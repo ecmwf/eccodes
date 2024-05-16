@@ -1148,36 +1148,6 @@
 	 table2Version = 1 ;
 	 indicatorOfParameter = 48 ;
 	}
-#U-component of current
-'m s**-1' = {
-	 table2Version = 3 ;
-	 indicatorOfParameter = 49 ;
-	}
-#U-component of current
-'m s**-1' = {
-	 table2Version = 2 ;
-	 indicatorOfParameter = 49 ;
-	}
-#U-component of current
-'m s**-1' = {
-	 table2Version = 1 ;
-	 indicatorOfParameter = 49 ;
-	}
-#V-component of current
-'m s**-1' = {
-	 table2Version = 3 ;
-	 indicatorOfParameter = 50 ;
-	}
-#V-component of current
-'m s**-1' = {
-	 table2Version = 2 ;
-	 indicatorOfParameter = 50 ;
-	}
-#V-component of current
-'m s**-1' = {
-	 table2Version = 1 ;
-	 indicatorOfParameter = 50 ;
-	}
 #Humidity mixing ratio
 'kg kg**-1' = {
 	 table2Version = 3 ;

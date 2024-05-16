@@ -9,8 +9,8 @@ unsigned[1]  minutesAfterDataCutoff = missing() : edition_specific,can_be_missin
 alias minutesAfterReferenceTimeOfDataCutoff=minutesAfterDataCutoff;
 
 # Indicator of unit for forecastTime (ECC-1709)
-codetable[1] indicatorOfUnitOfTimeRange ('4.4.table',masterDir,localDir)  : dump;
-alias indicatorOfUnitForForecastTime = indicatorOfUnitOfTimeRange;
+codetable[1] indicatorOfUnitForForecastTime ('4.4.table',masterDir,localDir) : dump;
+alias indicatorOfUnitOfTimeRange = indicatorOfUnitForForecastTime;
 
 include "grib2/stepUnits.def"
 

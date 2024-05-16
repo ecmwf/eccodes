@@ -15,29 +15,33 @@ tempGrib=temp.$label.grib
 tempText=temp.$label.txt
 
 input=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
-$EXEC ${test_dir}/codes_get_string $input dataDate
+$EXEC ${test_dir}/codes_get_string GRIB $input dataDate
 
 ${tools_dir}/grib_set -s marsType=s3,marsStream=mpic $input $tempGrib
-$EXEC ${test_dir}/codes_get_string $tempGrib dayOfTheYearDate # 2> $tempText
+$EXEC ${test_dir}/codes_get_string GRIB $tempGrib dayOfTheYearDate # 2> $tempText
 
 
 input=$data_dir/reduced_latlon_surface.grib2
-keys="identifier projString bitmap class year gridDefinitionDescription
+keys="hundred identifier projString bitmap class year gridDefinitionDescription
       time validityTime packingType md5Headers parameterUnits"
 for k in $keys; do
-    $EXEC ${test_dir}/codes_get_string $input $k 2> $tempText
+    $EXEC ${test_dir}/codes_get_string GRIB $input $k 2> $tempText
     grep -q "Buffer too small" $tempText
 done
 
 input=$ECCODES_SAMPLES_PATH/reduced_gg_ml_grib2.tmpl
-$EXEC ${test_dir}/codes_get_string "$input" gridName 2> $tempText
+$EXEC ${test_dir}/codes_get_string GRIB "$input" gridName 2> $tempText
 grep -q "Buffer too small" $tempText
 
 
 # shortName = swh
 input=$data_dir/reduced_latlon_surface.grib1
-$EXEC ${test_dir}/codes_get_string "$input" shortName 2> $tempText
+$EXEC ${test_dir}/codes_get_string GRIB "$input" shortName 2> $tempText
 grep -q "Buffer too small" $tempText
 
+input=$data_dir/gts/EGRR20150317121020_00493212.DAT
+$EXEC ${test_dir}/codes_get_string GTS "$input" theMessage 2> $tempText
+grep -q "Buffer too small" $tempText
 
-rm -f $tempText
+# Clean up
+rm -f $tempText $tempGrib

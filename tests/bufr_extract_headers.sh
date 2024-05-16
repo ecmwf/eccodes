@@ -14,6 +14,8 @@
 label="bufr_extract_headers_test"
 temp1="temp.${label}.1"
 temp2="temp.${label}.2"
+tempBufr=temp.$label.bufr
+tempFilt=temp.$label.filt
 
 # Multi-message BUFR
 # --------------------
@@ -62,7 +64,7 @@ r=`${test_dir}/bufr_extract_headers centre ${data_dir}/bufr/israel_observations_
 
 # Check all centres with an abbreviation
 centre_table=${ECCODES_DEFINITION_PATH}/common/c-11.table
-centres=`awk 'NR > 1 {print $2}' < $centre_table`
+centres=`awk 'NR > 1 && $1 !~ /#/ {print $2}' < $centre_table`
 for c in $centres; do
     ${tools_dir}/bufr_set -s centre=$c $ECCODES_SAMPLES_PATH/BUFR4.tmpl $temp1
     r=`${test_dir}/bufr_extract_headers centre $temp1`
@@ -115,26 +117,16 @@ amsu_55.bufr
 amv2_87.bufr
 asbh_139.bufr
 asbl_139.bufr
-asca_139.bufr
-asch_139.bufr
-ascs_139.bufr
-aseh_139.bufr
 asel_139.bufr
 ashs_139.bufr
 atap_55.bufr
 ateu_155.bufr
 atms_201.bufr
 atov_55.bufr
-avhm_87.bufr
-avhn_87.bufr
-avhr_58.bufr
 b003_56.bufr
 b005_89.bufr
-cmwi_87.bufr
 cmwn_87.bufr
 cori_156.bufr
-crit_202.bufr
-csrh_189.bufr
 emsg_189.bufr
 euwv_87.bufr
 fy3a_154.bufr
@@ -150,20 +142,14 @@ hirb_55.bufr
 hirs_55.bufr
 ias1_240.bufr
 iasi_241.bufr
-ifco_208.bufr
 ikco_217.bufr
 imssnow.bufr
 itrg_208.bufr
 itwt_233.bufr
-j2eo_216.bufr
 j2nb_216.bufr
 jaso_214.bufr
 kond_209.bufr
 maer_207.bufr
-mloz_206.bufr
-modi_87.bufr
-modw_87.bufr
-monw_87.bufr
 nomi_206.bufr
 nos1_208.bufr
 pgps_110.bufr
@@ -172,8 +158,6 @@ s4kn_165.bufr
 sb19_206.bufr
 sbu8_206.bufr
 smin_49.bufr
-smiu_49.bufr
-smos_203.bufr
 sn4k_165.bufr
 ssbt_127.bufr
 tmr7_129.bufr
@@ -208,6 +192,14 @@ ${tools_dir}/bufr_set -s restricted=1 $input $temp1
 r=`$EXEC ${test_dir}/bufr_extract_headers restricted $temp1`
 [ "$r" = "1" ]
 
+# ECC-1785 Allow encoding satelliteID when rdbType=30
+# ----------------------------------------------------
+sample_bufr4=$ECCODES_SAMPLES_PATH/BUFR3_local_satellite.tmpl
+echo 'set numberOfSubsets=1; set rdbType=30; set satelliteID=78; write;' > $tempFilt
+${tools_dir}/codes_bufr_filter -o $tempBufr $tempFilt $sample_bufr4
+r=$(${test_dir}/bufr_extract_headers isSatellite,satelliteID $tempBufr)
+[ "$r" = "1 78" ]
+
 
 echo "Test with invalid inputs..."
 # ---------------------------------
@@ -217,4 +209,39 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
+
+echo "Test with nonexistent file..."
+# ---------------------------------
+set +e
+$EXEC ${test_dir}/bufr_extract_headers centre nosuchfile > $temp1 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Unable to read file" $temp1
+
+
+echo "Test with bad BUFR file..."
+# ---------------------------------
+echo BUFR > $temp1
+set +e
+$EXEC ${test_dir}/bufr_extract_headers centre $temp1 > $temp2 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Unable to count BUFR messages" $temp2
+
+
+echo "Test with GRIB file..."
+# ---------------------------------
+input=${data_dir}/sample.grib2
+set +e
+$EXEC ${test_dir}/bufr_extract_headers centre $input > $temp2 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "No BUFR messages in file" $temp2
+
+
+# Clean up
 rm -f $temp1 $temp2
+rm -f $tempBufr $tempFilt

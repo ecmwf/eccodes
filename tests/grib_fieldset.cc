@@ -13,12 +13,6 @@
 
 #include "grib_api.h"
 
-static void usage(const char* prog)
-{
-    fprintf(stderr, "Usage: %s order_by grib_file grib_file ...\n", prog);
-    exit(1);
-}
-
 int main(int argc, char** argv)
 {
     int err = 0;
@@ -34,7 +28,7 @@ int main(int argc, char** argv)
     size_t lenDate  = 10, lenParam = 20, lenLevel = 50;
     char* order_by  = NULL;
 
-    if (argc != 3) usage(argv[0]);
+    if (argc != 3) return 1; //Usage: prog order_by grib_file grib_file ...
 
     nkeys    = sizeof(keys) / sizeof(*keys);
     order_by = argv[1];

@@ -9,6 +9,7 @@
  */
 
 #include "grib_tools.h"
+#include "accessor/grib_accessor_class_bufr_data_array.h"
 
 grib_option grib_options[] = {
     /*  {id, args, help}, on, command_line, value*/

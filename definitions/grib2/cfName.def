@@ -343,20 +343,6 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 10 ;
 	}
-#Eastward sea water velocity
-'eastward_sea_water_velocity' = {
-	 discipline = 10 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 2 ;
-	 typeOfFirstFixedSurface = 160 ;
-	}
-#Northward sea water velocity
-'northward_sea_water_velocity' = {
-	 discipline = 10 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 160 ;
-	}
 #Nitrogen dioxide mass mixing ratio
 'mass_fraction_of_nitrogen_dioxide_in_air' = {
 	 discipline = 0 ;

@@ -10,7 +10,6 @@
 
 /***************************************************************************
  *   Jean Baptiste Filippi - 01.11.2005                                    *
- *   Enrico Fucile                                                         *
  ***************************************************************************/
 #include "grib_api_internal.h"
 
@@ -55,7 +54,7 @@ static void update_sections(grib_section* s, grib_handle* h, long offset)
         a->offset += offset;
         /* update_sections ( grib_get_sub_section ( a ),h,offset ); */
         update_sections(a->sub_section, h, offset);
-        a = a->next;
+        a = a->next_;
     }
 }
 
@@ -75,7 +74,7 @@ void grib_swap_sections(grib_section* the_old, grib_section* the_new)
     a = the_old->block->first;
     while (a) {
         a->parent = the_old;
-        a         = a->next;
+        a         = a->next_;
     }
 
     update_sections(the_old, the_old->h, the_old->owner->offset);
@@ -95,12 +94,12 @@ void grib_empty_section(grib_context* c, grib_section* b)
     current = b->block->first;
 
     while (current) {
-        grib_accessor* next = current->next;
+        grib_accessor* next = current->next_;
         if (current->sub_section) {
             grib_section_delete(c, current->sub_section);
             current->sub_section = 0;
         }
-        grib_accessor_delete(c, current);
+        current->destroy(c);
         current = next;
     }
     b->block->first = b->block->last = 0;
@@ -228,11 +227,11 @@ grib_handle* codes_handle_new_from_samples(grib_context* c, const char* name)
         fprintf(stderr, "ECCODES DEBUG codes_handle_new_from_samples '%s'\n", name);
     }
 
-    g = codes_external_template(c, PRODUCT_ANY, name);
+    g = codes_external_sample(c, PRODUCT_ANY, name);
     if (!g) {
         grib_context_log(c, GRIB_LOG_ERROR,
                          "Unable to load sample file '%s.tmpl'\n"
-                         "                   from %s\n"
+                         "                   samples path='%s'\n"
                          "                   (ecCodes Version=%s)",
                          name, c->grib_samples_path, ECCODES_VERSION_STR);
     }
@@ -256,7 +255,7 @@ grib_handle* grib_handle_new_from_samples(grib_context* c, const char* name)
         fprintf(stderr, "ECCODES DEBUG grib_handle_new_from_samples '%s'\n", name);
     }
 
-    g = codes_external_template(c, PRODUCT_GRIB, name);
+    g = codes_external_sample(c, PRODUCT_GRIB, name);
     if (!g)
         grib_context_log(c, GRIB_LOG_ERROR,
                          "Unable to load GRIB sample file '%s.tmpl'\n"
@@ -279,7 +278,7 @@ grib_handle* codes_bufr_handle_new_from_samples(grib_context* c, const char* nam
         fprintf(stderr, "ECCODES DEBUG bufr_handle_new_from_samples '%s'\n", name);
     }
 
-    g = codes_external_template(c, PRODUCT_BUFR, name);
+    g = codes_external_sample(c, PRODUCT_BUFR, name);
     if (!g) {
         grib_context_log(c, GRIB_LOG_ERROR,
                          "Unable to load BUFR sample file '%s.tmpl'\n"

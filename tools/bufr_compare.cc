@@ -26,7 +26,7 @@ grib_option grib_options[] = {
     { "A:", 0, 0, 0, 1, 0 },
     { "t:", "factor", "Compare data values using factor multiplied by the tolerance specified in options -R -A.\n", 0, 1, 0 },
     { "w:", 0, 0, 0, 1, 0 },
-    { "f", 0, 0, 0, 1, 0 },
+    { "f", 0, "Forcefully compare, do not stop after first difference.\n", 0, 1, 0 },
     { "F", 0, 0, 1, 0, 0 },
     { "q", 0, 0, 1, 0, 0 },
     { "M", 0, 0, 1, 0, 0 },
@@ -84,7 +84,6 @@ static int compare_attribute(grib_handle* handle1, grib_handle* handle2, grib_ru
 
 static int error     = 0;
 static int count     = 0;
-static int lastPrint = 0;
 static int force     = 0;
 
 /* ECC-651: Boolean 'two_way' set to 1 when '-2' option used */
@@ -236,7 +235,7 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-    int ret               = 0, i;
+    int ret = 0;
     grib_context* context = grib_context_get_default();
 
     options->strict = 1;
@@ -315,16 +314,6 @@ int grib_tool_init(grib_runtime_options* options)
     compare_double   = &compare_double_absolute;
     if (grib_options_on("R:")) {
         global_tolerance = 0;
-        for (i = 0; i < options->tolerance_count; i++) {
-            if (!strcmp((options->tolerance[i]).name, "all")) {
-                global_tolerance = (options->tolerance[i]).double_value;
-                break;
-            }
-            if (!strcmp((options->tolerance[i]).name, "global")) {
-                global_tolerance = (options->tolerance[i]).double_value;
-                break;
-            }
-        }
         compare_double  = &compare_double_relative;
         compareAbsolute = 0;
     }
@@ -342,9 +331,9 @@ int grib_tool_init(grib_runtime_options* options)
         tolerance_factor = atof(grib_options_get_option("t:"));
 
     if (grib_options_on("R:")) {
-        char* sarg               = grib_options_get_option("R:");
+        char* sarg = grib_options_get_option("R:");
         options->tolerance_count = MAX_KEYS;
-        ret                      = parse_keyval_string(tool_name, sarg, 1, GRIB_TYPE_DOUBLE, options->tolerance, &(options->tolerance_count));
+        ret = parse_keyval_string(tool_name, sarg, 1, GRIB_TYPE_DOUBLE, options->tolerance, &(options->tolerance_count));
         if (ret == GRIB_INVALID_ARGUMENT) {
             usage();
             exit(1);
@@ -389,7 +378,6 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 static void printInfo(grib_handle* h)
 {
     printf("== %d == DIFFERENCE == ", count);
-    lastPrint = count;
 }
 
 static void print_index_key_values(grib_index* index, int icounter, const char* error_message)
@@ -771,11 +759,10 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
           return GRIB_COUNT_MISMATCH;
         } */
 
-    if (options->mode != MODE_BUFR) {
+    Assert(options->mode == MODE_BUFR);
         /* TODO: Ignore missing values for keys in BUFR. Not yet implemented */
         //isMissing1 = ((grib_is_missing(handle1, name, &err1) == 1) && (err1 == 0)) ? 1 : 0;
         //isMissing2 = ((grib_is_missing(handle2, name, &err2) == 1) && (err2 == 0)) ? 1 : 0;
-    }
 
     if ((isMissing1 == 1) && (isMissing2 == 1)) {
         // if (verbose) printf(" is set to missing in both fields\n");
@@ -1081,16 +1068,14 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
             break;
 
         case GRIB_TYPE_BYTES:
-            if (options->mode == MODE_BUFR)
-                return 0;
+            return 0; // Not in BUFR
             break;
 
         case GRIB_TYPE_LABEL:
             break;
 
         default:
-            if (verbose)
-                printf("\n");
+            if (verbose) printf("\n");
             printInfo(handle1);
             save_error(c, name);
             printf("Cannot compare [%s], unsupported type %d\n", name, type1);
@@ -1272,10 +1257,9 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
     else {
         const void *msg1 = NULL, *msg2 = NULL;
         size_t size1 = 0, size2 = 0;
-        int memcmp_ret = 0;
         GRIB_CHECK_NOLINE(grib_get_message(handle1, &msg1, &size1), 0);
         GRIB_CHECK_NOLINE(grib_get_message(handle2, &msg2, &size2), 0);
-        if (size1 == size2 && !(memcmp_ret = memcmp(msg1, msg2, size1))) {
+        if (size1 == size2 && 0 == memcmp(msg1, msg2, size1)) {
             return 0;
         }
 #if defined(BUFR_COMPARE_BYTES)

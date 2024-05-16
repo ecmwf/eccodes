@@ -32,6 +32,24 @@ set -e
 grep -q "Full documentation and examples at" $tempLog
 grep -q "https://confluence.ecmwf.int/display/ECC/grib_ls" $tempLog
 
+set +e
+${tools_dir}/grib_ls -? > $tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+
+set +e
+${tools_dir}/grib_ls -h > $tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+
+set +e
+DOXYGEN_USAGE=1 ${tools_dir}/grib_ls > $tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+
 
 ${tools_dir}/grib_ls -P count $infile       >  $tempLog
 ${tools_dir}/grib_ls -p count,step $infile  >> $tempLog
@@ -171,6 +189,14 @@ grep -q "0 of 38 messages" $tempText
 
 ${tools_dir}/grib_ls -w units!=K $file > $tempText
 grep -q "30 of 38 messages" $tempText
+
+${tools_dir}/grib_ls -w scaleFactorOfSecondFixedSurface=missing $file > $tempText
+grep -q "36 of 38 messages" $tempText
+${tools_dir}/grib_ls -w scaleFactorOfSecondFixedSurface!=missing $file > $tempText
+grep -q "2 of 38 messages" $tempText
+
+${tools_dir}/grib_ls -w referenceValue:d=0 $file > $tempText
+grep -q "5 of 38 messages" $tempText
 
 file=mixed.grib # Has 14 messages
 ${tools_dir}/grib_ls -w packingType=grid_simple,gridType=regular_ll/regular_gg $file > $tempText

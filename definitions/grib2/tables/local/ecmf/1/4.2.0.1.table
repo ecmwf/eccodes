@@ -1,7 +1,7 @@
 # Code table 4.2 - discipline=0 category=1 for ECMWF
 192 192 Snow evaporation rate (kg m-2 s-1)
 193 193 Total precipitation rate (m s-1)
-194 194 Accumulated freezing rain (m)
+194 194 Freezing rain precipitation rate (m s-1)
 195 195 Convective precipitation rate (m s-1)
 196 196 Large-scale precipitation rate (m s-1)
 197 197 Snow evaporation rate (m of water equivalent s-1)

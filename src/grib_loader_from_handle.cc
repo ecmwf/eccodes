@@ -10,6 +10,10 @@
 
 #include "grib_api_internal.h"
 
+#if defined DEBUG && ! defined GRIB_PTHREADS
+  #define MY_DEBUG
+#endif
+
 static int copy_values(grib_handle* h, grib_accessor* ga)
 {
     int i, j, k;
@@ -23,17 +27,14 @@ static int copy_values(grib_handle* h, grib_accessor* ga)
                     /*printf("SET VALUES %s\n",h->values[j][i].name);*/
                     switch (h->values[j][i].type) {
                         case GRIB_TYPE_LONG:
-                            return grib_pack_long(ga, &h->values[j][i].long_value, &len);
-                            break;
+                            return ga->pack_long(&h->values[j][i].long_value, &len);
 
                         case GRIB_TYPE_DOUBLE:
-                            return grib_pack_double(ga, &h->values[j][i].double_value, &len);
-                            break;
+                            return ga->pack_double(&h->values[j][i].double_value, &len);
 
                         case GRIB_TYPE_STRING:
                             len = strlen(h->values[j][i].string_value);
-                            return grib_pack_string(ga, h->values[j][i].string_value, &len);
-                            break;
+                            return ga->pack_string(h->values[j][i].string_value, &len);
                     }
                 }
             }
@@ -49,7 +50,7 @@ int grib_lookup_long_from_handle(grib_context* gc, grib_loader* loader, const ch
     grib_accessor* b = grib_find_accessor(h, name);
     size_t len       = 1;
     if (b)
-        return grib_unpack_long(b, value, &len);
+        return b->unpack_long(value, &len);
 
     /* TODO: fix me. For now, we don't fail on a lookup. */
     *value = -1;
@@ -65,7 +66,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
     unsigned char* uval = NULL;
     long* lval          = NULL;
     double* dval        = NULL;
-#ifdef DEBUG
+#ifdef MY_DEBUG
     static int first           = 1;
     static const char* missing = 0;
 #endif
@@ -79,7 +80,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
     if (default_value) {
         grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying:  setting %s to default value",
                          ga->name);
-        grib_pack_expression(ga, grib_arguments_get_expression(h, default_value, 0));
+        ga->pack_expression(grib_arguments_get_expression(h, default_value, 0));
     }
 
     if ((ga->flags & GRIB_ACCESSOR_FLAG_NO_COPY) ||
@@ -126,7 +127,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
 
     if (ret != GRIB_SUCCESS) {
         name = ga->name;
-#ifdef DEBUG
+#ifdef MY_DEBUG
         if (first) {
             missing = codes_getenv("ECCODES_PRINT_MISSING");
             first   = 0;
@@ -134,7 +135,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
 #endif
         grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying [%s] failed: %s",
                          name, grib_get_error_message(ret));
-#ifdef DEBUG
+#ifdef MY_DEBUG
         if (missing) {
             fprintf(stdout, "REPARSE: no value for %s", name);
             if (default_value)
@@ -152,11 +153,11 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
     }
 
     if ((ga->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) && grib_is_missing(h, name, &e) && e == GRIB_SUCCESS && len == 1) {
-        grib_pack_missing(ga);
+        ga->pack_missing();
         pack_missing = 1;
     }
 
-    const long ga_type = grib_accessor_get_native_type(ga);
+    const long ga_type = ga->get_native_type();
 
     if ((ga->flags & GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION) && !loader->changing_edition) {
         // See ECC-1560 and ECC-1644
@@ -172,7 +173,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
             ret  = grib_get_string_internal(h, name, sval, &len);
             if (ret == GRIB_SUCCESS) {
                 grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying string %s to %s", sval, name);
-                ret = grib_pack_string(ga, sval, &len);
+                ret = ga->pack_string(sval, &len);
             }
             grib_context_free(h->context, sval);
 
@@ -202,7 +203,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
                             *lval = 0; /* Reset to a reasonable value */
                         }
                     }
-                    ret = grib_pack_long(ga, lval, &len);
+                    ret = ga->pack_long(lval, &len);
                 }
             }
 
@@ -223,7 +224,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
                         ret = GRIB_SUCCESS;
                 }
                 else
-                    ret = grib_pack_double(ga, dval, &len);
+                    ret = ga->pack_double(dval, &len);
             }
 
             grib_context_free(h->context, dval);
@@ -232,13 +233,13 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
         case GRIB_TYPE_BYTES:
 
             ao   = grib_find_accessor(h, name);
-            len  = grib_byte_count(ao);
+            len  = ao->byte_count();
             uval = (unsigned char*)grib_context_malloc(h->context, len * sizeof(char));
-            ret  = grib_unpack_bytes(ao, uval, &len);
+            ret  = ao->unpack_bytes(uval, &len);
             /* ret = grib_get_bytes_internal(h,name,uval,&len); */
             if (ret == GRIB_SUCCESS) {
                 grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying %d byte(s) to %s", len, name);
-                ret = grib_pack_bytes(ga, uval, &len);
+                ret = ga->pack_bytes(uval, &len);
             }
 
             grib_context_free(h->context, uval);
@@ -250,7 +251,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
 
         default:
             grib_context_log(h->context, GRIB_LOG_ERROR,
-                "Copying %s, cannot establish type %ld [%s]", name, grib_accessor_get_native_type(ga), ga->creator->cclass->name);
+                "Copying %s, cannot establish type %ld [%s]", name, ga->get_native_type(), ga->creator->cclass->name);
             break;
     }
 

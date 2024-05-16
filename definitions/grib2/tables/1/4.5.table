@@ -1,13 +1,13 @@
 0 0 Reserved
-1 sfc Ground or water surface 
-2 2 Cloud base level 
-3 3 Level of cloud tops 
-4 4 Level of 0o C isotherm 
+1 sfc Ground or water surface
+2 2 Cloud base level
+3 3 Level of cloud tops
+4 4 Level of 0o C isotherm
 5 5 Level of adiabatic condensation lifted from the surface
-6 6 Maximum wind level 
-7 sfc Tropopause 
-8 sfc Nominal top of the atmosphere 
-9 9 Sea bottom 
+6 6 Maximum wind level
+7 sfc Tropopause
+8 sfc Nominal top of the atmosphere
+9 9 Sea bottom
 20 20 Isothermal level (K)
 100 pl Isobaric surface (Pa)
 101 sfc Mean sea level

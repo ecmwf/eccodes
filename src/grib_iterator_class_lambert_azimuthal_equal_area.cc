@@ -209,7 +209,11 @@ static int init_oblate(grib_handle* h,
     sinphi_  = sin(standardParallelInRadians); /*  (P->phi0); */
     Q__sinb1 = pj_qsfn(sinphi_, e, one_es) / Q__qp;
     Q__cosb1 = sqrt(1.0 - Q__sinb1 * Q__sinb1);
-    Q__dd    = cos(standardParallelInRadians) / (sqrt(1. - es * sinphi_ * sinphi_) * Q__rq * Q__cosb1);
+    if (Q__cosb1 == 0) {
+        Q__dd = 1.0;
+    } else {
+        Q__dd = cos(standardParallelInRadians) / (sqrt(1. - es * sinphi_ * sinphi_) * Q__rq * Q__cosb1);
+    }
     Q__ymf   = (Q__xmf = Q__rq) / Q__dd;
     Q__xmf *= Q__dd;
 
@@ -253,7 +257,12 @@ static int init_oblate(grib_handle* h,
                 xy_y *= Q__dd;
                 rho = hypot(xy_x, xy_y);
                 Assert(rho >= EPS10); /* TODO(masn): check */
-                sCe = 2. * asin(.5 * rho / Q__rq);
+                const double asin_arg = (0.5 * rho / Q__rq);
+                if (asin_arg < -1.0 || asin_arg > 1.0) {
+                    grib_context_log(h->context, GRIB_LOG_ERROR, "Invalid value: arcsin argument=%g", asin_arg);
+                    return GRIB_GEOCALCULUS_PROBLEM;
+                }
+                sCe = 2. * asin(asin_arg);
                 cCe = cos(sCe);
                 sCe = sin(sCe);
                 xy_x *= sCe;

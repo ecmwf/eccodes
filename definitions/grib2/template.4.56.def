@@ -1,6 +1,6 @@
-
 # TEMPLATE 4.56, Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for spatio-temporal changing tile parameters
 # Note: This template is deprecated. Template 4.59 should be used instead.
+transient template_is_deprecated = 1 : hidden;
 
 include "grib2/template.4.parameter.def"
 include "grib2/template.4.tile.def"

@@ -17,8 +17,6 @@ grib_oarray* grib_oarray_new(grib_context* c, size_t size, size_t incsize)
         c = grib_context_get_default();
     v = (grib_oarray*)grib_context_malloc_clear(c, sizeof(grib_oarray));
     if (!v) {
-        grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_oarray_new unable to allocate %zu bytes", sizeof(grib_oarray));
         return NULL;
     }
     v->size    = size;
@@ -27,8 +25,7 @@ grib_oarray* grib_oarray_new(grib_context* c, size_t size, size_t incsize)
     v->v       = (void**)grib_context_malloc_clear(c, sizeof(char*) * size);
     v->context = c;
     if (!v->v) {
-        grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_oarray_new unable to allocate %zu bytes", sizeof(char*) * size);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to allocate %zu bytes", __func__, sizeof(char*) * size);
         return NULL;
     }
     return v;
@@ -44,8 +41,7 @@ static grib_oarray* grib_oarray_resize(grib_oarray* v)
     v->v    = (void**)grib_context_realloc(c, v->v, newsize * sizeof(char*));
     v->size = newsize;
     if (!v->v) {
-        grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_oarray_resize unable to allocate %zu bytes", sizeof(char*) * newsize);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to allocate %zu bytes", __func__, sizeof(char*) * newsize);
         return NULL;
     }
     return v;

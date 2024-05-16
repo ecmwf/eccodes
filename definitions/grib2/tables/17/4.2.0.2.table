@@ -44,6 +44,6 @@
 42 42 v-component of geostrophic wind (m s-1)
 43 43 Geostrophic wind direction (degree true)
 44 44 Geostrophic wind speed (m s-1)
-# 45-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 45-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

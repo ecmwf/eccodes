@@ -129,15 +129,15 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         return;
 
     h = grib_handle_of_accessor(a);
-    grib_value_count(a, &count);
+    a->value_count(&count);
     size = size2 = count;
 
     if (size > 1) {
         values = (double*)grib_context_malloc_clear(a->context, sizeof(double) * size);
-        err    = grib_unpack_double(a, values, &size2);
+        err    = a->unpack_double(values, &size2);
     }
     else {
-        err = grib_unpack_double(a, &value, &size2);
+        err = a->unpack_double(&value, &size2);
     }
     Assert(size2 == size);
     (void)err; /* TODO */
@@ -222,15 +222,15 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
-    grib_value_count(a, &count);
+    a->value_count(&count);
     size = size2 = count;
 
     if (size > 1) {
         values = (long*)grib_context_malloc_clear(a->context, sizeof(long) * size);
-        err    = grib_unpack_long(a, values, &size2);
+        err    = a->unpack_long(values, &size2);
     }
     else {
-        err = grib_unpack_long(a, &value, &size2);
+        err = a->unpack_long(&value, &size2);
     }
     Assert(size2 == size);
 
@@ -327,7 +327,7 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
-    grib_unpack_double(a, &value, &size);
+    a->unpack_double(&value, &size);
 
     if (self->begin == 0 && self->empty == 0 && self->isAttribute == 0)
         fprintf(self->dumper.out, ",\n");
@@ -374,7 +374,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
-    grib_value_count(a, &count);
+    a->value_count(&count);
     size = count;
     if (size == 1) {
         dump_string(d, a, comment);
@@ -401,7 +401,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         return;
     }
 
-    err = grib_unpack_string_array(a, values, &size);
+    err = a->unpack_string_array(values, &size);
 
     if (self->isLeaf == 0) {
         fprintf(self->dumper.out, "%-*s", depth, " ");
@@ -458,7 +458,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
      * if (size==0) return;
      * value=(char*)grib_context_malloc_clear(a->context,size);
      * if (!value) {
-     *   grib_context_log(a->context,GRIB_LOG_ERROR,"unable to allocate %d bytes",(int)size);
+     *   grib_context_log(a->context,GRIB_LOG_ERROR,"Unable to allocate %zu bytes",size);
      *   return;
      * }
     */
@@ -470,7 +470,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 
     self->empty = 0;
 
-    err = grib_unpack_string(a, value, &size);
+    err = a->unpack_string(value, &size);
     if (err) {
         snprintf(value, sizeof(value), " *** ERR=%d (%s) [dump_string on '%s']",
                 err, grib_get_error_message(err), a->name);
@@ -582,7 +582,7 @@ static void dump_attributes(grib_dumper* d, grib_accessor* a)
         fprintf(out, "\"%s\" : ", a->attributes[i]->name);
         flags = a->attributes[i]->flags;
         a->attributes[i]->flags |= GRIB_ACCESSOR_FLAG_DUMP;
-        switch (grib_accessor_get_native_type(a->attributes[i])) {
+        switch (a->attributes[i]->get_native_type()) {
             case GRIB_TYPE_LONG:
                 dump_long(d, a->attributes[i], 0);
                 break;

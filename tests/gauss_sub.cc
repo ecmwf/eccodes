@@ -10,12 +10,6 @@
 
 #include "grib_api.h"
 
-static void usage(char* prog)
-{
-    printf("usage: %s file1.grib file2.grib\n", prog);
-    exit(1);
-}
-
 int main(int argc, char* argv[])
 {
     grib_handle *h1, *h2;
@@ -34,7 +28,7 @@ int main(int argc, char* argv[])
 
     c = grib_context_get_default();
 
-    if (argc < 3) usage(argv[0]);
+    if (argc < 3) return 1;//usage: %s file1.grib file2.grib
 
     infile1 = argv[1];
     infile2 = argv[2];

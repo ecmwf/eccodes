@@ -16,7 +16,7 @@ tempOut=temp.$label.txt
 
 [ -z "$ECCODES_DEFINITION_PATH" ] || ECCODES_DEFINITION_PATH=`${tools_dir}/codes_info -d`
 
-for file in `find ${ECCODES_DEFINITION_PATH}/ -name '*.def' -print | grep -v grib3/`
+for file in `find ${ECCODES_DEFINITION_PATH}/ -name '*.def' -print | grep -v grib3/ | grep -v metar/ | grep -v taf/`
 do
   ${tools_dir}/codes_parser $file > $REDIRECT
 done

@@ -1290,6 +1290,15 @@ cat > $fRules <<EOF
 EOF
 ${tools_dir}/codes_bufr_filter $fRules $f > $fLog
 
+# smart table unpack_string
+tempBufr=temp.$label.bufr
+f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
+cat > $fRules <<EOF
+  set unexpandedDescriptors = { 1031 };
+  print "[expandedOriginalCodes:s]";
+EOF
+${tools_dir}/codes_bufr_filter -o $tempBufr $fRules $f
+rm -f $tempBufr
 
 # Clean up
 rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules

@@ -54,18 +54,18 @@ int grib_pack_missing(grib_accessor* a)
     return 0;
 }
 
-int grib_pack_zero(grib_accessor* a)
-{
-    grib_accessor_class* c = a->cclass;
-    while (c) {
-        if (c->clear) {
-            return c->clear(a);
-        }
-        c = c->super ? *(c->super) : NULL;
-    }
-    DEBUG_ASSERT(0);
-    return 0;
-}
+// int grib_pack_zero(grib_accessor* a)
+// {
+//     grib_accessor_class* c = a->cclass;
+//     while (c) {
+//         if (c->clear) {
+//             return c->clear(a);
+//         }
+//         c = c->super ? *(c->super) : NULL;
+//     }
+//     DEBUG_ASSERT(0);
+//     return 0;
+// }
 
 int grib_is_missing_internal(grib_accessor* a)
 {
@@ -112,7 +112,9 @@ int grib_pack_float(grib_accessor* a, const float* v, size_t* len)
 int grib_pack_expression(grib_accessor* a, grib_expression* e)
 {
     grib_accessor_class* c = a->cclass;
-    //grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (double) %g",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0);
+    // grib_context_log(a->context, GRIB_LOG_INFO, "....(%s)%s is packing",
+    //                 (a->parent->owner)?(a->parent->owner->name):"root",
+    //                 a->name);
     while (c) {
         if (c->pack_expression) {
             return c->pack_expression(a, e);
@@ -526,7 +528,7 @@ int grib_accessor_notify_change(grib_accessor* a, grib_accessor* changed)
         c = c->super ? *(c->super) : NULL;
     }
     if (a && a->cclass)
-        printf("notify_change not implemented for %s %s\n", a->cclass->name, a->name);
+        fprintf(stderr, "Error: notify_change not implemented for %s %s\n", a->cclass->name, a->name);
     DEBUG_ASSERT(0);
     return 0;
 }
@@ -726,48 +728,47 @@ int grib_accessor_add_attribute(grib_accessor* a, grib_accessor* attr, int nest_
     return GRIB_TOO_MANY_ATTRIBUTES;
 }
 
-int grib_accessor_replace_attribute(grib_accessor* a, grib_accessor* attr)
-{
-    int id  = 0;
-    int idx = 0;
-    if (grib_accessor_get_attribute_index(a, attr->name, &id) != NULL) {
-        grib_accessor_delete(a->context, a->attributes[id]);
-        a->attributes[id]         = attr;
-        attr->parent_as_attribute = a;
-        if (a->same)
-            attr->same = grib_accessor_get_attribute_index(a->same, attr->name, &idx);
-    }
-    else {
-        grib_accessor_add_attribute(a, attr, 0);
-    }
-    return GRIB_SUCCESS;
-}
+// int grib_accessor_replace_attribute(grib_accessor* a, grib_accessor* attr)
+// {
+//     int id  = 0;
+//     int idx = 0;
+//     if (grib_accessor_get_attribute_index(a, attr->name, &id) != NULL) {
+//         grib_accessor_delete(a->context, a->attributes[id]);
+//         a->attributes[id]         = attr;
+//         attr->parent_as_attribute = a;
+//         if (a->same)
+//             attr->same = grib_accessor_get_attribute_index(a->same, attr->name, &idx);
+//     }
+//     else {
+//         grib_accessor_add_attribute(a, attr, 0);
+//     }
+//     return GRIB_SUCCESS;
+// }
 
-int grib_accessor_delete_attribute(grib_accessor* a, const char* name)
-{
-    int id = 0;
-    if (grib_accessor_get_attribute_index(a, name, &id) != NULL) {
-        grib_accessor_delete(a->context, a->attributes[id]);
-        a->attributes[id] = NULL;
-        return GRIB_SUCCESS;
-    }
-    else {
-        return GRIB_NOT_FOUND;
-    }
-}
+// int grib_accessor_delete_attribute(grib_accessor* a, const char* name)
+// {
+//     int id = 0;
+//     if (grib_accessor_get_attribute_index(a, name, &id) != NULL) {
+//         grib_accessor_delete(a->context, a->attributes[id]);
+//         a->attributes[id] = NULL;
+//         return GRIB_SUCCESS;
+//     }
+//     else {
+//         return GRIB_NOT_FOUND;
+//     }
+// }
 
-grib_accessor* grib_accessor_get_attribute_by_index(grib_accessor* a, int index)
-{
-    if (index < MAX_ACCESSOR_ATTRIBUTES)
-        return a->attributes[index];
+// grib_accessor* grib_accessor_get_attribute_by_index(grib_accessor* a, int index)
+// {
+//     if (index < MAX_ACCESSOR_ATTRIBUTES)
+//         return a->attributes[index];
+//     return NULL;
+// }
 
-    return NULL;
-}
-
-const char* grib_accessor_get_name(grib_accessor* a)
-{
-    return a->name;
-}
+// const char* grib_accessor_get_name(grib_accessor* a)
+// {
+//     return a->name;
+// }
 
 grib_accessor* grib_accessor_get_attribute_index(grib_accessor* a, const char* name, int* index)
 {
@@ -847,24 +848,21 @@ grib_accessors_list* grib_accessors_list_last(grib_accessors_list* al)
     //   last=next;
     //   next=last->next;
     // }
-
     return al->last;
 }
 
-grib_accessors_list* grib_accessors_list_find(grib_accessors_list* al, const grib_accessor* a)
-{
-    grib_accessors_list* last = al;
-    grib_accessors_list* next = al->next;
-
-    while (next) {
-        if (last->accessor == a)
-            return last;
-        last = next;
-        next = last->next;
-    }
-
-    return NULL;
-}
+// grib_accessors_list* grib_accessors_list_find(grib_accessors_list* al, const grib_accessor* a)
+// {
+//     grib_accessors_list* last = al;
+//     grib_accessors_list* next = al->next;
+//     while (next) {
+//         if (last->accessor == a)
+//             return last;
+//         last = next;
+//         next = last->next;
+//     }
+//     return NULL;
+// }
 
 void grib_accessors_list_delete(grib_context* c, grib_accessors_list* al)
 {

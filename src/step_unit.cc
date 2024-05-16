@@ -12,8 +12,6 @@
 
 namespace eccodes {
 
-Unit::Map Unit::map_{};
-
 std::vector<Unit::Value> Unit::grib_selected_units = {
     Unit::Value::SECOND,
     Unit::Value::MINUTE,
@@ -39,7 +37,7 @@ std::vector<Unit::Value> Unit::complete_unit_order_ = {
 };
 
 template <> long Unit::value<long>() const {
-    return map_.unit_to_long(internal_value_);
+    return get_converter().unit_to_long(internal_value_);
 }
 
 template <> Unit::Value Unit::value<Unit::Value>() const {
@@ -47,7 +45,7 @@ template <> Unit::Value Unit::value<Unit::Value>() const {
 }
 
 template <> std::string Unit::value<std::string>() const {
-    return map_.unit_to_name(internal_value_);
+    return get_converter().unit_to_name(internal_value_);
 }
 
 } // namespace eccodes
