@@ -637,7 +637,6 @@ static grib_handle* grib_handle_new_multi(grib_context* c, unsigned char** data,
         while (grib2_get_next_section((unsigned char*)message, olen, &secbegin, &seclen, &secnum, &err)) {
             // seccount++;
             /*printf("   - %d - section %d length=%d\n",(int)seccount,(int)secnum,(int)seclen);*/
-
             gm->sections[secnum]        = secbegin;
             gm->sections_length[secnum] = seclen;
 
@@ -685,6 +684,11 @@ static grib_handle* grib_handle_new_multi(grib_context* c, unsigned char** data,
 
                 break;
             }
+        }
+        // ECC-782
+        if (err == GRIB_INVALID_SECTION_NUMBER) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Failed to get section info (%s)", __func__, grib_get_error_message(err));
+            return NULL;
         }
     }
     else if (edition == 3) {
@@ -839,6 +843,11 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
                 }
                 break;
             }
+        }
+        // ECC-782
+        if (err == GRIB_INVALID_SECTION_NUMBER) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Failed to get section info (%s)", __func__, grib_get_error_message(err));
+            return NULL;
         }
     }
     else if (edition == 3) {
