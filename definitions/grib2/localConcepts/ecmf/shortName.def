@@ -16607,12 +16607,6 @@
 	 parameterCategory = 140 ;
 	 parameterNumber = 250 ;
 	}
-#Wave spectral peakedness
-'wsp' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 254 ;
-	}
 #Indicates a missing value
 '~' = {
 	 discipline = 192 ;
