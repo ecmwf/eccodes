@@ -13839,6 +13839,14 @@
 	 parameterNumber = 254 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean logarithm of surface pressure
+'avg_lnsp' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean low cloud cover
 'avg_lcc_frac' = {
 	 localTablesVersion = 1 ;
