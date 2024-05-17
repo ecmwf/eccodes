@@ -115,12 +115,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 25 ;
 	}
-#Lake cover
-'26' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 26 ;
-	}
 #Snow albedo
 '32' = {
 	 localTablesVersion = 1 ;

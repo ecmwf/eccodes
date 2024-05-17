@@ -181,6 +181,12 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 45 ;
 	}
+#Lake cover
+'26' = {
+         discipline = 1 ;
+         parameterCategory = 2 ;
+         parameterNumber = 2 ;
+        }
 #Low vegetation cover
 '27' = {
 	 discipline = 2 ;
