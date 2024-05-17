@@ -1,0 +1,7 @@
+# DestinE MARS On-Demand ExtremesDT keywords
+
+codetable[2] mytriggerkey "grib2/destine_trigger.table" : dump;
+alias mars.mytriggerkey = mytriggerkey;
+
+byte[4] myareakey : dump ;
+alias mars.myareakey = myareakey;
