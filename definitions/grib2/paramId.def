@@ -4916,20 +4916,6 @@
 	 parameterNumber = 18 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean snow depth
-'235095' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 11 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
-#Time-mean snow cover
-'235096' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 42 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
 #Time-mean specific rain water content
 '235101' = {
 	 discipline = 0 ;
