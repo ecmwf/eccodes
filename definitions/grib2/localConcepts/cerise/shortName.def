@@ -167,7 +167,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean snow depth
-'avg_sd_m' = {
+'msd_m' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
