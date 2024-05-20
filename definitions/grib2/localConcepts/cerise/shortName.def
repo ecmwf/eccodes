@@ -153,14 +153,14 @@
 	 typeOfStatisticalProcessing = 1 ;
 	}
 #Time-mean snow depth
-'avg_sde' = {
+'msde' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 11 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean snow cover
-'avg_snowc' = {
+'msnowc' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 42 ;
