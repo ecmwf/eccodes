@@ -4916,20 +4916,6 @@
 	 parameterNumber = 18 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean snow depth
-'msde' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 11 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
-#Time-mean snow cover
-'msnowc' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 42 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
 #Time-mean geopotential
 'mz' = {
 	 discipline = 0 ;
