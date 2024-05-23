@@ -5109,12 +5109,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 12 ;
 	}
-#Water fraction
-'240016' = {
-	 discipline = 1 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 2 ;
-	}
 #Days since last observation
 '240017' = {
 	 discipline = 0 ;
