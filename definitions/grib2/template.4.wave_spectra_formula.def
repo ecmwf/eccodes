@@ -24,3 +24,7 @@ listOfWaveFrequencySequenceParameters list(numberOfWaveFrequencySequenceParamete
   signed[1]   scaleFactorOfWaveFrequencySequenceParameter : dump;
   signed[4] scaledValueOfWaveFrequencySequenceParameter : dump;
 }
+
+transient paramType="wave_spectra";
+unalias mars.paramtype ;
+alias mars.paramtype = paramType ;
