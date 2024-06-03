@@ -194,13 +194,13 @@
 	 parameterNumber = 54 ;
 	}
 #Type of low vegetation
-'(code table 4.234)' = {
+'(Code table 4.234)' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 57 ;
 	}
 #Type of high vegetation
-'(code table 4.234)' = {
+'(Code table 4.234)' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 58 ;
@@ -3377,7 +3377,7 @@
 	 parameterNumber = 45 ;
 	}
 #Wetland type
-'Code table 4.239' = {
+'(Code table 4.239)' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 46 ;
@@ -5552,7 +5552,7 @@
 	 parameterNumber = 18 ;
 	}
 #Precipitation type
-'code table (4.201)' = {
+'(Code table 4.201)' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 19 ;
@@ -5620,7 +5620,7 @@
 	 typeOfStatisticalProcessing = 1 ;
 	}
 #Precipitable water category
-'code table (4.202)' = {
+'(Code table 4.202)' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 30 ;
@@ -6037,7 +6037,7 @@
 	 parameterNumber = 7 ;
 	}
 #Cloud type
-'code table (4.203)' = {
+'(Code table 4.203)' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 8 ;
@@ -6049,7 +6049,7 @@
 	 parameterNumber = 9 ;
 	}
 #Thunderstorm coverage
-'code table (4.204)' = {
+'(Code table 4.204)' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 10 ;
@@ -6181,7 +6181,7 @@
 	 parameterNumber = 11 ;
 	}
 #Aerosol type
-'code table (4.205)' = {
+'(Code table 4.205)' = {
 	 discipline = 0 ;
 	 parameterCategory = 13 ;
 	 parameterNumber = 0 ;
@@ -6291,7 +6291,7 @@
 	 parameterNumber = 8 ;
 	}
 #Volcanic ash
-'code table (4.206)' = {
+'(Code table 4.206)' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 4 ;
@@ -6309,7 +6309,7 @@
 	 parameterNumber = 6 ;
 	}
 #Icing
-'code table (4.207)' = {
+'(Code table 4.207)' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 7 ;
@@ -6327,7 +6327,7 @@
 	 parameterNumber = 9 ;
 	}
 #Turbulence
-'code table (4.208)' = {
+'(Code table 4.208)' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 10 ;
@@ -6339,19 +6339,19 @@
 	 parameterNumber = 11 ;
 	}
 #Planetary boundary layer regime
-'code table (4.209)' = {
+'(Code table 4.209)' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 12 ;
 	}
 #Contrail intensity
-'code table (4.210)' = {
+'(Code table 4.210)' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 13 ;
 	}
 #Contrail engine type
-'code table (4.211)' = {
+'(Code table 4.211)' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 14 ;
@@ -6429,13 +6429,13 @@
 	 parameterNumber = 1 ;
 	}
 #Remotely sensed snow cover
-'(code table 4.215)' = {
+'(Code table 4.215)' = {
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
 	}
 #Elevation of snow covered terrain
-'(code table 4.216)' = {
+'(Code table 4.216)' = {
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
@@ -6501,7 +6501,7 @@
 	 parameterNumber = 7 ;
 	}
 #Land use
-'code table (4.212)' = {
+'(Code table 4.212)' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 8 ;
@@ -6669,7 +6669,7 @@
 	 parameterNumber = 2 ;
 	}
 #Cloud top height quality indicator
-'Code table 4.219' = {
+'(Code table 4.219)' = {
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 3 ;
@@ -6875,7 +6875,7 @@
 	 parameterNumber = 0 ;
 	}
 #Precipitation type (most severe) in the last 1 hour
-'code table (4.201)' = {
+'(Code table 4.201)' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 19 ;
@@ -6884,7 +6884,7 @@
 	 lengthOfTimeRange = 1 ;
 	}
 #Precipitation type (most severe) in the last 3 hours
-'code table (4.201)' = {
+'(Code table 4.201)' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 19 ;
@@ -6893,7 +6893,7 @@
 	 lengthOfTimeRange = 3 ;
 	}
 #Precipitation type (most frequent) in the last 1 hour
-'code table (4.201)' = {
+'(Code table 4.201)' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 19 ;
@@ -6902,7 +6902,7 @@
 	 lengthOfTimeRange = 1 ;
 	}
 #Precipitation type (most frequent) in the last 3 hours
-'code table (4.201)' = {
+'(Code table 4.201)' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 19 ;
@@ -6911,7 +6911,7 @@
 	 lengthOfTimeRange = 3 ;
 	}
 #Precipitation type (most severe) in the last 6 hours
-'code table (4.201)' = {
+'(Code table 4.201)' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 19 ;
@@ -6920,7 +6920,7 @@
 	 lengthOfTimeRange = 6 ;
 	}
 #Precipitation type (most frequent) in the last 6 hours
-'code table (4.201)' = {
+'(Code table 4.201)' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 19 ;
@@ -7096,19 +7096,19 @@
 	 parameterNumber = 6 ;
 	}
 #Cloud mask
-'Code table 4.217' = {
+'(Code table 4.217)' = {
 	 discipline = 3 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 7 ;
 	}
 #Pixel scene type
-'Code table 4.218' = {
+'(Code table 4.218)' = {
 	 discipline = 3 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 8 ;
 	}
 #Fire detection indicator
-'Code table 4.223' = {
+'(Code table 4.223)' = {
 	 discipline = 3 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
