@@ -10,3 +10,10 @@ codetable[1] parameterCategory ('4.1.[discipline:l].table',masterDir,localDir) :
 codetable[1] parameterNumber ('4.2.[discipline:l].[parameterCategory:l].table',masterDir,localDir) : dump;
 meta parameterUnits codetable_units(parameterNumber) : dump;
 meta parameterName  codetable_title(parameterNumber) : dump;
+
+# discipline = 10, parameterCategory = 0 are WMO wave parameters !
+if (discipline == 10 && parameterCategory == 0) {
+  transient paramType="wave";
+  unalias mars.paramtype ;
+  alias mars.paramtype = paramType ;
+}
