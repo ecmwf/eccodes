@@ -200,13 +200,13 @@
 	 parameterNumber = 54 ;
 	}
 #Type of low vegetation
-'(code table 4.234)' = {
+'(Code table 4.234)' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 57 ;
 	}
 #Type of high vegetation
-'(code table 4.234)' = {
+'(Code table 4.234)' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 58 ;
@@ -3383,7 +3383,7 @@
 	 parameterNumber = 45 ;
 	}
 #Wetland type
-'Code table 4.239' = {
+'(Code table 4.239)' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 46 ;
@@ -4922,18 +4922,25 @@
 	 parameterNumber = 18 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean snow depth
-'m' = {
+#Time-mean specific rain water content
+'kg kg**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
-	 parameterNumber = 11 ;
+	 parameterNumber = 85 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean snow cover
-'%' = {
+#Time-mean specific snow water content
+'kg kg**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
-	 parameterNumber = 42 ;
+	 parameterNumber = 86 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean eta-coordinate vertical velocity
+'s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 32 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean geopotential
@@ -5004,12 +5011,26 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean vorticity (relative)
+'s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 12 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean mean sea level pressure
 'Pa' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean divergence
+'s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 13 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean relative humidity
@@ -5056,6 +5077,13 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean ozone mass mixing ratio
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean temperature of snow layer
 'K' = {
 	 discipline = 2 ;
@@ -5077,6 +5105,124 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 54 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean specific cloud liquid water content
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 83 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean specific cloud ice water content
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 84 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean fraction of cloud cover
+'(0 - 1)' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 32 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean K index
+'K' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total totals index
+'K' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean discharge from rivers or streams
+'m**3 s**-1' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 7 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean soil wetness index (total layer)
+'Numeric' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 30 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 151 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean soil wetness index (root zone)
+'Numeric' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 30 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 167 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean soil wetness index(layer)
+'Numeric' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 30 ;
+	 typeOfFirstFixedSurface = 151 ;
+	 typeOfSecondFixedSurface = 151 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean floodplain depth
+'m' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 17 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean floodplain flooded fraction
+'Proportion' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 18 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean floodplain flooded area
+'m**2' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 19 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean river fraction
+'Proportion' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean river area
+'m**2' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 21 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean fraction of river coverage plus river related flooding
+'Proportion' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean area of river coverage plus river related flooding
+'m**2' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 23 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Cross sectional area of flow in channel
@@ -5139,26 +5285,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 15 ;
 	}
-#Mean discharge in the last 6 hours
-'m**3 s**-1' = {
-	 discipline = 1 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 7 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 6 ;
-	}
-#Mean discharge in the last 24 hours
-'m**3 s**-1' = {
-	 discipline = 1 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 7 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 24 ;
-	}
 #Snow depth at elevation bands
 'kg m**-2' = {
 	 discipline = 2 ;
@@ -5210,6 +5336,48 @@
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 19 ;
+	}
+#Floodplain depth
+'m' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 17 ;
+	}
+#Floodplain flooded fraction
+'Proportion' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 18 ;
+	}
+#Floodplain flooded area
+'m**2' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 19 ;
+	}
+#River fraction
+'Proportion' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 20 ;
+	}
+#River area
+'m**2' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 21 ;
+	}
+#Fraction of river coverage plus river related flooding
+'Proportion' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	}
+#Area of river coverage plus river related flooding
+'m**2' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 23 ;
 	}
 #Latitude
 'Degree N' = {
@@ -5384,7 +5552,7 @@
 	 parameterNumber = 18 ;
 	}
 #Precipitation type
-'code table (4.201)' = {
+'(Code table 4.201)' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 19 ;
@@ -5452,7 +5620,7 @@
 	 typeOfStatisticalProcessing = 1 ;
 	}
 #Precipitable water category
-'code table (4.202)' = {
+'(Code table 4.202)' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 30 ;
@@ -5869,7 +6037,7 @@
 	 parameterNumber = 7 ;
 	}
 #Cloud type
-'code table (4.203)' = {
+'(Code table 4.203)' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 8 ;
@@ -5881,7 +6049,7 @@
 	 parameterNumber = 9 ;
 	}
 #Thunderstorm coverage
-'code table (4.204)' = {
+'(Code table 4.204)' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 10 ;
@@ -6013,7 +6181,7 @@
 	 parameterNumber = 11 ;
 	}
 #Aerosol type
-'code table (4.205)' = {
+'(Code table 4.205)' = {
 	 discipline = 0 ;
 	 parameterCategory = 13 ;
 	 parameterNumber = 0 ;
@@ -6123,7 +6291,7 @@
 	 parameterNumber = 8 ;
 	}
 #Volcanic ash
-'code table (4.206)' = {
+'(Code table 4.206)' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 4 ;
@@ -6141,7 +6309,7 @@
 	 parameterNumber = 6 ;
 	}
 #Icing
-'code table (4.207)' = {
+'(Code table 4.207)' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 7 ;
@@ -6159,7 +6327,7 @@
 	 parameterNumber = 9 ;
 	}
 #Turbulence
-'code table (4.208)' = {
+'(Code table 4.208)' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 10 ;
@@ -6171,19 +6339,19 @@
 	 parameterNumber = 11 ;
 	}
 #Planetary boundary layer regime
-'code table (4.209)' = {
+'(Code table 4.209)' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 12 ;
 	}
 #Contrail intensity
-'code table (4.210)' = {
+'(Code table 4.210)' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 13 ;
 	}
 #Contrail engine type
-'code table (4.211)' = {
+'(Code table 4.211)' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 14 ;
@@ -6261,13 +6429,13 @@
 	 parameterNumber = 1 ;
 	}
 #Remotely sensed snow cover
-'(code table 4.215)' = {
+'(Code table 4.215)' = {
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
 	}
 #Elevation of snow covered terrain
-'(code table 4.216)' = {
+'(Code table 4.216)' = {
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
@@ -6333,7 +6501,7 @@
 	 parameterNumber = 7 ;
 	}
 #Land use
-'code table (4.212)' = {
+'(Code table 4.212)' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 8 ;
@@ -6501,7 +6669,7 @@
 	 parameterNumber = 2 ;
 	}
 #Cloud top height quality indicator
-'Code table 4.219' = {
+'(Code table 4.219)' = {
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 3 ;
@@ -6707,7 +6875,7 @@
 	 parameterNumber = 0 ;
 	}
 #Precipitation type (most severe) in the last 1 hour
-'code table (4.201)' = {
+'(Code table 4.201)' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 19 ;
@@ -6716,7 +6884,7 @@
 	 lengthOfTimeRange = 1 ;
 	}
 #Precipitation type (most severe) in the last 3 hours
-'code table (4.201)' = {
+'(Code table 4.201)' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 19 ;
@@ -6725,7 +6893,7 @@
 	 lengthOfTimeRange = 3 ;
 	}
 #Precipitation type (most frequent) in the last 1 hour
-'code table (4.201)' = {
+'(Code table 4.201)' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 19 ;
@@ -6734,7 +6902,7 @@
 	 lengthOfTimeRange = 1 ;
 	}
 #Precipitation type (most frequent) in the last 3 hours
-'code table (4.201)' = {
+'(Code table 4.201)' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 19 ;
@@ -6743,7 +6911,7 @@
 	 lengthOfTimeRange = 3 ;
 	}
 #Precipitation type (most severe) in the last 6 hours
-'code table (4.201)' = {
+'(Code table 4.201)' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 19 ;
@@ -6752,7 +6920,7 @@
 	 lengthOfTimeRange = 6 ;
 	}
 #Precipitation type (most frequent) in the last 6 hours
-'code table (4.201)' = {
+'(Code table 4.201)' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 19 ;
@@ -6928,19 +7096,19 @@
 	 parameterNumber = 6 ;
 	}
 #Cloud mask
-'Code table 4.217' = {
+'(Code table 4.217)' = {
 	 discipline = 3 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 7 ;
 	}
 #Pixel scene type
-'Code table 4.218' = {
+'(Code table 4.218)' = {
 	 discipline = 3 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 8 ;
 	}
 #Fire detection indicator
-'Code table 4.223' = {
+'(Code table 4.223)' = {
 	 discipline = 3 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
@@ -7168,6 +7336,48 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
+#Standardised Precipitation Index (SPI)
+'Numeric' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 0 ;
+	}
+#Standardised Precipitation Evapotranspiration Index (SPEI)
+'Numeric' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 1 ;
+	}
+#Standardised Streamflow Index (SSFI)
+'Numeric' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 2 ;
+	}
+#Standardised Reservoir Supply Index (SRSI)
+'Numeric' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 3 ;
+	}
+#Standardised Water-level Index (SWI)
+'Numeric' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 4 ;
+	}
+#Standardised Snowmelt and Rain Index (SMRI)
+'Numeric' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 5 ;
+	}
+#Streamflow Drought Index (SDI)
+'Numeric' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 6 ;
+	}
 #Universal thermal climate index
 'K' = {
 	 discipline = 20 ;
@@ -7305,12 +7515,6 @@
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 174 ;
-	 typeOfSecondFixedSurface = 176 ;
-	 scaledValueOfFirstFixedSurface = missing() ;
-	 scaleFactorOfFirstFixedSurface = missing() ;
-	 scaledValueOfSecondFixedSurface = missing() ;
-	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
 #Sea ice area fraction
 'Fraction' = {
@@ -8415,12 +8619,6 @@
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 174 ;
-	 typeOfSecondFixedSurface = 176 ;
-	 scaledValueOfFirstFixedSurface = missing() ;
-	 scaleFactorOfFirstFixedSurface = missing() ;
-	 scaledValueOfSecondFixedSurface = missing() ;
-	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean sea ice area fraction
@@ -10012,6 +10210,38 @@
 	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
+#Aerosol optical depth
+'Numeric' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	}
+#Single scattering albedo
+'(0 - 1)' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 103 ;
+	}
+#Asymmetry Factor
+'Numeric' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 104 ;
+	}
+#Aerosol backscatter from top of atmosphere
+'m**-1 sr**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 107 ;
+	 typeOfFirstFixedSurface = 8 ;
+	}
+#Aerosol backscatter from ground
+'m**-1 sr**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 108 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
 #Pressure tendency
 'Pa s**-1' = {
 	 discipline = 0 ;
@@ -10539,6 +10769,12 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 44 ;
+	}
+#Wave spectral peakedness
+'dimensionless' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 98 ;
 	}
 #Skin reservoir content
 'kg m**-2' = {

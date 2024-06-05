@@ -94,7 +94,7 @@ static void remove_accessor(grib_accessor* a)
     grib_section* s = NULL;
     int id;
 
-    if (!a || !a->previous)
+    if (!a || !a->previous_)
         return;
     s = a->parent;
 
@@ -103,14 +103,14 @@ static void remove_accessor(grib_accessor* a)
         grib_handle_of_accessor(a)->accessors[id] = NULL;
     }
 
-    if (a->next)
-        a->previous->next = a->next;
+    if (a->next_)
+        a->previous_->next_ = a->next_;
     else
         return;
 
-    a->next->previous = a->previous;
+    a->next_->previous_ = a->previous_;
 
-    grib_accessor_delete(s->h->context, a);
+    a->destroy(s->h->context);
 }
 
 static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)

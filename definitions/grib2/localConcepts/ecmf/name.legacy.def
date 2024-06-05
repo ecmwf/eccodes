@@ -1771,3 +1771,9 @@
  parameterCategory = 172 ;
  parameterNumber = 212 ;
 }
+#Wave spectral peakedness
+'Wave spectral peakedness' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 254 ;
+}

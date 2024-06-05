@@ -27,6 +27,27 @@
 	 parameterNumber = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Vorticity (relative)
+'atmosphere_relative_vorticity' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 12 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Divergence
+'divergence_of_wind' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 13 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Ozone mass mixing ratio
+'mass_fraction_of_ozone_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Snow depth
 'lwe_thickness_of_surface_snow_amount' = {
 	 discipline = 0 ;

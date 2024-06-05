@@ -154,6 +154,20 @@
 	}
 #Time-mean snow depth
 'Time-mean snow depth' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 11 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean snow cover
+'Time-mean snow cover' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 42 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean snow depth
+'Time-mean snow depth' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;

@@ -195,12 +195,12 @@
 	 indicatorOfParameter = 28 ;
 	}
 #Type of low vegetation
-'(code table 4.234)' = {
+'(Code table 4.234)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 29 ;
 	}
 #Type of high vegetation
-'(code table 4.234)' = {
+'(Code table 4.234)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 30 ;
 	}

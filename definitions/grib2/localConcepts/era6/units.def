@@ -408,4 +408,12 @@
 	 constituentType = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 is_chemical = 1 ;
+	}
+#Time-mean logarithm of surface pressure
+'Numeric' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 0 ;
 }
