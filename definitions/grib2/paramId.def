@@ -10262,6 +10262,12 @@
 	 parameterNumber = 108 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
+#Aerosol extinction coefficient
+'462000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 105 ;
+	}
 #Pressure tendency
 '3003' = {
 	 discipline = 0 ;
