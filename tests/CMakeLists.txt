@@ -156,6 +156,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-1304
         bufr_ecc-1347
         bufr_ecc-1395
+        bufr_ecc-1840
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
