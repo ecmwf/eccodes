@@ -226,7 +226,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	}
 #Soil type
-'~' = {
+'(Code table 4.213)' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;

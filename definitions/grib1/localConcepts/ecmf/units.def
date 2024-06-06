@@ -265,7 +265,7 @@
 	 indicatorOfParameter = 42 ;
 	}
 #Soil type
-'~' = {
+'(Code table 4.213)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 43 ;
 	}
