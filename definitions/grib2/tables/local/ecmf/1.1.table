@@ -3,4 +3,5 @@
 # . Only table entries and templates from the current Master table are valid.
 # 1-254 Number of local tables version used
 1 1 ECMWF local tables version 1
+2 2 ECMWF local tables version 2
 255 255 Missing

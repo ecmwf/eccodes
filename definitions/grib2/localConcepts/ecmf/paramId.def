@@ -14162,6 +14162,74 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 192 ;
 	}
+#Volume-mean total column mixing ratio
+'409000' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 195 ;
+	}
+#Emission mass flux from vegetation
+'412000' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 192 ;
+	}
+#Emission mass flux from biomass burning
+'417000' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 193 ;
+	}
+#Emission mass flux from settlements
+'432000' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 194 ;
+	}
+#Emission mass flux from soil
+'442000' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 195 ;
+	}
+#Emission mass flux from wild animals
+'443000' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 196 ;
+	}
+#Aerosol negative fixer mass flux
+'451000' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	}
+#Aerosol sink/loss mass flux
+'452000' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	}
+#Aerosol source/gain mass flux
+'453000' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	}
 #Stream function gradient
 '129001' = {
 	 discipline = 192 ;
