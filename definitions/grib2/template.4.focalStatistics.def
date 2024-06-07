@@ -1,3 +1,4 @@
+# (C) Copyright 2005- ECMWF.
 codetable[1] spatialVicinityType ('4.103.table',masterDir,localDir)=255 ;
 
 unsigned[1]  numberOfSpatialVicinityValues = 1 : edition_specific;

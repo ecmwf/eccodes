@@ -240,14 +240,14 @@ typedef struct grib_action_file grib_action_file;
 typedef struct grib_action_file_list grib_action_file_list;
 typedef struct grib_block_of_accessors grib_block_of_accessors;
 typedef struct grib_buffer grib_buffer;
-typedef struct grib_accessor_class grib_accessor_class;
+class grib_accessor_class;
 typedef struct grib_action grib_action;
 typedef struct grib_action_class grib_action_class;
 typedef struct grib_section grib_section;
 typedef struct grib_codetable grib_codetable;
 typedef struct grib_smart_table grib_smart_table;
 
-typedef struct grib_accessor grib_accessor;
+class grib_accessor;
 typedef struct grib_iterator_class grib_iterator_class;
 typedef struct grib_nearest_class grib_nearest_class;
 typedef struct grib_dumper grib_dumper;
@@ -279,53 +279,6 @@ typedef long (*iterator_has_next_proc)(grib_iterator* i);
 typedef int (*grib_pack_proc)(grib_handle* h, const double* in, size_t inlen, void* out, size_t* outlen);
 typedef int (*grib_unpack_proc)(grib_handle* h, const void* in, size_t inlen, double* out, size_t* outlen);
 
-typedef void (*accessor_destroy_proc)(grib_context*, grib_accessor*);
-
-typedef int (*accessor_unpack_long_proc)(grib_accessor*, long*, size_t* len);
-typedef int (*accessor_unpack_double_proc)(grib_accessor*, double*, size_t* len);
-typedef int (*accessor_unpack_float_proc)(grib_accessor*, float*, size_t* len);
-
-typedef int (*accessor_unpack_double_element_proc)(grib_accessor*, size_t, double*);
-typedef int (*accessor_unpack_float_element_proc)(grib_accessor*, size_t, float*);
-typedef int (*accessor_unpack_double_element_set_proc)(grib_accessor*, const size_t*, size_t, double*);
-typedef int (*accessor_unpack_float_element_set_proc)(grib_accessor*, const size_t*, size_t, float*);
-
-typedef int (*accessor_unpack_double_subarray_proc)(grib_accessor*, double*, size_t, size_t);
-typedef int (*accessor_unpack_string_proc)(grib_accessor*, char*, size_t* len);
-typedef int (*accessor_unpack_string_array_proc)(grib_accessor*, char**, size_t* len);
-typedef int (*accessor_unpack_bytes_proc)(grib_accessor*, unsigned char*, size_t* len);
-typedef int (*accessor_get_native_type_proc)(grib_accessor*);
-typedef int (*accessor_notify_change_proc)(grib_accessor*, grib_accessor*);
-typedef void (*accessor_update_size_proc)(grib_accessor*, size_t);
-typedef size_t (*accessor_preferred_size_proc)(grib_accessor*, int);
-typedef void (*accessor_resize_proc)(grib_accessor*, size_t);
-
-typedef grib_accessor* (*accessor_next_proc)(grib_accessor*, int);
-typedef grib_section* (*accessor_sub_section_proc)(grib_accessor*);
-
-typedef int (*accessor_pack_missing_proc)(grib_accessor*);
-typedef int (*accessor_pack_is_missing_proc)(grib_accessor*);
-typedef int (*accessor_pack_long_proc)(grib_accessor*, const long*, size_t* len);
-typedef int (*accessor_pack_double_proc)(grib_accessor*, const double*, size_t* len);
-typedef int (*accessor_pack_float_proc)(grib_accessor*, const float*, size_t* len);
-typedef int (*accessor_pack_string_proc)(grib_accessor*, const char*, size_t* len);
-typedef int (*accessor_pack_string_array_proc)(grib_accessor*, const char**, size_t* len);
-typedef int (*accessor_pack_bytes_proc)(grib_accessor*, const unsigned char*, size_t* len);
-typedef int (*accessor_pack_expression_proc)(grib_accessor*, grib_expression*);
-typedef int (*accessor_clear_proc)(grib_accessor*);
-typedef grib_accessor* (*accessor_clone_proc)(grib_accessor*, grib_section*, int*);
-
-typedef void (*accessor_init_class_proc)(grib_accessor_class*);
-
-typedef int (*accessor_compare_proc)(grib_accessor*, grib_accessor*);
-typedef size_t (*accessor_string_proc)(grib_accessor*);
-typedef int (*accessor_value_with_ret_proc)(grib_accessor*, long*);
-typedef long (*accessor_value_proc)(grib_accessor*);
-typedef void (*accessor_dump_proc)(grib_accessor*, grib_dumper*);
-typedef void (*accessor_init_proc)(grib_accessor*, const long len, grib_arguments*);
-typedef void (*accessor_post_init_proc)(grib_accessor*);
-
-typedef int (*accessor_nearest_proc)(grib_accessor*, double, double*);
 
 typedef long (*grib_binop_long_proc)(long, long);
 typedef long (*grib_unop_long_proc)(long);
@@ -395,16 +348,7 @@ struct grib_action
     char* debug_info; /** purely for debugging and tracing */
 };
 
-typedef struct grib_accessors_list grib_accessors_list;
-
-struct grib_accessors_list
-{
-    grib_accessor* accessor;
-    int rank;
-    grib_accessors_list* next;
-    grib_accessors_list* prev;
-    grib_accessors_list* last;
-};
+class grib_accessors_list;
 
 typedef int (*action_create_accessors_handle_proc)(grib_section* p, grib_action* a, grib_loader* h);
 typedef int (*action_notify_change_proc)(grib_action* a, grib_accessor* observer, grib_accessor* observed);
@@ -477,34 +421,6 @@ struct grib_virtual_value
     int missing;
     int length;
     int type;
-};
-
-struct grib_accessor
-{
-    const char* name;       /** < name of the accessor */
-    const char* name_space; /** < namespace to which the accessor belongs */
-    grib_context* context;
-    grib_handle* h;
-    grib_action* creator;        /** < action that created the accessor */
-    long length;                 /** < byte length of the accessor */
-    long offset;                 /** < offset of the data in the buffer */
-    grib_section* parent;        /** < section to which the accessor is attached */
-    grib_accessor* next;         /** < next accessor in list */
-    grib_accessor* previous;     /** < next accessor in list */
-    grib_accessor_class* cclass; /** < behaviour of the accessor */
-    unsigned long flags;         /** < Various flags */
-    grib_section* sub_section;
-
-    const char* all_names[MAX_ACCESSOR_NAMES];       /** < name of the accessor */
-    const char* all_name_spaces[MAX_ACCESSOR_NAMES]; /** < namespace to which the accessor belongs */
-    int dirty;
-
-    grib_accessor* same;        /** < accessors with the same name */
-    long loop;                  /** < used in lists */
-    grib_virtual_value* vvalue; /** < virtual value used when transient flag on **/
-    const char* set;
-    grib_accessor* attributes[MAX_ACCESSOR_ATTRIBUTES]; /** < attributes are accessors */
-    grib_accessor* parent_as_attribute;
 };
 
 #define GRIB_ACCESSOR_FLAG_READ_ONLY        (1 << 1)
@@ -833,71 +749,6 @@ struct grib_multi_handle
     size_t length;
 };
 
-struct grib_accessor_class
-{
-    grib_accessor_class** super;
-    const char* name;
-    size_t size;
-
-    int inited;
-    accessor_init_class_proc init_class;
-
-    accessor_init_proc init;
-    accessor_post_init_proc post_init;
-    accessor_destroy_proc destroy;
-
-    accessor_dump_proc dump;
-    accessor_value_proc next_offset;
-
-    accessor_string_proc string_length;
-    accessor_value_with_ret_proc value_count;
-
-    accessor_value_proc byte_count;
-    accessor_value_proc byte_offset;
-
-    accessor_get_native_type_proc get_native_type;
-
-    accessor_sub_section_proc sub_section;
-
-    accessor_pack_missing_proc pack_missing;
-    accessor_pack_is_missing_proc is_missing;
-
-    accessor_pack_long_proc pack_long;
-    accessor_unpack_long_proc unpack_long;
-
-    accessor_pack_double_proc pack_double;
-    accessor_pack_float_proc pack_float;
-    accessor_unpack_double_proc unpack_double;
-    accessor_unpack_float_proc unpack_float;
-
-    accessor_pack_string_proc pack_string;
-    accessor_unpack_string_proc unpack_string;
-
-    accessor_pack_string_array_proc pack_string_array;
-    accessor_unpack_string_array_proc unpack_string_array;
-
-    accessor_pack_bytes_proc pack_bytes;
-    accessor_unpack_bytes_proc unpack_bytes;
-
-    accessor_pack_expression_proc pack_expression;
-
-    accessor_notify_change_proc notify_change;
-    accessor_update_size_proc update_size;
-
-    accessor_preferred_size_proc preferred_size;
-    accessor_resize_proc resize;
-
-    accessor_nearest_proc nearest_smaller_value;
-    accessor_next_proc next;
-    accessor_compare_proc compare;
-    accessor_unpack_double_element_proc unpack_double_element;
-    accessor_unpack_float_element_proc unpack_float_element;
-    accessor_unpack_double_element_set_proc unpack_double_element_set;
-    accessor_unpack_float_element_set_proc unpack_float_element_set;
-    accessor_unpack_double_subarray_proc unpack_double_subarray;
-    accessor_clear_proc clear;
-    accessor_clone_proc make_clone;
-};
 
 typedef struct grib_multi_support grib_multi_support;
 struct grib_multi_support
@@ -1434,6 +1285,8 @@ typedef struct j2k_encode_helper
 
 #ifdef __cplusplus
 }
+#include "accessor/grib_accessor.h"
+#include "accessor/grib_accessors_list.h"
 #endif
 
 #endif

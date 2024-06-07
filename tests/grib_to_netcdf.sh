@@ -110,6 +110,14 @@ ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=31 $sample2 $tempGrib
 ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
 
+ECCODES_DEBUG=-1 ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
+
+
+# The -u option
+input=${data_dir}/sample.grib2
+${tools_dir}/grib_to_netcdf -u time -o $tempNetcdf $input
+
+
 echo "Test different resolutions ..."
 # ------------------------------------
 # This should fail as messages have different resolutions
@@ -168,6 +176,26 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "Wrong message length" $tempText
+
+
+# Non-GRIB input
+input=$data_dir/bufr/aaen_55.bufr
+set +e
+${tools_dir}/grib_to_netcdf -o $tempNetcdf $input > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Input does not contain any field" $tempText
+
+
+# Bad reference date
+input=$data_dir/sample.grib2
+set +e
+${tools_dir}/grib_to_netcdf -Rxxx -o $tempNetcdf $input > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid reference date" $tempText
 
 
 # Validity time check

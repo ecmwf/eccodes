@@ -42,7 +42,7 @@ if( HAVE_FORTRAN )
     # Note: $<BUILD_INTERFACE:...> will be present only while building (for the whole bundle),
     # whereas $<INSTALL_INTERFACE:...> is only present once you install the package / bundle
     ecbuild_add_library( TARGET          eccodes_f90
-                         SOURCES         grib_fortran.c grib_f90.f90 eccodes_f90.f90 grib_kinds.h
+                         SOURCES         grib_fortran.cc grib_f90.f90 eccodes_f90.f90 grib_kinds.h
                          GENERATED       grib_f90.f90 eccodes_f90.f90
                          PUBLIC_INCLUDES $<BUILD_INTERFACE:${CMAKE_Fortran_MODULE_DIRECTORY}>
                                          $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>

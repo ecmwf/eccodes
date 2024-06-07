@@ -20,7 +20,8 @@ unsigned[1] localTablesVersionNumber : dump;
 transient typicalCentury=21;
 
 unsigned[1] typicalYearOfCentury : dump;
-transient typicalYear = (typicalCentury - 1) * 100 + typicalYearOfCentury : no_copy;
+# ECC-1840: Use the 'evaluate' accessor so typicalYear is updated if user changes typicalCentury
+meta typicalYear evaluate( (typicalCentury - 1) * 100 + typicalYearOfCentury ) : no_copy;
 
 unsigned[1] typicalMonth : dump;
 unsigned[1] typicalDay : dump;

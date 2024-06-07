@@ -140,11 +140,11 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
 
-    grib_value_count(a, &count);
+    a->value_count(&count);
     size = count;
 
     if (size <= 1) {
-        err = grib_unpack_double(a, &value, &size);
+        err = a->unpack_double(&value, &size);
     }
 
     self->begin = 0;
@@ -199,11 +199,11 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
 
-    grib_value_count(a, &count);
+    a->value_count(&count);
     size = count;
 
     if (size <= 1) {
-        err = grib_unpack_double(a, &value, &size);
+        err = a->unpack_double(&value, &size);
     }
 
     self->empty = 0;
@@ -244,7 +244,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
-    grib_value_count(a, &count);
+    a->value_count(&count);
     size = count;
 
     if ((a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0) {
@@ -270,7 +270,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     }
 
     if (size <= 1) {
-        err = grib_unpack_long(a, &value, &size);
+        err = a->unpack_long(&value, &size);
     }
 
     self->begin = 0;
@@ -353,7 +353,7 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
 
-    grib_unpack_double(a, &value, &size);
+    a->unpack_double(&value, &size);
     self->begin = 0;
     self->empty = 0;
 
@@ -399,7 +399,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
 
-    grib_value_count(a, &count);
+    a->value_count(&count);
     size = count;
     if (size == 1) {
         dump_string(d, a, comment);
@@ -457,7 +457,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 
     self->empty = 0;
 
-    err = grib_unpack_string(a, value, &size);
+    err = a->unpack_string(value, &size);
     p   = value;
     r   = compute_bufr_key_rank(h, self->keys, a->name);
     if (grib_is_missing_string(a, (unsigned char*)value, size)) {
@@ -569,7 +569,7 @@ static void dump_attributes(grib_dumper* d, grib_accessor* a, const char* prefix
         /* fprintf(out,"\"%s\" : ",a->attributes[i]->name); */
         flags = a->attributes[i]->flags;
         a->attributes[i]->flags |= GRIB_ACCESSOR_FLAG_DUMP;
-        switch (grib_accessor_get_native_type(a->attributes[i])) {
+        switch (a->attributes[i]->get_native_type()) {
             case GRIB_TYPE_LONG:
                 dump_long_attribute(d, a->attributes[i], prefix);
                 break;
