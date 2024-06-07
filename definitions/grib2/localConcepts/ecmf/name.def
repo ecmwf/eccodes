@@ -1619,12 +1619,6 @@
 	 parameterCategory = 200 ;
 	 parameterNumber = 129 ;
 	}
-#Temperature difference
-'Temperature difference' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 130 ;
-	}
 #U component of wind difference
 'U component of wind difference' = {
 	 discipline = 192 ;
@@ -1636,12 +1630,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 132 ;
-	}
-#Specific humidity difference
-'Specific humidity difference' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 133 ;
 	}
 #Surface pressure difference
 'Surface pressure difference' = {
@@ -1666,12 +1654,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 137 ;
-	}
-#Vorticity (relative) difference
-'Vorticity (relative) difference' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 138 ;
 	}
 #Soil temperature level 1 difference
 'Soil temperature level 1 difference' = {
@@ -1753,9 +1735,11 @@
 	}
 #Logarithm of surface pressure difference
 'Logarithm of surface pressure difference' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 152 ;
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfGeneratingProcess = 20 ;
 	}
 #Short-wave heating rate difference
 'Short-wave heating rate difference' = {
@@ -1768,12 +1752,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 154 ;
-	}
-#Divergence difference
-'Divergence difference' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 155 ;
 	}
 #Height difference
 'Height difference' = {
@@ -2050,12 +2028,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 202 ;
-	}
-#Ozone mass mixing ratio difference
-'Ozone mass mixing ratio difference' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 203 ;
 	}
 #Precipitation analysis weights difference
 'Precipitation analysis weights difference' = {

@@ -113,4 +113,13 @@ else {
    }
 }
 
+## discipline = 10, parameterCategory = 0 are WMO wave parameters !
+#if (discipline == 10 && parameterCategory == 0) {
+## paramIds 140xxx are for wave parameters, exception for wave spectra templates
+if (paramId >= 140000 && paramId < 141000 && productDefinitionTemplateNumber != 99 && productDefinitionTemplateNumber != 100 && productDefinitionTemplateNumber != 101 && productDefinitionTemplateNumber != 102){
+  transient paramType="wave";
+  unalias mars.paramtype ;
+  alias mars.paramtype = paramType ;
+}
+
 meta md5Section4 md5(offsetSection4,section4Length);
