@@ -81,12 +81,12 @@
 #Lumped alkenes
 'Lumped alkenes' = {
 	constituentType = 60010 ;
-	localTablesVersion = 1 ;
+	localTablesVersion = 2 ;
 	}
 #Lumped alkanes
 'Lumped alkanes' = {
 	constituentType = 60009 ;
-	localTablesVersion = 1 ;
+	localTablesVersion = 2 ;
 	}
 #Hydrogen atom
 'Hydrogen atom' = {
