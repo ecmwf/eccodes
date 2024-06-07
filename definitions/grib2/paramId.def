@@ -4922,6 +4922,27 @@
 	 parameterNumber = 18 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean wind speed
+'235097' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean pressure
+'235098' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean potential vorticity
+'235100' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 14 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean specific rain water content
 '235101' = {
 	 discipline = 0 ;
@@ -5140,6 +5161,13 @@
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean clear air turbulence (CAT)
+'235262' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 29 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean discharge from rivers or streams
@@ -10241,6 +10269,12 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 108 ;
 	 typeOfFirstFixedSurface = 1 ;
+	}
+#Aerosol extinction coefficient
+'462000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 105 ;
 	}
 #Pressure tendency
 '3003' = {
