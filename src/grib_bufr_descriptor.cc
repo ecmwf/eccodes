@@ -9,8 +9,9 @@
  */
 
 
-#include "grib_scaling.h"
 #include "grib_api_internal.h"
+#include "accessor/grib_accessor_class_bufr_data_array.h"
+#include "grib_scaling.h"
 
 bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor, int code, int silent, int* err)
 {

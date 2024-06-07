@@ -13826,15 +13826,23 @@
 	 typeOfStatisticalProcessing = 1 ;
 	}
 #Time-mean snow depth
-'msd_m' = {
+'avg_sd_m' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 254 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean logarithm of surface pressure
+'avg_lnsp' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean low cloud cover
-'mlcc_frac' = {
+'avg_lcc_frac' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
@@ -13842,7 +13850,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean medium cloud cover
-'mmcc_frac' = {
+'avg_mcc_frac' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
@@ -13850,7 +13858,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean high cloud cover
-'mhcc_frac' = {
+'avg_hcc_frac' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
@@ -13858,7 +13866,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean forecast albedo
-'mfal_frac' = {
+'avg_fal_frac' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
@@ -16663,12 +16671,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 250 ;
-	}
-#Wave spectral peakedness
-'wsp' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 254 ;
 	}
 #Indicates a missing value
 'p255.140' = {

@@ -486,7 +486,7 @@
 	 indicatorOfParameter = 253 ;
 	}
 #Type of vegetation
-'Code Table JMA-252' = {
+'(Code table JMA-252)' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 252 ;
 	}

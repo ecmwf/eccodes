@@ -14,6 +14,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "grib_api_internal.h"
+#include "accessor/grib_accessor_class_bufr_data_array.h"
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */
@@ -63,7 +64,7 @@ static grib_accessor* search(grib_section* s, const char* name, const char* name
         if ((b = search(sub, name, name_space)) != NULL)
             match = b;
 
-        a = a->next;
+        a = a->next_;
     }
 
     return match;
@@ -94,7 +95,7 @@ static void rebuild_hash_keys(grib_handle* h, grib_section* s)
             i++;
         }
         rebuild_hash_keys(h, sub);
-        a = a->next;
+        a = a->next_;
     }
 }
 
@@ -228,7 +229,7 @@ static grib_accessor* _search_by_rank(grib_accessor* a,const char* name,long ran
             if (r==rank) return al->accessor;
             r++;
         }
-        al=al->next;
+        al=al->next_;
     }
 
     return NULL;
@@ -257,14 +258,14 @@ static int get_single_long_val(grib_accessor* a, long* result)
     size_t size     = 1;
     if (c->bufr_multi_element_constant_arrays) {
         long count = 0;
-        grib_value_count(a, &count);
+        a->value_count(&count);
         if (count > 1) {
             size_t i        = 0;
             long val0       = 0;
             int is_constant = 1;
             long* values    = (long*)grib_context_malloc_clear(c, sizeof(long) * count);
             size            = count;
-            err             = grib_unpack_long(a, values, &size);
+            err             = a->unpack_long(values, &size);
             val0            = values[0];
             for (i = 0; i < size; i++) {
                 if (val0 != values[i]) {
@@ -281,11 +282,11 @@ static int get_single_long_val(grib_accessor* a, long* result)
             }
         }
         else {
-            err = grib_unpack_long(a, result, &size);
+            err = a->unpack_long(result, &size);
         }
     }
     else {
-        err = grib_unpack_long(a, result, &size);
+        err = a->unpack_long(result, &size);
     }
     return err;
 }
@@ -296,14 +297,14 @@ static int get_single_double_val(grib_accessor* a, double* result)
     size_t size     = 1;
     if (c->bufr_multi_element_constant_arrays) {
         long count = 0;
-        grib_value_count(a, &count);
+        a->value_count(&count);
         if (count > 1) {
             size_t i        = 0;
             double val0     = 0;
             int is_constant = 1;
             double* values  = (double*)grib_context_malloc_clear(c, sizeof(double) * count);
             size            = count;
-            err             = grib_unpack_double(a, values, &size);
+            err             = a->unpack_double(values, &size);
             val0            = values[0];
             for (i = 0; i < size; i++) {
                 if (val0 != values[i]) {
@@ -320,11 +321,11 @@ static int get_single_double_val(grib_accessor* a, double* result)
             }
         }
         else {
-            err = grib_unpack_double(a, result, &size);
+            err = a->unpack_double(result, &size);
         }
     }
     else {
-        err = grib_unpack_double(a, result, &size);
+        err = a->unpack_double(result, &size);
     }
     return err;
 }
@@ -377,27 +378,27 @@ static void search_from_accessors_list(grib_accessors_list* al, const grib_acces
     while (al && al != end && al->accessor) {
         if (grib_inline_strcmp(al->accessor->name, accessor_name) == 0) {
             if (attribute_name[0]) {
-                accessor_result = grib_accessor_get_attribute(al->accessor, attribute_name);
+                accessor_result = al->accessor->get_attribute(attribute_name);
             }
             else {
                 accessor_result = al->accessor;
             }
             if (accessor_result) {
-                grib_accessors_list_push(result, accessor_result, al->rank);
+                result->push(accessor_result, al->rank());
             }
         }
-        al = al->next;
+        al = al->next_;
     }
     if (al == end && al->accessor) {
         if (grib_inline_strcmp(al->accessor->name, accessor_name) == 0) {
             if (attribute_name[0]) {
-                accessor_result = grib_accessor_get_attribute(al->accessor, attribute_name);
+                accessor_result = al->accessor->get_attribute(attribute_name);
             }
             else {
                 accessor_result = al->accessor;
             }
             if (accessor_result) {
-                grib_accessors_list_push(result, accessor_result, al->rank);
+                result->push(accessor_result, al->rank());
             }
         }
     }
@@ -416,7 +417,7 @@ static void search_accessors_list_by_condition(grib_accessors_list* al, const ch
             if (start && !condition_true(al->accessor, condition))
                 end = al;
         }
-        if (start != NULL && (end != NULL || al->next == NULL)) {
+        if (start != NULL && (end != NULL || al->next_ == NULL)) {
             if (end == NULL)
                 end = al;
             search_from_accessors_list(start, end, name, result);
@@ -424,7 +425,7 @@ static void search_accessors_list_by_condition(grib_accessors_list* al, const ch
             start = NULL;
             end   = NULL;
         }
-        al = al->next;
+        al = al->next_;
     }
 }
 
@@ -452,7 +453,7 @@ static void grib_find_same_and_push(grib_accessors_list* al, grib_accessor* a)
 {
     if (a) {
         grib_find_same_and_push(al, a->same);
-        grib_accessors_list_push(al, a, al->rank);
+        al->push(a, al->rank());
     }
 }
 
@@ -484,7 +485,7 @@ grib_accessors_list* grib_find_accessors_list(const grib_handle* ch, const char*
             int r;
             al   = (grib_accessors_list*)grib_context_malloc_clear(h->context, sizeof(grib_accessors_list));
             str2 = get_rank(h->context, name, &r);
-            grib_accessors_list_push(al, a, r);
+            al->push(a, r);
             grib_context_free(h->context, str2);
         }
     }
@@ -585,7 +586,7 @@ grib_accessor* grib_find_accessor(const grib_handle* h, const char* name)
             aret = a;
         }
         else if (a) {
-            aret = grib_accessor_get_attribute(a, attribute_name);
+            aret = a->get_attribute(attribute_name);
             grib_context_free(h->context, accessor_name);
         }
     }
@@ -600,7 +601,7 @@ grib_accessor* grib_find_accessor(const grib_handle* h, const char* name)
 //         *err = GRIB_NOT_FOUND;
 //         return NULL;
 //     }
-//     if ((act = grib_accessor_get_attribute(a, attr_name)) == NULL) {
+//     if ((act = a->get_attribute(attr_name)) == NULL) {
 //         *err = GRIB_ATTRIBUTE_NOT_FOUND;
 //         return NULL;
 //     }

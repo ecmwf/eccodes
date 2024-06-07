@@ -9,10 +9,21 @@
  */
 
 #include <pthread.h>
-#include "grib_api_internal.h"
+#include <stdio.h>
+#include <stdlib.h>
+/*#include "grib_api_internal.h"*/
 
 #include "eccodes.h"
 #define NUM_THREADS 4
+
+void Assert(int condition)
+{
+    if (!condition) {
+        printf("Assertion failed\n");
+        exit(1);
+    }
+}
+
 
 /* Return 0 if numbers considered equal, otherwise 1 */
 static int compare_doubles(double a, double b, double tolerance)
@@ -40,7 +51,7 @@ static void* process_grib(void* threadID)
     ProductKind prod_kind = 0;
 
     codes_handle* h = codes_grib_handle_new_from_samples(0, "regular_ll_pl_grib2");
-    Assert(h);
+    Assert(h != NULL);
     CODES_CHECK(codes_get_product_kind(h, &prod_kind), 0);
     Assert(prod_kind == PRODUCT_GRIB);
     printf("Thread %ld running\n", tid);

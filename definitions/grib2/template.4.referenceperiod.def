@@ -1,10 +1,11 @@
-#  Type of reference dataset
+# (C) Copyright 2005- ECMWF.
+# Type of reference dataset
 codetable[1] typeOfReferenceDataset ('4.100.table',masterDir,localDir) = 255 : dump,edition_specific;
 
-#  Type of relation to reference dataset
+# Type of relation to reference dataset
 codetable[1] typeOfRelationToReferenceDataset ('4.101.table',masterDir,localDir) = 255 : dump,edition_specific;
 
-# number of additional parameters
+# Number of additional parameters
 unsigned[1] numberOfAdditionalParametersForReferencePeriod=0 ;
 additionalParameter list(numberOfAdditionalParametersForReferencePeriod)
 {
@@ -32,7 +33,7 @@ meta startDateOfReferencePeriod g2date(yearOfStartOfReferencePeriod,monthOfStart
 
 unsigned[4] sampleSizeOfReferencePeriod = 0;
 
-#  n - number of time range specifications describing the time intervals used to calculate the statistically-processed field
+# Number of time range specifications describing the time intervals used to calculate the statistically-processed field
 unsigned[1]  numberOfReferencePeriodTimeRanges = 1 : edition_specific;
 alias nref = numberOfReferencePeriodTimeRanges;
 

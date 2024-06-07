@@ -4795,28 +4795,28 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean snow density
-'mrsn' = {
+'avg_rsn' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 61 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean low vegetation cover
-'mcvl' = {
+'avg_cvl' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 53 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean high vegetation cover
-'mcvh' = {
+'avg_cvh' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 54 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean sea ice area fraction
-'mci' = {
+'avg_ci' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
@@ -4824,7 +4824,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean sea surface temperature
-'msst' = {
+'avg_sst' = {
 	 discipline = 10 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
@@ -4832,21 +4832,21 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean leaf area index, low vegetation
-'mlai_lv' = {
+'avg_lai_lv' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 55 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean leaf area index, high vegetation
-'mlai_hv' = {
+'avg_lai_hv' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 56 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean total column liquid water
-'mtclw' = {
+'avg_tclw' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 69 ;
@@ -4855,7 +4855,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean total column cloud ice water
-'mtciw' = {
+'avg_tciw' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 70 ;
@@ -4864,7 +4864,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean 2 metre specific humidity
-'m2sh' = {
+'avg_2sh' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 0 ;
@@ -4875,7 +4875,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean lake mix-layer temperature
-'mlmlt' = {
+'avg_lmlt' = {
 	 discipline = 1 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 1 ;
@@ -4884,7 +4884,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean lake mix-layer depth
-'mlmld' = {
+'avg_lmld' = {
 	 discipline = 1 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
@@ -4893,7 +4893,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean 2 metre relative humidity
-'m2r' = {
+'avg_2r' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 1 ;
@@ -4903,70 +4903,98 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean fraction of snow cover
-'mfscov' = {
+'avg_fscov' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 121 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean soil temperature
-'msot' = {
+'avg_sot' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 18 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean snow depth
-'msde' = {
+#Time-mean wind speed
+'avg_ws' = {
 	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 11 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean snow cover
-'msnowc' = {
+#Time-mean pressure
+'avg_pres' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean potential vorticity
+'avg_pv' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 14 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean specific rain water content
+'avg_crwc' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
-	 parameterNumber = 42 ;
+	 parameterNumber = 85 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean specific snow water content
+'avg_cswc' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 86 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean eta-coordinate vertical velocity
+'avg_etadot' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 32 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean geopotential
-'mz' = {
+'avg_z' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 4 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean temperature
-'mt' = {
+'avg_t' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean U component of wind
-'mu' = {
+'avg_u' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 2 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean V component of wind
-'mv' = {
+'avg_v' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean specific humidity
-'mq' = {
+'avg_q' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean surface pressure
-'msp' = {
+'avg_sp' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
@@ -4974,14 +5002,14 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean vertical velocity
-'mw' = {
+'avg_w' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean total column water
-'mtcw' = {
+'avg_tcw' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 51 ;
@@ -4990,7 +5018,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean total column vertically-integrated water vapour
-'mtcwv' = {
+'avg_tcwv' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 64 ;
@@ -4998,30 +5026,44 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean vorticity (relative)
+'avg_vo' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 12 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean mean sea level pressure
-'mmsl' = {
+'avg_msl' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean divergence
+'avg_d' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 13 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean relative humidity
-'mr' = {
+'avg_r' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean boundary layer height
-'mblh' = {
+'avg_blh' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 18 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean 10 metre U wind component
-'m10u' = {
+'avg_10u' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 2 ;
@@ -5031,7 +5073,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean 10 metre V wind component
-'m10v' = {
+'avg_10v' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 3 ;
@@ -5041,7 +5083,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean 2 metre dewpoint temperature
-'m2d' = {
+'avg_2d' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 6 ;
@@ -5050,15 +5092,22 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean ozone mass mixing ratio
+'avg_o3' = {
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean temperature of snow layer
-'mtsn' = {
+'avg_tsn' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 28 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean forecast surface roughness
-'mfsr' = {
+'avg_fsr' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 1 ;
@@ -5066,11 +5115,136 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean forecast logarithm of surface roughness for heat
-'mflsr' = {
+'avg_flsr' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 54 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean specific cloud liquid water content
+'avg_clwc' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 83 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean specific cloud ice water content
+'avg_ciwc' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 84 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean fraction of cloud cover
+'avg_cc' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 32 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean K index
+'avg_kx' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total totals index
+'avg_totalx' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean clear air turbulence (CAT)
+'avg_cat' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 29 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean discharge from rivers or streams
+'avg_dis' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 7 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean soil wetness index (total layer)
+'avg_swit' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 30 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 151 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean soil wetness index (root zone)
+'avg_swir' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 30 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 167 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean soil wetness index(layer)
+'avg_swil' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 30 ;
+	 typeOfFirstFixedSurface = 151 ;
+	 typeOfSecondFixedSurface = 151 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean floodplain depth
+'avg_flddep' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 17 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean floodplain flooded fraction
+'avg_fldffr' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 18 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean floodplain flooded area
+'avg_fldfar' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 19 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean river fraction
+'avg_rivfr' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean river area
+'avg_rivar' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 21 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean fraction of river coverage plus river related flooding
+'avg_rivcffr' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean area of river coverage plus river related flooding
+'avg_rivcfar' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 23 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Cross sectional area of flow in channel
@@ -5139,26 +5313,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 15 ;
 	}
-#Mean discharge in the last 6 hours
-'dis06' = {
-	 discipline = 1 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 7 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 6 ;
-	}
-#Mean discharge in the last 24 hours
-'dis24' = {
-	 discipline = 1 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 7 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 24 ;
-	}
 #Snow depth at elevation bands
 'sd_elev' = {
 	 discipline = 2 ;
@@ -5210,6 +5364,48 @@
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 19 ;
+	}
+#Floodplain depth
+'flddep' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 17 ;
+	}
+#Floodplain flooded fraction
+'fldffr' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 18 ;
+	}
+#Floodplain flooded area
+'fldfar' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 19 ;
+	}
+#River fraction
+'rivfr' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 20 ;
+	}
+#River area
+'rivar' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 21 ;
+	}
+#Fraction of river coverage plus river related flooding
+'rivcffr' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	}
+#Area of river coverage plus river related flooding
+'rivcfar' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 23 ;
 	}
 #Latitude
 'lat' = {
@@ -7168,6 +7364,48 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
+#Standardised Precipitation Index (SPI)
+'spi' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 0 ;
+	}
+#Standardised Precipitation Evapotranspiration Index (SPEI)
+'spei' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 1 ;
+	}
+#Standardised Streamflow Index (SSFI)
+'ssfi' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 2 ;
+	}
+#Standardised Reservoir Supply Index (SRSI)
+'srsi' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 3 ;
+	}
+#Standardised Water-level Index (SWI)
+'swi' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 4 ;
+	}
+#Standardised Snowmelt and Rain Index (SMRI)
+'smri' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 5 ;
+	}
+#Streamflow Drought Index (SDI)
+'sdi' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 6 ;
+	}
 #Universal thermal climate index
 'utci' = {
 	 discipline = 20 ;
@@ -7305,12 +7543,6 @@
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 174 ;
-	 typeOfSecondFixedSurface = 176 ;
-	 scaledValueOfFirstFixedSurface = missing() ;
-	 scaleFactorOfFirstFixedSurface = missing() ;
-	 scaledValueOfSecondFixedSurface = missing() ;
-	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
 #Sea ice area fraction
 'siconc' = {
@@ -8415,12 +8647,6 @@
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 174 ;
-	 typeOfSecondFixedSurface = 176 ;
-	 scaledValueOfFirstFixedSurface = missing() ;
-	 scaleFactorOfFirstFixedSurface = missing() ;
-	 scaledValueOfSecondFixedSurface = missing() ;
-	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean sea ice area fraction
@@ -10036,6 +10262,12 @@
 	 parameterNumber = 108 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
+#Aerosol extinction coefficient
+'aerext' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 105 ;
+	}
 #Pressure tendency
 'ptend' = {
 	 discipline = 0 ;
@@ -10563,6 +10795,12 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 44 ;
+	}
+#Wave spectral peakedness
+'wsp' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 98 ;
 	}
 #Skin reservoir content
 'srcrea' = {
