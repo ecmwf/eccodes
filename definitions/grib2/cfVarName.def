@@ -181,6 +181,12 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 45 ;
 	}
+#Lake cover
+'cl' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	}
 #Low vegetation cover
 'cvl' = {
 	 discipline = 2 ;
@@ -873,6 +879,41 @@
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 32 ;
+	}
+#Temperature difference
+'tdiff' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
+#Specific humidity difference
+'qdiff' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 0 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
+#Vorticity (relative) difference
+'vodiff' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 12 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
+#Divergence difference
+'ddiff' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 13 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
+#Ozone mass mixing ratio difference
+'o3diff' = {
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 1 ;
+	 typeOfGeneratingProcess = 20 ;
 	}
 #Large-scale precipitation
 'lsp' = {
@@ -5102,12 +5143,6 @@
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 12 ;
-	}
-#Water fraction
-'fldfrc' = {
-	 discipline = 1 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 2 ;
 	}
 #Days since last observation
 'dslr' = {
