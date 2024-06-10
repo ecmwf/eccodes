@@ -180,39 +180,3 @@
  parameterCategory = 0 ;
  parameterNumber = 24 ;
 }
-#Temperature difference
-'tdiff' = {
- discipline = 192 ;
- parameterCategory = 200 ;
- parameterNumber = 130 ;
-}
-#Specific humidity difference
-'qdiff' = {
- discipline = 192 ;
- parameterCategory = 200 ;
- parameterNumber = 133 ;
-}
-#Vorticity (relative) difference
-'vodiff' = {
- discipline = 192 ;
- parameterCategory = 200 ;
- parameterNumber = 138 ;
-}
-#Logarithm of surface pressure difference
-'lnspdiff' = {
- discipline = 192 ;
- parameterCategory = 200 ;
- parameterNumber = 152 ;
-}
-#Divergence difference
-'ddiff' = {
- discipline = 192 ;
- parameterCategory = 200 ;
- parameterNumber = 155 ;
-}
-#Ozone mass mixing ratio difference
-'o3diff' = {
- discipline = 192 ;
- parameterCategory = 200 ;
- parameterNumber = 203 ;
-}

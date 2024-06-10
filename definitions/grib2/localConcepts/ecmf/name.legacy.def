@@ -1777,3 +1777,39 @@
  parameterCategory = 140 ;
  parameterNumber = 254 ;
 }
+#Temperature difference
+'Temperature difference' = {
+ discipline = 192 ;
+ parameterCategory = 200 ;
+ parameterNumber = 130 ;
+}
+#Specific humidity difference
+'Specific humidity difference' = {
+ discipline = 192 ;
+ parameterCategory = 200 ;
+ parameterNumber = 133 ;
+}
+#Vorticity (relative) difference
+'Vorticity (relative) difference' = {
+ discipline = 192 ;
+ parameterCategory = 200 ;
+ parameterNumber = 138 ;
+}
+#Logarithm of surface pressure difference
+'Logarithm of surface pressure difference' = {
+ discipline = 192 ;
+ parameterCategory = 200 ;
+ parameterNumber = 152 ;
+}
+#Divergence difference
+'Divergence difference' = {
+ discipline = 192 ;
+ parameterCategory = 200 ;
+ parameterNumber = 155 ;
+}
+#Ozone mass mixing ratio difference
+'Ozone mass mixing ratio difference' = {
+ discipline = 192 ;
+ parameterCategory = 200 ;
+ parameterNumber = 203 ;
+}
