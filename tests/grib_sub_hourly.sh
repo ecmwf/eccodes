@@ -62,6 +62,37 @@ fi
 instantaneous_field=$data_dir/reduced_gaussian_surface.grib2
 accumulated_field=$data_dir/reduced_gaussian_sub_area.grib2
 
+# ECC-1802: Relaxation of the "Step Units Rule":
+# The updated rule permits the simultaneous assignment of the same step unit to both 'stepUnits' and 'step*' keys
+in="$instantaneous_field"
+low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s"
+${tools_dir}/grib_set -s stepUnits=s,step=11s $in $temp
+grib_check_key_equals $temp "-p $low_level_keys" "11 s"
+${tools_dir}/grib_set -s stepUnits=m,step=11m $in $temp
+grib_check_key_equals $temp "-p $low_level_keys" "11 m"
+${tools_dir}/grib_set -s stepUnits=h,step=11h $in $temp
+grib_check_key_equals $temp "-p $low_level_keys" "11 h"
+${tools_dir}/grib_set -s step=11s,stepUnits=s $in $temp
+grib_check_key_equals $temp "-p $low_level_keys" "11 s"
+${tools_dir}/grib_set -s step=11m,stepUnits=m $in $temp
+grib_check_key_equals $temp "-p $low_level_keys" "11 m"
+${tools_dir}/grib_set -s step=11h,stepUnits=h $in $temp
+grib_check_key_equals $temp "-p $low_level_keys" "11 h"
+
+in="$accumulated_field"
+low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
+${tools_dir}/grib_set -s stepUnits=s,stepRange=11s-181s $in $temp
+grib_check_key_equals $temp "-p $low_level_keys" "11 s 170 s"
+${tools_dir}/grib_set -s stepUnits=m,stepRange=11m-181m $in $temp
+grib_check_key_equals $temp "-p $low_level_keys" "11 m 170 m"
+${tools_dir}/grib_set -s stepUnits=h,stepRange=11h-181h $in $temp
+grib_check_key_equals $temp "-p $low_level_keys" "11 h 170 h"
+${tools_dir}/grib_set -s stepRange=11s-181s,stepUnits=s $in $temp
+grib_check_key_equals $temp "-p $low_level_keys" "11 s 170 s"
+${tools_dir}/grib_set -s stepRange=11m-181m,stepUnits=m $in $temp
+grib_check_key_equals $temp "-p $low_level_keys" "11 m 170 m"
+${tools_dir}/grib_set -s stepRange=11h-181h,stepUnits=h $in $temp
+grib_check_key_equals $temp "-p $low_level_keys" "11 h 170 h"
 
 # ECC-1813: Test that we can set the stepUnits without setting the step
 in="$instantaneous_field"
