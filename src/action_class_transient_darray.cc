@@ -117,7 +117,7 @@ static int execute(grib_action* act, grib_handle* h)
     if (a->flags & GRIB_ACCESSOR_FLAG_CONSTRAINT)
         grib_dependency_observe_arguments(a, act->default_value);
 
-    return grib_pack_double(a, self->darray->v, &len);
+    return a->pack_double(self->darray->v, &len);
 }
 
 static void dump(grib_action* act, FILE* f, int lvl)

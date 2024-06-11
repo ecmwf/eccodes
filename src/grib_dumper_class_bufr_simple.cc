@@ -141,15 +141,15 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
 
-    grib_value_count(a, &count);
+    a->value_count(&count);
     size = size2 = count;
 
     if (size > 1) {
         values = (double*)grib_context_malloc_clear(c, sizeof(double) * size);
-        err    = grib_unpack_double(a, values, &size2);
+        err    = a->unpack_double(values, &size2);
     }
     else {
-        err = grib_unpack_double(a, &value, &size2);
+        err = a->unpack_double(&value, &size2);
     }
     Assert(size2 == size);
 
@@ -231,15 +231,15 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
 
-    grib_value_count(a, &count);
+    a->value_count(&count);
     size = size2 = count;
 
     if (size > 1) {
         values = (double*)grib_context_malloc_clear(c, sizeof(double) * size);
-        err    = grib_unpack_double(a, values, &size2);
+        err    = a->unpack_double(values, &size2);
     }
     else {
-        err = grib_unpack_double(a, &value, &size2);
+        err = a->unpack_double(&value, &size2);
     }
     Assert(size2 == size);
 
@@ -304,7 +304,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
-    grib_value_count(a, &count);
+    a->value_count(&count);
     size = size2 = count;
 
     if ((a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0) {
@@ -314,7 +314,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 
             /* Note: the "subsetNumber" key is only there for UNCOMPRESSED BUFR messages */
             if (self->numberOfSubsets > 1 && strcmp(a->name, "subsetNumber") == 0) {
-                err = grib_unpack_long(a, &value, &size);
+                err = a->unpack_long(&value, &size);
                 DEBUG_ASSERT(!err);
                 fprintf(self->dumper.out, "%s=%ld\n", a->name, value);
                 DEBUG_ASSERT(!grib_is_missing_long(a, value));
@@ -340,10 +340,10 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 
     if (size > 1) {
         values = (long*)grib_context_malloc_clear(a->context, sizeof(long) * size);
-        err    = grib_unpack_long(a, values, &size2);
+        err    = a->unpack_long(values, &size2);
     }
     else {
-        err = grib_unpack_long(a, &value, &size2);
+        err = a->unpack_long(&value, &size2);
     }
     Assert(size2 == size);
 
@@ -432,15 +432,15 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
 
-    grib_value_count(a, &count);
+    a->value_count(&count);
     size = size2 = count;
 
     if (size > 1) {
         values = (long*)grib_context_malloc_clear(a->context, sizeof(long) * size);
-        err    = grib_unpack_long(a, values, &size2);
+        err    = a->unpack_long(values, &size2);
     }
     else {
-        err = grib_unpack_long(a, &value, &size2);
+        err = a->unpack_long(&value, &size2);
     }
     Assert(size2 == size);
 
@@ -504,7 +504,7 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
 
-    grib_unpack_double(a, &value, &size);
+    a->unpack_double(&value, &size);
 
     self->empty = 0;
 
@@ -554,7 +554,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
 
-    grib_value_count(a, &count);
+    a->value_count(&count);
     size = count;
     if (size == 1) {
         dump_string(d, a, comment);
@@ -576,7 +576,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         return;
     }
 
-    err = grib_unpack_string_array(a, values, &size);
+    err = a->unpack_string_array(values, &size);
 
     fprintf(self->dumper.out, "{");
     for (i = 0; i < size - 1; i++) {
@@ -631,7 +631,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 
     self->empty = 0;
 
-    err = grib_unpack_string(a, value, &size);
+    err = a->unpack_string(value, &size);
     if (err) {
         fprintf(self->dumper.out, " *** ERR=%d (%s) [dump_string on '%s']", err, grib_get_error_message(err), acc_name);
         return;
@@ -768,7 +768,7 @@ static void dump_attributes(grib_dumper* d, grib_accessor* a, const char* prefix
         /* fprintf(out,"\"%s\" : ",a->attributes[i]->name); */
         flags = a->attributes[i]->flags;
         a->attributes[i]->flags |= GRIB_ACCESSOR_FLAG_DUMP;
-        switch (grib_accessor_get_native_type(a->attributes[i])) {
+        switch (a->attributes[i]->get_native_type()) {
             case GRIB_TYPE_LONG:
                 dump_long_attribute(d, a->attributes[i], prefix);
                 break;

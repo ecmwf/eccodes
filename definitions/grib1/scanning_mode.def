@@ -9,8 +9,8 @@ flagbit jScansPositively(scanningMode,6)  : dump;
 flagbit jPointsAreConsecutive(scanningMode,5)  : dump;
 constant alternativeRowScanning=0 : dump;
 
-transient iScansPositively = !iScansNegatively : constraint;
-transient jScansNegatively = !jScansPositively : constraint;
+transient iScansPositively = !iScansNegatively : constraint, read_only;
+transient jScansNegatively = !jScansPositively : constraint, read_only;
 
 alias geography.iScansNegatively=iScansNegatively;
 alias geography.jScansPositively=jScansPositively;

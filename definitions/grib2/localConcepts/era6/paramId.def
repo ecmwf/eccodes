@@ -17,6 +17,24 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Wind speed
+'10' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 100 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Wind speed
+'10' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 200 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
 #UV visible albedo for direct radiation (climatological)
 '15' = {
 	 localTablesVersion = 1 ;
@@ -74,6 +92,42 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#U component of wind
+'131' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 100 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#U component of wind
+'131' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 200 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#V component of wind
+'132' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 100 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#V component of wind
+'132' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 200 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
 #Snow depth
 '141' = {
 	 localTablesVersion = 1 ;
@@ -123,6 +177,14 @@
 	 parameterNumber = 192 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	}
+#Albedo (climatological)
+'174' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 193 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
 #Evaporation
 '182' = {
@@ -400,4 +462,12 @@
 	 constituentType = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 is_chemical = 1 ;
+	}
+#Time-mean logarithm of surface pressure
+'235152' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 0 ;
 }

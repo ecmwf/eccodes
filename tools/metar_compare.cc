@@ -20,7 +20,7 @@ grib_option grib_options[] = {
     { "R:", 0, 0, 0, 1, 0 },
     { "A:", 0, 0, 0, 1, 0 },
     { "w:", 0, 0, 0, 1, 0 },
-    { "f", 0, 0, 0, 1, 0 },
+    { "f", 0, "Forcefully compare, do not stop after first difference.\n", 0, 1, 0 },
     { "F", 0, 0, 1, 0, 0 },
     { "q", 0, 0, 1, 0, 0 },
     { "I", 0, 0, 1, 0, 0 },
@@ -713,7 +713,7 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
     return GRIB_SUCCESS;
 }
 
-static int compare_all_dump_keys(grib_handle* h1, grib_handle* h2, grib_runtime_options* options, int* err)
+static int compare_all_dump_keys(grib_handle* h1, grib_handle* h2, grib_runtime_options* options, int* pErr)
 {
     int ret                  = 0;
     const char* name         = NULL;
@@ -733,7 +733,7 @@ static int compare_all_dump_keys(grib_handle* h1, grib_handle* h2, grib_runtime_
         if (xa == NULL || (xa->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
             continue;
         if (compare_values(options, h1, h2, name, GRIB_TYPE_UNDEFINED)) {
-            err++;
+            (*pErr)++;
             write_messages(h1, h2);
             ret = 1;
         }

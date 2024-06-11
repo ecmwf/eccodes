@@ -32,8 +32,8 @@ alias geography.orderingConvention = orderingConvention;
 flags[1] scanningMode 'grib2/tables/[tablesVersion]/3.13.table';
 flagbit iScansNegatively(scanningMode,7) : dump; # WMO bit 1
 flagbit jScansPositively(scanningMode,6) : dump; # WMO bit 2
-transient iScansPositively = !iScansNegatively : constraint;
-transient jScansNegatively = !jScansPositively : constraint;
+transient iScansPositively = !iScansNegatively : constraint, read_only;
+transient jScansNegatively = !jScansPositively : constraint, read_only;
 
 iterator healpix(numberOfPoints,missingValue,values,Nside,orderingConvention);
 nearest healpix(values,radius,Nx,Ny);

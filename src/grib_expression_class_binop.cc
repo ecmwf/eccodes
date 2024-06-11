@@ -83,7 +83,6 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 {
     long v1 = 0;
     long v2 = 0;
-    int ret;
     grib_expression_binop* e = (grib_expression_binop*)g;
 
 // #if DEBUGGING
@@ -100,7 +99,7 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 //         printf("\n");
 //     }
 
-    ret = grib_expression_evaluate_long(h, e->left, &v1);
+    int ret = grib_expression_evaluate_long(h, e->left, &v1);
     if (ret != GRIB_SUCCESS)
         return ret;
 
@@ -116,8 +115,6 @@ static int evaluate_double(grib_expression* g, grib_handle* h, double* dres)
 {
     double v1 = 0.0;
     double v2 = 0.0;
-    int ret;
-
     grib_expression_binop* e = (grib_expression_binop*)g;
 
 // #if DEBUGGING
@@ -134,7 +131,7 @@ static int evaluate_double(grib_expression* g, grib_handle* h, double* dres)
 //         printf("\n");
 //     }
 
-    ret = grib_expression_evaluate_double(h, e->left, &v1);
+    int ret = grib_expression_evaluate_double(h, e->left, &v1);
     if (ret != GRIB_SUCCESS)
         return ret;
 

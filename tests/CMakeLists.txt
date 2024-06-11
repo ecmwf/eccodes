@@ -148,6 +148,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1691
         grib_ecc-1766
         grib_ecc-1806
+        grib_ecc-1829
         bufr_ecc-1028
         bufr_ecc-1195
         bufr_ecc-1259
@@ -155,6 +156,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-1304
         bufr_ecc-1347
         bufr_ecc-1395
+        bufr_ecc-1840
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
@@ -226,6 +228,13 @@ if( HAVE_BUILD_TOOLS )
         grib_keys_iter
         grib_keys_iter_skip
         grib_geo_iter
+        grib_to_json
+        grib_to_ppm
+        grib_merge
+        big2gribex
+        grib_sub_area_check
+        grib_list_keys
+        grib_histogram
         bufr_get_element
         bufr_wmo_tables
         bufr_extract_headers
