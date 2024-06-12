@@ -43,18 +43,13 @@ else {
   alias cfName=cfNameFallback;
   alias cfVarName=cfVarNameFallback;
 }
- 
-constant defaultChemId="unknown" :hidden;
-constant defaultChemName="unknown" :hidden;
-constant defaultChemShortName="unknown" :hidden;
-constant defaultChemFormula="unknown" :hidden;
- 
-concept chemId (defaultChemId,"chemId.def",conceptsDir2,conceptsDir1): no_copy,long_type,dump;
-concept chemName (defaultChemName,"chemName.def",conceptsDir2,conceptsDir1): no_copy,dump;
-concept chemShortName (defaultChemShortName,"chemShortName.def",conceptsDir2,conceptsDir1): no_copy,dump;
-concept chemFormula (defaultChemFormula,"chemFormula.def",conceptsDir2,conceptsDir1): no_copy,dump;
 
-if (!chemId is "unknown"){ 
+concept chemId (unknown,"chemId.def",conceptsDir2,conceptsDir1): no_copy,long_type,dump;
+concept chemName (unknown,"chemName.def",conceptsDir2,conceptsDir1): no_copy,dump;
+concept chemShortName (unknown,"chemShortName.def",conceptsDir2,conceptsDir1): no_copy,dump;
+concept chemFormula (unknown,"chemFormula.def",conceptsDir2,conceptsDir1): no_copy,dump;
+
+if ( !(chemId is "unknown") ) {
  alias mars.chem = chemId;
  alias parameter.chemId = chemId;
  alias ls.chemShortName = chemShortName;
