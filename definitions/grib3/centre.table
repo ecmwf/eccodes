@@ -63,7 +63,7 @@
 96 96 Athens
 97 97 European Space Agency (ESA)
 98 ecmf European Centre for Medium-Range Weather Forecasts
-99 99 DeBilt, Netherlands
+99 knmi DeBilt, Netherlands
 #100 to 109 Reserved for centres in Region I which are not in the list above
 110 110 Hong-Kong
 #111 to 133 Reserved for centres in Region II which are not in the list above
@@ -104,7 +104,7 @@
 241 241 Monaco
 242 242 Romania (NMC)
 244 vuwien VUWien
-245 knmi KNMI
+245 245 Ukraine (NMC)
 246 ifmk IfM-Kiel
 247 hadc Hadley Centre
 250 cosmo COnsortium for Small scale MOdelling (COSMO)
