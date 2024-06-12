@@ -760,7 +760,7 @@ static const char* codes_bufr_header_get_centre_name(long edition, long centre_c
             return "crfc";
         case 244:
             return "vuwien";
-        case 245:
+        case 99:
             return "knmi";
         case 246:
             return "ifmk";
