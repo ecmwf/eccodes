@@ -764,8 +764,6 @@ static const char* codes_bufr_header_get_centre_name(long edition, long centre_c
             return "knmi";
         case 246:
             return "ifmk";
-        case 247:
-            return "hadc";
         case 250:
             return "cosmo";
         case 252:
