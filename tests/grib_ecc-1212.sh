@@ -58,6 +58,7 @@ cat > $tempRef <<EOF
     "class": "od",
     "type": "an",
     "stream": "oper",
+    "paramtype": "base",
     "levtype": "sfc",
     "date": 20200804,
     "time": "0000",
