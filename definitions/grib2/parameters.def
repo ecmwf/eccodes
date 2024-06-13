@@ -44,16 +44,18 @@ else {
   alias cfVarName=cfVarNameFallback;
 }
 
-concept chemId (unknown,"chemId.def",conceptsDir2,conceptsDir1): no_copy,long_type,dump;
-concept chemName (unknown,"chemName.def",conceptsDir2,conceptsDir1): no_copy,dump;
-concept chemShortName (unknown,"chemShortName.def",conceptsDir2,conceptsDir1): no_copy,dump;
-concept chemFormula (unknown,"chemFormula.def",conceptsDir2,conceptsDir1): no_copy,dump;
+if (tablesVersion >= 31 ) {
+  concept chemId (unknown,"chemId.def",conceptsDir2,conceptsDir1): no_copy,long_type,dump;
+  concept chemName (unknown,"chemName.def",conceptsDir2,conceptsDir1): no_copy,dump;
+  concept chemShortName (unknown,"chemShortName.def",conceptsDir2,conceptsDir1): no_copy,dump;
+  concept chemFormula (unknown,"chemFormula.def",conceptsDir2,conceptsDir1): no_copy,dump;
 
-if ( !(chemId is "unknown") ) {
- alias mars.chem = chemId;
- alias parameter.chemId = chemId;
- alias ls.chemShortName = chemShortName;
- alias parameter.chemShortName = chemShortName;
+  if ( !(chemId is "unknown") ) {
+    alias mars.chem = chemId;
+    alias parameter.chemId = chemId;
+    alias ls.chemShortName = chemShortName;
+    alias parameter.chemShortName = chemShortName;
+  }
 }
 
 template_nofail names "grib2/products_[productionStatusOfProcessedData].def";

@@ -10,7 +10,6 @@
 
 . ./include.ctest.sh
 
-
 label="grib_paramid_chemid_split_test"
 tempGribA=temp1.$label.grib
 tempGribB=temp2.$label.grib
@@ -23,6 +22,9 @@ ${tools_dir}/grib_set -s productDefinitionTemplateNumber=40,discipline=0,paramet
             $sample_grib2  $tempGribA
 grib_check_key_equals $tempGribA tablesVersion 4
 grib_check_key_equals $tempGribA paramId,is_chemical "210121 1"
+# The new keys should not be present
+result=$( ${tools_dir}/grib_get -f -p chemName,chemId $tempGribA )
+[ "$result" = "not_found not_found" ]
 
 
 # Switch to the newer tablesVersion so now the chemId/paramId split is activated
@@ -30,12 +32,12 @@ grib_check_key_equals $tempGribA paramId,is_chemical "210121 1"
 ${tools_dir}/grib_set -s tablesVersion=32 $tempGribA $tempGribB
 
 grib_check_key_equals $tempGribB paramId,chemId "402000 17"
+grib_check_key_equals $tempGribB chemName "Nitrogen dioxide"
 grib_check_key_equals $tempGribB name "Mass mixing ratio"
-set +e
-${tools_dir}/grib_get -p is_chemical $tempGribB 2> /dev/null
-status=$?
-set -e
-[ $status -ne 0 ]
+
+# The is_chemical key should not be present
+result=$( ${tools_dir}/grib_get -f -p is_chemical $tempGribB )
+[ "$result" = "not_found" ]
 
 
 # Clean up
