@@ -40,5 +40,10 @@ result=$( ${tools_dir}/grib_get -f -p is_chemical $tempGribB )
 [ "$result" = "not_found" ]
 
 
+# Test non-chemical e.g. temperature. Now chem keys are present but unknown
+${tools_dir}/grib_set -s tablesVersion=32,discipline=0,parameterCategory=0,parameterNumber=0 $sample_grib2  $tempGribA
+grib_check_key_equals $tempGribA "chemId,chemName,chemShortName" "0 unknown unknown"
+
+
 # Clean up
 rm -f $tempGribA $tempGribB 
