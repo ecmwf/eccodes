@@ -10,21 +10,33 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
 
-label="grib__test"  # Change prod to bufr or grib etc
-tempGrib1=temp1.$label.grib
-tempGrib2=temp2.$label.grib
+label="grib_paramid_chemid_split_test"
+tempGribA=temp1.$label.grib
+tempGribB=temp2.$label.grib
 
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
-# we expect paramId 210121
-${tools_dir}/grib_set -s productDefinitionTemplateNumber=40,discipline=0,parameterCategory=20,parameterNumber=2,constituentType=5 $sample_grib2  $tempGrib1
-# we expect paramId 402000 and chemId 17
-${tools_dir}/grib_set -s tablesVersion=32 $tempGrib1 $tempGrib2
+# Legacy using older tablesVersion
+# We expect paramId 210121
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=40,discipline=0,parameterCategory=20,parameterNumber=2,constituentType=5 \
+            $sample_grib2  $tempGribA
+grib_check_key_equals $tempGribA tablesVersion 4
+grib_check_key_equals $tempGribA paramId,is_chemical "210121 1"
 
-grib_check_key_equals $tempGrib1 paramId "210121"
-grib_check_key_equals $tempGrib2 paramId,chemId "402000 17"
+
+# Switch to the newer tablesVersion so now the chemId/paramId split is activated
+# Now expect paramId 402000 and chemId 17
+${tools_dir}/grib_set -s tablesVersion=32 $tempGribA $tempGribB
+
+grib_check_key_equals $tempGribB paramId,chemId "402000 17"
+grib_check_key_equals $tempGribB name "Mass mixing ratio"
+set +e
+${tools_dir}/grib_get -p is_chemical $tempGribB 2> /dev/null
+status=$?
+set -e
+[ $status -ne 0 ]
+
 
 # Clean up
-rm -f $tempGrib1 $tempGrib2 
+rm -f $tempGribA $tempGribB 
