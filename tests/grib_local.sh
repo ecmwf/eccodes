@@ -219,7 +219,7 @@ grib_check_key_equals $temp productDefinitionTemplateNumber 40
 
 # Automatic PDT selection is disabled for some parameters (the key is_chemical_srcsink removed from their definition)
 # ${tools_dir}/grib_set -s paramId=456000,setLocalDefinition=1,localDefinitionNumber=36 $sample_g2 $temp
-${tools_dir}/grib_set -s productDefinitionTemplateNumber=76,paramId=456000,setLocalDefinition=1,localDefinitionNumber=36 $sample_g2 $temp
+${tools_dir}/grib_set -s tablesVersion=32,productDefinitionTemplateNumber=76,paramId=456000,setLocalDefinition=1,localDefinitionNumber=36 $sample_g2 $temp
 grib_check_key_equals $temp chemShortName,chemId 'O3 236'
 
 ${tools_dir}/grib_set -s paramId=215225,setLocalDefinition=1,localDefinitionNumber=36 $sample_g2 $temp
