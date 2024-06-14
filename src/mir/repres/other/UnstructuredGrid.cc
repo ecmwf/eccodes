@@ -13,7 +13,9 @@
 #include "mir/repres/other/UnstructuredGrid.h"
 
 #include <fstream>
+#include <limits>
 #include <memory>
+#include <numeric>
 #include <ostream>
 #include <utility>
 
@@ -68,7 +70,20 @@ UnstructuredGrid::UnstructuredGrid(const param::MIRParametrisation& parametrisat
     if (latitudes_.size() != longitudes_.size()) {
         throw exception::UserError("UnstructuredGrid: requires 'latitudes' and 'longitudes' with the same size");
     }
-    ASSERT(latitudes_.size() == longitudes_.size());
+
+    if (latitudes_.empty()) {
+        size_t numberOfPoints = 0;
+        parametrisation.get("numberOfPoints", numberOfPoints);
+
+        if (numberOfPoints == 0) {
+            throw exception::UserError("UnstructuredGrid: requires 'latitudes' and 'longitudes', or 'numberOfPoints'");
+        }
+
+        // coordinates are unusable but unique
+        latitudes_.assign(numberOfPoints, std::numeric_limits<double>::signaling_NaN());
+        longitudes_.resize(numberOfPoints);
+        std::iota(longitudes_.begin(), longitudes_.end(), 0);
+    }
 
     util::check_duplicate_points("UnstructuredGrid from MIRParametrisation", latitudes_, longitudes_, parametrisation);
 }
