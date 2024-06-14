@@ -1,7 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
-transient paramType = "base";
-alias mars.paramtype = paramType ;
+constant paramType = "base";
+alias mars.paramtype = paramType;
 
 # Parameter category
 codetable[1] parameterCategory ('4.1.[discipline:l].table',masterDir,localDir) : dump;
