@@ -10,16 +10,16 @@
 
 . ./include.ctest.sh
 
-label="grib_paramid_chemid_split_test"
+label="grib2_paramid_chemid_split_test"
 tempGribA=temp1.$label.grib
 tempGribB=temp2.$label.grib
 
-sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 # Legacy using older tablesVersion
 # We expect paramId 210121
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=40,discipline=0,parameterCategory=20,parameterNumber=2,constituentType=5 \
-            $sample_grib2  $tempGribA
+            $sample $tempGribA
 grib_check_key_equals $tempGribA tablesVersion 4
 grib_check_key_equals $tempGribA paramId,is_chemical "210121 1"
 # The new keys should not be present
@@ -41,7 +41,7 @@ result=$( ${tools_dir}/grib_get -f -p is_chemical $tempGribB )
 
 
 # Test non-chemical e.g. temperature. Now chem keys are present but unknown
-${tools_dir}/grib_set -s tablesVersion=32,discipline=0,parameterCategory=0,parameterNumber=0 $sample_grib2  $tempGribA
+${tools_dir}/grib_set -s tablesVersion=32,discipline=0,parameterCategory=0,parameterNumber=0 $sample  $tempGribA
 grib_check_key_equals $tempGribA "chemId,chemName,chemShortName" "0 unknown unknown"
 
 
