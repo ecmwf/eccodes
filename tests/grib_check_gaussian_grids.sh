@@ -91,7 +91,7 @@ ${tools_dir}/grib_check_gaussian_grid -f -v $tempGrib 2> $tempText
 status=$?
 set -e
 [ $status -eq 1 ]
-grep -q "Error: Sum of pl array 50662 does not match numberOfValues 44" $tempText
+grep -q "Error: Sum of pl array 50662 does not match size of values array 44" $tempText
 
 # Octahedral
 # set +e
