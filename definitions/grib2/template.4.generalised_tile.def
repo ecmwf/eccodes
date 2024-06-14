@@ -41,5 +41,5 @@ alias tile.nTileAtt=nTileAtt;
 
 alias mars.tile=typeOfTile;
 alias mars.tileAttribute=tileAttribute;
-transient paramtype = "tile";
-alias mars.paramType=paramtype;
+transient paramType = "tile";
+alias mars.paramtype=paramType;
