@@ -194,6 +194,7 @@ if( HAVE_BUILD_TOOLS )
         grib_unpack_subarray
         grib_count
         grib_clone_headers_only
+        grib2_paramType
         wmo_read_bufr_from_file
         wmo_read_gts_from_file
         wmo_read_any_from_file
