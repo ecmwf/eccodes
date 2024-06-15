@@ -69,9 +69,9 @@ static int process_file(const char* filename)
     grib_handle* h = NULL;
     FILE* in       = NULL;
 
-    if (!path_is_regular_file(filename)) {
+    if (path_is_directory(filename)) {
         if (verbose)
-            printf(" WARNING: '%s' not a regular file! Ignoring\n", filename);
+            printf(" WARNING: '%s' is a directory! Ignoring\n", filename);
         return GRIB_IO_PROBLEM;
     }
 
