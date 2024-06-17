@@ -112,7 +112,7 @@ set -e
 [ $status -eq 1 ]
 
 ${tools_dir}/grib_check_gaussian_grid -v $data_dir > $tempText
-grep -q "not a regular file" $tempText
+grep -q "is a directory" $tempText
 
 ${tools_dir}/grib_check_gaussian_grid -v $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempText
 grep -q "ignoring" $tempText
