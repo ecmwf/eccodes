@@ -33,7 +33,7 @@ if (tablesVersion >= 31 ) {
   concept chemShortName (unknown,"chemShortName.def",conceptsDir2,conceptsDir1): no_copy,dump;
   concept chemFormula (unknown,"chemFormula.def",conceptsDir2,conceptsDir1): no_copy,dump;
 
-  if ( !(chemId is "unknown") ) {
+  if ( chemId != -1 ) {
     alias mars.chem = chemId;
     alias parameter.chemId = chemId;
     alias ls.chemShortName = chemShortName;
