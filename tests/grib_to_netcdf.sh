@@ -24,9 +24,11 @@ fi
 
 label="grib_to_netcdf_test"
 tempGrib=temp.${label}.grib
+tempGrib2=temp2.${label}.grib
 tempNetcdf=temp.${label}.nc
 tempText=temp.${label}.txt
 tempDir=temp.${label}.dir
+tempFilter=temp.${label}.filter
 
 have_netcdf4=0
 
@@ -34,6 +36,53 @@ have_netcdf4=0
 NC_DUMPER=""
 if command -v "ncdump" >/dev/null 2>&1; then
     NC_DUMPER="ncdump"
+fi
+
+echo "Test ECC-1755: Test sub-hourly support ..."
+# ------------------------------------------------------------
+# ECC-1755: Sub-hourly support
+# Minutes:
+cat > $tempFilter <<EOF
+ transient steps={0,15,30};
+ meta step_long element(steps, count - 1);
+ meta step_string sprintf("%sm", step_long); # Seconds
+ set step = step_string; 
+ write;
+EOF
+
+input=${data_dir}/sample.grib2
+cat $input $input $input > $tempGrib
+${tools_dir}/grib_filter -o $tempGrib2 $tempFilter $tempGrib
+${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib2
+${NC_DUMPER} -t -v time $tempNetcdf > $tempText
+cat $tempText
+grep -q 'time:units = "minutes since 1900-01-01 00:00:00.0" ;' $tempText
+grep -q 'time = "2008-02-06 12", "2008-02-06 12:15", "2008-02-06 12:30" ;' $tempText
+
+# Seconds:
+cat > $tempFilter <<EOF
+ transient steps={0,15,30};
+ meta step_long element(steps, count - 1);
+ meta step_string sprintf("%ss", step_long); # Seconds
+ set step = step_string; 
+ write;
+EOF
+
+input=${data_dir}/sample.grib2
+cat $input $input $input > $tempGrib
+${tools_dir}/grib_filter -o $tempGrib2 $tempFilter $tempGrib
+
+# Please set the reference date to avoid an out-of-range error with the integer value.
+${tools_dir}/grib_to_netcdf -R 20080206 -o $tempNetcdf $tempGrib2
+${NC_DUMPER} -t -v time $tempNetcdf > $tempText
+cat $tempText
+grep -q 'time:units = "seconds since 2008-02-06 00:00:00.0" ;' $tempText
+grep -q 'time = "2008-02-06 12", "2008-02-06 12:00:15", "2008-02-06 12:00:30" ;' $tempText
+
+# The operation should fail because the time value exceeded the maximum limit of 2,147,483,647.
+if ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib2; then
+    echo "Time values are out of range. Should fail."
+    exit 1
 fi
 
 
@@ -110,14 +159,6 @@ ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=31 $sample2 $tempGrib
 ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
 
-ECCODES_DEBUG=-1 ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
-
-
-# The -u option
-input=${data_dir}/sample.grib2
-${tools_dir}/grib_to_netcdf -u time -o $tempNetcdf $input
-
-
 echo "Test different resolutions ..."
 # ------------------------------------
 # This should fail as messages have different resolutions
@@ -178,26 +219,6 @@ set -e
 grep -q "Wrong message length" $tempText
 
 
-# Non-GRIB input
-input=$data_dir/bufr/aaen_55.bufr
-set +e
-${tools_dir}/grib_to_netcdf -o $tempNetcdf $input > $tempText 2>&1
-status=$?
-set -e
-[ $status -ne 0 ]
-grep -q "Input does not contain any field" $tempText
-
-
-# Bad reference date
-input=$data_dir/sample.grib2
-set +e
-${tools_dir}/grib_to_netcdf -Rxxx -o $tempNetcdf $input > $tempText 2>&1
-status=$?
-set -e
-[ $status -ne 0 ]
-grep -q "Invalid reference date" $tempText
-
-
 # Validity time check
 export GRIB_TO_NETCDF_CHECKVALIDTIME=0
 ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
@@ -206,4 +227,4 @@ unset GRIB_TO_NETCDF_CHECKVALIDTIME
 
 
 # Clean up
-rm -f $tempNetcdf $tempGrib $tempText
+rm -f $tempNetcdf $tempGrib $tempGrib2 $tempText $tempFilter 

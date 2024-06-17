@@ -3320,8 +3320,13 @@ static int fill_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid)
                 for (j = 0; j < n; ++j)
                     values[j] = monthnumber(get_value(cube, axis, j));
             else
-                for (j = 0; j < n; ++j)
-                    values[j] = grib_date_to_julian(atol(get_value(cube, axis, j))) - grib_date_to_julian(setup.refdate);
+                for (j = 0; j < n; ++j) {
+                    long date = grib_date_to_julian(atol(get_value(cube, axis, j)));
+                    long refdate = grib_date_to_julian(setup.refdate);
+                    fprintf(stderr, "date=%ld, refdate=%ld\n", date, refdate);
+                    values[j] = date - refdate;
+                    //values[j] = grib_date_to_julian(atol(get_value(cube, axis, j))) - grib_date_to_julian(setup.refdate);
+                }
         }
         else {
             for (j = 0; j < n; ++j) {
@@ -3329,6 +3334,12 @@ static int fill_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid)
                 const char* sv = get_value(cube, axis, j);
                 if (is_number(sv)) {
                     lv = atol(sv); /* Detect error? */
+                    constexpr long maxint = 2147483647; /* 2^31 - 1, max size of NC_INT*/
+                    if (lv > maxint) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Value %ld for %s is too large. ", lv, axis);
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Consider using the option: \"-R date\". Reference date in the format YYYYMMDD. Default value 19000101.", setup.refdate);
+                        exit(1);
+                    }
                 }
                 else {
                     /* ECC-725: Convert string-valued dimension to integer
