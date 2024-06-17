@@ -69,9 +69,9 @@ static int process_file(const char* filename)
     grib_handle* h = NULL;
     FILE* in       = NULL;
 
-    if (!path_is_regular_file(filename)) {
+    if (path_is_directory(filename)) {
         if (verbose)
-            printf(" WARNING: '%s' not a regular file! Ignoring\n", filename);
+            printf(" WARNING: '%s' is a directory! Ignoring\n", filename);
         return GRIB_IO_PROBLEM;
     }
 
@@ -86,7 +86,8 @@ static int process_file(const char* filename)
 
     while ((h = grib_handle_new_from_file(0, in, &err)) != NULL) {
         int is_reduced_gaussian = 0, is_regular_gaussian = 0, grid_ok = 0;
-        long edition = 0, N = 0, Nj = 0, numberOfDataPoints, numberOfValues, angleSubdivisions;
+        long edition = 0, N = 0, Nj = 0, numberOfDataPoints, angleSubdivisions;
+        size_t numberOfValues = 0;
         size_t len = 0, sizeOfValuesArray = 0;
         double* lats       = NULL;
         long* pl           = NULL;
@@ -117,7 +118,7 @@ static int process_file(const char* filename)
         GRIB_CHECK(grib_get_long(h, "N", &N), 0);
         GRIB_CHECK(grib_get_long(h, "Nj", &Nj), 0);
         GRIB_CHECK(grib_get_long(h, "numberOfDataPoints", &numberOfDataPoints), 0);
-        GRIB_CHECK(grib_get_long(h, "numberOfValues", &numberOfValues), 0);
+        GRIB_CHECK(grib_get_size(h, "values", &numberOfValues), 0);
         GRIB_CHECK(grib_get_double(h, "latitudeOfFirstGridPointInDegrees", &lat1), 0);
         GRIB_CHECK(grib_get_double(h, "longitudeOfFirstGridPointInDegrees", &lon1), 0);
         GRIB_CHECK(grib_get_double(h, "latitudeOfLastGridPointInDegrees", &lat2), 0);
@@ -208,8 +209,8 @@ static int process_file(const char* filename)
             if (pl_sum != numberOfDataPoints) {
                 error(filename, msg_num, "Sum of pl array %ld does not match numberOfDataPoints %ld\n", pl_sum, numberOfDataPoints);
             }
-            if (pl_sum != numberOfValues) {
-                error(filename, msg_num, "Sum of pl array %ld does not match numberOfValues %ld\n", pl_sum, numberOfValues);
+            if ( (size_t)pl_sum != numberOfValues ) {
+                error(filename, msg_num, "Sum of pl array %ld does not match size of values array %zu\n", pl_sum, numberOfValues);
             }
             GRIB_CHECK(grib_get_long(h, "isOctahedral", &is_octahedral), 0);
             if (is_octahedral) {
@@ -233,7 +234,7 @@ static int process_file(const char* filename)
 
         GRIB_CHECK(grib_get_size(h, "values", &sizeOfValuesArray), 0);
         if (sizeOfValuesArray != (size_t)numberOfDataPoints) {
-            error(filename, msg_num, "Number of data points %d different from size of values array %d\n",
+            error(filename, msg_num, "Number of data points %ld different from size of values array %zu\n",
                   numberOfDataPoints, sizeOfValuesArray);
         }
 
