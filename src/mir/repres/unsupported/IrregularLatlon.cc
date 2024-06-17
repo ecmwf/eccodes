@@ -248,7 +248,7 @@ atlas::Grid IrregularLatlon::atlasGrid() const {
 
     for (double lat : latitudes_) {
         for (double lon : longitudes_) {
-            pts.emplace_back(atlas::PointXY(lon, lat));
+            pts.emplace_back(lon, lat);
         }
     }
 
