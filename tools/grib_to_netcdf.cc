@@ -137,7 +137,7 @@ static bool eq_time(const char* l, const char* r)
     return false;
 }
 
-const char* get_step_units_longname(const char* step_units)
+static const char* get_step_units_longname(const char* step_units)
 {
     if (step_units == NULL)
         return NULL;
@@ -148,7 +148,7 @@ const char* get_step_units_longname(const char* step_units)
     if (strcmp(step_units, "h") == 0)
         return "hours";
 
-    Assert(0);
+    Assert(!"Unknown step units");
     return NULL;
 }
 
