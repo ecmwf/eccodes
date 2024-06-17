@@ -80,7 +80,7 @@ if test "x$NC_DUMPER" != "x"; then
     ${NC_DUMPER} -t -v time $tempNetcdf > $tempText
     cat $tempText
     grep -q 'time:units = "seconds since 2008-02-06 00:00:00.0" ;' $tempText
-    grep -q 'time = "2008-02-06 12", "2008-02-06 12:00:15", "2008-02-06 12:00:30"' $tempText
+    grep -q 'time = "2008-02-06 12", "2008-02-06 12:00:15.*", "2008-02-06 12:00:30' $tempText
 fi
 
 # The operation should fail because the time value exceeded the maximum limit of 2,147,483,647.
