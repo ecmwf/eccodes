@@ -78,6 +78,7 @@ ${tools_dir}/grib_filter -o $tempGrib2 $tempFilter $tempGrib
 ${tools_dir}/grib_to_netcdf -R 20080206 -o $tempNetcdf $tempGrib2
 if test "x$NC_DUMPER" != "x"; then
     ${NC_DUMPER} -t -v time $tempNetcdf > $tempText
+    cat $tempText
     grep -q 'time:units = "seconds since 2008-02-06 00:00:00.0" ;' $tempText
     grep -q 'time = "2008-02-06 12", "2008-02-06 12:00:15", "2008-02-06 12:00:30"' $tempText
 fi
