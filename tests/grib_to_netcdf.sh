@@ -54,10 +54,11 @@ input=${data_dir}/sample.grib2
 cat $input $input $input > $tempGrib
 ${tools_dir}/grib_filter -o $tempGrib2 $tempFilter $tempGrib
 ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib2
-${NC_DUMPER} -t -v time $tempNetcdf > $tempText
-cat $tempText
-grep -q 'time:units = "minutes since 1900-01-01 00:00:00.0" ;' $tempText
-grep -q 'time = "2008-02-06 12", "2008-02-06 12:15", "2008-02-06 12:30" ;' $tempText
+if test "x$NC_DUMPER" != "x"; then
+    ${NC_DUMPER} -t -v time $tempNetcdf > $tempText
+    grep -q 'time:units = "minutes since 1900-01-01 00:00:00.0" ;' $tempText
+    grep -q 'time = "2008-02-06 12", "2008-02-06 12:15", "2008-02-06 12:30" ;' $tempText
+fi
 
 # Seconds:
 cat > $tempFilter <<EOF
@@ -74,10 +75,11 @@ ${tools_dir}/grib_filter -o $tempGrib2 $tempFilter $tempGrib
 
 # Please set the reference date to avoid an out-of-range error with the integer value.
 ${tools_dir}/grib_to_netcdf -R 20080206 -o $tempNetcdf $tempGrib2
-${NC_DUMPER} -t -v time $tempNetcdf > $tempText
-cat $tempText
-grep -q 'time:units = "seconds since 2008-02-06 00:00:00.0" ;' $tempText
-grep -q 'time = "2008-02-06 12", "2008-02-06 12:00:15", "2008-02-06 12:00:30" ;' $tempText
+if test "x$NC_DUMPER" != "x"; then
+    ${NC_DUMPER} -t -v time $tempNetcdf > $tempText
+    grep -q 'time:units = "seconds since 2008-02-06 00:00:00.0" ;' $tempText
+    grep -q 'time = "2008-02-06 12", "2008-02-06 12:00:15", "2008-02-06 12:00:30" ;' $tempText
+fi
 
 # The operation should fail because the time value exceeded the maximum limit of 2,147,483,647.
 if ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib2; then
