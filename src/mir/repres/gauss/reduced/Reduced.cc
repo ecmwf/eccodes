@@ -345,7 +345,7 @@ std::vector<util::GridBox> Reduced::gridBoxes() const {
                 r.emplace_back(n, w, s, std::min(bbox_.east().value(), lon1.value()));
             }
 
-            ASSERT(lon0 < lon1.normalise(lon0));
+            ASSERT(lon0 <= lon1.normalise(lon0));
         }
     }
 
