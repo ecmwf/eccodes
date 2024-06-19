@@ -119,9 +119,9 @@ else {
 if (paramId >= 140000 && paramId < 141000 &&
     productDefinitionTemplateNumber != 99 && productDefinitionTemplateNumber != 100 &&
     productDefinitionTemplateNumber != 101 && productDefinitionTemplateNumber != 102) {
-  constant paramType="wave";
+  constant paramTypeWave="wave";
   unalias mars.paramtype;
-  alias mars.paramtype = paramType;
+  alias mars.paramtype = paramTypeWave;
 }
 
 meta md5Section4 md5(offsetSection4,section4Length);

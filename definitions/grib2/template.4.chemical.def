@@ -1,8 +1,8 @@
 # (C) Copyright 2005- ECMWF.
 
-constant paramType="chemical";
+constant paramTypeChemical="chemical";
 unalias mars.paramtype;
-alias mars.paramtype = paramType;
+alias mars.paramtype = paramTypeChemical;
 
 # Atmospheric chemical or physical constituent type
 codetable[2] constituentType ('4.230.table',masterDir,localDir) : dump;

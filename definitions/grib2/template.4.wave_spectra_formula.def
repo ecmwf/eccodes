@@ -26,6 +26,6 @@ listOfWaveFrequencySequenceParameters list(numberOfWaveFrequencySequenceParamete
   signed[4] scaledValueOfWaveFrequencySequenceParameter : dump;
 }
 
-constant paramType="wave_spectra";
+constant paramTypeWaveSpectra="wave_spectra";
 unalias mars.paramtype;
-alias mars.paramtype = paramType;
+alias mars.paramtype = paramTypeWaveSpectra;

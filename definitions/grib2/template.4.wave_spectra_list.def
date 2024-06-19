@@ -18,6 +18,6 @@ alias frequencyScalingFactor = integerScalingFactorAppliedToFrequencies;
 unsigned[4] scaledValuesOfWaveFrequencies[numberOfWaveFrequencies] : dump;
 alias scaledFrequencies = scaledValuesOfWaveFrequencies;
 
-constant paramType="wave_spectra";
+constant paramTypeWaveSpectraList="wave_spectra";
 unalias mars.paramtype;
-alias mars.paramtype = paramType;
+alias mars.paramtype = paramTypeWaveSpectraList;
