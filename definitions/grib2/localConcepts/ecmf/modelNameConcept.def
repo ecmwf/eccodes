@@ -1,8 +1,5 @@
 'IFS' = {
     backgroundProcess = 255;
 }
-'IFS' = {
-    backgroundProcess = 255;
-}
 'AIFS' = {
     backgroundProcess = 1;
