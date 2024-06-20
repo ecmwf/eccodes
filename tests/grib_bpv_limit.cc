@@ -25,12 +25,6 @@ static double compare_double_absolute(double a, double b, double tolerance)
     return ret;
 }
 
-static void usage(const char* prog)
-{
-    fprintf(stderr, "usage: %s input\n", prog);
-    exit(1);
-}
-
 static int check_error_code(int err)
 {
     if (err == GRIB_INVALID_BPV || err == GRIB_DECODING_ERROR)
@@ -40,28 +34,24 @@ static int check_error_code(int err)
 
 int main(int argc, char** argv)
 {
-    int err           = 0, i;
+    int err = 0, i;
     size_t values_len = 0;
-    double* values    = NULL;
-    char error_msg[100];
     const double tolerance = 1e-5;
-    size_t slong           = sizeof(long) * 8;
-    grib_handle* h;
-    char* filename;
+    size_t slong = sizeof(long) * 8;
 
-    if (argc < 2) usage(argv[0]);
-    filename = argv[1];
+    Assert(argc == 2);
+    char* filename = argv[1];
 
     for (i = 0; i < 255; i++) {
         FILE* in = fopen(filename, "rb");
         Assert(in);
-        h = grib_handle_new_from_file(0, in, &err);
+        grib_handle* h = grib_handle_new_from_file(0, in, &err);
         Assert(h);
 
         /* get the size of the values array*/
         GRIB_CHECK(grib_get_size(h, "values", &values_len), 0);
 
-        values = (double*)malloc(values_len * sizeof(double));
+        double* values = (double*)malloc(values_len * sizeof(double));
 
         err = grib_get_double_array(h, "values", values, &values_len);
         if (compare_double_absolute(values[0], 2.7900000000e+02, tolerance) != 0)
@@ -88,9 +78,8 @@ int main(int argc, char** argv)
             /* do nothing  */
         }
         else {
-            snprintf(error_msg, sizeof(error_msg), "Error decoding when bpv=%d. Error message:%s", i, grib_get_error_message(err));
-            perror(error_msg);
-            exit(1);
+            fprintf(stderr, "Error decoding when bpv=%d. Error message:%s\n", i, grib_get_error_message(err));
+            return 1;
         }
 
         values = (double*)malloc(values_len * sizeof(double));
@@ -108,9 +97,8 @@ int main(int argc, char** argv)
             /* do nothing  */
         }
         else {
-            snprintf(error_msg, sizeof(error_msg), "Error decoding when bpv=%d. Error message:%s", i, grib_get_error_message(err));
-            perror(error_msg);
-            exit(1);
+            fprintf(stderr, "Error decoding when bpv=%d. Error message:%s\n", i, grib_get_error_message(err));
+            return 1;
         }
 
         free(values);

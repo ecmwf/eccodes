@@ -33,6 +33,6 @@
 31 31 Turbulent diffusion coefficient for momentum (m2/s)
 32 32 Eta coordinate vertical velocity (/s)
 33 33 Wind fetch (m)
-# 34-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 34-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

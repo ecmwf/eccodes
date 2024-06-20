@@ -10,7 +10,6 @@
 
 /***************************************************************************
  *   Jean Baptiste Filippi - 01.11.2005                                    *
- *   Enrico Fucile                                                         *
  ***************************************************************************/
 #include "grib_api_internal.h"
 
@@ -55,7 +54,7 @@ static void update_sections(grib_section* s, grib_handle* h, long offset)
         a->offset += offset;
         /* update_sections ( grib_get_sub_section ( a ),h,offset ); */
         update_sections(a->sub_section, h, offset);
-        a = a->next;
+        a = a->next_;
     }
 }
 
@@ -75,7 +74,7 @@ void grib_swap_sections(grib_section* the_old, grib_section* the_new)
     a = the_old->block->first;
     while (a) {
         a->parent = the_old;
-        a         = a->next;
+        a         = a->next_;
     }
 
     update_sections(the_old, the_old->h, the_old->owner->offset);
@@ -95,12 +94,12 @@ void grib_empty_section(grib_context* c, grib_section* b)
     current = b->block->first;
 
     while (current) {
-        grib_accessor* next = current->next;
+        grib_accessor* next = current->next_;
         if (current->sub_section) {
             grib_section_delete(c, current->sub_section);
             current->sub_section = 0;
         }
-        grib_accessor_delete(c, current);
+        current->destroy(c);
         current = next;
     }
     b->block->first = b->block->last = 0;
@@ -228,11 +227,11 @@ grib_handle* codes_handle_new_from_samples(grib_context* c, const char* name)
         fprintf(stderr, "ECCODES DEBUG codes_handle_new_from_samples '%s'\n", name);
     }
 
-    g = codes_external_template(c, PRODUCT_ANY, name);
+    g = codes_external_sample(c, PRODUCT_ANY, name);
     if (!g) {
         grib_context_log(c, GRIB_LOG_ERROR,
                          "Unable to load sample file '%s.tmpl'\n"
-                         "                   from %s\n"
+                         "                   samples path='%s'\n"
                          "                   (ecCodes Version=%s)",
                          name, c->grib_samples_path, ECCODES_VERSION_STR);
     }
@@ -256,7 +255,7 @@ grib_handle* grib_handle_new_from_samples(grib_context* c, const char* name)
         fprintf(stderr, "ECCODES DEBUG grib_handle_new_from_samples '%s'\n", name);
     }
 
-    g = codes_external_template(c, PRODUCT_GRIB, name);
+    g = codes_external_sample(c, PRODUCT_GRIB, name);
     if (!g)
         grib_context_log(c, GRIB_LOG_ERROR,
                          "Unable to load GRIB sample file '%s.tmpl'\n"
@@ -279,7 +278,7 @@ grib_handle* codes_bufr_handle_new_from_samples(grib_context* c, const char* nam
         fprintf(stderr, "ECCODES DEBUG bufr_handle_new_from_samples '%s'\n", name);
     }
 
-    g = codes_external_template(c, PRODUCT_BUFR, name);
+    g = codes_external_sample(c, PRODUCT_BUFR, name);
     if (!g) {
         grib_context_log(c, GRIB_LOG_ERROR,
                          "Unable to load BUFR sample file '%s.tmpl'\n"
@@ -375,7 +374,7 @@ grib_handle* grib_handle_clone_headers_only(const grib_handle* h)
     const int sections_to_copy = GRIB_SECTION_PRODUCT | GRIB_SECTION_LOCAL | GRIB_SECTION_GRID;
     result = grib_util_sections_copy((grib_handle*)h, h_sample, sections_to_copy, &err);
     if (!result || err) {
-        grib_context_log(c, GRIB_LOG_ERROR, "Failed to create headers_only clone: Unable to copy sections");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s failed: Unable to copy sections (%s)", __func__, grib_get_error_message(err));
         grib_handle_delete(h_sample);
         return NULL;
     }
@@ -638,7 +637,6 @@ static grib_handle* grib_handle_new_multi(grib_context* c, unsigned char** data,
         while (grib2_get_next_section((unsigned char*)message, olen, &secbegin, &seclen, &secnum, &err)) {
             // seccount++;
             /*printf("   - %d - section %d length=%d\n",(int)seccount,(int)secnum,(int)seclen);*/
-
             gm->sections[secnum]        = secbegin;
             gm->sections_length[secnum] = seclen;
 
@@ -686,6 +684,11 @@ static grib_handle* grib_handle_new_multi(grib_context* c, unsigned char** data,
 
                 break;
             }
+        }
+        // ECC-782
+        if (err == GRIB_INVALID_SECTION_NUMBER) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Failed to get section info (%s)", __func__, grib_get_error_message(err));
+            return NULL;
         }
     }
     else if (edition == 3) {
@@ -840,6 +843,11 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
                 }
                 break;
             }
+        }
+        // ECC-782
+        if (err == GRIB_INVALID_SECTION_NUMBER) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Failed to get section info (%s)", __func__, grib_get_error_message(err));
+            return NULL;
         }
     }
     else if (edition == 3) {
@@ -1639,10 +1647,8 @@ static void grib2_build_message(grib_context* context, unsigned char* sections[]
 /* For multi support mode: Reset all file handles equal to f. See GRIB-249 */
 void grib_multi_support_reset_file(grib_context* c, FILE* f)
 {
-    grib_multi_support* gm = NULL;
-    if (!c)
-        c = grib_context_get_default();
-    gm = c->multi_support;
+    if (!c) c = grib_context_get_default();
+    grib_multi_support* gm = c->multi_support;
     while (gm) {
         if (gm->file == f) {
             gm->file = NULL;
@@ -1691,23 +1697,23 @@ static grib_multi_support* grib_get_multi_support(grib_context* c, FILE* f)
 
 void grib_multi_support_reset(grib_context* c)
 {
-    grib_multi_support* gm   = c->multi_support;
-    grib_multi_support* next = NULL;
-    int i                    = 0;
-    while (next) {
-        next = gm->next;
+    if (!c) c = grib_context_get_default();
+    const int GRIB2_END_SECTION = 8;
+
+    grib_multi_support* gm = c->multi_support;
+    while (gm) {
         if (gm->file)
             fclose(gm->file);
         if (gm->message)
             grib_context_free(c, gm->message);
         gm->message = NULL;
-        for (i = 0; i < 8; i++)
+        for (int i = 0; i < GRIB2_END_SECTION; i++)
             gm->sections[i] = 0;
         if (gm->bitmap_section)
             grib_context_free(c, gm->bitmap_section);
         gm->bitmap_section = NULL;
-        grib_context_free(c, gm);
-        gm = NULL;
+        //grib_context_free(c, gm);
+        gm = gm->next;
     }
 }
 

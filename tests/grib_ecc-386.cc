@@ -9,17 +9,10 @@
  */
 
 /*
- * Description: Reads a GRIB message from file, measures read time.
- *
+ * Description: Reads a GRIB message from file, measures time taken
  */
 #include <stdio.h>
 #include "grib_api_internal.h"
-
-static void usage(const char* prog)
-{
-    printf("usage: %s filename\n", prog);
-    exit(1);
-}
 
 int main(int argc, char** argv)
 {
@@ -33,21 +26,15 @@ int main(int argc, char** argv)
     const double duration_max = 3.6; /* seconds */
     const int num_repetitions = 100;
 
-    if (argc < 2) usage(argv[0]);
+    if (argc < 2) return 1;
 
     in = fopen(argv[1], "rb");
-    if (!in) {
-        printf("ERROR: unable to open file %s\n", argv[1]);
-        return 1;
-    }
+    Assert(in);
 
     /* create new handle */
     err = 0;
     h   = grib_handle_new_from_file(0, in, &err);
-    if (h == NULL) {
-        printf("Error: unable to create handle from file.\n");
-        return 1;
-    }
+    Assert(h);
 
     /* get the size of the values array*/
     GRIB_CHECK(grib_get_size(h, "values", &values_len), 0);
@@ -72,9 +59,3 @@ int main(int argc, char** argv)
     fclose(in);
     return 0;
 }
-
-// int main(int argc, char** argv)
-// {
-//     return 0;
-// }
-// #endif

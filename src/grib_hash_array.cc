@@ -30,19 +30,19 @@ grib_hash_array_value* grib_integer_hash_array_value_new(grib_context* c, const 
 //     return v;
 // }
 
-void grib_hash_array_value_delete(grib_context* c, grib_hash_array_value* v)
-{
-    switch (v->type) {
-        case GRIB_HASH_ARRAY_TYPE_INTEGER:
-            grib_iarray_delete(v->iarray);
-            break;
-        case GRIB_HASH_ARRAY_TYPE_DOUBLE:
-            grib_darray_delete(c, v->darray);
-            break;
-        default:
-            grib_context_log(c, GRIB_LOG_ERROR,
-                             "wrong type in grib_hash_array_value_delete");
-    }
-    grib_context_free_persistent(c, v->name);
-    grib_context_free_persistent(c, v);
-}
+// void grib_hash_array_value_delete(grib_context* c, grib_hash_array_value* v)
+// {
+//     switch (v->type) {
+//         case GRIB_HASH_ARRAY_TYPE_INTEGER:
+//             grib_iarray_delete(v->iarray);
+//             break;
+//         case GRIB_HASH_ARRAY_TYPE_DOUBLE:
+//             grib_darray_delete(c, v->darray);
+//             break;
+//         default:
+//             grib_context_log(c, GRIB_LOG_ERROR,
+//                              "wrong type in grib_hash_array_value_delete");
+//     }
+//     grib_context_free_persistent(c, v->name);
+//     grib_context_free_persistent(c, v);
+// }

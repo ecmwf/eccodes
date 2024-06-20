@@ -26,6 +26,13 @@ int main(int argc, char** argv)
     in = fopen(argv[1], "r");
     if (!in) return 1;
 
+    grib_context* c = grib_context_get_default();
+    err = grib_read_any_headers_only_from_file(c, in, buffer, &len);
+    printf("ANY (headers only): err=%s, len=%zu\n", grib_get_error_message(err), len);
+
+    rewind(in);
+    len = SIZE;
+
     err = wmo_read_any_from_file(in, buffer, &len);
     if (err == GRIB_END_OF_FILE && len == 0)
         printf("end of file\n");

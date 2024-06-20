@@ -111,6 +111,16 @@ file=$data_dir/sample.grib2
 ECCODES_DEBUG=1 ${tools_dir}/grib_dump $file > $temp 2>&1
 
 
+# Repeated key numberOfSection
+file=$data_dir/sample.grib2
+${tools_dir}/grib_dump -O $file > $temp
+grep -q "numberOfSection = 1" $temp
+grep -q "numberOfSection = 3" $temp
+grep -q "numberOfSection = 4" $temp
+grep -q "numberOfSection = 5" $temp
+grep -q "numberOfSection = 7" $temp
+
+
 # Dump long array
 # ----------------
 input=$data_dir/lfpw.grib1

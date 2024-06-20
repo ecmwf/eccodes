@@ -34,7 +34,7 @@ localTimeForecastList list(numberOfForecastsUsedInLocalTime)
   unsigned[1] secondOfForecastUsedInLocalTime=0 : dump, edition_specific;
 
   # Indicator of unit of time for ForecastTime
-  codetable[1] indicatorOfUnitForForecastTime ('4.4.table',masterDir,localDir)=1 : dump;
+  codetable[1] indicatorOfUnitForForecastTime('4.4.table',masterDir,localDir)=1 : dump;
 
   # Length of the time range over which statistical processing is done, in units defined by the previous octet
   unsigned[4] forecastTime=0 : dump;
@@ -43,7 +43,7 @@ localTimeForecastList list(numberOfForecastsUsedInLocalTime)
   unsigned[1] numberOfTimeIncrementsOfForecastsUsedInLocalTime=1 : dump;
 
   # Indicator of unit of time for the increment between the successive steps used
-  codetable[1]  indicatorOfUnitForTimeIncrement ('4.4.table',masterDir,localDir)=255 : dump;
+  codetable[1]  indicatorOfUnitForTimeIncrement('4.4.table',masterDir,localDir)=255 : dump;
 
   # Time increment between successive fields, in units defined by the previous octet
   unsigned[4] timeIncrement=0 : dump;

@@ -13,10 +13,12 @@ list(APPEND test_c_bins
     wmo_read_bufr_from_file
     wmo_read_gts_from_file
     wmo_read_any_from_file
+    wmo_read_any_from_stream
     grib_bpv_limit
     grib_double_cmp
     read_any
     julian
+    grib_update_sections_lengths
     grib_indexing
     grib_fieldset
     grib_multi_from_message
@@ -31,6 +33,7 @@ list(APPEND test_c_bins
     gauss_sub
     grib_nearest_test
     grib_util_set_spec
+    grib_util_set_spec2
     grib_check_param_concepts
     grib_local_MeteoFrance
     grib_2nd_order_numValues
@@ -43,11 +46,11 @@ list(APPEND test_c_bins
     grib_ecc-1467
     grib_ecc-1431
     grib_ecc-1433
+    grib_ecc-1764
     bufr_ecc-517
     bufr_ecc-1288
     bufr_get_element
     bufr_extract_headers
-    extract_offsets
     bufr_check_descriptors
     bufr_coordinate_descriptors
     codes_new_from_samples
@@ -56,6 +59,7 @@ list(APPEND test_c_bins
     codes_compare_keys
     codes_dump_content
     codes_codetable
+    codes_get_string
     grib_sh_ieee64
     grib_ieee
     grib_set_bytes
@@ -100,6 +104,8 @@ if( HAVE_BUILD_TOOLS )
         grib_ifsParam
         grib_packing_order
         filter_substr
+        filter_size
+        filter_is_one_of
         filter_is_in_list
         filter_transient_darray
         grib_uerra
@@ -140,6 +146,9 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1671
         grib_ecc-1708
         grib_ecc-1691
+        grib_ecc-1766
+        grib_ecc-1806
+        grib_ecc-1829
         bufr_ecc-1028
         bufr_ecc-1195
         bufr_ecc-1259
@@ -147,6 +156,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-1304
         bufr_ecc-1347
         bufr_ecc-1395
+        bufr_ecc-1840
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
@@ -166,6 +176,8 @@ if( HAVE_BUILD_TOOLS )
     # and/or take much longer
     list(APPEND tests_extra
         grib_data_quality_checks
+        grib_update_sections_lengths
+        grib_units_bias_factor
         grib_set_large_message_fail
         grib_g1monthlydate
         grib_g1fcperiod
@@ -184,6 +196,7 @@ if( HAVE_BUILD_TOOLS )
         wmo_read_bufr_from_file
         wmo_read_gts_from_file
         wmo_read_any_from_file
+        wmo_read_any_from_stream
         bufr_templates
         bufr_rdbSubTypes
         bufr_dump_data
@@ -215,6 +228,13 @@ if( HAVE_BUILD_TOOLS )
         grib_keys_iter
         grib_keys_iter_skip
         grib_geo_iter
+        grib_to_json
+        grib_to_ppm
+        grib_merge
+        big2gribex
+        grib_sub_area_check
+        grib_list_keys
+        grib_histogram
         bufr_get_element
         bufr_wmo_tables
         bufr_extract_headers
@@ -241,6 +261,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-1305
         bufr_ecc-1476
         bufr_ecc-1623
+        bufr_ecc-1785
         grib_ecc-490
         grib_ecc-756
         grib_ecc-806
@@ -252,14 +273,18 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1000
         grib_ecc-1001
         grib_ecc-1030
+        grib_ecc-1364
         grib_ecc-1397
         grib_ecc-1425
         grib_ecc-1467
+        grib_ecc-1764
+        grib_ecc-1792
         grib_sub_hourly
         grib_set_bytes
         grib_set_force
         bufr_ecc-556
         codes_ecc-1698
+        codes_get_string
         codes_codetable
         gts_get
         gts_ls
@@ -294,6 +319,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ls
         grib_ls_json
         grib_filter
+        grib_filter_fail
         grib_multi
         grib_nearest_test
         pseudo_budg
@@ -352,6 +378,7 @@ if( HAVE_BUILD_TOOLS )
     endif()
     if( ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra grib_util_set_spec)
+        list(APPEND tests_extra grib_util_set_spec2)
         list(APPEND tests_extra grib_padding)
         list(APPEND tests_extra grib_tigge_conversions1)
         list(APPEND tests_extra grib_tigge_conversions2)
@@ -376,7 +403,8 @@ if( HAVE_BUILD_TOOLS )
     ecbuild_add_test( TARGET eccodes_t_grib_repair
                       TYPE SCRIPT
                       CONDITION ECCODES_INSTALL_EXTRA_TOOLS AND ENABLE_EXTRA_TESTS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_repair.sh )
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_repair.sh
+                      TEST_DEPENDS eccodes_download_gribs )
 
 
     # Note: making the test dependent on the grib files (with DEPENDS)
@@ -439,20 +467,27 @@ if( HAVE_BUILD_TOOLS )
                           TYPE SCRIPT
                           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_pthreads.sh )
 
-        foreach( test grib_threads_ecc-604 grib_threads_ecc-604-encode bufr_threads_ecc-604 )
+        foreach( test grib_encode_pthreads2 grib_threads_ecc-604-encode bufr_encode_pthreads )
             ecbuild_add_executable( TARGET    ${test}
                                     NOINSTALL
                                     SOURCES   ${test}.cc
                                     LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
         endforeach()
-        ecbuild_add_test( TARGET eccodes_t_grib_threads_ecc-604
+        ecbuild_add_test( TARGET eccodes_t_grib_encode_pthreads2
                           TYPE SCRIPT
                           TEST_DEPENDS eccodes_download_gribs
-                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_threads_ecc-604.sh )
-        ecbuild_add_test( TARGET eccodes_t_bufr_threads_ecc-604
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_pthreads2.sh )
+        ecbuild_add_test( TARGET eccodes_t_bufr_encode_pthreads
                           TYPE SCRIPT
                           TEST_DEPENDS eccodes_download_bufrs
-                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_threads_ecc-604.sh )
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_encode_pthreads.sh )
+    endif()
+
+    if( NOT ECCODES_ON_WINDOWS )
+        ecbuild_add_executable( TARGET    extract_offsets
+                                NOINSTALL
+                                SOURCES   extract_offsets.cc
+                                LIBS      eccodes )
     endif()
 
     ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf

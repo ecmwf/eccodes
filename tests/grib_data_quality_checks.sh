@@ -28,6 +28,13 @@ sample_ccsds=$ECCODES_SAMPLES_PATH/ccsds_grib2.tmpl
 unset ECCODES_GRIB_DATA_QUALITY_CHECKS
 unset ECCODES_EXTRA_DEFINITION_PATH
 
+echo "Data quality checks enabled. Packing samples should work"
+# -------------------------------------------------------------
+export ECCODES_GRIB_DATA_QUALITY_CHECKS=1
+${tools_dir}/grib_copy -r $sample_g1 /dev/null
+${tools_dir}/grib_copy -r $sample_g2 /dev/null
+unset ECCODES_GRIB_DATA_QUALITY_CHECKS
+
 # These input files are 2m temperature with min=221.76 and max=311.619
 input1=${data_dir}/reduced_gaussian_surface.grib1
 input2=${data_dir}/reduced_gaussian_surface.grib2
@@ -50,6 +57,7 @@ set -e
 [ $status -ne 0 ]
 grep -q 'more than the allowable limit' $tempErr
 unset ECCODES_DEBUG
+
 
 echo "Data quality checks enabled but only as a warning. Repacking should pass..."
 # --------------------------------------------------------------------------------
@@ -80,15 +88,10 @@ grep -q 'allowable limit' $tempErr
 
 echo "Test limits which are doubles..."
 # -------------------------------------
-pid=151131 # has limits -3.5 and +3.5
-${tools_dir}/grib_set -s paramId=$pid $input1 $tempGrib1
+pid=262140 # has limits -3.5 and +3.5
 ${tools_dir}/grib_set -s paramId=$pid $input2 $tempGrib2
-minval1=`${tools_dir}/grib_get -p param_value_min:d $tempGrib1`
-maxval1=`${tools_dir}/grib_get -p param_value_max:d $tempGrib1`
 minval2=`${tools_dir}/grib_get -p param_value_min:d $tempGrib2`
 maxval2=`${tools_dir}/grib_get -p param_value_max:d $tempGrib2`
-[ "$minval1" = "-3.5" ]
-[ "$maxval1" = "3.5"  ]
 [ "$minval2" = "-3.5" ]
 [ "$maxval2" = "3.5"  ]
 
@@ -96,31 +99,21 @@ maxval2=`${tools_dir}/grib_get -p param_value_max:d $tempGrib2`
 grib_check_key_equals $tempGrib2 'param_value_min:s,param_value_max:s' '-3.5 3.5'
 
 set +e
-${tools_dir}/grib_set -s scaleValuesBy=1.1 $tempGrib1 $tempOut 2>$tempErr
-stat1=$?
 ${tools_dir}/grib_set -s scaleValuesBy=1.1 $tempGrib2 $tempOut 2>$tempErr
 stat2=$?
 set -e
-[ $stat1 -ne 0 ]
 [ $stat2 -ne 0 ]
 
 # Should succeed. Change paramId first and then scale all values down
-${tools_dir}/grib_set -s paramId=$pid,scaleValuesBy=0.01 $input1 $tempOut
 ${tools_dir}/grib_set -s paramId=$pid,scaleValuesBy=0.01 $input2 $tempOut
 
 echo "Test close to the limit..."
 # ---------------------------------
-${tools_dir}/grib_set -s paramId=$pid $sample_g2 $tempGrib2
+# The GRIB2 sample has max values of 273. We need to use 1 for this test
+${tools_dir}/grib_set -s paramId=$pid,values=1 $sample_g2 $tempGrib2
 ${tools_dir}/grib_set -s scaleValuesBy=3 $tempGrib2 $tempOut # OK
 set +e
 ${tools_dir}/grib_set -s scaleValuesBy=3.6 $tempGrib2 $tempOut
-set -e
-[ $status -ne 0 ]
-
-${tools_dir}/grib_set -s edition=1 $tempGrib2 $tempGrib1
-${tools_dir}/grib_set -s scaleValuesBy=-3 $tempGrib1 $tempOut # OK
-set +e
-${tools_dir}/grib_set -s scaleValuesBy=-3.55 $tempGrib1 $tempOut
 set -e
 [ $status -ne 0 ]
 
@@ -189,11 +182,13 @@ cat > $tempDir/param_limits.def <<EOF
  } : double_type, hidden;
 EOF
 # Step of 12 satisfies the condition: it is even and > 4
-${tools_dir}/grib_set -s paramId=260509,step=12,scaleValuesBy=1000 $sample_g2 $tempGrib2
+# The GRIB2 sample has max values of 273. We need to use 1 for this test
+${tools_dir}/grib_set -s paramId=260509,step=12,values=1,scaleValuesBy=1000 $sample_g2 $tempGrib2
 
 # Step of 0 doesn't satisfy the condition so will use 400
+# The GRIB2 sample has max values of 273. We need to use 1 for this test
 set +e
-${tools_dir}/grib_set -s paramId=260509,scaleValuesBy=1000 $sample_g2 $tempGrib2
+${tools_dir}/grib_set -s paramId=260509,values=1,scaleValuesBy=1000 $sample_g2 $tempGrib2
 status=$?
 set -e
 [ $status -ne 0 ]

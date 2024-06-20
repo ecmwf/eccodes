@@ -7,7 +7,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-program grib_read_bytes
+program read_bytes
   use eccodes
   implicit none
   integer :: ifile

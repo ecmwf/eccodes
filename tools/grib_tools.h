@@ -83,7 +83,7 @@ typedef struct grib_option
     const char* help;
     int on;
     int command_line;
-    char* value;
+    const char* value;
 } grib_option;
 
 typedef struct grib_failed grib_failed;
@@ -137,7 +137,6 @@ typedef struct grib_runtime_options
     grib_tools_file* infile;
     grib_tools_file* outfile;
     grib_action* action;
-    grib_rule* rules;
     int dump_flags;
     char* dump_mode;
     int repack;

@@ -26,12 +26,11 @@ static struct table_entry table[] = {
 #include "grib_dumper_factory.h"
 };
 
-#define NUMBER(x) (sizeof(x) / sizeof(x[0]))
-
 grib_dumper* grib_dumper_factory(const char* op, const grib_handle* h, FILE* out, unsigned long option_flags, void* arg)
 {
-    int i;
-    for (i = 0; i < NUMBER(table); i++)
+    size_t i = 0;
+    const size_t num_table_entries = sizeof(table) / sizeof(table[0]);
+    for (i = 0; i < num_table_entries; i++)
         if (strcmp(op, table[i].type) == 0) {
             grib_dumper_class* c = *(table[i].cclass);
             grib_dumper* d       = (grib_dumper*)grib_context_malloc_clear(h->context, c->size);
@@ -53,8 +52,8 @@ void grib_dump_accessors_block(grib_dumper* dumper, grib_block_of_accessors* blo
 {
     grib_accessor* a = block->first;
     while (a) {
-        grib_accessor_dump(a, dumper);
-        a = a->next;
+        a->dump(dumper);
+        a = a->next_;
     }
 }
 
@@ -62,8 +61,8 @@ void grib_dump_accessors_list(grib_dumper* dumper, grib_accessors_list* al)
 {
     grib_accessors_list* cur = al;
     while (cur) {
-        grib_accessor_dump(cur->accessor, dumper);
-        cur = cur->next;
+        cur->accessor->dump(dumper);
+        cur = cur->next_;
     }
 }
 
@@ -71,7 +70,7 @@ int grib_print(grib_handle* h, const char* name, grib_dumper* d)
 {
     grib_accessor* act = grib_find_accessor(h, name);
     if (act) {
-        grib_accessor_dump(act, d);
+        act->dump(d);
         return GRIB_SUCCESS;
     }
     return GRIB_NOT_FOUND;
@@ -83,7 +82,8 @@ void grib_dump_content(const grib_handle* h, FILE* f, const char* mode, unsigned
     dumper = grib_dumper_factory(mode ? mode : "serialize", h, f, flags, data);
     if (!dumper) {
         fprintf(stderr, "Here are some possible values for the dumper mode:\n");
-        for (size_t i = 0; i < NUMBER(table); i++) {
+        const size_t num_table_entries = sizeof(table) / sizeof(table[0]);
+        for (size_t i = 0; i < num_table_entries; i++) {
             const char* t = table[i].type;
             if (strstr(t, "bufr") == NULL && strstr(t, "grib") == NULL) {
                 fprintf(stderr, "\t%s\n", t);
@@ -106,7 +106,7 @@ void grib_dump_keys(grib_handle* h, FILE* f, const char* mode, unsigned long fla
     for (i = 0; i < num_keys; ++i) {
         acc = grib_find_accessor(h, keys[i]);
         if (acc)
-            grib_accessor_dump(acc, dumper);
+            acc->dump(dumper);
     }
     grib_dumper_delete(dumper);
 }

@@ -132,10 +132,10 @@ void grib_file_pool_clean()
 //     return grib_write_file(fh, file->next);
 // }
 
-grib_file* grib_file_pool_get_files()
-{
-    return file_pool.first;
-}
+// grib_file* grib_file_pool_get_files()
+// {
+//     return file_pool.first;
+// }
 
 // int grib_file_pool_read(grib_context* c, FILE* fh)
 // {

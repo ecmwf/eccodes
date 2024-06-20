@@ -89,7 +89,7 @@ if (horizontalCoordinateDefinition == 0) {
     {
         meta coordinateIndexNumber evaluate(coordinate4Flag+coordinate3Flag);
 
-# levelist  latitude longitude
+        # levelist latitude longitude
         if (coordinateIndexNumber== 3) {
             meta marsLatitude  divdouble( coordinate1Start,1000000);
             meta marsLongitude divdouble( coordinate2Start,1000000);
@@ -145,15 +145,15 @@ if (horizontalCoordinateDefinition == 0) {
                   alias mars.range = marsRange;
                }
            }
-# product
-           alias mars.product = coordAveragingTims;
-# date
-           if (marsType == TYPE_OR  && averaging1Flag == P_INST) {
-               #remove mars.date;
-               alias mars.date = verificationDate;
-               #remove mars.step;
-               constant stepZero = 0;
-               alias mars.step =stepZero;
-           }
+        # product
+        alias mars.product = coordAveragingTims;
+        # date
+        if (marsType == TYPE_OR && averaging1Flag == P_INST) {
+            #remove mars.date;
+            alias mars.date = verificationDate;
+            #remove mars.step;
+            constant stepZero = 0;
+            alias mars.step =stepZero;
+        }
     }
 }

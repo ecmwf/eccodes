@@ -14,7 +14,7 @@
 #include "eccodes.h"
 
 /* See JIRA issue GRIB-361 */
-int main()
+int main(void)
 {
     const int ni = 2880;
     const int nj = 2880;

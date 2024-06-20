@@ -214,7 +214,6 @@ static int find(grib_nearest* nearest, grib_handle* h,
         }
         while (grib_iterator_next(iter, &lat, &lon, NULL)) {
             if (ilat < self->lats_count && olat != lat) {
-                /* Assert(ilat < self->lats_count); */
                 self->lats[ilat++] = lat;
                 olat               = lat;
             }
@@ -351,7 +350,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
                 grib_context_log(h->context, GRIB_LOG_ERROR, "grib_nearest_regular: Unable to compute index. Value too large");
                 return GRIB_OUT_OF_RANGE;
             } else {
-                indexes[kk] = self->k[kk];
+                indexes[kk] = (int)self->k[kk];
             }
             kk++;
         }

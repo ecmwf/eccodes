@@ -32,10 +32,15 @@ Step step_from_string(const std::string& step, const Unit& force_unit)
             std::string unit_str = match[2];
             Unit unit;
             if (unit_str.size() != 0) {
-                if (force_unit == Unit{Unit::Value::MISSING})
+                if (force_unit == Unit{Unit::Value::MISSING}) {
                     unit = Unit{unit_str};
-                else
-                    throw std::runtime_error("Cannot force unit when unit is specified in step string");
+                }
+                else {
+                    if (Unit{unit_str} == force_unit)
+                        unit = Unit{unit_str};
+                    else
+                        throw std::runtime_error("Cannot force unit when unit is specified in step string");
+                }
             }
             else {
                 if (force_unit == Unit{Unit::Value::MISSING})

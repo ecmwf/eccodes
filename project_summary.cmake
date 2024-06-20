@@ -1,7 +1,4 @@
-#if( SWIG_FOUND )
-#  message( STATUS " SWIG command      : [${SWIG_EXECUTABLE}]" )
-#endif()
-
+# Third-party libraries
 foreach( _tpl ${ECCODES_TPLS} )
     string( TOUPPER ${_tpl} TPL )
     if( ${TPL}_FOUND )

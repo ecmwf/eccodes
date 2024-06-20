@@ -224,18 +224,6 @@
 	 typeOfStatisticalProcessing = 3 ;
 	 lengthOfTimeRange = 24 ;
 	}
-#Mean temperature at 2 metres in the last 24 hours
-'mean2t24' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 55 ;
-	}
-#Mean 2 metre dewpoint temperature in the last 24 hours
-'mn2d24' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 56 ;
-	}
 #Observation count
 'obct' = {
 	 discipline = 192 ;
@@ -2578,6 +2566,24 @@
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 122 ;
+	}
+#Mean surface runoff rate
+'msror' = {
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 202 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Mean sub-surface runoff rate
+'mssror' = {
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 204 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Volcanic ash aerosol mixing ratio
 'aermr13' = {
@@ -13825,6 +13831,54 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Time-mean snow depth
+'avg_sd_m' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 254 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean logarithm of surface pressure
+'avg_lnsp' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean low cloud cover
+'avg_lcc_frac' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean medium cloud cover
+'avg_mcc_frac' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean high cloud cover
+'avg_hcc_frac' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 195 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean forecast albedo
+'avg_fal_frac' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Covariance between 2-metre temperature and volumetric soil water layer 1
 'covar_t2m_swvl1' = {
 	 localTablesVersion = 1 ;
@@ -14384,18 +14438,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 129 ;
 	 parameterNumber = 54 ;
-	}
-#Mean 2 metre temperature in the last 24 hours gradient
-'mean2t24grd' = {
-	 discipline = 192 ;
-	 parameterCategory = 129 ;
-	 parameterNumber = 55 ;
-	}
-#Mean 2 metre dewpoint temperature in the last 24 hours gradient
-'mn2d24grd' = {
-	 discipline = 192 ;
-	 parameterCategory = 129 ;
-	 parameterNumber = 56 ;
 	}
 #Downward UV radiation at the surface gradient
 'uvbgrd' = {
@@ -15669,12 +15711,6 @@
 	 parameterCategory = 130 ;
 	 parameterNumber = 231 ;
 	}
-#Mean vertical velocity
-'mvv' = {
-	 discipline = 192 ;
-	 parameterCategory = 130 ;
-	 parameterNumber = 232 ;
-	}
 #2m temperature anomaly of at least +2K
 '2tag2' = {
 	 discipline = 192 ;
@@ -16573,41 +16609,11 @@
 	 parameterCategory = 140 ;
 	 parameterNumber = 200 ;
 	}
-#Standard deviation wave height
-'sdhs' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 240 ;
-	}
-#Mean of 10 metre wind speed
-'mu10' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 241 ;
-	}
-#Mean wind direction
-'mdwi' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 242 ;
-	}
-#Standard deviation of 10 metre wind speed
-'sdu' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 243 ;
-	}
 #2D wave spectra (multiple)
 '2dsp' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 250 ;
-	}
-#Wave spectral peakedness
-'wsp' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 254 ;
 	}
 #Indicates a missing value
 '~' = {
@@ -16813,24 +16819,6 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 128 ;
 	}
-#Sea water potential temperature
-'thetao' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 129 ;
-	}
-#Sea water practical salinity
-'so' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 130 ;
-	}
-#Upward sea water velocity
-'wo' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 133 ;
-	}
 #Modulus of strain rate tensor
 'mst' = {
 	 discipline = 192 ;
@@ -16854,12 +16842,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 137 ;
-	}
-#Sea water sigma theta
-'sigmat' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 138 ;
 	}
 #Richardson number
 'rn' = {
@@ -16932,18 +16914,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 152 ;
-	}
-#Surface downward eastward stress
-'taueo' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 153 ;
-	}
-#Surface downward northward stress
-'tauno' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 154 ;
 	}
 #Turbulent kinetic energy input
 'tki' = {
@@ -17544,198 +17514,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 254 ;
-	}
-#Surface geopotential
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 51 ;
-	}
-#Vertical integral of temperature
-'vit' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 54 ;
-	}
-#Vertical integral of cloud liquid water
-'vilw' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 56 ;
-	}
-#Vertical integral of cloud frozen water
-'viiw' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 57 ;
-	}
-#Vertical integral of ozone
-'vioz' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 58 ;
-	}
-#Vertical integral of energy conversion
-'viec' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 64 ;
-	}
-#Vertical integral of eastward mass flux
-'vimae' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 65 ;
-	}
-#Vertical integral of northward mass flux
-'viman' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 66 ;
-	}
-#Vertical integral of eastward kinetic energy flux
-'vikee' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 67 ;
-	}
-#Vertical integral of northward kinetic energy flux
-'viken' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 68 ;
-	}
-#Vertical integral of eastward geopotential flux
-'vige' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 73 ;
-	}
-#Vertical integral of northward geopotential flux
-'vign' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 74 ;
-	}
-#Vertical integral of eastward total energy flux
-'vitoee' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 75 ;
-	}
-#Vertical integral of northward total energy flux
-'vitoen' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 76 ;
-	}
-#Vertical integral of eastward ozone flux
-'vioze' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 77 ;
-	}
-#Vertical integral of northward ozone flux
-'viozn' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 78 ;
-	}
-#Vertical integral of divergence of mass flux
-'vimad' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 81 ;
-	}
-#Vertical integral of divergence of kinetic energy flux
-'viked' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 82 ;
-	}
-#Vertical integral of divergence of thermal energy flux
-'vithed' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 83 ;
-	}
-#Vertical integral of divergence of geopotential flux
-'vigd' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 85 ;
-	}
-#Vertical integral of divergence of total energy flux
-'vitoed' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 86 ;
-	}
-#Vertical integral of divergence of ozone flux
-'viozd' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 87 ;
-	}
-#Variance of geopotential
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 206 ;
-	}
-#Covariance of geopotential/temperature
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 207 ;
-	}
-#Variance of temperature
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 208 ;
-	}
-#Covariance of geopotential/specific humidity
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 209 ;
-	}
-#Covariance of temperature/specific humidity
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 210 ;
-	}
-#Variance of specific humidity
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 211 ;
-	}
-#Covariance of u component/geopotential
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 212 ;
-	}
-#Covariance of u component/temperature
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 213 ;
-	}
-#Covariance of u component/specific humidity
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 214 ;
-	}
-#Variance of u component
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 215 ;
 	}
 #Covariance of v component/geopotential
 '~' = {
@@ -18987,39 +18765,36 @@
 	}
 #Mean large-scale precipitation rate
 'mlsprt' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 142 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 196 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean convective precipitation rate
 'cprate' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 143 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 195 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean total snowfall rate
 'mtsfr' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 144 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 198 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Boundary layer dissipation
 'bldrate' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 145 ;
-	}
-#Mean surface sensible heat flux
-'msshfl' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 146 ;
-	}
-#Mean surface latent heat flux
-'mslhfl' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 147 ;
 	}
 #Mean short-wave heating rate
 'mswhr' = {
@@ -19033,59 +18808,14 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 154 ;
 	}
-#Mean surface downward solar radiation flux
-'msdsrf' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 169 ;
-	}
-#Mean surface downward thermal radiation flux
-'msdtrf' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 175 ;
-	}
-#Mean surface net solar radiation flux
-'msnsrf' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 176 ;
-	}
-#Mean surface net thermal radiation flux
-'msntrf' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 177 ;
-	}
-#Mean top net solar radiation flux
-'mtnsrf' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 178 ;
-	}
-#Mean top net thermal radiation flux
-'mtntrf' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 179 ;
-	}
-#East-West surface stress rate of accumulation
-'ewssra' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 180 ;
-	}
-#North-South surface stress rate of accumulation
-'nsssra' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 181 ;
-	}
 #Evaporation
 'erate' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 182 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 199 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean sunshine duration rate
 'msdr' = {
@@ -19113,45 +18843,21 @@
 	}
 #Mean runoff rate
 'mrort' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 205 ;
-	}
-#Top net solar radiation, clear sky
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 208 ;
-	}
-#Top net thermal radiation, clear sky
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 209 ;
-	}
-#Surface net solar radiation, clear sky
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 210 ;
-	}
-#Surface net thermal radiation, clear sky
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 211 ;
-	}
-#Solar insolation rate of accumulation
-'soira' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 212 ;
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 201 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean total precipitation rate
 'tprate' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 228 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 193 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Convective snowfall
 '~' = {
@@ -21841,17 +21547,15 @@
 	 parameterCategory = 220 ;
 	 parameterNumber = 228 ;
 	}
-#Mean of 10 metre wind speed
-'mean10ws' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 5 ;
-	}
 #Mean total cloud cover
 'meantcc' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 6 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Surface temperature significance
 'sts' = {

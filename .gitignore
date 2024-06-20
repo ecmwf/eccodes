@@ -17,6 +17,8 @@ grib_api.pc
 grib_api_f90.pc
 *.analyzerinfo
 *.snalyzerinfo
+tags
+src/convert_*.sh
 
 # compiled source #
 ###################
@@ -72,3 +74,4 @@ data/bufr/*test
 
 build/
 *.back
+trash

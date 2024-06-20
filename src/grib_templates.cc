@@ -25,27 +25,25 @@
 //     size_t               size;
 // } grib_templates;
 
-// #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 // grib_handle* grib_internal_sample(grib_context* c,const char* name)
 // {
 //     size_t i;
-//     const size_t num_samples = NUMBER(templates);
-//     Assert(0);
+//     const size_t num_samples = sizeof(templates) / sizeof(templates[0]);
 //     for(i = 0; i < num_samples; i++)
 //         if(strcmp(name,templates[i].name) == 0)
 //             return grib_handle_new_from_message_copy(c,templates[i].data,templates[i].size);
 //     return NULL;
 // }
 
-/* Windows always has a colon in pathnames e.g. C:\temp\file. It uses semi-colons as delimiter */
+// Windows always has a colon in pathnames e.g. C:\temp\file. It uses semi-colons as delimiter
 #ifdef ECCODES_ON_WINDOWS
 #define ECC_PATH_DELIMITER_CHAR ';'
 #else
 #define ECC_PATH_DELIMITER_CHAR ':'
 #endif
 
-/* if product_kind is PRODUCT_ANY, the type of sample file is determined at runtime */
-static grib_handle* try_product_template(grib_context* c, ProductKind product_kind, const char* dir, const char* name)
+// if product_kind is PRODUCT_ANY, the type of sample file is determined at runtime
+static grib_handle* try_product_sample(grib_context* c, ProductKind product_kind, const char* dir, const char* name)
 {
     char path[1024];
     grib_handle* g = NULL;
@@ -57,10 +55,10 @@ static grib_handle* try_product_template(grib_context* c, ProductKind product_ki
         snprintf(path, sizeof(path), "%s/%s.tmpl", dir, name);
 
     if (c->debug) {
-        fprintf(stderr, "ECCODES DEBUG try_product_template product=%s, path='%s'\n", codes_get_product_name(product_kind), path);
+        fprintf(stderr, "ECCODES DEBUG try_product_sample product=%s, path='%s'\n", codes_get_product_name(product_kind), path);
     }
 
-    if (codes_access(path, F_OK) == 0) { /* 0 means file exists */
+    if (codes_access(path, F_OK) == 0) { // 0 means file exists
         FILE* f = codes_fopen(path, "r");
         if (!f) {
             grib_context_log(c, GRIB_LOG_PERROR, "cannot open %s", path);
@@ -68,7 +66,7 @@ static grib_handle* try_product_template(grib_context* c, ProductKind product_ki
         }
         if (product_kind == PRODUCT_ANY)
         {
-            /* Determine the product kind from sample file */
+            // Determine the product kind from sample file
             char* mesg   = NULL;
             size_t size  = 0;
             off_t offset = 0;
@@ -91,7 +89,7 @@ static grib_handle* try_product_template(grib_context* c, ProductKind product_ki
         if (product_kind == PRODUCT_BUFR) {
             g = codes_bufr_handle_new_from_file(c, f, &err);
         } else {
-            /* Note: Pseudo GRIBs like DIAG and BUDG also come here */
+            // Note: Pseudo GRIBs like DIAG and BUDG also come here
             DEBUG_ASSERT(product_kind == PRODUCT_GRIB);
             g = grib_handle_new_from_file(c, f, &err);
         }
@@ -104,22 +102,24 @@ static grib_handle* try_product_template(grib_context* c, ProductKind product_ki
     return g;
 }
 
-static char* try_template_path(grib_context* c, const char* dir, const char* name)
+static char* try_sample_path(grib_context* c, const char* dir, const char* name)
 {
+    // The ".tmpl" extension is historic. It should have been ".sample"
     char path[2048];
     if (string_ends_with(name, ".tmpl"))
         snprintf(path, sizeof(path), "%s/%s", dir, name);
     else
         snprintf(path, sizeof(path), "%s/%s.tmpl", dir, name);
 
-    if (codes_access(path, F_OK) == 0) { /* 0 means file exists */
+    if (codes_access(path, F_OK) == 0) { // 0 means file exists
         return grib_context_strdup(c, path);
     }
 
     return NULL;
 }
 
-grib_handle* codes_external_template(grib_context* c, ProductKind product_kind, const char* name)
+// External here means on disk
+grib_handle* codes_external_sample(grib_context* c, ProductKind product_kind, const char* name)
 {
     const char* base = c->grib_samples_path;
     char buffer[1024];
@@ -132,21 +132,21 @@ grib_handle* codes_external_template(grib_context* c, ProductKind product_kind, 
     while (*base) {
         if (*base == ECC_PATH_DELIMITER_CHAR) {
             *p = 0;
-            g  = try_product_template(c, product_kind, buffer, name);
+            g  = try_product_sample(c, product_kind, buffer, name);
             if (g)
                 return g;
             p = buffer;
-            base++; /*advance past delimiter*/
+            base++; //advance past delimiter
         }
         *p++ = *base++;
     }
 
     *p       = 0;
-    g = try_product_template(c, product_kind, buffer, name);
+    g = try_product_sample(c, product_kind, buffer, name);
     return g;
 }
 
-char* get_external_template_path(grib_context* c, const char* name)
+char* get_external_sample_path(grib_context* c, const char* name)
 {
     const char* base = c->grib_samples_path;
     char buffer[1024];
@@ -159,7 +159,7 @@ char* get_external_template_path(grib_context* c, const char* name)
     while (*base) {
         if (*base == ECC_PATH_DELIMITER_CHAR) {
             *p = 0;
-            g  = try_template_path(c, buffer, name);
+            g  = try_sample_path(c, buffer, name);
             if (g)
                 return g;
             p = buffer;
@@ -169,5 +169,5 @@ char* get_external_template_path(grib_context* c, const char* name)
     }
 
     *p       = 0;
-    return g = try_template_path(c, buffer, name);
+    return g = try_sample_path(c, buffer, name);
 }

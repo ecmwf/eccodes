@@ -14,8 +14,9 @@ REDIRECT=/dev/null
 
 label=grib_step_test
 tempGrb=${data_dir}/temp.$label.out.grib
-templog=${data_dir}/temp.$label.log
-rm -f $templog $tempGrb
+tempLog=${data_dir}/temp.$label.log
+tempFilt=${data_dir}/temp.$label.filt
+rm -f $tempLog $tempGrb
 
 grib1_sample=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 grib2_sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
@@ -31,7 +32,7 @@ do
       #echo grib_set -s ${key}=$s ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb
       #grib_get -p step,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb 
       ${tools_dir}/grib_get -p mars.step,stepRange,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange:l \
-                            ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb >> ${templog}
+                            ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb >> $tempLog
 	done
   done
 done
@@ -44,7 +45,7 @@ do
    #echo grib_set -s ${key}=$s ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb
    #grib_ls -p step,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb 
    ${tools_dir}/grib_get -p mars.step,stepRange,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange:l \
-                         ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb >> ${templog}
+                         ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb >> $tempLog
 done
 
 rm -f $tempGrb
@@ -52,17 +53,17 @@ rm -f $tempGrb
 # test added for ifs stepType=max,min
 ${tools_dir}/grib_set -s stepType=max,startStep=3,endStep=6 ${data_dir}/reduced_gaussian_model_level.grib1 $tempGrb
 ${tools_dir}/grib_get -p mars.step,stepRange,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange:l \
-                      ${data_dir}/reduced_gaussian_model_level.grib1 $tempGrb >> ${templog}
+                      ${data_dir}/reduced_gaussian_model_level.grib1 $tempGrb >> $tempLog
 
 rm -f $tempGrb
 
-diff ${data_dir}/step.log ${templog}
+diff ${data_dir}/step.log $tempLog
 
-(${tools_dir}/grib_filter ${data_dir}/step_grib1.filter ${data_dir}/timeRangeIndicator_0.grib > ${templog}) 2>$REDIRECT
+(${tools_dir}/grib_filter ${data_dir}/step_grib1.filter ${data_dir}/timeRangeIndicator_0.grib > $tempLog) 2>$REDIRECT
 
-diff ${data_dir}/step_grib1.log ${templog}
+diff ${data_dir}/step_grib1.log $tempLog
 
-rm -f ${templog}
+rm -f $tempLog
 
 # GRIB-180
 # ------------
@@ -166,10 +167,10 @@ grib_check_key_equals $temp day  7
 
 # Seconds (ignored)
 # -----------------
-${tools_dir}/grib_ls -s second=9 -n time $grib2_sample 2>$templog
+${tools_dir}/grib_ls -s second=9 -n time $grib2_sample 2>$tempLog
 # Something should have been written to stderr
-[ -s $templog ]
-grep -q "Truncating time: non-zero seconds.* ignored" $templog
+[ -s $tempLog ]
+grep -q "Truncating time: non-zero seconds.* ignored" $tempLog
 
 # Hour or minute set to 255
 # ---------------------------
@@ -214,33 +215,50 @@ ECCODES_GRIBEX_MODE_ON=1 ${tools_dir}/grib_set -s stepRange=11-12 $input $temp
 grib_check_key_equals $temp P1,P2 '0 11'
 
 set +e
-${tools_dir}/grib_set -s stepRange=11-12 $input $temp 2>$templog
+${tools_dir}/grib_set -s stepRange=11-12 $input $temp 2>$tempLog
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "Unable to set stepRange" $templog
+grep -q "Unable to set stepRange" $tempLog
 
 
 # GRIB1: sub-hourly
 # -----------------
 ${tools_dir}/grib_set -s unitOfTimeRange=0,P1=5 $grib1_sample $temp
 set +e
-${tools_dir}/grib_get -p step $temp 2>$templog
+${tools_dir}/grib_get -p step $temp 2>$tempLog
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "unable to represent the step in h" $templog
+grep -q "unable to represent the step in h" $tempLog
 
 # GRIB1: Unknown timeRangeIndicator
 ${tools_dir}/grib_set -s timeRangeIndicator=138 $grib1_sample $temp
 set +e
-${tools_dir}/grib_get -p step $temp 2>$templog
+${tools_dir}/grib_get -p step $temp 2>$tempLog
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "Unknown stepType" $templog
+grep -q "Unknown stepType" $tempLog
 
+# Several time ranges
+# --------------------
+cat >$tempFilt <<EOF
+  set productDefinitionTemplateNumber = 8;
+  set numberOfTimeRange = 3;
+
+  meta elem_penultimate element(typeOfStatisticalProcessing, numberOfTimeRange - 2);
+  set elem_penultimate = 8;
+
+  meta elem_last  element(typeOfStatisticalProcessing, numberOfTimeRange - 1);
+  set elem_last = 7;
+
+  print "[typeOfStatisticalProcessing]";
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempLog
+cat $tempLog
+grep -q "255 8 7" $tempLog
 
 # Clean up
-rm -f $temp $templog
+rm -f $temp $tempLog $tempFilt
 rm -f $grib2File.p8tmp ${grib2File}.tmp x.grib

@@ -124,7 +124,7 @@ int grib_dependency_notify_change(grib_accessor* observed)
     while (d) {
         if (d->run) {
             /*printf("grib_dependency_notify_change %s %s %p\n", observed->name, d->observer ? d->observer->name : "?", (void*)d->observer);*/
-            if (d->observer && (ret = grib_accessor_notify_change(d->observer, observed)) != GRIB_SUCCESS)
+            if (d->observer && (ret = d->observer->notify_change(observed)) != GRIB_SUCCESS)
                 return ret;
         }
         d = d->next;
@@ -134,7 +134,7 @@ int grib_dependency_notify_change(grib_accessor* observed)
 
 /* This version takes in the handle so does not need to work it out from the 'observed' */
 /* See ECC-778 */
-int ecc__grib_dependency_notify_change(grib_handle* h, grib_accessor* observed)
+int grib_dependency_notify_change_h(grib_handle* h, grib_accessor* observed)
 {
     grib_dependency* d = h->dependencies;
     int ret            = GRIB_SUCCESS;
@@ -149,7 +149,7 @@ int ecc__grib_dependency_notify_change(grib_handle* h, grib_accessor* observed)
     while (d) {
         if (d->run) {
             /*printf("grib_dependency_notify_change %s %s %p\n",observed->name,d->observer ? d->observer->name : "?", (void*)d->observer);*/
-            if (d->observer && (ret = grib_accessor_notify_change(d->observer, observed)) != GRIB_SUCCESS)
+            if (d->observer && (ret = d->observer->notify_change(observed)) != GRIB_SUCCESS)
                 return ret;
         }
         d = d->next;

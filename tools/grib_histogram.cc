@@ -58,7 +58,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 */
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
-    size_t i, j, err = 0;
+    size_t i, j;
     size_t last_size = 0;
     long missingValuesPresent;
     double delta;
@@ -73,14 +73,6 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     for (i = 0; i < (size_t)options->requested_print_keys_count; i++) {
         names[name_count++] = options->requested_print_keys[i].name;
-    }
-
-    if (!options->skip) {
-        if (options->set_values_count != 0)
-            err = grib_set_values(h, options->set_values, options->set_values_count);
-
-        if (err != GRIB_SUCCESS && options->fail)
-            exit(err);
     }
 
     GRIB_CHECK(grib_get_long(h, "missingValuesPresent", &missingValuesPresent), 0);
