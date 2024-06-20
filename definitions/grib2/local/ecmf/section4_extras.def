@@ -1,8 +1,9 @@
 # (C) Copyright 2005- ECMWF.
 
-#concept modelName ("unknown", "modelNameConcept.def",conceptsDir2,conceptsDir1): no_copy, dump;
+concept modelName ("unknown", "modelNameConcept.def",conceptsDir2,conceptsDir1): no_copy, dump;
 
-#if (!(modelName is "unknown")) {
-#    concept modelVersion ("unknown", "modelVersionConcept.[modelName].def",conceptsDir2,conceptsDir1): no_copy, dump;
-#    alias mars.model = modelName;
-#}
+if (!(modelName is "unknown")) {
+    concept modelVersion ("unknown", "modelVersionConcept_[modelName].def",conceptsDir2,conceptsDir1): no_copy, dump;
+    alias ls.model = modelName;
+    alias mars.model = modelName;
+}
