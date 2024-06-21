@@ -4,10 +4,10 @@ constant modelNameDefault = "unknown";
 constant modelVersionDefault = "unknown";
 
 if (centre is "ecmf" or datasetForLocal is "era6") {
- concept_nofail modelName (modelNameDefault, "modelNameConcept.def",conceptsDir2,conceptsDir1): no_copy, dump;
+ concept_nofail modelName (modelNameDefault, "modelNameConcept.def",conceptsMasterDir,conceptsLocalDirAll): no_copy, dump;
 
  if (!(modelName is "unknown")) {
-    concept_nofail modelVersion (modelVersionDefault, "modelVersionConcept_[modelName].def",conceptsDir2,conceptsDir1): no_copy, dump;
+    concept_nofail modelVersion (modelVersionDefault, "modelVersionConcept_[modelName].def",conceptsMasterDir,conceptsLocalDirAll): no_copy, dump;
     alias ls.model = modelName;
     alias mars.model = modelName;
  }
