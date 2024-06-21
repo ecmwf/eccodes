@@ -78,8 +78,8 @@ if (defined(marsStream) && defined(marsType)) {
 template parameters "grib2/parameters.def";
 
 
-#adding hook for local extras 
-template_nofail section4_extras "grib2/local/[centre]/section4_extras.def";
+# Hook for local extras 
+template_nofail section4Extras "grib2/local/[centre]/section4_extras.def";
 
 # Detect if this is for Generalized vertical height coordinates
 if (defined(typeOfFirstFixedSurface)) {
