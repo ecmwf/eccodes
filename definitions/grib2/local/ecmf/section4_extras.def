@@ -2,10 +2,10 @@
 
 # See ECC-1846
 if (centre is "ecmf" or datasetForLocal is "era6") {
- concept_nofail modelName (unknown, "modelNameConcept.def",conceptsMasterDir,conceptsLocalDirAll): no_copy, dump;
+ concept_nofail modelName(unknown, "modelNameConcept.def", conceptsMasterDir, conceptsLocalDirAll): no_copy, dump;
 
  if (!(modelName is "unknown")) {
-    concept_nofail modelVersion (unknown, "modelVersionConcept_[modelName].def",conceptsMasterDir,conceptsLocalDirAll): no_copy, dump;
+    concept_nofail modelVersion(unknown, "modelVersionConcept_[modelName].def", conceptsMasterDir, conceptsLocalDirAll): no_copy, dump;
     # alias ls.model = modelName;
     # alias mars.model = modelName;
  }
