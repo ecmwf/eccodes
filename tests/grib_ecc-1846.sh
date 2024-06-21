@@ -28,5 +28,21 @@ grib_check_key_equals $tempGrib modelName,modelVersion "IFS cy48r1"
 ${tools_dir}/grib_set -s generatingProcessIdentifier=100 $sample $tempGrib
 grib_check_key_equals $tempGrib modelName,modelVersion "IFS unknown"
 
+# Keys are read-only (may change this later)
+set +e
+${tools_dir}/grib_set -s modelName=AIFS $sample $tempGrib 2>$tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Value is read only" $tempLog
+
+set +e
+${tools_dir}/grib_set -s modelVersion=cy48r1 $sample $tempGrib 2>$tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Value is read only" $tempLog
+
+
 # Clean up
 rm -f $tempGrib $tempFilt $tempLog $tempOut $tempRef
