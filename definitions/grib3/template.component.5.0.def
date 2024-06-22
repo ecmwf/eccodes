@@ -14,7 +14,7 @@ unsigned[4] scaledValueOfFirstFixedSurface = missing()  : can_be_missing,dump,ed
 ####
 transient pressureUnits="hPa";
 
-concept_nofail vertical.typeOfLevel (unknown) {
+concept vertical.typeOfLevel (unknown) {
 #set uses the last one
 #get returns the first match
   'surface'       = { typeOfFirstFixedSurface=1; }

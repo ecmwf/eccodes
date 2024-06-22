@@ -24,7 +24,7 @@ unsigned[4] scaledValueOfSecondFixedSurface = missing() : can_be_missing,dump,ed
 
 transient pressureUnits="hPa";
 
-concept_nofail vertical.typeOfLevel (unknown,"typeOfLevelConcept.def",conceptsDir2,conceptsDir1);
+concept vertical.typeOfLevel (unknown,"typeOfLevelConcept.def",conceptsDir2,conceptsDir1);
 
 alias levelType=typeOfFirstFixedSurface;
 
