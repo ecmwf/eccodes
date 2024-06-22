@@ -41,6 +41,6 @@ padto padding_loc2_2(offsetSection1 + 328);
 
 
 constant unknown="-";
-concept clusteringDomain(unknown,"cluster_domain.def",conceptsMasterDir,conceptsLocalDirAll);
+concept_nofail clusteringDomain(unknown,"cluster_domain.def",conceptsMasterDir,conceptsLocalDirAll);
 alias number = clusterNumber;
 alias domain = clusteringDomain;
