@@ -22,7 +22,7 @@ if ( localDefinitionNumber == 83 ) {
   alias mars.landtype         = matchLandType;
   alias mars.aerosolbinnumber = matchAerosolBinNumber;
 
-  concept_nofail matchAerosolPacking (unknown,"aerosolPackingConcept.def",conceptsLocalMarsDirAll,conceptsMasterMarsDir);
+  concept matchAerosolPacking (unknown,"aerosolPackingConcept.def",conceptsLocalMarsDirAll,conceptsMasterMarsDir);
   alias mars.aerosolpacking   = matchAerosolPacking; 
 }
 

@@ -12,11 +12,15 @@
 
 label="grib_typeOfLevel_test"
 temp=temp.$label.txt
+tempGrib=temp.$label.grib
 
 if [ ! -d "$ECCODES_DEFINITION_PATH" ]; then
     echo "Test $0 disabled. No definitions directory"
     exit 0
 fi
+
+sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 # Make sure all typeOfLevel values are unique
 def_file="$ECCODES_DEFINITION_PATH/grib2/typeOfLevelConcept.def"
@@ -35,4 +39,16 @@ else
     echo "No duplicates in $def_file"
 fi
 
-rm -f $temp
+# ECC-1847: Setting invalid value for 'typeOfLevel' does not fail
+for sample in $sample_g1 $sample_g2; do
+    set +e
+    ${tools_dir}/grib_set -s typeOfLevel=rubbish $sample $tempGrib 2>$temp
+    status=$?
+    set -e
+    [ $status -ne 0 ]
+    grep -q "Concept no match" $temp
+done
+
+
+# Clean up
+rm -f $temp $tempGrib
