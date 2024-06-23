@@ -19,40 +19,40 @@ sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 # Base
 ${tools_dir}/grib_set -s shortName=t $sample $tempGrib
-grib_check_key_equals $tempGrib paramType,mars.paramtype "base base"
+grib_check_key_equals $tempGrib mars.paramtype "base"
 
 # Aerosols
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=45,discipline=0,parameterCategory=20,parameterNumber=0 \
  $sample $tempGrib
-grib_check_key_equals $tempGrib paramType,mars.paramtype "chemical chemical"
+grib_check_key_equals $tempGrib mars.paramtype "chemical"
 
 
 # Atmospheric chemical constituents
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=40,discipline=0,parameterCategory=20,parameterNumber=2 \
  $sample $tempGrib
-grib_check_key_equals $tempGrib paramType,mars.paramtype "chemical chemical"
+grib_check_key_equals $tempGrib mars.paramtype "chemical"
 
 
 # Optical properties of aerosol
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=48,discipline=0,parameterCategory=20,parameterNumber=102 \
  $sample $tempGrib
 ${tools_dir}/grib_dump -O -p section_4 $tempGrib
-grib_check_key_equals $tempGrib paramType,mars.paramtype "optical optical"
+grib_check_key_equals $tempGrib mars.paramtype "optical"
 
 # Generalised tiles
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=113 $sample $tempGrib
-grib_check_key_equals $tempGrib paramType,mars.paramtype "tile tile"
+grib_check_key_equals $tempGrib mars.paramtype "tile"
 
 # Wave spectra
 for pdtn in 99 100 101 102; do
     ${tools_dir}/grib_set -s productDefinitionTemplateNumber=$pdtn $sample $tempGrib
-    grib_check_key_equals $tempGrib paramType,mars.paramtype "wave_spectra wave_spectra"
+    grib_check_key_equals $tempGrib mars.paramtype "wave_spectra"
 done
 
 # Wave
 for pid in 140200 140250; do
     ${tools_dir}/grib_set -s paramId=$pid $sample $tempGrib
-    grib_check_key_equals $tempGrib paramType,mars.paramtype "wave wave"
+    grib_check_key_equals $tempGrib mars.paramtype "wave"
 done
 
 # Clean up
