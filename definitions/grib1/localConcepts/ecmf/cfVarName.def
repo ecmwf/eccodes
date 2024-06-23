@@ -13024,12 +13024,12 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 130 ;
 	}
-#Eastward sea water velocity
+#Eastward surface sea water velocity
 'uoe' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 131 ;
 	}
-#Northward sea water velocity
+#Northward surface sea water velocity
 'von' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 132 ;
@@ -13244,7 +13244,7 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 174 ;
 	}
-#Average salinity in the upper 300m
+#Average sea water practical salinity in the upper 300m
 'sav300' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 175 ;

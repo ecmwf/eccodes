@@ -282,12 +282,6 @@
 	 discipline = 10 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 160 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfSecondFixedSurface = missing() ;
-	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
 #Depth of 20 C isotherm
 'depth_of_isosurface_of_sea_water_potential_temperature' = {
@@ -318,12 +312,6 @@
 	 discipline = 10 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 160 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfSecondFixedSurface = missing() ;
-	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
 #Heat flux correction
 'heat_flux_correction' = {
@@ -342,20 +330,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 10 ;
-	}
-#Eastward sea water velocity
-'eastward_sea_water_velocity' = {
-	 discipline = 10 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 2 ;
-	 typeOfFirstFixedSurface = 160 ;
-	}
-#Northward sea water velocity
-'northward_sea_water_velocity' = {
-	 discipline = 10 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 160 ;
 	}
 #Nitrogen dioxide mass mixing ratio
 'mass_fraction_of_nitrogen_dioxide_in_air' = {

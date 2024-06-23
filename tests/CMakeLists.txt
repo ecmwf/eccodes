@@ -104,6 +104,8 @@ if( HAVE_BUILD_TOOLS )
         grib_ifsParam
         grib_packing_order
         filter_substr
+        filter_size
+        filter_is_one_of
         filter_is_in_list
         filter_transient_darray
         grib_uerra
@@ -145,6 +147,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1708
         grib_ecc-1691
         grib_ecc-1766
+        grib_ecc-1806
         grib_ecc-1829
         bufr_ecc-1028
         bufr_ecc-1195
@@ -153,6 +156,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-1304
         bufr_ecc-1347
         bufr_ecc-1395
+        bufr_ecc-1840
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
@@ -224,6 +228,13 @@ if( HAVE_BUILD_TOOLS )
         grib_keys_iter
         grib_keys_iter_skip
         grib_geo_iter
+        grib_to_json
+        grib_to_ppm
+        grib_merge
+        big2gribex
+        grib_sub_area_check
+        grib_list_keys
+        grib_histogram
         bufr_get_element
         bufr_wmo_tables
         bufr_extract_headers
@@ -268,6 +279,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1467
         grib_ecc-1764
         grib_ecc-1792
+        grib_ecc-1846
         grib_sub_hourly
         grib_set_bytes
         grib_set_force

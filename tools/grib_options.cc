@@ -39,7 +39,7 @@ static grib_options_help grib_options_help_list[] = {
     { "e:", "tolerance", "\n\t\tOnly values whose difference is more than tolerance are considered different.\n" },
     { "f", 0, "Force. Force the execution not to fail on error.\n" },
     { "F:", "format", "\n\t\tC style format for floating-point values.\n" },
-    { "g", 0, "Copy GTS header. \n" },
+    { "g", 0, "Copy GTS header.\n" },
     { "G", 0, "GRIBEX compatibility mode.\n" },
     { "i:", "index",
       "\n\t\tData value corresponding to the given index is printed.\n" },
@@ -81,7 +81,7 @@ static grib_options_help grib_options_help_list[] = {
       "\n\t\tIn the value you can also use the forward-slash character '/' to specify an OR condition (i.e. a logical disjunction)"
       "\n\t\tNote: only one -w clause is allowed.\n" },
     { "v", 0, "Verbose.\n" },
-    { "7", 0, "Does not fail when the message has wrong length\n" },
+    { "7", 0, "Does not fail when the message has wrong length.\n" },
     { "A:", "absolute error\n",
       "\tCompare floating-point values using the absolute error as tolerance.\n\t\tDefault is absolute error=0\n" },
     { "C", 0, "C code mode. A C code program generating the message is dumped.\n" },
@@ -98,7 +98,7 @@ static grib_options_help grib_options_help_list[] = {
     { "S", 0,
       "Strict. Only messages matching all the constraints are copied to"
       "\n\t\tthe output file\n" },
-    { "T:", "T | B | M | A", "Message type. T->GTS, B->BUFR, M->METAR (Experimental), A->Any (Experimental).\n\t\t\t\tThe input file is interpreted according to the message type.\n" },
+    { "T:", "T | B | A", "Message type. T->GTS, B->BUFR, A->Any (Experimental).\n\t\t\tThe input file is interpreted according to the message type.\n" },
     { "V", 0, "Version.\n" },
     { "W:", "width", "\n\t\tMinimum width of each column in output. Default is 10.\n" },
     { "X:", "offset", "\n\t\tInput file offset in bytes. Processing of the input file will start from the given offset.\n" },

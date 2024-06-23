@@ -44,4 +44,4 @@ $EXEC ${test_dir}/codes_get_string GTS "$input" theMessage 2> $tempText
 grep -q "Buffer too small" $tempText
 
 # Clean up
-rm -f $tempText
+rm -f $tempText $tempGrib

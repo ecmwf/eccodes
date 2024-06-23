@@ -173,6 +173,22 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Eastward surface sea water velocity
+'Eastward surface sea water velocity' = {
+	 discipline = 10 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Northward surface sea water velocity
+'Northward surface sea water velocity' = {
+	 discipline = 10 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Sea surface height
 'Sea surface height' = {
 	 discipline = 10 ;
@@ -199,8 +215,8 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Average salinity in the upper 300m
-'Average salinity in the upper 300m' = {
+#Average sea water practical salinity in the upper 300m
+'Average sea water practical salinity in the upper 300m' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 21 ;

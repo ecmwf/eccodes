@@ -54,7 +54,7 @@ static void update_sections(grib_section* s, grib_handle* h, long offset)
         a->offset += offset;
         /* update_sections ( grib_get_sub_section ( a ),h,offset ); */
         update_sections(a->sub_section, h, offset);
-        a = a->next;
+        a = a->next_;
     }
 }
 
@@ -74,7 +74,7 @@ void grib_swap_sections(grib_section* the_old, grib_section* the_new)
     a = the_old->block->first;
     while (a) {
         a->parent = the_old;
-        a         = a->next;
+        a         = a->next_;
     }
 
     update_sections(the_old, the_old->h, the_old->owner->offset);
@@ -94,12 +94,12 @@ void grib_empty_section(grib_context* c, grib_section* b)
     current = b->block->first;
 
     while (current) {
-        grib_accessor* next = current->next;
+        grib_accessor* next = current->next_;
         if (current->sub_section) {
             grib_section_delete(c, current->sub_section);
             current->sub_section = 0;
         }
-        grib_accessor_delete(c, current);
+        current->destroy(c);
         current = next;
     }
     b->block->first = b->block->last = 0;
@@ -231,7 +231,7 @@ grib_handle* codes_handle_new_from_samples(grib_context* c, const char* name)
     if (!g) {
         grib_context_log(c, GRIB_LOG_ERROR,
                          "Unable to load sample file '%s.tmpl'\n"
-                         "                   from %s\n"
+                         "                   samples path='%s'\n"
                          "                   (ecCodes Version=%s)",
                          name, c->grib_samples_path, ECCODES_VERSION_STR);
     }
@@ -637,7 +637,6 @@ static grib_handle* grib_handle_new_multi(grib_context* c, unsigned char** data,
         while (grib2_get_next_section((unsigned char*)message, olen, &secbegin, &seclen, &secnum, &err)) {
             // seccount++;
             /*printf("   - %d - section %d length=%d\n",(int)seccount,(int)secnum,(int)seclen);*/
-
             gm->sections[secnum]        = secbegin;
             gm->sections_length[secnum] = seclen;
 
@@ -685,6 +684,11 @@ static grib_handle* grib_handle_new_multi(grib_context* c, unsigned char** data,
 
                 break;
             }
+        }
+        // ECC-782
+        if (err == GRIB_INVALID_SECTION_NUMBER) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Failed to get section info (%s)", __func__, grib_get_error_message(err));
+            return NULL;
         }
     }
     else if (edition == 3) {
@@ -839,6 +843,11 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
                 }
                 break;
             }
+        }
+        // ECC-782
+        if (err == GRIB_INVALID_SECTION_NUMBER) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Failed to get section info (%s)", __func__, grib_get_error_message(err));
+            return NULL;
         }
     }
     else if (edition == 3) {

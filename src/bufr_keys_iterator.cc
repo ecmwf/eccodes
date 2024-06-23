@@ -176,7 +176,7 @@ int codes_bufr_keys_iterator_next(bufr_keys_iterator* kiter)
             return 1;
         }
         else {
-            kiter->current    = grib_next_accessor(kiter->current);
+            kiter->current    = kiter->current->next_accessor();
             kiter->attributes = 0;
             if (kiter->prefix) {
                 grib_context_free(kiter->current->context, kiter->prefix);
@@ -187,7 +187,7 @@ int codes_bufr_keys_iterator_next(bufr_keys_iterator* kiter)
     }
 
     while (kiter->current && skip(kiter))
-        kiter->current = grib_next_accessor(kiter->current);
+        kiter->current = kiter->current->next_accessor();
 
     return kiter->current != NULL;
 }

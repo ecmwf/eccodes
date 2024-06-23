@@ -130,7 +130,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     grib_dumper_grib_encode_C* self = (grib_dumper_grib_encode_C*)d;
     long value;
     size_t size = 1;
-    int err     = grib_unpack_long(a, &value, &size);
+    int err     = a->unpack_long(&value, &size);
 
     if ((a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY))
         return;
@@ -161,7 +161,7 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
     grib_dumper_grib_encode_C* self = (grib_dumper_grib_encode_C*)d;
     long value;
     size_t size = 1;
-    int err     = grib_unpack_long(a, &value, &size);
+    int err     = a->unpack_long(&value, &size);
     int i;
 
     char buf[1024];
@@ -201,7 +201,7 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     grib_dumper_grib_encode_C* self = (grib_dumper_grib_encode_C*)d;
     double value;
     size_t size = 1;
-    int err     = grib_unpack_double(a, &value, &size);
+    int err     = a->unpack_double(&value, &size);
     if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
         return;
 
@@ -221,7 +221,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     grib_dumper_grib_encode_C* self = (grib_dumper_grib_encode_C*)d;
     char value[1024];
     size_t size = sizeof(value);
-    int err     = grib_unpack_string(a, value, &size);
+    int err     = a->unpack_string(value, &size);
 
     if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
         return;
@@ -260,7 +260,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
         return;
     }
 
-    err = grib_unpack_bytes(a, buf, &size);
+    err = a->unpack_bytes(buf, &size);
     if (err) {
         grib_context_free(d->context, buf);
         fprintf(self->dumper.out, " *** ERR=%d (%s) [grib_dumper_grib_encode_C::dump_bytes]\n}", err, grib_get_error_message(err));
@@ -305,7 +305,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     if ((a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) || ((a->flags & GRIB_ACCESSOR_FLAG_DATA) && (d->option_flags & GRIB_DUMP_FLAG_NO_DATA)))
         return;
 
-    grib_value_count(a, &count);
+    a->value_count(&count);
     size = count;
 
     if (size == 1) {
@@ -313,7 +313,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         return;
     }
 
-    type = grib_accessor_get_native_type(a);
+    type = a->get_native_type();
     switch (type) {
         case GRIB_TYPE_LONG:
             snprintf(stype, sizeof(stype), "%s", "long");
@@ -331,7 +331,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         return;
     }
 
-    err = grib_unpack_double(a, buf, &size);
+    err = a->unpack_double(buf, &size);
 
     if (err) {
         grib_context_free(d->context, buf);

@@ -224,18 +224,6 @@
 	 typeOfStatisticalProcessing = 3 ;
 	 lengthOfTimeRange = 24 ;
 	}
-#Mean temperature at 2 metres in the last 24 hours
-'mean2t24' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 55 ;
-	}
-#Mean 2 metre dewpoint temperature in the last 24 hours
-'mn2d24' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 56 ;
-	}
 #Observation count
 'obct' = {
 	 discipline = 192 ;
@@ -13844,15 +13832,23 @@
 	 typeOfStatisticalProcessing = 1 ;
 	}
 #Time-mean snow depth
-'msd_m' = {
+'avg_sd_m' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 254 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean logarithm of surface pressure
+'avg_lnsp' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean low cloud cover
-'mlcc_frac' = {
+'avg_lcc_frac' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
@@ -13860,7 +13856,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean medium cloud cover
-'mmcc_frac' = {
+'avg_mcc_frac' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
@@ -13868,7 +13864,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean high cloud cover
-'mhcc_frac' = {
+'avg_hcc_frac' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
@@ -13876,7 +13872,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean forecast albedo
-'mfal_frac' = {
+'avg_fal_frac' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
@@ -14442,18 +14438,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 129 ;
 	 parameterNumber = 54 ;
-	}
-#Mean 2 metre temperature in the last 24 hours gradient
-'mean2t24grd' = {
-	 discipline = 192 ;
-	 parameterCategory = 129 ;
-	 parameterNumber = 55 ;
-	}
-#Mean 2 metre dewpoint temperature in the last 24 hours gradient
-'mn2d24grd' = {
-	 discipline = 192 ;
-	 parameterCategory = 129 ;
-	 parameterNumber = 56 ;
 	}
 #Downward UV radiation at the surface gradient
 'uvbgrd' = {
@@ -15727,12 +15711,6 @@
 	 parameterCategory = 130 ;
 	 parameterNumber = 231 ;
 	}
-#Mean vertical velocity
-'mvv' = {
-	 discipline = 192 ;
-	 parameterCategory = 130 ;
-	 parameterNumber = 232 ;
-	}
 #2m temperature anomaly of at least +2K
 '2tag2' = {
 	 discipline = 192 ;
@@ -16631,41 +16609,11 @@
 	 parameterCategory = 140 ;
 	 parameterNumber = 200 ;
 	}
-#Standard deviation wave height
-'sdhs' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 240 ;
-	}
-#Mean of 10 metre wind speed
-'mu10' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 241 ;
-	}
-#Mean wind direction
-'mdwi' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 242 ;
-	}
-#Standard deviation of 10 metre wind speed
-'sdu' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 243 ;
-	}
 #2D wave spectra (multiple)
 '2dsp' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 250 ;
-	}
-#Wave spectral peakedness
-'wsp' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 254 ;
 	}
 #Indicates a missing value
 '~' = {
@@ -18848,18 +18796,6 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 145 ;
 	}
-#Mean surface sensible heat flux
-'msshfl' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 146 ;
-	}
-#Mean surface latent heat flux
-'mslhfl' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 147 ;
-	}
 #Mean short-wave heating rate
 'mswhr' = {
 	 discipline = 192 ;
@@ -18871,54 +18807,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 154 ;
-	}
-#Mean surface downward solar radiation flux
-'msdsrf' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 169 ;
-	}
-#Mean surface downward thermal radiation flux
-'msdtrf' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 175 ;
-	}
-#Mean surface net solar radiation flux
-'msnsrf' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 176 ;
-	}
-#Mean surface net thermal radiation flux
-'msntrf' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 177 ;
-	}
-#Mean top net solar radiation flux
-'mtnsrf' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 178 ;
-	}
-#Mean top net thermal radiation flux
-'mtntrf' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 179 ;
-	}
-#East-West surface stress rate of accumulation
-'ewssra' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 180 ;
-	}
-#North-South surface stress rate of accumulation
-'nsssra' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 181 ;
 	}
 #Evaporation
 'erate' = {
@@ -18961,36 +18849,6 @@
 	 parameterNumber = 201 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
-	}
-#Top net solar radiation, clear sky
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 208 ;
-	}
-#Top net thermal radiation, clear sky
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 209 ;
-	}
-#Surface net solar radiation, clear sky
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 210 ;
-	}
-#Surface net thermal radiation, clear sky
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 211 ;
-	}
-#Solar insolation rate of accumulation
-'soira' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 212 ;
 	}
 #Mean total precipitation rate
 'tprate' = {
