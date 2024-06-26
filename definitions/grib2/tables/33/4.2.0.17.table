@@ -5,3 +5,6 @@
 3 3 Cloud-to-cloud lightning flash density (km-2 day-1)
 4 4 Total lightning flash density (km-2 day-1)
 5 5 Subgrid-scale lightning potential index (J kg-1)
+# 6-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing
