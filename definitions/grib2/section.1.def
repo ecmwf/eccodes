@@ -97,7 +97,7 @@ concept stepType {
     "mode"    = {selectStepTemplateInterval=1; stepTypeInternal="mode";}
 }
 
-if ( tablesVersion < 30 ) {
+if ( tablesVersion < tablesVersionChemParamSplit ) {
   # 0=atmospheric chemical constituents
   # 1=atmospheric chemical constituents based on a distribution function
   # 2=atmospheric chemical constituents with source or sink

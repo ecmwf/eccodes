@@ -13,6 +13,10 @@ constant tablesVersionLatestOfficial = 32 : edition_specific;
 # If this is different from the official version, then it is the pre-operational version
 constant tablesVersionLatest = 33 : edition_specific;
 
+# See ECC-1426
+# GRIB messages with tablesVersion greater than or equal will have paramId and chemId
+constant tablesVersionChemParamSplit = 31 : hidden;
+
 constant false = 0 : hidden;
 constant true = 1 : hidden;
 constant million = 1000000 : hidden;
