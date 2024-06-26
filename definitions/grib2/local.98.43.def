@@ -31,4 +31,4 @@ alias mars.resolution = resolution;
 unalias mars.domain;
 
 # Add some padding just in case we want more keys in the future
-pad padding_loc43(25);
+pad padding_loc43(30);
