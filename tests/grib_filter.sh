@@ -148,7 +148,7 @@ echo "Test ECC-648: Set codetable key to array"
 # ---------------------------------------------
 cat >$tempFilt <<EOF
  set productDefinitionTemplateNumber = 11;
- set numberOfTimeRange = 3;
+ set numberOfTimeRanges = 3;
  set typeOfStatisticalProcessing = {3, 1, 2};
  write;
 EOF
