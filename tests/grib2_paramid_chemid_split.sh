@@ -16,6 +16,10 @@ tempGribB=temp2.$label.grib
 
 sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
+# If the GRIB has a tablesVersion >= tablesVersionSplit, then we get
+# chemId and paramId. If it is less, then the old behaviour of just paramId
+tablesVersionSplit=`${tools_dir}/grib_get -p tablesVersionChemParamSplit $sample`
+
 # Legacy using older tablesVersion
 # We expect paramId 210121
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=40,discipline=0,parameterCategory=20,parameterNumber=2,constituentType=5 \
@@ -29,7 +33,7 @@ result=$( ${tools_dir}/grib_get -f -p chemName,chemId $tempGribA )
 
 # Switch to the newer tablesVersion so now the chemId/paramId split is activated
 # Now expect paramId 402000 and chemId 17
-${tools_dir}/grib_set -s tablesVersion=32 $tempGribA $tempGribB
+${tools_dir}/grib_set -s tablesVersion=$tablesVersionSplit $tempGribA $tempGribB
 
 grib_check_key_equals $tempGribB paramId,chemId "402000 17"
 grib_check_key_equals $tempGribB chemName "Nitrogen dioxide"
@@ -41,7 +45,7 @@ result=$( ${tools_dir}/grib_get -f -p is_chemical $tempGribB )
 
 
 # Test non-chemical e.g. temperature. Now chem keys are present but unknown
-${tools_dir}/grib_set -s tablesVersion=32,discipline=0,parameterCategory=0,parameterNumber=0 $sample  $tempGribA
+${tools_dir}/grib_set -s tablesVersion=$tablesVersionSplit,discipline=0,parameterCategory=0,parameterNumber=0 $sample  $tempGribA
 grib_check_key_equals $tempGribA "chemId,chemName,chemShortName" "-1 unknown unknown"
 
 
