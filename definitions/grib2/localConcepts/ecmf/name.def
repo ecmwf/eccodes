@@ -224,18 +224,6 @@
 	 typeOfStatisticalProcessing = 3 ;
 	 lengthOfTimeRange = 24 ;
 	}
-#Mean temperature at 2 metres in the last 24 hours
-'Mean temperature at 2 metres in the last 24 hours' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 55 ;
-	}
-#Mean 2 metre dewpoint temperature in the last 24 hours
-'Mean 2 metre dewpoint temperature in the last 24 hours' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 56 ;
-	}
 #Observation count
 'Observation count' = {
 	 discipline = 192 ;
@@ -2578,6 +2566,24 @@
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 122 ;
+	}
+#Mean surface runoff rate
+'Mean surface runoff rate' = {
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 202 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Mean sub-surface runoff rate
+'Mean sub-surface runoff rate' = {
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 204 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Volcanic ash aerosol mixing ratio
 'Volcanic ash aerosol mixing ratio' = {
@@ -13825,6 +13831,222 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Time-mean snow depth
+'Time-mean snow depth' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 254 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean logarithm of surface pressure
+'Time-mean logarithm of surface pressure' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean low cloud cover
+'Time-mean low cloud cover' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean medium cloud cover
+'Time-mean medium cloud cover' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean high cloud cover
+'Time-mean high cloud cover' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 195 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean forecast albedo
+'Time-mean forecast albedo' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Covariance between 2-metre temperature and volumetric soil water layer 1
+'Covariance between 2-metre temperature and volumetric soil water layer 1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and volumetric soil water layer 1
+'Covariance between 2-metre relative humidity and volumetric soil water layer 1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 193 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between surface soil moisture and volumetric soil water layer 1
+'Covariance between surface soil moisture and volumetric soil water layer 1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 194 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and volumetric soil water layer 2
+'Covariance between 2-metre temperature and volumetric soil water layer 2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 195 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and volumetric soil water layer 2
+'Covariance between 2-metre relative humidity and volumetric soil water layer 2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 196 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between surface soil moisture and volumetric soil water layer 2
+'Covariance between surface soil moisture and volumetric soil water layer 2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 197 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and volumetric soil water layer 3
+'Covariance between 2-metre temperature and volumetric soil water layer 3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 198 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and volumetric soil water layer 3
+'Covariance between 2-metre relative humidity and volumetric soil water layer 3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 199 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between surface soil moisture and volumetric soil water layer 3
+'Covariance between surface soil moisture and volumetric soil water layer 3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 200 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and soil temperature layer 1
+'Covariance between 2-metre temperature and soil temperature layer 1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 201 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and soil temperature layer 1
+'Covariance between 2-metre relative humidity and soil temperature layer 1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 202 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and soil temperature layer 2
+'Covariance between 2-metre temperature and soil temperature layer 2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 203 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and soil temperature layer 2
+'Covariance between 2-metre relative humidity and soil temperature layer 2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 204 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and soil temperature layer 3
+'Covariance between 2-metre temperature and soil temperature layer 3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 205 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and soil temperature layer 3
+'Covariance between 2-metre relative humidity and soil temperature layer 3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 206 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and temperature of snow layer 1
+'Covariance between 2-metre temperature and temperature of snow layer 1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 207 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and temperature of snow layer 1
+'Covariance between 2-metre relative humidity and temperature of snow layer 1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 208 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and temperature of snow layer 2
+'Covariance between 2-metre temperature and temperature of snow layer 2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 209 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and temperature of snow layer 2
+'Covariance between 2-metre relative humidity and temperature of snow layer 2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 210 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and temperature of snow layer 3
+'Covariance between 2-metre temperature and temperature of snow layer 3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 211 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and temperature of snow layer 3
+'Covariance between 2-metre relative humidity and temperature of snow layer 3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 212 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
 #Surface roughness length for heat
 'Surface roughness length for heat' = {
 	 localTablesVersion = 1 ;
@@ -14216,18 +14438,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 129 ;
 	 parameterNumber = 54 ;
-	}
-#Mean 2 metre temperature in the last 24 hours gradient
-'Mean 2 metre temperature in the last 24 hours gradient' = {
-	 discipline = 192 ;
-	 parameterCategory = 129 ;
-	 parameterNumber = 55 ;
-	}
-#Mean 2 metre dewpoint temperature in the last 24 hours gradient
-'Mean 2 metre dewpoint temperature in the last 24 hours gradient' = {
-	 discipline = 192 ;
-	 parameterCategory = 129 ;
-	 parameterNumber = 56 ;
 	}
 #Downward UV radiation at the surface gradient
 'Downward UV radiation at the surface gradient' = {
@@ -15501,12 +15711,6 @@
 	 parameterCategory = 130 ;
 	 parameterNumber = 231 ;
 	}
-#Mean vertical velocity
-'Mean vertical velocity' = {
-	 discipline = 192 ;
-	 parameterCategory = 130 ;
-	 parameterNumber = 232 ;
-	}
 #2m temperature anomaly of at least +2K
 '2m temperature anomaly of at least +2K' = {
 	 discipline = 192 ;
@@ -16405,41 +16609,11 @@
 	 parameterCategory = 140 ;
 	 parameterNumber = 200 ;
 	}
-#Standard deviation wave height
-'Standard deviation wave height' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 240 ;
-	}
-#Mean of 10 metre wind speed
-'Mean of 10 metre wind speed' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 241 ;
-	}
-#Mean wind direction
-'Mean wind direction' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 242 ;
-	}
-#Standard deviation of 10 metre wind speed
-'Standard deviation of 10 metre wind speed' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 243 ;
-	}
 #2D wave spectra (multiple)
 '2D wave spectra (multiple)' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 250 ;
-	}
-#Wave spectral peakedness
-'Wave spectral peakedness' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 254 ;
 	}
 #Indicates a missing value
 'Indicates a missing value' = {
@@ -16645,24 +16819,6 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 128 ;
 	}
-#Sea water potential temperature
-'Sea water potential temperature' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 129 ;
-	}
-#Sea water practical salinity
-'Sea water practical salinity' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 130 ;
-	}
-#Upward sea water velocity
-'Upward sea water velocity' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 133 ;
-	}
 #Modulus of strain rate tensor
 'Modulus of strain rate tensor' = {
 	 discipline = 192 ;
@@ -16686,12 +16842,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 137 ;
-	}
-#Sea water sigma theta
-'Sea water sigma theta' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 138 ;
 	}
 #Richardson number
 'Richardson number' = {
@@ -16764,18 +16914,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 152 ;
-	}
-#Surface downward eastward stress
-'Surface downward eastward stress' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 153 ;
-	}
-#Surface downward northward stress
-'Surface downward northward stress' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 154 ;
 	}
 #Turbulent kinetic energy input
 'Turbulent kinetic energy input' = {
@@ -17376,198 +17514,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 254 ;
-	}
-#Surface geopotential
-'Surface geopotential' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 51 ;
-	}
-#Vertical integral of temperature
-'Vertical integral of temperature' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 54 ;
-	}
-#Vertical integral of cloud liquid water
-'Vertical integral of cloud liquid water' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 56 ;
-	}
-#Vertical integral of cloud frozen water
-'Vertical integral of cloud frozen water' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 57 ;
-	}
-#Vertical integral of ozone
-'Vertical integral of ozone' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 58 ;
-	}
-#Vertical integral of energy conversion
-'Vertical integral of energy conversion' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 64 ;
-	}
-#Vertical integral of eastward mass flux
-'Vertical integral of eastward mass flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 65 ;
-	}
-#Vertical integral of northward mass flux
-'Vertical integral of northward mass flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 66 ;
-	}
-#Vertical integral of eastward kinetic energy flux
-'Vertical integral of eastward kinetic energy flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 67 ;
-	}
-#Vertical integral of northward kinetic energy flux
-'Vertical integral of northward kinetic energy flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 68 ;
-	}
-#Vertical integral of eastward geopotential flux
-'Vertical integral of eastward geopotential flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 73 ;
-	}
-#Vertical integral of northward geopotential flux
-'Vertical integral of northward geopotential flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 74 ;
-	}
-#Vertical integral of eastward total energy flux
-'Vertical integral of eastward total energy flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 75 ;
-	}
-#Vertical integral of northward total energy flux
-'Vertical integral of northward total energy flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 76 ;
-	}
-#Vertical integral of eastward ozone flux
-'Vertical integral of eastward ozone flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 77 ;
-	}
-#Vertical integral of northward ozone flux
-'Vertical integral of northward ozone flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 78 ;
-	}
-#Vertical integral of divergence of mass flux
-'Vertical integral of divergence of mass flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 81 ;
-	}
-#Vertical integral of divergence of kinetic energy flux
-'Vertical integral of divergence of kinetic energy flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 82 ;
-	}
-#Vertical integral of divergence of thermal energy flux
-'Vertical integral of divergence of thermal energy flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 83 ;
-	}
-#Vertical integral of divergence of geopotential flux
-'Vertical integral of divergence of geopotential flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 85 ;
-	}
-#Vertical integral of divergence of total energy flux
-'Vertical integral of divergence of total energy flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 86 ;
-	}
-#Vertical integral of divergence of ozone flux
-'Vertical integral of divergence of ozone flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 87 ;
-	}
-#Variance of geopotential
-'Variance of geopotential' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 206 ;
-	}
-#Covariance of geopotential/temperature
-'Covariance of geopotential/temperature' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 207 ;
-	}
-#Variance of temperature
-'Variance of temperature' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 208 ;
-	}
-#Covariance of geopotential/specific humidity
-'Covariance of geopotential/specific humidity' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 209 ;
-	}
-#Covariance of temperature/specific humidity
-'Covariance of temperature/specific humidity' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 210 ;
-	}
-#Variance of specific humidity
-'Variance of specific humidity' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 211 ;
-	}
-#Covariance of u component/geopotential
-'Covariance of u component/geopotential' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 212 ;
-	}
-#Covariance of u component/temperature
-'Covariance of u component/temperature' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 213 ;
-	}
-#Covariance of u component/specific humidity
-'Covariance of u component/specific humidity' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 214 ;
-	}
-#Variance of u component
-'Variance of u component' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 215 ;
 	}
 #Covariance of v component/geopotential
 'Covariance of v component/geopotential' = {
@@ -18819,39 +18765,36 @@
 	}
 #Mean large-scale precipitation rate
 'Mean large-scale precipitation rate' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 142 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 196 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean convective precipitation rate
 'Mean convective precipitation rate' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 143 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 195 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean total snowfall rate
 'Mean total snowfall rate' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 144 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 198 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Boundary layer dissipation
 'Boundary layer dissipation' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 145 ;
-	}
-#Mean surface sensible heat flux
-'Mean surface sensible heat flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 146 ;
-	}
-#Mean surface latent heat flux
-'Mean surface latent heat flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 147 ;
 	}
 #Mean short-wave heating rate
 'Mean short-wave heating rate' = {
@@ -18865,59 +18808,14 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 154 ;
 	}
-#Mean surface downward solar radiation flux
-'Mean surface downward solar radiation flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 169 ;
-	}
-#Mean surface downward thermal radiation flux
-'Mean surface downward thermal radiation flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 175 ;
-	}
-#Mean surface net solar radiation flux
-'Mean surface net solar radiation flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 176 ;
-	}
-#Mean surface net thermal radiation flux
-'Mean surface net thermal radiation flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 177 ;
-	}
-#Mean top net solar radiation flux
-'Mean top net solar radiation flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 178 ;
-	}
-#Mean top net thermal radiation flux
-'Mean top net thermal radiation flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 179 ;
-	}
-#East-West surface stress rate of accumulation
-'East-West surface stress rate of accumulation' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 180 ;
-	}
-#North-South surface stress rate of accumulation
-'North-South surface stress rate of accumulation' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 181 ;
-	}
 #Evaporation
 'Evaporation' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 182 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 199 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean sunshine duration rate
 'Mean sunshine duration rate' = {
@@ -18945,45 +18843,21 @@
 	}
 #Mean runoff rate
 'Mean runoff rate' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 205 ;
-	}
-#Top net solar radiation, clear sky
-'Top net solar radiation, clear sky' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 208 ;
-	}
-#Top net thermal radiation, clear sky
-'Top net thermal radiation, clear sky' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 209 ;
-	}
-#Surface net solar radiation, clear sky
-'Surface net solar radiation, clear sky' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 210 ;
-	}
-#Surface net thermal radiation, clear sky
-'Surface net thermal radiation, clear sky' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 211 ;
-	}
-#Solar insolation rate of accumulation
-'Solar insolation rate of accumulation' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 212 ;
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 201 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean total precipitation rate
 'Mean total precipitation rate' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 228 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 193 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Convective snowfall
 'Convective snowfall' = {
@@ -21673,17 +21547,15 @@
 	 parameterCategory = 220 ;
 	 parameterNumber = 228 ;
 	}
-#Mean of 10 metre wind speed
-'Mean of 10 metre wind speed' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 5 ;
-	}
 #Mean total cloud cover
 'Mean total cloud cover' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 6 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Surface temperature significance
 'Surface temperature significance' = {

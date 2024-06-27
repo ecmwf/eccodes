@@ -32,5 +32,72 @@ set -e
 [ $status -ne 0 ]
 grep -q "Nh (Key/value not found)" $tempText
 
+
+# Nearest
+# ---------
+set +e
+${tools_dir}/grib_get -l abc $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Wrong latitude value" $tempText
+
+set +e
+${tools_dir}/grib_get -s Nj=MISSING -l 0,0,1 $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib1.tmpl > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Key Nj cannot be 'missing'" $tempText
+
+set +e
+${tools_dir}/grib_get -s Nj=0 -l 0,0,1 $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib1.tmpl > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Key Nj cannot be 0" $tempText
+
+
+set +e
+${tools_dir}/grib_get -l 0,0,5 $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib2.tmpl > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Wrong mode given" $tempText
+
+
+set +e
+${tools_dir}/grib_get -l 0,0,1,nonexistingmask $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib1.tmpl > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+cat $tempText
+grep -q "unable to open mask file" $tempText
+
+
+# ------------------------
+# Unreadable message
+# ------------------------
+outfile=temp.$label.out
+echo GRIB > $outfile
+set +e
+${tools_dir}/grib_get -p edition $outfile /dev/null > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "unreadable message" $tempText
+rm -f $outfile
+
+
+# ----------------------
+# Wrong message type
+# ----------------------
+set +e
+${tools_dir}/grib_get -p edition $ECCODES_SAMPLES_PATH/BUFR3.tmpl > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Input file seems to be BUFR" $tempText
+
+
 # Clean up
 rm -f $tempText

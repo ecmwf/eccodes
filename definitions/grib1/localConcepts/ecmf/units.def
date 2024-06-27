@@ -195,12 +195,12 @@
 	 indicatorOfParameter = 28 ;
 	}
 #Type of low vegetation
-'(code table 4.234)' = {
+'(Code table 4.234)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 29 ;
 	}
 #Type of high vegetation
-'(code table 4.234)' = {
+'(Code table 4.234)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 30 ;
 	}
@@ -265,7 +265,7 @@
 	 indicatorOfParameter = 42 ;
 	}
 #Soil type
-'~' = {
+'(Code table 4.213)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 43 ;
 	}
@@ -3805,12 +3805,12 @@
 	 indicatorOfParameter = 122 ;
 	}
 #Mean surface runoff rate
-'m of water equivalent s**-1' = {
+'m s**-1' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 8 ;
 	}
 #Mean sub-surface runoff rate
-'m of water equivalent s**-1' = {
+'m s**-1' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 9 ;
 	}
@@ -12659,7 +12659,7 @@
 	 table2Version = 140 ;
 	 indicatorOfParameter = 217 ;
 	}
-#Maximum individual wave height
+#Envelop-maximum individual wave height
 'm' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 218 ;
@@ -13024,12 +13024,12 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 130 ;
 	}
-#Eastward sea water velocity
+#Eastward surface sea water velocity
 'm s**-1' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 131 ;
 	}
-#Northward sea water velocity
+#Northward surface sea water velocity
 'm s**-1' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 132 ;
@@ -13244,7 +13244,7 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 174 ;
 	}
-#Average salinity in the upper 300m
+#Average sea water practical salinity in the upper 300m
 'psu' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 175 ;
@@ -15080,7 +15080,7 @@
 	 indicatorOfParameter = 181 ;
 	}
 #Evaporation
-'m of water s**-1' = {
+'m of water equivalent s**-1' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 182 ;
 	}

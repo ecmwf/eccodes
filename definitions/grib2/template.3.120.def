@@ -34,7 +34,7 @@ alias Dx  = spacingOfBinsAlongRadials;
 unsigned[4] offsetFromOriginToInnerBound;
 alias Dstart =  offsetFromOriginToInnerBound;
 
-include "grib2/template.3.scanning_mode.def";
+include "grib2/template.3.scanning_mode.def"
 
 # Octets 40-(39+4Nr) : For each of Nr radials:
 radials list(numberOfRadials){

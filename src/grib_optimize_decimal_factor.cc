@@ -148,7 +148,7 @@ int grib_optimize_decimal_factor(grib_accessor* a, const char* reference_value,
         long vmin, vmax;
         if (grib_get_nearest_smaller_value(gh, reference_value, min, ref) != GRIB_SUCCESS) {
             grib_context_log(gh->context, GRIB_LOG_ERROR,
-                             "unable to find nearest_smaller_value of %g for %s", min, reference_value);
+                             "Unable to find nearest_smaller_value of %g for %s", min, reference_value);
             return GRIB_INTERNAL_ERROR;
         }
 
@@ -191,7 +191,7 @@ int grib_optimize_decimal_factor(grib_accessor* a, const char* reference_value,
 
         if (grib_get_nearest_smaller_value(gh, reference_value, min, ref) != GRIB_SUCCESS) {
             grib_context_log(gh->context, GRIB_LOG_ERROR,
-                             "unable to find nearest_smaller_value of %g for %s", min, reference_value);
+                             "Unable to find nearest_smaller_value of %g for %s", min, reference_value);
             return GRIB_INTERNAL_ERROR;
         }
 

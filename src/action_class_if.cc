@@ -92,7 +92,7 @@ static void init_class(grib_action_class* c)
 grib_action* grib_action_create_if(grib_context* context,
                                    grib_expression* expression,
                                    grib_action* block_true, grib_action* block_false, int transient,
-                                   int lineno, char* file_being_parsed)
+                                   int lineno, const char* file_being_parsed)
 {
     char name[1024];
     const size_t nameLen = sizeof(name);

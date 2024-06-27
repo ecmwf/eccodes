@@ -11,20 +11,20 @@ program operator_3_test
   implicit none
   integer                                    :: iret, outfile, ibufr
   integer(kind=4), dimension(:), allocatable :: ivalues
+  integer(kind=8), dimension(:), allocatable :: lvalues
   character(len=100)                         :: outfile_name
 
   call getarg(1, outfile_name)
 
   call codes_bufr_new_from_samples(ibufr,'BUFR4',iret)
   if (iret /= CODES_SUCCESS) then
-    print *,'ERROR creating BUFR from BUFR4'
     stop 1
   endif
 
-  allocate(ivalues(1))
-  ivalues=(/ -16383 /)
-  call codes_set(ibufr,'inputOverriddenReferenceValues',ivalues)
-  deallocate(ivalues)
+  allocate(lvalues(1))
+  lvalues=(/ -16383 /)
+  call codes_set(ibufr,'inputOverriddenReferenceValues',lvalues)
+  deallocate(lvalues)
 
   allocate(ivalues(3))
   ivalues=(/ 2,2,2 /)

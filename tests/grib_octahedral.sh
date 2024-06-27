@@ -33,4 +33,12 @@ if [ $HAVE_EXTRA_TESTS -eq 1 ]; then
     [ "$numlines" = "6599681" ]     # 1 + numberOfDataPoints
 fi
 
+# Regular Gaussian (no pl array)
+input=${data_dir}/regular_gaussian_model_level.grib2
+grib_check_key_equals $input isOctahedral 0
+
+result=$( $tools_dir/grib_get -s Ni=missing -p isOctahedral $input )
+[ $result -eq 0 ]
+
+# Clean up
 rm -f $temp

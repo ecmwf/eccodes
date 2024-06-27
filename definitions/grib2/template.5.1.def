@@ -1,10 +1,11 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 5.1, Matrix values at grid point - simple packing
-# Preliminary note:
-# This template was not validated at the time of publication and should be used with caution
 
-include "grib2/template.5.packing.def";
+# This template was not validated at the time of publication and should be used with caution
+transient template_is_experimental = 1 : hidden;
+
+include "grib2/template.5.packing.def"
 
 unsigned[1] matrixBitmapsPresent;
 # same as in edition 1

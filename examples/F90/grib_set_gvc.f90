@@ -15,8 +15,12 @@
 program set
    use eccodes
    implicit none
-   integer              :: infile, outfile
-   integer              :: igrib
+   integer    :: infile, outfile
+   integer    :: igrib
+   real(4)    :: nlev_real4 = 12.21
+   real(8)    :: nlev_real8 = 12.21
+   integer(4) :: PDTN_int = 11
+   integer(8) :: PDTN_long = 11
 
    call codes_open_file(infile, '../../data/sample.grib2', 'r')
 
@@ -25,13 +29,15 @@ program set
    call codes_grib_new_from_file(infile, igrib)
 
    ! individual ensemble forecast
-   call codes_set(igrib, 'productDefinitionTemplateNumber', 11)
+   call codes_set(igrib, 'productDefinitionTemplateNumber', PDTN_int)
+   call codes_set(igrib, 'productDefinitionTemplateNumber', PDTN_long)
 
    ! select level type as Generalized Vertical Height Coordinate
    call codes_set(igrib, 'typeOfLevel', 'generalVertical')
 
    ! now set keys specific to this level type
-   call codes_set(igrib, 'nlev', 12.21)
+   call codes_set(igrib, 'nlev', nlev_real4)
+   call codes_set(igrib, 'nlev', nlev_real8)
    call codes_set(igrib, 'numberOfVGridUsed', 13.55)
 
    ! check integrity of GRIB message

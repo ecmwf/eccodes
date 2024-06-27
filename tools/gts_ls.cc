@@ -17,8 +17,6 @@ grib_option grib_options[] = {
     { "F:", 0, 0, 1, 1, "%g" },
     { "P:", 0, 0, 0, 1, 0 },
     { "w:", 0, 0, 0, 1, 0 },
-    /*{"j",0,"json output\n",0,1,0},*/
-    { "B:", 0, 0, 0, 1, 0 },
     { "s:", 0, 0, 0, 1, 0 },
     { "n:", 0, 0, 1, 1, "ls" },
     { "V", 0, 0, 0, 1, 0 },
@@ -107,12 +105,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     grib_handle_delete(h);
     return 0;
-}
-
-/* key values can be printed in this function. Headers are already printed if requested.*/
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
-    grib_print_key_values(options, h);
 }
 
 /* this is executed after the last message in the last file is processed */

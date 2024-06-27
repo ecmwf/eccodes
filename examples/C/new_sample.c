@@ -25,7 +25,9 @@ int main(int argc, char** argv)
         exit(1);
     }
 
-    /* h = codes_grib_handle_new_from_samples(NULL, "GRIB2"); */
+    h = codes_handle_new_from_samples(NULL, "nonexistentsample");
+    if (h) return 1;
+
     h = codes_handle_new_from_samples(NULL, "GRIB2");
     if (!h) {
         fprintf(stderr, "Cannot create grib handle\n");
@@ -145,12 +147,6 @@ int main(int argc, char** argv)
     CODES_CHECK(codes_set_long(h, "jScansPositively", 0), 0);
     CODES_CHECK(codes_set_long(h, "jPointsAreConsecutive", 0), 0);
     CODES_CHECK(codes_set_long(h, "alternativeRowScanning", 0), 0);
-    CODES_CHECK(codes_set_long(h, "iScansPositively", 1), 0);
-
-    /* ITERATOR */
-
-
-    /* NEAREST */
 
     CODES_CHECK(codes_set_long(h, "timeRangeIndicator", 0), 0);
     CODES_CHECK(codes_set_long(h, "NV", 0), 0);
@@ -162,14 +158,11 @@ int main(int argc, char** argv)
 
     /* Parameter information */
 
-
     /* 0 = Temperature (grib2/tables/4/4.1.0.table)  */
     CODES_CHECK(codes_set_long(h, "parameterCategory", 0), 0);
 
-
     /* 0 = Temperature  (K)  (grib2/tables/4/4.2.0.0.table)  */
     CODES_CHECK(codes_set_long(h, "parameterNumber", 0), 0);
-
 
     /* 0 = Analysis (grib2/tables/4/4.3.table)  */
     CODES_CHECK(codes_set_long(h, "typeOfGeneratingProcess", 0), 0);
@@ -181,7 +174,6 @@ int main(int argc, char** argv)
 
     /* 1 = Hour (grib2/tables/4/4.4.table)  */
     CODES_CHECK(codes_set_long(h, "indicatorOfUnitOfTimeRange", 1), 0);
-
 
     /* 1 = Hour (stepUnits.table)  */
     CODES_CHECK(codes_set_long(h, "stepUnits", 1), 0);
@@ -222,7 +214,6 @@ int main(int argc, char** argv)
     CODES_CHECK(codes_set_long(h, "representationMode", 0), 0);
 
     /* grib 2 Section 6 BIT-MAP SECTION */
-
 
     /* 255 = A bit map does not apply to this product (grib2/tables/4/6.0.table)  */
     CODES_CHECK(codes_set_long(h, "bitMapIndicator", 255), 0);

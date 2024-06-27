@@ -9,6 +9,8 @@
  */
 
 #include "grib_api_internal.h"
+#include <map>
+#include <string>
 
 #define UNDEF_LONG   -99999
 #define UNDEF_DOUBLE -99999
@@ -61,6 +63,9 @@ static const char* mars_keys =
 static int grib_filesid = -1;
 static int index_count;
 static long values_count = 0;
+
+static int codes_index_add_file_internal(grib_index* index, const char* filename, int message_type);
+static void grib_index_rewind(grib_index* index);
 
 static char* get_key(char** keys, int* type)
 {
@@ -240,17 +245,13 @@ static grib_index_key* grib_index_new_key(grib_context* c, grib_index_key* keys,
 
     next = (grib_index_key*)grib_context_malloc_clear(c, sizeof(grib_index_key));
     if (!next) {
-        grib_context_log(c, GRIB_LOG_ERROR,
-                         "unable to allocate %ld bytes",
-                         sizeof(grib_index_key));
+        grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %zu bytes", sizeof(grib_index_key));
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
     }
     values = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
     if (!values) {
-        grib_context_log(c, GRIB_LOG_ERROR,
-                         "unable to allocate %ld bytes",
-                         sizeof(grib_string_list));
+        grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %zu bytes", sizeof(grib_string_list));
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
     }
@@ -274,7 +275,7 @@ static grib_index_key* grib_index_new_key(grib_context* c, grib_index_key* keys,
     return keys;
 }
 
-int grib_read_uchar(FILE* fh, unsigned char* val)
+static int grib_read_uchar(FILE* fh, unsigned char* val)
 {
     if (fread(val, sizeof(unsigned char), 1, fh) < 1) {
         if (feof(fh))
@@ -285,7 +286,7 @@ int grib_read_uchar(FILE* fh, unsigned char* val)
     return GRIB_SUCCESS;
 }
 
-int grib_read_short(FILE* fh, short* val)
+static int grib_read_short(FILE* fh, short* val)
 {
     if (fread(val, sizeof(short), 1, fh) < 1) {
         if (feof(fh))
@@ -296,7 +297,18 @@ int grib_read_short(FILE* fh, short* val)
     return GRIB_SUCCESS;
 }
 
-int grib_read_long(FILE* fh, long* val)
+// static int grib_read_long(FILE* fh, long* val)
+// {
+//     if (fread(val, sizeof(long), 1, fh) < 1) {
+//         if (feof(fh))
+//             return GRIB_END_OF_FILE;
+//         else
+//             return GRIB_IO_PROBLEM;
+//     }
+//     return GRIB_SUCCESS;
+// }
+
+static int grib_read_unsigned_long(FILE* fh, unsigned long* val)
 {
     if (fread(val, sizeof(long), 1, fh) < 1) {
         if (feof(fh))
@@ -307,46 +319,35 @@ int grib_read_long(FILE* fh, long* val)
     return GRIB_SUCCESS;
 }
 
-int grib_read_unsigned_long(FILE* fh, unsigned long* val)
-{
-    if (fread(val, sizeof(long), 1, fh) < 1) {
-        if (feof(fh))
-            return GRIB_END_OF_FILE;
-        else
-            return GRIB_IO_PROBLEM;
-    }
-    return GRIB_SUCCESS;
-}
-
-int grib_write_uchar(FILE* fh, unsigned char val)
+static int grib_write_uchar(FILE* fh, unsigned char val)
 {
     if (fwrite(&val, sizeof(unsigned char), 1, fh) < 1)
         return GRIB_IO_PROBLEM;
     return GRIB_SUCCESS;
 }
 
-int grib_write_short(FILE* fh, short val)
+static int grib_write_short(FILE* fh, short val)
 {
     if (fwrite(&val, sizeof(short), 1, fh) < 1)
         return GRIB_IO_PROBLEM;
     return GRIB_SUCCESS;
 }
 
-int grib_write_long(FILE* fh, long val)
+// static int grib_write_long(FILE* fh, long val)
+// {
+//     if (fwrite(&val, sizeof(long), 1, fh) < 1)
+//         return GRIB_IO_PROBLEM;
+//     return GRIB_SUCCESS;
+// }
+
+static int grib_write_unsigned_long(FILE* fh, unsigned long val)
 {
     if (fwrite(&val, sizeof(long), 1, fh) < 1)
         return GRIB_IO_PROBLEM;
     return GRIB_SUCCESS;
 }
 
-int grib_write_unsigned_long(FILE* fh, unsigned long val)
-{
-    if (fwrite(&val, sizeof(long), 1, fh) < 1)
-        return GRIB_IO_PROBLEM;
-    return GRIB_SUCCESS;
-}
-
-int grib_write_string(FILE* fh, const char* s)
+static int grib_write_string(FILE* fh, const char* s)
 {
     size_t len = 0;
     if (s == NULL)
@@ -358,22 +359,22 @@ int grib_write_string(FILE* fh, const char* s)
     return GRIB_SUCCESS;
 }
 
-int grib_write_identifier(FILE* fh, const char* ID)
+static int grib_write_identifier(FILE* fh, const char* ID)
 {
     return grib_write_string(fh, ID);
 }
 
-int grib_write_null_marker(FILE* fh)
+static int grib_write_null_marker(FILE* fh)
 {
     return grib_write_uchar(fh, NULL_MARKER);
 }
 
-int grib_write_not_null_marker(FILE* fh)
+static int grib_write_not_null_marker(FILE* fh)
 {
     return grib_write_uchar(fh, NOT_NULL_MARKER);
 }
 
-char* grib_read_string(grib_context* c, FILE* fh, int* err)
+static char* grib_read_string(grib_context* c, FILE* fh, int* err)
 {
     unsigned char len = 0;
     char* s           = NULL;
@@ -544,7 +545,7 @@ grib_index* grib_index_new(grib_context* c, const char* key, int* err)
 
     index = (grib_index*)grib_context_malloc_clear(c, sizeof(grib_index));
     if (!index) {
-        grib_context_log(c, GRIB_LOG_ERROR, "unable to create index");
+        grib_context_log(c, GRIB_LOG_ERROR, "Unable to create index");
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
     }
@@ -1034,7 +1035,7 @@ int grib_index_search_same(grib_index* index, grib_handle* h)
         }
         if (err && err != GRIB_NOT_FOUND) {
             grib_context_log(c, GRIB_LOG_ERROR,
-                             "unable to create index. \"%s\": %s",
+                             "Unable to create index. \"%s\": %s",
                              keys->name, grib_get_error_message(err));
             return err;
         }
@@ -1052,7 +1053,7 @@ int grib_index_add_file(grib_index* index, const char* filename)
     else if (index->product_kind == PRODUCT_BUFR) message_type = CODES_BUFR;
     else return GRIB_INVALID_ARGUMENT;
 
-    return ecc__codes_index_add_file(index, filename, message_type);
+    return codes_index_add_file_internal(index, filename, message_type);
 }
 
 static grib_handle* new_message_from_file(int message_type, grib_context* c, FILE* f, int* error)
@@ -1067,7 +1068,7 @@ static grib_handle* new_message_from_file(int message_type, grib_context* c, FIL
 
 #define MAX_NUM_KEYS 40
 
-int ecc__codes_index_add_file(grib_index* index, const char* filename, int message_type)
+static int codes_index_add_file_internal(grib_index* index, const char* filename, int message_type)
 {
     double dval;
     size_t svallen;
@@ -1084,6 +1085,7 @@ int ecc__codes_index_add_file(grib_index* index, const char* filename, int messa
     grib_field_tree* field_tree;
     grib_file* file = NULL;
     grib_context* c;
+    bool warn_about_duplicates = true;
 
     if (!index)
         return GRIB_NULL_INDEX;
@@ -1122,6 +1124,7 @@ int ecc__codes_index_add_file(grib_index* index, const char* filename, int messa
 
     fseeko(file->handle, 0, SEEK_SET);
 
+    std::map<off_t, grib_handle*> map_of_offsets;
     while ((h = new_message_from_file(message_type, c, file->handle, &err)) != NULL) {
         grib_string_list* v = 0;
         index_key           = index->keys;
@@ -1130,18 +1133,25 @@ int ecc__codes_index_add_file(grib_index* index, const char* filename, int messa
         message_count++;
 
         {
-            char* envsetkeys = getenv("ECCODES_INDEX_SET_KEYS");
+            const char* set_keys_env_var = "ECCODES_INDEX_SET_KEYS";
+            char* envsetkeys = getenv(set_keys_env_var);
             if (envsetkeys) {
                 grib_values set_values[MAX_NUM_KEYS];
                 int set_values_count = MAX_NUM_KEYS;
+                std::string copy_of_env(envsetkeys); //parse_keyval_string changes envsetkeys!
                 int error = parse_keyval_string(NULL, envsetkeys, 1, GRIB_TYPE_UNDEFINED,
                         set_values, &set_values_count);
                 if (!error && set_values_count != 0) {
                     err = grib_set_values(h, set_values, set_values_count);
                     if (err) {
-                        grib_context_log(c, GRIB_LOG_ERROR,"codes_index_add_file: unable to set %s\n", envsetkeys);
+                        grib_context_log(c, GRIB_LOG_ERROR,
+                                        "codes_index_add_file: Unable to set %s", copy_of_env.c_str());
                         return err;
                     }
+                } else {
+                    grib_context_log(c, GRIB_LOG_ERROR, "codes_index_add_file: Unable to parse %s (%s)",
+                                     set_keys_env_var, grib_get_error_message(error));
+                    return error;
                 }
             }
         }
@@ -1149,7 +1159,7 @@ int ecc__codes_index_add_file(grib_index* index, const char* filename, int messa
         if (index->product_kind == PRODUCT_BUFR && index->unpack_bufr) {
             err = grib_set_long(h, "unpack", 1);
             if (err) {
-                grib_context_log(c, GRIB_LOG_ERROR, "unable to unpack BUFR to create index. \"%s\": %s",
+                grib_context_log(c, GRIB_LOG_ERROR, "Unable to unpack BUFR to create index. \"%s\": %s",
                                  index_key->name, grib_get_error_message(err));
                 return err;
             }
@@ -1187,7 +1197,7 @@ int ecc__codes_index_add_file(grib_index* index, const char* filename, int messa
                     return err;
             }
             if (err && err != GRIB_NOT_FOUND) {
-                grib_context_log(c, GRIB_LOG_ERROR, "unable to create index. key=\"%s\" (message #%lu): %s",
+                grib_context_log(c, GRIB_LOG_ERROR, "Unable to create index. key=\"%s\" (message #%lu): %s",
                                  index_key->name, message_count, grib_get_error_message(err));
                 return err;
             }
@@ -1241,6 +1251,18 @@ int ecc__codes_index_add_file(grib_index* index, const char* filename, int messa
         field->file = file;
         index->count++;
         field->offset = h->offset;
+        if (warn_about_duplicates) {
+            const bool offset_is_unique = map_of_offsets.insert( std::pair<off_t, grib_handle*>(h->offset, h) ).second;
+            if (!offset_is_unique) {
+                fprintf(stderr, "ECCODES WARNING :  File '%s': field offset %ld is not unique.\n", filename, (long)h->offset);
+                long edition = 0;
+                if (grib_get_long(h, "edition", &edition) == GRIB_SUCCESS && edition == 2) {
+                    fprintf(stderr, "ECCODES WARNING :  This can happen if the file contains multi-field GRIB messages.\n");
+                    fprintf(stderr, "ECCODES WARNING :  Indexing multi-field messages is not fully supported.\n");
+                }
+                warn_about_duplicates = false;
+            }
+        }
 
         err = grib_get_long(h, "totalLength", &length);
         if (err)
@@ -1267,6 +1289,11 @@ int ecc__codes_index_add_file(grib_index* index, const char* filename, int messa
     if (message_count == 0) {
         grib_context_log(c, GRIB_LOG_ERROR, "File %s contains no messages", filename);
         return GRIB_END_OF_FILE;
+    }
+
+    if (c->debug) {
+        fprintf(stderr, "ECCODES DEBUG %s %s\n", __func__, filename);
+        grib_index_dump(stderr, index, GRIB_DUMP_FLAG_TYPE);
     }
     return GRIB_SUCCESS;
 }
@@ -1360,7 +1387,7 @@ int ecc__codes_index_add_file(grib_index* index, const char* filename, int messa
 //                 return err;
 //             }
 //             if (err && err != GRIB_NOT_FOUND) {
-//                 grib_context_log(c,GRIB_LOG_ERROR,"unable to create index. \"%s\": %s",index_key->name,grib_get_error_message(err));
+//                 grib_context_log(c,GRIB_LOG_ERROR,"Unable to create index. \"%s\": %s",index_key->name,grib_get_error_message(err));
 //                 return err;
 //             }
 
@@ -1496,7 +1523,7 @@ int grib_index_get_long(const grib_index* index, const char* key, long* values, 
     if (!k)
         return GRIB_NOT_FOUND;
     if (k->type != GRIB_TYPE_LONG) {
-        grib_context_log(index->context, GRIB_LOG_ERROR, "unable to get index %s as long", key);
+        grib_context_log(index->context, GRIB_LOG_ERROR, "Unable to get index %s as long", key);
         return GRIB_WRONG_TYPE;
     }
     if (k->values_count > *size)
@@ -1525,7 +1552,7 @@ int grib_index_get_double(const grib_index* index, const char* key, double* valu
     if (!k)
         return GRIB_NOT_FOUND;
     if (k->type != GRIB_TYPE_DOUBLE) {
-        grib_context_log(index->context, GRIB_LOG_ERROR, "unable to get index %s as double", key);
+        grib_context_log(index->context, GRIB_LOG_ERROR, "Unable to get index %s as double", key);
         return GRIB_WRONG_TYPE;
     }
     if (k->values_count > *size)
@@ -1739,16 +1766,19 @@ static void grib_dump_key_values(FILE* fout, grib_string_list* values)
     }
     fprintf(fout, "\n");
 }
-static void grib_dump_index_keys(FILE* fout, grib_index_key* keys)
+
+static void grib_dump_index_keys(FILE* fout, grib_index_key* keys, unsigned long flags)
 {
     if (!keys)
         return;
     fprintf(fout, "key name = %s\n", keys->name);
-    /* fprintf(fout, "key type = %d\n", keys->type); */
-
+    if ((flags & GRIB_DUMP_FLAG_TYPE) != 0) {
+        fprintf(fout, "key type = %s\n", grib_get_type_name(keys->type));
+    }
     grib_dump_key_values(fout, keys->values);
-    grib_dump_index_keys(fout, keys->next);
+    grib_dump_index_keys(fout, keys->next, flags);
 }
+
 #ifdef INDEX_DUMPS
 static void grib_dump_files(FILE* fout, grib_file* files)
 {
@@ -1780,7 +1810,7 @@ static void grib_dump_field_tree(FILE* fout, grib_field_tree* tree)
 }
 #endif
 
-int grib_index_dump_file(FILE* fout, const char* filename)
+int grib_index_dump_file(FILE* fout, const char* filename, unsigned long flags)
 {
     int err           = 0;
     grib_index* index = NULL;
@@ -1821,13 +1851,13 @@ int grib_index_dump_file(FILE* fout, const char* filename)
         fclose(fh);
     }
 
-    grib_index_dump(fout, index);
+    grib_index_dump(fout, index, flags);
     grib_index_delete(index);
 
     return GRIB_SUCCESS;
 }
 
-void grib_index_dump(FILE* fout, grib_index* index)
+void grib_index_dump(FILE* fout, grib_index* index, unsigned long flags)
 {
     if (!index)
         return;
@@ -1838,7 +1868,7 @@ void grib_index_dump(FILE* fout, grib_index* index)
     /* grib_dump_files(fout, index->files); */
 
     fprintf(fout, "Index keys:\n");
-    grib_dump_index_keys(fout, index->keys);
+    grib_dump_index_keys(fout, index->keys, flags);
 
     /*
      * fprintf(fout, "Index field tree:\n");
@@ -1880,7 +1910,8 @@ grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err)
         return NULL;
     c = index->context;
     if (!index->rewind) {
-        if (!index->current) {
+        // ECC-1764
+        if (!index->current || !index->current->field) {
             *err = GRIB_END_OF_INDEX;
             return NULL;
         }
@@ -1903,7 +1934,7 @@ grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err)
                                                                       sizeof(grib_field_list));
         if (!index->fieldset) {
             grib_context_log(index->context, GRIB_LOG_ERROR,
-                             "unable to allocate %lu bytes", sizeof(grib_field_list));
+                             "Unable to allocate %zu bytes", sizeof(grib_field_list));
             return NULL;
         }
         index->current = index->fieldset;
@@ -1936,7 +1967,7 @@ grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err)
     return h;
 }
 
-void grib_index_rewind(grib_index* index)
+static void grib_index_rewind(grib_index* index)
 {
     index->rewind = 1;
 }

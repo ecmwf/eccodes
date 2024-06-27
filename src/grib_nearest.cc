@@ -341,8 +341,8 @@ int grib_nearest_find_generic(
         double lat1 = 0, lat2 = 0;     /* inlat will be between these */
         const double LAT_DELTA = 10.0; /* in degrees */
 
-        *out_lons_count = nvalues; /* Maybe overestimate but safe */
-        *out_lats_count = nvalues;
+        *out_lons_count = (int)nvalues; /* Maybe overestimate but safe */
+        *out_lats_count = (int)nvalues;
 
         if (*out_lats)
             grib_context_free(nearest->context, *out_lats);

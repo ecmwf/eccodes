@@ -41,20 +41,14 @@ or edit "expression.class" and rerun ./make_class.pl
 
 typedef const char* string; /* to keep make_class.pl happy */
 
-
-static void init_class              (grib_expression_class*);
-
-static void        destroy(grib_context*,grib_expression* e);
-
-static void        print(grib_context*,grib_expression*,grib_handle*);
-static void        add_dependency(grib_expression* e, grib_accessor* observer);
-static string get_name(grib_expression* e);
-
-static int        native_type(grib_expression*,grib_handle*);
-
-static int        evaluate_long(grib_expression*,grib_handle*,long*);
-static int      evaluate_double(grib_expression*,grib_handle*,double*);
-static string evaluate_string(grib_expression*,grib_handle*,char*,size_t*,int*);
+static void    destroy(grib_context*,grib_expression* e);
+static void    print(grib_context*,grib_expression*,grib_handle*);
+static void    add_dependency(grib_expression* e, grib_accessor* observer);
+static string  get_name(grib_expression* e);
+static int     native_type(grib_expression*,grib_handle*);
+static int     evaluate_long(grib_expression*,grib_handle*,long*);
+static int     evaluate_double(grib_expression*,grib_handle*,double*);
+static string  evaluate_string(grib_expression*,grib_handle*,char*,size_t*,int*);
 
 typedef struct grib_expression_is_integer{
   grib_expression base;
@@ -70,7 +64,6 @@ static grib_expression_class _grib_expression_class_is_integer = {
     "is_integer",                    /* name                      */
     sizeof(grib_expression_is_integer),/* size of instance        */
     0,                           /* inited */
-    &init_class,                 /* init_class */
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,
@@ -84,26 +77,21 @@ static grib_expression_class _grib_expression_class_is_integer = {
 
 grib_expression_class* grib_expression_class_is_integer = &_grib_expression_class_is_integer;
 
-
-static void init_class(grib_expression_class* c)
-{
-}
 /* END_CLASS_IMP */
 
 static const char* get_name(grib_expression* g)
 {
-    grib_expression_is_integer* e = (grib_expression_is_integer*)g;
+    const grib_expression_is_integer* e = (grib_expression_is_integer*)g;
     return e->name;
 }
 
 static int evaluate_long(grib_expression* g, grib_handle* h, long* result)
 {
     grib_expression_is_integer* e = (grib_expression_is_integer*)g;
-    int err                       = 0;
-    char mybuf[1024]              = {0,};
+    int err = 0;
+    char mybuf[1024] = {0,};
     size_t size = 1024;
     char* p     = 0;
-    long val    = 0;
     char* start = 0;
 
     if ((err = grib_get_string_internal(h, e->name, mybuf, &size)) != GRIB_SUCCESS)
@@ -114,23 +102,22 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* result)
     if (e->length > 0)
         start[e->length] = 0;
 
-    val = strtol(start, &p, 10);
+    strtol(start, &p, 10);
 
     if (*p != 0)
         *result = 0;
     else
         *result = 1;
 
-    (void)val;
     return err;
 }
 
 static int evaluate_double(grib_expression* g, grib_handle* h, double* result)
 {
-    int err      = 0;
+    int err = 0;
     long lresult = 0;
 
-    err     = evaluate_long(g, h, &lresult);
+    err = evaluate_long(g, h, &lresult);
     *result = lresult;
     return err;
 }
@@ -155,14 +142,14 @@ static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, siz
 
 static void print(grib_context* c, grib_expression* g, grib_handle* f)
 {
-    grib_expression_is_integer* e = (grib_expression_is_integer*)g;
-    printf("access('%s", e->name);
-    if (f) {
-        long s = 0;
-        grib_get_long(f, e->name, &s);
-        printf("=%ld", s);
-    }
-    printf("')");
+    // grib_expression_is_integer* e = (grib_expression_is_integer*)g;
+    // printf("access('%s", e->name);
+    // if (f) {
+    //     long s = 0;
+    //     grib_get_long(f, e->name, &s);
+    //     printf("=%ld", s);
+    // }
+    // printf("')");
 }
 
 static void destroy(grib_context* c, grib_expression* g)
@@ -174,7 +161,7 @@ static void destroy(grib_context* c, grib_expression* g)
 
 static void add_dependency(grib_expression* g, grib_accessor* observer)
 {
-    grib_expression_is_integer* e = (grib_expression_is_integer*)g;
+    const grib_expression_is_integer* e = (grib_expression_is_integer*)g;
     grib_accessor* observed       = grib_find_accessor(grib_handle_of_accessor(observer), e->name);
 
     if (!observed) {

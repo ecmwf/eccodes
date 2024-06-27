@@ -8,6 +8,8 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
+# ECC-1467: Support data values array decoded as "floats" (single-precision)
+
 . ./include.ctest.sh
 
 # Constant fields

@@ -98,15 +98,14 @@ grib_action* grib_action_create_set_darray(grib_context* context,
 
 static int execute(grib_action* a, grib_handle* h)
 {
-    grib_action_set_darray* self = (grib_action_set_darray*)a;
-
+    const grib_action_set_darray* self = (grib_action_set_darray*)a;
     return grib_set_double_array(h, self->name, self->darray->v, self->darray->n);
 }
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
     int i                        = 0;
-    grib_action_set_darray* self = (grib_action_set_darray*)act;
+    const grib_action_set_darray* self = (grib_action_set_darray*)act;
     for (i = 0; i < lvl; i++)
         grib_context_print(act->context, f, "     ");
     grib_context_print(act->context, f, self->name);

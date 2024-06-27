@@ -8,25 +8,14 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * test: reading GRIB2 multi fields messages from memory
- */
+/* Test: reading GRIB2 multi fields messages from memory */
 
 #include "grib_api_internal.h"
-
-
-static void usage(const char* prog)
-{
-    fprintf(stderr, "usage: %s [-m] file.grib\n", prog);
-    exit(1);
-}
 
 int main(int argc, char* argv[])
 {
     struct stat finfo;
-    char shortName[20] = {
-        0,
-    };
+    char shortName[20] = {0,};
     size_t len;
     grib_handle* h = NULL;
     size_t fsize;
@@ -49,25 +38,18 @@ int main(int argc, char* argv[])
     else if (argc == 2)
         filename = argv[1];
     else
-        usage(argv[0]);
+        return 1;
 
     Assert(filename);
     f = fopen(filename, "rb");
-    if (!f) {
-        perror(filename);
-        exit(1);
-    }
+    Assert(f);
 
     stat(filename, &finfo);
     fsize = finfo.st_size;
 
     data = (unsigned char*)malloc(fsize);
     p    = data;
-
-    if (!data) {
-        fprintf(stderr, "unable to allocate %ld bytes\n", (long)fsize);
-        exit(1);
-    }
+    Assert(data);
 
     if (fread(data, 1, fsize, f) != fsize) {
         perror(filename);

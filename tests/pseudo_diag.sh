@@ -20,6 +20,9 @@ REDIRECT=/dev/null
 
 sample=$ECCODES_SAMPLES_PATH/diag.tmpl
 
+# Abort if any error messages are posted
+export ECCODES_FAIL_IF_LOG_MESSAGE=1
+
 # Basic grib commands should not fail
 # ------------------------------------
 ${tools_dir}/grib_ls $sample > $REDIRECT

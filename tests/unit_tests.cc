@@ -41,12 +41,23 @@ static void check_float_representation(const double val, const double expected, 
     compare_doubles(out, expected, tolerance);
 }
 
+static void test_get_package_name()
+{
+    printf("Running %s ...\n", __func__);
+
+    const char* pn = codes_get_package_name();
+    Assert(pn != NULL);
+    Assert(strlen(pn) > 1);
+    printf("Package name = %s\n", pn);
+}
+
 static void test_get_git_sha1()
 {
     printf("Running %s ...\n", __func__);
 
-    const char* sha1 = grib_get_git_sha1();
+    const char* sha1 = codes_get_git_sha1();
     Assert(sha1 != NULL);
+    printf("Git SHA1 = %s\n", sha1);
 }
 
 static void test_get_build_date()
@@ -454,7 +465,7 @@ static void test_parse_keyval_string()
                               values_required, GRIB_TYPE_UNDEFINED, values1, &count);
     Assert( !err );
     Assert( count == 2 );
-    grib_print_values("print values test: values1", values1);
+    grib_print_values("print values test: values1", values1, stdout);
 
     Assert( strcmp(values1[0].name, "key1")==0 );
     Assert( strcmp(values1[0].string_value, "value1")==0 );
@@ -474,7 +485,7 @@ static void test_parse_keyval_string()
                               values_required, GRIB_TYPE_LONG, values2, &count);
     Assert( !err );
     Assert( count == 1 );
-    grib_print_values("print values test: values2", values2);
+    grib_print_values("print values test: values2", values2, stdout);
     Assert( strcmp(values2[0].name, "x")==0 );
     Assert( values2[0].long_value == 14 );
     Assert( values2[0].equal == 1 );
@@ -485,7 +496,7 @@ static void test_parse_keyval_string()
                               values_required, GRIB_TYPE_DOUBLE, values3, &count);
     Assert( !err );
     Assert( count == 1 );
-    grib_print_values("print values test: values3", values3);
+    grib_print_values("print values test: values3", values3, stdout);
     Assert( strcmp(values3[0].name, "mars.level")==0 );
     free( (void*)values3[0].name );
 }
@@ -622,8 +633,11 @@ void test_sarray()
     printf("Running %s ...\n", __func__);
     grib_context* c = grib_context_get_default();
     grib_sarray* a = grib_sarray_new(c, 10, 10);
-    grib_sarray_push(c, a, "ants");
-    grib_sarray_push(c, a, "bugs");
+
+    char ants_s[] = "ants";
+    char bugs_s[] = "bugs";
+    grib_sarray_push(c, a, ants_s);
+    grib_sarray_push(c, a, bugs_s);
     grib_sarray_print("sarray", a);
 
     grib_vsarray* va = grib_vsarray_new(c, 1, 1);
@@ -642,12 +656,13 @@ void test_codes_get_product_name()
     Assert( STR_EQUAL("BUFR",  codes_get_product_name(PRODUCT_BUFR)) );
     Assert( STR_EQUAL("GTS",   codes_get_product_name(PRODUCT_GTS)) );
     Assert( STR_EQUAL("METAR", codes_get_product_name(PRODUCT_METAR)) );
+    Assert( STR_EQUAL("TAF",   codes_get_product_name(PRODUCT_TAF)) );
 }
 
 void test_codes_get_type_name()
 {
     printf("Running %s ...\n", __func__);
-    Assert( STR_EQUAL("long",    grib_get_type_name(GRIB_TYPE_LONG)) );
+    Assert( STR_EQUAL("long",    codes_get_type_name(GRIB_TYPE_LONG)) );
     Assert( STR_EQUAL("string",  grib_get_type_name(GRIB_TYPE_STRING)) );
     Assert( STR_EQUAL("double",  grib_get_type_name(GRIB_TYPE_DOUBLE)) );
     Assert( STR_EQUAL("bytes",   grib_get_type_name(GRIB_TYPE_BYTES)) );
@@ -655,9 +670,71 @@ void test_codes_get_type_name()
     Assert( STR_EQUAL("section", grib_get_type_name(GRIB_TYPE_SECTION)) );
 }
 
+void test_grib2_select_PDTN()
+{
+    printf("Running %s ...\n", __func__);
+    int eps = 1;
+    int instant = 1;
+    int chemical = 1;
+    int chemical_srcsink = 1;
+    int chemical_distfn = 1;
+    int aerosol = 1;
+    int aerosol_optical = 1;
+
+    // arguments = eps instant chemical chemical_srcsink chemical_distfn aerosol aerosol_optical
+
+    // Chemicals
+    Assert( 40 == grib2_select_PDTN(!eps, instant,  chemical, 0, 0, 0, 0) );
+    Assert( 41 == grib2_select_PDTN(eps,  instant,  chemical, 0, 0, 0, 0) );
+    Assert( 42 == grib2_select_PDTN(!eps, !instant, chemical, 0, 0, 0, 0) );
+    Assert( 43 == grib2_select_PDTN(eps,  !instant, chemical, 0, 0, 0, 0) );
+
+    // Chemical source/sink
+    Assert( 76 == grib2_select_PDTN(!eps, instant,  !chemical, chemical_srcsink, 0,0,0) );
+    Assert( 77 == grib2_select_PDTN(eps,  instant,  !chemical, chemical_srcsink, 0,0,0) );
+    Assert( 78 == grib2_select_PDTN(!eps, !instant, !chemical, chemical_srcsink, 0,0,0) );
+    Assert( 79 == grib2_select_PDTN(eps,  !instant, !chemical, chemical_srcsink, 0,0,0) );
+
+    // Chemical distrib. function
+    Assert( 58 == grib2_select_PDTN(eps, instant,  0, 0, chemical_distfn, 0, 0) );
+    Assert( 68 == grib2_select_PDTN(eps, !instant,  0, 0, chemical_distfn, 0, 0) );
+    Assert( 57 == grib2_select_PDTN(!eps, instant,  0, 0, chemical_distfn, 0, 0) );
+    Assert( 67 == grib2_select_PDTN(!eps, !instant,  0, 0, chemical_distfn, 0, 0) );
+
+    // Aerosols
+    Assert( 48 == grib2_select_PDTN(!eps, instant,  0, 0, 0, aerosol, 0) );
+    Assert( 46 == grib2_select_PDTN(!eps, !instant, 0, 0, 0, aerosol, 0) );
+    Assert( 45 == grib2_select_PDTN(eps, instant,   0, 0, 0, aerosol, 0) );
+    Assert( 85 == grib2_select_PDTN(eps, !instant,  0, 0, 0, aerosol, 0) );
+
+    // Aerosol optical
+    Assert( 49 == grib2_select_PDTN(eps, instant,  0, 0, 0, 0, aerosol_optical) );
+    Assert( 48 == grib2_select_PDTN(!eps, instant, 0, 0, 0, 0, aerosol_optical) );
+
+    // Plain vanilla
+    Assert(  0 == grib2_select_PDTN(!eps, instant,  !chemical, !chemical_srcsink, !chemical_distfn, !aerosol, 0) );
+    Assert(  1 == grib2_select_PDTN(1,1,0,0,0, !aerosol,0) );
+    Assert(  8 == grib2_select_PDTN(0,0,0,0,0, !aerosol,0) );
+    Assert( 11 == grib2_select_PDTN(1,0,0,0,0, !aerosol,0) );
+
+    //printf("%d\n", grib2_select_PDTN(!eps, instant,  !chemical, !chemical_srcsink, !chemical_distfn, aerosol, 0) );
+    Assert( 1 == grib2_is_PDTN_EPS(1) );
+    Assert( 1 == grib2_is_PDTN_EPS(11) );
+    Assert( 0 == grib2_is_PDTN_EPS(0) );
+}
+
+void test_codes_get_error_message()
+{
+    printf("Running %s ...\n", __func__);
+    const char* errmsg = grib_get_error_message(6666);
+    Assert( STR_EQUAL(errmsg, "Unknown error -6666"));
+}
+
 int main(int argc, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
+
+    test_codes_get_error_message();
 
     test_iarray();
     test_darray();
@@ -673,6 +750,7 @@ int main(int argc, char** argv)
     test_parse_keyval_string();
 
     test_get_git_sha1();
+    test_get_package_name();
     test_get_build_date();
     test_gribex_mode();
     test_gts_header_mode();
@@ -708,6 +786,8 @@ int main(int argc, char** argv)
     test_string_trimming();
     test_string_replace_char();
     test_string_remove_char();
+
+    test_grib2_select_PDTN();
 
     return 0;
 }

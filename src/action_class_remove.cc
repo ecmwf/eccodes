@@ -94,7 +94,7 @@ static void remove_accessor(grib_accessor* a)
     grib_section* s = NULL;
     int id;
 
-    if (!a || !a->previous)
+    if (!a || !a->previous_)
         return;
     s = a->parent;
 
@@ -103,25 +103,21 @@ static void remove_accessor(grib_accessor* a)
         grib_handle_of_accessor(a)->accessors[id] = NULL;
     }
 
-    if (a->next)
-        a->previous->next = a->next;
+    if (a->next_)
+        a->previous_->next_ = a->next_;
     else
         return;
 
-    a->next->previous = a->previous;
+    a->next_->previous_ = a->previous_;
 
-    grib_accessor_delete(s->h->context, a);
-
-    return;
+    a->destroy(s->h->context);
 }
 
 static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 {
     grib_action_remove* a = (grib_action_remove*)act;
 
-    grib_accessor* ga = NULL;
-
-    ga = grib_find_accessor(p->h, grib_arguments_get_name(p->h, a->args, 0));
+    grib_accessor* ga = grib_find_accessor(p->h, grib_arguments_get_name(p->h, a->args, 0));
 
     if (ga) {
         remove_accessor(ga);
@@ -134,15 +130,15 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
-    grib_action_remove* a = (grib_action_remove*)act;
-
-    int i = 0;
-
-    for (i = 0; i < lvl; i++)
-        grib_context_print(act->context, f, "     ");
-
-    grib_context_print(act->context, f, "remove %s as %s in %s\n", grib_arguments_get_name(0, a->args, 0), act->name, grib_arguments_get_name(0, a->args, 1));
+    grib_context_log(act->context, GRIB_LOG_ERROR, "%s: dump not implemented", act->name);
+    // grib_action_remove* a = (grib_action_remove*)act;
+    // int i = 0;
+    // for (i = 0; i < lvl; i++)
+    //     grib_context_print(act->context, f, "     ");
+    // grib_context_print(act->context, f, "remove %s as %s in %s\n",
+    //     grib_arguments_get_name(0, a->args, 0), act->name, grib_arguments_get_name(0, a->args, 1));
 }
+
 static void destroy(grib_context* context, grib_action* act)
 {
     grib_action_remove* a = (grib_action_remove*)act;
@@ -151,4 +147,3 @@ static void destroy(grib_context* context, grib_action* act)
     grib_context_free_persistent(context, act->name);
     grib_context_free_persistent(context, act->op);
 }
-

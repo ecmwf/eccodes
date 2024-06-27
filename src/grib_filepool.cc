@@ -132,10 +132,10 @@ void grib_file_pool_clean()
 //     return grib_write_file(fh, file->next);
 // }
 
-grib_file* grib_file_pool_get_files()
-{
-    return file_pool.first;
-}
+// grib_file* grib_file_pool_get_files()
+// {
+//     return file_pool.first;
+// }
 
 // int grib_file_pool_read(grib_context* c, FILE* fh)
 // {
@@ -343,6 +343,11 @@ void grib_file_close_all(int* err)
 grib_file* grib_get_file(const char* filename, int* err)
 {
     grib_file* file = NULL;
+
+    if (!file_pool.current) {
+        *err = GRIB_IO_PROBLEM;
+        return NULL;
+    }
 
     if (file_pool.current->name && !grib_inline_strcmp(filename, file_pool.current->name)) {
         return file_pool.current;

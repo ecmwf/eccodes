@@ -34,12 +34,12 @@ int main(int argc, char** argv)
     Assert(sub_values);
 
     size_t len = nvalues;
-    GRIB_CHECK(grib_unpack_double(a, all_values, &len), 0);
+    GRIB_CHECK(a->unpack_double(all_values, &len), 0);
 
     size_t start = nvalues / 10;
     len   = nvalues / 5;
     printf("nvalues=%zu, start=%zu, len=%zu\n", nvalues, start, len);
-    GRIB_CHECK(grib_unpack_double_subarray(a, sub_values, start, len), 0);
+    GRIB_CHECK(a->unpack_double_subarray(sub_values, start, len), 0);
     for (size_t i = 0; i < len; ++i) {
         //printf("sub[%zu]=%.10e\n", start + i, sub_values[i]);
         Assert(all_values[start+i] == sub_values[i]);

@@ -18,7 +18,7 @@ int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* ke
     grib_string_list* prev = keys;
     int theRank            = 0;
     size_t size            = 0;
-    grib_context* c        = h->context;
+    const grib_context* c  = h->context;
     DEBUG_ASSERT(h->product_kind == PRODUCT_BUFR);
 
     while (next && next->value && strcmp(next->value, key)) {
@@ -220,7 +220,7 @@ static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2,
 
     DEBUG_ASSERT(hdr->ecmwfLocalSectionPresent);
 
-    if (hdr->rdbType == 2 || hdr->rdbType == 3 || hdr->rdbType == 8 || hdr->rdbType == 12) {
+    if (hdr->rdbType == 2 || hdr->rdbType == 3 || hdr->rdbType == 8 || hdr->rdbType == 12 || hdr->rdbType == 30) {
         isSatelliteType = true;
     }
     if (isSatelliteType || hdr->numberOfSubsets > 1) {
@@ -682,9 +682,8 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
     return GRIB_SUCCESS;
 }
 
-static const char* codes_bufr_header_get_centre_name(long edition, long centre_code)
+static const char* codes_bufr_header_get_centre_name(long centre_code)
 {
-    (void)edition;
     switch (centre_code) {
         case 1:
             return "ammc";
@@ -758,14 +757,8 @@ static const char* codes_bufr_header_get_centre_name(long edition, long centre_c
             return "ingv";
         case 239:
             return "crfc";
-        case 244:
-            return "vuwien";
-        case 245:
+        case 99:
             return "knmi";
-        case 246:
-            return "ifmk";
-        case 247:
-            return "hadc";
         case 250:
             return "cosmo";
         case 252:
@@ -871,7 +864,7 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
         *len = snprintf(val, 32, "%ld", bh->bufrHeaderCentre);
 
     else if (strcmp(key, "centre") == 0) {
-        const char* centre_str = codes_bufr_header_get_centre_name(bh->edition, bh->bufrHeaderCentre);
+        const char* centre_str = codes_bufr_header_get_centre_name(bh->bufrHeaderCentre);
         if (centre_str)
             *len = snprintf(val, 32, "%s", centre_str);
         else
@@ -1114,7 +1107,7 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
 // Returns 1 if the BUFR key is in the header and 0 if it is in the data section
 int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err)
 {
-    grib_accessor* acc = grib_find_accessor(h, key);
+    const grib_accessor* acc = grib_find_accessor(h, key);
     if (!acc) {
         *err = GRIB_NOT_FOUND;
         return 0;
@@ -1126,7 +1119,7 @@ int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err)
 // Returns 1 if the BUFR key is a coordinate descriptor
 int codes_bufr_key_is_coordinate(const grib_handle* h, const char* key, int* err)
 {
-    grib_accessor* acc = grib_find_accessor(h, key);
+    const grib_accessor* acc = grib_find_accessor(h, key);
     if (!acc) {
         *err = GRIB_NOT_FOUND;
         return 0;

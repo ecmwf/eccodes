@@ -9,12 +9,6 @@
  */
 #include "grib_api.h"
 
-static void usage(const char* prog)
-{
-    printf("usage: %s infile\n", prog);
-    exit(1);
-}
-
 static unsigned char buffer[50000000];
 
 int main(int argc, char* argv[])
@@ -35,7 +29,7 @@ int main(int argc, char* argv[])
     size_t len;
 
     if (argc != 2)
-        usage(argv[0]);
+        return 1;
     filename = argv[1];
 
     f = fopen(filename, "rb");

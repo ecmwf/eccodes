@@ -96,11 +96,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
     return 0;
 }
 
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
-    grib_print_key_values(options, h);
-}
-
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
     return 0;

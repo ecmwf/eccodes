@@ -99,6 +99,11 @@ grib_check_key_equals $input 'typeOfProcessedData:i' '2'
 ${tools_dir}/grib_set -s typeOfProcessedData=rubbish $input $outfile
 grib_check_key_equals $outfile 'typeOfProcessedData:i' '255' # set to default
 
+# GDSPresent
+# ------------
+input=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+${tools_dir}/grib_set -s GDSPresent=1 $input $outfile
+
 
 # Clean up
 rm -f $outfile $temp

@@ -15,7 +15,6 @@
 
    START_CLASS_DEF
    CLASS      = expression
-   IMPLEMENTS = init_class
    IMPLEMENTS = destroy
    IMPLEMENTS = native_type
    IMPLEMENTS = evaluate_long
@@ -39,18 +38,12 @@ or edit "expression.class" and rerun ./make_class.pl
 
 typedef const char* string; /* to keep make_class.pl happy */
 
-
-static void init_class              (grib_expression_class*);
-
-static void        destroy(grib_context*,grib_expression* e);
-
-static void        print(grib_context*,grib_expression*,grib_handle*);
-static void        add_dependency(grib_expression* e, grib_accessor* observer);
-
-static int        native_type(grib_expression*,grib_handle*);
-
-static int        evaluate_long(grib_expression*,grib_handle*,long*);
-static int      evaluate_double(grib_expression*,grib_handle*,double*);
+static void    destroy(grib_context*,grib_expression* e);
+static void    print(grib_context*,grib_expression*,grib_handle*);
+static void    add_dependency(grib_expression* e, grib_accessor* observer);
+static int     native_type(grib_expression*,grib_handle*);
+static int     evaluate_long(grib_expression*,grib_handle*,long*);
+static int     evaluate_double(grib_expression*,grib_handle*,double*);
 
 typedef struct grib_expression_logical_or{
   grib_expression base;
@@ -65,7 +58,6 @@ static grib_expression_class _grib_expression_class_logical_or = {
     "logical_or",                    /* name                      */
     sizeof(grib_expression_logical_or),/* size of instance        */
     0,                           /* inited */
-    &init_class,                 /* init_class */
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,
@@ -79,10 +71,6 @@ static grib_expression_class _grib_expression_class_logical_or = {
 
 grib_expression_class* grib_expression_class_logical_or = &_grib_expression_class_logical_or;
 
-
-static void init_class(grib_expression_class* c)
-{
-}
 /* END_CLASS_IMP */
 
 static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
@@ -141,11 +129,8 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 static int evaluate_double(grib_expression* g, grib_handle* h, double* dres)
 {
     long lres = 0;
-    int ret   = 0;
-
-    ret   = evaluate_long(g, h, &lres);
+    int ret = evaluate_long(g, h, &lres);
     *dres = (double)lres;
-
     return ret;
 }
 
@@ -154,7 +139,7 @@ static void print(grib_context* c, grib_expression* g, grib_handle* f)
     grib_expression_logical_or* e = (grib_expression_logical_or*)g;
     printf("(");
     grib_expression_print(c, e->left, f);
-    printf(" && ");
+    printf(" || ");
     grib_expression_print(c, e->right, f);
     printf(")");
 }

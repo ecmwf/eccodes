@@ -1,6 +1,5 @@
 constant ECMWF = 98 : hidden;
-constant ECMWF_s = "ecmf" : hidden;
-constant WMO= 0;
+constant WMO = 0;
 constant conceptsMasterDir="grib1" : hidden;
 constant conceptsLocalDirECMF="grib1/localConcepts/ecmf" : hidden;
 constant conceptsLocalDirAll="grib1/localConcepts/[centre:s]" : hidden;
@@ -59,8 +58,8 @@ alias levelType=indicatorOfTypeOfLevel;
 
 transient pressureUnits="hPa";
 
-concept_nofail typeOfLevelECMF      (unknown,         "typeOfLevel.def",conceptsMasterDir,conceptsLocalDirECMF);
-concept_nofail vertical.typeOfLevel (typeOfLevelECMF, "typeOfLevel.def",conceptsDir2,conceptsDir1);
+concept typeOfLevelECMF      (unknown,         "typeOfLevel.def",conceptsMasterDir,conceptsLocalDirECMF);
+concept vertical.typeOfLevel (typeOfLevelECMF, "typeOfLevel.def",conceptsDir2,conceptsDir1);
 
 when ( typeOfLevel is "isobaricInPa" ) { set pressureUnits="Pa"; }
 else { set pressureUnits="hPa";}
@@ -181,6 +180,8 @@ meta dataTime   time(hour,minute,second) : dump;
 meta julianDay  julian_day(dataDate,hour,minute,second) : edition_specific;
 
 codetable[1] stepUnits 'stepUnits.table' = 1 : transient,dump,no_copy;
+# The lowercase version is to unify it with the helper key in the MARS language
+alias stepunits = stepUnits;
 
 concept_nofail stepType (timeRangeIndicator, "stepType.def", conceptsDir2, conceptsDir1);
 
@@ -222,7 +223,6 @@ alias ls.stepRange = stepRange;
 alias ls.dataDate  = dataDate;
 
 alias mars.step    = endStep;
-alias stepunits = stepUnits;
 alias mars.date    = dataDate;
 alias mars.levtype = indicatorOfTypeOfLevel;
 alias mars.time    = dataTime;
@@ -268,7 +268,6 @@ if(((section1Length > 40) or new() or setLocalDefinition> 0) and deleteLocalDefi
     }
 
     template_nofail marsKeywords "mars/grib.[stream:s].[type:s].def";
-
   }
   else
   {
@@ -314,15 +313,18 @@ alias time.stepType=stepType;
 
 # ECC-457: GRIB1 to GRIB2 conversion
 concept_nofail stepTypeForConversion (unknown, "stepTypeForConversion.def", conceptsDir2, conceptsDir1);
-if (stepTypeForConversion is "accum" ) {
-    if (productDefinitionTemplateNumber == 1) {
-        alias productDefinitionTemplateNumber=eleven;
-    }
-    else {
-        alias productDefinitionTemplateNumber=eight;
-    }
+if (stepTypeForConversion is "accum" || stepTypeForConversion is "max" || stepTypeForConversion is "min" || stepTypeForConversion is "avg") {
+   if (productDefinitionTemplateNumber == 1) {
+      alias productDefinitionTemplateNumber=eleven;
+   }
+   else {
+      alias productDefinitionTemplateNumber=eight;
+   }
 }
 
 meta md5Section1 md5(offsetSection1,section1Length);
 # md5(start,length,blacklisted1,blacklisted2,...);
 meta md5Product md5(offsetSection1,section1Length,gridDefinition,section1Flags,decimalScaleFactor);
+
+# ECC-1806
+concept_nofail paramIdForConversion(zero, "paramIdForConversion.def", conceptsDir2, conceptsDir1) : long_type,read_only;

@@ -168,13 +168,14 @@ grib_action* grib_action_create_hash_array(grib_context* context,
 
     a->hash_array = hash_array;
     if (hash_array) {
-        grib_hash_array_value* ha = hash_array;
-        grib_trie* index          = grib_trie_new(context);
-        while (ha) {
-            ha->index = index;
-            grib_trie_insert_no_replace(index, ha->name, ha);
-            ha = ha->next;
-        }
+        grib_context_log(context, GRIB_LOG_FATAL, "%s: 'hash_array_list' not implemented", __func__);
+        // grib_hash_array_value* ha = hash_array;
+        // grib_trie* index = grib_trie_new(context);
+        // while (ha) {
+        //     ha->index = index;
+        //     grib_trie_insert_no_replace(index, ha->name, ha);
+        //     ha = ha->next;
+        // }
     }
     act->name = grib_context_strdup_persistent(context, name);
 
@@ -185,17 +186,12 @@ grib_action* grib_action_create_hash_array(grib_context* context,
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
-    int i = 0;
-
-    for (i = 0; i < lvl; i++)
-        grib_context_print(act->context, f, "     ");
-
-    printf("hash_array(%s) { ", act->name);
-    printf("\n");
-
-    for (i = 0; i < lvl; i++)
-        grib_context_print(act->context, f, "     ");
-    printf("}\n");
+    // for (int i = 0; i < lvl; i++)
+    //     grib_context_print(act->context, f, "     ");
+    // printf("hash_array(%s) { \n", act->name);
+    // for (int i = 0; i < lvl; i++)
+    //     grib_context_print(act->context, f, "     ");
+    // printf("}\n");
 }
 
 
@@ -203,14 +199,16 @@ static void destroy(grib_context* context, grib_action* act)
 {
     grib_action_hash_array* self = (grib_action_hash_array*)act;
 
-    grib_hash_array_value* v = self->hash_array;
-    if (v)
-        grib_trie_delete(v->index);
-    while (v) {
-        grib_hash_array_value* n = v->next;
-        grib_hash_array_value_delete(context, v);
-        v = n;
-    }
+    // This is currently unset. So assert that it is NULL
+    const grib_hash_array_value* v = self->hash_array;
+    Assert(v == NULL);
+    // if (v)
+    //     grib_trie_delete(v->index);
+    // while (v) {
+    //     grib_hash_array_value* n = v->next;
+    //     grib_hash_array_value_delete(context, v);
+    //     v = n;
+    // }
 
     grib_context_free_persistent(context, self->masterDir);
     grib_context_free_persistent(context, self->localDir);
@@ -286,6 +284,12 @@ static grib_hash_array_value* get_hash_array_impl(grib_handle* h, grib_action* a
     full = grib_context_full_defs_path(context, master);
 
     if (c) {
+        if (!full) {
+            grib_context_log(context, GRIB_LOG_ERROR,
+                             "unable to find definition file %s in %s:%s:%s\nDefinition files path=\"%s\"",
+                             self->basename, master, ecmf, local, context->grib_definition_files_path);
+            return NULL;
+        }
         grib_hash_array_value* last = c;
         while (last->next)
             last = last->next;
@@ -332,6 +336,6 @@ grib_hash_array_value* get_hash_array(grib_handle* h, grib_action* a)
 
 const char* get_hash_array_full_path(grib_action* a)
 {
-    grib_action_hash_array* self = (grib_action_hash_array*)a;
+    const grib_action_hash_array* self = (grib_action_hash_array*)a;
     return self->full_path;
 }

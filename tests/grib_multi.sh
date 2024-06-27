@@ -11,7 +11,7 @@
 . ./include.ctest.sh
 
 label="grib_multi_test"
-tmpdata=temp.$label.$$.grib
+tmpdata=temp.$label.grib
 rm -f $tmpdata
 
 parameterNumber=`${tools_dir}/grib_get -p parameterNumber -w parameterCategory=2,parameterNumber=3 ${data_dir}/multi.grib2`
@@ -35,4 +35,16 @@ if [ -z "$parameterNumber"  ]; then
   exit 1
 fi
 
+# Convert to single-field
+# -----------------------
+infile=${data_dir}/multi.grib2
+${tools_dir}/grib_copy $infile $tmpdata
+c1=$(${tools_dir}/grib_count $infile)
+c2=$(${tools_dir}/grib_count $tmpdata)
+[ $c1 -eq 30 ]
+[ $c2 -eq 56 ]
+
+
+# Clean up
+rm -f $tmpdata
 rm -f $tmpdata.1 $tmpdata.rules

@@ -23,6 +23,7 @@ tempData1=out.bmp.grib1.data
 tempData2=out.bmp.grib2.data
 tempRules=bitmap.rules
 tempRef=grib_bitmap.ref
+tempOut=grib_bitmap.txt
 
 rm -f $outfile
 
@@ -144,7 +145,24 @@ stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $tempComplexSD`
 rm -f $tempComplexSD
 rm -f $tempSimple
 
+# Secondary bitmap
+grib2_sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -s bitMapIndicator=254 $grib2_sample $tempData1
+set +e
+${tools_dir}/grib_dump -O $tempData1 > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "missing bitmap" $tempOut
 
+
+# bitmap as string
+cat > $tempRules<<EOF
+  print "[bitmap:s]";
+EOF
+${tools_dir}/grib_filter $tempRules $data_dir/boustrophedonic.grib1 > $REDIRECT
+${tools_dir}/grib_filter $tempRules $data_dir/missing_field.grib1 > $REDIRECT
+${tools_dir}/grib_filter $tempRules $data_dir/reduced_latlon_surface.grib2 > $REDIRECT
 
 # Clean up
-rm -f  $tempData1 $tempData2 $temp1 $temp2 $tempRules
+rm -f  $tempData1 $tempData2 $temp1 $temp2 $tempRules $tempOut

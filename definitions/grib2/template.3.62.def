@@ -7,7 +7,7 @@ transient biFourierMakeTemplate = 0;
 
 include "grib2/template.3.bf.def"
 
-include "grib2/template.3.shape_of_the_earth.def";
+include "grib2/template.3.shape_of_the_earth.def"
 
 #  La1 - latitude of first grid point
 signed[4] latitudeOfFirstGridPoint : edition_specific ;
@@ -23,7 +23,7 @@ alias Lo1 =  longitudeOfFirstGridPoint;
 flags[1] resolutionAndComponentFlags 'grib2/tables/[tablesVersion]/3.3.table' : dump;
 
 #  LaD - Latitude where Dx and Dy are specified
-signed[4] LaD  : edition_specific;
+signed[4] LaD : edition_specific;
 alias latitudeWhereDxAndDyAreSpecified=LaD;
 meta geography.LaDInDegrees scale(LaD,oneConstant,grib2divider,truncateDegrees) : dump;
 alias latitudeWhereDxAndDyAreSpecifiedInDegrees=LaDInDegrees;
@@ -31,7 +31,7 @@ alias latitudeWhereDxAndDyAreSpecifiedInDegrees=LaDInDegrees;
 #  LoV - orientation of the grid
 #  LoV is the longitude value of the meridian which is parallel to the y-axis (or columns of the grid)
 #  along which latitude increases as the y-coordinate increases
-signed[4] orientationOfTheGrid  : edition_specific;
+signed[4] orientationOfTheGrid : edition_specific;
 alias LoV =  orientationOfTheGrid ;
 meta geography.orientationOfTheGridInDegrees scale(orientationOfTheGrid,oneConstant,grib2divider,truncateDegrees) : dump;
 

@@ -64,11 +64,12 @@ ${tools_dir}/grib_set -s numberOfDataPoints=12582912,gridDefinitionTemplateNumbe
 
 grib_check_key_equals $temp_grib_a "gridSpecification" "H1024"
 
-# Now check streams.
+# Now check streams for use in climate-dt.
 # Setting stream clte and type fc should set mars.date and mars.time to dataDate and dataTime,
 # and mars.step should be unaliased
+# We must also set dataset=climate-dt, since in other datasets mars.step is set to stepRange
 
-${tools_dir}/grib_set -s stream=clte,type=fc $destine_sample $temp_grib_a
+${tools_dir}/grib_set -s dataset=climate-dt,stream=clte,type=fc $destine_sample $temp_grib_a
 
 result1=$( ${tools_dir}/grib_get -p mars.date,mars.time $temp_grib_a )
 result2=$( ${tools_dir}/grib_get -p dataDate,dataTime $temp_grib_a )
@@ -79,8 +80,9 @@ ${tools_dir}/grib_ls -jm $temp_grib_a
 
 # Setting stream clmn and type fc should set mars.year and mars.month to year and month,
 # and mars.date, mars.time, mars.step should be unaliased
+# We must also set dataset=climate-dt, since in other datasets mars.step is set to stepRange
 
-${tools_dir}/grib_set -s stream=clmn,type=fc $destine_sample $temp_grib_a
+${tools_dir}/grib_set -s dataset=climate-dt,stream=clmn,type=fc $destine_sample $temp_grib_a
 
 result1=$( ${tools_dir}/grib_get -p mars.year,mars.month $temp_grib_a )
 result2=$( ${tools_dir}/grib_get -p year,month $temp_grib_a )
@@ -90,6 +92,10 @@ ${tools_dir}/grib_ls -jm $temp_grib_a
 [ $( ${tools_dir}/grib_get -f -p mars.date $temp_grib_a ) = "not_found" ]
 [ $( ${tools_dir}/grib_get -f -p mars.time $temp_grib_a ) = "not_found" ]
 [ $( ${tools_dir}/grib_get -f -p mars.step $temp_grib_a ) = "not_found" ]
+
+# ECC-1801
+${tools_dir}/grib_set -s productionStatusOfProcessedData=12 $sample_grib2 $temp_grib_a
+${tools_dir}/grib_compare -b productionStatusOfProcessedData $sample_grib2 $temp_grib_a
 
 # Clean up
 rm -f $temp_grib_a $temp_grib_b $destine_sample

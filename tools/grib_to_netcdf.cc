@@ -1607,7 +1607,6 @@ static void cube_indexes(
     int i         = 0;
     int index     = 0;
     int n         = 1;
-    int ok        = 0;
 
     if (size < c) {
         grib_context_log(ctx, GRIB_LOG_ERROR, "Internal error in cube_indexes. size=%d < axis=%d", size, c);
@@ -1649,7 +1648,6 @@ static void cube_indexes(
             if (h->compare ? h->compare[i](w, v) : (w == v)) {
                 index += j * n;
                 n *= dims;
-                ok++;
                 ((hypercube*)h)->index_cache[i] = j;
                 break;
             }
@@ -4227,7 +4225,15 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
         grib_handle_delete(h);
     }
 
-    grib_file_close(file->name, 0, &e);
+    if (e != GRIB_SUCCESS) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "%s (message %d)", grib_get_error_message(e), i);
+    }
+
+    int e2 = 0;
+    grib_file_close(file->name, 0, &e2);
+    if (e2 != GRIB_SUCCESS) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "Failed to close file %s (%s)", file->name, grib_get_error_message(e2));
+    }
 
     {
         /* Now do some checks */
@@ -4273,10 +4279,6 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     return 0;
-}
-
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options)

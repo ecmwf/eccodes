@@ -24,7 +24,7 @@ unsigned[4] scaledValueOfSecondFixedSurface = missing() : can_be_missing,dump,ed
 
 transient pressureUnits="hPa";
 
-concept_nofail vertical.typeOfLevel (unknown,"typeOfLevelConcept.def",conceptsDir2,conceptsDir1);
+concept vertical.typeOfLevel (unknown,"typeOfLevelConcept.def",conceptsDir2,conceptsDir1);
 
 alias levelType=typeOfFirstFixedSurface;
 
@@ -66,7 +66,9 @@ if (extraDim) {
 } else {
     # See GRIB-74 why we store the pressureUnits in a transient
     transient tempPressureUnits=pressureUnits;
-    if (!(typeOfLevel is "surface")) {
+    # Same as typeOfLevel != "surface" but much quicker to evaluate
+    # than via the concept
+    if ( ! (typeOfFirstFixedSurface == 1 && typeOfSecondFixedSurface == 255) ) {
         if (tempPressureUnits is "Pa") {
             meta marsLevel scale(level,one,hundred) : read_only;
             alias mars.levelist=marsLevel;
@@ -77,7 +79,8 @@ if (extraDim) {
     # ECC-1333: levtype should be read-only in GRIB2
     concept mars.levtype(unknown,"marsLevtypeConcept.def",conceptsDir2,conceptsDir1):no_copy, read_only;
     # GRIB-372: levelist alias does not pertain to surface parameters
-    if (levtype is "sfc" || levtype is "o2d") {
+    transient tempLevtype = levtype; # Faster to copy the concept so we evaluate it once
+    if (tempLevtype is "sfc" || tempLevtype is "o2d") {
         unalias mars.levelist;
     }
 }

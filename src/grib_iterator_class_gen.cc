@@ -193,12 +193,21 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     if ((err = grib_get_long_internal(h, s_numPoints, &numberOfPoints)) != GRIB_SUCCESS)
         return err;
 
-    if (numberOfPoints != dli) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator: %s != size(%s) (%ld!=%ld)",
-                         s_numPoints, s_rawData, numberOfPoints, dli);
-        return GRIB_WRONG_GRID;
+    // See ECC-1792. If we don't want to decode the Data Section, we should not do a check
+    // to see if it is consistent with the Grid Section
+    if (iter->flags & GRIB_GEOITERATOR_NO_VALUES) {
+        // Iterator's number of values taken from the Grid Section
+        iter->nv = numberOfPoints;
+    } else {
+        // Check for consistency between the Grid and Data Sections
+        if (numberOfPoints != dli) {
+            grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator: %s != size(%s) (%ld!=%ld)",
+                             s_numPoints, s_rawData, numberOfPoints, dli);
+            return GRIB_WRONG_GRID;
+        }
+        iter->nv = dli;
     }
-    iter->nv = dli;
+
     if (iter->nv == 0) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator: size(%s) is %ld", s_rawData, dli);
         return GRIB_WRONG_GRID;

@@ -38,3 +38,14 @@ grib_check_key_exists()
    # grib_get will fail if the key is not found
    $tools_dir/grib_get -p $a_key $a_file >/dev/null
 }
+
+# This is useful in situations where we intend a key to have
+# a single value (size=1). For example when we redefine a transient
+grib_check_key_is_scalar()
+{
+   a_file=$1
+   a_key=$2
+   a_val=$3
+   result=$(echo "print '|[$a_key]|';" | ${tools_dir}/grib_filter - $a_file)
+    [ "$result" = "|$a_val|" ]
+}

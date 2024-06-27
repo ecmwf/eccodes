@@ -123,14 +123,14 @@ static void update_offsets(grib_accessor* a, long len)
         grib_context_log(a->context, GRIB_LOG_DEBUG, "::::: grib_buffer : accessor %s is moving by %d bytes to %ld", a->name, len, a->offset);
         if (s)
             update_offsets(s->block->first, len);
-        a = a->next;
+        a = a->next_;
     }
 }
 
 static void update_offsets_after(grib_accessor* a, long len)
 {
     while (a) {
-        update_offsets(a->next, len);
+        update_offsets(a->next_, len);
         a = a->parent->owner;
     }
 }
@@ -152,10 +152,10 @@ static void update_offsets_after(grib_accessor* a, long len)
 //         {
 //             int ret;
 //             if(s->owner)
-//                 plen = grib_get_next_position_offset(s->block->last) - s->owner->offset;
+//                 plen = s->block->last->get_next_position_offset() - s->owner->offset;
 //             else
-//                 plen = grib_get_next_position_offset(s->block->last);
-//             if((ret = grib_pack_long(s->aclength, &plen, &len)) != GRIB_SUCCESS)
+//                 plen = s->block->last->get_next_position_offset();
+//             if((ret = s->aclength->pack_long(&plen, &len)) != GRIB_SUCCESS)
 //                 ;
 //
 //             if(s->h->context->debug)
@@ -174,19 +174,19 @@ static void update_offsets_after(grib_accessor* a, long len)
 //     {
 //         int ret;
 //         if(s->owner)
-//             plen = grib_get_next_position_offset(s->block->last) - s->owner->offset;
+//             plen = s->block->last->get_next_position_offset() - s->owner->offset;
 //         else
-//             plen = grib_get_next_position_offset(s->block->last);
+//             plen = s->block->last->get_next_position_offset();
 //         /* if(s->owner) */
 //         /* s->owner->length = plen; */
 //         /* if(s->aclength)  */
-//         if((ret = grib_pack_long(s->aclength, &plen, &len)) != GRIB_SUCCESS)
+//         if((ret = s->aclength->pack_long(&plen, &len)) != GRIB_SUCCESS)
 //             ;
 //         if(s->h->context->debug)
 //         {
 //             printf("SECTION updating length %ld .. %s\n",plen,s->owner->name);
 //             printf("NEXT_POS = %ld, owner offset= %ld %s %s\n",
-//                     grib_get_next_position_offset(s->block->last),
+//                     s->block->last->get_next_position_offset(),
 //                     s->owner ? s->owner->offset : 0L, s->owner->name,
 //                             s->block->last->name);
 //         }
@@ -195,11 +195,11 @@ static void update_offsets_after(grib_accessor* a, long len)
 //         update_sections_lengths(s->owner->parent);
 // }
 
-void grib_buffer_replace(grib_accessor* a, const unsigned char* data,
-                         size_t newsize, int update_lengths, int update_paddings)
+int grib_buffer_replace(grib_accessor* a, const unsigned char* data,
+                        size_t newsize, int update_lengths, int update_paddings)
 {
     size_t offset = a->offset;
-    long oldsize  = grib_get_next_position_offset(a) - offset;
+    long oldsize  = a->get_next_position_offset() - offset;
     long increase = (long)newsize - (long)oldsize;
 
     grib_buffer* buffer   = grib_handle_of_accessor(a)->buffer;
@@ -231,12 +231,14 @@ void grib_buffer_replace(grib_accessor* a, const unsigned char* data,
     if (increase) {
         update_offsets_after(a, increase);
         if (update_lengths) {
-            grib_update_size(a, newsize);
-            grib_section_adjust_sizes(grib_handle_of_accessor(a)->root, 1, 0);
+            a->update_size(newsize);
+            int err = grib_section_adjust_sizes(grib_handle_of_accessor(a)->root, 1, 0);
+            if (err) return err;
             if (update_paddings)
                 grib_update_paddings(grib_handle_of_accessor(a)->root);
         }
     }
+    return GRIB_SUCCESS;
 }
 
 void grib_update_sections_lengths(grib_handle* h)

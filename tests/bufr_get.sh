@@ -119,6 +119,37 @@ result=`${tools_dir}/bufr_get -p unpack:d,heightOfStation aaen_55.bufr`
 result=`${tools_dir}/bufr_get -p unpack:s,heightOfStation aaen_55.bufr`
 [ "$result" = "0 858000" ]
 
+# ----------------------------------------
+# Wrong message type
+# ----------------------------------------
+f=$data_dir/sample.grib2
+set +e
+${tools_dir}/bufr_get -p edition $f > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Input file seems to be GRIB" $fLog
+
+f=$ECCODES_SAMPLES_PATH/budg.tmpl
+set +e
+${tools_dir}/bufr_get -p edition $f > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Input file seems to be GRIB" $fLog
+
+
+# ----------------------------------------
+# Unreadable message
+# ----------------------------------------
+echo BUFR > $fTmp
+set +e
+${tools_dir}/bufr_get -p edition $fTmp > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "unreadable message" $fLog
+
 
 # Clean up
 rm -f $fLog $fTmp $res_get $tempRef

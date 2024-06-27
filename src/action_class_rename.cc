@@ -112,15 +112,14 @@ static void rename_accessor(grib_accessor* a, char* name)
 static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 {
     grib_action_rename* a = (grib_action_rename*)act;
-    grib_accessor* ga     = NULL;
-
-    ga = grib_find_accessor(p->h, a->the_old);
+    grib_accessor* ga = grib_find_accessor(p->h, a->the_old);
 
     if (ga) {
         rename_accessor(ga, a->the_new);
     }
     else {
-        grib_context_log(act->context, GRIB_LOG_DEBUG, "Action_class_rename  : create_accessor_buffer : No accessor named %s to rename ", a->the_old);
+        grib_context_log(act->context, GRIB_LOG_DEBUG,
+                        "Action_class_rename::create_accessor: No accessor named %s to rename", a->the_old);
     }
 
     return GRIB_SUCCESS;
@@ -128,14 +127,12 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
-    grib_action_rename* a = (grib_action_rename*)act;
+    // grib_action_rename* a = (grib_action_rename*)act;
+    // int i = 0;
+    // for (i = 0; i < lvl; i++)
+    //     grib_context_print(act->context, f, "     ");
 
-    int i = 0;
-
-    for (i = 0; i < lvl; i++)
-        grib_context_print(act->context, f, "     ");
-
-    grib_context_print(act->context, f, "rename %s as %s in %s\n", a->the_old, act->name, a->the_new);
+    // grib_context_print(act->context, f, "rename %s as %s in %s\n", a->the_old, act->name, a->the_new);
 }
 
 static void destroy(grib_context* context, grib_action* act)

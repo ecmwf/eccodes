@@ -16,9 +16,9 @@ int main(int argc, char* argv[])
     char infile[]    = "../../data/reduced_gaussian_model_level.grib1";
     codes_handle* h  = NULL;
     codes_context* c = codes_context_get_default();
-    codes_values values[2];
-    int nvalues = 2;
-    int i;
+    codes_values values[4];
+    const int nvalues = sizeof(values)/sizeof(values[0]);
+    int i = 0;
     char* name = NULL;
 
     f = fopen(infile, "rb");
@@ -34,30 +34,41 @@ int main(int argc, char* argv[])
     }
     fclose(f);
 
-    values[0].type       = CODES_TYPE_LONG;
-    values[0].name       = "centre";
-    values[0].long_value = 98;
+    values[i].type       = CODES_TYPE_LONG;
+    values[i].name       = "centre";
+    values[i].long_value = 98;
+    i++;
 
-    values[1].type       = CODES_TYPE_LONG;
-    values[1].name       = "level";
-    values[1].long_value = 2;
+    values[i].type       = CODES_TYPE_DOUBLE;
+    values[i].name       = "bitsPerValue";
+    values[i].double_value = 13;
+    i++;
 
-    /*CODES_VALUE_DIFFERENT -> value is different*/
+    values[i].type       = CODES_TYPE_STRING;
+    values[i].name       = "identifier";
+    values[i].string_value = "GRIB";
+    i++;
+
+    values[i].type       = CODES_TYPE_LONG;
+    values[i].name       = "level";
+    values[i].long_value = 2; /* Intentionally made different; actual level==1 */
+
+    err = codes_values_check(h, values, nvalues);
+    if (err) {
+        for (i = 0; i < nvalues; i++) {
+            printf("i=%d %s\n",i, values[i].name);
+            if (values[i].error == err) name = (char*)values[i].name;
+        }
+        fprintf(stderr, "Error: \"%s\" - %s\n", name, codes_get_error_message(err));
+    }
+
+    values[1].name = "levelll"; /* non-existent key */
     err = codes_values_check(h, values, nvalues);
     if (err) {
         for (i = 0; i < nvalues; i++) {
             if (values[i].error == err) name = (char*)values[i].name;
         }
-        fprintf(stderr, "Error: \"%s\" %s\n", name, codes_get_error_message(err));
-    }
-
-    values[1].name = "levelll";
-    err            = codes_values_check(h, values, nvalues);
-    if (err) {
-        for (i = 0; i < nvalues; i++) {
-            if (values[i].error == err) name = (char*)values[i].name;
-        }
-        fprintf(stderr, "Error: \"%s\" %s\n", name, codes_get_error_message(err));
+        fprintf(stderr, "Error: \"%s\" - %s\n", name, codes_get_error_message(err));
     }
 
     codes_handle_delete(h);

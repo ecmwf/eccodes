@@ -128,7 +128,7 @@ grib_concept_value* action_concept_get_concept(grib_accessor* a)
 
 int action_concept_get_nofail(grib_accessor* a)
 {
-    grib_action_concept* self = (grib_action_concept*)a->creator;
+    const grib_action_concept* self = (grib_action_concept*)a->creator;
     return self->nofail;
 }
 
@@ -397,9 +397,9 @@ int get_concept_condition_string(grib_handle* h, const char* key, const char* va
         grib_concept_condition* concept_condition = concept_value->conditions;
         if (strcmp(pValue, concept_value->name) == 0) {
             while (concept_condition) {
-                grib_expression* expression = concept_condition->expression;
+                //grib_expression* expression = concept_condition->expression;
                 const char* condition_name  = concept_condition->name;
-                Assert(expression);
+                //Assert(expression);
                 if (concept_condition_expression_true(h, concept_condition, exprVal) && strcmp(condition_name, "one") != 0) {
                     length += snprintf(result + length, 2048, "%s%s=%s",
                                       (length == 0 ? "" : ","), condition_name, exprVal);

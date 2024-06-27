@@ -9,12 +9,10 @@ unsigned[1]  minutesAfterDataCutoff = missing() : edition_specific,can_be_missin
 alias minutesAfterReferenceTimeOfDataCutoff=minutesAfterDataCutoff;
 
 # Indicator of unit for forecastTime (ECC-1709)
-codetable[1] indicatorOfUnitOfTimeRange ('4.4.table',masterDir,localDir)  : dump;
-alias indicatorOfUnitForForecastTime = indicatorOfUnitOfTimeRange;
+codetable[1] indicatorOfUnitForForecastTime ('4.4.table',masterDir,localDir) : dump;
+alias indicatorOfUnitOfTimeRange = indicatorOfUnitForForecastTime;
 
-meta stepUnits optimal_step_units(forecastTime,indicatorOfUnitOfTimeRange,lengthOfTimeRange,indicatorOfUnitForTimeRange) : transient,dump;
-transient startStepUnit = 255 : hidden; # 255 means MISSING. See code table 4.4
-transient endStepUnit = 255 : hidden;
+include "grib2/stepUnits.def"
 
 # Forecast time in units defined by previous octet (GRIB-29: supports negative forecast time)
-signed[4] forecastTime  : dump;
+signed[4] forecastTime : dump;

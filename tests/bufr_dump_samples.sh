@@ -34,4 +34,41 @@ for lang in C python fortran filter; do
   ${tools_dir}/bufr_dump -E $lang $input >/dev/null
 done
 
+# Extra options
+input=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
+${tools_dir}/bufr_dump -OHat $input >/dev/null
+
+
+# Error cases
+input=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
+set +e
+${tools_dir}/bufr_dump -EXX $input > $temp 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid language specified" $temp
+
+set +e
+${tools_dir}/bufr_dump -DXX $input > $temp 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid language specified" $temp
+
+set +e
+${tools_dir}/bufr_dump -jX $input > $temp 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid JSON option" $temp
+
+export ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS=1
+set +e
+${tools_dir}/bufr_dump -EC $input > $temp 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "not implemented" $temp
+
+# Clean up
 rm -f $temp

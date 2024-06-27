@@ -6,7 +6,7 @@ cat > accessor_class_list.gperf <<EOF
 #include "grib_accessor_class.h"
 
 %}
-struct accessor_class_hash { char *name; grib_accessor_class **cclass;};
+struct accessor_class_hash { const char *name; grib_accessor_class **cclass;};
 %%
 EOF
 

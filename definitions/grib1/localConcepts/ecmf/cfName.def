@@ -909,12 +909,12 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 130 ;
 	}
-#Eastward sea water velocity
+#Eastward surface sea water velocity
 'eastward_sea_water_velocity' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 131 ;
 	}
-#Northward sea water velocity
+#Northward surface sea water velocity
 'northward_sea_water_velocity' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 132 ;

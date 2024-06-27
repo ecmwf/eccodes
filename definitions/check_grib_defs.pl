@@ -204,6 +204,7 @@ sub process {
         }
         elsif ($this =~ /'(.*)' *= *{/) {
             $concept = $1;
+            die "File: $filename, line: $lineNum: Value is empty." if ($concept eq '');
             die "File: $filename, line: $lineNum: Value contains invalid characters." if (non_printable($concept));
             if ($filename eq 'cfVarName.def') {
                #if ($concept =~ /^[0-9]/) {

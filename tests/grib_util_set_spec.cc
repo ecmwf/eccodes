@@ -27,6 +27,8 @@ static int get_packing_type_code(const char* packingType)
         return GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER;
     else if (STR_EQUAL(packingType, "grid_ieee"))
         return GRIB_UTIL_PACKING_TYPE_IEEE;
+    else if (STR_EQUAL(packingType, "grid_complex"))
+        return GRIB_UTIL_PACKING_TYPE_GRID_COMPLEX;
 
     Assert(!"Invalid packingType");
     return result;
@@ -126,6 +128,12 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
 #ifdef INFINITY
         packing_spec.accuracy = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
         values[0]             = INFINITY;
+        h2                    = grib_util_set_spec(handle, &spec, &packing_spec, set_spec_flags, values, outlen, &err);
+        Assert(err == GRIB_ENCODING_ERROR);
+        Assert(!h2);
+        if (h2) exit(1);
+
+        values[0]             = -INFINITY;
         h2                    = grib_util_set_spec(handle, &spec, &packing_spec, set_spec_flags, values, outlen, &err);
         Assert(err == GRIB_ENCODING_ERROR);
         Assert(!h2);

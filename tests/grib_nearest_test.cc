@@ -31,10 +31,9 @@ int main(int argc, char** argv)
 {
     int err       = 0;
     long step     = 0;
-    size_t nfiles = 0;
-    size_t i = 0, j = 0;
-    codes_fieldset* set       = NULL;
-    const size_t max_numfiles = 100;
+    int nfiles = 0, i = 0, j = 0;
+    codes_fieldset* set = NULL;
+    const int max_numfiles = 100;
     codes_handle* h           = NULL;
     char param[20]            = {0,};
     size_t len     = 20;
