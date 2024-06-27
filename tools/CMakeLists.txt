@@ -28,7 +28,7 @@ ecbuild_add_library( TARGET    ecc_tools
 # tools binaries
 list( APPEND ecc_tools_binaries
              codes_info codes_count codes_split_file
-             grib_histogram grib_filter grib_ls grib_dump grib_merge
+             grib_histogram grib_filter grib_ls grib_dump
              grib2ppm grib_set grib_get grib_get_data grib_copy
              grib_compare codes_parser grib_index_build bufr_index_build
              bufr_ls bufr_dump bufr_set bufr_get
@@ -37,8 +37,6 @@ list( APPEND ecc_tools_binaries
              metar_dump metar_ls metar_compare metar_get metar_filter metar_copy )
 
 list( APPEND ecc_tools_binaries_extra
-             big2gribex
-             gg_sub_area_check
              grib_repair
              grib_to_json
              codes_export_resource

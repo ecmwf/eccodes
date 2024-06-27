@@ -82,6 +82,7 @@ done
 
 
 # Test for dumping a section
+# ---------------------------
 if [ $HAVE_JPEG -eq 0 ]; then
     # No JPEG decoding enabled so dumping section 7 will issue errors
     # but dumping non-data sections should work
@@ -110,6 +111,27 @@ ${tools_dir}/grib_dump -w count=4 $file > $temp 2>&1
 file=$data_dir/sample.grib2
 ECCODES_DEBUG=1 ${tools_dir}/grib_dump $file > $temp 2>&1
 
+# Check the right number of sections are listed in the dump
+# ---------------------------------------------------------
+file=$data_dir/sample.grib2
+${tools_dir}/grib_dump -O $file > $temp
+count=$(grep -c SECTION_ $temp)
+[ $count -eq 8 ]
+
+file=$data_dir/test_uuid.grib2
+${tools_dir}/grib_dump -wcount=1 -O $file > $temp
+count=$(grep -c SECTION_ $temp)
+[ $count -eq 7 ]
+
+file=$data_dir/regular_gaussian_model_level.grib1
+${tools_dir}/grib_dump -O $file > $temp
+count=$(grep -c SECTION_ $temp)
+[ $count -eq 4 ]
+
+file=$data_dir/missing_field.grib1
+${tools_dir}/grib_dump -O $file > $temp
+count=$(grep -c SECTION_ $temp)
+[ $count -eq 5 ]
 
 # Repeated key numberOfSection
 file=$data_dir/sample.grib2
