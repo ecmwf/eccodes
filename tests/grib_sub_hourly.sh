@@ -62,6 +62,11 @@ fi
 instantaneous_field=$data_dir/reduced_gaussian_surface.grib2
 accumulated_field=$data_dir/reduced_gaussian_sub_area.grib2
 
+# ECC-1228: Changing template with negative forecast time
+${tools_dir}/grib_set -s stepRange=-48s--24s $accumulated_field $temp
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=8 $temp $temp2
+grib_check_key_equals $temp2 "-p forecastTime,indicatorOfUnitOfTimeRange,lengthOfTimeRange,indicatorOfUnitForTimeRange" "-48 13 24 13"
+
 # ECC-1802: Relaxation of the "Step Units Rule":
 # The updated rule permits the simultaneous assignment of the same step unit to both 'stepUnits' and 'step*' keys
 in="$instantaneous_field"
