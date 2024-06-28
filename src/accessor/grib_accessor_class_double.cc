@@ -11,26 +11,29 @@
 
 #include "grib_accessor_class_double.h"
 
-grib_accessor_class_double_t _grib_accessor_class_double{"double"};
+grib_accessor_class_double_t _grib_accessor_class_double{ "double" };
 grib_accessor_class* grib_accessor_class_double = &_grib_accessor_class_double;
 
 
-int grib_accessor_class_double_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_double_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_DOUBLE;
 }
 
-int grib_accessor_class_double_t::unpack_string(grib_accessor* a, char* v, size_t* len){
+int grib_accessor_class_double_t::unpack_string(grib_accessor* a, char* v, size_t* len)
+{
     double val = 0;
     size_t l   = 1;
     char repres[1024];
-    char format[32] = "%g";
-    grib_handle* h = grib_handle_of_accessor(a);
+    char format[32]         = "%g";
+    grib_handle* h          = grib_handle_of_accessor(a);
     const char* cclass_name = a->cclass->name;
 
     a->unpack_double(&val, &l);
     if ((val == GRIB_MISSING_DOUBLE) && ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0)) {
         snprintf(repres, sizeof(repres), "MISSING");
-    } else {
+    }
+    else {
         size_t size = sizeof(format);
         grib_get_string(h, "formatForDoubles", format, &size);
         snprintf(repres, sizeof(repres), format, val);
@@ -53,11 +56,13 @@ int grib_accessor_class_double_t::unpack_string(grib_accessor* a, char* v, size_
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_class_double_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_double_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_dump_values(dumper, a);
 }
 
-int grib_accessor_class_double_t::compare(grib_accessor* a, grib_accessor* b){
+int grib_accessor_class_double_t::compare(grib_accessor* a, grib_accessor* b)
+{
     int retval   = 0;
     double* aval = 0;
     double* bval = 0;
@@ -67,11 +72,13 @@ int grib_accessor_class_double_t::compare(grib_accessor* a, grib_accessor* b){
     long count  = 0;
     int err     = 0;
 
-    err = a->value_count(&count);    if (err)
+    err = a->value_count(&count);
+    if (err)
         return err;
     alen = count;
 
-    err = b->value_count(&count);    if (err)
+    err = b->value_count(&count);
+    if (err)
         return err;
     blen = count;
 
@@ -81,7 +88,8 @@ int grib_accessor_class_double_t::compare(grib_accessor* a, grib_accessor* b){
     aval = (double*)grib_context_malloc(a->context, alen * sizeof(double));
     bval = (double*)grib_context_malloc(b->context, blen * sizeof(double));
 
-    a->unpack_double(aval, &alen);    b->unpack_double(bval, &blen);
+    a->unpack_double(aval, &alen);
+    b->unpack_double(bval, &blen);
     retval = GRIB_SUCCESS;
     while (alen != 0) {
         if (*bval != *aval)
@@ -95,7 +103,8 @@ int grib_accessor_class_double_t::compare(grib_accessor* a, grib_accessor* b){
     return retval;
 }
 
-int grib_accessor_class_double_t::pack_missing(grib_accessor* a){
+int grib_accessor_class_double_t::pack_missing(grib_accessor* a)
+{
     size_t len   = 1;
     double value = GRIB_MISSING_DOUBLE;
 
