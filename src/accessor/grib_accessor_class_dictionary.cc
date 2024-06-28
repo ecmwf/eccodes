@@ -11,13 +11,14 @@
 
 #include "grib_accessor_class_dictionary.h"
 
-grib_accessor_class_dictionary_t _grib_accessor_class_dictionary{"dictionary"};
+grib_accessor_class_dictionary_t _grib_accessor_class_dictionary{ "dictionary" };
 grib_accessor_class* grib_accessor_class_dictionary = &_grib_accessor_class_dictionary;
 
 
-void grib_accessor_class_dictionary_t::init(grib_accessor* a, const long len, grib_arguments* params){
+void grib_accessor_class_dictionary_t::init(grib_accessor* a, const long len, grib_arguments* params)
+{
     grib_accessor_class_gen_t::init(a, len, params);
-    int n                          = 0;
+    int n                            = 0;
     grib_accessor_dictionary_t* self = (grib_accessor_dictionary_t*)a;
 
     self->dictionary = grib_arguments_get_string(grib_handle_of_accessor(a), params, n++);
@@ -146,7 +147,8 @@ static grib_trie* load_dictionary(grib_accessor* a, int* err)
     return dictionary;
 }
 
-void grib_accessor_class_dictionary_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_dictionary_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     switch (get_native_type(a)) {
         case GRIB_TYPE_STRING:
             grib_dump_string(dumper, a, NULL);
@@ -160,10 +162,11 @@ void grib_accessor_class_dictionary_t::dump(grib_accessor* a, grib_dumper* dumpe
     }
 }
 
-int grib_accessor_class_dictionary_t::unpack_string(grib_accessor* a, char* buffer, size_t* len){
+int grib_accessor_class_dictionary_t::unpack_string(grib_accessor* a, char* buffer, size_t* len)
+{
     grib_accessor_dictionary_t* self = (grib_accessor_dictionary_t*)a;
-    int err                        = GRIB_SUCCESS;
-    char key[1024]                 = {0,};
+    int err                          = GRIB_SUCCESS;
+    char key[1024]                   = {0,};
     size_t size  = 1024;
     char* list   = NULL;
     char* start  = NULL;
@@ -214,12 +217,14 @@ int grib_accessor_class_dictionary_t::unpack_string(grib_accessor* a, char* buff
     return err;
 }
 
-int grib_accessor_class_dictionary_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_dictionary_t::value_count(grib_accessor* a, long* count)
+{
     *count = 1;
     return 0;
 }
 
-int grib_accessor_class_dictionary_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_dictionary_t::get_native_type(grib_accessor* a)
+{
     int type = GRIB_TYPE_DOUBLE;
     if (a->flags & GRIB_ACCESSOR_FLAG_LONG_TYPE)
         type = GRIB_TYPE_LONG;
@@ -228,7 +233,8 @@ int grib_accessor_class_dictionary_t::get_native_type(grib_accessor* a){
     return type;
 }
 
-int grib_accessor_class_dictionary_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_dictionary_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     int err           = 0;
     char buffer[1024] = {0,};
     size_t size = 1024;
@@ -243,7 +249,8 @@ int grib_accessor_class_dictionary_t::unpack_long(grib_accessor* a, long* val, s
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_dictionary_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_dictionary_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     int err           = 0;
     char buffer[1024] = {0,};
     size_t size = 1024;

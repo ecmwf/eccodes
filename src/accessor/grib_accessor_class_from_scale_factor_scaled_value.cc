@@ -11,33 +11,36 @@
 
 #include "grib_accessor_class_from_scale_factor_scaled_value.h"
 
-grib_accessor_class_from_scale_factor_scaled_value_t _grib_accessor_class_from_scale_factor_scaled_value{"from_scale_factor_scaled_value"};
+grib_accessor_class_from_scale_factor_scaled_value_t _grib_accessor_class_from_scale_factor_scaled_value{ "from_scale_factor_scaled_value" };
 grib_accessor_class* grib_accessor_class_from_scale_factor_scaled_value = &_grib_accessor_class_from_scale_factor_scaled_value;
 
 
-void grib_accessor_class_from_scale_factor_scaled_value_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_from_scale_factor_scaled_value_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_from_scale_factor_scaled_value_t* self = (grib_accessor_from_scale_factor_scaled_value_t*)a;
-    int n                                              = 0;
-    grib_handle* hand                                  = grib_handle_of_accessor(a);
+    int n                                                = 0;
+    grib_handle* hand                                    = grib_handle_of_accessor(a);
 
     self->scaleFactor = grib_arguments_get_name(hand, c, n++);
-    self->scaledValue = grib_arguments_get_name(hand, c, n++); // Can be scalar or array
+    self->scaledValue = grib_arguments_get_name(hand, c, n++);  // Can be scalar or array
 
     // ECC-979: Allow user to encode
     // a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_from_scale_factor_scaled_value_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_from_scale_factor_scaled_value_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     // See ECC-979 and ECC-1416
     // Evaluate self->scaleFactor and self->scaledValue from input double '*val'
     grib_accessor_from_scale_factor_scaled_value_t* self = (grib_accessor_from_scale_factor_scaled_value_t*)a;
-    grib_handle* hand                                  = grib_handle_of_accessor(a);
-    int err                                            = 0;
+    grib_handle* hand                                    = grib_handle_of_accessor(a);
+
+    int err        = 0;
     int64_t factor = 0;
-    int64_t value = 0;
-    double exact        = *val; // the input
-    int64_t maxval_value, maxval_factor; // maximum allowable values
+    int64_t value  = 0;
+    double exact   = *val;                // the input
+    int64_t maxval_value, maxval_factor;  // maximum allowable values
     int value_accessor_num_bits = 0, factor_accessor_num_bits = 0;
     grib_accessor *factor_accessor, *value_accessor;
 
@@ -65,9 +68,9 @@ int grib_accessor_class_from_scale_factor_scaled_value_t::pack_double(grib_acces
     }
     value_accessor_num_bits  = value_accessor->length * 8;
     factor_accessor_num_bits = factor_accessor->length * 8;
-    maxval_value  = (1UL << value_accessor_num_bits) - 2;  // exclude missing
-    maxval_factor = (1UL << factor_accessor_num_bits) - 2; // exclude missing
-    if (strcmp(factor_accessor->cclass->name,"signed")==0) {
+    maxval_value             = (1UL << value_accessor_num_bits) - 2;   // exclude missing
+    maxval_factor            = (1UL << factor_accessor_num_bits) - 2;  // exclude missing
+    if (strcmp(factor_accessor->cclass->name, "signed") == 0) {
         maxval_factor = (1UL << (factor_accessor_num_bits - 1)) - 1;
     }
 
@@ -85,13 +88,14 @@ int grib_accessor_class_from_scale_factor_scaled_value_t::pack_double(grib_acces
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_from_scale_factor_scaled_value_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_from_scale_factor_scaled_value_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_from_scale_factor_scaled_value_t* self = (grib_accessor_from_scale_factor_scaled_value_t*)a;
     int err = 0;
     long scaleFactor = 0, scaledValue = 0;
     grib_handle* hand = grib_handle_of_accessor(a);
-    grib_context* c = a->context;
-    size_t vsize = 0;
+    grib_context* c   = a->context;
+    size_t vsize      = 0;
 
     if ((err = grib_get_long_internal(hand, self->scaleFactor, &scaleFactor)) != GRIB_SUCCESS)
         return err;
@@ -107,11 +111,12 @@ int grib_accessor_class_from_scale_factor_scaled_value_t::unpack_double(grib_acc
             *val = GRIB_MISSING_DOUBLE;
             *len = 1;
             return GRIB_SUCCESS;
-        } else {
+        }
+        else {
             // ECC-966: If scale factor is missing, print error and treat it as zero (as a fallback)
             if (grib_is_missing(hand, self->scaleFactor, &err) && err == GRIB_SUCCESS) {
                 grib_context_log(a->context, GRIB_LOG_ERROR,
-                        "unpack_double for %s: %s is missing! Using zero instead", a->name, self->scaleFactor);
+                                 "unpack_double for %s: %s is missing! Using zero instead", a->name, self->scaleFactor);
                 scaleFactor = 0;
             }
         }
@@ -132,7 +137,8 @@ int grib_accessor_class_from_scale_factor_scaled_value_t::unpack_double(grib_acc
 
         if (err == GRIB_SUCCESS)
             *len = 1;
-    } else {
+    }
+    else {
         size_t i;
         long* lvalues = (long*)grib_context_malloc(c, vsize * sizeof(long));
         if (!lvalues)
@@ -143,7 +149,7 @@ int grib_accessor_class_from_scale_factor_scaled_value_t::unpack_double(grib_acc
         }
         for (i = 0; i < vsize; i++) {
             long sf = scaleFactor;
-            val[i] = lvalues[i];
+            val[i]  = lvalues[i];
             while (sf < 0) {
                 val[i] *= 10;
                 sf++;
@@ -160,7 +166,8 @@ int grib_accessor_class_from_scale_factor_scaled_value_t::unpack_double(grib_acc
     return err;
 }
 
-int grib_accessor_class_from_scale_factor_scaled_value_t::is_missing(grib_accessor* a){
+int grib_accessor_class_from_scale_factor_scaled_value_t::is_missing(grib_accessor* a)
+{
     grib_accessor_from_scale_factor_scaled_value_t* self = (grib_accessor_from_scale_factor_scaled_value_t*)a;
     grib_handle* hand = grib_handle_of_accessor(a);
     int err = 0;
@@ -175,11 +182,12 @@ int grib_accessor_class_from_scale_factor_scaled_value_t::is_missing(grib_access
     return ((scaleFactor == GRIB_MISSING_LONG) || (scaledValue == GRIB_MISSING_LONG));
 }
 
-int grib_accessor_class_from_scale_factor_scaled_value_t::value_count(grib_accessor* a, long* len){
+int grib_accessor_class_from_scale_factor_scaled_value_t::value_count(grib_accessor* a, long* len)
+{
     grib_accessor_from_scale_factor_scaled_value_t* self = (grib_accessor_from_scale_factor_scaled_value_t*)a;
     int err = 0;
     grib_handle* hand = grib_handle_of_accessor(a);
-    size_t vsize;
+    size_t vsize = 0;
 
     if ((err = grib_get_size(hand, self->scaledValue, &vsize)) != GRIB_SUCCESS)
         return err;
