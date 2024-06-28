@@ -4999,6 +4999,16 @@
 	 parameterNumber = 32 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean most-unstable CAPE
+'Time-mean most-unstable CAPE' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean geopotential
 'Time-mean geopotential' = {
 	 discipline = 0 ;
@@ -5295,6 +5305,16 @@
 	 parameterNumber = 25 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum most-unstable CAPE
+'Time-maximum most-unstable CAPE' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-minimum volumetric soil moisture
 'Time-minimum volumetric soil moisture' = {
 	 discipline = 2 ;
@@ -5302,11 +5322,31 @@
 	 parameterNumber = 25 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum most-unstable CAPE
+'Time-minimum most-unstable CAPE' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-standard-deviation volumetric soil moisture
 'Time-standard-deviation volumetric soil moisture' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 25 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation most-unstable CAPE
+'Time-standard-deviation most-unstable CAPE' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Cross sectional area of flow in channel
