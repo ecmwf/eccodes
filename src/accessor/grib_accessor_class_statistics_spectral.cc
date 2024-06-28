@@ -11,14 +11,15 @@
 
 #include "grib_accessor_class_statistics_spectral.h"
 
-grib_accessor_class_statistics_spectral_t _grib_accessor_class_statistics_spectral{"statistics_spectral"};
+grib_accessor_class_statistics_spectral_t _grib_accessor_class_statistics_spectral{ "statistics_spectral" };
 grib_accessor_class* grib_accessor_class_statistics_spectral = &_grib_accessor_class_statistics_spectral;
 
 
-void grib_accessor_class_statistics_spectral_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_statistics_spectral_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_abstract_vector_t::init(a, l, c);
     grib_accessor_statistics_spectral_t* self = (grib_accessor_statistics_spectral_t*)a;
-    int n                                   = 0;
+    int n = 0;
 
     self->values = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
     self->J      = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
@@ -30,14 +31,14 @@ void grib_accessor_class_statistics_spectral_t::init(grib_accessor* a, const lon
     a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
 
     self->number_of_elements = 4;
-    self->v                  = (double*)grib_context_malloc(a->context,
-                                           sizeof(double) * self->number_of_elements);
+    self->v = (double*)grib_context_malloc(a->context, sizeof(double) * self->number_of_elements);
 
     a->length = 0;
     a->dirty  = 1;
 }
 
-int grib_accessor_class_statistics_spectral_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_statistics_spectral_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_statistics_spectral_t* self = (grib_accessor_statistics_spectral_t*)a;
     int ret = 0, i = 0;
     double* values;
@@ -85,8 +86,8 @@ int grib_accessor_class_statistics_spectral_t::unpack_double(grib_accessor* a, d
         return ret;
     }
 
-    avg   = values[0];
-    sd    = 0;
+    avg = values[0];
+    sd  = 0;
 
     for (i = 2; i < 2 * J; i += 2)
         sd += values[i] * values[i];
@@ -114,19 +115,22 @@ int grib_accessor_class_statistics_spectral_t::unpack_double(grib_accessor* a, d
     return ret;
 }
 
-int grib_accessor_class_statistics_spectral_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_statistics_spectral_t::value_count(grib_accessor* a, long* count)
+{
     grib_accessor_statistics_spectral_t* self = (grib_accessor_statistics_spectral_t*)a;
-    *count                                  = self->number_of_elements;
+    *count = self->number_of_elements;
     return 0;
 }
 
-void grib_accessor_class_statistics_spectral_t::destroy(grib_context* c, grib_accessor* a){
+void grib_accessor_class_statistics_spectral_t::destroy(grib_context* c, grib_accessor* a)
+{
     grib_accessor_statistics_spectral_t* self = (grib_accessor_statistics_spectral_t*)a;
     grib_context_free(c, self->v);
     grib_accessor_class_abstract_vector_t::destroy(c, a);
 }
 
-int grib_accessor_class_statistics_spectral_t::compare(grib_accessor* a, grib_accessor* b){
+int grib_accessor_class_statistics_spectral_t::compare(grib_accessor* a, grib_accessor* b)
+{
     int retval   = GRIB_SUCCESS;
     double* aval = 0;
     double* bval = 0;
@@ -136,11 +140,13 @@ int grib_accessor_class_statistics_spectral_t::compare(grib_accessor* a, grib_ac
     int err     = 0;
     long count  = 0;
 
-    err = a->value_count(&count);    if (err)
+    err = a->value_count(&count);
+    if (err)
         return err;
     alen = count;
 
-    err = b->value_count(&count);    if (err)
+    err = b->value_count(&count);
+    if (err)
         return err;
     blen = count;
 
@@ -153,9 +159,10 @@ int grib_accessor_class_statistics_spectral_t::compare(grib_accessor* a, grib_ac
     b->dirty = 1;
     a->dirty = 1;
 
-    a->unpack_double(aval, &alen);    b->unpack_double(bval, &blen);
+    a->unpack_double(aval, &alen);
+    b->unpack_double(bval, &blen);
     retval = GRIB_SUCCESS;
-    for (size_t i=0; i<alen && retval == GRIB_SUCCESS; ++i) {
+    for (size_t i = 0; i < alen && retval == GRIB_SUCCESS; ++i) {
         if (aval[i] != bval[i]) retval = GRIB_DOUBLE_VALUE_MISMATCH;
     }
 

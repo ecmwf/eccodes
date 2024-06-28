@@ -11,15 +11,16 @@
 
 #include "grib_accessor_class_octahedral_gaussian.h"
 
-grib_accessor_class_octahedral_gaussian_t _grib_accessor_class_octahedral_gaussian{"octahedral_gaussian"};
+grib_accessor_class_octahedral_gaussian_t _grib_accessor_class_octahedral_gaussian{ "octahedral_gaussian" };
 grib_accessor_class* grib_accessor_class_octahedral_gaussian = &_grib_accessor_class_octahedral_gaussian;
 
 
-void grib_accessor_class_octahedral_gaussian_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_octahedral_gaussian_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_octahedral_gaussian_t* self = (grib_accessor_octahedral_gaussian_t*)a;
-    int n                                   = 0;
-    grib_handle* hand                       = grib_handle_of_accessor(a);
+    int n = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     self->N         = grib_arguments_get_name(hand, c, n++);
     self->Ni        = grib_arguments_get_name(hand, c, n++);
@@ -36,7 +37,8 @@ void grib_accessor_class_octahedral_gaussian_t::init(grib_accessor* a, const lon
  *  -4 ..-4         All below equator
  * Anything else is considered not octahedral
  */
-static int is_pl_octahedral(const long pl[], size_t size){
+static int is_pl_octahedral(const long pl[], size_t size)
+{
     long i;
     long prev_diff = -1;
     for (i = 1; i < size; ++i) {
@@ -69,9 +71,10 @@ static int is_pl_octahedral(const long pl[], size_t size){
     return 1; /* it's octahedral */
 }
 
-int grib_accessor_class_octahedral_gaussian_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_octahedral_gaussian_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_octahedral_gaussian_t* self = (grib_accessor_octahedral_gaussian_t*)a;
-    int ret                                 = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     long Ni;
     long plpresent    = 0;
     long* pl          = NULL; /* pl array */
@@ -115,6 +118,7 @@ int grib_accessor_class_octahedral_gaussian_t::unpack_long(grib_accessor* a, lon
     return ret;
 }
 
-int grib_accessor_class_octahedral_gaussian_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_octahedral_gaussian_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     return GRIB_NOT_IMPLEMENTED;
 }

@@ -11,25 +11,27 @@
 
 #include "grib_accessor_class_time.h"
 
-grib_accessor_class_time_t _grib_accessor_class_time{"time"};
+grib_accessor_class_time_t _grib_accessor_class_time{ "time" };
 grib_accessor_class* grib_accessor_class_time = &_grib_accessor_class_time;
 
 
-void grib_accessor_class_time_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_time_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_time_t* self = (grib_accessor_time_t*)a;
-    grib_handle* hand        = grib_handle_of_accessor(a);
-    int n                    = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
+    int n = 0;
 
     self->hour   = grib_arguments_get_name(hand, c, n++);
     self->minute = grib_arguments_get_name(hand, c, n++);
     self->second = grib_arguments_get_name(hand, c, n++);
 }
 
-int grib_accessor_class_time_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_time_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     const grib_accessor_time_t* self = (grib_accessor_time_t*)a;
 
-    int ret = 0;
+    int ret   = 0;
     long hour = 0, minute = 0, second = 0;
     grib_handle* hand = grib_handle_of_accessor(a);
 
@@ -43,7 +45,7 @@ int grib_accessor_class_time_t::unpack_long(grib_accessor* a, long* val, size_t*
     /* We ignore the 'seconds' in our time calculation! */
     if (second != 0) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                "Key %s (%s): Truncating time: non-zero seconds(%ld) ignored", a->name, __func__, second);
+                         "Key %s (%s): Truncating time: non-zero seconds(%ld) ignored", a->name, __func__, second);
     }
 
     if (*len < 1)
@@ -60,11 +62,12 @@ int grib_accessor_class_time_t::unpack_long(grib_accessor* a, long* val, size_t*
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_time_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_time_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     const grib_accessor_time_t* self = (grib_accessor_time_t*)a;
 
     int ret = 0;
-    long v = val[0];
+    long v  = val[0];
     grib_handle* hand = grib_handle_of_accessor(a);
     long hour = 0, minute = 0, second = 0;
 
@@ -92,7 +95,8 @@ int grib_accessor_class_time_t::pack_long(grib_accessor* a, const long* val, siz
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_time_t::unpack_string(grib_accessor* a, char* val, size_t* len){
+int grib_accessor_class_time_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+{
     long v = 0;
     size_t lsize = 1, lmin = 5;
 
