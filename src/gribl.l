@@ -71,23 +71,24 @@ IDENT     {IDENT1}|{IDENT2}|{IDENT3}|{IDENT4}|{IDENT5}
 %%
 
 
-"=="           return EQ       ;
-">="           return GE       ;
-">"            return GT       ;
-"<="           return LE       ;
-"<"            return LT       ;
-"!="           return NE       ;
-"<>"           return NE       ;
-"bit"          return BIT      ;
-"notbit"       return BITOFF   ;
+"=="           return EQ     ;
+">="           return GE     ;
+">"            return GT     ;
+"<="           return LE     ;
+"<"            return LT     ;
+"!="           return NE     ;
+"<>"           return NE     ;
+"bit"          return BIT    ;
+"notbit"       return BITOFF ;
 
 "is"       return IS   ;
-"not"       return NOT   ;
-"!"         return NOT   ;
-"and"       return AND   ;
-"&&"        return AND   ;
-"or"        return OR   ;
-"||"        return OR   ;
+"isnot"    return ISNOT ;
+"not"      return NOT   ;
+"!"        return NOT   ;
+"and"      return AND   ;
+"&&"       return AND   ;
+"or"       return OR   ;
+"||"       return OR   ;
 
 "null"        return NIL   ;
 "~"           return DUMMY   ;
@@ -97,7 +98,7 @@ IDENT     {IDENT1}|{IDENT2}|{IDENT3}|{IDENT4}|{IDENT5}
 "length"        return LENGTH   ;
 "lowercase" return LOWERCASE;
 "if"        return IF       ;
-"_if"        return IF_TRANSIENT       ;
+"_if"        return IF_TRANSIENT ;
 "else"      return ELSE       ;
 "unsigned"  return UNSIGNED ;
 "ascii"     return ASCII    ;

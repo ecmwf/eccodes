@@ -385,7 +385,11 @@ grep "MISSING" $tempOut
 cat >$tempFilt <<EOF
  if (rubbish is "ppp") { print "yes"; } else { print "rubbish must fail"; }
  if ("ppp" is garbage) { print "yes"; } else { print "garbage must fail"; }
+ assert ( identifier isnot "rubbish" );
+ assert ( "a" isnot "A" );
+ assert ( identifier is "GRIB" );
 EOF
+cat $tempFilt
 ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut 2>&1
 cat $tempOut
 grep "rubbish must fail" $tempOut
