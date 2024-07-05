@@ -45,7 +45,7 @@ void grib_accessor_class_g2end_step_t::init(grib_accessor* a, const long l, grib
     self->time_range_unit     = grib_arguments_get_name(h, c, n++);
     self->time_range_value    = grib_arguments_get_name(h, c, n++);
     self->typeOfTimeIncrement = grib_arguments_get_name(h, c, n++);
-    self->numberOfTimeRange   = grib_arguments_get_name(h, c, n++);
+    self->numberOfTimeRanges  = grib_arguments_get_name(h, c, n++);
 }
 
 void grib_accessor_class_g2end_step_t::dump(grib_accessor* a, grib_dumper* dumper)
@@ -201,7 +201,7 @@ static int unpack_multiple_time_ranges_long_(grib_accessor* a, long* val, size_t
     grib_accessor_g2end_step_t* self = (grib_accessor_g2end_step_t*)a;
     int i = 0, err = 0;
     grib_handle* h         = grib_handle_of_accessor(a);
-    long numberOfTimeRange = 0, step_units = 0, start_step_value = 0;
+    long numberOfTimeRanges = 0, step_units = 0, start_step_value = 0;
 
     size_t count                                      = 0;
     long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {
@@ -218,14 +218,14 @@ static int unpack_multiple_time_ranges_long_(grib_accessor* a, long* val, size_t
         return err;
     if ((err = grib_get_long_internal(h, self->step_units, &step_units)))
         return err;
-    if ((err = grib_get_long_internal(h, self->numberOfTimeRange, &numberOfTimeRange)))
+    if ((err = grib_get_long_internal(h, self->numberOfTimeRanges, &numberOfTimeRanges)))
         return err;
-    if (numberOfTimeRange > MAX_NUM_TIME_RANGES) {
+    if (numberOfTimeRanges > MAX_NUM_TIME_RANGES) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "Too many time range specifications!");
         return GRIB_DECODING_ERROR;
     }
 
-    count = numberOfTimeRange;
+    count = numberOfTimeRanges;
     /* Get the arrays for the N time ranges */
     if ((err = grib_get_long_array(h, self->typeOfTimeIncrement, arr_typeOfTimeIncrement, &count)))
         return err;
@@ -259,11 +259,11 @@ static int unpack_multiple_time_ranges_double_(grib_accessor* a, double* val, si
 {
     grib_accessor_g2end_step_t* self = (grib_accessor_g2end_step_t*)a;
     int i = 0, err = 0;
-    grib_handle* h         = grib_handle_of_accessor(a);
-    long numberOfTimeRange = 0;
-    long step_units        = 0;
-    long start_step_value  = 0;
-    long start_step_unit   = 0;
+    grib_handle* h          = grib_handle_of_accessor(a);
+    long numberOfTimeRanges = 0;
+    long step_units         = 0;
+    long start_step_value   = 0;
+    long start_step_unit    = 0;
 
     size_t count                                      = 0;
     long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {
@@ -286,14 +286,14 @@ static int unpack_multiple_time_ranges_double_(grib_accessor* a, double* val, si
     if ((err = grib_get_long_internal(h, self->step_units, &step_units)))
         return err;
 
-    if ((err = grib_get_long_internal(h, self->numberOfTimeRange, &numberOfTimeRange)))
+    if ((err = grib_get_long_internal(h, self->numberOfTimeRanges, &numberOfTimeRanges)))
         return err;
-    if (numberOfTimeRange > MAX_NUM_TIME_RANGES) {
+    if (numberOfTimeRanges > MAX_NUM_TIME_RANGES) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "Too many time range specifications!");
         return GRIB_DECODING_ERROR;
     }
 
-    count = numberOfTimeRange;
+    count = numberOfTimeRanges;
     /* Get the arrays for the N time ranges */
     if ((err = grib_get_long_array(h, self->typeOfTimeIncrement, arr_typeOfTimeIncrement, &count)))
         return err;
@@ -329,9 +329,9 @@ int grib_accessor_class_g2end_step_t::unpack_long(grib_accessor* a, long* val, s
     grib_accessor_g2end_step_t* self = (grib_accessor_g2end_step_t*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret                          = 0;
-    long start_step_value;
-    long start_step_unit;
-    long numberOfTimeRange;
+    long start_step_value = 0;
+    long start_step_unit = 0;
+    long numberOfTimeRanges = 0;
 
     if ((ret = grib_get_long_internal(h, self->start_step_value, &start_step_value)))
         return ret;
@@ -346,13 +346,13 @@ int grib_accessor_class_g2end_step_t::unpack_long(grib_accessor* a, long* val, s
         return 0;
     }
 
-    Assert(self->numberOfTimeRange);
-    if ((ret = grib_get_long_internal(h, self->numberOfTimeRange, &numberOfTimeRange)))
+    Assert(self->numberOfTimeRanges);
+    if ((ret = grib_get_long_internal(h, self->numberOfTimeRanges, &numberOfTimeRanges)))
         return ret;
-    Assert(numberOfTimeRange == 1 || numberOfTimeRange == 2);
+    Assert(numberOfTimeRanges == 1 || numberOfTimeRanges == 2);
 
     try {
-        if (numberOfTimeRange == 1) {
+        if (numberOfTimeRanges == 1) {
             ret = unpack_one_time_range_long_(a, val, len);
         }
         else {
@@ -374,7 +374,7 @@ int grib_accessor_class_g2end_step_t::unpack_double(grib_accessor* a, double* va
     int ret                          = 0;
     long start_step_value;
     long start_step_unit;
-    long numberOfTimeRange;
+    long numberOfTimeRanges;
 
     if ((ret = grib_get_long_internal(h, self->start_step_value, &start_step_value)))
         return ret;
@@ -389,13 +389,13 @@ int grib_accessor_class_g2end_step_t::unpack_double(grib_accessor* a, double* va
         return 0;
     }
 
-    Assert(self->numberOfTimeRange);
-    if ((ret = grib_get_long_internal(h, self->numberOfTimeRange, &numberOfTimeRange)))
+    Assert(self->numberOfTimeRanges);
+    if ((ret = grib_get_long_internal(h, self->numberOfTimeRanges, &numberOfTimeRanges)))
         return ret;
-    Assert(numberOfTimeRange == 1 || numberOfTimeRange == 2);
+    Assert(numberOfTimeRanges == 1 || numberOfTimeRanges == 2);
 
     try {
-        if (numberOfTimeRange == 1) {
+        if (numberOfTimeRanges == 1) {
             ret = unpack_one_time_range_double_(a, val, len);
         }
         else {

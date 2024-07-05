@@ -11,23 +11,26 @@
 
 #include "grib_accessor_class_transient_darray.h"
 
-grib_accessor_class_transient_darray_t _grib_accessor_class_transient_darray{"transient_darray"};
+grib_accessor_class_transient_darray_t _grib_accessor_class_transient_darray{ "transient_darray" };
 grib_accessor_class* grib_accessor_class_transient_darray = &_grib_accessor_class_transient_darray;
 
 
-void grib_accessor_class_transient_darray_t::init(grib_accessor* a, const long length, grib_arguments* args){
+void grib_accessor_class_transient_darray_t::init(grib_accessor* a, const long length, grib_arguments* args)
+{
     grib_accessor_class_gen_t::init(a, length, args);
     grib_accessor_transient_darray_t* self = (grib_accessor_transient_darray_t*)a;
-    self->arr                            = NULL;
-    self->type                           = GRIB_TYPE_DOUBLE;
-    a->length                            = 0;
+    self->arr  = NULL;
+    self->type = GRIB_TYPE_DOUBLE;
+    a->length  = 0;
 }
 
-void grib_accessor_class_transient_darray_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_transient_darray_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_dump_double(dumper, a, NULL);
 }
 
-int grib_accessor_class_transient_darray_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_transient_darray_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_transient_darray_t* self = (grib_accessor_transient_darray_t*)a;
 
     if (self->arr)
@@ -40,7 +43,8 @@ int grib_accessor_class_transient_darray_t::pack_double(grib_accessor* a, const 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_transient_darray_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_transient_darray_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_transient_darray_t* self = (grib_accessor_transient_darray_t*)a;
 
     if (self->arr)
@@ -53,7 +57,8 @@ int grib_accessor_class_transient_darray_t::pack_long(grib_accessor* a, const lo
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_transient_darray_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_transient_darray_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_transient_darray_t* self = (grib_accessor_transient_darray_t*)a;
     long count = 0;
 
@@ -71,7 +76,8 @@ int grib_accessor_class_transient_darray_t::unpack_double(grib_accessor* a, doub
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_transient_darray_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_transient_darray_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_transient_darray_t* self = (grib_accessor_transient_darray_t*)a;
     long count = 0;
 
@@ -89,14 +95,16 @@ int grib_accessor_class_transient_darray_t::unpack_long(grib_accessor* a, long* 
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_class_transient_darray_t::destroy(grib_context* c, grib_accessor* a){
+void grib_accessor_class_transient_darray_t::destroy(grib_context* c, grib_accessor* a)
+{
     grib_accessor_transient_darray_t* self = (grib_accessor_transient_darray_t*)a;
     if (self->arr)
         grib_darray_delete(a->context, self->arr);
     grib_accessor_class_gen_t::destroy(c, a);
 }
 
-int grib_accessor_class_transient_darray_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_transient_darray_t::value_count(grib_accessor* a, long* count)
+{
     grib_accessor_transient_darray_t* self = (grib_accessor_transient_darray_t*)a;
     if (self->arr)
         *count = grib_darray_used_size(self->arr);
@@ -106,7 +114,8 @@ int grib_accessor_class_transient_darray_t::value_count(grib_accessor* a, long* 
     return 0;
 }
 
-int grib_accessor_class_transient_darray_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_transient_darray_t::get_native_type(grib_accessor* a)
+{
     const grib_accessor_transient_darray_t* self = (grib_accessor_transient_darray_t*)a;
     return self->type;
 }

@@ -11,22 +11,25 @@
 
 #include "grib_accessor_class_g1_half_byte_codeflag.h"
 
-grib_accessor_class_g1_half_byte_codeflag_t _grib_accessor_class_g1_half_byte_codeflag{"g1_half_byte_codeflag"};
+grib_accessor_class_g1_half_byte_codeflag_t _grib_accessor_class_g1_half_byte_codeflag{ "g1_half_byte_codeflag" };
 grib_accessor_class* grib_accessor_class_g1_half_byte_codeflag = &_grib_accessor_class_g1_half_byte_codeflag;
 
 
-void grib_accessor_class_g1_half_byte_codeflag_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+void grib_accessor_class_g1_half_byte_codeflag_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+{
     grib_accessor_class_gen_t::init(a, len, arg);
     a->length = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
 
-void grib_accessor_class_g1_half_byte_codeflag_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_g1_half_byte_codeflag_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_dump_long(dumper, a, NULL);
 }
 
-int grib_accessor_class_g1_half_byte_codeflag_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_g1_half_byte_codeflag_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     unsigned char dat = 0;
     if (*len < 1) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name, 1);
@@ -40,7 +43,8 @@ int grib_accessor_class_g1_half_byte_codeflag_t::unpack_long(grib_accessor* a, l
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_g1_half_byte_codeflag_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_g1_half_byte_codeflag_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     int ret = 0;
     if (*len < 1) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name, 1);
@@ -55,6 +59,7 @@ int grib_accessor_class_g1_half_byte_codeflag_t::pack_long(grib_accessor* a, con
     return ret;
 }
 
-int grib_accessor_class_g1_half_byte_codeflag_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_g1_half_byte_codeflag_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_LONG;
 }

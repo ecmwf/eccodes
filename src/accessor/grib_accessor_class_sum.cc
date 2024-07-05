@@ -11,26 +11,28 @@
 
 #include "grib_accessor_class_sum.h"
 
-grib_accessor_class_sum_t _grib_accessor_class_sum{"sum"};
+grib_accessor_class_sum_t _grib_accessor_class_sum{ "sum" };
 grib_accessor_class* grib_accessor_class_sum = &_grib_accessor_class_sum;
 
 
-void grib_accessor_class_sum_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_sum_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_sum_t* self = (grib_accessor_sum_t*)a;
-    int n                   = 0;
-    self->values            = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    a->length               = 0;
+    int n = 0;
+    self->values = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    a->length = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_sum_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_sum_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_sum_t* self = (grib_accessor_sum_t*)a;
-    int ret                 = 0;
-    size_t size             = 0;
-    long* values            = 0;
-    long i;
-    long count = 0;
+    int ret      = 0;
+    size_t size  = 0;
+    long* values = 0;
+    size_t i     = 0;
+    long count   = 0;
 
     ret = value_count(a, &count);
     if (ret)
@@ -56,12 +58,13 @@ int grib_accessor_class_sum_t::unpack_long(grib_accessor* a, long* val, size_t* 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_sum_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_sum_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_sum_t* self = (grib_accessor_sum_t*)a;
-    int ret                 = 0;
-    size_t size             = 0;
-    double* values          = 0;
-    long i;
+    int ret     = 0;
+    size_t size = 0;
+    double* values = 0;
+    size_t i = 0;
     long count = 0;
 
     ret = value_count(a, &count);
@@ -91,10 +94,11 @@ int grib_accessor_class_sum_t::unpack_double(grib_accessor* a, double* val, size
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_sum_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_sum_t::value_count(grib_accessor* a, long* count)
+{
     grib_accessor_sum_t* self = (grib_accessor_sum_t*)a;
-    size_t n                = 0;
-    int ret                 = 0;
+    size_t n = 0;
+    int ret  = GRIB_SUCCESS;
 
     ret    = grib_get_size(grib_handle_of_accessor(a), self->values, &n);
     *count = n;

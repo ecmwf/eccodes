@@ -11,13 +11,14 @@
 
 #include "grib_accessor_class_longitudes.h"
 
-grib_accessor_class_longitudes_t _grib_accessor_class_longitudes{"longitudes"};
+grib_accessor_class_longitudes_t _grib_accessor_class_longitudes{ "longitudes" };
 grib_accessor_class* grib_accessor_class_longitudes = &_grib_accessor_class_longitudes;
 
 
 static int get_distinct(grib_accessor* a, double** val, long* len);
 int compare_doubles(const void* a, const void* b);
-void grib_accessor_class_longitudes_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_longitudes_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_longitudes_t* self = (grib_accessor_longitudes_t*)a;
     int n = 0;
@@ -30,18 +31,20 @@ void grib_accessor_class_longitudes_t::init(grib_accessor* a, const long l, grib
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_longitudes_t::unpack_double(grib_accessor* a, double* val, size_t* len){
-    grib_context* c                = a->context;
+int grib_accessor_class_longitudes_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_longitudes_t* self = (grib_accessor_longitudes_t*)a;
-    int ret                        = 0;
-    double* v                      = val;
-    double dummyLat = 0;
-    size_t size = 0;
-    long count = 0;
+
+    grib_context* c     = a->context;
+    int ret             = 0;
+    double* v           = val;
+    double dummyLat     = 0;
+    size_t size         = 0;
+    long count          = 0;
     grib_iterator* iter = NULL;
 
     self->save = 1;
-    ret = value_count(a, &count);
+    ret        = value_count(a, &count);
     if (ret) return ret;
     size = count;
 
@@ -84,11 +87,12 @@ int grib_accessor_class_longitudes_t::unpack_double(grib_accessor* a, double* va
     return ret;
 }
 
-int grib_accessor_class_longitudes_t::value_count(grib_accessor* a, long* len){
+int grib_accessor_class_longitudes_t::value_count(grib_accessor* a, long* len)
+{
     grib_accessor_longitudes_t* self = (grib_accessor_longitudes_t*)a;
-    grib_handle* h                 = grib_handle_of_accessor(a);
-    grib_context* c                = a->context;
-    double* val                    = NULL;
+    grib_handle* h                   = grib_handle_of_accessor(a);
+    grib_context* c                  = a->context;
+    double* val                      = NULL;
     int ret;
     size_t size;
     *len = 0;
@@ -121,15 +125,16 @@ int grib_accessor_class_longitudes_t::value_count(grib_accessor* a, long* len){
     return ret;
 }
 
-static int get_distinct(grib_accessor* a, double** val, long* len){
+static int get_distinct(grib_accessor* a, double** val, long* len)
+{
     long count = 0;
     double prev;
     double* v       = NULL;
     double* v1      = NULL;
     double dummyLat = 0;
-    int ret = 0;
-    size_t size         = *len;
-    grib_context* c     = a->context;
+    int ret         = 0;
+    size_t size     = *len;
+    grib_context* c = a->context;
 
     // Performance: We do not need the values to be decoded
     grib_iterator* iter = grib_iterator_new(grib_handle_of_accessor(a), GRIB_GEOITERATOR_NO_VALUES, &ret);
@@ -177,7 +182,8 @@ static int get_distinct(grib_accessor* a, double** val, long* len){
     return GRIB_SUCCESS;
 }
 
-int compare_doubles(const void* a, const void* b){
+int compare_doubles(const void* a, const void* b)
+{
     double* arg1 = (double*)a;
     double* arg2 = (double*)b;
     if (*arg1 < *arg2)

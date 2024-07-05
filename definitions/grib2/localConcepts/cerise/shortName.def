@@ -153,6 +153,20 @@
 	 typeOfStatisticalProcessing = 1 ;
 	}
 #Time-mean snow depth
+'avg_sde' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 11 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean snow cover
+'avg_snowc' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 42 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean snow depth
 'avg_sd_m' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;

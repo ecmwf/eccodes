@@ -48,7 +48,6 @@
 1039 TENEU Urban temperate needleleaf evergreen
 1040 BONDU Urban boreal needleleaf deciduous
 # 1041-1500 Reserved for tile class entries for tile models using the ECOCLIMAP-SG land cover survey
-# v8.1 groupings
 1501 GNATU Nature grouping (NO + ROCK + SNOW + BOBD + TEBD + TRBD + TEBE + TRBE + BONE + TENE + BOND + SHRB + BOGR + GRAS + TROG + C3W + C3S + C4 + FLTR + FLGR)
 1502 GNOFO Non-forest grouping (NO + ROCK + SNOW + BOGR + GRAS + TROG + C3W + C3S + C4 + FLTR + FLGR)
 1503 GFORE Forest grouping (BOBD + TEBD + TRBD + TEBE + TRBE + BONE + TENE + BOND + SHRB)
@@ -64,7 +63,6 @@
 1513 GNFOR Needleleaf forest grouping (BONE + TENE + BOND)
 1514 GDBFO Deciduous broadleaf forest grouping (BOBD + TEBD + TRBD + TEBE + SHRB)
 1515 GTGRA Temperate grassland grouping (BOGR + GRAS)
-# v9.0 groupings
 1516 GNFNF Non-forest (no FLTR) grouping (NO + ROCK + SNOW + BOGR + GRAS + TROG + C3W + C3S + C4 + FLGR)
 1517 GBFFT Broadleaf forest (with FLTR) grouping (BOBD + TEBD + TRBD + TEBE + TRBE + SHRB + FLTR)
 1518 GBTRE Broadleaf trees grouping (BOBD + TEBD + TRBD + TEBE + TRBE + FLTR)
@@ -72,7 +70,6 @@
 1520 GBDTR Broadleaf deciduous trees grouping (BOBD + TEBD + TRBD + FLTR)
 1521 GBETR Broadleaf evergreen trees grouping (TEBE + TRBE)
 1522 GNETR Needleleaf evergreen trees grouping (BONE + TENE)
-# Other groupings
 1523 GLCZU LCZ or urban grouping (LCZ1 + LCZ2 + LCZ3 + LCZ4 + LCZ5 + LCZ6 + LCZ7 + LCZ8 + LCZ9 + LCZ10)
 1524 GIWAT Inland water grouping (LAKE + RIVE)
 1525 GPTEBD Urban parks and gardens TEBD grouping (NO + GRAS + TEBDU)

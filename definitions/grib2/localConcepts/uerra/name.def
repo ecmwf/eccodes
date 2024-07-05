@@ -17,6 +17,33 @@
 	 scaledValueOfFirstFixedSurface = 200 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
+#Wind speed
+'Wind speed' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Wind speed
+'Wind speed' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 100 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Wind speed
+'Wind speed' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 200 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Sea ice area fraction
 'Sea ice area fraction' = {
 	 discipline = 10 ;
@@ -74,6 +101,34 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
+	}
+#Pressure
+'Pressure' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Potential vorticity
+'Potential vorticity' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 14 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Specific rain water content
+'Specific rain water content' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 85 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Specific snow water content
+'Specific snow water content' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 86 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Total column cloud liquid water
 'Total column cloud liquid water' = {
@@ -287,6 +342,20 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Specific cloud liquid water content
+'Specific cloud liquid water content' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 83 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Specific cloud ice water content
+'Specific cloud ice water content' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 84 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #2 metre specific humidity
 '2 metre specific humidity' = {
 	 discipline = 0 ;
@@ -296,6 +365,13 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Precipitation type
+'Precipitation type' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 19 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Total column integrated water vapour

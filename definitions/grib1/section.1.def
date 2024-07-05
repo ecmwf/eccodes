@@ -58,8 +58,8 @@ alias levelType=indicatorOfTypeOfLevel;
 
 transient pressureUnits="hPa";
 
-concept_nofail typeOfLevelECMF      (unknown,         "typeOfLevel.def",conceptsMasterDir,conceptsLocalDirECMF);
-concept_nofail vertical.typeOfLevel (typeOfLevelECMF, "typeOfLevel.def",conceptsDir2,conceptsDir1);
+concept typeOfLevelECMF      (unknown,         "typeOfLevel.def",conceptsMasterDir,conceptsLocalDirECMF);
+concept vertical.typeOfLevel (typeOfLevelECMF, "typeOfLevel.def",conceptsDir2,conceptsDir1);
 
 when ( typeOfLevel is "isobaricInPa" ) { set pressureUnits="Pa"; }
 else { set pressureUnits="hPa";}
