@@ -757,7 +757,7 @@ grib_expression* new_is_in_dict_expression(grib_context* c, const char* name, co
 grib_expression* new_true_expression(grib_context* c);
 
 /* grib_expression_class_string_compare.cc */
-grib_expression* new_string_compare_expression(grib_context* c, grib_expression* left, grib_expression* right);
+grib_expression* new_string_compare_expression(grib_context* c, grib_expression* left, grib_expression* right, int eq);
 
 /* grib_expression_class_unop.cc */
 grib_expression* new_unop_expression(grib_context* c, grib_unop_long_proc long_func, grib_unop_double_proc double_func, grib_expression* exp);
