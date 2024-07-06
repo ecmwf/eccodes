@@ -15,7 +15,6 @@
 13 13 Derived forecasts based on a cluster of ensemble members over a rectangular area, at a horizontal level or in a horizontal layer, in a continuous or non-continuous interval
 14 14 Derived forecasts based on a cluster of ensemble members over a circular area, at a horizontal level or in a horizontal layer, in a continuous or non-continuous interval
 15 15 Average, accumulation, extreme values, or other statistically-processed values over a spatial area at a horizontal level or in a horizontal layer at a point in time
-#16-19 Reserved
 20 20 Radar product
 30 30 Satellite product
 31 31 Satellite product

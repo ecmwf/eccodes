@@ -5,7 +5,5 @@
 3 3 Cloud top height quality indicator (Code table 4.219)
 4 4 Estimated u component of wind (m s-1)
 5 5 Estimated v component of wind (m s-1)
-# 6-191 Reserved
-#192-254 Reserved for local use
 255 255 Missing
 

@@ -5,5 +5,4 @@
 3 3  Successive times processed have start time of forecast incremented and forecast time decremented so that valid time remains constant
 4 4  Successive times processed have start time of forecast decremented and forecast time incremented so that valid time remains constant
 5 5  Floating subinterval of time between forecast time and end of overall time interval
-# 192 254  Reserved for local use
 255 255  Missing

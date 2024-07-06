@@ -25,6 +25,4 @@
 23 23 Sea ice fraction tendency due to parameterization (s-1)
 24 24 x-component of ice drift (m s-1)
 25 25 y-component of ice drift (m s-1)
-# 26-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing

@@ -8,7 +8,5 @@
 6 6 Radiance (with respect to wave length) (W m-3 sr-1)
 7 7 Downward short-wave radiation flux (W m-2)
 9 8 Upward short-wave radiation flux (W m-2)
-# 9-191 Reserved
-#192-254 Reserved for local use
 255 255 Missing
 

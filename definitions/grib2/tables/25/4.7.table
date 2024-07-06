@@ -9,6 +9,4 @@
 7 7 Interquartile range (range between the 25th and 75th quantile)
 8 8 Minimum of all ensemble members
 9 9 Maximum of all ensemble members
-# 10-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing

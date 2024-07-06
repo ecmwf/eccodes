@@ -16,9 +16,7 @@
 14 14 Level of free convection (LFC)
 15 15 Convective condensation level (CCL)
 16 16 Level of neutral buoyancy or equilibrium level (LNB)
-# 17-19 Reserved
 20 20 Isothermal level (K)
-# 21-99 Reserved
 100 pl Isobaric surface (Pa)
 101 sfc Mean sea level
 102 102 Specific altitude above mean sea level (m)
@@ -34,14 +32,11 @@
 112 112 Reserved
 113 113 Logarithmic hybrid level
 114 114 Snow level (Numeric)
-# 115-116 Reserved
 117 117 Mixed layer depth (m)
 118 hhl Hybrid height level (-)
 119 hpl Hybrid pressure level (-)
-# 120-149 Reserved
 150 150 Generalized vertical height coordinate
 151 sol Soil level (Numeric)
-# 152-159 Reserved
 160 160 Depth below sea level (m)
 161 161 Depth below water surface (m)
 162 sfc Lake or river bottom (-)
@@ -50,18 +45,14 @@
 165 165 Bottom of sediment layer penetrated by thermal wave (-)
 166 sfc Mixing layer (-)
 167 167 Bottom of root zone (-)
-# 168-173 Reserved
 174 sfc Top surface of ice on sea, lake or river
 175 175 Top surface of ice, under snow cover, on sea, lake or river
 176 176 Bottom surface (underside) ice on sea, lake or river
 177 sfc Deep soil (of indefinite depth)
-# 178 Reserved
 179 179 Top surface of glacier ice and inland ice
 180 180 Deep inland or glacier ice (of indefinite depth)
 181 181 Grid tile land fraction as a model surface
 182 182 Grid tile water fraction as a model surface
 183 183 Grid tile ice fraction on sea, lake or river as a model surface
 184 184 Grid tile glacier ice and inland ice fraction as a model surface
-# 185-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing

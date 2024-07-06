@@ -21,10 +21,8 @@
 18 18 Nuclear/radiology
 19 19 Physical atmospheric properties
 20 20 Atmospheric chemical or physical constituents
-# 20-189 Reserved
 190 190 CCITT IA5 string
 191 191 Miscellaneous
-#192-254 Reserved for local use
 255 255 Missing
 
 

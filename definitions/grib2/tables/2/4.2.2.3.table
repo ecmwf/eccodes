@@ -10,7 +10,5 @@
 8 8 Direct evaporation cease (soil moisture) (Proportion)
 9 9 Soil porosity (Proportion)
 12 12 Transpiration stress-onset (soil moisture) (kg m-3)
-# 11-191 Reserved
-#192-254 Reserved for local use
 255 255 Missing
 

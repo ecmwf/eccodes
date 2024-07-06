@@ -5,6 +5,4 @@
 3 ECOCLIMAP Land use classes according to ECOCLIMAP
 4 ECOCLIMAP-SG Land use classes according to ECOCLIMAP-SG
 5 GLCCv2BATS Land use classes according to USGS EROS Global Land Cover Characterization (GLCC) v2.0 BATS Classification
-# 6-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing value
