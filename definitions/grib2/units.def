@@ -3060,8 +3060,8 @@
 #Soil moisture top 20 cm
 'kg m**-3' = {
 	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 22 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 19 ;
 	 typeOfFirstFixedSurface = 106 ;
 	 typeOfSecondFixedSurface = 106 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
@@ -3072,14 +3072,14 @@
 #Soil moisture top 100 cm
 'kg m**-3' = {
 	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 22 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 19 ;
 	 typeOfFirstFixedSurface = 106 ;
 	 typeOfSecondFixedSurface = 106 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfSecondFixedSurface = 10 ;
-	 scaleFactorOfSecondFixedSurface = 1 ;
+	 scaledValueOfSecondFixedSurface = 1 ;
+	 scaleFactorOfSecondFixedSurface = 0 ;
 	}
 #Total column supercooled liquid water
 'kg m**-2' = {
@@ -4956,6 +4956,32 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 32 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean soil moisture top 20 cm
+'kg m**-3' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 19 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 2 ;
+	 scaleFactorOfSecondFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean soil moisture top 100 cm
+'kg m**-3' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 19 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 1 ;
+	 scaleFactorOfSecondFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean most-unstable CAPE
