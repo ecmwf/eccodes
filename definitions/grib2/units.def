@@ -11261,8 +11261,8 @@
 #Soil moisture
 'kg m**-3' = {
 	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 22 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 19 ;
 	}
 #10 metre u-component of neutral wind
 'm s**-1' = {
