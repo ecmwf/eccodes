@@ -31,6 +31,4 @@
 29 29 Clear air turbulence (CAT) (m2/3 s-1)
 30 30 Eddy dissipation parameter (m2/3 s-1)
 31 31 Maximum of Eddy dissipation parameter in layer (m2/3 s-1)
-# 32-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing

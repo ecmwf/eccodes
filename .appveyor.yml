@@ -51,8 +51,8 @@ install:
                                 m2-perl ^
                                 m2w64-ntldd-git
 
-    # get deps
-  - cmd: conda install -c conda-forge cmake libnetcdf
+    # get deps. Drop libnetcdf
+  - cmd: conda install -c conda-forge cmake
 
 #---------------------------------#
 #       build configuration       #
@@ -71,7 +71,7 @@ build_script:
                -D CMAKE_INSTALL_PREFIX=%INSTALL_DIR% ^
                -D CMAKE_BUILD_TYPE=Release ^
                -D ENABLE_FORTRAN=0 ^
-               -D ENABLE_NETCDF=1 ^
+               -D ENABLE_NETCDF=0 ^
                -D ENABLE_JPG=1 ^
                -D ENABLE_AEC=0 ^
                -D IEEE_LE=1 ^

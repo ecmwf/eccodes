@@ -27,6 +27,4 @@
 25 25 Temperature tendency due to long-wave radiation, clear sky (K s-1)
 26 26 Temperature tendency due to parameterizations (K s-1)
 27 27 Wet bulb temperature (K)
-# 28-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing

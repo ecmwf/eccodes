@@ -38,7 +38,6 @@
 36 36 Hypobromous acid HBrO
 37 37 Bromine nitrate BrONO2
 38 38 Oxygen O2
-#39-9999 Reserved
 10000 10000 Hydroxyl radical OH
 10001 10001 Methyl peroxy radical CH3O2
 10002 10002 Methyl hydroperoxide CH3O2H
@@ -62,9 +61,7 @@
 10021 10021 Benzene C6H6
 10022 10022 Toluene C7H8
 10023 10023 Xylene C8H10
-#10024-10499 Reserved for other simple organic molecules (e.g. higher aldehydes, alcohols, peroxides...)
 10500 10500 Dimethyl sulphide CH3SCH3 (DMS)
-#10501-20000 Reserved
 20001 20001 Hydrogen chloride
 20002 20002 CFC-11
 20003 20003 CFC-12
@@ -86,9 +83,7 @@
 20019 20019 Hexachlorocyclohexane (HCH)
 20020 20020 Alpha hexachlorocyclohexane
 20021 20021 Hexachlorobiphenyl (PCB-153)
-#20022-29999 Reserved
 30000 30000 Radioactive pollutant (tracer, defined by originating centre)
-#30001-30009 Reserved
 30010 30010 Hydrogen H-3
 30011 30011 Hydrogen organic bounded H-3o
 30012 30012 Hydrogen inorganic H-3a
@@ -374,7 +369,6 @@
 30292 30292 Sum noble gas SumNG
 30293 30293 Activation gas ActGas
 30294 30294 Cs-137 Equivalent EquCs137
-#30295-59999 Reserved
 60000 60000 HOx radical (OH+HO2)
 60001 60001 Total inorganic and organic peroxy radicals (HO2 + RO2)
 60002 60002 Passive Ozone
@@ -393,7 +387,6 @@
 60015 60015 Biogenic non-methane volatile organic compounds expressed as carbon
 60016 60016 Lumped oxygenated hydrocarbons
 60017 60017 NOx expressed as nitrogen dioxide (NO2)
-#60018-61999 Reserved
 62000 62000 Total aerosol
 62001 62001 Dust dry
 62002 62002 Water in ambient
@@ -413,14 +406,12 @@
 62016 62016 Particulate organic matter hydrophobic dry
 62017 62017 Nitrate hydrophilic dry
 62018 62018 Nitrate hydrophobic dry
-#62019 Reserved
 62020 62020 Smoke - high absorption
 62021 62021 Smoke - low absorption
 62022 62022 Aerosol - high absorption
 62023 62023 Aerosol - low absorption
 62025 62025 Volcanic ash
 62026 62026 Particulate matter (PM)
-# 62027-62099 Reserved
 62100 62100 Alnus (Alder) pollen
 62101 62101 Betula (Birch) pollen
 62102 62102 Castanea (Chestnut) pollen
@@ -436,14 +427,11 @@
 62112 62112 Taxus (Yew) pollen
 62113 62113 Tilia (Lime, Linden) pollen
 62114 62114 Ulmus (Elm) pollen
-# 62115-62199 Reserved
 62200 62200 Ambrosia (Ragweed, Burr-ragweed ) pollen
 62201 62201 Artemisia (Sagebrush, Wormwood, Mugwort) pollen
 62202 62202 Brassica (Rape, Broccoli, Brussels Sprouts, Cabbage, Cauliflower, Collards, Kale, Kohlrabi, Mustard, Rutabaga) pollen
 62203 62203 Plantago (Plantain) pollen
 62204 62204 Rumex (Dock, Sorrel) pollen
 62205 62205 Urtica (Nettle) pollen
-# 62206-62299 Reserved
 62300 62300 Poaceae (Grass family) pollen
-# 62301-65534 Reserved
 65535 65535 Missing

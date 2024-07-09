@@ -174,10 +174,11 @@ extern int grib_yydebug;
     OR = 375,                      /* OR  */
     NOT = 376,                     /* NOT  */
     IS = 377,                      /* IS  */
-    IDENT = 378,                   /* IDENT  */
-    STRING = 379,                  /* STRING  */
-    INTEGER = 380,                 /* INTEGER  */
-    FLOAT = 381                    /* FLOAT  */
+    ISNOT = 378,                   /* ISNOT  */
+    IDENT = 379,                   /* IDENT  */
+    STRING = 380,                  /* STRING  */
+    INTEGER = 381,                 /* INTEGER  */
+    FLOAT = 382                    /* FLOAT  */
   };
   typedef enum grib_yytokentype grib_yytoken_kind_t;
 #endif
@@ -306,10 +307,11 @@ extern int grib_yydebug;
 #define OR 375
 #define NOT 376
 #define IS 377
-#define IDENT 378
-#define STRING 379
-#define INTEGER 380
-#define FLOAT 381
+#define ISNOT 378
+#define IDENT 379
+#define STRING 380
+#define INTEGER 381
+#define FLOAT 382
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -333,7 +335,7 @@ union YYSTYPE
   grib_rule               *rules;
   grib_rule_entry         *rule_entry;
 
-#line 337 "y.tab.h"
+#line 339 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -1773,7 +1773,7 @@ int grib_set_values(grib_handle* h, grib_values* args, size_t count)
 
     if (h->context->debug) {
         for (i = 0; i < count; i++) {
-            grib_print_values("ECCODES DEBUG set key/value pairs", &args[i], stderr);
+            grib_print_values("ECCODES DEBUG about to set key/value pair", &args[i], stderr);
         }
     }
 

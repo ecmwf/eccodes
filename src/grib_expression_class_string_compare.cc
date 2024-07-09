@@ -22,7 +22,8 @@
    IMPLEMENTS = print
    IMPLEMENTS = add_dependency
    MEMBERS    = grib_expression *left
-   MEMBERS = grib_expression *right
+   MEMBERS    = grib_expression *right
+   MEMBERS    = int eq
    END_CLASS_DEF
 
  */
@@ -50,6 +51,7 @@ typedef struct grib_expression_string_compare{
     /* Members defined in string_compare */
     grib_expression *left;
     grib_expression *right;
+    int eq;
 } grib_expression_string_compare;
 
 
@@ -110,7 +112,11 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         return ret;
     }
 
-    *lres = (grib_inline_strcmp(v1, v2) == 0);
+    if (e->eq) // IS operator
+        *lres = (grib_inline_strcmp(v1, v2) == 0);
+    else // ISNOT operator
+        *lres = (grib_inline_strcmp(v1, v2) != 0);
+
     return GRIB_SUCCESS;
 }
 
@@ -147,12 +153,13 @@ static void add_dependency(grib_expression* g, grib_accessor* observer)
 }
 
 grib_expression* new_string_compare_expression(grib_context* c,
-                                               grib_expression* left, grib_expression* right)
+                                               grib_expression* left, grib_expression* right, int eq)
 {
     grib_expression_string_compare* e = (grib_expression_string_compare*)grib_context_malloc_clear_persistent(c, sizeof(grib_expression_string_compare));
-    e->base.cclass                    = grib_expression_class_string_compare;
-    e->left                           = left;
-    e->right                          = right;
+    e->base.cclass = grib_expression_class_string_compare;
+    e->left  = left;
+    e->right = right;
+    e->eq    = eq;
     return (grib_expression*)e;
 }
 

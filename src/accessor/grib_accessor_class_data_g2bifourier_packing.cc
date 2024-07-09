@@ -11,6 +11,7 @@
 
 #include "grib_accessor_class_data_g2bifourier_packing.h"
 #include "grib_scaling.h"
+#include <algorithm>
 
 grib_accessor_class_data_g2bifourier_packing_t _grib_accessor_class_data_g2bifourier_packing{"data_g2bifourier_packing"};
 grib_accessor_class* grib_accessor_class_data_g2bifourier_packing = &_grib_accessor_class_data_g2bifourier_packing;

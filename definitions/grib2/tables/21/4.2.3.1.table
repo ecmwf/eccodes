@@ -23,10 +23,7 @@
 21 21 Aerosol optical thickness at 0.810 um
 22 22 Aerosol optical thickness at 1.640 um
 23 23 Angstrom coefficient
-# 24-26 Reserved
 27 27 Bidirectional reflectance factor (numeric)
 28 28 Brightness temperature (K)
 29 29 Scaled radiance (numeric)
-# 30-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing

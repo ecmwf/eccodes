@@ -20,6 +20,4 @@
 18 18 Snow temperature (top of snow) - validation (K)
 19 19 Turbulent transfer coefficient for heat - validation (Numeric)
 20 20 Turbulent diffusion coefficient for heat - validation (m2 s-1)
-#21-191 21-191 Reserved (-)
-#192-254 192-254 Reserved for local use (-)
 255 255 Missing (-)

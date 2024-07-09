@@ -3001,6 +3001,16 @@
 	 parameterCategory = 211 ;
 	 parameterNumber = 56 ;
 	}
+#Water vapour (chemistry) difference
+'Water vapour (chemistry) difference' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 1 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical = 1 ;
+	}
 #Altitude of emitter
 'Altitude of emitter' = {
 	 discipline = 192 ;

@@ -8,6 +8,4 @@
 7 7	Chemical gross production rate of mole concentration	mole.m-3.s-1
 8 8	Chemical gross destruction rate of mole concentration	mole.m-3.s-1
 9 9	Surface dry deposition mass flux into stomata	kg.m-2.s-1
-#10-191	Reserved	
-#192-254	Reserved for local use	
 255 255	Missing	
