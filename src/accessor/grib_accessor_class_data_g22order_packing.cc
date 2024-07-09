@@ -787,7 +787,10 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
     // long nvals_per_group     = 0;
     // long nbits_per_group_val = 0;
 
-    long binary_scale_factor, decimal_scale_factor, optimize_scale_factor, typeOfOriginalFieldValues;
+    // ECC-1858: Disable for complex packing and complex packing with spatial differencing (see scaling() function in wgrib2 code)
+    constexpr long optimize_scale_factor = 0;
+
+    long binary_scale_factor, decimal_scale_factor, typeOfOriginalFieldValues;
     // long groupSplittingMethodUsed, numberOfGroupsOfDataValues, referenceForGroupWidths;
     long missingValueManagementUsed, primaryMissingValueSubstitute, secondaryMissingValueSubstitute;
     long numberOfBitsUsedForTheGroupWidths, numberOfBitsUsedForTheScaledGroupLengths, orderOfSpatialDifferencing;
@@ -815,8 +818,6 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
         return err;
     if ((err = grib_get_long_internal(gh, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
-
-    optimize_scale_factor = 1;  // TODO(masn): To be reviewed
 
     if ((err = grib_get_long_internal(gh, self->binary_scale_factor, &binary_scale_factor)) != GRIB_SUCCESS)
         return err;
