@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -xe
 
 # We do not want to come across the ecCodes tools in the toolbox
 module unload ecmwf-toolbox
