@@ -119,6 +119,25 @@ grib_check_key_equals $temp aerosolType,typeOfSizeInterval '0 0'
 ${tools_dir}/grib_set -s paramId=210072 $tempSample $temp
 ${tools_dir}/grib_ls -p firstSize,secondSize $temp
 
+
+# =============================
+# Ensemble interval-based
+# =============================
+tempSample=temp.sample.$label
+${tools_dir}/grib_set -s tablesVersion=$latest,productDefinitionTemplateNumber=11,typeOfStatisticalProcessing=1 $sample2 $tempSample
+grib_check_key_equals $tempSample stepType,perturbationNumber 'accum 0'
+
+${tools_dir}/grib_set -s is_chemical=1 $tempSample $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '43'
+grib_check_key_equals $temp constituentType,perturbationNumber,stepType '0 0 accum'
+
+${tools_dir}/grib_set -s is_chemical_srcsink=1 $tempSample $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '79'
+
+${tools_dir}/grib_set -s is_chemical_distfn=1 $tempSample $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '68'
+
+
 # ECC-1303: Setting localDefinitionNumber=1 on chemical source/sink
 # ------------------------------------------------------------------
 ${tools_dir}/grib_set -s paramId=228104,setLocalDefinition=1,localDefinitionNumber=1 $sample2 $temp
