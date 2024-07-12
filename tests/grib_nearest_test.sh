@@ -10,6 +10,10 @@
 
 . ./include.ctest.sh
 
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
+
 label="grib_nearest_test"
 temp=temp.$label.txt
 tempGrib=temp.$label.grib

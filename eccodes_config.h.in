@@ -111,6 +111,7 @@
 
 #cmakedefine HAVE_NETCDF
 
+#cmakedefine HAVE_GEOGRAPHY
 #cmakedefine HAVE_MEMFS
 
 #ifdef HAVE_MEMFS
