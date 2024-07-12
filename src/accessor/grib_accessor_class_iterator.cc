@@ -52,7 +52,7 @@ grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int
 {
     *error = GRIB_FUNCTIONALITY_NOT_ENABLED;
     grib_context_log(ch->context, GRIB_LOG_ERROR,
-                     "Geoiterator support not enabled. Please rebuild with -DENABLE_GEOGRAPHY=ON");
+                     "Geoiterator functionality not enabled. Please rebuild with -DENABLE_GEOGRAPHY=ON");
 
     return NULL;
 }
