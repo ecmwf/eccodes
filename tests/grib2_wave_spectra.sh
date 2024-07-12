@@ -12,6 +12,8 @@
 
 label="grib2_wave_spectra_test"
 temp=temp.$label
+tempGribA=temp.$label.A.grib
+tempGribB=temp.$label.B.grib
 tempSample=temp.$label.tmpl
 sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
@@ -52,5 +54,18 @@ grib_check_key_equals $temp firstWavelengthInNanometres '12'
 grib_check_key_equals $temp firstWavelengthInMetres     '1.2e-08'
 
 
+# ECC-1867: Unexpected PDT change for wave template for ensemble DA streams
+sample_ld=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl # Sample with a mars local def
+${tools_dir}/grib_set -s tablesVersion=32,productDefinitionTemplateNumber=99,waveFrequencyNumber=14 $sample_ld $tempGribA
+${tools_dir}/grib_set -s stream=ewla $tempGribA $tempGribB
+grib_check_key_equals $tempGribB productDefinitionTemplateNumber,waveFrequencyNumber '99 14'
+${tools_dir}/grib_compare -b marsStream $tempGribA $tempGribB
+
+${tools_dir}/grib_set -s type=em $tempGribA $tempGribB
+${tools_dir}/grib_compare -b marsType,typeOfProcessedData,typeOfGeneratingProcess $tempGribA $tempGribB
+${tools_dir}/grib_set -s type=es $tempGribA $tempGribB
+${tools_dir}/grib_compare -b marsType,typeOfProcessedData,typeOfGeneratingProcess $tempGribA $tempGribB
+
+
 # Clean up
-rm -f $tempSample $temp
+rm -f $tempSample $temp $tempGribA $tempGribB
