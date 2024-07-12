@@ -11293,12 +11293,6 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 43 ;
 	}
-#Soil moisture
-'228039' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 19 ;
-	}
 #10 metre u-component of neutral wind
 '228131' = {
 	 discipline = 0 ;

@@ -256,8 +256,27 @@ cat >$tempFilt <<EOF
   print "[typeOfStatisticalProcessing]";
 EOF
 ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempLog
-cat $tempLog
 grep -q "255 8 7" $tempLog
+
+# ECC-1866: Setting step on interval-based message with dataDate=0000
+# -------------------------------------------------------------------
+tempGrbA=${data_dir}/temp.$label.A.grib
+tempGrbB=${data_dir}/temp.$label.B.grib
+${tools_dir}/grib_set -s stepType=accum $ECCODES_SAMPLES_PATH/GRIB2.tmpl $tempGrbA
+set +e
+${tools_dir}/grib_set -s year=0,month=0,day=0,step=0 $tempGrbA $tempGrbB 2>$tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Date/Time is not valid" $tempLog
+
+set +e
+${tools_dir}/grib_set -s year=0,month=0,day=0,stepUnits=1 $tempGrbA $tempGrbB 2>$tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Date/Time is not valid" $tempLog
+rm -f $tempGrbA $tempGrbB
 
 # Clean up
 rm -f $temp $tempLog $tempFilt
