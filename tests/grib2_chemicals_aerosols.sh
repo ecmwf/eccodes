@@ -124,7 +124,7 @@ ${tools_dir}/grib_ls -p firstSize,secondSize $temp
 # Ensemble interval-based
 # =============================
 tempSample=temp.sample.$label
-${tools_dir}/grib_set -s tablesVersion=$latest,productDefinitionTemplateNumber=11,typeOfStatisticalProcessing=1 $sample2 $tempSample
+${tools_dir}/grib_set -s tablesVersion=30,productDefinitionTemplateNumber=11,typeOfStatisticalProcessing=1 $sample2 $tempSample
 grib_check_key_equals $tempSample stepType,perturbationNumber 'accum 0'
 
 ${tools_dir}/grib_set -s is_chemical=1 $tempSample $temp
