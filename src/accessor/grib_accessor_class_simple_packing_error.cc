@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -12,11 +11,12 @@
 #include "grib_accessor_class_simple_packing_error.h"
 #include "grib_scaling.h"
 
-grib_accessor_class_simple_packing_error_t _grib_accessor_class_simple_packing_error{"simple_packing_error"};
+grib_accessor_class_simple_packing_error_t _grib_accessor_class_simple_packing_error{ "simple_packing_error" };
 grib_accessor_class* grib_accessor_class_simple_packing_error = &_grib_accessor_class_simple_packing_error;
 
 
-void grib_accessor_class_simple_packing_error_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_simple_packing_error_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_simple_packing_error_t* self = (grib_accessor_simple_packing_error_t*)a;
     int n = 0;
@@ -32,7 +32,8 @@ void grib_accessor_class_simple_packing_error_t::init(grib_accessor* a, const lo
     a->length = 0;
 }
 
-int grib_accessor_class_simple_packing_error_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_simple_packing_error_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_simple_packing_error_t* self = (grib_accessor_simple_packing_error_t*)a;
 
     int ret                 = 0;
@@ -40,7 +41,7 @@ int grib_accessor_class_simple_packing_error_t::unpack_double(grib_accessor* a, 
     long bitsPerValue       = 0;
     long decimalScaleFactor = 0;
     double referenceValue   = 0;
-    grib_handle* h = grib_handle_of_accessor(a);
+    grib_handle* h          = grib_handle_of_accessor(a);
 
     if ((ret = grib_get_long_internal(h, self->binaryScaleFactor, &binaryScaleFactor)) != GRIB_SUCCESS)
         return ret;

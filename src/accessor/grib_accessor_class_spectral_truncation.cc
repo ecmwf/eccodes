@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,14 +10,15 @@
 
 #include "grib_accessor_class_spectral_truncation.h"
 
-grib_accessor_class_spectral_truncation_t _grib_accessor_class_spectral_truncation{"spectral_truncation"};
+grib_accessor_class_spectral_truncation_t _grib_accessor_class_spectral_truncation{ "spectral_truncation" };
 grib_accessor_class* grib_accessor_class_spectral_truncation = &_grib_accessor_class_spectral_truncation;
 
 
-void grib_accessor_class_spectral_truncation_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_spectral_truncation_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_spectral_truncation_t* self = (grib_accessor_spectral_truncation_t*)a;
-    int n                                   = 0;
+    int n = 0;
 
     self->J = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
     self->K = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
@@ -28,9 +28,10 @@ void grib_accessor_class_spectral_truncation_t::init(grib_accessor* a, const lon
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_spectral_truncation_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_spectral_truncation_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_spectral_truncation_t* self = (grib_accessor_spectral_truncation_t*)a;
-    int ret                                 = 0;
+    int ret = GRIB_SUCCESS;
 
     long J, K, M, T, Tc;
 
