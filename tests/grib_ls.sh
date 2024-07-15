@@ -283,6 +283,16 @@ set -e
 [ $status -ne 0 ]
 grep -q "unable to open mask file" $tempText
 
+# ----------------------
+# Printing array keys
+# ----------------------
+set +e
+${tools_dir}/grib_ls -p bitmap $data_dir/reduced_latlon_surface.grib2 > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Hint: Tool grib_ls cannot print keys of array type" $tempText
+
 
 # Clean up
 rm -f $temp1 $temp2 $tempText $tempLog

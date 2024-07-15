@@ -1239,14 +1239,18 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
                 //GRIB_CHECK_NOLINE(ret, options->print_keys[i].name);
                 grib_context_log(h->context, GRIB_LOG_ERROR, "%s (%s)",
                                 options->print_keys[i].name, grib_get_error_message(ret));
+                if (ret == GRIB_ARRAY_TOO_SMALL || ret == GRIB_BUFFER_TOO_SMALL) {
+                    fprintf(dump_file, "\tHint: Tool %s cannot print keys of array type. Use grib_filter.\n", tool_name);
+                }
                 exit(ret);
             }
             if (ret == GRIB_NOT_FOUND) {
                 strcpy(value, notfound);
             } else {
                 fprintf(dump_file, "%s (%s)\n", options->print_keys[i].name, grib_get_error_message(ret));
-                if (ret == GRIB_ARRAY_TOO_SMALL)
+                if (ret == GRIB_ARRAY_TOO_SMALL || ret == GRIB_BUFFER_TOO_SMALL) {
                     fprintf(dump_file, "\tHint: Tool %s cannot print keys of array type. Use grib_filter.\n", tool_name);
+                }
                 exit(ret);
             }
         }
