@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,16 +10,17 @@
 
 #include "grib_accessor_class_latlon_increment.h"
 
-grib_accessor_class_latlon_increment_t _grib_accessor_class_latlon_increment{"latlon_increment"};
+grib_accessor_class_latlon_increment_t _grib_accessor_class_latlon_increment{ "latlon_increment" };
 grib_accessor_class* grib_accessor_class_latlon_increment = &_grib_accessor_class_latlon_increment;
 
 
-void grib_accessor_class_latlon_increment_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_latlon_increment_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_latlon_increment_t* self = (grib_accessor_latlon_increment_t*)a;
-    int n                                = 0;
-    grib_handle* hand                    = grib_handle_of_accessor(a);
+    grib_handle* hand = grib_handle_of_accessor(a);
 
+    int n = 0;
     self->directionIncrementGiven = grib_arguments_get_name(hand, c, n++);
     self->directionIncrement      = grib_arguments_get_name(hand, c, n++);
     self->scansPositively         = grib_arguments_get_name(hand, c, n++);
@@ -32,10 +32,11 @@ void grib_accessor_class_latlon_increment_t::init(grib_accessor* a, const long l
     self->isLongitude             = grib_arguments_get_long(hand, c, n++);
 }
 
-int grib_accessor_class_latlon_increment_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_latlon_increment_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_latlon_increment_t* self = (grib_accessor_latlon_increment_t*)a;
-    int ret                              = 0;
-    grib_handle* hand                    = grib_handle_of_accessor(a);
+    int ret = GRIB_SUCCESS;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     long directionIncrementGiven = 0;
     long directionIncrement      = 0;
@@ -118,11 +119,12 @@ int grib_accessor_class_latlon_increment_t::unpack_double(grib_accessor* a, doub
     return ret;
 }
 
-int grib_accessor_class_latlon_increment_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_latlon_increment_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_latlon_increment_t* self = (grib_accessor_latlon_increment_t*)a;
-    int ret                              = 0;
-    long codedNumberOfPoints             = 0;
-    grib_handle* hand                    = grib_handle_of_accessor(a);
+    int ret                                = GRIB_SUCCESS;
+    long codedNumberOfPoints               = 0;
+    grib_handle* hand                      = grib_handle_of_accessor(a);
 
     long directionIncrementGiven = 0;
     long directionIncrement      = 0;
@@ -182,8 +184,8 @@ int grib_accessor_class_latlon_increment_t::pack_double(grib_accessor* a, const 
         }
     }
 
-    //ret = grib_set_long_internal(hand, self->numberOfPoints,numberOfPoints);
-    //if(ret) grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannot pack value for %s error %d \n", a->name, self->numberOfPoints, ret);
+    // ret = grib_set_long_internal(hand, self->numberOfPoints,numberOfPoints);
+    // if(ret) grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannot pack value for %s error %d \n", a->name, self->numberOfPoints, ret);
 
     grib_get_long_internal(hand, self->numberOfPoints, &codedNumberOfPoints);
 
@@ -201,7 +203,8 @@ int grib_accessor_class_latlon_increment_t::pack_double(grib_accessor* a, const 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_latlon_increment_t::is_missing(grib_accessor* a){
+int grib_accessor_class_latlon_increment_t::is_missing(grib_accessor* a)
+{
     size_t len = 1;
     double val = 0;
 

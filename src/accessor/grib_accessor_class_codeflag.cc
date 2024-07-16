@@ -78,8 +78,8 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
                 codename[j++]  = bval[0];
                 codename[j++]  = ')';
                 codename[j++]  = ' ';
-                if (j)
-                    codename[j++] = ' ';
+                //if (j)
+                //    codename[j++] = ' ';
 
                 for (i = (strlen(num) + strlen(bval) + 2); i < linelen - 1; i++)
                     codename[j++] = line[i];
@@ -94,8 +94,9 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
         j--;
     codename[j] = 0;
 
-    strcat(codename, ":");
+    strcat(codename, " (");
     strcat(codename, fname);
+    strcat(codename, ")");
 
     fclose(f);
     return GRIB_SUCCESS;
