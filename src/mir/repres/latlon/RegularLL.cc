@@ -194,7 +194,7 @@ std::vector<util::GridBox> RegularLL::gridBoxes() const {
         for (size_t i = 0; i < ni_; ++i) {
             auto l = lon1;
             lon1   = l + we * (i + half);
-            r.emplace_back(util::GridBox(latEdges[j], lonEdges[i], latEdges[j + 1], lonEdges[i + 1]));
+            r.emplace_back(latEdges[j], lonEdges[i], latEdges[j + 1], lonEdges[i + 1]);
         }
 
         ASSERT(periodic ? lon0 == lon1.normalise(lon0) : lon0 <= lon1.normalise(lon0));

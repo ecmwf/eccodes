@@ -312,7 +312,7 @@ std::vector<util::GridBox> ReducedLL::gridBoxes() const {
             for (long i = 0; i < Ni; ++i) {
                 auto w = lon1.value();
                 lon1 += we;
-                r.emplace_back(util::GridBox(latEdges[j], w, latEdges[j + 1], lon1.value()));
+                r.emplace_back(latEdges[j], w, latEdges[j + 1], lon1.value());
             }
 
             ASSERT(lon0 == lon1.normalise(lon0));
@@ -322,7 +322,7 @@ std::vector<util::GridBox> ReducedLL::gridBoxes() const {
                 auto w = std::max(bbox_.west().value(), lon1.value());
                 lon1 += we;
                 auto e = std::min(bbox_.east().value(), lon1.value());
-                r.emplace_back(util::GridBox(latEdges[j], w, latEdges[j + 1], e));
+                r.emplace_back(latEdges[j], w, latEdges[j + 1], e);
             }
 
             ASSERT(lon0 <= lon1.normalise(lon0));

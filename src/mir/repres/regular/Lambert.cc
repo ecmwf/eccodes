@@ -53,10 +53,10 @@ RegularGrid::Projection Lambert::make_projection(const param::MIRParametrisation
         return spec;
     }
 
-    double LaDInDegrees;
-    double LoVInDegrees;
-    double Latin1InDegrees;
-    double Latin2InDegrees;
+    double LaDInDegrees    = 0.;
+    double LoVInDegrees    = 0.;
+    double Latin1InDegrees = 0.;
+    double Latin2InDegrees = 0.;
     ASSERT(param.get("LaDInDegrees", LaDInDegrees));
     ASSERT(param.get("LoVInDegrees", LoVInDegrees));
     param.get("Latin1InDegrees", Latin1InDegrees = LaDInDegrees);
@@ -73,23 +73,23 @@ RegularGrid::Projection Lambert::make_projection(const param::MIRParametrisation
 void Lambert::fillGrib(grib_info& info) const {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_LAMBERT_CONFORMAL;
 
-    Point2 first     = {firstPointBottomLeft_ ? x_.min() : x_.front(), firstPointBottomLeft_ ? y_.min() : y_.front()};
-    Point2 firstLL   = grid_.projection().lonlat(first);
-    Point2 reference = grid_.projection().lonlat({0., 0.});
+    Point2 first = {firstPointBottomLeft() ? x().min() : x().front(), firstPointBottomLeft() ? y().min() : y().front()};
+    Point2 firstLL   = grid().projection().lonlat(first);
+    Point2 reference = grid().projection().lonlat({0., 0.});
 
     info.grid.latitudeOfFirstGridPointInDegrees = firstLL[LLCOORDS::LAT];
     info.grid.longitudeOfFirstGridPointInDegrees =
         writeLonPositive_ ? util::normalise_longitude(firstLL[LLCOORDS::LON], 0) : firstLL[LLCOORDS::LON];
 
-    info.grid.Ni = long(x_.size());
-    info.grid.Nj = long(y_.size());
+    info.grid.Ni = static_cast<long>(x().size());
+    info.grid.Nj = static_cast<long>(y().size());
 
     info.grid.latitudeOfSouthernPoleInDegrees  = latitudeOfSouthernPoleInDegrees_;
     info.grid.longitudeOfSouthernPoleInDegrees = longitudeOfSouthernPoleInDegrees_;
     info.grid.uvRelativeToGrid                 = uvRelativeToGrid_ ? 1 : 0;
 
-    info.extra_set("DxInMetres", std::abs(x_.step()));
-    info.extra_set("DyInMetres", std::abs(y_.step()));
+    info.extra_set("DxInMetres", std::abs(x().step()));
+    info.extra_set("DyInMetres", std::abs(y().step()));
     info.extra_set("Latin1InDegrees", reference[LLCOORDS::LAT]);
     info.extra_set("Latin2InDegrees", reference[LLCOORDS::LAT]);
     info.extra_set("LoVInDegrees", writeLonPositive_ ? util::normalise_longitude(reference[LLCOORDS::LON], 0)
