@@ -1,19 +1,18 @@
 # (C) Copyright 2005- ECMWF.
 
-#  Resolution and component flags
 flags[1] resolutionAndComponentFlags 'grib2/tables/[tablesVersion]/3.3.table' : edition_specific,no_copy;
 
 # Note our flagbit numbers run from 7 to 0, while WMO convention uses 1 to 8
 # (most significant to least significant)
 
-flagbit resolutionAndComponentFlags1(resolutionAndComponentFlags,7) = 0: read_only;
-flagbit resolutionAndComponentFlags2(resolutionAndComponentFlags,6) = 0: read_only;
+flagbit resolutionAndComponentFlags1(resolutionAndComponentFlags,7) = 0: read_only; #Reserved
+flagbit resolutionAndComponentFlags2(resolutionAndComponentFlags,6) = 0: read_only; #Reserved
 flagbit iDirectionIncrementGiven(resolutionAndComponentFlags,5);
 flagbit jDirectionIncrementGiven(resolutionAndComponentFlags,4);
 flagbit uvRelativeToGrid(resolutionAndComponentFlags,3);
-flagbit resolutionAndComponentFlags6(resolutionAndComponentFlags,7) = 0: read_only;
-flagbit resolutionAndComponentFlags7(resolutionAndComponentFlags,6) = 0: read_only;
-flagbit resolutionAndComponentFlags8(resolutionAndComponentFlags,6) = 0: read_only;
+flagbit resolutionAndComponentFlags6(resolutionAndComponentFlags,2) = 0: read_only; #Reserved
+flagbit resolutionAndComponentFlags7(resolutionAndComponentFlags,1) = 0: read_only; #Reserved
+flagbit resolutionAndComponentFlags8(resolutionAndComponentFlags,0) = 0: read_only; #Reserved
 
 concept ijDirectionIncrementGiven {
   '1' = {

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,14 +10,15 @@
 
 #include "grib_accessor_class_julian_day.h"
 
-grib_accessor_class_julian_day_t _grib_accessor_class_julian_day{"julian_day"};
+grib_accessor_class_julian_day_t _grib_accessor_class_julian_day{ "julian_day" };
 grib_accessor_class* grib_accessor_class_julian_day = &_grib_accessor_class_julian_day;
 
 
-void grib_accessor_class_julian_day_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_julian_day_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_julian_day_t* self = (grib_accessor_julian_day_t*)a;
-    int n                          = 0;
+    int n                            = 0;
 
     self->date   = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
     self->hour   = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
@@ -28,22 +28,26 @@ void grib_accessor_class_julian_day_t::init(grib_accessor* a, const long l, grib
     a->length = 0;
 }
 
-void grib_accessor_class_julian_day_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_julian_day_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_dump_string(dumper, a, NULL);
 }
 
-int grib_accessor_class_julian_day_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_julian_day_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     const double v = *val;
     return pack_double(a, &v, len);
 }
 
-int grib_accessor_class_julian_day_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_julian_day_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_julian_day_t* self = (grib_accessor_julian_day_t*)a;
-    int ret                        = 0;
-    long hour                      = 0;
-    long minute                    = 0;
-    long second                    = 0;
-    long date                      = 0;
+
+    int ret     = 0;
+    long hour   = 0;
+    long minute = 0;
+    long second = 0;
+    long date   = 0;
     long year, month, day;
 
     ret = grib_julian_to_datetime(*val, &year, &month, &day, &hour, &minute, &second);
@@ -66,17 +70,18 @@ int grib_accessor_class_julian_day_t::pack_double(grib_accessor* a, const double
     return ret;
 }
 
-int grib_accessor_class_julian_day_t::unpack_long(grib_accessor* a, long* val, size_t* len){
-    int ret  = 0;
+int grib_accessor_class_julian_day_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     double v = 0;
 
-    ret  = unpack_double(a, &v, len);
+    int ret  = unpack_double(a, &v, len);
     *val = (long)v;
 
     return ret;
 }
 
-int grib_accessor_class_julian_day_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_julian_day_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     int ret = 0;
     long date, hour, minute, second;
     long year, month, day;

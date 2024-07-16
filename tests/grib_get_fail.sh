@@ -86,6 +86,16 @@ set -e
 grep -q "unreadable message" $tempText
 rm -f $outfile
 
+# ----------------------
+# Printing array keys
+# ----------------------
+set +e
+${tools_dir}/grib_get -p bitmap $data_dir/reduced_latlon_surface.grib2 > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Hint: Tool grib_get cannot print keys of array type" $tempText
+
 
 # ----------------------
 # Wrong message type

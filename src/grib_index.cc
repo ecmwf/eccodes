@@ -65,7 +65,6 @@ static int index_count;
 static long values_count = 0;
 
 static int codes_index_add_file_internal(grib_index* index, const char* filename, int message_type);
-static void grib_index_rewind(grib_index* index);
 
 static char* get_key(char** keys, int* type)
 {
@@ -1967,7 +1966,7 @@ grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err)
     return h;
 }
 
-static void grib_index_rewind(grib_index* index)
+void grib_index_rewind(grib_index* index)
 {
     index->rewind = 1;
 }
