@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,30 +10,34 @@
 
 #include "grib_accessor_class_offset_file.h"
 
-grib_accessor_class_offset_file_t _grib_accessor_class_offset_file{"offset_file"};
+grib_accessor_class_offset_file_t _grib_accessor_class_offset_file{ "offset_file" };
 grib_accessor_class* grib_accessor_class_offset_file = &_grib_accessor_class_offset_file;
 
 
-void grib_accessor_class_offset_file_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_offset_file_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_double_t::init(a, l, c);
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->length = 0;
 }
 
-int grib_accessor_class_offset_file_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_offset_file_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     *val = (double)grib_handle_of_accessor(a)->offset;
     *len = 1;
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_offset_file_t::unpack_string(grib_accessor* a, char* v, size_t* len){
+int grib_accessor_class_offset_file_t::unpack_string(grib_accessor* a, char* v, size_t* len)
+{
     double val = 0;
     size_t l   = 1;
     char repres[1024] = {0,};
     int err = 0;
     const char* cclass_name = a->cclass->name;
 
-    err = a->unpack_double(&val, &l);    if (err) return err;
+    err = a->unpack_double(&val, &l);
+    if (err) return err;
 
     snprintf(repres, sizeof(repres), "%.0f", val);
 
