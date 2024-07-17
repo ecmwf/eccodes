@@ -861,6 +861,7 @@ grib_string_list* grib_util_get_param_id(const char* mars_param);
 grib_string_list* grib_util_get_mars_param(const char* param_id);
 grib_handle* grib_util_set_spec(grib_handle* h, const grib_util_grid_spec* spec, const grib_util_packing_spec* packing_spec, int flags, const double* data_values, size_t data_values_count, int* err);
 int parse_keyval_string(const char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count);
+int grib2_is_PDTN_Plain(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_EPS(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_Chemical(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_ChemicalSourceSink(long productDefinitionTemplateNumber);

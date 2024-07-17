@@ -96,6 +96,9 @@ int grib_accessor_class_local_definition_t::pack_long(grib_accessor* a, const lo
     // if (grib2_is_PDTN_EPS(productDefinitionTemplateNumber))
     //     eps = 1;
 
+    // Is this a plain vanilla product?
+    const int is_plain = grib2_is_PDTN_Plain(productDefinitionTemplateNumber);
+
     switch (localDefinitionNumber) {
         case 0:
             productDefinitionTemplateNumberNew = productDefinitionTemplateNumber;
@@ -216,6 +219,11 @@ int grib_accessor_class_local_definition_t::pack_long(grib_accessor* a, const lo
             break;
     }
 
+    if (!is_plain) {
+        // ECC-1875
+        productDefinitionTemplateNumberNew = -1;  // disable PDT selection
+    }
+
     // Adjust for atmospheric chemical constituents
     if (chemical == 1) {
         if (eps == 1) {
@@ -309,9 +317,9 @@ int grib_accessor_class_local_definition_t::pack_long(grib_accessor* a, const lo
         }
     }
 
-    if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
+    if (productDefinitionTemplateNumberNew >=0 && productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
         if (a->context->debug) {
-            fprintf(stderr, "ECCODES DEBUG grib_accessor_local_definition_t: ldNumber=%d, newPDTN=%ld\n",
+            fprintf(stderr, "ECCODES DEBUG %s %s: ldNumber=%d, newPDTN=%ld\n", a->cclass->name, __func__,
                     localDefinitionNumber, productDefinitionTemplateNumberNew);
         }
         if (tooEarly)
