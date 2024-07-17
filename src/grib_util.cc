@@ -1882,6 +1882,16 @@ int grib2_is_PDTN_EPS(long pdtn)
     return 0;
 }
 
+// Return 1 if the productDefinitionTemplateNumber (GRIB2) is for plain (vanilla) products
+int grib2_is_PDTN_Plain(long pdtn)
+{
+    return (
+        pdtn == 0 ||
+        pdtn == 1 ||
+        pdtn == 8 ||
+        pdtn == 11);
+}
+
 // Return 1 if the productDefinitionTemplateNumber (GRIB2) is for atmospheric chemical constituents
 int grib2_is_PDTN_Chemical(long pdtn)
 {
