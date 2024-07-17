@@ -27,8 +27,10 @@ $EXEC $grib_util_set_spec -e 2 -r $infile $outfile > /dev/null
 res=`${tools_dir}/grib_get -p edition,section2Used,Ni,Nj,numberOfValues,bitsPerValue $outfile`
 [ "$res" = "2 0 17 14 238 24" ]
 
-# Check output file geometry
-${tools_dir}/grib_get_data $outfile > /dev/null
+if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+  # Check output file geometry
+  ${tools_dir}/grib_get_data $outfile > /dev/null
+fi
 
 # Remove the local definition from input
 ${tools_dir}/grib_set -s deleteLocalDefinition=1 $infile $tempOut
@@ -110,10 +112,12 @@ grib_check_key_equals $outfile packingType grid_second_order
 stats_new=`${tools_dir}/grib_get -F%.2f -p min,max $outfile`
 [ "$stats_new" = "4.84 246.90" ]
 
-${tools_dir}/grib_get_data $outfile > /dev/null
-CHECK_TOOL="${tools_dir}/grib_check_gaussian_grid"
-if [ -x $CHECK_TOOL ]; then
-  $CHECK_TOOL $outfile
+if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+  ${tools_dir}/grib_get_data $outfile > /dev/null
+  CHECK_TOOL="${tools_dir}/grib_check_gaussian_grid"
+  if [ -x $CHECK_TOOL ]; then
+    $CHECK_TOOL $outfile
+  fi
 fi
 
 ### Constant field N=32
@@ -123,8 +127,9 @@ rm -f $outfile
 
 $EXEC $grib_util_set_spec $infile $outfile
 grib_check_key_equals $outfile "packingType,const" "grid_simple 0"
-${tools_dir}/grib_get_data $outfile > /dev/null
-
+if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+  ${tools_dir}/grib_get_data $outfile > /dev/null
+fi
 
 # CCSDS input
 # ---------------------------

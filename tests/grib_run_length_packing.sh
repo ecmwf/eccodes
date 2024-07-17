@@ -39,7 +39,11 @@ $EXEC ${test_dir}/grib_run_length_packing $tempGrib
 unset ECCODES_DEBUG
 
 ${tools_dir}/grib_dump -O $tempGrib
-${tools_dir}/grib_get_data -mXXX $tempGrib
+
+if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+    ${tools_dir}/grib_get_data -mXXX $tempGrib
+fi
+
 grib_check_key_equals $tempGrib packingType grid_run_length
 
 stats=`${tools_dir}/grib_get -M -F%.1f -p min,max,avg $tempGrib`

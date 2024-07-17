@@ -9,6 +9,10 @@
 
 . ./include.ctest.sh
 
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
+
 label="grib_grid_lamb_az_eq_area_test"
 
 input=${data_dir}/regular_gaussian_pressure_level_constant.grib2

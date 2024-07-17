@@ -9,6 +9,10 @@
 
 . ./include.ctest.sh
 
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
+
 if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
     # m2-bash messes with the system path.
     # %CONDA_PREFIX%\Library\usr\bin is converted to /usr/bin.

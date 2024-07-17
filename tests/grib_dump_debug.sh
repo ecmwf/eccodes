@@ -12,6 +12,10 @@
 label="grib_dump_debug_test"
 temp=temp.$label.txt
 
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
+
 if [ $HAVE_MEMFS -eq 1 ]; then
     unset ECCODES_DEFINITION_PATH
     unset ECCODES_SAMPLES_PATH
