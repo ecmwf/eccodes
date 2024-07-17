@@ -94,9 +94,9 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
         j--;
     codename[j] = 0;
 
-    strcat(codename, " (");
+    strcat(codename, ":");
     strcat(codename, fname);
-    strcat(codename, ")");
+    //strcat(codename, ")");
 
     fclose(f);
     return GRIB_SUCCESS;
