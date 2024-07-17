@@ -23,10 +23,11 @@ alias geography.jPointsAreConsecutive=jPointsAreConsecutive;
 transient iScansPositively = !iScansNegatively : constraint, read_only;
 transient jScansNegatively = !jScansPositively : constraint, read_only;
 
-flagbit scanningMode5(scanningMode,3) = 0: read_only;
-flagbit scanningMode6(scanningMode,2) = 0: read_only;
-flagbit scanningMode7(scanningMode,1) = 0: read_only;
-flagbit scanningMode8(scanningMode,0) = 0: read_only;
+# The following modes are not yet supported
+flagbit scanningMode5(scanningMode,3) = 0: read_only; #Points within odd rows...
+flagbit scanningMode6(scanningMode,2) = 0: read_only; #Points within even rows...
+flagbit scanningMode7(scanningMode,1) = 0: read_only; #Points offset
+flagbit scanningMode8(scanningMode,0) = 0: read_only; #Rows have Ni grid points...
 
 meta swapScanningX change_scanning_direction(
     values,Ni,Nj,

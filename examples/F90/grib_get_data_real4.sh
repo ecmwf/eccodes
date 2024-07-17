@@ -9,4 +9,8 @@
 
 . ./include.ctest.sh
 
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
+
 ${examples_dir}/eccodes_f_grib_get_data_real4 > /dev/null

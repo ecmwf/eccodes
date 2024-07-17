@@ -51,7 +51,7 @@ concept datasetForLocal(unknown) {
   "unknown" = { dummy=1; }
 }
 
-if (!(datasetForLocal is "unknown")) {
+if (datasetForLocal isnot "unknown") {
    constant conceptsDir2 = "grib2/localConcepts/[datasetForLocal]": hidden;
    constant conceptsDir1 = "grib2": hidden;
 }

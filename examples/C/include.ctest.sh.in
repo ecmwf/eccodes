@@ -27,6 +27,7 @@ data_dir=@PROJECT_BINARY_DIR@/data
 HAVE_PRODUCT_BUFR=@HAVE_PRODUCT_BUFR@
 HAVE_PRODUCT_GRIB=@HAVE_PRODUCT_GRIB@
 HAVE_MEMFS=@HAVE_MEMFS@
+HAVE_GEOGRAPHY=@HAVE_GEOGRAPHY@
 
 # use definitions from binary dir to test if installation will be correct
 def_dir="@CMAKE_BINARY_DIR@/@ECCODES_DEFINITION_SUFF@"

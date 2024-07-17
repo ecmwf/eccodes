@@ -10,7 +10,9 @@
 
 . ./include.ctest.sh
 
-label="grib_ecc-1846_test"
+# See ECC-1846
+
+label="grib_modelName_test"
 tempGrib=temp.$label.grib
 tempFilt=temp.$label.filt
 tempLog=temp.$label.log

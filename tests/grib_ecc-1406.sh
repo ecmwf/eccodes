@@ -12,6 +12,10 @@
 
 label="grib_ecc-1406_test"
 
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
+
 tempGrib=temp.$label.grib
 tempFilt=temp.${label}.filt
 tempOut=temp.${label}.txt

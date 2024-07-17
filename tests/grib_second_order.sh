@@ -94,21 +94,23 @@ grib_check_key_equals $sec_ord_bmp accuracy 4
 nums=`${tools_dir}/grib_get -p numberOfDataPoints,numberOfCodedValues,numberOfMissing $sec_ord_bmp`
 [ "$nums" = "5969 4 5965" ]
 
-res=`${tools_dir}/grib_get -l 33,88.5 $sec_ord_bmp`
-[ "$res" = "9999 5.51552 9999 9999 " ]
+if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+    res=`${tools_dir}/grib_get -l 33,88.5 $sec_ord_bmp`
+    [ "$res" = "9999 5.51552 9999 9999 " ]
 
-res=`${tools_dir}/grib_get -l 30,90.0 $sec_ord_bmp`
-[ "$res" = "5.26552 9999 9999 9999 " ]
+    res=`${tools_dir}/grib_get -l 30,90.0 $sec_ord_bmp`
+    [ "$res" = "5.26552 9999 9999 9999 " ]
 
-res=`${tools_dir}/grib_get -l 28.5,87 $sec_ord_bmp`
-[ "$res" = "9999 2.51552 9999 9999 " ]
+    res=`${tools_dir}/grib_get -l 28.5,87 $sec_ord_bmp`
+    [ "$res" = "9999 2.51552 9999 9999 " ]
 
-res=`${tools_dir}/grib_get -l 28.5,90 $sec_ord_bmp`
-[ "$res" = "3.51552 9999 5.26552 9999 " ]
+    res=`${tools_dir}/grib_get -l 28.5,90 $sec_ord_bmp`
+    [ "$res" = "3.51552 9999 5.26552 9999 " ]
 
-# GRIB-203 nearest on M-F second order boustrophedonic
-res=`${tools_dir}/grib_get -w count=1 -l 0,0,1 lfpw.grib1`
-[ "$res" = "20563.4  " ]
+    # GRIB-203 nearest on M-F second order boustrophedonic
+    res=`${tools_dir}/grib_get -w count=1 -l 0,0,1 lfpw.grib1`
+    [ "$res" = "20563.4  " ]
+fi
 
 # Unpack/pack test for second order grib1 data
 # --------------------------------------------
@@ -196,10 +198,11 @@ set -e
 [ $status -ne 0 ]
 grep -q "Not implemented" $tempText
 
-${tools_dir}/grib_get_data $temp1 > $REDIRECT
-${tools_dir}/grib_ls -l46,1 $temp1 > $REDIRECT
-${tools_dir}/grib_ls -j -l46,1,1 $temp1 > $REDIRECT
-
+if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+    ${tools_dir}/grib_get_data $temp1 > $REDIRECT
+    ${tools_dir}/grib_ls -l46,1 $temp1 > $REDIRECT
+    ${tools_dir}/grib_ls -j -l46,1,1 $temp1 > $REDIRECT
+fi
 
 # Encoding
 input=second_ord_rbr.grib1

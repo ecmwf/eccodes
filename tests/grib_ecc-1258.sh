@@ -16,6 +16,10 @@ tempGrib=temp.$label.grib
 tempOut=temp.$label.txt
 sample_grib1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
+
 cat > $tempFilt <<EOF
  set Ni = 16;
  set Nj = 21;

@@ -25,9 +25,8 @@ grib_check_key_equals $input "global,isOctahedral" "1 1"
 # Check numberOfDataPoints
 grib_check_key_equals $input "numberOfDataPoints,numberOfCodedValues" "6599680 6599680"
 
-
 # Only do lengthy iterator test if extra tests are enabled
-if [ $HAVE_EXTRA_TESTS -eq 1 ]; then
+if [ $HAVE_EXTRA_TESTS -eq 1 -a $HAVE_GEOGRAPHY -eq 1 ]; then
     ${tools_dir}/grib_get_data $input > $temp
     numlines=`wc -l $temp | awk '{print $1}'`
     [ "$numlines" = "6599681" ]     # 1 + numberOfDataPoints

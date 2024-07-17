@@ -10,6 +10,10 @@
 
 . ./include.ctest.sh
 
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
+
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-1000
 # Nearest neighbour using grib_get/grib_ls on severa files

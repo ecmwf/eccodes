@@ -10,6 +10,9 @@
 
 . ./include.ctest.sh
 
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
 
 # ECC-1364: GRIB: Geoiterator for Lambert Conformal in the southern hemisphere
 
