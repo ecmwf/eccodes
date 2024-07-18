@@ -35,7 +35,7 @@ result=$( ${tools_dir}/grib_get -f -p chemName,chemId $tempGribA )
 # Now expect paramId 402000 and chemId 17
 ${tools_dir}/grib_set -s tablesVersion=$tablesVersionSplit $tempGribA $tempGribB
 
-grib_check_key_equals $tempGribB paramId,chemId "402000 17"
+grib_check_key_equals $tempGribB chem_param_split,paramId,chemId "1 402000 17"
 grib_check_key_equals $tempGribB chemName "Nitrogen dioxide"
 grib_check_key_equals $tempGribB name "Mass mixing ratio"
 
@@ -43,11 +43,16 @@ grib_check_key_equals $tempGribB name "Mass mixing ratio"
 result=$( ${tools_dir}/grib_get -f -p is_chemical $tempGribB )
 [ "$result" = "not_found" ]
 
+# Test with filter
+echo 'set tablesVersion=32; assert(chemId == 17); write;' | ${tools_dir}/grib_filter -o $tempGribB - $tempGribA
+grib_check_key_equals $tempGribB chem_param_split,paramId,chemName "1 402000 Nitrogen dioxide"
 
-# Test non-chemical e.g. temperature. Now chem keys are present but unknown
+
+# Test a non-chemical e.g., temperature. Now chem keys are present but unknown
 ${tools_dir}/grib_set -s tablesVersion=$tablesVersionSplit,discipline=0,parameterCategory=0,parameterNumber=0 $sample  $tempGribA
-grib_check_key_equals $tempGribA "chemId,chemName,chemShortName" "-1 unknown unknown"
+grib_check_key_equals $tempGribA "chem_param_split,chemId,chemName,chemShortName" "1 -1 unknown unknown"
 
+grib_check_key_equals $sample chem_param_split 0
 
 # Clean up
 rm -f $tempGribA $tempGribB 

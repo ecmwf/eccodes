@@ -16,6 +16,7 @@ constant tablesVersionLatest = 33 : edition_specific;
 # See ECC-1426
 # GRIB messages with tablesVersion greater than or equal will have paramId and chemId
 constant tablesVersionChemParamSplit = 31 : hidden;
+transient chem_param_split = 0 : hidden;
 
 constant false = 0 : hidden;
 constant true = 1 : hidden;

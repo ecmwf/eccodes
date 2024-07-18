@@ -29,10 +29,16 @@ transient masterDir="grib2/tables/[tablesVersion]";
 if (tablesVersion > tablesVersionLatest) {
   transient masterDir="grib2/tables/[tablesVersionLatest]";
 }
-when (tablesVersion!=255) {
-  set masterDir="grib2/tables/[tablesVersion]";
-} else {
-  set masterDir="grib2/tables/4";
+
+# See ECC-1426: chemId and paramId split feature.
+# The WHEN statement is needed for tablesVersion changed in memory
+when (tablesVersion >= tablesVersionChemParamSplit) {
+  set chem_param_split = 1;
+}
+# The IF statement is needed when reading an existing message
+if (tablesVersion >= tablesVersionChemParamSplit) {
+  remove chem_param_split;
+  transient chem_param_split = 1;
 }
 
 codetable[1] localTablesVersion 'grib2/tables/local/[centreForLocal]/1.1.table' ;
@@ -97,7 +103,7 @@ concept stepType {
     "mode"    = {selectStepTemplateInterval=1; stepTypeInternal="mode";}
 }
 
-if ( tablesVersion < tablesVersionChemParamSplit ) {
+if (chem_param_split == 0) {
   # 0=atmospheric chemical constituents
   # 1=atmospheric chemical constituents based on a distribution function
   # 2=atmospheric chemical constituents with source or sink
