@@ -891,7 +891,7 @@ typedef int (*expression_evaluate_double_proc)(grib_expression*, grib_handle*, d
 typedef const char* (*expression_evaluate_string_proc)(grib_expression*, grib_handle*, char*, size_t*, int*);
 typedef const char* (*expression_get_name_proc)(grib_expression*);
 
-typedef void (*expression_print_proc)(grib_context*, grib_expression*, grib_handle*);
+typedef void (*expression_print_proc)(grib_context*, grib_expression*, grib_handle*, FILE*);
 typedef void (*expression_add_dependency_proc)(grib_expression* e, grib_accessor* observer);
 
 typedef struct grib_expression_class grib_expression_class;

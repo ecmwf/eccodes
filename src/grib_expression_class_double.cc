@@ -38,7 +38,7 @@ or edit "expression.class" and rerun ./make_class.pl
 typedef const char* string; /* to keep make_class.pl happy */
 
 static void    destroy(grib_context*,grib_expression* e);
-static void    print(grib_context*,grib_expression*,grib_handle*);
+static void    print(grib_context*,grib_expression*,grib_handle*, FILE*);
 static void    add_dependency(grib_expression* e, grib_accessor* observer);
 static int     native_type(grib_expression*,grib_handle*);
 static int     evaluate_long(grib_expression*,grib_handle*,long*);
@@ -85,10 +85,10 @@ static int evaluate_double(grib_expression* g, grib_handle* h, double* dres)
     return GRIB_SUCCESS;
 }
 
-static void print(grib_context* c, grib_expression* g, grib_handle* f)
+static void print(grib_context* c, grib_expression* g, grib_handle* f, FILE* out)
 {
     const grib_expression_double* e = (grib_expression_double*)g;
-    printf("double(%g)", e->value);
+    fprintf(out, "double(%g)", e->value);
 }
 
 static void destroy(grib_context* c, grib_expression* g)

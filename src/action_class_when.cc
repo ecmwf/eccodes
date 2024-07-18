@@ -149,7 +149,7 @@ static void dump(grib_action* act, FILE* f, int lvl)
         grib_context_print(act->context, f, "     ");
 
     printf("when(%s) { ", act->name);
-    grib_expression_print(act->context, a->expression, 0);
+    grib_expression_print(act->context, a->expression, 0, stdout);
     printf("\n");
 
     grib_dump_action_branch(f, a->block_true, lvl + 1);
@@ -195,8 +195,8 @@ static int notify_change(grib_action* a, grib_accessor* observer, grib_accessor*
     if (self->loop) {
         printf("LOOP detected...\n");
         printf("WHEN triggered by %s %ld\n", observed->name, lres);
-        grib_expression_print(observed->context, self->expression, 0);
-        printf("\n");
+        grib_expression_print(observed->context, self->expression, 0, stderr);
+        fprintf(stderr, "\n");
         return ret;
     }
 #endif
@@ -206,8 +206,8 @@ static int notify_change(grib_action* a, grib_accessor* observer, grib_accessor*
         grib_context_log(hand->context, GRIB_LOG_DEBUG,
                 "------------- SECTION action %s is triggered by [%s] (%s)",
                 a->name, observed->name, a->debug_info ? a->debug_info : "no debug info");
-        //grib_expression_print(observed->context, self->expression, 0);
-        //fprintf(stderr, "\n");
+        grib_expression_print(observed->context, self->expression, 0, stderr);
+        fprintf(stderr, "\n");
     }
 
     if (lres)
