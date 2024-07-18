@@ -133,7 +133,7 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 {
     grib_action_if* a = (grib_action_if*)act;
     grib_action* next = NULL;
-    int ret           = 0;
+    int ret           = GRIB_SUCCESS;
     long lres         = 0;
 
     grib_accessor* as = NULL;
@@ -304,4 +304,3 @@ static void destroy(grib_context* context, grib_action* act)
     grib_context_free_persistent(context, act->debug_info);
     grib_context_free_persistent(context, act->op);
 }
-
