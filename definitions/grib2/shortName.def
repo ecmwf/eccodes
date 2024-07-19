@@ -3793,7 +3793,7 @@
 	 typeOfFirstFixedSurface = 187 ;
 	}
 #Urban canyon temperature
-'uct' = {
+'urct' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
@@ -3801,7 +3801,7 @@
 	 typeOfSecondFixedSurface = 185 ;
 	}
 #Urban canyon specific humidity
-'ucq' = {
+'urcq' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 0 ;
