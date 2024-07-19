@@ -128,14 +128,24 @@ static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, siz
     return buf;
 }
 
-static void print(grib_context* c, grib_expression* g, grib_handle* f, FILE* out)
+static void print(grib_context* c, grib_expression* g, grib_handle* hand, FILE* out)
 {
     const grib_expression_accessor* e = (grib_expression_accessor*)g;
+    int err = 0;
     fprintf(out, "access('%s", e->name);
-    if (f) {
-        long s = 0;
-        grib_get_long(f, e->name, &s);
-        fprintf(out, "=%ld", s);
+    if (hand) {
+        const int ntype = native_type(g, hand);
+        if (ntype == GRIB_TYPE_STRING) {
+            char buf[256] = {0,};
+            size_t len = sizeof(buf);
+            err = grib_get_string(hand, e->name, buf, &len);
+            if (!err) fprintf(out, "=%s", buf);
+        }
+        else if (ntype == GRIB_TYPE_LONG) {
+            long lVal = 0;
+            err = grib_get_long(hand, e->name, &lVal);
+            if (!err) fprintf(out, "=%ld", lVal);
+        }
     }
     fprintf(out, "')");
 }
