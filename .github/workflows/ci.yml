@@ -73,7 +73,7 @@ jobs:
           owner: ecmwf-actions
           repository: private-downstream-ci
           event_type: downstream-ci-hpc
-          payload: '{"eccodes": "ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}"}'
+          payload: '{"eccodes": "ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}","skip_matrix_jobs": "nvidia-22.11"}'
 
   notify:
     runs-on: ubuntu-latest
