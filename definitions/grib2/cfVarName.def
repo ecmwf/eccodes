@@ -3114,8 +3114,8 @@
 #Soil temperature top 20 cm
 'st20' = {
 	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 18 ;
 	 typeOfFirstFixedSurface = 106 ;
 	 typeOfSecondFixedSurface = 106 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
@@ -3126,14 +3126,14 @@
 #Soil temperature top 100 cm
 'st100' = {
 	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 18 ;
 	 typeOfFirstFixedSurface = 106 ;
 	 typeOfSecondFixedSurface = 106 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfSecondFixedSurface = 10 ;
-	 scaleFactorOfSecondFixedSurface = 1 ;
+	 scaledValueOfSecondFixedSurface = 1 ;
+	 scaleFactorOfSecondFixedSurface = 0 ;
 	}
 #Atmosphere emission mass flux of Methane from Wetlands
 'e_WLCH4' = {
@@ -4976,6 +4976,32 @@
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 19 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 1 ;
+	 scaleFactorOfSecondFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean soil temperature top 20 cm
+'avg_st20' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 2 ;
+	 scaleFactorOfSecondFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean soil temperature top 100 cm
+'avg_st100' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 18 ;
 	 typeOfFirstFixedSurface = 106 ;
 	 typeOfSecondFixedSurface = 106 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
@@ -11275,12 +11301,6 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
-#Soil temperature
-'st' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 2 ;
 	}
 #Snow depth water equivalent
 'sd' = {
