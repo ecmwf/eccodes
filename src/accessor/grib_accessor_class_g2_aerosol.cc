@@ -82,7 +82,7 @@ int grib_accessor_class_g2_aerosol_t::pack_long(grib_accessor* a, const long* va
     }
     else {
         if (isInstant) {
-            productDefinitionTemplateNumberNew = 48; // 44 is deprecated
+            productDefinitionTemplateNumberNew = 50; // 44 is deprecated, 50 is the corrected version
         }
         else {
             productDefinitionTemplateNumberNew = 46;
