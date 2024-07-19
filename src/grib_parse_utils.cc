@@ -321,7 +321,7 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
     if (maxcols == 0)
         maxcols = INT_MAX;
 
-    if (equal) fprintf(out, "%s=", name);
+    if (equal) fprintf(out, "%s=", name); // ECC-1878
 
     if (type == -1)
         type = al->accessor->get_native_type();
@@ -439,7 +439,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* un
     char* format    = NULL;
     int type        = -1;
     char* separator = NULL;
-    int equal = 0;
+    int equal = 0; // See ECC-1878
     int l;
     char buff[10] = {0,};
     char buff1[1024] = {0,};
@@ -491,6 +491,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* un
                     i += pp - uname - i - 1;
                     break;
                 case ']':
+                    // ECC-1878: The '=' format specifier
                     if (loc[mode - 1] == '=') { loc[mode-1] = 0; equal = 1; }
                     else                      { loc[mode] = 0; }
                     mode = -1;

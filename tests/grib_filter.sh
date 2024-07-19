@@ -460,6 +460,24 @@ EOF
 ${tools_dir}/grib_filter $tempFilt $input
 
 
+# ECC-1878: The '=' specifier for the print statement
+# ----------------------------------------------------
+input=$data_dir/sample.grib2
+cat > $tempFilt <<EOF
+  print "[edition=%02d]";
+  print "[day=]";
+  print "[identifier=]";
+  print "[referenceValue=%.5g]";
+EOF
+${tools_dir}/grib_filter $tempFilt $input > $tempOut
+cat > $tempRef <<EOF
+edition=02
+day=6
+identifier=GRIB
+referenceValue=270.47
+EOF
+diff $tempRef $tempOut
+
 # Clean up
 rm -f $tempGrib $tempFilt $tempOut $tempRef
 rm -f ${data_dir}/formatint.rules ${data_dir}/binop.rules
