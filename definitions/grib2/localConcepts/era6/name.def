@@ -330,7 +330,6 @@
 	 parameterNumber = 59 ;
 	 constituentType = 3 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Accumulated Carbon Dioxide Gross Primary Production
 'Accumulated Carbon Dioxide Gross Primary Production' = {
@@ -339,7 +338,6 @@
 	 parameterNumber = 60 ;
 	 constituentType = 3 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Accumulated Carbon Dioxide Ecosystem Respiration
 'Accumulated Carbon Dioxide Ecosystem Respiration' = {
@@ -348,7 +346,6 @@
 	 parameterNumber = 61 ;
 	 constituentType = 3 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Flux of Carbon Dioxide Net Ecosystem Exchange
 'Flux of Carbon Dioxide Net Ecosystem Exchange' = {
@@ -356,7 +353,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 59 ;
 	 constituentType = 3 ;
-	 is_chemical = 1 ;
 	}
 #Flux of Carbon Dioxide Gross Primary Production
 'Flux of Carbon Dioxide Gross Primary Production' = {
@@ -364,7 +360,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 60 ;
 	 constituentType = 3 ;
-	 is_chemical = 1 ;
 	}
 #Flux of Carbon Dioxide Ecosystem Respiration
 'Flux of Carbon Dioxide Ecosystem Respiration' = {
@@ -372,7 +367,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 61 ;
 	 constituentType = 3 ;
-	 is_chemical = 1 ;
 	}
 #Accumulated freezing rain
 'Accumulated freezing rain' = {
@@ -401,7 +395,6 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 constituentType = 0 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time integrated, vertically integrated northward ozone flux
 'Time integrated, vertically integrated northward ozone flux' = {
@@ -412,7 +405,6 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 constituentType = 0 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time integrated, vertically integrated divergence of ozone flux
 'Time integrated, vertically integrated divergence of ozone flux' = {
@@ -423,7 +415,6 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 constituentType = 0 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time integrated, vertically integrated net source of ozone
 'Time integrated, vertically integrated net source of ozone' = {
@@ -434,7 +425,6 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 constituentType = 0 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Mean carbon dioxide net ecosystem exchange flux
 'Mean carbon dioxide net ecosystem exchange flux' = {
@@ -443,7 +433,6 @@
 	 parameterNumber = 59 ;
 	 constituentType = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
-	 is_chemical = 1 ;
 	}
 #Mean carbon dioxide gross primary production flux
 'Mean carbon dioxide gross primary production flux' = {
@@ -452,7 +441,6 @@
 	 parameterNumber = 60 ;
 	 constituentType = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
-	 is_chemical = 1 ;
 	}
 #Mean carbon dioxide ecosystem respiration flux
 'Mean carbon dioxide ecosystem respiration flux' = {
@@ -461,7 +449,6 @@
 	 parameterNumber = 61 ;
 	 constituentType = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
-	 is_chemical = 1 ;
 	}
 #Time-mean logarithm of surface pressure
 'Time-mean logarithm of surface pressure' = {
