@@ -8498,7 +8498,7 @@
 	 typeOfSecondFixedSurface = 168 ;
 	}
 #Y-component of sea water velocity
-'vo' = {
+'voy' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 26 ;
@@ -8506,7 +8506,7 @@
 	 typeOfSecondFixedSurface = 168 ;
 	}
 #X-component of sea water velocity
-'uo' = {
+'uox' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 25 ;
@@ -9629,7 +9629,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean Y-component of sea water velocity
-'avg_vo' = {
+'avg_voy' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 26 ;
@@ -9638,7 +9638,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean X-component of sea water velocity
-'avg_uo' = {
+'avg_uox' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 25 ;
