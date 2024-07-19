@@ -300,7 +300,8 @@ int grib_recompose_name(grib_handle* h, grib_accessor* observer, const char* una
 // }
 
 int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const char* name,
-                              int type, const char* format, const char* separator, int maxcols, int* newline, FILE* out)
+                              int type, const char* format, const char* separator, int equal,
+                              int maxcols, int* newline, FILE* out)
 {
     size_t size = 0, len = 0, replen = 0, j = 0;
     unsigned char* bval      = NULL;
@@ -319,6 +320,8 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
     /* Number of columns specified as 0 means print on ONE line i.e. num cols = infinity */
     if (maxcols == 0)
         maxcols = INT_MAX;
+
+    if (equal) fprintf(out, "%s=", name);
 
     if (type == -1)
         type = al->accessor->get_native_type();
@@ -436,6 +439,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* un
     char* format    = NULL;
     int type        = -1;
     char* separator = NULL;
+    int equal = 0;
     int l;
     char buff[10] = {0,};
     char buff1[1024] = {0,};
@@ -487,8 +491,9 @@ int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* un
                     i += pp - uname - i - 1;
                     break;
                 case ']':
-                    loc[mode] = 0;
-                    mode      = -1;
+                    if (loc[mode - 1] == '=') { loc[mode-1] = 0; equal = 1; }
+                    else                      { loc[mode] = 0; }
+                    mode = -1;
                     if (al) grib_accessors_list_delete(h->context, al);
                     al        = grib_find_accessors_list(h, loc); /* This allocates memory */
                     if (!al) {
@@ -503,7 +508,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* un
                         }
                     }
                     else {
-                        ret = grib_accessors_list_print(h, al, loc, type, format, separator, maxcols, &newline, out);
+                        ret = grib_accessors_list_print(h, al, loc, type, format, separator, equal, maxcols, &newline, out);
 
                         if (ret != GRIB_SUCCESS) {
                             /* grib_context_log(h->context, GRIB_LOG_ERROR,"grib_recompose_print: Could not recompose print : %s", uname); */
