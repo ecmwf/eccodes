@@ -125,8 +125,8 @@ static int execute(grib_action* act, grib_handle* h)
     grib_action* next     = a->Default;
     grib_arguments* args  = a->args;
     grib_arguments* values;
-    grib_expression* e;
-    grib_expression* value;
+    grib_expression* e;     // The expression in the switch statement
+    grib_expression* value; // The value in each 'case'
     int ret     = 0;
     long lres   = 0;
     double dres = 0;
@@ -172,8 +172,10 @@ static int execute(grib_action* act, grib_handle* h)
                         len  = sizeof(buf);
                         size = sizeof(tmp);
                         ok   = ((cres = grib_expression_evaluate_string(h, e, buf, &len, &err)) != NULL) &&
-                             (err == 0) && ((cval = grib_expression_evaluate_string(h, value, tmp, &size, &err)) != NULL) &&
-                             (err == 0) && ((strcmp(buf, cval) == 0) || (strcmp(cval, "*") == 0));
+                               (err == 0) &&
+                               ((cval = grib_expression_evaluate_string(h, value, tmp, &size, &err)) != NULL) &&
+                               (err == 0) &&
+                               ((strcmp(buf, cval) == 0) || (strcmp(cval, "*") == 0));
                         break;
 
                     default:
