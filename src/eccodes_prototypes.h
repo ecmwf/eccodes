@@ -830,7 +830,7 @@ int grib_expression_evaluate_long(grib_handle* h, grib_expression* g, long* resu
 int grib_expression_evaluate_double(grib_handle* h, grib_expression* g, double* result);
 const char* grib_expression_evaluate_string(grib_handle* h, grib_expression* g, char* buf, size_t* size, int* err);
 const char* grib_expression_get_name(grib_expression* g);
-void grib_expression_print(grib_context* ctx, grib_expression* g, grib_handle* f);
+void grib_expression_print(grib_context* ctx, grib_expression* g, grib_handle* f, FILE*);
 void grib_expression_free(grib_context* ctx, grib_expression* g);
 void grib_expression_add_dependency(grib_expression* e, grib_accessor* observer);
 grib_arguments* grib_arguments_new(grib_context* c, grib_expression* g, grib_arguments* n);

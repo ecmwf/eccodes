@@ -108,6 +108,19 @@ grib_action* grib_action_create_when(grib_context* context,
 
     snprintf(name, nameLen, "_when%p", (void*)expression);
 
+    act->debug_info = NULL;
+    if (context->debug > 0) {
+        /* Construct debug information showing definition file and line */
+        /* number of IF statement */
+        const char* fbp = file_being_parsed();
+        if (fbp) {
+            char debug_info[1024];
+            const size_t infoLen = sizeof(debug_info);
+            snprintf(debug_info, infoLen, "File=%s", fbp);
+            act->debug_info = grib_context_strdup_persistent(context, debug_info);
+        }
+    }
+
     act->name = grib_context_strdup_persistent(context, name);
 
     return act;
@@ -136,7 +149,7 @@ static void dump(grib_action* act, FILE* f, int lvl)
         grib_context_print(act->context, f, "     ");
 
     printf("when(%s) { ", act->name);
-    grib_expression_print(act->context, a->expression, 0);
+    grib_expression_print(act->context, a->expression, 0, stdout);
     printf("\n");
 
     grib_dump_action_branch(f, a->block_true, lvl + 1);
@@ -182,12 +195,20 @@ static int notify_change(grib_action* a, grib_accessor* observer, grib_accessor*
     if (self->loop) {
         printf("LOOP detected...\n");
         printf("WHEN triggered by %s %ld\n", observed->name, lres);
-        grib_expression_print(observed->context, self->expression, 0);
-        printf("\n");
+        grib_expression_print(observed->context, self->expression, 0, stderr);
+        fprintf(stderr, "\n");
         return ret;
     }
 #endif
     SET_LOOP(self, 1);
+
+    if (hand->context->debug > 0) {
+        grib_context_log(hand->context, GRIB_LOG_DEBUG,
+                "------------- SECTION action %s is triggered by [%s] (%s)",
+                a->name, observed->name, a->debug_info ? a->debug_info : "no debug info");
+        grib_expression_print(observed->context, self->expression, 0, stderr);
+        fprintf(stderr, "\n");
+    }
 
     if (lres)
         b = self->block_true;
@@ -229,5 +250,6 @@ static void destroy(grib_context* context, grib_action* act)
     grib_expression_free(context, self->expression);
 
     grib_context_free_persistent(context, act->name);
+    grib_context_free_persistent(context, act->debug_info);
     grib_context_free_persistent(context, act->op);
 }

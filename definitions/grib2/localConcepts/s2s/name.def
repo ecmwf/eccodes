@@ -199,6 +199,32 @@
 	 scaleFactorOfSecondFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Soil temperature top 20 cm
+'Soil temperature top 20 cm' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 2 ;
+	 scaleFactorOfSecondFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Soil temperature top 100 cm
+'Soil temperature top 100 cm' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 10 ;
+	 scaleFactorOfSecondFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Eastward surface sea water velocity
 'Eastward surface sea water velocity' = {
 	 discipline = 10 ;

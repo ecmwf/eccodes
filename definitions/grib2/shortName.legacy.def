@@ -180,3 +180,9 @@
  parameterCategory = 0 ;
  parameterNumber = 24 ;
 }
+#Soil temperature
+'st' = {
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 2 ;
+}

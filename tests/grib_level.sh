@@ -117,7 +117,7 @@ grib_check_key_equals $temp2 level 5
 
 # Related to ECC-530: make sure GRIB2 parameters with typeOfSecondFixedSurface
 # have correct parameter definitions (grib_set does not cause scale factor/value loss)
-params="228086 228087 228095 228096 228170 228171 228139"
+params="228086 228087 228095 228096 228170 228171"
 for pid in $params; do
  ${tools_dir}/grib_set -s paramId=$pid $sample_g2 $temp
  grib_check_key_equals $temp paramId $pid

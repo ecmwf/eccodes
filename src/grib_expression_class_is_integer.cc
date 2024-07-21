@@ -42,7 +42,7 @@ or edit "expression.class" and rerun ./make_class.pl
 typedef const char* string; /* to keep make_class.pl happy */
 
 static void    destroy(grib_context*,grib_expression* e);
-static void    print(grib_context*,grib_expression*,grib_handle*);
+static void    print(grib_context*,grib_expression*,grib_handle*, FILE*);
 static void    add_dependency(grib_expression* e, grib_accessor* observer);
 static string  get_name(grib_expression* e);
 static int     native_type(grib_expression*,grib_handle*);
@@ -140,7 +140,7 @@ static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, siz
     return buf;
 }
 
-static void print(grib_context* c, grib_expression* g, grib_handle* f)
+static void print(grib_context* c, grib_expression* g, grib_handle* f, FILE* out)
 {
     // grib_expression_is_integer* e = (grib_expression_is_integer*)g;
     // printf("access('%s", e->name);
