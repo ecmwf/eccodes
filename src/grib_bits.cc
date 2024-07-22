@@ -117,7 +117,7 @@ int grib_encode_signed_long(unsigned char* p, long val, long o, int l)
     return GRIB_SUCCESS;
 }
 
-static void grib_set_bit_on(unsigned char* p, long* bitp)
+void grib_set_bit_on(unsigned char* p, long* bitp)
 {
     p += *bitp / 8;
     *p |= (1u << (7 - ((*bitp) % 8)));
