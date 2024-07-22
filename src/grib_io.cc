@@ -14,7 +14,7 @@
 static pthread_once_t once    = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
-static void init()
+static void init_mutex()
 {
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
@@ -27,7 +27,7 @@ static void init()
 static int once = 0;
 static omp_nest_lock_t mutex1;
 static omp_nest_lock_t mutex2;
-static void init()
+static void init_mutex()
 {
     GRIB_OMP_CRITICAL(lock_grib_io_c)
     {
@@ -931,7 +931,7 @@ static int read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int hdf5_
      * so each thread gets its own message. Otherwise if threads are passed
      * different files, then the lock is not needed
      */
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex1);
 #endif
 

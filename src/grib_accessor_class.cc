@@ -22,7 +22,7 @@
 static pthread_once_t once    = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 
-static void init()
+static void init_mutex()
 {
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
@@ -34,7 +34,7 @@ static void init()
 static int once = 0;
 static omp_nest_lock_t mutex1;
 
-static void init()
+static void init_mutex()
 {
     GRIB_OMP_CRITICAL(lock_grib_accessor_class_c)
     {
@@ -77,7 +77,7 @@ grib_section* grib_create_root_section(const grib_context* context, grib_handle*
     char* fpath     = 0;
     grib_section* s = (grib_section*)grib_context_malloc_clear(context, sizeof(grib_section));
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex1);
     if (h->context->grib_reader == NULL) {
         if ((fpath = grib_context_full_defs_path(h->context, "boot.def")) == NULL) {

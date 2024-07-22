@@ -22,7 +22,7 @@
 static pthread_once_t once   = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-static void init()
+static void init_mutex()
 {
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
@@ -34,7 +34,7 @@ static void init()
 static int once = 0;
 static omp_nest_lock_t mutex;
 
-static void init()
+static void init_mutex()
 {
     GRIB_OMP_CRITICAL(lock_grib_bits_any_endian_c)
     {
@@ -77,7 +77,7 @@ static void init_bits_all_one()
 
 static void init_bits_all_one_if_needed()
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex);
     if (!bits_all_one.inited)
         init_bits_all_one();
