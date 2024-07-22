@@ -26,7 +26,17 @@ concept cfVarNameLegacyECMF(defaultShortName,"cfVarName.legacy.def",conceptsMast
 concept cfVarNameECMF (cfVarNameLegacyECMF,"cfVarName.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy;
 concept cfVarName (cfVarNameECMF,"cfVarName.def",conceptsDir2,conceptsDir1): no_copy,dump;
 
-if (chem_param_split == 1) {
+transient chem_split_dataset = 0 : hidden;
+
+if (section2Used == 1) {
+ # 19=mc ; 2=rd
+ if (class == 19 || class == 2) {
+  remove chem_split_dataset;
+  transient chem_split_dataset = 1;
+ }
+}
+
+if (chem_param_split == 1 && chem_split_dataset == 1) {
   # Note: 0 is a valid chemId
   concept chemId (minus_one,"chemId.def",conceptsDir2,conceptsDir1): no_copy,long_type,dump;
   concept chemName (unknown,"chemName.def",conceptsDir2,conceptsDir1): no_copy,dump;
