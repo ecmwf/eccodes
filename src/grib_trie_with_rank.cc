@@ -292,7 +292,7 @@ static const size_t NUM_MAPPINGS = sizeof(mapping) / sizeof(mapping[0]);
 static pthread_once_t once   = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-static void init()
+static void init_mutex()
 {
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
@@ -304,7 +304,7 @@ static void init()
 static int once = 0;
 static omp_nest_lock_t mutex;
 
-static void init()
+static void init_mutex()
 {
     GRIB_OMP_CRITICAL(lock_grib_trie_with_rank_c)
     {
@@ -376,7 +376,7 @@ static void _grib_trie_with_rank_delete_container(grib_trie_with_rank* t)
 }
 void grib_trie_with_rank_delete_container(grib_trie_with_rank* t)
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex);
     _grib_trie_with_rank_delete_container(t);
     GRIB_MUTEX_UNLOCK(&mutex);
@@ -397,7 +397,7 @@ static void grib_trie_with_rank_delete_list(grib_context* c,grib_trie_with_rank_
 
 void grib_trie_with_rank_delete(grib_trie_with_rank* t)
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex);
     if (t) {
         int i;
@@ -456,7 +456,7 @@ int grib_trie_with_rank_insert(grib_trie_with_rank* t, const char* key, void* da
     DEBUG_ASSERT(t);
     if (!t) return -1;
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex);
 
     while (*k && t) {
@@ -506,7 +506,7 @@ void* grib_trie_with_rank_get(grib_trie_with_rank* t, const char* key, int rank)
 {
     const char* k = key;
     void* data;
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
 
     if (rank < 0)
         return NULL;

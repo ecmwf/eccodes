@@ -35,7 +35,7 @@ static pthread_mutex_t mutex_hash_array = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t mutex_stream     = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t mutex_parse      = PTHREAD_MUTEX_INITIALIZER;
 
-static void init()
+static void init_mutex()
 {
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
@@ -57,7 +57,7 @@ static omp_nest_lock_t mutex_hash_array;
 static omp_nest_lock_t mutex_stream;
 static omp_nest_lock_t mutex_parse;
 
-static void init()
+static void init_mutex()
 {
     GRIB_OMP_CRITICAL(lock_grib_parse_utils_c)
     {
@@ -717,7 +717,7 @@ extern int grib_yyparse(void);
 static int parse(grib_context* gc, const char* filename)
 {
     int err = 0;
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_parse);
 
 #ifdef YYDEBUG
@@ -752,7 +752,7 @@ static int parse(grib_context* gc, const char* filename)
 
 static grib_action* grib_parse_stream(grib_context* gc, const char* filename)
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_stream);
 
     grib_parser_all_actions = 0;
@@ -776,7 +776,7 @@ static grib_action* grib_parse_stream(grib_context* gc, const char* filename)
 
 grib_concept_value* grib_parse_concept_file(grib_context* gc, const char* filename)
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_file);
 
     gc                  = gc ? gc : grib_context_get_default();
@@ -794,7 +794,7 @@ grib_concept_value* grib_parse_concept_file(grib_context* gc, const char* filena
 
 grib_hash_array_value* grib_parse_hash_array_file(grib_context* gc, const char* filename)
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_file);
 
     gc                  = gc ? gc : grib_context_get_default();
@@ -813,7 +813,7 @@ grib_hash_array_value* grib_parse_hash_array_file(grib_context* gc, const char* 
 // grib_rule* grib_parse_rules_file(grib_context* gc, const char* filename)
 // {
 //     if (!gc) gc = grib_context_get_default();
-//     GRIB_MUTEX_INIT_ONCE(&once, &init);
+//     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
 //     GRIB_MUTEX_LOCK(&mutex_rules);
 //     gc                  = gc ? gc : grib_context_get_default();
 //     grib_parser_context = gc;
@@ -831,7 +831,7 @@ grib_action* grib_parse_file(grib_context* gc, const char* filename)
 {
     grib_action_file* af;
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_file);
 
     af = 0;
