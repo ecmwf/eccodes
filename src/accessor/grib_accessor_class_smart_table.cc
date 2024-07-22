@@ -30,7 +30,7 @@ static void init_mutex()
 static int once = 0;
 static omp_nest_lock_t mutex;
 
-static void init_mutex()
+static void thread_init()
 {
     GRIB_OMP_CRITICAL(lock_grib_accessor_class_smart_table_c)
     {
