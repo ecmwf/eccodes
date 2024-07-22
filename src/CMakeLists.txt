@@ -12,7 +12,6 @@ list( APPEND eccodes_src_files
     accessor/grib_accessor.cc
     accessor/grib_accessors_list.cc
     grib_accessor_class.cc
-    shared_functions.cc
     step_unit.cc
     step.cc
     step_utilities.cc

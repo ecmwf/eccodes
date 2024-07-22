@@ -10,7 +10,6 @@
  */
 
 #include "grib_accessor_class_g2bitmap.h"
-#include "shared_functions.h"
 
 grib_accessor_class_g2bitmap_t _grib_accessor_class_g2bitmap{ "g2bitmap" };
 grib_accessor_class* grib_accessor_class_g2bitmap = &_grib_accessor_class_g2bitmap;
