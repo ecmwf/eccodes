@@ -50,9 +50,9 @@ check_symbol_exists( fdatasync       "unistd.h"   ECCODES_HAVE_FDATASYNC)
 
 check_c_source_compiles(
       " typedef int foo_t;
-      static inline foo_t static_foo(){return 0;}
-      foo_t foo(){return 0;}
-      int main(int argc, char *argv[]){return 0;}
+      static inline foo_t static_foo(void){return 0;}
+      foo_t foo(void){return 0;}
+      int main(int argc, char *argv[]){ return static_foo(); }
       " ECCODES_HAVE_C_INLINE
 )
 

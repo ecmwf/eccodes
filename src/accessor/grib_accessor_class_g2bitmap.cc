@@ -24,7 +24,7 @@ void grib_accessor_class_g2bitmap_t::init(grib_accessor* a, const long len, grib
 }
 
 // For speed use a local static function
-static void set_bit_on(unsigned char* p, long* bitp)
+static GRIB_INLINE void set_bit_on(unsigned char* p, long* bitp)
 {
     p += *bitp / 8;
     *p |= (1u << (7 - ((*bitp) % 8)));
