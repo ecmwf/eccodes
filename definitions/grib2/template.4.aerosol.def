@@ -1,8 +1,10 @@
 # (C) Copyright 2005- ECMWF.
 
-constant paramTypeChemical = "chemical" ;
-unalias mars.paramtype;
-alias mars.paramtype = paramTypeChemical ;
+if (chem_param_split == 1){
+ constant paramTypeChemical = "chemical" ;
+ unalias mars.paramtype;
+ alias mars.paramtype = paramTypeChemical ;
+}
 
 # Aerosol type - now replaced by constituent type
 # Note: Code tables 4.230 and 4.233 are identical
