@@ -8,10 +8,18 @@ concept timeproc {
  "since-start"    = {typeOfStatisticalProcessing=1; forecastTime=0;}
  "1h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 1;}
  "3h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 3;}
+ "3h"   = {indicatorOfUnitOfTimeRange=10; lengthOfTimeRange = 1;}
  "6h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 6;}
+ "6h"   = {indicatorOfUnitOfTimeRange=11; lengthOfTimeRange = 1;}
  "12h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 12;}
+ "12h"   = {indicatorOfUnitOfTimeRange=12; lengthOfTimeRange = 1;}
  "18h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 18;}
  "24h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 24;}
- "week"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 168;}
+ "24h"   = {indicatorOfUnitOfTimeRange=2; lengthOfTimeRange = 1;}
+ "7 days"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 168;}
+ "month"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 672;}
+ "month"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 696;}
+ "month"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 720;}
  "month"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 744;}
+ "month"   = {indicatorOfUnitOfTimeRange=3; lengthOfTimeRange = 1;}
 }
