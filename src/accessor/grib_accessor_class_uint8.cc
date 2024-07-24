@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,13 +10,14 @@
 
 #include "grib_accessor_class_uint8.h"
 
-grib_accessor_class_uint8_t _grib_accessor_class_uint8{"uint8"};
+grib_accessor_class_uint8_t _grib_accessor_class_uint8{ "uint8" };
 grib_accessor_class* grib_accessor_class_uint8 = &_grib_accessor_class_uint8;
 
 
-int grib_accessor_class_uint8_t::unpack_long(grib_accessor* a, long* val, size_t* len){
-    long value          = 0;
-    long pos            = a->offset;
+int grib_accessor_class_uint8_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
+    long value = 0;
+    long pos   = a->offset;
     unsigned char* data = grib_handle_of_accessor(a)->buffer->data;
 
     if (*len < 1) {
@@ -31,6 +31,7 @@ int grib_accessor_class_uint8_t::unpack_long(grib_accessor* a, long* val, size_t
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_uint8_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_uint8_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_LONG;
 }
