@@ -1,0 +1,17 @@
+concept timeproc {
+ "point-in-time"    = {stepType="instant";}
+ "point-in-time"    = {stream="mnth"; numberOfTimeRange=1;}
+ "point-in-time"    = {stream="mmsa"; numberOfTimeRange=1;}
+ "point-in-time"    = {stream="msmm"; numberOfTimeRange=1;}
+ # we need to do this dataset dependent, in some datasets we might have
+ # hourly rolling accumulations and we don't want to have the first in a different bucket
+ "since-start"    = {typeOfStatisticalProcessing=1; forecastTime=0;}
+ "1h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 1;}
+ "3h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 3;}
+ "6h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 6;}
+ "12h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 12;}
+ "18h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 18;}
+ "24h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 24;}
+ "week"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 168;}
+ "month"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 744;}
+}
