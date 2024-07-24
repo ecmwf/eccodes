@@ -28,9 +28,11 @@ concept cfVarName (cfVarNameECMF,"cfVarName.def",conceptsDir2,conceptsDir1): no_
 
 transient chem_split_dataset = 0 : hidden;
 
-if (section2Used == 1) {
- # 19=mc ; 2=rd
- if (class == 19 || class == 2) {
+if (defined(marsClass) && section2Used==1) {
+ ### // too ecmwf ?
+ ## 19 | mc | Copernicus Atmosphere Monitoring Service (CAMS, previously MACC)
+ ## 36 | cr | Copernicus Atmosphere Monitoring Service (CAMS) Research
+ if (class == 19 || class == 36) {
   remove chem_split_dataset;
   transient chem_split_dataset = 1;
  }
