@@ -1,11 +1,26 @@
 concept timeproc {
+ # either instantaneous data or processing is specified by mars stream
  "point-in-time"    = {stepType="instant";}
  "point-in-time"    = {stream="mnth"; numberOfTimeRange=1;}
  "point-in-time"    = {stream="mmsa"; numberOfTimeRange=1;}
  "point-in-time"    = {stream="msmm"; numberOfTimeRange=1;}
+ #
+ ### Accumulations ###
  # we need to do this dataset dependent, in some datasets we might have
  # hourly rolling accumulations and we don't want to have the first in a different bucket
- "since-start"    = {typeOfStatisticalProcessing=1; forecastTime=0;}
+ ## since start accumulation must have forecastTime=0
+ # hourly
+ "since-start"    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitOfTimeRange=1;}
+ # 24 hourly time unit
+ "since-start"    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitOfTimeRange=2;}
+ ## 1h rolling accumulation
+ "1h"    = {typeOfStatisticalProcessing=1; indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 1; class=d1;}
+ ## 24h rolling accumulation
+ "24h"    = {typeOfStatisticalProcessing=1; indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 24; class=d1;}
+ "24h"    = {typeOfStatisticalProcessing=1; indicatorOfUnitOfTimeRange=2; lengthOfTimeRange = 1; class=d1;}
+ ### end Accumulations ###
+ #
+ ### mean/min/max/stdev ###
  "1h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 1;}
  "3h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 3;}
  "3h"   = {indicatorOfUnitOfTimeRange=10; lengthOfTimeRange = 1;}
@@ -17,9 +32,15 @@ concept timeproc {
  "24h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 24;}
  "24h"   = {indicatorOfUnitOfTimeRange=2; lengthOfTimeRange = 1;}
  "7 days"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 168;}
+ # 28 days
  "month"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 672;}
+ # 29 days
  "month"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 696;}
+ # 30 days
  "month"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 720;}
+ # 31 days
  "month"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 744;}
+ # time unit month
  "month"   = {indicatorOfUnitOfTimeRange=3; lengthOfTimeRange = 1;}
+ ### end mean/min/max/stdev ###
 }
