@@ -16,7 +16,7 @@ grib_accessor_class* grib_accessor_class_longitudes = &_grib_accessor_class_long
 
 
 static int get_distinct(grib_accessor* a, double** val, long* len);
-int compare_doubles(const void* a, const void* b);
+
 void grib_accessor_class_longitudes_t::init(grib_accessor* a, const long l, grib_arguments* c)
 {
     grib_accessor_class_double_t::init(a, l, c);
@@ -125,6 +125,18 @@ int grib_accessor_class_longitudes_t::value_count(grib_accessor* a, long* len)
     return ret;
 }
 
+static int compare_doubles_ascending(const void* a, const void* b)
+{
+    double* arg1 = (double*)a;
+    double* arg2 = (double*)b;
+    if (*arg1 < *arg2)
+        return -1;
+    else if (*arg1 == *arg2)
+        return 0;
+    else
+        return 1;
+}
+
 static int get_distinct(grib_accessor* a, double** val, long* len)
 {
     long count = 0;
@@ -155,7 +167,7 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     grib_iterator_delete(iter);
     v = *val;
 
-    qsort(v, *len, sizeof(double), &compare_doubles);
+    qsort(v, *len, sizeof(double), &compare_doubles_ascending);
 
     v1 = (double*)grib_context_malloc_clear(c, size * sizeof(double));
     if (!v1) {
@@ -180,16 +192,4 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
 
     *len = count;
     return GRIB_SUCCESS;
-}
-
-int compare_doubles(const void* a, const void* b)
-{
-    double* arg1 = (double*)a;
-    double* arg2 = (double*)b;
-    if (*arg1 < *arg2)
-        return -1;
-    else if (*arg1 == *arg2)
-        return 0;
-    else
-        return 1;
 }
