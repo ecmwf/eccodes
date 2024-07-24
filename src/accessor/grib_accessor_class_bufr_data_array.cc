@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -56,7 +55,7 @@ static int is_bitmap_start_defined(grib_accessor_bufr_data_array_t* self)
     return self->bitmapStart == -1 ? 0 : 1;
 }
 
-size_t get_length(grib_accessor* a)
+static size_t get_length(grib_accessor* a)
 {
     grib_accessor_bufr_data_array_t* self = (grib_accessor_bufr_data_array_t*)a;
     size_t len = 0;
@@ -101,7 +100,7 @@ static int tableB_override_get_ref_val(grib_accessor_bufr_data_array_t* self, in
 }
 
 /* Operator 203YYY: Clear and free linked list */
-void tableB_override_clear(grib_context* c, grib_accessor_bufr_data_array_t* self)
+static void tableB_override_clear(grib_context* c, grib_accessor_bufr_data_array_t* self)
 {
     bufr_tableb_override* tb = self->tableb_override;
     while (tb) {
@@ -113,7 +112,7 @@ void tableB_override_clear(grib_context* c, grib_accessor_bufr_data_array_t* sel
 }
 
 /* Operator 203YYY: Copy contents of linked list to the transient array key */
-int tableB_override_set_key(grib_handle* h, grib_accessor_bufr_data_array_t* self)
+static int tableB_override_set_key(grib_handle* h, grib_accessor_bufr_data_array_t* self)
 {
     int err                  = GRIB_SUCCESS;
     size_t size              = 0;
@@ -2202,7 +2201,7 @@ static grib_accessor* accessor_or_attribute_with_same_name(grib_accessor* a, con
 //     return *r;
 // }
 
-int grib_data_accessors_trie_push(grib_trie_with_rank* accessorsTrie, grib_accessor* a)
+static int grib_data_accessors_trie_push(grib_trie_with_rank* accessorsTrie, grib_accessor* a)
 {
     return grib_trie_with_rank_insert(accessorsTrie, a->name, a);
 }
