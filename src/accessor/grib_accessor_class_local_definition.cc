@@ -224,98 +224,100 @@ int grib_accessor_class_local_definition_t::pack_long(grib_accessor* a, const lo
         productDefinitionTemplateNumberNew = -1;  // disable PDT selection
     }
 
-    // Adjust for atmospheric chemical constituents
-    if (chemical == 1) {
-        if (eps == 1) {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 41;
-            }
-            else {
-                productDefinitionTemplateNumberNew = 43;
-            }
-        }
-        else {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 40;
-            }
-            else {
-                productDefinitionTemplateNumberNew = 42;
-            }
-        }
-    }
-    // Adjust for atmospheric chemical constituents based on a distribution function
-    if (chemical_distfn == 1) {
-        if (eps == 1) {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 58;
-            }
-            else {
-                productDefinitionTemplateNumberNew = 68;
-            }
-        }
-        else {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 57;
-            }
-            else {
-                productDefinitionTemplateNumberNew = 67;
-            }
-        }
-    }
+    // // Adjust for atmospheric chemical constituents
+    // if (chemical == 1) {
+    //     if (eps == 1) {
+    //         if (isInstant) {
+    //             Assert(productDefinitionTemplateNumber == 41);
+    //         }
+    //         else {
+    //             Assert(productDefinitionTemplateNumber == 43);
+    //         }
+    //     }
+    //     else {
+    //         if (isInstant) {
+    //             Assert(productDefinitionTemplateNumber == 40);
+    //         }
+    //         else {
+    //             Assert(productDefinitionTemplateNumber == 42);
+    //         }
+    //     }
+    // }
 
-    // Adjust for atmospheric chemical constituents with source or sink
-    if (chemical_srcsink == 1) {
-        if (eps == 1) {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 77;
-            }
-            else {
-                productDefinitionTemplateNumberNew = 79;
-            }
-        }
-        else {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 76;
-            }
-            else {
-                productDefinitionTemplateNumberNew = 78;
-            }
-        }
-    }
+    // // Adjust for atmospheric chemical constituents based on a distribution function
+    // if (chemical_distfn == 1) {
+    //     if (eps == 1) {
+    //         if (isInstant) {
+    //             Assert(productDefinitionTemplateNumber == 58);
+    //         }
+    //         else {
+    //             Assert(productDefinitionTemplateNumber == 68);
+    //         }
+    //     }
+    //     else {
+    //         if (isInstant) {
+    //             Assert(productDefinitionTemplateNumber == 57);
+    //         }
+    //         else {
+    //             Assert(productDefinitionTemplateNumber == 67);
+    //         }
+    //     }
+    // }
+
+    // // Adjust for atmospheric chemical constituents with source or sink
+    // if (chemical_srcsink == 1) {
+    //     if (eps == 1) {
+    //         if (isInstant) {
+    //             Assert(productDefinitionTemplateNumber == 77);
+    //         }
+    //         else {
+    //             Assert(productDefinitionTemplateNumber == 79);
+    //         }
+    //     }
+    //     else {
+    //         if (isInstant) {
+    //             Assert(productDefinitionTemplateNumber == 76);
+    //         }
+    //         else {
+    //             Assert(productDefinitionTemplateNumber == 78);
+    //         }
+    //     }
+    // }
 
     // Adjust for aerosols
-    if (aerosol == 1) {
-        if (eps == 1) {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 45;
-            }
-            else {
-                // productDefinitionTemplateNumberNew = 47;  This PDT is deprecated
-                productDefinitionTemplateNumberNew = 85;
-            }
-        }
-        else {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 48;  // 44 is deprecated*/
-            }
-            else {
-                productDefinitionTemplateNumberNew = 46;
-            }
-        }
-    }
-    // Adjust for optical properties of aerosol
-    if (aerosol_optical == 1) {
-        if (eps == 1) {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 49;
-            }
-        }
-        else {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 48;
-            }
-        }
-    }
+    // if (aerosol == 1) {
+    //     if (eps == 1) {
+    //         if (isInstant) {
+    //             productDefinitionTemplateNumberNew = 45;
+    //         }
+    //         else {
+    //             // productDefinitionTemplateNumberNew = 47;  This PDT is deprecated
+    //             productDefinitionTemplateNumberNew = 85;
+    //         }
+    //     }
+    //     else {
+    //         if (isInstant) {
+    //             productDefinitionTemplateNumberNew = 48;  // 44 is deprecated*/
+    //         }
+    //         else {
+    //             productDefinitionTemplateNumberNew = 46;
+    //         }
+    //     }
+    // }
+
+    // // Adjust for optical properties of aerosol
+    // if (aerosol_optical == 1) {
+    //     if (eps == 1) {
+    //         if (isInstant) {
+    //             productDefinitionTemplateNumberNew = 49;
+    //         }
+    //     }
+    //     else {
+    //         if (isInstant) {
+    //             productDefinitionTemplateNumberNew = 48;
+    //         }
+    //     }
+    // }
 
     if (productDefinitionTemplateNumberNew >=0 && productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
         if (a->context->debug) {
