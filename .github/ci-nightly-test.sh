@@ -14,16 +14,9 @@ module load python3
 
 version=$(cat $TMPDIR/eccodes/VERSION)
 
-env_check_param="$1"
-echo env_check: $env_check_param
-echo ENV_CHECK: $ENV_CHECK
-
 regression_suite_dir=$TMPDIR/eccodes-regression-tests
 mkdir -p $regression_suite_dir
-git clone https://oauth2:${GH_TOKEN}@github.com/ecmwf/eccodes-regression-tests.git $regression_suite_dir
-#git clone https://${GH_TOKEN}:@github.com/ecmwf/eccodes-regression-tests.git $regression_suite_dir
-#git clone https://${GH_TOKEN}:x-oauth-basic@github.com/ecmwf/eccodes-regression-tests.git $regression_suite_dir
-#git clone https://${GH_TOKEN}@github.com/ecmwf/eccodes-regression-tests.git $regression_suite_dir
+git clone https://${GH_TOKEN}@github.com/ecmwf/eccodes-regression-tests.git $regression_suite_dir
 cd $regression_suite_dir
 
 #cd ~masn/REGRESSION_TESTING/ecCodes
