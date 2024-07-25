@@ -34,14 +34,14 @@ check_param_type_is_scalar $sample 'base'
 # Aerosols
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=45,discipline=0,parameterCategory=20,parameterNumber=0 \
  $sample $tempGrib
-grib_check_key_equals $tempGrib mars.paramtype 'chemical'
-check_param_type_is_scalar $tempGrib 'chemical'
+grib_check_key_equals $tempGrib mars.paramtype 'base'
+check_param_type_is_scalar $tempGrib 'base'
 
 # Atmospheric chemical constituents
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=40,discipline=0,parameterCategory=20,parameterNumber=2 \
  $sample $tempGrib
-grib_check_key_equals $tempGrib mars.paramtype 'chemical'
-check_param_type_is_scalar $tempGrib 'chemical'
+grib_check_key_equals $tempGrib mars.paramtype 'base'
+check_param_type_is_scalar $tempGrib 'base'
 
 
 # Optical properties of aerosol
