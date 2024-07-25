@@ -1986,6 +1986,13 @@ int grib2_choose_PDTN(int current_PDTN, bool is_det, bool is_instant)
         if (is_interval && is_det) return 67;
     }
 
+    if (current_PDTN == 45 || current_PDTN == 48) {
+        if (is_instant  && is_ens) return 45;
+        if (is_instant  && is_det) return 48;
+        if (is_interval && is_ens) return 85;
+        if (is_interval && is_det) return 46;
+    }
+
     return current_PDTN;  // no change
 }
 
