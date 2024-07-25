@@ -62,6 +62,18 @@ static void print_debug_info__set_array(grib_handle* h, const char* func, const 
     fprintf(stderr, "min=%.10g, max=%.10g\n",minVal,maxVal);
 }
 
+static void print_error_no_accessor(const grib_context* c, const char* name)
+{
+    grib_context_log(c, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
+    const char* dpath = getenv("ECCODES_DEFINITION_PATH");
+    if (dpath != NULL) {
+        grib_context_log(c, GRIB_LOG_ERROR,
+            "Hint: This could be a symptom of an issue with your definitions.\n\t"
+            "The environment variable ECCODES_DEFINITION_PATH is defined and set to '%s'.\n\t"
+            "Please use the latest definitions.", dpath);
+    }
+}
+
 int grib_set_expression(grib_handle* h, const char* name, grib_expression* e)
 {
     grib_accessor* a = grib_find_accessor(h, name);
@@ -103,7 +115,8 @@ int grib_set_long_internal(grib_handle* h, const char* name, long val)
         return ret;
     }
 
-    grib_context_log(c, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
+    print_error_no_accessor(c, name);
+    //grib_context_log(c, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
     return GRIB_NOT_FOUND;
 }
 
@@ -162,7 +175,8 @@ int grib_set_double_internal(grib_handle* h, const char* name, double val)
         return ret;
     }
 
-    grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
+    print_error_no_accessor(h->context, name);
+    //grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
     return GRIB_NOT_FOUND;
 }
 
@@ -389,7 +403,8 @@ int grib_set_string_internal(grib_handle* h, const char* name,
         return ret;
     }
 
-    grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
+    print_error_no_accessor(h->context, name);
+    //grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
     return GRIB_NOT_FOUND;
 }
 
