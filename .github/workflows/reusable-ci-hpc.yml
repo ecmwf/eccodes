@@ -11,6 +11,9 @@ on:
         type: boolean
         default: false
 
+env:
+  GH_TOKEN: ${{ secrets.GH_REPO_READ_TOKEN }}
+
 jobs:
   ci-hpc:
     name: ci-hpc
@@ -18,7 +21,7 @@ jobs:
     with:
       name-prefix: eccodes-
       build-inputs: |
-        --env: 'GH_TOKEN='${{ secrets.GH_REPO_READ_TOKEN }}
+        --env: GH_TOKEN=${GH_TOKEN}
         --package: ${{ inputs.eccodes || 'ecmwf/eccodes@develop' }}
         --modules: |
           ecbuild
