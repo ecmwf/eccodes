@@ -702,7 +702,7 @@ void test_grib2_select_PDTN()
     Assert( 67 == grib2_select_PDTN(!eps, !instant,  0, 0, chemical_distfn, 0, 0) );
 
     // Aerosols
-    Assert( 48 == grib2_select_PDTN(!eps, instant,  0, 0, 0, aerosol, 0) );
+    Assert( 50 == grib2_select_PDTN(!eps, instant,  0, 0, 0, aerosol, 0) );
     Assert( 46 == grib2_select_PDTN(!eps, !instant, 0, 0, 0, aerosol, 0) );
     Assert( 45 == grib2_select_PDTN(eps, instant,   0, 0, 0, aerosol, 0) );
     Assert( 85 == grib2_select_PDTN(eps, !instant,  0, 0, 0, aerosol, 0) );
