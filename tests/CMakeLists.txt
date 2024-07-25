@@ -332,7 +332,7 @@ if( HAVE_BUILD_TOOLS )
         grib_bitsPerValue
         grib_get_fail
         grib_missing
-        grib_local
+        grib_local_ECMWF
         grib_step
         grib_set
         grib_set_fail
