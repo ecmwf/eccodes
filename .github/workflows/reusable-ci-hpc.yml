@@ -18,7 +18,7 @@ jobs:
     with:
       name-prefix: eccodes-
       build-inputs: |
-        --env: 'GH_TOKEN=${{ secrets.GH_REPO_READ_TOKEN }}'
+        --env: 'GH_TOKEN='${{ secrets.GH_REPO_READ_TOKEN }}
         --package: ${{ inputs.eccodes || 'ecmwf/eccodes@develop' }}
         --modules: |
           ecbuild
