@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,18 +10,20 @@
 
 #include "grib_accessor_class_spd.h"
 
-grib_accessor_class_spd_t _grib_accessor_class_spd{"spd"};
+grib_accessor_class_spd_t _grib_accessor_class_spd{ "spd" };
 grib_accessor_class* grib_accessor_class_spd = &_grib_accessor_class_spd;
 
 
-long grib_accessor_class_spd_t::byte_count(grib_accessor* a){
+long grib_accessor_class_spd_t::byte_count(grib_accessor* a)
+{
     return a->length;
 }
 
-static long compute_byte_count(grib_accessor* a){
+static long compute_byte_count(grib_accessor* a)
+{
     grib_accessor_spd_t* self = (grib_accessor_spd_t*)a;
-    long numberOfBits = 0;
-    long numberOfElements = 0;
+    long numberOfBits         = 0;
+    long numberOfElements     = 0;
 
     int ret = grib_get_long(grib_handle_of_accessor(a), self->numberOfBits, &numberOfBits);
     if (ret) {
@@ -42,20 +43,22 @@ static long compute_byte_count(grib_accessor* a){
     return (numberOfBits * numberOfElements + 7) / 8;
 }
 
-void grib_accessor_class_spd_t::init(grib_accessor* a, const long len, grib_arguments* args){
+void grib_accessor_class_spd_t::init(grib_accessor* a, const long len, grib_arguments* args)
+{
     grib_accessor_class_long_t::init(a, len, args);
     grib_accessor_spd_t* self = (grib_accessor_spd_t*)a;
-    int n                   = 0;
-    self->numberOfBits      = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
-    self->numberOfElements  = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
-    a->length               = compute_byte_count(a);
+    int n                     = 0;
+    self->numberOfBits        = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
+    self->numberOfElements    = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
+    a->length                 = compute_byte_count(a);
 }
 
-int grib_accessor_class_spd_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_spd_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_spd_t* self = (grib_accessor_spd_t*)a;
-    long pos          = a->offset * 8;
-    long rlen         = 0;
-    long numberOfBits = 0;
+    long pos                  = a->offset * 8;
+    long rlen                 = 0;
+    long numberOfBits         = 0;
 
     int ret = value_count(a, &rlen);
     if (ret)
@@ -72,7 +75,7 @@ int grib_accessor_class_spd_t::unpack_long(grib_accessor* a, long* val, size_t* 
     if (ret)
         return ret;
     if (numberOfBits > 64) {
-        grib_context_log(a->context, GRIB_LOG_ERROR,"Invalid number of bits: %ld",numberOfBits);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Invalid number of bits: %ld", numberOfBits);
         return GRIB_DECODING_ERROR;
     }
 
@@ -86,15 +89,16 @@ int grib_accessor_class_spd_t::unpack_long(grib_accessor* a, long* val, size_t* 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_spd_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_spd_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_spd_t* self = (grib_accessor_spd_t*)a;
-    int ret                 = 0;
-    long off                = 0;
-    long numberOfBits       = 0;
-    size_t buflen           = 0;
-    unsigned char* buf      = NULL;
-    unsigned long i         = 0;
-    long rlen               = 0;
+    int ret                   = 0;
+    long off                  = 0;
+    long numberOfBits         = 0;
+    size_t buflen             = 0;
+    unsigned char* buf        = NULL;
+    unsigned long i           = 0;
+    long rlen                 = 0;
 
     ret = value_count(a, &rlen);
     if (ret)
@@ -126,7 +130,8 @@ int grib_accessor_class_spd_t::pack_long(grib_accessor* a, const long* val, size
     return ret;
 }
 
-int grib_accessor_class_spd_t::value_count(grib_accessor* a, long* numberOfElements){
+int grib_accessor_class_spd_t::value_count(grib_accessor* a, long* numberOfElements)
+{
     grib_accessor_spd_t* self = (grib_accessor_spd_t*)a;
     int ret;
     *numberOfElements = 0;
@@ -142,14 +147,17 @@ int grib_accessor_class_spd_t::value_count(grib_accessor* a, long* numberOfEleme
     return ret;
 }
 
-long grib_accessor_class_spd_t::byte_offset(grib_accessor* a){
+long grib_accessor_class_spd_t::byte_offset(grib_accessor* a)
+{
     return a->offset;
 }
 
-void grib_accessor_class_spd_t::update_size(grib_accessor* a, size_t s){
+void grib_accessor_class_spd_t::update_size(grib_accessor* a, size_t s)
+{
     a->length = s;
 }
 
-long grib_accessor_class_spd_t::next_offset(grib_accessor* a){
+long grib_accessor_class_spd_t::next_offset(grib_accessor* a)
+{
     return a->byte_offset() + a->length;
 }

@@ -279,6 +279,26 @@ long convert_to_minutes(long step, long stepUnits)
     return (long)result;
 }
 
+bool is_sorted_ascending(double arr[], size_t n)
+{
+    for (size_t i = 0; i < n-1; i++) {
+        if (arr[i] > arr[i+1]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool is_sorted_descending(double arr[], size_t n)
+{
+    for (size_t i = 0; i < n-1; i++) {
+        if (arr[i] < arr[i+1]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 static float float_epsilon(void)
 {
     float floatEps = 1.0;
