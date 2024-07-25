@@ -670,6 +670,18 @@ void test_codes_get_type_name()
     Assert( STR_EQUAL("section", grib_get_type_name(GRIB_TYPE_SECTION)) );
 }
 
+void test_grib2_choose_PDTN()
+{
+    printf("Running %s ...\n", __func__);
+    int det = true;
+    int instant = true;
+
+    Assert( 0  == grib2_choose_PDTN(0,  det,  instant) );
+    Assert( 8  == grib2_choose_PDTN(0,  det, !instant) );
+    Assert( 1  == grib2_choose_PDTN(0, !det,  instant) );
+    Assert( 11 == grib2_choose_PDTN(0, !det, !instant) );
+}
+
 void test_grib2_select_PDTN()
 {
     printf("Running %s ...\n", __func__);
@@ -788,6 +800,7 @@ int main(int argc, char** argv)
     test_string_remove_char();
 
     test_grib2_select_PDTN();
+    test_grib2_choose_PDTN();
 
     return 0;
 }
