@@ -872,6 +872,7 @@ int grib2_is_PDTN_ChemicalSourceSink(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_ChemicalDistFunc(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_Aerosol(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_AerosolOptical(long productDefinitionTemplateNumber);
+int grib2_choose_PDTN(int current_PDTN, bool is_det, bool is_instant);
 int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemical_srcsink, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
 size_t sum_of_pl_array(const long* pl, size_t plsize);
 int grib_is_earth_oblate(const grib_handle* h);
