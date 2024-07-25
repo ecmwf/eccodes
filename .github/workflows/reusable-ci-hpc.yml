@@ -11,10 +11,6 @@ on:
         type: boolean
         default: false
 
-env: 
-  GH_TOKEN: ${{ secrets.GH_REPO_READ_TOKEN }} 
-  ENV_CHECK: 'SUCCESS'
-
 jobs:
   ci-hpc:
     name: ci-hpc
@@ -22,6 +18,7 @@ jobs:
     with:
       name-prefix: eccodes-
       build-inputs: |
+        --env: 'GH_TOKEN=${{ secrets.GH_REPO_READ_TOKEN }}'
         --package: ${{ inputs.eccodes || 'ecmwf/eccodes@develop' }}
         --modules: |
           ecbuild
@@ -32,6 +29,6 @@ jobs:
         --cmake-options: |
           -DENABLE_EXTRA_TESTS=1
           ${{ inputs.nightly_test && '-DENABLE_PNG=1,-DENABLE_NETCDF=1' || '' }}
-        ${{ inputs.nightly_test && '--post-script: .github/ci-nightly-test.sh ${ENV_CHECK}' || '' }}
+        ${{ inputs.nightly_test && '--post-script: .github/ci-nightly-test.sh' || '' }}
         ${{ inputs.nightly_test && '--force-build: true' || '' }}
     secrets: inherit
