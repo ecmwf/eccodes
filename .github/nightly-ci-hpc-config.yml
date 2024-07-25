@@ -13,3 +13,6 @@ build:
   post_script: .github/ci-nightly-test.sh
   env:
     - GH_TOKEN=${GH_TOKEN}
+  compiler_cc: gcc
+  compiler_cxx: g++
+  compiler_fc: gfortran
