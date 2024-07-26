@@ -30,9 +30,10 @@ int grib_accessor_class_dirty_t::pack_long(grib_accessor* a, const long* val, si
     grib_accessor_dirty_t* self = (grib_accessor_dirty_t*)a;
     grib_accessor* x            = grib_find_accessor(grib_handle_of_accessor(a), self->accessor);
 
-    if (x)
+    if (x) {
+        //printf("\ngrib_accessor_class_dirty_t::pack_long: Setting dirty to %ld on %s\n", *val, x->name);
         x->dirty = *val;
-
+    }
     return GRIB_SUCCESS;
 }
 
@@ -41,10 +42,11 @@ int grib_accessor_class_dirty_t::unpack_long(grib_accessor* a, long* val, size_t
     grib_accessor_dirty_t* self = (grib_accessor_dirty_t*)a;
     grib_accessor* x            = grib_find_accessor(grib_handle_of_accessor(a), self->accessor);
 
-    if (x)
-        x->dirty = 1;
-
-    *val = 1;
-
+    if (x) {
+        //printf("\ngrib_accessor_class_dirty_t::unpack_long: Getting dirty for %s\n", x->name);
+        *val = x->dirty;
+    } else {
+        *val = 1;
+    }
     return GRIB_SUCCESS;
 }

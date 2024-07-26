@@ -276,7 +276,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1467
         grib_ecc-1764
         grib_ecc-1792
-        grib_ecc-1846
+        grib_modelName
         grib_sub_hourly
         grib_set_bytes
         grib_set_force
@@ -332,7 +332,7 @@ if( HAVE_BUILD_TOOLS )
         grib_bitsPerValue
         grib_get_fail
         grib_missing
-        grib_local
+        grib_local_ECMWF
         grib_step
         grib_set
         grib_set_fail

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,31 +10,36 @@
 
 #include "grib_accessor_class_sexagesimal2decimal.h"
 
-grib_accessor_class_sexagesimal2decimal_t _grib_accessor_class_sexagesimal2decimal{"sexagesimal2decimal"};
+grib_accessor_class_sexagesimal2decimal_t _grib_accessor_class_sexagesimal2decimal{ "sexagesimal2decimal" };
 grib_accessor_class* grib_accessor_class_sexagesimal2decimal = &_grib_accessor_class_sexagesimal2decimal;
 
 
-void grib_accessor_class_sexagesimal2decimal_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+void grib_accessor_class_sexagesimal2decimal_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+{
     grib_accessor_class_to_double_t::init(a, len, arg);
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-void grib_accessor_class_sexagesimal2decimal_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_sexagesimal2decimal_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_dump_double(dumper, a, NULL);
 }
 
-int grib_accessor_class_sexagesimal2decimal_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_sexagesimal2decimal_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_DOUBLE;
 }
 
-int grib_accessor_class_sexagesimal2decimal_t::unpack_string(grib_accessor* a, char* val, size_t* len){
-    int err                                 = 0;
+int grib_accessor_class_sexagesimal2decimal_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+{
     grib_accessor_sexagesimal2decimal_t* self = (grib_accessor_sexagesimal2decimal_t*)a;
-    char buff[512]                          = {0,};
+
+    int err        = 0;
+    char buff[512] = {0,};
     size_t length = 0;
-    size_t size   = 512;
-    char* p;
-    char* q;
+    size_t size   = sizeof(buff);
+    char* p = 0;
+    char* q = 0;
     double dd, mm = 0, ss = 0;
     int dd_sign = 1;
 
@@ -134,7 +138,7 @@ int grib_accessor_class_sexagesimal2decimal_t::unpack_string(grib_accessor* a, c
 
     if (len[0] < length + 1) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%lu) for %s, it contains %ld values",
-                len[0], a->name, a->length + 1);
+                         len[0], a->name, a->length + 1);
         len[0] = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }

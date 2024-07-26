@@ -37,4 +37,10 @@ ${tools_dir}/grib_set -s tablesVersion=$latest,productDefinitionTemplateNumber=1
 ${tools_dir}/grib_dump -O $temp > $tempd
 grib_check_key_equals $temp typeOfWavelengthInterval,scaledValueOfFirstWavelength,scaledValueOfSecondWavelength "0 0 MISSING"
 
+# ECC-1875
+${tools_dir}/grib_set -s tablesVersion=$latest,productDefinitionTemplateNumber=109 $sample_grib2 $temp
+${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=14 $temp $tempd
+${tools_dir}/grib_compare -b numberOfSection,totalLength $temp $tempd
+
+# Clean up
 rm -f $temp $tempd

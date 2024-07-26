@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -12,7 +11,7 @@
 #include "grib_accessor_class_second_order_bits_per_value.h"
 #include "grib_scaling.h"
 
-grib_accessor_class_second_order_bits_per_value_t _grib_accessor_class_second_order_bits_per_value{"second_order_bits_per_value"};
+grib_accessor_class_second_order_bits_per_value_t _grib_accessor_class_second_order_bits_per_value{ "second_order_bits_per_value" };
 grib_accessor_class* grib_accessor_class_second_order_bits_per_value = &_grib_accessor_class_second_order_bits_per_value;
 
 
@@ -35,10 +34,11 @@ static const size_t nbits[64] = {
     0x1000000000000000, 0x2000000000000000, 0x4000000000000000, 0x8000000000000000
 };
 
-static int number_of_bits(size_t x, long* result){
+static int number_of_bits(size_t x, long* result)
+{
     const size_t* n = nbits;
     const int count = sizeof(nbits) / sizeof(nbits[0]);
-    *result         = 0;
+    *result = 0;
     while (x >= *n) {
         n++;
         (*result)++;
@@ -49,27 +49,30 @@ static int number_of_bits(size_t x, long* result){
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_class_second_order_bits_per_value_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_second_order_bits_per_value_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_long_t::init(a, l, c);
-    int n                                           = 0;
+    int n = 0;
     grib_accessor_second_order_bits_per_value_t* self = (grib_accessor_second_order_bits_per_value_t*)a;
-    self->values                                    = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->binaryScaleFactor                         = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->decimalScaleFactor                        = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->bitsPerValue                              = 0;
+    self->values             = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->binaryScaleFactor  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->decimalScaleFactor = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->bitsPerValue       = 0;
 
     a->length = 0;
 }
 
-int grib_accessor_class_second_order_bits_per_value_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_second_order_bits_per_value_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_second_order_bits_per_value_t* self = (grib_accessor_second_order_bits_per_value_t*)a;
-    self->bitsPerValue                              = (long)*val;
-    *len                                            = 1;
+    self->bitsPerValue = (long)*val;
+    *len = 1;
 
-    return 0;
+    return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_second_order_bits_per_value_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_second_order_bits_per_value_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     int ret     = GRIB_SUCCESS;
     size_t size = 0;
     size_t i;

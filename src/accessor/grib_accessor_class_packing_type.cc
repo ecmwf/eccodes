@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,13 +10,14 @@
 
 #include "grib_accessor_class_packing_type.h"
 
-grib_accessor_class_packing_type_t _grib_accessor_class_packing_type{"packing_type"};
+grib_accessor_class_packing_type_t _grib_accessor_class_packing_type{ "packing_type" };
 grib_accessor_class* grib_accessor_class_packing_type = &_grib_accessor_class_packing_type;
 
 
-void grib_accessor_class_packing_type_t::init(grib_accessor* a, const long l, grib_arguments* args){
+void grib_accessor_class_packing_type_t::init(grib_accessor* a, const long l, grib_arguments* args)
+{
     grib_accessor_class_gen_t::init(a, l, args);
-    int n                              = 0;
+    int n = 0;
     grib_accessor_packing_type_t* self = (grib_accessor_packing_type_t*)a;
     self->values                       = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
     self->packing_type                 = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
@@ -25,21 +25,25 @@ void grib_accessor_class_packing_type_t::init(grib_accessor* a, const long l, gr
     a->length = 0;
 }
 
-size_t grib_accessor_class_packing_type_t::string_length(grib_accessor* a){
+size_t grib_accessor_class_packing_type_t::string_length(grib_accessor* a)
+{
     return 1024;
 }
 
-int grib_accessor_class_packing_type_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_packing_type_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_STRING;
 }
 
-int grib_accessor_class_packing_type_t::pack_string(grib_accessor*a, const char* sval, size_t* len){
+int grib_accessor_class_packing_type_t::pack_string(grib_accessor* a, const char* sval, size_t* len)
+{
     grib_accessor_packing_type_t* self = (grib_accessor_packing_type_t*)a;
-    grib_handle* h = grib_handle_of_accessor(a);
-    double* values = NULL;
+
+    grib_handle* h  = grib_handle_of_accessor(a);
+    double* values  = NULL;
     grib_context* c = a->context;
-    size_t size = 0;
-    int err = 0;
+    size_t size     = 0;
+    int err         = 0;
 
     if ((err = grib_get_size(h, self->values, &size)) != GRIB_SUCCESS)
         return err;
@@ -66,9 +70,10 @@ int grib_accessor_class_packing_type_t::pack_string(grib_accessor*a, const char*
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_packing_type_t::unpack_string(grib_accessor* a, char* val, size_t* len){
+int grib_accessor_class_packing_type_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+{
     grib_accessor_packing_type_t* self = (grib_accessor_packing_type_t*)a;
-    grib_handle* h                   = grib_handle_of_accessor(a);
+    grib_handle* h = grib_handle_of_accessor(a);
 
     return grib_get_string(h, self->packing_type, val, len);
 }

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,18 +10,20 @@
 
 #include "grib_accessor_class_sprintf.h"
 
-grib_accessor_class_sprintf_t _grib_accessor_class_sprintf{"sprintf"};
+grib_accessor_class_sprintf_t _grib_accessor_class_sprintf{ "sprintf" };
 grib_accessor_class* grib_accessor_class_sprintf = &_grib_accessor_class_sprintf;
 
 
-void grib_accessor_class_sprintf_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_sprintf_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_ascii_t::init(a, l, c);
     grib_accessor_sprintf_t* self = (grib_accessor_sprintf_t*)a;
-    self->args                  = c;
+    self->args = c;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_sprintf_t::unpack_string(grib_accessor* a, char* val, size_t* len){
+int grib_accessor_class_sprintf_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+{
     grib_accessor_sprintf_t* self = (grib_accessor_sprintf_t*)a;
     char result[1024];
     char tempBuffer[2048];
@@ -61,7 +62,8 @@ int grib_accessor_class_sprintf_t::unpack_string(grib_accessor* a, char* val, si
                     if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), tempname, &ires)) != GRIB_SUCCESS)
                         return ret;
                     /* Bug GRIB-56: Check to see if the key is missing */
-                    is_missing = grib_is_missing(grib_handle_of_accessor(a), tempname, &ret);                    if (ret != GRIB_SUCCESS)
+                    is_missing = grib_is_missing(grib_handle_of_accessor(a), tempname, &ret);
+                    if (ret != GRIB_SUCCESS)
                         return ret;
                     if (is_missing) {
                         snprintf(tempBuffer, sizeof(tempBuffer), "%sMISSING", result);
@@ -117,11 +119,13 @@ int grib_accessor_class_sprintf_t::unpack_string(grib_accessor* a, char* val, si
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_sprintf_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_sprintf_t::value_count(grib_accessor* a, long* count)
+{
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_class_sprintf_t::string_length(grib_accessor* a){
+size_t grib_accessor_class_sprintf_t::string_length(grib_accessor* a)
+{
     return 1024;
 }

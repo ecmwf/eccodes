@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,30 +10,33 @@
 
 #include "grib_accessor_class_select_step_template.h"
 
-grib_accessor_class_select_step_template_t _grib_accessor_class_select_step_template{"select_step_template"};
+grib_accessor_class_select_step_template_t _grib_accessor_class_select_step_template{ "select_step_template" };
 grib_accessor_class* grib_accessor_class_select_step_template = &_grib_accessor_class_select_step_template;
 
 
-void grib_accessor_class_select_step_template_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_select_step_template_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_unsigned_t::init(a, l, c);
     grib_accessor_select_step_template_t* self = (grib_accessor_select_step_template_t*)a;
     grib_handle* hand = grib_handle_of_accessor(a);
     int n = 0;
 
     self->productDefinitionTemplateNumber = grib_arguments_get_name(hand, c, n++);
-    self->instant                         = grib_arguments_get_long(hand, c, n++);
+    self->instant = grib_arguments_get_long(hand, c, n++);
 }
 
-int grib_accessor_class_select_step_template_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_select_step_template_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     *val = 1;
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_select_step_template_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_select_step_template_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_select_step_template_t* self = (grib_accessor_select_step_template_t*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
-    long productDefinitionTemplateNumber     = 0;
-    long productDefinitionTemplateNumberNew  = 0;
+    grib_handle* hand                          = grib_handle_of_accessor(a);
+    long productDefinitionTemplateNumber       = 0;
+    long productDefinitionTemplateNumberNew    = 0;
 
     grib_get_long(hand, self->productDefinitionTemplateNumber, &productDefinitionTemplateNumber);
 
@@ -64,28 +66,28 @@ int grib_accessor_class_select_step_template_t::pack_long(grib_accessor* a, cons
             case 14:
                 productDefinitionTemplateNumberNew = 4;
                 break;
-            case 42: // DET chemical
+            case 42:  // DET chemical
                 productDefinitionTemplateNumberNew = 40;
                 break;
-            case 43: // ENS chemical
+            case 43:  // ENS chemical
                 productDefinitionTemplateNumberNew = 41;
                 break;
-            case 46:                                     // DET aerosol
-                productDefinitionTemplateNumberNew = 48; // 44 is deprecated
+            case 46:                                      // DET aerosol
+                productDefinitionTemplateNumberNew = 48;  // 44 is deprecated
                 break;
-            case 47: // ENS aerosol
+            case 47:  // ENS aerosol
                 productDefinitionTemplateNumberNew = 45;
                 break;
-            case 67: // DET chemical distrib func
+            case 67:  // DET chemical distrib func
                 productDefinitionTemplateNumberNew = 57;
                 break;
-            case 68: // ENS chemical distrib func
+            case 68:  // ENS chemical distrib func
                 productDefinitionTemplateNumberNew = 58;
                 break;
-            case 72: // DET post-processing
+            case 72:  // DET post-processing
                 productDefinitionTemplateNumberNew = 70;
                 break;
-            case 73: // ENS post-processing */
+            case 73:  // ENS post-processing */
                 productDefinitionTemplateNumberNew = 71;
                 break;
             case 0:
@@ -128,25 +130,25 @@ int grib_accessor_class_select_step_template_t::pack_long(grib_accessor* a, cons
             case 6:
                 productDefinitionTemplateNumberNew = 10;
                 break;
-            case 40: // DET chemical
+            case 40:  // DET chemical
                 productDefinitionTemplateNumberNew = 42;
                 break;
-            case 41: // ENS chemical
+            case 41:  // ENS chemical
                 productDefinitionTemplateNumberNew = 43;
                 break;
-            case 45: // ENS aerosol
-                productDefinitionTemplateNumberNew = 85; // 47 is  deprecated
+            case 45:                                      // ENS aerosol
+                productDefinitionTemplateNumberNew = 85;  // 47 is  deprecated
                 break;
-            case 57: // DET chemical distrib func
+            case 57:  // DET chemical distrib func
                 productDefinitionTemplateNumberNew = 67;
                 break;
-            case 58: // ENS chemical distrib func
+            case 58:  // ENS chemical distrib func
                 productDefinitionTemplateNumberNew = 68;
                 break;
-            case 70: // DET post-processing
+            case 70:  // DET post-processing
                 productDefinitionTemplateNumberNew = 72;
                 break;
-            case 71: // ENS post-processing
+            case 71:  // ENS post-processing
                 productDefinitionTemplateNumberNew = 73;
                 break;
             case 7:
@@ -172,7 +174,8 @@ int grib_accessor_class_select_step_template_t::pack_long(grib_accessor* a, cons
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_select_step_template_t::value_count(grib_accessor* a, long* c){
+int grib_accessor_class_select_step_template_t::value_count(grib_accessor* a, long* c)
+{
     *c = 1;
     return 0;
 }

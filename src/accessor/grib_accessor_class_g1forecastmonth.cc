@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -106,7 +105,7 @@ static int unpack_long_edition2(grib_accessor* a, long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int unpack_long_edition1(grib_accessor* a, long* val, size_t* len)
+static int unpack_long_edition1(grib_accessor* a, long* val, size_t* len)
 {
     int err = 0;
     grib_accessor_g1forecastmonth_t* self = (grib_accessor_g1forecastmonth_t*)a;

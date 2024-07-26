@@ -12,6 +12,10 @@
 
 label="grib_geo_iter_test"
 
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
+
 infiles="
     $ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
     $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib1.tmpl

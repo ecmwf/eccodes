@@ -10,7 +10,6 @@
  */
 
 #include "grib_accessor_class_validity_date.h"
-#include "shared_functions.h"
 
 grib_accessor_class_validity_date_t _grib_accessor_class_validity_date{ "validity_date" };
 grib_accessor_class* grib_accessor_class_validity_date = &_grib_accessor_class_validity_date;

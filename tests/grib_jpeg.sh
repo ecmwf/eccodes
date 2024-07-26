@@ -60,11 +60,12 @@ do_tests()
 
     rm -f $outfile2
 
-    # GRIB-564 nearest 4 neighbours with JPEG packing
-    res=`${tools_dir}/grib_get -l 0,50 $outfile1`
-    [ "$res" = "2.47244 2.47244 2.5115 2.51931 " ]
-
-    rm -f $outfile1
+    if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+        # GRIB-564 nearest 4 neighbours with JPEG packing
+        res=`${tools_dir}/grib_get -l 0,50 $outfile1`
+        [ "$res" = "2.47244 2.47244 2.5115 2.51931 " ]
+        rm -f $outfile1
+    fi
 
     # ECC-317: Constant JPEG field numberOfValues
     # Create a JPEG encoded GRIB message to have all constant values and one more value

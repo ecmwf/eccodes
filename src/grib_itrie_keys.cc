@@ -273,7 +273,7 @@ static const int mapping[] = {
 static pthread_once_t once   = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-static void init()
+static void init_mutex()
 {
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
@@ -285,7 +285,7 @@ static void init()
 static int once = 0;
 static omp_nest_lock_t mutex;
 
-static void init()
+static void init_mutex()
 {
     GRIB_OMP_CRITICAL(lock_grib_itrie_keys_c)
     {
@@ -317,7 +317,7 @@ grib_itrie* grib_hash_keys_new(grib_context* c, int* count)
 
 void grib_hash_keys_delete(grib_itrie* t)
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex);
 
     if (t) {
@@ -338,7 +338,7 @@ static int grib_hash_keys_insert(grib_itrie* t, const char* key)
     grib_itrie* last = t;
     int* count;
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex);
 
     Assert(t);
@@ -392,7 +392,7 @@ int grib_hash_keys_get_id(grib_itrie* t, const char* key)
         const char* k    = key;
         grib_itrie* last = t;
 
-        GRIB_MUTEX_INIT_ONCE(&once, &init);
+        GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
         GRIB_MUTEX_LOCK(&mutex);
 
         while (*k && t)

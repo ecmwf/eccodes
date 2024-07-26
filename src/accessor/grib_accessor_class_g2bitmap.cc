@@ -10,7 +10,6 @@
  */
 
 #include "grib_accessor_class_g2bitmap.h"
-#include "shared_functions.h"
 
 grib_accessor_class_g2bitmap_t _grib_accessor_class_g2bitmap{ "g2bitmap" };
 grib_accessor_class* grib_accessor_class_g2bitmap = &_grib_accessor_class_g2bitmap;
@@ -22,6 +21,14 @@ void grib_accessor_class_g2bitmap_t::init(grib_accessor* a, const long len, grib
     grib_accessor_g2bitmap_t* self = (grib_accessor_g2bitmap_t*)a;
 
     self->numberOfValues = grib_arguments_get_name(grib_handle_of_accessor(a), arg, 4);
+}
+
+// For speed use a local static function
+static GRIB_INLINE void set_bit_on(unsigned char* p, long* bitp)
+{
+    p += *bitp / 8;
+    *p |= (1u << (7 - ((*bitp) % 8)));
+    (*bitp)++;
 }
 
 int grib_accessor_class_g2bitmap_t::pack_double(grib_accessor* a, const double* val, size_t* len)
@@ -48,7 +55,7 @@ int grib_accessor_class_g2bitmap_t::pack_double(grib_accessor* a, const double* 
             pos++;
         else {
             // bmaplen++;
-            grib_set_bit_on(buf, &pos);
+            set_bit_on(buf, &pos);
         }
     }
 

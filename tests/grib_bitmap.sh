@@ -87,12 +87,13 @@ EOF
 ${tools_dir}/grib_filter -o $temp1 $tempRules $grib1
 ${tools_dir}/grib_filter -o $temp2 $tempRules $grib2
 
-${tools_dir}/grib_get_data -m missing $temp1 > $tempData1
-${tools_dir}/grib_get_data -m missing $temp2 > $tempData2
+if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+  ${tools_dir}/grib_get_data -m missing $temp1 > $tempData1
+  ${tools_dir}/grib_get_data -m missing $temp2 > $tempData2
 
-diff $tempData1 $tempData2
-rm -f $tempData1 $tempData2
-
+  diff $tempData1 $tempData2
+  rm -f $tempData1 $tempData2
+fi
 
 # ECC-1233: Allow printing of 'byte' keys e.g., bitmap, section paddings
 # -----------------------------------------------------------------------

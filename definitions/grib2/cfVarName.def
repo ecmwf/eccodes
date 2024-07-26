@@ -3114,8 +3114,8 @@
 #Soil temperature top 20 cm
 'st20' = {
 	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 18 ;
 	 typeOfFirstFixedSurface = 106 ;
 	 typeOfSecondFixedSurface = 106 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
@@ -3126,14 +3126,14 @@
 #Soil temperature top 100 cm
 'st100' = {
 	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 18 ;
 	 typeOfFirstFixedSurface = 106 ;
 	 typeOfSecondFixedSurface = 106 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfSecondFixedSurface = 10 ;
-	 scaleFactorOfSecondFixedSurface = 1 ;
+	 scaledValueOfSecondFixedSurface = 1 ;
+	 scaleFactorOfSecondFixedSurface = 0 ;
 	}
 #Atmosphere emission mass flux of Methane from Wetlands
 'e_WLCH4' = {
@@ -3793,7 +3793,7 @@
 	 typeOfFirstFixedSurface = 187 ;
 	}
 #Urban canyon temperature
-'uct' = {
+'urct' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
@@ -3801,7 +3801,7 @@
 	 typeOfSecondFixedSurface = 185 ;
 	}
 #Urban canyon specific humidity
-'ucq' = {
+'urcq' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 0 ;
@@ -4976,6 +4976,32 @@
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 19 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 1 ;
+	 scaleFactorOfSecondFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean soil temperature top 20 cm
+'avg_st20' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 2 ;
+	 scaleFactorOfSecondFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean soil temperature top 100 cm
+'avg_st100' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 18 ;
 	 typeOfFirstFixedSurface = 106 ;
 	 typeOfSecondFixedSurface = 106 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
@@ -8498,7 +8524,7 @@
 	 typeOfSecondFixedSurface = 168 ;
 	}
 #Y-component of sea water velocity
-'vo' = {
+'voy' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 26 ;
@@ -8506,7 +8532,7 @@
 	 typeOfSecondFixedSurface = 168 ;
 	}
 #X-component of sea water velocity
-'uo' = {
+'uox' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 25 ;
@@ -9629,7 +9655,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean Y-component of sea water velocity
-'avg_vo' = {
+'avg_voy' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 26 ;
@@ -9638,7 +9664,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean X-component of sea water velocity
-'avg_uo' = {
+'avg_uox' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 25 ;
@@ -11258,12 +11284,6 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 43 ;
 	}
-#Soil moisture
-'sm' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 19 ;
-	}
 #10 metre u-component of neutral wind
 'u10n' = {
 	 discipline = 0 ;
@@ -11281,12 +11301,6 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
-#Soil temperature
-'st' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 2 ;
 	}
 #Snow depth water equivalent
 'sd' = {

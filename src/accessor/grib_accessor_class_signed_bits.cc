@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,15 +10,17 @@
 
 #include "grib_accessor_class_signed_bits.h"
 
-grib_accessor_class_signed_bits_t _grib_accessor_class_signed_bits{"signed_bits"};
+grib_accessor_class_signed_bits_t _grib_accessor_class_signed_bits{ "signed_bits" };
 grib_accessor_class* grib_accessor_class_signed_bits = &_grib_accessor_class_signed_bits;
 
 
-long grib_accessor_class_signed_bits_t::byte_count(grib_accessor* a){
+long grib_accessor_class_signed_bits_t::byte_count(grib_accessor* a)
+{
     return a->length;
 }
 
-static long compute_byte_count(grib_accessor* a){
+static long compute_byte_count(grib_accessor* a)
+{
     grib_accessor_signed_bits_t* self = (grib_accessor_signed_bits_t*)a;
     long numberOfBits;
     long numberOfElements;
@@ -42,16 +43,18 @@ static long compute_byte_count(grib_accessor* a){
     return (numberOfBits * numberOfElements + 7) / 8;
 }
 
-void grib_accessor_class_signed_bits_t::init(grib_accessor* a, const long len, grib_arguments* args){
+void grib_accessor_class_signed_bits_t::init(grib_accessor* a, const long len, grib_arguments* args)
+{
     grib_accessor_class_long_t::init(a, len, args);
     grib_accessor_signed_bits_t* self = (grib_accessor_signed_bits_t*)a;
-    int n                           = 0;
-    self->numberOfBits              = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
-    self->numberOfElements          = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
-    a->length                       = compute_byte_count(a);
+    int n                             = 0;
+    self->numberOfBits                = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
+    self->numberOfElements            = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
+    a->length                         = compute_byte_count(a);
 }
 
-int grib_accessor_class_signed_bits_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_signed_bits_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     return GRIB_NOT_IMPLEMENTED;
 #if 0
     grib_accessor_signed_bits_t* self = (grib_accessor_signed_bits_t*)a;
@@ -91,7 +94,8 @@ int grib_accessor_class_signed_bits_t::unpack_long(grib_accessor* a, long* val, 
 #endif
 }
 
-int grib_accessor_class_signed_bits_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_signed_bits_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     return GRIB_NOT_IMPLEMENTED;
 #if 0
     grib_accessor_signed_bits_t* self = (grib_accessor_signed_bits_t*)a;
@@ -132,21 +136,25 @@ int grib_accessor_class_signed_bits_t::pack_long(grib_accessor* a, const long* v
 #endif
 }
 
-int grib_accessor_class_signed_bits_t::value_count(grib_accessor* a, long* numberOfElements){
+int grib_accessor_class_signed_bits_t::value_count(grib_accessor* a, long* numberOfElements)
+{
     grib_accessor_signed_bits_t* self = (grib_accessor_signed_bits_t*)a;
-    *numberOfElements               = 0;
+    *numberOfElements                 = 0;
 
     return grib_get_long(grib_handle_of_accessor(a), self->numberOfElements, numberOfElements);
 }
 
-long grib_accessor_class_signed_bits_t::byte_offset(grib_accessor* a){
+long grib_accessor_class_signed_bits_t::byte_offset(grib_accessor* a)
+{
     return a->offset;
 }
 
-void grib_accessor_class_signed_bits_t::update_size(grib_accessor* a, size_t s){
+void grib_accessor_class_signed_bits_t::update_size(grib_accessor* a, size_t s)
+{
     a->length = s;
 }
 
-long grib_accessor_class_signed_bits_t::next_offset(grib_accessor* a){
+long grib_accessor_class_signed_bits_t::next_offset(grib_accessor* a)
+{
     return a->byte_offset() + a->byte_count();
 }

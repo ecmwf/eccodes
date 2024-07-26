@@ -1882,6 +1882,16 @@ int grib2_is_PDTN_EPS(long pdtn)
     return 0;
 }
 
+// Return 1 if the productDefinitionTemplateNumber (GRIB2) is for plain (vanilla) products
+int grib2_is_PDTN_Plain(long pdtn)
+{
+    return (
+        pdtn == 0 ||
+        pdtn == 1 ||
+        pdtn == 8 ||
+        pdtn == 11);
+}
+
 // Return 1 if the productDefinitionTemplateNumber (GRIB2) is for atmospheric chemical constituents
 int grib2_is_PDTN_Chemical(long pdtn)
 {
@@ -1937,6 +1947,52 @@ int grib2_is_PDTN_AerosolOptical(long pdtn)
     return (
         pdtn == 48 ||
         pdtn == 49);
+}
+
+// Arguments:
+//  is_det:     true for deterministic, false for ensemble
+//  is_instant: true for instantaneous (point-in-time), false for interval-based (statistically processed)
+int grib2_choose_PDTN(int current_PDTN, bool is_det, bool is_instant)
+{
+    const bool is_ens      = !is_det;
+    const bool is_interval = !is_instant;
+
+    if (grib2_is_PDTN_Plain(current_PDTN)) {
+        if (is_instant  && is_ens) return 1;
+        if (is_instant  && is_det) return 0;
+        if (is_interval && is_ens) return 11;
+        if (is_interval && is_det) return 8;
+    }
+
+    if (grib2_is_PDTN_Chemical(current_PDTN)) {
+        if (is_instant  && is_ens) return 41;
+        if (is_instant  && is_det) return 40;
+        if (is_interval && is_ens) return 43;
+        if (is_interval && is_det) return 42;
+    }
+
+    if (grib2_is_PDTN_ChemicalSourceSink(current_PDTN)) {
+        if (is_instant  && is_ens) return 77;
+        if (is_instant  && is_det) return 76;
+        if (is_interval && is_ens) return 79;
+        if (is_interval && is_det) return 78;
+    }
+
+    if (grib2_is_PDTN_ChemicalDistFunc(current_PDTN)) {
+        if (is_instant  && is_ens) return 58;
+        if (is_instant  && is_det) return 57;
+        if (is_interval && is_ens) return 68;
+        if (is_interval && is_det) return 67;
+    }
+
+    if (current_PDTN == 45 || current_PDTN == 48) {
+        if (is_instant  && is_ens) return 45;
+        if (is_instant  && is_det) return 48;
+        if (is_interval && is_ens) return 85;
+        if (is_interval && is_det) return 46;
+    }
+
+    return current_PDTN;  // no change
 }
 
 // Given some information about the type of grib2 parameter, return the productDefinitionTemplateNumber to use.
