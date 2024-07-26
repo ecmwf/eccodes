@@ -787,9 +787,7 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
     // long nvals_per_group     = 0;
     // long nbits_per_group_val = 0;
 
-    // ECC-1858: Disable for complex packing and complex packing with spatial differencing (see scaling() function in wgrib2 code)
-    constexpr long optimize_scale_factor = 0;
-
+    long optimize_scale_factor = 0;
     long binary_scale_factor, decimal_scale_factor, typeOfOriginalFieldValues;
     // long groupSplittingMethodUsed, numberOfGroupsOfDataValues, referenceForGroupWidths;
     long missingValueManagementUsed, primaryMissingValueSubstitute, secondaryMissingValueSubstitute;
@@ -838,6 +836,8 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
     if ((err = grib_get_long_internal(gh, self->numberOfOctetsExtraDescriptors, &numberOfOctetsExtraDescriptors)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_long_internal(gh, "bitmapPresent", &bitmap_present)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->optimize_scale_factor, &optimize_scale_factor)) != GRIB_SUCCESS)
         return err;
 
     max_bits = bits_per_value;  // TODO(masn)
@@ -940,7 +940,7 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
 
     binary_scale = bin_scale;
 
-    if (optimize_scale_factor == 0) {  // ECMWF style
+    if (!(optimize_scale_factor == 0)) {  // ECMWF style
         ref       = min_val;
         frange    = max_val - ref;
         dec_scale = 0;

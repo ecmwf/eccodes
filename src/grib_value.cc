@@ -777,9 +777,22 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
 {
     double v = 0;
     size_t i = 0;
+    int ret  = 0;
 
     if (h->context->debug) {
         print_debug_info__set_array(h, __func__, name, val, length);
+    }
+
+    // ECC-1858: If values change, then optimise_scale_factor should be reset to 1 to re-calculate the scale factor
+    if (!strcmp(name, "values") || !strcmp(name, "codedValues")) {
+        char packingType[50] = {0, };
+        size_t slen = 50;
+        if ((ret = grib_get_string(h, "packingType", packingType, &slen)) != GRIB_SUCCESS)
+            return ret;
+        if (strcmp(packingType, "grid_complex") == 0 || strcmp(packingType, "grid_complex_spatial_differencing") == 0) {
+            if ((ret = grib_set_long_internal(h, "optimizeScaleFactor", 1)) != GRIB_SUCCESS)
+                return ret;
+        }
     }
 
     if (length == 0) {

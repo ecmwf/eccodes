@@ -109,8 +109,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             exit(1);
         }
 
-        GRIB_CHECK_NOLINE(grib_get_double_array(h, "values", v, &size), 0);
-        GRIB_CHECK_NOLINE(grib_set_double_array(h, "values", v, size), 0);
+        GRIB_CHECK_NOLINE(grib_get_double_array_internal(h, "values", v, &size), 0);
+        GRIB_CHECK_NOLINE(grib_set_double_array_internal(h, "values", v, size), 0);
         free(v);
     }
     grib_tools_write_message(options, h);

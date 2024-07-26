@@ -48,11 +48,19 @@ int grib_accessor_class_scale_values_t::pack_double(grib_accessor* a, const doub
     if (*val == 1)
         return GRIB_SUCCESS;
 
-    if ((ret = grib_get_double_internal(h, self->missingValue, &missingValue)) != GRIB_SUCCESS) {
+    if ((ret = grib_get_double_internal(h, self->missingValue, &missingValue)) != GRIB_SUCCESS)
         return ret;
-    }
-    if ((ret = grib_get_long_internal(h, "missingValuesPresent", &missingValuesPresent)) != GRIB_SUCCESS) {
+    if ((ret = grib_get_long_internal(h, "missingValuesPresent", &missingValuesPresent)) != GRIB_SUCCESS)
         return ret;
+
+    // ECC-1858: If values change, then optimise_scale_factor should be reset to 1 to re-calculate the scale factor
+    char packingType[50] = {0, };
+    size_t slen = 50;
+    if ((ret = grib_get_string(h, "packingType", packingType, &slen)) != GRIB_SUCCESS)
+        return ret;
+    if (strcmp(packingType, "grid_complex") == 0 || strcmp(packingType, "grid_complex_spatial_differencing") == 0) {
+        if ((ret = grib_set_long_internal(h, "optimizeScaleFactor", 1)) != GRIB_SUCCESS)
+            return ret;
     }
 
     if ((ret = grib_get_size(h, self->values, &size)) != GRIB_SUCCESS)
