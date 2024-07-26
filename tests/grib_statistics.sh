@@ -18,16 +18,28 @@ files="regular_latlon_surface.grib2 regular_latlon_surface.grib1"
 
 for file in $files; do
 
+# Note: When we get min,max etc for the 1st time, dirty_statistics is 1
+# so the statistics accessor will decode the data values (because dirty_statistics==1)
+# Once it is finished, it sets dirty_statistics to 0.
+# If you get min,max again, no computation is done (because dirty_statistics==0)
+# But once the data values are changed, then dirty_statistics is once again 1
 cat >statistics.filter<<EOF
- set Ni=2;
- set Nj=2;
- set decimalPrecision=4;
- set values={2.0,2.0,2.0,2.0};
- print "values=[values]";
- print "max=[max] min=[min] average=[average]";
- set values={2.0,5.0,2.0,2.0};
- print "values=[values]";
- print "max=[max] min=[min] average=[average]";
+    set Ni=2;
+    set Nj=2;
+    set decimalPrecision=4;
+    print "Will set values...";
+    set values={2.0,2.0,2.0,2.0};
+    assert(dirty_statistics == 1);
+    print "values=[values]";
+    print "max=[max] min=[min] average=[average]";
+    assert(dirty_statistics == 0);
+    print "max=[max] min=[min] average=[average]";
+    print "Will set values...";
+    set values={2.0,5.0,2.0,2.0};
+    assert(dirty_statistics == 1);
+    print "values=[values]";
+    print "max=[max] min=[min] average=[average]";
+    assert(dirty_statistics == 0);
 EOF
 
 ${tools_dir}/grib_filter statistics.filter ${data_dir}/$file > statistics.out
