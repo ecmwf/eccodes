@@ -41,7 +41,7 @@ static pthread_once_t once = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex_mem = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t mutex_c   = PTHREAD_MUTEX_INITIALIZER;
 
-static void init()
+static void init_mutex()
 {
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
@@ -55,7 +55,7 @@ static int once = 0;
 static omp_nest_lock_t mutex_mem;
 static omp_nest_lock_t mutex_c;
 
-static void init()
+static void init_mutex()
 {
     GRIB_OMP_CRITICAL(lock_grib_context_c)
     {
@@ -374,7 +374,7 @@ static grib_context default_grib_context = {
 
 grib_context* grib_context_get_default()
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
 
     if (!default_grib_context.inited) {
@@ -569,7 +569,7 @@ grib_context* grib_context_get_default()
 
 //     if (!parent) parent=grib_context_get_default();
 
-//     GRIB_MUTEX_INIT_ONCE(&once,&init);
+//     GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
 //     GRIB_MUTEX_LOCK(&(parent->mutex));
 
 //     c = (grib_context*)grib_context_malloc_clear_persistent(&default_grib_context,sizeof(grib_context));
@@ -646,7 +646,7 @@ static int init_definition_files_dir(grib_context* c)
     strncpy(path, c->grib_definition_files_path, ECC_PATH_MAXLEN-1);
     path[ ECC_PATH_MAXLEN - 1 ] = '\0';
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
 
     p = path;
@@ -692,7 +692,7 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
     if (!c)
         c = grib_context_get_default();
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
 
     if (*basename == '/' || *basename == '.') {
         return (char*)basename;
@@ -880,7 +880,7 @@ void grib_context_set_definitions_path(grib_context* c, const char* path)
 {
     if (!c)
         c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
 
     c->grib_definition_files_path = strdup(path);
@@ -892,7 +892,7 @@ void grib_context_set_samples_path(grib_context* c, const char* path)
 {
     if (!c)
         c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
 
     c->grib_samples_path = strdup(path);
@@ -1095,7 +1095,7 @@ int grib_context_get_handle_file_count(grib_context* c)
     int r = 0;
     if (!c)
         c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
     r = c->handle_file_count;
     GRIB_MUTEX_UNLOCK(&mutex_c);
@@ -1106,7 +1106,7 @@ int grib_context_get_handle_total_count(grib_context* c)
     int r = 0;
     if (!c)
         c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
     r = c->handle_total_count;
     GRIB_MUTEX_UNLOCK(&mutex_c);
@@ -1117,7 +1117,7 @@ void grib_context_set_handle_file_count(grib_context* c, int new_count)
 {
     if (!c)
         c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
     c->handle_file_count = new_count;
     GRIB_MUTEX_UNLOCK(&mutex_c);
@@ -1126,7 +1126,7 @@ void grib_context_set_handle_total_count(grib_context* c, int new_count)
 {
     if (!c)
         c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
     c->handle_total_count = new_count;
     GRIB_MUTEX_UNLOCK(&mutex_c);
@@ -1136,7 +1136,7 @@ void grib_context_increment_handle_file_count(grib_context* c)
 {
     if (!c)
         c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
     c->handle_file_count++;
     GRIB_MUTEX_UNLOCK(&mutex_c);
@@ -1145,7 +1145,7 @@ void grib_context_increment_handle_total_count(grib_context* c)
 {
     if (!c)
         c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
     c->handle_total_count++;
     GRIB_MUTEX_UNLOCK(&mutex_c);
@@ -1160,7 +1160,7 @@ bufr_descriptors_array* grib_context_expanded_descriptors_list_get(grib_context*
     if (!c)
         c = grib_context_get_default();
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
 
     if (!c->expanded_descriptors) {
@@ -1200,7 +1200,7 @@ void grib_context_expanded_descriptors_list_push(grib_context* c,
     if (!c)
         c = grib_context_get_default();
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
 
     newdescriptorsList             = (bufr_descriptors_map_list*)grib_context_malloc_clear(c, sizeof(bufr_descriptors_map_list));

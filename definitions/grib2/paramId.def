@@ -254,16 +254,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Maximum 10 metre wind gust since previous post-processing
-'49' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 22 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
 #Large-scale precipitation fraction
 '50' = {
 	 discipline = 0 ;
@@ -444,11 +434,6 @@
 #Total column water
 '136' = {
 	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 51 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	}
 #Total column vertically-integrated water vapour
 '137' = {
 	 discipline = 0 ;
@@ -492,14 +477,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 76 ;
 	}
-#Surface net radiation (SW and LW)
-'149' = {
-	 discipline = 0 ;
-	 parameterCategory = 19 ;
-	 parameterNumber = 46 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
-	}
 #Top net radiation (SW and LW)
 '150' = {
 	 discipline = 0 ;
@@ -507,13 +484,6 @@
 	 parameterNumber = 46 ;
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
-	}
-#Mean sea level pressure
-'151' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 101 ;
 	}
 #Divergence
 '155' = {
@@ -1259,15 +1229,9 @@
 #Mean wave period of second swell partition
 '140126' = {
 	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 51 ;
-	}
 #Significant wave height of third swell partition
 '140127' = {
 	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 49 ;
-	}
 #Mean wave direction of third swell partition
 '140128' = {
 	 discipline = 10 ;
@@ -1367,18 +1331,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 15 ;
 	 typeOfStatisticalProcessing = 0 ;
-	}
-#Mean sea water temperature in the upper 300 m
-'151127' = {
-	 discipline = 10 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 15 ;
-	 typeOfFirstFixedSurface = 160 ;
-	 typeOfSecondFixedSurface = 160 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfSecondFixedSurface = 300 ;
-	 scaleFactorOfSecondFixedSurface = 0 ;
 	}
 #Total column vertically-integrated water enthalpy
 '162093' = {
@@ -1481,14 +1433,6 @@
 	 parameterNumber = 59 ;
 	 typeOfGeneratingProcess = 9 ;
 	}
-#Ammonium aerosol mass mixing ratio
-'210249' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 aerosolType = 62003 ;
-	 is_aerosol = 1 ;
-	}
 #Nitrate aerosol optical depth at 550 nm
 '210250' = {
 	 discipline = 0 ;
@@ -1573,15 +1517,6 @@
 	 typeOfGeneratingProcess = 20 ;
 	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 7 ;
-	}
-#Ammonium aerosol mass mixing ratio
-'211249' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 aerosolType = 62003 ;
-	 typeOfGeneratingProcess = 20 ;
-	 is_aerosol = 1 ;
 	}
 #Biogenic secondary organic aerosol mass mixing ratio increment
 '211252' = {
@@ -3366,15 +3301,6 @@
 	 scaledValueOfFirstFixedSurface = 200 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
-#100 metre wind speed
-'228249' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 100 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
 #Urban cover
 '229001' = {
 	 discipline = 2 ;
@@ -3438,9 +3364,6 @@
 #C4 grass cover
 '229011' = {
 	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 49 ;
-	}
 #Accumulated freezing rain water equivalent
 '231001' = {
 	 discipline = 0 ;
@@ -3790,13 +3713,6 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 16 ;
-	}
-#Geometric height of atmospheric isothermal level above ground
-'231049' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 34 ;
-	 typeOfFirstFixedSurface = 20 ;
 	}
 #Roof temperature
 '231050' = {
@@ -4658,14 +4574,6 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 42 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
-#Mean top net short-wave radiation flux, clear sky
-'235049' = {
-	 discipline = 0 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 11 ;
-	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean top net long-wave radiation flux, clear sky
@@ -5932,9 +5840,6 @@
 #Total water precipitation
 '260045' = {
 	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 49 ;
-	}
 #Total snow precipitation
 '260046' = {
 	 discipline = 0 ;
@@ -5955,12 +5860,6 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
 	 typeOfFirstFixedSurface = 1 ;
-	}
-#Total snowfall rate water equivalent
-'260049' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 53 ;
 	}
 #Large scale precipitation rate
 '260050' = {
@@ -6497,12 +6396,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 4 ;
-	}
-#Icing top
-'260149' = {
-	 discipline = 0 ;
-	 parameterCategory = 19 ;
-	 parameterNumber = 5 ;
 	}
 #Icing base
 '260150' = {
@@ -8687,15 +8580,6 @@
 #Wind stress at sea surface
 '262901' = {
 	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 49 ;
-	 typeOfFirstFixedSurface = 160 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfSecondFixedSurface = missing() ;
-	 scaleFactorOfSecondFixedSurface = missing() ;
-	}
 #Wind speed at 10m above sea surface
 '262902' = {
 	 discipline = 0 ;
@@ -9833,16 +9717,6 @@
 #Time-mean wind stress at sea surface
 '263901' = {
 	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 49 ;
-	 typeOfFirstFixedSurface = 160 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfSecondFixedSurface = missing() ;
-	 scaleFactorOfSecondFixedSurface = missing() ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
 #Time-mean wind speed at 10m above sea surface
 '263902' = {
 	 discipline = 0 ;
@@ -9946,45 +9820,6 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
-	}
-#Time-accumulated net short wave radiation at sea surface
-'264900' = {
-	 discipline = 0 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 9 ;
-	 typeOfFirstFixedSurface = 160 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfSecondFixedSurface = missing() ;
-	 scaleFactorOfSecondFixedSurface = missing() ;
-	 typeOfStatisticalProcessing = 1 ;
-	}
-#Time-accumulated total precipitation at sea surface
-'264904' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 52 ;
-	 typeOfFirstFixedSurface = 160 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfSecondFixedSurface = missing() ;
-	 scaleFactorOfSecondFixedSurface = missing() ;
-	 typeOfStatisticalProcessing = 1 ;
-	}
-#Time-accumulated snow precipitation at sea surface
-'264905' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 66 ;
-	 typeOfFirstFixedSurface = 160 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfSecondFixedSurface = missing() ;
-	 scaleFactorOfSecondFixedSurface = missing() ;
-	 typeOfStatisticalProcessing = 1 ;
 	}
 #Virtual temperature
 '300012' = {
@@ -10871,15 +10706,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 39 ;
 	}
-#10 metre wind direction
-'140249' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 41 ;
-	 typeOfFirstFixedSurface = 102 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
 #2D wave spectra (single)
 '140251' = {
 	 discipline = 10 ;
@@ -11095,14 +10921,6 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 40 ;
 	 typeOfStatisticalProcessing = 1 ;
-	}
-#Time-mean surface net radiation flux (SW and LW)
-'172149' = {
-	 discipline = 0 ;
-	 parameterCategory = 19 ;
-	 parameterNumber = 46 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
 	}
 #Surface runoff
 '174008' = {
@@ -11421,3 +11239,76 @@
 	 scaledValueOfFirstFixedSurface = 100 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 }
+#Time-mean total lightning flash density
+'235326' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum convective available potential energy
+'237287' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum 2 metre temperature
+'237167' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum 10 metre wind gust
+'237318' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum convective available potential energy shear
+'237321' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 19 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum total precipitation rate
+'237055' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum 2 metre temperature
+'238167' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum total precipitation rate
+'238055' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}

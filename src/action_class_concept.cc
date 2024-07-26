@@ -95,7 +95,7 @@ static void init_class(grib_action_class* c)
 static pthread_once_t once   = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-static void init()
+static void init_mutex()
 {
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
@@ -107,7 +107,7 @@ static void init()
 static int once = 0;
 static omp_nest_lock_t mutex;
 
-static void init()
+static void init_mutex()
 {
     GRIB_OMP_CRITICAL(lock_action_class_concept_c)
     {
@@ -306,7 +306,7 @@ static grib_concept_value* get_concept_impl(grib_handle* h, grib_action_concept*
 static grib_concept_value* get_concept(grib_handle* h, grib_action_concept* self)
 {
     grib_concept_value* result = NULL;
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex);
 
     result = get_concept_impl(h, self);

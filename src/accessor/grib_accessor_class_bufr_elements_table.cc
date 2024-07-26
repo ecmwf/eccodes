@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,7 +15,7 @@
 static pthread_once_t once    = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 
-static void thread_init()
+static void init_mutex()
 {
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
@@ -28,7 +27,7 @@ static void thread_init()
 static int once = 0;
 static omp_nest_lock_t mutex1;
 
-void thread_init()
+static void init_mutex()
 {
     GRIB_OMP_CRITICAL(lock_grib_accessor_class_bufr_elements_table_c)
     {
@@ -90,7 +89,7 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     if (self->localDir != NULL)
         grib_get_string(h, self->localDir, localDir, &len);
 
-    GRIB_MUTEX_INIT_ONCE(&once, &thread_init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex1);
 
     if (*masterDir != 0) {
@@ -213,14 +212,14 @@ static int convert_type(const char* stype)
     return ret;
 }
 
-long atol_fast(const char* input)
+static long atol_fast(const char* input)
 {
     if (strcmp(input, "0") == 0)
         return 0;
     return atol(input);
 }
 
-int bufr_get_from_table(grib_accessor* a, bufr_descriptor* v)
+static int bufr_get_from_table(grib_accessor* a, bufr_descriptor* v)
 {
     int ret              = 0;
     char** list          = 0;

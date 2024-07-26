@@ -23,6 +23,8 @@
 
 #define ECCODES_DEFINITION_PATH      "@ECCODES_DEFINITION_PATH@"
 
+#cmakedefine ECCODES_HAVE_C_INLINE
+
 #ifdef ECCODES_HAVE_C_INLINE
 #define GRIB_INLINE inline
 #endif

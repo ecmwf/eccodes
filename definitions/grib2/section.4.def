@@ -51,7 +51,7 @@ concept datasetForLocal(unknown) {
   "unknown" = { dummy=1; }
 }
 
-if (datasetForLocal isnot "unknown") {
+if (!(datasetForLocal is "unknown")) {
    constant conceptsDir2 = "grib2/localConcepts/[datasetForLocal]": hidden;
    constant conceptsDir1 = "grib2": hidden;
 }
@@ -126,5 +126,8 @@ if (paramId >= 140000 && paramId < 141000 &&
   unalias mars.paramtype;
   alias mars.paramtype = paramTypeWave;
 }
+
+template timeproc "grib2/timeproc.def";
+alias mars.timeproc = timeproc ;
 
 meta md5Section4 md5(offsetSection4,section4Length);

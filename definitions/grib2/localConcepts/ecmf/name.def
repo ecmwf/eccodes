@@ -917,12 +917,6 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 193 ;
 	}
-#Accumulated ice water tendency
-'Accumulated ice water tendency' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 249 ;
-	}
 #Ice age
 'Ice age' = {
 	 discipline = 192 ;
@@ -1174,12 +1168,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 48 ;
-	}
-#10 metre wind gust difference
-'10 metre wind gust difference' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 49 ;
 	}
 #Large-scale precipitation fraction difference
 'Large-scale precipitation fraction difference' = {
@@ -1714,12 +1702,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 148 ;
-	}
-#Surface net radiation difference
-'Surface net radiation difference' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 149 ;
 	}
 #Top net radiation difference
 'Top net radiation difference' = {
@@ -2292,12 +2274,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 248 ;
-	}
-#Accumulated ice water tendency difference
-'Accumulated ice water tendency difference' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 249 ;
 	}
 #Ice age difference
 'Ice age difference' = {
@@ -3335,12 +3311,6 @@
 'Experimental product' = {
 	 discipline = 192 ;
 	 parameterCategory = 212 ;
-	 parameterNumber = 49 ;
-	}
-#Experimental product
-'Experimental product' = {
-	 discipline = 192 ;
-	 parameterCategory = 212 ;
 	 parameterNumber = 50 ;
 	}
 #Experimental product
@@ -3930,12 +3900,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 212 ;
 	 parameterNumber = 148 ;
-	}
-#Experimental product
-'Experimental product' = {
-	 discipline = 192 ;
-	 parameterCategory = 212 ;
-	 parameterNumber = 149 ;
 	}
 #Experimental product
 'Experimental product' = {
@@ -4535,12 +4499,6 @@
 'Experimental product' = {
 	 discipline = 192 ;
 	 parameterCategory = 212 ;
-	 parameterNumber = 249 ;
-	}
-#Experimental product
-'Experimental product' = {
-	 discipline = 192 ;
-	 parameterCategory = 212 ;
 	 parameterNumber = 250 ;
 	}
 #Experimental product
@@ -4890,13 +4848,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 213 ;
 	 parameterNumber = 148 ;
-	}
-#Random pattern 49 for SPP scheme
-'Random pattern 49 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 149 ;
-	}
 #Random pattern 50 for SPP scheme
 'Random pattern 50 for SPP scheme' = {
 	 discipline = 192 ;
@@ -5617,12 +5568,6 @@
 	 parameterCategory = 214 ;
 	 parameterNumber = 48 ;
 	}
-#Clear-sky surface UV spectral flux (385-390 nm)
-'Clear-sky surface UV spectral flux (385-390 nm)' = {
-	 discipline = 192 ;
-	 parameterCategory = 214 ;
-	 parameterNumber = 49 ;
-	}
 #Clear-sky surface UV spectral flux (390-395 nm)
 'Clear-sky surface UV spectral flux (390-395 nm)' = {
 	 discipline = 192 ;
@@ -5928,12 +5873,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 48 ;
-	}
-#Source/gain of hydrophobic organic matter aerosol
-'Source/gain of hydrophobic organic matter aerosol' = {
-	 discipline = 192 ;
-	 parameterCategory = 215 ;
-	 parameterNumber = 49 ;
 	}
 #Source/gain of hydrophilic organic matter aerosol
 'Source/gain of hydrophilic organic matter aerosol' = {
@@ -6528,12 +6467,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 148 ;
-	}
-#Single scattering albedo at 1640 nm
-'Single scattering albedo at 1640 nm' = {
-	 discipline = 192 ;
-	 parameterCategory = 215 ;
-	 parameterNumber = 149 ;
 	}
 #Asymmetry factor at 340 nm
 'Asymmetry factor at 340 nm' = {

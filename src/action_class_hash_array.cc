@@ -98,7 +98,7 @@ static void init_class(grib_action_class* c)
 static pthread_once_t once   = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-static void init()
+static void init_mutex()
 {
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
@@ -110,7 +110,7 @@ static void init()
 static int once = 0;
 static omp_nest_lock_t mutex;
 
-static void init()
+static void init_mutex()
 {
     GRIB_OMP_CRITICAL(lock_action_class_hash_array_c)
     {
@@ -325,7 +325,7 @@ static grib_hash_array_value* get_hash_array_impl(grib_handle* h, grib_action* a
 grib_hash_array_value* get_hash_array(grib_handle* h, grib_action* a)
 {
     grib_hash_array_value* result = NULL;
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex);
 
     result = get_hash_array_impl(h, a);

@@ -308,6 +308,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
 unsigned long grib_decode_unsigned_byte_long(const unsigned char* p, long o, int l);
 long grib_decode_signed_long(const unsigned char* p, long o, int l);
 int grib_encode_signed_long(unsigned char* p, long val, long o, int l);
+void grib_set_bit_on(unsigned char*, long*);
 void grib_set_bits_on(unsigned char* p, long* bitp, long nbits);
 int grib_get_bit(const unsigned char* p, long bitp);
 void grib_set_bit(unsigned char* p, long bitp, int val);
@@ -853,6 +854,7 @@ int codes_check_grib_ieee_packing_value(int value);
 int codes_flush_sync_close_file(FILE* f);
 int is_date_valid(long year, long month, long day, long hour, long minute, double second);
 int is_time_valid(long number); // number is HHMM
+long convert_to_minutes(long step, long stepUnits);
 int compute_scaled_value_and_scale_factor(double input, int64_t scaled_value_max, int64_t scale_factor_max, int64_t* ret_value, int64_t* ret_factor);
 
 /* grib_util.cc */
