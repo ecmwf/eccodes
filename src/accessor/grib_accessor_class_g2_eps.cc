@@ -123,47 +123,6 @@ int grib_accessor_class_g2_eps_t::pack_long(grib_accessor* a, const long* val, s
         // }
     }
 
-    // Adjust for chemical species
-    // if (chemical == 1) {
-    //     if (eps == 1) {
-    //         if (isInstant) {
-    //             productDefinitionTemplateNumberNew = 41;
-    //         }
-    //         else {
-    //             productDefinitionTemplateNumberNew = 43;
-    //         }
-    //     }
-    //     else {
-    //         if (isInstant) {
-    //             productDefinitionTemplateNumberNew = 40;
-    //         }
-    //         else {
-    //             productDefinitionTemplateNumberNew = 42;
-    //         }
-    //     }
-    // }
-
-    // Adjust for aerosols
-    // if (aerosol == 1) {
-    //     if (eps == 1) {
-    //         if (isInstant) {
-    //             productDefinitionTemplateNumberNew = 45;
-    //         }
-    //         else {
-    //             // productDefinitionTemplateNumberNew = 47;   This PDT is deprecated
-    //             productDefinitionTemplateNumberNew = 85;
-    //         }
-    //     }
-    //     else {
-    //         if (isInstant) {
-    //             productDefinitionTemplateNumberNew = 48;  // 44 is deprecated*/
-    //         }
-    //         else {
-    //             productDefinitionTemplateNumberNew = 46;
-    //         }
-    //     }
-    // }
-
     if (productDefinitionTemplateNumberNew >=0 && productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
         grib_set_long(hand, self->productDefinitionTemplateNumber, productDefinitionTemplateNumberNew);
         if (derivedForecast >= 0)
