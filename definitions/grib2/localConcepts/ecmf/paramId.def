@@ -194,30 +194,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 46 ;
 	}
-#Maximum temperature at 2 metres in the last 24 hours
-'51' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 lengthOfTimeRange = 24 ;
-	}
-#Minimum temperature at 2 metres in the last 24 hours
-'52' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 3 ;
-	 lengthOfTimeRange = 24 ;
-	}
 #Observation count
 '62' = {
 	 discipline = 192 ;
@@ -523,12 +499,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 120 ;
-	}
-#Maximum 10 metre wind gust in the last 6 hours
-'123' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 123 ;
 	}
 #Vertically integrated total energy
 '125' = {
@@ -917,6 +887,12 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 193 ;
 	}
+#Accumulated ice water tendency
+'249' = {
+	 discipline = 192 ;
+	 parameterCategory = 128 ;
+	 parameterNumber = 249 ;
+	}
 #Ice age
 '250' = {
 	 discipline = 192 ;
@@ -1168,6 +1144,12 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 48 ;
+	}
+#10 metre wind gust difference
+'200049' = {
+	 discipline = 192 ;
+	 parameterCategory = 200 ;
+	 parameterNumber = 49 ;
 	}
 #Large-scale precipitation fraction difference
 '200050' = {
@@ -1702,6 +1684,12 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 148 ;
+	}
+#Surface net radiation difference
+'200149' = {
+	 discipline = 192 ;
+	 parameterCategory = 200 ;
+	 parameterNumber = 149 ;
 	}
 #Top net radiation difference
 '200150' = {
@@ -2274,6 +2262,12 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 248 ;
+	}
+#Accumulated ice water tendency difference
+'200249' = {
+	 discipline = 192 ;
+	 parameterCategory = 200 ;
+	 parameterNumber = 249 ;
 	}
 #Ice age difference
 '200250' = {
@@ -3308,6 +3302,12 @@
 	 parameterNumber = 48 ;
 	}
 #Experimental product
+'212049' = {
+	 discipline = 192 ;
+	 parameterCategory = 212 ;
+	 parameterNumber = 49 ;
+	}
+#Experimental product
 '212050' = {
 	 discipline = 192 ;
 	 parameterCategory = 212 ;
@@ -3900,6 +3900,12 @@
 	 discipline = 192 ;
 	 parameterCategory = 212 ;
 	 parameterNumber = 148 ;
+	}
+#Experimental product
+'212149' = {
+	 discipline = 192 ;
+	 parameterCategory = 212 ;
+	 parameterNumber = 149 ;
 	}
 #Experimental product
 '212150' = {
@@ -4496,6 +4502,12 @@
 	 parameterNumber = 248 ;
 	}
 #Experimental product
+'212249' = {
+	 discipline = 192 ;
+	 parameterCategory = 212 ;
+	 parameterNumber = 249 ;
+	}
+#Experimental product
 '212250' = {
 	 discipline = 192 ;
 	 parameterCategory = 212 ;
@@ -4848,6 +4860,13 @@
 	 discipline = 192 ;
 	 parameterCategory = 213 ;
 	 parameterNumber = 148 ;
+	}
+#Random pattern 49 for SPP scheme
+'213149' = {
+	 discipline = 192 ;
+	 parameterCategory = 213 ;
+	 parameterNumber = 149 ;
+	}
 #Random pattern 50 for SPP scheme
 '213150' = {
 	 discipline = 192 ;
@@ -5568,6 +5587,12 @@
 	 parameterCategory = 214 ;
 	 parameterNumber = 48 ;
 	}
+#Clear-sky surface UV spectral flux (385-390 nm)
+'214049' = {
+	 discipline = 192 ;
+	 parameterCategory = 214 ;
+	 parameterNumber = 49 ;
+	}
 #Clear-sky surface UV spectral flux (390-395 nm)
 '214050' = {
 	 discipline = 192 ;
@@ -5873,6 +5898,12 @@
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 48 ;
+	}
+#Source/gain of hydrophobic organic matter aerosol
+'215049' = {
+	 discipline = 192 ;
+	 parameterCategory = 215 ;
+	 parameterNumber = 49 ;
 	}
 #Source/gain of hydrophilic organic matter aerosol
 '215050' = {
@@ -6467,6 +6498,12 @@
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 148 ;
+	}
+#Single scattering albedo at 1640 nm
+'215149' = {
+	 discipline = 192 ;
+	 parameterCategory = 215 ;
+	 parameterNumber = 149 ;
 	}
 #Asymmetry factor at 340 nm
 '215150' = {
@@ -13532,30 +13569,6 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 25 ;
 	}
-#Maximum temperature at 2 metres in the last 3 hours
-'228026' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 lengthOfTimeRange = 3 ;
-	}
-#Minimum temperature at 2 metres in the last 3 hours
-'228027' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 3 ;
-	 lengthOfTimeRange = 3 ;
-	}
 #Soil wetness index in layer 1
 '228040' = {
 	 discipline = 192 ;
@@ -19138,12 +19151,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 174 ;
 	 parameterNumber = 42 ;
-	}
-#10 metre wind gust in the last 24 hours
-'174049' = {
-	 discipline = 192 ;
-	 parameterCategory = 174 ;
-	 parameterNumber = 49 ;
 	}
 #1.5m temperature - mean in the last 24 hours
 '174055' = {
