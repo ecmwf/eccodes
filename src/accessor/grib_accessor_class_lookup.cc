@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,39 +10,42 @@
 
 #include "grib_accessor_class_lookup.h"
 
-grib_accessor_class_lookup_t _grib_accessor_class_lookup{"lookup"};
+grib_accessor_class_lookup_t _grib_accessor_class_lookup{ "lookup" };
 grib_accessor_class* grib_accessor_class_lookup = &_grib_accessor_class_lookup;
 
 
-void grib_accessor_class_lookup_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+void grib_accessor_class_lookup_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+{
     grib_accessor_class_long_t::init(a, len, arg);
     grib_accessor_lookup_t* self = (grib_accessor_lookup_t*)a;
-    a->length                  = 0;
-    self->llength              = len;
-    self->loffset              = grib_arguments_get_long(grib_handle_of_accessor(a), arg, 0);
+
+    a->length     = 0;
+    self->llength = len;
+    self->loffset = grib_arguments_get_long(grib_handle_of_accessor(a), arg, 0);
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     self->real_name = grib_arguments_get_expression(grib_handle_of_accessor(a), arg, 1);
 }
 
-void grib_accessor_class_lookup_t::post_init(grib_accessor* a){
+void grib_accessor_class_lookup_t::post_init(grib_accessor* a)
+{
     grib_accessor_lookup_t* self = (grib_accessor_lookup_t*)a;
     if (self->real_name) {
         grib_dependency_observe_expression(a, self->real_name);
     }
 }
 
-void grib_accessor_class_lookup_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_lookup_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_accessor_lookup_t* self = (grib_accessor_lookup_t*)a;
-    unsigned char bytes[1024]  = {0,};
+    unsigned char bytes[1024] = {0,};
     char msg[1024] = {0,};
     char buf[2048];
-    int i;
     unsigned long v = 0;
 
     size_t llen = self->llength;
     a->unpack_bytes(bytes, &llen);
     bytes[llen] = 0;
-    for (i = 0; i < llen; i++) {
+    for (size_t i = 0; i < llen; i++) {
         msg[i] = isprint(bytes[i]) ? bytes[i] : '?';
         v <<= 8;
         v |= bytes[i];
@@ -56,16 +58,16 @@ void grib_accessor_class_lookup_t::dump(grib_accessor* a, grib_dumper* dumper){
     grib_dump_long(dumper, a, buf);
 }
 
-int grib_accessor_class_lookup_t::unpack_string(grib_accessor* a, char* v, size_t* len){
+int grib_accessor_class_lookup_t::unpack_string(grib_accessor* a, char* v, size_t* len)
+{
     grib_accessor_lookup_t* self = (grib_accessor_lookup_t*)a;
-    unsigned char bytes[1024]  = {0,};
-    int i;
+    unsigned char bytes[1024]    = {0,};
 
     size_t llen = self->llength;
     a->unpack_bytes(bytes, &llen);
     bytes[llen] = 0;
 
-    for (i = 0; i < llen; i++) {
+    for (size_t i = 0; i < llen; i++) {
         v[i] = isprint(bytes[i]) ? bytes[i] : '?';
     }
 
@@ -87,9 +89,10 @@ int grib_accessor_class_lookup_t::unpack_string(grib_accessor* a, char* v, size_
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_lookup_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_lookup_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_lookup_t* self = (grib_accessor_lookup_t*)a;
-    grib_handle* h           = grib_handle_of_accessor(a);
+    grib_handle* h               = grib_handle_of_accessor(a);
 
     long pos = (a->offset + self->loffset) * 8;
 
@@ -113,21 +116,25 @@ int grib_accessor_class_lookup_t::unpack_long(grib_accessor* a, long* val, size_
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_lookup_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_lookup_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     return GRIB_NOT_IMPLEMENTED;
 }
 
-long grib_accessor_class_lookup_t::byte_count(grib_accessor* a){
+long grib_accessor_class_lookup_t::byte_count(grib_accessor* a)
+{
     grib_accessor_lookup_t* self = (grib_accessor_lookup_t*)a;
     return self->llength;
 }
 
-long grib_accessor_class_lookup_t::byte_offset(grib_accessor* a){
+long grib_accessor_class_lookup_t::byte_offset(grib_accessor* a)
+{
     grib_accessor_lookup_t* self = (grib_accessor_lookup_t*)a;
     return self->loffset;
 }
 
-int grib_accessor_class_lookup_t::notify_change(grib_accessor* self, grib_accessor* changed){
+int grib_accessor_class_lookup_t::notify_change(grib_accessor* self, grib_accessor* changed)
+{
     /* Forward changes */
     return grib_dependency_notify_change(self);
 }

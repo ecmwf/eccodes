@@ -272,7 +272,7 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
 
             switch (type) {
                 case GRIB_TYPE_STRING:
-                    len  = 512;
+                    len  = 1024;
                     sval = (char*)grib_context_malloc(src->context, len * sizeof(char));
 
                     if ((*err = grib_get_string(src, key, sval, &len)) != GRIB_SUCCESS)
@@ -309,8 +309,7 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
                     break;
 
                 case GRIB_TYPE_BYTES:
-                    if (len == 0)
-                        len = 512;
+                    len = 1024;
                     uval = (unsigned char*)grib_context_malloc(src->context, len * sizeof(unsigned char));
 
                     if ((*err = grib_get_bytes(src, key, uval, &len)) != GRIB_SUCCESS)
