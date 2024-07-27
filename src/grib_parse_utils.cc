@@ -92,7 +92,7 @@ int grib_recompose_name(grib_handle* h, grib_accessor* observer, const char* una
     fname[0]     = 0;
     ptrEnd_fname = fname;
 
-    /* uname is a string like "grib[GRIBEditionNumber:l]/boot.def". The result fname will be grib2/boot.def */
+    /* uname is a string like "grib[GRIBEditionNumber:i]/boot.def". The result fname will be grib2/boot.def */
     while (uname[i] != '\0') {
         if (mode > -1) {
             if (uname[i] == ':') {
@@ -109,7 +109,7 @@ int grib_recompose_name(grib_handle* h, grib_accessor* observer, const char* una
                     }
                     else {
                         grib_context_log(h->context, GRIB_LOG_WARNING,
-                        "Recompose name: Problem recomposing filename with : %s ( %s no accessor found)", uname, loc);
+                          "%s: Problem recomposing filename with: %s (%s no accessor found)", __func__, uname, loc);
                         return GRIB_NOT_FOUND;
                     }
                 }
