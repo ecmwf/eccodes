@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,14 +10,15 @@
 
 #include "grib_accessor_class_padtoeven.h"
 
-grib_accessor_class_padtoeven_t _grib_accessor_class_padtoeven{"padtoeven"};
+grib_accessor_class_padtoeven_t _grib_accessor_class_padtoeven{ "padtoeven" };
 grib_accessor_class* grib_accessor_class_padtoeven = &_grib_accessor_class_padtoeven;
 
 
-size_t grib_accessor_class_padtoeven_t::preferred_size(grib_accessor* a, int from_handle){
+size_t grib_accessor_class_padtoeven_t::preferred_size(grib_accessor* a, int from_handle)
+{
     grib_accessor_padtoeven_t* self = (grib_accessor_padtoeven_t*)a;
-    long offset                   = 0;
-    long length                   = 0;
+    long offset                     = 0;
+    long length                     = 0;
     long seclen;
 
     grib_get_long_internal(grib_handle_of_accessor(a), self->section_offset, &offset);
@@ -31,13 +31,14 @@ size_t grib_accessor_class_padtoeven_t::preferred_size(grib_accessor* a, int fro
         return 0;
     }
 
-    /* printf("EVEN %ld %ld\n",(long) a->offset,(long) offset);*/
+    // printf("EVEN %ld %ld\n",(long) a->offset,(long) offset);
     seclen = a->offset - offset;
 
     return (seclen % 2) ? 1 : 0;
 }
 
-void grib_accessor_class_padtoeven_t::init(grib_accessor* a, const long len, grib_arguments* args){
+void grib_accessor_class_padtoeven_t::init(grib_accessor* a, const long len, grib_arguments* args)
+{
     grib_accessor_class_padding_t::init(a, len, args);
     grib_accessor_padtoeven_t* self = (grib_accessor_padtoeven_t*)a;
 

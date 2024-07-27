@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,11 +10,12 @@
 
 #include "grib_accessor_class_section_length.h"
 
-grib_accessor_class_section_length_t _grib_accessor_class_section_length{"section_length"};
+grib_accessor_class_section_length_t _grib_accessor_class_section_length{ "section_length" };
 grib_accessor_class* grib_accessor_class_section_length = &_grib_accessor_class_section_length;
 
 
-void grib_accessor_class_section_length_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+void grib_accessor_class_section_length_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+{
     grib_accessor_class_unsigned_t::init(a, len, arg);
     a->parent->aclength = a;
     a->length           = len;
@@ -24,11 +24,13 @@ void grib_accessor_class_section_length_t::init(grib_accessor* a, const long len
     Assert(a->length >= 0);
 }
 
-void grib_accessor_class_section_length_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_section_length_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_dump_long(dumper, a, NULL);
 }
 
-int grib_accessor_class_section_length_t::value_count(grib_accessor* a, long* c){
+int grib_accessor_class_section_length_t::value_count(grib_accessor* a, long* c)
+{
     *c = 1;
     return 0;
 }
