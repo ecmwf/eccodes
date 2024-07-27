@@ -1095,10 +1095,8 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
         case GRIB_TYPE_BYTES:
             if (verbose)
                 printf(" as bytes\n");
-            if (len1 < 2)
-                len1 = 512;
-            if (len2 < 2)
-                len2 = 512;
+            grib_get_string_length(h1, name, &len1);
+            grib_get_string_length(h2, name, &len2);
             uval1 = (unsigned char*)grib_context_malloc(h1->context, len1 * sizeof(unsigned char));
             uval2 = (unsigned char*)grib_context_malloc(h2->context, len2 * sizeof(unsigned char));
 
