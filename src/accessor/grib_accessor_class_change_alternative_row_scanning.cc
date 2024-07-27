@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,15 +10,16 @@
 
 #include "grib_accessor_class_change_alternative_row_scanning.h"
 
-grib_accessor_class_change_alternative_row_scanning_t _grib_accessor_class_change_alternative_row_scanning{"change_alternative_row_scanning"};
+grib_accessor_class_change_alternative_row_scanning_t _grib_accessor_class_change_alternative_row_scanning{ "change_alternative_row_scanning" };
 grib_accessor_class* grib_accessor_class_change_alternative_row_scanning = &_grib_accessor_class_change_alternative_row_scanning;
 
 
-void grib_accessor_class_change_alternative_row_scanning_t::init(grib_accessor* a, const long len, grib_arguments* args){
+void grib_accessor_class_change_alternative_row_scanning_t::init(grib_accessor* a, const long len, grib_arguments* args)
+{
     grib_accessor_class_gen_t::init(a, len, args);
-    int n                                               = 0;
     grib_accessor_change_alternative_row_scanning_t* self = (grib_accessor_change_alternative_row_scanning_t*)a;
 
+    int n = 0;
     self->values                 = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
     self->Ni                     = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
     self->Nj                     = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
@@ -29,15 +29,17 @@ void grib_accessor_class_change_alternative_row_scanning_t::init(grib_accessor* 
     a->length = 0;
 }
 
-int grib_accessor_class_change_alternative_row_scanning_t::pack_long(grib_accessor* a, const long* val, size_t* len){
-    int err = 0;
+int grib_accessor_class_change_alternative_row_scanning_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_change_alternative_row_scanning_t* self = (grib_accessor_change_alternative_row_scanning_t*)a;
+
+    int err               = 0;
     const grib_context* c = a->context;
-    grib_handle* h  = grib_handle_of_accessor(a);
+    grib_handle* h        = grib_handle_of_accessor(a);
     long i, j, jr, theEnd, Ni, Nj, k, kp, alternativeRowScanning;
-    size_t size = 0;
+    size_t size    = 0;
     double* values = NULL;
-    double tmp = 0.0;
+    double tmp     = 0.0;
 
     if (*val == 0)
         return 0;
@@ -62,7 +64,7 @@ int grib_accessor_class_change_alternative_row_scanning_t::pack_long(grib_access
     if ((err = grib_get_size(h, self->values, &size)) != GRIB_SUCCESS)
         return err;
 
-    if ( size > (size_t)(Ni * Nj) ) {
+    if (size > (size_t)(Ni * Nj)) {
         grib_context_log(c, GRIB_LOG_ERROR, "change_alternative_row_scanning: wrong values size!=Ni*Nj (%zu!=%ld*%ld)", size, Ni, Nj);
         return GRIB_WRONG_ARRAY_SIZE;
     }
@@ -106,11 +108,13 @@ int grib_accessor_class_change_alternative_row_scanning_t::pack_long(grib_access
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_change_alternative_row_scanning_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_change_alternative_row_scanning_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_LONG;
 }
 
-int grib_accessor_class_change_alternative_row_scanning_t::unpack_long(grib_accessor* a, long* v, size_t* len){
+int grib_accessor_class_change_alternative_row_scanning_t::unpack_long(grib_accessor* a, long* v, size_t* len)
+{
     /* Decoding this accessor doesn't make sense so we return a dummy value */
     *v = -1;
     return GRIB_SUCCESS;
