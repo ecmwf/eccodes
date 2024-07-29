@@ -67,10 +67,8 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     char masterDir[1024] = {0,};
     char localDir[1024] = {0,};
     char dictName[1024] = {0,};
-    char masterRecomposed[1024] = {0,}; /*e.g. bufr/tables/0/wmo/36/element.table */
-    char localRecomposed[1024] = {
-        0,
-    }; /*e.g. bufr/tables/0/local/0/98/0/element.table */
+    char masterRecomposed[1024] = {0,}; //e.g. bufr/tables/0/wmo/36/element.table
+    char localRecomposed[1024] = {0,};  //e.g. bufr/tables/0/local/0/98/0/element.table
     char* localFilename   = 0;
     char** list           = 0;
     char** cached_list    = 0;
