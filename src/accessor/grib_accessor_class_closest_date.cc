@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -12,34 +11,37 @@
 #include "grib_accessor_class_closest_date.h"
 #include <float.h>
 
-grib_accessor_class_closest_date_t _grib_accessor_class_closest_date{"closest_date"};
+grib_accessor_class_closest_date_t _grib_accessor_class_closest_date{ "closest_date" };
 grib_accessor_class* grib_accessor_class_closest_date = &_grib_accessor_class_closest_date;
 
 
-void grib_accessor_class_closest_date_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_closest_date_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_closest_date_t* self = (grib_accessor_closest_date_t*)a;
-    grib_handle* h = grib_handle_of_accessor(a);
-    int n = 0;
+    grib_handle* h                     = grib_handle_of_accessor(a);
+    int n                              = 0;
 
-    self->dateLocal = grib_arguments_get_name(h, c, n++);
-    self->timeLocal = grib_arguments_get_name(h, c, n++);
+    self->dateLocal    = grib_arguments_get_name(h, c, n++);
+    self->timeLocal    = grib_arguments_get_name(h, c, n++);
     self->numForecasts = grib_arguments_get_name(h, c, n++);
-    self->year   = grib_arguments_get_name(h, c, n++);
-    self->month  = grib_arguments_get_name(h, c, n++);
-    self->day    = grib_arguments_get_name(h, c, n++);
-    self->hour   = grib_arguments_get_name(h, c, n++);
-    self->minute = grib_arguments_get_name(h, c, n++);
-    self->second = grib_arguments_get_name(h, c, n++);
+    self->year         = grib_arguments_get_name(h, c, n++);
+    self->month        = grib_arguments_get_name(h, c, n++);
+    self->day          = grib_arguments_get_name(h, c, n++);
+    self->hour         = grib_arguments_get_name(h, c, n++);
+    self->minute       = grib_arguments_get_name(h, c, n++);
+    self->second       = grib_arguments_get_name(h, c, n++);
 
     a->length = 0;
 }
 
-void grib_accessor_class_closest_date_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_closest_date_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_dump_string(dumper, a, NULL);
 }
 
-int grib_accessor_class_closest_date_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_closest_date_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     int ret  = 0;
     double v = 0;
 
@@ -50,24 +52,25 @@ int grib_accessor_class_closest_date_t::unpack_long(grib_accessor* a, long* val,
 }
 
 /* Sets val to the 'index' of the closes date */
-int grib_accessor_class_closest_date_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_closest_date_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     const grib_accessor_closest_date_t* self = (grib_accessor_closest_date_t*)a;
 
-    int err = 0;
+    int err            = 0;
     long num_forecasts = 0; /* numberOfForecastsUsedInLocalTime */
     /* These relate to the date and time in Section 1 */
     long ymdLocal, hmsLocal, yearLocal, monthLocal, dayLocal, hourLocal, minuteLocal, secondLocal;
-    double jLocal = 0;
+    double jLocal  = 0;
     double minDiff = DBL_MAX;
-    size_t i = 0;
-    size_t size = 0; /* number of elements in the array keys - should be = numberOfForecastsUsedInLocalTime */
+    size_t i       = 0;
+    size_t size    = 0; /* number of elements in the array keys - should be = numberOfForecastsUsedInLocalTime */
 
     /* These relate to the forecast dates and times in Section 4 */
     long *yearArray, *monthArray, *dayArray, *hourArray, *minuteArray, *secondArray;
 
-    grib_handle* h = grib_handle_of_accessor(a);
+    grib_handle* h        = grib_handle_of_accessor(a);
     const grib_context* c = a->context;
-    *val = -1; /* initialise to an invalid index */
+    *val                  = -1; /* initialise to an invalid index */
 
     if ((err = grib_get_long_internal(h, self->numForecasts, &num_forecasts)) != GRIB_SUCCESS) return err;
     Assert(num_forecasts > 1);
@@ -79,7 +82,7 @@ int grib_accessor_class_closest_date_t::unpack_double(grib_accessor* a, double* 
     ymdLocal %= 100;
     dayLocal = ymdLocal;
 
-    if ((err= grib_get_long(h, self->timeLocal, &hmsLocal)) != GRIB_SUCCESS) return err;
+    if ((err = grib_get_long(h, self->timeLocal, &hmsLocal)) != GRIB_SUCCESS) return err;
     hourLocal = hmsLocal / 100;
     hmsLocal %= 100;
     minuteLocal = hmsLocal / 100;
@@ -117,14 +120,14 @@ int grib_accessor_class_closest_date_t::unpack_double(grib_accessor* a, double* 
     if ((err = grib_get_long_array_internal(h, self->second, secondArray, &size)) != GRIB_SUCCESS) return err;
 
     grib_datetime_to_julian(yearLocal, monthLocal, dayLocal, hourLocal, minuteLocal, secondLocal, &jLocal);
-    for(i=0; i< size; ++i) {
+    for (i = 0; i < size; ++i) {
         double jval = 0, diff = 0;
         grib_datetime_to_julian(yearArray[i], monthArray[i], dayArray[i],
                                 hourArray[i], minuteArray[i], secondArray[i], &jval);
         diff = jLocal - jval;
         if (diff >= 0 && diff < minDiff) {
             minDiff = diff;
-            *val = i;
+            *val    = i;
         }
     }
     if (*val == -1) {

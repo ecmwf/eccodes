@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,20 +10,22 @@
 
 #include "grib_accessor_class_ksec1expver.h"
 
-grib_accessor_class_ksec1expver_t _grib_accessor_class_ksec1expver{"ksec1expver"};
+grib_accessor_class_ksec1expver_t _grib_accessor_class_ksec1expver{ "ksec1expver" };
 grib_accessor_class* grib_accessor_class_ksec1expver = &_grib_accessor_class_ksec1expver;
 
 
-void grib_accessor_class_ksec1expver_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+void grib_accessor_class_ksec1expver_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+{
     grib_accessor_class_ascii_t::init(a, len, arg);
     a->length = len;
     Assert(a->length >= 0);
 }
 
-int grib_accessor_class_ksec1expver_t::unpack_long(grib_accessor* a, long* val, size_t* len){
-    long value = 0;
-    long pos   = a->offset * 8;
-    char* intc = NULL;
+int grib_accessor_class_ksec1expver_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
+    long value  = 0;
+    long pos    = a->offset * 8;
+    char* intc  = NULL;
     char* pTemp = NULL;
     char expver[5];
     char refexpver[5];
@@ -40,7 +41,7 @@ int grib_accessor_class_ksec1expver_t::unpack_long(grib_accessor* a, long* val, 
 
     a->unpack_string(refexpver, &llen);
     /* test for endian */
-    intc = (char*)&value;
+    intc  = (char*)&value;
     pTemp = intc;
 
     expver[0] = *pTemp++;
@@ -49,11 +50,11 @@ int grib_accessor_class_ksec1expver_t::unpack_long(grib_accessor* a, long* val, 
     expver[3] = *pTemp++;
     expver[4] = 0;
 
-//     expver[0] = intc[0];
-//     expver[1] = intc[1];
-//     expver[2] = intc[2];
-//     expver[3] = intc[3];
-//     expver[4] = 0;
+    //     expver[0] = intc[0];
+    //     expver[1] = intc[1];
+    //     expver[2] = intc[2];
+    //     expver[3] = intc[3];
+    //     expver[4] = 0;
 
     /* if there is a difference, have to reverse*/
     if (strcmp(refexpver, expver)) {
@@ -68,7 +69,8 @@ int grib_accessor_class_ksec1expver_t::unpack_long(grib_accessor* a, long* val, 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_ksec1expver_t::pack_string(grib_accessor* a, const char* val, size_t* len){
+int grib_accessor_class_ksec1expver_t::pack_string(grib_accessor* a, const char* val, size_t* len)
+{
     int i = 0;
     if (len[0] != 4) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong length for %s. It has to be 4", a->name);
@@ -76,7 +78,7 @@ int grib_accessor_class_ksec1expver_t::pack_string(grib_accessor* a, const char*
     }
     if (len[0] > (a->length) + 1) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "pack_string: Wrong size (%lu) for %s, it contains %ld values",
-                len[0], a->name, a->length + 1);
+                         len[0], a->name, a->length + 1);
         len[0] = 0;
         return GRIB_BUFFER_TOO_SMALL;
     }
@@ -87,7 +89,8 @@ int grib_accessor_class_ksec1expver_t::pack_string(grib_accessor* a, const char*
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_ksec1expver_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_ksec1expver_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     char sval[5] = {0,};
     size_t slen = 4;
     snprintf(sval, sizeof(sval), "%04d", (int)(*val));

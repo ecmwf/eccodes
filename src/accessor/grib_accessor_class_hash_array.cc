@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,36 +10,42 @@
 
 #include "grib_accessor_class_hash_array.h"
 
-grib_accessor_class_hash_array_t _grib_accessor_class_hash_array{"hash_array"};
+grib_accessor_class_hash_array_t _grib_accessor_class_hash_array{ "hash_array" };
 grib_accessor_class* grib_accessor_class_hash_array = &_grib_accessor_class_hash_array;
 
 
 #define MAX_HASH_ARRAY_STRING_LENGTH 255
 
-void grib_accessor_class_hash_array_t::init(grib_accessor* a, const long len, grib_arguments* args){
+void grib_accessor_class_hash_array_t::init(grib_accessor* a, const long len, grib_arguments* args)
+{
     grib_accessor_class_gen_t::init(a, len, args);
     grib_accessor_hash_array_t* self = (grib_accessor_hash_array_t*)a;
-    a->length                      = 0;
-    self->key                      = 0;
-    self->ha                       = NULL;
+    a->length                        = 0;
+    self->key                        = 0;
+    self->ha                         = NULL;
 }
 
-void grib_accessor_class_hash_array_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_hash_array_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_dump_string(dumper, a, NULL);
 }
 
-int grib_accessor_class_hash_array_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_hash_array_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_hash_array_t* self = (grib_accessor_hash_array_t*)a;
-    char s[200]                    = {0,};
+
+    char s[200] = {0,};
     snprintf(s, sizeof(s), "%g", *val);
     self->key = grib_context_strdup(a->context, s);
     self->ha  = 0;
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_hash_array_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_hash_array_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_hash_array_t* self = (grib_accessor_hash_array_t*)a;
-    char s[200]                    = {0,};
+
+    char s[200] = {0,};
     snprintf(s, sizeof(s), "%ld", *val);
     if (self->key)
         grib_context_free(a->context, self->key);
@@ -49,22 +54,24 @@ int grib_accessor_class_hash_array_t::pack_long(grib_accessor* a, const long* va
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_hash_array_t::pack_string(grib_accessor* a, const char* v, size_t* len){
+int grib_accessor_class_hash_array_t::pack_string(grib_accessor* a, const char* v, size_t* len)
+{
     grib_accessor_hash_array_t* self = (grib_accessor_hash_array_t*)a;
-    self->key                      = grib_context_strdup(a->context, v);
-    self->ha                       = 0;
+    self->key  = grib_context_strdup(a->context, v);
+    self->ha   = 0;
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_hash_array_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_hash_array_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     return GRIB_NOT_IMPLEMENTED;
 }
 
 static grib_hash_array_value* find_hash_value(grib_accessor* a, int* err)
 {
     grib_accessor_hash_array_t* self = (grib_accessor_hash_array_t*)a;
-    grib_hash_array_value* ha_ret  = 0;
-    grib_hash_array_value* ha      = NULL;
+    grib_hash_array_value* ha_ret    = 0;
+    grib_hash_array_value* ha        = NULL;
 
     ha = get_hash_array(grib_handle_of_accessor(a), a->creator);
     if (!ha) {
@@ -103,11 +110,12 @@ static grib_hash_array_value* find_hash_value(grib_accessor* a, int* err)
     return ha_ret;
 }
 
-int grib_accessor_class_hash_array_t::unpack_long(grib_accessor* a, long* val, size_t* len){
-    grib_hash_array_value* ha = 0;
+int grib_accessor_class_hash_array_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
+    grib_hash_array_value* ha        = 0;
     grib_accessor_hash_array_t* self = (grib_accessor_hash_array_t*)a;
-    int err = 0;
-    size_t i = 0;
+    int err                          = 0;
+    size_t i                         = 0;
 
     if (!self->ha) {
         ha = find_hash_value(a, &err);
@@ -133,7 +141,8 @@ int grib_accessor_class_hash_array_t::unpack_long(grib_accessor* a, long* val, s
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_hash_array_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_hash_array_t::get_native_type(grib_accessor* a)
+{
     int type = GRIB_TYPE_STRING;
     if (a->flags & GRIB_ACCESSOR_FLAG_LONG_TYPE)
         type = GRIB_TYPE_LONG;
@@ -141,25 +150,29 @@ int grib_accessor_class_hash_array_t::get_native_type(grib_accessor* a){
     return type;
 }
 
-void grib_accessor_class_hash_array_t::destroy(grib_context* c, grib_accessor* a){
+void grib_accessor_class_hash_array_t::destroy(grib_context* c, grib_accessor* a)
+{
     grib_accessor_hash_array_t* self = (grib_accessor_hash_array_t*)a;
     if (self->key)
         grib_context_free(c, self->key);
     grib_accessor_class_gen_t::destroy(c, a);
 }
 
-int grib_accessor_class_hash_array_t::unpack_string(grib_accessor* a, char* val, size_t* len){
+int grib_accessor_class_hash_array_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+{
     return GRIB_NOT_IMPLEMENTED;
 }
 
-size_t grib_accessor_class_hash_array_t::string_length(grib_accessor* a){
+size_t grib_accessor_class_hash_array_t::string_length(grib_accessor* a)
+{
     return MAX_HASH_ARRAY_STRING_LENGTH;
 }
 
-int grib_accessor_class_hash_array_t::value_count(grib_accessor* a, long* count){
-    int err                        = 0;
+int grib_accessor_class_hash_array_t::value_count(grib_accessor* a, long* count)
+{
+    int err                          = 0;
     grib_accessor_hash_array_t* self = (grib_accessor_hash_array_t*)a;
-    grib_hash_array_value* ha      = 0;
+    grib_hash_array_value* ha        = 0;
 
     if (!self->ha) {
         ha = find_hash_value(a, &err);
@@ -172,6 +185,7 @@ int grib_accessor_class_hash_array_t::value_count(grib_accessor* a, long* count)
     return err;
 }
 
-int grib_accessor_class_hash_array_t::compare(grib_accessor* a, grib_accessor* b){
+int grib_accessor_class_hash_array_t::compare(grib_accessor* a, grib_accessor* b)
+{
     return GRIB_NOT_IMPLEMENTED;
 }

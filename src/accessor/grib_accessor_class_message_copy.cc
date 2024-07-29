@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,25 +10,29 @@
 
 #include "grib_accessor_class_message_copy.h"
 
-grib_accessor_class_message_copy_t _grib_accessor_class_message_copy{"message_copy"};
+grib_accessor_class_message_copy_t _grib_accessor_class_message_copy{ "message_copy" };
 grib_accessor_class* grib_accessor_class_message_copy = &_grib_accessor_class_message_copy;
 
 
-void grib_accessor_class_message_copy_t::init(grib_accessor* a, const long length, grib_arguments* args){
+void grib_accessor_class_message_copy_t::init(grib_accessor* a, const long length, grib_arguments* args)
+{
     grib_accessor_class_gen_t::init(a, length, args);
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->length = 0;
 }
 
-void grib_accessor_class_message_copy_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_message_copy_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_dump_string(dumper, a, NULL);
 }
 
-int grib_accessor_class_message_copy_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_message_copy_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_STRING;
 }
 
-int grib_accessor_class_message_copy_t::unpack_string(grib_accessor* a, char* val, size_t* len){
+int grib_accessor_class_message_copy_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+{
     size_t slen = grib_handle_of_accessor(a)->buffer->ulength;
     size_t i;
     unsigned char* v = 0;
@@ -50,10 +53,12 @@ int grib_accessor_class_message_copy_t::unpack_string(grib_accessor* a, char* va
     return GRIB_SUCCESS;
 }
 
-size_t grib_accessor_class_message_copy_t::string_length(grib_accessor* a){
+size_t grib_accessor_class_message_copy_t::string_length(grib_accessor* a)
+{
     return grib_handle_of_accessor(a)->buffer->ulength;
 }
 
-long grib_accessor_class_message_copy_t::byte_count(grib_accessor* a){
+long grib_accessor_class_message_copy_t::byte_count(grib_accessor* a)
+{
     return a->length;
 }
