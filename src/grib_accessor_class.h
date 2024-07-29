@@ -20,6 +20,7 @@ extern grib_accessor_class* grib_accessor_class_bufr_simple_thinning;
 extern grib_accessor_class* grib_accessor_class_bufr_string_values;
 extern grib_accessor_class* grib_accessor_class_bufrdc_expanded_descriptors;
 extern grib_accessor_class* grib_accessor_class_bytes;
+extern grib_accessor_class* grib_accessor_class_cf_var_name;
 extern grib_accessor_class* grib_accessor_class_change_alternative_row_scanning;
 extern grib_accessor_class* grib_accessor_class_change_scanning_direction;
 extern grib_accessor_class* grib_accessor_class_check_internal_version;

@@ -19,6 +19,7 @@
 { "bufr_string_values", &grib_accessor_class_bufr_string_values, },
 { "bufrdc_expanded_descriptors", &grib_accessor_class_bufrdc_expanded_descriptors, },
 { "bytes", &grib_accessor_class_bytes, },
+{ "cf_var_name", &grib_accessor_class_cf_var_name, },
 { "change_alternative_row_scanning", &grib_accessor_class_change_alternative_row_scanning, },
 { "change_scanning_direction", &grib_accessor_class_change_scanning_direction, },
 { "check_internal_version", &grib_accessor_class_check_internal_version, },
