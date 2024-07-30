@@ -122,7 +122,9 @@ stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $tempSimple`
 
 # Repack
 ${tools_dir}/grib_copy -r $infile $temp2
-${tools_dir}/grib_compare -c data:n $infile $temp2
+# The values do not have to be be bit-identical. The high effort to make them bit-identical is not justified.
+# Therefore, we compare the values with a relative tolerance.
+${tools_dir}/grib_compare -R all=0.3 -c data:n $infile $temp2
 grib_check_key_equals $temp2 bitsPerValue 9  # Note: The input file has bpv=9
 
 
@@ -164,6 +166,89 @@ EOF
 ${tools_dir}/grib_filter $tempRules $data_dir/boustrophedonic.grib1 > $REDIRECT
 ${tools_dir}/grib_filter $tempRules $data_dir/missing_field.grib1 > $REDIRECT
 ${tools_dir}/grib_filter $tempRules $data_dir/reduced_latlon_surface.grib2 > $REDIRECT
+
+# ECC-1858: grid_complex_spatial_differencing
+# Optimize binary_scale_factor, decimal_scale_factor by default
+# ----------------------------------------------------------
+# Repack
+
+in=${data_dir}/grid_complex_spatial_differencing.grib2
+in_with_bitmap=${data_dir}/temp_grid_complex_spatial_differencing_bitmap.grib2
+in_no_bitmap=${data_dir}/temp_grid_complex_spatial_differencing_no_bitmap.grib2
+
+${tools_dir}/grib_set -s bitmapPresent=1 $in $in_with_bitmap 
+${tools_dir}/grib_set -s bitmapPresent=0 $in $in_no_bitmap
+
+# No bitmap
+# Repack
+${tools_dir}/grib_copy -r $in_no_bitmap $temp2
+stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $temp2`
+[ "$stats" = '549.61 11.61 203.28'  ]
+
+# Rescale
+${tools_dir}/grib_set -s scaleValuesBy=0.001 $in_no_bitmap $temp2
+stats=`${tools_dir}/grib_get -F%.4f -p max,min,avg $temp2`
+[ "$stats" = '0.5496 0.0116 0.2033'  ]
+
+# BitsPerValue=16
+# If required bits and wanted bits are not the same, use an extra bit (see code)
+${tools_dir}/grib_set -s setBitsPerValue=15 $in_no_bitmap $temp2
+stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $temp2`
+[ "$stats" = '549.61 11.61 203.28'  ]
+grib_check_key_equals $temp2 bitsPerValue 16
+
+# BitsPerValue=24 (see comment above)
+${tools_dir}/grib_set -s setBitsPerValue=23 $in_no_bitmap $temp2
+stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $temp2`
+[ "$stats" = '549.61 11.61 203.28'  ]
+grib_check_key_equals $temp2 bitsPerValue 24
+
+# Change packing type
+${tools_dir}/grib_set -s packingType=grid_simple $in_no_bitmap $temp2
+stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $temp2`
+[ "$stats" = '549.61 11.61 203.28'  ]
+
+${tools_dir}/grib_set -s packingType=grid_complex_spatial_differencing $temp2 $tempSimple
+stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $temp2`
+[ "$stats" = '549.61 11.61 203.28'  ]
+
+# With bitmap
+# Repack
+${tools_dir}/grib_copy -r $in_with_bitmap $temp2
+stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $temp2`
+[ "$stats" = '549.61 11.61 203.28'  ]
+
+# Rescale
+${tools_dir}/grib_set -s scaleValuesBy=0.001 $in_with_bitmap $temp2
+stats=`${tools_dir}/grib_get -F%.4f -p max,min,avg $temp2`
+[ "$stats" = '0.5496 0.0116 0.2033'  ]
+
+# BitsPerValue=16 (see comment above)
+${tools_dir}/grib_set -s setBitsPerValue=15 $in_with_bitmap $temp2
+stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $temp2`
+[ "$stats" = '549.61 11.61 203.28'  ]
+grib_check_key_equals $temp2 bitsPerValue 16
+
+# BitsPerValue=24 (see comment above)
+${tools_dir}/grib_set -s setBitsPerValue=23 $in_with_bitmap $temp2
+stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $temp2`
+[ "$stats" = '549.61 11.61 203.28'  ]
+grib_check_key_equals $temp2 bitsPerValue 24
+
+# Change packing type
+${tools_dir}/grib_set -s packingType=grid_simple $in_with_bitmap $temp2
+stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $temp2`
+[ "$stats" = '549.61 11.61 203.28'  ]
+
+${tools_dir}/grib_set -s packingType=grid_complex_spatial_differencing $temp2 $tempSimple
+stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $temp2`
+[ "$stats" = '549.61 11.61 203.28'  ]
+
+# Clean up for ECC-1858
+rm -f $in_with_bitmap $in_no_bitmap
+rm -f $tempSimple
+
+# ----------------------------------------------------------
 
 # Clean up
 rm -f  $tempData1 $tempData2 $temp1 $temp2 $tempRules $tempOut
