@@ -6939,60 +6939,6 @@
 	 parameterCategory = 5 ;
 	 parameterNumber = 0 ;
 	}
-#Precipitation type (most severe) in the last 1 hour
-'260318' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 100 ;
-	 lengthOfTimeRange = 1 ;
-	}
-#Precipitation type (most severe) in the last 3 hours
-'260319' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 100 ;
-	 lengthOfTimeRange = 3 ;
-	}
-#Precipitation type (most frequent) in the last 1 hour
-'260320' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 101 ;
-	 lengthOfTimeRange = 1 ;
-	}
-#Precipitation type (most frequent) in the last 3 hours
-'260321' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 101 ;
-	 lengthOfTimeRange = 3 ;
-	}
-#Precipitation type (most severe) in the last 6 hours
-'260338' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 100 ;
-	 lengthOfTimeRange = 6 ;
-	}
-#Precipitation type (most frequent) in the last 6 hours
-'260339' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 101 ;
-	 lengthOfTimeRange = 6 ;
-	}
 #Soil temperature
 '260360' = {
 	 discipline = 2 ;
@@ -11357,3 +11303,17 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-severity precipitation type
+'260682' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 19 ;
+   typeOfStatisticalProcessing = 100 ;
+  }
+#Time-mode precipitation type
+'260683' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 19 ;
+   typeOfStatisticalProcessing = 101 ;
+  }

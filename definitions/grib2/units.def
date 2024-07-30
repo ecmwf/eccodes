@@ -6939,60 +6939,6 @@
 	 parameterCategory = 5 ;
 	 parameterNumber = 0 ;
 	}
-#Precipitation type (most severe) in the last 1 hour
-'(Code table 4.201)' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 100 ;
-	 lengthOfTimeRange = 1 ;
-	}
-#Precipitation type (most severe) in the last 3 hours
-'(Code table 4.201)' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 100 ;
-	 lengthOfTimeRange = 3 ;
-	}
-#Precipitation type (most frequent) in the last 1 hour
-'(Code table 4.201)' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 101 ;
-	 lengthOfTimeRange = 1 ;
-	}
-#Precipitation type (most frequent) in the last 3 hours
-'(Code table 4.201)' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 101 ;
-	 lengthOfTimeRange = 3 ;
-	}
-#Precipitation type (most severe) in the last 6 hours
-'(Code table 4.201)' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 100 ;
-	 lengthOfTimeRange = 6 ;
-	}
-#Precipitation type (most frequent) in the last 6 hours
-'(Code table 4.201)' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 101 ;
-	 lengthOfTimeRange = 6 ;
-	}
 #Soil temperature
 'K' = {
 	 discipline = 2 ;
@@ -11357,3 +11303,17 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-severity precipitation type
+'(Code table 4.201)' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 19 ;
+   typeOfStatisticalProcessing = 100 ;
+  }
+#Time-mode precipitation type
+'(Code table 4.201)' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 19 ;
+   typeOfStatisticalProcessing = 101 ;
+  }

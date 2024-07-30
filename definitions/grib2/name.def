@@ -6939,60 +6939,6 @@
 	 parameterCategory = 5 ;
 	 parameterNumber = 0 ;
 	}
-#Precipitation type (most severe) in the last 1 hour
-'Precipitation type (most severe) in the last 1 hour' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 100 ;
-	 lengthOfTimeRange = 1 ;
-	}
-#Precipitation type (most severe) in the last 3 hours
-'Precipitation type (most severe) in the last 3 hours' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 100 ;
-	 lengthOfTimeRange = 3 ;
-	}
-#Precipitation type (most frequent) in the last 1 hour
-'Precipitation type (most frequent) in the last 1 hour' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 101 ;
-	 lengthOfTimeRange = 1 ;
-	}
-#Precipitation type (most frequent) in the last 3 hours
-'Precipitation type (most frequent) in the last 3 hours' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 101 ;
-	 lengthOfTimeRange = 3 ;
-	}
-#Precipitation type (most severe) in the last 6 hours
-'Precipitation type (most severe) in the last 6 hours' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 100 ;
-	 lengthOfTimeRange = 6 ;
-	}
-#Precipitation type (most frequent) in the last 6 hours
-'Precipitation type (most frequent) in the last 6 hours' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 101 ;
-	 lengthOfTimeRange = 6 ;
-	}
 #Soil temperature
 'Soil temperature' = {
 	 discipline = 2 ;
@@ -11357,3 +11303,17 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-severity precipitation type
+'Time-severity precipitation type' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 19 ;
+   typeOfStatisticalProcessing = 100 ;
+  }
+#Time-mode precipitation type
+'Time-mode precipitation type' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 19 ;
+   typeOfStatisticalProcessing = 101 ;
+  }

@@ -6939,60 +6939,6 @@
 	 parameterCategory = 5 ;
 	 parameterNumber = 0 ;
 	}
-#Precipitation type (most severe) in the last 1 hour
-'ptype_sev1h' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 100 ;
-	 lengthOfTimeRange = 1 ;
-	}
-#Precipitation type (most severe) in the last 3 hours
-'ptype_sev3h' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 100 ;
-	 lengthOfTimeRange = 3 ;
-	}
-#Precipitation type (most frequent) in the last 1 hour
-'ptype_freq1h' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 101 ;
-	 lengthOfTimeRange = 1 ;
-	}
-#Precipitation type (most frequent) in the last 3 hours
-'ptype_freq3h' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 101 ;
-	 lengthOfTimeRange = 3 ;
-	}
-#Precipitation type (most severe) in the last 6 hours
-'ptype_sev6h' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 100 ;
-	 lengthOfTimeRange = 6 ;
-	}
-#Precipitation type (most frequent) in the last 6 hours
-'ptype_freq6h' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 101 ;
-	 lengthOfTimeRange = 6 ;
-	}
 #Soil temperature
 'sot' = {
 	 discipline = 2 ;
@@ -11357,3 +11303,17 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-severity precipitation type
+'sev_ptype' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 19 ;
+   typeOfStatisticalProcessing = 100 ;
+  }
+#Time-mode precipitation type
+'freq_ptype' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 19 ;
+   typeOfStatisticalProcessing = 101 ;
+  }
