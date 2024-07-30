@@ -204,11 +204,11 @@ stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $temp2`
 grib_check_key_equals $temp2 bitsPerValue 24
 
 # Change packing type
-${tools_dir}/grib_set -s packingType=grid_simple $in_no_bitmap $temp2
+${tools_dir}/grib_set -r -s packingType=grid_simple $in_no_bitmap $temp2
 stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $temp2`
 [ "$stats" = '549.61 11.61 203.28'  ]
 
-${tools_dir}/grib_set -s packingType=grid_complex_spatial_differencing $temp2 $tempSimple
+${tools_dir}/grib_set -r -s packingType=grid_complex_spatial_differencing $temp2 $tempSimple
 stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $temp2`
 [ "$stats" = '549.61 11.61 203.28'  ]
 
@@ -236,11 +236,11 @@ stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $temp2`
 grib_check_key_equals $temp2 bitsPerValue 24
 
 # Change packing type
-${tools_dir}/grib_set -s packingType=grid_simple $in_with_bitmap $temp2
+${tools_dir}/grib_set -r -s packingType=grid_simple $in_with_bitmap $temp2
 stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $temp2`
 [ "$stats" = '549.61 11.61 203.28'  ]
 
-${tools_dir}/grib_set -s packingType=grid_complex_spatial_differencing $temp2 $tempSimple
+${tools_dir}/grib_set -r -s packingType=grid_complex_spatial_differencing $temp2 $tempSimple
 stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $temp2`
 [ "$stats" = '549.61 11.61 203.28'  ]
 
