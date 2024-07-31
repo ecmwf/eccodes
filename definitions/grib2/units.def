@@ -11305,15 +11305,15 @@
 	}
 #Time-severity precipitation type
 '(Code table 4.201)' = {
-   discipline = 0 ;
-   parameterCategory = 1 ;
-   parameterNumber = 19 ;
-   typeOfStatisticalProcessing = 100 ;
-  }
+	discipline = 0 ;
+	parameterCategory = 1 ;
+	parameterNumber = 19 ;
+	typeOfStatisticalProcessing = 100 ;
+	}
 #Time-mode precipitation type
 '(Code table 4.201)' = {
-   discipline = 0 ;
-   parameterCategory = 1 ;
-   parameterNumber = 19 ;
-   typeOfStatisticalProcessing = 101 ;
-  }
+	discipline = 0 ;
+	parameterCategory = 1 ;
+	parameterNumber = 19 ;
+	typeOfStatisticalProcessing = 101 ;
+	}
