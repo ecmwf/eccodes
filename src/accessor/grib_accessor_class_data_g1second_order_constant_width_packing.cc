@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -12,14 +11,15 @@
 #include "grib_accessor_class_data_g1second_order_constant_width_packing.h"
 #include "grib_scaling.h"
 
-grib_accessor_class_data_g1second_order_constant_width_packing_t _grib_accessor_class_data_g1second_order_constant_width_packing{"data_g1second_order_constant_width_packing"};
+grib_accessor_class_data_g1second_order_constant_width_packing_t _grib_accessor_class_data_g1second_order_constant_width_packing{ "data_g1second_order_constant_width_packing" };
 grib_accessor_class* grib_accessor_class_data_g1second_order_constant_width_packing = &_grib_accessor_class_data_g1second_order_constant_width_packing;
 
 
-void grib_accessor_class_data_g1second_order_constant_width_packing_t::init(grib_accessor* a, const long v, grib_arguments* args){
+void grib_accessor_class_data_g1second_order_constant_width_packing_t::init(grib_accessor* a, const long v, grib_arguments* args)
+{
     grib_accessor_class_data_simple_packing_t::init(a, v, args);
     grib_accessor_data_g1second_order_constant_width_packing_t* self = (grib_accessor_data_g1second_order_constant_width_packing_t*)a;
-    grib_handle* hand                    = grib_handle_of_accessor(a);
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     self->half_byte                       = grib_arguments_get_name(hand, args, self->carg++);
     self->packingType                     = grib_arguments_get_name(hand, args, self->carg++);
@@ -41,23 +41,26 @@ void grib_accessor_class_data_g1second_order_constant_width_packing_t::init(grib
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_class_data_g1second_order_constant_width_packing_t::value_count(grib_accessor* a, long* numberOfSecondOrderPackedValues){
-    int err                                                        = 0;
+int grib_accessor_class_data_g1second_order_constant_width_packing_t::value_count(grib_accessor* a, long* numberOfSecondOrderPackedValues)
+{
+    int err = 0;
     grib_accessor_data_g1second_order_constant_width_packing_t* self = (grib_accessor_data_g1second_order_constant_width_packing_t*)a;
-    *numberOfSecondOrderPackedValues                               = 0;
+    *numberOfSecondOrderPackedValues = 0;
 
     err = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfSecondOrderPackedValues, numberOfSecondOrderPackedValues);
 
     return err;
 }
 
-int grib_accessor_class_data_g1second_order_constant_width_packing_t::unpack_float(grib_accessor*, float* val, size_t* len){
+int grib_accessor_class_data_g1second_order_constant_width_packing_t::unpack_float(grib_accessor*, float* val, size_t* len)
+{
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_class_data_g1second_order_constant_width_packing_t::unpack_double(grib_accessor* a, double* values, size_t* len){
+int grib_accessor_class_data_g1second_order_constant_width_packing_t::unpack_double(grib_accessor* a, double* values, size_t* len)
+{
     grib_accessor_data_g1second_order_constant_width_packing_t* self = (grib_accessor_data_g1second_order_constant_width_packing_t*)a;
-    int ret                                                        = 0;
+    int ret = 0;
     long numberOfGroups, numberOfSecondOrderPackedValues;
     long groupWidth              = 0;
     long* firstOrderValues       = 0;
@@ -139,7 +142,7 @@ int grib_accessor_class_data_g1second_order_constant_width_packing_t::unpack_dou
             i += secondaryBitmap[n];
             long fovi = 0;
             // ECC-1703
-            if ( i >=0 && i < numberOfGroups )
+            if (i >= 0 && i < numberOfGroups)
                 fovi = firstOrderValues[i];
             X[n] = fovi + X[n];
             n++;
@@ -151,7 +154,7 @@ int grib_accessor_class_data_g1second_order_constant_width_packing_t::unpack_dou
         while (n < numberOfSecondOrderPackedValues) {
             i += secondaryBitmap[n];
             long fovi = 0;
-            if ( i >=0 && i < numberOfGroups )
+            if (i >= 0 && i < numberOfGroups)
                 fovi = firstOrderValues[i];
             X[n] = fovi;
             n++;
@@ -177,17 +180,19 @@ int grib_accessor_class_data_g1second_order_constant_width_packing_t::unpack_dou
     return ret;
 }
 
-int grib_accessor_class_data_g1second_order_constant_width_packing_t::pack_double(grib_accessor* a, const double* cval, size_t* len){
+int grib_accessor_class_data_g1second_order_constant_width_packing_t::pack_double(grib_accessor* a, const double* cval, size_t* len)
+{
     const char* cclass_name = a->cclass->name;
     grib_context_log(a->context, GRIB_LOG_ERROR, "%s: %s: Not implemented", cclass_name, __func__);
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_class_data_g1second_order_constant_width_packing_t::unpack_double_element(grib_accessor* a, size_t idx, double* val){
+int grib_accessor_class_data_g1second_order_constant_width_packing_t::unpack_double_element(grib_accessor* a, size_t idx, double* val)
+{
     grib_handle* hand = grib_handle_of_accessor(a);
-    size_t size = 0;
-    double* values = NULL;
-    int err = 0;
+    size_t size       = 0;
+    double* values    = NULL;
+    int err           = 0;
 
     /* TODO: This should be 'codedValues' not 'values'
        but GRIB1 version of this packing does not have that key!! */
@@ -208,11 +213,12 @@ int grib_accessor_class_data_g1second_order_constant_width_packing_t::unpack_dou
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_data_g1second_order_constant_width_packing_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array){
+int grib_accessor_class_data_g1second_order_constant_width_packing_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+{
     grib_handle* hand = grib_handle_of_accessor(a);
     size_t size = 0, i = 0;
     double* values = NULL;
-    int err = 0;
+    int err        = 0;
 
     /* TODO: This should be 'codedValues' not 'values'
        but GRIB1 version of this packing does not have that key!! */

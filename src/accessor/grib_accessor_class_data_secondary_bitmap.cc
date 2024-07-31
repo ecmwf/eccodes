@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,26 +10,29 @@
 
 #include "grib_accessor_class_data_secondary_bitmap.h"
 
-grib_accessor_class_data_secondary_bitmap_t _grib_accessor_class_data_secondary_bitmap{"data_secondary_bitmap"};
+grib_accessor_class_data_secondary_bitmap_t _grib_accessor_class_data_secondary_bitmap{ "data_secondary_bitmap" };
 grib_accessor_class* grib_accessor_class_data_secondary_bitmap = &_grib_accessor_class_data_secondary_bitmap;
 
 
-void grib_accessor_class_data_secondary_bitmap_t::init(grib_accessor* a, const long v, grib_arguments* args){
+void grib_accessor_class_data_secondary_bitmap_t::init(grib_accessor* a, const long v, grib_arguments* args)
+{
     grib_accessor_class_gen_t::init(a, v, args);
     grib_accessor_data_secondary_bitmap_t* self = (grib_accessor_data_secondary_bitmap_t*)a;
-    self->primary_bitmap                      = grib_arguments_get_name(grib_handle_of_accessor(a), args, 0);
-    self->secondary_bitmap                    = grib_arguments_get_name(grib_handle_of_accessor(a), args, 1);
-    self->missing_value                       = grib_arguments_get_name(grib_handle_of_accessor(a), args, 2);
-    self->expand_by                           = grib_arguments_get_name(grib_handle_of_accessor(a), args, 3);
+    self->primary_bitmap                        = grib_arguments_get_name(grib_handle_of_accessor(a), args, 0);
+    self->secondary_bitmap                      = grib_arguments_get_name(grib_handle_of_accessor(a), args, 1);
+    self->missing_value                         = grib_arguments_get_name(grib_handle_of_accessor(a), args, 2);
+    self->expand_by                             = grib_arguments_get_name(grib_handle_of_accessor(a), args, 3);
 
     a->length = 0;
 }
 
-void grib_accessor_class_data_secondary_bitmap_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_data_secondary_bitmap_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_dump_values(dumper, a);
 }
 
-int grib_accessor_class_data_secondary_bitmap_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_data_secondary_bitmap_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_data_secondary_bitmap_t* self = (grib_accessor_data_secondary_bitmap_t*)a;
 
     size_t i       = 0;
@@ -45,7 +47,8 @@ int grib_accessor_class_data_secondary_bitmap_t::unpack_double(grib_accessor* a,
     size_t secondary_len;
     double* primary_vals;
     double* secondary_vals;
-    err    = a->value_count(&nn);    n_vals = nn;
+    err    = a->value_count(&nn);
+    n_vals = nn;
     if (err)
         return err;
 
@@ -111,8 +114,9 @@ int grib_accessor_class_data_secondary_bitmap_t::unpack_double(grib_accessor* a,
     return err;
 }
 
-int grib_accessor_class_data_secondary_bitmap_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_data_secondary_bitmap_t::get_native_type(grib_accessor* a)
+{
     // grib_accessor_data_secondary_bitmap_t* self =  (grib_accessor_data_secondary_bitmap_t*)a;
-    //return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(a),self->coded_values));
+    // return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(a),self->coded_values));
     return GRIB_TYPE_DOUBLE;
 }

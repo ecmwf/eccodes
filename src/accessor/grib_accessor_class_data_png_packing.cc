@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -14,14 +13,15 @@
 
 #define PNG_ANYBITS
 
-grib_accessor_class_data_png_packing_t _grib_accessor_class_data_png_packing{"data_png_packing"};
+grib_accessor_class_data_png_packing_t _grib_accessor_class_data_png_packing{ "data_png_packing" };
 grib_accessor_class* grib_accessor_class_data_png_packing = &_grib_accessor_class_data_png_packing;
 
 
-void grib_accessor_class_data_png_packing_t::init(grib_accessor* a, const long v, grib_arguments* args){
+void grib_accessor_class_data_png_packing_t::init(grib_accessor* a, const long v, grib_arguments* args)
+{
     grib_accessor_class_values_t::init(a, v, args);
     grib_accessor_data_png_packing_t* self = (grib_accessor_data_png_packing_t*)a;
-    grib_handle* h = grib_handle_of_accessor(a);
+    grib_handle* h                         = grib_handle_of_accessor(a);
 
     self->number_of_values      = grib_arguments_get_name(h, args, self->carg++);
     self->reference_value       = grib_arguments_get_name(h, args, self->carg++);
@@ -36,15 +36,16 @@ void grib_accessor_class_data_png_packing_t::init(grib_accessor* a, const long v
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_class_data_png_packing_t::value_count(grib_accessor* a, long* n_vals){
+int grib_accessor_class_data_png_packing_t::value_count(grib_accessor* a, long* n_vals)
+{
     grib_accessor_data_png_packing_t* self = (grib_accessor_data_png_packing_t*)a;
-    *n_vals = 0;
+    *n_vals                                = 0;
     return grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_values, n_vals);
 }
 
 #if HAVE_LIBPNG
 
-#include <png.h>
+    #include <png.h>
 
 typedef struct png_read_callback_data
 {
@@ -69,7 +70,7 @@ static void png_write_callback(png_structp png, png_bytep data, png_size_t lengt
     if (p->offset + length > p->length) {
         /* Errors handled through png_error() are fatal, meaning that png_error() should never return to its caller.
            Currently, this is handled via setjmp() and longjmp() */
-        png_error(png,"Failed to write PNG data");
+        png_error(png, "Failed to write PNG data");
     }
     memcpy(p->buffer + p->offset, data, length);
     p->offset += length;
@@ -80,12 +81,13 @@ static void png_flush_callback(png_structp png)
     /* Empty */
 }
 
-int grib_accessor_class_data_png_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_data_png_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_data_png_packing_t* self = (grib_accessor_data_png_packing_t*)a;
 
     int err = GRIB_SUCCESS;
     int i, j;
-    size_t buflen = a->byte_count();
+    size_t buflen      = a->byte_count();
     double bscale      = 0;
     double dscale      = 0;
     unsigned char* buf = NULL;
@@ -109,7 +111,8 @@ int grib_accessor_class_data_png_packing_t::unpack_double(grib_accessor* a, doub
 
     self->dirty = 0;
 
-    err = a->value_count(&nn);    n_vals = nn;
+    err    = a->value_count(&nn);
+    n_vals = nn;
     if (err) return err;
 
     if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
@@ -195,11 +198,11 @@ int grib_accessor_class_data_png_packing_t::unpack_double(grib_accessor* a, doub
         depth = 32;
     bits8 = ((bits_per_value + 7) / 8) * 8;
 
-#ifdef PNG_ANYBITS
+    #ifdef PNG_ANYBITS
     Assert(depth == bits8);
-#else
+    #else
     Assert(bits_per_value % 8 == 0);
-#endif
+    #endif
 
     i = 0;
 
@@ -224,10 +227,11 @@ cleanup:
 static bool is_constant(const double* values, size_t n_vals)
 {
     bool isConstant = true;
-    double v = 0;
+    double v        = 0;
     size_t i;
     for (i = 0; i < n_vals; i++) {
-        if (i == 0) v = values[i];
+        if (i == 0)
+            v = values[i];
         else if (v != values[i]) {
             isConstant = false;
             break;
@@ -236,11 +240,12 @@ static bool is_constant(const double* values, size_t n_vals)
     return isConstant;
 }
 
-int grib_accessor_class_data_png_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_data_png_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_data_png_packing_t* self = (grib_accessor_data_png_packing_t*)a;
-    const char* cclass_name = a->cclass->name;
+    const char* cclass_name                = a->cclass->name;
 
-    int err = GRIB_SUCCESS;
+    int err                = GRIB_SUCCESS;
     bool is_constant_field = false;
     int i, j;
     size_t buflen = 0;
@@ -299,11 +304,11 @@ int grib_accessor_class_data_png_packing_t::pack_double(grib_accessor* a, const 
     }
 
     if (is_constant_field) {
-#ifdef DEBUG
+    #ifdef DEBUG
         for (i = 1; i < n_vals; i++) {
             Assert(val[i] == val[0]);
         }
-#endif
+    #endif
         if ((err = grib_set_double_internal(grib_handle_of_accessor(a), self->reference_value, val[0])) != GRIB_SUCCESS)
             return err;
 
@@ -313,7 +318,7 @@ int grib_accessor_class_data_png_packing_t::pack_double(grib_accessor* a, const 
             grib_get_double_internal(grib_handle_of_accessor(a), self->reference_value, &ref);
             if (ref != reference_value) {
                 grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
-                            cclass_name, __func__, self->reference_value, ref, reference_value);
+                                 cclass_name, __func__, self->reference_value, ref, reference_value);
                 return GRIB_INTERNAL_ERROR;
             }
         }
@@ -370,7 +375,7 @@ int grib_accessor_class_data_png_packing_t::pack_double(grib_accessor* a, const 
         /* ECC-802: We cannot bomb out here as the user might have changed Ni/Nj and the packingType
          * but has not yet submitted the new data values. So len will be out of sync!
          * So issue a warning but proceed.
-        */
+         */
         return GRIB_SUCCESS;
     }
 
@@ -379,8 +384,10 @@ int grib_accessor_class_data_png_packing_t::pack_double(grib_accessor* a, const 
     max = val[0];
     min = max;
     for (i = 1; i < n_vals; i++) {
-        if (val[i] > max)      max = val[i];
-        else if (val[i] < min) min = val[i];
+        if (val[i] > max)
+            max = val[i];
+        else if (val[i] < min)
+            min = val[i];
     }
     min *= d;
     max *= d;
@@ -393,16 +400,16 @@ int grib_accessor_class_data_png_packing_t::pack_double(grib_accessor* a, const 
 
     if (reference_value > min) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "reference_value=%g min_value=%g diff=%g",
-                    reference_value, min, reference_value - min);
+                         reference_value, min, reference_value - min);
         return GRIB_INTERNAL_ERROR;
     }
 
     binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
     divisor             = codes_power<double>(-binary_scale_factor, 2);
 
-#ifndef PNG_ANYBITS
+    #ifndef PNG_ANYBITS
     Assert(bits_per_value % 8 == 0);
-#endif
+    #endif
     bits8   = (bits_per_value + 7) / 8 * 8;
     encoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context, bits8 / 8 * n_vals);
     if (!encoded) {
@@ -531,15 +538,16 @@ cleanup:
     return err;
 }
 
-int grib_accessor_class_data_png_packing_t::unpack_double_element(grib_accessor* a, size_t idx, double* val){
+int grib_accessor_class_data_png_packing_t::unpack_double_element(grib_accessor* a, size_t idx, double* val)
+{
     /* The index idx relates to codedValues NOT values! */
     grib_accessor_data_png_packing_t* self = (grib_accessor_data_png_packing_t*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
-    int err = 0;
-    size_t size    = 0;
-    double reference_value    = 0;
-    long bits_per_value       = 0;
-    double* values = NULL;
+    grib_handle* hand                      = grib_handle_of_accessor(a);
+    int err                                = 0;
+    size_t size                            = 0;
+    double reference_value                 = 0;
+    long bits_per_value                    = 0;
+    double* values                         = NULL;
 
     if ((err = grib_get_long_internal(hand, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
         return err;
@@ -566,15 +574,16 @@ int grib_accessor_class_data_png_packing_t::unpack_double_element(grib_accessor*
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_data_png_packing_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array){
+int grib_accessor_class_data_png_packing_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+{
     /* The index idx relates to codedValues NOT values! */
     grib_accessor_data_png_packing_t* self = (grib_accessor_data_png_packing_t*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
-    int err = 0;
+    grib_handle* hand                      = grib_handle_of_accessor(a);
+    int err                                = 0;
     size_t size = 0, i = 0;
-    double reference_value    = 0;
-    long bits_per_value       = 0;
-    double* values = NULL;
+    double reference_value = 0;
+    long bits_per_value    = 0;
+    double* values         = NULL;
 
     if ((err = grib_get_long_internal(hand, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
         return err;
@@ -612,24 +621,29 @@ int grib_accessor_class_data_png_packing_t::unpack_double_element_set(grib_acces
 
 #else
 
-static void print_error_feature_not_enabled(grib_context* c){
+static void print_error_feature_not_enabled(grib_context* c)
+{
     grib_context_log(c, GRIB_LOG_ERROR,
                      "PNG support not enabled. Please rebuild with -DENABLE_PNG=ON");
 }
 
-int grib_accessor_class_data_png_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_data_png_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     print_error_feature_not_enabled(a->context);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int grib_accessor_class_data_png_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_data_png_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     print_error_feature_not_enabled(a->context);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int grib_accessor_class_data_png_packing_t::unpack_double_element(grib_accessor* a, size_t idx, double* val){
+int grib_accessor_class_data_png_packing_t::unpack_double_element(grib_accessor* a, size_t idx, double* val)
+{
     print_error_feature_not_enabled(a->context);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int grib_accessor_class_data_png_packing_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array){
+int grib_accessor_class_data_png_packing_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+{
     print_error_feature_not_enabled(a->context);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
