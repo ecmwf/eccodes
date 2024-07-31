@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,11 +10,12 @@
 
 #include "grib_accessor_class_bufr_group.h"
 
-grib_accessor_class_bufr_group_t _grib_accessor_class_bufr_group{"bufr_group"};
+grib_accessor_class_bufr_group_t _grib_accessor_class_bufr_group{ "bufr_group" };
 grib_accessor_class* grib_accessor_class_bufr_group = &_grib_accessor_class_bufr_group;
 
 
-void grib_accessor_class_bufr_group_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_bufr_group_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_dump_section(dumper, a, a->sub_section->block);
 }
 
