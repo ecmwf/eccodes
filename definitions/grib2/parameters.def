@@ -23,12 +23,12 @@ concept cfNameLegacyECMF(defaultShortName,"cfName.legacy.def",conceptsMasterDir,
 concept cfNameECMF(cfNameLegacyECMF,"cfName.def",conceptsMasterDir,conceptsLocalDirECMF) : no_copy;
 concept cfName(cfNameECMF,"cfName.def",conceptsDir2,conceptsDir1) : no_copy,dump;
 
-concept cfVarNameLegacyECMF(defaultShortName,"cfVarName.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,hidden;
-concept cfVarNameECMF (cfVarNameLegacyECMF,"cfVarName.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy;
-concept cfVarName (cfVarNameECMF,"cfVarName.def",conceptsDir2,conceptsDir1): no_copy,dump;
+# concept cfVarNameLegacyECMF(defaultShortName,"cfVarName.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,hidden;
+# concept cfVarNameECMF (cfVarNameLegacyECMF,"cfVarName.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy;
+# concept cfVarName (cfVarNameECMF,"cfVarName.def",conceptsDir2,conceptsDir1): no_copy,dump;
 # See ECC-1886
-#meta defaultCfVarName cf_var_name(shortName) : hidden, read_only;
-#concept cfVarName (defaultCfVarName, "cfVarName.def", conceptsDir2, conceptsDir1): no_copy,dump;
+meta defaultCfVarName cf_var_name(shortName) : hidden, read_only;
+concept cfVarName (defaultCfVarName, "cfVarName.def", conceptsDir2, conceptsDir1): no_copy,dump;
 
 template_nofail names "grib2/products_[productionStatusOfProcessedData].def";
 
