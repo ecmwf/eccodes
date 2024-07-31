@@ -51,7 +51,14 @@ concept datasetForLocal(unknown) {
   "unknown" = { dummy=1; }
 }
 
-if (datasetForLocal isnot "unknown") {
+# If the keys marsClass or productionStatusOfProcessedData change in memory,
+# need to trigger the change of conceptsDirs
+transient redo_concept_dirs = 0;
+when( changed(marsClass) || changed(productionStatusOfProcessedData) ) {
+   set redo_concept_dirs = 1;
+}
+
+if ( redo_concept_dirs || datasetForLocal isnot "unknown") {
    constant conceptsDir2 = "grib2/localConcepts/[datasetForLocal]": hidden;
    constant conceptsDir1 = "grib2": hidden;
 }
