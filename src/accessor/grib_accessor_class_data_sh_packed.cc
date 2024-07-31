@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -12,17 +11,18 @@
 #include "grib_accessor_class_data_sh_packed.h"
 #include "grib_scaling.h"
 
-grib_accessor_class_data_sh_packed_t _grib_accessor_class_data_sh_packed{"data_sh_packed"};
+grib_accessor_class_data_sh_packed_t _grib_accessor_class_data_sh_packed{ "data_sh_packed" };
 grib_accessor_class* grib_accessor_class_data_sh_packed = &_grib_accessor_class_data_sh_packed;
 
 
 typedef unsigned long (*encode_float_proc)(double);
 typedef double (*decode_float_proc)(unsigned long);
 
-void grib_accessor_class_data_sh_packed_t::init(grib_accessor* a, const long v, grib_arguments* args){
+void grib_accessor_class_data_sh_packed_t::init(grib_accessor* a, const long v, grib_arguments* args)
+{
     grib_accessor_class_data_simple_packing_t::init(a, v, args);
     grib_accessor_data_sh_packed_t* self = (grib_accessor_data_sh_packed_t*)a;
-    grib_handle* hand                  = grib_handle_of_accessor(a);
+    grib_handle* hand                    = grib_handle_of_accessor(a);
 
     self->GRIBEX_sh_bug_present  = grib_arguments_get_name(hand, args, self->carg++);
     self->ieee_floats            = grib_arguments_get_name(hand, args, self->carg++);
@@ -39,11 +39,12 @@ void grib_accessor_class_data_sh_packed_t::init(grib_accessor* a, const long v, 
     a->length = 0;
 }
 
-int grib_accessor_class_data_sh_packed_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_data_sh_packed_t::value_count(grib_accessor* a, long* count)
+{
     grib_accessor_data_sh_packed_t* self = (grib_accessor_data_sh_packed_t*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
-    int ret = 0;
-    const char* cclass_name = a->cclass->name;
+    grib_handle* hand                    = grib_handle_of_accessor(a);
+    int ret                              = 0;
+    const char* cclass_name              = a->cclass->name;
 
     long sub_j = 0;
     long sub_k = 0;
@@ -75,42 +76,44 @@ int grib_accessor_class_data_sh_packed_t::value_count(grib_accessor* a, long* co
     return ret;
 }
 
-int grib_accessor_class_data_sh_packed_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_data_sh_packed_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_data_sh_packed_t* self = (grib_accessor_data_sh_packed_t*)a;
 
-    size_t i    = 0;
-    int ret     = GRIB_SUCCESS;
+    size_t i = 0;
+    int ret  = GRIB_SUCCESS;
     // long lup = 0;
     long hcount = 0, lcount = 0, hpos = 0, mmax = 0, n_vals = 0;
     double* scals = NULL;
     /* double *pscals=NULL; */
 
     double s = 0, d = 0, laplacianOperator = 0;
-    unsigned char* buf       = NULL;
-    unsigned char* hres      = NULL;
-    unsigned char* lres      = NULL;
+    unsigned char* buf  = NULL;
+    unsigned char* hres = NULL;
+    unsigned char* lres = NULL;
     unsigned long packed_offset;
     long lpos = 0;
 
     long maxv                  = 0;
     long GRIBEX_sh_bug_present = 0;
     long ieee_floats           = 0;
-    long offsetdata           = 0;
-    long bits_per_value       = 0;
-    double reference_value    = 0;
-    long binary_scale_factor  = 0;
-    long decimal_scale_factor = 0;
+    long offsetdata            = 0;
+    long bits_per_value        = 0;
+    double reference_value     = 0;
+    long binary_scale_factor   = 0;
+    long decimal_scale_factor  = 0;
 
     long sub_j = 0, sub_k = 0, sub_m = 0, pen_j = 0, pen_k = 0, pen_m = 0;
 
     double operat = 0;
-    int bytes = 0;
-    int err = 0;
+    int bytes     = 0;
+    int err       = 0;
 
     decode_float_proc decode_float = NULL;
 
     n_vals = 0;
-    err    = a->value_count(&n_vals);    if (err)
+    err    = a->value_count(&n_vals);
+    if (err)
         return err;
 
     if (*len < n_vals) {
@@ -191,7 +194,7 @@ int grib_accessor_class_data_sh_packed_t::unpack_double(grib_accessor* a, double
     d = codes_power<double>(-decimal_scale_factor, 10);
 
     scals = (double*)grib_context_malloc(a->context, maxv * sizeof(double));
-    if(!scals) return GRIB_OUT_OF_MEMORY;
+    if (!scals) return GRIB_OUT_OF_MEMORY;
 
     scals[0] = 0;
     for (i = 1; i < maxv; i++) {

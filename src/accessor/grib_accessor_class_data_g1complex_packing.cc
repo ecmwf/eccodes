@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,58 +10,62 @@
 
 #include "grib_accessor_class_data_g1complex_packing.h"
 
-grib_accessor_class_data_g1complex_packing_t _grib_accessor_class_data_g1complex_packing{"data_g1complex_packing"};
+grib_accessor_class_data_g1complex_packing_t _grib_accessor_class_data_g1complex_packing{ "data_g1complex_packing" };
 grib_accessor_class* grib_accessor_class_data_g1complex_packing = &_grib_accessor_class_data_g1complex_packing;
 
 
-void grib_accessor_class_data_g1complex_packing_t::init(grib_accessor* a, const long v, grib_arguments* args){
+void grib_accessor_class_data_g1complex_packing_t::init(grib_accessor* a, const long v, grib_arguments* args)
+{
     grib_accessor_class_data_complex_packing_t::init(a, v, args);
     grib_accessor_data_g1complex_packing_t* self = (grib_accessor_data_g1complex_packing_t*)a;
-    self->half_byte                            = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->N                                    = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->packingType                          = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->ieee_packing                         = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->precision                            = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->edition                              = 1;
+
+    self->half_byte    = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
+    self->N            = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
+    self->packingType  = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
+    self->ieee_packing = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
+    self->precision    = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
+    self->edition      = 1;
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_class_data_g1complex_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_data_g1complex_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_data_g1complex_packing_t* self = (grib_accessor_data_g1complex_packing_t*)a;
-    int ret              = GRIB_SUCCESS;
-    long seclen          = 0;
-    long sub_j           = 0;
-    long sub_k           = 0;
-    long sub_m           = 0;
-    long n               = 0;
-    long half_byte       = 0;
-    long bits_per_value  = 0;
-    size_t buflen        = 0;
+
+    int ret             = GRIB_SUCCESS;
+    long seclen         = 0;
+    long sub_j          = 0;
+    long sub_k          = 0;
+    long sub_m          = 0;
+    long n              = 0;
+    long half_byte      = 0;
+    long bits_per_value = 0;
+    size_t buflen       = 0;
 
     if (*len == 0)
         return GRIB_NO_VALUES;
 
-//     /* TODO: spectral_ieee does not work */
-//     if (c->ieee_packing && self->ieee_packing) {
-//         grib_handle* h       = grib_handle_of_accessor(a);
-//         grib_context* c      = a->context;
-//         char* packingType_s  = NULL;
-//         char* ieee_packing_s = NULL;
-//         long precision = c->ieee_packing == 32 ? 1 : 2;
-//         size_t lenstr  = strlen(self->ieee_packing);
+    //     /* TODO: spectral_ieee does not work */
+    //     if (c->ieee_packing && self->ieee_packing) {
+    //         grib_handle* h       = grib_handle_of_accessor(a);
+    //         grib_context* c      = a->context;
+    //         char* packingType_s  = NULL;
+    //         char* ieee_packing_s = NULL;
+    //         long precision = c->ieee_packing == 32 ? 1 : 2;
+    //         size_t lenstr  = strlen(self->ieee_packing);
 
-//         packingType_s  = grib_context_strdup(c, self->packingType);
-//         ieee_packing_s = grib_context_strdup(c, self->ieee_packing);
-//         precision_s    = grib_context_strdup(c, self->precision);
+    //         packingType_s  = grib_context_strdup(c, self->packingType);
+    //         ieee_packing_s = grib_context_strdup(c, self->ieee_packing);
+    //         precision_s    = grib_context_strdup(c, self->precision);
 
-//         grib_set_string(h, packingType_s, ieee_packing_s, &lenstr);
-//         grib_set_long(h, precision_s, precision);
+    //         grib_set_string(h, packingType_s, ieee_packing_s, &lenstr);
+    //         grib_set_long(h, precision_s, precision);
 
-//         grib_context_free(c, packingType_s);
-//         grib_context_free(c, ieee_packing_s);
-//         grib_context_free(c, precision_s);
-//         return grib_set_double_array(h, "values", val, *len);
-//     }
+    //         grib_context_free(c, packingType_s);
+    //         grib_context_free(c, ieee_packing_s);
+    //         grib_context_free(c, precision_s);
+    //         return grib_set_double_array(h, "values", val, *len);
+    //     }
 
     if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->sub_j, &sub_j)) != GRIB_SUCCESS)
         return ret;

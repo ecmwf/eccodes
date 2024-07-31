@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -12,17 +11,18 @@
 #include "grib_accessor_class_data_sh_unpacked.h"
 #include "grib_scaling.h"
 
-grib_accessor_class_data_sh_unpacked_t _grib_accessor_class_data_sh_unpacked{"data_sh_unpacked"};
+grib_accessor_class_data_sh_unpacked_t _grib_accessor_class_data_sh_unpacked{ "data_sh_unpacked" };
 grib_accessor_class* grib_accessor_class_data_sh_unpacked = &_grib_accessor_class_data_sh_unpacked;
 
 
 typedef unsigned long (*encode_float_proc)(double);
 typedef double (*decode_float_proc)(unsigned long);
 
-void grib_accessor_class_data_sh_unpacked_t::init(grib_accessor* a, const long v, grib_arguments* args){
+void grib_accessor_class_data_sh_unpacked_t::init(grib_accessor* a, const long v, grib_arguments* args)
+{
     grib_accessor_class_data_simple_packing_t::init(a, v, args);
     grib_accessor_data_sh_unpacked_t* self = (grib_accessor_data_sh_unpacked_t*)a;
-    grib_handle* hand                    = grib_handle_of_accessor(a);
+    grib_handle* hand                      = grib_handle_of_accessor(a);
 
     self->GRIBEX_sh_bug_present  = grib_arguments_get_name(hand, args, self->carg++);
     self->ieee_floats            = grib_arguments_get_name(hand, args, self->carg++);
@@ -39,9 +39,10 @@ void grib_accessor_class_data_sh_unpacked_t::init(grib_accessor* a, const long v
     a->length = 0;
 }
 
-int grib_accessor_class_data_sh_unpacked_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_data_sh_unpacked_t::value_count(grib_accessor* a, long* count)
+{
     grib_accessor_data_sh_unpacked_t* self = (grib_accessor_data_sh_unpacked_t*)a;
-    int ret                              = 0;
+    int ret                                = 0;
 
     long sub_j = 0;
     long sub_k = 0;
@@ -62,7 +63,8 @@ int grib_accessor_class_data_sh_unpacked_t::value_count(grib_accessor* a, long* 
     return ret;
 }
 
-int grib_accessor_class_data_sh_unpacked_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_data_sh_unpacked_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_data_sh_unpacked_t* self = (grib_accessor_data_sh_unpacked_t*)a;
 
     size_t i      = 0;
@@ -110,7 +112,8 @@ int grib_accessor_class_data_sh_unpacked_t::unpack_double(grib_accessor* a, doub
     decode_float_proc decode_float = NULL;
 
     n_vals = 0;
-    err    = a->value_count(&n_vals);    if (err)
+    err    = a->value_count(&n_vals);
+    if (err)
         return err;
 
     if (*len < n_vals) {

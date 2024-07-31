@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -12,43 +11,46 @@
 #include "grib_accessor_class_data_g2simple_packing.h"
 #include "grib_scaling.h"
 
-grib_accessor_class_data_g2simple_packing_t _grib_accessor_class_data_g2simple_packing{"data_g2simple_packing"};
+grib_accessor_class_data_g2simple_packing_t _grib_accessor_class_data_g2simple_packing{ "data_g2simple_packing" };
 grib_accessor_class* grib_accessor_class_data_g2simple_packing = &_grib_accessor_class_data_g2simple_packing;
 
 
-void grib_accessor_class_data_g2simple_packing_t::init(grib_accessor* a, const long v, grib_arguments* args){
+void grib_accessor_class_data_g2simple_packing_t::init(grib_accessor* a, const long v, grib_arguments* args)
+{
     grib_accessor_class_data_simple_packing_t::init(a, v, args);
     grib_accessor_data_g2simple_packing_t* self = (grib_accessor_data_g2simple_packing_t*)a;
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
     self->edition = 2;
 }
 
-int grib_accessor_class_data_g2simple_packing_t::value_count(grib_accessor* a, long* n_vals){
+int grib_accessor_class_data_g2simple_packing_t::value_count(grib_accessor* a, long* n_vals)
+{
     grib_accessor_data_g2simple_packing_t* self = (grib_accessor_data_g2simple_packing_t*)a;
-    *n_vals                                   = 0;
+    *n_vals                                     = 0;
     return grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_values, n_vals);
 }
 
-int grib_accessor_class_data_g2simple_packing_t::pack_double(grib_accessor* a, const double* cval, size_t* len){
+int grib_accessor_class_data_g2simple_packing_t::pack_double(grib_accessor* a, const double* cval, size_t* len)
+{
     grib_accessor_data_g2simple_packing_t* self = (grib_accessor_data_g2simple_packing_t*)a;
-    //grib_accessor_class* super                = *(a->cclass->super);
-    size_t n_vals                             = *len;
-    double reference_value                    = 0;
-    long binary_scale_factor                  = 0;
-    long bits_per_value                       = 0;
-    long decimal_scale_factor                 = 0;
-    double decimal                            = 1;
-    size_t buflen                             = 0;
-    unsigned char* buf                        = NULL;
-    unsigned char* encoded                    = NULL;
-    double divisor                            = 1;
-    long off                                  = 0;
-    int ret                                   = 0;
-    double units_factor                       = 1.0;
-    double units_bias                         = 0.0;
-    double* val                               = (double*)cval;
+    // grib_accessor_class* super                = *(a->cclass->super);
+    size_t n_vals             = *len;
+    double reference_value    = 0;
+    long binary_scale_factor  = 0;
+    long bits_per_value       = 0;
+    long decimal_scale_factor = 0;
+    double decimal            = 1;
+    size_t buflen             = 0;
+    unsigned char* buf        = NULL;
+    unsigned char* encoded    = NULL;
+    double divisor            = 1;
+    long off                  = 0;
+    int ret                   = 0;
+    double units_factor       = 1.0;
+    double units_bias         = 0.0;
+    double* val               = (double*)cval;
     int i;
-    grib_context* c            = a->context;
+    grib_context* c = a->context;
 
     if (*len == 0) {
         grib_buffer_replace(a, NULL, 0, 1, 1);
@@ -76,7 +78,8 @@ int grib_accessor_class_data_g2simple_packing_t::pack_double(grib_accessor* a, c
             for (i = 0; i < n_vals; i++) {
                 val[i] = val[i] * units_factor + units_bias;
             }
-        } else {
+        }
+        else {
             for (i = 0; i < n_vals; i++) {
                 val[i] *= units_factor;
             }
@@ -147,7 +150,8 @@ int grib_accessor_class_data_g2simple_packing_t::pack_double(grib_accessor* a, c
     return ret;
 }
 
-int grib_accessor_class_data_g2simple_packing_t::pack_bytes(grib_accessor* a, const unsigned char* val, size_t* len){
+int grib_accessor_class_data_g2simple_packing_t::pack_bytes(grib_accessor* a, const unsigned char* val, size_t* len)
+{
     size_t length = *len;
     grib_buffer_replace(a, val, length, 1, 1);
     return GRIB_SUCCESS;
