@@ -168,6 +168,34 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         return GRIB_SUCCESS;
     }
 
+    if (STR_EQUAL(e->name, "contains")) {
+        *lres = 0;
+        const int n = grib_arguments_get_count(e->args);
+        if (n != 3) return GRIB_INVALID_ARGUMENT;
+        const char* keyName = grib_arguments_get_name(h, e->args, 0);
+        if (!keyName) return GRIB_INVALID_ARGUMENT;
+        int type = 0;
+        int err = grib_get_native_type(h, keyName, &type);
+        if (err) return err;
+        if (type == GRIB_TYPE_STRING) {
+            char keyValue[254] = {0,};
+            size_t len = sizeof(keyValue);
+            err = grib_get_string(h, keyName, keyValue, &len);
+            if (err) return err;
+            const char* sValue = grib_arguments_get_string(h, e->args, 1);
+            const bool case_sens = grib_arguments_get_long(h, e->args, 2) != 0;
+            const bool contains = case_sens? strcasestr(keyValue, sValue) : strstr(keyValue, sValue);
+            if (sValue && contains) {
+                *lres = 1;
+                return GRIB_SUCCESS;
+            }
+        } else {
+            // For now only keys of type string supported
+            return GRIB_INVALID_ARGUMENT;
+        }
+        return GRIB_SUCCESS;
+    }
+
     if (STR_EQUAL(e->name, "is_one_of")) {
         *lres = 0;
         const char* keyName = grib_arguments_get_name(h, e->args, 0);

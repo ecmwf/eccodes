@@ -104,6 +104,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ifsParam
         grib_packing_order
         filter_substr
+        filter_contains
         filter_size
         filter_is_one_of
         filter_is_in_list
