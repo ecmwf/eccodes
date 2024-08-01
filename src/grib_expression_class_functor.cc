@@ -87,7 +87,7 @@ static char* strcasestr(const char *haystack, const char* needle)
                 if ((sc = *haystack++) == 0)
                     return (NULL);
             } while ((char)tolower((unsigned char)sc) != c);
-        } while (strncasecmp(haystack, needle, len) != 0);
+        } while (_strnicmp(haystack, needle, len) != 0);
         haystack--;
     }
     return ((char *)haystack);
