@@ -4,7 +4,7 @@
 
 # Note from WMO document:
 # This template is experimental, was not validated at the time of publication and should be used only for bilateral previously agreed tests
-transient template_is_deprecated = 1 : hidden;
+transient template_is_experimental = 1 : hidden;
 
 meta codedValues data_g2simple_packing_with_preprocessing(
     section7Length,
