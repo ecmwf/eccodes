@@ -309,7 +309,7 @@ static int unpack_multiple_time_ranges_double_(grib_accessor* a, double* val, si
             long the_coded_unit       = arr_coded_unit[i];
             long the_coded_time_range = arr_coded_time_range[i];
 
-            eccodes::Step time_range{ the_coded_unit, the_coded_time_range };
+            eccodes::Step time_range{the_coded_time_range, the_coded_unit};
             *val = (start_step + time_range).value<double>(eccodes::Unit(step_units));
 
             return GRIB_SUCCESS;

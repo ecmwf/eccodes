@@ -243,6 +243,7 @@ static int init_sphere(const grib_handle* h,
             const long index = i + j * nx;
             x = x0 + i * Dx;
             xy2lonlat(radius, n, f, rho0_bare, LoVInRadians, x, y, &lonDeg, &latDeg);
+            lonDeg = normalise_longitude_in_degrees(lonDeg);
             self->lons[index] = lonDeg;
             self->lats[index] = latDeg;
         }
