@@ -58,7 +58,11 @@ when( changed(marsClass) || changed(productionStatusOfProcessedData) ) {
    set redo_concept_dirs = 1;
 }
 
-if ( redo_concept_dirs || datasetForLocal isnot "unknown") {
+if (datasetForLocal isnot "unknown") {
+   constant conceptsDir2 = "grib2/localConcepts/[datasetForLocal]": hidden;
+   constant conceptsDir1 = "grib2": hidden;
+}
+if (redo_concept_dirs && datasetForLocal isnot "unknown") {
    constant conceptsDir2 = "grib2/localConcepts/[datasetForLocal]": hidden;
    constant conceptsDir1 = "grib2": hidden;
 }

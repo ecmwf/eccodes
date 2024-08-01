@@ -23,7 +23,7 @@ tempRef=temp.$label.ref
 
 # ERA6
 # -----
-sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl # This has a local def
 # Make changes in stages
 ${tools_dir}/grib_set -s marsClass=e6,productDefinitionTemplateNumber=42 $sample $tempGribA
 ${tools_dir}/grib_set -s paramId=233033 $tempGribA $tempGribB
@@ -42,6 +42,27 @@ ${tools_dir}/grib_set -s paramId=210061 $tempGribA $tempGribB
 ${tools_dir}/grib_set -s centre=0,productionStatusOfProcessedData=12,paramId=210061 $sample $tempGribC
 cmp $tempGribB $tempGribC
 
+# General class change
+# datasetForLocal should remain unknown
+# -------------------------------------
+sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+cat >$tempFilt<<EOF
+    print "[conceptsDir1=] [conceptsDir2=] ///////////// START ///////////////";
+    print "[redo_concept_dirs=]";
+    assert( redo_concept_dirs == 0 );
+    set class = "e6"; # Class changed
+    assert( redo_concept_dirs == 1 );
+    assert( datasetForLocal is "era6" );
+    print "[conceptsDir1=] [conceptsDir2=] ====================================";
+    assert ( substr(conceptsDir2,20,17) is "[datasetForLocal]" );
+
+    print "Case for [marsClass=]: d4l=[datasetForLocal]  dir=|[conceptsDir2]|   .... [redo_concept_dirs=]";
+    set class = "sr";
+    assert( datasetForLocal is "unknown" );
+    assert( conceptsDir2 is "grib2" );
+    print "Case for [marsClass=]: d4l=[datasetForLocal]  dir=|[conceptsDir2]|   .... [redo_concept_dirs=]";
+EOF
+${tools_dir}/grib_filter $tempFilt $sample
 #grib_check_key_equals $temp k1,k2 "v1 v2"
 
 # Clean up
