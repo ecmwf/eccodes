@@ -71,6 +71,29 @@ grib_expression_class* grib_expression_class_functor = &_grib_expression_class_f
 
 /* END_CLASS_IMP */
 
+
+#ifdef ECCODES_ON_WINDOWS
+// Windows does not have strcasestr
+static char* strcasestr(const char *haystack, const char* needle)
+{
+    char c, sc;
+    size_t len = 0;
+
+    if ((c = *needle++) != 0) {
+        c = tolower((unsigned char)c);
+        len = strlen(needle);
+        do {
+            do {
+                if ((sc = *haystack++) == 0)
+                    return (NULL);
+            } while ((char)tolower((unsigned char)sc) != c);
+        } while (strncasecmp(haystack, needle, len) != 0);
+        haystack--;
+    }
+    return ((char *)haystack);
+}
+#endif
+
 static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 {
     grib_expression_functor* e = (grib_expression_functor*)g;
