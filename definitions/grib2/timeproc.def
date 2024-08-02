@@ -4,8 +4,8 @@ concept timeproc {
  "point-in-time"    = {stream="mnth"; numberOfTimeRange=1;}
  "point-in-time"    = {stream="mmsa"; numberOfTimeRange=1;}
  "point-in-time"    = {stream="msmm"; numberOfTimeRange=1;}
- "point-in-time"    = {productDefinitionTemplateNumber=8; numberOfTimeRange=1;}
- "point-in-time"    = {productDefinitionTemplateNumber=11; numberOfTimeRange=1;}
+ "point-in-time"    = {productDefinitionTemplateNumber=8; lengthOfTimeRange=0;}
+ "point-in-time"    = {productDefinitionTemplateNumber=11; lengthOfTimeRange=0;}
  "point-in-time"    = {typeOfStatisticalProcessing=10; lengthOfTimeRange=0;}
  #
  ### Accumulations ###
