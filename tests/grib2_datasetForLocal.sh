@@ -27,6 +27,7 @@ sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl # This has a local def
 # Make changes in stages
 ${tools_dir}/grib_set -s marsClass=e6,productDefinitionTemplateNumber=42 $sample $tempGribA
 ${tools_dir}/grib_set -s paramId=233033 $tempGribA $tempGribB
+grib_check_key_equals $tempGribB shortName "tviozn"
 
 # Now all in one go
 ${tools_dir}/grib_set -s marsClass=e6,productDefinitionTemplateNumber=42,paramId=233033 $sample $tempGribC
@@ -38,6 +39,7 @@ sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 ${tools_dir}/grib_set -s centre=0,productionStatusOfProcessedData=12 $sample $tempGribA
 ${tools_dir}/grib_set -s paramId=210061 $tempGribA $tempGribB
+grib_check_key_equals $tempGribB shortName "co2"
 
 ${tools_dir}/grib_set -s centre=0,productionStatusOfProcessedData=12,paramId=210061 $sample $tempGribC
 cmp $tempGribB $tempGribC
@@ -47,13 +49,11 @@ cmp $tempGribB $tempGribC
 # -------------------------------------
 sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
 cat >$tempFilt<<EOF
-    print "[conceptsDir1=] [conceptsDir2=] ///////////// START ///////////////";
     print "[redo_concept_dirs=]";
     assert( redo_concept_dirs == 0 );
     set class = "e6"; # Class changed
     assert( redo_concept_dirs == 1 );
     assert( datasetForLocal is "era6" );
-    print "[conceptsDir1=] [conceptsDir2=] ====================================";
     assert ( substr(conceptsDir2,20,17) is "[datasetForLocal]" );
 
     print "Case for [marsClass=]: d4l=[datasetForLocal]  dir=|[conceptsDir2]|   .... [redo_concept_dirs=]";
