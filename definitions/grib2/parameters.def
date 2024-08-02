@@ -27,8 +27,8 @@ concept cfName(cfNameECMF,"cfName.def",conceptsDir2,conceptsDir1) : no_copy,dump
 # concept cfVarNameECMF (cfVarNameLegacyECMF,"cfVarName.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy;
 # concept cfVarName (cfVarNameECMF,"cfVarName.def",conceptsDir2,conceptsDir1): no_copy,dump;
 # See ECC-1886
-meta defaultCfVarName cf_var_name(shortName) : hidden, read_only;
-concept cfVarName (defaultCfVarName, "cfVarName.def", conceptsDir2, conceptsDir1): no_copy,dump;
+meta defaultCfVarName cf_var_name(shortName) : no_copy,hidden,read_only;
+concept cfVarName (defaultCfVarName, "cfVarName.def", conceptsDir2, conceptsDir1): no_copy,dump,read_only;
 
 template_nofail names "grib2/products_[productionStatusOfProcessedData].def";
 
