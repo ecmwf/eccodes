@@ -9,6 +9,16 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 49 ;
 	}
+#Maximum temperature at 2 metres in the last 24 hours
+'mx2t24' = {
+	 table2Version = 128 ;
+	 indicatorOfParameter = 51 ;
+	}
+#Minimum temperature at 2 metres in the last 24 hours
+'mn2t24' = {
+	 table2Version = 128 ;
+	 indicatorOfParameter = 52 ;
+	}
 #Maximum temperature at 2 metres in the last 6 hours
 'mx2t6' = {
 	 table2Version = 128 ;
@@ -183,6 +193,16 @@
 'sh2' = {
 	 table2Version = 174 ;
 	 indicatorOfParameter = 96 ;
+	}
+#Maximum temperature at 2 metres in the last 3 hours
+'mx2t3' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 26 ;
+	}
+#Minimum temperature at 2 metres in the last 3 hours
+'mn2t3' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 27 ;
 	}
 #Maximum 10 metre wind gust in the last 3 hours
 'fg310' = {
