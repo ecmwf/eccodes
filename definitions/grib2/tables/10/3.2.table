@@ -9,6 +9,4 @@
 7 7 Earth assumed oblate spheroid with major or minor axes specified (in m) by data producer
 8 8 Earth model assumed spherical with radius of 6 371 200 m, but the horizontal datum of the resulting latitude/longitude field is the WGS84 reference frame
 9 9 Earth represented by the OSGB 1936 Datum, using the Airy_1830 Spheroid, the Greenwich meridian as 0 longitude, the Newlyn datum as mean sea level, 0 height
-# 10-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing

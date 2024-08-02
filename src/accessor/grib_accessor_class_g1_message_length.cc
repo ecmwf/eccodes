@@ -11,14 +11,15 @@
 
 #include "grib_accessor_class_g1_message_length.h"
 
-grib_accessor_class_g1_message_length_t _grib_accessor_class_g1_message_length{"g1_message_length"};
+grib_accessor_class_g1_message_length_t _grib_accessor_class_g1_message_length{ "g1_message_length" };
 grib_accessor_class* grib_accessor_class_g1_message_length = &_grib_accessor_class_g1_message_length;
 
 
-void grib_accessor_class_g1_message_length_t::init(grib_accessor* a, const long len, grib_arguments* args){
+void grib_accessor_class_g1_message_length_t::init(grib_accessor* a, const long len, grib_arguments* args)
+{
     grib_accessor_class_section_length_t::init(a, len, args);
     grib_accessor_g1_message_length_t* self = (grib_accessor_g1_message_length_t*)a;
-    self->sec4_length = grib_arguments_get_name(grib_handle_of_accessor(a), args, 0);
+    self->sec4_length                       = grib_arguments_get_name(grib_handle_of_accessor(a), args, 0);
 }
 
 int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s4,
@@ -60,7 +61,8 @@ int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_g1_message_length_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_g1_message_length_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_g1_message_length_t* self = (grib_accessor_g1_message_length_t*)a;
     /*grib_accessor_class* super = *(a->cclass->super);*/
 
@@ -113,7 +115,7 @@ int grib_accessor_class_g1_message_length_t::pack_long(grib_accessor* a, const l
             grib_context_log(a->context, GRIB_LOG_ERROR,
                              "%s %s: Failed to set GRIB1 message length to %ld"
                              " (actual length=%ld)",
-                              cclass_name, __func__, *val, total_length);
+                             cclass_name, __func__, *val, total_length);
             grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Try encoding as GRIB2\n");
             return GRIB_ENCODING_ERROR;
         }
@@ -122,15 +124,15 @@ int grib_accessor_class_g1_message_length_t::pack_long(grib_accessor* a, const l
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_g1_message_length_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_g1_message_length_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_g1_message_length_t* self = (grib_accessor_g1_message_length_t*)a;
     int ret;
     long total_length, sec4_length;
 
     if ((ret = grib_get_g1_message_size(grib_handle_of_accessor(a), a,
                                         grib_find_accessor(grib_handle_of_accessor(a), self->sec4_length),
-                                        &total_length, &sec4_length)) != GRIB_SUCCESS)
-    {
+                                        &total_length, &sec4_length)) != GRIB_SUCCESS) {
         return ret;
     }
 

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,7 +10,7 @@
 
 #include "grib_accessor_class_check_internal_version.h"
 
-grib_accessor_class_check_internal_version_t _grib_accessor_class_check_internal_version{"check_internal_version"};
+grib_accessor_class_check_internal_version_t _grib_accessor_class_check_internal_version{ "check_internal_version" };
 grib_accessor_class* grib_accessor_class_check_internal_version = &_grib_accessor_class_check_internal_version;
 
 
@@ -20,7 +19,8 @@ grib_accessor_class* grib_accessor_class_check_internal_version = &_grib_accesso
 /* See the key "internalVersion"  */
 #define LATEST_ENGINE_VERSION 30
 
-void grib_accessor_class_check_internal_version_t::init(grib_accessor* a, const long l, grib_arguments* args){
+void grib_accessor_class_check_internal_version_t::init(grib_accessor* a, const long l, grib_arguments* args)
+{
     grib_accessor_class_ascii_t::init(a, l, args);
     /* Check version of definition files is compatible with the engine */
     int err                    = 0;
@@ -41,11 +41,13 @@ void grib_accessor_class_check_internal_version_t::init(grib_accessor* a, const 
     }
 }
 
-int grib_accessor_class_check_internal_version_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_check_internal_version_t::value_count(grib_accessor* a, long* count)
+{
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_class_check_internal_version_t::string_length(grib_accessor* a){
+size_t grib_accessor_class_check_internal_version_t::string_length(grib_accessor* a)
+{
     return 255;
 }

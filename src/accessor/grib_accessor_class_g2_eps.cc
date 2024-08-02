@@ -11,14 +11,15 @@
 
 #include "grib_accessor_class_g2_eps.h"
 
-grib_accessor_class_g2_eps_t _grib_accessor_class_g2_eps{"g2_eps"};
+grib_accessor_class_g2_eps_t _grib_accessor_class_g2_eps{ "g2_eps" };
 grib_accessor_class* grib_accessor_class_g2_eps = &_grib_accessor_class_g2_eps;
 
 
-void grib_accessor_class_g2_eps_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_g2_eps_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_unsigned_t::init(a, l, c);
     grib_accessor_g2_eps_t* self = (grib_accessor_g2_eps_t*)a;
-    int n                      = 0;
+    int n                        = 0;
 
     self->productDefinitionTemplateNumber = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
     self->type                            = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
@@ -27,11 +28,12 @@ void grib_accessor_class_g2_eps_t::init(grib_accessor* a, const long l, grib_arg
     self->derivedForecast                 = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
 }
 
-int grib_accessor_class_g2_eps_t::unpack_long(grib_accessor* a, long* val, size_t* len){
-    grib_accessor_g2_eps_t* self           = (grib_accessor_g2_eps_t*)a;
+int grib_accessor_class_g2_eps_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
+    grib_accessor_g2_eps_t* self         = (grib_accessor_g2_eps_t*)a;
     long productDefinitionTemplateNumber = 0;
-    int err = 0;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    int err                              = 0;
+    grib_handle* hand                    = grib_handle_of_accessor(a);
 
     err = grib_get_long(hand, self->productDefinitionTemplateNumber, &productDefinitionTemplateNumber);
     if (err) return err;
@@ -40,15 +42,17 @@ int grib_accessor_class_g2_eps_t::unpack_long(grib_accessor* a, long* val, size_
     if (grib_is_defined(hand, "perturbationNumber")) {
         *val = 1;
     }
-    //if (grib2_is_PDTN_EPS(productDefinitionTemplateNumber))
-    //    *val = 1;
+    // if (grib2_is_PDTN_EPS(productDefinitionTemplateNumber))
+    //     *val = 1;
 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_g2_eps_t::pack_long(grib_accessor* a, const long* val, size_t* len){
-    grib_accessor_g2_eps_t* self              = (grib_accessor_g2_eps_t*)a;
+int grib_accessor_class_g2_eps_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
+    grib_accessor_g2_eps_t* self            = (grib_accessor_g2_eps_t*)a;
     grib_handle* hand                       = grib_handle_of_accessor(a);
+
     long productDefinitionTemplateNumber    = -1;
     long productDefinitionTemplateNumberNew = -1;
     long type                               = -1;
@@ -89,7 +93,8 @@ int grib_accessor_class_g2_eps_t::pack_long(grib_accessor* a, const long* val, s
                 derivedForecast                    = 4;
             }
             else {
-                productDefinitionTemplateNumberNew = 1;
+                //productDefinitionTemplateNumberNew = 1;
+                productDefinitionTemplateNumberNew = grib2_choose_PDTN(productDefinitionTemplateNumber, false, isInstant);
             }
         }
         else {
@@ -103,61 +108,22 @@ int grib_accessor_class_g2_eps_t::pack_long(grib_accessor* a, const long* val, s
                 derivedForecast                    = 4;
             }
             else {
-                productDefinitionTemplateNumberNew = 11;
+                // productDefinitionTemplateNumberNew = 11;
+                productDefinitionTemplateNumberNew = grib2_choose_PDTN(productDefinitionTemplateNumber, false, false);
             }
         }
     }
     else {
-        if (isInstant) {
-            productDefinitionTemplateNumberNew = 0;
-        }
-        else {
-            productDefinitionTemplateNumberNew = 8;
-        }
+        productDefinitionTemplateNumberNew = grib2_choose_PDTN(productDefinitionTemplateNumber, true, isInstant);
+        // if (isInstant) {
+        //     productDefinitionTemplateNumberNew = 0;
+        // }
+        // else {
+        //     productDefinitionTemplateNumberNew = 8;
+        // }
     }
 
-    // Adjust for chemical species
-    if (chemical == 1) {
-        if (eps == 1) {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 41;
-            }
-            else {
-                productDefinitionTemplateNumberNew = 43;
-            }
-        }
-        else {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 40;
-            }
-            else {
-                productDefinitionTemplateNumberNew = 42;
-            }
-        }
-    }
-
-    // Adjust for aerosols
-    if (aerosol == 1) {
-        if (eps == 1) {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 45;
-            }
-            else {
-                //productDefinitionTemplateNumberNew = 47;   This PDT is deprecated
-                productDefinitionTemplateNumberNew = 85;
-            }
-        }
-        else {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 48; //44 is deprecated*/
-            }
-            else {
-                productDefinitionTemplateNumberNew = 46;
-            }
-        }
-    }
-
-    if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
+    if (productDefinitionTemplateNumberNew >=0 && productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
         grib_set_long(hand, self->productDefinitionTemplateNumber, productDefinitionTemplateNumberNew);
         if (derivedForecast >= 0)
             grib_set_long(hand, self->derivedForecast, derivedForecast);
@@ -166,7 +132,8 @@ int grib_accessor_class_g2_eps_t::pack_long(grib_accessor* a, const long* val, s
     return 0;
 }
 
-int grib_accessor_class_g2_eps_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_g2_eps_t::value_count(grib_accessor* a, long* count)
+{
     *count = 1;
     return 0;
 }

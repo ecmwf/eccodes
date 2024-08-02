@@ -12,7 +12,6 @@ list( APPEND eccodes_src_files
     accessor/grib_accessor.cc
     accessor/grib_accessors_list.cc
     grib_accessor_class.cc
-    shared_functions.cc
     step_unit.cc
     step.cc
     step_utilities.cc
@@ -89,6 +88,7 @@ list( APPEND eccodes_src_files
     accessor/grib_accessor_class_validity_date.cc
     accessor/grib_accessor_class_validity_time.cc
     accessor/grib_accessor_class_bytes.cc
+    accessor/grib_accessor_class_cf_var_name.cc
     accessor/grib_accessor_class_change_alternative_row_scanning.cc
     accessor/grib_accessor_class_change_scanning_direction.cc
     accessor/grib_accessor_class_check_internal_version.cc

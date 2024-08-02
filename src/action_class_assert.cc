@@ -137,8 +137,8 @@ static int execute(grib_action* a, grib_handle* h)
     }
     else {
         grib_context_log(h->context, GRIB_LOG_ERROR, "Assertion failure: ");
-        grib_expression_print(h->context, self->expression, h);
-        printf("\n");
+        grib_expression_print(h->context, self->expression, h, stderr);
+        fprintf(stderr, "\n");
         return GRIB_ASSERTION_FAILURE;
     }
 }

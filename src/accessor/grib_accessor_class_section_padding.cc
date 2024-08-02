@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,18 +10,19 @@
 
 #include "grib_accessor_class_section_padding.h"
 
-grib_accessor_class_section_padding_t _grib_accessor_class_section_padding{"section_padding"};
+grib_accessor_class_section_padding_t _grib_accessor_class_section_padding{ "section_padding" };
 grib_accessor_class* grib_accessor_class_section_padding = &_grib_accessor_class_section_padding;
 
 
-size_t grib_accessor_class_section_padding_t::preferred_size(grib_accessor* a, int from_handle){
+size_t grib_accessor_class_section_padding_t::preferred_size(grib_accessor* a, int from_handle)
+{
     grib_accessor_section_padding_t* self = (grib_accessor_section_padding_t*)a;
-    grib_accessor* b                    = a;
-    grib_accessor* section_length       = 0;
-    long length                         = 0;
-    size_t size                         = 1;
 
-    long alength = 0;
+    grib_accessor* b              = a;
+    grib_accessor* section_length = 0;
+    long length                   = 0;
+    size_t size                   = 1;
+    long alength                  = 0;
 
     if (!from_handle) {
         if (self->preserve)
@@ -34,7 +34,7 @@ size_t grib_accessor_class_section_padding_t::preferred_size(grib_accessor* a, i
     /* The section length should be a parameter */
     while (section_length == NULL && b != NULL) {
         section_length = b->parent->aclength;
-        b              = b->parent->owner;
+        b = b->parent->owner;
     }
 
     if (!section_length) {
@@ -62,9 +62,10 @@ size_t grib_accessor_class_section_padding_t::preferred_size(grib_accessor* a, i
     return alength;
 }
 
-void grib_accessor_class_section_padding_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+void grib_accessor_class_section_padding_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+{
     grib_accessor_class_padding_t::init(a, len, arg);
     grib_accessor_section_padding_t* self = (grib_accessor_section_padding_t*)a;
-    self->preserve                      = 1; /* This should be a parameter */
-    a->length                           = preferred_size(a, 1);
+    self->preserve = 1; /* This should be a parameter */
+    a->length      = preferred_size(a, 1);
 }

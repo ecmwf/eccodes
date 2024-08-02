@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,11 +10,12 @@
 
 #include "grib_accessor_class_uint64.h"
 
-grib_accessor_class_uint64_t _grib_accessor_class_uint64{"uint64"};
+grib_accessor_class_uint64_t _grib_accessor_class_uint64{ "uint64" };
 grib_accessor_class* grib_accessor_class_uint64 = &_grib_accessor_class_uint64;
 
 
-int grib_accessor_class_uint64_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_uint64_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     long value                = 0;
     long pos                  = a->offset;
     unsigned char* data       = grib_handle_of_accessor(a)->buffer->data;
@@ -45,6 +45,7 @@ int grib_accessor_class_uint64_t::unpack_long(grib_accessor* a, long* val, size_
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_uint64_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_uint64_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_LONG;
 }

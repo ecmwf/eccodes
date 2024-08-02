@@ -18,6 +18,4 @@
 16 16 Bulk Richardson number (Numeric)
 17 17 Gradient Richardson number (Numeric)
 18 18 Flux Richardson number (Numeric)
-# 19-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing

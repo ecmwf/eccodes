@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,16 +10,17 @@
 
 #include "grib_accessor_class_change_scanning_direction.h"
 
-grib_accessor_class_change_scanning_direction_t _grib_accessor_class_change_scanning_direction{"change_scanning_direction"};
+grib_accessor_class_change_scanning_direction_t _grib_accessor_class_change_scanning_direction{ "change_scanning_direction" };
 grib_accessor_class* grib_accessor_class_change_scanning_direction = &_grib_accessor_class_change_scanning_direction;
 
 
-void grib_accessor_class_change_scanning_direction_t::init(grib_accessor* a, const long len, grib_arguments* args){
+void grib_accessor_class_change_scanning_direction_t::init(grib_accessor* a, const long len, grib_arguments* args)
+{
     grib_accessor_class_gen_t::init(a, len, args);
     grib_accessor_change_scanning_direction_t* self = (grib_accessor_change_scanning_direction_t*)a;
     grib_handle* h = grib_handle_of_accessor(a);
-    int n = 0;
 
+    int n                    = 0;
     self->values             = grib_arguments_get_name(h, args, n++);
     self->Ni                 = grib_arguments_get_name(h, args, n++);
     self->Nj                 = grib_arguments_get_name(h, args, n++);
@@ -34,20 +34,21 @@ void grib_accessor_class_change_scanning_direction_t::init(grib_accessor* a, con
     a->length = 0;
 }
 
-int grib_accessor_class_change_scanning_direction_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_change_scanning_direction_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     int err = 0;
     long i, j, jr, theEnd, Ni, Nj, k, kp;
     double tmp;
-    long iScansNegatively                         = 0;
-    long jScansPositively                         = 0;
-    double first                                  = 0;
-    double last                                   = 0;
-    size_t size                                   = 0;
-    double* values                                = NULL;
+    long iScansNegatively                           = 0;
+    long jScansPositively                           = 0;
+    double first                                    = 0;
+    double last                                     = 0;
+    size_t size                                     = 0;
+    double* values                                  = NULL;
     grib_accessor_change_scanning_direction_t* self = (grib_accessor_change_scanning_direction_t*)a;
-    const grib_context* c                         = a->context;
-    grib_handle* h                                = grib_handle_of_accessor(a);
-    const char* cclass_name                       = a->cclass->name;
+    const grib_context* c                           = a->context;
+    grib_handle* h                                  = grib_handle_of_accessor(a);
+    const char* cclass_name                         = a->cclass->name;
 
     if (*val == 0)
         return GRIB_SUCCESS;
@@ -147,11 +148,13 @@ int grib_accessor_class_change_scanning_direction_t::pack_long(grib_accessor* a,
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_change_scanning_direction_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_change_scanning_direction_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_LONG;
 }
 
-int grib_accessor_class_change_scanning_direction_t::unpack_long(grib_accessor* a, long* v, size_t* len){
+int grib_accessor_class_change_scanning_direction_t::unpack_long(grib_accessor* a, long* v, size_t* len)
+{
     /* ECC-976: decoding this accessor doesn't make sense so we return a dummy value */
     *v = -1;
     return GRIB_SUCCESS;

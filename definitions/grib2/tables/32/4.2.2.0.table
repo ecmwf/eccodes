@@ -63,6 +63,4 @@
 61 61 Ecosystem respiration flux (kg m-2 s-1)
 62 62 Emissivity (Proportion)
 63 63 Canopy air temperature (K)
-# 64-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing

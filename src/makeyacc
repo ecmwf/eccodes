@@ -2,6 +2,8 @@ set -xe
 
 export LEX=flex
 export LEX_OUT=gribl.cc
+
+
 $LEX -o gribl.cc gribl.l
 sed 's/yy/grib_yy/g' < $LEX_OUT | sed 's/static void grib_yyunput/void grib_yyunput/' > grib_lex1.cc
 sed 's/fgetc/getc/g' < grib_lex1.cc > grib_lex.cc
@@ -18,11 +20,16 @@ sed 's/yy/grib_yy/g' < y.tab.h > grib_yacc.h
 rm -f y.tab.c y.tab.h
 
 set +x
+
+$LEX --version
+yacc --version
+
 echo "---------------------------------------------"
 # We use flex and bison
 echo "Did you use the latest YACC and FLEX modules?"
 echo "  module avail bison"
 echo "  module avail flex"
+
 
 echo
 echo ALL OK

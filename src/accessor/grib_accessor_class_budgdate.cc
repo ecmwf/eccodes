@@ -11,22 +11,24 @@
 
 #include "grib_accessor_class_budgdate.h"
 
-grib_accessor_class_budgdate_t _grib_accessor_class_budgdate{"budgdate"};
+grib_accessor_class_budgdate_t _grib_accessor_class_budgdate{ "budgdate" };
 grib_accessor_class* grib_accessor_class_budgdate = &_grib_accessor_class_budgdate;
 
 
-void grib_accessor_class_budgdate_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_budgdate_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_budgdate_t* self = (grib_accessor_budgdate_t*)a;
-    int n                        = 0;
+    int n                          = 0;
 
     self->year  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
     self->month = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
     self->day   = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
 }
 
-int grib_accessor_class_budgdate_t::unpack_long(grib_accessor* a, long* val, size_t* len){
-    int ret                      = 0;
+int grib_accessor_class_budgdate_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
+    int ret                        = 0;
     grib_accessor_budgdate_t* self = (grib_accessor_budgdate_t*)a;
 
     long year  = 0;
@@ -49,9 +51,10 @@ int grib_accessor_class_budgdate_t::unpack_long(grib_accessor* a, long* val, siz
 }
 
 /* TODO: Check for a valid date */
-int grib_accessor_class_budgdate_t::pack_long(grib_accessor* a, const long* val, size_t* len){
-    int ret                      = 0;
-    long v                       = val[0];
+int grib_accessor_class_budgdate_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
+    int ret                        = 0;
+    long v                         = val[0];
     grib_accessor_budgdate_t* self = (grib_accessor_budgdate_t*)a;
 
     long year  = 0;

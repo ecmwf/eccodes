@@ -44,6 +44,4 @@
 42 42 Water runoff and drainage rate (kg m-2 s-1)
 43 43 Drainage direction (Code table 4.250)
 44 44 Upstream area (m2)
-# 45-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing

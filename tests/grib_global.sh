@@ -76,14 +76,15 @@ set -e
 [ $status -ne 0 ]
 grep -q "Invalid pl array: entry at index=3 is zero" $tempText
 
-${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample1
-set +e
-${tools_dir}/grib_get -l 0,0 $tempGrib > $tempText 2>&1
-status=$?
-set -e
-[ $status -ne 0 ]
-grep -q "Invalid pl array: entry at index=3 is zero" $tempText
-
+if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+    ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample1
+    set +e
+    ${tools_dir}/grib_get -l 0,0 $tempGrib > $tempText 2>&1
+    status=$?
+    set -e
+    [ $status -ne 0 ]
+    grep -q "Invalid pl array: entry at index=3 is zero" $tempText
+fi
 
 # Clean up
 rm -f $tempGrib $tempText $tempFilt

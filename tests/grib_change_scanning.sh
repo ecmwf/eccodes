@@ -17,6 +17,9 @@ tempGribB=temp.$label.B.grib
 tempText=temp.$label.txt
 tempRef=temp.$label.ref
 
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
 
 editions="1 2"
 gridTypes="regular_ll rotated_ll" 

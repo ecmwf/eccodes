@@ -17,7 +17,5 @@
 15 15 Virtual potential temperature (K)
 16 16 Snow phase change heat flux (W m-2)
 17 17 Skin Temperature (K)
-#17-191 Reserved
-#192-254 Reserved for local use
 255 255 Missing
 

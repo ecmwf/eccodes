@@ -13,7 +13,8 @@
 grib_accessor_class_long_t _grib_accessor_class_long{"long"};
 grib_accessor_class* grib_accessor_class_long = &_grib_accessor_class_long;
 
-void grib_accessor_class_long_t::init(grib_accessor* a, const long len, grib_arguments* arg) {
+void grib_accessor_class_long_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+{
     grib_accessor_class_gen_t::init(a, len, arg);
 }
 

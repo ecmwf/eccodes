@@ -38,7 +38,7 @@ or edit "expression.class" and rerun ./make_class.pl
 typedef const char* string; /* to keep make_class.pl happy */
 
 static void    destroy(grib_context*,grib_expression* e);
-static void    print(grib_context*,grib_expression*,grib_handle*);
+static void    print(grib_context*,grib_expression*,grib_handle*,FILE*);
 static void    add_dependency(grib_expression* e, grib_accessor* observer);
 static int     native_type(grib_expression*,grib_handle*);
 static int     evaluate_long(grib_expression*,grib_handle*,long*);
@@ -70,6 +70,29 @@ static grib_expression_class _grib_expression_class_functor = {
 grib_expression_class* grib_expression_class_functor = &_grib_expression_class_functor;
 
 /* END_CLASS_IMP */
+
+
+#ifdef ECCODES_ON_WINDOWS
+// Windows does not have strcasestr
+static char* strcasestr(const char *haystack, const char* needle)
+{
+    char c, sc;
+    size_t len = 0;
+
+    if ((c = *needle++) != 0) {
+        c = tolower((unsigned char)c);
+        len = strlen(needle);
+        do {
+            do {
+                if ((sc = *haystack++) == 0)
+                    return (NULL);
+            } while ((char)tolower((unsigned char)sc) != c);
+        } while (_strnicmp(haystack, needle, len) != 0);
+        haystack--;
+    }
+    return ((char *)haystack);
+}
+#endif
 
 static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 {
@@ -168,6 +191,34 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         return GRIB_SUCCESS;
     }
 
+    if (STR_EQUAL(e->name, "contains")) {
+        *lres = 0;
+        const int n = grib_arguments_get_count(e->args);
+        if (n != 3) return GRIB_INVALID_ARGUMENT;
+        const char* keyName = grib_arguments_get_name(h, e->args, 0);
+        if (!keyName) return GRIB_INVALID_ARGUMENT;
+        int type = 0;
+        int err = grib_get_native_type(h, keyName, &type);
+        if (err) return err;
+        if (type == GRIB_TYPE_STRING) {
+            char keyValue[254] = {0,};
+            size_t len = sizeof(keyValue);
+            err = grib_get_string(h, keyName, keyValue, &len);
+            if (err) return err;
+            const char* sValue = grib_arguments_get_string(h, e->args, 1);
+            const bool case_sens = grib_arguments_get_long(h, e->args, 2) != 0;
+            const bool contains = case_sens? strcasestr(keyValue, sValue) : strstr(keyValue, sValue);
+            if (sValue && contains) {
+                *lres = 1;
+                return GRIB_SUCCESS;
+            }
+        } else {
+            // For now only keys of type string supported
+            return GRIB_INVALID_ARGUMENT;
+        }
+        return GRIB_SUCCESS;
+    }
+
     if (STR_EQUAL(e->name, "is_one_of")) {
         *lres = 0;
         const char* keyName = grib_arguments_get_name(h, e->args, 0);
@@ -216,12 +267,12 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-static void print(grib_context* c, grib_expression* g, grib_handle* f)
+static void print(grib_context* c, grib_expression* g, grib_handle* f, FILE* out)
 {
     const grib_expression_functor* e = (grib_expression_functor*)g;
-    printf("%s(", e->name);
+    fprintf(out, "%s(", e->name);
     // grib_expression_print(c,e->args,f);
-    printf(")");
+    fprintf(out, ")");
 }
 
 static void destroy(grib_context* c, grib_expression* g)

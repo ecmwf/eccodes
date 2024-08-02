@@ -148,7 +148,7 @@ echo "Test ECC-648: Set codetable key to array"
 # ---------------------------------------------
 cat >$tempFilt <<EOF
  set productDefinitionTemplateNumber = 11;
- set numberOfTimeRange = 3;
+ set numberOfTimeRanges = 3;
  set typeOfStatisticalProcessing = {3, 1, 2};
  write;
 EOF
@@ -385,7 +385,11 @@ grep "MISSING" $tempOut
 cat >$tempFilt <<EOF
  if (rubbish is "ppp") { print "yes"; } else { print "rubbish must fail"; }
  if ("ppp" is garbage) { print "yes"; } else { print "garbage must fail"; }
+ assert ( identifier isnot "rubbish" );
+ assert ( "a" isnot "A" );
+ assert ( identifier is "GRIB" );
 EOF
+cat $tempFilt
 ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut 2>&1
 cat $tempOut
 grep "rubbish must fail" $tempOut
@@ -420,6 +424,9 @@ set -e
 [ $status -ne 0 ]
 ${tools_dir}/grib_compare $input $tempGrib # compare should succeed
 
+# Write statement with key of type double
+input=$data_dir/sample.grib2
+echo 'write "delete_me_[referenceValue:d]";' | ${tools_dir}/grib_filter - $input
 
 # GTS header
 # ---------------
@@ -455,6 +462,24 @@ cat >$tempFilt <<EOF
 EOF
 ${tools_dir}/grib_filter $tempFilt $input
 
+
+# ECC-1878: The '=' specifier for the print statement
+# ----------------------------------------------------
+input=$data_dir/sample.grib2
+cat > $tempFilt <<EOF
+  print "[edition=%02d]";
+  print "[day=]";
+  print "[identifier=]";
+  print "[referenceValue=%.5g]";
+EOF
+${tools_dir}/grib_filter $tempFilt $input > $tempOut
+cat > $tempRef <<EOF
+edition=02
+day=6
+identifier=GRIB
+referenceValue=270.47
+EOF
+diff $tempRef $tempOut
 
 # Clean up
 rm -f $tempGrib $tempFilt $tempOut $tempRef

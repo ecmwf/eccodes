@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,26 +10,30 @@
 
 #include "grib_accessor_class_label.h"
 
-grib_accessor_class_label_t _grib_accessor_class_label{"label"};
+grib_accessor_class_label_t _grib_accessor_class_label{ "label" };
 grib_accessor_class* grib_accessor_class_label = &_grib_accessor_class_label;
 
 
-void grib_accessor_class_label_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+void grib_accessor_class_label_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+{
     grib_accessor_class_gen_t::init(a, len, arg);
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
     a->length = 0;
 }
 
-void grib_accessor_class_label_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_label_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_dump_label(dumper, a, NULL);
 }
 
-int grib_accessor_class_label_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_label_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_LABEL;
 }
 
-int grib_accessor_class_label_t::unpack_string(grib_accessor* a, char* val, size_t* len){
+int grib_accessor_class_label_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+{
     size_t vlen = strlen(a->name);
     if (vlen > *len)
         return GRIB_BUFFER_TOO_SMALL;

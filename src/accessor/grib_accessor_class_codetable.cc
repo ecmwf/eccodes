@@ -20,7 +20,7 @@ grib_accessor_class* grib_accessor_class_codetable = &_grib_accessor_class_codet
 static pthread_once_t once    = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 
-void thread_init()
+static void init_mutex()
 {
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
@@ -32,7 +32,7 @@ void thread_init()
 static int once = 0;
 static omp_nest_lock_t mutex1;
 
-void thread_init()
+static void init_mutex()
 {
     GRIB_OMP_CRITICAL(lock_grib_accessor_class_codetable_c)
     {
@@ -205,7 +205,7 @@ static grib_codetable* load_table(grib_accessor* a)
         localFilename = grib_context_full_defs_path(c, localRecomposed);
     }
 
-    GRIB_MUTEX_INIT_ONCE(&once, &thread_init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex1); /* GRIB-930 */
 
     /*printf("DBG %s: Look in cache: f=%s lf=%s (recomposed=%s)\n", self->att.name, filename, localFilename,recomposed);*/

@@ -133,7 +133,7 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 {
     grib_action_if* a = (grib_action_if*)act;
     grib_action* next = NULL;
-    int ret           = 0;
+    int ret           = GRIB_SUCCESS;
     long lres         = 0;
 
     grib_accessor* as = NULL;
@@ -154,9 +154,9 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
         next = a->block_false;
 
     if (p->h->context->debug > 1) {
-        printf("EVALUATE create_accessor_handle ");
-        grib_expression_print(p->h->context, a->expression, p->h);
-        printf(" [%s][_if%p]\n", (next == a->block_true ? "true" : "false"), (void*)a);
+        fprintf(stderr, "EVALUATE create_accessor_handle ");
+        grib_expression_print(p->h->context, a->expression, p->h, stderr);
+        fprintf(stderr, " [%s][_if%p]\n", (next == a->block_true ? "true" : "false"), (void*)a);
 
         /*grib_dump_action_branch(stdout,next,5);*/
     }
@@ -176,8 +176,8 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 
 static void print_expression_debug_info(grib_context* ctx, grib_expression* exp, grib_handle* h)
 {
-    grib_expression_print(ctx, exp, h); /* writes to stdout without a newline */
-    printf("\n");
+    grib_expression_print(ctx, exp, h, stderr); /* writes without a newline */
+    fprintf(stderr, "\n");
 }
 
 static int execute(grib_action* act, grib_handle* h)
@@ -240,7 +240,7 @@ static void dump(grib_action* act, FILE* f, int lvl)
         grib_context_print(act->context, f, "     ");
 
     printf("if(%s) { ", act->name);
-    grib_expression_print(act->context, a->expression, 0);
+    grib_expression_print(act->context, a->expression, 0, stdout);
     printf("\n");
 
     if (a->block_true) {
@@ -252,7 +252,7 @@ static void dump(grib_action* act, FILE* f, int lvl)
         for (i = 0; i < lvl; i++)
             grib_context_print(act->context, f, "     ");
         printf("else(%s) { ", act->name);
-        grib_expression_print(act->context, a->expression, 0);
+        grib_expression_print(act->context, a->expression, 0, stdout);
         /*     grib_context_print(act->context,f,"ELSE \n" );*/
         grib_dump_action_branch(f, a->block_false, lvl + 1);
     }
@@ -304,4 +304,3 @@ static void destroy(grib_context* context, grib_action* act)
     grib_context_free_persistent(context, act->debug_info);
     grib_context_free_persistent(context, act->op);
 }
-

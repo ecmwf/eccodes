@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -107,6 +106,9 @@ static int extra_set(grib_accessor* a, long val)
     grib_get_long(hand, "is_chemical_distfn", &is_chemical_distfn);
     grib_get_long(hand, "is_aerosol", &is_aerosol);
     grib_get_long(hand, "is_aerosol_optical", &is_aerosol_optical);
+
+    const int is_wave        = grib_is_defined(hand, "waveDirectionNumber");
+    const int is_wave_prange = grib_is_defined(hand, "typeOfWavePeriodInterval");
 
     switch (self->index) {
         case 0:
@@ -285,6 +287,11 @@ static int extra_set(grib_accessor* a, long val)
             grib_context_log(a->context, GRIB_LOG_ERROR,
                              "invalid first argument of g2_mars_labeling in %s", a->name);
             return GRIB_INTERNAL_ERROR;
+    }
+
+    if (is_wave || is_wave_prange) {
+        // ECC-1867
+        productDefinitionTemplateNumberNew = -1;  // disable PDT selection
     }
 
     if (productDefinitionTemplateNumberNew >= 0) {

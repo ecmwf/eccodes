@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,16 +10,16 @@
 
 #include "grib_accessor_class_julian_date.h"
 
-grib_accessor_class_julian_date_t _grib_accessor_class_julian_date{"julian_date"};
+grib_accessor_class_julian_date_t _grib_accessor_class_julian_date{ "julian_date" };
 grib_accessor_class* grib_accessor_class_julian_date = &_grib_accessor_class_julian_date;
 
 
-
-void grib_accessor_class_julian_date_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_julian_date_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_julian_date_t* self = (grib_accessor_julian_date_t*)a;
-    int n                           = 0;
-    grib_handle* h                  = grib_handle_of_accessor(a);
+    int n                             = 0;
+    grib_handle* h                    = grib_handle_of_accessor(a);
 
     self->year  = grib_arguments_get_name(h, c, n++);
     self->month = grib_arguments_get_name(h, c, n++);
@@ -51,15 +50,17 @@ void grib_accessor_class_julian_date_t::init(grib_accessor* a, const long l, gri
     a->length = 0;
 }
 
-void grib_accessor_class_julian_date_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_julian_date_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_dump_string(dumper, a, NULL);
 }
 
-int grib_accessor_class_julian_date_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_julian_date_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     int ret = 0;
     long hour, minute, second;
     long year, month, day, ymd, hms;
-    grib_handle* h                  = grib_handle_of_accessor(a);
+    grib_handle* h                    = grib_handle_of_accessor(a);
     grib_accessor_julian_date_t* self = (grib_accessor_julian_date_t*)a;
 
     if (self->ymd == NULL) {
@@ -108,12 +109,14 @@ int grib_accessor_class_julian_date_t::unpack_double(grib_accessor* a, double* v
     return ret;
 }
 
-int grib_accessor_class_julian_date_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_julian_date_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_julian_date_t* self = (grib_accessor_julian_date_t*)a;
-    int ret                         = 0;
-    long hour                       = 0;
-    long minute                     = 0;
-    long second                     = 0;
+
+    int ret     = 0;
+    long hour   = 0;
+    long minute = 0;
+    long second = 0;
     long ymd = 0, hms = 0;
     long year, month, day;
     grib_handle* h = grib_handle_of_accessor(a);
@@ -157,13 +160,14 @@ int grib_accessor_class_julian_date_t::pack_double(grib_accessor* a, const doubl
     return ret;
 }
 
-int grib_accessor_class_julian_date_t::unpack_string(grib_accessor* a, char* val, size_t* len){
+int grib_accessor_class_julian_date_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+{
     int ret = 0;
     long hour, minute, second;
     long year, month, day, ymd, hms;
     grib_accessor_julian_date_t* self = (grib_accessor_julian_date_t*)a;
-    char* sep                       = self->sep;
-    grib_handle* h                  = grib_handle_of_accessor(a);
+    char* sep                         = self->sep;
+    grib_handle* h                    = grib_handle_of_accessor(a);
 
     if (*len < 15)
         return GRIB_BUFFER_TOO_SMALL;
@@ -210,7 +214,8 @@ int grib_accessor_class_julian_date_t::unpack_string(grib_accessor* a, char* val
     }
 
     if (sep[1] != 0 && sep[2] != 0 && sep[3] != 0 && sep[4] != 0) {
-        snprintf(val, 1024, "%04ld%c%02ld%c%02ld%c%02ld%c%02ld%c%02ld", year, sep[0], month, sep[1], day, sep[2], hour, sep[3], minute, sep[4], second);
+        snprintf(val, 1024, "%04ld%c%02ld%c%02ld%c%02ld%c%02ld%c%02ld",
+                 year, sep[0], month, sep[1], day, sep[2], hour, sep[3], minute, sep[4], second);
     }
     else if (sep[0] != 0) {
         snprintf(val, 1024, "%04ld%02ld%02ld%c%02ld%02ld%02ld", year, month, day, sep[0], hour, minute, second);
@@ -218,19 +223,21 @@ int grib_accessor_class_julian_date_t::unpack_string(grib_accessor* a, char* val
     else {
         snprintf(val, 1024, "%04ld%02ld%02ld%02ld%02ld%02ld", year, month, day, hour, minute, second);
     }
-    *len = strlen(val)+1;
+    *len = strlen(val) + 1;
     return ret;
 }
 
-int grib_accessor_class_julian_date_t::pack_string(grib_accessor* a, const char* val, size_t* len){
+int grib_accessor_class_julian_date_t::pack_string(grib_accessor* a, const char* val, size_t* len)
+{
     int ret = 0;
     long hour, minute, second;
     long year, month, day, ymd, hms;
     grib_accessor_julian_date_t* self = (grib_accessor_julian_date_t*)a;
-    char* sep                       = self->sep;
-    grib_handle* h                  = grib_handle_of_accessor(a);
+    char* sep                         = self->sep;
+    grib_handle* h                    = grib_handle_of_accessor(a);
 
-    ret = sscanf(val, "%04ld%c%02ld%c%02ld%c%02ld%c%02ld%c%02ld", &year, &sep[0], &month, &sep[1], &day, &sep[2], &hour, &sep[3], &minute, &sep[4], &second);
+    ret = sscanf(val, "%04ld%c%02ld%c%02ld%c%02ld%c%02ld%c%02ld",
+                 &year, &sep[0], &month, &sep[1], &day, &sep[2], &hour, &sep[3], &minute, &sep[4], &second);
     if (ret != 11) {
         if (strlen(val) == 15) {
             ret = sscanf(val, "%04ld%02ld%02ld%c%02ld%02ld%02ld", &year, &month, &day, &sep[0], &hour, &minute, &second);
@@ -292,16 +299,19 @@ int grib_accessor_class_julian_date_t::pack_string(grib_accessor* a, const char*
     return ret;
 }
 
-int grib_accessor_class_julian_date_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_julian_date_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_context_log(a->context, GRIB_LOG_ERROR, " Cannot unpack %s as long", a->name);
     return GRIB_NOT_IMPLEMENTED;
 }
-int grib_accessor_class_julian_date_t::pack_long(grib_accessor* a, const long* v, size_t* len){
+int grib_accessor_class_julian_date_t::pack_long(grib_accessor* a, const long* v, size_t* len)
+{
     grib_context_log(a->context, GRIB_LOG_ERROR, " Cannot pack %s as long", a->name);
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_class_julian_date_t::pack_expression(grib_accessor* a, grib_expression* e){
+int grib_accessor_class_julian_date_t::pack_expression(grib_accessor* a, grib_expression* e)
+{
     size_t len        = 1;
     long lval         = 0;
     double dval       = 0;
@@ -319,14 +329,16 @@ int grib_accessor_class_julian_date_t::pack_expression(grib_accessor* a, grib_ex
             }
             /*if (hand->context->debug)
                     printf("ECCODES DEBUG grib_accessor_class_gen::pack_expression %s %ld\n", a->name,lval);*/
-            return a->pack_long(&lval, &len);        }
+            return a->pack_long(&lval, &len);
+        }
 
         case GRIB_TYPE_DOUBLE: {
             len = 1;
             ret = grib_expression_evaluate_double(hand, e, &dval);
             /*if (hand->context->debug)
                     printf("ECCODES DEBUG grib_accessor_class_gen::pack_expression %s %g\n", a->name, dval);*/
-            return a->pack_double(&dval, &len);        }
+            return a->pack_double(&dval, &len);
+        }
 
         case GRIB_TYPE_STRING: {
             char tmp[1024];
@@ -339,7 +351,8 @@ int grib_accessor_class_julian_date_t::pack_expression(grib_accessor* a, grib_ex
             len = strlen(cval);
             /*if (hand->context->debug)
                     printf("ECCODES DEBUG grib_accessor_class_gen::pack_expression %s %s\n", a->name, cval);*/
-            return a->pack_string(cval, &len);        }
+            return a->pack_string(cval, &len);
+        }
     }
 
     return GRIB_NOT_IMPLEMENTED;

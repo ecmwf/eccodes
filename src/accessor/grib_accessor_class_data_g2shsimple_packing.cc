@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,11 +10,12 @@
 
 #include "grib_accessor_class_data_g2shsimple_packing.h"
 
-grib_accessor_class_data_g2shsimple_packing_t _grib_accessor_class_data_g2shsimple_packing{"data_g2shsimple_packing"};
+grib_accessor_class_data_g2shsimple_packing_t _grib_accessor_class_data_g2shsimple_packing{ "data_g2shsimple_packing" };
 grib_accessor_class* grib_accessor_class_data_g2shsimple_packing = &_grib_accessor_class_data_g2shsimple_packing;
 
 
-void grib_accessor_class_data_g2shsimple_packing_t::init(grib_accessor* a, const long v, grib_arguments* args){
+void grib_accessor_class_data_g2shsimple_packing_t::init(grib_accessor* a, const long v, grib_arguments* args)
+{
     grib_accessor_class_data_shsimple_packing_t::init(a, v, args);
     grib_accessor_data_g2shsimple_packing_t* self = (grib_accessor_data_g2shsimple_packing_t*)a;
 
@@ -24,15 +24,17 @@ void grib_accessor_class_data_g2shsimple_packing_t::init(grib_accessor* a, const
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_class_data_g2shsimple_packing_t::value_count(grib_accessor* a, long* len){
+int grib_accessor_class_data_g2shsimple_packing_t::value_count(grib_accessor* a, long* len)
+{
     grib_accessor_data_g2shsimple_packing_t* self = (grib_accessor_data_g2shsimple_packing_t*)a;
-    *len                                        = 0;
+    *len                                          = 0;
     return grib_get_long(grib_handle_of_accessor(a), self->numberOfValues, len);
 }
 
-int grib_accessor_class_data_g2shsimple_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_data_g2shsimple_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_data_g2shsimple_packing_t* self = (grib_accessor_data_g2shsimple_packing_t*)a;
-    int err                                     = GRIB_SUCCESS;
+    int err                                       = GRIB_SUCCESS;
 
     size_t n_vals = 0;
 
@@ -61,9 +63,10 @@ int grib_accessor_class_data_g2shsimple_packing_t::unpack_double(grib_accessor* 
     return err;
 }
 
-int grib_accessor_class_data_g2shsimple_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_data_g2shsimple_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_data_g2shsimple_packing_t* self = (grib_accessor_data_g2shsimple_packing_t*)a;
-    int err                                     = GRIB_SUCCESS;
+    int err                                       = GRIB_SUCCESS;
 
     size_t coded_n_vals = *len - 1;
     size_t n_vals       = *len;

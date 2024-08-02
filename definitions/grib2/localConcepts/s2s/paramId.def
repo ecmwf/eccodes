@@ -173,6 +173,58 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Soil moisture top 20 cm
+'228086' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 22 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 2 ;
+	 scaleFactorOfSecondFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Soil moisture top 100 cm
+'228087' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 22 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 10 ;
+	 scaleFactorOfSecondFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Soil temperature top 20 cm
+'228095' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 2 ;
+	 scaleFactorOfSecondFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Soil temperature top 100 cm
+'228096' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 10 ;
+	 scaleFactorOfSecondFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Eastward surface sea water velocity
 '151131' = {
 	 discipline = 10 ;

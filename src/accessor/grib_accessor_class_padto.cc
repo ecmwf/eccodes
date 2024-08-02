@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,12 +10,12 @@
 
 #include "grib_accessor_class_padto.h"
 
-grib_accessor_class_padto_t _grib_accessor_class_padto{"padto"};
+grib_accessor_class_padto_t _grib_accessor_class_padto{ "padto" };
 grib_accessor_class* grib_accessor_class_padto = &_grib_accessor_class_padto;
 
 
-
-size_t grib_accessor_class_padto_t::preferred_size(grib_accessor* a, int from_handle){
+size_t grib_accessor_class_padto_t::preferred_size(grib_accessor* a, int from_handle)
+{
     grib_accessor_padto_t* self = (grib_accessor_padto_t*)a;
 
     long length = 0;
@@ -26,13 +25,13 @@ size_t grib_accessor_class_padto_t::preferred_size(grib_accessor* a, int from_ha
 
     length = theEnd - a->offset;
 
-    /* printf("preferred_size: prefered: %ld current:%ld %s %s %ld\n", (long)length,(long)a->length,a->cclass->name,a->name,(long)a->offset); */
+    //printf("preferred_size: prefered: %ld current:%ld %s %s %ld\n", (long)length,(long)a->length,a->cclass->name,a->name,(long)a->offset);
 
     return length > 0 ? length : 0;
 }
 
-
-void grib_accessor_class_padto_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+void grib_accessor_class_padto_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+{
     grib_accessor_class_padding_t::init(a, len, arg);
     grib_accessor_padto_t* self = (grib_accessor_padto_t*)a;
 
@@ -40,6 +39,7 @@ void grib_accessor_class_padto_t::init(grib_accessor* a, const long len, grib_ar
     a->length        = preferred_size(a, 1);
 }
 
-void grib_accessor_class_padto_t::dump(grib_accessor* a, grib_dumper* dumper){
-    /*grib_dump_string(dumper,a,NULL);*/
+void grib_accessor_class_padto_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
+    //grib_dump_string(dumper,a,NULL);
 }

@@ -8,7 +8,12 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
 . ./include.ctest.sh
+
 temp=temp.c_grib_iterator.txt
+
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
 
 # These two do not have any missing data
 ${examples_dir}/c_grib_iterator ${data_dir}/reduced_gaussian_model_level.grib1 > /dev/null

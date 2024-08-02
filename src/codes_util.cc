@@ -244,6 +244,61 @@ int is_time_valid(long number)
     return 1;
 }
 
+/* Table of multipliers to convert step units to minutes */
+static const double u2m[] = {
+    1,            /* index 0:  minutes  */
+    60,           /* index 1:  hour     */
+    24 * 60,      /* index 2:  day      */
+    24 * 60 * 30, /* index 3:  month    */
+    -1,           /* index 4:  year     */
+    -1,           /* index 5:  decade   */
+    -1,           /* index 6:  30 years */
+    -1,           /* index 7:  century  */
+    -1,           /* index 8:  RESERVED */
+    -1,           /* index 9:  RESERVED */
+    3 * 60,       /* index 10: 3 hours  */
+    6 * 60,       /* index 11: 6 hours  */
+    12 * 60,      /* index 12: 12 hours */
+    1 / 60.0,     /* index 13: seconds  */
+    15,           /* index 14: 15 mins  */
+    30            /* index 15: 30 mins  */
+};
+
+long convert_to_minutes(long step, long stepUnits)
+{
+    double result = 0;
+    if (stepUnits == 0)
+        return step; /* unit=minutes so no change */
+    if (stepUnits == 1)
+        return step * 60; /* unit=hours */
+    if (stepUnits == 13)
+        return step / 60; /* unit=seconds */
+    /* Assert( stepUnits < sizeof(u2m)/sizeof(u2m[0]) ); */
+
+    result = step * u2m[stepUnits];
+    return (long)result;
+}
+
+bool is_sorted_ascending(double arr[], size_t n)
+{
+    for (size_t i = 0; i < n-1; i++) {
+        if (arr[i] > arr[i+1]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool is_sorted_descending(double arr[], size_t n)
+{
+    for (size_t i = 0; i < n-1; i++) {
+        if (arr[i] < arr[i+1]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 static float float_epsilon(void)
 {
     float floatEps = 1.0;

@@ -3035,6 +3035,16 @@
 	 parameterCategory = 211 ;
 	 parameterNumber = 56 ;
 	}
+#Water vapour (chemistry) difference
+'kg kg**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 1 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical = 1 ;
+	}
 #Altitude of emitter
 'm' = {
 	 discipline = 192 ;
@@ -13839,6 +13849,14 @@
 	 parameterNumber = 254 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean logarithm of surface pressure
+'Numeric' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean low cloud cover
 '(0 - 1)' = {
 	 localTablesVersion = 1 ;
@@ -14113,7 +14131,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
-	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 192 ;
 	}
 #Emission mass flux from biomass burning
@@ -14122,7 +14139,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
-	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 193 ;
 	}
 #Emission mass flux from settlements
@@ -14131,7 +14147,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
-	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 194 ;
 	}
 #Emission mass flux from soil
@@ -14140,7 +14155,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
-	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 195 ;
 	}
 #Emission mass flux from wild animals
@@ -14149,7 +14163,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
-	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 196 ;
 	}
 #Aerosol negative fixer mass flux
@@ -14172,6 +14185,38 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 192 ;
+	}
+#Emission mass flux from commercial buildings heating
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 197 ;
+	}
+#Emission mass flux from residential heating
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 198 ;
+	}
+#Emission mass flux from oil refineries and transformation industry
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 199 ;
+	}
+#Emission mass flux from gas production
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 200 ;
 	}
 #Stream function gradient
 'm**2 s**-1' = {

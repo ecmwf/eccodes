@@ -51,7 +51,7 @@ concept datasetForLocal(unknown) {
   "unknown" = { dummy=1; }
 }
 
-if (!(datasetForLocal is "unknown")) {
+if (datasetForLocal isnot "unknown") {
    constant conceptsDir2 = "grib2/localConcepts/[datasetForLocal]": hidden;
    constant conceptsDir1 = "grib2": hidden;
 }
@@ -76,6 +76,9 @@ if (defined(marsStream) && defined(marsType)) {
 }
 
 template parameters "grib2/parameters.def";
+
+# Hook for local extras
+template_nofail extras "grib2/local/[centre]/section4_extras.def";
 
 # Detect if this is for Generalized vertical height coordinates
 if (defined(typeOfFirstFixedSurface)) {

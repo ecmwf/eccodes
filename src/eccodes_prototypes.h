@@ -281,6 +281,7 @@ int grib_index_dump_file(FILE* fout, const char* filename, unsigned long flags);
 void grib_index_dump(FILE* fout, grib_index* index, unsigned long flags);
 char* grib_get_field_file(grib_index* index, off_t* offset);
 grib_handle* grib_handle_new_from_index(grib_index* index, int* err);
+void grib_index_rewind(grib_index *index);
 grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err);
 int codes_index_set_product_kind(grib_index* index, ProductKind product_kind);
 int codes_index_set_unpack_bufr(grib_index* index, int unpack);
@@ -307,6 +308,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
 unsigned long grib_decode_unsigned_byte_long(const unsigned char* p, long o, int l);
 long grib_decode_signed_long(const unsigned char* p, long o, int l);
 int grib_encode_signed_long(unsigned char* p, long val, long o, int l);
+void grib_set_bit_on(unsigned char*, long*);
 void grib_set_bits_on(unsigned char* p, long* bitp, long nbits);
 int grib_get_bit(const unsigned char* p, long bitp);
 void grib_set_bit(unsigned char* p, long bitp, int val);
@@ -757,7 +759,7 @@ grib_expression* new_is_in_dict_expression(grib_context* c, const char* name, co
 grib_expression* new_true_expression(grib_context* c);
 
 /* grib_expression_class_string_compare.cc */
-grib_expression* new_string_compare_expression(grib_context* c, grib_expression* left, grib_expression* right);
+grib_expression* new_string_compare_expression(grib_context* c, grib_expression* left, grib_expression* right, int eq);
 
 /* grib_expression_class_unop.cc */
 grib_expression* new_unop_expression(grib_context* c, grib_unop_long_proc long_func, grib_unop_double_proc double_func, grib_expression* exp);
@@ -829,7 +831,7 @@ int grib_expression_evaluate_long(grib_handle* h, grib_expression* g, long* resu
 int grib_expression_evaluate_double(grib_handle* h, grib_expression* g, double* result);
 const char* grib_expression_evaluate_string(grib_handle* h, grib_expression* g, char* buf, size_t* size, int* err);
 const char* grib_expression_get_name(grib_expression* g);
-void grib_expression_print(grib_context* ctx, grib_expression* g, grib_handle* f);
+void grib_expression_print(grib_context* ctx, grib_expression* g, grib_handle* f, FILE*);
 void grib_expression_free(grib_context* ctx, grib_expression* g);
 void grib_expression_add_dependency(grib_expression* e, grib_accessor* observer);
 grib_arguments* grib_arguments_new(grib_context* c, grib_expression* g, grib_arguments* n);
@@ -852,6 +854,9 @@ int codes_check_grib_ieee_packing_value(int value);
 int codes_flush_sync_close_file(FILE* f);
 int is_date_valid(long year, long month, long day, long hour, long minute, double second);
 int is_time_valid(long number); // number is HHMM
+long convert_to_minutes(long step, long stepUnits);
+bool is_sorted_ascending(double arr[], size_t n);
+bool is_sorted_descending(double arr[], size_t n);
 int compute_scaled_value_and_scale_factor(double input, int64_t scaled_value_max, int64_t scale_factor_max, int64_t* ret_value, int64_t* ret_factor);
 
 /* grib_util.cc */
@@ -860,12 +865,14 @@ grib_string_list* grib_util_get_param_id(const char* mars_param);
 grib_string_list* grib_util_get_mars_param(const char* param_id);
 grib_handle* grib_util_set_spec(grib_handle* h, const grib_util_grid_spec* spec, const grib_util_packing_spec* packing_spec, int flags, const double* data_values, size_t data_values_count, int* err);
 int parse_keyval_string(const char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count);
+int grib2_is_PDTN_Plain(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_EPS(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_Chemical(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_ChemicalSourceSink(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_ChemicalDistFunc(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_Aerosol(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_AerosolOptical(long productDefinitionTemplateNumber);
+int grib2_choose_PDTN(int current_PDTN, bool is_det, bool is_instant);
 int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemical_srcsink, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
 size_t sum_of_pl_array(const long* pl, size_t plsize);
 int grib_is_earth_oblate(const grib_handle* h);

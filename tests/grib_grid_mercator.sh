@@ -9,6 +9,10 @@
 
 . ./include.ctest.sh
 
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
+
 # Define a common label for all the tmp files
 label="grib_mercator_test"
 tempOut="temp.${label}.out"

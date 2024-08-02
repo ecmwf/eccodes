@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -56,7 +55,7 @@ static int is_bitmap_start_defined(grib_accessor_bufr_data_array_t* self)
     return self->bitmapStart == -1 ? 0 : 1;
 }
 
-size_t get_length(grib_accessor* a)
+static size_t get_length(grib_accessor* a)
 {
     grib_accessor_bufr_data_array_t* self = (grib_accessor_bufr_data_array_t*)a;
     size_t len = 0;
@@ -101,7 +100,7 @@ static int tableB_override_get_ref_val(grib_accessor_bufr_data_array_t* self, in
 }
 
 /* Operator 203YYY: Clear and free linked list */
-void tableB_override_clear(grib_context* c, grib_accessor_bufr_data_array_t* self)
+static void tableB_override_clear(grib_context* c, grib_accessor_bufr_data_array_t* self)
 {
     bufr_tableb_override* tb = self->tableb_override;
     while (tb) {
@@ -113,7 +112,7 @@ void tableB_override_clear(grib_context* c, grib_accessor_bufr_data_array_t* sel
 }
 
 /* Operator 203YYY: Copy contents of linked list to the transient array key */
-int tableB_override_set_key(grib_handle* h, grib_accessor_bufr_data_array_t* self)
+static int tableB_override_set_key(grib_handle* h, grib_accessor_bufr_data_array_t* self)
 {
     int err                  = GRIB_SUCCESS;
     size_t size              = 0;
@@ -164,7 +163,8 @@ static int check_overridden_reference_values(const grib_context* c, long* refVal
 #define DYN_ARRAY_SIZE_INIT 1000 /* Initial size for grib_iarray_new and grib_darray_new */
 #define DYN_ARRAY_SIZE_INCR 1000 /* Increment size for grib_iarray_new and grib_darray_new */
 
-void grib_accessor_class_bufr_data_array_t::init(grib_accessor* a, const long v, grib_arguments* params){
+void grib_accessor_class_bufr_data_array_t::init(grib_accessor* a, const long v, grib_arguments* params)
+{
     grib_accessor_class_gen_t::init(a, v, params);
     grib_accessor_bufr_data_array_t* self = (grib_accessor_bufr_data_array_t*)a;
     int n                               = 0;
@@ -229,7 +229,8 @@ static int check_end_data(grib_context* c, bufr_descriptor* bd, grib_accessor_bu
     return 0;
 }
 
-void self_clear(grib_context* c, grib_accessor_bufr_data_array_t* self){
+void self_clear(grib_context* c, grib_accessor_bufr_data_array_t* self)
+{
     grib_context_free(c, self->canBeMissing);
     grib_vdarray_delete_content(c, self->numericValues);
     grib_vdarray_delete(c, self->numericValues);
@@ -258,30 +259,36 @@ void self_clear(grib_context* c, grib_accessor_bufr_data_array_t* self){
     if (self->inputBitmap) grib_context_free(c, self->inputBitmap);
 }
 
-int grib_accessor_class_bufr_data_array_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_bufr_data_array_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_DOUBLE;
 }
 
-long grib_accessor_class_bufr_data_array_t::byte_count(grib_accessor* a){
+long grib_accessor_class_bufr_data_array_t::byte_count(grib_accessor* a)
+{
     return 0;
 }
 
-long grib_accessor_class_bufr_data_array_t::byte_offset(grib_accessor* a){
+long grib_accessor_class_bufr_data_array_t::byte_offset(grib_accessor* a)
+{
     return a->offset;
 }
 
-long grib_accessor_class_bufr_data_array_t::next_offset(grib_accessor* a){
+long grib_accessor_class_bufr_data_array_t::next_offset(grib_accessor* a)
+{
     return a->offset;
 }
 
-int grib_accessor_class_bufr_data_array_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_bufr_data_array_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_bufr_data_array_t* self = (grib_accessor_bufr_data_array_t*)a;
     self->do_decode                     = 1;
 
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_class_bufr_data_array_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_bufr_data_array_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_bufr_data_array_t* self = (grib_accessor_bufr_data_array_t*)a;
     self->do_decode                     = 1;
     return process_elements(a, PROCESS_ENCODE, 0, 0, 0);
@@ -537,7 +544,8 @@ static int encode_string_array(grib_context* c, grib_buffer* buff, long* pos, bu
     return err;
 }
 
-void set_missing_long_to_double(grib_darray* dvalues){
+void set_missing_long_to_double(grib_darray* dvalues)
+{
     size_t i, n = grib_darray_used_size(dvalues);
     for (i = 0; i < n; i++) {
         if (dvalues->v[i] == GRIB_MISSING_LONG)
@@ -2202,7 +2210,7 @@ static grib_accessor* accessor_or_attribute_with_same_name(grib_accessor* a, con
 //     return *r;
 // }
 
-int grib_data_accessors_trie_push(grib_trie_with_rank* accessorsTrie, grib_accessor* a)
+static int grib_data_accessors_trie_push(grib_trie_with_rank* accessorsTrie, grib_accessor* a)
 {
     return grib_trie_with_rank_insert(accessorsTrie, a->name, a);
 }
@@ -3167,14 +3175,15 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
     return err;
 }
 
-void grib_accessor_class_bufr_data_array_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_bufr_data_array_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     // grib_accessor_bufr_data_array_t *self =(grib_accessor_bufr_data_array_t*)a;
     // int err=process_elements(a,PROCESS_DECODE);
     // grib_dump_section(dumper,a,self->dataKeys->block);
-    return;
 }
 
-int grib_accessor_class_bufr_data_array_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_bufr_data_array_t::value_count(grib_accessor* a, long* count)
+{
     int err = 0, l;
     long i;
     grib_accessor_bufr_data_array_t* self = (grib_accessor_bufr_data_array_t*)a;
@@ -3197,7 +3206,8 @@ int grib_accessor_class_bufr_data_array_t::value_count(grib_accessor* a, long* c
     return err;
 }
 
-int grib_accessor_class_bufr_data_array_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_bufr_data_array_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     int err                             = 0, i, k, ii;
     int proc_flag                       = PROCESS_DECODE;
     size_t l                            = 0, elementsInSubset;
@@ -3250,7 +3260,8 @@ int grib_accessor_class_bufr_data_array_t::unpack_double(grib_accessor* a, doubl
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_class_bufr_data_array_t::destroy(grib_context* c, grib_accessor* a){
+void grib_accessor_class_bufr_data_array_t::destroy(grib_context* c, grib_accessor* a)
+{
     grib_accessor_bufr_data_array_t* self = (grib_accessor_bufr_data_array_t*)a;
     self_clear(c, self);
     if (self->dataAccessors)

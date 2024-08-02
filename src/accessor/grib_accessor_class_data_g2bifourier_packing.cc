@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,18 +10,20 @@
 
 #include "grib_accessor_class_data_g2bifourier_packing.h"
 #include "grib_scaling.h"
+#include <algorithm>
 
-grib_accessor_class_data_g2bifourier_packing_t _grib_accessor_class_data_g2bifourier_packing{"data_g2bifourier_packing"};
+grib_accessor_class_data_g2bifourier_packing_t _grib_accessor_class_data_g2bifourier_packing{ "data_g2bifourier_packing" };
 grib_accessor_class* grib_accessor_class_data_g2bifourier_packing = &_grib_accessor_class_data_g2bifourier_packing;
 
 
 typedef unsigned long (*encode_float_proc)(double);
 typedef double (*decode_float_proc)(unsigned long);
 
-void grib_accessor_class_data_g2bifourier_packing_t::init(grib_accessor* a, const long v, grib_arguments* args){
+void grib_accessor_class_data_g2bifourier_packing_t::init(grib_accessor* a, const long v, grib_arguments* args)
+{
     grib_accessor_class_data_simple_packing_t::init(a, v, args);
     grib_accessor_data_g2bifourier_packing_t* self = (grib_accessor_data_g2bifourier_packing_t*)a;
-    grib_handle* gh                              = grib_handle_of_accessor(a);
+    grib_handle* gh                                = grib_handle_of_accessor(a);
 
     self->ieee_floats                         = grib_arguments_get_name(gh, args, self->carg++);
     self->laplacianOperatorIsSet              = grib_arguments_get_name(gh, args, self->carg++);
@@ -42,10 +43,11 @@ void grib_accessor_class_data_g2bifourier_packing_t::init(grib_accessor* a, cons
     self->dirty = 1;
 }
 
-int grib_accessor_class_data_g2bifourier_packing_t::value_count(grib_accessor* a, long* numberOfValues){
+int grib_accessor_class_data_g2bifourier_packing_t::value_count(grib_accessor* a, long* numberOfValues)
+{
     grib_accessor_data_g2bifourier_packing_t* self = (grib_accessor_data_g2bifourier_packing_t*)a;
-    grib_handle* gh                              = grib_handle_of_accessor(a);
-    *numberOfValues                              = 0;
+    grib_handle* gh                                = grib_handle_of_accessor(a);
+    *numberOfValues                                = 0;
 
     return grib_get_long_internal(gh, self->number_of_values, numberOfValues);
 }
@@ -248,7 +250,7 @@ static double laplam(bif_trunc_t* bt, const double val[])
         free(itab2);
         return 0.;
     }
-    Assert(lmax>0);
+    Assert(lmax > 0);
 
     /*
      * Now, itab2 contains all possible values of i*i+j*j, and itab1 contains
@@ -425,8 +427,8 @@ static bif_trunc_t* new_bif_trunc(grib_accessor* a)
     bt->jtruncation_bif = (long*)grib_context_malloc(gh->context, sizeof(long) * (1 + bt->bif_i));
 
 #define RECTANGLE 77
-#define ELLIPSE 88
-#define DIAMOND 99
+#define ELLIPSE   88
+#define DIAMOND   99
 
     switch (bt->biFourierTruncationType) {
         case RECTANGLE:
@@ -470,9 +472,10 @@ cleanup:
     return NULL;
 }
 
-int grib_accessor_class_data_g2bifourier_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_data_g2bifourier_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_data_g2bifourier_packing_t* self = (grib_accessor_data_g2bifourier_packing_t*)a;
-    grib_handle* gh                              = grib_handle_of_accessor(a);
+    grib_handle* gh                                = grib_handle_of_accessor(a);
 
     unsigned char* buf  = NULL;
     unsigned char* hres = NULL;
@@ -567,19 +570,20 @@ cleanup:
     return ret;
 }
 
-int grib_accessor_class_data_g2bifourier_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_data_g2bifourier_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_data_g2bifourier_packing_t* self = (grib_accessor_data_g2bifourier_packing_t*)a;
-    grib_handle* gh                              = grib_handle_of_accessor(a);
-    const char* cclass_name                      = a->cclass->name;
+    grib_handle* gh                                = grib_handle_of_accessor(a);
+    const char* cclass_name                        = a->cclass->name;
 
-    size_t buflen                                = 0;
-    size_t hsize                                 = 0;
-    size_t lsize                                 = 0;
-    unsigned char* buf                           = NULL;
-    unsigned char* hres                          = NULL;
-    unsigned char* lres                          = NULL;
-    long hpos                                    = 0;
-    long lpos                                    = 0;
+    size_t buflen       = 0;
+    size_t hsize        = 0;
+    size_t lsize        = 0;
+    unsigned char* buf  = NULL;
+    unsigned char* hres = NULL;
+    unsigned char* lres = NULL;
+    long hpos           = 0;
+    long lpos           = 0;
     int isp;
     bif_trunc_t* bt = NULL;
 
@@ -618,7 +622,7 @@ int grib_accessor_class_data_g2bifourier_packing_t::pack_double(grib_accessor* a
 
     if (*len != bt->n_vals_bif) {
         grib_context_log(gh->context, GRIB_LOG_ERROR, "BIFOURIER_PACKING: wrong number of values, expected %lu - got %lu",
-                bt->n_vals_bif, *len);
+                         bt->n_vals_bif, *len);
         ret = GRIB_INTERNAL_ERROR;
         goto cleanup;
     }
@@ -744,7 +748,7 @@ int grib_accessor_class_data_g2bifourier_packing_t::pack_double(grib_accessor* a
         grib_get_double_internal(gh, self->reference_value, &ref);
         if (ref != bt->reference_value) {
             grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
-                            cclass_name, __func__, self->reference_value, ref, bt->reference_value);
+                             cclass_name, __func__, self->reference_value, ref, bt->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
     }

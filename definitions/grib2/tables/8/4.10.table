@@ -10,6 +10,4 @@
 8 8 Difference (value at the start of time range minus value at the end)
 9 ratio Ratio
 10 10 Standardized anomaly
-# 11-191 Reserved
-# 192-254 Reserved for local use
 255 missing Missing

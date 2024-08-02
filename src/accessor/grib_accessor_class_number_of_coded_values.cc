@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,25 +10,28 @@
 
 #include "grib_accessor_class_number_of_coded_values.h"
 
-grib_accessor_class_number_of_coded_values_t _grib_accessor_class_number_of_coded_values{"number_of_coded_values"};
+grib_accessor_class_number_of_coded_values_t _grib_accessor_class_number_of_coded_values{ "number_of_coded_values" };
 grib_accessor_class* grib_accessor_class_number_of_coded_values = &_grib_accessor_class_number_of_coded_values;
 
 
-void grib_accessor_class_number_of_coded_values_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_number_of_coded_values_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_long_t::init(a, l, c);
-    int n                                      = 0;
     grib_accessor_number_of_coded_values_t* self = (grib_accessor_number_of_coded_values_t*)a;
-    self->bitsPerValue                         = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->offsetBeforeData                     = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->offsetAfterData                      = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->unusedBits                           = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->numberOfValues                       = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+
+    int n = 0;
+    self->bitsPerValue                           = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->offsetBeforeData                       = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->offsetAfterData                        = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->unusedBits                             = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->numberOfValues                         = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
     a->length = 0;
 }
 
-int grib_accessor_class_number_of_coded_values_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_number_of_coded_values_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     int ret               = GRIB_SUCCESS;
     long bpv              = 0;
     long offsetBeforeData = 0, offsetAfterData = 0, unusedBits = 0, numberOfValues;
@@ -50,8 +52,9 @@ int grib_accessor_class_number_of_coded_values_t::unpack_long(grib_accessor* a, 
         return ret;
 
     if (bpv != 0) {
-        grib_context_log(a->context, GRIB_LOG_DEBUG, "grib_accessor_number_of_coded_values_t: offsetAfterData=%ld offsetBeforeData=%ld unusedBits=%ld bpv=%ld\n",
-                         offsetAfterData, offsetBeforeData, unusedBits, bpv);
+        grib_context_log(a->context, GRIB_LOG_DEBUG,
+                "grib_accessor_number_of_coded_values_t: offsetAfterData=%ld offsetBeforeData=%ld unusedBits=%ld bpv=%ld\n",
+                offsetAfterData, offsetBeforeData, unusedBits, bpv);
         DEBUG_ASSERT(offsetAfterData > offsetBeforeData);
         *val = ((offsetAfterData - offsetBeforeData) * 8 - unusedBits) / bpv;
     }

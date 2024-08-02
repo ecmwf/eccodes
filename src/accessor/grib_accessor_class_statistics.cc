@@ -11,14 +11,15 @@
 
 #include "grib_accessor_class_statistics.h"
 
-grib_accessor_class_statistics_t _grib_accessor_class_statistics{"statistics"};
+grib_accessor_class_statistics_t _grib_accessor_class_statistics{ "statistics" };
 grib_accessor_class* grib_accessor_class_statistics = &_grib_accessor_class_statistics;
 
 
-void grib_accessor_class_statistics_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_statistics_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_abstract_vector_t::init(a, l, c);
     grib_accessor_statistics_t* self = (grib_accessor_statistics_t*)a;
-    int n                          = 0;
+    int n = 0;
 
     self->missing_value = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
     self->values        = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
@@ -27,24 +28,24 @@ void grib_accessor_class_statistics_t::init(grib_accessor* a, const long l, grib
     a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
 
     self->number_of_elements = 8;
-    self->v                  = (double*)grib_context_malloc(a->context,
-                                           sizeof(double) * self->number_of_elements);
+    self->v = (double*)grib_context_malloc(a->context, sizeof(double) * self->number_of_elements);
 
     a->length = 0;
     a->dirty  = 1;
 }
 
-int grib_accessor_class_statistics_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_statistics_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_statistics_t* self = (grib_accessor_statistics_t*)a;
     int ret = 0;
     double* values = NULL;
     size_t i = 0, size = 0, real_size = 0;
     double max, min, avg, sd, value, skew, kurt, m2 = 0, m3 = 0, m4 = 0;
-    double missing            = 0;
+    double missing = 0;
     long missingValuesPresent = 0;
     size_t number_of_missing  = 0;
-    grib_context* c           = a->context;
-    grib_handle* h            = grib_handle_of_accessor(a);
+    grib_context* c = a->context;
+    grib_handle* h = grib_handle_of_accessor(a);
 
     if (!a->dirty)
         return GRIB_SUCCESS;
@@ -113,7 +114,7 @@ int grib_accessor_class_statistics_t::unpack_double(grib_accessor* a, double* va
             avg += value;
         }
     }
-    /*printf("stats.......... number_of_missing=%ld\n", number_of_missing);*/
+
     /* Don't divide by zero if all values are missing! */
     if (size != number_of_missing) {
         avg /= (size - number_of_missing);
@@ -147,6 +148,8 @@ int grib_accessor_class_statistics_t::unpack_double(grib_accessor* a, double* va
         skew = m3 / (sd * sd * sd);
         kurt = m4 / (m2 * m2) - 3.0;
     }
+
+    //printf("\ngrib_accessor_class_statistics_t::unpack_double   Computed. So setting dirty to 0....... \n");
     a->dirty = 0;
 
     grib_context_free(c, values);
@@ -166,19 +169,22 @@ int grib_accessor_class_statistics_t::unpack_double(grib_accessor* a, double* va
     return ret;
 }
 
-int grib_accessor_class_statistics_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_statistics_t::value_count(grib_accessor* a, long* count)
+{
     grib_accessor_statistics_t* self = (grib_accessor_statistics_t*)a;
-    *count                         = self->number_of_elements;
+    *count = self->number_of_elements;
     return 0;
 }
 
-void grib_accessor_class_statistics_t::destroy(grib_context* c, grib_accessor* a){
+void grib_accessor_class_statistics_t::destroy(grib_context* c, grib_accessor* a)
+{
     grib_accessor_statistics_t* self = (grib_accessor_statistics_t*)a;
     grib_context_free(c, self->v);
     grib_accessor_class_abstract_vector_t::destroy(c, a);
 }
 
-int grib_accessor_class_statistics_t::compare(grib_accessor* a, grib_accessor* b){
+int grib_accessor_class_statistics_t::compare(grib_accessor* a, grib_accessor* b)
+{
     int retval   = GRIB_SUCCESS;
     double* aval = 0;
     double* bval = 0;
@@ -188,11 +194,13 @@ int grib_accessor_class_statistics_t::compare(grib_accessor* a, grib_accessor* b
     int err     = 0;
     long count  = 0;
 
-    err = a->value_count(&count);    if (err)
+    err = a->value_count(&count);
+    if (err)
         return err;
     alen = count;
 
-    err = b->value_count(&count);    if (err)
+    err = b->value_count(&count);
+    if (err)
         return err;
     blen = count;
 
@@ -205,9 +213,10 @@ int grib_accessor_class_statistics_t::compare(grib_accessor* a, grib_accessor* b
     b->dirty = 1;
     a->dirty = 1;
 
-    a->unpack_double(aval, &alen);    b->unpack_double(bval, &blen);
+    a->unpack_double(aval, &alen);
+    b->unpack_double(bval, &blen);
     retval = GRIB_SUCCESS;
-    for (size_t i=0; i<alen && retval == GRIB_SUCCESS; ++i) {
+    for (size_t i = 0; i < alen && retval == GRIB_SUCCESS; ++i) {
         if (aval[i] != bval[i]) retval = GRIB_DOUBLE_VALUE_MISMATCH;
     }
 
@@ -217,6 +226,7 @@ int grib_accessor_class_statistics_t::compare(grib_accessor* a, grib_accessor* b
     return retval;
 }
 
-int grib_accessor_class_statistics_t::unpack_string(grib_accessor* a, char* v, size_t* len){
+int grib_accessor_class_statistics_t::unpack_string(grib_accessor* a, char* v, size_t* len)
+{
     return GRIB_NOT_IMPLEMENTED;
 }

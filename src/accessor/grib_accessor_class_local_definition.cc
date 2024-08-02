@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,15 +10,16 @@
 
 #include "grib_accessor_class_local_definition.h"
 
-grib_accessor_class_local_definition_t _grib_accessor_class_local_definition{"local_definition"};
+grib_accessor_class_local_definition_t _grib_accessor_class_local_definition{ "local_definition" };
 grib_accessor_class* grib_accessor_class_local_definition = &_grib_accessor_class_local_definition;
 
 
-void grib_accessor_class_local_definition_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_local_definition_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_unsigned_t::init(a, l, c);
     grib_accessor_local_definition_t* self = (grib_accessor_local_definition_t*)a;
-    grib_handle* hand                    = grib_handle_of_accessor(a);
-    int n                                = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
+    int n = 0;
 
     self->grib2LocalSectionNumber                 = grib_arguments_get_name(hand, c, n++);
     self->productDefinitionTemplateNumber         = grib_arguments_get_name(hand, c, n++);
@@ -32,15 +32,18 @@ void grib_accessor_class_local_definition_t::init(grib_accessor* a, const long l
     self->derivedForecast                         = grib_arguments_get_name(hand, c, n++);
 }
 
-int grib_accessor_class_local_definition_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_local_definition_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_local_definition_t* self = (grib_accessor_local_definition_t*)a;
 
     return grib_get_long(grib_handle_of_accessor(a), self->grib2LocalSectionNumber, val);
 }
 
-int grib_accessor_class_local_definition_t::pack_long(grib_accessor* a, const long* val, size_t* len){
-    grib_accessor_local_definition_t* self         = (grib_accessor_local_definition_t*)a;
+int grib_accessor_class_local_definition_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
+    grib_accessor_local_definition_t* self       = (grib_accessor_local_definition_t*)a;
     grib_handle* hand                            = grib_handle_of_accessor(a);
+
     long productDefinitionTemplateNumber         = -1;
     long productDefinitionTemplateNumberInternal = -1;
     long productDefinitionTemplateNumberNew      = -1;
@@ -51,9 +54,6 @@ int grib_accessor_class_local_definition_t::pack_long(grib_accessor* a, const lo
     long eps                                     = -1;
     long chemical                                = -1;
     long aerosol                                 = -1;
-    long chemical_distfn                         = -1;
-    long chemical_srcsink                        = -1;
-    long aerosol_optical                         = -1;
     char stepType[15]                            = {0,};
     size_t slen               = 15;
     int localDefinitionNumber = *val;
@@ -78,10 +78,8 @@ int grib_accessor_class_local_definition_t::pack_long(grib_accessor* a, const lo
         isInstant = 1;
     grib_get_long(hand, self->grib2LocalSectionNumber, &grib2LocalSectionNumber);
     grib_get_long(hand, "is_chemical", &chemical);
-    grib_get_long(hand, "is_chemical_distfn", &chemical_distfn);
-    grib_get_long(hand, "is_chemical_srcsink", &chemical_srcsink);
     grib_get_long(hand, "is_aerosol", &aerosol);
-    grib_get_long(hand, "is_aerosol_optical", &aerosol_optical);
+
     if (chemical == 1 && aerosol == 1) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Parameter cannot be both chemical and aerosol!");
         return GRIB_ENCODING_ERROR;
@@ -90,8 +88,11 @@ int grib_accessor_class_local_definition_t::pack_long(grib_accessor* a, const lo
     if (grib_is_defined(hand, "perturbationNumber")) {
         eps = 1;
     }
-    //if (grib2_is_PDTN_EPS(productDefinitionTemplateNumber))
-    //    eps = 1;
+    // if (grib2_is_PDTN_EPS(productDefinitionTemplateNumber))
+    //     eps = 1;
+
+    // Is this a plain vanilla product?
+    const int is_plain = grib2_is_PDTN_Plain(productDefinitionTemplateNumber);
 
     switch (localDefinitionNumber) {
         case 0:
@@ -107,10 +108,10 @@ int grib_accessor_class_local_definition_t::pack_long(grib_accessor* a, const lo
             productDefinitionTemplateNumberNew = 0;
             break;
 
-        case 1:  // MARS labelling
-        case 36: // MARS labelling for long window 4Dvar system
-        case 40: // MARS labeling with domain and model (for LAM)
-        case 42: // LC-WFV: Wave forecast verification
+        case 1:   // MARS labelling
+        case 36:  // MARS labelling for long window 4Dvar system
+        case 40:  // MARS labeling with domain and model (for LAM)
+        case 42:  // LC-WFV: Wave forecast verification
             if (isInstant) {
                 // type=em || type=es
                 if (type == 17) {
@@ -148,7 +149,7 @@ int grib_accessor_class_local_definition_t::pack_long(grib_accessor* a, const lo
                 }
             }
             break;
-        case 41: // EFAS: uses post-processing templates
+        case 41:  // EFAS: uses post-processing templates
             if (isInstant) {
                 if (eps == 1)
                     productDefinitionTemplateNumberNew = 71;
@@ -164,12 +165,12 @@ int grib_accessor_class_local_definition_t::pack_long(grib_accessor* a, const lo
             }
             break;
 
-        case 15: // Seasonal forecast data
-        case 16: // Seasonal forecast monthly mean data
-        case 12: // Seasonal forecast monthly mean data for lagged systems
-        case 18: // Multianalysis ensemble data
-        case 26: // MARS labelling or ensemble forecast data
-        case 30: // Forecasting Systems with Variable Resolution
+        case 15:  // Seasonal forecast data
+        case 16:  // Seasonal forecast monthly mean data
+        case 12:  // Seasonal forecast monthly mean data for lagged systems
+        case 18:  // Multianalysis ensemble data
+        case 26:  // MARS labelling or ensemble forecast data
+        case 30:  // Forecasting Systems with Variable Resolution
             if (isInstant) {
                 productDefinitionTemplateNumberNew = 1;
             }
@@ -178,21 +179,21 @@ int grib_accessor_class_local_definition_t::pack_long(grib_accessor* a, const lo
             }
             break;
 
-        case 5:  // Forecast probability data
-        case 7:  // Sensitivity data
-        case 9:  // Singular vectors and ensemble perturbations
-        case 11: // Supplementary data used by the analysis
-        case 14: // Brightness temperature
-        case 20: // 4D variational increments
-        case 21: // Sensitive area predictions
-        case 23: // Coupled atmospheric, wave and ocean means
-        case 24: // Satellite Channel Number Data
+        case 5:   // Forecast probability data
+        case 7:   // Sensitivity data
+        case 9:   // Singular vectors and ensemble perturbations
+        case 11:  // Supplementary data used by the analysis
+        case 14:  // Brightness temperature
+        case 20:  // 4D variational increments
+        case 21:  // Sensitive area predictions
+        case 23:  // Coupled atmospheric, wave and ocean means
+        case 24:  // Satellite Channel Number Data
         case 25:
-        case 28:  // COSMO local area EPS
-        case 38:  // 4D variational increments for long window 4Dvar system
-        case 39:  // 4DVar model errors for long window 4Dvar system
-        case 60:  // Ocean data analysis
-        case 192: // Multiple ECMWF local definitions
+        case 28:   // COSMO local area EPS
+        case 38:   // 4D variational increments for long window 4Dvar system
+        case 39:   // 4DVar model errors for long window 4Dvar system
+        case 60:   // Ocean data analysis
+        case 192:  // Multiple ECMWF local definitions
             if (isInstant) {
                 productDefinitionTemplateNumberNew = 0;
             }
@@ -213,103 +214,15 @@ int grib_accessor_class_local_definition_t::pack_long(grib_accessor* a, const lo
             break;
     }
 
-    // Adjust for atmospheric chemical constituents
-    if (chemical == 1) {
-        if (eps == 1) {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 41;
-            }
-            else {
-                productDefinitionTemplateNumberNew = 43;
-            }
-        }
-        else {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 40;
-            }
-            else {
-                productDefinitionTemplateNumberNew = 42;
-            }
-        }
-    }
-    // Adjust for atmospheric chemical constituents based on a distribution function
-    if (chemical_distfn == 1) {
-        if (eps == 1) {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 58;
-            }
-            else {
-                productDefinitionTemplateNumberNew = 68;
-            }
-        }
-        else {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 57;
-            }
-            else {
-                productDefinitionTemplateNumberNew = 67;
-            }
-        }
+    if (!is_plain) {
+        // ECC-1875
+        productDefinitionTemplateNumberNew = -1;  // disable PDT selection
     }
 
-    // Adjust for atmospheric chemical constituents with source or sink
-    if (chemical_srcsink == 1) {
-        if (eps == 1) {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 77;
-            }
-            else {
-                productDefinitionTemplateNumberNew = 79;
-            }
-        }
-        else {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 76;
-            }
-            else {
-                productDefinitionTemplateNumberNew = 78;
-            }
-        }
-    }
-
-    // Adjust for aerosols
-    if (aerosol == 1) {
-        if (eps == 1) {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 45;
-            }
-            else {
-                //productDefinitionTemplateNumberNew = 47;  This PDT is deprecated
-                productDefinitionTemplateNumberNew = 85;
-            }
-        }
-        else {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 48; //44 is deprecated*/
-            }
-            else {
-                productDefinitionTemplateNumberNew = 46;
-            }
-        }
-    }
-    // Adjust for optical properties of aerosol
-    if (aerosol_optical == 1) {
-        if (eps == 1) {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 49;
-            }
-        }
-        else {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 48;
-            }
-        }
-    }
-
-    if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
+    if (productDefinitionTemplateNumberNew >=0 && productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
         if (a->context->debug) {
-            fprintf(stderr, "ECCODES DEBUG grib_accessor_local_definition_t: ldNumber=%d, newPDTN=%ld\n",
-                   localDefinitionNumber, productDefinitionTemplateNumberNew);
+            fprintf(stderr, "ECCODES DEBUG %s %s: ldNumber=%d, newPDTN=%ld\n", a->cclass->name, __func__,
+                    localDefinitionNumber, productDefinitionTemplateNumberNew);
         }
         if (tooEarly)
             grib_set_long(hand, self->productDefinitionTemplateNumberInternal, productDefinitionTemplateNumberNew);
@@ -324,7 +237,8 @@ int grib_accessor_class_local_definition_t::pack_long(grib_accessor* a, const lo
     return 0;
 }
 
-int grib_accessor_class_local_definition_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_local_definition_t::value_count(grib_accessor* a, long* count)
+{
     *count = 1;
     return 0;
 }

@@ -112,8 +112,8 @@ static int get_number_of_data_values(grib_handle* h, size_t* numDataValues)
     return err;
 }
 
-int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* len);
-int unpack_long_new(grib_accessor* a, long* val, size_t* len);
+static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* len);
+static int unpack_long_new(grib_accessor* a, long* val, size_t* len);
 
 int grib_accessor_class_number_of_points_gaussian_t::unpack_long(grib_accessor* a, long* val, size_t* len)
 {
@@ -132,7 +132,7 @@ int grib_accessor_class_number_of_points_gaussian_t::unpack_long(grib_accessor* 
 }
 
 /* New algorithm */
-int unpack_long_new(grib_accessor* a, long* val, size_t* len)
+static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
 {
     int err       = GRIB_SUCCESS;
     int is_global = 0;
@@ -241,7 +241,7 @@ int unpack_long_new(grib_accessor* a, long* val, size_t* len)
 }
 
 /* With Legacy support */
-int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* len)
+static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* len)
 {
     int err       = GRIB_SUCCESS;
     int is_global = 0;

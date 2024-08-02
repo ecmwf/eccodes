@@ -18,7 +18,7 @@ grib_accessor_class* grib_accessor_class_smart_table = &_grib_accessor_class_sma
 static pthread_once_t once   = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-static void thread_init()
+static void init_mutex()
 {
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
@@ -30,7 +30,7 @@ static void thread_init()
 static int once = 0;
 static omp_nest_lock_t mutex;
 
-void thread_init()
+static void init_mutex()
 {
     GRIB_OMP_CRITICAL(lock_grib_accessor_class_smart_table_c)
     {
@@ -183,7 +183,7 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
         t->recomposed_name[0] = grib_context_strdup_persistent(c, recomposed_name);
         t->next = c->smart_table;
         t->numberOfEntries = size;
-        GRIB_MUTEX_INIT_ONCE(&once, &thread_init);
+        GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
         GRIB_MUTEX_LOCK(&mutex);
         c->smart_table = t;
         GRIB_MUTEX_UNLOCK(&mutex);

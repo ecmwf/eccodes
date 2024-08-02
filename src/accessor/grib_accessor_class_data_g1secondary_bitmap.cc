@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,20 +10,22 @@
 
 #include "grib_accessor_class_data_g1secondary_bitmap.h"
 
-grib_accessor_class_data_g1secondary_bitmap_t _grib_accessor_class_data_g1secondary_bitmap{"data_g1secondary_bitmap"};
+grib_accessor_class_data_g1secondary_bitmap_t _grib_accessor_class_data_g1secondary_bitmap{ "data_g1secondary_bitmap" };
 grib_accessor_class* grib_accessor_class_data_g1secondary_bitmap = &_grib_accessor_class_data_g1secondary_bitmap;
 
 
-void grib_accessor_class_data_g1secondary_bitmap_t::init(grib_accessor* a, const long v, grib_arguments* args){
+void grib_accessor_class_data_g1secondary_bitmap_t::init(grib_accessor* a, const long v, grib_arguments* args)
+{
     grib_accessor_class_data_secondary_bitmap_t::init(a, v, args);
     grib_accessor_data_g1secondary_bitmap_t* self = (grib_accessor_data_g1secondary_bitmap_t*)a;
-    self->number_of_ones                        = grib_arguments_get_name(grib_handle_of_accessor(a), args, 4);
+    self->number_of_ones = grib_arguments_get_name(grib_handle_of_accessor(a), args, 4);
 }
 
-int grib_accessor_class_data_g1secondary_bitmap_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_data_g1secondary_bitmap_t::value_count(grib_accessor* a, long* count)
+{
     grib_accessor_data_g1secondary_bitmap_t* self = (grib_accessor_data_g1secondary_bitmap_t*)a;
-    size_t len                                  = 0;
-    int err                                     = 0;
+    size_t len = 0;
+    int err = 0;
     long expand_by;
     *count = 0;
 
@@ -40,11 +41,11 @@ int grib_accessor_class_data_g1secondary_bitmap_t::value_count(grib_accessor* a,
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_data_g1secondary_bitmap_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_data_g1secondary_bitmap_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_data_g1secondary_bitmap_t* self = (grib_accessor_data_g1secondary_bitmap_t*)a;
 
-    int err = 0;
-
+    int err                  = 0;
     long primary_len         = 0;
     long secondary_len       = 0;
     double* primary_bitmap   = NULL;
@@ -52,11 +53,11 @@ int grib_accessor_class_data_g1secondary_bitmap_t::pack_double(grib_accessor* a,
     long i                   = 0;
     long j                   = 0;
     long on                  = 0;
-    long k;
-    long m;
-    double missing_value = 0;
-    double present_value = 0;
-    long expand_by       = 0;
+    long k                   = 0;
+    long m                   = 0;
+    double missing_value     = 0;
+    double present_value     = 0;
+    long expand_by           = 0;
 
     if (*len == 0)
         return GRIB_NO_VALUES;

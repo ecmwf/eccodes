@@ -50,9 +50,9 @@ check_symbol_exists( fdatasync       "unistd.h"   ECCODES_HAVE_FDATASYNC)
 
 check_c_source_compiles(
       " typedef int foo_t;
-      static inline foo_t static_foo(){return 0;}
-      foo_t foo(){return 0;}
-      int main(int argc, char *argv[]){return 0;}
+      static inline foo_t static_foo(void){return 0;}
+      foo_t foo(void){return 0;}
+      int main(int argc, char *argv[]){ return static_foo(); }
       " ECCODES_HAVE_C_INLINE
 )
 
@@ -97,6 +97,10 @@ ecbuild_add_option( FEATURE EXAMPLES
 
 ecbuild_add_option( FEATURE BUILD_TOOLS
     DESCRIPTION "Build the command line tools"
+    DEFAULT ON )
+
+ecbuild_add_option( FEATURE GEOGRAPHY
+    DESCRIPTION "Support for Geoiterator and nearest neighbour"
     DEFAULT ON )
 
 ecbuild_add_option( FEATURE JPG
@@ -457,7 +461,7 @@ ecbuild_pkgconfig(
   DESCRIPTION    "The ecCodes library"
   LIBRARIES      eccodes
   IGNORE_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
-  VARIABLES      HAVE_MEMFS HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
+  VARIABLES      HAVE_MEMFS HAVE_GEOGRAPHY HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                  HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
                  HAVE_NETCDF HAVE_FORTRAN HAVE_PNG HAVE_AEC
 )
@@ -469,7 +473,7 @@ if( HAVE_FORTRAN )
     DESCRIPTION         "The ecCodes library for Fortran 90"
     IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${PROJECT_BINARY_DIR}/fortran
                         ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
-    VARIABLES           HAVE_MEMFS HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
+    VARIABLES           HAVE_MEMFS HAVE_GEOGRAPHY HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                         HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
                         HAVE_NETCDF HAVE_PNG HAVE_AEC
   )
