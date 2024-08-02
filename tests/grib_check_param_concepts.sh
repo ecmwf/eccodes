@@ -100,6 +100,8 @@ tempDir=temp.${label}.dir
 rm -fr $tempDir
 mkdir -p $tempDir
 cd $tempDir
+
+# See ECC-1886 re cfVarName files
 #cp $ECMF_DIR/cfName.legacy.def    cfName.def
 #cp $ECMF_DIR/cfVarName.legacy.def cfVarName.def
 cp $ECMF_DIR/name.legacy.def      name.def

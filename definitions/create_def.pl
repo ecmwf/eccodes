@@ -183,6 +183,7 @@ EOF
     close(TAR);
 }
 
+# See ECC-1886
 sub create_cfVarName {
     my $p; my %seen; 
     my ($key) =@_;
@@ -356,6 +357,8 @@ create_def("paramId");
 create_def("shortName");
 create_def("name");
 create_def("units");
+# Note: The cfVarName.def files are smaller than the rest. We only store the
+#       minimum set necessary. See ECC-1886
 create_cfVarName("cfVarName");
 create_cfName("cfName");
 
