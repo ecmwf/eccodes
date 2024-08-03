@@ -35,12 +35,10 @@ int grib_accessor_class_cf_var_name_t::unpack_string(grib_accessor* a, char* val
 
     int err = grib_get_string(h, self->defaultKey, defaultKey, &size);
     if (err) return err;
+    Assert(size > 0);
+    Assert(strlen(defaultKey) > 0);
 
-    if (size == 0) {
-        // Should not ever happen
-        snprintf(val, 1024, "%s", "unknown");
-    }
-    else if ( STR_EQUAL(defaultKey, "~") || isdigit(defaultKey[0]) ) {
+    if ( STR_EQUAL(defaultKey, "~") || isdigit(defaultKey[0]) ) {
         // NetCDF variables cannot start with a digit
         long paramId = 0;
         err = grib_get_long(h, "paramId", &paramId);

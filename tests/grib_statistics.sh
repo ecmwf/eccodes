@@ -13,6 +13,8 @@
 label="grib_statistics_test"
 temp1=temp1.$label.grib
 temp2=temp2.$label.grib
+tempFilt=temp2.$label.filt
+tempText=temp2.$label.txt
 
 files="regular_latlon_surface.grib2 regular_latlon_surface.grib1"
 
@@ -23,7 +25,7 @@ for file in $files; do
 # Once it is finished, it sets dirty_statistics to 0.
 # If you get min,max again, no computation is done (because dirty_statistics==0)
 # But once the data values are changed, then dirty_statistics is once again 1
-cat >statistics.filter<<EOF
+cat > $tempFilt <<EOF
     set Ni=2;
     set Nj=2;
     set decimalPrecision=4;
@@ -42,12 +44,11 @@ cat >statistics.filter<<EOF
     assert(dirty_statistics == 0);
 EOF
 
-${tools_dir}/grib_filter statistics.filter ${data_dir}/$file > statistics.out
-
-diff statistics.out ${data_dir}/statistics.out.good
+${tools_dir}/grib_filter $tempFilt ${data_dir}/$file > $tempText
+diff ${data_dir}/statistics.out.good $tempText
 
 done
-rm -f statistics.out statistics.filter
+rm -f $tempText $tempFilt
 
 
 # GRIB with no missing values but some entries = 9999
@@ -74,4 +75,13 @@ input=${data_dir}/gfs.complex.mvmu.grib2
 stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $input`
 [ "$stats" = "2.81 0.00 0.30" ]
 
-rm -f $temp1 $temp2
+# Decode as string - Null op
+cat >$tempFilt<<EOF
+    print "[computeStatistics:s]";
+EOF
+input=$data_dir/sample.grib2
+${tools_dir}/grib_filter $tempFilt $input
+
+
+# Clean up
+rm -f $temp1 $temp2 $tempFilt $tempText
