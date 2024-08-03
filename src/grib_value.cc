@@ -410,7 +410,7 @@ int grib_set_string_internal(grib_handle* h, const char* name,
 /* Return 1 if we dealt with specific packing type changes and nothing more needs doing.
  * Return 0 if further action is needed
  */
-static int process_packingType_change(grib_handle* h, const char* keyname, const char* keyval)
+static int preprocess_packingType_change(grib_handle* h, const char* keyname, const char* keyval)
 {
     int err = 0;
     char input_packing_type[100] = {0,};
@@ -456,16 +456,29 @@ static int process_packingType_change(grib_handle* h, const char* keyname, const
             if (strcmp(input_packing_type, "grid_ieee") == 0) {
                 const long max_bpv = 32; /* Cannot do any higher */
                 grib_set_long(h, "bitsPerValue", max_bpv);
-                /*
-                long accuracy = 0;
-                err = grib_get_long(h, "accuracy", &accuracy);
-                if (!err) {
-                    grib_set_long(h, "bitsPerValue", accuracy);
-                } */
+                //long accuracy = 0;
+                //err = grib_get_long(h, "accuracy", &accuracy);
+                //if (!err) grib_set_long(h, "bitsPerValue", accuracy);
             }
         }
     }
     return 0;  /* Further action is needed */
+}
+
+static void postprocess_packingType_change(grib_handle* h, const char* keyname, const char* keyval)
+{
+    if (grib_inline_strcmp(keyname, "packingType") == 0) {
+        long is_experimental = 0, is_deprecated = 0;
+        if (grib_get_long(h, "isTemplateExperimental", &is_experimental) == GRIB_SUCCESS && is_experimental == 1) {
+            fprintf(stderr, "ECCODES WARNING :  The template for %s=%s is experimental. "
+                            "This template was not validated at the time of publication.\n",
+                    keyname, keyval);
+            return;
+        }
+        if (grib_get_long(h, "isTemplateDeprecated", &is_deprecated) == GRIB_SUCCESS && is_deprecated == 1) {
+            fprintf(stderr, "ECCODES WARNING :  The template for %s=%s is deprecated.\n", keyname, keyval);
+        }
+    }
 }
 
 int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* length)
@@ -473,7 +486,7 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* l
     int ret          = 0;
     grib_accessor* a = NULL;
 
-    int processed = process_packingType_change(h, name, val);
+    int processed = preprocess_packingType_change(h, name, val);
     if (processed)
         return GRIB_SUCCESS;  /* Dealt with - no further action needed */
 
@@ -492,6 +505,7 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* l
 
         ret = a->pack_string(val, length);
         if (ret == GRIB_SUCCESS) {
+            postprocess_packingType_change(h, name, val);
             return grib_dependency_notify_change(a);
         }
         return ret;
