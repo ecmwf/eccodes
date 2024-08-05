@@ -18,6 +18,9 @@ constant tablesVersionLatest = 33 : edition_specific;
 constant tablesVersionChemParamSplit = 31 : hidden;
 transient chem_param_split = 0 : hidden;
 
+constant tablesVersionWavelengthParamSplit = 31 : hidden;
+transient wavelength_param_split = 0: hidden;
+
 constant false = 0 : hidden;
 constant true = 1 : hidden;
 constant million = 1000000 : hidden;

@@ -1,8 +1,16 @@
 # (C) Copyright 2005- ECMWF.
 
-constant paramTypeOptical = "optical" ;
-unalias mars.paramtype;
-alias mars.paramtype = paramTypeOptical ;
+if (wavelength_param_split == 1 && chem_param_split == 0){
+ constant paramTypeOptical = "optical" ;
+ unalias mars.paramtype;
+ alias mars.paramtype = paramTypeOptical ;
+}
+
+if (chem_param_split == 1 && wavelength_param_split == 1){
+ constant paramTypeChemical = "chemical_optical" ;
+ unalias mars.paramtype;
+ alias mars.paramtype = paramTypeChemical ;
+}
 
 codetable[1] typeOfWavelengthInterval ('4.91.table',masterDir,localDir) : dump;
 alias typeOfIntervalForFirstAndSecondWavelength=typeOfWavelengthInterval;
@@ -21,3 +29,16 @@ alias secondWavelengthInMetres = secondWavelength;
 constant billion = 1000000000 : hidden;
 meta firstWavelengthInNanometres  multdouble(firstWavelength, billion) : read_only;
 meta secondWavelengthInNanometres multdouble(secondWavelength, billion) : read_only;
+
+if (wavelength_param_split == 1) {
+ meta wavelengthRange sprintf("%s-%s",firstWavelengthInNanometres,secondWavelengthInNanometres) ;
+ if (firstWavelengthInNanometres > 0 && secondWavelengthInNanometres > 0) {
+  alias mars.wavelength = wavelengthRange;
+ }
+ if (firstWavelengthInNanometres > 0 && secondWavelengthInNanometres <= 0) {
+  alias mars.wavelength = firstWavelengthInNanometres ;
+ }
+ if (firstWavelengthInNanometres <= 0 && secondWavelengthInNanometres > 0) {
+  alias mars.wavelength = secondWavelengthInNanometres ;
+ }
+}
