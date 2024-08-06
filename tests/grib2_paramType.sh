@@ -45,11 +45,18 @@ check_param_type_is_scalar $tempGrib 'base'
 
 
 # Optical properties of aerosol
+# without wavelength key
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=48,discipline=0,parameterCategory=20,parameterNumber=102 \
  $sample $tempGrib
 ${tools_dir}/grib_dump -O -p section_4 $tempGrib > /dev/null
-grib_check_key_equals $tempGrib mars.paramtype 'optical'
-check_param_type_is_scalar $tempGrib 'optical'
+grib_check_key_equals $tempGrib mars.paramtype 'base'
+check_param_type_is_scalar $tempGrib 'base'
+# with wavelength key
+${tools_dir}/grib_set -s tablesVersion=33,productDefinitionTemplateNumber=48,discipline=0,parameterCategory=20,parameterNumber=102 \
+ $sample $tempGrib
+${tools_dir}/grib_dump -O -p section_4 $tempGrib > /dev/null
+grib_check_key_equals $tempGrib mars.paramtype 'chemical_optical'
+check_param_type_is_scalar $tempGrib 'chemical_optical'
 
 # Generalised tiles
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=113 $sample $tempGrib

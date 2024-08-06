@@ -7,9 +7,10 @@ if (wavelength_param_split == 1 && chem_param_split == 0){
 }
 
 if (chem_param_split == 1 && wavelength_param_split == 1){
- constant paramTypeChemical = "chemical_optical" ;
+ # use paramTypeChemical2 to avoid creating an array for mars.paramtype as paramTypeChemical is defined in template.4.{aerosol,chemical}.def
+ constant paramTypeChemical2 = "chemical_optical" ;
  unalias mars.paramtype;
- alias mars.paramtype = paramTypeChemical ;
+ alias mars.paramtype = paramTypeChemical2 ;
 }
 
 codetable[1] typeOfWavelengthInterval ('4.91.table',masterDir,localDir) : dump;
