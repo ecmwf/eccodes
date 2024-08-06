@@ -39,11 +39,12 @@ done
 # Check WMO name.def etc
 $EXEC ${test_dir}/grib_check_param_concepts name  $ECCODES_DEFINITION_PATH/grib2/name.def
 $EXEC ${test_dir}/grib_check_param_concepts units $ECCODES_DEFINITION_PATH/grib2/units.def
-$EXEC ${test_dir}/grib_check_param_concepts units $ECCODES_DEFINITION_PATH/grib2/cfVarName.def
+$EXEC ${test_dir}/grib_check_param_concepts cfVarName $ECCODES_DEFINITION_PATH/grib2/cfVarName.def
+$EXEC ${test_dir}/grib_check_param_concepts cfVarName $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/cfVarName.def
 
 
-# Check the group: name.def paramId.def shortName.def units.def cfVarName.def
-# ----------------------------------------------------------------------------
+# Check the group: name.def paramId.def shortName.def units.def
+# -------------------------------------------------------------
 # Check whether the Test::More Perl module is available
 set +e
 perl -e 'use Test::More;'
@@ -99,6 +100,8 @@ tempDir=temp.${label}.dir
 rm -fr $tempDir
 mkdir -p $tempDir
 cd $tempDir
+
+# See ECC-1886 re cfVarName files
 #cp $ECMF_DIR/cfName.legacy.def    cfName.def
 #cp $ECMF_DIR/cfVarName.legacy.def cfVarName.def
 cp $ECMF_DIR/name.legacy.def      name.def
@@ -119,7 +122,7 @@ rm -fr $tempDir
 mkdir -p $tempDir
 cd $tempDir
 cp $ECMF_DIR/cfName.legacy.def    cfName.def
-cp $ECMF_DIR/cfVarName.legacy.def cfVarName.def
+# cp $ECMF_DIR/cfVarName.legacy.def cfVarName.def
 cp $ECMF_DIR/name.legacy.def      name.def
 cp $ECMF_DIR/paramId.legacy.def   paramId.def
 cp $ECMF_DIR/shortName.legacy.def shortName.def
