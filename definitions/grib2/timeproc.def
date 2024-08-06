@@ -7,6 +7,13 @@ concept timeproc {
  "point-in-time"    = {productDefinitionTemplateNumber=8; lengthOfTimeRange=0;}
  "point-in-time"    = {productDefinitionTemplateNumber=11; lengthOfTimeRange=0;}
  "point-in-time"    = {typeOfStatisticalProcessing=10; lengthOfTimeRange=0;}
+ # special rules for weekly extended-range (sub-seasonal) products
+ "point-in-time"    = {marsStream="eefo"; type="fcmax"; numberOfTimeRange=1;}
+ "point-in-time"    = {marsStream="eefo"; type="fcmin"; numberOfTimeRange=1;}
+ "point-in-time"    = {marsStream="eefo"; type="fcmean"; numberOfTimeRange=1;}
+ "point-in-time"    = {marsStream="eefo"; type="fcstdev"; numberOfTimeRange=1;}
+ "point-in-time"    = {marsStream="eefo"; type="taem"; numberOfTimeRange=1;}
+ "point-in-time"    = {marsStream="eefo"; type="taes"; numberOfTimeRange=1;}
  #
  ### Accumulations ###
  # we need to do this dataset dependent, in some datasets we might have
