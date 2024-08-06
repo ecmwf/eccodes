@@ -1,13 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
-if (chem_param_split == 1 && wavelength_param_split == 0){
+if (chem_param_split == 1){
  constant paramTypeChemical = "chemical" ;
- unalias mars.paramtype;
- alias mars.paramtype = paramTypeChemical ;
-}
-
-if (chem_param_split == 1 && wavelength_param_split == 1){
- constant paramTypeChemical = "chemical_optical" ;
  unalias mars.paramtype;
  alias mars.paramtype = paramTypeChemical ;
 }
