@@ -1,8 +1,17 @@
 # (C) Copyright 2005- ECMWF.
 
-constant paramTypeOptical = "optical" ;
-unalias mars.paramtype;
-alias mars.paramtype = paramTypeOptical ;
+if (wavelength_param_split == 1 && chem_param_split == 0){
+ constant paramTypeOptical = "optical" ;
+ unalias mars.paramtype;
+ alias mars.paramtype = paramTypeOptical ;
+}
+
+if (chem_param_split == 1 && wavelength_param_split == 1){
+ # use paramTypeChemical2 to avoid creating an array for mars.paramtype as paramTypeChemical is defined in template.4.{aerosol,chemical}.def
+ constant paramTypeChemical2 = "chemical_optical" ;
+ unalias mars.paramtype;
+ alias mars.paramtype = paramTypeChemical2 ;
+}
 
 codetable[1] typeOfWavelengthInterval ('4.91.table',masterDir,localDir) : dump;
 alias typeOfIntervalForFirstAndSecondWavelength=typeOfWavelengthInterval;
@@ -21,3 +30,17 @@ alias secondWavelengthInMetres = secondWavelength;
 constant billion = 1000000000 : hidden;
 meta firstWavelengthInNanometres  multdouble(firstWavelength, billion) : read_only;
 meta secondWavelengthInNanometres multdouble(secondWavelength, billion) : read_only;
+
+if (wavelength_param_split == 1) {
+ # typeOfWavelengthInterval (table 4.91 specifies if first / second / first+second limit(s) are to be defined)
+ if ( typeOfWavelengthInterval == 0 || typeOfWavelengthInterval == 3 || typeOfWavelengthInterval == 5 || typeOfWavelengthInterval == 8 || typeOfWavelengthInterval == 11 ){
+  alias mars.wavelength = firstWavelengthInNanometres ;
+ }
+ if ( typeOfWavelengthInterval == 1 || typeOfWavelengthInterval == 4 || typeOfWavelengthInterval == 6 || typeOfWavelengthInterval == 9 ){
+  alias mars.wavelength = secondWavelengthInNanometres ;
+ }
+ if ( typeOfWavelengthInterval == 2 || typeOfWavelengthInterval == 7 || typeOfWavelengthInterval == 10 ){
+  meta wavelengthRange sprintf("%s-%s",firstWavelengthInNanometres,secondWavelengthInNanometres) ;
+  alias mars.wavelength = wavelengthRange ;
+ }
+}

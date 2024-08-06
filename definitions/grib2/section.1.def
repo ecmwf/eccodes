@@ -35,10 +35,17 @@ if (tablesVersion > tablesVersionLatest) {
 when (tablesVersion >= tablesVersionChemParamSplit) {
   set chem_param_split = 1;
 }
+when (tablesVersion >= tablesVersionWavelengthParamSplit) {
+  set wavelength_param_split = 1;
+}
 # The IF statement is needed when reading an existing message
 if (tablesVersion >= tablesVersionChemParamSplit) {
   remove chem_param_split;
   transient chem_param_split = 1;
+}
+if (tablesVersion >= tablesVersionWavelengthParamSplit) {
+  remove wavelength_param_split;
+  transient wavelength_param_split = 1;
 }
 
 codetable[1] localTablesVersion 'grib2/tables/local/[centreForLocal]/1.1.table' ;
