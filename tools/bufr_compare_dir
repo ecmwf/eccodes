@@ -1,23 +1,23 @@
-#!/bin/ksh
+#!/bin/sh
 
 keys="md5Structure,md5Data,typicalDate,typicalTime,rdbType,rdbSubtype,ident,satelliteID,localLatitude,localLongitude,localLatitude1,localLongitude1,localLatitude2,localLongitude2"
 
 opt=""
 
-if [[ $# -eq 3  ]]
+if [ $# -eq 3  ]
 then
   opt=$1
   dir1=$2
   dir2=$3
 fi
 
-if [[ $# -eq 2 ]]
+if [ $# -eq 2 ]
 then
   dir1=$1
   dir2=$2
 fi
 
-if [[ $# -gt 3 ]] || [[ $# -lt 2 ]]
+if [ $# -gt 3 ] || [ $# -lt 2 ]
 then
   echo usage: [bufr_compare options] bufr_compare_dir directory1 directory2
   exit 1
