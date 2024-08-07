@@ -23,8 +23,8 @@ then
   exit 1
 fi
 
-bufr_index_build -k $keys -o 1.idx $dir1/* > /dev/null
-bufr_index_build -k $keys -o 2.idx $dir2/* > /dev/null
+bufr_index_build -k $keys -o 1.idx "$dir1"/* > /dev/null
+bufr_index_build -k $keys -o 2.idx "$dir2"/* > /dev/null
 
 bufr_compare -f $opt 1.idx 2.idx
 rm -f 1.idx 2.idx
