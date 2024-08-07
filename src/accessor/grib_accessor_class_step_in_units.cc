@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -10,7 +9,6 @@
  */
 
 #include "grib_accessor_class_step_in_units.h"
-#include "step.h"
 #include "step_utilities.h"
 #include <stdexcept>
 
@@ -97,7 +95,7 @@ int grib_accessor_class_step_in_units_t::unpack_double(grib_accessor* a, double 
     return GRIB_SUCCESS;
 }
 
-int pack_long_new_(grib_accessor* a, const long start_step_value, const long start_step_unit, const long force_step_units)
+static int pack_long_new_(grib_accessor* a, const long start_step_value, const long start_step_unit, const long force_step_units)
 {
     const grib_accessor_step_in_units_t* self = (grib_accessor_step_in_units_t*)a;
     grib_handle* h = grib_handle_of_accessor(a);

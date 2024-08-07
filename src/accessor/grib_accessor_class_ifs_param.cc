@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,23 +10,25 @@
 
 #include "grib_accessor_class_ifs_param.h"
 
-grib_accessor_class_ifs_param_t _grib_accessor_class_ifs_param{"ifs_param"};
+grib_accessor_class_ifs_param_t _grib_accessor_class_ifs_param{ "ifs_param" };
 grib_accessor_class* grib_accessor_class_ifs_param = &_grib_accessor_class_ifs_param;
 
 
-void grib_accessor_class_ifs_param_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_ifs_param_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_gen_t::init(a, l, c);
     grib_accessor_ifs_param_t* self = (grib_accessor_ifs_param_t*)a;
-    int n                         = 0;
+    int n                           = 0;
 
     self->paramId = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
     self->type    = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
 }
 
-int grib_accessor_class_ifs_param_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_ifs_param_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_ifs_param_t* self = (grib_accessor_ifs_param_t*)a;
-    int ret                       = 0;
-    long paramId                  = 0;
+    int ret                         = 0;
+    long paramId                    = 0;
 
     if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->paramId, &paramId)) != GRIB_SUCCESS)
         return ret;
@@ -44,11 +45,12 @@ int grib_accessor_class_ifs_param_t::unpack_long(grib_accessor* a, long* val, si
     return ret;
 }
 
-int grib_accessor_class_ifs_param_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_ifs_param_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_ifs_param_t* self = (grib_accessor_ifs_param_t*)a;
-    long type                     = 0;
-    long table                    = 128;
-    long paramId                  = *val;
+    long type                       = 0;
+    long table                      = 128;
+    long paramId                    = *val;
     long param;
 
     grib_get_long(grib_handle_of_accessor(a), self->type, &type);
@@ -88,6 +90,7 @@ int grib_accessor_class_ifs_param_t::pack_long(grib_accessor* a, const long* val
     return grib_set_long_internal(grib_handle_of_accessor(a), self->paramId, paramId);
 }
 
-int grib_accessor_class_ifs_param_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_ifs_param_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_LONG;
 }

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -17,7 +16,7 @@ grib_accessor_class* grib_accessor_class_values = &_grib_accessor_class_values;
 long init_length(grib_accessor* a)
 {
     grib_accessor_values_t* self = (grib_accessor_values_t*)a;
-    int ret                    = 0;
+    int ret = 0;
 
     long seclen        = 0;
     long offsetsection = 0;

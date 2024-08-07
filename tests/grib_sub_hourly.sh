@@ -62,7 +62,7 @@ fi
 instantaneous_field=$data_dir/reduced_gaussian_surface.grib2
 accumulated_field=$data_dir/reduced_gaussian_sub_area.grib2
 
-# ECC-18XX: Bad step initialisatino
+# ECC-1855: Bad step initialisation
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=11,forecastTime=2184,indicatorOfUnitForForecastTime=1,lengthOfTimeRange=720,indicatorOfUnitForTimeRange=1,typeOfTimeIncrement=2,numberOfTimeRange=2 $accumulated_field $temp
 ${tools_dir}/grib_ls $temp
 grib_check_key_equals $temp "-p stepRange" "2184-2904"

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -12,11 +11,12 @@
 #include "grib_accessor_class_data_g1simple_packing.h"
 #include "grib_scaling.h"
 
-grib_accessor_class_data_g1simple_packing_t _grib_accessor_class_data_g1simple_packing{"data_g1simple_packing"};
+grib_accessor_class_data_g1simple_packing_t _grib_accessor_class_data_g1simple_packing{ "data_g1simple_packing" };
 grib_accessor_class* grib_accessor_class_data_g1simple_packing = &_grib_accessor_class_data_g1simple_packing;
 
 
-void grib_accessor_class_data_g1simple_packing_t::init(grib_accessor* a, const long v, grib_arguments* args){
+void grib_accessor_class_data_g1simple_packing_t::init(grib_accessor* a, const long v, grib_arguments* args)
+{
     grib_accessor_class_data_simple_packing_t::init(a, v, args);
     grib_accessor_data_g1simple_packing_t* self = (grib_accessor_data_g1simple_packing_t*)a;
 
@@ -28,9 +28,10 @@ void grib_accessor_class_data_g1simple_packing_t::init(grib_accessor* a, const l
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_class_data_g1simple_packing_t::value_count(grib_accessor* a, long* number_of_values){
+int grib_accessor_class_data_g1simple_packing_t::value_count(grib_accessor* a, long* number_of_values)
+{
     grib_accessor_data_g1simple_packing_t* self = (grib_accessor_data_g1simple_packing_t*)a;
-    *number_of_values                         = 0;
+    *number_of_values = 0;
 
     /* Special case for when values are cleared */
     /*if(a->length == 0)
@@ -39,7 +40,8 @@ int grib_accessor_class_data_g1simple_packing_t::value_count(grib_accessor* a, l
     return grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_values, number_of_values);
 }
 
-int grib_accessor_class_data_g1simple_packing_t::pack_double(grib_accessor* a, const double* cval, size_t* len){
+int grib_accessor_class_data_g1simple_packing_t::pack_double(grib_accessor* a, const double* cval, size_t* len)
+{
     grib_accessor_data_g1simple_packing_t* self = (grib_accessor_data_g1simple_packing_t*)a;
 
     size_t n_vals             = *len;
@@ -108,7 +110,7 @@ int grib_accessor_class_data_g1simple_packing_t::pack_double(grib_accessor* a, c
             packingType_s  = grib_context_strdup(c, self->packingType);
             ieee_packing_s = grib_context_strdup(c, self->ieee_packing);
             precision_s    = grib_context_strdup(c, self->precision);
-            precision = c->ieee_packing == 32 ? 1 : 2;
+            precision      = c->ieee_packing == 32 ? 1 : 2;
 
             if ((ret = grib_set_string(h, packingType_s, ieee_packing_s, &lenstr)) != GRIB_SUCCESS)
                 return ret;

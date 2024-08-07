@@ -10,11 +10,11 @@
 
 #include "grib_accessor_class_transient.h"
 
-grib_accessor_class_transient_t _grib_accessor_class_transient{"transient"};
+grib_accessor_class_transient_t _grib_accessor_class_transient{ "transient" };
 grib_accessor_class* grib_accessor_class_transient = &_grib_accessor_class_transient;
 
 
-void grib_accessor_class_transient_t::init(grib_accessor* a, const long l, grib_arguments* args) {
+void grib_accessor_class_transient_t::init(grib_accessor* a, const long l, grib_arguments* args)
+{
     grib_accessor_class_variable_t::init(a, l, args);
 }
-

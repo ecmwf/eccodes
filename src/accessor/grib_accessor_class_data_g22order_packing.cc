@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -787,7 +786,7 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
     // long nvals_per_group     = 0;
     // long nbits_per_group_val = 0;
 
-    long binary_scale_factor, decimal_scale_factor, optimize_scale_factor, typeOfOriginalFieldValues;
+    long binary_scale_factor, decimal_scale_factor, typeOfOriginalFieldValues;
     // long groupSplittingMethodUsed, numberOfGroupsOfDataValues, referenceForGroupWidths;
     long missingValueManagementUsed, primaryMissingValueSubstitute, secondaryMissingValueSubstitute;
     long numberOfBitsUsedForTheGroupWidths, numberOfBitsUsedForTheScaledGroupLengths, orderOfSpatialDifferencing;
@@ -816,7 +815,7 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
     if ((err = grib_get_long_internal(gh, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
-    optimize_scale_factor = 1;  // TODO(masn): To be reviewed
+    int use_scale = 1;
 
     if ((err = grib_get_long_internal(gh, self->binary_scale_factor, &binary_scale_factor)) != GRIB_SUCCESS)
         return err;
@@ -939,7 +938,7 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
 
     binary_scale = bin_scale;
 
-    if (optimize_scale_factor == 0) {  // ECMWF style
+    if (use_scale) {  // ECMWF style
         ref       = min_val;
         frange    = max_val - ref;
         dec_scale = 0;

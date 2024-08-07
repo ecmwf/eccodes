@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,25 +10,27 @@
 
 #include "grib_accessor_class_gts_header.h"
 
-grib_accessor_class_gts_header_t _grib_accessor_class_gts_header{"gts_header"};
+grib_accessor_class_gts_header_t _grib_accessor_class_gts_header{ "gts_header" };
 grib_accessor_class* grib_accessor_class_gts_header = &_grib_accessor_class_gts_header;
 
 
-void grib_accessor_class_gts_header_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_gts_header_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_ascii_t::init(a, l, c);
     grib_accessor_gts_header_t* self = (grib_accessor_gts_header_t*)a;
-    self->gts_offset = -1;
-    self->gts_length = -1;
-    self->gts_offset = grib_arguments_get_long(grib_handle_of_accessor(a), c, 0);
-    self->gts_length = grib_arguments_get_long(grib_handle_of_accessor(a), c, 1);
+    self->gts_offset                 = -1;
+    self->gts_length                 = -1;
+    self->gts_offset                 = grib_arguments_get_long(grib_handle_of_accessor(a), c, 0);
+    self->gts_length                 = grib_arguments_get_long(grib_handle_of_accessor(a), c, 1);
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_gts_header_t::unpack_string(grib_accessor* a, char* val, size_t* len){
+int grib_accessor_class_gts_header_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+{
     grib_accessor_gts_header_t* self = (grib_accessor_gts_header_t*)a;
-    grib_handle* h                 = grib_handle_of_accessor(a);
-    int offset                     = 0;
-    size_t length                  = 0;
+    grib_handle* h                   = grib_handle_of_accessor(a);
+    int offset                       = 0;
+    size_t length                    = 0;
 
     if (h->gts_header == NULL || h->gts_header_len < 8) {
         if (*len < 8)
@@ -50,12 +51,14 @@ int grib_accessor_class_gts_header_t::unpack_string(grib_accessor* a, char* val,
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_gts_header_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_gts_header_t::value_count(grib_accessor* a, long* count)
+{
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_class_gts_header_t::string_length(grib_accessor* a){
+size_t grib_accessor_class_gts_header_t::string_length(grib_accessor* a)
+{
     grib_handle* h = grib_handle_of_accessor(a);
     return h->gts_header_len;
 }

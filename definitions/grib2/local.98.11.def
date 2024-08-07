@@ -15,5 +15,5 @@ constant secondsOfAnalysis = 0;
 meta dateOfAnalysis  g2date(yearOfAnalysis,monthOfAnalysis,dayOfAnalysis) : dump;
 meta timeOfAnalysis  time(hourOfAnalysis,minuteOfAnalysis,secondsOfAnalysis) : dump;
 
-alias date = dateOfAnalysis;
-alias time = timeOfAnalysis;
+alias mars.date = dateOfAnalysis;
+alias mars.time = timeOfAnalysis;

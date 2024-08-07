@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,25 +10,27 @@
 
 #include "grib_accessor_class_g1bitmap.h"
 
-grib_accessor_class_g1bitmap_t _grib_accessor_class_g1bitmap{"g1bitmap"};
+grib_accessor_class_g1bitmap_t _grib_accessor_class_g1bitmap{ "g1bitmap" };
 grib_accessor_class* grib_accessor_class_g1bitmap = &_grib_accessor_class_g1bitmap;
 
 
-void grib_accessor_class_g1bitmap_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+void grib_accessor_class_g1bitmap_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+{
     grib_accessor_class_bitmap_t::init(a, len, arg);
     grib_accessor_g1bitmap_t* self = (grib_accessor_g1bitmap_t*)a;
-    self->unusedBits             = grib_arguments_get_name(grib_handle_of_accessor(a), arg, 4);
+    self->unusedBits               = grib_arguments_get_name(grib_handle_of_accessor(a), arg, 4);
 }
 
-int grib_accessor_class_g1bitmap_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_g1bitmap_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_g1bitmap_t* self = (grib_accessor_g1bitmap_t*)a;
     size_t tlen;
 
     unsigned char* buf = NULL;
     size_t i;
-    int err               = 0;
-    long pos              = 0;
-    //long bmaplen          = 0;
+    int err  = 0;
+    long pos = 0;
+    // long bmaplen          = 0;
     const int bit_padding = 16;
     double miss_values    = 0;
     tlen                  = ((*len + bit_padding - 1) / bit_padding * bit_padding) / 8;
@@ -45,7 +46,7 @@ int grib_accessor_class_g1bitmap_t::pack_double(grib_accessor* a, const double* 
         if (val[i] == miss_values)
             pos++;
         else {
-            //bmaplen++;
+            // bmaplen++;
             grib_set_bit_on(buf, &pos);
         }
     }
@@ -61,7 +62,8 @@ int grib_accessor_class_g1bitmap_t::pack_double(grib_accessor* a, const double* 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_g1bitmap_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_g1bitmap_t::value_count(grib_accessor* a, long* count)
+{
     grib_accessor_g1bitmap_t* self = (grib_accessor_g1bitmap_t*)a;
     long tlen;
     int err;
@@ -73,12 +75,14 @@ int grib_accessor_class_g1bitmap_t::value_count(grib_accessor* a, long* count){
     return err;
 }
 
-int grib_accessor_class_g1bitmap_t::unpack_bytes(grib_accessor* a, unsigned char* val, size_t* len){
-    unsigned char* buf           = grib_handle_of_accessor(a)->buffer->data;
+int grib_accessor_class_g1bitmap_t::unpack_bytes(grib_accessor* a, unsigned char* val, size_t* len)
+{
+    unsigned char* buf             = grib_handle_of_accessor(a)->buffer->data;
     grib_accessor_g1bitmap_t* self = (grib_accessor_g1bitmap_t*)a;
     long tlen;
     int err;
-    long length = a->byte_count();    long offset = a->byte_offset();
+    long length = a->byte_count();
+    long offset = a->byte_offset();
     if (*len < (size_t)length) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it is %ld bytes long\n", a->name, length);
         *len = length;

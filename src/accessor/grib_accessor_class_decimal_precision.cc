@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,15 +10,16 @@
 
 #include "grib_accessor_class_decimal_precision.h"
 
-grib_accessor_class_decimal_precision_t _grib_accessor_class_decimal_precision{"decimal_precision"};
+grib_accessor_class_decimal_precision_t _grib_accessor_class_decimal_precision{ "decimal_precision" };
 grib_accessor_class* grib_accessor_class_decimal_precision = &_grib_accessor_class_decimal_precision;
 
 
-void grib_accessor_class_decimal_precision_t::init(grib_accessor* a, const long l, grib_arguments* args){
+void grib_accessor_class_decimal_precision_t::init(grib_accessor* a, const long l, grib_arguments* args)
+{
     grib_accessor_class_long_t::init(a, l, args);
-    int n                                 = 0;
     grib_accessor_decimal_precision_t* self = (grib_accessor_decimal_precision_t*)a;
 
+    int n = 0;
     self->bits_per_value       = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
     self->decimal_scale_factor = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
     self->changing_precision   = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
@@ -29,11 +29,12 @@ void grib_accessor_class_decimal_precision_t::init(grib_accessor* a, const long 
     a->length = 0;
 }
 
-int grib_accessor_class_decimal_precision_t::unpack_long(grib_accessor* a, long* val, size_t* len){
-    int ret                               = 0;
+int grib_accessor_class_decimal_precision_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_decimal_precision_t* self = (grib_accessor_decimal_precision_t*)a;
-    grib_handle* h                        = grib_handle_of_accessor(a);
+    grib_handle* h                          = grib_handle_of_accessor(a);
 
+    int ret = GRIB_SUCCESS;
     if ((ret = grib_get_long_internal(h, self->decimal_scale_factor, val)) != GRIB_SUCCESS)
         return ret;
 
@@ -41,14 +42,16 @@ int grib_accessor_class_decimal_precision_t::unpack_long(grib_accessor* a, long*
     return ret;
 }
 
-int grib_accessor_class_decimal_precision_t::pack_long(grib_accessor* a, const long* val, size_t* len){
-    long bitsPerValue                     = 0;
-    double* values                        = NULL;
-    size_t size                           = 0;
-    int ret                               = 0;
+int grib_accessor_class_decimal_precision_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_decimal_precision_t* self = (grib_accessor_decimal_precision_t*)a;
-    grib_context* c                       = a->context;
-    grib_handle* h                        = grib_handle_of_accessor(a);
+
+    long bitsPerValue = 0;
+    double* values    = NULL;
+    size_t size       = 0;
+    int ret           = 0;
+    grib_context* c   = a->context;
+    grib_handle* h    = grib_handle_of_accessor(a);
 
     if (!self->values) {
         if ((ret = grib_set_long_internal(h, self->bits_per_value, 0)) != GRIB_SUCCESS)

@@ -114,7 +114,7 @@ int grib_accessor_class_statistics_t::unpack_double(grib_accessor* a, double* va
             avg += value;
         }
     }
-    /*printf("stats.......... number_of_missing=%ld\n", number_of_missing);*/
+
     /* Don't divide by zero if all values are missing! */
     if (size != number_of_missing) {
         avg /= (size - number_of_missing);
@@ -148,6 +148,8 @@ int grib_accessor_class_statistics_t::unpack_double(grib_accessor* a, double* va
         skew = m3 / (sd * sd * sd);
         kurt = m4 / (m2 * m2) - 3.0;
     }
+
+    //printf("\ngrib_accessor_class_statistics_t::unpack_double   Computed. So setting dirty to 0....... \n");
     a->dirty = 0;
 
     grib_context_free(c, values);

@@ -93,7 +93,8 @@ int grib_accessor_class_g2_eps_t::pack_long(grib_accessor* a, const long* val, s
                 derivedForecast                    = 4;
             }
             else {
-                productDefinitionTemplateNumberNew = 1;
+                //productDefinitionTemplateNumberNew = 1;
+                productDefinitionTemplateNumberNew = grib2_choose_PDTN(productDefinitionTemplateNumber, false, isInstant);
             }
         }
         else {
@@ -107,61 +108,22 @@ int grib_accessor_class_g2_eps_t::pack_long(grib_accessor* a, const long* val, s
                 derivedForecast                    = 4;
             }
             else {
-                productDefinitionTemplateNumberNew = 11;
+                // productDefinitionTemplateNumberNew = 11;
+                productDefinitionTemplateNumberNew = grib2_choose_PDTN(productDefinitionTemplateNumber, false, false);
             }
         }
     }
     else {
-        if (isInstant) {
-            productDefinitionTemplateNumberNew = 0;
-        }
-        else {
-            productDefinitionTemplateNumberNew = 8;
-        }
+        productDefinitionTemplateNumberNew = grib2_choose_PDTN(productDefinitionTemplateNumber, true, isInstant);
+        // if (isInstant) {
+        //     productDefinitionTemplateNumberNew = 0;
+        // }
+        // else {
+        //     productDefinitionTemplateNumberNew = 8;
+        // }
     }
 
-    // Adjust for chemical species
-    if (chemical == 1) {
-        if (eps == 1) {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 41;
-            }
-            else {
-                productDefinitionTemplateNumberNew = 43;
-            }
-        }
-        else {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 40;
-            }
-            else {
-                productDefinitionTemplateNumberNew = 42;
-            }
-        }
-    }
-
-    // Adjust for aerosols
-    if (aerosol == 1) {
-        if (eps == 1) {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 45;
-            }
-            else {
-                // productDefinitionTemplateNumberNew = 47;   This PDT is deprecated
-                productDefinitionTemplateNumberNew = 85;
-            }
-        }
-        else {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew = 48;  // 44 is deprecated*/
-            }
-            else {
-                productDefinitionTemplateNumberNew = 46;
-            }
-        }
-    }
-
-    if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
+    if (productDefinitionTemplateNumberNew >=0 && productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
         grib_set_long(hand, self->productDefinitionTemplateNumber, productDefinitionTemplateNumberNew);
         if (derivedForecast >= 0)
             grib_set_long(hand, self->derivedForecast, derivedForecast);

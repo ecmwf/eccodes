@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,15 +10,16 @@
 
 #include "grib_accessor_class_gds_not_present_bitmap.h"
 
-grib_accessor_class_gds_not_present_bitmap_t _grib_accessor_class_gds_not_present_bitmap{"gds_not_present_bitmap"};
+grib_accessor_class_gds_not_present_bitmap_t _grib_accessor_class_gds_not_present_bitmap{ "gds_not_present_bitmap" };
 grib_accessor_class* grib_accessor_class_gds_not_present_bitmap = &_grib_accessor_class_gds_not_present_bitmap;
 
 
-void grib_accessor_class_gds_not_present_bitmap_t::init(grib_accessor* a, const long v, grib_arguments* args){
+void grib_accessor_class_gds_not_present_bitmap_t::init(grib_accessor* a, const long v, grib_arguments* args)
+{
     grib_accessor_class_gen_t::init(a, v, args);
-    int n                                      = 0;
+    int n                                        = 0;
     grib_accessor_gds_not_present_bitmap_t* self = (grib_accessor_gds_not_present_bitmap_t*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_handle* hand                            = grib_handle_of_accessor(a);
 
     self->missing_value           = grib_arguments_get_name(hand, args, n++);
     self->number_of_values        = grib_arguments_get_name(hand, args, n++);
@@ -29,15 +29,17 @@ void grib_accessor_class_gds_not_present_bitmap_t::init(grib_accessor* a, const 
     a->length                     = 0;
 }
 
-int grib_accessor_class_gds_not_present_bitmap_t::value_count(grib_accessor* a, long* number_of_points){
+int grib_accessor_class_gds_not_present_bitmap_t::value_count(grib_accessor* a, long* number_of_points)
+{
     grib_accessor_gds_not_present_bitmap_t* self = (grib_accessor_gds_not_present_bitmap_t*)a;
-    *number_of_points = 0;
+    *number_of_points                            = 0;
     return grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_points, number_of_points);
 }
 
-int grib_accessor_class_gds_not_present_bitmap_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_gds_not_present_bitmap_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_gds_not_present_bitmap_t* self = (grib_accessor_gds_not_present_bitmap_t*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_handle* hand                            = grib_handle_of_accessor(a);
 
     long number_of_points = 0, number_of_values = 0, ni = 0;
     long latitude_of_first_point = 0;
@@ -47,8 +49,8 @@ int grib_accessor_class_gds_not_present_bitmap_t::unpack_double(grib_accessor* a
     long missing_value;
 
     double* coded_vals = NULL;
-    int err = a->value_count(&nn);
-    n_vals = nn;
+    int err            = a->value_count(&nn);
+    n_vals             = nn;
     if (err)
         return err;
 
@@ -98,12 +100,14 @@ int grib_accessor_class_gds_not_present_bitmap_t::unpack_double(grib_accessor* a
     return err;
 }
 
-int grib_accessor_class_gds_not_present_bitmap_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_gds_not_present_bitmap_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     // See deprecated/grib_accessor_class_gds_not_present_bitmap.cc for
     // a possible implementation
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_class_gds_not_present_bitmap_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_gds_not_present_bitmap_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_DOUBLE;
 }

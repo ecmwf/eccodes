@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,34 +10,37 @@
 
 #include "grib_accessor_class_g1step_range.h"
 
-grib_accessor_class_g1step_range_t _grib_accessor_class_g1step_range{"g1step_range"};
+grib_accessor_class_g1step_range_t _grib_accessor_class_g1step_range{ "g1step_range" };
 grib_accessor_class* grib_accessor_class_g1step_range = &_grib_accessor_class_g1step_range;
 
 
-void grib_accessor_class_g1step_range_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_g1step_range_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_abstract_long_vector_t::init(a, l, c);
     grib_accessor_g1step_range_t* self = (grib_accessor_g1step_range_t*)a;
-    grib_handle* h                   = grib_handle_of_accessor(a);
-    int n                            = 0;
-    self->p1                         = grib_arguments_get_name(h, c, n++);
-    self->p2                         = grib_arguments_get_name(h, c, n++);
-    self->timeRangeIndicator         = grib_arguments_get_name(h, c, n++);
-    self->unit                       = grib_arguments_get_name(h, c, n++);
-    self->step_unit                  = grib_arguments_get_name(h, c, n++);
-    self->stepType                   = grib_arguments_get_name(h, c, n++);
-    self->patch_fp_precip            = grib_arguments_get_name(h, c, n++);
-    self->error_on_units             = 1;
+    grib_handle* h = grib_handle_of_accessor(a);
+
+    int n                    = 0;
+    self->p1                 = grib_arguments_get_name(h, c, n++);
+    self->p2                 = grib_arguments_get_name(h, c, n++);
+    self->timeRangeIndicator = grib_arguments_get_name(h, c, n++);
+    self->unit               = grib_arguments_get_name(h, c, n++);
+    self->step_unit          = grib_arguments_get_name(h, c, n++);
+    self->stepType           = grib_arguments_get_name(h, c, n++);
+    self->patch_fp_precip    = grib_arguments_get_name(h, c, n++);
+    self->error_on_units     = 1;
 
     self->number_of_elements = 2;
     self->v                  = (long*)grib_context_malloc_clear(h->context,
-                                               sizeof(long) * self->number_of_elements);
-    self->pack_index         = -1;
-    a->dirty                 = 1;
+                                                                sizeof(long) * self->number_of_elements);
+    self->pack_index = -1;
+    a->dirty = 1;
 
     a->length = 0;
 }
 
-void grib_accessor_class_g1step_range_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_g1step_range_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_dump_string(dumper, a, NULL);
 }
 
@@ -88,7 +90,7 @@ static const int u2s[] = {
 int grib_g1_step_get_steps(grib_accessor* a, long* start, long* theEnd)
 {
     grib_accessor_g1step_range_t* self = (grib_accessor_g1step_range_t*)a;
-    int err                          = 0;
+    int err                            = 0;
     long p1 = 0, p2 = 0, unit = 0, timeRangeIndicator = 0, timeRangeIndicatorFromStepRange = 0;
     long step_unit    = 1;
     char stepType[20] = {0,};
@@ -182,15 +184,16 @@ int grib_g1_step_get_steps(grib_accessor* a, long* start, long* theEnd)
     return 0;
 }
 
-int grib_accessor_class_g1step_range_t::unpack_string(grib_accessor* a, char* val, size_t* len){
+int grib_accessor_class_g1step_range_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+{
     grib_accessor_g1step_range_t* self = (grib_accessor_g1step_range_t*)a;
     char buf[100];
     size_t size = 0;
     long start = 0, theEnd = 0;
     long timeRangeIndicator = 0;
     long unit;
-    int err            = 0;
-    char stepType[20]  = {0,};
+    int err           = 0;
+    char stepType[20] = {0,};
     size_t stepTypeLen = 20;
     grib_handle* hand  = grib_handle_of_accessor(a);
 
@@ -279,9 +282,9 @@ int grib_accessor_class_g1step_range_t::unpack_string(grib_accessor* a, char* va
 }
 
 static int grib_g1_step_apply_units(
-        const long* start, const long* theEnd, const long* step_unit,
-        long* P1, long* P2, long* unit,
-        const int max, const int instant)
+    const long* start, const long* theEnd, const long* step_unit,
+    long* P1, long* P2, long* unit,
+    const int max, const int instant)
 {
     int j = 0;
     long start_sec, end_sec;
@@ -333,9 +336,10 @@ static int grib_g1_step_apply_units(
     return GRIB_WRONG_STEP;
 }
 
-int grib_accessor_class_g1step_range_t::pack_string(grib_accessor* a, const char* val, size_t* len){
+int grib_accessor_class_g1step_range_t::pack_string(grib_accessor* a, const char* val, size_t* len)
+{
     grib_accessor_g1step_range_t* self = (grib_accessor_g1step_range_t*)a;
-    grib_handle* h                   = grib_handle_of_accessor(a);
+    grib_handle* h                     = grib_handle_of_accessor(a);
     long timeRangeIndicator = 0, P1 = 0, P2 = 0;
     long start = 0, theEnd = -1, unit = 0, ounit = 0, step_unit = 1;
     int ret = 0;
@@ -399,8 +403,8 @@ int grib_accessor_class_g1step_range_t::pack_string(grib_accessor* a, const char
 
     if (timeRangeIndicator == 10) {
         /*
-        * timeRangeIndicator = 10 means 'P1 occupies octets 19 and 20' i.e. 16 bits
-        */
+         * timeRangeIndicator = 10 means 'P1 occupies octets 19 and 20' i.e. 16 bits
+         */
         long off                   = 0;
         grib_accessor* p1_accessor = NULL;
         if (theEnd != start && !h->context->gribex_mode_on) {
@@ -431,7 +435,7 @@ int grib_accessor_class_g1step_range_t::pack_string(grib_accessor* a, const char
             return ret;
 
         if (h->context->debug) {
-            long dp1,dp2;
+            long dp1, dp2;
             grib_get_long(h, self->p1, &dp1);
             grib_get_long(h, self->p2, &dp2);
             fprintf(stderr, "ECCODES DEBUG pack_string: P1=%ld P2=%ld (as two octets => %ld)\n", dp1, dp2, P1);
@@ -480,7 +484,7 @@ int grib_accessor_class_g1step_range_t::pack_string(grib_accessor* a, const char
                 return ret;
 
             if (h->context->debug) {
-                long dp1,dp2;
+                long dp1, dp2;
                 grib_get_long(h, self->p1, &dp1);
                 grib_get_long(h, self->p2, &dp2);
                 fprintf(stderr, "ECCODES DEBUG pack_string: P1=%ld P2=%ld (as two octets => %ld)\n", dp1, dp2, P1);
@@ -492,7 +496,7 @@ int grib_accessor_class_g1step_range_t::pack_string(grib_accessor* a, const char
 
         if (ret == GRIB_WRONG_STEP) {
             grib_context_log(h->context, GRIB_LOG_ERROR,
-                    "Failed to set %s=%s: Keys P1 and P2 are one octet each (Range 0 to 255)", a->name, val);
+                             "Failed to set %s=%s: Keys P1 and P2 are one octet each (Range 0 to 255)", a->name, val);
         }
         return ret;
     }
@@ -513,23 +517,27 @@ int grib_accessor_class_g1step_range_t::pack_string(grib_accessor* a, const char
     return 0;
 }
 
-int grib_accessor_class_g1step_range_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_g1step_range_t::value_count(grib_accessor* a, long* count)
+{
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_class_g1step_range_t::string_length(grib_accessor* a){
+size_t grib_accessor_class_g1step_range_t::string_length(grib_accessor* a)
+{
     return 255;
 }
 
-int grib_accessor_class_g1step_range_t::pack_long(grib_accessor* a, const long* val, size_t* len){
-    char buff[256];
-    size_t bufflen                   = 100;
-    char sval[100]                   = { 0 };
-    char* p                          = sval;
-    size_t svallen                   = 100;
+int grib_accessor_class_g1step_range_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_g1step_range_t* self = (grib_accessor_g1step_range_t*)a;
-    char stepType[20]                = {0,};
+
+    char buff[256]    = {0,};
+    size_t bufflen    = 100;
+    char sval[100]    = { 0 };
+    char* p           = sval;
+    size_t svallen    = 100;
+    char stepType[20] = {0,};
     size_t stepTypeLen = 20;
     long step_unit     = 0;
     int err            = 0;
@@ -597,7 +605,8 @@ int grib_accessor_class_g1step_range_t::pack_long(grib_accessor* a, const long* 
     return GRIB_INTERNAL_ERROR;
 }
 
-int grib_accessor_class_g1step_range_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_g1step_range_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_g1step_range_t* self = (grib_accessor_g1step_range_t*)a;
     char buff[100];
     size_t bufflen = 100;
@@ -627,11 +636,13 @@ int grib_accessor_class_g1step_range_t::unpack_long(grib_accessor* a, long* val,
     return 0;
 }
 
-int grib_accessor_class_g1step_range_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_g1step_range_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_STRING;
 }
 
-void grib_accessor_class_g1step_range_t::destroy(grib_context* c, grib_accessor* a){
+void grib_accessor_class_g1step_range_t::destroy(grib_context* c, grib_accessor* a)
+{
     grib_accessor_g1step_range_t* self = (grib_accessor_g1step_range_t*)a;
     grib_context_free(c, self->v);
     grib_accessor_class_abstract_long_vector_t::destroy(c, a);

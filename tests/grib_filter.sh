@@ -424,6 +424,9 @@ set -e
 [ $status -ne 0 ]
 ${tools_dir}/grib_compare $input $tempGrib # compare should succeed
 
+# Write statement with key of type double
+input=$data_dir/sample.grib2
+echo 'write "delete_me_[referenceValue:d]";' | ${tools_dir}/grib_filter - $input
 
 # GTS header
 # ---------------

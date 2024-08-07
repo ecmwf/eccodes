@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -46,12 +45,16 @@ int grib_accessor_class_vector_t::unpack_double(grib_accessor* a, double* val, s
     }
 
     if (va->dirty) {
+        //printf("\ngrib_accessor_class_vector_t::unpack_double  accessor=%s is DIRTY\n",a->name);
         grib_get_size(grib_handle_of_accessor(a), self->vector, &size);
         stat = (double*)grib_context_malloc_clear(a->context, sizeof(double) * size);
         err  = va->unpack_double(stat, &size);
         grib_context_free(a->context, stat);
         if (err)
             return err;
+    }
+    else {
+        //printf("\ngrib_accessor_class_vector_t::unpack_double  accessor=%s is CLEAN\n",a->name);
     }
 
     *val = v->v[self->index];

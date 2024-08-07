@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -39,26 +38,26 @@ static long compute_byte_count(grib_accessor* a)
     return (numberOfBits * numberOfElements + 7) / 8;
 }
 
-
 void grib_accessor_class_unsigned_bits_t::init(grib_accessor* a, const long len, grib_arguments* args)
 {
     grib_accessor_class_long_t::init(a, len, args);
     grib_accessor_unsigned_bits_t* self = (grib_accessor_unsigned_bits_t*)a;
-    int n                               = 0;
-    self->numberOfBits                  = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
-    self->numberOfElements              = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
-    a->length                           = compute_byte_count(a);
+
+    int n                  = 0;
+    self->numberOfBits     = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
+    self->numberOfElements = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
+    a->length              = compute_byte_count(a);
 }
 
 int grib_accessor_class_unsigned_bits_t::unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_unsigned_bits_t* self = (grib_accessor_unsigned_bits_t*)a;
-    int ret                             = 0;
-    long pos                            = a->offset * 8;
-    long rlen                           = 0;
-    long numberOfBits                   = 0;
 
-    ret = value_count(a, &rlen);
+    long pos          = a->offset * 8;
+    long rlen         = 0;
+    long numberOfBits = 0;
+
+    int ret = value_count(a, &rlen);
     if (ret)
         return ret;
 
@@ -89,14 +88,14 @@ int grib_accessor_class_unsigned_bits_t::unpack_long(grib_accessor* a, long* val
 int grib_accessor_class_unsigned_bits_t::pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     grib_accessor_unsigned_bits_t* self = (grib_accessor_unsigned_bits_t*)a;
-    int ret                             = 0;
-    long off                            = 0;
-    long numberOfBits                   = 0;
-    size_t buflen                       = 0;
-    unsigned char* buf                  = NULL;
-    unsigned long i                     = 0;
-    long rlen                           = 0;
-    ret                                 = value_count(a, &rlen);
+
+    long off           = 0;
+    long numberOfBits  = 0;
+    size_t buflen      = 0;
+    unsigned char* buf = NULL;
+    unsigned long i    = 0;
+    long rlen          = 0;
+    int ret = value_count(a, &rlen);
     if (ret) return ret;
 
     /*

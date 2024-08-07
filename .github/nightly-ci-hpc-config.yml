@@ -1,0 +1,18 @@
+build:
+  modules:
+    - ecbuild
+    - ninja
+    - aec
+    - netcdf4
+  parallel: 64
+  cmake_options:
+    - -DENABLE_EXTRA_TESTS=1
+    - -DENABLE_PNG=1
+    - -DENABLE_NETCDF=1
+  force_build: true
+  post_script: .github/ci-nightly-test.sh
+  env:
+    - GH_TOKEN=${GH_TOKEN}
+  compiler_cc: gcc
+  compiler_cxx: g++
+  compiler_fc: gfortran

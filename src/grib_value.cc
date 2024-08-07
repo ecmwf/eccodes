@@ -62,6 +62,18 @@ static void print_debug_info__set_array(grib_handle* h, const char* func, const 
     fprintf(stderr, "min=%.10g, max=%.10g\n",minVal,maxVal);
 }
 
+static void print_error_no_accessor(const grib_context* c, const char* name)
+{
+    grib_context_log(c, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
+    const char* dpath = getenv("ECCODES_DEFINITION_PATH");
+    if (dpath != NULL) {
+        grib_context_log(c, GRIB_LOG_ERROR,
+            "Hint: This could be a symptom of an issue with your definitions.\n\t"
+            "The environment variable ECCODES_DEFINITION_PATH is defined and set to '%s'.\n\t"
+            "Please use the latest definitions.", dpath);
+    }
+}
+
 int grib_set_expression(grib_handle* h, const char* name, grib_expression* e)
 {
     grib_accessor* a = grib_find_accessor(h, name);
@@ -103,7 +115,8 @@ int grib_set_long_internal(grib_handle* h, const char* name, long val)
         return ret;
     }
 
-    grib_context_log(c, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
+    print_error_no_accessor(c, name);
+    //grib_context_log(c, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
     return GRIB_NOT_FOUND;
 }
 
@@ -162,7 +175,8 @@ int grib_set_double_internal(grib_handle* h, const char* name, double val)
         return ret;
     }
 
-    grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
+    print_error_no_accessor(h->context, name);
+    //grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
     return GRIB_NOT_FOUND;
 }
 
@@ -258,7 +272,7 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
 
             switch (type) {
                 case GRIB_TYPE_STRING:
-                    len  = 512;
+                    len  = 1024;
                     sval = (char*)grib_context_malloc(src->context, len * sizeof(char));
 
                     if ((*err = grib_get_string(src, key, sval, &len)) != GRIB_SUCCESS)
@@ -295,8 +309,7 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
                     break;
 
                 case GRIB_TYPE_BYTES:
-                    if (len == 0)
-                        len = 512;
+                    len = 1024;
                     uval = (unsigned char*)grib_context_malloc(src->context, len * sizeof(unsigned char));
 
                     if ((*err = grib_get_bytes(src, key, uval, &len)) != GRIB_SUCCESS)
@@ -389,14 +402,15 @@ int grib_set_string_internal(grib_handle* h, const char* name,
         return ret;
     }
 
-    grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
+    print_error_no_accessor(h->context, name);
+    //grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
     return GRIB_NOT_FOUND;
 }
 
 /* Return 1 if we dealt with specific packing type changes and nothing more needs doing.
  * Return 0 if further action is needed
  */
-static int process_packingType_change(grib_handle* h, const char* keyname, const char* keyval)
+static int preprocess_packingType_change(grib_handle* h, const char* keyname, const char* keyval)
 {
     int err = 0;
     char input_packing_type[100] = {0,};
@@ -442,16 +456,29 @@ static int process_packingType_change(grib_handle* h, const char* keyname, const
             if (strcmp(input_packing_type, "grid_ieee") == 0) {
                 const long max_bpv = 32; /* Cannot do any higher */
                 grib_set_long(h, "bitsPerValue", max_bpv);
-                /*
-                long accuracy = 0;
-                err = grib_get_long(h, "accuracy", &accuracy);
-                if (!err) {
-                    grib_set_long(h, "bitsPerValue", accuracy);
-                } */
+                //long accuracy = 0;
+                //err = grib_get_long(h, "accuracy", &accuracy);
+                //if (!err) grib_set_long(h, "bitsPerValue", accuracy);
             }
         }
     }
     return 0;  /* Further action is needed */
+}
+
+static void postprocess_packingType_change(grib_handle* h, const char* keyname, const char* keyval)
+{
+    if (grib_inline_strcmp(keyname, "packingType") == 0) {
+        long is_experimental = 0, is_deprecated = 0;
+        if (grib_get_long(h, "isTemplateExperimental", &is_experimental) == GRIB_SUCCESS && is_experimental == 1) {
+            fprintf(stderr, "ECCODES WARNING :  The template for %s=%s is experimental. "
+                            "This template was not validated at the time of publication.\n",
+                    keyname, keyval);
+            return;
+        }
+        if (grib_get_long(h, "isTemplateDeprecated", &is_deprecated) == GRIB_SUCCESS && is_deprecated == 1) {
+            fprintf(stderr, "ECCODES WARNING :  The template for %s=%s is deprecated.\n", keyname, keyval);
+        }
+    }
 }
 
 int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* length)
@@ -459,7 +486,7 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* l
     int ret          = 0;
     grib_accessor* a = NULL;
 
-    int processed = process_packingType_change(h, name, val);
+    int processed = preprocess_packingType_change(h, name, val);
     if (processed)
         return GRIB_SUCCESS;  /* Dealt with - no further action needed */
 
@@ -478,6 +505,7 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* l
 
         ret = a->pack_string(val, length);
         if (ret == GRIB_SUCCESS) {
+            postprocess_packingType_change(h, name, val);
             return grib_dependency_notify_change(a);
         }
         return ret;
