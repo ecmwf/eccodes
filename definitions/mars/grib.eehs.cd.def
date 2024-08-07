@@ -1,3 +1,8 @@
-alias   mars.step     = stepRange;
-alias   mars.quantile = quantile;
-
+alias mars.step     = stepRange;
+if (edition == 1){
+ alias mars.quantile = quantile;
+}
+if (edition == 2){
+ meta marsQuantile sprintf("%d:%d",quantileValue,totalNumberOfQuantiles);
+ alias mars.quantile = marsQuantile;
+}

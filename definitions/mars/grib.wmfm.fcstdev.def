@@ -1,4 +1,4 @@
-alias  mars.number = perturbationNumber;
+alias mars.number = perturbationNumber;
 unalias mars.step;
 
 # Old GRIBS do not have forecast forecastMonth set. It is computed from verifyingMonth

@@ -1,3 +1,3 @@
 # assert(localDefinitionNumber == 1);
-alias   mars.step = stepRange;
+alias mars.step = stepRange;
 unalias mars.time;
