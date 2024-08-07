@@ -12,7 +12,7 @@ if (class is "od") { alias mars.origin = centre; }
 # Special rule for Grib 2 local definition 11:
 # Key "centre" should be set to ECMWF and key "originatingCentreOfAnalysis"
 # should be the original centre
-if (editionNumber == 2 && localDefinitionNumber == 11) {
+if (gribEditionNumber == 2 && localDefinitionNumber == 11) {
   alias mars.origin = originatingCentreOfAnalysis;
 }
 
