@@ -181,6 +181,12 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 45 ;
 	}
+#Lake cover
+'(0 - 1)' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	}
 #Low vegetation cover
 '(0 - 1)' = {
 	 discipline = 2 ;
@@ -5415,12 +5421,6 @@
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 12 ;
-	}
-#Water fraction
-'(0 - 1)' = {
-	 discipline = 1 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 2 ;
 	}
 #Days since last observation
 'Integer' = {
