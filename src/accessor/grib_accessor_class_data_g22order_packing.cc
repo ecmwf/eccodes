@@ -786,7 +786,7 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
     // long nvals_per_group     = 0;
     // long nbits_per_group_val = 0;
 
-    long binary_scale_factor, decimal_scale_factor, typeOfOriginalFieldValues;
+    long binary_scale_factor, decimal_scale_factor, typeOfOriginalFieldValues, optimize_scale_factor;
     // long groupSplittingMethodUsed, numberOfGroupsOfDataValues, referenceForGroupWidths;
     long missingValueManagementUsed, primaryMissingValueSubstitute, secondaryMissingValueSubstitute;
     long numberOfBitsUsedForTheGroupWidths, numberOfBitsUsedForTheScaledGroupLengths, orderOfSpatialDifferencing;
@@ -815,7 +815,10 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
     if ((err = grib_get_long_internal(gh, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
-    int use_scale = 1;
+    if ((err = grib_get_long_internal(gh, self->optimize_scale_factor, &optimize_scale_factor)) != GRIB_SUCCESS)
+        return err;
+
+    int use_scale = !optimize_scale_factor;
 
     if ((err = grib_get_long_internal(gh, self->binary_scale_factor, &binary_scale_factor)) != GRIB_SUCCESS)
         return err;
