@@ -130,7 +130,7 @@ alias calendarIdPresent = false;
 if ( ((section1Length > 21) or setCalendarId > 0) and deleteCalendarId == 0) {
   alias calendarIdPresent = present;
   codetable[2] calendarIdentificationTemplateNumber ('1.5.table',masterDir,localDir) : dump,string_type,no_fail;
-  template calendarIdentification "grib2/template.1.[calendarIdentificationTemplateNumber:l].def";
+  template calendarIdentification "grib2/templates/template.1.[calendarIdentificationTemplateNumber:l].def";
 }
 
 constant conceptsMasterDir="grib2" : hidden;

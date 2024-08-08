@@ -13,7 +13,7 @@ unsigned[1] numberOfSection = 7:read_only;
 # Template number given in octets 10-11 of Section 5
 position offsetBeforeData;
 #if (changed(dataRepresentationTemplateNumber)) {
-  template dataValues "grib2/template.7.[dataRepresentationTemplateNumber:l].def";
+  template dataValues "grib2/templates/template.7.[dataRepresentationTemplateNumber:l].def";
 #}
 
 meta changeDecimalPrecision decimal_precision(bitsPerValue,decimalScaleFactor,changingPrecision,values) : edition_specific;

@@ -79,7 +79,7 @@ transient genVertHeightCoords = 0;
 if (productDefinitionTemplateNumber >= 32768) {
   template productDefinition "grib2/local/[centreForLocal]/template.4.[productDefinitionTemplateNumber:l].def";
 } else {
-  template productDefinition "grib2/template.4.[productDefinitionTemplateNumber:l].def";
+  template productDefinition "grib2/templates/template.4.[productDefinitionTemplateNumber:l].def";
 }
 
 if (defined(marsStream) && defined(marsType)) {
