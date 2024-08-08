@@ -223,7 +223,7 @@ ${tools_dir}/grib_set -s tablesVersion=32,productDefinitionTemplateNumber=76,par
 grib_check_key_equals $temp chemShortName,chemId 'O3 236'
 
 ${tools_dir}/grib_set -s paramId=215225,setLocalDefinition=1,localDefinitionNumber=36 $sample_g2 $temp
-grib_check_key_equals $temp productDefinitionTemplateNumber 48
+grib_check_key_equals $temp productDefinitionTemplateNumber 50
 
 ${tools_dir}/grib_set -s paramId=210251,setLocalDefinition=1,localDefinitionNumber=36 $sample_g2 $temp
 

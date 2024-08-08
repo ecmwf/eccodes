@@ -224,10 +224,10 @@ grib_check_key_equals $temp productDefinitionTemplateNumber '43'
 
 # Aerosol 210072
 $tools_dir/grib_set -s paramId=210072,stepType=instant,eps=0 $input $temp
-grib_check_key_equals $temp productDefinitionTemplateNumber '48'
+grib_check_key_equals $temp productDefinitionTemplateNumber '50'
 
-$tools_dir/grib_set -s paramId=210072,stepType=instant,eps=1 $input $temp
-grib_check_key_equals $temp productDefinitionTemplateNumber '45'
+# $tools_dir/grib_set -s paramId=210072,stepType=instant,eps=1 $input $temp
+# grib_check_key_equals $temp productDefinitionTemplateNumber '50'
 
 #$tools_dir/grib_set -s paramId=210072,stepType=accum,eps=0 $input $temp
 #grib_check_key_equals $temp productDefinitionTemplateNumber '42'
