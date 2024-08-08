@@ -137,6 +137,21 @@ static bool eq_time(const char* l, const char* r)
     return false;
 }
 
+static const char* get_step_units_longname(const char* step_units)
+{
+    if (step_units == NULL)
+        return NULL;
+    if (strcmp(step_units, "s") == 0)
+        return "seconds";
+    if (strcmp(step_units, "m") == 0)
+        return "minutes";
+    if (strcmp(step_units, "h") == 0)
+        return "hours";
+
+    Assert(!"Unknown step units");
+    return NULL;
+}
+
 static value* new_value(const char* name)
 {
     value* v = (value*)calloc(sizeof(value), 1);
@@ -1974,6 +1989,7 @@ static void validation_time(request* r)
     double v;
     long julian            = 0;
     const char* step_units = NULL;
+    double step_units_factor = 1.0;
 
     long nstep    = count_values(r, "step");
     long ndate    = count_values(r, "date");
@@ -2051,13 +2067,15 @@ static void validation_time(request* r)
                              "Cannot convert stepUnits of '%s'. Only hours, minutes and seconds supported.", step_units);
         }
         if (STR_EQUAL("m", step_units)) {
-            step /= 60;
+            step_units_factor = 60.0;
         }
         else if (STR_EQUAL("s", step_units)) {
-            step /= 3600;
+            step_units_factor = 3600.0;
         }
     }
-    v = julian * 24.0 + fcmonthdays * 24.0 + time / 100.0 + step * 1.0;
+
+    v = (julian * 24.0 + fcmonthdays * 24.0 + time / 100.0) * step_units_factor + step * 1.0;
+
     grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: date=%ld, julian=%ld, fcmonthdays=%ld, time=%ld, step=%g, validation=%.3f", date, julian, fcmonthdays, time, step, v);
     set_value(r, "_validation", "%lf", v);
     set_value(r, "_juliandate", "%ld", julian);
@@ -2065,7 +2083,7 @@ static void validation_time(request* r)
     if (!julianrefdate)
         julianrefdate = grib_date_to_julian(setup.refdate);
 
-    set_value(r, "_validationtime", "%lf", v - julianrefdate * 24.0);
+    set_value(r, "_validationtime", "%lf", v - julianrefdate * 24.0 * step_units_factor);
 
     /* Remove minutes from TIME */
     if (ntime)
@@ -3007,12 +3025,15 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
             }
         }
 
+        const char* step_units = get_value(data_r, "stepUnits", 0);
+        const char* step_units_longname= get_step_units_longname(step_units);
+
         if (strcmp(axis, "time") == 0) {
             bool onedtime = (count_values(cube, "date") == 0 && count_values(cube, "step") == 0);
-            snprintf(u, sizeof(u), "hours since 0000-00-00 00:00:00.0");
+            snprintf(u, sizeof(u), "%s since 0000-00-00 00:00:00.0", step_units_longname);
             longname = "reference_time";
             if (setup.usevalidtime || onedtime) {
-                snprintf(u, sizeof(u), "hours since %ld-%02ld-%02ld 00:00:00.0", setup.refdate / 10000, (setup.refdate % 10000) / 100, (setup.refdate % 100));
+                snprintf(u, sizeof(u), "%s since %ld-%02ld-%02ld 00:00:00.0", step_units_longname, setup.refdate / 10000, (setup.refdate % 10000) / 100, (setup.refdate % 100));
                 longname = "time";
             }
             if (setup.climatology) {
@@ -3023,7 +3044,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
         }
 
         if (strcmp(axis, "step") == 0) {
-            units    = "hours";
+            units    = step_units;
             longname = "time_step";
             if (count_values(cube, "date") == 0 && count_values(cube, "time") == 0) {
                 const char* d = get_value(data_r, "date", 0);
@@ -3299,8 +3320,13 @@ static int fill_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid)
                 for (j = 0; j < n; ++j)
                     values[j] = monthnumber(get_value(cube, axis, j));
             else
-                for (j = 0; j < n; ++j)
-                    values[j] = grib_date_to_julian(atol(get_value(cube, axis, j))) - grib_date_to_julian(setup.refdate);
+                for (j = 0; j < n; ++j) {
+                    long date = grib_date_to_julian(atol(get_value(cube, axis, j)));
+                    long refdate = grib_date_to_julian(setup.refdate);
+                    fprintf(stderr, "date=%ld, refdate=%ld\n", date, refdate);
+                    values[j] = date - refdate;
+                    //values[j] = grib_date_to_julian(atol(get_value(cube, axis, j))) - grib_date_to_julian(setup.refdate);
+                }
         }
         else {
             for (j = 0; j < n; ++j) {
@@ -3308,6 +3334,12 @@ static int fill_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid)
                 const char* sv = get_value(cube, axis, j);
                 if (is_number(sv)) {
                     lv = atol(sv); /* Detect error? */
+                    constexpr long maxint = 2147483647; /* 2^31 - 1, max size of NC_INT*/
+                    if (lv > maxint) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Value %ld for %s is too large. ", lv, axis);
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Consider using the option: \"-R date\". Reference date in the format YYYYMMDD. Default value 19000101.", setup.refdate);
+                        exit(1);
+                    }
                 }
                 else {
                     /* ECC-725: Convert string-valued dimension to integer
