@@ -309,6 +309,7 @@ int grib_f_multi_append__(int *ingid, int *sec, int *mgid);
 int codes_f_bufr_keys_iterator_new_(int* gid,int* iterid);
 int grib_f_read_file_(int* fid, void* buffer, size_t* nbytes);
 int codes_f_bufr_keys_iterator_delete_(int* iterid);
+void grib_f_set_debug_(int mode);
 int grib_f_set_definitions_path_(char* path, int len);
 int grib_f_read_any_from_file_(int* fid, void* buffer, size_t* nbytes);
 int any_f_new_from_file_(int* fid, int* gid);
