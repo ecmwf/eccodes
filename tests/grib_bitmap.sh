@@ -127,6 +127,8 @@ ${tools_dir}/grib_copy -r $infile $temp2
 ${tools_dir}/grib_compare -R all=0.3 -c data:n $infile $temp2
 grib_check_key_equals $temp2 bitsPerValue 9  # Note: The input file has bpv=9
 
+${tools_dir}/grib_set -rs optimizeScaleFactor=1 $infile $temp2
+${tools_dir}/grib_compare $infile $temp2
 
 # Simple to grid_complex
 tempComplex=temp.grib_bitmap.complex.grib
