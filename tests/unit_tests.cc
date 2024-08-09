@@ -742,10 +742,36 @@ void test_codes_get_error_message()
     Assert( STR_EQUAL(errmsg, "Unknown error -6666"));
 }
 
+void test_codes_context_set_debug()
+{
+    printf("Running %s ...\n", __func__);
+    grib_context* context = NULL;
+    int err = 0;
+
+    printf("\tEnable debugging...\n");
+    grib_context_set_debug(context, -1);
+
+    grib_handle* h = grib_handle_new_from_samples(context, "GRIB2");
+    err = grib_set_long(h, "paramId", 167);
+    Assert(!err);
+
+    printf("\tDisable debugging...\n");
+    grib_context_set_debug(context, 0);
+
+    err = grib_set_long(h, "edition", 1);
+    Assert(!err);
+    printf("\tEnable debugging again (verbose)...\n");
+    grib_context_set_debug(context, 1);
+    grib_handle_delete(h);
+
+    grib_context_set_debug(context, 0);
+}
+
 int main(int argc, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
 
+    test_codes_context_set_debug();
     test_codes_get_error_message();
 
     test_iarray();

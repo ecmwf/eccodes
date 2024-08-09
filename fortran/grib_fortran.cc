@@ -975,8 +975,9 @@ int grib_f_close_file_(int* fid)
 /*****************************************************************************/
 static int file_count=0;
 
-void grib_f_write_on_fail(int* gid) {
-    grib_context* c=grib_context_get_default();
+void grib_f_write_on_fail(int* gid)
+{
+    grib_context* c = grib_context_get_default();
     if (c->write_on_fail) {
         char filename[100]={0,};
         grib_handle* h=NULL;
@@ -993,7 +994,8 @@ void grib_f_write_on_fail(int* gid) {
         if (h) grib_write_message(h,filename,"w");
     }
 }
-void grib_f_write_on_fail_(int* gid) {
+void grib_f_write_on_fail_(int* gid)
+{
     grib_f_write_on_fail(gid);
 }
 /*****************************************************************************/
@@ -2888,6 +2890,13 @@ int codes_f_bufr_multi_element_constant_arrays_off_(void)
 {
     codes_bufr_multi_element_constant_arrays_off(NULL);
     return GRIB_SUCCESS;
+}
+
+/*****************************************************************************/
+void grib_f_set_debug_(int mode)
+{
+    grib_context* c = grib_context_get_default();
+    grib_context_set_debug(c, mode);
 }
 
 /*****************************************************************************/

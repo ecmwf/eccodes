@@ -2765,6 +2765,12 @@
     call grib_skip_read_only(iterid, status)
   end subroutine codes_skip_read_only
 
+  !> Set debug mode
+  subroutine codes_set_debug(mode)
+    integer(kind=kindOfInt), intent(in) :: mode
+    call grib_set_debug(mode)
+  end subroutine codes_set_debug
+
   !> Set the definition path
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
