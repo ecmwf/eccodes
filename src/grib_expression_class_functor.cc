@@ -98,9 +98,9 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 {
     grib_expression_functor* e = (grib_expression_functor*)g;
 
-    if (STR_EQUAL(e->name, "lookup")) {
-        return GRIB_SUCCESS;
-    }
+    // if (STR_EQUAL(e->name, "lookup")) {
+    //     return GRIB_SUCCESS;
+    // }
 
     if (STR_EQUAL(e->name, "new")) {
         *lres = h->loader != NULL;
@@ -126,6 +126,14 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
             return GRIB_SUCCESS;
         }
         return GRIB_INVALID_ARGUMENT;
+    }
+
+    if (STR_EQUAL(e->name, "debug_mode")) {
+        const int n = grib_arguments_get_count(e->args);
+        if (n != 1) return GRIB_INVALID_ARGUMENT;
+        const int dmode = grib_arguments_get_long(h, e->args, 0);
+        grib_context_set_debug(0, dmode);
+        return GRIB_SUCCESS;
     }
 
     if (STR_EQUAL(e->name, "missing")) {
