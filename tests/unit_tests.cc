@@ -721,7 +721,7 @@ void test_grib2_select_PDTN()
 
     // Aerosol optical
     Assert( 49 == grib2_select_PDTN(eps, instant,  0, 0, 0, 0, aerosol_optical) );
-    Assert( 48 == grib2_select_PDTN(!eps, instant, 0, 0, 0, 0, aerosol_optical) );
+    Assert( 50 == grib2_select_PDTN(!eps, instant, 0, 0, 0, 0, aerosol_optical) );
 
     // Plain vanilla
     Assert(  0 == grib2_select_PDTN(!eps, instant,  !chemical, !chemical_srcsink, !chemical_distfn, !aerosol, 0) );

@@ -1946,7 +1946,7 @@ int grib2_is_PDTN_AerosolOptical(long pdtn)
     // Note: PDT 48 can be used for both plain aerosols as well as optical properties of aerosol.
     // For the former user must set the optical wavelength range to missing
     return (
-        pdtn == 48 ||
+        pdtn == 48 || pdtn == 50 ||
         pdtn == 49);
 }
 
@@ -1986,9 +1986,9 @@ int grib2_choose_PDTN(int current_PDTN, bool is_det, bool is_instant)
         if (is_interval && is_det) return 67;
     }
 
-    if (current_PDTN == 45 || current_PDTN == 48) {
+    if (current_PDTN == 45 || current_PDTN == 48 || current_PDTN == 50) {
         if (is_instant  && is_ens) return 45;
-        if (is_instant  && is_det) return 48;
+        if (is_instant  && is_det) return 50;
         if (is_interval && is_ens) return 85;
         if (is_interval && is_det) return 46;
     }
@@ -2066,7 +2066,7 @@ int grib2_select_PDTN(int is_eps, int is_instant,
         }
         else {
             if (is_instant)
-                return 48;
+                return 50;
             // WMO does not have a non-instantaneous case here!
         }
     }
