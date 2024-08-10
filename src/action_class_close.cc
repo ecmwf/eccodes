@@ -91,18 +91,17 @@ grib_action* grib_action_create_close(grib_context* context, char* filename)
 
 static int execute(grib_action* act, grib_handle* h)
 {
-    char filename[2048] = {0,};
-    size_t len              = 2048;
     grib_action_close* self = (grib_action_close*)act;
-    int err                 = 0;
-    grib_file* file         = 0;
 
-    err = grib_get_string(h, self->filename, filename, &len);
+    char filename[2048] = {0,};
+    size_t len = sizeof(filename);
+
+    int err = grib_get_string(h, self->filename, filename, &len);
     /* fprintf(stderr,"++++ name %s\n",filename); */
     if (err)
         return err;
     /* grib_file_close(filename,1,&err); */
-    file = grib_get_file(filename, &err);
+    grib_file* file = grib_get_file(filename, &err);
     if (err)
         return err;
     if (file)

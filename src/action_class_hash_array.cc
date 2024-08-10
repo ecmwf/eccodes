@@ -231,7 +231,6 @@ static grib_hash_array_value* get_hash_array_impl(grib_handle* h, grib_action* a
     char key[4096]    = {0,};
     char* full = 0;
     int id;
-    int err;
     grib_action_hash_array* self = (grib_action_hash_array*)a;
 
     grib_context* context    = ((grib_action*)self)->context;
@@ -245,7 +244,7 @@ static grib_hash_array_value* get_hash_array_impl(grib_handle* h, grib_action* a
 
     snprintf(buf, 4096, "%s/%s", masterDir, self->basename);
 
-    err = grib_recompose_name(h, NULL, buf, master, 1);
+    int err = grib_recompose_name(h, NULL, buf, master, 1);
     if (err) {
         grib_context_log(context, GRIB_LOG_ERROR,
                          "unable to build name of directory %s", self->masterDir);

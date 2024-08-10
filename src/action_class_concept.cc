@@ -317,10 +317,10 @@ static grib_concept_value* get_concept(grib_handle* h, grib_action_concept* self
 
 static int concept_condition_expression_true(grib_handle* h, grib_concept_condition* c, char* exprVal)
 {
-    long lval;
-    long lres      = 0;
-    int ok         = 0;
-    int err        = 0;
+    long lval = 0;
+    long lres = 0;
+    int ok    = 0;
+    int err   = 0;
     const int type = grib_expression_native_type(h, c->expression);
 
     switch (type) {
