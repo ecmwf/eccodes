@@ -3,4 +3,4 @@
 #
 # This is deprecated and only included for backward compatibility, use template 4.33
 #
-include "grib2/template.4.33.def"
+include "grib2/templates/template.4.33.def"

@@ -1169,6 +1169,8 @@ void grib_context_set_definitions_path(grib_context* c, const char* path);
  */
 void grib_context_set_samples_path(grib_context* c, const char* path);
 
+void grib_context_set_debug(grib_context* c, int mode);
+
 /**
  *  Sets memory procedures of the context
  *

@@ -16,26 +16,23 @@
 class grib_accessor_global_gaussian_t : public grib_accessor_long_t
 {
 public:
-    /* Members defined in global_gaussian */
-    const char*                  N;
-    const char*                  Ni;
-    const char*                  di;
-    const char*                  latfirst;
-    const char*                  lonfirst;
-    const char*                  latlast;
-    const char*                  lonlast;
-    const char*                  plpresent;
-    const char*                  pl;
-    const char*                  basic_angle;
-    const char*                  subdivision;
-};
-
-class grib_accessor_class_global_gaussian_t : public grib_accessor_class_long_t
-{
-public:
-    grib_accessor_class_global_gaussian_t(const char* name) : grib_accessor_class_long_t(name) {}
+    grib_accessor_global_gaussian_t() :
+        grib_accessor_long_t() { class_name_ = "global_gaussian"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_global_gaussian_t{}; }
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* N_;
+    const char* Ni_;
+    const char* di_;
+    const char* latfirst_;
+    const char* lonfirst_;
+    const char* latlast_;
+    const char* lonlast_;
+    const char* plpresent_;
+    const char* pl_;
+    const char* basic_angle_;
+    const char* subdivision_;
 };

@@ -114,7 +114,7 @@ static int execute(grib_action* act, grib_handle* h)
 
     grib_push_accessor(a, p->block);
 
-    if (a->flags & GRIB_ACCESSOR_FLAG_CONSTRAINT)
+    if (a->flags_ & GRIB_ACCESSOR_FLAG_CONSTRAINT)
         grib_dependency_observe_arguments(a, act->default_value);
 
     return a->pack_double(self->darray->v, &len);

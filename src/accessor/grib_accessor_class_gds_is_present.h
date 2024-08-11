@@ -16,19 +16,16 @@
 class grib_accessor_gds_is_present_t : public grib_accessor_long_t
 {
 public:
-    /* Members defined in gds_is_present */
-    const char* gds_present;
-    const char* grid_definition;
-    const char* bitmap_present;
-    const char* values;
-};
-
-class grib_accessor_class_gds_is_present_t : public grib_accessor_class_long_t
-{
-public:
-    grib_accessor_class_gds_is_present_t(const char* name) : grib_accessor_class_long_t(name) {}
+    grib_accessor_gds_is_present_t() :
+        grib_accessor_long_t() { class_name_ = "gds_is_present"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_gds_is_present_t{}; }
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* gds_present_;
+    const char* grid_definition_;
+    const char* bitmap_present_;
+    const char* values_;
 };

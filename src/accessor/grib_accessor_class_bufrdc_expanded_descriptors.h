@@ -16,19 +16,16 @@
 class grib_accessor_bufrdc_expanded_descriptors_t : public grib_accessor_long_t
 {
 public:
-    /* Members defined in bufrdc_expanded_descriptors */
-    const char* expandedDescriptors;
-    grib_accessor* expandedDescriptorsAccessor;
-};
-
-class grib_accessor_class_bufrdc_expanded_descriptors_t : public grib_accessor_class_long_t
-{
-public:
-    grib_accessor_class_bufrdc_expanded_descriptors_t(const char* name) : grib_accessor_class_long_t(name) {}
+    grib_accessor_bufrdc_expanded_descriptors_t() :
+        grib_accessor_long_t() { class_name_ = "bufrdc_expanded_descriptors"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_bufrdc_expanded_descriptors_t{}; }
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    int unpack_string_array(grib_accessor*, char**, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void destroy(grib_context*, grib_accessor*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int unpack_long(long* val, size_t* len) override;
+    int unpack_string_array(char**, size_t* len) override;
+    int value_count(long*) override;
+    void destroy(grib_context*) override;
+    void init(const long, grib_arguments*) override;
+
+public:
+    const char* expandedDescriptors_;
+    grib_accessor* expandedDescriptorsAccessor_;
 };

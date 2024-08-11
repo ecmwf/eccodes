@@ -16,23 +16,20 @@
 class grib_accessor_transient_darray_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in transient_darray */
-    grib_darray* arr;
-    int type;
-};
-
-class grib_accessor_class_transient_darray_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_transient_darray_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_transient_darray_t() :
+        grib_accessor_gen_t() { class_name_ = "transient_darray"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_transient_darray_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int pack_double(grib_accessor*, const double* val, size_t* len) override;
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void destroy(grib_context*, grib_accessor*) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    long get_native_type() override;
+    int pack_double(const double* val, size_t* len) override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_double(double* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    int value_count(long*) override;
+    void destroy(grib_context*) override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    grib_darray* arr_;
+    int type_;
 };

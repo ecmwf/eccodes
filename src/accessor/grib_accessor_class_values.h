@@ -15,25 +15,23 @@
 class grib_accessor_values_t : public grib_accessor_gen_t
 {
 public:
-    int  carg;
-    const char* seclen;
-    const char* offsetdata;
-    const char* offsetsection;
-    int dirty;
-};
-
-class grib_accessor_class_values_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_values_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_values_t() :
+        grib_accessor_gen_t() { class_name_ = "values"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_values_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    long byte_count(grib_accessor*) override;
-    long byte_offset(grib_accessor*) override;
-    long next_offset(grib_accessor*) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
-    void update_size(grib_accessor*, size_t) override;
-    int compare(grib_accessor*, grib_accessor*) override;
+    long get_native_type() override;
+    int pack_long(const long* val, size_t* len) override;
+    long byte_count() override;
+    long byte_offset() override;
+    long next_offset() override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
+    void update_size(size_t) override;
+    int compare(grib_accessor*) override;
+
+public:
+    int carg_;
+    const char* seclen_;
+    const char* offsetdata_;
+    const char* offsetsection_;
+    int dirty_;
 };

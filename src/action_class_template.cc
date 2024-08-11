@@ -161,8 +161,8 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
         else
             la = grib_parse_file(p->h->context, fpath);
     }
-    as->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
-    gs         = as->sub_section;
+    as->flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;
+    gs         = as->sub_section_;
     gs->branch = la; /* Will be used to prevent unnecessary reparse */
 
     grib_push_accessor(as, p->block);
@@ -195,9 +195,9 @@ static grib_action* reparse(grib_action* a, grib_accessor* acc, int* doit)
         char fname[1024];
         grib_recompose_name(grib_handle_of_accessor(acc), NULL, self->arg, fname, 1);
 
-        if ((fpath = grib_context_full_defs_path(acc->context, fname)) == NULL) {
+        if ((fpath = grib_context_full_defs_path(acc->context_, fname)) == NULL) {
             if (!self->nofail) {
-                grib_context_log(acc->context, GRIB_LOG_ERROR,
+                grib_context_log(acc->context_, GRIB_LOG_ERROR,
                                  "Unable to find template %s from %s ", a->name, fname);
                 return NULL;
             }
@@ -205,7 +205,7 @@ static grib_action* reparse(grib_action* a, grib_accessor* acc, int* doit)
         }
 
         /* printf("REPARSE %s\n",fpath); */
-        return grib_parse_file(acc->context, fpath);
+        return grib_parse_file(acc->context_, fpath);
     }
 
     return NULL;

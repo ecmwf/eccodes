@@ -13,25 +13,22 @@
 #define DIRECT  0
 #define INVERSE 1
 
-grib_accessor_class_data_g2simple_packing_with_preprocessing_t _grib_accessor_class_data_g2simple_packing_with_preprocessing{ "data_g2simple_packing_with_preprocessing" };
-grib_accessor_class* grib_accessor_class_data_g2simple_packing_with_preprocessing = &_grib_accessor_class_data_g2simple_packing_with_preprocessing;
+grib_accessor_data_g2simple_packing_with_preprocessing_t _grib_accessor_data_g2simple_packing_with_preprocessing{};
+grib_accessor* grib_accessor_data_g2simple_packing_with_preprocessing = &_grib_accessor_data_g2simple_packing_with_preprocessing;
 
-
-void grib_accessor_class_data_g2simple_packing_with_preprocessing_t::init(grib_accessor* a, const long v, grib_arguments* args)
+void grib_accessor_data_g2simple_packing_with_preprocessing_t::init(const long v, grib_arguments* args)
 {
-    grib_accessor_class_data_g2simple_packing_t::init(a, v, args);
-    grib_accessor_data_g2simple_packing_with_preprocessing_t* self = (grib_accessor_data_g2simple_packing_with_preprocessing_t*)a;
-    self->pre_processing           = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->pre_processing_parameter = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    a->flags |= GRIB_ACCESSOR_FLAG_DATA;
+    grib_accessor_data_g2simple_packing_t::init(v, args);
+    pre_processing_           = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
+    pre_processing_parameter_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
+    flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_class_data_g2simple_packing_with_preprocessing_t::value_count(grib_accessor* a, long* n_vals)
+int grib_accessor_data_g2simple_packing_with_preprocessing_t::value_count(long* n_vals)
 {
-    grib_accessor_data_g2simple_packing_with_preprocessing_t* self = (grib_accessor_data_g2simple_packing_with_preprocessing_t*)a;
     *n_vals = 0;
 
-    return grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_values, n_vals);
+    return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, n_vals);
 }
 
 static int pre_processing_func(double* values, long length, long pre_processing,
@@ -98,10 +95,8 @@ static int pre_processing_func(double* values, long length, long pre_processing,
     return ret;
 }
 
-int grib_accessor_class_data_g2simple_packing_with_preprocessing_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+int grib_accessor_data_g2simple_packing_with_preprocessing_t::unpack_double(double* val, size_t* len)
 {
-    grib_accessor_data_g2simple_packing_with_preprocessing_t* self = (grib_accessor_data_g2simple_packing_with_preprocessing_t*)a;
-
     size_t n_vals = 0;
     long nn       = 0;
     int err       = 0;
@@ -109,7 +104,7 @@ int grib_accessor_class_data_g2simple_packing_with_preprocessing_t::unpack_doubl
     long pre_processing;
     double pre_processing_parameter;
 
-    err    = a->value_count(&nn);
+    err    = value_count(&nn);
     n_vals = nn;
     if (err)
         return err;
@@ -119,17 +114,17 @@ int grib_accessor_class_data_g2simple_packing_with_preprocessing_t::unpack_doubl
         return GRIB_SUCCESS;
     }
 
-    self->dirty = 0;
+    dirty_ = 0;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->pre_processing, &pre_processing)) != GRIB_SUCCESS) {
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), pre_processing_, &pre_processing)) != GRIB_SUCCESS) {
         return err;
     }
 
-    if ((err = grib_get_double_internal(grib_handle_of_accessor(a), self->pre_processing_parameter, &pre_processing_parameter)) != GRIB_SUCCESS) {
+    if ((err = grib_get_double_internal(grib_handle_of_accessor(this), pre_processing_parameter_, &pre_processing_parameter)) != GRIB_SUCCESS) {
         return err;
     }
 
-    err = grib_accessor_class_data_simple_packing_t::unpack_double(a, val, &n_vals);
+    err = grib_accessor_data_simple_packing_t::unpack_double(val, &n_vals);
     if (err != GRIB_SUCCESS)
         return err;
 
@@ -142,33 +137,31 @@ int grib_accessor_class_data_g2simple_packing_with_preprocessing_t::unpack_doubl
     return err;
 }
 
-int grib_accessor_class_data_g2simple_packing_with_preprocessing_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+int grib_accessor_data_g2simple_packing_with_preprocessing_t::pack_double(const double* val, size_t* len)
 {
-    grib_accessor_data_g2simple_packing_with_preprocessing_t* self = (grib_accessor_data_g2simple_packing_with_preprocessing_t*)a;
-
     size_t n_vals = *len;
     int err       = 0;
 
     long pre_processing             = 0;
     double pre_processing_parameter = 0;
 
-    self->dirty = 1;
+    dirty_ = 1;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->pre_processing, &pre_processing)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), pre_processing_, &pre_processing)) != GRIB_SUCCESS)
         return err;
 
     err = pre_processing_func((double*)val, n_vals, pre_processing, &pre_processing_parameter, DIRECT);
     if (err != GRIB_SUCCESS)
         return err;
 
-    err = grib_accessor_class_data_g2simple_packing_t::pack_double(a, val, len);
+    err = grib_accessor_data_g2simple_packing_t::pack_double(val, len);
     if (err != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_set_double_internal(grib_handle_of_accessor(a), self->pre_processing_parameter, pre_processing_parameter)) != GRIB_SUCCESS)
+    if ((err = grib_set_double_internal(grib_handle_of_accessor(this), pre_processing_parameter_, pre_processing_parameter)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->number_of_values, n_vals)) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(grib_handle_of_accessor(this), number_of_values_, n_vals)) != GRIB_SUCCESS)
         return err;
 
     return GRIB_SUCCESS;

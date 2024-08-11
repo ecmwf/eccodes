@@ -11,44 +11,43 @@
 
 #include "grib_accessor_class_position.h"
 
-grib_accessor_class_position_t _grib_accessor_class_position{ "position" };
-grib_accessor_class* grib_accessor_class_position = &_grib_accessor_class_position;
+grib_accessor_position_t _grib_accessor_position{};
+grib_accessor* grib_accessor_position = &_grib_accessor_position;
 
-
-void grib_accessor_class_position_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+void grib_accessor_position_t::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_class_gen_t::init(a, len, arg);
-    a->length = 0;
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
-    a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
+    grib_accessor_gen_t::init(len, arg);
+    length_ = 0;
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;
+    flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
 
-int grib_accessor_class_position_t::get_native_type(grib_accessor* a)
+long grib_accessor_position_t::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
 
-void grib_accessor_class_position_t::dump(grib_accessor* a, grib_dumper* dumper)
+void grib_accessor_position_t::dump(grib_dumper* dumper)
 {
-    grib_dump_long(dumper, a, NULL);
+    grib_dump_long(dumper, this, NULL);
 }
 
-int grib_accessor_class_position_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_position_t::unpack_long(long* val, size_t* len)
 {
     if (*len < 1) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it contains %d values ", a->name, 1);
+        grib_context_log(context_, GRIB_LOG_ERROR, "Wrong size for %s, it contains %d values ", name_, 1);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
-    *val = a->offset;
+    *val = offset_;
     *len = 1;
     return GRIB_SUCCESS;
 }
 
 // static int compare(grib_accessor* a, grib_accessor* b)
 // {
-//     if (a->offset != b->offset)
+//     if (offset_ != b->offset)
 //         return GRIB_OFFSET_MISMATCH;
 //     return GRIB_SUCCESS;
 // }

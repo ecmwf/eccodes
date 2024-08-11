@@ -16,22 +16,19 @@
 class grib_accessor_g1number_of_coded_values_sh_complex_t : public grib_accessor_long_t
 {
 public:
-    /* Members defined in g1number_of_coded_values_sh_complex */
-    const char* numberOfValues;
-    const char* bitsPerValue;
-    const char* offsetBeforeData;
-    const char* offsetAfterData;
-    const char* unusedBits;
-    const char* JS;
-    const char* KS;
-    const char* MS;
-};
-
-class grib_accessor_class_g1number_of_coded_values_sh_complex_t : public grib_accessor_class_long_t
-{
-public:
-    grib_accessor_class_g1number_of_coded_values_sh_complex_t(const char* name) : grib_accessor_class_long_t(name) {}
+    grib_accessor_g1number_of_coded_values_sh_complex_t() :
+        grib_accessor_long_t() { class_name_ = "g1number_of_coded_values_sh_complex"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_g1number_of_coded_values_sh_complex_t{}; }
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int unpack_long(long* val, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* numberOfValues_;
+    const char* bitsPerValue_;
+    const char* offsetBeforeData_;
+    const char* offsetAfterData_;
+    const char* unusedBits_;
+    const char* JS_;
+    const char* KS_;
+    const char* MS_;
 };

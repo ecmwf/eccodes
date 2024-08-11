@@ -15,22 +15,19 @@
 class grib_accessor_data_run_length_packing_t : public grib_accessor_values_t
 {
 public:
-    /* Members defined in data_run_length_packing */
-    const char*  number_of_values;
-    const char*  bits_per_value;
-    const char*  max_level_value;
-    const char*  number_of_level_values;
-    const char*  decimal_scale_factor;
-    const char*  level_values;
-};
-
-class grib_accessor_class_data_run_length_packing_t : public grib_accessor_class_values_t
-{
-public:
-    grib_accessor_class_data_run_length_packing_t(const char* name) : grib_accessor_class_values_t(name) {}
+    grib_accessor_data_run_length_packing_t() :
+        grib_accessor_values_t() { class_name_ = "data_run_length_packing"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_data_run_length_packing_t{}; }
-    int pack_double(grib_accessor*, const double* val, size_t* len) override;
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_double(const double* val, size_t* len) override;
+    int unpack_double(double* val, size_t* len) override;
+    int value_count(long*) override;
+    void init(const long, grib_arguments*) override;
+
+public:
+    const char* number_of_values_;
+    const char* bits_per_value_;
+    const char* max_level_value_;
+    const char* number_of_level_values_;
+    const char* decimal_scale_factor_;
+    const char* level_values_;
 };

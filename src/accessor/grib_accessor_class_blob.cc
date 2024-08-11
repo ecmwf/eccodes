@@ -11,37 +11,36 @@
 
 #include "grib_accessor_class_blob.h"
 
-grib_accessor_class_blob_t _grib_accessor_class_blob{ "blob" };
-grib_accessor_class* grib_accessor_class_blob = &_grib_accessor_class_blob;
+grib_accessor_blob_t _grib_accessor_blob{};
+grib_accessor* grib_accessor_blob = &_grib_accessor_blob;
 
-
-void grib_accessor_class_blob_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+void grib_accessor_blob_t::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_class_gen_t::init(a, len, arg);
-    grib_get_long_internal(grib_handle_of_accessor(a),
-                           grib_arguments_get_name(a->parent->h, arg, 0), &a->length);
-    Assert(a->length >= 0);
+    grib_accessor_gen_t::init(len, arg);
+    grib_get_long_internal(grib_handle_of_accessor(this),
+                           grib_arguments_get_name(parent_->h, arg, 0), &length_);
+    Assert(length_ >= 0);
 }
 
-int grib_accessor_class_blob_t::get_native_type(grib_accessor* a)
+long grib_accessor_blob_t::get_native_type()
 {
     return GRIB_TYPE_BYTES;
 }
 
-int grib_accessor_class_blob_t::unpack_bytes(grib_accessor* a, unsigned char* buffer, size_t* len)
+int grib_accessor_blob_t::unpack_bytes(unsigned char* buffer, size_t* len)
 {
-    if (*len < (size_t)a->length) {
-        *len = a->length;
+    if (*len < (size_t)length_) {
+        *len = length_;
         return GRIB_ARRAY_TOO_SMALL;
     }
-    *len = a->length;
+    *len = length_;
 
-    memcpy(buffer, grib_handle_of_accessor(a)->buffer->data + a->offset, *len);
+    memcpy(buffer, grib_handle_of_accessor(this)->buffer->data + offset_, *len);
 
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_class_blob_t::dump(grib_accessor* a, grib_dumper* dumper)
+void grib_accessor_blob_t::dump(grib_dumper* dumper)
 {
-    grib_dump_bytes(dumper, a, NULL);
+    grib_dump_bytes(dumper, this, NULL);
 }

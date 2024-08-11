@@ -15,19 +15,16 @@
 class grib_accessor_data_g1simple_packing_t : public grib_accessor_data_simple_packing_t
 {
 public:
-    /* Members defined in data_g1simple_packing */
-    const char*  half_byte;
-    const char*  packingType;
-    const char*  ieee_packing;
-    const char*  precision;
-};
-
-class grib_accessor_class_data_g1simple_packing_t : public grib_accessor_class_data_simple_packing_t
-{
-public:
-    grib_accessor_class_data_g1simple_packing_t(const char* name) : grib_accessor_class_data_simple_packing_t(name) {}
+    grib_accessor_data_g1simple_packing_t() :
+        grib_accessor_data_simple_packing_t() { class_name_ = "data_g1simple_packing"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_data_g1simple_packing_t{}; }
-    int pack_double(grib_accessor*, const double* val, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_double(const double* val, size_t* len) override;
+    int value_count(long*) override;
+    void init(const long, grib_arguments*) override;
+
+public:
+    const char* half_byte_;
+    const char* packingType_;
+    const char* ieee_packing_;
+    const char* precision_;
 };

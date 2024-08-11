@@ -11,16 +11,14 @@
 
 #include "grib_accessor_class_g2bitmap.h"
 
-grib_accessor_class_g2bitmap_t _grib_accessor_class_g2bitmap{ "g2bitmap" };
-grib_accessor_class* grib_accessor_class_g2bitmap = &_grib_accessor_class_g2bitmap;
+grib_accessor_g2bitmap_t _grib_accessor_g2bitmap{};
+grib_accessor* grib_accessor_g2bitmap = &_grib_accessor_g2bitmap;
 
-
-void grib_accessor_class_g2bitmap_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+void grib_accessor_g2bitmap_t::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_class_bitmap_t::init(a, len, arg);
-    grib_accessor_g2bitmap_t* self = (grib_accessor_g2bitmap_t*)a;
+    grib_accessor_bitmap_t::init(len, arg);
 
-    self->numberOfValues = grib_arguments_get_name(grib_handle_of_accessor(a), arg, 4);
+    numberOfValues_ = grib_arguments_get_name(grib_handle_of_accessor(this), arg, 4);
 }
 
 // For speed use a local static function
@@ -31,22 +29,20 @@ static GRIB_INLINE void set_bit_on(unsigned char* p, long* bitp)
     (*bitp)++;
 }
 
-int grib_accessor_class_g2bitmap_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+int grib_accessor_g2bitmap_t::pack_double(const double* val, size_t* len)
 {
-    grib_accessor_g2bitmap_t* self = (grib_accessor_g2bitmap_t*)a;
-
     unsigned char* buf = NULL;
     size_t i;
     int err  = 0;
     long pos = 0;
     // long bmaplen       = 0;
     double miss_values = 0;
-    size_t tlen = (*len + 7) / 8;
+    size_t tlen        = (*len + 7) / 8;
 
-    if ((err = grib_get_double_internal(grib_handle_of_accessor(a), self->missing_value, &miss_values)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(grib_handle_of_accessor(this), missing_value_, &miss_values)) != GRIB_SUCCESS)
         return err;
 
-    buf = (unsigned char*)grib_context_malloc_clear(a->context, tlen);
+    buf = (unsigned char*)grib_context_malloc_clear(context_, tlen);
     if (!buf)
         return GRIB_OUT_OF_MEMORY;
     pos = 0;
@@ -59,25 +55,23 @@ int grib_accessor_class_g2bitmap_t::pack_double(grib_accessor* a, const double* 
         }
     }
 
-    if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->numberOfValues, *len)) != GRIB_SUCCESS) {
-        grib_context_free(a->context, buf);
+    if ((err = grib_set_long_internal(grib_handle_of_accessor(this), numberOfValues_, *len)) != GRIB_SUCCESS) {
+        grib_context_free(context_, buf);
         return err;
     }
 
-    grib_buffer_replace(a, buf, tlen, 1, 1);
+    grib_buffer_replace(this, buf, tlen, 1, 1);
 
-    grib_context_free(a->context, buf);
+    grib_context_free(context_, buf);
 
     return GRIB_SUCCESS;
 }
 
-
-int grib_accessor_class_g2bitmap_t::value_count(grib_accessor* a, long* tlen)
+int grib_accessor_g2bitmap_t::value_count(long* tlen)
 {
-    grib_accessor_g2bitmap_t* self = (grib_accessor_g2bitmap_t*)a;
     int err;
     *tlen = 0;
 
-    err = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfValues, tlen);
+    err = grib_get_long_internal(grib_handle_of_accessor(this), numberOfValues_, tlen);
     return err;
 }

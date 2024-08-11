@@ -10,8 +10,6 @@
 
 /***************************************************************************
  *   Jean Baptiste Filippi - 01.11.2005                                    *
- *   Enrico Fucile
- *                                                                         *
  ***************************************************************************/
 #include "grib_api_internal.h"
 
@@ -412,7 +410,7 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
             grib_context_free(h->context, lval);
             break;
         case GRIB_TYPE_BYTES:
-            replen = a->length;
+            replen = a->length_;
             bval   = (unsigned char*)grib_context_malloc(h->context, replen * sizeof(unsigned char));
             ret    = al->accessor->unpack_bytes(bval, &replen);
             for (j = 0; j < replen; j++) {
@@ -423,7 +421,7 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
             break;
         default:
             grib_context_log(h->context, GRIB_LOG_WARNING,
-                             "Accessor print: Problem printing \"%s\", invalid type %d", a->name, grib_get_type_name(type));
+                             "Accessor print: Problem printing \"%s\", invalid type %d", a->name_, grib_get_type_name(type));
     }
     return ret;
 }

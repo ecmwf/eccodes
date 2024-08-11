@@ -16,13 +16,8 @@
 class grib_accessor_g1fcperiod_t : public grib_accessor_g1step_range_t
 {
 public:
-    /* Members defined in g1fcperiod */
-};
-
-class grib_accessor_class_g1fcperiod_t : public grib_accessor_class_g1step_range_t
-{
-public:
-    grib_accessor_class_g1fcperiod_t(const char* name) : grib_accessor_class_g1step_range_t(name) {}
+    grib_accessor_g1fcperiod_t() :
+        grib_accessor_g1step_range_t() { class_name_ = "g1fcperiod"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_g1fcperiod_t{}; }
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
+    int unpack_string(char*, size_t* len) override;
 };

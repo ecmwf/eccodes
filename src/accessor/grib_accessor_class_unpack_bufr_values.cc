@@ -11,70 +11,63 @@
 #include "grib_accessor_class_unpack_bufr_values.h"
 #include "grib_accessor_class_bufr_data_array.h"
 
-grib_accessor_class_unpack_bufr_values_t _grib_accessor_class_unpack_bufr_values{ "unpack_bufr_values" };
-grib_accessor_class* grib_accessor_class_unpack_bufr_values = &_grib_accessor_class_unpack_bufr_values;
+grib_accessor_unpack_bufr_values_t _grib_accessor_unpack_bufr_values{};
+grib_accessor* grib_accessor_unpack_bufr_values = &_grib_accessor_unpack_bufr_values;
 
-void grib_accessor_class_unpack_bufr_values_t::init(grib_accessor* a, const long len, grib_arguments* params)
+void grib_accessor_unpack_bufr_values_t::init(const long len, grib_arguments* params)
 {
-    grib_accessor_class_gen_t::init(a, len, params);
+    grib_accessor_gen_t::init(len, params);
     char* key;
-    grib_accessor_unpack_bufr_values_t* self = (grib_accessor_unpack_bufr_values_t*)a;
-    key = (char*)grib_arguments_get_name(grib_handle_of_accessor(a), params, 0);
-    self->data_accessor = grib_find_accessor(grib_handle_of_accessor(a), key);
+    key            = (char*)grib_arguments_get_name(grib_handle_of_accessor(this), params, 0);
+    data_accessor_ = grib_find_accessor(grib_handle_of_accessor(this), key);
 
-    a->length = 0;
+    length_ = 0;
 }
 
-void grib_accessor_class_unpack_bufr_values_t::dump(grib_accessor* a, grib_dumper* dumper)
+void grib_accessor_unpack_bufr_values_t::dump(grib_dumper* dumper)
 {
 }
 
-int grib_accessor_class_unpack_bufr_values_t::unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
+int grib_accessor_unpack_bufr_values_t::unpack_string_array(char** buffer, size_t* len)
 {
-    grib_accessor_unpack_bufr_values_t* self = (grib_accessor_unpack_bufr_values_t*)a;
-    grib_accessor* data                      = (grib_accessor*)self->data_accessor;
-
+    grib_accessor* data = (grib_accessor*)data_accessor_;
     return data->unpack_double(0, 0);
 }
 
-int grib_accessor_class_unpack_bufr_values_t::unpack_string(grib_accessor* a, char* buffer, size_t* len)
+int grib_accessor_unpack_bufr_values_t::unpack_string(char* buffer, size_t* len)
 {
-    grib_accessor_unpack_bufr_values_t* self = (grib_accessor_unpack_bufr_values_t*)a;
-    grib_accessor* data                      = (grib_accessor*)self->data_accessor;
+    grib_accessor* data = (grib_accessor*)data_accessor_;
     strcpy(buffer, "0");
     *len = 1;
 
     return data->unpack_double(0, 0);
 }
 
-int grib_accessor_class_unpack_bufr_values_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_unpack_bufr_values_t::unpack_long(long* val, size_t* len)
 {
-    grib_accessor_unpack_bufr_values_t* self = (grib_accessor_unpack_bufr_values_t*)a;
-    grib_accessor* data                      = (grib_accessor*)self->data_accessor;
+    grib_accessor* data = (grib_accessor*)data_accessor_;
+    return data->unpack_double(0, 0);
+}
+
+int grib_accessor_unpack_bufr_values_t::unpack_double(double* val, size_t* len)
+{
+    grib_accessor* data = (grib_accessor*)data_accessor_;
 
     return data->unpack_double(0, 0);
 }
 
-int grib_accessor_class_unpack_bufr_values_t::unpack_double(grib_accessor* a, double* val, size_t* len)
-{
-    grib_accessor_unpack_bufr_values_t* self = (grib_accessor_unpack_bufr_values_t*)a;
-    grib_accessor* data                      = (grib_accessor*)self->data_accessor;
-
-    return data->unpack_double(0, 0);
-}
-
-int grib_accessor_class_unpack_bufr_values_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_unpack_bufr_values_t::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-void grib_accessor_class_unpack_bufr_values_t::destroy(grib_context* context, grib_accessor* a)
+void grib_accessor_unpack_bufr_values_t::destroy(grib_context* context)
 {
-    grib_accessor_class_gen_t::destroy(context, a);
+    grib_accessor_gen_t::destroy(context);
 }
 
-int grib_accessor_class_unpack_bufr_values_t::get_native_type(grib_accessor* a)
+long grib_accessor_unpack_bufr_values_t::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
@@ -87,26 +80,21 @@ int grib_accessor_class_unpack_bufr_values_t::get_native_type(grib_accessor* a)
 //     return "unknown proc flag";
 // }
 
-int grib_accessor_class_unpack_bufr_values_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_unpack_bufr_values_t::pack_long(const long* val, size_t* len)
 {
     int unpackMode = CODES_BUFR_UNPACK_STRUCTURE;
-    grib_accessor_unpack_bufr_values_t* self = (grib_accessor_unpack_bufr_values_t*)a;
-    grib_accessor* data = (grib_accessor*)self->data_accessor;
 
     if (*val == 2)
         unpackMode = CODES_BUFR_UNPACK_FLAT;
     if (*val == 3)
         unpackMode = CODES_BUFR_NEW_DATA;
 
-    accessor_bufr_data_array_set_unpackMode(data, unpackMode);
+    accessor_bufr_data_array_set_unpackMode(data_accessor_, unpackMode);
 
-    return data->unpack_double(0, 0);
+    return data_accessor_->unpack_double(0, 0);
 }
 
-int grib_accessor_class_unpack_bufr_values_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+int grib_accessor_unpack_bufr_values_t::pack_double(const double* val, size_t* len)
 {
-    grib_accessor_unpack_bufr_values_t* self = (grib_accessor_unpack_bufr_values_t*)a;
-    grib_accessor* data                      = (grib_accessor*)self->data_accessor;
-
-    return data->unpack_double(0, 0);
+    return data_accessor_->unpack_double(0, 0);
 }

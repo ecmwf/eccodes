@@ -585,6 +585,11 @@ void codes_context_set_samples_path(grib_context* c, const char* path)
     grib_context_set_samples_path(c, path);
 }
 
+void codes_context_set_debug(grib_context* c, int mode)
+{
+    grib_context_set_debug(c, mode);
+}
+
 void codes_context_set_memory_proc(grib_context* c, grib_malloc_proc p_malloc, grib_free_proc p_free, grib_realloc_proc p_realloc)
 {
     grib_context_set_memory_proc(c, p_malloc, p_free, p_realloc);

@@ -30,7 +30,6 @@ list(APPEND test_c_bins
     grib_keys_iter
     grib_keys_iter_skip
     grib_geo_iter
-    gauss_sub
     grib_nearest_test
     grib_util_set_spec
     grib_util_set_spec2
@@ -61,7 +60,6 @@ list(APPEND test_c_bins
     codes_codetable
     codes_get_string
     grib_sh_ieee64
-    grib_ieee
     grib_set_bytes
     grib_copy_message
     grib_packing_order

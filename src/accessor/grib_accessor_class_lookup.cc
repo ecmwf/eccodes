@@ -10,40 +10,39 @@
 
 #include "grib_accessor_class_lookup.h"
 
-grib_accessor_class_lookup_t _grib_accessor_class_lookup{ "lookup" };
-grib_accessor_class* grib_accessor_class_lookup = &_grib_accessor_class_lookup;
+grib_accessor_lookup_t _grib_accessor_lookup{};
+grib_accessor* grib_accessor_lookup = &_grib_accessor_lookup;
 
-
-void grib_accessor_class_lookup_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+void grib_accessor_lookup_t::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_class_long_t::init(a, len, arg);
-    grib_accessor_lookup_t* self = (grib_accessor_lookup_t*)a;
-
-    a->length     = 0;
-    self->llength = len;
-    self->loffset = grib_arguments_get_long(grib_handle_of_accessor(a), arg, 0);
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    self->real_name = grib_arguments_get_expression(grib_handle_of_accessor(a), arg, 1);
+    grib_accessor_long_t::init(len, arg);
+    length_  = 0;
+    llength_ = len;
+    loffset_ = grib_arguments_get_long(grib_handle_of_accessor(this), arg, 0);
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    real_name_ = grib_arguments_get_expression(grib_handle_of_accessor(this), arg, 1);
 }
 
-void grib_accessor_class_lookup_t::post_init(grib_accessor* a)
+void grib_accessor_lookup_t::post_init()
 {
-    grib_accessor_lookup_t* self = (grib_accessor_lookup_t*)a;
-    if (self->real_name) {
-        grib_dependency_observe_expression(a, self->real_name);
+    if (real_name_) {
+        grib_dependency_observe_expression(this, real_name_);
     }
 }
 
-void grib_accessor_class_lookup_t::dump(grib_accessor* a, grib_dumper* dumper)
+void grib_accessor_lookup_t::dump(grib_dumper* dumper)
 {
-    grib_accessor_lookup_t* self = (grib_accessor_lookup_t*)a;
-    unsigned char bytes[1024] = {0,};
-    char msg[1024] = {0,};
+    unsigned char bytes[1024] = {
+        0,
+    };
+    char msg[1024] = {
+        0,
+    };
     char buf[2048];
     unsigned long v = 0;
 
-    size_t llen = self->llength;
-    a->unpack_bytes(bytes, &llen);
+    size_t llen = llength_;
+    unpack_bytes(bytes, &llen);
     bytes[llen] = 0;
     for (size_t i = 0; i < llen; i++) {
         msg[i] = isprint(bytes[i]) ? bytes[i] : '?';
@@ -53,18 +52,20 @@ void grib_accessor_class_lookup_t::dump(grib_accessor* a, grib_dumper* dumper)
 
     msg[llen] = 0;
 
-    snprintf(buf, sizeof(buf), "%s %lu %ld-%ld", msg, v, (long)a->offset + self->loffset, (long)self->llength);
+    snprintf(buf, sizeof(buf), "%s %lu %ld-%ld", msg, v, (long)offset_ + loffset_, (long)llength_);
 
-    grib_dump_long(dumper, a, buf);
+    grib_dump_long(dumper, this, buf);
 }
 
-int grib_accessor_class_lookup_t::unpack_string(grib_accessor* a, char* v, size_t* len)
+int grib_accessor_lookup_t::unpack_string(char* v, size_t* len)
 {
-    grib_accessor_lookup_t* self = (grib_accessor_lookup_t*)a;
-    unsigned char bytes[1024]    = {0,};
+    unsigned char bytes[1024] = {
+        0,
+    };
+    int i;
 
-    size_t llen = self->llength;
-    a->unpack_bytes(bytes, &llen);
+    size_t llen = llength_;
+    unpack_bytes(bytes, &llen);
     bytes[llen] = 0;
 
     for (size_t i = 0; i < llen; i++) {
@@ -76,7 +77,7 @@ int grib_accessor_class_lookup_t::unpack_string(grib_accessor* a, char* v, size_
         /* Try unpack as long */
         size_t length = 10;
         long lval     = 0;
-        int err       = unpack_long(a, &lval, &length);
+        int err       = unpack_long(&lval, &length);
         if (!err) {
             char str[5];
             int conv = snprintf(str, sizeof(str), "%ld", lval);
@@ -89,15 +90,14 @@ int grib_accessor_class_lookup_t::unpack_string(grib_accessor* a, char* v, size_
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_lookup_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_lookup_t::unpack_long(long* val, size_t* len)
 {
-    grib_accessor_lookup_t* self = (grib_accessor_lookup_t*)a;
-    grib_handle* h               = grib_handle_of_accessor(a);
+    grib_handle* h = grib_handle_of_accessor(this);
 
-    long pos = (a->offset + self->loffset) * 8;
+    long pos = (offset_ + loffset_) * 8;
 
     if (len[0] < 1) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name, 1);
+        grib_context_log(context_, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", name_, 1);
         len[0] = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -105,36 +105,34 @@ int grib_accessor_class_lookup_t::unpack_long(grib_accessor* a, long* val, size_
     /* This is used when reparsing or rebuilding */
     if (h->loader) {
         Assert(*len == 1);
-        return h->loader->lookup_long(h->context, h->loader, a->name, val);
+        return h->loader->lookup_long(h->context, h->loader, name_, val);
     }
 
-    val[0] = grib_decode_unsigned_long(h->buffer->data, &pos, self->llength * 8);
+    val[0] = grib_decode_unsigned_long(h->buffer->data, &pos, llength_ * 8);
     len[0] = 1;
 
-    /*printf("###########lookup unpack_long: %s %ld %ld\n",a->name, pos/8, val[0]);*/
+    /*printf("###########lookup unpack_long: %s %ld %ld\n",name_ , pos/8, val[0]);*/
 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_lookup_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_lookup_t::pack_long(const long* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-long grib_accessor_class_lookup_t::byte_count(grib_accessor* a)
+long grib_accessor_lookup_t::byte_count()
 {
-    grib_accessor_lookup_t* self = (grib_accessor_lookup_t*)a;
-    return self->llength;
+    return llength_;
 }
 
-long grib_accessor_class_lookup_t::byte_offset(grib_accessor* a)
+long grib_accessor_lookup_t::byte_offset()
 {
-    grib_accessor_lookup_t* self = (grib_accessor_lookup_t*)a;
-    return self->loffset;
+    return loffset_;
 }
 
-int grib_accessor_class_lookup_t::notify_change(grib_accessor* self, grib_accessor* changed)
+int grib_accessor_lookup_t::notify_change(grib_accessor* changed)
 {
     /* Forward changes */
-    return grib_dependency_notify_change(self);
+    return grib_dependency_notify_change(this);
 }

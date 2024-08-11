@@ -181,6 +181,12 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 45 ;
 	}
+#Lake cover
+'cl' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	}
 #Low vegetation cover
 'cvl' = {
 	 discipline = 2 ;
@@ -5415,12 +5421,6 @@
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 12 ;
-	}
-#Water fraction
-'fldfrc' = {
-	 discipline = 1 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 2 ;
 	}
 #Days since last observation
 'dslr' = {

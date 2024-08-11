@@ -10,12 +10,11 @@
 
 #include "grib_accessor_class_variable.h"
 
-class grib_accessor_constant_t : public grib_accessor_variable_t {};
-
-class grib_accessor_class_constant_t : public grib_accessor_class_variable_t
+class grib_accessor_constant_t : public grib_accessor_variable_t
 {
 public:
-    grib_accessor_class_constant_t(const char* name) : grib_accessor_class_variable_t(name) {}
+    grib_accessor_constant_t() :
+        grib_accessor_variable_t() { class_name_ = "constant"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_constant_t{}; }
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    void init(const long, grib_arguments*) override;
 };

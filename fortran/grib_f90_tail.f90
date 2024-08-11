@@ -3177,6 +3177,13 @@
     end if
   end subroutine grib_skip_read_only
 
+  !> Set debug mode
+  subroutine grib_set_debug(mode)
+    integer(kind=kindOfInt), intent(in) :: mode
+    call grib_f_set_debug(mode)
+  end subroutine grib_set_debug
+
+
   !> Set the definition path
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will

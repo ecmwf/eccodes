@@ -3,8 +3,8 @@
 # TEMPLATE 3.32769 - Rotate Latitude/Longitude (Arakawa Non-E Staggered grid)
 # See https://www.nco.ncep.noaa.gov/pmb/docs/grib2/grib2_doc/grib2_temp3-32769.shtml
 
-include "grib2/template.3.shape_of_the_earth.def";
-include "grib2/template.3.grid.def";
+include "grib2/templates/template.3.shape_of_the_earth.def";
+include "grib2/templates/template.3.grid.def";
 
 meta latitudeOfFirstGridPointInDegrees  scale(La1,one,grib2divider,truncateDegrees) : dump;
 meta longitudeOfFirstGridPointInDegrees scale(Lo1,one,grib2divider,truncateDegrees) : dump;

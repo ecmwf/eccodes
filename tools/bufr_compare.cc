@@ -348,7 +348,7 @@ int grib_tool_init(grib_runtime_options* options)
             if (path_is_directory(infile->name)) {
                 /* Take the filename of the 1st file and append to dir */
                 char bufr[2048] = {0,};
-                /* options->infile_extra->name is the 1st file */
+                /* options->infile_extra->name_ is the 1st file */
                 snprintf(bufr, sizeof(bufr), "%s%c%s",
                         infile->name,
                         get_dir_separator_char(),
@@ -1089,22 +1089,22 @@ static int compare_attributes(grib_handle* handle1, grib_handle* handle2, grib_r
                               grib_accessor* a, const char* prefix, int* err)
 {
     int i = 0, ret = 0;
-    while (i < MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
+    while (i < MAX_ACCESSOR_ATTRIBUTES && a->attributes_[i]) {
         /*long native_type = 0;*/
         grib_accessor* aa = NULL;
-        if ((a->attributes[i]->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0) {
+        if ((a->attributes_[i]->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0) {
             ++i; /* next attribute if accessor is not for dumping */
             continue;
         }
-        if ((a->attributes[i]->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0) {
+        if ((a->attributes_[i]->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0) {
             ++i; /* next attribute if accessor is read-only */
             continue;
         }
 
-        aa = a->attributes[i];
+        aa = a->attributes_[i];
         /*native_type = grib_accessor_get_native_type(aa);   TODO: read only check? */
 
-        isLeafKey = aa->attributes[0] == NULL ? 1 : 0; /* update global variable */
+        isLeafKey = aa->attributes_[0] == NULL ? 1 : 0; /* update global variable */
 
         if (compare_attribute(handle1, handle2, options, aa, prefix, err)) {
             (*err)++;
@@ -1122,9 +1122,9 @@ static int compare_attribute(grib_handle* handle1, grib_handle* handle2, grib_ru
 {
     int ret         = 0;
     grib_context* c = handle1->context;
-    const size_t fullnameMaxLen = strlen(a->name) + strlen(prefix) + 5;
+    const size_t fullnameMaxLen = strlen(a->name_) + strlen(prefix) + 5;
     char* fullname  = (char*)grib_context_malloc_clear(c, sizeof(char) * fullnameMaxLen);
-    snprintf(fullname, fullnameMaxLen, "%s->%s", prefix, a->name);
+    snprintf(fullname, fullnameMaxLen, "%s->%s", prefix, a->name_);
     if (compare_values(options, handle1, handle2, fullname, GRIB_TYPE_UNDEFINED)) {
         (*err)++;
         ret = 1;
@@ -1181,19 +1181,19 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
         name      = grib_keys_iterator_get_name(iter);
         if (blocklisted(name))
             continue;
-        if (xa == NULL || (xa->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+        if (xa == NULL || (xa->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
             continue;
 
         /* Get full name of key, e.g. '#2#windSpeed' or 'blockNumber' */
-        rank = compute_bufr_key_rank(handle1, keys_list, xa->name);
+        rank = compute_bufr_key_rank(handle1, keys_list, xa->name_);
         if (rank != 0) {
-            const size_t prefixMaxLen = strlen(xa->name) + 10;
+            const size_t prefixMaxLen = strlen(xa->name_) + 10;
             prefix = (char*)grib_context_malloc_clear(context, sizeof(char) * prefixMaxLen);
             dofree = 1;
-            snprintf(prefix, prefixMaxLen, "#%d#%s", rank, xa->name);
+            snprintf(prefix, prefixMaxLen, "#%d#%s", rank, xa->name_);
         }
         else {
-            prefix = (char*)xa->name;
+            prefix = (char*)xa->name_;
         }
 
         if (blocklisted(prefix)) {

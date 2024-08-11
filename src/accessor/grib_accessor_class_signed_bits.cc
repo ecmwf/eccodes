@@ -10,13 +10,12 @@
 
 #include "grib_accessor_class_signed_bits.h"
 
-grib_accessor_class_signed_bits_t _grib_accessor_class_signed_bits{ "signed_bits" };
-grib_accessor_class* grib_accessor_class_signed_bits = &_grib_accessor_class_signed_bits;
+grib_accessor_signed_bits_t _grib_accessor_signed_bits{};
+grib_accessor* grib_accessor_signed_bits = &_grib_accessor_signed_bits;
 
-
-long grib_accessor_class_signed_bits_t::byte_count(grib_accessor* a)
+long grib_accessor_signed_bits_t::byte_count()
 {
-    return a->length;
+    return length_;
 }
 
 static long compute_byte_count(grib_accessor* a)
@@ -26,41 +25,39 @@ static long compute_byte_count(grib_accessor* a)
     long numberOfElements;
     int ret = 0;
 
-    ret = grib_get_long(grib_handle_of_accessor(a), self->numberOfBits, &numberOfBits);
+    ret = grib_get_long(grib_handle_of_accessor(a), self->numberOfBits_, &numberOfBits);
     if (ret) {
-        grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "%s unable to get %s to compute size", a->name, self->numberOfBits);
+        grib_context_log(a->context_, GRIB_LOG_ERROR,
+                         "%s unable to get %s to compute size", a->name_, self->numberOfBits_);
         return 0;
     }
 
-    ret = grib_get_long(grib_handle_of_accessor(a), self->numberOfElements, &numberOfElements);
+    ret = grib_get_long(grib_handle_of_accessor(a), self->numberOfElements_, &numberOfElements);
     if (ret) {
-        grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "%s unable to get %s to compute size", a->name, self->numberOfElements);
+        grib_context_log(a->context_, GRIB_LOG_ERROR,
+                         "%s unable to get %s to compute size", a->name_, self->numberOfElements_);
         return 0;
     }
 
     return (numberOfBits * numberOfElements + 7) / 8;
 }
 
-void grib_accessor_class_signed_bits_t::init(grib_accessor* a, const long len, grib_arguments* args)
+void grib_accessor_signed_bits_t::init(const long len, grib_arguments* args)
 {
-    grib_accessor_class_long_t::init(a, len, args);
-    grib_accessor_signed_bits_t* self = (grib_accessor_signed_bits_t*)a;
-    int n                             = 0;
-    self->numberOfBits                = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
-    self->numberOfElements            = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
-    a->length                         = compute_byte_count(a);
+    grib_accessor_long_t::init(len, args);
+    int n             = 0;
+    numberOfBits_     = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
+    numberOfElements_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
+    length_           = compute_byte_count(this);
 }
 
-int grib_accessor_class_signed_bits_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_signed_bits_t::unpack_long(long* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 #if 0
-    grib_accessor_signed_bits_t* self = (grib_accessor_signed_bits_t*)a;
     int i;
     int ret           = 0;
-    long pos          = a->offset * 8;
+    long pos          = offset_ * 8;
     long rlen         = 0;
     long numberOfBits = 0;
 
@@ -69,13 +66,13 @@ int grib_accessor_class_signed_bits_t::unpack_long(grib_accessor* a, long* val, 
         return ret;
 
     if (*len < rlen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "Wrong size (%ld) for %s it contains %ld values", *len, a->name, rlen);
+        grib_context_log(context_ , GRIB_LOG_ERROR,
+                         "Wrong size (%ld) for %s it contains %ld values", *len, name_ , rlen);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    ret = grib_get_long(grib_handle_of_accessor(a), self->numberOfBits, &numberOfBits);
+    ret = grib_get_long(grib_handle_of_accessor(this), numberOfBits_ , &numberOfBits);
     if (ret)
         return ret;
 
@@ -86,7 +83,7 @@ int grib_accessor_class_signed_bits_t::unpack_long(grib_accessor* a, long* val, 
     }
 
     for (i = 0; i < rlen; i++)
-        val[i] = grib_decode_signed_longb(grib_handle_of_accessor(a)->buffer->data, &pos, numberOfBits);
+        val[i] = grib_decode_signed_longb(grib_handle_of_accessor(this)->buffer->data, &pos, numberOfBits);
 
     *len = rlen;
 
@@ -94,11 +91,10 @@ int grib_accessor_class_signed_bits_t::unpack_long(grib_accessor* a, long* val, 
 #endif
 }
 
-int grib_accessor_class_signed_bits_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_signed_bits_t::pack_long(const long* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 #if 0
-    grib_accessor_signed_bits_t* self = (grib_accessor_signed_bits_t*)a;
     int ret                         = 0;
     long off                        = 0;
     long numberOfBits               = 0;
@@ -113,48 +109,47 @@ int grib_accessor_class_signed_bits_t::pack_long(grib_accessor* a, const long* v
         return ret;
     rlen = count;
     if (*len != rlen) {
-        ret = grib_set_long(grib_handle_of_accessor(a), self->numberOfElements, rlen);
+        ret = grib_set_long(grib_handle_of_accessor(this), numberOfElements_ , rlen);
         if (ret)
             return ret;
     }
 
-    ret = grib_get_long(grib_handle_of_accessor(a), self->numberOfBits, &numberOfBits);
+    ret = grib_get_long(grib_handle_of_accessor(this), numberOfBits_ , &numberOfBits);
     if (ret)
         return ret;
 
     buflen = compute_byte_count(a);
-    buf    = (unsigned char*)grib_context_malloc_clear(a->context, buflen + sizeof(long));
+    buf    = (unsigned char*)grib_context_malloc_clear(context_ , buflen + sizeof(long));
 
     for (i = 0; i < rlen; i++)
         grib_encode_signed_longb(buf, val[i], &off, numberOfBits);
 
     grib_buffer_replace(a, buf, buflen, 1, 1);
 
-    grib_context_free(a->context, buf);
+    grib_context_free(context_ , buf);
 
     return ret;
 #endif
 }
 
-int grib_accessor_class_signed_bits_t::value_count(grib_accessor* a, long* numberOfElements)
+int grib_accessor_signed_bits_t::value_count(long* numberOfElements)
 {
-    grib_accessor_signed_bits_t* self = (grib_accessor_signed_bits_t*)a;
-    *numberOfElements                 = 0;
+    *numberOfElements = 0;
 
-    return grib_get_long(grib_handle_of_accessor(a), self->numberOfElements, numberOfElements);
+    return grib_get_long(grib_handle_of_accessor(this), numberOfElements_, numberOfElements);
 }
 
-long grib_accessor_class_signed_bits_t::byte_offset(grib_accessor* a)
+long grib_accessor_signed_bits_t::byte_offset()
 {
-    return a->offset;
+    return offset_;
 }
 
-void grib_accessor_class_signed_bits_t::update_size(grib_accessor* a, size_t s)
+void grib_accessor_signed_bits_t::update_size(size_t s)
 {
-    a->length = s;
+    length_ = s;
 }
 
-long grib_accessor_class_signed_bits_t::next_offset(grib_accessor* a)
+long grib_accessor_signed_bits_t::next_offset()
 {
-    return a->byte_offset() + a->byte_count();
+    return byte_offset() + byte_count();
 }

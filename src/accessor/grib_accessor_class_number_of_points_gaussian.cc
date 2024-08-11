@@ -10,36 +10,34 @@
 
 #include "grib_accessor_class_number_of_points_gaussian.h"
 
-grib_accessor_class_number_of_points_gaussian_t _grib_accessor_class_number_of_points_gaussian{ "number_of_points_gaussian" };
-grib_accessor_class* grib_accessor_class_number_of_points_gaussian = &_grib_accessor_class_number_of_points_gaussian;
-
+grib_accessor_number_of_points_gaussian_t _grib_accessor_number_of_points_gaussian{};
+grib_accessor* grib_accessor_number_of_points_gaussian = &_grib_accessor_number_of_points_gaussian;
 
 #define EFDEBUG 0
 
-void grib_accessor_class_number_of_points_gaussian_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_number_of_points_gaussian_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_long_t::init(a, l, c);
-    int n = 0;
-    grib_handle* h = grib_handle_of_accessor(a);
-    grib_accessor_number_of_points_gaussian_t* self = (grib_accessor_number_of_points_gaussian_t*)a;
+    grib_accessor_long_t::init(l, c);
+    int n          = 0;
+    grib_handle* h = grib_handle_of_accessor(this);
 
-    self->ni             = grib_arguments_get_name(h, c, n++);
-    self->nj             = grib_arguments_get_name(h, c, n++);
-    self->plpresent      = grib_arguments_get_name(h, c, n++);
-    self->pl             = grib_arguments_get_name(h, c, n++);
-    self->order          = grib_arguments_get_name(h, c, n++);
-    self->lat_first      = grib_arguments_get_name(h, c, n++);
-    self->lon_first      = grib_arguments_get_name(h, c, n++);
-    self->lat_last       = grib_arguments_get_name(h, c, n++);
-    self->lon_last       = grib_arguments_get_name(h, c, n++);
-    self->support_legacy = grib_arguments_get_name(h, c, n++);
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
-    a->length = 0;
+    ni_             = grib_arguments_get_name(h, c, n++);
+    nj_             = grib_arguments_get_name(h, c, n++);
+    plpresent_      = grib_arguments_get_name(h, c, n++);
+    pl_             = grib_arguments_get_name(h, c, n++);
+    order_          = grib_arguments_get_name(h, c, n++);
+    lat_first_      = grib_arguments_get_name(h, c, n++);
+    lon_first_      = grib_arguments_get_name(h, c, n++);
+    lat_last_       = grib_arguments_get_name(h, c, n++);
+    lon_last_       = grib_arguments_get_name(h, c, n++);
+    support_legacy_ = grib_arguments_get_name(h, c, n++);
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
+    length_ = 0;
 }
 
 // Old implementation of num_points_reduced_gauss_old
-// See src/deprecated/grib_accessor_class_number_of_points_gaussian.cc
+// See src/deprecated/grib_accessor_number_of_points_gaussian.cc
 //
 static int angleApproximatelyEqual(double A, double B, double angular_precision)
 {
@@ -114,27 +112,27 @@ static int get_number_of_data_values(grib_handle* h, size_t* numDataValues)
 static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* len);
 static int unpack_long_new(grib_accessor* a, long* val, size_t* len);
 
-int grib_accessor_class_number_of_points_gaussian_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_number_of_points_gaussian_t::unpack_long(long* val, size_t* len)
 {
-    int err                                         = GRIB_SUCCESS;
-    long support_legacy                             = 1;
-    grib_accessor_number_of_points_gaussian_t* self = (grib_accessor_number_of_points_gaussian_t*)a;
-    grib_handle* h                                  = grib_handle_of_accessor(a);
+    int err             = GRIB_SUCCESS;
+    long support_legacy = 1;
+    grib_handle* h      = grib_handle_of_accessor(this);
 
-    if ((err = grib_get_long_internal(h, self->support_legacy, &support_legacy)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(h, support_legacy_, &support_legacy)) != GRIB_SUCCESS)
         return err;
 
     if (support_legacy == 1)
-        return unpack_long_with_legacy_support(a, val, len);
+        return unpack_long_with_legacy_support(this, val, len);
     else
-        return unpack_long_new(a, val, len);
+        return unpack_long_new(this, val, len);
 }
 
 /* New algorithm */
 static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
 {
-    int err       = GRIB_SUCCESS;
-    int is_global = 0;
+    grib_accessor_number_of_points_gaussian_t* self = (grib_accessor_number_of_points_gaussian_t*)a;
+    int err                                         = GRIB_SUCCESS;
+    int is_global                                   = 0;
     long ni = 0, nj = 0, plpresent = 0, order = 0;
     size_t plsize = 0;
     double lat_first, lat_last, lon_first, lon_last;
@@ -146,16 +144,15 @@ static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
     long angleSubdivisions   = 0;
     grib_handle* h           = grib_handle_of_accessor(a);
 
-    grib_accessor_number_of_points_gaussian_t* self = (grib_accessor_number_of_points_gaussian_t*)a;
-    grib_context* c                                 = a->context;
+    grib_context* c = a->context_;
 
-    if ((err = grib_get_long_internal(h, self->ni, &ni)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(h, self->ni_, &ni)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long_internal(h, self->nj, &nj)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(h, self->nj_, &nj)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long_internal(h, self->plpresent, &plpresent)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(h, self->plpresent_, &plpresent)) != GRIB_SUCCESS)
         return err;
 
     if (nj == 0)
@@ -172,23 +169,23 @@ static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
         // double lon_first_row = 0, lon_last_row = 0;
 
         /*reduced*/
-        if ((err = grib_get_long_internal(h, self->order, &order)) != GRIB_SUCCESS)
+        if ((err = grib_get_long_internal(h, self->order_, &order)) != GRIB_SUCCESS)
             return err;
-        if ((err = grib_get_double_internal(h, self->lat_first, &lat_first)) != GRIB_SUCCESS)
+        if ((err = grib_get_double_internal(h, self->lat_first_, &lat_first)) != GRIB_SUCCESS)
             return err;
-        if ((err = grib_get_double_internal(h, self->lon_first, &lon_first)) != GRIB_SUCCESS)
+        if ((err = grib_get_double_internal(h, self->lon_first_, &lon_first)) != GRIB_SUCCESS)
             return err;
-        if ((err = grib_get_double_internal(h, self->lat_last, &lat_last)) != GRIB_SUCCESS)
+        if ((err = grib_get_double_internal(h, self->lat_last_, &lat_last)) != GRIB_SUCCESS)
             return err;
-        if ((err = grib_get_double_internal(h, self->lon_last, &lon_last)) != GRIB_SUCCESS)
+        if ((err = grib_get_double_internal(h, self->lon_last_, &lon_last)) != GRIB_SUCCESS)
             return err;
 
-        if ((err = grib_get_size(h, self->pl, &plsize)) != GRIB_SUCCESS)
+        if ((err = grib_get_size(h, self->pl_, &plsize)) != GRIB_SUCCESS)
             return err;
 
         pl     = (long*)grib_context_malloc_clear(c, sizeof(long) * plsize);
         plsave = pl;
-        grib_get_long_array_internal(h, self->pl, pl, &plsize);
+        grib_get_long_array_internal(h, self->pl_, pl, &plsize);
 
         if (lon_last < 0)
             lon_last += 360;
@@ -242,8 +239,9 @@ static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
 /* With Legacy support */
 static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* len)
 {
-    int err       = GRIB_SUCCESS;
-    int is_global = 0;
+    grib_accessor_number_of_points_gaussian_t* self = (grib_accessor_number_of_points_gaussian_t*)a;
+    int err                                         = GRIB_SUCCESS;
+    int is_global                                   = 0;
     long ni = 0, nj = 0, plpresent = 0, order = 0;
     size_t plsize = 0;
     double lat_first, lat_last, lon_first, lon_last;
@@ -256,16 +254,15 @@ static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* 
     grib_handle* h           = grib_handle_of_accessor(a);
     size_t numDataValues     = 0;
 
-    grib_accessor_number_of_points_gaussian_t* self = (grib_accessor_number_of_points_gaussian_t*)a;
-    grib_context* c                                 = a->context;
+    grib_context* c = a->context_;
 
-    if ((err = grib_get_long_internal(h, self->ni, &ni)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(h, self->ni_, &ni)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long_internal(h, self->nj, &nj)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(h, self->nj_, &nj)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long_internal(h, self->plpresent, &plpresent)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(h, self->plpresent_, &plpresent)) != GRIB_SUCCESS)
         return err;
 
     if (nj == 0)
@@ -282,23 +279,23 @@ static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* 
         // double lon_first_row = 0, lon_last_row = 0;
 
         /*reduced*/
-        if ((err = grib_get_long_internal(h, self->order, &order)) != GRIB_SUCCESS)
+        if ((err = grib_get_long_internal(h, self->order_, &order)) != GRIB_SUCCESS)
             return err;
-        if ((err = grib_get_double_internal(h, self->lat_first, &lat_first)) != GRIB_SUCCESS)
+        if ((err = grib_get_double_internal(h, self->lat_first_, &lat_first)) != GRIB_SUCCESS)
             return err;
-        if ((err = grib_get_double_internal(h, self->lon_first, &lon_first)) != GRIB_SUCCESS)
+        if ((err = grib_get_double_internal(h, self->lon_first_, &lon_first)) != GRIB_SUCCESS)
             return err;
-        if ((err = grib_get_double_internal(h, self->lat_last, &lat_last)) != GRIB_SUCCESS)
+        if ((err = grib_get_double_internal(h, self->lat_last_, &lat_last)) != GRIB_SUCCESS)
             return err;
-        if ((err = grib_get_double_internal(h, self->lon_last, &lon_last)) != GRIB_SUCCESS)
+        if ((err = grib_get_double_internal(h, self->lon_last_, &lon_last)) != GRIB_SUCCESS)
             return err;
 
-        if ((err = grib_get_size(h, self->pl, &plsize)) != GRIB_SUCCESS)
+        if ((err = grib_get_size(h, self->pl_, &plsize)) != GRIB_SUCCESS)
             return err;
 
         pl     = (long*)grib_context_malloc_clear(c, sizeof(long) * plsize);
         plsave = pl;
-        grib_get_long_array_internal(h, self->pl, pl, &plsize);
+        grib_get_long_array_internal(h, self->pl_, pl, &plsize);
 
         if (lon_last < 0)
             lon_last += 360;

@@ -15,25 +15,23 @@
 class grib_accessor_unsigned_t : public grib_accessor_long_t
 {
 public:
-    long nbytes;
-    grib_arguments* arg;
-};
-
-
-class grib_accessor_class_unsigned_t : public grib_accessor_class_long_t
-{
-public:
-    grib_accessor_class_unsigned_t(const char* name) : grib_accessor_class_long_t(name) {}
+    grib_accessor_unsigned_t() :
+        grib_accessor_long_t() { class_name_ = "None"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_unsigned_t{}; }
-    void init(grib_accessor* a, const long len, grib_arguments* arg) override;
-    void dump(grib_accessor* a, grib_dumper* dumper) override;
-    int unpack_long(grib_accessor* a, long* val, size_t* len) override;
-    int pack_long(grib_accessor* a, const long* val, size_t* len) override;
-    long byte_count(grib_accessor* a) override;
-    int value_count(grib_accessor* a, long* len) override;
-    long byte_offset(grib_accessor* a) override;
-    void update_size(grib_accessor* a, size_t s) override;
-    long next_offset(grib_accessor* a) override;
-    int is_missing(grib_accessor* a) override;
-    void destroy(grib_context* context, grib_accessor* a) override;
+    void init(const long len, grib_arguments* arg) override;
+    void dump(grib_dumper* dumper) override;
+    int unpack_long(long* val, size_t* len) override;
+    int pack_long(const long* val, size_t* len) override;
+    long byte_count() override;
+    int value_count(long* len) override;
+    long byte_offset() override;
+    void update_size(size_t s) override;
+    long next_offset() override;
+    int is_missing() override;
+    void destroy(grib_context* context) override;
+
+    // TODO(maee): make members private
+public:
+    long nbytes_;
+    grib_arguments* arg_;
 };

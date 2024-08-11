@@ -16,16 +16,11 @@
 class grib_accessor_position_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in position */
-};
-
-class grib_accessor_class_position_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_position_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_position_t() :
+        grib_accessor_gen_t() { class_name_ = "position"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_position_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    long get_native_type() override;
+    int unpack_long(long* val, size_t* len) override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
 };

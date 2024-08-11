@@ -140,7 +140,7 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* loade
 
     grib_push_accessor(ga, p->block);
 
-    if (ga->flags & GRIB_ACCESSOR_FLAG_CONSTRAINT)
+    if (ga->flags_ & GRIB_ACCESSOR_FLAG_CONSTRAINT)
         grib_dependency_observe_arguments(ga, act->default_value);
 
     if (loader == NULL)

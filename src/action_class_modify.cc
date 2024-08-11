@@ -102,7 +102,7 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
     ga = grib_find_accessor(p->h, a->name);
 
     if (ga) {
-        ga->flags = a->flags;
+        ga->flags_ = a->flags;
     }
     else {
         grib_context_log(act->context, GRIB_LOG_ERROR, "action_class_modify: %s: No accessor named %s to modify",

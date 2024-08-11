@@ -10,7 +10,6 @@
 
 /***************************************************************************
  *   Jean Baptiste Filippi - 01.11.2005                                    *
- *   Enrico  Fucile                                                        *
  ***************************************************************************/
 #include "grib_api_internal.h"
 /*
@@ -123,12 +122,12 @@ static grib_concept_value* get_concept(grib_handle* h, grib_action_concept* self
 
 grib_concept_value* action_concept_get_concept(grib_accessor* a)
 {
-    return get_concept(grib_handle_of_accessor(a), (grib_action_concept*)a->creator);
+    return get_concept(grib_handle_of_accessor(a), (grib_action_concept*)a->creator_);
 }
 
 int action_concept_get_nofail(grib_accessor* a)
 {
-    const grib_action_concept* self = (grib_action_concept*)a->creator;
+    const grib_action_concept* self = (grib_action_concept*)a->creator_;
     return self->nofail;
 }
 
@@ -317,10 +316,10 @@ static grib_concept_value* get_concept(grib_handle* h, grib_action_concept* self
 
 static int concept_condition_expression_true(grib_handle* h, grib_concept_condition* c, char* exprVal)
 {
-    long lval;
-    long lres      = 0;
-    int ok         = 0;
-    int err        = 0;
+    long lval = 0;
+    long lres = 0;
+    int ok    = 0;
+    int err   = 0;
     const int type = grib_expression_native_type(h, c->expression);
 
     switch (type) {

@@ -10,83 +10,81 @@
 
 #include "grib_accessor_class_g2_mars_labeling.h"
 
-grib_accessor_class_g2_mars_labeling_t _grib_accessor_class_g2_mars_labeling{ "g2_mars_labeling" };
-grib_accessor_class* grib_accessor_class_g2_mars_labeling = &_grib_accessor_class_g2_mars_labeling;
+grib_accessor_g2_mars_labeling_t _grib_accessor_g2_mars_labeling{};
+grib_accessor* grib_accessor_g2_mars_labeling = &_grib_accessor_g2_mars_labeling;
 
-
-void grib_accessor_class_g2_mars_labeling_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_g2_mars_labeling_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_gen_t::init(a, l, c);
-    grib_accessor_g2_mars_labeling_t* self = (grib_accessor_g2_mars_labeling_t*)a;
-    int n                                  = 0;
-    grib_handle* hand                      = grib_handle_of_accessor(a);
+    grib_accessor_gen_t::init(l, c);
+    int n             = 0;
+    grib_handle* hand = grib_handle_of_accessor(this);
 
-    self->index                           = grib_arguments_get_long(hand, c, n++);
-    self->the_class                       = grib_arguments_get_name(hand, c, n++);
-    self->type                            = grib_arguments_get_name(hand, c, n++);
-    self->stream                          = grib_arguments_get_name(hand, c, n++);
-    self->expver                          = grib_arguments_get_name(hand, c, n++);
-    self->typeOfProcessedData             = grib_arguments_get_name(hand, c, n++);
-    self->productDefinitionTemplateNumber = grib_arguments_get_name(hand, c, n++);
-    self->stepType                        = grib_arguments_get_name(hand, c, n++);
-    self->derivedForecast                 = grib_arguments_get_name(hand, c, n++);
-    self->typeOfGeneratingProcess         = grib_arguments_get_name(hand, c, n++);
+    index_                           = grib_arguments_get_long(hand, c, n++);
+    the_class_                       = grib_arguments_get_name(hand, c, n++);
+    type_                            = grib_arguments_get_name(hand, c, n++);
+    stream_                          = grib_arguments_get_name(hand, c, n++);
+    expver_                          = grib_arguments_get_name(hand, c, n++);
+    typeOfProcessedData_             = grib_arguments_get_name(hand, c, n++);
+    productDefinitionTemplateNumber_ = grib_arguments_get_name(hand, c, n++);
+    stepType_                        = grib_arguments_get_name(hand, c, n++);
+    derivedForecast_                 = grib_arguments_get_name(hand, c, n++);
+    typeOfGeneratingProcess_         = grib_arguments_get_name(hand, c, n++);
 }
 
-int grib_accessor_class_g2_mars_labeling_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_g2_mars_labeling_t::unpack_long(long* val, size_t* len)
 {
-    grib_accessor_g2_mars_labeling_t* self = (grib_accessor_g2_mars_labeling_t*)a;
-    char* key                              = NULL;
-
-    switch (self->index) {
-        case 0:
-            key = (char*)self->the_class;
-            break;
-        case 1:
-            key = (char*)self->type;
-            break;
-        case 2:
-            key = (char*)self->stream;
-            break;
-        default:
-            grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "invalid first argument of g2_mars_labeling in %s", a->name);
-            return GRIB_INTERNAL_ERROR;
-    }
-
-    return grib_get_long(grib_handle_of_accessor(a), key, val);
-}
-
-int grib_accessor_class_g2_mars_labeling_t::unpack_string(grib_accessor* a, char* val, size_t* len)
-{
-    grib_accessor_g2_mars_labeling_t* self = (grib_accessor_g2_mars_labeling_t*)a;
     char* key = NULL;
 
-    switch (self->index) {
+    switch (index_) {
         case 0:
-            key = (char*)self->the_class;
+            key = (char*)the_class_;
             break;
         case 1:
-            key = (char*)self->type;
+            key = (char*)type_;
             break;
         case 2:
-            key = (char*)self->stream;
+            key = (char*)stream_;
             break;
         default:
-            grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "invalid first argument of g2_mars_labeling in %s", a->name);
+            grib_context_log(context_, GRIB_LOG_ERROR,
+                             "invalid first argument of g2_mars_labeling in %s", name_);
             return GRIB_INTERNAL_ERROR;
     }
 
-    return grib_get_string(grib_handle_of_accessor(a), key, val, len);
+    return grib_get_long(grib_handle_of_accessor(this), key, val);
+}
+
+int grib_accessor_g2_mars_labeling_t::unpack_string(char* val, size_t* len)
+{
+    char* key = NULL;
+
+    switch (index_) {
+        case 0:
+            key = (char*)the_class_;
+            break;
+        case 1:
+            key = (char*)type_;
+            break;
+        case 2:
+            key = (char*)stream_;
+            break;
+        default:
+            grib_context_log(context_, GRIB_LOG_ERROR,
+                             "invalid first argument of g2_mars_labeling in %s", name_);
+            return GRIB_INTERNAL_ERROR;
+    }
+
+    return grib_get_string(grib_handle_of_accessor(this), key, val, len);
 }
 
 static int extra_set(grib_accessor* a, long val)
 {
-    int ret                                = 0;
     grib_accessor_g2_mars_labeling_t* self = (grib_accessor_g2_mars_labeling_t*)a;
+    int ret                                = 0;
     grib_handle* hand                      = grib_handle_of_accessor(a);
-    char stepType[30]                      = {0,};
+    char stepType[30]                      = {
+        0,
+    };
     size_t stepTypelen                      = 30;
     long derivedForecast                    = -1;
     long productDefinitionTemplateNumberNew = -1;
@@ -110,7 +108,7 @@ static int extra_set(grib_accessor* a, long val)
     const int is_wave        = grib_is_defined(hand, "waveDirectionNumber");
     const int is_wave_prange = grib_is_defined(hand, "typeOfWavePeriodInterval");
 
-    switch (self->index) {
+    switch (self->index_) {
         case 0:
             /* class */
             return ret;
@@ -164,7 +162,7 @@ static int extra_set(grib_accessor* a, long val)
                     break;
                 case 17: /* Ensemble mean  (em) */
                     derivedForecast = 0;
-                    grib_get_string(hand, self->stepType, stepType, &stepTypelen);
+                    grib_get_string(hand, self->stepType_, stepType, &stepTypelen);
                     if (!strcmp(stepType, "instant")) {
                         productDefinitionTemplateNumberNew = 2;
                     }
@@ -176,7 +174,7 @@ static int extra_set(grib_accessor* a, long val)
                     break;
                 case 18: /* Ensemble standard deviation     (es) */
                     derivedForecast = 4;
-                    grib_get_string(hand, self->stepType, stepType, &stepTypelen);
+                    grib_get_string(hand, self->stepType_, stepType, &stepTypelen);
                     if (!strcmp(stepType, "instant")) {
                         productDefinitionTemplateNumberNew = 2;
                     }
@@ -260,7 +258,7 @@ static int extra_set(grib_accessor* a, long val)
                     typeOfGeneratingProcess = 255;
                     break;
                 default:
-                    grib_context_log(a->context, GRIB_LOG_WARNING, "g2_mars_labeling: unknown mars.type %d", (int)val);
+                    grib_context_log(a->context_, GRIB_LOG_WARNING, "g2_mars_labeling: unknown mars.type %d", (int)val);
                     /*return GRIB_ENCODING_ERROR;*/
             }
             break;
@@ -271,7 +269,7 @@ static int extra_set(grib_accessor* a, long val)
                 case 1249:      /* elda */
                 case 1250:      /* ewla */
                     is_eps = 1; /* These streams are all for ensembles */
-                    grib_get_string(hand, self->stepType, stepType, &stepTypelen);
+                    grib_get_string(hand, self->stepType_, stepType, &stepTypelen);
                     is_instant                         = (strcmp(stepType, "instant") == 0);
                     productDefinitionTemplateNumberNew = grib2_select_PDTN(
                         is_eps, is_instant,
@@ -284,8 +282,8 @@ static int extra_set(grib_accessor* a, long val)
             }
             break;
         default:
-            grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "invalid first argument of g2_mars_labeling in %s", a->name);
+            grib_context_log(a->context_, GRIB_LOG_ERROR,
+                             "invalid first argument of g2_mars_labeling in %s", a->name_);
             return GRIB_INTERNAL_ERROR;
     }
 
@@ -295,118 +293,115 @@ static int extra_set(grib_accessor* a, long val)
     }
 
     if (productDefinitionTemplateNumberNew >= 0) {
-        grib_get_long(hand, self->productDefinitionTemplateNumber, &productDefinitionTemplateNumber);
+        grib_get_long(hand, self->productDefinitionTemplateNumber_, &productDefinitionTemplateNumber);
         if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew)
-            grib_set_long(hand, self->productDefinitionTemplateNumber, productDefinitionTemplateNumberNew);
+            grib_set_long(hand, self->productDefinitionTemplateNumber_, productDefinitionTemplateNumberNew);
     }
 
     if (derivedForecast >= 0) {
-        grib_set_long(hand, self->derivedForecast, derivedForecast);
+        grib_set_long(hand, self->derivedForecast_, derivedForecast);
     }
 
     if (typeOfProcessedData > 0)
-        grib_set_long(hand, self->typeOfProcessedData, typeOfProcessedData);
+        grib_set_long(hand, self->typeOfProcessedData_, typeOfProcessedData);
     if (typeOfGeneratingProcess > 0)
-        grib_set_long(hand, self->typeOfGeneratingProcess, typeOfGeneratingProcess);
+        grib_set_long(hand, self->typeOfGeneratingProcess_, typeOfGeneratingProcess);
 
     return ret;
 }
 
-int grib_accessor_class_g2_mars_labeling_t::pack_string(grib_accessor* a, const char* val, size_t* len)
+int grib_accessor_g2_mars_labeling_t::pack_string(const char* val, size_t* len)
 {
-    grib_accessor_g2_mars_labeling_t* self = (grib_accessor_g2_mars_labeling_t*)a;
     char* key = NULL;
     int ret   = 0;
     long lval = 0;
 
-    switch (self->index) {
+    switch (index_) {
         case 0:
-            key = (char*)self->the_class;
+            key = (char*)the_class_;
             break;
         case 1:
-            key = (char*)self->type;
+            key = (char*)type_;
             break;
         case 2:
-            key = (char*)self->stream;
+            key = (char*)stream_;
             break;
         default:
-            grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "invalid first argument of g2_mars_labeling in %s", a->name);
+            grib_context_log(context_, GRIB_LOG_ERROR,
+                             "invalid first argument of g2_mars_labeling in %s", name_);
             return GRIB_INTERNAL_ERROR;
     }
 
-    ret = grib_set_string(grib_handle_of_accessor(a), key, val, len);
+    ret = grib_set_string(grib_handle_of_accessor(this), key, val, len);
     if (ret)
         return ret; /* failed */
 
-    ret = grib_get_long(grib_handle_of_accessor(a), key, &lval);
+    ret = grib_get_long(grib_handle_of_accessor(this), key, &lval);
     if (ret)
         return ret; /* failed */
 
-    return extra_set(a, lval);
+    return extra_set(this, lval);
 }
 
-int grib_accessor_class_g2_mars_labeling_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_g2_mars_labeling_t::pack_long(const long* val, size_t* len)
 {
-    grib_accessor_g2_mars_labeling_t* self = (grib_accessor_g2_mars_labeling_t*)a;
     char* key = NULL;
     int ret   = 0;
 
-    switch (self->index) {
+    switch (index_) {
         case 0:
-            key = (char*)self->the_class;
+            key = (char*)the_class_;
             break;
         case 1:
-            key = (char*)self->type;
+            key = (char*)type_;
             break;
         case 2:
-            key = (char*)self->stream;
+            key = (char*)stream_;
             break;
         default:
-            grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "invalid first argument of g2_mars_labeling in %s", a->name);
+            grib_context_log(context_, GRIB_LOG_ERROR,
+                             "invalid first argument of g2_mars_labeling in %s", name_);
             return GRIB_INTERNAL_ERROR;
     }
 
-    ret = grib_set_long(grib_handle_of_accessor(a), key, *val);
+    ret = grib_set_long(grib_handle_of_accessor(this), key, *val);
     if (ret)
         return ret; /* failed */
 
-    return extra_set(a, *val);
+    return extra_set(this, *val);
 }
 
-int grib_accessor_class_g2_mars_labeling_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_g2_mars_labeling_t::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-int grib_accessor_class_g2_mars_labeling_t::get_native_type(grib_accessor* a)
+long grib_accessor_g2_mars_labeling_t::get_native_type()
 {
-    grib_accessor_g2_mars_labeling_t* self = (grib_accessor_g2_mars_labeling_t*)a;
     char* key = NULL;
     int ret   = 0;
     int type  = 0;
 
-    switch (self->index) {
+    switch (index_) {
         case 0:
-            key = (char*)self->the_class;
+            key = (char*)the_class_;
             break;
         case 1:
-            key = (char*)self->type;
+            key = (char*)type_;
             break;
         case 2:
-            key = (char*)self->stream;
+            key = (char*)stream_;
             break;
         default:
-            grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "invalid first argument of g2_mars_labeling in %s", a->name);
+            grib_context_log(context_, GRIB_LOG_ERROR,
+                             "invalid first argument of g2_mars_labeling in %s", name_);
             return GRIB_INTERNAL_ERROR;
     }
 
-    ret = grib_get_native_type(grib_handle_of_accessor(a), key, &type);
+    ret = grib_get_native_type(grib_handle_of_accessor(this), key, &type);
     if (ret)
-        grib_context_log(a->context, GRIB_LOG_ERROR,
+        grib_context_log(context_, GRIB_LOG_ERROR,
                          "unable to get native type for %s", key);
     return type;
 }

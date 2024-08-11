@@ -11,62 +11,57 @@
 #include "grib_accessor_class_data_sh_unpacked.h"
 #include "grib_scaling.h"
 
-grib_accessor_class_data_sh_unpacked_t _grib_accessor_class_data_sh_unpacked{ "data_sh_unpacked" };
-grib_accessor_class* grib_accessor_class_data_sh_unpacked = &_grib_accessor_class_data_sh_unpacked;
-
+grib_accessor_data_sh_unpacked_t _grib_accessor_data_sh_unpacked{};
+grib_accessor* grib_accessor_data_sh_unpacked = &_grib_accessor_data_sh_unpacked;
 
 typedef unsigned long (*encode_float_proc)(double);
 typedef double (*decode_float_proc)(unsigned long);
 
-void grib_accessor_class_data_sh_unpacked_t::init(grib_accessor* a, const long v, grib_arguments* args)
+void grib_accessor_data_sh_unpacked_t::init(const long v, grib_arguments* args)
 {
-    grib_accessor_class_data_simple_packing_t::init(a, v, args);
-    grib_accessor_data_sh_unpacked_t* self = (grib_accessor_data_sh_unpacked_t*)a;
-    grib_handle* hand                      = grib_handle_of_accessor(a);
+    grib_accessor_data_simple_packing_t::init(v, args);
+    grib_handle* hand = grib_handle_of_accessor(this);
 
-    self->GRIBEX_sh_bug_present  = grib_arguments_get_name(hand, args, self->carg++);
-    self->ieee_floats            = grib_arguments_get_name(hand, args, self->carg++);
-    self->laplacianOperatorIsSet = grib_arguments_get_name(hand, args, self->carg++);
-    self->laplacianOperator      = grib_arguments_get_name(hand, args, self->carg++);
-    self->sub_j                  = grib_arguments_get_name(hand, args, self->carg++);
-    self->sub_k                  = grib_arguments_get_name(hand, args, self->carg++);
-    self->sub_m                  = grib_arguments_get_name(hand, args, self->carg++);
-    self->pen_j                  = grib_arguments_get_name(hand, args, self->carg++);
-    self->pen_k                  = grib_arguments_get_name(hand, args, self->carg++);
-    self->pen_m                  = grib_arguments_get_name(hand, args, self->carg++);
+    GRIBEX_sh_bug_present_  = grib_arguments_get_name(hand, args, carg_++);
+    ieee_floats_            = grib_arguments_get_name(hand, args, carg_++);
+    laplacianOperatorIsSet_ = grib_arguments_get_name(hand, args, carg_++);
+    laplacianOperator_      = grib_arguments_get_name(hand, args, carg_++);
+    sub_j_                  = grib_arguments_get_name(hand, args, carg_++);
+    sub_k_                  = grib_arguments_get_name(hand, args, carg_++);
+    sub_m_                  = grib_arguments_get_name(hand, args, carg_++);
+    pen_j_                  = grib_arguments_get_name(hand, args, carg_++);
+    pen_k_                  = grib_arguments_get_name(hand, args, carg_++);
+    pen_m_                  = grib_arguments_get_name(hand, args, carg_++);
 
-    a->flags |= GRIB_ACCESSOR_FLAG_DATA;
-    a->length = 0;
+    flags_ |= GRIB_ACCESSOR_FLAG_DATA;
+    length_ = 0;
 }
 
-int grib_accessor_class_data_sh_unpacked_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_data_sh_unpacked_t::value_count(long* count)
 {
-    grib_accessor_data_sh_unpacked_t* self = (grib_accessor_data_sh_unpacked_t*)a;
-    int ret                                = 0;
+    int ret = 0;
 
     long sub_j = 0;
     long sub_k = 0;
     long sub_m = 0;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->sub_j, &sub_j)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), sub_j_, &sub_j)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->sub_k, &sub_k)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), sub_k_, &sub_k)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->sub_m, &sub_m)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), sub_m_, &sub_m)) != GRIB_SUCCESS)
         return ret;
 
     if (sub_j != sub_k || sub_j != sub_m) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "sub_j=%ld, sub_k=%ld, sub_m=%ld\n", sub_j, sub_k, sub_m);
+        grib_context_log(context_, GRIB_LOG_ERROR, "sub_j=%ld, sub_k=%ld, sub_m=%ld\n", sub_j, sub_k, sub_m);
         Assert((sub_j == sub_k) && (sub_j == sub_m));
     }
     *count = (sub_j + 1) * (sub_j + 2);
     return ret;
 }
 
-int grib_accessor_class_data_sh_unpacked_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+int grib_accessor_data_sh_unpacked_t::unpack_double(double* val, size_t* len)
 {
-    grib_accessor_data_sh_unpacked_t* self = (grib_accessor_data_sh_unpacked_t*)a;
-
     size_t i      = 0;
     int ret       = GRIB_SUCCESS;
     long hcount   = 0;
@@ -112,7 +107,7 @@ int grib_accessor_class_data_sh_unpacked_t::unpack_double(grib_accessor* a, doub
     decode_float_proc decode_float = NULL;
 
     n_vals = 0;
-    err    = a->value_count(&n_vals);
+    err    = value_count(&n_vals);
     if (err)
         return err;
 
@@ -121,29 +116,29 @@ int grib_accessor_class_data_sh_unpacked_t::unpack_double(grib_accessor* a, doub
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetdata, &offsetdata)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), offsetdata_, &offsetdata)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->GRIBEX_sh_bug_present, &GRIBEX_sh_bug_present)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), GRIBEX_sh_bug_present_, &GRIBEX_sh_bug_present)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->ieee_floats, &ieee_floats)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), ieee_floats_, &ieee_floats)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->sub_j, &sub_j)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), sub_j_, &sub_j)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->sub_k, &sub_k)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), sub_k_, &sub_k)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->sub_m, &sub_m)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), sub_m_, &sub_m)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->pen_j, &pen_j)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), pen_j_, &pen_j)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->pen_k, &pen_k)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), pen_k_, &pen_k)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->pen_m, &pen_m)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), pen_m_, &pen_m)) != GRIB_SUCCESS)
         return ret;
 
-    self->dirty = 0;
+    dirty_ = 0;
 
     switch (ieee_floats) {
         case 0:
@@ -167,7 +162,7 @@ int grib_accessor_class_data_sh_unpacked_t::unpack_double(grib_accessor* a, doub
     Assert(pen_j == pen_k);
     Assert(pen_j == pen_m);
 
-    buf = (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
+    buf = (unsigned char*)grib_handle_of_accessor(this)->buffer->data;
 
     maxv = pen_j + 1;
 
@@ -182,9 +177,9 @@ int grib_accessor_class_data_sh_unpacked_t::unpack_double(grib_accessor* a, doub
     s = codes_power<double>(binary_scale_factor, 2);
     d = codes_power<double>(-decimal_scale_factor, 10);
 
-    scals = (double*)grib_context_malloc(a->context, maxv * sizeof(double));
+    scals = (double*)grib_context_malloc(context_, maxv * sizeof(double));
     Assert(scals);
-    if ((ret = grib_get_double_internal(grib_handle_of_accessor(a), self->laplacianOperator, &laplacianOperator)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(grib_handle_of_accessor(this), laplacianOperator_, &laplacianOperator)) != GRIB_SUCCESS)
         return ret;
 
     scals[0] = 0;
@@ -203,7 +198,6 @@ int grib_accessor_class_data_sh_unpacked_t::unpack_double(grib_accessor* a, doub
         lup = mmax;
         if (sub_k >= 0) {
             for (hcount = 0; hcount < sub_k + 1; hcount++) {
-                val[i++] = decode_float(grib_decode_unsigned_long(hres, &hpos, 8 * bytes));
                 val[i++] = decode_float(grib_decode_unsigned_long(hres, &hpos, 8 * bytes));
 
                 if (GRIBEX_sh_bug_present && hcount == sub_k) {
@@ -233,7 +227,7 @@ int grib_accessor_class_data_sh_unpacked_t::unpack_double(grib_accessor* a, doub
     Assert(*len >= i);
     *len = n_vals;
 
-    grib_context_free(a->context, scals);
+    grib_context_free(context_, scals);
 
     return ret;
 }

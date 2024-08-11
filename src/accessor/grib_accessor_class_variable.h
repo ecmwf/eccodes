@@ -13,37 +13,34 @@
 #include "grib_accessor.h"
 #include "grib_accessor_class_gen.h"
 
-
 class grib_accessor_variable_t : public grib_accessor_gen_t
 {
 public:
-    double dval;
-    float  fval;
-    char*  cval;
-    char*  cname;
-    int    type;
-};
-
-class grib_accessor_class_variable_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_variable_t(const char* name) : grib_accessor_class_gen_t(name) {};
+    grib_accessor_variable_t() :
+        grib_accessor_gen_t() { class_name_ = "variable"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_variable_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int pack_double(grib_accessor*, const double* val, size_t* len) override;
-    int pack_float(grib_accessor*, const float* val, size_t* len) override;
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int pack_string(grib_accessor*, const char*, size_t* len) override;
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int unpack_float(grib_accessor*, float* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
-    size_t string_length(grib_accessor*) override;
-    long byte_count(grib_accessor*) override;
-    int value_count(grib_accessor*, long*) override;
-    void destroy(grib_context*, grib_accessor*) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
-    int compare(grib_accessor*, grib_accessor*) override;
-    grib_accessor* make_clone(grib_accessor*, grib_section*, int*) override;
+    long get_native_type() override;
+    int pack_double(const double* val, size_t* len) override;
+    int pack_float(const float* val, size_t* len) override;
+    int pack_long(const long* val, size_t* len) override;
+    int pack_string(const char*, size_t* len) override;
+    int unpack_double(double* val, size_t* len) override;
+    int unpack_float(float* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    int unpack_string(char*, size_t* len) override;
+    size_t string_length() override;
+    long byte_count() override;
+    int value_count(long*) override;
+    void destroy(grib_context*) override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
+    int compare(grib_accessor*) override;
+    grib_accessor* make_clone(grib_section*, int*) override;
+
+public:
+    double dval_;
+    float fval_;
+    char* cval_;
+    char* cname_;
+    int type_;
 };
