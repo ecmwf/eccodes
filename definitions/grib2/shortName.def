@@ -1345,6 +1345,159 @@
 	 scaledValueOfSecondFixedSurface = 300 ;
 	 scaleFactorOfSecondFixedSurface = 0 ;
 	}
+#Total column vertically-integrated divergence of water geopotential flux
+'viwgd' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 42 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated eastward enthalpy flux
+'viee' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated northward enthalpy flux
+'vien' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated divergence of enthalpy flux
+'vied' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 13 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated divergence of water enthalpy flux
+'viwed' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated divergence of water vapour flux
+'viwvd' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 160 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated divergence of cloud liquid water flux
+'viclwd' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 161 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated divergence of cloud ice water flux
+'viciwd' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 162 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated divergence of rain flux
+'vird' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 163 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated divergence of snow flux
+'visd' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 164 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated eastward cloud liquid water flux
+'viclwe' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 152 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated northward cloud liquid water flux
+'viclwn' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 153 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated eastward cloud ice water flux
+'viciwe' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 154 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated northward cloud ice water flux
+'viciwn' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 155 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated eastward rain flux
+'vire' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 156 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated northward rain flux
+'virn' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 157 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated eastward snow flux
+'vise' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 158 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated northward snow flux
+'visn' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 159 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated net source of ozone
+'vions' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 81 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 constituentType = 0 ;
+	}
 #Total column vertically-integrated water enthalpy
 'viwe' = {
 	 discipline = 0 ;
@@ -1352,6 +1505,90 @@
 	 parameterNumber = 4 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	}
+#Temperature tendency due to short-wave radiation
+'ttswr' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 22 ;
+	}
+#Temperature tendency due to long-wave radiation
+'ttlwr' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 23 ;
+	}
+#Temperature tendency due to short-wave radiation, clear sky
+'ttswrcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 24 ;
+	}
+#Temperature tendency due to long-wave radiation, clear sky
+'ttlwrcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 25 ;
+	}
+#Updraught mass flux
+'umf' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 27 ;
+	}
+#Downdraught mass flux
+'dmf' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 28 ;
+	}
+#Updraught detrainment rate
+'udr' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 29 ;
+	}
+#Downdraught detrainment rate
+'ddr' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 30 ;
+	}
+#Total precipitation flux
+'tpf' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	}
+#Turbulent diffusion coefficient for heat
+'tdch' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 20 ;
+	}
+#Temperature tendency due to parametrisations
+'ttpm' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 26 ;
+	}
+#Specific humidity tendency due to parametrisations
+'qtpm' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 108 ;
+	}
+#Eastward wind tendency due to parametrisations
+'utpm' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 39 ;
+	}
+#Northward wind tendency due to parametrisations
+'vtpm' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 40 ;
 	}
 #2 metre specific humidity
 '2sh' = {
@@ -3833,6 +4070,13 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 48 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Snow evaporation rate water equivalent
+'esrwe' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 148 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
 #Burned area
@@ -7603,6 +7847,110 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = 1 ;
 	 scaleFactorOfSecondFixedSurface = 0 ;
+	}
+#Surface photosynthetically active radiation flux, clear sky
+'parcsf' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 60 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Surface direct normal short-wave radiation flux
+'sdirnswrf' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 54 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
+#Instantaneous magnitude of turbulent surface stress
+'imagss' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 58 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Instantaneous boundary layer dissipation
+'ibld' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 20 ;
+	}
+#Top net short-wave radiation flux
+'tnswrf' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 9 ;
+	 typeOfFirstFixedSurface = 8 ;
+	}
+#Top net long-wave radiation flux
+'tnlwrf' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 8 ;
+	}
+#Instantaneous gravity wave dissipation
+'igwd' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 23 ;
+	}
+#Top net short-wave radiation flux, clear sky
+'tnswrfcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 8 ;
+	}
+#Top net long-wave radiation flux, clear sky
+'tnlwrcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 8 ;
+	}
+#Top downward short-wave radiation flux
+'tdswrf' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 8 ;
+	}
+#Surface direct short-wave radiation flux, clear sky
+'sdirswrfcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 61 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Instantaneous eastward turbulent surface stress due to orographic form drag
+'ietssofd' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 64 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Instantaneous northward turbulent surface stress due to orographic form drag
+'intssofd' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 65 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Instantaneous eastward turbulent surface stress due to surface roughness
+'ietsssr' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 66 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Instantaneous northward turbulent surface stress due to surface roughness
+'intsssr' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 67 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Universal thermal climate index
 'utci' = {

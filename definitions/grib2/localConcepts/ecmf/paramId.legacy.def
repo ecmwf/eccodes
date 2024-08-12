@@ -1777,3 +1777,45 @@
  parameterCategory = 140 ;
  parameterNumber = 254 ;
 }
+#Magnitude of turbulent surface stress
+'172048' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 48 ;
+}
+#Mean large-scale precipitation fraction
+'172050' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 50 ;
+}
+#Boundary layer dissipation
+'172145' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 145 ;
+}
+#Mean sunshine duration rate
+'172189' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 189 ;
+}
+#Longitudinal component of gravity wave stress
+'172195' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 195 ;
+}
+#Meridional component of gravity wave stress
+'172196' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 196 ;
+}
+#Gravity wave dissipation
+'172197' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 197 ;
+}
