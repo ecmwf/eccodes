@@ -752,8 +752,15 @@ static int unpack_real(grib_accessor* a, T* val, size_t* len)
         mmax++;
     }
 
-    Assert(*len >= i);
-    *len = i;
+    //Assert(*len >= i);
+    if (*len < i) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s::%s: Invalid values *len=%zu and i=%zu.",
+                         cclass_name, __func__, *len, i);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Make sure your array is large enough.");
+        ret = GRIB_ARRAY_TOO_SMALL;
+    } else {
+        *len = i;
+    }
 
     grib_context_free(a->context, scals);
 
