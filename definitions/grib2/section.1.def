@@ -44,7 +44,7 @@ if (tablesVersion >= tablesVersionChemParamSplit) {
   transient chem_param_split = 1;
 }
 if (tablesVersion >= tablesVersionWavelengthParamSplit) {
-  remove wavelength_param_split;
+  # remove wavelength_param_split;
   transient wavelength_param_split = 1;
 }
 
