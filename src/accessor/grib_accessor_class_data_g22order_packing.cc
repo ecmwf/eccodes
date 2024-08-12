@@ -812,7 +812,7 @@ int grib_accessor_data_g22order_packing_t::pack_double(const double* val, size_t
     if ((err = grib_get_long_internal(gh, decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long_internal(gh, self->optimize_scale_factor, &optimize_scale_factor)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(gh, optimize_scale_factor_, &optimize_scale_factor)) != GRIB_SUCCESS)
         return err;
 
     int use_scale = !optimize_scale_factor;
