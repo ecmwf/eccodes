@@ -3539,14 +3539,6 @@
 	 parameterNumber = 46 ;
 	 typeOfFirstFixedSurface = 8 ;
 	}
-#Time-mean top net radiation flux (SW and LW)
-'Time-mean top net radiation flux (SW and LW)' = {
-	 discipline = 0 ;
-	 parameterCategory = 19 ;
-	 parameterNumber = 46 ;
-	 typeOfFirstFixedSurface = 8 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
 #Global irradiance on tilted surfaces
 'Global irradiance on tilted surfaces' = {
 	 discipline = 0 ;
@@ -3705,22 +3697,6 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Maximum total column integrated graupel (snow pellets)
-'Maximum total column integrated graupel (snow pellets)' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 74 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
-#Minimum visibility
-'Minimum visibility' = {
-	 discipline = 0 ;
-	 parameterCategory = 19 ;
-	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 3 ;
-	}
 #Geometric height of theta level above ground
 'Geometric height of theta level above ground' = {
 	 discipline = 0 ;
@@ -3844,26 +3820,6 @@
 	 parameterCategory = 7 ;
 	 parameterNumber = 16 ;
 	 typeOfFirstFixedSurface = 1 ;
-	}
-#Time-maximum 2 metre relative humidity
-'Time-maximum 2 metre relative humidity' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
-#Time-minimum 2 metre relative humidity
-'Time-minimum 2 metre relative humidity' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 3 ;
 	}
 #Surface roughness for heat
 'Surface roughness for heat' = {
@@ -5127,6 +5083,22 @@
 	 parameterNumber = 12 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean surface net radiation flux (SW and LW)
+'Time-mean surface net radiation flux (SW and LW)' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 46 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean top net radiation flux (SW and LW)
+'Time-mean top net radiation flux (SW and LW)' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 46 ;
+	 typeOfFirstFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean mean sea level pressure
 'Time-mean mean sea level pressure' = {
 	 discipline = 0 ;
@@ -5348,6 +5320,16 @@
 	 parameterNumber = 25 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum 2 metre relative humidity
+'Time-maximum 2 metre relative humidity' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-maximum most-unstable CAPE
 'Time-maximum most-unstable CAPE' = {
 	 discipline = 0 ;
@@ -5358,11 +5340,37 @@
 	 scaleFactorOfFirstFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum total column vertically-integrated graupel (snow pellets)
+'Time-maximum total column vertically-integrated graupel (snow pellets)' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 74 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-minimum volumetric soil moisture
 'Time-minimum volumetric soil moisture' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 25 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum 2 metre relative humidity
+'Time-minimum 2 metre relative humidity' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum visibility
+'Time-minimum visibility' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum most-unstable CAPE
@@ -11060,14 +11068,6 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 40 ;
 	 typeOfStatisticalProcessing = 1 ;
-	}
-#Time-mean surface net radiation flux (SW and LW)
-'Time-mean surface net radiation flux (SW and LW)' = {
-	 discipline = 0 ;
-	 parameterCategory = 19 ;
-	 parameterNumber = 46 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
 	}
 #Surface runoff
 'Surface runoff' = {
