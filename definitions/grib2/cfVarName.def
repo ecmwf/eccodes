@@ -187,7 +187,7 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #Time-maximum 2 metre relative humidity
-'mx2r' = {
+'max_2r' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 1 ;
@@ -197,7 +197,7 @@
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-minimum 2 metre relative humidity
-'mn2r' = {
+'min_2r' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 1 ;
