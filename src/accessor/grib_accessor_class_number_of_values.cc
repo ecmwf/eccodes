@@ -32,7 +32,7 @@ void grib_accessor_number_of_values_t::init(const long l, grib_arguments* c)
 
 int grib_accessor_number_of_values_t::unpack_long(long* val, size_t* len)
 {
-    int ret      = GRIB_SUCCESS, i;
+    int ret      = GRIB_SUCCESS;
     long npoints = 0, bitmap_present = 0;
     size_t size = 0;
 

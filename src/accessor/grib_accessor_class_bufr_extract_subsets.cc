@@ -18,7 +18,6 @@ void get_accessors(grib_accessor* a)
 {
     const grib_handle* h                       = grib_handle_of_accessor(a);
     grib_accessor_bufr_extract_subsets_t* self = (grib_accessor_bufr_extract_subsets_t*)a;
-    int n                                      = 0;
 
     if (self->packAccessor_)
         return;

@@ -418,7 +418,6 @@ cleanup:
 
 static bufr_descriptors_array* do_expand(grib_accessor* a, bufr_descriptors_array* unexpanded, change_coding_params* ccp, int* err)
 {
-    grib_accessor_expanded_descriptors_t* self = (grib_accessor_expanded_descriptors_t*)a;
     bufr_descriptors_array* expanded           = NULL;
     grib_context* c                            = a->context_;
 #if MYDEBUG

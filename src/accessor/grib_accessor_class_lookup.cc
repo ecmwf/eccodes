@@ -62,7 +62,6 @@ int grib_accessor_lookup_t::unpack_string(char* v, size_t* len)
     unsigned char bytes[1024] = {
         0,
     };
-    int i;
 
     size_t llen = llength_;
     unpack_bytes(bytes, &llen);

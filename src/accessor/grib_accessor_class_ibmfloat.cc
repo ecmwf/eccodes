@@ -28,7 +28,6 @@ void grib_accessor_ibmfloat_t::init(const long len, grib_arguments* arg)
 template <typename T>
 static int unpack(grib_accessor* a, T* val, size_t* len)
 {
-    grib_accessor_ibmfloat_t* self = (grib_accessor_ibmfloat_t*)a;
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     unsigned long rlen = 0;
     long count         = 0;
