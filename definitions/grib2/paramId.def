@@ -5008,6 +5008,15 @@
 	 scaleFactorOfSecondFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean total column vertically-integrated graupel (snow pellets)
+'235120' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 74 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean geopotential
 '235129' = {
 	 discipline = 0 ;
@@ -5383,6 +5392,15 @@
 	 scaleFactorOfFirstFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum total column vertically-integrated graupel (snow pellets)
+'238120' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 74 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-standard-deviation volumetric soil moisture
 '239077' = {
 	 discipline = 2 ;
@@ -5398,6 +5416,15 @@
 	 typeOfFirstFixedSurface = 17 ;
 	 scaledValueOfFirstFixedSurface = missing() ;
 	 scaleFactorOfFirstFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated graupel (snow pellets)
+'239120' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 74 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Cross sectional area of flow in channel
@@ -5646,7 +5673,7 @@
 	 gridDefinitionTemplateNumber = 101 ;
 	 numberOfGridInReference = 5 ;
 	}
-#Total column graupel
+#Total column vertically-integrated graupel (snow pellets)
 '260001' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
