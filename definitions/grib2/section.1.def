@@ -40,7 +40,7 @@ when (tablesVersion >= tablesVersionWavelengthParamSplit) {
 }
 # The IF statement is needed when reading an existing message
 if (tablesVersion >= tablesVersionChemParamSplit) {
-  remove chem_param_split;
+  # remove chem_param_split;
   transient chem_param_split = 1;
 }
 if (tablesVersion >= tablesVersionWavelengthParamSplit) {
