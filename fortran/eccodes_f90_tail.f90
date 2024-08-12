@@ -2766,9 +2766,9 @@
   end subroutine codes_skip_read_only
 
   !> Set debug mode
-  subroutine codes_set_debug(mode)
-    integer(kind=kindOfInt), intent(in) :: mode
-    call grib_set_debug(mode)
+  subroutine codes_set_debug(dmode)
+    integer(kind=kindOfInt), intent(in) :: dmode
+    call grib_set_debug(dmode)
   end subroutine codes_set_debug
 
   !> Set the definition path
