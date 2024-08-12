@@ -15024,11 +15024,6 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Time-mean surface net radiation flux (SW and LW)
-'Time-mean surface net radiation flux (SW and LW)' = {
-	 table2Version = 172 ;
-	 indicatorOfParameter = 149 ;
-	}
 #Mean short-wave heating rate
 'Mean short-wave heating rate' = {
 	 table2Version = 172 ;

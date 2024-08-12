@@ -3178,9 +3178,9 @@
   end subroutine grib_skip_read_only
 
   !> Set debug mode
-  subroutine grib_set_debug(mode)
-    integer(kind=kindOfInt), intent(in) :: mode
-    call grib_f_set_debug(mode)
+  subroutine grib_set_debug(dmode)
+    integer(kind=kindOfInt), intent(in) :: dmode
+    call grib_f_set_debug(dmode)
   end subroutine grib_set_debug
 
 

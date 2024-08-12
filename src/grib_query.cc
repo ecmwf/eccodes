@@ -8,11 +8,9 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/***************************************************************************
- *  Enrico Fucile
+/**************************************************************************
  *  Jean Baptiste Filippi - 01.11.2005                                    *
- *                                                                         *
- ***************************************************************************/
+ **************************************************************************/
 #include "grib_api_internal.h"
 #include "accessor/grib_accessor_class_bufr_data_array.h"
 
