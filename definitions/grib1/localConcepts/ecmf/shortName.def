@@ -13780,12 +13780,12 @@
 	 indicatorOfParameter = 74 ;
 	}
 #Vertical integral of eastward total energy flux
-'vitoee' = {
+'vitee' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 75 ;
 	}
 #Vertical integral of northward total energy flux
-'vitoen' = {
+'viten' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 76 ;
 	}
@@ -13825,7 +13825,7 @@
 	 indicatorOfParameter = 85 ;
 	}
 #Vertical integral of divergence of total energy flux
-'vitoed' = {
+'vited' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 86 ;
 	}
