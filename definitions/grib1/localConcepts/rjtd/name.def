@@ -218,23 +218,23 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 219 ;
 	}
-#Downward short-wave radiation flux
-'Downward short-wave radiation flux' = {
+#Surface downward short-wave radiation flux
+'Surface downward short-wave radiation flux' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 204 ;
 	}
-#Upward short-wave radiation flux
-'Upward short-wave radiation flux' = {
+#Surface upward short-wave radiation flux
+'Surface upward short-wave radiation flux' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 211 ;
 	}
-#Downward long-wave radiation flux
-'Downward long-wave radiation flux' = {
+#Surface downward long-wave radiation flux
+'Surface downward long-wave radiation flux' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 205 ;
 	}
-#Upward long-wave radiation flux
-'Upward long-wave radiation flux' = {
+#Surface upward long-wave radiation flux
+'Surface upward long-wave radiation flux' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 212 ;
 	}

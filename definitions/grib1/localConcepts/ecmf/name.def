@@ -284,13 +284,13 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 46 ;
 	}
-#Direct solar radiation
-'Direct solar radiation' = {
+#Surface direct normal short-wave (solar) radiation
+'Surface direct normal short-wave (solar) radiation' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 47 ;
 	}
-#Magnitude of turbulent surface stress
-'Magnitude of turbulent surface stress' = {
+#Time-integrated magnitude of turbulent surface stress
+'Time-integrated magnitude of turbulent surface stress' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 48 ;
 	}
@@ -334,8 +334,8 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 56 ;
 	}
-#Downward UV radiation at the surface
-'Downward UV radiation at the surface' = {
+#Surface downward UV radiation
+'Surface downward UV radiation' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 57 ;
 	}
@@ -989,63 +989,63 @@
 	 table2Version = 180 ;
 	 indicatorOfParameter = 144 ;
 	}
-#Boundary layer dissipation
-'Boundary layer dissipation' = {
+#Time-integrated boundary layer dissipation
+'Time-integrated boundary layer dissipation' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 145 ;
 	}
-#Boundary layer dissipation
-'Boundary layer dissipation' = {
+#Time-integrated boundary layer dissipation
+'Time-integrated boundary layer dissipation' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 145 ;
 	}
-#Surface sensible heat flux
-'Surface sensible heat flux' = {
+#Time-integrated surface sensible heat net flux
+'Time-integrated surface sensible heat net flux' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface sensible heat flux
-'Surface sensible heat flux' = {
+#Time-integrated surface sensible heat net flux
+'Time-integrated surface sensible heat net flux' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface sensible heat flux
-'Surface sensible heat flux' = {
+#Time-integrated surface sensible heat net flux
+'Time-integrated surface sensible heat net flux' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface sensible heat flux
-'Surface sensible heat flux' = {
+#Time-integrated surface sensible heat net flux
+'Time-integrated surface sensible heat net flux' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface sensible heat flux
-'Surface sensible heat flux' = {
+#Time-integrated surface sensible heat net flux
+'Time-integrated surface sensible heat net flux' = {
 	 table2Version = 190 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface latent heat flux
-'Surface latent heat flux' = {
+#Time-integrated surface latent heat net flux
+'Time-integrated surface latent heat net flux' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Surface latent heat flux
-'Surface latent heat flux' = {
+#Time-integrated surface latent heat net flux
+'Time-integrated surface latent heat net flux' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Surface latent heat flux
-'Surface latent heat flux' = {
+#Time-integrated surface latent heat net flux
+'Time-integrated surface latent heat net flux' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Surface latent heat flux
-'Surface latent heat flux' = {
+#Time-integrated surface latent heat net flux
+'Time-integrated surface latent heat net flux' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Surface latent heat flux
-'Surface latent heat flux' = {
+#Time-integrated surface latent heat net flux
+'Time-integrated surface latent heat net flux' = {
 	 table2Version = 190 ;
 	 indicatorOfParameter = 147 ;
 	}
@@ -1894,8 +1894,8 @@
 	 table2Version = 160 ;
 	 indicatorOfParameter = 230 ;
 	}
-#Instantaneous surface sensible heat flux
-'Instantaneous surface sensible heat flux' = {
+#Instantaneous surface sensible heat net flux
+'Instantaneous surface sensible heat net flux' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 231 ;
 	}
@@ -9879,8 +9879,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 20 ;
 	}
-#Total sky direct short-wave (solar) radiation at surface
-'Total sky direct short-wave (solar) radiation at surface' = {
+#Surface direct short-wave (solar) radiation
+'Surface direct short-wave (solar) radiation' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 21 ;
 	}
@@ -10039,18 +10039,18 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 82 ;
 	}
-#Flux of Carbon Dioxide Net Ecosystem Exchange
-'Flux of Carbon Dioxide Net Ecosystem Exchange' = {
+#Carbon dioxide net ecosystem exchange flux
+'Carbon dioxide net ecosystem exchange flux' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 83 ;
 	}
-#Flux of Carbon Dioxide Gross Primary Production
-'Flux of Carbon Dioxide Gross Primary Production' = {
+#Carbon dioxide gross primary production flux
+'Carbon dioxide gross primary production flux' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 84 ;
 	}
-#Flux of Carbon Dioxide Ecosystem Respiration
-'Flux of Carbon Dioxide Ecosystem Respiration' = {
+#Carbon dioxide ecosystem respiration flux
+'Carbon dioxide ecosystem respiration flux' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 85 ;
 	}
@@ -10104,8 +10104,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 216 ;
 	}
-#Instantaneous large-scale surface precipitation fraction
-'Instantaneous large-scale surface precipitation fraction' = {
+#Instantaneous large-scale precipitation fraction
+'Instantaneous large-scale precipitation fraction' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 217 ;
 	}
@@ -13814,8 +13814,8 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 83 ;
 	}
-#Vertically integrated moisture divergence flux
-'Vertically integrated moisture divergence flux' = {
+#Total column vertically-integrated moisture divergence flux
+'Total column vertically-integrated moisture divergence flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 84 ;
 	}

@@ -350,24 +350,24 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical = 1 ;
 	}
-#Flux of Carbon Dioxide Net Ecosystem Exchange
-'Flux of Carbon Dioxide Net Ecosystem Exchange' = {
+#Carbon dioxide net ecosystem exchange flux
+'Carbon dioxide net ecosystem exchange flux' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 59 ;
 	 constituentType = 3 ;
 	 is_chemical = 1 ;
 	}
-#Flux of Carbon Dioxide Gross Primary Production
-'Flux of Carbon Dioxide Gross Primary Production' = {
+#Carbon dioxide gross primary production flux
+'Carbon dioxide gross primary production flux' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 60 ;
 	 constituentType = 3 ;
 	 is_chemical = 1 ;
 	}
-#Flux of Carbon Dioxide Ecosystem Respiration
-'Flux of Carbon Dioxide Ecosystem Respiration' = {
+#Carbon dioxide ecosystem respiration flux
+'Carbon dioxide ecosystem respiration flux' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 61 ;

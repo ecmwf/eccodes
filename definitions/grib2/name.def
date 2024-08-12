@@ -237,8 +237,8 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	}
-#Direct solar radiation
-'Direct solar radiation' = {
+#Surface direct normal short-wave (solar) radiation
+'Surface direct normal short-wave (solar) radiation' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 54 ;
@@ -246,8 +246,8 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Magnitude of turbulent surface stress
-'Magnitude of turbulent surface stress' = {
+#Time-integrated magnitude of turbulent surface stress
+'Time-integrated magnitude of turbulent surface stress' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 58 ;
@@ -284,8 +284,8 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	}
-#Downward UV radiation at the surface
-'Downward UV radiation at the surface' = {
+#Surface downward UV radiation
+'Surface downward UV radiation' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 12 ;
@@ -463,23 +463,23 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 12 ;
 	}
-#Boundary layer dissipation
-'Boundary layer dissipation' = {
+#Time-integrated boundary layer dissipation
+'Time-integrated boundary layer dissipation' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 20 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Surface sensible heat flux
-'Surface sensible heat flux' = {
+#Time-integrated surface sensible heat net flux
+'Time-integrated surface sensible heat net flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 11 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Surface latent heat flux
-'Surface latent heat flux' = {
+#Time-integrated surface latent heat net flux
+'Time-integrated surface latent heat net flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 10 ;
@@ -813,8 +813,8 @@
 	 parameterNumber = 63 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
-#Instantaneous surface sensible heat flux
-'Instantaneous surface sensible heat flux' = {
+#Instantaneous surface sensible heat net flux
+'Instantaneous surface sensible heat net flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 11 ;
@@ -3052,8 +3052,8 @@
 	 scaledValueOfFirstFixedSurface = 26315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
-#Total sky direct short-wave (solar) radiation at surface
-'Total sky direct short-wave (solar) radiation at surface' = {
+#Surface direct short-wave (solar) radiation
+'Surface direct short-wave (solar) radiation' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 13 ;
@@ -3427,8 +3427,8 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 33 ;
 	}
-#Instantaneous large-scale surface precipitation fraction
-'Instantaneous large-scale surface precipitation fraction' = {
+#Instantaneous large-scale precipitation fraction
+'Instantaneous large-scale precipitation fraction' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 36 ;
@@ -4301,8 +4301,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated divergence of mass flux
-'Time integrated, vertically integrated divergence of mass flux' = {
+#Time-integrated, total column vertically-integrated divergence of mass flux
+'Time-integrated, total column vertically-integrated divergence of mass flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 35 ;
@@ -4310,8 +4310,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated eastward mass flux
-'Time integrated, vertically integrated eastward mass flux' = {
+#Time-integrated, total column vertically-integrated eastward mass flux
+'Time-integrated, total column vertically-integrated eastward mass flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 36 ;
@@ -4319,8 +4319,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated northward mass flux
-'Time integrated, vertically integrated northward mass flux' = {
+#Time-integrated, total column vertically-integrated northward mass flux
+'Time-integrated, total column vertically-integrated northward mass flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 37 ;
@@ -5925,11 +5925,12 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Latent heat net flux
-'Latent heat net flux' = {
+#Surface latent heat net flux
+'Surface latent heat net flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 10 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Heat index
 'Heat index' = {
@@ -6112,6 +6113,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 37 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Horizontal moisture divergence
 'Horizontal moisture divergence' = {
@@ -6205,12 +6207,14 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 53 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Large scale precipitation rate
 'Large scale precipitation rate' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 54 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Total snowfall rate
 'Total snowfall rate' = {
@@ -6253,6 +6257,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 67 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Ice pellets precipitation rate
 'Ice pellets precipitation rate' = {
@@ -6356,17 +6361,19 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 15 ;
 	}
-#Zonal flux of gravity wave stress
-'Zonal flux of gravity wave stress' = {
+#Instantaneous eastward gravity wave surface stress
+'Instantaneous eastward gravity wave surface stress' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 16 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
-#Meridional flux of gravity wave stress
-'Meridional flux of gravity wave stress' = {
+#Instantaneous northward gravity wave surface stress
+'Instantaneous northward gravity wave surface stress' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #5-wave geopotential height anomaly
 '5-wave geopotential height anomaly' = {
@@ -6380,41 +6387,47 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 1 ;
 	}
-#Downward short-wave radiation flux
-'Downward short-wave radiation flux' = {
+#Surface downward short-wave radiation flux
+'Surface downward short-wave radiation flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
-#Upward short-wave radiation flux
-'Upward short-wave radiation flux' = {
+#Surface upward short-wave radiation flux
+'Surface upward short-wave radiation flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
-#Net short wave radiation flux
-'Net short wave radiation flux' = {
+#Surface net short-wave radiation flux
+'Surface net short-wave radiation flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 9 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
-#Photosynthetically active radiation
-'Photosynthetically active radiation' = {
+#Surface photosynthetically active radiation flux
+'Surface photosynthetically active radiation flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 10 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
-#Net short-wave radiation flux, clear sky
-'Net short-wave radiation flux, clear sky' = {
+#Surface net short-wave radiation flux, clear sky
+'Surface net short-wave radiation flux, clear sky' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
-#Downward UV radiation
-'Downward UV radiation' = {
+#Surface downward UV radiation flux
+'Surface downward UV radiation flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 12 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #UV index (under clear sky)
 'UV index (under clear sky)' = {
@@ -6440,29 +6453,33 @@
 	 parameterCategory = 5 ;
 	 parameterNumber = 1 ;
 	}
-#Downward long-wave radiation flux
-'Downward long-wave radiation flux' = {
+#Surface downward long-wave radiation flux
+'Surface downward long-wave radiation flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
-#Upward long-wave radiation flux
-'Upward long-wave radiation flux' = {
+#Surface upward long-wave radiation flux
+'Surface upward long-wave radiation flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 4 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
-#Net long wave radiation flux
-'Net long wave radiation flux' = {
+#Surface net long-wave radiation flux
+'Surface net long-wave radiation flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
-#Net long-wave radiation flux, clear sky
-'Net long-wave radiation flux, clear sky' = {
+#Surface net long-wave radiation flux, clear sky
+'Surface net long-wave radiation flux, clear sky' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Cloud Ice
 'Cloud Ice' = {
@@ -6571,6 +6588,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Horizontal extent of cumulonimbus (CB)
 'Horizontal extent of cumulonimbus (CB)' = {
@@ -7272,17 +7290,19 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
-#Direct short wave radiation flux
-'Direct short wave radiation flux' = {
+#Surface direct short-wave radiation flux
+'Surface direct short-wave radiation flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 13 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
-#Diffuse short wave radiation flux
-'Diffuse short wave radiation flux' = {
+#Surface diffuse short-wave radiation flux
+'Surface diffuse short-wave radiation flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Fraction of snow cover
 'Fraction of snow cover' = {
@@ -7380,23 +7400,26 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 18 ;
 	}
-#Downward short-wave radiation flux, clear sky
-'Downward short-wave radiation flux, clear sky' = {
+#Surface downward short-wave radiation flux, clear sky
+'Surface downward short-wave radiation flux, clear sky' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
-#Upward short-wave radiation flux, clear sky
-'Upward short-wave radiation flux, clear sky' = {
+#Surface upward short-wave radiation flux, clear sky
+'Surface upward short-wave radiation flux, clear sky' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 53 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
-#Downward long-wave radiation flux, clear sky
-'Downward long-wave radiation flux, clear sky' = {
+#Surface downward long-wave radiation flux, clear sky
+'Surface downward long-wave radiation flux, clear sky' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Soil heat flux
 'Soil heat flux' = {
@@ -7450,15 +7473,17 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 39 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Potential evapotranspiration rate
 'Potential evapotranspiration rate' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 40 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
-#Water runoff and drainage rate
-'Water runoff and drainage rate' = {
+#Runoff rate water equivalent (surface plus subsurface)
+'Runoff rate water equivalent (surface plus subsurface)' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 42 ;
@@ -7468,6 +7493,7 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 41 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Forecast albedo
 'Forecast albedo' = {
@@ -11436,8 +11462,8 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Vertically integrated moisture divergence flux
-'Vertically integrated moisture divergence flux' = {
+#Total column vertically-integrated moisture divergence flux
+'Total column vertically-integrated moisture divergence flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 165 ;
