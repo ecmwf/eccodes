@@ -266,18 +266,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 71 ;
 	}
-#Instantaneous surface solar radiation downwards
-'W m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 72 ;
-	}
-#Instantaneous surface thermal radiation downwards
-'W m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 73 ;
-	}
 #Experimental product
 '~' = {
 	 discipline = 192 ;
@@ -18782,18 +18770,6 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 45 ;
 	}
-#Magnitude of turbulent surface stress
-'N m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 48 ;
-	}
-#Mean large-scale precipitation fraction
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 50 ;
-	}
 #Mean large-scale precipitation rate
 'm s**-1' = {
 	 localTablesVersion = 1 ;
@@ -18821,12 +18797,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Boundary layer dissipation
-'W m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 145 ;
-	}
 #Mean short-wave heating rate
 'K s**-1' = {
 	 discipline = 192 ;
@@ -18847,30 +18817,6 @@
 	 parameterNumber = 199 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
-	}
-#Mean sunshine duration rate
-'s s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 189 ;
-	}
-#Longitudinal component of gravity wave stress
-'N m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 195 ;
-	}
-#Meridional component of gravity wave stress
-'N m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 196 ;
-	}
-#Gravity wave dissipation
-'W m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 197 ;
 	}
 #Mean runoff rate
 'm s**-1' = {
