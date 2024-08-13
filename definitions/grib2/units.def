@@ -6441,18 +6441,6 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 51 ;
 	}
-#Net long wave radiation flux (surface)
-'W m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 5 ;
-	 parameterNumber = 0 ;
-	}
-#Net long wave radiation flux (top of atmosphere)
-'W m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 5 ;
-	 parameterNumber = 1 ;
-	}
 #Surface downward long-wave radiation flux
 'W m**-2' = {
 	 discipline = 0 ;

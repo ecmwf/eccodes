@@ -14984,11 +14984,6 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 45 ;
 	}
-#Magnitude of turbulent surface stress
-'~' = {
-	 table2Version = 172 ;
-	 indicatorOfParameter = 48 ;
-	}
 #Mean large-scale precipitation fraction
 'mlspfr' = {
 	 table2Version = 172 ;

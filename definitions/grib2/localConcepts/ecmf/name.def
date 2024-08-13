@@ -266,18 +266,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 71 ;
 	}
-#Instantaneous surface solar radiation downwards
-'Instantaneous surface solar radiation downwards' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 72 ;
-	}
-#Instantaneous surface thermal radiation downwards
-'Instantaneous surface thermal radiation downwards' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 73 ;
-	}
 #Experimental product
 'Experimental product' = {
 	 discipline = 192 ;
@@ -18782,18 +18770,6 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 45 ;
 	}
-#Magnitude of turbulent surface stress
-'Magnitude of turbulent surface stress' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 48 ;
-	}
-#Mean large-scale precipitation fraction
-'Mean large-scale precipitation fraction' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 50 ;
-	}
 #Mean large-scale precipitation rate
 'Mean large-scale precipitation rate' = {
 	 localTablesVersion = 1 ;
@@ -18821,12 +18797,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Boundary layer dissipation
-'Boundary layer dissipation' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 145 ;
-	}
 #Mean short-wave heating rate
 'Mean short-wave heating rate' = {
 	 discipline = 192 ;
@@ -18847,30 +18817,6 @@
 	 parameterNumber = 199 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
-	}
-#Mean sunshine duration rate
-'Mean sunshine duration rate' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 189 ;
-	}
-#Longitudinal component of gravity wave stress
-'Longitudinal component of gravity wave stress' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 195 ;
-	}
-#Meridional component of gravity wave stress
-'Meridional component of gravity wave stress' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 196 ;
-	}
-#Gravity wave dissipation
-'Gravity wave dissipation' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 197 ;
 	}
 #Mean runoff rate
 'Mean runoff rate' = {
