@@ -910,22 +910,22 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 87 ;
 	}
-#Vertical integral of eastward heat flux
+#Total column vertically-integrated eastward heat flux
 'W m**-1' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 190 ;
 	}
-#Vertical integral of northward heat flux
+#Total column vertically-integrated northward heat flux
 'W m**-1' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 191 ;
 	}
-#Vertical integral of eastward water vapour flux
+#Total column vertically-integrated eastward water vapour flux
 'kg m**-1 s**-1' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 157 ;
 	}
-#Vertical integral of northward water vapour flux
+#Total column vertically-integrated northward water vapour flux
 'kg m**-1 s**-1' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 152 ;

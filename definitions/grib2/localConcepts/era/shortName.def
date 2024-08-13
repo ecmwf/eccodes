@@ -620,127 +620,127 @@
 	 parameterCategory = 162 ;
 	 parameterNumber = 51 ;
 	}
-#Vertical integral of temperature
+#Total column vertically-integrated temperature
 'vit' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 54 ;
 	}
-#Vertical integral of cloud liquid water
+#Total column vertically-integrated cloud liquid water
 'vilw' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 56 ;
 	}
-#Vertical integral of cloud frozen water
+#Total column vertically-integrated cloud frozen water
 'viiw' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 57 ;
 	}
-#Vertical integral of ozone
+#Total column vertically-integrated ozone
 'vioz' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 58 ;
 	}
-#Vertical integral of energy conversion
+#Total column vertically-integrated energy conversion
 'viec' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 64 ;
 	}
-#Vertical integral of eastward mass flux
+#Total column vertically-integrated eastward mass flux
 'vimae' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 65 ;
 	}
-#Vertical integral of northward mass flux
+#Total column vertically-integrated northward mass flux
 'viman' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 66 ;
 	}
-#Vertical integral of eastward kinetic energy flux
+#Total column vertically-integrated eastward kinetic energy flux
 'vikee' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 67 ;
 	}
-#Vertical integral of northward kinetic energy flux
+#Total column vertically-integrated northward kinetic energy flux
 'viken' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 68 ;
 	}
-#Vertical integral of eastward geopotential flux
+#Total column vertically-integrated eastward geopotential flux
 'vige' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 73 ;
 	}
-#Vertical integral of northward geopotential flux
+#Total column vertically-integrated northward geopotential flux
 'vign' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 74 ;
 	}
-#Vertical integral of eastward total energy flux
+#Total column vertically-integrated eastward total energy flux
 'vitee' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 75 ;
 	}
-#Vertical integral of northward total energy flux
+#Total column vertically-integrated northward total energy flux
 'viten' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 76 ;
 	}
-#Vertical integral of eastward ozone flux
+#Total column vertically-integrated eastward ozone flux
 'vioze' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 77 ;
 	}
-#Vertical integral of northward ozone flux
+#Total column vertically-integrated northward ozone flux
 'viozn' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 78 ;
 	}
-#Vertical integral of divergence of mass flux
+#Total column vertically-integrated divergence of mass flux
 'vimad' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 81 ;
 	}
-#Vertical integral of divergence of kinetic energy flux
+#Total column vertically-integrated divergence of kinetic energy flux
 'viked' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 82 ;
 	}
-#Vertical integral of divergence of thermal energy flux
+#Total column vertically-integrated divergence of thermal energy flux
 'vithed' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 83 ;
 	}
-#Vertical integral of divergence of geopotential flux
+#Total column vertically-integrated divergence of geopotential flux
 'vigd' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 85 ;
 	}
-#Vertical integral of divergence of total energy flux
+#Total column vertically-integrated divergence of total energy flux
 'vited' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 86 ;
 	}
-#Vertical integral of divergence of ozone flux
+#Total column vertically-integrated divergence of ozone flux
 'viozd' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;

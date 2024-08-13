@@ -4301,8 +4301,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time-integrated, total column vertically-integrated divergence of mass flux
-'Time-integrated, total column vertically-integrated divergence of mass flux' = {
+#Time-integrated total column vertically-integrated divergence of mass flux
+'Time-integrated total column vertically-integrated divergence of mass flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 35 ;
@@ -4310,8 +4310,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time-integrated, total column vertically-integrated eastward mass flux
-'Time-integrated, total column vertically-integrated eastward mass flux' = {
+#Time-integrated total column vertically-integrated eastward mass flux
+'Time-integrated total column vertically-integrated eastward mass flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 36 ;
@@ -4319,8 +4319,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time-integrated, total column vertically-integrated northward mass flux
-'Time-integrated, total column vertically-integrated northward mass flux' = {
+#Time-integrated total column vertically-integrated northward mass flux
+'Time-integrated total column vertically-integrated northward mass flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 37 ;
@@ -4328,8 +4328,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated divergence of water vapour flux
-'Time integrated, vertically integrated divergence of water vapour flux' = {
+#Time-integrated total column vertically-integrated divergence of water vapour flux
+'Time-integrated total column vertically-integrated divergence of water vapour flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 160 ;
@@ -4337,8 +4337,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated divergence of cloud liquid water flux
-'Time integrated, vertically integrated divergence of cloud liquid water flux' = {
+#Time-integrated total column vertically-integrated divergence of cloud liquid water flux
+'Time-integrated total column vertically-integrated divergence of cloud liquid water flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 161 ;
@@ -4346,8 +4346,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated divergence of cloud ice water flux
-'Time integrated, vertically integrated divergence of cloud ice water flux' = {
+#Time-integrated total column vertically-integrated divergence of cloud ice water flux
+'Time-integrated total column vertically-integrated divergence of cloud ice water flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 162 ;
@@ -4355,8 +4355,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated divergence of rain flux
-'Time integrated, vertically integrated divergence of rain flux' = {
+#Time-integrated total column vertically-integrated divergence of rain flux
+'Time-integrated total column vertically-integrated divergence of rain flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 163 ;
@@ -4364,8 +4364,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated divergence of snow flux
-'Time integrated, vertically integrated divergence of snow flux' = {
+#Time-integrated total column vertically-integrated divergence of snow flux
+'Time-integrated total column vertically-integrated divergence of snow flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 164 ;
@@ -4373,8 +4373,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated eastward water vapour flux
-'Time integrated, vertically integrated eastward water vapour flux' = {
+#Time-integrated total column vertically-integrated eastward water vapour flux
+'Time-integrated total column vertically-integrated eastward water vapour flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 150 ;
@@ -4382,8 +4382,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated northward water vapour flux
-'Time integrated, vertically integrated northward water vapour flux' = {
+#Time-integrated total column vertically-integrated northward water vapour flux
+'Time-integrated total column vertically-integrated northward water vapour flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 151 ;
@@ -4391,8 +4391,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated eastward cloud liquid water flux
-'Time integrated, vertically integrated eastward cloud liquid water flux' = {
+#Time-integrated total column vertically-integrated eastward cloud liquid water flux
+'Time-integrated total column vertically-integrated eastward cloud liquid water flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 152 ;
@@ -4400,8 +4400,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated northward cloud liquid water flux
-'Time integrated, vertically integrated northward cloud liquid water flux' = {
+#Time-integrated total column vertically-integrated northward cloud liquid water flux
+'Time-integrated total column vertically-integrated northward cloud liquid water flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 153 ;
@@ -4409,8 +4409,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated eastward cloud ice water flux
-'Time integrated, vertically integrated eastward cloud ice water flux' = {
+#Time-integrated total column vertically-integrated eastward cloud ice water flux
+'Time-integrated total column vertically-integrated eastward cloud ice water flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 154 ;
@@ -4418,8 +4418,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated northward cloud ice water flux
-'Time integrated, vertically integrated northward cloud ice water flux' = {
+#Time-integrated total column vertically-integrated northward cloud ice water flux
+'Time-integrated total column vertically-integrated northward cloud ice water flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 155 ;
@@ -4427,8 +4427,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated eastward rain flux
-'Time integrated, vertically integrated eastward rain flux' = {
+#Time-integrated total column vertically-integrated eastward rain flux
+'Time-integrated total column vertically-integrated eastward rain flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 156 ;
@@ -4436,8 +4436,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated northward rain flux
-'Time integrated, vertically integrated northward rain flux' = {
+#Time-integrated total column vertically-integrated northward rain flux
+'Time-integrated total column vertically-integrated northward rain flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 157 ;
@@ -4445,8 +4445,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated eastward snow flux
-'Time integrated, vertically integrated eastward snow flux' = {
+#Time-integrated total column vertically-integrated eastward snow flux
+'Time-integrated total column vertically-integrated eastward snow flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 158 ;
@@ -4454,8 +4454,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated northward snow flux
-'Time integrated, vertically integrated northward snow flux' = {
+#Time-integrated total column vertically-integrated northward snow flux
+'Time-integrated total column vertically-integrated northward snow flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 159 ;
@@ -11284,8 +11284,8 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 50 ;
 	}
-#Vertical integral of mass of atmosphere
-'Vertical integral of mass of atmosphere' = {
+#Total column vertically-integrated mass of atmosphere
+'Total column vertically-integrated mass of atmosphere' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 39 ;
@@ -11316,8 +11316,8 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Vertical integral of potential+internal+latent energy
-'Vertical integral of potential+internal+latent energy' = {
+#Total column vertically-integrated potential+internal+latent energy
+'Total column vertically-integrated potential+internal+latent energy' = {
 	 discipline = 0 ;
 	 parameterCategory = 21 ;
 	 parameterNumber = 21 ;
@@ -11332,104 +11332,104 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Vertical integral of eastward mass flux
-'Vertical integral of eastward mass flux' = {
+#Total column vertically-integrated eastward mass flux
+'Total column vertically-integrated eastward mass flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 36 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Vertical integral of northward mass flux
-'Vertical integral of northward mass flux' = {
+#Total column vertically-integrated northward mass flux
+'Total column vertically-integrated northward mass flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 37 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Vertical integral of eastward kinetic energy flux
-'Vertical integral of eastward kinetic energy flux' = {
+#Total column vertically-integrated eastward kinetic energy flux
+'Total column vertically-integrated eastward kinetic energy flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 21 ;
 	 parameterNumber = 9 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Vertical integral of northward kinetic energy flux
-'Vertical integral of northward kinetic energy flux' = {
+#Total column vertically-integrated northward kinetic energy flux
+'Total column vertically-integrated northward kinetic energy flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 21 ;
 	 parameterNumber = 10 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Vertical integral of eastward heat flux
-'Vertical integral of eastward heat flux' = {
+#Total column vertically-integrated eastward heat flux
+'Total column vertically-integrated eastward heat flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 21 ;
 	 parameterNumber = 19 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Vertical integral of northward heat flux
-'Vertical integral of northward heat flux' = {
+#Total column vertically-integrated northward heat flux
+'Total column vertically-integrated northward heat flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 21 ;
 	 parameterNumber = 20 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Vertical integral of eastward water vapour flux
-'Vertical integral of eastward water vapour flux' = {
+#Total column vertically-integrated eastward water vapour flux
+'Total column vertically-integrated eastward water vapour flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 150 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Vertical integral of northward water vapour flux
-'Vertical integral of northward water vapour flux' = {
+#Total column vertically-integrated northward water vapour flux
+'Total column vertically-integrated northward water vapour flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 151 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Vertical integral of eastward geopotential flux
-'Vertical integral of eastward geopotential flux' = {
+#Total column vertically-integrated eastward geopotential flux
+'Total column vertically-integrated eastward geopotential flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 40 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Vertical integral of northward geopotential flux
-'Vertical integral of northward geopotential flux' = {
+#Total column vertically-integrated northward geopotential flux
+'Total column vertically-integrated northward geopotential flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 41 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Vertical integral of eastward total energy flux
-'Vertical integral of eastward total energy flux' = {
+#Total column vertically-integrated eastward total energy flux
+'Total column vertically-integrated eastward total energy flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 21 ;
 	 parameterNumber = 11 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Vertical integral of northward total energy flux
-'Vertical integral of northward total energy flux' = {
+#Total column vertically-integrated northward total energy flux
+'Total column vertically-integrated northward total energy flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 21 ;
 	 parameterNumber = 12 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Vertical integral of eastward ozone flux
-'Vertical integral of eastward ozone flux' = {
+#Total column vertically-integrated eastward ozone flux
+'Total column vertically-integrated eastward ozone flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 78 ;
@@ -11437,8 +11437,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 constituentType = 0 ;
 	}
-#Vertical integral of northward ozone flux
-'Vertical integral of northward ozone flux' = {
+#Total column vertically-integrated northward ozone flux
+'Total column vertically-integrated northward ozone flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 79 ;
@@ -11446,16 +11446,16 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 constituentType = 0 ;
 	}
-#Vertical integral of divergence of mass flux
-'Vertical integral of divergence of mass flux' = {
+#Total column vertically-integrated divergence of mass flux
+'Total column vertically-integrated divergence of mass flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 35 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Vertical integral of divergence of kinetic energy flux
-'Vertical integral of divergence of kinetic energy flux' = {
+#Total column vertically-integrated divergence of kinetic energy flux
+'Total column vertically-integrated divergence of kinetic energy flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 21 ;
 	 parameterNumber = 16 ;
@@ -11470,24 +11470,24 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Vertical integral of divergence of geopotential flux
-'Vertical integral of divergence of geopotential flux' = {
+#Total column vertically-integrated divergence of geopotential flux
+'Total column vertically-integrated divergence of geopotential flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 43 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Vertical integral of divergence of total energy flux
-'Vertical integral of divergence of total energy flux' = {
+#Total column vertically-integrated divergence of total energy flux
+'Total column vertically-integrated divergence of total energy flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 21 ;
 	 parameterNumber = 17 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Vertical integral of divergence of ozone flux
-'Vertical integral of divergence of ozone flux' = {
+#Total column vertically-integrated divergence of ozone flux
+'Total column vertically-integrated divergence of ozone flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 80 ;

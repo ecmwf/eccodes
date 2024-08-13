@@ -3584,38 +3584,38 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 45 ;
 	}
-#Vertical integral of divergence of cloud liquid water flux
-'Vertical integral of divergence of cloud liquid water flux' = {
+#Total column vertically-integrated divergence of cloud liquid water flux
+'Total column vertically-integrated divergence of cloud liquid water flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 79 ;
 	}
-#Vertical integral of divergence of cloud frozen water flux
-'Vertical integral of divergence of cloud frozen water flux' = {
+#Total column vertically-integrated divergence of cloud frozen water flux
+'Total column vertically-integrated divergence of cloud frozen water flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 80 ;
 	}
-#Vertical integral of eastward cloud liquid water flux
-'Vertical integral of eastward cloud liquid water flux' = {
+#Total column vertically-integrated eastward cloud liquid water flux
+'Total column vertically-integrated eastward cloud liquid water flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 88 ;
 	}
-#Vertical integral of northward cloud liquid water flux
-'Vertical integral of northward cloud liquid water flux' = {
+#Total column vertically-integrated northward cloud liquid water flux
+'Total column vertically-integrated northward cloud liquid water flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 89 ;
 	}
-#Vertical integral of eastward cloud frozen water flux
-'Vertical integral of eastward cloud frozen water flux' = {
+#Total column vertically-integrated eastward cloud frozen water flux
+'Total column vertically-integrated eastward cloud frozen water flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 90 ;
 	}
-#Vertical integral of northward cloud frozen water flux 
-'Vertical integral of northward cloud frozen water flux ' = {
+#Total column vertically-integrated northward cloud frozen water flux 
+'Total column vertically-integrated northward cloud frozen water flux ' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 91 ;
 	}
-#Vertical integral of mass tendency
-'Vertical integral of mass tendency' = {
+#Total column vertically-integrated mass tendency
+'Total column vertically-integrated mass tendency' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 92 ;
 	}
@@ -13669,33 +13669,33 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 51 ;
 	}
-#Vertical integral of mass of atmosphere
-'Vertical integral of mass of atmosphere' = {
+#Total column vertically-integrated mass of atmosphere
+'Total column vertically-integrated mass of atmosphere' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 53 ;
 	}
-#Vertical integral of temperature
-'Vertical integral of temperature' = {
+#Total column vertically-integrated temperature
+'Total column vertically-integrated temperature' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 54 ;
 	}
-#Vertical integral of water vapour
-'Vertical integral of water vapour' = {
+#Total column vertically-integrated water vapour
+'Total column vertically-integrated water vapour' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 55 ;
 	}
-#Vertical integral of cloud liquid water
-'Vertical integral of cloud liquid water' = {
+#Total column vertically-integrated cloud liquid water
+'Total column vertically-integrated cloud liquid water' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 56 ;
 	}
-#Vertical integral of cloud frozen water
-'Vertical integral of cloud frozen water' = {
+#Total column vertically-integrated cloud frozen water
+'Total column vertically-integrated cloud frozen water' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Vertical integral of ozone
-'Vertical integral of ozone' = {
+#Total column vertically-integrated ozone
+'Total column vertically-integrated ozone' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 58 ;
 	}
@@ -13714,8 +13714,8 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 61 ;
 	}
-#Vertical integral of potential+internal+latent energy
-'Vertical integral of potential+internal+latent energy' = {
+#Total column vertically-integrated potential+internal+latent energy
+'Total column vertically-integrated potential+internal+latent energy' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 62 ;
 	}
@@ -13724,93 +13724,93 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 63 ;
 	}
-#Vertical integral of energy conversion
-'Vertical integral of energy conversion' = {
+#Total column vertically-integrated energy conversion
+'Total column vertically-integrated energy conversion' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 64 ;
 	}
-#Vertical integral of eastward mass flux
-'Vertical integral of eastward mass flux' = {
+#Total column vertically-integrated eastward mass flux
+'Total column vertically-integrated eastward mass flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 65 ;
 	}
-#Vertical integral of northward mass flux
-'Vertical integral of northward mass flux' = {
+#Total column vertically-integrated northward mass flux
+'Total column vertically-integrated northward mass flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 66 ;
 	}
-#Vertical integral of eastward kinetic energy flux
-'Vertical integral of eastward kinetic energy flux' = {
+#Total column vertically-integrated eastward kinetic energy flux
+'Total column vertically-integrated eastward kinetic energy flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 67 ;
 	}
-#Vertical integral of northward kinetic energy flux
-'Vertical integral of northward kinetic energy flux' = {
+#Total column vertically-integrated northward kinetic energy flux
+'Total column vertically-integrated northward kinetic energy flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 68 ;
 	}
-#Vertical integral of eastward heat flux
-'Vertical integral of eastward heat flux' = {
+#Total column vertically-integrated eastward heat flux
+'Total column vertically-integrated eastward heat flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 69 ;
 	}
-#Vertical integral of northward heat flux
-'Vertical integral of northward heat flux' = {
+#Total column vertically-integrated northward heat flux
+'Total column vertically-integrated northward heat flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 70 ;
 	}
-#Vertical integral of eastward water vapour flux
-'Vertical integral of eastward water vapour flux' = {
+#Total column vertically-integrated eastward water vapour flux
+'Total column vertically-integrated eastward water vapour flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 71 ;
 	}
-#Vertical integral of northward water vapour flux
-'Vertical integral of northward water vapour flux' = {
+#Total column vertically-integrated northward water vapour flux
+'Total column vertically-integrated northward water vapour flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 72 ;
 	}
-#Vertical integral of eastward geopotential flux
-'Vertical integral of eastward geopotential flux' = {
+#Total column vertically-integrated eastward geopotential flux
+'Total column vertically-integrated eastward geopotential flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 73 ;
 	}
-#Vertical integral of northward geopotential flux
-'Vertical integral of northward geopotential flux' = {
+#Total column vertically-integrated northward geopotential flux
+'Total column vertically-integrated northward geopotential flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 74 ;
 	}
-#Vertical integral of eastward total energy flux
-'Vertical integral of eastward total energy flux' = {
+#Total column vertically-integrated eastward total energy flux
+'Total column vertically-integrated eastward total energy flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 75 ;
 	}
-#Vertical integral of northward total energy flux
-'Vertical integral of northward total energy flux' = {
+#Total column vertically-integrated northward total energy flux
+'Total column vertically-integrated northward total energy flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 76 ;
 	}
-#Vertical integral of eastward ozone flux
-'Vertical integral of eastward ozone flux' = {
+#Total column vertically-integrated eastward ozone flux
+'Total column vertically-integrated eastward ozone flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 77 ;
 	}
-#Vertical integral of northward ozone flux
-'Vertical integral of northward ozone flux' = {
+#Total column vertically-integrated northward ozone flux
+'Total column vertically-integrated northward ozone flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 78 ;
 	}
-#Vertical integral of divergence of mass flux
-'Vertical integral of divergence of mass flux' = {
+#Total column vertically-integrated divergence of mass flux
+'Total column vertically-integrated divergence of mass flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 81 ;
 	}
-#Vertical integral of divergence of kinetic energy flux
-'Vertical integral of divergence of kinetic energy flux' = {
+#Total column vertically-integrated divergence of kinetic energy flux
+'Total column vertically-integrated divergence of kinetic energy flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 82 ;
 	}
-#Vertical integral of divergence of thermal energy flux
-'Vertical integral of divergence of thermal energy flux' = {
+#Total column vertically-integrated divergence of thermal energy flux
+'Total column vertically-integrated divergence of thermal energy flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 83 ;
 	}
@@ -13819,18 +13819,18 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 84 ;
 	}
-#Vertical integral of divergence of geopotential flux
-'Vertical integral of divergence of geopotential flux' = {
+#Total column vertically-integrated divergence of geopotential flux
+'Total column vertically-integrated divergence of geopotential flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 85 ;
 	}
-#Vertical integral of divergence of total energy flux
-'Vertical integral of divergence of total energy flux' = {
+#Total column vertically-integrated divergence of total energy flux
+'Total column vertically-integrated divergence of total energy flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 86 ;
 	}
-#Vertical integral of divergence of ozone flux
-'Vertical integral of divergence of ozone flux' = {
+#Total column vertically-integrated divergence of ozone flux
+'Total column vertically-integrated divergence of ozone flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 87 ;
 	}

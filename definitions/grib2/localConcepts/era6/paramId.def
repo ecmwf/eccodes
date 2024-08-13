@@ -392,7 +392,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated eastward ozone flux
+#Time-integrated total column vertically-integrated eastward ozone flux
 '233032' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -403,7 +403,7 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical = 1 ;
 	}
-#Time integrated, vertically integrated northward ozone flux
+#Time-integrated total column vertically-integrated northward ozone flux
 '233033' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -414,7 +414,7 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical = 1 ;
 	}
-#Time integrated, vertically integrated divergence of ozone flux
+#Time-integrated total column vertically-integrated divergence of ozone flux
 '233034' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -425,7 +425,7 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical = 1 ;
 	}
-#Time integrated, vertically integrated net source of ozone
+#Time-integrated total column vertically-integrated net source of ozone
 '233035' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
