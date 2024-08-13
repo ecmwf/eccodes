@@ -55,5 +55,8 @@ test_conversion 172178 235039 mtnswrf
 test_conversion 172179 235040 mtnlwrf
 test_conversion 151175 262118 sc300m
 
+test_conversion 72 260087 sdswrf
+test_conversion 73 260097 sdlwrf
+
 # Clean up
 rm -f $tempGrib1 $tempGrib2 $tempLog
