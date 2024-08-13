@@ -20,6 +20,7 @@ void grib_accessor_bits_t::init(const long l, grib_arguments* c)
     grib_handle* hand  = grib_handle_of_accessor(this);
     grib_expression* e = NULL;
     int n              = 0;
+    referenceValue_    = 0;
 
     argument_ = grib_arguments_get_name(hand, c, n++);
     start_    = grib_arguments_get_long(hand, c, n++);
