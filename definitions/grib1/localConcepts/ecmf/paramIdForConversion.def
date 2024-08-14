@@ -35,11 +35,19 @@
 262139 = {gribTablesVersionNo=151; indicatorOfParameter=132; centre=98;}
 # 151131
 262140 = {gribTablesVersionNo=151; indicatorOfParameter=131; centre=98;}
-# 
+# 72
 260087 = {gribTablesVersionNo=128; indicatorOfParameter=72; centre=98;}
+# 73
 260097 = {gribTablesVersionNo=128; indicatorOfParameter=73; centre=98;}
+# 172050
 235026 = {gribTablesVersionNo=172; indicatorOfParameter=50; centre=98;}
+# 172145
 235032 = {gribTablesVersionNo=172; indicatorOfParameter=145; centre=98;}
+# 172189 <-- ecCodes 2.38
+# 235189 = {gribTablesVersionNo=172; indicatorOfParameter=189; centre=98;}
+# 172195
 235045 = {gribTablesVersionNo=172; indicatorOfParameter=195; centre=98;}
+# 172196
 235046 = {gribTablesVersionNo=172; indicatorOfParameter=196; centre=98;}
+# 172197
 235047 = {gribTablesVersionNo=172; indicatorOfParameter=197; centre=98;}
