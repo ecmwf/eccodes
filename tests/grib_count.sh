@@ -19,6 +19,8 @@ for file in ${grib_files}; do
   ${tools_dir}/grib_count $input
 done
 
+${tools_dir}/grib_count -f $data_dir/bad.grib
+
 # Specific files
 count=`${tools_dir}/grib_count ${data_dir}/test.grib1`
 [ $count -eq 42 ]
