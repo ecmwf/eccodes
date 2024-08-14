@@ -37,7 +37,7 @@ export ECCODES_DEFINITION_PATH
 
 # binaries are in the TOP CMAKE_BINARY_DIR
 tools_dir=@CMAKE_BINARY_DIR@/bin
-tigge_dir=@CMAKE_BINARY_DIR@/bin
+bin_dir=@CMAKE_BINARY_DIR@/bin
 
 # If this environment variable is set, then run the
 # executables with valgrind. See ECC-746
