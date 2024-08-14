@@ -242,18 +242,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 65 ;
 	}
-#Minimum stomatal resistance, low vegetation
-'68' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 68 ;
-	}
-#Minimum stomatal resistance, high vegetation
-'69' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 69 ;
-	}
 #Biome cover, low vegetation
 '70' = {
 	 discipline = 192 ;
@@ -1276,18 +1264,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 67 ;
-	}
-#Minimum stomatal resistance, low vegetation
-'200068' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 68 ;
-	}
-#Minimum stomatal resistance, high vegetation
-'200069' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 69 ;
 	}
 #Biome cover, low vegetation
 '200070' = {
@@ -14524,18 +14500,6 @@
 	 parameterCategory = 129 ;
 	 parameterNumber = 67 ;
 	}
-#Minimum stomatal resistance, low vegetation
-'129068' = {
-	 discipline = 192 ;
-	 parameterCategory = 129 ;
-	 parameterNumber = 68 ;
-	}
-#Minimum stomatal resistance, high vegetation
-'129069' = {
-	 discipline = 192 ;
-	 parameterCategory = 129 ;
-	 parameterNumber = 69 ;
-	}
 #Biome cover, low vegetation
 '129070' = {
 	 discipline = 192 ;
@@ -17024,30 +16988,6 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 170 ;
 	}
-#U velocity maximum
-'151171' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 171 ;
-	}
-#Depth of the velocity maximum
-'151172' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 172 ;
-	}
-#Salinity maximum
-'151173' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 173 ;
-	}
-#Depth of salinity maximum
-'151174' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 174 ;
-	}
 #Layer Thickness at scalar points
 '151176' = {
 	 discipline = 192 ;
@@ -17330,41 +17270,17 @@
 	 parameterCategory = 160 ;
 	 parameterNumber = 199 ;
 	}
-#Maximum temperature at 2 metres during averaging time
-'160201' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 201 ;
-	}
-#Minimum temperature at 2 metres during averaging time
-'160202' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 202 ;
-	}
 #Runoff
 '160205' = {
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 205 ;
 	}
-#Standard deviation of geopotential
-'160206' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 206 ;
-	}
 #Covariance of temperature and geopotential
 '160207' = {
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 207 ;
-	}
-#Standard deviation of temperature
-'160208' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 208 ;
 	}
 #Covariance of specific humidity and geopotential
 '160209' = {
@@ -17377,12 +17293,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 210 ;
-	}
-#Standard deviation of specific humidity
-'160211' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 211 ;
 	}
 #Covariance of U component and geopotential
 '160212' = {
@@ -17401,12 +17311,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 214 ;
-	}
-#Standard deviation of U velocity
-'160215' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 215 ;
 	}
 #Covariance of V component and geopotential
 '160216' = {
@@ -17431,12 +17335,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 219 ;
-	}
-#Standard deviation of V component
-'160220' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 220 ;
 	}
 #Covariance of W component and geopotential
 '160221' = {
@@ -17467,12 +17365,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 225 ;
-	}
-#Standard deviation of vertical velocity
-'160226' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 226 ;
 	}
 #Instantaneous surface heat flux
 '160231' = {
@@ -19238,18 +19130,6 @@
 	 parameterCategory = 174 ;
 	 parameterNumber = 183 ;
 	}
-#1.5m temperature - maximum in the last 24 hours
-'174201' = {
-	 discipline = 192 ;
-	 parameterCategory = 174 ;
-	 parameterNumber = 201 ;
-	}
-#1.5m temperature - minimum in the last 24 hours
-'174202' = {
-	 discipline = 192 ;
-	 parameterCategory = 174 ;
-	 parameterNumber = 202 ;
-	}
 #Soil temperature layer 4
 '174236' = {
 	 discipline = 192 ;
@@ -19411,18 +19291,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 175 ;
 	 parameterNumber = 183 ;
-	}
-#1.5m temperature - maximum in the last 24 hours
-'175201' = {
-	 discipline = 192 ;
-	 parameterCategory = 175 ;
-	 parameterNumber = 201 ;
-	}
-#1.5m temperature - minimum in the last 24 hours
-'175202' = {
-	 discipline = 192 ;
-	 parameterCategory = 175 ;
-	 parameterNumber = 202 ;
 	}
 #Soil temperature layer 4
 '175236' = {
@@ -19910,23 +19778,11 @@
 	 parameterCategory = 201 ;
 	 parameterNumber = 113 ;
 	}
-#deviation of pressure from reference value
-'201139' = {
-	 discipline = 192 ;
-	 parameterCategory = 201 ;
-	 parameterNumber = 139 ;
-	}
 #coefficient of horizontal diffusion
 '201150' = {
 	 discipline = 192 ;
 	 parameterCategory = 201 ;
 	 parameterNumber = 150 ;
-	}
-#Maximum wind velocity
-'201187' = {
-	 discipline = 192 ;
-	 parameterCategory = 201 ;
-	 parameterNumber = 187 ;
 	}
 #water content of interception store
 '201200' = {

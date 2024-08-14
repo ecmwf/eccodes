@@ -2374,16 +2374,6 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 67 ;
 	}
-#Minimum stomatal resistance, low vegetation
-'~' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 68 ;
-	}
-#Minimum stomatal resistance, high vegetation
-'~' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 69 ;
-	}
 #Biome cover, low vegetation
 '~' = {
 	 table2Version = 200 ;
@@ -10544,21 +10534,6 @@
 	 table2Version = 235 ;
 	 indicatorOfParameter = 64 ;
 	}
-#Mean rain rate
-'mrr' = {
-	 table2Version = 235 ;
-	 indicatorOfParameter = 65 ;
-	}
-#Mean convective rain rate
-'mcrr' = {
-	 table2Version = 235 ;
-	 indicatorOfParameter = 66 ;
-	}
-#Mean large-scale rain rate
-'mlsrr' = {
-	 table2Version = 235 ;
-	 indicatorOfParameter = 67 ;
-	}
 #Mean surface downward short-wave radiation flux, clear sky
 'msdwswrfcs' = {
 	 table2Version = 235 ;
@@ -10873,16 +10848,6 @@
 '~' = {
 	 table2Version = 129 ;
 	 indicatorOfParameter = 67 ;
-	}
-#Minimum stomatal resistance, low vegetation
-'~' = {
-	 table2Version = 129 ;
-	 indicatorOfParameter = 68 ;
-	}
-#Minimum stomatal resistance, high vegetation
-'~' = {
-	 table2Version = 129 ;
-	 indicatorOfParameter = 69 ;
 	}
 #Biome cover, low vegetation
 '~' = {
@@ -13494,35 +13459,15 @@
 	 table2Version = 160 ;
 	 indicatorOfParameter = 199 ;
 	}
-#Maximum temperature at 2 metres during averaging time
-'mx2trea' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 201 ;
-	}
-#Minimum temperature at 2 metres during averaging time
-'mn2trea' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 202 ;
-	}
 #Runoff
 'rorea' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 205 ;
 	}
-#Standard deviation of geopotential
-'zzrea' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 206 ;
-	}
 #Covariance of temperature and geopotential
 'tzrea' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 207 ;
-	}
-#Standard deviation of temperature
-'ttrea' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 208 ;
 	}
 #Covariance of specific humidity and geopotential
 'qzrea' = {
@@ -13533,11 +13478,6 @@
 'qtrea' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 210 ;
-	}
-#Standard deviation of specific humidity
-'qqrea' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 211 ;
 	}
 #Covariance of U component and geopotential
 'uzrea' = {
@@ -13553,11 +13493,6 @@
 'uqrea' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 214 ;
-	}
-#Standard deviation of U velocity
-'uurea' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 215 ;
 	}
 #Covariance of V component and geopotential
 'vzrea' = {
@@ -13578,11 +13513,6 @@
 'vurea' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 219 ;
-	}
-#Standard deviation of V component
-'vvrea' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 220 ;
 	}
 #Covariance of W component and geopotential
 'wzrea' = {
@@ -13608,11 +13538,6 @@
 'wvrea' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 225 ;
-	}
-#Standard deviation of vertical velocity
-'wwrea' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 226 ;
 	}
 #Instantaneous surface heat flux
 'ishfrea' = {
@@ -16038,11 +15963,6 @@
 'rain_con' = {
 	 table2Version = 201 ;
 	 indicatorOfParameter = 113 ;
-	}
-#deviation of pressure from reference value
-'pp' = {
-	 table2Version = 201 ;
-	 indicatorOfParameter = 139 ;
 	}
 #coefficient of horizontal diffusion
 '~' = {

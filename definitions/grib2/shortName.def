@@ -5944,12 +5944,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 13 ;
 	}
-#Minimum dew point depression
-'mindpd' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 14 ;
-	}
 #Snow phase change heat flux
 'snohf' = {
 	 discipline = 0 ;
@@ -6045,18 +6039,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 26 ;
-	}
-#Maximum relative humidity
-'maxrh' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 27 ;
-	}
-#Maximum absolute humidity
-'maxah' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 28 ;
 	}
 #Total snowfall
 'asnow' = {
@@ -6264,12 +6246,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 68 ;
-	}
-#Maximum wind speed
-'maxgust' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 21 ;
 	}
 #Wind speed (gust)
 'gust' = {
@@ -6819,12 +6795,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 16 ;
-	}
-#Maximum snow albedo
-'mxsalb' = {
-	 discipline = 0 ;
-	 parameterCategory = 19 ;
-	 parameterNumber = 17 ;
 	}
 #Snow free albedo
 'snfalb' = {
@@ -10767,18 +10737,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
-	}
-#Maximum temperature
-'tmax' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 4 ;
-	}
-#Minimum temperature
-'tmin' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 5 ;
 	}
 #Dew point temperature
 'dpt' = {

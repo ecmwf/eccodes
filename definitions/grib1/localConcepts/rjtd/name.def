@@ -213,11 +213,6 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 78 ;
 	}
-#Maximum wind speed
-'Maximum wind speed' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 219 ;
-	}
 #Surface downward short-wave radiation flux
 'Surface downward short-wave radiation flux' = {
 	 table2Version = 200 ;

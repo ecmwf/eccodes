@@ -2374,16 +2374,6 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 67 ;
 	}
-#Minimum stomatal resistance, low vegetation
-'Minimum stomatal resistance, low vegetation' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 68 ;
-	}
-#Minimum stomatal resistance, high vegetation
-'Minimum stomatal resistance, high vegetation' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 69 ;
-	}
 #Biome cover, low vegetation
 'Biome cover, low vegetation' = {
 	 table2Version = 200 ;
@@ -10544,21 +10534,6 @@
 	 table2Version = 235 ;
 	 indicatorOfParameter = 64 ;
 	}
-#Mean rain rate
-'Mean rain rate' = {
-	 table2Version = 235 ;
-	 indicatorOfParameter = 65 ;
-	}
-#Mean convective rain rate
-'Mean convective rain rate' = {
-	 table2Version = 235 ;
-	 indicatorOfParameter = 66 ;
-	}
-#Mean large-scale rain rate
-'Mean large-scale rain rate' = {
-	 table2Version = 235 ;
-	 indicatorOfParameter = 67 ;
-	}
 #Mean surface downward short-wave radiation flux, clear sky
 'Mean surface downward short-wave radiation flux, clear sky' = {
 	 table2Version = 235 ;
@@ -10873,16 +10848,6 @@
 'Leaf area index, high vegetation' = {
 	 table2Version = 129 ;
 	 indicatorOfParameter = 67 ;
-	}
-#Minimum stomatal resistance, low vegetation
-'Minimum stomatal resistance, low vegetation' = {
-	 table2Version = 129 ;
-	 indicatorOfParameter = 68 ;
-	}
-#Minimum stomatal resistance, high vegetation
-'Minimum stomatal resistance, high vegetation' = {
-	 table2Version = 129 ;
-	 indicatorOfParameter = 69 ;
 	}
 #Biome cover, low vegetation
 'Biome cover, low vegetation' = {
@@ -13494,35 +13459,15 @@
 	 table2Version = 160 ;
 	 indicatorOfParameter = 199 ;
 	}
-#Maximum temperature at 2 metres during averaging time
-'Maximum temperature at 2 metres during averaging time' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 201 ;
-	}
-#Minimum temperature at 2 metres during averaging time
-'Minimum temperature at 2 metres during averaging time' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 202 ;
-	}
 #Runoff
 'Runoff' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 205 ;
 	}
-#Standard deviation of geopotential
-'Standard deviation of geopotential' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 206 ;
-	}
 #Covariance of temperature and geopotential
 'Covariance of temperature and geopotential' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 207 ;
-	}
-#Standard deviation of temperature
-'Standard deviation of temperature' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 208 ;
 	}
 #Covariance of specific humidity and geopotential
 'Covariance of specific humidity and geopotential' = {
@@ -13533,11 +13478,6 @@
 'Covariance of specific humidity and temperature' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 210 ;
-	}
-#Standard deviation of specific humidity
-'Standard deviation of specific humidity' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 211 ;
 	}
 #Covariance of U component and geopotential
 'Covariance of U component and geopotential' = {
@@ -13553,11 +13493,6 @@
 'Covariance of U component and specific humidity' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 214 ;
-	}
-#Standard deviation of U velocity
-'Standard deviation of U velocity' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 215 ;
 	}
 #Covariance of V component and geopotential
 'Covariance of V component and geopotential' = {
@@ -13578,11 +13513,6 @@
 'Covariance of V component and U component' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 219 ;
-	}
-#Standard deviation of V component
-'Standard deviation of V component' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 220 ;
 	}
 #Covariance of W component and geopotential
 'Covariance of W component and geopotential' = {
@@ -13608,11 +13538,6 @@
 'Covariance of W component and V component' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 225 ;
-	}
-#Standard deviation of vertical velocity
-'Standard deviation of vertical velocity' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 226 ;
 	}
 #Instantaneous surface heat flux
 'Instantaneous surface heat flux' = {
@@ -16038,11 +15963,6 @@
 'surface precipitation amount, rain, convective' = {
 	 table2Version = 201 ;
 	 indicatorOfParameter = 113 ;
-	}
-#deviation of pressure from reference value
-'deviation of pressure from reference value' = {
-	 table2Version = 201 ;
-	 indicatorOfParameter = 139 ;
 	}
 #coefficient of horizontal diffusion
 'coefficient of horizontal diffusion' = {
