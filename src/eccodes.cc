@@ -28,6 +28,11 @@ const char* codes_get_git_sha1()
 {
     return grib_get_git_sha1();
 }
+const char* codes_get_git_branch()
+{
+    return grib_get_git_branch();
+}
+
 const char* codes_get_package_name(void)
 {
     return grib_get_package_name();

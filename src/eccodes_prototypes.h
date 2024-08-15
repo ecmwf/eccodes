@@ -942,6 +942,7 @@ int grib_optimize_decimal_factor(grib_accessor* a, const char* reference_value, 
 
 /* grib_api_version.cc */
 const char* grib_get_git_sha1(void);
+const char* grib_get_git_branch(void);
 const char* codes_get_build_date(void);
 
 /* grib_bits_any_endian.cc */
