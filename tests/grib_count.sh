@@ -11,6 +11,7 @@
 . ./include.ctest.sh
 
 label="grib_count_test"
+tempText=temp.$label.txt
 
 grib_files=`cat ${data_dir}/grib_data_files.txt`
 for file in ${grib_files}; do
@@ -19,7 +20,16 @@ for file in ${grib_files}; do
   ${tools_dir}/grib_count $input
 done
 
+# Bad input
 ${tools_dir}/grib_count -f $data_dir/bad.grib
+cat $data_dir/bad.grib | ${tools_dir}/grib_count -f -
+
+set +e
+${tools_dir}/grib_count $data_dir > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Is a directory" $tempText
 
 # Specific files
 count=`${tools_dir}/grib_count ${data_dir}/test.grib1`
@@ -30,3 +40,6 @@ count=`${tools_dir}/grib_count ${data_dir}/mixed.grib`
 
 count=`${tools_dir}/grib_count ${data_dir}/tigge_ecmwf.grib2`
 [ $count -eq 248 ]
+
+# Clean up
+rm -f $tempText
