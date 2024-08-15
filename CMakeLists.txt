@@ -383,6 +383,7 @@ if(GIT_FOUND AND NOT ${GIT_EXECUTABLE} STREQUAL "")
     ecbuild_info("Found git: ${GIT_EXECUTABLE} (found version \"${GIT_VERSION_STRING}\")")
     execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD
                     OUTPUT_VARIABLE eccodes_GIT_BRANCH
+                    RESULT_VARIABLE nok ERROR_VARIABLE error
                     OUTPUT_STRIP_TRAILING_WHITESPACE
                     WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}" )
     ecbuild_info("ecCodes branch = ${eccodes_GIT_BRANCH}" )
