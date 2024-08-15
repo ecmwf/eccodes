@@ -164,6 +164,7 @@ if( HAVE_BUILD_TOOLS )
         grib_spectral
         grib_levtype
         grib_typeOfLevel
+        grib2_product_templates
         grib_grid_unstructured
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic

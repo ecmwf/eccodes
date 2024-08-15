@@ -24,7 +24,6 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* century_;
     const char* year_;
     const char* month_;
     const char* day_;

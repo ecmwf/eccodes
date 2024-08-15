@@ -18,12 +18,12 @@ tempOut=temp.$label.txt
 
 for file in `find ${ECCODES_DEFINITION_PATH}/ -name '*.def' -print | grep -v grib3/ | grep -v metar/ | grep -v taf/`
 do
-  ${tools_dir}/codes_parser $file > $REDIRECT
+  ${bin_dir}/codes_parser $file > $REDIRECT
 done
 
 # Try an invalid input
 set +e
-echo 'transient xx=1' | ${tools_dir}/codes_parser - 2>$tempOut
+echo 'transient xx=1' | ${bin_dir}/codes_parser - 2>$tempOut
 status=$?
 set -e
 [ $status -ne 0 ]

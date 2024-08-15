@@ -186,26 +186,6 @@
 	 scaledValueOfFirstFixedSurface = 100 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
-#Time-maximum 2 metre relative humidity
-'mx2r' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
-#Time-minimum 2 metre relative humidity
-'mn2r' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 3 ;
-	}
 #Time-mean sea ice area fraction
 'avg_ci' = {
 	 discipline = 10 ;
@@ -264,6 +244,26 @@
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum 2 metre relative humidity
+'max_2r' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum 2 metre relative humidity
+'min_2r' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
 	}
 #5-wave geopotential height
 'wavh5' = {

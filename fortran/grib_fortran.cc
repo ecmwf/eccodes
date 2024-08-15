@@ -2893,10 +2893,11 @@ int codes_f_bufr_multi_element_constant_arrays_off_(void)
 }
 
 /*****************************************************************************/
-void grib_f_set_debug_(int mode)
+void grib_f_set_debug_(int* dmode)
 {
+    Assert(dmode);
     grib_context* c = grib_context_get_default();
-    grib_context_set_debug(c, mode);
+    grib_context_set_debug(c, *dmode);
 }
 
 /*****************************************************************************/
