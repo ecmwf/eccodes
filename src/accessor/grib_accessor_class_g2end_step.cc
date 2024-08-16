@@ -121,24 +121,24 @@ static int unpack_one_time_range_long_(grib_accessor* a, long* val, size_t* len)
     if (err != GRIB_SUCCESS)
         return err;
 
-    if (typeOfTimeIncrement == 1) {
-        /* See GRIB-488 */
-        /* Note: For this case, lengthOfTimeRange is not related to step and should not be used to calculate step */
-        add_time_range = 0;
-        if (is_special_expver(h)) {
-            add_time_range = 1;
-        }
-    }
-    if (add_time_range) {
+    //if (typeOfTimeIncrement == 1) {
+    //    [> See GRIB-488 <]
+    //    [> Note: For this case, lengthOfTimeRange is not related to step and should not be used to calculate step <]
+    //    add_time_range = 0;
+    //    if (is_special_expver(h)) {
+    //        add_time_range = 1;
+    //    }
+    //}
+    //if (add_time_range) {
         *val = start_step_value + time_range_value;
         if ((err = grib_set_long_internal(h, "endStepUnit", step_units)) != GRIB_SUCCESS)
             return err;
-    }
-    else {
-        *val = start_step_value;
-        if ((err = grib_set_long_internal(h, "endStepUnit", step_units)) != GRIB_SUCCESS)
-            return err;
-    }
+    //}
+    //else {
+    //    *val = start_step_value;
+    //    if ((err = grib_set_long_internal(h, "endStepUnit", step_units)) != GRIB_SUCCESS)
+    //        return err;
+    //}
 
     return GRIB_SUCCESS;
 }
@@ -153,7 +153,7 @@ static int unpack_one_time_range_double_(grib_accessor* a, double* val, size_t* 
     long time_range_unit;
     double time_range_value;
     long typeOfTimeIncrement;
-    int add_time_range = 1; /* whether we add lengthOfTimeRange */
+    //int add_time_range = 1; [> whether we add lengthOfTimeRange <]
 
     grib_handle* h = grib_handle_of_accessor(a);
 
@@ -173,24 +173,24 @@ static int unpack_one_time_range_double_(grib_accessor* a, double* val, size_t* 
     eccodes::Step start_step{ start_step_value, start_step_unit };
     eccodes::Step time_range{ time_range_value, time_range_unit };
 
-    if (typeOfTimeIncrement == 1) {
-        /* See GRIB-488 */
-        /* Note: For this case, lengthOfTimeRange is not related to step and should not be used to calculate step */
-        add_time_range = 0;
-        if (is_special_expver(h)) {
-            add_time_range = 1;
-        }
-    }
-    if (add_time_range) {
+    //if (typeOfTimeIncrement == 1) {
+    //    [> See GRIB-488 <]
+    //    [> Note: For this case, lengthOfTimeRange is not related to step and should not be used to calculate step <]
+    //    add_time_range = 0;
+    //    if (is_special_expver(h)) {
+    //        add_time_range = 1;
+    //    }
+    //}
+    //if (add_time_range) {
         *val = (start_step + time_range).value<double>(eccodes::Unit(step_units));
         if ((err = grib_set_long_internal(h, "endStepUnit", step_units)) != GRIB_SUCCESS)
             return err;
-    }
-    else {
-        *val = start_step.value<double>(eccodes::Unit(start_step_unit));
-        if ((err = grib_set_long_internal(h, "endStepUnit", start_step_unit)) != GRIB_SUCCESS)
-            return err;
-    }
+    //}
+    //else {
+    //    *val = start_step.value<double>(eccodes::Unit(start_step_unit));
+    //    if ((err = grib_set_long_internal(h, "endStepUnit", start_step_unit)) != GRIB_SUCCESS)
+    //        return err;
+    //}
 
     return GRIB_SUCCESS;
 }
