@@ -11,6 +11,10 @@
 
 #include "grib_accessor_class_concept.h"
 
+#include <unordered_map>
+#include <string>
+#include <utility>
+
 grib_accessor_class_concept_t _grib_accessor_class_concept{ "concept" };
 grib_accessor_class* grib_accessor_class_concept = &_grib_accessor_class_concept;
 
@@ -44,8 +48,28 @@ void grib_accessor_class_concept_t::dump(grib_accessor* a, grib_dumper* dumper)
     grib_dump_string(dumper, a, NULL);
 }
 
+// See ECC-1905
+static int grib_get_long_memoize(
+    grib_handle* h, const char* key, long* value,
+    std::unordered_map<std::string_view, long>& memo)
+{
+    int err = 0;
+    auto pos = memo.find(key);
+    if (pos == memo.end()) { // not in map so decode & insert
+        err = grib_get_long(h, key, value);
+        if (!err) {
+            memo.insert( std::make_pair(key, *value) );
+        }
+    } else {
+        *value = pos->second; // found in map
+    }
+    return err;
+}
+
 /* Return 1 (=True) or 0 (=False) */
-static int concept_condition_expression_true(grib_handle* h, grib_concept_condition* c)
+static int concept_condition_expression_true(
+    grib_handle* h, grib_concept_condition* c,
+    std::unordered_map<std::string_view, long>& memo)
 {
     long lval;
     long lres      = 0;
@@ -56,8 +80,10 @@ static int concept_condition_expression_true(grib_handle* h, grib_concept_condit
     switch (type) {
         case GRIB_TYPE_LONG:
             grib_expression_evaluate_long(h, c->expression, &lres);
-            ok = (grib_get_long(h, c->name, &lval) == GRIB_SUCCESS) &&
+            // Use memoization for the most common type (integer keys)
+            ok = (grib_get_long_memoize(h, c->name, &lval, memo) == GRIB_SUCCESS) &&
                  (lval == lres);
+            //ok = (grib_get_long(h, c->name, &lval) == GRIB_SUCCESS) && (lval == lres);
             break;
 
         case GRIB_TYPE_DOUBLE: {
@@ -121,12 +147,14 @@ static int concept_condition_iarray_true(grib_handle* h, grib_concept_condition*
 }
 
 /* Return 1 (=True) or 0 (=False) */
-static int concept_condition_true(grib_handle* h, grib_concept_condition* c)
+static int concept_condition_true(
+    grib_handle* h, grib_concept_condition* c,
+    std::unordered_map<std::string_view, long>& memo)
 {
     if (c->expression == NULL)
         return concept_condition_iarray_true(h, c);
     else
-        return concept_condition_expression_true(h, c);
+        return concept_condition_expression_true(h, c, memo);
 }
 
 static const char* concept_evaluate(grib_accessor* a)
@@ -137,12 +165,14 @@ static const char* concept_evaluate(grib_accessor* a)
     grib_concept_value* c = action_concept_get_concept(a);
     grib_handle* h        = grib_handle_of_accessor(a);
 
-    // fprintf(stderr, "DEBUG: concept_evaluate: %s %s\n", a->name, c->name);
+    std::unordered_map<std::string_view, long> memo; // See ECC-1905
+
+    //fprintf(stderr, "DEBUG: concept_evaluate: %s %s\n", a->name, c->name);
     while (c) {
         grib_concept_condition* e = c->conditions;
         int cnt                   = 0;
         while (e) {
-            if (!concept_condition_true(h, e))
+            if (!concept_condition_true(h, e, memo))
                 break;
             e = e->next;
             cnt++;
