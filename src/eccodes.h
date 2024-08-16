@@ -1264,6 +1264,7 @@ long codes_get_api_version(void);
  */
 const char* codes_get_git_sha1(void);
 
+const char* codes_get_git_branch(void);
 const char* codes_get_build_date(void);
 
 /**

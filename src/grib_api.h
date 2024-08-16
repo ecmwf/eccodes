@@ -1259,6 +1259,8 @@ long grib_get_api_version(void);
  */
 const char* grib_get_git_sha1(void);
 
+const char* grib_get_git_branch(void);
+
 /**
  *  Get the package name
  *
