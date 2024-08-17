@@ -83,8 +83,7 @@ static int evaluate_double(grib_expression* g, grib_handle* h, double* dres)
 
 static void print(grib_context* c, grib_expression* g, grib_handle* f, FILE* out)
 {
-    fprintf(out, "true(");
-    fprintf(out, ")");
+    fprintf(out, "true()");
 }
 
 static void destroy(grib_context* c, grib_expression* g)
@@ -102,7 +101,6 @@ grib_expression* new_true_expression(grib_context* c)
     e->base.cclass          = grib_expression_class_true;
     return (grib_expression*)e;
 }
-
 
 static int native_type(grib_expression* g, grib_handle* h)
 {
