@@ -23,7 +23,7 @@ class grib_accessor_class_padding_t : public grib_accessor_class_bytes_t
 {
 public:
     grib_accessor_class_padding_t(const char* name) : grib_accessor_class_bytes_t(name) {}
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_padding_t{}; }
+    //grib_accessor* create_empty_accessor() override { return new grib_accessor_padding_t{}; }
     size_t string_length(grib_accessor*) override;
     long byte_count(grib_accessor*) override;
     int value_count(grib_accessor*, long*) override;

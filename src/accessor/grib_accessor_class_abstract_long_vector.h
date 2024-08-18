@@ -26,5 +26,5 @@ class grib_accessor_class_abstract_long_vector_t : public grib_accessor_class_ge
 {
 public:
     grib_accessor_class_abstract_long_vector_t(const char* name) : grib_accessor_class_gen_t(name) {}
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_abstract_long_vector_t{}; }
+    //grib_accessor* create_empty_accessor() override { return new grib_accessor_abstract_long_vector_t{}; }
 };
