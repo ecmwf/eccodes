@@ -219,6 +219,9 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
     int err       = 0;
     int isDouble  = 0;
 
+    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+        return;
+
     switch (a->get_native_type()) {
         case GRIB_TYPE_LONG:
             a->unpack_long(&lvalue, &size);
@@ -230,9 +233,6 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
         default:
             break;
     }
-
-    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
-        return;
 
     print_offset(self->dumper.out, d, a);
 
