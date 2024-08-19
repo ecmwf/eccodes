@@ -46,6 +46,8 @@ concept timeproc {
  "48h"   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 48;}
  "72h"   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 72;}
  "120h"   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 120;}
+ "240h"   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 240;}
+ "360h"   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 360;}
  "7 days"   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168;}
  # 28 days
  "month"   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 672;}
