@@ -770,6 +770,9 @@ void test_codes_context_set_debug()
 int main(int argc, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
+    printf("codes_print_api_version gives: ");
+    codes_print_api_version(stdout);
+    printf("\n");
 
     test_codes_context_set_debug();
     test_codes_get_error_message();
