@@ -57,28 +57,27 @@ grib_check_key_is_scalar()
 #
 grib_encode_via_set_and_filter()
 {
-  _label=$1 # For generating temp files
-  _kvals=$2 # key1=val1,key2=val2
-  _input=$3 # Must be a GRIB file
+   _label=$1 # For generating temp files
+   _kvals=$2 # key1=val1,key2=val2
+   _input=$3 # Must be a GRIB file
 
-  temp_encode_filt=temp.encode.$_label.filt
-  temp_encode_gribA=temp.encode.$_label.A.grib
-  temp_encode_gribB=temp.encode.$_label.B.grib
+   temp_encode_filt=temp.encode.$_label.filt
+   temp_encode_gribA=temp.encode.$_label.A.grib
+   temp_encode_gribB=temp.encode.$_label.B.grib
 
-  for kv in $(echo $_kvals | tr ',' ' '); do
-    k=$(echo $kv | awk -F= '{print $1}')
-    v=$(echo $kv | awk -F= '{print $2}')
-    if [[ "$v" =~ ^[A-z] ]]; then
-      echo "set $k = \"$v\" ;" >> $temp_encode_filt
-    else
-      echo "set $k = $v ;" >> $temp_encode_filt
-    fi
-  done
-  echo "write;" >> $temp_encode_filt
-  # cat $temp_encode_filt
-  ${tools_dir}/grib_filter -o $temp_encode_gribA $temp_encode_filt $_input
-  ${tools_dir}/grib_set -s $_kvals $_input $temp_encode_gribB
-  ${tools_dir}/grib_compare  $temp_encode_gribA $temp_encode_gribB
-
-  rm -f $temp_encode_filt $temp_encode_gribB $temp_encode_gribA
+   for kv in $(echo $_kvals | tr ',' ' '); do
+      k=$(echo $kv | awk -F= '{print $1}')
+      v=$(echo $kv | awk -F= '{print $2}')
+      if [[ "$v" =~ ^[A-z] ]]; then
+         echo "set $k = \"$v\" ;" >> $temp_encode_filt
+      else
+         echo "set $k = $v ;" >> $temp_encode_filt
+      fi
+   done
+   echo "write;" >> $temp_encode_filt
+   # cat $temp_encode_filt
+   ${tools_dir}/grib_filter -o $temp_encode_gribA $temp_encode_filt $_input
+   ${tools_dir}/grib_set -s $_kvals $_input $temp_encode_gribB
+   ${tools_dir}/grib_compare  $temp_encode_gribA $temp_encode_gribB
+   rm -f $temp_encode_filt $temp_encode_gribB $temp_encode_gribA
 }
