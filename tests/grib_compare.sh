@@ -157,6 +157,13 @@ set -e
 [ $status -eq 1 ]
 grep -q "Invalid absolute error" $outfile
 
+set +e
+${tools_dir}/grib_compare -A badnum -R 88 $infile $temp1 >$outfile 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "Invalid absolute error" $outfile
+
 
 # ----------------------------------------
 # ECC-355: -R with "all" option
@@ -174,6 +181,12 @@ ${tools_dir}/grib_compare -b $BLACKLIST -R all=2 $temp1 $temp2
 # ----------------------------------------
 cp ${data_dir}/tigge_cf_ecmwf.grib2 $temp1
 ${tools_dir}/grib_compare -w typeOfLevel=surface ${data_dir}/tigge_cf_ecmwf.grib2 $temp1
+
+
+# ----------------------------------------
+# Use -T switch
+# ----------------------------------------
+${tools_dir}/grib_compare -T5 ${data_dir}/tigge_cf_ecmwf.grib2 ${data_dir}/tigge_cf_ecmwf.grib2
 
 # ----------------------------------------
 # Summary mode (-f)
