@@ -85,7 +85,6 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
     long v2 = 0;
     grib_expression_binop* e = (grib_expression_binop*)g;
 
-// #if DEBUGGING
 //     {
 //         int typeLeft, typeRight;
 //         const char* nameLeft;
@@ -117,7 +116,6 @@ static int evaluate_double(grib_expression* g, grib_handle* h, double* dres)
     double v2 = 0.0;
     grib_expression_binop* e = (grib_expression_binop*)g;
 
-// #if DEBUGGING
 //     {
 //         int typeLeft, typeRight;
 //         const char* nameLeft;

@@ -212,27 +212,14 @@ static int test_bit(long a, long b)
 static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_default* self = (grib_dumper_default*)d;
-    int i;
     long lvalue   = 0;
-    double dvalue = 0;
     size_t size   = 1;
     int err       = 0;
-    int isDouble  = 0;
-
-    switch (a->get_native_type()) {
-        case GRIB_TYPE_LONG:
-            a->unpack_long(&lvalue, &size);
-            break;
-        case GRIB_TYPE_DOUBLE:
-            a->unpack_double(&dvalue, &size);
-            isDouble = 1;
-            break;
-        default:
-            break;
-    }
 
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
+
+    err = a->unpack_long(&lvalue, &size);
 
     print_offset(self->dumper.out, d, a);
 
@@ -249,7 +236,7 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
 
     fprintf(self->dumper.out, "  ");
     fprintf(self->dumper.out, "# flags: ");
-    for (i = 0; i < (a->length * 8); i++) {
+    for (long i = 0; i < (a->length * 8); i++) {
         if (test_bit(lvalue, a->length * 8 - i - 1))
             fprintf(self->dumper.out, "1");
         else
@@ -261,18 +248,15 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
         fprintf(self->dumper.out, "  ");
         fprintf(self->dumper.out, "#-READ ONLY- ");
     }
-    else
+    else {
         fprintf(self->dumper.out, "  ");
+    }
 
     if (((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && a->is_missing_internal())
         fprintf(self->dumper.out, "%s = MISSING;", a->name);
     else {
-        if (isDouble)
-            fprintf(self->dumper.out, "%s = %g;", a->name, dvalue);
-        else
-            fprintf(self->dumper.out, "%s = %ld;", a->name, lvalue);
+        fprintf(self->dumper.out, "%s = %ld;", a->name, lvalue);
     }
-
 
     if (err) {
         fprintf(self->dumper.out, "  ");

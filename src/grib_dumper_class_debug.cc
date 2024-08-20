@@ -264,22 +264,21 @@ static int test_bit(long a, long b)
 static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_debug* self = (grib_dumper_debug*)d;
-    long value              = 0;
-    size_t size             = 1;
-    int err                 = a->unpack_long(&value, &size);
-    int i;
 
     if (a->length == 0 &&
         (d->option_flags & GRIB_DUMP_FLAG_CODED) != 0)
         return;
 
+    size_t size = 1;
+    long value = 0;
+    int err = a->unpack_long(&value, &size);
     set_begin_end(d, a);
 
-    for (i = 0; i < d->depth; i++)
+    for (int i = 0; i < d->depth; i++)
         fprintf(self->dumper.out, " ");
     fprintf(self->dumper.out, "%ld-%ld %s %s = %ld [", self->begin, self->theEnd, a->creator->op, a->name, value);
 
-    for (i = 0; i < (a->length * 8); i++) {
+    for (long i = 0; i < (a->length * 8); i++) {
         if (test_bit(value, a->length * 8 - i - 1))
             fprintf(self->dumper.out, "1");
         else

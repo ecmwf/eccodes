@@ -25,5 +25,5 @@ class grib_accessor_class_abstract_vector_t : public grib_accessor_class_double_
 {
 public:
     grib_accessor_class_abstract_vector_t(const char* name) : grib_accessor_class_double_t(name) {}
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_abstract_vector_t{}; }
+    // grib_accessor* create_empty_accessor() override { return new grib_accessor_abstract_vector_t{}; }
 };
