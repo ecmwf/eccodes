@@ -280,6 +280,19 @@ status=$?
 set -e
 [ $status -eq 1 ]
 
+# ----------------------------------------
+# Through index using -S and -E
+# ----------------------------------------
+tempIndex1=temp.$label.1.idx
+tempIndex2=temp.$label.2.idx
+${tools_dir}/grib_index_build -o $tempIndex1 -N -k time,date $data_dir/tigge_ecmwf.grib2
+${tools_dir}/grib_index_build -o $tempIndex2 -N -k time,date $data_dir/tigge_cf_ecmwf.grib2
+set +e
+${tools_dir}/grib_compare -S 4 -E 5 $tempIndex1 $tempIndex2
+status=$?
+set -e
+[ $status -ne 0 ]
+
 
 # Failing cases
 # -----------------
