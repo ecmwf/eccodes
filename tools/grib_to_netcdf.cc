@@ -4294,6 +4294,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     int creation_mode = NC_CLOBBER;
 
     if (options->outfile == NULL || options->outfile->name == NULL) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "No output file. Exiting!");
         usage();
         exit(1);
     }

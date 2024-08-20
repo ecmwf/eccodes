@@ -104,7 +104,22 @@ echo "Test shuffle and deflate ..."
 if [ $have_netcdf4 -eq 1 ]; then
     input=${data_dir}/sst_globus0083.grib
     ${tools_dir}/grib_to_netcdf -s -d9 -k4 -o $tempNetcdf $input
+
+    set +e
+    ${tools_dir}/grib_to_netcdf -s -o $tempNetcdf $input > $tempText 2>&1
+    status=$?
+    set -e
+    [ $status -ne 0 ]
+    grep -q "Invalid shuffle option. Deflate option needed" $tempText
+
+    set +e
+    ${tools_dir}/grib_to_netcdf -s -dy -o $tempNetcdf $input > $tempText 2>&1
+    status=$?
+    set -e
+    [ $status -ne 0 ]
+    grep -q "Invalid number" $tempText
 fi
+
 
 echo "Test ECC-1060 ..."
 # ----------------------
@@ -170,6 +185,16 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "not on a regular lat/lon grid or on a regular Gaussian grid" $tempText
+
+
+echo "No output ..."
+# --------------------------
+set +e
+${tools_dir}/grib_to_netcdf $input > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "No output file" $tempText
 
 
 # ECC-1783: No error message when input file has invalid fields
