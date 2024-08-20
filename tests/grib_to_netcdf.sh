@@ -162,6 +162,14 @@ ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempDir > $tempText
 grep -q "Processing input file .*/subdir/regular_latlon_surface.grib2" $tempText
 rm -rf $tempDir
 
+echo "Test non-numeric dates ..."
+# ------------------------------------
+sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+${tools_dir}/grib_set -s class=ei,type=em,yearOfCentury=255,month=3,day=20 $sample1 $tempGrib
+grib_check_key_equals $tempGrib 'dataDate:s' 'mar-20'
+${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
+
+
 echo "Enable/Disable Checks ..."
 # ---------------------------------
 rm -f $tempNetcdf
