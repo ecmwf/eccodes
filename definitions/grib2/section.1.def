@@ -118,9 +118,24 @@ if ( ((section1Length > 21) or setCalendarId > 0) and deleteCalendarId == 0) {
   template calendarIdentification "grib2/templates/template.1.[calendarIdentificationTemplateNumber:l].def";
 }
 
-constant conceptsMasterDir="grib2" : hidden;
-constant conceptsLocalDirAll="grib2/localConcepts/[centre:s]" : hidden;
-constant conceptsLocalDirECMF="grib2/localConcepts/ecmf" : hidden;
+# MTG2 switch at tablesVersion 36
+
+transient tablesVersionMTG2Switch=36: hidden;
+
+# pre-MTG2
+if ( tablesVersion <= tablesVersionMTG2Switch ) {
+  
+  constant conceptsMasterDir="grib2/[tablesVersionMTG2Switch].premtg2" : hidden;
+  constant conceptsLocalDirAll="grib2/localConcepts/[tablesVersionMTG2Switch].premtg2/[centre:s]" : hidden;
+  constant conceptsLocalDirECMF="grib2/localConcepts/[tablesVersionMTG2Switch].premtg2/ecmf" : hidden;
+
+# post-MTG2
+} else {
+
+  constant conceptsMasterDir="grib2" : hidden;
+  constant conceptsLocalDirAll="grib2/localConcepts/[centre:s]" : hidden;
+  constant conceptsLocalDirECMF="grib2/localConcepts/ecmf" : hidden;
+}
 
 # ECC-806: Local concepts precedence order
 if (preferLocalConcepts) {
