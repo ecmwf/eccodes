@@ -16,88 +16,92 @@ grib_accessor_class* grib_accessor_class_gds_not_present_bitmap = &_grib_accesso
 
 void grib_accessor_class_gds_not_present_bitmap_t::init(grib_accessor* a, const long v, grib_arguments* args)
 {
-    grib_accessor_class_gen_t::init(a, v, args);
-    int n                                        = 0;
-    grib_accessor_gds_not_present_bitmap_t* self = (grib_accessor_gds_not_present_bitmap_t*)a;
-    grib_handle* hand                            = grib_handle_of_accessor(a);
+    Assert(!"grib_accessor_class_gds_not_present_bitmap_t::init should not be called");
+    // grib_accessor_class_gen_t::init(a, v, args);
+    // int n = 0;
+    // grib_accessor_gds_not_present_bitmap_t* self = (grib_accessor_gds_not_present_bitmap_t*)a;
+    // grib_handle* hand = grib_handle_of_accessor(a);
 
-    self->missing_value           = grib_arguments_get_name(hand, args, n++);
-    self->number_of_values        = grib_arguments_get_name(hand, args, n++);
-    self->number_of_points        = grib_arguments_get_name(hand, args, n++);
-    self->latitude_of_first_point = grib_arguments_get_name(hand, args, n++);
-    self->ni                      = grib_arguments_get_name(hand, args, n++);
-    a->length                     = 0;
+    // self->missing_value           = grib_arguments_get_name(hand, args, n++);
+    // self->number_of_values        = grib_arguments_get_name(hand, args, n++);
+    // self->number_of_points        = grib_arguments_get_name(hand, args, n++);
+    // self->latitude_of_first_point = grib_arguments_get_name(hand, args, n++);
+    // self->ni                      = grib_arguments_get_name(hand, args, n++);
+    // a->length                     = 0;
 }
 
 int grib_accessor_class_gds_not_present_bitmap_t::value_count(grib_accessor* a, long* number_of_points)
 {
-    grib_accessor_gds_not_present_bitmap_t* self = (grib_accessor_gds_not_present_bitmap_t*)a;
-    *number_of_points                            = 0;
-    return grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_points, number_of_points);
+    return GRIB_NOT_IMPLEMENTED;
+    // grib_accessor_gds_not_present_bitmap_t* self = (grib_accessor_gds_not_present_bitmap_t*)a;
+    // *number_of_points                            = 0;
+    // return grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_points, number_of_points);
 }
 
 int grib_accessor_class_gds_not_present_bitmap_t::unpack_double(grib_accessor* a, double* val, size_t* len)
 {
-    grib_accessor_gds_not_present_bitmap_t* self = (grib_accessor_gds_not_present_bitmap_t*)a;
-    grib_handle* hand                            = grib_handle_of_accessor(a);
+    return GRIB_NOT_IMPLEMENTED;
 
-    long number_of_points = 0, number_of_values = 0, ni = 0;
-    long latitude_of_first_point = 0;
-    size_t i                     = 0;
-    size_t n_vals                = 0;
-    long nn                      = 0;
-    long missing_value;
+    // grib_accessor_gds_not_present_bitmap_t* self = (grib_accessor_gds_not_present_bitmap_t*)a;
+    // grib_handle* hand                            = grib_handle_of_accessor(a);
 
-    double* coded_vals = NULL;
-    int err            = a->value_count(&nn);
-    n_vals             = nn;
-    if (err)
-        return err;
+    // long number_of_points = 0, number_of_values = 0, ni = 0;
+    // long latitude_of_first_point = 0;
+    // size_t i                     = 0;
+    // size_t n_vals                = 0;
+    // long nn                      = 0;
+    // long missing_value;
 
-    if ((err = grib_get_long(hand, self->number_of_points, &number_of_points)) != GRIB_SUCCESS)
-        return err;
+    // double* coded_vals = NULL;
+    // int err            = a->value_count(&nn);
+    // n_vals             = nn;
+    // if (err)
+    //     return err;
 
-    if ((err = grib_get_long(hand, self->number_of_values, &number_of_values)) != GRIB_SUCCESS)
-        return err;
+    // if ((err = grib_get_long(hand, self->number_of_points, &number_of_points)) != GRIB_SUCCESS)
+    //     return err;
 
-    if ((err = grib_get_long(hand, self->latitude_of_first_point, &latitude_of_first_point)) != GRIB_SUCCESS)
-        return err;
+    // if ((err = grib_get_long(hand, self->number_of_values, &number_of_values)) != GRIB_SUCCESS)
+    //     return err;
 
-    if ((err = grib_get_long(hand, self->missing_value, &missing_value)) != GRIB_SUCCESS)
-        return err;
+    // if ((err = grib_get_long(hand, self->latitude_of_first_point, &latitude_of_first_point)) != GRIB_SUCCESS)
+    //     return err;
 
-    if ((err = grib_get_long(hand, self->ni, &ni)) != GRIB_SUCCESS)
-        return err;
+    // if ((err = grib_get_long(hand, self->missing_value, &missing_value)) != GRIB_SUCCESS)
+    //     return err;
 
-    if (*len < number_of_points) {
-        *len = n_vals;
-        return GRIB_ARRAY_TOO_SMALL;
-    }
+    // if ((err = grib_get_long(hand, self->ni, &ni)) != GRIB_SUCCESS)
+    //     return err;
 
-    if (number_of_values > 0) {
-        coded_vals = (double*)grib_context_malloc(a->context, number_of_values * sizeof(double));
+    // if (*len < number_of_points) {
+    //     *len = n_vals;
+    //     return GRIB_ARRAY_TOO_SMALL;
+    // }
 
-        if (coded_vals == NULL)
-            return GRIB_OUT_OF_MEMORY;
-    }
+    // if (number_of_values > 0) {
+    //     coded_vals = (double*)grib_context_malloc(a->context, number_of_values * sizeof(double));
 
-    if (latitude_of_first_point == 0) {
-        for (i = 0; i < number_of_values; i++)
-            val[i] = 1;
-        for (i = number_of_values; i < number_of_points; i++)
-            val[i] = 0;
-    }
-    else {
-        for (i = 0; i < ni - 1; i++)
-            val[i] = 0;
-        for (i = ni - 1; i < number_of_points; i++)
-            val[i] = 1;
-    }
+    //     if (coded_vals == NULL)
+    //         return GRIB_OUT_OF_MEMORY;
+    // }
 
-    *len = number_of_points;
+    // if (latitude_of_first_point == 0) {
+    //     for (i = 0; i < number_of_values; i++)
+    //         val[i] = 1;
+    //     for (i = number_of_values; i < number_of_points; i++)
+    //         val[i] = 0;
+    // }
+    // else {
+    //     for (i = 0; i < ni - 1; i++)
+    //         val[i] = 0;
+    //     for (i = ni - 1; i < number_of_points; i++)
+    //         val[i] = 1;
+    // }
 
-    grib_context_free(a->context, coded_vals);
-    return err;
+    // *len = number_of_points;
+
+    // grib_context_free(a->context, coded_vals);
+    // return err;
 }
 
 int grib_accessor_class_gds_not_present_bitmap_t::pack_double(grib_accessor* a, const double* val, size_t* len)

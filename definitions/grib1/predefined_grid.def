@@ -121,7 +121,7 @@ constant numberOfUnusedBitsAtEndOfSection3 = 0;
 constant tableReference = 0;
 
 #position offsetBeforeBitmap;
-meta bitmap gds_not_present_bitmap( missingValue,numberOfValues,
-                                    numberOfPoints,
-                                    latitudeOfFirstGridPoint,
-                                    Ni,numberOfUnusedBitsAtEndOfSection3) : read_only;
+# meta bitmap gds_not_present_bitmap( missingValue,numberOfValues,
+#                                     numberOfPoints,
+#                                     latitudeOfFirstGridPoint,
+#                                     Ni,numberOfUnusedBitsAtEndOfSection3) : read_only;
