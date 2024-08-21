@@ -34,3 +34,5 @@
 'depthBelowSea' = {indicatorOfTypeOfLevel=160;}
 'entireAtmosphere' = {indicatorOfTypeOfLevel=200;}
 'entireOcean' = {indicatorOfTypeOfLevel=201;}
+'abstractSingleLevel' = {indicatorOfTypeOfLevel=202;}
+'abstractMultipleLevels' = {indicatorOfTypeOfLevel=203;}
