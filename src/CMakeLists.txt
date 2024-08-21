@@ -217,7 +217,6 @@ list( APPEND eccodes_src_files
     accessor/grib_accessor_class_data_raw_packing.cc
     accessor/grib_accessor_class_data_complex_packing.cc
     accessor/grib_accessor_class_data_g1complex_packing.cc
-    accessor/grib_accessor_class_gds_not_present_bitmap.cc
     accessor/grib_accessor_class_gds_is_present.cc
     accessor/grib_accessor_class_select_step_template.cc
     accessor/grib_accessor_class_local_definition.cc
