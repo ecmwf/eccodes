@@ -86,5 +86,24 @@ ${tools_dir}/grib_get_data $tempGrib > $tempOut
 ${tools_dir}/grib_ls -l 40.44,353.56 $tempGrib
 
 
+# Error conditions
+# ----------------
+set +e
+${tools_dir}/grib_get_data -s Latin1=5000,Latin2=-5000 $tempGrib > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Cannot have equal latitudes for standard parallels on opposite sides of equator" $tempOut
+
+
+set +e
+${tools_dir}/grib_get_data -s Ni=8 $tempGrib > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Wrong number of points" $tempOut
+
+
+
 # Clean up
 rm -f $tempFilt $tempGrib $tempOut
