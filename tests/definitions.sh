@@ -16,7 +16,9 @@ tempOut=temp.$label.txt
 
 [ -z "$ECCODES_DEFINITION_PATH" ] || ECCODES_DEFINITION_PATH=`${tools_dir}/codes_info -d`
 
-for file in `find ${ECCODES_DEFINITION_PATH}/ -name '*.def' -print | grep -v grib3/ | grep -v metar/ | grep -v taf/`
+# Ignore symbolic links
+# Ignore unsupported formats e.g., TAF, METAR
+for file in `find ${ECCODES_DEFINITION_PATH}/ -name '*.def' -type f -print | grep -v grib3/ | grep -v metar/ | grep -v taf/`
 do
   ${bin_dir}/codes_parser $file > $REDIRECT
 done
@@ -29,4 +31,5 @@ set -e
 [ $status -ne 0 ]
 grep -q "Parser: syntax error" $tempOut
 
+# Clean up
 rm -f $tempOut
