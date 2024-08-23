@@ -42,12 +42,12 @@
 141 141 Layer between two isobaric surfaces (mixed precision) pressure of top, in kPa 1100hPa minus pressure of bottom, in hPa
 # 142-159 Reserved
 160 dp Depth below sea level meters (2 octets)
-# 161-199Reserved
+# 161-199 Reserved
 200 sfc Entire atmosphere considered as a single layer 0 (2 octets)
 201 201 Entire ocean considered as a single layer 0 (2 octets)
 202 al Abstract Single Level
 203 al Abstract Multiple Level
-# 202-209 Reserved
+# 204-209 Reserved
 210 pl Isobaric surface (Pa) (ECMWF extension)
 # 211-254 Reserved for local use
 211 wv Ocean wave level (ECMWF extension)
