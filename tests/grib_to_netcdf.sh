@@ -132,7 +132,8 @@ ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
 ECCODES_DEBUG=-1 ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
 
 
-# The -u option
+echo "Test -u option ..."
+# ----------------------
 input=${data_dir}/sample.grib2
 ${tools_dir}/grib_to_netcdf -u time -o $tempNetcdf $input
 
@@ -168,6 +169,17 @@ sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 ${tools_dir}/grib_set -s class=ei,type=em,yearOfCentury=255,month=3,day=20 $sample1 $tempGrib
 grib_check_key_equals $tempGrib 'dataDate:s' 'mar-20'
 ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
+
+
+echo "Test -S option..."
+# ------------------------------------
+input=${data_dir}/high_level_api.grib2
+${tools_dir}/grib_to_netcdf -o $tempNetcdf -S param $input
+
+echo "Test -I option..."
+# ------------------------------------
+input=${data_dir}/high_level_api.grib2
+${tools_dir}/grib_to_netcdf -o $tempNetcdf -S method $input
 
 
 echo "Enable/Disable Checks ..."
@@ -233,6 +245,24 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "Invalid reference date" $tempText
+
+# Bad -k option
+input=$data_dir/sample.grib2
+set +e
+${tools_dir}/grib_to_netcdf -k hallo -o $tempNetcdf $input > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid value" $tempText
+
+# Bad -d option
+input=$data_dir/sample.grib2
+set +e
+${tools_dir}/grib_to_netcdf -d 999 -o $tempNetcdf $input > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid deflate option" $tempText
 
 
 # Validity time check
