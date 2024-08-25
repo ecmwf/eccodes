@@ -225,7 +225,6 @@ static void test_assertion_catching()
 
     char empty[] = "";
     char** list  = NULL;
-    int i        = 0;
     Assert(assertion_caught == 0);
     codes_set_codes_assertion_failed_proc(&my_assertion_proc);
 
@@ -263,6 +262,16 @@ static void test_logging_proc()
     grib_context_set_logging_proc(context, NULL);
     grib_context_log(context, GRIB_LOG_ERROR, "test_logging_proc: This error will come out as normal");
     Assert(logging_caught == 0);
+}
+
+static void my_print_proc(const grib_context* c, void* descriptor, const char* mesg)
+{
+}
+static void test_print_proc()
+{
+    grib_context* context = grib_context_get_default();
+    grib_context_set_print_proc(context, my_print_proc);
+    grib_context_set_print_proc(context, NULL);
 }
 
 static void test_concept_condition_strings()
@@ -788,6 +797,7 @@ int main(int argc, char** argv)
     test_scale_factor_scaled_values();
     test_dates();
     test_logging_proc();
+    test_print_proc();
     test_grib_binary_search();
     test_parse_keyval_string();
 
