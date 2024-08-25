@@ -402,8 +402,8 @@ void codes_dump_bufr_flat(grib_accessors_list* al, grib_handle* h, FILE* f, cons
 size_t grib_context_read(const grib_context* c, void* ptr, size_t size, void* stream);
 off_t grib_context_tell(const grib_context* c, void* stream);
 int grib_context_seek(const grib_context* c, off_t offset, int whence, void* stream);
-int grib_context_eof(const grib_context* c, void* stream);
-size_t grib_context_write(const grib_context* c, const void* ptr, size_t size, void* stream);
+// int grib_context_eof(const grib_context* c, void* stream);
+// size_t grib_context_write(const grib_context* c, const void* ptr, size_t size, void* stream);
 void grib_context_set_print_proc(grib_context* c, grib_print_proc p);
 void grib_context_set_debug(grib_context* c, int mode);
 void grib_context_set_logging_proc(grib_context* c, grib_log_proc p);
