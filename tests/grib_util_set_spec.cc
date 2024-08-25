@@ -357,14 +357,14 @@ static void test_grid_complex_spatial_differencing(int remove_local_def, int edi
 }
 #endif
 
-static void usage(const char* prog)
-{
-    fprintf(stderr, "%s: [-p packingType] [-r] [-e edition] in.grib out.grib\n", prog);
-    fprintf(stderr, "-p  packingType: one of grid_jpeg, grid_ccsds, grid_second_order or grid_simple\n");
-    fprintf(stderr, "-r  remove local definition\n");
-    fprintf(stderr, "-e  edition: 1 or 2\n");
-    exit(1);
-}
+// static void usage(const char* prog)
+// {
+//     fprintf(stderr, "%s: [-p packingType] [-r] [-e edition] in.grib out.grib\n", prog);
+//     fprintf(stderr, "-p  packingType: one of grid_jpeg, grid_ccsds, grid_second_order or grid_simple\n");
+//     fprintf(stderr, "-r  remove local definition\n");
+//     fprintf(stderr, "-e  edition: 1 or 2\n");
+//     exit(1);
+// }
 
 int main(int argc, char* argv[])
 {
@@ -375,7 +375,7 @@ int main(int argc, char* argv[])
     char* infile_name  = NULL;
     char* outfile_name = NULL;
 
-    if (argc == 1 || argc > 8) usage(prog);
+    if (argc == 1 || argc > 8) return 1;// see usage
 
     for (i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-p") == 0) {

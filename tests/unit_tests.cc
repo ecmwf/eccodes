@@ -224,7 +224,7 @@ static void test_assertion_catching()
     printf("Running %s ...\n", __func__);
 
     char empty[] = "";
-    char** list  = 0;
+    char** list  = NULL;
     int i        = 0;
     Assert(assertion_caught == 0);
     codes_set_codes_assertion_failed_proc(&my_assertion_proc);
@@ -233,13 +233,14 @@ static void test_assertion_catching()
     list = string_split(empty, " ");
 
     Assert(assertion_caught == 1);
+    Assert( list == NULL );
 
     /* Restore everything */
     codes_set_codes_assertion_failed_proc(NULL);
     assertion_caught = 0;
 
-    for (i = 0; list[i] != NULL; ++i)
-        free(list[i]);
+    // for (i = 0; list[i] != NULL; ++i)
+    //     free(list[i]);
     free(list);
 }
 
