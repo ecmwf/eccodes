@@ -71,6 +71,7 @@ set -e
 [ $status -eq 1 ]
 # Add correct blocklist
 ${tools_dir}/gts_compare -b GG $gts_file $fGtsTmp
+${tools_dir}/gts_compare -b CCCC,GG $gts_file $fGtsTmp
 
 #----------------------------------------------------
 # Compare using -c
