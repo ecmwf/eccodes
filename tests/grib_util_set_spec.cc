@@ -371,7 +371,6 @@ int main(int argc, char* argv[])
     int i = 0, remove_local_def = 0;
     int edition        = 0;
     char* packingType  = NULL;
-    const char* prog   = argv[0];
     char* infile_name  = NULL;
     char* outfile_name = NULL;
 
