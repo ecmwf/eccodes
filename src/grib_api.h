@@ -815,13 +815,14 @@ int grib_get_float_elements(const grib_handle* h, const char* key, const int* in
  *  Get a string value from a key, if several keys of the same name are present, the last one is returned
  * @see  grib_set_string
  *
- * @param h           : the handle to get the data from
- * @param key         : the key to be searched
- * @param mesg       : the address of a string where the data will be retrieved
- * @param length      : the address of a size_t that contains allocated length of the string on input, and that contains the actual length of the string on output
- * @return            0 if OK, integer value on error
+ * @param h        : the handle to get the data from
+ * @param key      : the key to be searched
+ * @param value    : the address of a string where the data will be retrieved
+ * @param length   : the address of a size_t that contains allocated length of the string on input,
+ *                   and that contains the actual length of the string on output
+ * @return         0 if OK, integer value on error
  */
-int grib_get_string(const grib_handle* h, const char* key, char* mesg, size_t* length);
+int grib_get_string(const grib_handle* h, const char* key, char* value, size_t* length);
 
 /**
  *  Get string array values from a key. If several keys of the same name are present, the last one is returned
@@ -912,11 +913,12 @@ int grib_set_double(grib_handle* h, const char* key, double val);
  *
  * @param h           : the handle to set the data to
  * @param key         : the key to be searched
- * @param mesg       : the address of a string where the data will be read
- * @param length      : the address of a size_t that contains the length of the string on input, and that contains the actual packed length of the string on output
+ * @param value       : the address of a string where the data will be read
+ * @param length      : the address of a size_t that contains the length of the string on input,
+ *                      and that contains the actual packed length of the string on output
  * @return            0 if OK, integer value on error
  */
-int grib_set_string(grib_handle* h, const char* key, const char* mesg, size_t* length);
+int grib_set_string(grib_handle* h, const char* key, const char* value, size_t* length);
 
 /**
  *  Set a bytes array from a key. If several keys of the same name are present, the last one is set
