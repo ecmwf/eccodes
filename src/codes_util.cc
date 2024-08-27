@@ -405,6 +405,18 @@ int compute_scaled_value_and_scale_factor(
     return err;
 }
 
+static const char* known_features[] = {
+    "AEC",
+    "MEMFS",
+    "JPG",
+    "PNG",
+    "ECCODES_THREADS",
+    "ECCODES_OMP_THREADS",
+    "NETCDF",
+    "FORTRAN",
+    "GEOGRAPHY"
+};
+
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 int codes_is_feature_enabled(const char* feature)
 {
@@ -418,19 +430,9 @@ int codes_is_feature_enabled(const char* feature)
     int fortran_enabled       = 0;
     int geography_enabled     = 0;
 
-    const char* known_features[] = {
-        "AEC",
-        "MEMFS",
-        "JPG",
-        "PNG",
-        "ECCODES_THREADS",
-        "ECCODES_OMP_THREADS",
-        "NETCDF",
-        "FORTRAN",
-        "GEOGRAPHY"
-    };
     int found_feature = 0;
-    for (size_t i = 0; i < NUMBER(known_features); ++i) {
+    const size_t num = NUMBER(known_features);
+    for (size_t i = 0; i < num; ++i) {
         if (STR_EQUAL(feature, known_features[i])) {
             found_feature = 1;
             break;
@@ -439,7 +441,7 @@ int codes_is_feature_enabled(const char* feature)
     if (!found_feature) {
         grib_context* c = grib_context_get_default();
         grib_context_log(c, GRIB_LOG_ERROR, "Unknown feature '%s'. Select one of:", feature);
-        for (size_t i = 0; i < NUMBER(known_features); ++i) {
+        for (size_t i = 0; i < num; ++i) {
             grib_context_log(c, GRIB_LOG_ERROR, "\t%s", known_features[i]);
         }
         return 0;
@@ -456,7 +458,7 @@ int codes_is_feature_enabled(const char* feature)
     jpg_enabled = 1;
     #endif
 #endif
-#if defined(HAVE_LIBPNG)
+#if HAVE_LIBPNG
     png_enabled = 1;
 #endif
 #if defined(HAVE_MEMFS)
@@ -507,4 +509,22 @@ int codes_is_feature_enabled(const char* feature)
     }
 
     return 0;
+}
+
+int codes_enabled_features(char* result, size_t* length)
+{
+    const size_t num = NUMBER(known_features);
+    for (size_t i = 0; i < num; ++i) {
+        if (codes_is_feature_enabled(known_features[i])) {
+            strcat(result, known_features[i]);
+            strcat(result, " ");
+        }
+    }
+
+    const size_t actual_length = strlen(result);
+    if (result[actual_length - 1] == ' ')
+        result[actual_length - 1] = '\0';
+    Assert(*length >= actual_length);
+    *length = actual_length;
+    return GRIB_SUCCESS;
 }
