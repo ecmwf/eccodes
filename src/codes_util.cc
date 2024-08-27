@@ -404,3 +404,72 @@ int compute_scaled_value_and_scale_factor(
     }
     return err;
 }
+
+int codes_is_feature_enabled(const char* feature)
+{
+    int aec_enabled = 0;
+    int jpg_enabled = 0; // JasPer and/or OpenJPEG
+    int png_enabled = 0;
+    int memfs_enabled = 0;
+    int posix_threads_enabled = 0;
+    int omp_threads_enabled = 0;
+    int netcdf_enabled = 0;
+    int fortran_enabled = 0;
+
+#if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
+    aec_enabled = 1;
+#endif
+#if HAVE_JPEG
+    #if HAVE_LIBJASPER
+        jpg_enabled = 1;
+    #endif
+    #if HAVE_LIBOPENJPEG
+        jpg_enabled = 1;
+    #endif
+#endif
+#if defined(HAVE_LIBPNG)
+    png_enabled = 1;
+#endif
+#if defined(HAVE_MEMFS)
+    memfs_enabled = 1;
+#endif
+#if GRIB_PTHREADS
+    posix_threads_enabled = 1;
+#endif
+#if GRIB_OMP_THREADS
+    omp_threads_enabled= 1;
+#endif
+#if defined(HAVE_NETCDF)
+    netcdf_enabled = 1;
+#endif
+#if defined(HAVE_FORTRAN)
+    fortran_enabled = 1;
+#endif
+
+    if (STR_EQUAL(feature, "AEC") || STR_EQUAL(feature, "CCSDS")) {
+        return aec_enabled;
+    }
+    if (STR_EQUAL(feature, "JPG") || STR_EQUAL(feature, "JPEG")) {
+        return jpg_enabled;
+    }
+    if (STR_EQUAL(feature, "PNG")) {
+        return png_enabled;
+    }
+    if (STR_EQUAL(feature, "MEMFS")) {
+        return memfs_enabled;
+    }
+    if (STR_EQUAL(feature, "ECCODES_THREADS")) {
+        return posix_threads_enabled;
+    }
+    if (STR_EQUAL(feature, "ECCODES_OMP_THREADS")) {
+        return omp_threads_enabled;
+    }
+    if (STR_EQUAL(feature, "NETCDF")) {
+        return netcdf_enabled;
+    }
+    if (STR_EQUAL(feature, "FORTRAN")) {
+        return fortran_enabled;
+    }
+
+    return 0;
+}

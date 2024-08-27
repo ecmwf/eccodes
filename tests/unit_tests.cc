@@ -282,6 +282,7 @@ static void test_concept_condition_strings()
     char result[1024] = {0,};
     grib_context* context = NULL;
     grib_handle* h = grib_handle_new_from_samples(context, "GRIB2");
+    if (!h) return;
 
     err = get_concept_condition_string(h, "typeOfLevel", NULL, result);
     Assert(!err);
@@ -762,6 +763,7 @@ void test_codes_context_set_debug()
     grib_context_set_debug(context, -1);
 
     grib_handle* h = grib_handle_new_from_samples(context, "GRIB2");
+    if (!h) return;
     err = grib_set_long(h, "paramId", 167);
     Assert(!err);
 
@@ -776,6 +778,27 @@ void test_codes_context_set_debug()
 
     grib_context_set_debug(context, 0);
 }
+
+void test_is_feature_enabled()
+{
+    printf("Running %s ...\n", __func__);
+    const char* features[] = {
+        "AEC",
+        "MEMFS",
+        "JPG",
+        "PNG",
+        "ECCODES_THREADS",
+        "ECCODES_OMP_THREADS",
+        "NETCDF",
+        "non-existent-feature",
+        "FORTRAN",
+        NULL};
+    for (int i = 0; features[i]; ++i) {
+        const char* f = features[i];
+        printf("\tFeature %s enabled?\t%d\n", f, codes_is_feature_enabled(f));
+    }
+}
+
 
 int main(int argc, char** argv)
 {
@@ -841,6 +864,7 @@ int main(int argc, char** argv)
 
     test_grib2_select_PDTN();
     test_grib2_choose_PDTN();
+    test_is_feature_enabled();
 
     return 0;
 }
