@@ -169,6 +169,14 @@
 	 parameterNumber = 25 ;
 	 typeOfFirstFixedSurface = 105 ;
 	}
+#Logarithm of surface pressure difference
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
 #Total cloud cover
 '(0 - 1)' = {
 	 localTablesVersion = 1 ;
