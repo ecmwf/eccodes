@@ -279,7 +279,7 @@ long convert_to_minutes(long step, long stepUnits)
     return (long)result;
 }
 
-bool is_sorted_ascending(double arr[], size_t n)
+bool is_sorted_ascending(const double arr[], size_t n)
 {
     for (size_t i = 0; i < n-1; i++) {
         if (arr[i] > arr[i+1]) {
@@ -289,7 +289,7 @@ bool is_sorted_ascending(double arr[], size_t n)
     return true;
 }
 
-bool is_sorted_descending(double arr[], size_t n)
+bool is_sorted_descending(const double arr[], size_t n)
 {
     for (size_t i = 0; i < n-1; i++) {
         if (arr[i] < arr[i+1]) {
@@ -439,7 +439,7 @@ int codes_is_feature_enabled(const char* feature)
         }
     }
     if (!found_feature) {
-        grib_context* c = grib_context_get_default();
+        const grib_context* c = grib_context_get_default();
         grib_context_log(c, GRIB_LOG_ERROR, "Unknown feature '%s'. Select one of:", feature);
         for (size_t i = 0; i < num; ++i) {
             grib_context_log(c, GRIB_LOG_ERROR, "\t%s", known_features[i]);
@@ -511,9 +511,10 @@ int codes_is_feature_enabled(const char* feature)
     return 0;
 }
 
-int codes_enabled_features(char* result, size_t* length)
+int codes_get_enabled_features(char* result, size_t* length)
 {
     const size_t num = NUMBER(known_features);
+    result[0] = '\0';
     for (size_t i = 0; i < num; ++i) {
         if (codes_is_feature_enabled(known_features[i])) {
             strcat(result, known_features[i]);

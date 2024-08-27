@@ -1403,7 +1403,7 @@ int codes_check_message_footer(const void* bytes, size_t length, ProductKind pro
 /* Features enabled */
 int codes_is_feature_enabled(const char* feature);
 /* result must be allocated by the caller and its length must be large enough */
-int codes_enabled_features(char* result, size_t* length);
+int codes_get_enabled_features(char* result, size_t* length);
 
 /* --------------------------------------- */
 #define CODES_UTIL_GRID_SPEC_REGULAR_LL                   GRIB_UTIL_GRID_SPEC_REGULAR_LL

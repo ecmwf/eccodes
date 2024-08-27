@@ -786,7 +786,7 @@ void test_codes_context_set_debug()
     grib_context_set_debug(context, 0);
 }
 
-void test_is_feature_enabled()
+void test_codes_is_feature_enabled()
 {
     printf("Running %s ...\n", __func__);
     const char* features[] = {
@@ -807,13 +807,13 @@ void test_is_feature_enabled()
     Assert( 0 == codes_is_feature_enabled("total rubbish") );
 }
 
-void test_codes_enabled_features()
+void test_codes_get_enabled_features()
 {
     printf("Running %s ...\n", __func__);
 
     size_t len = 512;
-    char* features = (char*)malloc(len * sizeof(char));
-    int err = codes_enabled_features(features, &len);
+    char* features = (char*)calloc(len, sizeof(char));
+    int err = codes_get_enabled_features(features, &len);
     Assert(!err);
     printf("\tEnabled features are: '%s'\n", features);
     free(features);
@@ -884,8 +884,8 @@ int main(int argc, char** argv)
 
     test_grib2_select_PDTN();
     test_grib2_choose_PDTN();
-    test_is_feature_enabled();
-    test_codes_enabled_features();
+    test_codes_is_feature_enabled();
+    test_codes_get_enabled_features();
 
     return 0;
 }
