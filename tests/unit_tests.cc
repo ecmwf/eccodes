@@ -512,6 +512,13 @@ static void test_parse_keyval_string()
     free( (void*)values3[0].name );
 }
 
+static void test_time_conversions()
+{
+    printf("Running %s ...\n", __func__);
+    long result = convert_to_minutes(120, 13); // 120s = 2mins
+    Assert(result == 2);
+}
+
 static void test_dates()
 {
     printf("Running %s ...\n", __func__);
@@ -790,13 +797,14 @@ void test_is_feature_enabled()
         "ECCODES_THREADS",
         "ECCODES_OMP_THREADS",
         "NETCDF",
-        "non-existent-feature",
         "FORTRAN",
+        "GEOGRAPHY",
         NULL};
     for (int i = 0; features[i]; ++i) {
         const char* f = features[i];
         printf("\tFeature %s enabled?\t%d\n", f, codes_is_feature_enabled(f));
     }
+    Assert( 0 == codes_is_feature_enabled("total rubbish") );
 }
 
 
@@ -819,6 +827,7 @@ int main(int argc, char** argv)
 
     test_scale_factor_scaled_values();
     test_dates();
+    test_time_conversions();
     test_logging_proc();
     test_print_proc();
     test_grib_binary_search();

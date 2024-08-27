@@ -405,26 +405,55 @@ int compute_scaled_value_and_scale_factor(
     return err;
 }
 
+#define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 int codes_is_feature_enabled(const char* feature)
 {
-    int aec_enabled = 0;
-    int jpg_enabled = 0; // JasPer and/or OpenJPEG
-    int png_enabled = 0;
-    int memfs_enabled = 0;
+    int aec_enabled           = 0; // or CCSDS
+    int memfs_enabled         = 0;
+    int jpg_enabled           = 0; // JasPer or OpenJPEG or both
+    int png_enabled           = 0;
     int posix_threads_enabled = 0;
-    int omp_threads_enabled = 0;
-    int netcdf_enabled = 0;
-    int fortran_enabled = 0;
+    int omp_threads_enabled   = 0;
+    int netcdf_enabled        = 0;
+    int fortran_enabled       = 0;
+    int geography_enabled     = 0;
+
+    const char* known_features[] = {
+        "AEC",
+        "MEMFS",
+        "JPG",
+        "PNG",
+        "ECCODES_THREADS",
+        "ECCODES_OMP_THREADS",
+        "NETCDF",
+        "FORTRAN",
+        "GEOGRAPHY"
+    };
+    int found_feature = 0;
+    for (size_t i = 0; i < NUMBER(known_features); ++i) {
+        if (STR_EQUAL(feature, known_features[i])) {
+            found_feature = 1;
+            break;
+        }
+    }
+    if (!found_feature) {
+        grib_context* c = grib_context_get_default();
+        grib_context_log(c, GRIB_LOG_ERROR, "Unknown feature '%s'. Select one of:", feature);
+        for (size_t i = 0; i < NUMBER(known_features); ++i) {
+            grib_context_log(c, GRIB_LOG_ERROR, "\t%s", known_features[i]);
+        }
+        return 0;
+    }
 
 #if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
     aec_enabled = 1;
 #endif
 #if HAVE_JPEG
     #if HAVE_LIBJASPER
-        jpg_enabled = 1;
+    jpg_enabled = 1;
     #endif
     #if HAVE_LIBOPENJPEG
-        jpg_enabled = 1;
+    jpg_enabled = 1;
     #endif
 #endif
 #if defined(HAVE_LIBPNG)
@@ -437,13 +466,16 @@ int codes_is_feature_enabled(const char* feature)
     posix_threads_enabled = 1;
 #endif
 #if GRIB_OMP_THREADS
-    omp_threads_enabled= 1;
+    omp_threads_enabled = 1;
 #endif
 #if defined(HAVE_NETCDF)
     netcdf_enabled = 1;
 #endif
 #if defined(HAVE_FORTRAN)
     fortran_enabled = 1;
+#endif
+#if defined(HAVE_GEOGRAPHY)
+    geography_enabled = 1;
 #endif
 
     if (STR_EQUAL(feature, "AEC") || STR_EQUAL(feature, "CCSDS")) {
@@ -469,6 +501,9 @@ int codes_is_feature_enabled(const char* feature)
     }
     if (STR_EQUAL(feature, "FORTRAN")) {
         return fortran_enabled;
+    }
+    if (STR_EQUAL(feature, "GEOGRAPHY")) {
+        return geography_enabled;
     }
 
     return 0;
