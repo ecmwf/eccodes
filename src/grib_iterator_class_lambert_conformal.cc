@@ -295,7 +295,7 @@ static int init_oblate(const grib_handle* h,
 
     double ns;     // ratio of angle between meridian
     double F;      // flattening of ellipsoid
-    double rh;     // height above ellipsoid 
+    double rh;     // height above ellipsoid
     double sin_po; // sin value
     double cos_po; // cos value
     double con;    // temporary variable

@@ -540,8 +540,7 @@ int codes_get_features(char* result, size_t* length, int select)
     const size_t actual_length = strlen(result);
     if (result[actual_length - 1] == ' ')
         result[actual_length - 1] = '\0';
-    
-    printf("actual = %zu  arg=%zu \n", actual_length, *length);
+
     Assert(*length >= actual_length);
     *length = actual_length;
     return GRIB_SUCCESS;
