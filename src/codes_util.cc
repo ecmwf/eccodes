@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "eccodes.h"
 
 // Input lon must be in degrees not radians
 // Not to be used for latitudes as they can be -ve
@@ -511,20 +512,36 @@ int codes_is_feature_enabled(const char* feature)
     return 0;
 }
 
-int codes_get_enabled_features(char* result, size_t* length)
+int codes_get_features(char* result, size_t* length, int select)
 {
+    Assert(select == CODES_FEATURES_ALL || select == CODES_FEATURES_ENABLED || select == CODES_FEATURES_DISABLED);
+
     const size_t num = NUMBER(known_features);
     result[0] = '\0';
     for (size_t i = 0; i < num; ++i) {
-        if (codes_is_feature_enabled(known_features[i])) {
+        if (select == CODES_FEATURES_ALL) {
             strcat(result, known_features[i]);
             strcat(result, " ");
+        }
+        else if (select == CODES_FEATURES_ENABLED) {
+            if (codes_is_feature_enabled(known_features[i])) {
+                strcat(result, known_features[i]);
+                strcat(result, " ");
+            }
+        }
+        else if (select == CODES_FEATURES_DISABLED) {
+            if (!codes_is_feature_enabled(known_features[i])) {
+                strcat(result, known_features[i]);
+                strcat(result, " ");
+            }
         }
     }
 
     const size_t actual_length = strlen(result);
     if (result[actual_length - 1] == ' ')
         result[actual_length - 1] = '\0';
+    
+    printf("actual = %zu  arg=%zu \n", actual_length, *length);
     Assert(*length >= actual_length);
     *length = actual_length;
     return GRIB_SUCCESS;

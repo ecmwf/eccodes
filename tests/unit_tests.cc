@@ -807,15 +807,24 @@ void test_codes_is_feature_enabled()
     Assert( 0 == codes_is_feature_enabled("total rubbish") );
 }
 
-void test_codes_get_enabled_features()
+void test_codes_get_features()
 {
     printf("Running %s ...\n", __func__);
 
     size_t len = 512;
     char* features = (char*)calloc(len, sizeof(char));
-    int err = codes_get_enabled_features(features, &len);
+    int err = codes_get_features(features, &len, CODES_FEATURES_ALL);
     Assert(!err);
+    printf("\tFeatures are: '%s'\n", features);
+
+    len = 512;
+    err = codes_get_features(features, &len, CODES_FEATURES_ENABLED);
     printf("\tEnabled features are: '%s'\n", features);
+
+    len = 512;
+    err = codes_get_features(features, &len, CODES_FEATURES_DISABLED);
+    printf("\tDisabled features are: '%s'\n", features);
+
     free(features);
 }
 
@@ -885,7 +894,7 @@ int main(int argc, char** argv)
     test_grib2_select_PDTN();
     test_grib2_choose_PDTN();
     test_codes_is_feature_enabled();
-    test_codes_get_enabled_features();
+    test_codes_get_features();
 
     return 0;
 }

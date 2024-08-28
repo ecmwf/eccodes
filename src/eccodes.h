@@ -1400,10 +1400,14 @@ int codes_get_product_kind(const codes_handle* h, ProductKind* product_kind);
 int codes_check_message_header(const void* bytes, size_t length, ProductKind product);
 int codes_check_message_footer(const void* bytes, size_t length, ProductKind product);
 
-/* Features enabled */
+/* Features */
+#define CODES_FEATURES_ALL      0
+#define CODES_FEATURES_ENABLED  1
+#define CODES_FEATURES_DISABLED 2
 int codes_is_feature_enabled(const char* feature);
-/* result must be allocated by the caller and its length must be large enough */
-int codes_get_enabled_features(char* result, size_t* length);
+/* result is a space-separated list of features and
+   must be allocated by the caller (its length must be large enough) */
+int codes_get_features(char* result, size_t* length, int select);
 
 /* --------------------------------------- */
 #define CODES_UTIL_GRID_SPEC_REGULAR_LL                   GRIB_UTIL_GRID_SPEC_REGULAR_LL
