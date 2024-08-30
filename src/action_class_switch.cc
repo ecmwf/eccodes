@@ -51,20 +51,17 @@ typedef struct grib_action_switch {
 extern grib_action_class* grib_action_class_section;
 
 static grib_action_class _grib_action_class_switch = {
-    &grib_action_class_section,                              /* super                     */
-    "action_class_switch",                              /* name                      */
-    sizeof(grib_action_switch),            /* size                      */
-    0,                                   /* inited */
+    &grib_action_class_section,                              /* super */
+    "action_class_switch",                 /* name */
+    sizeof(grib_action_switch),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     &destroy,                            /* destroy */
-
-    0,                               /* dump                      */
-    0,                               /* xref                      */
-
-    0,             /* create_accessor*/
-
-    0,                            /* notify_change */
+    0,                               /* dump */
+    0,                               /* xref */
+    0,                    /* create_accessor */
+    0,                      /* notify_change */
     0,                            /* reparse */
     &execute,                            /* execute */
 };

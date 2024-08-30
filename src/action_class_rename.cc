@@ -51,20 +51,17 @@ typedef struct grib_action_rename {
 
 
 static grib_action_class _grib_action_class_rename = {
-    0,                              /* super                     */
-    "action_class_rename",                              /* name                      */
-    sizeof(grib_action_rename),            /* size                      */
-    0,                                   /* inited */
+    0,                              /* super */
+    "action_class_rename",                 /* name */
+    sizeof(grib_action_rename),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     &destroy,                            /* destroy */
-
-    &dump,                               /* dump                      */
-    0,                               /* xref                      */
-
-    &create_accessor,             /* create_accessor*/
-
-    0,                            /* notify_change */
+    &dump,                               /* dump */
+    0,                               /* xref */
+    &create_accessor,                    /* create_accessor */
+    0,                      /* notify_change */
     0,                            /* reparse */
     0,                            /* execute */
 };
