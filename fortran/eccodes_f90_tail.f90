@@ -2765,11 +2765,28 @@
     call grib_skip_read_only(iterid, status)
   end subroutine codes_skip_read_only
 
+  subroutine codes_skip_function(iterid, status)
+    integer(kind=kindOfInt), intent(in)  :: iterid
+    integer(kind=kindOfInt), optional, intent(out) :: status
+
+    call grib_skip_function(iterid, status)
+  end subroutine codes_skip_function
+
+  subroutine codes_skip_edition_specific(iterid, status)
+    integer(kind=kindOfInt), intent(in)  :: iterid
+    integer(kind=kindOfInt), optional, intent(out) :: status
+
+    call grib_skip_edition_specific(iterid, status)
+  end subroutine codes_skip_edition_specific
+
+
   !> Set debug mode
   subroutine codes_set_debug(dmode)
     integer(kind=kindOfInt), intent(in) :: dmode
     call grib_set_debug(dmode)
   end subroutine codes_set_debug
+
+
 
   !> Set the definition path
   !>

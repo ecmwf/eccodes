@@ -128,7 +128,7 @@ grib_check_key_equals $temp typeOfTimeIncrement 2
 ${tools_dir}/grib_set -s stepType=avg,typeOfTimeIncrement=255 $grib2_sample $temp
 grib_check_key_equals $temp stepType avg
 ${tools_dir}/grib_set -s stepType=avg $grib2_sample $temp
-grib_check_key_equals $temp typeOfTimeIncrement 3
+grib_check_key_equals $temp typeOfTimeIncrement 2 # default is 2
 
 # Decode/Encode stepRange as an int and double
 ${tools_dir}/grib_set -s stepType=accum,stepRange=23-28 $grib2_sample $temp

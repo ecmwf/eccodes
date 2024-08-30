@@ -185,19 +185,19 @@ int grib_context_seek(const grib_context* c, off_t offset, int whence, void* str
     return c->seek(c, offset, whence, stream);
 }
 
-int grib_context_eof(const grib_context* c, void* stream)
-{
-    if (!c)
-        c = grib_context_get_default();
-    return c->eof(c, stream);
-}
+// int grib_context_eof(const grib_context* c, void* stream)
+// {
+//     if (!c)
+//         c = grib_context_get_default();
+//     return c->eof(c, stream);
+// }
 
-size_t grib_context_write(const grib_context* c, const void* ptr, size_t size, void* stream)
-{
-    if (!c)
-        c = grib_context_get_default();
-    return c->write(c, ptr, size, stream);
-}
+// size_t grib_context_write(const grib_context* c, const void* ptr, size_t size, void* stream)
+// {
+//     if (!c)
+//         c = grib_context_get_default();
+//     return c->write(c, ptr, size, stream);
+// }
 
 static void default_log(const grib_context* c, int level, const char* mess)
 {
@@ -237,7 +237,7 @@ static void default_print(const grib_context* c, void* descriptor, const char* m
 void grib_context_set_print_proc(grib_context* c, grib_print_proc p)
 {
     c = c ? c : grib_context_get_default();
-    /* Set logging back to the default if p is NULL */
+    /* Set printing back to the default if p is NULL */
     c->print = (p ? p : &default_print);
 }
 

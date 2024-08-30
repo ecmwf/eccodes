@@ -860,7 +860,7 @@ int main(int argc, char* argv[])
                 geometry_len = 128;
                 GRIB_CHECK(grib_get_string(h, "gridType", geometry, &geometry_len), 0);
                 if (strcmp(geometry, grids[igrid])) {
-                    printf("Geometry is incorrect\n");
+                    fprintf(stderr, "Geometry is incorrect\n");
                     return 1;
                 }
 

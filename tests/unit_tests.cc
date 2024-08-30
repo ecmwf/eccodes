@@ -224,8 +224,7 @@ static void test_assertion_catching()
     printf("Running %s ...\n", __func__);
 
     char empty[] = "";
-    char** list  = 0;
-    int i        = 0;
+    char** list  = NULL;
     Assert(assertion_caught == 0);
     codes_set_codes_assertion_failed_proc(&my_assertion_proc);
 
@@ -233,13 +232,14 @@ static void test_assertion_catching()
     list = string_split(empty, " ");
 
     Assert(assertion_caught == 1);
+    Assert( list == NULL );
 
     /* Restore everything */
     codes_set_codes_assertion_failed_proc(NULL);
     assertion_caught = 0;
 
-    for (i = 0; list[i] != NULL; ++i)
-        free(list[i]);
+    // for (i = 0; list[i] != NULL; ++i)
+    //     free(list[i]);
     free(list);
 }
 
@@ -264,6 +264,16 @@ static void test_logging_proc()
     Assert(logging_caught == 0);
 }
 
+static void my_print_proc(const grib_context* c, void* descriptor, const char* mesg)
+{
+}
+static void test_print_proc()
+{
+    grib_context* context = grib_context_get_default();
+    grib_context_set_print_proc(context, my_print_proc);
+    grib_context_set_print_proc(context, NULL);
+}
+
 static void test_concept_condition_strings()
 {
     printf("Running %s ...\n", __func__);
@@ -272,6 +282,7 @@ static void test_concept_condition_strings()
     char result[1024] = {0,};
     grib_context* context = NULL;
     grib_handle* h = grib_handle_new_from_samples(context, "GRIB2");
+    if (!h) return;
 
     err = get_concept_condition_string(h, "typeOfLevel", NULL, result);
     Assert(!err);
@@ -499,6 +510,13 @@ static void test_parse_keyval_string()
     grib_print_values("print values test: values3", values3, stdout);
     Assert( strcmp(values3[0].name, "mars.level")==0 );
     free( (void*)values3[0].name );
+}
+
+static void test_time_conversions()
+{
+    printf("Running %s ...\n", __func__);
+    long result = convert_to_minutes(120, 13); // 120s = 2mins
+    Assert(result == 2);
 }
 
 static void test_dates()
@@ -752,6 +770,7 @@ void test_codes_context_set_debug()
     grib_context_set_debug(context, -1);
 
     grib_handle* h = grib_handle_new_from_samples(context, "GRIB2");
+    if (!h) return;
     err = grib_set_long(h, "paramId", 167);
     Assert(!err);
 
@@ -765,6 +784,48 @@ void test_codes_context_set_debug()
     grib_handle_delete(h);
 
     grib_context_set_debug(context, 0);
+}
+
+void test_codes_is_feature_enabled()
+{
+    printf("Running %s ...\n", __func__);
+    const char* features[] = {
+        "AEC",
+        "MEMFS",
+        "JPG",
+        "PNG",
+        "ECCODES_THREADS",
+        "ECCODES_OMP_THREADS",
+        "NETCDF",
+        "FORTRAN",
+        "GEOGRAPHY",
+        NULL};
+    for (int i = 0; features[i]; ++i) {
+        const char* f = features[i];
+        printf("\tFeature %s enabled?\t%d\n", f, codes_is_feature_enabled(f));
+    }
+    Assert( 0 == codes_is_feature_enabled("total rubbish") );
+}
+
+void test_codes_get_features()
+{
+    printf("Running %s ...\n", __func__);
+
+    size_t len = 512;
+    char* features = (char*)calloc(len, sizeof(char));
+    int err = codes_get_features(features, &len, CODES_FEATURES_ALL);
+    Assert(!err);
+    printf("\tFeatures are: '%s'\n", features);
+
+    len = 512;
+    err = codes_get_features(features, &len, CODES_FEATURES_ENABLED);
+    printf("\tEnabled features are: '%s'\n", features);
+
+    len = 512;
+    err = codes_get_features(features, &len, CODES_FEATURES_DISABLED);
+    printf("\tDisabled features are: '%s'\n", features);
+
+    free(features);
 }
 
 int main(int argc, char** argv)
@@ -786,7 +847,9 @@ int main(int argc, char** argv)
 
     test_scale_factor_scaled_values();
     test_dates();
+    test_time_conversions();
     test_logging_proc();
+    test_print_proc();
     test_grib_binary_search();
     test_parse_keyval_string();
 
@@ -830,6 +893,8 @@ int main(int argc, char** argv)
 
     test_grib2_select_PDTN();
     test_grib2_choose_PDTN();
+    test_codes_is_feature_enabled();
+    test_codes_get_features();
 
     return 0;
 }

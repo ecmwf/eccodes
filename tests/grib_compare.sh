@@ -306,20 +306,35 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
+# Key unpackedValues
+#-------------------
+${tools_dir}/grib_set -s scaleValuesBy=1.01 $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $temp1
+${tools_dir}/grib_compare -c unpackedValues -A 1.86 $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $temp1
 
+
+# -----------------
 # Failing cases
 # -----------------
 set +e
-${tools_dir}/grib_compare -H -c data:n $temp1 $temp2
+${tools_dir}/grib_compare -Rxxxx $temp1 $temp2 > $outfile 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
+grep "Invalid argument" $outfile
 
 set +e
-${tools_dir}/grib_compare -a $temp1 $temp2
+${tools_dir}/grib_compare -H -c data:n $temp1 $temp2 > $outfile 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
+grep -q "options are incompatible" $outfile
+
+set +e
+${tools_dir}/grib_compare -a $temp1 $temp2 > $outfile 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "a option requires -c option" $outfile
 
 
 echo GRIB > $temp1

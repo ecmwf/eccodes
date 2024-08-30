@@ -187,15 +187,12 @@ grib_action* grib_action_create_concept(grib_context* context,
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
-    int i = 0;
-
-    for (i = 0; i < lvl; i++)
+    for (int i = 0; i < lvl; i++)
         grib_context_print(act->context, f, "     ");
 
-    printf("concept(%s) { ", act->name);
-    printf("\n");
+    printf("concept(%s) { \n", act->name);
 
-    for (i = 0; i < lvl; i++)
+    for (int i = 0; i < lvl; i++)
         grib_context_print(act->context, f, "     ");
     printf("}\n");
 }

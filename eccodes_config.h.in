@@ -115,6 +115,7 @@
 
 #cmakedefine HAVE_GEOGRAPHY
 #cmakedefine HAVE_MEMFS
+#cmakedefine HAVE_FORTRAN
 
 #ifdef HAVE_MEMFS
 #undef ECCODES_DEFINITION_PATH

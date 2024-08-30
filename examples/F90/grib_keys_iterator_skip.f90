@@ -36,6 +36,8 @@ program keys_iterator_skip
       call codes_skip_coded(kiter)
       call codes_skip_duplicates(kiter)
       call codes_skip_read_only(kiter)
+      call codes_skip_function(kiter)
+      call codes_skip_edition_specific(kiter)
 
       do
          call codes_keys_iterator_next(kiter, iret)

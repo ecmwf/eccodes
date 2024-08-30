@@ -55,7 +55,7 @@ static int grib_fieldset_set_order_by(grib_fieldset* set, grib_order_by* ob);
 
 
 /* --------------- grib_column functions ------------------*/
-int grib_fieldset_new_column(grib_fieldset* set, int id, char* key, int type)
+static int grib_fieldset_new_column(grib_fieldset* set, int id, char* key, int type)
 {
     grib_column* column = NULL;
     grib_context* c;
