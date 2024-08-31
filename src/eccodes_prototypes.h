@@ -450,7 +450,7 @@ bufr_descriptors_array* grib_context_expanded_descriptors_list_get(grib_context*
 void grib_context_expanded_descriptors_list_push(grib_context* c, const char* key, bufr_descriptors_array* expanded, bufr_descriptors_array* unexpanded);
 void codes_set_codes_assertion_failed_proc(codes_assertion_failed_proc proc);
 void codes_assertion_failed(const char* message, const char* file, int line);
-int grib_get_gribex_mode(grib_context* c);
+int grib_get_gribex_mode(const grib_context* c);
 void grib_gribex_mode_on(grib_context* c);
 void grib_gribex_mode_off(grib_context* c);
 void grib_gts_header_on(grib_context* c);

@@ -1143,7 +1143,7 @@ void codes_gribex_mode_on(codes_context* c);
  *
  * @param c           : the context
  */
-int codes_get_gribex_mode(codes_context* c);
+int codes_get_gribex_mode(const codes_context* c);
 
 /**
  *  Set the GRIBEX mode off.

@@ -1245,7 +1245,7 @@ void codes_assertion_failed(const char* message, const char* file, int line)
     }
 }
 
-int grib_get_gribex_mode(grib_context* c)
+int grib_get_gribex_mode(const grib_context* c)
 {
     if (!c)
         c = grib_context_get_default();

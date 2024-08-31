@@ -1145,7 +1145,7 @@ void grib_gribex_mode_on(grib_context* c);
  *
  * @param c           : the context
  */
-int grib_get_gribex_mode(grib_context* c);
+int grib_get_gribex_mode(const grib_context* c);
 
 /**
  *  Set the GRIBEX mode off.

@@ -480,7 +480,7 @@ void codes_gribex_mode_on(grib_context* c)
 {
     grib_gribex_mode_on(c);
 }
-int codes_get_gribex_mode(grib_context* c)
+int codes_get_gribex_mode(const grib_context* c)
 {
     return grib_get_gribex_mode(c);
 }
