@@ -18,6 +18,15 @@ if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
     exit 0
 fi
 
+check_grib_defs()
+{
+  CHECK_DEFS=$ECCODES_DEFINITION_PATH/check_grib_defs.pl
+  if [ -x "$CHECK_DEFS" ]; then
+    # Now check the name.def, paramId.def, shortName.def... files
+    # in the current directory
+    $CHECK_DEFS
+  fi
+}
 
 #
 # Do various checks on the concepts files
@@ -55,8 +64,6 @@ if [ $status -ne 0 ]; then
   exit 0
 fi
 
-CHECK_DEFS=$ECCODES_DEFINITION_PATH/check_grib_defs.pl
-
 defs_dirs="
  $ECCODES_DEFINITION_PATH/grib1
  $ECCODES_DEFINITION_PATH/grib2
@@ -86,7 +93,7 @@ defs_dirs="
 
 for dir in $defs_dirs; do
   cd $dir
-  $CHECK_DEFS
+  check_grib_defs
 done
 
 cd $test_dir
@@ -108,7 +115,7 @@ cp $ECMF_DIR/name.legacy.def      name.def
 cp $ECMF_DIR/paramId.legacy.def   paramId.def
 cp $ECMF_DIR/shortName.legacy.def shortName.def
 cp $ECMF_DIR/units.legacy.def     units.def
-$CHECK_DEFS
+check_grib_defs
 cd $test_dir
 rm -fr $tempDir
 
@@ -127,7 +134,7 @@ cp $ECMF_DIR/name.legacy.def      name.def
 cp $ECMF_DIR/paramId.legacy.def   paramId.def
 cp $ECMF_DIR/shortName.legacy.def shortName.def
 cp $ECMF_DIR/units.legacy.def     units.def
-$CHECK_DEFS
+check_grib_defs
 cd $test_dir
 rm -fr $tempDir
 
