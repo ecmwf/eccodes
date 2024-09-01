@@ -210,7 +210,27 @@ void grib_dump_action_tree(grib_context* ctx, FILE* out)
     Assert(ctx->grib_reader);
     Assert(ctx->grib_reader->first);
     Assert(out);
-    grib_dump_action_branch(out, ctx->grib_reader->first->root, 0);
+
+    // grib_dump_action_branch(out, ctx->grib_reader->first->root, 0);
+    // grib_action* next = ctx->grib_reader->first->root;
+    // while (next) {
+    //     fprintf(out, "Dump %s\n", next->name);
+    //     grib_dump_action_branch(out, next, 0);
+    //     next = next->next;
+    // }
+
+    grib_action_file* fr = ctx->grib_reader->first;
+    grib_action_file* fn = fr;
+    while (fn) {
+        fr = fn;
+        fn = fn->next;
+        grib_action* a = fr->root;
+        while (a) {
+            grib_action* na = a->next;
+            grib_dump_action_branch(out, a, 0);
+            a = na;
+        }
+    }
 }
 
 // void grib_xref_action_branch(FILE* out, grib_action* a, const char* path)

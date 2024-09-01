@@ -124,12 +124,12 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
-    // grib_action_rename* a = (grib_action_rename*)act;
-    // int i = 0;
-    // for (i = 0; i < lvl; i++)
-    //     grib_context_print(act->context, f, "     ");
+    grib_action_rename* a = (grib_action_rename*)act;
+    int i = 0;
+    for (i = 0; i < lvl; i++)
+        grib_context_print(act->context, f, "     ");
 
-    // grib_context_print(act->context, f, "rename %s as %s in %s\n", a->the_old, act->name, a->the_new);
+    grib_context_print(act->context, f, "rename %s as %s in %s\n", a->the_old, act->name, a->the_new);
 }
 
 static void destroy(grib_context* context, grib_action* act)
