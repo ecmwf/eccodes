@@ -95,7 +95,6 @@ static void grib_dump(grib_action* a, FILE* f, int l)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    DEBUG_ASSERT(0);
 }
 
 // void grib_xref(grib_action* a, FILE* f, const char* path)
