@@ -20,7 +20,7 @@ fi
 
 check_grib_defs()
 {
-  CHECK_DEFS=$ECCODES_DEFINITION_PATH/check_grib_defs.pl
+  CHECK_DEFS=$proj_dir/definitions/check_grib_defs.pl
   if [ -x "$CHECK_DEFS" ]; then
     # Now check the name.def, paramId.def, shortName.def... files
     # in the current directory
