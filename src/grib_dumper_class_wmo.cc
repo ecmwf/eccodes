@@ -219,7 +219,6 @@ static int test_bit(long a, long b)
 static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_wmo* self = (grib_dumper_wmo*)d;
-    int i;
     long value  = 0;
     size_t size = 1;
     int err     = 0;
@@ -237,7 +236,8 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
         fprintf(self->dumper.out, "%s (int) ", a->creator_->op);
 
     fprintf(self->dumper.out, "%s = %ld [", a->name_, value);
-    for (i = 0; i < (a->length_ * 8); i++) {
+
+    for (long i = 0; i < (a->length_ * 8); i++) {
         if (test_bit(value, a->length_ * 8 - i - 1))
             fprintf(self->dumper.out, "1");
         else

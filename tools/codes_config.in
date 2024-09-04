@@ -1,0 +1,131 @@
+#!/usr/bin/env bash
+
+ECCODES_VERSION_STR="@eccodes_VERSION_STR@"
+ECCODES_MAJOR_VERSION=@eccodes_VERSION_MAJOR@
+ECCODES_MINOR_VERSION=@eccodes_VERSION_MINOR@
+ECCODES_PATCH_VERSION=@eccodes_VERSION_PATCH@
+# ECCODES_VERSION="$ECCODES_MAJOR_VERSION.$ECCODES_MINOR_VERSION.$ECCODES_PATCH_VERSION"
+
+ECCODES_GIT_SHA1="@eccodes_GIT_SHA1@"
+
+#################################################################
+# Commands
+#################################################################
+usage()
+{
+  echo "Usage: $0 [--version] [--info] [--git]"
+  exit $1
+}
+
+version()
+{
+  echo "${ECCODES_VERSION_STR}"
+}
+
+print_feature()
+{
+  if [ -z "$1" ]; then
+    echo "OFF"
+  elif [[ $1 =~ (true|TRUE|ON|1) ]]; then
+    echo "ON"
+  else
+    echo "OFF"
+  fi
+}
+
+
+info()
+{
+  echo "ecCodes version (${ECCODES_VERSION_STR}), git-sha1 ${ECCODES_GIT_SHA1}"
+  echo ""
+  echo "Build:"
+  echo "  build type      : @CMAKE_BUILD_TYPE@"
+  echo "  timestamp       : @EC_BUILD_TIMESTAMP@"
+  echo "  op. system      : @CMAKE_SYSTEM@ (@EC_OS_NAME@.@EC_OS_BITS@)"
+  echo "  processor       : @CMAKE_SYSTEM_PROCESSOR@"
+  echo "  sources         : @PROJECT_SOURCE_DIR@"
+  echo "  c++ compiler    : @CMAKE_CXX_COMPILER_ID@ @CMAKE_CXX_COMPILER_VERSION@"
+  echo "    flags         : @CMAKE_CXX_FLAGS@"
+#  echo "  fortran compiler: @CMAKE_Fortran_COMPILER_ID@ @CMAKE_Fortran_COMPILER_VERSION@"
+#  echo "    flags         : @ECCODES_Fortran_FLAGS@"
+  echo ""
+  echo "Features:"
+  echo "  AEC             : $(print_feature @HAVE_AEC@)"
+  echo "  MEMFS           : $(print_feature @HAVE_MEMFS@)"
+  echo "  NETCDF          : $(print_feature @HAVE_NETCDF@)"
+  echo "  JPG             : $(print_feature @HAVE_JPEG@)"
+  echo "  PNG             : $(print_feature @HAVE_PNG@)"
+  echo ""
+  # echo "Dependencies: "
+  # if [ -n "@ECCODES_HAVE_ECKIT@" ]; then
+  #  echo "  eckit version (@eckit_VERSION@), git-sha1 $(short_gitsha1 @eckit_GIT_SHA1@)"
+  # else
+  #  echo "  None"
+  # fi
+}
+
+gitsha1()
+{
+  echo "${ECCODES_GIT_SHA1}"
+}
+
+short_gitsha1()
+{
+  if [ -z "$1" ]; then
+    echo "unknown"
+  else
+    echo $1 | head -c 13
+  fi
+}
+
+#################################################################
+# Parse command-line
+#################################################################
+
+if test $# -eq 0; then
+    info
+    # usage 1
+fi
+
+while test $# -gt 0; do
+
+    # Split --option=value in $opt="--option" and $val="value"
+
+    opt=""
+    val=""
+
+    case "$1" in
+    --*=*)
+      opt=`echo "$1" | sed 's/=.*//'`
+      val=`echo "$1" | sed 's/--[_a-zA-Z0-9]*=//'`
+      ;;
+    --*)
+      opt=$1
+      ;;
+    *)
+      break
+      ;;
+    esac
+
+    # Parse options
+    case "$opt" in
+      --version)
+        version
+        ;;
+      --git)
+        gitsha1
+          ;;
+      --info)
+        info
+        ;;
+      --)
+        shift
+        break
+        ;;
+      *)
+        echo "unknown option: $opt"
+        usage 1
+        ;;
+    esac
+    shift
+done

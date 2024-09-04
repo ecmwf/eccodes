@@ -50,6 +50,14 @@ ${tools_dir}/grib_get_data $tempGrib2 > $tempOut
 ${tools_dir}/grib_ls -l 50,0 $tempGrib2
 
 # Invalid cases
+# --------------
+set +e
+${tools_dir}/grib_get_data -s Nx=1 $tempGrib2 > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Wrong number of points" $tempOut
+
 set +e
 ${tools_dir}/grib_get_data -sNr=missing $tempGrib2 > $tempOut 2>&1
 status=$?
@@ -63,6 +71,22 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "must be greater than zero" $tempOut
+
+
+set +e
+${tools_dir}/grib_get_data -s latitudeOfSubSatellitePoint=66 $tempGrib2 > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "satellite must be located in the equator plane" $tempOut
+
+
+set +e
+${tools_dir}/grib_get_data -s dx=0 $tempGrib2 > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Keys dx and dy must be greater than zero" $tempOut
 
 rm -f $tempGrib2 $tempOut
 

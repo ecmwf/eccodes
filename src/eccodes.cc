@@ -28,6 +28,11 @@ const char* codes_get_git_sha1()
 {
     return grib_get_git_sha1();
 }
+const char* codes_get_git_branch()
+{
+    return grib_get_git_branch();
+}
+
 const char* codes_get_package_name(void)
 {
     return grib_get_package_name();
@@ -475,7 +480,7 @@ void codes_gribex_mode_on(grib_context* c)
 {
     grib_gribex_mode_on(c);
 }
-int codes_get_gribex_mode(grib_context* c)
+int codes_get_gribex_mode(const grib_context* c)
 {
     return grib_get_gribex_mode(c);
 }

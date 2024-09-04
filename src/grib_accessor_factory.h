@@ -100,7 +100,6 @@
 { "g2step_range", &grib_accessor_g2step_range, },
 { "gaussian_grid_name", &grib_accessor_gaussian_grid_name, },
 { "gds_is_present", &grib_accessor_gds_is_present, },
-{ "gds_not_present_bitmap", &grib_accessor_gds_not_present_bitmap, },
 { "gen", &grib_accessor_gen, },
 { "getenv", &grib_accessor_getenv, },
 { "global_gaussian", &grib_accessor_global_gaussian, },

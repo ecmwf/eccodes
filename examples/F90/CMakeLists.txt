@@ -155,12 +155,12 @@ ecbuild_add_test( TARGET          eccodes_f_grib_set_packing
                   COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/grib_set_packing.sh )
 
 # Executables without a shell script
-ecbuild_add_executable( TARGET    eccodes_f_new_from_file
-                        NOINSTALL
-                        SOURCES   new_from_file.f90
-                        CONDITION HAVE_FORTRAN
-                        LINKER_LANGUAGE Fortran
-                        LIBS      eccodes_f90 eccodes )
+#ecbuild_add_executable( TARGET    eccodes_f_new_from_file
+#                        NOINSTALL
+#                        SOURCES   new_from_file.f90
+#                        CONDITION HAVE_FORTRAN
+#                        LINKER_LANGUAGE Fortran
+#                        LIBS      eccodes_f90 eccodes )
 ecbuild_add_executable( TARGET    eccodes_f_grib_set_gvc
                         NOINSTALL
                         SOURCES   grib_set_gvc.f90

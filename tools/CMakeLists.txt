@@ -96,6 +96,14 @@ else()
 endif()
 ########################################
 
+configure_file( codes_config.in codes_config @ONLY )
+install( FILES ${CMAKE_CURRENT_BINARY_DIR}/codes_config
+         DESTINATION ${INSTALL_BIN_DIR}
+         PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
+                     GROUP_EXECUTE GROUP_READ
+                     WORLD_EXECUTE WORLD_READ )
+
+
 # BUFR compare script
 install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/bufr_compare_dir
          DESTINATION ${INSTALL_BIN_DIR}

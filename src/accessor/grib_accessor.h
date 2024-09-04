@@ -21,7 +21,6 @@ public:
 
     grib_accessor(const char* name) :
         context_(nullptr), name_(name), class_name_(nullptr), name_space_(nullptr), h_(nullptr), creator_(nullptr), length_(0), offset_(0), parent_(nullptr), next_(nullptr), previous_(nullptr), flags_(0), sub_section_(nullptr), dirty_(0), same_(nullptr), loop_(0), vvalue_(nullptr), set_(nullptr), parent_as_attribute_(nullptr) {}
-
     virtual ~grib_accessor() {}
 
     virtual void init_accessor(const long, grib_arguments*) = 0;

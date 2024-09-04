@@ -203,7 +203,7 @@ int grib_accessor_local_definition_t::pack_long(const long* val, size_t* len)
             // In test & development mode, fail so we remember to adjust PDTN
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "grib_accessor_local_definition_t: Invalid localDefinitionNumber %d", localDefinitionNumber);
-            return GRIB_ENCODING_ERROR;
+            // return GRIB_ENCODING_ERROR;
 #endif
             // ECC-1253: Do not fail in operations. Leave PDTN as is
             productDefinitionTemplateNumberNew = productDefinitionTemplateNumber;

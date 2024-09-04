@@ -49,17 +49,6 @@ const char* tool_name       = "bufr_compare";
 const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/bufr_compare";
 const char* tool_usage      = "[options] bufr_file1 bufr_file2";
 
-GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
-{
-    if (*a != *b)
-        return 1;
-    while ((*a != 0 && *b != 0) && *(a) == *(b)) {
-        a++;
-        b++;
-    }
-    return (*a == 0 && *b == 0) ? 0 : 1;
-}
-
 typedef double (*compare_double_proc)(const double*, const double*, const double*);
 
 typedef struct grib_error grib_error;
@@ -657,7 +646,7 @@ static int strings_are_different(grib_handle* h1, grib_handle* h2, const char* k
                                  const char* s1, const char* s2,
                                  size_t slen1, size_t slen2)
 {
-    if (grib_inline_strcmp(s1, s2) == 0) {
+    if (strcmp(s1, s2) == 0) {
         return 0;
     }
     /* Strings are different. Now check if strings are 'missing'.

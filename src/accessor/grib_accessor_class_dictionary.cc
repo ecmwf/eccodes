@@ -138,25 +138,27 @@ static grib_trie* load_dictionary(grib_accessor* a, int* err)
     fclose(f);
 
     if (localFilename != 0) {
-        f = codes_fopen(localFilename, "r");
-        if (!f) {
-            *err = GRIB_IO_PROBLEM;
-            return NULL;
-        }
+        *err = GRIB_NOT_IMPLEMENTED;
+        return NULL;
+        // f = codes_fopen(localFilename, "r");
+        // if (!f) {
+        //     *err = GRIB_IO_PROBLEM;
+        //     return NULL;
+        // }
 
-        while (fgets(line, sizeof(line) - 1, f)) {
-            i = 0;
-            while (line[i] != '|' && line[i] != 0) {
-                key[i] = line[i];
-                i++;
-            }
-            key[i] = 0;
-            list   = (char*)grib_context_malloc_clear(c, strlen(line) + 1);
-            memcpy(list, line, strlen(line));
-            grib_trie_insert(dictionary, key, list);
-        }
+        //while (fgets(line, sizeof(line) - 1, f)) {
+        //    i = 0;
+        //    while (line[i] != '|' && line[i] != 0) {
+        //        key[i] = line[i];
+        //        i++;
+        //    }
+        //    key[i] = 0;
+        //    list   = (char*)grib_context_malloc_clear(c, strlen(line) + 1);
+        //    memcpy(list, line, strlen(line));
+        //    grib_trie_insert(dictionary, key, list);
+        //}
 
-        fclose(f);
+        //fclose(f);
     }
     grib_trie_insert(c->lists, filename, dictionary);
     return dictionary;

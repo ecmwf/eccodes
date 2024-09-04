@@ -101,7 +101,6 @@ extern grib_accessor* grib_accessor_g2lon;
 extern grib_accessor* grib_accessor_g2step_range;
 extern grib_accessor* grib_accessor_gaussian_grid_name;
 extern grib_accessor* grib_accessor_gds_is_present;
-extern grib_accessor* grib_accessor_gds_not_present_bitmap;
 extern grib_accessor* grib_accessor_gen;
 extern grib_accessor* grib_accessor_getenv;
 extern grib_accessor* grib_accessor_global_gaussian;
