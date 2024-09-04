@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
 ECCODES_VERSION_STR="@eccodes_VERSION_STR@"
-
 ECCODES_MAJOR_VERSION=@eccodes_VERSION_MAJOR@
 ECCODES_MINOR_VERSION=@eccodes_VERSION_MINOR@
 ECCODES_PATCH_VERSION=@eccodes_VERSION_PATCH@
-ECCODES_VERSION="$ECCODES_MAJOR_VERSION.$ECCODES_MINOR_VERSION.$ECCODES_PATCH_VERSION"
+# ECCODES_VERSION="$ECCODES_MAJOR_VERSION.$ECCODES_MINOR_VERSION.$ECCODES_PATCH_VERSION"
 
 ECCODES_GIT_SHA1="@eccodes_GIT_SHA1@"
 
@@ -20,7 +19,7 @@ usage()
 
 version()
 {
-  echo "${ECCODES_VERSION}"
+  echo "${ECCODES_VERSION_STR}"
 }
 
 print_feature()
@@ -37,7 +36,7 @@ print_feature()
 
 info()
 {
-  echo "ecCodes version (${ECCODES_VERSION}), git-sha1 ${ECCODES_GIT_SHA1}"
+  echo "ecCodes version (${ECCODES_VERSION_STR}), git-sha1 ${ECCODES_GIT_SHA1}"
   echo ""
   echo "Build:"
   echo "  build type      : @CMAKE_BUILD_TYPE@"
@@ -53,11 +52,12 @@ info()
   echo "Features:"
   echo "  AEC             : $(print_feature @HAVE_AEC@)"
   echo "  MEMFS           : $(print_feature @HAVE_MEMFS@)"
+  echo "  NETCDF          : $(print_feature @HAVE_NETCDF@)"
   echo "  JPG             : $(print_feature @HAVE_JPEG@)"
   echo "  PNG             : $(print_feature @HAVE_PNG@)"
   echo ""
   # echo "Dependencies: "
-  # if [ -n "@fckit_HAVE_ECKIT@" ]; then
+  # if [ -n "@ECCODES_HAVE_ECKIT@" ]; then
   #  echo "  eckit version (@eckit_VERSION@), git-sha1 $(short_gitsha1 @eckit_GIT_SHA1@)"
   # else
   #  echo "  None"
@@ -83,7 +83,8 @@ short_gitsha1()
 #################################################################
 
 if test $# -eq 0; then
-    usage 1
+    info
+    # usage 1
 fi
 
 while test $# -gt 0; do
