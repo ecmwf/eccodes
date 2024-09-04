@@ -96,8 +96,13 @@ else()
 endif()
 ########################################
 
-configure_file( codes_config.in codes_config @ONLY )
-install( FILES ${CMAKE_CURRENT_BINARY_DIR}/codes_config
+configure_file( codes_config.in ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/codes_config @ONLY )
+file(COPY ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/codes_config
+  DESTINATION ${CMAKE_BINARY_DIR}/bin
+  FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ
+  GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+
+install( FILES ${CMAKE_BINARY_DIR}/bin/codes_config
          DESTINATION ${INSTALL_BIN_DIR}
          PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
                      GROUP_EXECUTE GROUP_READ
