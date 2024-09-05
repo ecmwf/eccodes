@@ -810,14 +810,14 @@ void grib_context_reset(grib_context* c)
 
     if (c->grib_definition_files_dir) {
         grib_string_list* next = c->grib_definition_files_dir;
-        grib_string_list* cur  = NULL;
+        grib_string_list* cur = NULL;
         while (next) {
             cur  = next;
             next = next->next;
             grib_context_free(c, cur->value);
             grib_context_free(c, cur);
         }
-        c->grib_definition_files_dir=0;
+        c->grib_definition_files_dir = 0;
     }
 
     if (c->multi_support_on)
