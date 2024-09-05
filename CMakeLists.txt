@@ -27,8 +27,8 @@ if(NOT ecbuild_FOUND)
         GIT_REPOSITORY https://github.com/ecmwf/ecbuild.git
         GIT_TAG        3.8.5
     )
-    FetchContent_MakeAvailable(ecbuild)
-    find_package( ecbuild 3.7 REQUIRED )
+    FetchContent_Populate(ecbuild)
+    find_package( ecbuild 3.7 REQUIRED HINTS ${ecbuild_SOURCE_DIR})
 endif()
 
 # Initialise project
