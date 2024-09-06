@@ -16,9 +16,9 @@ grib_accessor_class* grib_accessor_class_uint64 = &_grib_accessor_class_uint64;
 
 int grib_accessor_class_uint64_t::unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    long value                = 0;
-    long pos                  = a->offset;
-    unsigned char* data       = grib_handle_of_accessor(a)->buffer->data;
+    long value = 0;
+    long pos = a->offset;
+    const unsigned char* data = grib_handle_of_accessor(a)->buffer->data;
     unsigned long long result = 0, tmp;
     int i;
 

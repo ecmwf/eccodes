@@ -18,7 +18,7 @@ int grib_accessor_class_uint8_t::unpack_long(grib_accessor* a, long* val, size_t
 {
     long value = 0;
     long pos   = a->offset;
-    unsigned char* data = grib_handle_of_accessor(a)->buffer->data;
+    const unsigned char* data = grib_handle_of_accessor(a)->buffer->data;
 
     if (*len < 1) {
         return GRIB_ARRAY_TOO_SMALL;
