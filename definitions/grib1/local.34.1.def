@@ -40,7 +40,7 @@ if (stepType is "instant" ) {
 			} else {
 				alias typeOfEnsembleForecast=three;
 			}
-			alias productDefinitionTemplateNumber=epsContinous;
+			alias productDefinitionTemplateNumber=epsContinuous;
 		} else {
 			alias productDefinitionTemplateNumber=eight;
 		}

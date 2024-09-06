@@ -13,7 +13,7 @@ program read_bytes
   integer :: ifile
   integer :: intsize
   parameter(intsize=10000)
-  character, dimension(intsize) :: bufferChar
+  character, dimension(intsize) :: bufferChar = ''
   character(len=32)             :: input_grib_file = '../../data/v.grib2'
 
   call codes_open_file(ifile, input_grib_file, 'r')

@@ -116,6 +116,10 @@ sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 output=temp.grib1to2.grib
 ECCODES_DEBUG=-1 ${tools_dir}/grib_set -s edition=2 $sample_g1 $output
 
+# -G option
+sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+${tools_dir}/grib_set -G -s edition=2 $sample_g1 $temp2
+
 
 # Clean up
 rm -f $output

@@ -44,20 +44,17 @@ typedef struct grib_action_section {
 
 
 static grib_action_class _grib_action_class_section = {
-    0,                              /* super                     */
-    "action_class_section",                              /* name                      */
-    sizeof(grib_action_section),            /* size                      */
-    0,                                   /* inited */
+    0,                              /* super */
+    "action_class_section",                 /* name */
+    sizeof(grib_action_section),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     0,                            /* destroy */
-
-    0,                               /* dump                      */
-    0,                               /* xref                      */
-
-    0,             /* create_accessor*/
-
-    &notify_change,                            /* notify_change */
+    0,                               /* dump */
+    0,                               /* xref */
+    0,                    /* create_accessor */
+    &notify_change,                      /* notify_change */
     0,                            /* reparse */
     0,                            /* execute */
 };

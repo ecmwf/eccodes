@@ -57,20 +57,17 @@ typedef struct grib_action_template {
 extern grib_action_class* grib_action_class_section;
 
 static grib_action_class _grib_action_class_template = {
-    &grib_action_class_section,                              /* super                     */
-    "action_class_template",                              /* name                      */
-    sizeof(grib_action_template),            /* size                      */
-    0,                                   /* inited */
+    &grib_action_class_section,                              /* super */
+    "action_class_template",                 /* name */
+    sizeof(grib_action_template),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     &destroy,                            /* destroy */
-
-    &dump,                               /* dump                      */
-    0,                               /* xref                      */
-
-    &create_accessor,             /* create_accessor*/
-
-    0,                            /* notify_change */
+    &dump,                               /* dump */
+    0,                               /* xref */
+    &create_accessor,                    /* create_accessor */
+    0,                      /* notify_change */
     &reparse,                            /* reparse */
     0,                            /* execute */
 };

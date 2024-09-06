@@ -355,21 +355,21 @@
 	 constituentType = 3 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Flux of Carbon Dioxide Net Ecosystem Exchange
+#Carbon dioxide net ecosystem exchange flux
 'kg m**-2 s**-1' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 59 ;
 	 constituentType = 3 ;
 	}
-#Flux of Carbon Dioxide Gross Primary Production
+#Carbon dioxide gross primary production flux
 'kg m**-2 s**-1' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 60 ;
 	 constituentType = 3 ;
 	}
-#Flux of Carbon Dioxide Ecosystem Respiration
+#Carbon dioxide ecosystem respiration flux
 'kg m**-2 s**-1' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
@@ -394,7 +394,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated eastward ozone flux
+#Time-integrated total column vertically-integrated eastward ozone flux
 'kg m**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -404,7 +404,7 @@
 	 constituentType = 0 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated northward ozone flux
+#Time-integrated total column vertically-integrated northward ozone flux
 'kg m**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -414,7 +414,7 @@
 	 constituentType = 0 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated divergence of ozone flux
+#Time-integrated total column vertically-integrated divergence of ozone flux
 'kg m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -424,7 +424,7 @@
 	 constituentType = 0 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated net source of ozone
+#Time-integrated total column vertically-integrated net source of ozone
 'kg m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;

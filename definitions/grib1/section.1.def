@@ -105,7 +105,8 @@ if( indicatorOfTypeOfLevel == 109 ||
     indicatorOfTypeOfLevel == 100 ||
     indicatorOfTypeOfLevel == 110 ||
     indicatorOfTypeOfLevel == 113 ||
-    indicatorOfTypeOfLevel == 117)
+    indicatorOfTypeOfLevel == 117 ||
+    indicatorOfTypeOfLevel == 203)
 {
     alias mars.levelist = level;
 }

@@ -99,7 +99,6 @@ if( HAVE_BUILD_TOOLS )
         grib_calendar
         grib_md5
         grib_cfNames
-        grib_ifsParam
         grib_packing_order
         filter_substr
         filter_contains
@@ -107,7 +106,6 @@ if( HAVE_BUILD_TOOLS )
         filter_is_one_of
         filter_is_in_list
         filter_transient_darray
-        grib_uerra
         grib_ecpoint
         grib_s2s
         grib_fire
@@ -164,6 +162,7 @@ if( HAVE_BUILD_TOOLS )
         grib_spectral
         grib_levtype
         grib_typeOfLevel
+        grib2_product_templates
         grib_grid_unstructured
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
@@ -190,11 +189,13 @@ if( HAVE_BUILD_TOOLS )
         grib_partial_message
         grib_true_imagery
         grib_headers_only
+        grib_uerra
         grib_unpack_subarray
         grib_count
         grib_clone_headers_only
         grib2_paramType
         grib2_datasetForLocal
+        grib_ifsParam
         wmo_read_bufr_from_file
         wmo_read_gts_from_file
         wmo_read_any_from_file
@@ -278,6 +279,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1467
         grib_ecc-1764
         grib_ecc-1792
+        grib_ecc-1907
         grib_modelName
         grib_sub_hourly
         grib_set_bytes

@@ -213,27 +213,22 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 78 ;
 	}
-#Maximum wind speed
-'260064' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 219 ;
-	}
-#Downward short-wave radiation flux
+#Surface downward short-wave radiation flux
 '260087' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 204 ;
 	}
-#Upward short-wave radiation flux
+#Surface upward short-wave radiation flux
 '260088' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 211 ;
 	}
-#Downward long-wave radiation flux
+#Surface downward long-wave radiation flux
 '260097' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 205 ;
 	}
-#Upward long-wave radiation flux
+#Surface upward long-wave radiation flux
 '260098' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 212 ;
@@ -910,22 +905,22 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 87 ;
 	}
-#Vertical integral of eastward heat flux
+#Total column vertically-integrated eastward heat flux
 '162069' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 190 ;
 	}
-#Vertical integral of northward heat flux
+#Total column vertically-integrated northward heat flux
 '162070' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 191 ;
 	}
-#Vertical integral of eastward water vapour flux
+#Total column vertically-integrated eastward water vapour flux
 '162071' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 157 ;
 	}
-#Vertical integral of northward water vapour flux
+#Total column vertically-integrated northward water vapour flux
 '162072' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 152 ;

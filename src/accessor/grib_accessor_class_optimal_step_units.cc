@@ -51,7 +51,7 @@ int grib_accessor_class_optimal_step_units_t::pack_expression(grib_accessor* a, 
     const char* cclass_name = a->cclass->name;
 
     if (strcmp(e->cclass->name, "long") == 0) {
-        grib_expression_evaluate_long(hand, e, &lval); // TODO: check return value
+        grib_expression_evaluate_long(hand, e, &lval); // TODO(maee): check return value
         ret = a->pack_long(&lval, &len);
     }
     else {

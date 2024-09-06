@@ -83,6 +83,11 @@ typedef struct parameter parameter;
 static const char* get_value(const request*, const char* name, int n);
 static bool parsedate(const char* name, long* julian, long* second, bool* isjul);
 
+void usage_and_exit(void)
+{
+    usage(); // this calls exit(1)
+}
+
 static bool eq_string(const char* l, const char* r)
 {
     if (l && r)
@@ -3957,7 +3962,6 @@ struct KindValue
     /* The 64-bit offset kind */
     { "2", NC_FORMAT_64BIT },
     { "64-bit-offset", NC_FORMAT_64BIT },
-    { "64-bit offset", NC_FORMAT_64BIT },
 
     /* NetCDF-4 HDF5 format */
     { "3", NC_FORMAT_NETCDF4 },
@@ -4073,9 +4077,13 @@ int grib_tool_init(grib_runtime_options* options)
             }
         }
         if (kvalue->name == NULL) {
-            fprintf(stderr, "Invalid format: %s", kind_name);
-            usage();
-            exit(1);
+            fprintf(stderr, "Invalid value for -k option: %s\n", kind_name);
+            fprintf(stderr, "Please use one of:\n");
+            for (kvalue = legalkinds; kvalue->name; kvalue++) {
+                if (is_number(kvalue->name))
+                    fprintf(stderr, "\t%s\n", kvalue->name);
+            }
+            usage_and_exit();
         }
     }
 
@@ -4084,16 +4092,14 @@ int grib_tool_init(grib_runtime_options* options)
             char* theArg = grib_options_get_option("d:");
             if (!is_number(theArg) || atol(theArg) < 0 || atol(theArg) > 9) {
                 fprintf(stderr, "Invalid deflate option: %s (must be 0 to 9)\n", theArg);
-                usage();
-                exit(1);
+                usage_and_exit();
             }
             set_value(user_r, "deflate", theArg);
             deflate_option = 1;
         }
         else {
             fprintf(stderr, "Invalid deflate option for non netCDF-4 output formats\n");
-            usage();
-            exit(1);
+            usage_and_exit();
         }
     }
     else {
@@ -4105,8 +4111,7 @@ int grib_tool_init(grib_runtime_options* options)
             set_value(user_r, "shuffle", "true");
         else {
             fprintf(stderr, "Invalid shuffle option. Deflate option needed.\n");
-            usage();
-            exit(1);
+            usage_and_exit();
         }
     }
     else
@@ -4116,8 +4121,7 @@ int grib_tool_init(grib_runtime_options* options)
         char* theArg = grib_options_get_option("R:");
         if (!is_number(theArg)) {
             fprintf(stderr, "Invalid reference date: %s\n", theArg);
-            usage();
-            exit(1);
+            usage_and_exit();
         }
         set_value(user_r, "referencedate", theArg);
     }
@@ -4294,8 +4298,8 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     int creation_mode = NC_CLOBBER;
 
     if (options->outfile == NULL || options->outfile->name == NULL) {
-        usage();
-        exit(1);
+        grib_context_log(ctx, GRIB_LOG_ERROR, "No output file. Exiting!");
+        usage_and_exit();
     }
 
     if (fs->count == 0) {

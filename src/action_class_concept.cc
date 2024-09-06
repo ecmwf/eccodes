@@ -60,20 +60,17 @@ typedef struct grib_action_concept {
 extern grib_action_class* grib_action_class_gen;
 
 static grib_action_class _grib_action_class_concept = {
-    &grib_action_class_gen,                              /* super                     */
-    "action_class_concept",                              /* name                      */
-    sizeof(grib_action_concept),            /* size                      */
-    0,                                   /* inited */
+    &grib_action_class_gen,                              /* super */
+    "action_class_concept",                 /* name */
+    sizeof(grib_action_concept),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     &destroy,                            /* destroy */
-
-    &dump,                               /* dump                      */
-    0,                               /* xref                      */
-
-    0,             /* create_accessor*/
-
-    0,                            /* notify_change */
+    &dump,                               /* dump */
+    0,                               /* xref */
+    0,                    /* create_accessor */
+    0,                      /* notify_change */
     0,                            /* reparse */
     0,                            /* execute */
 };
@@ -187,15 +184,12 @@ grib_action* grib_action_create_concept(grib_context* context,
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
-    int i = 0;
-
-    for (i = 0; i < lvl; i++)
+    for (int i = 0; i < lvl; i++)
         grib_context_print(act->context, f, "     ");
 
-    printf("concept(%s) { ", act->name);
-    printf("\n");
+    printf("concept(%s) { \n", act->name);
 
-    for (i = 0; i < lvl; i++)
+    for (int i = 0; i < lvl; i++)
         grib_context_print(act->context, f, "     ");
     printf("}\n");
 }

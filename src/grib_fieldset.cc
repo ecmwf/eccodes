@@ -55,7 +55,7 @@ static int grib_fieldset_set_order_by(grib_fieldset* set, grib_order_by* ob);
 
 
 /* --------------- grib_column functions ------------------*/
-int grib_fieldset_new_column(grib_fieldset* set, int id, char* key, int type)
+static int grib_fieldset_new_column(grib_fieldset* set, int id, char* key, int type)
 {
     grib_column* column = NULL;
     grib_context* c;
@@ -113,14 +113,12 @@ int grib_fieldset_new_column(grib_fieldset* set, int id, char* key, int type)
 
 static void grib_fieldset_delete_columns(grib_fieldset* set)
 {
-    int i = 0;
-    grib_context* c;
-
     if (!set)
         return;
-    c = set->context;
 
-    for (i = 0; i < set->columns_size; i++) {
+    const grib_context* c = set->context;
+
+    for (size_t i = 0; i < set->columns_size; i++) {
         int j = 0;
         switch (set->columns[i].type) {
             case GRIB_TYPE_LONG:
@@ -146,22 +144,19 @@ static void grib_fieldset_delete_columns(grib_fieldset* set)
 
 static int grib_fieldset_columns_resize(grib_fieldset* set, size_t newsize)
 {
-    double* newdoubles;
-    long* newlongs;
-    char** newstrings;
-    int* newerrors;
-    int i = 0;
-    grib_context* c;
-
     if (!set || !set->columns)
         return GRIB_INVALID_ARGUMENT;
 
-    c = set->context;
+    double* newdoubles = NULL;
+    long* newlongs     = NULL;
+    char** newstrings  = NULL;
+    int* newerrors     = NULL;
+    const grib_context* c = set->context;
 
     if (newsize <= set->columns[0].values_array_size)
         return 0;
 
-    for (i = 0; i < set->columns_size; i++) {
+    for (size_t i = 0; i < set->columns_size; i++) {
         switch (set->columns[i].type) {
             case GRIB_TYPE_LONG:
                 newlongs = (long*)grib_context_realloc(c, set->columns[i].long_values,
@@ -818,12 +813,9 @@ static int grib_fieldset_resize_int_array(grib_int_array* a, size_t newsize)
 
 static void grib_fieldset_delete_int_array(grib_int_array* f)
 {
-    grib_context* c = NULL;
+    if (!f) return;
 
-    if (!f)
-        return;
-    c = f->context;
-
+    const grib_context* c = f->context;
     grib_context_free(c, f->el);
     grib_context_free(c, f);
 }

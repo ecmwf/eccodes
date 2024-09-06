@@ -809,12 +809,12 @@ int codes_get_float_elements(const codes_handle* h, const char* key, const int* 
  *
  * @param h         : the handle to get the data from
  * @param key       : the key to be searched
- * @param mesg      : the address of a string where the data will be retrieved
+ * @param value     : the address of a string where the data will be retrieved
  * @param length    : the address of a size_t that contains allocated length of the string on input,
  *                    and that contains the actual length of the string on output
  * @return          0 if OK, integer value on error
  */
-int codes_get_string(const codes_handle* h, const char* key, char* mesg, size_t* length);
+int codes_get_string(const codes_handle* h, const char* key, char* value, size_t* length);
 
 /**
  *  Get string array values from a key. If several keys of the same name are present, the last one is returned
@@ -910,12 +910,12 @@ int codes_set_double(codes_handle* h, const char* key, double val);
  *
  * @param h          : the handle to set the data to
  * @param key        : the key to be searched
- * @param mesg       : the address of a string where the data will be read
+ * @param value      : the address of a string where the data will be read
  * @param length     : the address of a size_t that contains the length of the string on input,
  *                     and that contains the actual packed length of the string on output
  * @return           0 if OK, integer value on error
  */
-int codes_set_string(codes_handle* h, const char* key, const char* mesg, size_t* length);
+int codes_set_string(codes_handle* h, const char* key, const char* value, size_t* length);
 
 /**
  *  Set a bytes array from a key. If several keys of the same name are present, the last one is set
@@ -1143,7 +1143,7 @@ void codes_gribex_mode_on(codes_context* c);
  *
  * @param c           : the context
  */
-int codes_get_gribex_mode(codes_context* c);
+int codes_get_gribex_mode(const codes_context* c);
 
 /**
  *  Set the GRIBEX mode off.
@@ -1400,6 +1400,14 @@ int codes_get_product_kind(const codes_handle* h, ProductKind* product_kind);
 int codes_check_message_header(const void* bytes, size_t length, ProductKind product);
 int codes_check_message_footer(const void* bytes, size_t length, ProductKind product);
 
+/* Features */
+#define CODES_FEATURES_ALL      0
+#define CODES_FEATURES_ENABLED  1
+#define CODES_FEATURES_DISABLED 2
+int codes_is_feature_enabled(const char* feature);
+/* result is a space-separated list of features and
+   must be allocated by the caller (its length must be large enough) */
+int codes_get_features(char* result, size_t* length, int select);
 
 /* --------------------------------------- */
 #define CODES_UTIL_GRID_SPEC_REGULAR_LL                   GRIB_UTIL_GRID_SPEC_REGULAR_LL

@@ -48,7 +48,7 @@
 	 parameterNumber = 195 ;
 	}
 #Convective precipitation rate
-'cprat' = {
+'cpr' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 196 ;
@@ -143,14 +143,14 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 193 ;
 	}
-#Zonal flux of gravity wave stress
-'u-gwd' = {
+#Instantaneous eastward gravity wave surface stress
+'iegwss' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 194 ;
 	}
-#Meridional flux of gravity wave stress
-'v-gwd' = {
+#Instantaneous northward gravity wave surface stress
+'ingwss' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 195 ;
@@ -161,14 +161,14 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 197 ;
 	}
-#Downward short-wave radiation flux
-'dswrf' = {
+#Surface downward short-wave radiation flux
+'sdswrf' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 192 ;
 	}
-#Upward short-wave radiation flux
-'uswrf' = {
+#Surface upward short-wave radiation flux
+'suswrf' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 193 ;
@@ -179,14 +179,14 @@
 	 parameterCategory = 7 ;
 	 parameterNumber = 196 ;
 	}
-#Downward long-wave radiation flux
-'dlwrf' = {
+#Surface downward long-wave radiation flux
+'sdlwrf' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 192 ;
 	}
-#Upward long-wave radiation flux
-'ulwrf' = {
+#Surface upward long-wave radiation flux
+'sulwrf' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 193 ;

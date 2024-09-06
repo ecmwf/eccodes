@@ -15,13 +15,12 @@ program keys_iterator_skip
    character(len=256) :: key
    character(len=256) :: value
    character(len=512) :: all1
-   integer            :: grib_count
+   integer            :: grib_count = 0
 
    call codes_open_file(ifile, &
                         '../../data/regular_latlon_surface.grib1', 'r')
 
    ! Loop on all the messages in a file
-   grib_count = 0
    do while (.true.)
       call codes_grib_new_from_file(ifile, igrib, iret)
       if (iret == CODES_END_OF_FILE) exit
@@ -37,15 +36,20 @@ program keys_iterator_skip
       call codes_skip_coded(kiter)
       call codes_skip_duplicates(kiter)
       call codes_skip_read_only(kiter)
+      call codes_skip_function(kiter)
+      call codes_skip_edition_specific(kiter)
 
       do
          call codes_keys_iterator_next(kiter, iret)
-         if (iret .ne. CODES_SUCCESS) exit !terminate the loop
+         if (iret .ne. CODES_SUCCESS) exit ! Terminate the loop
 
-         call codes_keys_iterator_get_name(kiter, key)
-         call codes_get(igrib, trim(key), value)
-         all1 = trim(key)//' = '//trim(value)
-         write (*, *) trim(all1)
+         ! All keys should be skipped so should not get here
+         call codes_check(CODES_INTERNAL_ERROR, 'Error', 'iterator next should have failed')
+
+         !call codes_keys_iterator_get_name(kiter, key)
+         !call codes_get(igrib, trim(key), value)
+         !all1 = trim(key)//' = '//trim(value)
+         !write (*, *) trim(all1)
       end do
 
       call codes_keys_iterator_delete(kiter)

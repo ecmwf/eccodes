@@ -199,6 +199,7 @@ sub create_cfVarName {
         centre.abbreviation,param_id,attribute.name,attribute_value,param.name,param.shortName
         from param,grib_encoding,grib,attribute,centre,units where
         param.hide_def=0 and
+        param.retired=0 and
         grib_encoding.id=grib.encoding_id and
         param.id=grib_encoding.param_id and
         attribute.id=grib.attribute_id and

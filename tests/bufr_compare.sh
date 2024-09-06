@@ -339,6 +339,18 @@ set -e
 [ $status -eq 1 ]
 grep -q "Summary of different key values" $fLog
 
+# More messages in 2nd file
+count1=$(${tools_dir}/bufr_count syno_4.bufr)
+count2=$(${tools_dir}/bufr_count syno_multi.bufr)
+[ $count1 = 1 ]
+[ $count2 = 3 ]
+set +e
+${tools_dir}/bufr_compare -f syno_4.bufr syno_multi.bufr > $fLog 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "Different number of messages" $fLog
+
 
 # ----------------------------------------
 # Unreadable message

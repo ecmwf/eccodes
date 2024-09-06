@@ -54,12 +54,9 @@ statisticalProcessesList list(numberOfTimeRanges)
 if (numberOfTimeRanges == 1 || numberOfTimeRanges == 2) {
   concept stepTypeInternal {
     "instant" = {typeOfStatisticalProcessing=255;}
-    "avg"     = {typeOfStatisticalProcessing=0;typeOfTimeIncrement=255;}
-    "avg"     = {typeOfStatisticalProcessing=0;typeOfTimeIncrement=2;}
-    "avg"     = {typeOfStatisticalProcessing=0;typeOfTimeIncrement=3;}
+    "avg"     = {typeOfStatisticalProcessing=0;}
     "avgd"    = {typeOfStatisticalProcessing=0;typeOfTimeIncrement=1;}
-    "accum"   = {typeOfStatisticalProcessing=1;typeOfTimeIncrement=255;}
-    "accum"   = {typeOfStatisticalProcessing=1;typeOfTimeIncrement=2;}
+    "accum"   = {typeOfStatisticalProcessing=1;}
     "max"     = {typeOfStatisticalProcessing=2;}
     "min"     = {typeOfStatisticalProcessing=3;}
     "diff"    = {typeOfStatisticalProcessing=4;} # end-start
