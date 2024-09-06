@@ -15,3 +15,5 @@ if (centre == 80 && subCentre == 98 && (class is "c3" || class is "ci" (class is
   constant cnmc_cmcc = 'cmcc';
   alias mars.origin = cnmc_cmcc;
 }
+
+if (class is "ci") { unalias mars.method; }
