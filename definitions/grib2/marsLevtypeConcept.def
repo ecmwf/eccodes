@@ -8,9 +8,8 @@
 'sfc'  = {typeOfFirstFixedSurface=8; typeOfSecondFixedSurface=255;}
 'sfc'  = {typeOfFirstFixedSurface=17; typeOfSecondFixedSurface=255;}
 'sfc'  = {typeOfFirstFixedSurface=18; typeOfSecondFixedSurface=255;}
-'o2d'  = {typeOfFirstFixedSurface=20; scaleFactorOfFirstFixedSurface=-2;
-          scaledValueOfFirstFixedSurface=29315; typeOfSecondFixedSurface=255;}
-'o2d'  = {typeOfFirstFixedSurface=20; typeOfSecondFixedSurface=255;}
+'o2d'  = {discipline=10; typeOfFirstFixedSurface=20; typeOfSecondFixedSurface=255;}
+'sfc'  = {typeOfFirstFixedSurface=20; typeOfSecondFixedSurface=255;}
 'pl'   = {typeOfFirstFixedSurface=100; typeOfSecondFixedSurface=255;}
 'pl'   = {typeOfFirstFixedSurface=100; typeOfSecondFixedSurface=100;}
 'sfc'  = {typeOfFirstFixedSurface=1; typeOfSecondFixedSurface=100;
