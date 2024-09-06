@@ -15,7 +15,7 @@
 class grib_accessor_getenv_t : public grib_accessor_ascii_t
 {
 public:
-    const char* name;
+    const char* envvar;
     char* value;
     const char* default_value;
 };
@@ -23,7 +23,7 @@ public:
 class grib_accessor_class_getenv_t : public grib_accessor_class_ascii_t
 {
 public:
-    grib_accessor_class_getenv_t(const char* name) : grib_accessor_class_ascii_t(name) {}
+    grib_accessor_class_getenv_t(const char* envvar) : grib_accessor_class_ascii_t(envvar) {}
     grib_accessor* create_empty_accessor() override { return new grib_accessor_getenv_t{}; }
     int pack_string(grib_accessor*, const char*, size_t* len) override;
     int unpack_string(grib_accessor*, char*, size_t* len) override;
@@ -31,4 +31,3 @@ public:
     int value_count(grib_accessor*, long*) override;
     void init(grib_accessor*, const long, grib_arguments*) override;
 };
-
