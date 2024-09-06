@@ -17,7 +17,7 @@ grib_accessor_class* grib_accessor_class_group = &_grib_accessor_class_group;
 void grib_accessor_class_group_t::init(grib_accessor* a, const long len, grib_arguments* arg)
 {
     grib_accessor_class_gen_t::init(a, len, arg);
-    grib_buffer* buffer         = grib_handle_of_accessor(a)->buffer;
+    const grib_buffer* buffer = grib_handle_of_accessor(a)->buffer;
     grib_accessor_group_t* self = (grib_accessor_group_t*)a;
 
     size_t i = 0;

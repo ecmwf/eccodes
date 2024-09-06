@@ -59,6 +59,6 @@ int grib_accessor_class_gts_header_t::value_count(grib_accessor* a, long* count)
 
 size_t grib_accessor_class_gts_header_t::string_length(grib_accessor* a)
 {
-    grib_handle* h = grib_handle_of_accessor(a);
+    const grib_handle* h = grib_handle_of_accessor(a);
     return h->gts_header_len;
 }
