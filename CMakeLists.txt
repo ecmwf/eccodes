@@ -22,12 +22,10 @@ find_package( ecbuild 3.7 HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOUR
 if(NOT ecbuild_FOUND)
     message(STATUS "Fetching ecbuild...")
     include(FetchContent)
-    FetchContent_Declare(
-        ecbuild
+    FetchContent_Populate(ecbuild
         GIT_REPOSITORY https://github.com/ecmwf/ecbuild.git
         GIT_TAG        3.8.5
     )
-    FetchContent_Populate(ecbuild)
     find_package( ecbuild 3.7 REQUIRED HINTS ${ecbuild_SOURCE_DIR})
 endif()
 
