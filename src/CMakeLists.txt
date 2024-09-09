@@ -9,6 +9,8 @@
 # nor does it submit to any jurisdiction.
 #
 list( APPEND eccodes_src_files
+    AccessorFactory.cc
+    AccessorStore.cc
     accessor/grib_accessor.cc
     accessor/grib_accessors_list.cc
     grib_accessor_class.cc

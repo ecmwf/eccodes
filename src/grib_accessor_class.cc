@@ -12,6 +12,15 @@
 #include "grib_api_internal.h"
 #include "grib_accessor_classes_hash.cc"
 #include <iostream>
+#include "AccessorFactory.h"
+#include "GribCpp/GribStatus.h"
+#include "AccessorUtils/AccessorLogger.h"
+#include "AccessorStore.h"
+
+using namespace eccodes::accessor;
+
+AccessorFactory& factory = AccessorFactory::instance();
+AccessorStore& store = AccessorStore::instance();
 /*     grib level     */
 
 
@@ -130,7 +139,7 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
                                      const long len, grib_arguments* params)
 {
     //grib_accessor_class* c = NULL;
-    grib_accessor* a       = NULL;
+    //grib_accessor* a       = NULL;
     size_t size            = 0;
 
 // TODO(maee): Replace this with an accessor_factory
@@ -141,9 +150,13 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     //c = *((grib_accessor_classes_hash(creator->op, strlen(creator->op)))->cclass);
 #endif
 
-    auto a_tmp = *((grib_accessor_hash(creator->op, strlen(creator->op)))->cclass);
+    //auto a_tmp = *((grib_accessor_hash(creator->op, strlen(creator->op)))->cclass);
+    //a = factory.build(creator->op);
+    AccessorPtr a = factory.build(AccessorType{creator->op}, AccessorName{creator->op}, AccessorNameSpace{""});
+    
+    //store.addAccessor();
 
-    a = a_tmp->create_empty_accessor();
+    //a = a_tmp->create_empty_accessor();
     //a = c->create_empty_accessor();
 
     a->name_       = creator->name;
