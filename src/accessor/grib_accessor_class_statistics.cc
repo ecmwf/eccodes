@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_statistics.h"
 
-grib_accessor_statistics_t _grib_accessor_statistics{};
-grib_accessor* grib_accessor_statistics = &_grib_accessor_statistics;
+AccessorBuilder<grib_accessor_statistics_t> _grib_accessor_statistics_builder{};
 
 void grib_accessor_statistics_t::init(const long l, grib_arguments* c)
 {

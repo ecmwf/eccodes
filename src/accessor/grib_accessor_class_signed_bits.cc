@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_signed_bits.h"
 
-grib_accessor_signed_bits_t _grib_accessor_signed_bits{};
-grib_accessor* grib_accessor_signed_bits = &_grib_accessor_signed_bits;
+AccessorBuilder<grib_accessor_signed_bits_t> _grib_accessor_signed_bits_builder{};
 
 long grib_accessor_signed_bits_t::byte_count()
 {

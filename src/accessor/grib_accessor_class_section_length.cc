@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_section_length.h"
 
-grib_accessor_section_length_t _grib_accessor_section_length{};
-grib_accessor* grib_accessor_section_length = &_grib_accessor_section_length;
+AccessorBuilder<grib_accessor_section_length_t> _grib_accessor_section_length_builder{};
 
 void grib_accessor_section_length_t::init(const long len, grib_arguments* arg)
 {

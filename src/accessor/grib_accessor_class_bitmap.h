@@ -17,8 +17,9 @@ class grib_accessor_bitmap_t : public grib_accessor_bytes_t
 {
 public:
     grib_accessor_bitmap_t() :
-        grib_accessor_bytes_t() { class_name_ = "bitmap"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_bitmap_t{}; }
+        grib_accessor_bytes_t() {}
+    static inline const AccessorType accessor_type{"bitmap"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     int unpack_double(double* val, size_t* len) override;
     int unpack_float(float* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;

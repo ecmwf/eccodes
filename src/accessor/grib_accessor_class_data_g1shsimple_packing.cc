@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_data_g1shsimple_packing.h"
 
-grib_accessor_data_g1shsimple_packing_t _grib_accessor_data_g1shsimple_packing{};
-grib_accessor* grib_accessor_data_g1shsimple_packing = &_grib_accessor_data_g1shsimple_packing;
+AccessorBuilder<grib_accessor_data_g1shsimple_packing_t> _grib_accessor_data_g1shsimple_packing_builder{};
 
 int grib_accessor_data_g1shsimple_packing_t::value_count(long* count)
 {

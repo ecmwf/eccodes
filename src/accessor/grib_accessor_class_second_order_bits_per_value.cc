@@ -11,8 +11,7 @@
 #include "grib_accessor_class_second_order_bits_per_value.h"
 #include "grib_scaling.h"
 
-grib_accessor_second_order_bits_per_value_t _grib_accessor_second_order_bits_per_value{};
-grib_accessor* grib_accessor_second_order_bits_per_value = &_grib_accessor_second_order_bits_per_value;
+AccessorBuilder<grib_accessor_second_order_bits_per_value_t> _grib_accessor_second_order_bits_per_value_builder{};
 
 static const size_t nbits[64] = {
     0x1, 0x2, 0x4, 0x8,

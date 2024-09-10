@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_uint64.h"
 
-grib_accessor_uint64_t _grib_accessor_uint64{};
-grib_accessor* grib_accessor_uint64 = &_grib_accessor_uint64;
+AccessorBuilder<grib_accessor_uint64_t> _grib_accessor_uint64_builder{};
 
 int grib_accessor_uint64_t::unpack_long(long* val, size_t* len)
 {

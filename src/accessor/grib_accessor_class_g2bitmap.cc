@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_g2bitmap.h"
 
-grib_accessor_g2bitmap_t _grib_accessor_g2bitmap{};
-grib_accessor* grib_accessor_g2bitmap = &_grib_accessor_g2bitmap;
+AccessorBuilder<grib_accessor_g2bitmap_t> _grib_accessor_g2bitmap_builder{};
 
 void grib_accessor_g2bitmap_t::init(const long len, grib_arguments* arg)
 {

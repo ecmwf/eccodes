@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_data_apply_boustrophedonic_bitmap.h"
 
-grib_accessor_data_apply_boustrophedonic_bitmap_t _grib_accessor_data_apply_boustrophedonic_bitmap{};
-grib_accessor* grib_accessor_data_apply_boustrophedonic_bitmap = &_grib_accessor_data_apply_boustrophedonic_bitmap;
+AccessorBuilder<grib_accessor_data_apply_boustrophedonic_bitmap_t> _grib_accessor_data_apply_boustrophedonic_bitmap_builder{};
 
 void grib_accessor_data_apply_boustrophedonic_bitmap_t::init(const long v, grib_arguments* args)
 {

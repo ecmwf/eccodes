@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_library_version.h"
 
-grib_accessor_library_version_t _grib_accessor_library_version{};
-grib_accessor* grib_accessor_library_version = &_grib_accessor_library_version;
+AccessorBuilder<grib_accessor_library_version_t> _grib_accessor_library_version_builder{};
 
 int grib_accessor_library_version_t::unpack_string(char* val, size_t* len)
 {

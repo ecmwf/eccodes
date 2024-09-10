@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_position.h"
 
-grib_accessor_position_t _grib_accessor_position{};
-grib_accessor* grib_accessor_position = &_grib_accessor_position;
+AccessorBuilder<grib_accessor_position_t> _grib_accessor_position_builder{};
 
 void grib_accessor_position_t::init(const long len, grib_arguments* arg)
 {

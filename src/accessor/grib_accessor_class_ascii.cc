@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_ascii.h"
 
-grib_accessor_ascii_t _grib_accessor_ascii{};
-grib_accessor* grib_accessor_ascii = &_grib_accessor_ascii;
+AccessorBuilder<grib_accessor_ascii_t> _grib_accessor_ascii_builder{};
 
 void grib_accessor_ascii_t::init(const long len, grib_arguments* arg)
 {

@@ -16,8 +16,9 @@ class grib_accessor_iterator_t : public grib_accessor_gen_t
 {
 public:
     grib_accessor_iterator_t() :
-        grib_accessor_gen_t() { class_name_ = "iterator"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_iterator_t{}; }
+        grib_accessor_gen_t() {}
+    static inline const AccessorType accessor_type{"iterator"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     void init(const long l, grib_arguments* args) override;
     void dump(grib_dumper* dumper) override;
 

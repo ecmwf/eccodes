@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_g1monthlydate.h"
 
-grib_accessor_g1monthlydate_t _grib_accessor_g1monthlydate{};
-grib_accessor* grib_accessor_g1monthlydate = &_grib_accessor_g1monthlydate;
+AccessorBuilder<grib_accessor_g1monthlydate_t> _grib_accessor_g1monthlydate_builder{};
 
 void grib_accessor_g1monthlydate_t::init(const long l, grib_arguments* c)
 {

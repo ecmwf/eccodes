@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_reference_value_error.h"
 
-grib_accessor_reference_value_error_t _grib_accessor_reference_value_error{};
-grib_accessor* grib_accessor_reference_value_error = &_grib_accessor_reference_value_error;
+AccessorBuilder<grib_accessor_reference_value_error_t> _grib_accessor_reference_value_error_builder{};
 
 void grib_accessor_reference_value_error_t::init(const long l, grib_arguments* c)
 {

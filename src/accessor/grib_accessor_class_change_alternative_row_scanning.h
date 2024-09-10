@@ -17,8 +17,9 @@ class grib_accessor_change_alternative_row_scanning_t : public grib_accessor_gen
 {
 public:
     grib_accessor_change_alternative_row_scanning_t() :
-        grib_accessor_gen_t() { class_name_ = "change_alternative_row_scanning"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_change_alternative_row_scanning_t{}; }
+        grib_accessor_gen_t() {}
+    static inline const AccessorType accessor_type{"change_alternative_row_scanning"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;

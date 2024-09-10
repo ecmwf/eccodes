@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_multdouble.h"
 
-grib_accessor_multdouble_t _grib_accessor_multdouble{};
-grib_accessor* grib_accessor_multdouble = &_grib_accessor_multdouble;
+AccessorBuilder<grib_accessor_multdouble_t> _grib_accessor_multdouble_builder{};
 
 void grib_accessor_multdouble_t::init(const long l, grib_arguments* c)
 {

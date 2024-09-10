@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_values.h"
 
-grib_accessor_values_t _grib_accessor_values{};
-grib_accessor* grib_accessor_values = &_grib_accessor_values;
+AccessorBuilder<grib_accessor_values_t> _grib_accessor_values_builder{};
 
 long init_length(grib_accessor* a)
 {

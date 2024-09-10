@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_g2_chemical.h"
 
-grib_accessor_g2_chemical_t _grib_accessor_g2_chemical{};
-grib_accessor* grib_accessor_g2_chemical = &_grib_accessor_g2_chemical;
+AccessorBuilder<grib_accessor_g2_chemical_t> _grib_accessor_g2_chemical_builder{};
 
 void grib_accessor_g2_chemical_t::init(const long l, grib_arguments* c)
 {

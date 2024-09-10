@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_dictionary.h"
 
-grib_accessor_dictionary_t _grib_accessor_dictionary{};
-grib_accessor* grib_accessor_dictionary = &_grib_accessor_dictionary;
+AccessorBuilder<grib_accessor_dictionary_t> _grib_accessor_dictionary_builder{};
 
 void grib_accessor_dictionary_t::init(const long len, grib_arguments* params)
 {

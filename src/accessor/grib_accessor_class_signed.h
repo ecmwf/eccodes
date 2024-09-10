@@ -17,8 +17,9 @@ class grib_accessor_signed_t : public grib_accessor_long_t
 {
 public:
     grib_accessor_signed_t() :
-        grib_accessor_long_t() { class_name_ = "signed"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_signed_t{}; }
+        grib_accessor_long_t() {}
+    static inline const AccessorType accessor_type{"signed"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     int is_missing() override;
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;

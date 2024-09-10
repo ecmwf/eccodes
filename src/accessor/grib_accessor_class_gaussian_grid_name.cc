@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_gaussian_grid_name.h"
 
-grib_accessor_gaussian_grid_name_t _grib_accessor_gaussian_grid_name{};
-grib_accessor* grib_accessor_gaussian_grid_name = &_grib_accessor_gaussian_grid_name;
+AccessorBuilder<grib_accessor_gaussian_grid_name_t> _grib_accessor_gaussian_grid_name_builder{};
 
 void grib_accessor_gaussian_grid_name_t::init(const long len, grib_arguments* arg)
 {

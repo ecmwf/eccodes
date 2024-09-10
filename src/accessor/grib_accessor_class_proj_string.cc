@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_proj_string.h"
 
-grib_accessor_proj_string_t _grib_accessor_proj_string{};
-grib_accessor* grib_accessor_proj_string = &_grib_accessor_proj_string;
+AccessorBuilder<grib_accessor_proj_string_t> _grib_accessor_proj_string_builder{};
 
 void grib_accessor_proj_string_t::init(const long len, grib_arguments* arg)
 {

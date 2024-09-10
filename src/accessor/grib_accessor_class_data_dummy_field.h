@@ -16,8 +16,9 @@ class grib_accessor_data_dummy_field_t : public grib_accessor_data_g1simple_pack
 {
 public:
     grib_accessor_data_dummy_field_t() :
-        grib_accessor_data_g1simple_packing_t() { class_name_ = "data_dummy_field"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_data_dummy_field_t{}; }
+        grib_accessor_data_g1simple_packing_t() {}
+    static inline const AccessorType accessor_type{"data_dummy_field"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;

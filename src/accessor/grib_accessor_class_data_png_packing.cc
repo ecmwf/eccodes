@@ -13,8 +13,7 @@
 
 #define PNG_ANYBITS
 
-grib_accessor_data_png_packing_t _grib_accessor_data_png_packing{};
-grib_accessor* grib_accessor_data_png_packing = &_grib_accessor_data_png_packing;
+AccessorBuilder<grib_accessor_data_png_packing_t> _grib_accessor_data_png_packing_builder{};
 
 void grib_accessor_data_png_packing_t::init(const long v, grib_arguments* args)
 {

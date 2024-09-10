@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_suppressed.h"
 
-grib_accessor_suppressed_t _grib_accessor_suppressed{};
-grib_accessor* grib_accessor_suppressed = &_grib_accessor_suppressed;
+AccessorBuilder<grib_accessor_suppressed_t> _grib_accessor_suppressed_builder{};
 
 void grib_accessor_suppressed_t::init(const long l, grib_arguments* c)
 {

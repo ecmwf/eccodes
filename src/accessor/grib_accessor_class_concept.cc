@@ -14,8 +14,7 @@
 #include <string>
 #include <utility>
 
-grib_accessor_concept_t _grib_accessor_concept{};
-grib_accessor* grib_accessor_concept = &_grib_accessor_concept;
+AccessorBuilder<grib_accessor_concept_t> _grib_accessor_concept_builder{};
 
 #define MAX_CONCEPT_STRING_LENGTH 255
 

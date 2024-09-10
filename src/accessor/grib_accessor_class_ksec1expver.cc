@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_ksec1expver.h"
 
-grib_accessor_ksec1expver_t _grib_accessor_ksec1expver{};
-grib_accessor* grib_accessor_ksec1expver = &_grib_accessor_ksec1expver;
+AccessorBuilder<grib_accessor_ksec1expver_t> _grib_accessor_ksec1expver_builder{};
 
 void grib_accessor_ksec1expver_t::init(const long len, grib_arguments* arg)
 {

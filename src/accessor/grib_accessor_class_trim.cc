@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_trim.h"
 
-grib_accessor_trim_t _grib_accessor_trim{};
-grib_accessor* grib_accessor_trim = &_grib_accessor_trim;
+AccessorBuilder<grib_accessor_trim_t> _grib_accessor_trim_builder{};
 
 void grib_accessor_trim_t::init(const long l, grib_arguments* arg)
 {

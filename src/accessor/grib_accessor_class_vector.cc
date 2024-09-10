@@ -11,8 +11,7 @@
 #include "grib_accessor_class_vector.h"
 #include "grib_accessor_class_abstract_vector.h"
 
-grib_accessor_vector_t _grib_accessor_vector{};
-grib_accessor* grib_accessor_vector = &_grib_accessor_vector;
+AccessorBuilder<grib_accessor_vector_t> _grib_accessor_vector_builder{};
 
 void grib_accessor_vector_t::init(const long l, grib_arguments* c)
 {

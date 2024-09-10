@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_bufr_extract_subsets.h"
 
-grib_accessor_bufr_extract_subsets_t _grib_accessor_bufr_extract_subsets{};
-grib_accessor* grib_accessor_bufr_extract_subsets = &_grib_accessor_bufr_extract_subsets;
+AccessorBuilder<grib_accessor_bufr_extract_subsets_t> _grib_accessor_bufr_extract_subsets_builder{};
 
 void get_accessors(grib_accessor* a)
 {

@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_g2_mars_labeling.h"
 
-grib_accessor_g2_mars_labeling_t _grib_accessor_g2_mars_labeling{};
-grib_accessor* grib_accessor_g2_mars_labeling = &_grib_accessor_g2_mars_labeling;
+AccessorBuilder<grib_accessor_g2_mars_labeling_t> _grib_accessor_g2_mars_labeling_builder{};
 
 void grib_accessor_g2_mars_labeling_t::init(const long l, grib_arguments* c)
 {

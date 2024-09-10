@@ -16,8 +16,9 @@ class grib_accessor_bufr_data_array_t : public grib_accessor_gen_t
 {
 public:
     grib_accessor_bufr_data_array_t() :
-        grib_accessor_gen_t() { class_name_ = "bufr_data_array"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_bufr_data_array_t{}; }
+        grib_accessor_gen_t() {}
+    static inline const AccessorType accessor_type{"bufr_data_array"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;

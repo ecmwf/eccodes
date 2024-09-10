@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_g2date.h"
 
-grib_accessor_g2date_t _grib_accessor_g2date{};
-grib_accessor* grib_accessor_g2date = &_grib_accessor_g2date;
+AccessorBuilder<grib_accessor_g2date_t> _grib_accessor_g2date_builder{};
 
 void grib_accessor_g2date_t::init(const long l, grib_arguments* c)
 {

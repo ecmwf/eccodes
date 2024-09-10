@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_g2bitmap_present.h"
 
-grib_accessor_g2bitmap_present_t _grib_accessor_g2bitmap_present{};
-grib_accessor* grib_accessor_g2bitmap_present = &_grib_accessor_g2bitmap_present;
+AccessorBuilder<grib_accessor_g2bitmap_present_t> _grib_accessor_g2bitmap_present_builder{};
 
 void grib_accessor_g2bitmap_present_t::init(const long l, grib_arguments* c)
 {

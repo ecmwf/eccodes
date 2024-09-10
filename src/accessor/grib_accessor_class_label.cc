@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_label.h"
 
-grib_accessor_label_t _grib_accessor_label{};
-grib_accessor* grib_accessor_label = &_grib_accessor_label;
+AccessorBuilder<grib_accessor_label_t> _grib_accessor_label_builder{};
 
 void grib_accessor_label_t::init(const long len, grib_arguments* arg)
 {

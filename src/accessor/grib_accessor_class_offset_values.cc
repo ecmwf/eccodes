@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_offset_values.h"
 
-grib_accessor_offset_values_t _grib_accessor_offset_values{};
-grib_accessor* grib_accessor_offset_values = &_grib_accessor_offset_values;
+AccessorBuilder<grib_accessor_offset_values_t> _grib_accessor_offset_values_builder{};
 
 void grib_accessor_offset_values_t::init(const long l, grib_arguments* args)
 {

@@ -17,8 +17,9 @@ class grib_accessor_raw_t : public grib_accessor_gen_t
 {
 public:
     grib_accessor_raw_t() :
-        grib_accessor_gen_t() { class_name_ = "raw"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_raw_t{}; }
+        grib_accessor_gen_t() {}
+    static inline const AccessorType accessor_type{"raw"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     long get_native_type() override;
     int pack_bytes(const unsigned char*, size_t* len) override;
     int unpack_bytes(unsigned char*, size_t* len) override;

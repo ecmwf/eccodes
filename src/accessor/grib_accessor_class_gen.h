@@ -19,11 +19,12 @@ class grib_accessor_gen_t : public grib_accessor
 {
 public:
     grib_accessor_gen_t() :
-        grib_accessor{} { class_name_ = "gen"; }
+        grib_accessor{} {}
+    static inline const AccessorType accessor_type{"gen"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     ~grib_accessor_gen_t();
 
     void init_accessor(const long, grib_arguments*) override;  // TODO: Implement
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_gen_t{}; }
     grib_section* sub_section() override;
     long get_native_type() override;
     int pack_missing() override;

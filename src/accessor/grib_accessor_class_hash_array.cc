@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_hash_array.h"
 
-grib_accessor_hash_array_t _grib_accessor_hash_array{};
-grib_accessor* grib_accessor_hash_array = &_grib_accessor_hash_array;
+AccessorBuilder<grib_accessor_hash_array_t> _grib_accessor_hash_array_builder{};
 
 #define MAX_HASH_ARRAY_STRING_LENGTH 255
 

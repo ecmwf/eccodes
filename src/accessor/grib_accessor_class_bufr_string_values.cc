@@ -12,8 +12,7 @@
 #include "grib_accessor_class_bufr_string_values.h"
 #include "grib_accessor_class_bufr_data_array.h"
 
-grib_accessor_bufr_string_values_t _grib_accessor_bufr_string_values{};
-grib_accessor* grib_accessor_bufr_string_values = &_grib_accessor_bufr_string_values;
+AccessorBuilder<grib_accessor_bufr_string_values_t> _grib_accessor_bufr_string_values_builder{};
 
 void grib_accessor_bufr_string_values_t::init(const long len, grib_arguments* args)
 {

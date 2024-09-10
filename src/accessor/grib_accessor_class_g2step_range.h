@@ -16,8 +16,9 @@ class grib_accessor_g2step_range_t : public grib_accessor_gen_t
 {
 public:
     grib_accessor_g2step_range_t() :
-        grib_accessor_gen_t() { class_name_ = "g2step_range"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_g2step_range_t{}; }
+        grib_accessor_gen_t() {}
+    static inline const AccessorType accessor_type{"g2step_range"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int pack_string(const char*, size_t* len) override;

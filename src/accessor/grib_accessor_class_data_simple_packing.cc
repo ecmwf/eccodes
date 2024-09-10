@@ -15,8 +15,7 @@
 #include <float.h>
 #include <type_traits>
 
-grib_accessor_data_simple_packing_t _grib_accessor_data_simple_packing{};
-grib_accessor* grib_accessor_data_simple_packing = &_grib_accessor_data_simple_packing;
+AccessorBuilder<grib_accessor_data_simple_packing_t> _grib_accessor_data_simple_packing_builder{};
 
 void grib_accessor_data_simple_packing_t::init(const long v, grib_arguments* args)
 {

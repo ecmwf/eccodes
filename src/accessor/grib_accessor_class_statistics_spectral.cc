@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_statistics_spectral.h"
 
-grib_accessor_statistics_spectral_t _grib_accessor_statistics_spectral{};
-grib_accessor* grib_accessor_statistics_spectral = &_grib_accessor_statistics_spectral;
+AccessorBuilder<grib_accessor_statistics_spectral_t> _grib_accessor_statistics_spectral_builder{};
 
 void grib_accessor_statistics_spectral_t::init(const long l, grib_arguments* c)
 {

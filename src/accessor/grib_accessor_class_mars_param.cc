@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_mars_param.h"
 
-grib_accessor_mars_param_t _grib_accessor_mars_param{};
-grib_accessor* grib_accessor_mars_param = &_grib_accessor_mars_param;
+AccessorBuilder<grib_accessor_mars_param_t> _grib_accessor_mars_param_builder{};
 
 void grib_accessor_mars_param_t::init(const long l, grib_arguments* c)
 {

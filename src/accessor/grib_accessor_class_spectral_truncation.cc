@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_spectral_truncation.h"
 
-grib_accessor_spectral_truncation_t _grib_accessor_spectral_truncation{};
-grib_accessor* grib_accessor_spectral_truncation = &_grib_accessor_spectral_truncation;
+AccessorBuilder<grib_accessor_spectral_truncation_t> _grib_accessor_spectral_truncation_builder{};
 
 void grib_accessor_spectral_truncation_t::init(const long l, grib_arguments* c)
 {

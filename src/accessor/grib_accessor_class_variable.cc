@@ -11,8 +11,7 @@
 #include "grib_accessor_class_variable.h"
 #include <limits.h>
 
-grib_accessor_variable_t _grib_accessor_variable{};
-grib_accessor* grib_accessor_variable = &_grib_accessor_variable;
+AccessorBuilder<grib_accessor_variable_t> _grib_accessor_variable_builder{};
 
 //
 // This accessor is used for:

@@ -11,8 +11,7 @@
 #include "grib_accessor_class_codetable.h"
 #include <cctype>
 
-grib_accessor_codetable_t _grib_accessor_codetable{};
-grib_accessor* grib_accessor_codetable = &_grib_accessor_codetable;
+AccessorBuilder<grib_accessor_codetable_t> _grib_accessor_codetable_builder{};
 
 #if GRIB_PTHREADS
 static pthread_once_t once    = PTHREAD_ONCE_INIT;

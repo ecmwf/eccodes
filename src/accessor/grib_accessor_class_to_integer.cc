@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_to_integer.h"
 
-grib_accessor_to_integer_t _grib_accessor_to_integer{};
-grib_accessor* grib_accessor_to_integer = &_grib_accessor_to_integer;
+AccessorBuilder<grib_accessor_to_integer_t> _grib_accessor_to_integer_builder{};
 
 void grib_accessor_to_integer_t::init(const long len, grib_arguments* arg)
 {

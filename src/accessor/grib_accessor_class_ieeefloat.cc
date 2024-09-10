@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_ieeefloat.h"
 
-grib_accessor_ieeefloat_t _grib_accessor_ieeefloat{};
-grib_accessor* grib_accessor_ieeefloat = &_grib_accessor_ieeefloat;
+AccessorBuilder<grib_accessor_ieeefloat_t> _grib_accessor_ieeefloat_builder{};
 
 void grib_accessor_ieeefloat_t::init(const long len, grib_arguments* arg)
 {

@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_g2lon.h"
 
-grib_accessor_g2lon_t _grib_accessor_g2lon{};
-grib_accessor* grib_accessor_g2lon = &_grib_accessor_g2lon;
+AccessorBuilder<grib_accessor_g2lon_t> _grib_accessor_g2lon_builder{};
 
 void grib_accessor_g2lon_t::init(const long l, grib_arguments* c)
 {

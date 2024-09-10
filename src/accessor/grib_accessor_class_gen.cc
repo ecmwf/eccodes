@@ -13,8 +13,8 @@
 #include <stdexcept>
 
 
-grib_accessor_gen_t _grib_accessor_gen = grib_accessor_gen_t{};
-grib_accessor* grib_accessor_gen       = &_grib_accessor_gen;
+//grib_accessor_gen_t _grib_accessor_gen = grib_accessor_gen_t{};
+//grib_accessor* grib_accessor_gen       = &_grib_accessor_gen;
 
 void grib_accessor_gen_t::init_accessor(const long len, grib_arguments* args)
 {

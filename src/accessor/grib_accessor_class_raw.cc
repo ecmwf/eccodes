@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_raw.h"
 
-grib_accessor_raw_t _grib_accessor_raw{};
-grib_accessor* grib_accessor_raw = &_grib_accessor_raw;
+AccessorBuilder<grib_accessor_raw_t> _grib_accessor_raw_builder{};
 
 void grib_accessor_raw_t::init(const long len, grib_arguments* arg)
 {

@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_uint16.h"
 
-grib_accessor_uint16_t _grib_accessor_uint16{};
-grib_accessor* grib_accessor_uint16 = &_grib_accessor_uint16;
+AccessorBuilder<grib_accessor_uint16_t> _grib_accessor_uint16_builder{};
 
 int grib_accessor_uint16_t::unpack_long(long* val, size_t* len)
 {

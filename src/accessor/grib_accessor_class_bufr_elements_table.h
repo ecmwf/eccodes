@@ -17,8 +17,9 @@ class grib_accessor_bufr_elements_table_t : public grib_accessor_gen_t
 {
 public:
     grib_accessor_bufr_elements_table_t() :
-        grib_accessor_gen_t() { class_name_ = "bufr_elements_table"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_bufr_elements_table_t{}; }
+        grib_accessor_gen_t() {}
+    static inline const AccessorType accessor_type{"bufr_elements_table"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     long get_native_type() override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;

@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_long.h"
 
-grib_accessor_long_t _grib_accessor_long{};
-grib_accessor* grib_accessor_long = &_grib_accessor_long;
+AccessorBuilder<grib_accessor_long_t> _grib_accessor_long_builder{};
 
 void grib_accessor_long_t::init(const long len, grib_arguments* arg)
 {

@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_data_shsimple_packing.h"
 
-grib_accessor_data_shsimple_packing_t _grib_accessor_data_shsimple_packing{};
-grib_accessor* grib_accessor_data_shsimple_packing = &_grib_accessor_data_shsimple_packing;
+AccessorBuilder<grib_accessor_data_shsimple_packing_t> _grib_accessor_data_shsimple_packing_builder{};
 
 void grib_accessor_data_shsimple_packing_t::init(const long v, grib_arguments* args)
 {

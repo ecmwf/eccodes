@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_sprintf.h"
 
-grib_accessor_sprintf_t _grib_accessor_sprintf{};
-grib_accessor* grib_accessor_sprintf = &_grib_accessor_sprintf;
+AccessorBuilder<grib_accessor_sprintf_t> _grib_accessor_sprintf_builder{};
 
 void grib_accessor_sprintf_t::init(const long l, grib_arguments* c)
 {

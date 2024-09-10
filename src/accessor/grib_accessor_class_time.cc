@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_time.h"
 
-grib_accessor_time_t _grib_accessor_time{};
-grib_accessor* grib_accessor_time = &_grib_accessor_time;
+AccessorBuilder<grib_accessor_time_t> _grib_accessor_time_builder{};
 
 void grib_accessor_time_t::init(const long l, grib_arguments* c)
 {

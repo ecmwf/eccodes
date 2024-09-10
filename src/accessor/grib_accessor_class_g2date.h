@@ -17,8 +17,9 @@ class grib_accessor_g2date_t : public grib_accessor_long_t
 {
 public:
     grib_accessor_g2date_t() :
-        grib_accessor_long_t() { class_name_ = "g2date"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_g2date_t{}; }
+        grib_accessor_long_t() {}
+    static inline const AccessorType accessor_type{"g2date"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

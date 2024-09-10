@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_to_double.h"
 
-grib_accessor_to_double_t _grib_accessor_to_double{};
-grib_accessor* grib_accessor_to_double = &_grib_accessor_to_double;
+AccessorBuilder<grib_accessor_to_double_t> _grib_accessor_to_double_builder{};
 
 void grib_accessor_to_double_t::init(const long len, grib_arguments* arg)
 {

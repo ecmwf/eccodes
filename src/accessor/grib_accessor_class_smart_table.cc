@@ -11,8 +11,7 @@
 #include "grib_accessor_class_smart_table.h"
 #include <cctype>
 
-grib_accessor_smart_table_t _grib_accessor_smart_table{};
-grib_accessor* grib_accessor_smart_table = &_grib_accessor_smart_table;
+AccessorBuilder<grib_accessor_smart_table_t> _grib_accessor_smart_table_builder{};
 
 #if GRIB_PTHREADS
 static pthread_once_t once   = PTHREAD_ONCE_INIT;

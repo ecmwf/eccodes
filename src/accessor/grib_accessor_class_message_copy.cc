@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_message_copy.h"
 
-grib_accessor_message_copy_t _grib_accessor_message_copy{};
-grib_accessor* grib_accessor_message_copy = &_grib_accessor_message_copy;
+AccessorBuilder<grib_accessor_message_copy_t> _grib_accessor_message_copy_builder{};
 
 void grib_accessor_message_copy_t::init(const long length, grib_arguments* args)
 {

@@ -13,8 +13,7 @@
 #define DIRECT  0
 #define INVERSE 1
 
-grib_accessor_data_g2simple_packing_with_preprocessing_t _grib_accessor_data_g2simple_packing_with_preprocessing{};
-grib_accessor* grib_accessor_data_g2simple_packing_with_preprocessing = &_grib_accessor_data_g2simple_packing_with_preprocessing;
+AccessorBuilder<grib_accessor_data_g2simple_packing_with_preprocessing_t> _grib_accessor_data_g2simple_packing_with_preprocessing_builder{};
 
 void grib_accessor_data_g2simple_packing_with_preprocessing_t::init(const long v, grib_arguments* args)
 {

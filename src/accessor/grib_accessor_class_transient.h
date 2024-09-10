@@ -17,6 +17,7 @@ class grib_accessor_transient_t : public grib_accessor_variable_t
 public:
     void init(const long l, grib_arguments* args) override;
     grib_accessor_transient_t() :
-        grib_accessor_variable_t() { class_name_ = "transient"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_transient_t{}; }
+        grib_accessor_variable_t() {}
+    static inline const AccessorType accessor_type{"transient"};
+    const AccessorType& getClassName() const override { return accessor_type; }
 };

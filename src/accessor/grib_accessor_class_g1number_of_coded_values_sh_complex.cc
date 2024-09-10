@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_g1number_of_coded_values_sh_complex.h"
 
-grib_accessor_g1number_of_coded_values_sh_complex_t _grib_accessor_g1number_of_coded_values_sh_complex{};
-grib_accessor* grib_accessor_g1number_of_coded_values_sh_complex = &_grib_accessor_g1number_of_coded_values_sh_complex;
+AccessorBuilder<grib_accessor_g1number_of_coded_values_sh_complex_t> _grib_accessor_g1number_of_coded_values_sh_complex_builder{};
 
 void grib_accessor_g1number_of_coded_values_sh_complex_t::init(const long l, grib_arguments* c)
 {

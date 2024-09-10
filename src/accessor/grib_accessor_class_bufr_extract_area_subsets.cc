@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_bufr_extract_area_subsets.h"
 
-grib_accessor_bufr_extract_area_subsets_t _grib_accessor_bufr_extract_area_subsets{};
-grib_accessor* grib_accessor_bufr_extract_area_subsets = &_grib_accessor_bufr_extract_area_subsets;
+AccessorBuilder<grib_accessor_bufr_extract_area_subsets_t> _grib_accessor_bufr_extract_area_subsets_builder{};
 
 void grib_accessor_bufr_extract_area_subsets_t::init(const long len, grib_arguments* arg)
 {

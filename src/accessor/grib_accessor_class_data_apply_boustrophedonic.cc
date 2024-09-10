@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_data_apply_boustrophedonic.h"
 
-grib_accessor_data_apply_boustrophedonic_t _grib_accessor_data_apply_boustrophedonic{};
-grib_accessor* grib_accessor_data_apply_boustrophedonic = &_grib_accessor_data_apply_boustrophedonic;
+AccessorBuilder<grib_accessor_data_apply_boustrophedonic_t> _grib_accessor_data_apply_boustrophedonic_builder{};
 
 void grib_accessor_data_apply_boustrophedonic_t::init(const long v, grib_arguments* args)
 {

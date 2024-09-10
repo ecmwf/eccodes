@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_evaluate.h"
 
-grib_accessor_evaluate_t _grib_accessor_evaluate{};
-grib_accessor* grib_accessor_evaluate = &_grib_accessor_evaluate;
+AccessorBuilder<grib_accessor_evaluate_t> _grib_accessor_evaluate_builder{};
 
 void grib_accessor_evaluate_t::init(const long l, grib_arguments* c)
 {

@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_julian_day.h"
 
-grib_accessor_julian_day_t _grib_accessor_julian_day{};
-grib_accessor* grib_accessor_julian_day = &_grib_accessor_julian_day;
+AccessorBuilder<grib_accessor_julian_day_t> _grib_accessor_julian_day_builder{};
 
 void grib_accessor_julian_day_t::init(const long l, grib_arguments* c)
 {

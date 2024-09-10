@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_g1forecastmonth.h"
 
-grib_accessor_g1forecastmonth_t _grib_accessor_g1forecastmonth{};
-grib_accessor* grib_accessor_g1forecastmonth = &_grib_accessor_g1forecastmonth;
+AccessorBuilder<grib_accessor_g1forecastmonth_t> _grib_accessor_g1forecastmonth_builder{};
 
 void grib_accessor_g1forecastmonth_t::init(const long l, grib_arguments* c)
 {

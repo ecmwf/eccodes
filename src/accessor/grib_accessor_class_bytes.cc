@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_bytes.h"
 
-grib_accessor_bytes_t _grib_accessor_bytes{};
-grib_accessor* grib_accessor_bytes = &_grib_accessor_bytes;
+AccessorBuilder<grib_accessor_bytes_t> _grib_accessor_bytes_builder{};
 
 void grib_accessor_bytes_t::init(const long len, grib_arguments* arg)
 {

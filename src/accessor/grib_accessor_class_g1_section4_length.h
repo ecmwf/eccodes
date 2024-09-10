@@ -17,8 +17,9 @@ class grib_accessor_g1_section4_length_t : public grib_accessor_section_length_t
 {
 public:
     grib_accessor_g1_section4_length_t() :
-        grib_accessor_section_length_t() { class_name_ = "g1_section4_length"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_g1_section4_length_t{}; }
+        grib_accessor_section_length_t() {}
+    static inline const AccessorType accessor_type{"g1_section4_length"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

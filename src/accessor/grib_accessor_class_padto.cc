@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_padto.h"
 
-grib_accessor_padto_t _grib_accessor_padto{};
-grib_accessor* grib_accessor_padto = &_grib_accessor_padto;
+AccessorBuilder<grib_accessor_padto_t> _grib_accessor_padto_builder{};
 
 size_t grib_accessor_padto_t::preferred_size(int from_handle)
 {

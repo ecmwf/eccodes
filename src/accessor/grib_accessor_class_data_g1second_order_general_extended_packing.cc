@@ -12,8 +12,7 @@
 #include "grib_accessor_class_data_g1second_order_general_extended_packing.h"
 #include "grib_scaling.h"
 
-grib_accessor_data_g1second_order_general_extended_packing_t _grib_accessor_data_g1second_order_general_extended_packing{};
-grib_accessor* grib_accessor_data_g1second_order_general_extended_packing = &_grib_accessor_data_g1second_order_general_extended_packing;
+AccessorBuilder<grib_accessor_data_g1second_order_general_extended_packing_t> _grib_accessor_data_g1second_order_general_extended_packing_builder{};
 
 #define MAX_NUMBER_OF_GROUPS 65534
 #define EFDEBUG              0

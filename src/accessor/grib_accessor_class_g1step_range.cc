@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_g1step_range.h"
 
-grib_accessor_g1step_range_t _grib_accessor_g1step_range{};
-grib_accessor* grib_accessor_g1step_range = &_grib_accessor_g1step_range;
+AccessorBuilder<grib_accessor_g1step_range_t> _grib_accessor_g1step_range_builder{};
 
 void grib_accessor_g1step_range_t::init(const long l, grib_arguments* c)
 {

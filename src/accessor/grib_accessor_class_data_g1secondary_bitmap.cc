@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_data_g1secondary_bitmap.h"
 
-grib_accessor_data_g1secondary_bitmap_t _grib_accessor_data_g1secondary_bitmap{};
-grib_accessor* grib_accessor_data_g1secondary_bitmap = &_grib_accessor_data_g1secondary_bitmap;
+AccessorBuilder<grib_accessor_data_g1secondary_bitmap_t> _grib_accessor_data_g1secondary_bitmap_builder{};
 
 void grib_accessor_data_g1secondary_bitmap_t::init(const long v, grib_arguments* args)
 {

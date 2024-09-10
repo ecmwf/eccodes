@@ -12,8 +12,7 @@
 #include "grib_accessor_class_codetable_title.h"
 #include "grib_accessor_class_codetable.h"
 
-grib_accessor_codetable_title_t _grib_accessor_codetable_title{};
-grib_accessor* grib_accessor_codetable_title = &_grib_accessor_codetable_title;
+AccessorBuilder<grib_accessor_codetable_title_t> _grib_accessor_codetable_title_builder{};
 
 void grib_accessor_codetable_title_t::init(const long len, grib_arguments* params)
 {

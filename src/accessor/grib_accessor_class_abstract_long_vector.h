@@ -17,8 +17,9 @@ class grib_accessor_abstract_long_vector_t : public grib_accessor_gen_t
 {
 public:
     grib_accessor_abstract_long_vector_t() :
-        grib_accessor_gen_t() { class_name_ = "abstract_long_vector"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_abstract_long_vector_t{}; }
+        grib_accessor_gen_t() {}
+    static inline const AccessorType accessor_type{"abstract_long_vector"};
+    const AccessorType& getClassName() const override { return accessor_type; }
 
 public:
     long* v_;

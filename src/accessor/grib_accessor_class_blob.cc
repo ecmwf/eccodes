@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_blob.h"
 
-grib_accessor_blob_t _grib_accessor_blob{};
-grib_accessor* grib_accessor_blob = &_grib_accessor_blob;
+AccessorBuilder<grib_accessor_blob_t> _grib_accessor_blob_builder{};
 
 void grib_accessor_blob_t::init(const long len, grib_arguments* arg)
 {

@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_pad.h"
 
-grib_accessor_pad_t _grib_accessor_pad{};
-grib_accessor* grib_accessor_pad = &_grib_accessor_pad;
+AccessorBuilder<grib_accessor_pad_t> _grib_accessor_pad_builder{};
 
 void grib_accessor_pad_t::init(const long len, grib_arguments* arg)
 {

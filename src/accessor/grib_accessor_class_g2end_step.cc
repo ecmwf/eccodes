@@ -14,8 +14,7 @@
 #include "step_utilities.h"
 #include <stdexcept>
 
-grib_accessor_g2end_step_t _grib_accessor_g2end_step{};
-grib_accessor* grib_accessor_g2end_step = &_grib_accessor_g2end_step;
+AccessorBuilder<grib_accessor_g2end_step_t> _grib_accessor_g2end_step_builder{};
 
 void grib_accessor_g2end_step_t::init(const long l, grib_arguments* c)
 {

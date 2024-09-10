@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_data_dummy_field.h"
 
-grib_accessor_data_dummy_field_t _grib_accessor_data_dummy_field{};
-grib_accessor* grib_accessor_data_dummy_field = &_grib_accessor_data_dummy_field;
+AccessorBuilder<grib_accessor_data_dummy_field_t> _grib_accessor_data_dummy_field_builder{};
 
 void grib_accessor_data_dummy_field_t::init(const long v, grib_arguments* args)
 {

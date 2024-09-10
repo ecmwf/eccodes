@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_bitmap.h"
 
-grib_accessor_bitmap_t _grib_accessor_bitmap{};
-grib_accessor* grib_accessor_bitmap = &_grib_accessor_bitmap;
+AccessorBuilder<grib_accessor_bitmap_t> _grib_accessor_bitmap_builder{};
 
 static void compute_size(grib_accessor* a)
 {

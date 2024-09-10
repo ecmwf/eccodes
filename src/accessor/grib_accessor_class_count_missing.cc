@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_count_missing.h"
 
-grib_accessor_count_missing_t _grib_accessor_count_missing{};
-grib_accessor* grib_accessor_count_missing = &_grib_accessor_count_missing;
+AccessorBuilder<grib_accessor_count_missing_t> _grib_accessor_count_missing_builder{};
 
 static const unsigned char bitsoff[] = {
     8, 7, 7, 6, 7, 6, 6, 5, 7, 6, 6, 5, 6, 5, 5, 4, 7,

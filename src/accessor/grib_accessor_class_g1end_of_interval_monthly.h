@@ -17,8 +17,9 @@ class grib_accessor_g1end_of_interval_monthly_t : public grib_accessor_abstract_
 {
 public:
     grib_accessor_g1end_of_interval_monthly_t() :
-        grib_accessor_abstract_vector_t() { class_name_ = "g1end_of_interval_monthly"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_g1end_of_interval_monthly_t{}; }
+        grib_accessor_abstract_vector_t() {}
+    static inline const AccessorType accessor_type{"g1end_of_interval_monthly"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
     void destroy(grib_context*) override;

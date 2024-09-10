@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_data_jpeg2000_packing.h"
 
-grib_accessor_data_jpeg2000_packing_t _grib_accessor_data_jpeg2000_packing{};
-grib_accessor* grib_accessor_data_jpeg2000_packing = &_grib_accessor_data_jpeg2000_packing;
+AccessorBuilder<grib_accessor_data_jpeg2000_packing_t> _grib_accessor_data_jpeg2000_packing_builder{};
 
 static int first = 1;
 

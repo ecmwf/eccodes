@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_scale.h"
 
-grib_accessor_scale_t _grib_accessor_scale{};
-grib_accessor* grib_accessor_scale = &_grib_accessor_scale;
+AccessorBuilder<grib_accessor_scale_t> _grib_accessor_scale_builder{};
 
 void grib_accessor_scale_t::init(const long l, grib_arguments* c)
 {

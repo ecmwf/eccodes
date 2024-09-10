@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_change_scanning_direction.h"
 
-grib_accessor_change_scanning_direction_t _grib_accessor_change_scanning_direction{};
-grib_accessor* grib_accessor_change_scanning_direction = &_grib_accessor_change_scanning_direction;
+AccessorBuilder<grib_accessor_change_scanning_direction_t> _grib_accessor_change_scanning_direction_builder{};
 
 void grib_accessor_change_scanning_direction_t::init(const long len, grib_arguments* args)
 {

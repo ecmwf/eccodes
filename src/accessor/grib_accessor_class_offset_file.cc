@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_offset_file.h"
 
-grib_accessor_offset_file_t _grib_accessor_offset_file{};
-grib_accessor* grib_accessor_offset_file = &_grib_accessor_offset_file;
+AccessorBuilder<grib_accessor_offset_file_t> _grib_accessor_offset_file_builder{};
 
 void grib_accessor_offset_file_t::init(const long l, grib_arguments* c)
 {

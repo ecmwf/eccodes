@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_number_of_points_gaussian.h"
 
-grib_accessor_number_of_points_gaussian_t _grib_accessor_number_of_points_gaussian{};
-grib_accessor* grib_accessor_number_of_points_gaussian = &_grib_accessor_number_of_points_gaussian;
+AccessorBuilder<grib_accessor_number_of_points_gaussian_t> _grib_accessor_number_of_points_gaussian_builder{};
 
 #define EFDEBUG 0
 

@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_signed.h"
 
-grib_accessor_signed_t _grib_accessor_signed{};
-grib_accessor* grib_accessor_signed = &_grib_accessor_signed;
+AccessorBuilder<grib_accessor_signed_t> _grib_accessor_signed_builder{};
 
 void grib_accessor_signed_t::init(const long len, grib_arguments* arg)
 {

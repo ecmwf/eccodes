@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_step_human_readable.h"
 
-grib_accessor_step_human_readable_t _grib_accessor_step_human_readable{};
-grib_accessor* grib_accessor_step_human_readable = &_grib_accessor_step_human_readable;
+AccessorBuilder<grib_accessor_step_human_readable_t> _grib_accessor_step_human_readable_builder{};
 
 void grib_accessor_step_human_readable_t::init(const long len, grib_arguments* params)
 {

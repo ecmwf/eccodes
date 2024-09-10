@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_bufrdc_expanded_descriptors.h"
 
-grib_accessor_bufrdc_expanded_descriptors_t _grib_accessor_bufrdc_expanded_descriptors{};
-grib_accessor* grib_accessor_bufrdc_expanded_descriptors = &_grib_accessor_bufrdc_expanded_descriptors;
+AccessorBuilder<grib_accessor_bufrdc_expanded_descriptors_t> _grib_accessor_bufrdc_expanded_descriptors_builder{};
 
 void grib_accessor_bufrdc_expanded_descriptors_t::init(const long len, grib_arguments* args)
 {

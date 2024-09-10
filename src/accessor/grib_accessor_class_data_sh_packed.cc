@@ -11,8 +11,7 @@
 #include "grib_accessor_class_data_sh_packed.h"
 #include "grib_scaling.h"
 
-grib_accessor_data_sh_packed_t _grib_accessor_data_sh_packed{};
-grib_accessor* grib_accessor_data_sh_packed = &_grib_accessor_data_sh_packed;
+AccessorBuilder<grib_accessor_data_sh_packed_t> _grib_accessor_data_sh_packed_builder{};
 
 typedef unsigned long (*encode_float_proc)(double);
 typedef double (*decode_float_proc)(unsigned long);

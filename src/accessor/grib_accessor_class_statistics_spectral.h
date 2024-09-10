@@ -17,8 +17,9 @@ class grib_accessor_statistics_spectral_t : public grib_accessor_abstract_vector
 {
 public:
     grib_accessor_statistics_spectral_t() :
-        grib_accessor_abstract_vector_t() { class_name_ = "statistics_spectral"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_statistics_spectral_t{}; }
+        grib_accessor_abstract_vector_t() {}
+    static inline const AccessorType accessor_type{"statistics_spectral"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
     void destroy(grib_context*) override;

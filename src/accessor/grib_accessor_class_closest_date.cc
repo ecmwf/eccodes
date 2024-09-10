@@ -11,8 +11,7 @@
 #include "grib_accessor_class_closest_date.h"
 #include <float.h>
 
-grib_accessor_closest_date_t _grib_accessor_closest_date{};
-grib_accessor* grib_accessor_closest_date = &_grib_accessor_closest_date;
+AccessorBuilder<grib_accessor_closest_date_t> _grib_accessor_closest_date_builder{};
 
 void grib_accessor_closest_date_t::init(const long l, grib_arguments* c)
 {

@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_sum.h"
 
-grib_accessor_sum_t _grib_accessor_sum{};
-grib_accessor* grib_accessor_sum = &_grib_accessor_sum;
+AccessorBuilder<grib_accessor_sum_t> _grib_accessor_sum_builder{};
 
 void grib_accessor_sum_t::init(const long l, grib_arguments* c)
 {

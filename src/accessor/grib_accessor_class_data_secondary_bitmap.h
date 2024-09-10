@@ -16,8 +16,9 @@ class grib_accessor_data_secondary_bitmap_t : public grib_accessor_gen_t
 {
 public:
     grib_accessor_data_secondary_bitmap_t() :
-        grib_accessor_gen_t() { class_name_ = "data_secondary_bitmap"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_data_secondary_bitmap_t{}; }
+        grib_accessor_gen_t() {}
+    static inline const AccessorType accessor_type{"data_secondary_bitmap"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     long get_native_type() override;
     int unpack_double(double* val, size_t* len) override;
     void dump(grib_dumper*) override;

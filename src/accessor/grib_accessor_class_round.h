@@ -17,8 +17,9 @@ class grib_accessor_round_t : public grib_accessor_evaluate_t
 {
 public:
     grib_accessor_round_t() :
-        grib_accessor_evaluate_t() { class_name_ = "round"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_round_t{}; }
+        grib_accessor_evaluate_t() {}
+    static inline const AccessorType accessor_type{"round"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     int unpack_double(double* val, size_t* len) override;
     int unpack_string(char*, size_t* len) override;
     void init(const long, grib_arguments*) override;

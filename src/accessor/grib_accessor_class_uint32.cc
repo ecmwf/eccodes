@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_uint32.h"
 
-grib_accessor_uint32_t _grib_accessor_uint32{};
-grib_accessor* grib_accessor_uint32 = &_grib_accessor_uint32;
+AccessorBuilder<grib_accessor_uint32_t> _grib_accessor_uint32_builder{};
 
 int grib_accessor_uint32_t::unpack_long(long* val, size_t* len)
 {

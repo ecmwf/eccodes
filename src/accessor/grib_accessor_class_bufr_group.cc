@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_bufr_group.h"
 
-grib_accessor_bufr_group_t _grib_accessor_bufr_group{};
-grib_accessor* grib_accessor_bufr_group = &_grib_accessor_bufr_group;
+AccessorBuilder<grib_accessor_bufr_group_t> _grib_accessor_bufr_group_builder{};
 
 void grib_accessor_bufr_group_t::dump(grib_dumper* dumper)
 {

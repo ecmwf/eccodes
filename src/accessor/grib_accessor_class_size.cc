@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_size.h"
 
-grib_accessor_size_t _grib_accessor_size{};
-grib_accessor* grib_accessor_size = &_grib_accessor_size;
+AccessorBuilder<grib_accessor_size_t> _grib_accessor_size_builder{};
 
 void grib_accessor_size_t::init(const long l, grib_arguments* c)
 {

@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_gts_header.h"
 
-grib_accessor_gts_header_t _grib_accessor_gts_header{};
-grib_accessor* grib_accessor_gts_header = &_grib_accessor_gts_header;
+AccessorBuilder<grib_accessor_gts_header_t> _grib_accessor_gts_header_builder{};
 
 void grib_accessor_gts_header_t::init(const long l, grib_arguments* c)
 {

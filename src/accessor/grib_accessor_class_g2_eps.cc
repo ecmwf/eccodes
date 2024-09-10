@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_g2_eps.h"
 
-grib_accessor_g2_eps_t _grib_accessor_g2_eps{};
-grib_accessor* grib_accessor_g2_eps = &_grib_accessor_g2_eps;
+AccessorBuilder<grib_accessor_g2_eps_t> _grib_accessor_g2_eps_builder{};
 
 void grib_accessor_g2_eps_t::init(const long l, grib_arguments* c)
 {

@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_when.h"
 
-grib_accessor_when_t _grib_accessor_when{};
-grib_accessor* grib_accessor_when = &_grib_accessor_when;
+AccessorBuilder<grib_accessor_when_t> _grib_accessor_when_builder{};
 
 void grib_accessor_when_t::init(const long len, grib_arguments* arg)
 {

@@ -17,8 +17,9 @@ class grib_accessor_mars_step_t : public grib_accessor_ascii_t
 {
 public:
     grib_accessor_mars_step_t() :
-        grib_accessor_ascii_t() { class_name_ = "mars_step"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_mars_step_t{}; }
+        grib_accessor_ascii_t() {}
+    static inline const AccessorType accessor_type{"mars_step"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int pack_string(const char*, size_t* len) override;

@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_from_scale_factor_scaled_value.h"
 
-grib_accessor_from_scale_factor_scaled_value_t _grib_accessor_from_scale_factor_scaled_value{};
-grib_accessor* grib_accessor_from_scale_factor_scaled_value = &_grib_accessor_from_scale_factor_scaled_value;
+AccessorBuilder<grib_accessor_from_scale_factor_scaled_value_t> _grib_accessor_from_scale_factor_scaled_value_builder{};
 
 void grib_accessor_from_scale_factor_scaled_value_t::init(const long l, grib_arguments* c)
 {

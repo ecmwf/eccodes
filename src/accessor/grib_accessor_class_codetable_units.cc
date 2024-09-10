@@ -12,8 +12,7 @@
 #include "grib_accessor_class_codetable_units.h"
 #include "grib_accessor_class_codetable.h"
 
-grib_accessor_codetable_units_t _grib_accessor_codetable_units{};
-grib_accessor* grib_accessor_codetable_units = &_grib_accessor_codetable_units;
+AccessorBuilder<grib_accessor_codetable_units_t> _grib_accessor_codetable_units_builder{};
 
 void grib_accessor_codetable_units_t::init(const long len, grib_arguments* params)
 {

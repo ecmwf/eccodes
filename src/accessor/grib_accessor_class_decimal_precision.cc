@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_decimal_precision.h"
 
-grib_accessor_decimal_precision_t _grib_accessor_decimal_precision{};
-grib_accessor* grib_accessor_decimal_precision = &_grib_accessor_decimal_precision;
+AccessorBuilder<grib_accessor_decimal_precision_t> _grib_accessor_decimal_precision_builder{};
 
 void grib_accessor_decimal_precision_t::init(const long l, grib_arguments* args)
 {

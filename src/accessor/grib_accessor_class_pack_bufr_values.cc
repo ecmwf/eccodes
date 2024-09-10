@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_pack_bufr_values.h"
 
-grib_accessor_pack_bufr_values_t _grib_accessor_pack_bufr_values{};
-grib_accessor* grib_accessor_pack_bufr_values = &_grib_accessor_pack_bufr_values;
+AccessorBuilder<grib_accessor_pack_bufr_values_t> _grib_accessor_pack_bufr_values_builder{};
 
 void grib_accessor_pack_bufr_values_t::init(const long len, grib_arguments* params)
 {

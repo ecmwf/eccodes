@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_round.h"
 
-grib_accessor_round_t _grib_accessor_round{};
-grib_accessor* grib_accessor_round = &_grib_accessor_round;
+AccessorBuilder<grib_accessor_round_t> _grib_accessor_round_builder{};
 
 void grib_accessor_round_t::init(const long l, grib_arguments* arg)
 {

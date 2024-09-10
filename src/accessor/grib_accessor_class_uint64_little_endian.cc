@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_uint64_little_endian.h"
 
-grib_accessor_uint64_little_endian_t _grib_accessor_uint64_little_endian{};
-grib_accessor* grib_accessor_uint64_little_endian = &_grib_accessor_uint64_little_endian;
+AccessorBuilder<grib_accessor_uint64_little_endian_t> _grib_accessor_uint64_little_endian_builder{};
 
 int grib_accessor_uint64_little_endian_t::unpack_long(long* val, size_t* len)
 {

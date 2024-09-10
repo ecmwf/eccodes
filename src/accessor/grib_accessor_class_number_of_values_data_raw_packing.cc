@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_number_of_values_data_raw_packing.h"
 
-grib_accessor_number_of_values_data_raw_packing_t _grib_accessor_number_of_values_data_raw_packing{};
-grib_accessor* grib_accessor_number_of_values_data_raw_packing = &_grib_accessor_number_of_values_data_raw_packing;
+AccessorBuilder<grib_accessor_number_of_values_data_raw_packing_t> _grib_accessor_number_of_values_data_raw_packing_builder{};
 
 void grib_accessor_number_of_values_data_raw_packing_t::init(const long v, grib_arguments* args)
 {

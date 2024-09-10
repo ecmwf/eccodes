@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_transient_darray.h"
 
-grib_accessor_transient_darray_t _grib_accessor_transient_darray{};
-grib_accessor* grib_accessor_transient_darray = &_grib_accessor_transient_darray;
+AccessorBuilder<grib_accessor_transient_darray_t> _grib_accessor_transient_darray_builder{};
 
 void grib_accessor_transient_darray_t::init(const long length, grib_arguments* args)
 {

@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_count_total.h"
 
-grib_accessor_count_total_t _grib_accessor_count_total{};
-grib_accessor* grib_accessor_count_total = &_grib_accessor_count_total;
+AccessorBuilder<grib_accessor_count_total_t> _grib_accessor_count_total_builder{};
 
 void grib_accessor_count_total_t::init(const long l, grib_arguments* c)
 {

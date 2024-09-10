@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_unsigned.h"
 
-grib_accessor_unsigned_t _grib_accessor_unsigned{};
-grib_accessor* grib_accessor_unsigned = &_grib_accessor_unsigned;
+AccessorBuilder<grib_accessor_unsigned_t> _grib_accessor_unsigned_builder{};
 
 void grib_accessor_unsigned_t::init(const long len, grib_arguments* arg)
 {

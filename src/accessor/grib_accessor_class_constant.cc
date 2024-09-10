@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_constant.h"
 
-grib_accessor_constant_t _grib_accessor_constant{};
-grib_accessor* grib_accessor_constant = &_grib_accessor_constant;
+AccessorBuilder<grib_accessor_constant_t> _grib_accessor_constant_builder{};
 
 void grib_accessor_constant_t::init(const long len, grib_arguments* arg)
 {

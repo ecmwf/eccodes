@@ -11,8 +11,7 @@
 #include "grib_accessor_class_simple_packing_error.h"
 #include "grib_scaling.h"
 
-grib_accessor_simple_packing_error_t _grib_accessor_simple_packing_error{};
-grib_accessor* grib_accessor_simple_packing_error = &_grib_accessor_simple_packing_error;
+AccessorBuilder<grib_accessor_simple_packing_error_t> _grib_accessor_simple_packing_error_builder{};
 
 void grib_accessor_simple_packing_error_t::init(const long l, grib_arguments* c)
 {

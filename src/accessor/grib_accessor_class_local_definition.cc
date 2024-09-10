@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_local_definition.h"
 
-grib_accessor_local_definition_t _grib_accessor_local_definition{};
-grib_accessor* grib_accessor_local_definition = &_grib_accessor_local_definition;
+AccessorBuilder<grib_accessor_local_definition_t> _grib_accessor_local_definition_builder{};
 
 void grib_accessor_local_definition_t::init(const long l, grib_arguments* c)
 {

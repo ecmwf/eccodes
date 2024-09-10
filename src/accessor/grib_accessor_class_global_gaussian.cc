@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_global_gaussian.h"
 
-grib_accessor_global_gaussian_t _grib_accessor_global_gaussian{};
-grib_accessor* grib_accessor_global_gaussian = &_grib_accessor_global_gaussian;
+AccessorBuilder<grib_accessor_global_gaussian_t> _grib_accessor_global_gaussian_builder{};
 
 void grib_accessor_global_gaussian_t::init(const long l, grib_arguments* c)
 {

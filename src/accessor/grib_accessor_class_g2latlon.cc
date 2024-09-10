@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_g2latlon.h"
 
-grib_accessor_g2latlon_t _grib_accessor_g2latlon{};
-grib_accessor* grib_accessor_g2latlon = &_grib_accessor_g2latlon;
+AccessorBuilder<grib_accessor_g2latlon_t> _grib_accessor_g2latlon_builder{};
 
 void grib_accessor_g2latlon_t::init(const long l, grib_arguments* c)
 {

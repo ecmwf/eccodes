@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_bits_per_value.h"
 
-grib_accessor_bits_per_value_t _grib_accessor_bits_per_value{};
-grib_accessor* grib_accessor_bits_per_value = &_grib_accessor_bits_per_value;
+AccessorBuilder<grib_accessor_bits_per_value_t> _grib_accessor_bits_per_value_builder{};
 
 void grib_accessor_bits_per_value_t::init(const long l, grib_arguments* args)
 {

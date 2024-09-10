@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_select_step_template.h"
 
-grib_accessor_select_step_template_t _grib_accessor_select_step_template{};
-grib_accessor* grib_accessor_select_step_template = &_grib_accessor_select_step_template;
+AccessorBuilder<grib_accessor_select_step_template_t> _grib_accessor_select_step_template_builder{};
 
 void grib_accessor_select_step_template_t::init(const long l, grib_arguments* c)
 {

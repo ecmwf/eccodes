@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_packing_type.h"
 
-grib_accessor_packing_type_t _grib_accessor_packing_type{};
-grib_accessor* grib_accessor_packing_type = &_grib_accessor_packing_type;
+AccessorBuilder<grib_accessor_packing_type_t> _grib_accessor_packing_type_builder{};
 
 void grib_accessor_packing_type_t::init(const long l, grib_arguments* args)
 {

@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_cf_var_name.h"
 
-grib_accessor_cf_var_name_t _grib_accessor_cf_var_name{};
-grib_accessor* grib_accessor_cf_var_name = &_grib_accessor_cf_var_name;
+AccessorBuilder<grib_accessor_cf_var_name_t> _grib_accessor_cf_var_name_builder{};
 
 void grib_accessor_cf_var_name_t::init(const long l, grib_arguments* arg)
 {

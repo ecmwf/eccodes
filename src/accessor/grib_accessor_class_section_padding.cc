@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_section_padding.h"
 
-grib_accessor_section_padding_t _grib_accessor_section_padding{};
-grib_accessor* grib_accessor_section_padding = &_grib_accessor_section_padding;
+AccessorBuilder<grib_accessor_section_padding_t> _grib_accessor_section_padding_builder{};
 
 size_t grib_accessor_section_padding_t::preferred_size(int from_handle)
 {

@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_g2_aerosol.h"
 
-grib_accessor_g2_aerosol_t _grib_accessor_g2_aerosol{};
-grib_accessor* grib_accessor_g2_aerosol = &_grib_accessor_g2_aerosol;
+AccessorBuilder<grib_accessor_g2_aerosol_t> _grib_accessor_g2_aerosol_builder{};
 
 void grib_accessor_g2_aerosol_t::init(const long l, grib_arguments* c)
 {

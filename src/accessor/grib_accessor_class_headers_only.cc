@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_headers_only.h"
 
-grib_accessor_headers_only_t _grib_accessor_headers_only{};
-grib_accessor* grib_accessor_headers_only = &_grib_accessor_headers_only;
+AccessorBuilder<grib_accessor_headers_only_t> _grib_accessor_headers_only_builder{};
 
 void grib_accessor_headers_only_t::init(const long l, grib_arguments* c)
 {

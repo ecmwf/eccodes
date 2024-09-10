@@ -18,8 +18,7 @@
     #endif
 #endif
 
-grib_accessor_data_ccsds_packing_t _grib_accessor_data_ccsds_packing{};
-grib_accessor* grib_accessor_data_ccsds_packing = &_grib_accessor_data_ccsds_packing;
+AccessorBuilder<grib_accessor_data_ccsds_packing_t> _grib_accessor_data_ccsds_packing_builder{};
 
 void grib_accessor_data_ccsds_packing_t::init(const long v, grib_arguments* args)
 {

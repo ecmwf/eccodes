@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_budgdate.h"
 
-grib_accessor_budgdate_t _grib_accessor_budgdate{};
-grib_accessor* grib_accessor_budgdate = &_grib_accessor_budgdate;
+AccessorBuilder<grib_accessor_budgdate_t> _grib_accessor_budgdate_builder{};
 
 void grib_accessor_budgdate_t::init(const long l, grib_arguments* c)
 {

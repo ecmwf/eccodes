@@ -13,8 +13,7 @@
 #include "step_utilities.h"
 #include <iostream>
 
-grib_accessor_g2step_range_t _grib_accessor_g2step_range{};
-grib_accessor* grib_accessor_g2step_range = &_grib_accessor_g2step_range;
+AccessorBuilder<grib_accessor_g2step_range_t> _grib_accessor_g2step_range_builder{};
 
 void grib_accessor_g2step_range_t::init(const long l, grib_arguments* c)
 {

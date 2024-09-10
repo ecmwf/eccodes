@@ -12,8 +12,7 @@
 #include "grib_accessor_class_md5.h"
 #include "md5.h"
 
-grib_accessor_md5_t _grib_accessor_md5{};
-grib_accessor* grib_accessor_md5 = &_grib_accessor_md5;
+AccessorBuilder<grib_accessor_md5_t> _grib_accessor_md5_builder{};
 
 void grib_accessor_md5_t::init(const long len, grib_arguments* arg)
 {

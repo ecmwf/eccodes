@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_latlon_increment.h"
 
-grib_accessor_latlon_increment_t _grib_accessor_latlon_increment{};
-grib_accessor* grib_accessor_latlon_increment = &_grib_accessor_latlon_increment;
+AccessorBuilder<grib_accessor_latlon_increment_t> _grib_accessor_latlon_increment_builder{};
 
 void grib_accessor_latlon_increment_t::init(const long l, grib_arguments* c)
 {

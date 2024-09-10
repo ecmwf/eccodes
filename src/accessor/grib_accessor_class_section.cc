@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_section.h"
 
-grib_accessor_section_t _grib_accessor_section{};
-grib_accessor* grib_accessor_section = &_grib_accessor_section;
+AccessorBuilder<grib_accessor_section_t> _grib_accessor_section_builder{};
 
 void grib_accessor_section_t::init(const long len, grib_arguments* arg)
 {

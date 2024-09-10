@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_bufr_data_element.h"
 
-grib_accessor_bufr_data_element_t _grib_accessor_bufr_data_element{};
-grib_accessor* grib_accessor_bufr_data_element = &_grib_accessor_bufr_data_element;
+AccessorBuilder<grib_accessor_bufr_data_element_t> _grib_accessor_bufr_data_element_builder{};
 
 grib_accessor* grib_accessor_bufr_data_element_t::make_clone(grib_section* s, int* err)
 {

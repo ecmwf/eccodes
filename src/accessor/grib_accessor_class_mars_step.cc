@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_mars_step.h"
 
-grib_accessor_mars_step_t _grib_accessor_mars_step{};
-grib_accessor* grib_accessor_mars_step = &_grib_accessor_mars_step;
+AccessorBuilder<grib_accessor_mars_step_t> _grib_accessor_mars_step_builder{};
 
 void grib_accessor_mars_step_t::init(const long l, grib_arguments* c)
 {

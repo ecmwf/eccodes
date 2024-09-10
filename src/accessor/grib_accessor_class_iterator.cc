@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_iterator.h"
 
-grib_accessor_iterator_t _grib_accessor_iterator{};
-grib_accessor* grib_accessor_iterator = &_grib_accessor_iterator;
+AccessorBuilder<grib_accessor_iterator_t> _grib_accessor_iterator_builder{};
 
 void grib_accessor_iterator_t::init(const long l, grib_arguments* args)
 {

@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_sexagesimal2decimal.h"
 
-grib_accessor_sexagesimal2decimal_t _grib_accessor_sexagesimal2decimal{};
-grib_accessor* grib_accessor_sexagesimal2decimal = &_grib_accessor_sexagesimal2decimal;
+AccessorBuilder<grib_accessor_sexagesimal2decimal_t> _grib_accessor_sexagesimal2decimal_builder{};
 
 void grib_accessor_sexagesimal2decimal_t::init(const long len, grib_arguments* arg)
 {

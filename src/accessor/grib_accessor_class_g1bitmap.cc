@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_g1bitmap.h"
 
-grib_accessor_g1bitmap_t _grib_accessor_g1bitmap{};
-grib_accessor* grib_accessor_g1bitmap = &_grib_accessor_g1bitmap;
+AccessorBuilder<grib_accessor_g1bitmap_t> _grib_accessor_g1bitmap_builder{};
 
 void grib_accessor_g1bitmap_t::init(const long len, grib_arguments* arg)
 {

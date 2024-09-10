@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_longitudes.h"
 
-grib_accessor_longitudes_t _grib_accessor_longitudes{};
-grib_accessor* grib_accessor_longitudes = &_grib_accessor_longitudes;
+AccessorBuilder<grib_accessor_longitudes_t> _grib_accessor_longitudes_builder{};
 
 static int get_distinct(grib_accessor* a, double** val, long* len);
 void grib_accessor_longitudes_t::init(const long l, grib_arguments* c)

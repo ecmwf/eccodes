@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_element.h"
 
-grib_accessor_element_t _grib_accessor_element{};
-grib_accessor* grib_accessor_element = &_grib_accessor_element;
+AccessorBuilder<grib_accessor_element_t> _grib_accessor_element_builder{};
 
 void grib_accessor_element_t::init(const long l, grib_arguments* c)
 {

@@ -16,8 +16,9 @@ class grib_accessor_data_sh_unpacked_t : public grib_accessor_data_simple_packin
 {
 public:
     grib_accessor_data_sh_unpacked_t() :
-        grib_accessor_data_simple_packing_t() { class_name_ = "data_sh_unpacked"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_data_sh_unpacked_t{}; }
+        grib_accessor_data_simple_packing_t() {}
+    static inline const AccessorType accessor_type{"data_sh_unpacked"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;

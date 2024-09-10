@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_g1_message_length.h"
 
-grib_accessor_g1_message_length_t _grib_accessor_g1_message_length{};
-grib_accessor* grib_accessor_g1_message_length = &_grib_accessor_g1_message_length;
+AccessorBuilder<grib_accessor_g1_message_length_t> _grib_accessor_g1_message_length_builder{};
 
 void grib_accessor_g1_message_length_t::init(const long len, grib_arguments* args)
 {

@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_count_file.h"
 
-grib_accessor_count_file_t _grib_accessor_count_file{};
-grib_accessor* grib_accessor_count_file = &_grib_accessor_count_file;
+AccessorBuilder<grib_accessor_count_file_t> _grib_accessor_count_file_builder{};
 
 void grib_accessor_count_file_t::init(const long l, grib_arguments* c)
 {

@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_unsigned_bits.h"
 
-grib_accessor_unsigned_bits_t _grib_accessor_unsigned_bits{};
-grib_accessor* grib_accessor_unsigned_bits = &_grib_accessor_unsigned_bits;
+AccessorBuilder<grib_accessor_unsigned_bits_t> _grib_accessor_unsigned_bits_builder{};
 
 static long compute_byte_count(grib_accessor* a)
 {

@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_latlonvalues.h"
 
-grib_accessor_latlonvalues_t _grib_accessor_latlonvalues{};
-grib_accessor* grib_accessor_latlonvalues = &_grib_accessor_latlonvalues;
+AccessorBuilder<grib_accessor_latlonvalues_t> _grib_accessor_latlonvalues_builder{};
 
 void grib_accessor_latlonvalues_t::init(const long l, grib_arguments* c)
 {

@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_lookup.h"
 
-grib_accessor_lookup_t _grib_accessor_lookup{};
-grib_accessor* grib_accessor_lookup = &_grib_accessor_lookup;
+AccessorBuilder<grib_accessor_lookup_t> _grib_accessor_lookup_builder{};
 
 void grib_accessor_lookup_t::init(const long len, grib_arguments* arg)
 {

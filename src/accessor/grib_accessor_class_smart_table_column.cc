@@ -12,8 +12,7 @@
 #include "grib_accessor_class_smart_table_column.h"
 #include "grib_accessor_class_smart_table.h"
 
-grib_accessor_smart_table_column_t _grib_accessor_smart_table_column{};
-grib_accessor* grib_accessor_smart_table_column = &_grib_accessor_smart_table_column;
+AccessorBuilder<grib_accessor_smart_table_column_t> _grib_accessor_smart_table_column_builder{};
 
 void grib_accessor_smart_table_column_t::init(const long len, grib_arguments* params)
 {

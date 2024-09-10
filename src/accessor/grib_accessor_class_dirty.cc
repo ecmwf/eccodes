@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_dirty.h"
 
-grib_accessor_dirty_t _grib_accessor_dirty{};
-grib_accessor* grib_accessor_dirty = &_grib_accessor_dirty;
+AccessorBuilder<grib_accessor_dirty_t> _grib_accessor_dirty_builder{};
 
 void grib_accessor_dirty_t::init(const long l, grib_arguments* c)
 {

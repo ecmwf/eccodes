@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_spd.h"
 
-grib_accessor_spd_t _grib_accessor_spd{};
-grib_accessor* grib_accessor_spd = &_grib_accessor_spd;
+AccessorBuilder<grib_accessor_spd_t> _grib_accessor_spd_builder{};
 
 long grib_accessor_spd_t::byte_count()
 {

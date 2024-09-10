@@ -17,8 +17,9 @@ class grib_accessor_number_of_values_data_raw_packing_t : public grib_accessor_g
 {
 public:
     grib_accessor_number_of_values_data_raw_packing_t() :
-        grib_accessor_gen_t() { class_name_ = "number_of_values_data_raw_packing"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_number_of_values_data_raw_packing_t{}; }
+        grib_accessor_gen_t() {}
+    static inline const AccessorType accessor_type{"number_of_values_data_raw_packing"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

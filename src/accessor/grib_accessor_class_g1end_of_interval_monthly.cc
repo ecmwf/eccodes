@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_g1end_of_interval_monthly.h"
 
-grib_accessor_g1end_of_interval_monthly_t _grib_accessor_g1end_of_interval_monthly{};
-grib_accessor* grib_accessor_g1end_of_interval_monthly = &_grib_accessor_g1end_of_interval_monthly;
+AccessorBuilder<grib_accessor_g1end_of_interval_monthly_t> _grib_accessor_g1end_of_interval_monthly_builder{};
 
 void grib_accessor_g1end_of_interval_monthly_t::init(const long l, grib_arguments* c)
 {

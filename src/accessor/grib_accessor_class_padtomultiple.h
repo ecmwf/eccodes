@@ -17,8 +17,9 @@ class grib_accessor_padtomultiple_t : public grib_accessor_padding_t
 {
 public:
     grib_accessor_padtomultiple_t() :
-        grib_accessor_padding_t() { class_name_ = "padtomultiple"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_padtomultiple_t{}; }
+        grib_accessor_padding_t() {}
+    static inline const AccessorType accessor_type{"padtomultiple"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     void init(const long, grib_arguments*) override;
     size_t preferred_size(int) override;
 

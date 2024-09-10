@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_message.h"
 
-grib_accessor_message_t _grib_accessor_message{};
-grib_accessor* grib_accessor_message = &_grib_accessor_message;
+AccessorBuilder<grib_accessor_message_t> _grib_accessor_message_builder{};
 
 void grib_accessor_message_t::init(const long len, grib_arguments* arg)
 {

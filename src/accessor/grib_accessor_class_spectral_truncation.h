@@ -17,8 +17,9 @@ class grib_accessor_spectral_truncation_t : public grib_accessor_long_t
 {
 public:
     grib_accessor_spectral_truncation_t() :
-        grib_accessor_long_t() { class_name_ = "spectral_truncation"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_spectral_truncation_t{}; }
+        grib_accessor_long_t() {}
+    static inline const AccessorType accessor_type{"spectral_truncation"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 

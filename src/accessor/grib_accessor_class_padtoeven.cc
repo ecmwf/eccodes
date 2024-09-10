@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_padtoeven.h"
 
-grib_accessor_padtoeven_t _grib_accessor_padtoeven{};
-grib_accessor* grib_accessor_padtoeven = &_grib_accessor_padtoeven;
+AccessorBuilder<grib_accessor_padtoeven_t> _grib_accessor_padtoeven_builder{};
 
 size_t grib_accessor_padtoeven_t::preferred_size(int from_handle)
 {

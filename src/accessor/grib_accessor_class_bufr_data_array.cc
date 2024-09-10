@@ -12,8 +12,7 @@
 #include "grib_accessor_class_bufr_data_array.h"
 #include "grib_accessor_class_expanded_descriptors.h"
 
-grib_accessor_bufr_data_array_t _grib_accessor_bufr_data_array{};
-grib_accessor* grib_accessor_bufr_data_array = &_grib_accessor_bufr_data_array;
+AccessorBuilder<grib_accessor_bufr_data_array_t> _grib_accessor_bufr_data_array_builder{};
 
 #define MAX_NESTED_REPLICATIONS 8
 

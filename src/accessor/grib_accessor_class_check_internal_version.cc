@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_check_internal_version.h"
 
-grib_accessor_check_internal_version_t _grib_accessor_check_internal_version{};
-grib_accessor* grib_accessor_check_internal_version = &_grib_accessor_check_internal_version;
+AccessorBuilder<grib_accessor_check_internal_version_t> _grib_accessor_check_internal_version_builder{};
 
 /* This is the internal engine version number */
 /* We check this against the version number found in the definitions boot.def file */

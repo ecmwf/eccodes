@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_g1fcperiod.h"
 
-grib_accessor_g1fcperiod_t _grib_accessor_g1fcperiod{};
-grib_accessor* grib_accessor_g1fcperiod = &_grib_accessor_g1fcperiod;
+AccessorBuilder<grib_accessor_g1fcperiod_t> _grib_accessor_g1fcperiod_builder{};
 
 int grib_accessor_g1fcperiod_t::unpack_string(char* val, size_t* len)
 {

@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_g2grid.h"
 
-grib_accessor_g2grid_t _grib_accessor_g2grid{};
-grib_accessor* grib_accessor_g2grid = &_grib_accessor_g2grid;
+AccessorBuilder<grib_accessor_g2grid_t> _grib_accessor_g2grid_builder{};
 
 void grib_accessor_g2grid_t::init(const long l, grib_arguments* c)
 {

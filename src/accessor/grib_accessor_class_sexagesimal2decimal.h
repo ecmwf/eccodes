@@ -17,8 +17,9 @@ class grib_accessor_sexagesimal2decimal_t : public grib_accessor_to_double_t
 {
 public:
     grib_accessor_sexagesimal2decimal_t() :
-        grib_accessor_to_double_t() { class_name_ = "sexagesimal2decimal"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_sexagesimal2decimal_t{}; }
+        grib_accessor_to_double_t() {}
+    static inline const AccessorType accessor_type{"sexagesimal2decimal"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     void dump(grib_dumper*) override;

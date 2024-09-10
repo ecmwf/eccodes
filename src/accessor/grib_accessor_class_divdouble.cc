@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_divdouble.h"
 
-grib_accessor_divdouble_t _grib_accessor_divdouble{};
-grib_accessor* grib_accessor_divdouble = &_grib_accessor_divdouble;
+AccessorBuilder<grib_accessor_divdouble_t> _grib_accessor_divdouble_builder{};
 
 void grib_accessor_divdouble_t::init(const long l, grib_arguments* c)
 {

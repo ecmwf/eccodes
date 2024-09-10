@@ -11,8 +11,7 @@
 #include "grib_accessor_class_data_run_length_packing.h"
 #include "grib_scaling.h"
 
-grib_accessor_data_run_length_packing_t _grib_accessor_data_run_length_packing{};
-grib_accessor* grib_accessor_data_run_length_packing = &_grib_accessor_data_run_length_packing;
+AccessorBuilder<grib_accessor_data_run_length_packing_t> _grib_accessor_data_run_length_packing_builder{};
 
 void grib_accessor_data_run_length_packing_t::init(const long v, grib_arguments* args)
 {

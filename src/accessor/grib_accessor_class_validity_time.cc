@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_validity_time.h"
 
-grib_accessor_validity_time_t _grib_accessor_validity_time{};
-grib_accessor* grib_accessor_validity_time = &_grib_accessor_validity_time;
+AccessorBuilder<grib_accessor_validity_time_t> _grib_accessor_validity_time_builder{};
 
 void grib_accessor_validity_time_t::init(const long l, grib_arguments* c)
 {

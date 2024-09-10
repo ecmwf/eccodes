@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_group.h"
 
-grib_accessor_group_t _grib_accessor_group{};
-grib_accessor* grib_accessor_group = &_grib_accessor_group;
+AccessorBuilder<grib_accessor_group_t> _grib_accessor_group_builder{};
 
 void grib_accessor_group_t::init(const long len, grib_arguments* arg)
 {

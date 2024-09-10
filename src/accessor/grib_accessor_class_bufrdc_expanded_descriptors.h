@@ -17,8 +17,9 @@ class grib_accessor_bufrdc_expanded_descriptors_t : public grib_accessor_long_t
 {
 public:
     grib_accessor_bufrdc_expanded_descriptors_t() :
-        grib_accessor_long_t() { class_name_ = "bufrdc_expanded_descriptors"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_bufrdc_expanded_descriptors_t{}; }
+        grib_accessor_long_t() {}
+    static inline const AccessorType accessor_type{"bufrdc_expanded_descriptors"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     int unpack_long(long* val, size_t* len) override;
     int unpack_string_array(char**, size_t* len) override;
     int value_count(long*) override;

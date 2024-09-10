@@ -12,8 +12,7 @@
 #include "grib_accessor_class_expanded_descriptors.h"
 #include "grib_scaling.h"
 
-grib_accessor_expanded_descriptors_t _grib_accessor_expanded_descriptors{};
-grib_accessor* grib_accessor_expanded_descriptors = &_grib_accessor_expanded_descriptors;
+AccessorBuilder<grib_accessor_expanded_descriptors_t> _grib_accessor_expanded_descriptors_builder{};
 
 #define MYDEBUG        0
 #define DESC_SIZE_INIT 400 /* Initial size for grib_bufr_descriptors_array_new */

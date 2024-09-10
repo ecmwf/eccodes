@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_julian_date.h"
 
-grib_accessor_julian_date_t _grib_accessor_julian_date{};
-grib_accessor* grib_accessor_julian_date = &_grib_accessor_julian_date;
+AccessorBuilder<grib_accessor_julian_date_t> _grib_accessor_julian_date_builder{};
 
 void grib_accessor_julian_date_t::init(const long l, grib_arguments* c)
 {

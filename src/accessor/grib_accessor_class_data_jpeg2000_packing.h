@@ -16,8 +16,9 @@ class grib_accessor_data_jpeg2000_packing_t : public grib_accessor_data_simple_p
 {
 public:
     grib_accessor_data_jpeg2000_packing_t() :
-        grib_accessor_data_simple_packing_t() { class_name_ = "data_jpeg2000_packing"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_data_jpeg2000_packing_t{}; }
+        grib_accessor_data_simple_packing_t() {}
+    static inline const AccessorType accessor_type{"data_jpeg2000_packing"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_float(float* val, size_t* len) override;

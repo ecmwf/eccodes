@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_padtomultiple.h"
 
-grib_accessor_padtomultiple_t _grib_accessor_padtomultiple{};
-grib_accessor* grib_accessor_padtomultiple = &_grib_accessor_padtomultiple;
+AccessorBuilder<grib_accessor_padtomultiple_t> _grib_accessor_padtomultiple_builder{};
 
 size_t grib_accessor_padtomultiple_t::preferred_size(int from_handle)
 {

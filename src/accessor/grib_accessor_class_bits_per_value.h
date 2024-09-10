@@ -17,8 +17,9 @@ class grib_accessor_bits_per_value_t : public grib_accessor_long_t
 {
 public:
     grib_accessor_bits_per_value_t() :
-        grib_accessor_long_t() { class_name_ = "bits_per_value"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_bits_per_value_t{}; }
+        grib_accessor_long_t() {}
+    static inline const AccessorType accessor_type{"bits_per_value"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

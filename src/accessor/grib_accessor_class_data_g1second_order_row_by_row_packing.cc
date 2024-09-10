@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_data_g1second_order_row_by_row_packing.h"
 
-grib_accessor_data_g1second_order_row_by_row_packing_t _grib_accessor_data_g1second_order_row_by_row_packing{};
-grib_accessor* grib_accessor_data_g1second_order_row_by_row_packing = &_grib_accessor_data_g1second_order_row_by_row_packing;
+AccessorBuilder<grib_accessor_data_g1second_order_row_by_row_packing_t> _grib_accessor_data_g1second_order_row_by_row_packing_builder{};
 
 void grib_accessor_data_g1second_order_row_by_row_packing_t::init(const long v, grib_arguments* args)
 {

@@ -39,8 +39,7 @@ static void init_mutex()
 }
 #endif
 
-grib_accessor_bufr_elements_table_t _grib_accessor_bufr_elements_table{};
-grib_accessor* grib_accessor_bufr_elements_table = &_grib_accessor_bufr_elements_table;
+AccessorBuilder<grib_accessor_bufr_elements_table_t> _grib_accessor_bufr_elements_table_builder{};
 
 void grib_accessor_bufr_elements_table_t::init(const long len, grib_arguments* params)
 {

@@ -12,8 +12,7 @@
 #include "grib_scaling.h"
 #include <algorithm>
 
-grib_accessor_data_g2bifourier_packing_t _grib_accessor_data_g2bifourier_packing{};
-grib_accessor* grib_accessor_data_g2bifourier_packing = &_grib_accessor_data_g2bifourier_packing;
+AccessorBuilder<grib_accessor_data_g2bifourier_packing_t> _grib_accessor_data_g2bifourier_packing_builder{};
 
 typedef unsigned long (*encode_float_proc)(double);
 typedef double (*decode_float_proc)(unsigned long);

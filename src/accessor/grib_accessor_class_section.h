@@ -17,8 +17,9 @@ class grib_accessor_section_t : public grib_accessor_gen_t
 {
 public:
     grib_accessor_section_t() :
-        grib_accessor_gen_t() { class_name_ = "section"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_section_t{}; }
+        grib_accessor_gen_t() {}
+    static inline const AccessorType accessor_type{"section"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     long get_native_type() override;
     long byte_count() override;
     long next_offset() override;

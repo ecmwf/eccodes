@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_getenv.h"
 
-grib_accessor_getenv_t _grib_accessor_getenv{};
-grib_accessor* grib_accessor_getenv = &_grib_accessor_getenv;
+AccessorBuilder<grib_accessor_getenv_t> _grib_accessor_getenv_builder{};
 
 void grib_accessor_getenv_t::init(const long l, grib_arguments* args)
 {

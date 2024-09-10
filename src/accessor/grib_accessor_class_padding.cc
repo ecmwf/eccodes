@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_padding.h"
 
-grib_accessor_padding_t _grib_accessor_padding{};
-grib_accessor* grib_accessor_padding = &_grib_accessor_padding;
+AccessorBuilder<grib_accessor_padding_t> _grib_accessor_padding_builder{};
 
 void grib_accessor_padding_t::init(const long len, grib_arguments* arg)
 {

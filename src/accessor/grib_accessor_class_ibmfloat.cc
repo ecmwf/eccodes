@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_ibmfloat.h"
 
-grib_accessor_ibmfloat_t _grib_accessor_ibmfloat{};
-grib_accessor* grib_accessor_ibmfloat = &_grib_accessor_ibmfloat;
+AccessorBuilder<grib_accessor_ibmfloat_t> _grib_accessor_ibmfloat_builder{};
 
 void grib_accessor_ibmfloat_t::init(const long len, grib_arguments* arg)
 {

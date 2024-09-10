@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_number_of_coded_values.h"
 
-grib_accessor_number_of_coded_values_t _grib_accessor_number_of_coded_values{};
-grib_accessor* grib_accessor_number_of_coded_values = &_grib_accessor_number_of_coded_values;
+AccessorBuilder<grib_accessor_number_of_coded_values_t> _grib_accessor_number_of_coded_values_builder{};
 
 void grib_accessor_number_of_coded_values_t::init(const long l, grib_arguments* c)
 {

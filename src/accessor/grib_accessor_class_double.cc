@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_double.h"
 
-grib_accessor_double_t _grib_accessor_double{};
-grib_accessor* grib_accessor_double = &_grib_accessor_double;
+AccessorBuilder<grib_accessor_double_t> _grib_accessor_double_builder{};
 
 long grib_accessor_double_t::get_native_type()
 {

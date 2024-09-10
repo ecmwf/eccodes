@@ -12,8 +12,7 @@
 #include "step_utilities.h"
 #include <stdexcept>
 
-grib_accessor_step_in_units_t _grib_accessor_step_in_units{};
-grib_accessor* grib_accessor_step_in_units = &_grib_accessor_step_in_units;
+AccessorBuilder<grib_accessor_step_in_units_t> _grib_accessor_step_in_units_builder{};
 
 void grib_accessor_step_in_units_t::init(const long l, grib_arguments* c)
 {

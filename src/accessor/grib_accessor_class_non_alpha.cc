@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_non_alpha.h"
 
-grib_accessor_non_alpha_t _grib_accessor_non_alpha{};
-grib_accessor* grib_accessor_non_alpha = &_grib_accessor_non_alpha;
+AccessorBuilder<grib_accessor_non_alpha_t> _grib_accessor_non_alpha_builder{};
 
 void grib_accessor_non_alpha_t::init(const long len, grib_arguments* arg)
 {

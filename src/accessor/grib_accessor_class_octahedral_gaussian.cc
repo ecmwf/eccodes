@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_octahedral_gaussian.h"
 
-grib_accessor_octahedral_gaussian_t _grib_accessor_octahedral_gaussian{};
-grib_accessor* grib_accessor_octahedral_gaussian = &_grib_accessor_octahedral_gaussian;
+AccessorBuilder<grib_accessor_octahedral_gaussian_t> _grib_accessor_octahedral_gaussian_builder{};
 
 void grib_accessor_octahedral_gaussian_t::init(const long l, grib_arguments* c)
 {

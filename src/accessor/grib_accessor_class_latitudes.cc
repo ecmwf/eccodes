@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_latitudes.h"
 
-grib_accessor_latitudes_t _grib_accessor_latitudes{};
-grib_accessor* grib_accessor_latitudes = &_grib_accessor_latitudes;
+AccessorBuilder<grib_accessor_latitudes_t> _grib_accessor_latitudes_builder{};
 
 static int get_distinct(grib_accessor* a, double** val, long* len);
 static int compare_doubles(const void* a, const void* b, int ascending)

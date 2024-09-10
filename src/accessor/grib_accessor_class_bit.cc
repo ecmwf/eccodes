@@ -11,8 +11,7 @@
 
 #include "grib_accessor_class_bit.h"
 
-grib_accessor_bit_t _grib_accessor_bit{};
-grib_accessor* grib_accessor_bit = &_grib_accessor_bit;
+AccessorBuilder<grib_accessor_bit_t> _grib_accessor_bit_builder{};
 
 void grib_accessor_bit_t::init(const long len, grib_arguments* arg)
 {

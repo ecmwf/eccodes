@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_octet_number.h"
 
-grib_accessor_octet_number_t _grib_accessor_octet_number{};
-grib_accessor* grib_accessor_octet_number = &_grib_accessor_octet_number;
+AccessorBuilder<grib_accessor_octet_number_t> _grib_accessor_octet_number_builder{};
 
 void grib_accessor_octet_number_t::init(const long l, grib_arguments* c)
 {

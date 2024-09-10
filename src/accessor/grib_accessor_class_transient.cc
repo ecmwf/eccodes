@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_transient.h"
 
-grib_accessor_transient_t _grib_accessor_transient{};
-grib_accessor* grib_accessor_transient = &_grib_accessor_transient;
+AccessorBuilder<grib_accessor_transient_t> _grib_accessor_transient_builder{};
 
 void grib_accessor_transient_t::init(const long l, grib_arguments* args)
 {

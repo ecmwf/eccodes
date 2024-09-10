@@ -17,8 +17,9 @@ class grib_accessor_check_internal_version_t : public grib_accessor_ascii_t
 {
 public:
     grib_accessor_check_internal_version_t() :
-        grib_accessor_ascii_t() { class_name_ = "check_internal_version"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_check_internal_version_t{}; }
+        grib_accessor_ascii_t() {}
+    static inline const AccessorType accessor_type{"check_internal_version"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     size_t string_length() override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;

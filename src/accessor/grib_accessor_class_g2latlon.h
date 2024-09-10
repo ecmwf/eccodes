@@ -17,8 +17,9 @@ class grib_accessor_g2latlon_t : public grib_accessor_double_t
 {
 public:
     grib_accessor_g2latlon_t() :
-        grib_accessor_double_t() { class_name_ = "g2latlon"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_g2latlon_t{}; }
+        grib_accessor_double_t() {}
+    static inline const AccessorType accessor_type{"g2latlon"};
+    const AccessorType& getClassName() const override { return accessor_type; }
     int pack_missing() override;
     int is_missing() override;
     int pack_double(const double* val, size_t* len) override;

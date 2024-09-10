@@ -10,8 +10,7 @@
 
 #include "grib_accessor_class_number_of_points.h"
 
-grib_accessor_number_of_points_t _grib_accessor_number_of_points{};
-grib_accessor* grib_accessor_number_of_points = &_grib_accessor_number_of_points;
+AccessorBuilder<grib_accessor_number_of_points_t> _grib_accessor_number_of_points_builder{};
 
 void grib_accessor_number_of_points_t::init(const long l, grib_arguments* c)
 {

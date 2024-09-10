@@ -12,8 +12,7 @@
 #include "step.h"
 #include "step_utilities.h"
 
-grib_accessor_optimal_step_units_t _grib_accessor_optimal_step_units{};
-grib_accessor* grib_accessor_optimal_step_units = &_grib_accessor_optimal_step_units;
+AccessorBuilder<grib_accessor_optimal_step_units_t> _grib_accessor_optimal_step_units_builder{};
 
 void grib_accessor_optimal_step_units_t::init(const long l, grib_arguments* c)
 {
