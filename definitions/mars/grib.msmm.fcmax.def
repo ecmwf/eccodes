@@ -6,10 +6,9 @@ alias mars.number = perturbationNumber;
 alias mars.origin = centre;
 alias mars.method = methodNumber;
 
-if (class is "od") { alias mars.system = systemNumber; }
-if (class is "me") { alias mars.system = systemNumber; }
-if (class is "en") { alias mars.system = systemNumber; }
-if (class is "c3") { alias mars.system = systemNumber; }
+if (class is "od" || class is "me" || class is "en" || class is "c3") {
+    alias mars.system = systemNumber;
+}
 
 # See ECC-624
 if (centre == 80 && subCentre == 98 && (class is "c3" || class is "ci")) {
