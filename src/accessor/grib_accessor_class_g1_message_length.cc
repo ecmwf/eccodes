@@ -107,7 +107,7 @@ int grib_accessor_g1_message_length_t::pack_long(const long* val, size_t* len)
                                  grib_find_accessor(grib_handle_of_accessor(this), sec4_length_),
                                  &total_length, &sec4_length);
         if (total_length != *val) {
-            const char* cclass_name = class_name_;
+            const char* cclass_name = getClassName().get().c_str();
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "%s %s: Failed to set GRIB1 message length to %ld"
                              " (actual length=%ld)",

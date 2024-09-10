@@ -65,7 +65,7 @@ int grib_accessor_from_scale_factor_scaled_value_t::pack_double(const double* va
     factor_accessor_num_bits = factor_accessor->length_ * 8;
     maxval_value             = (1UL << value_accessor_num_bits) - 2;   // exclude missing
     maxval_factor            = (1UL << factor_accessor_num_bits) - 2;  // exclude missing
-    if (strcmp(factor_accessor->class_name_, "signed") == 0) {
+    if (strcmp(factor_accessor->getClassName().get().c_str(), "signed") == 0) {
         maxval_factor = (1UL << (factor_accessor_num_bits - 1)) - 1;
     }
 

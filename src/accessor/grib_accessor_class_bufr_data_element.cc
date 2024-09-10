@@ -27,8 +27,8 @@ grib_accessor* grib_accessor_bufr_data_element_t::make_clone(grib_section* s, in
     creator.name_space = (char*)"";
     creator.set        = 0;
     creator.name       = (char*)"unknown";
-    if (strcmp(class_name_, "bufr_data_element")) {
-        grib_context_log(context_, GRIB_LOG_FATAL, "wrong accessor type: '%s' should be '%s'", class_name_, "bufr_data_element");
+    if (strcmp(getClassName().get().c_str(), "bufr_data_element")) {
+        grib_context_log(context_, GRIB_LOG_FATAL, "wrong accessor type: '%s' should be '%s'", getClassName().get().c_str(), "bufr_data_element");
     }
     *err = 0;
 

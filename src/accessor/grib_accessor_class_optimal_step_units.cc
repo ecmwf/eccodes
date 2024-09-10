@@ -45,7 +45,7 @@ int grib_accessor_optimal_step_units_t::pack_expression(grib_expression* e)
     long lval               = 0;
     size_t len              = 1;
     grib_handle* hand       = grib_handle_of_accessor(this);
-    const char* cclass_name = class_name_;
+    const char* cclass_name = getClassName().get().c_str();
 
     if (strcmp(e->cclass->name, "long") == 0) {
         grib_expression_evaluate_long(hand, e, &lval); /* TODO: check return value */

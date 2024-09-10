@@ -216,7 +216,7 @@ int grib_accessor_data_jpeg2000_packing_t::pack_double(const double* cval, size_
     double units_factor     = 1.0;
     double units_bias       = 0.0;
     double* val             = (double*)cval;
-    const char* cclass_name = class_name_;
+    const char* cclass_name = getClassName().get().c_str();
 
     dirty_ = 1;
 

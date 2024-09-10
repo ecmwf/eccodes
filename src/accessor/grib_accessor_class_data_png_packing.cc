@@ -234,7 +234,7 @@ static bool is_constant(const double* values, size_t n_vals)
 
 int grib_accessor_data_png_packing_t::pack_double(const double* val, size_t* len)
 {
-    const char* cclass_name = class_name_;
+    const char* cclass_name = getClassName().get().c_str();
 
     int err                = GRIB_SUCCESS;
     bool is_constant_field = false;

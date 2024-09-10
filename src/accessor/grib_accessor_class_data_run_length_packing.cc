@@ -35,7 +35,7 @@ int grib_accessor_data_run_length_packing_t::value_count(long* number_of_values)
 int grib_accessor_data_run_length_packing_t::unpack_double(double* val, size_t* len)
 {
     grib_handle* gh         = grib_handle_of_accessor(this);
-    const char* cclass_name = class_name_;
+    const char* cclass_name = getClassName().get().c_str();
     int err                 = GRIB_SUCCESS;
     long seclen, number_of_values, bits_per_value, max_level_value, number_of_level_values, decimal_scale_factor;
     long* level_values       = NULL;
@@ -140,7 +140,7 @@ int grib_accessor_data_run_length_packing_t::unpack_double(double* val, size_t* 
 int grib_accessor_data_run_length_packing_t::pack_double(const double* val, size_t* len)
 {
     grib_handle* gh         = grib_handle_of_accessor(this);
-    const char* cclass_name = class_name_;
+    const char* cclass_name = getClassName().get().c_str();
     int err                 = GRIB_SUCCESS;
     long number_of_values, bits_per_value, max_level_value, number_of_level_values, decimal_scale_factor;
     long* level_values       = NULL;

@@ -67,7 +67,7 @@ int grib_accessor_data_simple_packing_t::value_count(long* number_of_values)
 
 int grib_accessor_data_simple_packing_t::unpack_double_element(size_t idx, double* val)
 {
-    const char* cclass_name = class_name_;
+    const char* cclass_name = getClassName().get().c_str();
 
     long n_vals     = 0;
     int err         = 0;
@@ -163,7 +163,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     grib_accessor_data_simple_packing_t* self = (grib_accessor_data_simple_packing_t*)a;
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
 
-    const char* cclass_name = a->class_name_;
+    const char* cclass_name = a->getClassName().get().c_str();
     grib_handle* gh         = grib_handle_of_accessor(a);
     unsigned char* buf      = (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
 
@@ -315,7 +315,7 @@ static int _unpack_double(grib_accessor* a, double* val, size_t* len, unsigned c
 {
     grib_accessor_data_simple_packing_t* self = (grib_accessor_data_simple_packing_t*)a;
     grib_handle* gh                           = grib_handle_of_accessor(a);
-    const char* cclass_name                   = a->class_name_;
+    const char* cclass_name                   = a->getClassName().get().c_str();
 
     size_t i = 0;
     int err  = 0;
@@ -459,7 +459,7 @@ int grib_accessor_data_simple_packing_t::unpack_double_subarray(double* val, siz
 int grib_accessor_data_simple_packing_t::pack_double(const double* val, size_t* len)
 {
     grib_handle* gh         = grib_handle_of_accessor(this);
-    const char* cclass_name = class_name_;
+    const char* cclass_name = getClassName().get().c_str();
 
     size_t i                      = 0;
     size_t n_vals                 = *len;

@@ -57,7 +57,7 @@ int grib_accessor_mars_step_t::unpack_string(char* val, size_t* len)
     size_t buflen = 100;
     long step;
     grib_accessor* stepRangeAcc = grib_find_accessor(grib_handle_of_accessor(this), stepRange_);
-    const char* cclass_name     = class_name_;
+    const char* cclass_name     = getClassName().get().c_str();
 
     if (!stepRangeAcc) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s not found", cclass_name, stepRange_);

@@ -40,7 +40,7 @@ int grib_accessor_data_sh_packed_t::value_count(long* count)
 {
     grib_handle* hand       = grib_handle_of_accessor(this);
     int ret                 = 0;
-    const char* cclass_name = class_name_;
+    const char* cclass_name = getClassName().get().c_str();
 
     long sub_j = 0;
     long sub_k = 0;

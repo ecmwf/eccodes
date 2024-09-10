@@ -44,7 +44,7 @@ int grib_accessor_change_scanning_direction_t::pack_long(const long* val, size_t
     double* values          = NULL;
     const grib_context* c   = context_;
     grib_handle* h          = grib_handle_of_accessor(this);
-    const char* cclass_name = class_name_;
+    const char* cclass_name = getClassName().get().c_str();
 
     if (*val == 0)
         return GRIB_SUCCESS;

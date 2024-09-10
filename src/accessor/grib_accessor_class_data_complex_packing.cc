@@ -168,7 +168,7 @@ double calculate_pfactor(const grib_context* ctx, const double* spectralField, l
 int grib_accessor_data_complex_packing_t::pack_double(const double* val, size_t* len)
 {
     grib_handle* gh         = grib_handle_of_accessor(this);
-    const char* cclass_name = class_name_;
+    const char* cclass_name = getClassName().get().c_str();
 
     size_t i      = 0;
     int ret       = GRIB_SUCCESS;
@@ -539,7 +539,7 @@ static int unpack_real(grib_accessor* a, T* val, size_t* len)
     grib_accessor_data_complex_packing_t* self = (grib_accessor_data_complex_packing_t*)a;
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     grib_handle* gh         = grib_handle_of_accessor(a);
-    const char* cclass_name = a->class_name_;
+    const char* cclass_name = a->getClassName().get().c_str();
 
     size_t i    = 0;
     int ret     = GRIB_SUCCESS;

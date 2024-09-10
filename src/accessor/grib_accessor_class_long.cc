@@ -51,7 +51,7 @@ int grib_accessor_long_t::unpack_string(char* v, size_t* len)
     l = strlen(repres) + 1;
 
     if (*len < l) {
-        const char* cclass_name = class_name_;
+        const char* cclass_name = getClassName().get().c_str();
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
                          cclass_name, name_, l, *len);

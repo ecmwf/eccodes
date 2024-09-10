@@ -194,7 +194,7 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
         else {
             grib_context_log(p->h->context, GRIB_LOG_DEBUG,
                              "CREATE: name=%s class=%s offset=%ld length=%ld action=",
-                             a->name_, a->class_name_, a->offset_, a->length_);
+                             a->name_, a->getClassName().get().c_str(), a->offset_, a->length_);
 
             grib_grow_buffer(p->h->context, p->h->buffer, size);
             p->h->buffer->ulength = size;

@@ -566,7 +566,7 @@ cleanup:
 int grib_accessor_data_g2bifourier_packing_t::pack_double(const double* val, size_t* len)
 {
     grib_handle* gh         = grib_handle_of_accessor(this);
-    const char* cclass_name = class_name_;
+    const char* cclass_name = getClassName().get().c_str();
 
     size_t buflen       = 0;
     size_t hsize        = 0;

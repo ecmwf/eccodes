@@ -34,7 +34,7 @@ int grib_accessor_offset_file_t::unpack_string(char* v, size_t* len)
         0,
     };
     int err                 = 0;
-    const char* cclass_name = class_name_;
+    const char* cclass_name = getClassName().get().c_str();
 
     err = unpack_double(&val, &l);
     if (err) return err;

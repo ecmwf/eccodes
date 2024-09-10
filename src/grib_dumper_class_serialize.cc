@@ -105,7 +105,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0 &&
         (d->option_flags & GRIB_DUMP_FLAG_READ_ONLY) == 0 &&
-        (strcmp(a->class_name_, "lookup") != 0))
+        (strcmp(a->getClassName().get().c_str(), "lookup") != 0))
         return;
 
     if (((a->flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && (value == GRIB_MISSING_LONG))
@@ -114,7 +114,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         fprintf(self->dumper.out, "%s = %ld", a->name_, value);
 
     if (((a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0) &&
-        (strcmp(a->class_name_, "lookup") != 0))
+        (strcmp(a->getClassName().get().c_str(), "lookup") != 0))
         fprintf(self->dumper.out, " (read_only)");
 
     //if(comment) fprintf(self->dumper.out," [%s]",comment);

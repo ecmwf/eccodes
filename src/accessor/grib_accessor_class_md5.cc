@@ -88,7 +88,7 @@ int grib_accessor_md5_t::unpack_string(char* v, size_t* len)
     struct grib_md5_state md5c;
 
     if (*len < 32) {
-        const char* cclass_name = class_name_;
+        const char* cclass_name = getClassName().get().c_str();
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %d bytes long (len=%zu)",
                          cclass_name, name_, 32, *len);

@@ -774,7 +774,7 @@ static void merge_j(struct section* h, int ref_bits, int width_bits, int has_und
 int grib_accessor_data_g22order_packing_t::pack_double(const double* val, size_t* len)
 {
     grib_handle* gh         = grib_handle_of_accessor(this);
-    const char* cclass_name = class_name_;
+    const char* cclass_name = getClassName().get().c_str();
 
     int err = 0;
 
@@ -1464,7 +1464,7 @@ static int unpack(grib_accessor* a, T* val, const size_t* len)
 {
     grib_accessor_data_g22order_packing_t* self = reinterpret_cast<grib_accessor_data_g22order_packing_t*>(a);
     static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
-    const char* cclass_name = a->class_name_;
+    const char* cclass_name = a->getClassName().get().c_str();
     grib_handle* gh         = grib_handle_of_accessor(a);
 
     size_t i                  = 0;

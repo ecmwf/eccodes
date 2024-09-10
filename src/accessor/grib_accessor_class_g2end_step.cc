@@ -495,7 +495,7 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
         grib_context_log(h->context, GRIB_LOG_ERROR,
                          "%s:%s: Date/Time is not valid! "
                          "year=%ld month=%ld day=%ld hour=%ld minute=%ld second=%ld",
-                         a->class_name_, __func__, year, month, day, hour, minute, second);
+                         a->getClassName().get().c_str(), __func__, year, month, day, hour, minute, second);
         return GRIB_DECODING_ERROR;
     }
 

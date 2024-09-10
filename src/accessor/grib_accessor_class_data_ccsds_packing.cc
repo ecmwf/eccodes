@@ -87,7 +87,7 @@ static void print_aec_stream_info(struct aec_stream* strm, const char* func)
 int grib_accessor_data_ccsds_packing_t::pack_double(const double* val, size_t* len)
 {
     grib_handle* hand       = grib_handle_of_accessor(this);
-    const char* cclass_name = class_name_;
+    const char* cclass_name = getClassName().get().c_str();
     int err                 = GRIB_SUCCESS;
     size_t buflen = 0, i = 0;
     bool is_constant_field = false;
@@ -381,7 +381,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     grib_accessor_data_ccsds_packing_t* self = (grib_accessor_data_ccsds_packing_t*)a;
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     grib_handle* hand       = grib_handle_of_accessor(a);
-    const char* cclass_name = a->class_name_;
+    const char* cclass_name = a->getClassName().get().c_str();
 
     int err = GRIB_SUCCESS, i = 0;
     size_t buflen = 0;
