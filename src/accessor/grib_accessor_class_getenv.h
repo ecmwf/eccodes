@@ -26,7 +26,7 @@ public:
 
 private:
     // TODO(maee): shadows name_?
-    const char* name_;
+    const char* envvar_;
     char* value_;
     const char* default_value_;
 };

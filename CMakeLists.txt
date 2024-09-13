@@ -18,7 +18,16 @@
 
 cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 
-find_package( ecbuild 3.7 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
+find_package( ecbuild 3.7 HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
+if(NOT ecbuild_FOUND)
+    message(STATUS "Fetching ecbuild...")
+    include(FetchContent)
+    FetchContent_Populate(ecbuild
+        GIT_REPOSITORY https://github.com/ecmwf/ecbuild.git
+        GIT_TAG        3.8.5
+    )
+    find_package( ecbuild 3.7 REQUIRED HINTS ${ecbuild_SOURCE_DIR})
+endif()
 
 # Initialise project
 project( eccodes LANGUAGES CXX )

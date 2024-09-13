@@ -86,7 +86,7 @@ grib_action* grib_action_create_write(grib_context* context, const char* name, i
 grib_action* grib_action_create_print(grib_context* context, const char* name, char* outname);
 
 /* action_class_close.cc */
-grib_action* grib_action_create_close(grib_context* context, char* filename);
+grib_action* grib_action_create_close(grib_context* context, const char* filename);
 
 /* action_class_variable.cc */
 grib_action* grib_action_create_variable(grib_context* context, const char* name, const char* op, const long len, grib_arguments* params, grib_arguments* default_value, int flags, const char* name_space);

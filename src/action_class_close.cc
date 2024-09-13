@@ -65,7 +65,7 @@ static void init_class(grib_action_class* c)
 }
 /* END_CLASS_IMP */
 
-grib_action* grib_action_create_close(grib_context* context, char* filename)
+grib_action* grib_action_create_close(grib_context* context, const char* filename)
 {
     char buf[1024];
     grib_action_close* a;

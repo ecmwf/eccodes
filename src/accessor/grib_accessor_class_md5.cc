@@ -23,8 +23,8 @@ void grib_accessor_md5_t::init(const long len, grib_arguments* arg)
     grib_string_list* current = 0;
     grib_context* context     = context_;
 
-    offset_    = grib_arguments_get_name(grib_handle_of_accessor(this), arg, n++);
-    length_    = grib_arguments_get_expression(grib_handle_of_accessor(this), arg, n++);
+    offset_key_    = grib_arguments_get_name(grib_handle_of_accessor(this), arg, n++);
+    length_key_    = grib_arguments_get_expression(grib_handle_of_accessor(this), arg, n++);
     blocklist_ = NULL;
     while ((b = (char*)grib_arguments_get_name(grib_handle_of_accessor(this), arg, n++)) != NULL) {
         if (!blocklist_) {
@@ -97,9 +97,9 @@ int grib_accessor_md5_t::unpack_string(char* v, size_t* len)
         return GRIB_BUFFER_TOO_SMALL;
     }
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), offset_, &offset)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), offset_key_, &offset)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_expression_evaluate_long(grib_handle_of_accessor(this), length_, &length)) != GRIB_SUCCESS)
+    if ((ret = grib_expression_evaluate_long(grib_handle_of_accessor(this), length_key_, &length)) != GRIB_SUCCESS)
         return ret;
     mess = (unsigned char*)grib_context_malloc(context_, length);
     memcpy(mess, grib_handle_of_accessor(this)->buffer->data + offset, length);

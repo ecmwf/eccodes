@@ -16,7 +16,7 @@ grib_accessor* grib_accessor_group = &_grib_accessor_group;
 void grib_accessor_group_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
-    grib_buffer* buffer = grib_handle_of_accessor(this)->buffer;
+    const grib_buffer* buffer = grib_handle_of_accessor(this)->buffer;
 
     size_t i = 0;
     unsigned char* v;

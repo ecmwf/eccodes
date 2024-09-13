@@ -106,9 +106,8 @@ int grib_accessor_g1end_of_interval_monthly_t::compare(grib_accessor* b)
     long count  = 0;
     size_t alen = 0;
     size_t blen = 0;
-    int err     = 0;
 
-    err = value_count(&count);
+    int err = value_count(&count);
     if (err)
         return err;
     alen = count;
@@ -128,7 +127,10 @@ int grib_accessor_g1end_of_interval_monthly_t::compare(grib_accessor* b)
     dirty_    = 1;
 
     err = unpack_double(aval, &alen);
+    if (err) return err;
     err = b->unpack_double(bval, &blen);
+    if (err) return err;
+
     for (size_t i = 0; i < alen && retval == GRIB_SUCCESS; ++i) {
         if (aval[i] != bval[i]) retval = GRIB_DOUBLE_VALUE_MISMATCH;
     }

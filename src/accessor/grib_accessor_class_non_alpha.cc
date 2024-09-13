@@ -16,12 +16,9 @@ grib_accessor* grib_accessor_non_alpha = &_grib_accessor_non_alpha;
 void grib_accessor_non_alpha_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
-    grib_buffer* buffer = grib_handle_of_accessor(this)->buffer;
+    const grib_buffer* buffer = grib_handle_of_accessor(this)->buffer;
+    unsigned char* v = buffer->data + offset_;
     size_t i            = 0;
-    unsigned char* v;
-
-    v = buffer->data + offset_;
-    i = 0;
     while ((*v < 33 || *v > 126) && i <= buffer->ulength) {
         v++;
         i++;

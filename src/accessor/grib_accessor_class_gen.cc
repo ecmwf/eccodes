@@ -123,7 +123,7 @@ long grib_accessor_gen_t::byte_offset()
 
 int grib_accessor_gen_t::unpack_bytes(unsigned char* val, size_t* len)
 {
-    unsigned char* buf = grib_handle_of_accessor(this)->buffer->data;
+    const unsigned char* buf = grib_handle_of_accessor(this)->buffer->data;
     const long length  = byte_count();
     const long offset  = byte_offset();
 

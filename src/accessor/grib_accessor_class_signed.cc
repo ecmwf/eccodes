@@ -193,17 +193,16 @@ long grib_accessor_signed_t::next_offset()
 
 int grib_accessor_signed_t::is_missing()
 {
-    int i                = 0;
     unsigned char ff     = 0xff;
     unsigned long offset = offset_;
-    grib_handle* hand    = grib_handle_of_accessor(this);
+    const grib_handle* hand    = grib_handle_of_accessor(this);
 
     if (length_ == 0) {
         Assert(vvalue_ != NULL);
         return vvalue_->missing;
     }
 
-    for (i = 0; i < length_; i++) {
+    for (long i = 0; i < length_; i++) {
         if (hand->buffer->data[offset] != ff)
             return 0;
         offset++;

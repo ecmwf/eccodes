@@ -18,7 +18,7 @@ void grib_accessor_getenv_t::init(const long l, grib_arguments* args)
     grib_accessor_ascii_t::init(l, args);
     static char undefined[] = "undefined";
 
-    name_          = grib_arguments_get_string(grib_handle_of_accessor(this), args, 0);
+    envvar_          = grib_arguments_get_string(grib_handle_of_accessor(this), args, 0);
     default_value_ = grib_arguments_get_string(grib_handle_of_accessor(this), args, 1);
     if (!default_value_)
         default_value_ = undefined;
@@ -36,7 +36,7 @@ int grib_accessor_getenv_t::unpack_string(char* val, size_t* len)
     size_t l = 0;
 
     if (!value_) {
-        v = getenv(name_);
+        v = getenv(envvar_);
         if (!v)
             v = (char*)default_value_;
         value_ = v;
