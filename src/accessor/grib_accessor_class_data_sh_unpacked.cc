@@ -199,6 +199,7 @@ int grib_accessor_data_sh_unpacked_t::unpack_double(double* val, size_t* len)
         if (sub_k >= 0) {
             for (hcount = 0; hcount < sub_k + 1; hcount++) {
                 val[i++] = decode_float(grib_decode_unsigned_long(hres, &hpos, 8 * bytes));
+                val[i++] = decode_float(grib_decode_unsigned_long(hres, &hpos, 8 * bytes));
 
                 if (GRIBEX_sh_bug_present && hcount == sub_k) {
                     /*  bug in ecmwf data, last row (K+1)is scaled but should not */
