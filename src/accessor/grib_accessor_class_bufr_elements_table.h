@@ -25,8 +25,7 @@ public:
     int unpack_string(char*, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
-    // TODO(maee): make members private
-    // private:
+
 public:
     const char* dictionary_;
     const char* masterDir_;

@@ -38,6 +38,4 @@ public:
     long* tableCodes_;
     size_t tableCodesSize_;
     grib_smart_table* table_;
-    // TODO(maee): dirty_ shadowed by the derived class
-    // int dirty_;
 };

@@ -26,6 +26,4 @@ public:
 public:
     const char* coded_values_;
     const char* real_part_;
-    // TODO(maee): dirty_ shadowed by the derived class
-    // int dirty_;
 };

@@ -30,7 +30,7 @@ public:
     void update_size(size_t) override;
     int unpack_double_element(size_t i, double* val) override;
     int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) override;
-    // TODO(maee): make members private
+
 public:
     const char* tableReference_;
     const char* missing_value_;

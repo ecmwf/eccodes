@@ -96,7 +96,6 @@ grib_accessor* grib_accessor_section_t::next(grib_accessor* a, int explore)
     }
     if (!next) {
         if (a->parent_->owner)
-            // TODO(maee): check the owner of the parent
             next = a->parent_->owner->next(a->parent_->owner, 0);
     }
     return next;

@@ -78,8 +78,6 @@ public:
     virtual grib_accessor* make_clone(grib_section*, int*) = 0;
 
 public:
-    // private:
-    //  TODO(maee): make members private
     grib_context* context_;
     const char* name_;       /** < name of the accessor */
     const char* class_name_; /** < name of the class (Artifact from C version of ecCodes) */

@@ -129,22 +129,11 @@ static GRIB_INLINE grib_accessor_class* get_class(grib_context* c, char* type)
 grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
                                      const long len, grib_arguments* params)
 {
-    //grib_accessor_class* c = NULL;
     grib_accessor* a       = NULL;
     size_t size            = 0;
 
-// TODO(maee): Replace this with an accessor_factory
-#ifdef ACCESSOR_FACTORY_USE_TRIE
-    //c = get_class(p->h->context, creator->op);
-#else
-    /* Use the hash table built with gperf (See make_accessor_class_hash.sh) */
-    //c = *((grib_accessor_classes_hash(creator->op, strlen(creator->op)))->cclass);
-#endif
-
-    auto a_tmp = *((grib_accessor_hash(creator->op, strlen(creator->op)))->cclass);
-
-    a = a_tmp->create_empty_accessor();
-    //a = c->create_empty_accessor();
+    grib_accessor* builder = *((grib_accessor_hash(creator->op, strlen(creator->op)))->cclass);
+    a = builder->create_empty_accessor();
 
     a->name_       = creator->name;
     a->name_space_ = creator->name_space;
@@ -178,8 +167,6 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
         else
             a->offset_ = 0;
     }
-
-    //a->cclass_ = c;
 
     a->init_accessor(len, params);
     size = a->get_next_position_offset();

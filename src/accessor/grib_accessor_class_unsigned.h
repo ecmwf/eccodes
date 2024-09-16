@@ -30,7 +30,6 @@ public:
     int is_missing() override;
     void destroy(grib_context* context) override;
 
-    // TODO(maee): make members private
 public:
     long nbytes_;
     grib_arguments* arg_;
