@@ -10737,6 +10737,21 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 105 ;
 	}
+#Mass mixing ration difference
+'Mass mixing ration difference' = {
+         discipline = 0 ;
+         parameterCategory = 20 ;
+         parameterNumber = 2 ;
+         typeOfGeneratingProcess = 20 ;
+        }
+#Mass mixing ratio from volcanoes difference
+'Mass mixing ratio from volcanoes difference' = {
+         discipline = 0 ;
+         parameterCategory = 20 ;
+         parameterNumber = 2 ;
+         sourceSinkChemicalPhysicalProcess = 7 ;
+         typeOfGeneratingProcess = 20 ;
+        }
 #Pressure tendency
 'Pressure tendency' = {
 	 discipline = 0 ;
