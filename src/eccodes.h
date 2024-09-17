@@ -1175,6 +1175,7 @@ void codes_context_set_definitions_path(codes_context* c, const char* path);
 void codes_context_set_samples_path(codes_context* c, const char* path);
 
 void codes_context_set_debug(grib_context* c, int mode);
+void codes_context_set_data_quality_checks(grib_context* c, int val);
 
 /**
  *  Sets memory procedures of the context

@@ -241,6 +241,12 @@ void grib_context_set_print_proc(grib_context* c, grib_print_proc p)
     c->print = (p ? p : &default_print);
 }
 
+void grib_context_set_data_quality_checks(grib_context* c, int val)
+{
+    c = c ? c : grib_context_get_default();
+    c->grib_data_quality_checks = val;
+}
+
 void grib_context_set_debug(grib_context* c, int mode)
 {
     c = c ? c : grib_context_get_default();
