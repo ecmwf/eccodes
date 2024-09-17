@@ -108,8 +108,8 @@ grep -q "unsigned reserved = MISSING (can be missing) (read-only)" $temp
 
 # Debug dump a BUFR using -TB switch
 infile=${data_dir}/bufr/pgps_110.bufr
-${tools_dir}/grib_dump -Da -TB $infile > $temp 2>&1
-${tools_dir}/grib_dump -Da -TB -s unpack=1 $infile > $temp 2>&1
+${tools_dir}/grib_dump -Da -TB $infile > $temp
+# ${tools_dir}/grib_dump -Da -TB -s unpack=1 $infile > $temp
 
 
 # Clean up
