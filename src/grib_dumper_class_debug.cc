@@ -16,7 +16,7 @@
    START_CLASS_DEF
    CLASS      = dumper
    IMPLEMENTS = dump_long;dump_bits
-   IMPLEMENTS = dump_double;dump_string
+   IMPLEMENTS = dump_double;dump_string;dump_string_array
    IMPLEMENTS = dump_bytes;dump_values
    IMPLEMENTS = dump_label;dump_section
    IMPLEMENTS = init;destroy
@@ -45,6 +45,7 @@ static void dump_long       (grib_dumper* d, grib_accessor* a,const char* commen
 static void dump_bits       (grib_dumper* d, grib_accessor* a,const char* comment);
 static void dump_double     (grib_dumper* d, grib_accessor* a,const char* comment);
 static void dump_string     (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_string_array     (grib_dumper* d, grib_accessor* a,const char* comment);
 static void dump_bytes      (grib_dumper* d, grib_accessor* a,const char* comment);
 static void dump_values     (grib_dumper* d, grib_accessor* a);
 static void dump_label      (grib_dumper* d, grib_accessor* a,const char* comment);
@@ -70,7 +71,7 @@ static grib_dumper_class _grib_dumper_class_debug = {
     &dump_long,                          /* dump long         */
     &dump_double,                        /* dump double    */
     &dump_string,                        /* dump string    */
-    0,                        /* dump string array   */
+    &dump_string_array,                        /* dump string array   */
     &dump_label,                         /* dump labels  */
     &dump_bytes,                         /* dump bytes  */
     &dump_bits,                          /* dump bits   */
@@ -379,6 +380,76 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     fprintf(self->dumper.out, "\n");
 
     grib_context_free(a->context, value);
+}
+
+static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comment)
+{
+    grib_dumper_debug* self = (grib_dumper_debug*)d;
+
+    char** values;
+    size_t size = 0, i = 0;
+    grib_context* c = NULL;
+    int err         = 0;
+    int tab         = 0;
+    long count      = 0;
+
+    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+        return;
+
+    c = a->context;
+    a->value_count(&count);
+    if (count == 0)
+        return;
+    size = count;
+    if (size == 1) {
+        dump_string(d, a, comment);
+        return;
+    }
+
+    values = (char**)grib_context_malloc_clear(c, size * sizeof(char*));
+    if (!values) {
+        grib_context_log(c, GRIB_LOG_ERROR, "unable to allocate %zu bytes", size);
+        return;
+    }
+
+    err = a->unpack_string_array(values, &size);
+
+    // print_offset(self->dumper.out,d,a);
+    //print_offset(self->dumper.out, self->begin, self->theEnd);
+
+    if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0) {
+        fprintf(self->dumper.out, "  ");
+        fprintf(self->dumper.out, "# type %s (str) \n", a->creator->op);
+    }
+
+    aliases(d, a);
+    if (comment) {
+        fprintf(self->dumper.out, "  ");
+        fprintf(self->dumper.out, "# %s \n", comment);
+    }
+    if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) {
+        fprintf(self->dumper.out, "  ");
+        fprintf(self->dumper.out, "#-READ ONLY- ");
+        tab = 13;
+    }
+    else
+        fprintf(self->dumper.out, "  ");
+
+    tab++;
+    fprintf(self->dumper.out, "%s = {\n", a->name);
+    for (i = 0; i < size; i++) {
+        fprintf(self->dumper.out, "%-*s\"%s\",\n", (int)(tab + strlen(a->name) + 4), " ", values[i]);
+    }
+    fprintf(self->dumper.out, "  }");
+
+    if (err) {
+        fprintf(self->dumper.out, "  ");
+        fprintf(self->dumper.out, "# *** ERR=%d (%s)", err, grib_get_error_message(err));
+    }
+
+    fprintf(self->dumper.out, "\n");
+    for (i=0; i<size; ++i) grib_context_free(c, values[i]);
+    grib_context_free(c, values);
 }
 
 static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
