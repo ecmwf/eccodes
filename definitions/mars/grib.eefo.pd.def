@@ -12,6 +12,7 @@ if (gribEdition == 1){
  alias mars.quantile = marsQuantile;
 }
 if (gribEdition == 2){
- meta marsQuantile sprintf("%d:%d",quantileValue,totalNumberOfQuantiles);
+ #meta marsQuantile sprintf("%d:%d",quantileValue,totalNumberOfQuantiles);
+ meta marsQuantile sprintf("%d:%d",lowerLimit,upperLimit);
  alias mars.quantile = marsQuantile;
 }
