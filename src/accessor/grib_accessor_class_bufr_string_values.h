@@ -26,7 +26,9 @@ public:
     void dump(grib_dumper*) override;
     void init(const long, grib_arguments*) override;
 
-public:
+private:
     const char* dataAccessorName_;
     grib_accessor* dataAccessor_;
+
+    grib_accessor* get_accessor();
 };

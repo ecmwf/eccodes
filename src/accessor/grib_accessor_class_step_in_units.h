@@ -28,10 +28,12 @@ public:
     void dump(grib_dumper*) override;
     void init(const long, grib_arguments*) override;
 
-public:
+private:
     const char* forecast_time_value_;
     const char* forecast_time_unit_;
     const char* step_units_;
     const char* time_range_unit_;
     const char* time_range_value_;
+
+    int pack_long_new_(const long start_step_value, const long start_step_unit, const long force_step_units);
 };

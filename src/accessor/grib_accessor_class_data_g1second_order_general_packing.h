@@ -25,7 +25,7 @@ public:
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
 
-public:
+private:
     const char* half_byte_;
     const char* packingType_;
     const char* ieee_packing_;
@@ -42,4 +42,6 @@ public:
     const char* jPointsAreConsecutive_;
     const char* bitmap_;
     const char* groupWidths_;
+
+    template <typename T> int unpack_real(T* values, size_t* len);
 };

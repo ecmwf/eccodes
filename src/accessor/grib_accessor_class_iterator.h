@@ -21,8 +21,10 @@ public:
     void init(const long l, grib_arguments* args) override;
     void dump(grib_dumper* dumper) override;
 
-public:
+private:
     grib_arguments* args_;
+
+    friend grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int* error);
 };
 
 // grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int* error)

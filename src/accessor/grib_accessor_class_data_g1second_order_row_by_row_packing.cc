@@ -113,10 +113,9 @@ int grib_accessor_data_g1second_order_row_by_row_packing_t::value_count(long* co
 }
 
 template <typename T>
-static int unpack_real(grib_accessor* a, T* values, size_t* len)
+int grib_accessor_data_g1second_order_row_by_row_packing_t::unpack_real(T* values, size_t* len)
 {
-    grib_accessor_data_g1second_order_row_by_row_packing_t* self = (grib_accessor_data_g1second_order_row_by_row_packing_t*)a;
-    grib_handle* gh                                              = grib_handle_of_accessor(a);
+    grib_handle* gh                                              = grib_handle_of_accessor(this);
     int ret                                                      = 0;
     long numberOfGroups, numberOfSecondOrderPackedValues;
     long* groupWidths      = 0;
@@ -138,25 +137,25 @@ static int unpack_real(grib_accessor* a, T* values, size_t* len)
     size_t plSize          = 0;
     long* pl               = 0;
 
-    buf += a->byte_offset();
-    if ((ret = grib_get_long_internal(gh, self->numberOfGroups_, &numberOfGroups)) != GRIB_SUCCESS)
+    buf += byte_offset();
+    if ((ret = grib_get_long_internal(gh, numberOfGroups_, &numberOfGroups)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(gh, self->jPointsAreConsecutive_, &jPointsAreConsecutive)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, jPointsAreConsecutive_, &jPointsAreConsecutive)) != GRIB_SUCCESS)
         return ret;
 
-    if (self->bitmap_)
+    if (bitmap_)
         bitmapPresent = 1;
-    ret = grib_get_size(gh, self->pl_, &plSize);
+    ret = grib_get_size(gh, pl_, &plSize);
     if (ret == GRIB_SUCCESS) {
-        pl = (long*)grib_context_malloc_clear(a->context_, sizeof(long) * plSize);
-        if ((ret = grib_get_long_array(gh, self->pl_, pl, &plSize)) != GRIB_SUCCESS)
+        pl = (long*)grib_context_malloc_clear(context_, sizeof(long) * plSize);
+        if ((ret = grib_get_long_array(gh, pl_, pl, &plSize)) != GRIB_SUCCESS)
             return ret;
     }
 
-    if ((ret = grib_get_long_internal(gh, self->Ni_, &Ni)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, Ni_, &Ni)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(gh, self->Nj_, &Nj)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, Nj_, &Nj)) != GRIB_SUCCESS)
         return ret;
     if (jPointsAreConsecutive) {
         numberOfRows    = Ni;
@@ -167,7 +166,7 @@ static int unpack_real(grib_accessor* a, T* values, size_t* len)
         numberOfColumns = Ni;
     }
 
-    numbersPerRow = (long*)grib_context_malloc_clear(a->context_, sizeof(long) * numberOfRows);
+    numbersPerRow = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfRows);
     if (!numbersPerRow)
         return GRIB_OUT_OF_MEMORY;
     if (bitmapPresent) {
@@ -179,9 +178,9 @@ static int unpack_real(grib_accessor* a, T* values, size_t* len)
             for (i = 0; i < numberOfRows; i++)
                 numberOfPoints += pl[i];
         }
-        bitmap  = (long*)grib_context_malloc_clear(a->context_, sizeof(long) * numberOfPoints);
+        bitmap  = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfPoints);
         pbitmap = bitmap;
-        grib_get_long_array(gh, self->bitmap_, bitmap, &numberOfPoints);
+        grib_get_long_array(gh, bitmap_, bitmap, &numberOfPoints);
         if (plSize && pl) {
             for (i = 0; i < numberOfRows; i++) {
                 for (j = 0; j < pl[i]; j++) {
@@ -198,7 +197,7 @@ static int unpack_real(grib_accessor* a, T* values, size_t* len)
             }
         }
 
-        grib_context_free(a->context_, pbitmap);
+        grib_context_free(context_, pbitmap);
     }
     else {
         if (plSize && pl) {
@@ -211,28 +210,28 @@ static int unpack_real(grib_accessor* a, T* values, size_t* len)
         }
     }
 
-    if ((ret = grib_get_long_internal(gh, self->widthOfFirstOrderValues_, &widthOfFirstOrderValues)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, widthOfFirstOrderValues_, &widthOfFirstOrderValues)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(gh, self->binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(gh, self->decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_double_internal(gh, self->reference_value_, &reference_value)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(gh, reference_value_, &reference_value)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(gh, self->numberOfSecondOrderPackedValues_,
+    if ((ret = grib_get_long_internal(gh, numberOfSecondOrderPackedValues_,
                                       &numberOfSecondOrderPackedValues)) != GRIB_SUCCESS)
         return ret;
 
-    groupWidths     = (long*)grib_context_malloc_clear(a->context_, sizeof(long) * numberOfGroups);
+    groupWidths     = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfGroups);
     groupWidthsSize = numberOfGroups;
-    if ((ret = grib_get_long_array_internal(gh, self->groupWidths_, groupWidths, &groupWidthsSize)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_array_internal(gh, groupWidths_, groupWidths, &groupWidthsSize)) != GRIB_SUCCESS)
         return ret;
 
-    firstOrderValues = (long*)grib_context_malloc_clear(a->context_, sizeof(long) * numberOfGroups);
+    firstOrderValues = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfGroups);
     grib_decode_long_array(buf, &pos, widthOfFirstOrderValues, numberOfGroups, firstOrderValues);
     pos = 8 * ((pos + 7) / 8);
 
@@ -243,7 +242,7 @@ static int unpack_real(grib_accessor* a, T* values, size_t* len)
     if (*len < (size_t)n)
         return GRIB_ARRAY_TOO_SMALL;
 
-    X = (long*)grib_context_malloc_clear(a->context_, sizeof(long) * n);
+    X = (long*)grib_context_malloc_clear(context_, sizeof(long) * n);
     n = 0;
     k = 0;
     for (i = 0; i < numberOfGroups; i++) {
@@ -268,25 +267,25 @@ static int unpack_real(grib_accessor* a, T* values, size_t* len)
     for (i = 0; i < n; i++) {
         values[i] = (T)(((X[i] * s) + reference_value) * d);
     }
-    grib_context_free(a->context_, firstOrderValues);
-    grib_context_free(a->context_, X);
-    grib_context_free(a->context_, groupWidths);
+    grib_context_free(context_, firstOrderValues);
+    grib_context_free(context_, X);
+    grib_context_free(context_, groupWidths);
     if (plSize)
-        grib_context_free(a->context_, pl);
+        grib_context_free(context_, pl);
     if (numbersPerRow)
-        grib_context_free(a->context_, numbersPerRow);
+        grib_context_free(context_, numbersPerRow);
 
     return ret;
 }
 
 int grib_accessor_data_g1second_order_row_by_row_packing_t::unpack_float(float* values, size_t* len)
 {
-    return unpack_real<float>(this, values, len);
+    return unpack_real<float>(values, len);
 }
 
 int grib_accessor_data_g1second_order_row_by_row_packing_t::unpack_double(double* values, size_t* len)
 {
-    return unpack_real<double>(this, values, len);
+    return unpack_real<double>(values, len);
 }
 
 int grib_accessor_data_g1second_order_row_by_row_packing_t::pack_double(const double* cval, size_t* len)

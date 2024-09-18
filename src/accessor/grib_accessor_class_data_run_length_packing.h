@@ -23,7 +23,7 @@ public:
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
 
-public:
+private:
     const char* number_of_values_;
     const char* bits_per_value_;
     const char* max_level_value_;

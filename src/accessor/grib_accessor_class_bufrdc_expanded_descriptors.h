@@ -26,6 +26,7 @@ public:
     void init(const long, grib_arguments*) override;
 
 public:
+    // TODO(maee): make private
     const char* expandedDescriptors_;
     grib_accessor* expandedDescriptorsAccessor_;
 };

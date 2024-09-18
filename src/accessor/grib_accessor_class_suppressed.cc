@@ -22,38 +22,37 @@ void grib_accessor_suppressed_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-static void log_message(grib_accessor* a)
+void grib_accessor_suppressed_t::log_message()
 {
-    grib_accessor_suppressed_t* self = (grib_accessor_suppressed_t*)a;
     int i                            = 0;
-    grib_handle* hand                = grib_handle_of_accessor(a);
+    grib_handle* hand                = grib_handle_of_accessor(this);
 
-    grib_context_log(a->context_, GRIB_LOG_ERROR,
-                     "key '%s' is unavailable in this version.", a->name_);
-    grib_context_log(a->context_, GRIB_LOG_ERROR,
+    grib_context_log(context_, GRIB_LOG_ERROR,
+                     "key '%s' is unavailable in this version.", name_);
+    grib_context_log(context_, GRIB_LOG_ERROR,
                      "Please use the following key(s):");
-    while (grib_arguments_get_name(hand, self->args_, i)) {
-        grib_context_log(a->context_, GRIB_LOG_ERROR, "\t- %s",
-                         grib_arguments_get_name(hand, self->args_, i));
+    while (grib_arguments_get_name(hand, args_, i)) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "\t- %s",
+                         grib_arguments_get_name(hand, args_, i));
         i++;
     }
 }
 
 int grib_accessor_suppressed_t::unpack_string(char* val, size_t* len)
 {
-    log_message(this);
+    log_message();
     return GRIB_NOT_FOUND;
 }
 
 int grib_accessor_suppressed_t::unpack_long(long* val, size_t* len)
 {
-    log_message(this);
+    log_message();
     return GRIB_NOT_FOUND;
 }
 
 int grib_accessor_suppressed_t::unpack_double(double* val, size_t* len)
 {
-    log_message(this);
+    log_message();
     return GRIB_NOT_FOUND;
 }
 

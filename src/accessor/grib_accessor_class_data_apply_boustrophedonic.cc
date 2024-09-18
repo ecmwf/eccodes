@@ -39,9 +39,8 @@ int grib_accessor_data_apply_boustrophedonic_t::value_count(long* numberOfPoints
 }
 
 template <typename T>
-static int unpack(grib_accessor* a, T* val, size_t* len)
+int grib_accessor_data_apply_boustrophedonic_t::unpack(T* val, size_t* len)
 {
-    grib_accessor_data_apply_boustrophedonic_t* self = (grib_accessor_data_apply_boustrophedonic_t*)a;
     size_t plSize                                    = 0;
     long* pl                                         = 0;
     double* values                                   = 0;
@@ -52,7 +51,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     int ret;
     long numberOfPoints, numberOfRows, numberOfColumns;
 
-    ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfPoints_, &numberOfPoints);
+    ret = grib_get_long_internal(grib_handle_of_accessor(this), numberOfPoints_, &numberOfPoints);
     if (ret)
         return ret;
 
@@ -61,7 +60,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    ret = grib_get_size(grib_handle_of_accessor(a), self->values_, &valuesSize);
+    ret = grib_get_size(grib_handle_of_accessor(this), values_, &valuesSize);
     if (ret)
         return ret;
 
@@ -70,31 +69,31 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
         return 0;
 
     if (valuesSize != numberOfPoints) {
-        grib_context_log(a->context_, GRIB_LOG_ERROR, "boustrophedonic ordering error: ( %s=%ld ) != (sizeOf(%s)=%ld)",
-                         numberOfPoints, numberOfPoints, self->values_, (long)valuesSize);
+        grib_context_log(context_, GRIB_LOG_ERROR, "boustrophedonic ordering error: ( %s=%ld ) != (sizeOf(%s)=%ld)",
+                         numberOfPoints, numberOfPoints, values_, (long)valuesSize);
         return GRIB_DECODING_ERROR;
     }
 
-    values = (double*)grib_context_malloc_clear(a->context_, sizeof(double) * numberOfPoints);
-    ret    = grib_get_double_array_internal(grib_handle_of_accessor(a), self->values_, values, &valuesSize);
+    values = (double*)grib_context_malloc_clear(context_, sizeof(double) * numberOfPoints);
+    ret    = grib_get_double_array_internal(grib_handle_of_accessor(this), values_, values, &valuesSize);
     if (ret)
         return ret;
 
     pvalues = values;
     pval    = val;
 
-    ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfRows_, &numberOfRows);
+    ret = grib_get_long_internal(grib_handle_of_accessor(this), numberOfRows_, &numberOfRows);
     if (ret)
         return ret;
 
-    ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfColumns_, &numberOfColumns);
+    ret = grib_get_long_internal(grib_handle_of_accessor(this), numberOfColumns_, &numberOfColumns);
     if (ret)
         return ret;
 
-    if (grib_get_size(grib_handle_of_accessor(a), self->pl_, &plSize) == GRIB_SUCCESS) {
+    if (grib_get_size(grib_handle_of_accessor(this), pl_, &plSize) == GRIB_SUCCESS) {
         Assert(plSize == numberOfRows);
-        pl  = (long*)grib_context_malloc_clear(a->context_, sizeof(long) * plSize);
-        ret = grib_get_long_array_internal(grib_handle_of_accessor(a), self->pl_, pl, &plSize);
+        pl  = (long*)grib_context_malloc_clear(context_, sizeof(long) * plSize);
+        ret = grib_get_long_array_internal(grib_handle_of_accessor(this), pl_, pl, &plSize);
         if (ret)
             return ret;
 
@@ -111,7 +110,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
             }
         }
 
-        grib_context_free(a->context_, pl);
+        grib_context_free(context_, pl);
     }
     else {
         for (j = 0; j < numberOfRows; j++) {
@@ -128,19 +127,19 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
         }
     }
 
-    grib_context_free(a->context_, values);
+    grib_context_free(context_, values);
 
     return GRIB_SUCCESS;
 }
 
 int grib_accessor_data_apply_boustrophedonic_t::unpack_double(double* val, size_t* len)
 {
-    return unpack<double>(this, val, len);
+    return unpack<double>(val, len);
 }
 
 int grib_accessor_data_apply_boustrophedonic_t::unpack_float(float* val, size_t* len)
 {
-    return unpack<float>(this, val, len);
+    return unpack<float>(val, len);
 }
 
 int grib_accessor_data_apply_boustrophedonic_t::unpack_double_element(size_t idx, double* val)

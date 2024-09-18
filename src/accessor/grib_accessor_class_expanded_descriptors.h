@@ -28,6 +28,7 @@ public:
     void init(const long, grib_arguments*) override;
 
 public:
+    // TODO(maee): make private
     const char* unexpandedDescriptors_;
     const char* sequence_;
     const char* expandedName_;

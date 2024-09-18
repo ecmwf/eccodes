@@ -48,9 +48,8 @@ int grib_accessor_data_g1second_order_general_packing_t::value_count(long* numbe
 }
 
 template <typename T>
-static int unpack_real(grib_accessor* a, T* values, size_t* len)
+int grib_accessor_data_g1second_order_general_packing_t::unpack_real(T* values, size_t* len)
 {
-    grib_accessor_data_g1second_order_general_packing_t* self = (grib_accessor_data_g1second_order_general_packing_t*)a;
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     int ret = 0;
     long numberOfGroups, numberOfSecondOrderPackedValues;
@@ -59,7 +58,7 @@ static int unpack_real(grib_accessor* a, T* values, size_t* len)
     long* X                      = 0;
     long pos                     = 0;
     long widthOfFirstOrderValues = 0;
-    unsigned char* buf           = (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
+    unsigned char* buf           = (unsigned char*)grib_handle_of_accessor(this)->buffer->data;
     long i, n;
     double reference_value;
     long binary_scale_factor;
@@ -69,44 +68,44 @@ static int unpack_real(grib_accessor* a, T* values, size_t* len)
     long groupLength, j;
     size_t groupWidthsSize;
 
-    buf += a->byte_offset();
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfGroups_, &numberOfGroups)) != GRIB_SUCCESS)
+    buf += byte_offset();
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), numberOfGroups_, &numberOfGroups)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->widthOfFirstOrderValues_, &widthOfFirstOrderValues)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), widthOfFirstOrderValues_, &widthOfFirstOrderValues)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_double_internal(grib_handle_of_accessor(a), self->reference_value_, &reference_value)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(grib_handle_of_accessor(this), reference_value_, &reference_value)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfSecondOrderPackedValues_,
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), numberOfSecondOrderPackedValues_,
                                       &numberOfSecondOrderPackedValues)) != GRIB_SUCCESS)
         return ret;
 
     if (*len < (size_t)numberOfSecondOrderPackedValues)
         return GRIB_ARRAY_TOO_SMALL;
 
-    groupWidths     = (long*)grib_context_malloc_clear(a->context_, sizeof(long) * numberOfGroups);
+    groupWidths     = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfGroups);
     groupWidthsSize = numberOfGroups;
-    if ((ret = grib_get_long_array_internal(grib_handle_of_accessor(a), self->groupWidths_, groupWidths, &groupWidthsSize)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_array_internal(grib_handle_of_accessor(this), groupWidths_, groupWidths, &groupWidthsSize)) != GRIB_SUCCESS)
         return ret;
 
-    secondaryBitmap                                  = (long*)grib_context_malloc_clear(a->context_, sizeof(long) * (numberOfSecondOrderPackedValues + 1));
+    secondaryBitmap                                  = (long*)grib_context_malloc_clear(context_, sizeof(long) * (numberOfSecondOrderPackedValues + 1));
     secondaryBitmap[numberOfSecondOrderPackedValues] = 1;
     grib_decode_long_array(buf, &pos, 1, numberOfSecondOrderPackedValues, secondaryBitmap);
     pos = 8 * ((pos + 7) / 8);
 
-    firstOrderValues = (long*)grib_context_malloc_clear(a->context_, sizeof(long) * numberOfGroups);
+    firstOrderValues = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfGroups);
     grib_decode_long_array(buf, &pos, widthOfFirstOrderValues, numberOfGroups, firstOrderValues);
     pos = 8 * ((pos + 7) / 8);
 
-    X = (long*)grib_context_malloc_clear(a->context_, sizeof(long) * numberOfSecondOrderPackedValues);
+    X = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfSecondOrderPackedValues);
 
     n           = 0;
     i           = -1;
@@ -143,22 +142,22 @@ static int unpack_real(grib_accessor* a, T* values, size_t* len)
     }
 
     *len = numberOfSecondOrderPackedValues;
-    grib_context_free(a->context_, secondaryBitmap);
-    grib_context_free(a->context_, firstOrderValues);
-    grib_context_free(a->context_, X);
-    grib_context_free(a->context_, groupWidths);
+    grib_context_free(context_, secondaryBitmap);
+    grib_context_free(context_, firstOrderValues);
+    grib_context_free(context_, X);
+    grib_context_free(context_, groupWidths);
 
     return ret;
 }
 
 int grib_accessor_data_g1second_order_general_packing_t::unpack_float(float* values, size_t* len)
 {
-    return unpack_real<float>(this, values, len);
+    return unpack_real<float>(values, len);
 }
 
 int grib_accessor_data_g1second_order_general_packing_t::unpack_double(double* values, size_t* len)
 {
-    return unpack_real<double>(this, values, len);
+    return unpack_real<double>(values, len);
 }
 
 int grib_accessor_data_g1second_order_general_packing_t::pack_double(const double* cval, size_t* len)

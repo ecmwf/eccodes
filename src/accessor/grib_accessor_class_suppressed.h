@@ -26,6 +26,8 @@ public:
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
 
-public:
+private:
     grib_arguments* args_;
+
+    void log_message();
 };

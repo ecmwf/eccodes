@@ -377,12 +377,11 @@ cleanup:
 }
 
 template <typename T>
-static int unpack(grib_accessor* a, T* val, size_t* len)
+int grib_accessor_data_ccsds_packing_t::unpack(T* val, size_t* len)
 {
-    grib_accessor_data_ccsds_packing_t* self = (grib_accessor_data_ccsds_packing_t*)a;
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
-    grib_handle* hand       = grib_handle_of_accessor(a);
-    const char* cclass_name = a->class_name_;
+    grib_handle* hand       = grib_handle_of_accessor(this);
+    const char* cclass_name = class_name_;
 
     int err = GRIB_SUCCESS, i = 0;
     size_t buflen = 0;
@@ -406,28 +405,28 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     long ccsds_rsi;
     size_t nbytes;
 
-    a->dirty_ = 0;
+    dirty_ = 0;
 
-    if ((err = a->value_count(&nn)) != GRIB_SUCCESS)
+    if ((err = value_count(&nn)) != GRIB_SUCCESS)
         return err;
     n_vals = nn;
 
-    if ((err = grib_get_long_internal(hand, self->bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(hand, bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_double_internal(hand, self->reference_value_, &reference_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(hand, reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(hand, self->binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(hand, binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(hand, self->decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(hand, decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
     // ECC-477: Don't call grib_get_long_internal to suppress error message being output
-    if ((err = grib_get_long(hand, self->ccsds_flags_, &ccsds_flags)) != GRIB_SUCCESS)
+    if ((err = grib_get_long(hand, ccsds_flags_, &ccsds_flags)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long_internal(hand, self->ccsds_block_size_, &ccsds_block_size)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(hand, ccsds_block_size_, &ccsds_block_size)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(hand, self->ccsds_rsi_, &ccsds_rsi)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(hand, ccsds_rsi_, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
 
     modify_aec_flags(&ccsds_flags);
@@ -447,9 +446,9 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     bscale = codes_power<T>(binary_scale_factor, 2);
     dscale = codes_power<T>(-decimal_scale_factor, 10);
 
-    buflen = self->byte_count();
+    buflen = byte_count();
     buf    = (unsigned char*)hand->buffer->data;
-    buf += a->byte_offset();
+    buf += byte_offset();
     strm.flags           = ccsds_flags;
     strm.bits_per_sample = bits_per_value;
     strm.block_size      = ccsds_block_size;
@@ -463,7 +462,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
         nbytes = 4;
 
     size    = n_vals * nbytes;
-    decoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context_, size);
+    decoded = (unsigned char*)grib_context_buffer_malloc_clear(context_, size);
     if (!decoded) {
         err = GRIB_OUT_OF_MEMORY;
         goto cleanup;
@@ -474,7 +473,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     if (hand->context->debug) print_aec_stream_info(&strm, "unpack_*");
 
     if ((err = aec_buffer_decode(&strm)) != AEC_OK) {
-        grib_context_log(a->context_, GRIB_LOG_ERROR, "%s %s: aec_buffer_decode error %d (%s)",
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: aec_buffer_decode error %d (%s)",
                          cclass_name, __func__, err, aec_get_error_message(err));
         err = GRIB_DECODING_ERROR;
         goto cleanup;
@@ -501,8 +500,8 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
             }
             break;
         default:
-            grib_context_log(a->context_, GRIB_LOG_ERROR, "%s %s: unpacking %s, bits_per_value=%ld (max 32)",
-                             cclass_name, __func__, a->name_, bits_per_value);
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: unpacking %s, bits_per_value=%ld (max 32)",
+                             cclass_name, __func__, name_, bits_per_value);
             err = GRIB_INVALID_BPV;
             goto cleanup;
     }
@@ -510,18 +509,18 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     *len = n_vals;
 
 cleanup:
-    grib_context_buffer_free(a->context_, decoded);
+    grib_context_buffer_free(context_, decoded);
     return err;
 }
 
 int grib_accessor_data_ccsds_packing_t::unpack_double(double* val, size_t* len)
 {
-    return unpack<double>(this, val, len);
+    return unpack<double>(val, len);
 }
 
 int grib_accessor_data_ccsds_packing_t::unpack_float(float* val, size_t* len)
 {
-    return unpack<float>(this, val, len);
+    return unpack<float>(val, len);
 }
 
 int grib_accessor_data_ccsds_packing_t::unpack_double_element(size_t idx, double* val)

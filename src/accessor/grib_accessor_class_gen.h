@@ -73,7 +73,7 @@ public:
     template <typename T>
     int unpack_helper(grib_accessor* a, T* v, size_t* len);
 
-private:
+public:
     enum
     {
         PACK_DOUBLE,

@@ -28,7 +28,9 @@ public:
     void init(const long, grib_arguments*) override;
     void update_size(size_t) override;
 
-public:
+private:
     const char* numberOfBits_;
     const char* numberOfElements_;
+
+    long compute_byte_count();
 };

@@ -22,7 +22,7 @@ public:
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
-public:
+private:
     const char* ni_;
     const char* nj_;
     const char* plpresent_;
@@ -33,4 +33,7 @@ public:
     const char* lat_last_;
     const char* lon_last_;
     const char* support_legacy_;
+
+    int unpack_long_new(long* val, size_t* len);
+    int unpack_long_with_legacy_support(long* val, size_t* len);
 };

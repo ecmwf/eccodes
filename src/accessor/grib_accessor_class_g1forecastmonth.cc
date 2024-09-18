@@ -103,9 +103,8 @@ static int unpack_long_edition2(grib_accessor* a, long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-static int unpack_long_edition1(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_g1forecastmonth_t::unpack_long_edition1(long* val, size_t* len)
 {
-    grib_accessor_g1forecastmonth_t* self = (grib_accessor_g1forecastmonth_t*)a;
     int err                               = 0;
 
     long verification_yearmonth = 0;
@@ -116,29 +115,29 @@ static int unpack_long_edition1(grib_accessor* a, long* val, size_t* len)
     long check                  = 0;
     long fcmonth                = 0;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a),
-                                      self->verification_yearmonth_, &verification_yearmonth)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this),
+                                      verification_yearmonth_, &verification_yearmonth)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->base_date_, &base_date)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), base_date_, &base_date)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->day_, &day)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), day_, &day)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->hour_, &hour)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), hour_, &hour)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->fcmonth_, &gribForecastMonth)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), fcmonth_, &gribForecastMonth)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->check_, &check)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), check_, &check)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = calculate_fcmonth(a, verification_yearmonth, base_date, day, hour, val)) != GRIB_SUCCESS)
+    if ((err = calculate_fcmonth(this, verification_yearmonth, base_date, day, hour, val)) != GRIB_SUCCESS)
         return err;
 
     /* Verification - compare gribForecastMonth with fcmonth */
     fcmonth = *val;
     if (gribForecastMonth != 0 && gribForecastMonth != fcmonth) {
         if (check) {
-            grib_context_log(a->context_, GRIB_LOG_ERROR, "%s=%ld (%s-%s)=%ld", self->fcmonth_,
-                             gribForecastMonth, base_date, self->verification_yearmonth_, fcmonth);
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s=%ld (%s-%s)=%ld", fcmonth_,
+                             gribForecastMonth, base_date, verification_yearmonth_, fcmonth);
             Assert(gribForecastMonth == fcmonth);
         }
         else {
@@ -160,7 +159,7 @@ int grib_accessor_g1forecastmonth_t::unpack_long(long* val, size_t* len)
         return err;
 
     if (edition == 1)
-        return unpack_long_edition1(this, val, len);
+        return unpack_long_edition1(val, len);
     if (edition == 2)
         return unpack_long_edition2(this, val, len);
 

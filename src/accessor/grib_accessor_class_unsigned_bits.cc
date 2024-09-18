@@ -13,24 +13,23 @@
 grib_accessor_unsigned_bits_t _grib_accessor_unsigned_bits{};
 grib_accessor* grib_accessor_unsigned_bits = &_grib_accessor_unsigned_bits;
 
-static long compute_byte_count(grib_accessor* a)
+long grib_accessor_unsigned_bits_t::compute_byte_count()
 {
-    grib_accessor_unsigned_bits_t* self = (grib_accessor_unsigned_bits_t*)a;
     long numberOfBits;
     long numberOfElements;
     int ret = 0;
 
-    ret = grib_get_long(grib_handle_of_accessor(a), self->numberOfBits_, &numberOfBits);
+    ret = grib_get_long(grib_handle_of_accessor(this), numberOfBits_, &numberOfBits);
     if (ret) {
-        grib_context_log(a->context_, GRIB_LOG_ERROR,
-                         "%s unable to get %s to compute size", a->name_, self->numberOfBits_);
+        grib_context_log(context_, GRIB_LOG_ERROR,
+                         "%s unable to get %s to compute size", name_, numberOfBits_);
         return 0;
     }
 
-    ret = grib_get_long(grib_handle_of_accessor(a), self->numberOfElements_, &numberOfElements);
+    ret = grib_get_long(grib_handle_of_accessor(this), numberOfElements_, &numberOfElements);
     if (ret) {
-        grib_context_log(a->context_, GRIB_LOG_ERROR,
-                         "%s unable to get %s to compute size", a->name_, self->numberOfElements_);
+        grib_context_log(context_, GRIB_LOG_ERROR,
+                         "%s unable to get %s to compute size", name_, numberOfElements_);
         return 0;
     }
 
@@ -43,7 +42,7 @@ void grib_accessor_unsigned_bits_t::init(const long len, grib_arguments* args)
     int n             = 0;
     numberOfBits_     = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
     numberOfElements_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    length_           = compute_byte_count(this);
+    length_           = compute_byte_count();
 }
 
 int grib_accessor_unsigned_bits_t::unpack_long(long* val, size_t* len)
@@ -112,7 +111,7 @@ int grib_accessor_unsigned_bits_t::pack_long(const long* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    buflen = compute_byte_count(this);
+    buflen = compute_byte_count();
     buf    = (unsigned char*)grib_context_malloc_clear(context_, buflen + sizeof(long));
 
     for (i = 0; i < *len; i++)

@@ -30,13 +30,12 @@ void grib_accessor_bufr_string_values_t::dump(grib_dumper* dumper)
     grib_dump_string_array(dumper, this, NULL);
 }
 
-static grib_accessor* get_accessor(grib_accessor* a)
+grib_accessor* grib_accessor_bufr_string_values_t::get_accessor()
 {
-    grib_accessor_bufr_string_values_t* self = (grib_accessor_bufr_string_values_t*)a;
-    if (!self->dataAccessor_) {
-        self->dataAccessor_ = grib_find_accessor(grib_handle_of_accessor(a), self->dataAccessorName_);
+    if (!dataAccessor_) {
+        dataAccessor_ = grib_find_accessor(grib_handle_of_accessor(this), dataAccessorName_);
     }
-    return self->dataAccessor_;
+    return dataAccessor_;
 }
 
 int grib_accessor_bufr_string_values_t::unpack_string_array(char** buffer, size_t* len)
@@ -48,7 +47,7 @@ int grib_accessor_bufr_string_values_t::unpack_string_array(char** buffer, size_
     size_t i, j, n = 0;
     char** b = buffer;
 
-    data = get_accessor(this);
+    data = get_accessor();
     if (!data)
         return GRIB_NOT_FOUND;
 
@@ -80,7 +79,7 @@ int grib_accessor_bufr_string_values_t::unpack_string(char* val, size_t* len)
 
 int grib_accessor_bufr_string_values_t::value_count(long* rlen)
 {
-    grib_accessor* descriptors = get_accessor(this);
+    grib_accessor* descriptors = get_accessor();
     return descriptors->value_count(rlen);
 }
 

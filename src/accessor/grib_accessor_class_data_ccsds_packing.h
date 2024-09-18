@@ -27,7 +27,7 @@ public:
     int unpack_double_element(size_t i, double* val) override;
     int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) override;
 
-public:
+private:
     const char* number_of_values_;
     const char* reference_value_;
     const char* binary_scale_factor_;
@@ -38,4 +38,6 @@ public:
     const char* ccsds_flags_;
     const char* ccsds_block_size_;
     const char* ccsds_rsi_;
+
+    template <typename T> int unpack(T* val, size_t* len);
 };

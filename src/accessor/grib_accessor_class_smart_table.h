@@ -28,6 +28,10 @@ public:
     void init(const long, grib_arguments*) override;
 
 public:
+    // TODO(maee): make private
+    grib_smart_table* table_;
+
+private:
     const char* values_;
     const char* tablename_;
     const char* masterDir_;
@@ -37,5 +41,7 @@ public:
     int widthOfCode_;
     long* tableCodes_;
     size_t tableCodesSize_;
-    grib_smart_table* table_;
+
+    grib_smart_table* load_table();
+    int get_table_codes();
 };

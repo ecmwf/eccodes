@@ -24,6 +24,7 @@ public:
     void init(const long, grib_arguments*) override;
 
 public:
+    // TODO(maee): make private
     const char* doExtractSubsets_;
     const char* numberOfSubsets_;
     const char* extractSubsetList_;

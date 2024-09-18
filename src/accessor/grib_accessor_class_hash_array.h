@@ -33,7 +33,9 @@ public:
     void init(const long, grib_arguments*) override;
     int compare(grib_accessor*) override;
 
-public:
+private:
     char* key_;
     grib_hash_array_value* ha_;
+
+    grib_hash_array_value* find_hash_value(int* err);
 };

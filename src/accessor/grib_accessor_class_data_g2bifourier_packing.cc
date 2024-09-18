@@ -15,9 +15,6 @@
 grib_accessor_data_g2bifourier_packing_t _grib_accessor_data_g2bifourier_packing{};
 grib_accessor* grib_accessor_data_g2bifourier_packing = &_grib_accessor_data_g2bifourier_packing;
 
-typedef unsigned long (*encode_float_proc)(double);
-typedef double (*decode_float_proc)(unsigned long);
-
 void grib_accessor_data_g2bifourier_packing_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_data_simple_packing_t::init(v, args);
@@ -145,29 +142,6 @@ static void diamond(long ni, long nj, long itrunc[], long jtrunc[])
             insub = insub || (i == 0) || (j == 0);      \
     } while (0)
 
-typedef struct bif_trunc_t
-{
-    long bits_per_value;
-    long decimal_scale_factor;
-    long binary_scale_factor;
-    long ieee_floats;
-    long laplacianOperatorIsSet;
-    double laplacianOperator;
-    double reference_value;
-    long sub_i, sub_j, bif_i, bif_j;
-    long biFourierTruncationType;
-    long biFourierSubTruncationType;
-    long keepaxes;
-    long maketemplate;
-    decode_float_proc decode_float;
-    encode_float_proc encode_float;
-    int bytes;
-    long* itruncation_bif;
-    long* jtruncation_bif;
-    long* itruncation_sub;
-    long* jtruncation_sub;
-    size_t n_vals_bif, n_vals_sub;
-} bif_trunc_t;
 
 /*
  * Total number of coefficients
@@ -354,45 +328,44 @@ static void free_bif_trunc(bif_trunc_t* bt, grib_accessor* a)
     grib_context_free(gh->context, bt);
 }
 
-static bif_trunc_t* new_bif_trunc(grib_accessor* a)
+bif_trunc_t* grib_accessor_data_g2bifourier_packing_t::new_bif_trunc()
 {
     int ret;
-    grib_accessor_data_g2bifourier_packing_t* self = (grib_accessor_data_g2bifourier_packing_t*)a;
 
-    grib_handle* gh = grib_handle_of_accessor(a);
+    grib_handle* gh = grib_handle_of_accessor(this);
     bif_trunc_t* bt = (bif_trunc_t*)grib_context_malloc(gh->context, sizeof(bif_trunc_t));
 
     memset(bt, 0, sizeof(bif_trunc_t));
 
-    if ((ret = grib_get_double_internal(gh, self->reference_value_, &bt->reference_value)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(gh, reference_value_, &bt->reference_value)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->bits_per_value_, &bt->bits_per_value)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, bits_per_value_, &bt->bits_per_value)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->binary_scale_factor_, &bt->binary_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, binary_scale_factor_, &bt->binary_scale_factor)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->decimal_scale_factor_, &bt->decimal_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, decimal_scale_factor_, &bt->decimal_scale_factor)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->ieee_floats_, &bt->ieee_floats)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, ieee_floats_, &bt->ieee_floats)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->laplacianOperatorIsSet_, &bt->laplacianOperatorIsSet)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, laplacianOperatorIsSet_, &bt->laplacianOperatorIsSet)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_double_internal(gh, self->laplacianOperator_, &bt->laplacianOperator)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(gh, laplacianOperator_, &bt->laplacianOperator)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->sub_i_, &bt->sub_i)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, sub_i_, &bt->sub_i)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->sub_j_, &bt->sub_j)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, sub_j_, &bt->sub_j)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->bif_i_, &bt->bif_i)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, bif_i_, &bt->bif_i)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->bif_j_, &bt->bif_j)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, bif_j_, &bt->bif_j)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->biFourierTruncationType_, &bt->biFourierTruncationType)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, biFourierTruncationType_, &bt->biFourierTruncationType)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->biFourierSubTruncationType_, &bt->biFourierSubTruncationType)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, biFourierSubTruncationType_, &bt->biFourierSubTruncationType)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->biFourierDoNotPackAxes_, &bt->keepaxes)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, biFourierDoNotPackAxes_, &bt->keepaxes)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->biFourierMakeTemplate_, &bt->maketemplate)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, biFourierMakeTemplate_, &bt->maketemplate)) != GRIB_SUCCESS)
         goto cleanup;
 
     switch (bt->ieee_floats) {
@@ -461,7 +434,7 @@ static bif_trunc_t* new_bif_trunc(grib_accessor* a)
 
 cleanup:
 
-    free_bif_trunc(bt, a);
+    free_bif_trunc(bt, this);
     if (ret) fprintf(stderr, "ERROR: new_bif_trunc: %s\n", grib_get_error_message(ret));
 
     return NULL;
@@ -495,7 +468,7 @@ int grib_accessor_data_g2bifourier_packing_t::unpack_double(double* val, size_t*
     if ((ret = value_count(&count)) != GRIB_SUCCESS)
         goto cleanup;
 
-    bt = new_bif_trunc(this);
+    bt = new_bif_trunc();
 
     if (bt == NULL) {
         ret = GRIB_INTERNAL_ERROR;
@@ -594,7 +567,7 @@ int grib_accessor_data_g2bifourier_packing_t::pack_double(const double* val, siz
         goto cleanup;
     }
 
-    bt = new_bif_trunc(this);
+    bt = new_bif_trunc();
 
     if (bt == NULL) {
         long makeTemplate = 0;

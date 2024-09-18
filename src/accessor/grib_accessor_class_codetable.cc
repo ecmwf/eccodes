@@ -163,11 +163,11 @@ static void dump_codetable(grib_codetable* atable)
     }
 }
 #endif
-static grib_codetable* load_table(grib_accessor* a)
+
+grib_codetable* grib_accessor_codetable_t::load_table()
 {
-    grib_accessor_codetable_t* self = (grib_accessor_codetable_t*)a;
     size_t size                     = 0;
-    grib_handle* h                  = ((grib_accessor*)self)->parent_->h;
+    grib_handle* h                  = parent_->h;
     grib_context* c                 = h->context;
     grib_codetable* t               = NULL;
     grib_codetable* next            = NULL;
@@ -187,23 +187,23 @@ static grib_codetable* load_table(grib_accessor* a)
     };
     size_t len = 1024;
 
-    if (self->masterDir_ != NULL)
-        grib_get_string(h, self->masterDir_, masterDir, &len);
+    if (masterDir_ != NULL)
+        grib_get_string(h, masterDir_, masterDir, &len);
 
     len = 1024;
-    if (self->localDir_ != NULL)
-        grib_get_string(h, self->localDir_, localDir, &len);
+    if (localDir_ != NULL)
+        grib_get_string(h, localDir_, localDir, &len);
 
     if (*masterDir != 0) {
         char name[2048] = {
             0,
         };
-        snprintf(name, sizeof(name), "%s/%s", masterDir, self->tablename_);
+        snprintf(name, sizeof(name), "%s/%s", masterDir, tablename_);
         grib_recompose_name(h, NULL, name, recomposed, 0);
         filename = grib_context_full_defs_path(c, recomposed);
     }
     else {
-        grib_recompose_name(h, NULL, self->tablename_, recomposed, 0);
+        grib_recompose_name(h, NULL, tablename_, recomposed, 0);
         filename = grib_context_full_defs_path(c, recomposed);
     }
 
@@ -211,7 +211,7 @@ static grib_codetable* load_table(grib_accessor* a)
         char localName[2048] = {
             0,
         };
-        snprintf(localName, sizeof(localName), "%s/%s", localDir, self->tablename_);
+        snprintf(localName, sizeof(localName), "%s/%s", localDir, tablename_);
         grib_recompose_name(h, NULL, localName, localRecomposed, 0);
         localFilename = grib_context_full_defs_path(c, localRecomposed);
     }
@@ -243,12 +243,12 @@ static grib_codetable* load_table(grib_accessor* a)
         next = next->next;
     }
 
-    if (self->flags_ & GRIB_ACCESSOR_FLAG_TRANSIENT) {
-        Assert(self->vvalue_ != NULL);
-        size = self->vvalue_->length * 8;
+    if (flags_ & GRIB_ACCESSOR_FLAG_TRANSIENT) {
+        Assert(vvalue_ != NULL);
+        size = vvalue_->length * 8;
     }
     else {
-        size = ((grib_accessor*)self)->byte_count() * 8;
+        size = byte_count() * 8;
     }
 
     size = (1ULL << size); /* 2^size - 64bits */
@@ -531,7 +531,7 @@ void grib_accessor_codetable_t::dump(grib_dumper* dumper)
     long value;
 
     if (!table_loaded_) {
-        table_        = load_table(this); /* may return NULL */
+        table_        = load_table(); /* may return NULL */
         table_loaded_ = 1;
     }
     table = table_;
@@ -593,7 +593,7 @@ int grib_accessor_codetable_t::unpack_string(char* buffer, size_t* len)
         return err;
 
     if (!table_loaded_) {
-        table_        = load_table(this); /* may return NULL */
+        table_        = load_table(); /* may return NULL */
         table_loaded_ = 1;
     }
     table = table_;
@@ -664,7 +664,7 @@ int grib_accessor_codetable_t::pack_string(const char* buffer, size_t* len)
     size_t size           = 1;
 
     if (!table_loaded_) {
-        table_        = load_table(this); /* may return NULL */
+        table_        = load_table(); /* may return NULL */
         table_loaded_ = 1;
     }
     table = table_;
@@ -812,7 +812,7 @@ int grib_accessor_codetable_t::unpack_long(long* val, size_t* len)
     rlen = 1; /* ECC-480 Performance: avoid func call overhead of grib_value_count */
 
     if (!table_loaded_) {
-        table_        = load_table(this); /* may return NULL */
+        table_        = load_table(); /* may return NULL */
         table_loaded_ = 1;
     }
 

@@ -31,9 +31,14 @@ public:
     void init(const long, grib_arguments*) override;
 
 public:
+    // TODO(maee): make private
     grib_codetable* table_;
+
+private:
     const char* tablename_;
     const char* masterDir_;
     const char* localDir_;
     int table_loaded_;
+
+    grib_codetable* load_table();
 };
