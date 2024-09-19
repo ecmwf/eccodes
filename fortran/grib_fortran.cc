@@ -2875,6 +2875,13 @@ void grib_f_set_debug_(int* dmode)
     grib_context* c = grib_context_get_default();
     grib_context_set_debug(c, *dmode);
 }
+/*****************************************************************************/
+void grib_f_set_data_quality_checks_(int* val)
+{
+    Assert(val);
+    grib_context* c = grib_context_get_default();
+    grib_context_set_data_quality_checks(c, *val);
+}
 
 /*****************************************************************************/
 int grib_f_set_definitions_path_(char* path, int len)

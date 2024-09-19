@@ -848,8 +848,7 @@ int grib_accessor_bufr_data_array_t::encode_double_value(grib_context* c, grib_b
     return err;
 }
 
-static int encode_string_value(grib_context* c, grib_buffer* buff, long* pos, bufr_descriptor* bd,
-                               char* sval)
+static int encode_string_value(grib_context* c, grib_buffer* buff, long* pos, bufr_descriptor* bd, char* sval)
 {
     int err = 0;
     int len;
@@ -858,7 +857,7 @@ static int encode_string_value(grib_context* c, grib_buffer* buff, long* pos, bu
     grib_buffer_set_ulength_bits(c, buff, buff->ulength_bits + bd->width);
     err = grib_encode_string(buff->data, pos, len, sval);
     if (err) {
-        grib_context_log(c, GRIB_LOG_ERROR, "encode_string_value: %s. Failed to encode '%s'", bd->shortName, sval);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: %s. Failed to encode '%s'", __func__, bd->shortName, sval);
     }
 
     return err;

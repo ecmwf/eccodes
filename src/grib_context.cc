@@ -241,6 +241,16 @@ void grib_context_set_print_proc(grib_context* c, grib_print_proc p)
     c->print = (p ? p : &default_print);
 }
 
+void grib_context_set_data_quality_checks(grib_context* c, int val)
+{
+    c = c ? c : grib_context_get_default();
+    // If val == 1, failure results in an error
+    // If val == 2, failure results in a warning
+    Assert(val == 0 || val == 1 || val == 2);
+
+    c->grib_data_quality_checks = val;
+}
+
 void grib_context_set_debug(grib_context* c, int mode)
 {
     c = c ? c : grib_context_get_default();
