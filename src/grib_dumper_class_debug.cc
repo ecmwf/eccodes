@@ -393,10 +393,10 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     int tab         = 0;
     long count      = 0;
 
-    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+    if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
-    c = a->context;
+    c = a->context_;
     a->value_count(&count);
     if (count == 0)
         return;
@@ -419,7 +419,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
 
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0) {
         fprintf(self->dumper.out, "  ");
-        fprintf(self->dumper.out, "# type %s (str) \n", a->creator->op);
+        fprintf(self->dumper.out, "# type %s (str) \n", a->creator_->op);
     }
 
     aliases(d, a);
@@ -427,7 +427,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         fprintf(self->dumper.out, "  ");
         fprintf(self->dumper.out, "# %s \n", comment);
     }
-    if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) {
+    if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) {
         fprintf(self->dumper.out, "  ");
         fprintf(self->dumper.out, "#-READ ONLY- ");
         tab = 13;
@@ -436,9 +436,9 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         fprintf(self->dumper.out, "  ");
 
     tab++;
-    fprintf(self->dumper.out, "%s = {\n", a->name);
+    fprintf(self->dumper.out, "%s = {\n", a->name_);
     for (i = 0; i < size; i++) {
-        fprintf(self->dumper.out, "%-*s\"%s\",\n", (int)(tab + strlen(a->name) + 4), " ", values[i]);
+        fprintf(self->dumper.out, "%-*s\"%s\",\n", (int)(tab + strlen(a->name_) + 4), " ", values[i]);
     }
     fprintf(self->dumper.out, "  }");
 
