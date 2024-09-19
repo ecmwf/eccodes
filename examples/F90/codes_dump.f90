@@ -31,8 +31,10 @@ program codes_dump_test
       if (iret == CODES_END_OF_FILE) exit
 
       call codes_set_debug(0)
+      call codes_set_data_quality_checks(1)
       call codes_dump(msgid)
       call codes_set_debug(1)
+      call codes_set_data_quality_checks(0)
 
       call codes_release(msgid)
 
