@@ -244,6 +244,7 @@ void grib_context_set_print_proc(grib_context* c, grib_print_proc p)
 void grib_context_set_data_quality_checks(grib_context* c, int val)
 {
     c = c ? c : grib_context_get_default();
+    // If val == 0, disable data quality checks
     // If val == 1, failure results in an error
     // If val == 2, failure results in a warning
     Assert(val == 0 || val == 1 || val == 2);
