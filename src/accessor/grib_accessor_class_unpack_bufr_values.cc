@@ -9,7 +9,6 @@
  */
 
 #include "grib_accessor_class_unpack_bufr_values.h"
-#include "grib_accessor_class_bufr_data_array.h"
 
 grib_accessor_unpack_bufr_values_t _grib_accessor_unpack_bufr_values{};
 grib_accessor* grib_accessor_unpack_bufr_values = &_grib_accessor_unpack_bufr_values;
@@ -19,7 +18,7 @@ void grib_accessor_unpack_bufr_values_t::init(const long len, grib_arguments* pa
     grib_accessor_gen_t::init(len, params);
     char* key;
     key            = (char*)grib_arguments_get_name(grib_handle_of_accessor(this), params, 0);
-    data_accessor_ = grib_find_accessor(grib_handle_of_accessor(this), key);
+    data_accessor_ = dynamic_cast<grib_accessor_bufr_data_array_t*>(grib_find_accessor(grib_handle_of_accessor(this), key));
 
     length_ = 0;
 }
@@ -89,7 +88,7 @@ int grib_accessor_unpack_bufr_values_t::pack_long(const long* val, size_t* len)
     if (*val == 3)
         unpackMode = CODES_BUFR_NEW_DATA;
 
-    accessor_bufr_data_array_set_unpackMode(data_accessor_, unpackMode);
+    data_accessor_->accessor_bufr_data_array_set_unpackMode(unpackMode);
 
     return data_accessor_->unpack_double(0, 0);
 }
