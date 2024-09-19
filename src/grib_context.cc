@@ -241,6 +241,12 @@ void grib_context_set_print_proc(grib_context* c, grib_print_proc p)
     c->print = (p ? p : &default_print);
 }
 
+void grib_context_set_data_quality_checks(grib_context* c, int val)
+{
+    c = c ? c : grib_context_get_default();
+    c->grib_data_quality_checks = val;
+}
+
 void grib_context_set_debug(grib_context* c, int mode)
 {
     c = c ? c : grib_context_get_default();
@@ -661,20 +667,19 @@ static int init_definition_files_dir(grib_context* c)
     }
     else {
         /* Definitions path contains multiple directories */
-        char* dir = NULL;
-        dir       = strtok_r(path, ECC_PATH_DELIMITER_STR, &lasts);
+        const char* dir = strtok_r(path, ECC_PATH_DELIMITER_STR, &lasts);
 
         while (dir != NULL) {
             if (next) {
                 next->next = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
-                next       = next->next;
+                next = next->next;
             }
             else {
                 c->grib_definition_files_dir = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
-                next                         = c->grib_definition_files_dir;
+                next = c->grib_definition_files_dir;
             }
             next->value = codes_resolve_path(c, dir);
-            dir         = strtok_r(NULL, ECC_PATH_DELIMITER_STR, &lasts);
+            dir = strtok_r(NULL, ECC_PATH_DELIMITER_STR, &lasts);
         }
     }
 
@@ -811,14 +816,14 @@ void grib_context_reset(grib_context* c)
 
     if (c->grib_definition_files_dir) {
         grib_string_list* next = c->grib_definition_files_dir;
-        grib_string_list* cur  = NULL;
+        grib_string_list* cur = NULL;
         while (next) {
             cur  = next;
             next = next->next;
             grib_context_free(c, cur->value);
             grib_context_free(c, cur);
         }
-        c->grib_definition_files_dir=0;
+        c->grib_definition_files_dir = 0;
     }
 
     if (c->multi_support_on)
@@ -1233,7 +1238,7 @@ void codes_assertion_failed(const char* message, const char* file, int line)
     /* Default behaviour is to abort
      * unless user has supplied his own assertion routine */
     if (assertion == NULL) {
-        grib_context* c = grib_context_get_default();
+        const grib_context* c = grib_context_get_default();
         fprintf(stderr, "ecCodes assertion failed: `%s' in %s:%d\n", message, file, line);
         if (!c->no_abort) {
             abort();
@@ -1246,7 +1251,7 @@ void codes_assertion_failed(const char* message, const char* file, int line)
     }
 }
 
-int grib_get_gribex_mode(grib_context* c)
+int grib_get_gribex_mode(const grib_context* c)
 {
     if (!c)
         c = grib_context_get_default();

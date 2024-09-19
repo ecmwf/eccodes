@@ -162,7 +162,7 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t* len, in
 
 int grib_accessor_class_unsigned_t::unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    grib_accessor_unsigned_t* self = (grib_accessor_unsigned_t*)a;
+    const grib_accessor_unsigned_t* self = (grib_accessor_unsigned_t*)a;
 
     long rlen             = 0;
     unsigned long i       = 0;
@@ -245,7 +245,7 @@ int grib_accessor_class_unsigned_t::is_missing(grib_accessor* a)
 {
     const unsigned char ff = 0xff;
     unsigned long offset = a->offset;
-    grib_handle* hand    = grib_handle_of_accessor(a);
+    const grib_handle* hand = grib_handle_of_accessor(a);
 
     if (a->length == 0) {
         Assert(a->vvalue != NULL);

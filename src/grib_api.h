@@ -1145,7 +1145,7 @@ void grib_gribex_mode_on(grib_context* c);
  *
  * @param c           : the context
  */
-int grib_get_gribex_mode(grib_context* c);
+int grib_get_gribex_mode(const grib_context* c);
 
 /**
  *  Set the GRIBEX mode off.
@@ -1172,6 +1172,7 @@ void grib_context_set_definitions_path(grib_context* c, const char* path);
 void grib_context_set_samples_path(grib_context* c, const char* path);
 
 void grib_context_set_debug(grib_context* c, int mode);
+void grib_context_set_data_quality_checks(grib_context* c, int val);
 
 /**
  *  Sets memory procedures of the context

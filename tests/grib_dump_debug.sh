@@ -106,5 +106,11 @@ grep -q "unsigned iDirectionIncrement = 2000000 (can be missing)" $temp
 grep -q "constant zero = 0 (read-only)" $temp
 grep -q "unsigned reserved = MISSING (can be missing) (read-only)" $temp
 
+# Debug dump a BUFR using -TB switch
+infile=${data_dir}/bufr/pgps_110.bufr
+${tools_dir}/grib_dump -Da -TB $infile > $temp
+# ${tools_dir}/grib_dump -Da -TB -s unpack=1 $infile > $temp
+
+
 # Clean up
 rm -f $temp

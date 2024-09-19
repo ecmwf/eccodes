@@ -74,7 +74,7 @@ static struct table_entry table[] = {
 
 grib_section* grib_create_root_section(const grib_context* context, grib_handle* h)
 {
-    char* fpath     = 0;
+    const char* fpath = 0;
     grib_section* s = (grib_section*)grib_context_malloc_clear(context, sizeof(grib_section));
 
     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);

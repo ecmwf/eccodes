@@ -6113,6 +6113,27 @@
 	 parameterNumber = 148 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
+#Radar reflectivity
+'231066' = {
+	 discipline = 0 ;
+	 parameterCategory = 16 ;
+	 parameterNumber = 4 ;
+	}
+#Pressure at cloud ceiling
+'231067' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 19 ;
+	 scaledValueOfFirstFixedSurface = 50 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Visibility through precipitation
+'231068' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 51 ;
+	}
 #Burned area
 '232000' = {
 	 discipline = 2 ;
@@ -8565,6 +8586,13 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean visibility through precipitation
+'235382' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 51 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-maximum temperature tendency due to short-wave radiation
 '237001' = {
 	 discipline = 0 ;
@@ -10366,6 +10394,13 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum visibility through precipitation
+'237382' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 51 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-minimum temperature tendency due to short-wave radiation
 '238001' = {
 	 discipline = 0 ;
@@ -12165,6 +12200,13 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 67 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum visibility through precipitation
+'238382' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 51 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-standard-deviation temperature tendency due to short-wave radiation

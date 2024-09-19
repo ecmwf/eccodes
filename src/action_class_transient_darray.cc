@@ -52,20 +52,17 @@ typedef struct grib_action_transient_darray {
 extern grib_action_class* grib_action_class_gen;
 
 static grib_action_class _grib_action_class_transient_darray = {
-    &grib_action_class_gen,                              /* super                     */
-    "action_class_transient_darray",                              /* name                      */
-    sizeof(grib_action_transient_darray),            /* size                      */
-    0,                                   /* inited */
+    &grib_action_class_gen,                              /* super */
+    "action_class_transient_darray",                 /* name */
+    sizeof(grib_action_transient_darray),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     &destroy,                            /* destroy */
-
-    &dump,                               /* dump                      */
-    0,                               /* xref                      */
-
-    0,             /* create_accessor*/
-
-    0,                            /* notify_change */
+    &dump,                               /* dump */
+    0,                               /* xref */
+    0,                    /* create_accessor */
+    0,                      /* notify_change */
     0,                            /* reparse */
     &execute,                            /* execute */
 };

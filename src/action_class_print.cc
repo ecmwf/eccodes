@@ -48,20 +48,17 @@ typedef struct grib_action_print {
 
 
 static grib_action_class _grib_action_class_print = {
-    0,                              /* super                     */
-    "action_class_print",                              /* name                      */
-    sizeof(grib_action_print),            /* size                      */
-    0,                                   /* inited */
+    0,                              /* super */
+    "action_class_print",                 /* name */
+    sizeof(grib_action_print),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     &destroy,                            /* destroy */
-
-    0,                               /* dump                      */
-    0,                               /* xref                      */
-
-    0,             /* create_accessor*/
-
-    0,                            /* notify_change */
+    0,                               /* dump */
+    0,                               /* xref */
+    0,                    /* create_accessor */
+    0,                      /* notify_change */
     0,                            /* reparse */
     &execute,                            /* execute */
 };

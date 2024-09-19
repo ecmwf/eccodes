@@ -16,7 +16,7 @@ constant three=1 : hidden;
 constant eight=8 : hidden;
 constant eleven=11 : hidden;
 constant epsPoint=1 : hidden;
-constant epsContinous=11 : hidden;
+constant epsContinuous=11 : hidden;
 constant epsStatisticsPoint=2 : hidden;
 constant epsStatisticsContinous=12 : hidden;
 
