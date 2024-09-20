@@ -23,9 +23,10 @@ public:
     int pack_long(const long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
-public:
-    // TODO(maee): make private
+private:
     const char* doExtractSubsets_;
     const char* numberOfSubsets_;
     const char* extractSubsetList_;
+
+    int select_datetime();
 };

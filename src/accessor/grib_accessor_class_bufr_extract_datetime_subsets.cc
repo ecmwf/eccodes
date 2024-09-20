@@ -106,12 +106,11 @@ static int build_long_array(grib_context* c, grib_handle* h, int compressed,
     return err;
 }
 
-static int select_datetime(grib_accessor* a)
+int grib_accessor_bufr_extract_datetime_subsets_t::select_datetime()
 {
-    grib_accessor_bufr_extract_datetime_subsets_t* self = (grib_accessor_bufr_extract_datetime_subsets_t*)a;
     int ret                                             = 0;
     long compressed                                     = 0;
-    grib_handle* h                                      = grib_handle_of_accessor(a);
+    grib_handle* h                                      = grib_handle_of_accessor(this);
     grib_context* c                                     = h->context;
     size_t n;
     double julianStart = 0, julianEnd = 0, julianDT = 0;
@@ -142,7 +141,7 @@ static int select_datetime(grib_accessor* a)
     ret = grib_get_long(h, "compressedData", &compressed);
     if (ret) return ret;
 
-    ret = grib_get_long(h, self->numberOfSubsets_, &numberOfSubsets);
+    ret = grib_get_long(h, numberOfSubsets_, &numberOfSubsets);
     if (ret) return ret;
 
     subsets = grib_iarray_new(c, numberOfSubsets, 10);
@@ -322,11 +321,11 @@ static int select_datetime(grib_accessor* a)
 
     if (nsubsets != 0) {
         long* subsets_ar = grib_iarray_get_array(subsets);
-        ret              = grib_set_long_array(h, self->extractSubsetList_, subsets_ar, nsubsets);
+        ret              = grib_set_long_array(h, extractSubsetList_, subsets_ar, nsubsets);
         grib_context_free(c, subsets_ar);
         if (ret) return ret;
 
-        ret = grib_set_long(h, self->doExtractSubsets_, 1);
+        ret = grib_set_long(h, doExtractSubsets_, 1);
         if (ret) return ret;
     }
 
@@ -349,5 +348,5 @@ int grib_accessor_bufr_extract_datetime_subsets_t::pack_long(const long* val, si
 
     if (*len == 0)
         return GRIB_SUCCESS;
-    return select_datetime(this);
+    return select_datetime();
 }
