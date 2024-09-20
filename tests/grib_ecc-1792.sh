@@ -10,6 +10,10 @@
 
 . ./include.ctest.sh
 
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
+
 REDIRECT=/dev/null
 
 label="grib_ecc-1792_test"

@@ -3,7 +3,5 @@
 1 1 Main thermocline anomaly (m)
 2 2 Transient thermocline depth (m)
 3 3 Salinity (kg kg-1)
-# 4-191 Reserved
-#192-254 Reserved for local use
 255 255 Missing
 

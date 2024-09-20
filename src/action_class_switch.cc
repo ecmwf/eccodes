@@ -51,20 +51,17 @@ typedef struct grib_action_switch {
 extern grib_action_class* grib_action_class_section;
 
 static grib_action_class _grib_action_class_switch = {
-    &grib_action_class_section,                              /* super                     */
-    "action_class_switch",                              /* name                      */
-    sizeof(grib_action_switch),            /* size                      */
-    0,                                   /* inited */
+    &grib_action_class_section,                              /* super */
+    "action_class_switch",                 /* name */
+    sizeof(grib_action_switch),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     &destroy,                            /* destroy */
-
-    0,                               /* dump                      */
-    0,                               /* xref                      */
-
-    0,             /* create_accessor*/
-
-    0,                            /* notify_change */
+    0,                               /* dump */
+    0,                               /* xref */
+    0,                    /* create_accessor */
+    0,                      /* notify_change */
     0,                            /* reparse */
     &execute,                            /* execute */
 };
@@ -125,8 +122,8 @@ static int execute(grib_action* act, grib_handle* h)
     grib_action* next     = a->Default;
     grib_arguments* args  = a->args;
     grib_arguments* values;
-    grib_expression* e;
-    grib_expression* value;
+    grib_expression* e;     // The expression in the switch statement
+    grib_expression* value; // The value in each 'case'
     int ret     = 0;
     long lres   = 0;
     double dres = 0;
@@ -172,8 +169,10 @@ static int execute(grib_action* act, grib_handle* h)
                         len  = sizeof(buf);
                         size = sizeof(tmp);
                         ok   = ((cres = grib_expression_evaluate_string(h, e, buf, &len, &err)) != NULL) &&
-                             (err == 0) && ((cval = grib_expression_evaluate_string(h, value, tmp, &size, &err)) != NULL) &&
-                             (err == 0) && ((strcmp(buf, cval) == 0) || (strcmp(cval, "*") == 0));
+                               (err == 0) &&
+                               ((cval = grib_expression_evaluate_string(h, value, tmp, &size, &err)) != NULL) &&
+                               (err == 0) &&
+                               ((strcmp(buf, cval) == 0) || (strcmp(cval, "*") == 0));
                         break;
 
                     default:

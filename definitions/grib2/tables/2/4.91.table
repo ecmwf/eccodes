@@ -11,5 +11,4 @@
 9 9  Lower or equal upper limit
 10 10  Between lower and upper limits.  The range includes the upper limit but not the lower limit
 11 11  Equal to first limit
-# 192-254 Reserved for local use
 255 missing Missing

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -101,7 +100,6 @@ static int extra_set(grib_accessor* a, long val)
     long is_chemical_srcsink     = 0;
     long is_aerosol              = 0;
     long is_aerosol_optical      = 0;
-    long is_wave = 0, is_wave_prange = 0;
 
     grib_get_long(hand, "is_chemical", &is_chemical);
     grib_get_long(hand, "is_chemical_srcsink", &is_chemical_srcsink);
@@ -109,8 +107,8 @@ static int extra_set(grib_accessor* a, long val)
     grib_get_long(hand, "is_aerosol", &is_aerosol);
     grib_get_long(hand, "is_aerosol_optical", &is_aerosol_optical);
 
-    is_wave        = grib_is_defined(hand, "waveDirectionNumber");
-    is_wave_prange = grib_is_defined(hand, "typeOfWavePeriodInterval");
+    const int is_wave        = grib_is_defined(hand, "waveDirectionNumber");
+    const int is_wave_prange = grib_is_defined(hand, "typeOfWavePeriodInterval");
 
     switch (self->index) {
         case 0:

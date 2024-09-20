@@ -16,7 +16,7 @@
 class grib_accessor
 {
 public:
-    grib_accessor() : 
+    grib_accessor() :
         name(nullptr), name_space(nullptr), context(nullptr), h(nullptr), creator(nullptr),
         length(0), offset(0), parent(nullptr), next_(nullptr), previous_(nullptr), cclass(nullptr),
         flags(0), sub_section(nullptr), dirty(0), same(nullptr), loop(0), vvalue(nullptr),

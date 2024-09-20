@@ -7,7 +7,6 @@
 5 5 Ocean vertical salt diffusivity (m2/s)
 6 6 Ocean vertical momentum diffusivity (m2/s)
 7 7 Bathymetry (m)
-# 8-10 Reserved
 11 11 Shape factor with respect to salinity profile (-)
 12 12 Shape factor with respect to temperature profile in thermocline (-)
 13 13 Attenuation coefficient of water with respect to solar radiation (/m)
@@ -49,6 +48,4 @@
 49 49 Sea water column integrated zonal mass transport (kg m-1 s-1)
 50 50 Sea water column integrated practical salinity (g kg-1 m)
 51 51 Sea water column integrated salinity (kg kg-1 m)
-# 52-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing

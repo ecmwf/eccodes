@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,15 +10,16 @@
 
 #include "grib_accessor_class_padtomultiple.h"
 
-grib_accessor_class_padtomultiple_t _grib_accessor_class_padtomultiple{"padtomultiple"};
+grib_accessor_class_padtomultiple_t _grib_accessor_class_padtomultiple{ "padtomultiple" };
 grib_accessor_class* grib_accessor_class_padtomultiple = &_grib_accessor_class_padtomultiple;
 
 
-size_t grib_accessor_class_padtomultiple_t::preferred_size(grib_accessor* a, int from_handle){
+size_t grib_accessor_class_padtomultiple_t::preferred_size(grib_accessor* a, int from_handle)
+{
     grib_accessor_padtomultiple_t* self = (grib_accessor_padtomultiple_t*)a;
-    long padding                      = 0;
-    long begin                        = 0;
-    long multiple                     = 0;
+    long padding  = 0;
+    long begin    = 0;
+    long multiple = 0;
 
     grib_expression_evaluate_long(grib_handle_of_accessor(a), self->begin, &begin);
     grib_expression_evaluate_long(grib_handle_of_accessor(a), self->multiple, &multiple);
@@ -30,7 +30,8 @@ size_t grib_accessor_class_padtomultiple_t::preferred_size(grib_accessor* a, int
     return padding == 0 ? multiple : padding;
 }
 
-void grib_accessor_class_padtomultiple_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+void grib_accessor_class_padtomultiple_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+{
     grib_accessor_class_padding_t::init(a, len, arg);
     grib_accessor_padtomultiple_t* self = (grib_accessor_padtomultiple_t*)a;
 

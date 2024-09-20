@@ -67,6 +67,11 @@ ${tools_dir}/grib_set -s productDefinitionTemplateNumber=11,forecastTime=2184,in
 ${tools_dir}/grib_ls $temp
 grib_check_key_equals $temp "-p stepRange" "2184-2904"
 
+# ECC-1228: Changing template with negative forecast time
+${tools_dir}/grib_set -s stepRange=-48s--24s $accumulated_field $temp
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=8 $temp $temp2
+grib_check_key_equals $temp2 "-p forecastTime,indicatorOfUnitOfTimeRange,lengthOfTimeRange,indicatorOfUnitForTimeRange" "-48 13 24 13"
+
 # ECC-1802: Relaxation of the "Step Units Rule":
 # The updated rule permits the simultaneous assignment of the same step unit to both 'stepUnits' and 'step*' keys
 in="$instantaneous_field"

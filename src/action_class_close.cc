@@ -43,20 +43,17 @@ typedef struct grib_action_close {
 
 
 static grib_action_class _grib_action_class_close = {
-    0,                              /* super                     */
-    "action_class_close",                              /* name                      */
-    sizeof(grib_action_close),            /* size                      */
-    0,                                   /* inited */
+    0,                              /* super */
+    "action_class_close",                 /* name */
+    sizeof(grib_action_close),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     &destroy,                            /* destroy */
-
-    0,                               /* dump                      */
-    0,                               /* xref                      */
-
-    0,             /* create_accessor*/
-
-    0,                            /* notify_change */
+    0,                               /* dump */
+    0,                               /* xref */
+    0,                    /* create_accessor */
+    0,                      /* notify_change */
     0,                            /* reparse */
     &execute,                            /* execute */
 };
@@ -68,7 +65,7 @@ static void init_class(grib_action_class* c)
 }
 /* END_CLASS_IMP */
 
-grib_action* grib_action_create_close(grib_context* context, char* filename)
+grib_action* grib_action_create_close(grib_context* context, const char* filename)
 {
     char buf[1024];
     grib_action_close* a;
@@ -91,18 +88,17 @@ grib_action* grib_action_create_close(grib_context* context, char* filename)
 
 static int execute(grib_action* act, grib_handle* h)
 {
-    char filename[2048] = {0,};
-    size_t len              = 2048;
     grib_action_close* self = (grib_action_close*)act;
-    int err                 = 0;
-    grib_file* file         = 0;
 
-    err = grib_get_string(h, self->filename, filename, &len);
+    char filename[2048] = {0,};
+    size_t len = sizeof(filename);
+
+    int err = grib_get_string(h, self->filename, filename, &len);
     /* fprintf(stderr,"++++ name %s\n",filename); */
     if (err)
         return err;
     /* grib_file_close(filename,1,&err); */
-    file = grib_get_file(filename, &err);
+    grib_file* file = grib_get_file(filename, &err);
     if (err)
         return err;
     if (file)

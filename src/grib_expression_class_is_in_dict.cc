@@ -39,7 +39,7 @@ or edit "expression.class" and rerun ./make_class.pl
 
 typedef const char* string; /* to keep make_class.pl happy */
 
-static void    print(grib_context*,grib_expression*,grib_handle*);
+static void    print(grib_context*, grib_expression*, grib_handle*, FILE*);
 static void    add_dependency(grib_expression* e, grib_accessor* observer);
 static string  get_name(grib_expression* e);
 static int     native_type(grib_expression*,grib_handle*);
@@ -56,12 +56,12 @@ typedef struct grib_expression_is_in_dict{
 
 
 static grib_expression_class _grib_expression_class_is_in_dict = {
-    0,                    /* super                     */
-    "is_in_dict",                    /* name                      */
-    sizeof(grib_expression_is_in_dict),/* size of instance        */
+    0,                      /* super */
+    "is_in_dict",                      /* name  */
+    sizeof(grib_expression_is_in_dict),/* size of instance */
     0,                           /* inited */
-    0,                     /* constructor               */
-    0,                  /* destructor                */
+    0,                       /* constructor */
+    0,                    /* destructor */
     &print,
     &add_dependency,
     &native_type,
@@ -200,16 +200,16 @@ static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, siz
     // return buf;
 }
 
-static void print(grib_context* c, grib_expression* g, grib_handle* f)
+static void print(grib_context* c, grib_expression* g, grib_handle* f, FILE* out)
 {
     const grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
-    printf("access('%s", e->key);
+    fprintf(out, "access('%s", e->key);
     if (f) {
         long s = 0;
         grib_get_long(f, e->key, &s);
-        printf("=%ld", s);
+        fprintf(out, "=%ld", s);
     }
-    printf("')");
+    fprintf(out, "')");
 }
 
 grib_expression* new_is_in_dict_expression(grib_context* c, const char* name, const char* list)

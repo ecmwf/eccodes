@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,15 +10,16 @@
 
 #include "grib_accessor_class_g1date.h"
 
-grib_accessor_class_g1date_t _grib_accessor_class_g1date{"g1date"};
+grib_accessor_class_g1date_t _grib_accessor_class_g1date{ "g1date" };
 grib_accessor_class* grib_accessor_class_g1date = &_grib_accessor_class_g1date;
 
 
-void grib_accessor_class_g1date_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_g1date_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_g1date_t* self = (grib_accessor_g1date_t*)a;
-    grib_handle* hand          = grib_handle_of_accessor(a);
-    int n                      = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
+    int n = 0;
 
     self->century = grib_arguments_get_name(hand, c, n++);
     self->year    = grib_arguments_get_name(hand, c, n++);
@@ -27,11 +27,12 @@ void grib_accessor_class_g1date_t::init(grib_accessor* a, const long l, grib_arg
     self->day     = grib_arguments_get_name(hand, c, n++);
 }
 
-int grib_accessor_class_g1date_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_g1date_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_g1date_t* self = (grib_accessor_g1date_t*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_handle* hand            = grib_handle_of_accessor(a);
 
-    int ret = 0;
+    int ret   = 0;
     long year = 0, century = 0, month = 0, day = 0;
 
     if ((ret = grib_get_long_internal(hand, self->century, &century)) != GRIB_SUCCESS)
@@ -59,12 +60,13 @@ int grib_accessor_class_g1date_t::unpack_long(grib_accessor* a, long* val, size_
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_g1date_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_g1date_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_g1date_t* self = (grib_accessor_g1date_t*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_handle* hand            = grib_handle_of_accessor(a);
 
-    int ret = 0;
-    long v = val[0];
+    int ret   = 0;
+    long v    = val[0];
     long year = 0, century = 0, month = 0, day = 0;
 
     if (*len != 1)
@@ -116,9 +118,10 @@ static const char* months[] = {
     "dec",
 };
 
-int grib_accessor_class_g1date_t::unpack_string(grib_accessor* a, char* val, size_t* len){
+int grib_accessor_class_g1date_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+{
     grib_accessor_g1date_t* self = (grib_accessor_g1date_t*)a;
-    grib_handle* hand          = grib_handle_of_accessor(a);
+    grib_handle* hand            = grib_handle_of_accessor(a);
 
     int ret = 0;
     char tmp[1024];
@@ -159,7 +162,8 @@ int grib_accessor_class_g1date_t::unpack_string(grib_accessor* a, char* val, siz
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_g1date_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_g1date_t::value_count(grib_accessor* a, long* count)
+{
     *count = 1;
     return 0;
 }

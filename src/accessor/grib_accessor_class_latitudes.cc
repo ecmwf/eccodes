@@ -15,11 +15,11 @@ grib_accessor_class_latitudes_t _grib_accessor_class_latitudes{ "latitudes" };
 grib_accessor_class* grib_accessor_class_latitudes = &_grib_accessor_class_latitudes;
 
 static int get_distinct(grib_accessor* a, double** val, long* len);
-int compare_doubles(const void* a, const void* b, int ascending)
+static int compare_doubles(const void* a, const void* b, int ascending)
 {
     // ascending is a boolean: 0 or 1
-    double* arg1 = (double*)a;
-    double* arg2 = (double*)b;
+    const double* arg1 = (double*)a;
+    const double* arg2 = (double*)b;
     if (ascending) {
         if (*arg1 < *arg2)
             return -1; // Smaller values come before larger ones
@@ -33,11 +33,13 @@ int compare_doubles(const void* a, const void* b, int ascending)
     else
         return 1;
 }
-int compare_doubles_ascending(const void* a, const void* b)
+
+static int compare_doubles_ascending(const void* a, const void* b)
 {
     return compare_doubles(a, b, 1);
 }
-int compare_doubles_descending(const void* a, const void* b)
+
+static int compare_doubles_descending(const void* a, const void* b)
 {
     return compare_doubles(a, b, 0);
 }
@@ -95,8 +97,7 @@ int grib_accessor_class_latitudes_t::unpack_double(grib_accessor* a, double* val
     // ECC-1525 Performance: We do not need the values to be decoded
     iter = grib_iterator_new(grib_handle_of_accessor(a), GRIB_GEOITERATOR_NO_VALUES, &ret);
     if (ret != GRIB_SUCCESS) {
-        if (iter)
-            grib_iterator_delete(iter);
+        grib_iterator_delete(iter);
         grib_context_log(c, GRIB_LOG_ERROR, "latitudes: Unable to create iterator");
         return ret;
     }
@@ -164,8 +165,7 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     // Performance: We do not need the values to be decoded
     grib_iterator* iter = grib_iterator_new(grib_handle_of_accessor(a), GRIB_GEOITERATOR_NO_VALUES, &ret);
     if (ret != GRIB_SUCCESS) {
-        if (iter)
-            grib_iterator_delete(iter);
+        grib_iterator_delete(iter);
         grib_context_log(c, GRIB_LOG_ERROR, "latitudes: Unable to create iterator");
         return ret;
     }
@@ -184,10 +184,14 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), "jScansPositively", &jScansPositively)))
         return ret;
     if (jScansPositively) {
-        qsort(v, *len, sizeof(double), &compare_doubles_ascending); //South to North
+        if (!is_sorted_ascending(v, size)) {
+            qsort(v, *len, sizeof(double), &compare_doubles_ascending); //South to North
+        }
     }
     else {
-        qsort(v, *len, sizeof(double), &compare_doubles_descending); //North to South
+        if (!is_sorted_descending(v, size)) {
+            qsort(v, *len, sizeof(double), &compare_doubles_descending); //North to South
+        }
     }
 
     v1 = (double*)grib_context_malloc_clear(c, size * sizeof(double));

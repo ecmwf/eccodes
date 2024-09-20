@@ -3177,6 +3177,41 @@
     end if
   end subroutine grib_skip_read_only
 
+
+  subroutine grib_skip_function(iterid, status)
+    integer(kind=kindOfInt), intent(in)            :: iterid
+    integer(kind=kindOfInt), optional, intent(out) :: status
+    integer(kind=kindOfInt)                        :: iret
+
+    iret = grib_f_skip_function(iterid)
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'skip_function', '')
+    end if
+  end subroutine grib_skip_function
+
+  !!!
+  subroutine grib_skip_edition_specific(iterid, status)
+    integer(kind=kindOfInt), intent(in)            :: iterid
+    integer(kind=kindOfInt), optional, intent(out) :: status
+    integer(kind=kindOfInt)                        :: iret
+
+    iret = grib_f_skip_edition_specific(iterid)
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'skip_edition_specific', '')
+    end if
+  end subroutine grib_skip_edition_specific
+
+  !> Set debug mode
+  subroutine grib_set_debug(dmode)
+    integer(kind=kindOfInt), intent(in) :: dmode
+    call grib_f_set_debug(dmode)
+  end subroutine grib_set_debug
+
+
   !> Set the definition path
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will

@@ -7,6 +7,7 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
+#undef NDEBUG // activate the asserts
 
 #include <map>
 #include <stdexcept>
@@ -24,7 +25,7 @@ namespace eccodes {
 
 Step step_from_string(const std::string& step, const Unit& force_unit)
 {
-    std::regex re("([0-9.]+)([smhDMYC]?)");
+    std::regex re("([-]?[0-9.]+)([smhDMYC]?)");
     std::smatch match;
     if (std::regex_match(step, match, re)) {
         if (match.size() == 3) {
@@ -52,19 +53,44 @@ Step step_from_string(const std::string& step, const Unit& force_unit)
             return ret;
         }
     }
-    throw std::runtime_error("Could not parse step: " + step);
+    throw std::runtime_error("Could not parse step: \"" + step + "\"");
 }
 
 std::vector<Step> parse_range(const std::string& range_str, const Unit& force_unit)
 {
+    std::regex re1("([-]?[0-9.]+[smhDMYC]?)-([-]?[0-9.]+[smhDMYC]?)");
+    std::regex re2("[-]?[0-9.]+[smhDMYC]?");
+
+    std::smatch match;
     std::vector<Step> steps;
-    std::string::size_type pos = 0;
-    std::string::size_type prev = 0;
-    while ((pos = range_str.find("-", prev)) != std::string::npos) {
-        steps.push_back(step_from_string(range_str.substr(prev, pos - prev), force_unit));
-        prev = pos + 1;
+    if (std::regex_match(range_str, match, re1)) {
+        if (match.size() == 3) {
+            std::string v1 = match[1];
+            std::string v2 = match[2];
+            steps.push_back(step_from_string(v1, force_unit));
+            steps.push_back(step_from_string(v2, force_unit));
+        }
+        else if (match.size() == 2) {
+            std::string v1 = match[1];
+            steps.push_back(step_from_string(v1, force_unit));
+        }
+        else {
+            throw std::runtime_error("Could not parse step range for accumulated data: \"" + range_str + "\"");
+        }
     }
-    steps.push_back(step_from_string(range_str.substr(prev), force_unit));
+    else if(std::regex_match(range_str, match, re2)) {
+        if (match.size() == 1) {
+            std::string v1 = match[0];
+            steps.push_back(step_from_string(v1, force_unit));
+        }
+        else {
+            throw std::runtime_error("Could not parse step range for instantaneous data: \"" + range_str + "\"");
+        }
+    }
+    else {
+        throw std::runtime_error("Could not parse step range: \"" + range_str + "\"");
+    }
+
     return steps;
 }
 

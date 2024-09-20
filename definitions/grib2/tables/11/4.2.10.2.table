@@ -9,6 +9,4 @@
 7 7 Ice divergence (/s)
 8 8 Ice temperature (K)
 9 9 Ice internal pressure (Pa m)
-# 10-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing

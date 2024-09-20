@@ -5,3 +5,6 @@
 3 3 Direct solar exposure (J m-2)
 4 4 Diffuse solar irradiance (W m-2)
 5 5 Diffuse solar exposure (J m-2)
+# 6-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

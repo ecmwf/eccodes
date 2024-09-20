@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,13 +10,14 @@
 
 #include "grib_accessor_class_group.h"
 
-grib_accessor_class_group_t _grib_accessor_class_group{"group"};
+grib_accessor_class_group_t _grib_accessor_class_group{ "group" };
 grib_accessor_class* grib_accessor_class_group = &_grib_accessor_class_group;
 
 
-void grib_accessor_class_group_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+void grib_accessor_class_group_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+{
     grib_accessor_class_gen_t::init(a, len, arg);
-    grib_buffer* buffer       = grib_handle_of_accessor(a)->buffer;
+    const grib_buffer* buffer = grib_handle_of_accessor(a)->buffer;
     grib_accessor_group_t* self = (grib_accessor_group_t*)a;
 
     size_t i = 0;
@@ -52,26 +52,31 @@ void grib_accessor_class_group_t::init(grib_accessor* a, const long len, grib_ar
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_group_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_group_t::value_count(grib_accessor* a, long* count)
+{
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_class_group_t::string_length(grib_accessor* a){
+size_t grib_accessor_class_group_t::string_length(grib_accessor* a)
+{
     return a->length;
 }
 
-void grib_accessor_class_group_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_group_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_dump_string(dumper, a, NULL);
 }
 
-int grib_accessor_class_group_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_group_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_STRING;
 }
 
-int grib_accessor_class_group_t::unpack_string(grib_accessor* a, char* val, size_t* len){
-    long i = 0;
-    size_t l = a->length + 1;
+int grib_accessor_class_group_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+{
+    long i         = 0;
+    size_t l       = a->length + 1;
     grib_handle* h = grib_handle_of_accessor(a);
 
     if (*len < l) {
@@ -85,11 +90,12 @@ int grib_accessor_class_group_t::unpack_string(grib_accessor* a, char* val, size
     for (i = 0; i < a->length; i++)
         val[i] = h->buffer->data[a->offset + i];
     val[i] = 0;
-    *len = i;
+    *len   = i;
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_group_t::unpack_long(grib_accessor* a, long* v, size_t* len){
+int grib_accessor_class_group_t::unpack_long(grib_accessor* a, long* v, size_t* len)
+{
     char val[1024] = {0,};
     size_t l   = sizeof(val);
     size_t i   = 0;
@@ -115,7 +121,8 @@ int grib_accessor_class_group_t::unpack_long(grib_accessor* a, long* v, size_t* 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_group_t::unpack_double(grib_accessor* a, double* v, size_t* len){
+int grib_accessor_class_group_t::unpack_double(grib_accessor* a, double* v, size_t* len)
+{
     char val[1024];
     size_t l   = sizeof(val);
     char* last = NULL;
@@ -130,7 +137,8 @@ int grib_accessor_class_group_t::unpack_double(grib_accessor* a, double* v, size
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_class_group_t::compare(grib_accessor* a, grib_accessor* b){
+int grib_accessor_class_group_t::compare(grib_accessor* a, grib_accessor* b)
+{
     grib_context_log(a->context, GRIB_LOG_ERROR, "%s:%s not implemented", __func__, a->name);
     return GRIB_NOT_IMPLEMENTED;
 
@@ -155,6 +163,7 @@ int grib_accessor_class_group_t::compare(grib_accessor* a, grib_accessor* b){
     // return retval;
 }
 
-long grib_accessor_class_group_t::next_offset(grib_accessor* a){
+long grib_accessor_class_group_t::next_offset(grib_accessor* a)
+{
     return a->offset + a->length;
 }

@@ -292,7 +292,7 @@ static const size_t NUM_MAPPINGS = sizeof(mapping) / sizeof(mapping[0]);
 static pthread_once_t once   = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-static void init()
+static void init_mutex()
 {
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
@@ -304,7 +304,7 @@ static void init()
 static int once = 0;
 static omp_nest_lock_t mutex;
 
-static void init()
+static void init_mutex()
 {
     GRIB_OMP_CRITICAL(lock_grib_trie_c)
     {
@@ -340,7 +340,7 @@ grib_trie* grib_trie_new(grib_context* c)
 
 void grib_trie_delete_container(grib_trie* t)
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex);
     if (t) {
         int i;
@@ -359,7 +359,7 @@ void grib_trie_delete_container(grib_trie* t)
 
 void grib_trie_delete(grib_trie* t)
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex);
     if (t) {
         int i;
@@ -399,7 +399,7 @@ void* grib_trie_insert(grib_trie* t, const char* key, void* data)
         return NULL;
     }
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex);
 
     while (*k && t) {
@@ -437,11 +437,7 @@ void* grib_trie_insert_no_replace(grib_trie* t, const char* key, void* data)
 {
     grib_trie* last = t;
     const char* k   = key;
-
-    if (!t) {
-        Assert(!"grib_trie_insert_no_replace: grib_trie==NULL");
-        return NULL;
-    }
+    Assert(t);
 
     while (*k && t) {
         last = t;
@@ -474,7 +470,7 @@ void* grib_trie_insert_no_replace(grib_trie* t, const char* key, void* data)
 void* grib_trie_get(grib_trie* t, const char* key)
 {
     const char* k = key;
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex);
 
     while (*k && t) {

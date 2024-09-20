@@ -34,7 +34,7 @@ public:
     const char* time_range_unit;
     const char* time_range_value;
     const char* typeOfTimeIncrement;
-    const char* numberOfTimeRange;
+    const char* numberOfTimeRanges;
 };
 
 class grib_accessor_class_g2end_step_t : public grib_accessor_class_long_t

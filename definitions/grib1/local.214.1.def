@@ -32,7 +32,7 @@ if (stepType is "instant" ) {
   }
 } else {
   if (numberOfForecastsInEnsemble!=0) {
-    alias productDefinitionTemplateNumber=epsContinous;
+    alias productDefinitionTemplateNumber=epsContinuous;
   }
 }
 

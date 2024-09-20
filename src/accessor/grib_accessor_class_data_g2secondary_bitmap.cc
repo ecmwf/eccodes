@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,25 +10,28 @@
 
 #include "grib_accessor_class_data_g2secondary_bitmap.h"
 
-grib_accessor_class_data_g2secondary_bitmap_t _grib_accessor_class_data_g2secondary_bitmap{"data_g2secondary_bitmap"};
+grib_accessor_class_data_g2secondary_bitmap_t _grib_accessor_class_data_g2secondary_bitmap{ "data_g2secondary_bitmap" };
 grib_accessor_class* grib_accessor_class_data_g2secondary_bitmap = &_grib_accessor_class_data_g2secondary_bitmap;
 
 
-void grib_accessor_class_data_g2secondary_bitmap_t::init(grib_accessor* a, const long v, grib_arguments* args){
+void grib_accessor_class_data_g2secondary_bitmap_t::init(grib_accessor* a, const long v, grib_arguments* args)
+{
     grib_accessor_class_data_secondary_bitmap_t::init(a, v, args);
     grib_accessor_data_g2secondary_bitmap_t* self = (grib_accessor_data_g2secondary_bitmap_t*)a;
-    self->number_of_values = grib_arguments_get_name(grib_handle_of_accessor(a), args, 4);
+    self->number_of_values                        = grib_arguments_get_name(grib_handle_of_accessor(a), args, 4);
 }
 
-int grib_accessor_class_data_g2secondary_bitmap_t::value_count(grib_accessor* a, long* len){
+int grib_accessor_class_data_g2secondary_bitmap_t::value_count(grib_accessor* a, long* len)
+{
     grib_accessor_data_g2secondary_bitmap_t* self = (grib_accessor_data_g2secondary_bitmap_t*)a;
-    *len = 0;
+    *len                                          = 0;
     return grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_values, len);
 }
 
-int grib_accessor_class_data_g2secondary_bitmap_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_data_g2secondary_bitmap_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_data_g2secondary_bitmap_t* self = (grib_accessor_data_g2secondary_bitmap_t*)a;
-    int err = 0;
+    int err                                       = 0;
 
     long primary_len = 0, secondary_len = 0;
     double* primary_bitmap   = NULL;
@@ -85,7 +87,7 @@ int grib_accessor_class_data_g2secondary_bitmap_t::pack_double(grib_accessor* a,
             primary_bitmap[k++] = present_value;
             for (j = 0; j < expand_by; j++)
                 secondary_bitmap[m++] = val[i + j];
-            //on++;
+            // on++;
         }
     }
 

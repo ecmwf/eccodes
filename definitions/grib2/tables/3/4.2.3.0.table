@@ -8,7 +8,5 @@
 6 6 Scaled skin temperature (Numeric)
 7 7 Cloud mask (Code table 4.217)
 8 8 Pixel scene type (Code table 4.218)
-# 9-191 Reserved
-#192-254 Reserved for local use
 255 255 Missing
 

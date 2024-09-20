@@ -10,7 +10,6 @@
 
 #include "grib_accessor_class_unsigned.h"
 
-
 grib_accessor_class_unsigned_t _grib_accessor_class_unsigned("unsigned");
 grib_accessor_class* grib_accessor_class_unsigned = &_grib_accessor_class_unsigned;
 
@@ -67,17 +66,17 @@ int value_is_missing(long val)
 int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t* len, int check)
 {
     grib_accessor_unsigned_t* self = (grib_accessor_unsigned_t*)a;
-    int ret                        = 0;
-    long off                       = 0;
-    long rlen                      = 0;
-    int err                        = 0;
+
+    int ret   = 0;
+    long off  = 0;
+    long rlen = 0;
 
     size_t buflen         = 0;
     unsigned char* buf    = NULL;
     unsigned long i       = 0;
     unsigned long missing = 0;
 
-    err = a->value_count(&rlen);
+    int err = a->value_count(&rlen);
     if (err)
         return err;
 
@@ -163,14 +162,15 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t* len, in
 
 int grib_accessor_class_unsigned_t::unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    grib_accessor_unsigned_t* self = (grib_accessor_unsigned_t*)a;
-    long rlen                      = 0;
-    unsigned long i                = 0;
-    unsigned long missing          = 0;
-    long count                     = 0;
-    int err                        = 0;
-    long pos                       = a->offset * 8;
-    grib_handle* hand              = grib_handle_of_accessor(a);
+    const grib_accessor_unsigned_t* self = (grib_accessor_unsigned_t*)a;
+
+    long rlen             = 0;
+    unsigned long i       = 0;
+    unsigned long missing = 0;
+    long count            = 0;
+    int err               = 0;
+    long pos              = a->offset * 8;
+    grib_handle* hand     = grib_handle_of_accessor(a);
 
     err = a->value_count(&count);
     if (err)
@@ -243,17 +243,16 @@ long grib_accessor_class_unsigned_t::next_offset(grib_accessor* a)
 
 int grib_accessor_class_unsigned_t::is_missing(grib_accessor* a)
 {
-    int i                = 0;
-    unsigned char ff     = 0xff;
+    const unsigned char ff = 0xff;
     unsigned long offset = a->offset;
-    grib_handle* hand    = grib_handle_of_accessor(a);
+    const grib_handle* hand = grib_handle_of_accessor(a);
 
     if (a->length == 0) {
         Assert(a->vvalue != NULL);
         return a->vvalue->missing;
     }
 
-    for (i = 0; i < a->length; i++) {
+    for (long i = 0; i < a->length; i++) {
         if (hand->buffer->data[offset] != ff) {
             return 0;
         }
@@ -264,9 +263,7 @@ int grib_accessor_class_unsigned_t::is_missing(grib_accessor* a)
 
 void grib_accessor_class_unsigned_t::destroy(grib_context* context, grib_accessor* a)
 {
-    if (a->vvalue != NULL)
-        grib_context_free(context, a->vvalue);
-
+    grib_context_free(context, a->vvalue);
     a->vvalue = NULL;
 
     grib_accessor_class_long_t::destroy(context, a);

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,16 +10,17 @@
 
 #include "grib_accessor_class_data_apply_boustrophedonic_bitmap.h"
 
-grib_accessor_class_data_apply_boustrophedonic_bitmap_t _grib_accessor_class_data_apply_boustrophedonic_bitmap{"data_apply_boustrophedonic_bitmap"};
+grib_accessor_class_data_apply_boustrophedonic_bitmap_t _grib_accessor_class_data_apply_boustrophedonic_bitmap{ "data_apply_boustrophedonic_bitmap" };
 grib_accessor_class* grib_accessor_class_data_apply_boustrophedonic_bitmap = &_grib_accessor_class_data_apply_boustrophedonic_bitmap;
 
 
-void grib_accessor_class_data_apply_boustrophedonic_bitmap_t::init(grib_accessor* a, const long v, grib_arguments* args){
+void grib_accessor_class_data_apply_boustrophedonic_bitmap_t::init(grib_accessor* a, const long v, grib_arguments* args)
+{
     grib_accessor_class_gen_t::init(a, v, args);
-    int n                                                 = 0;
     grib_accessor_data_apply_boustrophedonic_bitmap_t* self = (grib_accessor_data_apply_boustrophedonic_bitmap_t*)a;
-    grib_handle* gh                                       = grib_handle_of_accessor(a);
+    grib_handle* gh                                         = grib_handle_of_accessor(a);
 
+    int n = 0;
     self->coded_values        = grib_arguments_get_name(gh, args, n++);
     self->bitmap              = grib_arguments_get_name(gh, args, n++);
     self->missing_value       = grib_arguments_get_name(gh, args, n++);
@@ -33,15 +33,18 @@ void grib_accessor_class_data_apply_boustrophedonic_bitmap_t::init(grib_accessor
     a->length = 0;
 }
 
-void grib_accessor_class_data_apply_boustrophedonic_bitmap_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_data_apply_boustrophedonic_bitmap_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_dump_values(dumper, a);
 }
 
-int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::value_count(grib_accessor* a, long* count)
+{
     grib_accessor_data_apply_boustrophedonic_bitmap_t* self = (grib_accessor_data_apply_boustrophedonic_bitmap_t*)a;
-    grib_handle* gh                                       = grib_handle_of_accessor(a);
-    size_t len                                            = 0;
-    int ret                                               = 0;
+
+    grib_handle* gh = grib_handle_of_accessor(a);
+    size_t len      = 0;
+    int ret         = 0;
 
     /* This accessor is for data with a bitmap after all */
     Assert(grib_find_accessor(gh, self->bitmap));
@@ -51,9 +54,10 @@ int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::value_count(grib_ac
     return ret;
 }
 
-int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_data_apply_boustrophedonic_bitmap_t* self = (grib_accessor_data_apply_boustrophedonic_bitmap_t*)a;
-    grib_handle* gh                                       = grib_handle_of_accessor(a);
+    grib_handle* gh                                         = grib_handle_of_accessor(a);
 
     size_t i = 0, j = 0, n_vals = 0, irow = 0;
     long nn              = 0;
@@ -63,7 +67,8 @@ int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::unpack_double(grib_
     double missing_value = 0;
     long numberOfPoints, numberOfRows, numberOfColumns;
 
-    err    = a->value_count(&nn);    n_vals = nn;
+    err    = a->value_count(&nn);
+    n_vals = nn;
     if (err)
         return err;
 
@@ -159,9 +164,10 @@ int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::unpack_double(grib_
     return err;
 }
 
-int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::unpack_double_element(grib_accessor* a, size_t idx, double* val){
+int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::unpack_double_element(grib_accessor* a, size_t idx, double* val)
+{
     grib_accessor_data_apply_boustrophedonic_bitmap_t* self = (grib_accessor_data_apply_boustrophedonic_bitmap_t*)a;
-    grib_handle* gh                                       = grib_handle_of_accessor(a);
+    grib_handle* gh                                         = grib_handle_of_accessor(a);
     int err = 0, i = 0;
     size_t cidx          = 0;
     double missing_value = 0;
@@ -169,7 +175,8 @@ int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::unpack_double_eleme
     size_t n_vals        = 0;
     long nn              = 0;
 
-    err    = a->value_count(&nn);    n_vals = nn;
+    err    = a->value_count(&nn);
+    n_vals = nn;
     if (err)
         return err;
 
@@ -204,19 +211,21 @@ int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::unpack_double_eleme
     return grib_get_double_element_internal(gh, self->coded_values, cidx, val);
 }
 
-int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array){
+int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+{
     grib_accessor_data_apply_boustrophedonic_bitmap_t* self = (grib_accessor_data_apply_boustrophedonic_bitmap_t*)a;
-    grib_handle* gh                                       = grib_handle_of_accessor(a);
+    grib_handle* gh                                         = grib_handle_of_accessor(a);
     int err = 0, all_missing = 1;
-    size_t cidx        = 0; /* index into the coded_values array */
-    size_t* cidx_array = NULL; /* array of indexes into the coded_values */
-    double* cval_array = NULL; /* array of values of the coded_values */
+    size_t cidx          = 0;    /* index into the coded_values array */
+    size_t* cidx_array   = NULL; /* array of indexes into the coded_values */
+    double* cval_array   = NULL; /* array of values of the coded_values */
     double missing_value = 0;
     double* bvals        = NULL;
     size_t n_vals = 0, i = 0, j = 0, idx = 0, count_1s = 0, ci = 0;
     long nn = 0;
 
-    err    = a->value_count(&nn);    n_vals = nn;
+    err    = a->value_count(&nn);
+    n_vals = nn;
     if (err) return err;
 
     if (!grib_find_accessor(gh, self->bitmap))
@@ -230,7 +239,8 @@ int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::unpack_double_eleme
     for (i = 0; i < len; i++) {
         if (val_array[i] == 0) {
             val_array[i] = missing_value;
-        } else {
+        }
+        else {
             all_missing = 0;
             count_1s++;
         }
@@ -255,7 +265,7 @@ int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::unpack_double_eleme
     ci = 0;
     for (i = 0; i < len; i++) {
         if (val_array[i] == 1) {
-            idx = index_array[i];
+            idx  = index_array[i];
             cidx = 0;
             for (j = 0; j < idx; j++) {
                 cidx += bvals[j];
@@ -282,17 +292,19 @@ int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::unpack_double_eleme
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_data_apply_boustrophedonic_bitmap_t* self = (grib_accessor_data_apply_boustrophedonic_bitmap_t*)a;
-    grib_handle* gh                                       = grib_handle_of_accessor(a);
-    int err                                               = 0;
-    size_t bmaplen                                        = *len;
-    size_t irow                                           = 0;
-    long coded_n_vals                                     = 0;
-    double* coded_vals                                    = NULL;
-    double* values                                        = 0;
-    long i                                                = 0;
-    long j                                                = 0;
+
+    grib_handle* gh    = grib_handle_of_accessor(a);
+    int err            = 0;
+    size_t bmaplen     = *len;
+    size_t irow        = 0;
+    long coded_n_vals  = 0;
+    double* coded_vals = NULL;
+    double* values     = 0;
+    long i             = 0;
+    long j             = 0;
     long numberOfPoints, numberOfRows, numberOfColumns;
     double missing_value = 0;
 
@@ -381,9 +393,10 @@ int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::pack_double(grib_ac
     return err;
 }
 
-int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::get_native_type(grib_accessor* a){
-    //grib_accessor_data_apply_boustrophedonic_bitmap_t* self =  (grib_accessor_data_apply_boustrophedonic_bitmap_t*)a;
-    //return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(a),self->coded_values));
+int grib_accessor_class_data_apply_boustrophedonic_bitmap_t::get_native_type(grib_accessor* a)
+{
+    // grib_accessor_data_apply_boustrophedonic_bitmap_t* self =  (grib_accessor_data_apply_boustrophedonic_bitmap_t*)a;
+    // return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(a),self->coded_values));
 
     return GRIB_TYPE_DOUBLE;
 }

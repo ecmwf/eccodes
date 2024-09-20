@@ -115,12 +115,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 25 ;
 	}
-#Lake cover
-'(0 - 1)' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 26 ;
-	}
 #Snow albedo
 '(0 - 1)' = {
 	 localTablesVersion = 1 ;
@@ -248,18 +242,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 65 ;
 	}
-#Minimum stomatal resistance, low vegetation
-'s m**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 68 ;
-	}
-#Minimum stomatal resistance, high vegetation
-'s m**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 69 ;
-	}
 #Biome cover, low vegetation
 '(0 - 1)' = {
 	 discipline = 192 ;
@@ -271,18 +253,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 71 ;
-	}
-#Instantaneous surface solar radiation downwards
-'W m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 72 ;
-	}
-#Instantaneous surface thermal radiation downwards
-'W m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 73 ;
 	}
 #Experimental product
 '~' = {
@@ -1294,18 +1264,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 67 ;
-	}
-#Minimum stomatal resistance, low vegetation
-'s m**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 68 ;
-	}
-#Minimum stomatal resistance, high vegetation
-'s m**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 69 ;
 	}
 #Biome cover, low vegetation
 '(0 - 1)' = {
@@ -3034,6 +2992,16 @@
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
 	 parameterNumber = 56 ;
+	}
+#Water vapour (chemistry) difference
+'kg kg**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 1 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical = 1 ;
 	}
 #Altitude of emitter
 'm' = {
@@ -14121,7 +14089,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
-	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 192 ;
 	}
 #Emission mass flux from biomass burning
@@ -14130,7 +14097,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
-	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 193 ;
 	}
 #Emission mass flux from settlements
@@ -14139,7 +14105,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
-	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 194 ;
 	}
 #Emission mass flux from soil
@@ -14148,7 +14113,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
-	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 195 ;
 	}
 #Emission mass flux from wild animals
@@ -14157,7 +14121,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
-	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 196 ;
 	}
 #Aerosol negative fixer mass flux
@@ -14180,6 +14143,38 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 192 ;
+	}
+#Emission mass flux from commercial buildings heating
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 197 ;
+	}
+#Emission mass flux from residential heating
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 198 ;
+	}
+#Emission mass flux from oil refineries and transformation industry
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 199 ;
+	}
+#Emission mass flux from gas production
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 200 ;
 	}
 #Stream function gradient
 'm**2 s**-1' = {
@@ -14504,18 +14499,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 129 ;
 	 parameterNumber = 67 ;
-	}
-#Minimum stomatal resistance, low vegetation
-'s m**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 129 ;
-	 parameterNumber = 68 ;
-	}
-#Minimum stomatal resistance, high vegetation
-'s m**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 129 ;
-	 parameterNumber = 69 ;
 	}
 #Biome cover, low vegetation
 '(0 - 1)' = {
@@ -17005,30 +16988,6 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 170 ;
 	}
-#U velocity maximum
-'m s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 171 ;
-	}
-#Depth of the velocity maximum
-'m' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 172 ;
-	}
-#Salinity maximum
-'psu' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 173 ;
-	}
-#Depth of salinity maximum
-'m' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 174 ;
-	}
 #Layer Thickness at scalar points
 'm' = {
 	 discipline = 192 ;
@@ -17311,41 +17270,17 @@
 	 parameterCategory = 160 ;
 	 parameterNumber = 199 ;
 	}
-#Maximum temperature at 2 metres during averaging time
-'K' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 201 ;
-	}
-#Minimum temperature at 2 metres during averaging time
-'K' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 202 ;
-	}
 #Runoff
 'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 205 ;
 	}
-#Standard deviation of geopotential
-'m**2 s**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 206 ;
-	}
 #Covariance of temperature and geopotential
 'K m**2 s**-2' = {
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 207 ;
-	}
-#Standard deviation of temperature
-'K' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 208 ;
 	}
 #Covariance of specific humidity and geopotential
 'm**2 s**-2' = {
@@ -17358,12 +17293,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 210 ;
-	}
-#Standard deviation of specific humidity
-'(0 - 1)' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 211 ;
 	}
 #Covariance of U component and geopotential
 'm**3 s**-3' = {
@@ -17382,12 +17311,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 214 ;
-	}
-#Standard deviation of U velocity
-'m s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 215 ;
 	}
 #Covariance of V component and geopotential
 'm**3 s**-3' = {
@@ -17412,12 +17335,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 219 ;
-	}
-#Standard deviation of V component
-'m s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 220 ;
 	}
 #Covariance of W component and geopotential
 'Pa m**2 s**-3' = {
@@ -17448,12 +17365,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 225 ;
-	}
-#Standard deviation of vertical velocity
-'Pa s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 226 ;
 	}
 #Instantaneous surface heat flux
 'J m**-2' = {
@@ -18740,28 +18651,16 @@
 	 parameterNumber = 255 ;
 	}
 #Snow evaporation
-'m of water s**-1' = {
+'m of water equivalent s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 44 ;
 	}
 #Snowmelt
-'m of water s**-1' = {
+'m of water equivalent s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 45 ;
-	}
-#Magnitude of turbulent surface stress
-'N m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 48 ;
-	}
-#Mean large-scale precipitation fraction
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 50 ;
 	}
 #Mean large-scale precipitation rate
 'm s**-1' = {
@@ -18790,12 +18689,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Boundary layer dissipation
-'W m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 145 ;
-	}
 #Mean short-wave heating rate
 'K s**-1' = {
 	 discipline = 192 ;
@@ -18816,30 +18709,6 @@
 	 parameterNumber = 199 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
-	}
-#Mean sunshine duration rate
-'s s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 189 ;
-	}
-#Longitudinal component of gravity wave stress
-'N m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 195 ;
-	}
-#Meridional component of gravity wave stress
-'N m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 196 ;
-	}
-#Gravity wave dissipation
-'W m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 197 ;
 	}
 #Mean runoff rate
 'm s**-1' = {
@@ -18878,13 +18747,13 @@
 	 parameterNumber = 255 ;
 	}
 #Snow evaporation anomaly
-'m of water s**-1' = {
+'m of water equivalent s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 44 ;
 	}
 #Snowmelt anomaly
-'m of water s**-1' = {
+'m of water equivalent s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 45 ;
@@ -19004,7 +18873,7 @@
 	 parameterNumber = 181 ;
 	}
 #Evaporation anomalous rate of accumulation
-'m of water s**-1' = {
+'m of water equivalent s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 182 ;
@@ -19261,18 +19130,6 @@
 	 parameterCategory = 174 ;
 	 parameterNumber = 183 ;
 	}
-#1.5m temperature - maximum in the last 24 hours
-'K' = {
-	 discipline = 192 ;
-	 parameterCategory = 174 ;
-	 parameterNumber = 201 ;
-	}
-#1.5m temperature - minimum in the last 24 hours
-'K' = {
-	 discipline = 192 ;
-	 parameterCategory = 174 ;
-	 parameterNumber = 202 ;
-	}
 #Soil temperature layer 4
 'K' = {
 	 discipline = 192 ;
@@ -19434,18 +19291,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 175 ;
 	 parameterNumber = 183 ;
-	}
-#1.5m temperature - maximum in the last 24 hours
-'K' = {
-	 discipline = 192 ;
-	 parameterCategory = 175 ;
-	 parameterNumber = 201 ;
-	}
-#1.5m temperature - minimum in the last 24 hours
-'K' = {
-	 discipline = 192 ;
-	 parameterCategory = 175 ;
-	 parameterNumber = 202 ;
 	}
 #Soil temperature layer 4
 'K' = {
@@ -19933,23 +19778,11 @@
 	 parameterCategory = 201 ;
 	 parameterNumber = 113 ;
 	}
-#deviation of pressure from reference value
-'Pa' = {
-	 discipline = 192 ;
-	 parameterCategory = 201 ;
-	 parameterNumber = 139 ;
-	}
 #coefficient of horizontal diffusion
 'm**2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 201 ;
 	 parameterNumber = 150 ;
-	}
-#Maximum wind velocity
-'m s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 201 ;
-	 parameterNumber = 187 ;
 	}
 #water content of interception store
 'kg m**-2' = {

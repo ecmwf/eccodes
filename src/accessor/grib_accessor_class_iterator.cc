@@ -26,6 +26,7 @@ void grib_accessor_class_iterator_t::dump(grib_accessor* a, grib_dumper* dumper)
     grib_dump_label(dumper, a, NULL);
 }
 
+#if defined(HAVE_GEOGRAPHY)
 grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int* error)
 {
     grib_handle* h              = (grib_handle*)ch;
@@ -46,3 +47,13 @@ grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int
 
     return iter;
 }
+#else
+grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int* error)
+{
+    *error = GRIB_FUNCTIONALITY_NOT_ENABLED;
+    grib_context_log(ch->context, GRIB_LOG_ERROR,
+                     "Geoiterator functionality not enabled. Please rebuild with -DENABLE_GEOGRAPHY=ON");
+
+    return NULL;
+}
+#endif

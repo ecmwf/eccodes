@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,15 +10,16 @@
 
 #include "grib_accessor_class_global_gaussian.h"
 
-grib_accessor_class_global_gaussian_t _grib_accessor_class_global_gaussian{"global_gaussian"};
+grib_accessor_class_global_gaussian_t _grib_accessor_class_global_gaussian{ "global_gaussian" };
 grib_accessor_class* grib_accessor_class_global_gaussian = &_grib_accessor_class_global_gaussian;
 
 
-void grib_accessor_class_global_gaussian_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_global_gaussian_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_global_gaussian_t* self = (grib_accessor_global_gaussian_t*)a;
-    int n                               = 0;
-    grib_handle* h                      = grib_handle_of_accessor(a);
+    int n = 0;
+    grib_handle* h = grib_handle_of_accessor(a);
 
     self->N           = grib_arguments_get_name(h, c, n++);
     self->Ni          = grib_arguments_get_name(h, c, n++);
@@ -34,9 +34,10 @@ void grib_accessor_class_global_gaussian_t::init(grib_accessor* a, const long l,
     self->subdivision = grib_arguments_get_name(h, c, n++);
 }
 
-int grib_accessor_class_global_gaussian_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_global_gaussian_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_global_gaussian_t* self = (grib_accessor_global_gaussian_t*)a;
-    int ret                             = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     long latfirst, latlast, lonfirst, lonlast, basic_angle, subdivision, N, Ni;
     double dlatfirst, dlatlast, dlonfirst, dlonlast;
     double angular_precision = 0;
@@ -140,9 +141,10 @@ int grib_accessor_class_global_gaussian_t::unpack_long(grib_accessor* a, long* v
     return ret;
 }
 
-int grib_accessor_class_global_gaussian_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_global_gaussian_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_global_gaussian_t* self = (grib_accessor_global_gaussian_t*)a;
-    int ret                             = GRIB_SUCCESS;
+    int ret                               = GRIB_SUCCESS;
     long latfirst, latlast, lonfirst, lonlast, di, diold, basic_angle = 0, N, Ni;
     long factor;
     double* lats;

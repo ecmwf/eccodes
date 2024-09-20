@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,15 +10,16 @@
 
 #include "grib_accessor_class_number_of_values.h"
 
-grib_accessor_class_number_of_values_t _grib_accessor_class_number_of_values{"number_of_values"};
+grib_accessor_class_number_of_values_t _grib_accessor_class_number_of_values{ "number_of_values" };
 grib_accessor_class* grib_accessor_class_number_of_values = &_grib_accessor_class_number_of_values;
 
 
-void grib_accessor_class_number_of_values_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_number_of_values_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_long_t::init(a, l, c);
-    int n                                = 0;
+    int n = 0;
     grib_accessor_number_of_values_t* self = (grib_accessor_number_of_values_t*)a;
-    grib_handle* hand                    = grib_handle_of_accessor(a);
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     self->values              = grib_arguments_get_name(hand, c, n++);
     self->bitsPerValue        = grib_arguments_get_name(hand, c, n++);
@@ -32,9 +32,10 @@ void grib_accessor_class_number_of_values_t::init(grib_accessor* a, const long l
     a->length = 0;
 }
 
-int grib_accessor_class_number_of_values_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_number_of_values_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_number_of_values_t* self = (grib_accessor_number_of_values_t*)a;
-    int ret                              = GRIB_SUCCESS, i;
+    int ret = GRIB_SUCCESS;
     long npoints = 0, bitmap_present = 0;
     size_t size = 0;
 
@@ -45,17 +46,18 @@ int grib_accessor_class_number_of_values_t::unpack_long(grib_accessor* a, long* 
         return ret;
 
     if (bitmap_present) {
-        double* bitmap;
-        size   = npoints;
-        bitmap = (double*)grib_context_malloc(a->context, sizeof(double) * size);
+        size = npoints;
+        double* bitmap = (double*)grib_context_malloc(a->context, sizeof(double) * size);
         if ((ret = grib_get_double_array_internal(grib_handle_of_accessor(a), self->bitmap, bitmap, &size)) != GRIB_SUCCESS) {
             grib_context_free(a->context, bitmap);
             return ret;
         }
         *val = 0;
-        for (i = 0; i < size; i++)
-            if (bitmap[i] != 0)
+        for (size_t i = 0; i < size; i++) {
+            if (bitmap[i] != 0) {
                 (*val)++;
+            }
+        }
 
         grib_context_free(a->context, bitmap);
     }

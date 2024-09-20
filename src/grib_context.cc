@@ -41,7 +41,7 @@ static pthread_once_t once = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex_mem = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t mutex_c   = PTHREAD_MUTEX_INITIALIZER;
 
-static void init()
+static void init_mutex()
 {
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
@@ -55,7 +55,7 @@ static int once = 0;
 static omp_nest_lock_t mutex_mem;
 static omp_nest_lock_t mutex_c;
 
-static void init()
+static void init_mutex()
 {
     GRIB_OMP_CRITICAL(lock_grib_context_c)
     {
@@ -185,19 +185,19 @@ int grib_context_seek(const grib_context* c, off_t offset, int whence, void* str
     return c->seek(c, offset, whence, stream);
 }
 
-int grib_context_eof(const grib_context* c, void* stream)
-{
-    if (!c)
-        c = grib_context_get_default();
-    return c->eof(c, stream);
-}
+// int grib_context_eof(const grib_context* c, void* stream)
+// {
+//     if (!c)
+//         c = grib_context_get_default();
+//     return c->eof(c, stream);
+// }
 
-size_t grib_context_write(const grib_context* c, const void* ptr, size_t size, void* stream)
-{
-    if (!c)
-        c = grib_context_get_default();
-    return c->write(c, ptr, size, stream);
-}
+// size_t grib_context_write(const grib_context* c, const void* ptr, size_t size, void* stream)
+// {
+//     if (!c)
+//         c = grib_context_get_default();
+//     return c->write(c, ptr, size, stream);
+// }
 
 static void default_log(const grib_context* c, int level, const char* mess)
 {
@@ -237,8 +237,14 @@ static void default_print(const grib_context* c, void* descriptor, const char* m
 void grib_context_set_print_proc(grib_context* c, grib_print_proc p)
 {
     c = c ? c : grib_context_get_default();
-    /* Set logging back to the default if p is NULL */
+    /* Set printing back to the default if p is NULL */
     c->print = (p ? p : &default_print);
+}
+
+void grib_context_set_data_quality_checks(grib_context* c, int val)
+{
+    c = c ? c : grib_context_get_default();
+    c->grib_data_quality_checks = val;
 }
 
 void grib_context_set_debug(grib_context* c, int mode)
@@ -374,7 +380,7 @@ static grib_context default_grib_context = {
 
 grib_context* grib_context_get_default()
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
 
     if (!default_grib_context.inited) {
@@ -569,7 +575,7 @@ grib_context* grib_context_get_default()
 
 //     if (!parent) parent=grib_context_get_default();
 
-//     GRIB_MUTEX_INIT_ONCE(&once,&init);
+//     GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
 //     GRIB_MUTEX_LOCK(&(parent->mutex));
 
 //     c = (grib_context*)grib_context_malloc_clear_persistent(&default_grib_context,sizeof(grib_context));
@@ -646,7 +652,7 @@ static int init_definition_files_dir(grib_context* c)
     strncpy(path, c->grib_definition_files_path, ECC_PATH_MAXLEN-1);
     path[ ECC_PATH_MAXLEN - 1 ] = '\0';
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
 
     p = path;
@@ -661,20 +667,19 @@ static int init_definition_files_dir(grib_context* c)
     }
     else {
         /* Definitions path contains multiple directories */
-        char* dir = NULL;
-        dir       = strtok_r(path, ECC_PATH_DELIMITER_STR, &lasts);
+        const char* dir = strtok_r(path, ECC_PATH_DELIMITER_STR, &lasts);
 
         while (dir != NULL) {
             if (next) {
                 next->next = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
-                next       = next->next;
+                next = next->next;
             }
             else {
                 c->grib_definition_files_dir = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
-                next                         = c->grib_definition_files_dir;
+                next = c->grib_definition_files_dir;
             }
             next->value = codes_resolve_path(c, dir);
-            dir         = strtok_r(NULL, ECC_PATH_DELIMITER_STR, &lasts);
+            dir = strtok_r(NULL, ECC_PATH_DELIMITER_STR, &lasts);
         }
     }
 
@@ -692,7 +697,7 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
     if (!c)
         c = grib_context_get_default();
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
 
     if (*basename == '/' || *basename == '.') {
         return (char*)basename;
@@ -811,14 +816,14 @@ void grib_context_reset(grib_context* c)
 
     if (c->grib_definition_files_dir) {
         grib_string_list* next = c->grib_definition_files_dir;
-        grib_string_list* cur  = NULL;
+        grib_string_list* cur = NULL;
         while (next) {
             cur  = next;
             next = next->next;
             grib_context_free(c, cur->value);
             grib_context_free(c, cur);
         }
-        c->grib_definition_files_dir=0;
+        c->grib_definition_files_dir = 0;
     }
 
     if (c->multi_support_on)
@@ -880,7 +885,7 @@ void grib_context_set_definitions_path(grib_context* c, const char* path)
 {
     if (!c)
         c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
 
     c->grib_definition_files_path = strdup(path);
@@ -892,7 +897,7 @@ void grib_context_set_samples_path(grib_context* c, const char* path)
 {
     if (!c)
         c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
 
     c->grib_samples_path = strdup(path);
@@ -1095,7 +1100,7 @@ int grib_context_get_handle_file_count(grib_context* c)
     int r = 0;
     if (!c)
         c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
     r = c->handle_file_count;
     GRIB_MUTEX_UNLOCK(&mutex_c);
@@ -1106,7 +1111,7 @@ int grib_context_get_handle_total_count(grib_context* c)
     int r = 0;
     if (!c)
         c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
     r = c->handle_total_count;
     GRIB_MUTEX_UNLOCK(&mutex_c);
@@ -1117,7 +1122,7 @@ void grib_context_set_handle_file_count(grib_context* c, int new_count)
 {
     if (!c)
         c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
     c->handle_file_count = new_count;
     GRIB_MUTEX_UNLOCK(&mutex_c);
@@ -1126,7 +1131,7 @@ void grib_context_set_handle_total_count(grib_context* c, int new_count)
 {
     if (!c)
         c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
     c->handle_total_count = new_count;
     GRIB_MUTEX_UNLOCK(&mutex_c);
@@ -1136,7 +1141,7 @@ void grib_context_increment_handle_file_count(grib_context* c)
 {
     if (!c)
         c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
     c->handle_file_count++;
     GRIB_MUTEX_UNLOCK(&mutex_c);
@@ -1145,7 +1150,7 @@ void grib_context_increment_handle_total_count(grib_context* c)
 {
     if (!c)
         c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
     c->handle_total_count++;
     GRIB_MUTEX_UNLOCK(&mutex_c);
@@ -1160,7 +1165,7 @@ bufr_descriptors_array* grib_context_expanded_descriptors_list_get(grib_context*
     if (!c)
         c = grib_context_get_default();
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
 
     if (!c->expanded_descriptors) {
@@ -1200,7 +1205,7 @@ void grib_context_expanded_descriptors_list_push(grib_context* c,
     if (!c)
         c = grib_context_get_default();
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
 
     newdescriptorsList             = (bufr_descriptors_map_list*)grib_context_malloc_clear(c, sizeof(bufr_descriptors_map_list));
@@ -1233,7 +1238,7 @@ void codes_assertion_failed(const char* message, const char* file, int line)
     /* Default behaviour is to abort
      * unless user has supplied his own assertion routine */
     if (assertion == NULL) {
-        grib_context* c = grib_context_get_default();
+        const grib_context* c = grib_context_get_default();
         fprintf(stderr, "ecCodes assertion failed: `%s' in %s:%d\n", message, file, line);
         if (!c->no_abort) {
             abort();
@@ -1246,7 +1251,7 @@ void codes_assertion_failed(const char* message, const char* file, int line)
     }
 }
 
-int grib_get_gribex_mode(grib_context* c)
+int grib_get_gribex_mode(const grib_context* c)
 {
     if (!c)
         c = grib_context_get_default();

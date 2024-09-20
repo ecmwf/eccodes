@@ -12,24 +12,25 @@
 #include "grib_accessor_class_smart_table_column.h"
 #include "grib_accessor_class_smart_table.h"
 
-grib_accessor_class_smart_table_column_t _grib_accessor_class_smart_table_column{"smart_table_column"};
+grib_accessor_class_smart_table_column_t _grib_accessor_class_smart_table_column{ "smart_table_column" };
 grib_accessor_class* grib_accessor_class_smart_table_column = &_grib_accessor_class_smart_table_column;
 
 
-
-void grib_accessor_class_smart_table_column_t::init(grib_accessor* a, const long len, grib_arguments* params){
+void grib_accessor_class_smart_table_column_t::init(grib_accessor* a, const long len, grib_arguments* params)
+{
     grib_accessor_class_gen_t::init(a, len, params);
     int n = 0;
     grib_accessor_smart_table_column_t* self = (grib_accessor_smart_table_column_t*)a;
 
     self->smartTable = grib_arguments_get_name(grib_handle_of_accessor(a), params, n++);
-    self->index = grib_arguments_get_long(grib_handle_of_accessor(a), params, n++);
+    self->index      = grib_arguments_get_long(grib_handle_of_accessor(a), params, n++);
 
     a->length = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-void grib_accessor_class_smart_table_column_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_smart_table_column_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     int type = get_native_type(a);
 
     switch (type) {
@@ -42,7 +43,8 @@ void grib_accessor_class_smart_table_column_t::dump(grib_accessor* a, grib_dumpe
     }
 }
 
-int grib_accessor_class_smart_table_column_t::unpack_string_array(grib_accessor* a, char** buffer, size_t* len){
+int grib_accessor_class_smart_table_column_t::unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
+{
     grib_accessor_smart_table_column_t* self   = (grib_accessor_smart_table_column_t*)a;
     grib_accessor_smart_table_t* tableAccessor = NULL;
     grib_smart_table* table = NULL;
@@ -96,7 +98,8 @@ int grib_accessor_class_smart_table_column_t::unpack_string_array(grib_accessor*
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_smart_table_column_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_smart_table_column_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_smart_table_column_t* self   = (grib_accessor_smart_table_column_t*)a;
     grib_accessor_smart_table_t* tableAccessor = NULL;
     grib_smart_table* table = NULL;
@@ -146,21 +149,23 @@ int grib_accessor_class_smart_table_column_t::unpack_long(grib_accessor* a, long
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_smart_table_column_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_smart_table_column_t::value_count(grib_accessor* a, long* count)
+{
     grib_accessor_smart_table_column_t* self = (grib_accessor_smart_table_column_t*)a;
     size_t size = 0;
-    int err = 0;
-    *count = 0;
+    int err     = 0;
+    *count      = 0;
 
     if (!self->smartTable)
         return 0;
 
-    err = grib_get_size(grib_handle_of_accessor(a), self->smartTable, &size);
+    err    = grib_get_size(grib_handle_of_accessor(a), self->smartTable, &size);
     *count = size;
     return err;
 }
 
-void grib_accessor_class_smart_table_column_t::destroy(grib_context* context, grib_accessor* a){
+void grib_accessor_class_smart_table_column_t::destroy(grib_context* context, grib_accessor* a)
+{
     if (a->vvalue != NULL) {
         grib_context_free(context, a->vvalue);
         a->vvalue = NULL;
@@ -169,7 +174,8 @@ void grib_accessor_class_smart_table_column_t::destroy(grib_context* context, gr
     grib_accessor_class_gen_t::destroy(context, a);
 }
 
-int grib_accessor_class_smart_table_column_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_smart_table_column_t::get_native_type(grib_accessor* a)
+{
     int type = GRIB_TYPE_LONG;
     /*printf("---------- %s flags=%ld GRIB_ACCESSOR_FLAG_STRING_TYPE=%d\n",
          a->name,a->flags,GRIB_ACCESSOR_FLAG_STRING_TYPE);*/

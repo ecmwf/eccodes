@@ -26,7 +26,7 @@ class grib_accessor_class_data_secondary_bitmap_t : public grib_accessor_class_g
 {
 public:
     grib_accessor_class_data_secondary_bitmap_t(const char* name) : grib_accessor_class_gen_t(name) {}
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_data_secondary_bitmap_t{}; }
+    // grib_accessor* create_empty_accessor() override { return new grib_accessor_data_secondary_bitmap_t{}; }
     int get_native_type(grib_accessor*) override;
     int unpack_double(grib_accessor*, double* val, size_t* len) override;
     void dump(grib_accessor*, grib_dumper*) override;

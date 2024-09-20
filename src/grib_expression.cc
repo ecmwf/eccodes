@@ -74,12 +74,12 @@ const char* grib_expression_get_name(grib_expression* g)
     return 0;
 }
 
-void grib_expression_print(grib_context* ctx, grib_expression* g, grib_handle* f)
+void grib_expression_print(grib_context* ctx, grib_expression* g, grib_handle* f, FILE* out)
 {
     grib_expression_class* c = g->cclass;
     while (c) {
         if (c->print) {
-            c->print(ctx, g, f);
+            c->print(ctx, g, f, out);
             return;
         }
         c = c->super ? *(c->super) : NULL;
@@ -163,7 +163,7 @@ void grib_arguments_print(grib_context* c, grib_arguments* g, grib_handle* f)
 {
     if (g) {
         if (g->expression)
-            grib_expression_print(c, g->expression, f);
+            grib_expression_print(c, g->expression, f, stdout);
         if (g->next) {
             printf(",");
             grib_arguments_print(c, g->next, f);

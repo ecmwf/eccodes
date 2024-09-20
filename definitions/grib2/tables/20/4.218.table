@@ -24,7 +24,6 @@
 22 22 Optically thin ice cloud
 23 23 Optically thick ice cloud
 24 24 Multilayered cloud
-# 25-96 Reserved
 97 97 Snow/ice on land
 98 98 Snow/ice on water
 99 99 Sun-glint
@@ -39,6 +38,4 @@
 108 108 High cloud/Cirrus
 109 109 High cloud/unknown
 110 110 Unknown cloud type
-# 111-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing

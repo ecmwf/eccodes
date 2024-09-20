@@ -5,15 +5,21 @@ on:
 
   # Run at 20:00 UTC every day (on default branch)
   schedule:
-    - cron: '0 20 * * *'
+    - cron: "0 20 * * *"
 
 jobs:
   test-hpc:
-    uses: ./.github/workflows/reusable-ci-hpc.yml
-    with:
-      eccodes: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
-      nightly_test: true
-    secrets: inherit
+    runs-on: [self-hosted, linux, hpc]
+    env:
+      GH_TOKEN: ${{ secrets.GH_REPO_READ_TOKEN }}
+    steps:
+      - uses: ecmwf-actions/reusable-workflows/ci-hpc@v2
+        with:
+          github_user: ${{ secrets.BUILD_PACKAGE_HPC_GITHUB_USER }}
+          github_token: ${{ secrets.GH_REPO_READ_TOKEN }}
+          troika_user: ${{ secrets.HPC_CI_SSH_USER }}
+          repository: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
+          build_config: .github/nightly-ci-hpc-config.yml
 
   test-macos:
     strategy:
@@ -63,6 +69,8 @@ jobs:
     secrets:
       url_debian_11: ${{ secrets.NEXUS_TEST_REPO_NIGHTLY_URL_DEBIAN_11 }}
       token_debian_11: ${{ secrets.NEXUS_TEST_REPO_UPLOAD_TOKEN }}
+      url_debian_12: ${{ secrets.NEXUS_TEST_REPO_URL_DEBIAN_12 }}
+      token_debian_12: ${{ secrets.NEXUS_TEST_REPO_UPLOAD_TOKEN }}
       url_centos_7: ${{ secrets.NEXUS_TEST_REPO_NIGHTLY_URL_CENTOS_7 }}
       token_centos_7: ${{ secrets.NEXUS_TEST_REPO_UPLOAD_TOKEN }}
       url_rocky_8: ${{ secrets.NEXUS_TEST_REPO_NIGHTLY_URL_ROCKY_8 }}

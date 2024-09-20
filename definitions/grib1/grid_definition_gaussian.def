@@ -1,10 +1,12 @@
 unsigned[2] Ni : can_be_missing,dump;
 alias numberOfPointsAlongAParallel= Ni ;
 alias Nx =Ni;
+alias geography.Ni=Ni;
 
 signed[2] Nj : dump;
 alias numberOfPointsAlongAMeridian=Nj;
 alias Ny=Nj;
+alias geography.Nj=Nj;
 
 # Latitudes and Longitudes of the first and the last points
 # Resolution and component flags

@@ -67,12 +67,15 @@ cat > $tempFilt <<EOF
  write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
-set +e
-${tools_dir}/grib_ls -l 0,0 $tempGrib > $tempText 2>&1
-status=$?
-set -e
-[ $status -ne 0 ]
-grep -q "Nearest neighbour functionality is not supported for grid: Variable resolution latitude/longitude" $tempText
+
+if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+  set +e
+  ${tools_dir}/grib_ls -l 0,0 $tempGrib > $tempText 2>&1
+  status=$?
+  set -e
+  [ $status -ne 0 ]
+  grep -q "Nearest neighbour functionality is not supported for grid: Variable resolution latitude/longitude" $tempText
+fi
 
 # Check the keys isSpectral and isGridded
 # ----------------------------------------

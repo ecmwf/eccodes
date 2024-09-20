@@ -11,17 +11,19 @@
 
 #include "grib_accessor_class_g1_section4_length.h"
 
-grib_accessor_class_g1_section4_length_t _grib_accessor_class_g1_section4_length{"g1_section4_length"};
+grib_accessor_class_g1_section4_length_t _grib_accessor_class_g1_section4_length{ "g1_section4_length" };
 grib_accessor_class* grib_accessor_class_g1_section4_length = &_grib_accessor_class_g1_section4_length;
 
 
-void grib_accessor_class_g1_section4_length_t::init(grib_accessor* a, const long len, grib_arguments* args){
+void grib_accessor_class_g1_section4_length_t::init(grib_accessor* a, const long len, grib_arguments* args)
+{
     grib_accessor_class_section_length_t::init(a, len, args);
     grib_accessor_g1_section4_length_t* self = (grib_accessor_g1_section4_length_t*)a;
-    self->total_length                     = grib_arguments_get_name(grib_handle_of_accessor(a), args, 0);
+    self->total_length                       = grib_arguments_get_name(grib_handle_of_accessor(a), args, 0);
 }
 
-int grib_accessor_class_g1_section4_length_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_g1_section4_length_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     // Old implementation:
     //   Here we assume that the totalLength will be coded AFTER the section4 length, and
     //   the section4 length will be overwritten by the totalLength accessor for large GRIBs
@@ -34,9 +36,10 @@ int grib_accessor_class_g1_section4_length_t::pack_long(grib_accessor* a, const 
     return pack_long_unsigned_helper(a, val, len, /*check=*/0);
 }
 
-int grib_accessor_class_g1_section4_length_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_g1_section4_length_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_g1_section4_length_t* self = (grib_accessor_g1_section4_length_t*)a;
-    int ret = 0;
+    int ret                                  = 0;
     long total_length = 0, sec4_length = 0;
 
     if ((ret = grib_get_g1_message_size(grib_handle_of_accessor(a),

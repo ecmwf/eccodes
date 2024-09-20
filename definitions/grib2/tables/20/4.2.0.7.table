@@ -19,6 +19,4 @@
 17 17 Gradient Richardson number (Numeric)
 18 18 Flux Richardson number (Numeric)
 19 19 Convective available potential energy - shear (m2 s-2)
-# 20-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing

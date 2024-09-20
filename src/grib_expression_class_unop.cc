@@ -41,7 +41,7 @@ or edit "expression.class" and rerun ./make_class.pl
 typedef const char* string; /* to keep make_class.pl happy */
 
 static void    destroy(grib_context*,grib_expression* e);
-static void    print(grib_context*,grib_expression*,grib_handle*);
+static void    print(grib_context*, grib_expression*, grib_handle*, FILE*);
 static void    add_dependency(grib_expression* e, grib_accessor* observer);
 static string  get_name(grib_expression* e);
 static int     native_type(grib_expression*,grib_handle*);
@@ -58,12 +58,12 @@ typedef struct grib_expression_unop{
 
 
 static grib_expression_class _grib_expression_class_unop = {
-    0,                    /* super                     */
-    "unop",                    /* name                      */
-    sizeof(grib_expression_unop),/* size of instance        */
+    0,                      /* super */
+    "unop",                      /* name  */
+    sizeof(grib_expression_unop),/* size of instance */
     0,                           /* inited */
-    0,                     /* constructor               */
-    &destroy,                  /* destructor                */
+    0,                       /* constructor */
+    &destroy,                    /* destructor */
     &print,
     &add_dependency,
     &native_type,
@@ -105,12 +105,12 @@ static const char* get_name(grib_expression* g)
     return grib_expression_get_name(e->exp);
 }
 
-static void print(grib_context* c, grib_expression* g, grib_handle* f)
+static void print(grib_context* c, grib_expression* g, grib_handle* f, FILE* out)
 {
     grib_expression_unop* e = (grib_expression_unop*)g;
-    printf("unop(");
-    grib_expression_print(c, e->exp, f);
-    printf(")");
+    fprintf(out, "unop(");
+    grib_expression_print(c, e->exp, f, out);
+    fprintf(out, ")");
 }
 
 static void destroy(grib_context* c, grib_expression* g)

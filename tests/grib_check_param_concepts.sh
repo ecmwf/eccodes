@@ -18,6 +18,15 @@ if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
     exit 0
 fi
 
+check_grib_defs()
+{
+  CHECK_DEFS=$proj_dir/definitions/check_grib_defs.pl
+  if [ -x "$CHECK_DEFS" ]; then
+    # Now check the name.def, paramId.def, shortName.def... files
+    # in the current directory
+    $CHECK_DEFS
+  fi
+}
 
 #
 # Do various checks on the concepts files
@@ -39,11 +48,12 @@ done
 # Check WMO name.def etc
 $EXEC ${test_dir}/grib_check_param_concepts name  $ECCODES_DEFINITION_PATH/grib2/name.def
 $EXEC ${test_dir}/grib_check_param_concepts units $ECCODES_DEFINITION_PATH/grib2/units.def
-$EXEC ${test_dir}/grib_check_param_concepts units $ECCODES_DEFINITION_PATH/grib2/cfVarName.def
+$EXEC ${test_dir}/grib_check_param_concepts cfVarName $ECCODES_DEFINITION_PATH/grib2/cfVarName.def
+$EXEC ${test_dir}/grib_check_param_concepts cfVarName $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/cfVarName.def
 
 
-# Check the group: name.def paramId.def shortName.def units.def cfVarName.def
-# ----------------------------------------------------------------------------
+# Check the group: name.def paramId.def shortName.def units.def
+# -------------------------------------------------------------
 # Check whether the Test::More Perl module is available
 set +e
 perl -e 'use Test::More;'
@@ -53,8 +63,6 @@ if [ $status -ne 0 ]; then
   echo "Perl Test::More not installed. Test will be skipped"
   exit 0
 fi
-
-CHECK_DEFS=$ECCODES_DEFINITION_PATH/check_grib_defs.pl
 
 defs_dirs="
  $ECCODES_DEFINITION_PATH/grib1
@@ -85,7 +93,7 @@ defs_dirs="
 
 for dir in $defs_dirs; do
   cd $dir
-  $CHECK_DEFS
+  check_grib_defs
 done
 
 cd $test_dir
@@ -99,13 +107,15 @@ tempDir=temp.${label}.dir
 rm -fr $tempDir
 mkdir -p $tempDir
 cd $tempDir
+
+# See ECC-1886 re cfVarName files
 #cp $ECMF_DIR/cfName.legacy.def    cfName.def
 #cp $ECMF_DIR/cfVarName.legacy.def cfVarName.def
 cp $ECMF_DIR/name.legacy.def      name.def
 cp $ECMF_DIR/paramId.legacy.def   paramId.def
 cp $ECMF_DIR/shortName.legacy.def shortName.def
 cp $ECMF_DIR/units.legacy.def     units.def
-$CHECK_DEFS
+check_grib_defs
 cd $test_dir
 rm -fr $tempDir
 
@@ -119,12 +129,12 @@ rm -fr $tempDir
 mkdir -p $tempDir
 cd $tempDir
 cp $ECMF_DIR/cfName.legacy.def    cfName.def
-cp $ECMF_DIR/cfVarName.legacy.def cfVarName.def
+# cp $ECMF_DIR/cfVarName.legacy.def cfVarName.def
 cp $ECMF_DIR/name.legacy.def      name.def
 cp $ECMF_DIR/paramId.legacy.def   paramId.def
 cp $ECMF_DIR/shortName.legacy.def shortName.def
 cp $ECMF_DIR/units.legacy.def     units.def
-$CHECK_DEFS
+check_grib_defs
 cd $test_dir
 rm -fr $tempDir
 

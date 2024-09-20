@@ -27,7 +27,7 @@ class grib_accessor_class_bitmap_t : public grib_accessor_class_bytes_t
 {
 public:
     grib_accessor_class_bitmap_t(const char* name) : grib_accessor_class_bytes_t(name) {}
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_bitmap_t{}; }
+    //grib_accessor* create_empty_accessor() override { return new grib_accessor_bitmap_t{}; }
     int unpack_double(grib_accessor*, double* val, size_t* len) override;
     int unpack_float(grib_accessor*, float* val, size_t* len) override;
     int unpack_long(grib_accessor*, long* val, size_t* len) override;

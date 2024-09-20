@@ -18,7 +18,16 @@
 
 cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 
-find_package( ecbuild 3.7 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
+find_package( ecbuild 3.7 HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
+if(NOT ecbuild_FOUND)
+    message(STATUS "Fetching ecbuild...")
+    include(FetchContent)
+    FetchContent_Populate(ecbuild
+        GIT_REPOSITORY https://github.com/ecmwf/ecbuild.git
+        GIT_TAG        3.8.5
+    )
+    find_package( ecbuild 3.7 REQUIRED HINTS ${ecbuild_SOURCE_DIR})
+endif()
 
 # Initialise project
 project( eccodes LANGUAGES CXX )
@@ -50,9 +59,9 @@ check_symbol_exists( fdatasync       "unistd.h"   ECCODES_HAVE_FDATASYNC)
 
 check_c_source_compiles(
       " typedef int foo_t;
-      static inline foo_t static_foo(){return 0;}
-      foo_t foo(){return 0;}
-      int main(int argc, char *argv[]){return 0;}
+      static inline foo_t static_foo(void){return 0;}
+      foo_t foo(void){return 0;}
+      int main(int argc, char *argv[]){ return static_foo(); }
       " ECCODES_HAVE_C_INLINE
 )
 
@@ -97,6 +106,10 @@ ecbuild_add_option( FEATURE EXAMPLES
 
 ecbuild_add_option( FEATURE BUILD_TOOLS
     DESCRIPTION "Build the command line tools"
+    DEFAULT ON )
+
+ecbuild_add_option( FEATURE GEOGRAPHY
+    DESCRIPTION "Support for Geoiterator and nearest neighbour"
     DEFAULT ON )
 
 ecbuild_add_option( FEATURE JPG
@@ -375,6 +388,16 @@ if( HAVE_FORTRAN AND CMAKE_Fortran_COMPILER_ID MATCHES "GNU" AND NOT CMAKE_Fortr
     ecbuild_add_fortran_flags("-fallow-argument-mismatch")
 endif()
 
+if(GIT_FOUND AND NOT ${GIT_EXECUTABLE} STREQUAL "")
+    ecbuild_info("Found git: ${GIT_EXECUTABLE} (found version \"${GIT_VERSION_STRING}\")")
+    execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD
+                    OUTPUT_VARIABLE eccodes_GIT_BRANCH
+                    RESULT_VARIABLE nok ERROR_VARIABLE error
+                    OUTPUT_STRIP_TRAILING_WHITESPACE
+                    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}" )
+    ecbuild_info("ecCodes branch = ${eccodes_GIT_BRANCH}" )
+endif()
+
 ###############################################################################
 # contents
 
@@ -457,7 +480,7 @@ ecbuild_pkgconfig(
   DESCRIPTION    "The ecCodes library"
   LIBRARIES      eccodes
   IGNORE_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
-  VARIABLES      HAVE_MEMFS HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
+  VARIABLES      HAVE_MEMFS HAVE_GEOGRAPHY HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                  HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
                  HAVE_NETCDF HAVE_FORTRAN HAVE_PNG HAVE_AEC
 )
@@ -469,7 +492,7 @@ if( HAVE_FORTRAN )
     DESCRIPTION         "The ecCodes library for Fortran 90"
     IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${PROJECT_BINARY_DIR}/fortran
                         ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
-    VARIABLES           HAVE_MEMFS HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
+    VARIABLES           HAVE_MEMFS HAVE_GEOGRAPHY HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                         HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
                         HAVE_NETCDF HAVE_PNG HAVE_AEC
   )
@@ -494,11 +517,8 @@ ecbuild_info("   |  ecCodes version ${eccodes_VERSION}  |")
 ecbuild_info("   +--------------------------+")
 ecbuild_info("")
 
-ecbuild_info("   +--------------------------------------+")
-ecbuild_info("   | Please note:                         |")
-ecbuild_info("   | For Python3 support, first install   |")
-ecbuild_info("   | ecCodes and then install the Python  |")
-ecbuild_info("   | bindings from PyPI with:             |")
-ecbuild_info("   |   $ pip3 install eccodes             |")
-ecbuild_info("   +--------------------------------------+")
+ecbuild_info("Please note:")
+ecbuild_info(" For Python3 support, you must install the Python bindings.")
+ecbuild_info(" See:")
+ecbuild_info("  https://confluence.ecmwf.int/display/ECC/ecCodes+installation")
 ecbuild_info("")

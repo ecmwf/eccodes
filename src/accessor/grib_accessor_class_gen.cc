@@ -202,13 +202,11 @@ void grib_accessor_gen_t::destroy(grib_context* ct)
 }
 
 
-
-
 // ======================== grib_accessor_class_gen ========================
 
 
-grib_accessor_class_gen_t  _grib_accessor_class_gen = grib_accessor_class_gen_t("gen");
-grib_accessor_class* grib_accessor_class_gen = &_grib_accessor_class_gen;
+grib_accessor_class_gen_t _grib_accessor_class_gen = grib_accessor_class_gen_t("gen");
+grib_accessor_class* grib_accessor_class_gen       = &_grib_accessor_class_gen;
 
 void grib_accessor_class_gen_t::init(grib_accessor* a, const long len, grib_arguments* param)
 {
@@ -229,7 +227,7 @@ void grib_accessor_class_gen_t::init(grib_accessor* a, const long len, grib_argu
             grib_expression* expression = grib_arguments_get_expression(grib_handle_of_accessor(a), act->default_value, 0);
             int type                    = grib_expression_native_type(grib_handle_of_accessor(a), expression);
             switch (type) {
-                // TODO(maee): add single-precision case
+                    // TODO(maee): add single-precision case
 
                 case GRIB_TYPE_DOUBLE:
                     grib_expression_evaluate_double(grib_handle_of_accessor(a), expression, &d);
@@ -312,9 +310,9 @@ long grib_accessor_class_gen_t::byte_offset(grib_accessor* a)
 
 int grib_accessor_class_gen_t::unpack_bytes(grib_accessor* a, unsigned char* val, size_t* len)
 {
-    unsigned char* buf = grib_handle_of_accessor(a)->buffer->data;
-    const long length = a->byte_count();
-    const long offset = a->byte_offset();
+    const unsigned char* buf = grib_handle_of_accessor(a)->buffer->data;
+    const long length  = a->byte_count();
+    const long offset  = a->byte_offset();
 
     if (*len < length) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it is %ld bytes long", a->name, length);
@@ -331,8 +329,8 @@ int grib_accessor_class_gen_t::unpack_bytes(grib_accessor* a, unsigned char* val
 int grib_accessor_class_gen_t::clear(grib_accessor* a)
 {
     unsigned char* buf = grib_handle_of_accessor(a)->buffer->data;
-    const long length = a->byte_count();
-    const long offset = a->byte_offset();
+    const long length  = a->byte_count();
+    const long offset  = a->byte_offset();
 
     memset(buf + offset, 0, length);
 
@@ -342,7 +340,7 @@ int grib_accessor_class_gen_t::clear(grib_accessor* a)
 int grib_accessor_class_gen_t::unpack_long(grib_accessor* a, long* v, size_t* len)
 {
     is_overridden_[UNPACK_LONG] = 0;
-    int type = GRIB_TYPE_UNDEFINED;
+    int type                    = GRIB_TYPE_UNDEFINED;
     if (is_overridden_[UNPACK_DOUBLE] == 1) {
         double val = 0.0;
         size_t l   = 1;
@@ -398,7 +396,7 @@ int grib_accessor_class_gen_t::unpack_string(grib_accessor* a, char* v, size_t* 
     if (is_overridden_[UNPACK_DOUBLE] == 1) {
         double val = 0.0;
         size_t l   = 1;
-        err = a->unpack_double(&val, &l);
+        err        = a->unpack_double(&val, &l);
         if (is_overridden_[UNPACK_DOUBLE] == 1) {
             if (err) return err;
             snprintf(v, 64, "%g", val);
@@ -411,7 +409,7 @@ int grib_accessor_class_gen_t::unpack_string(grib_accessor* a, char* v, size_t* 
     if (is_overridden_[UNPACK_LONG] == 1) {
         long val = 0;
         size_t l = 1;
-        err = a->unpack_long(&val, &l);
+        err      = a->unpack_long(&val, &l);
         if (is_overridden_[UNPACK_LONG] == 1) {
             if (err) return err;
             snprintf(v, 64, "%ld", val);
@@ -432,7 +430,7 @@ int grib_accessor_class_gen_t::unpack_string_array(grib_accessor* a, char** v, s
     if (err)
         return err;
     v[0] = (char*)grib_context_malloc_clear(a->context, length);
-    a->unpack_string(v[0], &length); // TODO(masn): check return value
+    a->unpack_string(v[0], &length);  // TODO(masn): check return value
     *len = 1;
 
     return GRIB_SUCCESS;
@@ -497,7 +495,7 @@ int grib_accessor_class_gen_t::pack_expression(grib_accessor* a, grib_expression
 int grib_accessor_class_gen_t::pack_long(grib_accessor* a, const long* v, size_t* len)
 {
     is_overridden_[PACK_LONG] = 0;
-    grib_context* c = a->context;
+    grib_context* c           = a->context;
     if (is_overridden_[PACK_DOUBLE]) {
         double* val = (double*)grib_context_malloc(c, *len * (sizeof(double)));
         if (!val) {
@@ -541,7 +539,7 @@ int pack_double_array_as_long(grib_accessor* a, const double* v, size_t* len)
 int grib_accessor_class_gen_t::pack_double(grib_accessor* a, const double* v, size_t* len)
 {
     is_overridden_[PACK_DOUBLE] = 0;
-    grib_context* c = a->context;
+    grib_context* c             = a->context;
 
     if (is_overridden_[PACK_LONG] || strcmp(a->cclass->name, "codetable") == 0) {
         /* ECC-648: Special case of codetable */
@@ -561,7 +559,7 @@ int grib_accessor_class_gen_t::pack_string_array(grib_accessor* a, const char** 
     size_t length     = 0;
     grib_accessor* as = 0;
 
-    as = a;
+    as     = a;
     long i = (long)*len - 1;
     while (as && i >= 0) {
         length = strlen(v[i]);
@@ -578,9 +576,9 @@ int grib_accessor_class_gen_t::pack_string(grib_accessor* a, const char* v, size
 {
     is_overridden_[PACK_STRING] = 0;
     if (is_overridden_[PACK_DOUBLE]) {
-        size_t l   = 1;
+        size_t l     = 1;
         char* endPtr = NULL; /* for error handling */
-        double val = strtod(v, &endPtr);
+        double val   = strtod(v, &endPtr);
         if (*endPtr) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
                              "%s: Invalid value (%s) for key '%s'. String cannot be converted to a double",
@@ -593,7 +591,7 @@ int grib_accessor_class_gen_t::pack_string(grib_accessor* a, const char* v, size
     if (is_overridden_[PACK_LONG]) {
         size_t l = 1;
         long val = atol(v);
-        int err = a->pack_long(&val, &l);
+        int err  = a->pack_long(&val, &l);
         if (is_overridden_[PACK_LONG]) {
             return err;
         }
@@ -721,31 +719,37 @@ grib_accessor* grib_accessor_class_gen_t::make_clone(grib_accessor* a, grib_sect
 }
 
 
+grib_accessor_class_gen_t::~grib_accessor_class_gen_t() {};
 
-
-grib_accessor_class_gen_t::~grib_accessor_class_gen_t(){};
-
-void grib_accessor_class_gen_t::post_init(grib_accessor*){
+void grib_accessor_class_gen_t::post_init(grib_accessor*)
+{
     return;
 };
-int grib_accessor_class_gen_t::pack_missing(grib_accessor*) {
+int grib_accessor_class_gen_t::pack_missing(grib_accessor*)
+{
     throw std::runtime_error("grib_accessor_class_gen_t::pack_missing not implemented");
 };
-int grib_accessor_class_gen_t::pack_float(grib_accessor*, const float*, size_t* len) {
+int grib_accessor_class_gen_t::pack_float(grib_accessor*, const float*, size_t* len)
+{
     throw std::runtime_error("grib_accessor_class_gen_t::pack_float not implemented");
 };
-void grib_accessor_class_gen_t::resize(grib_accessor*, size_t) {
+void grib_accessor_class_gen_t::resize(grib_accessor*, size_t)
+{
     throw std::runtime_error("grib_accessor_class_gen_t::resize not implemented");
 };
-int grib_accessor_class_gen_t::nearest_smaller_value(grib_accessor*, double, double*) {
+int grib_accessor_class_gen_t::nearest_smaller_value(grib_accessor*, double, double*)
+{
     throw std::runtime_error("grib_accessor_class_gen_t::nearest_smaller_value not implemented");
 };
-int grib_accessor_class_gen_t::unpack_float_element(grib_accessor*, size_t, float*) {
+int grib_accessor_class_gen_t::unpack_float_element(grib_accessor*, size_t, float*)
+{
     throw std::runtime_error("grib_accessor_class_gen_t::unpack_float_element not implemented");
 };
-int unpack_element_set(grib_accessor*, const size_t*, size_t, double*) {
+int unpack_element_set(grib_accessor*, const size_t*, size_t, double*)
+{
     throw std::runtime_error("grib_accessor_class_gen_t::unpack_element_set not implemented");
 };
-int grib_accessor_class_gen_t::unpack_float_element_set(grib_accessor*, const size_t*, size_t, float*) {
+int grib_accessor_class_gen_t::unpack_float_element_set(grib_accessor*, const size_t*, size_t, float*)
+{
     throw std::runtime_error("grib_accessor_class_gen_t::unpack_float_element_set not implemented");
 };

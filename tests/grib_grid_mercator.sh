@@ -9,6 +9,10 @@
 
 . ./include.ctest.sh
 
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
+
 # Define a common label for all the tmp files
 label="grib_mercator_test"
 tempOut="temp.${label}.out"
@@ -28,11 +32,30 @@ cat > $tempFilt <<EOF
  print "[distinctLongitudes]";
 EOF
 
-${tools_dir}/grib_filter $tempFilt $input
+${tools_dir}/grib_filter $tempFilt $input > $tempOut
 
 # Nearest function
 ${tools_dir}/grib_ls -l 19,-97,1 $input > $tempOut
 grep -q "Point chosen #1 index=618" $tempOut
+
+# Error conditions
+# ----------------
+input=${data_dir}/mercator.grib2
+set +e
+${tools_dir}/grib_get_data -s latitudeOfFirstGridPointInDegrees=90 $input > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Transformation cannot be computed at the poles" $tempOut
+
+input=${data_dir}/mercator.grib2
+set +e
+${tools_dir}/grib_get_data -s Ni=1 $input > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Wrong number of points" $tempOut
+
 
 # Clean up
 rm -f $tempFilt $tempOut

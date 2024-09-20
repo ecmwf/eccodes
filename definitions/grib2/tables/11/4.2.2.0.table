@@ -32,6 +32,4 @@
 30 30 Deciduous forest cover (Proportion)
 31 31 Normalized differential vegetation index (NDVI) (Numeric)
 32 32 Root depth of vegetation (m)
-# 33-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing

@@ -17,7 +17,6 @@ class grib_accessor_g2date_t : public grib_accessor_long_t
 {
 public:
     /* Members defined in g2date */
-    const char* century;
     const char* year;
     const char* month;
     const char* day;

@@ -10,7 +10,6 @@
 
 /***************************************************************************
  *   Jean Baptiste Filippi - 01.11.2005                                    *
- *   Enrico  Fucile                                                        *
  ***************************************************************************/
 #include "grib_api_internal.h"
 /*
@@ -61,20 +60,17 @@ typedef struct grib_action_concept {
 extern grib_action_class* grib_action_class_gen;
 
 static grib_action_class _grib_action_class_concept = {
-    &grib_action_class_gen,                              /* super                     */
-    "action_class_concept",                              /* name                      */
-    sizeof(grib_action_concept),            /* size                      */
-    0,                                   /* inited */
+    &grib_action_class_gen,                              /* super */
+    "action_class_concept",                 /* name */
+    sizeof(grib_action_concept),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     &destroy,                            /* destroy */
-
-    &dump,                               /* dump                      */
-    0,                               /* xref                      */
-
-    0,             /* create_accessor*/
-
-    0,                            /* notify_change */
+    &dump,                               /* dump */
+    0,                               /* xref */
+    0,                    /* create_accessor */
+    0,                      /* notify_change */
     0,                            /* reparse */
     0,                            /* execute */
 };
@@ -95,7 +91,7 @@ static void init_class(grib_action_class* c)
 static pthread_once_t once   = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-static void init()
+static void init_mutex()
 {
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
@@ -107,7 +103,7 @@ static void init()
 static int once = 0;
 static omp_nest_lock_t mutex;
 
-static void init()
+static void init_mutex()
 {
     GRIB_OMP_CRITICAL(lock_action_class_concept_c)
     {
@@ -188,15 +184,12 @@ grib_action* grib_action_create_concept(grib_context* context,
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
-    int i = 0;
-
-    for (i = 0; i < lvl; i++)
+    for (int i = 0; i < lvl; i++)
         grib_context_print(act->context, f, "     ");
 
-    printf("concept(%s) { ", act->name);
-    printf("\n");
+    printf("concept(%s) { \n", act->name);
 
-    for (i = 0; i < lvl; i++)
+    for (int i = 0; i < lvl; i++)
         grib_context_print(act->context, f, "     ");
     printf("}\n");
 }
@@ -306,7 +299,7 @@ static grib_concept_value* get_concept_impl(grib_handle* h, grib_action_concept*
 static grib_concept_value* get_concept(grib_handle* h, grib_action_concept* self)
 {
     grib_concept_value* result = NULL;
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex);
 
     result = get_concept_impl(h, self);
@@ -317,10 +310,10 @@ static grib_concept_value* get_concept(grib_handle* h, grib_action_concept* self
 
 static int concept_condition_expression_true(grib_handle* h, grib_concept_condition* c, char* exprVal)
 {
-    long lval;
-    long lres      = 0;
-    int ok         = 0;
-    int err        = 0;
+    long lval = 0;
+    long lres = 0;
+    int ok    = 0;
+    int err   = 0;
     const int type = grib_expression_native_type(h, c->expression);
 
     switch (type) {

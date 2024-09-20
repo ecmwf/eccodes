@@ -960,10 +960,10 @@
   !> @param nmessages number of messages found
   !> @param status    CODES_SUCCESS if OK, CODES_END_OF_FILE at the end of file, or error code
   subroutine codes_any_scan_file(ifile, nmessages, status)
-    integer(kind=kindOfInt), intent(in)              :: ifile
-    integer(kind=kindOfInt), intent(out)          :: nmessages
-    integer(kind=kindOfInt)                       :: iret
-    integer(kind=kindOfInt), optional, intent(out)    :: status
+    integer(kind=kindOfInt), intent(in)            :: ifile
+    integer(kind=kindOfInt), intent(out)           :: nmessages
+    integer(kind=kindOfInt)                        :: iret
+    integer(kind=kindOfInt), optional, intent(out) :: status
 
     iret = any_f_scan_file(ifile, nmessages)
     if (present(status)) then
@@ -989,8 +989,8 @@
     integer(kind=kindOfInt), intent(in)              :: ifile
     integer(kind=kindOfInt), intent(in)              :: nmsg
     integer(kind=kindOfInt), intent(out)             :: msgid
-    integer(kind=kindOfInt)                       :: iret
-    integer(kind=kindOfInt), optional, intent(out)    :: status
+    integer(kind=kindOfInt)                          :: iret
+    integer(kind=kindOfInt), optional, intent(out)   :: status
 
     iret = any_f_new_from_scanned_file(ifile, nmsg, msgid)
     if (present(status)) then
@@ -1007,10 +1007,10 @@
   !> @param nmessages number of messages loaded
   !> @param status    CODES_SUCCESS if OK, CODES_END_OF_FILE at the end of file, or error code
   subroutine codes_any_load_all_from_file(ifile, nmessages, status)
-    integer(kind=kindOfInt), intent(in)              :: ifile
-    integer(kind=kindOfInt), intent(out)          :: nmessages
-    integer(kind=kindOfInt)                       :: iret
-    integer(kind=kindOfInt), optional, intent(out)    :: status
+    integer(kind=kindOfInt), intent(in)             :: ifile
+    integer(kind=kindOfInt), intent(out)            :: nmessages
+    integer(kind=kindOfInt)                         :: iret
+    integer(kind=kindOfInt), optional, intent(out)  :: status
 
     iret = any_f_load_all_from_file(ifile, nmessages)
     if (present(status)) then
@@ -2765,6 +2765,29 @@
     call grib_skip_read_only(iterid, status)
   end subroutine codes_skip_read_only
 
+  subroutine codes_skip_function(iterid, status)
+    integer(kind=kindOfInt), intent(in)  :: iterid
+    integer(kind=kindOfInt), optional, intent(out) :: status
+
+    call grib_skip_function(iterid, status)
+  end subroutine codes_skip_function
+
+  subroutine codes_skip_edition_specific(iterid, status)
+    integer(kind=kindOfInt), intent(in)  :: iterid
+    integer(kind=kindOfInt), optional, intent(out) :: status
+
+    call grib_skip_edition_specific(iterid, status)
+  end subroutine codes_skip_edition_specific
+
+
+  !> Set debug mode
+  subroutine codes_set_debug(dmode)
+    integer(kind=kindOfInt), intent(in) :: dmode
+    call grib_set_debug(dmode)
+  end subroutine codes_set_debug
+
+
+
   !> Set the definition path
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
@@ -2789,43 +2812,37 @@
   !> @param path       samples path
   !> @param status     CODES_SUCCESS if OK, integer value on error
   subroutine codes_set_samples_path(path, status)
-    character(len=*), intent(in)   :: path
+    character(len=*), intent(in)                    :: path
     integer(kind=kindOfInt), optional, intent(out)  :: status
 
     call grib_set_samples_path(path, status)
   end subroutine codes_set_samples_path
 
   subroutine codes_julian_to_datetime(jd, year, month, day, hour, minute, second, status)
-    real(kind=kindOfDouble), intent(in)          :: jd
-    integer(kind=kindOfLong), intent(out)         :: year, month, day, hour, minute, second
-    integer(kind=kindOfInt), optional, intent(out)  :: status
+    real(kind=kindOfDouble), intent(in)            :: jd
+    integer(kind=kindOfLong), intent(out)          :: year, month, day, hour, minute, second
+    integer(kind=kindOfInt), optional, intent(out) :: status
     integer(kind=kindOfInt)                        :: iret
 
     iret = grib_f_julian_to_datetime(jd, year, month, day, hour, minute, second)
-    if (iret /= 0) then
-      if (present(status)) then
-        status = iret
-      else
-        call grib_check(iret, 'codes_julian_to_datetime', ' ')
-      end if
-      return
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'codes_julian_to_datetime', ' ')
     end if
   end subroutine codes_julian_to_datetime
 
   subroutine codes_datetime_to_julian(year, month, day, hour, minute, second, jd, status)
-    integer(kind=kindOfLong), intent(in) :: year, month, day, hour, minute, second
-    real(kind=kindOfDouble), intent(out)  :: jd
+    integer(kind=kindOfLong), intent(in)            :: year, month, day, hour, minute, second
+    real(kind=kindOfDouble), intent(out)            :: jd
     integer(kind=kindOfInt), optional, intent(out)  :: status
-    integer(kind=kindOfInt)                        :: iret
+    integer(kind=kindOfInt)                         :: iret
 
     iret = grib_f_datetime_to_julian(year, month, day, hour, minute, second, jd)
-    if (iret /= 0) then
-      if (present(status)) then
-        status = iret
-      else
-        call grib_check(iret, 'codes_datetime_to_julian', ' ')
-      end if
-      return
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'codes_datetime_to_julian', ' ')
     end if
   end subroutine codes_datetime_to_julian
 
@@ -2840,11 +2857,11 @@
   !> @param key           key whose value is to be copied
   !> @param status        GRIB_SUCCESS if OK, integer value on error
   subroutine codes_copy_key(msgid_src, key, msgid_dest, status)
-    integer(kind=kindOfInt), intent(in)  :: msgid_src
-    integer(kind=kindOfInt), intent(in)  :: msgid_dest
-    character(LEN=*), intent(in)  :: key
+    integer(kind=kindOfInt), intent(in)            :: msgid_src
+    integer(kind=kindOfInt), intent(in)            :: msgid_dest
+    character(LEN=*), intent(in)                   :: key
     integer(kind=kindOfInt), optional, intent(out) :: status
-    integer(kind=kindOfInt)                       :: iret
+    integer(kind=kindOfInt)                        :: iret
 
     iret = grib_f_copy_key(msgid_src, key, msgid_dest)
     if (present(status)) then
@@ -2856,7 +2873,7 @@
 
   subroutine codes_bufr_multi_element_constant_arrays_on(status)
     integer(kind=kindOfInt), optional, intent(out) :: status
-    integer(kind=kindOfInt)               :: iret
+    integer(kind=kindOfInt)                        :: iret
 
     iret = codes_f_bufr_multi_element_constant_arrays_on()
     if (present(status)) then
@@ -2868,7 +2885,7 @@
 
   subroutine codes_bufr_multi_element_constant_arrays_off(status)
     integer(kind=kindOfInt), optional, intent(out) :: status
-    integer(kind=kindOfInt)               :: iret
+    integer(kind=kindOfInt)                        :: iret
 
     iret = codes_f_bufr_multi_element_constant_arrays_off()
     if (present(status)) then

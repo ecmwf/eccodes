@@ -38,7 +38,7 @@ alias isRotatedGrid = false;
 if (gridDefinitionTemplateNumber >= 32768) {
   template gridDefinitionSection "grib2/local/[centreForLocal]/template.3.[gridDefinitionTemplateNumber:l].def";
 } else {
-  template gridDefinitionSection "grib2/template.3.[gridDefinitionTemplateNumber:l].def";
+  template gridDefinitionSection "grib2/templates/template.3.[gridDefinitionTemplateNumber:l].def";
 }
 
 if(PLPresent){

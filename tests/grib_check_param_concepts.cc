@@ -86,6 +86,14 @@ static int grib_check_param_concepts(const char* key, const char* filename)
         int type1Missing = -1, type2Missing = -1;
         int err = 0;
         /* concept_value->name is the value of the key (e.g. 151163 or sst) */
+        if (strcmp(key, "cfVarName")==0) {
+            Assert( strlen(concept_value->name) > 0 );
+            if ( isdigit(concept_value->name[0]) || strcmp(concept_value->name, "~")==0 ) {
+                fprintf(stderr, "%s %s: Invalid cfVarName in file %s\n",
+                        key, concept_value->name, filename);
+                return GRIB_INVALID_KEY_VALUE;
+            }
+        }
         while (concept_condition) {
             char condition_value[512] = {0,};
             grib_expression* expression = concept_condition->expression;

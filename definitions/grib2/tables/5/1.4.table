@@ -8,6 +8,4 @@
 6 sa  Processed satellite observations
 7 ra  Processed radar observations
 8 ep  Event Probability
-# 8-191 Reserved
-# 192-254 Reserved for local use
 255 missing Missing

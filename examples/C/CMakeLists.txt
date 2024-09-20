@@ -26,7 +26,6 @@ list( APPEND test_bins
       grib_get_data
       grib_sections_copy
       grib_copy_keys
-      grib_iterator_bitmap
       grib_clone
       grib_copy_message
       grib_ensemble_index

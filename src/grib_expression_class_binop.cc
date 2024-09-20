@@ -42,7 +42,7 @@ or edit "expression.class" and rerun ./make_class.pl
 typedef const char* string; /* to keep make_class.pl happy */
 
 static void    destroy(grib_context*,grib_expression* e);
-static void    print(grib_context*,grib_expression*,grib_handle*);
+static void    print(grib_context*, grib_expression*, grib_handle*, FILE*);
 static void    add_dependency(grib_expression* e, grib_accessor* observer);
 static int     native_type(grib_expression*,grib_handle*);
 static int     evaluate_long(grib_expression*,grib_handle*,long*);
@@ -60,12 +60,12 @@ typedef struct grib_expression_binop{
 
 
 static grib_expression_class _grib_expression_class_binop = {
-    0,                    /* super                     */
-    "binop",                    /* name                      */
-    sizeof(grib_expression_binop),/* size of instance        */
+    0,                      /* super */
+    "binop",                      /* name  */
+    sizeof(grib_expression_binop),/* size of instance */
     0,                           /* inited */
-    0,                     /* constructor               */
-    &destroy,                  /* destructor                */
+    0,                       /* constructor */
+    &destroy,                    /* destructor */
     &print,
     &add_dependency,
     &native_type,
@@ -85,7 +85,6 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
     long v2 = 0;
     grib_expression_binop* e = (grib_expression_binop*)g;
 
-// #if DEBUGGING
 //     {
 //         int typeLeft, typeRight;
 //         const char* nameLeft;
@@ -117,7 +116,6 @@ static int evaluate_double(grib_expression* g, grib_handle* h, double* dres)
     double v2 = 0.0;
     grib_expression_binop* e = (grib_expression_binop*)g;
 
-// #if DEBUGGING
 //     {
 //         int typeLeft, typeRight;
 //         const char* nameLeft;
@@ -144,14 +142,28 @@ static int evaluate_double(grib_expression* g, grib_handle* h, double* dres)
     return GRIB_SUCCESS;
 }
 
-static void print(grib_context* c, grib_expression* g, grib_handle* f)
+static void print(grib_context* c, grib_expression* g, grib_handle* f, FILE* out)
 {
     grib_expression_binop* e = (grib_expression_binop*)g;
-    printf("binop(");
-    grib_expression_print(c, e->left, f);
-    printf(",");
-    grib_expression_print(c, e->right, f);
-    printf(")");
+
+    // Cover a subset of the most commonly used functions
+    // TODO(masn): Can be done in a much better way!
+    //             e.g., the yacc parser passing in the functions name
+    if (e->long_func && e->long_func == grib_op_eq) {
+        fprintf(out, "equals(");
+    } else if (e->long_func && e->long_func == grib_op_ne) {
+        fprintf(out, "not_equals(");
+    } else if (e->long_func && e->long_func == grib_op_lt) {
+        fprintf(out, "less_than(");
+    } else if (e->long_func && e->long_func == grib_op_gt) {
+        fprintf(out, "greater_than(");
+    } else {
+        fprintf(out, "binop(");
+    }
+    grib_expression_print(c, e->left, f, out);
+    fprintf(out, ",");
+    grib_expression_print(c, e->right, f, out);
+    fprintf(out, ")");
 }
 
 static void destroy(grib_context* c, grib_expression* g)

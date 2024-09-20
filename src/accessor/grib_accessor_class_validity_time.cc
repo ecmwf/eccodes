@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -10,7 +9,6 @@
  */
 
 #include "grib_accessor_class_validity_time.h"
-#include "shared_functions.h"
 
 grib_accessor_class_validity_time_t _grib_accessor_class_validity_time{ "validity_time" };
 grib_accessor_class* grib_accessor_class_validity_time = &_grib_accessor_class_validity_time;
@@ -20,9 +18,9 @@ void grib_accessor_class_validity_time_t::init(grib_accessor* a, const long l, g
 {
     grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_validity_time_t* self = (grib_accessor_validity_time_t*)a;
-    grib_handle* hand                   = grib_handle_of_accessor(a);
-    int n                               = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
+    int n = 0;
     self->date      = grib_arguments_get_name(hand, c, n++);
     self->time      = grib_arguments_get_name(hand, c, n++);
     self->step      = grib_arguments_get_name(hand, c, n++);

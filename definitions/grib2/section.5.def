@@ -51,7 +51,7 @@ concept packingType (unknown) {
   "grid_run_length"                      = { dataRepresentationTemplateNumber = 200; }
 }  : dump;
 
-template dataRepresentation "grib2/template.5.[dataRepresentationTemplateNumber:l].def";
+template dataRepresentation "grib2/templates/template.5.[dataRepresentationTemplateNumber:l].def";
 
 alias ls.packingType=packingType;
 alias dataRepresentation=packingType;

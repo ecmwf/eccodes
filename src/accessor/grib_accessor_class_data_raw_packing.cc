@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -12,11 +11,12 @@
 #include "grib_accessor_class_data_raw_packing.h"
 #include "grib_ieeefloat.h"
 
-grib_accessor_class_data_raw_packing_t _grib_accessor_class_data_raw_packing{"data_raw_packing"};
+grib_accessor_class_data_raw_packing_t _grib_accessor_class_data_raw_packing{ "data_raw_packing" };
 grib_accessor_class* grib_accessor_class_data_raw_packing = &_grib_accessor_class_data_raw_packing;
 
 
-void grib_accessor_class_data_raw_packing_t::init(grib_accessor* a, const long v, grib_arguments* args){
+void grib_accessor_class_data_raw_packing_t::init(grib_accessor* a, const long v, grib_arguments* args)
+{
     grib_accessor_class_values_t::init(a, v, args);
     grib_accessor_data_raw_packing_t* self = (grib_accessor_data_raw_packing_t*)a;
 
@@ -25,19 +25,21 @@ void grib_accessor_class_data_raw_packing_t::init(grib_accessor* a, const long v
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_class_data_raw_packing_t::value_count(grib_accessor* a, long* n_vals){
+int grib_accessor_class_data_raw_packing_t::value_count(grib_accessor* a, long* n_vals)
+{
     grib_accessor_data_raw_packing_t* self = (grib_accessor_data_raw_packing_t*)a;
-    *n_vals                              = 0;
+    *n_vals                                = 0;
     return grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_values, n_vals);
 }
 
-int grib_accessor_class_data_raw_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_data_raw_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_data_raw_packing_t* self = (grib_accessor_data_raw_packing_t*)a;
-    unsigned char* buf                   = NULL;
-    int bytes                            = 0;
-    size_t nvals                         = 0;
-    long inlen                           = a->byte_count();
-    long precision = 0;
+    unsigned char* buf                     = NULL;
+    int bytes                              = 0;
+    size_t nvals                           = 0;
+    long inlen                             = a->byte_count();
+    long precision                         = 0;
 
     int code = GRIB_SUCCESS;
 
@@ -71,7 +73,8 @@ int grib_accessor_class_data_raw_packing_t::unpack_double(grib_accessor* a, doub
     return code;
 }
 
-int grib_accessor_class_data_raw_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_data_raw_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_data_raw_packing_t* self = (grib_accessor_data_raw_packing_t*)a;
 
     int bytes             = 0;
@@ -127,7 +130,7 @@ clean_up:
      *  free(buffer);
      * if (free_values)
      *  free(values);
-    */
+     */
 
     grib_buffer_replace(a, buffer, bufsize, 1, 1);
 
@@ -142,14 +145,16 @@ clean_up:
     return code;
 }
 
-int grib_accessor_class_data_raw_packing_t::unpack_double_element(grib_accessor* a, size_t idx, double* val){
-    int ret                              = 0;
+int grib_accessor_class_data_raw_packing_t::unpack_double_element(grib_accessor* a, size_t idx, double* val)
+{
+    int ret                                = 0;
     grib_accessor_data_raw_packing_t* self = (grib_accessor_data_raw_packing_t*)a;
-    unsigned char* buf                   = NULL;
-    int bytes                            = 0;
-    size_t nvals                         = 0;
-    long inlen                           = a->byte_count();    long pos                             = 0;
-    long precision                       = 0;
+    unsigned char* buf                     = NULL;
+    int bytes                              = 0;
+    size_t nvals                           = 0;
+    long inlen                             = a->byte_count();
+    long pos                               = 0;
+    long precision                         = 0;
 
     if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->precision, &precision)) != GRIB_SUCCESS)
         return ret;
@@ -183,11 +188,12 @@ int grib_accessor_class_data_raw_packing_t::unpack_double_element(grib_accessor*
     return ret;
 }
 
-int grib_accessor_class_data_raw_packing_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array){
-    int err = 0;
+int grib_accessor_class_data_raw_packing_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+{
+    int err  = 0;
     size_t i = 0;
-    for (i=0; i<len; ++i) {
-        if ((err = unpack_double_element(a, index_array[i], val_array+i)) != GRIB_SUCCESS)
+    for (i = 0; i < len; ++i) {
+        if ((err = unpack_double_element(a, index_array[i], val_array + i)) != GRIB_SUCCESS)
             return err;
     }
     return GRIB_SUCCESS;

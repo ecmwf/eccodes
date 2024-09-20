@@ -5,3 +5,6 @@
 3 3 Foundation sea-surface temperature (K)
 4 4 Estimated bias between sea-surface temperature and standard (K)
 5 5 Estimated standard deviation between sea surface temperature and standard (K)
+# 6-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing
