@@ -3,6 +3,9 @@
 # Uncertainties in ensembles of regional re-analysis project (UERRA)
 constant marsClass = 'ur';
 
+# UERRA data will always use pre-MTG2 definitions
+constant MTG2Switch = 0;
+
 alias tigge_short_name=shortName;
 alias short_name=shortName;
 alias parameter=paramId;

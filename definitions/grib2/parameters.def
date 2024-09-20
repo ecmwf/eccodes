@@ -3,14 +3,6 @@
 transient dummyc=0: hidden;
 # If MTG2Switch is defined and it is 0 (pre-MTG2) we need to look at pre-MTG2 definitions.
 # Otherwise (if it is different from 0, or not defined) look at new definitions.
-
-# Possible other case, if we want non-local data (e.g. S2S, TIGGE) to keep the old way.
-# In this case we would also need the "paramId.[tablesVersionMTG2Switch].def" files in the S2S
-# pseudocentre folder.
-# Would need to move the MTG2Switch tablesVersion to Section 1. Put it here for now.
-# constant tablesVersionMTG2Switch=33: hidden;
-# if ( (defined(MTG2Switch) and MTG2Switch == 0) or (!defined(MTG2Switch) and tablesVersion <= tablesVersionMTG2Switch) ) {
-
 # Cannot use constant in concept, has to be string, so duplicating code for now
 
 if ( defined(MTG2Switch) and MTG2Switch == 0 ) {

@@ -7,11 +7,11 @@
 1 = {tablesVersion=35; productionStatusOfProcessedData=1; modelVersion='cy50r1';}
 1 = {tablesVersion=35; productionStatusOfProcessedData=0; modelVersion='cy50r2';}
 # MC
-2 = {tablesVersion=35; productionStatusOfProcessedData=1; modelVersion='cy50r1'; class=mc;}
-2 = {tablesVersion=35; productionStatusOfProcessedData=0; modelVersion='cy50r2'; class=mc;}
+2 = {tablesVersion=35; productionStatusOfProcessedData=1; modelVersion='cy50r1'; marsClass=mc;}
+2 = {tablesVersion=35; productionStatusOfProcessedData=0; modelVersion='cy50r2'; marsClass=mc;}
 # RD
 0 = {tablesVersion=35; productionStatusOfProcessedData=2; modelVersion='cy50r1';}
-1 = {tablesVersion=35; productionStatusOfProcessedData=2; modelVersion='cy50r1'; typeOfProcessedData=9;}
+# 1 = {tablesVersion=35; productionStatusOfProcessedData=2; modelVersion='cy50r1'; typeOfProcessedData=9;}
 1 = {tablesVersion=35; productionStatusOfProcessedData=2; modelVersion='cy50r2';}
 
 # SEAS6
