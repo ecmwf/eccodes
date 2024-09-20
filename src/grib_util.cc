@@ -875,6 +875,20 @@ static int write_out_error_data_file(const double* data_values, size_t data_valu
     return GRIB_SUCCESS;
 }
 
+static long get_bitsPerValue_for_packingType(const int specPackingType, const long specBitsPerValue)
+{
+    if (specPackingType == GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE) {
+        if (specBitsPerValue > 60) return 60;
+    }
+    else if (specPackingType == GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER) {
+        if (specBitsPerValue > 60) return 32;
+    }
+    else if (specPackingType == GRIB_UTIL_PACKING_TYPE_CCSDS) {
+        if (specBitsPerValue > 32) return 32;
+    }
+    return specBitsPerValue; //original
+}
+
 static int get_grib_sample_name(grib_handle* h, long editionNumber,
                                 const grib_util_grid_spec* spec, const char* grid_type, char* sample_name)
 {
@@ -1341,17 +1355,22 @@ grib_handle* grib_util_set_spec(grib_handle* h,
                 Assert(grib_get_long(h, "bitsPerValue", &bitsPerValue) == 0);
                 SET_LONG_VALUE("bitsPerValue", bitsPerValue);
             }
-        } break;
+        }
+        break;
 
-        case GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES:
-            SET_LONG_VALUE("bitsPerValue", packing_spec->bitsPerValue);
-            break;
+        case GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES: {
+            // See ECC-1921
+            const long bitsPerValue = get_bitsPerValue_for_packingType(packing_spec->packing_type, packing_spec->bitsPerValue);
+            SET_LONG_VALUE("bitsPerValue", bitsPerValue);
+        }
+        break;
 
         case GRIB_UTIL_ACCURACY_SAME_DECIMAL_SCALE_FACTOR_AS_INPUT: {
             long decimalScaleFactor = 0;
             Assert(grib_get_long(h, "decimalScaleFactor", &decimalScaleFactor) == 0);
             SET_LONG_VALUE("decimalScaleFactor", decimalScaleFactor);
-        } break;
+        }
+        break;
 
         case GRIB_UTIL_ACCURACY_USE_PROVIDED_DECIMAL_SCALE_FACTOR:
             SET_LONG_VALUE("decimalScaleFactor", packing_spec->decimalScaleFactor);
