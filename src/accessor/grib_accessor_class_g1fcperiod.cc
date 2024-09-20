@@ -18,7 +18,7 @@ int grib_accessor_g1fcperiod_t::unpack_string(char* val, size_t* len)
     long start = 0, theEnd = 0;
     char tmp[1024];
     const size_t tmpLen = sizeof(tmp);
-    int err             = grib_g1_step_get_steps(this, &start, &theEnd);
+    int err             = grib_g1_step_get_steps(&start, &theEnd);
     size_t l            = 0;
 
     if (err)

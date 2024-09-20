@@ -23,7 +23,7 @@ public:
     void dump(grib_dumper*) override;
     void init(const long, grib_arguments*) override;
 
-public:
+protected:
     const char* coded_values_;
     const char* real_part_;
 };

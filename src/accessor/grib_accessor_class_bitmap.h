@@ -31,11 +31,11 @@ public:
     int unpack_double_element(size_t i, double* val) override;
     int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) override;
 
-    const char* missing_value() const { return missing_value_; }
+protected:
+    const char* missing_value_;
 
 private:
     const char* tableReference_;
-    const char* missing_value_;
     const char* offsetbsec_;
     const char* sLength_;
 

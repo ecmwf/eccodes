@@ -29,9 +29,11 @@ public:
     void dump(grib_dumper*) override;
     void init(const long, grib_arguments*) override;
 
-public:
+protected:
     const char* key_;
     long start_;
     size_t length_;
+
+private:
     long scale_;
 };

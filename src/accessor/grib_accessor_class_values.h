@@ -28,10 +28,13 @@ public:
     void update_size(size_t) override;
     int compare(grib_accessor*) override;
 
-public:
+protected:
     int carg_;
     const char* seclen_;
     const char* offsetdata_;
     const char* offsetsection_;
     int dirty_;
+
+private:
+    long init_length();
 };

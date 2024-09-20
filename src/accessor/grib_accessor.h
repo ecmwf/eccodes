@@ -60,7 +60,6 @@ public:
     virtual grib_accessor* next_accessor()                                                          = 0;
     virtual void resize(size_t new_size)                                                            = 0;
     virtual void destroy(grib_context* ct)                                                          = 0;
-
     virtual int compare_accessors(grib_accessor* a2, int compare_flags);
     virtual int compare(grib_accessor*) = 0;
     virtual int add_attribute(grib_accessor* attr, int nest_if_clash);
@@ -78,6 +77,7 @@ public:
     virtual grib_accessor* make_clone(grib_section*, int*) = 0;
 
 public:
+    // TODO(maee): make private
     grib_context* context_;
     const char* name_;       /** < name of the accessor */
     const char* class_name_; /** < name of the class (Artifact from C version of ecCodes) */

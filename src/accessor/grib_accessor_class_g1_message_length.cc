@@ -79,7 +79,7 @@ int grib_accessor_g1_message_length_t::pack_long(const long* val, size_t* len)
         /* Do not directly call pack_long on base class */
         /* because in this special case we want to skip the checks. */
         /* So we call the helper function which has an extra argument */
-        return pack_long_unsigned_helper(this, val, len, /*check=*/0);
+        return pack_long_unsigned_helper(val, len, /*check=*/0);
     }
 
     if (!s4)
@@ -97,7 +97,7 @@ int grib_accessor_g1_message_length_t::pack_long(const long* val, size_t* len)
 
     *len = 1;
     /* Do not do the length checks in this special case */
-    if ((ret = pack_long_unsigned_helper(this, &tlen, len, /*check=*/0)) != GRIB_SUCCESS)
+    if ((ret = pack_long_unsigned_helper(&tlen, len, /*check=*/0)) != GRIB_SUCCESS)
         return ret;
 
     // if((ret = super->pack_long(a,&tlen,len)) != GRIB_SUCCESS) return ret;

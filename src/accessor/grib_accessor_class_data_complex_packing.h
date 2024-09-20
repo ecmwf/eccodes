@@ -29,7 +29,7 @@ public:
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
 
-    // TODO(maee): make private
+protected:
     const char* sub_j_;
     const char* sub_k_;
     const char* sub_m_;

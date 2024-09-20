@@ -69,11 +69,7 @@ public:
     grib_accessor* make_clone(grib_section*, int*) override;
     grib_accessor* next_accessor() override;  // TODO: Implement
 
-
-    template <typename T>
-    int unpack_helper(grib_accessor* a, T* v, size_t* len);
-
-public:
+private:
     enum
     {
         PACK_DOUBLE,
@@ -86,6 +82,9 @@ public:
         UNPACK_STRING,
     };
     std::bitset<8> is_overridden_ = 0b11111111;
+
+    template <typename T>
+    int unpack_helper(grib_accessor* a, T* v, size_t* len);
 };
 
 

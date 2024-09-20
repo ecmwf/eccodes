@@ -25,7 +25,7 @@ public:
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
 
-public:
+protected:
     const char* century_;
     const char* year_;
     const char* month_;

@@ -13,16 +13,15 @@
 grib_accessor_values_t _grib_accessor_values{};
 grib_accessor* grib_accessor_values = &_grib_accessor_values;
 
-long init_length(grib_accessor* a)
+long grib_accessor_values_t::init_length()
 {
-    grib_accessor_values_t* self = (grib_accessor_values_t*)a;
     int ret                      = 0;
 
     long seclen        = 0;
     long offsetsection = 0;
     long offsetdata    = 0;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->seclen_, &seclen)))
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), seclen_, &seclen)))
         return ret;
 
     if (seclen == 0) {
@@ -30,16 +29,16 @@ long init_length(grib_accessor* a)
         return 0;
     }
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetsection_, &offsetsection)))
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), offsetsection_, &offsetsection)))
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetdata_, &offsetdata)))
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), offsetdata_, &offsetdata)))
         return ret;
 
     /* When reparsing */
     if (offsetdata < offsetsection) {
         /* printf("init_length offsetdata < offsetsection=0\n"); */
-        Assert(grib_handle_of_accessor(a)->loader);
+        Assert(grib_handle_of_accessor(this)->loader);
         return 0;
     }
 
@@ -56,7 +55,7 @@ void grib_accessor_values_t::init(const long v, grib_arguments* params)
     offsetsection_ = grib_arguments_get_name(grib_handle_of_accessor(this), params, carg_++);
     dirty_         = 1;
 
-    length_ = init_length(this);
+    length_ = init_length();
     /* Assert(length_ >=0); */
 }
 

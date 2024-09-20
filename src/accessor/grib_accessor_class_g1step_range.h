@@ -30,7 +30,10 @@ public:
     void dump(grib_dumper*) override;
     void init(const long, grib_arguments*) override;
 
-public:
+protected:
+    int grib_g1_step_get_steps(long* start, long* theEnd);
+
+private:
     const char* p1_;
     const char* p2_;
     const char* timeRangeIndicator_;
