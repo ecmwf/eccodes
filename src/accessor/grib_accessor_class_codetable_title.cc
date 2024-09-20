@@ -43,7 +43,7 @@ int grib_accessor_codetable_title_t::unpack_string(char* buffer, size_t* len)
     if ((err = ((grib_accessor*)ca)->unpack_long(&value, &size)) != GRIB_SUCCESS)
         return err;
 
-    table = ca->table_;
+    table = ca->table();
 
     if (table && (value >= 0) && (value < table->size) && table->entries[value].title) {
         strcpy(tmp, table->entries[value].title);

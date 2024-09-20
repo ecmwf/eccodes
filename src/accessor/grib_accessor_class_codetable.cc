@@ -455,7 +455,7 @@ int codes_codetable_get_contents_malloc(const grib_handle* h, const char* key, c
         return err;
     }
 
-    const grib_codetable* table = ca->table_;
+    const grib_codetable* table = ca->table();
     if (!table) return GRIB_INTERNAL_ERROR;
 
     grib_codetable* cached_table = c->codetable;  // Access the codetable cache
