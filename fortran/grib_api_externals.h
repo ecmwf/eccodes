@@ -79,7 +79,7 @@ integer, external :: grib_f_set_int, grib_f_set_int_array, &
 integer, external :: grib_f_get_message_size, grib_f_copy_message, grib_f_count_in_file
 integer, external :: grib_f_write, grib_f_multi_write, grib_f_multi_append
 integer, external :: grib_f_clone, grib_f_copy_namespace
-external :: grib_f_check , grib_f_set_debug
+external :: grib_f_check , grib_f_set_debug, grib_f_set_data_quality_checks
 integer, external :: grib_f_util_sections_copy
 integer, external :: grib_f_set_definitions_path, grib_f_set_samples_path
 integer, external :: grib_f_julian_to_datetime, grib_f_datetime_to_julian, grib_f_copy_key
