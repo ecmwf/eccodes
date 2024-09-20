@@ -14,15 +14,14 @@
 grib_accessor_bitmap_t _grib_accessor_bitmap{};
 grib_accessor* grib_accessor_bitmap = &_grib_accessor_bitmap;
 
-static void compute_size(grib_accessor* a)
+void grib_accessor_bitmap_t::compute_size()
 {
-    grib_accessor_bitmap_t* self = (grib_accessor_bitmap_t*)a;
     long slen                    = 0;
     long off                     = 0;
-    grib_handle* hand            = grib_handle_of_accessor(a);
+    grib_handle* hand            = grib_handle_of_accessor(this);
 
-    grib_get_long_internal(hand, self->offsetbsec_, &off);
-    grib_get_long_internal(hand, self->sLength_, &slen);
+    grib_get_long_internal(hand, offsetbsec_, &off);
+    grib_get_long_internal(hand, sLength_, &slen);
 
     if (slen == 0) {
         grib_accessor* seclen;
@@ -30,7 +29,7 @@ static void compute_size(grib_accessor* a)
         /* Assume reparsing */
         Assert(hand->loader != 0);
         if (hand->loader != 0) {
-            seclen = grib_find_accessor(hand, self->sLength_);
+            seclen = grib_find_accessor(hand, sLength_);
             Assert(seclen);
             grib_get_block_length(seclen->parent_, &size);
             slen = size;
@@ -39,15 +38,15 @@ static void compute_size(grib_accessor* a)
 
     // printf("compute_size off=%ld slen=%ld a->offset_=%ld\n", (long)off,(long)slen,(long)offset_ );
 
-    a->length_ = off + (slen - a->offset_);
+    length_ = off + (slen - offset_);
 
-    if (a->length_ < 0) {
+    if (length_ < 0) {
         /* Assume reparsing */
         /*Assert(hand->loader != 0);*/
-        a->length_ = 0;
+        length_ = 0;
     }
 
-    Assert(a->length_ >= 0);
+    Assert(length_ >= 0);
 }
 
 void grib_accessor_bitmap_t::init(const long len, grib_arguments* arg)
@@ -61,7 +60,7 @@ void grib_accessor_bitmap_t::init(const long len, grib_arguments* arg)
     offsetbsec_     = grib_arguments_get_name(hand, arg, n++);
     sLength_        = grib_arguments_get_name(hand, arg, n++);
 
-    compute_size(this);
+    compute_size();
 }
 
 long grib_accessor_bitmap_t::next_offset()

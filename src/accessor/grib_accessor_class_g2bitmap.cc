@@ -39,7 +39,7 @@ int grib_accessor_g2bitmap_t::pack_double(const double* val, size_t* len)
     double miss_values = 0;
     size_t tlen        = (*len + 7) / 8;
 
-    if ((err = grib_get_double_internal(grib_handle_of_accessor(this), missing_value_, &miss_values)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(grib_handle_of_accessor(this), missing_value(), &miss_values)) != GRIB_SUCCESS)
         return err;
 
     buf = (unsigned char*)grib_context_malloc_clear(context_, tlen);
