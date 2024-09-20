@@ -18,7 +18,6 @@ grib_accessor* grib_accessor_bufr_data_element_t::make_clone(grib_section* s, in
     grib_accessor* the_clone = NULL;
     grib_accessor* attribute = NULL;
     grib_accessor_bufr_data_element_t* elementAccessor;
-    grib_accessor_bufr_data_element_t* self;
     char* copied_name = NULL;
     int i;
     grib_action creator = {
@@ -36,20 +35,19 @@ grib_accessor* grib_accessor_bufr_data_element_t::make_clone(grib_section* s, in
     the_clone                                  = grib_accessor_factory(s, &creator, 0, NULL);
     copied_name                                = grib_context_strdup(context_, name_);
     the_clone->name_                           = copied_name;
-    elementAccessor                            = (grib_accessor_bufr_data_element_t*)the_clone;
-    self                                       = (grib_accessor_bufr_data_element_t*)this;
+    elementAccessor                            = dynamic_cast<grib_accessor_bufr_data_element_t*>(the_clone);
     the_clone->flags_                          = flags_;
     the_clone->parent_                         = NULL;
     the_clone->h_                              = s->h;
-    elementAccessor->index_                    = self->index_;
-    elementAccessor->type_                     = self->type_;
-    elementAccessor->numberOfSubsets_          = self->numberOfSubsets_;
-    elementAccessor->subsetNumber_             = self->subsetNumber_;
-    elementAccessor->compressedData_           = self->compressedData_;
-    elementAccessor->descriptors_              = self->descriptors_;
-    elementAccessor->numericValues_            = self->numericValues_;
-    elementAccessor->stringValues_             = self->stringValues_;
-    elementAccessor->elementsDescriptorsIndex_ = self->elementsDescriptorsIndex_;
+    elementAccessor->index_                    = index_;
+    elementAccessor->type_                     = type_;
+    elementAccessor->numberOfSubsets_          = numberOfSubsets_;
+    elementAccessor->subsetNumber_             = subsetNumber_;
+    elementAccessor->compressedData_           = compressedData_;
+    elementAccessor->descriptors_              = descriptors_;
+    elementAccessor->numericValues_            = numericValues_;
+    elementAccessor->stringValues_             = stringValues_;
+    elementAccessor->elementsDescriptorsIndex_ = elementsDescriptorsIndex_;
     elementAccessor->cname_                    = copied_name; /* ECC-765 */
 
     i = 0;
