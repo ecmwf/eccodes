@@ -37,7 +37,17 @@ public:
     int unpack_double_element(size_t i, double* val) override;
     grib_accessor* make_clone(grib_section*, int*) override;
 
-public:
+    void accessor_bufr_data_element_set_index(long);
+    void accessor_bufr_data_element_set_type(int);
+    void accessor_bufr_data_element_set_numberOfSubsets(long);
+    void accessor_bufr_data_element_set_subsetNumber(long);
+    void accessor_bufr_data_element_set_compressedData(int);
+    void accessor_bufr_data_element_set_descriptors(bufr_descriptors_array*);
+    void accessor_bufr_data_element_set_numericValues(grib_vdarray*);
+    void accessor_bufr_data_element_set_stringValues(grib_vsarray*);
+    void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_viarray*);
+
+private:
     long index_;
     int type_;
     long compressedData_;

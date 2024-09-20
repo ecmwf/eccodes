@@ -63,58 +63,49 @@ grib_accessor* grib_accessor_bufr_data_element_t::make_clone(grib_section* s, in
     return the_clone;
 }
 
-void accessor_bufr_data_element_set_index(grib_accessor* a, long index)
+void grib_accessor_bufr_data_element_t::accessor_bufr_data_element_set_index(long index)
 {
-    grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    self->index_                            = index;
+    index_ = index;
 }
 
-void accessor_bufr_data_element_set_type(grib_accessor* a, int type)
+void grib_accessor_bufr_data_element_t::accessor_bufr_data_element_set_type(int type)
 {
-    grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    self->type_                             = type;
+    type_ = type;
 }
 
-void accessor_bufr_data_element_set_numberOfSubsets(grib_accessor* a, long numberOfSubsets)
+void grib_accessor_bufr_data_element_t::accessor_bufr_data_element_set_numberOfSubsets(long numberOfSubsets)
 {
-    grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    self->numberOfSubsets_                  = numberOfSubsets;
+    numberOfSubsets_ = numberOfSubsets;
 }
 
-void accessor_bufr_data_element_set_subsetNumber(grib_accessor* a, long subsetNumber)
+void grib_accessor_bufr_data_element_t::accessor_bufr_data_element_set_subsetNumber(long subsetNumber)
 {
-    grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    self->subsetNumber_                     = subsetNumber;
+    subsetNumber_ = subsetNumber;
 }
 
-void accessor_bufr_data_element_set_compressedData(grib_accessor* a, int compressedData)
+void grib_accessor_bufr_data_element_t::accessor_bufr_data_element_set_compressedData(int compressedData)
 {
-    grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    self->compressedData_                   = compressedData;
+    compressedData_ = compressedData;
 }
 
-void accessor_bufr_data_element_set_descriptors(grib_accessor* a, bufr_descriptors_array* descriptors)
+void grib_accessor_bufr_data_element_t::accessor_bufr_data_element_set_descriptors(bufr_descriptors_array* descriptors)
 {
-    grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    self->descriptors_                      = descriptors;
+    descriptors_ = descriptors;
 }
 
-void accessor_bufr_data_element_set_numericValues(grib_accessor* a, grib_vdarray* numericValues)
+void grib_accessor_bufr_data_element_t::accessor_bufr_data_element_set_numericValues(grib_vdarray* numericValues)
 {
-    grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    self->numericValues_                    = numericValues;
+    numericValues_ = numericValues;
 }
 
-void accessor_bufr_data_element_set_stringValues(grib_accessor* a, grib_vsarray* stringValues)
+void grib_accessor_bufr_data_element_t::accessor_bufr_data_element_set_stringValues(grib_vsarray* stringValues)
 {
-    grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    self->stringValues_                     = stringValues;
+    stringValues_ = stringValues;
 }
 
-void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor* a, grib_viarray* elementsDescriptorsIndex)
+void grib_accessor_bufr_data_element_t::accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_viarray* elementsDescriptorsIndex)
 {
-    grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    self->elementsDescriptorsIndex_         = elementsDescriptorsIndex;
+    elementsDescriptorsIndex_ = elementsDescriptorsIndex;
 }
 
 void grib_accessor_bufr_data_element_t::init(const long len, grib_arguments* params)

@@ -196,15 +196,15 @@ void grib_viarray_delete_content(grib_context* c, grib_viarray* v);
 /* grib_accessor_class_bufr_data_array.cc*/
 
 /* grib_accessor_class_bufr_data_element.cc */
-void accessor_bufr_data_element_set_index(grib_accessor* a, long index);
-void accessor_bufr_data_element_set_type(grib_accessor* a, int type);
-void accessor_bufr_data_element_set_numberOfSubsets(grib_accessor* a, long numberOfSubsets);
-void accessor_bufr_data_element_set_subsetNumber(grib_accessor* a, long subsetNumber);
-void accessor_bufr_data_element_set_compressedData(grib_accessor* a, int compressedData);
-void accessor_bufr_data_element_set_descriptors(grib_accessor* a, bufr_descriptors_array* descriptors);
-void accessor_bufr_data_element_set_numericValues(grib_accessor* a, grib_vdarray* numericValues);
-void accessor_bufr_data_element_set_stringValues(grib_accessor* a, grib_vsarray* stringValues);
-void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor* a, grib_viarray* elementsDescriptorsIndex);
+//void accessor_bufr_data_element_set_index(grib_accessor* a, long index);
+//void accessor_bufr_data_element_set_type(grib_accessor* a, int type);
+//void accessor_bufr_data_element_set_numberOfSubsets(grib_accessor* a, long numberOfSubsets);
+//void accessor_bufr_data_element_set_subsetNumber(grib_accessor* a, long subsetNumber);
+//void accessor_bufr_data_element_set_compressedData(grib_accessor* a, int compressedData);
+//void accessor_bufr_data_element_set_descriptors(grib_accessor* a, bufr_descriptors_array* descriptors);
+//void accessor_bufr_data_element_set_numericValues(grib_accessor* a, grib_vdarray* numericValues);
+//void accessor_bufr_data_element_set_stringValues(grib_accessor* a, grib_vsarray* stringValues);
+//void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor* a, grib_viarray* elementsDescriptorsIndex);
 
 /* grib_accessor_class_bufr_elements_table.cc */
 int bufr_descriptor_is_marker(bufr_descriptor* d);
@@ -242,7 +242,7 @@ grib_nearest* grib_nearest_new(const grib_handle* h, int* error);
 int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s4, long* total_length, long* sec4_len);
 
 /* grib_accessor_class_variable.cc */
-void accessor_variable_set_type(grib_accessor* a, int type);
+//void accessor_variable_set_type(grib_accessor* a, int type);
 
 /* grib_accessor_class_expanded_descriptors.cc */
 int grib_accessor_class_expanded_descriptors_set_do_expand(grib_accessor* a, long do_expand);

@@ -37,12 +37,11 @@ public:
     int compare(grib_accessor*) override;
     grib_accessor* make_clone(grib_section*, int*) override;
 
+    void accessor_variable_set_type(int type);
 private:
     double dval_;
     float fval_;
     char* cval_;
     char* cname_;
     int type_;
-
-    friend void accessor_variable_set_type(grib_accessor* a, int type);
 };

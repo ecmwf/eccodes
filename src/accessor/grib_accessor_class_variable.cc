@@ -71,10 +71,9 @@ void grib_accessor_variable_t::init(const long length, grib_arguments* args)
     }
 }
 
-void accessor_variable_set_type(grib_accessor* a, int type)
+void grib_accessor_variable_t::accessor_variable_set_type(int type)
 {
-    grib_accessor_variable_t* self = (grib_accessor_variable_t*)a;
-    self->type_                    = type;
+    type_ = type;
 }
 
 void grib_accessor_variable_t::dump(grib_dumper* dumper)
