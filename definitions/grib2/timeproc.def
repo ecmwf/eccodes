@@ -1,6 +1,7 @@
 concept timeproc {
  # either instantaneous data or processing is specified by mars stream
  "point-in-time"    = {stepType="instant";}
+ "point-in-time"    = {stream="swmm"; numberOfTimeRange=1;}
  "point-in-time"    = {stream="mnth"; numberOfTimeRange=1;}
  "point-in-time"    = {stream="mmsa"; numberOfTimeRange=1;}
  "point-in-time"    = {stream="msmm"; numberOfTimeRange=1;}
@@ -49,6 +50,8 @@ concept timeproc {
  "240h"   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 240;}
  "360h"   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 360;}
  "7 days"   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168;}
+ ## 7 days rolling accumulation
+ "7 days"    = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168; type="cd";}
  # 28 days
  "month"   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 672;}
  # 29 days
