@@ -63,51 +63,6 @@ grib_accessor* grib_accessor_bufr_data_element_t::make_clone(grib_section* s, in
     return the_clone;
 }
 
-void grib_accessor_bufr_data_element_t::accessor_bufr_data_element_set_index(long index)
-{
-    index_ = index;
-}
-
-void grib_accessor_bufr_data_element_t::accessor_bufr_data_element_set_type(int type)
-{
-    type_ = type;
-}
-
-void grib_accessor_bufr_data_element_t::accessor_bufr_data_element_set_numberOfSubsets(long numberOfSubsets)
-{
-    numberOfSubsets_ = numberOfSubsets;
-}
-
-void grib_accessor_bufr_data_element_t::accessor_bufr_data_element_set_subsetNumber(long subsetNumber)
-{
-    subsetNumber_ = subsetNumber;
-}
-
-void grib_accessor_bufr_data_element_t::accessor_bufr_data_element_set_compressedData(int compressedData)
-{
-    compressedData_ = compressedData;
-}
-
-void grib_accessor_bufr_data_element_t::accessor_bufr_data_element_set_descriptors(bufr_descriptors_array* descriptors)
-{
-    descriptors_ = descriptors;
-}
-
-void grib_accessor_bufr_data_element_t::accessor_bufr_data_element_set_numericValues(grib_vdarray* numericValues)
-{
-    numericValues_ = numericValues;
-}
-
-void grib_accessor_bufr_data_element_t::accessor_bufr_data_element_set_stringValues(grib_vsarray* stringValues)
-{
-    stringValues_ = stringValues;
-}
-
-void grib_accessor_bufr_data_element_t::accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_viarray* elementsDescriptorsIndex)
-{
-    elementsDescriptorsIndex_ = elementsDescriptorsIndex;
-}
-
 void grib_accessor_bufr_data_element_t::init(const long len, grib_arguments* params)
 {
     grib_accessor_gen_t::init(len, params);

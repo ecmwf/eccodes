@@ -1826,15 +1826,15 @@ grib_accessor* grib_accessor_bufr_data_array_t::create_accessor_from_descriptor(
             if (expanded_->v[idx]->code == 31000 || expanded_->v[idx]->code == 31001 || expanded_->v[idx]->code == 31002 || expanded_->v[idx]->code == 31031)
                 accessor->flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
             elementAccessor = dynamic_cast<grib_accessor_bufr_data_element_t*>(accessor);
-            elementAccessor->accessor_bufr_data_element_set_index(ide);
-            elementAccessor->accessor_bufr_data_element_set_descriptors(expanded_);
-            elementAccessor->accessor_bufr_data_element_set_elementsDescriptorsIndex(elementsDescriptorsIndex_);
-            elementAccessor->accessor_bufr_data_element_set_numericValues(numericValues_);
-            elementAccessor->accessor_bufr_data_element_set_stringValues(stringValues_);
-            elementAccessor->accessor_bufr_data_element_set_compressedData(compressedData_);
-            elementAccessor->accessor_bufr_data_element_set_type(expanded_->v[idx]->type);
-            elementAccessor->accessor_bufr_data_element_set_numberOfSubsets(numberOfSubsets_);
-            elementAccessor->accessor_bufr_data_element_set_subsetNumber(subset);
+            elementAccessor->index(ide);
+            elementAccessor->descriptors(expanded_);
+            elementAccessor->elementsDescriptorsIndex(elementsDescriptorsIndex_);
+            elementAccessor->numericValues(numericValues_);
+            elementAccessor->stringValues(stringValues_);
+            elementAccessor->compressedData(compressedData_);
+            elementAccessor->type(expanded_->v[idx]->type);
+            elementAccessor->numberOfSubsets(numberOfSubsets_);
+            elementAccessor->subsetNumber(subset);
 
             expanded_->v[idx]->a = accessor;
 
@@ -1890,15 +1890,15 @@ grib_accessor* grib_accessor_bufr_data_array_t::create_accessor_from_descriptor(
                 if (canBeMissing_[idx])
                     accessor->flags_ |= GRIB_ACCESSOR_FLAG_CAN_BE_MISSING;
                 elementAccessor = dynamic_cast<grib_accessor_bufr_data_element_t*>(accessor);
-                elementAccessor->accessor_bufr_data_element_set_index(ide);
-                elementAccessor->accessor_bufr_data_element_set_descriptors(expanded_);
-                elementAccessor->accessor_bufr_data_element_set_elementsDescriptorsIndex(elementsDescriptorsIndex_);
-                elementAccessor->accessor_bufr_data_element_set_numericValues(numericValues_);
-                elementAccessor->accessor_bufr_data_element_set_stringValues(stringValues_);
-                elementAccessor->accessor_bufr_data_element_set_compressedData(compressedData_);
-                elementAccessor->accessor_bufr_data_element_set_type(expanded_->v[idx]->type);
-                elementAccessor->accessor_bufr_data_element_set_numberOfSubsets(numberOfSubsets_);
-                elementAccessor->accessor_bufr_data_element_set_subsetNumber(subset);
+                elementAccessor->index(ide);
+                elementAccessor->descriptors(expanded_);
+                elementAccessor->elementsDescriptorsIndex(elementsDescriptorsIndex_);
+                elementAccessor->numericValues(numericValues_);
+                elementAccessor->stringValues(stringValues_);
+                elementAccessor->compressedData(compressedData_);
+                elementAccessor->type(expanded_->v[idx]->type);
+                elementAccessor->numberOfSubsets(numberOfSubsets_);
+                elementAccessor->subsetNumber(subset);
 
                 attribute = create_attribute_variable("index", section, GRIB_TYPE_LONG, 0, 0, count, flags);
                 if (!attribute)
@@ -1928,15 +1928,15 @@ grib_accessor* grib_accessor_bufr_data_array_t::create_accessor_from_descriptor(
             accessor = grib_accessor_factory(section, &creator, 0, NULL);
             elementAccessor = dynamic_cast<grib_accessor_bufr_data_element_t*>(accessor);
 
-            elementAccessor->accessor_bufr_data_element_set_index(ide);
-            elementAccessor->accessor_bufr_data_element_set_descriptors(expanded_);
-            elementAccessor->accessor_bufr_data_element_set_elementsDescriptorsIndex(elementsDescriptorsIndex_);
-            elementAccessor->accessor_bufr_data_element_set_numericValues(numericValues_);
-            elementAccessor->accessor_bufr_data_element_set_stringValues(stringValues_);
-            elementAccessor->accessor_bufr_data_element_set_compressedData(compressedData_);
-            elementAccessor->accessor_bufr_data_element_set_type(expanded_->v[idx]->type);
-            elementAccessor->accessor_bufr_data_element_set_numberOfSubsets(numberOfSubsets_);
-            elementAccessor->accessor_bufr_data_element_set_subsetNumber(subset);
+            elementAccessor->index(ide);
+            elementAccessor->descriptors(expanded_);
+            elementAccessor->elementsDescriptorsIndex(elementsDescriptorsIndex_);
+            elementAccessor->numericValues(numericValues_);
+            elementAccessor->stringValues(stringValues_);
+            elementAccessor->compressedData(compressedData_);
+            elementAccessor->type(expanded_->v[idx]->type);
+            elementAccessor->numberOfSubsets(numberOfSubsets_);
+            elementAccessor->subsetNumber(subset);
 
             attribute = create_attribute_variable("index", section, GRIB_TYPE_LONG, 0, 0, count, flags);
             if (!attribute)
