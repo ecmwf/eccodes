@@ -27,11 +27,10 @@ public:
     void dump(grib_dumper*) override;
     void init(const long, grib_arguments*) override;
 
-public:
-    // TODO(maee): make private
-    grib_smart_table* table_;
+    grib_smart_table* table() const { return table_; }
 
 private:
+    grib_smart_table* table_;
     const char* values_;
     const char* tablename_;
     const char* masterDir_;
