@@ -343,8 +343,8 @@ int grib_accessor_bufr_data_array_t::get_descriptors()
     grib_context* c = context_;
 
     if (!expandedAccessor_)
-        expandedAccessor_ = grib_find_accessor(grib_handle_of_accessor(this), expandedDescriptorsName_);
-    expanded_ = grib_accessor_expanded_descriptors_get_expanded(expandedAccessor_, &ret);
+        expandedAccessor_ = dynamic_cast<grib_accessor_expanded_descriptors_t*>(grib_find_accessor(grib_handle_of_accessor(this), expandedDescriptorsName_));
+    expanded_ = expandedAccessor_->grib_accessor_expanded_descriptors_get_expanded(&ret);
     if (ret != GRIB_SUCCESS)
         return ret;
 

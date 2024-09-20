@@ -24,13 +24,12 @@ void grib_accessor_bufrdc_expanded_descriptors_t::init(const long len, grib_argu
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-static grib_accessor* get_accessor(grib_accessor* a)
+grib_accessor* grib_accessor_bufrdc_expanded_descriptors_t::get_accessor()
 {
-    grib_accessor_bufrdc_expanded_descriptors_t* self = (grib_accessor_bufrdc_expanded_descriptors_t*)a;
-    if (!self->expandedDescriptorsAccessor_) {
-        self->expandedDescriptorsAccessor_ = grib_find_accessor(grib_handle_of_accessor(a), self->expandedDescriptors_);
+    if (!expandedDescriptorsAccessor_) {
+        expandedDescriptorsAccessor_ = grib_find_accessor(grib_handle_of_accessor(this), expandedDescriptors_);
     }
-    return self->expandedDescriptorsAccessor_;
+    return expandedDescriptorsAccessor_;
 }
 
 int grib_accessor_bufrdc_expanded_descriptors_t::unpack_long(long* val, size_t* len)
@@ -42,7 +41,7 @@ int grib_accessor_bufrdc_expanded_descriptors_t::unpack_long(long* val, size_t* 
     long* v                    = 0;
     grib_context* c            = context_;
 
-    descriptors = get_accessor(this);
+    descriptors = get_accessor();
     if (!descriptors) return GRIB_NOT_FOUND;
 
     value_count(&lenall);
@@ -73,7 +72,7 @@ int grib_accessor_bufrdc_expanded_descriptors_t::unpack_string_array(char** buff
     };
     grib_context* c = context_;
 
-    descriptors = get_accessor(this);
+    descriptors = get_accessor();
     if (!descriptors) return GRIB_NOT_FOUND;
 
     err = value_count(&lenall);
@@ -97,7 +96,7 @@ int grib_accessor_bufrdc_expanded_descriptors_t::unpack_string_array(char** buff
 
 int grib_accessor_bufrdc_expanded_descriptors_t::value_count(long* rlen)
 {
-    grib_accessor* descriptors = get_accessor(this);
+    grib_accessor* descriptors = get_accessor();
 
     return descriptors->value_count(rlen);
 }

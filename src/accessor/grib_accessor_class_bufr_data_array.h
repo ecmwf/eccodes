@@ -11,6 +11,7 @@
 #pragma once
 
 #include "grib_accessor_class_gen.h"
+#include "grib_accessor_class_expanded_descriptors.h"
 
 typedef struct bitmap_s
 {
@@ -59,7 +60,7 @@ private:
     const char* elementsDescriptorsIndexName_;
     const char* compressedDataName_;
     bufr_descriptors_array* expanded_;
-    grib_accessor* expandedAccessor_;
+    grib_accessor_expanded_descriptors_t* expandedAccessor_;
     int* canBeMissing_;
     long numberOfSubsets_;
     long compressedData_;

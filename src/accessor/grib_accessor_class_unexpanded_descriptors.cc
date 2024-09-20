@@ -70,7 +70,7 @@ int grib_accessor_unexpanded_descriptors_t::pack_long(const long* val, size_t* l
     long pos = 0;
     unsigned long f, x, y;
     unsigned char* buf      = NULL;
-    grib_accessor* expanded = NULL;
+    grib_accessor_expanded_descriptors_t* expanded = NULL;
     size_t buflen           = *len * 2;
     size_t i = 0, length = *len;
     long createNewData = 1;
@@ -96,9 +96,9 @@ int grib_accessor_unexpanded_descriptors_t::pack_long(const long* val, size_t* l
     if (createNewData == 0)
         return ret;
 
-    expanded = grib_find_accessor(hand, "expandedCodes");
+    expanded = dynamic_cast<grib_accessor_expanded_descriptors_t*>(grib_find_accessor(hand, "expandedCodes"));
     Assert(expanded != NULL);
-    ret = grib_accessor_expanded_descriptors_set_do_expand(expanded, 1);
+    ret = expanded->grib_accessor_expanded_descriptors_set_do_expand(1);
     if (ret != GRIB_SUCCESS)
         return ret;
 
