@@ -6,4 +6,3 @@
 'F' = { numberOfGridInReference = 5; }
 'C' = { numberOfGridInReference = 6; }
 'N' = { numberOfGridInReference = 7; }
-'D' = { numberOfGridInReference = 8; }
