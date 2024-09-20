@@ -23,10 +23,11 @@ public:
     int pack_long(const long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
-public:
-    // TODO(maee): make private
+private:
     const char* numericValues_;
     const char* pack_;
     grib_accessor* numericValuesAccessor_;
     grib_accessor* packAccessor_;
+
+    void get_accessors();
 };

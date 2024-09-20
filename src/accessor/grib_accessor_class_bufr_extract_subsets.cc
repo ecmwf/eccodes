@@ -14,15 +14,14 @@
 grib_accessor_bufr_extract_subsets_t _grib_accessor_bufr_extract_subsets{};
 grib_accessor* grib_accessor_bufr_extract_subsets = &_grib_accessor_bufr_extract_subsets;
 
-void get_accessors(grib_accessor* a)
+void grib_accessor_bufr_extract_subsets_t::get_accessors()
 {
-    const grib_handle* h                       = grib_handle_of_accessor(a);
-    grib_accessor_bufr_extract_subsets_t* self = (grib_accessor_bufr_extract_subsets_t*)a;
+    const grib_handle* h                       = grib_handle_of_accessor(this);
 
-    if (self->packAccessor_)
+    if (packAccessor_)
         return;
-    self->numericValuesAccessor_ = grib_find_accessor(h, self->numericValues_);
-    self->packAccessor_          = grib_find_accessor(h, self->pack_);
+    numericValuesAccessor_ = grib_find_accessor(h, numericValues_);
+    packAccessor_          = grib_find_accessor(h, pack_);
 }
 
 void grib_accessor_bufr_extract_subsets_t::init(const long len, grib_arguments* arg)
@@ -49,7 +48,7 @@ int grib_accessor_bufr_extract_subsets_t::pack_long(const long* val, size_t* len
     size_t l = 1;
     long v[1];
 
-    get_accessors(this);
+    get_accessors();
 
     v[0]    = 1;
     int err = packAccessor_->pack_long(v, &l);
