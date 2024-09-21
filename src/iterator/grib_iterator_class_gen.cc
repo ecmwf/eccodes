@@ -8,71 +8,11 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
+#include "grib_iterator_class_gen.h"
 
-/*
-   This is used by make_class.pl
+//grib_iterator_gen_t _grib_iterator_class_gen{};
+//grib_iterator* grib_iterator_class_gen = &_grib_iterator_class_gen;
 
-   START_CLASS_DEF
-   CLASS      = iterator
-   IMPLEMENTS = destroy
-   IMPLEMENTS = has_next
-   IMPLEMENTS = init
-   IMPLEMENTS = reset
-   MEMBERS    = int carg
-   MEMBERS    = const char* missingValue;
-   END_CLASS_DEF
-
- */
-
-/* START_CLASS_IMP */
-
-/*
-
-Don't edit anything between START_CLASS_IMP and END_CLASS_IMP
-Instead edit values between START_CLASS_DEF and END_CLASS_DEF
-or edit "iterator.class" and rerun ./make_class.pl
-
-*/
-
-
-static void init_class              (grib_iterator_class*);
-
-static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
-static int destroy            (grib_iterator* i);
-static int reset              (grib_iterator* i);
-static long has_next          (grib_iterator* i);
-
-
-typedef struct grib_iterator_gen{
-  grib_iterator it;
-    /* Members defined in gen */
-    int carg;
-    const char* missingValue;
-} grib_iterator_gen;
-
-
-static grib_iterator_class _grib_iterator_class_gen = {
-    0,                    /* super                     */
-    "gen",                    /* name                      */
-    sizeof(grib_iterator_gen),/* size of instance          */
-    0,                           /* inited */
-    &init_class,                 /* init_class */
-    &init,                     /* constructor               */
-    &destroy,                  /* destructor                */
-    0,                     /* Next Value                */
-    0,                 /*  Previous Value           */
-    &reset,                    /* Reset the counter         */
-    &has_next,                 /* has next values           */
-};
-
-grib_iterator_class* grib_iterator_class_gen = &_grib_iterator_class_gen;
-
-
-static void init_class(grib_iterator_class* c)
-{
-}
-/* END_CLASS_IMP */
 
 /*
  * Return pointer to data at (i,j) (Fortran convention)
@@ -170,23 +110,24 @@ int transform_iterator_data(grib_context* context, double* data,
     return GRIB_SUCCESS;
 }
 
-static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
+int grib_iterator_gen_t::init(grib_handle* h, grib_arguments* args)
 {
-    grib_iterator_gen* self = (grib_iterator_gen*)iter;
+    grib_iterator::init(h, args);
+
     size_t dli              = 0;
     int err                 = GRIB_SUCCESS;
     const char* s_rawData   = NULL;
     const char* s_numPoints = NULL;
     long numberOfPoints     = 0;
-    self->carg              = 1;
+    carg_              = 1;
 
-    s_numPoints        = grib_arguments_get_name(h, args, self->carg++);
-    self->missingValue = grib_arguments_get_name(h, args, self->carg++);
-    s_rawData          = grib_arguments_get_name(h, args, self->carg++);
+    s_numPoints        = grib_arguments_get_name(h, args, carg_++);
+    missingValue_ = grib_arguments_get_name(h, args, carg_++);
+    s_rawData          = grib_arguments_get_name(h, args, carg_++);
 
-    iter->data = NULL;
-    iter->h    = h; /* We may not need to keep them */
-    iter->args = args;
+    data_ = NULL;
+    h    = h; /* We may not need to keep them */
+    args = args;
     if ((err = grib_get_size(h, s_rawData, &dli)) != GRIB_SUCCESS)
         return err;
 
@@ -195,9 +136,9 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 
     // See ECC-1792. If we don't want to decode the Data Section, we should not do a check
     // to see if it is consistent with the Grid Section
-    if (iter->flags & GRIB_GEOITERATOR_NO_VALUES) {
+    if (flags_ & GRIB_GEOITERATOR_NO_VALUES) {
         // Iterator's number of values taken from the Grid Section
-        iter->nv = numberOfPoints;
+        nv_ = numberOfPoints;
     } else {
         // Check for consistency between the Grid and Data Sections
         if (numberOfPoints != dli) {
@@ -205,47 +146,59 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
                              s_numPoints, s_rawData, numberOfPoints, dli);
             return GRIB_WRONG_GRID;
         }
-        iter->nv = dli;
+        nv_ = dli;
     }
 
-    if (iter->nv == 0) {
+    if (nv_ == 0) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator: size(%s) is %ld", s_rawData, dli);
         return GRIB_WRONG_GRID;
     }
 
-    if ((iter->flags & GRIB_GEOITERATOR_NO_VALUES) == 0) {
+    if ((flags_ & GRIB_GEOITERATOR_NO_VALUES) == 0) {
         // ECC-1525
         // When the NO_VALUES flag is unset, decode the values and store them in the iterator.
         // By default (and legacy) flags==0, so we decode
-        iter->data = (double*)grib_context_malloc(h->context, (iter->nv) * sizeof(double));
+        data_ = (double*)grib_context_malloc(h->context, (nv_) * sizeof(double));
 
-        if ((err = grib_get_double_array_internal(h, s_rawData, iter->data, &(iter->nv)))) {
+        if ((err = grib_get_double_array_internal(h, s_rawData, data_, &(nv_)))) {
             return err;
         }
     }
-    iter->e = -1;
+    e_ = -1;
 
     return err;
 }
 
-static int reset(grib_iterator* iter)
+int grib_iterator_gen_t::reset()
 {
-    iter->e = -1;
+    e_ = -1;
     return 0;
 }
 
-static int destroy(grib_iterator* iter)
+int grib_iterator_gen_t::destroy()
 {
-    const grib_context* c = iter->h->context;
-    grib_context_free(c, iter->data);
+    const grib_context* c = h_->context;
+    grib_context_free(c, data_);
+
+    grib_iterator::destroy();
     return GRIB_SUCCESS;
 }
 
-static long has_next(grib_iterator* iter)
+long grib_iterator_gen_t::has_next()
 {
-    if (iter->flags == 0 && iter->data == NULL)
+    if (flags_ == 0 && data_ == NULL)
         return 0;
-    if (iter->e >= (long)(iter->nv - 1))
+    if (e_ >= (long)(nv_ - 1))
         return 0;
     return 1;
 }
+
+
+int grib_iterator_gen_t::previous(double*, double*, double*) {
+    return GRIB_NOT_IMPLEMENTED;
+}
+
+int grib_iterator_gen_t::next(double*, double*, double*) {
+    return GRIB_NOT_IMPLEMENTED;
+}
+

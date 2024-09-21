@@ -8,93 +8,24 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
+#include "grib_iterator_class_polar_stereographic.h"
 #include <cmath>
 
-/*
-   This is used by make_class.pl
-
-   START_CLASS_DEF
-   CLASS      = iterator
-   SUPER      = grib_iterator_class_gen
-   IMPLEMENTS = destroy
-   IMPLEMENTS = init;next
-   MEMBERS     =   double *lats
-   MEMBERS     =   double *lons
-   MEMBERS     =   long Nj
-   END_CLASS_DEF
-*/
-
-/* START_CLASS_IMP */
-
-/*
-
-Don't edit anything between START_CLASS_IMP and END_CLASS_IMP
-Instead edit values between START_CLASS_DEF and END_CLASS_DEF
-or edit "iterator.class" and rerun ./make_class.pl
-
-*/
-
-
-static void init_class              (grib_iterator_class*);
-
-static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
-static int next               (grib_iterator* i, double *lat, double *lon, double *val);
-static int destroy            (grib_iterator* i);
-
-
-typedef struct grib_iterator_polar_stereographic{
-  grib_iterator it;
-    /* Members defined in gen */
-    int carg;
-    const char* missingValue;
-    /* Members defined in polar_stereographic */
-    double *lats;
-    double *lons;
-    long Nj;
-} grib_iterator_polar_stereographic;
-
-extern grib_iterator_class* grib_iterator_class_gen;
-
-static grib_iterator_class _grib_iterator_class_polar_stereographic = {
-    &grib_iterator_class_gen,                    /* super                     */
-    "polar_stereographic",                    /* name                      */
-    sizeof(grib_iterator_polar_stereographic),/* size of instance          */
-    0,                           /* inited */
-    &init_class,                 /* init_class */
-    &init,                     /* constructor               */
-    &destroy,                  /* destructor                */
-    &next,                     /* Next Value                */
-    0,                 /*  Previous Value           */
-    0,                    /* Reset the counter         */
-    0,                 /* has next values           */
-};
-
-grib_iterator_class* grib_iterator_class_polar_stereographic = &_grib_iterator_class_polar_stereographic;
-
-
-static void init_class(grib_iterator_class* c)
-{
-    c->previous    =    (*(c->super))->previous;
-    c->reset    =    (*(c->super))->reset;
-    c->has_next    =    (*(c->super))->has_next;
-}
-/* END_CLASS_IMP */
+grib_iterator_polar_stereographic_t _grib_iterator_polar_stereographic{};
+grib_iterator* grib_iterator_polar_stereographic = &_grib_iterator_polar_stereographic;
 
 #define ITER "Polar stereographic Geoiterator"
 
-static int next(grib_iterator* iter, double* lat, double* lon, double* val)
+int grib_iterator_polar_stereographic_t::next(double* lat, double* lon, double* val)
 {
-    grib_iterator_polar_stereographic* self = (grib_iterator_polar_stereographic*)iter;
-
-    if ((long)iter->e >= (long)(iter->nv - 1))
+    if ((long)e_ >= (long)(nv_ - 1))
         return 0;
-    iter->e++;
+    e_++;
 
-    *lat = self->lats[iter->e];
-    *lon = self->lons[iter->e];
-    if (val && iter->data) {
-        *val = iter->data[iter->e];
+    *lat = lats_[e_];
+    *lon = lons_[e_];
+    if (val && data_) {
+        *val = data_[e_];
     }
     return 1;
 }
@@ -117,8 +48,10 @@ typedef struct proj_data_t
 #define PI_OVER_2 1.5707963267948966    /* half pi */
 #define EPSILON 1.0e-10
 
-static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
+int grib_iterator_polar_stereographic_t::init(grib_handle* h, grib_arguments* args)
 {
+    grib_iterator_gen_t::init(h, args);
+
     int ret = 0;
     double *lats, *lons; /* arrays for latitudes and longitudes */
     double lonFirstInDegrees, latFirstInDegrees, radius;
@@ -135,22 +68,20 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     proj_data_t fwd_proj_data = {0,};
     proj_data_t inv_proj_data = {0,};
 
-    grib_iterator_polar_stereographic* self = (grib_iterator_polar_stereographic*)iter;
-
-    const char* s_radius                 = grib_arguments_get_name(h, args, self->carg++);
-    const char* s_nx                     = grib_arguments_get_name(h, args, self->carg++);
-    const char* s_ny                     = grib_arguments_get_name(h, args, self->carg++);
-    const char* s_latFirstInDegrees      = grib_arguments_get_name(h, args, self->carg++);
-    const char* s_lonFirstInDegrees      = grib_arguments_get_name(h, args, self->carg++);
-    const char* s_southPoleOnPlane       = grib_arguments_get_name(h, args, self->carg++);
-    const char* s_centralLongitude       = grib_arguments_get_name(h, args, self->carg++);
-    const char* s_centralLatitude        = grib_arguments_get_name(h, args, self->carg++);
-    const char* s_Dx                     = grib_arguments_get_name(h, args, self->carg++);
-    const char* s_Dy                     = grib_arguments_get_name(h, args, self->carg++);
-    const char* s_iScansNegatively       = grib_arguments_get_name(h, args, self->carg++);
-    const char* s_jScansPositively       = grib_arguments_get_name(h, args, self->carg++);
-    const char* s_jPointsAreConsecutive  = grib_arguments_get_name(h, args, self->carg++);
-    const char* s_alternativeRowScanning = grib_arguments_get_name(h, args, self->carg++);
+    const char* s_radius                 = grib_arguments_get_name(h, args, carg_++);
+    const char* s_nx                     = grib_arguments_get_name(h, args, carg_++);
+    const char* s_ny                     = grib_arguments_get_name(h, args, carg_++);
+    const char* s_latFirstInDegrees      = grib_arguments_get_name(h, args, carg_++);
+    const char* s_lonFirstInDegrees      = grib_arguments_get_name(h, args, carg_++);
+    const char* s_southPoleOnPlane       = grib_arguments_get_name(h, args, carg_++);
+    const char* s_centralLongitude       = grib_arguments_get_name(h, args, carg_++);
+    const char* s_centralLatitude        = grib_arguments_get_name(h, args, carg_++);
+    const char* s_Dx                     = grib_arguments_get_name(h, args, carg_++);
+    const char* s_Dy                     = grib_arguments_get_name(h, args, carg_++);
+    const char* s_iScansNegatively       = grib_arguments_get_name(h, args, carg_++);
+    const char* s_jScansPositively       = grib_arguments_get_name(h, args, carg_++);
+    const char* s_jPointsAreConsecutive  = grib_arguments_get_name(h, args, carg_++);
+    const char* s_alternativeRowScanning = grib_arguments_get_name(h, args, carg_++);
 
     if (grib_is_earth_oblate(h)) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only supported for spherical earth.", ITER);
@@ -164,8 +95,8 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     if ((ret = grib_get_long_internal(h, s_ny, &ny)) != GRIB_SUCCESS)
         return ret;
 
-    if (iter->nv != nx * ny) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, iter->nv, nx, ny);
+    if (nv_ != nx * ny) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, nv_, nx, ny);
         return GRIB_WRONG_GRID;
     }
     if ((ret = grib_get_double_internal(h, s_latFirstInDegrees, &latFirstInDegrees)) != GRIB_SUCCESS)
@@ -243,18 +174,18 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         inv_proj_data.mcs = cos(con1);
         inv_proj_data.tcs = tan(0.5 * (PI_OVER_2 - con1));
     }
-    self->lats = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
-    if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, iter->nv * sizeof(double));
+    lats_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
+    if (!lats_) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv_ * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
-    self->lons = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
-    if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, iter->nv * sizeof(double));
+    lons_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
+    if (!lats_) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv_ * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
-    lats = self->lats;
-    lons = self->lons;
+    lats = lats_;
+    lons = lons_;
     /* These will be processed later in transform_iterator_data() */
     /* Dx = iScansNegatively == 0 ? Dx : -Dx; */
     /* Dy = jScansPositively == 1 ? Dy : -Dy; */
@@ -353,22 +284,23 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 //         }
 //     }
 
-    iter->e = -1;
+    e_ = -1;
 
     /* Apply the scanning mode flags which may require data array to be transformed */
-    ret = transform_iterator_data(h->context, iter->data,
+    ret = transform_iterator_data(h->context, data_,
                                   iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning,
-                                  iter->nv, nx, ny);
+                                  nv_, nx, ny);
 
     return ret;
 }
 
-static int destroy(grib_iterator* i)
+int grib_iterator_polar_stereographic_t::destroy()
 {
-    grib_iterator_polar_stereographic* self = (grib_iterator_polar_stereographic*)i;
-    const grib_context* c                   = i->h->context;
+    const grib_context* c = h_->context;
 
-    grib_context_free(c, self->lats);
-    grib_context_free(c, self->lons);
+    grib_context_free(c, lats_);
+    grib_context_free(c, lons_);
+
+    grib_iterator_gen_t::destroy();
     return GRIB_SUCCESS;
 }

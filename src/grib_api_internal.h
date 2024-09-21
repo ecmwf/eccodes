@@ -248,7 +248,7 @@ typedef struct grib_codetable grib_codetable;
 typedef struct grib_smart_table grib_smart_table;
 
 class grib_accessor;
-typedef struct grib_iterator_class grib_iterator_class;
+class grib_iterator;
 typedef struct grib_nearest_class grib_nearest_class;
 typedef struct grib_dumper grib_dumper;
 typedef struct grib_dumper_class grib_dumper_class;
@@ -267,14 +267,6 @@ typedef int (*nearest_find_proc)(grib_nearest* nearest, grib_handle* h,
                                  double* distances, int* indexes, size_t* len);
 typedef int (*nearest_destroy_proc)(grib_nearest* nearest);
 
-typedef void (*iterator_init_class_proc)(grib_iterator_class*);
-typedef int (*iterator_init_proc)(grib_iterator* i, grib_handle*, grib_arguments*);
-
-typedef int (*iterator_next_proc)(grib_iterator* i, double* lat, double* lon, double* val);
-typedef int (*iterator_previous_proc)(grib_iterator* i, double* lat, double* lon, double* val);
-typedef int (*iterator_reset_proc)(grib_iterator* i);
-typedef int (*iterator_destroy_proc)(grib_iterator* i);
-typedef long (*iterator_has_next_proc)(grib_iterator* i);
 
 typedef int (*grib_pack_proc)(grib_handle* h, const double* in, size_t inlen, void* out, size_t* outlen);
 typedef int (*grib_unpack_proc)(grib_handle* h, const void* in, size_t inlen, double* out, size_t* outlen);
@@ -459,20 +451,6 @@ struct grib_section
     size_t padding;
 };
 
-struct grib_iterator_class
-{
-    grib_iterator_class** super;
-    const char* name;
-    size_t size;
-    int inited;
-    iterator_init_class_proc init_class;
-    iterator_init_proc       init;
-    iterator_destroy_proc    destroy;
-    iterator_next_proc       next;
-    iterator_previous_proc   previous;
-    iterator_reset_proc      reset;
-    iterator_has_next_proc   has_next;
-};
 
 struct grib_nearest_class
 {
@@ -527,17 +505,6 @@ struct grib_dumper_class
     dumper_dump_values_proc dump_values;
     dumper_header_proc header;
     dumper_footer_proc footer;
-};
-
-struct grib_iterator
-{
-    grib_arguments* args; /**  args of iterator */
-    grib_handle* h;
-    long e;       /**  current element */
-    size_t nv;    /**  number of values */
-    double* data; /**  data values */
-    grib_iterator_class* cclass;
-    unsigned long flags;
 };
 
 struct grib_nearest
@@ -1287,6 +1254,7 @@ typedef struct j2k_encode_helper
 }
 #include "accessor/grib_accessor.h"
 #include "accessor/grib_accessors_list.h"
+#include "iterator/grib_iterator.h"
 #endif
 
 #endif

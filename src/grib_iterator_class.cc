@@ -21,7 +21,7 @@
 struct table_entry
 {
     const char* type;
-    grib_iterator_class** cclass;
+    grib_iterator** cclass;
 };
 
 static const struct table_entry table[] = {
@@ -38,11 +38,10 @@ grib_iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsig
     num_table_entries = sizeof(table) / sizeof(table[0]);
     for (i = 0; i < num_table_entries; i++) {
         if (strcmp(type, table[i].type) == 0) {
-            grib_iterator_class* c = *(table[i].cclass);
-            grib_iterator* it      = (grib_iterator*)grib_context_malloc_clear(h->context, c->size);
-            it->cclass             = c;
-            it->flags              = flags;
-            *error                 = grib_iterator_init(it, h, args);
+            grib_iterator* c = *(table[i].cclass);
+            grib_iterator* it      = (grib_iterator*)grib_context_malloc_clear(h->context, c->size_);
+            it->flags_              = flags;
+            *error                 = it->init(h, args);
             if (*error == GRIB_SUCCESS)
                 return it;
             grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator factory: Error instantiating iterator %s (%s)",

@@ -811,12 +811,12 @@ grib_nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args, int* er
 
 /* grib_iterator.cc */
 int grib_get_data(const grib_handle* h, double* lats, double* lons, double* values);
-int grib_iterator_next(grib_iterator* i, double* lat, double* lon, double* value);
-int grib_iterator_has_next(grib_iterator* i);
-int grib_iterator_previous(grib_iterator* i, double* lat, double* lon, double* value);
-int grib_iterator_reset(grib_iterator* i);
-int grib_iterator_init(grib_iterator* i, grib_handle* h, grib_arguments* args);
-int grib_iterator_delete(grib_iterator* i);
+//int grib_iterator_next(grib_iterator* i, double* lat, double* lon, double* value);
+//int grib_iterator_has_next(grib_iterator* i);
+//int grib_iterator_previous(grib_iterator* i, double* lat, double* lon, double* value);
+//int grib_iterator_reset(grib_iterator* i);
+//int grib_iterator_init(grib_iterator* i, grib_handle* h, grib_arguments* args);
+//int grib_iterator_delete(grib_iterator* i);
 
 /* grib_iterator_class.cc */
 grib_iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* error);

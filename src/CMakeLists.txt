@@ -331,20 +331,20 @@ list( APPEND eccodes_src_files
     grib_nearest_class_mercator.cc
     grib_nearest_class_polar_stereographic.cc
     grib_nearest_class_space_view.cc
-    grib_iterator_class_polar_stereographic.cc
-    grib_iterator_class_lambert_azimuthal_equal_area.cc
-    grib_iterator_class_lambert_conformal.cc
-    grib_iterator_class_mercator.cc
-    grib_iterator.cc
+    iterator/grib_iterator_class_polar_stereographic.cc
+    iterator/grib_iterator_class_lambert_azimuthal_equal_area.cc
+    iterator/grib_iterator_class_lambert_conformal.cc
+    iterator/grib_iterator_class_mercator.cc
+    iterator/grib_iterator.cc
     grib_iterator_class.cc
-    grib_iterator_class_gaussian.cc
-    grib_iterator_class_gaussian_reduced.cc
-    grib_iterator_class_latlon_reduced.cc
-    grib_iterator_class_gen.cc
-    grib_iterator_class_latlon.cc
-    grib_iterator_class_regular.cc
-    grib_iterator_class_space_view.cc
-    grib_iterator_class_healpix.cc
+    iterator/grib_iterator_class_gaussian.cc
+    iterator/grib_iterator_class_gaussian_reduced.cc
+    iterator/grib_iterator_class_latlon_reduced.cc
+    iterator/grib_iterator_class_gen.cc
+    iterator/grib_iterator_class_latlon.cc
+    iterator/grib_iterator_class_regular.cc
+    iterator/grib_iterator_class_space_view.cc
+    iterator/grib_iterator_class_healpix.cc
     grib_expression.cc
     codes_util.cc
     grib_util.cc
