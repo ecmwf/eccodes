@@ -3,46 +3,51 @@
 transient dummyc=0: hidden;
 # If MTG2Switch is defined and it is 0 (pre-MTG2) we need to look at pre-MTG2 definitions.
 # Otherwise (if it is different from 0, or not defined) look at new definitions.
-# Cannot use constant in concept, has to be string, so duplicating code for now
+
+# Add support for "datasetForLocal" condition (e.g. S2S).
+# These datasets will always use pre-MTG2 definitions.
+if (datasetForLocal isnot "unknown") {
+    if ( datasetForLocal is "era" || datasetForLocal is "s2s" || datasetForLocal is "s2s" || datasetForLocal is "uerra" ) {
+
+        constant tablesVersionMTG2Switch=33: hidden;
+        constant MTG2Switch = 0 : no_copy, read_only;
+
+    }
+}
 
 if ( defined(MTG2Switch) and MTG2Switch == 0 ) {
 
-    concept paramIdLegacyECMF(defaultParameter,"paramId.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): long_type,no_copy,hidden;
-    concept paramIdECMF (paramIdLegacyECMF,"paramId.[tablesVersionMTG2Switch].def",conceptsMasterDir,conceptsLocalDirECMF): long_type,no_copy;
-    concept paramId (paramIdECMF,"paramId.[tablesVersionMTG2Switch].def",conceptsDir2,conceptsDir1): long_type;
-
-    concept shortNameLegacyECMF(defaultShortName,"shortName.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,hidden;
-    concept shortNameECMF (shortNameLegacyECMF,"shortName.[tablesVersionMTG2Switch].def",conceptsMasterDir,conceptsLocalDirECMF): no_copy;
-    concept ls.shortName (shortNameECMF,"shortName.[tablesVersionMTG2Switch].def",conceptsDir2,conceptsDir1): no_copy,dump;
-
-    concept unitsLegacyECMF(defaultName,"units.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,hidden,read_only;
-    concept unitsECMF (unitsLegacyECMF,"units.[tablesVersionMTG2Switch].def",conceptsMasterDir,conceptsLocalDirECMF): no_copy, read_only;
-    concept units (unitsECMF,"units.[tablesVersionMTG2Switch].def",conceptsDir2,conceptsDir1): no_copy, read_only;
-
-    concept nameLegacyECMF(defaultName,"name.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,hidden;
-    concept nameECMF(nameLegacyECMF,"name.[tablesVersionMTG2Switch].def",conceptsMasterDir,conceptsLocalDirECMF): no_copy;
-    concept name(nameECMF,"name.[tablesVersionMTG2Switch].def",conceptsDir2,conceptsDir1): no_copy,dump;
+    constant paramIdFilename = "paramId.[tablesVersionMTG2Switch].def" : hidden ;
+    constant shortNameFilename = "shortName.[tablesVersionMTG2Switch].def" : hidden ;
+    constant unitsFilename = "units.[tablesVersionMTG2Switch].def" : hidden ;
+    constant nameFilename = "name.[tablesVersionMTG2Switch].def" : hidden ;
 
 # All other cases other than existing data and pre-MTG2 fall into default parameter files
 } else {
 
-    concept paramIdLegacyECMF(defaultParameter,"paramId.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): long_type,no_copy,hidden;
-    concept paramIdECMF (paramIdLegacyECMF,"paramId.def",conceptsMasterDir,conceptsLocalDirECMF): long_type,no_copy;
-    concept paramId (paramIdECMF,"paramId.def",conceptsDir2,conceptsDir1): long_type;
-
-    concept shortNameLegacyECMF(defaultShortName,"shortName.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,hidden;
-    concept shortNameECMF (shortNameLegacyECMF,"shortName.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy;
-    concept ls.shortName (shortNameECMF,"shortName.def",conceptsDir2,conceptsDir1): no_copy,dump;
-
-    concept unitsLegacyECMF(defaultName,"units.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,hidden,read_only;
-    concept unitsECMF (unitsLegacyECMF,"units.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy, read_only;
-    concept units (unitsECMF,"units.def",conceptsDir2,conceptsDir1): no_copy, read_only;
-
-    concept nameLegacyECMF(defaultName,"name.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,hidden;
-    concept nameECMF(nameLegacyECMF,"name.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy;
-    concept name(nameECMF,"name.def",conceptsDir2,conceptsDir1): no_copy,dump;
+    constant paramIdFilename = "paramId.def" : hidden ;
+    constant shortNameFilename = "shortName.def" : hidden ;
+    constant unitsFilename = "units.def" : hidden ;
+    constant nameFilename = "name.def" : hidden ;
 
 }
+
+concept paramIdLegacyECMF(defaultParameter,"paramId.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): long_type,no_copy,hidden;
+concept paramIdECMF (paramIdLegacyECMF,paramIdFilename,conceptsMasterDir,conceptsLocalDirECMF): long_type,no_copy;
+concept paramId (paramIdECMF,paramIdFilename,conceptsDir2,conceptsDir1): long_type;
+
+concept shortNameLegacyECMF(defaultShortName,"shortName.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,hidden;
+concept shortNameECMF (shortNameLegacyECMF,shortNameFilename,conceptsMasterDir,conceptsLocalDirECMF): no_copy;
+concept shortName (shortNameECMF,shortNameFilename,conceptsDir2,conceptsDir1): no_copy,dump;
+alias ls.shortName = shortName;
+
+concept unitsLegacyECMF(defaultName,"units.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,hidden,read_only;
+concept unitsECMF (unitsLegacyECMF,unitsFilename,conceptsMasterDir,conceptsLocalDirECMF): no_copy, read_only;
+concept units (unitsECMF,unitsFilename,conceptsDir2,conceptsDir1): no_copy, read_only;
+
+concept nameLegacyECMF(defaultName,"name.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,hidden;
+concept nameECMF(nameLegacyECMF,nameFilename,conceptsMasterDir,conceptsLocalDirECMF): no_copy;
+concept name(nameECMF,nameFilename,conceptsDir2,conceptsDir1): no_copy,dump;
 
 # cfName does not have pre and post MTG2 switch
 

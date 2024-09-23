@@ -4,9 +4,6 @@
 constant marsClass  = 's2';
 constant marsModel  = 'glob';
 
-# S2S data will always use pre-MTG2 definitions
-constant MTG2Switch = 0;
-
 alias parameter.paramId=paramId;
 alias parameter.shortName=shortName;
 alias parameter.units=units;
