@@ -1361,6 +1361,10 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         case GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES: {
             // See ECC-1921
             const long bitsPerValue = get_bitsPerValue_for_packingType(packing_spec->packing_type, packing_spec->bitsPerValue);
+            if (bitsPerValue != packing_spec->bitsPerValue) {
+                fprintf(stderr, "ECCODES WARNING :  Cannot pack with requested bitsPerValue (%ld). Using %ld\n",
+                        packing_spec->bitsPerValue, bitsPerValue);
+            }
             SET_LONG_VALUE("bitsPerValue", bitsPerValue);
         }
         break;
