@@ -12,10 +12,14 @@
 
 #include "grib_iterator_class_gen.h"
 
-class grib_iterator_lambert_azimuthal_equal_area_t : public grib_iterator_gen_t
+namespace eccodes {
+namespace grib {
+namespace geo {
+
+class LambertAzimuthalEqualArea : public Gen
 {
 public:
-    grib_iterator_lambert_azimuthal_equal_area_t() : grib_iterator_gen_t()
+    LambertAzimuthalEqualArea() : Gen()
     {
         class_name_ = "lambert_azimuthal_equal_area";
     }
@@ -30,3 +34,7 @@ public:
     double *lons_;
     long Nj_;
 };
+
+} // namespace geo
+} // namespace grib
+} // namespace eccodes

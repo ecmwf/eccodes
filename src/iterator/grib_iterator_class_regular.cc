@@ -9,14 +9,17 @@
  */
 
 #include "grib_iterator_class_regular.h"
-#include <cmath>
 
-grib_iterator_regular_t _grib_iterator_regular{};
-grib_iterator_regular_t* grib_iterator_regular = &_grib_iterator_regular;
+namespace eccodes {
+namespace grib {
+namespace geo {
+
+Regular _grib_iterator_regular{};
+Iterator* grib_iterator_regular = &_grib_iterator_regular;
 
 #define ITER "Regular grid Geoiterator"
 
-int grib_iterator_regular_t::next(double* lat, double* lon, double* val)
+int Regular::next(double* lat, double* lon, double* val)
 {
     if ((long)e_ >= (long)(nv_ - 1))
         return 0;
@@ -31,7 +34,7 @@ int grib_iterator_regular_t::next(double* lat, double* lon, double* val)
     return 1;
 }
 
-int grib_iterator_regular_t::previous(double* lat, double* lon, double* val)
+int Regular::previous(double* lat, double* lon, double* val)
 {
     if (e_ < 0)
         return 0;
@@ -45,19 +48,19 @@ int grib_iterator_regular_t::previous(double* lat, double* lon, double* val)
     return 1;
 }
 
-int grib_iterator_regular_t::destroy()
+int Regular::destroy()
 {
     const grib_context* c       = h_->context;
     grib_context_free(c, las_);
     grib_context_free(c, los_);
 
-    grib_iterator_gen_t::destroy();
+    Gen::destroy();
     return GRIB_SUCCESS;
 }
 
-int grib_iterator_regular_t::init(grib_handle* h, grib_arguments* args)
+int Regular::init(grib_handle* h, grib_arguments* args)
 {
-    grib_iterator_gen_t::init(h, args);
+    Gen::init(h, args);
 
     int ret                     = GRIB_SUCCESS;
 
@@ -158,3 +161,7 @@ int grib_iterator_regular_t::init(grib_handle* h, grib_arguments* args)
 
     return ret;
 }
+
+} // namespace geo
+} // namespace grib
+} // namespace eccodes

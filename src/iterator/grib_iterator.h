@@ -16,7 +16,11 @@
     \ingroup grib_iterator
 */
 
-class grib_iterator
+namespace eccodes {
+namespace grib {
+namespace geo {
+
+class Iterator
 {
 public:
     virtual int init(grib_handle*, grib_arguments*) = 0;
@@ -38,3 +42,7 @@ public:
     size_t size_;
     int inited_;
 };
+
+} // namespace geo
+} // namespace grib
+} // namespace eccodes

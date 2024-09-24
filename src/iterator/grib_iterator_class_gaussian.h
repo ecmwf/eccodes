@@ -8,14 +8,24 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#pragma once
+
 #include "grib_iterator_class_regular.h"
 
-class grib_iterator_gaussian_t : public grib_iterator_regular_t
+namespace eccodes {
+namespace grib {
+namespace geo {
+
+class Gaussian : public Regular
 {
 public: 
-    grib_iterator_gaussian_t() : grib_iterator_regular_t()
+    Gaussian() : Regular()
     {
         class_name_ = "gaussian";
     }
-    int init(grib_handle*, grib_arguments*);
+    int init(grib_handle*, grib_arguments*) override;
 };
+
+} // namespace geo
+} // namespace grib
+} // namespace eccodes

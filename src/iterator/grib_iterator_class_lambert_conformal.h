@@ -12,10 +12,14 @@
 
 #include "grib_iterator_class_gen.h"
 
-class grib_iterator_lambert_conformal_t : public grib_iterator_gen_t
+namespace eccodes {
+namespace grib {
+namespace geo {
+
+class LambertConformal : public Gen
 {
 public:
-    grib_iterator_lambert_conformal_t() : grib_iterator_gen_t()
+    LambertConformal() : Gen()
     {
         class_name_ = "lambert_conformal";
     }
@@ -46,3 +50,7 @@ private:
                        double, double, double,
                        double);
 };
+
+} // namespace geo
+} // namespace grib
+} // namespace eccodes

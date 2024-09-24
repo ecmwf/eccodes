@@ -12,10 +12,14 @@
 
 #include "grib_iterator_class_gen.h"
 
-class grib_iterator_healpix_t : public grib_iterator_gen_t
+namespace eccodes {
+namespace grib {
+namespace geo {
+
+class Healpix : public Gen
 {
 public:
-    grib_iterator_healpix_t() : grib_iterator_gen_t()
+    Healpix() : Gen()
     {
         class_name_ = "healpix";
     }
@@ -33,3 +37,7 @@ public:
 private:
     int iterate_healpix(long N);
 };
+
+} // namespace geo
+} // namespace grib
+} // namespace eccodes

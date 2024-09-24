@@ -11,13 +11,16 @@
 #include "grib_iterator_class_gaussian_reduced.h"
 #include <cmath>
 
+namespace eccodes {
+namespace grib {
+namespace geo {
 
-grib_iterator_gaussian_reduced_t _grib_iterator_gaussian_reduced{};
-grib_iterator* grib_iterator_gaussian_reduced = &_grib_iterator_gaussian_reduced;
+GaussianReduced _grib_iterator_gaussian_reduced{};
+Iterator* grib_iterator_gaussian_reduced = &_grib_iterator_gaussian_reduced;
 
 #define ITER "Reduced Gaussian grid Geoiterator"
 
-int grib_iterator_gaussian_reduced_t::next(double* lat, double* lon, double* val)
+int GaussianReduced::next(double* lat, double* lon, double* val)
 {
     double ret_lat=0, ret_lon=0;
 
@@ -94,7 +97,7 @@ static void binary_search(const double xx[], const unsigned long n, double x, lo
 }
 
 /* Use legacy way to compute the iterator latitude/longitude values */
-int grib_iterator_gaussian_reduced_t::iterate_reduced_gaussian_subarea_legacy(grib_handle* h,
+int GaussianReduced::iterate_reduced_gaussian_subarea_legacy(grib_handle* h,
                                                    double lat_first, double lon_first,
                                                    double lat_last, double lon_last,
                                                    double* lats, long* pl, size_t plsize)
@@ -156,7 +159,7 @@ int grib_iterator_gaussian_reduced_t::iterate_reduced_gaussian_subarea_legacy(gr
 //         err = iterate_reduced_gaussian_subarea_algorithm2(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);
 //     }
 //     return err;
-int grib_iterator_gaussian_reduced_t::iterate_reduced_gaussian_subarea(grib_handle* h,
+int GaussianReduced::iterate_reduced_gaussian_subarea(grib_handle* h,
                                                        double lat_first, double lon_first,
                                                        double lat_last, double lon_last,
                                                        double* lats, long* pl, size_t plsize, size_t numlats)
@@ -220,9 +223,9 @@ int grib_iterator_gaussian_reduced_t::iterate_reduced_gaussian_subarea(grib_hand
     return err;
 }
 
-int grib_iterator_gaussian_reduced_t::init(grib_handle* h, grib_arguments* args)
+int GaussianReduced::init(grib_handle* h, grib_arguments* args)
 {
-    grib_iterator_gen_t::init(h, args);
+    Gen::init(h, args);
 
     int ret = GRIB_SUCCESS, j, is_global = 0;
     double lat_first = 0, lon_first = 0, lat_last = 0, lon_last = 0;
@@ -361,13 +364,17 @@ finalise:
     return ret;
 }
 
-int grib_iterator_gaussian_reduced_t::destroy()
+int GaussianReduced::destroy()
 {
     const grib_context* c                = h_->context;
 
     grib_context_free(c, las_);
     grib_context_free(c, los_);
 
-    grib_iterator_gen_t::destroy();
+    Gen::destroy();
     return GRIB_SUCCESS;
 }
+
+} // namespace geo
+} // namespace grib
+} // namespace eccodes

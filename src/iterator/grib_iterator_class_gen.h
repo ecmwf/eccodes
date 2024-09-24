@@ -12,10 +12,14 @@
 
 #include "grib_iterator.h"
 
-class grib_iterator_gen_t : public grib_iterator
+namespace eccodes {
+namespace grib {
+namespace geo { // TODO(maee): geo
+
+class Gen : public Iterator
 {
 public:
-    grib_iterator_gen_t() : grib_iterator()
+    Gen() : Iterator()
     {
         class_name_ = "abstract_long_vector";
     }
@@ -25,9 +29,13 @@ public:
     int previous(double*, double*, double*) override;
     int reset() override;
     int destroy() override;
-    long has_next() override;
+    long has_next() override; // TODO(maee/masn): return bool please!
 
 public:
     int carg_;
     const char* missingValue_;
 };
+
+} // namespace geo
+} // namespace grib
+} // namespace eccodes

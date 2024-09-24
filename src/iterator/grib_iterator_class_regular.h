@@ -12,10 +12,14 @@
 
 #include "grib_iterator_class_gen.h"
 
-class grib_iterator_regular_t : public grib_iterator_gen_t
+namespace eccodes {
+namespace grib {
+namespace geo {
+
+class Regular : public Gen
 {
 public:
-    grib_iterator_regular_t()
+    Regular()
     {
         class_name_ = "regular";
     }
@@ -38,3 +42,7 @@ protected:
     long jPointsAreConsecutive_;
     long disableUnrotate_;
 };
+
+} // namespace geo
+} // namespace grib
+} // namespace eccodes

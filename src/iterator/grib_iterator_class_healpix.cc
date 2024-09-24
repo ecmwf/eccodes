@@ -10,6 +10,10 @@
 
 #include "grib_iterator_class_healpix.h"
 
+namespace eccodes {
+namespace grib {
+namespace geo {
+
 #include <algorithm>
 #include <bitset>
 #include <cmath>
@@ -17,14 +21,15 @@
 #include <tuple>
 #include <vector>
 
-grib_iterator_healpix_t _grib_iterator_healpix;
-grib_iterator* grib_iterator_healpix = &_grib_iterator_healpix;
+namespace eccodes {
+namespace grib {
+namespace geo {
+
+Healpix _grib_iterator_healpix;
+Iterator* grib_iterator_healpix = &_grib_iterator_healpix;
 
 #define ITER "HEALPix Geoiterator"
 constexpr double RAD2DEG = 57.29577951308232087684;  // 180 over pi
-
-namespace
-{
 
 struct CodecFijNest
 {
@@ -144,7 +149,7 @@ static std::vector<double> HEALPix_longitudes(size_t N, size_t i)
 
 }  // anonymous namespace
 
-int grib_iterator_healpix_t::iterate_healpix(long N)
+int Healpix::iterate_healpix(long N)
 {
     size_t Ny = 4 * static_cast<size_t>(N) - 1;
     auto Nd   = static_cast<double>(N);
@@ -265,9 +270,9 @@ int grib_iterator_healpix_t::iterate_healpix(long N)
     return GRIB_SUCCESS;
 }
 
-int grib_iterator_healpix_t::init(grib_handle* h, grib_arguments* args)
+int Healpix::init(grib_handle* h, grib_arguments* args)
 {
-    grib_iterator_gen_t::init(h, args);
+    Gen::init(h, args);
 
     int err    = 0;
 
@@ -332,7 +337,7 @@ int grib_iterator_healpix_t::init(grib_handle* h, grib_arguments* args)
     return err;
 }
 
-int grib_iterator_healpix_t::next(double* lat, double* lon, double* val)
+int Healpix::next(double* lat, double* lon, double* val)
 {
     if (e_ >= static_cast<long>(nv_ - 1)) {
         return 0;
@@ -348,11 +353,15 @@ int grib_iterator_healpix_t::next(double* lat, double* lon, double* val)
     return 1;
 }
 
-int grib_iterator_healpix_t::destroy()
+int Healpix::destroy()
 {
     grib_context_free(context_, lats_);
     grib_context_free(context_, lons_);
 
-    grib_iterator_gen_t::destroy();
+    Gen::destroy();
     return GRIB_SUCCESS;
 }
+
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

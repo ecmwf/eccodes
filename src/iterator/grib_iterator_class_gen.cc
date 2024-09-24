@@ -10,8 +10,12 @@
 
 #include "grib_iterator_class_gen.h"
 
-//grib_iterator_gen_t _grib_iterator_class_gen{};
-//grib_iterator* grib_iterator_class_gen = &_grib_iterator_class_gen;
+namespace eccodes {
+namespace grib {
+namespace geo {
+
+//Gen _grib_iterator_class_gen{};
+//Iterator* grib_iterator_class_gen = &_grib_iterator_class_gen;
 
 
 /*
@@ -110,9 +114,9 @@ int transform_iterator_data(grib_context* context, double* data,
     return GRIB_SUCCESS;
 }
 
-int grib_iterator_gen_t::init(grib_handle* h, grib_arguments* args)
+int Gen::init(grib_handle* h, grib_arguments* args)
 {
-    grib_iterator::init(h, args);
+    Iterator::init(h, args);
 
     size_t dli              = 0;
     int err                 = GRIB_SUCCESS;
@@ -169,22 +173,22 @@ int grib_iterator_gen_t::init(grib_handle* h, grib_arguments* args)
     return err;
 }
 
-int grib_iterator_gen_t::reset()
+int Gen::reset()
 {
     e_ = -1;
     return 0;
 }
 
-int grib_iterator_gen_t::destroy()
+int Gen::destroy()
 {
     const grib_context* c = h_->context;
     grib_context_free(c, data_);
 
-    grib_iterator::destroy();
+    Iterator::destroy();
     return GRIB_SUCCESS;
 }
 
-long grib_iterator_gen_t::has_next()
+long Gen::has_next()
 {
     if (flags_ == 0 && data_ == NULL)
         return 0;
@@ -194,11 +198,28 @@ long grib_iterator_gen_t::has_next()
 }
 
 
-int grib_iterator_gen_t::previous(double*, double*, double*) {
+int Gen::previous(double*, double*, double*) {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_iterator_gen_t::next(double*, double*, double*) {
+int Gen::next(double*, double*, double*) {
     return GRIB_NOT_IMPLEMENTED;
 }
 
+
+int Gen::get(double* lat, double* lon, double* val)
+{
+    if (e_ >= (long)(nv_ - 1))
+        return GRIB_END_OF_ITERATION;
+
+    e_++;
+    if (lat) *lat = 0;
+    if (lon) *lon = 0;
+    if (val) *val = 0;
+
+    return 1;
+}
+
+} // namespace geo
+} // namespace grib
+} // namespace eccodes

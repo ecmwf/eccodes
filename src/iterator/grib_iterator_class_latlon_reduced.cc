@@ -9,13 +9,16 @@
  */
 
 #include "grib_iterator_class_latlon_reduced.h"
-#include <cmath>
 
-grib_iterator_latlon_reduced_t _grib_iterator_latlon_reduced{};
-grib_iterator* grib_iterator_latlon_reduced = &_grib_iterator_latlon_reduced;
+namespace eccodes {
+namespace grib {
+namespace geo {
+
+LatlonReduced _grib_iterator_latlon_reduced{};
+Iterator* grib_iterator_latlon_reduced = &_grib_iterator_latlon_reduced;
 
 
-int grib_iterator_latlon_reduced_t::next(double* lat, double* lon, double* val)
+int LatlonReduced::next(double* lat, double* lon, double* val)
 {
     if ((long)e_ >= (long)(nv_ - 1))
         return 0;
@@ -29,9 +32,9 @@ int grib_iterator_latlon_reduced_t::next(double* lat, double* lon, double* val)
     return 1;
 }
 
-int grib_iterator_latlon_reduced_t::init(grib_handle* h, grib_arguments* args)
+int LatlonReduced::init(grib_handle* h, grib_arguments* args)
 {
-    grib_iterator_gen_t::init(h, args);
+    Gen::init(h, args);
 
     int ret = GRIB_SUCCESS;
     double laf;
@@ -127,13 +130,17 @@ int grib_iterator_latlon_reduced_t::init(grib_handle* h, grib_arguments* args)
     return ret;
 }
 
-int grib_iterator_latlon_reduced_t::destroy()
+int LatlonReduced::destroy()
 {
     const grib_context* c              = h_->context;
 
     grib_context_free(c, las_);
     grib_context_free(c, los_);
 
-    grib_iterator_gen_t::destroy();
+    Gen::destroy();
     return GRIB_SUCCESS;
 }
+
+} // namespace geo
+} // namespace grib
+} // namespace eccodes

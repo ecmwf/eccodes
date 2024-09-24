@@ -12,10 +12,14 @@
 
 #include "grib_iterator_class_gen.h"
 
-class grib_iterator_space_view_t : public grib_iterator_gen_t
+namespace eccodes {
+namespace grib {
+namespace geo {
+
+class SpaceView : public Gen
 {
 public:
-    grib_iterator_space_view_t()
+    SpaceView()
     {
         class_name_ = "space_view";
     }
@@ -30,3 +34,6 @@ private:
     long Nj_;
 };
 
+} // namespace geo
+} // namespace grib
+} // namespace eccodes

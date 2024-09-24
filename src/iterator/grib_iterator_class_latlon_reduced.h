@@ -12,10 +12,14 @@
 
 #include "grib_iterator_class_gen.h"
 
-class grib_iterator_latlon_reduced_t : public grib_iterator_gen_t
+namespace eccodes {
+namespace grib {
+namespace geo {
+
+class LatlonReduced : public Gen
 {
 public:
-    grib_iterator_latlon_reduced_t() : grib_iterator_gen_t()
+    LatlonReduced() : Gen()
     {
         class_name_ = "latlon_reduced";
     }
@@ -28,3 +32,7 @@ private:
     double* las_;
     double* los_;
 };
+
+} // namespace geo
+} // namespace grib
+} // namespace eccodes

@@ -9,14 +9,17 @@
  */
 
 #include "grib_iterator_class_space_view.h"
-#include <cmath>
 
-grib_iterator_space_view_t _grib_iterator_space_view{};
-grib_iterator* grib_iterator_space_view = &_grib_iterator_space_view;
+namespace eccodes {
+namespace grib {
+namespace geo {
+
+SpaceView _grib_iterator_space_view{};
+Iterator* grib_iterator_space_view = &_grib_iterator_space_view;
 
 #define ITER "Space view Geoiterator"
 
-int grib_iterator_space_view_t::next(double* lat, double* lon, double* val)
+int SpaceView::next(double* lat, double* lon, double* val)
 {
     if ((long)e_ >= (long)(nv_ - 1))
         return 0;
@@ -73,9 +76,9 @@ int grib_iterator_space_view_t::next(double* lat, double* lon, double* val)
 #define RAD2DEG 57.29577951308232087684 /* 180 over pi */
 #define DEG2RAD 0.01745329251994329576  /* pi over 180 */
 
-int grib_iterator_space_view_t::init(grib_handle* h, grib_arguments* args)
+int SpaceView::init(grib_handle* h, grib_arguments* args)
 {
-    grib_iterator_gen_t::init(h, args);
+    Gen::init(h, args);
 
     /* REFERENCE:
     *  LRIT/HRIT Global Specification (CGMS 03, Issue 2.6, 12.08.1999)
@@ -309,13 +312,17 @@ int grib_iterator_space_view_t::init(grib_handle* h, grib_arguments* args)
     return ret;
 }
 
-int grib_iterator_space_view_t::destroy()
+int SpaceView::destroy()
 {
     const grib_context* c          = h_->context;
 
     grib_context_free(c, lats_);
     grib_context_free(c, lons_);
 
-    grib_iterator_gen_t::destroy();
+    Gen::destroy();
     return GRIB_SUCCESS;
 }
+
+} // namespace geo
+} // namespace grib
+} // namespace eccodes

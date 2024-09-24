@@ -9,16 +9,17 @@
  */
 
 #include "grib_iterator_class_lambert_azimuthal_equal_area.h"
-#include <cmath>
 
+namespace eccodes {
+namespace grib {
+namespace geo {
 
-grib_iterator_lambert_azimuthal_equal_area_t _grib_iterator_lambert_azimuthal_equal_area{};
-grib_iterator* grib_iterator_lambert_azimuthal_equal_area = &_grib_iterator_lambert_azimuthal_equal_area;
-
+LambertAzimuthalEqualArea _grib_iterator_lambert_azimuthal_equal_area{};
+Iterator* grib_iterator_lambert_azimuthal_equal_area = &_grib_iterator_lambert_azimuthal_equal_area;
 
 #define ITER "Lambert azimuthal equal area Geoiterator"
 
-int grib_iterator_lambert_azimuthal_equal_area_t::next(double* lat, double* lon, double* val)
+int LambertAzimuthalEqualArea::next(double* lat, double* lon, double* val)
 {
     if ((long)e_ >= (long)(nv_ - 1))
         return 0;
@@ -94,7 +95,7 @@ static double pj_qsfn(double sinphi, double e, double one_es)
 
 #define EPS10 1.e-10
 static int init_oblate(grib_handle* h,
-                       grib_iterator_lambert_azimuthal_equal_area_t* self,
+                       LambertAzimuthalEqualArea* self,
                        size_t nv, long nx, long ny,
                        double Dx, double Dy, double earthMinorAxisInMetres, double earthMajorAxisInMetres,
                        double latFirstInRadians, double lonFirstInRadians,
@@ -225,7 +226,7 @@ static int init_oblate(grib_handle* h,
 }
 
 static int init_sphere(grib_handle* h,
-                       grib_iterator_lambert_azimuthal_equal_area_t* self,
+                       LambertAzimuthalEqualArea* self,
                        size_t nv, long nx, long ny,
                        double Dx, double Dy, double radius,
                        double latFirstInRadians, double lonFirstInRadians,
@@ -331,9 +332,9 @@ static int init_sphere(grib_handle* h,
     return GRIB_SUCCESS;
 }
 
-int grib_iterator_lambert_azimuthal_equal_area_t::init(grib_handle* h, grib_arguments* args)
+int LambertAzimuthalEqualArea::init(grib_handle* h, grib_arguments* args)
 {
-    grib_iterator_gen_t::init(h, args);
+    Gen::init(h, args);
 
     int err       = 0;
     int is_oblate = 0;
@@ -426,13 +427,17 @@ int grib_iterator_lambert_azimuthal_equal_area_t::init(grib_handle* h, grib_argu
     return GRIB_SUCCESS;
 }
 
-int grib_iterator_lambert_azimuthal_equal_area_t::destroy()
+int LambertAzimuthalEqualArea::destroy()
 {
     const grib_context* c                            = h_->context;
 
     grib_context_free(c, lats_);
     grib_context_free(c, lons_);
 
-    grib_iterator_gen_t::destroy();
+    Gen::destroy();
     return GRIB_SUCCESS;
 }
+
+} // namespace geo
+} // namespace grib
+} // namespace eccodes

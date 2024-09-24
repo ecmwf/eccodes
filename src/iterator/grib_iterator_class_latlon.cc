@@ -10,11 +10,15 @@
 
 #include "grib_iterator_class_latlon.h"
 
-grib_iterator_latlon_t _grib_iterator_latlon{};
-grib_iterator* grib_iterator_latlon = &_grib_iterator_latlon;
+namespace eccodes {
+namespace grib {
+namespace geo {
+
+Latlon _grib_iterator_latlon{};
+Iterator* grib_iterator_latlon = &_grib_iterator_latlon;
 
 
-int grib_iterator_latlon_t::next(double* lat, double* lon, double* val)
+int Latlon::next(double* lat, double* lon, double* val)
 {
     /* GRIB-238: Support rotated lat/lon grids */
     double ret_lat, ret_lon, ret_val=0;
@@ -59,9 +63,9 @@ int grib_iterator_latlon_t::next(double* lat, double* lon, double* val)
     return 1;
 }
 
-int grib_iterator_latlon_t::init(grib_handle* h, grib_arguments* args)
+int Latlon::init(grib_handle* h, grib_arguments* args)
 {
-    grib_iterator_regular_t::init(h, args);
+    Regular::init(h, args);
 
     int err                    = 0;
     double jdir;
@@ -150,3 +154,7 @@ int grib_iterator_latlon_t::init(grib_handle* h, grib_arguments* args)
     e_ = -1;
     return err;
 }
+
+} // namespace geo
+} // namespace grib
+} // namespace eccodes

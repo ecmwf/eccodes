@@ -11,8 +11,12 @@
 #include "grib_iterator_class_lambert_conformal.h"
 #include <cmath>
 
-grib_iterator_lambert_conformal_t _grib_iterator_lambert_conformal{};
-grib_iterator* grib_iterator_lambert_conformal = &_grib_iterator_lambert_conformal;
+namespace eccodes {
+namespace grib {
+namespace geo {
+
+LambertConformal _grib_iterator_lambert_conformal{};
+Iterator* grib_iterator_lambert_conformal = &_grib_iterator_lambert_conformal;
 
 #define ITER "Lambert conformal Geoiterator"
 #define EPSILON 1.0e-10
@@ -121,7 +125,7 @@ static void xy2lonlat(double radius, double n, double f, double rho0_bare, doubl
     }
 }
 
-int grib_iterator_lambert_conformal_t::init_sphere(const grib_handle* h,
+int LambertConformal::init_sphere(const grib_handle* h,
                        size_t nv, long nx, long ny,
                        double LoVInDegrees,
                        double Dx, double Dy, double radius,
@@ -210,7 +214,7 @@ int grib_iterator_lambert_conformal_t::init_sphere(const grib_handle* h,
 }
 
 // Oblate spheroid
-int grib_iterator_lambert_conformal_t::init_oblate(const grib_handle* h,
+int LambertConformal::init_oblate(const grib_handle* h,
                        size_t nv, long nx, long ny,
                        double LoVInDegrees,
                        double Dx, double Dy,
@@ -339,9 +343,9 @@ int grib_iterator_lambert_conformal_t::init_oblate(const grib_handle* h,
     return GRIB_SUCCESS;
 }
 
-int grib_iterator_lambert_conformal_t::init(grib_handle* h, grib_arguments* args)
+int LambertConformal::init(grib_handle* h, grib_arguments* args)
 {
-    grib_iterator_gen_t::init(h, args);
+    Gen::init(h, args);
 
     int err = 0, is_oblate = 0;
     long nx, ny, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning;
@@ -452,7 +456,7 @@ int grib_iterator_lambert_conformal_t::init(grib_handle* h, grib_arguments* args
     return err;
 }
 
-int grib_iterator_lambert_conformal_t::next(double* lat, double* lon, double* val)
+int LambertConformal::next(double* lat, double* lon, double* val)
 {
     if ((long)e_ >= (long)(nv_ - 1))
         return 0;
@@ -466,13 +470,17 @@ int grib_iterator_lambert_conformal_t::next(double* lat, double* lon, double* va
     return 1;
 }
 
-int grib_iterator_lambert_conformal_t::destroy()
+int LambertConformal::destroy()
 {
     const grib_context* c                 = h_->context;
 
     grib_context_free(c, lats_);
     grib_context_free(c, lons_);
 
-    grib_iterator_gen_t::destroy();
+    Gen::destroy();
     return GRIB_SUCCESS;
 }
+
+} // namespace geo
+} // namespace grib
+} // namespace eccodes

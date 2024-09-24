@@ -12,10 +12,14 @@
 
 #include "grib_iterator_class_gen.h"
 
-class grib_iterator_mercator_t : public grib_iterator_gen_t
+namespace eccodes {
+namespace grib {
+namespace geo {
+
+class Mercator : public Gen
 {
 public:
-    grib_iterator_mercator_t() {
+    Mercator() {
         class_name_ = "mercator";
     }
     int init(grib_handle*,grib_arguments*) override;
@@ -36,3 +40,6 @@ private:
                       double, double);
 };
 
+} // namespace geo
+} // namespace grib
+} // namespace eccodes

@@ -12,10 +12,14 @@
 
 #include "grib_iterator_class_gen.h"
 
-class grib_iterator_polar_stereographic_t : public grib_iterator_gen_t
+namespace eccodes {
+namespace grib {
+namespace geo {
+
+class PolarStereographic : public Gen
 {
 public:
-    grib_iterator_polar_stereographic_t() : grib_iterator_gen_t()
+    PolarStereographic() : Gen()
     {
         class_name_ = "polar_stereographic";
     }
@@ -30,3 +34,6 @@ private:
     long Nj_;
 };
 
+} // namespace geo
+} // namespace grib
+} // namespace eccodes

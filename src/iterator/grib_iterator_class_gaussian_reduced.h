@@ -12,10 +12,14 @@
 
 #include "grib_iterator_class_gen.h"
 
-class grib_iterator_gaussian_reduced_t : public grib_iterator_gen_t
+namespace eccodes {
+namespace grib {
+namespace geo {
+
+class GaussianReduced : public Gen
 {
 public:
-    grib_iterator_gaussian_reduced_t() : grib_iterator_gen_t()
+    GaussianReduced() : Gen()
     {
         class_name_ = "gaussian_reduced";
     }
@@ -44,3 +48,7 @@ int iterate_reduced_gaussian_subarea(grib_handle*,
                                                        double, double,
                                                        double*, long*, size_t, size_t);
 };
+
+} // namespace geo
+} // namespace grib
+} // namespace eccodes
