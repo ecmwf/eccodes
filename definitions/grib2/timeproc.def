@@ -26,6 +26,13 @@ concept timeproc {
  "since-start"    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=2;}
  # 24 hourly time unit
  "24h"    = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 24; class="od"; stream="enfo"; type="ep";}
+ # special rule for accumulations in stream efhs, type cd
+ "24h"   = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 24; class="od"; stream="efhs"; type="cd";}
+ "72h"   = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 72; class="od"; stream="efhs"; type="cd";}
+ "120h"   = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 120; class="od"; stream="efhs"; type="cd";}
+ "168h"   = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168; class="od"; stream="efhs"; type="cd";}
+ "240h"   = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 240; class="od"; stream="efhs"; type="cd";}
+ "360h"   = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 360; class="od"; stream="efhs"; type="cd";}
  ## 1h rolling accumulation
  "1h"    = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 1; class="d1";}
  ## 24h rolling accumulation
