@@ -35,3 +35,27 @@
 262139 = {gribTablesVersionNo=151; indicatorOfParameter=132; centre=98;}
 # 151131
 262140 = {gribTablesVersionNo=151; indicatorOfParameter=131; centre=98;}
+# 39
+260199 = {gribTablesVersionNo=128; indicatorOfParameter=39; centre=98;}
+# 40
+260199 = {gribTablesVersionNo=128; indicatorOfParameter=40; centre=98;}
+# 41
+260199 = {gribTablesVersionNo=128; indicatorOfParameter=41; centre=98;}
+# 42
+260199 = {gribTablesVersionNo=128; indicatorOfParameter=42; centre=98;}
+# 139
+260360 = {gribTablesVersionNo=128; indicatorOfParameter=139; centre=98;}
+# 170
+260360 = {gribTablesVersionNo=128; indicatorOfParameter=170; centre=98;}
+# 183
+260360 = {gribTablesVersionNo=128; indicatorOfParameter=183; centre=98;}
+# 236
+260360 = {gribTablesVersionNo=128; indicatorOfParameter=236; centre=98;}
+# 228223
+228227 = {gribTablesVersionNo=128; indicatorOfParameter=223; centre=98;}
+# 228225
+228227 = {gribTablesVersionNo=128; indicatorOfParameter=225; centre=98;}
+# 228222
+228226 = {gribTablesVersionNo=128; indicatorOfParameter=222; centre=98;}
+# 228224
+228226 = {gribTablesVersionNo=128; indicatorOfParameter=224; centre=98;}
