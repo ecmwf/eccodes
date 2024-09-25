@@ -19,7 +19,7 @@
 #include "mir/key/grid/Grid.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
-#include "mir/repres/other/UnstructuredGrid.h"
+#include "mir/repres/UnstructuredGrid.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Exceptions.h"
 #include "mir/util/Log.h"
@@ -329,7 +329,7 @@ const Representation* Representation::globalise(data::MIRField& field) const {
     field.hasMissing(true);
 
 
-    return new other::UnstructuredGrid(latitudes, longitudes);
+    return new UnstructuredGrid(latitudes, longitudes);
 }
 
 
