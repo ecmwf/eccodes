@@ -15,6 +15,18 @@ concept timeproc {
  "point-in-time"    = {marsStream="eefo"; type="fcstdev"; numberOfTimeRange=1;}
  "point-in-time"    = {marsStream="eefo"; type="taem"; numberOfTimeRange=1;}
  "point-in-time"    = {marsStream="eefo"; type="taes"; numberOfTimeRange=1;}
+ "point-in-time"    = {marsStream="eehs"; type="fcmax"; numberOfTimeRange=1;}
+ "point-in-time"    = {marsStream="eehs"; type="fcmin"; numberOfTimeRange=1;}
+ "point-in-time"    = {marsStream="eehs"; type="fcmean"; numberOfTimeRange=1;}
+ "point-in-time"    = {marsStream="eehs"; type="fcstdev"; numberOfTimeRange=1;}
+ "point-in-time"    = {marsStream="eehs"; type="taem"; numberOfTimeRange=1;}
+ "point-in-time"    = {marsStream="eehs"; type="taes"; numberOfTimeRange=1;}
+ "point-in-time"    = {marsStream="efhs"; type="fcmax"; numberOfTimeRange=1;}
+ "point-in-time"    = {marsStream="efhs"; type="fcmin"; numberOfTimeRange=1;}
+ "point-in-time"    = {marsStream="efhs"; type="fcmean"; numberOfTimeRange=1;}
+ "point-in-time"    = {marsStream="efhs"; type="fcstdev"; numberOfTimeRange=1;}
+ "point-in-time"    = {marsStream="efhs"; type="taem"; numberOfTimeRange=1;}
+ "point-in-time"    = {marsStream="efhs"; type="taes"; numberOfTimeRange=1;}
  #
  ### Accumulations ###
  # we need to do this dataset dependent, in some datasets we might have

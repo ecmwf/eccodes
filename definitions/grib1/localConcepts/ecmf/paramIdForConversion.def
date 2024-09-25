@@ -59,3 +59,11 @@
 228226 = {gribTablesVersionNo=128; indicatorOfParameter=222; centre=98;}
 # 228224
 228226 = {gribTablesVersionNo=128; indicatorOfParameter=224; centre=98;}
+# 121
+237167 = {gribTablesVersionNo=128; indicatorOfParameter=121; centre=98;}
+# 51
+237167 = {gribTablesVersionNo=128; indicatorOfParameter=51; centre=98;}
+# 122
+238167 = {gribTablesVersionNo=128; indicatorOfParameter=122; centre=98;}
+# 52
+238167 = {gribTablesVersionNo=128; indicatorOfParameter=52; centre=98;}
