@@ -84,7 +84,6 @@ void grib_dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
 }
 
 void grib_dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
@@ -97,7 +96,6 @@ void grib_dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
 }
 
 void grib_dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
@@ -110,7 +108,6 @@ void grib_dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
 }
 
 void grib_dump_string_array(grib_dumper* d, grib_accessor* a, const char* comment)
@@ -123,7 +120,6 @@ void grib_dump_string_array(grib_dumper* d, grib_accessor* a, const char* commen
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
 }
 
 void grib_dump_label(grib_dumper* d, grib_accessor* a, const char* comment)
@@ -136,7 +132,6 @@ void grib_dump_label(grib_dumper* d, grib_accessor* a, const char* comment)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
 }
 
 void grib_dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
@@ -149,7 +144,6 @@ void grib_dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
 }
 
 void grib_dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
@@ -162,7 +156,6 @@ void grib_dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
 }
 
 void grib_dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block)
@@ -175,7 +168,6 @@ void grib_dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
 }
 
 void grib_dump_values(grib_dumper* d, grib_accessor* a)
@@ -188,7 +180,6 @@ void grib_dump_values(grib_dumper* d, grib_accessor* a)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
 }
 
 void grib_dump_header(grib_dumper* d, const grib_handle* ch)

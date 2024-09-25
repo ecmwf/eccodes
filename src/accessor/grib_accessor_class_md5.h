@@ -17,8 +17,8 @@ class grib_accessor_md5_t : public grib_accessor_gen_t
 {
 public:
     /* Members defined in md5 */
-    const char* offset;
-    grib_expression* length;
+    const char* offset_key;
+    grib_expression* length_key;
     grib_string_list* blocklist;
 };
 

@@ -422,6 +422,16 @@ static void test_gts_header_mode()
     Assert(c->gts_header_on == 0);
 }
 
+static void test_data_quality_checks()
+{
+    grib_context* c = grib_context_get_default();
+    printf("Running %s ...\n", __func__);
+
+    grib_context_set_data_quality_checks(c, 1);//warning
+    grib_context_set_data_quality_checks(c, 2);//error
+    grib_context_set_data_quality_checks(c, 0);//no checks
+}
+
 static void test_bufr_multi_element_constant_arrays()
 {
     grib_context* c = grib_context_get_default();
@@ -859,6 +869,7 @@ int main(int argc, char** argv)
     test_gribex_mode();
     test_gts_header_mode();
     test_bufr_multi_element_constant_arrays();
+    test_data_quality_checks();
 
     test_concept_condition_strings();
 

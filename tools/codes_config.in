@@ -36,7 +36,7 @@ print_feature()
 build_type="@CMAKE_BUILD_TYPE@"
 info()
 {
-  echo "ecCodes version (${ECCODES_VERSION_STR}), git-sha1 ${ECCODES_GIT_SHA1}"
+  echo "ecCodes version ${ECCODES_VERSION_STR}, git-sha1 ${ECCODES_GIT_SHA1}"
   echo ""
   echo "Build:"
   echo "  build type      : @CMAKE_BUILD_TYPE@"
@@ -55,6 +55,7 @@ info()
 #  echo "    flags         : @ECCODES_Fortran_FLAGS@"
   echo ""
   echo "Features:"
+  echo "  FORTRAN             : $(print_feature @HAVE_FORTRAN@)"
   echo "  AEC                 : $(print_feature @HAVE_AEC@)"
   echo "  MEMFS               : $(print_feature @HAVE_MEMFS@)"
   echo "  ECCODES_THREADS     : $(print_feature @GRIB_PTHREADS@)"

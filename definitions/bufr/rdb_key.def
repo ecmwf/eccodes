@@ -1,4 +1,5 @@
 # RDB stands for REPORT DATA BASE
+# See https://confluence.ecmwf.int/pages/viewpage.action?pageId=24316441
 unsigned[1]   rdbType : dump; 
 unsigned[1]   oldSubtype: dump;
 

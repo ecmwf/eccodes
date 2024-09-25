@@ -77,7 +77,7 @@ int grib_accessor_class_g1bitmap_t::value_count(grib_accessor* a, long* count)
 
 int grib_accessor_class_g1bitmap_t::unpack_bytes(grib_accessor* a, unsigned char* val, size_t* len)
 {
-    unsigned char* buf             = grib_handle_of_accessor(a)->buffer->data;
+    const unsigned char* buf = grib_handle_of_accessor(a)->buffer->data;
     grib_accessor_g1bitmap_t* self = (grib_accessor_g1bitmap_t*)a;
     long tlen;
     int err;
