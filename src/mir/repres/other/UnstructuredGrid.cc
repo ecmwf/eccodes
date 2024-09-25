@@ -10,7 +10,7 @@
  */
 
 
-#include "mir/repres/UnstructuredGrid.h"
+#include "mir/repres/other/UnstructuredGrid.h"
 
 #include <fstream>
 #include <limits>
@@ -45,7 +45,7 @@ namespace mir::repres {
 
 
 template <>
-Representation* RepresentationBuilder<UnstructuredGrid>::make(const param::MIRParametrisation& param) {
+Representation* RepresentationBuilder<other::UnstructuredGrid>::make(const param::MIRParametrisation& param) {
 #if mir_HAVE_ATLAS
     // specially-named unstructured grids
     std::string grid;
@@ -56,9 +56,11 @@ Representation* RepresentationBuilder<UnstructuredGrid>::make(const param::MIRPa
     }
 #endif
 
-    return new UnstructuredGrid(param);
+    return new other::UnstructuredGrid(param);
 }
 
+
+namespace other {
 
 UnstructuredGrid::UnstructuredGrid(const param::MIRParametrisation& parametrisation) {
     parametrisation.get("latitudes", latitudes_);
@@ -295,6 +297,9 @@ bool UnstructuredGrid::extendBoundingBoxOnIntersect() const {
 
 static const RepresentationBuilder<UnstructuredGrid> triangular_grid("triangular_grid");
 static const RepresentationBuilder<UnstructuredGrid> unstructured_grid("unstructured_grid");
+
+
+}  // namespace other
 
 
 }  // namespace mir::repres
