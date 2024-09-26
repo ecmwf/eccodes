@@ -7,7 +7,7 @@ transient dummyc=0: hidden;
 # Add support for "datasetForLocal" condition (e.g. S2S).
 # These datasets will always use pre-MTG2 definitions.
 if (datasetForLocal isnot "unknown") {
-    if ( datasetForLocal is "era" || datasetForLocal is "s2s" || datasetForLocal is "s2s" || datasetForLocal is "uerra" ) {
+    if ( datasetForLocal is "era" || datasetForLocal is "s2s" || datasetForLocal is "tigge" || datasetForLocal is "uerra" ) {
 
         constant tablesVersionMTG2Switch=33: hidden;
         constant MTG2Switch = 0 : no_copy, read_only;
