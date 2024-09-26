@@ -186,3 +186,15 @@
  parameterCategory = 0 ;
  parameterNumber = 2 ;
 }
+#Maximum temperature
+'K' = {
+ discipline = 0 ;
+ parameterCategory = 0 ;
+ parameterNumber = 4 ;
+}
+#Minimum temperature
+'K' = {
+ discipline = 0 ;
+ parameterCategory = 0 ;
+ parameterNumber = 5 ;
+}
