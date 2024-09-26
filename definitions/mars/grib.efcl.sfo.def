@@ -2,7 +2,9 @@
 # Water Balance
 
 # ECC-701
-alias mars.step = endStep;
+#alias mars.step = endStep;
+meta stepInterval sprintf("%s",timeprocendstep);
+alias mars.step = stepInterval;
 
 alias mars.date  = dateOfModelVersion;
 alias mars.time  = dataTime;

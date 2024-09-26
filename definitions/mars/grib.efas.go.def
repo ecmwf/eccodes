@@ -1,7 +1,9 @@
 # EFAS Gridded observations
 
 # ECC-701
-alias mars.step = endStep;
+#alias mars.step = endStep;
+meta stepInterval sprintf("%s",timeprocendstep);
+alias mars.step = stepInterval;
 
 alias mars.date = dateOfForecast;
 alias mars.time = timeOfForecast;

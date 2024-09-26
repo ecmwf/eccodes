@@ -16,7 +16,9 @@ alias monthlyVerificationTime = validityTime;
 if (class is "em" || class is "e2" || class is "ea" || class is "ep" ||
     class is "rd" || class is "mc" || class is "et" || class is "l5")
 {
-   alias mars.step = endStep;
+   #alias mars.step = endStep;
+   meta stepInterval sprintf("%s",timeprocendstep);
+   alias mars.step = stepInterval;
 }
 else
 {

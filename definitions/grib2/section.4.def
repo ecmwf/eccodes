@@ -128,6 +128,14 @@ if (paramId >= 140000 && paramId < 141000 &&
 }
 
 template timeproc "grib2/timeproc.def";
-alias mars.timeproc = timeproc ;
+#alias mars.timeproc = timeproc ;
+if ( timeproc is "unknown" || timeproc is "point-in-time" || timeproc is "none"){
+# transient timeproc_alias = timeproc ;
+ transient timeprocendstep = endStep;
+ #meta timeprocendstep sprintf("%s(%d)",timeproc,endStep);
+} else {
+ #transient timeprocendstep = endStep;
+ meta timeprocendstep sprintf("%s(%d)",timeproc,endStep);
+}
 
 meta md5Section4 md5(offsetSection4,section4Length);

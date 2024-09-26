@@ -1,4 +1,6 @@
 # class e4
-alias mars.step = endStep;
+#alias mars.step = endStep;
+meta stepInterval sprintf("%s",timeprocendstep);
+alias mars.step = stepInterval;
 alias mars.number=perturbationNumber;
 

@@ -1,4 +1,5 @@
 concept timeproc {
+ "unknown" = { dummy = 1; }
  # either instantaneous data or processing is specified by mars stream
  "point-in-time"    = {stepType="instant";}
  "point-in-time"    = {stream="swmm"; numberOfTimeRange=1;}

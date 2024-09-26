@@ -5,6 +5,8 @@
 if(startStep == endStep)
 {
 	alias mars.step   = endStep;
+	meta stepInterval sprintf("%s",timeprocendstep);
+    alias mars.step = stepInterval;
 }
 else
 {
@@ -13,7 +15,8 @@ else
 		if(startStep == endStep - 24)
 		{
 			alias mars.step   = endStep;
-		}
+			meta stepInterval sprintf("%s",timeprocendstep);
+			alias mars.step = stepInterval;		}
 		else
 		{
 			transient patch_precip_fp = 24;
