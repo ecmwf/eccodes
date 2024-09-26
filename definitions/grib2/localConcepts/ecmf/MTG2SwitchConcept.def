@@ -7,8 +7,8 @@
 1 = {tablesVersion=35; productionStatusOfProcessedData=1; modelVersion='cy50r1';}
 1 = {tablesVersion=35; productionStatusOfProcessedData=0; modelVersion='cy50r2';}
 # MC
-2 = {tablesVersion=35; productionStatusOfProcessedData=1; modelVersion='cy50r1'; marsClass=mc;}
-2 = {tablesVersion=35; productionStatusOfProcessedData=0; modelVersion='cy50r2'; marsClass=mc;}
+2 = {tablesVersion=35; productionStatusOfProcessedData=1; modelVersion='cy50r1'; marsClass='mc';}
+2 = {tablesVersion=35; productionStatusOfProcessedData=0; modelVersion='cy50r2'; marsClass='mc';}
 # RD
 0 = {tablesVersion=35; productionStatusOfProcessedData=2; modelVersion='cy50r1';}
 # 1 = {tablesVersion=35; productionStatusOfProcessedData=2; modelVersion='cy50r1'; typeOfProcessedData=9;}
@@ -18,8 +18,8 @@
 1 = {tablesVersion=34; productionStatusOfProcessedData=0; modelVersion='cy49r2';}
 
 # ERA6
-1 = {tablesVersion=34; productionStatusOfProcessedData=3; modelVersion='cy49r2'; marsClass=e6;}
+1 = {tablesVersion=34; productionStatusOfProcessedData=3; modelVersion='cy49r2'; marsClass='e6';}
 
 # EAC5
-2 = {tablesVersion=34; productionStatusOfProcessedData=3; modelVersion='cy49r2'; marsClass=mc;}
-2 = {tablesVersion=34; productionStatusOfProcessedData=3; modelVersion='cy49r2'; marsClass=cr;}
+2 = {tablesVersion=34; productionStatusOfProcessedData=3; modelVersion='cy49r2'; marsClass='mc';}
+2 = {tablesVersion=34; productionStatusOfProcessedData=3; modelVersion='cy49r2'; marsClass='cr';}
