@@ -111,7 +111,9 @@ if (numberOfTimeRanges == 1 || numberOfTimeRanges == 2) {
 #meta  marsStep mars_step(stepRange,stepType) : edition_specific;
 
 alias ls.stepRange=stepRange;
-alias mars.step=endStep;
+#alias mars.step=endStep;
+meta stepInterval sprintf("%s",timeprocendstep);
+alias mars.step = stepInterval;
 
 alias time.stepType=stepType;
 alias time.stepRange=stepRange;

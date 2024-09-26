@@ -80,7 +80,9 @@ if (numberOfForecastsUsedInLocalTime == 1) {
 
   alias mars.date = dateOfForecastUsedInLocalTime : dump;
   alias mars.time = timeOfForecastUsedInLocalTime : dump;
-  alias mars.step = endStep;
+  #alias mars.step = endStep;
+  meta stepInterval sprintf("%s",timeprocendstep);
+  alias mars.step = stepInterval;
   alias time.dataDate = dateOfForecastUsedInLocalTime;
   alias time.dataTime = timeOfForecastUsedInLocalTime;
   alias time.endStep = endStep;
