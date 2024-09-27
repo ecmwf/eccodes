@@ -8,6 +8,8 @@ constant tablesVersionMTG2Switch=33: hidden;
 # 1 = post-MTG2 encoding used
 # 2 = post-MTG2 encoding with paramId + chemId used
 
+# TODO: is add the when statement functionality for changes in memory.
+
 if (tablesVersion <= tablesVersionMTG2Switch) {
     # Pre-MTG2
     constant MTG2SwitchDefault = 0;
