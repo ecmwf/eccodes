@@ -1,0 +1,150 @@
+#Methane (chemistry)
+'Methane (chemistry)' = {
+	constituentType = 2 ;
+	localTablesVersion = 1 ;
+	}
+#Volcanic sulphur dioxide
+'Volcanic sulphur dioxide' = {
+        constituentType = 65507 ;
+        localTablesVersion = 1 ;
+        }
+#Stratospheric ozone
+'Stratospheric ozone' = {
+	constituentType = 65524 ;
+	localTablesVersion = 1 ;
+	}
+#PAR budget corrector
+'PAR budget corrector' = {
+	constituentType = 65520 ;
+	localTablesVersion = 1 ;
+	}
+#NO to NO2 operator
+'NO to NO2 operator' = {
+	constituentType = 65521 ;
+	localTablesVersion = 1 ;
+	}
+#NO to alkyl nitrate operator
+'NO to alkyl nitrate operator' = {
+	constituentType = 65522 ;
+	localTablesVersion = 1 ;
+	}
+#Polar stratospheric cloud
+'Polar stratospheric cloud' = {
+	constituentType = 65516 ;
+	localTablesVersion = 1 ;
+	}
+#Methacrolein MVK
+'Methacrolein MVK' = {
+	constituentType = 65523 ;
+	localTablesVersion = 1 ;
+	}
+#Acetone product
+'Acetone product' = {
+	constituentType = 65515 ;
+	localTablesVersion = 1 ;
+	}
+#HYPROPO2
+'HYPROPO2' = {
+	constituentType = 65519 ;
+	localTablesVersion = 1 ;
+	}
+#Nitrogen oxides Transp
+'Nitrogen oxides Transp' = {
+	constituentType = 65514 ;
+	localTablesVersion = 1 ;
+	}
+#Carbon dioxide (chemistry)
+'Carbon dioxide (chemistry)' = {
+	constituentType = 3 ;
+	localTablesVersion = 1 ;
+	}
+#Nitrous oxide (chemistry)
+'Nitrous oxide (chemistry)' = {
+	constituentType = 6 ;
+	localTablesVersion = 1 ;
+	}
+#Water vapour (chemistry)
+'Water vapour (chemistry)' = {
+	constituentType = 1 ;
+	localTablesVersion = 1 ;
+	}
+#Toluene and less reactive aromatics
+'Toluene and less reactive aromatics' = {
+	constituentType = 65529 ;
+	localTablesVersion = 1 ;
+	}
+#Xylene and more reactive aromatics
+'Xylene and more reactive aromatics' = {
+	constituentType = 65530 ;
+	localTablesVersion = 1 ;
+	}
+#Lumped alkenes
+'Lumped alkenes' = {
+	constituentType = 60010 ;
+	localTablesVersion = 2 ;
+	}
+#Lumped alkanes
+'Lumped alkanes' = {
+	constituentType = 60009 ;
+	localTablesVersion = 2 ;
+	}
+#Hydrogen atom
+'Hydrogen atom' = {
+	constituentType = 65513 ;
+	localTablesVersion = 1 ;
+	}
+#Condensable gas type 1
+'Condensable gas type 1' = {
+	constituentType = 65526 ;
+	localTablesVersion = 1 ;
+	}
+#Condensable gas type 2a
+'Condensable gas type 2a' = {
+	constituentType = 65527 ;
+	localTablesVersion = 1 ;
+	}
+#Condensable gas type 2b
+'Condensable gas type 2b' = {
+	constituentType = 65528 ;
+	localTablesVersion = 1 ;
+	}
+#Asymmetric chlorine dioxide radical
+'Asymmetric chlorine dioxide radical' = {
+	constituentType = 65518 ;
+	localTablesVersion = 1 ;
+	}
+#GEMS ozone
+'GEMS ozone' = {
+	constituentType = 0 ;
+	localTablesVersion = 1 ;
+	}
+#Stratospheric aerosol
+'Stratospheric aerosol' = {
+	constituentType = 65517 ;
+	localTablesVersion = 1 ;
+	}
+#Biogenic secondary organic aerosol precursor
+'Biogenic secondary organic aerosol precursor' = {
+	constituentType = 65511 ;
+	localTablesVersion = 1 ;
+	}
+#Anthropogenic secondary organic aerosol precursor
+'Anthropogenic secondary organic aerosol precursor' = {
+	constituentType = 65512 ;
+	localTablesVersion = 1 ;
+	}
+#SO2 precursor
+'SO2 precursor' = {
+	constituentType = 65510 ;
+	localTablesVersion = 1 ;
+	}
+#Aerosol small mode
+'Aerosol small mode' = {
+	constituentType = 65508 ;
+	localTablesVersion = 1 ;
+	}
+#Aerosol large mode
+'Aerosol large mode' = {
+	constituentType = 65509 ;
+	localTablesVersion = 1 ;
+	}

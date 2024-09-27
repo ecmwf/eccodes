@@ -32,6 +32,22 @@ if ( defined(MTG2Switch) and MTG2Switch == 0 ) {
 
 }
 
+# Now deal with chemical parameter split, pre and post MTG2
+if (defined(MTG2Switch) and MTG2Switch == 2) {
+  # Note: 0 is a valid chemId
+  concept chemId (minus_one,"chemId.def",conceptsDir2,conceptsDir1): no_copy,long_type,dump;
+  concept chemName (unknown,"chemName.def",conceptsDir2,conceptsDir1): no_copy,dump;
+  concept chemShortName (unknown,"chemShortName.def",conceptsDir2,conceptsDir1): no_copy,dump;
+  concept chemFormula (unknown,"chemFormula.def",conceptsDir2,conceptsDir1): no_copy,dump;
+
+  if ( chemId != -1 ) {
+    alias mars.chem = chemId;
+    alias parameter.chemId = chemId;
+    alias ls.chemShortName = chemShortName;
+    alias parameter.chemShortName = chemShortName;
+  }
+}
+
 concept paramIdLegacyECMF(defaultParameter,"paramId.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): long_type,no_copy,hidden;
 concept paramIdECMF (paramIdLegacyECMF,paramIdFilename,conceptsMasterDir,conceptsLocalDirECMF): long_type,no_copy;
 concept paramId (paramIdECMF,paramIdFilename,conceptsDir2,conceptsDir1): long_type;
