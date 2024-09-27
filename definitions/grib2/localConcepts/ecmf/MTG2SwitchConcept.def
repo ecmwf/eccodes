@@ -2,24 +2,32 @@
 # 0 = pre-MTG2 encoding used
 # 1 = post-MTG2 encoding used
 # 2 = post-MTG2 encoding with paramId + chemId used
+# Model version cannot be used in this concept because its concept is only evaluated at the end of Section 4,
+# and in many cases we use the value of the MTG2Switch earlier. Therefore we must use the backgroundProcess
+# and generatingProcessIdentifier key directly. The values for IFS are:
+# backgroundProcess=255
+# 'cy50r2' = { generatingProcessIdentifier = 161; }
+# 'cy50r1' = { generatingProcessIdentifier = 160; }
+# 'cy49r2' = { generatingProcessIdentifier = 159; }
+# 'cy49r1' = { generatingProcessIdentifier = 158; }
+
 # OD
-0 = {tablesVersion=35; productionStatusOfProcessedData=0; modelVersion='cy50r1';}
-1 = {tablesVersion=35; productionStatusOfProcessedData=1; modelVersion='cy50r1';}
-1 = {tablesVersion=35; productionStatusOfProcessedData=0; modelVersion='cy50r2';}
+0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=160;}
+1 = {tablesVersion=35; productionStatusOfProcessedData=1; backgroundProcess=255; generatingProcessIdentifier=160;}
+1 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=161;}
 # MC
-2 = {tablesVersion=35; productionStatusOfProcessedData=1; modelVersion='cy50r1'; marsClass='mc';}
-2 = {tablesVersion=35; productionStatusOfProcessedData=0; modelVersion='cy50r2'; marsClass='mc';}
+2 = {tablesVersion=35; productionStatusOfProcessedData=1; backgroundProcess=255; generatingProcessIdentifier=160; marsClass='mc';}
+2 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=161; marsClass='mc';}
 # RD
-0 = {tablesVersion=35; productionStatusOfProcessedData=2; modelVersion='cy50r1';}
-# 1 = {tablesVersion=35; productionStatusOfProcessedData=2; modelVersion='cy50r1'; typeOfProcessedData=9;}
-1 = {tablesVersion=35; productionStatusOfProcessedData=2; modelVersion='cy50r2';}
+0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=160;}
+1 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=161;}
 
 # SEAS6
-1 = {tablesVersion=34; productionStatusOfProcessedData=0; modelVersion='cy49r2';}
+1 = {tablesVersion=34; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier = 159;}
 
 # ERA6
-1 = {tablesVersion=34; productionStatusOfProcessedData=3; modelVersion='cy49r2'; marsClass='e6';}
+1 = {tablesVersion=34; productionStatusOfProcessedData=3; backgroundProcess=255; generatingProcessIdentifier = 159; marsClass='e6';}
 
 # EAC5
-2 = {tablesVersion=34; productionStatusOfProcessedData=3; modelVersion='cy49r2'; marsClass='mc';}
-2 = {tablesVersion=34; productionStatusOfProcessedData=3; modelVersion='cy49r2'; marsClass='cr';}
+2 = {tablesVersion=34; productionStatusOfProcessedData=3; backgroundProcess=255; generatingProcessIdentifier=159; marsClass='mc';}
+2 = {tablesVersion=34; productionStatusOfProcessedData=3; backgroundProcess=255; generatingProcessIdentifier=159; marsClass='cr';}

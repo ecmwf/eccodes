@@ -3,11 +3,29 @@
 
 constant tablesVersionMTG2Switch=33: hidden;
 
-# MTG2
+# MTG2 behaviour based on tablesVersion above
+# 0 = pre-MTG2 encoding used
+# 1 = post-MTG2 encoding used
+# 2 = post-MTG2 encoding with paramId + chemId used
+
 if (tablesVersion <= tablesVersionMTG2Switch) {
+    # Pre-MTG2
     constant MTG2SwitchDefault = 0;
+
 } else {
-    constant MTG2SwitchDefault = 1;
+    # For class mc and cr post MTG2 we always want the param + chem split (value 2)
+    # For TIGGE, marsClass is not defined in the empty local Section 2, but is defined later on.
+    # Therefore we need to protect this with an if defined check
+    if (defined(marsClass) and (marsClass is 'mc' or marsClass is 'cr')) {
+
+        constant MTG2SwitchDefault = 2;
+
+    # All other cases we are post-MTG2
+    } else {
+
+        constant MTG2SwitchDefault = 1;
+
+    }
 }
 
 concept MTG2Switch(MTG2SwitchDefault, "MTG2SwitchConcept.def", conceptsDir2,conceptsDir1): no_copy, read_only;
