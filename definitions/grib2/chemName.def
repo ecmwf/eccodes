@@ -538,6 +538,22 @@
 'Methane' = {
 	constituentType = 2 ;
 	}
+#Toluene
+'Toluene' = {
+	constituentType = 10022 ;
+	}
+#Benzene
+'Benzene' = {
+	constituentType = 10021 ;
+	}
+#Xylene
+'Xylene' = {
+	constituentType = 10023 ;
+	}
+#Butene
+'Butene' = {
+	constituentType = 10016 ;
+	}
 #Nitrate
 'Nitrate' = {
 	constituentType = 62004 ;
@@ -717,3 +733,7 @@
         scaledValueOfSecondSize = missing() ;
         constituentType = 62026 ;
         }
+#Volcanic ash
+'Volcanic ash' = {
+	constituentType = 62025 ;
+	}

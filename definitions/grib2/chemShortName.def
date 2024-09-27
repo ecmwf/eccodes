@@ -538,6 +538,22 @@
 'CH4' = {
 	constituentType = 2 ;
 	}
+#Toluene
+'C7H8' = {
+	constituentType = 10022 ;
+	}
+#Benzene
+'C6H6' = {
+	constituentType = 10021 ;
+	}
+#Xylene
+'C8H10' = {
+	constituentType = 10023 ;
+	}
+#Butene
+'C4H10' = {
+	constituentType = 10016 ;
+	}
 #Nitrate
 'aer_NO3' = {
 	constituentType = 62004 ;
@@ -717,3 +733,7 @@
         scaledValueOfSecondSize = missing() ;
         constituentType = 62026 ;
         }
+#Volcanic ash
+'volash' = {
+	constituentType = 62025 ;
+	}

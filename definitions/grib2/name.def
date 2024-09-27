@@ -10794,6 +10794,13 @@
          sourceSinkChemicalPhysicalProcess = 7 ;
          typeOfGeneratingProcess = 20 ;
         }
+#Emission mass flux from wild fires
+'Emission mass flux from wild fires' = {
+         discipline = 0 ;
+         parameterCategory = 20 ;
+         parameterNumber = 77 ;
+         sourceSinkChemicalPhysicalProcess = 5 ;
+        }
 #Pressure tendency
 'Pressure tendency' = {
 	 discipline = 0 ;
