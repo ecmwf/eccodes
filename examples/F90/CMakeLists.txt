@@ -12,6 +12,7 @@ if( HAVE_BUILD_TOOLS )
           codes_datetime_julian
           codes_set_paths
           codes_f90_misc
+          grib_Infinity_grid_second_order
           grib_set_pv
           grib_set_data
           grib_set_data_force
