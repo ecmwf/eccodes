@@ -11,6 +11,8 @@
 #include "grib_scaling.h"
 #include "grib_api_internal.h"
 
+#include <math.h>
+
 // Unfortunately, metkit uses grib_power() (illegal usage of private API)
 // As soon as it is fixed, the wrapper below can be deleted
 double grib_power(long s, long n) {
@@ -25,6 +27,12 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* error)
     const long last      = 127; /* Depends on edition, should be parameter */
     unsigned long maxint = 0;
     const size_t ulong_size = sizeof(maxint) * 8;
+
+    if ((isnan (range) || isinf (range)))
+      {
+        *error = GRIB_OUT_OF_RANGE; /*overflow*/
+        return 0;
+      }
 
     /* See ECC-246
       unsigned long maxint = codes_power<double>(bpval,2) - 1;
