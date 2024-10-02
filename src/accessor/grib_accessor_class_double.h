@@ -18,7 +18,7 @@ class grib_accessor_class_double_t : public grib_accessor_class_gen_t
 {
 public:
     grib_accessor_class_double_t(const char* name) : grib_accessor_class_gen_t(name) {}
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_double_t{}; }
+    //grib_accessor* create_empty_accessor() override { return new grib_accessor_double_t{}; }
     int get_native_type(grib_accessor*) override;
     int pack_missing(grib_accessor*) override;
     int unpack_string(grib_accessor*, char*, size_t* len) override;

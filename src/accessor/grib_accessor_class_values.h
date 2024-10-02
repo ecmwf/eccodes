@@ -26,7 +26,7 @@ class grib_accessor_class_values_t : public grib_accessor_class_gen_t
 {
 public:
     grib_accessor_class_values_t(const char* name) : grib_accessor_class_gen_t(name) {}
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_values_t{}; }
+    // grib_accessor* create_empty_accessor() override { return new grib_accessor_values_t{}; }
     int get_native_type(grib_accessor*) override;
     int pack_long(grib_accessor*, const long* val, size_t* len) override;
     long byte_count(grib_accessor*) override;

@@ -20,14 +20,11 @@
 
 int main(int argc, char** argv)
 {
-    codes_string_list* list;
-    codes_string_list* list2;
-
-    list = codes_grib_util_get_param_id("11.2");
+    const codes_string_list* list = codes_grib_util_get_param_id("11.2");
     printf("mars.param=11.2 -> paramId= ");
     while (list) {
+        const codes_string_list* list2 = codes_grib_util_get_param_id("130.128");
         printf("%s ", list->value);
-        list2 = codes_grib_util_get_param_id("130.128");
         printf("mars.param=11.2 -> paramId= ");
         while (list2) {
             printf("%s ", list2->value);

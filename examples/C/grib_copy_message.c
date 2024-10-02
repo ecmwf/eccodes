@@ -18,11 +18,6 @@
 #include "eccodes.h"
 #include <assert.h>
 
-static void usage(const char* prog)
-{
-    fprintf(stderr, "Usage is: %s input_file ouput_file\n", prog);
-}
-
 int main(int argc, char* argv[])
 {
     FILE* in                    = NULL;
@@ -30,7 +25,6 @@ int main(int argc, char* argv[])
     int err                     = 0;
 
     if (argc != 3) {
-        usage(argv[0]);
         return 1;
     }
 

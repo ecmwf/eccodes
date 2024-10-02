@@ -33,7 +33,7 @@ class grib_accessor_class_data_simple_packing_t : public grib_accessor_class_val
 {
 public:
     grib_accessor_class_data_simple_packing_t(const char* name) : grib_accessor_class_values_t(name) {}
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_data_simple_packing_t{}; }
+    // grib_accessor* create_empty_accessor() override { return new grib_accessor_data_simple_packing_t{}; }
     int pack_double(grib_accessor*, const double* val, size_t* len) override;
     int unpack_double(grib_accessor*, double* val, size_t* len) override;
     int unpack_float(grib_accessor*, float* val, size_t* len) override;

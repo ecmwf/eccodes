@@ -10,7 +10,7 @@ constant grib2LocalSectionNumber=18;
 if (stepType is "instant" ) {
   alias productDefinitionTemplateNumber=epsPoint;
 } else {
-  alias productDefinitionTemplateNumber=epsContinous;
+  alias productDefinitionTemplateNumber=epsContinuous;
 }
 template mars_labeling "grib1/mars_labeling.def";
 

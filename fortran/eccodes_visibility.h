@@ -7,6 +7,8 @@ public :: codes_keys_iterator_new, &
 public :: codes_skip_computed, &
           codes_skip_coded, &
           codes_skip_duplicates, &
+          codes_skip_function, &
+          codes_skip_edition_specific, &
           codes_skip_read_only
 public :: codes_keys_iterator_get_name, &
           codes_keys_iterator_rewind

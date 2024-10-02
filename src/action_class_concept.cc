@@ -60,20 +60,17 @@ typedef struct grib_action_concept {
 extern grib_action_class* grib_action_class_gen;
 
 static grib_action_class _grib_action_class_concept = {
-    &grib_action_class_gen,                              /* super                     */
-    "action_class_concept",                              /* name                      */
-    sizeof(grib_action_concept),            /* size                      */
-    0,                                   /* inited */
+    &grib_action_class_gen,                              /* super */
+    "action_class_concept",                 /* name */
+    sizeof(grib_action_concept),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     &destroy,                            /* destroy */
-
-    &dump,                               /* dump                      */
-    0,                               /* xref                      */
-
-    0,             /* create_accessor*/
-
-    0,                            /* notify_change */
+    &dump,                               /* dump */
+    0,                               /* xref */
+    0,                    /* create_accessor */
+    0,                      /* notify_change */
     0,                            /* reparse */
     0,                            /* execute */
 };
@@ -187,15 +184,12 @@ grib_action* grib_action_create_concept(grib_context* context,
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
-    int i = 0;
-
-    for (i = 0; i < lvl; i++)
+    for (int i = 0; i < lvl; i++)
         grib_context_print(act->context, f, "     ");
 
-    printf("concept(%s) { ", act->name);
-    printf("\n");
+    printf("concept(%s) { \n", act->name);
 
-    for (i = 0; i < lvl; i++)
+    for (int i = 0; i < lvl; i++)
         grib_context_print(act->context, f, "     ");
     printf("}\n");
 }
@@ -224,10 +218,9 @@ static grib_concept_value* get_concept_impl(grib_handle* h, grib_action_concept*
     char master[1024] = {0,};
     char local[1024] = {0,};
     char masterDir[1024] = {0,};
-    size_t lenMasterDir = 1024;
+    size_t lenMasterDir = sizeof(masterDir);
     char key[4096]      = {0,};
     char* full = 0;
-    int id;
     const size_t bufLen = sizeof(buf);
     const size_t keyLen = sizeof(key);
 
@@ -240,7 +233,15 @@ static grib_concept_value* get_concept_impl(grib_handle* h, grib_action_concept*
     Assert(self->masterDir);
     grib_get_string(h, self->masterDir, masterDir, &lenMasterDir);
 
-    snprintf(buf, bufLen, "%s/%s", masterDir, self->basename);
+    // See ECC-1920: The basename could be a key or a string
+    char* basename = self->basename; // default is a string
+    Assert(basename);
+    char baseNameValue[1024] = {0,}; // its value if a key
+    size_t lenBaseName = sizeof(baseNameValue);
+    if (grib_get_string(h, self->basename, baseNameValue, &lenBaseName) == GRIB_SUCCESS) {
+        basename = baseNameValue; // self->basename was a key whose value is baseNameValue
+    }
+    snprintf(buf, bufLen, "%s/%s", masterDir, basename);
 
     grib_recompose_name(h, NULL, buf, master, 1);
 
@@ -248,13 +249,13 @@ static grib_concept_value* get_concept_impl(grib_handle* h, grib_action_concept*
         char localDir[1024] = {0,};
         size_t lenLocalDir = 1024;
         grib_get_string(h, self->localDir, localDir, &lenLocalDir);
-        snprintf(buf, bufLen, "%s/%s", localDir, self->basename);
+        snprintf(buf, bufLen, "%s/%s", localDir, basename);
         grib_recompose_name(h, NULL, buf, local, 1);
     }
 
     snprintf(key, keyLen, "%s%s", master, local);
 
-    id = grib_itrie_get_id(h->context->concepts_index, key);
+    int id = grib_itrie_get_id(h->context->concepts_index, key);
     if ((c = h->context->concepts[id]) != NULL)
         return c;
 
@@ -280,7 +281,7 @@ static grib_concept_value* get_concept_impl(grib_handle* h, grib_action_concept*
     else {
         grib_context_log(context, GRIB_LOG_FATAL,
                          "unable to find definition file %s in %s:%s\nDefinition files path=\"%s\"",
-                         self->basename, master, local, context->grib_definition_files_path);
+                         basename, master, local, context->grib_definition_files_path);
         return NULL;
     }
 

@@ -108,7 +108,7 @@ int transform_iterator_data(grib_context* context, double* data,
 {
     double* data2;
     double *pData0, *pData1, *pData2;
-    unsigned long ix, iy;
+    long ix, iy;
 
     if (!iScansNegatively && jScansPositively && !jPointsAreConsecutive && !alternativeRowScanning) {
         /* Already +i and +j. No need to change */

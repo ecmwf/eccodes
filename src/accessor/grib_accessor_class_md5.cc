@@ -25,9 +25,9 @@ void grib_accessor_class_md5_t::init(grib_accessor* a, const long len, grib_argu
     grib_string_list* current = 0;
     grib_context* context     = a->context;
 
-    self->offset    = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
-    self->length    = grib_arguments_get_expression(grib_handle_of_accessor(a), arg, n++);
-    self->blocklist = NULL;
+    self->offset_key = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
+    self->length_key = grib_arguments_get_expression(grib_handle_of_accessor(a), arg, n++);
+    self->blocklist  = NULL;
     while ((b = (char*)grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++)) != NULL) {
         if (!self->blocklist) {
             self->blocklist        = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
@@ -99,9 +99,9 @@ int grib_accessor_class_md5_t::unpack_string(grib_accessor* a, char* v, size_t* 
         return GRIB_BUFFER_TOO_SMALL;
     }
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offset, &offset)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offset_key, &offset)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_expression_evaluate_long(grib_handle_of_accessor(a), self->length, &length)) != GRIB_SUCCESS)
+    if ((ret = grib_expression_evaluate_long(grib_handle_of_accessor(a), self->length_key, &length)) != GRIB_SUCCESS)
         return ret;
     mess = (unsigned char*)grib_context_malloc(a->context, length);
     memcpy(mess, grib_handle_of_accessor(a)->buffer->data + offset, length);

@@ -48,20 +48,17 @@ typedef struct grib_action_variable {
 extern grib_action_class* grib_action_class_gen;
 
 static grib_action_class _grib_action_class_variable = {
-    &grib_action_class_gen,                              /* super                     */
-    "action_class_variable",                              /* name                      */
-    sizeof(grib_action_variable),            /* size                      */
-    0,                                   /* inited */
+    &grib_action_class_gen,                              /* super */
+    "action_class_variable",                 /* name */
+    sizeof(grib_action_variable),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     0,                            /* destroy */
-
-    0,                               /* dump                      */
-    0,                               /* xref                      */
-
-    0,             /* create_accessor*/
-
-    0,                            /* notify_change */
+    0,                               /* dump */
+    0,                               /* xref */
+    0,                    /* create_accessor */
+    0,                      /* notify_change */
     0,                            /* reparse */
     &execute,                            /* execute */
 };

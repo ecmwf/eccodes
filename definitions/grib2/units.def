@@ -4079,6 +4079,27 @@
 	 parameterNumber = 148 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
+#Radar reflectivity
+'dB' = {
+	 discipline = 0 ;
+	 parameterCategory = 16 ;
+	 parameterNumber = 4 ;
+	}
+#Pressure at cloud ceiling
+'Pa' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 19 ;
+	 scaledValueOfFirstFixedSurface = 50 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Visibility through precipitation
+'m' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 51 ;
+	}
 #Burned area
 '%' = {
 	 discipline = 2 ;
@@ -5566,6 +5587,13 @@
 	 parameterNumber = 23 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean visibility through precipitation
+'m' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 51 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-maximum volumetric soil moisture
 'm**3 m**-3' = {
 	 discipline = 2 ;
@@ -5600,6 +5628,13 @@
 	 parameterNumber = 74 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum visibility through precipitation
+'m' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 51 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-minimum volumetric soil moisture
@@ -5643,6 +5678,13 @@
 	 parameterNumber = 74 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum visibility through precipitation
+'m' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 51 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-standard-deviation volumetric soil moisture

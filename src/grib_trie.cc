@@ -437,11 +437,7 @@ void* grib_trie_insert_no_replace(grib_trie* t, const char* key, void* data)
 {
     grib_trie* last = t;
     const char* k   = key;
-
-    if (!t) {
-        Assert(!"grib_trie_insert_no_replace: grib_trie==NULL");
-        return NULL;
-    }
+    Assert(t);
 
     while (*k && t) {
         last = t;
