@@ -90,6 +90,8 @@ static void print_aec_stream_info(struct aec_stream* strm, const char* func)
     fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.avail_in=%lu\n", func, strm->avail_in);
 }
 
+#define MAX_BITS_PER_VALUE 32
+
 int grib_accessor_class_data_ccsds_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_data_ccsds_packing_t* self = (grib_accessor_data_ccsds_packing_t*)a;
@@ -309,8 +311,8 @@ int grib_accessor_class_data_ccsds_packing_t::pack_double(grib_accessor* a, cons
             }
             break;
         default:
-            grib_context_log(a->context, GRIB_LOG_ERROR, "%s pack_double: packing %s, bits_per_value=%ld (max 32)",
-                             cclass_name, a->name, bits_per_value);
+            grib_context_log(a->context, GRIB_LOG_ERROR, "%s pack_double: packing %s, bitsPerValue=%ld (max %ld)",
+                             cclass_name, a->name, bits_per_value, MAX_BITS_PER_VALUE);
             err = GRIB_INVALID_BPV;
             goto cleanup;
     }
@@ -508,8 +510,8 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
             }
             break;
         default:
-            grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: unpacking %s, bits_per_value=%ld (max 32)",
-                             cclass_name, __func__, a->name, bits_per_value);
+            grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: unpacking %s, bitsPerValue=%ld (max %ld)",
+                             cclass_name, __func__, a->name, bits_per_value, MAX_BITS_PER_VALUE);
             err = GRIB_INVALID_BPV;
             goto cleanup;
     }
