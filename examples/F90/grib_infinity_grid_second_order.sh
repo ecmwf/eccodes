@@ -10,30 +10,23 @@
 
 . ./include.ctest.sh
 
-for encoding in grid_simple grid_second_order
-do
+for encoding in grid_simple grid_second_order; do
+  for infinity in 0 1; do
 
-  for infinity in 0 1 
-  do
-
-    if [ $infinity -eq 1 ]
-    then
+    if [ $infinity -eq 1 ]; then
       set +e
     fi
 
     ${examples_dir}/eccodes_f_grib_infinity_grid_second_order $encoding $infinity
     c=$?
 
-    if [ $infinity -eq 1 ]
-    then
+    if [ $infinity -eq 1 ]; then
       set -e
-      if [ $c -eq 0 ]
-      then
+      if [ $c -eq 0 ]; then
         echo "Encoding infinite numbers should fail"
         exit 1
       fi
     fi
 
   done
-
 done

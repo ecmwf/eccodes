@@ -36,7 +36,5 @@ IF (CLINFINITY == '1') THEN
 ENDIF
 
 CALL codes_set_real8_array (IGRIBH,  "values", ZT)
-! write (*,*) 'status=',status
-! write (*,*) 'ZT=    ',ZT(1)
 
 END
