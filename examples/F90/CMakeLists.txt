@@ -55,6 +55,7 @@ if( HAVE_BUILD_TOOLS )
           grib_get_set_uuid
           grib_clone
           grib_ecc-1316
+          grib_infinity_grid_second_order
           bufr_attributes
           bufr_clone
           bufr_expanded
