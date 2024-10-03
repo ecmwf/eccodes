@@ -8,6 +8,11 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
+# -----------------------------------------------------------------
+# This is the test for the JIRA issue ECC-1927
+# grid_second_order hangs when encoding fields with infinite values
+# -----------------------------------------------------------------
+
 . ./include.ctest.sh
 
 for encoding in grid_simple grid_second_order; do
@@ -23,7 +28,7 @@ for encoding in grid_simple grid_second_order; do
     if [ $infinity -eq 1 ]; then
       set -e
       if [ $c -eq 0 ]; then
-        echo "Encoding infinite numbers should fail"
+        echo "Encoding infinite numbers should have failed"
         exit 1
       fi
     fi

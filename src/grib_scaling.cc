@@ -27,6 +27,7 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* error)
     unsigned long maxint = 0;
     const size_t ulong_size = sizeof(maxint) * 8;
 
+    // See ECC-1927
     if ((isnan(range) || isinf(range))) {
         *error = GRIB_OUT_OF_RANGE; /*overflow*/
         return 0;

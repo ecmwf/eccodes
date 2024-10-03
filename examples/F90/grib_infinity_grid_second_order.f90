@@ -35,6 +35,7 @@ IF (CLINFINITY == '1') THEN
   ZT (1) = IEEE_VALUE (0._8, IEEE_POSITIVE_INF)
 ENDIF
 
+! This should fail if CLINFINITY is 1 (inf passed in)
 CALL codes_set_real8_array (IGRIBH,  "values", ZT)
 
 END
