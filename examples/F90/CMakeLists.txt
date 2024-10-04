@@ -9,6 +9,7 @@ configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 if( HAVE_BUILD_TOOLS )
     list( APPEND tests_sanity
           codes_ecc-1392
+          grib_infinity_grid_second_order
           codes_datetime_julian
           codes_set_paths
           codes_f90_misc
