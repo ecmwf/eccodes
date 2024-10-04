@@ -283,6 +283,7 @@ if( HAVE_BUILD_TOOLS )
         grib_set_force
         bufr_ecc-556
         codes_ecc-1698
+        codes_ecc-1929
         codes_get_string
         codes_codetable
         gts_get
