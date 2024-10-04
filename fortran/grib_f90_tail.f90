@@ -3211,6 +3211,12 @@
     call grib_f_set_debug(dmode)
   end subroutine grib_set_debug
 
+  !> Set data quality check value (0, 1 or 2)
+  subroutine grib_set_data_quality_checks(val)
+    integer(kind=kindOfInt), intent(in) :: val
+    call grib_f_set_data_quality_checks(val)
+  end subroutine grib_set_data_quality_checks
+
 
   !> Set the definition path
   !>

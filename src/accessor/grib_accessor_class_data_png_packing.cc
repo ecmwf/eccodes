@@ -397,6 +397,7 @@ int grib_accessor_data_png_packing_t::pack_double(const double* val, size_t* len
     }
 
     binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
+    if (err) return err;
     divisor             = codes_power<double>(-binary_scale_factor, 2);
 
     #ifndef PNG_ANYBITS

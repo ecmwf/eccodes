@@ -186,3 +186,69 @@
  parameterCategory = 0 ;
  parameterNumber = 2 ;
 }
+#Maximum temperature
+'Maximum temperature' = {
+ discipline = 0 ;
+ parameterCategory = 0 ;
+ parameterNumber = 4 ;
+}
+#Minimum temperature
+'Minimum temperature' = {
+ discipline = 0 ;
+ parameterCategory = 0 ;
+ parameterNumber = 5 ;
+}
+#Minimum dew point depression
+'Minimum dew point depression' = {
+ discipline = 0 ;
+ parameterCategory = 0 ;
+ parameterNumber = 14 ;
+}
+#Maximum relative humidity
+'Maximum relative humidity' = {
+ discipline = 0 ;
+ parameterCategory = 1 ;
+ parameterNumber = 27 ;
+}
+#Maximum absolute humidity
+'Maximum absolute humidity' = {
+ discipline = 0 ;
+ parameterCategory = 1 ;
+ parameterNumber = 28 ;
+}
+#Maximum wind speed
+'Maximum wind speed' = {
+ discipline = 0 ;
+ parameterCategory = 2 ;
+ parameterNumber = 21 ;
+}
+#Net long wave radiation flux (surface)
+'Net long wave radiation flux (surface)' = {
+ discipline = 0 ;
+ parameterCategory = 5 ;
+ parameterNumber = 0 ;
+}
+#Net long wave radiation flux (top of atmosphere)
+'Net long wave radiation flux (top of atmosphere)' = {
+ discipline = 0 ;
+ parameterCategory = 5 ;
+ parameterNumber = 1 ;
+}
+#Maximum snow albedo
+'Maximum snow albedo' = {
+ discipline = 0 ;
+ parameterCategory = 19 ;
+ parameterNumber = 17 ;
+}
+#Soil temperature
+'Soil temperature' = {
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 2 ;
+}
+#Soil moisture
+'Soil moisture' = {
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 22 ;
+}
