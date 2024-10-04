@@ -49,5 +49,5 @@ private:
     const char* orderOfSpatialDifferencing_;
     const char* numberOfOctetsExtraDescriptors_;
 
-    template <typename T> int unpack(T* val, const size_t* len);
+    template <typename T> int unpack(T* val, size_t* len);
 };

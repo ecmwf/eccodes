@@ -1461,7 +1461,7 @@ int grib_accessor_data_g22order_packing_t::pack_double(const double* val, size_t
 }
 
 template <typename T>
-int grib_accessor_data_g22order_packing_t::unpack(T* val, const size_t* len)
+int grib_accessor_data_g22order_packing_t::unpack(T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
     const char* cclass_name = class_name_;
@@ -1561,6 +1561,14 @@ int grib_accessor_data_g22order_packing_t::unpack(T* val, const size_t* len)
         return err;
 
     dirty_ = 0;
+
+    if (bits_per_value == 0) {
+        for (i = 0; i < n_vals; i++) {
+            val[i] = reference_value;
+        }
+        *len = n_vals;
+        return GRIB_SUCCESS;
+    }
 
     sec_val = (long*)grib_context_malloc(context_, (n_vals) * sizeof(long));
     if (!sec_val) return GRIB_OUT_OF_MEMORY;

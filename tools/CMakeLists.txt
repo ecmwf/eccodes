@@ -27,7 +27,7 @@ ecbuild_add_library( TARGET    ecc_tools
 
 # tools binaries
 list( APPEND ecc_tools_binaries
-             codes_info codes_count codes_split_file
+             codes_info codes_count codes_split_file codes_export_resource
              grib_histogram grib_filter grib_ls grib_dump
              grib2ppm grib_set grib_get grib_get_data grib_copy
              grib_compare codes_parser grib_index_build bufr_index_build
@@ -39,7 +39,6 @@ list( APPEND ecc_tools_binaries
 list( APPEND ecc_tools_binaries_extra
              grib_repair
              grib_to_json
-             codes_export_resource
              grib_check_gaussian_grid
              bufr_split_by_rdbSubtype )
 

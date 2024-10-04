@@ -85,6 +85,7 @@ static void print_aec_stream_info(struct aec_stream* strm, const char* func)
     fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.avail_in=%lu\n", func, strm->avail_in);
 }
 
+#define MAX_BITS_PER_VALUE 32
 int grib_accessor_data_ccsds_packing_t::pack_double(const double* val, size_t* len)
 {
     grib_handle* hand       = grib_handle_of_accessor(this);
@@ -253,7 +254,8 @@ int grib_accessor_data_ccsds_packing_t::pack_double(const double* val, size_t* l
     }
 
     binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
-    divisor             = codes_power<double>(-binary_scale_factor, 2);
+    if (err) return err;
+    divisor = codes_power<double>(-binary_scale_factor, 2);
 
     size_t nbytes = (bits_per_value + 7) / 8;
     // ECC-1602: use native a data type (4 bytes for uint32_t) for values that require only 3 bytes
@@ -302,8 +304,8 @@ int grib_accessor_data_ccsds_packing_t::pack_double(const double* val, size_t* l
             }
             break;
         default:
-            grib_context_log(context_, GRIB_LOG_ERROR, "%s pack_double: packing %s, bits_per_value=%ld (max 32)",
-                             cclass_name, name_, bits_per_value);
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s pack_double: packing %s, bitsPerValue=%ld (max %ld)",
+                             cclass_name, name_, bits_per_value, MAX_BITS_PER_VALUE);
             err = GRIB_INVALID_BPV;
             goto cleanup;
     }
@@ -500,8 +502,8 @@ int grib_accessor_data_ccsds_packing_t::unpack(T* val, size_t* len)
             }
             break;
         default:
-            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: unpacking %s, bits_per_value=%ld (max 32)",
-                             cclass_name, __func__, name_, bits_per_value);
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: unpacking %s, bitsPerValue=%ld (max %ld)",
+                             cclass_name, __func__, name_, bits_per_value, MAX_BITS_PER_VALUE);
             err = GRIB_INVALID_BPV;
             goto cleanup;
     }
