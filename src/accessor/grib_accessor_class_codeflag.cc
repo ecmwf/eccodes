@@ -28,9 +28,8 @@ static int test_bit(long a, long b)
     return a & (1 << b);
 }
 
-static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
+int grib_accessor_codeflag_t::grib_get_codeflag(long code, char* codename)
 {
-    const grib_accessor_codeflag_t* self = (grib_accessor_codeflag_t*)a;
     FILE* f                              = NULL;
     char fname[1024];
     char bval[50];
@@ -41,21 +40,21 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
     int j    = 0;
     int err  = 0;
 
-    err = grib_recompose_name(grib_handle_of_accessor(a), NULL, self->tablename_, fname, 1);
+    err = grib_recompose_name(grib_handle_of_accessor(this), NULL, tablename_, fname, 1);
     if (err) {
-        strncpy(fname, self->tablename_, sizeof(fname) - 1);
+        strncpy(fname, tablename_, sizeof(fname) - 1);
         fname[sizeof(fname) - 1] = '\0';
     }
 
-    if ((filename = grib_context_full_defs_path(a->context_, fname)) == NULL) {
-        grib_context_log(a->context_, GRIB_LOG_WARNING, "Cannot open flag table %s", filename);
+    if ((filename = grib_context_full_defs_path(context_, fname)) == NULL) {
+        grib_context_log(context_, GRIB_LOG_WARNING, "Cannot open flag table %s", filename);
         strcpy(codename, "Cannot open flag table");
         return GRIB_FILE_NOT_FOUND;
     }
 
     f = codes_fopen(filename, "r");
     if (!f) {
-        grib_context_log(a->context_, (GRIB_LOG_WARNING) | (GRIB_LOG_PERROR), "Cannot open flag table %s", filename);
+        grib_context_log(context_, (GRIB_LOG_WARNING) | (GRIB_LOG_PERROR), "Cannot open flag table %s", filename);
         strcpy(codename, "Cannot open flag table");
         return GRIB_FILE_NOT_FOUND;
     }
@@ -68,7 +67,7 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
         sscanf(line, "%49s %49s", num, bval);
 
         if (num[0] != '#') {
-            if ((test_bit(code, self->length_ * 8 - atol(num)) > 0) == atol(bval)) {
+            if ((test_bit(code, length_ * 8 - atol(num)) > 0) == atol(bval)) {
                 size_t linelen = strlen(line);
                 codename[j++]  = '(';
                 codename[j++]  = num[0];
@@ -117,7 +116,7 @@ void grib_accessor_codeflag_t::dump(grib_dumper* dumper)
 
     grib_recompose_name(grib_handle_of_accessor(this), NULL, tablename_, fname, 1);
     unpack_long(&v, &llen);
-    grib_get_codeflag(this, v, flagname);
+    grib_get_codeflag(v, flagname);
 
     grib_dump_bits(dumper, this, flagname);
 }

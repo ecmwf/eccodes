@@ -26,10 +26,12 @@ public:
     void dump(grib_dumper*) override;
     void init(const long, grib_arguments*) override;
 
-public:
+private:
     const char* dictionary_;
     const char* key_;
     long column_;
     const char* masterDir_;
     const char* localDir_;
+
+    grib_trie* load_dictionary(int* err);
 };

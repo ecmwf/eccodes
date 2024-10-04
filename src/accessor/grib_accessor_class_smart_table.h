@@ -27,7 +27,10 @@ public:
     void dump(grib_dumper*) override;
     void init(const long, grib_arguments*) override;
 
-public:
+    grib_smart_table* table() const { return table_; }
+
+private:
+    grib_smart_table* table_;
     const char* values_;
     const char* tablename_;
     const char* masterDir_;
@@ -37,7 +40,7 @@ public:
     int widthOfCode_;
     long* tableCodes_;
     size_t tableCodesSize_;
-    grib_smart_table* table_;
-    // TODO(maee): dirty_ shadowed by the derived class
-    // int dirty_;
+
+    grib_smart_table* load_table();
+    int get_table_codes();
 };

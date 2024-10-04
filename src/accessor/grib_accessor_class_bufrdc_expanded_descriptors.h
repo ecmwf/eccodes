@@ -25,7 +25,9 @@ public:
     void destroy(grib_context*) override;
     void init(const long, grib_arguments*) override;
 
-public:
+private:
     const char* expandedDescriptors_;
     grib_accessor* expandedDescriptorsAccessor_;
+
+    grib_accessor* get_accessor();
 };

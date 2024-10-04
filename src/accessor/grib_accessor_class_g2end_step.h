@@ -28,7 +28,7 @@ public:
     void dump(grib_dumper*) override;
     void init(const long, grib_arguments*) override;
 
-public:
+private:
     const char* start_step_value_;
     const char* step_units_;
     const char* year_;
@@ -47,4 +47,10 @@ public:
     const char* time_range_value_;
     const char* typeOfTimeIncrement_;
     const char* numberOfTimeRanges_;
+
+    int unpack_one_time_range_long_(long* val, size_t* len);
+    int unpack_one_time_range_double_(double* val, size_t* len);
+    int unpack_multiple_time_ranges_long_(long* val, size_t* len);
+    int unpack_multiple_time_ranges_double_(double* val, size_t* len);
+    int pack_long_(const long end_step_value, const long end_step_unit);
 };

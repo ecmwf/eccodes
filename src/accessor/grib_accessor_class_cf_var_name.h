@@ -22,7 +22,7 @@ public:
     size_t string_length() override;
     void init(const long, grib_arguments*) override;
 
-public:
+private:
     /* Members defined in cf_var_name */
     const char* defaultKey_;
 };

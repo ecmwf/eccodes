@@ -21,6 +21,6 @@ public:
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
-public:
+protected:
     grib_arguments* arg_;
 };

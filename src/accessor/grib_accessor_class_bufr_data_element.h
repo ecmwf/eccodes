@@ -37,7 +37,17 @@ public:
     int unpack_double_element(size_t i, double* val) override;
     grib_accessor* make_clone(grib_section*, int*) override;
 
-public:
+    void index(long index) { index_ = index; }
+    void type(int type) { type_ = type; }
+    void numberOfSubsets(long numberOfSubsets) { numberOfSubsets_ = numberOfSubsets; }
+    void subsetNumber(long subsetNumber) { subsetNumber_ = subsetNumber; }
+    void compressedData(int compressedData) { compressedData_ = compressedData; }
+    void descriptors(bufr_descriptors_array* descriptors) { descriptors_ = descriptors; }
+    void numericValues(grib_vdarray* numericValues) { numericValues_ = numericValues; }
+    void stringValues(grib_vsarray* stringValues) { stringValues_ = stringValues; }
+    void elementsDescriptorsIndex(grib_viarray* elementsDescriptorsIndex) { elementsDescriptorsIndex_ = elementsDescriptorsIndex; }
+
+private:
     long index_;
     int type_;
     long compressedData_;

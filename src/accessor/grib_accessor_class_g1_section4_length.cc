@@ -31,7 +31,7 @@ int grib_accessor_g1_section4_length_t::pack_long(const long* val, size_t* len)
     // Note: Do not directly call pack_long on base class
     // because in this special case we want to skip the checks.
     // So we call the helper function which has an extra argument
-    return pack_long_unsigned_helper(this, val, len, /*check=*/0);
+    return pack_long_unsigned_helper(val, len, /*check=*/0);
 }
 
 int grib_accessor_g1_section4_length_t::unpack_long(long* val, size_t* len)

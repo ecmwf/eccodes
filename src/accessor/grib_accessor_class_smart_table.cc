@@ -65,11 +65,10 @@ void grib_accessor_smart_table_t::init(const long len, grib_arguments* params)
     table_          = NULL;
 }
 
-grib_smart_table* load_table(grib_accessor* a)
+grib_smart_table* grib_accessor_smart_table_t::load_table()
 {
-    grib_accessor_smart_table_t* self = (grib_accessor_smart_table_t*)a;
     size_t size                       = 0;
-    grib_handle* h                    = ((grib_accessor*)self)->parent_->h;
+    grib_handle* h                    = this->parent_->h;
     grib_context* c                   = h->context;
     grib_smart_table* t               = NULL;
     grib_smart_table* next            = NULL;
@@ -96,30 +95,30 @@ grib_smart_table* load_table(grib_accessor* a)
     };
     size_t len = 1024;
 
-    if (self->masterDir_ != NULL) {
-        grib_get_string(h, self->masterDir_, masterDir, &len);
+    if (masterDir_ != NULL) {
+        grib_get_string(h, masterDir_, masterDir, &len);
     }
 
     len = 1024;
-    if (self->localDir_ != NULL) {
-        grib_get_string(h, self->localDir_, localDir, &len);
+    if (localDir_ != NULL) {
+        grib_get_string(h, localDir_, localDir, &len);
     }
 
     len = 1024;
-    if (self->extraDir_ != NULL && self->extraTable_ != NULL) {
-        grib_get_string(h, self->extraDir_, extraDir, &len);
+    if (extraDir_ != NULL && extraTable_ != NULL) {
+        grib_get_string(h, extraDir_, extraDir, &len);
     }
 
     if (*masterDir != 0) {
         char name[2048] = {
             0,
         };
-        snprintf(name, sizeof(name), "%s/%s", masterDir, self->tablename_);
+        snprintf(name, sizeof(name), "%s/%s", masterDir, tablename_);
         grib_recompose_name(h, NULL, name, recomposed, 0);
         filename = grib_context_full_defs_path(c, recomposed);
     }
     else {
-        grib_recompose_name(h, NULL, self->tablename_, recomposed, 0);
+        grib_recompose_name(h, NULL, tablename_, recomposed, 0);
         filename = grib_context_full_defs_path(c, recomposed);
     }
 
@@ -127,7 +126,7 @@ grib_smart_table* load_table(grib_accessor* a)
         char localName[2048] = {
             0,
         };
-        snprintf(localName, sizeof(localName), "%s/%s", localDir, self->tablename_);
+        snprintf(localName, sizeof(localName), "%s/%s", localDir, tablename_);
         grib_recompose_name(h, NULL, localName, localRecomposed, 0);
         localFilename = grib_context_full_defs_path(c, localRecomposed);
     }
@@ -136,7 +135,7 @@ grib_smart_table* load_table(grib_accessor* a)
         char extraTable[2048] = {
             0,
         };
-        snprintf(extraTable, sizeof(extraTable), "%s/%s", extraDir, self->extraTable_);
+        snprintf(extraTable, sizeof(extraTable), "%s/%s", extraDir, extraTable_);
         grib_recompose_name(h, NULL, extraTable, extraRecomposed, 0);
         extraFilename = grib_context_full_defs_path(c, extraRecomposed);
     }
@@ -155,7 +154,7 @@ grib_smart_table* load_table(grib_accessor* a)
     // Note: widthOfCode_ is chosen so that 2^width is bigger than the maximum descriptor code,
     //  which for BUFR4 is the Table C operator 243255
     //
-    size = (1ULL << self->widthOfCode_);  // = 2^widthOfCode_ (as a 64 bit number)
+    size = (1ULL << widthOfCode_);  // = 2^widthOfCode_ (as a 64 bit number)
 
     t                  = (grib_smart_table*)grib_context_malloc_clear_persistent(c, sizeof(grib_smart_table));
     t->entries         = (grib_smart_table_entry*)grib_context_malloc_clear_persistent(c, size * sizeof(grib_smart_table_entry));
@@ -317,7 +316,7 @@ int grib_accessor_smart_table_t::unpack_string(char* buffer, size_t* len)
         return err;
 
     if (!table_)
-        table_ = load_table(this);
+        table_ = load_table();
     table = table_;
 
     if (table && (value >= 0) && (value < table->numberOfEntries) && table->entries[value].abbreviation) {
@@ -341,9 +340,8 @@ int grib_accessor_smart_table_t::unpack_string(char* buffer, size_t* len)
     return GRIB_SUCCESS;
 }
 
-static int get_table_codes(grib_accessor* a)
+int grib_accessor_smart_table_t::get_table_codes()
 {
-    grib_accessor_smart_table_t* self = (grib_accessor_smart_table_t*)a;
     size_t size                       = 0;
     long* v                           = 0;
     int err                           = 0;
@@ -352,43 +350,43 @@ static int get_table_codes(grib_accessor* a)
 
     int table_size;
 
-    if (!a->dirty_)
+    if (!dirty_)
         return 0;
 
-    table_size = (1 << self->widthOfCode_);  // 2 ^ widthOfCode_
+    table_size = (1 << widthOfCode_);  // 2 ^ widthOfCode_
 
-    if (!self->table_)
-        self->table_ = load_table(a);
+    if (!table_)
+        table_ = load_table();
 
-    err = grib_get_size(grib_handle_of_accessor(a), self->values_, &size);
+    err = grib_get_size(grib_handle_of_accessor(this), values_, &size);
     if (err) {
-        grib_context_log(a->context_, GRIB_LOG_ERROR,
-                         "unable to get size of %s", a->name_);
+        grib_context_log(context_, GRIB_LOG_ERROR,
+                         "unable to get size of %s", name_);
         return err;
     }
 
-    v = (long*)grib_context_malloc_clear(a->context_, size * sizeof(long));
+    v = (long*)grib_context_malloc_clear(context_, size * sizeof(long));
 
-    grib_get_long_array(grib_handle_of_accessor(a), self->values_, v, &size);
+    grib_get_long_array(grib_handle_of_accessor(this), values_, v, &size);
 
     count = 0;
     for (i = 0; i < size; i++) {
         if (v[i] < table_size)
             count++;
     }
-    if (self->tableCodes_)
-        grib_context_free(a->context_, self->tableCodes_);
-    self->tableCodes_ = (long*)grib_context_malloc_clear(a->context_, count * sizeof(long));
+    if (tableCodes_)
+        grib_context_free(context_, tableCodes_);
+    tableCodes_ = (long*)grib_context_malloc_clear(context_, count * sizeof(long));
     j                 = 0;
     for (i = 0; i < size; i++) {
         if (v[i] < table_size)
-            self->tableCodes_[j++] = v[i];
+            tableCodes_[j++] = v[i];
     }
 
-    grib_context_free(a->context_, v);
+    grib_context_free(context_, v);
 
-    self->tableCodesSize_ = count;
-    a->dirty_             = 0;
+    tableCodesSize_ = count;
+    dirty_             = 0;
 
     return 0;
 }
@@ -400,7 +398,7 @@ int grib_accessor_smart_table_t::value_count(long* count)
 
     if (!values_)
         return 0;
-    err = get_table_codes(this);
+    err = get_table_codes();
     if (err)
         return err;
 
@@ -438,7 +436,7 @@ int grib_accessor_smart_table_t::unpack_long(long* val, size_t* len)
     if (!values_)
         return 0;
 
-    err = get_table_codes(this);
+    err = get_table_codes();
     if (err)
         return 0;
 

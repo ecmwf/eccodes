@@ -30,8 +30,12 @@ public:
     int is_missing() override;
     void destroy(grib_context* context) override;
 
-    // TODO(maee): make members private
-public:
+protected:
     long nbytes_;
+
+    int pack_long_unsigned_helper(const long* val, size_t* len, int check);
+
+private:
     grib_arguments* arg_;
+
 };

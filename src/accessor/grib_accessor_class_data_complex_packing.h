@@ -29,15 +29,19 @@ public:
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
 
-public:
+protected:
+    const char* sub_j_;
+    const char* sub_k_;
+    const char* sub_m_;
+
+private:
     const char* GRIBEX_sh_bug_present_;
     const char* ieee_floats_;
     const char* laplacianOperatorIsSet_;
     const char* laplacianOperator_;
-    const char* sub_j_;
-    const char* sub_k_;
-    const char* sub_m_;
     const char* pen_j_;
     const char* pen_k_;
     const char* pen_m_;
+
+    template <typename T> int unpack_real(T* val, size_t* len);
 };

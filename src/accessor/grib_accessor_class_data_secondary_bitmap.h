@@ -23,7 +23,7 @@ public:
     void dump(grib_dumper*) override;
     void init(const long, grib_arguments*) override;
 
-public:
+protected:
     const char* primary_bitmap_;
     const char* secondary_bitmap_;
     const char* missing_value_;

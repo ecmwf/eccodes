@@ -28,7 +28,7 @@ public:
     int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) override;
     int unpack_double_subarray(double* val, size_t start, size_t len) override;
 
-public:
+protected:
     int edition_;
     const char* units_factor_;
     const char* units_bias_;
@@ -39,4 +39,8 @@ public:
     const char* binary_scale_factor_;
     const char* decimal_scale_factor_;
     const char* optimize_scaling_factor_;
+
+private:
+    template <typename T> int unpack(T* val, size_t* len);
+    int _unpack_double(double* val, size_t* len, unsigned char* buf, long pos, size_t n_vals);
 };

@@ -23,6 +23,8 @@ public:
     void dump(grib_dumper*) override;
     void init(const long, grib_arguments*) override;
 
-public:
+private:
     const char* tablename_;
+
+    int grib_get_codeflag(long code, char* codename);
 };

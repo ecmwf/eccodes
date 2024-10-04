@@ -77,11 +77,10 @@ int grib_accessor_g2_mars_labeling_t::unpack_string(char* val, size_t* len)
     return grib_get_string(grib_handle_of_accessor(this), key, val, len);
 }
 
-static int extra_set(grib_accessor* a, long val)
+int grib_accessor_g2_mars_labeling_t::extra_set(long val)
 {
-    grib_accessor_g2_mars_labeling_t* self = (grib_accessor_g2_mars_labeling_t*)a;
     int ret                                = 0;
-    grib_handle* hand                      = grib_handle_of_accessor(a);
+    grib_handle* hand                      = grib_handle_of_accessor(this);
     char stepType[30]                      = {
         0,
     };
@@ -108,7 +107,7 @@ static int extra_set(grib_accessor* a, long val)
     const int is_wave        = grib_is_defined(hand, "waveDirectionNumber");
     const int is_wave_prange = grib_is_defined(hand, "typeOfWavePeriodInterval");
 
-    switch (self->index_) {
+    switch (index_) {
         case 0:
             /* class */
             return ret;
@@ -162,7 +161,7 @@ static int extra_set(grib_accessor* a, long val)
                     break;
                 case 17: /* Ensemble mean  (em) */
                     derivedForecast = 0;
-                    grib_get_string(hand, self->stepType_, stepType, &stepTypelen);
+                    grib_get_string(hand, stepType_, stepType, &stepTypelen);
                     if (!strcmp(stepType, "instant")) {
                         productDefinitionTemplateNumberNew = 2;
                     }
@@ -174,7 +173,7 @@ static int extra_set(grib_accessor* a, long val)
                     break;
                 case 18: /* Ensemble standard deviation     (es) */
                     derivedForecast = 4;
-                    grib_get_string(hand, self->stepType_, stepType, &stepTypelen);
+                    grib_get_string(hand, stepType_, stepType, &stepTypelen);
                     if (!strcmp(stepType, "instant")) {
                         productDefinitionTemplateNumberNew = 2;
                     }
@@ -258,7 +257,7 @@ static int extra_set(grib_accessor* a, long val)
                     typeOfGeneratingProcess = 255;
                     break;
                 default:
-                    grib_context_log(a->context_, GRIB_LOG_WARNING, "g2_mars_labeling: unknown mars.type %d", (int)val);
+                    grib_context_log(context_, GRIB_LOG_WARNING, "g2_mars_labeling: unknown mars.type %d", (int)val);
                     /*return GRIB_ENCODING_ERROR;*/
             }
             break;
@@ -269,7 +268,7 @@ static int extra_set(grib_accessor* a, long val)
                 case 1249:      /* elda */
                 case 1250:      /* ewla */
                     is_eps = 1; /* These streams are all for ensembles */
-                    grib_get_string(hand, self->stepType_, stepType, &stepTypelen);
+                    grib_get_string(hand, stepType_, stepType, &stepTypelen);
                     is_instant                         = (strcmp(stepType, "instant") == 0);
                     productDefinitionTemplateNumberNew = grib2_select_PDTN(
                         is_eps, is_instant,
@@ -282,8 +281,8 @@ static int extra_set(grib_accessor* a, long val)
             }
             break;
         default:
-            grib_context_log(a->context_, GRIB_LOG_ERROR,
-                             "invalid first argument of g2_mars_labeling in %s", a->name_);
+            grib_context_log(context_, GRIB_LOG_ERROR,
+                             "invalid first argument of g2_mars_labeling in %s", name_);
             return GRIB_INTERNAL_ERROR;
     }
 
@@ -293,19 +292,19 @@ static int extra_set(grib_accessor* a, long val)
     }
 
     if (productDefinitionTemplateNumberNew >= 0) {
-        grib_get_long(hand, self->productDefinitionTemplateNumber_, &productDefinitionTemplateNumber);
+        grib_get_long(hand, productDefinitionTemplateNumber_, &productDefinitionTemplateNumber);
         if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew)
-            grib_set_long(hand, self->productDefinitionTemplateNumber_, productDefinitionTemplateNumberNew);
+            grib_set_long(hand, productDefinitionTemplateNumber_, productDefinitionTemplateNumberNew);
     }
 
     if (derivedForecast >= 0) {
-        grib_set_long(hand, self->derivedForecast_, derivedForecast);
+        grib_set_long(hand, derivedForecast_, derivedForecast);
     }
 
     if (typeOfProcessedData > 0)
-        grib_set_long(hand, self->typeOfProcessedData_, typeOfProcessedData);
+        grib_set_long(hand, typeOfProcessedData_, typeOfProcessedData);
     if (typeOfGeneratingProcess > 0)
-        grib_set_long(hand, self->typeOfGeneratingProcess_, typeOfGeneratingProcess);
+        grib_set_long(hand, typeOfGeneratingProcess_, typeOfGeneratingProcess);
 
     return ret;
 }
@@ -340,7 +339,7 @@ int grib_accessor_g2_mars_labeling_t::pack_string(const char* val, size_t* len)
     if (ret)
         return ret; /* failed */
 
-    return extra_set(this, lval);
+    return extra_set(lval);
 }
 
 int grib_accessor_g2_mars_labeling_t::pack_long(const long* val, size_t* len)
@@ -368,7 +367,7 @@ int grib_accessor_g2_mars_labeling_t::pack_long(const long* val, size_t* len)
     if (ret)
         return ret; /* failed */
 
-    return extra_set(this, *val);
+    return extra_set(*val);
 }
 
 int grib_accessor_g2_mars_labeling_t::value_count(long* count)

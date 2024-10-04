@@ -61,10 +61,8 @@ int value_is_missing(long val)
     return (val == GRIB_MISSING_LONG || val == all_ones);
 }
 
-int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t* len, int check)
+int grib_accessor_unsigned_t::pack_long_unsigned_helper(const long* val, size_t* len, int check)
 {
-    grib_accessor_unsigned_t* self = (grib_accessor_unsigned_t*)a;
-
     int ret   = 0;
     long off  = 0;
     long rlen = 0;
@@ -74,28 +72,28 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t* len, in
     unsigned long i       = 0;
     unsigned long missing = 0;
 
-    int err = a->value_count(&rlen);
+    int err = value_count(&rlen);
     if (err)
         return err;
 
-    if (a->flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) {
-        Assert(self->nbytes_ <= 4);
-        missing = ones[self->nbytes_];
+    if (flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) {
+        Assert(nbytes_ <= 4);
+        missing = ones[nbytes_];
     }
 
-    if (self->flags_ & GRIB_ACCESSOR_FLAG_TRANSIENT) {
-        self->vvalue_->lval = val[0];
+    if (flags_ & GRIB_ACCESSOR_FLAG_TRANSIENT) {
+        vvalue_->lval = val[0];
 
         if (missing && val[0] == GRIB_MISSING_LONG)
-            self->vvalue_->missing = 1;
+            vvalue_->missing = 1;
         else
-            self->vvalue_->missing = 0;
+            vvalue_->missing = 0;
 
         return GRIB_SUCCESS;
     }
 
     if (*len < 1) {
-        grib_context_log(a->context_, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name_, 1);
+        grib_context_log(context_, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", name_, 1);
         len[0] = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -110,51 +108,51 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t* len, in
         /* Check if value fits into number of bits */
         if (check) {
             if (val[0] < 0) {
-                grib_context_log(a->context_, GRIB_LOG_ERROR,
-                                 "Key \"%s\": Trying to encode a negative value of %ld for key of type unsigned", a->name_, val[0]);
+                grib_context_log(context_, GRIB_LOG_ERROR,
+                                 "Key \"%s\": Trying to encode a negative value of %ld for key of type unsigned", name_, val[0]);
                 return GRIB_ENCODING_ERROR;
             }
             /* See GRIB-23 and GRIB-262 */
             if (!value_is_missing(v)) {
-                const long nbits = self->nbytes_ * 8;
+                const long nbits = nbytes_ * 8;
                 if (nbits < 33) {
                     unsigned long maxval = (1UL << nbits) - 1;
                     if (maxval > 0 && v > maxval) { /* See ECC-1002 */
-                        grib_context_log(a->context_, GRIB_LOG_ERROR,
+                        grib_context_log(context_, GRIB_LOG_ERROR,
                                          "Key \"%s\": Trying to encode value of %ld but the maximum allowable value is %lu (number of bits=%ld)",
-                                         a->name_, v, maxval, nbits);
+                                         name_, v, maxval, nbits);
                         return GRIB_ENCODING_ERROR;
                     }
                 }
             }
         }
 
-        off = a->offset_ * 8;
-        ret = grib_encode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, v, &off, self->nbytes_ * 8);
+        off = offset_ * 8;
+        ret = grib_encode_unsigned_long(grib_handle_of_accessor(this)->buffer->data, v, &off, nbytes_ * 8);
         if (ret == GRIB_SUCCESS)
             len[0] = 1;
         if (*len > 1)
-            grib_context_log(a->context_, GRIB_LOG_WARNING, "grib_accessor_unsigned : Trying to pack %d values in a scalar %s, packing first value", *len, a->name_);
+            grib_context_log(context_, GRIB_LOG_WARNING, "grib_accessor_unsigned : Trying to pack %d values in a scalar %s, packing first value", *len, name_);
         len[0] = 1;
         return ret;
     }
 
     /* TODO: We assume that there are no missing values if there are more that 1 value */
-    buflen = *len * self->nbytes_;
+    buflen = *len * nbytes_;
 
-    buf = (unsigned char*)grib_context_malloc(a->context_, buflen);
+    buf = (unsigned char*)grib_context_malloc(context_, buflen);
 
     for (i = 0; i < *len; i++)
-        grib_encode_unsigned_long(buf, val[i], &off, self->nbytes_ * 8);
+        grib_encode_unsigned_long(buf, val[i], &off, nbytes_ * 8);
 
-    ret = grib_set_long_internal(grib_handle_of_accessor(a), grib_arguments_get_name(a->parent_->h, self->arg_, 0), *len);
+    ret = grib_set_long_internal(grib_handle_of_accessor(this), grib_arguments_get_name(parent_->h, arg_, 0), *len);
 
     if (ret == GRIB_SUCCESS)
-        grib_buffer_replace(a, buf, buflen, 1, 1);
+        grib_buffer_replace(this, buf, buflen, 1, 1);
     else
         *len = 0;
 
-    grib_context_free(a->context_, buf);
+    grib_context_free(context_, buf);
     return ret;
 }
 
@@ -204,7 +202,7 @@ int grib_accessor_unsigned_t::unpack_long(long* val, size_t* len)
 int grib_accessor_unsigned_t::pack_long(const long* val, size_t* len)
 {
     /* See GRIB-262 as example of why we do the checks */
-    return pack_long_unsigned_helper(this, val, len, /*check=*/1);
+    return pack_long_unsigned_helper(val, len, /*check=*/1);
 }
 
 long grib_accessor_unsigned_t::byte_count()

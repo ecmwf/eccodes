@@ -77,7 +77,7 @@ int grib_accessor_smart_table_column_t::unpack_string_array(char** buffer, size_
     if ((err = ((grib_accessor*)tableAccessor)->unpack_long(code, &size)) != GRIB_SUCCESS)
         return err;
 
-    table = tableAccessor->table_;
+    table = tableAccessor->table();
 
     for (i = 0; i < size; i++) {
         if (table && (code[i] >= 0) &&
@@ -132,7 +132,7 @@ int grib_accessor_smart_table_column_t::unpack_long(long* val, size_t* len)
         return err;
     }
 
-    table = tableAccessor->table_;
+    table = tableAccessor->table();
 
     for (i = 0; i < size; i++) {
         if (table && (code[i] >= 0) &&

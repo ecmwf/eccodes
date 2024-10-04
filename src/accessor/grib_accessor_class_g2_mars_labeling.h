@@ -27,7 +27,7 @@ public:
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
 
-public:
+private:
     int index_;
     const char* the_class_;
     const char* stream_;
@@ -38,4 +38,6 @@ public:
     const char* stepType_;
     const char* derivedForecast_;
     const char* typeOfGeneratingProcess_;
+
+    int extra_set(long val);
 };

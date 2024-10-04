@@ -22,7 +22,7 @@ public:
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
 
-public:
+protected:
     const char* half_byte_;
     const char* packingType_;
     const char* ieee_packing_;

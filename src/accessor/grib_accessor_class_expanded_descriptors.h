@@ -12,6 +12,16 @@
 
 #include "grib_accessor_class_long.h"
 
+typedef struct change_coding_params
+{
+    int associatedFieldWidth;
+    int localDescriptorWidth;
+    int extraWidth;
+    int extraScale;
+    int newStringWidth;
+    double referenceFactor;
+} change_coding_params;
+
 class grib_accessor_expanded_descriptors_t : public grib_accessor_long_t
 {
 public:
@@ -27,17 +37,21 @@ public:
     void destroy(grib_context*) override;
     void init(const long, grib_arguments*) override;
 
-public:
+    int grib_accessor_expanded_descriptors_set_do_expand(long do_expand);
+    bufr_descriptors_array* grib_accessor_expanded_descriptors_get_expanded(int* err);
+
+private:
     const char* unexpandedDescriptors_;
     const char* sequence_;
     const char* expandedName_;
     const char* tablesAccessorName_;
     bufr_descriptors_array* expanded_;
     int rank_;
-    grib_accessor* expandedAccessor_;
+    grib_accessor_expanded_descriptors_t* expandedAccessor_;
     int do_expand_;
     grib_accessor* tablesAccessor_;
-};
 
-int grib_accessor_expanded_descriptors_set_do_expand(grib_accessor* a, long do_expand);
-bufr_descriptors_array* grib_accessor_expanded_descriptors_get_expanded(grib_accessor* a, int* err);
+    int expand();
+    void __expand(bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded, change_coding_params* ccp, int* err);
+    bufr_descriptors_array* do_expand(bufr_descriptors_array* unexpanded, change_coding_params* ccp, int* err);
+};

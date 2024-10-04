@@ -25,12 +25,16 @@ public:
     int unpack_string(char*, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
-    // TODO(maee): make members private
-    // private:
-public:
+
+private:
     const char* dictionary_;
     const char* masterDir_;
     const char* localDir_;
+
+    grib_trie* load_bufr_elements_table(int* err);
+    int bufr_get_from_table(bufr_descriptor* v);
+
+    friend bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, int code, int* err);
 };
 
 int bufr_descriptor_is_marker(bufr_descriptor* d);

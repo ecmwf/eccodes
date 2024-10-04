@@ -64,16 +64,15 @@ int grib_accessor_hash_array_t::unpack_double(double* val, size_t* len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-static grib_hash_array_value* find_hash_value(grib_accessor* a, int* err)
+grib_hash_array_value* grib_accessor_hash_array_t::find_hash_value(int* err)
 {
-    grib_accessor_hash_array_t* self = (grib_accessor_hash_array_t*)a;
     grib_hash_array_value* ha_ret    = 0;
     grib_hash_array_value* ha        = NULL;
 
-    ha = get_hash_array(grib_handle_of_accessor(a), self->creator_);
+    ha = get_hash_array(grib_handle_of_accessor(this), creator_);
     if (!ha) {
-        grib_context_log(a->context_, GRIB_LOG_ERROR,
-                         "unable to get hash value for %s", self->creator_->name);
+        grib_context_log(context_, GRIB_LOG_ERROR,
+                         "unable to get hash value for %s", creator_->name);
         *err = GRIB_HASH_ARRAY_NO_MATCH;
         return NULL;
     }
@@ -81,27 +80,27 @@ static grib_hash_array_value* find_hash_value(grib_accessor* a, int* err)
     *err = GRIB_SUCCESS;
 
     Assert(ha != NULL);
-    if (!self->key_) {
-        grib_context_log(a->context_, GRIB_LOG_ERROR,
-                         "unable to get hash value for %s, set before getting", self->creator_->name);
+    if (!key_) {
+        grib_context_log(context_, GRIB_LOG_ERROR,
+                         "unable to get hash value for %s, set before getting", creator_->name);
         *err = GRIB_HASH_ARRAY_NO_MATCH;
         return NULL;
     }
 
-    ha_ret = (grib_hash_array_value*)grib_trie_get(ha->index, self->key_);
+    ha_ret = (grib_hash_array_value*)grib_trie_get(ha->index, key_);
     if (!ha_ret)
         ha_ret = (grib_hash_array_value*)grib_trie_get(ha->index, "default");
 
     if (!ha_ret) {
         *err = GRIB_HASH_ARRAY_NO_MATCH;
-        grib_context_log(a->context_, GRIB_LOG_ERROR,
+        grib_context_log(context_, GRIB_LOG_ERROR,
                          "hash_array: no match for %s=%s",
-                         self->creator_->name, self->key_);
-        const char* full_path = get_hash_array_full_path(self->creator_);
+                         creator_->name, key_);
+        const char* full_path = get_hash_array_full_path(creator_);
         if (full_path) {
-            grib_context_log(a->context_, GRIB_LOG_ERROR, "hash_array: file path = %s", full_path);
+            grib_context_log(context_, GRIB_LOG_ERROR, "hash_array: file path = %s", full_path);
         }
-        grib_context_log(a->context_, GRIB_LOG_ERROR, "Hint: Check the key 'masterTablesVersionNumber'");
+        grib_context_log(context_, GRIB_LOG_ERROR, "Hint: Check the key 'masterTablesVersionNumber'");
         return NULL;
     }
     return ha_ret;
@@ -114,7 +113,7 @@ int grib_accessor_hash_array_t::unpack_long(long* val, size_t* len)
     size_t i                  = 0;
 
     if (!ha_) {
-        ha = find_hash_value(this, &err);
+        ha = find_hash_value(&err);
         if (err)
             return err;
         ha_ = ha;
@@ -169,7 +168,7 @@ int grib_accessor_hash_array_t::value_count(long* count)
     grib_hash_array_value* ha = 0;
 
     if (!ha_) {
-        ha = find_hash_value(this, &err);
+        ha = find_hash_value(&err);
         if (err)
             return err;
         ha_ = ha;

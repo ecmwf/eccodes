@@ -21,6 +21,7 @@ public:
     grib_accessor* create_empty_accessor() override { return new grib_accessor_abstract_vector_t{}; }
 
 public:
+    // TODO(maee): make private
     double* v_;
     int number_of_elements_;
 };

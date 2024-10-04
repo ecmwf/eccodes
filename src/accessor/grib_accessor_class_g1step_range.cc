@@ -83,9 +83,8 @@ static const int u2s[] = {
     1800     /* (15) 30 minutes  */
 };
 
-int grib_g1_step_get_steps(grib_accessor* a, long* start, long* theEnd)
+int grib_accessor_g1step_range_t::grib_g1_step_get_steps(long* start, long* theEnd)
 {
-    grib_accessor_g1step_range_t* self = (grib_accessor_g1step_range_t*)a;
     int err                            = 0;
     long p1 = 0, p2 = 0, unit = 0, timeRangeIndicator = 0, timeRangeIndicatorFromStepRange = 0;
     long step_unit    = 1;
@@ -96,30 +95,30 @@ int grib_g1_step_get_steps(grib_accessor* a, long* start, long* theEnd)
     long newstart, newend;
     int factor = 1;
     long u2sf, u2sf_step_unit;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_handle* hand = grib_handle_of_accessor(this);
 
-    if (self->step_unit_ != NULL)
-        grib_get_long_internal(hand, self->step_unit_, &step_unit);
+    if (step_unit_ != NULL)
+        grib_get_long_internal(hand, step_unit_, &step_unit);
 
     if (err != GRIB_SUCCESS)
         return err;
 
-    err = grib_get_long_internal(hand, self->unit_, &unit);
+    err = grib_get_long_internal(hand, unit_, &unit);
     if (err)
         return err;
     if (unit == 254) {
         unit = 15; /* See ECC-316: WMO says 254 is for 'seconds' but we use 15! */
     }
 
-    err = grib_get_long_internal(hand, self->p1_, &p1);
+    err = grib_get_long_internal(hand, p1_, &p1);
     if (err)
         return err;
 
-    err = grib_get_long_internal(hand, self->p2_, &p2);
+    err = grib_get_long_internal(hand, p2_, &p2);
     if (err)
         return err;
 
-    err = grib_get_long_internal(hand, self->timeRangeIndicator_, &timeRangeIndicator);
+    err = grib_get_long_internal(hand, timeRangeIndicator_, &timeRangeIndicator);
     if (err)
         return err;
 
@@ -130,8 +129,8 @@ int grib_g1_step_get_steps(grib_accessor* a, long* start, long* theEnd)
     if (timeRangeIndicatorFromStepRange == 10)
         timeRangeIndicator = timeRangeIndicatorFromStepRange;
 
-    if (self->stepType_) {
-        err = grib_get_string_internal(hand, self->stepType_, stepType, &stepTypeLen);
+    if (stepType_) {
+        err = grib_get_string_internal(hand, stepType_, stepType, &stepTypeLen);
         if (err)
             return err;
     }
@@ -196,7 +195,7 @@ int grib_accessor_g1step_range_t::unpack_string(char* val, size_t* len)
     size_t stepTypeLen = 20;
     grib_handle* hand  = grib_handle_of_accessor(this);
 
-    if ((err = grib_g1_step_get_steps(this, &start, &theEnd)) != GRIB_SUCCESS) {
+    if ((err = grib_g1_step_get_steps(&start, &theEnd)) != GRIB_SUCCESS) {
         size_t step_unit_string_len = 10;
         char step_unit_string[10];
 

@@ -24,11 +24,13 @@ public:
     void dump(grib_dumper*) override;
     void init(const long, grib_arguments*) override;
 
-public:
+private:
     const char* verification_yearmonth_;
     const char* base_date_;
     const char* day_;
     const char* hour_;
     const char* fcmonth_;
     const char* check_;
+
+    int unpack_long_edition1(long* val, size_t* len);
 };

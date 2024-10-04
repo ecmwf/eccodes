@@ -41,7 +41,7 @@ void grib_accessor_md5_t::init(const long len, grib_arguments* arg)
             }
         }
     }
-    // TODO(maee): Is this necessary?
+
     grib_accessor::length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;

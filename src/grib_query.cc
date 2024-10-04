@@ -212,8 +212,9 @@ static char* get_condition(const char* name, codes_condition* condition)
 
 static grib_accessor* _search_by_rank(grib_accessor* a, const char* name, int rank)
 {
-    grib_trie_with_rank* t = accessor_bufr_data_array_get_dataAccessorsTrie(a);
-    grib_accessor* ret     = (grib_accessor*)grib_trie_with_rank_get(t, name, rank);
+    grib_accessor_bufr_data_array_t* data_accessor = dynamic_cast<grib_accessor_bufr_data_array_t*>(a);
+    grib_trie_with_rank* t = data_accessor->accessor_bufr_data_array_get_dataAccessorsTrie();
+    grib_accessor* ret = (grib_accessor*)grib_trie_with_rank_get(t, name, rank);
     return ret;
 }
 
@@ -431,9 +432,10 @@ static grib_accessors_list* search_by_condition(grib_handle* h, const char* name
 {
     grib_accessors_list* al;
     grib_accessors_list* result = NULL;
-    grib_accessor* data         = search_and_cache(h, "dataAccessors", 0);
-    if (data && condition->left) {
-        al = accessor_bufr_data_array_get_dataAccessors(data);
+    grib_accessor* a = search_and_cache(h, "dataAccessors", 0);
+    grib_accessor_bufr_data_array_t* data_accessor = dynamic_cast<grib_accessor_bufr_data_array_t*>(a);
+    if (data_accessor && condition->left) {
+        al = data_accessor->accessor_bufr_data_array_get_dataAccessors();
         if (!al)
             return NULL;
         result = (grib_accessors_list*)grib_context_malloc_clear(al->accessor->context_, sizeof(grib_accessors_list));
