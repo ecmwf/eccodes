@@ -10,7 +10,7 @@
 
 . ./include.ctest.sh
 
-label="codes_ecc-1929_test"
+label="codes_assert_test"
 
 tempOut=temp.$label.txt
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
@@ -20,13 +20,19 @@ rm -rf $tempDir
 mkdir -p $tempDir/definitions/grib2
 bootfile=$tempDir/definitions/grib2/boot.def
 cat $def_dir/grib2/boot.def > $bootfile
-echo 'print "DEBUG: [gridType=] [typeOfLevel=]";' >> $bootfile
+echo 'assert( year == 1990 );' >> $bootfile
 echo >> $bootfile
 
 export ECCODES_DEFINITION_PATH=$PWD/$tempDir/definitions
 # This will activate the print statement above
-${tools_dir}/grib_get -p edition $sample_grib2 > $tempOut
-grep -q "DEBUG: gridType=regular_ll typeOfLevel=surface" $tempOut
+${tools_dir}/grib_set -s year=1990 $sample_grib2 /dev/null
+
+set +e
+${tools_dir}/grib_set -s year=1991 $sample_grib2 /dev/null > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "year.*Assertion failure" $tempOut
 
 # Clean up
 rm -rf $tempDir
