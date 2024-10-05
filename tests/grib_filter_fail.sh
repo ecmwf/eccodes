@@ -85,6 +85,17 @@ set -e
 [ $status -ne 0 ]
 grep -q "Unable to open file" $tempOut
 
+
+# Bad print
+# ----------
+set +e
+echo 'print ("/") "should fail";' | ${tools_dir}/grib_filter - $input > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "IO ERROR" $tempOut
+
+
 # Signed bits
 # -----------
 cat >$tempFilt <<EOF
