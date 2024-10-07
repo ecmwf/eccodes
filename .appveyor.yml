@@ -52,7 +52,7 @@ install:
                                 m2w64-ntldd-git
 
     # get deps. Drop libnetcdf
-  - cmd: conda install -c conda-forge cmake
+  - cmd: conda install -c conda-forge cmake libaec
 
 #---------------------------------#
 #       build configuration       #
@@ -73,7 +73,7 @@ build_script:
                -D ENABLE_FORTRAN=0 ^
                -D ENABLE_NETCDF=0 ^
                -D ENABLE_JPG=1 ^
-               -D ENABLE_AEC=0 ^
+               -D ENABLE_AEC=1 ^
                -D IEEE_LE=1 ^
                -D ENABLE_MEMFS=1 ^
                -D ENABLE_EXTRA_TESTS=ON ^
