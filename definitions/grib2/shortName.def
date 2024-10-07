@@ -10779,7 +10779,7 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 105 ;
 	}
-#Mass mixing ration difference
+#Mass mixing ratio difference
 'mass_mixrat_diff' = {
          discipline = 0 ;
          parameterCategory = 20 ;

@@ -10779,8 +10779,8 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 105 ;
 	}
-#Mass mixing ration difference
-'Mass mixing ration difference' = {
+#Mass mixing ratio difference
+'Mass mixing ratio difference' = {
          discipline = 0 ;
          parameterCategory = 20 ;
          parameterNumber = 2 ;
