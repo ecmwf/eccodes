@@ -64,6 +64,9 @@ platform:
 before_build:
   - cmd: call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
 
+# Building with libaec fails. When any executable runs, we get:
+#   error while loading shared libraries: ?: cannot open shared object file: No such file or directory
+# So we have to disable AEC
 build_script:
   - cmd: cd %ECCODES_SRC%
   - cmd: mkdir build && cd build
@@ -73,7 +76,7 @@ build_script:
                -D ENABLE_FORTRAN=0 ^
                -D ENABLE_NETCDF=0 ^
                -D ENABLE_JPG=1 ^
-               -D ENABLE_AEC=1 ^
+               -D ENABLE_AEC=0 ^
                -D IEEE_LE=1 ^
                -D ENABLE_MEMFS=1 ^
                -D ENABLE_EXTRA_TESTS=ON ^
