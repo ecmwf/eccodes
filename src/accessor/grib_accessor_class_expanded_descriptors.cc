@@ -53,8 +53,6 @@ void grib_accessor_expanded_descriptors_t::init(const long len, grib_arguments* 
     tablesAccessor_ = NULL;
 }
 
-static bufr_descriptors_array* do_expand(grib_accessor* a, bufr_descriptors_array* unexpanded, change_coding_params* ccp, int* err);
-
 #define BUFR_DESCRIPTORS_ARRAY_USED_SIZE(v) ((v)->n)
 #define SILENT                              1
 

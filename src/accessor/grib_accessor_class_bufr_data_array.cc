@@ -36,9 +36,6 @@ grib_accessor* grib_accessor_bufr_data_array = &_grib_accessor_bufr_data_array;
     }
 
 
-static int process_elements(grib_accessor* a, int flag, long onlySubset, long startSubset, long endSubset);
-static int create_keys(const grib_accessor* a, long onlySubset, long startSubset, long endSubset);
-
 void grib_accessor_bufr_data_array_t::restart_bitmap()
 {
     bitmapCurrent_                         = -1;
