@@ -737,3 +737,19 @@
 'Volcanic ash' = {
 	constituentType = 62025 ;
 	}
+#Black carbon organic aerosol
+'Black carbon organic aerosol' = {
+        constituentType = 62009 ;
+        }
+#Organic matter aerosol
+'Organic matter aerosol' = {
+        constituentType = 62010 ;
+        }
+#Dust aerosol
+'Dust aerosol' = {
+        constituentType = 62001 ;
+        }
+#Sea salt aerosol
+'Sea salt aerosol' = {
+        constituentType = 62008 ;
+        }

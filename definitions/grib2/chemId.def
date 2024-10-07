@@ -737,3 +737,19 @@
 '932' = {
 	constituentType = 62025 ;
 	}
+#Black carbon organic aerosol
+'933' = {
+        constituentType = 62009 ;
+        }
+#Organic matter aerosol
+'934' = {
+        constituentType = 62010 ;
+        }
+#Dust aerosol
+'935' = {
+        constituentType = 62001 ;
+        }
+#Sea salt aerosol
+'936' = {
+        constituentType = 62008 ;
+        }

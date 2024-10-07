@@ -737,3 +737,19 @@
 'volash' = {
 	constituentType = 62025 ;
 	}
+#Black carbon organic aerosol
+'aer_blackcarb' = {
+        constituentType = 62009 ;
+        }
+#Organic matter aerosol
+'aer_orgmat' = {
+        constituentType = 62010 ;
+        }
+#Dust aerosol
+'aer_dust' = {
+        constituentType = 62001 ;
+        }
+#Sea salt aerosol
+'aer_seasalt' = {
+        constituentType = 62008 ;
+        }
