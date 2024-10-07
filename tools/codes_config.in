@@ -7,6 +7,9 @@ ECCODES_PATCH_VERSION=@eccodes_VERSION_PATCH@
 # ECCODES_VERSION="$ECCODES_MAJOR_VERSION.$ECCODES_MINOR_VERSION.$ECCODES_PATCH_VERSION"
 
 ECCODES_GIT_SHA1="@eccodes_GIT_SHA1@"
+if [ "x$ECCODES_GIT_SHA1" = "x" ]; then
+  ECCODES_GIT_SHA1="unknown"
+fi
 
 #################################################################
 # Commands
