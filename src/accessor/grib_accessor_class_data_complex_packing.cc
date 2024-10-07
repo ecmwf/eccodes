@@ -416,7 +416,6 @@ int grib_accessor_class_data_complex_packing_t::pack_double(grib_accessor* a, co
             return GRIB_INTERNAL_ERROR;
         }
         binary_scale_factor = grib_get_binary_scale_fact(d * max, reference_value, bits_per_value, &ret);
-
         if (ret == GRIB_UNDERFLOW) {
             d                   = 0;
             binary_scale_factor = 0;
