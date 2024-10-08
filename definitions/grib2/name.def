@@ -1427,6 +1427,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 12 ;
 	}
 #Time-mean significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds
 'Time-mean significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds' = {
@@ -1434,6 +1439,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 12 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 14 ;
 	}
 #Time-mean significant wave height of all waves with periods within the inclusive range from 14 to 17 seconds
 'Time-mean significant wave height of all waves with periods within the inclusive range from 14 to 17 seconds' = {
@@ -1441,6 +1451,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 14 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 17 ;
 	}
 #Time-mean significant wave height of all waves with periods within the inclusive range from 17 to 21 seconds
 'Time-mean significant wave height of all waves with periods within the inclusive range from 17 to 21 seconds' = {
@@ -1448,6 +1463,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 17 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 21 ;
 	}
 #Time-mean significant wave height of all waves with periods within the inclusive range from 21 to 25 seconds
 'Time-mean significant wave height of all waves with periods within the inclusive range from 21 to 25 seconds' = {
@@ -1455,6 +1475,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 21 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 25 ;
 	}
 #Time-mean significant wave height of all waves with periods within the inclusive range from 25 to 30 seconds
 'Time-mean significant wave height of all waves with periods within the inclusive range from 25 to 30 seconds' = {
@@ -1462,6 +1487,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 25 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 30 ;
 	}
 #Time-mean significant wave height of all waves with period larger than 10s
 'Time-mean significant wave height of all waves with period larger than 10s' = {
@@ -1469,6 +1499,9 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
 	}
 #Time-mean significant wave height of first swell partition
 'Time-mean significant wave height of first swell partition' = {
@@ -7948,6 +7981,8 @@
 	 parameterNumber = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 162 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean lake shape factor
@@ -7973,6 +8008,10 @@
 	 parameterNumber = 5 ;
 	 typeOfFirstFixedSurface = 174 ;
 	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean minimum vertical gradient of refractivity inside trapping layer
@@ -8195,6 +8234,8 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean ceiling
