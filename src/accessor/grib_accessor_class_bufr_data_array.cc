@@ -13,6 +13,7 @@
 #include "grib_accessor_class_expanded_descriptors.h"
 #include "grib_accessor_class_bufr_data_element.h"
 #include "grib_accessor_class_variable.h"
+#include "NumericLimits.h"
 
 grib_accessor_bufr_data_array_t _grib_accessor_bufr_data_array{};
 grib_accessor* grib_accessor_bufr_data_array = &_grib_accessor_bufr_data_array;
@@ -131,8 +132,8 @@ int grib_accessor_bufr_data_array_t::tableB_override_set_key(grib_handle* h)
 /* Check numBits is sufficient for entries in the overridden reference values list*/
 static int check_overridden_reference_values(const grib_context* c, long* refValList, size_t refValListSize, int numBits)
 {
-    const long maxval = (1 << (numBits - 1)) - 1;
-    const long minval = -(1 << (numBits - 1));
+    const long maxval = NumericLimits<long>::max(numBits);
+    const long minval = NumericLimits<long>::min(numBits);
     size_t i          = 0;
     for (i = 0; i < refValListSize; ++i) {
         grib_context_log(c, GRIB_LOG_DEBUG, "check_overridden_reference_values: refValList[%ld]=%ld", i, refValList[i]);
