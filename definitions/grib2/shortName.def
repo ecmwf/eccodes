@@ -2868,6 +2868,527 @@
 	 parameterNumber = 98 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-standard-deviation wave induced mean sea level correction
+'std_weta' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 87 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation ratio of wave angular and frequency width
+'std_wraf' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 80 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation number of events in freak waves statistics
+'std_wnslc' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 89 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation U-component of atmospheric surface momentum flux
+'std_utaua' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation V-component of atmospheric surface momentum flux
+'std_vtaua' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation U-component of surface momentum flux into ocean
+'std_utauo' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 90 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation V-component of surface momentum flux into ocean
+'std_vtauo' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 91 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation wave turbulent energy flux into ocean
+'std_wphio' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 92 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation wave directional width of first swell partition
+'std_wdw1' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 56 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation wave frequency width of first swell partition
+'std_wfw1' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 59 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation wave directional width of second swell partition
+'std_wdw2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 57 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation wave frequency width of second swell partition
+'std_wfw2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 60 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation wave directional width of third swell partition
+'std_wdw3' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 58 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation wave frequency width of third swell partition
+'std_wfw3' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 61 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation wave energy flux magnitude
+'std_wefxm' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 78 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation wave energy flux mean direction
+'std_wefxd' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 79 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation significant wave height of all waves with periods within the inclusive range from 10 to 12 seconds
+'std_h1012' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds
+'std_h1214' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation significant wave height of all waves with periods within the inclusive range from 14 to 17 seconds
+'std_h1417' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation significant wave height of all waves with periods within the inclusive range from 17 to 21 seconds
+'std_h1721' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation significant wave height of all waves with periods within the inclusive range from 21 to 25 seconds
+'std_h2125' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation significant wave height of all waves with periods within the inclusive range from 25 to 30 seconds
+'std_h2530' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation significant wave height of all waves with period larger than 10s
+'std_sh10' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation significant wave height of first swell partition
+'std_swh1' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 47 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean wave direction of first swell partition
+'std_mwd1' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 53 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean wave period of first swell partition
+'std_mwp1' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 50 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation significant wave height of second swell partition
+'std_swh2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 48 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean wave direction of second swell partition
+'std_mwd2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 54 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean wave period of second swell partition
+'std_mwp2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 51 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation significant wave height of third swell partition
+'std_swh3' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 49 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean wave direction of third swell partition
+'std_mwd3' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 55 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean wave period of third swell partition
+'std_mwp3' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 52 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation time domain maximum individual crest height
+'std_tdcmax' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 94 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation time domain maximum individual wave height
+'std_tdhmax' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 95 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation space time maximum individual crest height
+'std_stcmax' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 96 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation space time maximum individual wave height
+'std_sthmax' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 97 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation wave Spectral Skewness
+'std_wss' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation free convective velocity over the oceans
+'std_wstar' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 81 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation air density over the oceans
+'std_rhoao' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 82 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation normalized energy flux into waves
+'std_phiaw' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 83 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation normalized energy flux into ocean
+'std_phioc' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 85 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation normalized stress into ocean
+'std_tauoc' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 84 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation U-component surface stokes drift
+'std_ust' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 21 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation V-component surface stokes drift
+'std_vst' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation period corresponding to maximum individual wave height
+'std_tmax' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 23 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation envelop-maximum individual wave height
+'std_hmax' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 93 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean wave period based on first moment
+'std_mp1' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 25 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean zero-crossing wave period
+'std_mp2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 28 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation wave spectral directional width
+'std_wdw' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 31 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean wave period based on first moment for wind waves
+'std_p1ww' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 26 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean wave period based on second moment for wind waves
+'std_p2ww' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 29 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation wave spectral directional width for wind waves
+'std_dwww' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 32 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean wave period based on first moment for swell
+'std_p1ps' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 27 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean wave period based on second moment for swell
+'std_p2ps' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 30 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation wave spectral directional width for swell
+'std_dwps' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 33 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation significant height of combined wind waves and swell
+'std_swh' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean wave direction
+'std_mwd' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 14 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave period
+'std_pp1d' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 34 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean wave period
+'std_mwp' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 15 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation coefficient of drag with waves
+'std_cdww' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 16 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation significant height of wind waves
+'std_shww' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean direction of wind waves
+'std_mdww' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 75 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean period of wind waves
+'std_mpww' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 6 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation significant height of total swell
+'std_shts' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean direction of total swell
+'std_mdts' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 74 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean period of total swell
+'std_mpts' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 9 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean square slope of waves
+'std_msqs' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 10 metre wind speed
+'std_wind' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 40 ;
+	 typeOfFirstFixedSurface = 102 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 10 metre wind direction
+'std_dwi' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 41 ;
+	 typeOfFirstFixedSurface = 102 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 2D wave spectra (single)
+'std_2dfd' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 86 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation wave spectral kurtosis
+'std_wsk' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 43 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation benjamin-Feir index
+'std_bfi' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 44 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation wave spectral peakedness
+'std_wsp' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 98 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Mean sea water temperature in the upper 300 m
 'mswt300m' = {
 	 discipline = 10 ;
@@ -11628,11 +12149,645 @@
 	 parameterNumber = 51 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-standard-deviation temperature tendency due to short-wave radiation
+'std_ttswr' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation temperature tendency due to long-wave radiation
+'std_ttlwr' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 23 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation temperature tendency due to short wave radiation, clear sky
+'std_ttswrcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 24 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation temperature tendency due to long-wave radiation, clear sky
+'std_ttlwrcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 25 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation temperature tendency due to parametrisations
+'std_ttpm' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 26 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation specific humidity tendency due to parametrisations
+'std_qtpm' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 108 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation eastward wind tendency due to parametrisations
+'std_utpm' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 39 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation northward wind tendency due to parametrisations
+'std_vtpm' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 40 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation updraught mass flux
+'std_umf' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 27 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation downdraught mass flux
+'std_dmf' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 28 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation updraught detrainment rate
+'std_udr' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 29 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation downdraught detrainment rate
+'std_ddr' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 30 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total precipitation flux
+'std_tpf' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation turbulent diffusion coefficient for heat
+'std_tdch' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface photosynthetically active radiation flux, clear sky
+'std_parcsf' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 60 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation snow evaporation rate
+'std_esrwe' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 148 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation snowmelt rate
+'std_smr' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 41 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation magnitude of turbulent surface stress
+'std_imagss' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 58 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation large-scale precipitation fraction
+'std_ilspf' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 36 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface downward UV radiation flux
+'std_sduvrf' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 12 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface photosynthetically active radiation flux
+'std_sparf' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 10 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation large-scale precipitation rate
+'std_lsprate' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 54 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation convective precipitation rate
+'std_cpr' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 37 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation snowfall rate
+'std_tsrwe' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 53 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation boundary layer dissipation
+'std_ibld' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface sensible heat flux
+'std_ishf' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface latent heat flux
+'std_slhtf' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 10 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface downward short-wave radiation flux
+'std_sdswrf' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface downward long-wave radiation flux
+'std_sdlwrf' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface net short-wave radiation flux
+'std_snswrf' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 9 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface net long-wave radiation flux
+'std_snlwrf' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation top net short-wave radiation flux
+'std_tnswrf' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 9 ;
+	 typeOfFirstFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation top net long-wave radiation flux
+'std_tnlwrf' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation eastward turbulent surface stress
+'std_iews' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 62 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation northward turbulent surface stress
+'std_inss' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 63 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation evaporation rate
+'std_ie' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 79 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation eastward gravity wave surface stress
+'std_iegwss' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 16 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation northward gravity wave surface stress
+'std_ingwss' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation gravity wave dissipation
+'std_igwd' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 23 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation runoff rate
+'std_rorwe' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 42 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation top net short-wave radiation flux, clear sky
+'std_tnswrfcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation top net long-wave radiation flux, clear sky
+'std_tnlwrcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface net short-wave radiation flux, clear sky
+'std_snswrfcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface net long-wave radiation flux, clear sky
+'std_snlwrcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation top downward short-wave radiation flux
+'std_tdswrf' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated moisture divergence
+'std_vimdf' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 165 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total precipitation rate
+'std_tprate' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation convective snowfall rate water equivalent
+'std_csfr' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 55 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation large scale snowfall rate water equivalent
+'std_lssfr' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 56 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface direct short-wave radiation flux
+'std_sdirswrf' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface direct short-wave radiation flux, clear sky
+'std_sdirswrfcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 61 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation carbon dioxide net ecosystem exchange flux
+'std_fco2nee' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 59 ;
+	 constituentType = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation carbon dioxide gross primary production flux
+'std_fco2gpp' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 60 ;
+	 constituentType = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation carbon dioxide ecosystem respiration flux
+'std_fco2rec' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 61 ;
+	 constituentType = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface downward short-wave radiation flux, clear sky
+'std_sdswrfcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface downward long-wave radiation flux, clear sky
+'std_sdlwrfcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation potential evaporation rate
+'std_pevr' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 143 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Time-standard-deviation volumetric soil moisture
 'std_vsw' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 25 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation snow depth water equivalent
+'std_sd' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 60 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation skin temperature
+'std_skt' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation snow density
+'std_rsn' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 61 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation sea ice area fraction
+'std_ci' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation sea surface temperature
+'std_sst' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column cloud liquid water
+'std_tclw' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 69 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column cloud ice water
+'std_tciw' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 70 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 2 metre specific humidity
+'std_2sh' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation lake mix-layer temperature
+'std_lmlt' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 166 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation lake mix-layer depth
+'std_lmld' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 166 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation soil temperature
+'std_sot' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 18 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation wind speed
+'std_ws' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation pressure
+'std_pres' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation charnock
+'std_chnk' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 76 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation potential vorticity
+'std_pv' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 14 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation specific rain water content
+'std_crwc' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 85 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation specific snow water content
+'std_cswc' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 86 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation eta-coordinate vertical velocity
+'std_etadot' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 32 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation visibility
+'std_vis' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation wind direction
+'std_wdir' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column snow water
+'std_tcsw' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 46 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation low cloud cover
+'std_lcc' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation medium cloud cover
+'std_mcc' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation high cloud cover
+'std_hcc' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column rain water
+'std_tcrw' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 45 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation most-unstable CAPE
@@ -11652,6 +12807,1137 @@
 	 parameterNumber = 74 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation geopotential
+'std_z' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation temperature
+'std_t' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation u component of wind
+'std_u' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation v component of wind
+'std_v' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation specific humidity
+'std_q' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface pressure
+'std_sp' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertical velocity
+'std_w' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column water
+'std_tcw' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated water vapour
+'std_tcwv' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 64 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vorticity (relative)
+'std_vo' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 12 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean sea level pressure
+'std_msl' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 101 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation logarithm of surface pressure
+'std_lnsp' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation divergence
+'std_d' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 13 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation relative humidity
+'std_r' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation boundary layer height
+'std_blh' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 18 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 10 metre U wind component
+'std_10u' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 10 metre V wind component
+'std_10v' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 2 metre temperature
+'std_2t' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 2 metre dewpoint temperature
+'std_2d' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation sunshine
+'std_suns' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation ozone mass mixing ratio
+'std_o3' = {
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 10 metre wind speed
+'std_10si' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation temperature of snow layer
+'std_tsn' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 28 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation forecast surface roughness
+'std_fsr' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation forecast logarithm of surface roughness for heat
+'std_flsr' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 54 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation specific cloud liquid water content
+'std_clwc' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 83 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation specific cloud ice water content
+'std_ciwc' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 84 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation fraction of cloud cover
+'std_cc' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 32 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation k index
+'std_kx' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total totals index
+'std_totalx' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 10 metre wind direction
+'std_10wdir' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation clear air turbulence (CAT)
+'std_cat' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 29 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation forecast albedo
+'std_al' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation potential temperature
+'std_pt' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation UV visible albedo for direct radiation (climatological)
+'std_aluvp_p' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 56 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Time-standard-deviation UV visible albedo for diffuse radiation (climatological)
+'std_aluvd_p' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 55 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Time-standard-deviation near IR albedo for direct radiation (climatological)
+'std_alnip_p' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 10 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Time-standard-deviation near IR albedo for diffuse radiation (climatological)
+'std_alnid_p' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 9 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Time-standard-deviation snow albedo
+'std_asn' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 19 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation montgomery potential
+'std_mont' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 6 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation convective available potential energy
+'std_cape' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total cloud cover
+'std_tcc' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation skin reservoir content
+'std_srcon' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 50 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column integrated ozone
+'std_tcioz' = {
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated kinetic energy
+'std_vike' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated enthalpy
+'std_vithe' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated potential + internal energy
+'std_vipie' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertical integral of potential+internal+latent energy
+'std_vipile' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 21 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated total energy
+'std_vitoe' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated water enthalpy
+'std_viwe' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 4 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation UV visible albedo for direct radiation, isotropic component (climatological)
+'std_aluvpi_p' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 58 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Time-standard-deviation UV visible albedo for direct radiation, volumetric component (climatological)
+'std_aluvpv_p' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 59 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Time-standard-deviation UV visible albedo for direct radiation, geometric component (climatological)
+'std_aluvpg_p' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 57 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Time-standard-deviation near IR albedo for direct radiation, isotropic component (climatological)
+'std_alnipi_p' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 12 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Time-standard-deviation near IR albedo for direct radiation, volumetric component (climatological)
+'std_alnipv_p' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 13 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Time-standard-deviation near IR albedo for direct radiation, geometric component (climatological)
+'std_alnipg_p' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 11 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Time-standard-deviation convective inhibition
+'std_cin' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation friction velocity
+'std_zust' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 17 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation lake bottom temperature
+'std_lblt' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 162 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation lake total layer temperature
+'std_ltlt' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 162 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation lake shape factor
+'std_lshf' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 10 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation lake ice surface temperature
+'std_lict' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation lake ice total depth
+'std_licd' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation minimum vertical gradient of refractivity inside trapping layer
+'std_dndzn' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 45 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mean vertical gradient of refractivity inside trapping layer
+'std_dndza' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 44 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation duct base height
+'std_dctb' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 41 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation trapping layer base height
+'std_tplb' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 42 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation trapping layer top height
+'std_tplt' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 43 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation -10 degrees C isothermal level (atm)
+'std_degm10l' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 26315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation cloud base height
+'std_cbh' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 0 degrees C isothermal level (atm)
+'std_deg0l' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 10 metre wind gust
+'std_i10fg' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation relative humidity with respect to water
+'std_rhw' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 93 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 2 metre relative humidity with respect to water
+'std_2rhw' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 93 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation convective available potential energy shear
+'std_capes' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 19 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation tropopause pressure
+'std_trpp' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation height of convective cloud top
+'std_hcct' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 27 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation height of zero-degree wet-bulb temperature
+'std_hwbt0' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 44 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation height of one-degree wet-bulb temperature
+'std_hwbt1' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 45 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total lightning flash density
+'std_litoti' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column supercooled liquid water
+'std_tcslw' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 167 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 10 metre U-component of neutral wind
+'std_u10n' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 56 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 10 metre V-component of neutral wind
+'std_v10n' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 57 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation convective rain rate
+'std_crr' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 76 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation large scale rain rate
+'std_lsrr' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 77 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mixed-layer CAPE in the lowest 50 hPa
+'std_mlcape50' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 5000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mixed-layer CIN in the lowest 50 hPa
+'std_mlcin50' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 5000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mixed-layer CAPE in the lowest 100 hPa
+'std_mlcape100' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 10000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mixed-layer CIN in the lowest 100 hPa
+'std_mlcin100' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 10000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation departure level of the most unstable parcel expressed as Pressure
+'std_mudlp' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation ceiling
+'std_ceil' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 13 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column integrated saturation specific humidity with respect to water
+'std_tcsqw' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 169 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation direct solar radiation flux
+'std_sdirnswrf' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 54 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation freezing rain rate water equivalent
+'std_fprate' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 67 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated eastward geopotential flux
+'std_vige' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 40 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated northward geopotential flux
+'std_vign' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 41 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated divergence of water geopotential flux
+'std_viwgd' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 42 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated divergence of geopotential flux
+'std_vigd' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 43 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated eastward enthalpy flux
+'std_viee' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated northward enthalpy flux
+'std_vien' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated eastward kinetic energy flux
+'std_vikee' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 9 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated northward kinetic energy flux
+'std_viken' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 10 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated eastward total energy flux
+'std_vitee' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated northward total energy flux
+'std_viten' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 12 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated divergence of enthalpy flux
+'std_vied' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 13 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated divergence of kinetic energy flux
+'std_viked' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 16 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated divergence of total energy flux
+'std_vited' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation total column vertically-integrated divergence of water enthalpy flux
+'std_viwed' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated divergence of mass flux
+'std_vimad' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 35 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated eastward mass flux
+'std_vimae' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 36 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated northward mass flux
+'std_viman' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 37 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated divergence of water vapour flux
+'std_viwvd' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 160 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated divergence of cloud liquid water flux
+'std_viclwd' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 161 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated divergence of cloud ice water flux
+'std_viciwd' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 162 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated divergence of rain flux
+'std_vird' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 163 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated divergence of snow flux
+'std_visd' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 164 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated eastward water vapour flux
+'std_viwve' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 150 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated northward water vapour flux
+'std_viwvn' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 151 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated eastward cloud liquid water flux
+'std_viclwe' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 152 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated northward cloud liquid water flux
+'std_viclwn' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 153 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated eastward cloud ice water flux
+'std_viciwe' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 154 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated northward cloud ice water flux
+'std_viciwn' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 155 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated eastward rain flux
+'std_vire' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 156 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated northward rain flux
+'std_virn' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 157 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated eastward snow flux
+'std_vise' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 158 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated northward snow flux
+'std_visn' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 159 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated eastward ozone flux
+'std_vioze' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 78 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 constituentType = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated northward ozone flux
+'std_viozn' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 79 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 constituentType = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated divergence of ozone flux
+'std_viozd' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 80 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 constituentType = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vertically integrated net source of ozone
+'std_vions' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 81 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 constituentType = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation eastward turbulent surface stress due to orographic form drag
+'std_ietssofd' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 64 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation northward turbulent surface stress due to orographic form drag
+'std_intssofd' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 65 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation eastward turbulent surface stress due to surface roughness
+'std_ietsssr' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 66 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation northward turbulent surface stress due to surface roughness
+'std_intsssr' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 67 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Cross sectional area of flow in channel
@@ -16314,6 +18600,13 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 8 ;
 	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation sea ice temperature
+'std_sit' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
 	}
 #Virtual temperature
 'vtmp' = {
