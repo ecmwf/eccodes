@@ -199,8 +199,8 @@ static int notify_change(grib_action* a, grib_accessor* observer, grib_accessor*
     if (hand->context->debug > 0) {
         grib_context_log(hand->context, GRIB_LOG_DEBUG,
                 "------------- SECTION action %s is triggered by [%s] (%s)",
-                a->name, observed->name, a->debug_info ? a->debug_info : "no debug info");
-        grib_expression_print(observed->context, self->expression, 0, stderr);
+                a->name, observed->name_, a->debug_info ? a->debug_info : "no debug info");
+        grib_expression_print(observed->context_, self->expression, 0, stderr);
         fprintf(stderr, "\n");
     }
 

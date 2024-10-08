@@ -10,26 +10,25 @@
 
 #include "grib_accessor_class_section_length.h"
 
-grib_accessor_class_section_length_t _grib_accessor_class_section_length{ "section_length" };
-grib_accessor_class* grib_accessor_class_section_length = &_grib_accessor_class_section_length;
+grib_accessor_section_length_t _grib_accessor_section_length{};
+grib_accessor* grib_accessor_section_length = &_grib_accessor_section_length;
 
-
-void grib_accessor_class_section_length_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+void grib_accessor_section_length_t::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_class_unsigned_t::init(a, len, arg);
-    a->parent->aclength = a;
-    a->length           = len;
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
-    Assert(a->length >= 0);
+    grib_accessor_unsigned_t::init(len, arg);
+    parent_->aclength = this;
+    length_           = len;
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
+    Assert(length_ >= 0);
 }
 
-void grib_accessor_class_section_length_t::dump(grib_accessor* a, grib_dumper* dumper)
+void grib_accessor_section_length_t::dump(grib_dumper* dumper)
 {
-    grib_dump_long(dumper, a, NULL);
+    grib_dump_long(dumper, this, NULL);
 }
 
-int grib_accessor_class_section_length_t::value_count(grib_accessor* a, long* c)
+int grib_accessor_section_length_t::value_count(long* c)
 {
     *c = 1;
     return 0;

@@ -16,16 +16,13 @@
 class grib_accessor_padtoeven_t : public grib_accessor_padding_t
 {
 public:
-    /* Members defined in padtoeven */
-    const char*  section_offset;
-    const char*  section_length;
-};
-
-class grib_accessor_class_padtoeven_t : public grib_accessor_class_padding_t
-{
-public:
-    grib_accessor_class_padtoeven_t(const char* name) : grib_accessor_class_padding_t(name) {}
+    grib_accessor_padtoeven_t() :
+        grib_accessor_padding_t() { class_name_ = "padtoeven"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_padtoeven_t{}; }
-    void init(grib_accessor*, const long, grib_arguments*) override;
-    size_t preferred_size(grib_accessor*, int) override;
+    void init(const long, grib_arguments*) override;
+    size_t preferred_size(int) override;
+
+private:
+    const char* section_offset_;
+    const char* section_length_;
 };

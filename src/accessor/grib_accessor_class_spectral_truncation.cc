@@ -10,41 +10,38 @@
 
 #include "grib_accessor_class_spectral_truncation.h"
 
-grib_accessor_class_spectral_truncation_t _grib_accessor_class_spectral_truncation{ "spectral_truncation" };
-grib_accessor_class* grib_accessor_class_spectral_truncation = &_grib_accessor_class_spectral_truncation;
+grib_accessor_spectral_truncation_t _grib_accessor_spectral_truncation{};
+grib_accessor* grib_accessor_spectral_truncation = &_grib_accessor_spectral_truncation;
 
-
-void grib_accessor_class_spectral_truncation_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_spectral_truncation_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_long_t::init(a, l, c);
-    grib_accessor_spectral_truncation_t* self = (grib_accessor_spectral_truncation_t*)a;
+    grib_accessor_long_t::init(l, c);
     int n = 0;
 
-    self->J = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->K = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->M = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->T = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    J_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    K_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    M_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    T_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
 
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_spectral_truncation_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_spectral_truncation_t::unpack_long(long* val, size_t* len)
 {
-    grib_accessor_spectral_truncation_t* self = (grib_accessor_spectral_truncation_t*)a;
-    int ret = GRIB_SUCCESS;
+    int ret = 0;
 
     long J, K, M, T, Tc;
 
     if (*len < 1)
         return GRIB_ARRAY_TOO_SMALL;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->J, &J)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), J_, &J)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->K, &K)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), K_, &K)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->M, &M)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), M_, &M)) != GRIB_SUCCESS)
         return ret;
 
     Tc = -1;
@@ -62,17 +59,17 @@ int grib_accessor_class_spectral_truncation_t::unpack_long(grib_accessor* a, lon
     }
     *val = Tc;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->T, &T)) != GRIB_SUCCESS) {
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), T_, &T)) != GRIB_SUCCESS) {
         if (Tc == -1)
-            grib_context_log(a->context, GRIB_LOG_ERROR,
+            grib_context_log(context_, GRIB_LOG_ERROR,
                              "%s. Spectral Truncation Type Unknown: %s=%ld %s=%ld %s=%ld",
-                             a->name, self->J, J, self->K, K, self->M, M);
+                             name_, J, J, K, K, M_, M);
         Tc = 0;
-        grib_set_long(grib_handle_of_accessor(a), self->T, Tc);
+        grib_set_long(grib_handle_of_accessor(this), T_, Tc);
     }
     else {
         if (Tc != -1 && Tc != T)
-            grib_set_long(grib_handle_of_accessor(a), self->T, Tc);
+            grib_set_long(grib_handle_of_accessor(this), T_, Tc);
     }
 
     if (ret == GRIB_SUCCESS)

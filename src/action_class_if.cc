@@ -138,7 +138,7 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
     as = grib_accessor_factory(p, act, 0, NULL);
     if (!as)
         return GRIB_INTERNAL_ERROR;
-    gs = as->sub_section;
+    gs = as->sub_section_;
     grib_push_accessor(as, p->block);
 
     if ((ret = grib_expression_evaluate_long(p->h, a->expression, &lres)) != GRIB_SUCCESS)
@@ -266,7 +266,7 @@ static grib_action* reparse(grib_action* a, grib_accessor* acc, int* doit)
     /* printf("reparse %s %s\n",a->name,acc->name); */
 
     if ((ret = grib_expression_evaluate_long(grib_handle_of_accessor(acc), self->expression, &lres)) != GRIB_SUCCESS)
-        grib_context_log(acc->context,
+        grib_context_log(acc->context_,
                          GRIB_LOG_ERROR, "action_class_if::reparse: grib_expression_evaluate_long failed: %s",
                          grib_get_error_message(ret));
 

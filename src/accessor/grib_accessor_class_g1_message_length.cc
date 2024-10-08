@@ -11,15 +11,13 @@
 
 #include "grib_accessor_class_g1_message_length.h"
 
-grib_accessor_class_g1_message_length_t _grib_accessor_class_g1_message_length{ "g1_message_length" };
-grib_accessor_class* grib_accessor_class_g1_message_length = &_grib_accessor_class_g1_message_length;
+grib_accessor_g1_message_length_t _grib_accessor_g1_message_length{};
+grib_accessor* grib_accessor_g1_message_length = &_grib_accessor_g1_message_length;
 
-
-void grib_accessor_class_g1_message_length_t::init(grib_accessor* a, const long len, grib_arguments* args)
+void grib_accessor_g1_message_length_t::init(const long len, grib_arguments* args)
 {
-    grib_accessor_class_section_length_t::init(a, len, args);
-    grib_accessor_g1_message_length_t* self = (grib_accessor_g1_message_length_t*)a;
-    self->sec4_length                       = grib_arguments_get_name(grib_handle_of_accessor(a), args, 0);
+    grib_accessor_section_length_t::init(len, args);
+    sec4_length_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, 0);
 }
 
 int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s4,
@@ -32,16 +30,16 @@ int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s
         return GRIB_NOT_FOUND;
     if (!s4) {
         *sec4_len     = 0;
-        off           = tl->offset * 8;
-        *total_length = grib_decode_unsigned_long(h->buffer->data, &off, tl->length * 8);
+        off           = tl->offset_ * 8;
+        *total_length = grib_decode_unsigned_long(h->buffer->data, &off, tl->length_ * 8);
         return GRIB_SUCCESS;
     }
 
-    off  = tl->offset * 8;
-    tlen = grib_decode_unsigned_long(h->buffer->data, &off, tl->length * 8);
+    off  = tl->offset_ * 8;
+    tlen = grib_decode_unsigned_long(h->buffer->data, &off, tl->length_ * 8);
 
-    off  = s4->offset * 8;
-    slen = grib_decode_unsigned_long(h->buffer->data, &off, s4->length * 8);
+    off  = s4->offset_ * 8;
+    slen = grib_decode_unsigned_long(h->buffer->data, &off, s4->length_ * 8);
 
     /* printf("\nlarge grib tlen=%ld slen=%ld diff=%ld\n",tlen&0x7fffff,slen,tlen-slen); */
 
@@ -52,7 +50,7 @@ int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s
         tlen -= slen;
         tlen += 4;
 
-        slen = tlen - s4->offset - 4; /* 4 is for 7777 */
+        slen = tlen - s4->offset_ - 4; /* 4 is for 7777 */
     }
 
     *total_length = tlen;
@@ -61,28 +59,27 @@ int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_g1_message_length_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_g1_message_length_t::pack_long(const long* val, size_t* len)
 {
-    grib_accessor_g1_message_length_t* self = (grib_accessor_g1_message_length_t*)a;
-    /*grib_accessor_class* super = *(a->cclass->super);*/
+    /*grib_accessor* super = *(cclass_ ->super);*/
 
     /* Here we assume that the totalLength will be coded AFTER the section4 length, and
        the section4 length will be overwritten by the totalLength accessor for large GRIBs */
 
-    grib_accessor* s4 = grib_find_accessor(grib_handle_of_accessor(a), self->sec4_length);
+    grib_accessor* s4 = grib_find_accessor(grib_handle_of_accessor(this), sec4_length_);
     long tlen, slen;
     long t120;
     int ret;
 
     tlen = *val;
-    if ((tlen < 0x800000 || !a->context->gribex_mode_on) && tlen < 0xFFFFFF) {
+    if ((tlen < 0x800000 || !context_->gribex_mode_on) && tlen < 0xFFFFFF) {
         /* printf("ENCODING small grib total = %ld\n",tlen); */
         /*return super->pack_long(a,val,len);*/
 
         /* Do not directly call pack_long on base class */
         /* because in this special case we want to skip the checks. */
         /* So we call the helper function which has an extra argument */
-        return pack_long_unsigned_helper(a, val, len, /*check=*/0);
+        return pack_long_unsigned_helper(val, len, /*check=*/0);
     }
 
     if (!s4)
@@ -100,23 +97,23 @@ int grib_accessor_class_g1_message_length_t::pack_long(grib_accessor* a, const l
 
     *len = 1;
     /* Do not do the length checks in this special case */
-    if ((ret = pack_long_unsigned_helper(a, &tlen, len, /*check=*/0)) != GRIB_SUCCESS)
+    if ((ret = pack_long_unsigned_helper(&tlen, len, /*check=*/0)) != GRIB_SUCCESS)
         return ret;
 
     // if((ret = super->pack_long(a,&tlen,len)) != GRIB_SUCCESS) return ret;
 
     {
         long total_length = -1, sec4_length = -1;
-        grib_get_g1_message_size(grib_handle_of_accessor(a), a,
-                                 grib_find_accessor(grib_handle_of_accessor(a), self->sec4_length),
+        grib_get_g1_message_size(grib_handle_of_accessor(this), this,
+                                 grib_find_accessor(grib_handle_of_accessor(this), sec4_length_),
                                  &total_length, &sec4_length);
         if (total_length != *val) {
-            const char* cclass_name = a->cclass->name;
-            grib_context_log(a->context, GRIB_LOG_ERROR,
+            const char* cclass_name = class_name_;
+            grib_context_log(context_, GRIB_LOG_ERROR,
                              "%s %s: Failed to set GRIB1 message length to %ld"
                              " (actual length=%ld)",
                              cclass_name, __func__, *val, total_length);
-            grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Try encoding as GRIB2\n");
+            grib_context_log(context_, GRIB_LOG_ERROR, "Hint: Try encoding as GRIB2\n");
             return GRIB_ENCODING_ERROR;
         }
     }
@@ -124,14 +121,13 @@ int grib_accessor_class_g1_message_length_t::pack_long(grib_accessor* a, const l
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_g1_message_length_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_g1_message_length_t::unpack_long(long* val, size_t* len)
 {
-    grib_accessor_g1_message_length_t* self = (grib_accessor_g1_message_length_t*)a;
     int ret;
     long total_length, sec4_length;
 
-    if ((ret = grib_get_g1_message_size(grib_handle_of_accessor(a), a,
-                                        grib_find_accessor(grib_handle_of_accessor(a), self->sec4_length),
+    if ((ret = grib_get_g1_message_size(grib_handle_of_accessor(this), this,
+                                        grib_find_accessor(grib_handle_of_accessor(this), sec4_length_),
                                         &total_length, &sec4_length)) != GRIB_SUCCESS) {
         return ret;
     }

@@ -111,17 +111,17 @@ static void aliases(grib_dumper* d, grib_accessor* a)
     if ((d->option_flags & GRIB_DUMP_FLAG_ALIASES) == 0)
         return;
 
-    if (a->all_names[1]) {
+    if (a->all_names_[1]) {
         const char* sep = "";
         fprintf(self->dumper.out, "  ");
         fprintf(self->dumper.out, "# ALIASES: ");
 
         for (i = 1; i < MAX_ACCESSOR_NAMES; i++) {
-            if (a->all_names[i]) {
-                if (a->all_name_spaces[i])
-                    fprintf(self->dumper.out, "%s%s.%s", sep, a->all_name_spaces[i], a->all_names[i]);
+            if (a->all_names_[i]) {
+                if (a->all_name_spaces_[i])
+                    fprintf(self->dumper.out, "%s%s.%s", sep, a->all_name_spaces_[i], a->all_names_[i]);
                 else
-                    fprintf(self->dumper.out, "%s%s", sep, a->all_names[i]);
+                    fprintf(self->dumper.out, "%s%s", sep, a->all_names_[i]);
             }
             sep = ", ";
         }
@@ -139,7 +139,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     int i;
     long count = 0;
 
-    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+    if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
     a->value_count(&count);
@@ -149,11 +149,11 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0) {
         fprintf(self->dumper.out, "  ");
-        fprintf(self->dumper.out, "# type %s (int)\n", a->creator->op);
+        fprintf(self->dumper.out, "# type %s (int)\n", a->creator_->op);
     }
 
     if (size > 1) {
-        values = (long*)grib_context_malloc_clear(a->context, sizeof(long) * size);
+        values = (long*)grib_context_malloc_clear(a->context_, sizeof(long) * size);
         err    = a->unpack_long(values, &size2);
     }
     else {
@@ -167,7 +167,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         fprintf(self->dumper.out, "# %s \n", comment);
     }
 
-    if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) {
+    if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) {
         fprintf(self->dumper.out, "  ");
         fprintf(self->dumper.out, "#-READ ONLY- ");
     }
@@ -177,7 +177,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     if (size > 1) {
         int cols   = 19;
         int icount = 0;
-        fprintf(self->dumper.out, "%s = { \t", a->name);
+        fprintf(self->dumper.out, "%s = { \t", a->name_);
         for (i = 0; i < size; i++) {
             if (icount > cols) {
                 fprintf(self->dumper.out, "\n\t\t\t\t");
@@ -187,13 +187,13 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
             icount++;
         }
         fprintf(self->dumper.out, "}\n");
-        grib_context_free(a->context, values);
+        grib_context_free(a->context_, values);
     }
     else {
-        if (((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && a->is_missing_internal())
-            fprintf(self->dumper.out, "%s = MISSING;", a->name);
+        if (((a->flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && a->is_missing_internal())
+            fprintf(self->dumper.out, "%s = MISSING;", a->name_);
         else
-            fprintf(self->dumper.out, "%s = %ld;", a->name, value);
+            fprintf(self->dumper.out, "%s = %ld;", a->name_, value);
     }
 
     if (err) {
@@ -216,7 +216,7 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
     size_t size   = 1;
     int err       = 0;
 
-    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+    if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
     err = a->unpack_long(&lvalue, &size);
@@ -225,7 +225,7 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
 
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0) {
         fprintf(self->dumper.out, "  ");
-        fprintf(self->dumper.out, "# type %s \n", a->creator->op);
+        fprintf(self->dumper.out, "# type %s \n", a->creator_->op);
     }
 
     aliases(d, a);
@@ -236,15 +236,15 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
 
     fprintf(self->dumper.out, "  ");
     fprintf(self->dumper.out, "# flags: ");
-    for (long i = 0; i < (a->length * 8); i++) {
-        if (test_bit(lvalue, a->length * 8 - i - 1))
+    for (long i = 0; i < (a->length_ * 8); i++) {
+        if (test_bit(lvalue, a->length_ * 8 - i - 1))
             fprintf(self->dumper.out, "1");
         else
             fprintf(self->dumper.out, "0");
     }
     fprintf(self->dumper.out, "\n");
 
-    if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) {
+    if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) {
         fprintf(self->dumper.out, "  ");
         fprintf(self->dumper.out, "#-READ ONLY- ");
     }
@@ -252,10 +252,10 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
         fprintf(self->dumper.out, "  ");
     }
 
-    if (((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && a->is_missing_internal())
-        fprintf(self->dumper.out, "%s = MISSING;", a->name);
+    if (((a->flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && a->is_missing_internal())
+        fprintf(self->dumper.out, "%s = MISSING;", a->name_);
     else {
-        fprintf(self->dumper.out, "%s = %ld;", a->name, lvalue);
+        fprintf(self->dumper.out, "%s = %ld;", a->name_, lvalue);
     }
 
     if (err) {
@@ -273,14 +273,14 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     size_t size               = 1;
     int err                   = a->unpack_double(&value, &size);
 
-    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+    if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
     print_offset(self->dumper.out, d, a);
 
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0) {
         fprintf(self->dumper.out, "  ");
-        fprintf(self->dumper.out, "# type %s (double)\n", a->creator->op);
+        fprintf(self->dumper.out, "# type %s (double)\n", a->creator_->op);
     }
 
     aliases(d, a);
@@ -290,17 +290,17 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     }
 
 
-    if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) {
+    if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) {
         fprintf(self->dumper.out, "  ");
         fprintf(self->dumper.out, "#-READ ONLY- ");
     }
     else
         fprintf(self->dumper.out, "  ");
 
-    if (((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && a->is_missing_internal())
-        fprintf(self->dumper.out, "%s = MISSING;", a->name);
+    if (((a->flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && a->is_missing_internal())
+        fprintf(self->dumper.out, "%s = MISSING;", a->name_);
     else
-        fprintf(self->dumper.out, "%s = %g;", a->name, value);
+        fprintf(self->dumper.out, "%s = %g;", a->name_, value);
 
     if (err) {
         fprintf(self->dumper.out, "  ");
@@ -315,7 +315,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     grib_dumper_default* self = (grib_dumper_default*)d;
     char** values;
     size_t size = 0, i = 0;
-    grib_context* c = a->context;
+    grib_context* c = a->context_;
     int err         = 0;
     int tab         = 0;
     long count      = 0;
@@ -335,14 +335,14 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
 
     err = a->unpack_string_array(values, &size);
 
-    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+    if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
     print_offset(self->dumper.out, d, a);
 
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0) {
         fprintf(self->dumper.out, "  ");
-        fprintf(self->dumper.out, "# type %s (str)\n", a->creator->op);
+        fprintf(self->dumper.out, "# type %s (str)\n", a->creator_->op);
     }
 
     aliases(d, a);
@@ -351,7 +351,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         fprintf(self->dumper.out, "# %s \n", comment);
     }
 
-    if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) {
+    if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) {
         fprintf(self->dumper.out, "  ");
         fprintf(self->dumper.out, "#-READ ONLY- ");
         tab = 13;
@@ -361,9 +361,9 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     }
 
     tab++;
-    fprintf(self->dumper.out, "%s = {\n", a->name);
+    fprintf(self->dumper.out, "%s = {\n", a->name_);
     for (i = 0; i < size; i++) {
-        fprintf(self->dumper.out, "%-*s\"%s\",\n", (int)(tab + strlen(a->name) + 4), " ", values[i]);
+        fprintf(self->dumper.out, "%-*s\"%s\",\n", (int)(tab + strlen(a->name_) + 4), " ", values[i]);
     }
     fprintf(self->dumper.out, "  }");
 
@@ -382,10 +382,10 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     char* value               = NULL;
     char* p                   = NULL;
     size_t size               = 0;
-    grib_context* c           = a->context;
+    grib_context* c           = a->context_;
     int err = 0;
 
-    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0) {
+    if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0) {
         return;
     }
 
@@ -412,7 +412,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0) {
         fprintf(self->dumper.out, "  ");
-        fprintf(self->dumper.out, "# type %s (str)\n", a->creator->op);
+        fprintf(self->dumper.out, "# type %s (str)\n", a->creator_->op);
     }
 
     aliases(d, a);
@@ -421,17 +421,17 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         fprintf(self->dumper.out, "# %s \n", comment);
     }
 
-    if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) {
+    if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) {
         fprintf(self->dumper.out, "  ");
         fprintf(self->dumper.out, "#-READ ONLY- ");
     }
     else
         fprintf(self->dumper.out, "  ");
 
-    if (((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && a->is_missing_internal())
-        fprintf(self->dumper.out, "%s = MISSING;", a->name);
+    if (((a->flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && a->is_missing_internal())
+        fprintf(self->dumper.out, "%s = MISSING;", a->name_);
     else
-        fprintf(self->dumper.out, "%s = %s;", a->name, value);
+        fprintf(self->dumper.out, "%s = %s;", a->name_, value);
 
 
     if (err) {
@@ -448,22 +448,22 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
 //     grib_dumper_default *self = (grib_dumper_default*)d;
 //     int i,k,err =0;
 //     size_t more = 0;
-//     size_t size = a->length;
+//     size_t size = a->length_;
 //     unsigned char* buf = grib_context_malloc(d->context,size);
 
-//     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+//     if ( (a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
 //         return;
 
 
-//     if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
+//     if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY)
 //         fprintf(self->dumper.out,"-READ ONLY- ");
 
 //     /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
 //     /*print_offset(self->dumper.out,self->begin,self->theEnd);*/
 //     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
-//         fprintf(self->dumper.out,"%s ",a->creator->op);
+//         fprintf(self->dumper.out,"%s ",a->creator_->op);
 
-//     fprintf(self->dumper.out,"%s = %ld",a->name,a->length);
+//     fprintf(self->dumper.out,"%s = %ld",a->name_,a->length_);
 //     aliases(d,a);
 //     fprintf(self->dumper.out," {");
 
@@ -512,7 +512,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
 //     }
 
 //     for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
-//     fprintf(self->dumper.out,"} # %s %s \n",a->creator->op, a->name);
+//     fprintf(self->dumper.out,"} # %s %s \n",a->creator_->op, a->name_);
 //     grib_context_free(d->context,buf);
 }
 
@@ -525,7 +525,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     size_t size = 0;
     long count  = 0;
 
-    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+    if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
     a->value_count(&count);
@@ -549,19 +549,19 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         else if (native_type == GRIB_TYPE_STRING)
             strcpy(type_name, "(str)");
         fprintf(self->dumper.out, "  ");
-        fprintf(self->dumper.out, "# type %s %s\n", a->creator->op, type_name);
+        fprintf(self->dumper.out, "# type %s %s\n", a->creator_->op, type_name);
     }
 
     aliases(d, a);
 
-    if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) {
+    if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) {
         fprintf(self->dumper.out, "  ");
         fprintf(self->dumper.out, "#-READ ONLY- ");
     }
     else
         fprintf(self->dumper.out, "  ");
 
-    fprintf(self->dumper.out, "%s(%zu) = ", a->name, size);
+    fprintf(self->dumper.out, "%s(%zu) = ", a->name_, size);
     aliases(d, a);
     fprintf(self->dumper.out, " {");
 
@@ -614,7 +614,7 @@ static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment)
     /*grib_dumper_default *self = (grib_dumper_default*)d;
 
   for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
-  fprintf(self->dumper.out,"----> %s %s %s\n",a->creator->op, a->name,comment?comment:"");*/
+  fprintf(self->dumper.out,"----> %s %s %s\n",a->creator_->op, a->name_,comment?comment:"");*/
 }
 
 static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block)
@@ -624,9 +624,9 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
     int is_default_section    = 0;
     char* upper               = NULL;
     char *p = NULL, *q = NULL;
-    if (!strncmp(a->name, "section", 7))
+    if (!strncmp(a->name_, "section", 7))
         is_default_section = 1;
-    if (!strcmp(a->creator->op, "bufr_group")) {
+    if (!strcmp(a->creator_->op, "bufr_group")) {
         dump_long(d, a, NULL);
     }
 
@@ -634,9 +634,9 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
     if (is_default_section) {
         /* char tmp[512]; */
         /* grib_section* s = a->sub_section; */
-        upper = (char*)malloc(strlen(a->name) + 1);
+        upper = (char*)malloc(strlen(a->name_) + 1);
         Assert(upper);
-        p = (char*)a->name;
+        p = (char*)a->name_;
         q = upper;
         while (*p != '\0') {
             *q = toupper(*p);
@@ -648,7 +648,7 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         /* snprintf(tmp, sizeof(tmp), "%s ( length=%ld, padding=%ld )", upper, (long)s->length, (long)s->padding); */
         /* fprintf(self->dumper.out,"#==============   %-38s   ==============\n",tmp); */
         free(upper);
-        self->section_offset = a->offset;
+        self->section_offset = a->offset_;
     }
 
     /*printf("------------- section_offset = %ld\n",self->section_offset);*/
@@ -656,7 +656,7 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
     grib_dump_accessors_block(d, block);
     d->depth -= 3;
     /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
-    /*fprintf(self->dumper.out,"<===== %s %s\n",a->creator->op, a->name);*/
+    /*fprintf(self->dumper.out,"<===== %s %s\n",a->creator_->op, a->name_);*/
 }
 
 static void print_offset(FILE* out, grib_dumper* d, grib_accessor* a)
@@ -668,10 +668,10 @@ static void print_offset(FILE* out, grib_dumper* d, grib_accessor* a)
     grib_dumper_default* self = (grib_dumper_default*)d;
     grib_handle* h            = grib_handle_of_accessor(a);
 
-    theBegin = a->offset - self->section_offset + 1;
+    theBegin = a->offset_ - self->section_offset + 1;
     theEnd = a->get_next_position_offset() - self->section_offset;
 
-    if ((d->option_flags & GRIB_DUMP_FLAG_HEXADECIMAL) != 0 && a->length != 0) {
+    if ((d->option_flags & GRIB_DUMP_FLAG_HEXADECIMAL) != 0 && a->length_ != 0) {
         if (theBegin == theEnd) {
             fprintf(self->dumper.out, "  ");
             fprintf(out, "# Octet: ");
@@ -683,7 +683,7 @@ static void print_offset(FILE* out, grib_dumper* d, grib_accessor* a)
             fprintf(out, "%ld-%ld", theBegin, theEnd);
         }
         fprintf(out, "  = ");
-        size = a->length;
+        size = a->length_;
 
         if (!(d->option_flags & GRIB_DUMP_FLAG_ALL_DATA) && size > 112) {
             more = size - 112;
@@ -692,7 +692,7 @@ static void print_offset(FILE* out, grib_dumper* d, grib_accessor* a)
 
         k = 0;
         while (k < size) {
-            offset = a->offset;
+            offset = a->offset_;
             for (i = 0; i < 14 && k < size; i++, k++) {
                 fprintf(out, " 0x%.2X", h->buffer->data[offset]);
                 offset++;

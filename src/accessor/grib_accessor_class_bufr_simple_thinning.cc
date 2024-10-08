@@ -11,39 +11,35 @@
 
 #include "grib_accessor_class_bufr_simple_thinning.h"
 
-grib_accessor_class_bufr_simple_thinning_t _grib_accessor_class_bufr_simple_thinning{ "bufr_simple_thinning" };
-grib_accessor_class* grib_accessor_class_bufr_simple_thinning = &_grib_accessor_class_bufr_simple_thinning;
+grib_accessor_bufr_simple_thinning_t _grib_accessor_bufr_simple_thinning{};
+grib_accessor* grib_accessor_bufr_simple_thinning = &_grib_accessor_bufr_simple_thinning;
 
-
-void grib_accessor_class_bufr_simple_thinning_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+void grib_accessor_bufr_simple_thinning_t::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_class_gen_t::init(a, len, arg);
-    grib_accessor_bufr_simple_thinning_t* self = (grib_accessor_bufr_simple_thinning_t*)a;
-    grib_handle* h                             = grib_handle_of_accessor(a);
-    int n                                      = 0;
+    grib_accessor_gen_t::init(len, arg);
+    grib_handle* h = grib_handle_of_accessor(this);
+    int n          = 0;
 
-    a->length                         = 0;
-    self->doExtractSubsets            = grib_arguments_get_name(h, arg, n++);
-    self->numberOfSubsets             = grib_arguments_get_name(h, arg, n++);
-    self->extractSubsetList           = grib_arguments_get_name(h, arg, n++);
-    self->simpleThinningStart         = grib_arguments_get_name(h, arg, n++);
-    self->simpleThinningMissingRadius = grib_arguments_get_name(h, arg, n++);
-    self->simpleThinningSkip          = grib_arguments_get_name(h, arg, n++);
+    length_                      = 0;
+    doExtractSubsets_            = grib_arguments_get_name(h, arg, n++);
+    numberOfSubsets_             = grib_arguments_get_name(h, arg, n++);
+    extractSubsetList_           = grib_arguments_get_name(h, arg, n++);
+    simpleThinningStart_         = grib_arguments_get_name(h, arg, n++);
+    simpleThinningMissingRadius_ = grib_arguments_get_name(h, arg, n++);
+    simpleThinningSkip_          = grib_arguments_get_name(h, arg, n++);
 
-    a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
+    flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }
 
-int grib_accessor_class_bufr_simple_thinning_t::get_native_type(grib_accessor* a)
+long grib_accessor_bufr_simple_thinning_t::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
 
-static int apply_thinning(grib_accessor* a)
+int grib_accessor_bufr_simple_thinning_t::apply_thinning()
 {
-    const grib_accessor_bufr_simple_thinning_t* self = (grib_accessor_bufr_simple_thinning_t*)a;
-
     long skip;
-    grib_handle* h  = grib_handle_of_accessor(a);
+    grib_handle* h  = grib_handle_of_accessor(this);
     grib_context* c = h->context;
     long compressed = 0, nsubsets;
     grib_iarray* subsets;
@@ -55,21 +51,21 @@ static int apply_thinning(grib_accessor* a)
         return ret;
     if (compressed) {
         long numberOfSubsets = 0;
-        ret                  = grib_get_long(h, self->numberOfSubsets, &numberOfSubsets);
+        ret                  = grib_get_long(h, numberOfSubsets_, &numberOfSubsets);
         if (ret)
             return ret;
 
-        ret = grib_get_long(h, self->simpleThinningStart, &start);
+        ret = grib_get_long(h, simpleThinningStart_, &start);
         if (ret)
             return ret;
 
-        ret = grib_get_long(h, self->simpleThinningSkip, &skip);
+        ret = grib_get_long(h, simpleThinningSkip_, &skip);
         if (ret)
             return ret;
         if (skip <= 0)
             return GRIB_INVALID_KEY_VALUE;
 
-        ret = grib_get_long(h, self->simpleThinningMissingRadius, &radius);
+        ret = grib_get_long(h, simpleThinningMissingRadius_, &radius);
         if (ret)
             return ret;
 
@@ -82,7 +78,7 @@ static int apply_thinning(grib_accessor* a)
 
         if (nsubsets != 0) {
             subsets_ar = grib_iarray_get_array(subsets);
-            ret        = grib_set_long_array(h, self->extractSubsetList, subsets_ar, nsubsets);
+            ret        = grib_set_long_array(h, extractSubsetList_, subsets_ar, nsubsets);
             grib_context_free(c, subsets_ar);
             if (ret)
                 return ret;
@@ -91,7 +87,7 @@ static int apply_thinning(grib_accessor* a)
             if (ret)
                 return ret;
 
-            ret = grib_set_long(h, self->doExtractSubsets, 1);
+            ret = grib_set_long(h, doExtractSubsets_, 1);
             if (ret)
                 return ret;
         }
@@ -104,15 +100,13 @@ static int apply_thinning(grib_accessor* a)
     return ret;
 }
 
-int grib_accessor_class_bufr_simple_thinning_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_bufr_simple_thinning_t::pack_long(const long* val, size_t* len)
 {
-    const grib_accessor_bufr_simple_thinning_t* self = (grib_accessor_bufr_simple_thinning_t*)a;
-
     if (*len == 0)
         return GRIB_SUCCESS;
-    int err = apply_thinning(a);
+    int err = apply_thinning();
     if (err)
         return err;
 
-    return grib_set_long(a->parent->h, self->doExtractSubsets, 1);
+    return grib_set_long(parent_->h, doExtractSubsets_, 1);
 }

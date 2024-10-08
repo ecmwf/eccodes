@@ -119,12 +119,12 @@ static grib_concept_value* get_concept(grib_handle* h, grib_action_concept* self
 
 grib_concept_value* action_concept_get_concept(grib_accessor* a)
 {
-    return get_concept(grib_handle_of_accessor(a), (grib_action_concept*)a->creator);
+    return get_concept(grib_handle_of_accessor(a), (grib_action_concept*)a->creator_);
 }
 
 int action_concept_get_nofail(grib_accessor* a)
 {
-    const grib_action_concept* self = (grib_action_concept*)a->creator;
+    const grib_action_concept* self = (grib_action_concept*)a->creator_;
     return self->nofail;
 }
 

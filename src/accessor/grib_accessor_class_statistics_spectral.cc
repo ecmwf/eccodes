@@ -11,59 +11,57 @@
 
 #include "grib_accessor_class_statistics_spectral.h"
 
-grib_accessor_class_statistics_spectral_t _grib_accessor_class_statistics_spectral{ "statistics_spectral" };
-grib_accessor_class* grib_accessor_class_statistics_spectral = &_grib_accessor_class_statistics_spectral;
+grib_accessor_statistics_spectral_t _grib_accessor_statistics_spectral{};
+grib_accessor* grib_accessor_statistics_spectral = &_grib_accessor_statistics_spectral;
 
-
-void grib_accessor_class_statistics_spectral_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_statistics_spectral_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_abstract_vector_t::init(a, l, c);
-    grib_accessor_statistics_spectral_t* self = (grib_accessor_statistics_spectral_t*)a;
+    grib_accessor_abstract_vector_t::init(l, c);
     int n = 0;
 
-    self->values = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->J      = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->K      = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->M      = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->JS     = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    values_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    J_      = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    K_      = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    M_      = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    JS_     = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
 
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
 
-    self->number_of_elements = 4;
-    self->v = (double*)grib_context_malloc(a->context, sizeof(double) * self->number_of_elements);
+    number_of_elements_ = 4;
+    v_                  = (double*)grib_context_malloc(context_,
+                                                       sizeof(double) * number_of_elements_);
 
-    a->length = 0;
-    a->dirty  = 1;
+    length_ = 0;
+    dirty_  = 1;
 }
 
-int grib_accessor_class_statistics_spectral_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+int grib_accessor_statistics_spectral_t::unpack_double(double* val, size_t* len)
 {
-    grib_accessor_statistics_spectral_t* self = (grib_accessor_statistics_spectral_t*)a;
     int ret = 0, i = 0;
     double* values;
     size_t size = 0;
     long J, K, M, N;
     double avg, enorm, sd;
-    grib_context* c = a->context;
-    grib_handle* h  = grib_handle_of_accessor(a);
+    grib_context* c = context_;
+    grib_handle* h  = grib_handle_of_accessor(this);
 
-    if (!a->dirty)
+    if (!dirty_)
         return GRIB_SUCCESS;
 
-    if (*len != self->number_of_elements)
+    if (*len != number_of_elements_)
         return GRIB_ARRAY_TOO_SMALL;
 
-    if ((ret = grib_get_size(h, self->values, &size)) != GRIB_SUCCESS)
+    if ((ret = grib_get_size(h, values_, &size)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long(grib_handle_of_accessor(a), self->J, &J)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long(grib_handle_of_accessor(this), J_, &J)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long(grib_handle_of_accessor(a), self->K, &K)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long(grib_handle_of_accessor(this), K_, &K)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long(grib_handle_of_accessor(a), self->M, &M)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long(grib_handle_of_accessor(this), M_, &M)) != GRIB_SUCCESS)
         return ret;
 
     if (J != M || M != K)
@@ -72,7 +70,7 @@ int grib_accessor_class_statistics_spectral_t::unpack_double(grib_accessor* a, d
     N = (M + 1) * (M + 2) / 2;
 
     if (2 * N != size) {
-        grib_context_log(a->context, GRIB_LOG_ERROR,
+        grib_context_log(context_, GRIB_LOG_ERROR,
                          "wrong number of components for spherical harmonics %ld != %ld", 2 * N, size);
         return GRIB_WRONG_ARRAY_SIZE;
     }
@@ -81,7 +79,7 @@ int grib_accessor_class_statistics_spectral_t::unpack_double(grib_accessor* a, d
     if (!values)
         return GRIB_OUT_OF_MEMORY;
 
-    if ((ret = grib_get_double_array_internal(h, self->values, values, &size)) != GRIB_SUCCESS) {
+    if ((ret = grib_get_double_array_internal(h, values_, values, &size)) != GRIB_SUCCESS) {
         grib_context_free(c, values);
         return ret;
     }
@@ -100,36 +98,34 @@ int grib_accessor_class_statistics_spectral_t::unpack_double(grib_accessor* a, d
     sd    = sqrt(sd);
     enorm = sqrt(enorm);
 
-    a->dirty = 0;
+    dirty_ = 0;
 
     grib_context_free(c, values);
 
-    self->v[0] = avg;
-    self->v[1] = enorm;
-    self->v[2] = sd;
-    self->v[3] = sd == 0 ? 1 : 0;
+    v_[0] = avg;
+    v_[1] = enorm;
+    v_[2] = sd;
+    v_[3] = sd == 0 ? 1 : 0;
 
-    for (i = 0; i < self->number_of_elements; i++)
-        val[i] = self->v[i];
+    for (i = 0; i < number_of_elements_; i++)
+        val[i] = v_[i];
 
     return ret;
 }
 
-int grib_accessor_class_statistics_spectral_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_statistics_spectral_t::value_count(long* count)
 {
-    grib_accessor_statistics_spectral_t* self = (grib_accessor_statistics_spectral_t*)a;
-    *count = self->number_of_elements;
+    *count = number_of_elements_;
     return 0;
 }
 
-void grib_accessor_class_statistics_spectral_t::destroy(grib_context* c, grib_accessor* a)
+void grib_accessor_statistics_spectral_t::destroy(grib_context* c)
 {
-    grib_accessor_statistics_spectral_t* self = (grib_accessor_statistics_spectral_t*)a;
-    grib_context_free(c, self->v);
-    grib_accessor_class_abstract_vector_t::destroy(c, a);
+    grib_context_free(c, v_);
+    grib_accessor_abstract_vector_t::destroy(c);
 }
 
-int grib_accessor_class_statistics_spectral_t::compare(grib_accessor* a, grib_accessor* b)
+int grib_accessor_statistics_spectral_t::compare(grib_accessor* b)
 {
     int retval   = GRIB_SUCCESS;
     double* aval = 0;
@@ -140,7 +136,7 @@ int grib_accessor_class_statistics_spectral_t::compare(grib_accessor* a, grib_ac
     int err     = 0;
     long count  = 0;
 
-    err = a->value_count(&count);
+    err = value_count(&count);
     if (err)
         return err;
     alen = count;
@@ -153,21 +149,21 @@ int grib_accessor_class_statistics_spectral_t::compare(grib_accessor* a, grib_ac
     if (alen != blen)
         return GRIB_COUNT_MISMATCH;
 
-    aval = (double*)grib_context_malloc(a->context, alen * sizeof(double));
-    bval = (double*)grib_context_malloc(b->context, blen * sizeof(double));
+    aval = (double*)grib_context_malloc(context_, alen * sizeof(double));
+    bval = (double*)grib_context_malloc(b->context_, blen * sizeof(double));
 
-    b->dirty = 1;
-    a->dirty = 1;
+    b->dirty_ = 1;
+    dirty_    = 1;
 
-    a->unpack_double(aval, &alen);
+    unpack_double(aval, &alen);
     b->unpack_double(bval, &blen);
     retval = GRIB_SUCCESS;
     for (size_t i = 0; i < alen && retval == GRIB_SUCCESS; ++i) {
         if (aval[i] != bval[i]) retval = GRIB_DOUBLE_VALUE_MISMATCH;
     }
 
-    grib_context_free(a->context, aval);
-    grib_context_free(b->context, bval);
+    grib_context_free(context_, aval);
+    grib_context_free(b->context_, bval);
 
     return retval;
 }

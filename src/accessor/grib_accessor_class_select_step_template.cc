@@ -10,39 +10,36 @@
 
 #include "grib_accessor_class_select_step_template.h"
 
-grib_accessor_class_select_step_template_t _grib_accessor_class_select_step_template{ "select_step_template" };
-grib_accessor_class* grib_accessor_class_select_step_template = &_grib_accessor_class_select_step_template;
+grib_accessor_select_step_template_t _grib_accessor_select_step_template{};
+grib_accessor* grib_accessor_select_step_template = &_grib_accessor_select_step_template;
 
-
-void grib_accessor_class_select_step_template_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_select_step_template_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_unsigned_t::init(a, l, c);
-    grib_accessor_select_step_template_t* self = (grib_accessor_select_step_template_t*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
-    int n = 0;
+    grib_accessor_unsigned_t::init(l, c);
+    grib_handle* hand = grib_handle_of_accessor(this);
+    int n             = 0;
 
-    self->productDefinitionTemplateNumber = grib_arguments_get_name(hand, c, n++);
-    self->instant = grib_arguments_get_long(hand, c, n++);
+    productDefinitionTemplateNumber_ = grib_arguments_get_name(hand, c, n++);
+    instant_                         = grib_arguments_get_long(hand, c, n++);
 }
 
-int grib_accessor_class_select_step_template_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_select_step_template_t::unpack_long(long* val, size_t* len)
 {
     *val = 1;
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_select_step_template_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_select_step_template_t::pack_long(const long* val, size_t* len)
 {
-    grib_accessor_select_step_template_t* self = (grib_accessor_select_step_template_t*)a;
-    grib_handle* hand                          = grib_handle_of_accessor(a);
-    long productDefinitionTemplateNumber       = 0;
-    long productDefinitionTemplateNumberNew    = 0;
+    grib_handle* hand                       = grib_handle_of_accessor(this);
+    long productDefinitionTemplateNumber    = 0;
+    long productDefinitionTemplateNumberNew = 0;
 
-    grib_get_long(hand, self->productDefinitionTemplateNumber, &productDefinitionTemplateNumber);
+    grib_get_long(hand, productDefinitionTemplateNumber_, &productDefinitionTemplateNumber);
 
     // DET = deterministic i.e., not ensemble
     // ENS = ensemble system
-    if (self->instant) {
+    if (instant_) {
         // Going from continuous or non-continuous interval to a point-in-time (instantaneous)
         switch (productDefinitionTemplateNumber) {
             case 8:
@@ -168,13 +165,13 @@ int grib_accessor_class_select_step_template_t::pack_long(grib_accessor* a, cons
     }
 
     if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
-        grib_set_long(hand, self->productDefinitionTemplateNumber, productDefinitionTemplateNumberNew);
+        grib_set_long(hand, productDefinitionTemplateNumber_, productDefinitionTemplateNumberNew);
     }
 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_select_step_template_t::value_count(grib_accessor* a, long* c)
+int grib_accessor_select_step_template_t::value_count(long* c)
 {
     *c = 1;
     return 0;

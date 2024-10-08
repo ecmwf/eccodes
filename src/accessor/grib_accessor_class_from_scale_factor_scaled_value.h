@@ -16,19 +16,16 @@
 class grib_accessor_from_scale_factor_scaled_value_t : public grib_accessor_double_t
 {
 public:
-    /* Members defined in from_scale_factor_scaled_value */
-    const char*    scaleFactor;
-    const char*    scaledValue;
-};
-
-class grib_accessor_class_from_scale_factor_scaled_value_t : public grib_accessor_class_double_t
-{
-public:
-    grib_accessor_class_from_scale_factor_scaled_value_t(const char* name) : grib_accessor_class_double_t(name) {}
+    grib_accessor_from_scale_factor_scaled_value_t() :
+        grib_accessor_double_t() { class_name_ = "from_scale_factor_scaled_value"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_from_scale_factor_scaled_value_t{}; }
-    int is_missing(grib_accessor*) override;
-    int pack_double(grib_accessor*, const double* val, size_t* len) override;
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int is_missing() override;
+    int pack_double(const double* val, size_t* len) override;
+    int unpack_double(double* val, size_t* len) override;
+    int value_count(long*) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* scaleFactor_;
+    const char* scaledValue_;
 };

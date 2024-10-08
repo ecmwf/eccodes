@@ -15,16 +15,14 @@
 class grib_accessor_cf_var_name_t : public grib_accessor_ascii_t
 {
 public:
-    /* Members defined in cf_var_name */
-    const char* defaultKey;
-};
-
-class grib_accessor_class_cf_var_name_t : public grib_accessor_class_ascii_t
-{
-public:
-    grib_accessor_class_cf_var_name_t(const char* name) : grib_accessor_class_ascii_t(name) {}
+    grib_accessor_cf_var_name_t() :
+        grib_accessor_ascii_t() { class_name_ = "cf_var_name"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_cf_var_name_t{}; }
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
-    size_t string_length(grib_accessor*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int unpack_string(char*, size_t* len) override;
+    size_t string_length() override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    /* Members defined in cf_var_name */
+    const char* defaultKey_;
 };
