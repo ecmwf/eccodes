@@ -1305,6 +1305,339 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 84 ;
 	}
+#Time-mean wave induced mean sea level correction
+'141098' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 87 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean ratio of wave angular and frequency width
+'141099' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 80 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean number of events in freak waves statistics
+'141100' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 89 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean U-component of atmospheric surface momentum flux
+'141101' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean V-component of atmospheric surface momentum flux
+'141102' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean U-component of surface momentum flux into ocean
+'141103' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 90 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean V-component of surface momentum flux into ocean
+'141104' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 91 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean wave turbulent energy flux into ocean
+'141105' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 92 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean wave directional width of first swell partition
+'141106' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 56 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean wave frequency width of first swell partition
+'141107' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 59 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean wave directional width of second swell partition
+'141108' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 57 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean wave frequency width of second swell partition
+'141109' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 60 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean wave directional width of third swell partition
+'141110' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 58 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean wave frequency width of third swell partition
+'141111' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 61 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean wave energy flux magnitude
+'141112' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 78 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean wave energy flux mean direction
+'141113' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 79 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean significant wave height of all waves with periods within the inclusive range from 10 to 12 seconds
+'141114' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds
+'141115' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean significant wave height of all waves with periods within the inclusive range from 14 to 17 seconds
+'141116' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean significant wave height of all waves with periods within the inclusive range from 17 to 21 seconds
+'141117' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean significant wave height of all waves with periods within the inclusive range from 21 to 25 seconds
+'141118' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean significant wave height of all waves with periods within the inclusive range from 25 to 30 seconds
+'141119' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean significant wave height of all waves with period larger than 10s
+'141120' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean significant wave height of first swell partition
+'141121' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 47 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mean wave direction of first swell partition
+'141122' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 53 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mean wave period of first swell partition
+'141123' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 50 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean significant wave height of second swell partition
+'141124' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 48 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mean wave direction of second swell partition
+'141125' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 54 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mean wave period of second swell partition
+'141126' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 51 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean significant wave height of third swell partition
+'141127' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 49 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mean wave direction of third swell partition
+'141128' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 55 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mean wave period of third swell partition
+'141129' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 52 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean time domain maximum individual crest height
+'141131' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 94 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean time domain maximum individual wave height
+'141132' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 95 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean space time maximum individual crest height
+'141133' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 96 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean space time maximum individual wave height
+'141134' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 97 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean wave Spectral Skewness
+'141207' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean free convective velocity over the oceans
+'141208' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 81 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean air density over the oceans
+'141209' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 82 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean normalized energy flux into waves
+'141211' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 83 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean normalized energy flux into ocean
+'141212' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 85 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean normalized stress into ocean
+'141214' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 84 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean U-component surface stokes drift
+'141215' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 21 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean V-component surface stokes drift
+'141216' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean period corresponding to maximum individual wave height
+'141217' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 23 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean envelop-maximum individual wave height
+'141218' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 93 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mean wave period based on first moment
+'141220' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 25 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean mean zero-crossing wave period
 '141221' = {
 	 discipline = 10 ;
@@ -1312,11 +1645,67 @@
 	 parameterNumber = 28 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean wave spectral directional width
+'141222' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 31 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mean wave period based on first moment for wind waves
+'141223' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 26 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mean wave period based on second moment for wind waves
+'141224' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 29 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean wave spectral directional width for wind waves
+'141225' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 32 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mean wave period based on first moment for swell
+'141226' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 27 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mean wave period based on second moment for swell
+'141227' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 30 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean wave spectral directional width for swell
+'141228' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 33 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean significant height of combined wind waves and swell
 '141229' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mean wave direction
+'141230' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 14 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean peak wave period
@@ -1331,6 +1720,110 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 15 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean coefficient of drag with waves
+'141233' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 16 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean significant height of wind waves
+'141234' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mean direction of wind waves
+'141235' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 75 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mean period of wind waves
+'141236' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 6 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean significant height of total swell
+'141237' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mean direction of total swell
+'141238' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 74 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mean period of total swell
+'141239' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 9 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mean square slope of waves
+'141244' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean 10 metre wind speed
+'141245' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 40 ;
+	 typeOfFirstFixedSurface = 102 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean 10 metre wind direction
+'141249' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 41 ;
+	 typeOfFirstFixedSurface = 102 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean 2D wave spectra (single)
+'141251' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 86 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean wave spectral kurtosis
+'141252' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 43 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean benjamin-Feir index
+'141253' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 44 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean wave spectral peakedness
+'141254' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 98 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Mean sea water temperature in the upper 300 m
@@ -4484,98 +4977,98 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Mean temperature tendency due to short-wave radiation
+#Time-mean temperature tendency due to short-wave radiation
 '235001' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 22 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean temperature tendency due to long-wave radiation
+#Time-mean temperature tendency due to long-wave radiation
 '235002' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 23 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean temperature tendency due to short-wave radiation, clear sky
+#Time-mean temperature tendency due to short wave radiation, clear sky
 '235003' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 24 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean temperature tendency due to long-wave radiation, clear sky
+#Time-mean temperature tendency due to long-wave radiation, clear sky
 '235004' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 25 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean temperature tendency due to parametrisations
+#Time-mean temperature tendency due to parametrisations
 '235005' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 26 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean specific humidity tendency due to parametrisations
+#Time-mean specific humidity tendency due to parametrisations
 '235006' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 108 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean eastward wind tendency due to parametrisations
+#Time-mean eastward wind tendency due to parametrisations
 '235007' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 39 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean northward wind tendency due to parametrisations
+#Time-mean northward wind tendency due to parametrisations
 '235008' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 40 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean updraught mass flux
+#Time-mean updraught mass flux
 '235009' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 27 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean downdraught mass flux
+#Time-mean downdraught mass flux
 '235010' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 28 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean updraught detrainment rate
+#Time-mean updraught detrainment rate
 '235011' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 29 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean downdraught detrainment rate
+#Time-mean downdraught detrainment rate
 '235012' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 30 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean total precipitation flux
+#Time-mean total precipitation flux
 '235013' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean turbulent diffusion coefficient for heat
+#Time-mean turbulent diffusion coefficient for heat
 '235014' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
@@ -4618,7 +5111,7 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Mean surface runoff rate
+#Time-mean surface runoff rate
 '235020' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
@@ -4626,7 +5119,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean sub-surface runoff rate
+#Time-mean sub-surface runoff rate
 '235021' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
@@ -4634,7 +5127,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean surface photosynthetically active radiation flux, clear sky
+#Time-mean surface photosynthetically active radiation flux, clear sky
 '235022' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -4642,7 +5135,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean snow evaporation rate
+#Time-mean snow evaporation rate water equivalent
 '235023' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -4650,7 +5143,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean snowmelt rate
+#Time-mean snow melt rate
 '235024' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
@@ -4658,7 +5151,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean magnitude of turbulent surface stress
+#Time-mean magnitude of turbulent surface stress
 '235025' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -4666,7 +5159,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean large-scale precipitation fraction
+#Time-mean large-scale precipitation fraction
 '235026' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
@@ -4674,7 +5167,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean surface downward UV radiation flux
+#Time-mean surface downward UV radiation flux
 '235027' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -4682,7 +5175,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean surface photosynthetically active radiation flux
+#Time-mean surface photosynthetically active radiation flux
 '235028' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -4690,7 +5183,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean large-scale precipitation rate
+#Time-mean large-scale precipitation rate
 '235029' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -4698,7 +5191,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean convective precipitation rate
+#Time-mean convective precipitation rate
 '235030' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -4706,7 +5199,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean snowfall rate
+#Time-mean total snowfall rate water equivalent
 '235031' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -4714,14 +5207,14 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean boundary layer dissipation
+#Time-mean boundary layer dissipation
 '235032' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 20 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean surface sensible heat flux
+#Time-mean surface sensible heat flux
 '235033' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
@@ -4729,7 +5222,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean surface latent heat flux
+#Time-mean surface latent heat flux
 '235034' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
@@ -4737,7 +5230,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean surface downward short-wave radiation flux
+#Time-mean surface downward short-wave radiation flux
 '235035' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -4745,7 +5238,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean surface downward long-wave radiation flux
+#Time-mean surface downward long-wave radiation flux
 '235036' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
@@ -4753,7 +5246,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean surface net short-wave radiation flux
+#Time-mean surface net short-wave radiation flux
 '235037' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -4761,7 +5254,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean surface net long-wave radiation flux
+#Time-mean surface net long-wave radiation flux
 '235038' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
@@ -4769,7 +5262,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean top net short-wave radiation flux
+#Time-mean top net short-wave radiation flux
 '235039' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -4777,7 +5270,7 @@
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean top net long-wave radiation flux
+#Time-mean top net long-wave radiation flux
 '235040' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
@@ -4785,7 +5278,7 @@
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean eastward turbulent surface stress
+#Time-mean eastward turbulent surface stress
 '235041' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -4793,7 +5286,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean northward turbulent surface stress
+#Time-mean northward turbulent surface stress
 '235042' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -4801,7 +5294,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean evaporation rate
+#Time-mean moisture flux
 '235043' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -4809,14 +5302,14 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Sunshine duration fraction
+#Time-mean sunshine duration fraction
 '235044' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 51 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
-#Mean eastward gravity wave surface stress
+#Time-mean eastward gravity wave surface stress
 '235045' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
@@ -4824,7 +5317,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean northward gravity wave surface stress
+#Time-mean northward gravity wave surface stress
 '235046' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
@@ -4832,21 +5325,21 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean gravity wave dissipation
+#Time-mean gravity wave dissipation
 '235047' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 23 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean runoff rate
+#Time-mean runoff rate water equivalent (surface plus subsurface)
 '235048' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 42 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean top net short-wave radiation flux, clear sky
+#Time-mean top net short-wave radiation flux, clear sky
 '235049' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -4854,7 +5347,7 @@
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean top net long-wave radiation flux, clear sky
+#Time-mean top net long-wave radiation flux, clear sky
 '235050' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
@@ -4862,7 +5355,7 @@
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean surface net short-wave radiation flux, clear sky
+#Time-mean surface net short-wave radiation flux, clear sky
 '235051' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -4870,7 +5363,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean surface net long-wave radiation flux, clear sky
+#Time-mean surface net long-wave radiation flux, clear sky
 '235052' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
@@ -4878,7 +5371,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean top downward short-wave radiation flux
+#Time mean top downward short-wave radiation flux
 '235053' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -4886,14 +5379,14 @@
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean vertically integrated moisture divergence
+#Time-mean total column vertically-integrated moisture divergence flux
 '235054' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 165 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean total precipitation rate
+#Time-mean total precipitation rate
 '235055' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -4901,7 +5394,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean convective snowfall rate
+#Time-mean convective snowfall rate water equivalent
 '235056' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -4909,7 +5402,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean large-scale snowfall rate
+#Time-mean large scale snowfall rate water equivalent
 '235057' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -4917,7 +5410,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean surface direct short-wave radiation flux
+#Time-mean surface direct short-wave radiation flux
 '235058' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -4925,7 +5418,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean surface direct short-wave radiation flux, clear sky
+#Time-mean surface direct short-wave radiation flux, clear sky
 '235059' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -4933,7 +5426,15 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean surface downward short-wave radiation flux, clear sky
+#Mean surface diffuse short-wave radiation flux
+'235060' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean surface downward short-wave radiation flux, clear sky
 '235068' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -4941,7 +5442,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean surface downward long-wave radiation flux, clear sky
+#Time-mean surface downward long-wave radiation flux, clear sky
 '235069' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
@@ -4949,7 +5450,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean potential evaporation rate
+#Time-mean potential evaporation rate
 '235070' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -4975,7 +5476,7 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time-mean evapotranspiration flux
+#Time-mean evapotranspiration rate
 '235074' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
@@ -5157,6 +5658,13 @@
 	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean charnock
+'235099' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 76 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean potential vorticity
 '235100' = {
 	 discipline = 0 ;
@@ -5183,6 +5691,59 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 32 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean visibility
+'235105' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean wind direction
+'235106' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column snow water
+'235107' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 46 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean low cloud cover
+'235108' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean medium cloud cover
+'235109' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean high cloud cover
+'235110' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column rain water
+'235111' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 45 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean soil moisture top 20 cm
@@ -5432,6 +5993,14 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean sunshine
+'235189' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean ozone mass mixing ratio
 '235203' = {
 	 discipline = 0 ;
@@ -5497,11 +6066,35 @@
 	 parameterNumber = 4 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean 10 metre wind direction
+'235261' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean clear air turbulence (CAT)
 '235262' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 29 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean forecast albedo
+'235263' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean potential temperature
+'235269' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 2 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean discharge from rivers or streams
@@ -5585,6 +6178,853 @@
 	 discipline = 1 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 23 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean UV visible albedo for direct radiation (climatological)
+'235281' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 56 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Time-mean UV visible albedo for diffuse radiation (climatological)
+'235282' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 55 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Time-mean near IR albedo for direct radiation (climatological)
+'235283' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 10 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Time-mean near IR albedo for diffuse radiation (climatological)
+'235284' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 9 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Time-mean snow albedo
+'235285' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 19 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean montgomery potential
+'235286' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 6 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean convective available potential energy
+'235287' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean skin reservoir content
+'235289' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 50 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column integrated ozone
+'235290' = {
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated kinetic energy
+'235291' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated enthalpy
+'235292' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated potential + internal energy
+'235293' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated potential+internal+latent energy
+'235294' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 21 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated total energy
+'235295' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated water enthalpy
+'235296' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 4 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean UV visible albedo for direct radiation, isotropic component (climatological)
+'235297' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 58 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Time-mean UV visible albedo for direct radiation, volumetric component (climatological)
+'235298' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 59 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Time-mean UV visible albedo for direct radiation, geometric component (climatological)
+'235299' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 57 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Time-mean near IR albedo for direct radiation, isotropic component (climatological)
+'235300' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 12 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Time-mean near IR albedo for direct radiation, volumetric component (climatological)
+'235301' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 13 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Time-mean near IR albedo for direct radiation, geometric component (climatological)
+'235302' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 11 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Time-mean convective inhibition
+'235303' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean friction velocity
+'235304' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 17 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean lake bottom temperature
+'235305' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 162 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean lake total layer temperature
+'235306' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 162 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean lake shape factor
+'235307' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 10 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean lake ice surface temperature
+'235308' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean lake ice total depth
+'235309' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean minimum vertical gradient of refractivity inside trapping layer
+'235310' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 45 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mean vertical gradient of refractivity inside trapping layer
+'235311' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 44 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean duct base height
+'235312' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 41 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean trapping layer base height
+'235313' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 42 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean trapping layer top height
+'235314' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 43 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean -10 degrees C isothermal level (atm)
+'235315' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 26315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean cloud base height
+'235316' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean 0 degrees C isothermal level (atm)
+'235317' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean 10 metre wind gust
+'235318' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean relative humidity with respect to water
+'235319' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 93 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean 2 metre relative humidity with respect to water
+'235320' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 93 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean convective available potential energy shear
+'235321' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 19 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean tropopause pressure
+'235322' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean height of convective cloud top
+'235323' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 27 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean height of zero-degree wet-bulb temperature
+'235324' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 44 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean height of one-degree wet-bulb temperature
+'235325' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 45 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column supercooled liquid water
+'235327' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 167 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean 10 metre U-component of neutral wind
+'235328' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 56 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean 10 metre V-component of neutral wind
+'235329' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 57 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean convective rain rate
+'235330' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 76 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean large scale rain rate
+'235331' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 77 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mixed-layer CAPE in the lowest 50 hPa
+'235332' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 5000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mixed-layer CIN in the lowest 50 hPa
+'235333' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 5000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mixed-layer CAPE in the lowest 100 hPa
+'235334' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 10000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mixed-layer CIN in the lowest 100 hPa
+'235335' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 10000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean departure level of the most unstable parcel expressed as Pressure
+'235336' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean ceiling
+'235337' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 13 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column integrated saturation specific humidity with respect to water
+'235338' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 169 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean surface direct normal short-wave radiation flux
+'235339' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 54 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean freezing rain precipitation rate
+'235341' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 67 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated eastward geopotential flux
+'235342' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 40 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated northward geopotential flux
+'235343' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 41 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated divergence of water geopotential flux
+'235344' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 42 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated divergence of geopotential flux
+'235345' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 43 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated eastward enthalpy flux
+'235346' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated northward enthalpy flux
+'235347' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated eastward kinetic energy flux
+'235348' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 9 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated northward kinetic energy flux
+'235349' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 10 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated eastward total energy flux
+'235350' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated northward total energy flux
+'235351' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 12 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated divergence of enthalpy flux
+'235352' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 13 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated divergence of kinetic energy flux
+'235353' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 16 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated divergence of total energy flux
+'235354' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated divergence of water enthalpy flux
+'235355' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated divergence of mass flux
+'235356' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 35 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated eastward mass flux
+'235357' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 36 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated northward mass flux
+'235358' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 37 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated divergence of water vapour flux
+'235359' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 160 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated divergence of cloud liquid water flux
+'235360' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 161 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated divergence of cloud ice water flux
+'235361' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 162 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated divergence of rain flux
+'235362' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 163 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated divergence of snow flux
+'235363' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 164 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated eastward water vapour flux
+'235364' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 150 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated northward water vapour flux
+'235365' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 151 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated eastward cloud liquid water flux
+'235366' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 152 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated northward cloud liquid water flux
+'235367' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 153 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated eastward cloud ice water flux
+'235368' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 154 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated northward cloud ice water flux
+'235369' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 155 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated eastward rain flux
+'235370' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 156 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated northward rain flux
+'235371' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 157 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated eastward snow flux
+'235372' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 158 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated northward snow flux
+'235373' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 159 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated eastward ozone flux
+'235374' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 78 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 constituentType = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated northward ozone flux
+'235375' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 79 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 constituentType = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated divergence of ozone flux
+'235376' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 80 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 constituentType = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total column vertically-integrated net source of ozone
+'235377' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 81 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 constituentType = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean eastward turbulent surface stress due to orographic form drag
+'235378' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 64 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean northward turbulent surface stress due to orographic form drag
+'235379' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 65 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean eastward turbulent surface stress due to surface roughness
+'235380' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 66 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean northward turbulent surface stress due to surface roughness
+'235381' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 67 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean visibility through precipitation
@@ -11676,7 +13116,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 17 ;
 	}
-#Mean 2 metre temperature
+#Time-mean 2 metre temperature
 '228004' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
@@ -11686,7 +13126,7 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean of 10 metre wind speed
+#Time-mean 10 metre wind speed
 '228005' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;

@@ -504,12 +504,12 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 168 ;
 	}
-#Mean 2 metre temperature
+#Time-mean 2 metre temperature
 'mean2t' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 4 ;
 	}
-#Mean of 10 metre wind speed
+#Time-mean 10 metre wind speed
 'mean10ws' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 5 ;
