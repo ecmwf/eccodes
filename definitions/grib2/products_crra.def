@@ -73,9 +73,39 @@ concept marsType(unknown) {
      typeOfGeneratingProcess = 0;
      generatingProcessIdentifier = 50;
    }
+
+   # SD-80276
+   em = {
+     centre = 82;
+     typeOfGeneratingProcess = 4;
+     generatingProcessIdentifier = 40;
+     derivedForecast = 0;
+   }
+   "18" = {
+     centre = 82;
+     typeOfGeneratingProcess = 4;
+     generatingProcessIdentifier = 40;
+     derivedForecast = 0;
+   }
+   es = {
+     centre = 82;
+     typeOfGeneratingProcess = 4;
+     generatingProcessIdentifier = 40;
+     derivedForecast = 4;
+   }
+   "17" = {
+     centre = 82;
+     typeOfGeneratingProcess = 4;
+     generatingProcessIdentifier = 40;
+     derivedForecast = 4;
+   }
+
 }
 
-# get the values from the 1st most outer loop which matter
+  unalias mars.number;
+
+# get the values from the 1st most outer loop which matter!
+#   aarays should be implemented in ecCodes as for bufr i.e. outerLoopLengthOfTimeRange[0] => #0#lengthOfTimeRange
 meta outerLoopLengthOfTimeRange element(lengthOfTimeRange, 0);
 meta outerLoopTypeOfStatisticalProcessing element(typeOfStatisticalProcessing, 0);
 meta outerLoopTypeOfTimeIncrement element(typeOfTimeIncrement, 0);
@@ -95,6 +125,9 @@ concept marsStream(unknown) {
     }
     enda = {
       productDefinitionTemplateNumber = 1;
+    }
+    enda = {
+      productDefinitionTemplateNumber = 2;
     }
     moda = {
       productDefinitionTemplateNumber = 8;
@@ -118,24 +151,27 @@ alias mars.stream = marsStream;
 alias mars.type   = marsType;
 
 if (marsStream is "moda") {
-  meta verificationDate g1verificationdate(dataDate, dataTime, outerLoopLengthOfTimeRange) : read_only;
+
+  meta verificationDate        g1verificationdate(dataDate, dataTime, outerLoopLengthOfTimeRange) : read_only;
   meta monthlyVerificationDate g1monthlydate(verificationDate) : no_copy;
-  alias mars.date = monthlyVerificationDate;
+  alias mars.date            = monthlyVerificationDate;
 
   unalias mars.time;
   unalias mars.step;
 }
 
 if (marsStream is "dame") {
+
   if (!(outerLoopTypeOfStatisticalProcessing == 3 || outerLoopTypeOfStatisticalProcessing == 2)) {
-    # not mind or maxd
-    alias mars.date = validityDate;
+  # not mind or maxd
+    alias mars.date            = validityDate;
   }
 
   if (outerLoopLengthOfTimeRange == 24) {
-    # accumd
-    meta verificationDate g1verificationdate(dataDate, dataTime, outerLoopLengthOfTimeRange) : read_only;
-    alias mars.date = verificationDate;
+  # accumd
+    meta verificationDate        g1verificationdate(dataDate, dataTime, outerLoopLengthOfTimeRange) : read_only;
+    alias mars.date            = verificationDate;
+
   }
 
   unalias mars.time;
