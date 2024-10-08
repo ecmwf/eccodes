@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -37,9 +36,7 @@ long grib_accessor_gaussian_grid_name_t::get_native_type()
 int grib_accessor_gaussian_grid_name_t::unpack_string(char* v, size_t* len)
 {
     long N = 0, Ni = 0;
-    char tmp[MAX_GRIDNAME_LEN] = {
-        0,
-    };
+    char tmp[MAX_GRIDNAME_LEN] = {0,};
     size_t length = 0;
     int ret       = GRIB_SUCCESS;
 
