@@ -274,12 +274,22 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean 10 metre wind direction
-'avg_2rhw' = {
+'avg_10wdir' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean 2 metre relative humidity with respect to water
+'avg_2rhw' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 93 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
