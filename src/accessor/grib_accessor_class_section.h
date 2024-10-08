@@ -13,20 +13,19 @@
 
 #include "grib_accessor_class_gen.h"
 
-class grib_accessor_section_t : public grib_accessor_gen_t {};
-
-class grib_accessor_class_section_t : public grib_accessor_class_gen_t
+class grib_accessor_section_t : public grib_accessor_gen_t
 {
 public:
-    grib_accessor_class_section_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_section_t() :
+        grib_accessor_gen_t() { class_name_ = "section"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_section_t{}; }
-    int get_native_type(grib_accessor*) override;
-    long byte_count(grib_accessor*) override;
-    long next_offset(grib_accessor*) override;
-    void destroy(grib_context*, grib_accessor*) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
-    void update_size(grib_accessor*, size_t) override;
-    grib_section* sub_section(grib_accessor*) override;
+    long get_native_type() override;
+    long byte_count() override;
+    long next_offset() override;
+    void destroy(grib_context*) override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
+    void update_size(size_t) override;
+    grib_section* sub_section() override;
     grib_accessor* next(grib_accessor*, int) override;
 };

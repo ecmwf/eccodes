@@ -1113,7 +1113,7 @@ int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err)
         return 0;
     }
     *err = GRIB_SUCCESS;
-    return ((acc->flags & GRIB_ACCESSOR_FLAG_BUFR_DATA) == 0);
+    return ((acc->flags_ & GRIB_ACCESSOR_FLAG_BUFR_DATA) == 0);
 }
 
 // Returns 1 if the BUFR key is a coordinate descriptor
@@ -1125,7 +1125,7 @@ int codes_bufr_key_is_coordinate(const grib_handle* h, const char* key, int* err
         return 0;
     }
     *err = GRIB_SUCCESS;
-    return ((acc->flags & GRIB_ACCESSOR_FLAG_BUFR_COORD) != 0);
+    return ((acc->flags_ & GRIB_ACCESSOR_FLAG_BUFR_COORD) != 0);
 }
 
 int codes_bufr_key_exclude_from_dump(const char* key)

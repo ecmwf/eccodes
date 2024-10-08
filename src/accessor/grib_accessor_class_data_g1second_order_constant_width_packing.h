@@ -15,35 +15,32 @@
 class grib_accessor_data_g1second_order_constant_width_packing_t : public grib_accessor_data_simple_packing_t
 {
 public:
-    /* Members defined in data_g1second_order_constant_width_packing */
-    const char* half_byte;
-    const char* packingType;
-    const char* ieee_packing;
-    const char* precision;
-    const char* widthOfFirstOrderValues;
-    const char* N1;
-    const char* N2;
-    const char* numberOfGroups;
-    const char* numberOfSecondOrderPackedValues;
-    const char* extraValues;
-    const char* pl;
-    const char* Ni;
-    const char* Nj;
-    const char* jPointsAreConsecutive;
-    const char* bitmap;
-    const char* groupWidth;
-};
-
-class grib_accessor_class_data_g1second_order_constant_width_packing_t : public grib_accessor_class_data_simple_packing_t
-{
-public:
-    grib_accessor_class_data_g1second_order_constant_width_packing_t(const char* name) : grib_accessor_class_data_simple_packing_t(name) {}
+    grib_accessor_data_g1second_order_constant_width_packing_t() :
+        grib_accessor_data_simple_packing_t() { class_name_ = "data_g1second_order_constant_width_packing"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_data_g1second_order_constant_width_packing_t{}; }
-    int pack_double(grib_accessor*, const double* val, size_t* len) override;
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int unpack_float(grib_accessor*, float* val, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
-    int unpack_double_element(grib_accessor*, size_t i, double* val) override;
-    int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array) override;
+    int pack_double(const double* val, size_t* len) override;
+    int unpack_double(double* val, size_t* len) override;
+    int unpack_float(float* val, size_t* len) override;
+    int value_count(long*) override;
+    void init(const long, grib_arguments*) override;
+    int unpack_double_element(size_t i, double* val) override;
+    int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) override;
+
+private:
+    const char* half_byte_;
+    const char* packingType_;
+    const char* ieee_packing_;
+    const char* precision_;
+    const char* widthOfFirstOrderValues_;
+    const char* N1_;
+    const char* N2_;
+    const char* numberOfGroups_;
+    const char* numberOfSecondOrderPackedValues_;
+    const char* extraValues_;
+    const char* pl_;
+    const char* Ni_;
+    const char* Nj_;
+    const char* jPointsAreConsecutive_;
+    const char* bitmap_;
+    const char* groupWidth_;
 };

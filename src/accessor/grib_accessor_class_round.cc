@@ -11,14 +11,26 @@
 
 #include "grib_accessor_class_round.h"
 
-grib_accessor_class_round_t _grib_accessor_class_round{ "round" };
-grib_accessor_class* grib_accessor_class_round = &_grib_accessor_class_round;
+grib_accessor_round_t _grib_accessor_round{};
+grib_accessor* grib_accessor_round = &_grib_accessor_round;
 
-
-int grib_accessor_class_round_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+void grib_accessor_round_t::init(const long l, grib_arguments* arg)
 {
-    grib_accessor_round_t* self = (grib_accessor_round_t*)a;
+    grib_accessor_evaluate_t::init(l, arg);
+}
 
+void grib_accessor_round_t::destroy(grib_context* c)
+{
+    grib_accessor_evaluate_t::destroy(c);
+}
+
+void grib_accessor_round_t::dump(grib_dumper* dumper)
+{
+    grib_accessor_evaluate_t::dump(dumper);
+}
+
+int grib_accessor_round_t::unpack_double(double* val, size_t* len)
+{
     int ret = GRIB_SUCCESS;
 
     size_t replen             = 0;
@@ -27,12 +39,12 @@ int grib_accessor_class_round_t::unpack_double(grib_accessor* a, double* val, si
     double toround            = 0;
 
     const char* oval = NULL;
-    oval             = grib_arguments_get_name(grib_handle_of_accessor(a), self->arg, 0);
+    oval             = grib_arguments_get_name(grib_handle_of_accessor(this), arg_, 0);
 
-    if ((ret = grib_get_double_internal(grib_handle_of_accessor(a), oval, &toround)) != 0)
+    if ((ret = grib_get_double_internal(grib_handle_of_accessor(this), oval, &toround)) != 0)
         return ret;
 
-    rounding_precision = grib_arguments_get_long(grib_handle_of_accessor(a), self->arg, 1);
+    rounding_precision = grib_arguments_get_long(grib_handle_of_accessor(this), arg_, 1);
 
     rounded = floor(rounding_precision * toround + 0.5) / rounding_precision;
 
@@ -43,7 +55,7 @@ int grib_accessor_class_round_t::unpack_double(grib_accessor* a, double* val, si
     return ret;
 }
 
-int grib_accessor_class_round_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+int grib_accessor_round_t::unpack_string(char* val, size_t* len)
 {
     char result[1024];
     int ret       = GRIB_SUCCESS;
@@ -51,7 +63,7 @@ int grib_accessor_class_round_t::unpack_string(grib_accessor* a, char* val, size
 
     double value = 0;
 
-    ret = unpack_double(a, &value, &replen);
+    ret = unpack_double(&value, &replen);
 
     snprintf(result, sizeof(result), "%.3f", value);
 

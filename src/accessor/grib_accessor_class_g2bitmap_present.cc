@@ -11,28 +11,24 @@
 
 #include "grib_accessor_class_g2bitmap_present.h"
 
-grib_accessor_class_g2bitmap_present_t _grib_accessor_class_g2bitmap_present{ "g2bitmap_present" };
-grib_accessor_class* grib_accessor_class_g2bitmap_present = &_grib_accessor_class_g2bitmap_present;
+grib_accessor_g2bitmap_present_t _grib_accessor_g2bitmap_present{};
+grib_accessor* grib_accessor_g2bitmap_present = &_grib_accessor_g2bitmap_present;
 
-
-void grib_accessor_class_g2bitmap_present_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_g2bitmap_present_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_long_t::init(a, l, c);
-    int n                                  = 0;
-    grib_accessor_g2bitmap_present_t* self = (grib_accessor_g2bitmap_present_t*)a;
-    self->bitmapIndicator                  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    grib_accessor_long_t::init(l, c);
+    int n            = 0;
+    bitmapIndicator_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
 
-    a->length = 0;
+    length_ = 0;
 }
 
-int grib_accessor_class_g2bitmap_present_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_g2bitmap_present_t::unpack_long(long* val, size_t* len)
 {
     int ret              = GRIB_SUCCESS;
     long bitmapIndicator = 0;
 
-    grib_accessor_g2bitmap_present_t* self = (grib_accessor_g2bitmap_present_t*)a;
-
-    ret = grib_get_long_internal(grib_handle_of_accessor(a), self->bitmapIndicator, &bitmapIndicator);
+    ret = grib_get_long_internal(grib_handle_of_accessor(this), bitmapIndicator_, &bitmapIndicator);
     if (ret) {
         if (ret == GRIB_NOT_FOUND) {
             *val = 0;
@@ -50,13 +46,12 @@ int grib_accessor_class_g2bitmap_present_t::unpack_long(grib_accessor* a, long* 
     return ret;
 }
 
-int grib_accessor_class_g2bitmap_present_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_g2bitmap_present_t::pack_long(const long* val, size_t* len)
 {
-    grib_accessor_g2bitmap_present_t* self = (grib_accessor_g2bitmap_present_t*)a;
-    long bitmapIndicator                   = 0;
+    long bitmapIndicator = 0;
 
     if (*val == 0)
         bitmapIndicator = 255;
 
-    return grib_set_long(grib_handle_of_accessor(a), self->bitmapIndicator, bitmapIndicator);
+    return grib_set_long(grib_handle_of_accessor(this), bitmapIndicator_, bitmapIndicator);
 }

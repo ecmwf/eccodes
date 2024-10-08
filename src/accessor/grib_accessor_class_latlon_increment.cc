@@ -10,33 +10,30 @@
 
 #include "grib_accessor_class_latlon_increment.h"
 
-grib_accessor_class_latlon_increment_t _grib_accessor_class_latlon_increment{ "latlon_increment" };
-grib_accessor_class* grib_accessor_class_latlon_increment = &_grib_accessor_class_latlon_increment;
+grib_accessor_latlon_increment_t _grib_accessor_latlon_increment{};
+grib_accessor* grib_accessor_latlon_increment = &_grib_accessor_latlon_increment;
 
-
-void grib_accessor_class_latlon_increment_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_latlon_increment_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_double_t::init(a, l, c);
-    grib_accessor_latlon_increment_t* self = (grib_accessor_latlon_increment_t*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_accessor_double_t::init(l, c);
+    int n             = 0;
+    grib_handle* hand = grib_handle_of_accessor(this);
 
-    int n = 0;
-    self->directionIncrementGiven = grib_arguments_get_name(hand, c, n++);
-    self->directionIncrement      = grib_arguments_get_name(hand, c, n++);
-    self->scansPositively         = grib_arguments_get_name(hand, c, n++);
-    self->first                   = grib_arguments_get_name(hand, c, n++);
-    self->last                    = grib_arguments_get_name(hand, c, n++);
-    self->numberOfPoints          = grib_arguments_get_name(hand, c, n++);
-    self->angleMultiplier         = grib_arguments_get_name(hand, c, n++);
-    self->angleDivisor            = grib_arguments_get_name(hand, c, n++);
-    self->isLongitude             = grib_arguments_get_long(hand, c, n++);
+    directionIncrementGiven_ = grib_arguments_get_name(hand, c, n++);
+    directionIncrement_      = grib_arguments_get_name(hand, c, n++);
+    scansPositively_         = grib_arguments_get_name(hand, c, n++);
+    first_                   = grib_arguments_get_name(hand, c, n++);
+    last_                    = grib_arguments_get_name(hand, c, n++);
+    numberOfPoints_          = grib_arguments_get_name(hand, c, n++);
+    angleMultiplier_         = grib_arguments_get_name(hand, c, n++);
+    angleDivisor_            = grib_arguments_get_name(hand, c, n++);
+    isLongitude_             = grib_arguments_get_long(hand, c, n++);
 }
 
-int grib_accessor_class_latlon_increment_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+int grib_accessor_latlon_increment_t::unpack_double(double* val, size_t* len)
 {
-    grib_accessor_latlon_increment_t* self = (grib_accessor_latlon_increment_t*)a;
-    int ret = GRIB_SUCCESS;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    int ret           = 0;
+    grib_handle* hand = grib_handle_of_accessor(this);
 
     long directionIncrementGiven = 0;
     long directionIncrement      = 0;
@@ -50,31 +47,31 @@ int grib_accessor_class_latlon_increment_t::unpack_double(grib_accessor* a, doub
     if (*len < 1)
         return GRIB_ARRAY_TOO_SMALL;
 
-    if ((ret = grib_get_long_internal(hand, self->directionIncrementGiven, &directionIncrementGiven)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, directionIncrementGiven_, &directionIncrementGiven)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(hand, self->scansPositively, &scansPositively)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, scansPositively_, &scansPositively)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(hand, self->directionIncrement, &directionIncrement)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, directionIncrement_, &directionIncrement)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_double_internal(hand, self->first, &first)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(hand, first_, &first)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_double_internal(hand, self->last, &last)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(hand, last_, &last)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(hand, self->numberOfPoints, &numberOfPoints)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, numberOfPoints_, &numberOfPoints)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(hand, self->angleMultiplier, &angleMultiplier)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, angleMultiplier_, &angleMultiplier)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(hand, self->angleDivisor, &angleDivisor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, angleDivisor_, &angleDivisor)) != GRIB_SUCCESS)
         return ret;
 
-    if (self->isLongitude) {
+    if (isLongitude_) {
         if (last < first && scansPositively)
             last += 360;
         /*if (last > first && !scansPositively) first-=360;*/
@@ -83,7 +80,7 @@ int grib_accessor_class_latlon_increment_t::unpack_double(grib_accessor* a, doub
     if (!directionIncrementGiven && numberOfPoints != GRIB_MISSING_LONG) {
         if (numberOfPoints < 2) {
             /* We cannot compute the increment if we don't have enough points! */
-            grib_context_log(a->parent->h->context, GRIB_LOG_ERROR,
+            grib_context_log(parent_->h->context, GRIB_LOG_ERROR,
                              "Cannot compute lat/lon increments. Not enough points!");
             return GRIB_GEOCALCULUS_PROBLEM;
         }
@@ -119,12 +116,11 @@ int grib_accessor_class_latlon_increment_t::unpack_double(grib_accessor* a, doub
     return ret;
 }
 
-int grib_accessor_class_latlon_increment_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+int grib_accessor_latlon_increment_t::pack_double(const double* val, size_t* len)
 {
-    grib_accessor_latlon_increment_t* self = (grib_accessor_latlon_increment_t*)a;
-    int ret                                = GRIB_SUCCESS;
-    long codedNumberOfPoints               = 0;
-    grib_handle* hand                      = grib_handle_of_accessor(a);
+    int ret                  = 0;
+    long codedNumberOfPoints = 0;
+    grib_handle* hand        = grib_handle_of_accessor(this);
 
     long directionIncrementGiven = 0;
     long directionIncrement      = 0;
@@ -137,30 +133,30 @@ int grib_accessor_class_latlon_increment_t::pack_double(grib_accessor* a, const 
     long scansPositively            = 0;
     double directionIncrementDouble = 0;
 
-    ret = grib_get_double_internal(hand, self->first, &first);
+    ret = grib_get_double_internal(hand, first_, &first);
     if (ret != GRIB_SUCCESS)
         return ret;
 
-    ret = grib_get_double_internal(hand, self->last, &last);
+    ret = grib_get_double_internal(hand, last_, &last);
     if (ret != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(hand, self->directionIncrementGiven, &directionIncrementGiven)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, directionIncrementGiven_, &directionIncrementGiven)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(hand, self->numberOfPoints, &numberOfPoints)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, numberOfPoints_, &numberOfPoints)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(hand, self->scansPositively, &scansPositively)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, scansPositively_, &scansPositively)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(hand, self->angleMultiplier, &angleMultiplier)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, angleMultiplier_, &angleMultiplier)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(hand, self->angleDivisor, &angleDivisor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, angleDivisor_, &angleDivisor)) != GRIB_SUCCESS)
         return ret;
 
-    if (self->isLongitude) {
+    if (isLongitude_) {
         if (last < first && scansPositively)
             last += 360;
         if (last > first && !scansPositively)
@@ -184,16 +180,16 @@ int grib_accessor_class_latlon_increment_t::pack_double(grib_accessor* a, const 
         }
     }
 
-    // ret = grib_set_long_internal(hand, self->numberOfPoints,numberOfPoints);
-    // if(ret) grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannot pack value for %s error %d \n", a->name, self->numberOfPoints, ret);
+    // ret = grib_set_long_internal(hand, numberOfPoints_ ,numberOfPoints);
+    // if(ret) grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannot pack value for %s error %d \n", a->name, numberOfPoints_ , ret);
 
-    grib_get_long_internal(hand, self->numberOfPoints, &codedNumberOfPoints);
+    grib_get_long_internal(hand, numberOfPoints_, &codedNumberOfPoints);
 
-    ret = grib_set_long_internal(hand, self->directionIncrement, directionIncrement);
+    ret = grib_set_long_internal(hand, directionIncrement_, directionIncrement);
     if (ret)
         return ret;
 
-    ret = grib_set_long_internal(hand, self->directionIncrementGiven, directionIncrementGiven);
+    ret = grib_set_long_internal(hand, directionIncrementGiven_, directionIncrementGiven);
     if (ret)
         return ret;
 
@@ -203,12 +199,12 @@ int grib_accessor_class_latlon_increment_t::pack_double(grib_accessor* a, const 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_latlon_increment_t::is_missing(grib_accessor* a)
+int grib_accessor_latlon_increment_t::is_missing()
 {
     size_t len = 1;
     double val = 0;
 
-    unpack_double(a, &val, &len);
+    unpack_double(&val, &len);
 
     return (val == GRIB_MISSING_DOUBLE);
 }

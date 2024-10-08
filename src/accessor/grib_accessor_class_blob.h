@@ -16,16 +16,11 @@
 class grib_accessor_blob_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in blob */
-};
-
-class grib_accessor_class_blob_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_blob_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_blob_t() :
+        grib_accessor_gen_t() { class_name_ = "blob"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_blob_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int unpack_bytes(grib_accessor*, unsigned char*, size_t* len) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    long get_native_type() override;
+    int unpack_bytes(unsigned char*, size_t* len) override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
 };

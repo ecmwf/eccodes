@@ -16,15 +16,13 @@
 class grib_accessor_abstract_long_vector_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in abstract_long_vector */
-    long* v;
-    long pack_index;
-    int number_of_elements;
-};
+    grib_accessor_abstract_long_vector_t() :
+        grib_accessor_gen_t() { class_name_ = "abstract_long_vector"; }
+    grib_accessor* create_empty_accessor() override { return new grib_accessor_abstract_long_vector_t{}; }
 
-class grib_accessor_class_abstract_long_vector_t : public grib_accessor_class_gen_t
-{
 public:
-    grib_accessor_class_abstract_long_vector_t(const char* name) : grib_accessor_class_gen_t(name) {}
-    //grib_accessor* create_empty_accessor() override { return new grib_accessor_abstract_long_vector_t{}; }
+    // TODO(maee): make private
+    long* v_;
+    long pack_index_;
+    int number_of_elements_;
 };

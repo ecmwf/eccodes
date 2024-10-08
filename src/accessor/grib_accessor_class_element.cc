@@ -11,19 +11,17 @@
 
 #include "grib_accessor_class_element.h"
 
-grib_accessor_class_element_t _grib_accessor_class_element{"element"};
-grib_accessor_class* grib_accessor_class_element = &_grib_accessor_class_element;
+grib_accessor_element_t _grib_accessor_element{};
+grib_accessor* grib_accessor_element = &_grib_accessor_element;
 
-
-void grib_accessor_class_element_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_element_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_long_t::init(a, l, c);
-    grib_accessor_element_t* self = (grib_accessor_element_t*)a;
-    grib_handle* hand           = grib_handle_of_accessor(a);
+    grib_accessor_long_t::init(l, c);
+    grib_handle* hand = grib_handle_of_accessor(this);
 
-    int n = 0;
-    self->array   = grib_arguments_get_name(hand, c, n++);
-    self->element = grib_arguments_get_long(hand, c, n++);
+    int n    = 0;
+    array_   = grib_arguments_get_name(hand, c, n++);
+    element_ = grib_arguments_get_long(hand, c, n++);
 }
 
 static int check_element_index(const char* func, const char* array_name, long index, size_t size)
@@ -31,28 +29,27 @@ static int check_element_index(const char* func, const char* array_name, long in
     const grib_context* c = grib_context_get_default();
     if (index < 0 || index >= size) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Invalid element index %ld for array '%s'. Value must be between 0 and %zu",
-                func, index, array_name, size - 1);
+                         func, index, array_name, size - 1);
         return GRIB_INVALID_ARGUMENT;
     }
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_element_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_element_t::unpack_long(long* val, size_t* len)
 {
-    grib_accessor_element_t* self = (grib_accessor_element_t*)a;
-    int ret                     = 0;
-    size_t size                 = 0;
-    long* ar                    = NULL;
-    const grib_context* c       = a->context;
-    grib_handle* hand           = grib_handle_of_accessor(a);
-    long index                  = self->element;
+    int ret               = 0;
+    size_t size           = 0;
+    long* ar              = NULL;
+    const grib_context* c = context_;
+    grib_handle* hand     = grib_handle_of_accessor(this);
+    long index            = element_;
 
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;
         return ret;
     }
 
-    if ((ret = grib_get_size(hand, self->array, &size)) != GRIB_SUCCESS)
+    if ((ret = grib_get_size(hand, array_, &size)) != GRIB_SUCCESS)
         return ret;
 
     ar = (long*)grib_context_malloc_clear(c, size * sizeof(long));
@@ -61,7 +58,7 @@ int grib_accessor_class_element_t::unpack_long(grib_accessor* a, long* val, size
         return GRIB_OUT_OF_MEMORY;
     }
 
-    if ((ret = grib_get_long_array_internal(hand, self->array, ar, &size)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_array_internal(hand, array_, ar, &size)) != GRIB_SUCCESS)
         return ret;
 
     // An index of -x means the xth item from the end of the list, so ar[-1] means the last item in ar
@@ -69,7 +66,7 @@ int grib_accessor_class_element_t::unpack_long(grib_accessor* a, long* val, size
         index = size + index;
     }
 
-    if ((ret = check_element_index(__func__, self->array, index, size)) != GRIB_SUCCESS) {
+    if ((ret = check_element_index(__func__, array_, index, size)) != GRIB_SUCCESS) {
         goto the_end;
     }
 
@@ -80,22 +77,21 @@ the_end:
     return ret;
 }
 
-int grib_accessor_class_element_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_element_t::pack_long(const long* val, size_t* len)
 {
-    grib_accessor_element_t* self = (grib_accessor_element_t*)a;
-    int ret                     = 0;
-    size_t size                 = 0;
-    long* ar                    = NULL;
-    const grib_context* c       = a->context;
-    grib_handle* hand           = grib_handle_of_accessor(a);
-    long index                  = self->element;
+    int ret               = 0;
+    size_t size           = 0;
+    long* ar              = NULL;
+    const grib_context* c = context_;
+    grib_handle* hand     = grib_handle_of_accessor(this);
+    long index            = element_;
 
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;
         return ret;
     }
 
-    if ((ret = grib_get_size(hand, self->array, &size)) != GRIB_SUCCESS)
+    if ((ret = grib_get_size(hand, array_, &size)) != GRIB_SUCCESS)
         return ret;
 
     ar = (long*)grib_context_malloc_clear(c, size * sizeof(long));
@@ -104,7 +100,7 @@ int grib_accessor_class_element_t::pack_long(grib_accessor* a, const long* val, 
         return GRIB_OUT_OF_MEMORY;
     }
 
-    if ((ret = grib_get_long_array_internal(hand, self->array, ar, &size)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_array_internal(hand, array_, ar, &size)) != GRIB_SUCCESS)
         return ret;
 
     // An index of -x means the xth item from the end of the list, so ar[-1] means the last item in ar
@@ -112,7 +108,7 @@ int grib_accessor_class_element_t::pack_long(grib_accessor* a, const long* val, 
         index = size + index;
     }
 
-    if ((ret = check_element_index(__func__, self->array, index, size)) != GRIB_SUCCESS) {
+    if ((ret = check_element_index(__func__, array_, index, size)) != GRIB_SUCCESS) {
         goto the_end;
     }
 
@@ -120,7 +116,7 @@ int grib_accessor_class_element_t::pack_long(grib_accessor* a, const long* val, 
     Assert(index < size);
     ar[index] = *val;
 
-    if ((ret = grib_set_long_array_internal(hand, self->array, ar, size)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_array_internal(hand, array_, ar, size)) != GRIB_SUCCESS)
         goto the_end;
 
 the_end:
@@ -128,22 +124,21 @@ the_end:
     return ret;
 }
 
-int grib_accessor_class_element_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+int grib_accessor_element_t::unpack_double(double* val, size_t* len)
 {
-    grib_accessor_element_t* self = (grib_accessor_element_t*)a;
-    int ret                     = 0;
-    size_t size                 = 0;
-    double* ar                  = NULL;
-    const grib_context* c       = a->context;
-    const grib_handle* hand     = grib_handle_of_accessor(a);
-    long index                  = self->element;
+    int ret                 = 0;
+    size_t size             = 0;
+    double* ar              = NULL;
+    const grib_context* c   = context_;
+    const grib_handle* hand = grib_handle_of_accessor(this);
+    long index              = element_;
 
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;
         return ret;
     }
 
-    if ((ret = grib_get_size(hand, self->array, &size)) != GRIB_SUCCESS)
+    if ((ret = grib_get_size(hand, array_, &size)) != GRIB_SUCCESS)
         return ret;
 
     ar = (double*)grib_context_malloc_clear(c, size * sizeof(double));
@@ -152,7 +147,7 @@ int grib_accessor_class_element_t::unpack_double(grib_accessor* a, double* val, 
         return GRIB_OUT_OF_MEMORY;
     }
 
-    if ((ret = grib_get_double_array_internal(hand, self->array, ar, &size)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_array_internal(hand, array_, ar, &size)) != GRIB_SUCCESS)
         return ret;
 
     // An index of -x means the xth item from the end of the list, so ar[-1] means the last item in ar
@@ -160,7 +155,7 @@ int grib_accessor_class_element_t::unpack_double(grib_accessor* a, double* val, 
         index = size + index;
     }
 
-    if ((ret = check_element_index(__func__, self->array, index, size)) != GRIB_SUCCESS) {
+    if ((ret = check_element_index(__func__, array_, index, size)) != GRIB_SUCCESS) {
         goto the_end;
     }
 
