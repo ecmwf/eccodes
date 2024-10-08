@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -32,21 +31,11 @@ void grib_accessor_dictionary_t::init(const long len, grib_arguments* params)
 grib_trie* grib_accessor_dictionary_t::load_dictionary(int* err)
 {
     char* filename  = NULL;
-    char line[1024] = {
-        0,
-    };
-    char key[1024] = {
-        0,
-    };
-    char masterDir[1024] = {
-        0,
-    };
-    char localDir[1024] = {
-        0,
-    };
-    char dictName[1024] = {
-        0,
-    };
+    char line[1024] = {0,};
+    char key[1024] = {0,};
+    char masterDir[1024] = {0,};
+    char localDir[1024] = {0,};
+    char dictName[1024] = {0,};
     char* localFilename   = 0;
     char* list            = 0;
     size_t len            = 1024;
@@ -66,12 +55,8 @@ grib_trie* grib_accessor_dictionary_t::load_dictionary(int* err)
         grib_get_string(h, localDir_, localDir, &len);
 
     if (*masterDir != 0) {
-        char name[2048] = {
-            0,
-        };
-        char recomposed[2048] = {
-            0,
-        };
+        char name[2048] = {0,};
+        char recomposed[2048] = {0,};
         snprintf(name, sizeof(name), "%s/%s", masterDir, dictionary_);
         grib_recompose_name(h, NULL, name, recomposed, 0);
         filename = grib_context_full_defs_path(c, recomposed);
@@ -81,12 +66,8 @@ grib_trie* grib_accessor_dictionary_t::load_dictionary(int* err)
     }
 
     if (*localDir != 0) {
-        char localName[2048] = {
-            0,
-        };
-        char localRecomposed[1024] = {
-            0,
-        };
+        char localName[2048] = {0,};
+        char localRecomposed[1024] = {0,};
         snprintf(localName, sizeof(localName), "%s/%s", localDir, dictionary_);
         grib_recompose_name(h, NULL, localName, localRecomposed, 0);
         localFilename = grib_context_full_defs_path(c, localRecomposed);
@@ -180,9 +161,7 @@ void grib_accessor_dictionary_t::dump(grib_dumper* dumper)
 int grib_accessor_dictionary_t::unpack_string(char* buffer, size_t* len)
 {
     int err        = GRIB_SUCCESS;
-    char key[1024] = {
-        0,
-    };
+    char key[1024] = {0,};
     size_t size  = 1024;
     char* list   = NULL;
     char* start  = NULL;
@@ -252,9 +231,7 @@ long grib_accessor_dictionary_t::get_native_type()
 int grib_accessor_dictionary_t::unpack_long(long* val, size_t* len)
 {
     int err           = 0;
-    char buffer[1024] = {
-        0,
-    };
+    char buffer[1024] = {0,};
     size_t size = 1024;
 
     err = unpack_string(buffer, &size);
@@ -270,9 +247,7 @@ int grib_accessor_dictionary_t::unpack_long(long* val, size_t* len)
 int grib_accessor_dictionary_t::unpack_double(double* val, size_t* len)
 {
     int err           = 0;
-    char buffer[1024] = {
-        0,
-    };
+    char buffer[1024] = {0,};
     size_t size = 1024;
 
     err = unpack_string(buffer, &size);

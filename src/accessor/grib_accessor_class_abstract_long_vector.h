@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -18,7 +17,7 @@ class grib_accessor_abstract_long_vector_t : public grib_accessor_gen_t
 public:
     grib_accessor_abstract_long_vector_t() :
         grib_accessor_gen_t() { class_name_ = "abstract_long_vector"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_abstract_long_vector_t{}; }
+    // grib_accessor* create_empty_accessor() override { return new grib_accessor_abstract_long_vector_t{}; }
 
 public:
     // TODO(maee): make private

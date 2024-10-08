@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -26,9 +25,7 @@ int grib_accessor_mars_step_t::pack_string(const char* val, size_t* len)
 {
     char stepType[100];
     size_t stepTypeLen = 100;
-    char buf[100]      = {
-        0,
-    };
+    char buf[100]      = {0,};
     int ret;
     grib_accessor* stepRangeAcc = grib_find_accessor(grib_handle_of_accessor(this), stepRange_);
 
@@ -51,9 +48,7 @@ int grib_accessor_mars_step_t::pack_string(const char* val, size_t* len)
 int grib_accessor_mars_step_t::unpack_string(char* val, size_t* len)
 {
     int ret       = 0;
-    char buf[100] = {
-        0,
-    };
+    char buf[100] = {0,};
     char* p       = NULL;
     size_t buflen = 100;
     long step;
@@ -89,9 +84,7 @@ int grib_accessor_mars_step_t::unpack_string(char* val, size_t* len)
 
 int grib_accessor_mars_step_t::pack_long(const long* val, size_t* len)
 {
-    char buff[100] = {
-        0,
-    };
+    char buff[100] = {0,};
     size_t bufflen = 100;
 
     snprintf(buff, sizeof(buff), "%ld", *val);
