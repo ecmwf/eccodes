@@ -311,7 +311,6 @@ int grib_accessor_data_simple_packing_t::_unpack_double(double* val, size_t* len
 {
     grib_accessor_data_simple_packing_t* self = (grib_accessor_data_simple_packing_t*)this;
     grib_handle* gh                           = grib_handle_of_accessor(this);
-    const char* class_name_                   = class_name_;
 
     size_t i = 0;
     int err  = 0;
@@ -454,8 +453,7 @@ int grib_accessor_data_simple_packing_t::unpack_double_subarray(double* val, siz
 
 int grib_accessor_data_simple_packing_t::pack_double(const double* val, size_t* len)
 {
-    grib_handle* gh         = grib_handle_of_accessor(this);
-    const char* class_name_ = class_name_;
+    grib_handle* gh = grib_handle_of_accessor(this);
 
     size_t i                      = 0;
     size_t n_vals                 = *len;

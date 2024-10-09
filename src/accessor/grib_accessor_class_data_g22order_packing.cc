@@ -1463,7 +1463,6 @@ template <typename T>
 int grib_accessor_data_g22order_packing_t::unpack(T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
-    const char* class_name_ = class_name_;
     grib_handle* gh         = grib_handle_of_accessor(this);
 
     size_t i                  = 0;
