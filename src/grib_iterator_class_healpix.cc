@@ -211,7 +211,7 @@ static std::vector<double> HEALPix_longitudes(size_t N, size_t i)
     return longitudes;
 }
 
-static int iterate_healpix(grib_iterator_healpix* self, long N)
+static int iterate_healpix(grib_iterator_healpix* self, long N, bool nested)
 {
     size_t Ny = 4 * static_cast<size_t>(N) - 1;
     auto Nd   = static_cast<double>(N);
@@ -241,7 +241,7 @@ static int iterate_healpix(grib_iterator_healpix* self, long N)
     // Equator
     latitudes[2 * N - 1] = 0.0;
 
-    if (self->nested) {
+    if (nested) {
         if (!is_power_of_2(N)) {
             grib_context* c = grib_context_get_default();
             grib_context_log(c, GRIB_LOG_ERROR, "%s: For nested ordering, Nside must be a power of 2", ITER);
@@ -389,7 +389,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     }
 
     try {
-        err = iterate_healpix(self, N);
+        err = iterate_healpix(self, N, self->nested);
     }
     catch (...) {
         return GRIB_INTERNAL_ERROR;

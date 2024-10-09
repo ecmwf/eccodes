@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,42 +10,39 @@
 
 #include "grib_accessor_class_dirty.h"
 
-grib_accessor_class_dirty_t _grib_accessor_class_dirty{ "dirty" };
-grib_accessor_class* grib_accessor_class_dirty = &_grib_accessor_class_dirty;
+grib_accessor_dirty_t _grib_accessor_dirty{};
+grib_accessor* grib_accessor_dirty = &_grib_accessor_dirty;
 
-
-void grib_accessor_class_dirty_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_dirty_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_long_t::init(a, l, c);
-    grib_accessor_dirty_t* self = (grib_accessor_dirty_t*)a;
-    self->accessor              = grib_arguments_get_name(grib_handle_of_accessor(a), c, 0);
-    a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
-    a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
-    a->length = 0;
+    grib_accessor_long_t::init(l, c);
+    accessor_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, 0);
+    flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
+    flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;
+    length_ = 0;
 }
 
-int grib_accessor_class_dirty_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_dirty_t::pack_long(const long* val, size_t* len)
 {
-    grib_accessor_dirty_t* self = (grib_accessor_dirty_t*)a;
-    grib_accessor* x            = grib_find_accessor(grib_handle_of_accessor(a), self->accessor);
+    grib_accessor* x = grib_find_accessor(grib_handle_of_accessor(this), accessor_);
 
-    if (x) {
-        //printf("\ngrib_accessor_class_dirty_t::pack_long: Setting dirty to %ld on %s\n", *val, x->name);
-        x->dirty = *val;
-    }
+    if (x)
+        x->dirty_ = *val;
+
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_dirty_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_dirty_t::unpack_long(long* val, size_t* len)
 {
-    grib_accessor_dirty_t* self = (grib_accessor_dirty_t*)a;
-    grib_accessor* x            = grib_find_accessor(grib_handle_of_accessor(a), self->accessor);
+    grib_accessor* x = grib_find_accessor(grib_handle_of_accessor(this), accessor_);
 
     if (x) {
-        //printf("\ngrib_accessor_class_dirty_t::unpack_long: Getting dirty for %s\n", x->name);
-        *val = x->dirty;
-    } else {
+        // printf("\ngrib_accessor_class_dirty_t::unpack_long: Getting dirty for %s\n", x->name);
+        *val = x->dirty_;
+    }
+    else {
         *val = 1;
     }
+
     return GRIB_SUCCESS;
 }

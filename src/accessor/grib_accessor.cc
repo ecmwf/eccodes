@@ -30,14 +30,13 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 
 int grib_accessor::compare_accessors(grib_accessor* a2, int compare_flags)
 {
-    int ret                 = 0;
-    long type1              = 0;
-    long type2              = 0;
-    int type_mismatch       = 0;
-    grib_accessor_class* c1 = NULL;
-    grib_accessor* a1       = this;
+    int ret           = 0;
+    long type1        = 0;
+    long type2        = 0;
+    int type_mismatch = 0;
+    grib_accessor* a1 = this;
 
-    if ((compare_flags & GRIB_COMPARE_NAMES) && grib_inline_strcmp(a1->name, a2->name))
+    if ((compare_flags & GRIB_COMPARE_NAMES) && grib_inline_strcmp(a1->name_, a2->name_))
         return GRIB_NAME_MISMATCH;
 
     if (compare_flags & GRIB_COMPARE_TYPES) {
@@ -48,8 +47,7 @@ int grib_accessor::compare_accessors(grib_accessor* a2, int compare_flags)
     }
 
     // ret = GRIB_UNABLE_TO_COMPARE_ACCESSORS;
-    c1  = a1->cclass;
-    ret = c1->compare(a1, a2);
+    ret = compare(a2);
 
     if (ret == GRIB_VALUE_MISMATCH && type_mismatch)
         ret = GRIB_TYPE_AND_VALUE_MISMATCH;
@@ -59,13 +57,13 @@ int grib_accessor::compare_accessors(grib_accessor* a2, int compare_flags)
 
 int grib_accessor::add_attribute(grib_accessor* attr, int nest_if_clash)
 {
-    int id              = 0;
-    int idx             = 0;
+    int id               = 0;
+    int idx              = 0;
     grib_accessor* pSame = NULL;
     grib_accessor* pAloc = this;
 
     if (this->has_attributes()) {
-        pSame = this->get_attribute_index(attr->name, &id);
+        pSame = this->get_attribute_index(attr->name_, &id);
     }
 
     if (pSame) {
@@ -75,27 +73,27 @@ int grib_accessor::add_attribute(grib_accessor* attr, int nest_if_clash)
     }
 
     for (id = 0; id < MAX_ACCESSOR_ATTRIBUTES; id++) {
-        if (pAloc->attributes[id] == NULL) {
+        if (pAloc->attributes_[id] == NULL) {
             // attr->parent=a->parent;
-            pAloc->attributes[id]      = attr;
-            attr->parent_as_attribute = pAloc;
-            if (pAloc->same)
-                attr->same = pAloc->same->get_attribute_index(attr->name, &idx);
+            pAloc->attributes_[id]     = attr;
+            attr->parent_as_attribute_ = pAloc;
+            if (pAloc->same_)
+                attr->same_ = pAloc->same_->get_attribute_index(attr->name_, &idx);
 
-            grib_context_log(this->context, GRIB_LOG_DEBUG, "added attribute %s->%s", this->name, attr->name);
+            grib_context_log(this->context_, GRIB_LOG_DEBUG, "added attribute %s->%s", this->name_, attr->name_);
             return GRIB_SUCCESS;
         }
     }
     return GRIB_TOO_MANY_ATTRIBUTES;
 }
 
-grib_accessor* grib_accessor::get_attribute_index(const char* name, int* index)
+grib_accessor* grib_accessor::get_attribute_index(const char* name_, int* index)
 {
     int i = 0;
-    while (i < MAX_ACCESSOR_ATTRIBUTES && this->attributes[i]) {
-        if (!grib_inline_strcmp(this->attributes[i]->name, name)) {
+    while (i < MAX_ACCESSOR_ATTRIBUTES && this->attributes_[i]) {
+        if (!grib_inline_strcmp(this->attributes_[i]->name_, name_)) {
             *index = i;
-            return this->attributes[i];
+            return this->attributes_[i];
         }
         i++;
     }
@@ -104,29 +102,29 @@ grib_accessor* grib_accessor::get_attribute_index(const char* name, int* index)
 
 int grib_accessor::has_attributes()
 {
-    return this->attributes[0] ? 1 : 0;
+    return this->attributes_[0] ? 1 : 0;
 }
 
-grib_accessor* grib_accessor::get_attribute(const char* name)
+grib_accessor* grib_accessor::get_attribute(const char* name_)
 {
     int index                  = 0;
     const char* p              = 0;
     char* basename             = NULL;
     const char* attribute_name = NULL;
     grib_accessor* acc         = NULL;
-    p                          = name;
+    p                          = name_;
     while (*(p + 1) != '\0' && (*p != '-' || *(p + 1) != '>'))
         p++;
     if (*(p + 1) == '\0') {
-        return this->get_attribute_index(name, &index);
+        return this->get_attribute_index(name_, &index);
     }
     else {
-        size_t size    = p - name;
+        size_t size    = p - name_;
         attribute_name = p + 2;
-        basename       = (char*)grib_context_malloc_clear(this->context, size + 1);
-        basename       = (char*)memcpy(basename, name, size);
+        basename       = (char*)grib_context_malloc_clear(this->context_, size + 1);
+        basename       = (char*)memcpy(basename, name_, size);
         acc            = this->get_attribute_index(basename, &index);
-        grib_context_free(this->context, basename);
+        grib_context_free(this->context_, basename);
         if (acc)
             return acc->get_attribute(attribute_name);
         else

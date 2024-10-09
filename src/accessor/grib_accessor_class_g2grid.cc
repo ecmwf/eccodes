@@ -11,32 +11,30 @@
 
 #include "grib_accessor_class_g2grid.h"
 
-grib_accessor_class_g2grid_t _grib_accessor_class_g2grid{ "g2grid" };
-grib_accessor_class* grib_accessor_class_g2grid = &_grib_accessor_class_g2grid;
+grib_accessor_g2grid_t _grib_accessor_g2grid{};
+grib_accessor* grib_accessor_g2grid = &_grib_accessor_g2grid;
 
-
-void grib_accessor_class_g2grid_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_g2grid_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_double_t::init(a, l, c);
-    grib_accessor_g2grid_t* self = (grib_accessor_g2grid_t*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
-    int n = 0;
+    grib_accessor_double_t::init(l, c);
+    grib_handle* hand = grib_handle_of_accessor(this);
+    int n             = 0;
 
-    self->latitude_first  = grib_arguments_get_name(hand, c, n++);
-    self->longitude_first = grib_arguments_get_name(hand, c, n++);
-    self->latitude_last   = grib_arguments_get_name(hand, c, n++);
-    self->longitude_last  = grib_arguments_get_name(hand, c, n++);
-    self->i_increment     = grib_arguments_get_name(hand, c, n++);
-    self->j_increment     = grib_arguments_get_name(hand, c, n++);
-    self->basic_angle     = grib_arguments_get_name(hand, c, n++);
-    self->sub_division    = grib_arguments_get_name(hand, c, n++);
+    latitude_first_  = grib_arguments_get_name(hand, c, n++);
+    longitude_first_ = grib_arguments_get_name(hand, c, n++);
+    latitude_last_   = grib_arguments_get_name(hand, c, n++);
+    longitude_last_  = grib_arguments_get_name(hand, c, n++);
+    i_increment_     = grib_arguments_get_name(hand, c, n++);
+    j_increment_     = grib_arguments_get_name(hand, c, n++);
+    basic_angle_     = grib_arguments_get_name(hand, c, n++);
+    sub_division_    = grib_arguments_get_name(hand, c, n++);
 
-    a->flags |=
+    flags_ |=
         GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC |
         GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_g2grid_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_g2grid_t::value_count(long* count)
 {
     *count = 6;
     return 0;
@@ -45,15 +43,14 @@ int grib_accessor_class_g2grid_t::value_count(grib_accessor* a, long* count)
 // GRIB edition 2 uses microdegrees
 #define ANGLE_SUBDIVISIONS (1000 * 1000)
 
-int grib_accessor_class_g2grid_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+int grib_accessor_g2grid_t::unpack_double(double* val, size_t* len)
 {
-    grib_accessor_g2grid_t* self = (grib_accessor_g2grid_t*)a;
-    grib_handle* hand            = grib_handle_of_accessor(a);
-    int ret                      = 0;
+    grib_handle* hand = grib_handle_of_accessor(this);
+    int ret           = 0;
 
     long basic_angle  = 0;
     long sub_division = 0;
-    int n = 0;
+    int n             = 0;
     long v[6];
 
     if (*len < 6) {
@@ -61,12 +58,11 @@ int grib_accessor_class_g2grid_t::unpack_double(grib_accessor* a, double* val, s
         return ret;
     }
 
-    if ((ret = grib_get_long_internal(hand, self->basic_angle, &basic_angle)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, basic_angle_, &basic_angle)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(hand, self->sub_division, &sub_division)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, sub_division_, &sub_division)) != GRIB_SUCCESS)
         return ret;
-
 
     if (sub_division == GRIB_MISSING_LONG || sub_division == 0)
         sub_division = ANGLE_SUBDIVISIONS;
@@ -75,28 +71,28 @@ int grib_accessor_class_g2grid_t::unpack_double(grib_accessor* a, double* val, s
         basic_angle = 1;
 
     n = 0;
-    if ((ret = grib_get_long_internal(hand, self->latitude_first, &v[n++])) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, latitude_first_, &v[n++])) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(hand, self->longitude_first, &v[n++])) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, longitude_first_, &v[n++])) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(hand, self->latitude_last, &v[n++])) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, latitude_last_, &v[n++])) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(hand, self->longitude_last, &v[n++])) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, longitude_last_, &v[n++])) != GRIB_SUCCESS)
         return ret;
 
-    if (!self->i_increment)
+    if (!i_increment_)
         v[n++] = GRIB_MISSING_LONG;
-    else if ((ret = grib_get_long_internal(hand, self->i_increment, &v[n++])) != GRIB_SUCCESS)
+    else if ((ret = grib_get_long_internal(hand, i_increment_, &v[n++])) != GRIB_SUCCESS)
         return ret;
 
-    if (!self->j_increment) {
+    if (!j_increment_) {
         v[n++] = GRIB_MISSING_LONG;
     }
     else {
-        if ((ret = grib_get_long_internal(hand, self->j_increment, &v[n++])) != GRIB_SUCCESS)
+        if ((ret = grib_get_long_internal(hand, j_increment_, &v[n++])) != GRIB_SUCCESS)
             return ret;
     }
     for (int i = 0; i < n; i++)
@@ -178,10 +174,9 @@ static int trial(const double* val, long v[6], long* basic_angle, long* sub_divi
     return is_ok(val, v, *basic_angle, *sub_division);
 }
 
-int grib_accessor_class_g2grid_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+int grib_accessor_g2grid_t::pack_double(const double* val, size_t* len)
 {
-    grib_accessor_g2grid_t* self = (grib_accessor_g2grid_t*)a;
-    grib_handle* hand            = grib_handle_of_accessor(a);
+    grib_handle* hand = grib_handle_of_accessor(this);
     int ret;
     long v[6];
     int n;
@@ -205,7 +200,7 @@ int grib_accessor_class_g2grid_t::pack_double(grib_accessor* a, const double* va
         sub_division = ANGLE_SUBDIVISIONS;
 
         if (!is_ok(val, v, basic_angle, sub_division))
-            grib_context_log(a->context, GRIB_LOG_DEBUG, "Grid cannot be coded with any loss of precision");
+            grib_context_log(context_, GRIB_LOG_DEBUG, "Grid cannot be coded with any loss of precision");
     }
 
     if (basic_angle == 1 && sub_division == ANGLE_SUBDIVISIONS) {
@@ -213,33 +208,33 @@ int grib_accessor_class_g2grid_t::pack_double(grib_accessor* a, const double* va
         sub_division = GRIB_MISSING_LONG;
     }
 
-    if ((ret = grib_set_long_internal(hand, self->basic_angle, basic_angle)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(hand, basic_angle_, basic_angle)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_set_long_internal(hand, self->sub_division, sub_division)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(hand, sub_division_, sub_division)) != GRIB_SUCCESS)
         return ret;
 
     n = 0;
-    if ((ret = grib_set_long_internal(hand, self->latitude_first, v[n++])) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(hand, latitude_first_, v[n++])) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_set_long_internal(hand, self->longitude_first, v[n++])) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(hand, longitude_first_, v[n++])) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_set_long_internal(hand, self->latitude_last, v[n++])) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(hand, latitude_last_, v[n++])) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_set_long_internal(hand, self->longitude_last, v[n++])) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(hand, longitude_last_, v[n++])) != GRIB_SUCCESS)
         return ret;
 
-    if (!self->i_increment)
+    if (!i_increment_)
         n++;
-    else if ((ret = grib_set_long_internal(hand, self->i_increment, v[n++])) != GRIB_SUCCESS)
+    else if ((ret = grib_set_long_internal(hand, i_increment_, v[n++])) != GRIB_SUCCESS)
         return ret;
 
-    if (!self->j_increment)
+    if (!j_increment_)
         n++;
-    else if ((ret = grib_set_long_internal(hand, self->j_increment, v[n++])) != GRIB_SUCCESS)
+    else if ((ret = grib_set_long_internal(hand, j_increment_, v[n++])) != GRIB_SUCCESS)
         return ret;
 
     return GRIB_SUCCESS;

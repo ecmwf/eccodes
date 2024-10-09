@@ -11,53 +11,50 @@
 
 #include "grib_accessor_class_data_complex_packing.h"
 
-grib_accessor_class_data_complex_packing_t _grib_accessor_class_data_complex_packing{ "data_complex_packing" };
-grib_accessor_class* grib_accessor_class_data_complex_packing = &_grib_accessor_class_data_complex_packing;
+grib_accessor_data_complex_packing_t _grib_accessor_data_complex_packing{};
+grib_accessor* grib_accessor_data_complex_packing = &_grib_accessor_data_complex_packing;
 
-void grib_accessor_class_data_complex_packing_t::init(grib_accessor* a, const long v, grib_arguments* args)
+void grib_accessor_data_complex_packing_t::init(const long v, grib_arguments* args)
 {
-    grib_accessor_class_data_simple_packing_t::init(a, v, args);
-    grib_accessor_data_complex_packing_t* self = (grib_accessor_data_complex_packing_t*)a;
-    grib_handle* gh = grib_handle_of_accessor(a);
+    grib_accessor_data_simple_packing_t::init(v, args);
+    grib_handle* gh = grib_handle_of_accessor(this);
 
-    self->GRIBEX_sh_bug_present  = grib_arguments_get_name(gh, args, self->carg++);
-    self->ieee_floats            = grib_arguments_get_name(gh, args, self->carg++);
-    self->laplacianOperatorIsSet = grib_arguments_get_name(gh, args, self->carg++);
-    self->laplacianOperator      = grib_arguments_get_name(gh, args, self->carg++);
-    self->sub_j                  = grib_arguments_get_name(gh, args, self->carg++);
-    self->sub_k                  = grib_arguments_get_name(gh, args, self->carg++);
-    self->sub_m                  = grib_arguments_get_name(gh, args, self->carg++);
-    self->pen_j                  = grib_arguments_get_name(gh, args, self->carg++);
-    self->pen_k                  = grib_arguments_get_name(gh, args, self->carg++);
-    self->pen_m                  = grib_arguments_get_name(gh, args, self->carg++);
+    GRIBEX_sh_bug_present_  = grib_arguments_get_name(gh, args, carg_++);
+    ieee_floats_            = grib_arguments_get_name(gh, args, carg_++);
+    laplacianOperatorIsSet_ = grib_arguments_get_name(gh, args, carg_++);
+    laplacianOperator_      = grib_arguments_get_name(gh, args, carg_++);
+    sub_j_                  = grib_arguments_get_name(gh, args, carg_++);
+    sub_k_                  = grib_arguments_get_name(gh, args, carg_++);
+    sub_m_                  = grib_arguments_get_name(gh, args, carg_++);
+    pen_j_                  = grib_arguments_get_name(gh, args, carg_++);
+    pen_k_                  = grib_arguments_get_name(gh, args, carg_++);
+    pen_m_                  = grib_arguments_get_name(gh, args, carg_++);
 
-    a->flags |= GRIB_ACCESSOR_FLAG_DATA;
+    flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_class_data_complex_packing_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_data_complex_packing_t::value_count(long* count)
 {
-    grib_accessor_data_complex_packing_t* self = (grib_accessor_data_complex_packing_t*)a;
-
     int ret         = GRIB_SUCCESS;
-    grib_handle* gh = grib_handle_of_accessor(a);
+    grib_handle* gh = grib_handle_of_accessor(this);
     long pen_j      = 0;
     long pen_k      = 0;
     long pen_m      = 0;
     *count          = 0;
 
-    if (a->length == 0)
+    if (length_ == 0)
         return 0;
 
-    if ((ret = grib_get_long_internal(gh, self->pen_j, &pen_j)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, pen_j_, &pen_j)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(gh, self->pen_k, &pen_k)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, pen_k_, &pen_k)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(gh, self->pen_m, &pen_m)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, pen_m_, &pen_m)) != GRIB_SUCCESS)
         return ret;
 
     if (pen_j != pen_k || pen_j != pen_m) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Invalid pentagonal resolution parameters");
-        grib_context_log(a->context, GRIB_LOG_ERROR, "pen_j=%ld, pen_k=%ld, pen_m=%ld", pen_j, pen_k, pen_m);
+        grib_context_log(context_, GRIB_LOG_ERROR, "Invalid pentagonal resolution parameters");
+        grib_context_log(context_, GRIB_LOG_ERROR, "pen_j=%ld, pen_k=%ld, pen_m=%ld", pen_j, pen_k, pen_m);
         return GRIB_DECODING_ERROR;
     }
     *count = (pen_j + 1) * (pen_j + 2);
@@ -169,11 +166,10 @@ double calculate_pfactor(const grib_context* ctx, const double* spectralField, l
     return pFactor;
 }
 
-int grib_accessor_class_data_complex_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+int grib_accessor_data_complex_packing_t::pack_double(const double* val, size_t* len)
 {
-    grib_accessor_data_complex_packing_t* self = (grib_accessor_data_complex_packing_t*)a;
-    grib_handle* gh = grib_handle_of_accessor(a);
-    const char* cclass_name = a->cclass->name;
+    grib_handle* gh         = grib_handle_of_accessor(this);
+    const char* cclass_name = class_name_;
 
     size_t i      = 0;
     int ret       = GRIB_SUCCESS;
@@ -228,42 +224,42 @@ int grib_accessor_class_data_complex_packing_t::pack_double(grib_accessor* a, co
     if (*len == 0)
         return GRIB_NO_VALUES;
 
-    if ((ret = grib_get_long_internal(gh, self->offsetdata, &offsetdata)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, offsetdata_, &offsetdata)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(gh, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
-        return ret;
-
-    if ((ret = grib_get_long_internal(gh, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(gh, self->optimize_scaling_factor, &optimize_scaling_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(gh, self->GRIBEX_sh_bug_present, &GRIBEX_sh_bug_present)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, optimize_scaling_factor_, &optimize_scaling_factor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(gh, self->ieee_floats, &ieee_floats)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, GRIBEX_sh_bug_present_, &GRIBEX_sh_bug_present)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(gh, self->laplacianOperatorIsSet, &laplacianOperatorIsSet)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_double_internal(gh, self->laplacianOperator, &laplacianOperator)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, ieee_floats_, &ieee_floats)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(gh, self->sub_j, &sub_j)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, laplacianOperatorIsSet_, &laplacianOperatorIsSet)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(gh, self->sub_k, &sub_k)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(gh, self->sub_m, &sub_m)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(gh, self->pen_j, &pen_j)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(gh, self->pen_k, &pen_k)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(gh, self->pen_m, &pen_m)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(gh, laplacianOperator_, &laplacianOperator)) != GRIB_SUCCESS)
         return ret;
 
-    self->dirty = 1;
+    if ((ret = grib_get_long_internal(gh, sub_j_, &sub_j)) != GRIB_SUCCESS)
+        return ret;
+    if ((ret = grib_get_long_internal(gh, sub_k_, &sub_k)) != GRIB_SUCCESS)
+        return ret;
+    if ((ret = grib_get_long_internal(gh, sub_m_, &sub_m)) != GRIB_SUCCESS)
+        return ret;
+    if ((ret = grib_get_long_internal(gh, pen_j_, &pen_j)) != GRIB_SUCCESS)
+        return ret;
+    if ((ret = grib_get_long_internal(gh, pen_k_, &pen_k)) != GRIB_SUCCESS)
+        return ret;
+    if ((ret = grib_get_long_internal(gh, pen_m_, &pen_m)) != GRIB_SUCCESS)
+        return ret;
+
+    dirty_ = 1;
 
     switch (ieee_floats) {
         case 0:
@@ -283,20 +279,20 @@ int grib_accessor_class_data_complex_packing_t::pack_double(grib_accessor* a, co
     }
 
     if (sub_j != sub_k || sub_j != sub_m || pen_j != pen_k || pen_j != pen_m) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Invalid pentagonal resolution parameters", cclass_name);
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: Invalid pentagonal resolution parameters", cclass_name);
         return GRIB_ENCODING_ERROR;
     }
 
     n_vals = (pen_j + 1) * (pen_j + 2);
 
     if (*len != n_vals) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Wrong number of values, expected %ld - got %zu",
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: Wrong number of values, expected %ld - got %zu",
                          cclass_name, n_vals, *len);
         return GRIB_INTERNAL_ERROR;
     }
 
     /* Data Quality checks */
-    if (a->context->grib_data_quality_checks) {
+    if (context_->grib_data_quality_checks) {
         /* First value is the field's average */
         double min_val = val[0];
         double max_val = min_val;
@@ -308,7 +304,7 @@ int grib_accessor_class_data_complex_packing_t::pack_double(grib_accessor* a, co
         double* values;
         d = codes_power<double>(decimal_scale_factor, 10);
         if (d) {
-            values = (double*)grib_context_malloc_clear(a->context, sizeof(double) * n_vals);
+            values = (double*)grib_context_malloc_clear(context_, sizeof(double) * n_vals);
             for (i = 0; i < n_vals; i++)
                 values[i] = val[i] * d;
         }
@@ -316,20 +312,20 @@ int grib_accessor_class_data_complex_packing_t::pack_double(grib_accessor* a, co
             values = (double*)val;
         }
         buflen = n_vals * bytes;
-        buf    = (unsigned char*)grib_context_malloc_clear(a->context, buflen);
-        grib_ieee_encode_array(a->context, values, n_vals, bytes, buf);
+        buf    = (unsigned char*)grib_context_malloc_clear(context_, buflen);
+        grib_ieee_encode_array(context_, values, n_vals, bytes, buf);
         if (d)
-            grib_context_free(a->context, values);
-        grib_buffer_replace(a, buf, buflen, 1, 1);
-        grib_context_free(a->context, buf);
+            grib_context_free(context_, values);
+        grib_buffer_replace(this, buf, buflen, 1, 1);
+        grib_context_free(context_, buf);
         return 0;
     }
 
     if (!laplacianOperatorIsSet) {
-        laplacianOperator = calculate_pfactor(a->context, val, pen_j, sub_j);
-        if ((ret = grib_set_double_internal(gh, self->laplacianOperator, laplacianOperator)) != GRIB_SUCCESS)
+        laplacianOperator = calculate_pfactor(context_, val, pen_j, sub_j);
+        if ((ret = grib_set_double_internal(gh, laplacianOperator_, laplacianOperator)) != GRIB_SUCCESS)
             return ret;
-        grib_get_double_internal(gh, self->laplacianOperator, &laplacianOperator);
+        grib_get_double_internal(gh, laplacianOperator_, &laplacianOperator);
     }
 
     hsize = bytes * (sub_k + 1) * (sub_k + 2);
@@ -337,7 +333,7 @@ int grib_accessor_class_data_complex_packing_t::pack_double(grib_accessor* a, co
 
     buflen = hsize + lsize;
 
-    buf  = (unsigned char*)grib_context_malloc(a->context, buflen);
+    buf  = (unsigned char*)grib_context_malloc(context_, buflen);
     hres = buf;
     lres = buf + hsize;
 
@@ -346,7 +342,7 @@ int grib_accessor_class_data_complex_packing_t::pack_double(grib_accessor* a, co
     lpos = 0;
     hpos = 0;
 
-    scals = (double*)grib_context_malloc(a->context, maxv * sizeof(double));
+    scals = (double*)grib_context_malloc(context_, maxv * sizeof(double));
     if (!scals) return GRIB_OUT_OF_MEMORY;
 
     scals[0] = 0;
@@ -396,27 +392,26 @@ int grib_accessor_class_data_complex_packing_t::pack_double(grib_accessor* a, co
     }
 
     if (optimize_scaling_factor) {
-        ret = grib_optimize_decimal_factor(a, self->reference_value,
+        ret = grib_optimize_decimal_factor(this, reference_value_,
                                            max, min, bits_per_value, 0, 1,
                                            &decimal_scale_factor,
                                            &binary_scale_factor,
                                            &reference_value);
         if (ret != GRIB_SUCCESS) {
             grib_context_log(gh->context, GRIB_LOG_ERROR,
-                             "%s: Unable to find nearest_smaller_value of %g for %s", cclass_name, min, self->reference_value);
+                             "%s: Unable to find nearest_smaller_value of %g for %s", cclass_name, min, reference_value_);
             return GRIB_INTERNAL_ERROR;
         }
         d = codes_power<double>(+decimal_scale_factor, 10);
     }
     else {
         d = codes_power<double>(+decimal_scale_factor, 10);
-        if (grib_get_nearest_smaller_value(gh, self->reference_value, d * min, &reference_value) != GRIB_SUCCESS) {
+        if (grib_get_nearest_smaller_value(gh, reference_value_, d * min, &reference_value) != GRIB_SUCCESS) {
             grib_context_log(gh->context, GRIB_LOG_ERROR,
-                             "%s: Unable to find nearest_smaller_value of %g for %s", cclass_name, d * min, self->reference_value);
+                             "%s: Unable to find nearest_smaller_value of %g for %s", cclass_name, d * min, reference_value_);
             return GRIB_INTERNAL_ERROR;
         }
         binary_scale_factor = grib_get_binary_scale_fact(d * max, reference_value, bits_per_value, &ret);
-
         if (ret == GRIB_UNDERFLOW) {
             d                   = 0;
             binary_scale_factor = 0;
@@ -424,7 +419,7 @@ int grib_accessor_class_data_complex_packing_t::pack_double(grib_accessor* a, co
         }
         else {
             if (ret != GRIB_SUCCESS) {
-                grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Cannot compute binary_scale_factor", cclass_name);
+                grib_context_log(context_, GRIB_LOG_ERROR, "%s: Cannot compute binary_scale_factor", cclass_name);
                 return ret;
             }
         }
@@ -468,13 +463,13 @@ int grib_accessor_class_data_complex_packing_t::pack_double(grib_accessor* a, co
             for (lcount = hcount; lcount < maxv; lcount++) {
                 current_val = (((((val[i++] * d) * scals[lup]) - reference_value) * s) + 0.5);
                 if (current_val < 0)
-                    grib_context_log(a->context, GRIB_LOG_ERROR,
+                    grib_context_log(context_, GRIB_LOG_ERROR,
                                      "%s: negative coput before packing (%g)", cclass_name, current_val);
                 grib_encode_unsigned_longb(lres, current_val, &lpos, bits_per_value);
 
                 current_val = (((((val[i++] * d) * scals[lup]) - reference_value) * s) + 0.5);
                 if (current_val < 0)
-                    grib_context_log(a->context, GRIB_LOG_ERROR,
+                    grib_context_log(context_, GRIB_LOG_ERROR,
                                      "%s: negative coput before packing (%g)", cclass_name, current_val);
                 grib_encode_unsigned_longb(lres, current_val, &lpos, bits_per_value);
                 lup++;
@@ -484,13 +479,13 @@ int grib_accessor_class_data_complex_packing_t::pack_double(grib_accessor* a, co
             for (lcount = hcount; lcount < maxv; lcount++) {
                 current_val = (((((val[i++] * d) * scals[lup]) - reference_value) * s) + 0.5);
                 if (current_val < 0)
-                    grib_context_log(a->context, GRIB_LOG_ERROR,
+                    grib_context_log(context_, GRIB_LOG_ERROR,
                                      "%s: negative coput before packing (%g)", cclass_name, current_val);
                 grib_encode_unsigned_long(lres, current_val, &lpos, bits_per_value);
 
                 current_val = (((((val[i++] * d) * scals[lup]) - reference_value) * s) + 0.5);
                 if (current_val < 0)
-                    grib_context_log(a->context, GRIB_LOG_ERROR,
+                    grib_context_log(context_, GRIB_LOG_ERROR,
                                      "%s: negative coput before packing (%g)", cclass_name, current_val);
                 grib_encode_unsigned_long(lres, current_val, &lpos, bits_per_value);
                 lup++;
@@ -504,47 +499,46 @@ int grib_accessor_class_data_complex_packing_t::pack_double(grib_accessor* a, co
     }
 
     if (((hpos / 8) != hsize) && ((lpos / 8) != lsize)) {
-        grib_context_log(a->context, GRIB_LOG_ERROR,
+        grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Mismatch in packing between high resolution and low resolution part", cclass_name);
-        grib_context_free(a->context, buf);
-        grib_context_free(a->context, scals);
+        grib_context_free(context_, buf);
+        grib_context_free(context_, scals);
         return GRIB_INTERNAL_ERROR;
     }
 
     buflen = ((hpos + lpos) / 8);
 
-    if ((ret = grib_set_double_internal(gh, self->reference_value, reference_value)) != GRIB_SUCCESS)
+    if ((ret = grib_set_double_internal(gh, reference_value_, reference_value)) != GRIB_SUCCESS)
         return ret;
     {
         // Make sure we can decode it again
         double ref = 1e-100;
-        grib_get_double_internal(gh, self->reference_value, &ref);
+        grib_get_double_internal(gh, reference_value_, &ref);
         if (ref != reference_value) {
-            grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
-                             cclass_name, __func__, self->reference_value, ref, reference_value);
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
+                             cclass_name, __func__, reference_value_, ref, reference_value);
             return GRIB_INTERNAL_ERROR;
         }
     }
 
-    if ((ret = grib_set_long_internal(gh, self->binary_scale_factor, binary_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(gh, binary_scale_factor_, binary_scale_factor)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_set_long_internal(gh, self->decimal_scale_factor, decimal_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(gh, decimal_scale_factor_, decimal_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    grib_buffer_replace(a, buf, buflen, 1, 1);
-    grib_context_free(a->context, buf);
-    grib_context_free(a->context, scals);
+    grib_buffer_replace(this, buf, buflen, 1, 1);
+    grib_context_free(context_, buf);
+    grib_context_free(context_, scals);
 
     return ret;
 }
 
 template <typename T>
-static int unpack_real(grib_accessor* a, T* val, size_t* len)
+int grib_accessor_data_complex_packing_t::unpack_real(T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
-    grib_accessor_data_complex_packing_t* self = (grib_accessor_data_complex_packing_t*)a;
-    grib_handle* gh = grib_handle_of_accessor(a);
-    const char* cclass_name = a->cclass->name;
+    grib_handle* gh         = grib_handle_of_accessor(this);
+    const char* cclass_name = class_name_;
 
     size_t i    = 0;
     int ret     = GRIB_SUCCESS;
@@ -590,7 +584,7 @@ static int unpack_real(grib_accessor* a, T* val, size_t* len)
 
     decode_float_proc decode_float = NULL;
 
-    err = a->value_count(&n_vals);
+    err = value_count(&n_vals);
     if (err)
         return err;
 
@@ -599,44 +593,44 @@ static int unpack_real(grib_accessor* a, T* val, size_t* len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    if ((ret = grib_get_long_internal(gh, self->offsetdata, &offsetdata)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, offsetdata_, &offsetdata)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(gh, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_double_internal(gh, self->reference_value, &tmp)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(gh, reference_value_, &tmp)) != GRIB_SUCCESS)
         return ret;
     reference_value = tmp;
-    if ((ret = grib_get_long_internal(gh, self->binary_scale_factor, &binary_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(gh, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(gh, self->GRIBEX_sh_bug_present, &GRIBEX_sh_bug_present)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, GRIBEX_sh_bug_present_, &GRIBEX_sh_bug_present)) != GRIB_SUCCESS)
         return ret;
 
     /* ECC-774: don't use grib_get_long_internal */
-    if ((ret = grib_get_long(gh, self->ieee_floats, &ieee_floats)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long(gh, ieee_floats_, &ieee_floats)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_double_internal(gh, self->laplacianOperator, &tmp)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(gh, laplacianOperator_, &tmp)) != GRIB_SUCCESS)
         return ret;
     laplacianOperator = tmp;
 
-    if ((ret = grib_get_long_internal(gh, self->sub_j, &sub_j)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, sub_j_, &sub_j)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(gh, self->sub_k, &sub_k)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, sub_k_, &sub_k)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(gh, self->sub_m, &sub_m)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, sub_m_, &sub_m)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(gh, self->pen_j, &pen_j)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, pen_j_, &pen_j)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(gh, self->pen_k, &pen_k)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, pen_k_, &pen_k)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(gh, self->pen_m, &pen_m)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, pen_m_, &pen_m)) != GRIB_SUCCESS)
         return ret;
 
-    self->dirty = 0;
+    dirty_ = 0;
 
     switch (ieee_floats) {
         case 0:
@@ -656,7 +650,7 @@ static int unpack_real(grib_accessor* a, T* val, size_t* len)
     }
 
     if (sub_j != sub_k || sub_j != sub_m || pen_j != pen_k || pen_j != pen_m) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Invalid pentagonal resolution parameters", cclass_name);
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: Invalid pentagonal resolution parameters", cclass_name);
         return GRIB_DECODING_ERROR;
     }
 
@@ -664,7 +658,7 @@ static int unpack_real(grib_accessor* a, T* val, size_t* len)
 
     maxv = pen_j + 1;
 
-    buf += a->byte_offset();
+    buf += byte_offset();
     hres = buf;
     lres = buf;
 
@@ -672,7 +666,7 @@ static int unpack_real(grib_accessor* a, T* val, size_t* len)
         n_vals = (pen_j + 1) * (pen_j + 2);
         d      = codes_power<T>(-decimal_scale_factor, 10);
 
-        grib_ieee_decode_array<T>(a->context, buf, n_vals, bytes, val);
+        grib_ieee_decode_array<T>(context_, buf, n_vals, bytes, val);
         if (d) {
             for (i = 0; i < n_vals; i++)
                 val[i] *= d;
@@ -680,13 +674,13 @@ static int unpack_real(grib_accessor* a, T* val, size_t* len)
         return 0;
     }
 
-    packed_offset = a->byte_offset() + bytes * (sub_k + 1) * (sub_k + 2);
+    packed_offset = byte_offset() + bytes * (sub_k + 1) * (sub_k + 2);
     lpos          = 8 * (packed_offset - offsetdata);
 
     s = codes_power<T>(binary_scale_factor, 2);
     d = codes_power<T>(-decimal_scale_factor, 10);
 
-    scals = (T*)grib_context_malloc(a->context, maxv * sizeof(T));
+    scals = (T*)grib_context_malloc(context_, maxv * sizeof(T));
     if (!scals) return GRIB_OUT_OF_MEMORY;
 
     scals[0] = 0;
@@ -695,7 +689,7 @@ static int unpack_real(grib_accessor* a, T* val, size_t* len)
         if (operat != 0)
             scals[i] = (1.0 / operat);
         else {
-            grib_context_log(a->context, GRIB_LOG_WARNING,
+            grib_context_log(context_, GRIB_LOG_WARNING,
                              "%s: Problem with operator div by zero at index %d of %d", cclass_name, i, maxv);
             scals[i] = 0;
         }
@@ -754,25 +748,25 @@ static int unpack_real(grib_accessor* a, T* val, size_t* len)
 
     //Assert(*len >= i);
     if (*len < i) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "%s::%s: Invalid values *len=%zu and i=%zu.",
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s::%s: Invalid values *len=%zu and i=%zu.",
                          cclass_name, __func__, *len, i);
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Make sure your array is large enough.");
+        grib_context_log(context_, GRIB_LOG_ERROR, "Make sure your array is large enough.");
         ret = GRIB_ARRAY_TOO_SMALL;
     } else {
         *len = i;
     }
 
-    grib_context_free(a->context, scals);
+    grib_context_free(context_, scals);
 
     return ret;
 }
 
-int grib_accessor_class_data_complex_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+int grib_accessor_data_complex_packing_t::unpack_double(double* val, size_t* len)
 {
-    return unpack_real<double>(a, val, len);
+    return unpack_real<double>(val, len);
 }
 
-int grib_accessor_class_data_complex_packing_t::unpack_float(grib_accessor* a, float* val, size_t* len)
+int grib_accessor_data_complex_packing_t::unpack_float(float* val, size_t* len)
 {
     // TODO(maee): See ECC-1579
     // Investigate why results are not bit-identical
@@ -780,18 +774,18 @@ int grib_accessor_class_data_complex_packing_t::unpack_float(grib_accessor* a, f
     // return unpack<float>(a, val, len);
 
     size_t size  = *len;
-    double* val8 = (double*)grib_context_malloc(a->context, size * (sizeof(double)));
+    double* val8 = (double*)grib_context_malloc(context_, size * (sizeof(double)));
     if (!val8) return GRIB_OUT_OF_MEMORY;
 
-    int err = unpack_real<double>(a, val8, len);
+    int err = unpack_real<double>(val8, len);
     if (err) {
-        grib_context_free(a->context, val8);
+        grib_context_free(context_, val8);
         return err;
     }
 
     for (size_t i = 0; i < size; i++)
         val[i] = val8[i];
-    grib_context_free(a->context, val8);
+    grib_context_free(context_, val8);
 
     return GRIB_SUCCESS;
 }

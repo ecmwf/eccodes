@@ -10,84 +10,84 @@
 
 #include "grib_accessor_class_section.h"
 
-grib_accessor_class_section_t _grib_accessor_class_section{ "section" };
-grib_accessor_class* grib_accessor_class_section = &_grib_accessor_class_section;
+grib_accessor_section_t _grib_accessor_section{};
+grib_accessor* grib_accessor_section = &_grib_accessor_section;
 
-
-void grib_accessor_class_section_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+void grib_accessor_section_t::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_class_gen_t::init(a, len, arg);
-    a->sub_section = grib_section_create(grib_handle_of_accessor(a), a);
-    a->length      = 0;
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    grib_accessor_gen_t::init(len, arg);
+    sub_section_ = grib_section_create(grib_handle_of_accessor(this), this);
+    length_      = 0;
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-void grib_accessor_class_section_t::dump(grib_accessor* a, grib_dumper* dumper)
+void grib_accessor_section_t::dump(grib_dumper* dumper)
 {
-    grib_dump_section(dumper, a, a->sub_section->block);
+    grib_dump_section(dumper, this, sub_section_->block);
 }
 
-long grib_accessor_class_section_t::byte_count(grib_accessor* a)
+long grib_accessor_section_t::byte_count()
 {
-    if (!a->length || grib_handle_of_accessor(a)->loader) {
-        if (a->name[1] == '_')
+    if (!length_ || grib_handle_of_accessor(this)->loader) {
+        if (name_[1] == '_')
             return 0;
 
-        //printf("adjusting sizes SECTION %s is %ld %ld\n",a->name,(long)a->offset,(long)a->length);
-        grib_section_adjust_sizes(a->sub_section, grib_handle_of_accessor(a)->loader != NULL, 0);
-        //printf("                SECTION %s is %ld %ld\n",a->name,(long)a->offset,(long)a->length);
+        /* printf("adjusting sizes SECTION %s is %ld %ld\n",a->name,(long)a->offset,(long)length_ ); */
+        grib_section_adjust_sizes(sub_section_, grib_handle_of_accessor(this)->loader != NULL, 0);
+        /* printf("                SECTION %s is %ld %ld\n",a->name,(long)a->offset,(long)length_ );  */
     }
 
-    // printf("SECTION %s is %ld %d\n",a->name,a->length,a->sub_section->aclength != NULL);
-    return a->length;
+    /* printf("SECTION %s is %ld %d\n",a->name,a->length,sub_section_ ->aclength != NULL);  */
+    return length_;
 }
 
-long grib_accessor_class_section_t::next_offset(grib_accessor* a)
+long grib_accessor_section_t::next_offset()
 {
-    return a->offset + a->byte_count();
+    return offset_ + byte_count();
 }
 
-void grib_accessor_class_section_t::destroy(grib_context* ct, grib_accessor* a)
+void grib_accessor_section_t::destroy(grib_context* ct)
 {
-    grib_section_delete(ct, a->sub_section);
-    grib_accessor_class_gen_t::destroy(ct, a);
+    grib_section_delete(ct, sub_section_);
+    grib_accessor_gen_t::destroy(ct);
 }
 
-int grib_accessor_class_section_t::get_native_type(grib_accessor* a)
+long grib_accessor_section_t::get_native_type()
 {
     return GRIB_TYPE_SECTION;
 }
 
-grib_section* grib_accessor_class_section_t::sub_section(grib_accessor* a)
+grib_section* grib_accessor_section_t::sub_section()
 {
-    return a->sub_section;
+    return sub_section_;
 }
 
-void grib_accessor_class_section_t::update_size(grib_accessor* a, size_t length)
+void grib_accessor_section_t::update_size(size_t length)
 {
     size_t size = 1;
     long len    = length;
     Assert(length <= 0x7fffffff);
-    if (a->sub_section->aclength) {
-        int e = a->sub_section->aclength->pack_long(&len, &size);
+    if (sub_section_->aclength) {
+        int e = sub_section_->aclength->pack_long(&len, &size);
         Assert(e == GRIB_SUCCESS);
-        // printf("update_length %s %ld %ld\n", a->sub_section->aclength->name,
-        //        (long)a->sub_section->aclength->offset,
-        //        (long)a->sub_section->aclength->length);
+        // printf("update_length %s %ld %ld\n", sub_section_ ->aclength->name,
+        //        (long)sub_section_ ->aclength->offset,
+        //        (long)sub_section_ ->aclength->length);
     }
 
-    a->sub_section->length = a->length = length;
-    a->sub_section->padding = 0;
+    sub_section_->length = length_ = length;
+    sub_section_->padding          = 0;
 
-    // printf("update_size %s %ld\n", a->name, a->length);
-    Assert(a->length >= 0);
+    // printf("update_size %s %ld\n", a->name, length_ );
+
+    Assert(length_ >= 0);
 }
 
-grib_accessor* grib_accessor_class_section_t::next(grib_accessor* a, int explore)
+grib_accessor* grib_accessor_section_t::next(grib_accessor* a, int explore)
 {
     grib_accessor* next = NULL;
     if (explore) {
-        next = a->sub_section->block->first;
+        next = a->sub_section_->block->first;
         if (!next)
             next = a->next_;
     }
@@ -95,8 +95,8 @@ grib_accessor* grib_accessor_class_section_t::next(grib_accessor* a, int explore
         next = a->next_;
     }
     if (!next) {
-        if (a->parent->owner)
-            next = a->parent->owner->cclass->next(a->parent->owner, 0);
+        if (a->parent_->owner)
+            next = a->parent_->owner->next(a->parent_->owner, 0);
     }
     return next;
 }

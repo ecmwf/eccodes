@@ -17,20 +17,17 @@ MEMBERS
 extern grib_action_class* SUPER;
 
 static grib_action_class _grib_action_class_NAME = {
-    &SUPER,                              /* super                     */
-    "action_class_NAME",                              /* name                      */
-    sizeof(grib_action_NAME),            /* size                      */
-    0,                                   /* inited */
+    &SUPER,                              /* super */
+    "action_class_NAME",                 /* name */
+    sizeof(grib_action_NAME),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    &init,                               /* init                      */
+    &init,                               /* init */
     &destroy,                            /* destroy */
-
-    &dump,                               /* dump                      */
-    &xref,                               /* xref                      */
-
-    &create_accessor,             /* create_accessor*/
-
-    &notify_change,                            /* notify_change */
+    &dump,                               /* dump */
+    &xref,                               /* xref */
+    &create_accessor,                    /* create_accessor */
+    &notify_change,                      /* notify_change */
     &reparse,                            /* reparse */
     &execute,                            /* execute */
 };

@@ -49,20 +49,17 @@ typedef struct grib_action_alias {
 
 
 static grib_action_class _grib_action_class_alias = {
-    0,                              /* super                     */
-    "action_class_alias",                              /* name                      */
-    sizeof(grib_action_alias),            /* size                      */
-    0,                                   /* inited */
+    0,                              /* super */
+    "action_class_alias",                 /* name */
+    sizeof(grib_action_alias),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     &destroy,                            /* destroy */
-
-    &dump,                               /* dump                      */
-    0,                               /* xref                      */
-
-    &create_accessor,             /* create_accessor*/
-
-    0,                            /* notify_change */
+    &dump,                               /* dump */
+    0,                               /* xref */
+    &create_accessor,                    /* create_accessor */
+    0,                      /* notify_change */
     0,                            /* reparse */
     0,                            /* execute */
 };
@@ -137,19 +134,19 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
             return GRIB_SUCCESS;
         }
 
-        if (x->name_space == NULL)
-            x->name_space = act->name_space;
+        if (x->name_space_ == NULL)
+            x->name_space_ = act->name_space;
 
         grib_context_log(p->h->context, GRIB_LOG_DEBUG, "alias: add only namespace: %s.%s",
                          act->name_space, act->name);
         i = 0;
         while (i < MAX_ACCESSOR_NAMES) {
-            if (x->all_names[i] != NULL && !grib_inline_strcmp(x->all_names[i], act->name)) {
-                if (x->all_name_spaces[i] == NULL) {
-                    x->all_name_spaces[i] = act->name_space;
+            if (x->all_names_[i] != NULL && !grib_inline_strcmp(x->all_names_[i], act->name)) {
+                if (x->all_name_spaces_[i] == NULL) {
+                    x->all_name_spaces_[i] = act->name_space;
                     return GRIB_SUCCESS;
                 }
-                else if (!grib_inline_strcmp(x->all_name_spaces[i], act->name_space)) {
+                else if (!grib_inline_strcmp(x->all_name_spaces_[i], act->name_space)) {
                     return GRIB_SUCCESS;
                 }
             }
@@ -157,9 +154,9 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
         }
         i = 0;
         while (i < MAX_ACCESSOR_NAMES) {
-            if (x->all_names[i] == NULL) {
-                x->all_names[i]       = act->name;
-                x->all_name_spaces[i] = act->name_space;
+            if (x->all_names_[i] == NULL) {
+                x->all_names_[i]       = act->name;
+                x->all_name_spaces_[i] = act->name_space;
                 return GRIB_SUCCESS;
             }
             i++;
@@ -175,20 +172,20 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
     /* delete old alias if already defined */
     if (y != NULL) {
         i = 0;
-        while (i < MAX_ACCESSOR_NAMES && y->all_names[i]) {
-            if (same(y->all_names[i], act->name) && same(y->all_name_spaces[i], act->name_space)) {
+        while (i < MAX_ACCESSOR_NAMES && y->all_names_[i]) {
+            if (same(y->all_names_[i], act->name) && same(y->all_name_spaces_[i], act->name_space)) {
                 grib_context_log(p->h->context, GRIB_LOG_DEBUG, "alias %s.%s already defined for %s. Deleting old alias",
-                                 act->name_space, act->name, y->name);
-                /* printf("[%s %s]\n",y->all_names[i], y->all_name_spaces[i]); */
+                                 act->name_space, act->name, y->name_);
+                /* printf("[%s %s]\n",y->all_names_[i], y->all_name_spaces_[i]); */
 
                 while (i < MAX_ACCESSOR_NAMES - 1) {
-                    y->all_names[i]       = y->all_names[i + 1];
-                    y->all_name_spaces[i] = y->all_name_spaces[i + 1];
+                    y->all_names_[i]       = y->all_names_[i + 1];
+                    y->all_name_spaces_[i] = y->all_name_spaces_[i + 1];
                     i++;
                 }
 
-                y->all_names[MAX_ACCESSOR_NAMES - 1]       = NULL;
-                y->all_name_spaces[MAX_ACCESSOR_NAMES - 1] = NULL;
+                y->all_names_[MAX_ACCESSOR_NAMES - 1]       = NULL;
+                y->all_name_spaces_[MAX_ACCESSOR_NAMES - 1] = NULL;
 
                 break;
             }
@@ -213,7 +210,7 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 
     hand = grib_handle_of_accessor(x);
     if (hand->use_trie) {
-        id = grib_hash_keys_get_id(x->context->keys, act->name);
+        id = grib_hash_keys_get_id(x->context_->keys, act->name);
         hand->accessors[id] = x;
 
         /*
@@ -226,19 +223,19 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 
     i = 0;
     while (i < MAX_ACCESSOR_NAMES) {
-        if (x->all_names[i] == NULL) {
+        if (x->all_names_[i] == NULL) {
             /* Only add entries if not already there */
             int found = 0;
             for (j = 0; j < i && !found; ++j) {
-                int nameSame      = same(x->all_names[j], act->name);
-                int namespaceSame = same(x->all_name_spaces[j], act->name_space);
+                int nameSame      = same(x->all_names_[j], act->name);
+                int namespaceSame = same(x->all_name_spaces_[j], act->name_space);
                 if (nameSame && namespaceSame) {
                     found = 1;
                 }
             }
             if (!found) { /* Not there. So add them */
-                x->all_names[i]       = act->name;
-                x->all_name_spaces[i] = act->name_space;
+                x->all_names_[i]       = act->name;
+                x->all_name_spaces_[i] = act->name_space;
                 grib_context_log(p->h->context, GRIB_LOG_DEBUG, "alias %s.%s added (%s)",
                                  act->name_space, act->name, self->target);
             }
@@ -249,7 +246,7 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 
     for (i = 0; i < MAX_ACCESSOR_NAMES; i++)
         grib_context_log(p->h->context, GRIB_LOG_ERROR, "alias %s= ( %s already bound to %s )",
-                         act->name, self->target, x->all_names[i]);
+                         act->name, self->target, x->all_names_[i]);
 
     return GRIB_SUCCESS;
 }

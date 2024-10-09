@@ -24,9 +24,9 @@ constant dataRepresentationType  = 0;
 # (according to data representation type - octet 6 above)
 
 # grib 1 -> 2
-constant gridDefinitionTemplateNumber     = 0;
+constant gridDefinitionTemplateNumber = 0;
 
-# START 1/grid_definition.latitude_longitude_grid ----------------------------------------------------------------------
+# START 1/grid_definition.latitude_longitude_grid
 # GRID DEFINITION latitude/longitude grid (or equidistant cylindrical)
 
 alias numberOfPointsAlongAParallel=Ni;
@@ -121,7 +121,7 @@ constant numberOfUnusedBitsAtEndOfSection3 = 0;
 constant tableReference = 0;
 
 #position offsetBeforeBitmap;
-meta bitmap gds_not_present_bitmap( missingValue,numberOfValues,
-                                    numberOfPoints,
-                                    latitudeOfFirstGridPoint,
-                                    Ni,numberOfUnusedBitsAtEndOfSection3) : read_only;
+# meta bitmap gds_not_present_bitmap( missingValue,numberOfValues,
+# numberOfPoints,
+# latitudeOfFirstGridPoint,
+# Ni,numberOfUnusedBitsAtEndOfSection3) : read_only;

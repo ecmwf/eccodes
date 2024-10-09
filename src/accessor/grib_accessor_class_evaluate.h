@@ -15,15 +15,12 @@
 class grib_accessor_evaluate_t : public grib_accessor_long_t
 {
 public:
-    /* Members defined in evaluate */
-    grib_arguments* arg;
-};
-
-class grib_accessor_class_evaluate_t : public grib_accessor_class_long_t
-{
-public:
-    grib_accessor_class_evaluate_t(const char* name) : grib_accessor_class_long_t(name) {}
+    grib_accessor_evaluate_t() :
+        grib_accessor_long_t() { class_name_ = "evaluate"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_evaluate_t{}; }
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int unpack_long(long* val, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+protected:
+    grib_arguments* arg_;
 };

@@ -20,6 +20,7 @@
 'neutralBuoyancy'              = {typeOfFirstFixedSurface=16;  typeOfSecondFixedSurface=255;}
 'mostUnstableParcel'           = {typeOfFirstFixedSurface=17;  typeOfSecondFixedSurface=255;}
 'mixedLayerParcel'             = {typeOfFirstFixedSurface=18;  typeOfSecondFixedSurface=255;}
+'lowestLevelOfCloudCoverExceedance' = {typeOfFirstFixedSurface=19; typeOfSecondFixedSurface=255;}
 'isothermal'                   = {typeOfFirstFixedSurface=20;  typeOfSecondFixedSurface=255;}
 'isobaricInPa'                 = {typeOfFirstFixedSurface=100; typeOfSecondFixedSurface=255; pressureUnits='Pa';}
 'isobaricInhPa'                = {typeOfFirstFixedSurface=100; pressureUnits='hPa'; typeOfSecondFixedSurface=255;}

@@ -12,32 +12,60 @@
 
 #include "grib_accessor_class_data_simple_packing.h"
 
+typedef unsigned long (*encode_float_proc)(double);
+typedef double (*decode_float_proc)(unsigned long);
+
+
+typedef struct bif_trunc_t
+{
+    long bits_per_value;
+    long decimal_scale_factor;
+    long binary_scale_factor;
+    long ieee_floats;
+    long laplacianOperatorIsSet;
+    double laplacianOperator;
+    double reference_value;
+    long sub_i, sub_j, bif_i, bif_j;
+    long biFourierTruncationType;
+    long biFourierSubTruncationType;
+    long keepaxes;
+    long maketemplate;
+    decode_float_proc decode_float;
+    encode_float_proc encode_float;
+    int bytes;
+    long* itruncation_bif;
+    long* jtruncation_bif;
+    long* itruncation_sub;
+    long* jtruncation_sub;
+    size_t n_vals_bif, n_vals_sub;
+} bif_trunc_t;
+
+
 class grib_accessor_data_g2bifourier_packing_t : public grib_accessor_data_simple_packing_t
 {
 public:
-    /* Members defined in data_g2bifourier_packing */
-    const char*  ieee_floats;
-    const char*  laplacianOperatorIsSet;
-    const char*  laplacianOperator;
-    const char*  biFourierTruncationType;
-    const char*  sub_i;
-    const char*  sub_j;
-    const char*  bif_i;
-    const char*  bif_j;
-    const char*  biFourierSubTruncationType;
-    const char*  biFourierDoNotPackAxes;
-    const char*  biFourierMakeTemplate;
-    const char*  totalNumberOfValuesInUnpackedSubset;
-    const char*  numberOfValues;
-};
-
-class grib_accessor_class_data_g2bifourier_packing_t : public grib_accessor_class_data_simple_packing_t
-{
-public:
-    grib_accessor_class_data_g2bifourier_packing_t(const char* name) : grib_accessor_class_data_simple_packing_t(name) {}
+    grib_accessor_data_g2bifourier_packing_t() :
+        grib_accessor_data_simple_packing_t() { class_name_ = "data_g2bifourier_packing"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_data_g2bifourier_packing_t{}; }
-    int pack_double(grib_accessor*, const double* val, size_t* len) override;
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_double(const double* val, size_t* len) override;
+    int unpack_double(double* val, size_t* len) override;
+    int value_count(long*) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* ieee_floats_;
+    const char* laplacianOperatorIsSet_;
+    const char* laplacianOperator_;
+    const char* biFourierTruncationType_;
+    const char* sub_i_;
+    const char* sub_j_;
+    const char* bif_i_;
+    const char* bif_j_;
+    const char* biFourierSubTruncationType_;
+    const char* biFourierDoNotPackAxes_;
+    const char* biFourierMakeTemplate_;
+    const char* totalNumberOfValuesInUnpackedSubset_;
+    const char* numberOfValues_;
+
+    bif_trunc_t* new_bif_trunc();
 };
