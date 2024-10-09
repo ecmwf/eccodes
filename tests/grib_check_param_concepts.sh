@@ -156,5 +156,14 @@ done
 set -e
 
 
+# -------------------------------
+echo "ECC-1932"
+# -------------------------------
+tempGrib=temp.${label}.grib
+sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+${tools_dir}/grib_set -s centre=egrr,indicatorOfParameter=167 $sample1 $tempGrib
+grib_check_key_equals $tempGrib cfVarName t2m
+rm -f $tempGrib
+
 cd $test_dir
 rm -fr $tempDir
