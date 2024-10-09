@@ -9,7 +9,7 @@
  */
 
 #include "grib_accessor_class_bits.h"
-#include "NumericLimits.h"
+#include "ecc_numeric_limits.h"
 
 
 grib_accessor_bits_t _grib_accessor_bits{};

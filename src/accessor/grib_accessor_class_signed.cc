@@ -10,7 +10,7 @@
  */
 
 #include "grib_accessor_class_signed.h"
-#include "NumericLimits.h"
+#include "ecc_numeric_limits.h"
 
 grib_accessor_signed_t _grib_accessor_signed{};
 grib_accessor* grib_accessor_signed = &_grib_accessor_signed;
