@@ -11,15 +11,21 @@
 #pragma once
 
 #include <array>
-#include <cstdint>
-#include <climits> // CHAR_BIT
+#include <climits>  // CHAR_BIT
 
 // NumericLimits is a class template that provides the minimum and maximum values for a given number of bits.
 // The minimum and maximum values are calculated for both signed and unsigned integral types.
 
+template <typename ValueType, bool = std::is_signed<ValueType>::value, bool = std::is_integral<ValueType>::value>
+struct NumericLimits
+{
+    static_assert(std::is_integral<ValueType>::value, "ValueType must be an integral type");
+};
+
+
 // Example:
 // For a 16-bit signed integer, the minimum and maximum values are:
-// nbits | min | max
+// nBits | min | max
 // ----- | --- | ---
 // 1     | -1  | 0
 // 2     | -2  | 1
@@ -29,47 +35,40 @@
 // 15    | -16384 | 16383
 // 16    | -32768 | 32767
 
-template <typename ValueType, bool = std::is_signed<ValueType>::value, bool = std::is_integral<ValueType>::value>
-struct NumericLimits
+template <typename ValueType>
+struct NumericLimits<ValueType, true, true>
 {
 private:
-    static constexpr uint8_t MaxN = CHAR_BIT * sizeof(ValueType);
+    static constexpr std::size_t maxNBits = CHAR_BIT * sizeof(ValueType);
 
-    static constexpr std::array<ValueType, MaxN> max_ = []() {
-        std::array<ValueType, MaxN> max{};
+    static constexpr std::array<ValueType, maxNBits> max_ = []() {
+        std::array<ValueType, maxNBits> max{};
         using UnsignedValueType          = std::make_unsigned_t<ValueType>;
-        constexpr UnsignedValueType ones = ~UnsignedValueType{0};
+        constexpr UnsignedValueType ones = ~UnsignedValueType{ 0 };
         max[0]                           = 0;
-        for (uint8_t i = 1; i < MaxN; ++i) {
-            max[i] = static_cast<ValueType>(ones >> (MaxN - i));
+        for (std::size_t i = 1; i < maxNBits; ++i) {
+            max[i] = static_cast<ValueType>(ones >> (maxNBits - i));
         }
         return max;
     }();
 
-    static constexpr std::array<ValueType, MaxN> min_ = []() {
-        std::array<ValueType, MaxN> min{};
-        for (uint8_t i = 0; i < MaxN; ++i) {
+    static constexpr std::array<ValueType, maxNBits> min_ = []() {
+        std::array<ValueType, maxNBits> min{};
+        for (std::size_t i = 0; i < maxNBits; ++i) {
             min[i] = ~max_[i];
         }
         return min;
     }();
 
 public:
-    static constexpr ValueType min(uint8_t nbits)
-    {
-        return min_[nbits - 1];
-    }
-
-    static constexpr ValueType max(uint8_t nbits)
-    {
-        return max_[nbits - 1];
-    }
+    static constexpr ValueType min(std::size_t nBits) { return min_[nBits - 1]; }
+    static constexpr ValueType max(std::size_t nBits) { return max_[nBits - 1]; }
 };
 
 
 // Example:
 // For a 16-bit unsigned integer, the minimum and maximum values are:
-// nbits | min | max
+// nBits | min | max
 // ----- | --- | ---
 // 1     | 0   | 1
 // 2     | 0   | 3
@@ -82,29 +81,20 @@ public:
 template <typename ValueType>
 struct NumericLimits<ValueType, false, true>
 {
-    static_assert(std::is_integral<ValueType>::value, "ValueType must be an integral type");
-
 private:
-    static constexpr uint8_t MaxN = CHAR_BIT * sizeof(ValueType);
+    static constexpr std::size_t maxNBits = CHAR_BIT * sizeof(ValueType);
 
-    static constexpr std::array<ValueType, MaxN> max_ = []() {
-        std::array<ValueType, MaxN> max{};
+    static constexpr std::array<ValueType, maxNBits> max_ = []() {
+        std::array<ValueType, maxNBits> max{};
         constexpr ValueType ones = ~(static_cast<ValueType>(0));
         max[0]                   = 1;
-        for (uint8_t i = 1; i < MaxN; ++i) {
-            max[i] = ones >> (MaxN - i - 1);
+        for (std::size_t i = 1; i < maxNBits; ++i) {
+            max[i] = ones >> (maxNBits - i - 1);
         }
         return max;
     }();
 
 public:
-    static constexpr ValueType min(uint8_t nbits)
-    {
-        return 0;
-    }
-
-    static constexpr ValueType max(uint8_t nbits)
-    {
-        return max_[nbits - 1];
-    }
+    static constexpr ValueType min(std::size_t nBits) { return 0; }
+    static constexpr ValueType max(std::size_t nBits) { return max_[nBits - 1]; }
 };
