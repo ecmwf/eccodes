@@ -1189,7 +1189,7 @@
  parameterCategory = 128 ;
  parameterNumber = 53 ;
 }
-#Water fraction
+#Lake cover
 '(0 - 1)' = {
  discipline = 192 ;
  parameterCategory = 128 ;
