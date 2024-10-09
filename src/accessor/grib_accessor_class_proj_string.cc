@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -218,10 +217,9 @@ int grib_accessor_proj_string_t::unpack_string(char* v, size_t* len)
 
     size_t l = 100;  // Safe bet
     if (*len < l) {
-        const char* cclass_name = class_name_;
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is at least %zu bytes long (len=%zu)",
-                         cclass_name, name_, l, *len);
+                         class_name_, name_, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }

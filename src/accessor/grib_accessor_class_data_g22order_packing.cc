@@ -774,8 +774,7 @@ static void merge_j(struct section* h, int ref_bits, int width_bits, int has_und
 
 int grib_accessor_data_g22order_packing_t::pack_double(const double* val, size_t* len)
 {
-    grib_handle* gh         = grib_handle_of_accessor(this);
-    const char* cclass_name = class_name_;
+    grib_handle* gh = grib_handle_of_accessor(this);
 
     int err = 0;
 
@@ -906,7 +905,7 @@ int grib_accessor_data_g22order_packing_t::pack_double(const double* val, size_t
     size_t ndata = *len;
     double* data = reinterpret_cast<double*>(grib_context_malloc_clear(context_, ndata * sizeof(double)));
     if (data == NULL) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: unable to allocate %zu bytes", cclass_name, ndata * sizeof(double));
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: unable to allocate %zu bytes", class_name_, ndata * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     memcpy(data, val, sizeof(*data) * ndata);
@@ -926,11 +925,11 @@ int grib_accessor_data_g22order_packing_t::pack_double(const double* val, size_t
 
     v = reinterpret_cast<int*>(grib_context_malloc(context_, nndata * sizeof(int)));
     if (v == NULL) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: unable to allocate %zu bytes", cclass_name, nndata * sizeof(int));
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: unable to allocate %zu bytes", class_name_, nndata * sizeof(int));
         return GRIB_OUT_OF_MEMORY;
     }
     if (min_max_array(data, ndata, &mn, &mx) != GRIB_SUCCESS) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: failed to get min max of data", cclass_name);
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: failed to get min max of data", class_name_);
         return GRIB_ENCODING_ERROR;
     }
     min_val = mn;
@@ -1109,7 +1108,7 @@ int grib_accessor_data_g22order_packing_t::pack_double(const double* val, size_t
 
     list = reinterpret_cast<section*>(grib_context_malloc_clear(context_, nstruct * sizeof(section)));
     if (list == NULL) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: memory allocation of list failed", cclass_name);
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: memory allocation of list failed", class_name_);
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -1139,7 +1138,7 @@ int grib_accessor_data_g22order_packing_t::pack_double(const double* val, size_t
     start.tail    = &list[0];
 
     if (nstruct != ii + 1) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: nstruct=%zu wanted %zu", cclass_name, nstruct, ii + 1);
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: nstruct=%zu wanted %zu", class_name_, nstruct, ii + 1);
         return GRIB_ENCODING_ERROR;
     }
     for (i = 1; i < nstruct; i++) {
@@ -1167,7 +1166,7 @@ int grib_accessor_data_g22order_packing_t::pack_double(const double* val, size_t
 
     list_backup = reinterpret_cast<section*>(grib_context_malloc(context_, nstruct * sizeof(section)));
     if (list_backup == NULL) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: memory allocation of list_backup failed", cclass_name);
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: memory allocation of list_backup failed", class_name_);
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -1247,7 +1246,7 @@ int grib_accessor_data_g22order_packing_t::pack_double(const double* val, size_t
     itmp2  = reinterpret_cast<int*>(grib_context_malloc(context_, ngroups * sizeof(int)));
 
     if (lens == NULL || widths == NULL || refs == NULL || itmp == NULL || itmp2 == NULL) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: memory alloc of lens/widths/refs/itmp/itmp2 failed", cclass_name);
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: memory alloc of lens/widths/refs/itmp/itmp2 failed", class_name_);
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -1382,7 +1381,7 @@ int grib_accessor_data_g22order_packing_t::pack_double(const double* val, size_t
 
     unsigned char* sec7 = reinterpret_cast<unsigned char*>(grib_context_malloc(context_, size_sec7));
     if (sec7 == NULL) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s: Unable to allocate %d bytes", cclass_name, size_sec7);
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: Unable to allocate %d bytes", class_name_, size_sec7);
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -1464,7 +1463,7 @@ template <typename T>
 int grib_accessor_data_g22order_packing_t::unpack(T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
-    const char* cclass_name = class_name_;
+    const char* class_name_ = class_name_;
     grib_handle* gh         = grib_handle_of_accessor(this);
 
     size_t i                  = 0;
@@ -1688,7 +1687,7 @@ int grib_accessor_data_g22order_packing_t::unpack(T* val, size_t* len)
         // For Complex packing and spatial differencing, order == 1 or 2 (code table 5.6)
         if (orderOfSpatialDifferencing != 1 && orderOfSpatialDifferencing != 2) {
             grib_context_log(context_, GRIB_LOG_ERROR,
-                             "%s unpacking: Unsupported order of spatial differencing %ld", cclass_name, orderOfSpatialDifferencing);
+                             "%s unpacking: Unsupported order of spatial differencing %ld", class_name_, orderOfSpatialDifferencing);
             return GRIB_INTERNAL_ERROR;
         }
 

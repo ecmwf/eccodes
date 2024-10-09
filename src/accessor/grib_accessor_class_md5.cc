@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -89,10 +88,9 @@ int grib_accessor_md5_t::unpack_string(char* v, size_t* len)
     struct grib_md5_state md5c;
 
     if (*len < 32) {
-        const char* cclass_name = class_name_;
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %d bytes long (len=%zu)",
-                         cclass_name, name_, 32, *len);
+                         class_name_, name_, 32, *len);
         *len = 32;
         return GRIB_BUFFER_TOO_SMALL;
     }

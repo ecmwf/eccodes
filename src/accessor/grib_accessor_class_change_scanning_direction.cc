@@ -45,18 +45,17 @@ int grib_accessor_change_scanning_direction_t::pack_long(const long* val, size_t
     double* values          = NULL;
     const grib_context* c   = context_;
     grib_handle* h          = grib_handle_of_accessor(this);
-    const char* cclass_name = class_name_;
 
     if (*val == 0)
         return GRIB_SUCCESS;
 
     /* Make sure Ni / Nj are not missing */
     if (grib_is_missing(h, Ni_, &err) && !err) {
-        grib_context_log(c, GRIB_LOG_ERROR, "%s: Key %s cannot be 'missing'!", cclass_name, Ni_);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Key %s cannot be 'missing'!", class_name_, Ni_);
         return GRIB_WRONG_GRID;
     }
     if (grib_is_missing(h, Nj_, &err) && !err) {
-        grib_context_log(c, GRIB_LOG_ERROR, "%s: Key %s cannot be 'missing'!", cclass_name, Nj_);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Key %s cannot be 'missing'!", class_name_, Nj_);
         return GRIB_WRONG_GRID;
     }
 
@@ -79,7 +78,7 @@ int grib_accessor_change_scanning_direction_t::pack_long(const long* val, size_t
         return err;
 
     if (size > Ni * Nj) {
-        grib_context_log(c, GRIB_LOG_ERROR, "%s: Wrong values size!=Ni*Nj (%ld!=%ld*%ld)", cclass_name, size, Ni, Nj);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Wrong values size!=Ni*Nj (%ld!=%ld*%ld)", class_name_, size, Ni, Nj);
         return GRIB_WRONG_ARRAY_SIZE;
     }
 

@@ -539,8 +539,7 @@ cleanup:
 
 int grib_accessor_data_g2bifourier_packing_t::pack_double(const double* val, size_t* len)
 {
-    grib_handle* gh         = grib_handle_of_accessor(this);
-    const char* cclass_name = class_name_;
+    grib_handle* gh = grib_handle_of_accessor(this);
 
     size_t buflen       = 0;
     size_t hsize        = 0;
@@ -714,7 +713,7 @@ int grib_accessor_data_g2bifourier_packing_t::pack_double(const double* val, siz
         grib_get_double_internal(gh, reference_value_, &ref);
         if (ref != bt->reference_value) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
-                             cclass_name, __func__, reference_value_, ref, bt->reference_value);
+                             class_name_, __func__, reference_value_, ref, bt->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
     }

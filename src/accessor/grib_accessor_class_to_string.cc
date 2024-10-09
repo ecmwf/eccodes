@@ -58,17 +58,14 @@ long grib_accessor_to_string_t::get_native_type()
 int grib_accessor_to_string_t::unpack_string(char* val, size_t* len)
 {
     int err        = 0;
-    char buff[512] = {
-        0,
-    };
+    char buff[512] = {0,};
 
     size_t length = string_length();
 
     if (*len < length + 1) {
-        const char* cclass_name = class_name_;
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         cclass_name, name_, length + 1, *len);
+                         class_name_, name_, length + 1, *len);
         *len = length + 1;
         return GRIB_BUFFER_TOO_SMALL;
     }
@@ -91,9 +88,7 @@ int grib_accessor_to_string_t::unpack_string(char* val, size_t* len)
 
 int grib_accessor_to_string_t::unpack_long(long* v, size_t* len)
 {
-    char val[1024] = {
-        0,
-    };
+    char val[1024] = {0,};
     size_t l   = sizeof(val);
     char* last = NULL;
     int err    = unpack_string(val, &l);

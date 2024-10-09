@@ -400,9 +400,8 @@ int grib_accessor_concept_t::pack_long(const long* val, size_t* len)
             long newParamId = 0;
             if (grib_get_long(h, "paramIdForConversion", &newParamId) == GRIB_SUCCESS && newParamId > 0) {
                 if (context_->debug) {
-                    const char* cclass_name = class_name_;
                     fprintf(stderr, "ECCODES DEBUG %s::%s: Changing %s from %ld to %ld\n",
-                            cclass_name, __func__, name_, *val, newParamId);
+                            class_name_, __func__, name_, *val, newParamId);
                 }
                 snprintf(buf, sizeof(buf), "%ld", newParamId);
             }

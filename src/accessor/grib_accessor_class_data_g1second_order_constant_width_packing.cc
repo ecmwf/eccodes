@@ -178,8 +178,7 @@ int grib_accessor_data_g1second_order_constant_width_packing_t::unpack_double(do
 
 int grib_accessor_data_g1second_order_constant_width_packing_t::pack_double(const double* cval, size_t* len)
 {
-    const char* cclass_name = class_name_;
-    grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s: Not implemented", cclass_name, __func__);
+    grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s: Not implemented", class_name_, __func__);
     return GRIB_NOT_IMPLEMENTED;
 }
 
