@@ -13,7 +13,7 @@
 #include "grib_accessor_class_expanded_descriptors.h"
 #include "grib_accessor_class_bufr_data_element.h"
 #include "grib_accessor_class_variable.h"
-#include "NumericLimits.h"
+#include "ecc_numeric_limits.h"
 
 grib_accessor_bufr_data_array_t _grib_accessor_bufr_data_array{};
 grib_accessor* grib_accessor_bufr_data_array = &_grib_accessor_bufr_data_array;

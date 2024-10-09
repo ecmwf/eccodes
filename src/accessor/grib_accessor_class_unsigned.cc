@@ -9,7 +9,7 @@
  */
 
 #include "grib_accessor_class_unsigned.h"
-#include "NumericLimits.h"
+#include "ecc_numeric_limits.h"
 
 grib_accessor_unsigned_t _grib_accessor_unsigned{};
 grib_accessor* grib_accessor_unsigned = &_grib_accessor_unsigned;

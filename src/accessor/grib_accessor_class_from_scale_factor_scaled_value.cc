@@ -10,7 +10,7 @@
  */
 
 #include "grib_accessor_class_from_scale_factor_scaled_value.h"
-#include "NumericLimits.h"
+#include "ecc_numeric_limits.h"
 
 grib_accessor_from_scale_factor_scaled_value_t _grib_accessor_from_scale_factor_scaled_value{};
 grib_accessor* grib_accessor_from_scale_factor_scaled_value = &_grib_accessor_from_scale_factor_scaled_value;
