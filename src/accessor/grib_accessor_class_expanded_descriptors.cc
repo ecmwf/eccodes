@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -471,9 +470,7 @@ int grib_accessor_expanded_descriptors_t::expand()
     /* grib_iarray* unexp=0; */
     int i;
     long* u      = 0;
-    char key[50] = {
-        0,
-    };
+    char key[50] = {0,};
     long centre, masterTablesVersionNumber, localTablesVersionNumber, masterTablesNumber;
     change_coding_params ccp;
     bufr_descriptors_array* unexpanded      = NULL;
@@ -683,9 +680,7 @@ int grib_accessor_expanded_descriptors_t::unpack_string_array(char** buffer, siz
 {
     int err      = 0;
     long* v      = NULL;
-    char buf[25] = {
-        0,
-    };
+    char buf[25] = {0,};
     long llen = 0;
     size_t i = 0, size = 0;
     const grib_context* c = context_;
