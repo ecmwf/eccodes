@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -40,14 +39,13 @@ grib_accessor* grib_accessor_bufr_string_values_t::get_accessor()
 
 int grib_accessor_bufr_string_values_t::unpack_string_array(char** buffer, size_t* len)
 {
-    grib_accessor_bufr_data_array_t* data = 0;
-    grib_context* c                       = context_;
-    grib_vsarray* stringValues            = NULL;
-    size_t l                              = 0, tl;
+    grib_context* c = context_;
+    grib_vsarray* stringValues = NULL;
+    size_t l = 0, tl;
     size_t i, j, n = 0;
     char** b = buffer;
 
-    data = dynamic_cast<grib_accessor_bufr_data_array_t*>(get_accessor());
+    grib_accessor_bufr_data_array_t* data = dynamic_cast<grib_accessor_bufr_data_array_t*>(get_accessor());
     if (!data)
         return GRIB_NOT_FOUND;
 

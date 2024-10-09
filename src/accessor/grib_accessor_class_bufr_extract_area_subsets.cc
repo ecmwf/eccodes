@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -18,7 +17,7 @@ void grib_accessor_bufr_extract_area_subsets_t::init(const long len, grib_argume
 {
     grib_accessor_gen_t::init(len, arg);
     grib_handle* h = grib_handle_of_accessor(this);
-    int n          = 0;
+    int n = 0;
 
     length_                       = 0;
     doExtractSubsets_             = grib_arguments_get_name(h, arg, n++);
@@ -50,10 +49,10 @@ static void fill_in(double a[], long length)
 
 int grib_accessor_bufr_extract_area_subsets_t::select_area()
 {
-    int ret                                         = 0;
-    long compressed                                 = 0;
-    grib_handle* h                                  = grib_handle_of_accessor(this);
-    grib_context* c                                 = h->context;
+    int ret         = 0;
+    long compressed = 0;
+    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_context* c = h->context;
 
     double* lat = NULL;
     double* lon = NULL;
@@ -61,13 +60,9 @@ int grib_accessor_bufr_extract_area_subsets_t::select_area()
     double lonWest, lonEast, latNorth, latSouth;
     long numberOfSubsets, i, latRank, lonRank;
     grib_iarray* subsets = NULL;
-    size_t nsubsets      = 0;
-    char latstr[32]      = {
-        0,
-    };
-    char lonstr[32] = {
-        0,
-    };
+    size_t nsubsets = 0;
+    char latstr[32] = {0,};
+    char lonstr[32] = {0,};
 
     ret = grib_get_long(h, "compressedData", &compressed);
     if (ret) return ret;

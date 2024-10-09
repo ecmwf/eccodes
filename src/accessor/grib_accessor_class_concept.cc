@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -298,9 +297,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
         if (err) {
             size_t i = 0, concept_count = 0;
             long dummy = 0, editionNumber = 0;
-            char centre_s[32] = {
-                0,
-            };
+            char centre_s[32] = {0,};
             size_t centre_len                              = sizeof(centre_s);
             char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {
                 NULL,
