@@ -11,6 +11,8 @@
 . ./include.ctest.sh
 
 label="grib_check_param_concepts_test"
+tempText=temp.$label.txt
+tempGrib=temp.$label.grib
 
 
 if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
@@ -31,6 +33,23 @@ check_grib_defs()
 #
 # Do various checks on the concepts files
 #
+
+# -----------------------------------
+echo "Check for duplicate encodings"
+# -----------------------------------
+paramIdFile=$ECCODES_DEFINITION_PATH/grib2/paramId.def
+# Flatten the file so we get just the encoding part.
+# uniq -d outputs a single copy of each line that is repeated in the input
+cat $paramIdFile | tr '\n' ' ' | tr '\t' ' ' | tr '#' '\n' | sed "s/^.* '//" | sed "s/'//" | awk '{$1="";print}' | sort |uniq -d > $tempText
+if [ -s "$tempText" ]; then
+    # File exists and has a size greater than zero
+    echo "ERROR: Duplicate parameter encoding(s) found in $paramIdFile" >&2
+    cat $tempText | sed -e 's/ ;/;/g'
+    exit 1
+else
+    echo "No duplicates in $paramIdFile"
+fi
+
 
 # First check the GRIB2 paramId.def and shortName.def
 # ----------------------------------------------------
@@ -159,11 +178,13 @@ set -e
 # -------------------------------
 echo "ECC-1932"
 # -------------------------------
-tempGrib=temp.${label}.grib
 sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 ${tools_dir}/grib_set -s centre=egrr,indicatorOfParameter=167 $sample1 $tempGrib
 grib_check_key_equals $tempGrib cfVarName t2m
 rm -f $tempGrib
+
+
+rm -f $tempText $tempGrib
 
 cd $test_dir
 rm -fr $tempDir
