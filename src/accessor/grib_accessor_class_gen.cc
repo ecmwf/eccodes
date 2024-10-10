@@ -536,7 +536,6 @@ int grib_accessor_gen_t::unpack_double_subarray(double* val, size_t start, size_
     return GRIB_NOT_IMPLEMENTED;
 }
 
-
 grib_accessor* grib_accessor_gen_t::clone(grib_section* s, int* err)
 {
     grib_context* ct = context_;
@@ -555,7 +554,9 @@ long grib_accessor_gen_t::get_next_position_offset()
     return next_offset();
 }
 
-grib_accessor_gen_t::~grib_accessor_gen_t(){};
+grib_accessor_gen_t::~grib_accessor_gen_t()
+{
+}
 
 void grib_accessor_gen_t::post_init()
 {
