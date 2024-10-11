@@ -81,9 +81,9 @@ void grib_accessor_bufr_data_element_t::init(const long len, grib_arguments* par
 
 void grib_accessor_bufr_data_element_t::dump(grib_dumper* dumper)
 {
-    int type = get_native_type();
+    const int ntype = get_native_type();
 
-    switch (type) {
+    switch (ntype) {
         case GRIB_TYPE_LONG:
             grib_dump_long(dumper, this, NULL);
             break;
@@ -371,16 +371,16 @@ int grib_accessor_bufr_data_element_t::pack_long(const long* val, size_t* len)
 
 int grib_accessor_bufr_data_element_t::value_count(long* count)
 {
-    int ret = 0, type = 0, idx = 0;
+    int ret = 0, idx = 0;
     size_t size = 0;
 
     if (!compressedData_) {
         *count = 1;
         return 0;
     }
-    type = get_native_type();
+    const int ntype = get_native_type();
 
-    if (type == GRIB_TYPE_STRING) {
+    if (ntype == GRIB_TYPE_STRING) {
         DEBUG_ASSERT(index_ < numericValues_->n);
         idx  = ((int)numericValues_->v[index_]->v[0] / 1000 - 1) / numberOfSubsets_;
         size = grib_sarray_used_size(stringValues_->v[idx]);

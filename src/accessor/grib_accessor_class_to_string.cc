@@ -16,10 +16,11 @@ grib_accessor* grib_accessor_to_string = &_grib_accessor_to_string;
 void grib_accessor_to_string_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
+    grib_handle* hand = grib_handle_of_accessor(this);
 
-    key_    = grib_arguments_get_name(grib_handle_of_accessor(this), arg, 0);
-    start_  = grib_arguments_get_long(grib_handle_of_accessor(this), arg, 1);
-    length_ = grib_arguments_get_long(grib_handle_of_accessor(this), arg, 2);
+    key_        = grib_arguments_get_name(hand, arg, 0);
+    start_      = grib_arguments_get_long(hand, arg, 1);
+    str_length_ = grib_arguments_get_long(hand, arg, 2);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     grib_accessor_gen_t::length_ = 0;
@@ -37,8 +38,8 @@ int grib_accessor_to_string_t::value_count(long* count)
 
 size_t grib_accessor_to_string_t::string_length()
 {
-    if (length_)
-        return length_;
+    if (str_length_)
+        return str_length_;
 
     size_t size = 0;
     grib_get_string_length(grib_handle_of_accessor(this), key_, &size);
@@ -59,7 +60,6 @@ int grib_accessor_to_string_t::unpack_string(char* val, size_t* len)
 {
     int err        = 0;
     char buff[512] = {0,};
-
     size_t length = string_length();
 
     if (*len < length + 1) {

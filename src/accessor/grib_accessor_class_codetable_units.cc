@@ -43,7 +43,7 @@ int grib_accessor_codetable_units_t::unpack_string(char* buffer, size_t* len)
     if ((err = ((grib_accessor*)ca)->unpack_long(&value, &size)) != GRIB_SUCCESS)
         return err;
 
-    table = ca->table();
+    table = ca->codetable();
 
     if (table && (value >= 0) && (value < table->size) && table->entries[value].units) {
         strcpy(tmp, table->entries[value].units);

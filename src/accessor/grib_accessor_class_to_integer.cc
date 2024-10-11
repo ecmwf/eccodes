@@ -16,13 +16,14 @@ grib_accessor* grib_accessor_to_integer = &_grib_accessor_to_integer;
 void grib_accessor_to_integer_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
+    grib_handle* hand = grib_handle_of_accessor(this);
 
-    key_    = grib_arguments_get_name(grib_handle_of_accessor(this), arg, 0);
-    start_  = grib_arguments_get_long(grib_handle_of_accessor(this), arg, 1);
-    length_ = grib_arguments_get_long(grib_handle_of_accessor(this), arg, 2);
+    key_        = grib_arguments_get_name(hand, arg, 0);
+    start_      = grib_arguments_get_long(hand, arg, 1);
+    str_length_ = grib_arguments_get_long(hand, arg, 2);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    length_ = 0;
+    grib_accessor::length_ = 0;
 }
 
 int grib_accessor_to_integer_t::value_count(long* count)
@@ -39,8 +40,8 @@ size_t grib_accessor_to_integer_t::string_length()
 {
     size_t size = 0;
 
-    if (length_)
-        return length_;
+    if (str_length_)
+        return str_length_;
 
     grib_get_string_length(grib_handle_of_accessor(this), key_, &size);
     return size;
@@ -59,11 +60,8 @@ long grib_accessor_to_integer_t::get_native_type()
 int grib_accessor_to_integer_t::unpack_string(char* val, size_t* len)
 {
     int err        = 0;
-    char buff[512] = {
-        0,
-    };
-    size_t size = 512;
-
+    char buff[512] = {0,};
+    size_t size = sizeof(buff);
     size_t length = string_length();
 
     if (*len < length + 1) {
@@ -108,9 +106,7 @@ int grib_accessor_to_integer_t::pack_double(const double* v, size_t* len)
 
 int grib_accessor_to_integer_t::unpack_long(long* v, size_t* len)
 {
-    char val[1024] = {
-        0,
-    };
+    char val[1024] = {0,};
     size_t l   = sizeof(val);
     char* last = NULL;
     int err    = unpack_string(val, &l);
@@ -136,5 +132,5 @@ int grib_accessor_to_integer_t::unpack_double(double* v, size_t* len)
 
 long grib_accessor_to_integer_t::next_offset()
 {
-    return offset_ + length_;
+    return offset_ + grib_accessor::length_;
 }

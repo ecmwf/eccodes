@@ -33,7 +33,7 @@ protected:
     const char* seclen_;
     const char* offsetdata_;
     const char* offsetsection_;
-    int dirty_;
+    int values_dirty_;
 
 private:
     long init_length();

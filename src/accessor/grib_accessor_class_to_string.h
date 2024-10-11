@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -32,5 +31,5 @@ public:
 private:
     const char* key_;
     long start_;
-    size_t length_;
+    size_t str_length_;
 };

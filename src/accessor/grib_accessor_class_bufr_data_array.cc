@@ -18,6 +18,9 @@
 grib_accessor_bufr_data_array_t _grib_accessor_bufr_data_array{};
 grib_accessor* grib_accessor_bufr_data_array = &_grib_accessor_bufr_data_array;
 
+typedef int (*codec_element_proc)(grib_context*, grib_accessor_bufr_data_array_t*, int, grib_buffer*, unsigned char*, long*, int, bufr_descriptor*, long, grib_darray*, grib_sarray*);
+typedef int (*codec_replication_proc)(grib_context*, grib_accessor_bufr_data_array_t*, int, grib_buffer*, unsigned char*, long*, int, long, grib_darray*, long*);
+
 #define MAX_NESTED_REPLICATIONS 8
 
 #define PROCESS_DECODE   0
@@ -656,7 +659,7 @@ int grib_accessor_bufr_data_array_t::encode_double_array(grib_context* c, grib_b
         }
         grib_buffer_set_ulength_bits(c, buff, buff->ulength_bits + 6);
         grib_encode_unsigned_longb(buff->data, localWidth, pos, 6);
-        return err;
+        return GRIB_SUCCESS;
     }
 
     if (nvals > grib_darray_used_size(dvalues))
@@ -845,7 +848,7 @@ int grib_accessor_bufr_data_array_t::encode_double_value(grib_context* c, grib_b
         grib_encode_size_tb(buff->data, lval, pos, modifiedWidth);
     }
 
-    return err;
+    return GRIB_SUCCESS;
 }
 
 static int encode_string_value(grib_context* c, grib_buffer* buff, long* pos, bufr_descriptor* bd, char* sval)
