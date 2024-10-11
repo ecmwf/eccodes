@@ -16,11 +16,12 @@ grib_accessor* grib_accessor_to_double = &_grib_accessor_to_double;
 void grib_accessor_to_double_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
+    grib_handle* hand = grib_handle_of_accessor(this);
 
-    key_    = grib_arguments_get_name(grib_handle_of_accessor(this), arg, 0);
-    start_  = grib_arguments_get_long(grib_handle_of_accessor(this), arg, 1);
-    length_ = grib_arguments_get_long(grib_handle_of_accessor(this), arg, 2);
-    scale_  = grib_arguments_get_long(grib_handle_of_accessor(this), arg, 3);
+    key_        = grib_arguments_get_name(hand, arg, 0);
+    start_      = grib_arguments_get_long(hand, arg, 1);
+    str_length_ = grib_arguments_get_long(hand, arg, 2);
+    scale_      = grib_arguments_get_long(hand, arg, 3);
     if (!scale_)
         scale_ = 1;
 
@@ -42,8 +43,8 @@ size_t grib_accessor_to_double_t::string_length()
 {
     size_t size = 0;
 
-    if (length_)
-        return length_;
+    if (str_length_)
+        return str_length_;
 
     grib_get_string_length_acc(this, &size);
     return size;
@@ -62,15 +63,13 @@ long grib_accessor_to_double_t::get_native_type()
 int grib_accessor_to_double_t::unpack_string(char* val, size_t* len)
 {
     int err        = 0;
-    char buff[512] = {
-        0,
-    };
+    char buff[512] = {0,};
     size_t size   = 512;
     size_t length = string_length();
 
     if (*len < length + 1) {
         grib_context_log(context_, GRIB_LOG_ERROR, "unpack_string: Wrong size (%lu) for %s, it contains %ld values",
-                         *len, name_, grib_accessor::length_ + 1);
+                         *len, name_, length + 1);
         *len = length + 1;
         return GRIB_ARRAY_TOO_SMALL;
     }
