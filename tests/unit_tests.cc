@@ -635,7 +635,7 @@ void test_iarray()
 void test_darray()
 {
     printf("Running %s ...\n", __func__);
-    grib_context* c = grib_context_get_default();
+
     grib_darray* a = grib_darray_new(10, 10);
     grib_darray_push(a, 42.009);
     grib_darray_push(a, -1.11);
@@ -647,13 +647,13 @@ void test_darray()
     grib_darray_push(b, 12);
 
     grib_vdarray* va = grib_vdarray_new(1, 1);
-    grib_vdarray_push(c, va, a);
-    grib_vdarray_push(c, va, b);
+    grib_vdarray_push(va, a);
+    grib_vdarray_push(va, b);
     grib_vdarray_print("vdarray", va);
 
     grib_darray_delete(a);
     grib_darray_delete(b);
-    grib_vdarray_delete(c, va);
+    grib_vdarray_delete(va);
 }
 
 void test_sarray()

@@ -256,8 +256,8 @@ int check_end_data(grib_context* c, bufr_descriptor* bd, grib_accessor_bufr_data
 void grib_accessor_bufr_data_array_t::self_clear()
 {
     grib_context_free(context_, canBeMissing_);
-    grib_vdarray_delete_content(context_, numericValues_);
-    grib_vdarray_delete(context_, numericValues_);
+    grib_vdarray_delete_content(numericValues_);
+    grib_vdarray_delete(numericValues_);
 
     if (stringValues_) {
         /*printf("dbg self_clear: clear %p\n", (void*)(stringValues_ ));*/
@@ -960,7 +960,7 @@ int decode_element(grib_context* c, grib_accessor_bufr_data_array_t* self, int s
                 x = (index + ii) * 1000 + bd->width / 8;
                 grib_darray_push(dar, x);
             }
-            grib_vdarray_push(c, self->numericValues_, dar);
+            grib_vdarray_push(self->numericValues_, dar);
         }
         else {
             csval = self->decode_string_value(c, data, pos, bd, &err);
@@ -989,7 +989,7 @@ int decode_element(grib_context* c, grib_accessor_bufr_data_array_t* self, int s
         }
         if (self->compressedData_) {
             dar = self->decode_double_array(c, data, pos, bd, self->canBeMissing_[i], &err);
-            grib_vdarray_push(c, self->numericValues_, dar);
+            grib_vdarray_push(self->numericValues_, dar);
         }
         else {
             /* Uncompressed */
@@ -1059,7 +1059,7 @@ int decode_replication(grib_context* c, grib_accessor_bufr_data_array_t* self, i
         else {
             grib_darray_push(dval, (double)(*numberOfRepetitions));
         }
-        grib_vdarray_push(c, self->numericValues_, dval);
+        grib_vdarray_push(self->numericValues_, dval);
     }
     else {
         grib_darray_push(dval, (double)(*numberOfRepetitions));
@@ -1643,7 +1643,7 @@ void grib_accessor_bufr_data_array_t::push_zero_element(grib_darray* dval)
     if (compressedData_) {
         d = grib_darray_new(1, 100);
         grib_darray_push(d, 0);
-        grib_vdarray_push(context_, numericValues_, d);
+        grib_vdarray_push(numericValues_, d);
     }
     else {
         grib_darray_push(dval, 0);
@@ -2777,8 +2777,8 @@ int grib_accessor_bufr_data_array_t::process_elements(int flag, long onlySubset,
     }
 
     if (do_clean == 1 && numericValues_) {
-        grib_vdarray_delete_content(c, numericValues_);
-        grib_vdarray_delete(c, numericValues_);
+        grib_vdarray_delete_content(numericValues_);
+        grib_vdarray_delete(numericValues_);
         /*printf("dbg process_elements: clear %p\n", (void*)(stringValues_ ));*/
         grib_vsarray_delete_content(c, stringValues_);
         grib_vsarray_delete(c, stringValues_);
@@ -3200,11 +3200,11 @@ int grib_accessor_bufr_data_array_t::process_elements(int flag, long onlySubset,
             /*grib_iarray_print("DBG process_elements::elementsDescriptorsIndex", elementsDescriptorsIndex);*/
         }
         if (decoding && !compressedData_) {
-            grib_vdarray_push(c, numericValues_, dval);
+            grib_vdarray_push(numericValues_, dval);
             /*grib_darray_print("DBG process_elements::dval", dval);*/
         }
         if (flag == PROCESS_NEW_DATA && !compressedData_) {
-            grib_vdarray_push(c, tempDoubleValues_, dval); /* ECC-1172 */
+            grib_vdarray_push(tempDoubleValues_, dval); /* ECC-1172 */
         }
     } /* for all subsets */
 
@@ -3329,8 +3329,8 @@ void grib_accessor_bufr_data_array_t::destroy(grib_context* c)
     }
     if (tempDoubleValues_) {
         /* ECC-1172: Clean up to avoid memory leaks */
-        grib_vdarray_delete_content(c, tempDoubleValues_);
-        grib_vdarray_delete(c, tempDoubleValues_);
+        grib_vdarray_delete_content(tempDoubleValues_);
+        grib_vdarray_delete(tempDoubleValues_);
         tempDoubleValues_ = NULL;
     }
 

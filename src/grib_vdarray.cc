@@ -64,7 +64,7 @@ static grib_vdarray* grib_vdarray_resize(grib_vdarray* v)
     return v;
 }
 
-grib_vdarray* grib_vdarray_push(grib_context* c, grib_vdarray* v, grib_darray* val)
+grib_vdarray* grib_vdarray_push(grib_vdarray* v, grib_darray* val)
 {
     size_t start_size    = 100;
     size_t start_incsize = 100;
@@ -78,25 +78,22 @@ grib_vdarray* grib_vdarray_push(grib_context* c, grib_vdarray* v, grib_darray* v
     return v;
 }
 
-void grib_vdarray_delete(grib_context* c, grib_vdarray* v)
+void grib_vdarray_delete(grib_vdarray* v)
 {
     if (!v)
         return;
-    if (!c)
-        c = grib_context_get_default();
+    grib_context* c = grib_context_get_default();
     if (v->v) {
         grib_context_free(c, v->v);
     }
     grib_context_free(c, v);
 }
 
-void grib_vdarray_delete_content(grib_context* c, grib_vdarray* v)
+void grib_vdarray_delete_content(grib_vdarray* v)
 {
     size_t i = 0;
     if (!v || !v->v)
         return;
-    if (!c)
-        c = grib_context_get_default();
     for (i = 0; i < v->n; i++) {
         grib_darray_delete(v->v[i]);
         v->v[i] = 0;
