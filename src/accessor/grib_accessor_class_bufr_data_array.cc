@@ -117,7 +117,7 @@ int grib_accessor_bufr_data_array_t::tableB_override_set_key(grib_handle* h)
     int err                  = GRIB_SUCCESS;
     size_t size              = 0;
     long* refVals            = NULL;
-    grib_iarray* refValArray = grib_iarray_new(h->context, 10, 10);
+    grib_iarray* refValArray = grib_iarray_new(10, 10);
     bufr_tableb_override* p  = tableb_override_;
     while (p) {
         grib_iarray_push(refValArray, p->new_ref_val);
@@ -2044,7 +2044,7 @@ grib_iarray* grib_accessor_bufr_data_array_t::set_subset_list(
     grib_context* c,
     long onlySubset, long startSubset, long endSubset, const long* subsetList, size_t subsetListSize)
 {
-    grib_iarray* list = grib_iarray_new(c, numberOfSubsets_, 10);
+    grib_iarray* list = grib_iarray_new(numberOfSubsets_, 10);
     long s            = 0;
 
 #ifdef DEBUG
@@ -2838,7 +2838,7 @@ int grib_accessor_bufr_data_array_t::process_elements(int flag, long onlySubset,
         refValIndex_ = 0;
 
         if (flag != PROCESS_ENCODE) {
-            elementsDescriptorsIndex = grib_iarray_new(c, DYN_ARRAY_SIZE_INIT, DYN_ARRAY_SIZE_INCR);
+            elementsDescriptorsIndex = grib_iarray_new(DYN_ARRAY_SIZE_INIT, DYN_ARRAY_SIZE_INCR);
             if (!compressedData_) {
                 dval = grib_darray_new(DYN_ARRAY_SIZE_INIT, DYN_ARRAY_SIZE_INCR);
             }

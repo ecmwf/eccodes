@@ -70,7 +70,7 @@ int grib_accessor_bufr_extract_area_subsets_t::select_area()
     ret = grib_get_long(h, numberOfSubsets_, &numberOfSubsets);
     if (ret) return ret;
 
-    subsets = grib_iarray_new(c, numberOfSubsets, 10);
+    subsets = grib_iarray_new(numberOfSubsets, 10);
 
     ret = grib_set_long(h, "unpack", 1);
     if (ret) return ret;

@@ -37,12 +37,10 @@ void grib_iarray_print(const char* title, const grib_iarray* iarray)
 //     return v;
 // }
 
-grib_iarray* grib_iarray_new(grib_context* c, size_t size, size_t incsize)
+grib_iarray* grib_iarray_new(size_t size, size_t incsize)
 {
     grib_iarray* v = NULL;
-
-    if (!c)
-        c = grib_context_get_default();
+    grib_context* c = grib_context_get_default();
 
     v = (grib_iarray*)grib_context_malloc(c, sizeof(grib_iarray));
     if (!v) {
@@ -125,7 +123,7 @@ grib_iarray* grib_iarray_push(grib_iarray* v, long val)
     size_t start_incsize = 100;
 
     if (!v)
-        v = grib_iarray_new(0, start_size, start_incsize);
+        v = grib_iarray_new(start_size, start_incsize);
 
     if (v->n >= v->size - v->number_of_pop_front)
         v = grib_iarray_resize(v);

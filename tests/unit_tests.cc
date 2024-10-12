@@ -612,12 +612,12 @@ void test_iarray()
 {
     printf("Running %s ...\n", __func__);
     grib_context* c = grib_context_get_default();
-    grib_iarray* a = grib_iarray_new(c, 10, 10);
+    grib_iarray* a = grib_iarray_new(10, 10);
     grib_iarray_push(a, 42);
     grib_iarray_push(a, 10000);
     grib_iarray_print("iarray", a);
 
-    grib_iarray* b = grib_iarray_new(c, 1, 1);
+    grib_iarray* b = grib_iarray_new(1, 1);
     grib_iarray_push(b, 0);
     grib_iarray_push(b, -1);
     grib_iarray_push(b, +1);

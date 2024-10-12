@@ -151,7 +151,7 @@ void* grib_oarray_get(grib_oarray* v, int i);
 
 /* grib_iarray.cc */
 void grib_iarray_print(const char* title, const grib_iarray* iarray);
-grib_iarray* grib_iarray_new(grib_context* c, size_t size, size_t incsize);
+grib_iarray* grib_iarray_new(size_t size, size_t incsize);
 long grib_iarray_pop(grib_iarray* a);
 long grib_iarray_pop_front(grib_iarray* a);
 grib_iarray* grib_iarray_push(grib_iarray* v, long val);
