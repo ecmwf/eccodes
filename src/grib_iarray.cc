@@ -33,7 +33,6 @@ void grib_iarray_print(const char* title, const grib_iarray* iarray)
 //         v->v[i] = src_array[i];
 //     v->n                   = size;
 //     v->number_of_pop_front = 0;
-//     v->context             = c;
 //     return v;
 // }
 
@@ -47,7 +46,6 @@ grib_iarray* grib_iarray_new(size_t size, size_t incsize)
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to allocate %zu bytes", __func__, sizeof(grib_iarray));
         return NULL;
     }
-    v->context             = c;
     v->size                = size;
     v->n                   = 0;
     v->incsize             = incsize;
@@ -84,13 +82,10 @@ static grib_iarray* grib_iarray_resize_to(grib_iarray* v, size_t newsize)
 {
     long* newv;
     size_t i;
-    grib_context* c = v->context;
+    grib_context* c = grib_context_get_default();
 
     if (newsize < v->size)
         return v;
-
-    if (!c)
-        c = grib_context_get_default();
 
     newv = (long*)grib_context_malloc_clear(c, newsize * sizeof(long));
     if (!newv) {
@@ -175,24 +170,21 @@ grib_iarray* grib_iarray_push(grib_iarray* v, long val)
 
 void grib_iarray_delete(grib_iarray* v)
 {
-    grib_context* c;
+    grib_context* c = grib_context_get_default();
 
     if (!v)
         return;
-    c = v->context;
 
     grib_iarray_delete_array(v);
-
     grib_context_free(c, v);
 }
 
 void grib_iarray_delete_array(grib_iarray* v)
 {
-    grib_context* c;
+    grib_context* c = grib_context_get_default();
 
     if (!v)
         return;
-    c = v->context;
 
     if (v->v) {
         long* vv = v->v - v->number_of_pop_front;
@@ -204,8 +196,8 @@ long* grib_iarray_get_array(grib_iarray* v)
 {
     long* vv;
     size_t i;
-    grib_context* c = v->context;
     DEBUG_ASSERT(c);
+    grib_context* c = grib_context_get_default();
 
     vv = (long*)grib_context_malloc_clear(c, sizeof(long) * v->n);
     for (i = 0; i < v->n; i++)

@@ -38,7 +38,7 @@ grib_viarray* grib_viarray_new(size_t size, size_t incsize)
     v->size    = size;
     v->n       = 0;
     v->incsize = incsize;
-    v->context = c;
+
     v->v       = (grib_iarray**)grib_context_malloc_clear(c, sizeof(grib_iarray*) * size);
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
@@ -51,9 +51,7 @@ grib_viarray* grib_viarray_new(size_t size, size_t incsize)
 static grib_viarray* grib_viarray_resize(grib_viarray* v)
 {
     const size_t newsize = v->incsize + v->size;
-    grib_context* c = v->context;
-    if (!c)
-        c = grib_context_get_default();
+    grib_context* c = grib_context_get_default();
 
     v->v    = (grib_iarray**)grib_context_realloc(c, v->v, newsize * sizeof(grib_iarray*));
     v->size = newsize;

@@ -35,7 +35,6 @@ grib_sarray* grib_sarray_new(size_t size, size_t incsize)
     v->size    = size;
     v->n       = 0;
     v->incsize = incsize;
-    v->context = c;
     v->v       = (char**)grib_context_malloc_clear(c, sizeof(char*) * size);
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
@@ -48,9 +47,7 @@ grib_sarray* grib_sarray_new(size_t size, size_t incsize)
 static grib_sarray* grib_sarray_resize(grib_sarray* v)
 {
     const size_t newsize = v->incsize + v->size;
-    grib_context* c = v->context;
-    if (!c)
-        c = grib_context_get_default();
+    grib_context* c = grib_context_get_default();
 
     v->v    = (char**)grib_context_realloc(c, v->v, newsize * sizeof(char*));
     v->size = newsize;

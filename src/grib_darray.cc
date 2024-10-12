@@ -22,19 +22,15 @@ void grib_darray_print(const char* title, const grib_darray* darray)
     printf("\n");
 }
 
-// grib_darray* grib_darray_new_from_array(grib_context* c, double* src_array, size_t size)
+// grib_darray* grib_darray_new_from_array(double* src_array, size_t size)
 // {
 //     size_t i;
 //     grib_darray* v;
-
-//     if (!c)
-//         c = grib_context_get_default();
-
+// c = grib_context_get_default();
 //     v = grib_darray_new(c, size, 100);
 //     for (i = 0; i < size; i++)
 //         v->v[i] = src_array[i];
 //     v->n       = size;
-//     v->context = c;
 //     return v;
 // }
 
@@ -50,7 +46,6 @@ grib_darray* grib_darray_new(size_t size, size_t incsize)
     v->size    = size;
     v->n       = 0;
     v->incsize = incsize;
-    v->context = c;
     v->v       = (double*)grib_context_malloc_clear(c, sizeof(double) * size);
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to allocate %zu bytes", __func__, sizeof(double) * size);
