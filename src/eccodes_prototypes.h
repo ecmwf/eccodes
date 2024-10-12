@@ -144,7 +144,7 @@ char** grib_sarray_get_array(grib_context* c, grib_sarray* v);
 size_t grib_sarray_used_size(grib_sarray* v);
 
 /* grib_oarray.cc */
-grib_oarray* grib_oarray_new(grib_context* c, size_t size, size_t incsize);
+grib_oarray* grib_oarray_new(size_t size, size_t incsize);
 grib_oarray* grib_oarray_push(grib_context* c, grib_oarray* v, void* val);
 void grib_oarray_delete(grib_context* c, grib_oarray* v);
 void* grib_oarray_get(grib_oarray* v, int i);

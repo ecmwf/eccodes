@@ -1487,7 +1487,7 @@ int any_f_scan_file_(int* fid, int* n)
     /* grib_oarray_delete_content(c, info_messages); */
 
     grib_oarray_delete(c, info_messages);
-    info_messages=grib_oarray_new(c, 1000, 1000);
+    info_messages=grib_oarray_new(1000, 1000);
 
     if (f) {
         while (err!=GRIB_END_OF_FILE) {
@@ -1559,7 +1559,7 @@ int any_f_load_all_from_file_(int* fid, int* n)
     /* grib_oarray_delete_content(c, binary_messages); */
 
     grib_oarray_delete(c, binary_messages);
-    binary_messages = grib_oarray_new(c, 1000, 1000);
+    binary_messages = grib_oarray_new(1000, 1000);
 
     if (f) {
       while (err != GRIB_END_OF_FILE) {

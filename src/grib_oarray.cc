@@ -10,11 +10,10 @@
 
 #include "grib_api_internal.h"
 
-grib_oarray* grib_oarray_new(grib_context* c, size_t size, size_t incsize)
+grib_oarray* grib_oarray_new(size_t size, size_t incsize)
 {
     grib_oarray* v = NULL;
-    if (!c)
-        c = grib_context_get_default();
+    grib_context* c = grib_context_get_default();
     v = (grib_oarray*)grib_context_malloc_clear(c, sizeof(grib_oarray));
     if (!v) {
         return NULL;
@@ -52,7 +51,7 @@ grib_oarray* grib_oarray_push(grib_context* c, grib_oarray* v, void* val)
     size_t start_size    = 100;
     size_t start_incsize = 100;
     if (!v)
-        v = grib_oarray_new(c, start_size, start_incsize);
+        v = grib_oarray_new(start_size, start_incsize);
 
     if (v->n >= v->size)
         v = grib_oarray_resize(v);
