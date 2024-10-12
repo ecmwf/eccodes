@@ -2786,7 +2786,7 @@ int grib_accessor_bufr_data_array_t::process_elements(int flag, long onlySubset,
     }
 
     if (flag != PROCESS_ENCODE) {
-        numericValues_ = grib_vdarray_new(c, 1000, 1000);
+        numericValues_ = grib_vdarray_new(1000, 1000);
         stringValues_  = grib_vsarray_new(c, 10, 10);
 
         if (elementsDescriptorsIndex_) {
@@ -2796,7 +2796,7 @@ int grib_accessor_bufr_data_array_t::process_elements(int flag, long onlySubset,
         elementsDescriptorsIndex_ = grib_viarray_new(c, 100, 100);
     }
     if (flag == PROCESS_NEW_DATA) {
-        tempDoubleValues_ = grib_vdarray_new(c, 1000, 1000);
+        tempDoubleValues_ = grib_vdarray_new(1000, 1000);
     }
 
     if (flag != PROCESS_DECODE) { /* Operator 203YYY: key OVERRIDDEN_REFERENCE_VALUES_KEY */

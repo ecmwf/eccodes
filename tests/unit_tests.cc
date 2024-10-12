@@ -646,7 +646,7 @@ void test_darray()
     grib_darray_push(b, 8);
     grib_darray_push(b, 12);
 
-    grib_vdarray* va = grib_vdarray_new(c, 1, 1);
+    grib_vdarray* va = grib_vdarray_new(1, 1);
     grib_vdarray_push(c, va, a);
     grib_vdarray_push(c, va, b);
     grib_vdarray_print("vdarray", va);

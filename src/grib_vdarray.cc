@@ -24,11 +24,10 @@ void grib_vdarray_print(const char* title, const grib_vdarray* vdarray)
     printf("\n");
 }
 
-grib_vdarray* grib_vdarray_new(grib_context* c, size_t size, size_t incsize)
+grib_vdarray* grib_vdarray_new(size_t size, size_t incsize)
 {
     grib_vdarray* v = NULL;
-    if (!c)
-        c = grib_context_get_default();
+    grib_context* c = grib_context_get_default();
     v = (grib_vdarray*)grib_context_malloc_clear(c, sizeof(grib_vdarray));
     if (!v) {
         grib_context_log(c, GRIB_LOG_ERROR,
@@ -70,7 +69,7 @@ grib_vdarray* grib_vdarray_push(grib_context* c, grib_vdarray* v, grib_darray* v
     size_t start_size    = 100;
     size_t start_incsize = 100;
     if (!v)
-        v = grib_vdarray_new(c, start_size, start_incsize);
+        v = grib_vdarray_new(start_size, start_incsize);
 
     if (v->n >= v->size)
         v = grib_vdarray_resize(v);
