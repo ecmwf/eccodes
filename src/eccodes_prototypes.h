@@ -106,7 +106,7 @@ grib_concept_condition* grib_concept_condition_new(grib_context* c, const char* 
 void grib_concept_condition_delete(grib_context* c, grib_concept_condition* v);
 
 /* grib_hash_array.cc */
-grib_hash_array_value* grib_integer_hash_array_value_new(grib_context* c, const char* name, grib_iarray* array);
+grib_hash_array_value* grib_integer_hash_array_value_new(const char* name, grib_iarray* array);
 
 /* grib_bufr_descriptor.cc */
 bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor, int code, int silent, int* err);
@@ -117,7 +117,7 @@ int grib_bufr_descriptor_can_be_missing(const bufr_descriptor* v);
 void grib_bufr_descriptor_delete(bufr_descriptor* v);
 
 /* grib_bufr_descriptors_array.cc */
-bufr_descriptors_array* grib_bufr_descriptors_array_new(grib_context* c, size_t size, size_t incsize);
+bufr_descriptors_array* grib_bufr_descriptors_array_new(size_t size, size_t incsize);
 bufr_descriptor* grib_bufr_descriptors_array_pop_front(bufr_descriptors_array* a);
 bufr_descriptors_array* grib_bufr_descriptors_array_push(bufr_descriptors_array* v, bufr_descriptor* val);
 bufr_descriptors_array* grib_bufr_descriptors_array_append(bufr_descriptors_array* v, bufr_descriptors_array* ar);

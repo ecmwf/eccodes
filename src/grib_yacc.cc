@@ -3545,14 +3545,14 @@ grib_yyreduce:
   case 214: /* hash_array_value: STRING '=' '[' integer_array ']'  */
 #line 772 "griby.y"
                                                     {
-	  				(grib_yyval.hash_array_value) = grib_integer_hash_array_value_new(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-1].ivalue)); free((grib_yyvsp[-4].str));}
+	  				(grib_yyval.hash_array_value) = grib_integer_hash_array_value_new((grib_yyvsp[-4].str),(grib_yyvsp[-1].ivalue)); free((grib_yyvsp[-4].str));}
 #line 3550 "y.tab.c"
     break;
 
   case 215: /* hash_array_value: IDENT '=' '[' integer_array ']'  */
 #line 774 "griby.y"
                                                                   {
-	  				(grib_yyval.hash_array_value) = grib_integer_hash_array_value_new(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-1].ivalue)); free((grib_yyvsp[-4].str));}
+	  				(grib_yyval.hash_array_value) = grib_integer_hash_array_value_new((grib_yyvsp[-4].str),(grib_yyvsp[-1].ivalue)); free((grib_yyvsp[-4].str));}
 #line 3557 "y.tab.c"
     break;
 
