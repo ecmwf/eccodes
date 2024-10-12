@@ -611,7 +611,7 @@ void test_scale_factor_scaled_values()
 void test_iarray()
 {
     printf("Running %s ...\n", __func__);
-    grib_context* c = grib_context_get_default();
+
     grib_iarray* a = grib_iarray_new(10, 10);
     grib_iarray_push(a, 42);
     grib_iarray_push(a, 10000);
@@ -622,14 +622,14 @@ void test_iarray()
     grib_iarray_push(b, -1);
     grib_iarray_push(b, +1);
 
-    grib_viarray* va = grib_viarray_new(c, 1, 1);
-    grib_viarray_push(c, va, a);
-    grib_viarray_push(c, va, b);
+    grib_viarray* va = grib_viarray_new(1, 1);
+    grib_viarray_push(va, a);
+    grib_viarray_push(va, b);
     grib_viarray_print("viarray", va);
 
     grib_iarray_delete(a);
     grib_iarray_delete(b);
-    grib_viarray_delete(c, va);
+    grib_viarray_delete(va);
 }
 
 void test_darray()
@@ -659,21 +659,21 @@ void test_darray()
 void test_sarray()
 {
     printf("Running %s ...\n", __func__);
-    grib_context* c = grib_context_get_default();
-    grib_sarray* a = grib_sarray_new(c, 10, 10);
+
+    grib_sarray* a = grib_sarray_new(10, 10);
 
     char ants_s[] = "ants";
     char bugs_s[] = "bugs";
-    grib_sarray_push(c, a, ants_s);
-    grib_sarray_push(c, a, bugs_s);
+    grib_sarray_push(a, ants_s);
+    grib_sarray_push(a, bugs_s);
     grib_sarray_print("sarray", a);
 
-    grib_vsarray* va = grib_vsarray_new(c, 1, 1);
-    grib_vsarray_push(c, va, a);
+    grib_vsarray* va = grib_vsarray_new(1, 1);
+    grib_vsarray_push(va, a);
     grib_vsarray_print("vsarray", va);
 
-    grib_sarray_delete(c, a);
-    grib_vsarray_delete(c, va);
+    grib_sarray_delete(a);
+    grib_vsarray_delete(va);
 }
 
 void test_codes_get_product_name()

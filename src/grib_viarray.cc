@@ -25,11 +25,10 @@ void grib_viarray_print(const char* title, const grib_viarray* viarray)
     printf("\n");
 }
 
-grib_viarray* grib_viarray_new(grib_context* c, size_t size, size_t incsize)
+grib_viarray* grib_viarray_new(size_t size, size_t incsize)
 {
     grib_viarray* v = NULL;
-    if (!c)
-        c = grib_context_get_default();
+    grib_context* c = grib_context_get_default();
     v = (grib_viarray*)grib_context_malloc_clear(c, sizeof(grib_viarray));
     if (!v) {
         grib_context_log(c, GRIB_LOG_ERROR,
@@ -66,12 +65,12 @@ static grib_viarray* grib_viarray_resize(grib_viarray* v)
     return v;
 }
 
-grib_viarray* grib_viarray_push(grib_context* c, grib_viarray* v, grib_iarray* val)
+grib_viarray* grib_viarray_push(grib_viarray* v, grib_iarray* val)
 {
     size_t start_size    = 100;
     size_t start_incsize = 100;
     if (!v)
-        v = grib_viarray_new(c, start_size, start_incsize);
+        v = grib_viarray_new(start_size, start_incsize);
 
     if (v->n >= v->size)
         v = grib_viarray_resize(v);
@@ -80,18 +79,17 @@ grib_viarray* grib_viarray_push(grib_context* c, grib_viarray* v, grib_iarray* v
     return v;
 }
 
-void grib_viarray_delete(grib_context* c, grib_viarray* v)
+void grib_viarray_delete(grib_viarray* v)
 {
     if (!v)
         return;
-    if (!c)
-        c = grib_context_get_default();
+    grib_context* c = grib_context_get_default();
     if (v->v)
         grib_context_free(c, v->v);
     grib_context_free(c, v);
 }
 
-void grib_viarray_delete_content(grib_context* c, grib_viarray* v)
+void grib_viarray_delete_content(grib_viarray* v)
 {
     size_t i=0;
     if (!v || !v->v)

@@ -280,8 +280,8 @@ dvalues:  FLOAT  { $$=grib_darray_push(0,$1);}
     |  dvalues ',' INTEGER { $$=grib_darray_push($1,$3);}
    ;
 
-svalues: STRING { $$=grib_sarray_push(grib_parser_context,0,$1);}
-    |  svalues ',' STRING { $$=grib_sarray_push(grib_parser_context,$1,$3);}
+svalues: STRING { $$=grib_sarray_push(0,$1);}
+    |  svalues ',' STRING { $$=grib_sarray_push($1,$3);}
     ;
 
 

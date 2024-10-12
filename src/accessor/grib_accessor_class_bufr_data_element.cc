@@ -137,12 +137,12 @@ int grib_accessor_bufr_data_element_t::pack_string_array(const char** v, size_t*
                              descriptors_->v[elementsDescriptorsIndex_->v[0]->v[idx]]->shortName, *len, numberOfSubsets_);
             return GRIB_ARRAY_TOO_SMALL;
         }
-        grib_sarray_delete_content(c, stringValues_->v[idx]); /* ECC-1172 */
-        grib_sarray_delete(c, stringValues_->v[idx]);
-        stringValues_->v[idx] = grib_sarray_new(c, *len, 1);
+        grib_sarray_delete_content(stringValues_->v[idx]); /* ECC-1172 */
+        grib_sarray_delete(stringValues_->v[idx]);
+        stringValues_->v[idx] = grib_sarray_new(*len, 1);
         for (i = 0; i < *len; i++) {
             s = grib_context_strdup(c, v[i]);
-            grib_sarray_push(c, stringValues_->v[idx], s);
+            grib_sarray_push(stringValues_->v[idx], s);
         }
     }
     else {
@@ -246,11 +246,11 @@ int grib_accessor_bufr_data_element_t::pack_string(const char* val, size_t* len)
     else {
         idx = (int)numericValues_->v[subsetNumber_]->v[index_] / 1000 - 1;
     }
-    grib_sarray_delete_content(c, stringValues_->v[idx]); /* ECC-1172 */
-    grib_sarray_delete(c, stringValues_->v[idx]);
-    stringValues_->v[idx] = grib_sarray_new(c, 1, 1);
+    grib_sarray_delete_content(stringValues_->v[idx]); /* ECC-1172 */
+    grib_sarray_delete(stringValues_->v[idx]);
+    stringValues_->v[idx] = grib_sarray_new(1, 1);
     s                     = grib_context_strdup(c, val);
-    grib_sarray_push(c, stringValues_->v[idx], s);
+    grib_sarray_push(stringValues_->v[idx], s);
 
     return ret;
 }

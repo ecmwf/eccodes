@@ -2411,13 +2411,13 @@ grib_yyreduce:
 
   case 13: /* svalues: STRING  */
 #line 283 "griby.y"
-                { (grib_yyval.svalue)=grib_sarray_push(grib_parser_context,0,(grib_yyvsp[0].str));}
+                { (grib_yyval.svalue)=grib_sarray_push(0,(grib_yyvsp[0].str));}
 #line 2416 "y.tab.c"
     break;
 
   case 14: /* svalues: svalues ',' STRING  */
 #line 284 "griby.y"
-                          { (grib_yyval.svalue)=grib_sarray_push(grib_parser_context,(grib_yyvsp[-2].svalue),(grib_yyvsp[0].str));}
+                          { (grib_yyval.svalue)=grib_sarray_push((grib_yyvsp[-2].svalue),(grib_yyvsp[0].str));}
 #line 2422 "y.tab.c"
     break;
 

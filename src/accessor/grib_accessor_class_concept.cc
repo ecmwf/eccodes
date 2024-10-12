@@ -363,12 +363,12 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
         return err;
     }
     e  = c->conditions;
-    sa = grib_sarray_new(h->context, 10, 10);
+    sa = grib_sarray_new(10, 10);
     while (e) {
         concept_conditions_apply(h, e, values, sa, &count);
         e = e->next;
     }
-    grib_sarray_delete(h->context, sa);
+    grib_sarray_delete(sa);
 
     if (count)
         err = grib_set_values(h, values, count);

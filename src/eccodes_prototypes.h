@@ -136,11 +136,11 @@ size_t grib_darray_used_size(grib_darray* v);
 
 /* grib_sarray.cc */
 void grib_sarray_print(const char* title, const grib_sarray* sarray);
-grib_sarray* grib_sarray_new(grib_context* c, size_t size, size_t incsize);
-grib_sarray* grib_sarray_push(grib_context* c, grib_sarray* v, char* val);
-void grib_sarray_delete(grib_context* c, grib_sarray* v);
-void grib_sarray_delete_content(grib_context* c, grib_sarray* v);
-char** grib_sarray_get_array(grib_context* c, grib_sarray* v);
+grib_sarray* grib_sarray_new(size_t size, size_t incsize);
+grib_sarray* grib_sarray_push(grib_sarray* v, char* val);
+void grib_sarray_delete(grib_sarray* v);
+void grib_sarray_delete_content(grib_sarray* v);
+char** grib_sarray_get_array(grib_sarray* v);
 size_t grib_sarray_used_size(grib_sarray* v);
 
 /* grib_oarray.cc */
@@ -170,18 +170,18 @@ size_t grib_vdarray_used_size(grib_vdarray* v);
 
 /* grib_vsarray.cc */
 void grib_vsarray_print(const char* title, const grib_vsarray* vdarray);
-grib_vsarray* grib_vsarray_new(grib_context* c, size_t size, size_t incsize);
-grib_vsarray* grib_vsarray_push(grib_context* c, grib_vsarray* v, grib_sarray* val);
-void grib_vsarray_delete(grib_context* c, grib_vsarray* v);
-void grib_vsarray_delete_content(grib_context* c, grib_vsarray* v);
+grib_vsarray* grib_vsarray_new(size_t size, size_t incsize);
+grib_vsarray* grib_vsarray_push(grib_vsarray* v, grib_sarray* val);
+void grib_vsarray_delete(grib_vsarray* v);
+void grib_vsarray_delete_content(grib_vsarray* v);
 size_t grib_vsarray_used_size(grib_vsarray* v);
 
 /* grib_viarray.cc */
 void grib_viarray_print(const char* title, const grib_viarray* viarray);
-grib_viarray* grib_viarray_new(grib_context* c, size_t size, size_t incsize);
-grib_viarray* grib_viarray_push(grib_context* c, grib_viarray* v, grib_iarray* val);
-void grib_viarray_delete(grib_context* c, grib_viarray* v);
-void grib_viarray_delete_content(grib_context* c, grib_viarray* v);
+grib_viarray* grib_viarray_new(size_t size, size_t incsize);
+grib_viarray* grib_viarray_push(grib_viarray* v, grib_iarray* val);
+void grib_viarray_delete(grib_viarray* v);
+void grib_viarray_delete_content(grib_viarray* v);
 
 /* grib_accessor_class_ascii.cc*/
 
