@@ -366,7 +366,7 @@ static void _grib_trie_with_rank_delete_container(grib_trie_with_rank* t)
         if (t->next[i]) {
             grib_trie_with_rank_delete_container(t->next[i]);
         }
-    grib_oarray_delete(t->context, t->objs);
+    grib_oarray_delete(t->objs);
     /* grib_trie_with_rank_delete_container_list(t->context,t->list); */
 #ifdef RECYCLE_TRIE
     grib_context_free_persistent(t->context, t);
@@ -482,7 +482,7 @@ int grib_trie_with_rank_insert(grib_trie_with_rank* t, const char* key, void* da
     }
     if (t->objs == NULL)
         t->objs = grib_oarray_new(100, 1000);
-    grib_oarray_push(t->context, t->objs, data);
+    grib_oarray_push(t->objs, data);
     /* grib_trie_with_rank_insert_in_list(t,data); */
     GRIB_MUTEX_UNLOCK(&mutex);
     return (int)t->objs->n;

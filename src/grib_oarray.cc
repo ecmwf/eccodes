@@ -46,7 +46,7 @@ static grib_oarray* grib_oarray_resize(grib_oarray* v)
     return v;
 }
 
-grib_oarray* grib_oarray_push(grib_context* c, grib_oarray* v, void* val)
+grib_oarray* grib_oarray_push(grib_oarray* v, void* val)
 {
     size_t start_size    = 100;
     size_t start_incsize = 100;
@@ -60,12 +60,11 @@ grib_oarray* grib_oarray_push(grib_context* c, grib_oarray* v, void* val)
     return v;
 }
 
-void grib_oarray_delete(grib_context* c, grib_oarray* v)
+void grib_oarray_delete(grib_oarray* v)
 {
     if (!v)
         return;
-    if (!c)
-        c = grib_context_get_default();
+    grib_context* c = grib_context_get_default();
     if (v->v)
         grib_context_free(c, v->v);
     grib_context_free(c, v);

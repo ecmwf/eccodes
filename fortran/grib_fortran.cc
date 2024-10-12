@@ -1486,7 +1486,7 @@ int any_f_scan_file_(int* fid, int* n)
     /* this needs a callback to a destructor*/
     /* grib_oarray_delete_content(c, info_messages); */
 
-    grib_oarray_delete(c, info_messages);
+    grib_oarray_delete(info_messages);
     info_messages=grib_oarray_new(1000, 1000);
 
     if (f) {
@@ -1496,7 +1496,7 @@ int any_f_scan_file_(int* fid, int* n)
             msg->offset = offset;
             msg->size = olen;
 
-            if (err == 0 && data) grib_oarray_push(c, info_messages, msg);
+            if (err == 0 && data) grib_oarray_push(info_messages, msg);
             grib_context_free(c, data);
         }
         if (err == GRIB_END_OF_FILE) err = 0;
@@ -1558,7 +1558,7 @@ int any_f_load_all_from_file_(int* fid, int* n)
     /* this needs a callback to a destructor*/
     /* grib_oarray_delete_content(c, binary_messages); */
 
-    grib_oarray_delete(c, binary_messages);
+    grib_oarray_delete(binary_messages);
     binary_messages = grib_oarray_new(1000, 1000);
 
     if (f) {
@@ -1568,7 +1568,7 @@ int any_f_load_all_from_file_(int* fid, int* n)
         msg->data = data;
         msg->size = olen;
 
-        if (err == 0 && data) grib_oarray_push(c, binary_messages, msg);
+        if (err == 0 && data) grib_oarray_push(binary_messages, msg);
       }
       if (err == GRIB_END_OF_FILE) err = 0;
     }
@@ -1604,7 +1604,7 @@ int any_f_new_from_loaded_(int* msgid, int* gid)
 int codes_f_clear_loaded_from_file_(void)
 {
     /* grib_oarray_delete_content(c,binary_messages); */
-    grib_oarray_delete(grib_context_get_default(), binary_messages);
+    grib_oarray_delete(binary_messages);
     return GRIB_SUCCESS;
 }
 
