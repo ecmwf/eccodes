@@ -838,6 +838,23 @@ void test_codes_get_features()
     free(features);
 }
 
+static void test_grib_get_binary_scale_fact()
+{
+    printf("Running %s ...\n", __func__);
+    int err = 0;
+    long result = grib_get_binary_scale_fact(INFINITY, 0, 0, &err);
+    Assert( err == GRIB_OUT_OF_RANGE);
+    Assert( result == 0 );
+
+    result = grib_get_binary_scale_fact(100, 0, 65, &err); // bpv too big
+    Assert( err == GRIB_OUT_OF_RANGE);
+    Assert( result == 0 );
+
+    result = grib_get_binary_scale_fact(100, 0, 0, &err); // bpv 0
+    Assert( err == GRIB_ENCODING_ERROR);
+    Assert( result == 0 );
+}
+
 int main(int argc, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
@@ -847,6 +864,7 @@ int main(int argc, char** argv)
 
     test_codes_context_set_debug();
     test_codes_get_error_message();
+    test_grib_get_binary_scale_fact();
 
     test_iarray();
     test_darray();
