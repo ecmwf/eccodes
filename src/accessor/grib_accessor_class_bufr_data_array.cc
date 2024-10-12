@@ -443,8 +443,8 @@ grib_darray* grib_accessor_bufr_data_array_t::decode_double_array(grib_context* 
         dval = GRIB_MISSING_DOUBLE;
         lval = 0;
         grib_context_log(c, GRIB_LOG_DEBUG, " modifiedWidth=%d lval=%ld dval=%g", modifiedWidth, lval, dval);
-        ret = grib_darray_new(c, DYN_ARRAY_SIZE_INIT, DYN_ARRAY_SIZE_INCR);
-        grib_darray_push(c, ret, dval);
+        ret = grib_darray_new(DYN_ARRAY_SIZE_INIT, DYN_ARRAY_SIZE_INCR);
+        grib_darray_push(ret, dval);
         *err = 0;
         return ret;
     }
@@ -452,15 +452,15 @@ grib_darray* grib_accessor_bufr_data_array_t::decode_double_array(grib_context* 
     localReference = (long)lval + modifiedReference;
     localWidth     = grib_decode_unsigned_long(data, pos, 6);
     grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data decoding: \tlocalWidth=%d", localWidth);
-    ret = grib_darray_new(c, numberOfSubsets_, 50);
+    ret = grib_darray_new(numberOfSubsets_, 50);
     if (localWidth) {
         CHECK_END_DATA_RETURN(c, bd, this, localWidth * numberOfSubsets_, NULL);
         if (*err) {
             dval = GRIB_MISSING_DOUBLE;
             lval = 0;
             grib_context_log(c, GRIB_LOG_DEBUG, " modifiedWidth=%d lval=%ld dval=%g", modifiedWidth, lval, dval);
-            ret = grib_darray_new(c, DYN_ARRAY_SIZE_INIT, DYN_ARRAY_SIZE_INCR);
-            grib_darray_push(c, ret, dval);
+            ret = grib_darray_new(DYN_ARRAY_SIZE_INIT, DYN_ARRAY_SIZE_INCR);
+            grib_darray_push(ret, dval);
             *err = 0;
             return ret;
         }
@@ -472,7 +472,7 @@ grib_darray* grib_accessor_bufr_data_array_t::decode_double_array(grib_context* 
             else {
                 dval = ((long)lval + localReference) * modifiedFactor;
             }
-            grib_darray_push(c, ret, dval);
+            grib_darray_push(ret, dval);
         }
     }
     else {
@@ -492,12 +492,12 @@ grib_darray* grib_accessor_bufr_data_array_t::decode_double_array(grib_context* 
         if (bufr_multi_element_constant_arrays) {
             grib_context_log(c, GRIB_LOG_DEBUG, " modifiedWidth=%d lval=%ld dval=%g (const array multi values) %6.6ld", modifiedWidth, lval, dval, bd->code);
             for (j = 0; j < numberOfSubsets_; j++) {
-                grib_darray_push(c, ret, dval);
+                grib_darray_push(ret, dval);
             }
         }
         else {
             grib_context_log(c, GRIB_LOG_DEBUG, " modifiedWidth=%d lval=%ld dval=%g (const array single value) %6.6ld", modifiedWidth, lval, dval, bd->code);
-            grib_darray_push(c, ret, dval);
+            grib_darray_push(ret, dval);
         }
     }
 
@@ -954,11 +954,11 @@ int decode_element(grib_context* c, grib_accessor_bufr_data_array_t* self, int s
         if (self->compressedData_) {
             err   = self->decode_string_array(c, data, pos, bd);
             index = grib_vsarray_used_size(self->stringValues_);
-            dar   = grib_darray_new(c, self->numberOfSubsets_, 10);
+            dar   = grib_darray_new(self->numberOfSubsets_, 10);
             index = self->numberOfSubsets_ * (index - 1);
             for (ii = 1; ii <= self->numberOfSubsets_; ii++) {
                 x = (index + ii) * 1000 + bd->width / 8;
-                grib_darray_push(c, dar, x);
+                grib_darray_push(dar, x);
             }
             grib_vdarray_push(c, self->numericValues_, dar);
         }
@@ -973,7 +973,7 @@ int decode_element(grib_context* c, grib_accessor_bufr_data_array_t* self, int s
                 index += grib_sarray_used_size(self->stringValues_->v[ii]);
             }
             cdval = index * 1000 + bd->width / 8;
-            grib_darray_push(c, dval, cdval);
+            grib_darray_push(dval, cdval);
         }
     }
     else {
@@ -996,7 +996,7 @@ int decode_element(grib_context* c, grib_accessor_bufr_data_array_t* self, int s
             cdval = self->decode_double_value(c, data, pos, bd, self->canBeMissing_[i], &err);
             grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data decoding: \t %s = %g",
                              bd->shortName, cdval);
-            grib_darray_push(c, dval, cdval);
+            grib_darray_push(dval, cdval);
         }
     }
     return err;
@@ -1049,20 +1049,20 @@ int decode_replication(grib_context* c, grib_accessor_bufr_data_array_t* self, i
         }
     }
     if (self->compressedData_) {
-        dval = grib_darray_new(c, 1, 100);
+        dval = grib_darray_new(1, 100);
         if (c->bufr_multi_element_constant_arrays) {
             long j;
             for (j = 0; j < self->numberOfSubsets_; j++) {
-                grib_darray_push(c, dval, (double)(*numberOfRepetitions));
+                grib_darray_push(dval, (double)(*numberOfRepetitions));
             }
         }
         else {
-            grib_darray_push(c, dval, (double)(*numberOfRepetitions));
+            grib_darray_push(dval, (double)(*numberOfRepetitions));
         }
         grib_vdarray_push(c, self->numericValues_, dval);
     }
     else {
-        grib_darray_push(c, dval, (double)(*numberOfRepetitions));
+        grib_darray_push(dval, (double)(*numberOfRepetitions));
     }
     return ret;
 }
@@ -1079,10 +1079,10 @@ int grib_accessor_bufr_data_array_t::encode_new_bitmap(grib_context* c, grib_buf
         cdval = inputBitmap_[iInputBitmap_++];
     }
     if (compressedData_) {
-        doubleValues = grib_darray_new(c, 1, 1);
-        grib_darray_push(c, doubleValues, cdval);
+        doubleValues = grib_darray_new(1, 1);
+        grib_darray_push(doubleValues, cdval);
         err = encode_double_array(c, buff, pos, expanded_->v[idx], doubleValues);
-        grib_darray_delete(c, doubleValues);
+        grib_darray_delete(doubleValues);
     }
     else {
         err = encode_double_value(c, buff, pos, expanded_->v[idx], cdval);
@@ -1178,10 +1178,10 @@ int encode_new_element(grib_context* c, grib_accessor_bufr_data_array_t* self, i
         if (bd->code == 31031)
             return self->encode_new_bitmap(c, buff, pos, i);
         if (self->compressedData_) {
-            grib_darray* doubleValues = grib_darray_new(c, 1, 1);
-            grib_darray_push(c, doubleValues, cdval);
+            grib_darray* doubleValues = grib_darray_new(1, 1);
+            grib_darray_push(doubleValues, cdval);
             err = self->encode_double_array(c, buff, pos, bd, doubleValues);
-            grib_darray_delete(c, doubleValues);
+            grib_darray_delete(doubleValues);
         }
         else {
             err = self->encode_double_value(c, buff, pos, bd, cdval);
@@ -1641,12 +1641,12 @@ void grib_accessor_bufr_data_array_t::push_zero_element(grib_darray* dval)
 {
     grib_darray* d = 0;
     if (compressedData_) {
-        d = grib_darray_new(context_, 1, 100);
-        grib_darray_push(context_, d, 0);
+        d = grib_darray_new(1, 100);
+        grib_darray_push(d, 0);
         grib_vdarray_push(context_, numericValues_, d);
     }
     else {
-        grib_darray_push(context_, dval, 0);
+        grib_darray_push(dval, 0);
     }
 }
 
@@ -2840,7 +2840,7 @@ int grib_accessor_bufr_data_array_t::process_elements(int flag, long onlySubset,
         if (flag != PROCESS_ENCODE) {
             elementsDescriptorsIndex = grib_iarray_new(c, DYN_ARRAY_SIZE_INIT, DYN_ARRAY_SIZE_INCR);
             if (!compressedData_) {
-                dval = grib_darray_new(c, DYN_ARRAY_SIZE_INIT, DYN_ARRAY_SIZE_INCR);
+                dval = grib_darray_new(DYN_ARRAY_SIZE_INIT, DYN_ARRAY_SIZE_INCR);
             }
         }
         else {

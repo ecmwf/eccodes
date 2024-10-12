@@ -274,10 +274,10 @@ all: empty        { grib_parser_all_actions = 0;grib_parser_concept=0;
 empty:;
 
 
-dvalues:  FLOAT  { $$=grib_darray_push(grib_parser_context,0,$1);}
-    |  dvalues ',' FLOAT { $$=grib_darray_push(grib_parser_context,$1,$3);}
-    |  INTEGER { $$=grib_darray_push(grib_parser_context,0,$1);}
-    |  dvalues ',' INTEGER { $$=grib_darray_push(grib_parser_context,$1,$3);}
+dvalues:  FLOAT  { $$=grib_darray_push(0,$1);}
+    |  dvalues ',' FLOAT { $$=grib_darray_push($1,$3);}
+    |  INTEGER { $$=grib_darray_push(0,$1);}
+    |  dvalues ',' INTEGER { $$=grib_darray_push($1,$3);}
    ;
 
 svalues: STRING { $$=grib_sarray_push(grib_parser_context,0,$1);}

@@ -2387,25 +2387,25 @@ grib_yyreduce:
 
   case 9: /* dvalues: FLOAT  */
 #line 277 "griby.y"
-                 { (grib_yyval.dvalue)=grib_darray_push(grib_parser_context,0,(grib_yyvsp[0].dval));}
+                 { (grib_yyval.dvalue)=grib_darray_push(0,(grib_yyvsp[0].dval));}
 #line 2392 "y.tab.c"
     break;
 
   case 10: /* dvalues: dvalues ',' FLOAT  */
 #line 278 "griby.y"
-                         { (grib_yyval.dvalue)=grib_darray_push(grib_parser_context,(grib_yyvsp[-2].dvalue),(grib_yyvsp[0].dval));}
+                         { (grib_yyval.dvalue)=grib_darray_push((grib_yyvsp[-2].dvalue),(grib_yyvsp[0].dval));}
 #line 2398 "y.tab.c"
     break;
 
   case 11: /* dvalues: INTEGER  */
 #line 279 "griby.y"
-               { (grib_yyval.dvalue)=grib_darray_push(grib_parser_context,0,(grib_yyvsp[0].lval));}
+               { (grib_yyval.dvalue)=grib_darray_push(0,(grib_yyvsp[0].lval));}
 #line 2404 "y.tab.c"
     break;
 
   case 12: /* dvalues: dvalues ',' INTEGER  */
 #line 280 "griby.y"
-                           { (grib_yyval.dvalue)=grib_darray_push(grib_parser_context,(grib_yyvsp[-2].dvalue),(grib_yyvsp[0].lval));}
+                           { (grib_yyval.dvalue)=grib_darray_push((grib_yyvsp[-2].dvalue),(grib_yyvsp[0].lval));}
 #line 2410 "y.tab.c"
     break;
 

@@ -128,9 +128,9 @@ size_t grib_bufr_descriptors_array_used_size(bufr_descriptors_array* v);
 
 /* grib_darray.cc */
 void grib_darray_print(const char* title, const grib_darray* darray);
-grib_darray* grib_darray_new(grib_context* c, size_t size, size_t incsize);
-grib_darray* grib_darray_push(grib_context* c, grib_darray* v, double val);
-void grib_darray_delete(grib_context* c, grib_darray* v);
+grib_darray* grib_darray_new(size_t size, size_t incsize);
+grib_darray* grib_darray_push(grib_darray* v, double val);
+void grib_darray_delete(grib_darray* v);
 int grib_darray_is_constant(grib_darray* v, double epsilon);
 size_t grib_darray_used_size(grib_darray* v);
 

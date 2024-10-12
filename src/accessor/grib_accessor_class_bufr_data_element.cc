@@ -324,11 +324,11 @@ int grib_accessor_bufr_data_element_t::pack_double(const double* val, size_t* le
                              descriptors_->v[elementsDescriptorsIndex_->v[0]->v[index_]]->shortName, count, numberOfSubsets_);
             return GRIB_ARRAY_TOO_SMALL;
         }
-        grib_darray_delete(context_, numericValues_->v[index_]);
-        numericValues_->v[index_] = grib_darray_new(context_, count, 1);
+        grib_darray_delete(numericValues_->v[index_]);
+        numericValues_->v[index_] = grib_darray_new(count, 1);
 
         for (i = 0; i < count; i++)
-            grib_darray_push(context_, numericValues_->v[index_], val[i]);
+            grib_darray_push(numericValues_->v[index_], val[i]);
 
         *len = count;
     }
@@ -353,11 +353,11 @@ int grib_accessor_bufr_data_element_t::pack_long(const long* val, size_t* len)
                              descriptors_->v[elementsDescriptorsIndex_->v[0]->v[index_]]->shortName, count, numberOfSubsets_);
             return GRIB_ARRAY_TOO_SMALL;
         }
-        grib_darray_delete(context_, numericValues_->v[index_]);
-        numericValues_->v[index_] = grib_darray_new(context_, count, 1);
+        grib_darray_delete(numericValues_->v[index_]);
+        numericValues_->v[index_] = grib_darray_new(count, 1);
 
         for (i = 0; i < count; i++) {
-            grib_darray_push(context_, numericValues_->v[index_], val[i] == GRIB_MISSING_LONG ? GRIB_MISSING_DOUBLE : val[i]);
+            grib_darray_push(numericValues_->v[index_], val[i] == GRIB_MISSING_LONG ? GRIB_MISSING_DOUBLE : val[i]);
         }
         *len = count;
     }
