@@ -6,8 +6,7 @@ alias   mars.fcperiod = forecastperiod;
 if (edition == 1){
  meta marsQuantile sprintf("%d:%d",perturbationNumber,numberOfForecastsInEnsemble);
  alias mars.quantile = marsQuantile;
-}
-if (edition == 2){
+} else {
  meta marsQuantile sprintf("%d:%d",quantileValue,totalNumberOfQuantiles);
  alias mars.quantile = marsQuantile;
 }
