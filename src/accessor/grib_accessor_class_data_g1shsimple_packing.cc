@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,31 +10,29 @@
 
 #include "grib_accessor_class_data_g1shsimple_packing.h"
 
-grib_accessor_class_data_g1shsimple_packing_t _grib_accessor_class_data_g1shsimple_packing{"data_g1shsimple_packing"};
-grib_accessor_class* grib_accessor_class_data_g1shsimple_packing = &_grib_accessor_class_data_g1shsimple_packing;
+grib_accessor_data_g1shsimple_packing_t _grib_accessor_data_g1shsimple_packing{};
+grib_accessor* grib_accessor_data_g1shsimple_packing = &_grib_accessor_data_g1shsimple_packing;
 
+int grib_accessor_data_g1shsimple_packing_t::value_count(long* count)
+{
+    size_t len = 0;
+    int err    = 0;
 
-
-int grib_accessor_class_data_g1shsimple_packing_t::value_count(grib_accessor* a, long* count){
-    grib_accessor_data_g1shsimple_packing_t* self = (grib_accessor_data_g1shsimple_packing_t*)a;
-    size_t len                                  = 0;
-    int err                                     = 0;
-
-    err = grib_get_size(grib_handle_of_accessor(a), self->coded_values, &len);
+    err = grib_get_size(grib_handle_of_accessor(this), coded_values_, &len);
     len += 1;
 
     *count = len;
     return err;
 }
 
-int grib_accessor_class_data_g1shsimple_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len){
-    grib_accessor_data_g1shsimple_packing_t* self = (grib_accessor_data_g1shsimple_packing_t*)a;
-    int err                                     = GRIB_SUCCESS;
+int grib_accessor_data_g1shsimple_packing_t::unpack_double(double* val, size_t* len)
+{
+    int err = GRIB_SUCCESS;
 
     size_t coded_n_vals = 0;
     size_t n_vals       = 0;
 
-    if ((err = grib_get_size(grib_handle_of_accessor(a), self->coded_values, &coded_n_vals)) != GRIB_SUCCESS)
+    if ((err = grib_get_size(grib_handle_of_accessor(this), coded_values_, &coded_n_vals)) != GRIB_SUCCESS)
         return err;
 
     n_vals = coded_n_vals + 1;
@@ -45,17 +42,17 @@ int grib_accessor_class_data_g1shsimple_packing_t::unpack_double(grib_accessor* 
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    if ((err = grib_get_double_internal(grib_handle_of_accessor(a), self->real_part, val)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(grib_handle_of_accessor(this), real_part_, val)) != GRIB_SUCCESS)
         return err;
 
     val++;
 
-    if ((err = grib_get_double_array_internal(grib_handle_of_accessor(a), self->coded_values, val, &coded_n_vals)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_array_internal(grib_handle_of_accessor(this), coded_values_, val, &coded_n_vals)) != GRIB_SUCCESS)
         return err;
 
-    grib_context_log(a->context, GRIB_LOG_DEBUG,
+    grib_context_log(context_, GRIB_LOG_DEBUG,
                      "grib_accessor_data_g1shsimple_packing_t_bitmap : unpack_double : creating %s, %d values",
-                     a->name, n_vals);
+                     name_, n_vals);
 
     *len = n_vals;
 

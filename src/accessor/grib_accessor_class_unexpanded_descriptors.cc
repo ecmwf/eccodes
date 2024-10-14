@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -9,50 +8,48 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include "grib_accessor_class_expanded_descriptors.h"
 #include "grib_accessor_class_unexpanded_descriptors.h"
 
-grib_accessor_class_unexpanded_descriptors_t _grib_accessor_class_unexpanded_descriptors{ "unexpanded_descriptors" };
-grib_accessor_class* grib_accessor_class_unexpanded_descriptors = &_grib_accessor_class_unexpanded_descriptors;
+grib_accessor_unexpanded_descriptors_t _grib_accessor_unexpanded_descriptors{};
+grib_accessor* grib_accessor_unexpanded_descriptors = &_grib_accessor_unexpanded_descriptors;
 
-
-void grib_accessor_class_unexpanded_descriptors_t::init(grib_accessor* a, const long len, grib_arguments* args)
+void grib_accessor_unexpanded_descriptors_t::init(const long len, grib_arguments* args)
 {
-    grib_accessor_class_long_t::init(a, len, args);
-    grib_accessor_unexpanded_descriptors_t* self = (grib_accessor_unexpanded_descriptors_t*)a;
+    grib_accessor_long_t::init(len, args);
 
-    int n                              = 0;
-    grib_handle* hand                  = grib_handle_of_accessor(a);
-    self->unexpandedDescriptorsEncoded = grib_find_accessor(hand, grib_arguments_get_name(hand, args, n++));
-    self->createNewData                = grib_arguments_get_name(hand, args, n++);
-    a->length                          = 0;
+    int n                         = 0;
+    grib_handle* hand             = grib_handle_of_accessor(this);
+    unexpandedDescriptorsEncoded_ = grib_find_accessor(hand, grib_arguments_get_name(hand, args, n++));
+    createNewData_                = grib_arguments_get_name(hand, args, n++);
+    length_                       = 0;
 }
 
-int grib_accessor_class_unexpanded_descriptors_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_unexpanded_descriptors_t::unpack_long(long* val, size_t* len)
 {
-    grib_accessor_unexpanded_descriptors_t* self = (grib_accessor_unexpanded_descriptors_t*)a;
-    int ret                                      = 0;
-    long pos                                     = 0;
-    long rlen                                    = 0;
+    int ret   = 0;
+    long pos  = 0;
+    long rlen = 0;
     long f, x, y;
     long* v = val;
     long i;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_handle* hand = grib_handle_of_accessor(this);
 
-    pos = accessor_raw_get_offset(self->unexpandedDescriptorsEncoded) * 8;
+    pos = accessor_raw_get_offset(unexpandedDescriptorsEncoded_) * 8;
 
-    ret = value_count(a, &rlen);
+    ret = value_count(&rlen);
     if (ret)
         return ret;
 
     if (rlen == 0) {
-        grib_context_log(a->context, GRIB_LOG_ERROR,
+        grib_context_log(context_, GRIB_LOG_ERROR,
                          "No descriptors in section 3. Malformed message.");
         return GRIB_MESSAGE_MALFORMED;
     }
 
     if (*len < rlen) {
-        /* grib_context_log(a->context, GRIB_LOG_ERROR, */
-        /* " wrong size (%ld) for %s it contains %d values ",*len, a->name , rlen); */
+        /* grib_context_log(context_ , GRIB_LOG_ERROR, */
+        /* " wrong size (%ld) for %s it contains %d values ",*len, name_ , rlen); */
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -67,22 +64,21 @@ int grib_accessor_class_unexpanded_descriptors_t::unpack_long(grib_accessor* a, 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_unexpanded_descriptors_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_unexpanded_descriptors_t::pack_long(const long* val, size_t* len)
 {
-    grib_accessor_unexpanded_descriptors_t* self = (grib_accessor_unexpanded_descriptors_t*)a;
-    int ret                                      = 0;
-    long pos                                     = 0;
+    int ret  = 0;
+    long pos = 0;
     unsigned long f, x, y;
     unsigned char* buf      = NULL;
-    grib_accessor* expanded = NULL;
+    grib_accessor_expanded_descriptors_t* expanded = NULL;
     size_t buflen           = *len * 2;
     size_t i = 0, length = *len;
     long createNewData = 1;
-    grib_handle* hand  = grib_handle_of_accessor(a);
+    grib_handle* hand  = grib_handle_of_accessor(this);
 
-    grib_get_long(hand, self->createNewData, &createNewData);
+    grib_get_long(hand, createNewData_, &createNewData);
 
-    buf = (unsigned char*)grib_context_malloc_clear(a->context, buflen);
+    buf = (unsigned char*)grib_context_malloc_clear(context_, buflen);
 
     for (i = 0; i < length; i++) {
         const long tmp = val[i] % 100000;
@@ -94,15 +90,15 @@ int grib_accessor_class_unexpanded_descriptors_t::pack_long(grib_accessor* a, co
         grib_encode_unsigned_longb(buf, y, &pos, 8);
     }
 
-    self->unexpandedDescriptorsEncoded->pack_bytes(buf, &buflen);
+    unexpandedDescriptorsEncoded_->pack_bytes(buf, &buflen);
     grib_context_free(hand->context, buf);
 
     if (createNewData == 0)
         return ret;
 
-    expanded = grib_find_accessor(hand, "expandedCodes");
+    expanded = dynamic_cast<grib_accessor_expanded_descriptors_t*>(grib_find_accessor(hand, "expandedCodes"));
     Assert(expanded != NULL);
-    ret = grib_accessor_class_expanded_descriptors_set_do_expand(expanded, 1);
+    ret = expanded->grib_accessor_expanded_descriptors_set_do_expand(1);
     if (ret != GRIB_SUCCESS)
         return ret;
 
@@ -115,28 +111,27 @@ int grib_accessor_class_unexpanded_descriptors_t::pack_long(grib_accessor* a, co
     return ret;
 }
 
-int grib_accessor_class_unexpanded_descriptors_t::value_count(grib_accessor* a, long* numberOfUnexpandedDescriptors)
+int grib_accessor_unexpanded_descriptors_t::value_count(long* numberOfUnexpandedDescriptors)
 {
-    grib_accessor_unexpanded_descriptors_t* self = (grib_accessor_unexpanded_descriptors_t*)a;
     long n = 0;
 
-    self->unexpandedDescriptorsEncoded->value_count(&n);
+    unexpandedDescriptorsEncoded_->value_count(&n);
     *numberOfUnexpandedDescriptors = n / 2;
 
     return 0;
 }
 
-long grib_accessor_class_unexpanded_descriptors_t::byte_offset(grib_accessor* a)
+long grib_accessor_unexpanded_descriptors_t::byte_offset()
 {
-    return a->offset;
+    return offset_;
 }
 
-void grib_accessor_class_unexpanded_descriptors_t::update_size(grib_accessor* a, size_t s)
+void grib_accessor_unexpanded_descriptors_t::update_size(size_t s)
 {
-    a->length = s;
+    length_ = s;
 }
 
-long grib_accessor_class_unexpanded_descriptors_t::next_offset(grib_accessor* a)
+long grib_accessor_unexpanded_descriptors_t::next_offset()
 {
-    return a->byte_offset() + a->length;
+    return byte_offset() + length_;
 }

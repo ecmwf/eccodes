@@ -16,22 +16,19 @@
 class grib_accessor_mars_step_t : public grib_accessor_ascii_t
 {
 public:
-    /* Members defined in mars_step */
-    const char* stepRange;
-    const char* stepType;
-};
-
-class grib_accessor_class_mars_step_t : public grib_accessor_class_ascii_t
-{
-public:
-    grib_accessor_class_mars_step_t(const char* name) : grib_accessor_class_ascii_t(name) {}
+    grib_accessor_mars_step_t() :
+        grib_accessor_ascii_t() { class_name_ = "mars_step"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_mars_step_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int pack_string(grib_accessor*, const char*, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
-    size_t string_length(grib_accessor*) override;
-    int value_count(grib_accessor*, long*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    long get_native_type() override;
+    int pack_long(const long* val, size_t* len) override;
+    int pack_string(const char*, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    int unpack_string(char*, size_t* len) override;
+    size_t string_length() override;
+    int value_count(long*) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* stepRange_;
+    const char* stepType_;
 };

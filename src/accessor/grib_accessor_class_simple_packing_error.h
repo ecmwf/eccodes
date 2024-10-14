@@ -16,19 +16,16 @@
 class grib_accessor_simple_packing_error_t : public grib_accessor_double_t
 {
 public:
-    /* Members defined in simple_packing_error */
-    const char*    binaryScaleFactor;
-    const char*    bitsPerValue;
-    const char*    decimalScaleFactor;
-    const char*    referenceValue;
-    const char*    floatType;
-};
-
-class grib_accessor_class_simple_packing_error_t : public grib_accessor_class_double_t
-{
-public:
-    grib_accessor_class_simple_packing_error_t(const char* name) : grib_accessor_class_double_t(name) {}
+    grib_accessor_simple_packing_error_t() :
+        grib_accessor_double_t() { class_name_ = "simple_packing_error"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_simple_packing_error_t{}; }
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int unpack_double(double* val, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* binaryScaleFactor_;
+    const char* bitsPerValue_;
+    const char* decimalScaleFactor_;
+    const char* referenceValue_;
+    const char* floatType_;
 };

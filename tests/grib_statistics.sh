@@ -13,29 +13,42 @@
 label="grib_statistics_test"
 temp1=temp1.$label.grib
 temp2=temp2.$label.grib
+tempFilt=temp2.$label.filt
+tempText=temp2.$label.txt
 
 files="regular_latlon_surface.grib2 regular_latlon_surface.grib1"
 
 for file in $files; do
 
-cat >statistics.filter<<EOF
- set Ni=2;
- set Nj=2;
- set decimalPrecision=4;
- set values={2.0,2.0,2.0,2.0};
- print "values=[values]";
- print "max=[max] min=[min] average=[average]";
- set values={2.0,5.0,2.0,2.0};
- print "values=[values]";
- print "max=[max] min=[min] average=[average]";
+# Note: When we get min,max etc for the 1st time, dirty_statistics is 1
+# so the statistics accessor will decode the data values (because dirty_statistics==1)
+# Once it is finished, it sets dirty_statistics to 0.
+# If you get min,max again, no computation is done (because dirty_statistics==0)
+# But once the data values are changed, then dirty_statistics is once again 1
+cat > $tempFilt <<EOF
+    set Ni=2;
+    set Nj=2;
+    set decimalPrecision=4;
+    print "Will set values...";
+    set values={2.0,2.0,2.0,2.0};
+    assert(dirty_statistics == 1);
+    print "values=[values]";
+    print "max=[max] min=[min] average=[average]";
+    assert(dirty_statistics == 0);
+    print "max=[max] min=[min] average=[average]";
+    print "Will set values...";
+    set values={2.0,5.0,2.0,2.0};
+    assert(dirty_statistics == 1);
+    print "values=[values]";
+    print "max=[max] min=[min] average=[average]";
+    assert(dirty_statistics == 0);
 EOF
 
-${tools_dir}/grib_filter statistics.filter ${data_dir}/$file > statistics.out
-
-diff statistics.out ${data_dir}/statistics.out.good
+${tools_dir}/grib_filter $tempFilt ${data_dir}/$file > $tempText
+diff ${data_dir}/statistics.out.good $tempText
 
 done
-rm -f statistics.out statistics.filter
+rm -f $tempText $tempFilt
 
 
 # GRIB with no missing values but some entries = 9999
@@ -62,4 +75,40 @@ input=${data_dir}/gfs.complex.mvmu.grib2
 stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $input`
 [ "$stats" = "2.81 0.00 0.30" ]
 
-rm -f $temp1 $temp2
+# ECC-1926
+# grid_complex_spatial_differencing with bpv=0
+# Create a data section similar to the attached file dswrf-1.grib2
+cat >$tempFilt<<EOF
+    set packingType='grid_complex_spatial_differencing';
+    set numberOfGroupsOfDataValues=0;
+    set orderOfSpatialDifferencing=2;
+    set primaryMissingValueSubstitute=0;
+    set referenceForGroupWidths = 64;
+    set numberOfBitsUsedForTheGroupWidths = 4;
+    set referenceForGroupLengths = 203736800;
+    set trueLengthOfLastGroup = 8;
+    set numberOfBitsForScaledGroupLengths = 7;
+    set numberOfOctetsExtraDescriptors = 1;
+    write;
+EOF
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_filter -o $temp1 $tempFilt $input
+grib_check_key_equals $temp1 packingType,isConstant 'grid_complex_spatial_differencing 1'
+stats1=`${tools_dir}/grib_get -M -F%.0f -n statistics $input`
+stats2=`${tools_dir}/grib_get -M -F%.0f -n statistics $temp1`
+[ "$stats1" = "$stats2" ]
+${tools_dir}/grib_set -rs packingType=grid_simple $temp1 $temp2
+grib_check_key_equals $temp2 packingType,isConstant 'grid_simple 1'
+${tools_dir}/grib_compare -b totalLength,section5Length,dataRepresentationTemplateNumber $temp2 $temp1
+
+
+# Decode as string - Null op
+cat >$tempFilt<<EOF
+    print "[computeStatistics:s]";
+EOF
+input=$data_dir/sample.grib2
+${tools_dir}/grib_filter $tempFilt $input
+
+
+# Clean up
+rm -f $temp1 $temp2 $tempFilt $tempText

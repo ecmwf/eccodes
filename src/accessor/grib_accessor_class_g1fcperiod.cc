@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,16 +10,16 @@
 
 #include "grib_accessor_class_g1fcperiod.h"
 
-grib_accessor_class_g1fcperiod_t _grib_accessor_class_g1fcperiod{"g1fcperiod"};
-grib_accessor_class* grib_accessor_class_g1fcperiod = &_grib_accessor_class_g1fcperiod;
+grib_accessor_g1fcperiod_t _grib_accessor_g1fcperiod{};
+grib_accessor* grib_accessor_g1fcperiod = &_grib_accessor_g1fcperiod;
 
-
-int grib_accessor_class_g1fcperiod_t::unpack_string(grib_accessor* a, char* val, size_t* len){
+int grib_accessor_g1fcperiod_t::unpack_string(char* val, size_t* len)
+{
     long start = 0, theEnd = 0;
     char tmp[1024];
     const size_t tmpLen = sizeof(tmp);
-    int err  = grib_g1_step_get_steps(a, &start, &theEnd);
-    size_t l = 0;
+    int err             = grib_g1_step_get_steps(&start, &theEnd);
+    size_t l            = 0;
 
     if (err)
         return err;

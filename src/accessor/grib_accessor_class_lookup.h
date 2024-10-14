@@ -16,23 +16,21 @@
 class grib_accessor_lookup_t : public grib_accessor_long_t
 {
 public:
-    long llength;
-    long loffset;
-    grib_expression* real_name;
-};
-
-class grib_accessor_class_lookup_t : public grib_accessor_class_long_t
-{
-public:
-    grib_accessor_class_lookup_t(const char* name) : grib_accessor_class_long_t(name) {}
+    grib_accessor_lookup_t() :
+        grib_accessor_long_t() { class_name_ = "lookup"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_lookup_t{}; }
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
-    long byte_count(grib_accessor*) override;
-    long byte_offset(grib_accessor*) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
-    void post_init(grib_accessor*) override;
-    int notify_change(grib_accessor*, grib_accessor*) override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    int unpack_string(char*, size_t* len) override;
+    long byte_count() override;
+    long byte_offset() override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
+    void post_init() override;
+    int notify_change(grib_accessor*) override;
+
+private:
+    long llength_;
+    long loffset_;
+    grib_expression* real_name_;
 };

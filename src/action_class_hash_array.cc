@@ -8,9 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/***************************************************************************
- *   Enrico  Fucile 2012                                                   *
- ***************************************************************************/
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -64,20 +61,17 @@ typedef struct grib_action_hash_array {
 extern grib_action_class* grib_action_class_gen;
 
 static grib_action_class _grib_action_class_hash_array = {
-    &grib_action_class_gen,                              /* super                     */
-    "action_class_hash_array",                              /* name                      */
-    sizeof(grib_action_hash_array),            /* size                      */
-    0,                                   /* inited */
+    &grib_action_class_gen,                              /* super */
+    "action_class_hash_array",                 /* name */
+    sizeof(grib_action_hash_array),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     &destroy,                            /* destroy */
-
-    &dump,                               /* dump                      */
-    0,                               /* xref                      */
-
-    0,             /* create_accessor*/
-
-    0,                            /* notify_change */
+    &dump,                               /* dump */
+    0,                               /* xref */
+    0,                    /* create_accessor */
+    0,                      /* notify_change */
     0,                            /* reparse */
     0,                            /* execute */
 };
@@ -231,7 +225,6 @@ static grib_hash_array_value* get_hash_array_impl(grib_handle* h, grib_action* a
     char key[4096]    = {0,};
     char* full = 0;
     int id;
-    int err;
     grib_action_hash_array* self = (grib_action_hash_array*)a;
 
     grib_context* context    = ((grib_action*)self)->context;
@@ -245,7 +238,7 @@ static grib_hash_array_value* get_hash_array_impl(grib_handle* h, grib_action* a
 
     snprintf(buf, 4096, "%s/%s", masterDir, self->basename);
 
-    err = grib_recompose_name(h, NULL, buf, master, 1);
+    int err = grib_recompose_name(h, NULL, buf, master, 1);
     if (err) {
         grib_context_log(context, GRIB_LOG_ERROR,
                          "unable to build name of directory %s", self->masterDir);

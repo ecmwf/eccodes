@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,49 +10,46 @@
 
 #include "grib_accessor_class_raw.h"
 
-grib_accessor_class_raw_t _grib_accessor_class_raw{ "raw" };
-grib_accessor_class* grib_accessor_class_raw = &_grib_accessor_class_raw;
+grib_accessor_raw_t _grib_accessor_raw{};
+grib_accessor* grib_accessor_raw = &_grib_accessor_raw;
 
-
-void grib_accessor_class_raw_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+void grib_accessor_raw_t::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_class_gen_t::init(a, len, arg);
+    grib_accessor_gen_t::init(len, arg);
     int n   = 0;
     int err = 0;
     long sectionLength;
-    grib_accessor_raw_t* self = (grib_accessor_raw_t*)a;
     grib_expression* e;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_handle* hand = grib_handle_of_accessor(this);
 
-    a->length           = 0;
-    self->totalLength   = grib_arguments_get_name(hand, arg, n++);
-    self->sectionLength = grib_arguments_get_name(hand, arg, n++);
+    length_        = 0;
+    totalLength_   = grib_arguments_get_name(hand, arg, n++);
+    sectionLength_ = grib_arguments_get_name(hand, arg, n++);
 
     e   = grib_arguments_get_expression(hand, arg, n++);
-    err = grib_expression_evaluate_long(hand, e, &(self->relativeOffset));
+    err = grib_expression_evaluate_long(hand, e, &(relativeOffset_));
     if (err)
         grib_context_log(hand->context, GRIB_LOG_ERROR, "Unable to evaluate relativeOffset");
 
-    grib_get_long(hand, self->sectionLength, &sectionLength);
+    grib_get_long(hand, sectionLength_, &sectionLength);
 
-    a->length = sectionLength - self->relativeOffset;
-    if (a->length < 0)
-        a->length = 0;
+    length_ = sectionLength - relativeOffset_;
+    if (length_ < 0)
+        length_ = 0;
 
-    /* Assert(a->length>=0); */
+    /* Assert(length_ >=0); */
 }
 
-int grib_accessor_class_raw_t::get_native_type(grib_accessor* a)
+long grib_accessor_raw_t::get_native_type()
 {
     return GRIB_TYPE_BYTES;
 }
 
-
-int grib_accessor_class_raw_t::compare(grib_accessor* a, grib_accessor* b)
+int grib_accessor_raw_t::compare(grib_accessor* b)
 {
     int retval = GRIB_SUCCESS;
 
-    size_t alen = (size_t)a->byte_count();
+    size_t alen = (size_t)byte_count();
     size_t blen = (size_t)b->byte_count();
     if (alen != blen)
         return GRIB_COUNT_MISMATCH;
@@ -61,66 +57,65 @@ int grib_accessor_class_raw_t::compare(grib_accessor* a, grib_accessor* b)
     return retval;
 }
 
-long grib_accessor_class_raw_t::byte_count(grib_accessor* a)
+long grib_accessor_raw_t::byte_count()
 {
-    return a->length;
+    return length_;
 }
 
-int grib_accessor_class_raw_t::value_count(grib_accessor* a, long* len)
+int grib_accessor_raw_t::value_count(long* len)
 {
-    *len = a->length;
+    *len = length_;
     return 0;
 }
 
-int grib_accessor_class_raw_t::unpack_bytes(grib_accessor* a, unsigned char* buffer, size_t* len)
+int grib_accessor_raw_t::unpack_bytes(unsigned char* buffer, size_t* len)
 {
-    if (*len < a->length) {
-        *len = a->length;
+    if (*len < length_) {
+        *len = length_;
         return GRIB_ARRAY_TOO_SMALL;
     }
-    *len = a->length;
+    *len = length_;
 
-    memcpy(buffer, grib_handle_of_accessor(a)->buffer->data + a->offset, *len);
+    memcpy(buffer, grib_handle_of_accessor(this)->buffer->data + offset_, *len);
 
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_class_raw_t::update_size(grib_accessor* a, size_t s)
+void grib_accessor_raw_t::update_size(size_t s)
 {
-    grib_context_log(a->context, GRIB_LOG_DEBUG, "updating size of %s old %ld new %ld", a->name, a->length, s);
-    a->length = s;
-    Assert(a->length >= 0);
+    grib_context_log(context_, GRIB_LOG_DEBUG, "updating size of %s old %ld new %ld", name_, length_, s);
+    length_ = s;
+    Assert(length_ >= 0);
 }
 
 void accessor_raw_set_length(grib_accessor* a, size_t len)
 {
-    a->length = len;
+    a->length_ = len;
 }
 
 long accessor_raw_get_offset(grib_accessor* a)
 {
-    return a->offset;
+    return a->offset_;
 }
 
-int grib_accessor_class_raw_t::pack_bytes(grib_accessor* a, const unsigned char* val, size_t* len)
+int grib_accessor_raw_t::pack_bytes(const unsigned char* val, size_t* len)
 {
     size_t length = *len;
     long totalLength;
     long sectionLength;
-    grib_handle* h            = grib_handle_of_accessor(a);
-    grib_accessor_raw_t* self = (grib_accessor_raw_t*)a;
-    long dlen                 = length - a->length;
+    grib_handle* h = grib_handle_of_accessor(this);
+    long dlen      = length - length_;
 
-    grib_get_long(h, self->totalLength, &totalLength);
+    grib_get_long(h, totalLength_, &totalLength);
     totalLength += dlen;
-    grib_get_long(h, self->sectionLength, &sectionLength);
+    grib_get_long(h, sectionLength_, &sectionLength);
     sectionLength += dlen;
 
-    grib_buffer_replace(a, val, length, 1, 1);
+    grib_buffer_replace(this, val, length, 1, 1);
 
-    grib_set_long(h, self->totalLength, totalLength);
-    grib_set_long(h, self->sectionLength, sectionLength);
-    a->length = length;
+    grib_set_long(h, totalLength_, totalLength);
+    grib_set_long(h, sectionLength_, sectionLength);
+    length_ = length;
 
     return GRIB_SUCCESS;
 }

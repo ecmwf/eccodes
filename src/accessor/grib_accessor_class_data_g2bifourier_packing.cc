@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -13,42 +12,38 @@
 #include "grib_scaling.h"
 #include <algorithm>
 
-grib_accessor_class_data_g2bifourier_packing_t _grib_accessor_class_data_g2bifourier_packing{"data_g2bifourier_packing"};
-grib_accessor_class* grib_accessor_class_data_g2bifourier_packing = &_grib_accessor_class_data_g2bifourier_packing;
+grib_accessor_data_g2bifourier_packing_t _grib_accessor_data_g2bifourier_packing{};
+grib_accessor* grib_accessor_data_g2bifourier_packing = &_grib_accessor_data_g2bifourier_packing;
 
+void grib_accessor_data_g2bifourier_packing_t::init(const long v, grib_arguments* args)
+{
+    grib_accessor_data_simple_packing_t::init(v, args);
+    grib_handle* gh = grib_handle_of_accessor(this);
 
-typedef unsigned long (*encode_float_proc)(double);
-typedef double (*decode_float_proc)(unsigned long);
+    ieee_floats_                         = grib_arguments_get_name(gh, args, carg_++);
+    laplacianOperatorIsSet_              = grib_arguments_get_name(gh, args, carg_++);
+    laplacianOperator_                   = grib_arguments_get_name(gh, args, carg_++);
+    biFourierTruncationType_             = grib_arguments_get_name(gh, args, carg_++);
+    sub_i_                               = grib_arguments_get_name(gh, args, carg_++);
+    sub_j_                               = grib_arguments_get_name(gh, args, carg_++);
+    bif_i_                               = grib_arguments_get_name(gh, args, carg_++);
+    bif_j_                               = grib_arguments_get_name(gh, args, carg_++);
+    biFourierSubTruncationType_          = grib_arguments_get_name(gh, args, carg_++);
+    biFourierDoNotPackAxes_              = grib_arguments_get_name(gh, args, carg_++);
+    biFourierMakeTemplate_               = grib_arguments_get_name(gh, args, carg_++);
+    totalNumberOfValuesInUnpackedSubset_ = grib_arguments_get_name(gh, args, carg_++);
+    /*numberOfValues             = grib_arguments_get_name(gh,args,carg_ ++);*/
 
-void grib_accessor_class_data_g2bifourier_packing_t::init(grib_accessor* a, const long v, grib_arguments* args){
-    grib_accessor_class_data_simple_packing_t::init(a, v, args);
-    grib_accessor_data_g2bifourier_packing_t* self = (grib_accessor_data_g2bifourier_packing_t*)a;
-    grib_handle* gh                              = grib_handle_of_accessor(a);
-
-    self->ieee_floats                         = grib_arguments_get_name(gh, args, self->carg++);
-    self->laplacianOperatorIsSet              = grib_arguments_get_name(gh, args, self->carg++);
-    self->laplacianOperator                   = grib_arguments_get_name(gh, args, self->carg++);
-    self->biFourierTruncationType             = grib_arguments_get_name(gh, args, self->carg++);
-    self->sub_i                               = grib_arguments_get_name(gh, args, self->carg++);
-    self->sub_j                               = grib_arguments_get_name(gh, args, self->carg++);
-    self->bif_i                               = grib_arguments_get_name(gh, args, self->carg++);
-    self->bif_j                               = grib_arguments_get_name(gh, args, self->carg++);
-    self->biFourierSubTruncationType          = grib_arguments_get_name(gh, args, self->carg++);
-    self->biFourierDoNotPackAxes              = grib_arguments_get_name(gh, args, self->carg++);
-    self->biFourierMakeTemplate               = grib_arguments_get_name(gh, args, self->carg++);
-    self->totalNumberOfValuesInUnpackedSubset = grib_arguments_get_name(gh, args, self->carg++);
-    /*self->numberOfValues             = grib_arguments_get_name(gh,args,self->carg++);*/
-
-    a->flags |= GRIB_ACCESSOR_FLAG_DATA;
-    self->dirty = 1;
+    flags_ |= GRIB_ACCESSOR_FLAG_DATA;
+    dirty_ = 1;
 }
 
-int grib_accessor_class_data_g2bifourier_packing_t::value_count(grib_accessor* a, long* numberOfValues){
-    grib_accessor_data_g2bifourier_packing_t* self = (grib_accessor_data_g2bifourier_packing_t*)a;
-    grib_handle* gh                              = grib_handle_of_accessor(a);
-    *numberOfValues                              = 0;
+int grib_accessor_data_g2bifourier_packing_t::value_count(long* numberOfValues)
+{
+    grib_handle* gh = grib_handle_of_accessor(this);
+    *numberOfValues = 0;
 
-    return grib_get_long_internal(gh, self->number_of_values, numberOfValues);
+    return grib_get_long_internal(gh, number_of_values_, numberOfValues);
 }
 
 static void ellipse(long ni, long nj, long itrunc[], long jtrunc[])
@@ -131,7 +126,6 @@ static void diamond(long ni, long nj, long itrunc[], long jtrunc[])
 
 #define scals(i, j) pow((double)((i) * (i) + (j) * (j)), bt->laplacianOperator)
 
-
 #define for_ij()                     \
     for (j = 0; j <= bt->bif_j; j++) \
         for (i = 0; i <= bt->itruncation_bif[j]; i++)
@@ -148,29 +142,6 @@ static void diamond(long ni, long nj, long itrunc[], long jtrunc[])
             insub = insub || (i == 0) || (j == 0);      \
     } while (0)
 
-typedef struct bif_trunc_t
-{
-    long bits_per_value;
-    long decimal_scale_factor;
-    long binary_scale_factor;
-    long ieee_floats;
-    long laplacianOperatorIsSet;
-    double laplacianOperator;
-    double reference_value;
-    long sub_i, sub_j, bif_i, bif_j;
-    long biFourierTruncationType;
-    long biFourierSubTruncationType;
-    long keepaxes;
-    long maketemplate;
-    decode_float_proc decode_float;
-    encode_float_proc encode_float;
-    int bytes;
-    long* itruncation_bif;
-    long* jtruncation_bif;
-    long* itruncation_sub;
-    long* jtruncation_sub;
-    size_t n_vals_bif, n_vals_sub;
-} bif_trunc_t;
 
 /*
  * Total number of coefficients
@@ -249,7 +220,7 @@ static double laplam(bif_trunc_t* bt, const double val[])
         free(itab2);
         return 0.;
     }
-    Assert(lmax>0);
+    Assert(lmax > 0);
 
     /*
      * Now, itab2 contains all possible values of i*i+j*j, and itab1 contains
@@ -357,47 +328,45 @@ static void free_bif_trunc(bif_trunc_t* bt, grib_accessor* a)
     grib_context_free(gh->context, bt);
 }
 
-static bif_trunc_t* new_bif_trunc(grib_accessor* a)
+bif_trunc_t* grib_accessor_data_g2bifourier_packing_t::new_bif_trunc()
 {
     int ret;
-    grib_accessor_data_g2bifourier_packing_t* self = (grib_accessor_data_g2bifourier_packing_t*)a;
 
-    grib_handle* gh = grib_handle_of_accessor(a);
+    grib_handle* gh = grib_handle_of_accessor(this);
     bif_trunc_t* bt = (bif_trunc_t*)grib_context_malloc(gh->context, sizeof(bif_trunc_t));
 
     memset(bt, 0, sizeof(bif_trunc_t));
 
-    if ((ret = grib_get_double_internal(gh, self->reference_value, &bt->reference_value)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(gh, reference_value_, &bt->reference_value)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->bits_per_value, &bt->bits_per_value)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, bits_per_value_, &bt->bits_per_value)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->binary_scale_factor, &bt->binary_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, binary_scale_factor_, &bt->binary_scale_factor)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->decimal_scale_factor, &bt->decimal_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, decimal_scale_factor_, &bt->decimal_scale_factor)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->ieee_floats, &bt->ieee_floats)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, ieee_floats_, &bt->ieee_floats)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->laplacianOperatorIsSet, &bt->laplacianOperatorIsSet)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, laplacianOperatorIsSet_, &bt->laplacianOperatorIsSet)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_double_internal(gh, self->laplacianOperator, &bt->laplacianOperator)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(gh, laplacianOperator_, &bt->laplacianOperator)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->sub_i, &bt->sub_i)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, sub_i_, &bt->sub_i)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->sub_j, &bt->sub_j)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, sub_j_, &bt->sub_j)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->bif_i, &bt->bif_i)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, bif_i_, &bt->bif_i)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->bif_j, &bt->bif_j)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, bif_j_, &bt->bif_j)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->biFourierTruncationType, &bt->biFourierTruncationType)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, biFourierTruncationType_, &bt->biFourierTruncationType)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->biFourierSubTruncationType, &bt->biFourierSubTruncationType)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, biFourierSubTruncationType_, &bt->biFourierSubTruncationType)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->biFourierDoNotPackAxes, &bt->keepaxes)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, biFourierDoNotPackAxes_, &bt->keepaxes)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_get_long_internal(gh, self->biFourierMakeTemplate, &bt->maketemplate)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, biFourierMakeTemplate_, &bt->maketemplate)) != GRIB_SUCCESS)
         goto cleanup;
-
 
     switch (bt->ieee_floats) {
         case 0:
@@ -426,8 +395,8 @@ static bif_trunc_t* new_bif_trunc(grib_accessor* a)
     bt->jtruncation_bif = (long*)grib_context_malloc(gh->context, sizeof(long) * (1 + bt->bif_i));
 
 #define RECTANGLE 77
-#define ELLIPSE 88
-#define DIAMOND 99
+#define ELLIPSE   88
+#define DIAMOND   99
 
     switch (bt->biFourierTruncationType) {
         case RECTANGLE:
@@ -465,15 +434,15 @@ static bif_trunc_t* new_bif_trunc(grib_accessor* a)
 
 cleanup:
 
-    free_bif_trunc(bt, a);
+    free_bif_trunc(bt, this);
     if (ret) fprintf(stderr, "ERROR: new_bif_trunc: %s\n", grib_get_error_message(ret));
 
     return NULL;
 }
 
-int grib_accessor_class_data_g2bifourier_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len){
-    grib_accessor_data_g2bifourier_packing_t* self = (grib_accessor_data_g2bifourier_packing_t*)a;
-    grib_handle* gh                              = grib_handle_of_accessor(a);
+int grib_accessor_data_g2bifourier_packing_t::unpack_double(double* val, size_t* len)
+{
+    grib_handle* gh = grib_handle_of_accessor(this);
 
     unsigned char* buf  = NULL;
     unsigned char* hres = NULL;
@@ -496,10 +465,10 @@ int grib_accessor_class_data_g2bifourier_packing_t::unpack_double(grib_accessor*
     int ret  = GRIB_SUCCESS;
     int i, j, k;
 
-    if ((ret = a->value_count(&count)) != GRIB_SUCCESS)
+    if ((ret = value_count(&count)) != GRIB_SUCCESS)
         goto cleanup;
 
-    bt = new_bif_trunc(a);
+    bt = new_bif_trunc();
 
     if (bt == NULL) {
         ret = GRIB_INTERNAL_ERROR;
@@ -511,7 +480,7 @@ int grib_accessor_class_data_g2bifourier_packing_t::unpack_double(grib_accessor*
         goto cleanup;
     }
 
-    if ((ret = grib_get_long_internal(gh, self->offsetdata, &offsetdata)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(gh, offsetdata_, &offsetdata)) != GRIB_SUCCESS)
         goto cleanup;
     if (*len < bt->n_vals_bif) {
         *len = (long)bt->n_vals_bif;
@@ -519,10 +488,10 @@ int grib_accessor_class_data_g2bifourier_packing_t::unpack_double(grib_accessor*
         goto cleanup;
     }
 
-    self->dirty = 0;
+    dirty_ = 0;
 
     buf = (unsigned char*)gh->buffer->data;
-    buf += a->byte_offset();
+    buf += byte_offset();
     s = codes_power<double>(bt->binary_scale_factor, 2);
     d = codes_power<double>(-bt->decimal_scale_factor, 10);
 
@@ -532,7 +501,7 @@ int grib_accessor_class_data_g2bifourier_packing_t::unpack_double(grib_accessor*
     hres = buf;
     lres = buf;
 
-    packed_offset = a->byte_offset() + bt->bytes * bt->n_vals_sub;
+    packed_offset = byte_offset() + bt->bytes * bt->n_vals_sub;
 
     lpos = 8 * (packed_offset - offsetdata);
     hpos = 0;
@@ -563,24 +532,23 @@ int grib_accessor_class_data_g2bifourier_packing_t::unpack_double(grib_accessor*
 
 cleanup:
 
-    free_bif_trunc(bt, a);
+    free_bif_trunc(bt, this);
 
     return ret;
 }
 
-int grib_accessor_class_data_g2bifourier_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len){
-    grib_accessor_data_g2bifourier_packing_t* self = (grib_accessor_data_g2bifourier_packing_t*)a;
-    grib_handle* gh                              = grib_handle_of_accessor(a);
-    const char* cclass_name                      = a->cclass->name;
+int grib_accessor_data_g2bifourier_packing_t::pack_double(const double* val, size_t* len)
+{
+    grib_handle* gh = grib_handle_of_accessor(this);
 
-    size_t buflen                                = 0;
-    size_t hsize                                 = 0;
-    size_t lsize                                 = 0;
-    unsigned char* buf                           = NULL;
-    unsigned char* hres                          = NULL;
-    unsigned char* lres                          = NULL;
-    long hpos                                    = 0;
-    long lpos                                    = 0;
+    size_t buflen       = 0;
+    size_t hsize        = 0;
+    size_t lsize        = 0;
+    unsigned char* buf  = NULL;
+    unsigned char* hres = NULL;
+    unsigned char* lres = NULL;
+    long hpos           = 0;
+    long lpos           = 0;
     int isp;
     bif_trunc_t* bt = NULL;
 
@@ -598,11 +566,11 @@ int grib_accessor_class_data_g2bifourier_packing_t::pack_double(grib_accessor* a
         goto cleanup;
     }
 
-    bt = new_bif_trunc(a);
+    bt = new_bif_trunc();
 
     if (bt == NULL) {
         long makeTemplate = 0;
-        if ((ret = grib_get_long_internal(gh, self->biFourierMakeTemplate, &makeTemplate)) != GRIB_SUCCESS)
+        if ((ret = grib_get_long_internal(gh, biFourierMakeTemplate_, &makeTemplate)) != GRIB_SUCCESS)
             goto cleanup;
         if (!makeTemplate) {
             ret = GRIB_INTERNAL_ERROR;
@@ -615,11 +583,11 @@ int grib_accessor_class_data_g2bifourier_packing_t::pack_double(grib_accessor* a
         }
     }
 
-    self->dirty = 1;
+    dirty_ = 1;
 
     if (*len != bt->n_vals_bif) {
         grib_context_log(gh->context, GRIB_LOG_ERROR, "BIFOURIER_PACKING: wrong number of values, expected %lu - got %lu",
-                bt->n_vals_bif, *len);
+                         bt->n_vals_bif, *len);
         ret = GRIB_INTERNAL_ERROR;
         goto cleanup;
     }
@@ -627,10 +595,10 @@ int grib_accessor_class_data_g2bifourier_packing_t::pack_double(grib_accessor* a
     if (!bt->laplacianOperatorIsSet) {
         bt->laplacianOperator = laplam(bt, val);
 
-        if ((ret = grib_set_double_internal(gh, self->laplacianOperator, bt->laplacianOperator)) != GRIB_SUCCESS)
+        if ((ret = grib_set_double_internal(gh, laplacianOperator_, bt->laplacianOperator)) != GRIB_SUCCESS)
             goto cleanup;
 
-        grib_get_double_internal(gh, self->laplacianOperator, &bt->laplacianOperator);
+        grib_get_double_internal(gh, laplacianOperator_, &bt->laplacianOperator);
     }
 
     /*
@@ -664,7 +632,7 @@ int grib_accessor_class_data_g2bifourier_packing_t::pack_double(grib_accessor* a
     }
 
     if (bt->n_vals_bif != bt->n_vals_sub) {
-        ret = grib_optimize_decimal_factor(a, self->reference_value,
+        ret = grib_optimize_decimal_factor(this, reference_value_,
                                            max, min, bt->bits_per_value, 0, 1,
                                            &bt->decimal_scale_factor,
                                            &bt->binary_scale_factor,
@@ -736,36 +704,36 @@ int grib_accessor_class_data_g2bifourier_packing_t::pack_double(grib_accessor* a
 
     buflen = ((hpos + lpos) / 8);
 
-    if ((ret = grib_set_double_internal(gh, self->reference_value, bt->reference_value)) != GRIB_SUCCESS)
+    if ((ret = grib_set_double_internal(gh, reference_value_, bt->reference_value)) != GRIB_SUCCESS)
         goto cleanup;
 
     {
         // Make sure we can decode it again
         double ref = 1e-100;
-        grib_get_double_internal(gh, self->reference_value, &ref);
+        grib_get_double_internal(gh, reference_value_, &ref);
         if (ref != bt->reference_value) {
-            grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
-                            cclass_name, __func__, self->reference_value, ref, bt->reference_value);
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
+                             class_name_, __func__, reference_value_, ref, bt->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
     }
 
-    if ((ret = grib_set_long_internal(gh, self->binary_scale_factor, bt->binary_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(gh, binary_scale_factor_, bt->binary_scale_factor)) != GRIB_SUCCESS)
         goto cleanup;
-    if ((ret = grib_set_long_internal(gh, self->decimal_scale_factor, bt->decimal_scale_factor)) != GRIB_SUCCESS)
-        goto cleanup;
-
-    grib_buffer_replace(a, buf, buflen, 1, 1);
-
-    if ((ret = grib_set_long_internal(gh, self->totalNumberOfValuesInUnpackedSubset, bt->n_vals_sub)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(gh, decimal_scale_factor_, bt->decimal_scale_factor)) != GRIB_SUCCESS)
         goto cleanup;
 
-    if ((ret = grib_set_long_internal(gh, self->number_of_values, bt->n_vals_bif)) != GRIB_SUCCESS)
+    grib_buffer_replace(this, buf, buflen, 1, 1);
+
+    if ((ret = grib_set_long_internal(gh, totalNumberOfValuesInUnpackedSubset_, bt->n_vals_sub)) != GRIB_SUCCESS)
+        goto cleanup;
+
+    if ((ret = grib_set_long_internal(gh, number_of_values_, bt->n_vals_bif)) != GRIB_SUCCESS)
         goto cleanup;
 
 cleanup:
 
-    free_bif_trunc(bt, a);
+    free_bif_trunc(bt, this);
 
     if (buf != NULL)
         grib_context_free(gh->context, buf);

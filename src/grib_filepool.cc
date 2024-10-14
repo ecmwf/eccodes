@@ -287,8 +287,8 @@ void grib_file_pool_delete_file(grib_file* file)
 
 void grib_file_close(const char* filename, int force, int* err)
 {
-    grib_file* file       = NULL;
-    grib_context* context = grib_context_get_default();
+    grib_file* file = NULL;
+    const grib_context* context = grib_context_get_default();
 
     /* Performance: keep the files open to avoid opening and closing files when writing the output. */
     /* So only call fclose() when too many files are open. */

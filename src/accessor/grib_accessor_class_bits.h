@@ -16,27 +16,24 @@
 class grib_accessor_bits_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in bits */
-    const char*    argument;
-    long    start;
-    long    len;
-    double referenceValue;
-    double referenceValuePresent;
-    double scale;
-};
-
-class grib_accessor_class_bits_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_bits_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_bits_t() :
+        grib_accessor_gen_t() { class_name_ = "bits"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_bits_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int pack_double(grib_accessor*, const double* val, size_t* len) override;
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_bytes(grib_accessor*, unsigned char*, size_t* len) override;
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
-    long byte_count(grib_accessor*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    long get_native_type() override;
+    int pack_double(const double* val, size_t* len) override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_bytes(unsigned char*, size_t* len) override;
+    int unpack_double(double* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    int unpack_string(char*, size_t* len) override;
+    long byte_count() override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* argument_;
+    long start_;
+    long len_;
+    double referenceValue_;
+    double referenceValuePresent_;
+    double scale_;
 };

@@ -88,6 +88,7 @@ list( APPEND eccodes_src_files
     accessor/grib_accessor_class_validity_date.cc
     accessor/grib_accessor_class_validity_time.cc
     accessor/grib_accessor_class_bytes.cc
+    accessor/grib_accessor_class_cf_var_name.cc
     accessor/grib_accessor_class_change_alternative_row_scanning.cc
     accessor/grib_accessor_class_change_scanning_direction.cc
     accessor/grib_accessor_class_check_internal_version.cc
@@ -216,7 +217,6 @@ list( APPEND eccodes_src_files
     accessor/grib_accessor_class_data_raw_packing.cc
     accessor/grib_accessor_class_data_complex_packing.cc
     accessor/grib_accessor_class_data_g1complex_packing.cc
-    accessor/grib_accessor_class_gds_not_present_bitmap.cc
     accessor/grib_accessor_class_gds_is_present.cc
     accessor/grib_accessor_class_select_step_template.cc
     accessor/grib_accessor_class_local_definition.cc
@@ -357,7 +357,6 @@ list( APPEND eccodes_src_files
     eccodes_prototypes.h
     grib_dumper_class.h
     grib_dumper_factory.h
-    grib_emoslib.h
     grib_iterator_class.h
     grib_iterator_factory.h
     grib_nearest_class.h

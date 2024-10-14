@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,30 +10,29 @@
 
 #include "grib_accessor_class_data_dummy_field.h"
 
-grib_accessor_class_data_dummy_field_t _grib_accessor_class_data_dummy_field{"data_dummy_field"};
-grib_accessor_class* grib_accessor_class_data_dummy_field = &_grib_accessor_class_data_dummy_field;
+grib_accessor_data_dummy_field_t _grib_accessor_data_dummy_field{};
+grib_accessor* grib_accessor_data_dummy_field = &_grib_accessor_data_dummy_field;
 
-
-void grib_accessor_class_data_dummy_field_t::init(grib_accessor* a, const long v, grib_arguments* args){
-    grib_accessor_class_data_g1simple_packing_t::init(a, v, args);
-    grib_accessor_data_dummy_field_t* self = (grib_accessor_data_dummy_field_t*)a;
-    self->missing_value  = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->numberOfPoints = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->bitmap         = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
+void grib_accessor_data_dummy_field_t::init(const long v, grib_arguments* args)
+{
+    grib_accessor_data_g1simple_packing_t::init(v, args);
+    missing_value_  = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
+    numberOfPoints_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
+    bitmap_         = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
 }
 
-int grib_accessor_class_data_dummy_field_t::unpack_double(grib_accessor* a, double* val, size_t* len){
-    grib_accessor_data_dummy_field_t* self = (grib_accessor_data_dummy_field_t*)a;
+int grib_accessor_data_dummy_field_t::unpack_double(double* val, size_t* len)
+{
     size_t i = 0, n_vals = 0;
     long numberOfPoints;
     double missing_value = 0;
-    int err = 0;
+    int err              = 0;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfPoints, &numberOfPoints)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), numberOfPoints_, &numberOfPoints)) != GRIB_SUCCESS)
         return err;
     n_vals = numberOfPoints;
 
-    if ((err = grib_get_double_internal(grib_handle_of_accessor(a), self->missing_value, &missing_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(grib_handle_of_accessor(this), missing_value_, &missing_value)) != GRIB_SUCCESS)
         return err;
 
     if (*len < n_vals) {
@@ -45,8 +43,8 @@ int grib_accessor_class_data_dummy_field_t::unpack_double(grib_accessor* a, doub
     for (i = 0; i < n_vals; i++)
         val[i] = missing_value;
 
-    if (grib_find_accessor(grib_handle_of_accessor(a), self->bitmap)) {
-        if ((err = grib_set_double_array_internal(grib_handle_of_accessor(a), self->bitmap, val, n_vals)) != GRIB_SUCCESS)
+    if (grib_find_accessor(grib_handle_of_accessor(this), bitmap_)) {
+        if ((err = grib_set_double_array_internal(grib_handle_of_accessor(this), bitmap_, val, n_vals)) != GRIB_SUCCESS)
             return err;
     }
 
@@ -54,48 +52,47 @@ int grib_accessor_class_data_dummy_field_t::unpack_double(grib_accessor* a, doub
     return err;
 }
 
-int grib_accessor_class_data_dummy_field_t::pack_double(grib_accessor* a, const double* val, size_t* len){
-    grib_accessor_data_dummy_field_t* self = (grib_accessor_data_dummy_field_t*)a;
-
-    size_t n_vals = *len;
-    int err       = 0;
+int grib_accessor_data_dummy_field_t::pack_double(const double* val, size_t* len)
+{
+    size_t n_vals       = *len;
+    int err             = 0;
     long bits_per_value = 0;
-    long half_byte = 0;
-    size_t buflen  = 0;
-    unsigned char* buf = NULL;
+    long half_byte      = 0;
+    size_t buflen       = 0;
+    unsigned char* buf  = NULL;
 
     if (*len == 0)
         return GRIB_NO_VALUES;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return err;
 
     buflen = (1 + ((bits_per_value * n_vals) / 8)) * sizeof(unsigned char);
 
-    buf = (unsigned char*)grib_context_malloc_clear(a->context, buflen);
+    buf = (unsigned char*)grib_context_malloc_clear(context_, buflen);
     if (!buf)
         return GRIB_OUT_OF_MEMORY;
 
     half_byte = (buflen * 8) - ((*len) * bits_per_value);
 
-    if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->half_byte, half_byte)) != GRIB_SUCCESS) {
-        grib_context_free(a->context, buf);
+    if ((err = grib_set_long_internal(grib_handle_of_accessor(this), half_byte_, half_byte)) != GRIB_SUCCESS) {
+        grib_context_free(context_, buf);
         return err;
     }
-    grib_buffer_replace(a, buf, buflen, 1, 1);
+    grib_buffer_replace(this, buf, buflen, 1, 1);
 
-    grib_context_free(a->context, buf);
+    grib_context_free(context_, buf);
 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_data_dummy_field_t::value_count(grib_accessor* a, long* numberOfPoints){
-    grib_accessor_data_dummy_field_t* self = (grib_accessor_data_dummy_field_t*)a;
-    int err = 0;
+int grib_accessor_data_dummy_field_t::value_count(long* numberOfPoints)
+{
+    int err         = 0;
     *numberOfPoints = 0;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfPoints, numberOfPoints)) != GRIB_SUCCESS) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Unable to get count of %s (%s)", a->name, grib_get_error_message(err));
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), numberOfPoints_, numberOfPoints)) != GRIB_SUCCESS) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "Unable to get count of %s (%s)", name_, grib_get_error_message(err));
     }
 
     return err;

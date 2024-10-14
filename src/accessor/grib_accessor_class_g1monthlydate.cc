@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,25 +10,23 @@
 
 #include "grib_accessor_class_g1monthlydate.h"
 
-grib_accessor_class_g1monthlydate_t _grib_accessor_class_g1monthlydate{"g1monthlydate"};
-grib_accessor_class* grib_accessor_class_g1monthlydate = &_grib_accessor_class_g1monthlydate;
+grib_accessor_g1monthlydate_t _grib_accessor_g1monthlydate{};
+grib_accessor* grib_accessor_g1monthlydate = &_grib_accessor_g1monthlydate;
 
+void grib_accessor_g1monthlydate_t::init(const long l, grib_arguments* c)
+{
+    grib_accessor_long_t::init(l, c);
+    int n = 0;
 
-void grib_accessor_class_g1monthlydate_t::init(grib_accessor* a, const long l, grib_arguments* c){
-    grib_accessor_class_long_t::init(a, l, c);
-    grib_accessor_g1monthlydate_t* self = (grib_accessor_g1monthlydate_t*)a;
-    int n                             = 0;
-
-    self->date = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    date_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_g1monthlydate_t::unpack_long(grib_accessor* a, long* val, size_t* len){
-    grib_accessor_g1monthlydate_t* self = (grib_accessor_g1monthlydate_t*)a;
-
+int grib_accessor_g1monthlydate_t::unpack_long(long* val, size_t* len)
+{
     long date = 0;
 
-    grib_get_long_internal(grib_handle_of_accessor(a), self->date, &date);
+    grib_get_long_internal(grib_handle_of_accessor(this), date_, &date);
 
     date /= 100;
     date *= 100;

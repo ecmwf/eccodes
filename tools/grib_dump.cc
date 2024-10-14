@@ -153,6 +153,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
          * are more index files */
         options->fail = 0;
         options->skip_all = 1; /* ECC-1516 */
+        file->handle_count = 1; // Suppress error "No messages found in ..."
     }
 
     return 0;

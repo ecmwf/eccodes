@@ -16,19 +16,16 @@
 class grib_accessor_g2_chemical_t : public grib_accessor_unsigned_t
 {
 public:
-    /* Members defined in g2_chemical */
-    const char* productDefinitionTemplateNumber;
-    const char* stepType;
-    int chemical_type;
-};
-
-class grib_accessor_class_g2_chemical_t : public grib_accessor_class_unsigned_t
-{
-public:
-    grib_accessor_class_g2_chemical_t(const char* name) : grib_accessor_class_unsigned_t(name) {}
+    grib_accessor_g2_chemical_t() :
+        grib_accessor_unsigned_t() { class_name_ = "g2_chemical"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_g2_chemical_t{}; }
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    int value_count(long*) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* productDefinitionTemplateNumber_;
+    const char* stepType_;
+    int chemical_type_;
 };

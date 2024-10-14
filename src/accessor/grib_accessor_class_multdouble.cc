@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,29 +10,28 @@
 
 #include "grib_accessor_class_multdouble.h"
 
-grib_accessor_class_multdouble_t _grib_accessor_class_multdouble{"multdouble"};
-grib_accessor_class* grib_accessor_class_multdouble = &_grib_accessor_class_multdouble;
+grib_accessor_multdouble_t _grib_accessor_multdouble{};
+grib_accessor* grib_accessor_multdouble = &_grib_accessor_multdouble;
 
-
-void grib_accessor_class_multdouble_t::init(grib_accessor* a, const long l, grib_arguments* c){
-    grib_accessor_class_double_t::init(a, l, c);
-    grib_accessor_multdouble_t* self = (grib_accessor_multdouble_t*)a;
+void grib_accessor_multdouble_t::init(const long l, grib_arguments* c)
+{
+    grib_accessor_double_t::init(l, c);
     int n = 0;
 
-    self->val = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->multiplier = grib_arguments_get_double(grib_handle_of_accessor(a), c, n++);
+    val_        = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    multiplier_ = grib_arguments_get_double(grib_handle_of_accessor(this), c, n++);
 }
 
-int grib_accessor_class_multdouble_t::unpack_double(grib_accessor* a, double* val, size_t* len){
-    const grib_accessor_multdouble_t* self = (grib_accessor_multdouble_t*)a;
-    int ret = GRIB_SUCCESS;
+int grib_accessor_multdouble_t::unpack_double(double* val, size_t* len)
+{
+    int ret      = GRIB_SUCCESS;
     double value = 0;
 
-    ret = grib_get_double_internal(grib_handle_of_accessor(a), self->val, &value);
+    ret = grib_get_double_internal(grib_handle_of_accessor(this), val_, &value);
     if (ret != GRIB_SUCCESS)
         return ret;
 
-    *val = value * self->multiplier;
+    *val = value * multiplier_;
 
     *len = 1;
     return GRIB_SUCCESS;

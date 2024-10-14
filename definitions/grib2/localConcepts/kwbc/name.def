@@ -143,14 +143,14 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 193 ;
 	}
-#Zonal flux of gravity wave stress
-'Zonal flux of gravity wave stress' = {
+#Instantaneous eastward gravity wave surface stress
+'Instantaneous eastward gravity wave surface stress' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 194 ;
 	}
-#Meridional flux of gravity wave stress
-'Meridional flux of gravity wave stress' = {
+#Instantaneous northward gravity wave surface stress
+'Instantaneous northward gravity wave surface stress' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 195 ;
@@ -161,14 +161,14 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 197 ;
 	}
-#Downward short-wave radiation flux
-'Downward short-wave radiation flux' = {
+#Surface downward short-wave radiation flux
+'Surface downward short-wave radiation flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 192 ;
 	}
-#Upward short-wave radiation flux
-'Upward short-wave radiation flux' = {
+#Surface upward short-wave radiation flux
+'Surface upward short-wave radiation flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 193 ;
@@ -179,14 +179,14 @@
 	 parameterCategory = 7 ;
 	 parameterNumber = 196 ;
 	}
-#Downward long-wave radiation flux
-'Downward long-wave radiation flux' = {
+#Surface downward long-wave radiation flux
+'Surface downward long-wave radiation flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 192 ;
 	}
-#Upward long-wave radiation flux
-'Upward long-wave radiation flux' = {
+#Surface upward long-wave radiation flux
+'Surface upward long-wave radiation flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 193 ;

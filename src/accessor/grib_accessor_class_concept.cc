@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -10,10 +9,12 @@
  */
 
 #include "grib_accessor_class_concept.h"
+#include <unordered_map>
+#include <string>
+#include <utility>
 
-grib_accessor_class_concept_t _grib_accessor_class_concept{ "concept" };
-grib_accessor_class* grib_accessor_class_concept = &_grib_accessor_class_concept;
-
+grib_accessor_concept_t _grib_accessor_concept{};
+grib_accessor* grib_accessor_concept = &_grib_accessor_concept;
 
 #define MAX_CONCEPT_STRING_LENGTH 255
 
@@ -33,19 +34,39 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
     return (*a == 0 && *b == 0) ? 0 : 1;
 }
 
-void grib_accessor_class_concept_t::init(grib_accessor* a, const long len, grib_arguments* args)
+void grib_accessor_concept_t::init(const long len, grib_arguments* args)
 {
-    grib_accessor_class_gen_t::init(a, len, args);
-    a->length = 0;
+    grib_accessor_gen_t::init(len, args);
+    length_ = 0;
 }
 
-void grib_accessor_class_concept_t::dump(grib_accessor* a, grib_dumper* dumper)
+void grib_accessor_concept_t::dump(grib_dumper* dumper)
 {
-    grib_dump_string(dumper, a, NULL);
+    grib_dump_string(dumper, this, NULL);
+}
+
+// See ECC-1905
+static int grib_get_long_memoize(
+    grib_handle* h, const char* key, long* value,
+    std::unordered_map<std::string_view, long>& memo)
+{
+    int err = 0;
+    auto pos = memo.find(key);
+    if (pos == memo.end()) { // not in map so decode & insert
+        err = grib_get_long(h, key, value);
+        if (!err) {
+            memo.insert( std::make_pair(key, *value) );
+        }
+    } else {
+        *value = pos->second; // found in map
+    }
+    return err;
 }
 
 /* Return 1 (=True) or 0 (=False) */
-static int concept_condition_expression_true(grib_handle* h, grib_concept_condition* c)
+static int concept_condition_expression_true(
+    grib_handle* h, grib_concept_condition* c,
+    std::unordered_map<std::string_view, long>& memo)
 {
     long lval;
     long lres      = 0;
@@ -56,8 +77,10 @@ static int concept_condition_expression_true(grib_handle* h, grib_concept_condit
     switch (type) {
         case GRIB_TYPE_LONG:
             grib_expression_evaluate_long(h, c->expression, &lres);
-            ok = (grib_get_long(h, c->name, &lval) == GRIB_SUCCESS) &&
+            // Use memoization for the most common type (integer keys)
+            ok = (grib_get_long_memoize(h, c->name, &lval, memo) == GRIB_SUCCESS) &&
                  (lval == lres);
+            //ok = (grib_get_long(h, c->name, &lval) == GRIB_SUCCESS) && (lval == lres);
             break;
 
         case GRIB_TYPE_DOUBLE: {
@@ -121,12 +144,14 @@ static int concept_condition_iarray_true(grib_handle* h, grib_concept_condition*
 }
 
 /* Return 1 (=True) or 0 (=False) */
-static int concept_condition_true(grib_handle* h, grib_concept_condition* c)
+static int concept_condition_true(
+    grib_handle* h, grib_concept_condition* c,
+    std::unordered_map<std::string_view, long>& memo)
 {
     if (c->expression == NULL)
         return concept_condition_iarray_true(h, c);
     else
-        return concept_condition_expression_true(h, c);
+        return concept_condition_expression_true(h, c, memo);
 }
 
 static const char* concept_evaluate(grib_accessor* a)
@@ -137,12 +162,14 @@ static const char* concept_evaluate(grib_accessor* a)
     grib_concept_value* c = action_concept_get_concept(a);
     grib_handle* h        = grib_handle_of_accessor(a);
 
-    // fprintf(stderr, "DEBUG: concept_evaluate: %s %s\n", a->name, c->name);
+    std::unordered_map<std::string_view, long> memo; // See ECC-1905
+    
+    // fprintf(stderr, "DEBUG: concept_evaluate: %s %s\n", name_ , c->name);
     while (c) {
         grib_concept_condition* e = c->conditions;
         int cnt                   = 0;
         while (e) {
-            if (!concept_condition_true(h, e))
+            if (!concept_condition_true(h, e, memo))
                 break;
             e = e->next;
             cnt++;
@@ -255,7 +282,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
     grib_concept_value* c        = NULL;
     grib_concept_value* concepts = action_concept_get_concept(a);
     grib_handle* h               = grib_handle_of_accessor(a);
-    grib_action* act             = a->creator;
+    grib_action* act             = a->creator_;
     int nofail                   = action_concept_get_nofail(a);
 
     DEBUG_ASSERT(concepts);
@@ -336,24 +363,24 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
         return err;
     }
     e  = c->conditions;
-    sa = grib_sarray_new(h->context, 10, 10);
+    sa = grib_sarray_new(10, 10);
     while (e) {
         concept_conditions_apply(h, e, values, sa, &count);
         e = e->next;
     }
-    grib_sarray_delete(h->context, sa);
+    grib_sarray_delete(sa);
 
     if (count)
         err = grib_set_values(h, values, count);
     return err;
 }
 
-int grib_accessor_class_concept_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+int grib_accessor_concept_t::pack_double(const double* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_class_concept_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_concept_t::pack_long(const long* val, size_t* len)
 {
     char buf[80];
     size_t s;
@@ -363,16 +390,15 @@ int grib_accessor_class_concept_t::pack_long(grib_accessor* a, const long* val, 
     //     return GRIB_NOT_IMPLEMENTED;
 
     // ECC-1806: GRIB: Change of paramId in conversion from GRIB1 to GRIB2
-    if (STR_EQUAL(a->name, "paramId")) {
-        grib_handle* h = grib_handle_of_accessor(a);
+    if (STR_EQUAL(name_, "paramId")) {
+        grib_handle* h = grib_handle_of_accessor(this);
         long edition   = 0;
         if (grib_get_long(h, "edition", &edition) == GRIB_SUCCESS && edition == 2) {
             long newParamId = 0;
             if (grib_get_long(h, "paramIdForConversion", &newParamId) == GRIB_SUCCESS && newParamId > 0) {
-                if (a->context->debug) {
-                    const char* cclass_name = a->cclass->name;
+                if (context_->debug) {
                     fprintf(stderr, "ECCODES DEBUG %s::%s: Changing %s from %ld to %ld\n",
-                            cclass_name, __func__, a->name, *val, newParamId);
+                            class_name_, __func__, name_, *val, newParamId);
                 }
                 snprintf(buf, sizeof(buf), "%ld", newParamId);
             }
@@ -380,10 +406,10 @@ int grib_accessor_class_concept_t::pack_long(grib_accessor* a, const long* val, 
     }
 
     s = strlen(buf) + 1;
-    return pack_string(a, buf, &s);
+    return pack_string(buf, &s);
 }
 
-int grib_accessor_class_concept_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+int grib_accessor_concept_t::unpack_double(double* val, size_t* len)
 {
     /*
      * If we want to have a condition which contains tests for paramId as well
@@ -393,20 +419,20 @@ int grib_accessor_class_concept_t::unpack_double(grib_accessor* a, double* val, 
      */
     /*return GRIB_NOT_IMPLEMENTED*/
     int ret = 0;
-    if (a->flags & GRIB_ACCESSOR_FLAG_LONG_TYPE) {
+    if (flags_ & GRIB_ACCESSOR_FLAG_LONG_TYPE) {
         long lval = 0;
-        ret       = unpack_long(a, &lval, len);
+        ret       = unpack_long(&lval, len);
         if (ret == GRIB_SUCCESS) {
             *val = lval;
         }
     }
-    else if (a->flags & GRIB_ACCESSOR_FLAG_DOUBLE_TYPE) {
-        const char* p = concept_evaluate(a);
+    else if (flags_ & GRIB_ACCESSOR_FLAG_DOUBLE_TYPE) {
+        const char* p = concept_evaluate(this);
 
         if (!p) {
-            grib_handle* h = grib_handle_of_accessor(a);
-            if (a->creator->defaultkey)
-                return grib_get_double_internal(h, a->creator->defaultkey, val);
+            grib_handle* h = grib_handle_of_accessor(this);
+            if (creator_->defaultkey)
+                return grib_get_double_internal(h, creator_->defaultkey, val);
 
             return GRIB_NOT_FOUND;
         }
@@ -416,14 +442,14 @@ int grib_accessor_class_concept_t::unpack_double(grib_accessor* a, double* val, 
     return ret;
 }
 
-int grib_accessor_class_concept_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_concept_t::unpack_long(long* val, size_t* len)
 {
-    const char* p = concept_evaluate(a);
+    const char* p = concept_evaluate(this);
 
     if (!p) {
-        grib_handle* h = grib_handle_of_accessor(a);
-        if (a->creator->defaultkey)
-            return grib_get_long_internal(h, a->creator->defaultkey, val);
+        grib_handle* h = grib_handle_of_accessor(this);
+        if (creator_->defaultkey)
+            return grib_get_long_internal(h, creator_->defaultkey, val);
 
         return GRIB_NOT_FOUND;
     }
@@ -441,9 +467,9 @@ int grib_accessor_class_concept_t::unpack_long(grib_accessor* a, long* val, size
         if (endptr == p || *endptr != '\0') {
             /* Failed to convert string into integer */
             int type = GRIB_TYPE_UNDEFINED;
-            grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack %s as long", a->name);
-            if (grib_get_native_type(grib_handle_of_accessor(a), a->name, &type) == GRIB_SUCCESS) {
-                grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Try unpacking as %s", grib_get_type_name(type));
+            grib_context_log(context_, GRIB_LOG_ERROR, "Cannot unpack %s as long", name_);
+            if (grib_get_native_type(grib_handle_of_accessor(this), name_, &type) == GRIB_SUCCESS) {
+                grib_context_log(context_, GRIB_LOG_ERROR, "Hint: Try unpacking as %s", grib_get_type_name(type));
             }
             return GRIB_DECODING_ERROR;
         }
@@ -452,73 +478,73 @@ int grib_accessor_class_concept_t::unpack_long(grib_accessor* a, long* val, size
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_concept_t::get_native_type(grib_accessor* a)
+long grib_accessor_concept_t::get_native_type()
 {
     int type = GRIB_TYPE_STRING;
-    if (a->flags & GRIB_ACCESSOR_FLAG_LONG_TYPE)
+    if (flags_ & GRIB_ACCESSOR_FLAG_LONG_TYPE)
         type = GRIB_TYPE_LONG;
 
     return type;
 }
 
-void grib_accessor_class_concept_t::destroy(grib_context* c, grib_accessor* a)
+void grib_accessor_concept_t::destroy(grib_context* c)
 {
     // grib_accessor_concept_t *self = (grib_accessor_concept_t*)a;
-    // grib_context_free(c,self->cval);
-    grib_accessor_class_gen_t::destroy(c, a);
+    // grib_context_free(c,cval_ );
+    grib_accessor_gen_t::destroy(c);
 }
 
-int grib_accessor_class_concept_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+int grib_accessor_concept_t::unpack_string(char* val, size_t* len)
 {
     size_t slen;
-    const char* p = concept_evaluate(a);
+    const char* p = concept_evaluate(this);
 
     if (!p) {
-        grib_handle* h = grib_handle_of_accessor(a);
-        if (a->creator->defaultkey)
-            return grib_get_string_internal(h, a->creator->defaultkey, val, len);
+        grib_handle* h = grib_handle_of_accessor(this);
+        if (creator_->defaultkey)
+            return grib_get_string_internal(h, creator_->defaultkey, val, len);
 
         return GRIB_NOT_FOUND;
     }
 
     slen = strlen(p) + 1;
     if (*len < slen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR,
+        grib_context_log(context_, GRIB_LOG_ERROR,
                          "Concept unpack_string. Buffer too small for %s, value='%s' which requires %lu bytes (len=%lu)",
-                         a->name, p, slen, *len);
+                         name_, p, slen, *len);
         *len = slen;
         return GRIB_BUFFER_TOO_SMALL;
     }
     strcpy(val, p); /* NOLINT: CWE-119 clang-analyzer-security.insecureAPI.strcpy */
     *len = slen;
 
-    //     if (a->context->debug==1) {
+    //     if (context_ ->debug==1) {
     //         int err = 0;
     //         char result[1024] = {0,};
-    //         err = get_concept_condition_string(grib_handle_of_accessor(a), a->name, val, result);
-    //         if (!err) fprintf(stderr, "ECCODES DEBUG concept name=%s, value=%s, conditions=%s\n", a->name, val, result);
+    //         err = get_concept_condition_string(grib_handle_of_accessor(this), name_ , val, result);
+    //         if (!err) fprintf(stderr, "ECCODES DEBUG concept name=%s, value=%s, conditions=%s\n", name_ , val, result);
     //     }
 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_concept_t::pack_string(grib_accessor* a, const char* val, size_t* len)
+int grib_accessor_concept_t::pack_string(const char* val, size_t* len)
 {
-    return grib_concept_apply(a, val);
+    return grib_concept_apply(this, val);
 }
 
-size_t grib_accessor_class_concept_t::string_length(grib_accessor* a)
+size_t grib_accessor_concept_t::string_length()
 {
     return MAX_CONCEPT_STRING_LENGTH;
 }
 
-int grib_accessor_class_concept_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_concept_t::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-int grib_accessor_class_concept_t::compare(grib_accessor* a, grib_accessor* b)
+int grib_accessor_concept_t::compare(grib_accessor* b)
 {
     int retval = 0;
     char* aval = 0;
@@ -529,7 +555,7 @@ int grib_accessor_class_concept_t::compare(grib_accessor* a, grib_accessor* b)
     int err     = 0;
     long count  = 0;
 
-    err = a->value_count(&count);
+    err = value_count(&count);
     if (err) return err;
     alen = count;
 
@@ -542,10 +568,10 @@ int grib_accessor_class_concept_t::compare(grib_accessor* a, grib_accessor* b)
     alen = MAX_CONCEPT_STRING_LENGTH;
     blen = MAX_CONCEPT_STRING_LENGTH;
 
-    aval = (char*)grib_context_malloc(a->context, alen * sizeof(char));
-    bval = (char*)grib_context_malloc(b->context, blen * sizeof(char));
+    aval = (char*)grib_context_malloc(context_, alen * sizeof(char));
+    bval = (char*)grib_context_malloc(b->context_, blen * sizeof(char));
 
-    err = a->unpack_string(aval, &alen);
+    err = unpack_string(aval, &alen);
     if (err) return err;
     err = b->unpack_string(bval, &blen);
     if (err) return err;
@@ -554,8 +580,8 @@ int grib_accessor_class_concept_t::compare(grib_accessor* a, grib_accessor* b)
     if (!aval || !bval || grib_inline_strcmp(aval, bval))
         retval = GRIB_STRING_VALUE_MISMATCH;
 
-    grib_context_free(a->context, aval);
-    grib_context_free(b->context, bval);
+    grib_context_free(context_, aval);
+    grib_context_free(b->context_, bval);
 
     return retval;
 }

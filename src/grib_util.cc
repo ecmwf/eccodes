@@ -875,6 +875,20 @@ static int write_out_error_data_file(const double* data_values, size_t data_valu
     return GRIB_SUCCESS;
 }
 
+static long get_bitsPerValue_for_packingType(const int specPackingType, const long specBitsPerValue)
+{
+    if (specPackingType == GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE) {
+        if (specBitsPerValue > 60) return 60;
+    }
+    else if (specPackingType == GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER) {
+        if (specBitsPerValue > 60) return 32;
+    }
+    else if (specPackingType == GRIB_UTIL_PACKING_TYPE_CCSDS) {
+        if (specBitsPerValue > 32) return 32;
+    }
+    return specBitsPerValue; //original
+}
+
 static int get_grib_sample_name(grib_handle* h, long editionNumber,
                                 const grib_util_grid_spec* spec, const char* grid_type, char* sample_name)
 {
@@ -1341,17 +1355,26 @@ grib_handle* grib_util_set_spec(grib_handle* h,
                 Assert(grib_get_long(h, "bitsPerValue", &bitsPerValue) == 0);
                 SET_LONG_VALUE("bitsPerValue", bitsPerValue);
             }
-        } break;
+        }
+        break;
 
-        case GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES:
-            SET_LONG_VALUE("bitsPerValue", packing_spec->bitsPerValue);
-            break;
+        case GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES: {
+            // See ECC-1921
+            const long bitsPerValue = get_bitsPerValue_for_packingType(packing_spec->packing_type, packing_spec->bitsPerValue);
+            if (bitsPerValue != packing_spec->bitsPerValue) {
+                fprintf(stderr, "ECCODES WARNING :  Cannot pack with requested bitsPerValue (%ld). Using %ld\n",
+                        packing_spec->bitsPerValue, bitsPerValue);
+            }
+            SET_LONG_VALUE("bitsPerValue", bitsPerValue);
+        }
+        break;
 
         case GRIB_UTIL_ACCURACY_SAME_DECIMAL_SCALE_FACTOR_AS_INPUT: {
             long decimalScaleFactor = 0;
             Assert(grib_get_long(h, "decimalScaleFactor", &decimalScaleFactor) == 0);
             SET_LONG_VALUE("decimalScaleFactor", decimalScaleFactor);
-        } break;
+        }
+        break;
 
         case GRIB_UTIL_ACCURACY_USE_PROVIDED_DECIMAL_SCALE_FACTOR:
             SET_LONG_VALUE("decimalScaleFactor", packing_spec->decimalScaleFactor);
@@ -1947,6 +1970,52 @@ int grib2_is_PDTN_AerosolOptical(long pdtn)
     return (
         pdtn == 48 ||
         pdtn == 49);
+}
+
+// Arguments:
+//  is_det:     true for deterministic, false for ensemble
+//  is_instant: true for instantaneous (point-in-time), false for interval-based (statistically processed)
+int grib2_choose_PDTN(int current_PDTN, bool is_det, bool is_instant)
+{
+    const bool is_ens      = !is_det;
+    const bool is_interval = !is_instant;
+
+    if (grib2_is_PDTN_Plain(current_PDTN)) {
+        if (is_instant  && is_ens) return 1;
+        if (is_instant  && is_det) return 0;
+        if (is_interval && is_ens) return 11;
+        if (is_interval && is_det) return 8;
+    }
+
+    if (grib2_is_PDTN_Chemical(current_PDTN)) {
+        if (is_instant  && is_ens) return 41;
+        if (is_instant  && is_det) return 40;
+        if (is_interval && is_ens) return 43;
+        if (is_interval && is_det) return 42;
+    }
+
+    if (grib2_is_PDTN_ChemicalSourceSink(current_PDTN)) {
+        if (is_instant  && is_ens) return 77;
+        if (is_instant  && is_det) return 76;
+        if (is_interval && is_ens) return 79;
+        if (is_interval && is_det) return 78;
+    }
+
+    if (grib2_is_PDTN_ChemicalDistFunc(current_PDTN)) {
+        if (is_instant  && is_ens) return 58;
+        if (is_instant  && is_det) return 57;
+        if (is_interval && is_ens) return 68;
+        if (is_interval && is_det) return 67;
+    }
+
+    if (current_PDTN == 45 || current_PDTN == 48) {
+        if (is_instant  && is_ens) return 45;
+        if (is_instant  && is_det) return 48;
+        if (is_interval && is_ens) return 85;
+        if (is_interval && is_det) return 46;
+    }
+
+    return current_PDTN;  // no change
 }
 
 // Given some information about the type of grib2 parameter, return the productDefinitionTemplateNumber to use.

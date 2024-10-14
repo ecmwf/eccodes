@@ -68,12 +68,14 @@ transient genVertHeightCoords = 0;
 if (productDefinitionTemplateNumber >= 32768) {
   template productDefinition "grib2/local/[centreForLocal]/template.4.[productDefinitionTemplateNumber:l].def";
 } else {
-  template productDefinition "grib2/template.4.[productDefinitionTemplateNumber:l].def";
+  template productDefinition "grib2/templates/template.4.[productDefinitionTemplateNumber:l].def";
 }
 
 if (defined(marsStream) && defined(marsType)) {
    template_nofail marsKeywords1 "mars/grib.[marsStream:s].[marsType:s].def";
 }
+
+concept productDefinitionTemplateName(unknown, "productDefinitionTemplateConcept.def", conceptsDir2,conceptsDir1): no_copy;
 
 template parameters "grib2/parameters.def";
 

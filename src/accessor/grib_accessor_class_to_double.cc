@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,76 +10,72 @@
 
 #include "grib_accessor_class_to_double.h"
 
-grib_accessor_class_to_double_t _grib_accessor_class_to_double{ "to_double" };
-grib_accessor_class* grib_accessor_class_to_double = &_grib_accessor_class_to_double;
+grib_accessor_to_double_t _grib_accessor_to_double{};
+grib_accessor* grib_accessor_to_double = &_grib_accessor_to_double;
 
-
-void grib_accessor_class_to_double_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+void grib_accessor_to_double_t::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_class_gen_t::init(a, len, arg);
-    grib_accessor_to_double_t* self = (grib_accessor_to_double_t*)a;
+    grib_accessor_gen_t::init(len, arg);
+    grib_handle* hand = grib_handle_of_accessor(this);
 
-    self->key    = grib_arguments_get_name(grib_handle_of_accessor(a), arg, 0);
-    self->start  = grib_arguments_get_long(grib_handle_of_accessor(a), arg, 1);
-    self->length = grib_arguments_get_long(grib_handle_of_accessor(a), arg, 2);
-    self->scale  = grib_arguments_get_long(grib_handle_of_accessor(a), arg, 3);
-    if (!self->scale)
-        self->scale = 1;
+    key_        = grib_arguments_get_name(hand, arg, 0);
+    start_      = grib_arguments_get_long(hand, arg, 1);
+    str_length_ = grib_arguments_get_long(hand, arg, 2);
+    scale_      = grib_arguments_get_long(hand, arg, 3);
+    if (!scale_)
+        scale_ = 1;
 
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    a->length = 0;
+    grib_accessor::flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    grib_accessor::length_ = 0;
 }
 
-int grib_accessor_class_to_double_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_to_double_t::value_count(long* count)
 {
-    grib_accessor_to_double_t* self = (grib_accessor_to_double_t*)a;
     size_t size = 0;
 
-    int err = grib_get_size(grib_handle_of_accessor(a), self->key, &size);
+    int err = grib_get_size(grib_handle_of_accessor(this), key_, &size);
     *count  = size;
 
     return err;
 }
 
-size_t grib_accessor_class_to_double_t::string_length(grib_accessor* a)
+size_t grib_accessor_to_double_t::string_length()
 {
-    grib_accessor_to_double_t* self = (grib_accessor_to_double_t*)a;
     size_t size = 0;
 
-    if (self->length)
-        return self->length;
+    if (str_length_)
+        return str_length_;
 
-    grib_get_string_length_acc(a, &size);
+    grib_get_string_length_acc(this, &size);
     return size;
 }
 
-void grib_accessor_class_to_double_t::dump(grib_accessor* a, grib_dumper* dumper)
+void grib_accessor_to_double_t::dump(grib_dumper* dumper)
 {
-    grib_dump_string(dumper, a, NULL);
+    grib_dump_string(dumper, this, NULL);
 }
 
-int grib_accessor_class_to_double_t::get_native_type(grib_accessor* a)
+long grib_accessor_to_double_t::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
 
-int grib_accessor_class_to_double_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+int grib_accessor_to_double_t::unpack_string(char* val, size_t* len)
 {
-    grib_accessor_to_double_t* self = (grib_accessor_to_double_t*)a;
-
-    int err = 0;
+    int err        = 0;
     char buff[512] = {0,};
-    size_t size   = 512;
-    size_t length = string_length(a);
+    size_t size   = sizeof(buff);
+    size_t length = string_length();
 
     if (*len < length + 1) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%lu) for %s, it contains %ld values",
-                         *len, a->name, a->length + 1);
+        grib_context_log(context_, GRIB_LOG_ERROR,
+                         "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
+                         class_name_, name_, length + 1, *len);
         *len = length + 1;
-        return GRIB_ARRAY_TOO_SMALL;
+        return GRIB_BUFFER_TOO_SMALL;
     }
 
-    err = grib_get_string(grib_handle_of_accessor(a), self->key, buff, &size);
+    err = grib_get_string(grib_handle_of_accessor(this), key_, buff, &size);
     if (err)
         return err;
     if (length > size) {
@@ -88,20 +83,19 @@ int grib_accessor_class_to_double_t::unpack_string(grib_accessor* a, char* val, 
         length = size;
     }
 
-    memcpy(val, buff + self->start, length);
+    memcpy(val, buff + start_, length);
 
     val[length] = 0;
-    *len = length;
+    *len        = length;
     return err;
 }
 
-int grib_accessor_class_to_double_t::unpack_long(grib_accessor* a, long* v, size_t* len)
+int grib_accessor_to_double_t::unpack_long(long* v, size_t* len)
 {
-    grib_accessor_to_double_t* self = (grib_accessor_to_double_t*)a;
     char val[1024] = {0,};
     size_t l   = sizeof(val);
     char* last = NULL;
-    int err    = a->unpack_string(val, &l);
+    int err    = unpack_string(val, &l);
     if (err)
         return err;
 
@@ -109,18 +103,17 @@ int grib_accessor_class_to_double_t::unpack_long(grib_accessor* a, long* v, size
     if (*last) {
         err = GRIB_WRONG_CONVERSION;
     }
-    *v /= self->scale;
+    *v /= scale_;
 
     return err;
 }
 
-int grib_accessor_class_to_double_t::unpack_double(grib_accessor* a, double* v, size_t* len)
+int grib_accessor_to_double_t::unpack_double(double* v, size_t* len)
 {
-    grib_accessor_to_double_t* self = (grib_accessor_to_double_t*)a;
     char val[1024] = {0,};
     size_t l   = sizeof(val);
     char* last = NULL;
-    int err    = a->unpack_string(val, &l);
+    int err    = unpack_string(val, &l);
     if (err)
         return err;
 
@@ -128,12 +121,12 @@ int grib_accessor_class_to_double_t::unpack_double(grib_accessor* a, double* v, 
     if (*last) {
         err = GRIB_WRONG_CONVERSION;
     }
-    *v /= self->scale;
+    *v /= scale_;
 
     return err;
 }
 
-long grib_accessor_class_to_double_t::next_offset(grib_accessor* a)
+long grib_accessor_to_double_t::next_offset()
 {
-    return a->offset + a->length;
+    return offset_ + grib_accessor::length_;
 }

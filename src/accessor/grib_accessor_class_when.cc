@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,29 +10,28 @@
 
 #include "grib_accessor_class_when.h"
 
-grib_accessor_class_when_t _grib_accessor_class_when{ "when" };
-grib_accessor_class* grib_accessor_class_when = &_grib_accessor_class_when;
+grib_accessor_when_t _grib_accessor_when{};
+grib_accessor* grib_accessor_when = &_grib_accessor_when;
 
-
-void grib_accessor_class_when_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+void grib_accessor_when_t::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_class_gen_t::init(a, len, arg);
-    a->length = 0;
-    a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    grib_accessor_gen_t::init(len, arg);
+    length_ = 0;
+    flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-void grib_accessor_class_when_t::dump(grib_accessor* a, grib_dumper* dumper)
+void grib_accessor_when_t::dump(grib_dumper* dumper)
 {
     /* grib_dump_when(dumper,a,NULL); */
 }
 
-int grib_accessor_class_when_t::notify_change(grib_accessor* a, grib_accessor* changed)
+int grib_accessor_when_t::notify_change(grib_accessor* changed)
 {
-    return grib_action_notify_change(a->creator, a, changed);
+    return grib_action_notify_change(creator_, this, changed);
 }
 
-int grib_accessor_class_when_t::get_native_type(grib_accessor* a)
+long grib_accessor_when_t::get_native_type()
 {
     return GRIB_TYPE_UNDEFINED;
 }

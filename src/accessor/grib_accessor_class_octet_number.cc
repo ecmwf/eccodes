@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,29 +10,28 @@
 
 #include "grib_accessor_class_octet_number.h"
 
-grib_accessor_class_octet_number_t _grib_accessor_class_octet_number{"octet_number"};
-grib_accessor_class* grib_accessor_class_octet_number = &_grib_accessor_class_octet_number;
+grib_accessor_octet_number_t _grib_accessor_octet_number{};
+grib_accessor* grib_accessor_octet_number = &_grib_accessor_octet_number;
 
+void grib_accessor_octet_number_t::init(const long l, grib_arguments* c)
+{
+    grib_accessor_long_t::init(l, c);
 
-void grib_accessor_class_octet_number_t::init(grib_accessor* a, const long l, grib_arguments* c){
-    grib_accessor_class_long_t::init(a, l, c);
-    grib_accessor_octet_number_t* self = (grib_accessor_octet_number_t*)a;
+    int n  = 0;
+    left_  = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    right_ = grib_arguments_get_long(grib_handle_of_accessor(this), c, n++);
 
-    int n = 0;
-    self->left  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->right = grib_arguments_get_long(grib_handle_of_accessor(a), c, n++);
-
-    a->length = 0;
+    length_ = 0;
 }
 
-int grib_accessor_class_octet_number_t::unpack_long(grib_accessor* a, long* val, size_t* len){
-    grib_accessor_octet_number_t* self = (grib_accessor_octet_number_t*)a;
+int grib_accessor_octet_number_t::unpack_long(long* val, size_t* len)
+{
     int ret = GRIB_SUCCESS;
     long offset;
 
-    offset = a->offset + self->right;
+    offset = offset_ + right_;
 
-    if ((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->left, offset)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(grib_handle_of_accessor(this), left_, offset)) != GRIB_SUCCESS)
         return ret;
 
     *val = offset;
@@ -42,6 +40,7 @@ int grib_accessor_class_octet_number_t::unpack_long(grib_accessor* a, long* val,
     return ret;
 }
 
-int grib_accessor_class_octet_number_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_octet_number_t::pack_long(const long* val, size_t* len)
+{
     return GRIB_SUCCESS;
 }

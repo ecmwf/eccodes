@@ -39,7 +39,7 @@ or edit "expression.class" and rerun ./make_class.pl
 typedef const char* string; /* to keep make_class.pl happy */
 
 static void    destroy(grib_context*,grib_expression* e);
-static void    print(grib_context*,grib_expression*,grib_handle*, FILE*);
+static void    print(grib_context*, grib_expression*, grib_handle*, FILE*);
 static void    add_dependency(grib_expression* e, grib_accessor* observer);
 static int     native_type(grib_expression*,grib_handle*);
 static int     evaluate_long(grib_expression*,grib_handle*,long*);
@@ -54,12 +54,12 @@ typedef struct grib_expression_logical_and{
 
 
 static grib_expression_class _grib_expression_class_logical_and = {
-    0,                    /* super                     */
-    "logical_and",                    /* name                      */
-    sizeof(grib_expression_logical_and),/* size of instance        */
+    0,                      /* super */
+    "logical_and",                      /* name  */
+    sizeof(grib_expression_logical_and),/* size of instance */
     0,                           /* inited */
-    0,                     /* constructor               */
-    &destroy,                  /* destructor                */
+    0,                       /* constructor */
+    &destroy,                    /* destructor */
     &print,
     &add_dependency,
     &native_type,

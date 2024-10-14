@@ -16,25 +16,24 @@
 class grib_accessor_step_in_units_t : public grib_accessor_long_t
 {
 public:
-    /* Members defined in step_in_units */
-    const char* forecast_time_value;
-    const char* forecast_time_unit;
-    const char* step_units;
-    const char* time_range_unit;
-    const char* time_range_value;
-};
-
-class grib_accessor_class_step_in_units_t : public grib_accessor_class_long_t
-{
-public:
-    grib_accessor_class_step_in_units_t(const char* name) : grib_accessor_class_long_t(name) {}
+    grib_accessor_step_in_units_t() :
+        grib_accessor_long_t() { class_name_ = "step_in_units"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_step_in_units_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int pack_string(grib_accessor*, const char*, size_t* len) override;
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    long get_native_type() override;
+    int pack_long(const long* val, size_t* len) override;
+    int pack_string(const char*, size_t* len) override;
+    int unpack_double(double* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    int unpack_string(char*, size_t* len) override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* forecast_time_value_;
+    const char* forecast_time_unit_;
+    const char* step_units_;
+    const char* time_range_unit_;
+    const char* time_range_value_;
+
+    int pack_long_new_(const long start_step_value, const long start_step_unit, const long force_step_units);
 };

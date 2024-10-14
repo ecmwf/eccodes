@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,77 +10,75 @@
 
 #include "grib_accessor_class_change_scanning_direction.h"
 
-grib_accessor_class_change_scanning_direction_t _grib_accessor_class_change_scanning_direction{"change_scanning_direction"};
-grib_accessor_class* grib_accessor_class_change_scanning_direction = &_grib_accessor_class_change_scanning_direction;
+grib_accessor_change_scanning_direction_t _grib_accessor_change_scanning_direction{};
+grib_accessor* grib_accessor_change_scanning_direction = &_grib_accessor_change_scanning_direction;
 
+void grib_accessor_change_scanning_direction_t::init(const long len, grib_arguments* args)
+{
+    grib_accessor_gen_t::init(len, args);
+    grib_handle* h = grib_handle_of_accessor(this);
+    int n          = 0;
 
-void grib_accessor_class_change_scanning_direction_t::init(grib_accessor* a, const long len, grib_arguments* args){
-    grib_accessor_class_gen_t::init(a, len, args);
-    grib_accessor_change_scanning_direction_t* self = (grib_accessor_change_scanning_direction_t*)a;
-    grib_handle* h = grib_handle_of_accessor(a);
-    int n = 0;
+    values_             = grib_arguments_get_name(h, args, n++);
+    Ni_                 = grib_arguments_get_name(h, args, n++);
+    Nj_                 = grib_arguments_get_name(h, args, n++);
+    i_scans_negatively_ = grib_arguments_get_name(h, args, n++);
+    j_scans_positively_ = grib_arguments_get_name(h, args, n++);
+    first_              = grib_arguments_get_name(h, args, n++);
+    last_               = grib_arguments_get_name(h, args, n++);
+    axis_               = grib_arguments_get_name(h, args, n++);
 
-    self->values             = grib_arguments_get_name(h, args, n++);
-    self->Ni                 = grib_arguments_get_name(h, args, n++);
-    self->Nj                 = grib_arguments_get_name(h, args, n++);
-    self->i_scans_negatively = grib_arguments_get_name(h, args, n++);
-    self->j_scans_positively = grib_arguments_get_name(h, args, n++);
-    self->first              = grib_arguments_get_name(h, args, n++);
-    self->last               = grib_arguments_get_name(h, args, n++);
-    self->axis               = grib_arguments_get_name(h, args, n++);
-
-    a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
-    a->length = 0;
+    flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
+    length_ = 0;
 }
 
-int grib_accessor_class_change_scanning_direction_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_change_scanning_direction_t::pack_long(const long* val, size_t* len)
+{
     int err = 0;
     long i, j, jr, theEnd, Ni, Nj, k, kp;
     double tmp;
-    long iScansNegatively                         = 0;
-    long jScansPositively                         = 0;
-    double first                                  = 0;
-    double last                                   = 0;
-    size_t size                                   = 0;
-    double* values                                = NULL;
-    grib_accessor_change_scanning_direction_t* self = (grib_accessor_change_scanning_direction_t*)a;
-    const grib_context* c                         = a->context;
-    grib_handle* h                                = grib_handle_of_accessor(a);
-    const char* cclass_name                       = a->cclass->name;
+    long iScansNegatively   = 0;
+    long jScansPositively   = 0;
+    double first            = 0;
+    double last             = 0;
+    size_t size             = 0;
+    double* values          = NULL;
+    const grib_context* c   = context_;
+    grib_handle* h          = grib_handle_of_accessor(this);
 
     if (*val == 0)
         return GRIB_SUCCESS;
 
     /* Make sure Ni / Nj are not missing */
-    if (grib_is_missing(h, self->Ni, &err) && !err) {
-        grib_context_log(c, GRIB_LOG_ERROR, "%s: Key %s cannot be 'missing'!", cclass_name, self->Ni);
+    if (grib_is_missing(h, Ni_, &err) && !err) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Key %s cannot be 'missing'!", class_name_, Ni_);
         return GRIB_WRONG_GRID;
     }
-    if (grib_is_missing(h, self->Nj, &err) && !err) {
-        grib_context_log(c, GRIB_LOG_ERROR, "%s: Key %s cannot be 'missing'!", cclass_name, self->Nj);
+    if (grib_is_missing(h, Nj_, &err) && !err) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Key %s cannot be 'missing'!", class_name_, Nj_);
         return GRIB_WRONG_GRID;
     }
 
-    if ((err = grib_get_long_internal(h, self->Ni, &Ni)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(h, Ni_, &Ni)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(h, self->Nj, &Nj)) != GRIB_SUCCESS)
-        return err;
-
-    if ((err = grib_get_long_internal(h, self->i_scans_negatively, &iScansNegatively)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_get_long_internal(h, self->j_scans_positively, &jScansPositively)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(h, Nj_, &Nj)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_double_internal(h, self->first, &first)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(h, i_scans_negatively_, &iScansNegatively)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_double_internal(h, self->last, &last)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(h, j_scans_positively_, &jScansPositively)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_size(h, self->values, &size)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(h, first_, &first)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(h, last_, &last)) != GRIB_SUCCESS)
+        return err;
+
+    if ((err = grib_get_size(h, values_, &size)) != GRIB_SUCCESS)
         return err;
 
     if (size > Ni * Nj) {
-        grib_context_log(c, GRIB_LOG_ERROR, "%s: Wrong values size!=Ni*Nj (%ld!=%ld*%ld)", cclass_name, size, Ni, Nj);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Wrong values size!=Ni*Nj (%ld!=%ld*%ld)", class_name_, size, Ni, Nj);
         return GRIB_WRONG_ARRAY_SIZE;
     }
 
@@ -89,15 +86,15 @@ int grib_accessor_class_change_scanning_direction_t::pack_long(grib_accessor* a,
     if (!values)
         return GRIB_OUT_OF_MEMORY;
 
-    if ((err = grib_get_double_array_internal(h, self->values, values, &size)) != GRIB_SUCCESS) {
+    if ((err = grib_get_double_array_internal(h, values_, values, &size)) != GRIB_SUCCESS) {
         grib_context_free(c, values);
         return err;
     }
 
-    Assert(self->axis);
-    Assert(strcmp(self->axis, "x") == 0 || strcmp(self->axis, "y") == 0);
+    Assert(axis_);
+    Assert(strcmp(axis_, "x") == 0 || strcmp(axis_, "y") == 0);
 
-    if (self->axis[0] == 'x') {
+    if (axis_[0] == 'x') {
         theEnd = Ni / 2;
         for (j = 0; j < Nj; j++) {
             jr = Ni * j;
@@ -110,7 +107,7 @@ int grib_accessor_class_change_scanning_direction_t::pack_long(grib_accessor* a,
             }
         }
         iScansNegatively = !iScansNegatively;
-        if ((err = grib_set_long_internal(h, self->i_scans_negatively, iScansNegatively)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(h, i_scans_negatively_, iScansNegatively)) != GRIB_SUCCESS)
             return err;
     }
     else {
@@ -127,19 +124,19 @@ int grib_accessor_class_change_scanning_direction_t::pack_long(grib_accessor* a,
             }
         }
         jScansPositively = !jScansPositively;
-        if ((err = grib_set_long_internal(h, self->j_scans_positively, jScansPositively)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(h, j_scans_positively_, jScansPositively)) != GRIB_SUCCESS)
             return err;
     }
 
-    if ((err = grib_set_double_array_internal(h, self->values, values, size)) != GRIB_SUCCESS) {
+    if ((err = grib_set_double_array_internal(h, values_, values, size)) != GRIB_SUCCESS) {
         grib_context_free(c, values);
         return err;
     }
 
-    if ((err = grib_set_double_internal(h, self->first, last)) != GRIB_SUCCESS)
+    if ((err = grib_set_double_internal(h, first_, last)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_set_double_internal(h, self->last, first)) != GRIB_SUCCESS)
+    if ((err = grib_set_double_internal(h, last_, first)) != GRIB_SUCCESS)
         return err;
 
     grib_context_free(c, values);
@@ -147,11 +144,13 @@ int grib_accessor_class_change_scanning_direction_t::pack_long(grib_accessor* a,
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_change_scanning_direction_t::get_native_type(grib_accessor* a){
+long grib_accessor_change_scanning_direction_t::get_native_type()
+{
     return GRIB_TYPE_LONG;
 }
 
-int grib_accessor_class_change_scanning_direction_t::unpack_long(grib_accessor* a, long* v, size_t* len){
+int grib_accessor_change_scanning_direction_t::unpack_long(long* v, size_t* len)
+{
     /* ECC-976: decoding this accessor doesn't make sense so we return a dummy value */
     *v = -1;
     return GRIB_SUCCESS;

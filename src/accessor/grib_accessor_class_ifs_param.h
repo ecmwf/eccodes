@@ -16,18 +16,15 @@
 class grib_accessor_ifs_param_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in ifs_param */
-    const char*    paramId;
-    const char*    type;
-};
-
-class grib_accessor_class_ifs_param_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_ifs_param_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_ifs_param_t() :
+        grib_accessor_gen_t() { class_name_ = "ifs_param"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_ifs_param_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    long get_native_type() override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* paramId_;
+    const char* type_;
 };

@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "eccodes.h"
 
 // Input lon must be in degrees not radians
 // Not to be used for latitudes as they can be -ve
@@ -279,6 +280,26 @@ long convert_to_minutes(long step, long stepUnits)
     return (long)result;
 }
 
+bool is_sorted_ascending(const double arr[], size_t n)
+{
+    for (size_t i = 0; i < n-1; i++) {
+        if (arr[i] > arr[i+1]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool is_sorted_descending(const double arr[], size_t n)
+{
+    for (size_t i = 0; i < n-1; i++) {
+        if (arr[i] < arr[i+1]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 static float float_epsilon(void)
 {
     float floatEps = 1.0;
@@ -383,4 +404,144 @@ int compute_scaled_value_and_scale_factor(
         err = compute_scaled_value_and_scale_factor_algorithm2(input, scaled_value_max, scale_factor_max, ret_value, ret_factor);
     }
     return err;
+}
+
+static const char* known_features[] = {
+    "AEC",
+    "MEMFS",
+    "JPG",
+    "PNG",
+    "ECCODES_THREADS",
+    "ECCODES_OMP_THREADS",
+    "NETCDF",
+    "FORTRAN",
+    "GEOGRAPHY"
+};
+
+#define NUMBER(x) (sizeof(x) / sizeof(x[0]))
+int codes_is_feature_enabled(const char* feature)
+{
+    int aec_enabled           = 0; // or CCSDS
+    int memfs_enabled         = 0;
+    int jpg_enabled           = 0; // JasPer or OpenJPEG or both
+    int png_enabled           = 0;
+    int posix_threads_enabled = 0;
+    int omp_threads_enabled   = 0;
+    int netcdf_enabled        = 0;
+    int fortran_enabled       = 0;
+    int geography_enabled     = 0;
+
+    int found_feature = 0;
+    const size_t num = NUMBER(known_features);
+    for (size_t i = 0; i < num; ++i) {
+        if (STR_EQUAL(feature, known_features[i])) {
+            found_feature = 1;
+            break;
+        }
+    }
+    if (!found_feature) {
+        const grib_context* c = grib_context_get_default();
+        grib_context_log(c, GRIB_LOG_ERROR, "Unknown feature '%s'. Select one of:", feature);
+        for (size_t i = 0; i < num; ++i) {
+            grib_context_log(c, GRIB_LOG_ERROR, "\t%s", known_features[i]);
+        }
+        return 0;
+    }
+
+#if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
+    aec_enabled = 1;
+#endif
+#if HAVE_JPEG
+    #if HAVE_LIBJASPER
+    jpg_enabled = 1;
+    #endif
+    #if HAVE_LIBOPENJPEG
+    jpg_enabled = 1;
+    #endif
+#endif
+#if HAVE_LIBPNG
+    png_enabled = 1;
+#endif
+#if defined(HAVE_MEMFS)
+    memfs_enabled = 1;
+#endif
+#if GRIB_PTHREADS
+    posix_threads_enabled = 1;
+#endif
+#if GRIB_OMP_THREADS
+    omp_threads_enabled = 1;
+#endif
+#if defined(HAVE_NETCDF)
+    netcdf_enabled = 1;
+#endif
+#if defined(HAVE_FORTRAN)
+    fortran_enabled = 1;
+#endif
+#if defined(HAVE_GEOGRAPHY)
+    geography_enabled = 1;
+#endif
+
+    if (STR_EQUAL(feature, "AEC") || STR_EQUAL(feature, "CCSDS")) {
+        return aec_enabled;
+    }
+    if (STR_EQUAL(feature, "JPG") || STR_EQUAL(feature, "JPEG")) {
+        return jpg_enabled;
+    }
+    if (STR_EQUAL(feature, "PNG")) {
+        return png_enabled;
+    }
+    if (STR_EQUAL(feature, "MEMFS")) {
+        return memfs_enabled;
+    }
+    if (STR_EQUAL(feature, "ECCODES_THREADS")) {
+        return posix_threads_enabled;
+    }
+    if (STR_EQUAL(feature, "ECCODES_OMP_THREADS")) {
+        return omp_threads_enabled;
+    }
+    if (STR_EQUAL(feature, "NETCDF")) {
+        return netcdf_enabled;
+    }
+    if (STR_EQUAL(feature, "FORTRAN")) {
+        return fortran_enabled;
+    }
+    if (STR_EQUAL(feature, "GEOGRAPHY")) {
+        return geography_enabled;
+    }
+
+    return 0;
+}
+
+int codes_get_features(char* result, size_t* length, int select)
+{
+    Assert(select == CODES_FEATURES_ALL || select == CODES_FEATURES_ENABLED || select == CODES_FEATURES_DISABLED);
+
+    const size_t num = NUMBER(known_features);
+    result[0] = '\0';
+    for (size_t i = 0; i < num; ++i) {
+        if (select == CODES_FEATURES_ALL) {
+            strcat(result, known_features[i]);
+            strcat(result, " ");
+        }
+        else if (select == CODES_FEATURES_ENABLED) {
+            if (codes_is_feature_enabled(known_features[i])) {
+                strcat(result, known_features[i]);
+                strcat(result, " ");
+            }
+        }
+        else if (select == CODES_FEATURES_DISABLED) {
+            if (!codes_is_feature_enabled(known_features[i])) {
+                strcat(result, known_features[i]);
+                strcat(result, " ");
+            }
+        }
+    }
+
+    const size_t actual_length = strlen(result);
+    if (result[actual_length - 1] == ' ')
+        result[actual_length - 1] = '\0';
+
+    Assert(*length >= actual_length);
+    *length = actual_length;
+    return GRIB_SUCCESS;
 }

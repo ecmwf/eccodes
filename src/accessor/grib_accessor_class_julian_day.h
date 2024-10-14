@@ -16,22 +16,19 @@
 class grib_accessor_julian_day_t : public grib_accessor_double_t
 {
 public:
-    /* Members defined in julian_day */
-    const char *date;
-    const char *hour;
-    const char *minute;
-    const char *second;
-};
-
-class grib_accessor_class_julian_day_t : public grib_accessor_class_double_t
-{
-public:
-    grib_accessor_class_julian_day_t(const char* name) : grib_accessor_class_double_t(name) {}
+    grib_accessor_julian_day_t() :
+        grib_accessor_double_t() { class_name_ = "julian_day"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_julian_day_t{}; }
-    int pack_double(grib_accessor*, const double* val, size_t* len) override;
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_double(const double* val, size_t* len) override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_double(double* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* date_;
+    const char* hour_;
+    const char* minute_;
+    const char* second_;
 };
