@@ -10,6 +10,8 @@
 
 #include "grib_api_internal.h"
 #include <string>
+#include <algorithm>
+
 /*
    This is used by make_class.pl
 
@@ -71,6 +73,7 @@ grib_expression_class* grib_expression_class_functor = &_grib_expression_class_f
 
 /* END_CLASS_IMP */
 
+// See ECC-1936. We cannot use strcasestr (not on Windows and non-standard)
 static bool string_contains_case(const char* haystack, const char* needle, bool case_sensitive)
 {
     std::string copy_haystack = haystack;
