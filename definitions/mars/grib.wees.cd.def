@@ -1,8 +1,3 @@
 alias mars.step     = stepRange;
 
-if (edition == 1){
- alias mars.quantile = quantile;
-} else {
- meta marsQuantile sprintf("%d:%d",quantileValue,totalNumberOfQuantiles);
- alias mars.quantile = marsQuantile;
-}
+include "mars/mars.quantile.def"

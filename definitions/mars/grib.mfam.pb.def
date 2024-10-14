@@ -3,13 +3,7 @@ alias mars.origin = centre;
 meta    forecastperiod    g1fcperiod(P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange) : no_copy;
 alias   mars.fcperiod = forecastperiod;
 
-if (edition == 1){
- meta marsQuantile sprintf("%d:%d",perturbationNumber,numberOfForecastsInEnsemble);
- alias mars.quantile = marsQuantile;
-} else {
- meta marsQuantile sprintf("%d:%d",quantileValue,totalNumberOfQuantiles);
- alias mars.quantile = marsQuantile;
-}
+include "mars/mars.quantile.def"
 
 # TODO: Check why they are set in the first place
 unalias mars.step;
