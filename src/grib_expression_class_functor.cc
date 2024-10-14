@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-
+#include <string>
 /*
    This is used by make_class.pl
 
@@ -71,28 +71,21 @@ grib_expression_class* grib_expression_class_functor = &_grib_expression_class_f
 
 /* END_CLASS_IMP */
 
-
-#ifdef ECCODES_ON_WINDOWS
-// Windows does not have strcasestr
-static char* strcasestr(const char *haystack, const char* needle)
+static bool string_contains_case(const char* haystack, const char* needle, bool case_sensitive)
 {
-    char c, sc;
-    size_t len = 0;
+    std::string copy_haystack = haystack;
+    std::string copy_needle   = needle;
 
-    if ((c = *needle++) != 0) {
-        c = tolower((unsigned char)c);
-        len = strlen(needle);
-        do {
-            do {
-                if ((sc = *haystack++) == 0)
-                    return (NULL);
-            } while ((char)tolower((unsigned char)sc) != c);
-        } while (_strnicmp(haystack, needle, len) != 0);
-        haystack--;
+    if (!case_sensitive) {
+        // Convert both strings to lowercase if we don't care about case
+        std::transform(copy_needle.begin(), copy_needle.end(), copy_needle.begin(),
+                       [](unsigned char c) { return std::tolower(c); });
+        std::transform(copy_haystack.begin(), copy_haystack.end(), copy_haystack.begin(),
+                       [](unsigned char c) { return std::tolower(c); });
     }
-    return ((char *)haystack);
+    // Perform the search
+    return copy_haystack.find(copy_needle) != std::string::npos;
 }
-#endif
 
 static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 {
@@ -214,8 +207,8 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
             err = grib_get_string(h, keyName, keyValue, &len);
             if (err) return err;
             const char* sValue = grib_arguments_get_string(h, e->args, 1);
-            const bool case_sens = grib_arguments_get_long(h, e->args, 2) != 0;
-            const bool contains = case_sens? strcasestr(keyValue, sValue) : strstr(keyValue, sValue);
+            const bool case_sens = grib_arguments_get_long(h, e->args, 2) == 0; // 0=case-sensitive, 1=case-insensitive
+            const bool contains = string_contains_case(keyValue, sValue, case_sens);
             if (sValue && contains) {
                 *lres = 1;
                 return GRIB_SUCCESS;
