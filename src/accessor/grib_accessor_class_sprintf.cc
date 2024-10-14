@@ -10,21 +10,18 @@
 
 #include "grib_accessor_class_sprintf.h"
 
-grib_accessor_class_sprintf_t _grib_accessor_class_sprintf{ "sprintf" };
-grib_accessor_class* grib_accessor_class_sprintf = &_grib_accessor_class_sprintf;
+grib_accessor_sprintf_t _grib_accessor_sprintf{};
+grib_accessor* grib_accessor_sprintf = &_grib_accessor_sprintf;
 
-
-void grib_accessor_class_sprintf_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_sprintf_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_ascii_t::init(a, l, c);
-    grib_accessor_sprintf_t* self = (grib_accessor_sprintf_t*)a;
-    self->args = c;
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    grib_accessor_ascii_t::init(l, c);
+    args_ = c;
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_sprintf_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+int grib_accessor_sprintf_t::unpack_string(char* val, size_t* len)
 {
-    grib_accessor_sprintf_t* self = (grib_accessor_sprintf_t*)a;
     char result[1024];
     char tempBuffer[2048];
     char sres[1024];
@@ -39,7 +36,7 @@ int grib_accessor_class_sprintf_t::unpack_string(grib_accessor* a, char* val, si
     const char* tempname = NULL;
     size_t uname_len     = 0;
 
-    uname = grib_arguments_get_string(grib_handle_of_accessor(a), self->args, carg++);
+    uname = grib_arguments_get_string(grib_handle_of_accessor(this), args_, carg++);
     snprintf(result, sizeof(result), "%s", "");
     uname_len = strlen(uname);
 
@@ -57,12 +54,12 @@ int grib_accessor_class_sprintf_t::unpack_string(grib_accessor* a, char* val, si
             }
             switch (uname[i]) {
                 case 'd':
-                    tempname = grib_arguments_get_name(grib_handle_of_accessor(a), self->args, carg++);
+                    tempname = grib_arguments_get_name(grib_handle_of_accessor(this), args_, carg++);
 
-                    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), tempname, &ires)) != GRIB_SUCCESS)
+                    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), tempname, &ires)) != GRIB_SUCCESS)
                         return ret;
                     /* Bug GRIB-56: Check to see if the key is missing */
-                    is_missing = grib_is_missing(grib_handle_of_accessor(a), tempname, &ret);
+                    is_missing = grib_is_missing(grib_handle_of_accessor(this), tempname, &ret);
                     if (ret != GRIB_SUCCESS)
                         return ret;
                     if (is_missing) {
@@ -83,8 +80,8 @@ int grib_accessor_class_sprintf_t::unpack_string(grib_accessor* a, char* val, si
                     break;
 
                 case 'g':
-                    tempname = grib_arguments_get_name(grib_handle_of_accessor(a), self->args, carg++);
-                    if ((ret = grib_get_double_internal(grib_handle_of_accessor(a), tempname, &dres)) != GRIB_SUCCESS)
+                    tempname = grib_arguments_get_name(grib_handle_of_accessor(this), args_, carg++);
+                    if ((ret = grib_get_double_internal(grib_handle_of_accessor(this), tempname, &dres)) != GRIB_SUCCESS)
                         return ret;
                     snprintf(tempBuffer, sizeof(tempBuffer), "%s%g", result, dres);
                     strcpy(result, tempBuffer);
@@ -92,8 +89,8 @@ int grib_accessor_class_sprintf_t::unpack_string(grib_accessor* a, char* val, si
                     break;
 
                 case 's':
-                    tempname = grib_arguments_get_name(grib_handle_of_accessor(a), self->args, carg++);
-                    if ((ret = grib_get_string_internal(grib_handle_of_accessor(a), tempname, sres, &replen)) != GRIB_SUCCESS)
+                    tempname = grib_arguments_get_name(grib_handle_of_accessor(this), args_, carg++);
+                    if ((ret = grib_get_string_internal(grib_handle_of_accessor(this), tempname, sres, &replen)) != GRIB_SUCCESS)
                         return ret;
                     snprintf(tempBuffer, sizeof(tempBuffer), "%s%s", result, sres);
                     strcpy(result, tempBuffer);
@@ -119,13 +116,13 @@ int grib_accessor_class_sprintf_t::unpack_string(grib_accessor* a, char* val, si
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_sprintf_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_sprintf_t::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_class_sprintf_t::string_length(grib_accessor* a)
+size_t grib_accessor_sprintf_t::string_length()
 {
     return 1024;
 }

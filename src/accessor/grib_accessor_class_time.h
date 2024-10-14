@@ -16,19 +16,16 @@
 class grib_accessor_time_t : public grib_accessor_long_t
 {
 public:
-    /* Members defined in time */
-    const char* hour;
-    const char* minute;
-    const char* second;
-};
-
-class grib_accessor_class_time_t : public grib_accessor_class_long_t
-{
-public:
-    grib_accessor_class_time_t(const char* name) : grib_accessor_class_long_t(name) {}
+    grib_accessor_time_t() :
+        grib_accessor_long_t() { class_name_ = "time"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_time_t{}; }
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    int unpack_string(char*, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* hour_;
+    const char* minute_;
+    const char* second_;
 };

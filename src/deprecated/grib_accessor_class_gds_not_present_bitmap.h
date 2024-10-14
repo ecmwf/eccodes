@@ -16,22 +16,19 @@
 class grib_accessor_gds_not_present_bitmap_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in gds_not_present_bitmap */
-    const char*  missing_value;
-    const char*  number_of_values;
-    const char*  number_of_points;
-    const char*  latitude_of_first_point;
-    const char*  ni;
-};
-
-class grib_accessor_class_gds_not_present_bitmap_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_gds_not_present_bitmap_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_gds_not_present_bitmap_t() :
+        grib_accessor_gen_t() { class_name_ = "gds_not_present_bitmap"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_gds_not_present_bitmap_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int pack_double(grib_accessor*, const double* val, size_t* len) override;
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    long get_native_type() override;
+    int pack_double(const double* val, size_t* len) override;
+    int unpack_double(double* val, size_t* len) override;
+    int value_count(long*) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* missing_value_;
+    const char* number_of_values_;
+    const char* number_of_points_;
+    const char* latitude_of_first_point_;
+    const char* ni_;
 };

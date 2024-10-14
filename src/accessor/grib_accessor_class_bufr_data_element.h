@@ -16,39 +16,46 @@
 class grib_accessor_bufr_data_element_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in bufr_data_element */
-    long index;
-    int type;
-    long compressedData;
-    long subsetNumber;
-    long numberOfSubsets;
-    bufr_descriptors_array* descriptors;
-    grib_vdarray* numericValues;
-    grib_vsarray* stringValues;
-    grib_viarray* elementsDescriptorsIndex;
-    char* cname;
-};
-
-class grib_accessor_class_bufr_data_element_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_bufr_data_element_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_bufr_data_element_t() :
+        grib_accessor_gen_t() { class_name_ = "bufr_data_element"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_bufr_data_element_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int pack_missing(grib_accessor*) override;
-    int is_missing(grib_accessor*) override;
-    int pack_double(grib_accessor*, const double* val, size_t* len) override;
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int pack_string(grib_accessor*, const char*, size_t* len) override;
-    int pack_string_array(grib_accessor*, const char**, size_t* len) override;
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
-    int unpack_string_array(grib_accessor*, char**, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void destroy(grib_context*, grib_accessor*) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
-    int unpack_double_element(grib_accessor*, size_t i, double* val) override;
-    grib_accessor* make_clone(grib_accessor*, grib_section*, int*) override;
+    long get_native_type() override;
+    int pack_missing() override;
+    int is_missing() override;
+    int pack_double(const double* val, size_t* len) override;
+    int pack_long(const long* val, size_t* len) override;
+    int pack_string(const char*, size_t* len) override;
+    int pack_string_array(const char**, size_t* len) override;
+    int unpack_double(double* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    int unpack_string(char*, size_t* len) override;
+    int unpack_string_array(char**, size_t* len) override;
+    int value_count(long*) override;
+    void destroy(grib_context*) override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
+    int unpack_double_element(size_t i, double* val) override;
+    grib_accessor* make_clone(grib_section*, int*) override;
+
+    void index(long index) { index_ = index; }
+    void type(int type) { type_ = type; }
+    void numberOfSubsets(long numberOfSubsets) { numberOfSubsets_ = numberOfSubsets; }
+    void subsetNumber(long subsetNumber) { subsetNumber_ = subsetNumber; }
+    void compressedData(int compressedData) { compressedData_ = compressedData; }
+    void descriptors(bufr_descriptors_array* descriptors) { descriptors_ = descriptors; }
+    void numericValues(grib_vdarray* numericValues) { numericValues_ = numericValues; }
+    void stringValues(grib_vsarray* stringValues) { stringValues_ = stringValues; }
+    void elementsDescriptorsIndex(grib_viarray* elementsDescriptorsIndex) { elementsDescriptorsIndex_ = elementsDescriptorsIndex; }
+
+private:
+    long index_;
+    int type_;
+    long compressedData_;
+    long subsetNumber_;
+    long numberOfSubsets_;
+    bufr_descriptors_array* descriptors_;
+    grib_vdarray* numericValues_;
+    grib_vsarray* stringValues_;
+    grib_viarray* elementsDescriptorsIndex_;
+    char* cname_;
 };

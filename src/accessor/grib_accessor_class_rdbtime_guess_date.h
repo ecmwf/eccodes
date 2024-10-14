@@ -16,20 +16,17 @@
 class grib_accessor_rdbtime_guess_date_t : public grib_accessor_long_t
 {
 public:
-    /* Members defined in rdbtime_guess_date */
-    const char* typicalYear;
-    const char* typicalMonth;
-    const char* typicalDay;
-    const char* rdbDay;
-    long yearOrMonth;
-};
-
-class grib_accessor_class_rdbtime_guess_date_t : public grib_accessor_class_long_t
-{
-public:
-    grib_accessor_class_rdbtime_guess_date_t(const char* name) : grib_accessor_class_long_t(name) {}
+    grib_accessor_rdbtime_guess_date_t() :
+        grib_accessor_long_t() { class_name_ = "rdbtime_guess_date"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_rdbtime_guess_date_t{}; }
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* typicalYear_;
+    const char* typicalMonth_;
+    const char* typicalDay_;
+    const char* rdbDay_;
+    long yearOrMonth_;
 };

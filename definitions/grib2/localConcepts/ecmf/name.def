@@ -18690,14 +18690,14 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 255 ;
 	}
-#Snow evaporation
-'Snow evaporation' = {
+#Time-mean snow evaporation rate
+'Time-mean snow evaporation rate' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 44 ;
 	}
-#Snowmelt
-'Snowmelt' = {
+#Time-mean snowmelt rate
+'Time-mean snowmelt rate' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 45 ;
@@ -18786,14 +18786,14 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 255 ;
 	}
-#Snow evaporation anomaly
-'Snow evaporation anomaly' = {
+#Time-mean snow evaporation anomalous rate of accumulation
+'Time-mean snow evaporation anomalous rate of accumulation' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 44 ;
 	}
-#Snowmelt anomaly
-'Snowmelt anomaly' = {
+#Time-mean snowmelt anomalous rate of accumulation
+'Time-mean snowmelt anomalous rate of accumulation' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 45 ;
@@ -18912,8 +18912,8 @@
 	 parameterCategory = 173 ;
 	 parameterNumber = 181 ;
 	}
-#Evaporation anomalous rate of accumulation
-'Evaporation anomalous rate of accumulation' = {
+#Time-mean evaporation anomalous rate of accumulation
+'Time-mean evaporation anomalous rate of accumulation' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 182 ;

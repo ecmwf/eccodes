@@ -43,16 +43,16 @@ test_conversion 174098 262000 sithick
 test_conversion 151163 262104 t20d
 test_conversion 151145 262124 zos
 test_conversion 130232 235135 avg_w
-test_conversion 172146 235033 msshf
-test_conversion 172147 235034 mslhf
-test_conversion 55     228004 mean2t
+test_conversion 172146 235033 avg_ishf
+test_conversion 172147 235034 avg_slhtf
+test_conversion 55     228004 avg_2t
 test_conversion 56     235168 avg_2d
-test_conversion 172169 235035 msdwswrf
-test_conversion 172175 235036 msdwlwrf
-test_conversion 172176 235037 msnswrf
-test_conversion 172177 235038 msnlwrf
-test_conversion 172178 235039 mtnswrf
-test_conversion 172179 235040 mtnlwrf
+test_conversion 172169 235035 avg_sdswrf
+test_conversion 172175 235036 avg_sdlwrf
+test_conversion 172176 235037 avg_snswrf
+test_conversion 172177 235038 avg_snlwrf
+test_conversion 172178 235039 avg_tnswrf
+test_conversion 172179 235040 avg_tnlwrf
 test_conversion 151175 262118 sc300m
 
 test_conversion 72 260087 sdswrf

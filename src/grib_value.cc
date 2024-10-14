@@ -80,7 +80,7 @@ int grib_set_expression(grib_handle* h, const char* name, grib_expression* e)
     int ret          = GRIB_SUCCESS;
 
     if (a) {
-        if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
+        if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY)
             return GRIB_READ_ONLY;
 
         ret = a->pack_expression(e);
@@ -130,13 +130,13 @@ int grib_set_long(grib_handle* h, const char* name, long val)
 
     if (a) {
         if (h->context->debug) {
-            if (strcmp(name, a->name)!=0)
-                fprintf(stderr, "ECCODES DEBUG grib_set_long h=%p %s=%ld (a->name=%s)\n", (void*)h, name, val, a->name);
+            if (strcmp(name, a->name_)!=0)
+                fprintf(stderr, "ECCODES DEBUG grib_set_long h=%p %s=%ld (a->name_=%s)\n", (void*)h, name, val, a->name_);
             else
                 fprintf(stderr, "ECCODES DEBUG grib_set_long h=%p %s=%ld\n", (void*)h, name, val);
         }
 
-        if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
+        if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY)
             return GRIB_READ_ONLY;
 
         ret = a->pack_long(&val, &l);
@@ -247,7 +247,7 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
                 continue;
             }
 
-            if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) {
+            if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) {
                 key_err->err = GRIB_SUCCESS;
                 key_err      = key_err->next;
                 continue;
@@ -362,13 +362,13 @@ int grib_set_double(grib_handle* h, const char* name, double val)
 
     if (a) {
         if (h->context->debug) {
-            if (strcmp(name, a->name)!=0)
-                fprintf(stderr, "ECCODES DEBUG grib_set_double h=%p %s=%.10g (a->name=%s)\n", (void*)h, name, val, a->name);
+            if (strcmp(name, a->name_)!=0)
+                fprintf(stderr, "ECCODES DEBUG grib_set_double h=%p %s=%.10g (a->name_=%s)\n", (void*)h, name, val, a->name_);
             else
                 fprintf(stderr, "ECCODES DEBUG grib_set_double h=%p %s=%.10g\n", (void*)h, name, val);
         }
 
-        if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
+        if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY)
             return GRIB_READ_ONLY;
 
         ret = a->pack_double(&val, &l);
@@ -494,13 +494,13 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* l
 
     if (a) {
         if (h->context->debug) {
-            if (strcmp(name, a->name)!=0)
-                fprintf(stderr, "ECCODES DEBUG grib_set_string h=%p %s=|%s| (a->name=%s)\n", (void*)h, name, val, a->name);
+            if (strcmp(name, a->name_)!=0)
+                fprintf(stderr, "ECCODES DEBUG grib_set_string h=%p %s=|%s| (a->name_=%s)\n", (void*)h, name, val, a->name_);
             else
                 fprintf(stderr, "ECCODES DEBUG grib_set_string h=%p %s=|%s|\n", (void*)h, name, val);
         }
 
-        if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
+        if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY)
             return GRIB_READ_ONLY;
 
         ret = a->pack_string(val, length);
@@ -530,7 +530,7 @@ int grib_set_string_array(grib_handle* h, const char* name, const char** val, si
     }
 
     if (a) {
-        if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
+        if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY)
             return GRIB_READ_ONLY;
 
         ret = a->pack_string_array(val, &length);
@@ -566,7 +566,7 @@ int grib_set_bytes(grib_handle* h, const char* name, const unsigned char* val, s
     grib_accessor* a = grib_find_accessor(h, name);
 
     if (a) {
-        /* if(a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) */
+        /* if(a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) */
         /* return GRIB_READ_ONLY; */
 
         ret = a->pack_bytes(val, length);
@@ -584,7 +584,7 @@ int grib_set_bytes(grib_handle* h, const char* name, const unsigned char* val, s
 //     grib_accessor* a = NULL;
 //     a = grib_find_accessor(h, name);
 //     if (a) {
-//         if (a->length == 0)
+//         if (a->length_ == 0)
 //             return 0;
 //         if ((ret = a->grib_pack_zero()) != GRIB_SUCCESS)
 //             grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to clear %s (%s)",
@@ -603,7 +603,7 @@ int grib_set_missing(grib_handle* h, const char* name)
     a = grib_find_accessor(h, name);
 
     if (a) {
-        if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
+        if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY)
             return GRIB_READ_ONLY;
 
         if (grib_accessor_can_be_missing(a, &ret)) {
@@ -628,12 +628,12 @@ int grib_set_missing(grib_handle* h, const char* name)
 
 int grib_is_missing_long(grib_accessor* a, long x)
 {
-    int ret = (a == NULL || (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)) && (x == GRIB_MISSING_LONG) ? 1 : 0;
+    int ret = (a == NULL || (a->flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)) && (x == GRIB_MISSING_LONG) ? 1 : 0;
     return ret;
 }
 int grib_is_missing_double(grib_accessor* a, double x)
 {
-    int ret = (a == NULL || (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)) && (x == GRIB_MISSING_DOUBLE) ? 1 : 0;
+    int ret = (a == NULL || (a->flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)) && (x == GRIB_MISSING_DOUBLE) ? 1 : 0;
     return ret;
 }
 
@@ -657,7 +657,7 @@ int grib_is_missing_string(grib_accessor* a, const unsigned char* x, size_t len)
 
     if (!a) return ret;
 
-    ret = ( ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) && ret == 1) ) ? 1 : 0;
+    ret = ( ((a->flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) && ret == 1) ) ? 1 : 0;
     return ret;
 }
 
@@ -665,7 +665,7 @@ int grib_accessor_is_missing(grib_accessor* a, int* err)
 {
     *err = GRIB_SUCCESS;
     if (a) {
-        if (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)
+        if (a->flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)
             return a->is_missing_internal();
         else
             return 0;
@@ -678,10 +678,10 @@ int grib_accessor_is_missing(grib_accessor* a, int* err)
 
 int grib_accessor_can_be_missing(grib_accessor* a, int* err)
 {
-    if (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) {
+    if (a->flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) {
         return 1;
     }
-    if (STR_EQUAL(a->cclass->name, "codetable")) {
+    if (STR_EQUAL(a->class_name_, "codetable")) {
         // Special case of Code Table keys
         // The vast majority have a 'Missing' entry
         return 1;
@@ -709,7 +709,7 @@ int grib_set_flag(grib_handle* h, const char* name, unsigned long flag)
     if (!a)
         return GRIB_NOT_FOUND;
 
-    a->flags |= flag;
+    a->flags_ |= flag;
 
     return GRIB_SUCCESS;
 }
@@ -718,9 +718,9 @@ static int _grib_set_double_array_internal(grib_handle* h, grib_accessor* a,
                                            const double* val, size_t buffer_len, size_t* encoded_length, int check)
 {
     if (a) {
-        int err = _grib_set_double_array_internal(h, a->same, val, buffer_len, encoded_length, check);
+        int err = _grib_set_double_array_internal(h, a->same_, val, buffer_len, encoded_length, check);
 
-        if (check && (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY))
+        if (check && (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY))
             return GRIB_READ_ONLY;
 
         if (err == GRIB_SUCCESS) {
@@ -734,7 +734,7 @@ static int _grib_set_double_array_internal(grib_handle* h, grib_accessor* a,
                 }
             }
             else {
-                grib_get_size(h, a->name, encoded_length);
+                grib_get_size(h, a->name_, encoded_length);
                 err = GRIB_WRONG_ARRAY_SIZE;
             }
         }
@@ -756,7 +756,7 @@ static int _grib_set_double_array(grib_handle* h, const char* name,
     if (!a)
         return GRIB_NOT_FOUND;
     if (name[0] == '/' || name[0] == '#') {
-        if (check && (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY))
+        if (check && (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY))
             return GRIB_READ_ONLY;
         err     = a->pack_double(val, &length);
         encoded = length;
@@ -894,9 +894,9 @@ int grib_set_float_array(grib_handle* h, const char* name, const float* val, siz
 static int _grib_set_long_array_internal(grib_handle* h, grib_accessor* a, const long* val, size_t buffer_len, size_t* encoded_length, int check)
 {
     if (a) {
-        int err = _grib_set_long_array_internal(h, a->same, val, buffer_len, encoded_length, check);
+        int err = _grib_set_long_array_internal(h, a->same_, val, buffer_len, encoded_length, check);
 
-        if (check && (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY))
+        if (check && (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY))
             return GRIB_READ_ONLY;
 
         if (err == GRIB_SUCCESS) {
@@ -906,7 +906,7 @@ static int _grib_set_long_array_internal(grib_handle* h, grib_accessor* a, const
                 *encoded_length += len;
             }
             else {
-                grib_get_size(h, a->name, encoded_length);
+                grib_get_size(h, a->name_, encoded_length);
                 err = GRIB_WRONG_ARRAY_SIZE;
             }
         }
@@ -942,7 +942,7 @@ static int _grib_set_long_array(grib_handle* h, const char* name, const long* va
     }
 
     if (name[0] == '/' || name[0] == '#') {
-        if (check && (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY))
+        if (check && (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY))
             return GRIB_READ_ONLY;
         err     = a->pack_long(val, &length);
         encoded = length;
@@ -989,7 +989,7 @@ int grib_get_long_internal(grib_handle* h, const char* name, long* val)
 // int grib_is_in_dump(const grib_handle* h, const char* name)
 // {
 //     const grib_accessor* a = grib_find_accessor(h, name);
-//     if (a != NULL && (a->flags & GRIB_ACCESSOR_FLAG_DUMP))
+//     if (a != NULL && (a->flags_ & GRIB_ACCESSOR_FLAG_DUMP))
 //         return 1;
 //     else
 //         return 0;
@@ -999,7 +999,7 @@ int grib_get_long_internal(grib_handle* h, const char* name, long* val)
 // {
 //     if (a) {
 //         *size = 0;
-//         while (a->attributes[*size] != NULL) {
+//         while (a->attributes_[*size] != NULL) {
 //             (*size)++;
 //         }
 //         return GRIB_SUCCESS;
@@ -1304,7 +1304,7 @@ static int _grib_get_array_internal(const grib_handle* h, grib_accessor* a, T* v
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     if (a) {
-        int err = _grib_get_array_internal<T>(h, a->same, val, buffer_len, decoded_length);
+        int err = _grib_get_array_internal<T>(h, a->same_, val, buffer_len, decoded_length);
 
         if (err == GRIB_SUCCESS) {
             size_t len = buffer_len - *decoded_length;
@@ -1401,7 +1401,7 @@ int grib_get_string_length_acc(grib_accessor* a, size_t* size)
         s = a->string_length();
         if (s > *size)
             *size = s;
-        a = a->same;
+        a = a->same_;
     }
     (*size) += 1;
 
@@ -1446,7 +1446,7 @@ int grib_get_size_acc(const grib_handle* h, grib_accessor* a, size_t* size)
                 return err;
             *size += count;
         }
-        a = a->same;
+        a = a->same_;
     }
     return GRIB_SUCCESS;
 }
@@ -1495,7 +1495,7 @@ int grib_get_length(const grib_handle* h, const char* name, size_t* length)
 //     *size = 0;
 //     while (a) {
 //         (*size)++;
-//         a = a->same;
+//         a = a->same_;
 //     }
 //     return GRIB_SUCCESS;
 // }
@@ -1514,7 +1514,7 @@ int grib_get_offset(const grib_handle* ch, const char* key, size_t* val)
 static int grib_get_string_array_internal_(const grib_handle* h, grib_accessor* a, char** val, size_t buffer_len, size_t* decoded_length)
 {
     if (a) {
-        int err = grib_get_string_array_internal_(h, a->same, val, buffer_len, decoded_length);
+        int err = grib_get_string_array_internal_(h, a->same_, val, buffer_len, decoded_length);
 
         if (err == GRIB_SUCCESS) {
             size_t len = buffer_len - *decoded_length;
@@ -1561,7 +1561,7 @@ int grib_get_string_array(const grib_handle* h, const char* name, char** val, si
 static int _grib_get_long_array_internal(const grib_handle* h, grib_accessor* a, long* val, size_t buffer_len, size_t* decoded_length)
 {
     if (a) {
-        int err = _grib_get_long_array_internal(h, a->same, val, buffer_len, decoded_length);
+        int err = _grib_get_long_array_internal(h, a->same_, val, buffer_len, decoded_length);
 
         if (err == GRIB_SUCCESS) {
             size_t len = buffer_len - *decoded_length;

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,24 +15,21 @@
 class grib_accessor_to_string_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in to_string */
-    const char* key;
-    long start;
-    size_t length;
-};
-
-class grib_accessor_class_to_string_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_to_string_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_to_string_t() :
+        grib_accessor_gen_t() { class_name_ = "to_string"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_to_string_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
-    size_t string_length(grib_accessor*) override;
-    long next_offset(grib_accessor*) override;
-    int value_count(grib_accessor*, long*) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    long get_native_type() override;
+    int unpack_double(double* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    int unpack_string(char*, size_t* len) override;
+    size_t string_length() override;
+    long next_offset() override;
+    int value_count(long*) override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* key_;
+    long start_;
+    size_t str_length_;
 };

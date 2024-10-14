@@ -16,16 +16,13 @@
 class grib_accessor_g2bitmap_present_t : public grib_accessor_long_t
 {
 public:
-    /* Members defined in g2bitmap_present */
-    const char* bitmapIndicator;
-};
-
-class grib_accessor_class_g2bitmap_present_t : public grib_accessor_class_long_t
-{
-public:
-    grib_accessor_class_g2bitmap_present_t(const char* name) : grib_accessor_class_long_t(name) {}
+    grib_accessor_g2bitmap_present_t() :
+        grib_accessor_long_t() { class_name_ = "g2bitmap_present"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_g2bitmap_present_t{}; }
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* bitmapIndicator_;
 };

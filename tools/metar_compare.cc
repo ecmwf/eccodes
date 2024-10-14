@@ -730,7 +730,7 @@ static int compare_all_dump_keys(grib_handle* h1, grib_handle* h2, grib_runtime_
 
         if (blocklisted(name))
             continue;
-        if (xa == NULL || (xa->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+        if (xa == NULL || (xa->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
             continue;
         if (compare_values(options, h1, h2, name, GRIB_TYPE_UNDEFINED)) {
             (*pErr)++;

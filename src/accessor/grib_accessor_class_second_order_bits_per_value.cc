@@ -11,9 +11,8 @@
 #include "grib_accessor_class_second_order_bits_per_value.h"
 #include "grib_scaling.h"
 
-grib_accessor_class_second_order_bits_per_value_t _grib_accessor_class_second_order_bits_per_value{ "second_order_bits_per_value" };
-grib_accessor_class* grib_accessor_class_second_order_bits_per_value = &_grib_accessor_class_second_order_bits_per_value;
-
+grib_accessor_second_order_bits_per_value_t _grib_accessor_second_order_bits_per_value{};
+grib_accessor* grib_accessor_second_order_bits_per_value = &_grib_accessor_second_order_bits_per_value;
 
 static const size_t nbits[64] = {
     0x1, 0x2, 0x4, 0x8,
@@ -38,7 +37,7 @@ static int number_of_bits(size_t x, long* result)
 {
     const size_t* n = nbits;
     const int count = sizeof(nbits) / sizeof(nbits[0]);
-    *result = 0;
+    *result         = 0;
     while (x >= *n) {
         n++;
         (*result)++;
@@ -49,29 +48,27 @@ static int number_of_bits(size_t x, long* result)
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_class_second_order_bits_per_value_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_second_order_bits_per_value_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_long_t::init(a, l, c);
-    int n = 0;
-    grib_accessor_second_order_bits_per_value_t* self = (grib_accessor_second_order_bits_per_value_t*)a;
-    self->values             = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->binaryScaleFactor  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->decimalScaleFactor = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->bitsPerValue       = 0;
+    grib_accessor_long_t::init(l, c);
+    int n               = 0;
+    values_             = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    binaryScaleFactor_  = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    decimalScaleFactor_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    bitsPerValue_       = 0;
 
-    a->length = 0;
+    length_ = 0;
 }
 
-int grib_accessor_class_second_order_bits_per_value_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_second_order_bits_per_value_t::pack_long(const long* val, size_t* len)
 {
-    grib_accessor_second_order_bits_per_value_t* self = (grib_accessor_second_order_bits_per_value_t*)a;
-    self->bitsPerValue = (long)*val;
-    *len = 1;
+    bitsPerValue_ = (long)*val;
+    *len          = 1;
 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_second_order_bits_per_value_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_second_order_bits_per_value_t::unpack_long(long* val, size_t* len)
 {
     int ret     = GRIB_SUCCESS;
     size_t size = 0;
@@ -80,29 +77,28 @@ int grib_accessor_class_second_order_bits_per_value_t::unpack_long(grib_accessor
     double* values = 0;
     long binaryScaleFactor, decimalScaleFactor;
 
-    grib_accessor_second_order_bits_per_value_t* self = (grib_accessor_second_order_bits_per_value_t*)a;
-    if (self->bitsPerValue) {
-        *val = self->bitsPerValue;
+    if (bitsPerValue_) {
+        *val = bitsPerValue_;
         return GRIB_SUCCESS;
     }
 
-    if ((ret = grib_get_size(grib_handle_of_accessor(a), self->values, &size)) != GRIB_SUCCESS) {
-        *val = self->bitsPerValue;
+    if ((ret = grib_get_size(grib_handle_of_accessor(this), values_, &size)) != GRIB_SUCCESS) {
+        *val = bitsPerValue_;
         return GRIB_SUCCESS;
     }
 
-    if ((ret = grib_get_long(grib_handle_of_accessor(a), self->binaryScaleFactor, &binaryScaleFactor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long(grib_handle_of_accessor(this), binaryScaleFactor_, &binaryScaleFactor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->decimalScaleFactor, &decimalScaleFactor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), decimalScaleFactor_, &decimalScaleFactor)) != GRIB_SUCCESS)
         return ret;
 
-    values = (double*)grib_context_malloc_clear(a->context, sizeof(double) * size);
+    values = (double*)grib_context_malloc_clear(context_, sizeof(double) * size);
     if (!values) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Memory allocation error: %zu bytes", a->name, size);
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: Memory allocation error: %zu bytes", name_, size);
         return GRIB_OUT_OF_MEMORY;
     }
-    if ((ret = grib_get_double_array_internal(grib_handle_of_accessor(a), self->values, values, &size)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_array_internal(grib_handle_of_accessor(this), values_, values, &size)) != GRIB_SUCCESS)
         return ret;
 
     max = values[0];
@@ -117,14 +113,14 @@ int grib_accessor_class_second_order_bits_per_value_t::unpack_long(grib_accessor
     d = codes_power<double>(decimalScaleFactor, 10);
     b = codes_power<double>(-binaryScaleFactor, 2);
 
-    /* self->bitsPerValue=(long)ceil(log((double)((max-min)*d+1))/log(2.0))-binaryScaleFactor; */
+    /* bitsPerValue_ =(long)ceil(log((double)((max-min)*d+1))/log(2.0))-binaryScaleFactor; */
     /* See GRIB-540 for why we use ceil */
-    ret = number_of_bits((size_t)ceil((fabs(max - min) * b * d)), &(self->bitsPerValue));
+    ret = number_of_bits((size_t)ceil((fabs(max - min) * b * d)), &(bitsPerValue_));
     if (ret != GRIB_SUCCESS)
         return ret;
-    *val = self->bitsPerValue;
+    *val = bitsPerValue_;
 
-    grib_context_free(a->context, values);
+    grib_context_free(context_, values);
 
     return ret;
 }

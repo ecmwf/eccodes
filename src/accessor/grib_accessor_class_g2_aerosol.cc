@@ -11,29 +11,26 @@
 
 #include "grib_accessor_class_g2_aerosol.h"
 
-grib_accessor_class_g2_aerosol_t _grib_accessor_class_g2_aerosol{ "g2_aerosol" };
-grib_accessor_class* grib_accessor_class_g2_aerosol = &_grib_accessor_class_g2_aerosol;
+grib_accessor_g2_aerosol_t _grib_accessor_g2_aerosol{};
+grib_accessor* grib_accessor_g2_aerosol = &_grib_accessor_g2_aerosol;
 
-
-void grib_accessor_class_g2_aerosol_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_g2_aerosol_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_unsigned_t::init(a, l, c);
-    grib_accessor_g2_aerosol_t* self = (grib_accessor_g2_aerosol_t*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
-    int n = 0;
+    grib_accessor_unsigned_t::init(l, c);
+    grib_handle* hand = grib_handle_of_accessor(this);
+    int n             = 0;
 
-    self->productDefinitionTemplateNumber = grib_arguments_get_name(hand, c, n++);
-    self->stepType                        = grib_arguments_get_name(hand, c, n++);
-    self->optical                         = grib_arguments_get_long(hand, c, n++);
+    productDefinitionTemplateNumber_ = grib_arguments_get_name(hand, c, n++);
+    stepType_                        = grib_arguments_get_name(hand, c, n++);
+    optical_                         = grib_arguments_get_long(hand, c, n++);
 }
 
-int grib_accessor_class_g2_aerosol_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_g2_aerosol_t::unpack_long(long* val, size_t* len)
 {
-    grib_accessor_g2_aerosol_t* self     = (grib_accessor_g2_aerosol_t*)a;
     long productDefinitionTemplateNumber = 0;
-    grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber, &productDefinitionTemplateNumber);
+    grib_get_long(grib_handle_of_accessor(this), productDefinitionTemplateNumber_, &productDefinitionTemplateNumber);
 
-    if (self->optical)
+    if (optical_)
         *val = grib2_is_PDTN_AerosolOptical(productDefinitionTemplateNumber);
     else
         *val = grib2_is_PDTN_Aerosol(productDefinitionTemplateNumber);
@@ -41,28 +38,31 @@ int grib_accessor_class_g2_aerosol_t::unpack_long(grib_accessor* a, long* val, s
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_g2_aerosol_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_g2_aerosol_t::pack_long(const long* val, size_t* len)
 {
-    grib_accessor_g2_aerosol_t* self        = (grib_accessor_g2_aerosol_t*)a;
-    grib_handle* hand                       = grib_handle_of_accessor(a);
+    grib_handle* hand                       = grib_handle_of_accessor(this);
     long productDefinitionTemplateNumber    = -1;
     long productDefinitionTemplateNumberNew = -1;
-    //long type=-1;
-    //long stream=-1;
+    // long type=-1;
+    // long stream=-1;
     long eps          = -1;
-    char stepType[15] = {0,};
+    char stepType[15] = {
+        0,
+    };
     size_t slen = 15;
-    //int aerosol = *val;
+    // int aerosol = *val;
     int isInstant = 0;
-    //long derivedForecast=-1;
+    // long derivedForecast=-1;
     int ret = 0;
 
-    if (grib_get_long(hand, self->productDefinitionTemplateNumber, &productDefinitionTemplateNumber) != GRIB_SUCCESS)
+    if (grib_get_long(hand, productDefinitionTemplateNumber_, &productDefinitionTemplateNumber) != GRIB_SUCCESS)
         return GRIB_SUCCESS;
 
-    //  grib_get_long(hand, self->type,&type);
-    //  grib_get_long(hand, self->stream,&stream);
-    ret = grib_get_string(hand, self->stepType, stepType, &slen);
+    /*
+     grib_get_long(hand, type_ ,&type);
+     grib_get_long(hand, stream_ ,&stream);
+     */
+    ret = grib_get_string(hand, stepType_, stepType, &slen);
     Assert(ret == GRIB_SUCCESS);
 
     // eps = grib2_is_PDTN_EPS(productDefinitionTemplateNumber);
@@ -89,7 +89,7 @@ int grib_accessor_class_g2_aerosol_t::pack_long(grib_accessor* a, const long* va
         }
     }
 
-    if (self->optical) {
+    if (optical_) {
         // Note: There is no interval based template for optical properties of aerosol!
         if (eps)
             productDefinitionTemplateNumberNew = 49;
@@ -102,14 +102,14 @@ int grib_accessor_class_g2_aerosol_t::pack_long(grib_accessor* a, const long* va
     }
 
     if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
-        grib_set_long(hand, self->productDefinitionTemplateNumber, productDefinitionTemplateNumberNew);
-        // if (derivedForecast>=0) grib_set_long(hand, self->derivedForecast,derivedForecast);
+        grib_set_long(hand, productDefinitionTemplateNumber_, productDefinitionTemplateNumberNew);
+        // if (derivedForecast>=0) grib_set_long(hand, derivedForecast_ ,derivedForecast);
     }
 
     return 0;
 }
 
-int grib_accessor_class_g2_aerosol_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_g2_aerosol_t::value_count(long* count)
 {
     *count = 1;
     return 0;

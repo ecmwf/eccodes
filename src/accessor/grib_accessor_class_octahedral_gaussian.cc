@@ -10,21 +10,19 @@
 
 #include "grib_accessor_class_octahedral_gaussian.h"
 
-grib_accessor_class_octahedral_gaussian_t _grib_accessor_class_octahedral_gaussian{ "octahedral_gaussian" };
-grib_accessor_class* grib_accessor_class_octahedral_gaussian = &_grib_accessor_class_octahedral_gaussian;
+grib_accessor_octahedral_gaussian_t _grib_accessor_octahedral_gaussian{};
+grib_accessor* grib_accessor_octahedral_gaussian = &_grib_accessor_octahedral_gaussian;
 
-
-void grib_accessor_class_octahedral_gaussian_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_octahedral_gaussian_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_long_t::init(a, l, c);
-    grib_accessor_octahedral_gaussian_t* self = (grib_accessor_octahedral_gaussian_t*)a;
-    int n = 0;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_accessor_long_t::init(l, c);
+    int n             = 0;
+    grib_handle* hand = grib_handle_of_accessor(this);
 
-    self->N         = grib_arguments_get_name(hand, c, n++);
-    self->Ni        = grib_arguments_get_name(hand, c, n++);
-    self->plpresent = grib_arguments_get_name(hand, c, n++);
-    self->pl        = grib_arguments_get_name(hand, c, n++);
+    N_         = grib_arguments_get_name(hand, c, n++);
+    Ni_        = grib_arguments_get_name(hand, c, n++);
+    plpresent_ = grib_arguments_get_name(hand, c, n++);
+    pl_        = grib_arguments_get_name(hand, c, n++);
 }
 
 /* Returns 1 (=true) if input pl array is Octahedral, 0 otherwise.
@@ -70,19 +68,18 @@ static int is_pl_octahedral(const long pl[], size_t size)
     return 1; /* it's octahedral */
 }
 
-int grib_accessor_class_octahedral_gaussian_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_octahedral_gaussian_t::unpack_long(long* val, size_t* len)
 {
-    grib_accessor_octahedral_gaussian_t* self = (grib_accessor_octahedral_gaussian_t*)a;
     int ret = GRIB_SUCCESS;
     long Ni;
     long plpresent    = 0;
     long* pl          = NULL; /* pl array */
     size_t plsize     = 0;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_handle* hand = grib_handle_of_accessor(this);
 
-    grib_context* c = a->context;
+    grib_context* c = context_;
 
-    if ((ret = grib_get_long_internal(hand, self->Ni, &Ni)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, Ni_, &Ni)) != GRIB_SUCCESS)
         return ret;
 
     /* If Ni is not missing, then this is a plain gaussian grid and not reduced. */
@@ -92,14 +89,14 @@ int grib_accessor_class_octahedral_gaussian_t::unpack_long(grib_accessor* a, lon
         return GRIB_SUCCESS;
     }
 
-    if ((ret = grib_get_long_internal(hand, self->plpresent, &plpresent)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, plpresent_, &plpresent)) != GRIB_SUCCESS)
         return ret;
     if (!plpresent) {
         *val = 0; /* Not octahedral */
         return GRIB_SUCCESS;
     }
 
-    if ((ret = grib_get_size(hand, self->pl, &plsize)) != GRIB_SUCCESS)
+    if ((ret = grib_get_size(hand, pl_, &plsize)) != GRIB_SUCCESS)
         return ret;
     Assert(plsize); /* pl array must have at least one element */
 
@@ -107,7 +104,7 @@ int grib_accessor_class_octahedral_gaussian_t::unpack_long(grib_accessor* a, lon
     if (!pl) {
         return GRIB_OUT_OF_MEMORY;
     }
-    if ((ret = grib_get_long_array_internal(hand, self->pl, pl, &plsize)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_array_internal(hand, pl_, pl, &plsize)) != GRIB_SUCCESS)
         return ret;
 
     /* pl[0] is guaranteed to exist. Have already asserted previously */
@@ -117,7 +114,7 @@ int grib_accessor_class_octahedral_gaussian_t::unpack_long(grib_accessor* a, lon
     return ret;
 }
 
-int grib_accessor_class_octahedral_gaussian_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_octahedral_gaussian_t::pack_long(const long* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }

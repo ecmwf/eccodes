@@ -16,14 +16,12 @@
 class grib_accessor_abstract_vector_t : public grib_accessor_double_t
 {
 public:
-    /* Members defined in abstract_vector */
-    double* v;
-    int number_of_elements;
-};
-
-class grib_accessor_class_abstract_vector_t : public grib_accessor_class_double_t
-{
-public:
-    grib_accessor_class_abstract_vector_t(const char* name) : grib_accessor_class_double_t(name) {}
+    grib_accessor_abstract_vector_t() :
+        grib_accessor_double_t() { class_name_ = "abstract_vector"; }
     // grib_accessor* create_empty_accessor() override { return new grib_accessor_abstract_vector_t{}; }
+
+public:
+    // TODO(maee): make private
+    double* v_;
+    int number_of_elements_;
 };
