@@ -210,9 +210,10 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
             err = grib_get_string(h, keyName, keyValue, &len);
             if (err) return err;
             const char* sValue = grib_arguments_get_string(h, e->args, 1);
+            if (!sValue) return GRIB_INVALID_ARGUMENT;
             const bool case_sens = grib_arguments_get_long(h, e->args, 2) == 0; // 0=case-sensitive, 1=case-insensitive
             const bool contains = string_contains_case(keyValue, sValue, case_sens);
-            if (sValue && contains) {
+            if (contains) {
                 *lres = 1;
                 return GRIB_SUCCESS;
             }
