@@ -733,7 +733,7 @@ int grib_get_long_array_internal(grib_handle* h, const char* name, long* val, si
 int grib_get_long_array(const grib_handle* h, const char* name, long* val, size_t* length);
 int grib_set_values(grib_handle* h, grib_values* args, size_t count);
 int grib_get_nearest_smaller_value(grib_handle* h, const char* name, double val, double* nearest);
-void grib_print_values(const char* title, grib_values* values, FILE* out);
+void grib_print_values(const char* title, const grib_values* values, FILE* out, int count);
 int grib_values_check(grib_handle* h, grib_values* values, int count);
 int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type);
 int codes_compare_key(grib_handle* h1, grib_handle* h2, const char* key, int compare_flags);
