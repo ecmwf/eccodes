@@ -15,18 +15,15 @@
 class grib_accessor_data_g2simple_packing_with_preprocessing_t : public grib_accessor_data_g2simple_packing_t
 {
 public:
-    /* Members defined in data_g2simple_packing_with_preprocessing */
-    const char*  pre_processing;
-    const char*  pre_processing_parameter;
-};
-
-class grib_accessor_class_data_g2simple_packing_with_preprocessing_t : public grib_accessor_class_data_g2simple_packing_t
-{
-public:
-    grib_accessor_class_data_g2simple_packing_with_preprocessing_t(const char* name) : grib_accessor_class_data_g2simple_packing_t(name) {}
+    grib_accessor_data_g2simple_packing_with_preprocessing_t() :
+        grib_accessor_data_g2simple_packing_t() { class_name_ = "data_g2simple_packing_with_preprocessing"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_data_g2simple_packing_with_preprocessing_t{}; }
-    int pack_double(grib_accessor*, const double* val, size_t* len) override;
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_double(const double* val, size_t* len) override;
+    int unpack_double(double* val, size_t* len) override;
+    int value_count(long*) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* pre_processing_;
+    const char* pre_processing_parameter_;
 };

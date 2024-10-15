@@ -17,7 +17,7 @@ bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor, int co
 {
     bufr_descriptor* ret = accessor_bufr_elements_table_get_descriptor(tables_accessor, code, err);
     if (!silent && *err)
-        grib_context_log(tables_accessor->context, GRIB_LOG_ERROR,
+        grib_context_log(tables_accessor->context_, GRIB_LOG_ERROR,
                          "unable to get descriptor %06d from table", code);
     return ret;
 }

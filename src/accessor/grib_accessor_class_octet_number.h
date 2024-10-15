@@ -16,17 +16,14 @@
 class grib_accessor_octet_number_t : public grib_accessor_long_t
 {
 public:
-    /* Members defined in octet_number */
-    const char*                  left;
-    long                         right;
-};
-
-class grib_accessor_class_octet_number_t : public grib_accessor_class_long_t
-{
-public:
-    grib_accessor_class_octet_number_t(const char* name) : grib_accessor_class_long_t(name) {}
+    grib_accessor_octet_number_t() :
+        grib_accessor_long_t() { class_name_ = "octet_number"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_octet_number_t{}; }
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* left_;
+    long right_;
 };

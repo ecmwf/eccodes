@@ -91,15 +91,15 @@ int codes_bufr_keys_iterator_rewind(bufr_keys_iterator* ki)
 
 static int skip(bufr_keys_iterator* kiter)
 {
-    if (kiter->current->sub_section)
+    if (kiter->current->sub_section_)
         return 1;
 
-    if (kiter->current->flags & kiter->accessor_flags_skip) {
+    if (kiter->current->flags_ & kiter->accessor_flags_skip) {
         return 1;
     }
 
-    if (kiter->accessor_flags_only == (kiter->current->flags & kiter->accessor_flags_only)) {
-        mark_seen(kiter, kiter->current->name);
+    if (kiter->accessor_flags_only == (kiter->current->flags_ & kiter->accessor_flags_only)) {
+        mark_seen(kiter, kiter->current->name_);
         return 0;
     }
     else {
@@ -114,24 +114,24 @@ static int next_attribute(bufr_keys_iterator* kiter)
     if (!kiter->current)
         return 0;
     if (!kiter->attributes) {
-        kiter->attributes       = kiter->current->attributes;
+        kiter->attributes       = kiter->current->attributes_;
         kiter->prefix           = 0;
         kiter->i_curr_attribute = 0;
     }
     i_curr_attribute = kiter->i_curr_attribute - 1;
 
     while (kiter->i_curr_attribute < MAX_ACCESSOR_ATTRIBUTES && kiter->attributes[kiter->i_curr_attribute]) {
-        if ((kiter->attributes[kiter->i_curr_attribute]->flags & GRIB_ACCESSOR_FLAG_DUMP) != 0 && (kiter->attributes[kiter->i_curr_attribute]->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) == 0)
+        if ((kiter->attributes[kiter->i_curr_attribute]->flags_ & GRIB_ACCESSOR_FLAG_DUMP) != 0 && (kiter->attributes[kiter->i_curr_attribute]->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) == 0)
             break;
         kiter->i_curr_attribute++;
     }
 
     if (kiter->attributes[kiter->i_curr_attribute]) {
         if (!kiter->prefix) {
-            const size_t prefixLenMax = strlen(kiter->current->name) + 10;
-            kiter->prefix = (char*)grib_context_malloc_clear(kiter->current->context, prefixLenMax);
-            r             = (int*)grib_trie_get(kiter->seen, kiter->current->name);
-            snprintf(kiter->prefix, prefixLenMax, "#%d#%s", *r, kiter->current->name);
+            const size_t prefixLenMax = strlen(kiter->current->name_) + 10;
+            kiter->prefix = (char*)grib_context_malloc_clear(kiter->current->context_, prefixLenMax);
+            r             = (int*)grib_trie_get(kiter->seen, kiter->current->name_);
+            snprintf(kiter->prefix, prefixLenMax, "#%d#%s", *r, kiter->current->name_);
         }
         kiter->i_curr_attribute++;
         return 1;
@@ -141,18 +141,18 @@ static int next_attribute(bufr_keys_iterator* kiter)
         if (!kiter->prefix)
             return 0;
         if (!kiter->attributes[i_curr_attribute]) {
-            grib_context_free(kiter->current->context, kiter->prefix);
+            grib_context_free(kiter->current->context_, kiter->prefix);
             kiter->prefix = 0;
             return 0;
         }
-        prefix = (char*)grib_context_malloc_clear(kiter->current->context, strlen(kiter->prefix) + strlen(kiter->attributes[i_curr_attribute]->name) + 3);
+        prefix = (char*)grib_context_malloc_clear(kiter->current->context_, strlen(kiter->prefix) + strlen(kiter->attributes[i_curr_attribute]->name_) + 3);
         /*sprintf(prefix,"%s->%s",kiter->prefix,kiter->attributes[i_curr_attribute]->name);*/
         strcpy(prefix, kiter->prefix); /* strcpy and strcat here are much faster than sprintf */
         strcat(prefix, "->");
-        strcat(prefix, kiter->attributes[i_curr_attribute]->name);
-        grib_context_free(kiter->current->context, kiter->prefix);
+        strcat(prefix, kiter->attributes[i_curr_attribute]->name_);
+        grib_context_free(kiter->current->context_, kiter->prefix);
         kiter->prefix           = prefix;
-        kiter->attributes       = kiter->attributes[i_curr_attribute]->attributes;
+        kiter->attributes       = kiter->attributes[i_curr_attribute]->attributes_;
         kiter->i_curr_attribute = 0;
         return next_attribute(kiter);
     }
@@ -179,7 +179,7 @@ int codes_bufr_keys_iterator_next(bufr_keys_iterator* kiter)
             kiter->current    = kiter->current->next_accessor();
             kiter->attributes = 0;
             if (kiter->prefix) {
-                grib_context_free(kiter->current->context, kiter->prefix);
+                grib_context_free(kiter->current->context_, kiter->prefix);
                 kiter->prefix = 0;
             }
             kiter->i_curr_attribute = 0;
@@ -204,22 +204,22 @@ char* codes_bufr_keys_iterator_get_name(const bufr_keys_iterator* ckiter)
 
     if (kiter->prefix) {
         int iattribute = kiter->i_curr_attribute - 1;
-        ret            = (char*)grib_context_malloc_clear(c, strlen(kiter->prefix) + strlen(kiter->attributes[iattribute]->name) + 10);
+        ret            = (char*)grib_context_malloc_clear(c, strlen(kiter->prefix) + strlen(kiter->attributes[iattribute]->name_) + 10);
         /*sprintf(ret,"%s->%s",kiter->prefix,kiter->attributes[iattribute]->name);*/
         strcpy(ret, kiter->prefix); /* strcpy and strcat here are much faster than sprintf */
         strcat(ret, "->");
-        strcat(ret, kiter->attributes[iattribute]->name);
+        strcat(ret, kiter->attributes[iattribute]->name_);
     }
     else {
-        const size_t retMaxLen = strlen(kiter->current->name) + 10;
+        const size_t retMaxLen = strlen(kiter->current->name_) + 10;
         ret = (char*)grib_context_malloc_clear(c, retMaxLen);
 
-        if (kiter->current->flags & GRIB_ACCESSOR_FLAG_BUFR_DATA) {
-            r = (int*)grib_trie_get(kiter->seen, kiter->current->name);
-            snprintf(ret, retMaxLen, "#%d#%s", *r, kiter->current->name);
+        if (kiter->current->flags_ & GRIB_ACCESSOR_FLAG_BUFR_DATA) {
+            r = (int*)grib_trie_get(kiter->seen, kiter->current->name_);
+            snprintf(ret, retMaxLen, "#%d#%s", *r, kiter->current->name_);
         }
         else {
-            strcpy(ret, kiter->current->name);
+            strcpy(ret, kiter->current->name_);
         }
     }
 

@@ -17,8 +17,6 @@ grib_option grib_options[] = {
     { "d", 0, "Write different messages on files\n", 0, 1, 0 },
     { "T:", 0, 0, 1, 0, "T" }, /* GTS */
     { "c:", 0, 0, 0, 1, 0 },
-    { "S:", "start", "First field to be processed.\n", 0, 1, 0 },
-    { "E:", "end", "Last field to be processed.\n", 0, 1, 0 },
     { "a", 0, "-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n", 0, 1, 0 },
     /*{"R:",0,0,0,1,0},*/
     /*{"A:",0,0,0,1,0},*/
@@ -87,9 +85,6 @@ static int write_count  = 0;
 
 grib_handle* global_handle = NULL;
 int counter                = 0;
-int start                  = -1;
-int end                    = -1;
-
 
 static void write_message(grib_handle* h, const char* str)
 {
@@ -155,11 +150,6 @@ int grib_tool_init(grib_runtime_options* options)
     grib_context* context = grib_context_get_default();
 
     options->strict = 1;
-    if (grib_options_on("S:"))
-        start = atoi(grib_options_get_option("S:"));
-
-    if (grib_options_on("E:"))
-        end = atoi(grib_options_get_option("E:"));
 
     if (grib_options_on("f"))
         force = 1;
@@ -537,10 +527,6 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
                 return err2;
             break;
 
-        case GRIB_TYPE_DOUBLE:
-            Assert(!"GTS cannot contain keys of type DOUBLE");
-            break;
-
         case GRIB_TYPE_BYTES:
             // We do not want to compare the message itself
             return 0;
@@ -577,7 +563,7 @@ static int compare_all_dump_keys(grib_handle* h1, grib_handle* h2, grib_runtime_
 
         if (blocklisted(name))
             continue;
-        if (xa == NULL || (xa->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+        if (xa == NULL || (xa->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
             continue;
         if (compare_values(options, h1, h2, name, GRIB_TYPE_UNDEFINED)) {
             (*pErr)++;

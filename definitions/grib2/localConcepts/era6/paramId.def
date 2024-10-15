@@ -330,7 +330,6 @@
 	 parameterNumber = 59 ;
 	 constituentType = 3 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Accumulated Carbon Dioxide Gross Primary Production
 '228081' = {
@@ -339,7 +338,6 @@
 	 parameterNumber = 60 ;
 	 constituentType = 3 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Accumulated Carbon Dioxide Ecosystem Respiration
 '228082' = {
@@ -348,31 +346,27 @@
 	 parameterNumber = 61 ;
 	 constituentType = 3 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
-#Flux of Carbon Dioxide Net Ecosystem Exchange
+#Carbon dioxide net ecosystem exchange flux
 '228083' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 59 ;
 	 constituentType = 3 ;
-	 is_chemical = 1 ;
 	}
-#Flux of Carbon Dioxide Gross Primary Production
+#Carbon dioxide gross primary production flux
 '228084' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 60 ;
 	 constituentType = 3 ;
-	 is_chemical = 1 ;
 	}
-#Flux of Carbon Dioxide Ecosystem Respiration
+#Carbon dioxide ecosystem respiration flux
 '228085' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 61 ;
 	 constituentType = 3 ;
-	 is_chemical = 1 ;
 	}
 #Accumulated freezing rain
 '228216' = {
@@ -392,7 +386,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Time integrated, vertically integrated eastward ozone flux
+#Time-integrated total column vertically-integrated eastward ozone flux
 '233032' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -401,9 +395,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 constituentType = 0 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
-#Time integrated, vertically integrated northward ozone flux
+#Time-integrated total column vertically-integrated northward ozone flux
 '233033' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -412,9 +405,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 constituentType = 0 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
-#Time integrated, vertically integrated divergence of ozone flux
+#Time-integrated total column vertically-integrated divergence of ozone flux
 '233034' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -423,9 +415,8 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 constituentType = 0 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
-#Time integrated, vertically integrated net source of ozone
+#Time-integrated total column vertically-integrated net source of ozone
 '233035' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -434,34 +425,70 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 constituentType = 0 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
-#Mean carbon dioxide net ecosystem exchange flux
+#Time-mean carbon dioxide net ecosystem exchange flux
 '235062' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 59 ;
 	 constituentType = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
-	 is_chemical = 1 ;
 	}
-#Mean carbon dioxide gross primary production flux
+#Time-mean carbon dioxide gross primary production flux
 '235063' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 60 ;
 	 constituentType = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
-	 is_chemical = 1 ;
 	}
-#Mean carbon dioxide ecosystem respiration flux
+#Time-mean carbon dioxide ecosystem respiration flux
 '235064' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 61 ;
 	 constituentType = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
-	 is_chemical = 1 ;
+	}
+#Time-mean U component of wind
+'235131' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 200 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean U component of wind
+'235131' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 100 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean V component of wind
+'235132' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 200 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean V component of wind
+'235132' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 100 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean logarithm of surface pressure
 '235152' = {

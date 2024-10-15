@@ -11,6 +11,8 @@
 . ./include.ctest.sh
 
 label="grib_check_param_concepts_test"
+tempText=temp.$label.txt
+tempGrib=temp.$label.grib
 
 
 if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
@@ -18,10 +20,36 @@ if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
     exit 0
 fi
 
+check_grib_defs()
+{
+  CHECK_DEFS=$proj_dir/definitions/check_grib_defs.pl
+  if [ -x "$CHECK_DEFS" ]; then
+    # Now check the name.def, paramId.def, shortName.def... files
+    # in the current directory
+    $CHECK_DEFS
+  fi
+}
 
 #
 # Do various checks on the concepts files
 #
+
+# -----------------------------------
+echo "Check for duplicate encodings"
+# -----------------------------------
+paramIdFile=$ECCODES_DEFINITION_PATH/grib2/paramId.def
+# Flatten the file so we get just the encoding part.
+# uniq -d outputs a single copy of each line that is repeated in the input
+cat $paramIdFile | tr '\n' ' ' | tr '\t' ' ' | tr '#' '\n' | sed "s/^.* '//" | sed "s/'//" | awk '{$1="";print}' | sort |uniq -d > $tempText
+if [ -s "$tempText" ]; then
+    # File exists and has a size greater than zero
+    echo "ERROR: Duplicate parameter encoding(s) found in $paramIdFile" >&2
+    cat $tempText | sed -e 's/ ;/;/g'
+    exit 1
+else
+    echo "No duplicates in $paramIdFile"
+fi
+
 
 # First check the GRIB2 paramId.def and shortName.def
 # ----------------------------------------------------
@@ -55,8 +83,6 @@ if [ $status -ne 0 ]; then
   exit 0
 fi
 
-CHECK_DEFS=$ECCODES_DEFINITION_PATH/check_grib_defs.pl
-
 defs_dirs="
  $ECCODES_DEFINITION_PATH/grib1
  $ECCODES_DEFINITION_PATH/grib2
@@ -86,7 +112,7 @@ defs_dirs="
 
 for dir in $defs_dirs; do
   cd $dir
-  $CHECK_DEFS
+  check_grib_defs
 done
 
 cd $test_dir
@@ -108,7 +134,7 @@ cp $ECMF_DIR/name.legacy.def      name.def
 cp $ECMF_DIR/paramId.legacy.def   paramId.def
 cp $ECMF_DIR/shortName.legacy.def shortName.def
 cp $ECMF_DIR/units.legacy.def     units.def
-$CHECK_DEFS
+check_grib_defs
 cd $test_dir
 rm -fr $tempDir
 
@@ -127,7 +153,7 @@ cp $ECMF_DIR/name.legacy.def      name.def
 cp $ECMF_DIR/paramId.legacy.def   paramId.def
 cp $ECMF_DIR/shortName.legacy.def shortName.def
 cp $ECMF_DIR/units.legacy.def     units.def
-$CHECK_DEFS
+check_grib_defs
 cd $test_dir
 rm -fr $tempDir
 
@@ -148,6 +174,17 @@ for p in $pids; do
 done
 set -e
 
+
+# -------------------------------
+echo "ECC-1932"
+# -------------------------------
+sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+${tools_dir}/grib_set -s centre=egrr,indicatorOfParameter=167 $sample1 $tempGrib
+grib_check_key_equals $tempGrib cfVarName t2m
+rm -f $tempGrib
+
+
+rm -f $tempText $tempGrib
 
 cd $test_dir
 rm -fr $tempDir

@@ -44,20 +44,17 @@ typedef struct grib_action_section {
 
 
 static grib_action_class _grib_action_class_section = {
-    0,                              /* super                     */
-    "action_class_section",                              /* name                      */
-    sizeof(grib_action_section),            /* size                      */
-    0,                                   /* inited */
+    0,                              /* super */
+    "action_class_section",                 /* name */
+    sizeof(grib_action_section),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     0,                            /* destroy */
-
-    0,                               /* dump                      */
-    0,                               /* xref                      */
-
-    0,             /* create_accessor*/
-
-    &notify_change,                            /* notify_change */
+    0,                               /* dump */
+    0,                               /* xref */
+    0,                    /* create_accessor */
+    &notify_change,                      /* notify_change */
     0,                            /* reparse */
     0,                            /* execute */
 };
@@ -76,7 +73,7 @@ static void init_class(grib_action_class* c)
 //     while(a)
 //     {
 //       Assert(grib_handle_of_accessor(a) == h);
-//       check_sections(a->sub_section,h);
+//       check_sections(a->sub_section_,h);
 //       a = a->next;
 //     }
 // }
@@ -103,11 +100,11 @@ static int notify_change(grib_action* act, grib_accessor* notified,
         }
         grib_context_log(h->context,
                          GRIB_LOG_DEBUG, "------------- SECTION action %s (%s) is triggered by [%s]%s",
-                         act->name, notified->name, changed->name, debug_str);
+                         act->name, notified->name_, changed->name_, debug_str);
     }
 
     la          = grib_action_reparse(act, notified, &doit);
-    old_section = notified->sub_section;
+    old_section = notified->sub_section_;
     if (!old_section) return GRIB_INTERNAL_ERROR;
 
     Assert(old_section->h == h);
@@ -123,14 +120,14 @@ static int notify_change(grib_action* act, grib_accessor* notified,
     if (!doit) {
         if (la != NULL || old_section->branch != NULL)
             if (la == old_section->branch) {
-                grib_context_log(h->context, GRIB_LOG_DEBUG, "IGNORING TRIGGER action %s (%s) is triggered %p", act->name, notified->name, (void*)la);
+                grib_context_log(h->context, GRIB_LOG_DEBUG, "IGNORING TRIGGER action %s (%s) is triggered %p", act->name, notified->name_, (void*)la);
                 return GRIB_SUCCESS;
             }
     }
 
     loader.list_is_resized = (la == old_section->branch);
 
-    if (!strcmp(changed->name, "GRIBEditionNumber"))
+    if (!strcmp(changed->name_, "GRIBEditionNumber"))
         loader.changing_edition = 1;
     else
         loader.changing_edition = 0;
@@ -159,7 +156,7 @@ static int notify_change(grib_action* act, grib_accessor* notified,
     h->kid             = tmp_handle;
     /* printf("tmp_handle- main %p %p\n",(void*)tmp_handle,(void*)h); */
 
-    grib_context_log(h->context, GRIB_LOG_DEBUG, "------------- CREATE TMP BLOCK act=%s notified=%s", act->name, notified->name);
+    grib_context_log(h->context, GRIB_LOG_DEBUG, "------------- CREATE TMP BLOCK act=%s notified=%s", act->name, notified->name_);
     tmp_handle->root = grib_section_create(tmp_handle, NULL);
 
     tmp_handle->use_trie = 1;
@@ -198,7 +195,7 @@ static int notify_change(grib_action* act, grib_accessor* notified,
 
     Assert(tmp_handle->root->block->first != NULL);
     grib_swap_sections(old_section,
-                       tmp_handle->root->block->first->sub_section);
+                       tmp_handle->root->block->first->sub_section_);
 
     Assert(tmp_handle->dependencies == NULL);
     /* printf("grib_handle_delete %p\n",(void*)tmp_handle); */

@@ -153,6 +153,22 @@ input=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
 ECCODES_DEBUG=1 ${tools_dir}/grib_get_data $input > $tempText 2>&1
 grep "global num points=6114" $tempText
 
+# Bad -s
+set +e
+${tools_dir}/grib_get_data -s blah=999 $data_dir/sample.grib2 > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Key/value not found" $tempText
+
+# Bad -p
+set +e
+${tools_dir}/grib_get_data -f -p values $data_dir/sample.grib2 > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Passed array is too small" $tempText
+
 
 # Clean up
 rm -f $tempText $tempGrib

@@ -8,3 +8,4 @@
 'eORCA12'   = { numberOfGridUsed = 7; }
 'CORE2'     = { numberOfGridUsed = 8; }
 'NG5'       = { numberOfGridUsed = 9; }
+'DART'      = { numberOfGridUsed = 10; }

@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "eccodes.h"
 
 /* Windows always has a colon in pathnames e.g. C:\temp\file. So instead we use semi-colons as delimiter */
 /* in order to have multiple definitions/samples directories */
@@ -32,6 +33,7 @@ int main(int argc, char** argv)
     sample_name = argv[1];
     new_dir     = argv[2]; /* The directory containing the given sample */
 
+    codes_context_set_debug(c, -1);
     printf("Initial samples path = %s\n", grib_samples_path(c));
 
     /* Should fail - default samples path does not include ifs_samples dirs */
@@ -40,7 +42,9 @@ int main(int argc, char** argv)
 
     snprintf(full_path, 2048, "%s%c%s", new_dir, ECC_PATH_DELIMITER_CHAR, grib_samples_path(c));
     printf("Change samples_path to: %s\n", full_path);
-    grib_context_set_samples_path(c, full_path);
+    codes_context_set_samples_path(c, full_path);
+
+    codes_context_set_debug(c, 0);
 
     h = grib_handle_new_from_samples(c, sample_name);
     Assert(h);

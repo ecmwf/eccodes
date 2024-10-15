@@ -2765,6 +2765,35 @@
     call grib_skip_read_only(iterid, status)
   end subroutine codes_skip_read_only
 
+  subroutine codes_skip_function(iterid, status)
+    integer(kind=kindOfInt), intent(in)  :: iterid
+    integer(kind=kindOfInt), optional, intent(out) :: status
+
+    call grib_skip_function(iterid, status)
+  end subroutine codes_skip_function
+
+  subroutine codes_skip_edition_specific(iterid, status)
+    integer(kind=kindOfInt), intent(in)  :: iterid
+    integer(kind=kindOfInt), optional, intent(out) :: status
+
+    call grib_skip_edition_specific(iterid, status)
+  end subroutine codes_skip_edition_specific
+
+
+  !> Set debug mode
+  subroutine codes_set_debug(dmode)
+    integer(kind=kindOfInt), intent(in) :: dmode
+    call grib_set_debug(dmode)
+  end subroutine codes_set_debug
+
+  !> Set data quality check value (0, 1 or 2)
+  subroutine codes_set_data_quality_checks(val)
+    integer(kind=kindOfInt), intent(in) :: val
+    call grib_set_data_quality_checks(val)
+  end subroutine codes_set_data_quality_checks
+
+
+
   !> Set the definition path
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will

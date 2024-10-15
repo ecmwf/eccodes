@@ -11,27 +11,23 @@
 
 #include "grib_accessor_class_size.h"
 
-grib_accessor_class_size_t _grib_accessor_class_size{ "size" };
-grib_accessor_class* grib_accessor_class_size = &_grib_accessor_class_size;
+grib_accessor_size_t _grib_accessor_size{};
+grib_accessor* grib_accessor_size = &_grib_accessor_size;
 
-
-void grib_accessor_class_size_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_size_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_long_t::init(a, l, c);
-    grib_accessor_size_t* self = (grib_accessor_size_t*)a;
-    self->accessor             = grib_arguments_get_name(grib_handle_of_accessor(a), c, 0);
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
-    a->length = 0;
+    grib_accessor_long_t::init(l, c);
+    accessor_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, 0);
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
+    length_ = 0;
 }
 
-int grib_accessor_class_size_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_size_t::unpack_long(long* val, size_t* len)
 {
-    grib_accessor_size_t* self = (grib_accessor_size_t*)a;
-
     size_t size = 0;
-    int ret = grib_get_size(grib_handle_of_accessor(a), self->accessor, &size);
-    *val    = (long)size;
-    *len    = 1;
+    int ret     = grib_get_size(grib_handle_of_accessor(this), accessor_, &size);
+    *val        = (long)size;
+    *len        = 1;
     return ret;
 }

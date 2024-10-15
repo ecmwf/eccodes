@@ -61,5 +61,10 @@ for s in $g2_samples; do
     grib_check_key_equals $sf "edition,packingType" "2 grid_ccsds"
 done
 
+# Test dump_bits
+sample_polar="$ECCODES_SAMPLES_PATH/polar_stereographic_pl_grib2.tmpl"
+${tools_dir}/grib_dump $sample_polar > $temp
+grep -q "resolutionAndComponentFlags" $temp
 
+# Clean up
 rm -f $temp

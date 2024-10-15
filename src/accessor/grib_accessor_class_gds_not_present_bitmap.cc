@@ -10,36 +10,32 @@
 
 #include "grib_accessor_class_gds_not_present_bitmap.h"
 
-grib_accessor_class_gds_not_present_bitmap_t _grib_accessor_class_gds_not_present_bitmap{ "gds_not_present_bitmap" };
-grib_accessor_class* grib_accessor_class_gds_not_present_bitmap = &_grib_accessor_class_gds_not_present_bitmap;
+grib_accessor_gds_not_present_bitmap_t _grib_accessor_gds_not_present_bitmap{};
+grib_accessor* grib_accessor_gds_not_present_bitmap = &_grib_accessor_gds_not_present_bitmap;
 
-
-void grib_accessor_class_gds_not_present_bitmap_t::init(grib_accessor* a, const long v, grib_arguments* args)
+void grib_accessor_gds_not_present_bitmap_t::init(const long v, grib_arguments* args)
 {
-    grib_accessor_class_gen_t::init(a, v, args);
-    int n                                        = 0;
-    grib_accessor_gds_not_present_bitmap_t* self = (grib_accessor_gds_not_present_bitmap_t*)a;
-    grib_handle* hand                            = grib_handle_of_accessor(a);
+    grib_accessor_gen_t::init(v, args);
+    int n             = 0;
+    grib_handle* hand = grib_handle_of_accessor(this);
 
-    self->missing_value           = grib_arguments_get_name(hand, args, n++);
-    self->number_of_values        = grib_arguments_get_name(hand, args, n++);
-    self->number_of_points        = grib_arguments_get_name(hand, args, n++);
-    self->latitude_of_first_point = grib_arguments_get_name(hand, args, n++);
-    self->ni                      = grib_arguments_get_name(hand, args, n++);
-    a->length                     = 0;
+    missing_value_           = grib_arguments_get_name(hand, args, n++);
+    number_of_values_        = grib_arguments_get_name(hand, args, n++);
+    number_of_points_        = grib_arguments_get_name(hand, args, n++);
+    latitude_of_first_point_ = grib_arguments_get_name(hand, args, n++);
+    ni_                      = grib_arguments_get_name(hand, args, n++);
+    length_                  = 0;
 }
 
-int grib_accessor_class_gds_not_present_bitmap_t::value_count(grib_accessor* a, long* number_of_points)
+int grib_accessor_gds_not_present_bitmap_t::value_count(long* number_of_points)
 {
-    grib_accessor_gds_not_present_bitmap_t* self = (grib_accessor_gds_not_present_bitmap_t*)a;
-    *number_of_points                            = 0;
-    return grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_points, number_of_points);
+    *number_of_points = 0;
+    return grib_get_long_internal(grib_handle_of_accessor(this), number_of_points_, number_of_points);
 }
 
-int grib_accessor_class_gds_not_present_bitmap_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+int grib_accessor_gds_not_present_bitmap_t::unpack_double(double* val, size_t* len)
 {
-    grib_accessor_gds_not_present_bitmap_t* self = (grib_accessor_gds_not_present_bitmap_t*)a;
-    grib_handle* hand                            = grib_handle_of_accessor(a);
+    grib_handle* hand = grib_handle_of_accessor(this);
 
     long number_of_points = 0, number_of_values = 0, ni = 0;
     long latitude_of_first_point = 0;
@@ -49,24 +45,24 @@ int grib_accessor_class_gds_not_present_bitmap_t::unpack_double(grib_accessor* a
     long missing_value;
 
     double* coded_vals = NULL;
-    int err            = a->value_count(&nn);
+    int err            = value_count(&nn);
     n_vals             = nn;
     if (err)
         return err;
 
-    if ((err = grib_get_long(hand, self->number_of_points, &number_of_points)) != GRIB_SUCCESS)
+    if ((err = grib_get_long(hand, number_of_points_, &number_of_points)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long(hand, self->number_of_values, &number_of_values)) != GRIB_SUCCESS)
+    if ((err = grib_get_long(hand, number_of_values_, &number_of_values)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long(hand, self->latitude_of_first_point, &latitude_of_first_point)) != GRIB_SUCCESS)
+    if ((err = grib_get_long(hand, latitude_of_first_point_, &latitude_of_first_point)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long(hand, self->missing_value, &missing_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_long(hand, missing_value_, &missing_value)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long(hand, self->ni, &ni)) != GRIB_SUCCESS)
+    if ((err = grib_get_long(hand, ni_, &ni)) != GRIB_SUCCESS)
         return err;
 
     if (*len < number_of_points) {
@@ -75,7 +71,7 @@ int grib_accessor_class_gds_not_present_bitmap_t::unpack_double(grib_accessor* a
     }
 
     if (number_of_values > 0) {
-        coded_vals = (double*)grib_context_malloc(a->context, number_of_values * sizeof(double));
+        coded_vals = (double*)grib_context_malloc(context_, number_of_values * sizeof(double));
 
         if (coded_vals == NULL)
             return GRIB_OUT_OF_MEMORY;
@@ -96,18 +92,18 @@ int grib_accessor_class_gds_not_present_bitmap_t::unpack_double(grib_accessor* a
 
     *len = number_of_points;
 
-    grib_context_free(a->context, coded_vals);
+    grib_context_free(context_, coded_vals);
     return err;
 }
 
-int grib_accessor_class_gds_not_present_bitmap_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+int grib_accessor_gds_not_present_bitmap_t::pack_double(const double* val, size_t* len)
 {
-    // See deprecated/grib_accessor_class_gds_not_present_bitmap.cc for
+    // See deprecated/grib_accessor_gds_not_present_bitmap.cc for
     // a possible implementation
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_class_gds_not_present_bitmap_t::get_native_type(grib_accessor* a)
+long grib_accessor_gds_not_present_bitmap_t::get_native_type()
 {
     return GRIB_TYPE_DOUBLE;
 }

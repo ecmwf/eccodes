@@ -367,8 +367,8 @@ int grib_tool_init(grib_runtime_options* options)
         options->tolerance_count = MAX_KEYS;
         ret = parse_keyval_string(tool_name, sarg, 1, GRIB_TYPE_DOUBLE, options->tolerance, &(options->tolerance_count));
         if (ret == GRIB_INVALID_ARGUMENT) {
+            fprintf(stderr, "%s: Invalid argument for -R\n",tool_name);
             usage();
-            exit(1);
         }
     }
 
@@ -647,9 +647,9 @@ static int test_bit(long a, long b)
 /* If the accessor represents a codeflag key, then return its binary rep in 'result' */
 static int codeflag_to_bitstr(grib_accessor* a, long val, char* result)
 {
-    if (a && grib_inline_strcmp(a->cclass->name, "codeflag") == 0) {
+    if (a && grib_inline_strcmp(a->class_name_, "codeflag") == 0) {
         long i;
-        const long bytelen = a->length * 8;
+        const long bytelen = a->length_ * 8;
         for (i = 0; i < bytelen; i++) {
             if (test_bit(val, bytelen - i - 1))
                 *result = '1';

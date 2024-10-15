@@ -143,8 +143,8 @@ static int compute_gaussian_latitudes(long trunc, double* lats)
         lats[nlat - 1 - jlat] = -lats[jlat];
     }
 
-    if (nlat != (trunc * 2))
-        lats[trunc + 1] = 0.0;
+    //if (nlat != (trunc * 2))
+    //    lats[trunc + 1] = 0.0;
     return GRIB_SUCCESS;
 }
 

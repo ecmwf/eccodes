@@ -18,6 +18,7 @@
    START_CLASS_DEF
    CLASS      = action
    IMPLEMENTS = destroy;execute
+   IMPLEMENTS = create_accessor
    MEMBERS    = char *name
    MEMBERS    = char *outname
    END_CLASS_DEF
@@ -36,6 +37,7 @@ or edit "action.class" and rerun ./make_class.pl
 
 static void init_class      (grib_action_class*);
 static void destroy         (grib_context*,grib_action*);
+static int create_accessor(grib_section*,grib_action*,grib_loader*);
 static int execute(grib_action* a,grib_handle* h);
 
 
@@ -48,20 +50,17 @@ typedef struct grib_action_print {
 
 
 static grib_action_class _grib_action_class_print = {
-    0,                              /* super                     */
-    "action_class_print",                              /* name                      */
-    sizeof(grib_action_print),            /* size                      */
-    0,                                   /* inited */
+    0,                              /* super */
+    "action_class_print",                 /* name */
+    sizeof(grib_action_print),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     &destroy,                            /* destroy */
-
-    0,                               /* dump                      */
-    0,                               /* xref                      */
-
-    0,             /* create_accessor*/
-
-    0,                            /* notify_change */
+    0,                               /* dump */
+    0,                               /* xref */
+    &create_accessor,                    /* create_accessor */
+    0,                      /* notify_change */
     0,                            /* reparse */
     &execute,                            /* execute */
 };
@@ -143,4 +142,22 @@ static void destroy(grib_context* context, grib_action* act)
     grib_context_free_persistent(context, a->name);
     grib_context_free_persistent(context, act->name);
     grib_context_free_persistent(context, act->op);
+}
+
+static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
+{
+    // ECC-1929: A print statement within the definitions does not
+    // actually create an accessor. So we just run it
+    grib_action_print* self = (grib_action_print*)act;
+
+    const int err = execute(act, p->h);
+    if (err)
+        grib_context_log(act->context, GRIB_LOG_ERROR, "Print: '%s' (%s)", self->name, grib_get_error_message(err));
+    return err;
+
+    // We may want to be forgiving and ignore the error
+    // if (act->context->debug) {
+    //     return err;
+    // }
+    // return GRIB_SUCCESS;
 }

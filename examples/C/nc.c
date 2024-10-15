@@ -9,7 +9,7 @@
  */
 #include "eccodes.h"
 
-void usage(char* prog)
+void usage(const char* prog)
 {
     printf("usage: %s in.nc\n", prog);
     exit(1);

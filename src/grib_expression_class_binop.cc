@@ -42,7 +42,7 @@ or edit "expression.class" and rerun ./make_class.pl
 typedef const char* string; /* to keep make_class.pl happy */
 
 static void    destroy(grib_context*,grib_expression* e);
-static void    print(grib_context*,grib_expression*,grib_handle*, FILE*);
+static void    print(grib_context*, grib_expression*, grib_handle*, FILE*);
 static void    add_dependency(grib_expression* e, grib_accessor* observer);
 static int     native_type(grib_expression*,grib_handle*);
 static int     evaluate_long(grib_expression*,grib_handle*,long*);
@@ -60,12 +60,12 @@ typedef struct grib_expression_binop{
 
 
 static grib_expression_class _grib_expression_class_binop = {
-    0,                    /* super                     */
-    "binop",                    /* name                      */
-    sizeof(grib_expression_binop),/* size of instance        */
+    0,                      /* super */
+    "binop",                      /* name  */
+    sizeof(grib_expression_binop),/* size of instance */
     0,                           /* inited */
-    0,                     /* constructor               */
-    &destroy,                  /* destructor                */
+    0,                       /* constructor */
+    &destroy,                    /* destructor */
     &print,
     &add_dependency,
     &native_type,
@@ -85,7 +85,6 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
     long v2 = 0;
     grib_expression_binop* e = (grib_expression_binop*)g;
 
-// #if DEBUGGING
 //     {
 //         int typeLeft, typeRight;
 //         const char* nameLeft;
@@ -117,7 +116,6 @@ static int evaluate_double(grib_expression* g, grib_handle* h, double* dres)
     double v2 = 0.0;
     grib_expression_binop* e = (grib_expression_binop*)g;
 
-// #if DEBUGGING
 //     {
 //         int typeLeft, typeRight;
 //         const char* nameLeft;

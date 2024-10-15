@@ -16,21 +16,18 @@
 class grib_accessor_g1date_t : public grib_accessor_long_t
 {
 public:
-    /* Members defined in g1date */
-    const char* century;
-    const char* year;
-    const char* month;
-    const char* day;
-};
-
-class grib_accessor_class_g1date_t : public grib_accessor_class_long_t
-{
-public:
-    grib_accessor_class_g1date_t(const char* name) : grib_accessor_class_long_t(name) {}
+    grib_accessor_g1date_t() :
+        grib_accessor_long_t() { class_name_ = "g1date"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_g1date_t{}; }
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    int unpack_string(char*, size_t* len) override;
+    int value_count(long*) override;
+    void init(const long, grib_arguments*) override;
+
+protected:
+    const char* century_;
+    const char* year_;
+    const char* month_;
+    const char* day_;
 };

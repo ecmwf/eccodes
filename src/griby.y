@@ -274,14 +274,14 @@ all: empty        { grib_parser_all_actions = 0;grib_parser_concept=0;
 empty:;
 
 
-dvalues:  FLOAT  { $$=grib_darray_push(grib_parser_context,0,$1);}
-    |  dvalues ',' FLOAT { $$=grib_darray_push(grib_parser_context,$1,$3);}
-    |  INTEGER { $$=grib_darray_push(grib_parser_context,0,$1);}
-    |  dvalues ',' INTEGER { $$=grib_darray_push(grib_parser_context,$1,$3);}
+dvalues:  FLOAT  { $$=grib_darray_push(0,$1);}
+    |  dvalues ',' FLOAT { $$=grib_darray_push($1,$3);}
+    |  INTEGER { $$=grib_darray_push(0,$1);}
+    |  dvalues ',' INTEGER { $$=grib_darray_push($1,$3);}
    ;
 
-svalues: STRING { $$=grib_sarray_push(grib_parser_context,0,$1);}
-    |  svalues ',' STRING { $$=grib_sarray_push(grib_parser_context,$1,$3);}
+svalues: STRING { $$=grib_sarray_push(0,$1);}
+    |  svalues ',' STRING { $$=grib_sarray_push($1,$3);}
     ;
 
 
@@ -703,13 +703,17 @@ trigger_block: TRIGGER '(' argument_list ')' '{' instructions '}' { $$ = grib_ac
 
 concept_block: CONCEPT IDENT '{' concept_list '}' flags { $$ = grib_action_create_concept(grib_parser_context,$2,$4,0,0,0,0,0,0,$6,0);  free($2); }
    | CONCEPT IDENT '(' IDENT ')' '{' concept_list '}' flags { $$ = grib_action_create_concept(grib_parser_context,$2,$7,0,0,$4,0,0,0,$9,0);  free($2);free($4); }
-   | CONCEPT IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags { $$ = grib_action_create_concept(grib_parser_context,$2,0,$6,0,$4,$8,$10,0,$12,0);  free($2);free($6);free($4);free($8);free($10); }
+   | CONCEPT IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags { $$ = grib_action_create_concept(grib_parser_context,$2,0,$6,0,$4,$8,$10,0,$12,0); free($2);free($6);free($4);free($8);free($10); }
+   | CONCEPT IDENT '(' IDENT ',' IDENT  ',' IDENT ',' IDENT ')' flags { $$ = grib_action_create_concept(grib_parser_context,$2,0,$6,0,$4,$8,$10,0,$12,0); free($2);free($6);free($4);free($8);free($10); }
    | CONCEPT IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ',' IDENT ')' flags { $$ = grib_action_create_concept(grib_parser_context,$2,0,$6,0,$4,$8,$10,$12,$14,0);  free($2);free($6);free($4);free($8);free($10);free($12); }
    | CONCEPT IDENT '(' IDENT ',' STRING ',' IDENT ')' flags { $$ = grib_action_create_concept(grib_parser_context,$2,0,$6,0,$4,$8,0,0,$10,0);  free($2);free($6);free($4);free($8); }
+
    | CONCEPT IDENT '.' IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags { $$ = grib_action_create_concept(grib_parser_context,$4,0,$8,$2,$6,$10,$12,0,$14,0);  free($4);free($8);free($6);free($10); free($12); free($2);}
+   | CONCEPT IDENT '.' IDENT '(' IDENT ',' IDENT  ',' IDENT ',' IDENT ')' flags { $$ = grib_action_create_concept(grib_parser_context,$4,0,$8,$2,$6,$10,$12,0,$14,0);  free($4);free($8);free($6);free($10); free($12); free($2);}
    | CONCEPT IDENT '.' IDENT '(' IDENT ',' STRING ',' IDENT ')' flags { $$ = grib_action_create_concept(grib_parser_context,$4,0,$8,$2,$6,$10,0,0,$12,0);  free($4);free($8);free($6);free($10); free($2);}
    | CONCEPT IDENT '.' IDENT '{' concept_list '}' flags { $$ = grib_action_create_concept(grib_parser_context,$4,$6,0,$2,0,0,0,0,$8,0);  free($2);free($4); }
    | CONCEPT IDENT '.' IDENT '(' IDENT ')' '{' concept_list '}' flags { $$ = grib_action_create_concept(grib_parser_context,$4,$9,0,$2,$6,0,0,0,$11,0);  free($2);free($4);free($6); }
+
    | CONCEPT_NOFAIL IDENT '{' concept_list '}' flags { $$ = grib_action_create_concept(grib_parser_context,$2,$4,0,0,0,0,0,0,$6,1);  free($2); }
    | CONCEPT_NOFAIL IDENT '(' IDENT ')' '{' concept_list '}' flags { $$ = grib_action_create_concept(grib_parser_context,$2,$7,0,0,$4,0,0,0,$9,1);  free($2);free($4); }
    | CONCEPT_NOFAIL IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags { $$ = grib_action_create_concept(grib_parser_context,$2,0,$6,0,$4,$8,$10,0,$12,1);  free($2);free($6);free($4);free($8);free($10); }
@@ -766,9 +770,9 @@ concept_condition: IDENT '=' expression ';' { $$ = grib_concept_condition_new(gr
 
 
 hash_array_value:  STRING '=' '[' integer_array ']' {
-	  				$$ = grib_integer_hash_array_value_new(grib_parser_context,$1,$4); free($1);}
+	  				$$ = grib_integer_hash_array_value_new($1,$4); free($1);}
   				| IDENT '=' '[' integer_array ']' {
-	  				$$ = grib_integer_hash_array_value_new(grib_parser_context,$1,$4); free($1);}
+	  				$$ = grib_integer_hash_array_value_new($1,$4); free($1);}
         ;
 
 string_or_ident: SUBSTR '(' IDENT ',' INTEGER ',' INTEGER ')' { $$ = new_accessor_expression(grib_parser_context,$3,$5,$7); free($3); }

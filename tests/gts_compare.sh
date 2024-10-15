@@ -31,6 +31,8 @@ echo "Test: comparing the same files" >> $fLog
 echo "file: $gts_file" >> $fLog
 ${tools_dir}/gts_compare $gts_file $gts_file
 
+${tools_dir}/gts_compare -v -c totalLength $gts_file $gts_file > /dev/null
+
 #----------------------------------------------------
 # Test: comparing with skip
 #----------------------------------------------------
@@ -69,6 +71,7 @@ set -e
 [ $status -eq 1 ]
 # Add correct blocklist
 ${tools_dir}/gts_compare -b GG $gts_file $fGtsTmp
+${tools_dir}/gts_compare -b CCCC,GG $gts_file $fGtsTmp
 
 #----------------------------------------------------
 # Compare using -c
@@ -82,13 +85,13 @@ ${tools_dir}/gts_compare -c theMessage $temp1 $temp2
 ${tools_dir}/gts_compare -c theMessage -a $temp1 $temp2
 
 set +e
-${tools_dir}/gts_compare -c ls:n $temp1 $temp2
+${tools_dir}/gts_compare -c ls:n $temp1 $temp2 > /dev/null
 status=$?
 set -e
 [ $status -eq 1 ]
 
 set +e
-${tools_dir}/gts_compare -c ls:n -a $temp1 $temp2
+${tools_dir}/gts_compare -c ls:n -a $temp1 $temp2 > /dev/null
 status=$?
 set -e
 [ $status -eq 1 ]

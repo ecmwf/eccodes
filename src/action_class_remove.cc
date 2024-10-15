@@ -49,20 +49,17 @@ typedef struct grib_action_remove {
 
 
 static grib_action_class _grib_action_class_remove = {
-    0,                              /* super                     */
-    "action_class_remove",                              /* name                      */
-    sizeof(grib_action_remove),            /* size                      */
-    0,                                   /* inited */
+    0,                              /* super */
+    "action_class_remove",                 /* name */
+    sizeof(grib_action_remove),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     &destroy,                            /* destroy */
-
-    &dump,                               /* dump                      */
-    0,                               /* xref                      */
-
-    &create_accessor,             /* create_accessor*/
-
-    0,                            /* notify_change */
+    &dump,                               /* dump */
+    0,                               /* xref */
+    &create_accessor,                    /* create_accessor */
+    0,                      /* notify_change */
     0,                            /* reparse */
     0,                            /* execute */
 };
@@ -96,10 +93,10 @@ static void remove_accessor(grib_accessor* a)
 
     if (!a || !a->previous_)
         return;
-    s = a->parent;
+    s = a->parent_;
 
-    if (grib_handle_of_accessor(a)->use_trie && *(a->all_names[0]) != '_') {
-        id = grib_hash_keys_get_id(a->context->keys, a->all_names[0]);
+    if (grib_handle_of_accessor(a)->use_trie && *(a->all_names_[0]) != '_') {
+        id = grib_hash_keys_get_id(a->context_->keys, a->all_names_[0]);
         grib_handle_of_accessor(a)->accessors[id] = NULL;
     }
 

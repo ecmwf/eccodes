@@ -815,13 +815,14 @@ int grib_get_float_elements(const grib_handle* h, const char* key, const int* in
  *  Get a string value from a key, if several keys of the same name are present, the last one is returned
  * @see  grib_set_string
  *
- * @param h           : the handle to get the data from
- * @param key         : the key to be searched
- * @param mesg       : the address of a string where the data will be retrieved
- * @param length      : the address of a size_t that contains allocated length of the string on input, and that contains the actual length of the string on output
- * @return            0 if OK, integer value on error
+ * @param h        : the handle to get the data from
+ * @param key      : the key to be searched
+ * @param value    : the address of a string where the data will be retrieved
+ * @param length   : the address of a size_t that contains allocated length of the string on input,
+ *                   and that contains the actual length of the string on output
+ * @return         0 if OK, integer value on error
  */
-int grib_get_string(const grib_handle* h, const char* key, char* mesg, size_t* length);
+int grib_get_string(const grib_handle* h, const char* key, char* value, size_t* length);
 
 /**
  *  Get string array values from a key. If several keys of the same name are present, the last one is returned
@@ -912,11 +913,12 @@ int grib_set_double(grib_handle* h, const char* key, double val);
  *
  * @param h           : the handle to set the data to
  * @param key         : the key to be searched
- * @param mesg       : the address of a string where the data will be read
- * @param length      : the address of a size_t that contains the length of the string on input, and that contains the actual packed length of the string on output
+ * @param value       : the address of a string where the data will be read
+ * @param length      : the address of a size_t that contains the length of the string on input,
+ *                      and that contains the actual packed length of the string on output
  * @return            0 if OK, integer value on error
  */
-int grib_set_string(grib_handle* h, const char* key, const char* mesg, size_t* length);
+int grib_set_string(grib_handle* h, const char* key, const char* value, size_t* length);
 
 /**
  *  Set a bytes array from a key. If several keys of the same name are present, the last one is set
@@ -1143,7 +1145,7 @@ void grib_gribex_mode_on(grib_context* c);
  *
  * @param c           : the context
  */
-int grib_get_gribex_mode(grib_context* c);
+int grib_get_gribex_mode(const grib_context* c);
 
 /**
  *  Set the GRIBEX mode off.
@@ -1168,6 +1170,9 @@ void grib_context_set_definitions_path(grib_context* c, const char* path);
  * @param path   : the search path for sample files
  */
 void grib_context_set_samples_path(grib_context* c, const char* path);
+
+void grib_context_set_debug(grib_context* c, int mode);
+void grib_context_set_data_quality_checks(grib_context* c, int val);
 
 /**
  *  Sets memory procedures of the context
@@ -1256,6 +1261,8 @@ long grib_get_api_version(void);
  *  @return character string with SHA1 identifier
  */
 const char* grib_get_git_sha1(void);
+
+const char* grib_get_git_branch(void);
 
 /**
  *  Get the package name

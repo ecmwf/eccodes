@@ -10,33 +10,30 @@
 
 #include "grib_accessor_class_g1end_of_interval_monthly.h"
 
-grib_accessor_class_g1end_of_interval_monthly_t _grib_accessor_class_g1end_of_interval_monthly{ "g1end_of_interval_monthly" };
-grib_accessor_class* grib_accessor_class_g1end_of_interval_monthly = &_grib_accessor_class_g1end_of_interval_monthly;
+grib_accessor_g1end_of_interval_monthly_t _grib_accessor_g1end_of_interval_monthly{};
+grib_accessor* grib_accessor_g1end_of_interval_monthly = &_grib_accessor_g1end_of_interval_monthly;
 
-
-void grib_accessor_class_g1end_of_interval_monthly_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_g1end_of_interval_monthly_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_abstract_vector_t::init(a, l, c);
-    grib_accessor_g1end_of_interval_monthly_t* self = (grib_accessor_g1end_of_interval_monthly_t*)a;
-    int n                                           = 0;
+    grib_accessor_abstract_vector_t::init(l, c);
+    int n = 0;
 
-    self->verifyingMonth = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
-    a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
+    verifyingMonth_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
+    flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;
 
-    self->number_of_elements = 6;
-    self->v                  = (double*)grib_context_malloc(a->context, sizeof(double) * self->number_of_elements);
+    number_of_elements_ = 6;
+    v_                  = (double*)grib_context_malloc(context_, sizeof(double) * number_of_elements_);
 
-    a->length = 0;
-    a->dirty  = 1;
+    length_ = 0;
+    dirty_  = 1;
 }
 
-int grib_accessor_class_g1end_of_interval_monthly_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+int grib_accessor_g1end_of_interval_monthly_t::unpack_double(double* val, size_t* len)
 {
-    grib_accessor_g1end_of_interval_monthly_t* self = (grib_accessor_g1end_of_interval_monthly_t*)a;
-    int ret                                         = 0;
-    char verifyingMonth[7]                          = {
+    int ret                = 0;
+    char verifyingMonth[7] = {
         0,
     };
     size_t slen = 7;
@@ -44,13 +41,13 @@ int grib_accessor_class_g1end_of_interval_monthly_t::unpack_double(grib_accessor
     const long mdays[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
     long days          = 0;
 
-    if (!a->dirty)
+    if (!dirty_)
         return GRIB_SUCCESS;
 
-    if (*len != (size_t)self->number_of_elements)
+    if (*len != (size_t)number_of_elements_)
         return GRIB_ARRAY_TOO_SMALL;
 
-    if ((ret = grib_get_string(grib_handle_of_accessor(a), self->verifyingMonth, verifyingMonth, &slen)) != GRIB_SUCCESS)
+    if ((ret = grib_get_string(grib_handle_of_accessor(this), verifyingMonth_, verifyingMonth, &slen)) != GRIB_SUCCESS)
         return ret;
 
     date = atoi(verifyingMonth);
@@ -68,41 +65,39 @@ int grib_accessor_class_g1end_of_interval_monthly_t::unpack_double(grib_accessor
         if (month < 1 || month > 12) return GRIB_INVALID_ARGUMENT;
         days = mdays[month - 1];
     }
-    self->v[0] = year;
-    self->v[1] = month;
+    v_[0] = year;
+    v_[1] = month;
 
-    self->v[2] = days;
-    self->v[3] = 24;
-    self->v[4] = 00;
-    self->v[5] = 00;
+    v_[2] = days;
+    v_[3] = 24;
+    v_[4] = 00;
+    v_[5] = 00;
 
-    a->dirty = 0;
+    dirty_ = 0;
 
-    val[0] = self->v[0];
-    val[1] = self->v[1];
-    val[2] = self->v[2];
-    val[3] = self->v[3];
-    val[4] = self->v[4];
-    val[5] = self->v[5];
+    val[0] = v_[0];
+    val[1] = v_[1];
+    val[2] = v_[2];
+    val[3] = v_[3];
+    val[4] = v_[4];
+    val[5] = v_[5];
 
     return ret;
 }
 
-int grib_accessor_class_g1end_of_interval_monthly_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_g1end_of_interval_monthly_t::value_count(long* count)
 {
-    grib_accessor_g1end_of_interval_monthly_t* self = (grib_accessor_g1end_of_interval_monthly_t*)a;
-    *count                                          = self->number_of_elements;
+    *count = number_of_elements_;
     return 0;
 }
 
-void grib_accessor_class_g1end_of_interval_monthly_t::destroy(grib_context* c, grib_accessor* a)
+void grib_accessor_g1end_of_interval_monthly_t::destroy(grib_context* c)
 {
-    grib_accessor_g1end_of_interval_monthly_t* self = (grib_accessor_g1end_of_interval_monthly_t*)a;
-    grib_context_free(c, self->v);
-    grib_accessor_class_abstract_vector_t::destroy(c, a);
+    grib_context_free(c, v_);
+    grib_accessor_abstract_vector_t::destroy(c);
 }
 
-int grib_accessor_class_g1end_of_interval_monthly_t::compare(grib_accessor* a, grib_accessor* b)
+int grib_accessor_g1end_of_interval_monthly_t::compare(grib_accessor* b)
 {
     int retval   = GRIB_SUCCESS;
     double* aval = 0;
@@ -111,9 +106,8 @@ int grib_accessor_class_g1end_of_interval_monthly_t::compare(grib_accessor* a, g
     long count  = 0;
     size_t alen = 0;
     size_t blen = 0;
-    int err     = 0;
 
-    err = a->value_count(&count);
+    int err = value_count(&count);
     if (err)
         return err;
     alen = count;
@@ -126,20 +120,23 @@ int grib_accessor_class_g1end_of_interval_monthly_t::compare(grib_accessor* a, g
     if (alen != blen)
         return GRIB_COUNT_MISMATCH;
 
-    aval = (double*)grib_context_malloc(a->context, alen * sizeof(double));
-    bval = (double*)grib_context_malloc(b->context, blen * sizeof(double));
+    aval = (double*)grib_context_malloc(context_, alen * sizeof(double));
+    bval = (double*)grib_context_malloc(b->context_, blen * sizeof(double));
 
-    b->dirty = 1;
-    a->dirty = 1;
+    b->dirty_ = 1;
+    dirty_    = 1;
 
-    err = a->unpack_double(aval, &alen);
+    err = unpack_double(aval, &alen);
+    if (err) return err;
     err = b->unpack_double(bval, &blen);
+    if (err) return err;
+
     for (size_t i = 0; i < alen && retval == GRIB_SUCCESS; ++i) {
         if (aval[i] != bval[i]) retval = GRIB_DOUBLE_VALUE_MISMATCH;
     }
 
-    grib_context_free(a->context, aval);
-    grib_context_free(b->context, bval);
+    grib_context_free(context_, aval);
+    grib_context_free(b->context_, bval);
 
     return retval;
 }
