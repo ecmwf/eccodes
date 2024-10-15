@@ -426,28 +426,68 @@
 	 constituentType = 0 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Mean carbon dioxide net ecosystem exchange flux
-'Mean carbon dioxide net ecosystem exchange flux' = {
+#Time-mean carbon dioxide net ecosystem exchange flux
+'Time-mean carbon dioxide net ecosystem exchange flux' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 59 ;
 	 constituentType = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean carbon dioxide gross primary production flux
-'Mean carbon dioxide gross primary production flux' = {
+#Time-mean carbon dioxide gross primary production flux
+'Time-mean carbon dioxide gross primary production flux' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 60 ;
 	 constituentType = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean carbon dioxide ecosystem respiration flux
-'Mean carbon dioxide ecosystem respiration flux' = {
+#Time-mean carbon dioxide ecosystem respiration flux
+'Time-mean carbon dioxide ecosystem respiration flux' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 61 ;
 	 constituentType = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean U component of wind
+'Time-mean U component of wind' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 200 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean U component of wind
+'Time-mean U component of wind' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 100 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean V component of wind
+'Time-mean V component of wind' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 200 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean V component of wind
+'Time-mean V component of wind' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 100 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean logarithm of surface pressure

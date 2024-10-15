@@ -10,15 +10,14 @@
 
 #include "grib_accessor_class_uint64_little_endian.h"
 
-grib_accessor_class_uint64_little_endian_t _grib_accessor_class_uint64_little_endian{ "uint64_little_endian" };
-grib_accessor_class* grib_accessor_class_uint64_little_endian = &_grib_accessor_class_uint64_little_endian;
+grib_accessor_uint64_little_endian_t _grib_accessor_uint64_little_endian{};
+grib_accessor* grib_accessor_uint64_little_endian = &_grib_accessor_uint64_little_endian;
 
-
-int grib_accessor_class_uint64_little_endian_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_uint64_little_endian_t::unpack_long(long* val, size_t* len)
 {
-    long value = 0;
-    long pos = a->offset;
-    const unsigned char* data = grib_handle_of_accessor(a)->buffer->data;
+    long value                = 0;
+    long pos                  = offset_;
+    const unsigned char* data = grib_handle_of_accessor(this)->buffer->data;
     unsigned long long result = 0, tmp;
 
     if (*len < 1) {
@@ -35,7 +34,7 @@ int grib_accessor_class_uint64_little_endian_t::unpack_long(grib_accessor* a, lo
 
     /* Result does not fit in long */
     if (tmp != result) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Value for %s cannot be decoded as a 'long' (%llu)", a->name, result);
+        grib_context_log(context_, GRIB_LOG_ERROR, "Value for %s cannot be decoded as a 'long' (%llu)", name_, result);
         return GRIB_DECODING_ERROR;
     }
 
@@ -44,7 +43,7 @@ int grib_accessor_class_uint64_little_endian_t::unpack_long(grib_accessor* a, lo
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_uint64_little_endian_t::get_native_type(grib_accessor* a)
+long grib_accessor_uint64_little_endian_t::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }

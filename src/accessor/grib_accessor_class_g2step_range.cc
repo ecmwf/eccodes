@@ -13,22 +13,19 @@
 #include "step_utilities.h"
 #include <iostream>
 
+grib_accessor_g2step_range_t _grib_accessor_g2step_range{};
+grib_accessor* grib_accessor_g2step_range = &_grib_accessor_g2step_range;
 
-grib_accessor_class_g2step_range_t _grib_accessor_class_g2step_range{ "g2step_range" };
-grib_accessor_class* grib_accessor_class_g2step_range = &_grib_accessor_class_g2step_range;
-
-
-void grib_accessor_class_g2step_range_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_g2step_range_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_gen_t::init(a, l, c);
-    grib_accessor_g2step_range_t* self = (grib_accessor_g2step_range_t*)a;
+    grib_accessor_gen_t::init(l, c);
 
     int n = 0;
 
-    self->start_step = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->end_step   = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    start_step_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    end_step_   = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
 
-    a->length = 0;
+    length_ = 0;
 }
 
 // static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -36,19 +33,18 @@ void grib_accessor_class_g2step_range_t::init(grib_accessor* a, const long l, gr
 // grib_dump_string(dumper, a, NULL);
 //}
 
-int grib_accessor_class_g2step_range_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+int grib_accessor_g2step_range_t::unpack_string(char* val, size_t* len)
 {
-    grib_accessor_g2step_range_t* self = (grib_accessor_g2step_range_t*)a;
-    grib_handle* h                     = grib_handle_of_accessor(a);
-    int ret                            = 0;
-    size_t size                        = 0;
-    double start_step_value            = 0;
-    double end_step_value              = 0;
+    grib_handle* h          = grib_handle_of_accessor(this);
+    int ret                 = 0;
+    size_t size             = 0;
+    double start_step_value = 0;
+    double end_step_value   = 0;
     long step_units;
 
-    int show_hours = a->context->grib_hourly_steps_with_units;
+    int show_hours = context_->grib_hourly_steps_with_units;
 
-    if ((ret = grib_get_double_internal(h, self->start_step, &start_step_value)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(h, start_step_, &start_step_value)) != GRIB_SUCCESS)
         return ret;
     if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
         return ret;
@@ -65,11 +61,11 @@ int grib_accessor_class_g2step_range_t::unpack_string(grib_accessor* a, char* va
         std::stringstream ss;
 
         eccodes::Step start_step{ start_step_value, step_units };
-        if (self->end_step == NULL) {
+        if (end_step_ == NULL) {
             ss << start_step.value<std::string>(fp_format, show_hours);
         }
         else {
-            if ((ret = grib_get_double_internal(h, self->end_step, &end_step_value)) != GRIB_SUCCESS)
+            if ((ret = grib_get_double_internal(h, end_step_, &end_step_value)) != GRIB_SUCCESS)
                 return ret;
 
             eccodes::Step end_step{ end_step_value, step_units };
@@ -92,7 +88,7 @@ int grib_accessor_class_g2step_range_t::unpack_string(grib_accessor* a, char* va
         memcpy(val, ss.str().c_str(), size);
     }
     catch (std::exception& e) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_g2step_range_t::unpack_string: %s", e.what());
+        grib_context_log(context_, GRIB_LOG_ERROR, "grib_accessor_g2step_range_t::unpack_string: %s", e.what());
         return GRIB_DECODING_ERROR;
     }
 
@@ -103,11 +99,10 @@ int grib_accessor_class_g2step_range_t::unpack_string(grib_accessor* a, char* va
 // <start_step> and <end_step> can be in different units
 // stepRange="X" in instantaneous field is equivalent to set step=X
 // stepRange="X" in accumulated field is equivalent to startStep=X, endStep=startStep
-int grib_accessor_class_g2step_range_t::pack_string(grib_accessor* a, const char* val, size_t* len)
+int grib_accessor_g2step_range_t::pack_string(const char* val, size_t* len)
 {
-    grib_accessor_g2step_range_t* self = (grib_accessor_g2step_range_t*)a;
-    grib_handle* h                     = grib_handle_of_accessor(a);
-    int ret                            = 0;
+    grib_handle* h = grib_handle_of_accessor(this);
+    int ret        = 0;
 
     long force_step_units;
     if ((ret = grib_get_long_internal(h, "forceStepUnits", &force_step_units)) != GRIB_SUCCESS)
@@ -126,7 +121,7 @@ int grib_accessor_class_g2step_range_t::pack_string(grib_accessor* a, const char
     try {
         std::vector<eccodes::Step> steps = parse_range(val, eccodes::Unit{ force_step_units });
         if (steps.size() == 0) {
-            grib_context_log(a->context, GRIB_LOG_ERROR, "Could not parse step range: %s", val);
+            grib_context_log(context_, GRIB_LOG_ERROR, "Could not parse step range: %s", val);
             return GRIB_INVALID_ARGUMENT;
         }
 
@@ -150,58 +145,57 @@ int grib_accessor_class_g2step_range_t::pack_string(grib_accessor* a, const char
         if ((ret = set_step(h, "forecastTime", "indicatorOfUnitOfTimeRange", step_0)) != GRIB_SUCCESS)
             return ret;
 
-        if (self->end_step != NULL) {
+        if (end_step_ != NULL) {
             if (steps.size() > 1) {
                 if ((ret = grib_set_long_internal(h, "endStepUnit", step_1.unit().value<long>())))
                     return ret;
-                if ((ret = grib_set_long_internal(h, self->end_step, step_1.value<long>())))
+                if ((ret = grib_set_long_internal(h, end_step_, step_1.value<long>())))
                     return ret;
             }
             else {
                 if ((ret = grib_set_long_internal(h, "endStepUnit", step_0.unit().value<long>())))
                     return ret;
-                if ((ret = grib_set_long_internal(h, self->end_step, step_0.value<long>())))
+                if ((ret = grib_set_long_internal(h, end_step_, step_0.value<long>())))
                     return ret;
             }
         }
     }
     catch (std::exception& e) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_class_g2step_range::pack_string: %s", e.what());
+        grib_context_log(context_, GRIB_LOG_ERROR, "grib_accessor_g2step_range::pack_string: %s", e.what());
         return GRIB_INVALID_ARGUMENT;
     }
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_g2step_range_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_g2step_range_t::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_class_g2step_range_t::string_length(grib_accessor* a)
+size_t grib_accessor_g2step_range_t::string_length()
 {
     return 255;
 }
 
-int grib_accessor_class_g2step_range_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_g2step_range_t::pack_long(const long* val, size_t* len)
 {
     char buff[100];
     size_t bufflen = 100;
 
     snprintf(buff, sizeof(buff), "%ld", *val);
-    return pack_string(a, buff, &bufflen);
+    return pack_string(buff, &bufflen);
 }
 
-int grib_accessor_class_g2step_range_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_g2step_range_t::unpack_long(long* val, size_t* len)
 {
-    grib_accessor_g2step_range_t* self = (grib_accessor_g2step_range_t*)a;
-    grib_handle* h                     = grib_handle_of_accessor(a);
-    int ret                            = 0;
-    long end_start_value               = 0;
-    long end_step_value                = 0;
-    long step_units                    = 0;
+    grib_handle* h       = grib_handle_of_accessor(this);
+    int ret              = 0;
+    long end_start_value = 0;
+    long end_step_value  = 0;
+    long step_units      = 0;
 
-    if ((ret = grib_get_long_internal(h, self->start_step, &end_start_value)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, start_step_, &end_start_value)) != GRIB_SUCCESS)
         return ret;
     try {
         if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
@@ -212,34 +206,33 @@ int grib_accessor_class_g2step_range_t::unpack_long(grib_accessor* a, long* val,
         }
 
         eccodes::Step start_step{ end_start_value, step_units };
-        if (self->end_step == NULL) {
+        if (end_step_ == NULL) {
             *val = start_step.value<long>();
         }
         else {
-            if ((ret = grib_get_long_internal(h, self->end_step, &end_step_value)) != GRIB_SUCCESS)
+            if ((ret = grib_get_long_internal(h, end_step_, &end_step_value)) != GRIB_SUCCESS)
                 return ret;
             eccodes::Step end_step{ end_step_value, step_units };
             *val = end_step.value<long>();
         }
     }
     catch (std::exception& e) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Failed to unpack step range: %s", e.what());
+        grib_context_log(context_, GRIB_LOG_ERROR, "Failed to unpack step range: %s", e.what());
         return GRIB_DECODING_ERROR;
     }
 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_g2step_range_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+int grib_accessor_g2step_range_t::unpack_double(double* val, size_t* len)
 {
-    grib_accessor_g2step_range_t* self = (grib_accessor_g2step_range_t*)a;
-    grib_handle* h                     = grib_handle_of_accessor(a);
-    int ret                            = 0;
-    double end_start_value             = 0;
-    double end_step_value              = 0;
-    long step_units                    = 0;
+    grib_handle* h         = grib_handle_of_accessor(this);
+    int ret                = 0;
+    double end_start_value = 0;
+    double end_step_value  = 0;
+    long step_units        = 0;
 
-    if ((ret = grib_get_double_internal(h, self->start_step, &end_start_value)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(h, start_step_, &end_start_value)) != GRIB_SUCCESS)
         return ret;
     if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
         throw std::runtime_error("Failed to get stepUnits");
@@ -251,25 +244,25 @@ int grib_accessor_class_g2step_range_t::unpack_double(grib_accessor* a, double* 
         }
 
         eccodes::Step start_step{ end_start_value, step_units };
-        if (self->end_step == NULL) {
+        if (end_step_ == NULL) {
             *val = start_step.value<long>();
         }
         else {
-            if ((ret = grib_get_double_internal(h, self->end_step, &end_step_value)) != GRIB_SUCCESS)
+            if ((ret = grib_get_double_internal(h, end_step_, &end_step_value)) != GRIB_SUCCESS)
                 return ret;
             eccodes::Step end_step{ end_step_value, step_units };
             *val = end_step.value<double>();
         }
     }
     catch (std::exception& e) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grid_accessor_g2step_range::unpack_double: %s", e.what());
+        grib_context_log(context_, GRIB_LOG_ERROR, "grid_accessor_g2step_range::unpack_double: %s", e.what());
         return GRIB_DECODING_ERROR;
     }
 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_g2step_range_t::get_native_type(grib_accessor* a)
+long grib_accessor_g2step_range_t::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }

@@ -18,9 +18,10 @@ grib_option grib_options[] = {
     { "w:", "key[:{s|d|i}]=value,key[:{s|d|i}]=value,...",
       "\n\t\tWhere clause.\n\t\tSet is only executed for BUFR messages matching all the "
       "key/value constraints.\n\t\tIf a BUFR message does not match the constraints it is"
-      " copied unchanged\n\t\tto the output_file. This behaviour can be changed "
+      " copied unchanged\n\t\tto the output_bufr_file. This behaviour can be changed "
       "setting the option -S.\n\t\tFor each key a string (key:s), a double (key:d) or"
       " an integer (key:i)\n\t\ttype can be defined. Default type is string."
+      "\n\t\tIn the value you can also use the forward-slash character '/' to specify an OR condition (i.e. a logical disjunction)"
       "\n\t\tNote: only one -w clause is allowed.\n",
       0, 1, 0 },
     { "q", 0, 0, 1, 0, 0 },
@@ -36,12 +37,12 @@ grib_option grib_options[] = {
 };
 
 const char* tool_description =
-    "Sets key/value pairs in the input BUFR file and writes"
-    "\n\teach message to the output_file."
+    "Sets key/value pairs in the input BUFR file(s) and writes"
+    "\n\teach message to the output_bufr_file."
     "\n\tIt fails when an error occurs (e.g. key not found).";
 const char* tool_name       = "bufr_set";
 const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/bufr_set";
-const char* tool_usage      = "[options] file file ... output_file";
+const char* tool_usage      = "[options] bufr_file bufr_file ... output_bufr_file";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 

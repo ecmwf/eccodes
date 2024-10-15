@@ -10,22 +10,21 @@
 
 #include "grib_accessor_class_check_internal_version.h"
 
-grib_accessor_class_check_internal_version_t _grib_accessor_class_check_internal_version{ "check_internal_version" };
-grib_accessor_class* grib_accessor_class_check_internal_version = &_grib_accessor_class_check_internal_version;
-
+grib_accessor_check_internal_version_t _grib_accessor_check_internal_version{};
+grib_accessor* grib_accessor_check_internal_version = &_grib_accessor_check_internal_version;
 
 /* This is the internal engine version number */
 /* We check this against the version number found in the definitions boot.def file */
 /* See the key "internalVersion"  */
 #define LATEST_ENGINE_VERSION 30
 
-void grib_accessor_class_check_internal_version_t::init(grib_accessor* a, const long l, grib_arguments* args)
+void grib_accessor_check_internal_version_t::init(const long l, grib_arguments* args)
 {
-    grib_accessor_class_ascii_t::init(a, l, args);
+    grib_accessor_ascii_t::init(l, args);
     /* Check version of definition files is compatible with the engine */
     int err                    = 0;
     long defs_file_version     = 0;
-    grib_handle* h             = grib_handle_of_accessor(a);
+    grib_handle* h             = grib_handle_of_accessor(this);
     const char* s_defn_version = grib_arguments_get_name(h, args, 0);
     Assert(s_defn_version);
 
@@ -41,13 +40,13 @@ void grib_accessor_class_check_internal_version_t::init(grib_accessor* a, const 
     }
 }
 
-int grib_accessor_class_check_internal_version_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_check_internal_version_t::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_class_check_internal_version_t::string_length(grib_accessor* a)
+size_t grib_accessor_check_internal_version_t::string_length()
 {
     return 255;
 }

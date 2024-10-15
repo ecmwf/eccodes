@@ -114,7 +114,6 @@ if(matrixOfValues == 0)
 
 # From GRIBEX:
 #  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#  !                                                !
 #  ! This is the WMO definition, but it is entirely !
 #  ! inadequate when secondary bit maps are present !
 #  ! eg 3x3 global grid with a matrix of values     !
@@ -129,7 +128,6 @@ if(matrixOfValues == 0)
 #  !      missing').                                !
 #  !     This definition will accommodate a 1x1     !
 #  !     degree global grid.                        !
-#  !                                                !
 #  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #
 	  constant datumSize             = NC*NR;

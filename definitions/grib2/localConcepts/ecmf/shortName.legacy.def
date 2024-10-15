@@ -1189,8 +1189,8 @@
  parameterCategory = 128 ;
  parameterNumber = 53 ;
 }
-#Water fraction
-'fldfrc' = {
+#Lake cover
+'cl' = {
  discipline = 192 ;
  parameterCategory = 128 ;
  parameterNumber = 26 ;

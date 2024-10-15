@@ -40,6 +40,6 @@ transient numberOfPoints= nd *(Ni + 1) * (Ni + 1);
 alias numberOfDataPoints=numberOfPoints;
 
 meta numberOfValues
-number_of_values(values,bitsPerValue,numberOfDataPoints,
-                 bitmapPresent,bitmap,numberOfCodedValues) : dump;
-
+number_of_values(
+    values,bitsPerValue,numberOfDataPoints,
+    bitmapPresent,bitmap,numberOfCodedValues) : dump;

@@ -118,9 +118,9 @@ void grib_buffer_set_ulength(const grib_context* c, grib_buffer* b, size_t lengt
 static void update_offsets(grib_accessor* a, long len)
 {
     while (a) {
-        grib_section* s = a->sub_section;
-        a->offset += len;
-        grib_context_log(a->context, GRIB_LOG_DEBUG, "::::: grib_buffer : accessor %s is moving by %d bytes to %ld", a->name, len, a->offset);
+        grib_section* s = a->sub_section_;
+        a->offset_ += len;
+        grib_context_log(a->context_, GRIB_LOG_DEBUG, "::::: grib_buffer : accessor %s is moving by %d bytes to %ld", a->name_, len, a->offset_);
         if (s)
             update_offsets(s->block->first, len);
         a = a->next_;
@@ -131,7 +131,7 @@ static void update_offsets_after(grib_accessor* a, long len)
 {
     while (a) {
         update_offsets(a->next_, len);
-        a = a->parent->owner;
+        a = a->parent_->owner;
     }
 }
 
@@ -198,18 +198,18 @@ static void update_offsets_after(grib_accessor* a, long len)
 int grib_buffer_replace(grib_accessor* a, const unsigned char* data,
                         size_t newsize, int update_lengths, int update_paddings)
 {
-    size_t offset = a->offset;
+    size_t offset = a->offset_;
     long oldsize  = a->get_next_position_offset() - offset;
     long increase = (long)newsize - (long)oldsize;
 
     grib_buffer* buffer   = grib_handle_of_accessor(a)->buffer;
     size_t message_length = buffer->ulength;
 
-    grib_context_log(a->context, GRIB_LOG_DEBUG,
+    grib_context_log(a->context_, GRIB_LOG_DEBUG,
                      "grib_buffer_replace %s offset=%ld oldsize=%ld newsize=%ld message_length=%ld update_paddings=%d",
-                     a->name, (long)offset, oldsize, (long)newsize, (long)message_length, update_paddings);
+                     a->name_, (long)offset, oldsize, (long)newsize, (long)message_length, update_paddings);
 
-    grib_buffer_set_ulength(a->context,
+    grib_buffer_set_ulength(a->context_,
                             buffer,
                             buffer->ulength + increase);
 

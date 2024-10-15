@@ -16,17 +16,14 @@
 class grib_accessor_step_human_readable_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in step_human_readable */
-    const char* stepUnits;
-    const char* step;
-};
-
-class grib_accessor_class_step_human_readable_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_step_human_readable_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_step_human_readable_t() :
+        grib_accessor_gen_t() { class_name_ = "step_human_readable"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_step_human_readable_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    long get_native_type() override;
+    int unpack_string(char*, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* stepUnits_;
+    const char* step_;
 };

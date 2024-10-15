@@ -10,20 +10,19 @@
 
 #include "grib_accessor_class_bufr_group.h"
 
-grib_accessor_class_bufr_group_t _grib_accessor_class_bufr_group{ "bufr_group" };
-grib_accessor_class* grib_accessor_class_bufr_group = &_grib_accessor_class_bufr_group;
+grib_accessor_bufr_group_t _grib_accessor_bufr_group{};
+grib_accessor* grib_accessor_bufr_group = &_grib_accessor_bufr_group;
 
-
-void grib_accessor_class_bufr_group_t::dump(grib_accessor* a, grib_dumper* dumper)
+void grib_accessor_bufr_group_t::dump(grib_dumper* dumper)
 {
-    grib_dump_section(dumper, a, a->sub_section->block);
+    grib_dump_section(dumper, this, sub_section_->block);
 }
 
-grib_accessor* grib_accessor_class_bufr_group_t::next(grib_accessor* a, int explore)
+grib_accessor* grib_accessor_bufr_group_t::next(grib_accessor* a, int explore)
 {
     grib_accessor* next = NULL;
     if (explore) {
-        next = a->sub_section->block->first;
+        next = a->sub_section_->block->first;
         if (!next)
             next = a->next_;
     }
@@ -31,8 +30,8 @@ grib_accessor* grib_accessor_class_bufr_group_t::next(grib_accessor* a, int expl
         next = a->next_;
     }
     if (!next) {
-        if (a->parent->owner)
-            next = a->parent->owner->cclass->next(a->parent->owner, 0);
+        if (a->parent_->owner)
+            next = a->parent_->owner->next(a->parent_->owner, 0);
     }
     return next;
 }

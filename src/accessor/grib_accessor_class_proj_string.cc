@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,24 +10,22 @@
 
 #include "grib_accessor_class_proj_string.h"
 
-grib_accessor_class_proj_string_t _grib_accessor_class_proj_string{ "proj_string" };
-grib_accessor_class* grib_accessor_class_proj_string = &_grib_accessor_class_proj_string;
+grib_accessor_proj_string_t _grib_accessor_proj_string{};
+grib_accessor* grib_accessor_proj_string = &_grib_accessor_proj_string;
 
-
-void grib_accessor_class_proj_string_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+void grib_accessor_proj_string_t::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_class_gen_t::init(a, len, arg);
-    grib_accessor_proj_string_t* self = (grib_accessor_proj_string_t*)a;
-    grib_handle* h                    = grib_handle_of_accessor(a);
+    grib_accessor_gen_t::init(len, arg);
+    grib_handle* h = grib_handle_of_accessor(this);
 
-    self->grid_type = grib_arguments_get_name(h, arg, 0);
-    self->endpoint  = grib_arguments_get_long(h, arg, 1);
-    a->length       = 0;
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
+    grid_type_ = grib_arguments_get_name(h, arg, 0);
+    endpoint_  = grib_arguments_get_long(h, arg, 1);
+    length_    = 0;
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
 
-int grib_accessor_class_proj_string_t::get_native_type(grib_accessor* a)
+long grib_accessor_proj_string_t::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
@@ -208,28 +205,26 @@ static proj_mapping proj_mappings[] = {
 
 #define ENDPOINT_SOURCE 0
 #define ENDPOINT_TARGET 1
-int grib_accessor_class_proj_string_t::unpack_string(grib_accessor* a, char* v, size_t* len)
+int grib_accessor_proj_string_t::unpack_string(char* v, size_t* len)
 {
-    grib_accessor_proj_string_t* self = (grib_accessor_proj_string_t*)a;
     int err = 0, found = 0;
     size_t i           = 0;
     char grid_type[64] = {0,};
-    grib_handle* h = grib_handle_of_accessor(a);
+    grib_handle* h = grib_handle_of_accessor(this);
     size_t size    = sizeof(grid_type) / sizeof(*grid_type);
 
-    Assert(self->endpoint == ENDPOINT_SOURCE || self->endpoint == ENDPOINT_TARGET);
+    Assert(endpoint_ == ENDPOINT_SOURCE || endpoint_ == ENDPOINT_TARGET);
 
     size_t l = 100;  // Safe bet
     if (*len < l) {
-        const char* cclass_name = a->cclass->name;
-        grib_context_log(a->context, GRIB_LOG_ERROR,
+        grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is at least %zu bytes long (len=%zu)",
-                         cclass_name, a->name, l, *len);
+                         class_name_, name_, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }
 
-    err = grib_get_string(h, self->grid_type, grid_type, &size);
+    err = grib_get_string(h, grid_type_, grid_type, &size);
     if (err) return err;
 
     const size_t num_proj_mappings = sizeof(proj_mappings) / sizeof(proj_mappings[0]);
@@ -237,7 +232,7 @@ int grib_accessor_class_proj_string_t::unpack_string(grib_accessor* a, char* v, 
         proj_mapping pm = proj_mappings[i];
         if (strcmp(grid_type, pm.gridType) == 0) {
             found = 1;
-            if (self->endpoint == ENDPOINT_SOURCE) {
+            if (endpoint_ == ENDPOINT_SOURCE) {
                 snprintf(v, 64, "EPSG:4326");
             }
             else {

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,37 +10,34 @@
 
 #include "grib_accessor_class_bit.h"
 
-grib_accessor_class_bit_t _grib_accessor_class_bit{ "bit" };
-grib_accessor_class* grib_accessor_class_bit = &_grib_accessor_class_bit;
+grib_accessor_bit_t _grib_accessor_bit{};
+grib_accessor* grib_accessor_bit = &_grib_accessor_bit;
 
-
-void grib_accessor_class_bit_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+void grib_accessor_bit_t::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_class_long_t::init(a, len, arg);
-    grib_accessor_bit_t* self = (grib_accessor_bit_t*)a;
-    a->length = 0;
-    self->owner     = grib_arguments_get_name(grib_handle_of_accessor(a), arg, 0);
-    self->bit_index = grib_arguments_get_long(grib_handle_of_accessor(a), arg, 1);
+    grib_accessor_long_t::init(len, arg);
+    length_    = 0;
+    owner_     = grib_arguments_get_name(grib_handle_of_accessor(this), arg, 0);
+    bit_index_ = grib_arguments_get_long(grib_handle_of_accessor(this), arg, 1);
 }
 
-int grib_accessor_class_bit_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_bit_t::unpack_long(long* val, size_t* len)
 {
-    grib_accessor_bit_t* self = (grib_accessor_bit_t*)a;
-    int ret                   = 0;
-    long data                 = 0;
+    int ret   = 0;
+    long data = 0;
 
     if (*len < 1) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit_t: unpack_long: Wrong size for %s, it contains %d values ", a->name, 1);
+        grib_context_log(context_, GRIB_LOG_ERROR, "grib_accessor_bit_t: unpack_long: Wrong size for %s, it contains %d values ", name_, 1);
         *len = 1;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->owner, &data)) != GRIB_SUCCESS) {
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), owner_, &data)) != GRIB_SUCCESS) {
         *len = 0;
         return ret;
     }
 
-    if (data & (1 << self->bit_index))
+    if (data & (1 << bit_index_))
         *val = 1;
     else
         *val = 0;
@@ -50,32 +46,30 @@ int grib_accessor_class_bit_t::unpack_long(grib_accessor* a, long* val, size_t* 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_bit_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_bit_t::pack_long(const long* val, size_t* len)
 {
-    grib_accessor_bit_t* self = (grib_accessor_bit_t*)a;
-
     if (*len < 1) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit_t: pack_long: At least one value to pack for %s", a->name);
+        grib_context_log(context_, GRIB_LOG_ERROR, "grib_accessor_bit_t: pack_long: At least one value to pack for %s", name_);
         *len = 1;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    grib_accessor* owner = grib_find_accessor(grib_handle_of_accessor(a), self->owner);
+    grib_accessor* owner = grib_find_accessor(grib_handle_of_accessor(this), owner_);
     if (!owner) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit_t: Cannot get the owner %s for computing the bit value of %s",
-                         self->owner, a->name);
+        grib_context_log(context_, GRIB_LOG_ERROR, "grib_accessor_bit_t: Cannot get the owner %s for computing the bit value of %s",
+                         owner_, name_);
         *len = 0;
         return GRIB_NOT_FOUND;
     }
 
-    unsigned char* mdata = grib_handle_of_accessor(a)->buffer->data;
+    unsigned char* mdata = grib_handle_of_accessor(this)->buffer->data;
     mdata += owner->byte_offset();
     /* Note: In the definitions, flagbit numbers go from 7 to 0 (the bit_index), while WMO convention is from 1 to 8 */
-    if (a->context->debug) {
+    if (context_->debug) {
         /* Print bit positions from 1 (MSB) */
-        fprintf(stderr, "ECCODES DEBUG Setting bit %d in %s to %d\n", 8 - self->bit_index, owner->name, (*val > 0));
+        fprintf(stderr, "ECCODES DEBUG Setting bit %d in %s to %d\n", 8 - bit_index_, owner->name_, (*val > 0));
     }
-    grib_set_bit(mdata, 7 - self->bit_index, *val > 0);
+    grib_set_bit(mdata, 7 - bit_index_, *val > 0);
 
     *len = 1;
     return GRIB_SUCCESS;

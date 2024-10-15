@@ -25,4 +25,3 @@ codetable[1] indicatorOfUnitForTimeIncrement ('4.4.table',masterDir,localDir)=25
 unsigned[4] timeIncrement=0 ;
 alias timeIncrementBetweenSuccessiveFields=timeIncrement;
 
-# include "grib2/templates/template.4.statistical.def"
