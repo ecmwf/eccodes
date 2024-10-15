@@ -43,9 +43,9 @@ g1_message_length[3] totalLength(section4Length);
 position startOfHeaders;
 unsigned[1] editionNumber = 1 : edition_specific,dump;
 
-template      section_1 "grib1/section.1.def";
-
 alias ls.edition = editionNumber;
+
+template      section_1 "grib1/section.1.def";
 
 # Note flagbit numbers 7 to 0, while wmo is 1 to 8
 flagbit gridDescriptionSectionPresent(section1Flags,7) = 1;
