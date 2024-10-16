@@ -33,9 +33,7 @@ void grib_accessor_g1end_of_interval_monthly_t::init(const long l, grib_argument
 int grib_accessor_g1end_of_interval_monthly_t::unpack_double(double* val, size_t* len)
 {
     int ret                = 0;
-    char verifyingMonth[7] = {
-        0,
-    };
+    char verifyingMonth[7] = {0,};
     size_t slen = 7;
     long year = 0, month = 0, date = 0;
     const long mdays[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
