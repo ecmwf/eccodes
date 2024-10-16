@@ -98,4 +98,4 @@
 'road'           = {typeOfFirstFixedSurface=187; typeOfSecondFixedSurface=255;}
 'roadLayer'      = {typeOfFirstFixedSurface=187; typeOfSecondFixedSurface=187;}
 'urbanCanyon'    = {typeOfFirstFixedSurface=187; typeOfSecondFixedSurface=185;}
-'unknown'        = {dummyc=0;}
+'unknown'        = {dummyc=1;}
