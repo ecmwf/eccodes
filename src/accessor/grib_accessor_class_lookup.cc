@@ -32,12 +32,8 @@ void grib_accessor_lookup_t::post_init()
 
 void grib_accessor_lookup_t::dump(grib_dumper* dumper)
 {
-    unsigned char bytes[1024] = {
-        0,
-    };
-    char msg[1024] = {
-        0,
-    };
+    unsigned char bytes[1024] = {0,};
+    char msg[1024] = {0,};
     char buf[2048];
     unsigned long v = 0;
 
@@ -59,9 +55,7 @@ void grib_accessor_lookup_t::dump(grib_dumper* dumper)
 
 int grib_accessor_lookup_t::unpack_string(char* v, size_t* len)
 {
-    unsigned char bytes[1024] = {
-        0,
-    };
+    unsigned char bytes[1024] = {0,};
 
     size_t llen = llength_;
     unpack_bytes(bytes, &llen);

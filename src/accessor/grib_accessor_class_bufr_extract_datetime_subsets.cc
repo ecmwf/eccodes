@@ -85,9 +85,7 @@ static int build_long_array(grib_context* c, grib_handle* h, int compressed,
     }
     else {
         /* uncompressed */
-        char keystr[32] = {
-            0,
-        };
+        char keystr[32] = {0,};
         size_t values_len = 0;
         for (i = 0; i < numberOfSubsets; ++i) {
             long lVal = 0;
@@ -108,21 +106,15 @@ static int build_long_array(grib_context* c, grib_handle* h, int compressed,
 
 int grib_accessor_bufr_extract_datetime_subsets_t::select_datetime()
 {
-    int ret                                             = 0;
-    long compressed                                     = 0;
-    grib_handle* h                                      = grib_handle_of_accessor(this);
-    grib_context* c                                     = h->context;
-    size_t n;
+    int ret         = 0;
+    long compressed = 0;
+    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_context* c = h->context;
+
     double julianStart = 0, julianEnd = 0, julianDT = 0;
-    char start_str[80] = {
-        0,
-    },
-         end_str[80] = {
-             0,
-         },
-         datetime_str[80] = {
-             0,
-         };
+    char start_str[80] = {0,},
+         end_str[80] = {0,},
+         datetime_str[80] = {0,};
     long yearRank, monthRank, dayRank, hourRank, minuteRank, secondRank;
     long yearStart, monthStart, dayStart, hourStart, minuteStart, secondStart;
     long yearEnd, monthEnd, dayEnd, hourEnd, minuteEnd, secondEnd;
@@ -196,7 +188,7 @@ int grib_accessor_bufr_extract_datetime_subsets_t::select_datetime()
     if (ret) return ret;
 
     /* SECOND: Double array */
-    n      = numberOfSubsets;
+    size_t n = numberOfSubsets;
     second = (double*)grib_context_malloc_clear(c, sizeof(double) * numberOfSubsets);
     if (compressed) {
         ret = grib_get_double_array(h, secondstr, second, &n);

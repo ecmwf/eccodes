@@ -37,19 +37,21 @@ check_grib_defs()
 # -----------------------------------
 echo "Check for duplicate encodings"
 # -----------------------------------
-paramIdFile=$ECCODES_DEFINITION_PATH/grib2/paramId.def
+paramIdFiles="$ECCODES_DEFINITION_PATH/grib2/paramId.def $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/paramId.def"
+
 # Flatten the file so we get just the encoding part.
 # uniq -d outputs a single copy of each line that is repeated in the input
-cat $paramIdFile | tr '\n' ' ' | tr '\t' ' ' | tr '#' '\n' | sed "s/^.* '//" | sed "s/'//" | awk '{$1="";print}' | sort |uniq -d > $tempText
-if [ -s "$tempText" ]; then
-    # File exists and has a size greater than zero
-    echo "ERROR: Duplicate parameter encoding(s) found in $paramIdFile" >&2
-    cat $tempText | sed -e 's/ ;/;/g'
-    exit 1
-else
-    echo "No duplicates in $paramIdFile"
-fi
-
+for paramIdFile in $paramIdFiles; do
+  cat $paramIdFile | tr '\n' ' ' | tr '\t' ' ' | tr '#' '\n' | sed "s/^.* '//" | sed "s/'//" | awk '{$1="";print}' | sort |uniq -d > $tempText
+  if [ -s "$tempText" ]; then
+      # File exists and has a size greater than zero
+      echo "ERROR: Duplicate parameter encoding(s) found in $paramIdFile" >&2
+      cat $tempText | sed -e 's/ ;/;/g'
+      exit 1
+  else
+      echo "No duplicates in $paramIdFile"
+  fi
+done
 
 # First check the GRIB2 paramId.def and shortName.def
 # ----------------------------------------------------

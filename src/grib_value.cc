@@ -1801,7 +1801,7 @@ int grib_set_values(grib_handle* h, grib_values* args, size_t count)
 
     if (h->context->debug) {
         for (i = 0; i < count; i++) {
-            grib_print_values("ECCODES DEBUG about to set key/value pair", &args[i], stderr);
+            grib_print_values("ECCODES DEBUG about to set key/value pair", &args[i], stderr, 1);
         }
     }
 
@@ -1875,22 +1875,24 @@ int grib_get_nearest_smaller_value(grib_handle* h, const char* name,
     return act->nearest_smaller_value(val, nearest);
 }
 
-void grib_print_values(const char* title, grib_values* values, FILE* out)
+void grib_print_values(const char* title, const grib_values* values, FILE* out, int count)
 {
-    if (values) {
-        fprintf(out, "%s: %s=", title, values->name);
-        switch (values->type) {
+    Assert(values);
+    for (int i = 0; i < count; ++i) {
+        const grib_values aVal = values[i];
+        fprintf(out, "%s: %s=", title, aVal.name);
+        switch (aVal.type) {
             case GRIB_TYPE_LONG:
-                fprintf(out, "%ld", values->long_value);
+                fprintf(out, "%ld", aVal.long_value);
                 break;
             case GRIB_TYPE_DOUBLE:
-                fprintf(out, "%g", values->double_value);
+                fprintf(out, "%g", aVal.double_value);
                 break;
             case GRIB_TYPE_STRING:
-                fprintf(out, "%s", values->string_value);
+                fprintf(out, "%s", aVal.string_value);
                 break;
         }
-        fprintf(out, " (type=%s)\n", grib_get_type_name(values->type));
+        fprintf(out, " (type=%s)\n", grib_get_type_name(aVal.type));
     }
 }
 
