@@ -1,5 +1,3 @@
-if (class is "ai")
-{
+if (class is "ai") {
  alias mars.step = stepRange;
 }
-

@@ -81,9 +81,7 @@ int grib_accessor_g2_mars_labeling_t::extra_set(long val)
 {
     int ret                                = 0;
     grib_handle* hand                      = grib_handle_of_accessor(this);
-    char stepType[30]                      = {
-        0,
-    };
+    char stepType[30]                      = {0,};
     size_t stepTypelen                      = 30;
     long derivedForecast                    = -1;
     long productDefinitionTemplateNumberNew = -1;

@@ -110,6 +110,7 @@
 013231|largeScalePrecipitation|double|LARGE SCALE PRECIPITATION|kg m-2|1|-1|14|NA|0|0
 013240|airDensity|double|AIR DENSITY|kg m-3|3|0|10|NA|0|0
 013241|cape|double|CONVECTIVE AVAILABLE POTENTIAL ENERGY|J/kg|1|0|17|NA|0|0
+013242|mucape|long|MOST UNSTABLE CAPE|J/kg|0|0|14|NA|0|0
 015008|significandOfVolumetricMixingRatio|long|(VAL) SCALED VOLUMETRIC MIXING RATIO|Numeric|0|0|24|NA|0|0
 015021|integratedMassDensity|long|(VAL) SCALED INTEGRATED MASS DENSITY|kg m-2|0|0|24|NA|0|0
 015042|reflectance|long|(VAL) REFLECTANCE|Numeric|6|0|20|NA|0|0
