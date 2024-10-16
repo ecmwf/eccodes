@@ -29,6 +29,7 @@ public:
     virtual int reset() = 0;
     virtual int destroy() = 0;
     virtual long has_next() = 0;
+    virtual Iterator* create() const = 0;
 
 public:
     grib_context* context_;
@@ -42,6 +43,9 @@ public:
     size_t size_;
     int inited_;
 };
+
+eccodes::grib::geo::Iterator* gribIteratorNew(const grib_handle*, unsigned long, int*);
+int gribIteratorDelete(eccodes::grib::geo::Iterator*);
 
 } // namespace geo
 } // namespace grib

@@ -10,13 +10,12 @@
 
 #include "grib_iterator_class_latlon_reduced.h"
 
+eccodes::grib::geo::LatlonReduced _grib_iterator_latlon_reduced{};
+eccodes::grib::geo::Iterator* grib_iterator_latlon_reduced = &_grib_iterator_latlon_reduced;
+
 namespace eccodes {
 namespace grib {
 namespace geo {
-
-LatlonReduced _grib_iterator_latlon_reduced{};
-Iterator* grib_iterator_latlon_reduced = &_grib_iterator_latlon_reduced;
-
 
 int LatlonReduced::next(double* lat, double* lon, double* val)
 {
@@ -34,9 +33,10 @@ int LatlonReduced::next(double* lat, double* lon, double* val)
 
 int LatlonReduced::init(grib_handle* h, grib_arguments* args)
 {
-    Gen::init(h, args);
-
     int ret = GRIB_SUCCESS;
+    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS)
+        return ret;
+
     double laf;
     double lal;
     long nlats;

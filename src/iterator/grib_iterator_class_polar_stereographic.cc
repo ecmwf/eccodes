@@ -10,12 +10,12 @@
 
 #include "grib_iterator_class_polar_stereographic.h"
 
+eccodes::grib::geo::PolarStereographic _grib_iterator_polar_stereographic{};
+eccodes::grib::geo::Iterator* grib_iterator_polar_stereographic = &_grib_iterator_polar_stereographic;
+
 namespace eccodes {
 namespace grib {
 namespace geo {
-
-PolarStereographic _grib_iterator_polar_stereographic{};
-Iterator* grib_iterator_polar_stereographic = &_grib_iterator_polar_stereographic;
 
 #define ITER "Polar stereographic Geoiterator"
 
@@ -53,9 +53,10 @@ typedef struct proj_data_t
 
 int PolarStereographic::init(grib_handle* h, grib_arguments* args)
 {
-    Gen::init(h, args);
+    int ret = GRIB_SUCCESS;
+    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS)
+        return ret;
 
-    int ret = 0;
     double *lats, *lons; /* arrays for latitudes and longitudes */
     double lonFirstInDegrees, latFirstInDegrees, radius;
     double x, y, Dx, Dy;

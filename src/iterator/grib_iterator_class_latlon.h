@@ -19,10 +19,8 @@ namespace geo {
 class Latlon : public Regular
 {
 public:
-    Latlon() : Regular()
-    {
-        class_name_ = "latlon";
-    }
+    Latlon() : Regular() { class_name_ = "latlon"; }
+    Iterator* create() const override { return new Latlon(); }
 
     int init(grib_handle*, grib_arguments*) override;
     int next(double*, double*, double*) override;

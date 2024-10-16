@@ -10,13 +10,12 @@
 
 #include "grib_iterator_class_latlon.h"
 
+eccodes::grib::geo::Latlon _grib_iterator_latlon{};
+eccodes::grib::geo::Iterator* grib_iterator_latlon = &_grib_iterator_latlon;
+
 namespace eccodes {
 namespace grib {
 namespace geo {
-
-Latlon _grib_iterator_latlon{};
-Iterator* grib_iterator_latlon = &_grib_iterator_latlon;
-
 
 int Latlon::next(double* lat, double* lon, double* val)
 {
@@ -65,9 +64,10 @@ int Latlon::next(double* lat, double* lon, double* val)
 
 int Latlon::init(grib_handle* h, grib_arguments* args)
 {
-    Regular::init(h, args);
+    int err = 0;
+    if ((err = Regular::init(h, args)) != GRIB_SUCCESS)
+        return err;
 
-    int err                    = 0;
     double jdir;
     double lat1=0, lat2=0, north=0, south=0;
     long jScansPositively;

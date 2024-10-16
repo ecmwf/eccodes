@@ -10,10 +10,6 @@
 
 #include "grib_iterator_class_healpix.h"
 
-namespace eccodes {
-namespace grib {
-namespace geo {
-
 #include <algorithm>
 #include <bitset>
 #include <cmath>
@@ -21,12 +17,12 @@ namespace geo {
 #include <tuple>
 #include <vector>
 
+eccodes::grib::geo::Healpix _grib_iterator_healpix;
+eccodes::grib::geo::Iterator* grib_iterator_healpix = &_grib_iterator_healpix;
+
 namespace eccodes {
 namespace grib {
 namespace geo {
-
-Healpix _grib_iterator_healpix;
-Iterator* grib_iterator_healpix = &_grib_iterator_healpix;
 
 #define ITER "HEALPix Geoiterator"
 constexpr double RAD2DEG = 57.29577951308232087684;  // 180 over pi
@@ -147,7 +143,6 @@ static std::vector<double> HEALPix_longitudes(size_t N, size_t i)
     return longitudes;
 }
 
-}  // anonymous namespace
 
 int Healpix::iterate_healpix(long N)
 {
@@ -272,9 +267,9 @@ int Healpix::iterate_healpix(long N)
 
 int Healpix::init(grib_handle* h, grib_arguments* args)
 {
-    Gen::init(h, args);
-
-    int err    = 0;
+    int err = GRIB_SUCCESS;
+    if ((err = Gen::init(h, args)) != GRIB_SUCCESS)
+        return err;
 
     const char* snside = grib_arguments_get_name(h, args, carg_++);
     const char* sorder = grib_arguments_get_name(h, args, carg_++);

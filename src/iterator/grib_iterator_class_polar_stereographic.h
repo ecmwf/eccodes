@@ -19,10 +19,8 @@ namespace geo {
 class PolarStereographic : public Gen
 {
 public:
-    PolarStereographic() : Gen()
-    {
-        class_name_ = "polar_stereographic";
-    }
+    PolarStereographic() : Gen() { class_name_ = "polar_stereographic"; }
+    Iterator* create() const override { return new PolarStereographic(); }
 
     int init(grib_handle*,grib_arguments*) override;
     int next(double *, double *, double *) override;

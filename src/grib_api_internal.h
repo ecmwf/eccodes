@@ -248,7 +248,14 @@ typedef struct grib_codetable grib_codetable;
 typedef struct grib_smart_table grib_smart_table;
 
 class grib_accessor;
-class grib_iterator;
+namespace eccodes::grib::geo {
+class Iterator;
+}
+
+typedef struct grib_iterator {
+  eccodes::grib::geo::Iterator* iterator;
+} grib_iterator;
+
 typedef struct grib_nearest_class grib_nearest_class;
 typedef struct grib_dumper grib_dumper;
 typedef struct grib_dumper_class grib_dumper_class;

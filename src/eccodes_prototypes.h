@@ -819,7 +819,7 @@ int grib_get_data(const grib_handle* h, double* lats, double* lons, double* valu
 //int grib_iterator_delete(grib_iterator* i);
 
 /* grib_iterator_class.cc */
-grib_iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* error);
+eccodes::grib::geo::Iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* error);
 
 /* grib_iterator_class_gen.cc */
 int transform_iterator_data(grib_context* c, double* data, long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning, size_t numPoints, long nx, long ny);

@@ -10,12 +10,12 @@
 
 #include "grib_iterator_class_mercator.h"
 
+eccodes::grib::geo::Mercator _grib_iterator_mercator{};
+eccodes::grib::geo::Iterator* grib_iterator_mercator = &_grib_iterator_mercator;
+
 namespace eccodes {
 namespace grib {
 namespace geo {
-
-Mercator _grib_iterator_mercator{};
-Iterator* grib_iterator_mercator = &_grib_iterator_mercator;
 
 #define ITER "Mercator Geoiterator"
 #define EPSILON 1.0e-10
@@ -165,9 +165,10 @@ int Mercator::init_mercator(grib_handle* h,
 
 int Mercator::init(grib_handle* h, grib_arguments* args)
 {
-    Gen::init(h, args);
+    int err = GRIB_SUCCESS;
+    if ((err = Gen::init(h, args)) != GRIB_SUCCESS)
+        return err;
 
-    int err = 0;
     long ni, nj, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning;
     double latFirstInDegrees, lonFirstInDegrees, LaDInDegrees;
     double latLastInDegrees, lonLastInDegrees, orientationInDegrees, DiInMetres, DjInMetres, radius = 0;

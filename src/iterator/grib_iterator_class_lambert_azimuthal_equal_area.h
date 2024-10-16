@@ -19,14 +19,11 @@ namespace geo {
 class LambertAzimuthalEqualArea : public Gen
 {
 public:
-    LambertAzimuthalEqualArea() : Gen()
-    {
-        class_name_ = "lambert_azimuthal_equal_area";
-    }
+    LambertAzimuthalEqualArea() : Gen() { class_name_ = "lambert_azimuthal_equal_area"; }
+    Iterator* create() const override { return new LambertAzimuthalEqualArea(); }
 
     int init(grib_handle*, grib_arguments*) override;
     int next(double*, double*, double*) override;
-    int previous(double*, double*, double*) override;
     int destroy() override;
 
 public:

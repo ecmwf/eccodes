@@ -19,10 +19,8 @@ namespace geo {
 class SpaceView : public Gen
 {
 public:
-    SpaceView()
-    {
-        class_name_ = "space_view";
-    }
+    SpaceView() { class_name_ = "space_view"; }
+    Iterator* create() const override { return new SpaceView(); }
 
     int init(grib_handle*, grib_arguments*) override;
     int next(double *, double *, double *) override;

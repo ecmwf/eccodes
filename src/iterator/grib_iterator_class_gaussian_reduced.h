@@ -19,10 +19,8 @@ namespace geo {
 class GaussianReduced : public Gen
 {
 public:
-    GaussianReduced() : Gen()
-    {
-        class_name_ = "gaussian_reduced";
-    }
+    GaussianReduced() : Gen() { class_name_ = "gaussian_reduced"; }
+    Iterator* create() const override { return new GaussianReduced(); }
 
     int init(grib_handle*,grib_arguments*) override;
     int next(double *, double *, double *) override;

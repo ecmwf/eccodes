@@ -10,12 +10,12 @@
 
 #include "grib_iterator_class_space_view.h"
 
+eccodes::grib::geo::SpaceView _grib_iterator_space_view{};
+eccodes::grib::geo::Iterator* grib_iterator_space_view = &_grib_iterator_space_view;
+
 namespace eccodes {
 namespace grib {
 namespace geo {
-
-SpaceView _grib_iterator_space_view{};
-Iterator* grib_iterator_space_view = &_grib_iterator_space_view;
 
 #define ITER "Space view Geoiterator"
 
@@ -78,12 +78,13 @@ int SpaceView::next(double* lat, double* lon, double* val)
 
 int SpaceView::init(grib_handle* h, grib_arguments* args)
 {
-    Gen::init(h, args);
+    int ret = GRIB_SUCCESS;
+    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS)
+        return ret;
 
     /* REFERENCE:
     *  LRIT/HRIT Global Specification (CGMS 03, Issue 2.6, 12.08.1999)
     */
-    int ret = GRIB_SUCCESS;
     double *lats, *lons; /* arrays of latitudes and longitudes */
     double latOfSubSatellitePointInDegrees, lonOfSubSatellitePointInDegrees;
     double orientationInDegrees, nrInRadiusOfEarth;

@@ -10,18 +10,20 @@
 
 #include "grib_iterator_class_gaussian.h"
 
+eccodes::grib::geo::Gaussian _grib_iterator_gaussian{};
+eccodes::grib::geo::Iterator* grib_iterator_gaussian = &_grib_iterator_gaussian;
+
 namespace eccodes {
 namespace grib {
 namespace geo {
-
-Gaussian _grib_iterator_gaussian{};
-Iterator* grib_iterator_gaussian = &_grib_iterator_gaussian;
 
 static void binary_search_gaussian_latitudes(const double xx[], const unsigned long n, double x, long* j);
 
 int Gaussian::init(grib_handle* h, grib_arguments* args)
 {
-    Regular::init(h, args);
+    int ret = GRIB_SUCCESS;
+    if((ret = Regular::init(h, args)) != GRIB_SUCCESS)
+        return ret;
 
     double* lats;
     double laf; /* latitude of first point in degrees */
@@ -32,7 +34,6 @@ int Gaussian::init(grib_handle* h, grib_arguments* args)
     int size = 0;
     double start;
     long istart = 0;
-    int ret = GRIB_SUCCESS;
 
     const char* latofirst          = grib_arguments_get_name(h, args, carg_++);
     const char* latoflast          = grib_arguments_get_name(h, args, carg_++);

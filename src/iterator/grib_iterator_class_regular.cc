@@ -10,12 +10,12 @@
 
 #include "grib_iterator_class_regular.h"
 
+eccodes::grib::geo::Regular _grib_iterator_regular{};
+eccodes::grib::geo::Iterator* grib_iterator_regular = &_grib_iterator_regular;
+
 namespace eccodes {
 namespace grib {
 namespace geo {
-
-Regular _grib_iterator_regular{};
-Iterator* grib_iterator_regular = &_grib_iterator_regular;
 
 #define ITER "Regular grid Geoiterator"
 
@@ -60,9 +60,9 @@ int Regular::destroy()
 
 int Regular::init(grib_handle* h, grib_arguments* args)
 {
-    Gen::init(h, args);
-
-    int ret                     = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
+    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS)
+        return ret;
 
     long Ni; /* Number of points along a parallel = Nx */
     long Nj; /* Number of points along a meridian = Ny */

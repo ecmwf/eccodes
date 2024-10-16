@@ -19,9 +19,9 @@ namespace geo {
 class Mercator : public Gen
 {
 public:
-    Mercator() {
-        class_name_ = "mercator";
-    }
+    Mercator() { class_name_ = "mercator"; }
+    Iterator* create() const override { return new Mercator(); }
+    
     int init(grib_handle*,grib_arguments*) override;
     int next(double *lat, double *lon, double *val) override;
     int destroy() override;

@@ -19,10 +19,8 @@ namespace geo {
 class Regular : public Gen
 {
 public:
-    Regular()
-    {
-        class_name_ = "regular";
-    }
+    Regular() { class_name_ = "regular"; }
+    Iterator* create() const override { return new Regular(); }
 
     int init(grib_handle*,grib_arguments*) override;
     int next(double *lat, double *lon, double *val) override;

@@ -19,10 +19,9 @@ namespace geo {
 class Gaussian : public Regular
 {
 public: 
-    Gaussian() : Regular()
-    {
-        class_name_ = "gaussian";
-    }
+    Gaussian() : Regular() { class_name_ = "gaussian"; }
+    Iterator* create() const override { return new Gaussian(); }
+
     int init(grib_handle*, grib_arguments*) override;
 };
 

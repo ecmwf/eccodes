@@ -11,12 +11,12 @@
 #include "grib_iterator_class_gaussian_reduced.h"
 #include <cmath>
 
+eccodes::grib::geo::GaussianReduced _grib_iterator_gaussian_reduced{};
+eccodes::grib::geo::Iterator* grib_iterator_gaussian_reduced = &_grib_iterator_gaussian_reduced;
+
 namespace eccodes {
 namespace grib {
 namespace geo {
-
-GaussianReduced _grib_iterator_gaussian_reduced{};
-Iterator* grib_iterator_gaussian_reduced = &_grib_iterator_gaussian_reduced;
 
 #define ITER "Reduced Gaussian grid Geoiterator"
 
@@ -225,9 +225,11 @@ int GaussianReduced::iterate_reduced_gaussian_subarea(grib_handle* h,
 
 int GaussianReduced::init(grib_handle* h, grib_arguments* args)
 {
-    Gen::init(h, args);
+    int ret = GRIB_SUCCESS;
+    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS)
+        return ret;
 
-    int ret = GRIB_SUCCESS, j, is_global = 0;
+    int j, is_global = 0;
     double lat_first = 0, lon_first = 0, lat_last = 0, lon_last = 0;
     double angular_precision = 1.0 / 1000000.0;
     double* lats;

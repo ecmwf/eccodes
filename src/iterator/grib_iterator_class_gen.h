@@ -14,15 +14,13 @@
 
 namespace eccodes {
 namespace grib {
-namespace geo { // TODO(maee): geo
+namespace geo {
 
 class Gen : public Iterator
 {
 public:
-    Gen() : Iterator()
-    {
-        class_name_ = "abstract_long_vector";
-    }
+    Gen() : Iterator() { class_name_ = "gen"; }
+    Iterator* create() const override { return new Gen(); }
 
     int init(grib_handle*,grib_arguments*) override;
     int next(double*, double*, double*) override;
@@ -32,6 +30,7 @@ public:
     long has_next() override; // TODO(maee/masn): return bool please!
 
 public:
+    //int get(double*, double*, double*);
     int carg_;
     const char* missingValue_;
 };

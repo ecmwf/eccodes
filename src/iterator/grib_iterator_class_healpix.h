@@ -19,10 +19,8 @@ namespace geo {
 class Healpix : public Gen
 {
 public:
-    Healpix() : Gen()
-    {
-        class_name_ = "healpix";
-    }
+    Healpix() : Gen() { class_name_ = "healpix"; }
+    Iterator* create() const override { return new Healpix(); }
 
     int init(grib_handle*, grib_arguments*) override;
     int next(double *, double *, double *) override;

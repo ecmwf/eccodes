@@ -11,12 +11,12 @@
 #include "grib_iterator_class_lambert_conformal.h"
 #include <cmath>
 
+eccodes::grib::geo::LambertConformal _grib_iterator_lambert_conformal{};
+eccodes::grib::geo::Iterator* grib_iterator_lambert_conformal = &_grib_iterator_lambert_conformal;
+
 namespace eccodes {
 namespace grib {
 namespace geo {
-
-LambertConformal _grib_iterator_lambert_conformal{};
-Iterator* grib_iterator_lambert_conformal = &_grib_iterator_lambert_conformal;
 
 #define ITER "Lambert conformal Geoiterator"
 #define EPSILON 1.0e-10
@@ -345,9 +345,11 @@ int LambertConformal::init_oblate(const grib_handle* h,
 
 int LambertConformal::init(grib_handle* h, grib_arguments* args)
 {
-    Gen::init(h, args);
+    int err = GRIB_SUCCESS;
+    if ((err = Gen::init(h, args)) != GRIB_SUCCESS)
+        return err;
 
-    int err = 0, is_oblate = 0;
+    int is_oblate = 0;
     long nx, ny, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning;
     double LoVInDegrees, LaDInDegrees, Latin1InDegrees, Latin2InDegrees, latFirstInDegrees,
         lonFirstInDegrees, Dx, Dy, radius = 0;

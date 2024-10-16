@@ -23,8 +23,5 @@ public:
 
 private:
     grib_arguments* args_;
-
-    friend grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int* error);
+    friend eccodes::grib::geo::Iterator* eccodes::grib::geo::gribIteratorNew(const grib_handle*, unsigned long, int*);
 };
-
-// grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int* error)
