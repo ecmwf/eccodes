@@ -51,6 +51,7 @@ concept datasetForLocal(unknown) {
   "unknown" = { dummy=1; }
 }
 
+<<<<<<< HEAD
 # If the keys marsClass or productionStatusOfProcessedData change in memory,
 # need to trigger the change of conceptsDirs
 transient redo_concept_dirs = 0;
@@ -59,6 +60,9 @@ when( changed(marsClass) || changed(productionStatusOfProcessedData) ) {
 }
 
 if (datasetForLocal isnot "unknown") {
+=======
+if (!(datasetForLocal is "unknown")) {
+>>>>>>> feature/timeproc
    constant conceptsDir2 = "grib2/localConcepts/[datasetForLocal]": hidden;
    constant conceptsDir1 = "grib2": hidden;
 }
@@ -129,6 +133,7 @@ else {
    }
 }
 
+
 ## discipline = 10, parameterCategory = 0 are WMO wave parameters !
 #if (discipline == 10 && parameterCategory == 0) {
 ## paramIds 140xxx are for wave parameters, exception for wave spectra templates
@@ -139,5 +144,8 @@ if (paramId >= 140000 && paramId < 141000 &&
   unalias mars.paramtype;
   alias mars.paramtype = paramTypeWave;
 }
+
+template timeproc "grib2/timeproc.def";
+alias mars.timeproc = timeproc ;
 
 meta md5Section4 md5(offsetSection4,section4Length);
