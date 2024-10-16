@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -44,7 +43,7 @@ int grib_accessor_codetable_units_t::unpack_string(char* buffer, size_t* len)
     if ((err = ((grib_accessor*)ca)->unpack_long(&value, &size)) != GRIB_SUCCESS)
         return err;
 
-    table = ca->table();
+    table = ca->codetable();
 
     if (table && (value >= 0) && (value < table->size) && table->entries[value].units) {
         strcpy(tmp, table->entries[value].units);
@@ -56,10 +55,9 @@ int grib_accessor_codetable_units_t::unpack_string(char* buffer, size_t* len)
     l = strlen(tmp) + 1;
 
     if (*len < l) {
-        const char* cclass_name = class_name_;
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         cclass_name, name_, l, *len);
+                         class_name_, name_, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }

@@ -32,7 +32,7 @@ public:
 protected:
     const char* key_;
     long start_;
-    size_t length_;
+    size_t str_length_;
 
 private:
     long scale_;

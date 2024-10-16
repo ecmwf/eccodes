@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -596,6 +595,9 @@ int grib_accessor_data_g1second_order_general_extended_packing_t::pack_double(co
         else if (val[i] < min)
             min = val[i];
     }
+    if ((ret = grib_check_data_values_minmax(handle, min, max)) != GRIB_SUCCESS) {
+        return ret;
+    }
 
     /* ECC-1219: packingType conversion from grid_ieee to grid_second_order */
     if ((ret = get_bits_per_value(handle, bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
@@ -641,6 +643,7 @@ int grib_accessor_data_g1second_order_general_extended_packing_t::pack_double(co
             return GRIB_INTERNAL_ERROR;
         }
         binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &ret);
+        if (ret != GRIB_SUCCESS) return ret;
 
         divisor = codes_power<double>(-binary_scale_factor, 2);
     }

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -10,6 +9,8 @@
  */
 
 #include "grib_accessor_class_bits.h"
+#include "ecc_numeric_limits.h"
+
 
 grib_accessor_bits_t _grib_accessor_bits{};
 grib_accessor* grib_accessor_bits = &_grib_accessor_bits;
@@ -161,7 +162,7 @@ int grib_accessor_bits_t::pack_long(const long* val, size_t* len)
     }
 #endif
 
-    maxval = (1 << length) - 1;
+    maxval = NumericLimits<unsigned long>::max(length);
     if (*val > maxval) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
                          "key=%s: Trying to encode value of %ld but the maximum allowable value is %ld (number of bits=%ld)",

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -52,8 +51,6 @@ void grib_accessor_expanded_descriptors_t::init(const long len, grib_arguments* 
 
     tablesAccessor_ = NULL;
 }
-
-static bufr_descriptors_array* do_expand(grib_accessor* a, bufr_descriptors_array* unexpanded, change_coding_params* ccp, int* err);
 
 #define BUFR_DESCRIPTORS_ARRAY_USED_SIZE(v) ((v)->n)
 #define SILENT                              1
@@ -144,7 +141,7 @@ void grib_accessor_expanded_descriptors_t::__expand(bufr_descriptors_array* unex
             if (*err)
                 goto cleanup;
 
-            inner_unexpanded = grib_bufr_descriptors_array_new(c, DESC_SIZE_INIT, DESC_SIZE_INCR);
+            inner_unexpanded = grib_bufr_descriptors_array_new(DESC_SIZE_INIT, DESC_SIZE_INCR);
             for (i = 0; i < size; i++) {
                 vv               = grib_bufr_descriptor_new(tablesAccessor_, v_array[i], !SILENT, err);
                 inner_unexpanded = grib_bufr_descriptors_array_push(inner_unexpanded, vv);
@@ -181,7 +178,7 @@ void grib_accessor_expanded_descriptors_t::__expand(bufr_descriptors_array* unex
                 grib_bufr_descriptors_array_push(expanded, u);
                 idx              = expanded->n - 1;
                 size             = 0;
-                inner_unexpanded = grib_bufr_descriptors_array_new(c, DESC_SIZE_INIT, DESC_SIZE_INCR);
+                inner_unexpanded = grib_bufr_descriptors_array_new(DESC_SIZE_INIT, DESC_SIZE_INCR);
 
                 /* Number of descriptors to replicate cannot be more than what's left */
                 if (us->X + 1 > unexpanded->n) {
@@ -244,7 +241,7 @@ void grib_accessor_expanded_descriptors_t::__expand(bufr_descriptors_array* unex
                     printf("+++ pop  %06ld [%s]\n", ur[j]->code, descriptor_type_name(ur[j]->type));
 #endif
                 }
-                inner_unexpanded = grib_bufr_descriptors_array_new(c, DESC_SIZE_INIT, DESC_SIZE_INCR);
+                inner_unexpanded = grib_bufr_descriptors_array_new(DESC_SIZE_INIT, DESC_SIZE_INCR);
                 for (j = 0; j < us->X; j++) {
                     urc = grib_bufr_descriptor_clone(ur[j]);
                     grib_bufr_descriptors_array_push(inner_unexpanded, urc);
@@ -407,13 +404,13 @@ cleanup:
 bufr_descriptors_array* grib_accessor_expanded_descriptors_t::do_expand(bufr_descriptors_array* unexpanded, change_coding_params* ccp, int* err)
 {
     bufr_descriptors_array* expanded = NULL;
-    grib_context* c                  = context_;
+
 #if MYDEBUG
     int idepth;
     global_depth++;
 #endif
 
-    expanded = grib_bufr_descriptors_array_new(c, DESC_SIZE_INIT, DESC_SIZE_INCR);
+    expanded = grib_bufr_descriptors_array_new(DESC_SIZE_INIT, DESC_SIZE_INCR);
 
 #if MYDEBUG
     {
@@ -473,9 +470,7 @@ int grib_accessor_expanded_descriptors_t::expand()
     /* grib_iarray* unexp=0; */
     int i;
     long* u      = 0;
-    char key[50] = {
-        0,
-    };
+    char key[50] = {0,};
     long centre, masterTablesVersionNumber, localTablesVersionNumber, masterTablesNumber;
     change_coding_params ccp;
     bufr_descriptors_array* unexpanded      = NULL;
@@ -538,8 +533,8 @@ int grib_accessor_expanded_descriptors_t::expand()
         Assert(tablesAccessor_);
     }
 
-    unexpanded           = grib_bufr_descriptors_array_new(c, unexpandedSize, DESC_SIZE_INCR);
-    unexpanded_copy      = grib_bufr_descriptors_array_new(c, unexpandedSize, DESC_SIZE_INCR);
+    unexpanded           = grib_bufr_descriptors_array_new(unexpandedSize, DESC_SIZE_INCR);
+    unexpanded_copy      = grib_bufr_descriptors_array_new(unexpandedSize, DESC_SIZE_INCR);
     operator206yyy_width = 0;
     for (i = 0; i < unexpandedSize; i++) {
         bufr_descriptor *aDescriptor1, *aDescriptor2;
@@ -685,9 +680,7 @@ int grib_accessor_expanded_descriptors_t::unpack_string_array(char** buffer, siz
 {
     int err      = 0;
     long* v      = NULL;
-    char buf[25] = {
-        0,
-    };
+    char buf[25] = {0,};
     long llen = 0;
     size_t i = 0, size = 0;
     const grib_context* c = context_;

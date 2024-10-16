@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -298,9 +297,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
         if (err) {
             size_t i = 0, concept_count = 0;
             long dummy = 0, editionNumber = 0;
-            char centre_s[32] = {
-                0,
-            };
+            char centre_s[32] = {0,};
             size_t centre_len                              = sizeof(centre_s);
             char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {
                 NULL,
@@ -366,12 +363,12 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
         return err;
     }
     e  = c->conditions;
-    sa = grib_sarray_new(h->context, 10, 10);
+    sa = grib_sarray_new(10, 10);
     while (e) {
         concept_conditions_apply(h, e, values, sa, &count);
         e = e->next;
     }
-    grib_sarray_delete(h->context, sa);
+    grib_sarray_delete(sa);
 
     if (count)
         err = grib_set_values(h, values, count);
@@ -400,9 +397,8 @@ int grib_accessor_concept_t::pack_long(const long* val, size_t* len)
             long newParamId = 0;
             if (grib_get_long(h, "paramIdForConversion", &newParamId) == GRIB_SUCCESS && newParamId > 0) {
                 if (context_->debug) {
-                    const char* cclass_name = class_name_;
                     fprintf(stderr, "ECCODES DEBUG %s::%s: Changing %s from %ld to %ld\n",
-                            cclass_name, __func__, name_, *val, newParamId);
+                            class_name_, __func__, name_, *val, newParamId);
                 }
                 snprintf(buf, sizeof(buf), "%ld", newParamId);
             }

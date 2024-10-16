@@ -23,9 +23,7 @@ void grib_accessor_cf_var_name_t::init(const long l, grib_arguments* arg)
 int grib_accessor_cf_var_name_t::unpack_string(char* val, size_t* len)
 {
     grib_handle* h       = grib_handle_of_accessor(this);
-    char defaultKey[256] = {
-        0,
-    };
+    char defaultKey[256] = {0,};
     size_t size       = sizeof(defaultKey) / sizeof(*defaultKey);
     char* pDefaultKey = defaultKey;
 

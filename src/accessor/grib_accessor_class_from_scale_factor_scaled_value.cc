@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -10,6 +9,7 @@
  */
 
 #include "grib_accessor_class_from_scale_factor_scaled_value.h"
+#include "ecc_numeric_limits.h"
 
 grib_accessor_from_scale_factor_scaled_value_t _grib_accessor_from_scale_factor_scaled_value{};
 grib_accessor* grib_accessor_from_scale_factor_scaled_value = &_grib_accessor_from_scale_factor_scaled_value;
@@ -64,8 +64,8 @@ int grib_accessor_from_scale_factor_scaled_value_t::pack_double(const double* va
     }
     value_accessor_num_bits  = value_accessor->length_ * 8;
     factor_accessor_num_bits = factor_accessor->length_ * 8;
-    maxval_value             = (1UL << value_accessor_num_bits) - 2;   // exclude missing
-    maxval_factor            = (1UL << factor_accessor_num_bits) - 2;  // exclude missing
+    maxval_value             = NumericLimits<int64_t>::max(value_accessor_num_bits);  // exclude missing
+    maxval_factor            = NumericLimits<int64_t>::max(factor_accessor_num_bits);  // exclude missing
     if (strcmp(factor_accessor->class_name_, "signed") == 0) {
         maxval_factor = (1UL << (factor_accessor_num_bits - 1)) - 1;
     }

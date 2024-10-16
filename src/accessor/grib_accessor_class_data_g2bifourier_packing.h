@@ -65,7 +65,7 @@ private:
     const char* biFourierDoNotPackAxes_;
     const char* biFourierMakeTemplate_;
     const char* totalNumberOfValuesInUnpackedSubset_;
-    const char* numberOfValues_;
+    //const char* numberOfValues_;
 
     bif_trunc_t* new_bif_trunc();
 };

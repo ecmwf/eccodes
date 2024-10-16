@@ -27,7 +27,7 @@ public:
     void dump(grib_dumper*) override;
     void init(const long, grib_arguments*) override;
 
-    grib_smart_table* table() const { return table_; }
+    grib_smart_table* smarttable() const { return table_; }
 
 private:
     grib_smart_table* table_;

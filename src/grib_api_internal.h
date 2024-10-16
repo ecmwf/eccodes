@@ -552,7 +552,6 @@ struct grib_sarray
     size_t size; /* capacity */
     size_t n;    /* used size */
     size_t incsize;
-    grib_context* context;
 };
 
 /* Dynamic array of objects (void*) */
@@ -562,7 +561,6 @@ struct grib_oarray
     size_t size; /* capacity */
     size_t n;    /* used size */
     size_t incsize;
-    grib_context* context;
 };
 
 /* Dynamic array of doubles */
@@ -572,7 +570,6 @@ struct grib_darray
     size_t size; /* capacity */
     size_t n;    /* used size */
     size_t incsize;
-    grib_context* context;
 };
 
 /* Dynamic array of integers (long) */
@@ -583,7 +580,6 @@ struct grib_iarray
     size_t n;    /* used size */
     size_t incsize;
     size_t number_of_pop_front;
-    grib_context* context;
 };
 
 /* Dynamic array of double arrays */
@@ -593,7 +589,6 @@ struct grib_vdarray
     size_t size; /* capacity */
     size_t n;    /* used size */
     size_t incsize;
-    grib_context* context;
 };
 
 /* Dynamic array of string arrays */
@@ -603,7 +598,6 @@ struct grib_vsarray
     size_t size; /* capacity */
     size_t n;    /* used size */
     size_t incsize;
-    grib_context* context;
 };
 
 /* Dynamic array of integer arrays */
@@ -613,7 +607,6 @@ struct grib_viarray
     size_t size; /* capacity */
     size_t n;    /* used size */
     size_t incsize;
-    grib_context* context;
 };
 
 /* types of BUFR descriptors used in bufr_descriptor->type*/

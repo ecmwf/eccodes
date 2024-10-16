@@ -80,6 +80,13 @@
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Forecast albedo
+'surface_albedo' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Sea-ice thickness
 'sea_ice_thickness' = {
 	 discipline = 10 ;

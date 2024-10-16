@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -103,9 +102,7 @@ static int proj_equatorial_azimuthal_equidistant(grib_handle* h, char* result)
 static int proj_lambert_conformal(grib_handle* h, char* result)
 {
     int err         = 0;
-    char shape[128] = {
-        0,
-    };
+    char shape[128] = {0,};
     double LoVInDegrees = 0, LaDInDegrees = 0, Latin1InDegrees = 0, Latin2InDegrees = 0;
 
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
@@ -126,9 +123,7 @@ static int proj_lambert_conformal(grib_handle* h, char* result)
 static int proj_lambert_azimuthal_equal_area(grib_handle* h, char* result)
 {
     int err         = 0;
-    char shape[128] = {
-        0,
-    };
+    char shape[128] = {0,};
     double standardParallel = 0, centralLongitude = 0;
 
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
@@ -148,9 +143,7 @@ static int proj_polar_stereographic(grib_handle* h, char* result)
     double centralLongitude = 0, centralLatitude = 0;
     int has_northPole         = 0;
     long projectionCentreFlag = 0;
-    char shape[128]           = {
-        0,
-    };
+    char shape[128]           = {0,};
 
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
         return err;
@@ -183,9 +176,7 @@ static int proj_mercator(grib_handle* h, char* result)
 {
     int err             = 0;
     double LaDInDegrees = 0;
-    char shape[128]     = {
-        0,
-    };
+    char shape[128]     = {0,};
 
     if ((err = grib_get_double_internal(h, "LaDInDegrees", &LaDInDegrees)) != GRIB_SUCCESS)
         return err;
@@ -218,9 +209,7 @@ int grib_accessor_proj_string_t::unpack_string(char* v, size_t* len)
 {
     int err = 0, found = 0;
     size_t i           = 0;
-    char grid_type[64] = {
-        0,
-    };
+    char grid_type[64] = {0,};
     grib_handle* h = grib_handle_of_accessor(this);
     size_t size    = sizeof(grid_type) / sizeof(*grid_type);
 
@@ -228,10 +217,9 @@ int grib_accessor_proj_string_t::unpack_string(char* v, size_t* len)
 
     size_t l = 100;  // Safe bet
     if (*len < l) {
-        const char* cclass_name = class_name_;
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is at least %zu bytes long (len=%zu)",
-                         cclass_name, name_, l, *len);
+                         class_name_, name_, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }

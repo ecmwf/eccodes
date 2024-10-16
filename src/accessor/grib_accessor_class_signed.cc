@@ -10,6 +10,7 @@
  */
 
 #include "grib_accessor_class_signed.h"
+#include "ecc_numeric_limits.h"
 
 grib_accessor_signed_t _grib_accessor_signed{};
 grib_accessor* grib_accessor_signed = &_grib_accessor_signed;
@@ -118,8 +119,8 @@ int grib_accessor_signed_t::pack_long(const long* val, size_t* len)
         else {
             // ECC-1605: Check overflow/underflow
             const int nbits   = nbytes_ * 8;
-            const long minval = -(1L << (nbits - 1)) + 1;
-            const long maxval = (1L << (nbits - 1)) - 1;
+            const long minval = NumericLimits<long>::min(nbits);
+            const long maxval = NumericLimits<long>::max(nbits);
             // printf("  key=%s: v=%ld  (minval=%ld  maxval=%ld)\n", name_ , v, minval, maxval);
             if (v > maxval || v < minval) {
                 grib_context_log(context_, GRIB_LOG_ERROR,

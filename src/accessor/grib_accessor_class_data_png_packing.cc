@@ -235,9 +235,7 @@ static bool is_constant(const double* values, size_t n_vals)
 
 int grib_accessor_data_png_packing_t::pack_double(const double* val, size_t* len)
 {
-    const char* cclass_name = class_name_;
-
-    int err                = GRIB_SUCCESS;
+    int err = GRIB_SUCCESS;
     bool is_constant_field = false;
     int i, j;
     size_t buflen = 0;
@@ -310,7 +308,7 @@ int grib_accessor_data_png_packing_t::pack_double(const double* val, size_t* len
             grib_get_double_internal(grib_handle_of_accessor(this), reference_value_, &ref);
             if (ref != reference_value) {
                 grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
-                                 cclass_name, __func__, reference_value_, ref, reference_value);
+                                 class_name_, __func__, reference_value_, ref, reference_value);
                 return GRIB_INTERNAL_ERROR;
             }
         }
@@ -363,7 +361,7 @@ int grib_accessor_data_png_packing_t::pack_double(const double* val, size_t* len
     if (width * height != *len) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s %s: width=%ld height=%ld len=%ld. width*height should equal len!",
-                         cclass_name, __func__, (long)width, (long)height, (long)*len);
+                         class_name_, __func__, (long)width, (long)height, (long)*len);
         /* ECC-802: We cannot bomb out here as the user might have changed Ni/Nj and the packingType
          * but has not yet submitted the new data values. So len will be out of sync!
          * So issue a warning but proceed.
@@ -397,6 +395,7 @@ int grib_accessor_data_png_packing_t::pack_double(const double* val, size_t* len
     }
 
     binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
+    if (err) return err;
     divisor             = codes_power<double>(-binary_scale_factor, 2);
 
     #ifndef PNG_ANYBITS
@@ -440,7 +439,7 @@ int grib_accessor_data_png_packing_t::pack_double(const double* val, size_t* len
         grib_get_double_internal(grib_handle_of_accessor(this), reference_value_, &ref);
         if (ref != reference_value) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
-                             cclass_name, __func__, reference_value_, ref, reference_value);
+                             class_name_, __func__, reference_value_, ref, reference_value);
             return GRIB_INTERNAL_ERROR;
         }
     }

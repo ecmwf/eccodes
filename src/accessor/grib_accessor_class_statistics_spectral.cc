@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -29,8 +28,7 @@ void grib_accessor_statistics_spectral_t::init(const long l, grib_arguments* c)
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
 
     number_of_elements_ = 4;
-    v_                  = (double*)grib_context_malloc(context_,
-                                                       sizeof(double) * number_of_elements_);
+    v_ = (double*)grib_context_malloc(context_, sizeof(double) * number_of_elements_);
 
     length_ = 0;
     dirty_  = 1;

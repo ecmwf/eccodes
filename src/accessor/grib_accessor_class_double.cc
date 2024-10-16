@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -26,7 +25,6 @@ int grib_accessor_double_t::unpack_string(char* v, size_t* len)
     char repres[1024];
     char format[32]         = "%g";
     grib_handle* h          = grib_handle_of_accessor(this);
-    const char* cclass_name = class_name_;
 
     unpack_double(&val, &l);
     if ((val == GRIB_MISSING_DOUBLE) && ((flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0)) {
@@ -43,7 +41,7 @@ int grib_accessor_double_t::unpack_string(char* v, size_t* len)
     if (l > *len) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         cclass_name, name_, l, *len);
+                         class_name_, name_, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }

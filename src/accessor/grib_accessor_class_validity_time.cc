@@ -99,10 +99,9 @@ int grib_accessor_validity_time_t::unpack_string(char* val, size_t* len)
     if (err) return err;
 
     if (*len < lmin) {
-        const char* cclass_name = class_name_;
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         cclass_name, name_, lmin, *len);
+                         class_name_, name_, lmin, *len);
         *len = lmin;
         return GRIB_BUFFER_TOO_SMALL;
     }

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -99,9 +98,7 @@ int grib_accessor_ascii_t::pack_double(const double* v, size_t* len)
 
 int grib_accessor_ascii_t::unpack_long(long* v, size_t* len)
 {
-    char val[1024] = {
-        0,
-    };
+    char val[1024] = {0,};
     size_t l   = sizeof(val);
     size_t i   = 0;
     char* last = NULL;

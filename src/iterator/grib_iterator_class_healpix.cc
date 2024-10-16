@@ -143,7 +143,6 @@ static std::vector<double> HEALPix_longitudes(size_t N, size_t i)
     return longitudes;
 }
 
-
 int Healpix::iterate_healpix(long N)
 {
     size_t Ny = 4 * static_cast<size_t>(N) - 1;

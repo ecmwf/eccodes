@@ -15,8 +15,7 @@ grib_accessor* grib_accessor_values = &_grib_accessor_values;
 
 long grib_accessor_values_t::init_length()
 {
-    int ret                      = 0;
-
+    int ret = 0;
     long seclen        = 0;
     long offsetsection = 0;
     long offsetdata    = 0;
@@ -53,7 +52,7 @@ void grib_accessor_values_t::init(const long v, grib_arguments* params)
     seclen_        = grib_arguments_get_name(grib_handle_of_accessor(this), params, carg_++);
     offsetdata_    = grib_arguments_get_name(grib_handle_of_accessor(this), params, carg_++);
     offsetsection_ = grib_arguments_get_name(grib_handle_of_accessor(this), params, carg_++);
-    dirty_         = 1;
+    values_dirty_  = 1;
 
     length_ = init_length();
     /* Assert(length_ >=0); */
@@ -142,7 +141,7 @@ int grib_accessor_values_t::pack_long(const long* val, size_t* len)
     int ret = pack_double(dval, len);
     grib_context_free(context_, dval);
 
-    dirty_ = 1;
+    values_dirty_ = 1;
 
     return ret;
 }

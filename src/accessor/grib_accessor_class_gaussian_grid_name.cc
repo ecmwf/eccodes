@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -37,9 +36,7 @@ long grib_accessor_gaussian_grid_name_t::get_native_type()
 int grib_accessor_gaussian_grid_name_t::unpack_string(char* v, size_t* len)
 {
     long N = 0, Ni = 0;
-    char tmp[MAX_GRIDNAME_LEN] = {
-        0,
-    };
+    char tmp[MAX_GRIDNAME_LEN] = {0,};
     size_t length = 0;
     int ret       = GRIB_SUCCESS;
 
@@ -67,10 +64,9 @@ int grib_accessor_gaussian_grid_name_t::unpack_string(char* v, size_t* len)
     length = strlen(tmp) + 1;
 
     if (*len < length) {
-        const char* cclass_name = class_name_;
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         cclass_name, name_, length, *len);
+                         class_name_, name_, length, *len);
         *len = length;
         return GRIB_BUFFER_TOO_SMALL;
     }

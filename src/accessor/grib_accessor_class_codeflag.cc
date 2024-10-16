@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -105,12 +104,8 @@ int grib_accessor_codeflag_t::value_count(long* count)
 void grib_accessor_codeflag_t::dump(grib_dumper* dumper)
 {
     long v              = 0;
-    char flagname[1024] = {
-        0,
-    };
-    char fname[1024] = {
-        0,
-    };
+    char flagname[1024] = {0,};
+    char fname[1024] = {0,};
 
     size_t llen = 1;
 

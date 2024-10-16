@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -45,9 +44,7 @@ int grib_accessor_g2level_t::unpack_double(double* val, size_t* len)
     long type_first         = 0;
     long scale_first        = 0;
     long value_first        = 0;
-    char pressure_units[10] = {
-        0,
-    };
+    char pressure_units[10] = {0,};
     size_t pressure_units_len = 10;
     bool tigge                = is_tigge(hand);
 
@@ -134,9 +131,7 @@ int grib_accessor_g2level_t::pack_double(const double* val, size_t* len)
     double value_first = *val;
     // long scale_first           = 0;
     long type_first         = 0;
-    char pressure_units[10] = {
-        0,
-    };
+    char pressure_units[10] = {0,};
     size_t pressure_units_len = 10;
     const long lval           = (long)value_first;
 
@@ -197,9 +192,7 @@ int grib_accessor_g2level_t::pack_long(const long* val, size_t* len)
     long value_first        = *val;
     long scale_first        = 0;
     long type_first         = 0;
-    char pressure_units[10] = {
-        0,
-    };
+    char pressure_units[10] = {0,};
     size_t pressure_units_len = 10;
 
     grib_handle* hand          = grib_handle_of_accessor(this);

@@ -30,7 +30,7 @@ public:
     void dump(grib_dumper*) override;
     void init(const long, grib_arguments*) override;
 
-    grib_codetable* table() const { return table_; }
+    grib_codetable* codetable() const { return table_; }
 
 private:
     grib_codetable* table_;

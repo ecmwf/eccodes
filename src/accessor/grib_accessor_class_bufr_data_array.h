@@ -23,11 +23,6 @@ typedef struct bitmap_s
 
 class grib_accessor_bufr_data_array_t;
 
-typedef int (*codec_element_proc)(grib_context*, grib_accessor_bufr_data_array_t*, int, grib_buffer*, unsigned char*, long*, int, bufr_descriptor*, long, grib_darray*, grib_sarray*);
-
-typedef int (*codec_replication_proc)(grib_context*, grib_accessor_bufr_data_array_t*, int, grib_buffer*, unsigned char*, long*, int, long, grib_darray*, long*);
-
-
 class grib_accessor_bufr_data_array_t : public grib_accessor_gen_t
 {
 public:
@@ -116,7 +111,6 @@ private:
     char* decode_string_value(grib_context*, unsigned char*, long*, bufr_descriptor*, int*);
     double decode_double_value(grib_context*, unsigned char*, long*, bufr_descriptor*, int, int*);
     int encode_new_bitmap(grib_context*, grib_buffer*, long*, int);
-    grib_darray* doubleValues = NULL;
     int encode_overridden_reference_value(grib_context*, grib_buffer*, long*, bufr_descriptor*);
     int build_bitmap(unsigned char*, long*, int, grib_iarray*, int);
     int consume_bitmap(int);

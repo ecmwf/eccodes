@@ -18,7 +18,7 @@ class grib_accessor_data_simple_packing_t : public grib_accessor_values_t
 public:
     grib_accessor_data_simple_packing_t() :
         grib_accessor_values_t() { class_name_ = "data_simple_packing"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_data_simple_packing_t{}; }
+    //grib_accessor* create_empty_accessor() override { return new grib_accessor_data_simple_packing_t{}; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_float(float* val, size_t* len) override;

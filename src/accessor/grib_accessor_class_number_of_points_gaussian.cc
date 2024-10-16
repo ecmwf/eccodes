@@ -109,9 +109,6 @@ static int get_number_of_data_values(grib_handle* h, size_t* numDataValues)
     return err;
 }
 
-static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* len);
-static int unpack_long_new(grib_accessor* a, long* val, size_t* len);
-
 int grib_accessor_number_of_points_gaussian_t::unpack_long(long* val, size_t* len)
 {
     int err             = GRIB_SUCCESS;
