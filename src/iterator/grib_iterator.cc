@@ -111,12 +111,12 @@ grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int
 
 int grib_iterator_delete(grib_iterator* i)
 {
-    if (i) { // TODO(maee): check if this is necessary
-        grib_context* c = i->iterator->context_; // TODO(maee): find a better solution
+    if (i) {
+        grib_context* c = grib_context_get_default();
         gribIteratorDelete(i->iterator);
         grib_context_free(c, i);
     }
-    return 0;
+    return GRIB_SUCCESS;
 }
 
 #else
