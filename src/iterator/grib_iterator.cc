@@ -18,50 +18,16 @@ namespace eccodes {
 namespace grib {
 namespace geo {
 
-#if GRIB_PTHREADS
-static pthread_once_t once   = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex;
-
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_iterator_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex);
-            once = 1;
-        }
-    }
-}
-#endif
-
 
 int Iterator::init(grib_handle* h, grib_arguments* args)
 {
-    int r = 0;
     h_ = h;
-    //GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    //GRIB_MUTEX_LOCK(&mutex);
-    //r = init_iterator(this, i, h, args);
-    //GRIB_MUTEX_UNLOCK(&mutex);
-    return r;
+    return GRIB_SUCCESS;
 }
 
 /* For this one, ALL destroy are called */
 int Iterator::destroy()
 {
-    //grib_context_free(context_, this);
     delete context_;
     delete this;
     return GRIB_SUCCESS;
