@@ -22,7 +22,7 @@ namespace geo
 
 #define ITER "Regular grid Geoiterator"
 
-int Regular::next(double* lat, double* lon, double* val)
+int Regular::next(double* lat, double* lon, double* val) const
 {
     if ((long)e_ >= (long)(nv_ - 1))
         return 0;
@@ -37,7 +37,7 @@ int Regular::next(double* lat, double* lon, double* val)
     return 1;
 }
 
-int Regular::previous(double* lat, double* lon, double* val)
+int Regular::previous(double* lat, double* lon, double* val) const
 {
     if (e_ < 0)
         return 0;

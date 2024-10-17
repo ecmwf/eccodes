@@ -337,7 +337,7 @@ int Healpix::init(grib_handle* h, grib_arguments* args)
     return err;
 }
 
-int Healpix::next(double* lat, double* lon, double* val)
+int Healpix::next(double* lat, double* lon, double* val) const
 {
     if (e_ >= static_cast<long>(nv_ - 1)) {
         return 0;

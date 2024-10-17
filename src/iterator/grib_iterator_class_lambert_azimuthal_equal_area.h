@@ -27,7 +27,7 @@ public:
     Iterator* create() const override { return new LambertAzimuthalEqualArea(); }
 
     int init(grib_handle*, grib_arguments*) override;
-    int next(double*, double*, double*) override;
+    int next(double*, double*, double*) const override;
     int destroy() override;
 
 private:

@@ -20,7 +20,7 @@ namespace grib
 namespace geo
 {
 
-int Latlon::next(double* lat, double* lon, double* val)
+int Latlon::next(double* lat, double* lon, double* val) const
 {
     /* GRIB-238: Support rotated lat/lon grids */
     double ret_lat, ret_lon, ret_val = 0;

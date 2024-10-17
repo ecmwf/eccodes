@@ -27,7 +27,7 @@ public:
     Iterator* create() const override { return new LatlonReduced(); }
 
     int init(grib_handle*, grib_arguments*) override;
-    int next(double* lat, double* lon, double* val) override;
+    int next(double* lat, double* lon, double* val) const override;
     int destroy() override;
 
 private:

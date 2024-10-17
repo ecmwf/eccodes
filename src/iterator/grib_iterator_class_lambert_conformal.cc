@@ -467,7 +467,7 @@ int LambertConformal::init(grib_handle* h, grib_arguments* args)
     return err;
 }
 
-int LambertConformal::next(double* lat, double* lon, double* val)
+int LambertConformal::next(double* lat, double* lon, double* val) const
 {
     if ((long)e_ >= (long)(nv_ - 1))
         return 0;

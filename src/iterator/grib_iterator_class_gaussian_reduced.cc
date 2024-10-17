@@ -23,7 +23,7 @@ namespace geo
 
 #define ITER "Reduced Gaussian grid Geoiterator"
 
-int GaussianReduced::next(double* lat, double* lon, double* val)
+int GaussianReduced::next(double* lat, double* lon, double* val) const
 {
     double ret_lat = 0, ret_lon = 0;
 

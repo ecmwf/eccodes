@@ -27,11 +27,11 @@ public:
     Iterator* create() const override { return new Gen(); }
 
     int init(grib_handle*, grib_arguments*) override;
-    int next(double*, double*, double*) override;
-    int previous(double*, double*, double*) override;
+    int next(double*, double*, double*) const override;
+    int previous(double*, double*, double*) const override;
     int reset() override;
     int destroy() override;
-    bool has_next() override;
+    bool has_next() const override;
 
 protected:
     int carg_;

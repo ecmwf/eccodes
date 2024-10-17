@@ -20,7 +20,7 @@ namespace grib
 namespace geo
 {
 
-int LatlonReduced::next(double* lat, double* lon, double* val)
+int LatlonReduced::next(double* lat, double* lon, double* val) const
 {
     if ((long)e_ >= (long)(nv_ - 1))
         return 0;

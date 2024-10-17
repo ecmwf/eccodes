@@ -22,7 +22,7 @@ namespace geo
 
 #define ITER "Polar stereographic Geoiterator"
 
-int PolarStereographic::next(double* lat, double* lon, double* val)
+int PolarStereographic::next(double* lat, double* lon, double* val) const
 {
     if ((long)e_ >= (long)(nv_ - 1))
         return 0;

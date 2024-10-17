@@ -92,7 +92,7 @@ int Gen::destroy()
     return Iterator::destroy();
 }
 
-bool Gen::has_next()
+bool Gen::has_next() const
 {
     if (flags_ == 0 && data_ == NULL)
         return false;
@@ -101,12 +101,12 @@ bool Gen::has_next()
     return true;
 }
 
-int Gen::previous(double*, double*, double*)
+int Gen::previous(double*, double*, double*) const
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int Gen::next(double*, double*, double*)
+int Gen::next(double*, double*, double*) const
 {
     return GRIB_NOT_IMPLEMENTED;
 }

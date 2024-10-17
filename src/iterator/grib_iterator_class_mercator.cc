@@ -262,7 +262,7 @@ int Mercator::init(grib_handle* h, grib_arguments* args)
     return err;
 }
 
-int Mercator::next(double* lat, double* lon, double* val)
+int Mercator::next(double* lat, double* lon, double* val) const
 {
     if ((long)e_ >= (long)(nv_ - 1))
         return 0;

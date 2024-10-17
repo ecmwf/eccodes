@@ -22,7 +22,7 @@ namespace geo
 
 #define ITER "Lambert azimuthal equal area Geoiterator"
 
-int LambertAzimuthalEqualArea::next(double* lat, double* lon, double* val)
+int LambertAzimuthalEqualArea::next(double* lat, double* lon, double* val) const
 {
     if ((long)e_ >= (long)(nv_ - 1))
         return 0;
