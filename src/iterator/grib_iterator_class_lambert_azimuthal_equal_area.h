@@ -30,25 +30,24 @@ public:
     int next(double*, double*, double*) override;
     int destroy() override;
 
-public:
+private:
     double* lats_;
     double* lons_;
     long Nj_;
 
-private:
-int init_sphere(grib_handle*,
-                       size_t, long, long,
-                       double, double, double,
-                       double, double,
-                       double, double,
-                       long, long, long);
+    int init_sphere(grib_handle*,
+                    size_t, long, long,
+                    double, double, double,
+                    double, double,
+                    double, double,
+                    long, long, long);
 
-int init_oblate(grib_handle*,
-                       size_t, long, long,
-                       double, double, double, double,
-                       double, double,
-                       double, double,
-                       long, long, long);
+    int init_oblate(grib_handle*,
+                    size_t, long, long,
+                    double, double, double, double,
+                    double, double,
+                    double, double,
+                    long, long, long);
 };
 
 }  // namespace geo

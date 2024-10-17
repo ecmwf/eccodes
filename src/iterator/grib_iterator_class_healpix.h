@@ -30,13 +30,12 @@ public:
     int next(double*, double*, double*) override;
     int destroy() override;
 
-public:
+private:
     double* lats_;
     double* lons_;
     long Nsides_;
     bool nested_;
 
-private:
     int iterate_healpix(long N);
 };
 

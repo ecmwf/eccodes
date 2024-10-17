@@ -33,10 +33,12 @@ public:
     int destroy() override;
     bool has_next() override;
 
-public:
-    // int get(double*, double*, double*);
+protected:
     int carg_;
+
+private:
     const char* missingValue_;
+    // int get(double*, double*, double*);
 };
 
 }  // namespace geo

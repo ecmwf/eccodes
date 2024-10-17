@@ -35,15 +35,18 @@ public:
     virtual bool has_next()                         = 0;
     virtual Iterator* create() const                = 0;
 
-public:
+    unsigned long flags_;
+
+protected:
     grib_context* context_;
-    grib_arguments* args_; /**  args of iterator */
     grib_handle* h_;
+    double* data_; /**  data values */
     long e_;       /**  current element */
     size_t nv_;    /**  number of values */
-    double* data_; /**  data values */
-    unsigned long flags_;
     const char* class_name_;
+
+private:
+    grib_arguments* args_; /**  args of iterator */
     size_t size_;
     int inited_;
 };
