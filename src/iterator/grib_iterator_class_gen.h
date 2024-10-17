@@ -27,7 +27,7 @@ public:
     int previous(double*, double*, double*) override;
     int reset() override;
     int destroy() override;
-    long has_next() override; // TODO(maee/masn): return bool please!
+    bool has_next() override;
 
 public:
     //int get(double*, double*, double*);

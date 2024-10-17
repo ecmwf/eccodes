@@ -88,13 +88,13 @@ int Gen::destroy()
     return Iterator::destroy();
 }
 
-long Gen::has_next()
+bool Gen::has_next()
 {
     if (flags_ == 0 && data_ == NULL)
-        return 0;
+        return false;
     if (e_ >= (long)(nv_ - 1))
-        return 0;
-    return 1;
+        return false;
+    return true;
 }
 
 int Gen::previous(double*, double*, double*) {

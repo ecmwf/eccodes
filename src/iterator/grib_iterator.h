@@ -29,7 +29,7 @@ public:
     virtual int previous(double*, double*, double*) = 0;
     virtual int reset() = 0;
     virtual int destroy() = 0;
-    virtual long has_next() = 0;
+    virtual bool has_next() = 0;
     virtual Iterator* create() const = 0;
 
 public:
