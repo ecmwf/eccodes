@@ -10,76 +10,68 @@
 
 #include "grib_accessor_class_to_string.h"
 
-grib_accessor_class_to_string_t _grib_accessor_class_to_string{ "to_string" };
-grib_accessor_class* grib_accessor_class_to_string = &_grib_accessor_class_to_string;
+grib_accessor_to_string_t _grib_accessor_to_string{};
+grib_accessor* grib_accessor_to_string = &_grib_accessor_to_string;
 
-
-void grib_accessor_class_to_string_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+void grib_accessor_to_string_t::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_class_gen_t::init(a, len, arg);
-    grib_accessor_to_string_t* self = (grib_accessor_to_string_t*)a;
+    grib_accessor_gen_t::init(len, arg);
+    grib_handle* hand = grib_handle_of_accessor(this);
 
-    self->key    = grib_arguments_get_name(grib_handle_of_accessor(a), arg, 0);
-    self->start  = grib_arguments_get_long(grib_handle_of_accessor(a), arg, 1);
-    self->length = grib_arguments_get_long(grib_handle_of_accessor(a), arg, 2);
+    key_        = grib_arguments_get_name(hand, arg, 0);
+    start_      = grib_arguments_get_long(hand, arg, 1);
+    str_length_ = grib_arguments_get_long(hand, arg, 2);
 
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    a->length = 0;
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    grib_accessor_gen_t::length_ = 0;
 }
 
-int grib_accessor_class_to_string_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_to_string_t::value_count(long* count)
 {
-    grib_accessor_to_string_t* self = (grib_accessor_to_string_t*)a;
     size_t size = 0;
 
-    int err = grib_get_size(grib_handle_of_accessor(a), self->key, &size);
+    int err = grib_get_size(grib_handle_of_accessor(this), key_, &size);
     *count  = size;
 
     return err;
 }
 
-size_t grib_accessor_class_to_string_t::string_length(grib_accessor* a)
+size_t grib_accessor_to_string_t::string_length()
 {
-    grib_accessor_to_string_t* self = (grib_accessor_to_string_t*)a;
-
-    if (self->length)
-        return self->length;
+    if (str_length_)
+        return str_length_;
 
     size_t size = 0;
-    grib_get_string_length(grib_handle_of_accessor(a), self->key, &size);
+    grib_get_string_length(grib_handle_of_accessor(this), key_, &size);
     return size;
 }
 
-void grib_accessor_class_to_string_t::dump(grib_accessor* a, grib_dumper* dumper)
+void grib_accessor_to_string_t::dump(grib_dumper* dumper)
 {
-    grib_dump_string(dumper, a, NULL);
+    grib_dump_string(dumper, this, NULL);
 }
 
-int grib_accessor_class_to_string_t::get_native_type(grib_accessor* a)
+long grib_accessor_to_string_t::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
 
-int grib_accessor_class_to_string_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+int grib_accessor_to_string_t::unpack_string(char* val, size_t* len)
 {
-    grib_accessor_to_string_t* self = (grib_accessor_to_string_t*)a;
-
-    int err = 0;
+    int err        = 0;
     char buff[512] = {0,};
-
-    size_t length = string_length(a);
+    size_t length = string_length();
 
     if (*len < length + 1) {
-        const char* cclass_name = a->cclass->name;
-        grib_context_log(a->context, GRIB_LOG_ERROR,
+        grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         cclass_name, a->name, length + 1, *len);
+                         class_name_, name_, length + 1, *len);
         *len = length + 1;
         return GRIB_BUFFER_TOO_SMALL;
     }
 
     size_t size = sizeof(buff);
-    err = grib_get_string(grib_handle_of_accessor(a), self->key, buff, &size);
+    err         = grib_get_string(grib_handle_of_accessor(this), key_, buff, &size);
     if (err)
         return err;
     if (length > size) {
@@ -87,19 +79,19 @@ int grib_accessor_class_to_string_t::unpack_string(grib_accessor* a, char* val, 
         length = size;
     }
 
-    memcpy(val, buff + self->start, length);
+    memcpy(val, buff + start_, length);
 
     val[length] = 0;
-    *len = length;
+    *len        = length;
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_to_string_t::unpack_long(grib_accessor* a, long* v, size_t* len)
+int grib_accessor_to_string_t::unpack_long(long* v, size_t* len)
 {
     char val[1024] = {0,};
     size_t l   = sizeof(val);
     char* last = NULL;
-    int err    = unpack_string(a, val, &l);
+    int err    = unpack_string(val, &l);
 
     if (err)
         return err;
@@ -112,17 +104,17 @@ int grib_accessor_class_to_string_t::unpack_long(grib_accessor* a, long* v, size
     return err;
 }
 
-int grib_accessor_class_to_string_t::unpack_double(grib_accessor* a, double* v, size_t* len)
+int grib_accessor_to_string_t::unpack_double(double* v, size_t* len)
 {
     size_t l = 1;
     long val = 0;
-    int err  = unpack_long(a, &val, &l);
+    int err  = unpack_long(&val, &l);
 
     *v = (double)val;
     return err;
 }
 
-long grib_accessor_class_to_string_t::next_offset(grib_accessor* a)
+long grib_accessor_to_string_t::next_offset()
 {
-    return a->offset + a->length;
+    return offset_ + grib_accessor_gen_t::length_;
 }

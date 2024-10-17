@@ -277,12 +277,16 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1792
         grib_ecc-1806
         grib_ecc-1907
+        grib_ecc-1941
+        grib_ecc-1942
         grib_modelName
         grib_sub_hourly
         grib_set_bytes
         grib_set_force
         bufr_ecc-556
+        codes_assert
         codes_ecc-1698
+        codes_ecc-1929
         codes_get_string
         codes_codetable
         gts_get

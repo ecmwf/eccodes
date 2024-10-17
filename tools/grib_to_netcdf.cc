@@ -144,7 +144,7 @@ static bool eq_time(const char* l, const char* r)
 
 static value* new_value(const char* name)
 {
-    value* v = (value*)calloc(sizeof(value), 1);
+    value* v = (value*)calloc(1, sizeof(value));
     Assert(v);
     v->name = grib_context_strdup(ctx, name);
     return v;
@@ -286,7 +286,7 @@ static bool is_number(const char* name)
 }
 static parameter* new_parameter(char* name, value* v)
 {
-    parameter* p = (parameter*)calloc(sizeof(parameter), 1);
+    parameter* p = (parameter*)calloc(1, sizeof(parameter));
     Assert(p);
     p->name   = grib_context_strdup(ctx, name);
     p->values = v;
@@ -708,7 +708,7 @@ typedef struct fieldset
  #define MISSING_FIELD(f)      ((f)->missing)
  #define FIELD_HAS_BITMAP(f)   ((f)->bitmap)
 
- #define FASTNEW(type)         (type*)calloc(sizeof(type),1)
+ #define FASTNEW(type)         (type*)calloc(1, sizeof(type))
  #define grib_context_free(ctx,x)           grib_context_free(ctx,x)
  */
 
@@ -724,7 +724,7 @@ static int ecc_cube_position(const hypercube* h, const request* r, bool remove_h
 
 static value* clone_one_value(const value* p)
 {
-    value* q = (value*)calloc(sizeof(value), 1);
+    value* q = (value*)calloc(1, sizeof(value));
     Assert(q);
     q->next = NULL;
     q->name = grib_context_strdup(ctx, p->name);
@@ -744,7 +744,7 @@ static value* clone_all_values(const value* p)
 
 static parameter* clone_one_parameter(const parameter* p)
 {
-    parameter* q = (parameter*)calloc(sizeof(parameter), 1);
+    parameter* q = (parameter*)calloc(1, sizeof(parameter));
     Assert(q);
     q->next   = NULL;
     q->name   = grib_context_strdup(ctx, p->name);
@@ -765,7 +765,7 @@ static parameter* clone_all_parameters(const parameter* p)
 static request* clone_one_request(const request* r)
 {
     if (r) {
-        request* p = (request*)calloc(sizeof(request), 1);
+        request* p = (request*)calloc(1, sizeof(request));
         Assert(p);
         p->name = grib_context_strdup(ctx, r->name);
 
@@ -778,7 +778,7 @@ static request* clone_one_request(const request* r)
 
 static request* new_request(const char* name, parameter* p)
 {
-    request* r = (request*)calloc(sizeof(request), 1);
+    request* r = (request*)calloc(1, sizeof(request));
     Assert(r);
     r->name   = grib_context_strdup(ctx, name);
     r->params = p;
@@ -884,7 +884,7 @@ static void grow_fieldset(fieldset* v, int n)
 
 static fieldset* new_fieldset(int n)
 {
-    fieldset* f = (fieldset*)calloc(sizeof(fieldset), 1);
+    fieldset* f = (fieldset*)calloc(1, sizeof(fieldset));
     Assert(f);
     grow_fieldset(f, n);
     return f;
@@ -1551,7 +1551,7 @@ static void reserve_index_cache(hypercube* h, int size)
     if (h->index_cache != 0)
         grib_context_free(ctx, h->index_cache);
     grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: Allocating hypercube index_cache: %d entries", size);
-    h->index_cache = (int*)calloc(sizeof(int), size);
+    h->index_cache = (int*)calloc(size, sizeof(int));
     Assert(h->index_cache);
     h->index_cache_size = size;
 }
@@ -1668,7 +1668,7 @@ static void cube_indexes(
 
 static hypercube* new_hypercube(const request* r)
 {
-    hypercube* h = (hypercube*)calloc(sizeof(hypercube), 1);
+    hypercube* h = (hypercube*)calloc(1, sizeof(hypercube));
     int total = 0, count = 0;
     size_t n        = 0;
     const char* val = 0;
@@ -1775,7 +1775,7 @@ static hypercube* new_hypercube_from_mars_request(const request* r)
 
     n = count_values(s.c->cube, "axis");
     if (n) {
-        s.c->compare = (namecmp*)calloc(sizeof(namecmp), n);
+        s.c->compare = (namecmp*)calloc(n, sizeof(namecmp));
         Assert(s.c->compare);
     }
 
@@ -1802,7 +1802,7 @@ static hypercube* new_simple_hypercube_from_mars_request(const request* r)
     free_one_request(s.r);
     n = count_values(s.c->cube, "axis");
     if (n) {
-        s.c->compare = (namecmp*)calloc(sizeof(namecmp), n);
+        s.c->compare = (namecmp*)calloc(n, sizeof(namecmp));
         Assert(s.c->compare);
     }
 
@@ -2904,7 +2904,7 @@ static void set_always_a_time(hypercube* h, request* data_r)
             int i = 0;
             int n = count_values(h->cube, "axis");
             if (n) {
-                h->compare = (namecmp*)calloc(sizeof(namecmp), n);
+                h->compare = (namecmp*)calloc(n, sizeof(namecmp));
                 Assert(h->compare);
             }
 
@@ -3628,7 +3628,7 @@ static int split_fieldset(fieldset* fs, request* data_r, dataset_t** subsets, co
 
     free_all_requests(s);
 
-    filters = (dataset_t*)calloc(sizeof(dataset_t), count);
+    filters = (dataset_t*)calloc(count, sizeof(dataset_t));
     Assert(filters);
 
     s = u;

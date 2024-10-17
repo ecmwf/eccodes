@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,18 +10,17 @@
 
 #include "grib_accessor_class_bitmap.h"
 
-grib_accessor_class_bitmap_t _grib_accessor_class_bitmap{ "bitmap" };
-grib_accessor_class* grib_accessor_class_bitmap = &_grib_accessor_class_bitmap;
+grib_accessor_bitmap_t _grib_accessor_bitmap{};
+grib_accessor* grib_accessor_bitmap = &_grib_accessor_bitmap;
 
-static void compute_size(grib_accessor* a)
+void grib_accessor_bitmap_t::compute_size()
 {
-    long slen         = 0;
-    long off          = 0;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    long slen                    = 0;
+    long off                     = 0;
+    grib_handle* hand            = grib_handle_of_accessor(this);
 
-    grib_accessor_bitmap_t* self = (grib_accessor_bitmap_t*)a;
-    grib_get_long_internal(hand, self->offsetbsec, &off);
-    grib_get_long_internal(hand, self->sLength, &slen);
+    grib_get_long_internal(hand, offsetbsec_, &off);
+    grib_get_long_internal(hand, sLength_, &slen);
 
     if (slen == 0) {
         grib_accessor* seclen;
@@ -30,68 +28,67 @@ static void compute_size(grib_accessor* a)
         /* Assume reparsing */
         Assert(hand->loader != 0);
         if (hand->loader != 0) {
-            seclen = grib_find_accessor(hand, self->sLength);
+            seclen = grib_find_accessor(hand, sLength_);
             Assert(seclen);
-            grib_get_block_length(seclen->parent, &size);
+            grib_get_block_length(seclen->parent_, &size);
             slen = size;
         }
     }
 
-    // printf("compute_size off=%ld slen=%ld a->offset=%ld\n", (long)off,(long)slen,(long)a->offset);
+    // printf("compute_size off=%ld slen=%ld a->offset_=%ld\n", (long)off,(long)slen,(long)offset_ );
 
-    a->length = off + (slen - a->offset);
+    length_ = off + (slen - offset_);
 
-    if (a->length < 0) {
+    if (length_ < 0) {
         /* Assume reparsing */
         /*Assert(hand->loader != 0);*/
-        a->length = 0;
+        length_ = 0;
     }
 
-    Assert(a->length >= 0);
+    Assert(length_ >= 0);
 }
 
-void grib_accessor_class_bitmap_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+void grib_accessor_bitmap_t::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_class_bytes_t::init(a, len, arg);
-    grib_accessor_bitmap_t* self = (grib_accessor_bitmap_t*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
-    int n = 0;
+    grib_accessor_bytes_t::init(len, arg);
+    grib_handle* hand = grib_handle_of_accessor(this);
+    int n             = 0;
 
-    self->tableReference = grib_arguments_get_name(hand, arg, n++);
-    self->missing_value  = grib_arguments_get_name(hand, arg, n++);
-    self->offsetbsec     = grib_arguments_get_name(hand, arg, n++);
-    self->sLength        = grib_arguments_get_name(hand, arg, n++);
+    tableReference_ = grib_arguments_get_name(hand, arg, n++);
+    missing_value_  = grib_arguments_get_name(hand, arg, n++);
+    offsetbsec_     = grib_arguments_get_name(hand, arg, n++);
+    sLength_        = grib_arguments_get_name(hand, arg, n++);
 
-    compute_size(a);
+    compute_size();
 }
 
-long grib_accessor_class_bitmap_t::next_offset(grib_accessor* a)
+long grib_accessor_bitmap_t::next_offset()
 {
-    return a->byte_offset() + a->byte_count();
+    return byte_offset() + byte_count();
 }
 
-void grib_accessor_class_bitmap_t::dump(grib_accessor* a, grib_dumper* dumper)
+void grib_accessor_bitmap_t::dump(grib_dumper* dumper)
 {
     long len = 0;
     char label[1024];
 
-    a->value_count(&len);
+    value_count(&len);
     snprintf(label, sizeof(label), "Bitmap of %ld values", len);
-    grib_dump_bytes(dumper, a, label);
+    grib_dump_bytes(dumper, this, label);
 }
 
-int grib_accessor_class_bitmap_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_bitmap_t::unpack_long(long* val, size_t* len)
 {
-    long pos  = a->offset * 8;
-    long tlen = 0;
-    const grib_handle* hand = grib_handle_of_accessor(a);
+    long pos                = offset_ * 8;
+    long tlen               = 0;
+    const grib_handle* hand = grib_handle_of_accessor(this);
 
-    int err = a->value_count(&tlen);
+    int err = value_count(&tlen);
     if (err)
         return err;
 
     if (*len < tlen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it contains %ld values", a->name, tlen);
+        grib_context_log(context_, GRIB_LOG_ERROR, "Wrong size for %s, it contains %ld values", name_, tlen);
         *len = tlen;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -107,7 +104,7 @@ template <typename T>
 static int unpack(grib_accessor* a, T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
-    long pos = a->offset * 8;
+    long pos = a->offset_ * 8;
     long tlen;
     grib_handle* hand = grib_handle_of_accessor(a);
 
@@ -116,7 +113,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
         return err;
 
     if (*len < tlen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it contains %ld values", a->name, tlen);
+        grib_context_log(a->context_, GRIB_LOG_ERROR, "Wrong size for %s, it contains %ld values", a->name_, tlen);
         *len = tlen;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -128,62 +125,61 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_bitmap_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+int grib_accessor_bitmap_t::unpack_double(double* val, size_t* len)
 {
-    return unpack<double>(a, val, len);
+    return unpack<double>(this, val, len);
 }
 
-int grib_accessor_class_bitmap_t::unpack_float(grib_accessor* a, float* val, size_t* len)
+int grib_accessor_bitmap_t::unpack_float(float* val, size_t* len)
 {
-    return unpack<float>(a, val, len);
+    return unpack<float>(this, val, len);
 }
 
-int grib_accessor_class_bitmap_t::unpack_double_element(grib_accessor* a, size_t idx, double* val)
+int grib_accessor_bitmap_t::unpack_double_element(size_t idx, double* val)
 {
-    long pos = a->offset * 8;
+    long pos = offset_ * 8;
 
     pos += idx;
-    *val = (double)grib_decode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, &pos, 1);
+    *val = (double)grib_decode_unsigned_long(grib_handle_of_accessor(this)->buffer->data, &pos, 1);
 
     return GRIB_SUCCESS;
 }
-int grib_accessor_class_bitmap_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+int grib_accessor_bitmap_t::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
     for (size_t i = 0; i < len; ++i) {
-        unpack_double_element(a, index_array[i], val_array + i);
+        unpack_double_element(index_array[i], val_array + i);
     }
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_class_bitmap_t::update_size(grib_accessor* a, size_t s)
+void grib_accessor_bitmap_t::update_size(size_t s)
 {
-    a->length = s;
+    length_ = s;
 }
 
-size_t grib_accessor_class_bitmap_t::string_length(grib_accessor* a)
+size_t grib_accessor_bitmap_t::string_length()
 {
-    return a->length;
+    return length_;
 }
 
-int grib_accessor_class_bitmap_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+int grib_accessor_bitmap_t::unpack_string(char* val, size_t* len)
 {
-    grib_handle* hand = grib_handle_of_accessor(a);
-    const size_t l    = a->length;
+    grib_handle* hand = grib_handle_of_accessor(this);
+    const size_t l    = length_;
 
     if (*len < l) {
-        const char* cclass_name = a->cclass->name;
-        grib_context_log(a->context, GRIB_LOG_ERROR,
+        grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         cclass_name, a->name, l, *len);
+                         class_name_, name_, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }
 
-    for (long i = 0; i < a->length; i++) {
-        val[i] = hand->buffer->data[a->offset + i];
+    for (long i = 0; i < length_; i++) {
+        val[i] = hand->buffer->data[offset_ + i];
     }
 
-    *len = a->length;
+    *len = length_;
 
     return GRIB_SUCCESS;
 }

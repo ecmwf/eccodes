@@ -112,8 +112,8 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
     ga = grib_accessor_factory(p, act, 0, NULL);
     if (!ga)
         return GRIB_BUFFER_TOO_SMALL;
-    gs       = ga->sub_section;
-    ga->loop = val;
+    gs       = ga->sub_section_;
+    ga->loop_ = val;
 
     grib_push_accessor(ga, p->block);
 
@@ -161,11 +161,11 @@ static grib_action* reparse(grib_action* a, grib_accessor* acc, int* doit)
 
     int ret = grib_expression_evaluate_long(grib_handle_of_accessor(acc), self->expression, &val);
     if (ret != GRIB_SUCCESS) {
-        grib_context_log(acc->context, GRIB_LOG_ERROR,
-                "List %s creating %ld values: Unable to evaluate long", acc->name, val);
+        grib_context_log(acc->context_, GRIB_LOG_ERROR,
+                "List %s creating %ld values: Unable to evaluate long", acc->name_, val);
     }
 
-    *doit = (val != acc->loop);
+    *doit = (val != acc->loop_);
 
     return self->block_list;
 }

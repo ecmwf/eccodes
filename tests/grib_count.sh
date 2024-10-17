@@ -41,5 +41,12 @@ count=`${tools_dir}/grib_count ${data_dir}/mixed.grib`
 count=`${tools_dir}/grib_count ${data_dir}/tigge_ecmwf.grib2`
 [ $count -eq 248 ]
 
+# Bad input
+set +e
+${tools_dir}/grib_count non-existent-file 2>/dev/null
+status=$?
+set -e
+[ $status -ne 0 ]
+
 # Clean up
 rm -f $tempText

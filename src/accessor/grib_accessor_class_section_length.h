@@ -16,15 +16,10 @@
 class grib_accessor_section_length_t : public grib_accessor_unsigned_t
 {
 public:
-    /* Members defined in section_length */
-};
-
-class grib_accessor_class_section_length_t : public grib_accessor_class_unsigned_t
-{
-public:
-    grib_accessor_class_section_length_t(const char* name) : grib_accessor_class_unsigned_t(name) {}
+    grib_accessor_section_length_t() :
+        grib_accessor_unsigned_t() { class_name_ = "section_length"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_section_length_t{}; }
-    int value_count(grib_accessor*, long*) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int value_count(long*) override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
 };

@@ -13,34 +13,31 @@
 
 #define PNG_ANYBITS
 
-grib_accessor_class_data_png_packing_t _grib_accessor_class_data_png_packing{ "data_png_packing" };
-grib_accessor_class* grib_accessor_class_data_png_packing = &_grib_accessor_class_data_png_packing;
+grib_accessor_data_png_packing_t _grib_accessor_data_png_packing{};
+grib_accessor* grib_accessor_data_png_packing = &_grib_accessor_data_png_packing;
 
-
-void grib_accessor_class_data_png_packing_t::init(grib_accessor* a, const long v, grib_arguments* args)
+void grib_accessor_data_png_packing_t::init(const long v, grib_arguments* args)
 {
-    grib_accessor_class_values_t::init(a, v, args);
-    grib_accessor_data_png_packing_t* self = (grib_accessor_data_png_packing_t*)a;
-    grib_handle* h                         = grib_handle_of_accessor(a);
+    grib_accessor_values_t::init(v, args);
+    grib_handle* h = grib_handle_of_accessor(this);
 
-    self->number_of_values      = grib_arguments_get_name(h, args, self->carg++);
-    self->reference_value       = grib_arguments_get_name(h, args, self->carg++);
-    self->binary_scale_factor   = grib_arguments_get_name(h, args, self->carg++);
-    self->decimal_scale_factor  = grib_arguments_get_name(h, args, self->carg++);
-    self->bits_per_value        = grib_arguments_get_name(h, args, self->carg++);
-    self->ni                    = grib_arguments_get_name(h, args, self->carg++);
-    self->nj                    = grib_arguments_get_name(h, args, self->carg++);
-    self->list_defining_points  = grib_arguments_get_name(h, args, self->carg++);
-    self->number_of_data_points = grib_arguments_get_name(h, args, self->carg++);
-    self->scanning_mode         = grib_arguments_get_name(h, args, self->carg++);
-    a->flags |= GRIB_ACCESSOR_FLAG_DATA;
+    number_of_values_      = grib_arguments_get_name(h, args, carg_++);
+    reference_value_       = grib_arguments_get_name(h, args, carg_++);
+    binary_scale_factor_   = grib_arguments_get_name(h, args, carg_++);
+    decimal_scale_factor_  = grib_arguments_get_name(h, args, carg_++);
+    bits_per_value_        = grib_arguments_get_name(h, args, carg_++);
+    ni_                    = grib_arguments_get_name(h, args, carg_++);
+    nj_                    = grib_arguments_get_name(h, args, carg_++);
+    list_defining_points_  = grib_arguments_get_name(h, args, carg_++);
+    number_of_data_points_ = grib_arguments_get_name(h, args, carg_++);
+    scanning_mode_         = grib_arguments_get_name(h, args, carg_++);
+    flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_class_data_png_packing_t::value_count(grib_accessor* a, long* n_vals)
+int grib_accessor_data_png_packing_t::value_count(long* n_vals)
 {
-    grib_accessor_data_png_packing_t* self = (grib_accessor_data_png_packing_t*)a;
-    *n_vals                                = 0;
-    return grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_values, n_vals);
+    *n_vals = 0;
+    return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, n_vals);
 }
 
 #if HAVE_LIBPNG
@@ -81,13 +78,11 @@ static void png_flush_callback(png_structp png)
     /* Empty */
 }
 
-int grib_accessor_class_data_png_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+int grib_accessor_data_png_packing_t::unpack_double(double* val, size_t* len)
 {
-    grib_accessor_data_png_packing_t* self = (grib_accessor_data_png_packing_t*)a;
-
     int err = GRIB_SUCCESS;
     int i, j;
-    size_t buflen      = a->byte_count();
+    size_t buflen      = byte_count();
     double bscale      = 0;
     double dscale      = 0;
     unsigned char* buf = NULL;
@@ -109,19 +104,19 @@ int grib_accessor_class_data_png_packing_t::unpack_double(grib_accessor* a, doub
 
     png_read_callback_data callback_data;
 
-    self->dirty = 0;
+    dirty_ = 0;
 
-    err    = a->value_count(&nn);
+    err    = value_count(&nn);
     n_vals = nn;
     if (err) return err;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_double_internal(grib_handle_of_accessor(a), self->reference_value, &reference_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(grib_handle_of_accessor(this), reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->binary_scale_factor, &binary_scale_factor)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
     bscale = codes_power<double>(binary_scale_factor, 2);
@@ -140,12 +135,11 @@ int grib_accessor_class_data_png_packing_t::unpack_double(grib_accessor* a, doub
         return GRIB_SUCCESS;
     }
 
-    buf = (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
-    buf += a->byte_offset();
+    buf = (unsigned char*)grib_handle_of_accessor(this)->buffer->data;
+    buf += byte_offset();
 
     if (png_sig_cmp(buf, 0, 8) != 0)
         return GRIB_INVALID_MESSAGE;
-
 
     png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL,
                                  NULL, NULL);
@@ -190,7 +184,6 @@ int grib_accessor_class_data_png_packing_t::unpack_double(grib_accessor* a, doub
                  &interlace,
                  &compression,
                  &filter);
-
 
     if (colour == PNG_COLOR_TYPE_RGB)
         depth = 24;
@@ -240,12 +233,9 @@ static bool is_constant(const double* values, size_t n_vals)
     return isConstant;
 }
 
-int grib_accessor_class_data_png_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+int grib_accessor_data_png_packing_t::pack_double(const double* val, size_t* len)
 {
-    grib_accessor_data_png_packing_t* self = (grib_accessor_data_png_packing_t*)a;
-    const char* cclass_name                = a->cclass->name;
-
-    int err                = GRIB_SUCCESS;
+    int err = GRIB_SUCCESS;
     bool is_constant_field = false;
     int i, j;
     size_t buflen = 0;
@@ -278,22 +268,22 @@ int grib_accessor_class_data_png_packing_t::pack_double(grib_accessor* a, const 
     long list_defining_points;
     long number_of_data_points;
 
-    self->dirty = 1;
+    dirty_ = 1;
 
     n_vals = *len;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_double_internal(grib_handle_of_accessor(a), self->reference_value, &reference_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(grib_handle_of_accessor(this), reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->binary_scale_factor, &binary_scale_factor)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
     /* Special case */
     if (*len == 0) {
-        grib_buffer_replace(a, NULL, 0, 1, 1);
+        grib_buffer_replace(this, NULL, 0, 1, 1);
         return GRIB_SUCCESS;
     }
 
@@ -309,41 +299,41 @@ int grib_accessor_class_data_png_packing_t::pack_double(grib_accessor* a, const 
             Assert(val[i] == val[0]);
         }
     #endif
-        if ((err = grib_set_double_internal(grib_handle_of_accessor(a), self->reference_value, val[0])) != GRIB_SUCCESS)
+        if ((err = grib_set_double_internal(grib_handle_of_accessor(this), reference_value_, val[0])) != GRIB_SUCCESS)
             return err;
 
         {
             // Make sure we can decode it again
             double ref = 1e-100;
-            grib_get_double_internal(grib_handle_of_accessor(a), self->reference_value, &ref);
+            grib_get_double_internal(grib_handle_of_accessor(this), reference_value_, &ref);
             if (ref != reference_value) {
-                grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
-                                 cclass_name, __func__, self->reference_value, ref, reference_value);
+                grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
+                                 class_name_, __func__, reference_value_, ref, reference_value);
                 return GRIB_INTERNAL_ERROR;
             }
         }
 
-        if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->number_of_values, n_vals)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(grib_handle_of_accessor(this), number_of_values_, n_vals)) != GRIB_SUCCESS)
             return err;
 
-        grib_buffer_replace(a, NULL, 0, 1, 1);
+        grib_buffer_replace(this, NULL, 0, 1, 1);
 
         return GRIB_SUCCESS;
     }
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->ni, &ni)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), ni_, &ni)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->nj, &nj)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), nj_, &nj)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->scanning_mode, &scanning_mode)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), scanning_mode_, &scanning_mode)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->list_defining_points, &list_defining_points)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), list_defining_points_, &list_defining_points)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_data_points, &number_of_data_points)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), number_of_data_points_, &number_of_data_points)) != GRIB_SUCCESS)
         return err;
 
     width  = ni;
@@ -369,9 +359,9 @@ int grib_accessor_class_data_png_packing_t::pack_double(grib_accessor* a, const 
     }
 
     if (width * height != *len) {
-        grib_context_log(a->context, GRIB_LOG_ERROR,
+        grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s %s: width=%ld height=%ld len=%ld. width*height should equal len!",
-                         cclass_name, __func__, (long)width, (long)height, (long)*len);
+                         class_name_, __func__, (long)width, (long)height, (long)*len);
         /* ECC-802: We cannot bomb out here as the user might have changed Ni/Nj and the packingType
          * but has not yet submitted the new data values. So len will be out of sync!
          * So issue a warning but proceed.
@@ -392,26 +382,27 @@ int grib_accessor_class_data_png_packing_t::pack_double(grib_accessor* a, const 
     min *= d;
     max *= d;
 
-    if (grib_get_nearest_smaller_value(grib_handle_of_accessor(a), self->reference_value, min, &reference_value) != GRIB_SUCCESS) {
-        grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "Unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
+    if (grib_get_nearest_smaller_value(grib_handle_of_accessor(this), reference_value_, min, &reference_value) != GRIB_SUCCESS) {
+        grib_context_log(context_, GRIB_LOG_ERROR,
+                         "Unable to find nearest_smaller_value of %g for %s", min, reference_value_);
         return GRIB_INTERNAL_ERROR;
     }
 
     if (reference_value > min) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "reference_value=%g min_value=%g diff=%g",
+        grib_context_log(context_, GRIB_LOG_ERROR, "reference_value=%g min_value=%g diff=%g",
                          reference_value, min, reference_value - min);
         return GRIB_INTERNAL_ERROR;
     }
 
     binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
+    if (err) return err;
     divisor             = codes_power<double>(-binary_scale_factor, 2);
 
     #ifndef PNG_ANYBITS
     Assert(bits_per_value % 8 == 0);
     #endif
     bits8   = (bits_per_value + 7) / 8 * 8;
-    encoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context, bits8 / 8 * n_vals);
+    encoded = (unsigned char*)grib_context_buffer_malloc_clear(context_, bits8 / 8 * n_vals);
     if (!encoded) {
         err = GRIB_OUT_OF_MEMORY;
         goto cleanup;
@@ -430,38 +421,38 @@ int grib_accessor_class_data_png_packing_t::pack_double(grib_accessor* a, const 
         }
     }
     /* buflen = n_vals*(bits_per_value/8); */
-    grib_context_log(a->context, GRIB_LOG_DEBUG,
-                     "grib_accessor_data_png_packing_t : pack_double : packing %s, %d values", a->name, n_vals);
-    buf = (unsigned char*)grib_context_buffer_malloc_clear(a->context, buflen);
+    grib_context_log(context_, GRIB_LOG_DEBUG,
+                     "grib_accessor_data_png_packing_t : pack_double : packing %s, %d values", name_, n_vals);
+    buf = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
 
     if (!buf) {
         err = GRIB_OUT_OF_MEMORY;
         goto cleanup;
     }
 
-    if ((err = grib_set_double_internal(grib_handle_of_accessor(a), self->reference_value, reference_value)) != GRIB_SUCCESS)
+    if ((err = grib_set_double_internal(grib_handle_of_accessor(this), reference_value_, reference_value)) != GRIB_SUCCESS)
         return err;
 
     {
         // Make sure we can decode it again
         double ref = 1e-100;
-        grib_get_double_internal(grib_handle_of_accessor(a), self->reference_value, &ref);
+        grib_get_double_internal(grib_handle_of_accessor(this), reference_value_, &ref);
         if (ref != reference_value) {
-            grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
-                             cclass_name, __func__, self->reference_value, ref, reference_value);
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
+                             class_name_, __func__, reference_value_, ref, reference_value);
             return GRIB_INTERNAL_ERROR;
         }
     }
 
-    if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->binary_scale_factor, binary_scale_factor)) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(grib_handle_of_accessor(this), binary_scale_factor_, binary_scale_factor)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->decimal_scale_factor, decimal_scale_factor)) != GRIB_SUCCESS)
-        return err;
-
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->ni, &ni)) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(grib_handle_of_accessor(this), decimal_scale_factor_, decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->nj, &nj)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), ni_, &ni)) != GRIB_SUCCESS)
+        return err;
+
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), nj_, &nj)) != GRIB_SUCCESS)
         return err;
 
     png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
@@ -507,7 +498,7 @@ int grib_accessor_class_data_png_packing_t::pack_double(grib_accessor* a, const 
     /*bytes=bit_depth/8;*/
     bytes = bits8 / 8;
 
-    rows = (png_bytepp)grib_context_buffer_malloc_clear(a->context, sizeof(png_bytep) * height);
+    rows = (png_bytepp)grib_context_buffer_malloc_clear(context_, sizeof(png_bytep) * height);
     if (!rows) {
         err = GRIB_OUT_OF_MEMORY;
         goto cleanup;
@@ -522,36 +513,35 @@ int grib_accessor_class_data_png_packing_t::pack_double(grib_accessor* a, const 
 
     Assert(callback_data.offset <= callback_data.length);
 
-    grib_buffer_replace(a, buf, callback_data.offset, 1, 1);
+    grib_buffer_replace(this, buf, callback_data.offset, 1, 1);
 
 cleanup:
     if (png)
         png_destroy_write_struct(&png, info ? &info : NULL);
 
-    grib_context_buffer_free(a->context, buf);
-    grib_context_buffer_free(a->context, encoded);
-    grib_context_buffer_free(a->context, rows);
+    grib_context_buffer_free(context_, buf);
+    grib_context_buffer_free(context_, encoded);
+    grib_context_buffer_free(context_, rows);
 
     if (err == GRIB_SUCCESS)
-        err = grib_set_long_internal(grib_handle_of_accessor(a), self->number_of_values, *len);
+        err = grib_set_long_internal(grib_handle_of_accessor(this), number_of_values_, *len);
 
     return err;
 }
 
-int grib_accessor_class_data_png_packing_t::unpack_double_element(grib_accessor* a, size_t idx, double* val)
+int grib_accessor_data_png_packing_t::unpack_double_element(size_t idx, double* val)
 {
     /* The index idx relates to codedValues NOT values! */
-    grib_accessor_data_png_packing_t* self = (grib_accessor_data_png_packing_t*)a;
-    grib_handle* hand                      = grib_handle_of_accessor(a);
-    int err                                = 0;
-    size_t size                            = 0;
-    double reference_value                 = 0;
-    long bits_per_value                    = 0;
-    double* values                         = NULL;
+    grib_handle* hand      = grib_handle_of_accessor(this);
+    int err                = 0;
+    size_t size            = 0;
+    double reference_value = 0;
+    long bits_per_value    = 0;
+    double* values         = NULL;
 
-    if ((err = grib_get_long_internal(hand, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(hand, bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_double_internal(hand, self->reference_value, &reference_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(hand, reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
 
     /* Special case of constant field */
@@ -563,31 +553,30 @@ int grib_accessor_class_data_png_packing_t::unpack_double_element(grib_accessor*
     if (err) return err;
     if (idx > size) return GRIB_INVALID_ARGUMENT;
 
-    values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));
+    values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
     err    = grib_get_double_array(hand, "codedValues", values, &size);
     if (err) {
-        grib_context_free(a->context, values);
+        grib_context_free(context_, values);
         return err;
     }
     *val = values[idx];
-    grib_context_free(a->context, values);
+    grib_context_free(context_, values);
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_data_png_packing_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+int grib_accessor_data_png_packing_t::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
     /* The index idx relates to codedValues NOT values! */
-    grib_accessor_data_png_packing_t* self = (grib_accessor_data_png_packing_t*)a;
-    grib_handle* hand                      = grib_handle_of_accessor(a);
-    int err                                = 0;
+    grib_handle* hand = grib_handle_of_accessor(this);
+    int err           = 0;
     size_t size = 0, i = 0;
     double reference_value = 0;
     long bits_per_value    = 0;
     double* values         = NULL;
 
-    if ((err = grib_get_long_internal(hand, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(hand, bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_double_internal(hand, self->reference_value, &reference_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(hand, reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
 
     /* Special case of constant field */
@@ -598,7 +587,7 @@ int grib_accessor_class_data_png_packing_t::unpack_double_element_set(grib_acces
         return GRIB_SUCCESS;
     }
 
-    err = grib_get_size(grib_handle_of_accessor(a), "codedValues", &size);
+    err = grib_get_size(grib_handle_of_accessor(this), "codedValues", &size);
     if (err)
         return err;
 
@@ -606,16 +595,16 @@ int grib_accessor_class_data_png_packing_t::unpack_double_element_set(grib_acces
         if (index_array[i] > size) return GRIB_INVALID_ARGUMENT;
     }
 
-    values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));
-    err    = grib_get_double_array(grib_handle_of_accessor(a), "codedValues", values, &size);
+    values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
+    err    = grib_get_double_array(grib_handle_of_accessor(this), "codedValues", values, &size);
     if (err) {
-        grib_context_free(a->context, values);
+        grib_context_free(context_, values);
         return err;
     }
     for (i = 0; i < len; i++) {
         val_array[i] = values[index_array[i]];
     }
-    grib_context_free(a->context, values);
+    grib_context_free(context_, values);
     return GRIB_SUCCESS;
 }
 
@@ -627,24 +616,24 @@ static void print_error_feature_not_enabled(grib_context* c)
                      "PNG support not enabled. Please rebuild with -DENABLE_PNG=ON");
 }
 
-int grib_accessor_class_data_png_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+int grib_accessor_data_png_packing_t::unpack_double(double* val, size_t* len)
 {
-    print_error_feature_not_enabled(a->context);
+    print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int grib_accessor_class_data_png_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+int grib_accessor_data_png_packing_t::pack_double(const double* val, size_t* len)
 {
-    print_error_feature_not_enabled(a->context);
+    print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int grib_accessor_class_data_png_packing_t::unpack_double_element(grib_accessor* a, size_t idx, double* val)
+int grib_accessor_data_png_packing_t::unpack_double_element(size_t idx, double* val)
 {
-    print_error_feature_not_enabled(a->context);
+    print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int grib_accessor_class_data_png_packing_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+int grib_accessor_data_png_packing_t::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
-    print_error_feature_not_enabled(a->context);
+    print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 

@@ -1405,6 +1405,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 12 ;
 	}
 #Time-mean significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds
 '141115' = {
@@ -1412,6 +1417,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 12 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 14 ;
 	}
 #Time-mean significant wave height of all waves with periods within the inclusive range from 14 to 17 seconds
 '141116' = {
@@ -1419,6 +1429,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 14 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 17 ;
 	}
 #Time-mean significant wave height of all waves with periods within the inclusive range from 17 to 21 seconds
 '141117' = {
@@ -1426,6 +1441,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 17 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 21 ;
 	}
 #Time-mean significant wave height of all waves with periods within the inclusive range from 21 to 25 seconds
 '141118' = {
@@ -1433,6 +1453,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 21 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 25 ;
 	}
 #Time-mean significant wave height of all waves with periods within the inclusive range from 25 to 30 seconds
 '141119' = {
@@ -1440,6 +1465,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 25 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 30 ;
 	}
 #Time-mean significant wave height of all waves with period larger than 10s
 '141120' = {
@@ -1447,6 +1477,9 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
 	}
 #Time-mean significant wave height of first swell partition
 '141121' = {
@@ -1926,6 +1959,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 2 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 12 ;
 	}
 #Time-maximum significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds
 '143115' = {
@@ -1933,6 +1971,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 2 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 12 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 14 ;
 	}
 #Time-maximum significant wave height of all waves with periods within the inclusive range from 14 to 17 seconds
 '143116' = {
@@ -1940,6 +1983,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 2 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 14 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 17 ;
 	}
 #Time-maximum significant wave height of all waves with periods within the inclusive range from 17 to 21 seconds
 '143117' = {
@@ -1947,6 +1995,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 2 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 17 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 21 ;
 	}
 #Time-maximum significant wave height of all waves with periods within the inclusive range from 21 to 25 seconds
 '143118' = {
@@ -1954,6 +2007,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 2 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 21 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 25 ;
 	}
 #Time-maximum significant wave height of all waves with periods within the inclusive range from 25 to 30 seconds
 '143119' = {
@@ -1961,6 +2019,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 2 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 25 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 30 ;
 	}
 #Time-maximum significant wave height of all waves with period larger than 10s
 '143120' = {
@@ -1968,6 +2031,9 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 2 ;
+	 typeOfWavePeriodInterval = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
 	}
 #Time-maximum significant wave height of first swell partition
 '143121' = {
@@ -2447,6 +2513,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 3 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 12 ;
 	}
 #Time-minimum significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds
 '144115' = {
@@ -2454,6 +2525,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 3 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 12 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 14 ;
 	}
 #Time-minimum significant wave height of all waves with periods within the inclusive range from 14 to 17 seconds
 '144116' = {
@@ -2461,6 +2537,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 3 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 14 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 17 ;
 	}
 #Time-minimum significant wave height of all waves with periods within the inclusive range from 17 to 21 seconds
 '144117' = {
@@ -2468,6 +2549,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 3 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 17 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 21 ;
 	}
 #Time-minimum significant wave height of all waves with periods within the inclusive range from 21 to 25 seconds
 '144118' = {
@@ -2475,6 +2561,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 3 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 21 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 25 ;
 	}
 #Time-minimum significant wave height of all waves with periods within the inclusive range from 25 to 30 seconds
 '144119' = {
@@ -2482,6 +2573,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 3 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 25 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 30 ;
 	}
 #Time-minimum significant wave height of all waves with period larger than 10s
 '144120' = {
@@ -2489,6 +2585,9 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 3 ;
+	 typeOfWavePeriodInterval = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
 	}
 #Time-minimum significant wave height of first swell partition
 '144121' = {
@@ -2968,6 +3067,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 6 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 12 ;
 	}
 #Time-standard-deviation significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds
 '145115' = {
@@ -2975,6 +3079,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 6 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 12 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 14 ;
 	}
 #Time-standard-deviation significant wave height of all waves with periods within the inclusive range from 14 to 17 seconds
 '145116' = {
@@ -2982,6 +3091,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 6 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 14 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 17 ;
 	}
 #Time-standard-deviation significant wave height of all waves with periods within the inclusive range from 17 to 21 seconds
 '145117' = {
@@ -2989,6 +3103,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 6 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 17 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 21 ;
 	}
 #Time-standard-deviation significant wave height of all waves with periods within the inclusive range from 21 to 25 seconds
 '145118' = {
@@ -2996,6 +3115,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 6 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 21 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 25 ;
 	}
 #Time-standard-deviation significant wave height of all waves with periods within the inclusive range from 25 to 30 seconds
 '145119' = {
@@ -3003,6 +3127,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 6 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 25 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 30 ;
 	}
 #Time-standard-deviation significant wave height of all waves with period larger than 10s
 '145120' = {
@@ -3010,6 +3139,9 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 6 ;
+	 typeOfWavePeriodInterval = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
 	}
 #Time-standard-deviation significant wave height of first swell partition
 '145121' = {
@@ -6943,7 +7075,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean large-scale snowfall rate water equivalent
+#Time-mean large scale snowfall rate water equivalent
 '235057' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -7935,6 +8067,8 @@
 	 parameterNumber = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 162 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean lake shape factor
@@ -7960,6 +8094,10 @@
 	 parameterNumber = 5 ;
 	 typeOfFirstFixedSurface = 174 ;
 	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean minimum vertical gradient of refractivity inside trapping layer
@@ -8191,6 +8329,8 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean ceiling
@@ -9743,6 +9883,8 @@
 	 parameterNumber = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 162 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum lake shape factor
@@ -9768,6 +9910,10 @@
 	 parameterNumber = 5 ;
 	 typeOfFirstFixedSurface = 174 ;
 	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum minimum vertical gradient of refractivity inside trapping layer
@@ -9999,6 +10145,8 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum ceiling
@@ -11551,6 +11699,8 @@
 	 parameterNumber = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 162 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum lake shape factor
@@ -11576,6 +11726,10 @@
 	 parameterNumber = 5 ;
 	 typeOfFirstFixedSurface = 174 ;
 	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum minimum vertical gradient of refractivity inside trapping layer
@@ -11807,6 +11961,8 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum ceiling
@@ -13349,6 +13505,8 @@
 	 parameterNumber = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 162 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation lake shape factor
@@ -13374,6 +13532,10 @@
 	 parameterNumber = 5 ;
 	 typeOfFirstFixedSurface = 174 ;
 	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation minimum vertical gradient of refractivity inside trapping layer
@@ -13605,6 +13767,8 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation ceiling
@@ -19984,7 +20148,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 17 ;
 	}
-#Mean 2 metre temperature
+#Time-mean 2 metre temperature
 '228004' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
@@ -19994,7 +20158,7 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean of 10 metre wind speed
+#Time-mean 10 metre wind speed
 '228005' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;

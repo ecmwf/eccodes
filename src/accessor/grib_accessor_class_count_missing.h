@@ -16,19 +16,16 @@
 class grib_accessor_count_missing_t : public grib_accessor_long_t
 {
 public:
-    /* Members defined in count_missing */
-    const char* bitmap;
-    const char* unusedBitsInBitmap;
-    const char* numberOfDataPoints;
-    const char* missingValueManagementUsed;
-};
-
-class grib_accessor_class_count_missing_t : public grib_accessor_class_long_t
-{
-public:
-    grib_accessor_class_count_missing_t(const char* name) : grib_accessor_class_long_t(name) {}
+    grib_accessor_count_missing_t() :
+        grib_accessor_long_t() { class_name_ = "count_missing"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_count_missing_t{}; }
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int unpack_long(long* val, size_t* len) override;
+    int value_count(long*) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* bitmap_;
+    const char* unusedBitsInBitmap_;
+    const char* numberOfDataPoints_;
+    const char* missingValueManagementUsed_;
 };

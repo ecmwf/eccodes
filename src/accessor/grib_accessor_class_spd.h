@@ -16,22 +16,21 @@
 class grib_accessor_spd_t : public grib_accessor_long_t
 {
 public:
-    /* Members defined in spd */
-    const char* numberOfBits;
-    const char* numberOfElements;
-};
-
-class grib_accessor_class_spd_t : public grib_accessor_class_long_t
-{
-public:
-    grib_accessor_class_spd_t(const char* name) : grib_accessor_class_long_t(name) {}
+    grib_accessor_spd_t() :
+        grib_accessor_long_t() { class_name_ = "spd"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_spd_t{}; }
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    long byte_count(grib_accessor*) override;
-    long byte_offset(grib_accessor*) override;
-    long next_offset(grib_accessor*) override;
-    int value_count(grib_accessor*, long*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
-    void update_size(grib_accessor*, size_t) override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    long byte_count() override;
+    long byte_offset() override;
+    long next_offset() override;
+    int value_count(long*) override;
+    void init(const long, grib_arguments*) override;
+    void update_size(size_t) override;
+
+private:
+    const char* numberOfBits_;
+    const char* numberOfElements_;
+
+    long compute_byte_count();
 };

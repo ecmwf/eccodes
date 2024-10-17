@@ -15,50 +15,47 @@
 class grib_accessor_data_g1second_order_general_extended_packing_t : public grib_accessor_data_simple_packing_t
 {
 public:
-    /* Members defined in data_g1second_order_general_extended_packing */
-    const char* half_byte;
-    const char* packingType;
-    const char* ieee_packing;
-    const char* precision;
-    const char* widthOfFirstOrderValues;
-    const char* firstOrderValues;
-    const char* N1;
-    const char* N2;
-    const char* numberOfGroups;
-    const char* codedNumberOfGroups;
-    const char* numberOfSecondOrderPackedValues;
-    const char* extraValues;
-    const char* groupWidths;
-    const char* widthOfWidths;
-    const char* groupLengths;
-    const char* widthOfLengths;
-    const char* NL;
-    const char* SPD;
-    const char* widthOfSPD;
-    const char* orderOfSPD;
-    const char* numberOfPoints;
-    const char* dataFlag;
-    double* dvalues;
-    float* fvalues;
-    int double_dirty;
-    int float_dirty;
-    size_t size;
-};
-
-class grib_accessor_class_data_g1second_order_general_extended_packing_t : public grib_accessor_class_data_simple_packing_t
-{
-public:
-    grib_accessor_class_data_g1second_order_general_extended_packing_t(const char* name) : grib_accessor_class_data_simple_packing_t(name) {}
+    grib_accessor_data_g1second_order_general_extended_packing_t() :
+        grib_accessor_data_simple_packing_t() { class_name_ = "data_g1second_order_general_extended_packing"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_data_g1second_order_general_extended_packing_t{}; }
-    int pack_double(grib_accessor*, const double* val, size_t* len) override;
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int unpack_float(grib_accessor*, float* val, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void destroy(grib_context*, grib_accessor*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
-    int unpack_double_element(grib_accessor*, size_t i, double* val) override;
-    int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array) override;
+    int pack_double(const double* val, size_t* len) override;
+    int unpack_double(double* val, size_t* len) override;
+    int unpack_float(float* val, size_t* len) override;
+    int value_count(long*) override;
+    void destroy(grib_context*) override;
+    void init(const long, grib_arguments*) override;
+    int unpack_double_element(size_t i, double* val) override;
+    int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) override;
 
 private:
-    int unpack(grib_accessor* a, double*, float*, size_t*);
+    int unpack(double*, float*, size_t*);
+
+private:
+    const char* half_byte_;
+    const char* packingType_;
+    const char* ieee_packing_;
+    const char* precision_;
+    const char* widthOfFirstOrderValues_;
+    const char* firstOrderValues_;
+    const char* N1_;
+    const char* N2_;
+    const char* numberOfGroups_;
+    const char* codedNumberOfGroups_;
+    const char* numberOfSecondOrderPackedValues_;
+    const char* extraValues_;
+    const char* groupWidths_;
+    const char* widthOfWidths_;
+    const char* groupLengths_;
+    const char* widthOfLengths_;
+    const char* NL_;
+    const char* SPD_;
+    const char* widthOfSPD_;
+    const char* orderOfSPD_;
+    const char* numberOfPoints_;
+    const char* dataFlag_;
+    double* dvalues_;
+    float* fvalues_;
+    int double_dirty_;
+    int float_dirty_;
+    size_t size_;
 };

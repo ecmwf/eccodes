@@ -2387,37 +2387,37 @@ grib_yyreduce:
 
   case 9: /* dvalues: FLOAT  */
 #line 277 "griby.y"
-                 { (grib_yyval.dvalue)=grib_darray_push(grib_parser_context,0,(grib_yyvsp[0].dval));}
+                 { (grib_yyval.dvalue)=grib_darray_push(0,(grib_yyvsp[0].dval));}
 #line 2392 "y.tab.c"
     break;
 
   case 10: /* dvalues: dvalues ',' FLOAT  */
 #line 278 "griby.y"
-                         { (grib_yyval.dvalue)=grib_darray_push(grib_parser_context,(grib_yyvsp[-2].dvalue),(grib_yyvsp[0].dval));}
+                         { (grib_yyval.dvalue)=grib_darray_push((grib_yyvsp[-2].dvalue),(grib_yyvsp[0].dval));}
 #line 2398 "y.tab.c"
     break;
 
   case 11: /* dvalues: INTEGER  */
 #line 279 "griby.y"
-               { (grib_yyval.dvalue)=grib_darray_push(grib_parser_context,0,(grib_yyvsp[0].lval));}
+               { (grib_yyval.dvalue)=grib_darray_push(0,(grib_yyvsp[0].lval));}
 #line 2404 "y.tab.c"
     break;
 
   case 12: /* dvalues: dvalues ',' INTEGER  */
 #line 280 "griby.y"
-                           { (grib_yyval.dvalue)=grib_darray_push(grib_parser_context,(grib_yyvsp[-2].dvalue),(grib_yyvsp[0].lval));}
+                           { (grib_yyval.dvalue)=grib_darray_push((grib_yyvsp[-2].dvalue),(grib_yyvsp[0].lval));}
 #line 2410 "y.tab.c"
     break;
 
   case 13: /* svalues: STRING  */
 #line 283 "griby.y"
-                { (grib_yyval.svalue)=grib_sarray_push(grib_parser_context,0,(grib_yyvsp[0].str));}
+                { (grib_yyval.svalue)=grib_sarray_push(0,(grib_yyvsp[0].str));}
 #line 2416 "y.tab.c"
     break;
 
   case 14: /* svalues: svalues ',' STRING  */
 #line 284 "griby.y"
-                          { (grib_yyval.svalue)=grib_sarray_push(grib_parser_context,(grib_yyvsp[-2].svalue),(grib_yyvsp[0].str));}
+                          { (grib_yyval.svalue)=grib_sarray_push((grib_yyvsp[-2].svalue),(grib_yyvsp[0].str));}
 #line 2422 "y.tab.c"
     break;
 
@@ -3545,14 +3545,14 @@ grib_yyreduce:
   case 214: /* hash_array_value: STRING '=' '[' integer_array ']'  */
 #line 772 "griby.y"
                                                     {
-	  				(grib_yyval.hash_array_value) = grib_integer_hash_array_value_new(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-1].ivalue)); free((grib_yyvsp[-4].str));}
+	  				(grib_yyval.hash_array_value) = grib_integer_hash_array_value_new((grib_yyvsp[-4].str),(grib_yyvsp[-1].ivalue)); free((grib_yyvsp[-4].str));}
 #line 3550 "y.tab.c"
     break;
 
   case 215: /* hash_array_value: IDENT '=' '[' integer_array ']'  */
 #line 774 "griby.y"
                                                                   {
-	  				(grib_yyval.hash_array_value) = grib_integer_hash_array_value_new(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-1].ivalue)); free((grib_yyvsp[-4].str));}
+	  				(grib_yyval.hash_array_value) = grib_integer_hash_array_value_new((grib_yyvsp[-4].str),(grib_yyvsp[-1].ivalue)); free((grib_yyvsp[-4].str));}
 #line 3557 "y.tab.c"
     break;
 

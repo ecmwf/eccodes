@@ -22,10 +22,10 @@ sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 cat > $tempFilt <<EOF
     if (! contains(identifier, "GR", 0) )  { assert (false); }
     if (! contains(identifier, "ib", 1) )  { assert (false); }
-    if (! contains(identifier, "", 1) )  { assert (false); }
+    if (! contains(identifier, "",   1) )  { assert (false); }
 
     if (contains(identifier, "grb", 1) ) { assert (false); }
-    if (contains(identifier, "ib", 0) ) { assert (false); }
+    if (contains(identifier, "ib",  0) ) { assert (false); }
 EOF
 cat $tempFilt
 ${tools_dir}/grib_filter $tempFilt $sample
