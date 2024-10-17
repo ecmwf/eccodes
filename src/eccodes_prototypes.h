@@ -732,6 +732,7 @@ int grib_get_string_array(const grib_handle* h, const char* name, char** val, si
 int grib_get_long_array_internal(grib_handle* h, const char* name, long* val, size_t* length);
 int grib_get_long_array(const grib_handle* h, const char* name, long* val, size_t* length);
 int grib_set_values(grib_handle* h, grib_values* args, size_t count);
+int grib_set_values_silent(grib_handle* h, grib_values* args, size_t count, int silent);
 int grib_get_nearest_smaller_value(grib_handle* h, const char* name, double val, double* nearest);
 void grib_print_values(const char* title, const grib_values* values, FILE* out, int count);
 int grib_values_check(grib_handle* h, grib_values* values, int count);

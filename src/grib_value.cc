@@ -31,7 +31,7 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
     return (*a == 0 && *b == 0) ? 0 : 1;
 }
 
-/* Debug utility function to track GRIB packing/repacking issues */
+// Debug utility function to track GRIB packing/repacking issues
 template <typename T>
 static void print_debug_info__set_array(grib_handle* h, const char* func, const char* name, const T* val, size_t length)
 {
@@ -339,7 +339,7 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
         }
     }
     if (err)
-        error_code = *err; /* copy the error code before cleanup */
+        error_code = *err; // copy the error code before cleanup
     grib_keys_iterator_delete(iter);
     key_err = first;
     while (key_err) {
@@ -407,9 +407,8 @@ int grib_set_string_internal(grib_handle* h, const char* name,
     return GRIB_NOT_FOUND;
 }
 
-/* Return 1 if we dealt with specific packing type changes and nothing more needs doing.
- * Return 0 if further action is needed
- */
+// Return 1 if we dealt with specific packing type changes and nothing more needs doing.
+// Return 0 if further action is needed
 static int preprocess_packingType_change(grib_handle* h, const char* keyname, const char* keyval)
 {
     int err = 0;
@@ -488,7 +487,7 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* l
 
     int processed = preprocess_packingType_change(h, name, val);
     if (processed)
-        return GRIB_SUCCESS;  /* Dealt with - no further action needed */
+        return GRIB_SUCCESS;  // Dealt with - no further action needed
 
     a = grib_find_accessor(h, name);
 
@@ -566,8 +565,8 @@ int grib_set_bytes(grib_handle* h, const char* name, const unsigned char* val, s
     grib_accessor* a = grib_find_accessor(h, name);
 
     if (a) {
-        /* if(a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) */
-        /* return GRIB_READ_ONLY; */
+        // if(a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY)
+        // return GRIB_READ_ONLY;
 
         ret = a->pack_bytes(val, length);
         if (ret == GRIB_SUCCESS) {
@@ -639,14 +638,14 @@ int grib_is_missing_double(grib_accessor* a, double x)
 
 int grib_is_missing_string(grib_accessor* a, const unsigned char* x, size_t len)
 {
-    /* For a string value to be missing, every character has to be */
-    /* all 1's (i.e. 0xFF) */
-    /* Note: An empty string is also classified as missing */
+    // For a string value to be missing, every character has to be */
+    // all 1's (i.e. 0xFF) */
+    // Note: An empty string is also classified as missing */
     int ret;
     size_t i = 0;
 
     if (len == 0)
-        return 1; /* empty string */
+        return 1; // empty string
     ret = 1;
     for (i = 0; i < len; i++) {
         if (x[i] != 0xFF) {
@@ -695,7 +694,7 @@ int grib_is_missing(const grib_handle* h, const char* name, int* err)
     return grib_accessor_is_missing(a, err);
 }
 
-/* Return true if the given key exists (is defined) in our grib message */
+// Return true if the given key exists (is defined) in our grib message
 int grib_is_defined(const grib_handle* h, const char* name)
 {
     const grib_accessor* a = grib_find_accessor(h, name);
@@ -729,7 +728,7 @@ static int _grib_set_double_array_internal(grib_handle* h, grib_accessor* a,
                 err = a->pack_double(val + *encoded_length, &len);
                 *encoded_length += len;
                 if (err == GRIB_SUCCESS) {
-                    /* See ECC-778 */
+                    // See ECC-778
                     return grib_dependency_notify_change_h(h, a);
                 }
             }
@@ -768,7 +767,7 @@ static int _grib_set_double_array(grib_handle* h, const char* name,
         err = GRIB_ARRAY_TOO_SMALL;
 
     if (err == GRIB_SUCCESS)
-        return grib_dependency_notify_change_h(h, a); /* See ECC-778 */
+        return grib_dependency_notify_change_h(h, a); // See ECC-778
 
     return err;
 }
@@ -792,7 +791,7 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
     if (ret != GRIB_SUCCESS)
         grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to set double array '%s' (%s)",
                          name, grib_get_error_message(ret));
-    /*if (h->context->debug) fprintf(stderr,"ECCODES DEBUG grib_set_double_array_internal key=%s --DONE\n",name);*/
+    //if (h->context->debug) fprintf(stderr,"ECCODES DEBUG grib_set_double_array_internal key=%s --DONE\n",name);
     return ret;
 }
 
@@ -1785,6 +1784,12 @@ int grib_get_long_array(const grib_handle* h, const char* name, long* val, size_
 
 int grib_set_values(grib_handle* h, grib_values* args, size_t count)
 {
+    // The default behaviour is to print any error messages (not silent)
+    return grib_set_values_silent(h, args, count, /*silent=*/0);
+}
+
+int grib_set_values_silent(grib_handle* h, grib_values* args, size_t count, int silent)
+{
     int i, error = 0;
     int err = 0;
     size_t len;
@@ -1839,13 +1844,13 @@ int grib_set_values(grib_handle* h, grib_values* args, size_t count)
                     break;
 
                 default:
-                    grib_context_log(h->context, GRIB_LOG_ERROR, "grib_set_values[%d] %s invalid type %d", i, args[i].name, args[i].type);
+                    if (!silent)
+                        grib_context_log(h->context, GRIB_LOG_ERROR, "grib_set_values[%d] %s invalid type %d", i, args[i].name, args[i].type);
                     args[i].error = GRIB_INVALID_ARGUMENT;
                     break;
             }
-            /*if (args[i].error != GRIB_SUCCESS)
-         grib_context_log(h->context,GRIB_LOG_ERROR,"Unable to set %s (%s)",
-                          args[i].name,grib_get_error_message(args[i].error)); */
+            // if (args[i].error != GRIB_SUCCESS)
+            //   grib_context_log(h->context,GRIB_LOG_ERROR,"Unable to set %s (%s)",args[i].name,grib_get_error_message(args[i].error));
         }
     }
 
@@ -1856,10 +1861,12 @@ int grib_set_values(grib_handle* h, grib_values* args, size_t count)
 
     for (i = 0; i < count; i++) {
         if (args[i].error != GRIB_SUCCESS) {
-            grib_context_log(h->context, GRIB_LOG_ERROR,
-                             "grib_set_values[%d] %s (type=%s) failed: %s (message %d)",
-                             i, args[i].name, grib_get_type_name(args[i].type),
-                             grib_get_error_message(args[i].error), h->context->handle_file_count);
+            if (!silent) {
+                grib_context_log(h->context, GRIB_LOG_ERROR,
+                                 "grib_set_values[%d] %s (type=%s) failed: %s (message %d)",
+                                 i, args[i].name, grib_get_type_name(args[i].type),
+                                 grib_get_error_message(args[i].error), h->context->handle_file_count);
+            }
             err = err == GRIB_SUCCESS ? args[i].error : err;
         }
     }
