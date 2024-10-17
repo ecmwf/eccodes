@@ -12,9 +12,12 @@
 
 #include "grib_iterator_class_gen.h"
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 class SpaceView : public Gen
 {
@@ -23,7 +26,7 @@ public:
     Iterator* create() const override { return new SpaceView(); }
 
     int init(grib_handle*, grib_arguments*) override;
-    int next(double *, double *, double *) override;
+    int next(double*, double*, double*) override;
     int destroy() override;
 
 private:
@@ -32,6 +35,6 @@ private:
     long Nj_;
 };
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

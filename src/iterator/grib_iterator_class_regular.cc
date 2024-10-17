@@ -13,9 +13,12 @@
 eccodes::grib::geo::Regular _grib_iterator_regular{};
 eccodes::grib::geo::Iterator* grib_iterator_regular = &_grib_iterator_regular;
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 #define ITER "Regular grid Geoiterator"
 
@@ -50,7 +53,7 @@ int Regular::previous(double* lat, double* lon, double* val)
 
 int Regular::destroy()
 {
-    const grib_context* c       = h_->context;
+    const grib_context* c = h_->context;
     grib_context_free(c, las_);
     grib_context_free(c, los_);
 
@@ -78,7 +81,7 @@ int Regular::init(grib_handle* h, grib_arguments* args)
         return ret;
     if ((ret = grib_get_double_internal(h, "longitudeOfLastGridPointInDegrees", &lon2)))
         return ret;
-    if ((ret = grib_get_double_internal(h, s_idir, &idir))) // can be GRIB_MISSING_DOUBLE
+    if ((ret = grib_get_double_internal(h, s_idir, &idir)))  // can be GRIB_MISSING_DOUBLE
         return ret;
     idir_coded = idir;
     if ((ret = grib_get_long_internal(h, s_Ni, &Ni)))
@@ -95,7 +98,7 @@ int Regular::init(grib_handle* h, grib_arguments* args)
         return GRIB_WRONG_GRID;
     }
 
-    if (Ni*Nj != nv_) {
+    if (Ni * Nj != nv_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Ni*Nj!=numberOfDataPoints (%ld*%ld!=%zu)", ITER, Ni, Nj, nv_);
         return GRIB_WRONG_GRID;
     }
@@ -156,11 +159,11 @@ int Regular::init(grib_handle* h, grib_arguments* args)
     if (lon2 > 0) {
         lon2 = normalise_longitude_in_degrees(lon2);
     }
-    los_[Ni-1] = lon2;
+    los_[Ni - 1] = lon2;
 
     return ret;
 }
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

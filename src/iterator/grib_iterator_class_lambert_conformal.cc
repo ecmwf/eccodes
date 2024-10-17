@@ -14,32 +14,35 @@
 eccodes::grib::geo::LambertConformal _grib_iterator_lambert_conformal{};
 eccodes::grib::geo::Iterator* grib_iterator_lambert_conformal = &_grib_iterator_lambert_conformal;
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
-#define ITER "Lambert conformal Geoiterator"
+#define ITER    "Lambert conformal Geoiterator"
 #define EPSILON 1.0e-10
 
 #ifndef M_PI
-#define M_PI 3.14159265358979323846 // Whole pie
+    #define M_PI 3.14159265358979323846  // Whole pie
 #endif
 
 #ifndef M_PI_2
-#define M_PI_2 1.57079632679489661923 // Half a pie
+    #define M_PI_2 1.57079632679489661923  // Half a pie
 #endif
 
 #ifndef M_PI_4
-#define M_PI_4 0.78539816339744830962 // Quarter of a pie
+    #define M_PI_4 0.78539816339744830962  // Quarter of a pie
 #endif
 
-#define RAD2DEG 57.29577951308232087684 // 180 over pi
-#define DEG2RAD 0.01745329251994329576  // pi over 180
+#define RAD2DEG 57.29577951308232087684  // 180 over pi
+#define DEG2RAD 0.01745329251994329576   // pi over 180
 
 // Adjust longitude (in radians) to range -180 to 180
 static double adjust_lon_radians(double lon)
 {
-    if (lon > M_PI)  lon -= 2 * M_PI;
+    if (lon > M_PI) lon -= 2 * M_PI;
     if (lon < -M_PI) lon += 2 * M_PI;
     return lon;
 }
@@ -51,8 +54,8 @@ static double adjust_lon_radians(double lon)
 // calculate phi on the left side. Substitute the calculated phi) into the right side,
 // calculate a new phi, etc., until phi does not change significantly from the preceding trial value of phi
 static double compute_phi(
-    double eccent, // Spheroid eccentricity
-    double ts,     // Constant value t
+    double eccent,  // Spheroid eccentricity
+    double ts,      // Constant value t
     int* error)
 {
     double eccnth, phi, con, dphi, sinpi;
@@ -82,9 +85,9 @@ static double compute_m(double eccent, double sinphi, double cosphi)
 
 // Compute the constant small t for use in the forward computations
 static double compute_t(
-    double eccent, // Eccentricity of the spheroid
-    double phi,    // Latitude phi
-    double sinphi) // Sine of the latitude
+    double eccent,  // Eccentricity of the spheroid
+    double phi,     // Latitude phi
+    double sinphi)  // Sine of the latitude
 {
     double con = eccent * sinphi;
     double com = 0.5 * eccent;
@@ -99,25 +102,25 @@ static double calculate_eccentricity(double minor, double major)
 }
 
 static void xy2lonlat(double radius, double n, double f, double rho0_bare, double LoVInRadians,
-                    double x, double y,
-                    double* lonDeg, double* latDeg)
+                      double x, double y,
+                      double* lonDeg, double* latDeg)
 {
     DEBUG_ASSERT(radius > 0);
     DEBUG_ASSERT(n != 0.0);
     x /= radius;
     y /= radius;
-    y = rho0_bare - y;
+    y          = rho0_bare - y;
     double rho = hypot(x, y);
     if (rho != 0.0) {
         if (n < 0.0) {
             rho = -rho;
-            x = -x;
-            y = -y;
+            x   = -x;
+            y   = -y;
         }
-        double latRadians = 2. * atan(pow(f / rho, 1.0/n)) - M_PI_2;
+        double latRadians = 2. * atan(pow(f / rho, 1.0 / n)) - M_PI_2;
         double lonRadians = atan2(x, y) / n;
-        *lonDeg = (lonRadians + LoVInRadians) * RAD2DEG;
-        *latDeg = latRadians * RAD2DEG;
+        *lonDeg           = (lonRadians + LoVInRadians) * RAD2DEG;
+        *latDeg           = latRadians * RAD2DEG;
     }
     else {
         *lonDeg = 0.0;
@@ -126,27 +129,28 @@ static void xy2lonlat(double radius, double n, double f, double rho0_bare, doubl
 }
 
 int LambertConformal::init_sphere(const grib_handle* h,
-                       size_t nv, long nx, long ny,
-                       double LoVInDegrees,
-                       double Dx, double Dy, double radius,
-                       double latFirstInRadians, double lonFirstInRadians,
-                       double LoVInRadians, double Latin1InRadians, double Latin2InRadians,
-                       double LaDInRadians)
+                                  size_t nv, long nx, long ny,
+                                  double LoVInDegrees,
+                                  double Dx, double Dy, double radius,
+                                  double latFirstInRadians, double lonFirstInRadians,
+                                  double LoVInRadians, double Latin1InRadians, double Latin2InRadians,
+                                  double LaDInRadians)
 {
     double n, x, y;
 
     if (fabs(Latin1InRadians - Latin2InRadians) < 1E-09) {
         n = sin(Latin1InRadians);
-    } else {
+    }
+    else {
         n = log(cos(Latin1InRadians) / cos(Latin2InRadians)) /
             log(tan(M_PI_4 + Latin2InRadians / 2.0) / tan(M_PI_4 + Latin1InRadians / 2.0));
     }
 
-    double f    = (cos(Latin1InRadians) * pow(tan(M_PI_4 + Latin1InRadians / 2.0), n)) / n;
-    double rho  = radius * f * pow(tan(M_PI_4 + latFirstInRadians / 2.0), -n);
+    double f         = (cos(Latin1InRadians) * pow(tan(M_PI_4 + Latin1InRadians / 2.0), n)) / n;
+    double rho       = radius * f * pow(tan(M_PI_4 + latFirstInRadians / 2.0), -n);
     double rho0_bare = f * pow(tan(M_PI_4 + LaDInRadians / 2.0), -n);
-    double rho0 = radius * rho0_bare; // scaled
-    double lonDiff = lonFirstInRadians - LoVInRadians;
+    double rho0      = radius * rho0_bare;  // scaled
+    double lonDiff   = lonFirstInRadians - LoVInRadians;
 
     // Adjust longitude to range -180 to 180
     if (lonDiff > M_PI)
@@ -177,9 +181,9 @@ int LambertConformal::init_sphere(const grib_handle* h,
         y = y0 + j * Dy;
         for (long i = 0; i < nx; i++) {
             const long index = i + j * nx;
-            x = x0 + i * Dx;
+            x                = x0 + i * Dx;
             xy2lonlat(radius, n, f, rho0_bare, LoVInRadians, x, y, &lonDeg, &latDeg);
-            lonDeg = normalise_longitude_in_degrees(lonDeg);
+            lonDeg       = normalise_longitude_in_degrees(lonDeg);
             lons_[index] = lonDeg;
             lats_[index] = latDeg;
         }
@@ -215,30 +219,30 @@ int LambertConformal::init_sphere(const grib_handle* h,
 
 // Oblate spheroid
 int LambertConformal::init_oblate(const grib_handle* h,
-                       size_t nv, long nx, long ny,
-                       double LoVInDegrees,
-                       double Dx, double Dy,
-                       double earthMinorAxisInMetres, double earthMajorAxisInMetres,
-                       double latFirstInRadians, double lonFirstInRadians,
-                       double LoVInRadians, double Latin1InRadians, double Latin2InRadians,
-                       double LaDInRadians)
+                                  size_t nv, long nx, long ny,
+                                  double LoVInDegrees,
+                                  double Dx, double Dy,
+                                  double earthMinorAxisInMetres, double earthMajorAxisInMetres,
+                                  double latFirstInRadians, double lonFirstInRadians,
+                                  double LoVInRadians, double Latin1InRadians, double Latin2InRadians,
+                                  double LaDInRadians)
 {
     int i, j, err = 0;
     double x0, y0, x, y, latRad, lonRad, latDeg, lonDeg, sinphi, ts, rh1, theta;
-    double false_easting;  // x offset in meters
-    double false_northing; // y offset in meters
+    double false_easting;   // x offset in meters
+    double false_northing;  // y offset in meters
 
-    double ns;     // ratio of angle between meridian
-    double F;      // flattening of ellipsoid
-    double rh;     // height above ellipsoid
-    double sin_po; // sin value
-    double cos_po; // cos value
-    double con;    // temporary variable
-    double ms1;    // small m 1
-    double ms2;    // small m 2
-    double ts0;    // small t 0
-    double ts1;    // small t 1
-    double ts2;    // small t 2
+    double ns;      // ratio of angle between meridian
+    double F;       // flattening of ellipsoid
+    double rh;      // height above ellipsoid
+    double sin_po;  // sin value
+    double cos_po;  // cos value
+    double con;     // temporary variable
+    double ms1;     // small m 1
+    double ms2;     // small m 2
+    double ts0;     // small t 0
+    double ts1;     // small t 1
+    double ts2;     // small t 2
 
     double e = calculate_eccentricity(earthMinorAxisInMetres, earthMajorAxisInMetres);
 
@@ -257,10 +261,11 @@ int LambertConformal::init_oblate(const grib_handle* h,
 
     if (fabs(Latin1InRadians - Latin2InRadians) > EPSILON) {
         ns = log(ms1 / ms2) / log(ts1 / ts2);
-    } else {
+    }
+    else {
         ns = con;
     }
-    F = ms1 / (ns * pow(ts1, ns));
+    F  = ms1 / (ns * pow(ts1, ns));
     rh = earthMajorAxisInMetres * F * pow(ts0, ns);
 
     // Forward projection: convert lat,lon to x,y
@@ -269,7 +274,8 @@ int LambertConformal::init_oblate(const grib_handle* h,
         sinphi = sin(latFirstInRadians);
         ts     = compute_t(e, latFirstInRadians, sinphi);
         rh1    = earthMajorAxisInMetres * F * pow(ts, ns);
-    } else {
+    }
+    else {
         con = latFirstInRadians * ns;
         if (con <= 0) {
             grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Point cannot be projected: latFirstInRadians=%g", ITER, latFirstInRadians);
@@ -305,8 +311,8 @@ int LambertConformal::init_oblate(const grib_handle* h,
             double _x, _y;
             x = i * Dx;
             // Inverse projection to convert from x,y to lat,lon
-            _x = x - false_easting;
-            _y = rh - y + false_northing;
+            _x  = x - false_easting;
+            _y  = rh - y + false_northing;
             rh1 = sqrt(_x * _x + _y * _y);
             con = 1.0;
             if (ns <= 0) {
@@ -327,15 +333,16 @@ int LambertConformal::init_oblate(const grib_handle* h,
                     grib_context_free(h->context, lons_);
                     return err;
                 }
-            } else {
+            }
+            else {
                 latRad = -M_PI_2;
             }
             lonRad = adjust_lon_radians(theta / ns + LoVInRadians);
             if (i == 0 && j == 0) {
                 DEBUG_ASSERT(fabs(latFirstInRadians - latRad) <= EPSILON);
             }
-            latDeg = latRad * RAD2DEG;  // Convert to degrees
-            lonDeg = normalise_longitude_in_degrees(lonRad * RAD2DEG);
+            latDeg       = latRad * RAD2DEG;  // Convert to degrees
+            lonDeg       = normalise_longitude_in_degrees(lonRad * RAD2DEG);
             lons_[index] = lonDeg;
             lats_[index] = latDeg;
         }
@@ -355,7 +362,7 @@ int LambertConformal::init(grib_handle* h, grib_arguments* args)
         lonFirstInDegrees, Dx, Dy, radius = 0;
     double latFirstInRadians, lonFirstInRadians, LoVInRadians, Latin1InRadians, Latin2InRadians,
         LaDInRadians;
-    double earthMajorAxisInMetres=0, earthMinorAxisInMetres=0;
+    double earthMajorAxisInMetres = 0, earthMinorAxisInMetres = 0;
 
     const char* sradius            = grib_arguments_get_name(h, args, carg_++);
     const char* snx                = grib_arguments_get_name(h, args, carg_++);
@@ -382,7 +389,8 @@ int LambertConformal::init(grib_handle* h, grib_arguments* args)
     if (is_oblate) {
         if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) return err;
         if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) return err;
-    } else {
+    }
+    else {
         if ((err = grib_get_double_internal(h, sradius, &radius)) != GRIB_SUCCESS) return err;
     }
 
@@ -440,7 +448,8 @@ int LambertConformal::init(grib_handle* h, grib_arguments* args)
                           latFirstInRadians, lonFirstInRadians,
                           LoVInRadians, Latin1InRadians, Latin2InRadians,
                           LaDInRadians);
-    } else {
+    }
+    else {
         err = init_sphere(h, nv_, nx, ny,
                           LoVInDegrees,
                           Dx, Dy, radius,
@@ -474,7 +483,7 @@ int LambertConformal::next(double* lat, double* lon, double* val)
 
 int LambertConformal::destroy()
 {
-    const grib_context* c                 = h_->context;
+    const grib_context* c = h_->context;
 
     grib_context_free(c, lats_);
     grib_context_free(c, lons_);
@@ -482,6 +491,6 @@ int LambertConformal::destroy()
     return Gen::destroy();
 }
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

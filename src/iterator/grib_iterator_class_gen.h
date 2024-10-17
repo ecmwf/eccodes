@@ -12,17 +12,21 @@
 
 #include "grib_iterator.h"
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 class Gen : public Iterator
 {
 public:
-    Gen() : Iterator() { class_name_ = "gen"; }
+    Gen() :
+        Iterator() { class_name_ = "gen"; }
     Iterator* create() const override { return new Gen(); }
 
-    int init(grib_handle*,grib_arguments*) override;
+    int init(grib_handle*, grib_arguments*) override;
     int next(double*, double*, double*) override;
     int previous(double*, double*, double*) override;
     int reset() override;
@@ -30,11 +34,11 @@ public:
     bool has_next() override;
 
 public:
-    //int get(double*, double*, double*);
+    // int get(double*, double*, double*);
     int carg_;
     const char* missingValue_;
 };
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

@@ -13,23 +13,26 @@
 eccodes::grib::geo::Mercator _grib_iterator_mercator{};
 eccodes::grib::geo::Iterator* grib_iterator_mercator = &_grib_iterator_mercator;
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
-#define ITER "Mercator Geoiterator"
+#define ITER    "Mercator Geoiterator"
 #define EPSILON 1.0e-10
 
 #ifndef M_PI
-#define M_PI 3.14159265358979323846 /* Whole pie */
+    #define M_PI 3.14159265358979323846 /* Whole pie */
 #endif
 
 #ifndef M_PI_2
-#define M_PI_2 1.57079632679489661923 /* Half a pie */
+    #define M_PI_2 1.57079632679489661923 /* Half a pie */
 #endif
 
 #ifndef M_PI_4
-#define M_PI_4 0.78539816339744830962 /* Quarter of a pie */
+    #define M_PI_4 0.78539816339744830962 /* Quarter of a pie */
 #endif
 
 #define RAD2DEG 57.29577951308232087684 /* 180 over pi */
@@ -38,7 +41,7 @@ namespace geo {
 /* Adjust longitude (in radians) to range -180 to 180 */
 static double adjust_lon_radians(double lon)
 {
-    if (lon > M_PI)  lon -= 2 * M_PI;
+    if (lon > M_PI) lon -= 2 * M_PI;
     if (lon < -M_PI) lon += 2 * M_PI;
     return lon;
 }
@@ -85,12 +88,12 @@ static double compute_t(
 }
 
 int Mercator::init_mercator(grib_handle* h,
-                         size_t nv, long nx, long ny,
-                         double DiInMetres, double DjInMetres,
-                         double earthMinorAxisInMetres, double earthMajorAxisInMetres,
-                         double latFirstInRadians, double lonFirstInRadians,
-                         double latLastInRadians, double lonLastInRadians,
-                         double LaDInRadians, double orientationInRadians)
+                            size_t nv, long nx, long ny,
+                            double DiInMetres, double DjInMetres,
+                            double earthMinorAxisInMetres, double earthMajorAxisInMetres,
+                            double latFirstInRadians, double lonFirstInRadians,
+                            double latLastInRadians, double lonLastInRadians,
+                            double LaDInRadians, double orientationInRadians)
 {
     int i, j, err = 0;
     double x0, y0, x, y, latRad, lonRad, latDeg, lonDeg, sinphi, ts;
@@ -154,8 +157,8 @@ int Mercator::init_mercator(grib_handle* h,
             if (i == 0 && j == 0) {
                 DEBUG_ASSERT(fabs(latFirstInRadians - latRad) <= EPSILON);
             }
-            latDeg            = latRad * RAD2DEG; /* Convert to degrees */
-            lonDeg            = normalise_longitude_in_degrees(lonRad * RAD2DEG);
+            latDeg       = latRad * RAD2DEG; /* Convert to degrees */
+            lonDeg       = normalise_longitude_in_degrees(lonRad * RAD2DEG);
             lons_[index] = lonDeg;
             lats_[index] = latDeg;
         }
@@ -275,7 +278,7 @@ int Mercator::next(double* lat, double* lon, double* val)
 
 int Mercator::destroy()
 {
-    const grib_context* c        = h_->context;
+    const grib_context* c = h_->context;
 
     grib_context_free(c, lats_);
     grib_context_free(c, lons_);
@@ -283,6 +286,6 @@ int Mercator::destroy()
     return Gen::destroy();
 }
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

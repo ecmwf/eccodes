@@ -14,9 +14,12 @@
 #include "grib_iterator.h"
 #include "../accessor/grib_accessor_class_iterator.h"
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 
 int Iterator::init(grib_handle* h, grib_arguments* args)
@@ -61,12 +64,12 @@ int gribIteratorDelete(eccodes::grib::geo::Iterator* i)
 }
 
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes
 
 
-/* 
+/*
  * C API Implementation
  * codes_iterator_* wrappers are in eccodes.h and eccodes.cc
  * grib_iterator_* declarations are in grib_api.h
@@ -101,7 +104,7 @@ int grib_iterator_destroy(grib_context* c, grib_iterator* i)
 grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int* error)
 {
     grib_iterator* i = (grib_iterator*)grib_context_malloc_clear(ch->context, sizeof(grib_iterator));
-    i->iterator = eccodes::grib::geo::gribIteratorNew(ch, flags, error);
+    i->iterator      = eccodes::grib::geo::gribIteratorNew(ch, flags, error);
     if (!i->iterator) {
         grib_context_free(ch->context, i);
         return NULL;

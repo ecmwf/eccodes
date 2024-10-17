@@ -12,19 +12,23 @@
 
 #include "grib_iterator_class_regular.h"
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 class Gaussian : public Regular
 {
-public: 
-    Gaussian() : Regular() { class_name_ = "gaussian"; }
+public:
+    Gaussian() :
+        Regular() { class_name_ = "gaussian"; }
     Iterator* create() const override { return new Gaussian(); }
 
     int init(grib_handle*, grib_arguments*) override;
 };
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

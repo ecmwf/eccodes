@@ -13,25 +13,28 @@
 eccodes::grib::geo::Gaussian _grib_iterator_gaussian{};
 eccodes::grib::geo::Iterator* grib_iterator_gaussian = &_grib_iterator_gaussian;
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 static void binary_search_gaussian_latitudes(const double xx[], const unsigned long n, double x, long* j);
 
 int Gaussian::init(grib_handle* h, grib_arguments* args)
 {
     int ret = GRIB_SUCCESS;
-    if((ret = Regular::init(h, args)) != GRIB_SUCCESS)
+    if ((ret = Regular::init(h, args)) != GRIB_SUCCESS)
         return ret;
 
     double* lats;
     double laf; /* latitude of first point in degrees */
     double lal; /* latitude of last point in degrees */
     long trunc; /* number of parallels between a pole and the equator */
-    long lai = 0;
+    long lai              = 0;
     long jScansPositively = 0;
-    int size = 0;
+    int size              = 0;
     double start;
     long istart = 0;
 
@@ -69,7 +72,7 @@ int Gaussian::init(grib_handle* h, grib_arguments* args)
      }
      */
 
-    binary_search_gaussian_latitudes(lats, size-1, start, &istart);
+    binary_search_gaussian_latitudes(lats, size - 1, start, &istart);
     if (istart < 0 || istart >= size) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "Failed to find index for latitude=%g", start);
         return GRIB_GEOCALCULUS_PROBLEM;
@@ -79,7 +82,7 @@ int Gaussian::init(grib_handle* h, grib_arguments* args)
         for (lai = 0; lai < Nj_; lai++) {
             DEBUG_ASSERT(istart >= 0);
             las_[lai] = lats[istart--];
-            if (istart<0) istart=size-1;
+            if (istart < 0) istart = size - 1;
         }
     }
     else {
@@ -99,7 +102,7 @@ int Gaussian::init(grib_handle* h, grib_arguments* args)
 /* Note: the argument 'n' is NOT the size of the 'xx' array but its LAST index i.e. size of xx - 1 */
 static void binary_search_gaussian_latitudes(const double array[], const unsigned long n, double x, long* j)
 {
-    unsigned long low = 0;
+    unsigned long low  = 0;
     unsigned long high = n;
     unsigned long mid;
     const int descending = (array[n] < array[0]);
@@ -149,6 +152,6 @@ static void binary_search_gaussian_latitudes(const double array[], const unsigne
 //     *j = jl;
 // }
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

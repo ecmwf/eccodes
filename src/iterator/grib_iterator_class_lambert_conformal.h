@@ -12,17 +12,21 @@
 
 #include "grib_iterator_class_gen.h"
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 class LambertConformal : public Gen
 {
 public:
-    LambertConformal() : Gen() { class_name_ = "lambert_conformal"; }
+    LambertConformal() :
+        Gen() { class_name_ = "lambert_conformal"; }
     Iterator* create() const override { return new LambertConformal(); }
 
-    int init(grib_handle*,grib_arguments*) override;
+    int init(grib_handle*, grib_arguments*) override;
     int next(double*, double*, double*) override;
     int destroy() override;
 
@@ -32,23 +36,23 @@ private:
     long Nj_;
 
     int init_sphere(const grib_handle*,
-                       size_t, long, long,
-                       double,
-                       double, double, double,
-                       double, double,
-                       double, double, double,
-                       double);
+                    size_t, long, long,
+                    double,
+                    double, double, double,
+                    double, double,
+                    double, double, double,
+                    double);
 
     int init_oblate(const grib_handle*,
-                       size_t, long, long,
-                       double,
-                       double, double,
-                       double, double,
-                       double, double,
-                       double, double, double,
-                       double);
+                    size_t, long, long,
+                    double,
+                    double, double,
+                    double, double,
+                    double, double,
+                    double, double, double,
+                    double);
 };
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

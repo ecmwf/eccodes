@@ -10,9 +10,12 @@
 
 #include "grib_iterator_class_gen.h"
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 int Gen::init(grib_handle* h, grib_arguments* args)
 {
@@ -31,8 +34,8 @@ int Gen::init(grib_handle* h, grib_arguments* args)
     s_rawData     = grib_arguments_get_name(h, args, carg_++);
 
     data_ = NULL;
-    h    = h; /* We may not need to keep them */
-    args = args;
+    h     = h; /* We may not need to keep them */
+    args  = args;
     if ((err = grib_get_size(h, s_rawData, &dli)) != GRIB_SUCCESS)
         return err;
 
@@ -44,7 +47,8 @@ int Gen::init(grib_handle* h, grib_arguments* args)
     if (flags_ & GRIB_GEOITERATOR_NO_VALUES) {
         // Iterator's number of values taken from the Grid Section
         nv_ = numberOfPoints;
-    } else {
+    }
+    else {
         // Check for consistency between the Grid and Data Sections
         if (numberOfPoints != dli) {
             grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator: %s != size(%s) (%ld!=%ld)",
@@ -97,18 +101,20 @@ bool Gen::has_next()
     return true;
 }
 
-int Gen::previous(double*, double*, double*) {
+int Gen::previous(double*, double*, double*)
+{
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int Gen::next(double*, double*, double*) {
+int Gen::next(double*, double*, double*)
+{
     return GRIB_NOT_IMPLEMENTED;
 }
 
-//int Gen::get(double* lat, double* lon, double* val)
+// int Gen::get(double* lat, double* lon, double* val)
 //{
-//    if (e_ >= (long)(nv_ - 1))
-//        return GRIB_END_OF_ITERATION;
+//     if (e_ >= (long)(nv_ - 1))
+//         return GRIB_END_OF_ITERATION;
 
 //    e_++;
 //    if (lat) *lat = 0;
@@ -118,6 +124,6 @@ int Gen::next(double*, double*, double*) {
 //    return 1;
 //}
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

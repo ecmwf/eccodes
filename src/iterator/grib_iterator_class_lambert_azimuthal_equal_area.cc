@@ -13,9 +13,12 @@
 eccodes::grib::geo::LambertAzimuthalEqualArea _grib_iterator_lambert_azimuthal_equal_area{};
 eccodes::grib::geo::Iterator* grib_iterator_lambert_azimuthal_equal_area = &_grib_iterator_lambert_azimuthal_equal_area;
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 #define ITER "Lambert azimuthal equal area Geoiterator"
 
@@ -34,15 +37,15 @@ int LambertAzimuthalEqualArea::next(double* lat, double* lon, double* val)
 }
 
 #ifndef M_PI
-#define M_PI 3.14159265358979323846 /* Whole pie */
+    #define M_PI 3.14159265358979323846 /* Whole pie */
 #endif
 
 #ifndef M_PI_2
-#define M_PI_2 1.57079632679489661923 /* Half a pie */
+    #define M_PI_2 1.57079632679489661923 /* Half a pie */
 #endif
 
 #ifndef M_PI_4
-#define M_PI_4 0.78539816339744830962 /* Quarter of a pie */
+    #define M_PI_4 0.78539816339744830962 /* Quarter of a pie */
 #endif
 
 #define RAD2DEG 57.29577951308232087684 /* 180 over pi */
@@ -109,7 +112,9 @@ static int init_oblate(grib_handle* h,
     double Q__qp = 0, Q__rq = 0, Q__cosb1, Q__sinb1, Q__dd, Q__xmf, Q__ymf, t;
     /* double Q__mmf = 0; */
     double e, es, temp, one_es;
-    double APA[3] = {0,};
+    double APA[3] = {
+        0,
+    };
     double xFirst, yFirst;
 
     Dx = iScansNegatively == 0 ? Dx / 1000 : -Dx / 1000;
@@ -136,7 +141,7 @@ static int init_oblate(grib_handle* h,
        else
         Q->mode = OBLIQ;
     */
-    Q__qp  = pj_qsfn(1.0, e, one_es);
+    Q__qp = pj_qsfn(1.0, e, one_es);
     /* Q__mmf = 0.5 / one_es;  ----  TODO(masn): do I need this? */
     pj_authset(es, APA); /* sets up APA array */
     Q__rq    = sqrt(0.5 * Q__qp);
@@ -145,10 +150,11 @@ static int init_oblate(grib_handle* h,
     Q__cosb1 = sqrt(1.0 - Q__sinb1 * Q__sinb1);
     if (Q__cosb1 == 0) {
         Q__dd = 1.0;
-    } else {
+    }
+    else {
         Q__dd = cos(standardParallelInRadians) / (sqrt(1. - es * sinphi_ * sinphi_) * Q__rq * Q__cosb1);
     }
-    Q__ymf   = (Q__xmf = Q__rq) / Q__dd;
+    Q__ymf = (Q__xmf = Q__rq) / Q__dd;
     Q__xmf *= Q__dd;
 
     sinb  = q / Q__qp;
@@ -249,8 +255,8 @@ static int init_sphere(grib_handle* h,
     cosphi1 = cos(phi1);
     sinphi1 = sin(phi1);
 
-    Dx         = iScansNegatively == 0 ? Dx / 1000 : -Dx / 1000;
-    Dy         = jScansPositively == 1 ? Dy / 1000 : -Dy / 1000;
+    Dx          = iScansNegatively == 0 ? Dx / 1000 : -Dx / 1000;
+    Dy          = jScansPositively == 1 ? Dy / 1000 : -Dy / 1000;
     self->lats_ = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv * sizeof(double));
@@ -430,7 +436,7 @@ int LambertAzimuthalEqualArea::init(grib_handle* h, grib_arguments* args)
 
 int LambertAzimuthalEqualArea::destroy()
 {
-    const grib_context* c                            = h_->context;
+    const grib_context* c = h_->context;
 
     grib_context_free(c, lats_);
     grib_context_free(c, lons_);
@@ -438,6 +444,6 @@ int LambertAzimuthalEqualArea::destroy()
     return Gen::destroy();
 }
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

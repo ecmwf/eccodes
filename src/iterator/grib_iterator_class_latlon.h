@@ -12,20 +12,24 @@
 
 #include "grib_iterator_class_regular.h"
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 class Latlon : public Regular
 {
 public:
-    Latlon() : Regular() { class_name_ = "latlon"; }
+    Latlon() :
+        Regular() { class_name_ = "latlon"; }
     Iterator* create() const override { return new Latlon(); }
 
     int init(grib_handle*, grib_arguments*) override;
     int next(double*, double*, double*) override;
 };
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

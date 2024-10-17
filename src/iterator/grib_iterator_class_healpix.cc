@@ -20,9 +20,12 @@
 eccodes::grib::geo::Healpix _grib_iterator_healpix;
 eccodes::grib::geo::Iterator* grib_iterator_healpix = &_grib_iterator_healpix;
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 #define ITER "HEALPix Geoiterator"
 constexpr double RAD2DEG = 57.29577951308232087684;  // 180 over pi
@@ -241,16 +244,17 @@ int Healpix::iterate_healpix(long N)
             ring_to_nest[r] = to_nest(f, ring, Nside, phi, ring & 1);
         }
 
-        for (size_t i = 0, j=0; i < Ny; i++) {
+        for (size_t i = 0, j = 0; i < Ny; i++) {
             // Compute the longitudes at a given latitude
             for (double longitude : HEALPix_longitudes(N, i)) {
-                Assert( ring_to_nest.at(j) < Npix );
+                Assert(ring_to_nest.at(j) < Npix);
                 lons_[ring_to_nest.at(j)] = longitude;
                 lats_[ring_to_nest.at(j)] = latitudes[i];
                 ++j;
             }
         }
-    } else {
+    }
+    else {
         for (size_t i = 0, j = 0; i < Ny; i++) {
             // Compute the longitudes at a given latitude
             for (double longitude : HEALPix_longitudes(N, i)) {
@@ -282,7 +286,9 @@ int Healpix::init(grib_handle* h, grib_arguments* args)
         return GRIB_WRONG_GRID;
     }
 
-    char ordering[32] = {0,};
+    char ordering[32] = {
+        0,
+    };
     size_t slen = sizeof(ordering);
     if ((err = grib_get_string_internal(h, sorder, ordering, &slen)) != GRIB_SUCCESS) {
         return err;

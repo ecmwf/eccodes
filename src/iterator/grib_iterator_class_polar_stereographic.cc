@@ -13,9 +13,12 @@
 eccodes::grib::geo::PolarStereographic _grib_iterator_polar_stereographic{};
 eccodes::grib::geo::Iterator* grib_iterator_polar_stereographic = &_grib_iterator_polar_stereographic;
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 #define ITER "Polar stereographic Geoiterator"
 
@@ -46,10 +49,10 @@ typedef struct proj_data_t
     double false_easting;  /* x offset in meters */
 } proj_data_t;
 
-#define RAD2DEG 57.29577951308232087684 /* 180 over pi */
-#define DEG2RAD 0.01745329251994329576  /* pi over 180 */
-#define PI_OVER_2 1.5707963267948966    /* half pi */
-#define EPSILON 1.0e-10
+#define RAD2DEG   57.29577951308232087684 /* 180 over pi */
+#define DEG2RAD   0.01745329251994329576  /* pi over 180 */
+#define PI_OVER_2 1.5707963267948966      /* half pi */
+#define EPSILON   1.0e-10
 
 int PolarStereographic::init(grib_handle* h, grib_arguments* args)
 {
@@ -69,8 +72,12 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
     double ts;                                /* value of small t */
     double height;                            /* height above ellipsoid */
     double x0, y0, lonFirst, latFirst;
-    proj_data_t fwd_proj_data = {0,};
-    proj_data_t inv_proj_data = {0,};
+    proj_data_t fwd_proj_data = {
+        0,
+    };
+    proj_data_t inv_proj_data = {
+        0,
+    };
 
     const char* s_radius                 = grib_arguments_get_name(h, args, carg_++);
     const char* s_nx                     = grib_arguments_get_name(h, args, carg_++);
@@ -229,64 +236,64 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
         y += Dy;
     }
 
-//     /*standardParallel = (southPoleOnPlane == 1) ? -90 : +90;*/
-//     if (jPointsAreConsecutive)
-//     {
-//         x=xFirst;
-//         for (i=0;i<nx;i++) {
-//             y=yFirst;
-//             for (j=0;j<ny;j++) {
-//                 rho=sqrt(x*x+y*y);
-//                 if (rho == 0) {
-//                     /* indeterminate case */
-//                     *lats = standardParallel;
-//                     *lons = centralLongitude;
-//                 }
-//                 else {
-//                     c=2*atan2(rho,(2.0*radius));
-//                     cosc=cos(c);
-//                     sinc=sin(c);
-//                     *lats = asin( cosc*sinphi1 + y*sinc*cosphi1/rho ) * RAD2DEG;
-//                     *lons = (lambda0+atan2(x*sinc, rho*cosphi1*cosc - y*sinphi1*sinc)) * RAD2DEG;
-//                 }
-//                 while (*lons<0)   *lons += 360;
-//                 while (*lons>360) *lons -= 360;
-//                 lons++;
-//                 lats++;
-//                 y+=Dy;
-//             }
-//             x+=Dx;
-//         }
-//     }
-//     else
-//     {
-//         y=yFirst;
-//         for (j=0;j<ny;j++) {
-//             x=xFirst;
-//             for (i=0;i<nx;i++) {
-//                 /* int index =i+j*nx; */
-//                 rho=sqrt(x*x+y*y);
-//                 if (rho == 0) {
-//                     /* indeterminate case */
-//                     *lats = standardParallel;
-//                     *lons = centralLongitude;
-//                 }
-//                 else {
-//                     c=2*atan2(rho,(2.0*radius));
-//                     cosc=cos(c);
-//                     sinc=sin(c);
-//                     *lats = asin( cosc*sinphi1 + y*sinc*cosphi1/rho ) * RAD2DEG;
-//                     *lons = (lambda0+atan2(x*sinc, rho*cosphi1*cosc - y*sinphi1*sinc)) * RAD2DEG;
-//                 }
-//                 while (*lons<0)   *lons += 360;
-//                 while (*lons>360) *lons -= 360;
-//                 lons++;
-//                 lats++;
-//                 x+=Dx;
-//             }
-//             y+=Dy;
-//         }
-//     }
+    //     /*standardParallel = (southPoleOnPlane == 1) ? -90 : +90;*/
+    //     if (jPointsAreConsecutive)
+    //     {
+    //         x=xFirst;
+    //         for (i=0;i<nx;i++) {
+    //             y=yFirst;
+    //             for (j=0;j<ny;j++) {
+    //                 rho=sqrt(x*x+y*y);
+    //                 if (rho == 0) {
+    //                     /* indeterminate case */
+    //                     *lats = standardParallel;
+    //                     *lons = centralLongitude;
+    //                 }
+    //                 else {
+    //                     c=2*atan2(rho,(2.0*radius));
+    //                     cosc=cos(c);
+    //                     sinc=sin(c);
+    //                     *lats = asin( cosc*sinphi1 + y*sinc*cosphi1/rho ) * RAD2DEG;
+    //                     *lons = (lambda0+atan2(x*sinc, rho*cosphi1*cosc - y*sinphi1*sinc)) * RAD2DEG;
+    //                 }
+    //                 while (*lons<0)   *lons += 360;
+    //                 while (*lons>360) *lons -= 360;
+    //                 lons++;
+    //                 lats++;
+    //                 y+=Dy;
+    //             }
+    //             x+=Dx;
+    //         }
+    //     }
+    //     else
+    //     {
+    //         y=yFirst;
+    //         for (j=0;j<ny;j++) {
+    //             x=xFirst;
+    //             for (i=0;i<nx;i++) {
+    //                 /* int index =i+j*nx; */
+    //                 rho=sqrt(x*x+y*y);
+    //                 if (rho == 0) {
+    //                     /* indeterminate case */
+    //                     *lats = standardParallel;
+    //                     *lons = centralLongitude;
+    //                 }
+    //                 else {
+    //                     c=2*atan2(rho,(2.0*radius));
+    //                     cosc=cos(c);
+    //                     sinc=sin(c);
+    //                     *lats = asin( cosc*sinphi1 + y*sinc*cosphi1/rho ) * RAD2DEG;
+    //                     *lons = (lambda0+atan2(x*sinc, rho*cosphi1*cosc - y*sinphi1*sinc)) * RAD2DEG;
+    //                 }
+    //                 while (*lons<0)   *lons += 360;
+    //                 while (*lons>360) *lons -= 360;
+    //                 lons++;
+    //                 lats++;
+    //                 x+=Dx;
+    //             }
+    //             y+=Dy;
+    //         }
+    //     }
 
     e_ = -1;
 
@@ -308,6 +315,6 @@ int PolarStereographic::destroy()
     return Gen::destroy();
 }
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

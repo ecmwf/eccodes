@@ -13,9 +13,12 @@
 eccodes::grib::geo::LatlonReduced _grib_iterator_latlon_reduced{};
 eccodes::grib::geo::Iterator* grib_iterator_latlon_reduced = &_grib_iterator_latlon_reduced;
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 int LatlonReduced::next(double* lat, double* lon, double* val)
 {
@@ -132,7 +135,7 @@ int LatlonReduced::init(grib_handle* h, grib_arguments* args)
 
 int LatlonReduced::destroy()
 {
-    const grib_context* c              = h_->context;
+    const grib_context* c = h_->context;
 
     grib_context_free(c, las_);
     grib_context_free(c, los_);
@@ -140,6 +143,6 @@ int LatlonReduced::destroy()
     return Gen::destroy();
 }
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

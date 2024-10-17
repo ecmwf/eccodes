@@ -12,14 +12,18 @@
 
 #include "grib_iterator_class_gen.h"
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 class LambertAzimuthalEqualArea : public Gen
 {
 public:
-    LambertAzimuthalEqualArea() : Gen() { class_name_ = "lambert_azimuthal_equal_area"; }
+    LambertAzimuthalEqualArea() :
+        Gen() { class_name_ = "lambert_azimuthal_equal_area"; }
     Iterator* create() const override { return new LambertAzimuthalEqualArea(); }
 
     int init(grib_handle*, grib_arguments*) override;
@@ -27,11 +31,11 @@ public:
     int destroy() override;
 
 public:
-    double *lats_;
-    double *lons_;
+    double* lats_;
+    double* lons_;
     long Nj_;
 };
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

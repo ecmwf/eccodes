@@ -12,23 +12,27 @@
 
 #include "grib_iterator_class_gen.h"
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 class GaussianReduced : public Gen
 {
 public:
-    GaussianReduced() : Gen() { class_name_ = "gaussian_reduced"; }
+    GaussianReduced() :
+        Gen() { class_name_ = "gaussian_reduced"; }
     Iterator* create() const override { return new GaussianReduced(); }
 
-    int init(grib_handle*,grib_arguments*) override;
-    int next(double *, double *, double *) override;
+    int init(grib_handle*, grib_arguments*) override;
+    int next(double*, double*, double*) override;
     int destroy() override;
 
 private:
-    double *las_;
-    double *los_;
+    double* las_;
+    double* los_;
     long Nj_;
     long isRotated_;
     double angleOfRotation_;
@@ -36,17 +40,17 @@ private:
     double southPoleLon_;
     long disableUnrotate_;
 
-int iterate_reduced_gaussian_subarea_legacy(grib_handle*,
-                                                   double, double,
-                                                   double, double,
-                                                   double*, long*, size_t);
+    int iterate_reduced_gaussian_subarea_legacy(grib_handle*,
+                                                double, double,
+                                                double, double,
+                                                double*, long*, size_t);
 
-int iterate_reduced_gaussian_subarea(grib_handle*,
-                                                       double, double,
-                                                       double, double,
-                                                       double*, long*, size_t, size_t);
+    int iterate_reduced_gaussian_subarea(grib_handle*,
+                                         double, double,
+                                         double, double,
+                                         double*, long*, size_t, size_t);
 };
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

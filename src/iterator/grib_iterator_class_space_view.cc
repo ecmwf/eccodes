@@ -13,9 +13,12 @@
 eccodes::grib::geo::SpaceView _grib_iterator_space_view{};
 eccodes::grib::geo::Iterator* grib_iterator_space_view = &_grib_iterator_space_view;
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 #define ITER "Space view Geoiterator"
 
@@ -83,8 +86,8 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
         return ret;
 
     /* REFERENCE:
-    *  LRIT/HRIT Global Specification (CGMS 03, Issue 2.6, 12.08.1999)
-    */
+     *  LRIT/HRIT Global Specification (CGMS 03, Issue 2.6, 12.08.1999)
+     */
     double *lats, *lons; /* arrays of latitudes and longitudes */
     double latOfSubSatellitePointInDegrees, lonOfSubSatellitePointInDegrees;
     double orientationInDegrees, nrInRadiusOfEarth;
@@ -315,7 +318,7 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
 
 int SpaceView::destroy()
 {
-    const grib_context* c          = h_->context;
+    const grib_context* c = h_->context;
 
     grib_context_free(c, lats_);
     grib_context_free(c, lons_);
@@ -323,6 +326,6 @@ int SpaceView::destroy()
     return Gen::destroy();
 }
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

@@ -12,18 +12,22 @@
 
 #include "grib_iterator_class_gen.h"
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 class PolarStereographic : public Gen
 {
 public:
-    PolarStereographic() : Gen() { class_name_ = "polar_stereographic"; }
+    PolarStereographic() :
+        Gen() { class_name_ = "polar_stereographic"; }
     Iterator* create() const override { return new PolarStereographic(); }
 
-    int init(grib_handle*,grib_arguments*) override;
-    int next(double *, double *, double *) override;
+    int init(grib_handle*, grib_arguments*) override;
+    int next(double*, double*, double*) override;
     int destroy() override;
 
 private:
@@ -32,6 +36,6 @@ private:
     long Nj_;
 };
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

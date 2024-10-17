@@ -13,14 +13,17 @@
 eccodes::grib::geo::Latlon _grib_iterator_latlon{};
 eccodes::grib::geo::Iterator* grib_iterator_latlon = &_grib_iterator_latlon;
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 int Latlon::next(double* lat, double* lon, double* val)
 {
     /* GRIB-238: Support rotated lat/lon grids */
-    double ret_lat, ret_lon, ret_val=0;
+    double ret_lat, ret_lon, ret_val = 0;
     if ((long)e_ >= (long)(nv_ - 1))
         return 0;
 
@@ -69,7 +72,7 @@ int Latlon::init(grib_handle* h, grib_arguments* args)
         return err;
 
     double jdir;
-    double lat1=0, lat2=0, north=0, south=0;
+    double lat1 = 0, lat2 = 0, north = 0, south = 0;
     long jScansPositively;
     long lai;
 
@@ -82,11 +85,11 @@ int Latlon::init(grib_handle* h, grib_arguments* args)
     const char* s_latSouthernPole = grib_arguments_get_name(h, args, carg_++);
     const char* s_lonSouthernPole = grib_arguments_get_name(h, args, carg_++);
 
-    angleOfRotation_  = 0;
-    isRotated_        = 0;
-    southPoleLat_     = 0;
-    southPoleLon_     = 0;
-    disableUnrotate_  = 0; /* unrotate enabled by default */
+    angleOfRotation_ = 0;
+    isRotated_       = 0;
+    southPoleLat_    = 0;
+    southPoleLon_    = 0;
+    disableUnrotate_ = 0; /* unrotate enabled by default */
 
     if ((err = grib_get_long(h, s_isRotatedGrid, &isRotated_)))
         return err;
@@ -103,7 +106,7 @@ int Latlon::init(grib_handle* h, grib_arguments* args)
         return err;
     if ((err = grib_get_double_internal(h, "latitudeLastInDegrees", &lat2)))
         return err;
-    if ((err = grib_get_double_internal(h, s_jdir, &jdir))) //can be GRIB_MISSING_DOUBLE
+    if ((err = grib_get_double_internal(h, s_jdir, &jdir)))  // can be GRIB_MISSING_DOUBLE
         return err;
     if ((err = grib_get_long_internal(h, s_jScansPos, &jScansPositively)))
         return err;
@@ -114,7 +117,7 @@ int Latlon::init(grib_handle* h, grib_arguments* args)
 
     /* ECC-984: If jDirectionIncrement is missing, then we cannot use it (See jDirectionIncrementGiven) */
     /* So try to compute the increment */
-    if ( (grib_is_missing(h, s_jdir, &err) && err == GRIB_SUCCESS) || (jdir == GRIB_MISSING_DOUBLE) ) {
+    if ((grib_is_missing(h, s_jdir, &err) && err == GRIB_SUCCESS) || (jdir == GRIB_MISSING_DOUBLE)) {
         const long Nj = Nj_;
         Assert(Nj > 1);
         if (lat1 > lat2) {
@@ -124,14 +127,15 @@ int Latlon::init(grib_handle* h, grib_arguments* args)
             jdir = (lat2 - lat1) / (Nj - 1);
         }
         grib_context_log(h->context, GRIB_LOG_DEBUG,
-                        "Cannot use jDirectionIncrement. Using value of %.6f obtained from La1, La2 and Nj", jdir);
+                         "Cannot use jDirectionIncrement. Using value of %.6f obtained from La1, La2 and Nj", jdir);
     }
 
     if (jScansPositively) {
         north = lat2;
         south = lat1;
-        jdir = -jdir;
-    } else {
+        jdir  = -jdir;
+    }
+    else {
         north = lat1;
         south = lat2;
     }
@@ -148,13 +152,13 @@ int Latlon::init(grib_handle* h, grib_arguments* args)
     }
     /* ECC-1406: Due to rounding, errors can accumulate.
      * So we ensure the last latitude is latitudeOfLastGridPointInDegrees
-    */
-    las_[Nj_-1] = lat2;
+     */
+    las_[Nj_ - 1] = lat2;
 
     e_ = -1;
     return err;
 }
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

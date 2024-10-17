@@ -12,23 +12,27 @@
 
 #include "grib_iterator_class_gen.h"
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 class Healpix : public Gen
 {
 public:
-    Healpix() : Gen() { class_name_ = "healpix"; }
+    Healpix() :
+        Gen() { class_name_ = "healpix"; }
     Iterator* create() const override { return new Healpix(); }
 
     int init(grib_handle*, grib_arguments*) override;
-    int next(double *, double *, double *) override;
+    int next(double*, double*, double*) override;
     int destroy() override;
 
 public:
-    double *lats_;
-    double *lons_;
+    double* lats_;
+    double* lons_;
     long Nsides_;
     bool nested_;
 
@@ -36,6 +40,6 @@ private:
     int iterate_healpix(long N);
 };
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

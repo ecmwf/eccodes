@@ -14,15 +14,18 @@
 eccodes::grib::geo::GaussianReduced _grib_iterator_gaussian_reduced{};
 eccodes::grib::geo::Iterator* grib_iterator_gaussian_reduced = &_grib_iterator_gaussian_reduced;
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 #define ITER "Reduced Gaussian grid Geoiterator"
 
 int GaussianReduced::next(double* lat, double* lon, double* val)
 {
-    double ret_lat=0, ret_lon=0;
+    double ret_lat = 0, ret_lon = 0;
 
     if (e_ >= (long)(nv_ - 1))
         return 0;
@@ -98,9 +101,9 @@ static void binary_search(const double xx[], const unsigned long n, double x, lo
 
 /* Use legacy way to compute the iterator latitude/longitude values */
 int GaussianReduced::iterate_reduced_gaussian_subarea_legacy(grib_handle* h,
-                                                   double lat_first, double lon_first,
-                                                   double lat_last, double lon_last,
-                                                   double* lats, long* pl, size_t plsize)
+                                                             double lat_first, double lon_first,
+                                                             double lat_last, double lon_last,
+                                                             double* lats, long* pl, size_t plsize)
 {
     int err        = 0;
     int l          = 0;
@@ -109,7 +112,7 @@ int GaussianReduced::iterate_reduced_gaussian_subarea_legacy(grib_handle* h,
     double d       = 0;
     long ilon_first, ilon_last, i;
     /*get_reduced_row_proc get_reduced_row = &grib_get_reduced_row;*/
-    get_reduced_row_proc get_reduced_row   = &grib_get_reduced_row_legacy; /* legacy algorithm */
+    get_reduced_row_proc get_reduced_row = &grib_get_reduced_row_legacy; /* legacy algorithm */
 
     if (h->context->debug) {
         const size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
@@ -138,7 +141,7 @@ int GaussianReduced::iterate_reduced_gaussian_subarea_legacy(grib_handle* h,
                 return GRIB_WRONG_GRID;
             }
 
-            los_[e_] = ((i)*360.0) / pl[j];
+            los_[e_] = ((i) * 360.0) / pl[j];
             las_[e_] = lats[j + l];
             e_++;
             k++;
@@ -160,9 +163,9 @@ int GaussianReduced::iterate_reduced_gaussian_subarea_legacy(grib_handle* h,
 //     }
 //     return err;
 int GaussianReduced::iterate_reduced_gaussian_subarea(grib_handle* h,
-                                                       double lat_first, double lon_first,
-                                                       double lat_last, double lon_last,
-                                                       double* lats, long* pl, size_t plsize, size_t numlats)
+                                                      double lat_first, double lon_first,
+                                                      double lat_last, double lon_last,
+                                                      double* lats, long* pl, size_t plsize, size_t numlats)
 {
     int err        = 0;
     long l         = 0;
@@ -180,13 +183,13 @@ int GaussianReduced::iterate_reduced_gaussian_subarea(grib_handle* h,
     binary_search(lats, numlats - 1, lat_first, &l);
     Assert(l < numlats);
 
-//     for(il=0; il<numlats; ++il) {
-//         const double diff = fabs(lat_first-lats[il]);
-//         if (diff < min_d) {
-//             min_d = diff;
-//             l = il; /* index of the latitude */
-//         }
-//     }
+    //     for(il=0; il<numlats; ++il) {
+    //         const double diff = fabs(lat_first-lats[il]);
+    //         if (diff < min_d) {
+    //             min_d = diff;
+    //             l = il; /* index of the latitude */
+    //         }
+    //     }
 
     e_ = 0;
     for (j = 0; j < plsize; j++) {
@@ -238,22 +241,22 @@ int GaussianReduced::init(grib_handle* h, grib_arguments* args)
     long* pl;
     long max_pl = 0;
     long nj = 0, order = 0, i;
-    long row_count = 0;
+    long row_count         = 0;
     long angleSubdivisions = 0;
-    const grib_context* c = h->context;
-    const char* slat_first               = grib_arguments_get_name(h, args, carg_++);
-    const char* slon_first               = grib_arguments_get_name(h, args, carg_++);
-    const char* slat_last                = grib_arguments_get_name(h, args, carg_++);
-    const char* slon_last                = grib_arguments_get_name(h, args, carg_++);
-    const char* sorder                   = grib_arguments_get_name(h, args, carg_++);
-    const char* spl                      = grib_arguments_get_name(h, args, carg_++);
-    const char* snj                      = grib_arguments_get_name(h, args, carg_++);
+    const grib_context* c  = h->context;
+    const char* slat_first = grib_arguments_get_name(h, args, carg_++);
+    const char* slon_first = grib_arguments_get_name(h, args, carg_++);
+    const char* slat_last  = grib_arguments_get_name(h, args, carg_++);
+    const char* slon_last  = grib_arguments_get_name(h, args, carg_++);
+    const char* sorder     = grib_arguments_get_name(h, args, carg_++);
+    const char* spl        = grib_arguments_get_name(h, args, carg_++);
+    const char* snj        = grib_arguments_get_name(h, args, carg_++);
 
-    angleOfRotation_  = 0;
-    isRotated_        = 0;
-    southPoleLat_     = 0;
-    southPoleLon_     = 0;
-    disableUnrotate_  = 0; /* unrotate enabled by default */
+    angleOfRotation_ = 0;
+    isRotated_       = 0;
+    southPoleLat_    = 0;
+    southPoleLon_    = 0;
+    disableUnrotate_ = 0; /* unrotate enabled by default */
 
     ret = grib_get_long(h, "isRotatedGrid", &isRotated_);
     if (ret == GRIB_SUCCESS && isRotated_) {
@@ -368,7 +371,7 @@ finalise:
 
 int GaussianReduced::destroy()
 {
-    const grib_context* c                = h_->context;
+    const grib_context* c = h_->context;
 
     grib_context_free(c, las_);
     grib_context_free(c, los_);
@@ -376,6 +379,6 @@ int GaussianReduced::destroy()
     return Gen::destroy();
 }
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

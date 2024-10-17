@@ -12,18 +12,22 @@
 
 #include "grib_iterator_class_gen.h"
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 class LatlonReduced : public Gen
 {
 public:
-    LatlonReduced() : Gen() { class_name_ = "latlon_reduced"; }
+    LatlonReduced() :
+        Gen() { class_name_ = "latlon_reduced"; }
     Iterator* create() const override { return new LatlonReduced(); }
 
-    int init(grib_handle*,grib_arguments*) override;
-    int next(double *lat, double *lon, double *val) override;
+    int init(grib_handle*, grib_arguments*) override;
+    int next(double* lat, double* lon, double* val) override;
     int destroy() override;
 
 private:
@@ -31,6 +35,6 @@ private:
     double* los_;
 };
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes

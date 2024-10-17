@@ -16,21 +16,24 @@
     \ingroup grib_iterator
 */
 
-namespace eccodes {
-namespace grib {
-namespace geo {
+namespace eccodes
+{
+namespace grib
+{
+namespace geo
+{
 
 class Iterator
 {
 public:
     virtual ~Iterator() {}
     virtual int init(grib_handle*, grib_arguments*) = 0;
-    virtual int next(double*, double*, double*) = 0;
+    virtual int next(double*, double*, double*)     = 0;
     virtual int previous(double*, double*, double*) = 0;
-    virtual int reset() = 0;
-    virtual int destroy() = 0;
-    virtual bool has_next() = 0;
-    virtual Iterator* create() const = 0;
+    virtual int reset()                             = 0;
+    virtual int destroy()                           = 0;
+    virtual bool has_next()                         = 0;
+    virtual Iterator* create() const                = 0;
 
 public:
     grib_context* context_;
@@ -48,6 +51,6 @@ public:
 eccodes::grib::geo::Iterator* gribIteratorNew(const grib_handle*, unsigned long, int*);
 int gribIteratorDelete(eccodes::grib::geo::Iterator*);
 
-} // namespace geo
-} // namespace grib
-} // namespace eccodes
+}  // namespace geo
+}  // namespace grib
+}  // namespace eccodes
