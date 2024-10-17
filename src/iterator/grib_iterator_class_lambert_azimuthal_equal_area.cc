@@ -435,8 +435,7 @@ int LambertAzimuthalEqualArea::destroy()
     grib_context_free(c, lats_);
     grib_context_free(c, lons_);
 
-    Gen::destroy();
-    return GRIB_SUCCESS;
+    return Gen::destroy();
 }
 
 } // namespace geo

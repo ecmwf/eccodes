@@ -137,8 +137,7 @@ int LatlonReduced::destroy()
     grib_context_free(c, las_);
     grib_context_free(c, los_);
 
-    Gen::destroy();
-    return GRIB_SUCCESS;
+    return Gen::destroy();
 }
 
 } // namespace geo

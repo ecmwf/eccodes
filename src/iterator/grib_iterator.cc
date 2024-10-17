@@ -62,7 +62,7 @@ int Iterator::init(grib_handle* h, grib_arguments* args)
 int Iterator::destroy()
 {
     grib_context_free(context_, this);
-    return 0;
+    return GRIB_SUCCESS;
 }
 
 eccodes::grib::geo::Iterator* gribIteratorNew(const grib_handle* ch, unsigned long flags, int* error)

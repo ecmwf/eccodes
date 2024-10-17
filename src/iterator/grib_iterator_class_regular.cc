@@ -54,8 +54,7 @@ int Regular::destroy()
     grib_context_free(c, las_);
     grib_context_free(c, los_);
 
-    Gen::destroy();
-    return GRIB_SUCCESS;
+    return Gen::destroy();
 }
 
 int Regular::init(grib_handle* h, grib_arguments* args)

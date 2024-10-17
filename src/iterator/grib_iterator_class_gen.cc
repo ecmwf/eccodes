@@ -85,8 +85,7 @@ int Gen::destroy()
     const grib_context* c = h_->context;
     grib_context_free(c, data_);
 
-    Iterator::destroy();
-    return GRIB_SUCCESS;
+    return Iterator::destroy();
 }
 
 long Gen::has_next()

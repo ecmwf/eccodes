@@ -352,8 +352,7 @@ int Healpix::destroy()
     grib_context_free(context_, lats_);
     grib_context_free(context_, lons_);
 
-    Gen::destroy();
-    return GRIB_SUCCESS;
+    return Gen::destroy();
 }
 
 }  // namespace geo
