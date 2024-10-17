@@ -97,8 +97,7 @@ static double pj_qsfn(double sinphi, double e, double one_es)
 }
 
 #define EPS10 1.e-10
-static int init_oblate(grib_handle* h,
-                       LambertAzimuthalEqualArea* self,
+int LambertAzimuthalEqualArea::init_oblate(grib_handle* h,
                        size_t nv, long nx, long ny,
                        double Dx, double Dy, double earthMinorAxisInMetres, double earthMajorAxisInMetres,
                        double latFirstInRadians, double lonFirstInRadians,
@@ -171,18 +170,18 @@ static int init_oblate(grib_handle* h,
     x0 = Q__xmf * b * cosb * sinlam;
 
     /* Allocate latitude and longitude arrays */
-    self->lats_ = (double*)grib_context_malloc(h->context, nv * sizeof(double));
-    if (!self->lats_) {
+    lats_ = (double*)grib_context_malloc(h->context, nv * sizeof(double));
+    if (!lats_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
-    self->lons_ = (double*)grib_context_malloc(h->context, nv * sizeof(double));
-    if (!self->lats_) {
+    lons_ = (double*)grib_context_malloc(h->context, nv * sizeof(double));
+    if (!lats_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
-    lats = self->lats_;
-    lons = self->lons_;
+    lats = lats_;
+    lons = lons_;
 
     /* Populate the lat and lon arrays */
     {
@@ -231,8 +230,7 @@ static int init_oblate(grib_handle* h,
     return GRIB_SUCCESS;
 }
 
-static int init_sphere(grib_handle* h,
-                       LambertAzimuthalEqualArea* self,
+int LambertAzimuthalEqualArea::init_sphere(grib_handle* h,
                        size_t nv, long nx, long ny,
                        double Dx, double Dy, double radius,
                        double latFirstInRadians, double lonFirstInRadians,
@@ -257,18 +255,18 @@ static int init_sphere(grib_handle* h,
 
     Dx          = iScansNegatively == 0 ? Dx / 1000 : -Dx / 1000;
     Dy          = jScansPositively == 1 ? Dy / 1000 : -Dy / 1000;
-    self->lats_ = (double*)grib_context_malloc(h->context, nv * sizeof(double));
-    if (!self->lats_) {
+    lats_ = (double*)grib_context_malloc(h->context, nv * sizeof(double));
+    if (!lats_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
-    self->lons_ = (double*)grib_context_malloc(h->context, nv * sizeof(double));
-    if (!self->lats_) {
+    lons_ = (double*)grib_context_malloc(h->context, nv * sizeof(double));
+    if (!lats_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
-    lats = self->lats_;
-    lons = self->lons_;
+    lats = lats_;
+    lons = lons_;
 
     /* compute xFirst,yFirst in metres */
     sinphi     = sin(latFirstInRadians);
@@ -414,14 +412,14 @@ int LambertAzimuthalEqualArea::init(grib_handle* h, grib_arguments* args)
     standardParallelInRadians = standardParallelInDegrees * d2r;
 
     if (is_oblate) {
-        err = init_oblate(h, this, nv_, nx, ny,
+        err = init_oblate(h, nv_, nx, ny,
                           Dx, Dy, earthMinorAxisInMetres, earthMajorAxisInMetres,
                           latFirstInRadians, lonFirstInRadians,
                           centralLongitudeInRadians, standardParallelInRadians,
                           iScansNegatively, jScansPositively, jPointsAreConsecutive);
     }
     else {
-        err = init_sphere(h, this, nv_, nx, ny,
+        err = init_sphere(h, nv_, nx, ny,
                           Dx, Dy, radius,
                           latFirstInRadians, lonFirstInRadians,
                           centralLongitudeInRadians, standardParallelInRadians,

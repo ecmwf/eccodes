@@ -209,8 +209,8 @@ int LambertConformal::init_sphere(const grib_handle* h,
             lonDeg = LoVInDegrees + (angle / n) * RAD2DEG;
             latDeg = (2.0 * atan(pow(radius * f / rho, 1.0 / n)) - M_PI_2) * RAD2DEG;
             lonDeg = normalise_longitude_in_degrees(lonDeg);
-            self->lons[index] = lonDeg;
-            self->lats[index] = latDeg;
+            lons_[index] = lonDeg;
+            lats_[index] = latDeg;
         }
     }
 #endif
