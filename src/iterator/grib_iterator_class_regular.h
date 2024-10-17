@@ -28,10 +28,10 @@ public:
     int destroy() override;
 
 protected:
-    long      Ni_;
-    long      Nj_;
-    double   *las_;
-    double   *los_;
+    long Ni_;
+    long Nj_;
+    double* las_;
+    double* los_;
     long iScansNegatively_;
     long isRotated_;
     double angleOfRotation_;

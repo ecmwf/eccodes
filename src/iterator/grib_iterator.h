@@ -23,6 +23,7 @@ namespace geo {
 class Iterator
 {
 public:
+    virtual ~Iterator() {}
     virtual int init(grib_handle*, grib_arguments*) = 0;
     virtual int next(double*, double*, double*) = 0;
     virtual int previous(double*, double*, double*) = 0;
