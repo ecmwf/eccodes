@@ -377,17 +377,20 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
             bool resubmit = false;
             for (int i = 0; i < count; i++) {
                 if (values[i].error == GRIB_NOT_FOUND) {
+                    // Repair the most common cause of failure: input GRIB handle
+                    // is instantaneous but paramId/shortName being set is for accum/avg etc
                     if (STR_EQUAL(values[i].name, "typeOfStatisticalProcessing")) {
+                        // Switch from instantaneous to interval-based
                         if (grib_set_long(h, "selectStepTemplateInterval", 1) == GRIB_SUCCESS) {
                             resubmit = true;
                             grib_set_values(h, &values[i], 1);
                         }
                     }
                     // else if (STR_EQUAL(values[i].name, "sourceSinkChemicalPhysicalProcess")) {
-//                         if (grib_set_long(h, "is_chemical_srcsink", 1) == GRIB_SUCCESS) {
-//                             resubmit = true;
-//                         }
-//                     }
+                    //     if (grib_set_long(h, "is_chemical_srcsink", 1) == GRIB_SUCCESS) {
+                    //         resubmit = true;
+                    //     }
+                    // }
                 }
             }
             if (resubmit) {
