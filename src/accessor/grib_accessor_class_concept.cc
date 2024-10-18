@@ -374,18 +374,16 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
         err = grib_set_values_silent(h, values, count, /*silent=*/1);
         if (err) {
             // GRIB2 product template selection
-            grib_print_values("......vals line 377", values, stdout, count);
             bool resubmit = false;
             for (int i = 0; i < count; i++) {
                 if (values[i].error == GRIB_NOT_FOUND) {
                     if (STR_EQUAL(values[i].name, "typeOfStatisticalProcessing")) {
-                        printf("Setting stepType.... \n");
                         if (grib_set_long(h, "selectStepTemplateInterval", 1) == GRIB_SUCCESS) {
                             resubmit = true;
+                            grib_set_values(h, &values[i], 1);
                         }
                     }
                     else if (STR_EQUAL(values[i].name, "sourceSinkChemicalPhysicalProcess")) {
-                        printf("Setting chem... \n");
                         if (grib_set_long(h, "is_chemical_srcsink", 1) == GRIB_SUCCESS) {
                             resubmit = true;
                         }
@@ -393,7 +391,6 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
                 }
             }
             if (resubmit) {
-                printf("Resubmit....... \n");
                 err = grib_set_values(h, values, count);
             }
         }
