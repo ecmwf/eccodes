@@ -383,11 +383,11 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
                             grib_set_values(h, &values[i], 1);
                         }
                     }
-                    else if (STR_EQUAL(values[i].name, "sourceSinkChemicalPhysicalProcess")) {
-                        if (grib_set_long(h, "is_chemical_srcsink", 1) == GRIB_SUCCESS) {
-                            resubmit = true;
-                        }
-                    }
+                    // else if (STR_EQUAL(values[i].name, "sourceSinkChemicalPhysicalProcess")) {
+//                         if (grib_set_long(h, "is_chemical_srcsink", 1) == GRIB_SUCCESS) {
+//                             resubmit = true;
+//                         }
+//                     }
                 }
             }
             if (resubmit) {
