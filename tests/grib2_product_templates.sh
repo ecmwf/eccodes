@@ -53,6 +53,15 @@ else
     echo "No duplicates in $def_file"
 fi
 
+# Automatic PDT selection
+# ------------------------
+grib_check_key_equals $sample_g2 productDefinitionTemplateNumber 0
+$tools_dir/grib_set -s shortName=tp $sample_g2 $tempGribA
+grib_check_key_equals $tempGribA productDefinitionTemplateNumber 8
+grib_check_key_equals $tempGribA typeOfStatisticalProcessing 1
+grib_check_key_equals $tempGribA name 'Total precipitation'
+grib_check_key_equals $tempGribA stepType 'accum'
+
 
 # Clean up
 rm -f $tempText $tempGribA $tempGribB
