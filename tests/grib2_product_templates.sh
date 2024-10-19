@@ -54,13 +54,25 @@ else
 fi
 
 # Automatic PDT selection
-# ------------------------
-grib_check_key_equals $sample_g2 productDefinitionTemplateNumber 0
+# from instantaneous to statistically processed (accum,max,etc)
+# -------------------------------------------------------------
+grib_check_key_equals $sample_g2 productDefinitionTemplateNumber,stepType '0 instant'
 $tools_dir/grib_set -s shortName=tp $sample_g2 $tempGribA
 grib_check_key_equals $tempGribA productDefinitionTemplateNumber 8
-grib_check_key_equals $tempGribA typeOfStatisticalProcessing 1
-grib_check_key_equals $tempGribA name 'Total precipitation'
-grib_check_key_equals $tempGribA stepType 'accum'
+grib_check_key_equals $tempGribA typeOfStatisticalProcessing,stepType '1 accum'
+grib_check_key_equals $tempGribA shortName,name 'tp Total precipitation'
+
+$tools_dir/grib_set -s productDefinitionTemplateNumber=1,shortName=tp,perturbationNumber=32 $sample_g2 $tempGribA
+grib_check_key_equals $tempGribA productDefinitionTemplateNumber 11
+grib_check_key_equals $tempGribA number 32
+grib_check_key_equals $tempGribA typeOfStatisticalProcessing,stepType '1 accum'
+grib_check_key_equals $tempGribA shortName,name 'tp Total precipitation'
+
+$tools_dir/grib_set -s paramId=237382 $sample_g2 $tempGribA
+$tools_dir/grib_ls -jn parameter $tempGribA
+grib_check_key_equals $tempGribA productDefinitionTemplateNumber 8
+grib_check_key_equals $tempGribA typeOfStatisticalProcessing,stepType '2 max'
+grib_check_key_equals $tempGribA shortName,name 'max_visp Time-maximum visibility through precipitation'
 
 
 # Clean up
