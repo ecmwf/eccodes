@@ -17,7 +17,7 @@ class grib_accessor_long_t : public grib_accessor_gen_t
 public:
     grib_accessor_long_t() :
         grib_accessor_gen_t() { class_name_ = "long"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_long_t{}; }
+    // grib_accessor* create_empty_accessor() override { return new grib_accessor_long_t{}; }
     void init(const long len, grib_arguments* arg) override;
     long get_native_type() override;
     int pack_missing() override;
