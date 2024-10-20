@@ -74,6 +74,15 @@ grib_check_key_equals $tempGribA productDefinitionTemplateNumber 8
 grib_check_key_equals $tempGribA typeOfStatisticalProcessing,stepType '2 max'
 grib_check_key_equals $tempGribA shortName,name 'max_visp Time-maximum visibility through precipitation'
 
+# Test a failure. paramId=140114 contains wave keys
+set +e
+$tools_dir/grib_set -s paramId=140114 $sample_g2 $tempGribA 2>$tempText
+status=$?
+set -e
+[ $status -ne 0 ]
+# cat $tempText
+# check for "typeOfWavePeriodInterval (type=long) failed: Key/value not found" in error log
+
 
 # Clean up
 rm -f $tempText $tempGribA $tempGribB

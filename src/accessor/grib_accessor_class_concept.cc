@@ -377,6 +377,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
         err = grib_set_values_silent(h, values, count, /*silent=*/1);
         if (err) {
             // GRIB2 product template selection
+            bool resubmit = false;
             for (int i = 0; i < count; i++) {
                 if (values[i].error == GRIB_NOT_FOUND) {
                     // Repair the most common cause of failure: input GRIB handle
@@ -384,6 +385,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
                     if (STR_EQUAL(values[i].name, "typeOfStatisticalProcessing")) {
                         // Switch from instantaneous to interval-based
                         if (grib_set_long(h, "selectStepTemplateInterval", 1) == GRIB_SUCCESS) {
+                            resubmit = true;
                             grib_set_values(h, &values[i], 1);
                         }
                     }
@@ -395,7 +397,9 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
                 }
             }
 
-            err = grib_set_values(h, values, count);
+            if (resubmit) {
+                err = grib_set_values(h, values, count);
+            }
         }
     }
     return err;
