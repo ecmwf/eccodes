@@ -272,6 +272,72 @@ bool blacklisted(grib_handle* h, long edition, const char* concept_name, const c
     return false;
 }
 
+static void print_user_friendly_message(grib_handle* h, const char* name, grib_concept_value* concepts, grib_action* act)
+{
+    size_t i = 0, concept_count = 0;
+    long dummy = 0, editionNumber = 0;
+    char centre_s[32] = {0,};
+    size_t centre_len = sizeof(centre_s);
+    char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {NULL,}; /* sorted array containing concept values */
+    grib_concept_value* pCon = concepts;
+
+    grib_context_log(h->context, GRIB_LOG_ERROR, "concept: no match for %s=%s", act->name, name);
+    if (grib_get_long(h, "edition", &editionNumber) == GRIB_SUCCESS &&
+        grib_get_string(h, "centre", centre_s, &centre_len) == GRIB_SUCCESS) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle edition=%ld, centre=%s", editionNumber, centre_s);
+    }
+    char dataset_s[80];
+    size_t dataset_len = sizeof(dataset_s);
+    if (grib_get_string(h, "datasetForLocal", dataset_s, &dataset_len) == GRIB_SUCCESS && !STR_EQUAL(dataset_s, "unknown")) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle dataset=%s", dataset_s);
+    }
+    if (strcmp(act->name, "paramId") == 0) {
+        if (string_to_long(name, &dummy, 1) == GRIB_SUCCESS) {
+            // The paramId value is an integer. Show them the param DB
+            grib_context_log(h->context, GRIB_LOG_ERROR,
+                             "Please check the Parameter Database 'https://codes.ecmwf.int/grib/param-db/?id=%s'", name);
+        }
+        else {
+            // paramId being set to a non-integer
+            grib_context_log(h->context, GRIB_LOG_ERROR,
+                             "The paramId value should be an integer. Are you trying to set the shortName?");
+        }
+    }
+    if (strcmp(act->name, "shortName") == 0) {
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                         "Please check the Parameter Database 'https://codes.ecmwf.int/grib/param-db/'");
+    }
+
+    // Create a list of all possible values for this concept and sort it
+    while (pCon) {
+        if (i >= MAX_NUM_CONCEPT_VALUES)
+            break;
+        all_concept_vals[i++] = pCon->name;
+        pCon                  = pCon->next;
+    }
+    concept_count = i;
+    // Only print out all concepts if fewer than MAX_NUM_CONCEPT_VALUES.
+    // Printing out all values for concepts like paramId would be silly!
+    if (concept_count < MAX_NUM_CONCEPT_VALUES) {
+        fprintf(stderr, "Here are some possible values for concept %s:\n", act->name);
+        qsort(&all_concept_vals, concept_count, sizeof(char*), cmpstringp);
+        for (i = 0; i < concept_count; ++i) {
+            if (all_concept_vals[i]) {
+                bool print_it = true;
+                if (i > 0 && all_concept_vals[i - 1] && strcmp(all_concept_vals[i], all_concept_vals[i - 1]) == 0) {
+                    print_it = false; // skip duplicate entries
+                }
+                if (blacklisted(h, editionNumber, act->name, all_concept_vals[i])) {
+                    print_it = false;
+                }
+                if (print_it) {
+                    fprintf(stderr, "\t%s\n", all_concept_vals[i]);
+                }
+            }
+        }
+    }
+}
+
 static int grib_concept_apply(grib_accessor* a, const char* name)
 {
     int err                   = 0;
@@ -295,68 +361,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
     if (!c) {
         err = nofail ? GRIB_SUCCESS : GRIB_CONCEPT_NO_MATCH;
         if (err) {
-            size_t i = 0, concept_count = 0;
-            long dummy = 0, editionNumber = 0;
-            char centre_s[32] = {0,};
-            size_t centre_len = sizeof(centre_s);
-            char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {NULL,}; /* sorted array containing concept values */
-            grib_concept_value* pCon = concepts;
-
-            grib_context_log(h->context, GRIB_LOG_ERROR, "concept: no match for %s=%s", act->name, name);
-            if (grib_get_long(h, "edition", &editionNumber) == GRIB_SUCCESS &&
-                grib_get_string(h, "centre", centre_s, &centre_len) == GRIB_SUCCESS) {
-                grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle edition=%ld, centre=%s", editionNumber, centre_s);
-            }
-            char dataset_s[80];
-            size_t dataset_len = sizeof(dataset_s);
-            if (grib_get_string(h, "datasetForLocal", dataset_s, &dataset_len) == GRIB_SUCCESS && !STR_EQUAL(dataset_s, "unknown")) {
-                grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle dataset=%s", dataset_s);
-            }
-            if (strcmp(act->name, "paramId") == 0) {
-                if (string_to_long(name, &dummy, 1) == GRIB_SUCCESS) {
-                    // The paramId value is an integer. Show them the param DB
-                    grib_context_log(h->context, GRIB_LOG_ERROR,
-                                     "Please check the Parameter Database 'https://codes.ecmwf.int/grib/param-db/?id=%s'", name);
-                }
-                else {
-                    // paramId being set to a non-integer
-                    grib_context_log(h->context, GRIB_LOG_ERROR,
-                                     "The paramId value should be an integer. Are you trying to set the shortName?");
-                }
-            }
-            if (strcmp(act->name, "shortName") == 0) {
-                grib_context_log(h->context, GRIB_LOG_ERROR,
-                                 "Please check the Parameter Database 'https://codes.ecmwf.int/grib/param-db/'");
-            }
-
-            /* Create a list of all possible values for this concept and sort it */
-            while (pCon) {
-                if (i >= MAX_NUM_CONCEPT_VALUES)
-                    break;
-                all_concept_vals[i++] = pCon->name;
-                pCon                  = pCon->next;
-            }
-            concept_count = i;
-            /* Only print out all concepts if fewer than MAX_NUM_CONCEPT_VALUES.
-             * Printing out all values for concepts like paramId would be silly! */
-            if (concept_count < MAX_NUM_CONCEPT_VALUES) {
-                fprintf(stderr, "Here are some possible values for concept %s:\n", act->name);
-                qsort(&all_concept_vals, concept_count, sizeof(char*), cmpstringp);
-                for (i = 0; i < concept_count; ++i) {
-                    if (all_concept_vals[i]) {
-                        bool print_it = true;
-                        if (i > 0 && all_concept_vals[i - 1] && strcmp(all_concept_vals[i], all_concept_vals[i - 1]) == 0) {
-                            print_it = false; /* skip duplicate entries */
-                        }
-                        if (blacklisted(h, editionNumber, act->name, all_concept_vals[i])) {
-                            print_it = false;
-                        }
-                        if (print_it) {
-                            fprintf(stderr, "\t%s\n", all_concept_vals[i]);
-                        }
-                    }
-                }
-            }
+            print_user_friendly_message(h, name, concepts, act);
         }
         return err;
     }
