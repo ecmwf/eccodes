@@ -34,14 +34,14 @@ static void init_mutex()
 }
 #elif GRIB_OMP_THREADS
 static int once = 0;
-static omp_nest_lock_t mutex1;
+static omp_nest_lock_t mutex;
 
 static void init_mutex()
 {
     GRIB_OMP_CRITICAL(lock_grib_accessor_class_c)
     {
         if (once == 0) {
-            omp_init_nest_lock(&mutex1);
+            omp_init_nest_lock(&mutex);
             once = 1;
         }
     }
