@@ -383,8 +383,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
                     // Repair the most common cause of failure: input GRIB2 handle
                     // is instantaneous but paramId/shortName being set is for accum/avg etc
                     if (STR_EQUAL(values[i].name, "typeOfStatisticalProcessing")) {
-                        // Switch from instantaneous to interval-based
-                        grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Switch to statistically processed", __func__);
+                        grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Switch from instantaneous to interval-based", __func__);
                         if (grib_set_long(h, "selectStepTemplateInterval", 1) == GRIB_SUCCESS) {
                             resubmit = true;
                             grib_set_values(h, &values[i], 1);
@@ -393,6 +392,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
                     // else if (STR_EQUAL(values[i].name, "sourceSinkChemicalPhysicalProcess")) {
                     //     if (grib_set_long(h, "is_chemical_srcsink", 1) == GRIB_SUCCESS) {
                     //         resubmit = true;
+                    //         grib_set_values(h, &values[i], 1);
                     //     }
                     // }
                 }
