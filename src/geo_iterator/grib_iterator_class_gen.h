@@ -29,7 +29,6 @@ public:
     bool has_next() const override;
 
 protected:
-    int carg_;
     double* lats_;
     double* lons_;
 

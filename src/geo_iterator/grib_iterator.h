@@ -41,7 +41,7 @@ protected:
     const char* class_name_;
 
 private:
-    grib_arguments* args_; /**  args of iterator */
+    //grib_arguments* args_; [>*  args of iterator <]
     size_t size_;
     int inited_;
 };

@@ -22,15 +22,13 @@ int Gen::init(grib_handle* h, grib_arguments* args)
     const char* s_rawData   = NULL;
     const char* s_numPoints = NULL;
     long numberOfPoints     = 0;
-    carg_                   = 1;
+    int carg                   = 1;
 
-    s_numPoints   = grib_arguments_get_name(h, args, carg_++);
-    missingValue_ = grib_arguments_get_name(h, args, carg_++);
-    s_rawData     = grib_arguments_get_name(h, args, carg_++);
+    s_numPoints   = grib_arguments_get_name(h, args, carg++);
+    missingValue_ = grib_arguments_get_name(h, args, carg++);
+    s_rawData     = grib_arguments_get_name(h, args, carg++);
 
     data_ = NULL;
-    h     = h; /* We may not need to keep them */
-    args  = args;
     if ((err = grib_get_size(h, s_rawData, &dli)) != GRIB_SUCCESS)
         return err;
 
