@@ -384,6 +384,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
                     // is instantaneous but paramId/shortName being set is for accum/avg etc
                     if (STR_EQUAL(values[i].name, "typeOfStatisticalProcessing")) {
                         // Switch from instantaneous to interval-based
+                        grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Switch to statistically processed", __func__);
                         if (grib_set_long(h, "selectStepTemplateInterval", 1) == GRIB_SUCCESS) {
                             resubmit = true;
                             grib_set_values(h, &values[i], 1);
@@ -398,6 +399,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
             }
 
             if (resubmit) {
+                grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Resubmitting key/values", __func__);
                 err = grib_set_values(h, values, count);
             }
         }

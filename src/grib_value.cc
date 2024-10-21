@@ -1801,14 +1801,14 @@ int grib_set_values_silent(grib_handle* h, grib_values* args, size_t count, int 
     h->values[stack]       = args;
     h->values_count[stack] = count;
 
-    for (i = 0; i < count; i++)
-        args[i].error = GRIB_NOT_FOUND;
-
     if (h->context->debug) {
         for (i = 0; i < count; i++) {
             grib_print_values("ECCODES DEBUG about to set key/value pair", &args[i], stderr, 1);
         }
     }
+
+    for (i = 0; i < count; i++)
+        args[i].error = GRIB_NOT_FOUND;
 
     while (more) {
         more = 0;
