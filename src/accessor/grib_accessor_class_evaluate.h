@@ -22,5 +22,5 @@ public:
     void init(const long, grib_arguments*) override;
 
 protected:
-    grib_arguments* arg_;
+    grib_arguments* arg_; // expression to be evaluated
 };
