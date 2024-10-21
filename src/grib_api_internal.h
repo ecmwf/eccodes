@@ -248,12 +248,12 @@ typedef struct grib_codetable grib_codetable;
 typedef struct grib_smart_table grib_smart_table;
 
 class grib_accessor;
-namespace eccodes::grib::geo {
+namespace eccodes::geo_iterator {
 class Iterator;
 }
 
 typedef struct grib_iterator {
-  eccodes::grib::geo::Iterator* iterator;
+  eccodes::geo_iterator::Iterator* iterator;
 } grib_iterator;
 
 typedef struct grib_nearest_class grib_nearest_class;
@@ -1254,7 +1254,7 @@ typedef struct j2k_encode_helper
 }
 #include "accessor/grib_accessor.h"
 #include "accessor/grib_accessors_list.h"
-#include "iterator/grib_iterator.h"
+#include "geo_iterator/grib_iterator.h"
 #endif
 
 #endif

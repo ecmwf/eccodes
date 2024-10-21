@@ -10,15 +10,10 @@
 
 #include "grib_iterator_class_latlon.h"
 
-eccodes::grib::geo::Latlon _grib_iterator_latlon{};
-eccodes::grib::geo::Iterator* grib_iterator_latlon = &_grib_iterator_latlon;
+eccodes::geo_iterator::Latlon _grib_iterator_latlon{};
+eccodes::geo_iterator::Iterator* grib_iterator_latlon = &_grib_iterator_latlon;
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
 int Latlon::next(double* lat, double* lon, double* val) const
 {
@@ -34,15 +29,15 @@ int Latlon::next(double* lat, double* lon, double* val) const
      */
     if (!jPointsAreConsecutive_) {
         /* Adjacent points in i (x) direction are consecutive */
-        ret_lat = las_[(long)floor(e_ / Ni_)];
-        ret_lon = los_[(long)e_ % Ni_];
+        ret_lat = lats_[(long)floor(e_ / Ni_)];
+        ret_lon = lons_[(long)e_ % Ni_];
         if (data_)
             ret_val = data_[e_];
     }
     else {
         /* Adjacent points in j (y) direction is consecutive */
-        ret_lon = los_[(long)e_ / Nj_];
-        ret_lat = las_[(long)floor(e_ % Nj_)];
+        ret_lon = lons_[(long)e_ / Nj_];
+        ret_lat = lats_[(long)floor(e_ % Nj_)];
         if (data_)
             ret_val = data_[e_];
     }
@@ -147,18 +142,16 @@ int Latlon::init(grib_handle* h, grib_arguments* args)
     }
 
     for (lai = 0; lai < Nj_; lai++) {
-        las_[lai] = lat1;
+        lats_[lai] = lat1;
         lat1 -= jdir;
     }
     /* ECC-1406: Due to rounding, errors can accumulate.
      * So we ensure the last latitude is latitudeOfLastGridPointInDegrees
      */
-    las_[Nj_ - 1] = lat2;
+    lats_[Nj_ - 1] = lat2;
 
     e_ = -1;
     return err;
 }
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+}  // namespace eccodes::geo_iterator

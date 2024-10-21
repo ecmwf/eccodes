@@ -12,12 +12,7 @@
 
 #include "grib_iterator_class_regular.h"
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
 class Gaussian : public Regular
 {
@@ -29,6 +24,5 @@ public:
     int init(grib_handle*, grib_arguments*) override;
 };
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+}  // namespace eccodes::geo_iterator
+

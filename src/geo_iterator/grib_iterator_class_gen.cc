@@ -10,12 +10,7 @@
 
 #include "grib_iterator_class_gen.h"
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
 int Gen::init(grib_handle* h, grib_arguments* args)
 {
@@ -124,6 +119,4 @@ int Gen::next(double*, double*, double*) const
 //    return 1;
 //}
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+}  // namespace eccodes::geo_iterator

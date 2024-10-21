@@ -10,15 +10,10 @@
 
 #include "grib_iterator_class_polar_stereographic.h"
 
-eccodes::grib::geo::PolarStereographic _grib_iterator_polar_stereographic{};
-eccodes::grib::geo::Iterator* grib_iterator_polar_stereographic = &_grib_iterator_polar_stereographic;
+eccodes::geo_iterator::PolarStereographic _grib_iterator_polar_stereographic{};
+eccodes::geo_iterator::Iterator* grib_iterator_polar_stereographic = &_grib_iterator_polar_stereographic;
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
 #define ITER "Polar stereographic Geoiterator"
 
@@ -315,6 +310,4 @@ int PolarStereographic::destroy()
     return Gen::destroy();
 }
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+}  // namespace eccodes::geo_iterator

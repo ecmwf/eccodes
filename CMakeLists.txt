@@ -434,7 +434,12 @@ endforeach()
 
 ### include directories
 
-include_directories( ${ECCODES_INCLUDE_DIRS}  ${ECCODES_EXTRA_INCLUDE_DIRS} )
+include_directories(
+    "accessor"
+    "geo_iterator"
+    ${ECCODES_INCLUDE_DIRS}
+    ${ECCODES_EXTRA_INCLUDE_DIRS}
+    )
 
 add_subdirectory( definitions ) # must be before memfs
 add_subdirectory( memfs )

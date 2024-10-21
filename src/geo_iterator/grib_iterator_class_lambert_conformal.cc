@@ -11,15 +11,10 @@
 #include "grib_iterator_class_lambert_conformal.h"
 #include <cmath>
 
-eccodes::grib::geo::LambertConformal _grib_iterator_lambert_conformal{};
-eccodes::grib::geo::Iterator* grib_iterator_lambert_conformal = &_grib_iterator_lambert_conformal;
+eccodes::geo_iterator::LambertConformal _grib_iterator_lambert_conformal{};
+eccodes::geo_iterator::Iterator* grib_iterator_lambert_conformal = &_grib_iterator_lambert_conformal;
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
 #define ITER    "Lambert conformal Geoiterator"
 #define EPSILON 1.0e-10
@@ -491,6 +486,4 @@ int LambertConformal::destroy()
     return Gen::destroy();
 }
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+}  // namespace eccodes::geo_iterator

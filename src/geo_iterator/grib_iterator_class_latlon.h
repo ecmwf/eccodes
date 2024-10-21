@@ -10,35 +10,19 @@
 
 #pragma once
 
-#include "grib_iterator_class_gen.h"
+#include "grib_iterator_class_regular.h"
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
-class Healpix : public Gen
+class Latlon : public Regular
 {
 public:
-    Healpix() :
-        Gen() { class_name_ = "healpix"; }
-    Iterator* create() const override { return new Healpix(); }
+    Latlon() :
+        Regular() { class_name_ = "latlon"; }
+    Iterator* create() const override { return new Latlon(); }
 
     int init(grib_handle*, grib_arguments*) override;
     int next(double*, double*, double*) const override;
-    int destroy() override;
-
-private:
-    double* lats_;
-    double* lons_;
-    long Nsides_;
-    bool nested_;
-
-    int iterate_healpix(long N);
 };
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+}  // namespace eccodes::geo_iterator

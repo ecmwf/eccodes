@@ -12,12 +12,7 @@
 
 #include "grib_iterator_class_gen.h"
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
 class Regular : public Gen
 {
@@ -26,15 +21,13 @@ public:
     Iterator* create() const override { return new Regular(); }
 
     int init(grib_handle*, grib_arguments*) override;
-    int next(double* lat, double* lon, double* val) const override;
-    int previous(double* lat, double* lon, double* val) const override;
+    int next(double*, double*, double*) const override;
+    int previous(double*, double*, double*) const override;
     int destroy() override;
 
 protected:
     long Ni_;
     long Nj_;
-    double* las_;
-    double* los_;
     long iScansNegatively_;
     long isRotated_;
     double angleOfRotation_;
@@ -44,6 +37,4 @@ protected:
     long disableUnrotate_;
 };
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+}  // namespace eccodes::geo_iterator

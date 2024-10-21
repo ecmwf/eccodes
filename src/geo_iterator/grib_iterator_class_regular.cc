@@ -10,15 +10,10 @@
 
 #include "grib_iterator_class_regular.h"
 
-eccodes::grib::geo::Regular _grib_iterator_regular{};
-eccodes::grib::geo::Iterator* grib_iterator_regular = &_grib_iterator_regular;
+eccodes::geo_iterator::Regular _grib_iterator_regular{};
+eccodes::geo_iterator::Iterator* grib_iterator_regular = &_grib_iterator_regular;
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
 #define ITER "Regular grid Geoiterator"
 
@@ -29,8 +24,8 @@ int Regular::next(double* lat, double* lon, double* val) const
 
     e_++;
 
-    *lat = las_[(long)floor(e_ / Ni_)];
-    *lon = los_[(long)e_ % Ni_];
+    *lat = lats_[(long)floor(e_ / Ni_)];
+    *lon = lons_[(long)e_ % Ni_];
     if (val && data_) {
         *val = data_[e_];
     }
@@ -41,8 +36,8 @@ int Regular::previous(double* lat, double* lon, double* val) const
 {
     if (e_ < 0)
         return 0;
-    *lat = las_[(long)floor(e_ / Ni_)];
-    *lon = los_[e_ % Ni_];
+    *lat = lats_[(long)floor(e_ / Ni_)];
+    *lon = lons_[e_ % Ni_];
     if (val && data_) {
         *val = data_[e_];
     }
@@ -54,8 +49,8 @@ int Regular::previous(double* lat, double* lon, double* val) const
 int Regular::destroy()
 {
     const grib_context* c = h_->context;
-    grib_context_free(c, las_);
-    grib_context_free(c, los_);
+    grib_context_free(c, lats_);
+    grib_context_free(c, lons_);
 
     return Gen::destroy();
 }
@@ -141,15 +136,15 @@ int Regular::init(grib_handle* h, grib_arguments* args)
     Ni_ = Ni;
     Nj_ = Nj;
 
-    las_ = (double*)grib_context_malloc(h->context, Nj * sizeof(double));
-    los_ = (double*)grib_context_malloc(h->context, Ni * sizeof(double));
+    lats_ = (double*)grib_context_malloc(h->context, Nj * sizeof(double));
+    lons_ = (double*)grib_context_malloc(h->context, Ni * sizeof(double));
 
     if (idir != idir_coded) {
         grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Using idir=%g (coded value=%g)", ITER, idir, idir_coded);
     }
 
     for (loi = 0; loi < Ni; loi++) {
-        los_[loi] = lon1;
+        lons_[loi] = lon1;
         lon1 += idir;
     }
 
@@ -159,11 +154,9 @@ int Regular::init(grib_handle* h, grib_arguments* args)
     if (lon2 > 0) {
         lon2 = normalise_longitude_in_degrees(lon2);
     }
-    los_[Ni - 1] = lon2;
+    lons_[Ni - 1] = lon2;
 
     return ret;
 }
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+}  // namespace eccodes::geo_iterator

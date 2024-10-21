@@ -11,15 +11,10 @@
 #include "grib_iterator_class_gaussian_reduced.h"
 #include <cmath>
 
-eccodes::grib::geo::GaussianReduced _grib_iterator_gaussian_reduced{};
-eccodes::grib::geo::Iterator* grib_iterator_gaussian_reduced = &_grib_iterator_gaussian_reduced;
+eccodes::geo_iterator::GaussianReduced _grib_iterator_gaussian_reduced{};
+eccodes::geo_iterator::Iterator* grib_iterator_gaussian_reduced = &_grib_iterator_gaussian_reduced;
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
 #define ITER "Reduced Gaussian grid Geoiterator"
 
@@ -31,8 +26,8 @@ int GaussianReduced::next(double* lat, double* lon, double* val) const
         return 0;
     e_++;
 
-    ret_lat = las_[e_];
-    ret_lon = los_[e_];
+    ret_lat = lats_[e_];
+    ret_lon = lons_[e_];
     if (val && data_) {
         *val = data_[e_];
     }
@@ -141,8 +136,8 @@ int GaussianReduced::iterate_reduced_gaussian_subarea_legacy(grib_handle* h,
                 return GRIB_WRONG_GRID;
             }
 
-            los_[e_] = ((i) * 360.0) / pl[j];
-            las_[e_] = lats[j + l];
+            lons_[e_] = ((i) * 360.0) / pl[j];
+            lats_[e_] = lats[j + l];
             e_++;
             k++;
             if (k >= row_count) {
@@ -205,9 +200,9 @@ int GaussianReduced::iterate_reduced_gaussian_subarea(grib_handle* h,
                                  "%s (sub-area). Num points=%zu, size(values)=%zu", ITER, np, nv_);
                 return GRIB_WRONG_GRID;
             }
-            los_[e_] = lon2;
+            lons_[e_] = lon2;
             DEBUG_ASSERT(j + l < numlats);
-            las_[e_] = lats[j + l];
+            lats_[e_] = lats[j + l];
             e_++;
         }
     }
@@ -308,11 +303,11 @@ int GaussianReduced::init(grib_handle* h, grib_arguments* args)
 
     grib_get_long_array_internal(h, spl, pl, &plsize);
 
-    las_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
-    if (!las_)
+    lats_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
+    if (!lats_)
         return GRIB_OUT_OF_MEMORY;
-    los_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
-    if (!los_)
+    lons_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
+    if (!lons_)
         return GRIB_OUT_OF_MEMORY;
 
     while (lon_last < 0)
@@ -354,8 +349,8 @@ int GaussianReduced::init(grib_handle* h, grib_arguments* args)
                     goto finalise;
                 }
 
-                los_[e_] = (i * 360.0) / row_count;
-                las_[e_] = lats[j];
+                lons_[e_] = (i * 360.0) / row_count;
+                lats_[e_] = lats[j];
                 e_++;
             }
         }
@@ -373,12 +368,10 @@ int GaussianReduced::destroy()
 {
     const grib_context* c = h_->context;
 
-    grib_context_free(c, las_);
-    grib_context_free(c, los_);
+    grib_context_free(c, lats_);
+    grib_context_free(c, lons_);
 
     return Gen::destroy();
 }
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+} // namespace eccodes::geo_iterator

@@ -12,12 +12,7 @@
 
 #include "grib_iterator_class_gen.h"
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
 class Mercator : public Gen
 {
@@ -26,12 +21,10 @@ public:
     Iterator* create() const override { return new Mercator(); }
 
     int init(grib_handle*, grib_arguments*) override;
-    int next(double* lat, double* lon, double* val) const override;
+    int next(double*, double*, double*) const override;
     int destroy() override;
 
 private:
-    double* lats_;
-    double* lons_;
     long Nj_;
 
     int init_mercator(grib_handle*,
@@ -43,6 +36,4 @@ private:
                       double, double);
 };
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+}  // namespace eccodes::geo_iterator

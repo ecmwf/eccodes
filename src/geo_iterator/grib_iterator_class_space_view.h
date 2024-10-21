@@ -12,29 +12,20 @@
 
 #include "grib_iterator_class_gen.h"
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
-class LatlonReduced : public Gen
+class SpaceView : public Gen
 {
 public:
-    LatlonReduced() :
-        Gen() { class_name_ = "latlon_reduced"; }
-    Iterator* create() const override { return new LatlonReduced(); }
+    SpaceView() { class_name_ = "space_view"; }
+    Iterator* create() const override { return new SpaceView(); }
 
     int init(grib_handle*, grib_arguments*) override;
-    int next(double* lat, double* lon, double* val) const override;
+    int next(double*, double*, double*) const override;
     int destroy() override;
 
 private:
-    double* las_;
-    double* los_;
+    long Nj_;
 };
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+}  // namespace eccodes::geo_iterator

@@ -12,12 +12,7 @@
 
 #include "grib_iterator_class_gen.h"
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
 class GaussianReduced : public Gen
 {
@@ -31,8 +26,6 @@ public:
     int destroy() override;
 
 private:
-    double* las_;
-    double* los_;
     long Nj_;
     long isRotated_;
     double angleOfRotation_;
@@ -51,6 +44,4 @@ private:
                                          double*, long*, size_t, size_t);
 };
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+}  // namespace eccodes::geo_iterator

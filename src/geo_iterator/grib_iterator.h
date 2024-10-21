@@ -16,12 +16,7 @@
     \ingroup grib_iterator
 */
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
 class Iterator
 {
@@ -51,9 +46,7 @@ private:
     int inited_;
 };
 
-eccodes::grib::geo::Iterator* gribIteratorNew(const grib_handle*, unsigned long, int*);
-int gribIteratorDelete(eccodes::grib::geo::Iterator*);
+eccodes::geo_iterator::Iterator* gribIteratorNew(const grib_handle*, unsigned long, int*);
+int gribIteratorDelete(eccodes::geo_iterator::Iterator*);
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+}  // namespace eccodes::geo_iterator

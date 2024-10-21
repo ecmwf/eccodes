@@ -10,15 +10,10 @@
 
 #include "grib_iterator_class_gaussian.h"
 
-eccodes::grib::geo::Gaussian _grib_iterator_gaussian{};
-eccodes::grib::geo::Iterator* grib_iterator_gaussian = &_grib_iterator_gaussian;
+eccodes::geo_iterator::Gaussian _grib_iterator_gaussian{};
+eccodes::geo_iterator::Iterator* grib_iterator_gaussian = &_grib_iterator_gaussian;
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
 static void binary_search_gaussian_latitudes(const double xx[], const unsigned long n, double x, long* j);
 
@@ -81,13 +76,13 @@ int Gaussian::init(grib_handle* h, grib_arguments* args)
     if (jScansPositively) {
         for (lai = 0; lai < Nj_; lai++) {
             DEBUG_ASSERT(istart >= 0);
-            las_[lai] = lats[istart--];
+            lats_[lai] = lats[istart--];
             if (istart < 0) istart = size - 1;
         }
     }
     else {
         for (lai = 0; lai < Nj_; lai++) {
-            las_[lai] = lats[istart++];
+            lats_[lai] = lats[istart++];
             if (istart > size - 1)
                 istart = 0;
         }
@@ -152,6 +147,4 @@ static void binary_search_gaussian_latitudes(const double array[], const unsigne
 //     *j = jl;
 // }
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+}  // namespace eccodes::geo_iterator

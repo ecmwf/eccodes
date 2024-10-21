@@ -10,15 +10,10 @@
 
 #include "grib_iterator_class_mercator.h"
 
-eccodes::grib::geo::Mercator _grib_iterator_mercator{};
-eccodes::grib::geo::Iterator* grib_iterator_mercator = &_grib_iterator_mercator;
+eccodes::geo_iterator::Mercator _grib_iterator_mercator{};
+eccodes::geo_iterator::Iterator* grib_iterator_mercator = &_grib_iterator_mercator;
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
 #define ITER    "Mercator Geoiterator"
 #define EPSILON 1.0e-10
@@ -286,6 +281,4 @@ int Mercator::destroy()
     return Gen::destroy();
 }
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+}  // namespace eccodes::geo_iterator

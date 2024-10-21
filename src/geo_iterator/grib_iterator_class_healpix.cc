@@ -14,18 +14,12 @@
 #include <bitset>
 #include <cmath>
 #include <cstdint>
-#include <tuple>
 #include <vector>
 
-eccodes::grib::geo::Healpix _grib_iterator_healpix;
-eccodes::grib::geo::Iterator* grib_iterator_healpix = &_grib_iterator_healpix;
+eccodes::geo_iterator::Healpix _grib_iterator_healpix;
+eccodes::geo_iterator::Iterator* grib_iterator_healpix = &_grib_iterator_healpix;
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
 #define ITER "HEALPix Geoiterator"
 constexpr double RAD2DEG = 57.29577951308232087684;  // 180 over pi
@@ -361,6 +355,4 @@ int Healpix::destroy()
     return Gen::destroy();
 }
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+}  // namespace eccodes::geo_iterator

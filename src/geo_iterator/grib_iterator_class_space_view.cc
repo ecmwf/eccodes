@@ -10,15 +10,10 @@
 
 #include "grib_iterator_class_space_view.h"
 
-eccodes::grib::geo::SpaceView _grib_iterator_space_view{};
-eccodes::grib::geo::Iterator* grib_iterator_space_view = &_grib_iterator_space_view;
+eccodes::geo_iterator::SpaceView _grib_iterator_space_view{};
+eccodes::geo_iterator::Iterator* grib_iterator_space_view = &_grib_iterator_space_view;
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
 #define ITER "Space view Geoiterator"
 
@@ -326,6 +321,4 @@ int SpaceView::destroy()
     return Gen::destroy();
 }
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+}  // namespace eccodes::geo_iterator

@@ -10,15 +10,10 @@
 
 #include "grib_iterator_class_lambert_azimuthal_equal_area.h"
 
-eccodes::grib::geo::LambertAzimuthalEqualArea _grib_iterator_lambert_azimuthal_equal_area{};
-eccodes::grib::geo::Iterator* grib_iterator_lambert_azimuthal_equal_area = &_grib_iterator_lambert_azimuthal_equal_area;
+eccodes::geo_iterator::LambertAzimuthalEqualArea _grib_iterator_lambert_azimuthal_equal_area{};
+eccodes::geo_iterator::Iterator* grib_iterator_lambert_azimuthal_equal_area = &_grib_iterator_lambert_azimuthal_equal_area;
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
 #define ITER "Lambert azimuthal equal area Geoiterator"
 
@@ -442,6 +437,4 @@ int LambertAzimuthalEqualArea::destroy()
     return Gen::destroy();
 }
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+}  // namespace eccodes::geo_iterator

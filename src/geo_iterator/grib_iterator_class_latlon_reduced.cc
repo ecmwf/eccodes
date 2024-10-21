@@ -10,15 +10,10 @@
 
 #include "grib_iterator_class_latlon_reduced.h"
 
-eccodes::grib::geo::LatlonReduced _grib_iterator_latlon_reduced{};
-eccodes::grib::geo::Iterator* grib_iterator_latlon_reduced = &_grib_iterator_latlon_reduced;
+eccodes::geo_iterator::LatlonReduced _grib_iterator_latlon_reduced{};
+eccodes::geo_iterator::Iterator* grib_iterator_latlon_reduced = &_grib_iterator_latlon_reduced;
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
 int LatlonReduced::next(double* lat, double* lon, double* val) const
 {
@@ -26,8 +21,8 @@ int LatlonReduced::next(double* lat, double* lon, double* val) const
         return 0;
     e_++;
 
-    *lat = las_[e_];
-    *lon = los_[e_];
+    *lat = lats_[e_];
+    *lon = lons_[e_];
     if (val && data_) {
         *val = data_[e_];
     }
@@ -83,8 +78,8 @@ int LatlonReduced::init(grib_handle* h, grib_arguments* args)
     pl     = (long*)grib_context_malloc(h->context, plsize * sizeof(long));
     grib_get_long_array_internal(h, plac, pl, &plsize);
 
-    las_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
-    los_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
+    lats_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
+    lons_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
 
     plmax = pl[0];
     for (j = 0; j < nlats; j++)
@@ -119,8 +114,8 @@ int LatlonReduced::init(grib_handle* h, grib_arguments* args)
             nlons2 = 1;
         idirinc = dlon / nlons2;
         for (ii = 0; ii < nlons; ii++) {
-            las_[k] = laf;
-            los_[k] = tlof;
+            lats_[k] = laf;
+            lons_[k] = tlof;
             tlof += idirinc;
             k++;
         }
@@ -137,12 +132,10 @@ int LatlonReduced::destroy()
 {
     const grib_context* c = h_->context;
 
-    grib_context_free(c, las_);
-    grib_context_free(c, los_);
+    grib_context_free(c, lats_);
+    grib_context_free(c, lons_);
 
     return Gen::destroy();
 }
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+}  // namespace eccodes::geo_iterator

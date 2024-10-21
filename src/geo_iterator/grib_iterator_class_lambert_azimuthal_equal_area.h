@@ -12,12 +12,7 @@
 
 #include "grib_iterator_class_gen.h"
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
 class LambertAzimuthalEqualArea : public Gen
 {
@@ -31,8 +26,6 @@ public:
     int destroy() override;
 
 private:
-    double* lats_;
-    double* lons_;
     long Nj_;
 
     int init_sphere(grib_handle*,
@@ -50,6 +43,4 @@ private:
                     long, long, long);
 };
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+}  // namespace eccodes::geo_iterator

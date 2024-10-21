@@ -10,31 +10,32 @@
 
 #pragma once
 
-#include "grib_iterator_class_gen.h"
+#include "grib_iterator.h"
 
-namespace eccodes
-{
-namespace grib
-{
-namespace geo
-{
+namespace eccodes::geo_iterator {
 
-class SpaceView : public Gen
+class Gen : public Iterator
 {
 public:
-    SpaceView() { class_name_ = "space_view"; }
-    Iterator* create() const override { return new SpaceView(); }
+    Gen() :
+        Iterator() { class_name_ = "gen"; }
+    Iterator* create() const override { return new Gen(); }
 
     int init(grib_handle*, grib_arguments*) override;
     int next(double*, double*, double*) const override;
+    int previous(double*, double*, double*) const override;
+    int reset() override;
     int destroy() override;
+    bool has_next() const override;
 
-private:
+protected:
+    int carg_;
     double* lats_;
     double* lons_;
-    long Nj_;
+
+private:
+    const char* missingValue_;
+    // int get(double*, double*, double*);
 };
 
-}  // namespace geo
-}  // namespace grib
-}  // namespace eccodes
+}  // namespace eccodes::geo_iterator
