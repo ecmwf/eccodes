@@ -340,16 +340,16 @@ static void print_user_friendly_message(grib_handle* h, const char* name, grib_c
 
 static int grib_concept_apply(grib_accessor* a, const char* name)
 {
-    int err                   = 0;
-    int count                 = 0;
+    int err = 0;
+    int count = 0;
     grib_concept_condition* e = NULL;
-    grib_values values[1024] = {{0},};
-    grib_sarray* sa              = NULL;
-    grib_concept_value* c        = NULL;
+    grib_values values[1024] = {{0},}; // key/value pair array
+    grib_sarray* sa       = NULL;
+    grib_concept_value* c = NULL;
     grib_concept_value* concepts = action_concept_get_concept(a);
-    grib_handle* h               = grib_handle_of_accessor(a);
-    grib_action* act             = a->creator_;
-    int nofail                   = action_concept_get_nofail(a);
+    grib_handle* h   = grib_handle_of_accessor(a);
+    grib_action* act = a->creator_;
+    const int nofail = action_concept_get_nofail(a);
 
     DEBUG_ASSERT(concepts);
 
@@ -380,7 +380,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
             bool resubmit = false;
             for (int i = 0; i < count; i++) {
                 if (values[i].error == GRIB_NOT_FOUND) {
-                    // Repair the most common cause of failure: input GRIB handle
+                    // Repair the most common cause of failure: input GRIB2 handle
                     // is instantaneous but paramId/shortName being set is for accum/avg etc
                     if (STR_EQUAL(values[i].name, "typeOfStatisticalProcessing")) {
                         // Switch from instantaneous to interval-based
@@ -402,6 +402,18 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
             }
         }
     }
+    //grib_print_values("DEBUG grib_concept_apply", values, stdout, count);
+    if (err) {
+        for (int i = 0; i < count; i++) {
+            if (values[i].error != GRIB_SUCCESS) {
+                grib_context_log(h->context, GRIB_LOG_ERROR,
+                                 "grib_set_values[%d] %s (type=%s) failed: %s",
+                                 i, values[i].name, grib_get_type_name(values[i].type),
+                                 grib_get_error_message(values[i].error));
+            }
+        }
+    }
+
     return err;
 }
 

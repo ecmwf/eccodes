@@ -1899,8 +1899,9 @@ void grib_print_values(const char* title, const grib_values* values, FILE* out, 
                 fprintf(out, "%s", aVal.string_value);
                 break;
         }
-        fprintf(out, " (type=%s)\n", grib_get_type_name(aVal.type));
-        //fprintf(out, " (type=%s) (%s)\n", grib_get_type_name(aVal.type), grib_get_error_message(aVal.error));
+        fprintf(out, " (type=%s)", grib_get_type_name(aVal.type));
+        if (aVal.error) fprintf(out, "\t(%s)\n", grib_get_error_message(aVal.error));
+        else            fprintf(out, "\n");
     }
 }
 
