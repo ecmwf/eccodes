@@ -227,7 +227,7 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
         return GRIB_OUT_OF_MEMORY;
     }
     lons_ = (double*)grib_context_malloc(h->context, array_size);
-    if (!lats_) {
+    if (!lons_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, array_size);
         return GRIB_OUT_OF_MEMORY;
     }
