@@ -8,92 +8,26 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
-#include <cmath>
+#include "grib_iterator_class_mercator.h"
 
-/*
-   This is used by make_class.pl
+eccodes::geo_iterator::Mercator _grib_iterator_mercator{};
+eccodes::geo_iterator::Iterator* grib_iterator_mercator = &_grib_iterator_mercator;
 
-   START_CLASS_DEF
-   CLASS      = iterator
-   SUPER      = grib_iterator_class_gen
-   IMPLEMENTS = destroy
-   IMPLEMENTS = init;next
-   MEMBERS    = double *lats
-   MEMBERS    = double *lons
-   MEMBERS    = long Nj
-   END_CLASS_DEF
-*/
+namespace eccodes::geo_iterator {
 
-/* START_CLASS_IMP */
-
-/*
-
-Don't edit anything between START_CLASS_IMP and END_CLASS_IMP
-Instead edit values between START_CLASS_DEF and END_CLASS_DEF
-or edit "iterator.class" and rerun ./make_class.pl
-
-*/
-
-
-static void init_class              (grib_iterator_class*);
-
-static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
-static int next               (grib_iterator* i, double *lat, double *lon, double *val);
-static int destroy            (grib_iterator* i);
-
-
-typedef struct grib_iterator_mercator{
-  grib_iterator it;
-    /* Members defined in gen */
-    int carg;
-    const char* missingValue;
-    /* Members defined in mercator */
-    double *lats;
-    double *lons;
-    long Nj;
-} grib_iterator_mercator;
-
-extern grib_iterator_class* grib_iterator_class_gen;
-
-static grib_iterator_class _grib_iterator_class_mercator = {
-    &grib_iterator_class_gen,                    /* super                     */
-    "mercator",                    /* name                      */
-    sizeof(grib_iterator_mercator),/* size of instance          */
-    0,                           /* inited */
-    &init_class,                 /* init_class */
-    &init,                     /* constructor               */
-    &destroy,                  /* destructor                */
-    &next,                     /* Next Value                */
-    0,                 /*  Previous Value           */
-    0,                    /* Reset the counter         */
-    0,                 /* has next values           */
-};
-
-grib_iterator_class* grib_iterator_class_mercator = &_grib_iterator_class_mercator;
-
-
-static void init_class(grib_iterator_class* c)
-{
-    c->previous    =    (*(c->super))->previous;
-    c->reset    =    (*(c->super))->reset;
-    c->has_next    =    (*(c->super))->has_next;
-}
-/* END_CLASS_IMP */
-
-#define ITER "Mercator Geoiterator"
+#define ITER    "Mercator Geoiterator"
 #define EPSILON 1.0e-10
 
 #ifndef M_PI
-#define M_PI 3.14159265358979323846 /* Whole pie */
+    #define M_PI 3.14159265358979323846 /* Whole pie */
 #endif
 
 #ifndef M_PI_2
-#define M_PI_2 1.57079632679489661923 /* Half a pie */
+    #define M_PI_2 1.57079632679489661923 /* Half a pie */
 #endif
 
 #ifndef M_PI_4
-#define M_PI_4 0.78539816339744830962 /* Quarter of a pie */
+    #define M_PI_4 0.78539816339744830962 /* Quarter of a pie */
 #endif
 
 #define RAD2DEG 57.29577951308232087684 /* 180 over pi */
@@ -102,7 +36,7 @@ static void init_class(grib_iterator_class* c)
 /* Adjust longitude (in radians) to range -180 to 180 */
 static double adjust_lon_radians(double lon)
 {
-    if (lon > M_PI)  lon -= 2 * M_PI;
+    if (lon > M_PI) lon -= 2 * M_PI;
     if (lon < -M_PI) lon += 2 * M_PI;
     return lon;
 }
@@ -148,14 +82,13 @@ static double compute_t(
     return (tan(0.5 * (M_PI_2 - phi)) / con);
 }
 
-static int init_mercator(grib_handle* h,
-                         grib_iterator_mercator* self,
-                         size_t nv, long nx, long ny,
-                         double DiInMetres, double DjInMetres,
-                         double earthMinorAxisInMetres, double earthMajorAxisInMetres,
-                         double latFirstInRadians, double lonFirstInRadians,
-                         double latLastInRadians, double lonLastInRadians,
-                         double LaDInRadians, double orientationInRadians)
+int Mercator::init_mercator(grib_handle* h,
+                            size_t nv, long nx, long ny,
+                            double DiInMetres, double DjInMetres,
+                            double earthMinorAxisInMetres, double earthMajorAxisInMetres,
+                            double latFirstInRadians, double lonFirstInRadians,
+                            double latLastInRadians, double lonLastInRadians,
+                            double LaDInRadians, double orientationInRadians)
 {
     int i, j, err = 0;
     double x0, y0, x, y, latRad, lonRad, latDeg, lonDeg, sinphi, ts;
@@ -184,13 +117,13 @@ static int init_mercator(grib_handle* h,
     y0 = -y0;
 
     /* Allocate latitude and longitude arrays */
-    self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
-    if (!self->lats) {
+    lats_ = (double*)grib_context_malloc(h->context, nv * sizeof(double));
+    if (!lats_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
-    self->lons = (double*)grib_context_malloc(h->context, nv * sizeof(double));
-    if (!self->lats) {
+    lons_ = (double*)grib_context_malloc(h->context, nv * sizeof(double));
+    if (!lons_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
@@ -211,26 +144,29 @@ static int init_mercator(grib_handle* h,
             latRad = compute_phi(e, ts, &err);
             if (err) {
                 grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Failed to compute the latitude angle, phi2, for the inverse", ITER);
-                grib_context_free(h->context, self->lats);
-                grib_context_free(h->context, self->lons);
+                grib_context_free(h->context, lats_);
+                grib_context_free(h->context, lons_);
                 return err;
             }
             lonRad = adjust_lon_radians(orientationInRadians + _x / (earthMajorAxisInMetres * m1));
             if (i == 0 && j == 0) {
                 DEBUG_ASSERT(fabs(latFirstInRadians - latRad) <= EPSILON);
             }
-            latDeg            = latRad * RAD2DEG; /* Convert to degrees */
-            lonDeg            = normalise_longitude_in_degrees(lonRad * RAD2DEG);
-            self->lons[index] = lonDeg;
-            self->lats[index] = latDeg;
+            latDeg       = latRad * RAD2DEG; /* Convert to degrees */
+            lonDeg       = normalise_longitude_in_degrees(lonRad * RAD2DEG);
+            lons_[index] = lonDeg;
+            lats_[index] = latDeg;
         }
     }
     return GRIB_SUCCESS;
 }
 
-static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
+int Mercator::init(grib_handle* h, grib_arguments* args)
 {
-    int err = 0;
+    int err = GRIB_SUCCESS;
+    if ((err = Gen::init(h, args)) != GRIB_SUCCESS)
+        return err;
+
     long ni, nj, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning;
     double latFirstInDegrees, lonFirstInDegrees, LaDInDegrees;
     double latLastInDegrees, lonLastInDegrees, orientationInDegrees, DiInMetres, DjInMetres, radius = 0;
@@ -238,24 +174,22 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         LaDInRadians, orientationInRadians;
     double earthMajorAxisInMetres = 0, earthMinorAxisInMetres = 0;
 
-    grib_iterator_mercator* self = (grib_iterator_mercator*)iter;
-
-    const char* sRadius               = grib_arguments_get_name(h, args, self->carg++);
-    const char* sNi                   = grib_arguments_get_name(h, args, self->carg++);
-    const char* sNj                   = grib_arguments_get_name(h, args, self->carg++);
-    const char* sLatFirstInDegrees    = grib_arguments_get_name(h, args, self->carg++);
-    const char* sLonFirstInDegrees    = grib_arguments_get_name(h, args, self->carg++);
-    const char* sLaDInDegrees         = grib_arguments_get_name(h, args, self->carg++);
-    const char* sLatLastInDegrees     = grib_arguments_get_name(h, args, self->carg++);
-    const char* sLonLastInDegrees     = grib_arguments_get_name(h, args, self->carg++);
-    const char* sOrientationInDegrees = grib_arguments_get_name(h, args, self->carg++);
+    const char* sRadius               = grib_arguments_get_name(h, args, carg_++);
+    const char* sNi                   = grib_arguments_get_name(h, args, carg_++);
+    const char* sNj                   = grib_arguments_get_name(h, args, carg_++);
+    const char* sLatFirstInDegrees    = grib_arguments_get_name(h, args, carg_++);
+    const char* sLonFirstInDegrees    = grib_arguments_get_name(h, args, carg_++);
+    const char* sLaDInDegrees         = grib_arguments_get_name(h, args, carg_++);
+    const char* sLatLastInDegrees     = grib_arguments_get_name(h, args, carg_++);
+    const char* sLonLastInDegrees     = grib_arguments_get_name(h, args, carg_++);
+    const char* sOrientationInDegrees = grib_arguments_get_name(h, args, carg_++);
     /* Dx and Dy are in Metres */
-    const char* sDi                     = grib_arguments_get_name(h, args, self->carg++);
-    const char* sDj                     = grib_arguments_get_name(h, args, self->carg++);
-    const char* siScansNegatively       = grib_arguments_get_name(h, args, self->carg++);
-    const char* sjScansPositively       = grib_arguments_get_name(h, args, self->carg++);
-    const char* sjPointsAreConsecutive  = grib_arguments_get_name(h, args, self->carg++);
-    const char* sAlternativeRowScanning = grib_arguments_get_name(h, args, self->carg++);
+    const char* sDi                     = grib_arguments_get_name(h, args, carg_++);
+    const char* sDj                     = grib_arguments_get_name(h, args, carg_++);
+    const char* siScansNegatively       = grib_arguments_get_name(h, args, carg_++);
+    const char* sjScansPositively       = grib_arguments_get_name(h, args, carg_++);
+    const char* sjPointsAreConsecutive  = grib_arguments_get_name(h, args, carg_++);
+    const char* sAlternativeRowScanning = grib_arguments_get_name(h, args, carg_++);
 
     if ((err = grib_get_long_internal(h, sNi, &ni)) != GRIB_SUCCESS) return err;
     if ((err = grib_get_long_internal(h, sNj, &nj)) != GRIB_SUCCESS) return err;
@@ -269,8 +203,8 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         earthMinorAxisInMetres = earthMajorAxisInMetres = radius;
     }
 
-    if (iter->nv != ni * nj) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, iter->nv, ni, nj);
+    if (nv_ != ni * nj) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, nv_, ni, nj);
         return GRIB_WRONG_GRID;
     }
 
@@ -307,44 +241,44 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     LaDInRadians         = LaDInDegrees * DEG2RAD;
     orientationInRadians = orientationInDegrees * DEG2RAD;
 
-    err = init_mercator(h, self, iter->nv, ni, nj,
+    err = init_mercator(h, nv_, ni, nj,
                         DiInMetres, DjInMetres, earthMinorAxisInMetres, earthMajorAxisInMetres,
                         latFirstInRadians, lonFirstInRadians,
                         latLastInRadians, lonLastInRadians,
                         LaDInRadians, orientationInRadians);
     if (err) return err;
 
-    iter->e = -1;
+    e_ = -1;
 
     /* Apply the scanning mode flags which may require data array to be transformed */
-    err = transform_iterator_data(h->context, iter->data,
+    err = transform_iterator_data(h->context, data_,
                                   iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning,
-                                  iter->nv, ni, nj);
+                                  nv_, ni, nj);
     return err;
 }
 
-static int next(grib_iterator* iter, double* lat, double* lon, double* val)
+int Mercator::next(double* lat, double* lon, double* val) const
 {
-    grib_iterator_mercator* self = (grib_iterator_mercator*)iter;
-
-    if ((long)iter->e >= (long)(iter->nv - 1))
+    if ((long)e_ >= (long)(nv_ - 1))
         return 0;
-    iter->e++;
+    e_++;
 
-    *lat = self->lats[iter->e];
-    *lon = self->lons[iter->e];
-    if (val && iter->data) {
-        *val = iter->data[iter->e];
+    *lat = lats_[e_];
+    *lon = lons_[e_];
+    if (val && data_) {
+        *val = data_[e_];
     }
     return 1;
 }
 
-static int destroy(grib_iterator* iter)
+int Mercator::destroy()
 {
-    grib_iterator_mercator* self = (grib_iterator_mercator*)iter;
-    const grib_context* c        = iter->h->context;
+    const grib_context* c = h_->context;
 
-    grib_context_free(c, self->lats);
-    grib_context_free(c, self->lons);
-    return GRIB_SUCCESS;
+    grib_context_free(c, lats_);
+    grib_context_free(c, lons_);
+
+    return Gen::destroy();
 }
+
+}  // namespace eccodes::geo_iterator

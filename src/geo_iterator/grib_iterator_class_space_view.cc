@@ -8,93 +8,25 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
-#include <cmath>
+#include "grib_iterator_class_space_view.h"
 
-/*
-   This is used by make_class.pl
+eccodes::geo_iterator::SpaceView _grib_iterator_space_view{};
+eccodes::geo_iterator::Iterator* grib_iterator_space_view = &_grib_iterator_space_view;
 
-   START_CLASS_DEF
-   CLASS      = iterator
-   SUPER      = grib_iterator_class_gen
-   IMPLEMENTS = destroy
-   IMPLEMENTS = init;next
-   MEMBERS     =   double *lats
-   MEMBERS     =   double *lons
-   MEMBERS     =   long Nj
-   END_CLASS_DEF
-*/
-
-/* START_CLASS_IMP */
-
-/*
-
-Don't edit anything between START_CLASS_IMP and END_CLASS_IMP
-Instead edit values between START_CLASS_DEF and END_CLASS_DEF
-or edit "iterator.class" and rerun ./make_class.pl
-
-*/
-
-
-static void init_class              (grib_iterator_class*);
-
-static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
-static int next               (grib_iterator* i, double *lat, double *lon, double *val);
-static int destroy            (grib_iterator* i);
-
-
-typedef struct grib_iterator_space_view{
-  grib_iterator it;
-    /* Members defined in gen */
-    int carg;
-    const char* missingValue;
-    /* Members defined in space_view */
-    double *lats;
-    double *lons;
-    long Nj;
-} grib_iterator_space_view;
-
-extern grib_iterator_class* grib_iterator_class_gen;
-
-static grib_iterator_class _grib_iterator_class_space_view = {
-    &grib_iterator_class_gen,                    /* super                     */
-    "space_view",                    /* name                      */
-    sizeof(grib_iterator_space_view),/* size of instance          */
-    0,                           /* inited */
-    &init_class,                 /* init_class */
-    &init,                     /* constructor               */
-    &destroy,                  /* destructor                */
-    &next,                     /* Next Value                */
-    0,                 /*  Previous Value           */
-    0,                    /* Reset the counter         */
-    0,                 /* has next values           */
-};
-
-grib_iterator_class* grib_iterator_class_space_view = &_grib_iterator_class_space_view;
-
-
-static void init_class(grib_iterator_class* c)
-{
-    c->previous    =    (*(c->super))->previous;
-    c->reset    =    (*(c->super))->reset;
-    c->has_next    =    (*(c->super))->has_next;
-}
-/* END_CLASS_IMP */
+namespace eccodes::geo_iterator {
 
 #define ITER "Space view Geoiterator"
 
-static int next(grib_iterator* iter, double* lat, double* lon, double* val)
+int SpaceView::next(double* lat, double* lon, double* val) const
 {
-    grib_iterator_space_view* self = (grib_iterator_space_view*)iter;
-
-    if ((long)iter->e >= (long)(iter->nv - 1))
+    if ((long)e_ >= (long)(nv_ - 1))
         return 0;
-    iter->e++;
+    e_++;
 
-    *lat = self->lats[iter->e];
-    *lon = self->lons[iter->e];
-    if (val && iter->data) {
-        *val = iter->data[iter->e];
+    *lat = lats_[e_];
+    *lon = lons_[e_];
+    if (val && data_) {
+        *val = data_[e_];
     }
     return 1;
 }
@@ -142,12 +74,15 @@ static int next(grib_iterator* iter, double* lat, double* lon, double* val)
 #define RAD2DEG 57.29577951308232087684 /* 180 over pi */
 #define DEG2RAD 0.01745329251994329576  /* pi over 180 */
 
-static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
+int SpaceView::init(grib_handle* h, grib_arguments* args)
 {
-    /* REFERENCE:
-    *  LRIT/HRIT Global Specification (CGMS 03, Issue 2.6, 12.08.1999)
-    */
     int ret = GRIB_SUCCESS;
+    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS)
+        return ret;
+
+    /* REFERENCE:
+     *  LRIT/HRIT Global Specification (CGMS 03, Issue 2.6, 12.08.1999)
+     */
     double *lats, *lons; /* arrays of latitudes and longitudes */
     double latOfSubSatellitePointInDegrees, lonOfSubSatellitePointInDegrees;
     double orientationInDegrees, nrInRadiusOfEarth;
@@ -163,31 +98,29 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     double factor_1, factor_2, tmp1, Sd, Sn, Sxy, S1, S2, S3;
     int x0, y0, ix, iy;
     double *s_x, *c_x; /* arrays storing sin and cos values */
-    size_t array_size = (iter->nv * sizeof(double));
+    size_t array_size = (nv_ * sizeof(double));
 
-    grib_iterator_space_view* self = (grib_iterator_space_view*)iter;
+    const char* sradius                          = grib_arguments_get_name(h, args, carg_++);
+    const char* sEarthIsOblate                   = grib_arguments_get_name(h, args, carg_++);
+    const char* sMajorAxisInMetres               = grib_arguments_get_name(h, args, carg_++);
+    const char* sMinorAxisInMetres               = grib_arguments_get_name(h, args, carg_++);
+    const char* snx                              = grib_arguments_get_name(h, args, carg_++);
+    const char* sny                              = grib_arguments_get_name(h, args, carg_++);
+    const char* sLatOfSubSatellitePointInDegrees = grib_arguments_get_name(h, args, carg_++);
+    const char* sLonOfSubSatellitePointInDegrees = grib_arguments_get_name(h, args, carg_++);
+    const char* sDx                              = grib_arguments_get_name(h, args, carg_++);
+    const char* sDy                              = grib_arguments_get_name(h, args, carg_++);
+    const char* sXpInGridLengths                 = grib_arguments_get_name(h, args, carg_++);
+    const char* sYpInGridLengths                 = grib_arguments_get_name(h, args, carg_++);
+    const char* sOrientationInDegrees            = grib_arguments_get_name(h, args, carg_++);
+    const char* sNrInRadiusOfEarthScaled         = grib_arguments_get_name(h, args, carg_++);
+    const char* sXo                              = grib_arguments_get_name(h, args, carg_++);
+    const char* sYo                              = grib_arguments_get_name(h, args, carg_++);
 
-    const char* sradius                          = grib_arguments_get_name(h, args, self->carg++);
-    const char* sEarthIsOblate                   = grib_arguments_get_name(h, args, self->carg++);
-    const char* sMajorAxisInMetres               = grib_arguments_get_name(h, args, self->carg++);
-    const char* sMinorAxisInMetres               = grib_arguments_get_name(h, args, self->carg++);
-    const char* snx                              = grib_arguments_get_name(h, args, self->carg++);
-    const char* sny                              = grib_arguments_get_name(h, args, self->carg++);
-    const char* sLatOfSubSatellitePointInDegrees = grib_arguments_get_name(h, args, self->carg++);
-    const char* sLonOfSubSatellitePointInDegrees = grib_arguments_get_name(h, args, self->carg++);
-    const char* sDx                              = grib_arguments_get_name(h, args, self->carg++);
-    const char* sDy                              = grib_arguments_get_name(h, args, self->carg++);
-    const char* sXpInGridLengths                 = grib_arguments_get_name(h, args, self->carg++);
-    const char* sYpInGridLengths                 = grib_arguments_get_name(h, args, self->carg++);
-    const char* sOrientationInDegrees            = grib_arguments_get_name(h, args, self->carg++);
-    const char* sNrInRadiusOfEarthScaled         = grib_arguments_get_name(h, args, self->carg++);
-    const char* sXo                              = grib_arguments_get_name(h, args, self->carg++);
-    const char* sYo                              = grib_arguments_get_name(h, args, self->carg++);
-
-    const char* siScansNegatively       = grib_arguments_get_name(h, args, self->carg++);
-    const char* sjScansPositively       = grib_arguments_get_name(h, args, self->carg++);
-    const char* sjPointsAreConsecutive  = grib_arguments_get_name(h, args, self->carg++);
-    const char* sAlternativeRowScanning = grib_arguments_get_name(h, args, self->carg++);
+    const char* siScansNegatively       = grib_arguments_get_name(h, args, carg_++);
+    const char* sjScansPositively       = grib_arguments_get_name(h, args, carg_++);
+    const char* sjPointsAreConsecutive  = grib_arguments_get_name(h, args, carg_++);
+    const char* sAlternativeRowScanning = grib_arguments_get_name(h, args, carg_++);
 
     if ((ret = grib_get_long_internal(h, snx, &nx)) != GRIB_SUCCESS)
         return ret;
@@ -207,8 +140,8 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
             return ret;
     }
 
-    if (iter->nv != nx * ny) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, iter->nv, nx, ny);
+    if (nv_ != nx * ny) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, nv_, nx, ny);
         return GRIB_WRONG_GRID;
     }
     if ((ret = grib_get_double_internal(h, sLatOfSubSatellitePointInDegrees, &latOfSubSatellitePointInDegrees)) != GRIB_SUCCESS)
@@ -288,18 +221,18 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     rx = angular_size / dx;
     ry = (r_pol / r_eq) * angular_size / dy;
 
-    self->lats = (double*)grib_context_malloc(h->context, array_size);
-    if (!self->lats) {
+    lats_ = (double*)grib_context_malloc(h->context, array_size);
+    if (!lats_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, array_size);
         return GRIB_OUT_OF_MEMORY;
     }
-    self->lons = (double*)grib_context_malloc(h->context, array_size);
-    if (!self->lats) {
+    lons_ = (double*)grib_context_malloc(h->context, array_size);
+    if (!lons_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, array_size);
         return GRIB_OUT_OF_MEMORY;
     }
-    lats = self->lats;
-    lons = self->lons;
+    lats = lats_;
+    lons = lons_;
 
     if (!iScansNegatively) {
         xp = xp - x0;
@@ -373,17 +306,19 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     }
     grib_context_free(h->context, s_x);
     grib_context_free(h->context, c_x);
-    iter->e = -1;
+    e_ = -1;
 
     return ret;
 }
 
-static int destroy(grib_iterator* iter)
+int SpaceView::destroy()
 {
-    grib_iterator_space_view* self = (grib_iterator_space_view*)iter;
-    const grib_context* c          = iter->h->context;
+    const grib_context* c = h_->context;
 
-    grib_context_free(c, self->lats);
-    grib_context_free(c, self->lons);
-    return GRIB_SUCCESS;
+    grib_context_free(c, lats_);
+    grib_context_free(c, lons_);
+
+    return Gen::destroy();
 }
+
+}  // namespace eccodes::geo_iterator

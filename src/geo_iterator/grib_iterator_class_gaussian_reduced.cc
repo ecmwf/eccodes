@@ -8,111 +8,34 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
+#include "grib_iterator_class_gaussian_reduced.h"
 #include <cmath>
 
-/*
-   This is used by make_class.pl
+eccodes::geo_iterator::GaussianReduced _grib_iterator_gaussian_reduced{};
+eccodes::geo_iterator::Iterator* grib_iterator_gaussian_reduced = &_grib_iterator_gaussian_reduced;
 
-   START_CLASS_DEF
-   CLASS      = iterator
-   SUPER      = grib_iterator_class_gen
-   IMPLEMENTS = destroy
-   IMPLEMENTS = init;next
-   MEMBERS     =   double *las
-   MEMBERS     =   double *los
-   MEMBERS     =   long Nj
-   MEMBERS     =   long isRotated
-   MEMBERS     =   double angleOfRotation
-   MEMBERS     =   double southPoleLat
-   MEMBERS     =   double southPoleLon
-   MEMBERS     =   long disableUnrotate
-   END_CLASS_DEF
-
- */
-
-/* START_CLASS_IMP */
-
-/*
-
-Don't edit anything between START_CLASS_IMP and END_CLASS_IMP
-Instead edit values between START_CLASS_DEF and END_CLASS_DEF
-or edit "iterator.class" and rerun ./make_class.pl
-
-*/
-
-
-static void init_class              (grib_iterator_class*);
-
-static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
-static int next               (grib_iterator* i, double *lat, double *lon, double *val);
-static int destroy            (grib_iterator* i);
-
-
-typedef struct grib_iterator_gaussian_reduced{
-  grib_iterator it;
-    /* Members defined in gen */
-    int carg;
-    const char* missingValue;
-    /* Members defined in gaussian_reduced */
-    double *las;
-    double *los;
-    long Nj;
-    long isRotated;
-    double angleOfRotation;
-    double southPoleLat;
-    double southPoleLon;
-    long disableUnrotate;
-} grib_iterator_gaussian_reduced;
-
-extern grib_iterator_class* grib_iterator_class_gen;
-
-static grib_iterator_class _grib_iterator_class_gaussian_reduced = {
-    &grib_iterator_class_gen,                    /* super                     */
-    "gaussian_reduced",                    /* name                      */
-    sizeof(grib_iterator_gaussian_reduced),/* size of instance          */
-    0,                           /* inited */
-    &init_class,                 /* init_class */
-    &init,                     /* constructor               */
-    &destroy,                  /* destructor                */
-    &next,                     /* Next Value                */
-    0,                 /*  Previous Value           */
-    0,                    /* Reset the counter         */
-    0,                 /* has next values           */
-};
-
-grib_iterator_class* grib_iterator_class_gaussian_reduced = &_grib_iterator_class_gaussian_reduced;
-
-
-static void init_class(grib_iterator_class* c)
-{
-    c->previous    =    (*(c->super))->previous;
-    c->reset    =    (*(c->super))->reset;
-    c->has_next    =    (*(c->super))->has_next;
-}
-/* END_CLASS_IMP */
+namespace eccodes::geo_iterator {
 
 #define ITER "Reduced Gaussian grid Geoiterator"
 
-static int next(grib_iterator* iter, double* lat, double* lon, double* val)
+int GaussianReduced::next(double* lat, double* lon, double* val) const
 {
-    grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
-    double ret_lat=0, ret_lon=0;
+    double ret_lat = 0, ret_lon = 0;
 
-    if (iter->e >= (long)(iter->nv - 1))
+    if (e_ >= (long)(nv_ - 1))
         return 0;
-    iter->e++;
+    e_++;
 
-    ret_lat = self->las[iter->e];
-    ret_lon = self->los[iter->e];
-    if (val && iter->data) {
-        *val = iter->data[iter->e];
+    ret_lat = lats_[e_];
+    ret_lon = lons_[e_];
+    if (val && data_) {
+        *val = data_[e_];
     }
 
-    if (self->isRotated && !self->disableUnrotate) {
+    if (isRotated_ && !disableUnrotate_) {
         double new_lat = 0, new_lon = 0;
         unrotate(ret_lat, ret_lon,
-                 self->angleOfRotation, self->southPoleLat, self->southPoleLon,
+                 angleOfRotation_, southPoleLat_, southPoleLon_,
                  &new_lat, &new_lon);
         ret_lat = new_lat;
         ret_lon = new_lon;
@@ -172,10 +95,10 @@ static void binary_search(const double xx[], const unsigned long n, double x, lo
 }
 
 /* Use legacy way to compute the iterator latitude/longitude values */
-static int iterate_reduced_gaussian_subarea_legacy(grib_iterator* iter, grib_handle* h,
-                                                   double lat_first, double lon_first,
-                                                   double lat_last, double lon_last,
-                                                   double* lats, long* pl, size_t plsize)
+int GaussianReduced::iterate_reduced_gaussian_subarea_legacy(grib_handle* h,
+                                                             double lat_first, double lon_first,
+                                                             double lat_last, double lon_last,
+                                                             double* lats, long* pl, size_t plsize)
 {
     int err        = 0;
     int l          = 0;
@@ -183,9 +106,8 @@ static int iterate_reduced_gaussian_subarea_legacy(grib_iterator* iter, grib_han
     long row_count = 0;
     double d       = 0;
     long ilon_first, ilon_last, i;
-    grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
     /*get_reduced_row_proc get_reduced_row = &grib_get_reduced_row;*/
-    get_reduced_row_proc get_reduced_row   = &grib_get_reduced_row_legacy; /* legacy algorithm */
+    get_reduced_row_proc get_reduced_row = &grib_get_reduced_row_legacy; /* legacy algorithm */
 
     if (h->context->debug) {
         const size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
@@ -198,7 +120,7 @@ static int iterate_reduced_gaussian_subarea_legacy(grib_iterator* iter, grib_han
         l++;
     }
 
-    iter->e = 0;
+    e_ = 0;
     for (j = 0; j < plsize; j++) {
         long k    = 0;
         row_count = 0;
@@ -207,16 +129,16 @@ static int iterate_reduced_gaussian_subarea_legacy(grib_iterator* iter, grib_han
         if (ilon_first > ilon_last)
             ilon_first -= pl[j];
         for (i = ilon_first; i <= ilon_last; i++) {
-            if (iter->e >= iter->nv) {
+            if (e_ >= nv_) {
                 size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
                 grib_context_log(h->context, GRIB_LOG_ERROR,
-                                 "%s (sub-area legacy). Num points=%zu, size(values)=%zu", ITER, np, iter->nv);
+                                 "%s (sub-area legacy). Num points=%zu, size(values)=%zu", ITER, np, nv_);
                 return GRIB_WRONG_GRID;
             }
 
-            self->los[iter->e] = ((i)*360.0) / pl[j];
-            self->las[iter->e] = lats[j + l];
-            iter->e++;
+            lons_[e_] = ((i) * 360.0) / pl[j];
+            lats_[e_] = lats[j + l];
+            e_++;
             k++;
             if (k >= row_count) {
                 /* Ensure we exit the loop and only process 'row_count' points */
@@ -235,17 +157,16 @@ static int iterate_reduced_gaussian_subarea_legacy(grib_iterator* iter, grib_han
 //         err = iterate_reduced_gaussian_subarea_algorithm2(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);
 //     }
 //     return err;
-static int iterate_reduced_gaussian_subarea(grib_iterator* iter, grib_handle* h,
-                                                       double lat_first, double lon_first,
-                                                       double lat_last, double lon_last,
-                                                       double* lats, long* pl, size_t plsize, size_t numlats)
+int GaussianReduced::iterate_reduced_gaussian_subarea(grib_handle* h,
+                                                      double lat_first, double lon_first,
+                                                      double lat_last, double lon_last,
+                                                      double* lats, long* pl, size_t plsize, size_t numlats)
 {
     int err        = 0;
     long l         = 0;
     size_t j       = 0;
     long row_count = 0, i = 0;
     double olon_first, olon_last;
-    grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
     get_reduced_row_proc get_reduced_row = &grib_get_reduced_row;
 
     if (h->context->debug) {
@@ -257,41 +178,41 @@ static int iterate_reduced_gaussian_subarea(grib_iterator* iter, grib_handle* h,
     binary_search(lats, numlats - 1, lat_first, &l);
     Assert(l < numlats);
 
-//     for(il=0; il<numlats; ++il) {
-//         const double diff = fabs(lat_first-lats[il]);
-//         if (diff < min_d) {
-//             min_d = diff;
-//             l = il; /* index of the latitude */
-//         }
-//     }
+    //     for(il=0; il<numlats; ++il) {
+    //         const double diff = fabs(lat_first-lats[il]);
+    //         if (diff < min_d) {
+    //             min_d = diff;
+    //             l = il; /* index of the latitude */
+    //         }
+    //     }
 
-    iter->e = 0;
+    e_ = 0;
     for (j = 0; j < plsize; j++) {
         const double delta = 360.0 / pl[j];
         row_count          = 0;
         grib_get_reduced_row_p(pl[j], lon_first, lon_last, &row_count, &olon_first, &olon_last);
         for (i = 0; i < row_count; ++i) {
             double lon2 = olon_first + i * delta;
-            if (iter->e >= iter->nv) {
+            if (e_ >= nv_) {
                 /* Only print error message on the second pass */
                 size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
                 grib_context_log(h->context, GRIB_LOG_ERROR,
-                                 "%s (sub-area). Num points=%zu, size(values)=%zu", ITER, np, iter->nv);
+                                 "%s (sub-area). Num points=%zu, size(values)=%zu", ITER, np, nv_);
                 return GRIB_WRONG_GRID;
             }
-            self->los[iter->e] = lon2;
+            lons_[e_] = lon2;
             DEBUG_ASSERT(j + l < numlats);
-            self->las[iter->e] = lats[j + l];
-            iter->e++;
+            lats_[e_] = lats[j + l];
+            e_++;
         }
     }
 
-    if (iter->e != iter->nv) {
+    if (e_ != nv_) {
         /* Fewer counted points in the sub-area than the number of data values */
         const size_t legacy_count = count_subarea_points(h, grib_get_reduced_row_legacy, pl, plsize, lon_first, lon_last);
-        if (iter->nv == legacy_count) {
+        if (nv_ == legacy_count) {
             /* Legacy (produced by PRODGEN/LIBEMOS) */
-            return iterate_reduced_gaussian_subarea_legacy(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);
+            return iterate_reduced_gaussian_subarea_legacy(h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);
         }
         else {
             /* TODO: A gap exists! Not all values can be mapped. Inconsistent grid or error in calculating num. points! */
@@ -300,9 +221,13 @@ static int iterate_reduced_gaussian_subarea(grib_iterator* iter, grib_handle* h,
     return err;
 }
 
-static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
+int GaussianReduced::init(grib_handle* h, grib_arguments* args)
 {
-    int ret = GRIB_SUCCESS, j, is_global = 0;
+    int ret = GRIB_SUCCESS;
+    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS)
+        return ret;
+
+    int j, is_global = 0;
     double lat_first = 0, lon_first = 0, lat_last = 0, lon_last = 0;
     double angular_precision = 1.0 / 1000000.0;
     double* lats;
@@ -311,31 +236,30 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     long* pl;
     long max_pl = 0;
     long nj = 0, order = 0, i;
-    long row_count = 0;
+    long row_count         = 0;
     long angleSubdivisions = 0;
-    const grib_context* c = h->context;
-    grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
-    const char* slat_first               = grib_arguments_get_name(h, args, self->carg++);
-    const char* slon_first               = grib_arguments_get_name(h, args, self->carg++);
-    const char* slat_last                = grib_arguments_get_name(h, args, self->carg++);
-    const char* slon_last                = grib_arguments_get_name(h, args, self->carg++);
-    const char* sorder                   = grib_arguments_get_name(h, args, self->carg++);
-    const char* spl                      = grib_arguments_get_name(h, args, self->carg++);
-    const char* snj                      = grib_arguments_get_name(h, args, self->carg++);
+    const grib_context* c  = h->context;
+    const char* slat_first = grib_arguments_get_name(h, args, carg_++);
+    const char* slon_first = grib_arguments_get_name(h, args, carg_++);
+    const char* slat_last  = grib_arguments_get_name(h, args, carg_++);
+    const char* slon_last  = grib_arguments_get_name(h, args, carg_++);
+    const char* sorder     = grib_arguments_get_name(h, args, carg_++);
+    const char* spl        = grib_arguments_get_name(h, args, carg_++);
+    const char* snj        = grib_arguments_get_name(h, args, carg_++);
 
-    self->angleOfRotation  = 0;
-    self->isRotated        = 0;
-    self->southPoleLat     = 0;
-    self->southPoleLon     = 0;
-    self->disableUnrotate  = 0; /* unrotate enabled by default */
+    angleOfRotation_ = 0;
+    isRotated_       = 0;
+    southPoleLat_    = 0;
+    southPoleLon_    = 0;
+    disableUnrotate_ = 0; /* unrotate enabled by default */
 
-    ret = grib_get_long(h, "isRotatedGrid", &self->isRotated);
-    if (ret == GRIB_SUCCESS && self->isRotated) {
-        if ((ret = grib_get_double_internal(h, "angleOfRotation", &self->angleOfRotation)))
+    ret = grib_get_long(h, "isRotatedGrid", &isRotated_);
+    if (ret == GRIB_SUCCESS && isRotated_) {
+        if ((ret = grib_get_double_internal(h, "angleOfRotation", &angleOfRotation_)))
             return ret;
-        if ((ret = grib_get_double_internal(h, "latitudeOfSouthernPoleInDegrees", &self->southPoleLat)))
+        if ((ret = grib_get_double_internal(h, "latitudeOfSouthernPoleInDegrees", &southPoleLat_)))
             return ret;
-        if ((ret = grib_get_double_internal(h, "longitudeOfSouthernPoleInDegrees", &self->southPoleLon)))
+        if ((ret = grib_get_double_internal(h, "longitudeOfSouthernPoleInDegrees", &southPoleLon_)))
             return ret;
     }
 
@@ -379,11 +303,11 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 
     grib_get_long_array_internal(h, spl, pl, &plsize);
 
-    self->las = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
-    if (!self->las)
+    lats_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
+    if (!lats_)
         return GRIB_OUT_OF_MEMORY;
-    self->los = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
-    if (!self->los)
+    lons_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
+    if (!lons_)
         return GRIB_OUT_OF_MEMORY;
 
     while (lon_last < 0)
@@ -402,11 +326,11 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     is_global = is_gaussian_global(lat_first, lat_last, lon_first, lon_last, max_pl, lats, angular_precision);
     if (!is_global) {
         /*sub area*/
-        ret = iterate_reduced_gaussian_subarea(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, numlats);
+        ret = iterate_reduced_gaussian_subarea(h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, numlats);
     }
     else {
         /*global*/
-        iter->e = 0;
+        e_ = 0;
         if (h->context->debug) {
             const size_t np = count_global_points(pl, plsize);
             fprintf(stderr, "ECCODES DEBUG grib_iterator_class_gaussian_reduced: global num points=%zu\n", np);
@@ -415,37 +339,39 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         for (j = 0; j < plsize; j++) {
             row_count = pl[j];
             for (i = 0; i < row_count; i++) {
-                if (iter->e >= iter->nv) {
+                if (e_ >= nv_) {
                     /*grib_context_log(h->context,GRIB_LOG_ERROR, "Failed to initialise reduced Gaussian iterator (global)");*/
                     /*return GRIB_WRONG_GRID;*/
                     /*Try now as NON-global*/
-                    ret = iterate_reduced_gaussian_subarea(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, numlats);
+                    ret = iterate_reduced_gaussian_subarea(h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, numlats);
                     if (ret != GRIB_SUCCESS)
                         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Failed to initialise iterator (global)", ITER);
                     goto finalise;
                 }
 
-                self->los[iter->e] = (i * 360.0) / row_count;
-                self->las[iter->e] = lats[j];
-                iter->e++;
+                lons_[e_] = (i * 360.0) / row_count;
+                lats_[e_] = lats[j];
+                e_++;
             }
         }
     }
 
 finalise:
-    iter->e = -1;
+    e_ = -1;
     grib_context_free(h->context, lats);
     grib_context_free(h->context, pl);
 
     return ret;
 }
 
-static int destroy(grib_iterator* iter)
+int GaussianReduced::destroy()
 {
-    grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
-    const grib_context* c                = iter->h->context;
+    const grib_context* c = h_->context;
 
-    grib_context_free(c, self->las);
-    grib_context_free(c, self->los);
-    return GRIB_SUCCESS;
+    grib_context_free(c, lats_);
+    grib_context_free(c, lons_);
+
+    return Gen::destroy();
 }
+
+} // namespace eccodes::geo_iterator
