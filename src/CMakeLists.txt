@@ -8,6 +8,12 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 #
+
+include_directories(
+    "${CMAKE_CURRENT_SOURCE_DIR}/accessor"
+    "${CMAKE_CURRENT_SOURCE_DIR}/geo_iterator"
+    )
+
 list( APPEND eccodes_src_files
     accessor/grib_accessor.cc
     accessor/grib_accessors_list.cc
