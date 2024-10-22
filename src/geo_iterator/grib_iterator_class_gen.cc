@@ -15,6 +15,8 @@ namespace eccodes::geo_iterator {
 int Gen::init(grib_handle* h, grib_arguments* args)
 {
     int err = GRIB_SUCCESS;
+    lats_ = lons_ = NULL;
+
     if ((err = Iterator::init(h, args)) != GRIB_SUCCESS)
         return err;
 

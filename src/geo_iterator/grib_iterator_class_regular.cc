@@ -51,15 +51,15 @@ int Regular::destroy()
     const grib_context* c = h_->context;
     grib_context_free(c, lats_);
     grib_context_free(c, lons_);
+    lats_ = lons_ = NULL;
 
     return Gen::destroy();
 }
 
 int Regular::init(grib_handle* h, grib_arguments* args)
 {
-    int ret = GRIB_SUCCESS;
-    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS)
-        return ret;
+    int ret = Gen::init(h, args);
+    if (ret != GRIB_SUCCESS) return ret;
 
     long Ni; /* Number of points along a parallel = Nx */
     long Nj; /* Number of points along a meridian = Ny */
