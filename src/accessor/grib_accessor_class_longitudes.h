@@ -24,9 +24,9 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* values_;
-    long distinct_;
-    double* lons_;
-    long size_;
-    int save_;
+    const char* values_ = nullptr;
+    long distinct_ = 0;
+    double* lons_ = nullptr;
+    long size_ = 0;
+    int save_ = 0;
 };

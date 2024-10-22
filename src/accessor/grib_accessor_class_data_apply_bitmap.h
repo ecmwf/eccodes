@@ -30,12 +30,12 @@ public:
     int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) override;
 
 private:
-    const char* coded_values_;
-    const char* bitmap_;
-    const char* missing_value_;
-    const char* number_of_data_points_;
-    const char* number_of_values_;
-    const char* binary_scale_factor_;
+    const char* coded_values_ = nullptr;
+    const char* bitmap_ = nullptr;
+    const char* missing_value_ = nullptr;
+    const char* number_of_data_points_ = nullptr;
+    const char* number_of_values_ = nullptr;
+    const char* binary_scale_factor_ = nullptr;
 
     template <typename T> int unpack(T* val, size_t* len);
 };

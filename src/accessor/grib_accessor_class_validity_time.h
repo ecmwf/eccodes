@@ -23,10 +23,10 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* date_;
-    const char* time_;
-    const char* step_;
-    const char* stepUnits_;
-    const char* hours_;
-    const char* minutes_;
+    const char* date_ = nullptr;
+    const char* time_ = nullptr;
+    const char* step_ = nullptr;
+    const char* stepUnits_ = nullptr;
+    const char* hours_ = nullptr;
+    const char* minutes_ = nullptr;
 };

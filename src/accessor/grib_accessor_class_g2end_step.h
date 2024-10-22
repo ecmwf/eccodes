@@ -28,24 +28,24 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* start_step_value_;
-    const char* step_units_;
-    const char* year_;
-    const char* month_;
-    const char* day_;
-    const char* hour_;
-    const char* minute_;
-    const char* second_;
-    const char* year_of_end_of_interval_;
-    const char* month_of_end_of_interval_;
-    const char* day_of_end_of_interval_;
-    const char* hour_of_end_of_interval_;
-    const char* minute_of_end_of_interval_;
-    const char* second_of_end_of_interval_;
-    const char* time_range_unit_;
-    const char* time_range_value_;
-    const char* typeOfTimeIncrement_;
-    const char* numberOfTimeRanges_;
+    const char* start_step_value_ = nullptr;
+    const char* step_units_ = nullptr;
+    const char* year_ = nullptr;
+    const char* month_ = nullptr;
+    const char* day_ = nullptr;
+    const char* hour_ = nullptr;
+    const char* minute_ = nullptr;
+    const char* second_ = nullptr;
+    const char* year_of_end_of_interval_ = nullptr;
+    const char* month_of_end_of_interval_ = nullptr;
+    const char* day_of_end_of_interval_ = nullptr;
+    const char* hour_of_end_of_interval_ = nullptr;
+    const char* minute_of_end_of_interval_ = nullptr;
+    const char* second_of_end_of_interval_ = nullptr;
+    const char* time_range_unit_ = nullptr;
+    const char* time_range_value_ = nullptr;
+    const char* typeOfTimeIncrement_ = nullptr;
+    const char* numberOfTimeRanges_ = nullptr;
 
     int unpack_one_time_range_long_(long* val, size_t* len);
     int unpack_one_time_range_double_(double* val, size_t* len);

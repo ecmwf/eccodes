@@ -25,7 +25,7 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* envvar_;
-    char* value_;
-    const char* default_value_;
+    const char* envvar_ = nullptr;
+    char* value_ = nullptr;
+    const char* default_value_ = nullptr;
 };

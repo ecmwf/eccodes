@@ -25,6 +25,6 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* productDefinitionTemplateNumber_;
-    int instant_;
+    const char* productDefinitionTemplateNumber_ = nullptr;
+    int instant_ = 0;
 };

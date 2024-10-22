@@ -24,8 +24,8 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* values_;
-    const char* Ni_;
-    const char* Nj_;
-    const char* alternativeRowScanning_;
+    const char* values_ = nullptr;
+    const char* Ni_ = nullptr;
+    const char* Nj_ = nullptr;
+    const char* alternativeRowScanning_ = nullptr;
 };

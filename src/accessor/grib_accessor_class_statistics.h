@@ -27,6 +27,6 @@ public:
     int compare(grib_accessor*) override;
 
 private:
-    const char* values_;
-    const char* missing_value_;
+    const char* values_ = nullptr;
+    const char* missing_value_ = nullptr;
 };

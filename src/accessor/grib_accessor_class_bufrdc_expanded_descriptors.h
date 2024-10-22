@@ -25,8 +25,8 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* expandedDescriptors_;
-    grib_accessor* expandedDescriptorsAccessor_;
+    const char* expandedDescriptors_ = nullptr;
+    grib_accessor* expandedDescriptorsAccessor_ = nullptr;
 
     grib_accessor* get_accessor();
 };

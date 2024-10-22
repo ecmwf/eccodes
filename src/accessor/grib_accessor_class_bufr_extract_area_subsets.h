@@ -23,16 +23,16 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* doExtractSubsets_;
-    const char* numberOfSubsets_;
-    const char* extractSubsetList_;
-    const char* extractAreaWestLongitude_;
-    const char* extractAreaEastLongitude_;
-    const char* extractAreaNorthLatitude_;
-    const char* extractAreaSouthLatitude_;
-    const char* extractAreaLongitudeRank_;
-    const char* extractAreaLatitudeRank_;
-    const char* extractedAreaNumberOfSubsets_;
+    const char* doExtractSubsets_ = nullptr;
+    const char* numberOfSubsets_ = nullptr;
+    const char* extractSubsetList_ = nullptr;
+    const char* extractAreaWestLongitude_ = nullptr;
+    const char* extractAreaEastLongitude_ = nullptr;
+    const char* extractAreaNorthLatitude_ = nullptr;
+    const char* extractAreaSouthLatitude_ = nullptr;
+    const char* extractAreaLongitudeRank_ = nullptr;
+    const char* extractAreaLatitudeRank_ = nullptr;
+    const char* extractedAreaNumberOfSubsets_ = nullptr;
 
     int select_area();
 };

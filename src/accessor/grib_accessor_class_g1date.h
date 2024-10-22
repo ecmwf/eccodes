@@ -25,8 +25,8 @@ public:
     void init(const long, grib_arguments*) override;
 
 protected:
-    const char* century_;
-    const char* year_;
-    const char* month_;
-    const char* day_;
+    const char* century_ = nullptr;
+    const char* year_ = nullptr;
+    const char* month_ = nullptr;
+    const char* day_ = nullptr;
 };

@@ -23,6 +23,6 @@ public:
     size_t preferred_size(int) override;
 
 private:
-    const char* section_offset_;
-    const char* section_length_;
+    const char* section_offset_ = nullptr;
+    const char* section_length_ = nullptr;
 };

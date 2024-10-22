@@ -25,6 +25,6 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* paramId_;
-    const char* type_;
+    const char* paramId_ = nullptr;
+    const char* type_ = nullptr;
 };

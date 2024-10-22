@@ -24,8 +24,8 @@ public:
     void init(const long, grib_arguments*) override;
 
 protected:
-    const char* primary_bitmap_;
-    const char* secondary_bitmap_;
-    const char* missing_value_;
-    const char* expand_by_;
+    const char* primary_bitmap_ = nullptr;
+    const char* secondary_bitmap_ = nullptr;
+    const char* missing_value_ = nullptr;
+    const char* expand_by_ = nullptr;
 };

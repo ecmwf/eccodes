@@ -24,7 +24,7 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* hour_;
-    const char* minute_;
-    const char* second_;
+    const char* hour_ = nullptr;
+    const char* minute_ = nullptr;
+    const char* second_ = nullptr;
 };

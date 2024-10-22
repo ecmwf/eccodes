@@ -23,9 +23,9 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* numberOfValues_;
-    const char* bitsPerValue_;
-    const char* offsetBeforeData_;
-    const char* offsetAfterData_;
-    const char* unusedBits_;
+    const char* numberOfValues_ = nullptr;
+    const char* bitsPerValue_ = nullptr;
+    const char* offsetBeforeData_ = nullptr;
+    const char* offsetAfterData_ = nullptr;
+    const char* unusedBits_ = nullptr;
 };

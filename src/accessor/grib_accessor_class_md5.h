@@ -27,7 +27,7 @@ public:
     int compare(grib_accessor*) override;
 
 private:
-    const char* offset_key_;
-    grib_expression* length_key_;
-    grib_string_list* blocklist_;
+    const char* offset_key_ = nullptr;
+    grib_expression* length_key_ = nullptr;
+    grib_string_list* blocklist_ = nullptr;
 };

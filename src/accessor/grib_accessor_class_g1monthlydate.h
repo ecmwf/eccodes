@@ -22,5 +22,5 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* date_;
+    const char* date_ = nullptr;
 };

@@ -25,5 +25,5 @@ public:
     int compare(grib_accessor*) override;
 
 private:
-    const char* verifyingMonth_;
+    const char* verifyingMonth_ = nullptr;
 };

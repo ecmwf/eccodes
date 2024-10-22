@@ -30,7 +30,7 @@ public:
     int notify_change(grib_accessor*) override;
 
 private:
-    long llength_;
-    long loffset_;
-    grib_expression* real_name_;
+    long llength_ = 0;
+    long loffset_ = 0;
+    grib_expression* real_name_ = nullptr;
 };

@@ -25,5 +25,5 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    grib_arguments* args_;
+    grib_arguments* args_ = nullptr;
 };

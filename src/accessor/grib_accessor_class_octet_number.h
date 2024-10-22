@@ -24,6 +24,6 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* left_;
-    long right_;
+    const char* left_ = nullptr;
+    long right_ = 0;
 };

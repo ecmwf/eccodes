@@ -23,6 +23,6 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* referenceValue_;
-    const char* floatType_;
+    const char* referenceValue_ = nullptr;
+    const char* floatType_ = nullptr;
 };

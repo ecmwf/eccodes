@@ -30,6 +30,6 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    grib_darray* arr_;
-    int type_;
+    grib_darray* arr_ = nullptr;
+    int type_ = 0;
 };
