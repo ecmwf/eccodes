@@ -39,11 +39,6 @@ protected:
     mutable long e_; /**  current element */
     size_t nv_;      /**  number of values */
     const char* class_name_;
-
-private:
-    //grib_arguments* args_; [>*  args of iterator <]
-    size_t size_;
-    int inited_;
 };
 
 eccodes::geo_iterator::Iterator* gribIteratorNew(const grib_handle*, unsigned long, int*);

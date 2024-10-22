@@ -26,8 +26,6 @@ public:
     int destroy() override;
 
 private:
-    long Nj_;
-
     int init_sphere(const grib_handle*,
                     size_t, long, long,
                     double,

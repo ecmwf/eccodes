@@ -23,9 +23,6 @@ public:
     int init(grib_handle*, grib_arguments*) override;
     int next(double*, double*, double*) const override;
     int destroy() override;
-
-private:
-    long Nj_;
 };
 
 }  // namespace eccodes::geo_iterator

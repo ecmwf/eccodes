@@ -25,8 +25,6 @@ public:
     int destroy() override;
 
 private:
-    long Nj_;
-
     int init_mercator(grib_handle*,
                       size_t, long, long,
                       double, double,

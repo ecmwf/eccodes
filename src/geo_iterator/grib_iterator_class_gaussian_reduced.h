@@ -26,7 +26,6 @@ public:
     int destroy() override;
 
 private:
-    long Nj_;
     long isRotated_;
     double angleOfRotation_;
     double southPoleLat_;

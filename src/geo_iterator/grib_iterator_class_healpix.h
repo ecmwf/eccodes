@@ -26,7 +26,7 @@ public:
     int destroy() override;
 
 private:
-    long Nsides_;
+    // long Nsides_;
     bool nested_;
 
     int iterate_healpix(long N);
