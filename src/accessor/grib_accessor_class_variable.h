@@ -40,7 +40,7 @@ public:
     void accessor_variable_set_type(int type);
 private:
     double dval_ = 0.;
-    float fval_ = 0.;
+    float fval_ = 0.f;
     char* cval_ = nullptr;
     char* cname_ = nullptr;
     int type_ = 0;

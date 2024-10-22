@@ -79,17 +79,17 @@ public:
 public:
     // TODO(maee): make private
     grib_context* context_ = nullptr;
-    const char* name_ = nullptr;
-    const char* class_name_ = nullptr;
-    const char* name_space_ = nullptr;
+    const char* name_ = nullptr;       /** < name of the accessor */
+    const char* class_name_ = nullptr; /** < name of the class (Artifact from C version of ecCodes) */
+    const char* name_space_ = nullptr; /** < namespace to which the accessor belongs */
     grib_handle* h_ = nullptr;
-    grib_action* creator_ = nullptr;
-    long length_ = 0;
-    long offset_ = 0;
-    grib_section* parent_ = nullptr;
-    grib_accessor* next_ = nullptr;
-    grib_accessor* previous_ = nullptr;
-    unsigned long flags_ = 0;
+    grib_action* creator_ = nullptr;    /** < action that created the accessor */
+    long length_ = 0;             /** < byte length of the accessor */
+    long offset_ = 0;             /** < offset of the data in the buffer */
+    grib_section* parent_ = nullptr;    /** < section to which the accessor is attached */
+    grib_accessor* next_ = nullptr;     /** < next accessor in list */
+    grib_accessor* previous_ = nullptr; /** < next accessor in list */
+    unsigned long flags_ = 0;     /** < Various flags */
     grib_section* sub_section_ = nullptr;
 
     const char* all_names_[MAX_ACCESSOR_NAMES] = {
@@ -100,9 +100,9 @@ public:
     }; /** < namespace to which the accessor belongs */
     int dirty_ = 0;
 
-    grib_accessor* same_ = nullptr;
-    long loop_ = 0;
-    grib_virtual_value* vvalue_ = nullptr;
+    grib_accessor* same_ = nullptr;        /** < accessors with the same name */
+    long loop_ = 0;                  /** < used in lists */
+    grib_virtual_value* vvalue_ = nullptr; /** < virtual value used when transient flag on **/
     const char* set_ = nullptr;
     grib_accessor* attributes_[MAX_ACCESSOR_ATTRIBUTES] = {
         0,

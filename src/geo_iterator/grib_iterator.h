@@ -34,9 +34,9 @@ public:
 
 protected:
     grib_handle* h_ = nullptr;
-    double* data_ = nullptr;
+    double* data_ = nullptr;   /**  data values */
     mutable long e_ = 0; /**  current element */
-    size_t nv_ = 0;
+    size_t nv_ = 0;      /**  number of values */
     const char* class_name_ = nullptr;
 };
 
