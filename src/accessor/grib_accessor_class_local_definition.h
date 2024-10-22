@@ -25,13 +25,13 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* productDefinitionTemplateNumber_;
-    const char* productDefinitionTemplateNumberInternal_;
-    const char* grib2LocalSectionNumber_;
-    const char* type_;
-    const char* stream_;
-    const char* the_class_;
-    const char* eps_;
-    const char* stepType_;
-    const char* derivedForecast_;
+    const char* productDefinitionTemplateNumber_ = nullptr;
+    const char* productDefinitionTemplateNumberInternal_ = nullptr;
+    const char* grib2LocalSectionNumber_ = nullptr;
+    const char* type_ = nullptr;
+    const char* stream_ = nullptr;
+    const char* the_class_ = nullptr;
+    const char* eps_ = nullptr;
+    const char* stepType_ = nullptr;
+    const char* derivedForecast_ = nullptr;
 };

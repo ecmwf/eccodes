@@ -23,8 +23,8 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* J_;
-    const char* K_;
-    const char* M_;
-    const char* T_;
+    const char* J_ = nullptr;
+    const char* K_ = nullptr;
+    const char* M_ = nullptr;
+    const char* T_ = nullptr;
 };

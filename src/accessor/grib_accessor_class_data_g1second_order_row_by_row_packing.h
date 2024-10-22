@@ -26,22 +26,22 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* half_byte_;
-    const char* packingType_;
-    const char* ieee_packing_;
-    const char* precision_;
-    const char* widthOfFirstOrderValues_;
-    const char* N1_;
-    const char* N2_;
-    const char* numberOfGroups_;
-    const char* numberOfSecondOrderPackedValues_;
-    const char* extraValues_;
-    const char* pl_;
-    const char* Ni_;
-    const char* Nj_;
-    const char* jPointsAreConsecutive_;
-    const char* bitmap_;
-    const char* groupWidths_;
+    const char* half_byte_ = nullptr;
+    const char* packingType_ = nullptr;
+    const char* ieee_packing_ = nullptr;
+    const char* precision_ = nullptr;
+    const char* widthOfFirstOrderValues_ = nullptr;
+    const char* N1_ = nullptr;
+    const char* N2_ = nullptr;
+    const char* numberOfGroups_ = nullptr;
+    const char* numberOfSecondOrderPackedValues_ = nullptr;
+    const char* extraValues_ = nullptr;
+    const char* pl_ = nullptr;
+    const char* Ni_ = nullptr;
+    const char* Nj_ = nullptr;
+    const char* jPointsAreConsecutive_ = nullptr;
+    const char* bitmap_ = nullptr;
+    const char* groupWidths_ = nullptr;
 
     template <typename T> int unpack_real(T* values, size_t* len);
 };

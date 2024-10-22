@@ -23,5 +23,5 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* total_length_;
+    const char* total_length_ = nullptr;
 };

@@ -23,6 +23,6 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* values_;
-    const char* bits_per_value_;
+    const char* values_ = nullptr;
+    const char* bits_per_value_ = nullptr;
 };

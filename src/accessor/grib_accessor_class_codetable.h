@@ -33,11 +33,11 @@ public:
     grib_codetable* codetable() const { return table_; }
 
 private:
-    grib_codetable* table_;
-    const char* tablename_;
-    const char* masterDir_;
-    const char* localDir_;
-    int table_loaded_;
+    grib_codetable* table_ = nullptr;
+    const char* tablename_ = nullptr;
+    const char* masterDir_ = nullptr;
+    const char* localDir_ = nullptr;
+    int table_loaded_ = 0;
 
     grib_codetable* load_table();
 };

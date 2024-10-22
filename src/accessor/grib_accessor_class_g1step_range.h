@@ -33,12 +33,12 @@ protected:
     int grib_g1_step_get_steps(long* start, long* theEnd);
 
 private:
-    const char* p1_;
-    const char* p2_;
-    const char* timeRangeIndicator_;
-    const char* unit_;
-    const char* step_unit_;
-    const char* stepType_;
-    const char* patch_fp_precip_;
-    int error_on_units_;
+    const char* p1_ = nullptr;
+    const char* p2_ = nullptr;
+    const char* timeRangeIndicator_ = nullptr;
+    const char* unit_ = nullptr;
+    const char* step_unit_ = nullptr;
+    const char* stepType_ = nullptr;
+    const char* patch_fp_precip_ = nullptr;
+    int error_on_units_ = 0;
 };

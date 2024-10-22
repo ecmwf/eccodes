@@ -24,6 +24,6 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* stepUnits_;
-    const char* step_;
+    const char* stepUnits_ = nullptr;
+    const char* step_ = nullptr;
 };

@@ -28,16 +28,16 @@ public:
     int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) override;
 
 private:
-    const char* number_of_values_;
-    const char* reference_value_;
-    const char* binary_scale_factor_;
-    const char* decimal_scale_factor_;
-    const char* optimize_scaling_factor_;
-    const char* bits_per_value_;
-    const char* number_of_data_points_;
-    const char* ccsds_flags_;
-    const char* ccsds_block_size_;
-    const char* ccsds_rsi_;
+    const char* number_of_values_ = nullptr;
+    const char* reference_value_ = nullptr;
+    const char* binary_scale_factor_ = nullptr;
+    const char* decimal_scale_factor_ = nullptr;
+    const char* optimize_scaling_factor_ = nullptr;
+    const char* bits_per_value_ = nullptr;
+    const char* number_of_data_points_ = nullptr;
+    const char* ccsds_flags_ = nullptr;
+    const char* ccsds_block_size_ = nullptr;
+    const char* ccsds_rsi_ = nullptr;
 
     template <typename T> int unpack(T* val, size_t* len);
 };

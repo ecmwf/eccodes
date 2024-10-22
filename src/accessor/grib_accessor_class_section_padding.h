@@ -23,5 +23,5 @@ public:
     size_t preferred_size(int) override;
 
 private:
-    int preserve_;
+    int preserve_ = 0;
 };

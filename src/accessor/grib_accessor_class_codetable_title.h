@@ -23,5 +23,5 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* codetable_;
+    const char* codetable_ = nullptr;
 };

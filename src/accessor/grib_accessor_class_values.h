@@ -29,11 +29,11 @@ public:
     int compare(grib_accessor*) override;
 
 protected:
-    int carg_;
-    const char* seclen_;
-    const char* offsetdata_;
-    const char* offsetsection_;
-    int values_dirty_;
+    int carg_ = 0;
+    const char* seclen_ = nullptr;
+    const char* offsetdata_ = nullptr;
+    const char* offsetsection_ = nullptr;
+    int values_dirty_ = 0;
 
 private:
     long init_length();

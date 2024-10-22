@@ -24,10 +24,10 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* number_of_values_;
-    const char* bits_per_value_;
-    const char* max_level_value_;
-    const char* number_of_level_values_;
-    const char* decimal_scale_factor_;
-    const char* level_values_;
+    const char* number_of_values_ = nullptr;
+    const char* bits_per_value_ = nullptr;
+    const char* max_level_value_ = nullptr;
+    const char* number_of_level_values_ = nullptr;
+    const char* decimal_scale_factor_ = nullptr;
+    const char* level_values_ = nullptr;
 };

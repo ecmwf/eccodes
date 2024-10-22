@@ -22,9 +22,9 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* N_;
-    const char* half_byte_;
-    const char* packingType_;
-    const char* ieee_packing_;
-    const char* precision_;
+    const char* N_ = nullptr;
+    const char* half_byte_ = nullptr;
+    const char* packingType_ = nullptr;
+    const char* ieee_packing_ = nullptr;
+    const char* precision_ = nullptr;
 };

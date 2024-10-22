@@ -39,9 +39,9 @@ public:
 
     void accessor_variable_set_type(int type);
 private:
-    double dval_;
-    float fval_;
-    char* cval_;
-    char* cname_;
-    int type_;
+    double dval_ = 0.;
+    float fval_ = 0.;
+    char* cval_ = nullptr;
+    char* cname_ = nullptr;
+    int type_ = 0;
 };

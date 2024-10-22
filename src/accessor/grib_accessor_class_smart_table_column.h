@@ -28,6 +28,6 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* smartTable_;
-    int index_;
+    const char* smartTable_ = nullptr;
+    int index_ = 0;
 };

@@ -23,7 +23,7 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* tablename_;
+    const char* tablename_ = nullptr;
 
     int grib_get_codeflag(long code, char* codename);
 };

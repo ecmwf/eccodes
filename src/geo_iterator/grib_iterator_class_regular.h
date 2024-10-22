@@ -26,15 +26,15 @@ public:
     int destroy() override;
 
 protected:
-    long Ni_;
-    long Nj_;
-    long iScansNegatively_;
-    long isRotated_;
-    double angleOfRotation_;
-    double southPoleLat_;
-    double southPoleLon_;
-    long jPointsAreConsecutive_;
-    long disableUnrotate_;
+    long Ni_ = 0;
+    long Nj_ = 0;
+    long iScansNegatively_ = 0;
+    long isRotated_ = 0;
+    double angleOfRotation_ = 0.;
+    double southPoleLat_ = 0.;
+    double southPoleLon_ = 0.;
+    long jPointsAreConsecutive_ = 0;
+    long disableUnrotate_ = 0;
 };
 
 }  // namespace eccodes::geo_iterator

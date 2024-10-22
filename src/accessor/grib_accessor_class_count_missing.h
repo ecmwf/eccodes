@@ -23,8 +23,8 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* bitmap_;
-    const char* unusedBitsInBitmap_;
-    const char* numberOfDataPoints_;
-    const char* missingValueManagementUsed_;
+    const char* bitmap_ = nullptr;
+    const char* unusedBitsInBitmap_ = nullptr;
+    const char* numberOfDataPoints_ = nullptr;
+    const char* missingValueManagementUsed_ = nullptr;
 };

@@ -23,6 +23,6 @@ public:
     size_t preferred_size(int) override;
 
 private:
-    grib_expression* begin_;
-    grib_expression* multiple_;
+    grib_expression* begin_ = nullptr;
+    grib_expression* multiple_ = nullptr;
 };

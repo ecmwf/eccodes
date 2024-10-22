@@ -24,5 +24,5 @@ public:
 
 private:
     /* Members defined in cf_var_name */
-    const char* defaultKey_;
+    const char* defaultKey_ = nullptr;
 };

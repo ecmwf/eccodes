@@ -24,12 +24,12 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* latitude_first_;
-    const char* longitude_first_;
-    const char* latitude_last_;
-    const char* longitude_last_;
-    const char* i_increment_;
-    const char* j_increment_;
-    const char* basic_angle_;
-    const char* sub_division_;
+    const char* latitude_first_ = nullptr;
+    const char* longitude_first_ = nullptr;
+    const char* latitude_last_ = nullptr;
+    const char* longitude_last_ = nullptr;
+    const char* i_increment_ = nullptr;
+    const char* j_increment_ = nullptr;
+    const char* basic_angle_ = nullptr;
+    const char* sub_division_ = nullptr;
 };

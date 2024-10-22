@@ -24,8 +24,8 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* values_;
-    const char* binaryScaleFactor_;
-    const char* decimalScaleFactor_;
-    long bitsPerValue_;
+    const char* values_ = nullptr;
+    const char* binaryScaleFactor_ = nullptr;
+    const char* decimalScaleFactor_ = nullptr;
+    long bitsPerValue_ = 0;
 };

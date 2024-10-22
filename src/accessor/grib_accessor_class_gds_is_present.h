@@ -24,8 +24,8 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* gds_present_;
-    const char* grid_definition_;
-    const char* bitmap_present_;
-    const char* values_;
+    const char* gds_present_ = nullptr;
+    const char* grid_definition_ = nullptr;
+    const char* bitmap_present_ = nullptr;
+    const char* values_ = nullptr;
 };

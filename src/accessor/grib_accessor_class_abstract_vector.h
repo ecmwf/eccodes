@@ -21,6 +21,6 @@ public:
 
 public:
     // TODO(maee): make private
-    double* v_;
-    int number_of_elements_;
+    double* v_ = nullptr;
+    int number_of_elements_ = 0;
 };
