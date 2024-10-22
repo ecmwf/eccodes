@@ -130,8 +130,8 @@ int LatlonReduced::init(grib_handle* h, grib_arguments* args)
 
 int LatlonReduced::destroy()
 {
+    DEBUG_ASSERT(h_);
     const grib_context* c = h_->context;
-
     grib_context_free(c, lats_);
     grib_context_free(c, lons_);
 

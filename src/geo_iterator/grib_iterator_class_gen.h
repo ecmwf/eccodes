@@ -34,8 +34,7 @@ protected:
     double* lons_;
 
 private:
-    const char* missingValue_;
-    // int get(double*, double*, double*);
+    //int get(double*, double*, double*);
 };
 
 }  // namespace eccodes::geo_iterator

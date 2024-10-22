@@ -15,25 +15,25 @@ namespace eccodes::geo_iterator {
 int Gen::init(grib_handle* h, grib_arguments* args)
 {
     int err = GRIB_SUCCESS;
-    lats_ = lons_ = NULL;
+    lats_ = lons_ = data_ = NULL;
 
     if ((err = Iterator::init(h, args)) != GRIB_SUCCESS)
         return err;
 
-    size_t dli              = 0;
-    const char* s_rawData   = NULL;
-    const char* s_numPoints = NULL;
-    long numberOfPoints     = 0;
-    carg_                   = 1;
+    // Skip the 1st argument which is the name of the iterator itself
+    // e.g., latlon, gaussian_reduced etc
+    carg_ = 1; // start from 1 and not 0
 
-    s_numPoints   = grib_arguments_get_name(h, args, carg_++);
-    missingValue_ = grib_arguments_get_name(h, args, carg_++);
-    s_rawData     = grib_arguments_get_name(h, args, carg_++);
+    const char* s_numPoints    = grib_arguments_get_name(h, args, carg_++);
+    // The missingValue argument is not currently used. Skip it
+    carg_++;  //const char* s_missingValue = grib_arguments_get_name(h, args, carg_++);
+    const char* s_rawData      = grib_arguments_get_name(h, args, carg_++);
 
-    data_ = NULL;
+    size_t dli = 0;
     if ((err = grib_get_size(h, s_rawData, &dli)) != GRIB_SUCCESS)
         return err;
 
+    long numberOfPoints = 0;
     if ((err = grib_get_long_internal(h, s_numPoints, &numberOfPoints)) != GRIB_SUCCESS)
         return err;
 

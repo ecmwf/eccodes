@@ -33,7 +33,6 @@ public:
     unsigned long flags_;
 
 protected:
-    grib_context* context_;
     grib_handle* h_;
     double* data_;   /**  data values */
     mutable long e_; /**  current element */

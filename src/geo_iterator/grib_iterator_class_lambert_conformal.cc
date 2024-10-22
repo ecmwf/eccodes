@@ -478,8 +478,8 @@ int LambertConformal::next(double* lat, double* lon, double* val) const
 
 int LambertConformal::destroy()
 {
+    DEBUG_ASSERT(h_);
     const grib_context* c = h_->context;
-
     grib_context_free(c, lats_);
     grib_context_free(c, lons_);
 

@@ -280,9 +280,7 @@ int Healpix::init(grib_handle* h, grib_arguments* args)
         return GRIB_WRONG_GRID;
     }
 
-    char ordering[32] = {
-        0,
-    };
+    char ordering[32] = {0,};
     size_t slen = sizeof(ordering);
     if ((err = grib_get_string_internal(h, sorder, ordering, &slen)) != GRIB_SUCCESS) {
         return err;
@@ -349,8 +347,10 @@ int Healpix::next(double* lat, double* lon, double* val) const
 
 int Healpix::destroy()
 {
-    grib_context_free(context_, lats_);
-    grib_context_free(context_, lons_);
+    DEBUG_ASSERT(h_);
+    const grib_context* c = h_->context;
+    grib_context_free(c, lats_);
+    grib_context_free(c, lons_);
 
     return Gen::destroy();
 }

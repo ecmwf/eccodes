@@ -25,19 +25,17 @@ int Iterator::init(grib_handle* h, grib_arguments* args)
 /* For this one, ALL destroy are called */
 int Iterator::destroy()
 {
-    delete context_;
     delete this;
     return GRIB_SUCCESS;
 }
 
 eccodes::geo_iterator::Iterator* gribIteratorNew(const grib_handle* ch, unsigned long flags, int* error)
 {
-    grib_handle* h                = (grib_handle*)ch;
-    grib_accessor* a              = NULL;
-    grib_accessor_iterator_t* ita = NULL;
-    *error                        = GRIB_NOT_IMPLEMENTED;
-    a                             = grib_find_accessor(h, "ITERATOR");
-    ita                           = (grib_accessor_iterator_t*)a;
+    *error = GRIB_NOT_IMPLEMENTED;
+
+    grib_handle* h = (grib_handle*)ch;
+    grib_accessor* a = grib_find_accessor(h, "ITERATOR");
+    grib_accessor_iterator_t* ita = (grib_accessor_iterator_t*)a;
 
     if (!a)
         return NULL;
