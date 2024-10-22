@@ -19,7 +19,7 @@ class Gen : public Iterator
 public:
     Gen() :
         Iterator() { class_name_ = "gen"; }
-    Iterator* create() const override { return new Gen(); }
+    // Iterator* create() const override { return new Gen(); }
 
     int init(grib_handle*, grib_arguments*) override;
     int next(double*, double*, double*) const override;
