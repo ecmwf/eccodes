@@ -30,5 +30,5 @@ public:
     int nearest_smaller_value(double, double*) override;
 
 private:
-    grib_arguments* arg_;
+    grib_arguments* arg_ = nullptr;
 };

@@ -29,9 +29,9 @@ public:
     bool has_next() const override;
 
 protected:
-    int carg_;
-    double* lats_;
-    double* lons_;
+    int carg_ = 0;
+    double* lats_ = nullptr;
+    double* lons_ = nullptr;
 
 private:
     //int get(double*, double*, double*);

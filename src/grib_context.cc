@@ -865,7 +865,7 @@ void grib_context_delete(grib_context* c)
     c->hash_array_count = 0;
     grib_itrie_delete(c->hash_array_index);
     c->hash_array_index=0;
-    grib_trie_delete(c->expanded_descriptors);
+    grib_trie_delete_container(c->expanded_descriptors);
     c->expanded_descriptors=0;
 
     c->inited = 0;

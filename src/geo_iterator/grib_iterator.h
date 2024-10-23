@@ -12,9 +12,7 @@
 
 #include "grib_api_internal.h"
 
-/*! Grib geoiterator, structure supporting a geographic iteration of values on a GRIB message.
-    \ingroup grib_iterator
-*/
+// GRIB geoiterator, class supporting geographic iteration of values on a GRIB message
 
 namespace eccodes::geo_iterator {
 
@@ -30,14 +28,14 @@ public:
     virtual bool has_next() const                         = 0;
     virtual Iterator* create() const                      = 0;
 
-    unsigned long flags_;
+    unsigned long flags_ = 0;
 
 protected:
-    grib_handle* h_;
-    double* data_;   /**  data values */
-    mutable long e_; /**  current element */
-    size_t nv_;      /**  number of values */
-    const char* class_name_;
+    grib_handle* h_ = nullptr;
+    double* data_ = nullptr;   // data values
+    mutable long e_ = 0;       // current element
+    size_t nv_ = 0;            // number of values
+    const char* class_name_ = nullptr;
 };
 
 eccodes::geo_iterator::Iterator* gribIteratorNew(const grib_handle*, unsigned long, int*);

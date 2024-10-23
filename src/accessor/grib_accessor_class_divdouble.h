@@ -22,6 +22,6 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* val_;
-    double divisor_;
+    const char* val_ = nullptr;
+    double divisor_ = 0.;
 };

@@ -24,6 +24,6 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* grid_type_;
-    int endpoint_;
+    const char* grid_type_ = nullptr;
+    int endpoint_ = 0;
 };

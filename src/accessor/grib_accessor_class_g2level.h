@@ -26,8 +26,8 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* type_first_;
-    const char* scale_first_;
-    const char* value_first_;
-    const char* pressure_units_;
+    const char* type_first_ = nullptr;
+    const char* scale_first_ = nullptr;
+    const char* value_first_ = nullptr;
+    const char* pressure_units_ = nullptr;
 };

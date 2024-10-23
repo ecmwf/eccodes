@@ -22,12 +22,12 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* numberOfValues_;
-    const char* bitsPerValue_;
-    const char* offsetBeforeData_;
-    const char* offsetAfterData_;
-    const char* unusedBits_;
-    const char* JS_;
-    const char* KS_;
-    const char* MS_;
+    const char* numberOfValues_ = nullptr;
+    const char* bitsPerValue_ = nullptr;
+    const char* offsetBeforeData_ = nullptr;
+    const char* offsetAfterData_ = nullptr;
+    const char* unusedBits_ = nullptr;
+    const char* JS_ = nullptr;
+    const char* KS_ = nullptr;
+    const char* MS_ = nullptr;
 };

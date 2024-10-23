@@ -51,7 +51,7 @@ test_stream_and_type()
             grib_check_key_equals $temp1 'mars.stream,mars.type' "$ms $mt"
 
             # Param 228228 (accum) and 167 (instant)
-            ${tools_dir}/grib_set -s stepType=accum,paramId=228228 $temp1 $temp2
+            ${tools_dir}/grib_set -s paramId=228228 $temp1 $temp2
             grib_check_key_equals $temp2 'stream,type' "$ms $mt"
 
             ${tools_dir}/grib_set -s paramId=167                   $temp1 $temp2

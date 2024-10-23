@@ -23,15 +23,15 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* N_;
-    const char* Ni_;
-    const char* di_;
-    const char* latfirst_;
-    const char* lonfirst_;
-    const char* latlast_;
-    const char* lonlast_;
-    const char* plpresent_;
-    const char* pl_;
-    const char* basic_angle_;
-    const char* subdivision_;
+    const char* N_ = nullptr;
+    const char* Ni_ = nullptr;
+    const char* di_ = nullptr;
+    const char* latfirst_ = nullptr;
+    const char* lonfirst_ = nullptr;
+    const char* latlast_ = nullptr;
+    const char* lonlast_ = nullptr;
+    const char* plpresent_ = nullptr;
+    const char* pl_ = nullptr;
+    const char* basic_angle_ = nullptr;
+    const char* subdivision_ = nullptr;
 };

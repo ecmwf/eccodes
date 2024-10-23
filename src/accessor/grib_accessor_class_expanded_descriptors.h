@@ -41,15 +41,15 @@ public:
     bufr_descriptors_array* grib_accessor_expanded_descriptors_get_expanded(int* err);
 
 private:
-    const char* unexpandedDescriptors_;
-    const char* sequence_;
-    const char* expandedName_;
-    const char* tablesAccessorName_;
-    bufr_descriptors_array* expanded_;
-    int rank_;
-    grib_accessor_expanded_descriptors_t* expandedAccessor_;
-    int do_expand_;
-    grib_accessor* tablesAccessor_;
+    const char* unexpandedDescriptors_ = nullptr;
+    const char* sequence_ = nullptr;
+    const char* expandedName_ = nullptr;
+    const char* tablesAccessorName_ = nullptr;
+    bufr_descriptors_array* expanded_ = nullptr;
+    int rank_ = 0;
+    grib_accessor_expanded_descriptors_t* expandedAccessor_ = nullptr;
+    int do_expand_ = 0;
+    grib_accessor* tablesAccessor_ = nullptr;
 
     int expand();
     void __expand(bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded, change_coding_params* ccp, int* err);

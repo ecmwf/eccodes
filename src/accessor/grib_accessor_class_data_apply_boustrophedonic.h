@@ -29,11 +29,11 @@ public:
     int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) override;
 
 private:
-    const char* values_;
-    const char* numberOfRows_;
-    const char* numberOfColumns_;
-    const char* numberOfPoints_;
-    const char* pl_;
+    const char* values_ = nullptr;
+    const char* numberOfRows_ = nullptr;
+    const char* numberOfColumns_ = nullptr;
+    const char* numberOfPoints_ = nullptr;
+    const char* pl_ = nullptr;
 
     template <typename T> int unpack(T* val, size_t* len);
 };

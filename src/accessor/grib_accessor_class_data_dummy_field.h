@@ -24,7 +24,7 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* missing_value_;
-    const char* numberOfPoints_;
-    const char* bitmap_;
+    const char* missing_value_ = nullptr;
+    const char* numberOfPoints_ = nullptr;
+    const char* bitmap_ = nullptr;
 };

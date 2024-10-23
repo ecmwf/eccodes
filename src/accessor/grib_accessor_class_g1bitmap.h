@@ -24,5 +24,5 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* unusedBits_;
+    const char* unusedBits_ = nullptr;
 };
