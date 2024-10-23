@@ -23,6 +23,5 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    /* Members defined in cf_var_name */
     const char* defaultKey_ = nullptr;
 };
