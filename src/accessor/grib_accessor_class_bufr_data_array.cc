@@ -2845,6 +2845,7 @@ int grib_accessor_bufr_data_array_t::process_elements(int flag, long onlySubset,
         }
         else {
             if (elementsDescriptorsIndex_ == NULL) {
+                grib_buffer_delete(c, buffer);
                 return GRIB_ENCODING_ERROR; /* See ECC-359 */
             }
             elementsDescriptorsIndex = elementsDescriptorsIndex_->v[iss];
