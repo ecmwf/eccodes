@@ -1027,6 +1027,7 @@ void* grib_context_buffer_malloc_clear(const grib_context* c, size_t size)
 
 void grib_context_set_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f, grib_realloc_proc r)
 {
+    fprintf(stderr, "Warning: The %s function is deprecated and will be removed later.\n", __func__);
     c->free_mem    = f;
     c->alloc_mem   = m;
     c->realloc_mem = r;
@@ -1034,12 +1035,14 @@ void grib_context_set_memory_proc(grib_context* c, grib_malloc_proc m, grib_free
 
 void grib_context_set_persistent_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f)
 {
+    fprintf(stderr, "Warning: The %s function is deprecated and will be removed later.\n", __func__);
     c->free_persistent_mem  = f;
     c->alloc_persistent_mem = m;
 }
 
 void grib_context_set_buffer_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f, grib_realloc_proc r)
 {
+    fprintf(stderr, "Warning: The %s function is deprecated and will be removed later.\n", __func__);
     c->free_buffer_mem    = f;
     c->alloc_buffer_mem   = m;
     c->realloc_buffer_mem = r;

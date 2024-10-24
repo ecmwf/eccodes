@@ -1105,7 +1105,7 @@ typedef int (*grib_data_eof_proc)(const grib_context* c, void* stream);
 /**
  *  Get the static default context
  *
- * @return            the default context, NULL it the context is not available
+ * @return            the default context, NULL if the context is not available
  */
 grib_context* grib_context_get_default(void);
 
