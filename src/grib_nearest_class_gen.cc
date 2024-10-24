@@ -81,16 +81,15 @@ static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
     self->radius     = grib_arguments_get_name(h, args, self->cargs++);
     nearest->values  = NULL;
 
-    nearest->context = h->context;
-
     return ret;
 }
 
 static int destroy(grib_nearest* nearest)
 {
+    grib_context* c = grib_context_get_default();
     if (nearest->values)
-        grib_context_free(nearest->context, nearest->values);
-    grib_context_free(nearest->context, nearest);
+        grib_context_free(c, nearest->values);
+    grib_context_free(c, nearest);
     return GRIB_SUCCESS;
 }
 

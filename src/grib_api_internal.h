@@ -518,7 +518,6 @@ struct grib_nearest
 {
     grib_arguments* args; /**  args of iterator */
     grib_handle* h;
-    grib_context* context;
     double* values;
     size_t values_count;
     grib_nearest_class* cclass;
