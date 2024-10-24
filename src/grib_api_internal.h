@@ -458,7 +458,6 @@ struct grib_section
     size_t padding;
 };
 
-
 struct grib_nearest_class
 {
     grib_nearest_class** super;
@@ -516,7 +515,6 @@ struct grib_dumper_class
 
 struct grib_nearest
 {
-    grib_arguments* args; /**  args of iterator */
     grib_handle* h;
     double* values;
     size_t values_count;
