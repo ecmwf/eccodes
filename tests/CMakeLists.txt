@@ -276,6 +276,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1764
         grib_ecc-1792
         grib_ecc-1806
+        grib_ecc-1898
         grib_ecc-1907
         grib_ecc-1941
         grib_ecc-1942
