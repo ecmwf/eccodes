@@ -942,13 +942,11 @@ typedef struct grib_int_array grib_int_array;
 
 struct grib_where
 {
-    grib_context* context;
     char* string;
 };
 
 struct grib_column
 {
-    grib_context* context;
     int refcount;
     char* name;
     int type;
