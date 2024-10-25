@@ -723,29 +723,29 @@ grib_accessor* grib_accessor_class_gen_t::make_clone(grib_accessor* a, grib_sect
 
 
 
-grib_accessor_class_gen_t::~grib_accessor_class_gen_t(){};
+grib_accessor_class_gen_t::~grib_accessor_class_gen_t(){}
 
 void grib_accessor_class_gen_t::post_init(grib_accessor*){
     return;
-};
+}
 int grib_accessor_class_gen_t::pack_missing(grib_accessor*) {
     throw std::runtime_error("grib_accessor_class_gen_t::pack_missing not implemented");
-};
+}
 int grib_accessor_class_gen_t::pack_float(grib_accessor*, const float*, size_t* len) {
     throw std::runtime_error("grib_accessor_class_gen_t::pack_float not implemented");
-};
+}
 void grib_accessor_class_gen_t::resize(grib_accessor*, size_t) {
     throw std::runtime_error("grib_accessor_class_gen_t::resize not implemented");
-};
+}
 int grib_accessor_class_gen_t::nearest_smaller_value(grib_accessor*, double, double*) {
     throw std::runtime_error("grib_accessor_class_gen_t::nearest_smaller_value not implemented");
-};
+}
 int grib_accessor_class_gen_t::unpack_float_element(grib_accessor*, size_t, float*) {
     throw std::runtime_error("grib_accessor_class_gen_t::unpack_float_element not implemented");
-};
+}
 int unpack_element_set(grib_accessor*, const size_t*, size_t, double*) {
     throw std::runtime_error("grib_accessor_class_gen_t::unpack_element_set not implemented");
-};
+}
 int grib_accessor_class_gen_t::unpack_float_element_set(grib_accessor*, const size_t*, size_t, float*) {
     throw std::runtime_error("grib_accessor_class_gen_t::unpack_float_element_set not implemented");
-};
+}
