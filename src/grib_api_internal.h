@@ -829,6 +829,7 @@ struct grib_context
     int hash_array_count;
     grib_hash_array_value* hash_array[MAX_NUM_HASH_ARRAY];
     grib_trie* def_files;
+    grib_sarray* def_file_paths;
     grib_string_list* blocklist;
     int ieee_packing; /* 32 or 64 */
     int bufrdc_mode;

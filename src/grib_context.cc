@@ -23,8 +23,6 @@
  int feenableexcept(int excepts);
 #endif
 
-grib_string_list grib_file_not_found;
-
 /* Windows always has a colon in pathnames e.g. C:\temp\file. So instead we use semi-colons as delimiter */
 /* in order to have multiple definitions/samples directories */
 #ifdef ECCODES_ON_WINDOWS
@@ -362,6 +360,7 @@ static grib_context default_grib_context = {
     0,              /* hash_array_count           */
     {0,},           /* hash_array                 */
     0,              /* def_files                  */
+    0,              /* def_file_paths             */
     0,              /* blocklist                  */
     0,              /* ieee_packing               */
     0,              /* bufrdc_mode                */
@@ -556,6 +555,7 @@ grib_context* grib_context_get_default()
         default_grib_context.concepts_index = grib_itrie_new(&(default_grib_context), &(default_grib_context.concepts_count));
         default_grib_context.hash_array_index = grib_itrie_new(&(default_grib_context), &(default_grib_context.hash_array_count));
         default_grib_context.def_files = grib_trie_new(&(default_grib_context));
+        default_grib_context.def_file_paths = grib_sarray_new(50, 10);
         default_grib_context.lists = grib_trie_new(&(default_grib_context));
         default_grib_context.classes = grib_trie_new(&(default_grib_context));
         default_grib_context.bufrdc_mode = bufrdc_mode ? atoi(bufrdc_mode) : 0;
@@ -733,6 +733,7 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
                 Assert(fullpath);
                 fullpath->value = grib_context_strdup(c, full);
                 GRIB_MUTEX_LOCK(&mutex_c);
+                grib_sarray_push(c->def_file_paths, fullpath->value);
                 grib_trie_insert(c->def_files, basename, fullpath);
                 grib_context_log(c, GRIB_LOG_DEBUG, "Found def file %s", full);
                 GRIB_MUTEX_UNLOCK(&mutex_c);
@@ -746,7 +747,8 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
 
     GRIB_MUTEX_LOCK(&mutex_c);
     /* Store missing files so we don't check for them again and again */
-    grib_trie_insert(c->def_files, basename, &grib_file_not_found);
+    grib_string_list* grib_file_not_found = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
+    grib_trie_insert(c->def_files, basename, grib_file_not_found);
     /*grib_context_log(c,GRIB_LOG_ERROR,"Def file \"%s\" not found",basename);*/
     GRIB_MUTEX_UNLOCK(&mutex_c);
     full[0] = 0;
@@ -853,7 +855,11 @@ void grib_context_delete(grib_context* c)
         c = grib_context_get_default();
 
     grib_hash_keys_delete(c->keys);
-    /* grib_trie_delete(c->def_files);  TODO:masn */
+
+    grib_sarray_delete_content(c->def_file_paths);
+    grib_sarray_delete(c->def_file_paths);
+    c->def_file_paths = 0;
+    grib_trie_delete(c->def_files);
 
     grib_context_reset(c);
 
