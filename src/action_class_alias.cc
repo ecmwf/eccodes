@@ -137,6 +137,8 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
         if (x->name_space_ == NULL)
             x->name_space_ = act->name_space;
 
+        // TODO(maee): Make sure that the accessor is added to the trie
+
         grib_context_log(p->h->context, GRIB_LOG_DEBUG, "alias: add only namespace: %s.%s",
                          act->name_space, act->name);
         i = 0;
@@ -177,6 +179,13 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
                 grib_context_log(p->h->context, GRIB_LOG_DEBUG, "alias %s.%s already defined for %s. Deleting old alias",
                                  act->name_space, act->name, y->name_);
                 /* printf("[%s %s]\n",y->all_names_[i], y->all_name_spaces_[i]); */
+
+                // ECC-1898: Remove accessor from cache
+                grib_handle* hand = grib_handle_of_accessor(y);
+                if (hand->use_trie && y->all_name_spaces_[i] != NULL && strcmp(y->name_, act->name) != 0) {
+                    int id = grib_hash_keys_get_id(hand->context->keys, act->name);
+                    hand->accessors[id] = NULL;
+                }
 
                 while (i < MAX_ACCESSOR_NAMES - 1) {
                     y->all_names_[i]       = y->all_names_[i + 1];

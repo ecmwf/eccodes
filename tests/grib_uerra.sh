@@ -98,5 +98,16 @@ $grib2_sample $temp1
 grib_check_key_equals $temp1 'marsExpver,mars.expver' '0078 0078'
 
 
+# Stream 'dame'
+${tools_dir}/grib_set -s productionStatusOfProcessedData=10 $grib2_sample $temp1
+grib_check_key_equals $temp1 'mars.time,mars.step' '1200 0'
+
+${tools_dir}/grib_set -s \
+ productionStatusOfProcessedData=10,productDefinitionTemplateNumber=8,outerLoopTypeOfTimeIncrement=1,outerLoopLengthOfTimeRange=21 \
+ $grib2_sample $temp1
+grib_check_key_equals $temp1 'mars.stream' 'dame'
+result=$(${tools_dir}/grib_get -fp mars.time,mars.step $temp1)
+[ "$result" = "not_found not_found" ]
+
 # Clean up
 rm -f $temp1 $temp2 $tempSample
