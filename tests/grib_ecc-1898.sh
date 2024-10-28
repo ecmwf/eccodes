@@ -28,14 +28,11 @@ grep -q '288-288 g2level level = 1000 \[vertical.level\]' $tempOut
 $tools_dir/grib_dump -p levelist -Da $tempGrib 2> $tempOut
 grep -q 'levelist: Key/value not found' $tempOut
 
-set +e
-$tools_dir/grib_get -p levelist $tempGrib 2> $tempOut
-set -e
-grep -q 'levelist (Key/value not found)' $tempOut
+result=$($tools_dir/grib_get -fp levelist $tempGrib)
+[ "$result" = "not_found" ]
 
-set +e
-$tools_dir/grib_get -p mars.levelist $tempGrib 2> $tempOut
-set -e
-grep -q 'mars.levelist (Key/value not found)' $tempOut
+result=$($tools_dir/grib_get -fp mars.levelist $tempGrib)
+[ "$result" = "not_found" ]
 
+# Clean up
 rm -f $tempGrib $tempOut
