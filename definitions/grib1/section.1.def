@@ -335,6 +335,7 @@ meta md5Product md5(offsetSection1,section1Length,gridDefinition,section1Flags,d
 # ECC-1806
 concept_nofail paramIdForConversion(zero, "paramIdForConversion.def", conceptsDir2, conceptsDir1) : long_type,read_only;
 
+# ECC-1954
 if (productDefinitionTemplateNumber == 0 && defined(perturbationNumber) && numberOfForecastsInEnsemble > 0) {
   alias productDefinitionTemplateNumber = one; # ensemble instant
 }

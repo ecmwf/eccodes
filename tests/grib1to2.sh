@@ -11,6 +11,7 @@
 . ./include.ctest.sh
 
 REDIRECT=/dev/null
+label="grib1to2_test"
 
 files="constant_field\
  reduced_gaussian_pressure_level_constant \
@@ -28,6 +29,8 @@ files="constant_field\
  regular_gaussian_surface \
  spherical_pressure_level \
  spherical_model_level "
+
+tempLog=temp.$label.log
 
 for f in `echo $files`
 do
@@ -53,7 +56,7 @@ done
 echo "ECC-457,ECC-1298 ECMWF total precipitation..."
 # ---------------------------------------------------
 input=${data_dir}/tp_ecmwf.grib
-output=temp.grib1to2.grib
+output=temp.$label.grib
 ${tools_dir}/grib_set -s edition=2 $input $output
 res=`${tools_dir}/grib_get -w count=1 -p edition,paramId,units $output`
 [ "$res" = "2 228 m" ]
@@ -93,8 +96,8 @@ grib_check_key_equals $output    shapeOfTheEarth 0
 
 echo "ECC-1329: Cannot convert runoff (paramId=205)"
 # --------------------------------------------------------
-temp1="temp1.grib1to2.grib1"
-temp2="temp2.grib1to2.grib2"
+temp1="temp1.$label.grib1"
+temp2="temp2.$label.grib2"
 ${tools_dir}/grib_set -s paramId=205,P1=240,marsType=fc $sample_g1 $temp1
 ${tools_dir}/grib_set -s edition=2 $temp1 $temp2
 grib_check_key_equals $temp2 discipline,stepType,shortName,paramId '2 accum ro 205'
@@ -111,10 +114,20 @@ for sn in e lsp pev sro uvb; do
     ${tools_dir}/grib_compare -e -b param $temp1 $temp2
 done
 
+
+echo "ECC-1954: preserve ensemble product template..."
+# --------------------------------------------------------
+${tools_dir}/grib_set -s \
+  indicatorOfParameter=49,P2=1,timeRangeIndicator=2,localDefinitionNumber=30,perturbationNumber=1,numberOfForecastsInEnsemble=51 \
+  $sample_g1 $temp1
+${tools_dir}/grib_set -s edition=2 $temp1 $temp2
+grib_check_key_equals $temp2 productDefinitionTemplateNumber,perturbationNumber '11 1'
+
+
 # Turn on (brief) DEBUGGING messages
 sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
-output=temp.grib1to2.grib
-ECCODES_DEBUG=-1 ${tools_dir}/grib_set -s edition=2 $sample_g1 $output
+output=temp.$label.grib
+ECCODES_DEBUG=-1 ${tools_dir}/grib_set -s edition=2 $sample_g1 $output > $tempLog 2>&1
 
 # -G option
 sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
@@ -124,3 +137,4 @@ ${tools_dir}/grib_set -G -s edition=2 $sample_g1 $temp2
 # Clean up
 rm -f $output
 rm -f $temp1 $temp2
+rm -f $tempLog
