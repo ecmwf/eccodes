@@ -486,6 +486,7 @@ void grib_file_close(const char* filename, int force, int* err);
 void grib_file_close_all(int* err);
 grib_file* grib_get_file(const char* filename, int* err);
 void grib_file_delete(grib_file* file);
+void grib_file_pool_print(const char* title, FILE* out);
 
 /* grib_geography.cc */
 int grib_get_gaussian_latitudes(long trunc, double* lats);
