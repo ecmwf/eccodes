@@ -1,9 +1,4 @@
 # DestinE MARS On-Demand ExtremesDT keywords
 
-# byte[4] centroid : dump ;
-# alias mars.centroid = centroid;
-
-transient centroid = unknown;
+ascii[8] centroid = "unknown" : dump ;
 alias mars.centroid = centroid;
-
-
