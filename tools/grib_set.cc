@@ -44,7 +44,7 @@ grib_option grib_options[] = {
 };
 
 const char* tool_description =
-    "Sets key/value pairs in the input GRIB file and writes"
+    "Sets key/value pairs in the input GRIB file(s) and writes"
     "\n\teach message to the output_grib_file."
     "\n\tIt fails when an error occurs (e.g. key not found).";
 const char* tool_name       = "grib_set";

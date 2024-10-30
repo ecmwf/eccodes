@@ -10,11 +10,11 @@
 
 #include "grib_accessor_class_constant.h"
 
-grib_accessor_class_constant_t _grib_accessor_class_constant{"constant"};
-grib_accessor_class* grib_accessor_class_constant = &_grib_accessor_class_constant;
+grib_accessor_constant_t _grib_accessor_constant{};
+grib_accessor* grib_accessor_constant = &_grib_accessor_constant;
 
-void grib_accessor_class_constant_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+void grib_accessor_constant_t::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_class_variable_t::init(a, len, arg);
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    grib_accessor_variable_t::init(len, arg);
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }

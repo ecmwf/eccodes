@@ -9,6 +9,8 @@
  */
 
 #include "grib_api_internal.h"
+#include <cstdio>
+
 #define GRIB_MAX_OPENED_FILES 200
 
 #if GRIB_PTHREADS
@@ -287,8 +289,8 @@ void grib_file_pool_delete_file(grib_file* file)
 
 void grib_file_close(const char* filename, int force, int* err)
 {
-    grib_file* file       = NULL;
-    grib_context* context = grib_context_get_default();
+    grib_file* file = NULL;
+    const grib_context* context = grib_context_get_default();
 
     /* Performance: keep the files open to avoid opening and closing files when writing the output. */
     /* So only call fclose() when too many files are open. */
@@ -423,15 +425,22 @@ void grib_file_delete(grib_file* file)
     //    }
     //}
 
-    if (file->name)
-        free(file->name);
-    if (file->mode)
-        free(file->mode);
-
-    if (file->buffer) {
-        free(file->buffer);
-    }
+    free(file->name); file->name = 0;
+    free(file->mode); file->mode = 0;
+    free(file->buffer); file->buffer = 0;
     grib_context_free(file->context, file);
     /* file = NULL; */
     GRIB_MUTEX_UNLOCK(&mutex1);
+}
+
+void grib_file_pool_print(const char* title, FILE* out)
+{
+    int i = 0;
+    grib_file* file = file_pool.first;
+    printf("%s: size=%zu, num_opened_files=%d\n", title, file_pool.size, file_pool.number_of_opened_files);
+    while (file) {
+        printf("%s:\tfile_pool entry %d = %s\n", title, i++, file->name);
+        file = file->next;
+    }
+    printf("\n");
 }

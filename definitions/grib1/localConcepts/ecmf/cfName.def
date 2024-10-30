@@ -284,62 +284,62 @@
 	 table2Version = 180 ;
 	 indicatorOfParameter = 144 ;
 	}
-#Boundary layer dissipation
+#Time-integrated boundary layer dissipation
 'kinetic_energy_dissipation_in_atmosphere_boundary_layer' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 145 ;
 	}
-#Boundary layer dissipation
+#Time-integrated boundary layer dissipation
 'kinetic_energy_dissipation_in_atmosphere_boundary_layer' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 145 ;
 	}
-#Surface sensible heat flux
+#Time-integrated surface sensible heat net flux
 'surface_upward_sensible_heat_flux' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface sensible heat flux
+#Time-integrated surface sensible heat net flux
 'surface_upward_sensible_heat_flux' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface sensible heat flux
+#Time-integrated surface sensible heat net flux
 'surface_upward_sensible_heat_flux' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface sensible heat flux
+#Time-integrated surface sensible heat net flux
 'surface_upward_sensible_heat_flux' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface sensible heat flux
+#Time-integrated surface sensible heat net flux
 'surface_upward_sensible_heat_flux' = {
 	 table2Version = 190 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface latent heat flux
+#Time-integrated surface latent heat net flux
 'surface_upward_latent_heat_flux' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Surface latent heat flux
+#Time-integrated surface latent heat net flux
 'surface_upward_latent_heat_flux' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Surface latent heat flux
+#Time-integrated surface latent heat net flux
 'surface_upward_latent_heat_flux' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Surface latent heat flux
+#Time-integrated surface latent heat net flux
 'surface_upward_latent_heat_flux' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Surface latent heat flux
+#Time-integrated surface latent heat net flux
 'surface_upward_latent_heat_flux' = {
 	 table2Version = 190 ;
 	 indicatorOfParameter = 147 ;

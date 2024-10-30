@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,61 +10,59 @@
 
 #include "grib_accessor_class_validity_date.h"
 
-grib_accessor_class_validity_date_t _grib_accessor_class_validity_date{ "validity_date" };
-grib_accessor_class* grib_accessor_class_validity_date = &_grib_accessor_class_validity_date;
+grib_accessor_validity_date_t _grib_accessor_validity_date{};
+grib_accessor* grib_accessor_validity_date = &_grib_accessor_validity_date;
 
-void grib_accessor_class_validity_date_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_validity_date_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_long_t::init(a, l, c);
-    grib_accessor_validity_date_t* self = (grib_accessor_validity_date_t*)a;
-    grib_handle* hand                   = grib_handle_of_accessor(a);
-    int n                               = 0;
+    grib_accessor_long_t::init(l, c);
+    grib_handle* hand = grib_handle_of_accessor(this);
+    int n             = 0;
 
-    self->date      = grib_arguments_get_name(hand, c, n++);
-    self->time      = grib_arguments_get_name(hand, c, n++);
-    self->step      = grib_arguments_get_name(hand, c, n++);
-    self->stepUnits = grib_arguments_get_name(hand, c, n++);
-    self->year      = grib_arguments_get_name(hand, c, n++);
-    self->month     = grib_arguments_get_name(hand, c, n++);
-    self->day       = grib_arguments_get_name(hand, c, n++);
+    date_      = grib_arguments_get_name(hand, c, n++);
+    time_      = grib_arguments_get_name(hand, c, n++);
+    step_      = grib_arguments_get_name(hand, c, n++);
+    stepUnits_ = grib_arguments_get_name(hand, c, n++);
+    year_      = grib_arguments_get_name(hand, c, n++);
+    month_     = grib_arguments_get_name(hand, c, n++);
+    day_       = grib_arguments_get_name(hand, c, n++);
 
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_validity_date_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_validity_date_t::unpack_long(long* val, size_t* len)
 {
-    grib_accessor_validity_date_t* self = (grib_accessor_validity_date_t*)a;
-    grib_handle* hand                   = grib_handle_of_accessor(a);
-    int ret                             = 0;
-    long date                           = 0;
-    long time                           = 0;
-    long step                           = 0;
-    long stepUnits                      = 0;
+    grib_handle* hand = grib_handle_of_accessor(this);
+    int ret           = 0;
+    long date         = 0;
+    long time         = 0;
+    long step         = 0;
+    long stepUnits    = 0;
     long hours = 0, minutes = 0, step_mins = 0, tmp, tmp_hrs;
 
-    if (self->year) {
+    if (year_) {
         long year, month, day;
-        if ((ret = grib_get_long_internal(hand, self->year, &year)) != GRIB_SUCCESS)
+        if ((ret = grib_get_long_internal(hand, year_, &year)) != GRIB_SUCCESS)
             return ret;
-        if ((ret = grib_get_long_internal(hand, self->month, &month)) != GRIB_SUCCESS)
+        if ((ret = grib_get_long_internal(hand, month_, &month)) != GRIB_SUCCESS)
             return ret;
-        if ((ret = grib_get_long_internal(hand, self->day, &day)) != GRIB_SUCCESS)
+        if ((ret = grib_get_long_internal(hand, day_, &day)) != GRIB_SUCCESS)
             return ret;
         *val = year * 10000 + month * 100 + day;
         return GRIB_SUCCESS;
     }
-    if ((ret = grib_get_long_internal(hand, self->date, &date)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, date_, &date)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(hand, self->time, &time)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, time_, &time)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long(hand, self->step, &step)) != GRIB_SUCCESS) {
+    if ((ret = grib_get_long(hand, step_, &step)) != GRIB_SUCCESS) {
         if ((ret = grib_get_long_internal(hand, "endStep", &step)) != GRIB_SUCCESS) {
             return ret; /* See ECC-817 */
         }
     }
 
-    if (self->stepUnits) {
-        if ((ret = grib_get_long_internal(hand, self->stepUnits, &stepUnits)) != GRIB_SUCCESS)
+    if (stepUnits_) {
+        if ((ret = grib_get_long_internal(hand, stepUnits_, &stepUnits)) != GRIB_SUCCESS)
             return ret;
         step_mins = convert_to_minutes(step, stepUnits);
     }

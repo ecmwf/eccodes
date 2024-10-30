@@ -8,9 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/***************************************************************************
- * Enrico Fucile                                                           *
- ***************************************************************************/
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -56,20 +53,17 @@ typedef struct grib_action_when {
 
 
 static grib_action_class _grib_action_class_when = {
-    0,                              /* super                     */
-    "action_class_when",                              /* name                      */
-    sizeof(grib_action_when),            /* size                      */
-    0,                                   /* inited */
+    0,                              /* super */
+    "action_class_when",                 /* name */
+    sizeof(grib_action_when),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     &destroy,                            /* destroy */
-
-    &dump,                               /* dump                      */
-    0,                               /* xref                      */
-
-    &create_accessor,             /* create_accessor*/
-
-    &notify_change,                            /* notify_change */
+    &dump,                               /* dump */
+    0,                               /* xref */
+    &create_accessor,                    /* create_accessor */
+    &notify_change,                      /* notify_change */
     0,                            /* reparse */
     0,                            /* execute */
 };
@@ -205,8 +199,8 @@ static int notify_change(grib_action* a, grib_accessor* observer, grib_accessor*
     if (hand->context->debug > 0) {
         grib_context_log(hand->context, GRIB_LOG_DEBUG,
                 "------------- SECTION action %s is triggered by [%s] (%s)",
-                a->name, observed->name, a->debug_info ? a->debug_info : "no debug info");
-        grib_expression_print(observed->context, self->expression, 0, stderr);
+                a->name, observed->name_, a->debug_info ? a->debug_info : "no debug info");
+        grib_expression_print(observed->context_, self->expression, 0, stderr);
         fprintf(stderr, "\n");
     }
 

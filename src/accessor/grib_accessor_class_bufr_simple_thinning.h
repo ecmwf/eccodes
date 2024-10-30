@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,21 +15,20 @@
 class grib_accessor_bufr_simple_thinning_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in bufr_simple_thinning */
-    const char* doExtractSubsets;
-    const char* numberOfSubsets;
-    const char* extractSubsetList;
-    const char* simpleThinningStart;
-    const char* simpleThinningMissingRadius;
-    const char* simpleThinningSkip;
-};
-
-class grib_accessor_class_bufr_simple_thinning_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_bufr_simple_thinning_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_bufr_simple_thinning_t() :
+        grib_accessor_gen_t() { class_name_ = "bufr_simple_thinning"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_bufr_simple_thinning_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    long get_native_type() override;
+    int pack_long(const long* val, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* doExtractSubsets_ = nullptr;
+    const char* numberOfSubsets_ = nullptr;
+    const char* extractSubsetList_ = nullptr;
+    const char* simpleThinningStart_ = nullptr;
+    const char* simpleThinningMissingRadius_ = nullptr;
+    const char* simpleThinningSkip_ = nullptr;
+
+    int apply_thinning();
 };

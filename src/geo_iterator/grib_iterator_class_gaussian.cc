@@ -7,109 +7,36 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
-/**************************************
- *  Enrico Fucile
- **************************************/
 
-#include "grib_api_internal.h"
-#include <cmath>
+#include "grib_iterator_class_gaussian.h"
 
-/*
-   This is used by make_class.pl
+eccodes::geo_iterator::Gaussian _grib_iterator_gaussian{};
+eccodes::geo_iterator::Iterator* grib_iterator_gaussian = &_grib_iterator_gaussian;
 
-   START_CLASS_DEF
-   CLASS      = iterator
-   SUPER      = grib_iterator_class_regular
-   IMPLEMENTS = init
-   END_CLASS_DEF
-
- */
-
-/* START_CLASS_IMP */
-
-/*
-
-Don't edit anything between START_CLASS_IMP and END_CLASS_IMP
-Instead edit values between START_CLASS_DEF and END_CLASS_DEF
-or edit "iterator.class" and rerun ./make_class.pl
-
-*/
-
-
-static void init_class              (grib_iterator_class*);
-
-static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
-
-
-typedef struct grib_iterator_gaussian{
-  grib_iterator it;
-    /* Members defined in gen */
-    int carg;
-    const char* missingValue;
-    /* Members defined in regular */
-    double   *las;
-    double   *los;
-    long      Ni;
-    long      Nj;
-    long iScansNegatively;
-    long isRotated;
-    double angleOfRotation;
-    double southPoleLat;
-    double southPoleLon;
-    long jPointsAreConsecutive;
-    long disableUnrotate;
-    /* Members defined in gaussian */
-} grib_iterator_gaussian;
-
-extern grib_iterator_class* grib_iterator_class_regular;
-
-static grib_iterator_class _grib_iterator_class_gaussian = {
-    &grib_iterator_class_regular,                    /* super                     */
-    "gaussian",                    /* name                      */
-    sizeof(grib_iterator_gaussian),/* size of instance          */
-    0,                           /* inited */
-    &init_class,                 /* init_class */
-    &init,                     /* constructor               */
-    0,                  /* destructor                */
-    0,                     /* Next Value                */
-    0,                 /*  Previous Value           */
-    0,                    /* Reset the counter         */
-    0,                 /* has next values           */
-};
-
-grib_iterator_class* grib_iterator_class_gaussian = &_grib_iterator_class_gaussian;
-
-
-static void init_class(grib_iterator_class* c)
-{
-    c->next    =    (*(c->super))->next;
-    c->previous    =    (*(c->super))->previous;
-    c->reset    =    (*(c->super))->reset;
-    c->has_next    =    (*(c->super))->has_next;
-}
-/* END_CLASS_IMP */
+namespace eccodes::geo_iterator {
 
 static void binary_search_gaussian_latitudes(const double xx[], const unsigned long n, double x, long* j);
 
-static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
+int Gaussian::init(grib_handle* h, grib_arguments* args)
 {
-    grib_iterator_gaussian* self = (grib_iterator_gaussian*)i;
+    int ret = GRIB_SUCCESS;
+    if ((ret = Regular::init(h, args)) != GRIB_SUCCESS)
+        return ret;
 
     double* lats;
     double laf; /* latitude of first point in degrees */
     double lal; /* latitude of last point in degrees */
     long trunc; /* number of parallels between a pole and the equator */
-    long lai = 0;
+    long lai              = 0;
     long jScansPositively = 0;
-    int size = 0;
+    int size              = 0;
     double start;
     long istart = 0;
-    int ret = GRIB_SUCCESS;
 
-    const char* latofirst          = grib_arguments_get_name(h, args, self->carg++);
-    const char* latoflast          = grib_arguments_get_name(h, args, self->carg++);
-    const char* numtrunc           = grib_arguments_get_name(h, args, self->carg++);
-    const char* s_jScansPositively = grib_arguments_get_name(h, args, self->carg++);
+    const char* latofirst          = grib_arguments_get_name(h, args, carg_++);
+    const char* latoflast          = grib_arguments_get_name(h, args, carg_++);
+    const char* numtrunc           = grib_arguments_get_name(h, args, carg_++);
+    const char* s_jScansPositively = grib_arguments_get_name(h, args, carg_++);
 
     if ((ret = grib_get_double_internal(h, latofirst, &laf)))
         return ret;
@@ -140,22 +67,22 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
      }
      */
 
-    binary_search_gaussian_latitudes(lats, size-1, start, &istart);
+    binary_search_gaussian_latitudes(lats, size - 1, start, &istart);
     if (istart < 0 || istart >= size) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "Failed to find index for latitude=%g", start);
         return GRIB_GEOCALCULUS_PROBLEM;
     }
 
     if (jScansPositively) {
-        for (lai = 0; lai < self->Nj; lai++) {
+        for (lai = 0; lai < Nj_; lai++) {
             DEBUG_ASSERT(istart >= 0);
-            self->las[lai] = lats[istart--];
-            if (istart<0) istart=size-1;
+            lats_[lai] = lats[istart--];
+            if (istart < 0) istart = size - 1;
         }
     }
     else {
-        for (lai = 0; lai < self->Nj; lai++) {
-            self->las[lai] = lats[istart++];
+        for (lai = 0; lai < Nj_; lai++) {
+            lats_[lai] = lats[istart++];
             if (istart > size - 1)
                 istart = 0;
         }
@@ -170,7 +97,7 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
 /* Note: the argument 'n' is NOT the size of the 'xx' array but its LAST index i.e. size of xx - 1 */
 static void binary_search_gaussian_latitudes(const double array[], const unsigned long n, double x, long* j)
 {
-    unsigned long low = 0;
+    unsigned long low  = 0;
     unsigned long high = n;
     unsigned long mid;
     const int descending = (array[n] < array[0]);
@@ -219,3 +146,5 @@ static void binary_search_gaussian_latitudes(const double array[], const unsigne
 //     }
 //     *j = jl;
 // }
+
+}  // namespace eccodes::geo_iterator

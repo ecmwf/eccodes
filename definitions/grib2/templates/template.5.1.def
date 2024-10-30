@@ -5,7 +5,7 @@
 # This template was not validated at the time of publication and should be used with caution
 transient template_is_experimental = 1 : hidden;
 
-include "grib2/template.5.packing.def"
+include "grib2/templates/template.5.packing.def"
 
 unsigned[1] matrixBitmapsPresent;
 # same as in edition 1

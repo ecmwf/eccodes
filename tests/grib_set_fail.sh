@@ -77,7 +77,7 @@ if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
     status=$?
     set -e
     [ $status -ne 0 ]
-    grep -q "Trying to encode value of 2147483648 but the allowable range is -2147483647 to 2147483647" $temp
+    grep -q "Trying to encode value of 2147483648 but the allowable range is -2147483648 to 2147483647" $temp
 
     set +e
     ${tools_dir}/grib_set -s forecastTime=-2147483650 $input $outfile 2>$temp

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,14 +15,9 @@
 class grib_accessor_uint32_little_endian_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in uint32_little_endian */
-};
-
-class grib_accessor_class_uint32_little_endian_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_uint32_little_endian_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_uint32_little_endian_t() :
+        grib_accessor_gen_t() { class_name_ = "uint32_little_endian"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_uint32_little_endian_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
+    long get_native_type() override;
+    int unpack_long(long* val, size_t* len) override;
 };

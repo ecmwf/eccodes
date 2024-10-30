@@ -8,101 +8,36 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
+#include "grib_iterator_class_lambert_conformal.h"
 #include <cmath>
 
-/*
-   This is used by make_class.pl
+eccodes::geo_iterator::LambertConformal _grib_iterator_lambert_conformal{};
+eccodes::geo_iterator::Iterator* grib_iterator_lambert_conformal = &_grib_iterator_lambert_conformal;
 
-   START_CLASS_DEF
-   CLASS      = iterator
-   SUPER      = grib_iterator_class_gen
-   IMPLEMENTS = destroy
-   IMPLEMENTS = init;next
-   MEMBERS     =   double *lats
-   MEMBERS     =   double *lons
-   MEMBERS     =   long Nj
-   END_CLASS_DEF
-*/
+namespace eccodes::geo_iterator {
 
-/* START_CLASS_IMP */
-
-/*
-
-Don't edit anything between START_CLASS_IMP and END_CLASS_IMP
-Instead edit values between START_CLASS_DEF and END_CLASS_DEF
-or edit "iterator.class" and rerun ./make_class.pl
-
-*/
-
-
-static void init_class              (grib_iterator_class*);
-
-static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
-static int next               (grib_iterator* i, double *lat, double *lon, double *val);
-static int destroy            (grib_iterator* i);
-
-
-typedef struct grib_iterator_lambert_conformal{
-  grib_iterator it;
-    /* Members defined in gen */
-    int carg;
-    const char* missingValue;
-    /* Members defined in lambert_conformal */
-    double *lats;
-    double *lons;
-    long Nj;
-} grib_iterator_lambert_conformal;
-
-extern grib_iterator_class* grib_iterator_class_gen;
-
-static grib_iterator_class _grib_iterator_class_lambert_conformal = {
-    &grib_iterator_class_gen,                    /* super                     */
-    "lambert_conformal",                    /* name                      */
-    sizeof(grib_iterator_lambert_conformal),/* size of instance          */
-    0,                           /* inited */
-    &init_class,                 /* init_class */
-    &init,                     /* constructor               */
-    &destroy,                  /* destructor                */
-    &next,                     /* Next Value                */
-    0,                 /*  Previous Value           */
-    0,                    /* Reset the counter         */
-    0,                 /* has next values           */
-};
-
-grib_iterator_class* grib_iterator_class_lambert_conformal = &_grib_iterator_class_lambert_conformal;
-
-
-static void init_class(grib_iterator_class* c)
-{
-    c->previous    =    (*(c->super))->previous;
-    c->reset    =    (*(c->super))->reset;
-    c->has_next    =    (*(c->super))->has_next;
-}
-/* END_CLASS_IMP */
-
-#define ITER "Lambert conformal Geoiterator"
+#define ITER    "Lambert conformal Geoiterator"
 #define EPSILON 1.0e-10
 
 #ifndef M_PI
-#define M_PI 3.14159265358979323846 // Whole pie
+    #define M_PI 3.14159265358979323846  // Whole pie
 #endif
 
 #ifndef M_PI_2
-#define M_PI_2 1.57079632679489661923 // Half a pie
+    #define M_PI_2 1.57079632679489661923  // Half a pie
 #endif
 
 #ifndef M_PI_4
-#define M_PI_4 0.78539816339744830962 // Quarter of a pie
+    #define M_PI_4 0.78539816339744830962  // Quarter of a pie
 #endif
 
-#define RAD2DEG 57.29577951308232087684 // 180 over pi
-#define DEG2RAD 0.01745329251994329576  // pi over 180
+#define RAD2DEG 57.29577951308232087684  // 180 over pi
+#define DEG2RAD 0.01745329251994329576   // pi over 180
 
 // Adjust longitude (in radians) to range -180 to 180
 static double adjust_lon_radians(double lon)
 {
-    if (lon > M_PI)  lon -= 2 * M_PI;
+    if (lon > M_PI) lon -= 2 * M_PI;
     if (lon < -M_PI) lon += 2 * M_PI;
     return lon;
 }
@@ -114,8 +49,8 @@ static double adjust_lon_radians(double lon)
 // calculate phi on the left side. Substitute the calculated phi) into the right side,
 // calculate a new phi, etc., until phi does not change significantly from the preceding trial value of phi
 static double compute_phi(
-    double eccent, // Spheroid eccentricity
-    double ts,     // Constant value t
+    double eccent,  // Spheroid eccentricity
+    double ts,      // Constant value t
     int* error)
 {
     double eccnth, phi, con, dphi, sinpi;
@@ -145,9 +80,9 @@ static double compute_m(double eccent, double sinphi, double cosphi)
 
 // Compute the constant small t for use in the forward computations
 static double compute_t(
-    double eccent, // Eccentricity of the spheroid
-    double phi,    // Latitude phi
-    double sinphi) // Sine of the latitude
+    double eccent,  // Eccentricity of the spheroid
+    double phi,     // Latitude phi
+    double sinphi)  // Sine of the latitude
 {
     double con = eccent * sinphi;
     double com = 0.5 * eccent;
@@ -162,25 +97,25 @@ static double calculate_eccentricity(double minor, double major)
 }
 
 static void xy2lonlat(double radius, double n, double f, double rho0_bare, double LoVInRadians,
-                    double x, double y,
-                    double* lonDeg, double* latDeg)
+                      double x, double y,
+                      double* lonDeg, double* latDeg)
 {
     DEBUG_ASSERT(radius > 0);
     DEBUG_ASSERT(n != 0.0);
     x /= radius;
     y /= radius;
-    y = rho0_bare - y;
+    y          = rho0_bare - y;
     double rho = hypot(x, y);
     if (rho != 0.0) {
         if (n < 0.0) {
             rho = -rho;
-            x = -x;
-            y = -y;
+            x   = -x;
+            y   = -y;
         }
-        double latRadians = 2. * atan(pow(f / rho, 1.0/n)) - M_PI_2;
+        double latRadians = 2. * atan(pow(f / rho, 1.0 / n)) - M_PI_2;
         double lonRadians = atan2(x, y) / n;
-        *lonDeg = (lonRadians + LoVInRadians) * RAD2DEG;
-        *latDeg = latRadians * RAD2DEG;
+        *lonDeg           = (lonRadians + LoVInRadians) * RAD2DEG;
+        *latDeg           = latRadians * RAD2DEG;
     }
     else {
         *lonDeg = 0.0;
@@ -188,29 +123,29 @@ static void xy2lonlat(double radius, double n, double f, double rho0_bare, doubl
     }
 }
 
-static int init_sphere(const grib_handle* h,
-                       grib_iterator_lambert_conformal* self,
-                       size_t nv, long nx, long ny,
-                       double LoVInDegrees,
-                       double Dx, double Dy, double radius,
-                       double latFirstInRadians, double lonFirstInRadians,
-                       double LoVInRadians, double Latin1InRadians, double Latin2InRadians,
-                       double LaDInRadians)
+int LambertConformal::init_sphere(const grib_handle* h,
+                                  size_t nv, long nx, long ny,
+                                  double LoVInDegrees,
+                                  double Dx, double Dy, double radius,
+                                  double latFirstInRadians, double lonFirstInRadians,
+                                  double LoVInRadians, double Latin1InRadians, double Latin2InRadians,
+                                  double LaDInRadians)
 {
     double n, x, y;
 
     if (fabs(Latin1InRadians - Latin2InRadians) < 1E-09) {
         n = sin(Latin1InRadians);
-    } else {
+    }
+    else {
         n = log(cos(Latin1InRadians) / cos(Latin2InRadians)) /
             log(tan(M_PI_4 + Latin2InRadians / 2.0) / tan(M_PI_4 + Latin1InRadians / 2.0));
     }
 
-    double f    = (cos(Latin1InRadians) * pow(tan(M_PI_4 + Latin1InRadians / 2.0), n)) / n;
-    double rho  = radius * f * pow(tan(M_PI_4 + latFirstInRadians / 2.0), -n);
+    double f         = (cos(Latin1InRadians) * pow(tan(M_PI_4 + Latin1InRadians / 2.0), n)) / n;
+    double rho       = radius * f * pow(tan(M_PI_4 + latFirstInRadians / 2.0), -n);
     double rho0_bare = f * pow(tan(M_PI_4 + LaDInRadians / 2.0), -n);
-    double rho0 = radius * rho0_bare; // scaled
-    double lonDiff = lonFirstInRadians - LoVInRadians;
+    double rho0      = radius * rho0_bare;  // scaled
+    double lonDiff   = lonFirstInRadians - LoVInRadians;
 
     // Adjust longitude to range -180 to 180
     if (lonDiff > M_PI)
@@ -225,13 +160,13 @@ static int init_sphere(const grib_handle* h,
     // Dy = jScansPositively == 1 ? Dy : -Dy;
 
     // Allocate latitude and longitude arrays
-    self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
-    if (!self->lats) {
+    lats_ = (double*)grib_context_malloc(h->context, nv * sizeof(double));
+    if (!lats_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
-    self->lons = (double*)grib_context_malloc(h->context, nv * sizeof(double));
-    if (!self->lats) {
+    lons_ = (double*)grib_context_malloc(h->context, nv * sizeof(double));
+    if (!lons_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
@@ -241,11 +176,11 @@ static int init_sphere(const grib_handle* h,
         y = y0 + j * Dy;
         for (long i = 0; i < nx; i++) {
             const long index = i + j * nx;
-            x = x0 + i * Dx;
+            x                = x0 + i * Dx;
             xy2lonlat(radius, n, f, rho0_bare, LoVInRadians, x, y, &lonDeg, &latDeg);
-            lonDeg = normalise_longitude_in_degrees(lonDeg);
-            self->lons[index] = lonDeg;
-            self->lats[index] = latDeg;
+            lonDeg       = normalise_longitude_in_degrees(lonDeg);
+            lons_[index] = lonDeg;
+            lats_[index] = latDeg;
         }
     }
 
@@ -269,8 +204,8 @@ static int init_sphere(const grib_handle* h,
             lonDeg = LoVInDegrees + (angle / n) * RAD2DEG;
             latDeg = (2.0 * atan(pow(radius * f / rho, 1.0 / n)) - M_PI_2) * RAD2DEG;
             lonDeg = normalise_longitude_in_degrees(lonDeg);
-            self->lons[index] = lonDeg;
-            self->lats[index] = latDeg;
+            lons_[index] = lonDeg;
+            lats_[index] = latDeg;
         }
     }
 #endif
@@ -278,32 +213,31 @@ static int init_sphere(const grib_handle* h,
 }
 
 // Oblate spheroid
-static int init_oblate(const grib_handle* h,
-                       grib_iterator_lambert_conformal* self,
-                       size_t nv, long nx, long ny,
-                       double LoVInDegrees,
-                       double Dx, double Dy,
-                       double earthMinorAxisInMetres, double earthMajorAxisInMetres,
-                       double latFirstInRadians, double lonFirstInRadians,
-                       double LoVInRadians, double Latin1InRadians, double Latin2InRadians,
-                       double LaDInRadians)
+int LambertConformal::init_oblate(const grib_handle* h,
+                                  size_t nv, long nx, long ny,
+                                  double LoVInDegrees,
+                                  double Dx, double Dy,
+                                  double earthMinorAxisInMetres, double earthMajorAxisInMetres,
+                                  double latFirstInRadians, double lonFirstInRadians,
+                                  double LoVInRadians, double Latin1InRadians, double Latin2InRadians,
+                                  double LaDInRadians)
 {
     int i, j, err = 0;
     double x0, y0, x, y, latRad, lonRad, latDeg, lonDeg, sinphi, ts, rh1, theta;
-    double false_easting;  // x offset in meters
-    double false_northing; // y offset in meters
+    double false_easting;   // x offset in meters
+    double false_northing;  // y offset in meters
 
-    double ns;     // ratio of angle between meridian
-    double F;      // flattening of ellipsoid
-    double rh;     // height above ellipsoid 
-    double sin_po; // sin value
-    double cos_po; // cos value
-    double con;    // temporary variable
-    double ms1;    // small m 1
-    double ms2;    // small m 2
-    double ts0;    // small t 0
-    double ts1;    // small t 1
-    double ts2;    // small t 2
+    double ns;      // ratio of angle between meridian
+    double F;       // flattening of ellipsoid
+    double rh;      // height above ellipsoid
+    double sin_po;  // sin value
+    double cos_po;  // cos value
+    double con;     // temporary variable
+    double ms1;     // small m 1
+    double ms2;     // small m 2
+    double ts0;     // small t 0
+    double ts1;     // small t 1
+    double ts2;     // small t 2
 
     double e = calculate_eccentricity(earthMinorAxisInMetres, earthMajorAxisInMetres);
 
@@ -322,10 +256,11 @@ static int init_oblate(const grib_handle* h,
 
     if (fabs(Latin1InRadians - Latin2InRadians) > EPSILON) {
         ns = log(ms1 / ms2) / log(ts1 / ts2);
-    } else {
+    }
+    else {
         ns = con;
     }
-    F = ms1 / (ns * pow(ts1, ns));
+    F  = ms1 / (ns * pow(ts1, ns));
     rh = earthMajorAxisInMetres * F * pow(ts0, ns);
 
     // Forward projection: convert lat,lon to x,y
@@ -334,7 +269,8 @@ static int init_oblate(const grib_handle* h,
         sinphi = sin(latFirstInRadians);
         ts     = compute_t(e, latFirstInRadians, sinphi);
         rh1    = earthMajorAxisInMetres * F * pow(ts, ns);
-    } else {
+    }
+    else {
         con = latFirstInRadians * ns;
         if (con <= 0) {
             grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Point cannot be projected: latFirstInRadians=%g", ITER, latFirstInRadians);
@@ -349,13 +285,13 @@ static int init_oblate(const grib_handle* h,
     y0    = -y0;
 
     // Allocate latitude and longitude arrays
-    self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
-    if (!self->lats) {
+    lats_ = (double*)grib_context_malloc(h->context, nv * sizeof(double));
+    if (!lats_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
-    self->lons = (double*)grib_context_malloc(h->context, nv * sizeof(double));
-    if (!self->lats) {
+    lons_ = (double*)grib_context_malloc(h->context, nv * sizeof(double));
+    if (!lons_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
@@ -370,8 +306,8 @@ static int init_oblate(const grib_handle* h,
             double _x, _y;
             x = i * Dx;
             // Inverse projection to convert from x,y to lat,lon
-            _x = x - false_easting;
-            _y = rh - y + false_northing;
+            _x  = x - false_easting;
+            _y  = rh - y + false_northing;
             rh1 = sqrt(_x * _x + _y * _y);
             con = 1.0;
             if (ns <= 0) {
@@ -388,54 +324,57 @@ static int init_oblate(const grib_handle* h,
                 if (err) {
                     grib_context_log(h->context, GRIB_LOG_ERROR,
                                      "%s: Failed to compute the latitude angle, phi2, for the inverse", ITER);
-                    grib_context_free(h->context, self->lats);
-                    grib_context_free(h->context, self->lons);
+                    grib_context_free(h->context, lats_);
+                    grib_context_free(h->context, lons_);
                     return err;
                 }
-            } else {
+            }
+            else {
                 latRad = -M_PI_2;
             }
             lonRad = adjust_lon_radians(theta / ns + LoVInRadians);
             if (i == 0 && j == 0) {
                 DEBUG_ASSERT(fabs(latFirstInRadians - latRad) <= EPSILON);
             }
-            latDeg = latRad * RAD2DEG;  // Convert to degrees
-            lonDeg = normalise_longitude_in_degrees(lonRad * RAD2DEG);
-            self->lons[index] = lonDeg;
-            self->lats[index] = latDeg;
+            latDeg       = latRad * RAD2DEG;  // Convert to degrees
+            lonDeg       = normalise_longitude_in_degrees(lonRad * RAD2DEG);
+            lons_[index] = lonDeg;
+            lats_[index] = latDeg;
         }
     }
     return GRIB_SUCCESS;
 }
 
-static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
+int LambertConformal::init(grib_handle* h, grib_arguments* args)
 {
-    int err = 0, is_oblate = 0;
+    int err = GRIB_SUCCESS;
+    if ((err = Gen::init(h, args)) != GRIB_SUCCESS)
+        return err;
+
+    int is_oblate = 0;
     long nx, ny, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning;
     double LoVInDegrees, LaDInDegrees, Latin1InDegrees, Latin2InDegrees, latFirstInDegrees,
         lonFirstInDegrees, Dx, Dy, radius = 0;
     double latFirstInRadians, lonFirstInRadians, LoVInRadians, Latin1InRadians, Latin2InRadians,
         LaDInRadians;
-    double earthMajorAxisInMetres=0, earthMinorAxisInMetres=0;
+    double earthMajorAxisInMetres = 0, earthMinorAxisInMetres = 0;
 
-    grib_iterator_lambert_conformal* self = (grib_iterator_lambert_conformal*)iter;
-
-    const char* sradius            = grib_arguments_get_name(h, args, self->carg++);
-    const char* snx                = grib_arguments_get_name(h, args, self->carg++);
-    const char* sny                = grib_arguments_get_name(h, args, self->carg++);
-    const char* sLoVInDegrees      = grib_arguments_get_name(h, args, self->carg++);
-    const char* sLaDInDegrees      = grib_arguments_get_name(h, args, self->carg++);
-    const char* sLatin1InDegrees   = grib_arguments_get_name(h, args, self->carg++);
-    const char* sLatin2InDegrees   = grib_arguments_get_name(h, args, self->carg++);
-    const char* slatFirstInDegrees = grib_arguments_get_name(h, args, self->carg++);
-    const char* slonFirstInDegrees = grib_arguments_get_name(h, args, self->carg++);
+    const char* sradius            = grib_arguments_get_name(h, args, carg_++);
+    const char* snx                = grib_arguments_get_name(h, args, carg_++);
+    const char* sny                = grib_arguments_get_name(h, args, carg_++);
+    const char* sLoVInDegrees      = grib_arguments_get_name(h, args, carg_++);
+    const char* sLaDInDegrees      = grib_arguments_get_name(h, args, carg_++);
+    const char* sLatin1InDegrees   = grib_arguments_get_name(h, args, carg_++);
+    const char* sLatin2InDegrees   = grib_arguments_get_name(h, args, carg_++);
+    const char* slatFirstInDegrees = grib_arguments_get_name(h, args, carg_++);
+    const char* slonFirstInDegrees = grib_arguments_get_name(h, args, carg_++);
     // Dx and Dy are in Metres
-    const char* sDx                     = grib_arguments_get_name(h, args, self->carg++);
-    const char* sDy                     = grib_arguments_get_name(h, args, self->carg++);
-    const char* siScansNegatively       = grib_arguments_get_name(h, args, self->carg++);
-    const char* sjScansPositively       = grib_arguments_get_name(h, args, self->carg++);
-    const char* sjPointsAreConsecutive  = grib_arguments_get_name(h, args, self->carg++);
-    const char* salternativeRowScanning = grib_arguments_get_name(h, args, self->carg++);
+    const char* sDx                     = grib_arguments_get_name(h, args, carg_++);
+    const char* sDy                     = grib_arguments_get_name(h, args, carg_++);
+    const char* siScansNegatively       = grib_arguments_get_name(h, args, carg_++);
+    const char* sjScansPositively       = grib_arguments_get_name(h, args, carg_++);
+    const char* sjPointsAreConsecutive  = grib_arguments_get_name(h, args, carg_++);
+    const char* salternativeRowScanning = grib_arguments_get_name(h, args, carg_++);
 
     if ((err = grib_get_long_internal(h, snx, &nx)) != GRIB_SUCCESS) return err;
     if ((err = grib_get_long_internal(h, sny, &ny)) != GRIB_SUCCESS) return err;
@@ -445,12 +384,13 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     if (is_oblate) {
         if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) return err;
         if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) return err;
-    } else {
+    }
+    else {
         if ((err = grib_get_double_internal(h, sradius, &radius)) != GRIB_SUCCESS) return err;
     }
 
-    if (iter->nv != nx * ny) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, iter->nv, nx, ny);
+    if (nv_ != nx * ny) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, nv_, nx, ny);
         return GRIB_WRONG_GRID;
     }
 
@@ -497,14 +437,15 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     LoVInRadians      = LoVInDegrees * DEG2RAD;
 
     if (is_oblate) {
-        err = init_oblate(h, self, iter->nv, nx, ny,
+        err = init_oblate(h, nv_, nx, ny,
                           LoVInDegrees,
                           Dx, Dy, earthMinorAxisInMetres, earthMajorAxisInMetres,
                           latFirstInRadians, lonFirstInRadians,
                           LoVInRadians, Latin1InRadians, Latin2InRadians,
                           LaDInRadians);
-    } else {
-        err = init_sphere(h, self, iter->nv, nx, ny,
+    }
+    else {
+        err = init_sphere(h, nv_, nx, ny,
                           LoVInDegrees,
                           Dx, Dy, radius,
                           latFirstInRadians, lonFirstInRadians,
@@ -512,37 +453,37 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     }
     if (err) return err;
 
-    iter->e = -1;
+    e_ = -1;
 
     // Apply the scanning mode flags which may require data array to be transformed
-    err = transform_iterator_data(h->context, iter->data,
+    err = transform_iterator_data(h->context, data_,
                                   iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning,
-                                  iter->nv, nx, ny);
+                                  nv_, nx, ny);
     return err;
 }
 
-static int next(grib_iterator* iter, double* lat, double* lon, double* val)
+int LambertConformal::next(double* lat, double* lon, double* val) const
 {
-    grib_iterator_lambert_conformal* self = (grib_iterator_lambert_conformal*)iter;
-
-    if ((long)iter->e >= (long)(iter->nv - 1))
+    if ((long)e_ >= (long)(nv_ - 1))
         return 0;
-    iter->e++;
+    e_++;
 
-    *lat = self->lats[iter->e];
-    *lon = self->lons[iter->e];
-    if (val && iter->data) {
-        *val = iter->data[iter->e];
+    *lat = lats_[e_];
+    *lon = lons_[e_];
+    if (val && data_) {
+        *val = data_[e_];
     }
     return 1;
 }
 
-static int destroy(grib_iterator* i)
+int LambertConformal::destroy()
 {
-    grib_iterator_lambert_conformal* self = (grib_iterator_lambert_conformal*)i;
-    const grib_context* c                 = i->h->context;
+    DEBUG_ASSERT(h_);
+    const grib_context* c = h_->context;
+    grib_context_free(c, lats_);
+    grib_context_free(c, lons_);
 
-    grib_context_free(c, self->lats);
-    grib_context_free(c, self->lons);
-    return GRIB_SUCCESS;
+    return Gen::destroy();
 }
+
+}  // namespace eccodes::geo_iterator

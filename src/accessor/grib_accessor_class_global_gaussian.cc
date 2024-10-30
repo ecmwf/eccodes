@@ -10,33 +10,30 @@
 
 #include "grib_accessor_class_global_gaussian.h"
 
-grib_accessor_class_global_gaussian_t _grib_accessor_class_global_gaussian{ "global_gaussian" };
-grib_accessor_class* grib_accessor_class_global_gaussian = &_grib_accessor_class_global_gaussian;
+grib_accessor_global_gaussian_t _grib_accessor_global_gaussian{};
+grib_accessor* grib_accessor_global_gaussian = &_grib_accessor_global_gaussian;
 
-
-void grib_accessor_class_global_gaussian_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_global_gaussian_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_long_t::init(a, l, c);
-    grib_accessor_global_gaussian_t* self = (grib_accessor_global_gaussian_t*)a;
-    int n = 0;
-    grib_handle* h = grib_handle_of_accessor(a);
+    grib_accessor_long_t::init(l, c);
+    int n          = 0;
+    grib_handle* h = grib_handle_of_accessor(this);
 
-    self->N           = grib_arguments_get_name(h, c, n++);
-    self->Ni          = grib_arguments_get_name(h, c, n++);
-    self->di          = grib_arguments_get_name(h, c, n++);
-    self->latfirst    = grib_arguments_get_name(h, c, n++);
-    self->lonfirst    = grib_arguments_get_name(h, c, n++);
-    self->latlast     = grib_arguments_get_name(h, c, n++);
-    self->lonlast     = grib_arguments_get_name(h, c, n++);
-    self->plpresent   = grib_arguments_get_name(h, c, n++);
-    self->pl          = grib_arguments_get_name(h, c, n++);
-    self->basic_angle = grib_arguments_get_name(h, c, n++);
-    self->subdivision = grib_arguments_get_name(h, c, n++);
+    N_           = grib_arguments_get_name(h, c, n++);
+    Ni_          = grib_arguments_get_name(h, c, n++);
+    di_          = grib_arguments_get_name(h, c, n++);
+    latfirst_    = grib_arguments_get_name(h, c, n++);
+    lonfirst_    = grib_arguments_get_name(h, c, n++);
+    latlast_     = grib_arguments_get_name(h, c, n++);
+    lonlast_     = grib_arguments_get_name(h, c, n++);
+    plpresent_   = grib_arguments_get_name(h, c, n++);
+    pl_          = grib_arguments_get_name(h, c, n++);
+    basic_angle_ = grib_arguments_get_name(h, c, n++);
+    subdivision_ = grib_arguments_get_name(h, c, n++);
 }
 
-int grib_accessor_class_global_gaussian_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_global_gaussian_t::unpack_long(long* val, size_t* len)
 {
-    grib_accessor_global_gaussian_t* self = (grib_accessor_global_gaussian_t*)a;
     int ret = GRIB_SUCCESS;
     long latfirst, latlast, lonfirst, lonlast, basic_angle, subdivision, N, Ni;
     double dlatfirst, dlatlast, dlonfirst, dlonlast;
@@ -44,15 +41,15 @@ int grib_accessor_class_global_gaussian_t::unpack_long(grib_accessor* a, long* v
     double* lats             = NULL;
     long factor = 1000, plpresent = 0;
     long max_pl     = 0; /* max. element of pl array */
-    grib_context* c = a->context;
-    grib_handle* h  = grib_handle_of_accessor(a);
+    grib_context* c = context_;
+    grib_handle* h  = grib_handle_of_accessor(this);
 
-    if (self->basic_angle && self->subdivision) {
+    if (basic_angle_ && subdivision_) {
         factor = 1000000;
-        if ((ret = grib_get_long_internal(h, self->basic_angle, &basic_angle)) != GRIB_SUCCESS)
+        if ((ret = grib_get_long_internal(h, basic_angle_, &basic_angle)) != GRIB_SUCCESS)
             return ret;
 
-        if ((ret = grib_get_long_internal(h, self->subdivision, &subdivision)) != GRIB_SUCCESS)
+        if ((ret = grib_get_long_internal(h, subdivision_, &subdivision)) != GRIB_SUCCESS)
             return ret;
 
         if ((basic_angle != 0 && basic_angle != GRIB_MISSING_LONG) ||
@@ -66,25 +63,25 @@ int grib_accessor_class_global_gaussian_t::unpack_long(grib_accessor* a, long* v
     }
     angular_precision = 1.0 / factor;
 
-    if ((ret = grib_get_long_internal(h, self->N, &N)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, N_, &N)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(h, self->Ni, &Ni)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, Ni_, &Ni)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(h, self->latfirst, &latfirst)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, latfirst_, &latfirst)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(h, self->lonfirst, &lonfirst)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, lonfirst_, &lonfirst)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(h, self->latlast, &latlast)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, latlast_, &latlast)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(h, self->lonlast, &lonlast)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, lonlast_, &lonlast)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(h, self->plpresent, &plpresent)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, plpresent_, &plpresent)) != GRIB_SUCCESS)
         return ret;
 
     dlatfirst = ((double)latfirst) / factor;
@@ -93,14 +90,14 @@ int grib_accessor_class_global_gaussian_t::unpack_long(grib_accessor* a, long* v
     dlonlast  = ((double)lonlast) / factor;
 
     if (N == 0) {
-        grib_context_log(c, GRIB_LOG_ERROR, "Key %s (unpack_long): N cannot be 0!", a->name);
+        grib_context_log(c, GRIB_LOG_ERROR, "Key %s (unpack_long): N cannot be 0!", name_);
         return GRIB_WRONG_GRID;
     }
 
     lats = (double*)grib_context_malloc(c, sizeof(double) * N * 2);
     if (!lats) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "Key %s (unpack_long): Memory allocation error: %zu bytes", a->name, sizeof(double) * N * 2);
+                         "Key %s (unpack_long): Memory allocation error: %zu bytes", name_, sizeof(double) * N * 2);
         return GRIB_OUT_OF_MEMORY;
     }
     if ((ret = grib_get_gaussian_latitudes(N, lats)) != GRIB_SUCCESS)
@@ -111,11 +108,11 @@ int grib_accessor_class_global_gaussian_t::unpack_long(grib_accessor* a, long* v
     if (plpresent) {
         size_t plsize = 0, i = 0;
         long* pl = NULL; /* pl array */
-        if ((ret = grib_get_size(h, self->pl, &plsize)) != GRIB_SUCCESS)
+        if ((ret = grib_get_size(h, pl_, &plsize)) != GRIB_SUCCESS)
             return ret;
         Assert(plsize);
         pl = (long*)grib_context_malloc_clear(c, sizeof(long) * plsize);
-        grib_get_long_array_internal(h, self->pl, pl, &plsize);
+        grib_get_long_array_internal(h, pl_, pl, &plsize);
 
         max_pl = pl[0];
         for (i = 1; i < plsize; i++) {
@@ -141,58 +138,57 @@ int grib_accessor_class_global_gaussian_t::unpack_long(grib_accessor* a, long* v
     return ret;
 }
 
-int grib_accessor_class_global_gaussian_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_global_gaussian_t::pack_long(const long* val, size_t* len)
 {
-    grib_accessor_global_gaussian_t* self = (grib_accessor_global_gaussian_t*)a;
-    int ret                               = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     long latfirst, latlast, lonfirst, lonlast, di, diold, basic_angle = 0, N, Ni;
     long factor;
     double* lats;
     double ddi, dlonlast;
     double dfactor, dNi;
     long plpresent  = 0;
-    grib_context* c = a->context;
-    grib_handle* h  = grib_handle_of_accessor(a);
+    grib_context* c = context_;
+    grib_handle* h  = grib_handle_of_accessor(this);
 
     if (*val == 0)
         return ret;
 
-    if (self->basic_angle) {
+    if (basic_angle_) {
         factor = 1000000;
-        if ((ret = grib_set_missing(h, self->subdivision)) != GRIB_SUCCESS)
+        if ((ret = grib_set_missing(h, subdivision_)) != GRIB_SUCCESS)
             return ret;
 
-        if ((ret = grib_set_long_internal(h, self->basic_angle, basic_angle)) != GRIB_SUCCESS)
+        if ((ret = grib_set_long_internal(h, basic_angle_, basic_angle)) != GRIB_SUCCESS)
             return ret;
     }
     else
         factor = 1000;
 
-    if ((ret = grib_get_long_internal(h, self->N, &N)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, N_, &N)) != GRIB_SUCCESS)
         return ret;
     if (N == 0)
         return ret;
 
-    if ((ret = grib_get_long_internal(h, self->Ni, &Ni)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, Ni_, &Ni)) != GRIB_SUCCESS)
         return ret;
     if (Ni == GRIB_MISSING_LONG)
         Ni = N * 4;
     if (Ni == 0)
         return ret;
 
-    if ((ret = grib_get_long_internal(h, self->di, &diold)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, di_, &diold)) != GRIB_SUCCESS)
         return ret;
 
     lats = (double*)grib_context_malloc(c, sizeof(double) * N * 2);
     if (!lats) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "Key %s (pack_long): Memory allocation error: %zu bytes", a->name, sizeof(double) * N * 2);
+                         "Key %s (pack_long): Memory allocation error: %zu bytes", name_, sizeof(double) * N * 2);
         return GRIB_OUT_OF_MEMORY;
     }
     if ((ret = grib_get_gaussian_latitudes(N, lats)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(h, self->plpresent, &plpresent)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, plpresent_, &plpresent)) != GRIB_SUCCESS)
         return ret;
 
     /* GRIB-854: For octahedral grids, get max of pl array */
@@ -201,11 +197,11 @@ int grib_accessor_class_global_gaussian_t::pack_long(grib_accessor* a, const lon
         long* pl    = NULL; /* pl array */
         long max_pl = 0;    /* max. element of pl array */
 
-        if ((ret = grib_get_size(h, self->pl, &plsize)) != GRIB_SUCCESS)
+        if ((ret = grib_get_size(h, pl_, &plsize)) != GRIB_SUCCESS)
             return ret;
         Assert(plsize);
         pl = (long*)grib_context_malloc_clear(c, sizeof(long) * plsize);
-        grib_get_long_array_internal(h, self->pl, pl, &plsize);
+        grib_get_long_array_internal(h, pl_, pl, &plsize);
 
         max_pl = pl[0];
         for (i = 1; i < plsize; i++) {
@@ -231,20 +227,20 @@ int grib_accessor_class_global_gaussian_t::pack_long(grib_accessor* a, const lon
 
     grib_context_free(c, lats);
 
-    if ((ret = grib_set_long_internal(h, self->latfirst, latfirst)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(h, latfirst_, latfirst)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_set_long_internal(h, self->lonfirst, lonfirst)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(h, lonfirst_, lonfirst)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_set_long_internal(h, self->latlast, latlast)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(h, latlast_, latlast)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_set_long_internal(h, self->lonlast, lonlast)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(h, lonlast_, lonlast)) != GRIB_SUCCESS)
         return ret;
 
     if (diold != GRIB_MISSING_LONG)
-        if ((ret = grib_set_long_internal(h, self->di, di)) != GRIB_SUCCESS)
+        if ((ret = grib_set_long_internal(h, di_, di)) != GRIB_SUCCESS)
             return ret;
 
     return GRIB_SUCCESS;

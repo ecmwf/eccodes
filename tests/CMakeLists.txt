@@ -30,7 +30,6 @@ list(APPEND test_c_bins
     grib_keys_iter
     grib_keys_iter_skip
     grib_geo_iter
-    gauss_sub
     grib_nearest_test
     grib_util_set_spec
     grib_util_set_spec2
@@ -61,7 +60,6 @@ list(APPEND test_c_bins
     codes_codetable
     codes_get_string
     grib_sh_ieee64
-    grib_ieee
     grib_set_bytes
     grib_copy_message
     grib_packing_order
@@ -101,7 +99,6 @@ if( HAVE_BUILD_TOOLS )
         grib_calendar
         grib_md5
         grib_cfNames
-        grib_ifsParam
         grib_packing_order
         filter_substr
         filter_contains
@@ -109,7 +106,6 @@ if( HAVE_BUILD_TOOLS )
         filter_is_one_of
         filter_is_in_list
         filter_transient_darray
-        grib_uerra
         grib_ecpoint
         grib_s2s
         grib_fire
@@ -148,7 +144,6 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1708
         grib_ecc-1691
         grib_ecc-1766
-        grib_ecc-1806
         grib_ecc-1829
         bufr_ecc-1028
         bufr_ecc-1195
@@ -166,6 +161,7 @@ if( HAVE_BUILD_TOOLS )
         grib_spectral
         grib_levtype
         grib_typeOfLevel
+        grib2_product_templates
         grib_grid_unstructured
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
@@ -191,9 +187,11 @@ if( HAVE_BUILD_TOOLS )
         grib_partial_message
         grib_true_imagery
         grib_headers_only
+        grib_uerra
         grib_unpack_subarray
         grib_count
         grib_clone_headers_only
+        grib_ifsParam
         wmo_read_bufr_from_file
         wmo_read_gts_from_file
         wmo_read_any_from_file
@@ -277,12 +275,19 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1467
         grib_ecc-1764
         grib_ecc-1792
+        grib_ecc-1806
+        #grib_ecc-1898
+        grib_ecc-1907
+        grib_ecc-1941
+        grib_ecc-1942
         grib_modelName
         grib_sub_hourly
         grib_set_bytes
         grib_set_force
         bufr_ecc-556
+        codes_assert
         codes_ecc-1698
+        codes_ecc-1929
         codes_get_string
         codes_codetable
         gts_get

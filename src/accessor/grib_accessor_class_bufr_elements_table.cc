@@ -29,7 +29,7 @@ static omp_nest_lock_t mutex1;
 
 static void init_mutex()
 {
-    GRIB_OMP_CRITICAL(lock_grib_accessor_class_bufr_elements_table_c)
+    GRIB_OMP_CRITICAL(lock_grib_accessor_bufr_elements_table_c)
     {
         if (once == 0) {
             omp_init_nest_lock(&mutex1);
@@ -39,70 +39,65 @@ static void init_mutex()
 }
 #endif
 
+grib_accessor_bufr_elements_table_t _grib_accessor_bufr_elements_table{};
+grib_accessor* grib_accessor_bufr_elements_table = &_grib_accessor_bufr_elements_table;
 
-grib_accessor_class_bufr_elements_table_t _grib_accessor_class_bufr_elements_table{ "bufr_elements_table" };
-grib_accessor_class* grib_accessor_class_bufr_elements_table = &_grib_accessor_class_bufr_elements_table;
-
-
-void grib_accessor_class_bufr_elements_table_t::init(grib_accessor* a, const long len, grib_arguments* params)
+void grib_accessor_bufr_elements_table_t::init(const long len, grib_arguments* params)
 {
-    grib_accessor_class_gen_t::init(a, len, params);
-    int n                                     = 0;
-    grib_accessor_bufr_elements_table_t* self = (grib_accessor_bufr_elements_table_t*)a;
+    grib_accessor_gen_t::init(len, params);
+    int n = 0;
 
-    self->dictionary = grib_arguments_get_string(grib_handle_of_accessor(a), params, n++);
-    self->masterDir  = grib_arguments_get_name(grib_handle_of_accessor(a), params, n++);
-    self->localDir   = grib_arguments_get_name(grib_handle_of_accessor(a), params, n++);
+    dictionary_ = grib_arguments_get_string(grib_handle_of_accessor(this), params, n++);
+    masterDir_  = grib_arguments_get_name(grib_handle_of_accessor(this), params, n++);
+    localDir_   = grib_arguments_get_name(grib_handle_of_accessor(this), params, n++);
 
-    a->length = 0;
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    length_ = 0;
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
+grib_trie* grib_accessor_bufr_elements_table_t::load_bufr_elements_table(int* err)
 {
-    grib_accessor_bufr_elements_table_t* self = (grib_accessor_bufr_elements_table_t*)a;
-
-    char* filename  = NULL;
+    char* filename = NULL;
     char line[1024] = {0,};
     char masterDir[1024] = {0,};
     char localDir[1024] = {0,};
     char dictName[1024] = {0,};
-    char masterRecomposed[1024] = {0,}; //e.g. bufr/tables/0/wmo/36/element.table
-    char localRecomposed[1024] = {0,};  //e.g. bufr/tables/0/local/0/98/0/element.table
+    char masterRecomposed[1024] = {0,};  // e.g. bufr/tables/0/wmo/36/element.table
+    char localRecomposed[1024] = {0,};   // e.g. bufr/tables/0/local/0/98/0/element.table
     char* localFilename   = 0;
     char** list           = 0;
     char** cached_list    = 0;
     size_t len            = 1024;
     grib_trie* dictionary = NULL;
     FILE* f               = NULL;
-    grib_handle* h        = grib_handle_of_accessor(a);
-    grib_context* c       = a->context;
+    grib_handle* h        = grib_handle_of_accessor(this);
+    grib_context* c       = context_;
 
     *err = GRIB_SUCCESS;
 
     len = 1024;
-    if (self->masterDir != NULL)
-        grib_get_string(h, self->masterDir, masterDir, &len);
+    if (masterDir_ != NULL)
+        grib_get_string(h, masterDir_, masterDir, &len);
     len = 1024;
-    if (self->localDir != NULL)
-        grib_get_string(h, self->localDir, localDir, &len);
+    if (localDir_ != NULL)
+        grib_get_string(h, localDir_, localDir, &len);
 
     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex1);
 
     if (*masterDir != 0) {
         char name[4096] = {0,};
-        snprintf(name, 4096, "%s/%s", masterDir, self->dictionary);
+        snprintf(name, 4096, "%s/%s", masterDir, dictionary_);
         grib_recompose_name(h, NULL, name, masterRecomposed, 0);
         filename = grib_context_full_defs_path(c, masterRecomposed);
     }
     else {
-        filename = grib_context_full_defs_path(c, self->dictionary);
+        filename = grib_context_full_defs_path(c, dictionary_);
     }
 
     if (*localDir != 0) {
         char localName[2048] = {0,};
-        snprintf(localName, 2048, "%s/%s", localDir, self->dictionary);
+        snprintf(localName, 2048, "%s/%s", localDir, dictionary_);
         grib_recompose_name(h, NULL, localName, localRecomposed, 0);
         localFilename = grib_context_full_defs_path(c, localRecomposed);
         snprintf(dictName, 1024, "%s:%s", localFilename, filename);
@@ -112,7 +107,7 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     }
 
     if (!filename) {
-        grib_context_log(c, GRIB_LOG_ERROR, "Unable to find definition file %s", self->dictionary);
+        grib_context_log(c, GRIB_LOG_ERROR, "Unable to find definition file %s", dictionary_);
         if (strlen(masterRecomposed) > 0) grib_context_log(c, GRIB_LOG_DEBUG, "master path=%s", masterRecomposed);
         if (strlen(localRecomposed) > 0) grib_context_log(c, GRIB_LOG_DEBUG, "local path=%s", localRecomposed);
         *err       = GRIB_FILE_NOT_FOUND;
@@ -122,11 +117,11 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
 
     dictionary = (grib_trie*)grib_trie_get(c->lists, dictName);
     if (dictionary) {
-        /*grib_context_log(c,GRIB_LOG_DEBUG,"using dictionary %s from cache",self->dictionary);*/
+        /*grib_context_log(c,GRIB_LOG_DEBUG,"using dictionary %s from cache",a->dictionary_ );*/
         goto the_end;
     }
     else {
-        grib_context_log(c, GRIB_LOG_DEBUG, "using dictionary %s from file %s", self->dictionary, filename);
+        grib_context_log(c, GRIB_LOG_DEBUG, "using dictionary %s from file %s", dictionary_, filename);
     }
 
     f = codes_fopen(filename, "r");
@@ -217,14 +212,14 @@ static long atol_fast(const char* input)
     return atol(input);
 }
 
-static int bufr_get_from_table(grib_accessor* a, bufr_descriptor* v)
+int grib_accessor_bufr_elements_table_t::bufr_get_from_table(bufr_descriptor* v)
 {
     int ret              = 0;
     char** list          = 0;
     char code[7]         = { 0 };
     const size_t codeLen = sizeof(code);
 
-    grib_trie* table = load_bufr_elements_table(a, &ret);
+    grib_trie* table = load_bufr_elements_table(&ret);
     if (ret)
         return ret;
 
@@ -276,13 +271,14 @@ int bufr_descriptor_is_marker(bufr_descriptor* d)
 
 bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, int code, int* err)
 {
+    grib_accessor_bufr_elements_table_t* self = (grib_accessor_bufr_elements_table_t*)a;
     grib_context* c;
     bufr_descriptor* v = NULL;
 
     if (!a)
         return NULL;
 
-    c = a->context;
+    c = a->context_;
     DEBUG_ASSERT(c);
     v = (bufr_descriptor*)grib_context_malloc_clear(c, sizeof(bufr_descriptor));
     if (!v) {
@@ -298,7 +294,7 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, i
 
     switch (v->F) {
         case 0:
-            *err = bufr_get_from_table(a, v);
+            *err = self->bufr_get_from_table(v);
             break;
         case 1:
             v->type = BUFR_DESCRIPTOR_TYPE_REPLICATION;
@@ -314,28 +310,28 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, i
     return v;
 }
 
-int grib_accessor_class_bufr_elements_table_t::unpack_string(grib_accessor* a, char* buffer, size_t* len)
+int grib_accessor_bufr_elements_table_t::unpack_string(char* buffer, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_class_bufr_elements_table_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_bufr_elements_table_t::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-int grib_accessor_class_bufr_elements_table_t::get_native_type(grib_accessor* a)
+long grib_accessor_bufr_elements_table_t::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
 
-int grib_accessor_class_bufr_elements_table_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_bufr_elements_table_t::unpack_long(long* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_class_bufr_elements_table_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+int grib_accessor_bufr_elements_table_t::unpack_double(double* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }

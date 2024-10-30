@@ -12,14 +12,11 @@
 
 #include "grib_accessor_class_variable.h"
 
-class grib_accessor_transient_t : public grib_accessor_variable_t {
+class grib_accessor_transient_t : public grib_accessor_variable_t
+{
 public:
-};
-
-class grib_accessor_class_transient_t : public grib_accessor_class_variable_t {
-public:
-    void init(grib_accessor* a, const long l, grib_arguments* args) override;
-    grib_accessor_class_transient_t(const char* name) : grib_accessor_class_variable_t(name) {};
+    void init(const long l, grib_arguments* args) override;
+    grib_accessor_transient_t() :
+        grib_accessor_variable_t() { class_name_ = "transient"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_transient_t{}; }
 };
-

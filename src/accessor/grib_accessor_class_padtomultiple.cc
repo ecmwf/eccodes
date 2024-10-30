@@ -10,32 +10,29 @@
 
 #include "grib_accessor_class_padtomultiple.h"
 
-grib_accessor_class_padtomultiple_t _grib_accessor_class_padtomultiple{ "padtomultiple" };
-grib_accessor_class* grib_accessor_class_padtomultiple = &_grib_accessor_class_padtomultiple;
+grib_accessor_padtomultiple_t _grib_accessor_padtomultiple{};
+grib_accessor* grib_accessor_padtomultiple = &_grib_accessor_padtomultiple;
 
-
-size_t grib_accessor_class_padtomultiple_t::preferred_size(grib_accessor* a, int from_handle)
+size_t grib_accessor_padtomultiple_t::preferred_size(int from_handle)
 {
-    grib_accessor_padtomultiple_t* self = (grib_accessor_padtomultiple_t*)a;
     long padding  = 0;
     long begin    = 0;
     long multiple = 0;
 
-    grib_expression_evaluate_long(grib_handle_of_accessor(a), self->begin, &begin);
-    grib_expression_evaluate_long(grib_handle_of_accessor(a), self->multiple, &multiple);
+    grib_expression_evaluate_long(grib_handle_of_accessor(this), begin_, &begin);
+    grib_expression_evaluate_long(grib_handle_of_accessor(this), multiple_, &multiple);
 
-    padding = a->offset - begin;
+    padding = offset_ - begin;
     padding = ((padding + multiple - 1) / multiple) * multiple - padding;
 
     return padding == 0 ? multiple : padding;
 }
 
-void grib_accessor_class_padtomultiple_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+void grib_accessor_padtomultiple_t::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_class_padding_t::init(a, len, arg);
-    grib_accessor_padtomultiple_t* self = (grib_accessor_padtomultiple_t*)a;
+    grib_accessor_padding_t::init(len, arg);
 
-    self->begin    = grib_arguments_get_expression(grib_handle_of_accessor(a), arg, 0);
-    self->multiple = grib_arguments_get_expression(grib_handle_of_accessor(a), arg, 1);
-    a->length      = preferred_size(a, 1);
+    begin_    = grib_arguments_get_expression(grib_handle_of_accessor(this), arg, 0);
+    multiple_ = grib_arguments_get_expression(grib_handle_of_accessor(this), arg, 1);
+    length_   = preferred_size(1);
 }

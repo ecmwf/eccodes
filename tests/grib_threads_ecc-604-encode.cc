@@ -26,19 +26,24 @@ int opt_write                     = 0; /* If 1 write handle to file */
 
 static int encode_values(grib_handle* h, char* output_file)
 {
-    double* values;
-    const size_t DIM = 1000;
-    size_t size      = DIM * DIM;
-    size_t i         = 0;
-    values           = (double*)malloc(size * sizeof(double));
-    for (i = 0; i < size; ++i) {
+    double* values = NULL;
+    long numberOfDataPoints = 0;
+    GRIB_CHECK(grib_get_long(h, "numberOfDataPoints", &numberOfDataPoints), 0);
+    size_t size = numberOfDataPoints;
+
+    values = (double*)malloc(size * sizeof(double));
+    for (size_t i = 0; i < size; ++i) {
         double v = i;
-        if (i % DIM == 0) v = 0;
+        if (i % size == 0) v = 0;
         values[i] = v;
     }
     GRIB_CHECK(grib_set_long(h, "bitsPerValue", 16), 0);
     GRIB_CHECK(grib_set_double_array(h, "values", values, size), 0);
     free(values);
+    if (opt_dump) {
+        FILE* devnull = fopen("/dev/null", "w");
+        grib_dump_content(h, devnull, "wmo", 0, NULL);
+    }
     return GRIB_SUCCESS;
 }
 
@@ -62,6 +67,7 @@ int main(int argc, char** argv)
     char* mode;
     if (argc < 5 || argc > 7) {
         fprintf(stderr, "Usage:\n\t%s [options] seq sample numRuns numIter\nOr\n\t%s [options] par sample numThreads numIter\n", prog, prog);
+        fprintf(stderr, "Options:\n\t-d: do a dump\n\t-c: clone\n");
         return 1;
     }
 
@@ -144,7 +150,12 @@ void do_encode(void* ptr)
     hs = grib_handle_new_from_samples(0, INPUT_FILE);
 
     for (i = 0; i < FILES_PER_ITERATION; i++) {
-        grib_handle* h = grib_handle_clone(hs);
+        grib_handle* h = NULL;
+        if (opt_clone) {
+            h = grib_handle_clone(hs);
+        } else {
+            h = hs;
+        }
         if (opt_write) {
             snprintf(output_file, 50, "output/output_file_%zu-%zu.grib", data->number, i);
             encode_values(h, output_file);
@@ -152,7 +163,8 @@ void do_encode(void* ptr)
         else {
             encode_values(h, NULL);
         }
-        grib_handle_delete(h);
+        if (opt_clone)
+            grib_handle_delete(h);
     }
 
     ltime = time(NULL);

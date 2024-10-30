@@ -1,6 +1,3 @@
-#no step in type an
-unalias mars.step;
-
 if (class is "od" || class is "me" || class is "en" ||
     class is "c3" || class is "ci")
 {
@@ -15,7 +12,7 @@ if (class isnot "gw") { # ECC-1448
 }
 
 # See ECC-624
-if (centre == 80 && subCentre == 98 && class is "c3") {
+if (centre == 80 && subCentre == 98 && (class is "c3" || class is "ci")) {
   constant cnmc_cmcc = 'cmcc';
   alias mars.origin = cnmc_cmcc;
 }

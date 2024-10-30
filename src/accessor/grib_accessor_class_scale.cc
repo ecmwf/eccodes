@@ -11,45 +11,42 @@
 
 #include "grib_accessor_class_scale.h"
 
-grib_accessor_class_scale_t _grib_accessor_class_scale{ "scale" };
-grib_accessor_class* grib_accessor_class_scale = &_grib_accessor_class_scale;
+grib_accessor_scale_t _grib_accessor_scale{};
+grib_accessor* grib_accessor_scale = &_grib_accessor_scale;
 
-
-void grib_accessor_class_scale_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_scale_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_double_t::init(a, l, c);
-    grib_accessor_scale_t* self = (grib_accessor_scale_t*)a;
+    grib_accessor_double_t::init(l, c);
     int n = 0;
 
-    self->value      = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->multiplier = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->divisor    = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->truncating = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    value_      = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    multiplier_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    divisor_    = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    truncating_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
 }
 
-int grib_accessor_class_scale_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+int grib_accessor_scale_t::unpack_double(double* val, size_t* len)
 {
-    grib_accessor_scale_t* self = (grib_accessor_scale_t*)a;
-    int ret                     = 0;
-    long value                  = 0;
-    long multiplier             = 0;
-    long divisor                = 0;
+    int ret         = 0;
+    long value      = 0;
+    long multiplier = 0;
+    long divisor    = 0;
 
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;
-        grib_context_log(a->context, GRIB_LOG_ERROR,
+        grib_context_log(context_, GRIB_LOG_ERROR,
                          "Accessor %s cannot gather value for %s and/or %s",
-                         a->name, self->multiplier, self->divisor);
+                         name_, multiplier, divisor_);
         return ret;
     }
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->divisor, &divisor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), divisor_, &divisor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->multiplier, &multiplier)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), multiplier_, &multiplier)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->value, &value)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), value_, &value)) != GRIB_SUCCESS)
         return ret;
 
     if (value == GRIB_MISSING_LONG)
@@ -63,15 +60,14 @@ int grib_accessor_class_scale_t::unpack_double(grib_accessor* a, double* val, si
     return ret;
 }
 
-int grib_accessor_class_scale_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_scale_t::pack_long(const long* val, size_t* len)
 {
     const double dval = (double)*val;
-    return pack_double(a, &dval, len);
+    return pack_double(&dval, len);
 }
 
-int grib_accessor_class_scale_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+int grib_accessor_scale_t::pack_double(const double* val, size_t* len)
 {
-    grib_accessor_scale_t* self = (grib_accessor_scale_t*)a;
     int ret = 0;
 
     long value      = 0;
@@ -80,20 +76,20 @@ int grib_accessor_class_scale_t::pack_double(grib_accessor* a, const double* val
     long truncating = 0;
     double x;
 
-    ret = grib_get_long_internal(grib_handle_of_accessor(a), self->divisor, &divisor);
+    ret = grib_get_long_internal(grib_handle_of_accessor(this), divisor_, &divisor);
     if (ret != GRIB_SUCCESS) return ret;
 
-    ret = grib_get_long_internal(grib_handle_of_accessor(a), self->multiplier, &multiplier);
+    ret = grib_get_long_internal(grib_handle_of_accessor(this), multiplier_, &multiplier);
     if (ret != GRIB_SUCCESS) return ret;
 
-    if (self->truncating) {
-        ret = grib_get_long_internal(grib_handle_of_accessor(a), self->truncating, &truncating);
+    if (truncating_) {
+        ret = grib_get_long_internal(grib_handle_of_accessor(this), truncating_, &truncating);
         if (ret != GRIB_SUCCESS) return ret;
     }
 
     if (multiplier == 0) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s: cannot divide by a zero multiplier %s",
-                         a->name, self->multiplier);
+        grib_context_log(context_, GRIB_LOG_ERROR, "Accessor %s: cannot divide by a zero multiplier %s",
+                         name_, multiplier_);
         return GRIB_ENCODING_ERROR;
     }
 
@@ -107,11 +103,11 @@ int grib_accessor_class_scale_t::pack_double(grib_accessor* a, const double* val
         value = x > 0 ? (long)(x + 0.5) : (long)(x - 0.5);
     }
 
-    ret = grib_set_long_internal(grib_handle_of_accessor(a), self->value, value);
+    ret = grib_set_long_internal(grib_handle_of_accessor(this), value_, value);
     if (ret)
-        grib_context_log(a->context, GRIB_LOG_ERROR,
+        grib_context_log(context_, GRIB_LOG_ERROR,
                          "Accessor %s: cannot pack value for %s (%s)\n",
-                         a->name, self->value, grib_get_error_message(ret));
+                         name_, value_, grib_get_error_message(ret));
 
     if (ret == GRIB_SUCCESS)
         *len = 1;
@@ -119,20 +115,19 @@ int grib_accessor_class_scale_t::pack_double(grib_accessor* a, const double* val
     return ret;
 }
 
-int grib_accessor_class_scale_t::is_missing(grib_accessor* a)
+int grib_accessor_scale_t::is_missing()
 {
-    grib_accessor_scale_t* self = (grib_accessor_scale_t*)a;
-    grib_accessor* av = grib_find_accessor(grib_handle_of_accessor(a), self->value);
+    grib_accessor* av = grib_find_accessor(grib_handle_of_accessor(this), value_);
 
     if (!av)
         return GRIB_NOT_FOUND;
     return av->is_missing_internal();
     //     int ret=0;
     //     long value=0;
-    //     if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->value, &value))!= GRIB_SUCCESS){
-    //         grib_context_log(a->context, GRIB_LOG_ERROR,
-    //         "Accessor %s cannot gather value for %s error %d \n", a->name,
-    //         self->value, ret);
+    //     if((ret = grib_get_long_internal(grib_handle_of_accessor(this),value_ , &value))!= GRIB_SUCCESS){
+    //         grib_context_log(context_ , GRIB_LOG_ERROR,
+    //         "Accessor %s cannot gather value for %s error %d \n", name_ ,
+    //         value_ , ret);
     //         return 0;
     //     }
     //     return (value == GRIB_MISSING_LONG);

@@ -8,6 +8,21 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-int igglat_(long* KLAT, float* PGAUSS, long* KPR, long* KERR);
-void gribex_(long* KSEC0, long* KSEC1, long* KSEC2, double* PSEC2, long* KSEC3, double* PSEC3, long* KSEC4,
-             double* PSEC4, long* KLENP, void* KGRIB, long* KLENG, long* KWORD, char* HOPER, long* KRET);
+#pragma once
+
+#include "grib_iterator_class_regular.h"
+
+namespace eccodes::geo_iterator {
+
+class Gaussian : public Regular
+{
+public:
+    Gaussian() :
+        Regular() { class_name_ = "gaussian"; }
+    Iterator* create() const override { return new Gaussian(); }
+
+    int init(grib_handle*, grib_arguments*) override;
+};
+
+}  // namespace eccodes::geo_iterator
+

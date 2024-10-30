@@ -1,7 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 3.110, Equatorial azimuthal equidistant projection
-include "grib2/template.3.shape_of_the_earth.def"
+include "grib2/templates/template.3.shape_of_the_earth.def"
 
 constant isGridded = true;
 
@@ -37,4 +37,4 @@ unsigned[4] Dy : dump;
 # Projection centre flag
 unsigned[1] projectionCentreFlag : dump;
 
-include "grib2/template.3.scanning_mode.def"
+include "grib2/templates/template.3.scanning_mode.def"

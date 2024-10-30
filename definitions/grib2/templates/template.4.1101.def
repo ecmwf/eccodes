@@ -6,10 +6,10 @@
 # (Octets 35-50 are very similar to octets 43-58 of product definition template 4.8, but the meaning of some fields differs slightly)
 transient template_is_experimental = 1 : hidden;
 
-include "grib2/template.4.parameter.def"
-include "grib2/template.4.generating_process.def"
-include "grib2/template.4.forecast_time.def"
-include "grib2/template.4.horizontal.def"
+include "grib2/templates/template.4.parameter.def"
+include "grib2/templates/template.4.generating_process.def"
+include "grib2/templates/template.4.forecast_time.def"
+include "grib2/templates/template.4.horizontal.def"
 
 unsigned[4] numberOfMissingInStatisticalProcess = 0  : edition_specific;
 alias totalNumberOfDataValuesMissingInStatisticalProcess=numberOfMissingInStatisticalProcess;
@@ -25,4 +25,3 @@ codetable[1] indicatorOfUnitForTimeIncrement ('4.4.table',masterDir,localDir)=25
 unsigned[4] timeIncrement=0 ;
 alias timeIncrementBetweenSuccessiveFields=timeIncrement;
 
-# include "grib2/template.4.statistical.def"

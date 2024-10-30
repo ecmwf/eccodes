@@ -5,7 +5,7 @@
 # and should be used only for bilateral previously agreed tests
 transient template_is_experimental = 1 : hidden;
 
-include "grib2/template.4.parameter.def"
-include "grib2/template.4.generating_process.def"
-include "grib2/template.4.forecast_time.def"
-include "grib2/template.4.statistical.def"
+include "grib2/templates/template.4.parameter.def"
+include "grib2/templates/template.4.generating_process.def"
+include "grib2/templates/template.4.forecast_time.def"
+include "grib2/templates/template.4.statistical.def"

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,22 +15,19 @@
 class grib_accessor_statistics_spectral_t : public grib_accessor_abstract_vector_t
 {
 public:
-    /* Members defined in statistics_spectral */
-    const char* values;
-    const char* J;
-    const char* K;
-    const char* M;
-    const char* JS;
-};
-
-class grib_accessor_class_statistics_spectral_t : public grib_accessor_class_abstract_vector_t
-{
-public:
-    grib_accessor_class_statistics_spectral_t(const char* name) : grib_accessor_class_abstract_vector_t(name) {}
+    grib_accessor_statistics_spectral_t() :
+        grib_accessor_abstract_vector_t() { class_name_ = "statistics_spectral"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_statistics_spectral_t{}; }
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void destroy(grib_context*, grib_accessor*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
-    int compare(grib_accessor*, grib_accessor*) override;
+    int unpack_double(double* val, size_t* len) override;
+    int value_count(long*) override;
+    void destroy(grib_context*) override;
+    void init(const long, grib_arguments*) override;
+    int compare(grib_accessor*) override;
+
+private:
+    const char* values_ = nullptr;
+    const char* J_ = nullptr;
+    const char* K_ = nullptr;
+    const char* M_ = nullptr;
+    const char* JS_ = nullptr;
 };

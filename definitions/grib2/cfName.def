@@ -63,14 +63,14 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 12 ;
 	}
-#Boundary layer dissipation
+#Time-integrated boundary layer dissipation
 'kinetic_energy_dissipation_in_atmosphere_boundary_layer' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 20 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Surface sensible heat flux
+#Time-integrated surface sensible heat net flux
 'surface_upward_sensible_heat_flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
@@ -78,7 +78,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Surface latent heat flux
+#Time-integrated surface latent heat net flux
 'surface_upward_latent_heat_flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;

@@ -119,7 +119,7 @@ for statid  in 1 3 7 ; do
 done
 
 #-----------------------------------------------------------
-# Test:  print attributes
+# Test: print attributes
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -159,7 +159,7 @@ diff ${f}.ref ${f}.log
 rm -f ${f}.ref ${f}.log
 
 #-----------------------------------------------------------
-# Test:  access element by rank
+# Test: access element by rank
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -192,7 +192,7 @@ diff ${f}.ref ${f}.log
 rm -f ${f}.ref ${f}.log
 
 #-----------------------------------------------------------
-# Test:  access marker operators
+# Test: access marker operators
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -266,7 +266,7 @@ diff ${f}.ref ${f}.log
 rm -f ${f}.ref ${f}.log
 
 #-----------------------------------------------------------
-# Test:  access marker operators 2
+# Test: access marker operators 2
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -319,7 +319,7 @@ diff ${f}.ref ${f}.log
 rm -f ${f}.ref ${f}.log
 
 #-----------------------------------------------------------
-# Test:  access by condition
+# Test: access by condition
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -340,7 +340,7 @@ diff $REFERENCE_FILE ${f}.log
 rm -f ${f}.log
 
 #-----------------------------------------------------------
-# Test:  access by condition 2
+# Test: access by condition 2
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -420,7 +420,7 @@ rm -f ${f}.ref ${f}.log
 #rm -f $testScript $testScript1
 
 #-----------------------------------------------------------
-# Test:  get string
+# Test: get string
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -453,7 +453,7 @@ f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
 ${tools_dir}/codes_bufr_filter $fRules $f
 
 #-----------------------------------------------------------
-# Test:  get string whose value is MISSING (ECC-650)
+# Test: get string whose value is MISSING (ECC-650)
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  set unpack=1;
@@ -468,7 +468,7 @@ diff ${f}.ref ${f}.log
 rm -f ${f}.ref ${f}.log
 
 #-----------------------------------------------------------
-# Test:  get string array and stringValues
+# Test: get string array and stringValues
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  set unpack=1;
@@ -650,7 +650,7 @@ ${tools_dir}/bufr_compare $fout ${fout}.ref #2>> $fLog 1>> $fLog
 rm -f $fout
 
 #-----------------------------------------------------------
-# Test:  access subsets by condition 
+# Test: access subsets by condition 
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  set unpack=1;
@@ -688,7 +688,7 @@ diff ${f}.ref ${f}.log
 rm -f ${f}.ref ${f}.log
 
 #-----------------------------------------------------------
-# Test:  access subsets and attribute by condition 
+# Test: access subsets and attribute by condition 
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  set unpack=1;
@@ -710,7 +710,7 @@ diff ${f}.ref ${f}.log
 rm -f ${f}.ref ${f}.log
 rm -f $fLog $fRules
 #-----------------------------------------------------------
-# Test:  set key by rank                           
+# Test: set key by rank                           
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  set unpack=1;
@@ -733,7 +733,7 @@ diff ${f}.ref ${f}.log
 rm -f ${f}.ref ${f}.log
 rm -f $fLog $fRules
 #-----------------------------------------------------------
-# Test:  initialise with given values of delayed replications
+# Test: initialise with given values of delayed replications
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  set localTablesVersionNumber=0;
@@ -783,7 +783,7 @@ ${tools_dir}/bufr_compare ${fOut} ${fOut}.ref
 rm -f ${fOut}.log
 rm -f $fLog $fRules ${fOut} ${fOut}.log.ref
 #-----------------------------------------------------------
-# Test:  add section 2
+# Test: add section 2
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  set bufrHeaderCentre=98;
@@ -816,7 +816,7 @@ rm -f ${fOut}.log
 rm -f $fLog $fRules ${fOut} ${fOut}.log.ref
 
 #-----------------------------------------------------------
-# Test:  associatedField
+# Test: associatedField
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -842,7 +842,7 @@ rm -f ${f}.log ${f}.log.ref
 rm -f $fLog $fRules 
 
 #-----------------------------------------------------------
-# Test:  firstOrderStatistics
+# Test: firstOrderStatistics
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -877,7 +877,7 @@ rm -f ${f}.log ${f}.log.ref
 rm -f $fLog $fRules 
 
 #-----------------------------------------------------------
-# Test:  delayed replication compressed data
+# Test: delayed replication compressed data
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  set localTablesVersionNumber=1;
@@ -927,7 +927,7 @@ rm -f ${f}.log ${f}.log.ref
 rm -f $fLog $fOut $fRules 
 
 #-----------------------------------------------------------
-# Test:  create new BUFR with bitmap
+# Test: create new BUFR with bitmap
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set compressedData=1;
@@ -975,7 +975,7 @@ rm -f ${f}.log ${f}.log.ref
 rm -f $fLog $fOut $fRules 
 
 #-----------------------------------------------------------
-# Test:  several percentConfidence for same element
+# Test: several percentConfidence for same element
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -1299,6 +1299,21 @@ cat > $fRules <<EOF
 EOF
 ${tools_dir}/codes_bufr_filter -o $tempBufr $fRules $f
 rm -f $tempBufr
+
+# hash_array (sequences) as string and double
+# --------------------------------------------
+cat >$fRules <<EOF
+ set sequences="301012"; print "[sequences]";
+EOF
+result=$(${tools_dir}/codes_bufr_filter $fRules $f)
+[ "$result" = '4004 4005' ]
+
+cat >$fRules <<EOF
+ set sequences=301012.0; print "[sequences]";
+EOF
+result=$(${tools_dir}/codes_bufr_filter $fRules $f)
+[ "$result" = '4004 4005' ]
+
 
 # Clean up
 rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules

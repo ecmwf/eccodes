@@ -12,7 +12,7 @@ program grib_sections_copy
    implicit none
 
    integer :: igrib_a, igrib_b, igrib_c, iret
-   character(len=40) :: error_message
+   character(len=40) :: error_message = ''
 
    call codes_grib_new_from_samples(igrib_a, 'regular_ll_sfc_grib1')
    call codes_grib_new_from_samples(igrib_b, 'reduced_gg_pl_640_grib1')

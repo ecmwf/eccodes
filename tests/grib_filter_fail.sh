@@ -85,6 +85,17 @@ set -e
 [ $status -ne 0 ]
 grep -q "Unable to open file" $tempOut
 
+
+# Bad print
+# ----------
+set +e
+echo 'print ("/") "should fail";' | ${tools_dir}/grib_filter - $input > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "IO ERROR" $tempOut
+
+
 # Signed bits
 # -----------
 cat >$tempFilt <<EOF
@@ -119,6 +130,24 @@ set -e
 [ $status -ne 0 ]
 grep -q "ECCODES ERROR.*failed for 'unicorn'" $tempOut
 grep -q "Function not yet implemented" $tempOut
+
+# Direction Increment
+# --------------------
+input="${samp_dir}/GRIB1.tmpl"
+cat >$tempFilt <<EOF
+  set ijDirectionIncrementGiven = 0;
+  set Ni = 1;
+  set Nj = 1;
+  set values = { 0 };
+  print "[jDirectionIncrementInDegrees]";
+EOF
+set +e
+${tools_dir}/grib_filter $tempFilt $input 2> $tempOut
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Cannot compute lat/lon increments. Not enough points" $tempOut
+
 
 
 # Clean up

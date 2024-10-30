@@ -41,7 +41,7 @@ codetable[2] instrument "grib2/tables/local/ecmf/obstat.5.0.table";
 
 codetable[2] dataStream "grib2/tables/local/ecmf/obstat.6.0.table";
 
-#  include "grib2/template.4.horizontal.def"
+#  include "grib2/templates/template.4.horizontal.def"
 
 codetable[2] observationDiagnostic "grib2/tables/local/ecmf/obstat.9.0.table";
 

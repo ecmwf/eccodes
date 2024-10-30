@@ -6,14 +6,14 @@ transient template_is_deprecated = 1 : hidden;
 
 # GRIB-530: Special case for aerosol thanks to WMO error
 
-include "grib2/template.4.parameter.def"
-include "grib2/template.4.aerosol.def"
-include "grib2/template.4.aerosol_size.def"
-include "grib2/template.4.generating_process.def"
+include "grib2/templates/template.4.parameter.def"
+include "grib2/templates/template.4.aerosol.def"
+include "grib2/templates/template.4.aerosol_size.def"
+include "grib2/templates/template.4.generating_process.def"
 
 # GRIB-530: Special case for aerosol thanks to WMO error
-include "grib2/template.4.forecast_time_44.def"
+include "grib2/templates/template.4.forecast_time_44.def"
 
-include "grib2/template.4.point_in_time.def"
-include "grib2/template.4.horizontal.def"
+include "grib2/templates/template.4.point_in_time.def"
+include "grib2/templates/template.4.horizontal.def"
 

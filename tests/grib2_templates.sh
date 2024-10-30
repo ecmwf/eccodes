@@ -8,7 +8,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 . ./include.ctest.sh
-set -u
 
 label="grib2_templates_test"
 
@@ -26,11 +25,30 @@ latestOfficial=`${tools_dir}/grib_get -p tablesVersionLatestOfficial $sample2`
 
 latest_codetable_file=$ECCODES_DEFINITION_PATH/grib2/tables/$latestOfficial/4.0.table
 awk '$1 !~ /#/ && $1 < 65000 {print $1}' $latest_codetable_file | while read pdtn; do
-    if [ ! -f "$ECCODES_DEFINITION_PATH/grib2/template.4.$pdtn.def" ]; then
+    if [ ! -f "$ECCODES_DEFINITION_PATH/grib2/templates/template.4.$pdtn.def" ]; then
         echo "GRIB2 template for product definition $pdtn does not exist!"
         exit 1
     fi
 done
+
+rm -f $tempText
+pdtns=$( awk '!/^#/ && $1 < 65000 {print $1}' $latest_codetable_file )
+for p in $pdtns; do
+    $tools_dir/grib_set -s tablesVersion=$latestOfficial,productDefinitionTemplateNumber=$p $sample2 $temp
+    $tools_dir/grib_dump -O -p section_4 $temp >> $tempText
+    # Expect the grep to fail and not find 'unknown' in the dump output
+    set +e
+    grep -q -i unknown $tempText
+    status=$?
+    set -e
+    if [ $status -ne 1 ]; then
+        echo "GRIB2 PDTN $p produced a dump with unknown!"
+        grep -i unknown $tempText
+        exit 1
+    fi
+done
+rm -f $tempText
+
 
 # ECC-1746
 # -------------

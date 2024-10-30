@@ -52,20 +52,17 @@ typedef struct grib_action_transient_darray {
 extern grib_action_class* grib_action_class_gen;
 
 static grib_action_class _grib_action_class_transient_darray = {
-    &grib_action_class_gen,                              /* super                     */
-    "action_class_transient_darray",                              /* name                      */
-    sizeof(grib_action_transient_darray),            /* size                      */
-    0,                                   /* inited */
+    &grib_action_class_gen,                              /* super */
+    "action_class_transient_darray",                 /* name */
+    sizeof(grib_action_transient_darray),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     &destroy,                            /* destroy */
-
-    &dump,                               /* dump                      */
-    0,                               /* xref                      */
-
-    0,             /* create_accessor*/
-
-    0,                            /* notify_change */
+    &dump,                               /* dump */
+    0,                               /* xref */
+    0,                    /* create_accessor */
+    0,                      /* notify_change */
     0,                            /* reparse */
     &execute,                            /* execute */
 };
@@ -114,7 +111,7 @@ static int execute(grib_action* act, grib_handle* h)
 
     grib_push_accessor(a, p->block);
 
-    if (a->flags & GRIB_ACCESSOR_FLAG_CONSTRAINT)
+    if (a->flags_ & GRIB_ACCESSOR_FLAG_CONSTRAINT)
         grib_dependency_observe_arguments(a, act->default_value);
 
     return a->pack_double(self->darray->v, &len);
@@ -135,5 +132,5 @@ static void destroy(grib_context* context, grib_action* act)
     grib_action_transient_darray* a = (grib_action_transient_darray*)act;
 
     grib_context_free_persistent(context, a->name);
-    grib_darray_delete(context, a->darray);
+    grib_darray_delete(a->darray);
 }

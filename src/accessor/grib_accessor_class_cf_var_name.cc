@@ -10,42 +10,36 @@
 
 #include "grib_accessor_class_cf_var_name.h"
 
-grib_accessor_class_cf_var_name_t _grib_accessor_class_cf_var_name{ "cf_var_name" };
-grib_accessor_class* grib_accessor_class_cf_var_name = &_grib_accessor_class_cf_var_name;
+grib_accessor_cf_var_name_t _grib_accessor_cf_var_name{};
+grib_accessor* grib_accessor_cf_var_name = &_grib_accessor_cf_var_name;
 
-
-void grib_accessor_class_cf_var_name_t::init(grib_accessor* a, const long l, grib_arguments* arg)
+void grib_accessor_cf_var_name_t::init(const long l, grib_arguments* arg)
 {
-    grib_accessor_class_ascii_t::init(a, l, arg);
-
-    grib_accessor_cf_var_name_t* self = (grib_accessor_cf_var_name_t*)a;
-    grib_handle* h = grib_handle_of_accessor(a);
-
-    self->defaultKey = grib_arguments_get_name(h, arg, 0);
+    grib_accessor_ascii_t::init(l, arg);
+    grib_handle* h = grib_handle_of_accessor(this);
+    defaultKey_    = grib_arguments_get_name(h, arg, 0);
 }
 
-int grib_accessor_class_cf_var_name_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+int grib_accessor_cf_var_name_t::unpack_string(char* val, size_t* len)
 {
-    grib_accessor_cf_var_name_t* self = (grib_accessor_cf_var_name_t*)a;
-
-    grib_handle* h  = grib_handle_of_accessor(a);
+    grib_handle* h       = grib_handle_of_accessor(this);
     char defaultKey[256] = {0,};
-    size_t size  = sizeof(defaultKey) / sizeof(*defaultKey);
+    size_t size       = sizeof(defaultKey) / sizeof(*defaultKey);
     char* pDefaultKey = defaultKey;
 
-    int err = grib_get_string(h, self->defaultKey, defaultKey, &size);
+    int err = grib_get_string(h, defaultKey_, defaultKey, &size);
     if (err) return err;
+    Assert(size > 0);
+    Assert(strlen(defaultKey) > 0);
 
-    if (size == 0) {
-        // Should not ever happen
-        snprintf(val, 1024, "%s", "unknown");
-    }
-    else if ( STR_EQUAL(defaultKey, "~") || isdigit(defaultKey[0]) ) {
+    if (STR_EQUAL(defaultKey, "~") || isdigit(defaultKey[0])) {
         // NetCDF variables cannot start with a digit
         long paramId = 0;
-        err = grib_get_long(h, "paramId", &paramId);
-        if (err) snprintf(val, 1024, "%s", "unknown");
-        else     snprintf(val, 1024, "p%ld", paramId);
+        err          = grib_get_long(h, "paramId", &paramId);
+        if (err)
+            snprintf(val, 1024, "%s", "unknown");
+        else
+            snprintf(val, 1024, "p%ld", paramId);
     }
     else {
         snprintf(val, 1024, "%s", pDefaultKey);
@@ -55,7 +49,7 @@ int grib_accessor_class_cf_var_name_t::unpack_string(grib_accessor* a, char* val
     return GRIB_SUCCESS;
 }
 
-size_t grib_accessor_class_cf_var_name_t::string_length(grib_accessor* a)
+size_t grib_accessor_cf_var_name_t::string_length()
 {
     return 1024;
 }

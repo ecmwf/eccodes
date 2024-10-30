@@ -42,14 +42,14 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    CODES_CHECK(grib_count_in_file(NULL, in, &mcount), 0);
+    CODES_CHECK(codes_count_in_file(NULL, in, &mcount), 0);
     assert(mcount == 56);
-    printf("grib_count_in_file counted %d messages\n", mcount);
+    printf("count_in_file counted %d messages\n", mcount);
 
     mcount = 0;
-    CODES_CHECK(grib_count_in_filename(NULL, filename, &mcount), 0);
+    CODES_CHECK(codes_count_in_filename(NULL, filename, &mcount), 0);
     assert(mcount == 56);
-    printf("grib_count_in_filename counted %d messages\n", mcount);
+    printf("count_in_filename counted %d messages\n", mcount);
 
     mcount = 0;
     while ((h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err)) != NULL) {

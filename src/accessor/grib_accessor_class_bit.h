@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,17 +15,14 @@
 class grib_accessor_bit_t : public grib_accessor_long_t
 {
 public:
-    /* Members defined in bit */
-    const char* owner;
-    int bit_index;
-};
-
-class grib_accessor_class_bit_t : public grib_accessor_class_long_t
-{
-public:
-    grib_accessor_class_bit_t(const char* name) : grib_accessor_class_long_t(name) {}
+    grib_accessor_bit_t() :
+        grib_accessor_long_t() { class_name_ = "bit"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_bit_t{}; }
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* owner_ = nullptr;
+    int bit_index_ = 0;
 };

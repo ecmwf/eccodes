@@ -8,6 +8,12 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 #
+
+include_directories(
+    "${CMAKE_CURRENT_SOURCE_DIR}/accessor"
+    "${CMAKE_CURRENT_SOURCE_DIR}/geo_iterator"
+    )
+
 list( APPEND eccodes_src_files
     accessor/grib_accessor.cc
     accessor/grib_accessors_list.cc
@@ -217,7 +223,6 @@ list( APPEND eccodes_src_files
     accessor/grib_accessor_class_data_raw_packing.cc
     accessor/grib_accessor_class_data_complex_packing.cc
     accessor/grib_accessor_class_data_g1complex_packing.cc
-    accessor/grib_accessor_class_gds_not_present_bitmap.cc
     accessor/grib_accessor_class_gds_is_present.cc
     accessor/grib_accessor_class_select_step_template.cc
     accessor/grib_accessor_class_local_definition.cc
@@ -332,20 +337,20 @@ list( APPEND eccodes_src_files
     grib_nearest_class_mercator.cc
     grib_nearest_class_polar_stereographic.cc
     grib_nearest_class_space_view.cc
-    grib_iterator_class_polar_stereographic.cc
-    grib_iterator_class_lambert_azimuthal_equal_area.cc
-    grib_iterator_class_lambert_conformal.cc
-    grib_iterator_class_mercator.cc
-    grib_iterator.cc
+    geo_iterator/grib_iterator_class_polar_stereographic.cc
+    geo_iterator/grib_iterator_class_lambert_azimuthal_equal_area.cc
+    geo_iterator/grib_iterator_class_lambert_conformal.cc
+    geo_iterator/grib_iterator_class_mercator.cc
+    geo_iterator/grib_iterator.cc
     grib_iterator_class.cc
-    grib_iterator_class_gaussian.cc
-    grib_iterator_class_gaussian_reduced.cc
-    grib_iterator_class_latlon_reduced.cc
-    grib_iterator_class_gen.cc
-    grib_iterator_class_latlon.cc
-    grib_iterator_class_regular.cc
-    grib_iterator_class_space_view.cc
-    grib_iterator_class_healpix.cc
+    geo_iterator/grib_iterator_class_gaussian.cc
+    geo_iterator/grib_iterator_class_gaussian_reduced.cc
+    geo_iterator/grib_iterator_class_latlon_reduced.cc
+    geo_iterator/grib_iterator_class_gen.cc
+    geo_iterator/grib_iterator_class_latlon.cc
+    geo_iterator/grib_iterator_class_regular.cc
+    geo_iterator/grib_iterator_class_space_view.cc
+    geo_iterator/grib_iterator_class_healpix.cc
     grib_expression.cc
     codes_util.cc
     grib_util.cc
@@ -358,7 +363,6 @@ list( APPEND eccodes_src_files
     eccodes_prototypes.h
     grib_dumper_class.h
     grib_dumper_factory.h
-    grib_emoslib.h
     grib_iterator_class.h
     grib_iterator_factory.h
     grib_nearest_class.h

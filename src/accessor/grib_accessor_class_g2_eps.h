@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,21 +15,18 @@
 class grib_accessor_g2_eps_t : public grib_accessor_unsigned_t
 {
 public:
-    /* Members defined in g2_eps */
-    const char* productDefinitionTemplateNumber;
-    const char* stream;
-    const char* type;
-    const char* stepType;
-    const char* derivedForecast;
-};
-
-class grib_accessor_class_g2_eps_t : public grib_accessor_class_unsigned_t
-{
-public:
-    grib_accessor_class_g2_eps_t(const char* name) : grib_accessor_class_unsigned_t(name) {}
+    grib_accessor_g2_eps_t() :
+        grib_accessor_unsigned_t() { class_name_ = "g2_eps"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_g2_eps_t{}; }
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    int value_count(long*) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* productDefinitionTemplateNumber_ = nullptr;
+    const char* stream_ = nullptr;
+    const char* type_ = nullptr;
+    const char* stepType_ = nullptr;
+    const char* derivedForecast_ = nullptr;
 };

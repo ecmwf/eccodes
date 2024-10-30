@@ -23,7 +23,7 @@ if (stepType is "instant" ) {
   if (type is "em" || type is "es" ) {
     alias productDefinitionTemplateNumber=epsStatisticsContinous;
   } else {
-    alias productDefinitionTemplateNumber=epsContinous;
+    alias productDefinitionTemplateNumber=epsContinuous;
   }
 }
 

@@ -47,7 +47,7 @@ alias La1 = latitudeOfFirstGridPoint;
 signed[4] longitudeOfFirstGridPoint ;
 alias Lo1 = longitudeOfFirstGridPoint;
 
-include "grib2/template.3.resolution_flags.def"
+include "grib2/templates/template.3.resolution_flags.def"
 
 # La2 - latitude of last grid point
 signed[4] latitudeOfLastGridPoint : edition_specific;

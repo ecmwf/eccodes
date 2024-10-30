@@ -47,20 +47,17 @@ typedef struct grib_action_set_darray {
 
 
 static grib_action_class _grib_action_class_set_darray = {
-    0,                              /* super                     */
-    "action_class_set_darray",                              /* name                      */
-    sizeof(grib_action_set_darray),            /* size                      */
-    0,                                   /* inited */
+    0,                              /* super */
+    "action_class_set_darray",                 /* name */
+    sizeof(grib_action_set_darray),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     &destroy,                            /* destroy */
-
-    &dump,                               /* dump                      */
-    0,                               /* xref                      */
-
-    0,             /* create_accessor*/
-
-    0,                            /* notify_change */
+    &dump,                               /* dump */
+    0,                               /* xref */
+    0,                    /* create_accessor */
+    0,                      /* notify_change */
     0,                            /* reparse */
     &execute,                            /* execute */
 };
@@ -117,7 +114,7 @@ static void destroy(grib_context* context, grib_action* act)
     grib_action_set_darray* a = (grib_action_set_darray*)act;
 
     grib_context_free_persistent(context, a->name);
-    grib_darray_delete(context, a->darray);
+    grib_darray_delete(a->darray);
     grib_context_free_persistent(context, act->name);
     grib_context_free_persistent(context, act->op);
 }

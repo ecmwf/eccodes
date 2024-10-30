@@ -168,16 +168,16 @@ int grib_tool(int argc, char** argv)
     grib_process_runtime_options(c, argc, argv, &global_options);
 
     grib_tool_init(&global_options);
-    if (global_options.dump_filename) {
-        dump_file = fopen(global_options.dump_filename, "w");
-        if (!dump_file) {
-            perror(global_options.dump_filename);
-            exit(1);
-        }
-    }
-    else {
-        dump_file = stdout;
-    }
+
+    Assert(global_options.dump_filename == NULL);
+    dump_file = stdout;
+    // if (global_options.dump_filename) {
+    //     dump_file = fopen(global_options.dump_filename, "w");
+    //     if (!dump_file) {
+    //         perror(global_options.dump_filename);
+    //         exit(1);
+    //     }
+    // }
 
     /* ECC-926: Currently only GRIB and BUFR indexing work. Disable the through_index if GTS etc */
     if ((global_options.mode == MODE_GRIB || global_options.mode == MODE_BUFR) &&
@@ -800,7 +800,7 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
                 grib_accessor* anAccessor = h->accessors[i];
                 if (anAccessor) {
                     for (j = 0; j < MAX_ACCESSOR_NAMES; j++) {
-                        const char* a_namespace = anAccessor->all_name_spaces[j];
+                        const char* a_namespace = anAccessor->all_name_spaces_[j];
                         if (a_namespace) {
                             all_namespace_vals[k++] = a_namespace;
                             ns_count++;
