@@ -84,15 +84,12 @@ void PolarStereographic::fillJob(api::MIRJob& job) const {
          << "Nj=" << y()->size() << ";"
          << "grid=" << std::abs(x().step()) << "/" << std::abs(y().step()) << ";"
          << "latitudeOfFirstGridPointInDegrees=" << firstLL[LLCOORDS::LAT] << ";"
-         << "longitudeOfFirstGridPointInDegrees=" << firstLL[LLCOORDS::LON] << ";"
-         << "iScansNegatively=" << (x().front() < x().back() ? 0 : 1) << ";"
-         << "jScansPositively=" << (y().front() < y().back() ? 1 : 0);
-    //  << "shapeOfTheEarth="  <<  << ";"
-    //  << "radius="           <<  << ";"
-    //  << "earthMajorAxis="   <<  << ";"
-    //  << "earthMinorAxis="   <<  << ";"
+         << "longitudeOfFirstGridPointInDegrees=" << firstLL[LLCOORDS::LON];
 
     job.set("grid", grid.str());
+
+    // some extra keys are edition-specific, so parent call is here
+    RegularGrid::fillJob(job);
 }
 
 
