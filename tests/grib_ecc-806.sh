@@ -17,7 +17,6 @@
 label="grib_ecc-806_test"
 tempGrb=temp.${label}.grb
 tempOut=temp.${label}.txt
-tempErr=temp.${label}.err
 
 # This NCEP grib2 file has the keys
 #   discipline = 0
@@ -36,5 +35,17 @@ res=`${tools_dir}/grib_get -p paramId,shortName,units,name $input`
 res=`${tools_dir}/grib_get -s preferLocalConcepts=1 -p paramId,shortName,units,name $input`
 [ "$res" = "260056 sdwe kg m**-2 Water equivalent of accumulated snow depth (deprecated)" ]
 
+# Test the environment variable too
+export ECCODES_GRIB_PREFER_LOCAL_CONCEPTS=1
+grib_check_key_equals $input preferLocalConceptsEnvVar,preferLocalConcepts '1 1'
+res=`${tools_dir}/grib_get -p paramId,shortName,units,name $input`
+[ "$res" = "260056 sdwe kg m**-2 Water equivalent of accumulated snow depth (deprecated)" ]
+
+export ECCODES_GRIB_PREFER_LOCAL_CONCEPTS=0
+grib_check_key_equals $input preferLocalConceptsEnvVar,preferLocalConcepts '0 0'
+unset ECCODES_GRIB_PREFER_LOCAL_CONCEPTS
+grib_check_key_equals $input preferLocalConceptsEnvVar,preferLocalConcepts '0 0'
+
+
 # Clean up
-rm -f $tempGrb $tempOut $tempErr
+rm -f $tempGrb $tempOut
