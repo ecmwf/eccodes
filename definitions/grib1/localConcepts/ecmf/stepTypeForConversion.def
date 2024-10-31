@@ -218,3 +218,6 @@
 "avg"={gribTablesVersionNo=172;indicatorOfParameter=178;centre=98;}
 # mtntrf
 "avg"={gribTablesVersionNo=172;indicatorOfParameter=179;centre=98;}
+
+# 10fg6
+"max"={gribTablesVersionNo=128;indicatorOfParameter=123;centre=98;}

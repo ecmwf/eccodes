@@ -11,42 +11,39 @@
 
 #include "grib_accessor_class_rdbtime_guess_date.h"
 
-grib_accessor_class_rdbtime_guess_date_t _grib_accessor_class_rdbtime_guess_date{"rdbtime_guess_date"};
-grib_accessor_class* grib_accessor_class_rdbtime_guess_date = &_grib_accessor_class_rdbtime_guess_date;
+grib_accessor_rdbtime_guess_date_t _grib_accessor_rdbtime_guess_date{};
+grib_accessor* grib_accessor_rdbtime_guess_date = &_grib_accessor_rdbtime_guess_date;
 
-
-void grib_accessor_class_rdbtime_guess_date_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_rdbtime_guess_date_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_long_t::init(a, l, c);
-    grib_accessor_rdbtime_guess_date_t* self = (grib_accessor_rdbtime_guess_date_t*)a;
+    grib_accessor_long_t::init(l, c);
     int n = 0;
 
-    self->typicalYear  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->typicalMonth = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->typicalDay   = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->rdbDay       = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->yearOrMonth  = grib_arguments_get_long(grib_handle_of_accessor(a), c, n++);
+    typicalYear_  = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    typicalMonth_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    typicalDay_   = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    rdbDay_       = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    yearOrMonth_  = grib_arguments_get_long(grib_handle_of_accessor(this), c, n++);
 
-    /* a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY; */
+    /* flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY; */
 }
 
-int grib_accessor_class_rdbtime_guess_date_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_rdbtime_guess_date_t::unpack_long(long* val, size_t* len)
 {
-    grib_accessor_rdbtime_guess_date_t* self = (grib_accessor_rdbtime_guess_date_t*)a;
-    grib_handle* h = grib_handle_of_accessor(a);
+    grib_handle* h = grib_handle_of_accessor(this);
     long typicalYear, typicalMonth, typicalDay, rdbDay;
     long rdbYear, rdbMonth;
 
-    int ret = grib_get_long(h, self->typicalYear, &typicalYear);
+    int ret = grib_get_long(h, typicalYear_, &typicalYear);
     if (ret)
         return ret;
-    ret = grib_get_long(h, self->typicalMonth, &typicalMonth);
+    ret = grib_get_long(h, typicalMonth_, &typicalMonth);
     if (ret)
         return ret;
-    ret = grib_get_long(h, self->typicalDay, &typicalDay);
+    ret = grib_get_long(h, typicalDay_, &typicalDay);
     if (ret)
         return ret;
-    ret = grib_get_long(h, self->rdbDay, &rdbDay);
+    ret = grib_get_long(h, rdbDay_, &rdbDay);
     if (ret)
         return ret;
 
@@ -65,13 +62,13 @@ int grib_accessor_class_rdbtime_guess_date_t::unpack_long(grib_accessor* a, long
         rdbMonth = typicalMonth;
     }
 
-    *val = self->yearOrMonth == 1 ? rdbYear : rdbMonth;
+    *val = yearOrMonth_ == 1 ? rdbYear : rdbMonth;
     *len = 1;
 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_rdbtime_guess_date_t::pack_long(grib_accessor* a, const long* v, size_t* len)
+int grib_accessor_rdbtime_guess_date_t::pack_long(const long* v, size_t* len)
 {
     /* do nothing*/
     return GRIB_SUCCESS;

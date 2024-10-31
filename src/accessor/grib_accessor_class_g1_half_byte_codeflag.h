@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,17 +15,12 @@
 class grib_accessor_g1_half_byte_codeflag_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in g1_half_byte_codeflag */
-};
-
-class grib_accessor_class_g1_half_byte_codeflag_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_g1_half_byte_codeflag_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_g1_half_byte_codeflag_t() :
+        grib_accessor_gen_t() { class_name_ = "g1_half_byte_codeflag"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_g1_half_byte_codeflag_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    long get_native_type() override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
 };

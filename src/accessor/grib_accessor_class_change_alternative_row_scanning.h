@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,20 +15,17 @@
 class grib_accessor_change_alternative_row_scanning_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in change_alternative_row_scanning */
-    const char* values;
-    const char* Ni;
-    const char* Nj;
-    const char* alternativeRowScanning;
-};
-
-class grib_accessor_class_change_alternative_row_scanning_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_change_alternative_row_scanning_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_change_alternative_row_scanning_t() :
+        grib_accessor_gen_t() { class_name_ = "change_alternative_row_scanning"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_change_alternative_row_scanning_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    long get_native_type() override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* values_ = nullptr;
+    const char* Ni_ = nullptr;
+    const char* Nj_ = nullptr;
+    const char* alternativeRowScanning_ = nullptr;
 };

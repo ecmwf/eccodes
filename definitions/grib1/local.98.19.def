@@ -12,6 +12,7 @@ alias perturbationNumber=number;
 
 unsigned[1] ensembleSize  : dump;
 alias totalNumber=ensembleSize;
+alias numberOfForecastsInEnsemble=ensembleSize;
 
 meta quantile sprintf("%s:%s",number,ensembleSize);
 

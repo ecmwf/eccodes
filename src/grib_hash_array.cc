@@ -11,8 +11,9 @@
 #include "grib_api_internal.h"
 
 
-grib_hash_array_value* grib_integer_hash_array_value_new(grib_context* c, const char* name, grib_iarray* array)
+grib_hash_array_value* grib_integer_hash_array_value_new(const char* name, grib_iarray* array)
 {
+    grib_context* c = grib_context_get_default();
     grib_hash_array_value* v = (grib_hash_array_value*)grib_context_malloc_clear_persistent(c, sizeof(grib_hash_array_value));
 
     v->name   = grib_context_strdup_persistent(c, name);

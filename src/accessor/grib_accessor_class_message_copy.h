@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,18 +15,13 @@
 class grib_accessor_message_copy_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in message_copy */
-};
-
-class grib_accessor_class_message_copy_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_message_copy_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_message_copy_t() :
+        grib_accessor_gen_t() { class_name_ = "message_copy"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_message_copy_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
-    size_t string_length(grib_accessor*) override;
-    long byte_count(grib_accessor*) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    long get_native_type() override;
+    int unpack_string(char*, size_t* len) override;
+    size_t string_length() override;
+    long byte_count() override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
 };

@@ -20,9 +20,9 @@ static int copy_values(grib_handle* h, grib_accessor* ga)
     /* printf("copy_values stack is %ld\n",(long)h->values_stack);*/
     for (j = 0; j < h->values_stack; j++) {
         for (i = 0; i < h->values_count[j]; i++) {
-            for (k = 0; (k < MAX_ACCESSOR_NAMES) && (ga->all_names[k] != NULL); k++) {
+            for (k = 0; (k < MAX_ACCESSOR_NAMES) && (ga->all_names_[k] != NULL); k++) {
                 /*printf("copy_values: %s %s\n",h->values[j][i].name,ga->all_names[k]);*/
-                if (strcmp(h->values[j][i].name, ga->all_names[k]) == 0) {
+                if (strcmp(h->values[j][i].name, ga->all_names_[k]) == 0) {
                     size_t len = 1;
                     /*printf("SET VALUES %s\n",h->values[j][i].name);*/
                     switch (h->values[j][i].type) {
@@ -75,21 +75,21 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
     grib_handle* g;
     grib_accessor* ao = NULL;
     int e, pack_missing = 0;
-    grib_context_log(h->context, GRIB_LOG_DEBUG, "XXXXX Copying  %s", ga->name);
+    grib_context_log(h->context, GRIB_LOG_DEBUG, "XXXXX Copying  %s", ga->name_);
 
     if (default_value) {
         grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying:  setting %s to default value",
-                         ga->name);
+                         ga->name_);
         ga->pack_expression(grib_arguments_get_expression(h, default_value, 0));
     }
 
-    if ((ga->flags & GRIB_ACCESSOR_FLAG_NO_COPY) ||
-        ((ga->flags & GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC) &&
+    if ((ga->flags_ & GRIB_ACCESSOR_FLAG_NO_COPY) ||
+        ((ga->flags_ & GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC) &&
          loader->changing_edition) ||
-        (ga->flags & GRIB_ACCESSOR_FLAG_FUNCTION) ||
-        ((ga->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) &&
-         !(ga->flags & GRIB_ACCESSOR_FLAG_COPY_OK))) {
-        grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying %s ignored", ga->name);
+        (ga->flags_ & GRIB_ACCESSOR_FLAG_FUNCTION) ||
+        ((ga->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) &&
+         !(ga->flags_ & GRIB_ACCESSOR_FLAG_COPY_OK))) {
+        grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying %s ignored", ga->name_);
         return GRIB_SUCCESS;
     }
 
@@ -111,7 +111,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
     g = h;
     while (g) {
         if (copy_values(g, ga) == GRIB_SUCCESS) {
-            grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying: setting %s to multi-set-value", ga->name);
+            grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying: setting %s to multi-set-value", ga->name_);
             return GRIB_SUCCESS;
         }
         g = g->main;
@@ -121,12 +121,12 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
     /* Check if the same name exists in the original message ... */
     k = 0;
     while ((k < MAX_ACCESSOR_NAMES) &&
-           ((name = ga->all_names[k]) != NULL) &&
+           ((name = ga->all_names_[k]) != NULL) &&
            ((ret = grib_get_size(h, name, &len)) != GRIB_SUCCESS))
         k++;
 
     if (ret != GRIB_SUCCESS) {
-        name = ga->name;
+        name = ga->name_;
 #ifdef MY_DEBUG
         if (first) {
             missing = codes_getenv("ECCODES_PRINT_MISSING");
@@ -152,16 +152,16 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
         return GRIB_SUCCESS;
     }
 
-    if ((ga->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) && grib_is_missing(h, name, &e) && e == GRIB_SUCCESS && len == 1) {
+    if ((ga->flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) && grib_is_missing(h, name, &e) && e == GRIB_SUCCESS && len == 1) {
         ga->pack_missing();
         pack_missing = 1;
     }
 
     const long ga_type = ga->get_native_type();
 
-    if ((ga->flags & GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION) && !loader->changing_edition) {
+    if ((ga->flags_ & GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION) && !loader->changing_edition) {
         // See ECC-1560 and ECC-1644
-        grib_context_log(h->context, GRIB_LOG_DEBUG, "Skipping %s (only copied if changing edition)", ga->name);
+        grib_context_log(h->context, GRIB_LOG_DEBUG, "Skipping %s (only copied if changing edition)", ga->name_);
         return GRIB_SUCCESS;
     }
 
@@ -184,8 +184,8 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
             ret  = grib_get_long_array_internal(h, name, lval, &len);
             if (ret == GRIB_SUCCESS) {
                 grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying %d long(s) %d to %s", len, lval[0], name);
-                if (ga->same) {
-                    ret = grib_set_long_array(grib_handle_of_accessor(ga), ga->name, lval, len);
+                if (ga->same_) {
+                    ret = grib_set_long_array(grib_handle_of_accessor(ga), ga->name_, lval, len);
 
                     /* Allow for lists to be resized */
                     if ((ret == GRIB_WRONG_ARRAY_SIZE || ret == GRIB_ARRAY_TOO_SMALL) && loader->list_is_resized)
@@ -198,7 +198,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
                     }
                     else {
                         /* If we have just one key of type long which has one octet, then do not exceed maximum value */
-                        const long num_octets = ga->length;
+                        const long num_octets = ga->length_;
                         if (len == 1 && num_octets == 1 && *lval > 255) {
                             *lval = 0; /* Reset to a reasonable value */
                         }
@@ -216,8 +216,8 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
             ret  = grib_get_double_array(h, name, dval, &len); /* GRIB-898 */
             if (ret == GRIB_SUCCESS) {
                 grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying %d double(s) %g to %s", len, dval[0], name);
-                if (ga->same) {
-                    ret = grib_set_double_array(grib_handle_of_accessor(ga), ga->name, dval, len);
+                if (ga->same_) {
+                    ret = grib_set_double_array(grib_handle_of_accessor(ga), ga->name_, dval, len);
 
                     /* Allow for lists to be resized */
                     if ((ret == GRIB_WRONG_ARRAY_SIZE || ret == GRIB_ARRAY_TOO_SMALL) && loader->list_is_resized)
@@ -251,7 +251,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
 
         default:
             grib_context_log(h->context, GRIB_LOG_ERROR,
-                "Copying %s, cannot establish type %ld [%s]", name, ga->get_native_type(), ga->creator->cclass->name);
+                "Copying %s, cannot establish type %ld [%s]", name, ga->get_native_type(), ga->creator_->cclass->name);
             break;
     }
 

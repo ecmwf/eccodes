@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,25 +15,22 @@
 class grib_accessor_latlon_increment_t : public grib_accessor_double_t
 {
 public:
-    /* Members defined in latlon_increment */
-    const char*                  directionIncrementGiven;
-    const char*                  directionIncrement;
-    const char*                  scansPositively;
-    const char*                  first;
-    const char*                  last;
-    const char*                  numberOfPoints;
-    const char*                  angleMultiplier;
-    const char*                  angleDivisor;
-    long                   isLongitude;
-};
-
-class grib_accessor_class_latlon_increment_t : public grib_accessor_class_double_t
-{
-public:
-    grib_accessor_class_latlon_increment_t(const char* name) : grib_accessor_class_double_t(name) {}
+    grib_accessor_latlon_increment_t() :
+        grib_accessor_double_t() { class_name_ = "latlon_increment"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_latlon_increment_t{}; }
-    int is_missing(grib_accessor*) override;
-    int pack_double(grib_accessor*, const double* val, size_t* len) override;
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int is_missing() override;
+    int pack_double(const double* val, size_t* len) override;
+    int unpack_double(double* val, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* directionIncrementGiven_ = nullptr;
+    const char* directionIncrement_ = nullptr;
+    const char* scansPositively_ = nullptr;
+    const char* first_ = nullptr;
+    const char* last_ = nullptr;
+    const char* numberOfPoints_ = nullptr;
+    const char* angleMultiplier_ = nullptr;
+    const char* angleDivisor_ = nullptr;
+    long isLongitude_ = 0;
 };

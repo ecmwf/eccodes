@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,17 +10,15 @@
 
 #include "grib_accessor_class_codeflag.h"
 
-grib_accessor_class_codeflag_t _grib_accessor_class_codeflag{ "codeflag" };
-grib_accessor_class* grib_accessor_class_codeflag = &_grib_accessor_class_codeflag;
+grib_accessor_codeflag_t _grib_accessor_codeflag{};
+grib_accessor* grib_accessor_codeflag = &_grib_accessor_codeflag;
 
-
-void grib_accessor_class_codeflag_t::init(grib_accessor* a, const long len, grib_arguments* param)
+void grib_accessor_codeflag_t::init(const long len, grib_arguments* param)
 {
-    grib_accessor_class_unsigned_t::init(a, len, param);
-    grib_accessor_codeflag_t* self = (grib_accessor_codeflag_t*)a;
-    a->length = len;
-    self->tablename = grib_arguments_get_string(grib_handle_of_accessor(a), param, 0);
-    Assert(a->length >= 0);
+    grib_accessor_unsigned_t::init(len, param);
+    length_    = len;
+    tablename_ = grib_arguments_get_string(grib_handle_of_accessor(this), param, 0);
+    Assert(length_ >= 0);
 }
 
 static int test_bit(long a, long b)
@@ -30,10 +27,9 @@ static int test_bit(long a, long b)
     return a & (1 << b);
 }
 
-static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
+int grib_accessor_codeflag_t::grib_get_codeflag(long code, char* codename)
 {
-    const grib_accessor_codeflag_t* self = (grib_accessor_codeflag_t*)a;
-    FILE* f = NULL;
+    FILE* f                              = NULL;
     char fname[1024];
     char bval[50];
     char num[50];
@@ -43,26 +39,26 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
     int j    = 0;
     int err  = 0;
 
-    err = grib_recompose_name(grib_handle_of_accessor(a), NULL, self->tablename, fname, 1);
+    err = grib_recompose_name(grib_handle_of_accessor(this), NULL, tablename_, fname, 1);
     if (err) {
-        strncpy(fname, self->tablename, sizeof(fname) - 1);
+        strncpy(fname, tablename_, sizeof(fname) - 1);
         fname[sizeof(fname) - 1] = '\0';
     }
 
-    if ((filename = grib_context_full_defs_path(a->context, fname)) == NULL) {
-        grib_context_log(a->context, GRIB_LOG_WARNING, "Cannot open flag table %s", filename);
+    if ((filename = grib_context_full_defs_path(context_, fname)) == NULL) {
+        grib_context_log(context_, GRIB_LOG_WARNING, "Cannot open flag table %s", filename);
         strcpy(codename, "Cannot open flag table");
         return GRIB_FILE_NOT_FOUND;
     }
 
     f = codes_fopen(filename, "r");
     if (!f) {
-        grib_context_log(a->context, (GRIB_LOG_WARNING) | (GRIB_LOG_PERROR), "Cannot open flag table %s", filename);
+        grib_context_log(context_, (GRIB_LOG_WARNING) | (GRIB_LOG_PERROR), "Cannot open flag table %s", filename);
         strcpy(codename, "Cannot open flag table");
         return GRIB_FILE_NOT_FOUND;
     }
 
-    // strcpy(codename, self->tablename);
+    // strcpy(codename, tablename_ );
     // strcat(codename,": ");
     // j = strlen(codename);
 
@@ -70,7 +66,7 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
         sscanf(line, "%49s %49s", num, bval);
 
         if (num[0] != '#') {
-            if ((test_bit(code, a->length * 8 - atol(num)) > 0) == atol(bval)) {
+            if ((test_bit(code, length_ * 8 - atol(num)) > 0) == atol(bval)) {
                 size_t linelen = strlen(line);
                 codename[j++]  = '(';
                 codename[j++]  = num[0];
@@ -99,24 +95,23 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_codeflag_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_codeflag_t::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-void grib_accessor_class_codeflag_t::dump(grib_accessor* a, grib_dumper* dumper)
+void grib_accessor_codeflag_t::dump(grib_dumper* dumper)
 {
-    const grib_accessor_codeflag_t* self = (grib_accessor_codeflag_t*)a;
-    long v = 0;
+    long v              = 0;
     char flagname[1024] = {0,};
     char fname[1024] = {0,};
 
     size_t llen = 1;
 
-    grib_recompose_name(grib_handle_of_accessor(a), NULL, self->tablename, fname, 1);
-    a->unpack_long(&v, &llen);
-    grib_get_codeflag(a, v, flagname);
+    grib_recompose_name(grib_handle_of_accessor(this), NULL, tablename_, fname, 1);
+    unpack_long(&v, &llen);
+    grib_get_codeflag(v, flagname);
 
-    grib_dump_bits(dumper, a, flagname);
+    grib_dump_bits(dumper, this, flagname);
 }

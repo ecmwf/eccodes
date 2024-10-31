@@ -16,30 +16,27 @@
 class grib_accessor_julian_date_t : public grib_accessor_double_t
 {
 public:
-    /* Members defined in julian_date */
-    const char *year;
-    const char *month;
-    const char *day;
-    const char *hour;
-    const char *minute;
-    const char *second;
-    const char *ymd;
-    const char *hms;
-    char sep[5];
-};
-
-class grib_accessor_class_julian_date_t : public grib_accessor_class_double_t
-{
-public:
-    grib_accessor_class_julian_date_t(const char* name) : grib_accessor_class_double_t(name) {}
+    grib_accessor_julian_date_t() :
+        grib_accessor_double_t() { class_name_ = "julian_date"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_julian_date_t{}; }
-    int pack_double(grib_accessor*, const double* val, size_t* len) override;
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int pack_string(grib_accessor*, const char*, size_t* len) override;
-    int pack_expression(grib_accessor*, grib_expression*) override;
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_double(const double* val, size_t* len) override;
+    int pack_long(const long* val, size_t* len) override;
+    int pack_string(const char*, size_t* len) override;
+    int pack_expression(grib_expression*) override;
+    int unpack_double(double* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    int unpack_string(char*, size_t* len) override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* year_ = nullptr;
+    const char* month_ = nullptr;
+    const char* day_ = nullptr;
+    const char* hour_ = nullptr;
+    const char* minute_ = nullptr;
+    const char* second_ = nullptr;
+    const char* ymd_ = nullptr;
+    const char* hms_ = nullptr;
+    char sep_[5];
 };

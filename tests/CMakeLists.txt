@@ -114,6 +114,7 @@ if( HAVE_BUILD_TOOLS )
         grib2_wave_spectra
         grib_element
         grib_suppressed
+        grib_destine_mars_keys
         grib_2nd_order_numValues
         grib_ecc-136
         grib_ecc-530
@@ -142,9 +143,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1654
         grib_ecc-1671
         grib_ecc-1708
-        grib_ecc-1691
         grib_ecc-1766
-        grib_ecc-1806
         grib_ecc-1829
         bufr_ecc-1028
         bufr_ecc-1195
@@ -276,13 +275,19 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1467
         grib_ecc-1764
         grib_ecc-1792
+        grib_ecc-1806
+        #grib_ecc-1898
         grib_ecc-1907
+        grib_ecc-1941
+        grib_ecc-1942
         grib_modelName
         grib_sub_hourly
         grib_set_bytes
         grib_set_force
         bufr_ecc-556
+        codes_assert
         codes_ecc-1698
+        codes_ecc-1929
         codes_get_string
         codes_codetable
         gts_get

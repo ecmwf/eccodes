@@ -15,23 +15,20 @@
 class grib_accessor_ibmfloat_t : public grib_accessor_double_t
 {
 public:
-    /* Members defined in ibmfloat */
-    grib_arguments* arg;
-};
-
-class grib_accessor_class_ibmfloat_t : public grib_accessor_class_double_t
-{
-public:
-    grib_accessor_class_ibmfloat_t(const char* name) : grib_accessor_class_double_t(name) {}
+    grib_accessor_ibmfloat_t() :
+        grib_accessor_double_t() { class_name_ = "ibmfloat"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_ibmfloat_t{}; }
-    int pack_double(grib_accessor*, const double* val, size_t* len) override;
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int unpack_float(grib_accessor*, float* val, size_t* len) override;
-    long byte_count(grib_accessor*) override;
-    long byte_offset(grib_accessor*) override;
-    long next_offset(grib_accessor*) override;
-    int value_count(grib_accessor*, long*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
-    void update_size(grib_accessor*, size_t) override;
-    int nearest_smaller_value(grib_accessor*, double, double*) override;
+    int pack_double(const double* val, size_t* len) override;
+    int unpack_double(double* val, size_t* len) override;
+    int unpack_float(float* val, size_t* len) override;
+    long byte_count() override;
+    long byte_offset() override;
+    long next_offset() override;
+    int value_count(long*) override;
+    void init(const long, grib_arguments*) override;
+    void update_size(size_t) override;
+    int nearest_smaller_value(double, double*) override;
+
+private:
+    grib_arguments* arg_ = nullptr;
 };

@@ -28,10 +28,11 @@ public:
 
     int rank() const { return rank_; }
 
-    grib_accessor* accessor = nullptr;
+    grib_accessor* accessor    = nullptr;
     grib_accessors_list* next_ = nullptr;
     grib_accessors_list* prev_ = nullptr;
     grib_accessors_list* last_ = nullptr;
+
 private:
     int rank_ = 0;
 };

@@ -106,7 +106,7 @@ grib_concept_condition* grib_concept_condition_new(grib_context* c, const char* 
 void grib_concept_condition_delete(grib_context* c, grib_concept_condition* v);
 
 /* grib_hash_array.cc */
-grib_hash_array_value* grib_integer_hash_array_value_new(grib_context* c, const char* name, grib_iarray* array);
+grib_hash_array_value* grib_integer_hash_array_value_new(const char* name, grib_iarray* array);
 
 /* grib_bufr_descriptor.cc */
 bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor, int code, int silent, int* err);
@@ -117,7 +117,7 @@ int grib_bufr_descriptor_can_be_missing(const bufr_descriptor* v);
 void grib_bufr_descriptor_delete(bufr_descriptor* v);
 
 /* grib_bufr_descriptors_array.cc */
-bufr_descriptors_array* grib_bufr_descriptors_array_new(grib_context* c, size_t size, size_t incsize);
+bufr_descriptors_array* grib_bufr_descriptors_array_new(size_t size, size_t incsize);
 bufr_descriptor* grib_bufr_descriptors_array_pop_front(bufr_descriptors_array* a);
 bufr_descriptors_array* grib_bufr_descriptors_array_push(bufr_descriptors_array* v, bufr_descriptor* val);
 bufr_descriptors_array* grib_bufr_descriptors_array_append(bufr_descriptors_array* v, bufr_descriptors_array* ar);
@@ -128,30 +128,30 @@ size_t grib_bufr_descriptors_array_used_size(bufr_descriptors_array* v);
 
 /* grib_darray.cc */
 void grib_darray_print(const char* title, const grib_darray* darray);
-grib_darray* grib_darray_new(grib_context* c, size_t size, size_t incsize);
-grib_darray* grib_darray_push(grib_context* c, grib_darray* v, double val);
-void grib_darray_delete(grib_context* c, grib_darray* v);
+grib_darray* grib_darray_new(size_t size, size_t incsize);
+grib_darray* grib_darray_push(grib_darray* v, double val);
+void grib_darray_delete(grib_darray* v);
 int grib_darray_is_constant(grib_darray* v, double epsilon);
 size_t grib_darray_used_size(grib_darray* v);
 
 /* grib_sarray.cc */
 void grib_sarray_print(const char* title, const grib_sarray* sarray);
-grib_sarray* grib_sarray_new(grib_context* c, size_t size, size_t incsize);
-grib_sarray* grib_sarray_push(grib_context* c, grib_sarray* v, char* val);
-void grib_sarray_delete(grib_context* c, grib_sarray* v);
-void grib_sarray_delete_content(grib_context* c, grib_sarray* v);
-char** grib_sarray_get_array(grib_context* c, grib_sarray* v);
+grib_sarray* grib_sarray_new(size_t size, size_t incsize);
+grib_sarray* grib_sarray_push(grib_sarray* v, char* val);
+void grib_sarray_delete(grib_sarray* v);
+void grib_sarray_delete_content(grib_sarray* v);
+char** grib_sarray_get_array(grib_sarray* v);
 size_t grib_sarray_used_size(grib_sarray* v);
 
 /* grib_oarray.cc */
-grib_oarray* grib_oarray_new(grib_context* c, size_t size, size_t incsize);
-grib_oarray* grib_oarray_push(grib_context* c, grib_oarray* v, void* val);
-void grib_oarray_delete(grib_context* c, grib_oarray* v);
+grib_oarray* grib_oarray_new(size_t size, size_t incsize);
+grib_oarray* grib_oarray_push(grib_oarray* v, void* val);
+void grib_oarray_delete(grib_oarray* v);
 void* grib_oarray_get(grib_oarray* v, int i);
 
 /* grib_iarray.cc */
 void grib_iarray_print(const char* title, const grib_iarray* iarray);
-grib_iarray* grib_iarray_new(grib_context* c, size_t size, size_t incsize);
+grib_iarray* grib_iarray_new(size_t size, size_t incsize);
 long grib_iarray_pop(grib_iarray* a);
 long grib_iarray_pop_front(grib_iarray* a);
 grib_iarray* grib_iarray_push(grib_iarray* v, long val);
@@ -162,26 +162,26 @@ size_t grib_iarray_used_size(grib_iarray* v);
 
 /* grib_vdarray.cc */
 void grib_vdarray_print(const char* title, const grib_vdarray* vdarray);
-grib_vdarray* grib_vdarray_new(grib_context* c, size_t size, size_t incsize);
-grib_vdarray* grib_vdarray_push(grib_context* c, grib_vdarray* v, grib_darray* val);
-void grib_vdarray_delete(grib_context* c, grib_vdarray* v);
-void grib_vdarray_delete_content(grib_context* c, grib_vdarray* v);
+grib_vdarray* grib_vdarray_new(size_t size, size_t incsize);
+grib_vdarray* grib_vdarray_push(grib_vdarray* v, grib_darray* val);
+void grib_vdarray_delete(grib_vdarray* v);
+void grib_vdarray_delete_content(grib_vdarray* v);
 size_t grib_vdarray_used_size(grib_vdarray* v);
 
 /* grib_vsarray.cc */
 void grib_vsarray_print(const char* title, const grib_vsarray* vdarray);
-grib_vsarray* grib_vsarray_new(grib_context* c, size_t size, size_t incsize);
-grib_vsarray* grib_vsarray_push(grib_context* c, grib_vsarray* v, grib_sarray* val);
-void grib_vsarray_delete(grib_context* c, grib_vsarray* v);
-void grib_vsarray_delete_content(grib_context* c, grib_vsarray* v);
+grib_vsarray* grib_vsarray_new(size_t size, size_t incsize);
+grib_vsarray* grib_vsarray_push(grib_vsarray* v, grib_sarray* val);
+void grib_vsarray_delete(grib_vsarray* v);
+void grib_vsarray_delete_content(grib_vsarray* v);
 size_t grib_vsarray_used_size(grib_vsarray* v);
 
 /* grib_viarray.cc */
 void grib_viarray_print(const char* title, const grib_viarray* viarray);
-grib_viarray* grib_viarray_new(grib_context* c, size_t size, size_t incsize);
-grib_viarray* grib_viarray_push(grib_context* c, grib_viarray* v, grib_iarray* val);
-void grib_viarray_delete(grib_context* c, grib_viarray* v);
-void grib_viarray_delete_content(grib_context* c, grib_viarray* v);
+grib_viarray* grib_viarray_new(size_t size, size_t incsize);
+grib_viarray* grib_viarray_push(grib_viarray* v, grib_iarray* val);
+void grib_viarray_delete(grib_viarray* v);
+void grib_viarray_delete_content(grib_viarray* v);
 
 /* grib_accessor_class_ascii.cc*/
 
@@ -196,15 +196,15 @@ void grib_viarray_delete_content(grib_context* c, grib_viarray* v);
 /* grib_accessor_class_bufr_data_array.cc*/
 
 /* grib_accessor_class_bufr_data_element.cc */
-void accessor_bufr_data_element_set_index(grib_accessor* a, long index);
-void accessor_bufr_data_element_set_type(grib_accessor* a, int type);
-void accessor_bufr_data_element_set_numberOfSubsets(grib_accessor* a, long numberOfSubsets);
-void accessor_bufr_data_element_set_subsetNumber(grib_accessor* a, long subsetNumber);
-void accessor_bufr_data_element_set_compressedData(grib_accessor* a, int compressedData);
-void accessor_bufr_data_element_set_descriptors(grib_accessor* a, bufr_descriptors_array* descriptors);
-void accessor_bufr_data_element_set_numericValues(grib_accessor* a, grib_vdarray* numericValues);
-void accessor_bufr_data_element_set_stringValues(grib_accessor* a, grib_vsarray* stringValues);
-void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor* a, grib_viarray* elementsDescriptorsIndex);
+//void accessor_bufr_data_element_set_index(grib_accessor* a, long index);
+//void accessor_bufr_data_element_set_type(grib_accessor* a, int type);
+//void accessor_bufr_data_element_set_numberOfSubsets(grib_accessor* a, long numberOfSubsets);
+//void accessor_bufr_data_element_set_subsetNumber(grib_accessor* a, long subsetNumber);
+//void accessor_bufr_data_element_set_compressedData(grib_accessor* a, int compressedData);
+//void accessor_bufr_data_element_set_descriptors(grib_accessor* a, bufr_descriptors_array* descriptors);
+//void accessor_bufr_data_element_set_numericValues(grib_accessor* a, grib_vdarray* numericValues);
+//void accessor_bufr_data_element_set_stringValues(grib_accessor* a, grib_vsarray* stringValues);
+//void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor* a, grib_viarray* elementsDescriptorsIndex);
 
 /* grib_accessor_class_bufr_elements_table.cc */
 int bufr_descriptor_is_marker(bufr_descriptor* d);
@@ -242,7 +242,7 @@ grib_nearest* grib_nearest_new(const grib_handle* h, int* error);
 int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s4, long* total_length, long* sec4_len);
 
 /* grib_accessor_class_variable.cc */
-void accessor_variable_set_type(grib_accessor* a, int type);
+//void accessor_variable_set_type(grib_accessor* a, int type);
 
 /* grib_accessor_class_expanded_descriptors.cc */
 int grib_accessor_class_expanded_descriptors_set_do_expand(grib_accessor* a, long do_expand);
@@ -486,6 +486,7 @@ void grib_file_close(const char* filename, int force, int* err);
 void grib_file_close_all(int* err);
 grib_file* grib_get_file(const char* filename, int* err);
 void grib_file_delete(grib_file* file);
+void grib_file_pool_print(const char* title, FILE* out);
 
 /* grib_geography.cc */
 int grib_get_gaussian_latitudes(long trunc, double* lats);
@@ -732,8 +733,9 @@ int grib_get_string_array(const grib_handle* h, const char* name, char** val, si
 int grib_get_long_array_internal(grib_handle* h, const char* name, long* val, size_t* length);
 int grib_get_long_array(const grib_handle* h, const char* name, long* val, size_t* length);
 int grib_set_values(grib_handle* h, grib_values* args, size_t count);
+int grib_set_values_silent(grib_handle* h, grib_values* args, size_t count, int silent);
 int grib_get_nearest_smaller_value(grib_handle* h, const char* name, double val, double* nearest);
-void grib_print_values(const char* title, grib_values* values, FILE* out);
+void grib_print_values(const char* title, const grib_values* values, FILE* out, int count);
 int grib_values_check(grib_handle* h, grib_values* values, int count);
 int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type);
 int codes_compare_key(grib_handle* h1, grib_handle* h2, const char* key, int compare_flags);
@@ -811,15 +813,15 @@ grib_nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args, int* er
 
 /* grib_iterator.cc */
 int grib_get_data(const grib_handle* h, double* lats, double* lons, double* values);
-int grib_iterator_next(grib_iterator* i, double* lat, double* lon, double* value);
-int grib_iterator_has_next(grib_iterator* i);
-int grib_iterator_previous(grib_iterator* i, double* lat, double* lon, double* value);
-int grib_iterator_reset(grib_iterator* i);
-int grib_iterator_init(grib_iterator* i, grib_handle* h, grib_arguments* args);
-int grib_iterator_delete(grib_iterator* i);
+//int grib_iterator_next(grib_iterator* i, double* lat, double* lon, double* value);
+//int grib_iterator_has_next(grib_iterator* i);
+//int grib_iterator_previous(grib_iterator* i, double* lat, double* lon, double* value);
+//int grib_iterator_reset(grib_iterator* i);
+//int grib_iterator_init(grib_iterator* i, grib_handle* h, grib_arguments* args);
+//int grib_iterator_delete(grib_iterator* i);
 
 /* grib_iterator_class.cc */
-grib_iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* error);
+eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* error);
 
 /* grib_iterator_class_gen.cc */
 int transform_iterator_data(grib_context* c, double* data, long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning, size_t numPoints, long nx, long ny);

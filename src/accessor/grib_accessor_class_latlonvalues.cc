@@ -11,37 +11,35 @@
 
 #include "grib_accessor_class_latlonvalues.h"
 
-grib_accessor_class_latlonvalues_t _grib_accessor_class_latlonvalues{ "latlonvalues" };
-grib_accessor_class* grib_accessor_class_latlonvalues = &_grib_accessor_class_latlonvalues;
+grib_accessor_latlonvalues_t _grib_accessor_latlonvalues{};
+grib_accessor* grib_accessor_latlonvalues = &_grib_accessor_latlonvalues;
 
-
-void grib_accessor_class_latlonvalues_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_latlonvalues_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_double_t::init(a, l, c);
-    grib_accessor_latlonvalues_t* self = (grib_accessor_latlonvalues_t*)a;
+    grib_accessor_double_t::init(l, c);
     int n = 0;
 
-    self->values = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    values_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
 
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_latlonvalues_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+int grib_accessor_latlonvalues_t::unpack_double(double* val, size_t* len)
 {
-    grib_context* c = a->context;
+    grib_context* c = context_;
     int err         = 0;
     double* v       = val;
     double lat, lon, value;
     size_t size         = 0;
     long count          = 0;
-    grib_iterator* iter = grib_iterator_new(grib_handle_of_accessor(a), 0, &err);
+    grib_iterator* iter = grib_iterator_new(grib_handle_of_accessor(this), 0, &err);
     if (err) {
         grib_iterator_delete(iter);
         grib_context_log(c, GRIB_LOG_ERROR, "latlonvalues: Unable to create iterator");
         return err;
     }
 
-    err = value_count(a, &count);
+    err = value_count(&count);
     if (err) return err;
     size = count;
 
@@ -63,14 +61,13 @@ int grib_accessor_class_latlonvalues_t::unpack_double(grib_accessor* a, double* 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_latlonvalues_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_latlonvalues_t::value_count(long* count)
 {
-    grib_accessor_latlonvalues_t* self = (grib_accessor_latlonvalues_t*)a;
-    grib_handle* h                     = grib_handle_of_accessor(a);
-    int ret                            = GRIB_SUCCESS;
+    grib_handle* h = grib_handle_of_accessor(this);
+    int ret        = GRIB_SUCCESS;
     size_t size;
-    if ((ret = grib_get_size(h, self->values, &size)) != GRIB_SUCCESS) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "latlonvalues: Unable to get size of %s", self->values);
+    if ((ret = grib_get_size(h, values_, &size)) != GRIB_SUCCESS) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "latlonvalues: Unable to get size of %s", values_);
         return ret;
     }
 

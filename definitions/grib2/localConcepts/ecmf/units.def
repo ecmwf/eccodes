@@ -18650,13 +18650,13 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 255 ;
 	}
-#Snow evaporation
+#Time-mean snow evaporation rate
 'm of water equivalent s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 44 ;
 	}
-#Snowmelt
+#Time-mean snowmelt rate
 'm of water equivalent s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
@@ -18746,13 +18746,13 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 255 ;
 	}
-#Snow evaporation anomaly
+#Time-mean snow evaporation anomalous rate of accumulation
 'm of water equivalent s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 44 ;
 	}
-#Snowmelt anomaly
+#Time-mean snowmelt anomalous rate of accumulation
 'm of water equivalent s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
@@ -18872,7 +18872,7 @@
 	 parameterCategory = 173 ;
 	 parameterNumber = 181 ;
 	}
-#Evaporation anomalous rate of accumulation
+#Time-mean evaporation anomalous rate of accumulation
 'm of water equivalent s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;

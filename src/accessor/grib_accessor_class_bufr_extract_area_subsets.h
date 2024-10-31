@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,25 +15,24 @@
 class grib_accessor_bufr_extract_area_subsets_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in bufr_extract_area_subsets */
-    const char* doExtractSubsets;
-    const char* numberOfSubsets;
-    const char* extractSubsetList;
-    const char* extractAreaWestLongitude;
-    const char* extractAreaEastLongitude;
-    const char* extractAreaNorthLatitude;
-    const char* extractAreaSouthLatitude;
-    const char* extractAreaLongitudeRank;
-    const char* extractAreaLatitudeRank;
-    const char* extractedAreaNumberOfSubsets;
-};
-
-class grib_accessor_class_bufr_extract_area_subsets_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_bufr_extract_area_subsets_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_bufr_extract_area_subsets_t() :
+        grib_accessor_gen_t() { class_name_ = "bufr_extract_area_subsets"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_bufr_extract_area_subsets_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    long get_native_type() override;
+    int pack_long(const long* val, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* doExtractSubsets_ = nullptr;
+    const char* numberOfSubsets_ = nullptr;
+    const char* extractSubsetList_ = nullptr;
+    const char* extractAreaWestLongitude_ = nullptr;
+    const char* extractAreaEastLongitude_ = nullptr;
+    const char* extractAreaNorthLatitude_ = nullptr;
+    const char* extractAreaSouthLatitude_ = nullptr;
+    const char* extractAreaLongitudeRank_ = nullptr;
+    const char* extractAreaLatitudeRank_ = nullptr;
+    const char* extractedAreaNumberOfSubsets_ = nullptr;
+
+    int select_area();
 };

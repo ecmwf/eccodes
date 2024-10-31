@@ -12,15 +12,14 @@
 
 #include "grib_accessor_class_data_simple_packing.h"
 
-class grib_accessor_data_g2simple_packing_t : public grib_accessor_data_simple_packing_t {};
-
-class grib_accessor_class_data_g2simple_packing_t : public grib_accessor_class_data_simple_packing_t
+class grib_accessor_data_g2simple_packing_t : public grib_accessor_data_simple_packing_t
 {
 public:
-    grib_accessor_class_data_g2simple_packing_t(const char* name) : grib_accessor_class_data_simple_packing_t(name) {}
+    grib_accessor_data_g2simple_packing_t() :
+        grib_accessor_data_simple_packing_t() { class_name_ = "data_g2simple_packing"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_data_g2simple_packing_t{}; }
-    int pack_bytes(grib_accessor*, const unsigned char*, size_t* len) override;
-    int pack_double(grib_accessor*, const double* val, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_bytes(const unsigned char*, size_t* len) override;
+    int pack_double(const double* val, size_t* len) override;
+    int value_count(long*) override;
+    void init(const long, grib_arguments*) override;
 };

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,35 +10,32 @@
 
 #include "grib_accessor_class_budgdate.h"
 
-grib_accessor_class_budgdate_t _grib_accessor_class_budgdate{ "budgdate" };
-grib_accessor_class* grib_accessor_class_budgdate = &_grib_accessor_class_budgdate;
+grib_accessor_budgdate_t _grib_accessor_budgdate{};
+grib_accessor* grib_accessor_budgdate = &_grib_accessor_budgdate;
 
-
-void grib_accessor_class_budgdate_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_budgdate_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_long_t::init(a, l, c);
-    grib_accessor_budgdate_t* self = (grib_accessor_budgdate_t*)a;
-    int n                          = 0;
+    grib_accessor_long_t::init(l, c);
+    int n = 0;
 
-    self->year  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->month = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->day   = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    year_  = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    month_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    day_   = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
 }
 
-int grib_accessor_class_budgdate_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_budgdate_t::unpack_long(long* val, size_t* len)
 {
-    int ret                        = 0;
-    grib_accessor_budgdate_t* self = (grib_accessor_budgdate_t*)a;
+    int ret = 0;
 
     long year  = 0;
     long month = 0;
     long day   = 0;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->day, &day)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), day_, &day)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->month, &month)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), month_, &month)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->year, &year)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), year_, &year)) != GRIB_SUCCESS)
         return ret;
 
     if (*len < 1)
@@ -51,11 +47,10 @@ int grib_accessor_class_budgdate_t::unpack_long(grib_accessor* a, long* val, siz
 }
 
 /* TODO: Check for a valid date */
-int grib_accessor_class_budgdate_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_budgdate_t::pack_long(const long* val, size_t* len)
 {
-    int ret                        = 0;
-    long v                         = val[0];
-    grib_accessor_budgdate_t* self = (grib_accessor_budgdate_t*)a;
+    int ret = 0;
+    long v  = val[0];
 
     long year  = 0;
     long month = 0;
@@ -74,11 +69,11 @@ int grib_accessor_class_budgdate_t::pack_long(grib_accessor* a, const long* val,
 
     Assert(year < 255);
 
-    if ((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->day, day)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(grib_handle_of_accessor(this), day_, day)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->month, month)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(grib_handle_of_accessor(this), month_, month)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->year, year)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(grib_handle_of_accessor(this), year_, year)) != GRIB_SUCCESS)
         return ret;
 
     return ret;

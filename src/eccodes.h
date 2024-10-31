@@ -1103,7 +1103,7 @@ typedef int (*codes_data_eof_proc)(const codes_context* c, void* stream);
 /**
  *  Get the static default context
  *
- * @return         the default context, NULL it the context is not available
+ * @return         the default context, NULL if the context is not available
  */
 codes_context* codes_context_get_default(void);
 
@@ -1186,7 +1186,7 @@ void codes_context_set_data_quality_checks(codes_context* c, int val);
  * @param p_realloc : the memory reallocation procedure to be set @see codes_realloc_proc
  */
 void codes_context_set_memory_proc(codes_context* c, codes_malloc_proc p_malloc,
-                                   codes_free_proc p_free, codes_realloc_proc p_realloc);
+                                   codes_free_proc p_free, codes_realloc_proc p_realloc) ECCODES_DEPRECATED;
 
 /**
  *  Sets memory procedures of the context for persistent data
@@ -1196,7 +1196,7 @@ void codes_context_set_memory_proc(codes_context* c, codes_malloc_proc p_malloc,
  * @param gribfree    : the memory freeing procedure to be set @see codes_free_proc
  */
 void codes_context_set_persistent_memory_proc(codes_context* c, codes_malloc_proc p_malloc,
-                                              codes_free_proc p_free);
+                                              codes_free_proc p_free) ECCODES_DEPRECATED;
 
 /**
  *  Sets memory procedures of the context for large buffers
@@ -1207,7 +1207,7 @@ void codes_context_set_persistent_memory_proc(codes_context* c, codes_malloc_pro
  * @param p_free   : the memory reallocation procedure to be set @see codes_realloc_proc
  */
 void codes_context_set_buffer_memory_proc(codes_context* c, codes_malloc_proc p_malloc,
-                                          codes_free_proc p_free, codes_realloc_proc p_realloc);
+                                          codes_free_proc p_free, codes_realloc_proc p_realloc) ECCODES_DEPRECATED;
 
 /**
  *  Sets the context printing procedure used for user interaction

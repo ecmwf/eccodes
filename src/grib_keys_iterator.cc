@@ -110,31 +110,31 @@ static int skip(grib_keys_iterator* kiter)
 {
     /* TODO: set the section to hidden, to speed up that */
     /* if(grib_get_sub_section(kiter->current)) */
-    if (kiter->current->sub_section)
+    if (kiter->current->sub_section_)
         return 1;
 
-    if (kiter->current->flags & GRIB_ACCESSOR_FLAG_HIDDEN)
+    if (kiter->current->flags_ & GRIB_ACCESSOR_FLAG_HIDDEN)
         return 1;
 
-    if (kiter->current->flags & kiter->accessor_flags_skip)
+    if (kiter->current->flags_ & kiter->accessor_flags_skip)
         return 1;
 
-    if ((kiter->filter_flags & GRIB_KEYS_ITERATOR_SKIP_COMPUTED) && kiter->current->length == 0)
+    if ((kiter->filter_flags & GRIB_KEYS_ITERATOR_SKIP_COMPUTED) && kiter->current->length_ == 0)
         return 1;
 
-    if ((kiter->filter_flags & GRIB_KEYS_ITERATOR_SKIP_CODED) && kiter->current->length != 0)
+    if ((kiter->filter_flags & GRIB_KEYS_ITERATOR_SKIP_CODED) && kiter->current->length_ != 0)
         return 1;
 
     if (kiter->name_space) {
         kiter->match = 0;
 
         while (kiter->match < MAX_ACCESSOR_NAMES) {
-            if (kiter->current->all_name_spaces[kiter->match] != NULL) {
-                if (grib_inline_strcmp(kiter->current->all_name_spaces[kiter->match], kiter->name_space) == 0) {
+            if (kiter->current->all_name_spaces_[kiter->match] != NULL) {
+                if (grib_inline_strcmp(kiter->current->all_name_spaces_[kiter->match], kiter->name_space) == 0) {
                     if (kiter->seen) {
-                        if (was_seen(kiter, kiter->current->all_names[kiter->match]))
+                        if (was_seen(kiter, kiter->current->all_names_[kiter->match]))
                             return 1;
-                        mark_seen(kiter, kiter->current->all_names[kiter->match]);
+                        mark_seen(kiter, kiter->current->all_names_[kiter->match]);
                     }
                     return 0;
                 }
@@ -146,13 +146,13 @@ static int skip(grib_keys_iterator* kiter)
     }
 
     if (kiter->seen) {
-        if (was_seen(kiter, kiter->current->name))
+        if (was_seen(kiter, kiter->current->name_))
             return 1;
-        mark_seen(kiter, kiter->current->name);
+        mark_seen(kiter, kiter->current->name_);
     }
 
     /* ECC-1410 */
-    if (kiter->current->all_names[0] == NULL)
+    if (kiter->current->all_names_[0] == NULL)
         return 1;
 
     return 0;
@@ -178,7 +178,7 @@ const char* grib_keys_iterator_get_name(const grib_keys_iterator* kiter)
 {
     /* if(kiter->name_space) */
     Assert(kiter->current);
-    return kiter->current->all_names[kiter->match];
+    return kiter->current->all_names_[kiter->match];
 }
 
 grib_accessor* grib_keys_iterator_get_accessor(grib_keys_iterator* kiter)

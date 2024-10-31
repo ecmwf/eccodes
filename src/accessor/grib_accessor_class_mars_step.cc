@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,34 +10,31 @@
 
 #include "grib_accessor_class_mars_step.h"
 
-grib_accessor_class_mars_step_t _grib_accessor_class_mars_step{ "mars_step" };
-grib_accessor_class* grib_accessor_class_mars_step = &_grib_accessor_class_mars_step;
+grib_accessor_mars_step_t _grib_accessor_mars_step{};
+grib_accessor* grib_accessor_mars_step = &_grib_accessor_mars_step;
 
-
-void grib_accessor_class_mars_step_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_mars_step_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_ascii_t::init(a, l, c);
-    int n = 0;
-    grib_accessor_mars_step_t* self = (grib_accessor_mars_step_t*)a;
-    self->stepRange                 = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->stepType                  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    grib_accessor_ascii_t::init(l, c);
+    int n      = 0;
+    stepRange_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    stepType_  = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
 }
 
-int grib_accessor_class_mars_step_t::pack_string(grib_accessor* a, const char* val, size_t* len)
+int grib_accessor_mars_step_t::pack_string(const char* val, size_t* len)
 {
     char stepType[100];
     size_t stepTypeLen = 100;
     char buf[100]      = {0,};
     int ret;
-    grib_accessor_mars_step_t* self = (grib_accessor_mars_step_t*)a;
-    grib_accessor* stepRangeAcc     = grib_find_accessor(grib_handle_of_accessor(a), self->stepRange);
+    grib_accessor* stepRangeAcc = grib_find_accessor(grib_handle_of_accessor(this), stepRange_);
 
     if (!stepRangeAcc) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "%s not found", self->stepRange);
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s not found", stepRange_);
         return GRIB_NOT_FOUND;
     }
 
-    if ((ret = grib_get_string(grib_handle_of_accessor(a), self->stepType, stepType, &stepTypeLen)) != GRIB_SUCCESS)
+    if ((ret = grib_get_string(grib_handle_of_accessor(this), stepType_, stepType, &stepTypeLen)) != GRIB_SUCCESS)
         return ret;
 
     if (!strcmp(stepType, "instant"))
@@ -49,20 +45,17 @@ int grib_accessor_class_mars_step_t::pack_string(grib_accessor* a, const char* v
     return stepRangeAcc->pack_string(buf, len);
 }
 
-int grib_accessor_class_mars_step_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+int grib_accessor_mars_step_t::unpack_string(char* val, size_t* len)
 {
-    grib_accessor_mars_step_t* self = (grib_accessor_mars_step_t*)a;
-
     int ret       = 0;
     char buf[100] = {0,};
     char* p       = NULL;
     size_t buflen = 100;
     long step;
-    grib_accessor* stepRangeAcc = grib_find_accessor(grib_handle_of_accessor(a), self->stepRange);
-    const char* cclass_name     = a->cclass->name;
+    grib_accessor* stepRangeAcc = grib_find_accessor(grib_handle_of_accessor(this), stepRange_);
 
     if (!stepRangeAcc) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "%s: %s not found", cclass_name, self->stepRange);
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s not found", class_name_, stepRange_);
         return GRIB_NOT_FOUND;
     }
 
@@ -70,9 +63,9 @@ int grib_accessor_class_mars_step_t::unpack_string(grib_accessor* a, char* val, 
         return ret;
 
     if (*len < buflen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR,
+        grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         cclass_name, a->name, buflen, *len);
+                         class_name_, name_, buflen, *len);
         *len = buflen;
         return GRIB_BUFFER_TOO_SMALL;
     }
@@ -88,20 +81,19 @@ int grib_accessor_class_mars_step_t::unpack_string(grib_accessor* a, char* val, 
     return ret;
 }
 
-int grib_accessor_class_mars_step_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_mars_step_t::pack_long(const long* val, size_t* len)
 {
     char buff[100] = {0,};
     size_t bufflen = 100;
 
     snprintf(buff, sizeof(buff), "%ld", *val);
 
-    return pack_string(a, buff, &bufflen);
+    return pack_string(buff, &bufflen);
 }
 
-int grib_accessor_class_mars_step_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_mars_step_t::unpack_long(long* val, size_t* len)
 {
-    grib_accessor_mars_step_t* self = (grib_accessor_mars_step_t*)a;
-    grib_accessor* stepRangeAcc     = grib_find_accessor(grib_handle_of_accessor(a), self->stepRange);
+    grib_accessor* stepRangeAcc = grib_find_accessor(grib_handle_of_accessor(this), stepRange_);
 
     if (!stepRangeAcc)
         return GRIB_NOT_FOUND;
@@ -109,18 +101,18 @@ int grib_accessor_class_mars_step_t::unpack_long(grib_accessor* a, long* val, si
     return stepRangeAcc->unpack_long(val, len);
 }
 
-int grib_accessor_class_mars_step_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_mars_step_t::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_class_mars_step_t::string_length(grib_accessor* a)
+size_t grib_accessor_mars_step_t::string_length()
 {
     return 16;
 }
 
-int grib_accessor_class_mars_step_t::get_native_type(grib_accessor* a)
+long grib_accessor_mars_step_t::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }

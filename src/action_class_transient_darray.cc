@@ -111,7 +111,7 @@ static int execute(grib_action* act, grib_handle* h)
 
     grib_push_accessor(a, p->block);
 
-    if (a->flags & GRIB_ACCESSOR_FLAG_CONSTRAINT)
+    if (a->flags_ & GRIB_ACCESSOR_FLAG_CONSTRAINT)
         grib_dependency_observe_arguments(a, act->default_value);
 
     return a->pack_double(self->darray->v, &len);
@@ -132,5 +132,5 @@ static void destroy(grib_context* context, grib_action* act)
     grib_action_transient_darray* a = (grib_action_transient_darray*)act;
 
     grib_context_free_persistent(context, a->name);
-    grib_darray_delete(context, a->darray);
+    grib_darray_delete(a->darray);
 }

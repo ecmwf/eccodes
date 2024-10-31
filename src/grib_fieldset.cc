@@ -103,7 +103,6 @@ static int grib_fieldset_new_column(grib_fieldset* set, int id, char* key, int t
             return err;
     }
 
-    set->columns[id].context           = c;
     set->columns[id].name              = grib_context_strdup(c, key);
     set->columns[id].type              = type;
     set->columns[id].values_array_size = GRIB_START_ARRAY_SIZE;

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,16 +15,13 @@
 class grib_accessor_g2bitmap_t : public grib_accessor_bitmap_t
 {
 public:
-    /* Members defined in g2bitmap */
-    const char* numberOfValues;
-};
-
-class grib_accessor_class_g2bitmap_t : public grib_accessor_class_bitmap_t
-{
-public:
-    grib_accessor_class_g2bitmap_t(const char* name) : grib_accessor_class_bitmap_t(name) {}
+    grib_accessor_g2bitmap_t() :
+        grib_accessor_bitmap_t() { class_name_ = "g2bitmap"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_g2bitmap_t{}; }
-    int pack_double(grib_accessor*, const double* val, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_double(const double* val, size_t* len) override;
+    int value_count(long*) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* numberOfValues_ = nullptr;
 };
