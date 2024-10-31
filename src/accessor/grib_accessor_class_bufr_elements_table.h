@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -27,9 +26,9 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* dictionary_;
-    const char* masterDir_;
-    const char* localDir_;
+    const char* dictionary_ = nullptr;
+    const char* masterDir_ = nullptr;
+    const char* localDir_ = nullptr;
 
     grib_trie* load_bufr_elements_table(int* err);
     int bufr_get_from_table(bufr_descriptor* v);

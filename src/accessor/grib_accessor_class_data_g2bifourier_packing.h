@@ -53,19 +53,19 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* ieee_floats_;
-    const char* laplacianOperatorIsSet_;
-    const char* laplacianOperator_;
-    const char* biFourierTruncationType_;
-    const char* sub_i_;
-    const char* sub_j_;
-    const char* bif_i_;
-    const char* bif_j_;
-    const char* biFourierSubTruncationType_;
-    const char* biFourierDoNotPackAxes_;
-    const char* biFourierMakeTemplate_;
-    const char* totalNumberOfValuesInUnpackedSubset_;
-    //const char* numberOfValues_;
+    const char* ieee_floats_ = nullptr;
+    const char* laplacianOperatorIsSet_ = nullptr;
+    const char* laplacianOperator_ = nullptr;
+    const char* biFourierTruncationType_ = nullptr;
+    const char* sub_i_ = nullptr;
+    const char* sub_j_ = nullptr;
+    const char* bif_i_ = nullptr;
+    const char* bif_j_ = nullptr;
+    const char* biFourierSubTruncationType_ = nullptr;
+    const char* biFourierDoNotPackAxes_ = nullptr;
+    const char* biFourierMakeTemplate_ = nullptr;
+    const char* totalNumberOfValuesInUnpackedSubset_ = nullptr;
+    //const char* numberOfValues_ = nullptr;
 
     bif_trunc_t* new_bif_trunc();
 };

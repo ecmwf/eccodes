@@ -24,6 +24,6 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* numberOfValues_;
-    const char* numberOfDataPoints_;
+    const char* numberOfValues_ = nullptr;
+    const char* numberOfDataPoints_ = nullptr;
 };

@@ -322,7 +322,7 @@ int grib_nearest_find_generic(
     if ((ret = grib_nearest_get_radius(h, &radiusInKm)) != GRIB_SUCCESS)
         return ret;
 
-    neighbours = (PointStore*)grib_context_malloc(nearest->context, nvalues * sizeof(PointStore));
+    neighbours = (PointStore*)grib_context_malloc(h->context, nvalues * sizeof(PointStore));
     for (i = 0; i < nvalues; ++i) {
         neighbours[i].m_dist  = 1e10; /* set all distances to large number to begin with */
         neighbours[i].m_lat   = 0;
@@ -345,14 +345,14 @@ int grib_nearest_find_generic(
         *out_lats_count = (int)nvalues;
 
         if (*out_lats)
-            grib_context_free(nearest->context, *out_lats);
-        *out_lats = (double*)grib_context_malloc(nearest->context, nvalues * sizeof(double));
+            grib_context_free(h->context, *out_lats);
+        *out_lats = (double*)grib_context_malloc(h->context, nvalues * sizeof(double));
         if (!*out_lats)
             return GRIB_OUT_OF_MEMORY;
 
         if (*out_lons)
-            grib_context_free(nearest->context, *out_lons);
-        *out_lons = (double*)grib_context_malloc(nearest->context, nvalues * sizeof(double));
+            grib_context_free(h->context, *out_lons);
+        *out_lons = (double*)grib_context_malloc(h->context, nvalues * sizeof(double));
         if (!*out_lons)
             return GRIB_OUT_OF_MEMORY;
 
@@ -418,7 +418,7 @@ int grib_nearest_find_generic(
 
     /* GRIB_NEAREST_SAME_XXX not yet implemented */
     if (!*out_distances) {
-        *out_distances = (double*)grib_context_malloc(nearest->context, 4 * sizeof(double));
+        *out_distances = (double*)grib_context_malloc(h->context, 4 * sizeof(double));
     }
     (*out_distances)[0] = neighbours[0].m_dist;
     (*out_distances)[1] = neighbours[1].m_dist;

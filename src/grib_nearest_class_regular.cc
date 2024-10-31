@@ -128,6 +128,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
     double lat = 0, lon = 0;
     const bool is_rotated  = is_rotated_grid(h);
     double angleOfRotation = 0, southPoleLat = 0, southPoleLon = 0;
+    grib_context* c = h->context;
 
     while (inlon < 0)
         inlon += 360;
@@ -194,16 +195,14 @@ static int find(grib_nearest* nearest, grib_handle* h,
         self->lats_count = n;
 
         if (self->lats)
-            grib_context_free(nearest->context, self->lats);
-        self->lats = (double*)grib_context_malloc(nearest->context,
-                                                  self->lats_count * sizeof(double));
+            grib_context_free(c, self->lats);
+        self->lats = (double*)grib_context_malloc(c, self->lats_count * sizeof(double));
         if (!self->lats)
             return GRIB_OUT_OF_MEMORY;
 
         if (self->lons)
-            grib_context_free(nearest->context, self->lons);
-        self->lons = (double*)grib_context_malloc(nearest->context,
-                                                  self->lons_count * sizeof(double));
+            grib_context_free(c, self->lons);
+        self->lons = (double*)grib_context_malloc(c, self->lons_count * sizeof(double));
         if (!self->lons)
             return GRIB_OUT_OF_MEMORY;
 
@@ -289,9 +288,9 @@ static int find(grib_nearest* nearest, grib_handle* h,
                                &(self->i[0]), &(self->i[1]));
 
         if (!self->distances)
-            self->distances = (double*)grib_context_malloc(nearest->context, NUM_NEIGHBOURS * sizeof(double));
+            self->distances = (double*)grib_context_malloc(c, NUM_NEIGHBOURS * sizeof(double));
         if (!self->k)
-            self->k = (size_t*)grib_context_malloc(nearest->context, NUM_NEIGHBOURS * sizeof(size_t));
+            self->k = (size_t*)grib_context_malloc(c, NUM_NEIGHBOURS * sizeof(size_t));
         kk = 0;
         for (jj = 0; jj < 2; jj++) {
             for (ii = 0; ii < 2; ii++) {
@@ -310,7 +309,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
      * First unpack all the values into an array. Then when we need the 4 points
      * we just index into this array so no need to call grib_get_double_element_internal
      *
-     *   if (nearest->values) grib_context_free(nearest->context,nearest->values);
+     *   if (nearest->values) grib_context_free(c,nearest->values);
      *   nearest->values = grib_context_malloc(h->context,nvalues*sizeof(double));
      *   if (!nearest->values) return GRIB_OUT_OF_MEMORY;
      *   ret = grib_get_double_array(h, self->values_key, nearest->values ,&nvalues);
@@ -362,17 +361,13 @@ static int find(grib_nearest* nearest, grib_handle* h,
 static int destroy(grib_nearest* nearest)
 {
     grib_nearest_regular* self = (grib_nearest_regular*)nearest;
-    if (self->lats)
-        grib_context_free(nearest->context, self->lats);
-    if (self->lons)
-        grib_context_free(nearest->context, self->lons);
-    if (self->i)
-        grib_context_free(nearest->context, self->i);
-    if (self->j)
-        grib_context_free(nearest->context, self->j);
-    if (self->k)
-        grib_context_free(nearest->context, self->k);
-    if (self->distances)
-        grib_context_free(nearest->context, self->distances);
+    grib_context* c = grib_context_get_default();
+
+    if (self->lats) grib_context_free(c, self->lats);
+    if (self->lons) grib_context_free(c, self->lons);
+    if (self->i) grib_context_free(c, self->i);
+    if (self->j) grib_context_free(c, self->j);
+    if (self->k) grib_context_free(c, self->k);
+    if (self->distances) grib_context_free(c, self->distances);
     return GRIB_SUCCESS;
 }

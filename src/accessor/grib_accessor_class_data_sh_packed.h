@@ -23,14 +23,14 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* GRIBEX_sh_bug_present_;
-    const char* ieee_floats_;
-    const char* laplacianOperatorIsSet_;
-    const char* laplacianOperator_;
-    const char* sub_j_;
-    const char* sub_k_;
-    const char* sub_m_;
-    const char* pen_j_;
-    const char* pen_k_;
-    const char* pen_m_;
+    const char* GRIBEX_sh_bug_present_ = nullptr;
+    const char* ieee_floats_ = nullptr;
+    const char* laplacianOperatorIsSet_ = nullptr;
+    const char* laplacianOperator_ = nullptr;
+    const char* sub_j_ = nullptr;
+    const char* sub_k_ = nullptr;
+    const char* sub_m_ = nullptr;
+    const char* pen_j_ = nullptr;
+    const char* pen_k_ = nullptr;
+    const char* pen_m_ = nullptr;
 };

@@ -486,6 +486,7 @@ void grib_file_close(const char* filename, int force, int* err);
 void grib_file_close_all(int* err);
 grib_file* grib_get_file(const char* filename, int* err);
 void grib_file_delete(grib_file* file);
+void grib_file_pool_print(const char* title, FILE* out);
 
 /* grib_geography.cc */
 int grib_get_gaussian_latitudes(long trunc, double* lats);
@@ -812,15 +813,15 @@ grib_nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args, int* er
 
 /* grib_iterator.cc */
 int grib_get_data(const grib_handle* h, double* lats, double* lons, double* values);
-int grib_iterator_next(grib_iterator* i, double* lat, double* lon, double* value);
-int grib_iterator_has_next(grib_iterator* i);
-int grib_iterator_previous(grib_iterator* i, double* lat, double* lon, double* value);
-int grib_iterator_reset(grib_iterator* i);
-int grib_iterator_init(grib_iterator* i, grib_handle* h, grib_arguments* args);
-int grib_iterator_delete(grib_iterator* i);
+//int grib_iterator_next(grib_iterator* i, double* lat, double* lon, double* value);
+//int grib_iterator_has_next(grib_iterator* i);
+//int grib_iterator_previous(grib_iterator* i, double* lat, double* lon, double* value);
+//int grib_iterator_reset(grib_iterator* i);
+//int grib_iterator_init(grib_iterator* i, grib_handle* h, grib_arguments* args);
+//int grib_iterator_delete(grib_iterator* i);
 
 /* grib_iterator_class.cc */
-grib_iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* error);
+eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* error);
 
 /* grib_iterator_class_gen.cc */
 int transform_iterator_data(grib_context* c, double* data, long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning, size_t numPoints, long nx, long ny);

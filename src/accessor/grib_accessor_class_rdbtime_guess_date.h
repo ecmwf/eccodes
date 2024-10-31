@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -24,9 +23,9 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* typicalYear_;
-    const char* typicalMonth_;
-    const char* typicalDay_;
-    const char* rdbDay_;
-    long yearOrMonth_;
+    const char* typicalYear_ = nullptr;
+    const char* typicalMonth_ = nullptr;
+    const char* typicalDay_ = nullptr;
+    const char* rdbDay_ = nullptr;
+    long yearOrMonth_ = 0;
 };

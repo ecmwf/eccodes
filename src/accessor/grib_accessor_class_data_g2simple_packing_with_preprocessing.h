@@ -24,6 +24,6 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* pre_processing_;
-    const char* pre_processing_parameter_;
+    const char* pre_processing_ = nullptr;
+    const char* pre_processing_parameter_ = nullptr;
 };

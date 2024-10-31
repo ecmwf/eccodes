@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -25,7 +24,7 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* N_;
-    const char* Ni_;
-    const char* isOctahedral_;
+    const char* N_ = nullptr;
+    const char* Ni_ = nullptr;
+    const char* isOctahedral_ = nullptr;
 };

@@ -1801,14 +1801,14 @@ int grib_set_values_silent(grib_handle* h, grib_values* args, size_t count, int 
     h->values[stack]       = args;
     h->values_count[stack] = count;
 
-    for (i = 0; i < count; i++)
-        args[i].error = GRIB_NOT_FOUND;
-
     if (h->context->debug) {
         for (i = 0; i < count; i++) {
             grib_print_values("ECCODES DEBUG about to set key/value pair", &args[i], stderr, 1);
         }
     }
+
+    for (i = 0; i < count; i++)
+        args[i].error = GRIB_NOT_FOUND;
 
     while (more) {
         more = 0;
@@ -1899,7 +1899,9 @@ void grib_print_values(const char* title, const grib_values* values, FILE* out, 
                 fprintf(out, "%s", aVal.string_value);
                 break;
         }
-        fprintf(out, " (type=%s)\n", grib_get_type_name(aVal.type));
+        fprintf(out, " (type=%s)", grib_get_type_name(aVal.type));
+        if (aVal.error) fprintf(out, "\t(%s)\n", grib_get_error_message(aVal.error));
+        else            fprintf(out, "\n");
     }
 }
 

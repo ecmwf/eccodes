@@ -22,7 +22,7 @@ public:
     void dump(grib_dumper* dumper) override;
 
 private:
-    grib_arguments* args_;
+    grib_arguments* args_ = nullptr;
 
     friend grib_nearest* grib_nearest_new(const grib_handle* ch, int* error);
 };

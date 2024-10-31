@@ -23,12 +23,12 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* doExtractSubsets_;
-    const char* numberOfSubsets_;
-    const char* extractSubsetList_;
-    const char* simpleThinningStart_;
-    const char* simpleThinningMissingRadius_;
-    const char* simpleThinningSkip_;
+    const char* doExtractSubsets_ = nullptr;
+    const char* numberOfSubsets_ = nullptr;
+    const char* extractSubsetList_ = nullptr;
+    const char* simpleThinningStart_ = nullptr;
+    const char* simpleThinningMissingRadius_ = nullptr;
+    const char* simpleThinningSkip_ = nullptr;
 
     int apply_thinning();
 };

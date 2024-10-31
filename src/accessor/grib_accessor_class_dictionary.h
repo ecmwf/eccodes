@@ -27,11 +27,11 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* dictionary_;
-    const char* key_;
-    long column_;
-    const char* masterDir_;
-    const char* localDir_;
+    const char* dictionary_ = nullptr;
+    const char* key_ = nullptr;
+    long column_ = 0;
+    const char* masterDir_ = nullptr;
+    const char* localDir_ = nullptr;
 
     grib_trie* load_dictionary(int* err);
 };

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -25,12 +24,12 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* verification_yearmonth_;
-    const char* base_date_;
-    const char* day_;
-    const char* hour_;
-    const char* fcmonth_;
-    const char* check_;
+    const char* verification_yearmonth_ = nullptr;
+    const char* base_date_ = nullptr;
+    const char* day_ = nullptr;
+    const char* hour_ = nullptr;
+    const char* fcmonth_ = nullptr;
+    const char* check_ = nullptr;
 
     int unpack_long_edition1(long* val, size_t* len);
 };

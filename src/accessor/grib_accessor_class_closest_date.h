@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -25,13 +24,13 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* dateLocal_;
-    const char* timeLocal_;
-    const char* numForecasts_;
-    const char* year_;
-    const char* month_;
-    const char* day_;
-    const char* hour_;
-    const char* minute_;
-    const char* second_;
+    const char* dateLocal_ = nullptr;
+    const char* timeLocal_ = nullptr;
+    const char* numForecasts_ = nullptr;
+    const char* year_ = nullptr;
+    const char* month_ = nullptr;
+    const char* day_ = nullptr;
+    const char* hour_ = nullptr;
+    const char* minute_ = nullptr;
+    const char* second_ = nullptr;
 };

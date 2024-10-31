@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -24,6 +23,6 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* owner_;
-    int bit_index_;
+    const char* owner_ = nullptr;
+    int bit_index_ = 0;
 };

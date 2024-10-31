@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -32,5 +31,5 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    grib_accessor* data_accessor_;
+    grib_accessor* data_accessor_ = nullptr;
 };
