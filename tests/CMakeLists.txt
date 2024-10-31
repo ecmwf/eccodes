@@ -114,6 +114,7 @@ if( HAVE_BUILD_TOOLS )
         grib2_wave_spectra
         grib_element
         grib_suppressed
+        grib_destine_mars_keys
         grib_2nd_order_numValues
         grib_ecc-136
         grib_ecc-530
@@ -142,7 +143,6 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1654
         grib_ecc-1671
         grib_ecc-1708
-        grib_ecc-1691
         grib_ecc-1766
         grib_ecc-1829
         bufr_ecc-1028
