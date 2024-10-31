@@ -10,36 +10,32 @@
 
 #include "grib_accessor_class_number_of_values_data_raw_packing.h"
 
-grib_accessor_class_number_of_values_data_raw_packing_t _grib_accessor_class_number_of_values_data_raw_packing{ "number_of_values_data_raw_packing" };
-grib_accessor_class* grib_accessor_class_number_of_values_data_raw_packing = &_grib_accessor_class_number_of_values_data_raw_packing;
+grib_accessor_number_of_values_data_raw_packing_t _grib_accessor_number_of_values_data_raw_packing{};
+grib_accessor* grib_accessor_number_of_values_data_raw_packing = &_grib_accessor_number_of_values_data_raw_packing;
 
-
-void grib_accessor_class_number_of_values_data_raw_packing_t::init(grib_accessor* a, const long v, grib_arguments* args)
+void grib_accessor_number_of_values_data_raw_packing_t::init(const long v, grib_arguments* args)
 {
-    grib_accessor_class_gen_t::init(a, v, args);
-    grib_accessor_number_of_values_data_raw_packing_t* self = (grib_accessor_number_of_values_data_raw_packing_t*)a;
-
+    grib_accessor_gen_t::init(v, args);
     int n = 0;
-    self->values    = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
-    self->precision = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    a->length = 0;
+
+    values_    = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
+    precision_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    length_ = 0;
 }
 
-int grib_accessor_class_number_of_values_data_raw_packing_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_number_of_values_data_raw_packing_t::unpack_long(long* val, size_t* len)
 {
-    grib_accessor_number_of_values_data_raw_packing_t* self = (grib_accessor_number_of_values_data_raw_packing_t*)a;
-
     int err              = 0;
     grib_accessor* adata = NULL;
     long precision       = 0;
     int bytes            = 0;
     long byte_count      = 0;
 
-    adata = grib_find_accessor(grib_handle_of_accessor(a), self->values);
+    adata = grib_find_accessor(grib_handle_of_accessor(this), values_);
     Assert(adata != NULL);
     byte_count = adata->byte_count();
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->precision, &precision)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), precision_, &precision)) != GRIB_SUCCESS)
         return err;
 
     switch (precision) {
@@ -60,7 +56,7 @@ int grib_accessor_class_number_of_values_data_raw_packing_t::unpack_long(grib_ac
     return err;
 }
 
-int grib_accessor_class_number_of_values_data_raw_packing_t::get_native_type(grib_accessor* a)
+long grib_accessor_number_of_values_data_raw_packing_t::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }

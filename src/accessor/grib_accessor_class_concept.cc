@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -10,14 +9,12 @@
  */
 
 #include "grib_accessor_class_concept.h"
-
 #include <unordered_map>
 #include <string>
 #include <utility>
 
-grib_accessor_class_concept_t _grib_accessor_class_concept{ "concept" };
-grib_accessor_class* grib_accessor_class_concept = &_grib_accessor_class_concept;
-
+grib_accessor_concept_t _grib_accessor_concept{};
+grib_accessor* grib_accessor_concept = &_grib_accessor_concept;
 
 #define MAX_CONCEPT_STRING_LENGTH 255
 
@@ -37,15 +34,15 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
     return (*a == 0 && *b == 0) ? 0 : 1;
 }
 
-void grib_accessor_class_concept_t::init(grib_accessor* a, const long len, grib_arguments* args)
+void grib_accessor_concept_t::init(const long len, grib_arguments* args)
 {
-    grib_accessor_class_gen_t::init(a, len, args);
-    a->length = 0;
+    grib_accessor_gen_t::init(len, args);
+    length_ = 0;
 }
 
-void grib_accessor_class_concept_t::dump(grib_accessor* a, grib_dumper* dumper)
+void grib_accessor_concept_t::dump(grib_dumper* dumper)
 {
-    grib_dump_string(dumper, a, NULL);
+    grib_dump_string(dumper, this, NULL);
 }
 
 // See ECC-1905
@@ -166,8 +163,8 @@ static const char* concept_evaluate(grib_accessor* a)
     grib_handle* h        = grib_handle_of_accessor(a);
 
     std::unordered_map<std::string_view, long> memo; // See ECC-1905
-
-    //fprintf(stderr, "DEBUG: concept_evaluate: %s %s\n", a->name, c->name);
+    
+    // fprintf(stderr, "DEBUG: concept_evaluate: %s %s\n", name_ , c->name);
     while (c) {
         grib_concept_condition* e = c->conditions;
         int cnt                   = 0;
@@ -275,18 +272,84 @@ bool blacklisted(grib_handle* h, long edition, const char* concept_name, const c
     return false;
 }
 
+static void print_user_friendly_message(grib_handle* h, const char* name, grib_concept_value* concepts, grib_action* act)
+{
+    size_t i = 0, concept_count = 0;
+    long dummy = 0, editionNumber = 0;
+    char centre_s[32] = {0,};
+    size_t centre_len = sizeof(centre_s);
+    char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {NULL,}; /* sorted array containing concept values */
+    grib_concept_value* pCon = concepts;
+
+    grib_context_log(h->context, GRIB_LOG_ERROR, "concept: no match for %s=%s", act->name, name);
+    if (grib_get_long(h, "edition", &editionNumber) == GRIB_SUCCESS &&
+        grib_get_string(h, "centre", centre_s, &centre_len) == GRIB_SUCCESS) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle edition=%ld, centre=%s", editionNumber, centre_s);
+    }
+    char dataset_s[80];
+    size_t dataset_len = sizeof(dataset_s);
+    if (grib_get_string(h, "datasetForLocal", dataset_s, &dataset_len) == GRIB_SUCCESS && !STR_EQUAL(dataset_s, "unknown")) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle dataset=%s", dataset_s);
+    }
+    if (strcmp(act->name, "paramId") == 0) {
+        if (string_to_long(name, &dummy, 1) == GRIB_SUCCESS) {
+            // The paramId value is an integer. Show them the param DB
+            grib_context_log(h->context, GRIB_LOG_ERROR,
+                             "Please check the Parameter Database 'https://codes.ecmwf.int/grib/param-db/?id=%s'", name);
+        }
+        else {
+            // paramId being set to a non-integer
+            grib_context_log(h->context, GRIB_LOG_ERROR,
+                             "The paramId value should be an integer. Are you trying to set the shortName?");
+        }
+    }
+    if (strcmp(act->name, "shortName") == 0) {
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                         "Please check the Parameter Database 'https://codes.ecmwf.int/grib/param-db/'");
+    }
+
+    // Create a list of all possible values for this concept and sort it
+    while (pCon) {
+        if (i >= MAX_NUM_CONCEPT_VALUES)
+            break;
+        all_concept_vals[i++] = pCon->name;
+        pCon                  = pCon->next;
+    }
+    concept_count = i;
+    // Only print out all concepts if fewer than MAX_NUM_CONCEPT_VALUES.
+    // Printing out all values for concepts like paramId would be silly!
+    if (concept_count < MAX_NUM_CONCEPT_VALUES) {
+        fprintf(stderr, "Here are some possible values for concept %s:\n", act->name);
+        qsort(&all_concept_vals, concept_count, sizeof(char*), cmpstringp);
+        for (i = 0; i < concept_count; ++i) {
+            if (all_concept_vals[i]) {
+                bool print_it = true;
+                if (i > 0 && all_concept_vals[i - 1] && strcmp(all_concept_vals[i], all_concept_vals[i - 1]) == 0) {
+                    print_it = false; // skip duplicate entries
+                }
+                if (blacklisted(h, editionNumber, act->name, all_concept_vals[i])) {
+                    print_it = false;
+                }
+                if (print_it) {
+                    fprintf(stderr, "\t%s\n", all_concept_vals[i]);
+                }
+            }
+        }
+    }
+}
+
 static int grib_concept_apply(grib_accessor* a, const char* name)
 {
-    int err                   = 0;
-    int count                 = 0;
+    int err = 0;
+    int count = 0;
     grib_concept_condition* e = NULL;
-    grib_values values[1024];
-    grib_sarray* sa              = NULL;
-    grib_concept_value* c        = NULL;
+    grib_values values[1024] = {{0},}; // key/value pair array
+    grib_sarray* sa       = NULL;
+    grib_concept_value* c = NULL;
     grib_concept_value* concepts = action_concept_get_concept(a);
-    grib_handle* h               = grib_handle_of_accessor(a);
-    grib_action* act             = a->creator;
-    int nofail                   = action_concept_get_nofail(a);
+    grib_handle* h   = grib_handle_of_accessor(a);
+    grib_action* act = a->creator_;
+    const int nofail = action_concept_get_nofail(a);
 
     DEBUG_ASSERT(concepts);
 
@@ -298,92 +361,70 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
     if (!c) {
         err = nofail ? GRIB_SUCCESS : GRIB_CONCEPT_NO_MATCH;
         if (err) {
-            size_t i = 0, concept_count = 0;
-            long dummy = 0, editionNumber = 0;
-            char centre_s[32] = {0,};
-            size_t centre_len                              = sizeof(centre_s);
-            char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {
-                NULL,
-            }; /* sorted array containing concept values */
-            grib_concept_value* pCon = concepts;
-
-            grib_context_log(h->context, GRIB_LOG_ERROR, "concept: no match for %s=%s", act->name, name);
-            if (grib_get_long(h, "edition", &editionNumber) == GRIB_SUCCESS &&
-                grib_get_string(h, "centre", centre_s, &centre_len) == GRIB_SUCCESS) {
-                grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle edition=%ld, centre=%s", editionNumber, centre_s);
-            }
-            char dataset_s[80];
-            size_t dataset_len = sizeof(dataset_s);
-            if (grib_get_string(h, "datasetForLocal", dataset_s, &dataset_len) == GRIB_SUCCESS && !STR_EQUAL(dataset_s, "unknown")) {
-                grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle dataset=%s", dataset_s);
-            }
-            if (strcmp(act->name, "paramId") == 0) {
-                if (string_to_long(name, &dummy, 1) == GRIB_SUCCESS) {
-                    // The paramId value is an integer. Show them the param DB
-                    grib_context_log(h->context, GRIB_LOG_ERROR,
-                                     "Please check the Parameter Database 'https://codes.ecmwf.int/grib/param-db/?id=%s'", name);
-                }
-                else {
-                    // paramId being set to a non-integer
-                    grib_context_log(h->context, GRIB_LOG_ERROR,
-                                     "The paramId value should be an integer. Are you trying to set the shortName?");
-                }
-            }
-            if (strcmp(act->name, "shortName") == 0) {
-                grib_context_log(h->context, GRIB_LOG_ERROR,
-                                 "Please check the Parameter Database 'https://codes.ecmwf.int/grib/param-db/'");
-            }
-
-            /* Create a list of all possible values for this concept and sort it */
-            while (pCon) {
-                if (i >= MAX_NUM_CONCEPT_VALUES)
-                    break;
-                all_concept_vals[i++] = pCon->name;
-                pCon                  = pCon->next;
-            }
-            concept_count = i;
-            /* Only print out all concepts if fewer than MAX_NUM_CONCEPT_VALUES.
-             * Printing out all values for concepts like paramId would be silly! */
-            if (concept_count < MAX_NUM_CONCEPT_VALUES) {
-                fprintf(stderr, "Here are some possible values for concept %s:\n", act->name);
-                qsort(&all_concept_vals, concept_count, sizeof(char*), cmpstringp);
-                for (i = 0; i < concept_count; ++i) {
-                    if (all_concept_vals[i]) {
-                        bool print_it = true;
-                        if (i > 0 && all_concept_vals[i - 1] && strcmp(all_concept_vals[i], all_concept_vals[i - 1]) == 0) {
-                            print_it = false; /* skip duplicate entries */
-                        }
-                        if (blacklisted(h, editionNumber, act->name, all_concept_vals[i])) {
-                            print_it = false;
-                        }
-                        if (print_it) {
-                            fprintf(stderr, "\t%s\n", all_concept_vals[i]);
-                        }
-                    }
-                }
-            }
+            print_user_friendly_message(h, name, concepts, act);
         }
         return err;
     }
     e  = c->conditions;
-    sa = grib_sarray_new(h->context, 10, 10);
+    sa = grib_sarray_new(10, 10);
     while (e) {
         concept_conditions_apply(h, e, values, sa, &count);
         e = e->next;
     }
-    grib_sarray_delete(h->context, sa);
+    grib_sarray_delete(sa);
 
-    if (count)
-        err = grib_set_values(h, values, count);
+    if (count) {
+        err = grib_set_values_silent(h, values, count, /*silent=*/1);
+        if (err) {
+            // GRIB2 product template selection
+            bool resubmit = false;
+            for (int i = 0; i < count; i++) {
+                if (values[i].error == GRIB_NOT_FOUND) {
+                    // Repair the most common cause of failure: input GRIB2 handle
+                    // is instantaneous but paramId/shortName being set is for accum/avg etc
+                    if (STR_EQUAL(values[i].name, "typeOfStatisticalProcessing")) {
+                        grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Switch from instantaneous to interval-based", __func__);
+                        if (grib_set_long(h, "selectStepTemplateInterval", 1) == GRIB_SUCCESS) {
+                            resubmit = true;
+                            grib_set_values(h, &values[i], 1);
+                        }
+                    }
+                    // else if (STR_EQUAL(values[i].name, "sourceSinkChemicalPhysicalProcess")) {
+                    //     if (grib_set_long(h, "is_chemical_srcsink", 1) == GRIB_SUCCESS) {
+                    //         resubmit = true;
+                    //         grib_set_values(h, &values[i], 1);
+                    //     }
+                    // }
+                }
+            }
+
+            if (resubmit) {
+                grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Resubmitting key/values", __func__);
+                err = grib_set_values(h, values, count);
+            }
+        }
+    }
+    //grib_print_values("DEBUG grib_concept_apply", values, stdout, count);
+    if (err) {
+        for (int i = 0; i < count; i++) {
+            if (values[i].error != GRIB_SUCCESS) {
+                grib_context_log(h->context, GRIB_LOG_ERROR,
+                                 "grib_set_values[%d] %s (type=%s) failed: %s",
+                                 i, values[i].name, grib_get_type_name(values[i].type),
+                                 grib_get_error_message(values[i].error));
+            }
+        }
+    }
+
     return err;
 }
 
-int grib_accessor_class_concept_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+int grib_accessor_concept_t::pack_double(const double* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_class_concept_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_concept_t::pack_long(const long* val, size_t* len)
 {
     char buf[80];
     size_t s;
@@ -393,16 +434,15 @@ int grib_accessor_class_concept_t::pack_long(grib_accessor* a, const long* val, 
     //     return GRIB_NOT_IMPLEMENTED;
 
     // ECC-1806: GRIB: Change of paramId in conversion from GRIB1 to GRIB2
-    if (STR_EQUAL(a->name, "paramId")) {
-        grib_handle* h = grib_handle_of_accessor(a);
+    if (STR_EQUAL(name_, "paramId")) {
+        grib_handle* h = grib_handle_of_accessor(this);
         long edition   = 0;
         if (grib_get_long(h, "edition", &edition) == GRIB_SUCCESS && edition == 2) {
             long newParamId = 0;
             if (grib_get_long(h, "paramIdForConversion", &newParamId) == GRIB_SUCCESS && newParamId > 0) {
-                if (a->context->debug) {
-                    const char* cclass_name = a->cclass->name;
+                if (context_->debug) {
                     fprintf(stderr, "ECCODES DEBUG %s::%s: Changing %s from %ld to %ld\n",
-                            cclass_name, __func__, a->name, *val, newParamId);
+                            class_name_, __func__, name_, *val, newParamId);
                 }
                 snprintf(buf, sizeof(buf), "%ld", newParamId);
             }
@@ -410,10 +450,10 @@ int grib_accessor_class_concept_t::pack_long(grib_accessor* a, const long* val, 
     }
 
     s = strlen(buf) + 1;
-    return pack_string(a, buf, &s);
+    return pack_string(buf, &s);
 }
 
-int grib_accessor_class_concept_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+int grib_accessor_concept_t::unpack_double(double* val, size_t* len)
 {
     /*
      * If we want to have a condition which contains tests for paramId as well
@@ -423,20 +463,20 @@ int grib_accessor_class_concept_t::unpack_double(grib_accessor* a, double* val, 
      */
     /*return GRIB_NOT_IMPLEMENTED*/
     int ret = 0;
-    if (a->flags & GRIB_ACCESSOR_FLAG_LONG_TYPE) {
+    if (flags_ & GRIB_ACCESSOR_FLAG_LONG_TYPE) {
         long lval = 0;
-        ret       = unpack_long(a, &lval, len);
+        ret       = unpack_long(&lval, len);
         if (ret == GRIB_SUCCESS) {
             *val = lval;
         }
     }
-    else if (a->flags & GRIB_ACCESSOR_FLAG_DOUBLE_TYPE) {
-        const char* p = concept_evaluate(a);
+    else if (flags_ & GRIB_ACCESSOR_FLAG_DOUBLE_TYPE) {
+        const char* p = concept_evaluate(this);
 
         if (!p) {
-            grib_handle* h = grib_handle_of_accessor(a);
-            if (a->creator->defaultkey)
-                return grib_get_double_internal(h, a->creator->defaultkey, val);
+            grib_handle* h = grib_handle_of_accessor(this);
+            if (creator_->defaultkey)
+                return grib_get_double_internal(h, creator_->defaultkey, val);
 
             return GRIB_NOT_FOUND;
         }
@@ -446,14 +486,14 @@ int grib_accessor_class_concept_t::unpack_double(grib_accessor* a, double* val, 
     return ret;
 }
 
-int grib_accessor_class_concept_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_concept_t::unpack_long(long* val, size_t* len)
 {
-    const char* p = concept_evaluate(a);
+    const char* p = concept_evaluate(this);
 
     if (!p) {
-        grib_handle* h = grib_handle_of_accessor(a);
-        if (a->creator->defaultkey)
-            return grib_get_long_internal(h, a->creator->defaultkey, val);
+        grib_handle* h = grib_handle_of_accessor(this);
+        if (creator_->defaultkey)
+            return grib_get_long_internal(h, creator_->defaultkey, val);
 
         return GRIB_NOT_FOUND;
     }
@@ -471,9 +511,9 @@ int grib_accessor_class_concept_t::unpack_long(grib_accessor* a, long* val, size
         if (endptr == p || *endptr != '\0') {
             /* Failed to convert string into integer */
             int type = GRIB_TYPE_UNDEFINED;
-            grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack %s as long", a->name);
-            if (grib_get_native_type(grib_handle_of_accessor(a), a->name, &type) == GRIB_SUCCESS) {
-                grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Try unpacking as %s", grib_get_type_name(type));
+            grib_context_log(context_, GRIB_LOG_ERROR, "Cannot unpack %s as long", name_);
+            if (grib_get_native_type(grib_handle_of_accessor(this), name_, &type) == GRIB_SUCCESS) {
+                grib_context_log(context_, GRIB_LOG_ERROR, "Hint: Try unpacking as %s", grib_get_type_name(type));
             }
             return GRIB_DECODING_ERROR;
         }
@@ -482,73 +522,73 @@ int grib_accessor_class_concept_t::unpack_long(grib_accessor* a, long* val, size
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_concept_t::get_native_type(grib_accessor* a)
+long grib_accessor_concept_t::get_native_type()
 {
     int type = GRIB_TYPE_STRING;
-    if (a->flags & GRIB_ACCESSOR_FLAG_LONG_TYPE)
+    if (flags_ & GRIB_ACCESSOR_FLAG_LONG_TYPE)
         type = GRIB_TYPE_LONG;
 
     return type;
 }
 
-void grib_accessor_class_concept_t::destroy(grib_context* c, grib_accessor* a)
+void grib_accessor_concept_t::destroy(grib_context* c)
 {
     // grib_accessor_concept_t *self = (grib_accessor_concept_t*)a;
-    // grib_context_free(c,self->cval);
-    grib_accessor_class_gen_t::destroy(c, a);
+    // grib_context_free(c,cval_ );
+    grib_accessor_gen_t::destroy(c);
 }
 
-int grib_accessor_class_concept_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+int grib_accessor_concept_t::unpack_string(char* val, size_t* len)
 {
     size_t slen;
-    const char* p = concept_evaluate(a);
+    const char* p = concept_evaluate(this);
 
     if (!p) {
-        grib_handle* h = grib_handle_of_accessor(a);
-        if (a->creator->defaultkey)
-            return grib_get_string_internal(h, a->creator->defaultkey, val, len);
+        grib_handle* h = grib_handle_of_accessor(this);
+        if (creator_->defaultkey)
+            return grib_get_string_internal(h, creator_->defaultkey, val, len);
 
         return GRIB_NOT_FOUND;
     }
 
     slen = strlen(p) + 1;
     if (*len < slen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR,
+        grib_context_log(context_, GRIB_LOG_ERROR,
                          "Concept unpack_string. Buffer too small for %s, value='%s' which requires %lu bytes (len=%lu)",
-                         a->name, p, slen, *len);
+                         name_, p, slen, *len);
         *len = slen;
         return GRIB_BUFFER_TOO_SMALL;
     }
     strcpy(val, p); /* NOLINT: CWE-119 clang-analyzer-security.insecureAPI.strcpy */
     *len = slen;
 
-    //     if (a->context->debug==1) {
+    //     if (context_ ->debug==1) {
     //         int err = 0;
     //         char result[1024] = {0,};
-    //         err = get_concept_condition_string(grib_handle_of_accessor(a), a->name, val, result);
-    //         if (!err) fprintf(stderr, "ECCODES DEBUG concept name=%s, value=%s, conditions=%s\n", a->name, val, result);
+    //         err = get_concept_condition_string(grib_handle_of_accessor(this), name_ , val, result);
+    //         if (!err) fprintf(stderr, "ECCODES DEBUG concept name=%s, value=%s, conditions=%s\n", name_ , val, result);
     //     }
 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_concept_t::pack_string(grib_accessor* a, const char* val, size_t* len)
+int grib_accessor_concept_t::pack_string(const char* val, size_t* len)
 {
-    return grib_concept_apply(a, val);
+    return grib_concept_apply(this, val);
 }
 
-size_t grib_accessor_class_concept_t::string_length(grib_accessor* a)
+size_t grib_accessor_concept_t::string_length()
 {
     return MAX_CONCEPT_STRING_LENGTH;
 }
 
-int grib_accessor_class_concept_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_concept_t::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-int grib_accessor_class_concept_t::compare(grib_accessor* a, grib_accessor* b)
+int grib_accessor_concept_t::compare(grib_accessor* b)
 {
     int retval = 0;
     char* aval = 0;
@@ -559,7 +599,7 @@ int grib_accessor_class_concept_t::compare(grib_accessor* a, grib_accessor* b)
     int err     = 0;
     long count  = 0;
 
-    err = a->value_count(&count);
+    err = value_count(&count);
     if (err) return err;
     alen = count;
 
@@ -572,10 +612,10 @@ int grib_accessor_class_concept_t::compare(grib_accessor* a, grib_accessor* b)
     alen = MAX_CONCEPT_STRING_LENGTH;
     blen = MAX_CONCEPT_STRING_LENGTH;
 
-    aval = (char*)grib_context_malloc(a->context, alen * sizeof(char));
-    bval = (char*)grib_context_malloc(b->context, blen * sizeof(char));
+    aval = (char*)grib_context_malloc(context_, alen * sizeof(char));
+    bval = (char*)grib_context_malloc(b->context_, blen * sizeof(char));
 
-    err = a->unpack_string(aval, &alen);
+    err = unpack_string(aval, &alen);
     if (err) return err;
     err = b->unpack_string(bval, &blen);
     if (err) return err;
@@ -584,8 +624,8 @@ int grib_accessor_class_concept_t::compare(grib_accessor* a, grib_accessor* b)
     if (!aval || !bval || grib_inline_strcmp(aval, bval))
         retval = GRIB_STRING_VALUE_MISMATCH;
 
-    grib_context_free(a->context, aval);
-    grib_context_free(b->context, bval);
+    grib_context_free(context_, aval);
+    grib_context_free(b->context_, bval);
 
     return retval;
 }

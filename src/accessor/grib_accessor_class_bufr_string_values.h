@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,20 +15,19 @@
 class grib_accessor_bufr_string_values_t : public grib_accessor_ascii_t
 {
 public:
-    /* Members defined in bufr_string_values */
-    const char* dataAccessorName;
-    grib_accessor* dataAccessor;
-};
-
-class grib_accessor_class_bufr_string_values_t : public grib_accessor_class_ascii_t
-{
-public:
-    grib_accessor_class_bufr_string_values_t(const char* name) : grib_accessor_class_ascii_t(name) {}
+    grib_accessor_bufr_string_values_t() :
+        grib_accessor_ascii_t() { class_name_ = "bufr_string_values"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_bufr_string_values_t{}; }
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
-    int unpack_string_array(grib_accessor*, char**, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void destroy(grib_context*, grib_accessor*) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int unpack_string(char*, size_t* len) override;
+    int unpack_string_array(char**, size_t* len) override;
+    int value_count(long*) override;
+    void destroy(grib_context*) override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* dataAccessorName_ = nullptr;
+    grib_accessor* dataAccessor_ = nullptr;
+
+    grib_accessor* get_accessor();
 };

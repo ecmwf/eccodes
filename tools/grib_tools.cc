@@ -800,7 +800,7 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
                 grib_accessor* anAccessor = h->accessors[i];
                 if (anAccessor) {
                     for (j = 0; j < MAX_ACCESSOR_NAMES; j++) {
-                        const char* a_namespace = anAccessor->all_name_spaces[j];
+                        const char* a_namespace = anAccessor->all_name_spaces_[j];
                         if (a_namespace) {
                             all_namespace_vals[k++] = a_namespace;
                             ns_count++;

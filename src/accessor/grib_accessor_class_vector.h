@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,16 +15,13 @@
 class grib_accessor_vector_t : public grib_accessor_abstract_vector_t
 {
 public:
-    /* Members defined in vector */
-    const char* vector;
-    int index;
-};
-
-class grib_accessor_class_vector_t : public grib_accessor_class_abstract_vector_t
-{
-public:
-    grib_accessor_class_vector_t(const char* name) : grib_accessor_class_abstract_vector_t(name) {}
+    grib_accessor_vector_t() :
+        grib_accessor_abstract_vector_t() { class_name_ = "vector"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_vector_t{}; }
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int unpack_double(double* val, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* vector_ = nullptr;
+    int index_ = 0;
 };

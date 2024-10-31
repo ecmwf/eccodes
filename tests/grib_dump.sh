@@ -169,6 +169,13 @@ file=$data_dir/sample.grib2
 ${tools_dir}/grib_dump -p nonexist $file > $temp 2>&1
 grep -q "Key/value not found" $temp
 
+# Invalid options
+set +e
+${tools_dir}/grib_dump -jOD $file > $temp 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+
 
 # Unreadable message
 #-----------------------------------------------------------

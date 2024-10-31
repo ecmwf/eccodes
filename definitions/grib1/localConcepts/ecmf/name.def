@@ -10309,203 +10309,203 @@
 	 table2Version = 230 ;
 	 indicatorOfParameter = 251 ;
 	}
-#Mean surface runoff rate
-'Mean surface runoff rate' = {
+#Time-mean surface runoff rate
+'Time-mean surface runoff rate' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 20 ;
 	}
-#Mean sub-surface runoff rate
-'Mean sub-surface runoff rate' = {
+#Time-mean sub-surface runoff rate
+'Time-mean sub-surface runoff rate' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 21 ;
 	}
-#Mean surface photosynthetically active radiation flux, clear sky
-'Mean surface photosynthetically active radiation flux, clear sky' = {
+#Time-mean surface photosynthetically active radiation flux, clear sky
+'Time-mean surface photosynthetically active radiation flux, clear sky' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 22 ;
 	}
-#Mean snow evaporation rate
-'Mean snow evaporation rate' = {
+#Time-mean snow evaporation rate water equivalent
+'Time-mean snow evaporation rate water equivalent' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 23 ;
 	}
-#Mean snowmelt rate
-'Mean snowmelt rate' = {
+#Time-mean snow melt rate
+'Time-mean snow melt rate' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 24 ;
 	}
-#Mean magnitude of turbulent surface stress
-'Mean magnitude of turbulent surface stress' = {
+#Time-mean magnitude of turbulent surface stress
+'Time-mean magnitude of turbulent surface stress' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 25 ;
 	}
-#Mean large-scale precipitation fraction
-'Mean large-scale precipitation fraction' = {
+#Time-mean large-scale precipitation fraction
+'Time-mean large-scale precipitation fraction' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 26 ;
 	}
-#Mean surface downward UV radiation flux
-'Mean surface downward UV radiation flux' = {
+#Time-mean surface downward UV radiation flux
+'Time-mean surface downward UV radiation flux' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 27 ;
 	}
-#Mean surface photosynthetically active radiation flux
-'Mean surface photosynthetically active radiation flux' = {
+#Time-mean surface photosynthetically active radiation flux
+'Time-mean surface photosynthetically active radiation flux' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 28 ;
 	}
-#Mean large-scale precipitation rate
-'Mean large-scale precipitation rate' = {
+#Time-mean large-scale precipitation rate
+'Time-mean large-scale precipitation rate' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 29 ;
 	}
-#Mean convective precipitation rate
-'Mean convective precipitation rate' = {
+#Time-mean convective precipitation rate
+'Time-mean convective precipitation rate' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 30 ;
 	}
-#Mean snowfall rate
-'Mean snowfall rate' = {
+#Time-mean total snowfall rate water equivalent
+'Time-mean total snowfall rate water equivalent' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 31 ;
 	}
-#Mean boundary layer dissipation
-'Mean boundary layer dissipation' = {
+#Time-mean boundary layer dissipation
+'Time-mean boundary layer dissipation' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 32 ;
 	}
-#Mean surface sensible heat flux
-'Mean surface sensible heat flux' = {
+#Time-mean surface sensible heat flux
+'Time-mean surface sensible heat flux' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 33 ;
 	}
-#Mean surface latent heat flux
-'Mean surface latent heat flux' = {
+#Time-mean surface latent heat flux
+'Time-mean surface latent heat flux' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 34 ;
 	}
-#Mean surface downward short-wave radiation flux
-'Mean surface downward short-wave radiation flux' = {
+#Time-mean surface downward short-wave radiation flux
+'Time-mean surface downward short-wave radiation flux' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 35 ;
 	}
-#Mean surface downward long-wave radiation flux
-'Mean surface downward long-wave radiation flux' = {
+#Time-mean surface downward long-wave radiation flux
+'Time-mean surface downward long-wave radiation flux' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 36 ;
 	}
-#Mean surface net short-wave radiation flux
-'Mean surface net short-wave radiation flux' = {
+#Time-mean surface net short-wave radiation flux
+'Time-mean surface net short-wave radiation flux' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 37 ;
 	}
-#Mean surface net long-wave radiation flux
-'Mean surface net long-wave radiation flux' = {
+#Time-mean surface net long-wave radiation flux
+'Time-mean surface net long-wave radiation flux' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 38 ;
 	}
-#Mean top net short-wave radiation flux
-'Mean top net short-wave radiation flux' = {
+#Time-mean top net short-wave radiation flux
+'Time-mean top net short-wave radiation flux' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 39 ;
 	}
-#Mean top net long-wave radiation flux
-'Mean top net long-wave radiation flux' = {
+#Time-mean top net long-wave radiation flux
+'Time-mean top net long-wave radiation flux' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 40 ;
 	}
-#Mean eastward turbulent surface stress
-'Mean eastward turbulent surface stress' = {
+#Time-mean eastward turbulent surface stress
+'Time-mean eastward turbulent surface stress' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 41 ;
 	}
-#Mean northward turbulent surface stress
-'Mean northward turbulent surface stress' = {
+#Time-mean northward turbulent surface stress
+'Time-mean northward turbulent surface stress' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 42 ;
 	}
-#Mean evaporation rate
-'Mean evaporation rate' = {
+#Time-mean moisture flux
+'Time-mean moisture flux' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 43 ;
 	}
-#Sunshine duration fraction
-'Sunshine duration fraction' = {
+#Time-mean sunshine duration fraction
+'Time-mean sunshine duration fraction' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 44 ;
 	}
-#Mean eastward gravity wave surface stress
-'Mean eastward gravity wave surface stress' = {
+#Time-mean eastward gravity wave surface stress
+'Time-mean eastward gravity wave surface stress' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 45 ;
 	}
-#Mean northward gravity wave surface stress
-'Mean northward gravity wave surface stress' = {
+#Time-mean northward gravity wave surface stress
+'Time-mean northward gravity wave surface stress' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 46 ;
 	}
-#Mean gravity wave dissipation
-'Mean gravity wave dissipation' = {
+#Time-mean gravity wave dissipation
+'Time-mean gravity wave dissipation' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 47 ;
 	}
-#Mean runoff rate
-'Mean runoff rate' = {
+#Time-mean runoff rate water equivalent (surface plus subsurface)
+'Time-mean runoff rate water equivalent (surface plus subsurface)' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 48 ;
 	}
-#Mean top net short-wave radiation flux, clear sky
-'Mean top net short-wave radiation flux, clear sky' = {
+#Time-mean top net short-wave radiation flux, clear sky
+'Time-mean top net short-wave radiation flux, clear sky' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 49 ;
 	}
-#Mean top net long-wave radiation flux, clear sky
-'Mean top net long-wave radiation flux, clear sky' = {
+#Time-mean top net long-wave radiation flux, clear sky
+'Time-mean top net long-wave radiation flux, clear sky' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 50 ;
 	}
-#Mean surface net short-wave radiation flux, clear sky
-'Mean surface net short-wave radiation flux, clear sky' = {
+#Time-mean surface net short-wave radiation flux, clear sky
+'Time-mean surface net short-wave radiation flux, clear sky' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 51 ;
 	}
-#Mean surface net long-wave radiation flux, clear sky
-'Mean surface net long-wave radiation flux, clear sky' = {
+#Time-mean surface net long-wave radiation flux, clear sky
+'Time-mean surface net long-wave radiation flux, clear sky' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 52 ;
 	}
-#Mean top downward short-wave radiation flux
-'Mean top downward short-wave radiation flux' = {
+#Time mean top downward short-wave radiation flux
+'Time mean top downward short-wave radiation flux' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 53 ;
 	}
-#Mean vertically integrated moisture divergence
-'Mean vertically integrated moisture divergence' = {
+#Time-mean total column vertically-integrated moisture divergence flux
+'Time-mean total column vertically-integrated moisture divergence flux' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 54 ;
 	}
-#Mean total precipitation rate
-'Mean total precipitation rate' = {
+#Time-mean total precipitation rate
+'Time-mean total precipitation rate' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 55 ;
 	}
-#Mean convective snowfall rate
-'Mean convective snowfall rate' = {
+#Time-mean convective snowfall rate water equivalent
+'Time-mean convective snowfall rate water equivalent' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 56 ;
 	}
-#Mean large-scale snowfall rate
-'Mean large-scale snowfall rate' = {
+#Time-mean large scale snowfall rate water equivalent
+'Time-mean large scale snowfall rate water equivalent' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Mean surface direct short-wave radiation flux
-'Mean surface direct short-wave radiation flux' = {
+#Time-mean surface direct short-wave radiation flux
+'Time-mean surface direct short-wave radiation flux' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 58 ;
 	}
-#Mean surface direct short-wave radiation flux, clear sky
-'Mean surface direct short-wave radiation flux, clear sky' = {
+#Time-mean surface direct short-wave radiation flux, clear sky
+'Time-mean surface direct short-wave radiation flux, clear sky' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 59 ;
 	}
@@ -10514,38 +10514,38 @@
 	 table2Version = 235 ;
 	 indicatorOfParameter = 60 ;
 	}
-#Mean surface diffuse short-wave radiation flux, clear sky
-'Mean surface diffuse short-wave radiation flux, clear sky' = {
+#Time-mean surface diffuse short-wave radiation flux, clear sky
+'Time-mean surface diffuse short-wave radiation flux, clear sky' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 61 ;
 	}
-#Mean carbon dioxide net ecosystem exchange flux
-'Mean carbon dioxide net ecosystem exchange flux' = {
+#Time-mean carbon dioxide net ecosystem exchange flux
+'Time-mean carbon dioxide net ecosystem exchange flux' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 62 ;
 	}
-#Mean carbon dioxide gross primary production flux
-'Mean carbon dioxide gross primary production flux' = {
+#Time-mean carbon dioxide gross primary production flux
+'Time-mean carbon dioxide gross primary production flux' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 63 ;
 	}
-#Mean carbon dioxide ecosystem respiration flux
-'Mean carbon dioxide ecosystem respiration flux' = {
+#Time-mean carbon dioxide ecosystem respiration flux
+'Time-mean carbon dioxide ecosystem respiration flux' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 64 ;
 	}
-#Mean surface downward short-wave radiation flux, clear sky
-'Mean surface downward short-wave radiation flux, clear sky' = {
+#Time-mean surface downward short-wave radiation flux, clear sky
+'Time-mean surface downward short-wave radiation flux, clear sky' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 68 ;
 	}
-#Mean surface downward long-wave radiation flux, clear sky
-'Mean surface downward long-wave radiation flux, clear sky' = {
+#Time-mean surface downward long-wave radiation flux, clear sky
+'Time-mean surface downward long-wave radiation flux, clear sky' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 69 ;
 	}
-#Mean potential evaporation rate
-'Mean potential evaporation rate' = {
+#Time-mean potential evaporation rate
+'Time-mean potential evaporation rate' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 70 ;
 	}
@@ -14899,13 +14899,13 @@
 	 table2Version = 171 ;
 	 indicatorOfParameter = 255 ;
 	}
-#Snow evaporation
-'Snow evaporation' = {
+#Time-mean snow evaporation rate
+'Time-mean snow evaporation rate' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 44 ;
 	}
-#Snowmelt
-'Snowmelt' = {
+#Time-mean snowmelt rate
+'Time-mean snowmelt rate' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 45 ;
 	}
@@ -15069,13 +15069,13 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 255 ;
 	}
-#Snow evaporation anomaly
-'Snow evaporation anomaly' = {
+#Time-mean snow evaporation anomalous rate of accumulation
+'Time-mean snow evaporation anomalous rate of accumulation' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 44 ;
 	}
-#Snowmelt anomaly
-'Snowmelt anomaly' = {
+#Time-mean snowmelt anomalous rate of accumulation
+'Time-mean snowmelt anomalous rate of accumulation' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 45 ;
 	}
@@ -15174,8 +15174,8 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 181 ;
 	}
-#Evaporation anomalous rate of accumulation
-'Evaporation anomalous rate of accumulation' = {
+#Time-mean evaporation anomalous rate of accumulation
+'Time-mean evaporation anomalous rate of accumulation' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 182 ;
 	}
@@ -17419,13 +17419,13 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 3 ;
 	}
-#Mean 2 metre temperature
-'Mean 2 metre temperature' = {
+#Time-mean 2 metre temperature
+'Time-mean 2 metre temperature' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 4 ;
 	}
-#Mean of 10 metre wind speed
-'Mean of 10 metre wind speed' = {
+#Time-mean 10 metre wind speed
+'Time-mean 10 metre wind speed' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 5 ;
 	}

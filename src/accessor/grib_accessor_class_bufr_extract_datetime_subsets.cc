@@ -10,25 +10,23 @@
 
 #include "grib_accessor_class_bufr_extract_datetime_subsets.h"
 
-grib_accessor_class_bufr_extract_datetime_subsets_t _grib_accessor_class_bufr_extract_datetime_subsets{ "bufr_extract_datetime_subsets" };
-grib_accessor_class* grib_accessor_class_bufr_extract_datetime_subsets = &_grib_accessor_class_bufr_extract_datetime_subsets;
+grib_accessor_bufr_extract_datetime_subsets_t _grib_accessor_bufr_extract_datetime_subsets{};
+grib_accessor* grib_accessor_bufr_extract_datetime_subsets = &_grib_accessor_bufr_extract_datetime_subsets;
 
-
-void grib_accessor_class_bufr_extract_datetime_subsets_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+void grib_accessor_bufr_extract_datetime_subsets_t::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_class_gen_t::init(a, len, arg);
-    int n                                               = 0;
-    grib_accessor_bufr_extract_datetime_subsets_t* self = (grib_accessor_bufr_extract_datetime_subsets_t*)a;
+    grib_accessor_gen_t::init(len, arg);
+    int n = 0;
 
-    a->length               = 0;
-    self->doExtractSubsets  = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
-    self->numberOfSubsets   = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
-    self->extractSubsetList = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
+    length_            = 0;
+    doExtractSubsets_  = grib_arguments_get_name(grib_handle_of_accessor(this), arg, n++);
+    numberOfSubsets_   = grib_arguments_get_name(grib_handle_of_accessor(this), arg, n++);
+    extractSubsetList_ = grib_arguments_get_name(grib_handle_of_accessor(this), arg, n++);
 
-    a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
+    flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }
 
-int grib_accessor_class_bufr_extract_datetime_subsets_t::get_native_type(grib_accessor* a)
+long grib_accessor_bufr_extract_datetime_subsets_t::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
@@ -106,14 +104,13 @@ static int build_long_array(grib_context* c, grib_handle* h, int compressed,
     return err;
 }
 
-static int select_datetime(grib_accessor* a)
+int grib_accessor_bufr_extract_datetime_subsets_t::select_datetime()
 {
-    int ret                                             = 0;
-    long compressed                                     = 0;
-    grib_accessor_bufr_extract_datetime_subsets_t* self = (grib_accessor_bufr_extract_datetime_subsets_t*)a;
-    grib_handle* h                                      = grib_handle_of_accessor(a);
-    grib_context* c                                     = h->context;
-    size_t n;
+    int ret         = 0;
+    long compressed = 0;
+    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_context* c = h->context;
+
     double julianStart = 0, julianEnd = 0, julianDT = 0;
     char start_str[80] = {0,},
          end_str[80] = {0,},
@@ -136,10 +133,10 @@ static int select_datetime(grib_accessor* a)
     ret = grib_get_long(h, "compressedData", &compressed);
     if (ret) return ret;
 
-    ret = grib_get_long(h, self->numberOfSubsets, &numberOfSubsets);
+    ret = grib_get_long(h, numberOfSubsets_, &numberOfSubsets);
     if (ret) return ret;
 
-    subsets = grib_iarray_new(c, numberOfSubsets, 10);
+    subsets = grib_iarray_new(numberOfSubsets, 10);
 
     ret = grib_set_long(h, "unpack", 1);
     if (ret) return ret;
@@ -191,7 +188,7 @@ static int select_datetime(grib_accessor* a)
     if (ret) return ret;
 
     /* SECOND: Double array */
-    n      = numberOfSubsets;
+    size_t n = numberOfSubsets;
     second = (double*)grib_context_malloc_clear(c, sizeof(double) * numberOfSubsets);
     if (compressed) {
         ret = grib_get_double_array(h, secondstr, second, &n);
@@ -316,11 +313,11 @@ static int select_datetime(grib_accessor* a)
 
     if (nsubsets != 0) {
         long* subsets_ar = grib_iarray_get_array(subsets);
-        ret              = grib_set_long_array(h, self->extractSubsetList, subsets_ar, nsubsets);
+        ret              = grib_set_long_array(h, extractSubsetList_, subsets_ar, nsubsets);
         grib_context_free(c, subsets_ar);
         if (ret) return ret;
 
-        ret = grib_set_long(h, self->doExtractSubsets, 1);
+        ret = grib_set_long(h, doExtractSubsets_, 1);
         if (ret) return ret;
     }
 
@@ -337,11 +334,11 @@ cleanup:
     return ret;
 }
 
-int grib_accessor_class_bufr_extract_datetime_subsets_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_bufr_extract_datetime_subsets_t::pack_long(const long* val, size_t* len)
 {
     /*grib_accessor_bufr_extract_datetime_subsets_t *self =(grib_accessor_bufr_extract_datetime_subsets_t*)a;*/
 
     if (*len == 0)
         return GRIB_SUCCESS;
-    return select_datetime(a);
+    return select_datetime();
 }

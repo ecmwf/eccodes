@@ -19,7 +19,7 @@ sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 cat >$tempFilt<<EOF
  transient aa = 156;
- meta aad to_double(aa,0,3,0);
+ meta aad to_double(aa,0,2,0); # substr "15"
  print "aa=[aad]";
 
  transient xx = "45.5e3";
@@ -27,15 +27,20 @@ cat >$tempFilt<<EOF
  print "xx=[xxd:d]";
 
  transient yy = "45.9";
- meta yyd to_double(yy,0,2,0);
+ meta yyd to_double(yy,0,2,0); # substr "45"
  print "yy=[yyd:s]";
+
+ transient zz = "145.02";
+ meta zzd to_double(zz,1,4,0); # substr "45.0"
+ print "zz=[zzd:s]";
 EOF
 ${tools_dir}/grib_filter $tempFilt $sample_grib2 > $tempLog
 
 cat >$tempRef<<EOF
-aa=156
+aa=15
 xx=45500
 yy=45
+zz=45.0
 EOF
 diff $tempRef $tempLog
 

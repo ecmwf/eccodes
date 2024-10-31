@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,16 +15,13 @@
 class grib_accessor_padtomultiple_t : public grib_accessor_padding_t
 {
 public:
-    /* Members defined in padtomultiple */
-    grib_expression* begin;
-    grib_expression* multiple;
-};
-
-class grib_accessor_class_padtomultiple_t : public grib_accessor_class_padding_t
-{
-public:
-    grib_accessor_class_padtomultiple_t(const char* name) : grib_accessor_class_padding_t(name) {}
+    grib_accessor_padtomultiple_t() :
+        grib_accessor_padding_t() { class_name_ = "padtomultiple"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_padtomultiple_t{}; }
-    void init(grib_accessor*, const long, grib_arguments*) override;
-    size_t preferred_size(grib_accessor*, int) override;
+    void init(const long, grib_arguments*) override;
+    size_t preferred_size(int) override;
+
+private:
+    grib_expression* begin_ = nullptr;
+    grib_expression* multiple_ = nullptr;
 };

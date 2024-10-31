@@ -11,52 +11,48 @@
 #include "grib_accessor_class_simple_packing_error.h"
 #include "grib_scaling.h"
 
-grib_accessor_class_simple_packing_error_t _grib_accessor_class_simple_packing_error{ "simple_packing_error" };
-grib_accessor_class* grib_accessor_class_simple_packing_error = &_grib_accessor_class_simple_packing_error;
+grib_accessor_simple_packing_error_t _grib_accessor_simple_packing_error{};
+grib_accessor* grib_accessor_simple_packing_error = &_grib_accessor_simple_packing_error;
 
-
-void grib_accessor_class_simple_packing_error_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_simple_packing_error_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_double_t::init(a, l, c);
-    grib_accessor_simple_packing_error_t* self = (grib_accessor_simple_packing_error_t*)a;
-    int n = 0;
-    grib_handle* h = grib_handle_of_accessor(a);
+    grib_accessor_double_t::init(l, c);
+    int n          = 0;
+    grib_handle* h = grib_handle_of_accessor(this);
 
-    self->bitsPerValue       = grib_arguments_get_name(h, c, n++);
-    self->binaryScaleFactor  = grib_arguments_get_name(h, c, n++);
-    self->decimalScaleFactor = grib_arguments_get_name(h, c, n++);
-    self->referenceValue     = grib_arguments_get_name(h, c, n++);
-    self->floatType          = grib_arguments_get_name(h, c, n++);
+    bitsPerValue_       = grib_arguments_get_name(h, c, n++);
+    binaryScaleFactor_  = grib_arguments_get_name(h, c, n++);
+    decimalScaleFactor_ = grib_arguments_get_name(h, c, n++);
+    referenceValue_     = grib_arguments_get_name(h, c, n++);
+    floatType_          = grib_arguments_get_name(h, c, n++);
 
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    a->length = 0;
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    length_ = 0;
 }
 
-int grib_accessor_class_simple_packing_error_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+int grib_accessor_simple_packing_error_t::unpack_double(double* val, size_t* len)
 {
-    grib_accessor_simple_packing_error_t* self = (grib_accessor_simple_packing_error_t*)a;
-
     int ret                 = 0;
     long binaryScaleFactor  = 0;
     long bitsPerValue       = 0;
     long decimalScaleFactor = 0;
     double referenceValue   = 0;
-    grib_handle* h          = grib_handle_of_accessor(a);
+    grib_handle* h          = grib_handle_of_accessor(this);
 
-    if ((ret = grib_get_long_internal(h, self->binaryScaleFactor, &binaryScaleFactor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, binaryScaleFactor_, &binaryScaleFactor)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(h, self->bitsPerValue, &bitsPerValue)) != GRIB_SUCCESS)
-        return ret;
-
-    if ((ret = grib_get_long_internal(h, self->decimalScaleFactor, &decimalScaleFactor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, bitsPerValue_, &bitsPerValue)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_double_internal(h, self->referenceValue, &referenceValue)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, decimalScaleFactor_, &decimalScaleFactor)) != GRIB_SUCCESS)
         return ret;
 
-    if (!strcmp(self->floatType, "ibm"))
+    if ((ret = grib_get_double_internal(h, referenceValue_, &referenceValue)) != GRIB_SUCCESS)
+        return ret;
+
+    if (!strcmp(floatType_, "ibm"))
         *val = grib_ibmfloat_error(referenceValue);
-    else if (!strcmp(self->floatType, "ieee"))
+    else if (!strcmp(floatType_, "ieee"))
         *val = grib_ieeefloat_error(referenceValue);
     else
         Assert(1 == 0);

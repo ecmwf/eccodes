@@ -59,5 +59,11 @@ ${tools_dir}/grib_set -s productDefinitionTemplateNumber=1 $tempGribA $tempGribB
 grib_check_key_equals $tempGribB typeOfLevel,productDefinitionTemplateNumber 'unknown 1'
 
 
+# ECC-1847: Fix case when input has typeOfLevel=unknown
+# In definitions/grib2/typeOfLevelConcept.def, make sure we map 'unknown' correctly (transient dummyc)
+${tools_dir}/grib_set -s centre=ecmf,typeOfFirstFixedSurface=254 $sample_g2 $tempGribA
+grib_check_key_equals $tempGribA typeOfLevel abstractLevel
+
+
 # Clean up
 rm -f $tempText $tempGribA $tempGribB

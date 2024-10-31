@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,27 +15,28 @@
 class grib_accessor_bitmap_t : public grib_accessor_bytes_t
 {
 public:
-    /* Members defined in bitmap */
-    const char* tableReference;
-    const char* missing_value;
-    const char* offsetbsec;
-    const char* sLength;
-};
+    grib_accessor_bitmap_t() :
+        grib_accessor_bytes_t() { class_name_ = "bitmap"; }
+    // grib_accessor* create_empty_accessor() override { return new grib_accessor_bitmap_t{}; }
+    int unpack_double(double* val, size_t* len) override;
+    int unpack_float(float* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    int unpack_string(char*, size_t* len) override;
+    size_t string_length() override;
+    long next_offset() override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
+    void update_size(size_t) override;
+    int unpack_double_element(size_t i, double* val) override;
+    int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) override;
 
-class grib_accessor_class_bitmap_t : public grib_accessor_class_bytes_t
-{
-public:
-    grib_accessor_class_bitmap_t(const char* name) : grib_accessor_class_bytes_t(name) {}
-    //grib_accessor* create_empty_accessor() override { return new grib_accessor_bitmap_t{}; }
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int unpack_float(grib_accessor*, float* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
-    size_t string_length(grib_accessor*) override;
-    long next_offset(grib_accessor*) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
-    void update_size(grib_accessor*, size_t) override;
-    int unpack_double_element(grib_accessor*, size_t i, double* val) override;
-    int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array) override;
+protected:
+    const char* missing_value_ = nullptr;
+
+private:
+    const char* tableReference_ = nullptr;
+    const char* offsetbsec_ = nullptr;
+    const char* sLength_ = nullptr;
+
+    void compute_size();
 };

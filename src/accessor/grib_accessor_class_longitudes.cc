@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,31 +10,27 @@
 
 #include "grib_accessor_class_longitudes.h"
 
-grib_accessor_class_longitudes_t _grib_accessor_class_longitudes{ "longitudes" };
-grib_accessor_class* grib_accessor_class_longitudes = &_grib_accessor_class_longitudes;
-
+grib_accessor_longitudes_t _grib_accessor_longitudes{};
+grib_accessor* grib_accessor_longitudes = &_grib_accessor_longitudes;
 
 static int get_distinct(grib_accessor* a, double** val, long* len);
-
-void grib_accessor_class_longitudes_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_longitudes_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_double_t::init(a, l, c);
-    grib_accessor_longitudes_t* self = (grib_accessor_longitudes_t*)a;
+    grib_accessor_double_t::init(l, c);
     int n = 0;
 
-    self->values   = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->distinct = grib_arguments_get_long(grib_handle_of_accessor(a), c, n++);
-    self->save     = 0;
-    self->lons     = 0;
+    values_   = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    distinct_ = grib_arguments_get_long(grib_handle_of_accessor(this), c, n++);
+    save_     = 0;
+    lons_     = 0;
 
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_longitudes_t::unpack_double(grib_accessor* a, double* val, size_t* len)
-{
-    grib_accessor_longitudes_t* self = (grib_accessor_longitudes_t*)a;
 
-    grib_context* c     = a->context;
+int grib_accessor_longitudes_t::unpack_double(double* val, size_t* len)
+{
+    grib_context* c     = context_;
     int ret             = 0;
     double* v           = val;
     double dummyLat     = 0;
@@ -43,35 +38,35 @@ int grib_accessor_class_longitudes_t::unpack_double(grib_accessor* a, double* va
     long count          = 0;
     grib_iterator* iter = NULL;
 
-    self->save = 1;
-    ret        = value_count(a, &count);
+    save_ = 1;
+    ret   = value_count(&count);
     if (ret) return ret;
     size = count;
 
     if (*len < size) {
-        /* self->lons are computed in value_count*/
-        if (self->lons) {
-            grib_context_free(c, self->lons);
-            self->lons = NULL;
+        /* lons_ are computed in value_count*/
+        if (lons_) {
+            grib_context_free(c, lons_);
+            lons_ = NULL;
         }
         return GRIB_ARRAY_TOO_SMALL;
     }
-    self->save = 0;
+    save_ = 0;
 
-    /* self->lons are computed in value_count*/
-    if (self->lons) {
+    /* lons_ are computed in value_count*/
+    if (lons_) {
         int i;
-        *len = self->size;
+        *len = size_;
         for (i = 0; i < size; i++)
-            val[i] = self->lons[i];
-        grib_context_free(c, self->lons);
-        self->lons = NULL;
-        self->size = 0;
+            val[i] = lons_[i];
+        grib_context_free(c, lons_);
+        lons_ = NULL;
+        size_ = 0;
         return GRIB_SUCCESS;
     }
 
     // ECC-1525 Performance: We do not need the values to be decoded
-    iter = grib_iterator_new(grib_handle_of_accessor(a), GRIB_GEOITERATOR_NO_VALUES, &ret);
+    iter = grib_iterator_new(grib_handle_of_accessor(this), GRIB_GEOITERATOR_NO_VALUES, &ret);
     if (ret != GRIB_SUCCESS) {
         grib_iterator_delete(iter);
         grib_context_log(c, GRIB_LOG_ERROR, "longitudes: Unable to create iterator");
@@ -86,17 +81,16 @@ int grib_accessor_class_longitudes_t::unpack_double(grib_accessor* a, double* va
     return ret;
 }
 
-int grib_accessor_class_longitudes_t::value_count(grib_accessor* a, long* len)
+int grib_accessor_longitudes_t::value_count(long* len)
 {
-    grib_accessor_longitudes_t* self = (grib_accessor_longitudes_t*)a;
-    grib_handle* h                   = grib_handle_of_accessor(a);
-    grib_context* c                  = a->context;
-    double* val                      = NULL;
+    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_context* c = context_;
+    double* val     = NULL;
     int ret;
     size_t size;
     *len = 0;
-    if ((ret = grib_get_size(h, self->values, &size)) != GRIB_SUCCESS) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "longitudes: Unable to get size of %s", self->values);
+    if ((ret = grib_get_size(h, values_, &size)) != GRIB_SUCCESS) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "longitudes: Unable to get size of %s", values_);
         return ret;
     }
     *len = size;
@@ -108,13 +102,13 @@ int grib_accessor_class_longitudes_t::value_count(grib_accessor* a, long* len)
         *len = numberOfDataPoints;
     }
 
-    if (self->distinct) {
-        ret = get_distinct(a, &val, len);
+    if (distinct_) {
+        ret = get_distinct(this, &val, len);
         if (ret != GRIB_SUCCESS)
             return ret;
-        if (self->save) {
-            self->lons = val;
-            self->size = *len;
+        if (save_) {
+            lons_ = val;
+            size_ = *len;
         }
         else {
             grib_context_free(c, val);
@@ -145,7 +139,7 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     double dummyLat = 0;
     int ret         = 0;
     size_t size     = *len;
-    grib_context* c = a->context;
+    grib_context* c = a->context_;
 
     // Performance: We do not need the values to be decoded
     grib_iterator* iter = grib_iterator_new(grib_handle_of_accessor(a), GRIB_GEOITERATOR_NO_VALUES, &ret);

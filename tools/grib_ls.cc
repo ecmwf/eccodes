@@ -122,7 +122,6 @@ int grib_tool_init(grib_runtime_options* options)
                     exit(1);
                 }
             }
-            Assert(p);
             if (p && *p == ',') {
                 p++;
                 options->latlon_mask = strdup(p);
@@ -371,10 +370,6 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     }
 
     if (!json_latlon && options->json_output) {
-        if (options->current_infile && options->current_infile->name) {
-            size_t len = strlen(options->current_infile->name);
-            grib_set_string(h, "file", options->current_infile->name, &len);
-        }
         if (!first_handle && options->handle_count > 1) {
             fprintf(stdout, ",\n");
         }
@@ -383,6 +378,12 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             first_handle = 0;
         }
     }
+
+    if (options->current_infile && options->current_infile->name) {
+        size = strlen(options->current_infile->name);
+        grib_set_string(h, "file", options->current_infile->name, &size);
+    }
+
     new_handle = "\n,";
     return 0;
 }

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,29 +15,28 @@
 class grib_accessor_g2_mars_labeling_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in g2_mars_labeling */
-    int index;
-    const char* the_class;
-    const char* stream;
-    const char* type;
-    const char* expver;
-    const char* typeOfProcessedData;
-    const char* productDefinitionTemplateNumber;
-    const char* stepType;
-    const char* derivedForecast;
-    const char* typeOfGeneratingProcess;
-};
-
-class grib_accessor_class_g2_mars_labeling_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_g2_mars_labeling_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_g2_mars_labeling_t() :
+        grib_accessor_gen_t() { class_name_ = "g2_mars_labeling"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_g2_mars_labeling_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int pack_string(grib_accessor*, const char*, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    long get_native_type() override;
+    int pack_long(const long* val, size_t* len) override;
+    int pack_string(const char*, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    int unpack_string(char*, size_t* len) override;
+    int value_count(long*) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    int index_ = 0;
+    const char* the_class_ = nullptr;
+    const char* stream_ = nullptr;
+    const char* type_ = nullptr;
+    const char* expver_ = nullptr;
+    const char* typeOfProcessedData_ = nullptr;
+    const char* productDefinitionTemplateNumber_ = nullptr;
+    const char* stepType_ = nullptr;
+    const char* derivedForecast_ = nullptr;
+    const char* typeOfGeneratingProcess_ = nullptr;
+
+    int extra_set(long val);
 };

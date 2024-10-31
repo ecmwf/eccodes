@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,17 +15,14 @@
 class grib_accessor_number_of_values_data_raw_packing_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in number_of_values_data_raw_packing */
-    const char*   values;
-    const char*   precision;
-};
-
-class grib_accessor_class_number_of_values_data_raw_packing_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_number_of_values_data_raw_packing_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_number_of_values_data_raw_packing_t() :
+        grib_accessor_gen_t() { class_name_ = "number_of_values_data_raw_packing"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_number_of_values_data_raw_packing_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    long get_native_type() override;
+    int unpack_long(long* val, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* values_ = nullptr;
+    const char* precision_ = nullptr;
 };

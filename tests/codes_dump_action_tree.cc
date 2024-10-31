@@ -12,17 +12,29 @@
 #include <assert.h>
 #include "eccodes.h"
 
+static ProductKind get_product_kind(const char* p)
+{
+    if (strcmp(p, "GRIB") == 0)  return PRODUCT_GRIB;
+    if (strcmp(p, "BUFR") == 0)  return PRODUCT_BUFR;
+    if (strcmp(p, "METAR") == 0) return PRODUCT_METAR;
+    if (strcmp(p, "GTS") == 0)   return PRODUCT_GTS;
+    return PRODUCT_ANY;
+}
+
 int main(int argc, char** argv)
 {
     int err = 0;
     codes_context* c = codes_context_get_default();
 
-    assert(argc == 2);
+    assert(argc == 3);
 
-    char* filename = argv[1];
+    const ProductKind mode = get_product_kind( argv[1] );
+    const char* filename = argv[2];
+
     FILE* fp = fopen(filename, "rb");
     assert(fp);
-    codes_handle* h = codes_handle_new_from_file(c, fp, PRODUCT_ANY, &err);
+
+    codes_handle* h = codes_handle_new_from_file(c, fp, mode, &err);
     assert(h);
     assert(!err);
 

@@ -12,7 +12,8 @@ constant internalVersion=30 : hidden;
 meta checkInternalVersion check_internal_version(internalVersion) : hidden;
 
 # ECC-806: Local concepts precedence order
-transient preferLocalConcepts = 0 : hidden;
+preferLocalConceptsEnvVar = getenv("ECCODES_GRIB_PREFER_LOCAL_CONCEPTS","0") : hidden;
+transient preferLocalConcepts = preferLocalConceptsEnvVar : hidden;
 
 constant defaultTypeOfLevel="unknown" : hidden;
 

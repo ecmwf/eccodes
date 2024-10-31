@@ -16,7 +16,6 @@ GRIB {
   subCentre = 0;
   paramId = 130;
   #-READ ONLY- cfName = air_temperature;
-  #-READ ONLY- cfVarName = t;
   #-READ ONLY- units = K;
   #-READ ONLY- name = Temperature;
   decimalScaleFactor = 0;
@@ -40,6 +39,7 @@ GRIB {
   perturbationNumber = 0;
   numberOfForecastsInEnsemble = 0;
   shortName = t;
+  #-READ ONLY- cfVarName = t;
   GDSPresent = 1;
   bitmapPresent = 0;
   numberOfVerticalCoordinateValues = 184;

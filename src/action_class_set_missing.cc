@@ -14,7 +14,6 @@
 
    START_CLASS_DEF
    CLASS      = action
-   IMPLEMENTS = dump
    IMPLEMENTS = destroy;execute
    MEMBERS    = char *name
    END_CLASS_DEF
@@ -32,7 +31,6 @@ or edit "action.class" and rerun ./make_class.pl
 */
 
 static void init_class      (grib_action_class*);
-static void dump            (grib_action* d, FILE*,int);
 static void destroy         (grib_context*,grib_action*);
 static int execute(grib_action* a,grib_handle* h);
 
@@ -45,20 +43,17 @@ typedef struct grib_action_set_missing {
 
 
 static grib_action_class _grib_action_class_set_missing = {
-    0,                              /* super                     */
-    "action_class_set_missing",                              /* name                      */
-    sizeof(grib_action_set_missing),            /* size                      */
-    0,                                   /* inited */
+    0,                              /* super */
+    "action_class_set_missing",                 /* name */
+    sizeof(grib_action_set_missing),            /* size */
+    0,                                   /* inited  */
     &init_class,                         /* init_class */
-    0,                               /* init                      */
+    0,                               /* init */
     &destroy,                            /* destroy */
-
-    &dump,                               /* dump                      */
-    0,                               /* xref                      */
-
-    0,             /* create_accessor*/
-
-    0,                            /* notify_change */
+    0,                               /* dump */
+    0,                               /* xref */
+    0,                    /* create_accessor */
+    0,                      /* notify_change */
     0,                            /* reparse */
     &execute,                            /* execute */
 };
@@ -96,17 +91,6 @@ static int execute(grib_action* a, grib_handle* h)
 {
     const grib_action_set_missing* self = (grib_action_set_missing*)a;
     return grib_set_missing(h, self->name);
-}
-
-static void dump(grib_action* act, FILE* f, int lvl)
-{
-    grib_context_log(act->context, GRIB_LOG_ERROR, "%s %s(): Not implemented", __FILE__, __func__);
-    // int i = 0;
-    // const grib_action_set_missing* self = (grib_action_set_missing*)act;
-    // for (i = 0; i < lvl; i++)
-    //     grib_context_print(act->context, f, "     ");
-    // grib_context_print(act->context, f, self->name);
-    // printf("\n");
 }
 
 static void destroy(grib_context* context, grib_action* act)

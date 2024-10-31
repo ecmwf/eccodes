@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,24 +15,21 @@
 class grib_accessor_signed_t : public grib_accessor_long_t
 {
 public:
-    /* Members defined in signed */
-    grib_arguments* arg;
-    int nbytes;
-};
-
-class grib_accessor_class_signed_t : public grib_accessor_class_long_t
-{
-public:
-    grib_accessor_class_signed_t(const char* name) : grib_accessor_class_long_t(name) {}
+    grib_accessor_signed_t() :
+        grib_accessor_long_t() { class_name_ = "signed"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_signed_t{}; }
-    int is_missing(grib_accessor*) override;
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    long byte_count(grib_accessor*) override;
-    long byte_offset(grib_accessor*) override;
-    long next_offset(grib_accessor*) override;
-    int value_count(grib_accessor*, long*) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
-    void update_size(grib_accessor*, size_t) override;
+    int is_missing() override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    long byte_count() override;
+    long byte_offset() override;
+    long next_offset() override;
+    int value_count(long*) override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
+    void update_size(size_t) override;
+
+private:
+    grib_arguments* arg_ = nullptr;
+    int nbytes_ = 0;
 };

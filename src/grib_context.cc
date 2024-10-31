@@ -241,6 +241,17 @@ void grib_context_set_print_proc(grib_context* c, grib_print_proc p)
     c->print = (p ? p : &default_print);
 }
 
+void grib_context_set_data_quality_checks(grib_context* c, int val)
+{
+    c = c ? c : grib_context_get_default();
+    // If val == 0, disable data quality checks
+    // If val == 1, failure results in an error
+    // If val == 2, failure results in a warning
+    Assert(val == 0 || val == 1 || val == 2);
+
+    c->grib_data_quality_checks = val;
+}
+
 void grib_context_set_debug(grib_context* c, int mode)
 {
     c = c ? c : grib_context_get_default();
@@ -661,20 +672,19 @@ static int init_definition_files_dir(grib_context* c)
     }
     else {
         /* Definitions path contains multiple directories */
-        char* dir = NULL;
-        dir       = strtok_r(path, ECC_PATH_DELIMITER_STR, &lasts);
+        const char* dir = strtok_r(path, ECC_PATH_DELIMITER_STR, &lasts);
 
         while (dir != NULL) {
             if (next) {
                 next->next = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
-                next       = next->next;
+                next = next->next;
             }
             else {
                 c->grib_definition_files_dir = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
-                next                         = c->grib_definition_files_dir;
+                next = c->grib_definition_files_dir;
             }
             next->value = codes_resolve_path(c, dir);
-            dir         = strtok_r(NULL, ECC_PATH_DELIMITER_STR, &lasts);
+            dir = strtok_r(NULL, ECC_PATH_DELIMITER_STR, &lasts);
         }
     }
 
@@ -811,14 +821,14 @@ void grib_context_reset(grib_context* c)
 
     if (c->grib_definition_files_dir) {
         grib_string_list* next = c->grib_definition_files_dir;
-        grib_string_list* cur  = NULL;
+        grib_string_list* cur = NULL;
         while (next) {
             cur  = next;
             next = next->next;
             grib_context_free(c, cur->value);
             grib_context_free(c, cur);
         }
-        c->grib_definition_files_dir=0;
+        c->grib_definition_files_dir = 0;
     }
 
     if (c->multi_support_on)
@@ -855,7 +865,7 @@ void grib_context_delete(grib_context* c)
     c->hash_array_count = 0;
     grib_itrie_delete(c->hash_array_index);
     c->hash_array_index=0;
-    grib_trie_delete(c->expanded_descriptors);
+    grib_trie_delete_container(c->expanded_descriptors);
     c->expanded_descriptors=0;
 
     c->inited = 0;
@@ -1017,6 +1027,7 @@ void* grib_context_buffer_malloc_clear(const grib_context* c, size_t size)
 
 void grib_context_set_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f, grib_realloc_proc r)
 {
+    fprintf(stderr, "ECCODES WARNING :  The %s function is deprecated and will be removed in a future release.\n", __func__);
     c->free_mem    = f;
     c->alloc_mem   = m;
     c->realloc_mem = r;
@@ -1024,12 +1035,14 @@ void grib_context_set_memory_proc(grib_context* c, grib_malloc_proc m, grib_free
 
 void grib_context_set_persistent_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f)
 {
+    fprintf(stderr, "ECCODES WARNING :  The %s function is deprecated and will be removed in a future release.\n", __func__);
     c->free_persistent_mem  = f;
     c->alloc_persistent_mem = m;
 }
 
 void grib_context_set_buffer_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f, grib_realloc_proc r)
 {
+    fprintf(stderr, "ECCODES WARNING :  The %s function is deprecated and will be removed in a future release.\n", __func__);
     c->free_buffer_mem    = f;
     c->alloc_buffer_mem   = m;
     c->realloc_buffer_mem = r;
@@ -1233,7 +1246,7 @@ void codes_assertion_failed(const char* message, const char* file, int line)
     /* Default behaviour is to abort
      * unless user has supplied his own assertion routine */
     if (assertion == NULL) {
-        grib_context* c = grib_context_get_default();
+        const grib_context* c = grib_context_get_default();
         fprintf(stderr, "ecCodes assertion failed: `%s' in %s:%d\n", message, file, line);
         if (!c->no_abort) {
             abort();
@@ -1246,7 +1259,7 @@ void codes_assertion_failed(const char* message, const char* file, int line)
     }
 }
 
-int grib_get_gribex_mode(grib_context* c)
+int grib_get_gribex_mode(const grib_context* c)
 {
     if (!c)
         c = grib_context_get_default();

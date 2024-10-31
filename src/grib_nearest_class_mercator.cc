@@ -124,11 +124,13 @@ static int find(grib_nearest* nearest, grib_handle* h,
 static int destroy(grib_nearest* nearest)
 {
     grib_nearest_mercator* self = (grib_nearest_mercator*)nearest;
-    if (self->lats)      grib_context_free(nearest->context, self->lats);
-    if (self->lons)      grib_context_free(nearest->context, self->lons);
-    if (self->i)         grib_context_free(nearest->context, self->i);
-    if (self->j)         grib_context_free(nearest->context, self->j);
-    if (self->k)         grib_context_free(nearest->context, self->k);
-    if (self->distances) grib_context_free(nearest->context, self->distances);
+    grib_context* c = grib_context_get_default();
+
+    if (self->lats)      grib_context_free(c, self->lats);
+    if (self->lons)      grib_context_free(c, self->lons);
+    if (self->i)         grib_context_free(c, self->i);
+    if (self->j)         grib_context_free(c, self->j);
+    if (self->k)         grib_context_free(c, self->k);
+    if (self->distances) grib_context_free(c, self->distances);
     return GRIB_SUCCESS;
 }

@@ -125,7 +125,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     double missing_value = GRIB_MISSING_DOUBLE;
     grib_handle* h       = NULL;
 
-    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+    if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
     h = grib_handle_of_accessor(a);
@@ -133,7 +133,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     size = size2 = count;
 
     if (size > 1) {
-        values = (double*)grib_context_malloc_clear(a->context, sizeof(double) * size);
+        values = (double*)grib_context_malloc_clear(a->context_, sizeof(double) * size);
         err    = a->unpack_double(values, &size2);
     }
     else {
@@ -153,7 +153,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         fprintf(self->dumper.out, "\n%-*s{\n", depth, " ");
         depth += 2;
         fprintf(self->dumper.out, "%-*s", depth, " ");
-        fprintf(self->dumper.out, "\"key\" : \"%s\",\n", a->name);
+        fprintf(self->dumper.out, "\"key\" : \"%s\",\n", a->name_);
     }
 
     err = grib_set_double(h, "missingValue", missing_value);
@@ -185,8 +185,8 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 
         depth -= 2;
         fprintf(self->dumper.out, "\n%-*s]", depth, " ");
-        /* if (a->attributes[0]) fprintf(self->dumper.out,","); */
-        grib_context_free(a->context, values);
+        /* if (a->attributes_[0]) fprintf(self->dumper.out,","); */
+        grib_context_free(a->context_, values);
     }
     else {
         if (self->isLeaf == 0) {
@@ -219,14 +219,14 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     int cols   = 9;
     long count = 0;
 
-    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+    if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
     a->value_count(&count);
     size = size2 = count;
 
     if (size > 1) {
-        values = (long*)grib_context_malloc_clear(a->context, sizeof(long) * size);
+        values = (long*)grib_context_malloc_clear(a->context_, sizeof(long) * size);
         err    = a->unpack_long(values, &size2);
     }
     else {
@@ -245,7 +245,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         fprintf(self->dumper.out, "\n%-*s{\n", depth, " ");
         depth += 2;
         fprintf(self->dumper.out, "%-*s", depth, " ");
-        fprintf(self->dumper.out, "\"key\" : \"%s\",\n", a->name);
+        fprintf(self->dumper.out, "\"key\" : \"%s\",\n", a->name_);
     }
 
     if (size > 1) {
@@ -258,7 +258,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         fprintf(self->dumper.out, "%-*s[", depth, " ");
         /* See ECC-637: unfortunately json_xs says:
          *  malformed number (leading zero must not be followed by another digit
-          if (strcmp(a->name, "unexpandedDescriptors")==0)
+          if (strcmp(a->name_, "unexpandedDescriptors")==0)
             doing_unexpandedDescriptors = 1;
           */
         depth += 2;
@@ -291,8 +291,8 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 
         depth -= 2;
         fprintf(self->dumper.out, "\n%-*s]", depth, " ");
-        /* if (a->attributes[0]) fprintf(self->dumper.out,","); */
-        grib_context_free(a->context, values);
+        /* if (a->attributes_[0]) fprintf(self->dumper.out,","); */
+        grib_context_free(a->context_, values);
     }
     else {
         if (self->isLeaf == 0) {
@@ -303,7 +303,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
             fprintf(self->dumper.out, "null");
         else
             fprintf(self->dumper.out, "%ld", value);
-        /* if (a->attributes[0]) fprintf(self->dumper.out,","); */
+        /* if (a->attributes_[0]) fprintf(self->dumper.out,","); */
     }
 
     if (self->isLeaf == 0) {
@@ -324,7 +324,7 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     double value           = 0;
     size_t size            = 1;
 
-    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+    if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
     a->unpack_double(&value, &size);
@@ -340,7 +340,7 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
         fprintf(self->dumper.out, "%-*s{\n", depth, " ");
         depth += 2;
         fprintf(self->dumper.out, "%-*s", depth, " ");
-        fprintf(self->dumper.out, "\"key\" : \"%s\",\n", a->name);
+        fprintf(self->dumper.out, "\"key\" : \"%s\",\n", a->name_);
 
         fprintf(self->dumper.out, "%-*s", depth, " ");
         fprintf(self->dumper.out, "\"value\" : ");
@@ -351,7 +351,7 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     else
         fprintf(self->dumper.out, "%g", value);
 
-    /* if (a->attributes[0]) fprintf(self->dumper.out,","); */
+    /* if (a->attributes_[0]) fprintf(self->dumper.out,","); */
 
     if (self->isLeaf == 0) {
         dump_attributes(d, a);
@@ -369,9 +369,9 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     int err         = 0;
     int is_missing  = 0;
     long count      = 0;
-    c               = a->context;
+    c               = a->context_;
 
-    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+    if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
     a->value_count(&count);
@@ -390,7 +390,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         fprintf(self->dumper.out, "\n%-*s{\n", depth, " ");
         depth += 2;
         fprintf(self->dumper.out, "%-*s", depth, " ");
-        fprintf(self->dumper.out, "\"key\" : \"%s\",\n", a->name);
+        fprintf(self->dumper.out, "\"key\" : \"%s\",\n", a->name_);
     }
 
     self->empty = 0;
@@ -421,7 +421,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     depth -= 2;
     fprintf(self->dumper.out, "\n%-*s]", depth, " ");
 
-    /* if (a->attributes[0]) fprintf(self->dumper.out,","); */
+    /* if (a->attributes_[0]) fprintf(self->dumper.out,","); */
 
     if (self->isLeaf == 0) {
         dump_attributes(d, a);
@@ -445,9 +445,9 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     char* p              = NULL;
     int is_missing       = 0;
     int err              = 0;
-    const char* acc_name = a->name;
+    const char* acc_name = a->name_;
 
-    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0) {
+    if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0) {
         return;
     }
 
@@ -456,9 +456,9 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
      * Specially for BUFR elements */
     /* err = grib_get_string_length_acc(a,&size);
      * if (size==0) return;
-     * value=(char*)grib_context_malloc_clear(a->context,size);
+     * value=(char*)grib_context_malloc_clear(a->context_,size);
      * if (!value) {
-     *   grib_context_log(a->context,GRIB_LOG_ERROR,"Unable to allocate %zu bytes",size);
+     *   grib_context_log(a->context_,GRIB_LOG_ERROR,"Unable to allocate %zu bytes",size);
      *   return;
      * }
     */
@@ -473,7 +473,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     err = a->unpack_string(value, &size);
     if (err) {
         snprintf(value, sizeof(value), " *** ERR=%d (%s) [dump_string on '%s']",
-                err, grib_get_error_message(err), a->name);
+                err, grib_get_error_message(err), a->name_);
     } else {
         Assert(size < MAX_STRING_SIZE);
     }
@@ -503,7 +503,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     else
         fprintf(self->dumper.out, "\"%s\"", value);
 
-    /* if (a->attributes[0]) fprintf(self->dumper.out,","); */
+    /* if (a->attributes_[0]) fprintf(self->dumper.out,","); */
 
     if (self->isLeaf == 0) {
         dump_attributes(d, a);
@@ -511,7 +511,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         fprintf(self->dumper.out, "\n%-*s}", depth, " ");
     }
 
-    /* grib_context_free(a->context,value); */
+    /* grib_context_free(a->context_,value); */
     (void)err; /* TODO */
 }
 
@@ -526,9 +526,9 @@ static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment)
 static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block)
 {
     grib_dumper_json* self = (grib_dumper_json*)d;
-    if (strcmp(a->name, "BUFR")==0 ||
-        strcmp(a->name, "GRIB")==0 ||
-        strcmp(a->name, "META")==0) {
+    if (strcmp(a->name_, "BUFR")==0 ||
+        strcmp(a->name_, "GRIB")==0 ||
+        strcmp(a->name_, "META")==0) {
         depth = 2;
         fprintf(self->dumper.out, "%-*s", depth, " ");
         fprintf(self->dumper.out, "[\n");
@@ -539,8 +539,8 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         depth -= 2;
         fprintf(self->dumper.out, "\n]\n");
     }
-    else if (strcmp(a->name, "groupNumber")==0) {
-        if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+    else if (strcmp(a->name_, "groupNumber")==0) {
+        if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
             return;
         if (!self->empty)
             fprintf(self->dumper.out, ",\n");
@@ -570,30 +570,30 @@ static void dump_attributes(grib_dumper* d, grib_accessor* a)
     grib_dumper_json* self = (grib_dumper_json*)d;
     FILE* out              = self->dumper.out;
     unsigned long flags;
-    while (i < MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
+    while (i < MAX_ACCESSOR_ATTRIBUTES && a->attributes_[i]) {
         self->isAttribute = 1;
-        if ((d->option_flags & GRIB_DUMP_FLAG_ALL_ATTRIBUTES) == 0 && (a->attributes[i]->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0) {
+        if ((d->option_flags & GRIB_DUMP_FLAG_ALL_ATTRIBUTES) == 0 && (a->attributes_[i]->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0) {
             i++;
             continue;
         }
-        self->isLeaf = a->attributes[i]->attributes[0] == NULL ? 1 : 0;
+        self->isLeaf = a->attributes_[i]->attributes_[0] == NULL ? 1 : 0;
         fprintf(self->dumper.out, ",");
         fprintf(self->dumper.out, "\n%-*s", depth, " ");
-        fprintf(out, "\"%s\" : ", a->attributes[i]->name);
-        flags = a->attributes[i]->flags;
-        a->attributes[i]->flags |= GRIB_ACCESSOR_FLAG_DUMP;
-        switch (a->attributes[i]->get_native_type()) {
+        fprintf(out, "\"%s\" : ", a->attributes_[i]->name_);
+        flags = a->attributes_[i]->flags_;
+        a->attributes_[i]->flags_ |= GRIB_ACCESSOR_FLAG_DUMP;
+        switch (a->attributes_[i]->get_native_type()) {
             case GRIB_TYPE_LONG:
-                dump_long(d, a->attributes[i], 0);
+                dump_long(d, a->attributes_[i], 0);
                 break;
             case GRIB_TYPE_DOUBLE:
-                dump_values(d, a->attributes[i]);
+                dump_values(d, a->attributes_[i]);
                 break;
             case GRIB_TYPE_STRING:
-                dump_string_array(d, a->attributes[i], 0);
+                dump_string_array(d, a->attributes_[i], 0);
                 break;
         }
-        a->attributes[i]->flags = flags;
+        a->attributes_[i]->flags_ = flags;
         i++;
     }
     self->isLeaf      = 0;

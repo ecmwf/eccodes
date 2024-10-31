@@ -10,5 +10,16 @@
 
 . ./include.ctest.sh
 
-input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-$EXEC ${test_dir}/codes_dump_action_tree "$input"
+for f in GRIB1.tmpl GRIB2.tmpl sh_sfc_grib1.tmpl sh_sfc_grib2.tmpl; do
+    input=$ECCODES_SAMPLES_PATH/$f
+    $EXEC ${test_dir}/codes_dump_action_tree GRIB "$input" > /dev/null
+done
+
+input=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
+$EXEC ${test_dir}/codes_dump_action_tree BUFR "$input" > /dev/null
+
+input=$data_dir/metar/metar.txt
+$EXEC ${test_dir}/codes_dump_action_tree METAR "$input" > /dev/null
+
+input=$data_dir/gts/EGRR20150317121020_00493212.DAT
+$EXEC ${test_dir}/codes_dump_action_tree GTS "$input" > /dev/null

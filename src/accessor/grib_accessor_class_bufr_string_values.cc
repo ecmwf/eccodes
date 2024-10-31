@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -12,49 +11,45 @@
 #include "grib_accessor_class_bufr_string_values.h"
 #include "grib_accessor_class_bufr_data_array.h"
 
-grib_accessor_class_bufr_string_values_t _grib_accessor_class_bufr_string_values{ "bufr_string_values" };
-grib_accessor_class* grib_accessor_class_bufr_string_values = &_grib_accessor_class_bufr_string_values;
+grib_accessor_bufr_string_values_t _grib_accessor_bufr_string_values{};
+grib_accessor* grib_accessor_bufr_string_values = &_grib_accessor_bufr_string_values;
 
-
-void grib_accessor_class_bufr_string_values_t::init(grib_accessor* a, const long len, grib_arguments* args)
+void grib_accessor_bufr_string_values_t::init(const long len, grib_arguments* args)
 {
-    grib_accessor_class_ascii_t::init(a, len, args);
-    grib_accessor_bufr_string_values_t* self = (grib_accessor_bufr_string_values_t*)a;
-    int n                                    = 0;
-    self->dataAccessorName                   = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
-    self->dataAccessor                       = NULL;
-    a->length                                = 0;
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    grib_accessor_ascii_t::init(len, args);
+    int n             = 0;
+    dataAccessorName_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
+    dataAccessor_     = NULL;
+    length_           = 0;
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-void grib_accessor_class_bufr_string_values_t::dump(grib_accessor* a, grib_dumper* dumper)
+void grib_accessor_bufr_string_values_t::dump(grib_dumper* dumper)
 {
-    grib_dump_string_array(dumper, a, NULL);
+    grib_dump_string_array(dumper, this, NULL);
 }
 
-static grib_accessor* get_accessor(grib_accessor* a)
+grib_accessor* grib_accessor_bufr_string_values_t::get_accessor()
 {
-    grib_accessor_bufr_string_values_t* self = (grib_accessor_bufr_string_values_t*)a;
-    if (!self->dataAccessor) {
-        self->dataAccessor = grib_find_accessor(grib_handle_of_accessor(a), self->dataAccessorName);
+    if (!dataAccessor_) {
+        dataAccessor_ = grib_find_accessor(grib_handle_of_accessor(this), dataAccessorName_);
     }
-    return self->dataAccessor;
+    return dataAccessor_;
 }
 
-int grib_accessor_class_bufr_string_values_t::unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
+int grib_accessor_bufr_string_values_t::unpack_string_array(char** buffer, size_t* len)
 {
-    grib_accessor* data        = 0;
-    grib_context* c            = a->context;
+    grib_context* c = context_;
     grib_vsarray* stringValues = NULL;
-    size_t l                   = 0, tl;
+    size_t l = 0, tl;
     size_t i, j, n = 0;
     char** b = buffer;
 
-    data = get_accessor(a);
+    grib_accessor_bufr_data_array_t* data = dynamic_cast<grib_accessor_bufr_data_array_t*>(get_accessor());
     if (!data)
         return GRIB_NOT_FOUND;
 
-    stringValues = accessor_bufr_data_array_get_stringValues(data);
+    stringValues = data->accessor_bufr_data_array_get_stringValues();
 
     n = grib_vsarray_used_size(stringValues);
 
@@ -75,18 +70,18 @@ int grib_accessor_class_bufr_string_values_t::unpack_string_array(grib_accessor*
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_bufr_string_values_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+int grib_accessor_bufr_string_values_t::unpack_string(char* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_class_bufr_string_values_t::value_count(grib_accessor* a, long* rlen)
+int grib_accessor_bufr_string_values_t::value_count(long* rlen)
 {
-    grib_accessor* descriptors = get_accessor(a);
+    grib_accessor* descriptors = get_accessor();
     return descriptors->value_count(rlen);
 }
 
-void grib_accessor_class_bufr_string_values_t::destroy(grib_context* c, grib_accessor* a)
+void grib_accessor_bufr_string_values_t::destroy(grib_context* c)
 {
-    grib_accessor_class_ascii_t::destroy(c, a);
+    grib_accessor_ascii_t::destroy(c);
 }

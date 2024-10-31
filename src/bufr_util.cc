@@ -73,7 +73,7 @@ char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin, grib_handle* ho
     kiter = codes_bufr_data_section_keys_iterator_new(hin);
     if (!kiter)
         return NULL;
-    k = grib_sarray_new(hin->context, 50, 10);
+    k = grib_sarray_new(50, 10);
 
     while (codes_bufr_keys_iterator_next(kiter)) {
         char* name = codes_bufr_keys_iterator_get_name(kiter);
@@ -85,12 +85,12 @@ char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin, grib_handle* ho
         if (*err == 0) {
             // 'name' will be freed when we call codes_bufr_keys_iterator_delete so copy
             char* copied_name = strdup(name);
-            k                 = grib_sarray_push(hin->context, k, copied_name);
+            k = grib_sarray_push(k, copied_name);
         }
     }
     *nkeys = grib_sarray_used_size(k);
-    keys   = grib_sarray_get_array(hin->context, k);
-    grib_sarray_delete(hin->context, k);
+    keys   = grib_sarray_get_array(k);
+    grib_sarray_delete(k);
     if (*nkeys > 0) {
         // Do the pack if something was copied
         *err = grib_set_long(hout, "pack", 1);
@@ -1113,7 +1113,7 @@ int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err)
         return 0;
     }
     *err = GRIB_SUCCESS;
-    return ((acc->flags & GRIB_ACCESSOR_FLAG_BUFR_DATA) == 0);
+    return ((acc->flags_ & GRIB_ACCESSOR_FLAG_BUFR_DATA) == 0);
 }
 
 // Returns 1 if the BUFR key is a coordinate descriptor
@@ -1125,7 +1125,7 @@ int codes_bufr_key_is_coordinate(const grib_handle* h, const char* key, int* err
         return 0;
     }
     *err = GRIB_SUCCESS;
-    return ((acc->flags & GRIB_ACCESSOR_FLAG_BUFR_COORD) != 0);
+    return ((acc->flags_ & GRIB_ACCESSOR_FLAG_BUFR_COORD) != 0);
 }
 
 int codes_bufr_key_exclude_from_dump(const char* key)

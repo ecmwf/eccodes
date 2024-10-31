@@ -12,11 +12,11 @@
 
 /* Generic functions */
 /******************************************************************************/
-char* codes_samples_path(const grib_context* c)
+char* codes_samples_path(const codes_context* c)
 {
     return grib_samples_path(c);
 }
-char* codes_definition_path(const grib_context* c)
+char* codes_definition_path(const codes_context* c)
 {
     return grib_definition_path(c);
 }
@@ -41,16 +41,16 @@ void codes_print_api_version(FILE* out)
 {
     grib_print_api_version(out);
 }
-int codes_count_in_file(grib_context* c, FILE* f, int* n)
+int codes_count_in_file(codes_context* c, FILE* f, int* n)
 {
     return grib_count_in_file(c, f, n);
 }
-int codes_count_in_filename(grib_context* c, const char* filename, int* n)
+int codes_count_in_filename(codes_context* c, const char* filename, int* n)
 {
     return grib_count_in_filename(c, filename, n);
 }
 
-grib_context* codes_context_get_default(void)
+codes_context* codes_context_get_default(void)
 {
     return grib_context_get_default();
 }
@@ -74,7 +74,7 @@ void codes_check(const char* call, const char* file, int line, int e, const char
 
 /* Fieldsets */
 /******************************************************************************/
-grib_fieldset* codes_fieldset_new_from_files(grib_context* c, const char* filenames[], int nfiles, const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err)
+grib_fieldset* codes_fieldset_new_from_files(codes_context* c, const char* filenames[], int nfiles, const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err)
 {
     return grib_fieldset_new_from_files(c, filenames, nfiles, keys, nkeys, where_string, order_by_string, err);
 }
@@ -101,11 +101,11 @@ int codes_fieldset_count(const grib_fieldset* set)
 
 /* Indexing */
 /******************************************************************************/
-grib_index* codes_index_new_from_file(grib_context* c, const char* filename, const char* keys, int* err)
+grib_index* codes_index_new_from_file(codes_context* c, const char* filename, const char* keys, int* err)
 {
     return grib_index_new_from_file(c, filename, keys, err);
 }
-grib_index* codes_index_new(grib_context* c, const char* keys, int* err)
+grib_index* codes_index_new(codes_context* c, const char* keys, int* err)
 {
     return grib_index_new(c, keys, err);
 }
@@ -117,7 +117,7 @@ int codes_index_write(grib_index* index, const char* filename)
 {
     return grib_index_write(index, filename);
 }
-grib_index* codes_index_read(grib_context* c, const char* filename, int* err)
+grib_index* codes_index_read(codes_context* c, const char* filename, int* err)
 {
     return grib_index_read(c, filename, err);
 }
@@ -164,15 +164,15 @@ int codes_write_message(const grib_handle* h, const char* file, const char* mode
 {
     return grib_write_message(h, file, mode);
 }
-grib_handle* codes_handle_new_from_message(grib_context* c, const void* data, size_t data_len)
+grib_handle* codes_handle_new_from_message(codes_context* c, const void* data, size_t data_len)
 {
     return grib_handle_new_from_message(c, data, data_len);
 }
-grib_handle* codes_handle_new_from_message_copy(grib_context* c, const void* data, size_t data_len)
+grib_handle* codes_handle_new_from_message_copy(codes_context* c, const void* data, size_t data_len)
 {
     return grib_handle_new_from_message_copy(c, data, data_len);
 }
-grib_handle* codes_grib_handle_new_from_samples(grib_context* c, const char* sample_name)
+grib_handle* codes_grib_handle_new_from_samples(codes_context* c, const char* sample_name)
 {
     return grib_handle_new_from_samples(c, sample_name);
 }
@@ -189,11 +189,11 @@ int codes_handle_delete(grib_handle* h)
 {
     return grib_handle_delete(h);
 }
-grib_handle* codes_handle_new_from_partial_message_copy(grib_context* c, const void* data, size_t size)
+grib_handle* codes_handle_new_from_partial_message_copy(codes_context* c, const void* data, size_t size)
 {
     return grib_handle_new_from_partial_message_copy(c, data, size);
 }
-grib_handle* codes_handle_new_from_partial_message(grib_context* c, const void* data, size_t buflen)
+grib_handle* codes_handle_new_from_partial_message(codes_context* c, const void* data, size_t buflen)
 {
     return grib_handle_new_from_partial_message(c, data, buflen);
 }
@@ -230,23 +230,23 @@ grib_string_list* codes_grib_util_get_mars_param(const char* param_id)
 {
     return grib_util_get_mars_param(param_id);
 }
-void codes_grib_multi_support_on(grib_context* c)
+void codes_grib_multi_support_on(codes_context* c)
 {
     grib_multi_support_on(c);
 }
-void codes_grib_multi_support_off(grib_context* c)
+void codes_grib_multi_support_off(codes_context* c)
 {
     grib_multi_support_off(c);
 }
-void codes_grib_multi_support_reset_file(grib_context* c, FILE* f)
+void codes_grib_multi_support_reset_file(codes_context* c, FILE* f)
 {
     grib_multi_support_reset_file(c, f);
 }
-grib_handle* codes_grib_handle_new_from_multi_message(grib_context* c, void** data, size_t* data_len, int* error)
+grib_handle* codes_grib_handle_new_from_multi_message(codes_context* c, void** data, size_t* data_len, int* error)
 {
     return grib_handle_new_from_multi_message(c, data, data_len, error);
 }
-grib_multi_handle* codes_grib_multi_handle_new(grib_context* c)
+grib_multi_handle* codes_grib_multi_handle_new(codes_context* c)
 {
     return grib_multi_handle_new(c);
 }
@@ -467,24 +467,24 @@ void codes_dump_action_tree(codes_context* c, FILE* f)
 }
 /* GTS, GRIBEX */
 /******************************************************************************/
-void codes_gts_header_off(grib_context* c)
+void codes_gts_header_off(codes_context* c)
 {
     grib_gts_header_off(c);
 }
-void codes_gts_header_on(grib_context* c)
+void codes_gts_header_on(codes_context* c)
 {
     grib_gts_header_on(c);
 }
 
-void codes_gribex_mode_on(grib_context* c)
+void codes_gribex_mode_on(codes_context* c)
 {
     grib_gribex_mode_on(c);
 }
-int codes_get_gribex_mode(grib_context* c)
+int codes_get_gribex_mode(const codes_context* c)
 {
     return grib_get_gribex_mode(c);
 }
-void codes_gribex_mode_off(grib_context* c)
+void codes_gribex_mode_off(codes_context* c)
 {
     grib_gribex_mode_off(c);
 }
@@ -577,41 +577,49 @@ void codes_get_reduced_row_p(long pl, double lon_first, double lon_last, long* n
     grib_get_reduced_row_p(pl, lon_first, lon_last, npoints, olon_first, olon_last);
 }
 
-void codes_context_delete(grib_context* c)
+void codes_context_delete(codes_context* c)
 {
     grib_context_delete(c);
 }
-void codes_context_set_definitions_path(grib_context* c, const char* path)
+void codes_context_set_definitions_path(codes_context* c, const char* path)
 {
     grib_context_set_definitions_path(c, path);
 }
-void codes_context_set_samples_path(grib_context* c, const char* path)
+void codes_context_set_samples_path(codes_context* c, const char* path)
 {
     grib_context_set_samples_path(c, path);
 }
 
-void codes_context_set_debug(grib_context* c, int mode)
+void codes_context_set_debug(codes_context* c, int mode)
 {
     grib_context_set_debug(c, mode);
 }
-
-void codes_context_set_memory_proc(grib_context* c, grib_malloc_proc p_malloc, grib_free_proc p_free, grib_realloc_proc p_realloc)
+void codes_context_set_data_quality_checks(codes_context* c, int val)
 {
+    grib_context_set_data_quality_checks(c, val);
+}
+
+void codes_context_set_memory_proc(codes_context* c, grib_malloc_proc p_malloc, grib_free_proc p_free, grib_realloc_proc p_realloc)
+{
+    // This function is deprecated and will later be removed
     grib_context_set_memory_proc(c, p_malloc, p_free, p_realloc);
 }
-void codes_context_set_persistent_memory_proc(grib_context* c, grib_malloc_proc p_malloc, grib_free_proc p_free)
+void codes_context_set_persistent_memory_proc(codes_context* c, grib_malloc_proc p_malloc, grib_free_proc p_free)
 {
+    // This function is deprecated and will later be removed
     grib_context_set_persistent_memory_proc(c, p_malloc, p_free);
 }
-void codes_context_set_buffer_memory_proc(grib_context* c, grib_malloc_proc p_malloc, grib_free_proc p_free, grib_realloc_proc p_realloc)
+void codes_context_set_buffer_memory_proc(codes_context* c, grib_malloc_proc p_malloc, grib_free_proc p_free, grib_realloc_proc p_realloc)
 {
+    // This function is deprecated and will later be removed
     grib_context_set_buffer_memory_proc(c, p_malloc, p_free, p_realloc);
 }
-void codes_context_set_print_proc(grib_context* c, grib_print_proc p_print)
+
+void codes_context_set_print_proc(codes_context* c, grib_print_proc p_print)
 {
     grib_context_set_print_proc(c, p_print);
 }
-void codes_context_set_logging_proc(grib_context* c, grib_log_proc p_log)
+void codes_context_set_logging_proc(codes_context* c, grib_log_proc p_log)
 {
     grib_context_set_logging_proc(c, p_log);
 }

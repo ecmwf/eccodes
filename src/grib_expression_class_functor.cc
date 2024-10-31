@@ -9,6 +9,8 @@
  */
 
 #include "grib_api_internal.h"
+#include <string>
+#include <algorithm>
 
 /*
    This is used by make_class.pl
@@ -38,7 +40,7 @@ or edit "expression.class" and rerun ./make_class.pl
 typedef const char* string; /* to keep make_class.pl happy */
 
 static void    destroy(grib_context*,grib_expression* e);
-static void    print(grib_context*,grib_expression*,grib_handle*,FILE*);
+static void    print(grib_context*, grib_expression*, grib_handle*, FILE*);
 static void    add_dependency(grib_expression* e, grib_accessor* observer);
 static int     native_type(grib_expression*,grib_handle*);
 static int     evaluate_long(grib_expression*,grib_handle*,long*);
@@ -52,12 +54,12 @@ typedef struct grib_expression_functor{
 
 
 static grib_expression_class _grib_expression_class_functor = {
-    0,                    /* super                     */
-    "functor",                    /* name                      */
-    sizeof(grib_expression_functor),/* size of instance        */
+    0,                      /* super */
+    "functor",                      /* name  */
+    sizeof(grib_expression_functor),/* size of instance */
     0,                           /* inited */
-    0,                     /* constructor               */
-    &destroy,                  /* destructor                */
+    0,                       /* constructor */
+    &destroy,                    /* destructor */
     &print,
     &add_dependency,
     &native_type,
@@ -71,28 +73,22 @@ grib_expression_class* grib_expression_class_functor = &_grib_expression_class_f
 
 /* END_CLASS_IMP */
 
-
-#ifdef ECCODES_ON_WINDOWS
-// Windows does not have strcasestr
-static char* strcasestr(const char *haystack, const char* needle)
+// See ECC-1936. We cannot use strcasestr (not on Windows and non-standard)
+static bool string_contains_case(const char* haystack, const char* needle, bool case_sensitive)
 {
-    char c, sc;
-    size_t len = 0;
+    std::string copy_haystack = haystack;
+    std::string copy_needle   = needle;
 
-    if ((c = *needle++) != 0) {
-        c = tolower((unsigned char)c);
-        len = strlen(needle);
-        do {
-            do {
-                if ((sc = *haystack++) == 0)
-                    return (NULL);
-            } while ((char)tolower((unsigned char)sc) != c);
-        } while (_strnicmp(haystack, needle, len) != 0);
-        haystack--;
+    if (!case_sensitive) {
+        // Convert both strings to lowercase if we don't care about case
+        std::transform(copy_needle.begin(), copy_needle.end(), copy_needle.begin(),
+                       [](unsigned char c) { return std::tolower(c); });
+        std::transform(copy_haystack.begin(), copy_haystack.end(), copy_haystack.begin(),
+                       [](unsigned char c) { return std::tolower(c); });
     }
-    return ((char *)haystack);
+    // Perform the search
+    return copy_haystack.find(copy_needle) != std::string::npos;
 }
-#endif
 
 static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 {
@@ -214,9 +210,10 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
             err = grib_get_string(h, keyName, keyValue, &len);
             if (err) return err;
             const char* sValue = grib_arguments_get_string(h, e->args, 1);
-            const bool case_sens = grib_arguments_get_long(h, e->args, 2) != 0;
-            const bool contains = case_sens? strcasestr(keyValue, sValue) : strstr(keyValue, sValue);
-            if (sValue && contains) {
+            if (!sValue) return GRIB_INVALID_ARGUMENT;
+            const bool case_sens = grib_arguments_get_long(h, e->args, 2) == 0; // 0=case-sensitive, 1=case-insensitive
+            const bool contains = string_contains_case(keyValue, sValue, case_sens);
+            if (contains) {
                 *lres = 1;
                 return GRIB_SUCCESS;
             }

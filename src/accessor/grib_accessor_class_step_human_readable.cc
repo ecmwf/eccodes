@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,24 +10,22 @@
 
 #include "grib_accessor_class_step_human_readable.h"
 
-grib_accessor_class_step_human_readable_t _grib_accessor_class_step_human_readable{ "step_human_readable" };
-grib_accessor_class* grib_accessor_class_step_human_readable = &_grib_accessor_class_step_human_readable;
+grib_accessor_step_human_readable_t _grib_accessor_step_human_readable{};
+grib_accessor* grib_accessor_step_human_readable = &_grib_accessor_step_human_readable;
 
-
-void grib_accessor_class_step_human_readable_t::init(grib_accessor* a, const long len, grib_arguments* params)
+void grib_accessor_step_human_readable_t::init(const long len, grib_arguments* params)
 {
-    grib_accessor_class_gen_t::init(a, len, params);
-    grib_accessor_step_human_readable_t* self = (grib_accessor_step_human_readable_t*)a;
-    int n = 0;
-    grib_handle* h = grib_handle_of_accessor(a);
+    grib_accessor_gen_t::init(len, params);
+    int n          = 0;
+    grib_handle* h = grib_handle_of_accessor(this);
 
-    self->stepUnits = grib_arguments_get_name(h, params, n++);
-    self->step      = grib_arguments_get_name(h, params, n++);
-    a->length       = 0;
-    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    stepUnits_ = grib_arguments_get_name(h, params, n++);
+    step_      = grib_arguments_get_name(h, params, n++);
+    length_    = 0;
+    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_step_human_readable_t::get_native_type(grib_accessor* a)
+long grib_accessor_step_human_readable_t::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
@@ -66,22 +63,20 @@ static int get_step_human_readable(grib_handle* h, char* result, size_t* length)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_step_human_readable_t::unpack_string(grib_accessor* a, char* buffer, size_t* len)
+int grib_accessor_step_human_readable_t::unpack_string(char* buffer, size_t* len)
 {
-    grib_accessor_step_human_readable_t* self = (grib_accessor_step_human_readable_t*)a;
-
-    grib_handle* h = grib_handle_of_accessor(a);
+    grib_handle* h = grib_handle_of_accessor(this);
     long stepUnits = 0;
     int err        = 0;
 
     /* Save the current value of stepUnits */
-    err = grib_get_long_internal(h, self->stepUnits, &stepUnits);
+    err = grib_get_long_internal(h, stepUnits_, &stepUnits);
     if (err) return err;
 
     /* This will change stepUnits to seconds for its calculation */
     err = get_step_human_readable(h, buffer, len);
 
     /* Restore stepUnits */
-    grib_set_long(h, self->stepUnits, stepUnits);
+    grib_set_long(h, stepUnits_, stepUnits);
     return err;
 }

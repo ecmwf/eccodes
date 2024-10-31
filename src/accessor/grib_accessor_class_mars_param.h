@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,18 +15,15 @@
 class grib_accessor_mars_param_t : public grib_accessor_ascii_t
 {
 public:
-    /* Members defined in mars_param */
-    const char* paramId;
-    const char* table;
-    const char* param;
-};
-
-class grib_accessor_class_mars_param_t : public grib_accessor_class_ascii_t
-{
-public:
-    grib_accessor_class_mars_param_t(const char* name) : grib_accessor_class_ascii_t(name) {}
+    grib_accessor_mars_param_t() :
+        grib_accessor_ascii_t() { class_name_ = "mars_param"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_mars_param_t{}; }
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
-    size_t string_length(grib_accessor*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int unpack_string(char*, size_t* len) override;
+    size_t string_length() override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* paramId_ = nullptr;
+    const char* table_ = nullptr;
+    const char* param_ = nullptr;
 };

@@ -18,7 +18,16 @@
 
 cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 
-find_package( ecbuild 3.7 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
+find_package( ecbuild 3.7 HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
+if(NOT ecbuild_FOUND)
+    message(STATUS "Fetching ecbuild...")
+    include(FetchContent)
+    FetchContent_Populate(ecbuild
+        GIT_REPOSITORY https://github.com/ecmwf/ecbuild.git
+        GIT_TAG        3.8.5
+    )
+    find_package( ecbuild 3.7 REQUIRED HINTS ${ecbuild_SOURCE_DIR})
+endif()
 
 # Initialise project
 project( eccodes LANGUAGES CXX )
@@ -425,7 +434,10 @@ endforeach()
 
 ### include directories
 
-include_directories( ${ECCODES_INCLUDE_DIRS}  ${ECCODES_EXTRA_INCLUDE_DIRS} )
+include_directories(
+    ${ECCODES_INCLUDE_DIRS}
+    ${ECCODES_EXTRA_INCLUDE_DIRS}
+    )
 
 add_subdirectory( definitions ) # must be before memfs
 add_subdirectory( memfs )
@@ -508,11 +520,8 @@ ecbuild_info("   |  ecCodes version ${eccodes_VERSION}  |")
 ecbuild_info("   +--------------------------+")
 ecbuild_info("")
 
-ecbuild_info("   +--------------------------------------+")
-ecbuild_info("   | Please note:                         |")
-ecbuild_info("   | For Python3 support, first install   |")
-ecbuild_info("   | ecCodes and then install the Python  |")
-ecbuild_info("   | bindings from PyPI with:             |")
-ecbuild_info("   |   $ pip3 install eccodes             |")
-ecbuild_info("   +--------------------------------------+")
+ecbuild_info("Please note:")
+ecbuild_info(" For Python3 support, you must install the Python bindings.")
+ecbuild_info(" See:")
+ecbuild_info("  https://confluence.ecmwf.int/display/ECC/ecCodes+installation")
 ecbuild_info("")

@@ -15,23 +15,20 @@
 class grib_accessor_g2step_range_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in g2step_range */
-    const char* start_step;
-    const char* end_step;
-};
-
-class grib_accessor_class_g2step_range_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_g2step_range_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_g2step_range_t() :
+        grib_accessor_gen_t() { class_name_ = "g2step_range"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_g2step_range_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int pack_string(grib_accessor*, const char*, size_t* len) override;
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
-    size_t string_length(grib_accessor*) override;
-    int value_count(grib_accessor*, long*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    long get_native_type() override;
+    int pack_long(const long* val, size_t* len) override;
+    int pack_string(const char*, size_t* len) override;
+    int unpack_double(double* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    int unpack_string(char*, size_t* len) override;
+    size_t string_length() override;
+    int value_count(long*) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* start_step_ = nullptr;
+    const char* end_step_ = nullptr;
 };
