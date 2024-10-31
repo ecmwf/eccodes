@@ -6,19 +6,19 @@
 # and in many cases we use the value of the MTG2Switch earlier. Therefore we must use the backgroundProcess
 # and generatingProcessIdentifier key directly. The values for IFS are:
 # backgroundProcess=255
-# 'cy50r2' = { generatingProcessIdentifier = 161; }
-# 'cy50r1' = { generatingProcessIdentifier = 160; }
+# 'cy50r2' = { generatingProcessIdentifier = 162; }
+# 'cy50r1' = { generatingProcessIdentifier = 161; }
 # 'cy49r2' = { generatingProcessIdentifier = 159; }
 # 'cy49r1' = { generatingProcessIdentifier = 158; }
 
 # We only need the concepts which differ from the default below.
-# These are all for 50r1 (255 + 160; GRIBmix), where we have the newer model but still want the pre-MTG2 behaviour
+# These are all for 50r1 (255 + 161; GRIBmix), where we have the newer model but still want the pre-MTG2 behaviour
 
 # OD
-0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=160;}
+0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=161;}
 # RD
-0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=160;}
+0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=161;}
 # MC
-0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=160; marsClass='mc';}
+0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=161; marsClass='mc';}
 # CR
-0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=160; marsClass='cr';}
+0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=161; marsClass='cr';}
