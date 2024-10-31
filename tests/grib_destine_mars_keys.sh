@@ -14,7 +14,7 @@ REDIRECT=/dev/null
 
 # ECC-1691: Destination Earth ClimateDT metadata support
 
-label="grib_ecc-1691_test"
+label="grib_destine_mars_keys_test"
 temp_grib_a=temp.$label.a.grib
 temp_grib_b=temp.$label.b.grib
 destine_sample=temp.$label.destine.grib
