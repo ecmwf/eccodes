@@ -22,16 +22,8 @@ public:
     Nearest* create() override { return new Reduced(); }
     int init(grib_handle*, grib_arguments*) override;
     int find(grib_handle*, double, double, unsigned long, double*, double*, double*, double*, int*, size_t*) override;
-    int destroy() override;
 
 private:
-    double* lats_ = nullptr;
-    int  lats_count_ = 0;
-    double* lons_ = nullptr;
-    double* distances_ = nullptr;
-    size_t* k_ = nullptr;
-    size_t* j_ = nullptr;
-    const char* Nj_ = nullptr;
     const char* pl_ = nullptr;
     long global_ = 0.0;
     double lon_first_ = 0.0;

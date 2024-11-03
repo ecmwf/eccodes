@@ -285,18 +285,4 @@ int Regular::find(grib_handle* h,
     return GRIB_SUCCESS;
 }
 
-int Regular::destroy()
-{
-    grib_context* c = grib_context_get_default();
-
-    if (lats_) grib_context_free(c, lats_);
-    if (lons_) grib_context_free(c, lons_);
-    if (i_) grib_context_free(c, i_);
-    if (j_) grib_context_free(c, j_);
-    if (k_) grib_context_free(c, k_);
-    if (distances_) grib_context_free(c, distances_);
-
-    return Gen::destroy();
-}
-
 }  // namespace eccodes::geo_nearest

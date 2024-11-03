@@ -21,11 +21,11 @@ int LatlonReduced::init(grib_handle* h, grib_arguments* args)
     if ((ret = Gen::init(h, args) != GRIB_SUCCESS))
         return ret;
 
-    Nj_                          = grib_arguments_get_name(h, args, cargs_++);
-    pl_                          = grib_arguments_get_name(h, args, cargs_++);
-    lonFirst_                    = grib_arguments_get_name(h, args, cargs_++);
-    lonLast_                     = grib_arguments_get_name(h, args, cargs_++);
-    j_                           = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
+    Nj_       = grib_arguments_get_name(h, args, cargs_++);
+    pl_       = grib_arguments_get_name(h, args, cargs_++);
+    lonFirst_ = grib_arguments_get_name(h, args, cargs_++);
+    lonLast_  = grib_arguments_get_name(h, args, cargs_++);
+    j_        = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
     if (!j_)
         return GRIB_OUT_OF_MEMORY;
     k_ = (size_t*)grib_context_malloc(h->context, 4 * sizeof(size_t));
@@ -227,6 +227,7 @@ int LatlonReduced::find_global(grib_handle* h,
         if (!distances_)
             return GRIB_OUT_OF_MEMORY;
 
+        //void grib_binary_search(const double xx[], const size_t n, double x, size_t* ju, size_t* jl)
         grib_binary_search(lats_, ilat - 1, inlat,
                            &(j_[0]), &(j_[1]));
 
@@ -338,23 +339,6 @@ int LatlonReduced::find_global(grib_handle* h,
     }
 
     return GRIB_SUCCESS;
-}
-
-int LatlonReduced::destroy()
-{
-    grib_context* c = grib_context_get_default();
-    if (lats_)
-        grib_context_free(c, lats_);
-    if (lons_)
-        grib_context_free(c, lons_);
-    if (j_)
-        grib_context_free(c, j_);
-    if (k_)
-        grib_context_free(c, k_);
-    if (distances_)
-        grib_context_free(c, distances_);
-
-    return Gen::destroy();
 }
 
 }  // namespace eccodes::geo_nearest

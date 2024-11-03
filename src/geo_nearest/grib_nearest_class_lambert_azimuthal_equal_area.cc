@@ -23,8 +23,9 @@ int LambertAzimuthalEqualArea::init(grib_handle* h, grib_arguments* args)
 
     Ni_ = grib_arguments_get_name(h, args, cargs_++);
     Nj_ = grib_arguments_get_name(h, args, cargs_++);
-    i_  = (int*)grib_context_malloc(h->context, 2 * sizeof(int));
-    j_  = (int*)grib_context_malloc(h->context, 2 * sizeof(int));
+    i_  = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
+    j_  = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
+
     return ret;
 }
 
@@ -45,20 +46,6 @@ int LambertAzimuthalEqualArea::find(grib_handle* h,
 
         outlats, outlons, /* outputs of the find function */
         values, distances, indexes, len);
-}
-
-int LambertAzimuthalEqualArea::destroy()
-{
-    grib_context* c = grib_context_get_default();
-
-    if (lats_) grib_context_free(c, lats_);
-    if (lons_) grib_context_free(c, lons_);
-    if (i_) grib_context_free(c, i_);
-    if (j_) grib_context_free(c, j_);
-    if (k_) grib_context_free(c, k_);
-    if (distances_) grib_context_free(c, distances_);
-
-    return Gen::destroy();
 }
 
 }  // namespace eccodes::geo_nearest

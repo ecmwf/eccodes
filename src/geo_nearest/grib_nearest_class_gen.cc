@@ -30,8 +30,14 @@ int Gen::init(grib_handle* h, grib_arguments* args)
 int Gen::destroy()
 {
     grib_context* c = grib_context_get_default();
-    if (values_)
-        grib_context_free(c, values_);
+
+    if (lats_)      grib_context_free(c, lats_);
+    if (lons_)      grib_context_free(c, lons_);
+    if (i_)         grib_context_free(c, i_);
+    if (j_)         grib_context_free(c, j_);
+    if (k_)         grib_context_free(c, k_);
+    if (distances_) grib_context_free(c, distances_);
+    if (values_)    grib_context_free(c, values_);
 
     return Nearest::destroy();
 }

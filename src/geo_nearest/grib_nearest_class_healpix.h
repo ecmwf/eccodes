@@ -22,19 +22,6 @@ public:
     Nearest* create() override { return new Healpix(); };
     int init(grib_handle*, grib_arguments*) override;
     int find(grib_handle*, double, double, unsigned long, double*, double*, double*, double*, int*, size_t*) override;
-    int destroy() override;
-
-private:
-    double* lats_ = nullptr;
-    int lats_count_ = 0;
-    double* lons_ = nullptr;
-    int lons_count_ = 0;
-    double* distances_ = nullptr;
-    int* k_ = nullptr;
-    int* i_ = nullptr;
-    int* j_ = nullptr;
-    const char* Ni_ = nullptr;
-    const char* Nj_ = nullptr;
 };
 
 }  // namespace eccodes::geo_nearest

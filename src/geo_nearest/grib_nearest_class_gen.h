@@ -25,6 +25,18 @@ protected:
     int cargs_ = 0;
     const char* values_key_ = nullptr;
 
+    double* lats_ = nullptr;
+    int lats_count_ = 0;
+    double* lons_ = nullptr;
+    int lons_count_ = 0;
+
+    double* distances_ = nullptr;
+    size_t* k_ = nullptr;
+    size_t* i_ = nullptr;
+    size_t* j_ = nullptr;
+    const char* Ni_ = nullptr;
+    const char* Nj_ = nullptr;
+
 private:
     const char* radius_ = nullptr;
 };
