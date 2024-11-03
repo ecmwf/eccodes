@@ -792,23 +792,23 @@ grib_expression* new_string_expression(grib_context* c, const char* value);
 grib_expression* new_sub_string_expression(grib_context* c, const char* value, size_t start, size_t length);
 
 /* grib_nearest.cc */
-int grib_nearest_find(grib_nearest* nearest, const grib_handle* h, double inlat, double inlon, unsigned long flags, double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
-int grib_nearest_init(grib_nearest* i, grib_handle* h, grib_arguments* args);
-int grib_nearest_delete(grib_nearest* i);
-int grib_nearest_get_radius(grib_handle* h, double* radiusInKm);
-void grib_binary_search(const double xx[], const size_t n, double x, size_t* ju, size_t* jl);
-int grib_nearest_find_multiple(const grib_handle* h, int is_lsm, const double* inlats, const double* inlons, long npoints, double* outlats, double* outlons, double* values, double* distances, int* indexes);
-int grib_nearest_find_generic(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags,
-                              const char* values_keyname,
-                              double** out_lats,
-                              int* out_lats_count,
-                              double** out_lons,
-                              int* out_lons_count,
-                              double** out_distances,
-                              double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
+//int grib_nearest_find(grib_nearest* nearest, const grib_handle* h, double inlat, double inlon, unsigned long flags, double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
+//int grib_nearest_init(grib_nearest* i, grib_handle* h, grib_arguments* args);
+//int grib_nearest_delete(grib_nearest* i);
+//int grib_nearest_get_radius(grib_handle* h, double* radiusInKm);
+//void grib_binary_search(const double xx[], const size_t n, double x, size_t* ju, size_t* jl);
+//int grib_nearest_find_multiple(const grib_handle* h, int is_lsm, const double* inlats, const double* inlons, long npoints, double* outlats, double* outlons, double* values, double* distances, int* indexes);
+//int grib_nearest_find_generic(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags,
+//                              const char* values_keyname,
+//                              double** out_lats,
+//                              int* out_lats_count,
+//                              double** out_lons,
+//                              int* out_lons_count,
+//                              double** out_distances,
+//                              double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
 
 /* grib_nearest_class.cc */
-grib_nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args, int* error);
+//eccodes::geo_nearest::Nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args, int* error);
 
 /* grib_iterator.cc */
 int grib_get_data(const grib_handle* h, double* lats, double* lons, double* values);
