@@ -178,6 +178,20 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
                                  act->name_space, act->name, y->name_);
                 /* printf("[%s %s]\n",y->all_names_[i], y->all_name_spaces_[i]); */
 
+                /* 
+                 * ECC-1898: Remove accessor from cache
+                 * This workaround was disabled because it was causing problems with the unaliasing mars.step,
+                 * i.e., when unaliasing "mars.step" it also unaliases "step"
+                 */
+
+                // TODO(maee): Implement a new hash function, which uses the name and the name_space as well
+
+                //grib_handle* hand = grib_handle_of_accessor(y);
+                //if (hand->use_trie && y->all_name_spaces_[i] != NULL && strcmp(y->name_, act->name) != 0) {
+                //    int id = grib_hash_keys_get_id(hand->context->keys, act->name);
+                //    hand->accessors[id] = NULL;
+                //}
+
                 while (i < MAX_ACCESSOR_NAMES - 1) {
                     y->all_names_[i]       = y->all_names_[i + 1];
                     y->all_name_spaces_[i] = y->all_name_spaces_[i + 1];

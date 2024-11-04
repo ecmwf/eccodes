@@ -5,7 +5,7 @@ if (centre is "ecmf" or datasetForLocal is "era6") {
  concept modelName(unknown, "modelNameConcept.def", conceptsMasterDir, conceptsLocalDirAll): no_copy, dump, read_only;
 
  if (modelName isnot "unknown") {
-    concept modelVersion(unknown, "modelVersionConcept_[modelName].def", conceptsMasterDir, conceptsLocalDirAll): no_copy, dump, read_only;
+    concept modelVersion(unknown, "modelVersionConcept.[modelName].def", conceptsMasterDir, conceptsLocalDirAll): no_copy, dump, read_only;
     # alias ls.model = modelName;
     # alias mars.model = modelName;
  }
