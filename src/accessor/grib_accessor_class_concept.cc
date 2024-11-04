@@ -389,12 +389,21 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
                             grib_set_values(h, &values[i], 1);
                         }
                     }
-                    // else if (STR_EQUAL(values[i].name, "sourceSinkChemicalPhysicalProcess")) {
-                    //     if (grib_set_long(h, "is_chemical_srcsink", 1) == GRIB_SUCCESS) {
-                    //         resubmit = true;
-                    //         grib_set_values(h, &values[i], 1);
-                    //     }
-                    // }
+                    else if (STR_EQUAL(values[i].name, "typeOfWavePeriodInterval")) {
+                        grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Switch to waves selected by period range", __func__);
+                        // TODO(masn): Add a new key e.g. is_wave_period_range
+                        if (grib_set_long(h, "productDefinitionTemplateNumber", 103) == GRIB_SUCCESS) {
+                            resubmit = true;
+                            grib_set_values(h, &values[i], 1);
+                        }
+                    }
+                    else if (STR_EQUAL(values[i].name, "sourceSinkChemicalPhysicalProcess")) {
+                    grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Switch to chemical src/sink", __func__);
+                        if (grib_set_long(h, "is_chemical_srcsink", 1) == GRIB_SUCCESS) {
+                            resubmit = true;
+                            grib_set_values(h, &values[i], 1);
+                        }
+                    }
                 }
             }
 
