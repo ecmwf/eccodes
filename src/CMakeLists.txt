@@ -326,7 +326,6 @@ list( APPEND eccodes_src_files
     grib_expression_class_double.cc
     grib_expression_class_string.cc
     grib_expression_class_sub_string.cc
-    grib_nearest_factory.cc
     geo_nearest/grib_nearest.cc
     geo_nearest/grib_nearest_class_gen.cc
     geo_nearest/grib_nearest_class_healpix.cc
@@ -365,6 +364,8 @@ list( APPEND eccodes_src_files
     grib_dumper_factory.h
     grib_iterator_factory.h
     grib_iterator_factory.cc
+    grib_nearest_factory.h
+    grib_nearest_factory.cc
     grib_yacc.h
     md5.h
     md5.cc
