@@ -211,15 +211,16 @@ void grib_accessor_expanded_descriptors_t::__expand(bufr_descriptors_array* unex
 #endif
                 expanded = grib_bufr_descriptors_array_append(expanded, inner_expanded);
                 uidx     = grib_bufr_descriptors_array_get(expanded, idx);
-                if (size > 100) {
-                    grib_context_log(c, GRIB_LOG_ERROR,
-                                     "Delayed replication %06ld: Too many elements (%lu). "
-                                     "Hint: This may be due to associated field descriptors",
-                                     uidx->code, size);
-                    *err = GRIB_DECODING_ERROR;
-                    return;
+                // ECC-1958
+                if (size <= 100) {
+                    grib_bufr_descriptor_set_code(uidx, (size - 1) * 1000 + 100000);
                 }
-                grib_bufr_descriptor_set_code(uidx, (size - 1) * 1000 + 100000);
+                else {
+                     grib_context_log(c, GRIB_LOG_DEBUG,
+                                      "WARNING :  Delayed replication %06ld: Too many elements (%lu). "
+                                      "Hint: This may be due to associated field descriptors",
+                                      uidx->code, size);
+                }
                 size++;
             }
             else {
