@@ -8,8 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
-#include "geo_iterator/grib_iterator.h"
+#include "grib_iterator_factory.h"
 #include "accessor/grib_accessor_class_iterator.h"
 
 #if GRIB_PTHREADS
