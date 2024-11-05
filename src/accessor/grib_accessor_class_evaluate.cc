@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -17,15 +16,16 @@ grib_accessor* grib_accessor_evaluate = &_grib_accessor_evaluate;
 void grib_accessor_evaluate_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
-    arg_ = c;
+    arg_ = c; // the expression to be evaluated
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
 int grib_accessor_evaluate_t::unpack_long(long* val, size_t* len)
 {
-    grib_expression* e = grib_arguments_get_expression(grib_handle_of_accessor(this), arg_, 0);
+    grib_handle* h = grib_handle_of_accessor(this);
+    grib_expression* e = grib_arguments_get_expression(h, arg_, 0);
 
-    int ret = grib_expression_evaluate_long(grib_handle_of_accessor(this), e, val);
+    int ret = grib_expression_evaluate_long(h, e, val);
     *len    = 1;
 
     return ret;

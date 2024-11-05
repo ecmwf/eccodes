@@ -22,7 +22,7 @@ class grib_accessor_data_complex_packing_t : public grib_accessor_data_simple_pa
 public:
     grib_accessor_data_complex_packing_t() :
         grib_accessor_data_simple_packing_t() { class_name_ = "data_complex_packing"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_data_complex_packing_t{}; }
+    // grib_accessor* create_empty_accessor() override { return new grib_accessor_data_complex_packing_t{}; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_float(float* val, size_t* len) override;
@@ -30,18 +30,18 @@ public:
     void init(const long, grib_arguments*) override;
 
 protected:
-    const char* sub_j_;
-    const char* sub_k_;
-    const char* sub_m_;
+    const char* sub_j_ = nullptr;
+    const char* sub_k_ = nullptr;
+    const char* sub_m_ = nullptr;
 
 private:
-    const char* GRIBEX_sh_bug_present_;
-    const char* ieee_floats_;
-    const char* laplacianOperatorIsSet_;
-    const char* laplacianOperator_;
-    const char* pen_j_;
-    const char* pen_k_;
-    const char* pen_m_;
+    const char* GRIBEX_sh_bug_present_ = nullptr;
+    const char* ieee_floats_ = nullptr;
+    const char* laplacianOperatorIsSet_ = nullptr;
+    const char* laplacianOperator_ = nullptr;
+    const char* pen_j_ = nullptr;
+    const char* pen_k_ = nullptr;
+    const char* pen_m_ = nullptr;
 
     template <typename T> int unpack_real(T* val, size_t* len);
 };

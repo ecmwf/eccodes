@@ -274,14 +274,14 @@ all: empty        { grib_parser_all_actions = 0;grib_parser_concept=0;
 empty:;
 
 
-dvalues:  FLOAT  { $$=grib_darray_push(grib_parser_context,0,$1);}
-    |  dvalues ',' FLOAT { $$=grib_darray_push(grib_parser_context,$1,$3);}
-    |  INTEGER { $$=grib_darray_push(grib_parser_context,0,$1);}
-    |  dvalues ',' INTEGER { $$=grib_darray_push(grib_parser_context,$1,$3);}
+dvalues:  FLOAT  { $$=grib_darray_push(0,$1);}
+    |  dvalues ',' FLOAT { $$=grib_darray_push($1,$3);}
+    |  INTEGER { $$=grib_darray_push(0,$1);}
+    |  dvalues ',' INTEGER { $$=grib_darray_push($1,$3);}
    ;
 
-svalues: STRING { $$=grib_sarray_push(grib_parser_context,0,$1);}
-    |  svalues ',' STRING { $$=grib_sarray_push(grib_parser_context,$1,$3);}
+svalues: STRING { $$=grib_sarray_push(0,$1);}
+    |  svalues ',' STRING { $$=grib_sarray_push($1,$3);}
     ;
 
 
@@ -770,9 +770,9 @@ concept_condition: IDENT '=' expression ';' { $$ = grib_concept_condition_new(gr
 
 
 hash_array_value:  STRING '=' '[' integer_array ']' {
-	  				$$ = grib_integer_hash_array_value_new(grib_parser_context,$1,$4); free($1);}
+	  				$$ = grib_integer_hash_array_value_new($1,$4); free($1);}
   				| IDENT '=' '[' integer_array ']' {
-	  				$$ = grib_integer_hash_array_value_new(grib_parser_context,$1,$4); free($1);}
+	  				$$ = grib_integer_hash_array_value_new($1,$4); free($1);}
         ;
 
 string_or_ident: SUBSTR '(' IDENT ',' INTEGER ',' INTEGER ')' { $$ = new_accessor_expression(grib_parser_context,$3,$5,$7); free($3); }

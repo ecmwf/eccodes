@@ -27,19 +27,19 @@ public:
     void dump(grib_dumper*) override;
     void init(const long, grib_arguments*) override;
 
-    grib_smart_table* table() const { return table_; }
+    grib_smart_table* smarttable() const { return table_; }
 
 private:
-    grib_smart_table* table_;
-    const char* values_;
-    const char* tablename_;
-    const char* masterDir_;
-    const char* localDir_;
-    const char* extraDir_;
-    const char* extraTable_;
-    int widthOfCode_;
-    long* tableCodes_;
-    size_t tableCodesSize_;
+    grib_smart_table* table_ = nullptr;
+    const char* values_ = nullptr;
+    const char* tablename_ = nullptr;
+    const char* masterDir_ = nullptr;
+    const char* localDir_ = nullptr;
+    const char* extraDir_ = nullptr;
+    const char* extraTable_ = nullptr;
+    int widthOfCode_ = 0;
+    long* tableCodes_ = nullptr;
+    size_t tableCodesSize_ = 0;
 
     grib_smart_table* load_table();
     int get_table_codes();

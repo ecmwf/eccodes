@@ -23,11 +23,6 @@ typedef struct bitmap_s
 
 class grib_accessor_bufr_data_array_t;
 
-typedef int (*codec_element_proc)(grib_context*, grib_accessor_bufr_data_array_t*, int, grib_buffer*, unsigned char*, long*, int, bufr_descriptor*, long, grib_darray*, grib_sarray*);
-
-typedef int (*codec_replication_proc)(grib_context*, grib_accessor_bufr_data_array_t*, int, grib_buffer*, unsigned char*, long*, int, long, grib_darray*, long*);
-
-
 class grib_accessor_bufr_data_array_t : public grib_accessor_gen_t
 {
 public:
@@ -52,53 +47,53 @@ public:
     grib_vsarray* accessor_bufr_data_array_get_stringValues();
 
 private:
-    const char* bufrDataEncodedName_;
-    const char* numberOfSubsetsName_;
-    const char* expandedDescriptorsName_;
-    const char* flagsName_;
-    const char* unitsName_;
-    const char* elementsDescriptorsIndexName_;
-    const char* compressedDataName_;
-    bufr_descriptors_array* expanded_;
-    grib_accessor_expanded_descriptors_t* expandedAccessor_;
-    int* canBeMissing_;
-    long numberOfSubsets_;
-    long compressedData_;
-    grib_vdarray* numericValues_;
-    grib_vsarray* stringValues_;
-    grib_viarray* elementsDescriptorsIndex_;
-    int do_decode_;
-    int bitmapStartElementsDescriptorsIndex_;
-    int bitmapCurrentElementsDescriptorsIndex_;
-    int bitmapSize_;
-    int bitmapStart_;
-    int bitmapCurrent_;
-    grib_accessors_list* dataAccessors_;
-    int unpackMode_;
-    int bitsToEndData_;
-    grib_section* dataKeys_;
-    double* inputBitmap_;
-    int nInputBitmap_;
-    int iInputBitmap_;
-    long* inputReplications_;
-    int nInputReplications_;
-    int iInputReplications_;
-    long* inputExtendedReplications_;
-    int nInputExtendedReplications_;
-    int iInputExtendedReplications_;
-    long* inputShortReplications_;
-    int nInputShortReplications_;
-    int iInputShortReplications_;
-    grib_iarray* iss_list_;
-    grib_trie_with_rank* dataAccessorsTrie_;
-    grib_sarray* tempStrings_;
-    grib_vdarray* tempDoubleValues_;
-    int change_ref_value_operand_;
-    size_t refValListSize_;
-    long* refValList_;
-    long refValIndex_;
-    bufr_tableb_override* tableb_override_;
-    int set_to_missing_if_out_of_range_;
+    const char* bufrDataEncodedName_ = nullptr;
+    const char* numberOfSubsetsName_ = nullptr;
+    const char* expandedDescriptorsName_ = nullptr;
+    const char* flagsName_ = nullptr;
+    const char* unitsName_ = nullptr;
+    const char* elementsDescriptorsIndexName_ = nullptr;
+    const char* compressedDataName_ = nullptr;
+    bufr_descriptors_array* expanded_ = nullptr;
+    grib_accessor_expanded_descriptors_t* expandedAccessor_ = nullptr;
+    int* canBeMissing_ = nullptr;
+    long numberOfSubsets_ = 0;
+    long compressedData_ = 0;
+    grib_vdarray* numericValues_ = nullptr;
+    grib_vsarray* stringValues_ = nullptr;
+    grib_viarray* elementsDescriptorsIndex_ = nullptr;
+    int do_decode_ = 0;
+    int bitmapStartElementsDescriptorsIndex_ = 0;
+    int bitmapCurrentElementsDescriptorsIndex_ = 0;
+    int bitmapSize_ = 0;
+    int bitmapStart_ = 0;
+    int bitmapCurrent_ = 0;
+    grib_accessors_list* dataAccessors_ = nullptr;
+    int unpackMode_ = 0;
+    int bitsToEndData_ = 0;
+    grib_section* dataKeys_ = nullptr;
+    double* inputBitmap_ = nullptr;
+    int nInputBitmap_ = 0;
+    int iInputBitmap_ = 0;
+    long* inputReplications_ = nullptr;
+    int nInputReplications_ = 0;
+    int iInputReplications_ = 0;
+    long* inputExtendedReplications_ = nullptr;
+    int nInputExtendedReplications_ = 0;
+    int iInputExtendedReplications_ = 0;
+    long* inputShortReplications_ = nullptr;
+    int nInputShortReplications_ = 0;
+    int iInputShortReplications_ = 0;
+    grib_iarray* iss_list_ = nullptr;
+    grib_trie_with_rank* dataAccessorsTrie_ = nullptr;
+    grib_sarray* tempStrings_ = nullptr;
+    grib_vdarray* tempDoubleValues_ = nullptr;
+    int change_ref_value_operand_ = 0;
+    size_t refValListSize_ = 0;
+    long* refValList_ = nullptr;
+    long refValIndex_ = 0;
+    bufr_tableb_override* tableb_override_ = nullptr;
+    int set_to_missing_if_out_of_range_ = 0;
 
     void restart_bitmap();
     void cancel_bitmap();
@@ -116,7 +111,6 @@ private:
     char* decode_string_value(grib_context*, unsigned char*, long*, bufr_descriptor*, int*);
     double decode_double_value(grib_context*, unsigned char*, long*, bufr_descriptor*, int, int*);
     int encode_new_bitmap(grib_context*, grib_buffer*, long*, int);
-    grib_darray* doubleValues = NULL;
     int encode_overridden_reference_value(grib_context*, grib_buffer*, long*, bufr_descriptor*);
     int build_bitmap(unsigned char*, long*, int, grib_iarray*, int);
     int consume_bitmap(int);

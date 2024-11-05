@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -69,7 +68,7 @@ int grib_accessor_bufr_simple_thinning_t::apply_thinning()
         if (ret)
             return ret;
 
-        subsets = grib_iarray_new(c, numberOfSubsets / skip + 1, 10);
+        subsets = grib_iarray_new(numberOfSubsets / skip + 1, 10);
         for (long i = 0; i < numberOfSubsets; i += skip + 1) {
             grib_iarray_push(subsets, i + 1);
         }

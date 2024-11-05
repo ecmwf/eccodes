@@ -29,11 +29,11 @@ void grib_accessor_transient_darray_t::dump(grib_dumper* dumper)
 int grib_accessor_transient_darray_t::pack_double(const double* val, size_t* len)
 {
     if (arr_)
-        grib_darray_delete(context_, arr_);
-    arr_ = grib_darray_new(context_, *len, 10);
+        grib_darray_delete(arr_);
+    arr_ = grib_darray_new(*len, 10);
 
     for (size_t i = 0; i < *len; i++)
-        grib_darray_push(context_, arr_, val[i]);
+        grib_darray_push(arr_, val[i]);
 
     return GRIB_SUCCESS;
 }
@@ -41,11 +41,11 @@ int grib_accessor_transient_darray_t::pack_double(const double* val, size_t* len
 int grib_accessor_transient_darray_t::pack_long(const long* val, size_t* len)
 {
     if (arr_)
-        grib_darray_delete(context_, arr_);
-    arr_ = grib_darray_new(context_, *len, 10);
+        grib_darray_delete(arr_);
+    arr_ = grib_darray_new(*len, 10);
 
     for (size_t i = 0; i < *len; i++)
-        grib_darray_push(context_, arr_, (double)val[i]);
+        grib_darray_push(arr_, (double)val[i]);
 
     return GRIB_SUCCESS;
 }
@@ -89,7 +89,7 @@ int grib_accessor_transient_darray_t::unpack_long(long* val, size_t* len)
 void grib_accessor_transient_darray_t::destroy(grib_context* c)
 {
     if (arr_)
-        grib_darray_delete(context_, arr_);
+        grib_darray_delete(arr_);
     grib_accessor_gen_t::destroy(c);
 }
 

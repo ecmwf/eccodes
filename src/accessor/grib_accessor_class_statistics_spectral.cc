@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -18,19 +17,19 @@ void grib_accessor_statistics_spectral_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_abstract_vector_t::init(l, c);
     int n = 0;
+    grib_handle* h  = grib_handle_of_accessor(this);
 
-    values_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    J_      = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    K_      = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    M_      = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    JS_     = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    values_ = grib_arguments_get_name(h, c, n++);
+    J_      = grib_arguments_get_name(h, c, n++);
+    K_      = grib_arguments_get_name(h, c, n++);
+    M_      = grib_arguments_get_name(h, c, n++);
+    JS_     = grib_arguments_get_name(h, c, n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
 
     number_of_elements_ = 4;
-    v_                  = (double*)grib_context_malloc(context_,
-                                                       sizeof(double) * number_of_elements_);
+    v_ = (double*)grib_context_malloc(context_, sizeof(double) * number_of_elements_);
 
     length_ = 0;
     dirty_  = 1;
@@ -55,13 +54,13 @@ int grib_accessor_statistics_spectral_t::unpack_double(double* val, size_t* len)
     if ((ret = grib_get_size(h, values_, &size)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long(grib_handle_of_accessor(this), J_, &J)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long(h, J_, &J)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long(grib_handle_of_accessor(this), K_, &K)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long(h, K_, &K)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long(grib_handle_of_accessor(this), M_, &M)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long(h, M_, &M)) != GRIB_SUCCESS)
         return ret;
 
     if (J != M || M != K)
@@ -116,7 +115,7 @@ int grib_accessor_statistics_spectral_t::unpack_double(double* val, size_t* len)
 int grib_accessor_statistics_spectral_t::value_count(long* count)
 {
     *count = number_of_elements_;
-    return 0;
+    return GRIB_SUCCESS;
 }
 
 void grib_accessor_statistics_spectral_t::destroy(grib_context* c)

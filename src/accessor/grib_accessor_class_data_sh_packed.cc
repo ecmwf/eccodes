@@ -39,9 +39,8 @@ void grib_accessor_data_sh_packed_t::init(const long v, grib_arguments* args)
 
 int grib_accessor_data_sh_packed_t::value_count(long* count)
 {
-    grib_handle* hand       = grib_handle_of_accessor(this);
-    int ret                 = 0;
-    const char* cclass_name = class_name_;
+    grib_handle* hand = grib_handle_of_accessor(this);
+    int ret = 0;
 
     long sub_j = 0;
     long sub_k = 0;
@@ -66,7 +65,7 @@ int grib_accessor_data_sh_packed_t::value_count(long* count)
 
     if (pen_j != pen_k || pen_j != pen_m) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s: pen_j=%ld, pen_k=%ld, pen_m=%ld\n",
-                         cclass_name, pen_j, pen_k, pen_m);
+                         class_name_, pen_j, pen_k, pen_m);
         return GRIB_DECODING_ERROR;
     }
     *count = (pen_j + 1) * (pen_j + 2) - (sub_j + 1) * (sub_j + 2);

@@ -98,7 +98,7 @@ static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
     self->j                           = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
     if (!self->j)
         return GRIB_OUT_OF_MEMORY;
-    self->k = (size_t*)grib_context_malloc(nearest->context, 4 * sizeof(size_t));
+    self->k = (size_t*)grib_context_malloc(h->context, 4 * sizeof(size_t));
     if (!self->k)
         return GRIB_OUT_OF_MEMORY;
 
@@ -195,15 +195,15 @@ static int find_global(grib_nearest* nearest, grib_handle* h,
         self->lats_count = n;
 
         if (self->lats)
-            grib_context_free(nearest->context, self->lats);
-        self->lats = (double*)grib_context_malloc(nearest->context,
+            grib_context_free(h->context, self->lats);
+        self->lats = (double*)grib_context_malloc(h->context,
                                                   self->lats_count * sizeof(double));
         if (!self->lats)
             return GRIB_OUT_OF_MEMORY;
 
         if (self->lons)
-            grib_context_free(nearest->context, self->lons);
-        self->lons = (double*)grib_context_malloc(nearest->context,
+            grib_context_free(h->context, self->lons);
+        self->lons = (double*)grib_context_malloc(h->context,
                                                   nearest->values_count * sizeof(double));
         if (!self->lons)
             return GRIB_OUT_OF_MEMORY;
@@ -300,7 +300,7 @@ static int find_global(grib_nearest* nearest, grib_handle* h,
         }
 
         if (!self->distances)
-            self->distances = (double*)grib_context_malloc(nearest->context, 4 * sizeof(double));
+            self->distances = (double*)grib_context_malloc(h->context, 4 * sizeof(double));
         if (!self->distances)
             return GRIB_OUT_OF_MEMORY;
 
@@ -420,16 +420,17 @@ static int find_global(grib_nearest* nearest, grib_handle* h,
 static int destroy(grib_nearest* nearest)
 {
     grib_nearest_latlon_reduced* self = (grib_nearest_latlon_reduced*)nearest;
+    grib_context* c = grib_context_get_default();
     if (self->lats)
-        grib_context_free(nearest->context, self->lats);
+        grib_context_free(c, self->lats);
     if (self->lons)
-        grib_context_free(nearest->context, self->lons);
+        grib_context_free(c, self->lons);
     if (self->j)
-        grib_context_free(nearest->context, self->j);
+        grib_context_free(c, self->j);
     if (self->k)
-        grib_context_free(nearest->context, self->k);
+        grib_context_free(c, self->k);
     if (self->distances)
-        grib_context_free(nearest->context, self->distances);
+        grib_context_free(c, self->distances);
 
     return GRIB_SUCCESS;
 }

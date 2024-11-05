@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -26,6 +25,6 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* scaleFactor_;
-    const char* scaledValue_;
+    const char* scaleFactor_ = nullptr;
+    const char* scaledValue_ = nullptr;
 };

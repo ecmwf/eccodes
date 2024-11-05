@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -24,7 +23,7 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* year_;
-    const char* month_;
-    const char* day_;
+    const char* year_ = nullptr;
+    const char* month_ = nullptr;
+    const char* day_ = nullptr;
 };

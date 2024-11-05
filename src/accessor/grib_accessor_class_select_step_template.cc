@@ -75,12 +75,21 @@ int grib_accessor_select_step_template_t::pack_long(const long* val, size_t* len
             case 47:  // ENS aerosol
                 productDefinitionTemplateNumberNew = 45;
                 break;
+
             case 67:  // DET chemical distrib func
                 productDefinitionTemplateNumberNew = 57;
                 break;
             case 68:  // ENS chemical distrib func
                 productDefinitionTemplateNumberNew = 58;
                 break;
+
+            case 78:  // DET chemical source/sink
+                productDefinitionTemplateNumberNew = 76;
+                break;
+            case 79:  // ENS chemical source/sink
+                productDefinitionTemplateNumberNew = 77;
+                break;
+
             case 72:  // DET post-processing
                 productDefinitionTemplateNumberNew = 70;
                 break;
@@ -136,12 +145,21 @@ int grib_accessor_select_step_template_t::pack_long(const long* val, size_t* len
             case 45:                                      // ENS aerosol
                 productDefinitionTemplateNumberNew = 85;  // 47 is  deprecated
                 break;
+
             case 57:  // DET chemical distrib func
                 productDefinitionTemplateNumberNew = 67;
                 break;
             case 58:  // ENS chemical distrib func
                 productDefinitionTemplateNumberNew = 68;
                 break;
+
+            case 76:  // DET chemical source/sink
+                productDefinitionTemplateNumberNew = 78;
+                break;
+            case 77:  // ENS chemical source/sink
+                productDefinitionTemplateNumberNew = 79;
+                break;
+
             case 70:  // DET post-processing
                 productDefinitionTemplateNumberNew = 72;
                 break;

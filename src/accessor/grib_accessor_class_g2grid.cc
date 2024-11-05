@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -29,9 +28,7 @@ void grib_accessor_g2grid_t::init(const long l, grib_arguments* c)
     basic_angle_     = grib_arguments_get_name(hand, c, n++);
     sub_division_    = grib_arguments_get_name(hand, c, n++);
 
-    flags_ |=
-        GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC |
-        GRIB_ACCESSOR_FLAG_READ_ONLY;
+    flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC | GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
 int grib_accessor_g2grid_t::value_count(long* count)

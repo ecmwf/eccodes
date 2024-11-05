@@ -81,9 +81,9 @@ void grib_accessor_bufr_data_element_t::init(const long len, grib_arguments* par
 
 void grib_accessor_bufr_data_element_t::dump(grib_dumper* dumper)
 {
-    int type = get_native_type();
+    const int ntype = get_native_type();
 
-    switch (type) {
+    switch (ntype) {
         case GRIB_TYPE_LONG:
             grib_dump_long(dumper, this, NULL);
             break;
@@ -137,12 +137,12 @@ int grib_accessor_bufr_data_element_t::pack_string_array(const char** v, size_t*
                              descriptors_->v[elementsDescriptorsIndex_->v[0]->v[idx]]->shortName, *len, numberOfSubsets_);
             return GRIB_ARRAY_TOO_SMALL;
         }
-        grib_sarray_delete_content(c, stringValues_->v[idx]); /* ECC-1172 */
-        grib_sarray_delete(c, stringValues_->v[idx]);
-        stringValues_->v[idx] = grib_sarray_new(c, *len, 1);
+        grib_sarray_delete_content(stringValues_->v[idx]); /* ECC-1172 */
+        grib_sarray_delete(stringValues_->v[idx]);
+        stringValues_->v[idx] = grib_sarray_new(*len, 1);
         for (i = 0; i < *len; i++) {
             s = grib_context_strdup(c, v[i]);
-            grib_sarray_push(c, stringValues_->v[idx], s);
+            grib_sarray_push(stringValues_->v[idx], s);
         }
     }
     else {
@@ -175,9 +175,7 @@ int grib_accessor_bufr_data_element_t::unpack_string(char* val, size_t* len)
     grib_context* c = context_;
 
     if (type_ != BUFR_DESCRIPTOR_TYPE_STRING) {
-        char sval[32] = {
-            0,
-        };
+        char sval[32] = {0,};
         err = unpack_double(&dval, &dlen);
         if (err) return err;
         snprintf(sval, sizeof(sval), "%g", dval);
@@ -246,11 +244,11 @@ int grib_accessor_bufr_data_element_t::pack_string(const char* val, size_t* len)
     else {
         idx = (int)numericValues_->v[subsetNumber_]->v[index_] / 1000 - 1;
     }
-    grib_sarray_delete_content(c, stringValues_->v[idx]); /* ECC-1172 */
-    grib_sarray_delete(c, stringValues_->v[idx]);
-    stringValues_->v[idx] = grib_sarray_new(c, 1, 1);
+    grib_sarray_delete_content(stringValues_->v[idx]); /* ECC-1172 */
+    grib_sarray_delete(stringValues_->v[idx]);
+    stringValues_->v[idx] = grib_sarray_new(1, 1);
     s                     = grib_context_strdup(c, val);
-    grib_sarray_push(c, stringValues_->v[idx], s);
+    grib_sarray_push(stringValues_->v[idx], s);
 
     return ret;
 }
@@ -324,11 +322,11 @@ int grib_accessor_bufr_data_element_t::pack_double(const double* val, size_t* le
                              descriptors_->v[elementsDescriptorsIndex_->v[0]->v[index_]]->shortName, count, numberOfSubsets_);
             return GRIB_ARRAY_TOO_SMALL;
         }
-        grib_darray_delete(context_, numericValues_->v[index_]);
-        numericValues_->v[index_] = grib_darray_new(context_, count, 1);
+        grib_darray_delete(numericValues_->v[index_]);
+        numericValues_->v[index_] = grib_darray_new(count, 1);
 
         for (i = 0; i < count; i++)
-            grib_darray_push(context_, numericValues_->v[index_], val[i]);
+            grib_darray_push(numericValues_->v[index_], val[i]);
 
         *len = count;
     }
@@ -353,11 +351,11 @@ int grib_accessor_bufr_data_element_t::pack_long(const long* val, size_t* len)
                              descriptors_->v[elementsDescriptorsIndex_->v[0]->v[index_]]->shortName, count, numberOfSubsets_);
             return GRIB_ARRAY_TOO_SMALL;
         }
-        grib_darray_delete(context_, numericValues_->v[index_]);
-        numericValues_->v[index_] = grib_darray_new(context_, count, 1);
+        grib_darray_delete(numericValues_->v[index_]);
+        numericValues_->v[index_] = grib_darray_new(count, 1);
 
         for (i = 0; i < count; i++) {
-            grib_darray_push(context_, numericValues_->v[index_], val[i] == GRIB_MISSING_LONG ? GRIB_MISSING_DOUBLE : val[i]);
+            grib_darray_push(numericValues_->v[index_], val[i] == GRIB_MISSING_LONG ? GRIB_MISSING_DOUBLE : val[i]);
         }
         *len = count;
     }
@@ -371,16 +369,16 @@ int grib_accessor_bufr_data_element_t::pack_long(const long* val, size_t* len)
 
 int grib_accessor_bufr_data_element_t::value_count(long* count)
 {
-    int ret = 0, type = 0, idx = 0;
+    int ret = 0, idx = 0;
     size_t size = 0;
 
     if (!compressedData_) {
         *count = 1;
         return 0;
     }
-    type = get_native_type();
+    const int ntype = get_native_type();
 
-    if (type == GRIB_TYPE_STRING) {
+    if (ntype == GRIB_TYPE_STRING) {
         DEBUG_ASSERT(index_ < numericValues_->n);
         idx  = ((int)numericValues_->v[index_]->v[0] / 1000 - 1) / numberOfSubsets_;
         size = grib_sarray_used_size(stringValues_->v[idx]);
@@ -539,9 +537,7 @@ int grib_accessor_bufr_data_element_t::is_missing()
             grib_context_free(c, values);
         }
         else {
-            char value[MAX_STRING_SIZE] = {
-                0,
-            }; /* See ECC-710 */
+            char value[MAX_STRING_SIZE] = {0,}; /* See ECC-710 */
             size = MAX_STRING_SIZE;
             err  = unpack_string(value, &size);
             if (err) return 0; /* TODO: no way of propagating the error up */

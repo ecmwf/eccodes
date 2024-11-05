@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -67,9 +66,7 @@ int grib_accessor_bufrdc_expanded_descriptors_t::unpack_string_array(char** buff
     long lenall                = 0;
     size_t i                   = 0;
     long* v                    = 0;
-    char buf[25]               = {
-        0,
-    };
+    char buf[25]               = {0,};
     grib_context* c = context_;
 
     descriptors = get_accessor();

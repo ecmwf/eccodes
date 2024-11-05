@@ -132,5 +132,5 @@ static void destroy(grib_context* context, grib_action* act)
     grib_action_transient_darray* a = (grib_action_transient_darray*)act;
 
     grib_context_free_persistent(context, a->name);
-    grib_darray_delete(context, a->darray);
+    grib_darray_delete(a->darray);
 }

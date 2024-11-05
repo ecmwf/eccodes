@@ -40,16 +40,15 @@ int grib_accessors_list::value_count(size_t* count)
 
 void grib_accessors_list::push(grib_accessor* a, int rank)
 {
-    grib_accessors_list* last;
     const grib_context* c = a->context_;
 
-    last = this->last();
-    if (last && last->accessor) {
-        last->next_           = (grib_accessors_list*)grib_context_malloc_clear(c, sizeof(grib_accessors_list));
-        last->next_->accessor = a;
-        last->next_->prev_    = last;
-        last->next_->rank_    = rank;
-        this->last_           = last->next_;
+    grib_accessors_list* last_acc = this->last();
+    if (last_acc && last_acc->accessor) {
+        last_acc->next_           = (grib_accessors_list*)grib_context_malloc_clear(c, sizeof(grib_accessors_list));
+        last_acc->next_->accessor = a;
+        last_acc->next_->prev_    = last_acc;
+        last_acc->next_->rank_    = rank;
+        this->last_               = last_acc->next_;
     }
     else {
         this->accessor = a;

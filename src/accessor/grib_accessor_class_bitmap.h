@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -18,7 +17,7 @@ class grib_accessor_bitmap_t : public grib_accessor_bytes_t
 public:
     grib_accessor_bitmap_t() :
         grib_accessor_bytes_t() { class_name_ = "bitmap"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_bitmap_t{}; }
+    // grib_accessor* create_empty_accessor() override { return new grib_accessor_bitmap_t{}; }
     int unpack_double(double* val, size_t* len) override;
     int unpack_float(float* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
@@ -32,12 +31,12 @@ public:
     int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) override;
 
 protected:
-    const char* missing_value_;
+    const char* missing_value_ = nullptr;
 
 private:
-    const char* tableReference_;
-    const char* offsetbsec_;
-    const char* sLength_;
+    const char* tableReference_ = nullptr;
+    const char* offsetbsec_ = nullptr;
+    const char* sLength_ = nullptr;
 
     void compute_size();
 };

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -33,7 +32,7 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* key_;
-    long start_;
-    size_t length_;
+    const char* key_ = nullptr;
+    long start_ = 0;
+    size_t str_length_ = 0;
 };

@@ -9,6 +9,7 @@
  */
 
 #include "grib_accessor_class_unsigned.h"
+#include "ecc_numeric_limits.h"
 
 grib_accessor_unsigned_t _grib_accessor_unsigned{};
 grib_accessor* grib_accessor_unsigned = &_grib_accessor_unsigned;
@@ -116,7 +117,7 @@ int grib_accessor_unsigned_t::pack_long_unsigned_helper(const long* val, size_t*
             if (!value_is_missing(v)) {
                 const long nbits = nbytes_ * 8;
                 if (nbits < 33) {
-                    unsigned long maxval = (1UL << nbits) - 1;
+                    unsigned long maxval = NumericLimits<unsigned long>::max(nbits);
                     if (maxval > 0 && v > maxval) { /* See ECC-1002 */
                         grib_context_log(context_, GRIB_LOG_ERROR,
                                          "Key \"%s\": Trying to encode value of %ld but the maximum allowable value is %lu (number of bits=%ld)",

@@ -22,9 +22,6 @@ public:
     void dump(grib_dumper* dumper) override;
 
 private:
-    grib_arguments* args_;
-
-    friend grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int* error);
+    grib_arguments* args_ = nullptr;
+    friend eccodes::geo_iterator::Iterator* eccodes::geo_iterator::gribIteratorNew(const grib_handle*, unsigned long, int*);
 };
-
-// grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int* error)

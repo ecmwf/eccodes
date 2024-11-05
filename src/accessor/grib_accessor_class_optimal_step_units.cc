@@ -46,7 +46,6 @@ int grib_accessor_optimal_step_units_t::pack_expression(grib_expression* e)
     long lval               = 0;
     size_t len              = 1;
     grib_handle* hand       = grib_handle_of_accessor(this);
-    const char* cclass_name = class_name_;
 
     if (strcmp(e->cclass->name, "long") == 0) {
         grib_expression_evaluate_long(hand, e, &lval); /* TODO: check return value */
@@ -59,7 +58,7 @@ int grib_accessor_optimal_step_units_t::pack_expression(grib_expression* e)
         if (ret != GRIB_SUCCESS) {
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "%s.%s: Unable to evaluate string %s to be set in %s",
-                             cclass_name, __func__, grib_expression_get_name(e), name_);
+                             class_name_, __func__, grib_expression_get_name(e), name_);
             return ret;
         }
         len = strlen(cval) + 1;

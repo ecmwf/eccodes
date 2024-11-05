@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -37,13 +36,13 @@ int grib_accessor_codetable_title_t::unpack_string(char* buffer, size_t* len)
     long value;
     int err = GRIB_SUCCESS;
     char tmp[1024];
-    size_t l                      = 1024;
+    size_t l = 1024;
     grib_accessor_codetable_t* ca = (grib_accessor_codetable_t*)grib_find_accessor(grib_handle_of_accessor(this), codetable_);
 
     if ((err = ((grib_accessor*)ca)->unpack_long(&value, &size)) != GRIB_SUCCESS)
         return err;
 
-    table = ca->table();
+    table = ca->codetable();
 
     if (table && (value >= 0) && (value < table->size) && table->entries[value].title) {
         strcpy(tmp, table->entries[value].title);
@@ -55,10 +54,9 @@ int grib_accessor_codetable_title_t::unpack_string(char* buffer, size_t* len)
     l = strlen(tmp) + 1;
 
     if (*len < l) {
-        const char* cclass_name = class_name_;
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         cclass_name, name_, l, *len);
+                         class_name_, name_, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }

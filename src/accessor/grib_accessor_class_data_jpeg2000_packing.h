@@ -27,13 +27,13 @@ public:
     int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) override;
 
 private:
-    const char* type_of_compression_used_;
-    const char* target_compression_ratio_;
-    const char* ni_;
-    const char* nj_;
-    const char* list_defining_points_;
-    const char* number_of_data_points_;
-    const char* scanning_mode_;
-    int jpeg_lib_;
-    const char* dump_jpg_;
+    const char* type_of_compression_used_ = nullptr;
+    const char* target_compression_ratio_ = nullptr;
+    const char* ni_ = nullptr;
+    const char* nj_ = nullptr;
+    const char* list_defining_points_ = nullptr;
+    const char* number_of_data_points_ = nullptr;
+    const char* scanning_mode_ = nullptr;
+    int jpeg_lib_ = 0;
+    const char* dump_jpg_ = nullptr;
 };

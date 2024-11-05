@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -24,10 +23,10 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* numericValues_;
-    const char* pack_;
-    grib_accessor* numericValuesAccessor_;
-    grib_accessor* packAccessor_;
+    const char* numericValues_ = nullptr;
+    const char* pack_ = nullptr;
+    grib_accessor* numericValuesAccessor_ = nullptr;
+    grib_accessor* packAccessor_ = nullptr;
 
     void get_accessors();
 };

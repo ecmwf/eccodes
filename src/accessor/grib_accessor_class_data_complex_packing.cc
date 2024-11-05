@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -168,8 +167,7 @@ double calculate_pfactor(const grib_context* ctx, const double* spectralField, l
 
 int grib_accessor_data_complex_packing_t::pack_double(const double* val, size_t* len)
 {
-    grib_handle* gh         = grib_handle_of_accessor(this);
-    const char* cclass_name = class_name_;
+    grib_handle* gh = grib_handle_of_accessor(this);
 
     size_t i      = 0;
     int ret       = GRIB_SUCCESS;
@@ -279,7 +277,7 @@ int grib_accessor_data_complex_packing_t::pack_double(const double* val, size_t*
     }
 
     if (sub_j != sub_k || sub_j != sub_m || pen_j != pen_k || pen_j != pen_m) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s: Invalid pentagonal resolution parameters", cclass_name);
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: Invalid pentagonal resolution parameters", class_name_);
         return GRIB_ENCODING_ERROR;
     }
 
@@ -287,7 +285,7 @@ int grib_accessor_data_complex_packing_t::pack_double(const double* val, size_t*
 
     if (*len != n_vals) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s: Wrong number of values, expected %ld - got %zu",
-                         cclass_name, n_vals, *len);
+                         class_name_, n_vals, *len);
         return GRIB_INTERNAL_ERROR;
     }
 
@@ -399,7 +397,7 @@ int grib_accessor_data_complex_packing_t::pack_double(const double* val, size_t*
                                            &reference_value);
         if (ret != GRIB_SUCCESS) {
             grib_context_log(gh->context, GRIB_LOG_ERROR,
-                             "%s: Unable to find nearest_smaller_value of %g for %s", cclass_name, min, reference_value_);
+                             "%s: Unable to find nearest_smaller_value of %g for %s", class_name_, min, reference_value_);
             return GRIB_INTERNAL_ERROR;
         }
         d = codes_power<double>(+decimal_scale_factor, 10);
@@ -408,7 +406,7 @@ int grib_accessor_data_complex_packing_t::pack_double(const double* val, size_t*
         d = codes_power<double>(+decimal_scale_factor, 10);
         if (grib_get_nearest_smaller_value(gh, reference_value_, d * min, &reference_value) != GRIB_SUCCESS) {
             grib_context_log(gh->context, GRIB_LOG_ERROR,
-                             "%s: Unable to find nearest_smaller_value of %g for %s", cclass_name, d * min, reference_value_);
+                             "%s: Unable to find nearest_smaller_value of %g for %s", class_name_, d * min, reference_value_);
             return GRIB_INTERNAL_ERROR;
         }
         binary_scale_factor = grib_get_binary_scale_fact(d * max, reference_value, bits_per_value, &ret);
@@ -419,7 +417,7 @@ int grib_accessor_data_complex_packing_t::pack_double(const double* val, size_t*
         }
         else {
             if (ret != GRIB_SUCCESS) {
-                grib_context_log(context_, GRIB_LOG_ERROR, "%s: Cannot compute binary_scale_factor", cclass_name);
+                grib_context_log(context_, GRIB_LOG_ERROR, "%s: Cannot compute binary_scale_factor", class_name_);
                 return ret;
             }
         }
@@ -464,13 +462,13 @@ int grib_accessor_data_complex_packing_t::pack_double(const double* val, size_t*
                 current_val = (((((val[i++] * d) * scals[lup]) - reference_value) * s) + 0.5);
                 if (current_val < 0)
                     grib_context_log(context_, GRIB_LOG_ERROR,
-                                     "%s: negative coput before packing (%g)", cclass_name, current_val);
+                                     "%s: negative coput before packing (%g)", class_name_, current_val);
                 grib_encode_unsigned_longb(lres, current_val, &lpos, bits_per_value);
 
                 current_val = (((((val[i++] * d) * scals[lup]) - reference_value) * s) + 0.5);
                 if (current_val < 0)
                     grib_context_log(context_, GRIB_LOG_ERROR,
-                                     "%s: negative coput before packing (%g)", cclass_name, current_val);
+                                     "%s: negative coput before packing (%g)", class_name_, current_val);
                 grib_encode_unsigned_longb(lres, current_val, &lpos, bits_per_value);
                 lup++;
             }
@@ -480,13 +478,13 @@ int grib_accessor_data_complex_packing_t::pack_double(const double* val, size_t*
                 current_val = (((((val[i++] * d) * scals[lup]) - reference_value) * s) + 0.5);
                 if (current_val < 0)
                     grib_context_log(context_, GRIB_LOG_ERROR,
-                                     "%s: negative coput before packing (%g)", cclass_name, current_val);
+                                     "%s: negative coput before packing (%g)", class_name_, current_val);
                 grib_encode_unsigned_long(lres, current_val, &lpos, bits_per_value);
 
                 current_val = (((((val[i++] * d) * scals[lup]) - reference_value) * s) + 0.5);
                 if (current_val < 0)
                     grib_context_log(context_, GRIB_LOG_ERROR,
-                                     "%s: negative coput before packing (%g)", cclass_name, current_val);
+                                     "%s: negative coput before packing (%g)", class_name_, current_val);
                 grib_encode_unsigned_long(lres, current_val, &lpos, bits_per_value);
                 lup++;
             }
@@ -500,7 +498,7 @@ int grib_accessor_data_complex_packing_t::pack_double(const double* val, size_t*
 
     if (((hpos / 8) != hsize) && ((lpos / 8) != lsize)) {
         grib_context_log(context_, GRIB_LOG_ERROR,
-                         "%s: Mismatch in packing between high resolution and low resolution part", cclass_name);
+                         "%s: Mismatch in packing between high resolution and low resolution part", class_name_);
         grib_context_free(context_, buf);
         grib_context_free(context_, scals);
         return GRIB_INTERNAL_ERROR;
@@ -516,7 +514,7 @@ int grib_accessor_data_complex_packing_t::pack_double(const double* val, size_t*
         grib_get_double_internal(gh, reference_value_, &ref);
         if (ref != reference_value) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
-                             cclass_name, __func__, reference_value_, ref, reference_value);
+                             class_name_, __func__, reference_value_, ref, reference_value);
             return GRIB_INTERNAL_ERROR;
         }
     }
@@ -538,7 +536,6 @@ int grib_accessor_data_complex_packing_t::unpack_real(T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     grib_handle* gh         = grib_handle_of_accessor(this);
-    const char* cclass_name = class_name_;
 
     size_t i    = 0;
     int ret     = GRIB_SUCCESS;
@@ -650,7 +647,7 @@ int grib_accessor_data_complex_packing_t::unpack_real(T* val, size_t* len)
     }
 
     if (sub_j != sub_k || sub_j != sub_m || pen_j != pen_k || pen_j != pen_m) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s: Invalid pentagonal resolution parameters", cclass_name);
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: Invalid pentagonal resolution parameters", class_name_);
         return GRIB_DECODING_ERROR;
     }
 
@@ -690,7 +687,7 @@ int grib_accessor_data_complex_packing_t::unpack_real(T* val, size_t* len)
             scals[i] = (1.0 / operat);
         else {
             grib_context_log(context_, GRIB_LOG_WARNING,
-                             "%s: Problem with operator div by zero at index %d of %d", cclass_name, i, maxv);
+                             "%s: Problem with operator div by zero at index %d of %d", class_name_, i, maxv);
             scals[i] = 0;
         }
     }
@@ -749,7 +746,7 @@ int grib_accessor_data_complex_packing_t::unpack_real(T* val, size_t* len)
     //Assert(*len >= i);
     if (*len < i) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s::%s: Invalid values *len=%zu and i=%zu.",
-                         cclass_name, __func__, *len, i);
+                         class_name_, __func__, *len, i);
         grib_context_log(context_, GRIB_LOG_ERROR, "Make sure your array is large enough.");
         ret = GRIB_ARRAY_TOO_SMALL;
     } else {

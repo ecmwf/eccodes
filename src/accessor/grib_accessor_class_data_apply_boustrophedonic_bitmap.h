@@ -28,11 +28,11 @@ public:
     int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) override;
 
 private:
-    const char* coded_values_;
-    const char* bitmap_;
-    const char* missing_value_;
-    const char* binary_scale_factor_;
-    const char* numberOfRows_;
-    const char* numberOfColumns_;
-    const char* numberOfPoints_;
+    const char* coded_values_ = nullptr;
+    const char* bitmap_ = nullptr;
+    const char* missing_value_ = nullptr;
+    const char* binary_scale_factor_ = nullptr;
+    const char* numberOfRows_ = nullptr;
+    const char* numberOfColumns_ = nullptr;
+    const char* numberOfPoints_ = nullptr;
 };

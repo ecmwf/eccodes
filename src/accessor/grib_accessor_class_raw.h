@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -29,7 +28,7 @@ public:
     int compare(grib_accessor*) override;
 
 private:
-    const char* totalLength_;
-    const char* sectionLength_;
-    long relativeOffset_;
+    const char* totalLength_ = nullptr;
+    const char* sectionLength_ = nullptr;
+    long relativeOffset_ = 0;
 };

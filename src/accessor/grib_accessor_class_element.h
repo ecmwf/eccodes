@@ -24,6 +24,6 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* array_;
-    long element_;
+    const char* array_ = nullptr;
+    long element_ = 0;
 };

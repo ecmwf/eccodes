@@ -88,9 +88,7 @@ int grib_accessor_g1step_range_t::grib_g1_step_get_steps(long* start, long* theE
     int err                            = 0;
     long p1 = 0, p2 = 0, unit = 0, timeRangeIndicator = 0, timeRangeIndicatorFromStepRange = 0;
     long step_unit    = 1;
-    char stepType[20] = {
-        0,
-    };
+    char stepType[20] = {0,};
     size_t stepTypeLen = 20;
     long newstart, newend;
     int factor = 1;
@@ -189,9 +187,7 @@ int grib_accessor_g1step_range_t::unpack_string(char* val, size_t* len)
     long timeRangeIndicator = 0;
     long unit;
     int err           = 0;
-    char stepType[20] = {
-        0,
-    };
+    char stepType[20] = {0,};
     size_t stepTypeLen = 20;
     grib_handle* hand  = grib_handle_of_accessor(this);
 
@@ -343,9 +339,7 @@ int grib_accessor_g1step_range_t::pack_string(const char* val, size_t* len)
     long end_sec, start_sec;
     char *p = NULL, *q = NULL;
     int instant       = 0;
-    char stepType[20] = {
-        0,
-    };
+    char stepType[20] = {0,};
     size_t stepTypeLen = 20;
 
     if (stepType_) {
@@ -534,9 +528,7 @@ int grib_accessor_g1step_range_t::pack_long(const long* val, size_t* len)
     char sval[100]    = { 0 };
     char* p           = sval;
     size_t svallen    = 100;
-    char stepType[20] = {
-        0,
-    };
+    char stepType[20] = {0,};
     size_t stepTypeLen = 20;
     long step_unit     = 0;
     int err            = 0;

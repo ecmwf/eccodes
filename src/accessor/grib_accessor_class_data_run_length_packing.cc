@@ -36,7 +36,6 @@ int grib_accessor_data_run_length_packing_t::value_count(long* number_of_values)
 int grib_accessor_data_run_length_packing_t::unpack_double(double* val, size_t* len)
 {
     grib_handle* gh         = grib_handle_of_accessor(this);
-    const char* cclass_name = class_name_;
     int err                 = GRIB_SUCCESS;
     long seclen, number_of_values, bits_per_value, max_level_value, number_of_level_values, decimal_scale_factor;
     long* level_values       = NULL;
@@ -82,7 +81,7 @@ int grib_accessor_data_run_length_packing_t::unpack_double(double* val, size_t* 
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: parameters are invalid: max_level_value=%ld(>0, <=number_of_level_values), "
                          "number_of_level_values=%ld(>0, >=max_level_value), range=%ld(>0)",
-                         cclass_name, max_level_value, number_of_level_values, range);
+                         class_name_, max_level_value, number_of_level_values, range);
         return GRIB_DECODING_ERROR;
     }
     if (decimal_scale_factor > 127) {
@@ -107,7 +106,7 @@ int grib_accessor_data_run_length_packing_t::unpack_double(double* val, size_t* 
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "%s: numberOfValues mismatch: i=%ld, "
                              "compressed_values[i]=%ld, max_level_value=%ld",
-                             cclass_name, i, compressed_values[i], max_level_value);
+                             class_name_, i, compressed_values[i], max_level_value);
             break;
         }
         v      = compressed_values[i++];
@@ -120,7 +119,7 @@ int grib_accessor_data_run_length_packing_t::unpack_double(double* val, size_t* 
         }
         if (n > number_of_values) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s: numberOfValues mismatch: n=%ld, number_of_values=%ld",
-                             cclass_name, n, number_of_values);
+                             class_name_, n, number_of_values);
             break;
         }
         for (k = 0; k < n; k++) {
@@ -132,7 +131,7 @@ int grib_accessor_data_run_length_packing_t::unpack_double(double* val, size_t* 
     grib_context_free(context_, compressed_values);
     if (j != number_of_values) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s: numberOfValues mismatch: j=%ld, number_of_values=%ld",
-                         cclass_name, j, number_of_values);
+                         class_name_, j, number_of_values);
         return GRIB_DECODING_ERROR;
     }
     return err;
@@ -141,7 +140,6 @@ int grib_accessor_data_run_length_packing_t::unpack_double(double* val, size_t* 
 int grib_accessor_data_run_length_packing_t::pack_double(const double* val, size_t* len)
 {
     grib_handle* gh         = grib_handle_of_accessor(this);
-    const char* cclass_name = class_name_;
     int err                 = GRIB_SUCCESS;
     long number_of_values, bits_per_value, max_level_value, number_of_level_values, decimal_scale_factor;
     long* level_values       = NULL;
@@ -167,7 +165,7 @@ int grib_accessor_data_run_length_packing_t::pack_double(const double* val, size
 
     if (n_vals != number_of_values) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s: Parameters are invalid: n_vals=%ld(==number_of_values), number_of_values=%ld(==n_vals)",
-                         cclass_name, n_vals, number_of_values);
+                         class_name_, n_vals, number_of_values);
         return GRIB_ENCODING_ERROR;
     }
 
@@ -188,7 +186,7 @@ int grib_accessor_data_run_length_packing_t::pack_double(const double* val, size
     for (i = 0; i < number_of_level_values; i++) {
         if (missingValueLong == level_values[i]) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s: Parameters are invalid: level_values[%ld]=%ld, missingValueLong=%ld",
-                             cclass_name, i, level_values[i], missingValueLong);
+                             class_name_, i, level_values[i], missingValueLong);
             return GRIB_ENCODING_ERROR;
         }
     }
@@ -197,7 +195,7 @@ int grib_accessor_data_run_length_packing_t::pack_double(const double* val, size
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Parameters are invalid: max_level_value=%ld(>0, <=number_of_level_values), "
                          "number_of_level_values=%ld(>0, >=max_level_value), range=%ld(>0)",
-                         cclass_name, max_level_value, number_of_level_values, range);
+                         class_name_, max_level_value, number_of_level_values, range);
         return GRIB_ENCODING_ERROR;
     }
     buf = (unsigned char*)grib_context_malloc(context_, 2 * number_of_values);
@@ -220,7 +218,7 @@ int grib_accessor_data_run_length_packing_t::pack_double(const double* val, size
         if (err != GRIB_SUCCESS) {
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "%s: Values and/or parameters are invalid: val[%ld]=%lf, level_value=%ld, max_level_value=%ld",
-                             cclass_name, i, val[i], k, max_level_value);
+                             class_name_, i, val[i], k, max_level_value);
             return GRIB_ENCODING_ERROR;
         }
         if (i == 0) {

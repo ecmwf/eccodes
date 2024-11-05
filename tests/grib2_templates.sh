@@ -8,7 +8,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 . ./include.ctest.sh
-set -u
 
 label="grib2_templates_test"
 
@@ -31,6 +30,25 @@ awk '$1 !~ /#/ && $1 < 65000 {print $1}' $latest_codetable_file | while read pdt
         exit 1
     fi
 done
+
+rm -f $tempText
+pdtns=$( awk '!/^#/ && $1 < 65000 {print $1}' $latest_codetable_file )
+for p in $pdtns; do
+    $tools_dir/grib_set -s tablesVersion=$latestOfficial,productDefinitionTemplateNumber=$p $sample2 $temp
+    $tools_dir/grib_dump -O -p section_4 $temp >> $tempText
+    # Expect the grep to fail and not find 'unknown' in the dump output
+    set +e
+    grep -q -i unknown $tempText
+    status=$?
+    set -e
+    if [ $status -ne 1 ]; then
+        echo "GRIB2 PDTN $p produced a dump with unknown!"
+        grep -i unknown $tempText
+        exit 1
+    fi
+done
+rm -f $tempText
+
 
 # ECC-1746
 # -------------

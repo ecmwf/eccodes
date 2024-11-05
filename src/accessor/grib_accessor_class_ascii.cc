@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -67,19 +66,39 @@ int grib_accessor_ascii_t::pack_string(const char* val, size_t* len)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
     const size_t alen = length_;
-    if (len[0] > (alen + 1)) {
+    if (*len > (alen + 1)) {
         grib_context_log(context_, GRIB_LOG_ERROR,
-                         "pack_string: Wrong size (%zu) for %s, it contains %ld values",
-                         len[0], name_, length_ + 1);
-        len[0] = 0;
+                         "%s: Buffer too small for %s. It is %zu bytes long (input string len=%zu)",
+                         class_name_, name_, alen, *len);
+        *len = alen;
         return GRIB_BUFFER_TOO_SMALL;
     }
 
     for (size_t i = 0; i < alen; i++) {
-        if (i < len[0])
+        if (i < *len)
             hand->buffer->data[offset_ + i] = val[i];
         else
             hand->buffer->data[offset_ + i] = 0;
+    }
+
+    // TODO(masn): Make this an error.
+    // But we have to allow this case unfortunately as returning an error breaks
+    // clients e.g. grib1 local def 40 has marsDomain of 2 bytes but local def 21
+    // has the same key with 1 byte! Legacy stuff that cannot be changed easily.
+    // So at least issue a warning
+    if (*len > alen) {
+        // Decode the string and compare with the incoming value
+        size_t size = 0;
+        if (grib_get_string_length_acc(this, &size) == GRIB_SUCCESS) {
+            char* value = (char*)grib_context_malloc_clear(context_, size);
+            if (value) {
+                if (this->unpack_string(value, &size) == GRIB_SUCCESS && !STR_EQUAL(val, value)) {
+                    fprintf(stderr, "ECCODES WARNING :  String input '%s' truncated to '%s'. Key %s is %zu byte(s)\n",
+                            val, value, name_, alen);
+                }
+                grib_context_free(context_, value);
+            }
+        }
     }
 
     return GRIB_SUCCESS;
@@ -99,9 +118,7 @@ int grib_accessor_ascii_t::pack_double(const double* v, size_t* len)
 
 int grib_accessor_ascii_t::unpack_long(long* v, size_t* len)
 {
-    char val[1024] = {
-        0,
-    };
+    char val[1024] = {0,};
     size_t l   = sizeof(val);
     size_t i   = 0;
     char* last = NULL;

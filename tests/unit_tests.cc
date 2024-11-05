@@ -486,7 +486,7 @@ static void test_parse_keyval_string()
                               values_required, GRIB_TYPE_UNDEFINED, values1, &count);
     Assert( !err );
     Assert( count == 2 );
-    grib_print_values("print values test: values1", values1, stdout);
+    grib_print_values("print values test: values1", values1, stdout, count);
 
     Assert( strcmp(values1[0].name, "key1")==0 );
     Assert( strcmp(values1[0].string_value, "value1")==0 );
@@ -506,7 +506,7 @@ static void test_parse_keyval_string()
                               values_required, GRIB_TYPE_LONG, values2, &count);
     Assert( !err );
     Assert( count == 1 );
-    grib_print_values("print values test: values2", values2, stdout);
+    grib_print_values("print values test: values2", values2, stdout, count);
     Assert( strcmp(values2[0].name, "x")==0 );
     Assert( values2[0].long_value == 14 );
     Assert( values2[0].equal == 1 );
@@ -517,7 +517,7 @@ static void test_parse_keyval_string()
                               values_required, GRIB_TYPE_DOUBLE, values3, &count);
     Assert( !err );
     Assert( count == 1 );
-    grib_print_values("print values test: values3", values3, stdout);
+    grib_print_values("print values test: values3", values3, stdout, count);
     Assert( strcmp(values3[0].name, "mars.level")==0 );
     free( (void*)values3[0].name );
 }
@@ -611,69 +611,69 @@ void test_scale_factor_scaled_values()
 void test_iarray()
 {
     printf("Running %s ...\n", __func__);
-    grib_context* c = grib_context_get_default();
-    grib_iarray* a = grib_iarray_new(c, 10, 10);
+
+    grib_iarray* a = grib_iarray_new(10, 10);
     grib_iarray_push(a, 42);
     grib_iarray_push(a, 10000);
     grib_iarray_print("iarray", a);
 
-    grib_iarray* b = grib_iarray_new(c, 1, 1);
+    grib_iarray* b = grib_iarray_new(1, 1);
     grib_iarray_push(b, 0);
     grib_iarray_push(b, -1);
     grib_iarray_push(b, +1);
 
-    grib_viarray* va = grib_viarray_new(c, 1, 1);
-    grib_viarray_push(c, va, a);
-    grib_viarray_push(c, va, b);
+    grib_viarray* va = grib_viarray_new(1, 1);
+    grib_viarray_push(va, a);
+    grib_viarray_push(va, b);
     grib_viarray_print("viarray", va);
 
     grib_iarray_delete(a);
     grib_iarray_delete(b);
-    grib_viarray_delete(c, va);
+    grib_viarray_delete(va);
 }
 
 void test_darray()
 {
     printf("Running %s ...\n", __func__);
-    grib_context* c = grib_context_get_default();
-    grib_darray* a = grib_darray_new(c, 10, 10);
-    grib_darray_push(c, a, 42.009);
-    grib_darray_push(c, a, -1.11);
-    grib_darray_push(c, a, 5099);
+
+    grib_darray* a = grib_darray_new(10, 10);
+    grib_darray_push(a, 42.009);
+    grib_darray_push(a, -1.11);
+    grib_darray_push(a, 5099);
     grib_darray_print("darray", a);
 
-    grib_darray* b = grib_darray_new(c, 5, 1);
-    grib_darray_push(c, b, 8);
-    grib_darray_push(c, b, 12);
+    grib_darray* b = grib_darray_new(5, 1);
+    grib_darray_push(b, 8);
+    grib_darray_push(b, 12);
 
-    grib_vdarray* va = grib_vdarray_new(c, 1, 1);
-    grib_vdarray_push(c, va, a);
-    grib_vdarray_push(c, va, b);
+    grib_vdarray* va = grib_vdarray_new(1, 1);
+    grib_vdarray_push(va, a);
+    grib_vdarray_push(va, b);
     grib_vdarray_print("vdarray", va);
 
-    grib_darray_delete(c, a);
-    grib_darray_delete(c, b);
-    grib_vdarray_delete(c, va);
+    grib_darray_delete(a);
+    grib_darray_delete(b);
+    grib_vdarray_delete(va);
 }
 
 void test_sarray()
 {
     printf("Running %s ...\n", __func__);
-    grib_context* c = grib_context_get_default();
-    grib_sarray* a = grib_sarray_new(c, 10, 10);
+
+    grib_sarray* a = grib_sarray_new(10, 10);
 
     char ants_s[] = "ants";
     char bugs_s[] = "bugs";
-    grib_sarray_push(c, a, ants_s);
-    grib_sarray_push(c, a, bugs_s);
+    grib_sarray_push(a, ants_s);
+    grib_sarray_push(a, bugs_s);
     grib_sarray_print("sarray", a);
 
-    grib_vsarray* va = grib_vsarray_new(c, 1, 1);
-    grib_vsarray_push(c, va, a);
+    grib_vsarray* va = grib_vsarray_new(1, 1);
+    grib_vsarray_push(va, a);
     grib_vsarray_print("vsarray", va);
 
-    grib_sarray_delete(c, a);
-    grib_vsarray_delete(c, va);
+    grib_sarray_delete(a);
+    grib_vsarray_delete(va);
 }
 
 void test_codes_get_product_name()
@@ -838,6 +838,29 @@ void test_codes_get_features()
     free(features);
 }
 
+static void test_grib_get_binary_scale_fact()
+{
+    printf("Running %s ...\n", __func__);
+    int err = 0;
+    long result = grib_get_binary_scale_fact(INFINITY, 0, 0, &err);
+    Assert( err == GRIB_OUT_OF_RANGE);
+    Assert( result == 0 );
+
+    result = grib_get_binary_scale_fact(100, 0, 65, &err); // bpv too big
+    Assert( err == GRIB_OUT_OF_RANGE);
+    Assert( result == 0 );
+
+    result = grib_get_binary_scale_fact(100, 0, 0, &err); // bpv 0
+    Assert( err == GRIB_ENCODING_ERROR);
+    Assert( result == 0 );
+}
+
+static void test_filepool()
+{
+    printf("Running %s ...\n", __func__);
+    grib_file_pool_print("file_pool contents", stdout);
+}
+
 int main(int argc, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
@@ -847,6 +870,7 @@ int main(int argc, char** argv)
 
     test_codes_context_set_debug();
     test_codes_get_error_message();
+    test_grib_get_binary_scale_fact();
 
     test_iarray();
     test_darray();
@@ -906,6 +930,7 @@ int main(int argc, char** argv)
     test_grib2_choose_PDTN();
     test_codes_is_feature_enabled();
     test_codes_get_features();
+    test_filepool();
 
     return 0;
 }

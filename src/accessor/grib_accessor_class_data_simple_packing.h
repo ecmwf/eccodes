@@ -18,7 +18,7 @@ class grib_accessor_data_simple_packing_t : public grib_accessor_values_t
 public:
     grib_accessor_data_simple_packing_t() :
         grib_accessor_values_t() { class_name_ = "data_simple_packing"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_data_simple_packing_t{}; }
+    //grib_accessor* create_empty_accessor() override { return new grib_accessor_data_simple_packing_t{}; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_float(float* val, size_t* len) override;
@@ -29,16 +29,16 @@ public:
     int unpack_double_subarray(double* val, size_t start, size_t len) override;
 
 protected:
-    int edition_;
-    const char* units_factor_;
-    const char* units_bias_;
-    const char* changing_precision_;
-    const char* number_of_values_;
-    const char* bits_per_value_;
-    const char* reference_value_;
-    const char* binary_scale_factor_;
-    const char* decimal_scale_factor_;
-    const char* optimize_scaling_factor_;
+    int edition_ = 0;
+    const char* units_factor_ = nullptr;
+    const char* units_bias_ = nullptr;
+    const char* changing_precision_ = nullptr;
+    const char* number_of_values_ = nullptr;
+    const char* bits_per_value_ = nullptr;
+    const char* reference_value_ = nullptr;
+    const char* binary_scale_factor_ = nullptr;
+    const char* decimal_scale_factor_ = nullptr;
+    const char* optimize_scaling_factor_ = nullptr;
 
 private:
     template <typename T> int unpack(T* val, size_t* len);

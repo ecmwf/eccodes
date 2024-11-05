@@ -48,9 +48,7 @@ int grib_accessor_local_definition_t::pack_long(const long* val, size_t* len)
     long eps                                     = -1;
     long chemical                                = -1;
     long aerosol                                 = -1;
-    char stepType[15]                            = {
-        0,
-    };
+    char stepType[15]                            = {0,};
     size_t slen               = 15;
     int localDefinitionNumber = *val;
     int isInstant             = 0;
