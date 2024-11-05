@@ -11,16 +11,6 @@
 #include "grib_nearest_factory.h"
 #include "accessor/grib_accessor_class_nearest.h"
 
-extern eccodes::geo_nearest::Nearest* grib_nearest_healpix;
-extern eccodes::geo_nearest::Nearest* grib_nearest_lambert_azimuthal_equal_area;
-extern eccodes::geo_nearest::Nearest* grib_nearest_lambert_conformal;
-extern eccodes::geo_nearest::Nearest* grib_nearest_latlon_reduced;
-extern eccodes::geo_nearest::Nearest* grib_nearest_mercator;
-extern eccodes::geo_nearest::Nearest* grib_nearest_polar_stereographic;
-extern eccodes::geo_nearest::Nearest* grib_nearest_reduced;
-extern eccodes::geo_nearest::Nearest* grib_nearest_regular;
-extern eccodes::geo_nearest::Nearest* grib_nearest_space_view;
-
 struct table_entry
 {
     const char* type;

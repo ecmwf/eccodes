@@ -13,4 +13,14 @@
 #include "grib_api_internal.h"
 #include "geo_nearest/grib_nearest.h"
 
+extern eccodes::geo_nearest::Nearest* grib_nearest_healpix;
+extern eccodes::geo_nearest::Nearest* grib_nearest_lambert_azimuthal_equal_area;
+extern eccodes::geo_nearest::Nearest* grib_nearest_lambert_conformal;
+extern eccodes::geo_nearest::Nearest* grib_nearest_latlon_reduced;
+extern eccodes::geo_nearest::Nearest* grib_nearest_mercator;
+extern eccodes::geo_nearest::Nearest* grib_nearest_polar_stereographic;
+extern eccodes::geo_nearest::Nearest* grib_nearest_reduced;
+extern eccodes::geo_nearest::Nearest* grib_nearest_regular;
+extern eccodes::geo_nearest::Nearest* grib_nearest_space_view;
+
 eccodes::geo_nearest::Nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args, int* error);

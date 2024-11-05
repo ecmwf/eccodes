@@ -45,18 +45,6 @@ struct table_entry
     eccodes::geo_iterator::Iterator** iterator;
 };
 
-extern eccodes::geo_iterator::Iterator* grib_iterator_gaussian;
-extern eccodes::geo_iterator::Iterator* grib_iterator_gaussian_reduced;
-extern eccodes::geo_iterator::Iterator* grib_iterator_healpix;
-extern eccodes::geo_iterator::Iterator* grib_iterator_lambert_azimuthal_equal_area;
-extern eccodes::geo_iterator::Iterator* grib_iterator_lambert_conformal;
-extern eccodes::geo_iterator::Iterator* grib_iterator_latlon;
-extern eccodes::geo_iterator::Iterator* grib_iterator_latlon_reduced;
-extern eccodes::geo_iterator::Iterator* grib_iterator_mercator;
-extern eccodes::geo_iterator::Iterator* grib_iterator_polar_stereographic;
-extern eccodes::geo_iterator::Iterator* grib_iterator_regular;
-extern eccodes::geo_iterator::Iterator* grib_iterator_space_view;
-
 static const struct table_entry table[] = {
     { "gaussian", &grib_iterator_gaussian, },
     { "gaussian_reduced", &grib_iterator_gaussian_reduced, },

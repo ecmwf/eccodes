@@ -13,4 +13,17 @@
 #include "grib_api_internal.h"
 #include "geo_iterator/grib_iterator.h"
 
+extern eccodes::geo_iterator::Iterator* grib_iterator_gaussian;
+extern eccodes::geo_iterator::Iterator* grib_iterator_gaussian_reduced;
+extern eccodes::geo_iterator::Iterator* grib_iterator_healpix;
+extern eccodes::geo_iterator::Iterator* grib_iterator_lambert_azimuthal_equal_area;
+extern eccodes::geo_iterator::Iterator* grib_iterator_lambert_conformal;
+extern eccodes::geo_iterator::Iterator* grib_iterator_latlon;
+extern eccodes::geo_iterator::Iterator* grib_iterator_latlon_reduced;
+extern eccodes::geo_iterator::Iterator* grib_iterator_mercator;
+extern eccodes::geo_iterator::Iterator* grib_iterator_polar_stereographic;
+extern eccodes::geo_iterator::Iterator* grib_iterator_regular;
+extern eccodes::geo_iterator::Iterator* grib_iterator_space_view;
+
+
 eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* error);
