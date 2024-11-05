@@ -362,9 +362,7 @@ list( APPEND eccodes_src_files
     eccodes_prototypes.h
     grib_dumper_class.h
     grib_dumper_factory.h
-    grib_iterator_factory.h
     grib_iterator_factory.cc
-    grib_nearest_factory.h
     grib_nearest_factory.cc
     grib_yacc.h
     md5.h
