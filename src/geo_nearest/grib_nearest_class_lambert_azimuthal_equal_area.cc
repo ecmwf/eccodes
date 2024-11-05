@@ -11,7 +11,7 @@
 #include "grib_nearest_class_lambert_azimuthal_equal_area.h"
 
 eccodes::geo_nearest::LambertAzimuthalEqualArea _grib_nearest_lambert_azimuthal_equal_area{};
-eccodes::geo_nearest::LambertAzimuthalEqualArea* grib_nearest_lambert_azimuthal_equal_area = &_grib_nearest_lambert_azimuthal_equal_area;
+eccodes::geo_nearest::Nearest* grib_nearest_lambert_azimuthal_equal_area = &_grib_nearest_lambert_azimuthal_equal_area;
 
 namespace eccodes::geo_nearest {
 

@@ -11,7 +11,7 @@
 #include "grib_nearest_class_latlon_reduced.h"
 
 eccodes::geo_nearest::LatlonReduced _grib_nearest_latlon_reduced{};
-eccodes::geo_nearest::LatlonReduced* grib_nearest_latlon_reduced = &_grib_nearest_latlon_reduced;
+eccodes::geo_nearest::Nearest* grib_nearest_latlon_reduced = &_grib_nearest_latlon_reduced;
 
 namespace eccodes::geo_nearest {
 

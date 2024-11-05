@@ -11,7 +11,7 @@
 #include "grib_nearest_class_mercator.h"
 
 eccodes::geo_nearest::Mercator _grib_nearest_mercator{};
-eccodes::geo_nearest::Mercator* grib_nearest_mercator = &_grib_nearest_mercator;
+eccodes::geo_nearest::Nearest* grib_nearest_mercator = &_grib_nearest_mercator;
 
 namespace eccodes::geo_nearest {
 

@@ -11,7 +11,7 @@
 #include "grib_nearest_class_reduced.h"
 
 eccodes::geo_nearest::Reduced _grib_nearest_reduced{};
-eccodes::geo_nearest::Reduced* grib_nearest_reduced = &_grib_nearest_reduced;
+eccodes::geo_nearest::Nearest* grib_nearest_reduced = &_grib_nearest_reduced;
 
 namespace eccodes::geo_nearest {
 

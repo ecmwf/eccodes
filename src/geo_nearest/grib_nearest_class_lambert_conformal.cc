@@ -11,7 +11,7 @@
 #include "grib_nearest_class_lambert_conformal.h"
 
 eccodes::geo_nearest::LambertConformal _grib_nearest_lambert_conformal{};
-eccodes::geo_nearest::LambertConformal* grib_nearest_lambert_conformal = &_grib_nearest_lambert_conformal;
+eccodes::geo_nearest::Nearest* grib_nearest_lambert_conformal = &_grib_nearest_lambert_conformal;
 
 namespace eccodes::geo_nearest {
 

@@ -11,7 +11,7 @@
 #include "grib_nearest_class_polar_stereographic.h"
 
 eccodes::geo_nearest::PolarStereographic _grib_nearest_polar_stereographic{};
-eccodes::geo_nearest::PolarStereographic* grib_nearest_polar_stereographic = &_grib_nearest_polar_stereographic;
+eccodes::geo_nearest::Nearest* grib_nearest_polar_stereographic = &_grib_nearest_polar_stereographic;
 
 namespace eccodes::geo_nearest {
 

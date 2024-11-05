@@ -11,7 +11,7 @@
 #include "grib_nearest_class_space_view.h"
 
 eccodes::geo_nearest::SpaceView _grib_nearest_space_view{};
-eccodes::geo_nearest::SpaceView* grib_nearest_space_view = &_grib_nearest_space_view;
+eccodes::geo_nearest::Nearest* grib_nearest_space_view = &_grib_nearest_space_view;
 
 namespace eccodes::geo_nearest {
 

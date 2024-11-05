@@ -11,7 +11,7 @@
 #include "grib_nearest_class_regular.h"
 
 eccodes::geo_nearest::Regular _grib_nearest_regular{};
-eccodes::geo_nearest::Regular* grib_nearest_regular = &_grib_nearest_regular;
+eccodes::geo_nearest::Nearest* grib_nearest_regular = &_grib_nearest_regular;
 
 namespace eccodes::geo_nearest {
 
