@@ -265,7 +265,7 @@ grib_file* grib_file_pool_create_clone(grib_context* c, short clone_id, grib_fil
         newfile->pool_file          = pool_file;
         newfile->pool_file_refcount = 0;
 
-        GRIB_MUTEX_INIT_ONCE(&once, &init);
+        GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
         GRIB_MUTEX_LOCK(&mutex1);
 
         ++pool_file->pool_file_refcount;
@@ -283,7 +283,7 @@ void grib_file_pool_delete_clone(grib_file* cloned_file)
     grib_file* pool_file = cloned_file->pool_file;
     if(pool_file)
     {
-        GRIB_MUTEX_INIT_ONCE(&once, &init);
+        GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
         GRIB_MUTEX_LOCK(&mutex1);
         if(pool_file->pool_file_refcount > 0)
         {
