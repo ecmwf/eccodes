@@ -196,7 +196,7 @@ int Reduced::find_global(grib_handle* h,
                     if (lon > 180 && lon < 360)
                         lon -= 360;
             }
-            DEBUG_ASSERT_ACCESS(lons_, (long)ilon, (long)nearest->values_count);
+            DEBUG_ASSERT_ACCESS(lons_, (long)ilon, (long)values_count_);
             lons_[ilon++] = lon;
         }
         lats_count_ = ilat;
