@@ -11,7 +11,7 @@
 #include "grib_nearest_class_healpix.h"
 
 eccodes::geo_nearest::Healpix _grib_nearest_healpix{};
-eccodes::geo_nearest::Healpix* grib_nearest_healpix = &_grib_nearest_healpix;
+eccodes::geo_nearest::Nearest* grib_nearest_healpix = &_grib_nearest_healpix;
 
 namespace eccodes::geo_nearest {
 
