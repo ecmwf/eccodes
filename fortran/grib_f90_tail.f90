@@ -1370,6 +1370,36 @@
 
   end subroutine grib_new_from_message_char
 
+  
+  !> Create a message pointing to an character array containting the coded message.
+  !>
+  !> The message can be accessed through its gribid and it will be available\n
+  !> until @ref grib_release is called or (attention) the character array is deallocated!
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param gribid      id of the grib loaded in memory
+  !> @param message     array containing the coded message
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+
+  subroutine grib_new_from_message_no_copy_char(gribid, message, status)
+    integer(kind=kindOfInt), intent(out)              :: gribid
+    character(len=1), dimension(:), intent(in)        :: message
+    integer(kind=kindOfInt), optional, intent(out)    :: status
+    integer(kind=kindOfSize_t)                        :: size_bytes
+    integer(kind=kindOfInt)                           :: iret
+
+    size_bytes = size(message, dim=1)
+    iret = grib_f_new_from_message_no_copy(gribid, message, size_bytes)
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'new_from_message_no_copy_char', '')
+    end if
+
+  end subroutine grib_new_from_message_no_copy_char
   !> Create a new message in memory from an integer array containting the coded message.
   !>
   !> The message can be accessed through its gribid and it will be available\n
@@ -2796,6 +2826,42 @@
       call grib_check(iret, 'copy_message', '')
     end if
   end subroutine grib_copy_message
+
+  !> Get pointer to message and message length from the grib_handle.
+  !> Be careful, user has to manage deallocation via pointer or handle!
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param gribid      ID of the message loaded in memory
+  !> @param message     array containing the coded message
+  !> @param mess_len    length of the message
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+ subroutine grib_get_message(gribid, message, mess_len, status)
+    USE, INTRINSIC :: ISO_C_BINDING, ONLY: C_INT,C_PTR, C_CHAR, C_F_POINTER
+    implicit none
+    integer(kind=kindOfInt), intent(in)         :: gribid
+    integer(kind=kindOfInt), optional, intent(out) :: status
+    integer(kind=kindOfInt)      :: iret
+    character(len=1), pointer, intent(out) :: message(:) !data in handle is read in C with unsigned chars
+    type(C_PTR) :: mess_ptr
+    integer(kind=kindOfInt), intent(out) :: mess_len
+    integer(C_INT) :: nbytes=0
+
+    mess_len = 0
+    iret = grib_f_get_message(gribid, mess_ptr, nbytes)
+    mess_len = nbytes
+    call C_F_POINTER(mess_ptr, message,(/nbytes/))
+    if(.not. associated(message)) then
+          write(0,*) 'ERROR: Pointer was not associated'
+    endif
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'get_message', '')
+    end if
+  end subroutine grib_get_message
+
 
   !> Write the coded message to a file.
   !>
