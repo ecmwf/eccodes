@@ -2838,7 +2838,7 @@
   !> @param mess_len    length of the message
   !> @param status      GRIB_SUCCESS if OK, integer value on error
  subroutine grib_get_message(gribid, message, mess_len, status)
-    USE, INTRINSIC :: ISO_C_BINDING, ONLY: C_INT,C_PTR, C_CHAR, C_F_POINTER
+    USE, INTRINSIC :: ISO_C_BINDING, ONLY: C_PTR, C_F_POINTER
     implicit none
     integer(kind=kindOfInt), intent(in)         :: gribid
     integer(kind=kindOfInt), optional, intent(out) :: status
@@ -2846,15 +2846,12 @@
     character(len=1), pointer, intent(out) :: message(:) !data in handle is read in C with unsigned chars
     type(C_PTR) :: mess_ptr
     integer(kind=kindOfInt), intent(out) :: mess_len
-    integer(C_INT) :: nbytes=0
 
-    mess_len = 0
-    iret = grib_f_get_message(gribid, mess_ptr, nbytes)
-    mess_len = nbytes
-    call C_F_POINTER(mess_ptr, message,(/nbytes/))
-    if(.not. associated(message)) then
-          write(0,*) 'ERROR: Pointer was not associated'
-    endif
+    iret = grib_f_get_message(gribid, mess_ptr, mess_len)
+    call C_F_POINTER(mess_ptr, message,(/mess_len/))
+    !if(.not. associated(message)) then
+    !      write(0,*) 'ERROR: Pointer was not associated'
+    !endif
     if (present(status)) then
       status = iret
     else
