@@ -8110,6 +8110,12 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 32 ;
 	}
+#Wet-bulb temperature
+'K' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 27 ;
+	}
 #Sea ice thickness
 'm' = {
 	 discipline = 10 ;
