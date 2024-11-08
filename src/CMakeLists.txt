@@ -350,6 +350,7 @@ list( APPEND eccodes_src_files
     geo_iterator/grib_iterator_class_polar_stereographic.cc
     geo_iterator/grib_iterator_class_regular.cc
     geo_iterator/grib_iterator_class_space_view.cc
+    geo_iterator/grib_iterator_class_unstructured.cc
     grib_expression.cc
     codes_util.cc
     grib_util.cc
