@@ -10,16 +10,13 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
-
 label="bufr_ecc-1938_test"
 
 tempBufr=temp.$label.bufr
 tempLog=temp.$label.log
 tempOut=temp.$label.txt
 
-sample_bufr4=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
-
+# This has 2 unreadable messages
 infile=${data_dir}/bufr/bad.bufr
 if [ -f "$infile" ]; then
   count=$( ${tools_dir}/bufr_count -f $infile )
