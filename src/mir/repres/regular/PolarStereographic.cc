@@ -97,8 +97,8 @@ void PolarStereographic::fillJob(api::MIRJob& job) const {
          << "LaDInDegrees=" << LaDInDegrees_ << ";"
          << "orientationOfTheGridInDegrees=" << orientationOfTheGridInDegrees_ << ";"
          << "southPoleOnProjectionPlane=" << (southPoleOnProjectionPlane_ ? "1" : "0") << ";"
-         << "Ni=" << x()->size() << ";"
-         << "Nj=" << y()->size() << ";"
+         << "Ni=" << x().size() << ";"
+         << "Nj=" << y().size() << ";"
          << "grid=" << std::abs(x().step()) << "/" << std::abs(y().step()) << ";"
          << "latitudeOfFirstGridPointInDegrees=" << firstLL[LLCOORDS::LAT] << ";"
          << "longitudeOfFirstGridPointInDegrees=" << firstLL[LLCOORDS::LON];
