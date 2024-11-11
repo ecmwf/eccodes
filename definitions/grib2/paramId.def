@@ -1269,6 +1269,78 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 97 ;
 	}
+#Peak wave period of wind waves
+'140135' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 35 ;
+	}
+#Peak wave period of total swell
+'140136' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 36 ;
+	}
+#Peak wave period of first swell partition
+'140137' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 65 ;
+	}
+#Peak wave period of second swell partition
+'140138' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 66 ;
+	}
+#Peak wave period of third swell partition
+'140139' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 67 ;
+	}
+#Peak wave direction (total)
+'140140' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 46 ;
+	}
+#Peak wave direction of wind waves
+'140141' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 71 ;
+	}
+#Peak wave direction of total swell
+'140142' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 72 ;
+	}
+#Peak wave direction of first swell partition
+'140143' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 68 ;
+	}
+#Peak wave direction of second swell partition
+'140144' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 69 ;
+	}
+#Peak wave direction of third swell partition
+'140145' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 70 ;
+	}
+#Whitecap fraction
+'140146' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 73 ;
+	}
 #Wave Spectral Skewness
 '140207' = {
 	 discipline = 10 ;
