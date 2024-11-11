@@ -28,7 +28,7 @@ void grib_accessor_bits_t::init(const long l, grib_arguments* c)
     len_      = grib_arguments_get_long(hand, c, n++);
     e         = grib_arguments_get_expression(hand, c, n++);
     if (e) {
-        grib_expression_evaluate_double(hand, e, &(referenceValue_));
+        e->evaluate_double(hand, &(referenceValue_));
         referenceValuePresent_ = 1;
     }
     else {

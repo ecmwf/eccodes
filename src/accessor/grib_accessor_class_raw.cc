@@ -27,7 +27,7 @@ void grib_accessor_raw_t::init(const long len, grib_arguments* arg)
     sectionLength_ = grib_arguments_get_name(hand, arg, n++);
 
     e   = grib_arguments_get_expression(hand, arg, n++);
-    err = grib_expression_evaluate_long(hand, e, &(relativeOffset_));
+    err = e->evaluate_long(hand, &(relativeOffset_));
     if (err)
         grib_context_log(hand->context, GRIB_LOG_ERROR, "Unable to evaluate relativeOffset");
 

@@ -19,8 +19,8 @@ size_t grib_accessor_padtomultiple_t::preferred_size(int from_handle)
     long begin    = 0;
     long multiple = 0;
 
-    grib_expression_evaluate_long(grib_handle_of_accessor(this), begin_, &begin);
-    grib_expression_evaluate_long(grib_handle_of_accessor(this), multiple_, &multiple);
+    begin_->evaluate_long(grib_handle_of_accessor(this), &begin);
+    multiple_->evaluate_long(grib_handle_of_accessor(this), &multiple);
 
     padding = offset_ - begin;
     padding = ((padding + multiple - 1) / multiple) * multiple - padding;

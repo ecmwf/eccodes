@@ -25,7 +25,7 @@ int grib_accessor_evaluate_t::unpack_long(long* val, size_t* len)
     grib_handle* h = grib_handle_of_accessor(this);
     grib_expression* e = grib_arguments_get_expression(h, arg_, 0);
 
-    int ret = grib_expression_evaluate_long(h, e, val);
+    int ret = e->evaluate_long(h, val);
     *len    = 1;
 
     return ret;

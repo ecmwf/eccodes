@@ -8,70 +8,13 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
+#include "grib_expression_class_functor.h"
 #include <string>
 #include <algorithm>
 
-/*
-   This is used by make_class.pl
 
-   START_CLASS_DEF
-   CLASS      = expression
-   IMPLEMENTS = destroy
-   IMPLEMENTS = native_type
-   IMPLEMENTS = evaluate_long
-   IMPLEMENTS = print
-   IMPLEMENTS = add_dependency
-   MEMBERS    = char *name
-   MEMBERS    = grib_arguments *args
-   END_CLASS_DEF
-
- */
-/* START_CLASS_IMP */
-
-/*
-
-Don't edit anything between START_CLASS_IMP and END_CLASS_IMP
-Instead edit values between START_CLASS_DEF and END_CLASS_DEF
-or edit "expression.class" and rerun ./make_class.pl
-
-*/
-
-typedef const char* string; /* to keep make_class.pl happy */
-
-static void    destroy(grib_context*,grib_expression* e);
-static void    print(grib_context*, grib_expression*, grib_handle*, FILE*);
-static void    add_dependency(grib_expression* e, grib_accessor* observer);
-static int     native_type(grib_expression*,grib_handle*);
-static int     evaluate_long(grib_expression*,grib_handle*,long*);
-
-typedef struct grib_expression_functor{
-  grib_expression base;
-    /* Members defined in functor */
-    char *name;
-    grib_arguments *args;
-} grib_expression_functor;
-
-
-static grib_expression_class _grib_expression_class_functor = {
-    0,                      /* super */
-    "functor",                      /* name  */
-    sizeof(grib_expression_functor),/* size of instance */
-    0,                           /* inited */
-    0,                       /* constructor */
-    &destroy,                    /* destructor */
-    &print,
-    &add_dependency,
-    &native_type,
-    0,
-    &evaluate_long,
-    0,
-    0,
-};
-
-grib_expression_class* grib_expression_class_functor = &_grib_expression_class_functor;
-
-/* END_CLASS_IMP */
+namespace eccodes::expression
+{
 
 // See ECC-1936. We cannot use strcasestr (not on Windows and non-standard)
 static bool string_contains_case(const char* haystack, const char* needle, bool case_sensitive)
@@ -90,30 +33,28 @@ static bool string_contains_case(const char* haystack, const char* needle, bool 
     return copy_haystack.find(copy_needle) != std::string::npos;
 }
 
-static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
+int Functor::evaluate_long(grib_handle* h, long* lres)
 {
-    grib_expression_functor* e = (grib_expression_functor*)g;
-
-    // if (STR_EQUAL(e->name, "lookup")) {
+    // if (STR_EQUAL(name_, "lookup")) {
     //     return GRIB_SUCCESS;
     // }
 
-    if (STR_EQUAL(e->name, "new")) {
+    if (STR_EQUAL(name_, "new")) {
         *lres = h->loader != NULL;
         return GRIB_SUCCESS;
     }
 
-    if (STR_EQUAL(e->name, "abs")) {
-        grib_expression* exp = grib_arguments_get_expression(h, e->args, 0);
+    if (STR_EQUAL(name_, "abs")) {
+        grib_expression* exp = grib_arguments_get_expression(h, args_, 0);
         long lval = 0;
         int ret = grib_expression_evaluate_long(h, exp, &lval);
         *lres = abs(lval);
         return ret;
     }
 
-    if (STR_EQUAL(e->name, "size")) {
+    if (STR_EQUAL(name_, "size")) {
         *lres = 0;
-        const char* keyName = grib_arguments_get_name(h, e->args, 0);
+        const char* keyName = grib_arguments_get_name(h, args_, 0);
         if (keyName) {
             size_t size = 0;
             int err = grib_get_size(h, keyName, &size);
@@ -124,16 +65,16 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         return GRIB_INVALID_ARGUMENT;
     }
 
-    if (STR_EQUAL(e->name, "debug_mode")) {
-        const int n = grib_arguments_get_count(e->args);
+    if (STR_EQUAL(name_, "debug_mode")) {
+        const int n = grib_arguments_get_count(args_);
         if (n != 1) return GRIB_INVALID_ARGUMENT;
-        const int dmode = grib_arguments_get_long(h, e->args, 0);
+        const int dmode = grib_arguments_get_long(h, args_, 0);
         grib_context_set_debug(0, dmode);
         return GRIB_SUCCESS;
     }
 
-    if (STR_EQUAL(e->name, "missing")) {
-        const char* keyName = grib_arguments_get_name(h, e->args, 0);
+    if (STR_EQUAL(name_, "missing")) {
+        const char* keyName = grib_arguments_get_name(h, args_, 0);
         if (keyName) {
             long val = 0;
             int err  = 0;
@@ -159,8 +100,8 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         return GRIB_SUCCESS;
     }
 
-    if (STR_EQUAL(e->name, "defined")) {
-        const char* keyName = grib_arguments_get_name(h, e->args, 0);
+    if (STR_EQUAL(name_, "defined")) {
+        const char* keyName = grib_arguments_get_name(h, args_, 0);
         if (keyName) {
             const grib_accessor* a = grib_find_accessor(h, keyName);
             *lres = a != NULL ? 1 : 0;
@@ -170,12 +111,12 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         return GRIB_SUCCESS;
     }
 
-    if (STR_EQUAL(e->name, "environment_variable")) {
+    if (STR_EQUAL(name_, "environment_variable")) {
         // ECC-1520: This implementation has some limitations:
         // 1. Cannot distinguish between environment variable NOT SET
         //    and SET but equal to 0
         // 2. Cannot deal with string values
-        const char* p = grib_arguments_get_name(h, e->args, 0);
+        const char* p = grib_arguments_get_name(h, args_, 0);
         if (p) {
             const char* env = getenv(p);
             if (env) {
@@ -190,16 +131,16 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         return GRIB_SUCCESS;
     }
 
-    if (STR_EQUAL(e->name, "changed")) {
+    if (STR_EQUAL(name_, "changed")) {
         *lres = 1;
         return GRIB_SUCCESS;
     }
 
-    if (STR_EQUAL(e->name, "contains")) {
+    if (STR_EQUAL(name_, "contains")) {
         *lres = 0;
-        const int n = grib_arguments_get_count(e->args);
+        const int n = grib_arguments_get_count(args_);
         if (n != 3) return GRIB_INVALID_ARGUMENT;
-        const char* keyName = grib_arguments_get_name(h, e->args, 0);
+        const char* keyName = grib_arguments_get_name(h, args_, 0);
         if (!keyName) return GRIB_INVALID_ARGUMENT;
         int type = 0;
         int err = grib_get_native_type(h, keyName, &type);
@@ -209,9 +150,9 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
             size_t len = sizeof(keyValue);
             err = grib_get_string(h, keyName, keyValue, &len);
             if (err) return err;
-            const char* sValue = grib_arguments_get_string(h, e->args, 1);
+            const char* sValue = grib_arguments_get_string(h, args_, 1);
             if (!sValue) return GRIB_INVALID_ARGUMENT;
-            const bool case_sens = grib_arguments_get_long(h, e->args, 2) == 0; // 0=case-sensitive, 1=case-insensitive
+            const bool case_sens = grib_arguments_get_long(h, args_, 2) == 0; // 0=case-sensitive, 1=case-insensitive
             const bool contains = string_contains_case(keyValue, sValue, case_sens);
             if (contains) {
                 *lres = 1;
@@ -224,21 +165,21 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         return GRIB_SUCCESS;
     }
 
-    if (STR_EQUAL(e->name, "is_one_of")) {
+    if (STR_EQUAL(name_, "is_one_of")) {
         *lres = 0;
-        const char* keyName = grib_arguments_get_name(h, e->args, 0);
+        const char* keyName = grib_arguments_get_name(h, args_, 0);
         if (!keyName) return GRIB_INVALID_ARGUMENT;
         int type = 0;
         int err = grib_get_native_type(h, keyName, &type);
         if (err) return err;
-        int n = grib_arguments_get_count(e->args);
+        int n = grib_arguments_get_count(args_);
         if (type == GRIB_TYPE_STRING) {
             char keyValue[254] = {0,};
             size_t len = sizeof(keyValue);
             err = grib_get_string(h, keyName, keyValue, &len);
             if (err) return err;
             for (int i = 1; i < n; ++i) { // skip 1st argument which is the key
-                const char* sValue = grib_arguments_get_string(h, e->args, i);
+                const char* sValue = grib_arguments_get_string(h, args_, i);
                 if (sValue && STR_EQUAL(keyValue, sValue)) {
                     *lres = 1;
                     return GRIB_SUCCESS;
@@ -250,7 +191,7 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
             err = grib_get_long(h, keyName, &keyValue);
             if (err) return err;
             for (int i = 1; i < n; ++i) { // skip 1st argument which is the key
-                long lValue = grib_arguments_get_long(h, e->args, i);
+                long lValue = grib_arguments_get_long(h, args_, i);
                 if (keyValue == lValue) {
                     *lres = 1;
                     return GRIB_SUCCESS;
@@ -263,47 +204,48 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         return GRIB_SUCCESS;
     }
 
-    if (STR_EQUAL(e->name, "gribex_mode_on")) {
+    if (STR_EQUAL(name_, "gribex_mode_on")) {
         *lres = h->context->gribex_mode_on ? 1 : 0;
         return GRIB_SUCCESS;
     }
 
-    grib_context_log(h->context, GRIB_LOG_ERROR, "grib_expression_class_functor::%s failed for '%s'", __func__, e->name);
+    grib_context_log(h->context, GRIB_LOG_ERROR, "grib_expression_class_functor::%s failed for '%s'", __func__, name_);
     return GRIB_NOT_IMPLEMENTED;
 }
 
-static void print(grib_context* c, grib_expression* g, grib_handle* f, FILE* out)
+void Functor::print(grib_context* c,grib_handle* f, FILE* out)
 {
-    const grib_expression_functor* e = (grib_expression_functor*)g;
-    fprintf(out, "%s(", e->name);
-    // grib_expression_print(c,e->args,f);
+    fprintf(out, "%s(", name_);
+    // grib_expression_print(c,args_,f);
     fprintf(out, ")");
 }
 
-static void destroy(grib_context* c, grib_expression* g)
+void Functor::destroy(grib_context* c)
 {
-    grib_expression_functor* e = (grib_expression_functor*)g;
-    grib_context_free_persistent(c, e->name);
-    grib_arguments_free(c, e->args);
+    grib_context_free_persistent(c, name_);
+    grib_arguments_free(c, args_);
 }
 
-static void add_dependency(grib_expression* g, grib_accessor* observer)
+void Functor::add_dependency(grib_accessor* observer)
 {
-    grib_expression_functor* e = (grib_expression_functor*)g;
-    if (strcmp(e->name, "defined"))
-        grib_dependency_observe_arguments(observer, e->args);
+    if (strcmp(name_, "defined"))
+        grib_dependency_observe_arguments(observer, args_);
 }
 
-grib_expression* new_func_expression(grib_context* c, const char* name, grib_arguments* args)
+Functor::Functor(grib_context* c, const char* name, grib_arguments* args)
 {
-    grib_expression_functor* e = (grib_expression_functor*)grib_context_malloc_clear_persistent(c, sizeof(grib_expression_functor));
-    e->base.cclass             = grib_expression_class_functor;
-    e->name                    = grib_context_strdup_persistent(c, name);
-    e->args                    = args;
-    return (grib_expression*)e;
+    name_ = grib_context_strdup_persistent(c, name);
+    args_ = args;
 }
 
-static int native_type(grib_expression* g, grib_handle* h)
+int Functor::native_type(grib_handle* h)
 {
     return GRIB_TYPE_LONG;
+}
+
+}  // namespace eccodes::expression
+
+
+grib_expression* new_func_expression(grib_context* c, const char* name, grib_arguments* args) {
+    return new eccodes::expression::Functor(c, name, args);
 }

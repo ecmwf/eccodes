@@ -149,7 +149,7 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* loade
 static int notify_change(grib_action* act, grib_accessor* notified, grib_accessor* changed)
 {
     if (act->default_value)
-        return notified->pack_expression(grib_arguments_get_expression(grib_handle_of_accessor(notified), act->default_value, 0));
+        return notified->pack_expression(act->default_value->get_expression(grib_handle_of_accessor(notified), 0));
     return GRIB_SUCCESS;
 }
 

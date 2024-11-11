@@ -98,21 +98,21 @@ void grib_accessor_codetable_t::init(const long len, grib_arguments* params)
             double d;
             char tmp[1024];
             grib_expression* expression = grib_arguments_get_expression(hand, act->default_value, 0);
-            int type                    = grib_expression_native_type(hand, expression);
+            int type                    = expression->native_type(hand);
             switch (type) {
                 case GRIB_TYPE_DOUBLE:
-                    grib_expression_evaluate_double(hand, expression, &d);
+                    expression->evaluate_double(hand, &d);
                     pack_double(&d, &s_len);
                     break;
 
                 case GRIB_TYPE_LONG:
-                    grib_expression_evaluate_long(grib_handle_of_accessor(this), expression, &l);
+                    expression->evaluate_long(grib_handle_of_accessor(this), &l);
                     pack_long(&l, &s_len);
                     break;
 
                 default:
                     s_len = sizeof(tmp);
-                    p     = grib_expression_evaluate_string(grib_handle_of_accessor(this), expression, tmp, &s_len, &ret);
+                    p     = expression->evaluate_string(grib_handle_of_accessor(this), tmp, &s_len, &ret);
                     if (ret != GRIB_SUCCESS) {
                         grib_context_log(context_, GRIB_LOG_FATAL,
                                          "Unable to evaluate %s as string", name_);
@@ -684,21 +684,21 @@ int grib_accessor_codetable_t::pack_string(const char* buffer, size_t* len)
             double d       = 0;
             char tmp[1024] = {0,};
             grib_expression* expression = grib_arguments_get_expression(grib_handle_of_accessor(this), act->default_value, 0);
-            int type                    = grib_expression_native_type(grib_handle_of_accessor(this), expression);
+            int type                    = expression->native_type(grib_handle_of_accessor(this));
             switch (type) {
                 case GRIB_TYPE_DOUBLE:
-                    grib_expression_evaluate_double(grib_handle_of_accessor(this), expression, &d);
+                    expression->evaluate_double(grib_handle_of_accessor(this), &d);
                     pack_double(&d, &s_len);
                     break;
 
                 case GRIB_TYPE_LONG:
-                    grib_expression_evaluate_long(grib_handle_of_accessor(this), expression, &l);
+                    expression->evaluate_long(grib_handle_of_accessor(this), &l);
                     pack_long(&l, &s_len);
                     break;
 
                 default:
                     s_len = sizeof(tmp);
-                    p     = grib_expression_evaluate_string(grib_handle_of_accessor(this), expression, tmp, &s_len, &ret);
+                    p     = expression->evaluate_string(grib_handle_of_accessor(this), tmp, &s_len, &ret);
                     if (ret != GRIB_SUCCESS) {
                         grib_context_log(context_, GRIB_LOG_ERROR,
                                          "%s: Unable to evaluate default value of %s as string expression", __func__, name_);
@@ -735,19 +735,19 @@ int grib_accessor_codetable_t::pack_expression(grib_expression* e)
     size_t len        = 1;
     grib_handle* hand = grib_handle_of_accessor(this);
 
-    if (strcmp(e->cclass->name, "long") == 0) {
-        grib_expression_evaluate_long(hand, e, &lval); /* TODO: check return value */
+    if (strcmp(e->class_name(), "long") == 0) {
+        e->evaluate_long(hand, &lval); /* TODO: check return value */
         // if (hand->context->debug) printf("ECCODES DEBUG grib_accessor_codetable::pack_expression %s %ld\n", name_ ,lval);
         ret = pack_long(&lval, &len);
     }
     else {
         char tmp[1024];
         len  = sizeof(tmp);
-        cval = grib_expression_evaluate_string(hand, e, tmp, &len, &ret);
+        cval = e->evaluate_string(hand, tmp, &len, &ret);
         if (ret != GRIB_SUCCESS) {
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "grib_accessor_codetable.%s: Unable to evaluate string %s to be set in %s",
-                             __func__, grib_expression_get_name(e), name_);
+                             __func__, e->get_name(), name_);
             return ret;
         }
         len = strlen(cval) + 1;

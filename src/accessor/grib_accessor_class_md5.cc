@@ -97,7 +97,7 @@ int grib_accessor_md5_t::unpack_string(char* v, size_t* len)
 
     if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), offset_key_, &offset)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_expression_evaluate_long(grib_handle_of_accessor(this), length_key_, &length)) != GRIB_SUCCESS)
+    if ((ret = length_key_->evaluate_long(grib_handle_of_accessor(this), &length)) != GRIB_SUCCESS)
         return ret;
     mess = (unsigned char*)grib_context_malloc(context_, length);
     memcpy(mess, grib_handle_of_accessor(this)->buffer->data + offset, length);

@@ -233,8 +233,14 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 
 extern const int max_nbits;
 
-typedef struct grib_expression grib_expression;
-typedef struct grib_arguments grib_arguments;
+//typedef struct grib_expression grib_expression;
+//
+namespace eccodes::expression {
+class Expression;
+class Arguments;
+}
+using grib_expression = eccodes::expression::Expression;
+using grib_arguments = eccodes::expression::Arguments;
 
 typedef struct grib_action_file grib_action_file;
 typedef struct grib_action_file_list grib_action_file_list;
@@ -826,53 +832,54 @@ struct grib_context
 
 /* expression*/
 
-typedef int (*expression_evaluate_long_proc)(grib_expression*, grib_handle*, long*);
-typedef int (*expression_evaluate_double_proc)(grib_expression*, grib_handle*, double*);
-typedef const char* (*expression_evaluate_string_proc)(grib_expression*, grib_handle*, char*, size_t*, int*);
-typedef const char* (*expression_get_name_proc)(grib_expression*);
+//typedef int (*expression_evaluate_long_proc)(grib_expression*, grib_handle*, long*);
+//typedef int (*expression_evaluate_double_proc)(grib_expression*, grib_handle*, double*);
+//typedef const char* (*expression_evaluate_string_proc)(grib_expression*, grib_handle*, char*, size_t*, int*);
+//typedef const char* (*expression_get_name_proc)(grib_expression*);
 
-typedef void (*expression_print_proc)(grib_context*, grib_expression*, grib_handle*, FILE*);
-typedef void (*expression_add_dependency_proc)(grib_expression* e, grib_accessor* observer);
+//typedef void (*expression_print_proc)(grib_context*, grib_expression*, grib_handle*, FILE*);
+//typedef void (*expression_add_dependency_proc)(grib_expression* e, grib_accessor* observer);
 
-typedef struct grib_expression_class grib_expression_class;
+//typedef struct grib_expression_class grib_expression_class;
 
-typedef void (*expression_class_init_proc)(grib_expression_class* e);
-typedef void (*expression_init_proc)(grib_expression* e);
-typedef void (*expression_destroy_proc)(grib_context*, grib_expression* e);
+//typedef void (*expression_class_init_proc)(grib_expression_class* e);
+//typedef void (*expression_init_proc)(grib_expression* e);
+//typedef void (*expression_destroy_proc)(grib_context*, grib_expression* e);
 
-typedef int (*expression_native_type_proc)(grib_expression*, grib_handle*);
-
-struct grib_expression
-{
-    grib_expression_class* cclass;
-};
-
-struct grib_expression_class
-{
-    grib_expression_class** super;
-    const char* name;
-    size_t size;
-    int inited;
-    expression_init_proc            init;
-    expression_destroy_proc         destroy;
-    expression_print_proc           print;
-    expression_add_dependency_proc  add_dependency;
-    expression_native_type_proc     native_type;
-    expression_get_name_proc        get_name;
-    expression_evaluate_long_proc   evaluate_long;
-    expression_evaluate_double_proc evaluate_double;
-    expression_evaluate_string_proc evaluate_string;
-};
-
-struct grib_arguments
-{
-    struct grib_arguments* next;
-    grib_expression* expression;
-};
+//typedef int (*expression_native_type_proc)(grib_expression*, grib_handle*);
 
 
-long grib_expression_evaluate(grib_handle*, grib_expression*);
-void grib_expression_free(grib_context*, grib_expression*);
+//struct grib_expression
+//{
+//    grib_expression_class* cclass;
+//};
+
+//struct grib_expression_class
+//{
+//    grib_expression_class** super;
+//    const char* name;
+//    size_t size;
+//    int inited;
+//    expression_init_proc            init;
+//    expression_destroy_proc         destroy;
+//    expression_print_proc           print;
+//    expression_add_dependency_proc  add_dependency;
+//    expression_native_type_proc     native_type;
+//    expression_get_name_proc        get_name;
+//    expression_evaluate_long_proc   evaluate_long;
+//    expression_evaluate_double_proc evaluate_double;
+//    expression_evaluate_string_proc evaluate_string;
+//};
+
+//struct grib_arguments
+//{
+//    struct grib_arguments* next;
+//    grib_expression* expression;
+//};
+
+
+//long grib_expression_evaluate(grib_handle*, grib_expression*);
+//void grib_expression_free(grib_context*, grib_expression*);
 
 grib_arguments* grib_arguments_new(grib_context*, grib_expression*, grib_arguments*);
 void grib_arguments_free(grib_context*, grib_arguments*);
@@ -1227,6 +1234,8 @@ typedef struct j2k_encode_helper
 #include "accessor/grib_accessors_list.h"
 #include "geo_iterator/grib_iterator.h"
 #include "geo_nearest/grib_nearest.h"
+#include "expression/grib_expression.h"
+#include "expression/grib_arguments.h"
 #endif
 
 #endif

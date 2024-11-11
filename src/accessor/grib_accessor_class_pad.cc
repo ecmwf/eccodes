@@ -25,7 +25,7 @@ size_t grib_accessor_pad_t::preferred_size(int from_handle)
 {
     long length = 0;
 
-    grib_expression_evaluate_long(grib_handle_of_accessor(this), expression_, &length);
+    expression_->evaluate_long(grib_handle_of_accessor(this), &length);
 
     return length > 0 ? length : 0;
 }

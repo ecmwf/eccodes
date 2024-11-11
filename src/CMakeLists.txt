@@ -310,22 +310,27 @@ list( APPEND eccodes_src_files
     grib_dependency.cc
     grib_value.cc
     grib_errors.cc
-    grib_expression_class_binop.cc
-    grib_expression_class_logical_and.cc
-    grib_expression_class_logical_or.cc
-    grib_expression_class_is_in_dict.cc
-    grib_expression_class_true.cc
-    grib_expression_class_string_compare.cc
-    grib_expression_class_unop.cc
-    grib_expression_class_functor.cc
-    grib_expression_class_accessor.cc
-    grib_expression_class_is_in_list.cc
-    grib_expression_class_is_integer.cc
-    grib_expression_class_length.cc
-    grib_expression_class_long.cc
-    grib_expression_class_double.cc
-    grib_expression_class_string.cc
-    grib_expression_class_sub_string.cc
+
+    expression/grib_arguments.cc
+
+    expression/grib_expression.cc
+    expression/grib_expression_class_binop.cc
+    expression/grib_expression_class_logical_and.cc
+    expression/grib_expression_class_logical_or.cc
+    expression/grib_expression_class_is_in_dict.cc
+    expression/grib_expression_class_true.cc
+    expression/grib_expression_class_string_compare.cc
+    expression/grib_expression_class_unop.cc
+    expression/grib_expression_class_functor.cc
+    expression/grib_expression_class_accessor.cc
+    expression/grib_expression_class_is_in_list.cc
+    expression/grib_expression_class_is_integer.cc
+    expression/grib_expression_class_length.cc
+    expression/grib_expression_class_long.cc
+    expression/grib_expression_class_double.cc
+    expression/grib_expression_class_string.cc
+    expression/grib_expression_class_sub_string.cc
+
     geo_nearest/grib_nearest.cc
     geo_nearest/grib_nearest_class_gen.cc
     geo_nearest/grib_nearest_class_healpix.cc
@@ -337,6 +342,7 @@ list( APPEND eccodes_src_files
     geo_nearest/grib_nearest_class_reduced.cc
     geo_nearest/grib_nearest_class_regular.cc
     geo_nearest/grib_nearest_class_space_view.cc
+
     geo_iterator/grib_iterator.cc
     geo_iterator/grib_iterator_class_gaussian.cc
     geo_iterator/grib_iterator_class_gaussian_reduced.cc
@@ -350,7 +356,7 @@ list( APPEND eccodes_src_files
     geo_iterator/grib_iterator_class_polar_stereographic.cc
     geo_iterator/grib_iterator_class_regular.cc
     geo_iterator/grib_iterator_class_space_view.cc
-    grib_expression.cc
+
     codes_util.cc
     grib_util.cc
     bufr_util.cc

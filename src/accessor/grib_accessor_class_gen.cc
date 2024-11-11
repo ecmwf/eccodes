@@ -38,23 +38,23 @@ void grib_accessor_gen_t::init(const long len, grib_arguments* param)
             double d;
             char tmp[1024];
             grib_expression* expression = grib_arguments_get_expression(grib_handle_of_accessor(this), act->default_value, 0);
-            int type                    = grib_expression_native_type(grib_handle_of_accessor(this), expression);
+            int type                    = expression->native_type(grib_handle_of_accessor(this));
             switch (type) {
                     // TODO(maee): add single-precision case
 
                 case GRIB_TYPE_DOUBLE:
-                    grib_expression_evaluate_double(grib_handle_of_accessor(this), expression, &d);
+                    expression->evaluate_double(grib_handle_of_accessor(this), &d);
                     pack_double(&d, &s_len);
                     break;
 
                 case GRIB_TYPE_LONG:
-                    grib_expression_evaluate_long(grib_handle_of_accessor(this), expression, &l);
+                    expression->evaluate_long(grib_handle_of_accessor(this), &l);
                     pack_long(&l, &s_len);
                     break;
 
                 default:
                     s_len = sizeof(tmp);
-                    p     = grib_expression_evaluate_string(grib_handle_of_accessor(this), expression, tmp, &s_len, &ret);
+                    p     = expression->evaluate_string(grib_handle_of_accessor(this), tmp, &s_len, &ret);
                     if (ret != GRIB_SUCCESS) {
                         grib_context_log(context_, GRIB_LOG_ERROR, "Unable to evaluate %s as string", name_);
                         Assert(0);
@@ -259,13 +259,13 @@ int grib_accessor_gen_t::pack_expression(grib_expression* e)
     grib_handle* hand = grib_handle_of_accessor(this);
 
     // Use the native type of the expression not the accessor
-    switch (grib_expression_native_type(hand, e)) {
+    switch (e->native_type(hand)) {
         case GRIB_TYPE_LONG: {
             len = 1;
-            ret = grib_expression_evaluate_long(hand, e, &lval);
+            ret = e->evaluate_long(hand, &lval);
             if (ret != GRIB_SUCCESS) {
                 grib_context_log(context_, GRIB_LOG_ERROR, "Unable to set %s as long (from %s)",
-                                 name_, e->cclass->name);
+                                 name_, e->class_name());
                 return ret;
             }
             /*if (hand->context->debug)
@@ -275,10 +275,10 @@ int grib_accessor_gen_t::pack_expression(grib_expression* e)
 
         case GRIB_TYPE_DOUBLE: {
             len = 1;
-            ret = grib_expression_evaluate_double(hand, e, &dval);
+            ret = e->evaluate_double(hand, &dval);
             if (ret != GRIB_SUCCESS) {
                 grib_context_log(context_, GRIB_LOG_ERROR, "Unable to set %s as double (from %s)",
-                                 name_, e->cclass->name);
+                                 name_, e->class_name());
                 return ret;
             }
             /*if (hand->context->debug)
@@ -289,10 +289,10 @@ int grib_accessor_gen_t::pack_expression(grib_expression* e)
         case GRIB_TYPE_STRING: {
             char tmp[1024];
             len  = sizeof(tmp);
-            cval = grib_expression_evaluate_string(hand, e, tmp, &len, &ret);
+            cval = e->evaluate_string(hand, tmp, &len, &ret);
             if (ret != GRIB_SUCCESS) {
                 grib_context_log(context_, GRIB_LOG_ERROR, "Unable to set %s as string (from %s)",
-                                 name_, e->cclass->name);
+                                 name_, e->class_name());
                 return ret;
             }
             len = strlen(cval);

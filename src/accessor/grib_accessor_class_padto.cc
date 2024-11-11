@@ -18,7 +18,7 @@ size_t grib_accessor_padto_t::preferred_size(int from_handle)
     long length = 0;
     long theEnd;
 
-    grib_expression_evaluate_long(grib_handle_of_accessor(this), expression_, &theEnd);
+    expression_->evaluate_long(grib_handle_of_accessor(this), &theEnd);
 
     length = theEnd - offset_;
 

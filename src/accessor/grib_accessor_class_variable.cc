@@ -41,23 +41,23 @@ void grib_accessor_variable_t::init(const long length, grib_arguments* args)
 
     length_ = 0;
     if (type_ == GRIB_TYPE_UNDEFINED && expression) {
-        type_ = grib_expression_native_type(hand, expression);
+        type_ = expression->native_type(hand);
 
         switch (type_) {
             case GRIB_TYPE_DOUBLE:
-                grib_expression_evaluate_double(hand, expression, &d);
+                expression->evaluate_double(hand, &d);
                 pack_double(&d, &len);
                 break;
 
             case GRIB_TYPE_LONG:
-                grib_expression_evaluate_long(hand, expression, &l);
+                expression->evaluate_long(hand, &l);
                 pack_long(&l, &len);
                 break;
 
             default: {
                 char tmp[1024];
                 len = sizeof(tmp);
-                p   = grib_expression_evaluate_string(hand, expression, tmp, &len, &ret);
+                p   = expression->evaluate_string(hand, tmp, &len, &ret);
                 if (ret != GRIB_SUCCESS) {
                     grib_context_log(context_, GRIB_LOG_ERROR, "Unable to evaluate %s as string: %s",
                                      name_, grib_get_error_message(ret));
