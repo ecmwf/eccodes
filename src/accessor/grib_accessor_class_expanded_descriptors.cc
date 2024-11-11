@@ -58,7 +58,7 @@ void grib_accessor_expanded_descriptors_t::init(const long len, grib_arguments* 
 #if MYDEBUG
 static int global_depth = -1;
 
-static char* descriptor_type_name(int dtype)
+static const char* descriptor_type_name(int dtype)
 {
     switch (dtype) {
         case BUFR_DESCRIPTOR_TYPE_STRING:
