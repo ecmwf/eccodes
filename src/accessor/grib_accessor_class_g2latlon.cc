@@ -19,9 +19,9 @@ void grib_accessor_g2latlon_t::init(const long l, grib_arguments* c)
     grib_accessor_double_t::init(l, c);
     int n = 0;
 
-    grid_  = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    index_ = grib_arguments_get_long(grib_handle_of_accessor(this), c, n++);
-    given_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    grid_  = c->get_name(grib_handle_of_accessor(this), n++);
+    index_ = c->get_long(grib_handle_of_accessor(this), n++);
+    given_ = c->get_name(grib_handle_of_accessor(this), n++);
 }
 
 int grib_accessor_g2latlon_t::unpack_double(double* val, size_t* len)

@@ -18,8 +18,8 @@ void grib_accessor_gts_header_t::init(const long l, grib_arguments* c)
     grib_accessor_ascii_t::init(l, c);
     gts_offset_ = -1;
     gts_length_ = -1;
-    gts_offset_ = grib_arguments_get_long(grib_handle_of_accessor(this), c, 0);
-    gts_length_ = grib_arguments_get_long(grib_handle_of_accessor(this), c, 1);
+    gts_offset_ = c->get_long(grib_handle_of_accessor(this), 0);
+    gts_length_ = c->get_long(grib_handle_of_accessor(this), 1);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 

@@ -19,8 +19,8 @@ void grib_accessor_select_step_template_t::init(const long l, grib_arguments* c)
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
-    productDefinitionTemplateNumber_ = grib_arguments_get_name(hand, c, n++);
-    instant_                         = grib_arguments_get_long(hand, c, n++);
+    productDefinitionTemplateNumber_ = c->get_name(hand, n++);
+    instant_                         = c->get_long(hand, n++);
 }
 
 int grib_accessor_select_step_template_t::unpack_long(long* val, size_t* len)

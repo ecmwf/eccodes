@@ -22,10 +22,10 @@ void grib_accessor_md5_t::init(const long len, grib_arguments* arg)
     grib_string_list* current = 0;
     grib_context* context     = context_;
 
-    offset_key_    = grib_arguments_get_name(grib_handle_of_accessor(this), arg, n++);
-    length_key_    = grib_arguments_get_expression(grib_handle_of_accessor(this), arg, n++);
+    offset_key_    = arg->get_name(grib_handle_of_accessor(this), n++);
+    length_key_    = arg->get_expression(grib_handle_of_accessor(this), n++);
     blocklist_ = NULL;
-    while ((b = (char*)grib_arguments_get_name(grib_handle_of_accessor(this), arg, n++)) != NULL) {
+    while ((b = (char*)arg->get_name(grib_handle_of_accessor(this), n++)) != NULL) {
         if (!blocklist_) {
             blocklist_        = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
             blocklist_->value = grib_context_strdup(context, b);

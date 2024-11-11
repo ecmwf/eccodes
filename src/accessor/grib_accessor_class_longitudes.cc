@@ -19,8 +19,8 @@ void grib_accessor_longitudes_t::init(const long l, grib_arguments* c)
     grib_accessor_double_t::init(l, c);
     int n = 0;
 
-    values_   = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    distinct_ = grib_arguments_get_long(grib_handle_of_accessor(this), c, n++);
+    values_   = c->get_name(grib_handle_of_accessor(this), n++);
+    distinct_ = c->get_long(grib_handle_of_accessor(this), n++);
     save_     = 0;
     lons_     = 0;
 

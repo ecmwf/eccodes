@@ -37,7 +37,7 @@ void grib_accessor_gen_t::init(const long len, grib_arguments* param)
             int ret = 0;
             double d;
             char tmp[1024];
-            grib_expression* expression = grib_arguments_get_expression(grib_handle_of_accessor(this), act->default_value, 0);
+            grib_expression* expression = act->default_value->get_expression(grib_handle_of_accessor(this), 0);
             int type                    = expression->native_type(grib_handle_of_accessor(this));
             switch (type) {
                     // TODO(maee): add single-precision case

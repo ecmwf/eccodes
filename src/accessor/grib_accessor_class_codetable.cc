@@ -61,19 +61,19 @@ void grib_accessor_codetable_t::init(const long len, grib_arguments* params)
          * its length as an identifier not an integer. This identifier is
          * added to the argument list (at the beginning)
          */
-        new_len = grib_arguments_get_long(hand, params, n++);
+        new_len = params->get_long(hand, n++);
         if (new_len <= 0) {
             grib_context_log(context_, GRIB_LOG_FATAL, "%s: codetable length must be a positive integer", name_);
         }
         nbytes_ = new_len;
     }
 
-    tablename_ = grib_arguments_get_string(hand, params, n++);
+    tablename_ = params->get_string(hand, n++);
     if (tablename_ == NULL) {
         grib_context_log(context_, GRIB_LOG_FATAL, "%s: codetable table is invalid", name_);
     }
-    masterDir_ = grib_arguments_get_name(hand, params, n++); /* can be NULL */
-    localDir_  = grib_arguments_get_name(hand, params, n++); /* can be NULL */
+    masterDir_ = params->get_name(hand, n++); /* can be NULL */
+    localDir_  = params->get_name(hand, n++); /* can be NULL */
 
     /*if (flags_ & GRIB_ACCESSOR_FLAG_STRING_TYPE)
     printf("-------- %s type string (%ld)\n",a->name,flags_ );*/
@@ -97,7 +97,7 @@ void grib_accessor_codetable_t::init(const long len, grib_arguments* params)
             int ret = 0;
             double d;
             char tmp[1024];
-            grib_expression* expression = grib_arguments_get_expression(hand, act->default_value, 0);
+            grib_expression* expression = act->default_value->get_expression(hand, 0);
             int type                    = expression->native_type(hand);
             switch (type) {
                 case GRIB_TYPE_DOUBLE:
@@ -683,7 +683,7 @@ int grib_accessor_codetable_t::pack_string(const char* buffer, size_t* len)
             int ret        = 0;
             double d       = 0;
             char tmp[1024] = {0,};
-            grib_expression* expression = grib_arguments_get_expression(grib_handle_of_accessor(this), act->default_value, 0);
+            grib_expression* expression = act->default_value->get_expression(grib_handle_of_accessor(this), 0);
             int type                    = expression->native_type(grib_handle_of_accessor(this));
             switch (type) {
                 case GRIB_TYPE_DOUBLE:

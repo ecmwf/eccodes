@@ -19,15 +19,15 @@ void grib_accessor_latlon_increment_t::init(const long l, grib_arguments* c)
     int n             = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
 
-    directionIncrementGiven_ = grib_arguments_get_name(hand, c, n++);
-    directionIncrement_      = grib_arguments_get_name(hand, c, n++);
-    scansPositively_         = grib_arguments_get_name(hand, c, n++);
-    first_                   = grib_arguments_get_name(hand, c, n++);
-    last_                    = grib_arguments_get_name(hand, c, n++);
-    numberOfPoints_          = grib_arguments_get_name(hand, c, n++);
-    angleMultiplier_         = grib_arguments_get_name(hand, c, n++);
-    angleDivisor_            = grib_arguments_get_name(hand, c, n++);
-    isLongitude_             = grib_arguments_get_long(hand, c, n++);
+    directionIncrementGiven_ = c->get_name(hand, n++);
+    directionIncrement_      = c->get_name(hand, n++);
+    scansPositively_         = c->get_name(hand, n++);
+    first_                   = c->get_name(hand, n++);
+    last_                    = c->get_name(hand, n++);
+    numberOfPoints_          = c->get_name(hand, n++);
+    angleMultiplier_         = c->get_name(hand, n++);
+    angleDivisor_            = c->get_name(hand, n++);
+    isLongitude_             = c->get_long(hand, n++);
 }
 
 int grib_accessor_latlon_increment_t::unpack_double(double* val, size_t* len)

@@ -18,8 +18,8 @@ void grib_accessor_octet_number_t::init(const long l, grib_arguments* c)
     grib_accessor_long_t::init(l, c);
 
     int n  = 0;
-    left_  = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    right_ = grib_arguments_get_long(grib_handle_of_accessor(this), c, n++);
+    left_  = c->get_name(grib_handle_of_accessor(this), n++);
+    right_ = c->get_long(grib_handle_of_accessor(this), n++);
 
     length_ = 0;
 }

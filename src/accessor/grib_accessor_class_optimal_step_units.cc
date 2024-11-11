@@ -21,10 +21,10 @@ void grib_accessor_optimal_step_units_t::init(const long l, grib_arguments* c)
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
-    forecast_time_value_ = grib_arguments_get_name(hand, c, n++);
-    forecast_time_unit_  = grib_arguments_get_name(hand, c, n++);
-    time_range_value_    = grib_arguments_get_name(hand, c, n++);
-    time_range_unit_     = grib_arguments_get_name(hand, c, n++);
+    forecast_time_value_ = c->get_name(hand, n++);
+    forecast_time_unit_  = c->get_name(hand, n++);
+    time_range_value_    = c->get_name(hand, n++);
+    time_range_unit_     = c->get_name(hand, n++);
     length_              = 0;
     overwriteStepUnits_  = eccodes::Unit{ eccodes::Unit::Value::MISSING }.value<long>();
 }

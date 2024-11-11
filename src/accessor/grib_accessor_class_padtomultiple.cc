@@ -32,7 +32,7 @@ void grib_accessor_padtomultiple_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_padding_t::init(len, arg);
 
-    begin_    = grib_arguments_get_expression(grib_handle_of_accessor(this), arg, 0);
-    multiple_ = grib_arguments_get_expression(grib_handle_of_accessor(this), arg, 1);
+    begin_    = arg->get_expression(grib_handle_of_accessor(this), 0);
+    multiple_ = arg->get_expression(grib_handle_of_accessor(this), 1);
     length_   = preferred_size(1);
 }

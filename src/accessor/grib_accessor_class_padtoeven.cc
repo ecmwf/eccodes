@@ -39,8 +39,8 @@ void grib_accessor_padtoeven_t::init(const long len, grib_arguments* args)
 {
     grib_accessor_padding_t::init(len, args);
 
-    section_offset_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, 0);
-    section_length_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, 1);
+    section_offset_ = args->get_name(grib_handle_of_accessor(this), 0);
+    section_length_ = args->get_name(grib_handle_of_accessor(this), 1);
 
     length_ = preferred_size(1);
 }

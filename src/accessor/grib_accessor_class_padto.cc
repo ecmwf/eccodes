@@ -31,7 +31,7 @@ void grib_accessor_padto_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_padding_t::init(len, arg);
 
-    expression_ = grib_arguments_get_expression(grib_handle_of_accessor(this), arg, 0);
+    expression_ = arg->get_expression(grib_handle_of_accessor(this), 0);
     length_     = preferred_size(1);
 }
 
