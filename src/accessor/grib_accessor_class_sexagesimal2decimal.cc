@@ -32,9 +32,7 @@ long grib_accessor_sexagesimal2decimal_t::get_native_type()
 int grib_accessor_sexagesimal2decimal_t::unpack_string(char* val, size_t* len)
 {
     int err        = 0;
-    char buff[512] = {
-        0,
-    };
+    char buff[512] = {0,};
     size_t length = 0;
     size_t size   = sizeof(buff);
     char* p       = 0;

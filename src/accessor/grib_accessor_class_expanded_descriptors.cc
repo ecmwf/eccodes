@@ -94,9 +94,7 @@ void grib_accessor_expanded_descriptors_t::__expand(bufr_descriptors_array* unex
     bufr_descriptor* vv = NULL;
     /* ECC-1422: 'ur' is the array of bufr_descriptor pointers for replications.
      * Its max size is X (from FXY) which is 6 bits so no need for malloc */
-    bufr_descriptor* ur[65] = {
-        0,
-    };
+    bufr_descriptor* ur[65] = {0,};
     bufr_descriptor* urc                     = NULL;
     size_t idx                               = 0;
     bufr_descriptor* u0                      = NULL;
