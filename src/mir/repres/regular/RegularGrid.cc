@@ -208,11 +208,6 @@ size_t RegularGrid::numberOfPoints() const {
 }
 
 
-bool RegularGrid::isPeriodicWestEast() const {
-    return false;
-}
-
-
 void RegularGrid::fillGrib(grib_info& info) const {
     // shape of the reference system
     shape_.fillGrib(info, grid_.projection().spec());
@@ -245,6 +240,12 @@ bool RegularGrid::includesNorthPole() const {
 
 bool RegularGrid::includesSouthPole() const {
     return bbox_.south() == Latitude::SOUTH_POLE;
+}
+
+
+bool RegularGrid::isPeriodicWestEast() const {
+    return includesNorthPole() || includesSouthPole() ||
+           (bbox_.east().value() - bbox_.west().value() >= Longitude::GLOBE.value());
 }
 
 
