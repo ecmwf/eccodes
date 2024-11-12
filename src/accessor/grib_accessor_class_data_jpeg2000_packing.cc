@@ -94,6 +94,8 @@ int grib_accessor_data_jpeg2000_packing_t::unpack_float(float* val, size_t* len)
 int grib_accessor_data_jpeg2000_packing_t::unpack_double(double* val, size_t* len)
 {
     int err            = GRIB_SUCCESS;
+    grib_handle* hand  = grib_handle_of_accessor(this);
+
     size_t i           = 0;
     size_t buflen      = byte_count();
     double bscale      = 0;
@@ -116,18 +118,18 @@ int grib_accessor_data_jpeg2000_packing_t::unpack_double(double* val, size_t* le
         return err;
 
     if (units_factor_)
-        grib_get_double_internal(grib_handle_of_accessor(this), units_factor_, &units_factor);
+        grib_get_double_internal(hand, units_factor_, &units_factor);
 
     if (units_bias_)
-        grib_get_double_internal(grib_handle_of_accessor(this), units_bias_, &units_bias);
+        grib_get_double_internal(hand, units_bias_, &units_bias);
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(hand, bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_double_internal(grib_handle_of_accessor(this), reference_value_, &reference_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(hand, reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(hand, binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(hand, decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
     dirty_ = 0;
@@ -194,7 +196,6 @@ int grib_accessor_data_jpeg2000_packing_t::pack_double(const double* cval, size_
 {
     size_t n_vals = *len;
     int err       = 0;
-    int i;
     double reference_value     = 0;
     long binary_scale_factor   = 0;
     long bits_per_value        = 0;
@@ -237,14 +238,14 @@ int grib_accessor_data_jpeg2000_packing_t::pack_double(const double* cval, size_
 
     if (units_factor != 1.0) {
         if (units_bias != 0.0)
-            for (i = 0; i < n_vals; i++)
+            for (size_t i = 0; i < n_vals; i++)
                 val[i] = val[i] * units_factor + units_bias;
         else
-            for (i = 0; i < n_vals; i++)
+            for (size_t i = 0; i < n_vals; i++)
                 val[i] *= units_factor;
     }
     else if (units_bias != 0.0)
-        for (i = 0; i < n_vals; i++)
+        for (size_t i = 0; i < n_vals; i++)
             val[i] += units_bias;
 
     ret = grib_accessor_data_simple_packing_t::pack_double(val, len);

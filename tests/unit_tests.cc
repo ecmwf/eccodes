@@ -855,6 +855,12 @@ static void test_grib_get_binary_scale_fact()
     Assert( result == 0 );
 }
 
+static void test_filepool()
+{
+    printf("Running %s ...\n", __func__);
+    grib_file_pool_print("file_pool contents", stdout);
+}
+
 int main(int argc, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
@@ -924,6 +930,7 @@ int main(int argc, char** argv)
     test_grib2_choose_PDTN();
     test_codes_is_feature_enabled();
     test_codes_get_features();
+    test_filepool();
 
     return 0;
 }

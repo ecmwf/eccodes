@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -23,9 +22,9 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* binaryScaleFactor_;
-    const char* bitsPerValue_;
-    const char* decimalScaleFactor_;
-    const char* referenceValue_;
-    const char* floatType_;
+    const char* binaryScaleFactor_ = nullptr;
+    const char* bitsPerValue_ = nullptr;
+    const char* decimalScaleFactor_ = nullptr;
+    const char* referenceValue_ = nullptr;
+    const char* floatType_ = nullptr;
 };

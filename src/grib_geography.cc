@@ -148,10 +148,53 @@ static int compute_gaussian_latitudes(long trunc, double* lats)
     return GRIB_SUCCESS;
 }
 
+// Performance: return the precomputed latitudes for N=640
+// The provided 'lats' array should have allocated 2*N elements
+static int get_precomputed_latitudes_N640(double* lats)
+{
+    #include "grib_gaussian_N640.h"
+    const size_t N = 640;
+    for (size_t i = 0; i < N; ++i) {
+        lats[i] = lats_N640[i];
+    }
+
+    const size_t ilast = N * 2 - 1;
+    for (size_t i = ilast; i > ilast / 2; --i) {
+        lats[i] = -lats[ilast - i];
+    }
+
+    return GRIB_SUCCESS;
+}
+
+// Performance: return the precomputed latitudes for N=1280
+// The provided 'lats' array should have allocated 2*N elements
+static int get_precomputed_latitudes_N1280(double* lats)
+{
+    #include "grib_gaussian_N1280.h"
+    const size_t N = 1280;
+    for (size_t i = 0; i < N; ++i) {
+        lats[i] = lats_N1280[i];
+    }
+
+    const size_t ilast = N * 2 - 1;
+    for (size_t i = ilast; i > ilast / 2; --i) {
+        lats[i] = -lats[ilast - i];
+    }
+
+    return GRIB_SUCCESS;
+}
+
 int grib_get_gaussian_latitudes(long trunc, double* lats)
 {
     if (trunc <= 0)
         return GRIB_GEOCALCULUS_PROBLEM;
+
+    if (trunc == 640) {
+        return get_precomputed_latitudes_N640(lats);
+    }
+    if (trunc == 1280) {
+        return get_precomputed_latitudes_N1280(lats);
+    }
     return compute_gaussian_latitudes(trunc, lats);
 }
 

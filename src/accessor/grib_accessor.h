@@ -17,10 +17,14 @@ class grib_accessor
 {
 public:
     grib_accessor() :
-        context_(nullptr), name_(nullptr), class_name_(nullptr), name_space_(nullptr), h_(nullptr), creator_(nullptr), length_(0), offset_(0), parent_(nullptr), next_(nullptr), previous_(nullptr), flags_(0), sub_section_(nullptr), dirty_(0), same_(nullptr), loop_(0), vvalue_(nullptr), set_(nullptr), parent_as_attribute_(nullptr) {}
+        context_(nullptr), name_(nullptr), class_name_(nullptr), name_space_(nullptr), h_(nullptr),
+        creator_(nullptr), length_(0), offset_(0), parent_(nullptr), next_(nullptr), previous_(nullptr),
+        flags_(0), sub_section_(nullptr), dirty_(0), same_(nullptr), loop_(0), vvalue_(nullptr), set_(nullptr), parent_as_attribute_(nullptr) {}
 
     grib_accessor(const char* name) :
-        context_(nullptr), name_(name), class_name_(nullptr), name_space_(nullptr), h_(nullptr), creator_(nullptr), length_(0), offset_(0), parent_(nullptr), next_(nullptr), previous_(nullptr), flags_(0), sub_section_(nullptr), dirty_(0), same_(nullptr), loop_(0), vvalue_(nullptr), set_(nullptr), parent_as_attribute_(nullptr) {}
+        context_(nullptr), name_(name), class_name_(nullptr), name_space_(nullptr), h_(nullptr),
+        creator_(nullptr), length_(0), offset_(0), parent_(nullptr), next_(nullptr), previous_(nullptr),
+        flags_(0), sub_section_(nullptr), dirty_(0), same_(nullptr), loop_(0), vvalue_(nullptr), set_(nullptr), parent_as_attribute_(nullptr) {}
     virtual ~grib_accessor() {}
 
     virtual void init_accessor(const long, grib_arguments*) = 0;
@@ -78,34 +82,28 @@ public:
 
 public:
     // TODO(maee): make private
-    grib_context* context_;
-    const char* name_;       /** < name of the accessor */
-    const char* class_name_; /** < name of the class (Artifact from C version of ecCodes) */
-    const char* name_space_; /** < namespace to which the accessor belongs */
-    grib_handle* h_;
-    grib_action* creator_;    /** < action that created the accessor */
-    long length_;             /** < byte length of the accessor */
-    long offset_;             /** < offset of the data in the buffer */
-    grib_section* parent_;    /** < section to which the accessor is attached */
-    grib_accessor* next_;     /** < next accessor in list */
-    grib_accessor* previous_; /** < next accessor in list */
-    unsigned long flags_;     /** < Various flags */
-    grib_section* sub_section_;
+    grib_context* context_ = nullptr;
+    const char* name_ = nullptr;       // name of the accessor
+    const char* class_name_ = nullptr; // name of the class (Artifact from C version of ecCodes)
+    const char* name_space_ = nullptr; // namespace to which the accessor belongs
+    grib_handle* h_ = nullptr;
+    grib_action* creator_ = nullptr;    // action that created the accessor
+    long length_ = 0;                   // byte length of the accessor
+    long offset_ = 0;                   // offset of the data in the buffer
+    grib_section* parent_ = nullptr;    // section to which the accessor is attached
+    grib_accessor* next_ = nullptr;     // next accessor in list
+    grib_accessor* previous_ = nullptr; // next accessor in list
+    unsigned long flags_ = 0;           // Various flags
+    grib_section* sub_section_ = nullptr;
 
-    const char* all_names_[MAX_ACCESSOR_NAMES] = {
-        0,
-    }; /** < name of the accessor */
-    const char* all_name_spaces_[MAX_ACCESSOR_NAMES] = {
-        0,
-    }; /** < namespace to which the accessor belongs */
-    int dirty_;
+    const char* all_names_[MAX_ACCESSOR_NAMES] = {0,}; // name of the accessor
+    const char* all_name_spaces_[MAX_ACCESSOR_NAMES] = {0,}; // namespace to which the accessor belongs
+    int dirty_ = 0;
 
-    grib_accessor* same_;        /** < accessors with the same name */
-    long loop_;                  /** < used in lists */
-    grib_virtual_value* vvalue_; /** < virtual value used when transient flag on **/
-    const char* set_;
-    grib_accessor* attributes_[MAX_ACCESSOR_ATTRIBUTES] = {
-        0,
-    }; /** < attributes are accessors */
-    grib_accessor* parent_as_attribute_;
+    grib_accessor* same_ = nullptr;        // accessors with the same name
+    long loop_ = 0;                        // used in lists
+    grib_virtual_value* vvalue_ = nullptr; // virtual value used when transient flag on
+    const char* set_ = nullptr;
+    grib_accessor* attributes_[MAX_ACCESSOR_ATTRIBUTES] = {0,}; // attributes are accessors
+    grib_accessor* parent_as_attribute_ = nullptr;
 };

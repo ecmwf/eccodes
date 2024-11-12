@@ -48,14 +48,14 @@ public:
     void elementsDescriptorsIndex(grib_viarray* elementsDescriptorsIndex) { elementsDescriptorsIndex_ = elementsDescriptorsIndex; }
 
 private:
-    long index_;
-    int type_;
-    long compressedData_;
-    long subsetNumber_;
-    long numberOfSubsets_;
-    bufr_descriptors_array* descriptors_;
-    grib_vdarray* numericValues_;
-    grib_vsarray* stringValues_;
-    grib_viarray* elementsDescriptorsIndex_;
-    char* cname_;
+    long index_ = 0;
+    int type_ = 0;
+    long compressedData_ = 0;
+    long subsetNumber_ = 0;
+    long numberOfSubsets_ = 0;
+    bufr_descriptors_array* descriptors_ = nullptr;
+    grib_vdarray* numericValues_ = nullptr;
+    grib_vsarray* stringValues_ = nullptr;
+    grib_viarray* elementsDescriptorsIndex_ = nullptr;
+    char* cname_ = nullptr;
 };

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -28,6 +27,6 @@ public:
     void update_size(size_t) override;
 
 private:
-    grib_accessor* unexpandedDescriptorsEncoded_;
-    const char* createNewData_;
+    grib_accessor* unexpandedDescriptorsEncoded_ = nullptr;
+    const char* createNewData_ = nullptr;
 };

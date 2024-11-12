@@ -17,7 +17,7 @@ class grib_accessor_values_t : public grib_accessor_gen_t
 public:
     grib_accessor_values_t() :
         grib_accessor_gen_t() { class_name_ = "values"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_values_t{}; }
+    // grib_accessor* create_empty_accessor() override { return new grib_accessor_values_t{}; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     long byte_count() override;
@@ -29,11 +29,11 @@ public:
     int compare(grib_accessor*) override;
 
 protected:
-    int carg_;
-    const char* seclen_;
-    const char* offsetdata_;
-    const char* offsetsection_;
-    int values_dirty_;
+    int carg_ = 0;
+    const char* seclen_ = nullptr;
+    const char* offsetdata_ = nullptr;
+    const char* offsetsection_ = nullptr;
+    int values_dirty_ = 0;
 
 private:
     long init_length();

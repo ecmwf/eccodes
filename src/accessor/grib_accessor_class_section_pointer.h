@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -26,7 +25,7 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* sectionOffset_;
-    const char* sectionLength_;
-    long sectionNumber_;
+    const char* sectionOffset_ = nullptr;
+    const char* sectionLength_ = nullptr;
+    long sectionNumber_ = 0;
 };

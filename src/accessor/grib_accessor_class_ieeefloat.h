@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -28,5 +27,5 @@ public:
     int nearest_smaller_value(double val, double* nearest) override;
 
 private:
-    grib_arguments* arg_;
+    grib_arguments* arg_ = nullptr;
 };

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -24,9 +23,9 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* doExtractSubsets_;
-    const char* numberOfSubsets_;
-    const char* extractSubsetList_;
+    const char* doExtractSubsets_ = nullptr;
+    const char* numberOfSubsets_ = nullptr;
+    const char* extractSubsetList_ = nullptr;
 
     int select_datetime();
 };

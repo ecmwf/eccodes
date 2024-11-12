@@ -23,8 +23,8 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* values_;
-    const char* bits_per_value_;
-    const char* changing_precision_;
-    const char* decimal_scale_factor_;
+    const char* values_ = nullptr;
+    const char* bits_per_value_ = nullptr;
+    const char* changing_precision_ = nullptr;
+    const char* decimal_scale_factor_ = nullptr;
 };

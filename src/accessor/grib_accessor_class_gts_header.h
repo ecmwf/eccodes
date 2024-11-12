@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -25,6 +24,6 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    int gts_offset_;
-    int gts_length_;
+    int gts_offset_ = 0;
+    int gts_length_ = 0;
 };

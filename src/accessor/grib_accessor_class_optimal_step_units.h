@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -31,9 +30,9 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* forecast_time_value_;
-    const char* forecast_time_unit_;
-    const char* time_range_value_;
-    const char* time_range_unit_;
-    long overwriteStepUnits_;
+    const char* forecast_time_value_ = nullptr;
+    const char* forecast_time_unit_ = nullptr;
+    const char* time_range_value_ = nullptr;
+    const char* time_range_unit_ = nullptr;
+    long overwriteStepUnits_ = 0;
 };

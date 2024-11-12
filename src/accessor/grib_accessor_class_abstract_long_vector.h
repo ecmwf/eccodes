@@ -21,7 +21,7 @@ public:
 
 public:
     // TODO(maee): make private
-    long* v_;
-    long pack_index_;
-    int number_of_elements_;
+    long* v_ = nullptr;
+    long pack_index_ = 0;
+    int number_of_elements_ = 0;
 };

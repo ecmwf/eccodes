@@ -1,6 +1,3 @@
-#no step in type an
-unalias mars.step;
-
 if (class is "od" || class is "me" || class is "en" ||
     class is "c3" || class is "ci")
 {
