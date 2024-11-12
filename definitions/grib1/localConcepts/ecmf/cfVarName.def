@@ -189,6 +189,11 @@
 	 table2Version = 171 ;
 	 indicatorOfParameter = 7 ;
 	}
+#100 metre wind speed anomaly
+'sia100' = {
+	 table2Version = 171 ;
+	 indicatorOfParameter = 8 ;
+	}
 #2 metre specific humidity
 'sh2' = {
 	 table2Version = 174 ;

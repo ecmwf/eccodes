@@ -3774,6 +3774,11 @@
 	 table2Version = 171 ;
 	 indicatorOfParameter = 7 ;
 	}
+#100 metre wind speed anomaly
+'100 metre wind speed anomaly' = {
+	 table2Version = 171 ;
+	 indicatorOfParameter = 8 ;
+	}
 #Lake mix-layer temperature anomaly
 'Lake mix-layer temperature anomaly' = {
 	 table2Version = 171 ;
