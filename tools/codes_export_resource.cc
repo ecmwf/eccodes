@@ -108,7 +108,8 @@ int main(int argc, char* argv[])
     grib_context_free(c, full_path);
 
     if (read_count == 0) {
-        fprintf(stderr, "Error: Number of bytes read == 0. Please check the path refers to a file.\n");
+        fprintf(stderr, "Error: Number of bytes read == 0. Please check the path refers to a regular %s file.\n",
+                        (resource_type == SAMPLE) ? "sample" : "definition");
     } else {
         printf("Resource exported to file '%s'.\n", out_file);
     }
