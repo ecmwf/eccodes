@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -31,6 +30,6 @@ public:
     void update_size(size_t) override;
 
 private:
-    grib_arguments* arg_;
-    int nbytes_;
+    grib_arguments* arg_ = nullptr;
+    int nbytes_ = 0;
 };

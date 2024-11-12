@@ -13,6 +13,7 @@ string(REGEX REPLACE "\n" ";" bufr_refs_to_download "${bufr_refs_to_download}")
 
 # Exceptional case: download bufr files which have to be treated specially
 list(APPEND bufr_files_to_download "vos308014_v3_26.bufr")  # See test ecc-197
+list(APPEND bufr_files_to_download "bad.bufr")  # See ECC-1938
 
 if( ENABLE_EXTRA_TESTS )
     ecbuild_get_test_multidata(

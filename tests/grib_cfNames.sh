@@ -24,7 +24,7 @@ ${tools_dir}/grib_set -s stepType=accum,discipline=0,parameterNumber=20,paramete
 grib_check_key_equals $temp cfName kinetic_energy_dissipation_in_atmosphere_boundary_layer
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=8,paramId=145 $sample2 $temp
 grib_check_key_equals $temp cfName kinetic_energy_dissipation_in_atmosphere_boundary_layer
-${tools_dir}/grib_set -s stepType=accum,paramId=145 $sample2 $temp
+${tools_dir}/grib_set -s paramId=145 $sample2 $temp
 grib_check_key_equals $temp cfName kinetic_energy_dissipation_in_atmosphere_boundary_layer
 
 ${tools_dir}/grib_set -s paramId=137 $sample2 $temp
@@ -51,7 +51,7 @@ grib_check_key_equals $temp cfName depth_of_isosurface_of_sea_water_potential_te
 
 ${tools_dir}/grib_set -s paramId=181 $sample1 $temp
 grib_check_key_equals $temp cfName surface_downward_northward_stress
-${tools_dir}/grib_set -s stepType=accum,paramId=181 $sample2 $temp
+${tools_dir}/grib_set -s paramId=181 $sample2 $temp
 grib_check_key_equals $temp cfName surface_downward_northward_stress
 ${tools_dir}/grib_set -s discipline=192,parameterCategory=151,parameterNumber=153 $sample2 $temp
 grib_check_key_equals $temp cfName surface_downward_eastward_stress

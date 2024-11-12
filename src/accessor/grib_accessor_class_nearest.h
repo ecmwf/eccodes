@@ -11,6 +11,7 @@
 #pragma once
 
 #include "grib_accessor_class_gen.h"
+#include "geo_nearest/grib_nearest.h"
 
 class grib_accessor_nearest_t : public grib_accessor_gen_t
 {
@@ -22,9 +23,6 @@ public:
     void dump(grib_dumper* dumper) override;
 
 private:
-    grib_arguments* args_;
-
-    friend grib_nearest* grib_nearest_new(const grib_handle* ch, int* error);
+    grib_arguments* args_ = nullptr;
+    friend eccodes::geo_nearest::Nearest* eccodes::geo_nearest::gribNearestNew(const grib_handle* ch, int* error);
 };
-
-// grib_nearest* grib_nearest_new(const grib_handle* ch, int* error);

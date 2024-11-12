@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -26,9 +25,9 @@ public:
     int compare(grib_accessor*) override;
 
 private:
-    const char* values_;
-    const char* J_;
-    const char* K_;
-    const char* M_;
-    const char* JS_;
+    const char* values_ = nullptr;
+    const char* J_ = nullptr;
+    const char* K_ = nullptr;
+    const char* M_ = nullptr;
+    const char* JS_ = nullptr;
 };

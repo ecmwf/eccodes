@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -29,8 +28,8 @@ public:
     void update_size(size_t) override;
 
 private:
-    const char* numberOfBits_;
-    const char* numberOfElements_;
+    const char* numberOfBits_ = nullptr;
+    const char* numberOfElements_ = nullptr;
 
     long compute_byte_count();
 };

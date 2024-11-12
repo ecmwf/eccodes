@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -23,8 +22,8 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* ni_;
-    const char* nj_;
-    const char* plpresent_;
-    const char* pl_;
+    const char* ni_ = nullptr;
+    const char* nj_ = nullptr;
+    const char* plpresent_ = nullptr;
+    const char* pl_ = nullptr;
 };

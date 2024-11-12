@@ -24,5 +24,5 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* bitmapIndicator_;
+    const char* bitmapIndicator_ = nullptr;
 };

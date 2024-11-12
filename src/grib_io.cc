@@ -822,6 +822,9 @@ static int read_BUFR(reader* r, int no_alloc)
             if (sec3len < 5) {
                 return GRIB_INVALID_MESSAGE; // ECC-1778
             }
+            if (sec3len > 10'000'000) {
+                return GRIB_INVALID_MESSAGE; // ECC-1938
+            }
             if ((r->read(r->read_data, tmp + i, sec3len - 3, &err) != sec3len - 3) || err)
                 return err;
             i += sec3len - 3;

@@ -31,12 +31,12 @@ public:
     int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) override;
 
 protected:
-    const char* missing_value_;
+    const char* missing_value_ = nullptr;
 
 private:
-    const char* tableReference_;
-    const char* offsetbsec_;
-    const char* sLength_;
+    const char* tableReference_ = nullptr;
+    const char* offsetbsec_ = nullptr;
+    const char* sLength_ = nullptr;
 
     void compute_size();
 };

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -26,6 +25,6 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* vector_;
-    int index_;
+    const char* vector_ = nullptr;
+    int index_ = 0;
 };

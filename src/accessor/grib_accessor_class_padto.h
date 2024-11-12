@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -24,5 +23,5 @@ public:
     size_t preferred_size(int) override;
 
 private:
-    grib_expression* expression_;
+    grib_expression* expression_ = nullptr;
 };

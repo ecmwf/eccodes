@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -24,5 +23,5 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* numberOfValues_;
+    const char* numberOfValues_ = nullptr;
 };
