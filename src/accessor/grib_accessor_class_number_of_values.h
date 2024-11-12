@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -23,10 +22,10 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* values_;
-    const char* bitsPerValue_;
-    const char* numberOfPoints_;
-    const char* bitmapPresent_;
-    const char* bitmap_;
-    const char* numberOfCodedValues_;
+    const char* values_ = nullptr;
+    const char* bitsPerValue_ = nullptr;
+    const char* numberOfPoints_ = nullptr;
+    const char* bitmapPresent_ = nullptr;
+    const char* bitmap_ = nullptr;
+    const char* numberOfCodedValues_ = nullptr;
 };

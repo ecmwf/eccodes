@@ -30,13 +30,13 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* year_;
-    const char* month_;
-    const char* day_;
-    const char* hour_;
-    const char* minute_;
-    const char* second_;
-    const char* ymd_;
-    const char* hms_;
+    const char* year_ = nullptr;
+    const char* month_ = nullptr;
+    const char* day_ = nullptr;
+    const char* hour_ = nullptr;
+    const char* minute_ = nullptr;
+    const char* second_ = nullptr;
+    const char* ymd_ = nullptr;
+    const char* hms_ = nullptr;
     char sep_[5];
 };

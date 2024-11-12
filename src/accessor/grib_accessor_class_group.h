@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -31,5 +30,5 @@ public:
     int compare(grib_accessor*) override;
 
 private:
-    char endCharacter_;
+    char endCharacter_ = 0;
 };

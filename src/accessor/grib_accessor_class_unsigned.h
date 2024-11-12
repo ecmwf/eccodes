@@ -31,11 +31,11 @@ public:
     void destroy(grib_context* context) override;
 
 protected:
-    long nbytes_;
+    long nbytes_ = 0;
 
     int pack_long_unsigned_helper(const long* val, size_t* len, int check);
 
 private:
-    grib_arguments* arg_;
+    grib_arguments* arg_ = nullptr;
 
 };

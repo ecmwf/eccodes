@@ -403,8 +403,8 @@ int grib_accessor_g2end_step_t::unpack_double(double* val, size_t* len)
 
 int grib_accessor_g2end_step_t::pack_long_(const long end_step_value, const long end_step_unit)
 {
-    grib_handle* h                   = grib_handle_of_accessor(this);
-    int err                          = 0;
+    grib_handle* h = grib_handle_of_accessor(this);
+    int err = 0;
 
     long year;
     long month;
@@ -527,13 +527,13 @@ int grib_accessor_g2end_step_t::pack_long_(const long end_step_value, const long
         time_range_opt    = eccodes::Step{ time_range.value<long>(eccodes::Unit{ force_step_units }), eccodes::Unit{ force_step_units } };
     }
 
-    if ((err = grib_set_long_internal(grib_handle_of_accessor(this), time_range_value_, time_range_opt.value<long>())) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(h, time_range_value_, time_range_opt.value<long>())) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_set_long_internal(grib_handle_of_accessor(this), time_range_unit_, time_range_opt.unit().value<long>())) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(h, time_range_unit_, time_range_opt.unit().value<long>())) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_set_long_internal(grib_handle_of_accessor(this), forecast_time_value_key, forecast_time_opt.value<long>())) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(h, forecast_time_value_key, forecast_time_opt.value<long>())) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_set_long_internal(grib_handle_of_accessor(this), forecast_time_unit_key, forecast_time_opt.unit().value<long>())) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(h, forecast_time_unit_key, forecast_time_opt.unit().value<long>())) != GRIB_SUCCESS)
         return err;
 
     return GRIB_SUCCESS;
@@ -639,7 +639,7 @@ int grib_accessor_g2end_step_t::pack_string(const char* val, size_t* len)
 
 long grib_accessor_g2end_step_t::get_native_type()
 {
-    grib_handle* h                 = grib_handle_of_accessor(this);
+    grib_handle* h = grib_handle_of_accessor(this);
     const int show_units_for_hours = context_->grib_hourly_steps_with_units;
 
     if (!show_units_for_hours) {

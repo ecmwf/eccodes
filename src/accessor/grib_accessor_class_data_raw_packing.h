@@ -26,6 +26,6 @@ public:
     int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) override;
 
 private:
-    const char* number_of_values_;
-    const char* precision_;
+    const char* number_of_values_ = nullptr;
+    const char* precision_ = nullptr;
 };

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -25,7 +24,7 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* input_;
-    int trim_left_;
-    int trim_right_;
+    const char* input_ = nullptr;
+    int trim_left_ = 0;
+    int trim_right_ = 0;
 };

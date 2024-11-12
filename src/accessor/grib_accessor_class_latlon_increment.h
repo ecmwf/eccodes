@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -25,13 +24,13 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* directionIncrementGiven_;
-    const char* directionIncrement_;
-    const char* scansPositively_;
-    const char* first_;
-    const char* last_;
-    const char* numberOfPoints_;
-    const char* angleMultiplier_;
-    const char* angleDivisor_;
-    long isLongitude_;
+    const char* directionIncrementGiven_ = nullptr;
+    const char* directionIncrement_ = nullptr;
+    const char* scansPositively_ = nullptr;
+    const char* first_ = nullptr;
+    const char* last_ = nullptr;
+    const char* numberOfPoints_ = nullptr;
+    const char* angleMultiplier_ = nullptr;
+    const char* angleDivisor_ = nullptr;
+    long isLongitude_ = 0;
 };

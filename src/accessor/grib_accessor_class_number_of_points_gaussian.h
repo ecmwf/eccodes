@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -23,16 +22,16 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* ni_;
-    const char* nj_;
-    const char* plpresent_;
-    const char* pl_;
-    const char* order_;
-    const char* lat_first_;
-    const char* lon_first_;
-    const char* lat_last_;
-    const char* lon_last_;
-    const char* support_legacy_;
+    const char* ni_ = nullptr;
+    const char* nj_ = nullptr;
+    const char* plpresent_ = nullptr;
+    const char* pl_ = nullptr;
+    const char* order_ = nullptr;
+    const char* lat_first_ = nullptr;
+    const char* lon_first_ = nullptr;
+    const char* lat_last_ = nullptr;
+    const char* lon_last_ = nullptr;
+    const char* support_legacy_ = nullptr;
 
     int unpack_long_new(long* val, size_t* len);
     int unpack_long_with_legacy_support(long* val, size_t* len);

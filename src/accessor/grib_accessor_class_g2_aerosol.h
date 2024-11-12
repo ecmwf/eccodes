@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -25,7 +24,7 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* productDefinitionTemplateNumber_;
-    const char* stepType_;
-    int optical_;
+    const char* productDefinitionTemplateNumber_ = nullptr;
+    const char* stepType_ = nullptr;
+    int optical_ = 0;
 };

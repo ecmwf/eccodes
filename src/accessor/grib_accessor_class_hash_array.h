@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -34,8 +33,8 @@ public:
     int compare(grib_accessor*) override;
 
 private:
-    char* key_;
-    grib_hash_array_value* ha_;
+    char* key_ = nullptr;
+    grib_hash_array_value* ha_ = nullptr;
 
     grib_hash_array_value* find_hash_value(int* err);
 };

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -25,12 +24,12 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* values_;
-    const char* Ni_;
-    const char* Nj_;
-    const char* i_scans_negatively_;
-    const char* j_scans_positively_;
-    const char* first_;
-    const char* last_;
-    const char* axis_;
+    const char* values_ = nullptr;
+    const char* Ni_ = nullptr;
+    const char* Nj_ = nullptr;
+    const char* i_scans_negatively_ = nullptr;
+    const char* j_scans_positively_ = nullptr;
+    const char* first_ = nullptr;
+    const char* last_ = nullptr;
+    const char* axis_ = nullptr;
 };

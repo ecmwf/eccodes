@@ -24,6 +24,6 @@ public:
     void init(const long, grib_arguments*) override;
 
 protected:
-    const char* coded_values_;
-    const char* real_part_;
+    const char* coded_values_ = nullptr;
+    const char* real_part_ = nullptr;
 };

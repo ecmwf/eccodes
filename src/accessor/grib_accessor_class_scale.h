@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -26,8 +25,8 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* value_;
-    const char* multiplier_;
-    const char* divisor_;
-    const char* truncating_;
+    const char* value_ = nullptr;
+    const char* multiplier_ = nullptr;
+    const char* divisor_ = nullptr;
+    const char* truncating_ = nullptr;
 };

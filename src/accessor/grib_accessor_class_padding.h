@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -18,7 +17,7 @@ class grib_accessor_padding_t : public grib_accessor_bytes_t
 public:
     grib_accessor_padding_t() :
         grib_accessor_bytes_t() { class_name_ = "padding"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_padding_t{}; }
+    //grib_accessor* create_empty_accessor() override { return new grib_accessor_padding_t{}; }
     size_t string_length() override;
     long byte_count() override;
     int value_count(long*) override;

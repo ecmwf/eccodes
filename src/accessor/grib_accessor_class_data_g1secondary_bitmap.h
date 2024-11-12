@@ -23,5 +23,5 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* number_of_ones_;
+    const char* number_of_ones_ = nullptr;
 };

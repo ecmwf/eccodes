@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -28,16 +27,16 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    int index_;
-    const char* the_class_;
-    const char* stream_;
-    const char* type_;
-    const char* expver_;
-    const char* typeOfProcessedData_;
-    const char* productDefinitionTemplateNumber_;
-    const char* stepType_;
-    const char* derivedForecast_;
-    const char* typeOfGeneratingProcess_;
+    int index_ = 0;
+    const char* the_class_ = nullptr;
+    const char* stream_ = nullptr;
+    const char* type_ = nullptr;
+    const char* expver_ = nullptr;
+    const char* typeOfProcessedData_ = nullptr;
+    const char* productDefinitionTemplateNumber_ = nullptr;
+    const char* stepType_ = nullptr;
+    const char* derivedForecast_ = nullptr;
+    const char* typeOfGeneratingProcess_ = nullptr;
 
     int extra_set(long val);
 };
