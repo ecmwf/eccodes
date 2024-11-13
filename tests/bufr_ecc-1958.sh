@@ -38,8 +38,13 @@ cat >$tempFilt<<EOF
 EOF
 ${tools_dir}/codes_bufr_filter -o $tempBufr $tempFilt $sample_bufr4
 
-${tools_dir}/bufr_dump -p $tempBufr > $tempOut
+# Check descriptor dump
+${tools_dir}/bufr_dump -d $tempBufr > $tempOut
+c=$( grep -c -w antennaBeamAzimuth $tempOut )
+[ $c -eq 72 ]
 
+# Check full dump
+${tools_dir}/bufr_dump -p $tempBufr > $tempOut
 c=$( grep -c -w indexInRangeDirection $tempOut )
 [ $c -eq 32 ]
 
