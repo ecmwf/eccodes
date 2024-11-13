@@ -101,14 +101,14 @@ ${tools_dir}/grib_compare -b productionStatusOfProcessedData $sample_grib2 $temp
 # Check setting dataset to on-demand-extremes-dt (4). Check keys are present and equal defaults
 ${tools_dir}/grib_set -s dataset=4 $destine_sample $temp_grib_a
 
-grib_check_key_exists $temp_grib_a dataset,centroid
-grib_check_key_equals $temp_grib_a "dataset,dataset:s,centroid" "4 on-demand-extremes-dt unknown"
+grib_check_key_exists $temp_grib_a dataset,georef
+grib_check_key_equals $temp_grib_a "dataset,dataset:s,georef" "4 on-demand-extremes-dt s0000000"
 
 # Check an example where a few additional things are set in on-demand-extremes-dt
 
-${tools_dir}/grib_set -s dataset=4,centroid=gcpkd2 $destine_sample $temp_grib_a
+${tools_dir}/grib_set -s dataset=4,georef=gcpkd2 $destine_sample $temp_grib_a
 
-grib_check_key_equals $temp_grib_a "centroid" "gcpkd2"
+grib_check_key_equals $temp_grib_a "georef" "gcpkd2"
 
 # Clean up
 rm -f $temp_grib_a $temp_grib_b $destine_sample
