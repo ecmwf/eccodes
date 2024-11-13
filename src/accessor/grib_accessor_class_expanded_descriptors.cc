@@ -212,7 +212,12 @@ void grib_accessor_expanded_descriptors_t::__expand(bufr_descriptors_array* unex
                 Assert( uidx->type == BUFR_DESCRIPTOR_TYPE_REPLICATION );
                 Assert( uidx->F == 1 );
                 Assert( uidx->Y == 0 );
-                uidx->X = (int)(size - 1); // ECC-1958: X here is not limited to 6bits!
+                // ECC-1958 and ECC-1054:
+                // Here size can exceed 63 (num bits in X is 6)
+                // We need to set X but not the descriptor code
+                uidx->X = (int)(size - 1);
+                if (size < 64)
+                    uidx->code = (size - 1) * 1000 + 100000;
                 //grib_bufr_descriptor_set_code(uidx, (size - 1) * 1000 + 100000);
                 size++;
             }

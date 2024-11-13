@@ -21,8 +21,12 @@ tempRef=temp.$label.ref
 
 sample_bufr4=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
 
-#...
-#infile=${data_dir}/SOME_FILE
+# 005074 indexInRangeDirection
+# 005075 indexInAzimuthalDirection
+# 008085 beamIdentifier
+# 022161 waveSpectra
+# 002134 antennaBeamAzimuth
+
 cat >$tempFilt<<EOF
  set numberOfSubsets = 1;
  set inputExtendedDelayedDescriptorReplicationFactor = {32};
@@ -34,8 +38,19 @@ cat >$tempFilt<<EOF
 EOF
 ${tools_dir}/codes_bufr_filter -o $tempBufr $tempFilt $sample_bufr4
 
-${tools_dir}/bufr_dump -p $tempBufr | wc -l
 ${tools_dir}/bufr_dump -p $tempBufr > $tempOut
+
+c=$( grep -c -w indexInRangeDirection $tempOut )
+[ $c -eq 32 ]
+
+# 32*24   = 768
+c=$( grep -c -w indexInAzimuthalDirection $tempOut )
+[ $c -eq 768 ]
+
+# 32*24*3 = 2304
+c=$( grep -c -w antennaBeamAzimuth $tempOut )
+[ $c -eq 2304 ]
+
 
 # Clean up
 rm -f $tempBufr $tempFilt $tempLog $tempOut $tempRef
