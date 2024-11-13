@@ -11,7 +11,9 @@
 /***************************************************************************
  *   Jean Baptiste Filippi - 01.11.2005                                    *
  ***************************************************************************/
+
 #include "grib_iterator.h"
+#include "grib_iterator_factory.h"
 #include "accessor/grib_accessor_class_iterator.h"
 
 namespace eccodes::geo_iterator {
@@ -54,7 +56,6 @@ int gribIteratorDelete(eccodes::geo_iterator::Iterator* i)
         i->destroy();
     return GRIB_SUCCESS;
 }
-
 
 }  // namespace eccodes::geo_iterator
 

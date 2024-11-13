@@ -58,7 +58,7 @@ void grib_accessor_expanded_descriptors_t::init(const long len, grib_arguments* 
 #if MYDEBUG
 static int global_depth = -1;
 
-static char* descriptor_type_name(int dtype)
+static const char* descriptor_type_name(int dtype)
 {
     switch (dtype) {
         case BUFR_DESCRIPTOR_TYPE_STRING:
@@ -94,9 +94,7 @@ void grib_accessor_expanded_descriptors_t::__expand(bufr_descriptors_array* unex
     bufr_descriptor* vv = NULL;
     /* ECC-1422: 'ur' is the array of bufr_descriptor pointers for replications.
      * Its max size is X (from FXY) which is 6 bits so no need for malloc */
-    bufr_descriptor* ur[65] = {
-        0,
-    };
+    bufr_descriptor* ur[65] = {0,};
     bufr_descriptor* urc                     = NULL;
     size_t idx                               = 0;
     bufr_descriptor* u0                      = NULL;
@@ -211,16 +209,11 @@ void grib_accessor_expanded_descriptors_t::__expand(bufr_descriptors_array* unex
 #endif
                 expanded = grib_bufr_descriptors_array_append(expanded, inner_expanded);
                 uidx     = grib_bufr_descriptors_array_get(expanded, idx);
-                // ECC-1958
-                if (size <= 100) {
-                    grib_bufr_descriptor_set_code(uidx, (size - 1) * 1000 + 100000);
-                }
-                else {
-                     grib_context_log(c, GRIB_LOG_DEBUG,
-                                      "WARNING :  Delayed replication %06ld: Too many elements (%lu). "
-                                      "Hint: This may be due to associated field descriptors",
-                                      uidx->code, size);
-                }
+                Assert( uidx->type == BUFR_DESCRIPTOR_TYPE_REPLICATION );
+                Assert( uidx->F == 1 );
+                Assert( uidx->Y == 0 );
+                uidx->X = (int)(size - 1); // ECC-1958: X here is not limited to 6bits!
+                //grib_bufr_descriptor_set_code(uidx, (size - 1) * 1000 + 100000);
                 size++;
             }
             else {
