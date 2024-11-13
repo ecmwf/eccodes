@@ -102,7 +102,7 @@ ${tools_dir}/grib_compare -b productionStatusOfProcessedData $sample_grib2 $temp
 ${tools_dir}/grib_set -s dataset=4 $destine_sample $temp_grib_a
 
 grib_check_key_exists $temp_grib_a dataset,georef
-grib_check_key_equals $temp_grib_a "dataset,dataset:s,georef" "4 on-demand-extremes-dt s0000000"
+grib_check_key_equals $temp_grib_a "dataset,dataset:s,georef,mars.georef" "4 on-demand-extremes-dt s0000000 s0000000"
 
 # Check an example where a few additional things are set in on-demand-extremes-dt
 
