@@ -106,9 +106,9 @@ grib_check_key_equals $temp_grib_a "dataset,dataset:s,georef" "4 on-demand-extre
 
 # Check an example where a few additional things are set in on-demand-extremes-dt
 
-${tools_dir}/grib_set -s dataset=4,georef=gcpkd2 $destine_sample $temp_grib_a
+${tools_dir}/grib_set -s dataset=4,georef=gcpkd2eu $destine_sample $temp_grib_a
 
-grib_check_key_equals $temp_grib_a "georef" "gcpkd2"
+grib_check_key_equals $temp_grib_a "georef" "gcpkd2eu"
 
 # Clean up
 rm -f $temp_grib_a $temp_grib_b $destine_sample
