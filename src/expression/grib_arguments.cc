@@ -42,7 +42,7 @@ Arguments::~Arguments()
     grib_expression_free(context_, expression_);
 }
 
-void Arguments::print(grib_handle* f)
+void Arguments::print(grib_handle* f) const
 {
     if (expression_)
         expression_->print(context_, f, stdout);
@@ -52,10 +52,10 @@ void Arguments::print(grib_handle* f)
     }
 }
 
-const char* Arguments::get_name(grib_handle* h, int n)
+const char* Arguments::get_name(grib_handle* h, int n) const
 {
     Expression* e   = NULL;
-    Arguments* args = this;
+    const Arguments* args = this;
     while (args && n-- > 0) {
         args = args->next_;
     }
@@ -67,10 +67,10 @@ const char* Arguments::get_name(grib_handle* h, int n)
     return e ? e->get_name() : NULL;
 }
 
-const char* Arguments::get_string(grib_handle* h, int n)
+const char* Arguments::get_string(grib_handle* h, int n) const
 {
     Expression* e   = NULL;
-    Arguments* args = this;
+    const Arguments* args = this;
     int ret         = 0;
     while (args && n-- > 0) {
         args = args->next_;
@@ -83,12 +83,12 @@ const char* Arguments::get_string(grib_handle* h, int n)
     return e->evaluate_string(h, NULL, NULL, &ret);
 }
 
-long Arguments::get_long(grib_handle* h, int n)
+long Arguments::get_long(grib_handle* h, int n) const
 {
     int ret            = 0;
     long lres          = 0;
     grib_expression* e = NULL;
-    Arguments* args    = this;
+    const Arguments* args    = this;
     while (args && n-- > 0) {
         args = args->next_;
     }
@@ -102,13 +102,13 @@ long Arguments::get_long(grib_handle* h, int n)
     return lres;
 }
 
-double Arguments::get_double(grib_handle* h, int n)
+double Arguments::get_double(grib_handle* h, int n) const
 {
     int ret     = 0;
     double dres = 0.0;
 
     Expression* e   = NULL;
-    Arguments* args = this;
+    const Arguments* args = this;
     while (args && n-- > 0) {
         args = args->next_;
     }
@@ -122,9 +122,9 @@ double Arguments::get_double(grib_handle* h, int n)
     return dres;
 }
 
-grib_expression* Arguments::get_expression(grib_handle* h, int n)
+grib_expression* Arguments::get_expression(grib_handle* h, int n) const
 {
-    Arguments* args = this;
+    const Arguments* args = this;
     while (args && n-- > 0) {
         args = args->next_;
     }
@@ -135,9 +135,9 @@ grib_expression* Arguments::get_expression(grib_handle* h, int n)
     return args->expression_;
 }
 
-int Arguments::get_count()
+int Arguments::get_count() const
 {
-    Arguments* args = this;
+    const Arguments* args = this;
     int n           = 0;
     while (args) {
         args = args->next_;
