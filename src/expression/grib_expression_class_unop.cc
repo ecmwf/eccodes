@@ -36,7 +36,7 @@ int Unop::evaluate_double(grib_handle* h, double* dres)
     return GRIB_SUCCESS;
 }
 
-Expression::string Unop::get_name()
+Expression::string Unop::get_name() const
 {
     return exp_->get_name();
 }

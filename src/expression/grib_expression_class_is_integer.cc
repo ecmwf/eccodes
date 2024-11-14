@@ -12,7 +12,7 @@
 
 namespace eccodes::expression {
 
-Expression::string IsInteger::get_name()
+Expression::string IsInteger::get_name() const
 {
     return name_;
 }

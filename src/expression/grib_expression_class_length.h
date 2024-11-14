@@ -21,7 +21,7 @@ public:
     void destroy(grib_context*) override;
     void print(grib_context*, grib_handle*, FILE*) override;
     void add_dependency(grib_accessor* observer) override;
-    string get_name() override;
+    string get_name() const override;
     int native_type(grib_handle*) const override;
     int evaluate_long(grib_handle*, long*) override;
     int evaluate_double(grib_handle*, double*) override;

@@ -12,7 +12,7 @@
 
 namespace eccodes::expression {
 
-Expression::string Length::get_name()
+Expression::string Length::get_name() const
 {
     return name_;
 }

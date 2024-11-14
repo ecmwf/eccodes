@@ -12,7 +12,7 @@
 
 namespace eccodes::expression {
 
-const char* Accessor::get_name()
+const char* Accessor::get_name() const
 {
     return name_;
 }

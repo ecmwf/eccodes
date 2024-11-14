@@ -66,7 +66,7 @@ grib_trie* IsInList::load_list(grib_context* c,  int* err)
     return list;
 }
 
-const char* IsInList::get_name()
+const char* IsInList::get_name() const
 {
     return name_;
 }

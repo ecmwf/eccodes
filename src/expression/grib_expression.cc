@@ -45,7 +45,7 @@ const char* Expression::evaluate_string(grib_handle* h, char* buf, size_t* size,
     return nullptr;
 }
 
-const char* Expression::get_name()
+const char* Expression::get_name() const
 {
     grib_context_log(grib_context_get_default(), GRIB_LOG_FATAL, "%s: No get_name() in %s", __func__, class_name());
     return nullptr;

@@ -69,7 +69,7 @@ grib_trie* IsInDict::load_dictionary(grib_context* c, int* err)
     return dictionary;
 }
 
-Expression::string IsInDict::get_name()
+Expression::string IsInDict::get_name() const
 {
     return key_;
 }
