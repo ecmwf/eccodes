@@ -30,7 +30,7 @@ public:
     virtual ~Expression() {};
     virtual void destroy(grib_context*);
     virtual void print(grib_context*, grib_handle*, FILE*) const;
-    virtual void add_dependency(grib_accessor* observer);
+    virtual void add_dependency(grib_accessor*);
     virtual string get_name() const;
     virtual int native_type(grib_handle*) const;
     virtual int evaluate_long(grib_handle*, long*) const;
@@ -48,4 +48,4 @@ namespace eccodes {
 using Expression = eccodes::expression::Expression;
 }  // namespace eccodes
 
-void grib_expression_free(grib_context* ctx, grib_expression* g);
+void grib_expression_free(grib_context*, grib_expression*);

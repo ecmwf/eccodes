@@ -4,7 +4,7 @@
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  *
- * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * In applying this, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
@@ -16,11 +16,11 @@ namespace eccodes::expression {
 
 class Unop : public Expression {
 public:
-    Unop(grib_context* c, UnopLongProc long_func, UnopDoubleProc double_func, Expression* exp);
+    Unop(grib_context*, UnopLongProc, UnopDoubleProc, Expression*);
 
     void destroy(grib_context*) override;
     void print(grib_context*, grib_handle*, FILE*) const override;
-    void add_dependency(grib_accessor* observer) override;
+    void add_dependency(grib_accessor*) override;
     string get_name() const override;
     int native_type(grib_handle*) const override;
     int evaluate_long(grib_handle*, long*) const override;
@@ -36,4 +36,4 @@ private:
 
 }  // namespace eccodes::expression
 
-grib_expression* new_unop_expression(grib_context* c, grib_unop_long_proc long_func, grib_unop_double_proc double_func, grib_expression* exp);
+grib_expression* new_unop_expression(grib_context*, grib_unop_long_proc, grib_unop_double_proc, grib_expression*);

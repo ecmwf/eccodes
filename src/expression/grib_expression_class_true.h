@@ -19,7 +19,7 @@ public:
     True() = default;
     void destroy(grib_context*) override {}
     void print(grib_context*, grib_handle*, FILE*) const override;
-    void add_dependency(grib_accessor* observer) override {};
+    void add_dependency(grib_accessor*) override {};
     int native_type(grib_handle*) const override;
     int evaluate_long(grib_handle*, long*) const override;
     int evaluate_double(grib_handle*, double*) const override;
@@ -29,4 +29,4 @@ public:
 
 }  // namespace eccodes::expression
 
-grib_expression* new_true_expression(grib_context* c);
+grib_expression* new_true_expression(grib_context*);
