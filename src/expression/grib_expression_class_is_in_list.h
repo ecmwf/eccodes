@@ -23,9 +23,9 @@ public:
     void add_dependency(grib_accessor* observer) override;
     string get_name() const override;
     int native_type(grib_handle*) const override;
-    int evaluate_long(grib_handle*, long*) override;
-    int evaluate_double(grib_handle*, double*) override;
-    string evaluate_string(grib_handle*, char*, size_t*, int*) override;
+    int evaluate_long(grib_handle*, long*) const override;
+    int evaluate_double(grib_handle*, double*) const override;
+    string evaluate_string(grib_handle*, char*, size_t*, int*) const override;
 
     const char* class_name() const override { return "is_in_list"; };
 
@@ -33,7 +33,7 @@ private:
     char* name_ = nullptr;
     char* list_ = nullptr;
 
-    grib_trie* load_list(grib_context* c,  int* err);
+    grib_trie* load_list(grib_context* c,  int* err) const;
     friend Expression* new_is_in_list_expression(grib_context* c, const char* name, const char* list);
 };
 

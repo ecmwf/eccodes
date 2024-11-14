@@ -12,7 +12,7 @@
 
 namespace eccodes::expression {
 
-grib_trie* IsInDict::load_dictionary(grib_context* c, int* err)
+grib_trie* IsInDict::load_dictionary(grib_context* c, int* err) const
 {
     char* filename  = NULL;
     char line[1024] = {0,};
@@ -74,7 +74,7 @@ Expression::string IsInDict::get_name() const
     return key_;
 }
 
-int IsInDict::evaluate_long(grib_handle* h, long* result)
+int IsInDict::evaluate_long(grib_handle* h, long* result) const
 {
     int err = 0;
     char mybuf[1024] = {0,};
@@ -93,7 +93,7 @@ int IsInDict::evaluate_long(grib_handle* h, long* result)
     return err;
 }
 
-int IsInDict::evaluate_double(grib_handle* h, double* result)
+int IsInDict::evaluate_double(grib_handle* h, double* result) const
 {
     return GRIB_NOT_IMPLEMENTED;
 
@@ -111,7 +111,7 @@ int IsInDict::evaluate_double(grib_handle* h, double* result)
     // return err;
 }
 
-Expression::string IsInDict::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err)
+Expression::string IsInDict::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
 {
     *err = GRIB_NOT_IMPLEMENTED;
     return NULL;

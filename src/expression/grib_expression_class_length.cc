@@ -17,7 +17,7 @@ Expression::string Length::get_name() const
     return name_;
 }
 
-int Length::evaluate_long(grib_handle* h, long* result)
+int Length::evaluate_long(grib_handle* h, long* result) const
 {
     int err = 0;
     char mybuf[1024] = {0,};
@@ -29,7 +29,7 @@ int Length::evaluate_long(grib_handle* h, long* result)
     return err;
 }
 
-int Length::evaluate_double(grib_handle* h, double* result)
+int Length::evaluate_double(grib_handle* h, double* result) const
 {
     char mybuf[1024] = {0,};
     size_t size = 1024;
@@ -41,7 +41,7 @@ int Length::evaluate_double(grib_handle* h, double* result)
     return err;
 }
 
-Expression::string Length::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err)
+Expression::string Length::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
 {
     char mybuf[1024] = {0,};
     Assert(buf);

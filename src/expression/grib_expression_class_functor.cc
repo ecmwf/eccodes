@@ -33,7 +33,7 @@ static bool string_contains_case(const char* haystack, const char* needle, bool 
     return copy_haystack.find(copy_needle) != std::string::npos;
 }
 
-int Functor::evaluate_long(grib_handle* h, long* lres)
+int Functor::evaluate_long(grib_handle* h, long* lres) const
 {
     // if (STR_EQUAL(name_, "lookup")) {
     //     return GRIB_SUCCESS;

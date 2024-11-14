@@ -17,7 +17,7 @@ Expression::string IsInteger::get_name() const
     return name_;
 }
 
-int IsInteger::evaluate_long(grib_handle* h, long* result)
+int IsInteger::evaluate_long(grib_handle* h, long* result) const
 {
     int err = 0;
     char mybuf[1024] = {0,};
@@ -43,7 +43,7 @@ int IsInteger::evaluate_long(grib_handle* h, long* result)
     return err;
 }
 
-int IsInteger::evaluate_double(grib_handle* h, double* result)
+int IsInteger::evaluate_double(grib_handle* h, double* result) const
 {
     int err = 0;
     long lresult = 0;
@@ -53,7 +53,7 @@ int IsInteger::evaluate_double(grib_handle* h, double* result)
     return err;
 }
 
-Expression::string IsInteger::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err)
+Expression::string IsInteger::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
 {
     long lresult   = 0;
     double dresult = 0.0;

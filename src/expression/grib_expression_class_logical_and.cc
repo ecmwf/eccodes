@@ -13,7 +13,7 @@
 
 namespace eccodes::expression {
 
-int LogicalAnd::evaluate_long(grib_handle* h, long* lres)
+int LogicalAnd::evaluate_long(grib_handle* h, long* lres) const
 {
     long v1    = 0;
     long v2    = 0;
@@ -64,7 +64,7 @@ int LogicalAnd::evaluate_long(grib_handle* h, long* lres)
     return GRIB_SUCCESS;
 }
 
-int LogicalAnd::evaluate_double(grib_handle* h, double* dres)
+int LogicalAnd::evaluate_double(grib_handle* h, double* dres) const
 {
     long lres = 0;
     int ret = evaluate_long(h, &lres);

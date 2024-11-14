@@ -12,7 +12,7 @@
 
 namespace eccodes::expression {
 
-Expression::string SubString::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err)
+Expression::string SubString::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
 {
     *err = 0;
     return value_;

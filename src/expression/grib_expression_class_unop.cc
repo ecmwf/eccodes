@@ -16,7 +16,7 @@ Unop::Unop(grib_context* c, Expression::UnopLongProc long_func,
            Expression::UnopDoubleProc double_func,
            Expression* exp) : exp_(exp), long_func_(long_func), double_func_(double_func) {}
 
-int Unop::evaluate_long(grib_handle* h, long* lres)
+int Unop::evaluate_long(grib_handle* h, long* lres) const
 {
     long v = 0;
     int ret = exp_->evaluate_long(h, &v);
@@ -26,7 +26,7 @@ int Unop::evaluate_long(grib_handle* h, long* lres)
     return GRIB_SUCCESS;
 }
 
-int Unop::evaluate_double(grib_handle* h, double* dres)
+int Unop::evaluate_double(grib_handle* h, double* dres) const
 {
     double v = 0;
     int ret = exp_->evaluate_double(h, &v);

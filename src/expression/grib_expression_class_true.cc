@@ -12,13 +12,13 @@
 
 namespace eccodes::expression {
 
-int True::evaluate_long(grib_handle* h, long* lres)
+int True::evaluate_long(grib_handle* h, long* lres) const
 {
     *lres = 1;
     return GRIB_SUCCESS;
 }
 
-int True::evaluate_double(grib_handle* h, double* dres)
+int True::evaluate_double(grib_handle* h, double* dres) const
 {
     *dres = 1;
     return GRIB_SUCCESS;

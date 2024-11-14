@@ -23,9 +23,9 @@ public:
     void add_dependency(grib_accessor* observer) override;
     string get_name() const override;
     int native_type(grib_handle*) const override;
-    int evaluate_long(grib_handle*, long*) override;
-    int evaluate_double(grib_handle*, double*) override;
-    string evaluate_string(grib_handle*, char*, size_t*, int*) override;
+    int evaluate_long(grib_handle*, long*) const override;
+    int evaluate_double(grib_handle*, double*) const override;
+    string evaluate_string(grib_handle*, char*, size_t*, int*) const override;
 
     const char* class_name() const override { return "is_integer"; };
 

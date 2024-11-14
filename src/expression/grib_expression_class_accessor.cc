@@ -17,17 +17,17 @@ const char* Accessor::get_name() const
     return name_;
 }
 
-int Accessor::evaluate_long(grib_handle* h, long* result)
+int Accessor::evaluate_long(grib_handle* h, long* result) const
 {
     return grib_get_long_internal(h, name_, result);
 }
 
-int Accessor::evaluate_double(grib_handle* h, double* result)
+int Accessor::evaluate_double(grib_handle* h, double* result) const
 {
     return grib_get_double_internal(h, name_, result);
 }
 
-Accessor::string Accessor::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err)
+Accessor::string Accessor::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
 {
     char mybuf[1024]            = {0,};
     long start = start_;

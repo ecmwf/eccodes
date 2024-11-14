@@ -27,17 +27,17 @@ int Expression::native_type(grib_handle* h) const
     return 0;
 }
 
-int Expression::evaluate_long(grib_handle* h, long* result)
+int Expression::evaluate_long(grib_handle* h, long* result) const
 {
     return GRIB_INVALID_TYPE;
 }
 
-int Expression::evaluate_double(grib_handle* h, double* result)
+int Expression::evaluate_double(grib_handle* h, double* result) const
 {
     return GRIB_INVALID_TYPE;
 }
 
-const char* Expression::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err)
+const char* Expression::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
 {
     grib_context_log(h->context, GRIB_LOG_ERROR, "%s: No evaluate_string() in %s", __func__, class_name());
     *err = GRIB_INVALID_TYPE;

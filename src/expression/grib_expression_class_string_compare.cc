@@ -25,7 +25,7 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
     return (*a == 0 && *b == 0) ? 0 : 1;
 }
 
-int StringCompare::evaluate_long(grib_handle* h, long* lres)
+int StringCompare::evaluate_long(grib_handle* h, long* lres) const
 {
     int ret = 0;
     char b1[1024] = {0,};
@@ -56,7 +56,7 @@ int StringCompare::evaluate_long(grib_handle* h, long* lres)
     return GRIB_SUCCESS;
 }
 
-int StringCompare::evaluate_double(grib_handle* h, double* dres)
+int StringCompare::evaluate_double(grib_handle* h, double* dres) const
 {
     long n;
     int ret = evaluate_long(h, &n);

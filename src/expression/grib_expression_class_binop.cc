@@ -12,7 +12,7 @@
 
 namespace eccodes::expression {
 
-int Binop::evaluate_long(grib_handle* h, long* lres)
+int Binop::evaluate_long(grib_handle* h, long* lres) const
 {
     long v1 = 0;
     long v2 = 0;
@@ -42,7 +42,7 @@ int Binop::evaluate_long(grib_handle* h, long* lres)
     return GRIB_SUCCESS;
 }
 
-int Binop::evaluate_double(grib_handle* h, double* dres)
+int Binop::evaluate_double(grib_handle* h, double* dres) const
 {
     double v1 = 0.0;
     double v2 = 0.0;
