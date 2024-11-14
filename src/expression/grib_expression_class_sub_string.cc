@@ -37,27 +37,6 @@ SubString::SubString(grib_context* c, const char* value, size_t start, size_t le
 {
     char v[1024] = {0,};
 
-    const size_t slen = strlen(value);
-    /* if (start<0) start+=strlen(value);  */
-
-    // TODO(maee): Move outside the constructor
-
-    //if (length == 0) {
-    //    grib_context_log(c, GRIB_LOG_ERROR, "Invalid substring: length must be > 0");
-    //    grib_context_free_persistent(c, e);
-    //    return NULL;
-    //}
-    //if (start > slen) { [> to catch a -ve number passed to start <]
-    //    grib_context_log(c, GRIB_LOG_ERROR, "Invalid substring: start=%lu", start);
-    //    grib_context_free_persistent(c, e);
-    //    return NULL;
-    //}
-    //if (start + length > slen) {
-    //    grib_context_log(c, GRIB_LOG_ERROR, "Invalid substring: start(=%lu)+length(=%lu) > length('%s'))", start, length, value);
-    //    grib_context_free_persistent(c, e);
-    //    return NULL;
-    //}
-
     memcpy(v, value + start, length);
     value_ = grib_context_strdup_persistent(c, v);
 }
@@ -69,6 +48,23 @@ int SubString::native_type(grib_handle* h)
 
 }  // namespace eccodes::expression
 
-grib_expression* new_sub_string_expression(grib_context* c, const char* value, size_t start, size_t length) {
+grib_expression* new_sub_string_expression(grib_context* c, const char* value, size_t start, size_t length)
+{
+    /* if (start<0) start+=strlen(value);  */
+    const size_t slen = strlen(value);
+
+    if (length == 0) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Invalid substring: length must be > 0");
+        return NULL;
+    }
+    if (start > slen) { /* to catch a -ve number passed to start */
+        grib_context_log(c, GRIB_LOG_ERROR, "Invalid substring: start=%lu", start);
+        return NULL;
+    }
+    if (start + length > slen) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Invalid substring: start(=%lu)+length(=%lu) > length('%s'))", start, length, value);
+        return NULL;
+    }
+
     return new eccodes::expression::SubString(c, value, start, length);
 }

@@ -35,37 +35,38 @@ or edit "action.class" and rerun ./make_class.pl
 
 */
 
-static void init_class      (grib_action_class*);
-static void dump            (grib_action* d, FILE*,int);
-static void destroy         (grib_context*,grib_action*);
-static int create_accessor(grib_section*,grib_action*,grib_loader*);
-static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* observed);
+static void init_class(grib_action_class*);
+static void dump(grib_action* d, FILE*, int);
+static void destroy(grib_context*, grib_action*);
+static int create_accessor(grib_section*, grib_action*, grib_loader*);
+static int notify_change(grib_action* a, grib_accessor* observer, grib_accessor* observed);
 
 
-typedef struct grib_action_when {
-    grib_action          act;
+typedef struct grib_action_when
+{
+    grib_action act;
     /* Members defined in when */
-    grib_expression *expression;
-    grib_action     *block_true;
-    grib_action     *block_false;
+    grib_expression* expression;
+    grib_action* block_true;
+    grib_action* block_false;
     int loop;
 } grib_action_when;
 
 
 static grib_action_class _grib_action_class_when = {
-    0,                              /* super */
-    "action_class_when",                 /* name */
-    sizeof(grib_action_when),            /* size */
-    0,                                   /* inited  */
-    &init_class,                         /* init_class */
-    0,                               /* init */
-    &destroy,                            /* destroy */
-    &dump,                               /* dump */
-    0,                               /* xref */
-    &create_accessor,                    /* create_accessor */
-    &notify_change,                      /* notify_change */
-    0,                            /* reparse */
-    0,                            /* execute */
+    0,                        /* super */
+    "action_class_when",      /* name */
+    sizeof(grib_action_when), /* size */
+    0,                        /* inited  */
+    &init_class,              /* init_class */
+    0,                        /* init */
+    &destroy,                 /* destroy */
+    &dump,                    /* dump */
+    0,                        /* xref */
+    &create_accessor,         /* create_accessor */
+    &notify_change,           /* notify_change */
+    0,                        /* reparse */
+    0,                        /* execute */
 };
 
 grib_action_class* grib_action_class_when = &_grib_action_class_when;
@@ -77,7 +78,7 @@ static void init_class(grib_action_class* c)
 
 /* The check on self->loop can only be done in non-threaded mode */
 #if defined(DEBUG) && GRIB_PTHREADS == 0 && GRIB_OMP_THREADS == 0
-#define CHECK_LOOP 1
+    #define CHECK_LOOP 1
 #endif
 
 grib_action* grib_action_create_when(grib_context* context,
@@ -165,9 +166,9 @@ static void dump(grib_action* act, FILE* f, int lvl)
 }
 
 #ifdef CHECK_LOOP
-#define SET_LOOP(self, v) self->loop = v;
+    #define SET_LOOP(self, v) self->loop = v;
 #else
-#define SET_LOOP(self, v)
+    #define SET_LOOP(self, v)
 #endif
 
 static int notify_change(grib_action* a, grib_accessor* observer, grib_accessor* observed)
@@ -188,8 +189,8 @@ static int notify_change(grib_action* a, grib_accessor* observer, grib_accessor*
 #ifdef CHECK_LOOP
     if (self->loop) {
         printf("LOOP detected...\n");
-        printf("WHEN triggered by %s %ld\n", observed->name, lres);
-        grib_expression_print(observed->context, self->expression, 0, stderr);
+        printf("WHEN triggered by %s %ld\n", observed->name_, lres);
+        self->expression->print(observed->context_, 0, stderr);
         fprintf(stderr, "\n");
         return ret;
     }
@@ -198,8 +199,8 @@ static int notify_change(grib_action* a, grib_accessor* observer, grib_accessor*
 
     if (hand->context->debug > 0) {
         grib_context_log(hand->context, GRIB_LOG_DEBUG,
-                "------------- SECTION action %s is triggered by [%s] (%s)",
-                a->name, observed->name_, a->debug_info ? a->debug_info : "no debug info");
+                         "------------- SECTION action %s is triggered by [%s] (%s)",
+                         a->name, observed->name_, a->debug_info ? a->debug_info : "no debug info");
         self->expression->print(observed->context_, 0, stderr);
         fprintf(stderr, "\n");
     }

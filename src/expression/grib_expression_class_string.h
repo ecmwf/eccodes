@@ -12,10 +12,9 @@
 
 #include "grib_expression.h"
 
-namespace eccodes::expression
-{
-class String : public Expression
-{
+namespace eccodes::expression {
+
+class String : public Expression {
 public:
     String(grib_context* context, const char* value);
 
@@ -24,12 +23,8 @@ public:
     void add_dependency(grib_accessor* observer) override;
     int native_type(grib_handle*) override;
     string evaluate_string(grib_handle*, char*, size_t*, int*) override;
-    const char* class_name() override { return "string"; };
 
-    // TODO(maee): Check this
-    string get_name() override { return nullptr; }
-    int evaluate_long(grib_handle*, long*) override { return 0; }
-    int evaluate_double(grib_handle*, double*) override { return 0; }
+    const char* class_name() override { return "string"; };
 
 private:
     char* value_ = nullptr;

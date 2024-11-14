@@ -11,19 +11,23 @@
 #include "grib_arguments.h"
 
 
-grib_arguments* grib_arguments_new(grib_context* c, eccodes::Expression* g, eccodes::Arguments* n) {
+grib_arguments* grib_arguments_new(grib_context* c, eccodes::Expression* g, eccodes::Arguments* n)
+{
     return new eccodes::Arguments(c, g, n);
 }
 
-void grib_arguments_free(grib_context* c, grib_arguments* g) {
+void grib_arguments_free(grib_context* c, grib_arguments* g)
+{
     if (g) {
-        grib_arguments_free(c, g->next_);
-        grib_expression_free(c, g->expression_);
+        // TODO(maee): Check for memory leaks
+        // grib_arguments_free(c, g->next_);
+        // grib_expression_free(c, g->expression_);
         delete g;
     }
 }
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
 Arguments::Arguments(grib_context* c, Expression* g, Arguments* n)
 {
@@ -50,8 +54,8 @@ void Arguments::print(grib_handle* f)
 
 const char* Arguments::get_name(grib_handle* h, int n)
 {
-    Expression* e = NULL;
-    Arguments* args    = this;
+    Expression* e   = NULL;
+    Arguments* args = this;
     while (args && n-- > 0) {
         args = args->next_;
     }
@@ -65,9 +69,9 @@ const char* Arguments::get_name(grib_handle* h, int n)
 
 const char* Arguments::get_string(grib_handle* h, int n)
 {
-    Expression* e = NULL;
+    Expression* e   = NULL;
     Arguments* args = this;
-    int ret            = 0;
+    int ret         = 0;
     while (args && n-- > 0) {
         args = args->next_;
     }
@@ -79,11 +83,12 @@ const char* Arguments::get_string(grib_handle* h, int n)
     return e->evaluate_string(h, NULL, NULL, &ret);
 }
 
-long Arguments::get_long(grib_handle* h, grib_arguments* args, int n)
+long Arguments::get_long(grib_handle* h, int n)
 {
     int ret            = 0;
     long lres          = 0;
     grib_expression* e = NULL;
+    Arguments* args    = this;
     while (args && n-- > 0) {
         args = args->next_;
     }
@@ -102,7 +107,7 @@ double Arguments::get_double(grib_handle* h, int n)
     int ret     = 0;
     double dres = 0.0;
 
-    Expression* e = NULL;
+    Expression* e   = NULL;
     Arguments* args = this;
     while (args && n-- > 0) {
         args = args->next_;
@@ -133,7 +138,7 @@ grib_expression* Arguments::get_expression(grib_handle* h, int n)
 int Arguments::get_count()
 {
     Arguments* args = this;
-    int n = 0;
+    int n           = 0;
     while (args) {
         args = args->next_;
         n++;

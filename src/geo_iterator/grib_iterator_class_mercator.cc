@@ -174,22 +174,22 @@ int Mercator::init(grib_handle* h, grib_arguments* args)
         LaDInRadians, orientationInRadians;
     double earthMajorAxisInMetres = 0, earthMinorAxisInMetres = 0;
 
-    const char* sRadius               = grib_arguments_get_name(h, args, carg_++);
-    const char* sNi                   = grib_arguments_get_name(h, args, carg_++);
-    const char* sNj                   = grib_arguments_get_name(h, args, carg_++);
-    const char* sLatFirstInDegrees    = grib_arguments_get_name(h, args, carg_++);
-    const char* sLonFirstInDegrees    = grib_arguments_get_name(h, args, carg_++);
-    const char* sLaDInDegrees         = grib_arguments_get_name(h, args, carg_++);
-    const char* sLatLastInDegrees     = grib_arguments_get_name(h, args, carg_++);
-    const char* sLonLastInDegrees     = grib_arguments_get_name(h, args, carg_++);
-    const char* sOrientationInDegrees = grib_arguments_get_name(h, args, carg_++);
+    const char* sRadius               = args->get_name(h, carg_++);
+    const char* sNi                   = args->get_name(h, carg_++);
+    const char* sNj                   = args->get_name(h, carg_++);
+    const char* sLatFirstInDegrees    = args->get_name(h, carg_++);
+    const char* sLonFirstInDegrees    = args->get_name(h, carg_++);
+    const char* sLaDInDegrees         = args->get_name(h, carg_++);
+    const char* sLatLastInDegrees     = args->get_name(h, carg_++);
+    const char* sLonLastInDegrees     = args->get_name(h, carg_++);
+    const char* sOrientationInDegrees = args->get_name(h, carg_++);
     /* Dx and Dy are in Metres */
-    const char* sDi                     = grib_arguments_get_name(h, args, carg_++);
-    const char* sDj                     = grib_arguments_get_name(h, args, carg_++);
-    const char* siScansNegatively       = grib_arguments_get_name(h, args, carg_++);
-    const char* sjScansPositively       = grib_arguments_get_name(h, args, carg_++);
-    const char* sjPointsAreConsecutive  = grib_arguments_get_name(h, args, carg_++);
-    const char* sAlternativeRowScanning = grib_arguments_get_name(h, args, carg_++);
+    const char* sDi                     = args->get_name(h, carg_++);
+    const char* sDj                     = args->get_name(h, carg_++);
+    const char* siScansNegatively       = args->get_name(h, carg_++);
+    const char* sjScansPositively       = args->get_name(h, carg_++);
+    const char* sjPointsAreConsecutive  = args->get_name(h, carg_++);
+    const char* sAlternativeRowScanning = args->get_name(h, carg_++);
 
     if ((err = grib_get_long_internal(h, sNi, &ni)) != GRIB_SUCCESS) return err;
     if ((err = grib_get_long_internal(h, sNj, &nj)) != GRIB_SUCCESS) return err;

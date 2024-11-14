@@ -23,8 +23,8 @@ int Reduced::init(grib_handle* h, grib_arguments* args)
     if ((ret = Gen::init(h, args) != GRIB_SUCCESS))
         return ret;
 
-    Nj_      = grib_arguments_get_name(h, args, cargs_++);
-    pl_      = grib_arguments_get_name(h, args, cargs_++);
+    Nj_      = args->get_name(h, cargs_++);
+    pl_      = args->get_name(h, cargs_++);
     j_       = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
     legacy_  = -1;
     rotated_ = -1;
@@ -59,29 +59,29 @@ typedef void (*get_reduced_row_proc)(long pl, double lon_first, double lon_last,
 
 static int is_legacy(grib_handle* h, int* legacy)
 {
-    int err = 0;
+    int err   = 0;
     long lVal = 0;
-    *legacy = 0; // false by default
-    err = grib_get_long(h, "legacyGaussSubarea", &lVal);
+    *legacy   = 0;  // false by default
+    err       = grib_get_long(h, "legacyGaussSubarea", &lVal);
     if (err) return err;
     *legacy = (int)lVal;
     return GRIB_SUCCESS;
 }
 static int is_rotated(grib_handle* h, int* rotated)
 {
-    int err = 0;
+    int err   = 0;
     long lVal = 0;
-    *rotated = 0; // false by default
-    err = grib_get_long(h, "isRotatedGrid", &lVal);
+    *rotated  = 0;  // false by default
+    err       = grib_get_long(h, "isRotatedGrid", &lVal);
     if (err) return err;
     *rotated = (int)lVal;
     return GRIB_SUCCESS;
 }
 
 int Reduced::find(grib_handle* h,
-                double inlat, double inlon, unsigned long flags,
-                double* outlats, double* outlons, double* values,
-                double* distances, int* indexes, size_t* len)
+                  double inlat, double inlon, unsigned long flags,
+                  double* outlats, double* outlons, double* values,
+                  double* distances, int* indexes, size_t* len)
 {
     int err = 0;
 
@@ -91,16 +91,15 @@ int Reduced::find(grib_handle* h,
     }
 
     if (global_ && rotated_ == 0) {
-        err = find_global( h,
-                inlat, inlon, flags,
-                outlats, outlons, values,
-                distances, indexes, len);
+        err = find_global(h,
+                          inlat, inlon, flags,
+                          outlats, outlons, values,
+                          distances, indexes, len);
     }
-    else
-    {
+    else {
         /* ECC-762, ECC-1432: Use brute force generic algorithm
          * for reduced grid subareas. Review in the future
-        */
+         */
         int lons_count = 0; /*dummy*/
 
         err = grib_nearest_find_generic(
@@ -119,12 +118,12 @@ int Reduced::find(grib_handle* h,
 
 /* Old implementation in src/deprecated/grib_nearest_class_reduced.old */
 int Reduced::find_global(grib_handle* h,
-                double inlat, double inlon, unsigned long flags,
-                double* outlats, double* outlons, double* values,
-                double* distances, int* indexes, size_t* len)
+                         double inlat, double inlon, unsigned long flags,
+                         double* outlats, double* outlons, double* values,
+                         double* distances, int* indexes, size_t* len)
 {
     int err = 0, kk = 0, ii = 0;
-    size_t jj = 0;
+    size_t jj           = 0;
     long* pla           = NULL;
     long* pl            = NULL;
     size_t nvalues      = 0;
@@ -153,8 +152,8 @@ int Reduced::find_global(grib_handle* h,
      * This is for performance: if the grid has not changed, we only do this once
      * and reuse for other messages */
     if (!h_ || (flags & GRIB_NEAREST_SAME_GRID) == 0) {
-        double olat  = 1.e10;
-        long n       = 0;
+        double olat = 1.e10;
+        long n      = 0;
 
         ilat = 0;
         ilon = 0;
@@ -187,7 +186,7 @@ int Reduced::find_global(grib_handle* h,
         while (grib_iterator_next(iter, &lat, &lon, NULL)) {
             if (ilat < lats_count_ && olat != lat) {
                 lats_[ilat++] = lat;
-                olat               = lat;
+                olat          = lat;
             }
             while (lon > 360)
                 lon -= 360;
@@ -196,7 +195,7 @@ int Reduced::find_global(grib_handle* h,
                     if (lon > 180 && lon < 360)
                         lon -= 360;
             }
-            DEBUG_ASSERT_ACCESS(lons_, (long)ilon, (long)nearest->values_count);
+            DEBUG_ASSERT_ACCESS(lons_, (long)ilon, (long)values_count_);
             lons_[ilon++] = lon;
         }
         lats_count_ = ilat;
@@ -288,8 +287,8 @@ int Reduced::find_global(grib_handle* h,
         if (lons[nplm1] > lons[0]) {
             if (inlon < lons[0] || inlon > lons[nplm1]) {
                 if (lons[nplm1] - lons[0] - 360 <= lons[nplm1] - lons[nplm1 - 1]) {
-                    k_[0]         = 0;
-                    k_[1]         = nplm1;
+                    k_[0]              = 0;
+                    k_[1]              = nplm1;
                     nearest_lons_found = 1;
                 }
                 else
@@ -299,8 +298,8 @@ int Reduced::find_global(grib_handle* h,
         else {
             if (inlon > lons[0] || inlon < lons[nplm1]) {
                 if (lons[0] - lons[nplm1] - 360 <= lons[0] - lons[1]) {
-                    k_[0]         = 0;
-                    k_[1]         = nplm1;
+                    k_[0]              = 0;
+                    k_[1]              = nplm1;
                     nearest_lons_found = 1;
                 }
                 else
@@ -352,8 +351,8 @@ int Reduced::find_global(grib_handle* h,
             if (inlon < lons[0] || inlon > lons[nplm1]) {
                 if (lons[nplm1] - lons[0] - 360 <=
                     lons[nplm1] - lons[nplm1 - 1]) {
-                    k_[2]         = 0;
-                    k_[3]         = nplm1;
+                    k_[2]              = 0;
+                    k_[3]              = nplm1;
                     nearest_lons_found = 1;
                 }
                 else
@@ -364,8 +363,8 @@ int Reduced::find_global(grib_handle* h,
             if (inlon > lons[0] || inlon < lons[nplm1]) {
                 if (lons[0] - lons[nplm1] - 360 <=
                     lons[0] - lons[1]) {
-                    k_[2]         = 0;
-                    k_[3]         = nplm1;
+                    k_[2]              = 0;
+                    k_[3]              = nplm1;
                     nearest_lons_found = 1;
                 }
                 else
@@ -395,7 +394,7 @@ int Reduced::find_global(grib_handle* h,
         for (jj = 0; jj < 2; jj++) {
             for (ii = 0; ii < 2; ii++) {
                 distances_[kk] = geographic_distance_spherical(radiusInKm, inlon, inlat,
-                                                                    lons_[k_[kk]], lats_[j_[jj]]);
+                                                               lons_[k_[kk]], lats_[j_[jj]]);
                 kk++;
             }
         }
@@ -423,7 +422,8 @@ int Reduced::find_global(grib_handle* h,
                 /* Current interface uses an 'int' for 'indexes' which is 32bits! We should change this to a 64bit type */
                 grib_context_log(h->context, GRIB_LOG_ERROR, "grib_nearest_reduced: Unable to compute index. Value too large");
                 return GRIB_OUT_OF_RANGE;
-            } else {
+            }
+            else {
                 indexes[kk] = (int)k_[kk];
             }
             kk++;

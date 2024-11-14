@@ -14,8 +14,7 @@
 
 namespace eccodes::expression {
 
-class Accessor : public Expression
-{
+class Accessor : public Expression {
 public:
     Accessor(grib_context* c, const char* name, long start, size_t length);
 

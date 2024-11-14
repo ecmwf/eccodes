@@ -130,10 +130,15 @@ int Binop::native_type(grib_handle* h)
 
 }  // namespace eccodes::expression
 
-grib_expression* new_binop_expression(grib_context* c,
-                                      eccodes::Expression::BinopLongProc long_func,
-                                      eccodes::Expression::BinopDoubleProc double_func,
-                                      grib_expression* left, grib_expression* right)
-{
+
+grib_expression* new_binop_expression(grib_context* c, grib_binop_long_proc long_func, grib_binop_double_proc double_func, grib_expression* left, grib_expression* right) {
     return new eccodes::expression::Binop(c, long_func, double_func, left, right);
 }
+
+//grib_expression* new_binop_expression(grib_context* c,
+//                                      eccodes::Expression::BinopLongProc long_func,
+//                                      eccodes::Expression::BinopDoubleProc double_func,
+//                                      grib_expression* left, grib_expression* right)
+//{
+//    return new eccodes::expression::Binop(c, long_func, double_func, left, right);
+//}

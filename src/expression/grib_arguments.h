@@ -20,8 +20,6 @@ public:
     Arguments(grib_context* c, Expression* g, Arguments* n);
     ~Arguments();
 
-    const char* next(Arguments**);
-
     void print(grib_handle* f);
     const char* get_name(grib_handle* h, int n);
     const char* get_string(grib_handle* h, int n);
@@ -32,9 +30,9 @@ public:
 
     // TODO(maee): make this private
 //private:
-    Arguments* next_ = nullptr;
+    Arguments* next_        = nullptr;
     Expression* expression_ = nullptr;
-    grib_context* context_ = nullptr;
+    grib_context* context_  = nullptr;
 };
 
 }  // namespace eccodes::expression
@@ -43,5 +41,5 @@ namespace eccodes {
 using Arguments = eccodes::expression::Arguments;
 }  // namespace eccodes
 
-eccodes::Arguments* grib_arguments_new(grib_context* c, eccodes::Expression* g, eccodes::Arguments* n);
+eccodes::Arguments* grib_arguments_new(grib_context* c, grib_expression* g, eccodes::Arguments* n);
 void grib_arguments_free(grib_context* c, grib_arguments* g);

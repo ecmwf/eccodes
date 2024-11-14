@@ -12,11 +12,9 @@
 
 #include "grib_expression.h"
 
-namespace eccodes::expression
-{
+namespace eccodes::expression {
 
-class IsInteger : public Expression
-{
+class IsInteger : public Expression {
 public:
     IsInteger(grib_context* c, const char* name, int start, int length);
 
@@ -28,6 +26,7 @@ public:
     int evaluate_long(grib_handle*, long*) override;
     int evaluate_double(grib_handle*, double*) override;
     string evaluate_string(grib_handle*, char*, size_t*, int*) override;
+
     const char* class_name() override { return "is_integer"; };
 
 private:

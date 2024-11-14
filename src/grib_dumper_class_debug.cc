@@ -109,7 +109,7 @@ static void default_long_value(grib_dumper* d, grib_accessor* a, long actualValu
         return;
 
     grib_handle* h = grib_handle_of_accessor(a);
-    grib_expression* expression = grib_arguments_get_expression(h, act->default_value, 0);
+    grib_expression* expression = act->default_value->get_expression(h, 0);
     if (!expression)
         return;
 

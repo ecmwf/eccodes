@@ -12,11 +12,9 @@
 
 #include "grib_expression.h"
 
-namespace eccodes::expression
-{
+namespace eccodes::expression {
 
-class IsInDict : public Expression
-{
+class IsInDict : public Expression {
 public:
     IsInDict(grib_context* c, const char* name, const char* list);
 
@@ -27,17 +25,14 @@ public:
     int evaluate_long(grib_handle*, long*) override;
     int evaluate_double(grib_handle*, double*) override;
     string evaluate_string(grib_handle*, char*, size_t*, int*) override;
+
     const char* class_name() override { return "is_in_dict"; };
 
-    // TODO(maee): Check this
-    void destroy(grib_context*) override {}
-
 private:
-
     const char* key_        = nullptr;
     const char* dictionary_ = nullptr;
 
-    grib_trie* load_dictionary(grib_context* c,  int* err);
+    grib_trie* load_dictionary(grib_context* c, int* err);
     friend Expression* new_is_in_dict_expression(grib_context* c, const char* name, const char* list);
 };
 

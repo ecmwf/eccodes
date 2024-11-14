@@ -14,8 +14,7 @@
 
 namespace eccodes::expression {
 
-class Binop : public Expression
-{
+class Binop : public Expression {
 public:
     Binop(grib_context* c, BinopLongProc long_func, BinopDoubleProc double_func, Expression* left, Expression* right);
 
@@ -26,13 +25,9 @@ public:
     int evaluate_long(grib_handle*, long*) override;
     int evaluate_double(grib_handle*, double*) override;
 
-    // TODO(maee): Check this
-    string get_name() override { return nullptr; }
-    string evaluate_string(grib_handle*, char*, size_t*, int*) override { return nullptr; }
     const char* class_name() override { return "binop"; };
 
 private:
-
     Expression* left_ = nullptr;
     Expression* right_ = nullptr;
     BinopLongProc long_func_ = nullptr;
@@ -42,7 +37,4 @@ private:
 
 };  // namespace eccodes::expression
 
-grib_expression* new_binop_expression(grib_context* c,
-                                      eccodes::Expression::BinopLongProc long_func,
-                                      eccodes::Expression::BinopDoubleProc double_func,
-                                      grib_expression* left, grib_expression* right);
+grib_expression* new_binop_expression(grib_context* c, grib_binop_long_proc long_func, grib_binop_double_proc double_func, grib_expression* left, grib_expression* right);

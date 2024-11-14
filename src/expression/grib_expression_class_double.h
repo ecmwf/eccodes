@@ -26,9 +26,6 @@ public:
     int evaluate_long(grib_handle*, long*) override;
     int evaluate_double(grib_handle*, double*) override;
 
-    // TODO(maee): Check this
-    string get_name() override { return nullptr; }
-    string evaluate_string(grib_handle*, char*, size_t*, int*) override { return nullptr; }
     const char* class_name() override { return "double"; };
 
 private:

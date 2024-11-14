@@ -12,11 +12,9 @@
 
 #include "grib_expression.h"
 
-namespace eccodes::expression
-{
+namespace eccodes::expression {
 
-class Long : public Expression
-{
+class Long : public Expression {
 public:
     Long(long value) : value_(value) {}
 
@@ -26,14 +24,10 @@ public:
     int native_type(grib_handle*) override;
     int evaluate_long(grib_handle*, long*) override;
     int evaluate_double(grib_handle*, double*) override;
+
     const char* class_name() override { return "long"; };
 
-    // TODO(maee): Check this
-    string get_name() override { return nullptr; }
-    string evaluate_string(grib_handle*, char*, size_t*, int*) override { return nullptr; }
-
 private:
-
     long value_ = 0;
 };
 

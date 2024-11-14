@@ -12,11 +12,9 @@
 
 #include "grib_expression.h"
 
-namespace eccodes::expression
-{
+namespace eccodes::expression {
 
-class Unop : public Expression
-{
+class Unop : public Expression {
 public:
     Unop(grib_context* c, UnopLongProc long_func, UnopDoubleProc double_func, Expression* exp);
 
@@ -27,10 +25,8 @@ public:
     int native_type(grib_handle*) override;
     int evaluate_long(grib_handle*, long*) override;
     int evaluate_double(grib_handle*, double*) override;
-    const char* class_name() override { return "unop"; };
 
-    // TODO(maee): Check this
-    string evaluate_string(grib_handle*, char*, size_t*, int*) override { return nullptr; }
+    const char* class_name() override { return "unop"; };
 
 private:
     Expression* exp_            = nullptr;

@@ -12,11 +12,9 @@
 
 #include "grib_expression.h"
 
-namespace eccodes::expression
-{
+namespace eccodes::expression {
 
-class True : public Expression
-{
+class True : public Expression {
 public:
     True() = default;
     void destroy(grib_context*) override {}
@@ -25,11 +23,8 @@ public:
     int native_type(grib_handle*) override;
     int evaluate_long(grib_handle*, long*) override;
     int evaluate_double(grib_handle*, double*) override;
-    const char* class_name() override { return "true"; };
 
-    // TODO(maee): Check this
-    string evaluate_string(grib_handle*, char*, size_t*, int*) override { return nullptr; }
-    string get_name() override { return nullptr; }
+    const char* class_name() override { return "true"; };
 };
 
 }  // namespace eccodes::expression

@@ -12,11 +12,9 @@
 
 #include "grib_expression.h"
 
-namespace eccodes::expression
-{
+namespace eccodes::expression {
 
-class Functor : public Expression
-{
+class Functor : public Expression {
 public:
     Functor(grib_context* c, const char* name, grib_arguments* args);
 
@@ -26,11 +24,9 @@ public:
     int native_type(grib_handle*) override;
     int evaluate_long(grib_handle*, long*) override;
 
-    // TODO(maee): Check this
-    string get_name() override { return nullptr; }
-    int evaluate_double(grib_handle*, double*) override { return 0; }
-    string evaluate_string(grib_handle*, char*, size_t*, int*) override { return nullptr; }
     const char* class_name() override { return "functor"; };
+
+    char* name() { return name_; }  // For testing
 
 private:
     char* name_ = nullptr;

@@ -14,8 +14,7 @@
 
 namespace eccodes::expression {
 
-class IsInList : public Expression
-{
+class IsInList : public Expression {
 public:
     IsInList(grib_context* c, const char* name, const char* list);
 
@@ -27,6 +26,7 @@ public:
     int evaluate_long(grib_handle*, long*) override;
     int evaluate_double(grib_handle*, double*) override;
     string evaluate_string(grib_handle*, char*, size_t*, int*) override;
+
     const char* class_name() override { return "is_in_list"; };
 
 private:
