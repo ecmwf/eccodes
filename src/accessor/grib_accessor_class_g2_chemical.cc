@@ -13,6 +13,15 @@
 grib_accessor_g2_chemical_t _grib_accessor_g2_chemical{};
 grib_accessor* grib_accessor_g2_chemical = &_grib_accessor_g2_chemical;
 
+// Meaning of data member chemical_type_:
+//  0 = atmospheric chemical constituents
+//  1 = atmospheric chemical constituents based on a distribution function
+//  2 = atmospheric chemical constituents with source or sink
+//
+#define CHEM_PLAIN   0
+#define CHEM_DISTRIB 1
+#define CHEM_SRCSINK 2
+
 void grib_accessor_g2_chemical_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_unsigned_t::init(l, c);
@@ -29,15 +38,10 @@ int grib_accessor_g2_chemical_t::unpack_long(long* val, size_t* len)
     long productDefinitionTemplateNumber = 0;
     grib_get_long(grib_handle_of_accessor(this), productDefinitionTemplateNumber_, &productDefinitionTemplateNumber);
 
-    // Meaning of self->chemical_type:
-    //  0 = atmospheric chemical constituents
-    //  1 = atmospheric chemical constituents based on a distribution function
-    //  2 = atmospheric chemical constituents with source or sink
-    //
-    Assert(chemical_type_ == 0 || chemical_type_ == 1 || chemical_type_ == 2);
-    if (chemical_type_ == 1)
+    Assert(chemical_type_ == CHEM_PLAIN || chemical_type_ == CHEM_DISTRIB || chemical_type_ == CHEM_SRCSINK);
+    if (chemical_type_ == CHEM_DISTRIB)
         *val = grib2_is_PDTN_ChemicalDistFunc(productDefinitionTemplateNumber);
-    else if (chemical_type_ == 2)
+    else if (chemical_type_ == CHEM_SRCSINK)
         *val = grib2_is_PDTN_ChemicalSourceSink(productDefinitionTemplateNumber);
     else
         *val = grib2_is_PDTN_Chemical(productDefinitionTemplateNumber);
@@ -74,47 +78,42 @@ int grib_accessor_g2_chemical_t::pack_long(const long* val, size_t* len)
     if (!strcmp(stepType, "instant"))
         isInstant = 1;
 
-    // Meaning of self->chemical_type:
-    //  0 = atmospheric chemical constituents
-    //  1 = atmospheric chemical constituents based on a distribution function
-    //  2 = atmospheric chemical constituents with source or sink
-    //
-    Assert(chemical_type_ == 0 || chemical_type_ == 1 || chemical_type_ == 2);
+    Assert(chemical_type_ == CHEM_PLAIN || chemical_type_ == CHEM_DISTRIB || chemical_type_ == CHEM_SRCSINK);
 
     if (eps == 1) {
         if (isInstant) {
-            if (chemical_type_ == 0)
+            if (chemical_type_ == CHEM_PLAIN)
                 productDefinitionTemplateNumberNew = 41;
-            else if (chemical_type_ == 1)
+            else if (chemical_type_ == CHEM_DISTRIB)
                 productDefinitionTemplateNumberNew = 58;
-            else if (chemical_type_ == 2)
+            else if (chemical_type_ == CHEM_SRCSINK)
                 productDefinitionTemplateNumberNew = 77;
         }
         else {
-            if (chemical_type_ == 0)
+            if (chemical_type_ == CHEM_PLAIN)
                 productDefinitionTemplateNumberNew = 43;
-            else if (chemical_type_ == 1)
+            else if (chemical_type_ == CHEM_DISTRIB)
                 productDefinitionTemplateNumberNew = 68;
-            else if (chemical_type_ == 2)
+            else if (chemical_type_ == CHEM_SRCSINK)
                 productDefinitionTemplateNumberNew = 79;
         }
     }
     else {
         // deterministic
         if (isInstant) {
-            if (chemical_type_ == 0)
+            if (chemical_type_ == CHEM_PLAIN)
                 productDefinitionTemplateNumberNew = 40;
-            else if (chemical_type_ == 1)
+            else if (chemical_type_ == CHEM_DISTRIB)
                 productDefinitionTemplateNumberNew = 57;
-            else if (chemical_type_ == 2)
+            else if (chemical_type_ == CHEM_SRCSINK)
                 productDefinitionTemplateNumberNew = 76;
         }
         else {
-            if (chemical_type_ == 0)
+            if (chemical_type_ == CHEM_PLAIN)
                 productDefinitionTemplateNumberNew = 42;
-            else if (chemical_type_ == 1)
+            else if (chemical_type_ == CHEM_DISTRIB)
                 productDefinitionTemplateNumberNew = 67;
-            else if (chemical_type_ == 2)
+            else if (chemical_type_ == CHEM_SRCSINK)
                 productDefinitionTemplateNumberNew = 78;
         }
     }

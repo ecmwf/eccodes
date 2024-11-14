@@ -385,23 +385,19 @@ size_t grib_decode_size_t(const unsigned char* p, long* bitp, long nbits)
 
 int grib_encode_unsigned_longb(unsigned char* p, unsigned long val, long* bitp, long nb)
 {
-    long i = 0;
-
     if (nb > max_nbits) {
         fprintf(stderr, "Number of bits (%ld) exceeds maximum number of bits (%d)\n", nb, max_nbits);
         Assert(0);
         return GRIB_INTERNAL_ERROR;
     }
-#ifdef DEBUG
-    {
-        unsigned long maxV = codes_power<double>(nb, 2);
-        if (val > maxV) {
-            fprintf(stderr, "grib_encode_unsigned_longb: Value=%lu, but number of bits=%ld!\n", val, nb);
-            Assert(0);
-        }
+
+    const unsigned long maxV = codes_power<double>(nb, 2) - 1;
+    if (val > maxV) {
+        fprintf(stderr, "ECCODES WARNING :  %s: Trying to encode value of %lu but the maximum allowable value is %lu (number of bits=%ld)\n",
+                __func__, val, maxV, nb);
     }
-#endif
-    for (i = nb - 1; i >= 0; i--) {
+
+    for (long i = nb - 1; i >= 0; i--) {
         if (test(val, i))
             grib_set_bit_on(p, bitp);
         else
@@ -415,22 +411,18 @@ int grib_encode_unsigned_longb(unsigned char* p, unsigned long val, long* bitp, 
  */
 int grib_encode_size_tb(unsigned char* p, size_t val, long* bitp, long nb)
 {
-    long i = 0;
-
     if (nb > max_nbits_size_t) {
         fprintf(stderr, "Number of bits (%ld) exceeds maximum number of bits (%d)\n", nb, max_nbits_size_t);
         Assert(0);
     }
-#ifdef DEBUG
-    {
-        size_t maxV = codes_power<double>(nb, 2);
-        if (val > maxV) {
-            fprintf(stderr, "grib_encode_size_tb: Value=%lu, but number of bits=%ld!\n", val, nb);
-            Assert(0);
-        }
+
+    const size_t maxV = codes_power<double>(nb, 2) - 1;
+    if (val > maxV) {
+        fprintf(stderr, "ECCODES WARNING :  %s: Trying to encode value of %zu but the maximum allowable value is %zu (number of bits=%ld)\n",
+                __func__, val, maxV, nb);
     }
-#endif
-    for (i = nb - 1; i >= 0; i--) {
+
+    for (long i = nb - 1; i >= 0; i--) {
         if (test(val, i))
             grib_set_bit_on(p, bitp);
         else

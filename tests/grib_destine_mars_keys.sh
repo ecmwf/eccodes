@@ -97,5 +97,18 @@ ${tools_dir}/grib_ls -jm $temp_grib_a
 ${tools_dir}/grib_set -s productionStatusOfProcessedData=12 $sample_grib2 $temp_grib_a
 ${tools_dir}/grib_compare -b productionStatusOfProcessedData $sample_grib2 $temp_grib_a
 
+# ECC-1832 On-Demand DT metadata
+# Check setting dataset to on-demand-extremes-dt (4). Check keys are present and equal defaults
+${tools_dir}/grib_set -s dataset=4 $destine_sample $temp_grib_a
+
+grib_check_key_exists $temp_grib_a dataset,georef
+grib_check_key_equals $temp_grib_a "dataset,dataset:s,georef,mars.georef" "4 on-demand-extremes-dt s0000000 s0000000"
+
+# Check an example where a few additional things are set in on-demand-extremes-dt
+
+${tools_dir}/grib_set -s dataset=4,georef=gcpkd2eu $destine_sample $temp_grib_a
+
+grib_check_key_equals $temp_grib_a "georef" "gcpkd2eu"
+
 # Clean up
 rm -f $temp_grib_a $temp_grib_b $destine_sample

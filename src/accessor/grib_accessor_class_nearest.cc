@@ -25,34 +25,3 @@ void grib_accessor_nearest_t::dump(grib_dumper* dumper)
     grib_dump_label(dumper, this, NULL);
 }
 
-#if defined(HAVE_GEOGRAPHY)
-grib_nearest* grib_nearest_new(const grib_handle* ch, int* error)
-{
-    grib_handle* h              = (grib_handle*)ch;
-    grib_accessor* a            = NULL;
-    grib_accessor_nearest_t* na = NULL;
-    grib_nearest* n             = NULL;
-    *error                      = GRIB_NOT_IMPLEMENTED;
-    a                           = grib_find_accessor(h, "NEAREST");
-    na                          = (grib_accessor_nearest_t*)a;
-
-    if (!a)
-        return NULL;
-
-    n = grib_nearest_factory(h, na->args_, error);
-
-    if (n)
-        *error = GRIB_SUCCESS;
-
-    return n;
-}
-#else
-grib_nearest* grib_nearest_new(const grib_handle* ch, int* error)
-{
-    *error = GRIB_FUNCTIONALITY_NOT_ENABLED;
-    grib_context_log(ch->context, GRIB_LOG_ERROR,
-                     "Nearest neighbour functionality not enabled. Please rebuild with -DENABLE_GEOGRAPHY=ON");
-
-    return NULL;
-}
-#endif
