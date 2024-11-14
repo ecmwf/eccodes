@@ -238,7 +238,7 @@ Functor::Functor(grib_context* c, const char* name, grib_arguments* args)
     args_ = args;
 }
 
-int Functor::native_type(grib_handle* h)
+int Functor::native_type(grib_handle* h) const
 {
     return GRIB_TYPE_LONG;
 }

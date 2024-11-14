@@ -93,7 +93,7 @@ StringCompare::StringCompare(grib_context* c, Expression* left, Expression* righ
     eq_    = eq;
 }
 
-int StringCompare::native_type(grib_handle* h)
+int StringCompare::native_type(grib_handle* h) const
 {
     return GRIB_TYPE_LONG;
 }

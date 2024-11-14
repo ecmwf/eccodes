@@ -37,7 +37,7 @@ void String::add_dependency(grib_accessor* observer)
     /* grib_expression_string* e = (grib_expression_string*)g; */
 }
 
-int String::native_type(grib_handle* h)
+int String::native_type(grib_handle* h) const
 {
     return GRIB_TYPE_STRING;
 }

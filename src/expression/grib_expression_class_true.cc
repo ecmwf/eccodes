@@ -29,7 +29,7 @@ void True::print(grib_context* c, grib_handle* f, FILE* out)
     fprintf(out, "true()");
 }
 
-int True::native_type(grib_handle* h)
+int True::native_type(grib_handle* h) const
 {
     return GRIB_TYPE_LONG;
 }

@@ -32,12 +32,12 @@ public:
     virtual void print(grib_context*, grib_handle*, FILE*);
     virtual void add_dependency(grib_accessor* observer);
     virtual string get_name();
-    virtual int native_type(grib_handle*);
+    virtual int native_type(grib_handle*) const;
     virtual int evaluate_long(grib_handle*, long*);
     virtual int evaluate_double(grib_handle*, double*);
     virtual string evaluate_string(grib_handle*, char*, size_t*, int*);
 
-    virtual const char* class_name() = 0;
+    virtual const char* class_name() const = 0;
 };
 
 };  // namespace eccodes::expression

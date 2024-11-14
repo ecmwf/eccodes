@@ -21,10 +21,10 @@ public:
     void destroy(grib_context*) override;
     void print(grib_context*, grib_handle*, FILE*) override;
     void add_dependency(grib_accessor* observer) override;
-    int native_type(grib_handle*) override;
+    int native_type(grib_handle*) const override;
     int evaluate_long(grib_handle*, long*) override;
 
-    const char* class_name() override { return "functor"; };
+    const char* class_name() const override { return "functor"; };
 
     char* name() { return name_; }  // For testing
 

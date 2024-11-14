@@ -22,11 +22,11 @@ public:
     void destroy(grib_context*) override {}
     void print(grib_context*, grib_handle*, FILE*) override;
     void add_dependency(grib_accessor* observer) override {}
-    int native_type(grib_handle*) override;
+    int native_type(grib_handle*) const override;
     int evaluate_long(grib_handle*, long*) override;
     int evaluate_double(grib_handle*, double*) override;
 
-    const char* class_name() override { return "double"; };
+    const char* class_name() const override { return "double"; };
 
 private:
     double value_ = 0.0;

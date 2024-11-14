@@ -165,7 +165,7 @@ IsInList::IsInList(grib_context* c, const char* name, const char* list)
     list_ = grib_context_strdup_persistent(c, list);
 }
 
-int IsInList::native_type(grib_handle* h)
+int IsInList::native_type(grib_handle* h) const
 {
     int type = 0;
     int err;

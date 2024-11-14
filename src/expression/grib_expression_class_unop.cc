@@ -59,7 +59,7 @@ void Unop::add_dependency(grib_accessor* observer)
     exp_->add_dependency(observer);
 }
 
-int Unop::native_type(grib_handle* h)
+int Unop::native_type(grib_handle* h) const
 {
     return long_func_ ? GRIB_TYPE_LONG : GRIB_TYPE_DOUBLE;
 }

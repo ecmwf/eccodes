@@ -110,7 +110,7 @@ IsInteger::IsInteger(grib_context* c, const char* name, int start, int length)
     length_   = length;
 }
 
-int IsInteger::native_type(grib_handle* h)
+int IsInteger::native_type(grib_handle* h) const
 {
     return GRIB_TYPE_LONG;
 }

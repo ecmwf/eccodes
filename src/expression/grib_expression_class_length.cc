@@ -88,7 +88,7 @@ Length::Length(grib_context* c, const char* name)
     name_ = grib_context_strdup_persistent(c, name);
 }
 
-int Length::native_type(grib_handle* h)
+int Length::native_type(grib_handle* h) const
 {
     return GRIB_TYPE_LONG;
 }

@@ -39,7 +39,7 @@ void Long::add_dependency(grib_accessor* observer)
     /* grib_expression_long* e = (grib_expression_long*)g; */
 }
 
-int Long::native_type(grib_handle* h)
+int Long::native_type(grib_handle* h) const
 {
     return GRIB_TYPE_LONG;
 }

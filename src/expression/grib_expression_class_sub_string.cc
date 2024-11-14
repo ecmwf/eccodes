@@ -41,7 +41,7 @@ SubString::SubString(grib_context* c, const char* value, size_t start, size_t le
     value_ = grib_context_strdup_persistent(c, v);
 }
 
-int SubString::native_type(grib_handle* h)
+int SubString::native_type(grib_handle* h) const
 {
     return GRIB_TYPE_STRING;
 }

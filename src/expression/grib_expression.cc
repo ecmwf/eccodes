@@ -21,7 +21,7 @@ namespace eccodes::expression
 {
 void Expression::destroy(grib_context*) {};
 
-int Expression::native_type(grib_handle* h)
+int Expression::native_type(grib_handle* h) const
 {
     grib_context_log(h->context, GRIB_LOG_FATAL, "%s: No native_type() in %s", __func__, class_name());
     return 0;

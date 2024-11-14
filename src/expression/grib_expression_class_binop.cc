@@ -118,7 +118,7 @@ Binop::Binop(grib_context* c,
     double_func_ = double_func;
 }
 
-int Binop::native_type(grib_handle* h)
+int Binop::native_type(grib_handle* h) const
 {
     /* See GRIB-394 : The type of this binary expression will be double if any of its operands are double */
     if (left_->native_type(h) == GRIB_TYPE_DOUBLE ||

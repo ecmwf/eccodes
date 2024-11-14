@@ -34,7 +34,7 @@ Double::Double(grib_context* c, double value)
     value_ = value;
 }
 
-int Double::native_type(grib_handle* h)
+int Double::native_type(grib_handle* h) const
 {
     return GRIB_TYPE_DOUBLE;
 }

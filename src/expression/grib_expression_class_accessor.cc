@@ -105,7 +105,7 @@ Accessor::Accessor(grib_context* c, const char* name, long start, size_t length)
     length_  = length;
 }
 
-int Accessor::native_type(grib_handle* h)
+int Accessor::native_type(grib_handle* h) const
 {
     int type = 0;
     int err;
