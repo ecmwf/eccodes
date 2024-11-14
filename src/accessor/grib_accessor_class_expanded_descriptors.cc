@@ -181,7 +181,7 @@ void grib_accessor_expanded_descriptors_t::__expand(bufr_descriptors_array* unex
                 /* Number of descriptors to replicate cannot be more than what's left */
                 if (us->X + 1 > unexpanded->n) {
                     grib_context_log(c, GRIB_LOG_ERROR,
-                                     "Delayed replication: %06ld: expected %d but only found %lu elements",
+                                     "Delayed replication: %06ld: expected %d but only found %lu element(s)",
                                      u->code, us->X, unexpanded->n - 1);
                     *err = GRIB_DECODING_ERROR;
                     return;
@@ -232,6 +232,10 @@ void grib_accessor_expanded_descriptors_t::__expand(bufr_descriptors_array* unex
                 grib_bufr_descriptor_delete(u);
                 size = us->X * us->Y;
                 memset(ur, 0, us->X); /* ECC-1422 */
+                if (us->X > unexpanded->n) {
+                    grib_context_log(c, GRIB_LOG_ERROR, "Replication descriptor %06ld: expected %d but only found %zu element(s)",
+                                     us->code, us->X, unexpanded->n);
+                }
                 for (j = 0; j < us->X; j++) {
                     DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded, ur[j]);
 #if MYDEBUG
