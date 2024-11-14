@@ -29,7 +29,7 @@ public:
 
     virtual ~Expression() {};
     virtual void destroy(grib_context*);
-    virtual void print(grib_context*, grib_handle*, FILE*);
+    virtual void print(grib_context*, grib_handle*, FILE*) const;
     virtual void add_dependency(grib_accessor* observer);
     virtual string get_name() const;
     virtual int native_type(grib_handle*) const;

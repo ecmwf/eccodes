@@ -19,7 +19,7 @@ public:
     IsInList(grib_context* c, const char* name, const char* list);
 
     void destroy(grib_context*) override;
-    void print(grib_context*, grib_handle*, FILE*) override;
+    void print(grib_context*, grib_handle*, FILE*) const override;
     void add_dependency(grib_accessor* observer) override;
     string get_name() const override;
     int native_type(grib_handle*) const override;

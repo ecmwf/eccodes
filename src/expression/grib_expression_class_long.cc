@@ -24,7 +24,7 @@ int Long::evaluate_double(grib_handle* h, double* dres)
     return GRIB_SUCCESS;
 }
 
-void Long::print(grib_context* c, grib_handle* f, FILE* out)
+void Long::print(grib_context* c, grib_handle* f, FILE* out) const
 {
     fprintf(out, "long(%ld)", value_);
 }

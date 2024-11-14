@@ -71,7 +71,7 @@ Expression::string IsInteger::evaluate_string(grib_handle* h, char* buf, size_t*
     return buf;
 }
 
-void IsInteger::print(grib_context* c, grib_handle* f, FILE* out)
+void IsInteger::print(grib_context* c, grib_handle* f, FILE* out) const
 {
     // grib_expression_is_integer* e = (grib_expression_is_integer*)g;
     // printf("access('%s", name_);

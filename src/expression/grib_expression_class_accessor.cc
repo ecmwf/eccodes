@@ -57,7 +57,7 @@ Accessor::string Accessor::evaluate_string(grib_handle* h, char* buf, size_t* si
     return buf;
 }
 
-void Accessor::print(grib_context* c, grib_handle* hand, FILE* out)
+void Accessor::print(grib_context* c, grib_handle* hand, FILE* out) const
 {
     int err = 0;
     fprintf(out, "access('%s", name_);

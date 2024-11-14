@@ -64,7 +64,7 @@ int StringCompare::evaluate_double(grib_handle* h, double* dres)
     return ret;
 }
 
-void StringCompare::print(grib_context* c, grib_handle* f, FILE* out)
+void StringCompare::print(grib_context* c, grib_handle* f, FILE* out) const
 {
     fprintf(out, "string_compare(");
     left_->print(c, f, out);

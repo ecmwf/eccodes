@@ -52,7 +52,7 @@ Expression::string Length::evaluate_string(grib_handle* h, char* buf, size_t* si
     return buf;
 }
 
-void Length::print(grib_context* c, grib_handle* f, FILE* out)
+void Length::print(grib_context* c, grib_handle* f, FILE* out) const
 {
     fprintf(out, "access('%s", name_);
     if (f) {

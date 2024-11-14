@@ -18,7 +18,7 @@ Expression::string SubString::evaluate_string(grib_handle* h, char* buf, size_t*
     return value_;
 }
 
-void SubString::print(grib_context* c, grib_handle* f, FILE* out)
+void SubString::print(grib_context* c, grib_handle* f, FILE* out) const
 {
     fprintf(out, "string('%s')", value_);
 }

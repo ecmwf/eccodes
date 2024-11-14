@@ -24,7 +24,7 @@ int Double::evaluate_double(grib_handle* h, double* dres)
     return GRIB_SUCCESS;
 }
 
-void Double::print(grib_context* c, grib_handle* f, FILE* out)
+void Double::print(grib_context* c, grib_handle* f, FILE* out) const
 {
     fprintf(out, "double(%g)", value_);
 }

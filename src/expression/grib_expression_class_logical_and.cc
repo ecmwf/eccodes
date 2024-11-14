@@ -72,7 +72,7 @@ int LogicalAnd::evaluate_double(grib_handle* h, double* dres)
     return ret;
 }
 
-void LogicalAnd::print(grib_context* c, grib_handle* f, FILE* out)
+void LogicalAnd::print(grib_context* c, grib_handle* f, FILE* out) const
 {
     fprintf(out, "(");
     left_->print(c, f, out);

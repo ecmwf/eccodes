@@ -51,7 +51,7 @@ const char* Expression::get_name() const
     return nullptr;
 }
 
-void Expression::print(grib_context* ctx, grib_handle* f, FILE* out) {}
+void Expression::print(grib_context* ctx, grib_handle* f, FILE* out) const {}
 
 void Expression::add_dependency(grib_accessor* observer) {}
 

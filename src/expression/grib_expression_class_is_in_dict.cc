@@ -132,7 +132,7 @@ Expression::string IsInDict::evaluate_string(grib_handle* h, char* buf, size_t* 
     // return buf;
 }
 
-void IsInDict::print(grib_context* c, grib_handle* f, FILE* out)
+void IsInDict::print(grib_context* c, grib_handle* f, FILE* out) const
 {
     fprintf(out, "access('%s", key_);
     if (f) {

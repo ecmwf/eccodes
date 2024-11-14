@@ -73,7 +73,7 @@ int Binop::evaluate_double(grib_handle* h, double* dres)
     return GRIB_SUCCESS;
 }
 
-void Binop::print(grib_context* c, grib_handle* f, FILE* out)
+void Binop::print(grib_context* c, grib_handle* f, FILE* out) const
 {
     // Cover a subset of the most commonly used functions
     // TODO(masn): Can be done in a much better way!

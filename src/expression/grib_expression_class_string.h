@@ -19,7 +19,7 @@ public:
     String(grib_context* context, const char* value);
 
     void destroy(grib_context*) override;
-    void print(grib_context*, grib_handle*, FILE*) override;
+    void print(grib_context*, grib_handle*, FILE*) const override;
     void add_dependency(grib_accessor* observer) override;
     int native_type(grib_handle*) const override;
     string evaluate_string(grib_handle*, char*, size_t*, int*) override;

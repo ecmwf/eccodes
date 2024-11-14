@@ -213,7 +213,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-void Functor::print(grib_context* c,grib_handle* f, FILE* out)
+void Functor::print(grib_context* c,grib_handle* f, FILE* out) const
 {
     fprintf(out, "%s(", name_);
     // grib_expression_print(c,args_,f);

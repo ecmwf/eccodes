@@ -22,7 +22,7 @@ Expression::string String::evaluate_string(grib_handle* h, char* buf, size_t* si
     return value_;
 }
 
-void String::print(grib_context* c, grib_handle* f, FILE* out)
+void String::print(grib_context* c, grib_handle* f, FILE* out) const
 {
     fprintf(out, "string('%s')", value_);
 }

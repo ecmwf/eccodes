@@ -41,7 +41,7 @@ Expression::string Unop::get_name() const
     return exp_->get_name();
 }
 
-void Unop::print(grib_context* c, grib_handle* f, FILE* out)
+void Unop::print(grib_context* c, grib_handle* f, FILE* out) const
 {
     fprintf(out, "unop(");
     exp_->print(c, f, out);

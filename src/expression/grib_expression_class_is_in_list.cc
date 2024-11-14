@@ -128,7 +128,7 @@ Expression::string IsInList::evaluate_string(grib_handle* h, char* buf, size_t* 
     return buf;
 }
 
-void IsInList::print(grib_context* c, grib_handle* f, FILE* out)
+void IsInList::print(grib_context* c, grib_handle* f, FILE* out) const
 {
     fprintf(out, "access('%s", name_);
     if (f) {
