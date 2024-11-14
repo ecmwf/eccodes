@@ -48,9 +48,7 @@ int grib_accessor_smart_table_column_t::unpack_string_array(char** buffer, size_
     size_t size = 1;
     long* code;
     int err        = GRIB_SUCCESS;
-    char tmp[1024] = {
-        0,
-    };
+    char tmp[1024] = {0,};
     int i = 0;
 
     tableAccessor = (grib_accessor_smart_table_t*)grib_find_accessor(grib_handle_of_accessor(this), smartTable_);

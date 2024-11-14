@@ -94,9 +94,7 @@ int grib_accessor_group_t::unpack_string(char* val, size_t* len)
 
 int grib_accessor_group_t::unpack_long(long* v, size_t* len)
 {
-    char val[1024] = {
-        0,
-    };
+    char val[1024] = {0,};
     size_t l   = sizeof(val);
     size_t i   = 0;
     char* last = NULL;

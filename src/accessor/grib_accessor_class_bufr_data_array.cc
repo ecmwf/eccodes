@@ -1775,21 +1775,15 @@ grib_accessor* grib_accessor_bufr_data_array_t::create_accessor_from_descriptor(
                                                                                 long ide, long subset, int add_dump_flag, int add_coord_flag,
                                                                                 int count, int add_extra_attributes)
 {
-    char code[10] = {
-        0,
-    };
+    char code[10] = {0,};
     char* temp_str              = NULL;
     int idx                     = 0;
     unsigned long flags         = GRIB_ACCESSOR_FLAG_READ_ONLY;
-    grib_action operatorCreator = {
-        0,
-    };
+    grib_action operatorCreator = {0,};
     grib_accessor* accessor = NULL;
     grib_accessor_bufr_data_element_t* elementAccessor = NULL;
     grib_accessor_variable_t* variableAccessor = NULL;
-    grib_action creator            = {
-        0,
-    };
+    grib_action creator            = {0,};
     creator.op         = (char*)"bufr_data_element";
     creator.name_space = (char*)"";
     creator.set        = 0;

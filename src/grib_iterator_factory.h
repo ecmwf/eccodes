@@ -24,6 +24,7 @@ extern eccodes::geo_iterator::Iterator* grib_iterator_mercator;
 extern eccodes::geo_iterator::Iterator* grib_iterator_polar_stereographic;
 extern eccodes::geo_iterator::Iterator* grib_iterator_regular;
 extern eccodes::geo_iterator::Iterator* grib_iterator_space_view;
+extern eccodes::geo_iterator::Iterator* grib_iterator_unstructured;
 
 
 eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* error);

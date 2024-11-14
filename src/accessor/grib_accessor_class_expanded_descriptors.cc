@@ -58,7 +58,7 @@ void grib_accessor_expanded_descriptors_t::init(const long len, grib_arguments* 
 #if MYDEBUG
 static int global_depth = -1;
 
-static char* descriptor_type_name(int dtype)
+static const char* descriptor_type_name(int dtype)
 {
     switch (dtype) {
         case BUFR_DESCRIPTOR_TYPE_STRING:
@@ -94,9 +94,7 @@ void grib_accessor_expanded_descriptors_t::__expand(bufr_descriptors_array* unex
     bufr_descriptor* vv = NULL;
     /* ECC-1422: 'ur' is the array of bufr_descriptor pointers for replications.
      * Its max size is X (from FXY) which is 6 bits so no need for malloc */
-    bufr_descriptor* ur[65] = {
-        0,
-    };
+    bufr_descriptor* ur[65] = {0,};
     bufr_descriptor* urc                     = NULL;
     size_t idx                               = 0;
     bufr_descriptor* u0                      = NULL;
@@ -183,7 +181,7 @@ void grib_accessor_expanded_descriptors_t::__expand(bufr_descriptors_array* unex
                 /* Number of descriptors to replicate cannot be more than what's left */
                 if (us->X + 1 > unexpanded->n) {
                     grib_context_log(c, GRIB_LOG_ERROR,
-                                     "Delayed replication: %06ld: expected %d but only found %lu elements",
+                                     "Delayed replication: %06ld: expected %d but only found %lu element(s)",
                                      u->code, us->X, unexpanded->n - 1);
                     *err = GRIB_DECODING_ERROR;
                     return;
@@ -211,15 +209,16 @@ void grib_accessor_expanded_descriptors_t::__expand(bufr_descriptors_array* unex
 #endif
                 expanded = grib_bufr_descriptors_array_append(expanded, inner_expanded);
                 uidx     = grib_bufr_descriptors_array_get(expanded, idx);
-                if (size > 100) {
-                    grib_context_log(c, GRIB_LOG_ERROR,
-                                     "Delayed replication %06ld: Too many elements (%lu). "
-                                     "Hint: This may be due to associated field descriptors",
-                                     uidx->code, size);
-                    *err = GRIB_DECODING_ERROR;
-                    return;
-                }
-                grib_bufr_descriptor_set_code(uidx, (size - 1) * 1000 + 100000);
+                Assert( uidx->type == BUFR_DESCRIPTOR_TYPE_REPLICATION );
+                Assert( uidx->F == 1 );
+                Assert( uidx->Y == 0 );
+                // ECC-1958 and ECC-1054:
+                // Here size can exceed 63 (num bits in X is 6)
+                // We need to set X but not the descriptor code
+                uidx->X = (int)(size - 1);
+                if (size < 64)
+                    uidx->code = (size - 1) * 1000 + 100000;
+                //grib_bufr_descriptor_set_code(uidx, (size - 1) * 1000 + 100000);
                 size++;
             }
             else {
@@ -233,6 +232,10 @@ void grib_accessor_expanded_descriptors_t::__expand(bufr_descriptors_array* unex
                 grib_bufr_descriptor_delete(u);
                 size = us->X * us->Y;
                 memset(ur, 0, us->X); /* ECC-1422 */
+                if (us->X > unexpanded->n) {
+                    grib_context_log(c, GRIB_LOG_ERROR, "Replication descriptor %06ld: expected %d but only found %zu element(s)",
+                                     us->code, us->X, unexpanded->n);
+                }
                 for (j = 0; j < us->X; j++) {
                     DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded, ur[j]);
 #if MYDEBUG
