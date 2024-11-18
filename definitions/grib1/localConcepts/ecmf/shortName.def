@@ -10465,7 +10465,7 @@
 	 indicatorOfParameter = 49 ;
 	}
 #Time-mean top net long-wave radiation flux, clear sky
-'avg_tnlwrcs' = {
+'avg_tnlwrfcs' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 50 ;
 	}
@@ -10475,7 +10475,7 @@
 	 indicatorOfParameter = 51 ;
 	}
 #Time-mean surface net long-wave radiation flux, clear sky
-'avg_snlwrcs' = {
+'avg_snlwrfcs' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 52 ;
 	}
