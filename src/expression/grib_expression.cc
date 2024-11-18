@@ -19,7 +19,6 @@ void grib_expression_free(grib_context* ctx, grib_expression* g)
 
 namespace eccodes::expression
 {
-void Expression::destroy(grib_context*) {};
 
 int Expression::native_type(grib_handle* h) const
 {

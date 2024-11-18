@@ -15,7 +15,8 @@
 
 namespace eccodes::expression {
 
-class Expression {
+class Expression
+{
 public:
     using string = const char*;
 
@@ -28,7 +29,7 @@ public:
     using BinopStringProc = std::function<int(char*, char*)>;
 
     virtual ~Expression() {};
-    virtual void destroy(grib_context*);
+    virtual void destroy(grib_context*) {};
     virtual void print(grib_context*, grib_handle*, FILE*) const;
     virtual void add_dependency(grib_accessor*);
     virtual string get_name() const;
@@ -48,4 +49,6 @@ namespace eccodes {
 using Expression = eccodes::expression::Expression;
 }  // namespace eccodes
 
+// Defined in grib_expression_class_accessor.cc
+// grib_expression* new_accessor_expression(grib_context*, const char*, long, size_t);
 void grib_expression_free(grib_context*, grib_expression*);

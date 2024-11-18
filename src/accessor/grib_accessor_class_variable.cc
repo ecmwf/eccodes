@@ -27,7 +27,7 @@ void grib_accessor_variable_t::init(const long length, grib_arguments* args)
     grib_accessor_gen_t::init(length, args);
 
     grib_handle* hand           = grib_handle_of_accessor(this);
-    grib_expression* expression = args->get_expression(hand, 0);
+    grib_expression* expression = args ? expression = args->get_expression(hand, 0) : nullptr;
     const char* p               = 0;
     size_t len                  = 1;
     long l                      = 0;

@@ -81,7 +81,6 @@ void Accessor::print(grib_context* c, grib_handle* hand, FILE* out) const
 void Accessor::destroy(grib_context* c)
 {
     grib_context_free_persistent(c, name_);
-    Expression::destroy(c);
 }
 
 void Accessor::add_dependency(grib_accessor* observer)

@@ -45,7 +45,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
     }
 
     if (STR_EQUAL(name_, "abs")) {
-        grib_expression* exp = args_->get_expression(h, 0);
+        grib_expression* exp = args_ ? args_->get_expression(h, 0) : nullptr;
         long lval = 0;
         int ret = exp->evaluate_long(h, &lval);
         *lres = abs(lval);
@@ -54,7 +54,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
 
     if (STR_EQUAL(name_, "size")) {
         *lres = 0;
-        const char* keyName = args_->get_name(h, 0);
+        const char* keyName = args_ ? args_->get_name(h, 0) : nullptr;
         if (keyName) {
             size_t size = 0;
             int err = grib_get_size(h, keyName, &size);
@@ -66,15 +66,15 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
     }
 
     if (STR_EQUAL(name_, "debug_mode")) {
-        const int n = args_->get_count();
+        const int n = args_ ? args_->get_count() : 0;
         if (n != 1) return GRIB_INVALID_ARGUMENT;
-        const int dmode = args_->get_long(h, 0);
+        const int dmode = args_ ? args_->get_long(h, 0) : 0;
         grib_context_set_debug(0, dmode);
         return GRIB_SUCCESS;
     }
 
     if (STR_EQUAL(name_, "missing")) {
-        const char* keyName = args_->get_name(h, 0);
+        const char* keyName = args_ ? args_->get_name(h, 0) : nullptr;
         if (keyName) {
             long val = 0;
             int err  = 0;
@@ -101,7 +101,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
     }
 
     if (STR_EQUAL(name_, "defined")) {
-        const char* keyName = args_->get_name(h, 0);
+        const char* keyName = args_ ? args_->get_name(h, 0) : nullptr;
         if (keyName) {
             const grib_accessor* a = grib_find_accessor(h, keyName);
             *lres = a != NULL ? 1 : 0;
@@ -116,7 +116,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
         // 1. Cannot distinguish between environment variable NOT SET
         //    and SET but equal to 0
         // 2. Cannot deal with string values
-        const char* p = args_->get_name(h, 0);
+        const char* p = args_ ? args_->get_name(h, 0) : nullptr;
         if (p) {
             const char* env = getenv(p);
             if (env) {
@@ -138,9 +138,9 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
 
     if (STR_EQUAL(name_, "contains")) {
         *lres = 0;
-        const int n = args_->get_count();
+        const int n = args_ ? args_->get_count() : 0;
         if (n != 3) return GRIB_INVALID_ARGUMENT;
-        const char* keyName = args_->get_name(h, 0);
+        const char* keyName = args_ ? args_->get_name(h, 0) : nullptr;
         if (!keyName) return GRIB_INVALID_ARGUMENT;
         int type = 0;
         int err = grib_get_native_type(h, keyName, &type);

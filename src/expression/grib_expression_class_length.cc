@@ -66,7 +66,6 @@ void Length::print(grib_context* c, grib_handle* f, FILE* out) const
 void Length::destroy(grib_context* c)
 {
     grib_context_free_persistent(c, name_);
-    Expression::destroy(c);
 }
 
 void Length::add_dependency(grib_accessor* observer)

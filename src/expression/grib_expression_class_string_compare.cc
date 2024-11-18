@@ -77,7 +77,6 @@ void StringCompare::destroy(grib_context* c)
 {
     left_->destroy(c);
     right_->destroy(c);
-    Expression::destroy(c);
 }
 
 void StringCompare::add_dependency(grib_accessor* observer)

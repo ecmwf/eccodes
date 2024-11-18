@@ -9,6 +9,7 @@
  */
 
 #include "grib_expression_class_is_in_list.h"
+#include "eccodes_prototypes.h"
 
 namespace eccodes::expression {
 
@@ -155,8 +156,8 @@ void IsInList::add_dependency(grib_accessor* observer)
 }
 
 void IsInList::destroy(grib_context* c) {
-     free(name_);
-     free(list_);
+    grib_context_free_persistent(c, name_);
+    grib_context_free_persistent(c, list_);
 }
 
 IsInList::IsInList(grib_context* c, const char* name, const char* list)
