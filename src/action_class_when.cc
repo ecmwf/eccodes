@@ -188,8 +188,8 @@ static int notify_change(grib_action* a, grib_accessor* observer, grib_accessor*
 #ifdef CHECK_LOOP
     if (self->loop) {
         printf("LOOP detected...\n");
-        printf("WHEN triggered by %s %ld\n", observed->name, lres);
-        grib_expression_print(observed->context, self->expression, 0, stderr);
+        printf("WHEN triggered by %s %ld\n", observed->name_, lres);
+        grib_expression_print(observed->context_, self->expression, 0, stderr);
         fprintf(stderr, "\n");
         return ret;
     }
