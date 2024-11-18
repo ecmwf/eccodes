@@ -7095,7 +7095,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean top net long-wave radiation flux, clear sky
-'avg_tnlwrcs' = {
+'avg_tnlwrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -7111,7 +7111,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean surface net long-wave radiation flux, clear sky
-'avg_snlwrcs' = {
+'avg_snlwrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -9101,7 +9101,7 @@
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum top net long-wave radiation flux, clear sky
-'max_tnlwrcs' = {
+'max_tnlwrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -9117,7 +9117,7 @@
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum surface net long-wave radiation flux, clear sky
-'max_snlwrcs' = {
+'max_snlwrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -10871,7 +10871,7 @@
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum top net long-wave radiation flux, clear sky
-'min_tnlwrcs' = {
+'min_tnlwrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -10887,7 +10887,7 @@
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum surface net long-wave radiation flux, clear sky
-'min_snlwrcs' = {
+'min_snlwrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -12669,7 +12669,7 @@
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation top net long-wave radiation flux, clear sky
-'std_tnlwrcs' = {
+'std_tnlwrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -12685,7 +12685,7 @@
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation surface net long-wave radiation flux, clear sky
-'std_snlwrcs' = {
+'std_snlwrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -14924,7 +14924,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	}
 #Surface net long-wave radiation flux, clear sky
-'snlwrcs' = {
+'snlwrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -16373,7 +16373,7 @@
 	 typeOfFirstFixedSurface = 8 ;
 	}
 #Top net long-wave radiation flux, clear sky
-'tnlwrcs' = {
+'tnlwrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
