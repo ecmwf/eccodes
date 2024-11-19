@@ -808,6 +808,13 @@ int grib_accessor_data_g22order_packing_t::pack_double(const double* val, size_t
 
     if ((err = grib_get_long_internal(gh, bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return err;
+
+    // ECC-1968: For bits_per_value > 23, the complex packing algorithm may use more than 25 bits per value.
+    // However, this exceeds the maximum number of bits for the packing algorithm.
+    if (bits_per_value > 23) {
+        bits_per_value = 23;
+    }
+
     if ((err = grib_get_long_internal(gh, decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
@@ -1463,7 +1470,7 @@ template <typename T>
 int grib_accessor_data_g22order_packing_t::unpack(T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
-    grib_handle* gh         = grib_handle_of_accessor(this);
+    grib_handle* gh = grib_handle_of_accessor(this);
 
     size_t i                  = 0;
     size_t j                  = 0;
