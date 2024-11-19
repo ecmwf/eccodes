@@ -29,7 +29,7 @@ transient hourOfEndOfOverallTimeInterval=23;
 transient minuteOfEndOfOverallTimeInterval=59;
 transient secondOfEndOfOverallTimeInterval=59;
 
-transient indicatorOfUnitForTimeRange=3;
+transient indicatorOfUnitForTimeRange=3; # month
 transient lengthOfTimeRange=1;
 unsigned[1] averagingPeriod : dump ;
 
