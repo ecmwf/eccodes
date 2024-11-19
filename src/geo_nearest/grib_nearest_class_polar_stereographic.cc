@@ -36,14 +36,12 @@ int PolarStereographic::find(grib_handle* h,
 {
     return grib_nearest_find_generic(
         h, inlat, inlon, flags, /* inputs */
-
         values_key_,   /* outputs to set the 'self' object */
         &(lats_),
         &(lats_count_),
         &(lons_),
         &(lons_count_),
         &(distances_),
-
         outlats, outlons,  /* outputs of the find function */
         values, distances, indexes, len);
 }

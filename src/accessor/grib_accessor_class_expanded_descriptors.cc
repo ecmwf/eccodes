@@ -213,7 +213,7 @@ void grib_accessor_expanded_descriptors_t::__expand(bufr_descriptors_array* unex
                 Assert( uidx->F == 1 );
                 Assert( uidx->Y == 0 );
                 // ECC-1958 and ECC-1054:
-                // Here size can exceed 63 (num bits in X is 6)
+                // Here X is used to store the size which can exceed 63. The normal X is 6 bits wide so max=63
                 // We need to set X but not the descriptor code
                 uidx->X = (int)(size - 1);
                 if (size < 64)
