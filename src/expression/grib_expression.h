@@ -13,7 +13,7 @@
 #include "grib_api_internal.h"
 #include <functional>
 
-namespace eccodes::expression {
+namespace eccodes {
 
 class Expression
 {
@@ -41,13 +41,9 @@ public:
     virtual const char* class_name() const = 0;
 };
 
-};  // namespace eccodes::expression
+};  // namespace eccodes
 
-using grib_expression = eccodes::expression::Expression;
-
-namespace eccodes {
-using Expression = eccodes::expression::Expression;
-}  // namespace eccodes
+using grib_expression = eccodes::Expression;
 
 // Defined in grib_expression_class_accessor.cc
 // grib_expression* new_accessor_expression(grib_context*, const char*, long, size_t);

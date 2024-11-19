@@ -26,8 +26,7 @@ void grib_arguments_free(grib_context* c, grib_arguments* g)
     }
 }
 
-namespace eccodes::expression
-{
+namespace eccodes {
 
 Arguments::Arguments(grib_context* c, Expression* g, Arguments* n)
 {
@@ -54,7 +53,7 @@ void Arguments::print(grib_handle* f) const
 
 const char* Arguments::get_name(grib_handle* h, int n) const
 {
-    Expression* e   = NULL;
+    Expression* e         = NULL;
     const Arguments* args = this;
     while (args && n-- > 0) {
         args = args->next_;
@@ -69,9 +68,9 @@ const char* Arguments::get_name(grib_handle* h, int n) const
 
 const char* Arguments::get_string(grib_handle* h, int n) const
 {
-    Expression* e   = NULL;
+    Expression* e         = NULL;
     const Arguments* args = this;
-    int ret         = 0;
+    int ret               = 0;
     while (args && n-- > 0) {
         args = args->next_;
     }
@@ -85,10 +84,10 @@ const char* Arguments::get_string(grib_handle* h, int n) const
 
 long Arguments::get_long(grib_handle* h, int n) const
 {
-    int ret            = 0;
-    long lres          = 0;
-    grib_expression* e = NULL;
-    const Arguments* args    = this;
+    int ret               = 0;
+    long lres             = 0;
+    grib_expression* e    = NULL;
+    const Arguments* args = this;
     while (args && n-- > 0) {
         args = args->next_;
     }
@@ -107,7 +106,7 @@ double Arguments::get_double(grib_handle* h, int n) const
     int ret     = 0;
     double dres = 0.0;
 
-    Expression* e   = NULL;
+    Expression* e         = NULL;
     const Arguments* args = this;
     while (args && n-- > 0) {
         args = args->next_;
@@ -138,7 +137,7 @@ grib_expression* Arguments::get_expression(grib_handle* h, int n) const
 int Arguments::get_count() const
 {
     const Arguments* args = this;
-    int n           = 0;
+    int n                 = 0;
     while (args) {
         args = args->next_;
         n++;
@@ -146,4 +145,4 @@ int Arguments::get_count() const
     return n;
 }
 
-}  // namespace eccodes::expression
+}  // namespace eccodes

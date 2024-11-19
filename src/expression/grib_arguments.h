@@ -13,9 +13,10 @@
 #include "grib_api_internal.h"
 #include "grib_expression.h"
 
-namespace eccodes::expression {
+namespace eccodes {
 
-class Arguments {
+class Arguments
+{
 public:
     Arguments(grib_context* c, Expression* g, Arguments* n);
     ~Arguments();
@@ -29,16 +30,12 @@ public:
     int get_count() const;
 
     // TODO(maee): make this private
-//private:
+    // private:
     Arguments* next_        = nullptr;
     Expression* expression_ = nullptr;
     grib_context* context_  = nullptr;
 };
 
-}  // namespace eccodes::expression
-
-namespace eccodes {
-using Arguments = eccodes::expression::Arguments;
 }  // namespace eccodes
 
 eccodes::Arguments* grib_arguments_new(grib_context* c, grib_expression* g, eccodes::Arguments* n);

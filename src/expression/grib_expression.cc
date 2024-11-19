@@ -17,8 +17,7 @@ void grib_expression_free(grib_context* ctx, grib_expression* g)
     }
 }
 
-namespace eccodes::expression
-{
+namespace eccodes {
 
 int Expression::native_type(grib_handle* h) const
 {
@@ -54,4 +53,4 @@ void Expression::print(grib_context* ctx, grib_handle* f, FILE* out) const {}
 
 void Expression::add_dependency(grib_accessor* observer) {}
 
-}  // namespace eccodes::expression
+}  // namespace eccodes
