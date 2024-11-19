@@ -23,7 +23,7 @@ my $dbh  = DBI->connect("dbi:mysql(RaiseError=>1):database=$db;host=$host",$user
 #my $tarfilesflag = 0;
 
 sub create_cfName {
-    my $p; my %seen; 
+    my $p; my %seen;
     my ($key) = "cfName";
     my $field = "cf.name";
 
@@ -47,7 +47,7 @@ EOF
     my $qh=$dbh->prepare($query);
     $qh->execute();
 
-    # file containing the list of grib api parameters files we want to tar and 
+    # file containing the list of grib api parameters files we want to tar and
     # distribute to users for them to download and update their list of parameter
     # to the latest
     #open(TAR,$tarfilesflag ? ">>" : ">","tarfiles.txt") or die "Count not open file tarfiles.txt: $!";
@@ -82,7 +82,7 @@ EOF
         }
         $seen{$attribute}=1;
         print "($key=$keyval) $edition,$centre,$shortName,$paramId,$name,$attribute,$value\n";
-        # we need to allow strings in the attribute_value field 
+        # we need to allow strings in the attribute_value field
         # for the moment we apply a patch here
         if ($attribute =~ /stepType/ ) {
             $value="\"accum\"";
@@ -101,7 +101,7 @@ EOF
 }
 
 sub create_cfName_legacy {
-    my $p; my %seen; 
+    my $p; my %seen;
     my ($key) = "cfName";
     my $field = "cf.name";
 
@@ -124,7 +124,7 @@ EOF
     my $qh=$dbh->prepare($query);
     $qh->execute();
 
-    # file containing the list of grib api parameters files we want to tar and 
+    # file containing the list of grib api parameters files we want to tar and
     # distribute to users for them to download and update their list of parameter
     # to the latest
     #open(TAR,$tarfilesflag ? ">>" : ">","tarfiles.txt") or die "Count not open file tarfiles.txt: $!";
@@ -159,7 +159,7 @@ EOF
         }
         $seen{$attribute}=1;
         print "($key=$keyval) $edition,$centre,$shortName,$paramId,$name,$attribute,$value\n";
-        # we need to allow strings in the attribute_value field 
+        # we need to allow strings in the attribute_value field
         # for the moment we apply a patch here
         if ($attribute =~ /stepType/ ) {
             $value="\"accum\"";
@@ -178,13 +178,13 @@ EOF
 }
 
 sub create_def {
-    my $p; my %seen; 
+    my $p; my %seen;
     my ($key) =@_;
     my $field=$key;
 
-    if ($key =~ /paramId/) { $field="param.id"; } 
-    if ($key =~ /name/) { $field="param.name"; } 
-    if ($key =~ /units/) { $field="units.name"; } 
+    if ($key =~ /paramId/) { $field="param.id"; }
+    if ($key =~ /name/) { $field="param.name"; }
+    if ($key =~ /units/) { $field="units.name"; }
 
     my $query= <<"EOF";
         select $field,force128,edition,
@@ -205,7 +205,7 @@ EOF
     my $qh=$dbh->prepare($query);
     $qh->execute();
 
-    # file containing the list of grib api parameters files we want to tar and 
+    # file containing the list of grib api parameters files we want to tar and
     # distribute to users for them to download and update their list of parameter
     # to the latest
     #open(TAR,$tarfilesflag ? ">>" : ">","tarfiles.txt") or die "Count not open file tarfiles.txt: $!";
@@ -225,9 +225,9 @@ EOF
                 close $out;
             }
             $filebase="$basedir/grib$edition$conceptDir";
-            mkpath($filebase); 
+            mkpath($filebase);
 
-            #copy("$filebase/$key.def","$filebase/$key.def.bkp") 
+            #copy("$filebase/$key.def","$filebase/$key.def.bkp")
             #  or die ("unable to copy $filebase/$key.def");
 
             print TAR "grib$edition$conceptDir/$key.def\n";
@@ -246,7 +246,7 @@ EOF
         }
         $seen{$attribute}=1;
         print "($key=$keyval) $edition,$centre,$shortName,$paramId,$name,$attribute,$value\n";
-        # we need to allow strings in the attribute_value field 
+        # we need to allow strings in the attribute_value field
         # for the moment we apply a patch here
         if ($attribute =~ /stepType/ ) {
             $value="\"accum\"";
@@ -265,13 +265,13 @@ EOF
 }
 
 sub create_def_legacy {
-    my $p; my %seen; 
+    my $p; my %seen;
     my ($key) =@_;
     my $field=$key;
 
-    if ($key =~ /paramId/) { $field="param.id"; } 
-    if ($key =~ /name/) { $field="param.name"; } 
-    if ($key =~ /units/) { $field="units.name"; } 
+    if ($key =~ /paramId/) { $field="param.id"; }
+    if ($key =~ /name/) { $field="param.name"; }
+    if ($key =~ /units/) { $field="units.name"; }
 
     my $query= <<"EOF";
         select $field,force128,edition,
@@ -291,7 +291,7 @@ EOF
     my $qh=$dbh->prepare($query);
     $qh->execute();
 
-    # file containing the list of grib api parameters files we want to tar and 
+    # file containing the list of grib api parameters files we want to tar and
     # distribute to users for them to download and update their list of parameter
     # to the latest
     #open(TAR,$tarfilesflag ? ">>" : ">","tarfiles.txt") or die "Count not open file tarfiles.txt: $!";
@@ -311,9 +311,9 @@ EOF
                 close $out;
             }
             $filebase="$basedir/grib$edition$conceptDir";
-            mkpath($filebase); 
+            mkpath($filebase);
 
-            #copy("$filebase/$key.def","$filebase/$key.def.bkp") 
+            #copy("$filebase/$key.def","$filebase/$key.def.bkp")
             #  or die ("unable to copy $filebase/$key.def");
 
             print TAR "grib$edition$conceptDir/$key.legacy.def\n";
@@ -332,7 +332,7 @@ EOF
         }
         $seen{$attribute}=1;
         print "($key=$keyval) $edition,$centre,$shortName,$paramId,$name,$attribute,$value\n";
-        # we need to allow strings in the attribute_value field 
+        # we need to allow strings in the attribute_value field
         # for the moment we apply a patch here
         if ($attribute =~ /stepType/ ) {
             $value="\"accum\"";
@@ -349,9 +349,95 @@ EOF
 
     close(TAR);
 }
- 
+
+sub create_cfVarName {
+    my $p; my %seen;
+    my ($key) =@_;
+    my $field=$key;
+
+    #if ($key =~ /paramId/) { $field="param.id"; }
+    #if ($key =~ /name/) { $field="param.name"; }
+    #if ($key =~ /units/) { $field="units.name"; }
+    if ($key =~ /cfVarName/) { $field="cfVarName"; }
+
+    my $query= <<"EOF";
+        select $field,force128,edition,
+        centre.abbreviation,param_id,attribute.name,attribute_value,param.name,param.shortName
+        from param,grib_encoding,grib,attribute,centre,units where
+        param.hide_def=0 and
+        grib_encoding.id=grib.encoding_id and
+        param.id=grib_encoding.param_id and
+        attribute.id=grib.attribute_id and
+        centre.id=grib_encoding.centre_id and
+        units.id=param.units_id
+        and cfVarName IS NOT NULL
+        order by edition,centre_id,param.o,param.id,grib_encoding.param_version,attribute.o;
+EOF
+
+    my $qh=$dbh->prepare($query);
+    $qh->execute();
+
+    # file containing the list of grib api parameters files we want to tar and
+    # distribute to users for them to download and update their list of parameter
+    # to the latest
+    #open(TAR,$tarfilesflag ? ">>" : ">","tarfiles.txt") or die "Count not open file tarfiles.txt: $!";
+    #$tarfilesflag=1;
+
+    while (my ($keyval,$force128,$edition,$centre,$paramId,$attribute,$value,$name,$shortName)=$qh->fetchrow_array )
+    {
+        if ($centre eq "wmo" ) { $conceptDir=""; }
+        else { $conceptDir="/localConcepts/$centre"; }
+        #if ($key =~ /paramId/ && $force128==1 && $keyval >1000) {
+        #  $keyval= $keyval % 1000;
+        #}
+
+        if ($filebase ne "$basedir/grib$edition$conceptDir") {
+            if ($filebase) {
+                print $out "}\n";
+                close $out;
+            }
+            $filebase="$basedir/grib$edition$conceptDir";
+            mkpath($filebase);
+
+            #copy("$filebase/$key.def","$filebase/$key.def.bkp")
+            #  or die ("unable to copy $filebase/$key.def");
+
+            print TAR "grib$edition$conceptDir/$key.def\n";
+            #system("cp -f $filebase/$key.def $filebase/$key.def.orig");
+            open($out,"> $filebase/$key.def")
+                or die "unable to open $filebase/$key.def";
+            print $out "# Automatically generated by $0, do not edit\n";
+            $p=();
+        }
+        if ($p ne $paramId || exists($seen{$attribute}) ) {
+           if ($p) { print $out "\t}\n"; }
+           print $out "#$name\n" ;
+           print $out "\'".$keyval."\' = {\n" ;
+           $p=$paramId;
+           %seen=();
+        }
+        $seen{$attribute}=1;
+        print "($key=$keyval) $edition,$centre,$shortName,$paramId,$name,$attribute,$value\n";
+        # we need to allow strings in the attribute_value field
+        # for the moment we apply a patch here
+        if ($attribute =~ /stepType/ ) {
+            $value="\"accum\"";
+        }
+        if ($value eq '') {
+            $value="missing()";
+        }
+        print $out "\t $attribute = $value ;\n" ;
+    }
+    if ($filebase) {
+       print $out "}\n";
+       close $out;
+    }
+
+    close(TAR);
+}
+
 sub create_paramId_def {
-    my $p; my %seen; 
+    my $p; my %seen;
 
     my $query="select edition,centre.abbreviation,param_id,attribute.name,attribute_value,param.name,param.shortName
     from param,grib_encoding,grib,attribute,centre where
@@ -378,9 +464,9 @@ sub create_paramId_def {
                 close $out;
             }
             $filebase="$basedir/grib$edition$conceptDir";
-            mkpath($filebase); 
+            mkpath($filebase);
 
-            copy("$filebase/paramId.def","$filebase/paramId.def.bkp") 
+            copy("$filebase/paramId.def","$filebase/paramId.def.bkp")
                 or die ("unable to copy $filebase/paramId.def");
             open($out,"> $filebase/paramId.def")
                 or die "unable to open $filebase/paramId.def";
@@ -403,7 +489,7 @@ sub create_paramId_def {
        close $out;
     }
 }
- 
+
 sub create_def_old {
     my ($key,$query)=@_;
 
@@ -420,9 +506,9 @@ sub create_def_old {
                 close $out;
             }
             $filebase="$basedir/grib$edition$conceptDir";
-            mkpath($filebase); 
+            mkpath($filebase);
 
-            copy("$filebase/$key.def","$filebase/$key.def.bkp") 
+            copy("$filebase/$key.def","$filebase/$key.def.bkp")
                 or die ("unable to copy $filebase/$key.def");
             open($out,"> $filebase/$key.def")
                 or die "unable to open $filebase/$key.def";
@@ -443,35 +529,36 @@ create_def("name");
 create_def_legacy("name");
 create_def("units");
 create_def_legacy("units");
+create_cfVarName("cfVarName");
 create_cfName("cfName");
 create_cfName_legacy("cfName");
 
 # #create_paramId_def();
 
 # $query="select distinct edition,centre.abbreviation,param_id,param.shortName from param,grib_encoding,centre where
-#  param.hide_def=0 and 
-#  param.id=grib_encoding.param_id and 
-#  centre.id=grib_encoding.centre_id and 
+#  param.hide_def=0 and
+#  param.id=grib_encoding.param_id and
+#  centre.id=grib_encoding.centre_id and
 #  shortName!='~' order by abbreviation,edition,param.o,param.id,shortName";
 
 
-# #select distinct edition,centre.abbreviation,param_id,param.shortName 
-# #from param,grib_encoding,grib,centre where param.hide_def=0 and param.id=grib.param_id and 
-# #centre.id=grib_encoding.centre_id and shortName!='~' 
+# #select distinct edition,centre.abbreviation,param_id,param.shortName
+# #from param,grib_encoding,grib,centre where param.hide_def=0 and param.id=grib.param_id and
+# #centre.id=grib_encoding.centre_id and shortName!='~'
 # #order by centre,edition,param.o,param_id";
 
 # #create_def("shortName",$query);
 
-# $query="select distinct edition,centre.abbreviation,param_id,param.name 
-# from param,grib,centre where param.hide_def=0 and param.id=grib.param_id and 
-# centre.id=grib.centre and shortName!='~' 
+# $query="select distinct edition,centre.abbreviation,param_id,param.name
+# from param,grib,centre where param.hide_def=0 and param.id=grib.param_id and
+# centre.id=grib.centre and shortName!='~'
 # order by centre,edition,param.o,param_id";
 
 # #create_def("name",$query);
 
-# $query="select distinct edition,centre.abbreviation,param_id,units.name 
+# $query="select distinct edition,centre.abbreviation,param_id,units.name
 # from param,grib,centre,units where param.hide_def=0 and param.id=grib.param_id and units.id=param.units_id
-# and centre.id=grib.centre and shortName!='~' 
+# and centre.id=grib.centre and shortName!='~'
 # order by centre,edition,param.o,param_id";
 
 # #create_def("units",$query);

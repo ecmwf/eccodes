@@ -227,9 +227,7 @@ int LatlonReduced::find_global(grib_handle* h,
         if (!distances_)
             return GRIB_OUT_OF_MEMORY;
 
-        //void grib_binary_search(const double xx[], const size_t n, double x, size_t* ju, size_t* jl)
-        grib_binary_search(lats_, ilat - 1, inlat,
-                           &(j_[0]), &(j_[1]));
+        grib_binary_search(lats_, ilat - 1, inlat, &(j_[0]), &(j_[1]));
 
         nlon = 0;
         for (jj = 0; jj < j_[0]; jj++)

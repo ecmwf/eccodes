@@ -1584,6 +1584,90 @@
 	 parameterNumber = 97 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean peak wave period of wind waves
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 35 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean peak wave period of total swell
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 36 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean peak wave period of first swell partition
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 65 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean peak wave period of second swell partition
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 66 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean peak wave period of third swell partition
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 67 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean peak wave direction (total)
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 46 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean peak wave direction of wind waves
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 71 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean peak wave direction of total swell
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 72 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean peak wave direction of first swell partition
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 68 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean peak wave direction of second swell partition
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 69 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean peak wave direction of third swell partition
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean whitecap fraction
+'Fraction' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 73 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean wave Spectral Skewness
 'Numeric' = {
 	 discipline = 10 ;
@@ -2047,6 +2131,90 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 97 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave period of wind waves
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 35 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave period of total swell
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 36 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave period of first swell partition
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 65 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave period of second swell partition
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 66 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave period of third swell partition
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 67 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave direction (total)
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 46 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave direction of wind waves
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 71 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave direction of total swell
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 72 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave direction of first swell partition
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 68 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave direction of second swell partition
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 69 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave direction of third swell partition
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum whitecap fraction
+'Fraction' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 73 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum wave Spectral Skewness
@@ -2514,6 +2682,90 @@
 	 parameterNumber = 97 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum peak wave period of wind waves
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 35 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum peak wave period of total swell
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 36 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum peak wave period of first swell partition
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 65 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum peak wave period of second swell partition
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 66 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum peak wave period of third swell partition
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 67 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum peak wave direction (total)
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 46 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum peak wave direction of wind waves
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 71 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum peak wave direction of total swell
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 72 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum peak wave direction of first swell partition
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 68 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum peak wave direction of second swell partition
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 69 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum peak wave direction of third swell partition
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum whitecap fraction
+'Fraction' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 73 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-minimum wave Spectral Skewness
 'Numeric' = {
 	 discipline = 10 ;
@@ -2977,6 +3229,90 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 97 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave period of wind waves
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 35 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave period of total swell
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 36 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave period of first swell partition
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 65 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave period of second swell partition
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 66 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave period of third swell partition
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 67 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave direction (total)
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 46 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave direction of wind waves
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 71 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave direction of total swell
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 72 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave direction of first swell partition
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 68 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave direction of second swell partition
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 69 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave direction of third swell partition
+'Degree true' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation whitecap fraction
+'Fraction' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 73 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation wave Spectral Skewness
@@ -17159,6 +17495,22 @@
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	}
+#Northward mass transport
+'kg m**-2 s**-1' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 46 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Eastward mass transport
+'kg m**-2 s**-1' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 47 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
 #Net short wave radiation rate at sea surface
 'W m**-2' = {
 	 discipline = 0 ;
@@ -18300,6 +18652,24 @@
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean northward mass transport
+'kg m**-2 s**-1' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 46 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean eastward mass transport
+'kg m**-2 s**-1' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 47 ;
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfStatisticalProcessing = 0 ;
