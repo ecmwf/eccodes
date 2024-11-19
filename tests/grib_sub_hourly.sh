@@ -621,7 +621,7 @@ ${tools_dir}/grib_set -s stepUnits=s,paramId=131060 $sample_g2 $temp # probabili
 grib_check_key_equals $temp '-p indicatorOfUnitOfTimeRange,stepUnits:s,productDefinitionTemplateNumber' '13 s 9'
 
 ${tools_dir}/grib_set -s stepUnits=s,paramId=210073 $sample_g2 $temp # is_aerosol
-grib_check_key_equals $temp '-p indicatorOfUnitOfTimeRange,stepUnits:s,productDefinitionTemplateNumber' '13 s 48'
+grib_check_key_equals $temp '-p indicatorOfUnitOfTimeRange,stepUnits:s,productDefinitionTemplateNumber' '13 s 50'
 
 ${tools_dir}/grib_set -s stepUnits=s,paramId=210170 $sample_g2 $temp # is_chemical_srcsink
 grib_check_key_equals $temp '-p indicatorOfUnitOfTimeRange,stepUnits:s,productDefinitionTemplateNumber' '13 s 76'
