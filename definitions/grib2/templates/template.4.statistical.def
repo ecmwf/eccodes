@@ -55,7 +55,8 @@ if (numberOfTimeRanges == 1 || numberOfTimeRanges == 2) {
   concept stepTypeInternal {
     "instant" = {typeOfStatisticalProcessing=255;}
     "avg"     = {typeOfStatisticalProcessing=0;}
-    "avgd"    = {typeOfStatisticalProcessing=0;typeOfTimeIncrement=1;}
+    # "avgd"    = {typeOfStatisticalProcessing=0;typeOfTimeIncrement=1;}
+    "avgd"    = {significaneOfReferenceTime=1;typeOfStatisticalProcessing=0;typeOfTimeIncrement=1;} 
     "accum"   = {typeOfStatisticalProcessing=1;}
     "max"     = {typeOfStatisticalProcessing=2;}
     "min"     = {typeOfStatisticalProcessing=3;}
