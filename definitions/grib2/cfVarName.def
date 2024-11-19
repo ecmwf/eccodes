@@ -119,34 +119,6 @@
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
 	}
-#Time-mean 2D wave spectra (single)
-'avg_2dfd' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 86 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
-#Time-maximum 2D wave spectra (single)
-'max_2dfd' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 86 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
-#Time-minimum 2D wave spectra (single)
-'min_2dfd' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 86 ;
-	 typeOfStatisticalProcessing = 3 ;
-	}
-#Time-standard-deviation 2D wave spectra (single)
-'std_2dfd' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 86 ;
-	 typeOfStatisticalProcessing = 6 ;
-	}
 #2 metre specific humidity
 'sh2' = {
 	 discipline = 0 ;
@@ -213,6 +185,26 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 100 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Time-maximum 2 metre relative humidity
+'mx2r' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum 2 metre relative humidity
+'mn2r' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-mean sea ice area fraction
 'avg_ci' = {

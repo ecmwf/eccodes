@@ -12,6 +12,7 @@
 include_directories(
     "${CMAKE_CURRENT_SOURCE_DIR}/accessor"
     "${CMAKE_CURRENT_SOURCE_DIR}/geo_iterator"
+    "${CMAKE_CURRENT_SOURCE_DIR}/geo_nearest"
     )
 
 list( APPEND eccodes_src_files
@@ -325,32 +326,31 @@ list( APPEND eccodes_src_files
     grib_expression_class_double.cc
     grib_expression_class_string.cc
     grib_expression_class_sub_string.cc
-    grib_nearest.cc
-    grib_nearest_class.cc
-    grib_nearest_class_gen.cc
-    grib_nearest_class_healpix.cc
-    grib_nearest_class_regular.cc
-    grib_nearest_class_reduced.cc
-    grib_nearest_class_latlon_reduced.cc
-    grib_nearest_class_lambert_conformal.cc
-    grib_nearest_class_lambert_azimuthal_equal_area.cc
-    grib_nearest_class_mercator.cc
-    grib_nearest_class_polar_stereographic.cc
-    grib_nearest_class_space_view.cc
-    geo_iterator/grib_iterator_class_polar_stereographic.cc
-    geo_iterator/grib_iterator_class_lambert_azimuthal_equal_area.cc
-    geo_iterator/grib_iterator_class_lambert_conformal.cc
-    geo_iterator/grib_iterator_class_mercator.cc
+    geo_nearest/grib_nearest.cc
+    geo_nearest/grib_nearest_class_gen.cc
+    geo_nearest/grib_nearest_class_healpix.cc
+    geo_nearest/grib_nearest_class_lambert_azimuthal_equal_area.cc
+    geo_nearest/grib_nearest_class_lambert_conformal.cc
+    geo_nearest/grib_nearest_class_latlon_reduced.cc
+    geo_nearest/grib_nearest_class_mercator.cc
+    geo_nearest/grib_nearest_class_polar_stereographic.cc
+    geo_nearest/grib_nearest_class_reduced.cc
+    geo_nearest/grib_nearest_class_regular.cc
+    geo_nearest/grib_nearest_class_space_view.cc
     geo_iterator/grib_iterator.cc
-    grib_iterator_class.cc
     geo_iterator/grib_iterator_class_gaussian.cc
     geo_iterator/grib_iterator_class_gaussian_reduced.cc
-    geo_iterator/grib_iterator_class_latlon_reduced.cc
     geo_iterator/grib_iterator_class_gen.cc
+    geo_iterator/grib_iterator_class_healpix.cc
+    geo_iterator/grib_iterator_class_lambert_azimuthal_equal_area.cc
+    geo_iterator/grib_iterator_class_lambert_conformal.cc
     geo_iterator/grib_iterator_class_latlon.cc
+    geo_iterator/grib_iterator_class_latlon_reduced.cc
+    geo_iterator/grib_iterator_class_mercator.cc
+    geo_iterator/grib_iterator_class_polar_stereographic.cc
     geo_iterator/grib_iterator_class_regular.cc
     geo_iterator/grib_iterator_class_space_view.cc
-    geo_iterator/grib_iterator_class_healpix.cc
+    geo_iterator/grib_iterator_class_unstructured.cc
     grib_expression.cc
     codes_util.cc
     grib_util.cc
@@ -363,10 +363,8 @@ list( APPEND eccodes_src_files
     eccodes_prototypes.h
     grib_dumper_class.h
     grib_dumper_factory.h
-    grib_iterator_class.h
-    grib_iterator_factory.h
-    grib_nearest_class.h
-    grib_nearest_factory.h
+    grib_iterator_factory.cc
+    grib_nearest_factory.cc
     grib_yacc.h
     md5.h
     md5.cc

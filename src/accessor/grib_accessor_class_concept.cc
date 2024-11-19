@@ -21,8 +21,8 @@ grib_accessor* grib_accessor_concept = &_grib_accessor_concept;
 #define FALSE 0
 #define TRUE  1
 
-/* Note: A fast cut-down version of strcmp which does NOT return -1 */
-/* 0 means input strings are equal and 1 means not equal */
+// Note: A fast cut-down version of strcmp which does NOT return -1
+// 0 means input strings are equal and 1 means not equal
 GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 {
     if (*a != *b)
@@ -63,14 +63,14 @@ static int grib_get_long_memoize(
     return err;
 }
 
-/* Return 1 (=True) or 0 (=False) */
+// Return 1 (=True) or 0 (=False)
 static int concept_condition_expression_true(
     grib_handle* h, grib_concept_condition* c,
     std::unordered_map<std::string_view, long>& memo)
 {
     long lval;
     long lres      = 0;
-    int ok         = FALSE; /* Boolean */
+    int ok         = FALSE; // Boolean
     int err        = 0;
     const int type = grib_expression_native_type(h, c->expression);
 
@@ -106,18 +106,18 @@ static int concept_condition_expression_true(
         }
 
         default:
-            /* TODO: */
+            // TODO
             break;
     }
     return ok;
 }
 
-/* Return 1 (=True) or 0 (=False) */
+// Return 1 (=True) or 0 (=False)
 static int concept_condition_iarray_true(grib_handle* h, grib_concept_condition* c)
 {
     long* val   = NULL;
     size_t size = 0, i;
-    int ret; /* Boolean */
+    int ret; //Boolean
     int err = 0;
 
     err = grib_get_size(h, c->name, &size);
@@ -143,7 +143,7 @@ static int concept_condition_iarray_true(grib_handle* h, grib_concept_condition*
     return ret;
 }
 
-/* Return 1 (=True) or 0 (=False) */
+// Return 1 (=True) or 0 (=False)
 static int concept_condition_true(
     grib_handle* h, grib_concept_condition* c,
     std::unordered_map<std::string_view, long>& memo)
@@ -158,16 +158,16 @@ static const char* concept_evaluate(grib_accessor* a)
 {
     int match        = 0;
     const char* best = 0;
-    /* const char* prev = 0; */
+    //const char* prev = 0;
     grib_concept_value* c = action_concept_get_concept(a);
     grib_handle* h        = grib_handle_of_accessor(a);
 
     std::unordered_map<std::string_view, long> memo; // See ECC-1905
-    
-    // fprintf(stderr, "DEBUG: concept_evaluate: %s %s\n", name_ , c->name);
+
     while (c) {
+        // printf("DEBUG: %s concept=%s while loop c->name=%s\n", __func__, a->name_, c->name);
         grib_concept_condition* e = c->conditions;
-        int cnt                   = 0;
+        int cnt = 0;
         while (e) {
             if (!concept_condition_true(h, e, memo))
                 break;
@@ -177,15 +177,17 @@ static const char* concept_evaluate(grib_accessor* a)
 
         if (e == NULL) {
             if (cnt >= match) {
-                /* prev  = (cnt > match) ? NULL : best; */
+                // prev  = (cnt > match) ? NULL : best;
                 match = cnt;
                 best  = c->name;
+                // printf("DEBUG: %s concept=%s current best=%s\n", __func__, a->name_, best);
             }
         }
 
         c = c->next;
     }
 
+    // printf("DEBUG: %s concept=%s final best=%s\n", __func__, a->name_, best);
     return best;
 }
 
@@ -238,9 +240,9 @@ static int concept_conditions_apply(grib_handle* h, grib_concept_condition* c, g
 
 static int cmpstringp(const void* p1, const void* p2)
 {
-    /* The actual arguments to this function are "pointers to
-       pointers to char", but strcmp(3) arguments are "pointers
-       to char", hence the following cast plus dereference */
+    // The actual arguments to this function are "pointers to
+    // pointers to char", but strcmp(3) arguments are "pointers
+    // to char", hence the following cast plus dereference */
     return strcmp(*(char* const*)p1, *(char* const*)p2);
 }
 
@@ -278,7 +280,7 @@ static void print_user_friendly_message(grib_handle* h, const char* name, grib_c
     long dummy = 0, editionNumber = 0;
     char centre_s[32] = {0,};
     size_t centre_len = sizeof(centre_s);
-    char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {NULL,}; /* sorted array containing concept values */
+    char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {NULL,}; // sorted array containing concept values
     grib_concept_value* pCon = concepts;
 
     grib_context_log(h->context, GRIB_LOG_ERROR, "concept: no match for %s=%s", act->name, name);
@@ -389,12 +391,21 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
                             grib_set_values(h, &values[i], 1);
                         }
                     }
-                    // else if (STR_EQUAL(values[i].name, "sourceSinkChemicalPhysicalProcess")) {
-                    //     if (grib_set_long(h, "is_chemical_srcsink", 1) == GRIB_SUCCESS) {
-                    //         resubmit = true;
-                    //         grib_set_values(h, &values[i], 1);
-                    //     }
-                    // }
+                    else if (STR_EQUAL(values[i].name, "typeOfWavePeriodInterval")) {
+                        grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Switch to waves selected by period range", __func__);
+                        // TODO(masn): Add a new key e.g. is_wave_period_range
+                        if (grib_set_long(h, "productDefinitionTemplateNumber", 103) == GRIB_SUCCESS) {
+                            resubmit = true;
+                            grib_set_values(h, &values[i], 1);
+                        }
+                    }
+                    else if (STR_EQUAL(values[i].name, "sourceSinkChemicalPhysicalProcess")) {
+                    grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Switch to chemical src/sink", __func__);
+                        if (grib_set_long(h, "is_chemical_srcsink", 1) == GRIB_SUCCESS) {
+                            resubmit = true;
+                            grib_set_values(h, &values[i], 1);
+                        }
+                    }
                 }
             }
 
@@ -455,13 +466,11 @@ int grib_accessor_concept_t::pack_long(const long* val, size_t* len)
 
 int grib_accessor_concept_t::unpack_double(double* val, size_t* len)
 {
-    /*
-     * If we want to have a condition which contains tests for paramId as well
-     * as a floating point key, then need to be able to evaluate paramId as a
-     * double. E.g.
-     *   if (referenceValue > 0 && paramId == 129)
-     */
-    /*return GRIB_NOT_IMPLEMENTED*/
+    //  If we want to have a condition which contains tests for paramId as well
+    //  as a floating point key, then need to be able to evaluate paramId as a
+    //  double. E.g.
+    //     if (referenceValue > 0 && paramId == 129)
+    // return GRIB_NOT_IMPLEMENTED
     int ret = 0;
     if (flags_ & GRIB_ACCESSOR_FLAG_LONG_TYPE) {
         long lval = 0;
