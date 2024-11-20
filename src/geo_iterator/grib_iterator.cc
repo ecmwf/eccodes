@@ -15,6 +15,8 @@
 #include "eccodes_config.h"
 
 #if defined(HAVE_ECKIT_GEO)
+    #include "eckit/runtime/Main.h"
+
     #include "eccodes/geo/GeoIterator.h"
 
     // eccodes macros conflict with eckit
@@ -110,6 +112,17 @@ grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int
     #if defined(HAVE_ECKIT_GEO)
     static const auto* eckit_geo = codes_getenv("ECCODES_ECKIT_GEO");
     if (eckit_geo != nullptr && strcmp(eckit_geo, "1") == 0) {
+        struct InitMain
+        {
+            InitMain()
+            {
+                if (!eckit::Main::ready()) {
+                    static char* argv[]{ const_cast<char*>("grib_iterator_new") };
+                    eckit::Main::initialise(1, argv);
+                }
+            }
+        } static const init_main;
+
         i->iterator = new eccodes::geo::GeoIterator(const_cast<grib_handle*>(ch), flags);
     }
     else
