@@ -547,6 +547,7 @@ grib_context* grib_context_get_default()
 #endif
 
         if (default_grib_context.debug) {
+            fprintf(stderr, "ECCODES DEBUG ecCodes Version:  %s\n", ECCODES_VERSION_STR);
             fprintf(stderr, "ECCODES DEBUG Definitions path: %s\n", default_grib_context.grib_definition_files_path);
             fprintf(stderr, "ECCODES DEBUG Samples path:     %s\n", default_grib_context.grib_samples_path);
         }
