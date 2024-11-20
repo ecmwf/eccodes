@@ -12,6 +12,17 @@
  *   Jean Baptiste Filippi - 01.11.2005                                    *
  ***************************************************************************/
 
+#include "eccodes_config.h"
+
+#if defined(HAVE_ECKIT_GEO)
+    #include "eccodes/geo/GeoIterator.h"
+
+    // eccodes macros conflict with eckit
+    #ifdef Assert
+        #undef Assert
+    #endif
+#endif
+
 #include "grib_iterator.h"
 #include "grib_iterator_factory.h"
 #include "accessor/grib_accessor_class_iterator.h"
@@ -95,7 +106,18 @@ int grib_iterator_destroy(grib_context* c, grib_iterator* i)
 grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int* error)
 {
     grib_iterator* i = (grib_iterator*)grib_context_malloc_clear(ch->context, sizeof(grib_iterator));
-    i->iterator      = eccodes::geo_iterator::gribIteratorNew(ch, flags, error);
+
+    #if defined(HAVE_ECKIT_GEO)
+    static const auto* eckit_geo = codes_getenv("ECCODES_ECKIT_GEO");
+    if (eckit_geo != nullptr && strcmp(eckit_geo, "1") == 0) {
+        i->iterator = new eccodes::geo::GeoIterator(const_cast<grib_handle*>(ch), flags);
+    }
+    else
+    #endif
+    {
+        i->iterator = eccodes::geo_iterator::gribIteratorNew(ch, flags, error);
+    }
+
     if (!i->iterator) {
         grib_context_free(ch->context, i);
         return NULL;
