@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,16 +15,13 @@
 class grib_accessor_g2lon_t : public grib_accessor_double_t
 {
 public:
-    /* Members defined in g2lon */
-    const char* longitude;
-};
-
-class grib_accessor_class_g2lon_t : public grib_accessor_class_double_t
-{
-public:
-    grib_accessor_class_g2lon_t(const char* name) : grib_accessor_class_double_t(name) {}
+    grib_accessor_g2lon_t() :
+        grib_accessor_double_t() { class_name_ = "g2lon"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_g2lon_t{}; }
-    int pack_double(grib_accessor*, const double* val, size_t* len) override;
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_double(const double* val, size_t* len) override;
+    int unpack_double(double* val, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* longitude_ = nullptr;
 };

@@ -11,20 +11,18 @@
 #pragma once
 
 #include "grib_accessor_class_gen.h"
+#include "geo_iterator/grib_iterator.h"
 
 class grib_accessor_iterator_t : public grib_accessor_gen_t
 {
 public:
-    grib_arguments* args;
-};
-
-class grib_accessor_class_iterator_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_iterator_t(const char* name) : grib_accessor_class_gen_t(name) {};
+    grib_accessor_iterator_t() :
+        grib_accessor_gen_t() { class_name_ = "iterator"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_iterator_t{}; }
-    void init(grib_accessor* a, const long l, grib_arguments* args) override;
-    void dump(grib_accessor* a, grib_dumper* dumper) override;
-};
+    void init(const long l, grib_arguments* args) override;
+    void dump(grib_dumper* dumper) override;
 
-//grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int* error)
+private:
+    grib_arguments* args_ = nullptr;
+    friend eccodes::geo_iterator::Iterator* eccodes::geo_iterator::gribIteratorNew(const grib_handle*, unsigned long, int*);
+};

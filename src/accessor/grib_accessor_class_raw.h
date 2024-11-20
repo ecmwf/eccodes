@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,23 +15,20 @@
 class grib_accessor_raw_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in raw */
-    const char* totalLength;
-    const char* sectionLength;
-    long relativeOffset;
-};
-
-class grib_accessor_class_raw_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_raw_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_raw_t() :
+        grib_accessor_gen_t() { class_name_ = "raw"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_raw_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int pack_bytes(grib_accessor*, const unsigned char*, size_t* len) override;
-    int unpack_bytes(grib_accessor*, unsigned char*, size_t* len) override;
-    long byte_count(grib_accessor*) override;
-    int value_count(grib_accessor*, long*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
-    void update_size(grib_accessor*, size_t) override;
-    int compare(grib_accessor*, grib_accessor*) override;
+    long get_native_type() override;
+    int pack_bytes(const unsigned char*, size_t* len) override;
+    int unpack_bytes(unsigned char*, size_t* len) override;
+    long byte_count() override;
+    int value_count(long*) override;
+    void init(const long, grib_arguments*) override;
+    void update_size(size_t) override;
+    int compare(grib_accessor*) override;
+
+private:
+    const char* totalLength_ = nullptr;
+    const char* sectionLength_ = nullptr;
+    long relativeOffset_ = 0;
 };

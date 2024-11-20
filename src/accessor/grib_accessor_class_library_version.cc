@@ -10,11 +10,10 @@
 
 #include "grib_accessor_class_library_version.h"
 
-grib_accessor_class_library_version_t _grib_accessor_class_library_version{ "library_version" };
-grib_accessor_class* grib_accessor_class_library_version = &_grib_accessor_class_library_version;
+grib_accessor_library_version_t _grib_accessor_library_version{};
+grib_accessor* grib_accessor_library_version = &_grib_accessor_library_version;
 
-
-int grib_accessor_class_library_version_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+int grib_accessor_library_version_t::unpack_string(char* val, size_t* len)
 {
     char result[30] = {0,};
     size_t size = 0;
@@ -35,13 +34,13 @@ int grib_accessor_class_library_version_t::unpack_string(grib_accessor* a, char*
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_library_version_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_library_version_t::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_class_library_version_t::string_length(grib_accessor* a)
+size_t grib_accessor_library_version_t::string_length()
 {
     return 255;
 }

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,25 +15,22 @@
 class grib_accessor_closest_date_t : public grib_accessor_double_t
 {
 public:
-    /* Members defined in closest_date */
-    const char *dateLocal;
-    const char *timeLocal;
-    const char *numForecasts;
-    const char *year;
-    const char *month;
-    const char *day;
-    const char *hour;
-    const char *minute;
-    const char *second;
-};
-
-class grib_accessor_class_closest_date_t : public grib_accessor_class_double_t
-{
-public:
-    grib_accessor_class_closest_date_t(const char* name) : grib_accessor_class_double_t(name) {}
+    grib_accessor_closest_date_t() :
+        grib_accessor_double_t() { class_name_ = "closest_date"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_closest_date_t{}; }
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int unpack_double(double* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* dateLocal_ = nullptr;
+    const char* timeLocal_ = nullptr;
+    const char* numForecasts_ = nullptr;
+    const char* year_ = nullptr;
+    const char* month_ = nullptr;
+    const char* day_ = nullptr;
+    const char* hour_ = nullptr;
+    const char* minute_ = nullptr;
+    const char* second_ = nullptr;
 };

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,16 +15,13 @@
 class grib_accessor_g1_section4_length_t : public grib_accessor_section_length_t
 {
 public:
-    /* Members defined in g1_section4_length */
-    const char* total_length;
-};
-
-class grib_accessor_class_g1_section4_length_t : public grib_accessor_class_section_length_t
-{
-public:
-    grib_accessor_class_g1_section4_length_t(const char* name) : grib_accessor_class_section_length_t(name) {}
+    grib_accessor_g1_section4_length_t() :
+        grib_accessor_section_length_t() { class_name_ = "g1_section4_length"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_g1_section4_length_t{}; }
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* total_length_ = nullptr;
 };

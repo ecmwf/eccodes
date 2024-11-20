@@ -244,6 +244,11 @@ void grib_context_set_print_proc(grib_context* c, grib_print_proc p)
 void grib_context_set_data_quality_checks(grib_context* c, int val)
 {
     c = c ? c : grib_context_get_default();
+    // If val == 0, disable data quality checks
+    // If val == 1, failure results in an error
+    // If val == 2, failure results in a warning
+    Assert(val == 0 || val == 1 || val == 2);
+
     c->grib_data_quality_checks = val;
 }
 
@@ -860,7 +865,7 @@ void grib_context_delete(grib_context* c)
     c->hash_array_count = 0;
     grib_itrie_delete(c->hash_array_index);
     c->hash_array_index=0;
-    grib_trie_delete(c->expanded_descriptors);
+    grib_trie_delete_container(c->expanded_descriptors);
     c->expanded_descriptors=0;
 
     c->inited = 0;
@@ -1022,6 +1027,7 @@ void* grib_context_buffer_malloc_clear(const grib_context* c, size_t size)
 
 void grib_context_set_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f, grib_realloc_proc r)
 {
+    fprintf(stderr, "ECCODES WARNING :  The %s function is deprecated and will be removed in a future release.\n", __func__);
     c->free_mem    = f;
     c->alloc_mem   = m;
     c->realloc_mem = r;
@@ -1029,12 +1035,14 @@ void grib_context_set_memory_proc(grib_context* c, grib_malloc_proc m, grib_free
 
 void grib_context_set_persistent_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f)
 {
+    fprintf(stderr, "ECCODES WARNING :  The %s function is deprecated and will be removed in a future release.\n", __func__);
     c->free_persistent_mem  = f;
     c->alloc_persistent_mem = m;
 }
 
 void grib_context_set_buffer_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f, grib_realloc_proc r)
 {
+    fprintf(stderr, "ECCODES WARNING :  The %s function is deprecated and will be removed in a future release.\n", __func__);
     c->free_buffer_mem    = f;
     c->alloc_buffer_mem   = m;
     c->realloc_buffer_mem = r;

@@ -15,24 +15,23 @@
 class grib_accessor_dictionary_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in dictionary */
-    const char* dictionary;
-    const char* key;
-    long column;
-    const char* masterDir;
-    const char* localDir;
-};
-
-class grib_accessor_class_dictionary_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_dictionary_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_dictionary_t() :
+        grib_accessor_gen_t() { class_name_ = "dictionary"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_dictionary_t{}; }
-    int get_native_type(grib_accessor*) override;
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
-    int value_count(grib_accessor*, long*) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    long get_native_type() override;
+    int unpack_double(double* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    int unpack_string(char*, size_t* len) override;
+    int value_count(long*) override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* dictionary_ = nullptr;
+    const char* key_ = nullptr;
+    long column_ = 0;
+    const char* masterDir_ = nullptr;
+    const char* localDir_ = nullptr;
+
+    grib_trie* load_dictionary(int* err);
 };

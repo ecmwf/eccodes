@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,24 +15,24 @@
 class grib_accessor_number_of_points_gaussian_t : public grib_accessor_long_t
 {
 public:
-    /* Members defined in number_of_points_gaussian */
-    const char* ni;
-    const char* nj;
-    const char* plpresent;
-    const char* pl;
-    const char* order;
-    const char* lat_first;
-    const char* lon_first;
-    const char* lat_last;
-    const char* lon_last;
-    const char* support_legacy;
-};
-
-class grib_accessor_class_number_of_points_gaussian_t : public grib_accessor_class_long_t
-{
-public:
-    grib_accessor_class_number_of_points_gaussian_t(const char* name) : grib_accessor_class_long_t(name) {}
+    grib_accessor_number_of_points_gaussian_t() :
+        grib_accessor_long_t() { class_name_ = "number_of_points_gaussian"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_number_of_points_gaussian_t{}; }
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int unpack_long(long* val, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* ni_ = nullptr;
+    const char* nj_ = nullptr;
+    const char* plpresent_ = nullptr;
+    const char* pl_ = nullptr;
+    const char* order_ = nullptr;
+    const char* lat_first_ = nullptr;
+    const char* lon_first_ = nullptr;
+    const char* lat_last_ = nullptr;
+    const char* lon_last_ = nullptr;
+    const char* support_legacy_ = nullptr;
+
+    int unpack_long_new(long* val, size_t* len);
+    int unpack_long_with_legacy_support(long* val, size_t* len);
 };

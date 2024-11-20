@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -11,37 +10,38 @@
 
 #include "grib_accessor_class_g2_chemical.h"
 
-grib_accessor_class_g2_chemical_t _grib_accessor_class_g2_chemical{ "g2_chemical" };
-grib_accessor_class* grib_accessor_class_g2_chemical = &_grib_accessor_class_g2_chemical;
+grib_accessor_g2_chemical_t _grib_accessor_g2_chemical{};
+grib_accessor* grib_accessor_g2_chemical = &_grib_accessor_g2_chemical;
 
+// Meaning of data member chemical_type_:
+//  0 = atmospheric chemical constituents
+//  1 = atmospheric chemical constituents based on a distribution function
+//  2 = atmospheric chemical constituents with source or sink
+//
+#define CHEM_PLAIN   0
+#define CHEM_DISTRIB 1
+#define CHEM_SRCSINK 2
 
-void grib_accessor_class_g2_chemical_t::init(grib_accessor* a, const long l, grib_arguments* c)
+void grib_accessor_g2_chemical_t::init(const long l, grib_arguments* c)
 {
-    grib_accessor_class_unsigned_t::init(a, l, c);
-    grib_accessor_g2_chemical_t* self = (grib_accessor_g2_chemical_t*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
-    int n = 0;
+    grib_accessor_unsigned_t::init(l, c);
+    grib_handle* hand = grib_handle_of_accessor(this);
+    int n             = 0;
 
-    self->productDefinitionTemplateNumber = grib_arguments_get_name(hand, c, n++);
-    self->stepType                        = grib_arguments_get_name(hand, c, n++);
-    self->chemical_type                   = grib_arguments_get_long(hand, c, n++);
+    productDefinitionTemplateNumber_ = grib_arguments_get_name(hand, c, n++);
+    stepType_                        = grib_arguments_get_name(hand, c, n++);
+    chemical_type_                   = grib_arguments_get_long(hand, c, n++);
 }
 
-int grib_accessor_class_g2_chemical_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_g2_chemical_t::unpack_long(long* val, size_t* len)
 {
-    grib_accessor_g2_chemical_t* self    = (grib_accessor_g2_chemical_t*)a;
     long productDefinitionTemplateNumber = 0;
-    grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber, &productDefinitionTemplateNumber);
+    grib_get_long(grib_handle_of_accessor(this), productDefinitionTemplateNumber_, &productDefinitionTemplateNumber);
 
-    // Meaning of self->chemical_type:
-    //  0 = atmospheric chemical constituents
-    //  1 = atmospheric chemical constituents based on a distribution function
-    //  2 = atmospheric chemical constituents with source or sink
-    //
-    Assert(self->chemical_type == 0 || self->chemical_type == 1 || self->chemical_type == 2);
-    if (self->chemical_type == 1)
+    Assert(chemical_type_ == CHEM_PLAIN || chemical_type_ == CHEM_DISTRIB || chemical_type_ == CHEM_SRCSINK);
+    if (chemical_type_ == CHEM_DISTRIB)
         *val = grib2_is_PDTN_ChemicalDistFunc(productDefinitionTemplateNumber);
-    else if (self->chemical_type == 2)
+    else if (chemical_type_ == CHEM_SRCSINK)
         *val = grib2_is_PDTN_ChemicalSourceSink(productDefinitionTemplateNumber);
     else
         *val = grib2_is_PDTN_Chemical(productDefinitionTemplateNumber);
@@ -49,10 +49,9 @@ int grib_accessor_class_g2_chemical_t::unpack_long(grib_accessor* a, long* val, 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_g2_chemical_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_g2_chemical_t::pack_long(const long* val, size_t* len)
 {
-    grib_accessor_g2_chemical_t* self       = (grib_accessor_g2_chemical_t*)a;
-    grib_handle* hand                       = grib_handle_of_accessor(a);
+    grib_handle* hand                       = grib_handle_of_accessor(this);
     long productDefinitionTemplateNumber    = -1;
     long productDefinitionTemplateNumberNew = -1;
     // long type=-1;
@@ -65,12 +64,12 @@ int grib_accessor_class_g2_chemical_t::pack_long(grib_accessor* a, const long* v
     // long derivedForecast=-1;
     int ret = 0;
 
-    if (grib_get_long(hand, self->productDefinitionTemplateNumber, &productDefinitionTemplateNumber) != GRIB_SUCCESS)
+    if (grib_get_long(hand, productDefinitionTemplateNumber_, &productDefinitionTemplateNumber) != GRIB_SUCCESS)
         return GRIB_SUCCESS;
 
-    //  grib_get_long(hand, self->type,&type);
-    //  grib_get_long(hand, self->stream,&stream);
-    ret = grib_get_string(hand, self->stepType, stepType, &slen);
+    //  grib_get_long(hand, type_ ,&type);
+    //  grib_get_long(hand, stream_ ,&stream);
+    ret = grib_get_string(hand, stepType_, stepType, &slen);
     Assert(ret == GRIB_SUCCESS);
 
     eps = grib_is_defined(hand, "perturbationNumber");
@@ -79,60 +78,55 @@ int grib_accessor_class_g2_chemical_t::pack_long(grib_accessor* a, const long* v
     if (!strcmp(stepType, "instant"))
         isInstant = 1;
 
-    // Meaning of self->chemical_type:
-    //  0 = atmospheric chemical constituents
-    //  1 = atmospheric chemical constituents based on a distribution function
-    //  2 = atmospheric chemical constituents with source or sink
-    //
-    Assert(self->chemical_type == 0 || self->chemical_type == 1 || self->chemical_type == 2);
+    Assert(chemical_type_ == CHEM_PLAIN || chemical_type_ == CHEM_DISTRIB || chemical_type_ == CHEM_SRCSINK);
 
     if (eps == 1) {
         if (isInstant) {
-            if (self->chemical_type == 0)
+            if (chemical_type_ == CHEM_PLAIN)
                 productDefinitionTemplateNumberNew = 41;
-            else if (self->chemical_type == 1)
+            else if (chemical_type_ == CHEM_DISTRIB)
                 productDefinitionTemplateNumberNew = 58;
-            else if (self->chemical_type == 2)
+            else if (chemical_type_ == CHEM_SRCSINK)
                 productDefinitionTemplateNumberNew = 77;
         }
         else {
-            if (self->chemical_type == 0)
+            if (chemical_type_ == CHEM_PLAIN)
                 productDefinitionTemplateNumberNew = 43;
-            else if (self->chemical_type == 1)
+            else if (chemical_type_ == CHEM_DISTRIB)
                 productDefinitionTemplateNumberNew = 68;
-            else if (self->chemical_type == 2)
+            else if (chemical_type_ == CHEM_SRCSINK)
                 productDefinitionTemplateNumberNew = 79;
         }
     }
     else {
         // deterministic
         if (isInstant) {
-            if (self->chemical_type == 0)
+            if (chemical_type_ == CHEM_PLAIN)
                 productDefinitionTemplateNumberNew = 40;
-            else if (self->chemical_type == 1)
+            else if (chemical_type_ == CHEM_DISTRIB)
                 productDefinitionTemplateNumberNew = 57;
-            else if (self->chemical_type == 2)
+            else if (chemical_type_ == CHEM_SRCSINK)
                 productDefinitionTemplateNumberNew = 76;
         }
         else {
-            if (self->chemical_type == 0)
+            if (chemical_type_ == CHEM_PLAIN)
                 productDefinitionTemplateNumberNew = 42;
-            else if (self->chemical_type == 1)
+            else if (chemical_type_ == CHEM_DISTRIB)
                 productDefinitionTemplateNumberNew = 67;
-            else if (self->chemical_type == 2)
+            else if (chemical_type_ == CHEM_SRCSINK)
                 productDefinitionTemplateNumberNew = 78;
         }
     }
 
     if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
-        grib_set_long(hand, self->productDefinitionTemplateNumber, productDefinitionTemplateNumberNew);
-        //if (derivedForecast>=0) grib_set_long(hand, self->derivedForecast,derivedForecast);
+        grib_set_long(hand, productDefinitionTemplateNumber_, productDefinitionTemplateNumberNew);
+        /*if (derivedForecast>=0) grib_set_long(hand, derivedForecast_ ,derivedForecast);*/
     }
 
     return 0;
 }
 
-int grib_accessor_class_g2_chemical_t::value_count(grib_accessor* a, long* count)
+int grib_accessor_g2_chemical_t::value_count(long* count)
 {
     *count = 1;
     return 0;

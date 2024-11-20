@@ -15,11 +15,11 @@
 
 grib_handle* grib_handle_of_accessor(const grib_accessor* a)
 {
-    if (a->parent == NULL) {
-        return a->h;
+    if (a->parent_ == NULL) {
+        return a->h_;
     }
     else {
-        return a->parent->h;
+        return a->parent_->h;
     }
 }
 
@@ -31,10 +31,10 @@ static grib_handle* handle_of(grib_accessor* observed)
     /* printf("+++++ %s = %p\n",observed->name,observed); */
     /* printf("+++++       h=%p\n",observed->h); */
     /* special case for BUFR attributes parentless */
-    if (observed->parent == NULL) {
-        return observed->h;
+    if (observed->parent_ == NULL) {
+        return observed->h_;
     }
-    h = observed->parent->h;
+    h = observed->parent_->h;
     while (h->main)
         h = h->main;
     return h;

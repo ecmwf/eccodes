@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,16 +15,11 @@
 class grib_accessor_when_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in when */
-};
-
-class grib_accessor_class_when_t : public grib_accessor_class_gen_t
-{
-public:
-    grib_accessor_class_when_t(const char* name) : grib_accessor_class_gen_t(name) {}
+    grib_accessor_when_t() :
+        grib_accessor_gen_t() { class_name_ = "when"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_when_t{}; }
-    int get_native_type(grib_accessor*) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
-    int notify_change(grib_accessor*, grib_accessor*) override;
+    long get_native_type() override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
+    int notify_change(grib_accessor* changed) override;
 };

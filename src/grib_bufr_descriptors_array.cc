@@ -13,12 +13,11 @@
 #define DYN_ARRAY_SIZE_INIT 200 /* Initial size for grib_bufr_descriptors_array_new */
 #define DYN_ARRAY_SIZE_INCR 400 /* Increment size for the above */
 
-bufr_descriptors_array* grib_bufr_descriptors_array_new(grib_context* c, size_t size, size_t incsize)
+bufr_descriptors_array* grib_bufr_descriptors_array_new(size_t size, size_t incsize)
 {
     bufr_descriptors_array* v = NULL;
 
-    if (!c)
-        c = grib_context_get_default();
+    grib_context* c = grib_context_get_default();
 
     v = (bufr_descriptors_array*)grib_context_malloc(c, sizeof(bufr_descriptors_array));
     if (!v) {
@@ -100,7 +99,7 @@ bufr_descriptors_array* grib_bufr_descriptors_array_push(bufr_descriptors_array*
     if (!v) {
         size_t start_size    = DYN_ARRAY_SIZE_INIT;
         size_t start_incsize = DYN_ARRAY_SIZE_INCR;
-        v                    = grib_bufr_descriptors_array_new(0, start_size, start_incsize);
+        v                    = grib_bufr_descriptors_array_new(start_size, start_incsize);
     }
 
     if (v->n >= v->size - v->number_of_pop_front)
@@ -119,7 +118,7 @@ bufr_descriptors_array* grib_bufr_descriptors_array_append(bufr_descriptors_arra
     if (!v) {
         size_t start_size    = DYN_ARRAY_SIZE_INIT;
         size_t start_incsize = DYN_ARRAY_SIZE_INCR;
-        v                    = grib_bufr_descriptors_array_new(0, start_size, start_incsize);
+        v                    = grib_bufr_descriptors_array_new(start_size, start_incsize);
     }
 
     for (i = 0; i < ar->n; i++) {
@@ -139,7 +138,7 @@ bufr_descriptors_array* grib_bufr_descriptors_array_append(bufr_descriptors_arra
 //     if (!v) {
 //         size_t start_size    = DYN_ARRAY_SIZE_INIT;
 //         size_t start_incsize = DYN_ARRAY_SIZE_INCR;
-//         v                    = grib_bufr_descriptors_array_new(0, start_size, start_incsize);
+//         v                    = grib_bufr_descriptors_array_new(start_size, start_incsize);
 //     }
 //     if (v->number_of_pop_front) {
 //         v->v--;

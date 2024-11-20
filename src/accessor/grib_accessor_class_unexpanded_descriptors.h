@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,21 +15,18 @@
 class grib_accessor_unexpanded_descriptors_t : public grib_accessor_long_t
 {
 public:
-    /* Members defined in unexpanded_descriptors */
-    grib_accessor* unexpandedDescriptorsEncoded;
-    const char* createNewData;
-};
-
-class grib_accessor_class_unexpanded_descriptors_t : public grib_accessor_class_long_t
-{
-public:
-    grib_accessor_class_unexpanded_descriptors_t(const char* name) : grib_accessor_class_long_t(name) {}
+    grib_accessor_unexpanded_descriptors_t() :
+        grib_accessor_long_t() { class_name_ = "unexpanded_descriptors"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_unexpanded_descriptors_t{}; }
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    long byte_offset(grib_accessor*) override;
-    long next_offset(grib_accessor*) override;
-    int value_count(grib_accessor*, long*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
-    void update_size(grib_accessor*, size_t) override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    long byte_offset() override;
+    long next_offset() override;
+    int value_count(long*) override;
+    void init(const long, grib_arguments*) override;
+    void update_size(size_t) override;
+
+private:
+    grib_accessor* unexpandedDescriptorsEncoded_ = nullptr;
+    const char* createNewData_ = nullptr;
 };

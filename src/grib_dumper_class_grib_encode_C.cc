@@ -132,19 +132,19 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     size_t size = 1;
     int err     = a->unpack_long(&value, &size);
 
-    if ((a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY))
+    if ((a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY))
         return;
 
     if (comment)
         pcomment(self->dumper.out, value, comment);
 
-    if (((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && (value == GRIB_MISSING_LONG))
-        fprintf(self->dumper.out, "    GRIB_CHECK(grib_set_missing(h,\"%s\"),%d);\n", a->name, 0);
+    if (((a->flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && (value == GRIB_MISSING_LONG))
+        fprintf(self->dumper.out, "    GRIB_CHECK(grib_set_missing(h,\"%s\"),%d);\n", a->name_, 0);
     else
-        fprintf(self->dumper.out, "    GRIB_CHECK(grib_set_long(h,\"%s\",%ld),%d);\n", a->name, value, 0);
+        fprintf(self->dumper.out, "    GRIB_CHECK(grib_set_long(h,\"%s\",%ld),%d);\n", a->name_, value, 0);
 
     if (err)
-        fprintf(self->dumper.out, " /*  Error accessing %s (%s) */", a->name, grib_get_error_message(err));
+        fprintf(self->dumper.out, " /*  Error accessing %s (%s) */", a->name_, grib_get_error_message(err));
 
     if (comment)
         fprintf(self->dumper.out, "\n");
@@ -166,16 +166,16 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
 
     char buf[1024];
 
-    if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
+    if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY)
         return;
 
-    if (a->length == 0)
+    if (a->length_ == 0)
         return;
 
     buf[0] = 0;
 
-    for (i = 0; i < (a->length * 8); i++) {
-        if (test_bit(value, a->length * 8 - i - 1))
+    for (i = 0; i < (a->length_ * 8); i++) {
+        if (test_bit(value, a->length_ * 8 - i - 1))
             strcat(buf, "1");
         else
             strcat(buf, "0");
@@ -189,9 +189,9 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
     pcomment(self->dumper.out, value, buf);
 
     if (err)
-        fprintf(self->dumper.out, " /*  Error accessing %s (%s) */", a->name, grib_get_error_message(err));
+        fprintf(self->dumper.out, " /*  Error accessing %s (%s) */", a->name_, grib_get_error_message(err));
     else
-        fprintf(self->dumper.out, "    GRIB_CHECK(grib_set_long(h,\"%s\",%ld),%d);\n", a->name, value, 0);
+        fprintf(self->dumper.out, "    GRIB_CHECK(grib_set_long(h,\"%s\",%ld),%d);\n", a->name_, value, 0);
 
     fprintf(self->dumper.out, "\n");
 }
@@ -202,18 +202,18 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     double value;
     size_t size = 1;
     int err     = a->unpack_double(&value, &size);
-    if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
+    if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY)
         return;
 
-    if (a->length == 0)
+    if (a->length_ == 0)
         return;
 
     //if(comment) fprintf(self->dumper.out,"/* %s */\n",comment);
 
-    fprintf(self->dumper.out, "    GRIB_CHECK(grib_set_double(h,\"%s\",%g),%d);\n", a->name, value, 0);
+    fprintf(self->dumper.out, "    GRIB_CHECK(grib_set_double(h,\"%s\",%g),%d);\n", a->name_, value, 0);
 
     if (err)
-        fprintf(self->dumper.out, " /*  Error accessing %s (%s) */", a->name, grib_get_error_message(err));
+        fprintf(self->dumper.out, " /*  Error accessing %s (%s) */", a->name_, grib_get_error_message(err));
 }
 
 static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
@@ -223,10 +223,10 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     size_t size = sizeof(value);
     int err     = a->unpack_string(value, &size);
 
-    if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
+    if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY)
         return;
 
-    if (a->length == 0)
+    if (a->length_ == 0)
         return;
 
     if (comment)
@@ -234,20 +234,20 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 
     fprintf(self->dumper.out, "    p    = \"%s\";\n", value);
     fprintf(self->dumper.out, "    size = strlen(p);\n");
-    fprintf(self->dumper.out, "    GRIB_CHECK(grib_set_string(h,\"%s\",p,&size),%d);\n", a->name, 0);
+    fprintf(self->dumper.out, "    GRIB_CHECK(grib_set_string(h,\"%s\",p,&size),%d);\n", a->name_, 0);
 
     if (err)
-        fprintf(self->dumper.out, " /*  Error accessing %s (%s) */", a->name, grib_get_error_message(err));
+        fprintf(self->dumper.out, " /*  Error accessing %s (%s) */", a->name_, grib_get_error_message(err));
 }
 
 static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_grib_encode_C* self = (grib_dumper_grib_encode_C*)d;
     int err                         = 0;
-    size_t size                     = a->length;
+    size_t size                     = a->length_;
     unsigned char* buf;
 
-    if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
+    if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY)
         return;
 
     if (size == 0)
@@ -256,7 +256,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
     buf = (unsigned char*)grib_context_malloc(d->context, size);
 
     if (!buf) {
-        fprintf(self->dumper.out, "/* %s: cannot malloc(%zu) */\n", a->name, size);
+        fprintf(self->dumper.out, "/* %s: cannot malloc(%zu) */\n", a->name_, size);
         return;
     }
 
@@ -302,7 +302,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 
     stype[0] = '\0';
 
-    if ((a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) || ((a->flags & GRIB_ACCESSOR_FLAG_DATA) && (d->option_flags & GRIB_DUMP_FLAG_NO_DATA)))
+    if ((a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) || ((a->flags_ & GRIB_ACCESSOR_FLAG_DATA) && (d->option_flags & GRIB_DUMP_FLAG_NO_DATA)))
         return;
 
     a->value_count(&count);
@@ -327,7 +327,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 
     buf = (double*)grib_context_malloc(d->context, size * sizeof(double));
     if (!buf) {
-        fprintf(self->dumper.out, "/* %s: cannot malloc(%zu) */\n", a->name, size);
+        fprintf(self->dumper.out, "/* %s: cannot malloc(%zu) */\n", a->name_, size);
         return;
     }
 
@@ -335,7 +335,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 
     if (err) {
         grib_context_free(d->context, buf);
-        fprintf(self->dumper.out, " /*  Error accessing %s (%s) */", a->name, grib_get_error_message(err));
+        fprintf(self->dumper.out, " /*  Error accessing %s (%s) */", a->name_, grib_get_error_message(err));
         return;
     }
 
@@ -358,7 +358,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     if (size % 4)
         fprintf(self->dumper.out, "\n");
     fprintf(self->dumper.out, "\n");
-    fprintf(self->dumper.out, "    GRIB_CHECK(grib_set_%s_array(h,\"%s\",v%s,size),%d);\n", stype, a->name, stype, 0);
+    fprintf(self->dumper.out, "    GRIB_CHECK(grib_set_%s_array(h,\"%s\",v%s,size),%d);\n", stype, a->name_, stype, 0);
     fprintf(self->dumper.out, "    free(v%s);\n", stype);
 
     grib_context_free(d->context, buf);
@@ -367,7 +367,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_grib_encode_C* self = (grib_dumper_grib_encode_C*)d;
-    fprintf(self->dumper.out, "\n    /* %s */\n\n", a->name);
+    fprintf(self->dumper.out, "\n    /* %s */\n\n", a->name_);
 }
 
 static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block)

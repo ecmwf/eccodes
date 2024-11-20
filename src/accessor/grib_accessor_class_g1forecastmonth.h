@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,22 +15,21 @@
 class grib_accessor_g1forecastmonth_t : public grib_accessor_long_t
 {
 public:
-    /* Members defined in g1forecastmonth */
-    const char* verification_yearmonth;
-    const char* base_date;
-    const char* day;
-    const char* hour;
-    const char* fcmonth;
-    const char* check;
-};
-
-class grib_accessor_class_g1forecastmonth_t : public grib_accessor_class_long_t
-{
-public:
-    grib_accessor_class_g1forecastmonth_t(const char* name) : grib_accessor_class_long_t(name) {}
+    grib_accessor_g1forecastmonth_t() :
+        grib_accessor_long_t() { class_name_ = "g1forecastmonth"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_g1forecastmonth_t{}; }
-    int pack_long(grib_accessor*, const long* val, size_t* len) override;
-    int unpack_long(grib_accessor*, long* val, size_t* len) override;
-    void dump(grib_accessor*, grib_dumper*) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int pack_long(const long* val, size_t* len) override;
+    int unpack_long(long* val, size_t* len) override;
+    void dump(grib_dumper*) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* verification_yearmonth_ = nullptr;
+    const char* base_date_ = nullptr;
+    const char* day_ = nullptr;
+    const char* hour_ = nullptr;
+    const char* fcmonth_ = nullptr;
+    const char* check_ = nullptr;
+
+    int unpack_long_edition1(long* val, size_t* len);
 };

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,15 +15,10 @@
 class grib_accessor_library_version_t : public grib_accessor_ascii_t
 {
 public:
-    /* Members defined in library_version */
-};
-
-class grib_accessor_class_library_version_t : public grib_accessor_class_ascii_t
-{
-public:
-    grib_accessor_class_library_version_t(const char* name) : grib_accessor_class_ascii_t(name) {}
+    grib_accessor_library_version_t() :
+        grib_accessor_ascii_t() { class_name_ = "library_version"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_library_version_t{}; }
-    int unpack_string(grib_accessor*, char*, size_t* len) override;
-    size_t string_length(grib_accessor*) override;
-    int value_count(grib_accessor*, long*) override;
+    int unpack_string(char*, size_t* len) override;
+    size_t string_length() override;
+    int value_count(long*) override;
 };

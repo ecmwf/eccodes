@@ -11,6 +11,8 @@
 . ./include.ctest.sh
 
 label="grib_check_param_concepts_test"
+tempText=temp.$label.txt
+tempGrib=temp.$label.grib
 
 
 if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
@@ -32,10 +34,41 @@ check_grib_defs()
 # Do various checks on the concepts files
 #
 
+# -----------------------------------
+echo "Check for duplicate encodings"
+# -----------------------------------
+paramIdFiles="$ECCODES_DEFINITION_PATH/grib2/paramId.def $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/paramId.def"
+
+# Flatten the file so we get just the encoding part.
+# uniq -d outputs a single copy of each line that is repeated in the input
+for paramIdFile in $paramIdFiles; do
+  cat $paramIdFile | tr '\n' ' ' | tr '\t' ' ' | tr '#' '\n' | sed "s/^.* '//" | sed "s/'//" | awk '{$1="";print}' | sort |uniq -d > $tempText
+  if [ -s "$tempText" ]; then
+      # File exists and has a size greater than zero
+      echo "ERROR: Duplicate parameter encoding(s) found in $paramIdFile" >&2
+      cat $tempText | sed -e 's/ ;/;/g'
+      exit 1
+  else
+      echo "No duplicates in $paramIdFile"
+  fi
+done
+
+
+# -----------------------------------
+echo "Check for bad shortNames"
+# -----------------------------------
+shortNameFile="$ECCODES_DEFINITION_PATH/grib2/shortName.def"
+grep "^'.*=" $shortNameFile | sed -e 's/ = {//' > $tempText
+set +e
+grep ' ' $tempText # This grep should fail. No spaces must be found
+status=$?
+set -e
+[ $status -ne 0 ]
+
 # First check the GRIB2 paramId.def and shortName.def
 # ----------------------------------------------------
 $EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/paramId.def
-datasets="ecmf uerra cerise hydro s2s tigge era6 destine era"
+datasets="ecmf uerra cerise hydro s2s tigge era6 destine era nextgems"
 for a_dataset in $datasets; do
     $EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/$a_dataset/paramId.def
 done
@@ -155,6 +188,17 @@ for p in $pids; do
 done
 set -e
 
+
+# -------------------------------
+echo "ECC-1932"
+# -------------------------------
+sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+${tools_dir}/grib_set -s centre=egrr,indicatorOfParameter=167 $sample1 $tempGrib
+grib_check_key_equals $tempGrib cfVarName t2m
+rm -f $tempGrib
+
+
+rm -f $tempText $tempGrib
 
 cd $test_dir
 rm -fr $tempDir

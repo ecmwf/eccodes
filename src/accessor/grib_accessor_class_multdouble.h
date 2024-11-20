@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -16,16 +15,13 @@
 class grib_accessor_multdouble_t : public grib_accessor_double_t
 {
 public:
-    /* Members defined in multdouble */
-    const char* val;
-    double multiplier;
-};
-
-class grib_accessor_class_multdouble_t : public grib_accessor_class_double_t
-{
-public:
-    grib_accessor_class_multdouble_t(const char* name) : grib_accessor_class_double_t(name) {}
+    grib_accessor_multdouble_t() :
+        grib_accessor_double_t() { class_name_ = "multdouble"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_multdouble_t{}; }
-    int unpack_double(grib_accessor*, double* val, size_t* len) override;
-    void init(grib_accessor*, const long, grib_arguments*) override;
+    int unpack_double(double* val, size_t* len) override;
+    void init(const long, grib_arguments*) override;
+
+private:
+    const char* val_ = nullptr;
+    double multiplier_ = 0.;
 };

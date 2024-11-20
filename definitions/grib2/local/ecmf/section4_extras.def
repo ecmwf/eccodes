@@ -1,12 +1,13 @@
 # (C) Copyright 2005- ECMWF.
 
 # See ECC-1846
-if (centre is "ecmf" or datasetForLocal is "era6") {
- concept modelName(unknown, "modelNameConcept.def", conceptsMasterDir, conceptsLocalDirAll): no_copy, dump, read_only;
+# This is only read when centre=ecmf, so can remove if statement that was here
+# This is ecmf local so we shouldn't use MasterDir. Instead we look for pseudocentre (conceptsDir2) then centre (conceptsLocalDirAll)
 
- if (modelName isnot "unknown") {
-    concept modelVersion(unknown, "modelVersionConcept_[modelName].def", conceptsMasterDir, conceptsLocalDirAll): no_copy, dump, read_only;
-    # alias ls.model = modelName;
-    # alias mars.model = modelName;
- }
+concept modelName(unknown, "modelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
+
+if (modelName isnot "unknown") {
+   concept modelVersion(unknown, "modelVersionConcept.[modelName].def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
+   # alias ls.model = modelName;
+   # alias mars.model = modelName;
 }

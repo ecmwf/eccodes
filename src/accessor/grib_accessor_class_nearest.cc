@@ -10,51 +10,18 @@
 
 #include "grib_accessor_class_nearest.h"
 
-grib_accessor_class_nearest_t _grib_accessor_class_nearest{"nearest"};
-grib_accessor_class* grib_accessor_class_nearest = &_grib_accessor_class_nearest;
+grib_accessor_nearest_t _grib_accessor_nearest{};
+grib_accessor* grib_accessor_nearest = &_grib_accessor_nearest;
 
-
-void grib_accessor_class_nearest_t::init(grib_accessor* a, const long l, grib_arguments* args)
+void grib_accessor_nearest_t::init(const long l, grib_arguments* args)
 {
-    grib_accessor_class_gen_t::init(a, l, args);
-    grib_accessor_nearest_t* self = (grib_accessor_nearest_t*)a;
-    self->args                  = args;
+    grib_accessor_gen_t::init(l, args);
+    args_ = args;
 }
 
-void grib_accessor_class_nearest_t::dump(grib_accessor* a, grib_dumper* dumper)
+void grib_accessor_nearest_t::dump(grib_dumper* dumper)
 {
     /* TODO: pass args */
-    grib_dump_label(dumper, a, NULL);
+    grib_dump_label(dumper, this, NULL);
 }
 
-#if defined(HAVE_GEOGRAPHY)
-grib_nearest* grib_nearest_new(const grib_handle* ch, int* error)
-{
-    grib_handle* h            = (grib_handle*)ch;
-    grib_accessor* a          = NULL;
-    grib_accessor_nearest_t* na = NULL;
-    grib_nearest* n           = NULL;
-    *error                    = GRIB_NOT_IMPLEMENTED;
-    a                         = grib_find_accessor(h, "NEAREST");
-    na                        = (grib_accessor_nearest_t*)a;
-
-    if (!a)
-        return NULL;
-
-    n = grib_nearest_factory(h, na->args, error);
-
-    if (n)
-        *error = GRIB_SUCCESS;
-
-    return n;
-}
-#else
-grib_nearest* grib_nearest_new(const grib_handle* ch, int* error)
-{
-    *error = GRIB_FUNCTIONALITY_NOT_ENABLED;
-    grib_context_log(ch->context, GRIB_LOG_ERROR,
-                     "Nearest neighbour functionality not enabled. Please rebuild with -DENABLE_GEOGRAPHY=ON");
-
-    return NULL;
-}
-#endif
