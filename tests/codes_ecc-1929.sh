@@ -23,7 +23,7 @@ cat $def_dir/grib2/boot.def > $bootfile
 echo 'print "DEBUG: [gridType=] [typeOfLevel=]";' >> $bootfile
 echo >> $bootfile
 
-export ECCODES_DEFINITION_PATH=$PWD/$tempDir/definitions
+export ECCODES_DEFINITION_PATH=$PWD/$tempDir/definitions:$ECCODES_DEFINITION_PATH
 # This will activate the print statement above
 ${tools_dir}/grib_get -p edition $sample_grib2 > $tempOut
 grep -q "DEBUG: gridType=regular_ll typeOfLevel=surface" $tempOut
