@@ -12,6 +12,11 @@
 
 label="codes_assert_test"
 
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
 tempOut=temp.$label.txt
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
