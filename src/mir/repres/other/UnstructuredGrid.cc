@@ -12,21 +12,19 @@
 
 #include "mir/repres/other/UnstructuredGrid.h"
 
-#include <fstream>
 #include <limits>
 #include <memory>
 #include <numeric>
 #include <ostream>
 #include <utility>
 
-#include "eckit/filesystem/PathName.h"
-#include "eckit/serialisation/FileStream.h"
-#include "eckit/serialisation/IfstreamStream.h"
 #include "eckit/utils/MD5.h"
 
 #include "mir/api/MIRJob.h"
 #include "mir/api/mir_config.h"
+#include "mir/input/GriddefInput.h"
 #include "mir/iterator/UnstructuredIterator.h"
+#include "mir/output/GriddefOutput.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/CheckDuplicatePoints.h"
 #include "mir/util/Domain.h"
@@ -62,12 +60,13 @@ Representation* RepresentationBuilder<other::UnstructuredGrid>::make(const param
 
 namespace other {
 
+
 UnstructuredGrid::UnstructuredGrid(const param::MIRParametrisation& parametrisation) {
     parametrisation.get("latitudes", latitudes_);
     parametrisation.get("longitudes", longitudes_);
 
     if (latitudes_.size() != longitudes_.size()) {
-        throw exception::UserError("UnstructuredGrid: requires 'latitudes' and 'longitudes' with the same size");
+        throw exception::UserError("UnstructuredGrid: requires 'latitudes'/'longitudes' with the same size");
     }
 
     if (latitudes_.empty()) {
@@ -75,7 +74,7 @@ UnstructuredGrid::UnstructuredGrid(const param::MIRParametrisation& parametrisat
         parametrisation.get("numberOfPoints", numberOfPoints);
 
         if (numberOfPoints == 0) {
-            throw exception::UserError("UnstructuredGrid: requires 'latitudes' and 'longitudes', or 'numberOfPoints'");
+            throw exception::UserError("UnstructuredGrid: requires 'latitudes'/'longitudes' or 'numberOfPoints'");
         }
 
         // coordinates are unusable but unique
@@ -89,68 +88,16 @@ UnstructuredGrid::UnstructuredGrid(const param::MIRParametrisation& parametrisat
 
 
 UnstructuredGrid::UnstructuredGrid(const eckit::PathName& path) {
-    std::ifstream in(path.asString().c_str());
-    if (!in) {
-        throw exception::CantOpenFile(path);
-    }
-
-    if (::isprint(in.peek()) == 0) {
-
-        Log::info() << "UnstructuredGrid::load  " << path << std::endl;
-
-        eckit::IfstreamStream s(in);
-        size_t version = 0;
-        s >> version;
-        ASSERT(version == 1);
-
-        size_t count = 0;
-        s >> count;
-
-        latitudes_.resize(count);
-        longitudes_.resize(count);
-
-        for (size_t i = 0; i < count; ++i) {
-            s >> latitudes_[i];
-            s >> longitudes_[i];
-            // Log::info() << latitudes_[i] << " " << longitudes_[i] << std::endl;
-        }
-    }
-    else {
-        double lat = 0;
-        double lon = 0;
-        while (in >> lat >> lon) {
-            latitudes_.push_back(lat);
-            longitudes_.push_back(lon);
-        }
-    }
-
+    input::GriddefInput::load(path, latitudes_, longitudes_);
     util::check_duplicate_points("UnstructuredGrid from " + path.asString(), latitudes_, longitudes_);
 }
 
 
 void UnstructuredGrid::save(const eckit::PathName& path, const std::vector<double>& latitudes,
                             const std::vector<double>& longitudes, bool binary) {
-    Log::info() << "UnstructuredGrid::save " << path << std::endl;
-
     util::check_duplicate_points("UnstructuredGrid::save to " + path.asString(), latitudes, longitudes);
-
-    if (binary) {
-        eckit::FileStream s(path, "w");
-        size_t version = 1;
-        size_t count   = latitudes.size();
-        s << version;
-        s << count;
-        for (size_t i = 0; i < count; ++i) {
-            s << latitudes[i];
-            s << longitudes[i];
-
-            Log::info() << latitudes[i] << " " << longitudes[i] << std::endl;
-        }
-        s.close();
-    }
-    else {
-        NOTIMP;
-    }
+    ASSERT(binary);
+    output::GriddefOutput::save(path, latitudes, longitudes);
 }
 
 
@@ -158,7 +105,7 @@ UnstructuredGrid::UnstructuredGrid(const std::vector<double>& latitudes, const s
                                    const util::BoundingBox& bbox) :
     Gridded(bbox), latitudes_(latitudes), longitudes_(longitudes) {
     if (latitudes_.size() != longitudes_.size()) {
-        throw exception::UserError("UnstructuredGrid: requires 'latitudes' and 'longitudes' with the same size");
+        throw exception::UserError("UnstructuredGrid: requires 'latitudes'/'longitudes' with the same size");
     }
 
     util::check_duplicate_points("UnstructuredGrid from arguments", latitudes_, longitudes_);
