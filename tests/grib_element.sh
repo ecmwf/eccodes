@@ -11,6 +11,7 @@
 . ./include.ctest.sh
 
 label="grib_element_test"
+tempGrib=temp.${label}.grib
 tempRef=temp.${label}.ref
 tempText=temp.${label}.txt
 tempFilt=temp.${label}.filt
@@ -72,6 +73,20 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
+# Encode a single double element in an array
+input=$data_dir/sample.grib2
+cat > $tempFilt <<EOF
+    meta elemN element(values, -1);
+    assert( elemN < 301 );
+    print "before: [elemN:d]";
+    set elemN = 311.0;  # value has to be a double
+    print "after:  [elemN:d]";
+    assert( elemN > 310 );
+    write;
+EOF
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $input
+${tools_dir}/grib_get -p avg $input $tempGrib
+
 
 # Clean up
-rm -f $tempRef $tempText $tempFilt
+rm -f $tempRef $tempText $tempFilt $tempGrib

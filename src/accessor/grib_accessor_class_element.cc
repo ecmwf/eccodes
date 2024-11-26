@@ -123,6 +123,53 @@ the_end:
     return ret;
 }
 
+int grib_accessor_element_t::pack_double(const double* v, size_t* len)
+{
+    int ret               = 0;
+    size_t size           = 0;
+    double* ar            = NULL;
+    const grib_context* c = context_;
+    grib_handle* hand     = grib_handle_of_accessor(this);
+    long index            = element_;
+
+    if (*len < 1) {
+        ret = GRIB_ARRAY_TOO_SMALL;
+        return ret;
+    }
+
+    if ((ret = grib_get_size(hand, array_, &size)) != GRIB_SUCCESS)
+        return ret;
+
+    ar = (double*)grib_context_malloc_clear(c, size * sizeof(double));
+    if (!ar) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Error allocating %zu bytes", size * sizeof(double));
+        return GRIB_OUT_OF_MEMORY;
+    }
+
+    if ((ret = grib_get_double_array_internal(hand, array_, ar, &size)) != GRIB_SUCCESS)
+        return ret;
+
+    // An index of -x means the xth item from the end of the list, so ar[-1] means the last item in ar
+    if (index < 0) {
+        index = size + index;
+    }
+
+    if ((ret = check_element_index(__func__, array_, index, size)) != GRIB_SUCCESS) {
+        goto the_end;
+    }
+
+    Assert(index >= 0);
+    Assert(index < size);
+    ar[index] = *v;
+
+    if ((ret = grib_set_double_array_internal(hand, array_, ar, size)) != GRIB_SUCCESS)
+        goto the_end;
+
+the_end:
+    grib_context_free(c, ar);
+    return ret;
+}
+
 int grib_accessor_element_t::unpack_double(double* val, size_t* len)
 {
     int ret                 = 0;
