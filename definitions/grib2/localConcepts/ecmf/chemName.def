@@ -148,3 +148,8 @@
 	constituentType = 65509 ;
 	localTablesVersion = 1 ;
 	}
+#Volcanic sulphate
+'Volcanic sulphate' = {
+        constituentType = 65506 ;
+        localTablesVersion = 1 ;
+        }
