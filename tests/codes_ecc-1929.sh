@@ -12,6 +12,11 @@
 
 label="codes_ecc-1929_test"
 
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
 tempOut=temp.$label.txt
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
@@ -23,7 +28,7 @@ cat $def_dir/grib2/boot.def > $bootfile
 echo 'print "DEBUG: [gridType=] [typeOfLevel=]";' >> $bootfile
 echo >> $bootfile
 
-export ECCODES_DEFINITION_PATH=$PWD/$tempDir/definitions
+export ECCODES_DEFINITION_PATH=$PWD/$tempDir/definitions:$ECCODES_DEFINITION_PATH
 # This will activate the print statement above
 ${tools_dir}/grib_get -p edition $sample_grib2 > $tempOut
 grep -q "DEBUG: gridType=regular_ll typeOfLevel=surface" $tempOut

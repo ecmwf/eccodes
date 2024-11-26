@@ -15,9 +15,7 @@ grib_accessor* grib_accessor_library_version = &_grib_accessor_library_version;
 
 int grib_accessor_library_version_t::unpack_string(char* val, size_t* len)
 {
-    char result[30] = {
-        0,
-    };
+    char result[30] = {0,};
     size_t size = 0;
 
     int major    = ECCODES_MAJOR_VERSION;

@@ -94,9 +94,7 @@ int grib_accessor_group_t::unpack_string(char* val, size_t* len)
 
 int grib_accessor_group_t::unpack_long(long* v, size_t* len)
 {
-    char val[1024] = {
-        0,
-    };
+    char val[1024] = {0,};
     size_t l   = sizeof(val);
     size_t i   = 0;
     char* last = NULL;
@@ -117,7 +115,7 @@ int grib_accessor_group_t::unpack_long(long* v, size_t* len)
 
     *v = strtol(val, &last, 10);
 
-    grib_context_log(context_, GRIB_LOG_DEBUG, " Casting string %s to long", name_);
+    grib_context_log(context_, GRIB_LOG_DEBUG, "Casting string %s to long", name_);
     return GRIB_SUCCESS;
 }
 
@@ -130,7 +128,7 @@ int grib_accessor_group_t::unpack_double(double* v, size_t* len)
     *v = strtod(val, &last);
 
     if (*last == 0) {
-        grib_context_log(context_, GRIB_LOG_DEBUG, " Casting string %s to long", name_);
+        grib_context_log(context_, GRIB_LOG_DEBUG, "Casting string %s to long", name_);
         return GRIB_SUCCESS;
     }
 

@@ -53,10 +53,22 @@ for paramIdFile in $paramIdFiles; do
   fi
 done
 
+
+# -----------------------------------
+echo "Check for bad shortNames"
+# -----------------------------------
+shortNameFile="$ECCODES_DEFINITION_PATH/grib2/shortName.def"
+grep "^'.*=" $shortNameFile | sed -e 's/ = {//' > $tempText
+set +e
+grep ' ' $tempText # This grep should fail. No spaces must be found
+status=$?
+set -e
+[ $status -ne 0 ]
+
 # First check the GRIB2 paramId.def and shortName.def
 # ----------------------------------------------------
 $EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/paramId.def
-datasets="ecmf uerra cerise hydro s2s tigge era6 destine era"
+datasets="ecmf uerra cerise hydro s2s tigge era6 destine era nextgems"
 for a_dataset in $datasets; do
     $EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/$a_dataset/paramId.def
 done

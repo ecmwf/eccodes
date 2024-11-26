@@ -70,7 +70,7 @@ int grib_accessor_select_step_template_t::pack_long(const long* val, size_t* len
                 productDefinitionTemplateNumberNew = 41;
                 break;
             case 46:                                      // DET aerosol
-                productDefinitionTemplateNumberNew = 48;  // 44 is deprecated
+                productDefinitionTemplateNumberNew = 50;  // ECC-1963: 44 is deprecated
                 break;
             case 47:  // ENS aerosol
                 productDefinitionTemplateNumberNew = 45;

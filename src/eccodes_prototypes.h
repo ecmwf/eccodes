@@ -434,9 +434,6 @@ void* grib_context_buffer_malloc(const grib_context* c, size_t size);
 void grib_context_buffer_free(const grib_context* c, void* p);
 void* grib_context_buffer_realloc(const grib_context* c, void* p, size_t size);
 void* grib_context_buffer_malloc_clear(const grib_context* c, size_t size);
-void grib_context_set_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f, grib_realloc_proc r);
-void grib_context_set_persistent_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f);
-void grib_context_set_buffer_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f, grib_realloc_proc r);
 void grib_context_set_data_accessing_proc(grib_context* c, grib_data_read_proc read, grib_data_write_proc write, grib_data_tell_proc tell);
 void grib_context_log(const grib_context* c, int level, const char* fmt, ...);
 void grib_context_print(const grib_context* c, void* descriptor, const char* fmt, ...);
@@ -793,23 +790,12 @@ grib_expression* new_string_expression(grib_context* c, const char* value);
 grib_expression* new_sub_string_expression(grib_context* c, const char* value, size_t start, size_t length);
 
 /* grib_nearest.cc */
-int grib_nearest_find(grib_nearest* nearest, const grib_handle* h, double inlat, double inlon, unsigned long flags, double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
-int grib_nearest_init(grib_nearest* i, grib_handle* h, grib_arguments* args);
-int grib_nearest_delete(grib_nearest* i);
-int grib_nearest_get_radius(grib_handle* h, double* radiusInKm);
-void grib_binary_search(const double xx[], const size_t n, double x, size_t* ju, size_t* jl);
-int grib_nearest_find_multiple(const grib_handle* h, int is_lsm, const double* inlats, const double* inlons, long npoints, double* outlats, double* outlons, double* values, double* distances, int* indexes);
-int grib_nearest_find_generic(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags,
-                              const char* values_keyname,
-                              double** out_lats,
-                              int* out_lats_count,
-                              double** out_lons,
-                              int* out_lons_count,
-                              double** out_distances,
-                              double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
-
-/* grib_nearest_class.cc */
-grib_nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args, int* error);
+//int grib_nearest_find(grib_nearest* nearest, const grib_handle* h, double inlat, double inlon, unsigned long flags, double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
+//int grib_nearest_init(grib_nearest* i, grib_handle* h, grib_arguments* args);
+//int grib_nearest_delete(grib_nearest* i);
+//int grib_nearest_get_radius(grib_handle* h, double* radiusInKm);
+//void grib_binary_search(const double xx[], const size_t n, double x, size_t* ju, size_t* jl);
+//int grib_nearest_find_multiple(const grib_handle* h, int is_lsm, const double* inlats, const double* inlons, long npoints, double* outlats, double* outlons, double* values, double* distances, int* indexes);
 
 /* grib_iterator.cc */
 int grib_get_data(const grib_handle* h, double* lats, double* lons, double* values);
