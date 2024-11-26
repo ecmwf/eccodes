@@ -260,6 +260,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-1785
         bufr_ecc-1958
         bufr_ecc-1938
+        grib_488
         grib_ecc-490
         grib_ecc-756
         grib_ecc-806
