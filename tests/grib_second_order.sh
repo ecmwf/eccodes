@@ -210,6 +210,18 @@ ${tools_dir}/grib_set -s scaleValuesBy=1.01 $input $temp1
 ${tools_dir}/grib_dump $temp1
 grib_check_key_equals $temp1 packingType grid_second_order
 
+# ECC-1986: GRIB1: Setting field values in second order packing
+cat > $tempFilt<<EOF
+  if (count==1) {
+    # min = 19074.9, max = 20717.6
+    assert( min < 20000 );
+    set offsetValuesBy = 1000.0;
+    assert( min > 20000 );
+  }
+EOF
+input=lfpw.grib1
+${tools_dir}/grib_filter $tempFilt $input
+
 
 # Clean up
 rm -f $temp_stat1 $temp_stat2
