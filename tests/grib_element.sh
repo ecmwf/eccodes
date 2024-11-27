@@ -76,16 +76,21 @@ set -e
 # Encode a single double element in an array
 input=$data_dir/sample.grib2
 cat > $tempFilt <<EOF
+    print "Before:  [min=] [max=]";
+    transient avg1 = avg;
+    transient max1 = max;
     meta elemN element(values, -1);
     assert( elemN < 301 );
-    print "before: [elemN:d]";
-    set elemN = 311.0;  # value has to be a double
-    print "after:  [elemN:d]";
+    print "Last elem was: [elemN:d]";
+    set elemN = 312; # Pass in an integer. Should call pack_double
+    print "Last elem now: [elemN:d]";
+    print "After:  [min=] [max=]";
     assert( elemN > 310 );
+    assert ( avg > avg1 );
+    assert ( max > max1 );
     write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $input
-${tools_dir}/grib_get -p avg $input $tempGrib
 
 
 # Clean up

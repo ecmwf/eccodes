@@ -90,6 +90,12 @@ int grib_accessor_element_t::pack_long(const long* val, size_t* len)
         return ret;
     }
 
+    int atype = GRIB_TYPE_UNDEFINED;
+    if (grib_get_native_type(hand, array_, &atype) == GRIB_SUCCESS && atype == GRIB_TYPE_DOUBLE) {
+        const double dVal = *val;
+        return pack_double(&dVal, len);
+    }
+
     if ((ret = grib_get_size(hand, array_, &size)) != GRIB_SUCCESS)
         return ret;
 
