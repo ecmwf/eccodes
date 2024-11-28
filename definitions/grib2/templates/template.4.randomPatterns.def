@@ -1,0 +1,10 @@
+# Random patterns - SKEB / SPPT / SPP
+
+unsigned[2] randomFieldNumber : dump;
+unsigned[2] totalNumberOfRandomFields : dump;
+unsigned[2] spatioTemporalScaleNumber : dump;
+unsigned[2] totalNumberOfSpatioTemporalScales : dump;
+unsigned[4] scaledValueOfSpatialScale : dump;
+unsigned[1] scaleFactorOfSpatialScale : dump;
+unsigned[4] scaledValueOfTemporalScale : dump;
+unsigned[1] scaleFactorOfTemporalScale : dump;
