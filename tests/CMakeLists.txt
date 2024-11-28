@@ -112,7 +112,6 @@ if( HAVE_BUILD_TOOLS )
         grib_generalised_tiles
         # grib_true_imagery
         grib2_wave_spectra
-        grib_element
         grib_suppressed
         grib_destine_mars_keys
         grib_2nd_order_numValues
@@ -181,6 +180,7 @@ if( HAVE_BUILD_TOOLS )
         grib_bpv_limit
         grib_complex
         grib_double_cmp
+        grib_element
         grib_change_packing
         grib_run_length_packing
         grib_grid_space_view
@@ -260,6 +260,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-1785
         bufr_ecc-1958
         bufr_ecc-1938
+        grib_488
         grib_ecc-490
         grib_ecc-756
         grib_ecc-806
