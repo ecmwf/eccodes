@@ -584,8 +584,6 @@ int grib_accessor_data_g1second_order_general_extended_packing_t::pack_double(co
     grib_handle* handle          = grib_handle_of_accessor(this);
     long optimize_scaling_factor = 0;
 
-    double_dirty_ = 1;
-
     numberOfValues = *len;
 
     min = max = val[0];
@@ -605,6 +603,9 @@ int grib_accessor_data_g1second_order_general_extended_packing_t::pack_double(co
 
     if ((ret = grib_get_long_internal(handle, optimize_scaling_factor_, &optimize_scaling_factor)) != GRIB_SUCCESS)
         return ret;
+
+    // ECC-1986: Make sure we set the dirty flag after calling get_bits_per_value
+    double_dirty_ = 1;
 
     if (optimize_scaling_factor) {
         const int compat_gribex = handle->context->gribex_mode_on && edition_ == 1;

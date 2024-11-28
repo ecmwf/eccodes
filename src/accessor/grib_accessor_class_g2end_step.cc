@@ -51,13 +51,12 @@ void grib_accessor_g2end_step_t::dump(grib_dumper* dumper)
 }
 
 // See GRIB-488
-bool is_special_expver(const grib_handle* h)
+static bool is_special_expver(const grib_handle* h)
 {
-    int ret                = 0;
     char strMarsExpVer[50] = {0,};
     char strMarsClass[50] = {0,};
     size_t slen = 50;
-    ret         = grib_get_string(h, "mars.class", strMarsClass, &slen);
+    int ret = grib_get_string(h, "mars.class", strMarsClass, &slen);
     if (ret == GRIB_SUCCESS && STR_EQUAL(strMarsClass, "em")) {
         // em = ERA-CLIM model integration for the 20th-century (ERA-20CM)
         slen = 50;

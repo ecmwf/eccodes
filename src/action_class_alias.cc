@@ -178,7 +178,7 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
                                  act->name_space, act->name, y->name_);
                 /* printf("[%s %s]\n",y->all_names_[i], y->all_name_spaces_[i]); */
 
-                /* 
+                /*
                  * ECC-1898: Remove accessor from cache
                  * This workaround was disabled because it was causing problems with the unaliasing mars.step,
                  * i.e., when unaliasing "mars.step" it also unaliases "step"
