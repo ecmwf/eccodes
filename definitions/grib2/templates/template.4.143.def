@@ -1,6 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-# TEMPLATE 4.32768, Random pattern
+# TEMPLATE 4.143, Random fields used in an ensemble forecast, at a horizontal level or in a horizontal layer at a point in time
 
 include "grib2/templates/template.4.parameter.def"
 include "grib2/templates/template.4.generating_process.def"
