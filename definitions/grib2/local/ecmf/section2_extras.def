@@ -13,10 +13,12 @@ transient redo_mtg2_switch = 0;
 when( changed(tablesVersion) ) {
    set redo_mtg2_switch = 1;
 }
+# TODO(masn): This is work in progress
 if ( tablesVersion > 0 ) {
     transient redo_mtg2_switch = 1;
 }
 
+# TODO(masn): This is work in progress
 if ( redo_mtg2_switch == 1 ) {
     if (tablesVersion <= tablesVersionMTG2Switch) {
         constant MTG2SwitchDefault = 0;
