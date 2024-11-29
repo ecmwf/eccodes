@@ -13,24 +13,34 @@ transient redo_mtg2_switch = 0;
 when( changed(tablesVersion) ) {
    set redo_mtg2_switch = 1;
 }
+if ( tablesVersion > 0 ) {
+    transient redo_mtg2_switch = 1;
+}
+
+if ( redo_mtg2_switch == 1 ) {
+    if (tablesVersion <= tablesVersionMTG2Switch) {
+        constant MTG2SwitchDefault = 0;
+    } else {
+        if (defined(marsClass) and (marsClass is 'mc' or marsClass is 'cr')) {
+            constant MTG2SwitchDefault = 2;
+        } else {
+            constant MTG2SwitchDefault = 1;
+        }
+    }
+}
 
 if (tablesVersion <= tablesVersionMTG2Switch) {
     # Pre-MTG2
     constant MTG2SwitchDefault = 0;
-
 } else {
     # For class mc and cr post MTG2 we always want the param + chem split (value 2)
     # For TIGGE, marsClass is not defined in the empty local Section 2, but is defined later on.
     # Therefore we need to protect this with an if defined check
     if (defined(marsClass) and (marsClass is 'mc' or marsClass is 'cr')) {
-
         constant MTG2SwitchDefault = 2;
-
-    # All other cases we are post-MTG2
+        # All other cases we are post-MTG2
     } else {
-
         constant MTG2SwitchDefault = 1;
-
     }
 }
 
@@ -49,4 +59,4 @@ if (tablesVersion <= tablesVersionMTG2Switch) {
 
 # Now evaluate concept
 
-concept MTG2Switch(MTG2SwitchDefault, "MTG2SwitchConcept.def", conceptsDir2,conceptsDir1): no_copy, read_only;
+concept MTG2Switch(MTG2SwitchDefault, "MTG2SwitchConcept.def", conceptsDir2,conceptsDir1): no_copy, read_only, long_type;
