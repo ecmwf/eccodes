@@ -117,9 +117,9 @@ ecbuild_add_option( FEATURE ECKIT_GEO
     CONDITION ENABLE_GEOGRAPHY
     DEFAULT OFF )
 
-if( ENABLE_ECKIT_GEO AND NOT TARGET eckit_geo )
+if( eckit_HAVE_ECKIT_GEO AND NOT TARGET eckit_geo )
     ecbuild_find_package(NAME eckit VERSION 1.27 REQUIRED)
-    if( NOT eckit_HAVE_ECKIT_GEO )
+    if( NOT TARGET eckit_geo )
         ecbuild_critical("eckit has not been built with ECKIT_GEO enabled")
     endif()
 endif()
