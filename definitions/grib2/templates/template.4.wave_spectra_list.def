@@ -21,3 +21,6 @@ if (numberOfWaveFrequencies > 0) {
  unsigned[4] scaledValuesOfWaveFrequencies[numberOfWaveFrequencies] : dump;
  alias scaledFrequencies = scaledValuesOfWaveFrequencies;
 }
+
+constant paramTypeWaveSpectra="wave_spectra";
+alias paramtypeTmp = paramTypeWaveSpectra;

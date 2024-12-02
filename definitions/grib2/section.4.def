@@ -121,4 +121,35 @@ else {
    }
 }
 
+if (defined(MTG2Switch) and MTG2Switch > 0 ) {
+ ## paramtype to be added in case of after MTG2 GRIB2 files
+ # paramtypeTmp is defined as temporary variable in each specific template where needed
+ if (defined(paramtypeTmp)){
+    alias paramtype = paramtypeTmp;
+ }
+ if (!defined(paramtypeTmp)){
+      # if paramtype not defined anywhere else set it to base
+      constant paramTypeBase = "base";
+      alias paramtype = paramTypeBase;
+ }
+ ## time processing key
+ concept timeproc (unknown,"timeprocConcept.def",conceptsDir2,conceptsDir1) : read_only ;
+ # paramtype instant should not appear in mars namespace for backward compatibility
+ if (! timeproc is "instant"){
+   alias mars.timeproc = timeproc ;
+ }
+}
+
+if (defined(MTG2Switch) and MTG2Switch > 0 ) {
+## discipline = 10, parameterCategory = 0 are WMO wave parameters !
+#if (discipline == 10 && parameterCategory == 0) {
+## paramIds 140xxx are for wave parameters, exception for wave spectra templates
+ if (paramId >= 140000 && paramId < 141000 && productDefinitionTemplateNumber != 99 && productDefinitionTemplateNumber != 100 && productDefinitionTemplateNumber != 101 && productDefinitionTemplateNumber != 102) {
+     constant paramTypeWave="wave";
+     unalias paramtype;
+     alias paramtype = paramTypeWave;
+    }
+}
+
+
 meta md5Section4 md5(offsetSection4,section4Length);

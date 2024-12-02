@@ -31,3 +31,6 @@ if (defined(MTG2Switch) and MTG2Switch == 0) {
   alias mars.wavelength = wavelengthRange ;
  }
 }
+
+constant paramTypeOptical = "optical" ;
+alias paramtypeTmp = paramTypeOptical ;

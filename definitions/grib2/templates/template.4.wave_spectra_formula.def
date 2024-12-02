@@ -25,3 +25,6 @@ listOfWaveFrequencySequenceParameters list(numberOfWaveFrequencySequenceParamete
   signed[1]   scaleFactorOfWaveFrequencySequenceParameter : dump;
   signed[4] scaledValueOfWaveFrequencySequenceParameter : dump;
 }
+
+constant paramTypeWaveSpectra="wave_spectra";
+alias paramtypeTmp = paramTypeWaveSpectra;
