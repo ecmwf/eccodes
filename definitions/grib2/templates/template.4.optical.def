@@ -32,5 +32,13 @@ if (defined(MTG2Switch) and MTG2Switch == 0) {
  }
 }
 
-constant paramTypeOptical = "optical" ;
-alias paramtypeTmp = paramTypeOptical ;
+if ((defined(paramtypeTmp) and paramtypeTmp isnot "chemical") or !defined(paramtypeTmp)){
+ constant paramTypeOptical = "optical" ;
+ alias paramtypeTmp = paramTypeOptical ;
+}
+
+if (defined(paramtypeTmp) and paramtypeTmp is "chemical"){
+ constant paramTypeOptical = "chemical_optical" ;
+ unalias paramtypeTmp;
+ alias paramtypeTmp = paramTypeOptical ;
+}
