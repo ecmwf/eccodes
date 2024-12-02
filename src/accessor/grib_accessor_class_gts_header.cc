@@ -16,8 +16,8 @@ grib_accessor* grib_accessor_gts_header = &_grib_accessor_gts_header;
 void grib_accessor_gts_header_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_ascii_t::init(l, c);
-    gts_offset_ = c ? c->get_long(grib_handle_of_accessor(this), 0) : -1;
-    gts_length_ = c ? c->get_long(grib_handle_of_accessor(this), 1) : -1;
+    gts_offset_ = c ? c->get_long(grib_handle_of_accessor(this), 0) : 0;
+    gts_length_ = c ? c->get_long(grib_handle_of_accessor(this), 1) : 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
