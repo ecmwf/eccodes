@@ -112,6 +112,18 @@ ecbuild_add_option( FEATURE GEOGRAPHY
     DESCRIPTION "Support for Geoiterator and nearest neighbour"
     DEFAULT ON )
 
+ecbuild_add_option( FEATURE ECKIT_GEO
+    DESCRIPTION "Support for Geoiterator and nearest neighbour (additional backend)"
+    CONDITION ENABLE_GEOGRAPHY
+    DEFAULT OFF )
+
+if( eccodes_HAVE_ECKIT_GEO AND NOT TARGET eckit_geo )
+    ecbuild_find_package(NAME eckit VERSION 1.27 REQUIRED)
+    if( NOT TARGET eckit_geo )
+        ecbuild_critical("eckit has not been built with ECKIT_GEO enabled")
+    endif()
+endif()
+
 ecbuild_add_option( FEATURE JPG
     DESCRIPTION "Support for JPG decoding/encoding"
     DEFAULT ON )
@@ -485,7 +497,7 @@ ecbuild_pkgconfig(
   IGNORE_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
   VARIABLES      HAVE_MEMFS HAVE_GEOGRAPHY HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                  HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
-                 HAVE_NETCDF HAVE_FORTRAN HAVE_PNG HAVE_AEC
+                 HAVE_NETCDF HAVE_FORTRAN HAVE_PNG HAVE_AEC HAVE_ECKIT_GEO
 )
 if( HAVE_FORTRAN )
   ecbuild_pkgconfig(
@@ -497,7 +509,7 @@ if( HAVE_FORTRAN )
                         ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
     VARIABLES           HAVE_MEMFS HAVE_GEOGRAPHY HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                         HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
-                        HAVE_NETCDF HAVE_PNG HAVE_AEC
+                        HAVE_NETCDF HAVE_PNG HAVE_AEC HAVE_ECKIT_GEO
   )
 endif()
 
