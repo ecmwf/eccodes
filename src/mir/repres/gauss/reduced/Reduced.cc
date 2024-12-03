@@ -29,6 +29,7 @@
 #include "mir/repres/gauss/GaussianIterator.h"
 #include "mir/util/Atlas.h"
 #include "mir/util/BoundingBox.h"
+#include "mir/util/Domain.h"
 #include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
 #include "mir/util/GridBox.h"
@@ -294,12 +295,19 @@ std::vector<util::GridBox> Reduced::gridBoxes() const {
     // latitude edges
     std::vector<double> latEdges = calculateUnrotatedGridBoxLatitudeEdges();
 
+    const auto dom   = domain();
+    const auto north = dom.north().value();
+    const auto west  = dom.west();
+    const auto south = dom.south().value();
+    const auto east  = dom.east();
+
+    const auto periodic = isPeriodicWestEast();
+
 
     // grid boxes
     std::vector<util::GridBox> r;
     r.reserve(numberOfPoints());
 
-    bool periodic  = isPeriodicWestEast();
     const auto& pl = pls();
 
     for (size_t j = k_; j < k_ + Nj_; ++j) {
@@ -307,20 +315,20 @@ std::vector<util::GridBox> Reduced::gridBoxes() const {
         const auto inc = eckit::Fraction(360, pl[j]);
 
         // latitude edges
-        const auto n = includesNorthPole() ? latEdges[j] : std::min(bbox_.north().value(), latEdges[j]);
-        const auto s = includesSouthPole() ? latEdges[j + 1] : std::max(bbox_.south().value(), latEdges[j + 1]);
+        const auto n = includesNorthPole() ? latEdges[j] : std::min(north, latEdges[j]);
+        const auto s = includesSouthPole() ? latEdges[j + 1] : std::max(south, latEdges[j + 1]);
         ASSERT(n >= s);
 
         // longitude edges
-        const auto west = bbox_.west().fraction();
-        auto Nw         = (west / inc).integralPart();
-        if (Nw * inc < west) {
+        const auto w = west.fraction();
+        auto Nw      = (w / inc).integralPart();
+        if (Nw * inc < w) {
             Nw += 1;
         }
 
-        const auto east = bbox_.east().fraction();
-        auto Ne         = (east / inc).integralPart();
-        if (Ne * inc > east) {
+        const auto e = east.fraction();
+        auto Ne      = (e / inc).integralPart();
+        if (Ne * inc > e) {
             Ne -= 1;
         }
 
@@ -340,9 +348,9 @@ std::vector<util::GridBox> Reduced::gridBoxes() const {
         }
         else {
             for (size_t i = 0; i < N; ++i) {
-                auto w = std::max(bbox_.west().value(), lon1.value());
+                auto w = std::max(west.value(), lon1.value());
                 lon1 += inc;
-                r.emplace_back(n, w, s, std::min(bbox_.east().value(), lon1.value()));
+                r.emplace_back(n, w, s, std::min(east.value(), lon1.value()));
             }
 
             ASSERT(lon0 <= lon1.normalise(lon0));

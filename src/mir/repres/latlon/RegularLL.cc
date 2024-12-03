@@ -145,10 +145,13 @@ util::BoundingBox RegularLL::extendBoundingBox(const util::BoundingBox& bbox) co
 }
 
 std::vector<util::GridBox> RegularLL::gridBoxes() const {
+    const auto dom   = domain();
+    const auto north = dom.north();
+    const auto west  = dom.west();
+    const auto south = dom.south();
+    const auto east  = dom.east();
 
-    auto dom   = domain();
-    auto north = dom.north().value();
-    auto south = dom.south().value();
+    const auto periodic = isPeriodicWestEast();
 
     auto lat0 = bbox_.north();
     auto lon0 = bbox_.west();
@@ -166,8 +169,16 @@ std::vector<util::GridBox> RegularLL::gridBoxes() const {
         latEdges[j + 1] = (lat0 - (j + half) * sn.fraction()).value();
     }
 
-    latEdges.front() = std::min(north, std::max(south, latEdges.front()));
-    latEdges.back()  = std::min(north, std::max(south, latEdges.back()));
+    latEdges.front() = std::min(north.value(), std::max(south.value(), latEdges.front()));
+    if (dom.includesPoleNorth()) {
+        latEdges.front() = Latitude::NORTH_POLE.value();
+    }
+
+    latEdges.back() = std::min(north.value(), std::max(south.value(), latEdges.back()));
+    latEdges.back() = std::min(north.value(), std::max(south.value(), latEdges.back()));
+    if (dom.includesPoleSouth()) {
+        latEdges.back() = Latitude::SOUTH_POLE.value();
+    }
 
 
     // longitude edges
@@ -177,10 +188,9 @@ std::vector<util::GridBox> RegularLL::gridBoxes() const {
         lonEdges[i + 1] = (lon0 + (i + half) * we).value();
     }
 
-    bool periodic = isPeriodicWestEast();
     if (!periodic) {
-        lonEdges.front() = std::max(lonEdges.front(), lon0.value());
-        lonEdges.back()  = std::min(lonEdges.back(), bbox_.east().value());
+        lonEdges.front() = std::max(west.value(), lonEdges.front());
+        lonEdges.back()  = std::min(east.value(), lonEdges.back());
     }
 
 

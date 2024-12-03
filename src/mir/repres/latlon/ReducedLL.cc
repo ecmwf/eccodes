@@ -273,11 +273,16 @@ Iterator* ReducedLL::iterator() const {
 }
 
 std::vector<util::GridBox> ReducedLL::gridBoxes() const {
-    auto dom      = domain();
-    bool periodic = isPeriodicWestEast();
+    const auto dom   = domain();
+    const auto north = dom.north();
+    const auto west  = dom.west();
+    const auto south = dom.south();
+    const auto east  = dom.east();
+
+    const auto periodic = isPeriodicWestEast();
 
     auto Nj                  = pl_.size();
-    const eckit::Fraction sn = (dom.north() - dom.south()).fraction() / eckit::Fraction(Nj - 1);
+    const eckit::Fraction sn = (north - south).fraction() / eckit::Fraction(Nj - 1);
     eckit::Fraction half(1, 2);
 
 
@@ -295,8 +300,15 @@ std::vector<util::GridBox> ReducedLL::gridBoxes() const {
         latEdges[j + 1] = (lat0 - (j + half) * sn).value();
     }
 
-    latEdges.front() = std::min(dom.north().value(), latEdges.front());
-    latEdges.back()  = std::max(dom.south().value(), latEdges.back());
+    latEdges.front() = std::min(north.value(), std::max(south.value(), latEdges.front()));
+    if (dom.includesPoleNorth()) {
+        latEdges.front() = Latitude::NORTH_POLE.value();
+    }
+
+    latEdges.back() = std::min(north.value(), std::max(south.value(), latEdges.back()));
+    if (dom.includesPoleSouth()) {
+        latEdges.back() = Latitude::SOUTH_POLE.value();
+    }
 
 
     for (size_t j = 0; j < Nj; ++j) {
@@ -304,9 +316,9 @@ std::vector<util::GridBox> ReducedLL::gridBoxes() const {
         // longitude edges
         auto Ni = pl_[j];
         ASSERT(Ni > 1);
-        const eckit::Fraction we = (dom.east() - dom.west()).fraction() / (Ni - (periodic ? 0 : 1));
+        const eckit::Fraction we = (east - west).fraction() / (periodic ? Ni : Ni - 1);
 
-        auto lon0 = bbox_.west() - we / 2;
+        auto lon0 = west - we / 2;
         auto lon1 = lon0;
 
         if (periodic) {
@@ -320,9 +332,9 @@ std::vector<util::GridBox> ReducedLL::gridBoxes() const {
         }
         else {
             for (long i = 0; i < Ni; ++i) {
-                auto w = std::max(bbox_.west().value(), lon1.value());
+                auto w = std::max(west.value(), lon1.value());
                 lon1 += we;
-                auto e = std::min(bbox_.east().value(), lon1.value());
+                auto e = std::min(east.value(), lon1.value());
                 r.emplace_back(latEdges[j], w, latEdges[j + 1], e);
             }
 
