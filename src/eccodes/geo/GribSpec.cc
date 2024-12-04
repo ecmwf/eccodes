@@ -245,7 +245,7 @@ const char* get_key(const std::string& name, codes_handle* h)
         const std::string name;
         const char* key;
         const std::unique_ptr<const Condition> condition;
-        P(const std::string _name, const char* _key, const Condition* _condition = nullptr) :
+        P(const std::string& _name, const char* _key, const Condition* _condition = nullptr) :
             name(_name), key(_key), condition(_condition) {}
     };
 
@@ -974,7 +974,7 @@ bool GribSpec::get(const std::string& name, std::vector<double>& value) const
     }
 
     size_t count = 0;
-    int err      = codes_get_size(handle_, key, &count);
+    int err = codes_get_size(handle_, key, &count);
     CHECK_ERROR(err, key);
 
     ASSERT(count > 0);
@@ -1076,8 +1076,8 @@ void GribSpec::json(eckit::JSON& j) const
         }
 
         if (type == CODES_TYPE_STRING) {
-            size_t length = 1024;
-            char value[length];
+            char value[1024] = {0,};
+            size_t length = sizeof(value);
             CHECK_CALL(codes_get_string(handle_, name, value, &length));
             j << name << value;
             continue;
