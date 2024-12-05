@@ -5,10 +5,10 @@
 # Model version cannot be used in this concept because its concept is only evaluated at the end of Section 4,
 # and in many cases we use the value of the MTG2Switch earlier. Therefore we must use the backgroundProcess
 # and generatingProcessIdentifier key directly. The values for IFS are:
-# backgroundProcess=255
+# backgroundProcess=255
 # 'cy50r2' = { generatingProcessIdentifier = 162; }
 # 'cy50r1' = { generatingProcessIdentifier = 161; }
-# 'cy49r2' = { generatingProcessIdentifier = 159; }
+# 'cy49r2' = { generatingProcessIdentifier = 159; }
 # 'cy49r1' = { generatingProcessIdentifier = 158; }
 
 # We only need the concepts which differ from the default below.
