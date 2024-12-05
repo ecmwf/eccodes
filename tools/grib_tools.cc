@@ -9,8 +9,13 @@
  */
 
 #include "grib_tools.h"
+
 #include <stdlib.h>
 #include <string>
+
+#ifdef HAVE_ECKIT_GEO
+    #include "eckit/runtime/Main.h"
+#endif
 
 #if HAVE_LIBJASPER
 /* Remove compiler warnings re macros being redefined */
@@ -141,6 +146,10 @@ static grib_handle* grib_handle_new_from_file_x(grib_context* c, FILE* f, int mo
 
 int grib_tool(int argc, char** argv)
 {
+#ifdef HAVE_ECKIT_GEO
+    eckit::Main::initialise(argc, argv);
+#endif
+
     int ret                = 0;
     int i = 0;
     grib_context* c        = grib_context_get_default();

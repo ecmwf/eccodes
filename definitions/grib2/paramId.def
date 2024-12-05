@@ -254,16 +254,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Maximum 10 metre wind gust since previous post-processing
-'49' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 22 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
 #Large-scale precipitation fraction
 '50' = {
 	 discipline = 0 ;
@@ -366,18 +356,6 @@
 	 parameterNumber = 70 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
-	}
-#Minimum temperature at 2 metres in the last 6 hours
-'122' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 3 ;
-	 lengthOfTimeRange = 6 ;
 	}
 #Surface emissivity
 '124' = {
@@ -702,16 +680,6 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 23 ;
 	 typeOfStatisticalProcessing = 1 ;
-	}
-#Minimum temperature at 2 metres since previous post-processing
-'202' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 3 ;
 	}
 #Ozone mass mixing ratio
 '203' = {
@@ -5302,18 +5270,6 @@
 	 scaledValueOfFirstFixedSurface = 27315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
-#Maximum 10 metre wind gust in the last 3 hours
-'228028' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 22 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 lengthOfTimeRange = 3 ;
-	}
 #Instantaneous 10 metre wind gust
 '228029' = {
 	 discipline = 0 ;
@@ -5346,28 +5302,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 37 ;
-	}
-#Maximum CAPE in the last 6 hours
-'228035' = {
-	 discipline = 0 ;
-	 parameterCategory = 7 ;
-	 parameterNumber = 6 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 lengthOfTimeRange = 6 ;
-	}
-#Maximum CAPES in the last 6 hours
-'228036' = {
-	 discipline = 0 ;
-	 parameterCategory = 7 ;
-	 parameterNumber = 19 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 lengthOfTimeRange = 6 ;
 	}
 #2 metre relative humidity with respect to water
 '228037' = {
@@ -5426,17 +5360,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Averaged total lightning flash density in the last hour
-'228051' = {
-	 discipline = 0 ;
-	 parameterCategory = 17 ;
-	 parameterNumber = 4 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 1 ;
-	}
 #Instantaneous cloud-to-ground lightning flash density
 '228052' = {
 	 discipline = 0 ;
@@ -5444,17 +5367,6 @@
 	 parameterNumber = 2 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
-	}
-#Averaged cloud-to-ground lightning flash density in the last hour
-'228053' = {
-	 discipline = 0 ;
-	 parameterCategory = 17 ;
-	 parameterNumber = 2 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 1 ;
 	}
 #Unbalanced component of specific humidity
 '228054' = {
@@ -5473,50 +5385,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 120 ;
-	}
-#Averaged total lightning flash density in the last 3 hours
-'228057' = {
-	 discipline = 0 ;
-	 parameterCategory = 17 ;
-	 parameterNumber = 4 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 3 ;
-	}
-#Averaged total lightning flash density in the last 6 hours
-'228058' = {
-	 discipline = 0 ;
-	 parameterCategory = 17 ;
-	 parameterNumber = 4 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 6 ;
-	}
-#Averaged cloud-to-ground lightning flash density in the last 3 hours
-'228059' = {
-	 discipline = 0 ;
-	 parameterCategory = 17 ;
-	 parameterNumber = 2 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 3 ;
-	}
-#Averaged cloud-to-ground lightning flash density in the last 6 hours
-'228060' = {
-	 discipline = 0 ;
-	 parameterCategory = 17 ;
-	 parameterNumber = 2 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 6 ;
 	}
 #Soil moisture top 20 cm
 '228086' = {
@@ -5679,22 +5547,6 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 56 ;
 	 typeOfFirstFixedSurface = 1 ;
-	}
-#Maximum total precipitation rate since previous post-processing
-'228226' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 52 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
-#Minimum total precipitation rate since previous post-processing
-'228227' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 52 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 3 ;
 	}
 #Mixed-layer CAPE in the lowest 50 hPa
 '228231' = {
@@ -8785,6 +8637,15 @@
 	 parameterNumber = 51 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean cloud-to-ground lightning flash density
+'235383' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-maximum temperature tendency due to short-wave radiation
 '237001' = {
 	 discipline = 0 ;
@@ -10599,6 +10460,26 @@
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 51 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum 10 metre eastward wind gust
+'237384' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 23 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum 10 metre northward wind gust
+'237385' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-minimum temperature tendency due to short-wave radiation
@@ -15843,60 +15724,6 @@
 	 parameterCategory = 5 ;
 	 parameterNumber = 0 ;
 	}
-#Precipitation type (most severe) in the last 1 hour
-'260318' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 100 ;
-	 lengthOfTimeRange = 1 ;
-	}
-#Precipitation type (most severe) in the last 3 hours
-'260319' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 100 ;
-	 lengthOfTimeRange = 3 ;
-	}
-#Precipitation type (most frequent) in the last 1 hour
-'260320' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 101 ;
-	 lengthOfTimeRange = 1 ;
-	}
-#Precipitation type (most frequent) in the last 3 hours
-'260321' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 101 ;
-	 lengthOfTimeRange = 3 ;
-	}
-#Precipitation type (most severe) in the last 6 hours
-'260338' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 100 ;
-	 lengthOfTimeRange = 6 ;
-	}
-#Precipitation type (most frequent) in the last 6 hours
-'260339' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 101 ;
-	 lengthOfTimeRange = 6 ;
-	}
 #Soil temperature
 '260360' = {
 	 discipline = 2 ;
@@ -16235,28 +16062,6 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#10 metre eastward wind gust since previous post-processing
-'260646' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 23 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
-#10 metre northward wind gust since previous post-processing
-'260647' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 24 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
 #Fog
 '260648' = {
 	 discipline = 0 ;
@@ -16480,6 +16285,20 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 67 ;
 	 typeOfFirstFixedSurface = 1 ;
+	}
+#Time-severity precipitation type
+'260682' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 19 ;
+	 typeOfStatisticalProcessing = 100 ;
+	}
+#Time-mode precipitation type
+'260683' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 19 ;
+	 typeOfStatisticalProcessing = 101 ;
 	}
 #Universal thermal climate index
 '261001' = {
