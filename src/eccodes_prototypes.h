@@ -847,6 +847,7 @@ bool is_sorted_descending(const double arr[], size_t n);
 int compute_scaled_value_and_scale_factor(double input, int64_t scaled_value_max, int64_t scale_factor_max, int64_t* ret_value, int64_t* ret_factor);
 int codes_is_feature_enabled(const char* feature);
 int codes_get_features(char* result, size_t* length, int select);
+int codes_key_is_computed(const grib_handle* h, const char* key, int* err);
 
 
 /* grib_util.cc */
