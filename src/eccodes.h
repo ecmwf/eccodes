@@ -1339,6 +1339,9 @@ int codes_is_missing(const codes_handle* h, const char* key, int* err);
    Returns a bool i.e. 0 or 1 */
 int codes_is_defined(const codes_handle* h, const char* key);
 
+/* Returns 1 if the key is computed (virtual) and 0 if it is coded */
+int codes_key_is_computed(const grib_handle* h, const char* key, int* err);
+
 /* Returns 1 if the BUFR key is in the header and 0 if it is in the data section.
    The error code is the final argument */
 int codes_bufr_key_is_header(const codes_handle* h, const char* key, int* err);
