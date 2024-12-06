@@ -9,6 +9,8 @@ ecCodes
 
 [![codecov](https://codecov.io/gh/ecmwf/eccodes/branch/develop/graph/badge.svg)](https://codecov.io/gh/ecmwf/eccodes)
 
+[![Anaconda-Server Badge](https://anaconda.org/conda-forge/eccodes/badges/version.svg)](https://anaconda.org/conda-forge/eccodes)
+
 ecCodes is a package developed by ECMWF which provides an application programming interface
 and a set of tools for decoding and encoding messages in the following formats:
 

@@ -231,7 +231,7 @@ int grib_accessor_data_apply_bitmap_t::pack_double(const double* val, size_t* le
     return err;
 }
 
-template <typename T> 
+template <typename T>
 int grib_accessor_data_apply_bitmap_t::unpack(T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");

@@ -434,9 +434,6 @@ void* grib_context_buffer_malloc(const grib_context* c, size_t size);
 void grib_context_buffer_free(const grib_context* c, void* p);
 void* grib_context_buffer_realloc(const grib_context* c, void* p, size_t size);
 void* grib_context_buffer_malloc_clear(const grib_context* c, size_t size);
-void grib_context_set_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f, grib_realloc_proc r);
-void grib_context_set_persistent_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f);
-void grib_context_set_buffer_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f, grib_realloc_proc r);
 void grib_context_set_data_accessing_proc(grib_context* c, grib_data_read_proc read, grib_data_write_proc write, grib_data_tell_proc tell);
 void grib_context_log(const grib_context* c, int level, const char* fmt, ...);
 void grib_context_print(const grib_context* c, void* descriptor, const char* fmt, ...);
@@ -850,6 +847,7 @@ bool is_sorted_descending(const double arr[], size_t n);
 int compute_scaled_value_and_scale_factor(double input, int64_t scaled_value_max, int64_t scale_factor_max, int64_t* ret_value, int64_t* ret_factor);
 int codes_is_feature_enabled(const char* feature);
 int codes_get_features(char* result, size_t* length, int select);
+int codes_key_is_computed(const grib_handle* h, const char* key, int* err);
 
 
 /* grib_util.cc */

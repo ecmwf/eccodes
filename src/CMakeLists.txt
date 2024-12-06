@@ -417,6 +417,15 @@ if( HAVE_MEMFS )
     list(APPEND ECCODES_EXTRA_LIBRARIES eccodes_memfs)
 endif()
 
+if( eccodes_HAVE_GEOGRAPHY AND eccodes_HAVE_ECKIT_GEO )
+    list( APPEND eccodes_src_files
+        eccodes/geo/GeoIterator.cc
+        eccodes/geo/GeoIterator.h
+        eccodes/geo/GribSpec.cc
+        eccodes/geo/GribSpec.h )
+    list( APPEND ECCODES_EXTRA_LIBRARIES eckit_geo )
+endif()
+
 ecbuild_add_library( TARGET    eccodes
                      SOURCES   ${CMAKE_CURRENT_BINARY_DIR}/grib_api_version.cc
                               # griby.cc gribl.cc

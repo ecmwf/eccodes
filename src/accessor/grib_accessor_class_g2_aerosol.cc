@@ -79,7 +79,7 @@ int grib_accessor_g2_aerosol_t::pack_long(const long* val, size_t* len)
     }
     else {
         if (isInstant) {
-            productDefinitionTemplateNumberNew = 48;  // 44 is deprecated
+            productDefinitionTemplateNumberNew = 50;  // ECC-1963: 44 is deprecated
         }
         else {
             productDefinitionTemplateNumberNew = 46;

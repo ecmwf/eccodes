@@ -1178,38 +1178,6 @@ void codes_context_set_debug(codes_context* c, int mode);
 void codes_context_set_data_quality_checks(codes_context* c, int val);
 
 /**
- *  Sets memory procedures of the context
- *
- * @param c         : the context to be modified
- * @param p_malloc  : the memory allocation procedure to be set @see codes_malloc_proc
- * @param p_free    : the memory freeing procedure to be set @see codes_free_proc
- * @param p_realloc : the memory reallocation procedure to be set @see codes_realloc_proc
- */
-void codes_context_set_memory_proc(codes_context* c, codes_malloc_proc p_malloc,
-                                   codes_free_proc p_free, codes_realloc_proc p_realloc) ECCODES_DEPRECATED;
-
-/**
- *  Sets memory procedures of the context for persistent data
- *
- * @param c           : the context to be modified
- * @param griballoc   : the memory allocation procedure to be set @see codes_malloc_proc
- * @param gribfree    : the memory freeing procedure to be set @see codes_free_proc
- */
-void codes_context_set_persistent_memory_proc(codes_context* c, codes_malloc_proc p_malloc,
-                                              codes_free_proc p_free) ECCODES_DEPRECATED;
-
-/**
- *  Sets memory procedures of the context for large buffers
- *
- * @param c        : the context to be modified
- * @param p_malloc : the memory allocation procedure to be set @see codes_malloc_proc
- * @param p_free   : the memory freeing procedure to be set @see codes_free_proc
- * @param p_free   : the memory reallocation procedure to be set @see codes_realloc_proc
- */
-void codes_context_set_buffer_memory_proc(codes_context* c, codes_malloc_proc p_malloc,
-                                          codes_free_proc p_free, codes_realloc_proc p_realloc) ECCODES_DEPRECATED;
-
-/**
  *  Sets the context printing procedure used for user interaction
  *
  * @param c        : the context to be modified
@@ -1370,6 +1338,9 @@ int codes_is_missing(const codes_handle* h, const char* key, int* err);
 /* Check whether the given key is defined (exists).
    Returns a bool i.e. 0 or 1 */
 int codes_is_defined(const codes_handle* h, const char* key);
+
+/* Returns 1 if the key is computed (virtual) and 0 if it is coded */
+int codes_key_is_computed(const grib_handle* h, const char* key, int* err);
 
 /* Returns 1 if the BUFR key is in the header and 0 if it is in the data section.
    The error code is the final argument */

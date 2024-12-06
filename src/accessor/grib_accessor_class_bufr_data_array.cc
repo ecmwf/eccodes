@@ -2486,7 +2486,6 @@ int grib_accessor_bufr_data_array_t::create_keys(long onlySubset, long startSubs
             }
 
             if (ide == 0 && !compressedData_) {
-                
                 long subsetNumber     = iss + 1;
                 size_t len            = 1;
                 grib_action creatorsn = {

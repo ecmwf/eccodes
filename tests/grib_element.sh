@@ -11,6 +11,7 @@
 . ./include.ctest.sh
 
 label="grib_element_test"
+tempGrib=temp.${label}.grib
 tempRef=temp.${label}.ref
 tempText=temp.${label}.txt
 tempFilt=temp.${label}.filt
@@ -72,6 +73,25 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
+# Encode a single double element in an array
+input=$data_dir/sample.grib2
+cat > $tempFilt <<EOF
+    print "Before:  [min=] [max=]";
+    transient avg1 = avg;
+    transient max1 = max;
+    meta elemN element(values, -1);
+    assert( elemN < 301 );
+    print "Last elem was: [elemN:d]";
+    set elemN = 312; # Pass in an integer. Should call pack_double
+    print "Last elem now: [elemN:d]";
+    print "After:  [min=] [max=]";
+    assert( elemN > 310 );
+    assert ( avg > avg1 );
+    assert ( max > max1 );
+    write;
+EOF
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $input
+
 
 # Clean up
-rm -f $tempRef $tempText $tempFilt
+rm -f $tempRef $tempText $tempFilt $tempGrib
