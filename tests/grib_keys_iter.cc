@@ -39,9 +39,15 @@ int main(int argc, char* argv[])
             GRIB_CHECK(grib_get_native_type(h, name, &type), 0);
             Assert( type > 0 && type < 7 );
             int ktype = grib_keys_iterator_get_native_type(kiter);
-            Assert(type == ktype);
+            if (type != ktype) {
+                fprintf(stderr, "ERROR: key=%s type=%s ktype=%s\n", name, grib_get_type_name(type), grib_get_type_name(ktype));
+                return 1;
+            }
             const char* type_name = grib_get_type_name(type);
-            Assert( !STR_EQUAL(type_name, "unknown") );
+            if (STR_EQUAL(type_name, "unknown")) {
+                fprintf(stderr, "ERROR: key=%s type is unknown!\n", name);
+                return 1;
+            }
             printf("%s = %s (%d)\n", name, type_name, type);
 
             if (STR_EQUAL(type_name, "label")) {
