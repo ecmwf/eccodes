@@ -45,11 +45,14 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
     }
 
     if (STR_EQUAL(name_, "abs")) {
-        grib_expression* exp = args_ ? args_->get_expression(h, 0) : nullptr;
-        long lval = 0;
-        int ret = exp->evaluate_long(h, &lval);
-        *lres = abs(lval);
-        return ret;
+        const grib_expression* exp = args_ ? args_->get_expression(h, 0) : nullptr;
+        if (exp) {
+            long lval = 0;
+            int ret = exp->evaluate_long(h, &lval);
+            *lres = abs(lval);
+            return ret;
+        }
+        return GRIB_INVALID_ARGUMENT;
     }
 
     if (STR_EQUAL(name_, "size")) {

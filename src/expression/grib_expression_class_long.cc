@@ -29,11 +29,6 @@ void Long::print(grib_context* c, grib_handle* f, FILE* out) const
     fprintf(out, "long(%ld)", value_);
 }
 
-void Long::destroy(grib_context* c)
-{
-    /* grib_expression_long* e = (grib_expression_long*)g; */
-}
-
 void Long::add_dependency(grib_accessor* observer)
 {
     /* grib_expression_long* e = (grib_expression_long*)g; */

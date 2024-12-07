@@ -19,7 +19,6 @@ class Double : public Expression
 public:
     Double(grib_context*, double);
 
-    void destroy(grib_context*) override {}
     void print(grib_context*, grib_handle*, FILE*) const override;
     void add_dependency(grib_accessor*) override {}
     int native_type(grib_handle*) const override;
