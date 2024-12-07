@@ -16,7 +16,7 @@ grib_accessor* grib_accessor_g1bitmap = &_grib_accessor_g1bitmap;
 void grib_accessor_g1bitmap_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_bitmap_t::init(len, arg);
-    unusedBits_ = grib_arguments_get_name(grib_handle_of_accessor(this), arg, 4);
+    unusedBits_ = arg->get_name(grib_handle_of_accessor(this), 4);
 }
 
 int grib_accessor_g1bitmap_t::pack_double(const double* val, size_t* len)

@@ -18,8 +18,8 @@ void grib_accessor_ifs_param_t::init(const long l, grib_arguments* c)
     grib_accessor_gen_t::init(l, c);
     int n = 0;
 
-    paramId_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    type_    = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    paramId_ = c->get_name(grib_handle_of_accessor(this), n++);
+    type_    = c->get_name(grib_handle_of_accessor(this), n++);
 }
 
 int grib_accessor_ifs_param_t::unpack_long(long* val, size_t* len)

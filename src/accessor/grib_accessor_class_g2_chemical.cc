@@ -28,9 +28,9 @@ void grib_accessor_g2_chemical_t::init(const long l, grib_arguments* c)
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
-    productDefinitionTemplateNumber_ = grib_arguments_get_name(hand, c, n++);
-    stepType_                        = grib_arguments_get_name(hand, c, n++);
-    chemical_type_                   = grib_arguments_get_long(hand, c, n++);
+    productDefinitionTemplateNumber_ = c->get_name(hand, n++);
+    stepType_                        = c->get_name(hand, n++);
+    chemical_type_                   = c->get_long(hand, n++);
 }
 
 int grib_accessor_g2_chemical_t::unpack_long(long* val, size_t* len)

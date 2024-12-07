@@ -20,16 +20,16 @@ void grib_accessor_bufr_extract_area_subsets_t::init(const long len, grib_argume
     int n = 0;
 
     length_                       = 0;
-    doExtractSubsets_             = grib_arguments_get_name(h, arg, n++);
-    numberOfSubsets_              = grib_arguments_get_name(h, arg, n++);
-    extractSubsetList_            = grib_arguments_get_name(h, arg, n++);
-    extractAreaWestLongitude_     = grib_arguments_get_name(h, arg, n++);
-    extractAreaEastLongitude_     = grib_arguments_get_name(h, arg, n++);
-    extractAreaNorthLatitude_     = grib_arguments_get_name(h, arg, n++);
-    extractAreaSouthLatitude_     = grib_arguments_get_name(h, arg, n++);
-    extractAreaLongitudeRank_     = grib_arguments_get_name(h, arg, n++);
-    extractAreaLatitudeRank_      = grib_arguments_get_name(h, arg, n++);
-    extractedAreaNumberOfSubsets_ = grib_arguments_get_name(h, arg, n++);
+    doExtractSubsets_             = arg->get_name(h, n++);
+    numberOfSubsets_              = arg->get_name(h, n++);
+    extractSubsetList_            = arg->get_name(h, n++);
+    extractAreaWestLongitude_     = arg->get_name(h, n++);
+    extractAreaEastLongitude_     = arg->get_name(h, n++);
+    extractAreaNorthLatitude_     = arg->get_name(h, n++);
+    extractAreaSouthLatitude_     = arg->get_name(h, n++);
+    extractAreaLongitudeRank_     = arg->get_name(h, n++);
+    extractAreaLatitudeRank_      = arg->get_name(h, n++);
+    extractedAreaNumberOfSubsets_ = arg->get_name(h, n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }

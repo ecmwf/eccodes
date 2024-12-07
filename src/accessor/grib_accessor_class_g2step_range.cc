@@ -22,8 +22,8 @@ void grib_accessor_g2step_range_t::init(const long l, grib_arguments* c)
 
     int n = 0;
 
-    start_step_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    end_step_   = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    start_step_ = c->get_name(grib_handle_of_accessor(this), n++);
+    end_step_   = c->get_name(grib_handle_of_accessor(this), n++);
 
     length_ = 0;
 }

@@ -18,11 +18,11 @@ void grib_accessor_data_apply_boustrophedonic_t::init(const long v, grib_argumen
     grib_accessor_gen_t::init(v, args);
 
     int n            = 0;
-    values_          = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    numberOfRows_    = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    numberOfColumns_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    numberOfPoints_  = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    pl_              = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
+    values_          = args->get_name(grib_handle_of_accessor(this), n++);
+    numberOfRows_    = args->get_name(grib_handle_of_accessor(this), n++);
+    numberOfColumns_ = args->get_name(grib_handle_of_accessor(this), n++);
+    numberOfPoints_  = args->get_name(grib_handle_of_accessor(this), n++);
+    pl_              = args->get_name(grib_handle_of_accessor(this), n++);
 
     length_ = 0;
 }

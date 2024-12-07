@@ -16,7 +16,7 @@ grib_accessor* grib_accessor_g1_section4_length = &_grib_accessor_g1_section4_le
 void grib_accessor_g1_section4_length_t::init(const long len, grib_arguments* args)
 {
     grib_accessor_section_length_t::init(len, args);
-    total_length_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, 0);
+    total_length_ = args->get_name(grib_handle_of_accessor(this), 0);
 }
 
 int grib_accessor_g1_section4_length_t::pack_long(const long* val, size_t* len)

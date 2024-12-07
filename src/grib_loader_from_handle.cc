@@ -80,7 +80,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
     if (default_value) {
         grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying:  setting %s to default value",
                          ga->name_);
-        ga->pack_expression(grib_arguments_get_expression(h, default_value, 0));
+        ga->pack_expression(default_value->get_expression(h, 0));
     }
 
     if ((ga->flags_ & GRIB_ACCESSOR_FLAG_NO_COPY) ||

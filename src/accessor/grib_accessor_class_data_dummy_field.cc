@@ -16,9 +16,9 @@ grib_accessor* grib_accessor_data_dummy_field = &_grib_accessor_data_dummy_field
 void grib_accessor_data_dummy_field_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_data_g1simple_packing_t::init(v, args);
-    missing_value_  = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
-    numberOfPoints_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
-    bitmap_         = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
+    missing_value_  = args->get_name(grib_handle_of_accessor(this), carg_++);
+    numberOfPoints_ = args->get_name(grib_handle_of_accessor(this), carg_++);
+    bitmap_         = args->get_name(grib_handle_of_accessor(this), carg_++);
 }
 
 int grib_accessor_data_dummy_field_t::unpack_double(double* val, size_t* len)

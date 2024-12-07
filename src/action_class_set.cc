@@ -124,7 +124,7 @@ static void destroy(grib_context* context, grib_action* act)
     grib_action_set* a = (grib_action_set*)act;
 
     grib_context_free_persistent(context, a->name);
-    grib_expression_free(context, a->expression);
+    a->expression->destroy(context);
     grib_context_free_persistent(context, act->name);
     grib_context_free_persistent(context, act->op);
 }

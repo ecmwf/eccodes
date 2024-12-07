@@ -18,14 +18,14 @@ void grib_accessor_g1forecastmonth_t::init(const long l, grib_arguments* c)
     grib_accessor_long_t::init(l, c);
     grib_handle* h  = grib_handle_of_accessor(this);
     int n           = 0;
-    const int count = grib_arguments_get_count(c);
+    const int count = c->get_count();
     if (count == 6) { /* GRIB1 case -- this needs to be refactored */
-        verification_yearmonth_ = grib_arguments_get_name(h, c, n++);
-        base_date_              = grib_arguments_get_name(h, c, n++);
-        day_                    = grib_arguments_get_name(h, c, n++);
-        hour_                   = grib_arguments_get_name(h, c, n++);
-        fcmonth_                = grib_arguments_get_name(h, c, n++);
-        check_                  = grib_arguments_get_name(h, c, n++);
+        verification_yearmonth_ = c->get_name(h, n++);
+        base_date_              = c->get_name(h, n++);
+        day_                    = c->get_name(h, n++);
+        hour_                   = c->get_name(h, n++);
+        fcmonth_                = c->get_name(h, n++);
+        check_                  = c->get_name(h, n++);
     }
 }
 

@@ -18,12 +18,12 @@ void grib_accessor_data_run_length_packing_t::init(const long v, grib_arguments*
 {
     grib_accessor_values_t::init(v, args);
     grib_handle* gh         = grib_handle_of_accessor(this);
-    number_of_values_       = grib_arguments_get_name(gh, args, carg_++);
-    bits_per_value_         = grib_arguments_get_name(gh, args, carg_++);
-    max_level_value_        = grib_arguments_get_name(gh, args, carg_++);
-    number_of_level_values_ = grib_arguments_get_name(gh, args, carg_++);
-    decimal_scale_factor_   = grib_arguments_get_name(gh, args, carg_++);
-    level_values_           = grib_arguments_get_name(gh, args, carg_++);
+    number_of_values_       = args->get_name(gh, carg_++);
+    bits_per_value_         = args->get_name(gh, carg_++);
+    max_level_value_        = args->get_name(gh, carg_++);
+    number_of_level_values_ = args->get_name(gh, carg_++);
+    decimal_scale_factor_   = args->get_name(gh, carg_++);
+    level_values_           = args->get_name(gh, carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 

@@ -19,11 +19,11 @@ void grib_accessor_number_of_coded_values_t::init(const long l, grib_arguments* 
     grib_handle* h  = grib_handle_of_accessor(this);
 
     int n             = 0;
-    bitsPerValue_     = grib_arguments_get_name(h, c, n++);
-    offsetBeforeData_ = grib_arguments_get_name(h, c, n++);
-    offsetAfterData_  = grib_arguments_get_name(h, c, n++);
-    unusedBits_       = grib_arguments_get_name(h, c, n++);
-    numberOfValues_   = grib_arguments_get_name(h, c, n++);
+    bitsPerValue_     = c->get_name(h, n++);
+    offsetBeforeData_ = c->get_name(h, n++);
+    offsetAfterData_  = c->get_name(h, n++);
+    unusedBits_       = c->get_name(h, n++);
+    numberOfValues_   = c->get_name(h, n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;

@@ -17,7 +17,7 @@ grib_accessor* grib_accessor_size = &_grib_accessor_size;
 void grib_accessor_size_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
-    accessor_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, 0);
+    accessor_ = c->get_name(grib_handle_of_accessor(this), 0);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;

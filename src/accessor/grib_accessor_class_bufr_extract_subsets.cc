@@ -29,8 +29,8 @@ void grib_accessor_bufr_extract_subsets_t::init(const long len, grib_arguments* 
     int n = 0;
 
     length_        = 0;
-    numericValues_ = grib_arguments_get_name(grib_handle_of_accessor(this), arg, n++);
-    pack_          = grib_arguments_get_name(grib_handle_of_accessor(this), arg, n++);
+    numericValues_ = arg->get_name(grib_handle_of_accessor(this), n++);
+    pack_          = arg->get_name(grib_handle_of_accessor(this), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
 
     numericValuesAccessor_ = NULL;

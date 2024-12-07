@@ -19,10 +19,10 @@ void grib_accessor_octahedral_gaussian_t::init(const long l, grib_arguments* c)
     int n             = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
 
-    N_         = grib_arguments_get_name(hand, c, n++);
-    Ni_        = grib_arguments_get_name(hand, c, n++);
-    plpresent_ = grib_arguments_get_name(hand, c, n++);
-    pl_        = grib_arguments_get_name(hand, c, n++);
+    N_         = c->get_name(hand, n++);
+    Ni_        = c->get_name(hand, n++);
+    plpresent_ = c->get_name(hand, n++);
+    pl_        = c->get_name(hand, n++);
 }
 
 /* Returns 1 (=true) if input pl array is Octahedral, 0 otherwise.
