@@ -35,6 +35,6 @@ private:
     size_t length_;
 };
 
-};  // namespace eccodes::expression
+}  // namespace eccodes::expression
 
 grib_expression* new_accessor_expression(grib_context*, const char*, long, size_t);

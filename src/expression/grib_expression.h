@@ -41,7 +41,7 @@ public:
     virtual const char* class_name() const = 0;
 };
 
-};  // namespace eccodes
+}  // namespace eccodes
 
 using grib_expression = eccodes::Expression;
 

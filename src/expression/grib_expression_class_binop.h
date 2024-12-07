@@ -35,6 +35,6 @@ private:
     BinopStringProc string_func_ = nullptr;
 };
 
-};  // namespace eccodes::expression
+}  // namespace eccodes::expression
 
 grib_expression* new_binop_expression(grib_context*, grib_binop_long_proc, grib_binop_double_proc, grib_expression*, grib_expression*);
