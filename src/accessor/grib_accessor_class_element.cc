@@ -19,8 +19,8 @@ void grib_accessor_element_t::init(const long l, grib_arguments* c)
     grib_handle* hand = grib_handle_of_accessor(this);
 
     int n    = 0;
-    array_   = grib_arguments_get_name(hand, c, n++);
-    element_ = grib_arguments_get_long(hand, c, n++);
+    array_   = c->get_name(hand, n++);
+    element_ = c->get_long(hand, n++);
 }
 
 static int check_element_index(const char* func, const char* array_name, long index, size_t size)

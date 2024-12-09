@@ -20,8 +20,8 @@ int Gen::init(grib_handle* h, grib_arguments* args)
 
     cargs_ = 1;
 
-    values_key_ = grib_arguments_get_name(h, args, cargs_++);
-    radius_     = grib_arguments_get_name(h, args, cargs_++);
+    values_key_ = args->get_name(h, cargs_++);
+    radius_     = args->get_name(h, cargs_++);
     values_  = NULL;
 
     return ret;

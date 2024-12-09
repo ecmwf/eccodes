@@ -20,15 +20,15 @@ void grib_accessor_closest_date_t::init(const long l, grib_arguments* c)
     grib_handle* h = grib_handle_of_accessor(this);
     int n          = 0;
 
-    dateLocal_    = grib_arguments_get_name(h, c, n++);
-    timeLocal_    = grib_arguments_get_name(h, c, n++);
-    numForecasts_ = grib_arguments_get_name(h, c, n++);
-    year_         = grib_arguments_get_name(h, c, n++);
-    month_        = grib_arguments_get_name(h, c, n++);
-    day_          = grib_arguments_get_name(h, c, n++);
-    hour_         = grib_arguments_get_name(h, c, n++);
-    minute_       = grib_arguments_get_name(h, c, n++);
-    second_       = grib_arguments_get_name(h, c, n++);
+    dateLocal_    = c->get_name(h, n++);
+    timeLocal_    = c->get_name(h, n++);
+    numForecasts_ = c->get_name(h, n++);
+    year_         = c->get_name(h, n++);
+    month_        = c->get_name(h, n++);
+    day_          = c->get_name(h, n++);
+    hour_         = c->get_name(h, n++);
+    minute_       = c->get_name(h, n++);
+    second_       = c->get_name(h, n++);
 
     length_ = 0;
 }

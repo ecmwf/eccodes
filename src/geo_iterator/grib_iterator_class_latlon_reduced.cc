@@ -50,13 +50,13 @@ int LatlonReduced::init(grib_handle* h, grib_arguments* args)
     int islocal    = 0;
     long nlons2    = 0; /* adjusted num of longitudes */
 
-    const char* latofirst   = grib_arguments_get_name(h, args, carg_++);
-    const char* longoffirst = grib_arguments_get_name(h, args, carg_++);
-    const char* latoflast   = grib_arguments_get_name(h, args, carg_++);
-    const char* longoflast  = grib_arguments_get_name(h, args, carg_++);
-    const char* nlats_name  = grib_arguments_get_name(h, args, carg_++);
-    const char* jdirec      = grib_arguments_get_name(h, args, carg_++);
-    const char* plac        = grib_arguments_get_name(h, args, carg_++);
+    const char* latofirst   = args->get_name(h, carg_++);
+    const char* longoffirst = args->get_name(h, carg_++);
+    const char* latoflast   = args->get_name(h, carg_++);
+    const char* longoflast  = args->get_name(h, carg_++);
+    const char* nlats_name  = args->get_name(h, carg_++);
+    const char* jdirec      = args->get_name(h, carg_++);
+    const char* plac        = args->get_name(h, carg_++);
 
     if ((ret = grib_get_double_internal(h, latofirst, &laf)))
         return ret;

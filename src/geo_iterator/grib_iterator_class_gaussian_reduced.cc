@@ -239,13 +239,13 @@ int GaussianReduced::init(grib_handle* h, grib_arguments* args)
     long row_count         = 0;
     long angleSubdivisions = 0;
     const grib_context* c  = h->context;
-    const char* slat_first = grib_arguments_get_name(h, args, carg_++);
-    const char* slon_first = grib_arguments_get_name(h, args, carg_++);
-    const char* slat_last  = grib_arguments_get_name(h, args, carg_++);
-    const char* slon_last  = grib_arguments_get_name(h, args, carg_++);
-    const char* sorder     = grib_arguments_get_name(h, args, carg_++);
-    const char* spl        = grib_arguments_get_name(h, args, carg_++);
-    const char* snj        = grib_arguments_get_name(h, args, carg_++);
+    const char* slat_first = args->get_name(h, carg_++);
+    const char* slon_first = args->get_name(h, carg_++);
+    const char* slat_last  = args->get_name(h, carg_++);
+    const char* slon_last  = args->get_name(h, carg_++);
+    const char* sorder     = args->get_name(h, carg_++);
+    const char* spl        = args->get_name(h, carg_++);
+    const char* snj        = args->get_name(h, carg_++);
 
     angleOfRotation_ = 0;
     isRotated_       = 0;

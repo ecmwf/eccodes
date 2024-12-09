@@ -12,23 +12,10 @@
  * Check GRIB2 parameter concept file e.g. shortName.def, paramId.def
  */
 
+#include "expression/grib_expression_class_long.h"
+#include "expression/grib_expression_class_functor.h"
+#include "expression/grib_expression_class_string.h"
 #include "grib_api_internal.h"
-
-typedef struct grib_expression_long {
-    grib_expression base;
-    long value;
-} grib_expression_long;
-
-typedef struct grib_expression_functor {
-    grib_expression base;
-    char* name;
-    grib_arguments* args;
-} grib_expression_functor;
-
-typedef struct grib_expression_string {
-    grib_expression base;
-    char* value;
-} grib_expression_string;
 
 static int type_of_surface_missing(const char* name, const char* value)
 {
@@ -95,26 +82,30 @@ static int grib_check_param_concepts(const char* key, const char* filename)
             }
         }
         while (concept_condition) {
-            char condition_value[512] = {0,};
-            grib_expression* expression = concept_condition->expression;
+            char condition_value[512] = {0, };
+            eccodes::Expression* expression = concept_condition->expression;
             const char* condition_name  = concept_condition->name;
             /* printf("%s\n", concept_value->name); */
             /* condition_name is discipline, parameterCategory etc. */
-            if (strcmp(expression->cclass->name, "long") == 0) {
-                grib_expression_long* el = (grib_expression_long*)expression;
-                snprintf(condition_value, sizeof(condition_value), "%ld", el->value);
+            if (strcmp(expression->class_name(), "long") == 0) {
+                eccodes::expression::Long* el = dynamic_cast<eccodes::expression::Long*>(expression);
+                long value;
+                el->evaluate_long(NULL, &value);
+                snprintf(condition_value, sizeof(condition_value), "%ld", value);
             }
-            else if (strcmp(expression->cclass->name, "functor") == 0) {
-                grib_expression_functor* ef = (grib_expression_functor*)expression;
-                snprintf(condition_value, sizeof(condition_value), "%s", ef->name);
+            else if (strcmp(expression->class_name(), "functor") == 0) {
+                eccodes::expression::Functor* ef = dynamic_cast<eccodes::expression::Functor*>(expression);
+                snprintf(condition_value, sizeof(condition_value), "%s", ef->name());
             }
-            else if (strcmp(expression->cclass->name, "string") == 0) {
-                grib_expression_string* es = (grib_expression_string*)expression;
-                snprintf(condition_value, sizeof(condition_value), "%s", es->value);
+            else if (strcmp(expression->class_name(), "string") == 0) {
+                eccodes::expression::String* es = dynamic_cast<eccodes::expression::String*>(expression);
+                int error;
+                const char* value = es->evaluate_string(NULL, NULL, NULL, &error);
+                snprintf(condition_value, sizeof(condition_value), "%s", value);
             }
             else {
                 fprintf(stderr, "%s %s: Unknown class name: '%s'\n",
-                        key, concept_value->name, expression->cclass->name);
+                        key, concept_value->name, expression->class_name());
                 Assert(0);
             }
             if (!isLocal && strcmp(condition_name, "localTablesVersion") == 0) {

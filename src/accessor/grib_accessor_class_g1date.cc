@@ -19,10 +19,10 @@ void grib_accessor_g1date_t::init(const long l, grib_arguments* c)
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
-    century_ = grib_arguments_get_name(hand, c, n++);
-    year_    = grib_arguments_get_name(hand, c, n++);
-    month_   = grib_arguments_get_name(hand, c, n++);
-    day_     = grib_arguments_get_name(hand, c, n++);
+    century_ = c->get_name(hand, n++);
+    year_    = c->get_name(hand, n++);
+    month_   = c->get_name(hand, n++);
+    day_     = c->get_name(hand, n++);
 }
 
 int grib_accessor_g1date_t::unpack_long(long* val, size_t* len)

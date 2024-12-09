@@ -17,14 +17,14 @@ void grib_accessor_g1number_of_coded_values_sh_complex_t::init(const long l, gri
 {
     grib_accessor_long_t::init(l, c);
     int n             = 0;
-    bitsPerValue_     = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    offsetBeforeData_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    offsetAfterData_  = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    unusedBits_       = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    numberOfValues_   = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    JS_               = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    KS_               = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    MS_               = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    bitsPerValue_     = c->get_name(grib_handle_of_accessor(this), n++);
+    offsetBeforeData_ = c->get_name(grib_handle_of_accessor(this), n++);
+    offsetAfterData_  = c->get_name(grib_handle_of_accessor(this), n++);
+    unusedBits_       = c->get_name(grib_handle_of_accessor(this), n++);
+    numberOfValues_   = c->get_name(grib_handle_of_accessor(this), n++);
+    JS_               = c->get_name(grib_handle_of_accessor(this), n++);
+    KS_               = c->get_name(grib_handle_of_accessor(this), n++);
+    MS_               = c->get_name(grib_handle_of_accessor(this), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;

@@ -19,9 +19,9 @@ void grib_accessor_time_t::init(const long l, grib_arguments* c)
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
-    hour_   = grib_arguments_get_name(hand, c, n++);
-    minute_ = grib_arguments_get_name(hand, c, n++);
-    second_ = grib_arguments_get_name(hand, c, n++);
+    hour_   = c->get_name(hand, n++);
+    minute_ = c->get_name(hand, n++);
+    second_ = c->get_name(hand, n++);
 }
 
 int grib_accessor_time_t::unpack_long(long* val, size_t* len)

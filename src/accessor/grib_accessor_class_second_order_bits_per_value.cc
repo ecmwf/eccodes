@@ -52,9 +52,9 @@ void grib_accessor_second_order_bits_per_value_t::init(const long l, grib_argume
 {
     grib_accessor_long_t::init(l, c);
     int n               = 0;
-    values_             = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    binaryScaleFactor_  = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    decimalScaleFactor_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    values_             = c->get_name(grib_handle_of_accessor(this), n++);
+    binaryScaleFactor_  = c->get_name(grib_handle_of_accessor(this), n++);
+    decimalScaleFactor_ = c->get_name(grib_handle_of_accessor(this), n++);
     bitsPerValue_       = 0;
 
     length_ = 0;

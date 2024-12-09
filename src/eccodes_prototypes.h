@@ -813,23 +813,23 @@ eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_argu
 int transform_iterator_data(grib_context* c, double* data, long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning, size_t numPoints, long nx, long ny);
 
 /* grib_expression.cc */
-int grib_expression_native_type(grib_handle* h, grib_expression* g);
-int grib_expression_evaluate_long(grib_handle* h, grib_expression* g, long* result);
-int grib_expression_evaluate_double(grib_handle* h, grib_expression* g, double* result);
-const char* grib_expression_evaluate_string(grib_handle* h, grib_expression* g, char* buf, size_t* size, int* err);
-const char* grib_expression_get_name(grib_expression* g);
-void grib_expression_print(grib_context* ctx, grib_expression* g, grib_handle* f, FILE*);
-void grib_expression_free(grib_context* ctx, grib_expression* g);
-void grib_expression_add_dependency(grib_expression* e, grib_accessor* observer);
-grib_arguments* grib_arguments_new(grib_context* c, grib_expression* g, grib_arguments* n);
-void grib_arguments_free(grib_context* c, grib_arguments* g);
-void grib_arguments_print(grib_context* c, grib_arguments* g, grib_handle* f);
-const char* grib_arguments_get_name(grib_handle* h, grib_arguments* args, int n);
-const char* grib_arguments_get_string(grib_handle* h, grib_arguments* args, int n);
-long grib_arguments_get_long(grib_handle* h, grib_arguments* args, int n);
-double grib_arguments_get_double(grib_handle* h, grib_arguments* args, int n);
-grib_expression* grib_arguments_get_expression(grib_handle* h, grib_arguments* args, int n);
-int grib_arguments_get_count(grib_arguments* args);
+//int grib_expression_native_type(grib_handle* h, grib_expression* g);
+//int grib_expression_evaluate_long(grib_handle* h, grib_expression* g, long* result);
+//int grib_expression_evaluate_double(grib_handle* h, grib_expression* g, double* result);
+//const char* grib_expression_evaluate_string(grib_handle* h, grib_expression* g, char* buf, size_t* size, int* err);
+//const char* grib_expression_get_name(grib_expression* g);
+//void grib_expression_print(grib_context* ctx, grib_expression* g, grib_handle* f, FILE*);
+//void grib_expression_free(grib_context* ctx, grib_expression* g);
+//void grib_expression_add_dependency(grib_expression* e, grib_accessor* observer);
+//grib_arguments* grib_arguments_new(grib_context* c, grib_expression* g, grib_arguments* n);
+//void grib_arguments_free(grib_context* c, grib_arguments* g);
+//void grib_arguments_print(grib_context* c, grib_arguments* g, grib_handle* f);
+//const char* grib_arguments_get_name(grib_handle* h, grib_arguments* args, int n);
+//const char* grib_arguments_get_string(grib_handle* h, grib_arguments* args, int n);
+//long grib_arguments_get_long(grib_handle* h, grib_arguments* args, int n);
+//double grib_arguments_get_double(grib_handle* h, grib_arguments* args, int n);
+//grib_expression* grib_arguments_get_expression(grib_handle* h, grib_arguments* args, int n);
+//int grib_arguments_get_count(grib_arguments* args);
 
 /* codes_util.cc */
 double normalise_longitude_in_degrees(double lon);

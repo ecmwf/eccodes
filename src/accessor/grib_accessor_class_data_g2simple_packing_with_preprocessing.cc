@@ -18,8 +18,8 @@ grib_accessor* grib_accessor_data_g2simple_packing_with_preprocessing = &_grib_a
 void grib_accessor_data_g2simple_packing_with_preprocessing_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_data_g2simple_packing_t::init(v, args);
-    pre_processing_           = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
-    pre_processing_parameter_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
+    pre_processing_           = args->get_name(grib_handle_of_accessor(this), carg_++);
+    pre_processing_parameter_ = args->get_name(grib_handle_of_accessor(this), carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 

@@ -19,8 +19,8 @@ void grib_accessor_step_human_readable_t::init(const long len, grib_arguments* p
     int n          = 0;
     grib_handle* h = grib_handle_of_accessor(this);
 
-    stepUnits_ = grib_arguments_get_name(h, params, n++);
-    step_      = grib_arguments_get_name(h, params, n++);
+    stepUnits_ = params->get_name(h, n++);
+    step_      = params->get_name(h, n++);
     length_    = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
