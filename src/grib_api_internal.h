@@ -611,7 +611,7 @@ struct bufr_descriptor
     int type;
     /*char* name;   Not needed: All usage commented out. See ECC-489 */
     char shortName[128];
-    char units[128];
+    char units[64];
     long scale;
     double factor;
     long reference;
