@@ -19,13 +19,13 @@ void grib_accessor_validity_date_t::init(const long l, grib_arguments* c)
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
-    date_      = grib_arguments_get_name(hand, c, n++);
-    time_      = grib_arguments_get_name(hand, c, n++);
-    step_      = grib_arguments_get_name(hand, c, n++);
-    stepUnits_ = grib_arguments_get_name(hand, c, n++);
-    year_      = grib_arguments_get_name(hand, c, n++);
-    month_     = grib_arguments_get_name(hand, c, n++);
-    day_       = grib_arguments_get_name(hand, c, n++);
+    date_      = c->get_name(hand, n++);
+    time_      = c->get_name(hand, n++);
+    step_      = c->get_name(hand, n++);
+    stepUnits_ = c->get_name(hand, n++);
+    year_      = c->get_name(hand, n++);
+    month_     = c->get_name(hand, n++);
+    day_       = c->get_name(hand, n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }

@@ -25,13 +25,13 @@ void grib_accessor_data_jpeg2000_packing_t::init(const long v, grib_arguments* a
     grib_handle* hand    = grib_handle_of_accessor(this);
 
     jpeg_lib_                 = 0;
-    type_of_compression_used_ = grib_arguments_get_name(hand, args, carg_++);
-    target_compression_ratio_ = grib_arguments_get_name(hand, args, carg_++);
-    ni_                       = grib_arguments_get_name(hand, args, carg_++);
-    nj_                       = grib_arguments_get_name(hand, args, carg_++);
-    list_defining_points_     = grib_arguments_get_name(hand, args, carg_++);
-    number_of_data_points_    = grib_arguments_get_name(hand, args, carg_++);
-    scanning_mode_            = grib_arguments_get_name(hand, args, carg_++);
+    type_of_compression_used_ = args->get_name(hand, carg_++);
+    target_compression_ratio_ = args->get_name(hand, carg_++);
+    ni_                       = args->get_name(hand, carg_++);
+    nj_                       = args->get_name(hand, carg_++);
+    list_defining_points_     = args->get_name(hand, carg_++);
+    number_of_data_points_    = args->get_name(hand, carg_++);
+    scanning_mode_            = args->get_name(hand, carg_++);
     edition_                  = 2;
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 

@@ -17,11 +17,11 @@ void grib_accessor_g1number_of_coded_values_sh_simple_t::init(const long l, grib
 {
     grib_accessor_long_t::init(l, c);
     int n             = 0;
-    bitsPerValue_     = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    offsetBeforeData_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    offsetAfterData_  = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    unusedBits_       = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    numberOfValues_   = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    bitsPerValue_     = c->get_name(grib_handle_of_accessor(this), n++);
+    offsetBeforeData_ = c->get_name(grib_handle_of_accessor(this), n++);
+    offsetAfterData_  = c->get_name(grib_handle_of_accessor(this), n++);
+    unusedBits_       = c->get_name(grib_handle_of_accessor(this), n++);
+    numberOfValues_   = c->get_name(grib_handle_of_accessor(this), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;

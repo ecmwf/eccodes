@@ -21,10 +21,10 @@ void grib_accessor_optimal_step_units_t::init(const long l, grib_arguments* c)
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
-    forecast_time_value_ = grib_arguments_get_name(hand, c, n++);
-    forecast_time_unit_  = grib_arguments_get_name(hand, c, n++);
-    time_range_value_    = grib_arguments_get_name(hand, c, n++);
-    time_range_unit_     = grib_arguments_get_name(hand, c, n++);
+    forecast_time_value_ = c->get_name(hand, n++);
+    forecast_time_unit_  = c->get_name(hand, n++);
+    time_range_value_    = c->get_name(hand, n++);
+    time_range_unit_     = c->get_name(hand, n++);
     length_              = 0;
     overwriteStepUnits_  = eccodes::Unit{ eccodes::Unit::Value::MISSING }.value<long>();
 }
@@ -47,18 +47,18 @@ int grib_accessor_optimal_step_units_t::pack_expression(grib_expression* e)
     size_t len              = 1;
     grib_handle* hand       = grib_handle_of_accessor(this);
 
-    if (strcmp(e->cclass->name, "long") == 0) {
-        grib_expression_evaluate_long(hand, e, &lval); /* TODO: check return value */
+    if (strcmp(e->class_name(), "long") == 0) {
+        e->evaluate_long(hand, &lval); /* TODO: check return value */
         ret = pack_long(&lval, &len);
     }
     else {
         char tmp[1024];
         len  = sizeof(tmp);
-        cval = grib_expression_evaluate_string(hand, e, tmp, &len, &ret);
+        cval = e->evaluate_string(hand, tmp, &len, &ret);
         if (ret != GRIB_SUCCESS) {
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "%s.%s: Unable to evaluate string %s to be set in %s",
-                             class_name_, __func__, grib_expression_get_name(e), name_);
+                             class_name_, __func__, e->get_name(), name_);
             return ret;
         }
         len = strlen(cval) + 1;

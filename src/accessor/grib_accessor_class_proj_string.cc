@@ -18,8 +18,8 @@ void grib_accessor_proj_string_t::init(const long len, grib_arguments* arg)
     grib_accessor_gen_t::init(len, arg);
     grib_handle* h = grib_handle_of_accessor(this);
 
-    grid_type_ = grib_arguments_get_name(h, arg, 0);
-    endpoint_  = grib_arguments_get_long(h, arg, 1);
+    grid_type_ = arg->get_name(h, 0);
+    endpoint_  = arg->get_long(h, 1);
     length_    = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;

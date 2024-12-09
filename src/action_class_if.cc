@@ -141,7 +141,7 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
     gs = as->sub_section_;
     grib_push_accessor(as, p->block);
 
-    if ((ret = grib_expression_evaluate_long(p->h, a->expression, &lres)) != GRIB_SUCCESS)
+    if ((ret = a->expression->evaluate_long(p->h, &lres)) != GRIB_SUCCESS)
         return ret;
 
     if (lres)
@@ -151,7 +151,7 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 
     if (p->h->context->debug > 1) {
         fprintf(stderr, "EVALUATE create_accessor_handle ");
-        grib_expression_print(p->h->context, a->expression, p->h, stderr);
+        a->expression->print(p->h->context, p->h, stderr);
         fprintf(stderr, " [%s][_if%p]\n", (next == a->block_true ? "true" : "false"), (void*)a);
 
         /*grib_dump_action_branch(stdout,next,5);*/
@@ -172,7 +172,7 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 
 static void print_expression_debug_info(grib_context* ctx, grib_expression* exp, grib_handle* h)
 {
-    grib_expression_print(ctx, exp, h, stderr); /* writes without a newline */
+    exp->print(ctx, h, stderr); /* writes without a newline */
     fprintf(stderr, "\n");
 }
 
@@ -185,9 +185,9 @@ static int execute(grib_action* act, grib_handle* h)
     long lres         = 0;
 
     /* See GRIB-394 */
-    int type = grib_expression_native_type(h, a->expression);
+    int type = a->expression->native_type(h);
     if (type != GRIB_TYPE_DOUBLE) {
-        if ((ret = grib_expression_evaluate_long(h, a->expression, &lres)) != GRIB_SUCCESS) {
+        if ((ret = a->expression->evaluate_long(h, &lres)) != GRIB_SUCCESS) {
             if (ret == GRIB_NOT_FOUND)
                 lres = 0;
             else {
@@ -199,7 +199,7 @@ static int execute(grib_action* act, grib_handle* h)
     }
     else {
         double dres = 0.0;
-        ret         = grib_expression_evaluate_double(h, a->expression, &dres);
+        ret         = a->expression->evaluate_double(h, &dres);
         lres        = (long)dres;
         if (ret != GRIB_SUCCESS) {
             if (ret == GRIB_NOT_FOUND)
@@ -236,7 +236,7 @@ static void dump(grib_action* act, FILE* f, int lvl)
         grib_context_print(act->context, f, "     ");
 
     printf("if(%s) { ", act->name);
-    grib_expression_print(act->context, a->expression, 0, stdout);
+    a->expression->print(act->context, 0, stdout);
     printf("\n");
 
     if (a->block_true) {
@@ -248,7 +248,7 @@ static void dump(grib_action* act, FILE* f, int lvl)
         for (i = 0; i < lvl; i++)
             grib_context_print(act->context, f, "     ");
         printf("else(%s) { ", act->name);
-        grib_expression_print(act->context, a->expression, 0, stdout);
+        a->expression->print(act->context, 0, stdout);
         /*     grib_context_print(act->context,f,"ELSE \n" );*/
         grib_dump_action_branch(f, a->block_false, lvl + 1);
     }
@@ -265,7 +265,7 @@ static grib_action* reparse(grib_action* a, grib_accessor* acc, int* doit)
 
     /* printf("reparse %s %s\n",a->name,acc->name); */
 
-    if ((ret = grib_expression_evaluate_long(grib_handle_of_accessor(acc), self->expression, &lres)) != GRIB_SUCCESS)
+    if ((ret = self->expression->evaluate_long(grib_handle_of_accessor(acc), &lres)) != GRIB_SUCCESS)
         grib_context_log(acc->context_,
                          GRIB_LOG_ERROR, "action_class_if::reparse: grib_expression_evaluate_long failed: %s",
                          grib_get_error_message(ret));
@@ -294,7 +294,7 @@ static void destroy(grib_context* context, grib_action* act)
         f = nf;
     }
 
-    grib_expression_free(context, a->expression);
+    a->expression->destroy(context);
 
     grib_context_free_persistent(context, act->name);
     grib_context_free_persistent(context, act->debug_info);

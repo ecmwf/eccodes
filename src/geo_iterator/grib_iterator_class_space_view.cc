@@ -100,27 +100,27 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
     double *s_x, *c_x; /* arrays storing sin and cos values */
     size_t array_size = (nv_ * sizeof(double));
 
-    const char* sradius                          = grib_arguments_get_name(h, args, carg_++);
-    const char* sEarthIsOblate                   = grib_arguments_get_name(h, args, carg_++);
-    const char* sMajorAxisInMetres               = grib_arguments_get_name(h, args, carg_++);
-    const char* sMinorAxisInMetres               = grib_arguments_get_name(h, args, carg_++);
-    const char* snx                              = grib_arguments_get_name(h, args, carg_++);
-    const char* sny                              = grib_arguments_get_name(h, args, carg_++);
-    const char* sLatOfSubSatellitePointInDegrees = grib_arguments_get_name(h, args, carg_++);
-    const char* sLonOfSubSatellitePointInDegrees = grib_arguments_get_name(h, args, carg_++);
-    const char* sDx                              = grib_arguments_get_name(h, args, carg_++);
-    const char* sDy                              = grib_arguments_get_name(h, args, carg_++);
-    const char* sXpInGridLengths                 = grib_arguments_get_name(h, args, carg_++);
-    const char* sYpInGridLengths                 = grib_arguments_get_name(h, args, carg_++);
-    const char* sOrientationInDegrees            = grib_arguments_get_name(h, args, carg_++);
-    const char* sNrInRadiusOfEarthScaled         = grib_arguments_get_name(h, args, carg_++);
-    const char* sXo                              = grib_arguments_get_name(h, args, carg_++);
-    const char* sYo                              = grib_arguments_get_name(h, args, carg_++);
+    const char* sradius                          = args->get_name(h, carg_++);
+    const char* sEarthIsOblate                   = args->get_name(h, carg_++);
+    const char* sMajorAxisInMetres               = args->get_name(h, carg_++);
+    const char* sMinorAxisInMetres               = args->get_name(h, carg_++);
+    const char* snx                              = args->get_name(h, carg_++);
+    const char* sny                              = args->get_name(h, carg_++);
+    const char* sLatOfSubSatellitePointInDegrees = args->get_name(h, carg_++);
+    const char* sLonOfSubSatellitePointInDegrees = args->get_name(h, carg_++);
+    const char* sDx                              = args->get_name(h, carg_++);
+    const char* sDy                              = args->get_name(h, carg_++);
+    const char* sXpInGridLengths                 = args->get_name(h, carg_++);
+    const char* sYpInGridLengths                 = args->get_name(h, carg_++);
+    const char* sOrientationInDegrees            = args->get_name(h, carg_++);
+    const char* sNrInRadiusOfEarthScaled         = args->get_name(h, carg_++);
+    const char* sXo                              = args->get_name(h, carg_++);
+    const char* sYo                              = args->get_name(h, carg_++);
 
-    const char* siScansNegatively       = grib_arguments_get_name(h, args, carg_++);
-    const char* sjScansPositively       = grib_arguments_get_name(h, args, carg_++);
-    const char* sjPointsAreConsecutive  = grib_arguments_get_name(h, args, carg_++);
-    const char* sAlternativeRowScanning = grib_arguments_get_name(h, args, carg_++);
+    const char* siScansNegatively       = args->get_name(h, carg_++);
+    const char* sjScansPositively       = args->get_name(h, carg_++);
+    const char* sjPointsAreConsecutive  = args->get_name(h, carg_++);
+    const char* sAlternativeRowScanning = args->get_name(h, carg_++);
 
     if ((ret = grib_get_long_internal(h, snx, &nx)) != GRIB_SUCCESS)
         return ret;

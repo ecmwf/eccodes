@@ -19,10 +19,10 @@ void grib_accessor_number_of_points_t::init(const long l, grib_arguments* c)
     int n             = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
 
-    ni_        = grib_arguments_get_name(hand, c, n++);
-    nj_        = grib_arguments_get_name(hand, c, n++);
-    plpresent_ = grib_arguments_get_name(hand, c, n++);
-    pl_        = grib_arguments_get_name(hand, c, n++);
+    ni_        = c->get_name(hand, n++);
+    nj_        = c->get_name(hand, n++);
+    plpresent_ = c->get_name(hand, n++);
+    pl_        = c->get_name(hand, n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;

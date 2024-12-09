@@ -178,13 +178,13 @@ void grib_dependency_remove_observer(grib_accessor* observer)
 
 void grib_dependency_observe_expression(grib_accessor* observer, grib_expression* e)
 {
-    grib_expression_add_dependency(e, observer);
+    e->add_dependency(observer);
 }
 
 void grib_dependency_observe_arguments(grib_accessor* observer, grib_arguments* a)
 {
     while (a) {
-        grib_dependency_observe_expression(observer, a->expression);
-        a = a->next;
+        grib_dependency_observe_expression(observer, a->expression_);
+        a = a->next_;
     }
 }

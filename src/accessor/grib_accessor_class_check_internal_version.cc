@@ -25,7 +25,7 @@ void grib_accessor_check_internal_version_t::init(const long l, grib_arguments* 
     int err                    = 0;
     long defs_file_version     = 0;
     grib_handle* h             = grib_handle_of_accessor(this);
-    const char* s_defn_version = grib_arguments_get_name(h, args, 0);
+    const char* s_defn_version = args->get_name(h, 0);
     Assert(s_defn_version);
 
     err = grib_get_long_internal(h, s_defn_version, &defs_file_version);

@@ -45,8 +45,8 @@ void grib_accessor_signed_bits_t::init(const long len, grib_arguments* args)
 {
     grib_accessor_long_t::init(len, args);
     int n             = 0;
-    numberOfBits_     = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    numberOfElements_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
+    numberOfBits_     = args->get_name(grib_handle_of_accessor(this), n++);
+    numberOfElements_ = args->get_name(grib_handle_of_accessor(this), n++);
     length_           = compute_byte_count();
 }
 

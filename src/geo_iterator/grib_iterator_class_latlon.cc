@@ -71,14 +71,14 @@ int Latlon::init(grib_handle* h, grib_arguments* args)
     long jScansPositively;
     long lai;
 
-    const char* s_lat1            = grib_arguments_get_name(h, args, carg_++);
-    const char* s_jdir            = grib_arguments_get_name(h, args, carg_++);
-    const char* s_jScansPos       = grib_arguments_get_name(h, args, carg_++);
-    const char* s_jPtsConsec      = grib_arguments_get_name(h, args, carg_++);
-    const char* s_isRotatedGrid   = grib_arguments_get_name(h, args, carg_++);
-    const char* s_angleOfRotation = grib_arguments_get_name(h, args, carg_++);
-    const char* s_latSouthernPole = grib_arguments_get_name(h, args, carg_++);
-    const char* s_lonSouthernPole = grib_arguments_get_name(h, args, carg_++);
+    const char* s_lat1            = args->get_name(h, carg_++);
+    const char* s_jdir            = args->get_name(h, carg_++);
+    const char* s_jScansPos       = args->get_name(h, carg_++);
+    const char* s_jPtsConsec      = args->get_name(h, carg_++);
+    const char* s_isRotatedGrid   = args->get_name(h, carg_++);
+    const char* s_angleOfRotation = args->get_name(h, carg_++);
+    const char* s_latSouthernPole = args->get_name(h, carg_++);
+    const char* s_lonSouthernPole = args->get_name(h, carg_++);
 
     angleOfRotation_ = 0;
     isRotated_       = 0;

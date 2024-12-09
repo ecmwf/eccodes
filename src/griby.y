@@ -316,7 +316,7 @@ argument_list: empty       { $$ = 0; }
               ;
 
 arguments: argument
-              | argument ',' arguments { $1->next = $3; $$ = $1; }
+              | argument ',' arguments { $1->next_ = $3; $$ = $1; }
               ;
 
 argument: expression { $$ = grib_arguments_new(grib_parser_context,$1,NULL); }
@@ -388,7 +388,7 @@ simple: UNSIGNED '[' INTEGER ']'   IDENT   default flags
     {
       /* ECC-485: Set length to 0 and prepend the new argument */
       grib_arguments* a = grib_arguments_new(grib_parser_context, new_accessor_expression(grib_parser_context,$3,0,0),NULL);
-      a->next = $6;
+      a->next_ = $6;
       $$ = grib_action_create_gen(grib_parser_context, $5, "codetable",
                                   0, a, /* length=0 and additional argument */
                                   $7, $8, NULL, NULL);
@@ -575,7 +575,7 @@ simple: UNSIGNED '[' INTEGER ']'   IDENT   default flags
         new_accessor_expression(grib_parser_context,$2,0,0),
 		NULL
         );
-      a->next=$4;
+      a->next_=$4;
       $$ = grib_action_create_meta(grib_parser_context,
       "ITERATOR","iterator",a,NULL,
       GRIB_ACCESSOR_FLAG_HIDDEN|GRIB_ACCESSOR_FLAG_READ_ONLY,NULL); free($2);
@@ -587,7 +587,7 @@ simple: UNSIGNED '[' INTEGER ']'   IDENT   default flags
         new_accessor_expression(grib_parser_context,$2,0,0),
 		NULL
         );
-      a->next=$4;
+      a->next_=$4;
       $$ = grib_action_create_meta(grib_parser_context,
       "NEAREST","nearest",a,NULL,
       GRIB_ACCESSOR_FLAG_HIDDEN|GRIB_ACCESSOR_FLAG_READ_ONLY,NULL); free($2);
@@ -599,7 +599,7 @@ simple: UNSIGNED '[' INTEGER ']'   IDENT   default flags
         new_accessor_expression(grib_parser_context,$2,0,0),
 		NULL
         );
-      a->next=$4;
+      a->next_=$4;
       $$ = grib_action_create_meta(grib_parser_context,
       "BOX","box",a,NULL,
       GRIB_ACCESSOR_FLAG_HIDDEN|GRIB_ACCESSOR_FLAG_READ_ONLY,NULL); free($2);

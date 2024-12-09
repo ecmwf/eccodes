@@ -74,20 +74,20 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
         0,
     };
 
-    const char* s_radius                 = grib_arguments_get_name(h, args, carg_++);
-    const char* s_nx                     = grib_arguments_get_name(h, args, carg_++);
-    const char* s_ny                     = grib_arguments_get_name(h, args, carg_++);
-    const char* s_latFirstInDegrees      = grib_arguments_get_name(h, args, carg_++);
-    const char* s_lonFirstInDegrees      = grib_arguments_get_name(h, args, carg_++);
-    const char* s_southPoleOnPlane       = grib_arguments_get_name(h, args, carg_++);
-    const char* s_centralLongitude       = grib_arguments_get_name(h, args, carg_++);
-    const char* s_centralLatitude        = grib_arguments_get_name(h, args, carg_++);
-    const char* s_Dx                     = grib_arguments_get_name(h, args, carg_++);
-    const char* s_Dy                     = grib_arguments_get_name(h, args, carg_++);
-    const char* s_iScansNegatively       = grib_arguments_get_name(h, args, carg_++);
-    const char* s_jScansPositively       = grib_arguments_get_name(h, args, carg_++);
-    const char* s_jPointsAreConsecutive  = grib_arguments_get_name(h, args, carg_++);
-    const char* s_alternativeRowScanning = grib_arguments_get_name(h, args, carg_++);
+    const char* s_radius                 = args->get_name(h, carg_++);
+    const char* s_nx                     = args->get_name(h, carg_++);
+    const char* s_ny                     = args->get_name(h, carg_++);
+    const char* s_latFirstInDegrees      = args->get_name(h, carg_++);
+    const char* s_lonFirstInDegrees      = args->get_name(h, carg_++);
+    const char* s_southPoleOnPlane       = args->get_name(h, carg_++);
+    const char* s_centralLongitude       = args->get_name(h, carg_++);
+    const char* s_centralLatitude        = args->get_name(h, carg_++);
+    const char* s_Dx                     = args->get_name(h, carg_++);
+    const char* s_Dy                     = args->get_name(h, carg_++);
+    const char* s_iScansNegatively       = args->get_name(h, carg_++);
+    const char* s_jScansPositively       = args->get_name(h, carg_++);
+    const char* s_jPointsAreConsecutive  = args->get_name(h, carg_++);
+    const char* s_alternativeRowScanning = args->get_name(h, carg_++);
 
     if (grib_is_earth_oblate(h)) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only supported for spherical earth.", ITER);
