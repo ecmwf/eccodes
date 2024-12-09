@@ -65,6 +65,19 @@ int main(int argc, char* argv[])
                 int e = grib_keys_iterator_get_long(kiter, &lVal, &llen);
                 Assert(!e);
                 Assert(lVal == 1 || lVal == 2);
+                Assert(codes_key_is_computed(h, name, &e) == 0 && !e);
+            }
+            if (STR_EQUAL(name, "gridType")) {
+                int e = 0;
+                Assert(codes_key_is_computed(h, name, &e) == 1 && !e);
+            }
+            if (STR_EQUAL(name, "longitudeOfLastGridPointInDegrees")) {
+                int e = 0;
+                Assert(codes_key_is_computed(h, name, &e) == 1 && !e);
+            }
+            if (STR_EQUAL(name, "longitudeOfLastGridPoint")) {
+                int e = 0;
+                Assert(codes_key_is_computed(h, name, &e) == 0 && !e);
             }
         }
 

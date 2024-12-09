@@ -19,7 +19,7 @@ void grib_accessor_codetable_units_t::init(const long len, grib_arguments* param
     grib_accessor_gen_t::init(len, params);
 
     int n      = 0;
-    codetable_ = grib_arguments_get_name(grib_handle_of_accessor(this), params, n++);
+    codetable_ = params->get_name(grib_handle_of_accessor(this), n++);
     length_    = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }

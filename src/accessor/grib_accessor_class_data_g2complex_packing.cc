@@ -16,7 +16,7 @@ grib_accessor* grib_accessor_data_g2complex_packing = &_grib_accessor_data_g2com
 void grib_accessor_data_g2complex_packing_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_data_complex_packing_t::init(v, args);
-    numberOfValues_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
+    numberOfValues_ = args->get_name(grib_handle_of_accessor(this), carg_++);
     edition_        = 2;
 
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;

@@ -67,11 +67,11 @@ int Regular::init(grib_handle* h, grib_arguments* args)
     double idir, idir_coded, lon1, lon2;
     long loi;
 
-    const char* s_lon1      = grib_arguments_get_name(h, args, carg_++);
-    const char* s_idir      = grib_arguments_get_name(h, args, carg_++);
-    const char* s_Ni        = grib_arguments_get_name(h, args, carg_++);
-    const char* s_Nj        = grib_arguments_get_name(h, args, carg_++);
-    const char* s_iScansNeg = grib_arguments_get_name(h, args, carg_++);
+    const char* s_lon1      = args->get_name(h, carg_++);
+    const char* s_idir      = args->get_name(h, carg_++);
+    const char* s_Ni        = args->get_name(h, carg_++);
+    const char* s_Nj        = args->get_name(h, carg_++);
+    const char* s_iScansNeg = args->get_name(h, carg_++);
 
     if ((ret = grib_get_double_internal(h, s_lon1, &lon1)))
         return ret;

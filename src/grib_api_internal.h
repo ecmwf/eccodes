@@ -22,41 +22,41 @@ extern "C" {
 
 /* cmake config header */
 #ifdef HAVE_ECCODES_CONFIG_H
- #include "eccodes_config.h"
+    #include "eccodes_config.h"
 #endif
 
 /* autoconf config header */
 #ifdef HAVE_CONFIG_H
- #include "config.h"
- #ifdef _LARGE_FILES
-  #undef _LARGE_FILE_API
- #endif
+    #include "config.h"
+    #ifdef _LARGE_FILES
+        #undef _LARGE_FILE_API
+    #endif
 #endif
 
 #ifndef GRIB_INLINE
- #define GRIB_INLINE
+    #define GRIB_INLINE
 #endif
 
 /* See ECC-670 */
 #if IS_BIG_ENDIAN
- #if GRIB_MEM_ALIGN
-  #define FAST_BIG_ENDIAN 1
- #else
-  #define FAST_BIG_ENDIAN 0
- #endif
+    #if GRIB_MEM_ALIGN
+        #define FAST_BIG_ENDIAN 1
+    #else
+        #define FAST_BIG_ENDIAN 0
+    #endif
 #endif
 
 #if IEEE_BE
- #define IEEE
+    #define IEEE
 #else
- #if IEEE_LE
-  #define IEEE
- #endif
+    #if IEEE_LE
+        #define IEEE
+    #endif
 #endif
 
 #if defined(_WIN32) && defined(_MSC_VER)
-  #define _CRT_SECURE_NO_WARNINGS
-  #define _CRT_NONSTDC_NO_DEPRECATE
+    #define _CRT_SECURE_NO_WARNINGS
+    #define _CRT_NONSTDC_NO_DEPRECATE
 #endif
 
 #include <stdio.h>
@@ -66,44 +66,44 @@ extern "C" {
 #include "eccodes_windef.h"
 
 #ifndef ECCODES_ON_WINDOWS
- #include <dirent.h>
- #include <unistd.h>
- #include <inttypes.h>
+    #include <dirent.h>
+    #include <unistd.h>
+    #include <inttypes.h>
 #else
- #define strtok_r strtok_s
- #include <direct.h>
- #include <io.h>
+    #define strtok_r strtok_s
+    #include <direct.h>
+    #include <io.h>
 
- /* Replace C99/Unix rint() for Windows Visual C++ (only before VC++ 2013 versions) */
- #if defined _MSC_VER && _MSC_VER < 1800
-  double rint(double x);
- #endif
+    /* Replace C99/Unix rint() for Windows Visual C++ (only before VC++ 2013 versions) */
+    #if defined _MSC_VER && _MSC_VER < 1800
+double rint(double x);
+    #endif
 
- #ifndef S_ISREG
-  #define S_ISREG(mode) (mode & S_IFREG)
- #endif
+    #ifndef S_ISREG
+        #define S_ISREG(mode) (mode & S_IFREG)
+    #endif
 
- #ifndef S_ISDIR
-  #define S_ISDIR(mode) (mode & S_IFDIR)
- #endif
+    #ifndef S_ISDIR
+        #define S_ISDIR(mode) (mode & S_IFDIR)
+    #endif
 
- #ifndef M_PI
-  #define M_PI 3.14159265358979323846
- #endif
+    #ifndef M_PI
+        #define M_PI 3.14159265358979323846
+    #endif
 
- #define R_OK 04 /* Needed for Windows */
+    #define R_OK 04 /* Needed for Windows */
 
- #ifndef F_OK
-  #define F_OK 0
- #endif
+    #ifndef F_OK
+        #define F_OK 0
+    #endif
 
- #define mkdir(dirname, mode) _mkdir(dirname)
+    #define mkdir(dirname, mode) _mkdir(dirname)
 
- #ifdef _MSC_VER
-  #define access(path, mode) _access(path, mode)
-  #define chmod(path, mode) _chmod(path, mode)
-  #define strdup(str) _strdup(str)
- #endif
+    #ifdef _MSC_VER
+        #define access(path, mode) _access(path, mode)
+        #define chmod(path, mode)  _chmod(path, mode)
+        #define strdup(str)        _strdup(str)
+    #endif
 
 #endif /* ifndef ECCODES_ON_WINDOWS */
 
@@ -115,9 +115,9 @@ extern "C" {
 
 
 #ifdef HAVE_STRING_H
- #include <string.h>
+    #include <string.h>
 #else
- #include <strings.h>
+    #include <strings.h>
 #endif
 
 /*
@@ -127,43 +127,43 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 */
 
 #if GRIB_PTHREADS
-#include <pthread.h>
-#define GRIB_MUTEX_INIT_ONCE(a, b) pthread_once(a, b);
-#define GRIB_MUTEX_LOCK(a) pthread_mutex_lock(a);
-#define GRIB_MUTEX_UNLOCK(a) pthread_mutex_unlock(a);
+    #include <pthread.h>
+    #define GRIB_MUTEX_INIT_ONCE(a, b) pthread_once(a, b);
+    #define GRIB_MUTEX_LOCK(a)         pthread_mutex_lock(a);
+    #define GRIB_MUTEX_UNLOCK(a)       pthread_mutex_unlock(a);
 /*
  #define GRIB_MUTEX_LOCK(a) {pthread_mutex_lock(a); printf("MUTEX LOCK %p %s line %d\n",(void*)a,__FILE__,__LINE__);}
  #define GRIB_MUTEX_UNLOCK(a) {pthread_mutex_unlock(a);printf("MUTEX UNLOCK %p %s line %d\n",(void*)a,__FILE__,__LINE__);}
  */
 #elif GRIB_OMP_THREADS
-#include <omp.h>
-#ifdef _MSC_VER
-#define GRIB_OMP_CRITICAL(a) __pragma(omp critical(a))
+    #include <omp.h>
+    #ifdef _MSC_VER
+        #define GRIB_OMP_CRITICAL(a) __pragma(omp critical(a))
+    #else
+        #define GRIB_OMP_STR(a)      #a
+        #define GRIB_OMP_XSTR(a)     GRIB_OMP_STR(a)
+        #define GRIB_OMP_CRITICAL(a) _Pragma(GRIB_OMP_XSTR(omp critical(a)))
+    #endif
+    #define GRIB_MUTEX_INIT_ONCE(a, b) (*(b))();
+    #define GRIB_MUTEX_LOCK(a)         omp_set_nest_lock(a);
+    #define GRIB_MUTEX_UNLOCK(a)       omp_unset_nest_lock(a);
 #else
-#define GRIB_OMP_STR(a) #a
-#define GRIB_OMP_XSTR(a) GRIB_OMP_STR(a)
-#define GRIB_OMP_CRITICAL(a) _Pragma(GRIB_OMP_XSTR(omp critical(a)))
-#endif
-#define GRIB_MUTEX_INIT_ONCE(a, b) (*(b))();
-#define GRIB_MUTEX_LOCK(a) omp_set_nest_lock(a);
-#define GRIB_MUTEX_UNLOCK(a) omp_unset_nest_lock(a);
-#else
-#define GRIB_MUTEX_INIT_ONCE(a, b)
-#define GRIB_MUTEX_LOCK(a)
-#define GRIB_MUTEX_UNLOCK(a)
+    #define GRIB_MUTEX_INIT_ONCE(a, b)
+    #define GRIB_MUTEX_LOCK(a)
+    #define GRIB_MUTEX_UNLOCK(a)
 #endif
 
 #if GRIB_LINUX_PTHREADS
-/* Note: in newer pthreads PTHREAD_MUTEX_RECURSIVE and PTHREAD_MUTEX_RECURSIVE_NP are enums */
-#if !defined(PTHREAD_MUTEX_RECURSIVE)
-#define PTHREAD_MUTEX_RECURSIVE PTHREAD_MUTEX_RECURSIVE_NP
-#endif
+    /* Note: in newer pthreads PTHREAD_MUTEX_RECURSIVE and PTHREAD_MUTEX_RECURSIVE_NP are enums */
+    #if !defined(PTHREAD_MUTEX_RECURSIVE)
+        #define PTHREAD_MUTEX_RECURSIVE PTHREAD_MUTEX_RECURSIVE_NP
+    #endif
 #endif
 
 
 #ifndef HAVE_FSEEKO
-#define fseeko fseek
-#define ftello ftell
+    #define fseeko fseek
+    #define ftello ftell
 #endif
 
 #define Assert(a)                                                 \
@@ -172,17 +172,17 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
     } while (0)
 
 #ifdef DEBUG
-#define DEBUG_ASSERT(a) Assert(a)
-#define DEBUG_ASSERT_ACCESS(array, index, size)                                                                             \
-    do {                                                                                                                  \
-        if (!((index) >= 0 && (index) < (size))) {                                                                        \
-            printf("ARRAY ACCESS ERROR: array=%s idx=%ld size=%ld @ %s +%d \n", #array, index, size, __FILE__, __LINE__); \
-            abort();                                                                                                      \
-        }                                                                                                                 \
-    } while (0)
+    #define DEBUG_ASSERT(a) Assert(a)
+    #define DEBUG_ASSERT_ACCESS(array, index, size)                                                                           \
+        do {                                                                                                                  \
+            if (!((index) >= 0 && (index) < (size))) {                                                                        \
+                printf("ARRAY ACCESS ERROR: array=%s idx=%ld size=%ld @ %s +%d \n", #array, index, size, __FILE__, __LINE__); \
+                abort();                                                                                                      \
+            }                                                                                                                 \
+        } while (0)
 #else
-#define DEBUG_ASSERT(a)
-#define DEBUG_ASSERT_ACCESS(array, index, size)
+    #define DEBUG_ASSERT(a)
+    #define DEBUG_ASSERT_ACCESS(array, index, size)
 #endif
 
 /* Return true if two strings are equal */
@@ -192,11 +192,11 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 
 #include "grib_api.h"
 
-#define MAX_ACCESSOR_ATTRIBUTES 20
+#define MAX_ACCESSOR_ATTRIBUTES     20
 #define MAX_FILE_HANDLES_WITH_MULTI 10
-#define ACCESSORS_ARRAY_SIZE 5000
-#define MAX_NUM_CONCEPTS 2000
-#define MAX_NUM_HASH_ARRAY 2000
+#define ACCESSORS_ARRAY_SIZE        5000
+#define MAX_NUM_CONCEPTS            2000
+#define MAX_NUM_HASH_ARRAY          2000
 
 #define CODES_NAMESPACE   10
 #define MAX_NAMESPACE_LEN 64
@@ -212,8 +212,8 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 
 #define GRIB_HASH_ARRAY_TYPE_UNKNOWN 0
 #define GRIB_HASH_ARRAY_TYPE_INTEGER 1
-#define GRIB_HASH_ARRAY_TYPE_DOUBLE 2
-#define GRIB_HASH_ARRAY_TYPE_STRING 3
+#define GRIB_HASH_ARRAY_TYPE_DOUBLE  2
+#define GRIB_HASH_ARRAY_TYPE_STRING  3
 
 #define CODES_GRIB  1
 #define CODES_BUFR  2
@@ -233,8 +233,14 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 
 extern const int max_nbits;
 
-typedef struct grib_expression grib_expression;
-typedef struct grib_arguments grib_arguments;
+// typedef struct grib_expression grib_expression;
+//
+namespace eccodes {
+class Expression;
+class Arguments;
+}  // namespace eccodes
+using grib_expression = eccodes::Expression;
+using grib_arguments  = eccodes::Arguments;
 
 typedef struct grib_action_file grib_action_file;
 typedef struct grib_action_file_list grib_action_file_list;
@@ -252,8 +258,9 @@ namespace eccodes::geo_iterator {
 class Iterator;
 }
 
-typedef struct grib_iterator {
-  eccodes::geo_iterator::Iterator* iterator;
+typedef struct grib_iterator
+{
+    eccodes::geo_iterator::Iterator* iterator;
 } grib_iterator;
 
 typedef struct grib_dumper grib_dumper;
@@ -316,11 +323,11 @@ struct grib_loader
 };
 
 /**
-*  An action
-*  Structure supporting the creation of accessor, resulting of a statement during a definition file parsing
-*
-*  @see  grib_action_class
-*/
+ *  An action
+ *  Structure supporting the creation of accessor, resulting of a statement during a definition file parsing
+ *
+ *  @see  grib_action_class
+ */
 struct grib_action
 {
     char* name;                /**  name of the definition statement */
@@ -350,11 +357,11 @@ typedef grib_action* (*action_reparse_proc)(grib_action* a, grib_accessor*, int*
 typedef int (*action_execute_proc)(grib_action* a, grib_handle*);
 
 /**
-*  An action_class
-*  Structure supporting the specific behaviour of an action
-*
-*  @see  grib_action
-*/
+ *  An action_class
+ *  Structure supporting the specific behaviour of an action
+ *
+ *  @see  grib_action
+ */
 struct grib_action_class
 {
     grib_action_class** super; /** < link to a more general behaviour */
@@ -377,9 +384,9 @@ struct grib_action_class
 };
 
 /**
-*  A buffer
-*  Structure containing the data of a message
-*/
+ *  A buffer
+ *  Structure containing the data of a message
+ */
 struct grib_buffer
 {
     int property;        /** < property parameter of buffer */
@@ -392,10 +399,10 @@ struct grib_buffer
 };
 
 /**
-*  An accessor
-*  Structure supporting each single data unit and allowing its access
-*  @see  grib_accessor_class
-*/
+ *  An accessor
+ *  Structure supporting each single data unit and allowing its access
+ *  @see  grib_accessor_class
+ */
 
 #define MAX_ACCESSOR_NAMES 20
 
@@ -411,31 +418,31 @@ struct grib_virtual_value
     int type;
 };
 
-#define GRIB_ACCESSOR_FLAG_READ_ONLY        (1 << 1)
-#define GRIB_ACCESSOR_FLAG_DUMP             (1 << 2)
-#define GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC (1 << 3)
-#define GRIB_ACCESSOR_FLAG_CAN_BE_MISSING   (1 << 4)
-#define GRIB_ACCESSOR_FLAG_HIDDEN           (1 << 5)
-#define GRIB_ACCESSOR_FLAG_CONSTRAINT       (1 << 6)
-#define GRIB_ACCESSOR_FLAG_BUFR_DATA        (1 << 7)
-#define GRIB_ACCESSOR_FLAG_NO_COPY          (1 << 8)
-#define GRIB_ACCESSOR_FLAG_COPY_OK          (1 << 9)
-#define GRIB_ACCESSOR_FLAG_FUNCTION         (1 << 10)
-#define GRIB_ACCESSOR_FLAG_DATA             (1 << 11)
-#define GRIB_ACCESSOR_FLAG_NO_FAIL          (1 << 12)
-#define GRIB_ACCESSOR_FLAG_TRANSIENT        (1 << 13)
-#define GRIB_ACCESSOR_FLAG_STRING_TYPE      (1 << 14)
-#define GRIB_ACCESSOR_FLAG_LONG_TYPE        (1 << 15)
-#define GRIB_ACCESSOR_FLAG_DOUBLE_TYPE      (1 << 16)
-#define GRIB_ACCESSOR_FLAG_LOWERCASE        (1 << 17)
-#define GRIB_ACCESSOR_FLAG_BUFR_COORD       (1 << 18)
+#define GRIB_ACCESSOR_FLAG_READ_ONLY                (1 << 1)
+#define GRIB_ACCESSOR_FLAG_DUMP                     (1 << 2)
+#define GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC         (1 << 3)
+#define GRIB_ACCESSOR_FLAG_CAN_BE_MISSING           (1 << 4)
+#define GRIB_ACCESSOR_FLAG_HIDDEN                   (1 << 5)
+#define GRIB_ACCESSOR_FLAG_CONSTRAINT               (1 << 6)
+#define GRIB_ACCESSOR_FLAG_BUFR_DATA                (1 << 7)
+#define GRIB_ACCESSOR_FLAG_NO_COPY                  (1 << 8)
+#define GRIB_ACCESSOR_FLAG_COPY_OK                  (1 << 9)
+#define GRIB_ACCESSOR_FLAG_FUNCTION                 (1 << 10)
+#define GRIB_ACCESSOR_FLAG_DATA                     (1 << 11)
+#define GRIB_ACCESSOR_FLAG_NO_FAIL                  (1 << 12)
+#define GRIB_ACCESSOR_FLAG_TRANSIENT                (1 << 13)
+#define GRIB_ACCESSOR_FLAG_STRING_TYPE              (1 << 14)
+#define GRIB_ACCESSOR_FLAG_LONG_TYPE                (1 << 15)
+#define GRIB_ACCESSOR_FLAG_DOUBLE_TYPE              (1 << 16)
+#define GRIB_ACCESSOR_FLAG_LOWERCASE                (1 << 17)
+#define GRIB_ACCESSOR_FLAG_BUFR_COORD               (1 << 18)
 #define GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION (1 << 19)
 
 /**
-*  A section accessor
-*  Structure supporting hierarchical naming of the accessors
-*  @see  grib_accessor
-*/
+ *  A section accessor
+ *  Structure supporting hierarchical naming of the accessors
+ *  @see  grib_accessor
+ */
 struct grib_section
 {
     grib_accessor* owner;
@@ -451,8 +458,9 @@ namespace eccodes::geo_nearest {
 class Nearest;
 }
 
-typedef struct grib_nearest {
-  eccodes::geo_nearest::Nearest* nearest;
+typedef struct grib_nearest
+{
+    eccodes::geo_nearest::Nearest* nearest;
 } grib_nearest;
 
 /* --------------- */
@@ -583,15 +591,15 @@ struct grib_viarray
 };
 
 /* types of BUFR descriptors used in bufr_descriptor->type*/
-#define BUFR_DESCRIPTOR_TYPE_UNKNOWN 0
-#define BUFR_DESCRIPTOR_TYPE_STRING 1
-#define BUFR_DESCRIPTOR_TYPE_DOUBLE 2
-#define BUFR_DESCRIPTOR_TYPE_LONG 3
-#define BUFR_DESCRIPTOR_TYPE_TABLE 4
-#define BUFR_DESCRIPTOR_TYPE_FLAG 5
+#define BUFR_DESCRIPTOR_TYPE_UNKNOWN     0
+#define BUFR_DESCRIPTOR_TYPE_STRING      1
+#define BUFR_DESCRIPTOR_TYPE_DOUBLE      2
+#define BUFR_DESCRIPTOR_TYPE_LONG        3
+#define BUFR_DESCRIPTOR_TYPE_TABLE       4
+#define BUFR_DESCRIPTOR_TYPE_FLAG        5
 #define BUFR_DESCRIPTOR_TYPE_REPLICATION 6
-#define BUFR_DESCRIPTOR_TYPE_OPERATOR 7
-#define BUFR_DESCRIPTOR_TYPE_SEQUENCE 8
+#define BUFR_DESCRIPTOR_TYPE_OPERATOR    7
+#define BUFR_DESCRIPTOR_TYPE_SEQUENCE    8
 
 struct bufr_descriptor
 {
@@ -649,7 +657,7 @@ struct codes_condition
 
 void codes_assertion_failed(const char* message, const char* file, int line);
 
-#define MAX_SET_VALUES 10
+#define MAX_SET_VALUES     10
 #define MAX_ACCESSOR_CACHE 100
 
 struct grib_handle
@@ -826,53 +834,54 @@ struct grib_context
 
 /* expression*/
 
-typedef int (*expression_evaluate_long_proc)(grib_expression*, grib_handle*, long*);
-typedef int (*expression_evaluate_double_proc)(grib_expression*, grib_handle*, double*);
-typedef const char* (*expression_evaluate_string_proc)(grib_expression*, grib_handle*, char*, size_t*, int*);
-typedef const char* (*expression_get_name_proc)(grib_expression*);
+// typedef int (*expression_evaluate_long_proc)(grib_expression*, grib_handle*, long*);
+// typedef int (*expression_evaluate_double_proc)(grib_expression*, grib_handle*, double*);
+// typedef const char* (*expression_evaluate_string_proc)(grib_expression*, grib_handle*, char*, size_t*, int*);
+// typedef const char* (*expression_get_name_proc)(grib_expression*);
 
-typedef void (*expression_print_proc)(grib_context*, grib_expression*, grib_handle*, FILE*);
-typedef void (*expression_add_dependency_proc)(grib_expression* e, grib_accessor* observer);
+// typedef void (*expression_print_proc)(grib_context*, grib_expression*, grib_handle*, FILE*);
+// typedef void (*expression_add_dependency_proc)(grib_expression* e, grib_accessor* observer);
 
-typedef struct grib_expression_class grib_expression_class;
+// typedef struct grib_expression_class grib_expression_class;
 
-typedef void (*expression_class_init_proc)(grib_expression_class* e);
-typedef void (*expression_init_proc)(grib_expression* e);
-typedef void (*expression_destroy_proc)(grib_context*, grib_expression* e);
+// typedef void (*expression_class_init_proc)(grib_expression_class* e);
+// typedef void (*expression_init_proc)(grib_expression* e);
+// typedef void (*expression_destroy_proc)(grib_context*, grib_expression* e);
 
-typedef int (*expression_native_type_proc)(grib_expression*, grib_handle*);
-
-struct grib_expression
-{
-    grib_expression_class* cclass;
-};
-
-struct grib_expression_class
-{
-    grib_expression_class** super;
-    const char* name;
-    size_t size;
-    int inited;
-    expression_init_proc            init;
-    expression_destroy_proc         destroy;
-    expression_print_proc           print;
-    expression_add_dependency_proc  add_dependency;
-    expression_native_type_proc     native_type;
-    expression_get_name_proc        get_name;
-    expression_evaluate_long_proc   evaluate_long;
-    expression_evaluate_double_proc evaluate_double;
-    expression_evaluate_string_proc evaluate_string;
-};
-
-struct grib_arguments
-{
-    struct grib_arguments* next;
-    grib_expression* expression;
-};
+// typedef int (*expression_native_type_proc)(grib_expression*, grib_handle*);
 
 
-long grib_expression_evaluate(grib_handle*, grib_expression*);
-void grib_expression_free(grib_context*, grib_expression*);
+// struct grib_expression
+//{
+//     grib_expression_class* cclass;
+// };
+
+// struct grib_expression_class
+//{
+//     grib_expression_class** super;
+//     const char* name;
+//     size_t size;
+//     int inited;
+//     expression_init_proc            init;
+//     expression_destroy_proc         destroy;
+//     expression_print_proc           print;
+//     expression_add_dependency_proc  add_dependency;
+//     expression_native_type_proc     native_type;
+//     expression_get_name_proc        get_name;
+//     expression_evaluate_long_proc   evaluate_long;
+//     expression_evaluate_double_proc evaluate_double;
+//     expression_evaluate_string_proc evaluate_string;
+// };
+
+// struct grib_arguments
+//{
+//     struct grib_arguments* next;
+//     grib_expression* expression;
+// };
+
+
+// long grib_expression_evaluate(grib_handle*, grib_expression*);
+// void grib_expression_free(grib_context*, grib_expression*);
 
 grib_arguments* grib_arguments_new(grib_context*, grib_expression*, grib_arguments*);
 void grib_arguments_free(grib_context*, grib_arguments*);
@@ -1223,10 +1232,12 @@ typedef struct j2k_encode_helper
 #include "eccodes_prototypes.h"
 #ifdef __cplusplus
 }
-#include "accessor/grib_accessor.h"
-#include "accessor/grib_accessors_list.h"
-#include "geo_iterator/grib_iterator.h"
-#include "geo_nearest/grib_nearest.h"
+    #include "accessor/grib_accessor.h"
+    #include "accessor/grib_accessors_list.h"
+    #include "geo_iterator/grib_iterator.h"
+    #include "geo_nearest/grib_nearest.h"
+    #include "expression/grib_expression.h"
+    #include "expression/grib_arguments.h"
 #endif
 
 #endif

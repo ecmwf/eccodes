@@ -142,35 +142,35 @@ static int execute(grib_action* act, grib_handle* h)
     Assert(args);
 
     while (c) {
-        e      = args->expression;
+        e      = args->expression_;
         values = c->values;
-        value  = values->expression;
+        value  = values->expression_;
         ok     = 0;
         while (e && value) {
-            if (!strcmp(value->cclass->name, "true"))
+            if (!strcmp(value->class_name(), "true"))
                 ok = 1;
             else {
-                type = grib_expression_native_type(h, value);
+                type = value->native_type(h);
 
                 switch (type) {
                     case GRIB_TYPE_LONG:
-                        ok = (grib_expression_evaluate_long(h, value, &lres) == GRIB_SUCCESS) &&
-                             (grib_expression_evaluate_long(h, e, &lval) == GRIB_SUCCESS) &&
+                        ok = (value->evaluate_long(h, &lres) == GRIB_SUCCESS) &&
+                             (e->evaluate_long(h, &lval) == GRIB_SUCCESS) &&
                              (lval == lres);
                         break;
 
                     case GRIB_TYPE_DOUBLE:
-                        ok = (grib_expression_evaluate_double(h, value, &dres) == GRIB_SUCCESS) &&
-                             (grib_expression_evaluate_double(h, e, &dval) == GRIB_SUCCESS) &&
+                        ok = (value->evaluate_double(h, &dres) == GRIB_SUCCESS) &&
+                             (e->evaluate_double(h, &dval) == GRIB_SUCCESS) &&
                              (dval == dres);
                         break;
 
                     case GRIB_TYPE_STRING:
                         len  = sizeof(buf);
                         size = sizeof(tmp);
-                        ok   = ((cres = grib_expression_evaluate_string(h, e, buf, &len, &err)) != NULL) &&
+                        ok   = ((cres = e->evaluate_string(h, buf, &len, &err)) != NULL) &&
                                (err == 0) &&
-                               ((cval = grib_expression_evaluate_string(h, value, tmp, &size, &err)) != NULL) &&
+                               ((cval = value->evaluate_string(h, tmp, &size, &err)) != NULL) &&
                                (err == 0) &&
                                ((strcmp(buf, cval) == 0) || (strcmp(cval, "*") == 0));
                         break;
@@ -183,15 +183,15 @@ static int execute(grib_action* act, grib_handle* h)
             if (!ok)
                 break;
 
-            args = args->next;
+            args = args->next_;
             if (args)
-                e = args->expression;
+                e = args->expression_;
             else
                 e = NULL;
 
-            values = values->next;
+            values = values->next_;
             if (values)
-                value = values->expression;
+                value = values->expression_;
             else
                 value = NULL;
         }
