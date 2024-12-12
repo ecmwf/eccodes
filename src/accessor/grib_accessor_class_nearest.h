@@ -11,7 +11,7 @@
 #pragma once
 
 #include "grib_accessor_class_gen.h"
-#include "geo_nearest/grib_nearest.h"
+#include "geo/nearest/grib_nearest.h"
 
 class grib_accessor_nearest_t : public grib_accessor_gen_t
 {

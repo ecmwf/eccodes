@@ -1234,8 +1234,8 @@ typedef struct j2k_encode_helper
 }
     #include "accessor/grib_accessor.h"
     #include "accessor/grib_accessors_list.h"
-    #include "geo_iterator/grib_iterator.h"
-    #include "geo_nearest/grib_nearest.h"
+    #include "geo/iterator/grib_iterator.h"
+    #include "geo/nearest/grib_nearest.h"
     #include "expression/grib_expression.h"
     #include "expression/grib_arguments.h"
 #endif

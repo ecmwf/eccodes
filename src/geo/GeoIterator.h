@@ -20,7 +20,7 @@
     #undef Assert
 #endif
 
-#include "geo_iterator/grib_iterator.h"
+#include "geo/iterator/grib_iterator.h"
 
 
 namespace eccodes::geo
