@@ -506,7 +506,7 @@ int codes_codetable_check_abbreviation(const grib_handle* h, const char* key, co
     return err;
 }
 
-void grib_accessor_codetable_t::dump(grib_dumper* dumper)
+void grib_accessor_codetable_t::dump(eccodes::Dumper* dumper)
 {
     char comment[2048];
     grib_codetable* table;

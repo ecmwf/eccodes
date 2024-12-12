@@ -26,7 +26,7 @@ void grib_accessor_smart_table_column_t::init(const long len, grib_arguments* pa
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-void grib_accessor_smart_table_column_t::dump(grib_dumper* dumper)
+void grib_accessor_smart_table_column_t::dump(eccodes::Dumper* dumper)
 {
     int type = get_native_type();
 

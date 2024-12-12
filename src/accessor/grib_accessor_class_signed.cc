@@ -27,7 +27,7 @@ void grib_accessor_signed_t::init(const long len, grib_arguments* arg)
     Assert(length_ >= 0);
 }
 
-void grib_accessor_signed_t::dump(grib_dumper* dumper)
+void grib_accessor_signed_t::dump(eccodes::Dumper* dumper)
 {
     long rlen = 0;
     value_count(&rlen);

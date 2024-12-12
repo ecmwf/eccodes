@@ -45,7 +45,7 @@ void grib_accessor_g2end_step_t::init(const long l, grib_arguments* c)
     numberOfTimeRanges_  = grib_arguments_get_name(h, c, n++);
 }
 
-void grib_accessor_g2end_step_t::dump(grib_dumper* dumper)
+void grib_accessor_g2end_step_t::dump(eccodes::Dumper* dumper)
 {
     grib_dump_double(dumper, this, NULL);
 }

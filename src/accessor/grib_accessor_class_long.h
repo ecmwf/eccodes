@@ -24,6 +24,6 @@ public:
     int pack_string(const char*, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_string(char*, size_t* len) override;
-    void dump(grib_dumper*) override;
+    void dump(eccodes::Dumper*) override;
     int compare(grib_accessor*) override;
 };

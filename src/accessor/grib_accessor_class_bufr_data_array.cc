@@ -3225,7 +3225,7 @@ int grib_accessor_bufr_data_array_t::process_elements(int flag, long onlySubset,
     return err;
 }
 
-void grib_accessor_bufr_data_array_t::dump(grib_dumper* dumper)
+void grib_accessor_bufr_data_array_t::dump(eccodes::Dumper* dumper)
 {
     // grib_accessor_bufr_data_array_t *self =(grib_accessor_bufr_data_array_t*)a;
     // int err=process_elements(a,PROCESS_DECODE);

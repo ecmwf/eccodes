@@ -61,7 +61,7 @@ size_t grib_accessor_group_t::string_length()
     return length_;
 }
 
-void grib_accessor_group_t::dump(grib_dumper* dumper)
+void grib_accessor_group_t::dump(eccodes::Dumper* dumper)
 {
     grib_dump_string(dumper, this, NULL);
 }

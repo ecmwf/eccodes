@@ -20,7 +20,7 @@ public:
         grib_accessor_gen_t() { class_name_ = "iterator"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_iterator_t{}; }
     void init(const long l, grib_arguments* args) override;
-    void dump(grib_dumper* dumper) override;
+    void dump(eccodes::Dumper* dumper) override;
 
 private:
     grib_arguments* args_ = nullptr;

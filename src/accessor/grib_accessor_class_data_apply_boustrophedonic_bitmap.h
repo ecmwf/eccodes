@@ -22,7 +22,7 @@ public:
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
-    void dump(grib_dumper*) override;
+    void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
     int unpack_double_element(size_t i, double* val) override;
     int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) override;

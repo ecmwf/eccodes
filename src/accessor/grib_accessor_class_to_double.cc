@@ -50,7 +50,7 @@ size_t grib_accessor_to_double_t::string_length()
     return size;
 }
 
-void grib_accessor_to_double_t::dump(grib_dumper* dumper)
+void grib_accessor_to_double_t::dump(eccodes::Dumper* dumper)
 {
     grib_dump_string(dumper, this, NULL);
 }

@@ -143,7 +143,7 @@ grib_trie* grib_accessor_dictionary_t::load_dictionary(int* err)
     return dictionary;
 }
 
-void grib_accessor_dictionary_t::dump(grib_dumper* dumper)
+void grib_accessor_dictionary_t::dump(eccodes::Dumper* dumper)
 {
     switch (get_native_type()) {
         case GRIB_TYPE_STRING:

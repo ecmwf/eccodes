@@ -39,7 +39,7 @@ int grib_accessor_blob_t::unpack_bytes(unsigned char* buffer, size_t* len)
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_blob_t::dump(grib_dumper* dumper)
+void grib_accessor_blob_t::dump(eccodes::Dumper* dumper)
 {
     grib_dump_bytes(dumper, this, NULL);
 }

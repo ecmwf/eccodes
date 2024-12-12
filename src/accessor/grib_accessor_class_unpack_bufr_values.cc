@@ -23,7 +23,7 @@ void grib_accessor_unpack_bufr_values_t::init(const long len, grib_arguments* pa
     length_ = 0;
 }
 
-void grib_accessor_unpack_bufr_values_t::dump(grib_dumper* dumper)
+void grib_accessor_unpack_bufr_values_t::dump(eccodes::Dumper* dumper)
 {
 }
 

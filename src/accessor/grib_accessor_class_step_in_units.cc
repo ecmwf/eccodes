@@ -28,7 +28,7 @@ void grib_accessor_step_in_units_t::init(const long l, grib_arguments* c)
     time_range_value_    = grib_arguments_get_name(hand, c, n++);
 }
 
-void grib_accessor_step_in_units_t::dump(grib_dumper* dumper)
+void grib_accessor_step_in_units_t::dump(eccodes::Dumper* dumper)
 {
     grib_dump_double(dumper, this, NULL);
 }

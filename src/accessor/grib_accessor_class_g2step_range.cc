@@ -28,7 +28,7 @@ void grib_accessor_g2step_range_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-// static void dump(grib_accessor* a, grib_dumper* dumper)
+// static void dump(grib_accessor* a, eccodes::Dumper* dumper)
 //{
 // grib_dump_string(dumper, a, NULL);
 //}

@@ -36,7 +36,7 @@ void grib_accessor_g1step_range_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-void grib_accessor_g1step_range_t::dump(grib_dumper* dumper)
+void grib_accessor_g1step_range_t::dump(eccodes::Dumper* dumper)
 {
     grib_dump_string(dumper, this, NULL);
 }

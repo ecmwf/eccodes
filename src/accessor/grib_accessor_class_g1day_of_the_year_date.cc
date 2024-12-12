@@ -19,7 +19,7 @@ void grib_accessor_g1day_of_the_year_date_t::init(const long l, grib_arguments* 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-void grib_accessor_g1day_of_the_year_date_t::dump(grib_dumper* dumper)
+void grib_accessor_g1day_of_the_year_date_t::dump(eccodes::Dumper* dumper)
 {
     grib_dump_string(dumper, this, NULL);
 }

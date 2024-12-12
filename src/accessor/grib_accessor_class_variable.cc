@@ -76,7 +76,7 @@ void grib_accessor_variable_t::accessor_variable_set_type(int type)
     type_ = type;
 }
 
-void grib_accessor_variable_t::dump(grib_dumper* dumper)
+void grib_accessor_variable_t::dump(eccodes::Dumper* dumper)
 {
     switch (type_) {
         case GRIB_TYPE_DOUBLE:

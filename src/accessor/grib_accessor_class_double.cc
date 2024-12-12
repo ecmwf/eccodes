@@ -53,7 +53,7 @@ int grib_accessor_double_t::unpack_string(char* v, size_t* len)
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_double_t::dump(grib_dumper* dumper)
+void grib_accessor_double_t::dump(eccodes::Dumper* dumper)
 {
     grib_dump_values(dumper, this);
 }

@@ -30,7 +30,7 @@ void grib_accessor_lookup_t::post_init()
     }
 }
 
-void grib_accessor_lookup_t::dump(grib_dumper* dumper)
+void grib_accessor_lookup_t::dump(eccodes::Dumper* dumper)
 {
     unsigned char bytes[1024] = {0,};
     char msg[1024] = {0,};

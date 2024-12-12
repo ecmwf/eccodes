@@ -48,7 +48,7 @@ void grib_accessor_julian_date_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-void grib_accessor_julian_date_t::dump(grib_dumper* dumper)
+void grib_accessor_julian_date_t::dump(eccodes::Dumper* dumper)
 {
     grib_dump_string(dumper, this, NULL);
 }

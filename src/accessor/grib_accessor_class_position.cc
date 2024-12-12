@@ -28,7 +28,7 @@ long grib_accessor_position_t::get_native_type()
     return GRIB_TYPE_LONG;
 }
 
-void grib_accessor_position_t::dump(grib_dumper* dumper)
+void grib_accessor_position_t::dump(eccodes::Dumper* dumper)
 {
     grib_dump_long(dumper, this, NULL);
 }

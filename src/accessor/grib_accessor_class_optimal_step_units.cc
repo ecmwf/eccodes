@@ -29,7 +29,7 @@ void grib_accessor_optimal_step_units_t::init(const long l, grib_arguments* c)
     overwriteStepUnits_  = eccodes::Unit{ eccodes::Unit::Value::MISSING }.value<long>();
 }
 
-void grib_accessor_optimal_step_units_t::dump(grib_dumper* dumper)
+void grib_accessor_optimal_step_units_t::dump(eccodes::Dumper* dumper)
 {
     grib_dump_string(dumper, this, NULL);
 }

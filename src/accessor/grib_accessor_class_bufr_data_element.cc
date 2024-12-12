@@ -79,7 +79,7 @@ void grib_accessor_bufr_data_element_t::init(const long len, grib_arguments* par
     cname_                    = NULL;
 }
 
-void grib_accessor_bufr_data_element_t::dump(grib_dumper* dumper)
+void grib_accessor_bufr_data_element_t::dump(eccodes::Dumper* dumper)
 {
     const int ntype = get_native_type();
 

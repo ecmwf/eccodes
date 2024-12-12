@@ -36,7 +36,7 @@ void grib_accessor_unsigned_t::init(const long len, grib_arguments* arg)
     }
 }
 
-void grib_accessor_unsigned_t::dump(grib_dumper* dumper)
+void grib_accessor_unsigned_t::dump(eccodes::Dumper* dumper)
 {
     long rlen = 0;
     value_count(&rlen);

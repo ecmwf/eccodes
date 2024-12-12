@@ -67,7 +67,7 @@ long grib_accessor_bitmap_t::next_offset()
     return byte_offset() + byte_count();
 }
 
-void grib_accessor_bitmap_t::dump(grib_dumper* dumper)
+void grib_accessor_bitmap_t::dump(eccodes::Dumper* dumper)
 {
     long len = 0;
     char label[1024];

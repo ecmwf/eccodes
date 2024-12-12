@@ -24,7 +24,7 @@ void grib_accessor_bufr_string_values_t::init(const long len, grib_arguments* ar
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-void grib_accessor_bufr_string_values_t::dump(grib_dumper* dumper)
+void grib_accessor_bufr_string_values_t::dump(eccodes::Dumper* dumper)
 {
     grib_dump_string_array(dumper, this, NULL);
 }

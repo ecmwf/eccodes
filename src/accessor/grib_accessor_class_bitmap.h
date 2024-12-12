@@ -24,7 +24,7 @@ public:
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
     long next_offset() override;
-    void dump(grib_dumper*) override;
+    void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
     void update_size(size_t) override;
     int unpack_double_element(size_t i, double* val) override;

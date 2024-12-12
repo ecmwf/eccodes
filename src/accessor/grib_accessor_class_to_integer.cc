@@ -47,7 +47,7 @@ size_t grib_accessor_to_integer_t::string_length()
     return size;
 }
 
-void grib_accessor_to_integer_t::dump(grib_dumper* dumper)
+void grib_accessor_to_integer_t::dump(eccodes::Dumper* dumper)
 {
     grib_dump_long(dumper, this, NULL);
 }

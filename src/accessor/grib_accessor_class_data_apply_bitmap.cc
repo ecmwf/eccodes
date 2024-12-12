@@ -27,7 +27,7 @@ void grib_accessor_data_apply_bitmap_t::init(const long v, grib_arguments* args)
 
     length_ = 0;
 }
-void grib_accessor_data_apply_bitmap_t::dump(grib_dumper* dumper)
+void grib_accessor_data_apply_bitmap_t::dump(eccodes::Dumper* dumper)
 {
     grib_dump_values(dumper, this);
 }

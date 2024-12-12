@@ -29,7 +29,7 @@ void grib_accessor_g1forecastmonth_t::init(const long l, grib_arguments* c)
     }
 }
 
-void grib_accessor_g1forecastmonth_t::dump(grib_dumper* dumper)
+void grib_accessor_g1forecastmonth_t::dump(eccodes::Dumper* dumper)
 {
     grib_dump_long(dumper, this, NULL);
 }
