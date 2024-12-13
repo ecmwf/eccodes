@@ -124,6 +124,7 @@ list( APPEND eccodes_src_files
     accessor/grib_accessor_class_data_g22order_packing.cc
     accessor/grib_accessor_class_mars_step.cc
     accessor/grib_accessor_class_message_copy.cc
+    accessor/grib_accessor_class_message_is_valid.cc
     accessor/grib_accessor_class_dictionary.cc
     accessor/grib_accessor_class_latlon_increment.cc
     accessor/grib_accessor_class_g2date.cc
