@@ -20,8 +20,30 @@ void grib_accessor_message_is_valid_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
+static int check_field_values(grib_handle* h)
+{
+    //printf("DEBUG  %s \n", __func__);
+    int ret = GRIB_SUCCESS;
+    double* values = NULL;
+    size_t size = 0;
+    grib_context* c = h->context;
+
+    if ((ret = grib_get_size(h, "values", &size)) != GRIB_SUCCESS)
+        return ret;
+    values = (double*)grib_context_malloc_clear(c, size * sizeof(double));
+    if (!values)
+        return GRIB_OUT_OF_MEMORY;
+
+    if ((ret = grib_get_double_array(h, "values", values, &size)) != GRIB_SUCCESS) {
+        return ret;
+    }
+    grib_context_free(c, values);
+    return GRIB_SUCCESS;
+}
+
 static int check_grid_pl_array(grib_handle* h)
 {
+    // printf("DEBUG  %s \n", __func__);
     int ret = GRIB_SUCCESS;
     long Ni = 0,plpresent  = 0;
     long* pl = NULL; // pl array
@@ -31,7 +53,7 @@ static int check_grid_pl_array(grib_handle* h)
     // is there a PL array?
     ret = grib_get_long(h, "PLPresent", &plpresent);
     if (ret != GRIB_SUCCESS || plpresent == 0)
-        return GRIB_SUCCESS;
+        return GRIB_SUCCESS; // No PL array. So nothing to do
 
     if ((ret = grib_get_size(h, "pl", &plsize)) != GRIB_SUCCESS)
         return ret;
@@ -64,19 +86,31 @@ static int check_grid_pl_array(grib_handle* h)
     return GRIB_SUCCESS;
 }
 
+typedef int (*proj_func)(grib_handle*);
+static proj_func check_functions[] = {
+    check_field_values,
+    check_grid_pl_array
+};
+
 int grib_accessor_message_is_valid_t::unpack_long(long* val, size_t* len)
 {
+    int ret = 0;
     grib_handle* h = grib_handle_of_accessor(this);
     *len = 1;
-    *val = 0;
+    *val = 1; // Assume message is valid
 
-    // TODO: Move all checks to dedicated classes, e.g.,
-    //  GribDataIntegrityChecker
-    //  BufrDataIntegrityChecker
-    // etc.
-    int ret = check_grid_pl_array(h); // Just prototyping
-    if (ret == GRIB_SUCCESS) {
-        *val = 1;
+    if (h->product_kind != PRODUCT_GRIB) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Validity checks only implemented for GRIB messages");
+        *val = 0;
+        return GRIB_NOT_IMPLEMENTED;
+    }
+
+    const size_t num_check_functions = sizeof(check_functions) / sizeof(check_functions[0]);
+    for (size_t i = 0; i < num_check_functions; ++i) {
+        proj_func cfunc = check_functions[i];
+        if ((ret = cfunc(h)) != GRIB_SUCCESS) {
+            *val = 0; // check failed
+        }
     }
 
     return GRIB_SUCCESS;

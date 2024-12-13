@@ -17,6 +17,8 @@ tempFilt=temp.$label.filt
 sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
 grib_check_key_equals $sample   isMessageValid 1
 
+# Check reduced Gaussian grid Ni
+# ------------------------------
 cat >$tempFilt<<EOF
    set Ni = 0;
    assert ( isMessageValid == 0 );
@@ -27,7 +29,8 @@ ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample
 grib_check_key_equals $tempGrib isMessageValid 0
 grib_check_key_equals $sample   isMessageValid 1
 
-
+# Check reduced Gaussian grid pl
+# ------------------------------
 cat >$tempFilt<<EOF
    meta pl_elem4 element(pl, 4);
    set pl_elem4 = 0;
@@ -38,15 +41,11 @@ ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample
 
 grib_check_key_equals $tempGrib isMessageValid 0
 
-# # Set wrong Nj. Should fail
-# input=$samples_dir/reduced_gg_pl_32_grib2.tmpl
-# ${tools_dir}/grib_set -s Nj=1 $input $tempGrib
-# set +e
-# ${tools_dir}/grib_check_gaussian_grid -v $tempGrib 2> $tempText
-# status=$?
-# set -e
-# [ $status -ne 0 ]
-# grep -q "Nj is 1 but should be 2\*N" $tempText
+
+# Check data values
+# ------------------------------
+${tools_dir}/grib_set -s bitsPerValue=25 $data_dir/sample.grib2 $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0
 
 
 # Clean up
