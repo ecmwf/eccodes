@@ -19,17 +19,17 @@ void grib_accessor_global_gaussian_t::init(const long l, grib_arguments* c)
     int n          = 0;
     grib_handle* h = grib_handle_of_accessor(this);
 
-    N_           = grib_arguments_get_name(h, c, n++);
-    Ni_          = grib_arguments_get_name(h, c, n++);
-    di_          = grib_arguments_get_name(h, c, n++);
-    latfirst_    = grib_arguments_get_name(h, c, n++);
-    lonfirst_    = grib_arguments_get_name(h, c, n++);
-    latlast_     = grib_arguments_get_name(h, c, n++);
-    lonlast_     = grib_arguments_get_name(h, c, n++);
-    plpresent_   = grib_arguments_get_name(h, c, n++);
-    pl_          = grib_arguments_get_name(h, c, n++);
-    basic_angle_ = grib_arguments_get_name(h, c, n++);
-    subdivision_ = grib_arguments_get_name(h, c, n++);
+    N_           = c->get_name(h, n++);
+    Ni_          = c->get_name(h, n++);
+    di_          = c->get_name(h, n++);
+    latfirst_    = c->get_name(h, n++);
+    lonfirst_    = c->get_name(h, n++);
+    latlast_     = c->get_name(h, n++);
+    lonlast_     = c->get_name(h, n++);
+    plpresent_   = c->get_name(h, n++);
+    pl_          = c->get_name(h, n++);
+    basic_angle_ = c->get_name(h, n++);
+    subdivision_ = c->get_name(h, n++);
 }
 
 int grib_accessor_global_gaussian_t::unpack_long(long* val, size_t* len)

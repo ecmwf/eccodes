@@ -17,8 +17,8 @@ void grib_accessor_bit_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_long_t::init(len, arg);
     length_    = 0;
-    owner_     = grib_arguments_get_name(grib_handle_of_accessor(this), arg, 0);
-    bit_index_ = grib_arguments_get_long(grib_handle_of_accessor(this), arg, 1);
+    owner_     = arg->get_name(grib_handle_of_accessor(this), 0);
+    bit_index_ = arg->get_long(grib_handle_of_accessor(this), 1);
 }
 
 int grib_accessor_bit_t::unpack_long(long* val, size_t* len)

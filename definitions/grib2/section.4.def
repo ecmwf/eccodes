@@ -24,31 +24,34 @@ if (centre==7 || centre==46) {
 }
 
 concept datasetForLocal(unknown) {
-  "tigge"   = {productionStatusOfProcessedData=4;}
-  "tigge"   = {productionStatusOfProcessedData=5;}
-  "s2s"     = {productionStatusOfProcessedData=6;}
-  "s2s"     = {productionStatusOfProcessedData=7;}
-  "cerise"  = {marsClass="ci";}
-  "era6"    = {marsClass="e6";} # for ERA6 parameters with constituentType
-  "hydro"   = {marsClass="ce";} # EFAS/GLOFAS
-  "hydro"   = {marsClass="ul";} # ULYSSES
-  "fire"    = {marsClass="gw";} # Global Wildfire awareness system
-  "uerra"   = {productionStatusOfProcessedData=8;} # UERRA
-  "uerra"   = {productionStatusOfProcessedData=9;}
-  "uerra"   = {productionStatusOfProcessedData=10;} # CARRA/CERRA
-  "uerra"   = {productionStatusOfProcessedData=11;}
-  "destine" = {productionStatusOfProcessedData=12;} # Destination Earth
-  "destine" = {productionStatusOfProcessedData=13;}
-  "era"     = {marsClass="e2";}
-  "era"     = {marsClass="e4";}
-  "era"     = {marsClass="ea";}
-  "era"     = {marsClass="ei";}
-  "era"     = {marsClass="em";}
-  "era"     = {marsClass="ep";}
-  "era"     = {marsClass="er";}
-  "era"     = {marsClass="et";}
-  "era"     = {marsClass="l5";}
-  "unknown" = { dummy=1; }
+  "tigge"       = {productionStatusOfProcessedData=4;}
+  "tigge"       = {productionStatusOfProcessedData=5;}
+  "s2s"         = {productionStatusOfProcessedData=6;}
+  "s2s"         = {productionStatusOfProcessedData=7;}
+  "cerise"      = {marsClass="ci";}
+  "era6"        = {marsClass="e6";} # for ERA6 parameters with constituentType
+  "hydro"       = {marsClass="ce";} # EFAS/GLOFAS
+  "hydro"       = {marsClass="ul";} # ULYSSES
+  "fire"        = {marsClass="gw";} # Global Wildfire awareness system
+  "uerra"       = {productionStatusOfProcessedData=8;} # UERRA
+  "uerra"       = {productionStatusOfProcessedData=9;}
+  "uerra"       = {productionStatusOfProcessedData=10;} # CARRA/CERRA
+  "uerra"       = {productionStatusOfProcessedData=11;}
+  "destine"     = {productionStatusOfProcessedData=12;} # Destination Earth
+  "destine"     = {productionStatusOfProcessedData=13;}
+  "destinegen1" = {productionStatusOfProcessedData=12;generation=1;} # DestinE ClimateDT Generation 1
+  "destinegen1" = {productionStatusOfProcessedData=13;generation=1;}
+  "era"         = {marsClass="e2";}
+  "era"         = {marsClass="e4";}
+  "era"         = {marsClass="ea";}
+  "era"         = {marsClass="ei";}
+  "era"         = {marsClass="em";}
+  "era"         = {marsClass="ep";}
+  "era"         = {marsClass="er";}
+  "era"         = {marsClass="et";}
+  "era"         = {marsClass="l5";}
+  "nextgems"    = {marsClass="ng";}
+  "unknown"     = { dummy=1; }
 }
 
 # If the keys marsClass or productionStatusOfProcessedData change in memory,

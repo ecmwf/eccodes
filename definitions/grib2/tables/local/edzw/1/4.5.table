@@ -12,4 +12,8 @@
 203 vN  Surface: vertical plane facing north
 204 vS  Surface: vertical plane facing south
 205 vW  Surface: vertical plane facing west
+206 N   Surface: plane normal to the sun (radiation)
+207 NO  Surface: plane normal to the sun without orographic shading (radiation)
+208 208 Surface: horizontal plane including orographic shading (radiation)
+209 209 Surface: tangent plane to terrain including orographic shading (radiation)
 255 255 Missing

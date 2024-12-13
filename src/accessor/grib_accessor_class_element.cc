@@ -19,8 +19,8 @@ void grib_accessor_element_t::init(const long l, grib_arguments* c)
     grib_handle* hand = grib_handle_of_accessor(this);
 
     int n    = 0;
-    array_   = grib_arguments_get_name(hand, c, n++);
-    element_ = grib_arguments_get_long(hand, c, n++);
+    array_   = c->get_name(hand, n++);
+    element_ = c->get_long(hand, n++);
 }
 
 static int check_element_index(const char* func, const char* array_name, long index, size_t size)
@@ -90,6 +90,12 @@ int grib_accessor_element_t::pack_long(const long* val, size_t* len)
         return ret;
     }
 
+    int atype = GRIB_TYPE_UNDEFINED;
+    if (grib_get_native_type(hand, array_, &atype) == GRIB_SUCCESS && atype == GRIB_TYPE_DOUBLE) {
+        const double dVal = *val;
+        return pack_double(&dVal, len);
+    }
+
     if ((ret = grib_get_size(hand, array_, &size)) != GRIB_SUCCESS)
         return ret;
 
@@ -116,6 +122,53 @@ int grib_accessor_element_t::pack_long(const long* val, size_t* len)
     ar[index] = *val;
 
     if ((ret = grib_set_long_array_internal(hand, array_, ar, size)) != GRIB_SUCCESS)
+        goto the_end;
+
+the_end:
+    grib_context_free(c, ar);
+    return ret;
+}
+
+int grib_accessor_element_t::pack_double(const double* v, size_t* len)
+{
+    int ret               = 0;
+    size_t size           = 0;
+    double* ar            = NULL;
+    const grib_context* c = context_;
+    grib_handle* hand     = grib_handle_of_accessor(this);
+    long index            = element_;
+
+    if (*len < 1) {
+        ret = GRIB_ARRAY_TOO_SMALL;
+        return ret;
+    }
+
+    if ((ret = grib_get_size(hand, array_, &size)) != GRIB_SUCCESS)
+        return ret;
+
+    ar = (double*)grib_context_malloc_clear(c, size * sizeof(double));
+    if (!ar) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Error allocating %zu bytes", size * sizeof(double));
+        return GRIB_OUT_OF_MEMORY;
+    }
+
+    if ((ret = grib_get_double_array_internal(hand, array_, ar, &size)) != GRIB_SUCCESS)
+        return ret;
+
+    // An index of -x means the xth item from the end of the list, so ar[-1] means the last item in ar
+    if (index < 0) {
+        index = size + index;
+    }
+
+    if ((ret = check_element_index(__func__, array_, index, size)) != GRIB_SUCCESS) {
+        goto the_end;
+    }
+
+    Assert(index >= 0);
+    Assert(index < size);
+    ar[index] = *v;
+
+    if ((ret = grib_set_double_array_internal(hand, array_, ar, size)) != GRIB_SUCCESS)
         goto the_end;
 
 the_end:

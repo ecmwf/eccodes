@@ -20,8 +20,8 @@ void grib_accessor_from_scale_factor_scaled_value_t::init(const long l, grib_arg
     int n             = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
 
-    scaleFactor_ = grib_arguments_get_name(hand, c, n++);
-    scaledValue_ = grib_arguments_get_name(hand, c, n++);  // Can be scalar or array
+    scaleFactor_ = c->get_name(hand, n++);
+    scaledValue_ = c->get_name(hand, n++);  // Can be scalar or array
 
     // ECC-979: Allow user to encode
     // flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;

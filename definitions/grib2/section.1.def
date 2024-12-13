@@ -108,6 +108,7 @@ concept stepType {
     "sum"     = {selectStepTemplateInterval=1; stepTypeInternal="sum";}
     "severity" = {selectStepTemplateInterval=1; stepTypeInternal="severity";}
     "mode"    = {selectStepTemplateInterval=1; stepTypeInternal="mode";}
+    "index"   = {selectStepTemplateInterval=1; stepTypeInternal="index";}
 }
 
 if (chem_param_split == 0) {

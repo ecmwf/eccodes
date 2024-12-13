@@ -17,7 +17,7 @@ void grib_accessor_g2bitmap_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_bitmap_t::init(len, arg);
 
-    numberOfValues_ = grib_arguments_get_name(grib_handle_of_accessor(this), arg, 4);
+    numberOfValues_ = arg->get_name(grib_handle_of_accessor(this), 4);
 }
 
 // For speed use a local static function

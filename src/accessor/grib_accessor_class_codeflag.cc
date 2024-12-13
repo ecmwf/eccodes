@@ -17,7 +17,7 @@ void grib_accessor_codeflag_t::init(const long len, grib_arguments* param)
 {
     grib_accessor_unsigned_t::init(len, param);
     length_    = len;
-    tablename_ = grib_arguments_get_string(grib_handle_of_accessor(this), param, 0);
+    tablename_ = param->get_string(grib_handle_of_accessor(this), 0);
     Assert(length_ >= 0);
 }
 

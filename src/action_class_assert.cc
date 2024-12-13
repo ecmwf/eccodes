@@ -112,7 +112,7 @@ static void dump(grib_action* act, FILE* f, int lvl)
 static void destroy(grib_context* context, grib_action* act)
 {
     grib_action_assert* a = (grib_action_assert*)act;
-    grib_expression_free(context, a->expression);
+    a->expression->destroy(context);
     grib_context_free_persistent(context, act->name);
     grib_context_free_persistent(context, act->op);
 }
@@ -123,7 +123,7 @@ static int execute(grib_action* a, grib_handle* h)
     double res               = 0;
     grib_action_assert* self = (grib_action_assert*)a;
 
-    if ((ret = grib_expression_evaluate_double(h, self->expression, &res)) != GRIB_SUCCESS)
+    if ((ret = self->expression->evaluate_double(h, &res)) != GRIB_SUCCESS)
         return ret;
 
     if (res != 0) {
@@ -131,7 +131,7 @@ static int execute(grib_action* a, grib_handle* h)
     }
     else {
         grib_context_log(h->context, GRIB_LOG_ERROR, "Assertion failure: ");
-        grib_expression_print(h->context, self->expression, h, stderr);
+        self->expression->print(h->context, h, stderr);
         fprintf(stderr, "\n");
         return GRIB_ASSERTION_FAILURE;
     }
@@ -144,7 +144,7 @@ static int notify_change(grib_action* a, grib_accessor* observer, grib_accessor*
     int ret = GRIB_SUCCESS;
     long lres;
 
-    if ((ret = grib_expression_evaluate_long(grib_handle_of_accessor(observed), self->expression, &lres)) != GRIB_SUCCESS)
+    if ((ret = self->expression->evaluate_long(grib_handle_of_accessor(observed), &lres)) != GRIB_SUCCESS)
         return ret;
 
     if (lres != 0)

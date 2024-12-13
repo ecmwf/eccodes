@@ -39,10 +39,10 @@ void grib_accessor_count_missing_t::init(const long len, grib_arguments* arg)
     grib_handle* h = grib_handle_of_accessor(this);
     length_        = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    bitmap_                     = grib_arguments_get_name(h, arg, n++);
-    unusedBitsInBitmap_         = grib_arguments_get_name(h, arg, n++);
-    numberOfDataPoints_         = grib_arguments_get_name(h, arg, n++);
-    missingValueManagementUsed_ = grib_arguments_get_name(h, arg, n++); /* Can be NULL */
+    bitmap_                     = arg->get_name(h, n++);
+    unusedBitsInBitmap_         = arg->get_name(h, n++);
+    numberOfDataPoints_         = arg->get_name(h, n++);
+    missingValueManagementUsed_ = arg->get_name(h, n++); /* Can be NULL */
 }
 
 static const int used[] = { 0, 1, 3, 7, 15, 31, 63, 127, 255 };

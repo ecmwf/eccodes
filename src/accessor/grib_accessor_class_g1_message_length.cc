@@ -16,7 +16,7 @@ grib_accessor* grib_accessor_g1_message_length = &_grib_accessor_g1_message_leng
 void grib_accessor_g1_message_length_t::init(const long len, grib_arguments* args)
 {
     grib_accessor_section_length_t::init(len, args);
-    sec4_length_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, 0);
+    sec4_length_ = args->get_name(grib_handle_of_accessor(this), 0);
 }
 
 int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s4,

@@ -54,10 +54,10 @@ void grib_accessor_bitmap_t::init(const long len, grib_arguments* arg)
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
-    tableReference_ = grib_arguments_get_name(hand, arg, n++);
-    missing_value_  = grib_arguments_get_name(hand, arg, n++);
-    offsetbsec_     = grib_arguments_get_name(hand, arg, n++);
-    sLength_        = grib_arguments_get_name(hand, arg, n++);
+    tableReference_ = arg->get_name(hand, n++);
+    missing_value_  = arg->get_name(hand, n++);
+    offsetbsec_     = arg->get_name(hand, n++);
+    sLength_        = arg->get_name(hand, n++);
 
     compute_size();
 }

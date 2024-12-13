@@ -18,10 +18,10 @@ void grib_accessor_decimal_precision_t::init(const long l, grib_arguments* args)
     grib_accessor_long_t::init(l, args);
     int n = 0;
 
-    bits_per_value_       = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    decimal_scale_factor_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    changing_precision_   = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    values_               = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
+    bits_per_value_       = args->get_name(grib_handle_of_accessor(this), n++);
+    decimal_scale_factor_ = args->get_name(grib_handle_of_accessor(this), n++);
+    changing_precision_   = args->get_name(grib_handle_of_accessor(this), n++);
+    values_               = args->get_name(grib_handle_of_accessor(this), n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;

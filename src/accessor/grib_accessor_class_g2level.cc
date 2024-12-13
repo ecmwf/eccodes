@@ -19,10 +19,10 @@ void grib_accessor_g2level_t::init(const long l, grib_arguments* c)
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
-    type_first_     = grib_arguments_get_name(hand, c, n++);
-    scale_first_    = grib_arguments_get_name(hand, c, n++);
-    value_first_    = grib_arguments_get_name(hand, c, n++);
-    pressure_units_ = grib_arguments_get_name(hand, c, n++);
+    type_first_     = c->get_name(hand, n++);
+    scale_first_    = c->get_name(hand, n++);
+    value_first_    = c->get_name(hand, n++);
+    pressure_units_ = c->get_name(hand, n++);
 
     // See ECC-1644
     flags_ |= GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION;

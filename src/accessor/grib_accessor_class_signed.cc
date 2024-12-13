@@ -150,7 +150,7 @@ int grib_accessor_signed_t::pack_long(const long* val, size_t* len)
         grib_encode_signed_long(buf, val[i], off, length_);
         off += length_;
     }
-    ret = grib_set_long_internal(grib_handle_of_accessor(this), grib_arguments_get_name(parent_->h, arg_, 0), *len);
+    ret = grib_set_long_internal(grib_handle_of_accessor(this), arg_->get_name(parent_->h, 0), *len);
 
     if (ret == GRIB_SUCCESS)
         grib_buffer_replace(this, buf, buflen, 1, 1);
@@ -173,7 +173,7 @@ int grib_accessor_signed_t::value_count(long* len)
         *len = 1;
         return 0;
     }
-    return grib_get_long_internal(grib_handle_of_accessor(this), grib_arguments_get_name(parent_->h, arg_, 0), len);
+    return grib_get_long_internal(grib_handle_of_accessor(this), arg_->get_name(parent_->h, 0), len);
 }
 
 long grib_accessor_signed_t::byte_offset()

@@ -56,7 +56,7 @@ grib_check_key_equals $temp productDefinitionTemplateNumber '57'
 grib_check_key_equals $temp constituentType,numberOfModeOfDistribution,modeNumber '0 0 0'
 
 # Plain aerosols
-${tools_dir}/grib_set -s is_aerosol=1 $sample2 $temp
+${tools_dir}/grib_set -s tablesVersion=$latest,is_aerosol=1 $sample2 $temp
 grib_check_key_equals $temp productDefinitionTemplateNumber '50'
 grib_check_key_equals $temp aerosolType,typeOfSizeInterval '0 0'
 
