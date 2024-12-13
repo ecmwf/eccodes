@@ -114,6 +114,22 @@ static void test_gaussian_latitudes(int order)
     free(lats);
 }
 
+static void test_grib_get_reduced_row_legacy()
+{
+    printf("Running %s ...\n", __func__);
+    long npoints=0, ilon_first=0, ilon_last=0;
+
+    grib_get_reduced_row_legacy(25, 0.0, 100.0, &npoints, &ilon_first, &ilon_last);
+    // printf("Result: npoints=%ld, ilon_first=%ld, ilon_last=%ld\n", npoints, ilon_first, ilon_last);
+
+    grib_get_reduced_row_legacy(25, 90.0, 100.0, &npoints, &ilon_first, &ilon_last);
+    grib_get_reduced_row_legacy(25, 295.0, 300.0, &npoints, &ilon_first, &ilon_last);
+    grib_get_reduced_row_legacy(25, -20.0, 30.0, &npoints, &ilon_first, &ilon_last);
+    grib_get_reduced_row_legacy(25, 301, 300.0, &npoints, &ilon_first, &ilon_last);
+    grib_get_reduced_row_legacy(200, 0.0, 359.0, &npoints, &ilon_first, &ilon_last);
+}
+
+
 static void test_gaussian_latitude_640()
 {
     printf("Running %s ...\n", __func__);
@@ -867,6 +883,8 @@ int main(int argc, char** argv)
     printf("codes_print_api_version gives: ");
     codes_print_api_version(stdout);
     printf("\n");
+
+    test_grib_get_reduced_row_legacy();
 
     test_codes_context_set_debug();
     test_codes_get_error_message();
