@@ -31,8 +31,6 @@ reduced_gaussian_pressure_level.grib1
 reduced_gaussian_pressure_level_constant.grib1
 reduced_gaussian_sub_area.grib1
 reduced_gaussian_surface.grib1
-reduced_latlon_surface.grib1
-reduced_latlon_surface_constant.grib1
 reference_ensemble_mean.grib1
 reference_stdev.grib1
 regular_gaussian_model_level.grib1
@@ -55,8 +53,6 @@ reduced_gaussian_pressure_level.grib2
 reduced_gaussian_pressure_level_constant.grib2
 reduced_gaussian_sub_area.grib2
 reduced_gaussian_surface.grib2
-reduced_latlon_surface.grib2
-reduced_latlon_surface_constant.grib2
 regular_gaussian_model_level.grib2
 regular_gaussian_pressure_level.grib2
 regular_gaussian_pressure_level_constant.grib2
