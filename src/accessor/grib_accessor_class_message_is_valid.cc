@@ -13,9 +13,13 @@
 grib_accessor_message_is_valid_t _grib_accessor_message_is_valid{};
 grib_accessor* grib_accessor_message_is_valid = &_grib_accessor_message_is_valid;
 
-void grib_accessor_message_is_valid_t::init(const long l, grib_arguments* c)
+void grib_accessor_message_is_valid_t::init(const long l, grib_arguments* arg)
 {
-    grib_accessor_long_t::init(l, c);
+    grib_accessor_long_t::init(l, arg);
+
+    grib_handle* h = grib_handle_of_accessor(this);
+    product_ = arg->get_name(h, 0);
+
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     length_ = 0;
 }
@@ -96,10 +100,16 @@ int grib_accessor_message_is_valid_t::unpack_long(long* val, size_t* len)
 {
     int ret = 0;
     grib_handle* h = grib_handle_of_accessor(this);
+
     *len = 1;
     *val = 1; // Assume message is valid
 
-    if (h->product_kind != PRODUCT_GRIB) {
+    char product[32] = {0,};
+    size_t size = sizeof(product) / sizeof(*product);
+    ret = grib_get_string(h, product_, product, &size);
+    if (ret) return ret;
+
+    if (!STR_EQUAL(product, "GRIB")) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "Validity checks only implemented for GRIB messages");
         *val = 0;
         return GRIB_NOT_IMPLEMENTED;

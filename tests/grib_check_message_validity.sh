@@ -24,8 +24,8 @@ cat >$tempFilt<<EOF
    assert ( isMessageValid == 0 );
    write;
 EOF
-${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample
-
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample 2>$tempText
+grep -q "Invalid Ni" $tempText
 grib_check_key_equals $tempGrib isMessageValid 0
 grib_check_key_equals $sample   isMessageValid 1
 
@@ -37,15 +37,16 @@ cat >$tempFilt<<EOF
    assert ( isMessageValid == 0 );
    write;
 EOF
-${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample
-
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample 2>$tempText
+grep -q "Invalid PL array" $tempText
 grib_check_key_equals $tempGrib isMessageValid 0
 
 
 # Check data values
 # ------------------------------
 ${tools_dir}/grib_set -s bitsPerValue=25 $data_dir/sample.grib2 $tempGrib
-grib_check_key_equals $tempGrib isMessageValid 0
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "Data section size mismatch" $tempText
 
 
 # Clean up

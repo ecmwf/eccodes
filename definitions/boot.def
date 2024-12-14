@@ -11,8 +11,6 @@ constant definitionFilesVersion="2.0.0.0" : hidden;
 constant internalVersion=30 : hidden;
 meta checkInternalVersion check_internal_version(internalVersion) : hidden;
 
-meta isMessageValid message_is_valid() : hidden;
-
 # ECC-806: Local concepts precedence order
 preferLocalConceptsEnvVar = getenv("ECCODES_GRIB_PREFER_LOCAL_CONCEPTS","0") : hidden;
 transient preferLocalConcepts = preferLocalConceptsEnvVar : hidden;
@@ -126,3 +124,5 @@ if(kindOfProduct == `WRAP`){
  constant WRAPstr="WRAP";
  alias ls.identifier=WRAPstr;
 }
+
+meta isMessageValid message_is_valid(kindOfProduct) : hidden;
