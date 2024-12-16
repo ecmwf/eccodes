@@ -20,8 +20,11 @@ grib_check_key_equals $sample   isMessageValid 1
 # Check reduced Gaussian grid Ni
 # ------------------------------
 cat >$tempFilt<<EOF
-   set Ni = 0;
+   set Ni = 0; # illegal
    assert ( isMessageValid == 0 );
+   set Ni = MISSING;
+   assert ( isMessageValid == 1 );
+   set Ni = 0; # illegal again
    write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample 2>$tempText
