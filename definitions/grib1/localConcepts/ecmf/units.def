@@ -6230,7 +6230,7 @@
 	 indicatorOfParameter = 221 ;
 	}
 #Cosine of solar zenith angle
-'~' = {
+'Numeric' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 1 ;
 	}
