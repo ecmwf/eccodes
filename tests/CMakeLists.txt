@@ -112,6 +112,7 @@ if( HAVE_BUILD_TOOLS )
         grib_generalised_tiles
         # grib_true_imagery
         grib2_wave_spectra
+        grib2_probability
         grib_suppressed
         grib_destine_mars_keys
         grib_2nd_order_numValues
