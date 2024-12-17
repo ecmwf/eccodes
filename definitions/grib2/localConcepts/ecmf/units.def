@@ -5293,12 +5293,6 @@
 	 parameterCategory = 213 ;
 	 parameterNumber = 221 ;
 	}
-#Cosine of solar zenith angle
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 214 ;
-	 parameterNumber = 1 ;
-	}
 #UV biologically effective dose
 '~' = {
 	 discipline = 192 ;

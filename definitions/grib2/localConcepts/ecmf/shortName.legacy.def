@@ -629,6 +629,12 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 197 ;
 	}
+#Cosine of solar zenith angle
+'cossza' = {
+	 discipline = 192 ;
+	 parameterCategory = 214 ;
+	 parameterNumber = 1 ;
+	}
 #Ammonia mass mixing ratio
 'nh3' = {
 	 discipline = 192 ;
