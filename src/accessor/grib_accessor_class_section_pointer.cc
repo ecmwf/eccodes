@@ -18,9 +18,9 @@ void grib_accessor_section_pointer_t::init(const long len, grib_arguments* arg)
     grib_accessor_gen_t::init(len, arg);
 
     int n          = 0;
-    sectionOffset_ = grib_arguments_get_name(grib_handle_of_accessor(this), arg, n++);
-    sectionLength_ = grib_arguments_get_name(grib_handle_of_accessor(this), arg, n++);
-    sectionNumber_ = grib_arguments_get_long(grib_handle_of_accessor(this), arg, n++);
+    sectionOffset_ = arg->get_name(grib_handle_of_accessor(this), n++);
+    sectionLength_ = arg->get_name(grib_handle_of_accessor(this), n++);
+    sectionNumber_ = arg->get_long(grib_handle_of_accessor(this), n++);
 
     Assert(sectionNumber_ < MAX_NUM_SECTIONS);
 

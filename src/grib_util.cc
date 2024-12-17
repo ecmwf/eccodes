@@ -1950,12 +1950,13 @@ int grib2_is_PDTN_ChemicalDistFunc(long pdtn)
 // Return 1 if the productDefinitionTemplateNumber (GRIB2) is for aerosols
 int grib2_is_PDTN_Aerosol(long pdtn)
 {
-    // Notes: PDT 44 is deprecated and replaced by 48
+    // Notes: PDT 44 is deprecated and replaced by 50
     //        PDT 47 is deprecated and replaced by 85
     return (
         pdtn == 44 ||
         pdtn == 48 ||
         pdtn == 49 ||
+        pdtn == 50 ||
         pdtn == 45 ||
         pdtn == 46 ||
         pdtn == 47 ||
@@ -2013,6 +2014,9 @@ int grib2_choose_PDTN(int current_PDTN, bool is_det, bool is_instant)
         if (is_instant  && is_det) return 48;
         if (is_interval && is_ens) return 85;
         if (is_interval && is_det) return 46;
+    }
+    if (current_PDTN == 50) {
+        if (is_instant && is_ens) return 45;
     }
 
     return current_PDTN;  // no change
@@ -2102,7 +2106,7 @@ int grib2_select_PDTN(int is_eps, int is_instant,
         }
         else {
             if (is_instant)
-                return 48; // 44 is deprecated
+                return 50; // ECC-1963: 44 is deprecated
             else
                 return 46;
         }

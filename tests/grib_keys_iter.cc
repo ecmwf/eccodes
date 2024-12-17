@@ -39,9 +39,15 @@ int main(int argc, char* argv[])
             GRIB_CHECK(grib_get_native_type(h, name, &type), 0);
             Assert( type > 0 && type < 7 );
             int ktype = grib_keys_iterator_get_native_type(kiter);
-            Assert(type == ktype);
+            if (type != ktype) {
+                fprintf(stderr, "ERROR: key=%s type=%s ktype=%s\n", name, grib_get_type_name(type), grib_get_type_name(ktype));
+                return 1;
+            }
             const char* type_name = grib_get_type_name(type);
-            Assert( !STR_EQUAL(type_name, "unknown") );
+            if (STR_EQUAL(type_name, "unknown")) {
+                fprintf(stderr, "ERROR: key=%s type is unknown!\n", name);
+                return 1;
+            }
             printf("%s = %s (%d)\n", name, type_name, type);
 
             if (STR_EQUAL(type_name, "label")) {
@@ -59,6 +65,19 @@ int main(int argc, char* argv[])
                 int e = grib_keys_iterator_get_long(kiter, &lVal, &llen);
                 Assert(!e);
                 Assert(lVal == 1 || lVal == 2);
+                Assert(codes_key_is_computed(h, name, &e) == 0 && !e);
+            }
+            if (STR_EQUAL(name, "gridType")) {
+                int e = 0;
+                Assert(codes_key_is_computed(h, name, &e) == 1 && !e);
+            }
+            if (STR_EQUAL(name, "longitudeOfLastGridPointInDegrees")) {
+                int e = 0;
+                Assert(codes_key_is_computed(h, name, &e) == 1 && !e);
+            }
+            if (STR_EQUAL(name, "longitudeOfLastGridPoint")) {
+                int e = 0;
+                Assert(codes_key_is_computed(h, name, &e) == 0 && !e);
             }
         }
 

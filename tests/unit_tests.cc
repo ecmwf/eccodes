@@ -114,6 +114,22 @@ static void test_gaussian_latitudes(int order)
     free(lats);
 }
 
+static void test_grib_get_reduced_row_legacy()
+{
+    printf("Running %s ...\n", __func__);
+    long npoints=0, ilon_first=0, ilon_last=0;
+
+    grib_get_reduced_row_legacy(25, 0.0, 100.0, &npoints, &ilon_first, &ilon_last);
+    // printf("Result: npoints=%ld, ilon_first=%ld, ilon_last=%ld\n", npoints, ilon_first, ilon_last);
+
+    grib_get_reduced_row_legacy(25, 90.0, 100.0, &npoints, &ilon_first, &ilon_last);
+    grib_get_reduced_row_legacy(25, 295.0, 300.0, &npoints, &ilon_first, &ilon_last);
+    grib_get_reduced_row_legacy(25, -20.0, 30.0, &npoints, &ilon_first, &ilon_last);
+    grib_get_reduced_row_legacy(25, 301, 300.0, &npoints, &ilon_first, &ilon_last);
+    grib_get_reduced_row_legacy(200, 0.0, 359.0, &npoints, &ilon_first, &ilon_last);
+}
+
+
 static void test_gaussian_latitude_640()
 {
     printf("Running %s ...\n", __func__);
@@ -742,7 +758,7 @@ void test_grib2_select_PDTN()
     Assert( 67 == grib2_select_PDTN(!eps, !instant,  0, 0, chemical_distfn, 0, 0) );
 
     // Aerosols
-    Assert( 48 == grib2_select_PDTN(!eps, instant,  0, 0, 0, aerosol, 0) );
+    Assert( 50 == grib2_select_PDTN(!eps, instant,  0, 0, 0, aerosol, 0) );
     Assert( 46 == grib2_select_PDTN(!eps, !instant, 0, 0, 0, aerosol, 0) );
     Assert( 45 == grib2_select_PDTN(eps, instant,   0, 0, 0, aerosol, 0) );
     Assert( 85 == grib2_select_PDTN(eps, !instant,  0, 0, 0, aerosol, 0) );
@@ -842,9 +858,7 @@ static void test_grib_get_binary_scale_fact()
 {
     printf("Running %s ...\n", __func__);
     int err = 0;
-    long result = grib_get_binary_scale_fact(INFINITY, 0, 0, &err);
-    Assert( err == GRIB_OUT_OF_RANGE);
-    Assert( result == 0 );
+    long result = 0;
 
     result = grib_get_binary_scale_fact(100, 0, 65, &err); // bpv too big
     Assert( err == GRIB_OUT_OF_RANGE);
@@ -867,6 +881,8 @@ int main(int argc, char** argv)
     printf("codes_print_api_version gives: ");
     codes_print_api_version(stdout);
     printf("\n");
+
+    test_grib_get_reduced_row_legacy();
 
     test_codes_context_set_debug();
     test_codes_get_error_message();

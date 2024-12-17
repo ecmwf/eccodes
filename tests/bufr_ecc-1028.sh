@@ -24,7 +24,7 @@ status=$?
 set -e
 [ $status -ne 0 ]
 # Check error message
-grep -q "Delayed replication: 101000: expected 1 but only found 0 elements" $tempError
+grep -q "Delayed replication: 101000: expected 1 but only found 0 element(s)" $tempError
 
 
 rm -f $tempFilt $tempError

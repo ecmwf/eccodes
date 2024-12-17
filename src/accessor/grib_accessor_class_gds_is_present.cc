@@ -18,10 +18,10 @@ void grib_accessor_gds_is_present_t::init(const long l, grib_arguments* c)
     grib_accessor_long_t::init(l, c);
     int n            = 0;
     grib_handle* h   = grib_handle_of_accessor(this);
-    gds_present_     = grib_arguments_get_name(h, c, n++);
-    grid_definition_ = grib_arguments_get_name(h, c, n++);
-    bitmap_present_  = grib_arguments_get_name(h, c, n++);
-    values_          = grib_arguments_get_name(h, c, n++);
+    gds_present_     = c->get_name(h, n++);
+    grid_definition_ = c->get_name(h, n++);
+    bitmap_present_  = c->get_name(h, n++);
+    values_          = c->get_name(h, n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;

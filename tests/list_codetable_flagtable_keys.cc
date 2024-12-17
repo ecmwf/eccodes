@@ -65,7 +65,7 @@ static void print_names(grib_action* a)
             grib_action_gen* ag = (grib_action_gen*)a;
             if (strcmp(a->op,"codetable")==0 || strcmp(a->op,"codeflag")==0) {
                 printf("%s", a->name);
-                table = grib_arguments_get_string(NULL, ag->params, 0);
+                table = ag->params->get_string(NULL, 0);
                 if (table) printf("\t%s=%s", a->op, table);
                 printf("\n");
             }

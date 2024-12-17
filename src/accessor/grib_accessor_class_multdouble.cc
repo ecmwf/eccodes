@@ -18,8 +18,8 @@ void grib_accessor_multdouble_t::init(const long l, grib_arguments* c)
     grib_accessor_double_t::init(l, c);
     int n = 0;
 
-    val_        = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    multiplier_ = grib_arguments_get_double(grib_handle_of_accessor(this), c, n++);
+    val_        = c->get_name(grib_handle_of_accessor(this), n++);
+    multiplier_ = c->get_double(grib_handle_of_accessor(this), n++);
 }
 
 int grib_accessor_multdouble_t::unpack_double(double* val, size_t* len)

@@ -19,16 +19,16 @@ void grib_accessor_g2_mars_labeling_t::init(const long l, grib_arguments* c)
     int n             = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
 
-    index_                           = grib_arguments_get_long(hand, c, n++);
-    the_class_                       = grib_arguments_get_name(hand, c, n++);
-    type_                            = grib_arguments_get_name(hand, c, n++);
-    stream_                          = grib_arguments_get_name(hand, c, n++);
-    expver_                          = grib_arguments_get_name(hand, c, n++);
-    typeOfProcessedData_             = grib_arguments_get_name(hand, c, n++);
-    productDefinitionTemplateNumber_ = grib_arguments_get_name(hand, c, n++);
-    stepType_                        = grib_arguments_get_name(hand, c, n++);
-    derivedForecast_                 = grib_arguments_get_name(hand, c, n++);
-    typeOfGeneratingProcess_         = grib_arguments_get_name(hand, c, n++);
+    index_                           = c->get_long(hand, n++);
+    the_class_                       = c->get_name(hand, n++);
+    type_                            = c->get_name(hand, n++);
+    stream_                          = c->get_name(hand, n++);
+    expver_                          = c->get_name(hand, n++);
+    typeOfProcessedData_             = c->get_name(hand, n++);
+    productDefinitionTemplateNumber_ = c->get_name(hand, n++);
+    stepType_                        = c->get_name(hand, n++);
+    derivedForecast_                 = c->get_name(hand, n++);
+    typeOfGeneratingProcess_         = c->get_name(hand, n++);
 }
 
 int grib_accessor_g2_mars_labeling_t::unpack_long(long* val, size_t* len)

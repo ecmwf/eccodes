@@ -547,6 +547,7 @@ grib_context* grib_context_get_default()
 #endif
 
         if (default_grib_context.debug) {
+            fprintf(stderr, "ECCODES DEBUG ecCodes Version:  %s\n", ECCODES_VERSION_STR);
             fprintf(stderr, "ECCODES DEBUG Definitions path: %s\n", default_grib_context.grib_definition_files_path);
             fprintf(stderr, "ECCODES DEBUG Samples path:     %s\n", default_grib_context.grib_samples_path);
         }
@@ -1023,29 +1024,6 @@ void* grib_context_buffer_malloc_clear(const grib_context* c, size_t size)
     if (p)
         memset(p, 0, size);
     return p;
-}
-
-void grib_context_set_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f, grib_realloc_proc r)
-{
-    fprintf(stderr, "ECCODES WARNING :  The %s function is deprecated and will be removed in a future release.\n", __func__);
-    c->free_mem    = f;
-    c->alloc_mem   = m;
-    c->realloc_mem = r;
-}
-
-void grib_context_set_persistent_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f)
-{
-    fprintf(stderr, "ECCODES WARNING :  The %s function is deprecated and will be removed in a future release.\n", __func__);
-    c->free_persistent_mem  = f;
-    c->alloc_persistent_mem = m;
-}
-
-void grib_context_set_buffer_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f, grib_realloc_proc r)
-{
-    fprintf(stderr, "ECCODES WARNING :  The %s function is deprecated and will be removed in a future release.\n", __func__);
-    c->free_buffer_mem    = f;
-    c->alloc_buffer_mem   = m;
-    c->realloc_buffer_mem = r;
 }
 
 void grib_context_set_data_accessing_proc(grib_context* c, grib_data_read_proc read, grib_data_write_proc write, grib_data_tell_proc tell)

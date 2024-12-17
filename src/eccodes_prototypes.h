@@ -434,9 +434,6 @@ void* grib_context_buffer_malloc(const grib_context* c, size_t size);
 void grib_context_buffer_free(const grib_context* c, void* p);
 void* grib_context_buffer_realloc(const grib_context* c, void* p, size_t size);
 void* grib_context_buffer_malloc_clear(const grib_context* c, size_t size);
-void grib_context_set_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f, grib_realloc_proc r);
-void grib_context_set_persistent_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f);
-void grib_context_set_buffer_memory_proc(grib_context* c, grib_malloc_proc m, grib_free_proc f, grib_realloc_proc r);
 void grib_context_set_data_accessing_proc(grib_context* c, grib_data_read_proc read, grib_data_write_proc write, grib_data_tell_proc tell);
 void grib_context_log(const grib_context* c, int level, const char* fmt, ...);
 void grib_context_print(const grib_context* c, void* descriptor, const char* fmt, ...);
@@ -799,17 +796,6 @@ grib_expression* new_sub_string_expression(grib_context* c, const char* value, s
 //int grib_nearest_get_radius(grib_handle* h, double* radiusInKm);
 //void grib_binary_search(const double xx[], const size_t n, double x, size_t* ju, size_t* jl);
 //int grib_nearest_find_multiple(const grib_handle* h, int is_lsm, const double* inlats, const double* inlons, long npoints, double* outlats, double* outlons, double* values, double* distances, int* indexes);
-//int grib_nearest_find_generic(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags,
-//                              const char* values_keyname,
-//                              double** out_lats,
-//                              int* out_lats_count,
-//                              double** out_lons,
-//                              int* out_lons_count,
-//                              double** out_distances,
-//                              double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
-
-/* grib_nearest_class.cc */
-//eccodes::geo_nearest::Nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args, int* error);
 
 /* grib_iterator.cc */
 int grib_get_data(const grib_handle* h, double* lats, double* lons, double* values);
@@ -827,23 +813,23 @@ eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_argu
 int transform_iterator_data(grib_context* c, double* data, long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning, size_t numPoints, long nx, long ny);
 
 /* grib_expression.cc */
-int grib_expression_native_type(grib_handle* h, grib_expression* g);
-int grib_expression_evaluate_long(grib_handle* h, grib_expression* g, long* result);
-int grib_expression_evaluate_double(grib_handle* h, grib_expression* g, double* result);
-const char* grib_expression_evaluate_string(grib_handle* h, grib_expression* g, char* buf, size_t* size, int* err);
-const char* grib_expression_get_name(grib_expression* g);
-void grib_expression_print(grib_context* ctx, grib_expression* g, grib_handle* f, FILE*);
-void grib_expression_free(grib_context* ctx, grib_expression* g);
-void grib_expression_add_dependency(grib_expression* e, grib_accessor* observer);
-grib_arguments* grib_arguments_new(grib_context* c, grib_expression* g, grib_arguments* n);
-void grib_arguments_free(grib_context* c, grib_arguments* g);
-void grib_arguments_print(grib_context* c, grib_arguments* g, grib_handle* f);
-const char* grib_arguments_get_name(grib_handle* h, grib_arguments* args, int n);
-const char* grib_arguments_get_string(grib_handle* h, grib_arguments* args, int n);
-long grib_arguments_get_long(grib_handle* h, grib_arguments* args, int n);
-double grib_arguments_get_double(grib_handle* h, grib_arguments* args, int n);
-grib_expression* grib_arguments_get_expression(grib_handle* h, grib_arguments* args, int n);
-int grib_arguments_get_count(grib_arguments* args);
+//int grib_expression_native_type(grib_handle* h, grib_expression* g);
+//int grib_expression_evaluate_long(grib_handle* h, grib_expression* g, long* result);
+//int grib_expression_evaluate_double(grib_handle* h, grib_expression* g, double* result);
+//const char* grib_expression_evaluate_string(grib_handle* h, grib_expression* g, char* buf, size_t* size, int* err);
+//const char* grib_expression_get_name(grib_expression* g);
+//void grib_expression_print(grib_context* ctx, grib_expression* g, grib_handle* f, FILE*);
+//void grib_expression_free(grib_context* ctx, grib_expression* g);
+//void grib_expression_add_dependency(grib_expression* e, grib_accessor* observer);
+//grib_arguments* grib_arguments_new(grib_context* c, grib_expression* g, grib_arguments* n);
+//void grib_arguments_free(grib_context* c, grib_arguments* g);
+//void grib_arguments_print(grib_context* c, grib_arguments* g, grib_handle* f);
+//const char* grib_arguments_get_name(grib_handle* h, grib_arguments* args, int n);
+//const char* grib_arguments_get_string(grib_handle* h, grib_arguments* args, int n);
+//long grib_arguments_get_long(grib_handle* h, grib_arguments* args, int n);
+//double grib_arguments_get_double(grib_handle* h, grib_arguments* args, int n);
+//grib_expression* grib_arguments_get_expression(grib_handle* h, grib_arguments* args, int n);
+//int grib_arguments_get_count(grib_arguments* args);
 
 /* codes_util.cc */
 double normalise_longitude_in_degrees(double lon);
@@ -861,6 +847,7 @@ bool is_sorted_descending(const double arr[], size_t n);
 int compute_scaled_value_and_scale_factor(double input, int64_t scaled_value_max, int64_t scale_factor_max, int64_t* ret_value, int64_t* ret_factor);
 int codes_is_feature_enabled(const char* feature);
 int codes_get_features(char* result, size_t* length, int select);
+int codes_key_is_computed(const grib_handle* h, const char* key, int* err);
 
 
 /* grib_util.cc */

@@ -18,16 +18,16 @@ void grib_accessor_data_complex_packing_t::init(const long v, grib_arguments* ar
     grib_accessor_data_simple_packing_t::init(v, args);
     grib_handle* gh = grib_handle_of_accessor(this);
 
-    GRIBEX_sh_bug_present_  = grib_arguments_get_name(gh, args, carg_++);
-    ieee_floats_            = grib_arguments_get_name(gh, args, carg_++);
-    laplacianOperatorIsSet_ = grib_arguments_get_name(gh, args, carg_++);
-    laplacianOperator_      = grib_arguments_get_name(gh, args, carg_++);
-    sub_j_                  = grib_arguments_get_name(gh, args, carg_++);
-    sub_k_                  = grib_arguments_get_name(gh, args, carg_++);
-    sub_m_                  = grib_arguments_get_name(gh, args, carg_++);
-    pen_j_                  = grib_arguments_get_name(gh, args, carg_++);
-    pen_k_                  = grib_arguments_get_name(gh, args, carg_++);
-    pen_m_                  = grib_arguments_get_name(gh, args, carg_++);
+    GRIBEX_sh_bug_present_  = args->get_name(gh, carg_++);
+    ieee_floats_            = args->get_name(gh, carg_++);
+    laplacianOperatorIsSet_ = args->get_name(gh, carg_++);
+    laplacianOperator_      = args->get_name(gh, carg_++);
+    sub_j_                  = args->get_name(gh, carg_++);
+    sub_k_                  = args->get_name(gh, carg_++);
+    sub_m_                  = args->get_name(gh, carg_++);
+    pen_j_                  = args->get_name(gh, carg_++);
+    pen_k_                  = args->get_name(gh, carg_++);
+    pen_m_                  = args->get_name(gh, carg_++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }

@@ -599,22 +599,6 @@ void codes_context_set_data_quality_checks(codes_context* c, int val)
     grib_context_set_data_quality_checks(c, val);
 }
 
-void codes_context_set_memory_proc(codes_context* c, grib_malloc_proc p_malloc, grib_free_proc p_free, grib_realloc_proc p_realloc)
-{
-    // This function is deprecated and will later be removed
-    grib_context_set_memory_proc(c, p_malloc, p_free, p_realloc);
-}
-void codes_context_set_persistent_memory_proc(codes_context* c, grib_malloc_proc p_malloc, grib_free_proc p_free)
-{
-    // This function is deprecated and will later be removed
-    grib_context_set_persistent_memory_proc(c, p_malloc, p_free);
-}
-void codes_context_set_buffer_memory_proc(codes_context* c, grib_malloc_proc p_malloc, grib_free_proc p_free, grib_realloc_proc p_realloc)
-{
-    // This function is deprecated and will later be removed
-    grib_context_set_buffer_memory_proc(c, p_malloc, p_free, p_realloc);
-}
-
 void codes_context_set_print_proc(codes_context* c, grib_print_proc p_print)
 {
     grib_context_set_print_proc(c, p_print);

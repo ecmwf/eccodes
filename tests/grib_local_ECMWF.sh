@@ -222,7 +222,7 @@ ${tools_dir}/grib_set -s productDefinitionTemplateNumber=76,paramId=456000,setLo
 grib_check_key_equals $temp shortName drydep_vel_vol
 
 ${tools_dir}/grib_set -s paramId=215225,setLocalDefinition=1,localDefinitionNumber=36 $sample_g2 $temp
-grib_check_key_equals $temp productDefinitionTemplateNumber 48
+grib_check_key_equals $temp productDefinitionTemplateNumber 50
 
 ${tools_dir}/grib_set -s paramId=210251,setLocalDefinition=1,localDefinitionNumber=36 $sample_g2 $temp
 

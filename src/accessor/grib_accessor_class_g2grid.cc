@@ -19,14 +19,14 @@ void grib_accessor_g2grid_t::init(const long l, grib_arguments* c)
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
-    latitude_first_  = grib_arguments_get_name(hand, c, n++);
-    longitude_first_ = grib_arguments_get_name(hand, c, n++);
-    latitude_last_   = grib_arguments_get_name(hand, c, n++);
-    longitude_last_  = grib_arguments_get_name(hand, c, n++);
-    i_increment_     = grib_arguments_get_name(hand, c, n++);
-    j_increment_     = grib_arguments_get_name(hand, c, n++);
-    basic_angle_     = grib_arguments_get_name(hand, c, n++);
-    sub_division_    = grib_arguments_get_name(hand, c, n++);
+    latitude_first_  = c->get_name(hand, n++);
+    longitude_first_ = c->get_name(hand, n++);
+    latitude_last_   = c->get_name(hand, n++);
+    longitude_last_  = c->get_name(hand, n++);
+    i_increment_     = c->get_name(hand, n++);
+    j_increment_     = c->get_name(hand, n++);
+    basic_angle_     = c->get_name(hand, n++);
+    sub_division_    = c->get_name(hand, n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC | GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
