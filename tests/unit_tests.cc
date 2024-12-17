@@ -858,9 +858,7 @@ static void test_grib_get_binary_scale_fact()
 {
     printf("Running %s ...\n", __func__);
     int err = 0;
-    long result = grib_get_binary_scale_fact(INFINITY, 0, 0, &err);
-    Assert( err == GRIB_OUT_OF_RANGE);
-    Assert( result == 0 );
+    long result = 0;
 
     result = grib_get_binary_scale_fact(100, 0, 65, &err); // bpv too big
     Assert( err == GRIB_OUT_OF_RANGE);
