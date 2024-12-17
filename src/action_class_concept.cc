@@ -321,11 +321,11 @@ static int concept_condition_expression_true(grib_handle* h, grib_concept_condit
     long lres = 0;
     int ok    = 0;
     int err   = 0;
-    const int type = grib_expression_native_type(h, c->expression);
+    const int type = c->expression->native_type(h);
 
     switch (type) {
         case GRIB_TYPE_LONG:
-            grib_expression_evaluate_long(h, c->expression, &lres);
+            c->expression->evaluate_long(h, &lres);
             ok = (grib_get_long(h, c->name, &lval) == GRIB_SUCCESS) &&
                  (lval == lres);
             if (ok)
@@ -335,7 +335,7 @@ static int concept_condition_expression_true(grib_handle* h, grib_concept_condit
         case GRIB_TYPE_DOUBLE: {
             double dval;
             double dres = 0.0;
-            grib_expression_evaluate_double(h, c->expression, &dres);
+            c->expression->evaluate_double(h, &dres);
             ok = (grib_get_double(h, c->name, &dval) == GRIB_SUCCESS) &&
                  (dval == dres);
             if (ok)
@@ -351,7 +351,7 @@ static int concept_condition_expression_true(grib_handle* h, grib_concept_condit
             size_t size = sizeof(tmp);
 
             ok = (grib_get_string(h, c->name, buf, &len) == GRIB_SUCCESS) &&
-                 ((cval = grib_expression_evaluate_string(h, c->expression, tmp, &size, &err)) != NULL) &&
+                 ((cval = c->expression->evaluate_string(h, tmp, &size, &err)) != NULL) &&
                  (err == 0) && (strcmp(buf, cval) == 0);
             if (ok) {
                 snprintf(exprVal, size, "%s", cval);

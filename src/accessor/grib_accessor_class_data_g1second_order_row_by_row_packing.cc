@@ -18,22 +18,22 @@ void grib_accessor_data_g1second_order_row_by_row_packing_t::init(const long v, 
     grib_accessor_data_simple_packing_t::init(v, args);
     grib_handle* gh = grib_handle_of_accessor(this);
 
-    half_byte_                       = grib_arguments_get_name(gh, args, carg_++);
-    packingType_                     = grib_arguments_get_name(gh, args, carg_++);
-    ieee_packing_                    = grib_arguments_get_name(gh, args, carg_++);
-    precision_                       = grib_arguments_get_name(gh, args, carg_++);
-    widthOfFirstOrderValues_         = grib_arguments_get_name(gh, args, carg_++);
-    N1_                              = grib_arguments_get_name(gh, args, carg_++);
-    N2_                              = grib_arguments_get_name(gh, args, carg_++);
-    numberOfGroups_                  = grib_arguments_get_name(gh, args, carg_++);
-    numberOfSecondOrderPackedValues_ = grib_arguments_get_name(gh, args, carg_++);
-    extraValues_                     = grib_arguments_get_name(gh, args, carg_++);
-    Ni_                              = grib_arguments_get_name(gh, args, carg_++);
-    Nj_                              = grib_arguments_get_name(gh, args, carg_++);
-    pl_                              = grib_arguments_get_name(gh, args, carg_++);
-    jPointsAreConsecutive_           = grib_arguments_get_name(gh, args, carg_++);
-    groupWidths_                     = grib_arguments_get_name(gh, args, carg_++);
-    bitmap_                          = grib_arguments_get_name(gh, args, carg_++);
+    half_byte_                       = args->get_name(gh, carg_++);
+    packingType_                     = args->get_name(gh, carg_++);
+    ieee_packing_                    = args->get_name(gh, carg_++);
+    precision_                       = args->get_name(gh, carg_++);
+    widthOfFirstOrderValues_         = args->get_name(gh, carg_++);
+    N1_                              = args->get_name(gh, carg_++);
+    N2_                              = args->get_name(gh, carg_++);
+    numberOfGroups_                  = args->get_name(gh, carg_++);
+    numberOfSecondOrderPackedValues_ = args->get_name(gh, carg_++);
+    extraValues_                     = args->get_name(gh, carg_++);
+    Ni_                              = args->get_name(gh, carg_++);
+    Nj_                              = args->get_name(gh, carg_++);
+    pl_                              = args->get_name(gh, carg_++);
+    jPointsAreConsecutive_           = args->get_name(gh, carg_++);
+    groupWidths_                     = args->get_name(gh, carg_++);
+    bitmap_                          = args->get_name(gh, carg_++);
     edition_                         = 1;
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }

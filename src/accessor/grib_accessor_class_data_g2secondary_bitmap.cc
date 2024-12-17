@@ -16,7 +16,7 @@ grib_accessor* grib_accessor_data_g2secondary_bitmap = &_grib_accessor_data_g2se
 void grib_accessor_data_g2secondary_bitmap_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_data_secondary_bitmap_t::init(v, args);
-    number_of_values_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, 4);
+    number_of_values_ = args->get_name(grib_handle_of_accessor(this), 4);
 }
 
 int grib_accessor_data_g2secondary_bitmap_t::value_count(long* len)

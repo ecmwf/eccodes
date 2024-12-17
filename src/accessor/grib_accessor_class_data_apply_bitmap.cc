@@ -18,12 +18,12 @@ void grib_accessor_data_apply_bitmap_t::init(const long v, grib_arguments* args)
     grib_accessor_gen_t::init(v, args);
     int n = 0;
 
-    coded_values_          = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    bitmap_                = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    missing_value_         = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    binary_scale_factor_   = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    number_of_data_points_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    number_of_values_      = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
+    coded_values_          = args->get_name(grib_handle_of_accessor(this), n++);
+    bitmap_                = args->get_name(grib_handle_of_accessor(this), n++);
+    missing_value_         = args->get_name(grib_handle_of_accessor(this), n++);
+    binary_scale_factor_   = args->get_name(grib_handle_of_accessor(this), n++);
+    number_of_data_points_ = args->get_name(grib_handle_of_accessor(this), n++);
+    number_of_values_      = args->get_name(grib_handle_of_accessor(this), n++);
 
     length_ = 0;
 }
@@ -231,7 +231,7 @@ int grib_accessor_data_apply_bitmap_t::pack_double(const double* val, size_t* le
     return err;
 }
 
-template <typename T> 
+template <typename T>
 int grib_accessor_data_apply_bitmap_t::unpack(T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");

@@ -506,6 +506,15 @@
 	 typeOfFirstFixedSurface = 105 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean total cloud cover
+'235288' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Snow thickness over sea ice
 '262002' = {
 	 localTablesVersion = 1 ;

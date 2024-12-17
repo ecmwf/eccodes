@@ -18,6 +18,7 @@ if( HAVE_BUILD_TOOLS )
           bufr_ecc-1284
           bufr_ecc-1019
           get_native_type
+          key_is_computed
           grib_ecc-671 )
     list( APPEND tests_extra
           grib_index
@@ -81,6 +82,7 @@ else()
           codes_set_paths
           codes_f90_misc
           get_native_type
+          key_is_computed
           grib_ecc-671 )
     list( APPEND tests_extra
           grib_index

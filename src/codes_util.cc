@@ -545,3 +545,15 @@ int codes_get_features(char* result, size_t* length, int select)
     *length = actual_length;
     return GRIB_SUCCESS;
 }
+
+// Returns 1 if the key is computed (virtual) and 0 if it is coded
+int codes_key_is_computed(const grib_handle* h, const char* key, int* err)
+{
+    const grib_accessor* acc = grib_find_accessor(h, key);
+    if (!acc) {
+        *err = GRIB_NOT_FOUND;
+        return 0;
+    }
+    *err = GRIB_SUCCESS;
+    return (acc->length_ == 0);
+}

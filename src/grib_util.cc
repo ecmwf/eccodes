@@ -2015,6 +2015,9 @@ int grib2_choose_PDTN(int current_PDTN, bool is_det, bool is_instant)
         if (is_interval && is_ens) return 85;
         if (is_interval && is_det) return 46;
     }
+    if (current_PDTN == 50) {
+        if (is_instant && is_ens) return 45;
+    }
 
     return current_PDTN;  // no change
 }
@@ -2103,7 +2106,7 @@ int grib2_select_PDTN(int is_eps, int is_instant,
         }
         else {
             if (is_instant)
-                return 50; // 44 is deprecated, 50 is the corrected template
+                return 50; // ECC-1963: 44 is deprecated
             else
                 return 46;
         }

@@ -17,8 +17,8 @@ void grib_accessor_data_g2shsimple_packing_t::init(const long v, grib_arguments*
 {
     grib_accessor_data_shsimple_packing_t::init(v, args);
 
-    numberOfValues_     = grib_arguments_get_name(grib_handle_of_accessor(this), args, 2);
-    numberOfDataPoints_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, 3);
+    numberOfValues_     = args->get_name(grib_handle_of_accessor(this), 2);
+    numberOfDataPoints_ = args->get_name(grib_handle_of_accessor(this), 3);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 

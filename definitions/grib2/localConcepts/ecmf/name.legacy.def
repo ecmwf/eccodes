@@ -629,6 +629,12 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 197 ;
 	}
+#Cosine of solar zenith angle
+'Cosine of solar zenith angle' = {
+	 discipline = 192 ;
+	 parameterCategory = 214 ;
+	 parameterNumber = 1 ;
+	}
 #Ammonia mass mixing ratio
 'Ammonia mass mixing ratio' = {
 	 discipline = 192 ;
@@ -1448,128 +1454,128 @@
 	 parameterCategory = 162 ;
 	 parameterNumber = 215 ;
 	}
-#Mean large-scale precipitation rate
-'Mean large-scale precipitation rate' = {
+#Time-mean large-scale precipitation rate
+'Time-mean large-scale precipitation rate' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 142 ;
 	}
-#Mean convective precipitation rate
-'Mean convective precipitation rate' = {
+#Time-mean convective precipitation rate
+'Time-mean convective precipitation rate' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 143 ;
 	}
-#Mean total snowfall rate
-'Mean total snowfall rate' = {
+#Time-mean total snowfall rate
+'Time-mean total snowfall rate' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 144 ;
 	}
-#Mean surface sensible heat flux
-'Mean surface sensible heat flux' = {
+#Time-mean surface sensible heat flux
+'Time-mean surface sensible heat flux' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 146 ;
 	}
-#Mean surface latent heat flux
-'Mean surface latent heat flux' = {
+#Time-mean surface latent heat flux
+'Time-mean surface latent heat flux' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 147 ;
 	}
-#Mean surface downward solar radiation flux
-'Mean surface downward solar radiation flux' = {
+#Time-mean surface downward short-wave (solar) radiation flux
+'Time-mean surface downward short-wave (solar) radiation flux' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 169 ;
 	}
-#Mean surface downward thermal radiation flux
-'Mean surface downward thermal radiation flux' = {
+#Time-mean surface downward long-wave (thermal) radiation flux
+'Time-mean surface downward long-wave (thermal) radiation flux' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 175 ;
 	}
-#Mean surface net solar radiation flux
-'Mean surface net solar radiation flux' = {
+#Time-mean surface net short-wave (solar) radiation flux
+'Time-mean surface net short-wave (solar) radiation flux' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 176 ;
 	}
-#Mean surface net thermal radiation flux
-'Mean surface net thermal radiation flux' = {
+#Time-mean surface net long-wave (thermal) radiation flux
+'Time-mean surface net long-wave (thermal) radiation flux' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 177 ;
 	}
-#Mean top net solar radiation flux
-'Mean top net solar radiation flux' = {
+#Time-mean top net short-wave (solar) radiation flux
+'Time-mean top net short-wave (solar) radiation flux' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 178 ;
 	}
-#Mean top net thermal radiation flux
-'Mean top net thermal radiation flux' = {
+#Time-mean top net long-wave (thermal) radiation flux
+'Time-mean top net long-wave (thermal) radiation flux' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 179 ;
 	}
-#East-West surface stress rate of accumulation
-'East-West surface stress rate of accumulation' = {
+#Time-mean eastward turbulent surface stress
+'Time-mean eastward turbulent surface stress' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 180 ;
 	}
-#North-South surface stress rate of accumulation
-'North-South surface stress rate of accumulation' = {
+#Time-mean northward turbulent surface stress
+'Time-mean northward turbulent surface stress' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 181 ;
 	}
-#Evaporation
-'Evaporation' = {
+#Time-mean evaporation rate
+'Time-mean evaporation rate' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 182 ;
 	}
-#Mean runoff rate
-'Mean runoff rate' = {
+#Time-mean runoff rate
+'Time-mean runoff rate' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 205 ;
 	}
-#Top net solar radiation, clear sky
-'Top net solar radiation, clear sky' = {
+#Time-mean top net short-wave (solar) radiation flux, clear sky
+'Time-mean top net short-wave (solar) radiation flux, clear sky' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 208 ;
 	}
-#Top net thermal radiation, clear sky
-'Top net thermal radiation, clear sky' = {
+#Time-mean top net long-wave (thermal) radiation flux, clear sky
+'Time-mean top net long-wave (thermal) radiation flux, clear sky' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 209 ;
 	}
-#Surface net solar radiation, clear sky
-'Surface net solar radiation, clear sky' = {
+#Time-mean surface net short-wave (solar) radiation flux, clear sky
+'Time-mean surface net short-wave (solar) radiation flux, clear sky' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 210 ;
 	}
-#Surface net thermal radiation, clear sky
-'Surface net thermal radiation, clear sky' = {
+#Time-mean surface net long-wave (thermal) radiation flux, clear sky
+'Time-mean surface net long-wave (thermal) radiation flux, clear sky' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 211 ;
 	}
-#Solar insolation rate of accumulation
-'Solar insolation rate of accumulation' = {
+#Time-mean short-wave (solar) insolation rate
+'Time-mean short-wave (solar) insolation rate' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 212 ;
 	}
-#Mean total precipitation rate
-'Mean total precipitation rate' = {
+#Time-mean total precipitation rate
+'Time-mean total precipitation rate' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 228 ;

@@ -12,6 +12,11 @@
 
 label="codes_assert_test"
 
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
 tempOut=temp.$label.txt
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
@@ -23,7 +28,7 @@ cat $def_dir/grib2/boot.def > $bootfile
 echo 'assert( year == 1990 );' >> $bootfile
 echo >> $bootfile
 
-export ECCODES_DEFINITION_PATH=$PWD/$tempDir/definitions
+export ECCODES_DEFINITION_PATH=$PWD/$tempDir/definitions:$ECCODES_DEFINITION_PATH
 # This will activate the print statement above
 ${tools_dir}/grib_set -s year=1990 $sample_grib2 /dev/null
 

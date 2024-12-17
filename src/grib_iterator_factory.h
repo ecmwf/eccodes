@@ -11,7 +11,7 @@
 #pragma once
 
 #include "grib_api_internal.h"
-#include "geo_iterator/grib_iterator.h"
+#include "geo/iterator/grib_iterator.h"
 
 extern eccodes::geo_iterator::Iterator* grib_iterator_gaussian;
 extern eccodes::geo_iterator::Iterator* grib_iterator_gaussian_reduced;

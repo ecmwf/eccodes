@@ -114,6 +114,7 @@
 #cmakedefine HAVE_NETCDF
 
 #cmakedefine HAVE_GEOGRAPHY
+#cmakedefine HAVE_ECKIT_GEO
 #cmakedefine HAVE_MEMFS
 #cmakedefine HAVE_FORTRAN
 

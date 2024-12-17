@@ -985,6 +985,18 @@
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
 	}
+#10 metre convective gust of at least 25 m/s
+'10cogug25' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 68 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfLowerLimit = 25 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
 #Probability of temperature standardized anomaly greater than 1 standard deviation
 'ptsa_gt_1stdev' = {
 	 discipline = 0 ;
@@ -1619,6 +1631,90 @@
 	 parameterNumber = 97 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean peak wave period of wind waves
+'avg_pp1dw' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 35 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean peak wave period of total swell
+'avg_pp1ds' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 36 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean peak wave period of first swell partition
+'avg_pp1d1' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 65 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean peak wave period of second swell partition
+'avg_pp1d2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 66 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean peak wave period of third swell partition
+'avg_pp1d3' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 67 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean peak wave direction (total)
+'avg_pwd' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 46 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean peak wave direction of wind waves
+'avg_pwdw' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 71 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean peak wave direction of total swell
+'avg_pwds' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 72 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean peak wave direction of first swell partition
+'avg_pwd1' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 68 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean peak wave direction of second swell partition
+'avg_pwd2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 69 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean peak wave direction of third swell partition
+'avg_pwd3' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean whitecap fraction
+'avg_wcfr' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 73 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean wave Spectral Skewness
 'avg_wss' = {
 	 discipline = 10 ;
@@ -2082,6 +2178,90 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 97 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave period of wind waves
+'max_pp1dw' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 35 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave period of total swell
+'max_pp1ds' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 36 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave period of first swell partition
+'max_pp1d1' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 65 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave period of second swell partition
+'max_pp1d2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 66 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave period of third swell partition
+'max_pp1d3' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 67 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave direction (total)
+'max_pwd' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 46 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave direction of wind waves
+'max_pwdw' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 71 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave direction of total swell
+'max_pwds' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 72 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave direction of first swell partition
+'max_pwd1' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 68 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave direction of second swell partition
+'max_pwd2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 69 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum peak wave direction of third swell partition
+'max_pwd3' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum whitecap fraction
+'max_wcfr' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 73 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum wave Spectral Skewness
@@ -2549,6 +2729,90 @@
 	 parameterNumber = 97 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum peak wave period of wind waves
+'min_pp1dw' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 35 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum peak wave period of total swell
+'min_pp1ds' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 36 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum peak wave period of first swell partition
+'min_pp1d1' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 65 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum peak wave period of second swell partition
+'min_pp1d2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 66 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum peak wave period of third swell partition
+'min_pp1d3' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 67 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum peak wave direction (total)
+'min_pwd' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 46 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum peak wave direction of wind waves
+'min_pwdw' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 71 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum peak wave direction of total swell
+'min_pwds' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 72 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum peak wave direction of first swell partition
+'min_pwd1' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 68 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum peak wave direction of second swell partition
+'min_pwd2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 69 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum peak wave direction of third swell partition
+'min_pwd3' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum whitecap fraction
+'min_wcfr' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 73 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-minimum wave Spectral Skewness
 'min_wss' = {
 	 discipline = 10 ;
@@ -3012,6 +3276,90 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 97 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave period of wind waves
+'std_pp1dw' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 35 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave period of total swell
+'std_pp1ds' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 36 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave period of first swell partition
+'std_pp1d1' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 65 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave period of second swell partition
+'std_pp1d2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 66 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave period of third swell partition
+'std_pp1d3' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 67 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave direction (total)
+'std_pwd' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 46 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave direction of wind waves
+'std_pwdw' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 71 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave direction of total swell
+'std_pwds' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 72 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave direction of first swell partition
+'std_pwd1' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 68 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave direction of second swell partition
+'std_pwd2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 69 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation peak wave direction of third swell partition
+'std_pwd3' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation whitecap fraction
+'std_wcfr' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 73 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation wave Spectral Skewness
@@ -3741,6 +4089,13 @@
 	 aerosolType = 62033 ;
 	 typeOfGeneratingProcess = 20 ;
 	 is_aerosol = 1 ;
+	}
+#Cosine of solar zenith angle
+'cossza' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Dry deposition of ammonium aerosol
 'aerddpam' = {
@@ -6794,7 +7149,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean top net long-wave radiation flux, clear sky
-'avg_tnlwrcs' = {
+'avg_tnlwrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -6810,7 +7165,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean surface net long-wave radiation flux, clear sky
-'avg_snlwrcs' = {
+'avg_snlwrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -8113,6 +8468,14 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean cosine of solar zenith angle
+'avg_cossza' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean freezing rain precipitation rate
 'avg_fprate' = {
 	 discipline = 0 ;
@@ -8488,6 +8851,58 @@
 	 parameterNumber = 51 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean land surface heat net flux
+'avg_lshnf' = {
+	 discipline = 2 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean surface direct normal short-wave radiation flux, clear sky
+'avg_sdirnswrfcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 62 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean 10 metre convective gust
+'avg_10cogu' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 68 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean 10 metre turbulent gust
+'avg_10tugu' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 69 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-integrated land surface heat net flux
+'acc_lshnf' = {
+	 discipline = 2 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated surface direct normal short-wave radiation flux, clear sky
+'acc_sdirnswrfcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 62 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Time-maximum temperature tendency due to short-wave radiation
 'max_ttswr' = {
 	 discipline = 0 ;
@@ -8800,7 +9215,7 @@
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum top net long-wave radiation flux, clear sky
-'max_tnlwrcs' = {
+'max_tnlwrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -8816,7 +9231,7 @@
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum surface net long-wave radiation flux, clear sky
-'max_snlwrcs' = {
+'max_snlwrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -9883,6 +10298,14 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum cosine of solar zenith angle
+'max_cossza' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-maximum freezing rain precipitation rate
 'max_fprate' = {
 	 discipline = 0 ;
@@ -10258,6 +10681,42 @@
 	 parameterNumber = 51 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum land surface heat net flux
+'max_lshnf' = {
+	 discipline = 2 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum surface direct normal short-wave radiation flux, clear sky
+'max_sdirnswrfcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 62 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum 10 metre convective gust
+'max_10cogu' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 68 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum 10 metre turbulent gust
+'max_10tugu' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 69 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-minimum temperature tendency due to short-wave radiation
 'min_ttswr' = {
 	 discipline = 0 ;
@@ -10570,7 +11029,7 @@
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum top net long-wave radiation flux, clear sky
-'min_tnlwrcs' = {
+'min_tnlwrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -10586,7 +11045,7 @@
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum surface net long-wave radiation flux, clear sky
-'min_snlwrcs' = {
+'min_snlwrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -11681,6 +12140,14 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum cosine of solar zenith angle
+'min_cossza' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-minimum freezing rain rate water equivalent
 'min_fprate' = {
 	 discipline = 0 ;
@@ -12056,6 +12523,42 @@
 	 parameterNumber = 51 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum land surface heat net flux
+'min_lshnf' = {
+	 discipline = 2 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum surface direct normal short-wave radiation flux, clear sky
+'min_sdirnswrfcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 62 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum 10 metre convective gust
+'min_10cogu' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 68 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum 10 metre turbulent gust
+'min_10tugu' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 69 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-standard-deviation temperature tendency due to short-wave radiation
 'std_ttswr' = {
 	 discipline = 0 ;
@@ -12368,7 +12871,7 @@
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation top net long-wave radiation flux, clear sky
-'std_tnlwrcs' = {
+'std_tnlwrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -12384,7 +12887,7 @@
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation surface net long-wave radiation flux, clear sky
-'std_snlwrcs' = {
+'std_snlwrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -13487,6 +13990,14 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
+#Time-standard-deviation cosine of solar zenith angle
+'std_cossza' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Time-standard-deviation freezing rain rate water equivalent
 'std_fprate' = {
 	 discipline = 0 ;
@@ -13853,6 +14364,42 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 67 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation land surface heat net flux
+'std_lshnf' = {
+	 discipline = 2 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface direct normal short-wave radiation flux, clear sky
+'std_sdirnswrfcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 62 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 10 metre convective gust
+'std_10cogu' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 68 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 10 metre turbulent gust
+'std_10tugu' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 69 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Cross sectional area of flow in channel
@@ -14623,7 +15170,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	}
 #Surface net long-wave radiation flux, clear sky
-'snlwrcs' = {
+'snlwrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -16072,7 +16619,7 @@
 	 typeOfFirstFixedSurface = 8 ;
 	}
 #Top net long-wave radiation flux, clear sky
-'tnlwrcs' = {
+'tnlwrfcs' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -16119,6 +16666,38 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 67 ;
 	 typeOfFirstFixedSurface = 1 ;
+	}
+#Land surface heat net flux
+'lshnf' = {
+	 discipline = 2 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Surface direct normal short-wave radiation flux, clear sky
+'sdirnswrfcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 62 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#10 metre convective gust
+'10cogu' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 68 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#10 metre turbulent gust
+'10tugu' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 69 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #Universal thermal climate index
 'utci' = {
@@ -17191,6 +17770,22 @@
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Northward mass transport
+'mtn' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 46 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Eastward mass transport
+'mte' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 47 ;
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	}
@@ -18339,6 +18934,24 @@
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean northward mass transport
+'avg_mtn' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 46 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean eastward mass transport
+'avg_mte' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 47 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean net short wave radiation rate at sea surface
 'avg_ssr_sea' = {
 	 discipline = 0 ;
@@ -18898,14 +19511,12 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 107 ;
-	 typeOfFirstFixedSurface = 8 ;
 	}
 #Aerosol backscatter from ground
 'aerbscatgnd' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 108 ;
-	 typeOfFirstFixedSurface = 1 ;
 	}
 #Aerosol extinction coefficient
 'aerext' = {
@@ -18915,26 +19526,26 @@
 	}
 #Mass mixing ratio difference
 'mass_mixrat_diff' = {
-         discipline = 0 ;
-         parameterCategory = 20 ;
-         parameterNumber = 2 ;
-         typeOfGeneratingProcess = 20 ;
-        }
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
 #Mass mixing ratio from volcanoes difference
 'mass_mixrat_vol_diff' = {
-         discipline = 0 ;
-         parameterCategory = 20 ;
-         parameterNumber = 2 ;
-         sourceSinkChemicalPhysicalProcess = 7 ;
-         typeOfGeneratingProcess = 20 ;
-        }
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfGeneratingProcess = 20 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
 #Emission mass flux from wild fires
 'emi_mflx_wfire' = {
-         discipline = 0 ;
-         parameterCategory = 20 ;
-         parameterNumber = 77 ;
-         sourceSinkChemicalPhysicalProcess = 5 ;
-        }
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 5 ;
+	}
 #Pressure tendency
 'ptend' = {
 	 discipline = 0 ;

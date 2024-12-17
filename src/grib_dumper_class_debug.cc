@@ -109,14 +109,14 @@ static void default_long_value(grib_dumper* d, grib_accessor* a, long actualValu
         return;
 
     grib_handle* h = grib_handle_of_accessor(a);
-    grib_expression* expression = grib_arguments_get_expression(h, act->default_value, 0);
+    grib_expression* expression = act->default_value->get_expression(h, 0);
     if (!expression)
         return;
 
-    const int type = grib_expression_native_type(h, expression);
+    const int type = expression->native_type(h);
     if (type == GRIB_TYPE_LONG) {
         long defaultValue = 0;
-        if (grib_expression_evaluate_long(h, expression, &defaultValue) == GRIB_SUCCESS && defaultValue != actualValue) {
+        if (expression->evaluate_long(h, &defaultValue) == GRIB_SUCCESS && defaultValue != actualValue) {
             if (defaultValue == GRIB_MISSING_LONG)
                 fprintf(self->dumper.out, " (default=MISSING)");
             else

@@ -2459,7 +2459,7 @@ grib_yyreduce:
 
   case 35: /* arguments: argument ',' arguments  */
 #line 319 "griby.y"
-                                       { (grib_yyvsp[-2].explist)->next = (grib_yyvsp[0].explist); (grib_yyval.explist) = (grib_yyvsp[-2].explist); }
+                                       { (grib_yyvsp[-2].explist)->next_ = (grib_yyvsp[0].explist); (grib_yyval.explist) = (grib_yyvsp[-2].explist); }
 #line 2464 "y.tab.c"
     break;
 
@@ -2594,7 +2594,7 @@ grib_yyreduce:
     {
       /* ECC-485: Set length to 0 and prepend the new argument */
       grib_arguments* a = grib_arguments_new(grib_parser_context, new_accessor_expression(grib_parser_context,(grib_yyvsp[-5].str),0,0),NULL);
-      a->next = (grib_yyvsp[-2].explist);
+      a->next_ = (grib_yyvsp[-2].explist);
       (grib_yyval.act) = grib_action_create_gen(grib_parser_context, (grib_yyvsp[-3].str), "codetable",
                                   0, a, /* length=0 and additional argument */
                                   (grib_yyvsp[-1].explist), (grib_yyvsp[0].lval), NULL, NULL);
@@ -2958,7 +2958,7 @@ grib_yyreduce:
         new_accessor_expression(grib_parser_context,(grib_yyvsp[-3].str),0,0),
 		NULL
         );
-      a->next=(grib_yyvsp[-1].explist);
+      a->next_=(grib_yyvsp[-1].explist);
       (grib_yyval.act) = grib_action_create_meta(grib_parser_context,
       "ITERATOR","iterator",a,NULL,
       GRIB_ACCESSOR_FLAG_HIDDEN|GRIB_ACCESSOR_FLAG_READ_ONLY,NULL); free((grib_yyvsp[-3].str));
@@ -2974,7 +2974,7 @@ grib_yyreduce:
         new_accessor_expression(grib_parser_context,(grib_yyvsp[-3].str),0,0),
 		NULL
         );
-      a->next=(grib_yyvsp[-1].explist);
+      a->next_=(grib_yyvsp[-1].explist);
       (grib_yyval.act) = grib_action_create_meta(grib_parser_context,
       "NEAREST","nearest",a,NULL,
       GRIB_ACCESSOR_FLAG_HIDDEN|GRIB_ACCESSOR_FLAG_READ_ONLY,NULL); free((grib_yyvsp[-3].str));
@@ -2990,7 +2990,7 @@ grib_yyreduce:
         new_accessor_expression(grib_parser_context,(grib_yyvsp[-3].str),0,0),
 		NULL
         );
-      a->next=(grib_yyvsp[-1].explist);
+      a->next_=(grib_yyvsp[-1].explist);
       (grib_yyval.act) = grib_action_create_meta(grib_parser_context,
       "BOX","box",a,NULL,
       GRIB_ACCESSOR_FLAG_HIDDEN|GRIB_ACCESSOR_FLAG_READ_ONLY,NULL); free((grib_yyvsp[-3].str));

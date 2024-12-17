@@ -312,7 +312,7 @@ int grib_tool_init(grib_runtime_options* options)
         options->idx     = grib_fieldset_new_from_files(context, filename,
                                                     nfiles, 0, 0, 0, orderby, &ret);
         if (ret) {
-            fprintf(stderr, "%s: Unable to create index for input file %s (%s)",
+            fprintf(stderr, "%s: Unable to create index for input file '%s' (%s)\n",
                     tool_name, options->infile_extra->name, grib_get_error_message(ret));
             exit(ret);
         }

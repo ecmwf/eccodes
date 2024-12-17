@@ -18,10 +18,10 @@ void grib_accessor_data_g1simple_packing_t::init(const long v, grib_arguments* a
 {
     grib_accessor_data_simple_packing_t::init(v, args);
 
-    half_byte_    = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
-    packingType_  = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
-    ieee_packing_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
-    precision_    = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
+    half_byte_    = args->get_name(grib_handle_of_accessor(this), carg_++);
+    packingType_  = args->get_name(grib_handle_of_accessor(this), carg_++);
+    ieee_packing_ = args->get_name(grib_handle_of_accessor(this), carg_++);
+    precision_    = args->get_name(grib_handle_of_accessor(this), carg_++);
     edition_      = 1;
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
