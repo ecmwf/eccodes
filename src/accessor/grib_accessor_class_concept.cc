@@ -400,8 +400,16 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
                         }
                     }
                     else if (STR_EQUAL(values[i].name, "sourceSinkChemicalPhysicalProcess")) {
-                    grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Switch to chemical src/sink", __func__);
+                        grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Switch to chemical src/sink", __func__);
                         if (grib_set_long(h, "is_chemical_srcsink", 1) == GRIB_SUCCESS) {
+                            resubmit = true;
+                            grib_set_values(h, &values[i], 1);
+                        }
+                    }
+                    else if (STR_EQUAL(values[i].name, "probabilityType")) {
+                        grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Switch to probability forecasts", __func__);
+                        // TODO(masn): Add a new key e.g. is_probability_forecast
+                        if (grib_set_long(h, "productDefinitionTemplateNumber", 5) == GRIB_SUCCESS) {
                             resubmit = true;
                             grib_set_values(h, &values[i], 1);
                         }
