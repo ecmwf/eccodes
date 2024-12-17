@@ -85,13 +85,13 @@ void grib_accessor_bufr_data_element_t::dump(eccodes::Dumper* dumper)
 
     switch (ntype) {
         case GRIB_TYPE_LONG:
-            grib_dump_long(dumper, this, NULL);
+            dumper->dump_long(this, NULL);
             break;
         case GRIB_TYPE_DOUBLE:
-            grib_dump_values(dumper, this);
+            dumper->dump_values(this);
             break;
         case GRIB_TYPE_STRING:
-            grib_dump_string_array(dumper, this, NULL);
+            dumper->dump_string_array(this, NULL);
             break;
     }
 }

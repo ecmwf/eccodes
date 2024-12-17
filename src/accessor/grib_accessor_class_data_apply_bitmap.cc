@@ -29,7 +29,7 @@ void grib_accessor_data_apply_bitmap_t::init(const long v, grib_arguments* args)
 }
 void grib_accessor_data_apply_bitmap_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_values(dumper, this);
+    dumper->dump_values(this);
 }
 
 int grib_accessor_data_apply_bitmap_t::value_count(long* count)

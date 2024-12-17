@@ -30,7 +30,7 @@ void grib_accessor_step_in_units_t::init(const long l, grib_arguments* c)
 
 void grib_accessor_step_in_units_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_double(dumper, this, NULL);
+    dumper->dump_double(this, NULL);
 }
 
 int grib_accessor_step_in_units_t::unpack_long(long* val, size_t* len)

@@ -23,7 +23,7 @@ void grib_accessor_label_t::init(const long len, grib_arguments* arg)
 
 void grib_accessor_label_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_label(dumper, this, NULL);
+    dumper->dump_label(this, NULL);
 }
 
 long grib_accessor_label_t::get_native_type()

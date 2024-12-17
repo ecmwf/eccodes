@@ -48,7 +48,7 @@ size_t grib_accessor_to_string_t::string_length()
 
 void grib_accessor_to_string_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_string(dumper, this, NULL);
+    dumper->dump_string(this, NULL);
 }
 
 long grib_accessor_to_string_t::get_native_type()

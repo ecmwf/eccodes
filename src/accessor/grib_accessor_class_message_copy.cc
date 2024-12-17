@@ -22,7 +22,7 @@ void grib_accessor_message_copy_t::init(const long length, grib_arguments* args)
 
 void grib_accessor_message_copy_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_string(dumper, this, NULL);
+    dumper->dump_string(this, NULL);
 }
 
 long grib_accessor_message_copy_t::get_native_type()

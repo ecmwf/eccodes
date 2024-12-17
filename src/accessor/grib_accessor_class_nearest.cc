@@ -22,6 +22,6 @@ void grib_accessor_nearest_t::init(const long l, grib_arguments* args)
 void grib_accessor_nearest_t::dump(eccodes::Dumper* dumper)
 {
     /* TODO: pass args */
-    grib_dump_label(dumper, this, NULL);
+    dumper->dump_label(this, NULL);
 }
 

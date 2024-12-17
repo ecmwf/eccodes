@@ -41,9 +41,9 @@ void grib_accessor_unsigned_t::dump(eccodes::Dumper* dumper)
     long rlen = 0;
     value_count(&rlen);
     if (rlen == 1)
-        grib_dump_long(dumper, this, NULL);
+        dumper->dump_long(this, NULL);
     else
-        grib_dump_values(dumper, this);
+        dumper->dump_values(this);
 }
 
 static const unsigned long ones[] = {

@@ -23,7 +23,7 @@ void grib_accessor_section_t::init(const long len, grib_arguments* arg)
 
 void grib_accessor_section_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_section(dumper, this, sub_section_->block);
+    dumper->dump_section(this, sub_section_->block);
 }
 
 long grib_accessor_section_t::byte_count()

@@ -42,7 +42,7 @@ void grib_accessor_concept_t::init(const long len, grib_arguments* args)
 
 void grib_accessor_concept_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_string(dumper, this, NULL);
+    dumper->dump_string(this, NULL);
 }
 
 // See ECC-1905

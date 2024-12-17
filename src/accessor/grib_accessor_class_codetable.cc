@@ -560,7 +560,7 @@ void grib_accessor_codetable_t::dump(eccodes::Dumper* dumper)
     }
     strcat(comment, ") ");
 
-    grib_dump_long(dumper, this, comment);
+    dumper->dump_long(this, comment);
 }
 
 int grib_accessor_codetable_t::unpack_string(char* buffer, size_t* len)

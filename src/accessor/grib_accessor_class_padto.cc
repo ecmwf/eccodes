@@ -37,5 +37,5 @@ void grib_accessor_padto_t::init(const long len, grib_arguments* arg)
 
 void grib_accessor_padto_t::dump(eccodes::Dumper* dumper)
 {
-    /*grib_dump_string(dumper,a,NULL);*/
+    /*dumper->dump_string(a,NULL);*/
 }

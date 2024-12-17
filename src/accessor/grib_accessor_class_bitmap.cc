@@ -74,7 +74,7 @@ void grib_accessor_bitmap_t::dump(eccodes::Dumper* dumper)
 
     value_count(&len);
     snprintf(label, sizeof(label), "Bitmap of %ld values", len);
-    grib_dump_bytes(dumper, this, label);
+    dumper->dump_bytes(this, label);
 }
 
 int grib_accessor_bitmap_t::unpack_long(long* val, size_t* len)

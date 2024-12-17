@@ -113,5 +113,5 @@ void grib_accessor_codeflag_t::dump(eccodes::Dumper* dumper)
     unpack_long(&v, &llen);
     grib_get_codeflag(v, flagname);
 
-    grib_dump_bits(dumper, this, flagname);
+    dumper->dump_bits(this, flagname);
 }

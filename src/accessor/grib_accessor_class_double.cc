@@ -55,7 +55,7 @@ int grib_accessor_double_t::unpack_string(char* v, size_t* len)
 
 void grib_accessor_double_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_values(dumper, this);
+    dumper->dump_values(this);
 }
 
 int grib_accessor_double_t::compare(grib_accessor* b)

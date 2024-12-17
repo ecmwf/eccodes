@@ -41,5 +41,5 @@ int grib_accessor_blob_t::unpack_bytes(unsigned char* buffer, size_t* len)
 
 void grib_accessor_blob_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_bytes(dumper, this, NULL);
+    dumper->dump_bytes(this, NULL);
 }

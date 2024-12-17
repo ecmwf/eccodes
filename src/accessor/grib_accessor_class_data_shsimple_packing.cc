@@ -26,7 +26,7 @@ void grib_accessor_data_shsimple_packing_t::init(const long v, grib_arguments* a
 
 void grib_accessor_data_shsimple_packing_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_values(dumper, this);
+    dumper->dump_values(this);
 }
 
 int grib_accessor_data_shsimple_packing_t::pack_double(const double* val, size_t* len)

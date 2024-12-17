@@ -40,30 +40,31 @@ or edit "expression.class" and rerun ./make_class.pl
 
 typedef const char* string; /* to keep make_class.pl happy */
 
-static void    destroy(grib_context*,grib_expression* e);
-static void    print(grib_context*, grib_expression*, grib_handle*, FILE*);
-static void    add_dependency(grib_expression* e, grib_accessor* observer);
-static string  get_name(grib_expression* e);
-static int     native_type(grib_expression*,grib_handle*);
-static int     evaluate_long(grib_expression*,grib_handle*,long*);
-static int     evaluate_double(grib_expression*,grib_handle*,double*);
+static void destroy(grib_context*, grib_expression* e);
+static void print(grib_context*, grib_expression*, grib_handle*, FILE*);
+static void add_dependency(grib_expression* e, grib_accessor* observer);
+static string get_name(grib_expression* e);
+static int native_type(grib_expression*, grib_handle*);
+static int evaluate_long(grib_expression*, grib_handle*, long*);
+static int evaluate_double(grib_expression*, grib_handle*, double*);
 
-typedef struct grib_expression_unop{
-  grib_expression base;
+typedef struct grib_expression_unop
+{
+    grib_expression base;
     /* Members defined in unop */
-    grib_expression *exp;
-    grib_unop_long_proc  long_func;
-    grib_unop_double_proc  double_func;
+    grib_expression* exp;
+    grib_unop_long_proc long_func;
+    grib_unop_double_proc double_func;
 } grib_expression_unop;
 
 
 static grib_expression_class _grib_expression_class_unop = {
-    0,                      /* super */
-    "unop",                      /* name  */
-    sizeof(grib_expression_unop),/* size of instance */
-    0,                           /* inited */
-    0,                       /* constructor */
-    &destroy,                    /* destructor */
+    0,                            /* super */
+    "unop",                       /* name  */
+    sizeof(grib_expression_unop), /* size of instance */
+    0,                            /* inited */
+    0,                            /* constructor */
+    &destroy,                     /* destructor */
     &print,
     &add_dependency,
     &native_type,
@@ -79,9 +80,9 @@ grib_expression_class* grib_expression_class_unop = &_grib_expression_class_unop
 
 static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 {
-    long v = 0;
+    long v                  = 0;
     grib_expression_unop* e = (grib_expression_unop*)g;
-    int ret = grib_expression_evaluate_long(h, e->exp, &v);
+    int ret                 = grib_expression_evaluate_long(h, e->exp, &v);
     if (ret != GRIB_SUCCESS)
         return ret;
     *lres = e->long_func(v);
@@ -90,9 +91,9 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 
 static int evaluate_double(grib_expression* g, grib_handle* h, double* dres)
 {
-    double v = 0;
+    double v                = 0;
     grib_expression_unop* e = (grib_expression_unop*)g;
-    int ret = grib_expression_evaluate_double(h, e->exp, &v);
+    int ret                 = grib_expression_evaluate_double(h, e->exp, &v);
     if (ret != GRIB_SUCCESS)
         return ret;
     *dres = e->double_func ? e->double_func(v) : e->long_func(v);

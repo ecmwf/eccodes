@@ -15,7 +15,7 @@ grib_accessor* grib_accessor_bufr_group = &_grib_accessor_bufr_group;
 
 void grib_accessor_bufr_group_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_section(dumper, this, sub_section_->block);
+    dumper->dump_section(this, sub_section_->block);
 }
 
 grib_accessor* grib_accessor_bufr_group_t::next(grib_accessor* a, int explore)

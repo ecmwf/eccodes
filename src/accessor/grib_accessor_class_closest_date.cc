@@ -35,7 +35,7 @@ void grib_accessor_closest_date_t::init(const long l, grib_arguments* c)
 
 void grib_accessor_closest_date_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_string(dumper, this, NULL);
+    dumper->dump_string(this, NULL);
 }
 
 int grib_accessor_closest_date_t::unpack_long(long* val, size_t* len)

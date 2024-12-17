@@ -12,8 +12,11 @@
 #pragma once
 
 #include "grib_api_internal.h"
-#include "grib_dumper.h"
-#include "grib_value.h"
+#include "dumper/grib_dumper.h"
+
+namespace eccodes {
+class Dumper;
+}
 
 class grib_accessor {
 public:
