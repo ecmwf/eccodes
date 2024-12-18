@@ -11,7 +11,6 @@
 #pragma once
 
 #include <grib_api_internal.h>
-#include <stdexcept>
 
 namespace eccodes
 {
@@ -19,31 +18,19 @@ namespace eccodes
 class Dumper
 {
 public:
-    virtual int init()                                    = 0;
-    virtual int destroy()                                 = 0;
-    virtual void dump_long(grib_accessor*, const char*)   = 0;
-    virtual void dump_double(grib_accessor*, const char*) = 0;
-    virtual void dump_string(grib_accessor*, const char*) = 0;
-    virtual void dump_string_array(grib_accessor*, const char*)
-    {
-        // TODO(maee): make abstract
-        throw std::runtime_error("Not implemented");
-    };
+    virtual int init()                                                  = 0;
+    virtual int destroy()                                               = 0;
+    virtual void dump_long(grib_accessor*, const char*)                 = 0;
+    virtual void dump_double(grib_accessor*, const char*)               = 0;
+    virtual void dump_string(grib_accessor*, const char*)               = 0;
+    virtual void dump_string_array(grib_accessor*, const char*)         = 0;
     virtual void dump_label(grib_accessor*, const char*)                = 0;
     virtual void dump_bytes(grib_accessor*, const char*)                = 0;
     virtual void dump_bits(grib_accessor*, const char*)                 = 0;
     virtual void dump_section(grib_accessor*, grib_block_of_accessors*) = 0;
     virtual void dump_values(grib_accessor*)                            = 0;
-    virtual void header(const grib_handle*)
-    {
-        // TODO(maee): make abstract
-        throw std::runtime_error("Not implemented");
-    };
-    virtual void footer(const grib_handle*)
-    {
-        // TODO(maee): make abstract
-        throw std::runtime_error("Not implemented");
-    };
+    virtual void header(const grib_handle*) {};
+    virtual void footer(const grib_handle*) {};
 
     long count() { return count_; }
     void count(long count) { count_ = count; }
