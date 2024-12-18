@@ -899,9 +899,13 @@ int grib_f_write_file_(int* fid, void* buffer, size_t* nbytes)
 int grib_f_get_message_(int* gid, const void** mess, size_t* mess_len)
 {
     void *message = NULL;
+    int iret = 0;
     grib_handle *h = get_handle(*gid);
     if (!h) return GRIB_INVALID_GRIB;
-    grib_get_message(h,&message,mess_len);
+    iret = grib_get_message(h,&message,mess_len);
+    if(iret != 0){
+    	return iret;
+    }
     *mess = message;
     return GRIB_SUCCESS;
 }
@@ -1369,6 +1373,15 @@ int grib_f_new_from_message_(int* gid, void* buffer, size_t* bufsize)
     return  GRIB_INTERNAL_ERROR;
 }
 /*****************************************************************************/
+
+/* See SUP-3893: Need to provide an 'int' version */
+int grib_f_new_from_message_int_(int* gid, int* buffer , size_t* bufsize)
+{
+    /* Call the version with void pointer */
+    return grib_f_new_from_message_(gid, (void*)buffer, bufsize);
+}
+
+/*****************************************************************************/
 int grib_f_new_from_message_no_copy_(int* gid, void* buffer, size_t* bufsize)
 {
     grib_handle *h = NULL;
@@ -1381,13 +1394,12 @@ int grib_f_new_from_message_no_copy_(int* gid, void* buffer, size_t* bufsize)
     return  GRIB_INTERNAL_ERROR;
 }
 
-/* See SUP-3893: Need to provide an 'int' version */
-int grib_f_new_from_message_int_(int* gid, int* buffer , size_t* bufsize)
-{
-    /* Call the version with void pointer */
-    return grib_f_new_from_message_(gid, (void*)buffer, bufsize);
-}
 /*****************************************************************************/
+int grib_f_new_from_message_no_copy_int_(int* gid, int* buffer, size_t* bufsize)
+{
+	return grib_f_new_from_message_no_copy_(gid, (void*)buffer, bufsize);
+}
+
 #if 0
 int grib_f_new_from_message_copy_(int* gid, void* buffer, size_t* bufsize)
 {

@@ -56,6 +56,7 @@ module grib_api
   !> @param message     array containing the coded message
   !> @param status      GRIB_SUCCESS if OK, integer value on error  
   interface grib_new_from_message_no_copy
+    module procedure grib_new_from_message_no_copy_int4
     module procedure grib_new_from_message_no_copy_char
   end interface grib_new_from_message_no_copy
 

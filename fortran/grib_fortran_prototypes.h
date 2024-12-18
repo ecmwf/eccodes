@@ -21,6 +21,7 @@ int grib_f_get_string_array_(int* gid, char* key, char* val,int* nvals,int* slen
 int codes_f_bufr_keys_iterator_rewind_(int* kiter);
 int any_f_scan_file_(int* fid, int* n);
 int grib_f_new_from_message_int_(int* gid, int* buffer , size_t* bufsize);
+int grib_f_new_from_message_no_copy_int_(int* gid, int* buffer , size_t* bufsize);
 int grib_f_copy_key_(int* gidsrc, char* key, int* giddest, int len);
 int grib_f_set_samples_path_(char* path, int len);
 
