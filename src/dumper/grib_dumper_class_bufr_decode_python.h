@@ -38,7 +38,7 @@ private:
 
     long section_offset_    = 0;
     long empty_             = 0;
-    long end_               = 0;
+    // long end_               = 0;
     long isLeaf_            = 0;
     long isAttribute_       = 0;
     grib_string_list* keys_ = nullptr;
