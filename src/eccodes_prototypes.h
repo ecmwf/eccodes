@@ -374,29 +374,29 @@ int grib_buffer_replace(grib_accessor* a, const unsigned char* data, size_t news
 void grib_update_sections_lengths(grib_handle* h);
 
 /* grib_dumper.cc */
-void grib_init_dumper(grib_dumper* d);
-void grib_dumper_delete(grib_dumper* d);
-void grib_dump_long(grib_dumper* d, grib_accessor* a, const char* comment);
-void grib_dump_double(grib_dumper* d, grib_accessor* a, const char* comment);
-void grib_dump_string(grib_dumper* d, grib_accessor* a, const char* comment);
-void grib_dump_string_array(grib_dumper* d, grib_accessor* a, const char* comment);
-void grib_dump_label(grib_dumper* d, grib_accessor* a, const char* comment);
-void grib_dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment);
-void grib_dump_bits(grib_dumper* d, grib_accessor* a, const char* comment);
-void grib_dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block);
-void grib_dump_values(grib_dumper* d, grib_accessor* a);
-void grib_dump_header(grib_dumper* d, const grib_handle* h);
-void grib_dump_footer(grib_dumper* d, const grib_handle* h);
+// void grib_init_dumper(grib_dumper* d);
+// void grib_dumper_delete(grib_dumper* d);
+// void grib_dump_long(grib_dumper* d, grib_accessor* a, const char* comment);
+// void grib_dump_double(grib_dumper* d, grib_accessor* a, const char* comment);
+// void grib_dump_string(grib_dumper* d, grib_accessor* a, const char* comment);
+// void grib_dump_string_array(grib_dumper* d, grib_accessor* a, const char* comment);
+// void grib_dump_label(grib_dumper* d, grib_accessor* a, const char* comment);
+// void grib_dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment);
+// void grib_dump_bits(grib_dumper* d, grib_accessor* a, const char* comment);
+// void grib_dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block);
+// void grib_dump_values(grib_dumper* d, grib_accessor* a);
+// void grib_dump_header(grib_dumper* d, const grib_handle* h);
+// void grib_dump_footer(grib_dumper* d, const grib_handle* h);
 
 /* grib_dumper_class.cc */
-grib_dumper* grib_dumper_factory(const char* op, const grib_handle* h, FILE* out, unsigned long option_flags, void* arg);
-void grib_dump_accessors_block(grib_dumper* dumper, grib_block_of_accessors* block);
-void grib_dump_accessors_list(grib_dumper* dumper, grib_accessors_list* al);
-int grib_print(grib_handle* h, const char* name, grib_dumper* d);
-void grib_dump_content(const grib_handle* h, FILE* f, const char* mode, unsigned long flags, void* data);
-void grib_dump_keys(grib_handle* h, FILE* f, const char* mode, unsigned long flags, void* data, const char** keys, size_t num_keys);
-grib_dumper* grib_dump_content_with_dumper(grib_handle* h, grib_dumper* dumper, FILE* f, const char* mode, unsigned long flags, void* data);
-void codes_dump_bufr_flat(grib_accessors_list* al, grib_handle* h, FILE* f, const char* mode, unsigned long flags, void* data);
+// grib_dumper* grib_dumper_factory(const char* op, const grib_handle* h, FILE* out, unsigned long option_flags, void* arg);
+// void grib_dump_accessors_block(grib_dumper* dumper, grib_block_of_accessors* block);
+// void grib_dump_accessors_list(grib_dumper* dumper, grib_accessors_list* al);
+// int grib_print(grib_handle* h, const char* name, grib_dumper* d);
+// void grib_dump_content(const grib_handle* h, FILE* f, const char* mode, unsigned long flags, void* data);
+// void grib_dump_keys(grib_handle* h, FILE* f, const char* mode, unsigned long flags, void* data, const char** keys, size_t num_keys);
+// grib_dumper* grib_dump_content_with_dumper(grib_handle* h, grib_dumper* dumper, FILE* f, const char* mode, unsigned long flags, void* data);
+// void codes_dump_bufr_flat(grib_accessors_list* al, grib_handle* h, FILE* f, const char* mode, unsigned long flags, void* data);
 
 /* grib_context.cc */
 size_t grib_context_read(const grib_context* c, void* ptr, size_t size, void* stream);

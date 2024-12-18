@@ -10,6 +10,7 @@
 #
 
 include_directories(
+    "${CMAKE_CURRENT_SOURCE_DIR}/dumper"
     "${CMAKE_CURRENT_SOURCE_DIR}/accessor"
     "${CMAKE_CURRENT_SOURCE_DIR}/geo/iterator"
     "${CMAKE_CURRENT_SOURCE_DIR}/geo/nearest"
@@ -273,23 +274,21 @@ list( APPEND eccodes_src_files
     accessor/grib_accessor_class_reference_value_error.cc
     grib_memory.cc
     grib_buffer.cc
-    grib_dumper.cc
-    grib_dumper_class_serialize.cc
-    grib_dumper_class_debug.cc
-    grib_dumper_class_default.cc
-    grib_dumper_class_bufr_encode_C.cc
-    grib_dumper_class_bufr_encode_filter.cc
-    grib_dumper_class_bufr_encode_fortran.cc
-    grib_dumper_class_bufr_encode_python.cc
-    grib_dumper_class_bufr_decode_C.cc
-    grib_dumper_class_bufr_decode_filter.cc
-    grib_dumper_class_bufr_decode_fortran.cc
-    grib_dumper_class_bufr_decode_python.cc
-    grib_dumper_class_bufr_simple.cc
-    grib_dumper_class_json.cc
-    grib_dumper_class_grib_encode_C.cc
-    grib_dumper_class_wmo.cc
-    grib_dumper_class.cc
+    dumper/grib_dumper_class_serialize.cc
+    dumper/grib_dumper_class_debug.cc
+    dumper/grib_dumper_class_default.cc
+    dumper/grib_dumper_class_bufr_encode_C.cc
+    dumper/grib_dumper_class_bufr_encode_filter.cc
+    dumper/grib_dumper_class_bufr_encode_fortran.cc
+    dumper/grib_dumper_class_bufr_encode_python.cc
+    dumper/grib_dumper_class_bufr_decode_C.cc
+    dumper/grib_dumper_class_bufr_decode_filter.cc
+    dumper/grib_dumper_class_bufr_decode_fortran.cc
+    dumper/grib_dumper_class_bufr_decode_python.cc
+    dumper/grib_dumper_class_bufr_simple.cc
+    dumper/grib_dumper_class_json.cc
+    dumper/grib_dumper_class_grib_encode_C.cc
+    dumper/grib_dumper_class_wmo.cc
     grib_context.cc
     grib_date.cc
     grib_fieldset.cc
@@ -368,8 +367,7 @@ list( APPEND eccodes_src_files
     grib_accessor_factory.h
     grib_api_internal.h
     eccodes_prototypes.h
-    grib_dumper_class.h
-    grib_dumper_factory.h
+    grib_dumper_factory.cc
     grib_iterator_factory.cc
     grib_nearest_factory.cc
     grib_yacc.h

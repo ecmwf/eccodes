@@ -26,9 +26,9 @@ void grib_accessor_data_apply_boustrophedonic_t::init(const long v, grib_argumen
 
     length_ = 0;
 }
-void grib_accessor_data_apply_boustrophedonic_t::dump(grib_dumper* dumper)
+void grib_accessor_data_apply_boustrophedonic_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_values(dumper, this);
+    dumper->dump_values(this);
 }
 
 int grib_accessor_data_apply_boustrophedonic_t::value_count(long* numberOfPoints)

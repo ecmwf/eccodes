@@ -25,7 +25,7 @@ public:
     long byte_offset() override;
     long next_offset() override;
     int value_count(long*) override;
-    void dump(grib_dumper*) override;
+    void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
     void update_size(size_t) override;
 

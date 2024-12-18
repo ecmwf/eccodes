@@ -19,8 +19,8 @@ void grib_accessor_iterator_t::init(const long l, grib_arguments* args)
     args_ = args;
 }
 
-void grib_accessor_iterator_t::dump(grib_dumper* dumper)
+void grib_accessor_iterator_t::dump(eccodes::Dumper* dumper)
 {
     /* TODO: pass args */
-    grib_dump_label(dumper, this, NULL);
+    dumper->dump_label(this, NULL);
 }
