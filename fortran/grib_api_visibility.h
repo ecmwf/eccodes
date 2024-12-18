@@ -10,7 +10,7 @@ public :: grib_skip_computed, &
           grib_skip_read_only
 public :: grib_keys_iterator_get_name, &
           grib_keys_iterator_rewind
-public :: grib_new_from_message, &
+public :: grib_new_from_message, grib_new_from_message_no_copy, &
           grib_new_from_samples, grib_new_from_file, &
           grib_read_from_file,grib_headers_only_new_from_file
 public :: grib_release
@@ -18,7 +18,7 @@ public :: grib_dump
 public :: grib_get_error_string
 public :: grib_get_native_type
 public :: grib_get_size
-public :: grib_get_message_size, grib_copy_message
+public :: grib_get_message_size, grib_get_message, grib_copy_message
 public :: grib_write, grib_multi_append
 public :: grib_check
 public :: grib_clone, grib_copy_namespace
