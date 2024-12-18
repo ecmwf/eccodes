@@ -49,9 +49,9 @@ void grib_accessor_values_t::init(const long v, grib_arguments* params)
     grib_accessor_gen_t::init(v, params);
     carg_ = 0;
 
-    seclen_        = grib_arguments_get_name(grib_handle_of_accessor(this), params, carg_++);
-    offsetdata_    = grib_arguments_get_name(grib_handle_of_accessor(this), params, carg_++);
-    offsetsection_ = grib_arguments_get_name(grib_handle_of_accessor(this), params, carg_++);
+    seclen_        = params->get_name(grib_handle_of_accessor(this), carg_++);
+    offsetdata_    = params->get_name(grib_handle_of_accessor(this), carg_++);
+    offsetsection_ = params->get_name(grib_handle_of_accessor(this), carg_++);
     values_dirty_  = 1;
 
     length_ = init_length();

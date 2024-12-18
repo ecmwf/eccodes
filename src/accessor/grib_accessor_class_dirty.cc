@@ -16,7 +16,7 @@ grib_accessor* grib_accessor_dirty = &_grib_accessor_dirty;
 void grib_accessor_dirty_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
-    accessor_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, 0);
+    accessor_ = c->get_name(grib_handle_of_accessor(this), 0);
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;
     length_ = 0;

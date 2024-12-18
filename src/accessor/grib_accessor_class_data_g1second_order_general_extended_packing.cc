@@ -58,28 +58,28 @@ void grib_accessor_data_g1second_order_general_extended_packing_t::init(const lo
     grib_accessor_data_simple_packing_t::init(v, args);
     grib_handle* handle = grib_handle_of_accessor(this);
 
-    half_byte_                       = grib_arguments_get_name(handle, args, carg_++);
-    packingType_                     = grib_arguments_get_name(handle, args, carg_++);
-    ieee_packing_                    = grib_arguments_get_name(handle, args, carg_++);
-    precision_                       = grib_arguments_get_name(handle, args, carg_++);
-    widthOfFirstOrderValues_         = grib_arguments_get_name(handle, args, carg_++);
-    firstOrderValues_                = grib_arguments_get_name(handle, args, carg_++);
-    N1_                              = grib_arguments_get_name(handle, args, carg_++);
-    N2_                              = grib_arguments_get_name(handle, args, carg_++);
-    numberOfGroups_                  = grib_arguments_get_name(handle, args, carg_++);
-    codedNumberOfGroups_             = grib_arguments_get_name(handle, args, carg_++);
-    numberOfSecondOrderPackedValues_ = grib_arguments_get_name(handle, args, carg_++);
-    extraValues_                     = grib_arguments_get_name(handle, args, carg_++);
-    groupWidths_                     = grib_arguments_get_name(handle, args, carg_++);
-    widthOfWidths_                   = grib_arguments_get_name(handle, args, carg_++);
-    groupLengths_                    = grib_arguments_get_name(handle, args, carg_++);
-    widthOfLengths_                  = grib_arguments_get_name(handle, args, carg_++);
-    NL_                              = grib_arguments_get_name(handle, args, carg_++);
-    SPD_                             = grib_arguments_get_name(handle, args, carg_++);
-    widthOfSPD_                      = grib_arguments_get_name(handle, args, carg_++);
-    orderOfSPD_                      = grib_arguments_get_name(handle, args, carg_++);
-    numberOfPoints_                  = grib_arguments_get_name(handle, args, carg_++);
-    dataFlag_                        = grib_arguments_get_name(handle, args, carg_++);
+    half_byte_                       = args->get_name(handle, carg_++);
+    packingType_                     = args->get_name(handle, carg_++);
+    ieee_packing_                    = args->get_name(handle, carg_++);
+    precision_                       = args->get_name(handle, carg_++);
+    widthOfFirstOrderValues_         = args->get_name(handle, carg_++);
+    firstOrderValues_                = args->get_name(handle, carg_++);
+    N1_                              = args->get_name(handle, carg_++);
+    N2_                              = args->get_name(handle, carg_++);
+    numberOfGroups_                  = args->get_name(handle, carg_++);
+    codedNumberOfGroups_             = args->get_name(handle, carg_++);
+    numberOfSecondOrderPackedValues_ = args->get_name(handle, carg_++);
+    extraValues_                     = args->get_name(handle, carg_++);
+    groupWidths_                     = args->get_name(handle, carg_++);
+    widthOfWidths_                   = args->get_name(handle, carg_++);
+    groupLengths_                    = args->get_name(handle, carg_++);
+    widthOfLengths_                  = args->get_name(handle, carg_++);
+    NL_                              = args->get_name(handle, carg_++);
+    SPD_                             = args->get_name(handle, carg_++);
+    widthOfSPD_                      = args->get_name(handle, carg_++);
+    orderOfSPD_                      = args->get_name(handle, carg_++);
+    numberOfPoints_                  = args->get_name(handle, carg_++);
+    dataFlag_                        = args->get_name(handle, carg_++);
     edition_                         = 1;
     dirty_                           = 1;
     dvalues_                         = NULL;
@@ -584,8 +584,6 @@ int grib_accessor_data_g1second_order_general_extended_packing_t::pack_double(co
     grib_handle* handle          = grib_handle_of_accessor(this);
     long optimize_scaling_factor = 0;
 
-    double_dirty_ = 1;
-
     numberOfValues = *len;
 
     min = max = val[0];
@@ -605,6 +603,9 @@ int grib_accessor_data_g1second_order_general_extended_packing_t::pack_double(co
 
     if ((ret = grib_get_long_internal(handle, optimize_scaling_factor_, &optimize_scaling_factor)) != GRIB_SUCCESS)
         return ret;
+
+    // ECC-1986: Make sure we set the dirty flag after calling get_bits_per_value
+    double_dirty_ = 1;
 
     if (optimize_scaling_factor) {
         const int compat_gribex = handle->context->gribex_mode_on && edition_ == 1;

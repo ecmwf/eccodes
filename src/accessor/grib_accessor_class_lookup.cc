@@ -18,9 +18,9 @@ void grib_accessor_lookup_t::init(const long len, grib_arguments* arg)
     grib_accessor_long_t::init(len, arg);
     length_  = 0;
     llength_ = len;
-    loffset_ = grib_arguments_get_long(grib_handle_of_accessor(this), arg, 0);
+    loffset_ = arg->get_long(grib_handle_of_accessor(this), 0);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    real_name_ = grib_arguments_get_expression(grib_handle_of_accessor(this), arg, 1);
+    real_name_ = arg->get_expression(grib_handle_of_accessor(this), 1);
 }
 
 void grib_accessor_lookup_t::post_init()

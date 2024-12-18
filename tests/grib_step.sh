@@ -118,6 +118,12 @@ grib_check_key_equals $temp productDefinitionTemplateNumber,typeOfStatisticalPro
 ${tools_dir}/grib_set -s stepType=mode,paramId=260320     $grib2_sample $temp
 grib_check_key_equals $temp productDefinitionTemplateNumber,typeOfStatisticalProcessing '8 101'
 
+# ECC-1991: stepType for index processing
+# -----------------------------------------
+${tools_dir}/grib_set -s stepType=index $grib2_sample $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber,typeOfStatisticalProcessing '8 102'
+
+
 # ECC-1577: stepType when typeOfTimeIncrement=255
 # -----------------------------------------------
 ${tools_dir}/grib_set -s stepType=accum,typeOfTimeIncrement=255 $grib2_sample $temp

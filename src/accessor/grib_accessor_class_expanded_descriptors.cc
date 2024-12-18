@@ -34,17 +34,17 @@ void grib_accessor_expanded_descriptors_t::init(const long len, grib_arguments* 
     grib_accessor_long_t::init(len, args);
     int n               = 0;
     grib_handle* hand   = grib_handle_of_accessor(this);
-    tablesAccessorName_ = grib_arguments_get_name(hand, args, n++);
-    expandedName_       = grib_arguments_get_name(hand, args, n++);
-    rank_               = grib_arguments_get_long(hand, args, n++);
+    tablesAccessorName_ = args->get_name(hand, n++);
+    expandedName_       = args->get_name(hand, n++);
+    rank_               = args->get_long(hand, n++);
     if (rank_ != 0) {
         expandedAccessor_ = dynamic_cast<grib_accessor_expanded_descriptors_t*>(grib_find_accessor(hand, expandedName_));
     }
     else {
         expandedAccessor_ = 0;
     }
-    unexpandedDescriptors_ = grib_arguments_get_name(hand, args, n++);
-    sequence_              = grib_arguments_get_name(hand, args, n++);
+    unexpandedDescriptors_ = args->get_name(hand, n++);
+    sequence_              = args->get_name(hand, n++);
     do_expand_             = 1;
     expanded_              = 0;
     length_                = 0;

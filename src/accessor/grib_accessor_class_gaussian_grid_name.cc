@@ -18,9 +18,9 @@ void grib_accessor_gaussian_grid_name_t::init(const long len, grib_arguments* ar
     grib_accessor_gen_t::init(len, arg);
     int n = 0;
 
-    N_            = grib_arguments_get_name(parent_->h, arg, n++);
-    Ni_           = grib_arguments_get_name(parent_->h, arg, n++);
-    isOctahedral_ = grib_arguments_get_name(parent_->h, arg, n++);
+    N_            = arg->get_name(parent_->h, n++);
+    Ni_           = arg->get_name(parent_->h, n++);
+    isOctahedral_ = arg->get_name(parent_->h, n++);
     length_       = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;

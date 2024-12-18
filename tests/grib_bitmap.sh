@@ -249,8 +249,8 @@ stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $temp2`
 # ECC-1968
 # ---------
 in=${data_dir}/grid_complex_spatial_differencing.grib2
-${tools_dir}/grib_set -s setBitsPerValue=25 $in $temp2
-${tools_dir}/grib_get -p bitsPerValue $temp2
+${tools_dir}/grib_set -s setBitsPerValue=28 $in $temp2
+grib_check_key_equals $temp2 bitsPerValue 24 # Update this once wgrib2 fixes this bug
 
 # Clean up for ECC-1858
 rm -f $in_with_bitmap $in_no_bitmap

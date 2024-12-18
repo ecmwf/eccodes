@@ -21,15 +21,15 @@ void grib_accessor_data_simple_packing_t::init(const long v, grib_arguments* arg
 {
     grib_accessor_values_t::init(v, args);
     grib_handle* gh          = grib_handle_of_accessor(this);
-    units_factor_            = grib_arguments_get_name(gh, args, carg_++);
-    units_bias_              = grib_arguments_get_name(gh, args, carg_++);
-    changing_precision_      = grib_arguments_get_name(gh, args, carg_++);
-    number_of_values_        = grib_arguments_get_name(gh, args, carg_++);
-    bits_per_value_          = grib_arguments_get_name(gh, args, carg_++);
-    reference_value_         = grib_arguments_get_name(gh, args, carg_++);
-    binary_scale_factor_     = grib_arguments_get_name(gh, args, carg_++);
-    decimal_scale_factor_    = grib_arguments_get_name(gh, args, carg_++);
-    optimize_scaling_factor_ = grib_arguments_get_name(gh, args, carg_++);
+    units_factor_            = args->get_name(gh, carg_++);
+    units_bias_              = args->get_name(gh, carg_++);
+    changing_precision_      = args->get_name(gh, carg_++);
+    number_of_values_        = args->get_name(gh, carg_++);
+    bits_per_value_          = args->get_name(gh, carg_++);
+    reference_value_         = args->get_name(gh, carg_++);
+    binary_scale_factor_     = args->get_name(gh, carg_++);
+    decimal_scale_factor_    = args->get_name(gh, carg_++);
+    optimize_scaling_factor_ = args->get_name(gh, carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
     dirty_ = 1;
 }

@@ -49,13 +49,13 @@ void grib_accessor_smart_table_t::init(const long len, grib_arguments* params)
     int n             = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
 
-    values_      = grib_arguments_get_name(hand, params, n++);
-    tablename_   = grib_arguments_get_string(hand, params, n++);
-    masterDir_   = grib_arguments_get_name(hand, params, n++);
-    localDir_    = grib_arguments_get_name(hand, params, n++);
-    widthOfCode_ = grib_arguments_get_long(hand, params, n++);
-    extraDir_    = grib_arguments_get_name(hand, params, n++);
-    extraTable_  = grib_arguments_get_string(hand, params, n++);
+    values_      = params->get_name(hand, n++);
+    tablename_   = params->get_string(hand, n++);
+    masterDir_   = params->get_name(hand, n++);
+    localDir_    = params->get_name(hand, n++);
+    widthOfCode_ = params->get_long(hand, n++);
+    extraDir_    = params->get_name(hand, n++);
+    extraTable_  = params->get_string(hand, n++);
 
     grib_accessor_unsigned_t::length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;

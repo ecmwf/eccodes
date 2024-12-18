@@ -19,14 +19,14 @@ void grib_accessor_data_apply_boustrophedonic_bitmap_t::init(const long v, grib_
     int n           = 0;
     grib_handle* gh = grib_handle_of_accessor(this);
 
-    coded_values_        = grib_arguments_get_name(gh, args, n++);
-    bitmap_              = grib_arguments_get_name(gh, args, n++);
-    missing_value_       = grib_arguments_get_name(gh, args, n++);
-    binary_scale_factor_ = grib_arguments_get_name(gh, args, n++);
+    coded_values_        = args->get_name(gh, n++);
+    bitmap_              = args->get_name(gh, n++);
+    missing_value_       = args->get_name(gh, n++);
+    binary_scale_factor_ = args->get_name(gh, n++);
 
-    numberOfRows_    = grib_arguments_get_name(gh, args, n++);
-    numberOfColumns_ = grib_arguments_get_name(gh, args, n++);
-    numberOfPoints_  = grib_arguments_get_name(gh, args, n++);
+    numberOfRows_    = args->get_name(gh, n++);
+    numberOfColumns_ = args->get_name(gh, n++);
+    numberOfPoints_  = args->get_name(gh, n++);
 
     length_ = 0;
 }

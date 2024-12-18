@@ -19,8 +19,8 @@ void grib_accessor_vector_t::init(const long l, grib_arguments* c)
     grib_accessor_abstract_vector_t::init(l, c);
     int n = 0;
 
-    vector_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    index_  = grib_arguments_get_long(grib_handle_of_accessor(this), c, n++);
+    vector_ = c->get_name(grib_handle_of_accessor(this), n++);
+    index_  = c->get_long(grib_handle_of_accessor(this), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;

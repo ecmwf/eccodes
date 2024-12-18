@@ -3799,12 +3799,12 @@
 	 table2Version = 171 ;
 	 indicatorOfParameter = 122 ;
 	}
-#Mean surface runoff rate
+#Time-mean surface runoff rate
 'msror' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 8 ;
 	}
-#Mean sub-surface runoff rate
+#Time-mean sub-surface runoff rate
 'mssror' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 9 ;
@@ -6230,7 +6230,7 @@
 	 indicatorOfParameter = 221 ;
 	}
 #Cosine of solar zenith angle
-'uvcossza' = {
+'cossza' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 1 ;
 	}
@@ -14919,17 +14919,17 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 50 ;
 	}
-#Mean large-scale precipitation rate
+#Time-mean large-scale precipitation rate
 'mlsprt' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 142 ;
 	}
-#Mean convective precipitation rate
+#Time-mean convective precipitation rate
 'cprate' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 143 ;
 	}
-#Mean total snowfall rate
+#Time-mean total snowfall rate
 'mtsfr' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 144 ;
@@ -14939,67 +14939,67 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 145 ;
 	}
-#Mean surface sensible heat flux
+#Time-mean surface sensible heat flux
 'msshfl' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Mean surface latent heat flux
+#Time-mean surface latent heat flux
 'mslhfl' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Mean short-wave heating rate
+#Time-mean short-wave (solar) heating rate
 'mswhr' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 153 ;
 	}
-#Mean long-wave heating rate
+#Time-mean long-wave (thermal) heating rate
 'mlwhr' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 154 ;
 	}
-#Mean surface downward solar radiation flux
+#Time-mean surface downward short-wave (solar) radiation flux
 'msdsrf' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 169 ;
 	}
-#Mean surface downward thermal radiation flux
+#Time-mean surface downward long-wave (thermal) radiation flux
 'msdtrf' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 175 ;
 	}
-#Mean surface net solar radiation flux
+#Time-mean surface net short-wave (solar) radiation flux
 'msnsrf' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 176 ;
 	}
-#Mean surface net thermal radiation flux
+#Time-mean surface net long-wave (thermal) radiation flux
 'msntrf' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 177 ;
 	}
-#Mean top net solar radiation flux
+#Time-mean top net short-wave (solar) radiation flux
 'mtnsrf' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 178 ;
 	}
-#Mean top net thermal radiation flux
+#Time-mean top net long-wave (thermal) radiation flux
 'mtntrf' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 179 ;
 	}
-#East-West surface stress rate of accumulation
+#Time-mean eastward turbulent surface stress
 'ewssra' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 180 ;
 	}
-#North-South surface stress rate of accumulation
+#Time-mean northward turbulent surface stress
 'nsssra' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 181 ;
 	}
-#Evaporation
+#Time-mean evaporation rate
 'erate' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 182 ;
@@ -15024,47 +15024,47 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 197 ;
 	}
-#Mean runoff rate
+#Time-mean runoff rate
 'mrort' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 205 ;
 	}
-#Top net solar radiation, clear sky
+#Time-mean top net short-wave (solar) radiation flux, clear sky
 '~' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 208 ;
 	}
-#Top net thermal radiation, clear sky
+#Time-mean top net long-wave (thermal) radiation flux, clear sky
 '~' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 209 ;
 	}
-#Surface net solar radiation, clear sky
+#Time-mean surface net short-wave (solar) radiation flux, clear sky
 '~' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 210 ;
 	}
-#Surface net thermal radiation, clear sky
+#Time-mean surface net long-wave (thermal) radiation flux, clear sky
 '~' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 211 ;
 	}
-#Solar insolation rate of accumulation
+#Time-mean short-wave (solar) insolation rate
 'soira' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 212 ;
 	}
-#Mean total precipitation rate
+#Time-mean total precipitation rate
 'tprate' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 228 ;
 	}
-#Convective snowfall
+#Time-mean convective snowfall rate
 '~' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 239 ;
 	}
-#Large scale snowfall
+#Time-mean large-scale snowfall rate
 '~' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 240 ;

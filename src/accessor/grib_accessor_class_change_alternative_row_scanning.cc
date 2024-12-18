@@ -18,10 +18,10 @@ void grib_accessor_change_alternative_row_scanning_t::init(const long len, grib_
     grib_accessor_gen_t::init(len, args);
     int n = 0;
 
-    values_                 = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    Ni_                     = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    Nj_                     = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    alternativeRowScanning_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
+    values_                 = args->get_name(grib_handle_of_accessor(this), n++);
+    Ni_                     = args->get_name(grib_handle_of_accessor(this), n++);
+    Nj_                     = args->get_name(grib_handle_of_accessor(this), n++);
+    alternativeRowScanning_ = args->get_name(grib_handle_of_accessor(this), n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;

@@ -195,13 +195,13 @@ void grib_accessor_bufr_data_array_t::init(const long v, grib_arguments* params)
     tempStrings_                           = NULL;
 
 
-    bufrDataEncodedName_          = grib_arguments_get_name(grib_handle_of_accessor(this), params, n++);
-    numberOfSubsetsName_          = grib_arguments_get_name(grib_handle_of_accessor(this), params, n++);
-    expandedDescriptorsName_      = grib_arguments_get_name(grib_handle_of_accessor(this), params, n++);
-    flagsName_                    = grib_arguments_get_name(grib_handle_of_accessor(this), params, n++);
-    elementsDescriptorsIndexName_ = grib_arguments_get_name(grib_handle_of_accessor(this), params, n++);
-    compressedDataName_           = grib_arguments_get_name(grib_handle_of_accessor(this), params, n++);
-    dataKeysName                  = grib_arguments_get_name(grib_handle_of_accessor(this), params, n++);
+    bufrDataEncodedName_          = params->get_name(grib_handle_of_accessor(this), n++);
+    numberOfSubsetsName_          = params->get_name(grib_handle_of_accessor(this), n++);
+    expandedDescriptorsName_      = params->get_name(grib_handle_of_accessor(this), n++);
+    flagsName_                    = params->get_name(grib_handle_of_accessor(this), n++);
+    elementsDescriptorsIndexName_ = params->get_name(grib_handle_of_accessor(this), n++);
+    compressedDataName_           = params->get_name(grib_handle_of_accessor(this), n++);
+    dataKeysName                  = params->get_name(grib_handle_of_accessor(this), n++);
 
     dataKeysAcc               = grib_find_accessor(grib_handle_of_accessor(this), dataKeysName);
     dataKeys_                 = dataKeysAcc->parent_;
@@ -2486,7 +2486,6 @@ int grib_accessor_bufr_data_array_t::create_keys(long onlySubset, long startSubs
             }
 
             if (ide == 0 && !compressedData_) {
-                
                 long subsetNumber     = iss + 1;
                 size_t len            = 1;
                 grib_action creatorsn = {

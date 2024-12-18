@@ -18,13 +18,13 @@ void grib_accessor_g1step_range_t::init(const long l, grib_arguments* c)
     grib_accessor_abstract_long_vector_t::init(l, c);
     grib_handle* h      = grib_handle_of_accessor(this);
     int n               = 0;
-    p1_                 = grib_arguments_get_name(h, c, n++);
-    p2_                 = grib_arguments_get_name(h, c, n++);
-    timeRangeIndicator_ = grib_arguments_get_name(h, c, n++);
-    unit_               = grib_arguments_get_name(h, c, n++);
-    step_unit_          = grib_arguments_get_name(h, c, n++);
-    stepType_           = grib_arguments_get_name(h, c, n++);
-    patch_fp_precip_    = grib_arguments_get_name(h, c, n++);
+    p1_                 = c->get_name(h, n++);
+    p2_                 = c->get_name(h, n++);
+    timeRangeIndicator_ = c->get_name(h, n++);
+    unit_               = c->get_name(h, n++);
+    step_unit_          = c->get_name(h, n++);
+    stepType_           = c->get_name(h, n++);
+    patch_fp_precip_    = c->get_name(h, n++);
     error_on_units_     = 1;
 
     number_of_elements_ = 2;

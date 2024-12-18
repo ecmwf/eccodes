@@ -19,8 +19,8 @@ void grib_accessor_smart_table_column_t::init(const long len, grib_arguments* pa
     grib_accessor_gen_t::init(len, params);
     int n = 0;
 
-    smartTable_ = grib_arguments_get_name(grib_handle_of_accessor(this), params, n++);
-    index_      = grib_arguments_get_long(grib_handle_of_accessor(this), params, n++);
+    smartTable_ = params->get_name(grib_handle_of_accessor(this), n++);
+    index_      = params->get_long(grib_handle_of_accessor(this), n++);
 
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;

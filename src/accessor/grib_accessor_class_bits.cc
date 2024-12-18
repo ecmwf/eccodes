@@ -23,12 +23,12 @@ void grib_accessor_bits_t::init(const long l, grib_arguments* c)
     int n              = 0;
     referenceValue_    = 0;
 
-    argument_ = grib_arguments_get_name(hand, c, n++);
-    start_    = grib_arguments_get_long(hand, c, n++);
-    len_      = grib_arguments_get_long(hand, c, n++);
-    e         = grib_arguments_get_expression(hand, c, n++);
+    argument_ = c->get_name(hand, n++);
+    start_    = c->get_long(hand, n++);
+    len_      = c->get_long(hand, n++);
+    e         = c->get_expression(hand, n++);
     if (e) {
-        grib_expression_evaluate_double(hand, e, &(referenceValue_));
+        e->evaluate_double(hand, &(referenceValue_));
         referenceValuePresent_ = 1;
     }
     else {
@@ -36,7 +36,7 @@ void grib_accessor_bits_t::init(const long l, grib_arguments* c)
     }
     scale_ = 1;
     if (referenceValuePresent_) {
-        scale_ = grib_arguments_get_double(hand, c, n++);
+        scale_ = c->get_double(hand, n++);
     }
 
     Assert(len_ <= sizeof(long) * 8);

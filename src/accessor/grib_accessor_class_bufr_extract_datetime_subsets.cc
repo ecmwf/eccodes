@@ -19,9 +19,9 @@ void grib_accessor_bufr_extract_datetime_subsets_t::init(const long len, grib_ar
     int n = 0;
 
     length_            = 0;
-    doExtractSubsets_  = grib_arguments_get_name(grib_handle_of_accessor(this), arg, n++);
-    numberOfSubsets_   = grib_arguments_get_name(grib_handle_of_accessor(this), arg, n++);
-    extractSubsetList_ = grib_arguments_get_name(grib_handle_of_accessor(this), arg, n++);
+    doExtractSubsets_  = arg->get_name(grib_handle_of_accessor(this), n++);
+    numberOfSubsets_   = arg->get_name(grib_handle_of_accessor(this), n++);
+    extractSubsetList_ = arg->get_name(grib_handle_of_accessor(this), n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }

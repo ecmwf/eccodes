@@ -18,11 +18,11 @@ void grib_accessor_dictionary_t::init(const long len, grib_arguments* params)
     grib_accessor_gen_t::init(len, params);
     int n = 0;
 
-    dictionary_ = grib_arguments_get_string(grib_handle_of_accessor(this), params, n++);
-    key_        = grib_arguments_get_name(grib_handle_of_accessor(this), params, n++);
-    column_     = grib_arguments_get_long(grib_handle_of_accessor(this), params, n++);
-    masterDir_  = grib_arguments_get_name(grib_handle_of_accessor(this), params, n++);
-    localDir_   = grib_arguments_get_name(grib_handle_of_accessor(this), params, n++);
+    dictionary_ = params->get_string(grib_handle_of_accessor(this), n++);
+    key_        = params->get_name(grib_handle_of_accessor(this), n++);
+    column_     = params->get_long(grib_handle_of_accessor(this), n++);
+    masterDir_  = params->get_name(grib_handle_of_accessor(this), n++);
+    localDir_   = params->get_name(grib_handle_of_accessor(this), n++);
 
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;

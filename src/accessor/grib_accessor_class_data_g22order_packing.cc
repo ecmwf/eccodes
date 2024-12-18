@@ -18,28 +18,28 @@ void grib_accessor_data_g22order_packing_t::init(const long v, grib_arguments* a
     grib_accessor_values_t::init(v, args);
     grib_handle* gh = grib_handle_of_accessor(this);
 
-    numberOfValues_        = grib_arguments_get_name(gh, args, carg_++);
-    bits_per_value_        = grib_arguments_get_name(gh, args, carg_++);
-    reference_value_       = grib_arguments_get_name(gh, args, carg_++);
-    binary_scale_factor_   = grib_arguments_get_name(gh, args, carg_++);
-    decimal_scale_factor_  = grib_arguments_get_name(gh, args, carg_++);
-    optimize_scale_factor_ = grib_arguments_get_name(gh, args, carg_++);
+    numberOfValues_        = args->get_name(gh, carg_++);
+    bits_per_value_        = args->get_name(gh, carg_++);
+    reference_value_       = args->get_name(gh, carg_++);
+    binary_scale_factor_   = args->get_name(gh, carg_++);
+    decimal_scale_factor_  = args->get_name(gh, carg_++);
+    optimize_scale_factor_ = args->get_name(gh, carg_++);
 
-    typeOfOriginalFieldValues_                = grib_arguments_get_name(gh, args, carg_++);
-    groupSplittingMethodUsed_                 = grib_arguments_get_name(gh, args, carg_++);
-    missingValueManagementUsed_               = grib_arguments_get_name(gh, args, carg_++);
-    primaryMissingValueSubstitute_            = grib_arguments_get_name(gh, args, carg_++);
-    secondaryMissingValueSubstitute_          = grib_arguments_get_name(gh, args, carg_++);
-    numberOfGroupsOfDataValues_               = grib_arguments_get_name(gh, args, carg_++);
-    referenceForGroupWidths_                  = grib_arguments_get_name(gh, args, carg_++);
-    numberOfBitsUsedForTheGroupWidths_        = grib_arguments_get_name(gh, args, carg_++);
-    referenceForGroupLengths_                 = grib_arguments_get_name(gh, args, carg_++);
-    lengthIncrementForTheGroupLengths_        = grib_arguments_get_name(gh, args, carg_++);
-    trueLengthOfLastGroup_                    = grib_arguments_get_name(gh, args, carg_++);
-    numberOfBitsUsedForTheScaledGroupLengths_ = grib_arguments_get_name(gh, args, carg_++);
+    typeOfOriginalFieldValues_                = args->get_name(gh, carg_++);
+    groupSplittingMethodUsed_                 = args->get_name(gh, carg_++);
+    missingValueManagementUsed_               = args->get_name(gh, carg_++);
+    primaryMissingValueSubstitute_            = args->get_name(gh, carg_++);
+    secondaryMissingValueSubstitute_          = args->get_name(gh, carg_++);
+    numberOfGroupsOfDataValues_               = args->get_name(gh, carg_++);
+    referenceForGroupWidths_                  = args->get_name(gh, carg_++);
+    numberOfBitsUsedForTheGroupWidths_        = args->get_name(gh, carg_++);
+    referenceForGroupLengths_                 = args->get_name(gh, carg_++);
+    lengthIncrementForTheGroupLengths_        = args->get_name(gh, carg_++);
+    trueLengthOfLastGroup_                    = args->get_name(gh, carg_++);
+    numberOfBitsUsedForTheScaledGroupLengths_ = args->get_name(gh, carg_++);
 
-    orderOfSpatialDifferencing_     = grib_arguments_get_name(gh, args, carg_++);
-    numberOfOctetsExtraDescriptors_ = grib_arguments_get_name(gh, args, carg_++);
+    orderOfSpatialDifferencing_     = args->get_name(gh, carg_++);
+    numberOfOctetsExtraDescriptors_ = args->get_name(gh, carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
