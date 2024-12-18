@@ -61,7 +61,6 @@ void Default::dump_long(grib_accessor* a, const char* comment)
     size_t size = 1, size2 = 0;
     long* values = NULL;
     int err      = 0;
-    int i;
     long count = 0;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)

@@ -17,8 +17,6 @@ eccodes::Dumper *grib_dumper_bufr_decode_filter = &_grib_dumper_bufr_decode_filt
 
 namespace eccodes::dumper {
 
-static void dump_attributes(grib_accessor *a, const char *prefix);
-
 int BufrDecodeFilter::init()
 {
     section_offset_ = 0;
