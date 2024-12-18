@@ -19530,14 +19530,12 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 107 ;
-	 typeOfFirstFixedSurface = 8 ;
 	}
 #Aerosol backscatter from ground
 'aerbscatgnd' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 108 ;
-	 typeOfFirstFixedSurface = 1 ;
 	}
 #Aerosol extinction coefficient
 'aerext' = {
