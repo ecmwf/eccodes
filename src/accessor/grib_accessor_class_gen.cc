@@ -4,14 +4,14 @@
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  *
- * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
- * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ * In applying this licence, ECMWF does not waive the privileges and immunities
+ * granted to it by virtue of its status as an intergovernmental organisation
+ * nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class.h"
 #include "grib_accessor_class_gen.h"
+#include "grib_accessor_class.h"
 #include <stdexcept>
-
 
 grib_accessor_gen_t _grib_accessor_gen = grib_accessor_gen_t{};
 grib_accessor* grib_accessor_gen       = &_grib_accessor_gen;
@@ -70,21 +70,21 @@ void grib_accessor_gen_t::init(const long len, grib_arguments* param)
     }
 }
 
-void grib_accessor_gen_t::dump(grib_dumper* dumper)
+void grib_accessor_gen_t::dump(eccodes::Dumper* dumper)
 {
     const int type = get_native_type();
     switch (type) {
         case GRIB_TYPE_STRING:
-            grib_dump_string(dumper, this, NULL);
+            dumper->dump_string(this, NULL);
             break;
         case GRIB_TYPE_DOUBLE:
-            grib_dump_double(dumper, this, NULL);
+            dumper->dump_double(this, NULL);
             break;
         case GRIB_TYPE_LONG:
-            grib_dump_long(dumper, this, NULL);
+            dumper->dump_long(this, NULL);
             break;
         default:
-            grib_dump_bytes(dumper, this, NULL);
+            dumper->dump_bytes(this, NULL);
     }
 }
 
@@ -111,8 +111,11 @@ long grib_accessor_gen_t::byte_count()
 
 long grib_accessor_gen_t::get_native_type()
 {
-    grib_context_log(context_, GRIB_LOG_ERROR,
-                     "Accessor %s [%s] must implement 'get_native_type'", name_, class_name_);
+    grib_context_log(context_,
+                     GRIB_LOG_ERROR,
+                     "Accessor %s [%s] must implement 'get_native_type'",
+                     name_,
+                     class_name_);
     return GRIB_TYPE_UNDEFINED;
 }
 
@@ -124,11 +127,15 @@ long grib_accessor_gen_t::byte_offset()
 int grib_accessor_gen_t::unpack_bytes(unsigned char* val, size_t* len)
 {
     const unsigned char* buf = grib_handle_of_accessor(this)->buffer->data;
-    const long length  = byte_count();
-    const long offset  = byte_offset();
+    const long length        = byte_count();
+    const long offset        = byte_offset();
 
     if (*len < length) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "Wrong size for %s, it is %ld bytes long", name_, length);
+        grib_context_log(context_,
+                         GRIB_LOG_ERROR,
+                         "Wrong size for %s, it is %ld bytes long",
+                         name_,
+                         length);
         *len = length;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -163,7 +170,8 @@ int grib_accessor_gen_t::unpack_long(long* v, size_t* len)
                 *v = GRIB_MISSING_LONG;
             else
                 *v = (long)val;
-            grib_context_log(context_, GRIB_LOG_DEBUG, "Casting double %s to long", name_);
+            grib_context_log(
+                context_, GRIB_LOG_DEBUG, "Casting double %s to long", name_);
             return GRIB_SUCCESS;
         }
     }
@@ -178,15 +186,21 @@ int grib_accessor_gen_t::unpack_long(long* v, size_t* len)
             *v = strtol(val, &last, 10);
 
             if (*last == 0) {
-                grib_context_log(context_, GRIB_LOG_DEBUG, "Casting string %s to long", name_);
+                grib_context_log(
+                    context_, GRIB_LOG_DEBUG, "Casting string %s to long", name_);
                 return GRIB_SUCCESS;
             }
         }
     }
 
-    grib_context_log(context_, GRIB_LOG_ERROR, "Cannot unpack key '%s' as long", name_);
-    if (grib_get_native_type(grib_handle_of_accessor(this), name_, &type) == GRIB_SUCCESS) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "Hint: Try unpacking as %s", grib_get_type_name(type));
+    grib_context_log(
+        context_, GRIB_LOG_ERROR, "Cannot unpack key '%s' as long", name_);
+    if (grib_get_native_type(grib_handle_of_accessor(this), name_, &type) ==
+        GRIB_SUCCESS) {
+        grib_context_log(context_,
+                         GRIB_LOG_ERROR,
+                         "Hint: Try unpacking as %s",
+                         grib_get_type_name(type));
     }
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -211,10 +225,12 @@ int grib_accessor_gen_t::unpack_string(char* v, size_t* len)
         size_t l   = 1;
         err        = unpack_double(&val, &l);
         if (is_overridden_[UNPACK_DOUBLE] == 1) {
-            if (err) return err;
+            if (err)
+                return err;
             snprintf(v, 64, "%g", val);
             *len = strlen(v);
-            grib_context_log(context_, GRIB_LOG_DEBUG, "Casting double %s to string", name_);
+            grib_context_log(
+                context_, GRIB_LOG_DEBUG, "Casting double %s to string", name_);
             return GRIB_SUCCESS;
         }
     }
@@ -224,10 +240,12 @@ int grib_accessor_gen_t::unpack_string(char* v, size_t* len)
         size_t l = 1;
         err      = unpack_long(&val, &l);
         if (is_overridden_[UNPACK_LONG] == 1) {
-            if (err) return err;
+            if (err)
+                return err;
             snprintf(v, 64, "%ld", val);
             *len = strlen(v);
-            grib_context_log(context_, GRIB_LOG_DEBUG, "Casting long %s to string\n", name_);
+            grib_context_log(
+                context_, GRIB_LOG_DEBUG, "Casting long %s to string\n", name_);
             return GRIB_SUCCESS;
         }
     }
@@ -257,6 +275,7 @@ int grib_accessor_gen_t::pack_expression(grib_expression* e)
     const char* cval  = NULL;
     int ret           = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
+
 
     // Use the native type of the expression not the accessor
     switch (e->native_type(hand)) {
@@ -312,7 +331,10 @@ int grib_accessor_gen_t::pack_long(const long* v, size_t* len)
     if (is_overridden_[PACK_DOUBLE]) {
         double* val = (double*)grib_context_malloc(c, *len * (sizeof(double)));
         if (!val) {
-            grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %zu bytes", *len * (sizeof(double)));
+            grib_context_log(c,
+                             GRIB_LOG_ERROR,
+                             "Unable to allocate %zu bytes",
+                             *len * (sizeof(double)));
             return GRIB_OUT_OF_MEMORY;
         }
         for (size_t i = 0; i < *len; i++)
@@ -324,7 +346,8 @@ int grib_accessor_gen_t::pack_long(const long* v, size_t* len)
         }
     }
 
-    grib_context_log(c, GRIB_LOG_ERROR, "Should not pack '%s' as an integer", name_);
+    grib_context_log(
+        c, GRIB_LOG_ERROR, "Should not pack '%s' as an integer", name_);
     if (is_overridden_[PACK_STRING]) {
         grib_context_log(c, GRIB_LOG_ERROR, "Try packing as a string");
     }
@@ -339,7 +362,8 @@ int pack_double_array_as_long(grib_accessor* a, const double* v, size_t* len)
     size_t numBytes = *len * (sizeof(long));
     long* lValues   = (long*)grib_context_malloc(c, numBytes);
     if (!lValues) {
-        grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", numBytes);
+        grib_context_log(
+            c, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", numBytes);
         return GRIB_OUT_OF_MEMORY;
     }
     for (size_t i = 0; i < *len; i++)
@@ -359,7 +383,8 @@ int grib_accessor_gen_t::pack_double(const double* v, size_t* len)
         return pack_double_array_as_long(this, v, len);
     }
 
-    grib_context_log(c, GRIB_LOG_ERROR, "Should not pack '%s' as a double", name_);
+    grib_context_log(
+        c, GRIB_LOG_ERROR, "Should not pack '%s' as a double", name_);
     if (is_overridden_[PACK_STRING]) {
         grib_context_log(c, GRIB_LOG_ERROR, "Try packing as a string");
     }
@@ -393,9 +418,13 @@ int grib_accessor_gen_t::pack_string(const char* v, size_t* len)
         char* endPtr = NULL; /* for error handling */
         double val   = strtod(v, &endPtr);
         if (*endPtr) {
-            grib_context_log(context_, GRIB_LOG_ERROR,
-                             "%s: Invalid value (%s) for key '%s'. String cannot be converted to a double",
-                             __func__, v, name_);
+            grib_context_log(context_,
+                             GRIB_LOG_ERROR,
+                             "%s: Invalid value (%s) for key '%s'. String cannot be "
+                             "converted to a double",
+                             __func__,
+                             v,
+                             name_);
             return GRIB_WRONG_TYPE;
         }
         return pack_double(&val, &l);
@@ -410,7 +439,8 @@ int grib_accessor_gen_t::pack_string(const char* v, size_t* len)
         }
     }
 
-    grib_context_log(context_, GRIB_LOG_ERROR, "Should not pack '%s' as string", name_);
+    grib_context_log(
+        context_, GRIB_LOG_ERROR, "Should not pack '%s' as string", name_);
     return GRIB_NOT_IMPLEMENTED;
 }
 
@@ -418,9 +448,13 @@ int grib_accessor_gen_t::pack_bytes(const unsigned char* val, size_t* len)
 {
     const size_t length = *len;
     if (length_ != length) {
-        grib_context_log(context_, GRIB_LOG_ERROR,
-                         "pack_bytes: Wrong size (%zu) for %s. It is %ld bytes long",
-                         length, name_, length_);
+        grib_context_log(
+            context_,
+            GRIB_LOG_ERROR,
+            "pack_bytes: Wrong size (%zu) for %s. It is %ld bytes long",
+            length,
+            name_,
+            length_);
         return GRIB_BUFFER_TOO_SMALL;
     }
     grib_buffer_replace(this, val, length, 1, 1);
@@ -452,8 +486,11 @@ int grib_accessor_gen_t::notify_change(grib_accessor* observed)
 
 void grib_accessor_gen_t::update_size(size_t s)
 {
-    grib_context_log(context_, GRIB_LOG_FATAL,
-                     "Accessor %s [%s] must implement 'update_size'", name_, class_name_);
+    grib_context_log(context_,
+                     GRIB_LOG_FATAL,
+                     "Accessor %s [%s] must implement 'update_size'",
+                     name_,
+                     class_name_);
 }
 
 grib_accessor* grib_accessor_gen_t::next_accessor()
@@ -500,7 +537,11 @@ int grib_accessor_gen_t::is_missing()
 
     if (flags_ & GRIB_ACCESSOR_FLAG_TRANSIENT) {
         if (vvalue_ == NULL) {
-            grib_context_log(context_, GRIB_LOG_ERROR, "%s internal error (flags=0x%lX)", name_, flags_);
+            grib_context_log(context_,
+                             GRIB_LOG_ERROR,
+                             "%s internal error (flags=0x%lX)",
+                             name_,
+                             flags_);
             Assert(!"grib_accessor_gen_t::is_missing(): vvalue == NULL");
             return 0;
         }
@@ -526,12 +567,16 @@ int grib_accessor_gen_t::unpack_double_element(size_t i, double* val)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_gen_t::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
+int grib_accessor_gen_t::unpack_double_element_set(const size_t* index_array,
+                                                   size_t len,
+                                                   double* val_array)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_gen_t::unpack_double_subarray(double* val, size_t start, size_t len)
+int grib_accessor_gen_t::unpack_double_subarray(double* val,
+                                                size_t start,
+                                                size_t len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -554,9 +599,7 @@ long grib_accessor_gen_t::get_next_position_offset()
     return next_offset();
 }
 
-grib_accessor_gen_t::~grib_accessor_gen_t()
-{
-}
+grib_accessor_gen_t::~grib_accessor_gen_t() {}
 
 void grib_accessor_gen_t::post_init()
 {
@@ -576,17 +619,23 @@ void grib_accessor_gen_t::resize(size_t)
 }
 int grib_accessor_gen_t::nearest_smaller_value(double, double*)
 {
-    throw std::runtime_error("grib_accessor_gen_t::nearest_smaller_value not implemented");
+    throw std::runtime_error(
+        "grib_accessor_gen_t::nearest_smaller_value not implemented");
 }
 int grib_accessor_gen_t::unpack_float_element(size_t, float*)
 {
-    throw std::runtime_error("grib_accessor_gen_t::unpack_float_element not implemented");
+    throw std::runtime_error(
+        "grib_accessor_gen_t::unpack_float_element not implemented");
 }
 int unpack_element_set(const size_t*, size_t, double*)
 {
-    throw std::runtime_error("grib_accessor_gen_t::unpack_element_set not implemented");
+    throw std::runtime_error(
+        "grib_accessor_gen_t::unpack_element_set not implemented");
 }
-int grib_accessor_gen_t::unpack_float_element_set(const size_t*, size_t, float*)
+int grib_accessor_gen_t::unpack_float_element_set(const size_t*,
+                                                  size_t,
+                                                  float*)
 {
-    throw std::runtime_error("grib_accessor_gen_t::unpack_float_element_set not implemented");
+    throw std::runtime_error(
+        "grib_accessor_gen_t::unpack_float_element_set not implemented");
 }

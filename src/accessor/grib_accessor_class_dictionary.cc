@@ -143,17 +143,17 @@ grib_trie* grib_accessor_dictionary_t::load_dictionary(int* err)
     return dictionary;
 }
 
-void grib_accessor_dictionary_t::dump(grib_dumper* dumper)
+void grib_accessor_dictionary_t::dump(eccodes::Dumper* dumper)
 {
     switch (get_native_type()) {
         case GRIB_TYPE_STRING:
-            grib_dump_string(dumper, this, NULL);
+            dumper->dump_string(this, NULL);
             break;
         case GRIB_TYPE_LONG:
-            grib_dump_long(dumper, this, NULL);
+            dumper->dump_long(this, NULL);
             break;
         case GRIB_TYPE_DOUBLE:
-            grib_dump_double(dumper, this, NULL);
+            dumper->dump_double(this, NULL);
             break;
     }
 }

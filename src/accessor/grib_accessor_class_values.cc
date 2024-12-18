@@ -63,9 +63,9 @@ long grib_accessor_values_t::get_native_type()
     return GRIB_TYPE_DOUBLE;
 }
 
-void grib_accessor_values_t::dump(grib_dumper* dumper)
+void grib_accessor_values_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_values(dumper, this);
+    dumper->dump_values(this);
 }
 
 long grib_accessor_values_t::byte_count()

@@ -9,6 +9,7 @@
  */
 
 #include "grib_tools.h"
+#include "grib_dumper_factory.h"
 
 grib_option grib_options[] = {
     /*  {id, args, help}, on, command_line, value*/

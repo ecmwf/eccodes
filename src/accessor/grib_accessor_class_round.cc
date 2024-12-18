@@ -24,7 +24,7 @@ void grib_accessor_round_t::destroy(grib_context* c)
     grib_accessor_evaluate_t::destroy(c);
 }
 
-void grib_accessor_round_t::dump(grib_dumper* dumper)
+void grib_accessor_round_t::dump(eccodes::Dumper* dumper)
 {
     grib_accessor_evaluate_t::dump(dumper);
 }
