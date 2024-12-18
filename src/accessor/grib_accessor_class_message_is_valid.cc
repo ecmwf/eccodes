@@ -73,9 +73,7 @@ static int check_grid_pl_array(grib_handle* h)
     }
 
     pl = (long*)grib_context_malloc_clear(c, sizeof(long) * plsize);
-    if (!pl) {
-        return GRIB_OUT_OF_MEMORY;
-    }
+    if (!pl) return GRIB_OUT_OF_MEMORY;
     if ((ret = grib_get_long_array(h, "pl", pl, &plsize)) != GRIB_SUCCESS)
         return ret;
 
@@ -90,10 +88,26 @@ static int check_grid_pl_array(grib_handle* h)
     return GRIB_SUCCESS;
 }
 
+static int check_geoiterator(grib_handle* h)
+{
+    //printf("DEBUG  %s \n", __func__);
+    int err = 0;
+    grib_iterator* iter = grib_iterator_new(h, 0, &err);
+    if (err == GRIB_NOT_IMPLEMENTED || err == GRIB_SUCCESS) {
+        grib_iterator_delete(iter);
+        return GRIB_SUCCESS; // GRIB_NOT_IMPLEMENTED is OK e.g., for spectral fields
+    }
+
+    grib_context_log(h->context, GRIB_LOG_ERROR, "%s", grib_get_error_message(err));
+    grib_iterator_delete(iter);
+    return err;
+}
+
 typedef int (*proj_func)(grib_handle*);
 static proj_func check_functions[] = {
     check_field_values,
-    check_grid_pl_array
+    check_grid_pl_array,
+    check_geoiterator
 };
 
 int grib_accessor_message_is_valid_t::unpack_long(long* val, size_t* len)

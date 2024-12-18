@@ -17,6 +17,13 @@ tempFilt=temp.$label.filt
 sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
 grib_check_key_equals $sample   isMessageValid 1
 
+# Check regular lat/lon
+# ------------------------------
+${tools_dir}/grib_set -s Nj=0 $data_dir/sample.grib2 $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "Regular grid Geoiterator" $tempText
+
+
 # Check reduced Gaussian grid Ni
 # ------------------------------
 cat >$tempFilt<<EOF
