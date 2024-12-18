@@ -112,6 +112,7 @@ if( HAVE_BUILD_TOOLS )
         grib_generalised_tiles
         # grib_true_imagery
         grib2_wave_spectra
+        grib2_probability
         grib_suppressed
         grib_destine_mars_keys
         grib_2nd_order_numValues
@@ -172,6 +173,7 @@ if( HAVE_BUILD_TOOLS )
     # and/or take much longer
     list(APPEND tests_extra
         grib_data_quality_checks
+        grib_check_message_validity
         grib_update_sections_lengths
         grib_units_bias_factor
         grib_set_large_message_fail

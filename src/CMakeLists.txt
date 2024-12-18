@@ -11,8 +11,8 @@
 
 include_directories(
     "${CMAKE_CURRENT_SOURCE_DIR}/accessor"
-    "${CMAKE_CURRENT_SOURCE_DIR}/geo_iterator"
-    "${CMAKE_CURRENT_SOURCE_DIR}/geo_nearest"
+    "${CMAKE_CURRENT_SOURCE_DIR}/geo/iterator"
+    "${CMAKE_CURRENT_SOURCE_DIR}/geo/nearest"
     )
 
 list( APPEND eccodes_src_files
@@ -124,6 +124,7 @@ list( APPEND eccodes_src_files
     accessor/grib_accessor_class_data_g22order_packing.cc
     accessor/grib_accessor_class_mars_step.cc
     accessor/grib_accessor_class_message_copy.cc
+    accessor/grib_accessor_class_message_is_valid.cc
     accessor/grib_accessor_class_dictionary.cc
     accessor/grib_accessor_class_latlon_increment.cc
     accessor/grib_accessor_class_g2date.cc
@@ -262,7 +263,7 @@ list( APPEND eccodes_src_files
     accessor/grib_accessor_class_sexagesimal2decimal.cc
     accessor/grib_accessor_class_vector.cc
     accessor/grib_accessor_class_long_vector.cc
-    grib_gaussian_reduced.cc
+    geo/grib_gaussian_reduced.cc
     accessor/grib_accessor_class_abstract_vector.cc
     accessor/grib_accessor_class_abstract_long_vector.cc
     grib_loader_from_handle.cc
@@ -293,7 +294,7 @@ list( APPEND eccodes_src_files
     grib_date.cc
     grib_fieldset.cc
     grib_filepool.cc
-    grib_geography.cc
+    geo/grib_geography.cc
     grib_handle.cc
     grib_hash_keys.cc
     grib_io.cc
@@ -331,32 +332,32 @@ list( APPEND eccodes_src_files
     expression/grib_expression_class_string.cc
     expression/grib_expression_class_sub_string.cc
 
-    geo_nearest/grib_nearest.cc
-    geo_nearest/grib_nearest_class_gen.cc
-    geo_nearest/grib_nearest_class_healpix.cc
-    geo_nearest/grib_nearest_class_lambert_azimuthal_equal_area.cc
-    geo_nearest/grib_nearest_class_lambert_conformal.cc
-    geo_nearest/grib_nearest_class_latlon_reduced.cc
-    geo_nearest/grib_nearest_class_mercator.cc
-    geo_nearest/grib_nearest_class_polar_stereographic.cc
-    geo_nearest/grib_nearest_class_reduced.cc
-    geo_nearest/grib_nearest_class_regular.cc
-    geo_nearest/grib_nearest_class_space_view.cc
+    geo/nearest/grib_nearest.cc
+    geo/nearest/grib_nearest_class_gen.cc
+    geo/nearest/grib_nearest_class_healpix.cc
+    geo/nearest/grib_nearest_class_lambert_azimuthal_equal_area.cc
+    geo/nearest/grib_nearest_class_lambert_conformal.cc
+    geo/nearest/grib_nearest_class_latlon_reduced.cc
+    geo/nearest/grib_nearest_class_mercator.cc
+    geo/nearest/grib_nearest_class_polar_stereographic.cc
+    geo/nearest/grib_nearest_class_reduced.cc
+    geo/nearest/grib_nearest_class_regular.cc
+    geo/nearest/grib_nearest_class_space_view.cc
 
-    geo_iterator/grib_iterator.cc
-    geo_iterator/grib_iterator_class_gaussian.cc
-    geo_iterator/grib_iterator_class_gaussian_reduced.cc
-    geo_iterator/grib_iterator_class_gen.cc
-    geo_iterator/grib_iterator_class_healpix.cc
-    geo_iterator/grib_iterator_class_lambert_azimuthal_equal_area.cc
-    geo_iterator/grib_iterator_class_lambert_conformal.cc
-    geo_iterator/grib_iterator_class_latlon.cc
-    geo_iterator/grib_iterator_class_latlon_reduced.cc
-    geo_iterator/grib_iterator_class_mercator.cc
-    geo_iterator/grib_iterator_class_polar_stereographic.cc
-    geo_iterator/grib_iterator_class_regular.cc
-    geo_iterator/grib_iterator_class_space_view.cc
-    geo_iterator/grib_iterator_class_unstructured.cc
+    geo/iterator/grib_iterator.cc
+    geo/iterator/grib_iterator_class_gaussian.cc
+    geo/iterator/grib_iterator_class_gaussian_reduced.cc
+    geo/iterator/grib_iterator_class_gen.cc
+    geo/iterator/grib_iterator_class_healpix.cc
+    geo/iterator/grib_iterator_class_lambert_azimuthal_equal_area.cc
+    geo/iterator/grib_iterator_class_lambert_conformal.cc
+    geo/iterator/grib_iterator_class_latlon.cc
+    geo/iterator/grib_iterator_class_latlon_reduced.cc
+    geo/iterator/grib_iterator_class_mercator.cc
+    geo/iterator/grib_iterator_class_polar_stereographic.cc
+    geo/iterator/grib_iterator_class_regular.cc
+    geo/iterator/grib_iterator_class_space_view.cc
+    geo/iterator/grib_iterator_class_unstructured.cc
 
     codes_util.cc
     grib_util.cc
@@ -419,10 +420,10 @@ endif()
 
 if( eccodes_HAVE_GEOGRAPHY AND eccodes_HAVE_ECKIT_GEO )
     list( APPEND eccodes_src_files
-        eccodes/geo/GeoIterator.cc
-        eccodes/geo/GeoIterator.h
-        eccodes/geo/GribSpec.cc
-        eccodes/geo/GribSpec.h )
+        geo/GeoIterator.cc
+        geo/GeoIterator.h
+        geo/GribSpec.cc
+        geo/GribSpec.h )
     list( APPEND ECCODES_EXTRA_LIBRARIES eckit_geo )
 endif()
 

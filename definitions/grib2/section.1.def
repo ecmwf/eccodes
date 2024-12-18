@@ -29,11 +29,6 @@ transient masterDir="grib2/tables/[tablesVersion]";
 if (tablesVersion > tablesVersionLatest) {
   transient masterDir="grib2/tables/[tablesVersionLatest]";
 }
-when (tablesVersion!=255) {
-  set masterDir="grib2/tables/[tablesVersion]";
-} else {
-  set masterDir="grib2/tables/4";
-}
 
 codetable[1] localTablesVersion 'grib2/tables/local/[centreForLocal]/1.1.table' ;
 alias versionNumberOfGribLocalTables=localTablesVersion;
@@ -95,6 +90,7 @@ concept stepType {
     "sum"     = {selectStepTemplateInterval=1; stepTypeInternal="sum";}
     "severity" = {selectStepTemplateInterval=1; stepTypeInternal="severity";}
     "mode"    = {selectStepTemplateInterval=1; stepTypeInternal="mode";}
+    "index"   = {selectStepTemplateInterval=1; stepTypeInternal="index";}
 }
 
 # 0=atmospheric chemical constituents

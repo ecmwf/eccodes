@@ -69,6 +69,7 @@ if (numberOfTimeRanges == 1 || numberOfTimeRanges == 2) {
     "sum"     = {typeOfStatisticalProcessing=11;}
     "severity" = {typeOfStatisticalProcessing=100;}
     "mode"     = {typeOfStatisticalProcessing=101;}
+    "index"    = {typeOfStatisticalProcessing=102;}
   }
   meta startStep step_in_units(forecastTime,indicatorOfUnitOfTimeRange,stepUnits,
     indicatorOfUnitForTimeRange,lengthOfTimeRange) : no_copy;
