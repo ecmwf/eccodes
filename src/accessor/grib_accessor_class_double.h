@@ -21,6 +21,6 @@ public:
     long get_native_type() override;
     int pack_missing() override;
     int unpack_string(char*, size_t* len) override;
-    void dump(grib_dumper*) override;
+    void dump(eccodes::Dumper*) override;
     int compare(grib_accessor*) override;
 };

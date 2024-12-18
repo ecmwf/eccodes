@@ -19,6 +19,6 @@ public:
         grib_accessor_g1date_t() { class_name_ = "g1day_of_the_year_date"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_g1day_of_the_year_date_t{}; }
     int unpack_string(char*, size_t* len) override;
-    void dump(grib_dumper*) override;
+    void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
 };

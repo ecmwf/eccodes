@@ -277,9 +277,9 @@ void grib_smart_table_delete(grib_context* c)
     }
 }
 
-void grib_accessor_smart_table_t::dump(grib_dumper* dumper)
+void grib_accessor_smart_table_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_long(dumper, this, NULL);
+    dumper->dump_long(this, NULL);
 }
 
 int grib_accessor_smart_table_t::unpack_string(char* buffer, size_t* len)

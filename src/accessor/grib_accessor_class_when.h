@@ -19,7 +19,7 @@ public:
         grib_accessor_gen_t() { class_name_ = "when"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_when_t{}; }
     long get_native_type() override;
-    void dump(grib_dumper*) override;
+    void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
     int notify_change(grib_accessor* changed) override;
 };

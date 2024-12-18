@@ -77,19 +77,19 @@ void grib_accessor_variable_t::accessor_variable_set_type(int type)
     type_ = type;
 }
 
-void grib_accessor_variable_t::dump(grib_dumper* dumper)
+void grib_accessor_variable_t::dump(eccodes::Dumper* dumper)
 {
     switch (type_) {
         case GRIB_TYPE_DOUBLE:
-            grib_dump_double(dumper, this, NULL);
+            dumper->dump_double(this, NULL);
             break;
 
         case GRIB_TYPE_LONG:
-            grib_dump_long(dumper, this, NULL);
+            dumper->dump_long(this, NULL);
             break;
 
         default:
-            grib_dump_string(dumper, this, NULL);
+            dumper->dump_string(this, NULL);
             break;
     }
 }

@@ -45,7 +45,7 @@ long number_of_bits(grib_handle* h, unsigned long x)
         n++;
         i++;
         if (i >= count) {
-            /*grib_dump_content(h, stdout,"debug", ~0, NULL);*/
+            /*h->dump_content(stdout,"debug", ~0, NULL);*/
             grib_context_log(h->context, GRIB_LOG_FATAL,
                              "grib_accessor_data_g1second_order_general_extended_packing: Number out of range: %ld", x);
         }

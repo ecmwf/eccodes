@@ -23,9 +23,9 @@ void grib_accessor_hash_array_t::init(const long len, grib_arguments* args)
     ha_     = NULL;
 }
 
-void grib_accessor_hash_array_t::dump(grib_dumper* dumper)
+void grib_accessor_hash_array_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_string(dumper, this, NULL);
+    dumper->dump_string(this, NULL);
 }
 
 int grib_accessor_hash_array_t::pack_double(const double* val, size_t* len)

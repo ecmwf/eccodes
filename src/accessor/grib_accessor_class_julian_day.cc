@@ -27,9 +27,9 @@ void grib_accessor_julian_day_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-void grib_accessor_julian_day_t::dump(grib_dumper* dumper)
+void grib_accessor_julian_day_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_string(dumper, this, NULL);
+    dumper->dump_string(this, NULL);
 }
 
 int grib_accessor_julian_day_t::pack_long(const long* val, size_t* len)

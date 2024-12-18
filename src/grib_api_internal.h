@@ -263,8 +263,6 @@ typedef struct grib_iterator
     eccodes::geo_iterator::Iterator* iterator;
 } grib_iterator;
 
-typedef struct grib_dumper grib_dumper;
-typedef struct grib_dumper_class grib_dumper_class;
 typedef struct grib_dependency grib_dependency;
 
 typedef struct codes_condition codes_condition;
@@ -464,47 +462,6 @@ typedef struct grib_nearest
 } grib_nearest;
 
 /* --------------- */
-typedef int (*dumper_init_proc)(grib_dumper*);
-typedef void (*dumper_dump_proc)(grib_dumper*, grib_accessor*, const char* comment);
-typedef void (*dumper_dump_section_proc)(grib_dumper*, grib_accessor*, grib_block_of_accessors* block);
-typedef void (*dumper_dump_values_proc)(grib_dumper*, grib_accessor*);
-typedef int (*dumper_destroy_proc)(grib_dumper*);
-typedef void (*dumper_header_proc)(grib_dumper*, grib_handle*);
-typedef void (*dumper_footer_proc)(grib_dumper*, grib_handle*);
-typedef void (*dumper_init_class_proc)(grib_dumper_class*);
-
-struct grib_dumper
-{
-    FILE* out;
-    unsigned long option_flags;
-    void* arg;
-    int depth;
-    long count;
-    grib_context* context;
-    grib_dumper_class* cclass;
-};
-
-struct grib_dumper_class
-{
-    grib_dumper_class** super;
-    const char* name;
-    size_t size;
-    int inited;
-    dumper_init_class_proc init_class;
-    dumper_init_proc init;
-    dumper_destroy_proc destroy;
-    dumper_dump_proc dump_long;
-    dumper_dump_proc dump_double;
-    dumper_dump_proc dump_string;
-    dumper_dump_proc dump_string_array;
-    dumper_dump_proc dump_label;
-    dumper_dump_proc dump_bytes;
-    dumper_dump_proc dump_bits;
-    dumper_dump_section_proc dump_section;
-    dumper_dump_values_proc dump_values;
-    dumper_header_proc header;
-    dumper_footer_proc footer;
-};
 
 struct grib_dependency
 {

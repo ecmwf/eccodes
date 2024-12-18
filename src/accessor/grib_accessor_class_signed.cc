@@ -27,14 +27,14 @@ void grib_accessor_signed_t::init(const long len, grib_arguments* arg)
     Assert(length_ >= 0);
 }
 
-void grib_accessor_signed_t::dump(grib_dumper* dumper)
+void grib_accessor_signed_t::dump(eccodes::Dumper* dumper)
 {
     long rlen = 0;
     value_count(&rlen);
     if (rlen == 1)
-        grib_dump_long(dumper, this, NULL);
+        dumper->dump_long(this, NULL);
     else
-        grib_dump_values(dumper, this);
+        dumper->dump_values(this);
 }
 
 static const long ones[] = {
