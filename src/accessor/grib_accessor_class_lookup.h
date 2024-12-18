@@ -23,7 +23,7 @@ public:
     int unpack_string(char*, size_t* len) override;
     long byte_count() override;
     long byte_offset() override;
-    void dump(grib_dumper*) override;
+    void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
     void post_init() override;
     int notify_change(grib_accessor*) override;

@@ -67,14 +67,14 @@ long grib_accessor_bitmap_t::next_offset()
     return byte_offset() + byte_count();
 }
 
-void grib_accessor_bitmap_t::dump(grib_dumper* dumper)
+void grib_accessor_bitmap_t::dump(eccodes::Dumper* dumper)
 {
     long len = 0;
     char label[1024];
 
     value_count(&len);
     snprintf(label, sizeof(label), "Bitmap of %ld values", len);
-    grib_dump_bytes(dumper, this, label);
+    dumper->dump_bytes(this, label);
 }
 
 int grib_accessor_bitmap_t::unpack_long(long* val, size_t* len)

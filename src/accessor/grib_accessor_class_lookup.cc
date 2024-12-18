@@ -30,7 +30,7 @@ void grib_accessor_lookup_t::post_init()
     }
 }
 
-void grib_accessor_lookup_t::dump(grib_dumper* dumper)
+void grib_accessor_lookup_t::dump(eccodes::Dumper* dumper)
 {
     unsigned char bytes[1024] = {0,};
     char msg[1024] = {0,};
@@ -50,7 +50,7 @@ void grib_accessor_lookup_t::dump(grib_dumper* dumper)
 
     snprintf(buf, sizeof(buf), "%s %lu %ld-%ld", msg, v, (long)offset_ + loffset_, (long)llength_);
 
-    grib_dump_long(dumper, this, buf);
+    dumper->dump_long(this, buf);
 }
 
 int grib_accessor_lookup_t::unpack_string(char* v, size_t* len)

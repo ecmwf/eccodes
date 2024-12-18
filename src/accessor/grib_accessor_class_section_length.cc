@@ -23,9 +23,9 @@ void grib_accessor_section_length_t::init(const long len, grib_arguments* arg)
     Assert(length_ >= 0);
 }
 
-void grib_accessor_section_length_t::dump(grib_dumper* dumper)
+void grib_accessor_section_length_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_long(dumper, this, NULL);
+    dumper->dump_long(this, NULL);
 }
 
 int grib_accessor_section_length_t::value_count(long* c)

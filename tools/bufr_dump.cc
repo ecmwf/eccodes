@@ -9,6 +9,7 @@
  */
 
 #include "grib_tools.h"
+#include "grib_dumper_factory.h"
 #include "accessor/grib_accessor_class_bufr_data_array.h"
 
 grib_option grib_options[] = {
@@ -59,15 +60,15 @@ grib_option grib_options[] = {
     /* {"x",0,0,0,1,0} */
 };
 
-const char* tool_description = "Dump the content of a BUFR file in different formats.";
-const char* tool_name        = "bufr_dump";
-const char* tool_online_doc  = "https://confluence.ecmwf.int/display/ECC/bufr_dump";
-const char* tool_usage       = "[options] bufr_file bufr_file ...";
-static int json              = 0;
-static int dump_descriptors  = 0;
-static char* json_option     = 0;
-static int first_handle      = 1;
-static grib_dumper* dumper   = 0;
+const char* tool_description   = "Dump the content of a BUFR file in different formats.";
+const char* tool_name          = "bufr_dump";
+const char* tool_online_doc    = "https://confluence.ecmwf.int/display/ECC/bufr_dump";
+const char* tool_usage         = "[options] bufr_file bufr_file ...";
+static int json                = 0;
+static int dump_descriptors    = 0;
+static char* json_option       = 0;
+static int first_handle        = 1;
+static eccodes::Dumper* dumper = 0;
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 

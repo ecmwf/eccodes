@@ -21,9 +21,9 @@ void grib_accessor_g1_half_byte_codeflag_t::init(const long len, grib_arguments*
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
 
-void grib_accessor_g1_half_byte_codeflag_t::dump(grib_dumper* dumper)
+void grib_accessor_g1_half_byte_codeflag_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_long(dumper, this, NULL);
+    dumper->dump_long(this, NULL);
 }
 
 int grib_accessor_g1_half_byte_codeflag_t::unpack_long(long* val, size_t* len)

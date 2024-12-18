@@ -22,6 +22,6 @@ public:
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
     long byte_count() override;
-    void dump(grib_dumper*) override;
+    void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
 };
