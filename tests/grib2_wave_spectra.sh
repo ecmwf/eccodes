@@ -83,6 +83,10 @@ ${tools_dir}/grib_compare -b marsType,typeOfProcessedData,typeOfGeneratingProces
 ${tools_dir}/grib_set -s type=es $tempGribA $tempGribB
 ${tools_dir}/grib_compare -b marsType,typeOfProcessedData,typeOfGeneratingProcess $tempGribA $tempGribB
 
+# Check PDTN
+#
+${tools_dir}/grib_set -s paramId=140114 $sample2 $tempGribA
+grib_check_key_equals $tempGribA productDefinitionTemplateNumber,shortName '103 h1012'
 
 # Clean up
 rm -f $tempSample $temp $tempGribA $tempGribB $tempRef $tempOut

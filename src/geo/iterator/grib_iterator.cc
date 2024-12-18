@@ -17,7 +17,7 @@
 #if defined(HAVE_ECKIT_GEO)
     #include "eckit/runtime/Main.h"
 
-    #include "eccodes/geo/GeoIterator.h"
+    #include "geo/GeoIterator.h"
 
     // eccodes macros conflict with eckit
     #ifdef Assert

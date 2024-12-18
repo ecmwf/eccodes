@@ -10,7 +10,7 @@
  */
 
 
-#include "eccodes/geo/GribSpec.h"
+#include "geo/GribSpec.h"
 
 #include <algorithm>
 #include <cstring>

@@ -611,7 +611,7 @@ struct bufr_descriptor
     int type;
     /*char* name;   Not needed: All usage commented out. See ECC-489 */
     char shortName[128];
-    char units[128];
+    char units[64];
     long scale;
     double factor;
     long reference;
@@ -1234,8 +1234,8 @@ typedef struct j2k_encode_helper
 }
     #include "accessor/grib_accessor.h"
     #include "accessor/grib_accessors_list.h"
-    #include "geo_iterator/grib_iterator.h"
-    #include "geo_nearest/grib_nearest.h"
+    #include "geo/iterator/grib_iterator.h"
+    #include "geo/nearest/grib_nearest.h"
     #include "expression/grib_expression.h"
     #include "expression/grib_arguments.h"
 #endif

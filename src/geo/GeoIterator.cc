@@ -9,11 +9,11 @@
  */
 
 
-#include "eccodes/geo/GeoIterator.h"
+#include "geo/GeoIterator.h"
 
 #include "eckit/exception/Exceptions.h"
 
-#include "eccodes/geo/GribSpec.h"
+#include "geo/GribSpec.h"
 
 
 namespace eccodes::geo

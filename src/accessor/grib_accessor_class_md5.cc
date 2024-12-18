@@ -102,6 +102,7 @@ int grib_accessor_md5_t::unpack_string(char* v, size_t* len)
     mess = (unsigned char*)grib_context_malloc(context_, length);
     memcpy(mess, grib_handle_of_accessor(this)->buffer->data + offset, length);
     mess_len = length;
+    const unsigned char* pEnd = mess + length - 1;
 
     blocklist = context_->blocklist;
     /* passed blocklist overrides context blocklist.
@@ -117,8 +118,10 @@ int grib_accessor_md5_t::unpack_string(char* v, size_t* len)
         }
 
         p = mess + b->offset_ - offset;
-        for (i = 0; i < b->length_; i++)
+        for (i = 0; i < b->length_; i++) {
+            if (p > pEnd) break;
             *(p++) = 0;
+        }
 
         blocklist = blocklist->next;
     }

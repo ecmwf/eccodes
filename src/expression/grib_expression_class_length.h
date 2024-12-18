@@ -31,8 +31,6 @@ public:
 
 private:
     char* name_   = nullptr;
-    size_t start_ = 0;
-    size_t length = 0;
 };
 
 }  // namespace eccodes::expression

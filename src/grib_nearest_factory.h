@@ -11,7 +11,7 @@
 #pragma once
 
 #include "grib_api_internal.h"
-#include "geo_nearest/grib_nearest.h"
+#include "geo/nearest/grib_nearest.h"
 
 extern eccodes::geo_nearest::Nearest* grib_nearest_healpix;
 extern eccodes::geo_nearest::Nearest* grib_nearest_lambert_azimuthal_equal_area;
