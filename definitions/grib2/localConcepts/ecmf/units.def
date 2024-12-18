@@ -194,30 +194,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 46 ;
 	}
-#Maximum temperature at 2 metres in the last 24 hours
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 lengthOfTimeRange = 24 ;
-	}
-#Minimum temperature at 2 metres in the last 24 hours
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 3 ;
-	 lengthOfTimeRange = 24 ;
-	}
 #Observation count
 '~' = {
 	 discipline = 192 ;
@@ -499,12 +475,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 120 ;
-	}
-#Maximum 10 metre wind gust in the last 6 hours
-'m s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 123 ;
 	}
 #Vertically integrated total energy
 'J m**-2' = {
@@ -1583,12 +1553,6 @@
 	 parameterCategory = 200 ;
 	 parameterNumber = 129 ;
 	}
-#Temperature difference
-'K' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 130 ;
-	}
 #U component of wind difference
 'm s**-1' = {
 	 discipline = 192 ;
@@ -1600,12 +1564,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 132 ;
-	}
-#Specific humidity difference
-'kg kg**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 133 ;
 	}
 #Surface pressure difference
 'Pa' = {
@@ -1630,12 +1588,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 137 ;
-	}
-#Vorticity (relative) difference
-'s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 138 ;
 	}
 #Soil temperature level 1 difference
 'K' = {
@@ -1717,9 +1669,11 @@
 	}
 #Logarithm of surface pressure difference
 'kg m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 152 ;
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfGeneratingProcess = 20 ;
 	}
 #Short-wave heating rate difference
 'K' = {
@@ -1732,12 +1686,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 154 ;
-	}
-#Divergence difference
-'s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 155 ;
 	}
 #Height difference
 'm' = {
@@ -2014,12 +1962,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 202 ;
-	}
-#Ozone mass mixing ratio difference
-'kg kg**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 203 ;
 	}
 #Precipitation analysis weights difference
 '~' = {
@@ -2525,7 +2467,7 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 122 ;
 	}
-#Time-mean surface runoff rate
+#Mean surface runoff rate
 'm s**-1' = {
 	 localTablesVersion = 1 ;
 	 discipline = 2 ;
@@ -2534,7 +2476,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean sub-surface runoff rate
+#Mean sub-surface runoff rate
 'm s**-1' = {
 	 localTablesVersion = 1 ;
 	 discipline = 2 ;
@@ -5320,6 +5262,12 @@
 	 discipline = 192 ;
 	 parameterCategory = 213 ;
 	 parameterNumber = 221 ;
+	}
+#Cosine of solar zenith angle
+'~' = {
+	 discipline = 192 ;
+	 parameterCategory = 214 ;
+	 parameterNumber = 1 ;
 	}
 #UV biologically effective dose
 '~' = {
@@ -13585,30 +13533,6 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 25 ;
 	}
-#Maximum temperature at 2 metres in the last 3 hours
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 lengthOfTimeRange = 3 ;
-	}
-#Minimum temperature at 2 metres in the last 3 hours
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 3 ;
-	 lengthOfTimeRange = 3 ;
-	}
 #Soil wetness index in layer 1
 'dimensionless' = {
 	 discipline = 192 ;
@@ -14165,6 +14089,106 @@
 #Emission mass flux from gas production
 'kg m**-2 s**-1' = {
 	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 200 ;
+	}
+#Volume-mean total column mixing ratio
+'mol mol**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 195 ;
+	}
+#Emission mass flux from vegetation
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 192 ;
+	}
+#Emission mass flux from biomass burning
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 193 ;
+	}
+#Emission mass flux from settlements
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 194 ;
+	}
+#Emission mass flux from soil
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 195 ;
+	}
+#Emission mass flux from wild animals
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 196 ;
+	}
+#Aerosol negative fixer mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	}
+#Aerosol sink/loss mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	}
+#Aerosol source/gain mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	}
+#Emission mass flux from commercial buildings heating
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 197 ;
+	}
+#Emission mass flux from residential heating
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 198 ;
+	}
+#Emission mass flux from oil refineries and transformation industry
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 199 ;
+	}
+#Emission mass flux from gas production
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
@@ -18656,7 +18680,7 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 45 ;
 	}
-#Time-mean large-scale precipitation rate
+#Mean large-scale precipitation rate
 'm s**-1' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -18665,7 +18689,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean convective precipitation rate
+#Mean convective precipitation rate
 'm s**-1' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -18674,7 +18698,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean total snowfall rate
+#Mean total snowfall rate
 'm of water equivalent s**-1' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -18683,19 +18707,19 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean short-wave (solar) heating rate
+#Mean short-wave heating rate
 'K s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 153 ;
 	}
-#Time-mean long-wave (thermal) heating rate
+#Mean long-wave heating rate
 'K s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 154 ;
 	}
-#Time-mean evaporation rate
+#Evaporation
 'm of water equivalent s**-1' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -18704,7 +18728,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean runoff rate
+#Mean runoff rate
 'm s**-1' = {
 	 localTablesVersion = 1 ;
 	 discipline = 2 ;
@@ -18713,7 +18737,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean total precipitation rate
+#Mean total precipitation rate
 'm s**-1' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -18722,13 +18746,13 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean convective snowfall rate
+#Convective snowfall
 'm of water equivalent s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 239 ;
 	}
-#Time-mean large-scale snowfall rate
+#Large scale snowfall
 'm of water equivalent s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
@@ -18997,12 +19021,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 174 ;
 	 parameterNumber = 42 ;
-	}
-#10 metre wind gust in the last 24 hours
-'m s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 174 ;
-	 parameterNumber = 49 ;
 	}
 #1.5m temperature - mean in the last 24 hours
 'K' = {

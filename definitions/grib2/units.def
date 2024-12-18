@@ -254,16 +254,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Maximum 10 metre wind gust since previous post-processing
-'m s**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 22 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
 #Large-scale precipitation fraction
 's' = {
 	 discipline = 0 ;
@@ -366,30 +356,6 @@
 	 parameterNumber = 70 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
-	}
-#Maximum temperature at 2 metres in the last 6 hours
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 lengthOfTimeRange = 6 ;
-	}
-#Minimum temperature at 2 metres in the last 6 hours
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 3 ;
-	 lengthOfTimeRange = 6 ;
 	}
 #Surface emissivity
 'Proportion' = {
@@ -715,26 +681,6 @@
 	 parameterNumber = 23 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Maximum temperature at 2 metres since previous post-processing
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
-#Minimum temperature at 2 metres since previous post-processing
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 3 ;
-	}
 #Ozone mass mixing ratio
 'kg kg**-1' = {
 	 discipline = 0 ;
@@ -880,6 +826,41 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 32 ;
 	}
+#Temperature difference
+'K' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
+#Specific humidity difference
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 0 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
+#Vorticity (relative) difference
+'s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 12 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
+#Divergence difference
+'s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 13 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
+#Ozone mass mixing ratio difference
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 1 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
 #Large-scale precipitation
 'kg m**-2' = {
 	 discipline = 0 ;
@@ -947,18 +928,6 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 scaledValueOfLowerLimit = 10 ;
-	 scaleFactorOfLowerLimit = 0 ;
-	 probabilityType = 3 ;
-	}
-#10 metre convective gust of at least 25 m/s
-'m s**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 68 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfLowerLimit = 25 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
 	}
@@ -4055,13 +4024,6 @@
 	 typeOfGeneratingProcess = 20 ;
 	 is_aerosol = 1 ;
 	}
-#Cosine of solar zenith angle
-'Numeric' = {
-	 discipline = 3 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 24 ;
-	 typeOfFirstFixedSurface = 1 ;
-	}
 #Dry deposition of ammonium aerosol
 'kg m**-2 s**-1' = {
 	 discipline = 0 ;
@@ -5343,18 +5305,6 @@
 	 scaledValueOfFirstFixedSurface = 27315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
-#Maximum 10 metre wind gust in the last 3 hours
-'m s**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 22 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 lengthOfTimeRange = 3 ;
-	}
 #Instantaneous 10 metre wind gust
 'm s**-1' = {
 	 discipline = 0 ;
@@ -5387,28 +5337,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 37 ;
-	}
-#Maximum CAPE in the last 6 hours
-'J kg**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 7 ;
-	 parameterNumber = 6 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 lengthOfTimeRange = 6 ;
-	}
-#Maximum CAPES in the last 6 hours
-'m**2 s**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 7 ;
-	 parameterNumber = 19 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 lengthOfTimeRange = 6 ;
 	}
 #2 metre relative humidity with respect to water
 '%' = {
@@ -5467,17 +5395,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Averaged total lightning flash density in the last hour
-'km**-2 day**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 17 ;
-	 parameterNumber = 4 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 1 ;
-	}
 #Instantaneous cloud-to-ground lightning flash density
 'km**-2 day**-1' = {
 	 discipline = 0 ;
@@ -5485,17 +5402,6 @@
 	 parameterNumber = 2 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
-	}
-#Averaged cloud-to-ground lightning flash density in the last hour
-'km**-2 day**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 17 ;
-	 parameterNumber = 2 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 1 ;
 	}
 #Unbalanced component of specific humidity
 'kg kg**-1' = {
@@ -5514,50 +5420,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 120 ;
-	}
-#Averaged total lightning flash density in the last 3 hours
-'km**-2 day**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 17 ;
-	 parameterNumber = 4 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 3 ;
-	}
-#Averaged total lightning flash density in the last 6 hours
-'km**-2 day**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 17 ;
-	 parameterNumber = 4 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 6 ;
-	}
-#Averaged cloud-to-ground lightning flash density in the last 3 hours
-'km**-2 day**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 17 ;
-	 parameterNumber = 2 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 3 ;
-	}
-#Averaged cloud-to-ground lightning flash density in the last 6 hours
-'km**-2 day**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 17 ;
-	 parameterNumber = 2 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 6 ;
 	}
 #Soil moisture top 20 cm
 'kg m**-3' = {
@@ -5720,22 +5582,6 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 56 ;
 	 typeOfFirstFixedSurface = 1 ;
-	}
-#Maximum total precipitation rate since previous post-processing
-'kg m**-2 s**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 52 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
-#Minimum total precipitation rate since previous post-processing
-'kg m**-2 s**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 52 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 3 ;
 	}
 #Mixed-layer CAPE in the lowest 50 hPa
 'J kg**-1' = {
@@ -8001,6 +7847,15 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean total cloud cover
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean skin reservoir content
 'kg m**-2' = {
 	 discipline = 2 ;
@@ -8313,6 +8168,15 @@
 	 parameterNumber = 45 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean total lightning flash density
+'km**-2 day**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean total column supercooled liquid water
 'kg m**-2' = {
 	 discipline = 0 ;
@@ -8431,14 +8295,6 @@
 	 parameterNumber = 54 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 255 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
-#Time-mean cosine of solar zenith angle
-'Numeric' = {
-	 discipline = 3 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 24 ;
-	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean freezing rain precipitation rate
@@ -8816,57 +8672,14 @@
 	 parameterNumber = 51 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean land surface heat net flux
-'W m**-2' = {
-	 discipline = 2 ;
-	 parameterCategory = 7 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
-#Time-mean surface direct normal short-wave radiation flux, clear sky
-'W m**-2' = {
+#Time-mean cloud-to-ground lightning flash density
+'km**-2 day**-1' = {
 	 discipline = 0 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 62 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
-	}
-#Time-mean 10 metre convective gust
-'m s**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 68 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
-#Time-mean 10 metre turbulent gust
-'m s**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 69 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
-#Time-integrated land surface heat net flux
-'J m**-2' = {
-	 discipline = 2 ;
-	 parameterCategory = 7 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
-	}
-#Time-integrated surface direct normal short-wave radiation flux, clear sky
-'J m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 62 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
 	}
 #Time-maximum temperature tendency due to short-wave radiation
 'K s**-1' = {
@@ -9218,6 +9031,14 @@
 	 parameterNumber = 165 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum total precipitation rate
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum convective snowfall rate water equivalent
@@ -9662,6 +9483,16 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum 2 metre temperature
+'K' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-maximum 2 metre dewpoint temperature
 'K' = {
 	 discipline = 0 ;
@@ -9830,6 +9661,15 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 6 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum convective available potential energy
+'J kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum total cloud cover
@@ -10087,6 +9927,16 @@
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum 10 metre wind gust
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-maximum relative humidity with respect to water
 '%' = {
 	 discipline = 0 ;
@@ -10102,6 +9952,15 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum convective available potential energy shear
+'m**2 s**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 19 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum tropopause pressure
@@ -10261,14 +10120,6 @@
 	 parameterNumber = 54 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 255 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
-#Time-maximum cosine of solar zenith angle
-'Numeric' = {
-	 discipline = 3 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 24 ;
-	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum freezing rain precipitation rate
@@ -10646,37 +10497,21 @@
 	 parameterNumber = 51 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
-#Time-maximum land surface heat net flux
-'W m**-2' = {
-	 discipline = 2 ;
-	 parameterCategory = 7 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
-#Time-maximum surface direct normal short-wave radiation flux, clear sky
-'W m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 62 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
-#Time-maximum 10 metre convective gust
+#Time-maximum 10 metre eastward wind gust
 'm s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
-	 parameterNumber = 68 ;
+	 parameterNumber = 23 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
-#Time-maximum 10 metre turbulent gust
+#Time-maximum 10 metre northward wind gust
 'm s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
-	 parameterNumber = 69 ;
+	 parameterNumber = 24 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
@@ -11032,6 +10867,14 @@
 	 parameterNumber = 165 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum total precipitation rate
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum convective snowfall rate water equivalent
@@ -11473,6 +11316,16 @@
 	 parameterNumber = 3 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum 2 metre temperature
+'K' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
@@ -12105,14 +11958,6 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
-#Time-minimum cosine of solar zenith angle
-'Numeric' = {
-	 discipline = 3 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 24 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 3 ;
-	}
 #Time-minimum freezing rain rate water equivalent
 'kg m**-2 s**-1' = {
 	 discipline = 0 ;
@@ -12486,42 +12331,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 51 ;
-	 typeOfStatisticalProcessing = 3 ;
-	}
-#Time-minimum land surface heat net flux
-'W m**-2' = {
-	 discipline = 2 ;
-	 parameterCategory = 7 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 3 ;
-	}
-#Time-minimum surface direct normal short-wave radiation flux, clear sky
-'W m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 62 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 3 ;
-	}
-#Time-minimum 10 metre convective gust
-'m s**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 68 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 3 ;
-	}
-#Time-minimum 10 metre turbulent gust
-'m s**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 69 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-standard-deviation temperature tendency due to short-wave radiation
@@ -13955,14 +13764,6 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
-#Time-standard-deviation cosine of solar zenith angle
-'Numeric' = {
-	 discipline = 3 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 24 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 6 ;
-	}
 #Time-standard-deviation freezing rain rate water equivalent
 'kg m**-2 s**-1' = {
 	 discipline = 0 ;
@@ -14329,42 +14130,6 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 67 ;
 	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 6 ;
-	}
-#Time-standard-deviation land surface heat net flux
-'W m**-2' = {
-	 discipline = 2 ;
-	 parameterCategory = 7 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 6 ;
-	}
-#Time-standard-deviation surface direct normal short-wave radiation flux, clear sky
-'W m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 62 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 6 ;
-	}
-#Time-standard-deviation 10 metre convective gust
-'m s**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 68 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 6 ;
-	}
-#Time-standard-deviation 10 metre turbulent gust
-'m s**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 69 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Cross sectional area of flow in channel
@@ -15994,60 +15759,6 @@
 	 parameterCategory = 5 ;
 	 parameterNumber = 0 ;
 	}
-#Precipitation type (most severe) in the last 1 hour
-'(Code table 4.201)' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 100 ;
-	 lengthOfTimeRange = 1 ;
-	}
-#Precipitation type (most severe) in the last 3 hours
-'(Code table 4.201)' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 100 ;
-	 lengthOfTimeRange = 3 ;
-	}
-#Precipitation type (most frequent) in the last 1 hour
-'(Code table 4.201)' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 101 ;
-	 lengthOfTimeRange = 1 ;
-	}
-#Precipitation type (most frequent) in the last 3 hours
-'(Code table 4.201)' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 101 ;
-	 lengthOfTimeRange = 3 ;
-	}
-#Precipitation type (most severe) in the last 6 hours
-'(Code table 4.201)' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 100 ;
-	 lengthOfTimeRange = 6 ;
-	}
-#Precipitation type (most frequent) in the last 6 hours
-'(Code table 4.201)' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 101 ;
-	 lengthOfTimeRange = 6 ;
-	}
 #Soil temperature
 'K' = {
 	 discipline = 2 ;
@@ -16386,28 +16097,6 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#10 metre eastward wind gust since previous post-processing
-'m s**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 23 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
-#10 metre northward wind gust since previous post-processing
-'m s**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 24 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
 #Fog
 '%' = {
 	 discipline = 0 ;
@@ -16632,37 +16321,19 @@
 	 parameterNumber = 67 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
-#Land surface heat net flux
-'W m**-2' = {
-	 discipline = 2 ;
-	 parameterCategory = 7 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 1 ;
-	}
-#Surface direct normal short-wave radiation flux, clear sky
-'W m**-2' = {
+#Time-severity precipitation type
+'(Code table 4.201)' = {
 	 discipline = 0 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 62 ;
-	 typeOfFirstFixedSurface = 1 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 19 ;
+	 typeOfStatisticalProcessing = 100 ;
 	}
-#10 metre convective gust
-'m s**-1' = {
+#Time-mode precipitation type
+'(Code table 4.201)' = {
 	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 68 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
-#10 metre turbulent gust
-'m s**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 69 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 19 ;
+	 typeOfStatisticalProcessing = 101 ;
 	}
 #Universal thermal climate index
 'K' = {
@@ -19476,40 +19147,20 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 107 ;
+	 typeOfFirstFixedSurface = 8 ;
 	}
 #Aerosol backscatter from ground
 'm**-1 sr**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 108 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Aerosol extinction coefficient
 'm**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 105 ;
-	}
-#Mass mixing ratio difference
-'kg kg**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 typeOfGeneratingProcess = 20 ;
-	}
-#Mass mixing ratio from volcanoes difference
-'kg kg**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 typeOfGeneratingProcess = 20 ;
-	 sourceSinkChemicalPhysicalProcess = 7 ;
-	}
-#Emission mass flux from wild fires
-'kg m**-2 s**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 5 ;
 	}
 #Pressure tendency
 'Pa s**-1' = {
