@@ -16,6 +16,7 @@
 
 #include "eccodes.h"
 #include "grib_api_internal.h"
+#include "grib_dumper_factory.h"
 
 /* These are passed in via argv */
 static size_t NUM_THREADS         = 0;
@@ -64,7 +65,7 @@ static int encode_file(char* template_file, char* output_file)
         }
         if (opt_dump) {
             FILE* devnull            = fopen("/dev/null", "w");
-            grib_dumper* dumper      = NULL;
+            eccodes::Dumper* dumper  = NULL;
             const char* dumper_name  = "bufr_simple";
             unsigned long dump_flags = CODES_DUMP_FLAG_ALL_DATA;
             /* codes_dump_content(source_handle,devnull, "json", 1024, NULL); */ /* JSON dump with all attributes */
