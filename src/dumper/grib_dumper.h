@@ -46,9 +46,9 @@ protected:
     long count_             = 0;
 
 private:
-    const char* name_ = nullptr;
-    size_t size_      = 0;
-    int inited_       = 0;
+    // const char* name_ = nullptr;
+    // size_t size_      = 0;
+    // int inited_       = 0;
 };
 
 }  // namespace eccodes

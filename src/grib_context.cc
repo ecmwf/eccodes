@@ -369,6 +369,7 @@ static grib_context default_grib_context = {
     0,              /* bufr_multi_element_constant_arrays */
     0,              /* grib_data_quality_checks   */
     0,              /* single_precision           */
+    0,              /* eckit_geo             */
     0,              /* log_stream                 */
     0,              /* classes                    */
     0,              /* lists                      */
@@ -406,18 +407,22 @@ grib_context* grib_context_get_default()
         const char* bufr_multi_element_constant_arrays  = NULL;
         const char* grib_data_quality_checks            = NULL;
         const char* single_precision                    = NULL;
+        const char* eckit_geo                           = NULL;
         const char* file_pool_max_opened_files          = NULL;
 
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
         feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
 #endif
 
-        write_on_fail                       = codes_getenv("ECCODES_GRIB_WRITE_ON_FAIL");
         bufrdc_mode                         = getenv("ECCODES_BUFRDC_MODE_ON");
         bufr_set_to_missing_if_out_of_range = getenv("ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE");
         bufr_multi_element_constant_arrays  = getenv("ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS");
         grib_data_quality_checks            = getenv("ECCODES_GRIB_DATA_QUALITY_CHECKS");
         single_precision                    = getenv("ECCODES_SINGLE_PRECISION");
+        file_pool_max_opened_files          = getenv("ECCODES_FILE_POOL_MAX_OPENED_FILES");
+        eckit_geo                           = getenv("ECCODES_ECKIT_GEO");
+        // The following had an equivalent env. var in grib_api
+        write_on_fail                       = codes_getenv("ECCODES_GRIB_WRITE_ON_FAIL");
         large_constant_fields               = codes_getenv("ECCODES_GRIB_LARGE_CONSTANT_FIELDS");
         no_abort                            = codes_getenv("ECCODES_NO_ABORT");
         debug                               = codes_getenv("ECCODES_DEBUG");
@@ -429,7 +434,6 @@ grib_context* grib_context_get_default()
         no_spd                              = codes_getenv("ECCODES_GRIB_NO_SPD");
         keep_matrix                         = codes_getenv("ECCODES_GRIB_KEEP_MATRIX");
         show_hour_stepunit                  = codes_getenv("ECCODES_GRIB_HOURLY_STEPS_WITH_UNITS");
-        file_pool_max_opened_files          = getenv("ECCODES_FILE_POOL_MAX_OPENED_FILES");
 
         /* On UNIX, when we read from a file we get exactly what is in the file on disk.
          * But on Windows a file can be opened in binary or text mode. In binary mode the system behaves exactly as in UNIX.
@@ -564,6 +568,7 @@ grib_context* grib_context_get_default()
         default_grib_context.bufr_multi_element_constant_arrays = bufr_multi_element_constant_arrays ? atoi(bufr_multi_element_constant_arrays) : 0;
         default_grib_context.grib_data_quality_checks = grib_data_quality_checks ? atoi(grib_data_quality_checks) : 0;
         default_grib_context.single_precision = single_precision ? atoi(single_precision) : 0;
+        default_grib_context.eckit_geo = eckit_geo ? atoi(eckit_geo) : 0;
         default_grib_context.file_pool_max_opened_files = file_pool_max_opened_files ? atoi(file_pool_max_opened_files) : DEFAULT_FILE_POOL_MAX_OPENED_FILES;
     }
 

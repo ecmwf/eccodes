@@ -110,8 +110,8 @@ grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int
     grib_iterator* i = (grib_iterator*)grib_context_malloc_clear(ch->context, sizeof(grib_iterator));
 
     #if defined(HAVE_ECKIT_GEO)
-    static const auto* eckit_geo = codes_getenv("ECCODES_ECKIT_GEO");
-    if (eckit_geo != nullptr && strcmp(eckit_geo, "1") == 0) {
+    const int eckit_geo = ch->context->eckit_geo; // check environment variable
+    if (eckit_geo) {
         struct InitMain
         {
             InitMain()

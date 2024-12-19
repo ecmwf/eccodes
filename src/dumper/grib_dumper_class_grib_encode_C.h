@@ -34,7 +34,7 @@ public:
     void footer(const grib_handle*) override;
 
 private:
-    int cr_ = 0;
+    // int cr_ = 0;
 };
 
 }  // namespace eccodes::dumper
