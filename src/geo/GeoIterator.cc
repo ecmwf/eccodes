@@ -45,23 +45,29 @@ int GeoIterator::init(grib_handle*, grib_arguments*)
     NOTIMP;
 }
 
-
+// The C public API for this does not have a way of returning an error,
+// So any exception thrown by eckit will is fatal!
 int GeoIterator::next(double* lat, double* lon, double* val) const
 {
     if (iter_ == end_) {
         return 0;  // (false)
     }
+    try {
+        const auto p  = *iter_;
+        const auto& q = std::get<eckit::geo::PointLonLat>(p);
 
-    const auto p  = *iter_;
-    const auto& q = std::get<eckit::geo::PointLonLat>(p);
+        *lat = q.lat;
+        *lon = q.lon;
+        if (val != nullptr && data_ != nullptr) {
+            *val = data_[iter_->index()];
+        }
 
-    *lat = q.lat;
-    *lon = q.lon;
-    if (val != nullptr && data_ != nullptr) {
-        *val = data_[iter_->index()];
+        ++iter_;
     }
-
-    ++iter_;
+    catch(std::exception& e) {
+        grib_context_log(h_->context, GRIB_LOG_FATAL, "GeoIterator::next: Exception thrown (%s)", e.what());
+        return 0;
+    }
     return 1;  // (true)
 }
 
