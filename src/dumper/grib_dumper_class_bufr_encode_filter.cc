@@ -69,7 +69,7 @@ void BufrEncodeFilter::dump_values(grib_accessor* a)
     else {
         err = a->unpack_double(&value, &size2);
     }
-    Assert(size2 == size);
+    ECCODES_ASSERT(size2 == size);
 
     begin_ = 0;
     empty_ = 0;
@@ -158,7 +158,7 @@ void BufrEncodeFilter::dump_values_attribute(grib_accessor* a, const char* prefi
     else {
         err = a->unpack_double(&value, &size2);
     }
-    Assert(size2 == size);
+    ECCODES_ASSERT(size2 == size);
 
     empty_ = 0;
 
@@ -251,7 +251,7 @@ void BufrEncodeFilter::dump_long(grib_accessor* a, const char* comment)
     else {
         err = a->unpack_long(&value, &size2);
     }
-    Assert(size2 == size);
+    ECCODES_ASSERT(size2 == size);
 
     begin_ = 0;
     empty_ = 0;
@@ -338,7 +338,7 @@ void BufrEncodeFilter::dump_long_attribute(grib_accessor* a, const char* prefix)
     else {
         err = a->unpack_long(&value, &size2);
     }
-    Assert(size2 == size);
+    ECCODES_ASSERT(size2 == size);
 
     empty_ = 0;
 
@@ -689,7 +689,7 @@ void BufrEncodeFilter::header(const grib_handle* h)
     char sampleName[128] = { 0 };
     long localSectionPresent, edition, bufrHeaderCentre, isSatellite;
 
-    Assert(h->product_kind == PRODUCT_BUFR);
+    ECCODES_ASSERT(h->product_kind == PRODUCT_BUFR);
 
     grib_get_long(h, "localSectionPresent", &localSectionPresent);
     grib_get_long(h, "bufrHeaderCentre", &bufrHeaderCentre);

@@ -45,7 +45,7 @@ size_t grib_accessor_section_padding_t::preferred_size(int from_handle)
         else
             alength = 0;
 
-        /*Assert(length_ >=0);*/
+        /*ECCODES_ASSERT(length_ >=0);*/
 
         if (alength < 0)
             alength = 0;

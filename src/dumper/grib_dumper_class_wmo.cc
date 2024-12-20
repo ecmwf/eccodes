@@ -460,7 +460,7 @@ void Wmo::dump_section(grib_accessor* a, grib_block_of_accessors* block)
 
     if (is_wmo_section) {
         upper = (char*)malloc(strlen(a->name_) + 1);
-        Assert(upper);
+        ECCODES_ASSERT(upper);
         p = (char*)a->name_;
         q = upper;
         while (*p != '\0') {

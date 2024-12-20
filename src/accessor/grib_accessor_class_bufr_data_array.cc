@@ -225,7 +225,7 @@ void grib_accessor_bufr_data_array_t::init(const long v, grib_arguments* params)
     bitsToEndData_ = get_length() * 8;
     unpackMode_    = CODES_BUFR_UNPACK_STRUCTURE;
     inputBitmap_   = NULL;
-    /* Assert(length_ >=0); */
+    /* ECCODES_ASSERT(length_ >=0); */
 }
 
 // void clean_string(char* s,int len)
@@ -932,7 +932,7 @@ int decode_element(grib_context* c, grib_accessor_bufr_data_array_t* self, int s
     double cdval        = 0, x;
     int err             = 0;
     bufr_descriptor* bd = descriptor == NULL ? self->expanded_->v[i] : descriptor;
-    /* Assert( b->data == data); */
+    /* ECCODES_ASSERT( b->data == data); */
 
     if (self->change_ref_value_operand_ > 0 && self->change_ref_value_operand_ != 255) {
         /* Operator 203YYY: Change Reference Values: Definition phase */
@@ -1012,7 +1012,7 @@ int decode_replication(grib_context* c, grib_accessor_bufr_data_array_t* self, i
     err                           = &ret;
     descriptors                   = self->expanded_->v;
 
-    /* Assert(buff->data == data); */
+    /* ECCODES_ASSERT(buff->data == data); */
 
     grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data decoding: -%d- \tcode=%6.6ld width=%ld ",
                      i, self->expanded_->v[i]->code, self->expanded_->v[i]->width);
@@ -1098,7 +1098,7 @@ int grib_accessor_bufr_data_array_t::encode_overridden_reference_value(grib_cont
     long currRefVal = -1;
     long numBits    = change_ref_value_operand_;
     /* We must be encoding between 203YYY and 203255 */
-    Assert(change_ref_value_operand_ > 0 && change_ref_value_operand_ != 255);
+    ECCODES_ASSERT(change_ref_value_operand_ > 0 && change_ref_value_operand_ != 255);
     if (refValListSize_ == 0) {
         grib_context_log(c, GRIB_LOG_ERROR,
                          "encode_new_element: Overridden Reference Values array is empty! "
@@ -1262,7 +1262,7 @@ int encode_element(grib_context* c, grib_accessor_bufr_data_array_t* self, int s
     int idx, j;
     int err             = 0;
     bufr_descriptor* bd = descriptor == NULL ? self->expanded_->v[i] : descriptor;
-    /* Assert( buff->data == data); */
+    /* ECCODES_ASSERT( buff->data == data); */
 
     grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data encoding: -%d- \tcode=%6.6ld width=%ld pos=%ld ulength=%ld ulength_bits=%ld",
                      i, bd->code, bd->width, (long)*pos, buff->ulength, buff->ulength_bits);
@@ -1332,7 +1332,7 @@ int encode_replication(grib_context* c, grib_accessor_bufr_data_array_t* self, i
                        grib_buffer* buff, unsigned char* data, long* pos, int i, long elementIndex,
                        grib_darray* dval, long* numberOfRepetitions)
 {
-    /* Assert( buff->data == data); */
+    /* ECCODES_ASSERT( buff->data == data); */
     if (self->compressedData_) {
         DEBUG_ASSERT(grib_darray_used_size(self->numericValues_->v[elementIndex]) == 1);
         *numberOfRepetitions = self->numericValues_->v[elementIndex]->v[0];
@@ -1388,7 +1388,7 @@ int grib_accessor_bufr_data_array_t::build_bitmap(unsigned char* data, long* pos
             i = iBitmapOperator + 1;
             if (descriptors[i]->code == 101000) {
                 iDelayedReplication = iBitmapOperator + 2;
-                Assert(descriptors[iDelayedReplication]->code == 31001 ||
+                ECCODES_ASSERT(descriptors[iDelayedReplication]->code == 31001 ||
                        descriptors[iDelayedReplication]->code == 31002);
                 i = iDelayedReplication;
                 if (compressedData_) {
@@ -1458,7 +1458,7 @@ int grib_accessor_bufr_data_array_t::consume_bitmap(int iBitmapOperator)
                 bitmapSize = inputExtendedReplications_[iInputExtendedReplications_];
                 break;
             default:
-                Assert(0);
+                ECCODES_ASSERT(0);
         }
     }
     else if (descriptors[i]->code == 31031) {
@@ -1528,7 +1528,7 @@ int grib_accessor_bufr_data_array_t::build_bitmap_new_data(unsigned char* data, 
                         bitmapSize = inputExtendedReplications_[iInputExtendedReplications_];
                         break;
                     default:
-                        Assert(0);
+                        ECCODES_ASSERT(0);
                 }
             }
             else if (descriptors[i]->code == 31031) {
@@ -2043,10 +2043,10 @@ grib_iarray* grib_accessor_bufr_data_array_t::set_subset_list(
 
 #ifdef DEBUG
     if (subsetList == NULL) {
-        Assert(subsetListSize == 0);
+        ECCODES_ASSERT(subsetListSize == 0);
     }
     if (subsetListSize == 0) {
-        Assert(subsetList == NULL);
+        ECCODES_ASSERT(subsetList == NULL);
     }
 #endif
     if (startSubset > 0) {

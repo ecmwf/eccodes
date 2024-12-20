@@ -103,7 +103,7 @@ int grib_encode_string(unsigned char* bitStream, long* bitOffset, size_t numberO
     char str[512]           = {0,};
     char* s = str;
 
-    Assert(numberOfCharacters < 512);
+    ECCODES_ASSERT(numberOfCharacters < 512);
 
     /* There is a case where string == NULL:
      * bufr_dump -Efortran data/bufr/btem_109.bufr
@@ -210,13 +210,13 @@ unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long
 
         if (mod != 0) {
             int e = grib_decode_unsigned_long(p, bitp, mod);
-            Assert(e == 0);
+            ECCODES_ASSERT(e == 0);
             bits -= mod;
         }
 
         while (bits > max_nbits) {
             int e = grib_decode_unsigned_long(p, bitp, max_nbits);
-            Assert(e == 0);
+            ECCODES_ASSERT(e == 0);
             bits -= max_nbits;
         }
 
@@ -276,14 +276,14 @@ int grib_encode_unsigned_long(unsigned char* p, unsigned long val, long* bitp, l
         if (mod != 0) {
             int e = grib_encode_unsigned_long(p, zero, bitp, mod);
             /* printf(" -> : encoding %ld bits=%ld %ld\n",zero,(long)mod,*bitp); */
-            Assert(e == 0);
+            ECCODES_ASSERT(e == 0);
             bits -= mod;
         }
 
         while (bits > max_nbits) {
             int e = grib_encode_unsigned_long(p, zero, bitp, max_nbits);
             /* printf(" -> : encoding %ld bits=%ld %ld\n",zero,(long)max_nbits,*bitp); */
-            Assert(e == 0);
+            ECCODES_ASSERT(e == 0);
             bits -= max_nbits;
         }
 
@@ -343,13 +343,13 @@ size_t grib_decode_size_t(const unsigned char* p, long* bitp, long nbits)
 
         if (mod != 0) {
             int e = grib_decode_size_t(p, bitp, mod);
-            Assert(e == 0);
+            ECCODES_ASSERT(e == 0);
             bits -= mod;
         }
 
         while (bits > max_nbits_size_t) {
             int e = grib_decode_size_t(p, bitp, max_nbits_size_t);
-            Assert(e == 0);
+            ECCODES_ASSERT(e == 0);
             bits -= max_nbits_size_t;
         }
 
@@ -387,7 +387,7 @@ int grib_encode_unsigned_longb(unsigned char* p, unsigned long val, long* bitp, 
 {
     if (nb > max_nbits) {
         fprintf(stderr, "Number of bits (%ld) exceeds maximum number of bits (%d)\n", nb, max_nbits);
-        Assert(0);
+        ECCODES_ASSERT(0);
         return GRIB_INTERNAL_ERROR;
     }
 
@@ -413,7 +413,7 @@ int grib_encode_size_tb(unsigned char* p, size_t val, long* bitp, long nb)
 {
     if (nb > max_nbits_size_t) {
         fprintf(stderr, "Number of bits (%ld) exceeds maximum number of bits (%d)\n", nb, max_nbits_size_t);
-        Assert(0);
+        ECCODES_ASSERT(0);
     }
 
     const size_t maxV = codes_power<double>(nb, 2) - 1;

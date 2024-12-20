@@ -395,7 +395,7 @@ void* grib_trie_insert(grib_trie* t, const char* key, void* data)
     void* old       = NULL;
 
     if (!t) {
-        Assert(!"grib_trie_insert: grib_trie==NULL");
+        ECCODES_ASSERT(!"grib_trie_insert: grib_trie==NULL");
         return NULL;
     }
 
@@ -437,7 +437,7 @@ void* grib_trie_insert_no_replace(grib_trie* t, const char* key, void* data)
 {
     grib_trie* last = t;
     const char* k   = key;
-    Assert(t);
+    ECCODES_ASSERT(t);
 
     while (*k && t) {
         last = t;

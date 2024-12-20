@@ -166,7 +166,7 @@ static int trial(const double* val, long v[6], long* basic_angle, long* sub_divi
     if (*sub_division < 0)
         return 0;
 
-    Assert(*sub_division >= 0);
+    ECCODES_ASSERT(*sub_division >= 0);
 
     return is_ok(val, v, *basic_angle, *sub_division);
 }

@@ -71,7 +71,7 @@ void BufrSimple::dump_values(grib_accessor* a)
     else {
         err = a->unpack_double(&value, &size2);
     }
-    Assert(size2 == size);
+    ECCODES_ASSERT(size2 == size);
 
     empty_ = 0;
 
@@ -160,7 +160,7 @@ void BufrSimple::dump_values_attribute(grib_accessor* a, const char* prefix)
     else {
         err = a->unpack_double(&value, &size2);
     }
-    Assert(size2 == size);
+    ECCODES_ASSERT(size2 == size);
 
     empty_ = 0;
 
@@ -263,7 +263,7 @@ void BufrSimple::dump_long(grib_accessor* a, const char* comment)
     else {
         err = a->unpack_long(&value, &size2);
     }
-    Assert(size2 == size);
+    ECCODES_ASSERT(size2 == size);
 
     empty_ = 0;
 
@@ -359,7 +359,7 @@ void BufrSimple::dump_long_attribute(grib_accessor* a, const char* prefix)
     else {
         err = a->unpack_long(&value, &size2);
     }
-    Assert(size2 == size);
+    ECCODES_ASSERT(size2 == size);
 
     empty_ = 0;
 
@@ -553,7 +553,7 @@ void BufrSimple::dump_string(grib_accessor* a, const char* comment)
         fprintf(out_, " *** ERR=%d (%s) [dump_string on '%s']", err, grib_get_error_message(err), acc_name);
         return;
     }
-    Assert(size < MAX_STRING_SIZE);
+    ECCODES_ASSERT(size < MAX_STRING_SIZE);
     p = value;
     r = compute_bufr_key_rank(h, keys_, acc_name);
     if (grib_is_missing_string(a, (unsigned char*)value, size)) {
@@ -643,7 +643,7 @@ void BufrSimple::dump_section(grib_accessor* a, grib_block_of_accessors* block)
         empty_         = 1;
 
         err = grib_get_long(h, "numberOfSubsets", &(numberOfSubsets_));
-        Assert(!err);
+        ECCODES_ASSERT(!err);
         _dump_long_array(h, out_, "dataPresentIndicator");
         _dump_long_array(h, out_, "delayedDescriptorReplicationFactor");
         _dump_long_array(h, out_, "shortDelayedDescriptorReplicationFactor");

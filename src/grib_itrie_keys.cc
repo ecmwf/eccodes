@@ -341,7 +341,7 @@ static int grib_hash_keys_insert(grib_itrie* t, const char* key)
     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex);
 
-    Assert(t);
+    ECCODES_ASSERT(t);
     if (!t) return -1;
 
     count = t->count;
@@ -368,7 +368,7 @@ static int grib_hash_keys_insert(grib_itrie* t, const char* key)
     else {
         grib_context_log(t->context, GRIB_LOG_ERROR,
                          "grib_hash_keys_insert: too many accessors, increase ACCESSORS_ARRAY_SIZE\n");
-        Assert(*(t->count) + TOTAL_KEYWORDS < ACCESSORS_ARRAY_SIZE);
+        ECCODES_ASSERT(*(t->count) + TOTAL_KEYWORDS < ACCESSORS_ARRAY_SIZE);
     }
 
     GRIB_MUTEX_UNLOCK(&mutex);

@@ -29,12 +29,12 @@ int main(int argc, char** argv)
     if (argc < 2) return 1;
 
     in = fopen(argv[1], "rb");
-    Assert(in);
+    ECCODES_ASSERT(in);
 
     /* create new handle */
     err = 0;
     h   = grib_handle_new_from_file(0, in, &err);
-    Assert(h);
+    ECCODES_ASSERT(h);
 
     /* get the size of the values array*/
     GRIB_CHECK(grib_get_size(h, "values", &values_len), 0);

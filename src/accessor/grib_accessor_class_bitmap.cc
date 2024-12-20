@@ -26,10 +26,10 @@ void grib_accessor_bitmap_t::compute_size()
         grib_accessor* seclen;
         size_t size;
         /* Assume reparsing */
-        Assert(hand->loader != 0);
+        ECCODES_ASSERT(hand->loader != 0);
         if (hand->loader != 0) {
             seclen = grib_find_accessor(hand, sLength_);
-            Assert(seclen);
+            ECCODES_ASSERT(seclen);
             grib_get_block_length(seclen->parent_, &size);
             slen = size;
         }
@@ -41,11 +41,11 @@ void grib_accessor_bitmap_t::compute_size()
 
     if (length_ < 0) {
         /* Assume reparsing */
-        /*Assert(hand->loader != 0);*/
+        /*ECCODES_ASSERT(hand->loader != 0);*/
         length_ = 0;
     }
 
-    Assert(length_ >= 0);
+    ECCODES_ASSERT(length_ >= 0);
 }
 
 void grib_accessor_bitmap_t::init(const long len, grib_arguments* arg)

@@ -190,7 +190,7 @@ int LambertAzimuthalEqualArea::init_oblate(grib_handle* h,
                 xy_x /= Q__dd;
                 xy_y *= Q__dd;
                 rho = hypot(xy_x, xy_y);
-                Assert(rho >= EPS10); /* TODO(masn): check */
+                ECCODES_ASSERT(rho >= EPS10); /* TODO(masn): check */
                 const double asin_arg = (0.5 * rho / Q__rq);
                 if (asin_arg < -1.0 || asin_arg > 1.0) {
                     grib_context_log(h->context, GRIB_LOG_ERROR, "Invalid value: arcsin argument=%g", asin_arg);

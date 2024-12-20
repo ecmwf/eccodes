@@ -26,17 +26,17 @@ GeoIterator::GeoIterator(grib_handle* h, unsigned long flags) :
     h_          = h;
     class_name_ = "geo_iterator";
     flags_      = flags;
-    Assert(h_ != nullptr);
+    ECCODES_ASSERT(h_ != nullptr);
 
     CODES_CHECK(codes_get_size(h_, "values", &nv_), "");
-    Assert(nv_ > 0);
+    ECCODES_ASSERT(nv_ > 0);
 
     data_ = (flags_ & GRIB_GEOITERATOR_NO_VALUES) ? nullptr : static_cast<double*>(grib_context_malloc(h_->context, nv_ * sizeof(double)));
-    Assert(data_ != nullptr);
+    ECCODES_ASSERT(data_ != nullptr);
 
     auto size = nv_;
     CODES_CHECK(codes_get_double_array(h_, "values", data_, &size), "");
-    Assert(nv_ == size);
+    ECCODES_ASSERT(nv_ == size);
 }
 
 

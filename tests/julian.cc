@@ -71,16 +71,16 @@ static void Test0()
     sec   = 24;
 
     codes_datetime_to_julian(year, month, day, hour, min, sec, &jd);
-    Assert(DBL_EQUAL(jd, 2378891.268333));
+    ECCODES_ASSERT(DBL_EQUAL(jd, 2378891.268333));
     printf("%ld %ld %ld %ld:%ld:%ld -> %f\n", year, month, day, hour, min, sec, jd);
 
     grib_julian_to_datetime(jd, &year, &month, &day, &hour, &min, &sec);
-    Assert(year == 1801);
-    Assert(month == 1);
-    Assert(day == 30);
-    Assert(hour == 18);
-    Assert(min == 26);
-    Assert(sec == 24);
+    ECCODES_ASSERT(year == 1801);
+    ECCODES_ASSERT(month == 1);
+    ECCODES_ASSERT(day == 30);
+    ECCODES_ASSERT(hour == 18);
+    ECCODES_ASSERT(min == 26);
+    ECCODES_ASSERT(sec == 24);
     printf("%ld %ld %ld %ld:%ld:%ld -> %f\n", year, month, day, hour, min, sec, jd);
 }
 
@@ -99,16 +99,16 @@ static void Test1()
     sec   = 24;
 
     grib_datetime_to_julian(year, month, day, hour, min, sec, &jd);
-    Assert(DBL_EQUAL(jd, 2436116.31));
+    ECCODES_ASSERT(DBL_EQUAL(jd, 2436116.31));
     printf("%ld %ld %ld %ld:%ld:%ld -> %f\n", year, month, day, hour, min, sec, jd);
 
     grib_julian_to_datetime(jd, &year, &month, &day, &hour, &min, &sec);
-    Assert(year == 1957);
-    Assert(month == 10);
-    Assert(day == 4);
-    Assert(hour == 19);
-    Assert(min == 26);
-    Assert(sec == 24);
+    ECCODES_ASSERT(year == 1957);
+    ECCODES_ASSERT(month == 10);
+    ECCODES_ASSERT(day == 4);
+    ECCODES_ASSERT(hour == 19);
+    ECCODES_ASSERT(min == 26);
+    ECCODES_ASSERT(sec == 24);
     printf("%ld %ld %ld %ld:%ld:%ld -> %f\n", year, month, day, hour, min, sec, jd);
 }
 
@@ -146,7 +146,7 @@ static void Test2()
 
         if (!DBL_EQUAL(jd, jds[i])) {
             fprintf(stderr, "i=%d:  Got: %f, expected: %f\n", i, jd, jds[i]);
-            Assert(0);
+            ECCODES_ASSERT(0);
         }
 
         jdl  = (long)(jd + 0.5);
@@ -226,7 +226,7 @@ static void Test5()
     codes_julian_to_datetime(jd, &year1, &month1, &day1, &hour1, &min1, &sec1);
 
     if (Check(year, month, day, hour, min, sec, year1, month1, day1, hour1, min1, sec1)) {
-        Assert(!"Bad input should have failed checks");
+        ECCODES_ASSERT(!"Bad input should have failed checks");
     }
 }
 

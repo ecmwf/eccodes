@@ -22,7 +22,7 @@ void grib_accessor_section_pointer_t::init(const long len, grib_arguments* arg)
     sectionLength_ = arg->get_name(grib_handle_of_accessor(this), n++);
     sectionNumber_ = arg->get_long(grib_handle_of_accessor(this), n++);
 
-    Assert(sectionNumber_ < MAX_NUM_SECTIONS);
+    ECCODES_ASSERT(sectionNumber_ < MAX_NUM_SECTIONS);
 
     grib_handle_of_accessor(this)->section_offset[sectionNumber_] = (char*)sectionOffset_;
     grib_handle_of_accessor(this)->section_length[sectionNumber_] = (char*)sectionLength_;

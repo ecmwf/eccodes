@@ -193,7 +193,7 @@ int grib_accessor_data_g1simple_packing_t::pack_double(const double* cval, size_
                      "HALF byte: buflen=%d bits_per_value=%ld len=%d half_byte=%ld\n",
                      buflen, bits_per_value, *len, half_byte);
 
-    Assert(half_byte <= 0x0f);
+    ECCODES_ASSERT(half_byte <= 0x0f);
 
     if ((ret = grib_set_long_internal(grib_handle_of_accessor(this), half_byte_, half_byte)) != GRIB_SUCCESS)
         return ret;

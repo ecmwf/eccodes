@@ -60,7 +60,7 @@ void Json::dump_values(grib_accessor* a)
     else {
         err = a->unpack_double(&value, &size2);
     }
-    Assert(size2 == size);
+    ECCODES_ASSERT(size2 == size);
     (void)err; /* TODO */
 
     if (begin_ == 0 && empty_ == 0 && isAttribute_ == 0)
@@ -152,7 +152,7 @@ void Json::dump_long(grib_accessor* a, const char* comment)
     else {
         err = a->unpack_long(&value, &size2);
     }
-    Assert(size2 == size);
+    ECCODES_ASSERT(size2 == size);
 
     if (begin_ == 0 && empty_ == 0 && isAttribute_ == 0)
         fprintf(out_, ",");
@@ -398,7 +398,7 @@ void Json::dump_string(grib_accessor* a, const char* comment)
                  err, grib_get_error_message(err), a->name_);
     }
     else {
-        Assert(size < MAX_STRING_SIZE);
+        ECCODES_ASSERT(size < MAX_STRING_SIZE);
     }
     p = value;
     if (grib_is_missing_string(a, (unsigned char*)value, size)) {

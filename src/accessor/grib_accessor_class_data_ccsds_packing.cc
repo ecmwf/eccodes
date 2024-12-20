@@ -168,7 +168,7 @@ int grib_accessor_data_ccsds_packing_t::pack_double(const double* val, size_t* l
     if (is_constant_field) {
     #ifdef DEBUG
         for (i = 1; i < n_vals; i++) {
-            Assert(val[i] == val[0]);
+            ECCODES_ASSERT(val[i] == val[0]);
         }
     #endif
         if (grib_get_nearest_smaller_value(hand, reference_value_, val[0], &reference_value) != GRIB_SUCCESS) {

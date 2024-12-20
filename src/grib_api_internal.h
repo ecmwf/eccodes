@@ -166,13 +166,13 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
     #define ftello ftell
 #endif
 
-#define Assert(a)                                                 \
+#define ECCODES_ASSERT(a)                                                 \
     do {                                                          \
         if (!(a)) codes_assertion_failed(#a, __FILE__, __LINE__); \
     } while (0)
 
 #ifdef DEBUG
-    #define DEBUG_ASSERT(a) Assert(a)
+    #define DEBUG_ASSERT(a) ECCODES_ASSERT(a)
     #define DEBUG_ASSERT_ACCESS(array, index, size)                                                                           \
         do {                                                                                                                  \
             if (!((index) >= 0 && (index) < (size))) {                                                                        \

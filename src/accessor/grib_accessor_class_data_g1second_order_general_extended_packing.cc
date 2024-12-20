@@ -199,7 +199,7 @@ int grib_accessor_data_g1second_order_general_extended_packing_t::unpack(double*
     long bias           = 0;
     long y = 0, z = 0, w = 0;
     size_t k, ngroups;
-    Assert(!(dvalues && fvalues));
+    ECCODES_ASSERT(!(dvalues && fvalues));
 
     if (dvalues) {
         if (!double_dirty_) {
@@ -694,7 +694,7 @@ int grib_accessor_data_g1second_order_general_extended_packing_t::pack_double(co
             break;
     }
     if (orderOfSPD) {
-        Assert(orderOfSPD >= 0 && orderOfSPD < numberOfValues);
+        ECCODES_ASSERT(orderOfSPD >= 0 && orderOfSPD < numberOfValues);
         bias = X[orderOfSPD];
         for (i = orderOfSPD + 1; i < numberOfValues; i++) {
             if (bias > X[i])
@@ -1143,7 +1143,7 @@ int grib_accessor_data_g1second_order_general_extended_packing_t::pack_double(co
             0,
         };
         size_t nSPD = orderOfSPD + 1;
-        Assert(orderOfSPD <= 3);
+        ECCODES_ASSERT(orderOfSPD <= 3);
         for (i = 0; i < orderOfSPD; i++)
             SPD[i] = X[i];
         SPD[orderOfSPD] = bias;

@@ -54,7 +54,7 @@ int grib_accessor_data_sh_unpacked_t::value_count(long* count)
 
     if (sub_j != sub_k || sub_j != sub_m) {
         grib_context_log(context_, GRIB_LOG_ERROR, "sub_j=%ld, sub_k=%ld, sub_m=%ld\n", sub_j, sub_k, sub_m);
-        Assert((sub_j == sub_k) && (sub_j == sub_m));
+        ECCODES_ASSERT((sub_j == sub_k) && (sub_j == sub_m));
     }
     *count = (sub_j + 1) * (sub_j + 2);
     return ret;
@@ -157,10 +157,10 @@ int grib_accessor_data_sh_unpacked_t::unpack_double(double* val, size_t* len)
             return GRIB_NOT_IMPLEMENTED;
     }
 
-    Assert(sub_j == sub_k);
-    Assert(sub_j == sub_m);
-    Assert(pen_j == pen_k);
-    Assert(pen_j == pen_m);
+    ECCODES_ASSERT(sub_j == sub_k);
+    ECCODES_ASSERT(sub_j == sub_m);
+    ECCODES_ASSERT(pen_j == pen_k);
+    ECCODES_ASSERT(pen_j == pen_m);
 
     buf = (unsigned char*)grib_handle_of_accessor(this)->buffer->data;
 
@@ -178,7 +178,7 @@ int grib_accessor_data_sh_unpacked_t::unpack_double(double* val, size_t* len)
     d = codes_power<double>(-decimal_scale_factor, 10);
 
     scals = (double*)grib_context_malloc(context_, maxv * sizeof(double));
-    Assert(scals);
+    ECCODES_ASSERT(scals);
     if ((ret = grib_get_double_internal(grib_handle_of_accessor(this), laplacianOperator_, &laplacianOperator)) != GRIB_SUCCESS)
         return ret;
 
@@ -225,7 +225,7 @@ int grib_accessor_data_sh_unpacked_t::unpack_double(double* val, size_t* len)
         mmax++;
     }
 
-    Assert(*len >= i);
+    ECCODES_ASSERT(*len >= i);
     *len = n_vals;
 
     grib_context_free(context_, scals);
