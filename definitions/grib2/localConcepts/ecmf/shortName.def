@@ -2467,7 +2467,7 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 122 ;
 	}
-#Mean surface runoff rate
+#Time-mean surface runoff rate
 'msror' = {
 	 localTablesVersion = 1 ;
 	 discipline = 2 ;
@@ -2476,7 +2476,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean sub-surface runoff rate
+#Time-mean sub-surface runoff rate
 'mssror' = {
 	 localTablesVersion = 1 ;
 	 discipline = 2 ;
@@ -5262,12 +5262,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 213 ;
 	 parameterNumber = 221 ;
-	}
-#Cosine of solar zenith angle
-'uvcossza' = {
-	 discipline = 192 ;
-	 parameterCategory = 214 ;
-	 parameterNumber = 1 ;
 	}
 #UV biologically effective dose
 'uvbed' = {
@@ -18601,7 +18595,7 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 45 ;
 	}
-#Mean large-scale precipitation rate
+#Time-mean large-scale precipitation rate
 'mlsprt' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -18610,7 +18604,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean convective precipitation rate
+#Time-mean convective precipitation rate
 'cprate' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -18619,7 +18613,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean total snowfall rate
+#Time-mean total snowfall rate
 'mtsfr' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -18628,19 +18622,19 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean short-wave heating rate
+#Time-mean short-wave (solar) heating rate
 'mswhr' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 153 ;
 	}
-#Mean long-wave heating rate
+#Time-mean long-wave (thermal) heating rate
 'mlwhr' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 154 ;
 	}
-#Evaporation
+#Time-mean evaporation rate
 'erate' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -18649,7 +18643,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean runoff rate
+#Time-mean runoff rate
 'mrort' = {
 	 localTablesVersion = 1 ;
 	 discipline = 2 ;
@@ -18658,7 +18652,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean total precipitation rate
+#Time-mean total precipitation rate
 'tprate' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -18667,13 +18661,13 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Convective snowfall
+#Time-mean convective snowfall rate
 '~' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 239 ;
 	}
-#Large scale snowfall
+#Time-mean large-scale snowfall rate
 '~' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
