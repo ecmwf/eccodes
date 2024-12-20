@@ -120,7 +120,7 @@ int grib_jasper_decode(grib_context* c, unsigned char* buf, const size_t* buflen
         goto cleanup;
     }
 
-    Assert(p->height_ * p->width_ == *n_vals);
+    ECCODES_ASSERT(p->height_ * p->width_ == *n_vals);
 
     k = 0;
     for (i = 0; i < p->height_; i++)
@@ -193,7 +193,7 @@ int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
 
     /* Simple packing encoding */
     bits8 = (helper->bits_per_value + 7) / 8 * 8;
-    Assert(bits8 > 0);
+    ECCODES_ASSERT(bits8 > 0);
     encoded = (unsigned char*)grib_context_malloc_clear(c, bits8 / 8 * no_values);
 
     if (!encoded) {
@@ -224,7 +224,7 @@ int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
         snprintf(opts, MAXOPTSSIZE, "mode=real\nrate=%f", 1.0 / helper->compression);
     }
 
-    Assert(cmpt.width_ * cmpt.height_ * cmpt.cps_ == buflen);
+    ECCODES_ASSERT(cmpt.width_ * cmpt.height_ * cmpt.cps_ == buflen);
     grib_context_log(c, GRIB_LOG_DEBUG, "grib_jasper_encode: JasPer version %s", jas_getversion());
 
     pcmpt        = &cmpt;

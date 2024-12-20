@@ -48,7 +48,7 @@ int grib_accessor_sprintf_t::unpack_string(char* val, size_t* len)
                 char *theEnd = NULL, *start;
                 start        = (char*)&(uname[++i]);
                 precision    = strtol(start, &theEnd, 10);
-                Assert(*theEnd != 0);
+                ECCODES_ASSERT(*theEnd != 0);
                 while (uname[i] != *theEnd)
                     i++;
             }

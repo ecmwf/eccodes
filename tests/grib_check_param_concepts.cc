@@ -26,7 +26,7 @@ static int type_of_surface_missing(const char* name, const char* value)
     /* Beware of problems where we put 'missing()' for a code table key! */
     if (strncmp(value, "missing", 7) == 0) {
         fprintf(stderr, "Invalid value for %s Code Table entry: '%s'\n", name, value);
-        Assert(0);
+        ECCODES_ASSERT(0);
     }
     return 0;
 }
@@ -60,7 +60,7 @@ static int grib_check_param_concepts(const char* key, const char* filename)
         count++;
         if (strlen(concept_value->name) == 0) {
             fprintf(stderr, "%s %s: Empty concept value (count=%d)\n", key, concept_value->name, count);
-            Assert(0);
+            ECCODES_ASSERT(0);
         }
         grib_concept_condition* concept_condition = concept_value->conditions;
         /* Convention:
@@ -74,7 +74,7 @@ static int grib_check_param_concepts(const char* key, const char* filename)
         int err = 0;
         /* concept_value->name is the value of the key (e.g. 151163 or sst) */
         if (strcmp(key, "cfVarName")==0) {
-            Assert( strlen(concept_value->name) > 0 );
+            ECCODES_ASSERT( strlen(concept_value->name) > 0 );
             if ( isdigit(concept_value->name[0]) || strcmp(concept_value->name, "~")==0 ) {
                 fprintf(stderr, "%s %s: Invalid cfVarName in file %s\n",
                         key, concept_value->name, filename);
@@ -106,7 +106,7 @@ static int grib_check_param_concepts(const char* key, const char* filename)
             else {
                 fprintf(stderr, "%s %s: Unknown class name: '%s'\n",
                         key, concept_value->name, expression->class_name());
-                Assert(0);
+                ECCODES_ASSERT(0);
             }
             if (!isLocal && strcmp(condition_name, "localTablesVersion") == 0) {
                 fprintf(stderr, "%s %s: Cannot have localTablesVersion key in WMO file %s!\n",
@@ -168,7 +168,7 @@ int main(int argc, char** argv)
     const char* concepts_key      = argv[1];
     const char* concepts_filename = argv[2];
 
-    Assert(argc == 3);
+    ECCODES_ASSERT(argc == 3);
     err = grib_check_param_concepts(concepts_key, concepts_filename);
     if (err) return err;
 

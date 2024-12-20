@@ -100,7 +100,7 @@ grib_action* grib_action_create_gen(grib_context* context, const char* name, con
             flag_stringtype = 1;
         if (flag_lowercase && !flag_stringtype) {
             printf("grib_action_create_gen name=%s. Has lowercase but not string_type\n", name);
-            Assert(0);
+            ECCODES_ASSERT(0);
         }
     }
 #endif

@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
 
     f1 = fopen(argv[1], "rb");
     f2 = fopen(argv[2], "rb");
-    Assert(f1 && f2);
+    ECCODES_ASSERT(f1 && f2);
 
     if (argc == 4) {
         // List of keys is also given on the command line
@@ -37,11 +37,11 @@ int main(int argc, char* argv[])
         // Set flags to 0 to not filter any keys
         //kiter = grib_keys_iterator_new(h1, /*flags=*/0, /*namespace=*/NULL);
         kiter = grib_keys_iterator_new(h1, /*flags=*/GRIB_KEYS_ITERATOR_SKIP_COMPUTED, /*namespace=*/NULL);
-        Assert(kiter);
+        ECCODES_ASSERT(kiter);
 
         while (grib_keys_iterator_next(kiter)) {
             const char* name = grib_keys_iterator_get_name(kiter);
-            Assert(name);
+            ECCODES_ASSERT(name);
             err = codes_compare_key(h1, h2, name, 0);
             if (err) {
                 fprintf(stderr, "key: %s  (%s)\n", name, grib_get_error_message(err));
@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
         codes_compare_key(h1, h2, "paramId", 0);    // concept
         codes_compare_key(h1, h2, "identifier", 0); // ascii
         err = codes_compare_key(h1, h2, "abcdefghij", 0); // no such key
-        Assert(err == GRIB_NOT_FOUND);
+        ECCODES_ASSERT(err == GRIB_NOT_FOUND);
 
         if (list_provided_keys) {
             for (i = 0; list_provided_keys[i] != NULL; ++i) {

@@ -19316,6 +19316,12 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 52 ;
 	}
+#Volume-mean total column mixing ratio
+'409000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 84 ;
+	}
 #Wet deposition mass flux by large-scale precipitation
 '410000' = {
 	 discipline = 0 ;
@@ -19327,6 +19333,13 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 10 ;
+	}
+#Emission mass flux from vegetation
+'412000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 34 ;
 	}
 #Emission mass flux from natural sources
 '413000' = {
@@ -19355,6 +19368,13 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 13 ;
+	}
+#Emission mass flux from biomass burning
+'417000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 35 ;
 	}
 #Emission from aviation
 '418000' = {
@@ -19453,6 +19473,13 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 20 ;
+	}
+#Emission mass flux from settlements
+'432000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 36 ;
 	}
 #Emission mass flux from volcanoes
 '433000' = {
@@ -19556,6 +19583,20 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 11 ;
 	}
+#Emission mass flux from soil
+'442000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 37 ;
+	}
+#Emission mass flux from wild animals
+'443000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 38 ;
+	}
 #Accumulated wet deposition mass flux
 '444000' = {
 	 discipline = 0 ;
@@ -19635,6 +19676,34 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 105 ;
 	}
+#Emission mass flux from commercial buildings heating
+'463000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 30 ;
+	}
+#Emission mass flux from residential heating
+'464000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 31 ;
+	}
+#Emission mass flux from oil refineries and transformation industry
+'465000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 32 ;
+	}
+#Emission mass flux from gas production
+'466000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 33 ;
+	}
 #Mass mixing ratio difference
 '467000' = {
 	 discipline = 0 ;
@@ -19656,6 +19725,24 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 5 ;
+	}
+#Sink mass flux
+'470000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 82 ;
+	}
+#Source mass flux
+'471000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 83 ;
+	}
+#Absorption aerosol optical thickness
+'472000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 112 ;
 	}
 #Pressure tendency
 '3003' = {

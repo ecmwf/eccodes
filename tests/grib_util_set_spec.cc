@@ -30,7 +30,7 @@ static int get_packing_type_code(const char* packingType)
     else if (STR_EQUAL(packingType, "grid_complex"))
         return GRIB_UTIL_PACKING_TYPE_GRID_COMPLEX;
 
-    Assert(!"Invalid packingType");
+    ECCODES_ASSERT(!"Invalid packingType");
     return result;
 }
 
@@ -53,20 +53,20 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
     grib_util_grid_spec spec = {0,};
     grib_util_packing_spec packing_spec = {0,};
 
-    Assert(input_filename);
+    ECCODES_ASSERT(input_filename);
     in = fopen(input_filename, "rb");
-    Assert(in);
+    ECCODES_ASSERT(in);
     handle = grib_handle_new_from_file(0, in, &err);
-    Assert(handle);
+    ECCODES_ASSERT(handle);
 
     CODES_CHECK(grib_get_string(handle, "gridType", gridType, &slen), 0);
     if (!STR_EQUAL(gridType, "reduced_gg")) {
         grib_handle_delete(handle);
         return;
     }
-    Assert(output_filename);
+    ECCODES_ASSERT(output_filename);
     out = fopen(output_filename, "wb");
-    Assert(out);
+    ECCODES_ASSERT(out);
 
     CODES_CHECK(grib_get_size(handle, "values", &inlen), 0);
     values = (double*)malloc(sizeof(double) * inlen);
@@ -114,29 +114,29 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
         values,
         outlen,
         &err);
-    Assert(finalh);
-    Assert(err == 0);
+    ECCODES_ASSERT(finalh);
+    ECCODES_ASSERT(err == 0);
 
     /* Try some invalid inputs and check it is handled */
     {
         grib_handle* h2      = 0;
         packing_spec.accuracy = 999;
         h2                    = grib_util_set_spec(handle, &spec, &packing_spec, set_spec_flags, values, outlen, &err);
-        Assert(err == GRIB_INTERNAL_ERROR);
-        Assert(!h2);
+        ECCODES_ASSERT(err == GRIB_INTERNAL_ERROR);
+        ECCODES_ASSERT(!h2);
         if (h2) exit(1);
 #ifdef INFINITY
         packing_spec.accuracy = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
         values[0]             = INFINITY;
         h2                    = grib_util_set_spec(handle, &spec, &packing_spec, set_spec_flags, values, outlen, &err);
-        Assert(err == GRIB_ENCODING_ERROR);
-        Assert(!h2);
+        ECCODES_ASSERT(err == GRIB_ENCODING_ERROR);
+        ECCODES_ASSERT(!h2);
         if (h2) exit(1);
 
         values[0]             = -INFINITY;
         h2                    = grib_util_set_spec(handle, &spec, &packing_spec, set_spec_flags, values, outlen, &err);
-        Assert(err == GRIB_ENCODING_ERROR);
-        Assert(!h2);
+        ECCODES_ASSERT(err == GRIB_ENCODING_ERROR);
+        ECCODES_ASSERT(!h2);
         if (h2) exit(1);
 #endif
     }
@@ -146,7 +146,7 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
     CODES_CHECK(codes_check_message_header(buffer, size, PRODUCT_GRIB), 0);
     CODES_CHECK(codes_check_message_footer(buffer, size, PRODUCT_GRIB), 0);
     if (fwrite(buffer, 1, size, out) != size) {
-        Assert(0);
+        ECCODES_ASSERT(0);
     }
     grib_handle_delete(handle);
     grib_handle_delete(finalh);
@@ -176,11 +176,11 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
     grib_util_grid_spec spec = {0,};
     grib_util_packing_spec packing_spec = {0,};
 
-    Assert(input_filename);
+    ECCODES_ASSERT(input_filename);
     in = fopen(input_filename, "rb");
-    Assert(in);
+    ECCODES_ASSERT(in);
     handle = grib_handle_new_from_file(0, in, &err);
-    Assert(handle);
+    ECCODES_ASSERT(handle);
 
     CODES_CHECK(grib_get_long(handle, "edition", &input_edition), 0);
 
@@ -189,9 +189,9 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
         grib_handle_delete(handle);
         return;
     }
-    Assert(output_filename);
+    ECCODES_ASSERT(output_filename);
     out = fopen(output_filename, "wb");
-    Assert(out);
+    ECCODES_ASSERT(out);
 
     CODES_CHECK(grib_get_size(handle, "values", &inlen), 0);
     values = (double*)malloc(sizeof(double) * inlen);
@@ -242,8 +242,8 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
         values,
         outlen,
         &err);
-    Assert(finalh);
-    Assert(err == 0);
+    ECCODES_ASSERT(finalh);
+    ECCODES_ASSERT(err == 0);
 
     /* Check expand_bounding_box worked.
      * Specified latitudeOfFirstGridPointInDegrees cannot be encoded in GRIB1
@@ -252,7 +252,7 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
         const double expected_lat1 = 60.001;
         double lat1                = 0;
         CODES_CHECK(grib_get_double(finalh, "latitudeOfFirstGridPointInDegrees", &lat1), 0);
-        Assert(fabs(lat1 - expected_lat1) < 1e-10);
+        ECCODES_ASSERT(fabs(lat1 - expected_lat1) < 1e-10);
     }
 
     /* Write out the message to the output file */
@@ -260,7 +260,7 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
     CODES_CHECK(codes_check_message_header(buffer, size, PRODUCT_GRIB), 0);
     CODES_CHECK(codes_check_message_footer(buffer, size, PRODUCT_GRIB), 0);
     if (fwrite(buffer, 1, size, out) != size) {
-        Assert(0);
+        ECCODES_ASSERT(0);
     }
     grib_handle_delete(handle);
     grib_handle_delete(finalh);
@@ -290,15 +290,15 @@ static void test_grid_complex_spatial_differencing(int remove_local_def, int edi
     grib_util_grid_spec spec={0,};
     grib_util_packing_spec packing_spec={0,};
 
-    in = fopen(input_filename,"rb");     Assert(in);
-    handle = grib_handle_new_from_file(0, in, &err);    Assert(handle);
+    in = fopen(input_filename,"rb");     ECCODES_ASSERT(in);
+    handle = grib_handle_new_from_file(0, in, &err);    ECCODES_ASSERT(handle);
 
     CODES_CHECK(grib_get_string(handle, "packingType", gridType, &slen),0);
     if (!STR_EQUAL(gridType, "grid_complex_spatial_differencing")) {
         grib_handle_delete(handle);
         return;
     }
-    out = fopen(output_filename,"wb");   Assert(out);
+    out = fopen(output_filename,"wb");   ECCODES_ASSERT(out);
 
     CODES_CHECK(grib_get_size(handle,"values",&inlen), 0);
     values = (double*)malloc(sizeof(double)*inlen);
@@ -342,13 +342,13 @@ static void test_grid_complex_spatial_differencing(int remove_local_def, int edi
             values,
             outlen,
             &err);
-    Assert(finalh);
-    Assert(err == 0);
+    ECCODES_ASSERT(finalh);
+    ECCODES_ASSERT(err == 0);
 
     /* Write out the message to the output file */
     CODES_CHECK(grib_get_message(finalh, &buffer, &size),0);
     if(fwrite(buffer,1,size,out) != size) {
-        Assert(0);
+        ECCODES_ASSERT(0);
     }
     grib_handle_delete(handle);
     grib_handle_delete(finalh);

@@ -57,7 +57,7 @@ int grib_accessor_local_definition_t::pack_long(const long* val, size_t* len)
     long editionNumber        = 0;
 
     if (grib_get_long(hand, "editionNumber", &editionNumber) == GRIB_SUCCESS) {
-        Assert(editionNumber != 1);
+        ECCODES_ASSERT(editionNumber != 1);
     }
 
     if (grib_get_long(hand, productDefinitionTemplateNumber_, &productDefinitionTemplateNumber) != GRIB_SUCCESS)

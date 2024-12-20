@@ -176,7 +176,7 @@ int GaussianReduced::iterate_reduced_gaussian_subarea(grib_handle* h,
 
     /* Find starting latitude */
     binary_search(lats, numlats - 1, lat_first, &l);
-    Assert(l < numlats);
+    ECCODES_ASSERT(l < numlats);
 
     //     for(il=0; il<numlats; ++il) {
     //         const double diff = fabs(lat_first-lats[il]);
@@ -282,7 +282,7 @@ int GaussianReduced::init(grib_handle* h, grib_arguments* args)
         return ret;
 
     if (grib_get_long(h, "angleSubdivisions", &angleSubdivisions) == GRIB_SUCCESS) {
-        Assert(angleSubdivisions > 0);
+        ECCODES_ASSERT(angleSubdivisions > 0);
         angular_precision = 1.0 / angleSubdivisions;
     }
 
@@ -296,7 +296,7 @@ int GaussianReduced::init(grib_handle* h, grib_arguments* args)
     if ((ret = grib_get_size(h, spl, &plsize)) != GRIB_SUCCESS)
         return ret;
 
-    Assert(plsize);
+    ECCODES_ASSERT(plsize);
     pl = (long*)grib_context_malloc(c, sizeof(long) * plsize);
     if (!pl)
         return GRIB_OUT_OF_MEMORY;

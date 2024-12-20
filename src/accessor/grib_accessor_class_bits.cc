@@ -39,7 +39,7 @@ void grib_accessor_bits_t::init(const long l, grib_arguments* c)
         scale_ = c->get_double(hand, n++);
     }
 
-    Assert(len_ <= sizeof(long) * 8);
+    ECCODES_ASSERT(len_ <= sizeof(long) * 8);
 
     length_ = 0;
 }

@@ -824,6 +824,85 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 251 ;
 	}
+#Volume-mean total column mixing ratio
+'mol mol**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 195 ;
+	}
+#Emission mass flux from vegetation
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 192 ;
+	}
+#Emission mass flux from biomass burning
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 193 ;
+	}
+#Emission mass flux from settlements
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 194 ;
+	}
+#Emission mass flux from soil
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 195 ;
+	}
+#Emission mass flux from wild animals
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 196 ;
+	}
+#Emission mass flux from commercial buildings heating
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 197 ;
+	}
+#Emission mass flux from residential heating
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 198 ;
+	}
+#Emission mass flux from oil refineries and transformation industry
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 199 ;
+	}
+#Emission mass flux from gas production
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 200 ;
+	}
 #Mean 2 metre temperature in the last 24 hours gradient
 'K' = {
 	 discipline = 192 ;

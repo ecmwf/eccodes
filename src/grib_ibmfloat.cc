@@ -55,7 +55,7 @@ unsigned long grib_ibm_to_long(double x)
     /* Overflow */
     if (x > ibm_table.vmax) {
         fprintf(stderr, "grib_ibm_to_long: Number is too large: x=%.20e > xmax=%.20e\n", x, ibm_table.vmax);
-        Assert(0);
+        ECCODES_ASSERT(0);
         return 0;
     }
 
@@ -106,7 +106,7 @@ double grib_ibmfloat_error(double x)
     /* Overflow */
     if (x > ibm_table.vmax) {
         fprintf(stderr, "grib_ibmfloat_error: Number is too large: x=%.20e > xmax=%.20e\n", x, ibm_table.vmax);
-        Assert(0);
+        ECCODES_ASSERT(0);
         return 0;
     }
 
@@ -190,7 +190,7 @@ unsigned long grib_ibm_nearest_smaller_to_long(double x)
         l = grib_ibm_to_long(x - eps);
         if (x < grib_long_to_ibm(l)) {
             printf("grib_ibm_nearest_smaller_to_long: x=%.20e grib_long_to_ibm(0x%lX)=%.20e\n", x, l, grib_long_to_ibm(l));
-            Assert(x >= grib_long_to_ibm(l));
+            ECCODES_ASSERT(x >= grib_long_to_ibm(l));
         }
     }
 

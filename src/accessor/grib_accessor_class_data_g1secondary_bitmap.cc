@@ -108,7 +108,7 @@ int grib_accessor_data_g1secondary_bitmap_t::pack_double(const double* val, size
     *len = k;
 
     /*printf("QQQQQQQ %ld %ld second=%ld\n",primary_len,on,m);*/
-    Assert(k == primary_len);
+    ECCODES_ASSERT(k == primary_len);
 
     err = grib_set_double_array_internal(grib_handle_of_accessor(this), primary_bitmap_, primary_bitmap, k);
     if (err == GRIB_SUCCESS)

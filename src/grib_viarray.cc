@@ -16,7 +16,7 @@ void grib_viarray_print(const char* title, const grib_viarray* viarray)
     size_t i;
     char text[100] = {0,};
     const size_t textLen = sizeof(text);
-    Assert(viarray);
+    ECCODES_ASSERT(viarray);
     printf("%s: viarray.n=%zu\n", title, viarray->n);
     for (i = 0; i < viarray->n; i++) {
         snprintf(text, textLen, " viarray->v[%zu]", i);

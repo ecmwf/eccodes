@@ -163,7 +163,7 @@ static void grib_md5_flush(grib_md5_state* s)
 
 void grib_md5_init(grib_md5_state* s)
 {
-    Assert(sizeof(uint64_t) == 8);
+    ECCODES_ASSERT(sizeof(uint64_t) == 8);
     memset(s, 0, sizeof(grib_md5_state));
     s->h0 = 0x67452301;
     s->h1 = 0xefcdab89;

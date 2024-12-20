@@ -67,7 +67,7 @@ int grib_accessor_budgdate_t::pack_long(const long* val, size_t* len)
 
     year -= 1900;
 
-    Assert(year < 255);
+    ECCODES_ASSERT(year < 255);
 
     if ((ret = grib_set_long_internal(grib_handle_of_accessor(this), day_, day)) != GRIB_SUCCESS)
         return ret;

@@ -153,7 +153,7 @@ double grib_op_le_d(double a, double b)
 //     LOOKUP(grib_op_mul);
 //     LOOKUP(grib_op_modulo);
 //     fprintf(stderr, "Cannot find grib_binop_long_proc\n");
-//     Assert(0);
+//     ECCODES_ASSERT(0);
 //     return NULL;
 // }
 
@@ -172,7 +172,7 @@ double grib_op_le_d(double a, double b)
 //     LOOKUP(grib_op_ge_d);
 //     LOOKUP(grib_op_le_d);
 //     fprintf(stderr, "Cannot find grib_binop_double_proc_name\n");
-//     Assert(0);
+//     ECCODES_ASSERT(0);
 //     return NULL;
 // }
 
@@ -183,7 +183,7 @@ double grib_op_le_d(double a, double b)
 //     LOOKUP(grib_op_not);
 //     LOOKUP(grib_op_neg);
 //     fprintf(stderr, "Cannot find grib_unop_long_proc_name\n");
-//     Assert(0);
+//     ECCODES_ASSERT(0);
 //     return NULL;
 // }
 
@@ -193,6 +193,6 @@ double grib_op_le_d(double a, double b)
 //         return "NULL";
 //     LOOKUP(grib_op_neg_d);
 //     fprintf(stderr, "Cannot find grib_unop_double_proc_name\n");
-//     Assert(0);
+//     ECCODES_ASSERT(0);
 //     return NULL;
 // }

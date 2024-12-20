@@ -5263,12 +5263,6 @@
 	 parameterCategory = 213 ;
 	 parameterNumber = 221 ;
 	}
-#Cosine of solar zenith angle
-'Cosine of solar zenith angle' = {
-	 discipline = 192 ;
-	 parameterCategory = 214 ;
-	 parameterNumber = 1 ;
-	}
 #UV biologically effective dose
 'UV biologically effective dose' = {
 	 discipline = 192 ;
@@ -13994,53 +13988,6 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Volume-mean total column mixing ratio
-'Volume-mean total column mixing ratio' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 195 ;
-	}
-#Emission mass flux from vegetation
-'Emission mass flux from vegetation' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 192 ;
-	}
-#Emission mass flux from biomass burning
-'Emission mass flux from biomass burning' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 193 ;
-	}
-#Emission mass flux from settlements
-'Emission mass flux from settlements' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 194 ;
-	}
-#Emission mass flux from soil
-'Emission mass flux from soil' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 195 ;
-	}
-#Emission mass flux from wild animals
-'Emission mass flux from wild animals' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 196 ;
-	}
 #Aerosol negative fixer mass flux
 'Aerosol negative fixer mass flux' = {
 	 localTablesVersion = 1 ;
@@ -14062,6 +14009,7 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 192 ;
 	}
+<<<<<<< HEAD
 #Emission mass flux from commercial buildings heating
 'Emission mass flux from commercial buildings heating' = {
 	 localTablesVersion = 1 ;
@@ -14194,6 +14142,8 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 200 ;
 	}
+=======
+>>>>>>> origin/develop
 #Stream function gradient
 'Stream function gradient' = {
 	 discipline = 192 ;

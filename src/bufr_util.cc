@@ -809,7 +809,7 @@ static char* codes_bufr_header_get_centre_name(long edition, long centre_code)
 
         if( *p =='\0' ) continue;
 
-        Assert(isdigit(*p));
+        ECCODES_ASSERT(isdigit(*p));
         while(*p != '\0') {
             if(isspace(*p)) break;
             code *= 10;
@@ -838,13 +838,13 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
 {
     static const char* NOT_FOUND = "not_found";
     bool isEcmwfLocal            = false;
-    Assert(bh);
-    Assert(key);
+    ECCODES_ASSERT(bh);
+    ECCODES_ASSERT(key);
     *len = strlen(NOT_FOUND); // By default
 
     isEcmwfLocal = (bh->ecmwfLocalSectionPresent == 1);
-    Assert(!(isEcmwfLocal && bh->bufrHeaderCentre != 98));
-    Assert(!(bh->ecmwfLocalSectionPresent && !bh->localSectionPresent));
+    ECCODES_ASSERT(!(isEcmwfLocal && bh->bufrHeaderCentre != 98));
+    ECCODES_ASSERT(!(bh->ecmwfLocalSectionPresent && !bh->localSectionPresent));
 
     if (strcmp(key, "message_offset") == 0)
         *len = snprintf(val, 32, "%lu", bh->message_offset);

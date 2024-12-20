@@ -104,7 +104,7 @@ int grib_accessor_data_simple_packing_t::unpack_double_element(size_t idx, doubl
         return GRIB_SUCCESS;
     }
 
-    Assert(idx < n_vals);
+    ECCODES_ASSERT(idx < n_vals);
     s = codes_power<double>(binary_scale_factor, 2);
     d = codes_power<double>(-decimal_scale_factor, 10);
 
@@ -113,7 +113,7 @@ int grib_accessor_data_simple_packing_t::unpack_double_element(size_t idx, doubl
                      class_name_, __func__, name_, n_vals, idx);
 
     buf += byte_offset();
-    /*Assert(((bits_per_value*n_vals)/8) < (1<<29));*/ /* See GRIB-787 */
+    /*ECCODES_ASSERT(((bits_per_value*n_vals)/8) < (1<<29));*/ /* See GRIB-787 */
 
     if (bits_per_value % 8) {
         grib_context_log(context_, GRIB_LOG_DEBUG,
@@ -244,7 +244,7 @@ int grib_accessor_data_simple_packing_t::unpack(T* val, size_t* len)
     offsetBeforeData = byte_offset();
     buf += offsetBeforeData;
 
-    /*Assert(((bits_per_value*n_vals)/8) < (1<<29));*/ /* See GRIB-787 */
+    /*ECCODES_ASSERT(((bits_per_value*n_vals)/8) < (1<<29));*/ /* See GRIB-787 */
 
     /* ECC-941 */
     if (!context_->ieee_packing) {
@@ -385,7 +385,7 @@ int grib_accessor_data_simple_packing_t::_unpack_double(double* val, size_t* len
     offsetBeforeData = byte_offset();
     buf += offsetBeforeData;
 
-    /*Assert(((bits_per_value*n_vals)/8) < (1<<29));*/ /* See GRIB-787 */
+    /*ECCODES_ASSERT(((bits_per_value*n_vals)/8) < (1<<29));*/ /* See GRIB-787 */
 
     /* ECC-941 */
     if (!context_->ieee_packing) {

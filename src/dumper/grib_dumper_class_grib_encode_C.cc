@@ -307,7 +307,7 @@ void GribEncodeC::header(const grib_handle* h)
     ret                             = grib_get_long(h, "editionNumber", &edition);
     if (ret != GRIB_SUCCESS) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to get edition number.");
-        Assert(0);
+        ECCODES_ASSERT(0);
     }
 
     fprintf(out_,

@@ -40,7 +40,7 @@ int grib_accessor_reference_value_error_t::unpack_double(double* val, size_t* le
     else if (!strcmp(floatType_, "ieee"))
         *val = grib_ieeefloat_error(referenceValue);
     else
-        Assert(1 == 0);
+        ECCODES_ASSERT(1 == 0);
 
     if (ret == GRIB_SUCCESS)
         *len = 1;

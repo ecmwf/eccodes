@@ -52,7 +52,7 @@ static int decode_rdbSubtype(const void* msg, long* rdbSubtype)
     int ecmwfLocalSectionPresent = 0;
     const unsigned char* message = (const unsigned char*)msg;
 
-    Assert(message);
+    ECCODES_ASSERT(message);
     *rdbSubtype = -1; /* default */
 
     edition = (long)grib_decode_unsigned_long(message, &pos_edition, nbits_edition);

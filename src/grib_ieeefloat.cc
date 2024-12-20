@@ -56,7 +56,7 @@ unsigned long grib_ieee_to_long(double x)
     /* Overflow */
     if (x > ieee_table.vmax) {
         fprintf(stderr, "grib_ieee_to_long: Number is too large: x=%.20e > xmax=%.20e\n", x, ieee_table.vmax);
-        Assert(0);
+        ECCODES_ASSERT(0);
         return 0;
     }
 
@@ -107,7 +107,7 @@ double grib_ieeefloat_error(double x)
     /* Overflow */
     if (x > ieee_table.vmax) {
         fprintf(stderr, "grib_ieeefloat_error: Number is too large: x=%.20e > xmax=%.20e\n", x, ieee_table.vmax);
-        Assert(0);
+        ECCODES_ASSERT(0);
         return 0;
     }
 
@@ -127,7 +127,7 @@ double grib_long_to_ieee(unsigned long x)
 #ifdef DEBUG
     if (x > 0 && x < 0x800000) {
         fprintf(stderr, "grib_long_to_ieee: Invalid input %lu\n", x);
-        Assert(0);
+        ECCODES_ASSERT(0);
     }
 #endif
 
@@ -195,7 +195,7 @@ unsigned long grib_ieee_nearest_smaller_to_long(double x)
 
     if (x < grib_long_to_ieee(l)) {
         printf("grib_ieee_nearest_smaller_to_long: x=%.20e grib_long_to_ieee(0x%lX)=%.20e\n", x, l, grib_long_to_ieee(l));
-        Assert(x >= grib_long_to_ieee(l));
+        ECCODES_ASSERT(x >= grib_long_to_ieee(l));
     }
 
     return l;
