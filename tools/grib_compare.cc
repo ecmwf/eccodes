@@ -195,7 +195,7 @@ static int blocklisted(const char* name)
 {
     grib_string_list* b = blocklist;
     while (b) {
-        Assert(b->value);
+        ECCODES_ASSERT(b->value);
         if (!strcmp(name, b->value))
             return 1;
         b = b->next;

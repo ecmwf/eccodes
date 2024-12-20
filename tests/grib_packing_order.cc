@@ -24818,7 +24818,7 @@ int main(int argc, char** argv)
 
     fprintf(stderr, "Using sample_filename = %s\n", sample_filename);
     h = grib_handle_new_from_samples(0, sample_filename);
-    Assert(h);
+    ECCODES_ASSERT(h);
 
     if (strcmp(packing_type, "grid_second_order") == 0 && packing_stage == VALUES_BEFORE_PACKING_TYPE) {
         check = 0; /* TDOD */
@@ -24861,7 +24861,7 @@ int main(int argc, char** argv)
             GRIB_CHECK(grib_get_long(h, "offsetBeforeData", &offsetBeforeData), 0);
             calc = (offsetAfterData - offsetBeforeData) * 8.0 / values_len;
             printf("bitsPerValue calculated as = (offsetAfterData - offsetBeforeData)*8/numValues = %g\n", calc);
-            Assert(calc == 16 || calc == 32 || calc == 64);
+            ECCODES_ASSERT(calc == 16 || calc == 32 || calc == 64);
         }
         free(vals);
     }

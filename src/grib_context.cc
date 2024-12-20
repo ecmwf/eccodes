@@ -205,7 +205,7 @@ static void default_log(const grib_context* c, int level, const char* mess)
         c = grib_context_get_default();
     if (level == GRIB_LOG_ERROR) {
         fprintf(c->log_stream, "ECCODES ERROR   :  %s\n", mess);
-        /*Assert(1==0);*/
+        /*ECCODES_ASSERT(1==0);*/
     }
     if (level == GRIB_LOG_FATAL)
         fprintf(c->log_stream, "ECCODES ERROR   :  %s\n", mess);
@@ -217,15 +217,15 @@ static void default_log(const grib_context* c, int level, const char* mess)
         fprintf(c->log_stream, "ECCODES INFO    :  %s\n", mess);
 
     if (level == GRIB_LOG_FATAL) {
-        Assert(0);
+        ECCODES_ASSERT(0);
     }
 
     if (getenv("ECCODES_FAIL_IF_LOG_MESSAGE")) {
         long n = atol(getenv("ECCODES_FAIL_IF_LOG_MESSAGE"));
         if (n >= 1 && level == GRIB_LOG_ERROR)
-            Assert(0);
+            ECCODES_ASSERT(0);
         if (n >= 2 && level == GRIB_LOG_WARNING)
-            Assert(0);
+            ECCODES_ASSERT(0);
     }
 }
 
@@ -247,7 +247,7 @@ void grib_context_set_data_quality_checks(grib_context* c, int val)
     // If val == 0, disable data quality checks
     // If val == 1, failure results in an error
     // If val == 2, failure results in a warning
-    Assert(val == 0 || val == 1 || val == 2);
+    ECCODES_ASSERT(val == 0 || val == 1 || val == 2);
 
     c->grib_data_quality_checks = val;
 }
@@ -736,7 +736,7 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
             snprintf(full, sizeof(full), "%s/%s", dir->value, basename);
             if (codes_access(full, F_OK) == 0) { /* 0 means file exists */
                 fullpath = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
-                Assert(fullpath);
+                ECCODES_ASSERT(fullpath);
                 fullpath->value = grib_context_strdup(c, full);
                 GRIB_MUTEX_LOCK(&mutex_c);
                 grib_trie_insert(c->def_files, basename, fullpath);

@@ -98,8 +98,8 @@ int grib_accessor_data_secondary_bitmap_t::unpack_double(double* val, size_t* le
         }
     }
 
-    Assert(k <= *len);
-    Assert(m <= secondary_len);
+    ECCODES_ASSERT(k <= *len);
+    ECCODES_ASSERT(m <= secondary_len);
 
     /*printf("FOOBAR %d %d %ld %d\n",f,primary_len,expand_by,n_vals);*/
 

@@ -90,7 +90,7 @@ int grib_accessor_data_apply_boustrophedonic_t::unpack(T* val, size_t* len)
         return ret;
 
     if (grib_get_size(grib_handle_of_accessor(this), pl_, &plSize) == GRIB_SUCCESS) {
-        Assert(plSize == numberOfRows);
+        ECCODES_ASSERT(plSize == numberOfRows);
         pl  = (long*)grib_context_malloc_clear(context_, sizeof(long) * plSize);
         ret = grib_get_long_array_internal(grib_handle_of_accessor(this), pl_, pl, &plSize);
         if (ret)
@@ -228,7 +228,7 @@ int grib_accessor_data_apply_boustrophedonic_t::pack_double(const double* val, s
         return ret;
 
     if (grib_get_size(grib_handle_of_accessor(this), pl_, &plSize) == GRIB_SUCCESS) {
-        Assert(plSize == numberOfRows);
+        ECCODES_ASSERT(plSize == numberOfRows);
         pl  = (long*)grib_context_malloc_clear(context_, sizeof(long) * plSize);
         ret = grib_get_long_array_internal(grib_handle_of_accessor(this), pl_, pl, &plSize);
         if (ret)

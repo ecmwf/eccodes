@@ -93,9 +93,9 @@ int grib_openjpeg_encode(grib_context* c, j2k_encode_helper* helper)
     image->x1 = helper->width;
     image->y1 = helper->height;
 
-    Assert(cmptparm.prec <= sizeof(image->comps[0].data[0]) * 8 - 1); /* BR: -1 because I don't know what happens if the sign bit is set */
+    ECCODES_ASSERT(cmptparm.prec <= sizeof(image->comps[0].data[0]) * 8 - 1); /* BR: -1 because I don't know what happens if the sign bit is set */
 
-    Assert(helper->no_values == image->comps[0].h * image->comps[0].w);
+    ECCODES_ASSERT(helper->no_values == image->comps[0].h * image->comps[0].w);
 
     /* Simple packing */
     data = image->comps[0].data;
@@ -195,10 +195,10 @@ int grib_openjpeg_decode(grib_context* c, unsigned char* buf, const size_t* bufl
         goto cleanup;
     }
 
-    Assert(image->comps[0].sgnd == 0);
-    Assert(comp.prec <= sizeof(image->comps[0].data[0]) * 8 - 1); /* BR: -1 because I don't know what happens if the sign bit is set */
+    ECCODES_ASSERT(image->comps[0].sgnd == 0);
+    ECCODES_ASSERT(comp.prec <= sizeof(image->comps[0].data[0]) * 8 - 1); /* BR: -1 because I don't know what happens if the sign bit is set */
 
-    Assert(image->comps[0].prec < sizeof(mask) * 8 - 1);
+    ECCODES_ASSERT(image->comps[0].prec < sizeof(mask) * 8 - 1);
 
     data = image->comps[0].data;
     mask = (1 << image->comps[0].prec) - 1;
@@ -388,8 +388,8 @@ int grib_openjpeg_encode(grib_context* c, j2k_encode_helper* helper)
     image->x1 = helper->width;
     image->y1 = helper->height;
 
-    Assert(cmptparm.prec <= sizeof(image->comps[0].data[0]) * 8 - 1); /* BR: -1 because I don't know what happens if the sign bit is set */
-    Assert(helper->no_values == image->comps[0].h * image->comps[0].w);
+    ECCODES_ASSERT(cmptparm.prec <= sizeof(image->comps[0].data[0]) * 8 - 1); /* BR: -1 because I don't know what happens if the sign bit is set */
+    ECCODES_ASSERT(helper->no_values == image->comps[0].h * image->comps[0].w);
 
     /* Simple packing */
     data = image->comps[0].data;
@@ -517,10 +517,10 @@ int grib_openjpeg_decode(grib_context* c, unsigned char* buf, const size_t* bufl
         goto cleanup;
     }
 
-    Assert(image->comps[0].sgnd == 0);
-    Assert(comp.prec <= sizeof(image->comps[0].data[0]) * 8 - 1); /* BR: -1 because I don't know what happens if the sign bit is set */
+    ECCODES_ASSERT(image->comps[0].sgnd == 0);
+    ECCODES_ASSERT(comp.prec <= sizeof(image->comps[0].data[0]) * 8 - 1); /* BR: -1 because I don't know what happens if the sign bit is set */
 
-    Assert(image->comps[0].prec < sizeof(mask) * 8 - 1);
+    ECCODES_ASSERT(image->comps[0].prec < sizeof(mask) * 8 - 1);
 
     data = image->comps[0].data;
     mask = (1 << image->comps[0].prec) - 1;

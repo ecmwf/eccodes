@@ -33,7 +33,7 @@ double rint(double x)
     double result = 0;
     buf           = (char*)malloc(_CVTBUFSIZE);
     err           = _fcvt_s(buf, _CVTBUFSIZE, x, 0, &decimal, &sign);
-    Assert(err == 0);
+    ECCODES_ASSERT(err == 0);
     result = atof(buf);
     if (sign == 1) {
         result = result * -1;
@@ -148,7 +148,7 @@ int codes_flush_sync_close_file(FILE* f)
     int err = 0;
     int fd  = 0;
     const grib_context* c = grib_context_get_default();
-    Assert(f);
+    ECCODES_ASSERT(f);
 
     fd = fileno(f);
     if (fd == -1) {
@@ -274,7 +274,7 @@ long convert_to_minutes(long step, long stepUnits)
         return step * 60; /* unit=hours */
     if (stepUnits == 13)
         return step / 60; /* unit=seconds */
-    /* Assert( stepUnits < sizeof(u2m)/sizeof(u2m[0]) ); */
+    /* ECCODES_ASSERT( stepUnits < sizeof(u2m)/sizeof(u2m[0]) ); */
 
     result = step * u2m[stepUnits];
     return (long)result;
@@ -514,7 +514,7 @@ int codes_is_feature_enabled(const char* feature)
 
 int codes_get_features(char* result, size_t* length, int select)
 {
-    Assert(select == CODES_FEATURES_ALL || select == CODES_FEATURES_ENABLED || select == CODES_FEATURES_DISABLED);
+    ECCODES_ASSERT(select == CODES_FEATURES_ALL || select == CODES_FEATURES_ENABLED || select == CODES_FEATURES_DISABLED);
 
     const size_t num = NUMBER(known_features);
     result[0] = '\0';
@@ -541,7 +541,7 @@ int codes_get_features(char* result, size_t* length, int select)
     if (result[actual_length - 1] == ' ')
         result[actual_length - 1] = '\0';
 
-    Assert(*length >= actual_length);
+    ECCODES_ASSERT(*length >= actual_length);
     *length = actual_length;
     return GRIB_SUCCESS;
 }

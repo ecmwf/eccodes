@@ -58,7 +58,7 @@ int grib_encode_string(unsigned char* bitStream, long* bitOffset, size_t numberO
     int remainderComplement = 8 - remainder;
     const char* s           = string;
 
-    Assert(numberOfCharacters < 512 && (numberOfCharacters == 0 || string));
+    ECCODES_ASSERT(numberOfCharacters < 512 && (numberOfCharacters == 0 || string));
 
     /* if (remainder) byteOffset++; */
 

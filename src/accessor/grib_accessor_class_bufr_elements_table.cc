@@ -234,8 +234,8 @@ int grib_accessor_bufr_elements_table_t::bufr_get_from_table(bufr_descriptor* v)
         /* ECC-1137: check descriptor key name and unit lengths */
         const size_t maxlen_shortName = sizeof(v->shortName);
         const size_t maxlen_units     = sizeof(v->units);
-        Assert(strlen(list[1]) < maxlen_shortName);
-        Assert(strlen(list[4]) < maxlen_units);
+        ECCODES_ASSERT(strlen(list[1]) < maxlen_shortName);
+        ECCODES_ASSERT(strlen(list[4]) < maxlen_units);
     }
 #endif
 

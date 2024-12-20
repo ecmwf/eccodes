@@ -139,7 +139,7 @@ void BufrEncodeFortran::dump_values(grib_accessor* a)
     else {
         err = a->unpack_double(&value, &size2);
     }
-    Assert(size2 == size);
+    ECCODES_ASSERT(size2 == size);
 
     empty_ = 0;
 
@@ -232,7 +232,7 @@ void BufrEncodeFortran::dump_values_attribute(grib_accessor* a, const char* pref
     else {
         err = a->unpack_double(&value, &size2);
     }
-    Assert(size2 == size);
+    ECCODES_ASSERT(size2 == size);
 
     empty_ = 0;
 
@@ -346,7 +346,7 @@ void BufrEncodeFortran::dump_long(grib_accessor* a, const char* comment)
     else {
         err = a->unpack_long(&value, &size2);
     }
-    Assert(size2 == size);
+    ECCODES_ASSERT(size2 == size);
 
     empty_ = 0;
 
@@ -451,7 +451,7 @@ void BufrEncodeFortran::dump_long_attribute(grib_accessor* a, const char* prefix
     else {
         err = a->unpack_long(&value, &size2);
     }
-    Assert(size2 == size);
+    ECCODES_ASSERT(size2 == size);
 
     empty_ = 0;
 

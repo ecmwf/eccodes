@@ -69,10 +69,10 @@ static void init_class(grib_action_class* c)
 // static void check_sections(grib_section *s,grib_handle* h)
 // {
 //     grib_accessor *a = s?s->block->first:NULL;
-//     if(s) Assert(s->h == h);
+//     if(s) ECCODES_ASSERT(s->h == h);
 //     while(a)
 //     {
-//       Assert(grib_handle_of_accessor(a) == h);
+//       ECCODES_ASSERT(grib_handle_of_accessor(a) == h);
 //       check_sections(a->sub_section_,h);
 //       a = a->next;
 //     }
@@ -107,7 +107,7 @@ static int notify_change(grib_action* act, grib_accessor* notified,
     old_section = notified->sub_section_;
     if (!old_section) return GRIB_INTERNAL_ERROR;
 
-    Assert(old_section->h == h);
+    ECCODES_ASSERT(old_section->h == h);
 
     /* printf("old = %p\n",(void*)old_section->branch); */
     /* printf("new = %p\n",(void*)la); */
@@ -139,7 +139,7 @@ static int notify_change(grib_action* act, grib_accessor* notified,
         return GRIB_OUT_OF_MEMORY;
 
     tmp_handle->buffer = grib_create_growable_buffer(h->context);
-    Assert(tmp_handle->buffer); /* FIXME */
+    ECCODES_ASSERT(tmp_handle->buffer); /* FIXME */
 
     loader.data          = h;
     loader.lookup_long   = grib_lookup_long_from_handle;
@@ -150,7 +150,7 @@ static int notify_change(grib_action* act, grib_accessor* notified,
         return GRIB_INTERNAL_ERROR;
     }
 
-    Assert(h->kid == NULL);
+    ECCODES_ASSERT(h->kid == NULL);
     tmp_handle->loader = &loader;
     tmp_handle->main   = h;
     h->kid             = tmp_handle;
@@ -188,16 +188,16 @@ static int notify_change(grib_action* act, grib_accessor* notified,
     //if(h->context->debug > 10)
     //    grib_dump_content(tmp_handle,stdout,NULL,0,NULL);
 
-    /* Assert(tmp_handle->buffer->ulength == len); */
+    /* ECCODES_ASSERT(tmp_handle->buffer->ulength == len); */
     /* grib_empty_section(h->context,old_section); */
 
     grib_buffer_replace(notified, tmp_handle->buffer->data, tmp_handle->buffer->ulength, 0, 1);
 
-    Assert(tmp_handle->root->block->first != NULL);
+    ECCODES_ASSERT(tmp_handle->root->block->first != NULL);
     grib_swap_sections(old_section,
                        tmp_handle->root->block->first->sub_section_);
 
-    Assert(tmp_handle->dependencies == NULL);
+    ECCODES_ASSERT(tmp_handle->dependencies == NULL);
     /* printf("grib_handle_delete %p\n",(void*)tmp_handle); */
 
     grib_handle_delete(tmp_handle);
@@ -218,7 +218,7 @@ static int notify_change(grib_action* act, grib_accessor* notified,
     if (h->context->debug > 10)
         grib_dump_content(h, stdout, "debug", ~0, NULL);
 
-    Assert(size == len);
+    ECCODES_ASSERT(size == len);
 
     grib_update_paddings(old_section);
 

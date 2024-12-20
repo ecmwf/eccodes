@@ -38,7 +38,7 @@ int grib_accessor_g2_chemical_t::unpack_long(long* val, size_t* len)
     long productDefinitionTemplateNumber = 0;
     grib_get_long(grib_handle_of_accessor(this), productDefinitionTemplateNumber_, &productDefinitionTemplateNumber);
 
-    Assert(chemical_type_ == CHEM_PLAIN || chemical_type_ == CHEM_DISTRIB || chemical_type_ == CHEM_SRCSINK);
+    ECCODES_ASSERT(chemical_type_ == CHEM_PLAIN || chemical_type_ == CHEM_DISTRIB || chemical_type_ == CHEM_SRCSINK);
     if (chemical_type_ == CHEM_DISTRIB)
         *val = grib2_is_PDTN_ChemicalDistFunc(productDefinitionTemplateNumber);
     else if (chemical_type_ == CHEM_SRCSINK)
@@ -70,7 +70,7 @@ int grib_accessor_g2_chemical_t::pack_long(const long* val, size_t* len)
     //  grib_get_long(hand, type_ ,&type);
     //  grib_get_long(hand, stream_ ,&stream);
     ret = grib_get_string(hand, stepType_, stepType, &slen);
-    Assert(ret == GRIB_SUCCESS);
+    ECCODES_ASSERT(ret == GRIB_SUCCESS);
 
     eps = grib_is_defined(hand, "perturbationNumber");
     // eps = grib2_is_PDTN_EPS(productDefinitionTemplateNumber);
@@ -78,7 +78,7 @@ int grib_accessor_g2_chemical_t::pack_long(const long* val, size_t* len)
     if (!strcmp(stepType, "instant"))
         isInstant = 1;
 
-    Assert(chemical_type_ == CHEM_PLAIN || chemical_type_ == CHEM_DISTRIB || chemical_type_ == CHEM_SRCSINK);
+    ECCODES_ASSERT(chemical_type_ == CHEM_PLAIN || chemical_type_ == CHEM_DISTRIB || chemical_type_ == CHEM_SRCSINK);
 
     if (eps == 1) {
         if (isInstant) {

@@ -171,7 +171,7 @@ int grib_accessor_data_raw_packing_t::unpack_double_element(size_t idx, double* 
 
     pos = bytes * idx;
 
-    Assert(pos <= inlen);
+    ECCODES_ASSERT(pos <= inlen);
 
     nvals = 1;
     buf += pos;

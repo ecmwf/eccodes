@@ -139,7 +139,7 @@ static int execute(grib_action* act, grib_handle* h)
     size_t size = sizeof(tmp);
     int err     = 0;
 
-    Assert(args);
+    ECCODES_ASSERT(args);
 
     while (c) {
         e      = args->expression_;

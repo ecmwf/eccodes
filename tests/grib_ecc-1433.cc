@@ -50,7 +50,7 @@ int main(int argc, char** argv)
               grid_ccsds_values[i] > (values[i] / (1 + tolerance)))) {
             std::cout.precision(dbl::max_digits10);
             std::cout << "Test failed: " << grid_ccsds_values[i] << " != " << values[i] << std::endl;
-            Assert(0);
+            ECCODES_ASSERT(0);
         }
     }
 

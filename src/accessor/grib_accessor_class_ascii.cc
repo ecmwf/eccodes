@@ -17,7 +17,7 @@ void grib_accessor_ascii_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
     length_ = len;
-    Assert(length_ >= 0);
+    ECCODES_ASSERT(length_ >= 0);
 }
 
 int grib_accessor_ascii_t::value_count(long* count)

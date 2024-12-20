@@ -423,7 +423,7 @@ static int read_GRIB(reader* r, int no_alloc)
             return GRIB_UNSUPPORTED_EDITION;
     }
 
-    /* Assert(i <= buf->length); */
+    /* ECCODES_ASSERT(i <= buf->length); */
     err = read_the_rest(r, length, tmp, i, /*check7777=*/1, no_alloc);
     if (err)
         r->seek_from_start(r->read_data, r->offset + 4);
@@ -441,7 +441,7 @@ static int read_PSEUDO(reader* r, const char* type, int no_alloc)
     int err        = 0;
     int i = 0, j = 0;
 
-    Assert(strlen(type) == 4);
+    ECCODES_ASSERT(strlen(type) == 4);
     for (j = 0; j < 4; j++) {
         tmp[i] = type[i];
         i++;
@@ -478,7 +478,7 @@ static int read_PSEUDO(reader* r, const char* type, int no_alloc)
 
     /* fprintf(stderr,"%s sec4len=%d i=%d l=%d\n",type,sec4len,i,4+sec1len+sec4len+4); */
 
-    Assert(i <= sizeof(tmp));
+    ECCODES_ASSERT(i <= sizeof(tmp));
     return read_the_rest(r, 4 + sec1len + sec4len + 4, tmp, i, /*check7777=*/1, no_alloc);
 }
 
@@ -665,7 +665,7 @@ static int read_HDF5(reader* r)
         return GRIB_NOT_IMPLEMENTED;
     }
 
-    Assert(i <= sizeof(tmp));
+    ECCODES_ASSERT(i <= sizeof(tmp));
     return read_the_rest(r, end_of_file_address, tmp, i, 0, 0);
 }
 
@@ -697,7 +697,7 @@ static int read_WRAP(reader* r)
         tmp[i++] = buf[j];
     }
 
-    Assert(i <= sizeof(tmp));
+    ECCODES_ASSERT(i <= sizeof(tmp));
     return read_the_rest(r, length, tmp, i, 1, 0);
 }
 
@@ -747,7 +747,7 @@ static int read_BUFR(reader* r, int no_alloc)
 
     edition = tmp[i++];
 
-    /* Assert(edition != 1); */
+    /* ECCODES_ASSERT(edition != 1); */
 
     switch (edition) {
         case 0:
@@ -852,7 +852,7 @@ static int read_BUFR(reader* r, int no_alloc)
             return GRIB_UNSUPPORTED_EDITION;
     }
 
-    /* Assert(i <= sizeof(tmp)); */
+    /* ECCODES_ASSERT(i <= sizeof(tmp)); */
     err = read_the_rest(r, length, tmp, i, /*check7777=*/1, no_alloc);
     if (err)
         r->seek_from_start(r->read_data, r->offset + 4);

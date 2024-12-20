@@ -60,7 +60,7 @@ int grib_accessor_g2_aerosol_t::pack_long(const long* val, size_t* len)
      grib_get_long(hand, stream_ ,&stream);
      */
     ret = grib_get_string(hand, stepType_, stepType, &slen);
-    Assert(ret == GRIB_SUCCESS);
+    ECCODES_ASSERT(ret == GRIB_SUCCESS);
 
     // eps = grib2_is_PDTN_EPS(productDefinitionTemplateNumber);
     eps = grib_is_defined(hand, "perturbationNumber");

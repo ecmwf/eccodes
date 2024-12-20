@@ -167,10 +167,10 @@ int grib_accessor_data_sh_packed_t::unpack_double(double* val, size_t* len)
             return GRIB_NOT_IMPLEMENTED;
     }
 
-    Assert(sub_j == sub_k);
-    Assert(sub_j == sub_m);
-    Assert(pen_j == pen_k);
-    Assert(pen_j == pen_m);
+    ECCODES_ASSERT(sub_j == sub_k);
+    ECCODES_ASSERT(sub_j == sub_m);
+    ECCODES_ASSERT(pen_j == pen_k);
+    ECCODES_ASSERT(pen_j == pen_m);
 
     buf = (unsigned char*)grib_handle_of_accessor(this)->buffer->data;
 
@@ -232,7 +232,7 @@ int grib_accessor_data_sh_packed_t::unpack_double(double* val, size_t* len)
         mmax++;
     }
 
-    Assert(*len >= i);
+    ECCODES_ASSERT(*len >= i);
     *len = n_vals;
 
     grib_context_free(context_, scals);

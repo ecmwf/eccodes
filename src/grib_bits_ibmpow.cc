@@ -25,13 +25,13 @@ unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long
 
         if (mod != 0) {
             int e = grib_decode_unsigned_long(p, bitp, mod);
-            Assert(e == 0);
+            ECCODES_ASSERT(e == 0);
             bits -= mod;
         }
 
         while (bits > max_nbits) {
             int e = grib_decode_unsigned_long(p, bitp, max_nbits);
-            Assert(e == 0);
+            ECCODES_ASSERT(e == 0);
             bits -= max_nbits;
         }
 
@@ -78,14 +78,14 @@ int grib_encode_unsigned_long(unsigned char* p, unsigned long val, long* bitp, l
         if (mod != 0) {
             int e = grib_encode_unsigned_long(p, zero, bitp, mod);
             /* printf(" -> : encoding %ld bits=%ld %ld\n",zero,(long)mod,*bitp); */
-            Assert(e == 0);
+            ECCODES_ASSERT(e == 0);
             bits -= mod;
         }
 
         while (bits > max_nbits) {
             int e = grib_encode_unsigned_long(p, zero, bitp, max_nbits);
             /* printf(" -> : encoding %ld bits=%ld %ld\n",zero,(long)max_nbits,*bitp); */
-            Assert(e == 0);
+            ECCODES_ASSERT(e == 0);
             bits -= max_nbits;
         }
 
@@ -128,7 +128,7 @@ int grib_encode_unsigned_longb(unsigned char* p, unsigned long val, long* bitp, 
 {
     long i = 0;
 
-    Assert(nb <= max_nbits);
+    ECCODES_ASSERT(nb <= max_nbits);
 
     for (i = nb - 1; i >= 0; i--) {
         if (test(val, i))

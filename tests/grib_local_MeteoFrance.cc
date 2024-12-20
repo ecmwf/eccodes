@@ -849,7 +849,7 @@ int main(int argc, char* argv[])
     size_t len     = 0;
     const char* outfile;
 
-    Assert(argc == 2);
+    ECCODES_ASSERT(argc == 2);
     outfile = argv[1];
 
     GRIB_CHECK(((h = grib_handle_new_from_samples(NULL, "regular_ll_pl_grib2")) == NULL), 0);

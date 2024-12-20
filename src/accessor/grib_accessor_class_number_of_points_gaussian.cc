@@ -155,7 +155,7 @@ int grib_accessor_number_of_points_gaussian_t::unpack_long_new(long* val, size_t
         return GRIB_GEOCALCULUS_PROBLEM;
 
     if (grib_get_long(h, "angleSubdivisions", &angleSubdivisions) == GRIB_SUCCESS) {
-        Assert(angleSubdivisions > 0);
+        ECCODES_ASSERT(angleSubdivisions > 0);
         angular_precision = 1.0 / angleSubdivisions;
     }
 
@@ -264,7 +264,7 @@ int grib_accessor_number_of_points_gaussian_t::unpack_long_with_legacy_support(l
         return GRIB_GEOCALCULUS_PROBLEM;
 
     if (grib_get_long(h, "angleSubdivisions", &angleSubdivisions) == GRIB_SUCCESS) {
-        Assert(angleSubdivisions > 0);
+        ECCODES_ASSERT(angleSubdivisions > 0);
         angular_precision = 1.0 / angleSubdivisions;
     }
 

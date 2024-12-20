@@ -91,8 +91,8 @@ int grib_accessor_change_scanning_direction_t::pack_long(const long* val, size_t
         return err;
     }
 
-    Assert(axis_);
-    Assert(strcmp(axis_, "x") == 0 || strcmp(axis_, "y") == 0);
+    ECCODES_ASSERT(axis_);
+    ECCODES_ASSERT(strcmp(axis_, "x") == 0 || strcmp(axis_, "y") == 0);
 
     if (axis_[0] == 'x') {
         theEnd = Ni / 2;

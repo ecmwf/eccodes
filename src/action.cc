@@ -72,7 +72,7 @@ static void init(grib_action_class* c)
 //         if(c->super) {
 //             grib_action_class *g = *(c->super);
 //             if (g && !g->inited) {
-//                 Assert(g->super == NULL);
+//                 ECCODES_ASSERT(g->super == NULL);
 //                 g->init_class(g);
 //                 g->inited = 1;
 //             }
@@ -205,10 +205,10 @@ void grib_dump_action_branch(FILE* out, grib_action* a, int decay)
 
 void grib_dump_action_tree(grib_context* ctx, FILE* out)
 {
-    Assert(ctx);
-    Assert(ctx->grib_reader);
-    Assert(ctx->grib_reader->first);
-    Assert(out);
+    ECCODES_ASSERT(ctx);
+    ECCODES_ASSERT(ctx->grib_reader);
+    ECCODES_ASSERT(ctx->grib_reader->first);
+    ECCODES_ASSERT(out);
 
     // grib_dump_action_branch(out, ctx->grib_reader->first->root, 0);
     // grib_action* next = ctx->grib_reader->first->root;

@@ -80,7 +80,7 @@ static const char* descriptor_type_name(int dtype)
         case BUFR_DESCRIPTOR_TYPE_SEQUENCE:
             return "sequence";
     }
-    Assert(!"bufr_descriptor_type_name failed");
+    ECCODES_ASSERT(!"bufr_descriptor_type_name failed");
     return "unknown";
 }
 #endif
@@ -209,9 +209,9 @@ void grib_accessor_expanded_descriptors_t::__expand(bufr_descriptors_array* unex
 #endif
                 expanded = grib_bufr_descriptors_array_append(expanded, inner_expanded);
                 uidx     = grib_bufr_descriptors_array_get(expanded, idx);
-                Assert( uidx->type == BUFR_DESCRIPTOR_TYPE_REPLICATION );
-                Assert( uidx->F == 1 );
-                Assert( uidx->Y == 0 );
+                ECCODES_ASSERT( uidx->type == BUFR_DESCRIPTOR_TYPE_REPLICATION );
+                ECCODES_ASSERT( uidx->F == 1 );
+                ECCODES_ASSERT( uidx->Y == 0 );
                 // ECC-1958 and ECC-1054:
                 // Here X is used to store the size which can exceed 63. The normal X is 6 bits wide so max=63
                 // We need to set X but not the descriptor code
@@ -533,7 +533,7 @@ int grib_accessor_expanded_descriptors_t::expand()
 
     if (!tablesAccessor_) {
         tablesAccessor_ = grib_find_accessor(h, tablesAccessorName_);
-        Assert(tablesAccessor_);
+        ECCODES_ASSERT(tablesAccessor_);
     }
 
     unexpanded           = grib_bufr_descriptors_array_new(unexpandedSize, DESC_SIZE_INCR);
@@ -549,7 +549,7 @@ int grib_accessor_expanded_descriptors_t::expand()
 
         /* ECC-433: Operator 206YYY */
         if (aDescriptor1->F == 2 && aDescriptor1->X == 6) {
-            Assert(aDescriptor1->type == BUFR_DESCRIPTOR_TYPE_OPERATOR);
+            ECCODES_ASSERT(aDescriptor1->type == BUFR_DESCRIPTOR_TYPE_OPERATOR);
             operator206yyy_width = aDescriptor1->Y; /* Store the width for the following descriptor */
             DEBUG_ASSERT(operator206yyy_width > 0);
         }

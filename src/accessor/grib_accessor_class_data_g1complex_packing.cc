@@ -71,7 +71,7 @@ int grib_accessor_data_g1complex_packing_t::pack_double(const double* val, size_
 
     dirty_ = 1;
 
-    Assert((sub_j == sub_k) && (sub_m == sub_j));
+    ECCODES_ASSERT((sub_j == sub_k) && (sub_m == sub_j));
 
     ret = grib_accessor_data_complex_packing_t::pack_double(val, len);
 

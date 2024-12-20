@@ -106,16 +106,16 @@ char** string_split(char* inputString, const char* delimiter)
     ++numTokens; // terminating NULL string to mark the end
 
     result = (char**)malloc(numTokens * sizeof(char*));
-    Assert(result);
+    ECCODES_ASSERT(result);
 
     // Start tokenizing
     aToken = strtok_r(inputString, delimiter, &lasts);
     while (aToken) {
-        Assert(index < numTokens);
+        ECCODES_ASSERT(index < numTokens);
         *(result + index++) = strdup(aToken);
         aToken              = strtok_r(NULL, delimiter, &lasts);
     }
-    Assert(index == numTokens - 1);
+    ECCODES_ASSERT(index == numTokens - 1);
     *(result + index) = NULL;
 
     return result;

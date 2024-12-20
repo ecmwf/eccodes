@@ -57,7 +57,7 @@ unsigned long grib_decode_unsigned_byte_long(const unsigned char* p, long o, int
     int i           = 0;
     unsigned char b = p[o++];
 
-    Assert(l <= max_nbits);
+    ECCODES_ASSERT(l <= max_nbits);
 
     accum <<= 8;
     accum |= b;
@@ -77,7 +77,7 @@ long grib_decode_signed_long(const unsigned char* p, long o, int l)
     unsigned char b = p[o++];
     int sign        = grib_get_bit(&b, 0);
 
-    Assert(l <= max_nbits);
+    ECCODES_ASSERT(l <= max_nbits);
 
     b &= 0x7f;
     accum <<= 8;
@@ -101,7 +101,7 @@ int grib_encode_signed_long(unsigned char* p, long val, long o, int l)
     int off              = o;
     int sign             = (val < 0);
 
-    Assert(l <= max_nbits);
+    ECCODES_ASSERT(l <= max_nbits);
 
     if (sign)
         val *= -1;
@@ -158,7 +158,7 @@ long grib_decode_signed_longb(const unsigned char* p, long* bitp, long nbits)
     const int sign = grib_get_bit(p, *bitp);
     long val = 0;
 
-    Assert(nbits <= max_nbits);
+    ECCODES_ASSERT(nbits <= max_nbits);
 
     *bitp += 1;
 
@@ -174,7 +174,7 @@ int grib_encode_signed_longb(unsigned char* p, long val, long* bitp, long nb)
 {
     const short sign = val < 0;
 
-    Assert(nb <= max_nbits);
+    ECCODES_ASSERT(nb <= max_nbits);
 
     if (sign) {
         val = -val;

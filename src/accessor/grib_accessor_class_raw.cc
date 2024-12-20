@@ -37,7 +37,7 @@ void grib_accessor_raw_t::init(const long len, grib_arguments* arg)
     if (length_ < 0)
         length_ = 0;
 
-    /* Assert(length_ >=0); */
+    /* ECCODES_ASSERT(length_ >=0); */
 }
 
 long grib_accessor_raw_t::get_native_type()
@@ -85,7 +85,7 @@ void grib_accessor_raw_t::update_size(size_t s)
 {
     grib_context_log(context_, GRIB_LOG_DEBUG, "updating size of %s old %ld new %ld", name_, length_, s);
     length_ = s;
-    Assert(length_ >= 0);
+    ECCODES_ASSERT(length_ >= 0);
 }
 
 void accessor_raw_set_length(grib_accessor* a, size_t len)

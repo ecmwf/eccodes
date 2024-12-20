@@ -59,7 +59,7 @@ static Fraction_type fraction_construct(Fraction_value_type top, Fraction_value_
      */
     Fraction_value_type g;
     Fraction_value_type sign = 1;
-    Assert(bottom != 0);
+    ECCODES_ASSERT(bottom != 0);
     if (top < 0) {
         top  = -top;
         sign = -sign;
@@ -91,8 +91,8 @@ static Fraction_type fraction_construct_from_double(double x)
     Fraction_value_type t2, top, bottom, g;
     size_t cnt = 0;
 
-    /*Assert(x != NAN);*/
-    Assert(fabs(x) < 1e30);
+    /*ECCODES_ASSERT(x != NAN);*/
+    ECCODES_ASSERT(fabs(x) < 1e30);
 
     if (x < 0) {
         sign = -sign;
@@ -146,7 +146,7 @@ static Fraction_type fraction_construct_from_double(double x)
 
 static Fraction_value_type fraction_integralPart(const Fraction_type frac)
 {
-    Assert(frac.bottom_);
+    ECCODES_ASSERT(frac.bottom_);
     if (frac.bottom_ == 0) return frac.top_;
     return frac.top_ / frac.bottom_;
 }
@@ -282,7 +282,7 @@ static void gaussian_reduced_row(
     Nw     = fraction_integralPart(fraction_operator_divide(w, inc));
     Nw_inc = fraction_operator_multiply_n_Frac(Nw, inc);
 
-    Assert(Ni_globe > 1);
+    ECCODES_ASSERT(Ni_globe > 1);
     /*if (Nw * inc < w) {*/
     if (fraction_operator_less_than(Nw_inc, w)) {
         Nw += 1;
@@ -401,7 +401,7 @@ void grib_get_reduced_row_legacy(long pl, double lon_first, double lon_last, lon
             }
         }
 
-        /*Assert(*npoints==irange);*/
+        /*ECCODES_ASSERT(*npoints==irange);*/
 #if EFDEBUG
         printf("--  pl=%ld npoints=%ld range=%.10e ilon_first=%ld ilon_last=%ld irange=%ld\n",
                pl, *npoints, range, *ilon_first, *ilon_last, irange);

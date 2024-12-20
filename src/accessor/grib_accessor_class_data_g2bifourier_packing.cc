@@ -220,7 +220,7 @@ static double laplam(bif_trunc_t* bt, const double val[])
         free(itab2);
         return 0.;
     }
-    Assert(lmax > 0);
+    ECCODES_ASSERT(lmax > 0);
 
     /*
      * Now, itab2 contains all possible values of i*i+j*j, and itab1 contains
@@ -527,7 +527,7 @@ int grib_accessor_data_g2bifourier_packing_t::unpack_double(double* val, size_t*
         isp += 4;
     }
 
-    Assert(*len >= isp);
+    ECCODES_ASSERT(*len >= isp);
     *len = isp;
 
 cleanup:
