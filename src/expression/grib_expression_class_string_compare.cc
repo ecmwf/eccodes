@@ -76,7 +76,9 @@ void StringCompare::print(grib_context* c, grib_handle* f, FILE* out) const
 void StringCompare::destroy(grib_context* c)
 {
     left_->destroy(c);
+    delete left_;
     right_->destroy(c);
+    delete right_;
 }
 
 void StringCompare::add_dependency(grib_accessor* observer)

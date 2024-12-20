@@ -33,8 +33,6 @@ public:
 
 private:
     long section_offset_ = 0;
-    //long begin_          = 0;
-    //long theEnd_         = 0;
 
     void aliases(grib_accessor* a);
     void print_offset(FILE* out, grib_accessor* a);

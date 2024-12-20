@@ -101,7 +101,7 @@ void Wmo::dump_long(grib_accessor* a, const char* comment)
     print_offset(out_, begin_, theEnd_);
 
     if ((option_flags_ & GRIB_DUMP_FLAG_TYPE) != 0)
-        fprintf(out_, "%s (int) ", a->creator_->op);
+        fprintf(out_, "%s (int) ", a->creator_->op_);
 
     if (size > 1) {
         int cols   = 19;
@@ -161,7 +161,7 @@ void Wmo::dump_bits(grib_accessor* a, const char* comment)
     // for(i = 0; i < depth_ ; i++) fprintf(out_," ");
     print_offset(out_, begin_, theEnd_);
     if ((option_flags_ & GRIB_DUMP_FLAG_TYPE) != 0)
-        fprintf(out_, "%s (int) ", a->creator_->op);
+        fprintf(out_, "%s (int) ", a->creator_->op_);
 
     fprintf(out_, "%s = %ld [", a->name_, value);
 
@@ -211,7 +211,7 @@ void Wmo::dump_double(grib_accessor* a, const char* comment)
 
     print_offset(out_, begin_, theEnd_);
     if ((option_flags_ & GRIB_DUMP_FLAG_TYPE) != 0)
-        fprintf(out_, "%s (double) ", a->creator_->op);
+        fprintf(out_, "%s (double) ", a->creator_->op_);
 
     if (((a->flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && a->is_missing_internal())
         fprintf(out_, "%s = MISSING", a->name_);
@@ -260,7 +260,7 @@ void Wmo::dump_string(grib_accessor* a, const char* comment)
     // for(i = 0; i < depth_ ; i++) fprintf(out_," ");
     print_offset(out_, begin_, theEnd_);
     if ((option_flags_ & GRIB_DUMP_FLAG_TYPE) != 0)
-        fprintf(out_, "%s (str) ", a->creator_->op);
+        fprintf(out_, "%s (str) ", a->creator_->op_);
 
     fprintf(out_, "%s = %s", a->name_, value);
 
@@ -291,7 +291,7 @@ void Wmo::dump_bytes(grib_accessor* a, const char* comment)
     // for(i = 0; i < depth_ ; i++) fprintf(out_," ");
     print_offset(out_, begin_, theEnd_);
     if ((option_flags_ & GRIB_DUMP_FLAG_TYPE) != 0)
-        fprintf(out_, "%s ", a->creator_->op);
+        fprintf(out_, "%s ", a->creator_->op_);
 
     fprintf(out_, "%s = %ld", a->name_, a->length_);
     aliases(a);
@@ -343,7 +343,7 @@ void Wmo::dump_bytes(grib_accessor* a, const char* comment)
 
     for (i = 0; i < depth_; i++)
         fprintf(out_, " ");
-    fprintf(out_, "} # %s %s \n", a->creator_->op, a->name_);
+    fprintf(out_, "} # %s %s \n", a->creator_->op_, a->name_);
     grib_context_free(context_, buf);
 }
 
@@ -386,7 +386,7 @@ void Wmo::dump_values(grib_accessor* a)
             strcpy(type_name, "(double)");
         else if (native_type == GRIB_TYPE_STRING)
             strcpy(type_name, "(str)");
-        fprintf(out_, "%s %s ", a->creator_->op, type_name);
+        fprintf(out_, "%s %s ", a->creator_->op_, type_name);
     }
 
     fprintf(out_, "%s = (%ld,%ld)", a->name_, (long)size, a->length_);
@@ -438,7 +438,7 @@ void Wmo::dump_values(grib_accessor* a)
         fprintf(out_, "... %lu more values\n", (unsigned long)more);
     }
 
-    fprintf(out_, "} # %s %s \n", a->creator_->op, a->name_);
+    fprintf(out_, "} # %s %s \n", a->creator_->op_, a->name_);
     grib_context_free(context_, buf);
 }
 
@@ -549,7 +549,7 @@ void Wmo::dump_string_array(grib_accessor* a, const char* comment)
 
     if ((option_flags_ & GRIB_DUMP_FLAG_TYPE) != 0) {
         fprintf(out_, "  ");
-        fprintf(out_, "# type %s (str) \n", a->creator_->op);
+        fprintf(out_, "# type %s (str) \n", a->creator_->op_);
     }
 
     aliases(a);

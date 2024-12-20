@@ -223,7 +223,7 @@ void Serialize::dump_bytes(grib_accessor* a, const char* comment)
 
     for (i = 0; i < depth_; i++)
         fprintf(out_, " ");
-    fprintf(out_, "} # %s %s \n", a->creator_->op, a->name_);
+    fprintf(out_, "} # %s %s \n", a->creator_->op_, a->name_);
     grib_context_free(context_, buf);
 }
 

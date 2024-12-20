@@ -30,14 +30,14 @@ void grib_accessor_gen_t::init(const long len, grib_arguments* param)
             vvalue_ = (grib_virtual_value*)grib_context_malloc_clear(context_, sizeof(grib_virtual_value));
         vvalue_->type   = get_native_type();
         vvalue_->length = len;
-        if (act->default_value != NULL) {
+        if (act->default_value_ != NULL) {
             const char* p = 0;
             size_t s_len  = 1;
             long l;
             int ret = 0;
             double d;
             char tmp[1024];
-            grib_expression* expression = act->default_value->get_expression(grib_handle_of_accessor(this), 0);
+            grib_expression* expression = act->default_value_->get_expression(grib_handle_of_accessor(this), 0);
             int type                    = expression->native_type(grib_handle_of_accessor(this));
             switch (type) {
                     // TODO(maee): add single-precision case
@@ -481,7 +481,7 @@ grib_section* grib_accessor_gen_t::sub_section()
 int grib_accessor_gen_t::notify_change(grib_accessor* observed)
 {
     /* Default behaviour is to notify creator */
-    return grib_action_notify_change(creator_, this, observed);
+    return creator_->notify_change(this, observed);
 }
 
 void grib_accessor_gen_t::update_size(size_t s)

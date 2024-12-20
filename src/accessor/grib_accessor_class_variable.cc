@@ -315,20 +315,18 @@ grib_accessor* grib_accessor_variable_t::make_clone(grib_section* s, int* err)
 {
     grib_accessor* the_clone                   = NULL;
     grib_accessor_variable_t* variableAccessor = NULL;
-    grib_action creator                        = {
-        0,
-    };
-    creator.op         = (char*)"variable";
-    creator.name_space = (char*)"";
-    creator.set        = 0;
+    grib_action creator;
+    creator.op_         = (char*)"variable";
+    creator.name_space_ = (char*)"";
+    creator.set_        = 0;
 
-    creator.name             = grib_context_strdup(context_, name_);
+    creator.name_             = grib_context_strdup(context_, name_);
     the_clone                = grib_accessor_factory(s, &creator, 0, NULL);
     the_clone->parent_       = NULL;
     the_clone->h_            = s->h;
     the_clone->flags_        = flags_;
     variableAccessor         = (grib_accessor_variable_t*)the_clone;
-    variableAccessor->cname_ = creator.name; /* ECC-765: Store for later freeing memory */
+    variableAccessor->cname_ = creator.name_; /* ECC-765: Store for later freeing memory */
 
     *err                    = 0;
     variableAccessor->type_ = type_;

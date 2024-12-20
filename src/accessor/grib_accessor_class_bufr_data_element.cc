@@ -20,13 +20,12 @@ grib_accessor* grib_accessor_bufr_data_element_t::make_clone(grib_section* s, in
     grib_accessor_bufr_data_element_t* elementAccessor;
     char* copied_name = NULL;
     int i;
-    grib_action creator = {
-        0,
-    };
-    creator.op         = (char*)"bufr_data_element";
-    creator.name_space = (char*)"";
-    creator.set        = 0;
-    creator.name       = (char*)"unknown";
+    grib_action creator;
+
+    creator.op_         = (char*)"bufr_data_element";
+    creator.name_space_ = (char*)"";
+    creator.set_        = 0;
+    creator.name_       = (char*)"unknown";
     if (strcmp(class_name_, "bufr_data_element")) {
         grib_context_log(context_, GRIB_LOG_FATAL, "wrong accessor type: '%s' should be '%s'", class_name_, "bufr_data_element");
     }
