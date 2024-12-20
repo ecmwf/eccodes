@@ -122,8 +122,14 @@ grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int
                 }
             }
         } static const init_main;
-
-        i->iterator = new eccodes::geo::GeoIterator(const_cast<grib_handle*>(ch), flags);
+        try {
+            i->iterator = new eccodes::geo::GeoIterator(const_cast<grib_handle*>(ch), flags);
+        }
+        catch(std::exception& e) {
+            grib_context_log(ch->context, GRIB_LOG_ERROR, "grib_iterator_new: Exception thrown (%s)", e.what());
+            *error = GRIB_GEOCALCULUS_PROBLEM;
+            return NULL;
+        }
     }
     else
     #endif
