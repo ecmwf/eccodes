@@ -138,7 +138,7 @@ int grib_accessor_g1forecastmonth_t::unpack_long_edition1(long* val, size_t* len
         if (check) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s=%ld (%s-%s)=%ld", fcmonth_,
                              gribForecastMonth, base_date, verification_yearmonth_, fcmonth);
-            Assert(gribForecastMonth == fcmonth);
+            ECCODES_ASSERT(gribForecastMonth == fcmonth);
         }
         else {
             *val = gribForecastMonth;

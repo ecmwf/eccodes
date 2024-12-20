@@ -57,7 +57,7 @@ void grib_dependency_add(grib_accessor* observer, grib_accessor* observed)
     h = handle_of(observed);
     d = h->dependencies;
 
-    /* Assert(h == handle_of(observer)); */
+    /* ECCODES_ASSERT(h == handle_of(observer)); */
 
     /* Check if already in list */
     while (d) {
@@ -75,7 +75,7 @@ void grib_dependency_add(grib_accessor* observer, grib_accessor* observed)
 //     }
 
     d = (grib_dependency*)grib_context_malloc_clear(h->context, sizeof(grib_dependency));
-    Assert(d);
+    ECCODES_ASSERT(d);
 
     d->observed = observed;
     d->observer = observer;

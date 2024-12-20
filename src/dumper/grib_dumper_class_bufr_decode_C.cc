@@ -579,7 +579,7 @@ void BufrDecodeC::dump_attributes(grib_accessor* a, const char* prefix)
 
 void BufrDecodeC::header(const grib_handle* h)
 {
-    Assert(h->product_kind == PRODUCT_BUFR);
+    ECCODES_ASSERT(h->product_kind == PRODUCT_BUFR);
 
     if (count_ < 2) {
         /* This is the first message being processed */

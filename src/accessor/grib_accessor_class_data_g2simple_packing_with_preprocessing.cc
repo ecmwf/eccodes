@@ -36,7 +36,7 @@ static int pre_processing_func(double* values, long length, long pre_processing,
     int i = 0, ret = 0;
     double min      = values[0];
     double next_min = values[0];
-    Assert(length > 0);
+    ECCODES_ASSERT(length > 0);
 
     switch (pre_processing) {
         /* NONE */
@@ -75,7 +75,7 @@ static int pre_processing_func(double* values, long length, long pre_processing,
                 }
             }
             else {
-                Assert(mode == INVERSE);
+                ECCODES_ASSERT(mode == INVERSE);
                 if (*pre_processing_parameter == 0) {
                     for (i = 0; i < length; i++)
                         values[i] = exp(values[i]);

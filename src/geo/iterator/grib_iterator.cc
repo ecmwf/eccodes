@@ -20,8 +20,8 @@
     #include "geo/GeoIterator.h"
 
     // eccodes macros conflict with eckit
-    #ifdef Assert
-        #undef Assert
+    #ifdef ECCODES_ASSERT
+        #undef ECCODES_ASSERT
     #endif
 #endif
 

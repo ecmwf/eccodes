@@ -64,7 +64,7 @@ int main(int argc, char** argv)
 
     for (const size_t in_values_len : values_lens) {
         for (const Range range : ranges) {
-            Assert(range.min < range.max);
+            ECCODES_ASSERT(range.min < range.max);
             std::cout << "Testing: "
                 << "n_vals : " << std::setw(7) << in_values_len
                 << " range(" << std::scientific << std::setw(12) << range.min << ", " << std::setw(12) << range.max << ") "
@@ -97,26 +97,26 @@ int main(int argc, char** argv)
                 //CODES_CHECK(codes_get_double_array(handle, "values", grid_simple_values, &grid_simple_values_len), 0);
             }
 
-            Assert(in_values_len == grid_simple_values_len);
+            ECCODES_ASSERT(in_values_len == grid_simple_values_len);
 
             // Test grid_ccsds
             packing_type = "grid_ccsds";
             size         = packing_type.size();
             CODES_CHECK(codes_set_string(handle, "packingType", packing_type.c_str(), &size), 0);
             if ((err = codes_set_double_array(handle, "values", grid_simple_values, grid_simple_values_len)) != 0) {
-                Assert(!"CCSDS encoding failed");
+                ECCODES_ASSERT(!"CCSDS encoding failed");
             }
             if ((err = codes_get_double_array(handle, "values", grid_ccsds_values, &grid_ccsds_values_len)) != 0) {
-                Assert(!"CCSDS decoding failed");
+                ECCODES_ASSERT(!"CCSDS decoding failed");
             }
-            Assert(grid_ccsds_values_len == grid_simple_values_len);
+            ECCODES_ASSERT(grid_ccsds_values_len == grid_simple_values_len);
 
             // Test buffers
             for (size_t i = 0; i < grid_ccsds_values_len; ++i) {
                 if (grid_ccsds_values[i] != grid_simple_values[i]) {
                     std::cout.precision(dbl::max_digits10);
                     std::cout << "Test failed: " << grid_ccsds_values[i] << " != " << grid_simple_values[i] << std::endl;
-                    Assert(0);
+                    ECCODES_ASSERT(0);
                 }
             }
 

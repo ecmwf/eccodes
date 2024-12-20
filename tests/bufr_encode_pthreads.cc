@@ -35,13 +35,13 @@ static int encode_file(char* template_file, char* output_file)
     int err                     = 0;
     long numSubsets             = 0;
 
-    Assert(template_file);
+    ECCODES_ASSERT(template_file);
     in = fopen(template_file, "rb");
-    Assert(in);
+    ECCODES_ASSERT(in);
     if (opt_write) {
-        Assert(output_file);
+        ECCODES_ASSERT(output_file);
         out = fopen(output_file, "wb");
-        Assert(out);
+        ECCODES_ASSERT(out);
     }
 
     /* loop over the messages in the source BUFR and clone them */
@@ -50,7 +50,7 @@ static int encode_file(char* template_file, char* output_file)
 
         if (opt_clone) {
             h = codes_handle_clone(source_handle);
-            Assert(h);
+            ECCODES_ASSERT(h);
         }
 
         CODES_CHECK(codes_get_long(h, "numberOfSubsets", &numSubsets), 0);
@@ -70,7 +70,7 @@ static int encode_file(char* template_file, char* output_file)
             unsigned long dump_flags = CODES_DUMP_FLAG_ALL_DATA;
             /* codes_dump_content(source_handle,devnull, "json", 1024, NULL); */ /* JSON dump with all attributes */
             dumper = grib_dump_content_with_dumper(source_handle, dumper, devnull, dumper_name, dump_flags, NULL);
-            Assert(dumper);
+            ECCODES_ASSERT(dumper);
             fclose(devnull);
         }
 

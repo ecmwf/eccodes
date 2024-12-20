@@ -41,7 +41,7 @@ static grib_handle* test0()
     grib_handle* finalh = codes_grib_util_set_spec(
         handle, &spec, &packing_spec, set_spec_flags,
         values, outlen, &err);
-    Assert(err == 0);
+    ECCODES_ASSERT(err == 0);
     return finalh;
 }
 
@@ -63,7 +63,7 @@ static grib_handle* test1()
     grib_handle* finalh = grib_util_set_spec(
         handle, &spec, &packing_spec, set_spec_flags,
         values, outlen, &err);
-    Assert(err == 0);
+    ECCODES_ASSERT(err == 0);
     return finalh;
 }
 
@@ -89,7 +89,7 @@ static grib_handle* test2()
     grib_handle* finalh = grib_util_set_spec(
         handle, &spec, &packing_spec, set_spec_flags,
         values, outlen, &err);
-    Assert(err == 0);
+    ECCODES_ASSERT(err == 0);
     return finalh;
 }
 
@@ -117,7 +117,7 @@ static grib_handle* test3()
     grib_handle* finalh = grib_util_set_spec(
         handle, &spec, &packing_spec, set_spec_flags,
         values, outlen, &err);
-    Assert(err == 0);
+    ECCODES_ASSERT(err == 0);
     return finalh;
 }
 
@@ -145,7 +145,7 @@ static grib_handle* test4()
     grib_handle* finalh = grib_util_set_spec(
         handle, &spec, &packing_spec, set_spec_flags,
         values, outlen, &err);
-    Assert(err == 0);
+    ECCODES_ASSERT(err == 0);
     return finalh;
 }
 
@@ -168,7 +168,7 @@ static grib_handle* test5()
     grib_handle* finalh = grib_util_set_spec(
         handle, &spec, &packing_spec, set_spec_flags,
         values, outlen, &err);
-    Assert(err == 0);
+    ECCODES_ASSERT(err == 0);
     return finalh;
 }
 
@@ -191,7 +191,7 @@ static grib_handle* test6()
     grib_handle* finalh = grib_util_set_spec(
         handle, &spec, &packing_spec, set_spec_flags,
         values, outlen, &err);
-    Assert(err == 0);
+    ECCODES_ASSERT(err == 0);
     return finalh;
 }
 
@@ -212,7 +212,7 @@ static grib_handle* test7()
     grib_handle* finalh = grib_util_set_spec(
         handle, &spec, &packing_spec, set_spec_flags,
         values, outlen, &err);
-    Assert(err == 0);
+    ECCODES_ASSERT(err == 0);
     return finalh;
 }
 
@@ -226,7 +226,7 @@ int main()
     const size_t num_tests = sizeof(funcs)/sizeof(funcs[0]);
     for (size_t i = 0; i < num_tests; i++) {
         grib_handle* result = funcs[i]();
-        Assert(result);
+        ECCODES_ASSERT(result);
         dump_it(result);
     }
     return 0;

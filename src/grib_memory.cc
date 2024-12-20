@@ -190,7 +190,7 @@ static void fast_delete(void* p, mempool* pool)
         n = m;
         m = m->next;
     }
-    Assert(1 == 0);
+    ECCODES_ASSERT(1 == 0);
 }
 
 static void* fast_realloc(void* p, size_t s, mempool* pool)

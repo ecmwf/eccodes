@@ -33,7 +33,7 @@ int grib_decode_long_array(const unsigned char* p, long* bitp, long nbits, size_
         sizel++;
 
     x = malloc(sizel * sizeof(unsigned long));
-    Assert(x);
+    ECCODES_ASSERT(x);
     memcpy(x, p + bitpv / 8, sizel * sizeof(*x));
     /* (void) ftrace_region_end  ("gdda-1"); */
 
@@ -132,7 +132,7 @@ int grib_decode_double_array(const unsigned char* p, long* bitp, long nbits, dou
         sizel++;
 
     x = malloc(sizel * sizeof(unsigned long));
-    Assert(x);
+    ECCODES_ASSERT(x);
     memcpy(x, p + bitpv / 8, sizel * sizeof(*x));
     /* (void) ftrace_region_end  ("gdda-1"); */
 
@@ -224,7 +224,7 @@ int grib_decode_double_array_complex(const unsigned char* p, long* bitp, long nb
         sizel++;
 
     x = malloc(sizel * sizeof(unsigned long));
-    Assert(x);
+    ECCODES_ASSERT(x);
     memcpy(x, p + bitpv / 8, sizel * sizeof(*x));
 
     if ((max_nbits % nbits == 0) && (bitpv % nbits == 0)) {
@@ -277,7 +277,7 @@ int grib_encode_double_array(size_t size, const double* val, long nbits, double 
         sizel++;
 
     destination = malloc(sizel * sizeof(unsigned long));
-    Assert(destination);
+    ECCODES_ASSERT(destination);
 
     if ((max_nbits % nbits == 0)) {
         for (i = 0; i < size; i++) {
@@ -341,7 +341,7 @@ int grib_encode_double_array_complex(size_t size, double* restrict val, long nbi
         sizel++;
 
     destination = malloc(sizel * sizeof(unsigned long));
-    Assert(destination);
+    ECCODES_ASSERT(destination);
 
     if ((max_nbits % nbits == 0)) {
         for (i = 0; i < size; i++) {

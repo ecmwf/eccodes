@@ -72,7 +72,7 @@ static grib_handle* try_product_sample(grib_context* c, ProductKind product_kind
             off_t offset = 0;
             mesg = (char*)wmo_read_any_from_file_malloc(f, 0, &size, &offset, &err);
             if (mesg && !err) {
-                Assert(size > 4);
+                ECCODES_ASSERT(size > 4);
                 if (strncmp(mesg, "GRIB", 4) == 0 || strncmp(mesg, "DIAG", 4) == 0 || strncmp(mesg, "BUDG", 4) == 0) {
                     product_kind = PRODUCT_GRIB;
                 } else if (strncmp(mesg, "BUFR", 4) == 0) {

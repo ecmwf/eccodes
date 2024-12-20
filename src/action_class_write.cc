@@ -126,7 +126,7 @@ static int execute(grib_action* act, grib_handle* h)
         }
     }
 
-    Assert(filename);
+    ECCODES_ASSERT(filename);
     if (a->append)
         of = grib_file_open(filename, "a", &err);
     else

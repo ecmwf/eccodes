@@ -144,7 +144,7 @@ eccodes::Dumper *grib_dump_content_with_dumper(grib_handle *h, eccodes::Dumper *
 void codes_dump_bufr_flat(grib_accessors_list *al, grib_handle *h, FILE *f, const char *mode, unsigned long flags, void *data)
 {
   eccodes::Dumper *dumper = NULL;
-  Assert(h->product_kind == PRODUCT_BUFR);
+  ECCODES_ASSERT(h->product_kind == PRODUCT_BUFR);
   dumper = grib_dumper_factory(mode ? mode : "serialize", h, f, flags, data);
   if (!dumper)
     return;

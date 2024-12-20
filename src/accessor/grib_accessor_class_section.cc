@@ -66,10 +66,10 @@ void grib_accessor_section_t::update_size(size_t length)
 {
     size_t size = 1;
     long len    = length;
-    Assert(length <= 0x7fffffff);
+    ECCODES_ASSERT(length <= 0x7fffffff);
     if (sub_section_->aclength) {
         int e = sub_section_->aclength->pack_long(&len, &size);
-        Assert(e == GRIB_SUCCESS);
+        ECCODES_ASSERT(e == GRIB_SUCCESS);
         // printf("update_length %s %ld %ld\n", sub_section_ ->aclength->name,
         //        (long)sub_section_ ->aclength->offset,
         //        (long)sub_section_ ->aclength->length);
@@ -80,7 +80,7 @@ void grib_accessor_section_t::update_size(size_t length)
 
     // printf("update_size %s %ld\n", a->name, length_ );
 
-    Assert(length_ >= 0);
+    ECCODES_ASSERT(length_ >= 0);
 }
 
 grib_accessor* grib_accessor_section_t::next(grib_accessor* a, int explore)

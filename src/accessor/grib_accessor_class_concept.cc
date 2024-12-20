@@ -200,7 +200,7 @@ static int concept_conditions_expression_apply(grib_handle* h, grib_concept_cond
     size_t size;
     int err = 0;
 
-    Assert(count < 1024);
+    ECCODES_ASSERT(count < 1024);
     values[count].name = e->name;
 
     values[count].type = e->expression->native_type(h);

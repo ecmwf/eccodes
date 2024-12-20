@@ -145,7 +145,7 @@ static bool eq_time(const char* l, const char* r)
 static value* new_value(const char* name)
 {
     value* v = (value*)calloc(1, sizeof(value));
-    Assert(v);
+    ECCODES_ASSERT(v);
     v->name = grib_context_strdup(ctx, name);
     return v;
 }
@@ -287,7 +287,7 @@ static bool is_number(const char* name)
 static parameter* new_parameter(char* name, value* v)
 {
     parameter* p = (parameter*)calloc(1, sizeof(parameter));
-    Assert(p);
+    ECCODES_ASSERT(p);
     p->name   = grib_context_strdup(ctx, name);
     p->values = v;
     return p;
@@ -577,10 +577,10 @@ static err handle_to_request(request* r, grib_handle* g)
     }
 
     /*
-     Assert(grib_get_long(g, "validityDate", &l ) == 0);
+     ECCODES_ASSERT(grib_get_long(g, "validityDate", &l ) == 0);
      set_value(r, "validityDate", "%ld", l);
 
-     Assert(grib_get_long(g, "validityTime", &l ) == 0);
+     ECCODES_ASSERT(grib_get_long(g, "validityTime", &l ) == 0);
      set_value(r, "validityTime", "%ld", l);
      */
 
@@ -725,7 +725,7 @@ static int ecc_cube_position(const hypercube* h, const request* r, bool remove_h
 static value* clone_one_value(const value* p)
 {
     value* q = (value*)calloc(1, sizeof(value));
-    Assert(q);
+    ECCODES_ASSERT(q);
     q->next = NULL;
     q->name = grib_context_strdup(ctx, p->name);
     return q;
@@ -745,7 +745,7 @@ static value* clone_all_values(const value* p)
 static parameter* clone_one_parameter(const parameter* p)
 {
     parameter* q = (parameter*)calloc(1, sizeof(parameter));
-    Assert(q);
+    ECCODES_ASSERT(q);
     q->next   = NULL;
     q->name   = grib_context_strdup(ctx, p->name);
     q->values = clone_all_values(p->values);
@@ -766,7 +766,7 @@ static request* clone_one_request(const request* r)
 {
     if (r) {
         request* p = (request*)calloc(1, sizeof(request));
-        Assert(p);
+        ECCODES_ASSERT(p);
         p->name = grib_context_strdup(ctx, r->name);
 
         p->params = clone_all_parameters(r->params);
@@ -779,7 +779,7 @@ static request* clone_one_request(const request* r)
 static request* new_request(const char* name, parameter* p)
 {
     request* r = (request*)calloc(1, sizeof(request));
-    Assert(r);
+    ECCODES_ASSERT(r);
     r->name   = grib_context_strdup(ctx, name);
     r->params = p;
     return r;
@@ -866,11 +866,11 @@ static void grow_fieldset(fieldset* v, int n)
         int i;
         if (v->fields == NULL) {
             v->fields = (field**)grib_context_malloc(ctx, sizeof(field*) * v->max);
-            Assert(v->fields);
+            ECCODES_ASSERT(v->fields);
         }
         else {
             field** f = (field**)grib_context_malloc(ctx, sizeof(field*) * v->max);
-            Assert(f);
+            ECCODES_ASSERT(f);
             for (i = 0; i < m; i++)
                 f[i] = v->fields[i];
             grib_context_free(ctx, v->fields);
@@ -885,7 +885,7 @@ static void grow_fieldset(fieldset* v, int n)
 static fieldset* new_fieldset(int n)
 {
     fieldset* f = (fieldset*)calloc(1, sizeof(fieldset));
-    Assert(f);
+    ECCODES_ASSERT(f);
     grow_fieldset(f, n);
     return f;
 }
@@ -989,7 +989,7 @@ static err to_expand_mem(field* g)
 {
     err e = 0;
 
-    Assert(g);
+    ECCODES_ASSERT(g);
     if (g->shape == expand_mem)
         return 0;
 
@@ -1005,7 +1005,7 @@ static err to_expand_mem(field* g)
         fseeko(file->handle, g->offset, SEEK_SET);
 
         g->handle = grib_handle_new_from_file(ctx, file->handle, &e);
-        Assert(g->handle);
+        ECCODES_ASSERT(g->handle);
 
         if (g->handle)
             grib_get_message(g->handle, &dummy, &g->length);
@@ -1392,7 +1392,7 @@ static void set_index(hypercube* h, int index, int value)
             h->max += 4096;
 
         h->set = h->set ? (char*)grib_context_realloc(ctx, h->set, h->max) : (char*)grib_context_malloc(ctx, h->max);
-        Assert(h->set);
+        ECCODES_ASSERT(h->set);
         memset(h->set + old, 0, h->max - old);
     }
 
@@ -1552,7 +1552,7 @@ static void reserve_index_cache(hypercube* h, int size)
         grib_context_free(ctx, h->index_cache);
     grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: Allocating hypercube index_cache: %d entries", size);
     h->index_cache = (int*)calloc(size, sizeof(int));
-    Assert(h->index_cache);
+    ECCODES_ASSERT(h->index_cache);
     h->index_cache_size = size;
 }
 
@@ -1631,18 +1631,18 @@ static void cube_indexes(
         int last                   = h->index_cache[i];
         const bool is_time_axis = (STR_EQUAL(axis, "time"));
         if (is_time_axis) {
-            Assert(times_array);
-            Assert(times_array_size == count);
+            ECCODES_ASSERT(times_array);
+            ECCODES_ASSERT(times_array_size == count);
         }
 
         for (k = 0; k < count; k++) {
             j = (k + last) % count;
             if (is_time_axis) {
                 /* GRIB-792: use fast lookup */
-                Assert(j >= 0 && j < times_array_size);
+                ECCODES_ASSERT(j >= 0 && j < times_array_size);
                 w = times_array[j];
                 /* For testing:
-                 * Assert( strcmp(w, get_value(cube, axis, j))==0 );
+                 * ECCODES_ASSERT( strcmp(w, get_value(cube, axis, j))==0 );
                  * */
             }
             else {
@@ -1672,7 +1672,7 @@ static hypercube* new_hypercube(const request* r)
     int total = 0, count = 0;
     size_t n        = 0;
     const char* val = 0;
-    Assert(h);
+    ECCODES_ASSERT(h);
     h->r    = clone_one_request(r);
     h->cube = empty_request("CUBE");
 
@@ -1701,7 +1701,7 @@ static hypercube* new_hypercube(const request* r)
 
 static void print_hypercube(const hypercube* h)
 {
-    Assert(h);
+    ECCODES_ASSERT(h);
     if (!h) return;
     print_all_requests(h->r);
     print_all_requests(h->cube);
@@ -1776,7 +1776,7 @@ static hypercube* new_hypercube_from_mars_request(const request* r)
     n = count_values(s.c->cube, "axis");
     if (n) {
         s.c->compare = (namecmp*)calloc(n, sizeof(namecmp));
-        Assert(s.c->compare);
+        ECCODES_ASSERT(s.c->compare);
     }
 
     for (i = 0; i < n; i++)
@@ -1803,7 +1803,7 @@ static hypercube* new_simple_hypercube_from_mars_request(const request* r)
     n = count_values(s.c->cube, "axis");
     if (n) {
         s.c->compare = (namecmp*)calloc(n, sizeof(namecmp));
-        Assert(s.c->compare);
+        ECCODES_ASSERT(s.c->compare);
     }
 
     for (i = 0; i < n; i++)
@@ -2219,7 +2219,7 @@ static int get_num_latitudes_longitudes(grib_handle* h, size_t* nlats, size_t* n
         strcmp(grid_type, "regular_ll") == 0) {
         /* Special shortcut for regular lat/on grids */
         long n;
-        Assert(!grib_is_missing(h, "Ni", &e));
+        ECCODES_ASSERT(!grib_is_missing(h, "Ni", &e));
         if ((e = grib_get_long(h, "Ni", &n)) != GRIB_SUCCESS) {
             grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni: %s", grib_get_error_message(e));
             return e;
@@ -2567,7 +2567,7 @@ static void scale_bitmap(double* vals, long n, void* data, dataset_t* subset)
         return;
      } */
     if (n > 0 && !vals) {
-        Assert(!"scale_bitmap: n > 0 but vals == NULL");
+        ECCODES_ASSERT(!"scale_bitmap: n > 0 but vals == NULL");
         return;
     }
 
@@ -2667,7 +2667,7 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
             for (i = 0; i < n; ++i) {
                 if (!g->bitmap || (vals[i] != global_missing_value)) {
                     double d = 0;
-                    Assert(scale_factor > 0);
+                    ECCODES_ASSERT(scale_factor > 0);
                     d = rint((vals[i] - add_offset) / scale_factor);
                     if (!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
                         grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_SHORT failed");
@@ -2905,7 +2905,7 @@ static void set_always_a_time(hypercube* h, request* data_r)
             int n = count_values(h->cube, "axis");
             if (n) {
                 h->compare = (namecmp*)calloc(n, sizeof(namecmp));
-                Assert(h->compare);
+                ECCODES_ASSERT(h->compare);
             }
 
             for (i = 0; i < n; i++)
@@ -3629,11 +3629,11 @@ static int split_fieldset(fieldset* fs, request* data_r, dataset_t** subsets, co
     free_all_requests(s);
 
     filters = (dataset_t*)calloc(count, sizeof(dataset_t));
-    Assert(filters);
+    ECCODES_ASSERT(filters);
 
     s = u;
     for (i = 0; i < count; ++i) {
-        Assert(s);
+        ECCODES_ASSERT(s);
         filters[i].filter         = new_hypercube_from_mars_request(s);
         filters[i].fset           = new_fieldset(1);
         filters[i].count          = 0;
@@ -4168,12 +4168,12 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
 
         /* process only GRIB for the moment*/
         size_t size = sizeof(buf);
-        Assert(grib_get_string(h, "identifier", buf, &size) == 0);
+        ECCODES_ASSERT(grib_get_string(h, "identifier", buf, &size) == 0);
         if (strcmp(buf, "GRIB")) {
             grib_handle_delete(h);
             continue;
         }
-        Assert(grib_get_long(h, "totalLength", &length) == 0);
+        ECCODES_ASSERT(grib_get_long(h, "totalLength", &length) == 0);
 
         g = read_field(file, h->offset, length);
 
