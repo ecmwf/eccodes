@@ -104,37 +104,39 @@ static int check_geoiterator(grib_handle* h)
     return err;
 }
 
+
+static int check_section_numbers(grib_handle* h, long edition, const int* sec_nums, size_t N)
+{
+    for (size_t i = 0; i < N; ++i) {
+        char sname[16] = {0,};
+        const int sec_num = sec_nums[i];
+        snprintf(sname, sizeof(sname), "section_%d", sec_num);
+        if (!grib_is_defined(h, sname)) {
+            grib_context_log(h->context, GRIB_LOG_ERROR, "GRIB%ld: Section %d is missing!", edition, sec_num);
+            return GRIB_INVALID_MESSAGE;
+        }
+    }
+    return GRIB_SUCCESS;
+}
+
 static int check_sections(grib_handle* h)
 {
     int err = 0;
     long edition = 0;
     err = grib_get_long_internal(h, "edition", &edition);
     if (err) return err;
-    const int grib1_section_nums[] = {1, 2, 4};
-    const int grib2_section_nums[] = {1, 3, 4, 5, 6, 7, 8}; // section 2 is optional
+
     if (edition == 1) {
+        const int grib1_section_nums[] = {1, 2, 4};
         const size_t N = sizeof(grib1_section_nums) / sizeof(grib1_section_nums[0]);
-        for (size_t i=0; i<N; ++i) {
-            char sname[16] = {0,};
-            const int sec_num = grib1_section_nums[i];
-            snprintf(sname, sizeof(sname), "section_%d", sec_num);
-            if (!grib_is_defined(h, sname)) {
-                grib_context_log(h->context, GRIB_LOG_ERROR, "GRIB%ld: Section %d is missing!", edition, sec_num);
-                return GRIB_INVALID_MESSAGE;
-            }
-        }
+        err = check_section_numbers(h, edition, grib1_section_nums, N);
+        if (err) return err;
     }
     else if (edition == 2) {
+        const int grib2_section_nums[] = {1, 3, 4, 5, 6, 7, 8}; // section 2 is optional
         const size_t N = sizeof(grib2_section_nums) / sizeof(grib2_section_nums[0]);
-        for (size_t i=0; i<N; ++i) {
-            char sname[16] = {0,};
-            const int sec_num = grib2_section_nums[i];
-            snprintf(sname, sizeof(sname), "section_%d", sec_num);
-            if (!grib_is_defined(h, sname)) {
-                grib_context_log(h->context, GRIB_LOG_ERROR, "GRIB%ld: Section %d is missing!", edition, sec_num);
-                return GRIB_INVALID_MESSAGE;
-            }
-        }
+        err = check_section_numbers(h, edition, grib2_section_nums, N);
+        if (err) return err;
     }
     return GRIB_SUCCESS;
 }
