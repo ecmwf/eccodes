@@ -31,14 +31,20 @@ GeoIterator::GeoIterator(grib_handle* h, unsigned long flags) :
     CODES_CHECK(codes_get_size(h_, "values", &nv_), "");
     ECCODES_ASSERT(nv_ > 0);
 
-    data_ = (flags_ & GRIB_GEOITERATOR_NO_VALUES) ? nullptr : static_cast<double*>(grib_context_malloc(h_->context, nv_ * sizeof(double)));
-    ECCODES_ASSERT(data_ != nullptr);
+    //long numberOfPoints = 0;
+    //grib_get_long_internal(h, "numberOfPoints", &numberOfPoints);
 
-    auto size = nv_;
-    CODES_CHECK(codes_get_double_array(h_, "values", data_, &size), "");
-    ECCODES_ASSERT(nv_ == size);
+    if (flags_ & GRIB_GEOITERATOR_NO_VALUES) {
+        data_ = nullptr;
+    } else {
+        data_ = static_cast<double*>(grib_context_malloc(h_->context, nv_ * sizeof(double)));
+        ECCODES_ASSERT(data_ != nullptr);
+        auto size = nv_;
+        CODES_CHECK(codes_get_double_array(h_, "values", data_, &size), "");
+        // Check numberOfPoints equals nv_
+        // if not, throw an exception
+    }
 }
-
 
 int GeoIterator::init(grib_handle*, grib_arguments*)
 {
