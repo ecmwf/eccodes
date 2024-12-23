@@ -9,6 +9,7 @@
  */
 
 #include "grib_accessor_class_message_is_valid.h"
+#include <cstdio>
 
 grib_accessor_message_is_valid_t _grib_accessor_message_is_valid{};
 grib_accessor* grib_accessor_message_is_valid = &_grib_accessor_message_is_valid;
@@ -103,8 +104,30 @@ static int check_geoiterator(grib_handle* h)
     return err;
 }
 
+static int check_sections(grib_handle* h)
+{
+    int err = 0;
+    long edition = 0;
+    err = grib_get_long_internal(h, "edition", &edition);
+    if (err) return err;
+    if (edition == 2) {
+        // sections 3 thru to 8 should exist
+        // section 2 is optional
+        for (size_t i=3; i<9; ++i) {
+            char sname[16] = {0,};
+            snprintf(sname, sizeof(sname), "section_%zu", i);
+            if (!grib_is_defined(h, sname)) {
+                grib_context_log(h->context, GRIB_LOG_ERROR, "Section %zu is missing!", i);
+                return GRIB_INVALID_MESSAGE;
+            }
+        }
+    }
+    return GRIB_SUCCESS;
+}
+
 typedef int (*proj_func)(grib_handle*);
 static proj_func check_functions[] = {
+    check_sections,
     check_field_values,
     check_grid_pl_array,
     check_geoiterator
