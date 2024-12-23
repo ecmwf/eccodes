@@ -121,13 +121,12 @@ static int check_section_numbers(grib_handle* h, long edition, const int* sec_nu
 
 static int check_sections(grib_handle* h)
 {
-    int err = 0;
     long edition = 0;
-    err = grib_get_long_internal(h, "edition", &edition);
+    int err = grib_get_long_internal(h, "edition", &edition);
     if (err) return err;
 
     if (edition == 1) {
-        const int grib1_section_nums[] = {1, 2, 4};
+        const int grib1_section_nums[] = {1, 2, 4}; // section 3 is optional
         const size_t N = sizeof(grib1_section_nums) / sizeof(grib1_section_nums[0]);
         err = check_section_numbers(h, edition, grib1_section_nums, N);
         if (err) return err;
