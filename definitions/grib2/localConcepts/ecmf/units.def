@@ -1583,12 +1583,6 @@
 	 parameterCategory = 200 ;
 	 parameterNumber = 129 ;
 	}
-#Temperature difference
-'K' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 130 ;
-	}
 #U component of wind difference
 'm s**-1' = {
 	 discipline = 192 ;
@@ -1600,12 +1594,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 132 ;
-	}
-#Specific humidity difference
-'kg kg**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 133 ;
 	}
 #Surface pressure difference
 'Pa' = {
@@ -1630,12 +1618,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 137 ;
-	}
-#Vorticity (relative) difference
-'s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 138 ;
 	}
 #Soil temperature level 1 difference
 'K' = {
@@ -1717,9 +1699,11 @@
 	}
 #Logarithm of surface pressure difference
 'kg m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 152 ;
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfGeneratingProcess = 20 ;
 	}
 #Short-wave heating rate difference
 'K' = {
@@ -1732,12 +1716,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 154 ;
-	}
-#Divergence difference
-'s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 155 ;
 	}
 #Height difference
 'm' = {
@@ -2014,12 +1992,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 202 ;
-	}
-#Ozone mass mixing ratio difference
-'kg kg**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 203 ;
 	}
 #Precipitation analysis weights difference
 '~' = {
@@ -14090,6 +14062,106 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 192 ;
+	}
+#Volume-mean total column mixing ratio
+'mol mol**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 195 ;
+	}
+#Emission mass flux from vegetation
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 192 ;
+	}
+#Emission mass flux from biomass burning
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 193 ;
+	}
+#Emission mass flux from settlements
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 194 ;
+	}
+#Emission mass flux from soil
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 195 ;
+	}
+#Emission mass flux from wild animals
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 196 ;
+	}
+#Aerosol negative fixer mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	}
+#Aerosol sink/loss mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	}
+#Aerosol source/gain mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	}
+#Emission mass flux from commercial buildings heating
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 197 ;
+	}
+#Emission mass flux from residential heating
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 198 ;
+	}
+#Emission mass flux from oil refineries and transformation industry
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 199 ;
+	}
+#Emission mass flux from gas production
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 200 ;
 	}
 #Stream function gradient
 'm**2 s**-1' = {
