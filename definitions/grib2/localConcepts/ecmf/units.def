@@ -194,30 +194,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 46 ;
 	}
-#Maximum temperature at 2 metres in the last 24 hours
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 lengthOfTimeRange = 24 ;
-	}
-#Minimum temperature at 2 metres in the last 24 hours
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 3 ;
-	 lengthOfTimeRange = 24 ;
-	}
 #Observation count
 '~' = {
 	 discipline = 192 ;
@@ -499,12 +475,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 120 ;
-	}
-#Maximum 10 metre wind gust in the last 6 hours
-'m s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 123 ;
 	}
 #Vertically integrated total energy
 'J m**-2' = {
@@ -13557,30 +13527,6 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 25 ;
 	}
-#Maximum temperature at 2 metres in the last 3 hours
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 lengthOfTimeRange = 3 ;
-	}
-#Minimum temperature at 2 metres in the last 3 hours
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 3 ;
-	 lengthOfTimeRange = 3 ;
-	}
 #Soil wetness index in layer 1
 'dimensionless' = {
 	 discipline = 192 ;
@@ -18990,12 +18936,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 174 ;
 	 parameterNumber = 42 ;
-	}
-#10 metre wind gust in the last 24 hours
-'m s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 174 ;
-	 parameterNumber = 49 ;
 	}
 #1.5m temperature - mean in the last 24 hours
 'K' = {
