@@ -112,11 +112,12 @@ static int concept_condition_expression_true(
     return ok;
 }
 
-// Return 1 (=True) or 0 (=False)
+// Return 0 (=False) or >0 which is the count of matches
+// See ECC-1992
 static int concept_condition_iarray_true(grib_handle* h, grib_concept_condition* c)
 {
     long* val   = NULL;
-    size_t size = 0, i;
+    size_t size = 0;
     int ret; //Boolean
     int err = 0;
 
@@ -132,7 +133,7 @@ static int concept_condition_iarray_true(grib_handle* h, grib_concept_condition*
         return FALSE;
     }
     ret = TRUE;
-    for (i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++) {
         if (val[i] != c->iarray->v[i]) {
             ret = FALSE;
             break;
@@ -140,10 +141,11 @@ static int concept_condition_iarray_true(grib_handle* h, grib_concept_condition*
     }
 
     grib_context_free(h->context, val);
-    return ret;
+    if (ret) return (int)size;
+    return FALSE;
 }
 
-// Return 1 (=True) or 0 (=False)
+// Return 0 (=False) or >0 (=True)
 static int concept_condition_true(
     grib_handle* h, grib_concept_condition* c,
     std::unordered_map<std::string_view, long>& memo)
@@ -169,10 +171,11 @@ static const char* concept_evaluate(grib_accessor* a)
         grib_concept_condition* e = c->conditions;
         int cnt = 0;
         while (e) {
-            if (!concept_condition_true(h, e, memo))
+            const int cc_count = concept_condition_true(h, e, memo);
+            if (cc_count == 0) // match failed
                 break;
             e = e->next;
-            cnt++;
+            cnt += cc_count; // ECC-1992
         }
 
         if (e == NULL) {
