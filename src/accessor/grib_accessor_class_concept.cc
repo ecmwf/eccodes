@@ -112,37 +112,36 @@ static int concept_condition_expression_true(
     return ok;
 }
 
-// Return 0 (=False) or >0 which is the count of matches
+// Return 0 (=no match) or >0 which is the count of matches
 // See ECC-1992
 static int concept_condition_iarray_true(grib_handle* h, grib_concept_condition* c)
 {
-    long* val   = NULL;
     size_t size = 0;
-    int ret; //Boolean
-    int err = 0;
+    int ret = 0; // count of matches
 
-    err = grib_get_size(h, c->name, &size);
+    int err = grib_get_size(h, c->name, &size);
     if (err || size != grib_iarray_used_size(c->iarray))
-        return FALSE;
+        return 0; // failed
 
-    val = (long*)grib_context_malloc_clear(h->context, sizeof(long) * size);
+    long* val = (long*)grib_context_malloc_clear(h->context, sizeof(long) * size);
+    if (!val) return 0;
 
     err = grib_get_long_array(h, c->name, val, &size);
     if (err) {
         grib_context_free(h->context, val);
-        return FALSE;
+        return 0; // failed
     }
-    ret = TRUE;
+
+    ret = (int)size; // Assume all array entries match
     for (size_t i = 0; i < size; i++) {
         if (val[i] != c->iarray->v[i]) {
-            ret = FALSE;
+            ret = 0; // failed
             break;
         }
     }
 
     grib_context_free(h->context, val);
-    if (ret) return (int)size;
-    return FALSE;
+    return ret;
 }
 
 // Return 0 (=False) or >0 (=True)
