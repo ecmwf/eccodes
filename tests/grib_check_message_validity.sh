@@ -24,15 +24,17 @@ grib_check_key_equals $ECCODES_SAMPLES_PATH/GRIB2.tmpl isMessageValid 1
 ${tools_dir}/grib_set -s PVPresent=1,NV=6 $ECCODES_SAMPLES_PATH/reduced_gg_pl_128_grib2.tmpl $tempGrib
 grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "Section 5 is missing" $tempText
-grep -q "Error instantiating iterator gaussian_reduced" $tempText
-
+if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+   grep -q "Error instantiating iterator gaussian_reduced" $tempText
+fi
 
 # Check regular lat/lon
 # ------------------------------
-${tools_dir}/grib_set -s Nj=0 $data_dir/sample.grib2 $tempGrib
-grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
-grep -q "Regular grid Geoiterator" $tempText
-
+if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+   ${tools_dir}/grib_set -s Nj=0 $data_dir/sample.grib2 $tempGrib
+   grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+   grep -q "Regular grid Geoiterator" $tempText
+fi
 
 # Check reduced Gaussian grid Ni
 # ------------------------------

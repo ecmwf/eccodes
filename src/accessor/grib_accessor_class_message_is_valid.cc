@@ -93,6 +93,8 @@ static int check_geoiterator(grib_handle* h)
 {
     //printf("DEBUG  %s \n", __func__);
     int err = 0;
+
+#if defined(HAVE_GEOGRAPHY)
     grib_iterator* iter = grib_iterator_new(h, 0, &err);
     if (err == GRIB_NOT_IMPLEMENTED || err == GRIB_SUCCESS) {
         grib_iterator_delete(iter);
@@ -101,6 +103,8 @@ static int check_geoiterator(grib_handle* h)
 
     grib_context_log(h->context, GRIB_LOG_ERROR, "%s", grib_get_error_message(err));
     grib_iterator_delete(iter);
+#endif
+
     return err;
 }
 
