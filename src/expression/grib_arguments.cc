@@ -38,7 +38,10 @@ Arguments::Arguments(grib_context* c, Expression* g, Arguments* n)
 Arguments::~Arguments()
 {
     grib_arguments_free(context_, next_);
-    grib_expression_free(context_, expression_);
+    if (expression_) {
+        expression_->destroy(context_);
+        delete expression_;
+    }
 }
 
 void Arguments::print(grib_handle* f) const

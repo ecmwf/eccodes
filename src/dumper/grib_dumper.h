@@ -18,6 +18,7 @@ namespace eccodes
 class Dumper
 {
 public:
+    virtual ~Dumper() {}
     virtual int init()                                                  = 0;
     virtual int destroy()                                               = 0;
     virtual void dump_long(grib_accessor*, const char*)                 = 0;

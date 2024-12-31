@@ -174,6 +174,7 @@ void When::destroy(grib_context* context)
     }
 
     expression_->destroy(context);
+    delete expression_;
 
     grib_context_free_persistent(context, name_);
     grib_context_free_persistent(context, debug_info_);

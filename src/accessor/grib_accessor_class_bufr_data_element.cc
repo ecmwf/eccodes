@@ -445,6 +445,7 @@ void grib_accessor_bufr_data_element_t::destroy(grib_context* ct)
         /*grib_context_log(ct,GRIB_LOG_DEBUG,"deleting attribute %s->%s",a->name,attributes_ [i]->name);*/
         /*printf("bufr_data_element destroy %s %p\n", a->attributes_[i]->name, (void*)attributes_ [i]);*/
         attributes_[i]->destroy(ct);
+        delete attributes_[i];
         attributes_[i] = NULL;
         i++;
     }

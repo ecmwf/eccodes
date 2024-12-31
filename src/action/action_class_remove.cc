@@ -48,6 +48,8 @@ static void remove_accessor(grib_accessor* a)
     a->next_->previous_ = a->previous_;
 
     a->destroy(s->h->context);
+    delete a;
+    a = NULL;
 }
 
 int Remove::create_accessor(grib_section* p, grib_loader* h)

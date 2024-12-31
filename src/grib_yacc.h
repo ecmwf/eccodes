@@ -317,7 +317,7 @@ extern int grib_yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 154 "griby.y"
+#line 69 "griby.y"
 
     char                    *str;
     long                    lval;

@@ -178,6 +178,8 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
                                  p->h->buffer->ulength);
 
             a->destroy(p->h->context);
+            delete a;
+            a = nullptr;
             return NULL;
         }
         else {

@@ -40,7 +40,6 @@ int Iterator::init(grib_handle* h, grib_arguments* args)
 /* For this one, ALL destroy are called */
 int Iterator::destroy()
 {
-    delete this;
     return GRIB_SUCCESS;
 }
 
@@ -65,8 +64,11 @@ eccodes::geo_iterator::Iterator* gribIteratorNew(const grib_handle* ch, unsigned
 
 int gribIteratorDelete(eccodes::geo_iterator::Iterator* i)
 {
-    if (i)
+    if (i) {
         i->destroy();
+        delete i;
+        i = nullptr;
+    }
     return GRIB_SUCCESS;
 }
 
@@ -101,7 +103,9 @@ int grib_iterator_previous(grib_iterator* i, double* lat, double* lon, double* v
 
 int grib_iterator_destroy(grib_context* c, grib_iterator* i)
 {
-    return i->iterator->destroy();
+    int ret = i->iterator->destroy();
+    delete i;
+    return ret;
 }
 
 #if defined(HAVE_GEOGRAPHY)

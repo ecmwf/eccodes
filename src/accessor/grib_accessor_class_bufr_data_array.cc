@@ -2344,7 +2344,8 @@ int grib_accessor_bufr_data_array_t::create_keys(long onlySubset, long startSubs
         associatedFieldAccessor = NULL;
         if (associatedFieldSignificanceAccessor) {
             associatedFieldSignificanceAccessor->destroy(c);
-            associatedFieldSignificanceAccessor = NULL;
+            delete associatedFieldSignificanceAccessor;
+            associatedFieldSignificanceAccessor = nullptr;
         }
         for (ide = 0; ide < elementsInSubset; ide++) {
             idx = compressedData_ ? elementsDescriptorsIndex_->v[0]->v[ide] : elementsDescriptorsIndex_->v[iss]->v[ide];
@@ -2543,8 +2544,11 @@ int grib_accessor_bufr_data_array_t::create_keys(long onlySubset, long startSubs
                         }
                         break;
                     case 31021:
-                        if (associatedFieldSignificanceAccessor)
+                        if (associatedFieldSignificanceAccessor) {
                             associatedFieldSignificanceAccessor->destroy(c);
+                            delete associatedFieldSignificanceAccessor;
+                            associatedFieldSignificanceAccessor = nullptr;
+                        }
                         associatedFieldSignificanceAccessor = elementAccessor;
                         break;
                         /*case 33007:*/

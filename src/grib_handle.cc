@@ -100,6 +100,7 @@ void grib_empty_section(grib_context* c, grib_section* b)
             current->sub_section_ = 0;
         }
         current->destroy(c);
+        delete current;
         current = next;
     }
     b->block->first = b->block->last = 0;
@@ -1535,7 +1536,7 @@ grib_action* grib_action_from_filter(const char* filter)
         grib_context_free_persistent(context, context->grib_reader);
     }
 
-    context->grib_reader = NULL;
+    context->grib_reader = nullptr;
     return a;
 }
 

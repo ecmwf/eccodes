@@ -469,7 +469,6 @@ void grib_accessor_gen_t::destroy(grib_context* ct)
         grib_context_free(ct, vvalue_);
         vvalue_ = NULL;
     }
-    delete this;
     /*grib_context_log(ct,GRIB_LOG_DEBUG,"address=%p",a);*/
 }
 

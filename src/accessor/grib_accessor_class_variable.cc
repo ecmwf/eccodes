@@ -204,7 +204,8 @@ void grib_accessor_variable_t::destroy(grib_context* c)
     /* Note: BUFR operator descriptors are variables and have attributes so need to free them */
     while (i < MAX_ACCESSOR_ATTRIBUTES && attributes_[i]) {
         attributes_[i]->destroy(c);
-        attributes_[i] = NULL;
+        delete attributes_[i];
+        attributes_[i] = nullptr;
         ++i;
     }
 
