@@ -12,14 +12,12 @@
 #include <unordered_map>
 #include <string>
 #include <utility>
+//#include <map>
 
 grib_accessor_concept_t _grib_accessor_concept{};
 grib_accessor* grib_accessor_concept = &_grib_accessor_concept;
 
 #define MAX_CONCEPT_STRING_LENGTH 255
-
-#define FALSE 0
-#define TRUE  1
 
 // Note: A fast cut-down version of strcmp which does NOT return -1
 // 0 means input strings are equal and 1 means not equal
@@ -70,7 +68,7 @@ static int concept_condition_expression_true(
 {
     long lval;
     long lres      = 0;
-    int ok         = FALSE; // Boolean
+    int ok         = 0; // Boolean
     int err        = 0;
     const int type = c->expression->native_type(h);
 
@@ -114,7 +112,7 @@ static int concept_condition_expression_true(
 
 // Return 0 (=no match) or >0 which is the count of matches
 // See ECC-1992
-static int concept_condition_iarray_true(grib_handle* h, grib_concept_condition* c)
+static int concept_condition_iarray_true_count(grib_handle* h, grib_concept_condition* c)
 {
     size_t size = 0;
     int ret = 0; // count of matches
@@ -144,13 +142,13 @@ static int concept_condition_iarray_true(grib_handle* h, grib_concept_condition*
     return ret;
 }
 
-// Return 0 (=False) or >0 (=True)
-static int concept_condition_true(
+// Return 0 (=no match) or >0 (=match count)
+static int concept_condition_true_count(
     grib_handle* h, grib_concept_condition* c,
     std::unordered_map<std::string_view, long>& memo)
 {
     if (c->expression == NULL)
-        return concept_condition_iarray_true(h, c);
+        return concept_condition_iarray_true_count(h, c);
     else
         return concept_condition_expression_true(h, c, memo);
 }
@@ -170,7 +168,7 @@ static const char* concept_evaluate(grib_accessor* a)
         grib_concept_condition* e = c->conditions;
         int cnt = 0;
         while (e) {
-            const int cc_count = concept_condition_true(h, e, memo);
+            const int cc_count = concept_condition_true_count(h, e, memo);
             if (cc_count == 0) // match failed
                 break;
             e = e->next;
@@ -180,6 +178,7 @@ static const char* concept_evaluate(grib_accessor* a)
         if (e == NULL) {
             if (cnt >= match) {
                 // prev  = (cnt > match) ? NULL : best;
+                // A better candidate was found. Update 'match' and 'best'
                 match = cnt;
                 best  = c->name;
                 // printf("DEBUG: %s concept=%s current best=%s\n", __func__, a->name_, best);
@@ -356,6 +355,9 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
     const int nofail = action_concept_get_nofail(a);
 
     DEBUG_ASSERT(concepts);
+
+    //std::map<std::string, std::pair<std::string, int>> myMap; //??
+    //myMap["typeOfStatisticalProcessing"] = std::make_pair("selectStepTemplateInterval", 1);
 
     c = (grib_concept_value*)grib_trie_get(concepts->index, name);
 
