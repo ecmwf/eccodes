@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <string>
 #include <utility>
-//#include <map>
+#include <map>
 
 grib_accessor_concept_t _grib_accessor_concept{};
 grib_accessor* grib_accessor_concept = &_grib_accessor_concept;
@@ -53,7 +53,7 @@ static int grib_get_long_memoize(
     if (pos == memo.end()) { // not in map so decode & insert
         err = grib_get_long(h, key, value);
         if (!err) {
-            memo.insert( std::make_pair(key, *value) );
+            memo.insert(std::make_pair(key, *value));
         }
     } else {
         *value = pos->second; // found in map
@@ -119,7 +119,7 @@ static int concept_condition_iarray_true_count(grib_handle* h, grib_concept_cond
 
     int err = grib_get_size(h, c->name, &size);
     if (err || size != grib_iarray_used_size(c->iarray))
-        return 0; // failed
+        return 0; // no match
 
     long* val = (long*)grib_context_malloc_clear(h->context, sizeof(long) * size);
     if (!val) return 0;
@@ -127,13 +127,13 @@ static int concept_condition_iarray_true_count(grib_handle* h, grib_concept_cond
     err = grib_get_long_array(h, c->name, val, &size);
     if (err) {
         grib_context_free(h->context, val);
-        return 0; // failed
+        return 0; // no match
     }
 
     ret = (int)size; // Assume all array entries match
     for (size_t i = 0; i < size; i++) {
         if (val[i] != c->iarray->v[i]) {
-            ret = 0; // failed
+            ret = 0; // no match
             break;
         }
     }
@@ -225,9 +225,34 @@ static int concept_conditions_expression_apply(grib_handle* h, grib_concept_cond
     return err;
 }
 
+static int rectify_concept_apply(grib_handle* h, const char* key)
+{
+    // The key was not found. In specific cases, rectify the problem by setting
+    // a secondary key
+    // e.g.,
+    // GRIB is instantaneous but paramId being set is for accum/avg
+    // 
+    int ret = GRIB_NOT_FOUND;
+    static const std::map<std::string_view, std::pair<std::string_view, long>> keyMap = {
+        { "typeOfStatisticalProcessing", { "selectStepTemplateInterval", 1 } },
+        { "typeOfWavePeriodInterval", { "productDefinitionTemplateNumber", 103 } },
+        { "sourceSinkChemicalPhysicalProcess", { "is_chemical_srcsink", 1 } },
+        // TODO(masn): Add a new key e.g. is_probability_forecast
+        { "probabilityType", { "productDefinitionTemplateNumber", 5 } }
+    };
+    const auto mapIter = keyMap.find(key);
+    if (mapIter != keyMap.end()) {
+        const char* key2 = mapIter->second.first.data();
+        const long val2  = mapIter->second.second;
+        grib_context_log(h->context, GRIB_LOG_DEBUG, "Concept: Key %s not found, setting %s to %ld", key, key2, val2);
+        ret = grib_set_long(h, key2, val2);
+    }
+    return ret;
+}
+
 static int concept_conditions_iarray_apply(grib_handle* h, grib_concept_condition* c)
 {
-    size_t size = grib_iarray_used_size(c->iarray);
+    const size_t size = grib_iarray_used_size(c->iarray);
     return grib_set_long_array(h, c->name, c->iarray->v, size);
 }
 
@@ -356,9 +381,6 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
 
     DEBUG_ASSERT(concepts);
 
-    //std::map<std::string, std::pair<std::string, int>> myMap; //??
-    //myMap["typeOfStatisticalProcessing"] = std::make_pair("selectStepTemplateInterval", 1);
-
     c = (grib_concept_value*)grib_trie_get(concepts->index, name);
 
     if (!c)
@@ -382,41 +404,14 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
     if (count) {
         err = grib_set_values_silent(h, values, count, /*silent=*/1);
         if (err) {
-            // GRIB2 product template selection
+            // Encoding of the concept failed. Can we recover?
             bool resubmit = false;
             for (int i = 0; i < count; i++) {
                 if (values[i].error == GRIB_NOT_FOUND) {
-                    // Repair the most common cause of failure: input GRIB2 handle
-                    // is instantaneous but paramId/shortName being set is for accum/avg etc
-                    if (STR_EQUAL(values[i].name, "typeOfStatisticalProcessing")) {
-                        grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Switch from instantaneous to interval-based", __func__);
-                        if (grib_set_long(h, "selectStepTemplateInterval", 1) == GRIB_SUCCESS) {
-                            resubmit = true;
-                            grib_set_values(h, &values[i], 1);
-                        }
-                    }
-                    else if (STR_EQUAL(values[i].name, "typeOfWavePeriodInterval")) {
-                        grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Switch to waves selected by period range", __func__);
-                        // TODO(masn): Add a new key e.g. is_wave_period_range
-                        if (grib_set_long(h, "productDefinitionTemplateNumber", 103) == GRIB_SUCCESS) {
-                            resubmit = true;
-                            grib_set_values(h, &values[i], 1);
-                        }
-                    }
-                    else if (STR_EQUAL(values[i].name, "sourceSinkChemicalPhysicalProcess")) {
-                        grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Switch to chemical src/sink", __func__);
-                        if (grib_set_long(h, "is_chemical_srcsink", 1) == GRIB_SUCCESS) {
-                            resubmit = true;
-                            grib_set_values(h, &values[i], 1);
-                        }
-                    }
-                    else if (STR_EQUAL(values[i].name, "probabilityType")) {
-                        grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Switch to probability forecasts", __func__);
-                        // TODO(masn): Add a new key e.g. is_probability_forecast
-                        if (grib_set_long(h, "productDefinitionTemplateNumber", 5) == GRIB_SUCCESS) {
-                            resubmit = true;
-                            grib_set_values(h, &values[i], 1);
-                        }
+                    // Try to rectify the most common causes of failure
+                    if (rectify_concept_apply(h, values[i].name) == GRIB_SUCCESS) {
+                        resubmit = true;
+                        grib_set_values(h, &values[i], 1);
                     }
                 }
             }
