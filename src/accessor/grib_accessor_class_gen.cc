@@ -57,7 +57,7 @@ void grib_accessor_gen_t::init(const long len, grib_arguments* param)
                     p     = expression->evaluate_string(grib_handle_of_accessor(this), tmp, &s_len, &ret);
                     if (ret != GRIB_SUCCESS) {
                         grib_context_log(context_, GRIB_LOG_ERROR, "Unable to evaluate %s as string", name_);
-                        Assert(0);
+                        ECCODES_ASSERT(0);
                     }
                     s_len = strlen(p) + 1;
                     pack_string(p, &s_len);
@@ -541,12 +541,12 @@ int grib_accessor_gen_t::is_missing()
                              "%s internal error (flags=0x%lX)",
                              name_,
                              flags_);
-            Assert(!"grib_accessor_gen_t::is_missing(): vvalue == NULL");
+            ECCODES_ASSERT(!"grib_accessor_gen_t::is_missing(): vvalue == NULL");
             return 0;
         }
         return vvalue_->missing;
     }
-    Assert(length_ >= 0);
+    ECCODES_ASSERT(length_ >= 0);
 
     v = grib_handle_of_accessor(this)->buffer->data + offset_;
 

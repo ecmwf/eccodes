@@ -148,7 +148,7 @@ void IsInList::add_dependency(grib_accessor* observer)
     if (!observed) {
         /* grib_context_log(observer->context, GRIB_LOG_ERROR, */
         /* "Error in accessor_add_dependency: cannot find [%s]", name_); */
-        /* Assert(observed); */
+        /* ECCODES_ASSERT(observed); */
         return;
     }
 

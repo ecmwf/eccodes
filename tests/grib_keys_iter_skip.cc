@@ -18,10 +18,10 @@ int main(int argc, char* argv[])
     grib_handle* h = NULL;
     int err = 0;
 
-    Assert(argc == 2);
+    ECCODES_ASSERT(argc == 2);
     const char* fname = argv[1];
     FILE* f = fopen(fname, "rb");
-    Assert(f);
+    ECCODES_ASSERT(f);
 
     unsigned long flags[] = {
         GRIB_KEYS_ITERATOR_SKIP_READ_ONLY,
@@ -39,12 +39,12 @@ int main(int argc, char* argv[])
         for (unsigned long i=0; i<N; ++i) {
             size_t count = 0;
             grib_keys_iterator* kiter = grib_keys_iterator_new(h, flags[i], NULL);
-            Assert(kiter);
+            ECCODES_ASSERT(kiter);
 
             while (grib_keys_iterator_next(kiter)) {
                 const char* name = grib_keys_iterator_get_name(kiter);
-                Assert(name);
-                Assert(strlen(name) > 0);
+                ECCODES_ASSERT(name);
+                ECCODES_ASSERT(strlen(name) > 0);
                 ++count;
             }
             grib_keys_iterator_delete(kiter);

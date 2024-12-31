@@ -83,7 +83,7 @@ void Default::dump_long(grib_accessor* a, const char* comment)
     else {
         err = a->unpack_long(&value, &size2);
     }
-    Assert(size2 == size);
+    ECCODES_ASSERT(size2 == size);
 
     aliases(a);
     if (comment) {
@@ -549,7 +549,7 @@ void Default::dump_section(grib_accessor* a, grib_block_of_accessors* block)
         /* char tmp[512]; */
         /* grib_section* s = a->sub_section; */
         upper = (char*)malloc(strlen(a->name_) + 1);
-        Assert(upper);
+        ECCODES_ASSERT(upper);
         p = (char*)a->name_;
         q = upper;
         while (*p != '\0') {

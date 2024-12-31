@@ -435,7 +435,7 @@ grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind pr
     if (product == PRODUCT_ANY)
         return any_new_from_file(c, f, error);
 
-    Assert(!"codes_handle_new_from_file: Invalid product");
+    ECCODES_ASSERT(!"codes_handle_new_from_file: Invalid product");
     return NULL;
 }
 
@@ -1418,9 +1418,9 @@ int codes_get_product_kind(const grib_handle* h, ProductKind* product_kind)
 int codes_check_message_header(const void* bytes, size_t length, ProductKind product)
 {
     const char* p = ((const char*)bytes);
-    Assert(p);
-    Assert(product == PRODUCT_GRIB || product == PRODUCT_BUFR); /* Others not yet implemented */
-    Assert(length > 4);
+    ECCODES_ASSERT(p);
+    ECCODES_ASSERT(product == PRODUCT_GRIB || product == PRODUCT_BUFR); /* Others not yet implemented */
+    ECCODES_ASSERT(length > 4);
     if (product == PRODUCT_GRIB) {
         if (p[0] != 'G' || p[1] != 'R' || p[2] != 'I' || p[3] != 'B')
             return GRIB_INVALID_MESSAGE;
@@ -1438,8 +1438,8 @@ int codes_check_message_header(const void* bytes, size_t length, ProductKind pro
 int codes_check_message_footer(const void* bytes, size_t length, ProductKind product)
 {
     const char* p = ((const char*)bytes);
-    Assert(p);
-    Assert(product == PRODUCT_GRIB || product == PRODUCT_BUFR); /* Others not yet implemented */
+    ECCODES_ASSERT(p);
+    ECCODES_ASSERT(product == PRODUCT_GRIB || product == PRODUCT_BUFR); /* Others not yet implemented */
 
     if (p[length - 4] != '7' || p[length - 3] != '7' || p[length - 2] != '7' || p[length - 1] != '7') {
         return GRIB_7777_NOT_FOUND;

@@ -249,7 +249,7 @@ void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
 
             if (a->same_ && (a->same_ == a)) {
                 fprintf(stderr, "---> %s\n", a->name_);
-                Assert(a->same_ != a);
+                ECCODES_ASSERT(a->same_ != a);
             }
         }
     }
@@ -306,7 +306,7 @@ int grib_section_adjust_sizes(grib_section* s, int update, int depth)
             size_t len = 1;
             long plen  = 0;
             int lret   = s->aclength->unpack_long(&plen, &len);
-            Assert(lret == GRIB_SUCCESS);
+            ECCODES_ASSERT(lret == GRIB_SUCCESS);
             /* This happens when there is some padding */
             if ((plen != length) || force_update) {
                 if (update) {
@@ -375,7 +375,7 @@ int grib_get_block_length(grib_section* s, size_t* l)
 //         if(s->h->context->debug)
 //             printf("SECTION updating length %ld %s\n",plen,s->owner->name);
 //     }
-//     // if(s->aclength) Assert(*l == plen);
+//     // if(s->aclength) ECCODES_ASSERT(*l == plen);
 //     return GRIB_SUCCESS;
 }
 
@@ -405,7 +405,7 @@ void grib_update_paddings(grib_section* s)
 
     /* while((changed = find_paddings(s)) != NULL) */
     while ((changed = find_paddings(s->h->root)) != NULL) {
-        Assert(changed != last);
+        ECCODES_ASSERT(changed != last);
         changed->resize(changed->preferred_size(0));
         last = changed;
     }

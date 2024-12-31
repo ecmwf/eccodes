@@ -17,7 +17,7 @@ void grib_accessor_ksec1expver_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_ascii_t::init(len, arg);
     length_ = len;
-    Assert(length_ >= 0);
+    ECCODES_ASSERT(length_ >= 0);
 }
 
 int grib_accessor_ksec1expver_t::unpack_long(long* val, size_t* len)
@@ -29,7 +29,7 @@ int grib_accessor_ksec1expver_t::unpack_long(long* val, size_t* len)
     char expver[5];
     char refexpver[5];
     size_t llen = length_ + 1;
-    Assert(length_ == 4);
+    ECCODES_ASSERT(length_ == 4);
 
     if (*len < 1) {
         grib_context_log(context_, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", name_, 1);

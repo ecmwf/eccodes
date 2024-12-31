@@ -22,6 +22,8 @@ void grib_accessor_evaluate_t::init(const long l, grib_arguments* c)
 
 int grib_accessor_evaluate_t::unpack_long(long* val, size_t* len)
 {
+    if (!arg_) return GRIB_INVALID_ARGUMENT;
+
     grib_handle* h = grib_handle_of_accessor(this);
     grib_expression* e = arg_->get_expression(h, 0);
 

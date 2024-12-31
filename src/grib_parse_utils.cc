@@ -604,8 +604,8 @@ int grib_yywrap()
     if (top) {
         parse_file = stack[top - 1].name;
         grib_yyin  = stack[top - 1].file;
-        Assert(parse_file);
-        Assert(grib_yyin);
+        ECCODES_ASSERT(parse_file);
+        ECCODES_ASSERT(grib_yyin);
         /* grib_yyrestart(grib_yyin); */
 
         /* for(i = 0; i < top ; i++) printf("   "); */
@@ -642,14 +642,14 @@ void grib_parser_include(const char* included_fname)
     FILE* f         = NULL;
     char* io_buffer = 0;
     /* int i; */
-    Assert(top < MAXINCLUDE);
-    Assert(included_fname);
+    ECCODES_ASSERT(top < MAXINCLUDE);
+    ECCODES_ASSERT(included_fname);
     if (!included_fname)
         return;
 
     if (parse_file == 0) {
         parse_file = included_fname;
-        Assert(top == 0);
+        ECCODES_ASSERT(top == 0);
     }
     else {
         /* When parse_file is not NULL, it's the path of the parent file (includer) */
@@ -657,7 +657,7 @@ void grib_parser_include(const char* included_fname)
 
         /* GRIB-796: Search for the included file in ECCODES_DEFINITION_PATH */
         char* new_path = NULL;
-        Assert(*included_fname != '/');
+        ECCODES_ASSERT(*included_fname != '/');
         new_path = grib_context_full_defs_path(grib_parser_context, included_fname);
         if (!new_path) {
             fprintf(stderr, "ecCodes Version:       %s\nDefinition files path: %s\n",

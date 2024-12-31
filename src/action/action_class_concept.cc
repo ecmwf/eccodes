@@ -150,13 +150,13 @@ grib_concept_value* Concept::get_concept_impl(grib_handle* h)
     if (concept_value_ != NULL)
         return concept_value_;
 
-    Assert(masterDir_);
+    ECCODES_ASSERT(masterDir_);
     grib_get_string(h, masterDir_, masterDir, &lenMasterDir);
 
     // See ECC-1920: The basename could be a key or a string
-    char* basename = basename_;  // default is a string
-    Assert(basename);
-    char baseNameValue[1024] = {0, };  // its value if a key
+    char* basename = basename_; // default is a string
+    ECCODES_ASSERT(basename);
+    char baseNameValue[1024] = {0, }; // its value if a key
     size_t lenBaseName = sizeof(baseNameValue);
     if (grib_get_string(h, basename_, baseNameValue, &lenBaseName) == GRIB_SUCCESS) {
         basename = baseNameValue;  // basename_ was a key whose value is baseNameValue
@@ -321,8 +321,8 @@ int get_concept_condition_string(grib_handle* h, const char* key, const char* va
         if (strcmp(pValue, concept_value->name) == 0) {
             while (concept_condition) {
                 // grib_expression* expression = concept_condition->expression;
-                const char* condition_name = concept_condition->name;
-                // Assert(expression);
+                const char* condition_name  = concept_condition->name;
+                //ECCODES_ASSERT(expression);
                 if (concept_condition_expression_true(h, concept_condition, exprVal) && strcmp(condition_name, "one") != 0) {
                     length += snprintf(result + length, 2048, "%s%s=%s",
                                        (length == 0 ? "" : ","), condition_name, exprVal);

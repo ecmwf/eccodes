@@ -18,7 +18,7 @@ void grib_accessor_blob_t::init(const long len, grib_arguments* arg)
     grib_accessor_gen_t::init(len, arg);
     grib_get_long_internal(grib_handle_of_accessor(this),
                            arg->get_name(parent_->h, 0), &length_);
-    Assert(length_ >= 0);
+    ECCODES_ASSERT(length_ >= 0);
 }
 
 long grib_accessor_blob_t::get_native_type()

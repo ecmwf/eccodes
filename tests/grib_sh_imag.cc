@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
     int m, n, k;
     const char* outfile;
 
-    Assert(argc == 2);
+    ECCODES_ASSERT(argc == 2);
     outfile = argv[1];
 
     GRIB_CHECK(((h = grib_handle_new_from_samples(NULL, "sh_ml_grib2")) == NULL), 0);

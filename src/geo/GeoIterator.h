@@ -15,17 +15,11 @@
 
 #include "eckit/geo/Grid.h"
 
-// eccodes macros conflict with eckit
-#ifdef Assert
-    #undef Assert
-#endif
-
 #include "geo/iterator/grib_iterator.h"
 
 
 namespace eccodes::geo
 {
-
 
 class GeoIterator : public geo_iterator::Iterator
 {
@@ -46,6 +40,5 @@ private:
     bool has_next() const override;
     geo_iterator::Iterator* create() const override;
 };
-
 
 }  // namespace eccodes::geo

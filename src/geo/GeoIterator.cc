@@ -26,42 +26,54 @@ GeoIterator::GeoIterator(grib_handle* h, unsigned long flags) :
     h_          = h;
     class_name_ = "geo_iterator";
     flags_      = flags;
-    Assert(h_ != nullptr);
+    ECCODES_ASSERT(h_ != nullptr);
 
     CODES_CHECK(codes_get_size(h_, "values", &nv_), "");
-    Assert(nv_ > 0);
+    ECCODES_ASSERT(nv_ > 0);
 
-    data_ = (flags_ & GRIB_GEOITERATOR_NO_VALUES) ? nullptr : static_cast<double*>(grib_context_malloc(h_->context, nv_ * sizeof(double)));
-    Assert(data_ != nullptr);
+    //long numberOfPoints = 0;
+    //grib_get_long_internal(h, "numberOfPoints", &numberOfPoints);
 
-    auto size = nv_;
-    CODES_CHECK(codes_get_double_array(h_, "values", data_, &size), "");
-    Assert(nv_ == size);
+    if (flags_ & GRIB_GEOITERATOR_NO_VALUES) {
+        data_ = nullptr;
+    } else {
+        data_ = static_cast<double*>(grib_context_malloc(h_->context, nv_ * sizeof(double)));
+        ECCODES_ASSERT(data_ != nullptr);
+        auto size = nv_;
+        CODES_CHECK(codes_get_double_array(h_, "values", data_, &size), "");
+        // Check numberOfPoints equals nv_
+        // if not, throw an exception
+    }
 }
-
 
 int GeoIterator::init(grib_handle*, grib_arguments*)
 {
     NOTIMP;
 }
 
-
+// The C public API for this does not have a way of returning an error,
+// So any exception thrown by eckit will is fatal!
 int GeoIterator::next(double* lat, double* lon, double* val) const
 {
     if (iter_ == end_) {
         return 0;  // (false)
     }
+    try {
+        const auto p  = *iter_;
+        const auto& q = std::get<eckit::geo::PointLonLat>(p);
 
-    const auto p  = *iter_;
-    const auto& q = std::get<eckit::geo::PointLonLat>(p);
+        *lat = q.lat;
+        *lon = q.lon;
+        if (val != nullptr && data_ != nullptr) {
+            *val = data_[iter_->index()];
+        }
 
-    *lat = q.lat;
-    *lon = q.lon;
-    if (val != nullptr && data_ != nullptr) {
-        *val = data_[iter_->index()];
+        ++iter_;
     }
-
-    ++iter_;
+    catch(std::exception& e) {
+        grib_context_log(h_->context, GRIB_LOG_FATAL, "GeoIterator::next: Exception thrown (%s)", e.what());
+        return 0;
+    }
     return 1;  // (true)
 }
 

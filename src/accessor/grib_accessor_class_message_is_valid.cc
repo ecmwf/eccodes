@@ -9,6 +9,7 @@
  */
 
 #include "grib_accessor_class_message_is_valid.h"
+#include <cstdio>
 
 grib_accessor_message_is_valid_t _grib_accessor_message_is_valid{};
 grib_accessor* grib_accessor_message_is_valid = &_grib_accessor_message_is_valid;
@@ -94,6 +95,8 @@ static int check_geoiterator(grib_handle* h)
 {
     //printf("DEBUG  %s \n", __func__);
     int err = 0;
+
+#if defined(HAVE_GEOGRAPHY)
     grib_iterator* iter = grib_iterator_new(h, 0, &err);
     if (err == GRIB_NOT_IMPLEMENTED || err == GRIB_SUCCESS) {
         grib_iterator_delete(iter);
@@ -102,11 +105,50 @@ static int check_geoiterator(grib_handle* h)
 
     grib_context_log(h->context, GRIB_LOG_ERROR, "%s", grib_get_error_message(err));
     grib_iterator_delete(iter);
+#endif
+
     return err;
+}
+
+
+static int check_section_numbers(grib_handle* h, long edition, const int* sec_nums, size_t N)
+{
+    for (size_t i = 0; i < N; ++i) {
+        char sname[16] = {0,};
+        const int sec_num = sec_nums[i];
+        snprintf(sname, sizeof(sname), "section_%d", sec_num);
+        if (!grib_is_defined(h, sname)) {
+            grib_context_log(h->context, GRIB_LOG_ERROR, "GRIB%ld: Section %d is missing!", edition, sec_num);
+            return GRIB_INVALID_MESSAGE;
+        }
+    }
+    return GRIB_SUCCESS;
+}
+
+static int check_sections(grib_handle* h)
+{
+    long edition = 0;
+    int err = grib_get_long_internal(h, "edition", &edition);
+    if (err) return err;
+
+    if (edition == 1) {
+        const int grib1_section_nums[] = {1, 2, 4}; // section 3 is optional
+        const size_t N = sizeof(grib1_section_nums) / sizeof(grib1_section_nums[0]);
+        err = check_section_numbers(h, edition, grib1_section_nums, N);
+        if (err) return err;
+    }
+    else if (edition == 2) {
+        const int grib2_section_nums[] = {1, 3, 4, 5, 6, 7, 8}; // section 2 is optional
+        const size_t N = sizeof(grib2_section_nums) / sizeof(grib2_section_nums[0]);
+        err = check_section_numbers(h, edition, grib2_section_nums, N);
+        if (err) return err;
+    }
+    return GRIB_SUCCESS;
 }
 
 typedef int (*proj_func)(grib_handle*);
 static proj_func check_functions[] = {
+    check_sections,
     check_field_values,
     check_grid_pl_array,
     check_geoiterator

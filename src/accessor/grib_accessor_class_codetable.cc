@@ -80,7 +80,7 @@ void grib_accessor_codetable_t::init(const long len, grib_arguments* params)
 #ifdef DEBUG
     if (flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) {
         grib_context_log(context_, GRIB_LOG_FATAL, "codetable '%s' has flag can_be_missing!", name_);
-        Assert(!"codetable with can_be_missing?");
+        ECCODES_ASSERT(!"codetable with can_be_missing?");
     }
 #endif
 
@@ -232,7 +232,7 @@ grib_codetable* grib_accessor_codetable_t::load_table()
     }
 
     if (flags_ & GRIB_ACCESSOR_FLAG_TRANSIENT) {
-        Assert(vvalue_ != NULL);
+        ECCODES_ASSERT(vvalue_ != NULL);
         size = vvalue_->length * 8;
     }
     else {
@@ -276,7 +276,7 @@ static int grib_load_codetable(grib_context* c, const char* filename,
     if (!f)
         return GRIB_IO_PROBLEM;
 
-    Assert(t != NULL);
+    ECCODES_ASSERT(t != NULL);
 
     if (t->filename[0] == NULL) {
         t->filename[0]        = grib_context_strdup_persistent(c, filename);
@@ -324,7 +324,7 @@ static int grib_load_codetable(grib_context* c, const char* filename,
             grib_context_log(c, GRIB_LOG_ERROR, "Invalid entry in file %s: line %d", filename, lineNumber);
             continue; /* skip this line */
         }
-        Assert(isdigit(*p));
+        ECCODES_ASSERT(isdigit(*p));
 
         while (*p != '\0') {
             if (isspace(*p))
@@ -372,8 +372,8 @@ static int grib_load_codetable(grib_context* c, const char* filename,
         if (!units)
             units = unknown;
 
-        Assert(*abbreviation);
-        Assert(*title);
+        ECCODES_ASSERT(*abbreviation);
+        ECCODES_ASSERT(*title);
         string_rtrim(title); /* ECC-1315 */
 
         if (t->entries[code].abbreviation != NULL) {
@@ -381,8 +381,8 @@ static int grib_load_codetable(grib_context* c, const char* filename,
             continue;
         }
 
-        Assert(t->entries[code].abbreviation == NULL);
-        Assert(t->entries[code].title == NULL);
+        ECCODES_ASSERT(t->entries[code].abbreviation == NULL);
+        ECCODES_ASSERT(t->entries[code].title == NULL);
 
         t->entries[code].abbreviation = grib_context_strdup_persistent(c, abbreviation);
         t->entries[code].title        = grib_context_strdup_persistent(c, title);
@@ -631,7 +631,7 @@ bool strings_equal(const char* s1, const char* s2, bool case_sensitive)
 int grib_accessor_codetable_t::pack_string(const char* buffer, size_t* len)
 {
     long lValue = 0;
-    Assert(buffer);
+    ECCODES_ASSERT(buffer);
     if (is_number(buffer) && string_to_long(buffer, &lValue, 1) == GRIB_SUCCESS) {
         // ECC-1654: If value is a pure number, just pack as long
         size_t l = 1;
@@ -786,8 +786,8 @@ int grib_accessor_codetable_t::unpack_long(long* val, size_t* len)
 #ifdef DEBUG
     {
         int err = value_count(&rlen);
-        Assert(!err);
-        Assert(rlen == 1);
+        ECCODES_ASSERT(!err);
+        ECCODES_ASSERT(rlen == 1);
     }
 #endif
     rlen = 1; /* ECC-480 Performance: avoid func call overhead of grib_value_count */

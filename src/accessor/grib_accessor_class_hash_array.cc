@@ -82,7 +82,7 @@ grib_hash_array_value* grib_accessor_hash_array_t::find_hash_value(int* err)
 
     *err = GRIB_SUCCESS;
 
-    Assert(ha != NULL);
+    ECCODES_ASSERT(ha != NULL);
     if (!key_) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "unable to get hash value for %s, set before getting", creator_->name_);

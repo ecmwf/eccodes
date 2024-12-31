@@ -589,7 +589,7 @@ int grib_accessor_g1step_range_t::pack_long(const long* val, size_t* len)
             }
             return pack_string(buff, &bufflen);
         default:
-            Assert(pack_index_ < 2);
+            ECCODES_ASSERT(pack_index_ < 2);
             break;
     }
 

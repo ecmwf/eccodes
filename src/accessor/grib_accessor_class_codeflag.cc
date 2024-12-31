@@ -18,7 +18,7 @@ void grib_accessor_codeflag_t::init(const long len, grib_arguments* param)
     grib_accessor_unsigned_t::init(len, param);
     length_    = len;
     tablename_ = param->get_string(grib_handle_of_accessor(this), 0);
-    Assert(length_ >= 0);
+    ECCODES_ASSERT(length_ >= 0);
 }
 
 static int test_bit(long a, long b)

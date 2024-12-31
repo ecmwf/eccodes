@@ -55,7 +55,7 @@ int grib_accessor_simple_packing_error_t::unpack_double(double* val, size_t* len
     else if (!strcmp(floatType_, "ieee"))
         *val = grib_ieeefloat_error(referenceValue);
     else
-        Assert(1 == 0);
+        ECCODES_ASSERT(1 == 0);
 
     if (bitsPerValue != 0)
         *val = (*val + codes_power<double>(binaryScaleFactor, 2)) * codes_power<double>(-decimalScaleFactor, 10) * 0.5;

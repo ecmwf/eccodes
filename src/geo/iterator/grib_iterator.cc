@@ -20,8 +20,8 @@
     #include "geo/GeoIterator.h"
 
     // eccodes macros conflict with eckit
-    #ifdef Assert
-        #undef Assert
+    #ifdef ECCODES_ASSERT
+        #undef ECCODES_ASSERT
     #endif
 #endif
 
@@ -114,8 +114,8 @@ grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int
     grib_iterator* i = (grib_iterator*)grib_context_malloc_clear(ch->context, sizeof(grib_iterator));
 
     #if defined(HAVE_ECKIT_GEO)
-    static const auto* eckit_geo = codes_getenv("ECCODES_ECKIT_GEO");
-    if (eckit_geo != nullptr && strcmp(eckit_geo, "1") == 0) {
+    const int eckit_geo = ch->context->eckit_geo; // check environment variable
+    if (eckit_geo) {
         struct InitMain
         {
             InitMain()
@@ -126,8 +126,14 @@ grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int
                 }
             }
         } static const init_main;
-
-        i->iterator = new eccodes::geo::GeoIterator(const_cast<grib_handle*>(ch), flags);
+        try {
+            i->iterator = new eccodes::geo::GeoIterator(const_cast<grib_handle*>(ch), flags);
+        }
+        catch(std::exception& e) {
+            grib_context_log(ch->context, GRIB_LOG_ERROR, "grib_iterator_new: Exception thrown (%s)", e.what());
+            *error = GRIB_GEOCALCULUS_PROBLEM;
+            return NULL;
+        }
     }
     else
     #endif
@@ -164,7 +170,8 @@ grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int
 
 int grib_iterator_delete(grib_iterator* i)
 {
-    grib_context_log(ch->context, GRIB_LOG_ERROR,
+    grib_context* c = grib_context_get_default();
+    grib_context_log(c, GRIB_LOG_ERROR,
                      "Geoiterator functionality not enabled. Please rebuild with -DENABLE_GEOGRAPHY=ON");
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }

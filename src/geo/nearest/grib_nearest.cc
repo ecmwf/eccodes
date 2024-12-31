@@ -145,8 +145,8 @@ int Nearest::grib_nearest_find_generic(
         /* First pass: collect all latitudes and longitudes */
         while (grib_iterator_next(iter, &lat, &lon, &the_value)) {
             ++the_index;
-            Assert(ilat < *out_lats_count);
-            Assert(ilon < *out_lons_count);
+            ECCODES_ASSERT(ilat < *out_lats_count);
+            ECCODES_ASSERT(ilon < *out_lons_count);
             (*out_lats)[ilat++] = lat;
             (*out_lons)[ilon++] = lon;
         }
@@ -156,7 +156,7 @@ int Nearest::grib_nearest_find_generic(
         grib_binary_search(*out_lats, *out_lats_count - 1, inlat, &idx_upper, &idx_lower);
         lat2 = (*out_lats)[idx_upper];
         lat1 = (*out_lats)[idx_lower];
-        Assert(lat1 <= lat2);
+        ECCODES_ASSERT(lat1 <= lat2);
 
         /* Second pass: Iterate again and collect candidate neighbours */
         grib_iterator_reset(iter);
@@ -193,7 +193,7 @@ int Nearest::grib_nearest_find_generic(
     /* Sanity check for sorting */
 #ifdef DEBUG
     for (i = 0; i < nneighbours - 1; ++i) {
-        Assert(neighbours[i].m_dist <= neighbours[i + 1].m_dist);
+        ECCODES_ASSERT(neighbours[i].m_dist <= neighbours[i + 1].m_dist);
     }
 #endif
 
@@ -344,7 +344,7 @@ int grib_nearest_find_multiple(
     if (is_lsm) {
         int noland = 1;
         /* ECC-499: In land-sea mask mode, 'values' cannot be NULL because we need to query whether >= 0.5 */
-        Assert(values);
+        ECCODES_ASSERT(values);
         for (i = 0; i < npoints; i++) {
             ret = grib_nearest_find(nearest, h, inlats[i], inlons[i], flags, qoutlats, qoutlons,
                                     qvalues, qdistances, qindexes, &len);
@@ -421,7 +421,7 @@ int grib_nearest_find(
     grib_handle* h        = (grib_handle*)ch;
     if (!nearest)
         return GRIB_INVALID_ARGUMENT;
-    Assert(flags <= (GRIB_NEAREST_SAME_GRID | GRIB_NEAREST_SAME_DATA | GRIB_NEAREST_SAME_POINT));
+    ECCODES_ASSERT(flags <= (GRIB_NEAREST_SAME_GRID | GRIB_NEAREST_SAME_DATA | GRIB_NEAREST_SAME_POINT));
 
     int ret = nearest->nearest->find(h, inlat, inlon, flags, outlats, outlons, values, distances, indexes, len);
     if (ret != GRIB_SUCCESS) {

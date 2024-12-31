@@ -57,8 +57,8 @@ static int encode_file(const char* input_file, const char* output_file)
 
     FILE* in  = fopen(input_file, "rb");
     FILE* out = fopen(output_file, "wb");
-    Assert(in);
-    Assert(out);
+    ECCODES_ASSERT(in);
+    ECCODES_ASSERT(out);
 
     while ((source_handle = grib_handle_new_from_file(0, in, &err)) != NULL) {
         size_t size = 0, values_len = 0;
@@ -68,7 +68,7 @@ static int encode_file(const char* input_file, const char* output_file)
         double d, e;
 
         grib_handle* clone_handle = grib_handle_clone(source_handle);
-        Assert(clone_handle);
+        ECCODES_ASSERT(clone_handle);
 
         GRIB_CHECK(grib_get_size(clone_handle, "values", &values_len), 0);
         values = (double*)malloc(values_len * sizeof(double));

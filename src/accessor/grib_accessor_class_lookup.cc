@@ -97,7 +97,7 @@ int grib_accessor_lookup_t::unpack_long(long* val, size_t* len)
 
     /* This is used when reparsing or rebuilding */
     if (h->loader) {
-        Assert(*len == 1);
+        ECCODES_ASSERT(*len == 1);
         return h->loader->lookup_long(h->context, h->loader, name_, val);
     }
 

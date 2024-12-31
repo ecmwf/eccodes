@@ -268,7 +268,7 @@ int Regular::find(grib_handle* h,
              *}
              */
             /* Using the brute force approach described above */
-            /* Assert(k_[kk] < nvalues); */
+            /* ECCODES_ASSERT(k_[kk] < nvalues); */
             /* values[kk]=nearest->values[k_[kk]]; */
 
             if (k_[kk] >= INT_MAX) {

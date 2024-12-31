@@ -106,7 +106,7 @@ int grib_accessor_latlon_increment_t::unpack_double(double* val, size_t* len)
         *val = GRIB_MISSING_DOUBLE;
     }
     else {
-        Assert(angleDivisor != 0);
+        ECCODES_ASSERT(angleDivisor != 0);
         *val = (double)directionIncrement / angleDivisor * angleMultiplier;
     }
 

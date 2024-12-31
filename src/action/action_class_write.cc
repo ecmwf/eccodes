@@ -65,7 +65,7 @@ int Write::execute(grib_handle* h)
         }
     }
 
-    Assert(filename);
+    ECCODES_ASSERT(filename);
     if (append_)
         of = grib_file_open(filename, "a", &err);
     else

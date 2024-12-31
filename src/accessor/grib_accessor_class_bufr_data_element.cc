@@ -476,7 +476,7 @@ int grib_accessor_bufr_data_element_t::is_missing()
             err = unpack_long(&value, &size2);
         }
         if (err) return 0; /* TODO: no way of propagating the error up */
-        Assert(size2 == size);
+        ECCODES_ASSERT(size2 == size);
         if (size > 1) {
             for (i = 0; i < size; i++) {
                 if (!grib_is_missing_long(this, values[i])) {
@@ -504,7 +504,7 @@ int grib_accessor_bufr_data_element_t::is_missing()
             err = unpack_double(&value, &size2);
         }
         if (err) return 0; /* TODO: no way of propagating the error up */
-        Assert(size2 == size);
+        ECCODES_ASSERT(size2 == size);
         if (size > 1) {
             for (i = 0; i < size; ++i) {
                 if (!grib_is_missing_double(this, values[i])) {
