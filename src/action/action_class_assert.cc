@@ -12,7 +12,7 @@
 
 grib_action* grib_action_create_assert(grib_context* context, grib_expression* expression)
 {
-    eccodes::action::ActionAssert* act = new eccodes::action::ActionAssert();
+    eccodes::action::Assert* act = new eccodes::action::Assert();
 
     act->next_       = NULL;
     act->name_       = grib_context_strdup_persistent(context, "assertion");
@@ -26,7 +26,7 @@ grib_action* grib_action_create_assert(grib_context* context, grib_expression* e
 namespace eccodes::action
 {
 
-int ActionAssert::create_accessor(grib_section* p, grib_loader* h)
+int Assert::create_accessor(grib_section* p, grib_loader* h)
 {
     grib_accessor* as = grib_accessor_factory(p, this, 0, NULL);
     if (!as)
@@ -38,7 +38,7 @@ int ActionAssert::create_accessor(grib_section* p, grib_loader* h)
     return GRIB_SUCCESS;
 }
 
-void ActionAssert::dump(FILE* f, int lvl)
+void Assert::dump(FILE* f, int lvl)
 {
     // int i = 0;
     // for (i = 0; i < lvl; i++)
@@ -47,7 +47,7 @@ void ActionAssert::dump(FILE* f, int lvl)
     // printf("\n");
 }
 
-void ActionAssert::destroy(grib_context* context)
+void Assert::destroy(grib_context* context)
 {
     expression_->destroy(context);
     delete expression_;
@@ -57,7 +57,7 @@ void ActionAssert::destroy(grib_context* context)
     Action::destroy(context);
 }
 
-int ActionAssert::execute(grib_handle* h)
+int Assert::execute(grib_handle* h)
 {
     int ret    = 0;
     double res = 0;
@@ -76,7 +76,7 @@ int ActionAssert::execute(grib_handle* h)
     }
 }
 
-int ActionAssert::notify_change(grib_accessor* observer, grib_accessor* observed)
+int Assert::notify_change(grib_accessor* observer, grib_accessor* observed)
 {
     int ret = GRIB_SUCCESS;
     long lres;

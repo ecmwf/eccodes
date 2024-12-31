@@ -15,11 +15,10 @@
 namespace eccodes::action
 {
 
-// TODO(maee): After renaming Assert Macro to ASSERT, change class name from ActionAssert to Assert
-class ActionAssert : public Action
+class Assert : public Action
 {
 public:
-    ActionAssert() { class_name_ = "action_class_assert"; }
+    Assert() { class_name_ = "action_class_assert"; }
 
     void dump(FILE*, int) override;
     void destroy(grib_context*) override;
