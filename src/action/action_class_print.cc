@@ -12,42 +12,51 @@
 
 grib_action* grib_action_create_print(grib_context* context, const char* name, char* outname)
 {
+    return new eccodes::action::Print(context, name, outname);
+}
+
+namespace eccodes::action
+{
+
+Print::Print(grib_context* context, const char* name, char* outname)
+{
     char buf[1024];
 
-    eccodes::action::Print* act = new eccodes::action::Print();
-
-    act->op_      = grib_context_strdup_persistent(context, "section");
-    act->context_ = context;
-    act->name2_    = grib_context_strdup_persistent(context, name);
+    class_name_ = "action_class_print";
+    op_         = grib_context_strdup_persistent(context, "section");
+    context_    = context;
+    name2_      = grib_context_strdup_persistent(context, name);
 
     if (outname) {
-        FILE* out     = NULL;
-        int ioerr     = 0;
-        act->outname_ = grib_context_strdup_persistent(context, outname);
-        out           = fopen(outname, "w");
-        ioerr         = errno;
+        FILE* out = nullptr;
+        int ioerr = 0;
+        outname_  = grib_context_strdup_persistent(context, outname);
+        out       = fopen(outname, "w");
+        ioerr     = errno;
         if (!out) {
-            grib_context_log(act->context_, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
+            grib_context_log(context_, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
                              "IO ERROR: %s: %s", strerror(ioerr), outname);
         }
         if (out)
             fclose(out);
     }
 
-    snprintf(buf, 1024, "print%p", (void*)act->name2_);
+    snprintf(buf, 1024, "print%p", (void*)name2_);
 
-    act->name_ = grib_context_strdup_persistent(context, buf);
-
-    return act;
+    name_ = grib_context_strdup_persistent(context, buf);
 }
 
-namespace eccodes::action
+Print::~Print()
 {
+    grib_context_free_persistent(context_, name_);
+    grib_context_free_persistent(context_, name2_);
+    grib_context_free_persistent(context_, op_);
+}
 
 int Print::execute(grib_handle* h)
 {
     int err   = 0;
-    FILE* out = NULL;
+    FILE* out = nullptr;
     int ioerr = 0;
 
     if (outname_) {
@@ -63,21 +72,12 @@ int Print::execute(grib_handle* h)
         out = stdout;
     }
 
-    err = grib_recompose_print(h, NULL, name2_, 0, out);
+    err = grib_recompose_print(h, nullptr, name2_, 0, out);
 
     if (outname_)
         fclose(out);
 
     return err;
-}
-
-void Print::destroy(grib_context* context)
-{
-    grib_context_free_persistent(context, name_);
-    grib_context_free_persistent(context, name2_);
-    grib_context_free_persistent(context, op_);
-
-    Action::destroy(context);
 }
 
 int Print::create_accessor(grib_section* p, grib_loader* h)

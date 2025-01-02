@@ -18,10 +18,10 @@ namespace eccodes::action
 class Rename : public Action
 {
 public:
-    Rename() { class_name_ = "action_class_rename"; }
+    Rename(grib_context* context, char* the_old, char* the_new);
+    ~Rename() override;
 
     void dump(FILE*, int) override;
-    void destroy(grib_context*) override;
     int create_accessor(grib_section*, grib_loader*) override;
 
     char* the_old_ = nullptr;

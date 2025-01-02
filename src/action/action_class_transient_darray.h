@@ -18,10 +18,10 @@ namespace eccodes::action
 class TransientDArray : public Gen
 {
 public:
-    TransientDArray() { class_name_ = "action_class_transient_darray"; }
+    TransientDArray(grib_context* context, const char* name, grib_darray* darray, int flags);
+    ~TransientDArray() override;
 
     void dump(FILE*, int) override;
-    void destroy(grib_context*) override;
     int execute(grib_handle* h) override;
 
     grib_darray* darray_ = nullptr;

@@ -16,22 +16,7 @@ grib_action* grib_action_create_switch(grib_context* context,
                                        grib_case* Case,
                                        grib_action* Default)
 {
-    char name[1024];
-    const size_t nameLen = sizeof(name);
-
-    eccodes::action::Switch* act = new eccodes::action::Switch();
-
-    act->op_      = grib_context_strdup_persistent(context, "section");
-    act->context_ = context;
-    act->args_    = args;
-    act->Case_    = Case;
-    act->Default_ = Default;
-
-    snprintf(name, nameLen, "_switch%p", (void*)act);
-
-    act->name_ = grib_context_strdup_persistent(context, name);
-
-    return act;
+    return new eccodes::action::Switch(context, args, Case, Default);
 }
 
 grib_case* grib_case_new(grib_context* c, grib_arguments* values, grib_action* action)
@@ -46,6 +31,39 @@ grib_case* grib_case_new(grib_context* c, grib_arguments* values, grib_action* a
 
 namespace eccodes::action
 {
+
+Switch::Switch(grib_context* context, grib_arguments* args, grib_case* Case, grib_action* Default)
+{
+    class_name_ = "action_class_switch";
+    op_         = grib_context_strdup_persistent(context, "section");
+    context_    = context;
+    args_       = args;
+    Case_       = Case;
+    Default_    = Default;
+
+    char name[1024];
+    snprintf(name, sizeof(name), "_switch%p", (void*)this);
+
+    name_ = grib_context_strdup_persistent(context, name);
+}
+
+Switch::~Switch()
+{
+    grib_case* t = Case_;
+
+    while (t) {
+        grib_case* nt = t->next;
+        delete t->action;
+        grib_arguments_free(context_, t->values);
+        grib_context_free(context_, t);
+        t = nt;
+    }
+
+    delete Default_;
+
+    grib_context_free_persistent(context_, name_);
+    grib_context_free_persistent(context_, op_);
+}
 
 int Switch::execute(grib_handle* h)
 {
@@ -146,28 +164,6 @@ int Switch::execute(grib_handle* h)
     }
 
     return GRIB_SUCCESS;
-}
-
-void Switch::destroy(grib_context* context)
-{
-    grib_case* t = Case_;
-
-    while (t) {
-        grib_case* nt = t->next;
-        t->action->destroy(context);
-        delete t->action;
-        grib_arguments_free(context, t->values);
-        grib_context_free(context, t);
-        t = nt;
-    }
-
-    Default_->destroy(context);
-    delete Default_;
-
-    grib_context_free_persistent(context, name_);
-    grib_context_free_persistent(context, op_);
-
-    Section::destroy(context);
 }
 
 }  // namespace eccodes::action

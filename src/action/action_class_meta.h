@@ -18,7 +18,8 @@ namespace eccodes::action
 class Meta : public Gen
 {
 public:
-    Meta() { class_name_ = "action_class_meta"; }
+    Meta(grib_context* context, const char* name, const char* op,
+         grib_arguments* params, grib_arguments* default_value, unsigned long flags, const char* name_space);
 
     void dump(FILE*, int) override;
     int execute(grib_handle* h) override;

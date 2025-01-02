@@ -56,34 +56,27 @@ grib_action* grib_action_create_concept(grib_context* context,
                                         const char* basename, const char* name_space, const char* defaultkey,
                                         const char* masterDir, const char* localDir, const char* ecmfDir, int flags, int nofail)
 {
-    eccodes::action::Concept* act = new eccodes::action::Concept();
+    return new eccodes::action::Concept(context, name, concept_value, basename, name_space, defaultkey, masterDir, localDir, ecmfDir, flags, nofail);
+}
 
-    act->op_      = grib_context_strdup_persistent(context, "concept");
-    act->context_ = context;
-    act->flags_   = flags;
 
-    if (name_space)
-        act->name_space_ = grib_context_strdup_persistent(context, name_space);
+namespace eccodes::action
+{
 
-    if (basename)
-        act->basename_ = grib_context_strdup_persistent(context, basename);
-    else
-        act->basename_ = NULL;
+Concept::Concept(grib_context* context,
+                 const char* name,
+                 grib_concept_value* concept_value,
+                 const char* basename, const char* name_space, const char* defaultkey,
+                 const char* masterDir, const char* localDir, const char* ecmfDir, int flags, int nofail) :
+Gen(context, name, "concept", 0, nullptr, nullptr, flags, name_space, nullptr)
+{
+    class_name_    = "action_class_concept";
+    basename_      = basename ? grib_context_strdup_persistent(context, basename) : nullptr;
+    masterDir_     = masterDir ? grib_context_strdup_persistent(context, masterDir) : nullptr;
+    localDir_      = localDir ? grib_context_strdup_persistent(context, localDir) : nullptr;
+    defaultkey_    = defaultkey ? grib_context_strdup_persistent(context, defaultkey) : nullptr;
+    concept_value_ = concept_value;
 
-    if (masterDir)
-        act->masterDir_ = grib_context_strdup_persistent(context, masterDir);
-    else
-        act->masterDir_ = NULL;
-
-    if (localDir)
-        act->localDir_ = grib_context_strdup_persistent(context, localDir);
-    else
-        act->localDir_ = NULL;
-
-    if (defaultkey)
-        act->defaultkey_ = grib_context_strdup_persistent(context, defaultkey);
-
-    act->concept_value_ = concept_value;
     if (concept_value) {
         grib_concept_value* conc_val = concept_value;
         grib_trie* index             = grib_trie_new(context);
@@ -93,15 +86,25 @@ grib_action* grib_action_create_concept(grib_context* context,
             conc_val = conc_val->next;
         }
     }
-    act->name_ = grib_context_strdup_persistent(context, name);
 
-    act->nofail_ = nofail;
-
-    return act;
+    nofail_ = nofail;
 }
 
-namespace eccodes::action
+Concept::~Concept()
 {
+    grib_concept_value* v = concept_value_;
+    if (v) {
+        grib_trie_delete_container(v->index);
+    }
+    while (v) {
+        grib_concept_value* n = v->next;
+        grib_concept_value_delete(context_, v);
+        v = n;
+    }
+    grib_context_free_persistent(context_, masterDir_);
+    grib_context_free_persistent(context_, localDir_);
+    grib_context_free_persistent(context_, basename_);
+}
 
 void Concept::dump(FILE* f, int lvl)
 {
@@ -113,24 +116,6 @@ void Concept::dump(FILE* f, int lvl)
     for (int i = 0; i < lvl; i++)
         grib_context_print(context_, f, "     ");
     printf("}\n");
-}
-
-void Concept::destroy(grib_context* context)
-{
-    grib_concept_value* v = concept_value_;
-    if (v) {
-        grib_trie_delete_container(v->index);
-    }
-    while (v) {
-        grib_concept_value* n = v->next;
-        grib_concept_value_delete(context, v);
-        v = n;
-    }
-    grib_context_free_persistent(context, masterDir_);
-    grib_context_free_persistent(context, localDir_);
-    grib_context_free_persistent(context, basename_);
-
-    Gen::destroy(context);
 }
 
 grib_concept_value* Concept::get_concept_impl(grib_handle* h)

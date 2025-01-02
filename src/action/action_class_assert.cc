@@ -12,19 +12,29 @@
 
 grib_action* grib_action_create_assert(grib_context* context, grib_expression* expression)
 {
-    eccodes::action::Assert* act = new eccodes::action::Assert();
-
-    act->next_       = NULL;
-    act->name_       = grib_context_strdup_persistent(context, "assertion");
-    act->op_         = grib_context_strdup_persistent(context, "evaluate");
-    act->context_    = context;
-    act->expression_ = expression;
-
-    return act;
+    return new eccodes::action::Assert(context, expression);
 }
 
 namespace eccodes::action
 {
+
+Assert::Assert(grib_context* context, grib_expression* expression)
+{
+    class_name_ = "action_class_assert";
+    next_       = NULL;
+    name_       = grib_context_strdup_persistent(context, "assertion");
+    op_         = grib_context_strdup_persistent(context, "evaluate");
+    context_    = context;
+    expression_ = expression;
+}
+
+Assert::~Assert()
+{
+    expression_->destroy(context_);
+    delete expression_;
+    grib_context_free_persistent(context_, name_);
+    grib_context_free_persistent(context_, op_);
+}
 
 int Assert::create_accessor(grib_section* p, grib_loader* h)
 {
@@ -45,16 +55,6 @@ void Assert::dump(FILE* f, int lvl)
     //     grib_context_print(act->context, f, "     ");
     // grib_expression_print(act->context, self->expression, 0);
     // printf("\n");
-}
-
-void Assert::destroy(grib_context* context)
-{
-    expression_->destroy(context);
-    delete expression_;
-    grib_context_free_persistent(context, name_);
-    grib_context_free_persistent(context, op_);
-
-    Action::destroy(context);
 }
 
 int Assert::execute(grib_handle* h)

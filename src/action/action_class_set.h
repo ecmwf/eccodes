@@ -18,14 +18,14 @@ namespace eccodes::action
 class Set : public Action
 {
 public:
-    Set() { class_name_ = "action_class_set"; }
+    Set(grib_context* context, const char* name, grib_expression* expression, int nofail);
+    ~Set() override;
 
     void dump(FILE*, int) override;
-    void destroy(grib_context*) override;
     int execute(grib_handle* h) override;
 
     grib_expression* expression_ = nullptr;
-    char* name2_                  = nullptr;
+    char* name2_                 = nullptr;
     int nofail_                  = 0;
 };
 

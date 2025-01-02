@@ -19,8 +19,6 @@ class Action
 {
 public:
     virtual ~Action() {}
-    virtual void init() {};
-    virtual void destroy(grib_context*) {};
     virtual void dump(FILE*, int) {};
     virtual void xref(FILE* f, const char* path) {};
     virtual void destroy(grib_context*, grib_action*) {};

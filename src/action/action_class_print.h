@@ -18,9 +18,9 @@ namespace eccodes::action
 class Print : public Action
 {
 public:
-    Print() { class_name_ = "action_class_print"; }
+    Print(grib_context* context, const char* name, char* outname);
+    ~Print() override;
 
-    void destroy(grib_context*) override;
     int create_accessor(grib_section*, grib_loader*) override;
     int execute(grib_handle* h) override;
 

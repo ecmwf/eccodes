@@ -18,10 +18,10 @@ namespace eccodes::action
 class SetDArray : public Action
 {
 public:
-    SetDArray() { class_name_ = "action_class_set_darray"; }
+    SetDArray(grib_context* context, const char* name, grib_darray* darray);
+    ~SetDArray() override;
 
     void dump(FILE*, int) override;
-    void destroy(grib_context*) override;
     int execute(grib_handle* h) override;
 
     grib_darray* darray_ = nullptr;
@@ -30,6 +30,4 @@ public:
 
 }  // namespace eccodes::action
 
-grib_action* grib_action_create_set_darray(grib_context* context,
-                                           const char* name,
-                                           grib_darray* darray);
+grib_action* grib_action_create_set_darray(grib_context* context, const char* name, grib_darray* darray);

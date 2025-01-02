@@ -13,26 +13,20 @@
 grib_action* grib_action_create_meta(grib_context* context, const char* name, const char* op,
                                      grib_arguments* params, grib_arguments* default_value, unsigned long flags, const char* name_space)
 {
-    eccodes::action::Meta* act = new eccodes::action::Meta();
-
-    act->next_ = NULL;
-    act->name_ = grib_context_strdup_persistent(context, name);
-    act->op_   = grib_context_strdup_persistent(context, op);
-    if (name_space)
-        act->name_space_ = grib_context_strdup_persistent(context, name_space);
-    act->context_       = context;
-    act->flags_         = flags;
-    act->params_        = params;
-    act->default_value_ = default_value;
-    act->len_           = 0;
-
-    /* grib_arguments_print(context,a->params,0); printf("\n"); */
-
-    return act;
+    return new eccodes::action::Meta(context, name, op, params, default_value, flags, name_space);
 }
 
 namespace eccodes::action
 {
+
+Meta::Meta(grib_context* context, const char* name, const char* op,
+           grib_arguments* params, grib_arguments* default_value, unsigned long flags, const char* name_space) :
+    Gen(context, name, op, 0, params, default_value, flags, name_space, NULL)
+{
+    class_name_ = "action_class_meta";
+
+    /* grib_arguments_print(context,a->params,0); printf("\n"); */
+}
 
 void Meta::dump(FILE* f, int lvl)
 {

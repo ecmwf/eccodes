@@ -18,9 +18,9 @@ namespace eccodes::action
 class Switch : public Section
 {
 public:
-    Switch() { class_name_ = "action_class_switch"; }
+    Switch(grib_context* context, grib_arguments* args, grib_case* Case, grib_action* Default);
+    ~Switch() override;
 
-    void destroy(grib_context*) override;
     int execute(grib_handle* h) override;
 
     grib_arguments* args_ = nullptr;

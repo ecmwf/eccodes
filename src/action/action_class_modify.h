@@ -18,16 +18,15 @@ namespace eccodes::action
 class Modify : public Action
 {
 public:
-    Modify() { class_name_ = "action_class_modify"; }
+    Modify(grib_context* context, const char* name, long flags);
+    ~Modify() override;
 
-    void destroy(grib_context*) override;
     int create_accessor(grib_section*, grib_loader*) override;
 
-    long flags_ = 0;
-    char* type_name_ = nullptr; // TODO(maee): find a better member variable name
+    long flags_      = 0; // TODO(maee): rename shadowed variable
+    char* type_name_ = nullptr;  // TODO(maee): find a better member variable name
 };
 
 }  // namespace eccodes::action
 
 grib_action* grib_action_create_modify(grib_context* context, const char* name, long flags);
-

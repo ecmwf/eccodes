@@ -18,10 +18,10 @@ namespace eccodes::action
 class Template : public Section
 {
 public:
-    Template() { class_name_ = "action_class_template"; }
+    Template(grib_context* context, int nofail, const char* name, const char* arg1);
+    ~Template() override;
 
     void dump(FILE*, int) override;
-    void destroy(grib_context*) override;
     int create_accessor(grib_section*, grib_loader*) override;
     grib_action* reparse(grib_accessor* acc, int* doit) override;
 

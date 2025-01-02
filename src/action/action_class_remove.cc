@@ -12,19 +12,28 @@
 
 grib_action* grib_action_create_remove(grib_context* context, grib_arguments* args)
 {
-    eccodes::action::Remove* act = new eccodes::action::Remove();
-
-    act->next_                   = NULL;
-    act->name_                   = grib_context_strdup_persistent(context, "DELETE");
-    act->op_                     = grib_context_strdup_persistent(context, "remove");
-    act->context_                = context;
-    act->args_                   = args;
-
-    return act;
+    return new eccodes::action::Remove(context, args);
 }
 
 namespace eccodes::action
 {
+
+Remove::Remove(grib_context* context, grib_arguments* args)
+{
+    class_name_ = "action_class_remove";
+    next_       = NULL;
+    name_       = grib_context_strdup_persistent(context, "DELETE");
+    op_         = grib_context_strdup_persistent(context, "remove");
+    context_    = context;
+    args_       = args;
+}
+
+Remove::~Remove()
+{
+    grib_arguments_free(context_, args_);
+    grib_context_free_persistent(context_, name_);
+    grib_context_free_persistent(context_, op_);
+}
 
 static void remove_accessor(grib_accessor* a)
 {
@@ -75,15 +84,6 @@ void Remove::dump(FILE* f, int lvl)
     //     grib_context_print(context_, f, "     ");
     // grib_context_print(context_, f, "remove %s as %s in %s\n",
     //     grib_arguments_get_name(0, args_, 0), name_, grib_arguments_get_name(0, args_, 1));
-}
-
-void Remove::destroy(grib_context* context)
-{
-    grib_arguments_free(context, args_);
-    grib_context_free_persistent(context, name_);
-    grib_context_free_persistent(context, op_);
-
-    Action::destroy(context);
 }
 
 }  // namespace eccodes::action

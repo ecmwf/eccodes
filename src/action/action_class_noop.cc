@@ -12,29 +12,29 @@
 
 grib_action* grib_action_create_noop(grib_context* context, const char* fname)
 {
-    char buf[1024];
-
-    eccodes::action::Noop* act = new eccodes::action::Noop();
-
-    act->op_      = grib_context_strdup_persistent(context, "section");
-    act->context_ = context;
-
-    snprintf(buf, sizeof(buf), "_noop%p", (void*)act);
-
-    act->name_    = grib_context_strdup_persistent(context, buf);
-
-    return act;
+    return new eccodes::action::Noop(context, fname);
 }
 
 namespace eccodes::action
 {
 
-void Noop::destroy(grib_context* context)
+Noop::Noop(grib_context* context, const char* fname)
 {
-    grib_context_free_persistent(context, name_);
-    grib_context_free_persistent(context, op_);
+    char buf[1024];
 
-    Action::destroy(context);
+    class_name_ = "action_class_noop";
+    op_      = grib_context_strdup_persistent(context, "section");
+    context_ = context;
+
+    snprintf(buf, sizeof(buf), "_noop%p", (void*)this);
+
+    name_    = grib_context_strdup_persistent(context, buf);
+}
+
+Noop::~Noop()
+{
+    grib_context_free_persistent(context_, name_);
+    grib_context_free_persistent(context_, op_);
 }
 
 int Noop::execute(grib_handle* h)

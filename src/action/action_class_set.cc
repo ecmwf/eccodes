@@ -13,25 +13,37 @@
 grib_action* grib_action_create_set(grib_context* context,
                                     const char* name, grib_expression* expression, int nofail)
 {
-    char buf[1024];
-
-    eccodes::action::Set* act = new eccodes::action::Set();
-
-    act->op_         = grib_context_strdup_persistent(context, "section");
-    act->context_    = context;
-    act->expression_ = expression;
-    act->name2_       = grib_context_strdup_persistent(context, name);
-    act->nofail_     = nofail;
-
-    snprintf(buf, 1024, "set%p", (void*)expression);
-
-    act->name_      = grib_context_strdup_persistent(context, buf);
-
-    return act;
+    return new eccodes::action::Set(context, name, expression, nofail);
 }
 
 namespace eccodes::action
 {
+
+Set::Set(grib_context* context,
+         const char* name, grib_expression* expression, int nofail)
+{
+    char buf[1024];
+
+    class_name_ = "action_class_set";
+    op_         = grib_context_strdup_persistent(context, "section");
+    context_    = context;
+    expression_ = expression;
+    name2_      = grib_context_strdup_persistent(context, name);
+    nofail_     = nofail;
+
+    snprintf(buf, 1024, "set%p", (void*)expression);
+
+    name_ = grib_context_strdup_persistent(context, buf);
+}
+
+Set::~Set()
+{
+    grib_context_free_persistent(context_, name_);
+    expression_->destroy(context_);
+    delete expression_;
+    grib_context_free_persistent(context_, name2_);
+    grib_context_free_persistent(context_, op_);
+}
 
 int Set::execute(grib_handle* h)
 {
@@ -53,17 +65,6 @@ void Set::dump(FILE* f, int lvl)
         grib_context_print(context_, f, "     ");
     grib_context_print(context_, f, name2_);
     printf("\n");
-}
-
-void Set::destroy(grib_context* context)
-{
-    grib_context_free_persistent(context, name_);
-    expression_->destroy(context);
-    delete expression_;
-    grib_context_free_persistent(context, name2_);
-    grib_context_free_persistent(context, op_);
-
-    Action::destroy(context);
 }
 
 }  // namespace eccodes::action

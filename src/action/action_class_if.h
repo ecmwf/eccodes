@@ -18,10 +18,13 @@ namespace eccodes::action
 class If : public Section
 {
 public:
-    If() { class_name_ = "action_class_if"; }
+    If(grib_context* context,
+       grib_expression* expression,
+       grib_action* block_true, grib_action* block_false, int transient,
+       int lineno, const char* file_being_parsed);
+    ~If() override;
 
     void dump(FILE*, int) override;
-    void destroy(grib_context*) override;
     int create_accessor(grib_section*, grib_loader*) override;
     grib_action* reparse(grib_accessor* acc, int* doit) override;
     int execute(grib_handle* h) override;

@@ -20,20 +20,27 @@ grib_action* grib_action_create_when(grib_context* context,
                                      grib_expression* expression,
                                      grib_action* block_true, grib_action* block_false)
 {
+    return new eccodes::action::When(context, expression, block_true, block_false);
+}
+
+namespace eccodes::action
+{
+
+When::When(grib_context* context, grib_expression* expression, grib_action* block_true, grib_action* block_false)
+{
     char name[1024];
     const size_t nameLen = sizeof(name);
 
-    eccodes::action::When* act = new eccodes::action::When();
-
-    act->op_          = grib_context_strdup_persistent(context, "when");
-    act->context_     = context;
-    act->expression_  = expression;
-    act->block_true_  = block_true;
-    act->block_false_ = block_false;
+    class_name_  = "action_class_when";
+    op_          = grib_context_strdup_persistent(context, "when");
+    context_     = context;
+    expression_  = expression;
+    block_true_  = block_true;
+    block_false_ = block_false;
 
     snprintf(name, nameLen, "_when%p", (void*)expression);
 
-    act->debug_info_ = NULL;
+    debug_info_ = NULL;
     if (context->debug > 0) {
         /* Construct debug information showing definition file and line */
         /* number of IF statement */
@@ -42,17 +49,37 @@ grib_action* grib_action_create_when(grib_context* context,
             char debug_info[1024];
             const size_t infoLen = sizeof(debug_info);
             snprintf(debug_info, infoLen, "File=%s", fbp);
-            act->debug_info_ = grib_context_strdup_persistent(context, debug_info);
+            debug_info_ = grib_context_strdup_persistent(context, debug_info);
         }
     }
 
-    act->name_ = grib_context_strdup_persistent(context, name);
-
-    return act;
+    name_ = grib_context_strdup_persistent(context, name);
 }
 
-namespace eccodes::action
+When::~When()
 {
+    grib_action* t = block_true_;
+
+    while (t) {
+        grib_action* nt = t->next_;
+        delete t;
+        t = nt;
+    }
+
+    t = block_false_;
+    while (t) {
+        grib_action* nt = t->next_;
+        delete t;
+        t = nt;
+    }
+
+    expression_->destroy(context_);
+    delete expression_;
+
+    grib_context_free_persistent(context_, name_);
+    grib_context_free_persistent(context_, debug_info_);
+    grib_context_free_persistent(context_, op_);
+}
 
 int When::create_accessor(grib_section* p, grib_loader* h)
 {
@@ -152,35 +179,6 @@ int When::notify_change(grib_accessor* observer, grib_accessor* observed)
     SET_LOOP(0);
 
     return GRIB_SUCCESS;
-}
-
-void When::destroy(grib_context* context)
-{
-    grib_action* t = block_true_;
-
-    while (t) {
-        grib_action* nt = t->next_;
-        t->destroy(context);
-        delete t;
-        t = nt;
-    }
-
-    t = block_false_;
-    while (t) {
-        grib_action* nt = t->next_;
-        t->destroy(context);
-        delete t;
-        t = nt;
-    }
-
-    expression_->destroy(context);
-    delete expression_;
-
-    grib_context_free_persistent(context, name_);
-    grib_context_free_persistent(context, debug_info_);
-    grib_context_free_persistent(context, op_);
-
-    Action::destroy(context);
 }
 
 }  // namespace eccodes::action

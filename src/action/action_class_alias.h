@@ -18,10 +18,10 @@ namespace eccodes::action
 class Alias : public Action
 {
 public:
-    Alias() { class_name_ = "action_class_alias"; }
+    Alias(grib_context* context, const char* name, const char* arg1, const char* name_space, int flags);
+    ~Alias() override;
 
     void dump(FILE*, int) override;
-    void destroy(grib_context*) override;
     int create_accessor(grib_section*, grib_loader*) override;
 
     char* target_ = nullptr;

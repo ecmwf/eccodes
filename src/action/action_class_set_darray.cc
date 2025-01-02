@@ -14,24 +14,33 @@ grib_action* grib_action_create_set_darray(grib_context* context,
                                            const char* name,
                                            grib_darray* darray)
 {
-    char buf[1024];
-
-    eccodes::action::SetDArray* act = new eccodes::action::SetDArray();
-
-    act->op_      = grib_context_strdup_persistent(context, "section");
-    act->context_ = context;
-    act->darray_  = darray;
-    act->name2_   = grib_context_strdup_persistent(context, name);
-
-    snprintf(buf, 1024, "set_darray%p", (void*)darray);
-
-    act->name_    = grib_context_strdup_persistent(context, buf);
-
-    return act;
+    return new eccodes::action::SetDArray(context, name, darray);
 }
 
 namespace eccodes::action
 {
+
+SetDArray::SetDArray(grib_context* context, const char* name, grib_darray* darray)
+{
+    char buf[1024];
+    class_name_ = "action_class_set_darray";
+    op_         = grib_context_strdup_persistent(context, "section");
+    context_    = context;
+    darray_     = darray;
+    name2_      = grib_context_strdup_persistent(context, name);
+
+    snprintf(buf, 1024, "set_darray%p", (void*)darray);
+
+    name_ = grib_context_strdup_persistent(context, buf);
+}
+
+SetDArray::~SetDArray()
+{
+    grib_context_free_persistent(context_, name2_);
+    grib_darray_delete(darray_);
+    grib_context_free_persistent(context_, name_);
+    grib_context_free_persistent(context_, op_);
+}
 
 int SetDArray::execute(grib_handle* h)
 {
@@ -45,16 +54,6 @@ void SetDArray::dump(FILE* f, int lvl)
         grib_context_print(context_, f, "     ");
     grib_context_print(context_, f, name2_);
     printf("\n");
-}
-
-void SetDArray::destroy(grib_context* context)
-{
-    grib_context_free_persistent(context, name2_);
-    grib_darray_delete(darray_);
-    grib_context_free_persistent(context, name_);
-    grib_context_free_persistent(context, op_);
-
-    Action::destroy(context);
 }
 
 }  // namespace eccodes::action

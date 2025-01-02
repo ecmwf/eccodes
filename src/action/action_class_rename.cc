@@ -13,20 +13,30 @@
 
 grib_action* grib_action_create_rename(grib_context* context, char* the_old, char* the_new)
 {
-    eccodes::action::Rename* act = new eccodes::action::Rename();
-
-    act->next_    = NULL;
-    act->name_    = grib_context_strdup_persistent(context, "RENAME");
-    act->op_      = grib_context_strdup_persistent(context, "rename");
-    act->context_ = context;
-    act->the_old_ = grib_context_strdup_persistent(context, the_old);
-    act->the_new_ = grib_context_strdup_persistent(context, the_new);
-
-    return act;
+    return new eccodes::action::Rename(context, the_old, the_new);
 }
 
 namespace eccodes::action
 {
+
+Rename::Rename(grib_context* context, char* the_old, char* the_new)
+{
+    class_name_ = "action_class_rename";
+    next_       = NULL;
+    name_       = grib_context_strdup_persistent(context, "RENAME");
+    op_         = grib_context_strdup_persistent(context, "rename");
+    context_    = context;
+    the_old_    = grib_context_strdup_persistent(context, the_old);
+    the_new_    = grib_context_strdup_persistent(context, the_new);
+}
+
+Rename::~Rename()
+{
+    grib_context_free_persistent(context_, the_old_);
+    grib_context_free_persistent(context_, the_new_);
+    grib_context_free_persistent(context_, name_);
+    grib_context_free_persistent(context_, op_);
+}
 
 static void rename_accessor(grib_accessor* a, char* name)
 {
@@ -67,16 +77,6 @@ void Rename::dump(FILE* f, int lvl)
         grib_context_print(context_, f, "     ");
 
     grib_context_print(context_, f, "rename %s as %s in %s\n", the_old_, name_, the_new_);
-}
-
-void Rename::destroy(grib_context* context)
-{
-    grib_context_free_persistent(context, the_old_);
-    grib_context_free_persistent(context, the_new_);
-    grib_context_free_persistent(context, name_);
-    grib_context_free_persistent(context, op_);
-
-    Action::destroy(context);
 }
 
 }  // namespace eccodes::action

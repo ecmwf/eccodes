@@ -806,7 +806,6 @@ void grib_context_reset(grib_context* c)
             a = fr->root;
             while (a) {
                 grib_action* na = a->next_;
-                a->destroy(c);
                 delete a;
                 a = na;
             }

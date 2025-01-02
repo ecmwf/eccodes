@@ -12,23 +12,32 @@
 
 grib_action* grib_action_create_template(grib_context* context, int nofail, const char* name, const char* arg1)
 {
-    eccodes::action::Template* act = new eccodes::action::Template();
-
-    act->name_    = grib_context_strdup_persistent(context, name);
-    act->op_      = grib_context_strdup_persistent(context, "section");
-    act->next_    = nullptr;
-    act->context_ = context;
-    act->nofail_  = nofail;
-    if (arg1)
-        act->arg_ = grib_context_strdup_persistent(context, arg1);
-    else
-        act->arg_ = nullptr;
-
-    return act;
+    return new eccodes::action::Template(context, nofail, name, arg1);
 }
 
 namespace eccodes::action
 {
+
+Template::Template(grib_context* context, int nofail, const char* name, const char* arg1)
+{
+    class_name_ = "action_class_template";
+    name_       = grib_context_strdup_persistent(context, name);
+    op_         = grib_context_strdup_persistent(context, "section");
+    context_    = context;
+    nofail_     = nofail;
+
+    if (arg1)
+        arg_ = grib_context_strdup_persistent(context, arg1);
+    else
+        arg_ = nullptr;
+}
+
+Template::~Template()
+{
+    grib_context_free_persistent(context_, arg_);
+    grib_context_free_persistent(context_, name_);
+    grib_context_free_persistent(context_, op_);
+}
 
 void Template::dump(FILE* f, int lvl)
 {
@@ -131,15 +140,6 @@ grib_action* Template::reparse(grib_accessor* acc, int* doit)
     }
 
     return NULL;
-}
-
-void Template::destroy(grib_context* context)
-{
-    grib_context_free_persistent(context, arg_);
-    grib_context_free_persistent(context, name_);
-    grib_context_free_persistent(context, op_);
-
-    Section::destroy(context);
 }
 
 }  // namespace eccodes::action

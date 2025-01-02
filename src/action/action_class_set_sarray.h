@@ -18,10 +18,10 @@ namespace eccodes::action
 class SetSArray : public Action
 {
 public:
-    SetSArray() { class_name_ = "action_class_set_sarray"; }
+    SetSArray(grib_context* context, const char* name, grib_sarray* sarray);
+    ~SetSArray() override;
 
     void dump(FILE*, int) override;
-    void destroy(grib_context*) override;
     int execute(grib_handle* h) override;
 
     grib_sarray* sarray_ = nullptr;

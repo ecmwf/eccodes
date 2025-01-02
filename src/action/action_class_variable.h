@@ -18,7 +18,7 @@ namespace eccodes::action
 class Variable : public Gen
 {
 public:
-    Variable() { class_name_ = "action_class_variable"; }
+    Variable(grib_context* context, const char* name, const char* op, const long len, grib_arguments* params, grib_arguments* default_value, int flags, const char* name_space);
 
     int execute(grib_handle* h) override;
 };

@@ -18,10 +18,14 @@ namespace eccodes::action
 class HashArray : public Gen
 {
 public:
-    HashArray() { class_name_ = "action_class_hash_array"; }
+    HashArray(grib_context* context,
+              const char* name,
+              grib_hash_array_value* hash_array,
+              const char* basename, const char* name_space, const char* defaultkey,
+              const char* masterDir, const char* localDir, const char* ecmfDir, int flags, int nofail);
+    ~HashArray() override;
 
     void dump(FILE*, int) override;
-    void destroy(grib_context*) override;
 
     grib_hash_array_value* get_hash_array_impl(grib_handle* h);
     const char* get_hash_array_full_path();

@@ -853,7 +853,6 @@ grib_action* grib_parse_file(grib_context* gc, const char* filename)
 
         if (error) {
             if (a) {
-                a->destroy(gc);
                 delete a;
             }
             GRIB_MUTEX_UNLOCK(&mutex_file);

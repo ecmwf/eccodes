@@ -18,9 +18,9 @@ namespace eccodes::action
 class Close : public Action
 {
 public:
-    Close() { class_name_ = "action_class_close"; }
+    Close(grib_context* context, const char* filename);
+    ~Close() override;
 
-    void destroy(grib_context*) override;
     int execute(grib_handle* h) override;
 
     char* filename_ = nullptr;

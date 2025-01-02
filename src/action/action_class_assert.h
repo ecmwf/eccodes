@@ -18,10 +18,10 @@ namespace eccodes::action
 class Assert : public Action
 {
 public:
-    Assert() { class_name_ = "action_class_assert"; }
+    Assert(grib_context* context, grib_expression* expression);
+    ~Assert() override;
 
     void dump(FILE*, int) override;
-    void destroy(grib_context*) override;
     int create_accessor(grib_section*, grib_loader*) override;
     int notify_change(grib_accessor* observer, grib_accessor* observed) override;
     int execute(grib_handle* h) override;

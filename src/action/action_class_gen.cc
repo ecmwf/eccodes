@@ -13,14 +13,22 @@
 grib_action* grib_action_create_gen(grib_context* context, const char* name, const char* op, const long len,
                                     grib_arguments* params, grib_arguments* default_value, int flags, const char* name_space, const char* set)
 {
-    eccodes::action::Gen* act = new eccodes::action::Gen();
-    act->next_                = NULL;
-    act->name_                = grib_context_strdup_persistent(context, name);
-    act->op_                  = grib_context_strdup_persistent(context, op);
-    if (name_space)
-        act->name_space_ = grib_context_strdup_persistent(context, name_space);
-    act->context_ = context;
-    act->flags_   = flags;
+    return new eccodes::action::Gen(context, name, op, len, params, default_value, flags, name_space, set);
+}
+
+namespace eccodes::action
+{
+
+Gen::Gen(grib_context* context, const char* name, const char* op, const long len,
+         grib_arguments* params, grib_arguments* default_value, int flags, const char* name_space, const char* set)
+{
+    class_name_ = "action_class_gen";
+    next_       = NULL;
+    name_       = grib_context_strdup_persistent(context, name);
+    op_         = grib_context_strdup_persistent(context, op);
+    name_space_ = name_space ? grib_context_strdup_persistent(context, name_space) : nullptr;
+    context_    = context;
+    flags_      = flags;
 #ifdef CHECK_LOWERCASE_AND_STRING_TYPE
     {
         int flag_lowercase = 0, flag_stringtype = 0;
@@ -34,17 +42,29 @@ grib_action* grib_action_create_gen(grib_context* context, const char* name, con
         }
     }
 #endif
-    act->len_    = len;
-    act->params_ = params;
-    if (set)
-        act->set_ = grib_context_strdup_persistent(context, set);
-    act->default_value_ = default_value;
-
-    return act;
+    len_           = len;
+    params_        = params;
+    set_           = set ? grib_context_strdup_persistent(context, set) : nullptr;
+    default_value_ = default_value;
 }
 
-namespace eccodes::action
+Gen::~Gen()
 {
+    if (params_ != default_value_)
+        grib_arguments_free(context_, params_);
+    grib_arguments_free(context_, default_value_);
+
+    grib_context_free_persistent(context_, name_);
+    grib_context_free_persistent(context_, op_);
+    if (name_space_) {
+        grib_context_free_persistent(context_, name_space_);
+    }
+    if (set_)
+        grib_context_free_persistent(context_, set_);
+    if (defaultkey_) {
+        grib_context_free_persistent(context_, defaultkey_);
+    }
+}
 
 void Gen::dump(FILE* f, int lvl)
 {
@@ -83,25 +103,4 @@ int Gen::notify_change(grib_accessor* notified, grib_accessor* changed)
     return GRIB_SUCCESS;
 }
 
-void Gen::destroy(grib_context* context)
-{
-    if (params_ != default_value_)
-        grib_arguments_free(context, params_);
-    grib_arguments_free(context, default_value_);
-
-    grib_context_free_persistent(context, name_);
-    grib_context_free_persistent(context, op_);
-    if (name_space_) {
-        grib_context_free_persistent(context, name_space_);
-    }
-    if (set_)
-        grib_context_free_persistent(context, set_);
-    if (defaultkey_) {
-        grib_context_free_persistent(context, defaultkey_);
-    }
-
-    Action::destroy(context);
-}
-
 }  // namespace eccodes::action
-

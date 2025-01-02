@@ -12,22 +12,30 @@
 
 grib_action* grib_action_create_close(grib_context* context, const char* filename)
 {
-    char buf[1024];
-    eccodes::action::Close* act = new eccodes::action::Close();
-
-    act->op_       = grib_context_strdup_persistent(context, "section");
-    act->context_  = context;
-    act->filename_ = grib_context_strdup_persistent(context, filename);
-
-    snprintf(buf, 1024, "close_%p", (void*)act->filename_);
-
-    act->name_     = grib_context_strdup_persistent(context, buf);
-
-    return act;
+    return new eccodes::action::Close(context, filename);
 }
 
 namespace eccodes::action
 {
+Close::Close(grib_context* context, const char* filename)
+{
+    class_name_ = "action_class_close";
+    op_         = grib_context_strdup_persistent(context, "section");
+    context_    = context;
+    filename_   = grib_context_strdup_persistent(context, filename);
+
+    char buf[1024];
+    snprintf(buf, sizeof(buf), "close_%p", (void*)filename_);
+
+    name_ = grib_context_strdup_persistent(context, buf);
+}
+
+Close::~Close()
+{
+    grib_context_free_persistent(context_, filename_);
+    grib_context_free_persistent(context_, name_);
+    grib_context_free_persistent(context_, op_);
+}
 
 int Close::execute(grib_handle* h)
 {
@@ -46,15 +54,6 @@ int Close::execute(grib_handle* h)
         grib_file_pool_delete_file(file);
 
     return GRIB_SUCCESS;
-}
-
-void Close::destroy(grib_context* context)
-{
-    grib_context_free_persistent(context, filename_);
-    grib_context_free_persistent(context, name_);
-    grib_context_free_persistent(context, op_);
-
-    Action::destroy(context);
 }
 
 }  // namespace eccodes::action

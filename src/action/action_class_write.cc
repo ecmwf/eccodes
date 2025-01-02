@@ -14,25 +14,34 @@
 
 grib_action* grib_action_create_write(grib_context* context, const char* name, int append, int padtomultiple)
 {
-    char buf[1024];
-
-    eccodes::action::Write* act = new eccodes::action::Write();
-
-    act->op_      = grib_context_strdup_persistent(context, "section");
-    act->context_ = context;
-    act->name2_   = grib_context_strdup_persistent(context, name);
-
-    snprintf(buf, 1024, "write%p", (void*)act->name_);
-
-    act->name_          = grib_context_strdup_persistent(context, buf);
-    act->append_        = append;
-    act->padtomultiple_ = padtomultiple;
-
-    return act;
+    return new eccodes::action::Write(context, name, append, padtomultiple);
 }
 
 namespace eccodes::action
 {
+
+Write::Write(grib_context* context, const char* name, int append, int padtomultiple)
+{
+    char buf[1024];
+
+    class_name_ = "action_class_write";
+    op_         = grib_context_strdup_persistent(context, "section");
+    context_    = context;
+    name2_      = grib_context_strdup_persistent(context, name);
+
+    snprintf(buf, 1024, "write%p", (void*)name_);
+
+    name_          = grib_context_strdup_persistent(context, buf);
+    append_        = append;
+    padtomultiple_ = padtomultiple;
+}
+
+Write::~Write()
+{
+    grib_context_free_persistent(context_, name2_);
+    grib_context_free_persistent(context_, name_);
+    grib_context_free_persistent(context_, op_);
+}
 
 int Write::execute(grib_handle* h)
 {
@@ -125,15 +134,6 @@ int Write::execute(grib_handle* h)
     }
 
     return err;
-}
-
-void Write::destroy(grib_context* context)
-{
-    grib_context_free_persistent(context, name2_);
-    grib_context_free_persistent(context, name_);
-    grib_context_free_persistent(context, op_);
-
-    Action::destroy(context);
 }
 
 }  // namespace eccodes::action

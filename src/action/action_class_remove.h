@@ -18,10 +18,10 @@ namespace eccodes::action
 class Remove : public Action
 {
 public:
-    Remove() { class_name_ = "action_class_remove"; }
+    Remove(grib_context* context, grib_arguments* args);
+    ~Remove() override;
 
     void dump(FILE*, int) override;
-    void destroy(grib_context*) override;
     int create_accessor(grib_section*, grib_loader*) override;
 
     grib_arguments* args_ = nullptr;

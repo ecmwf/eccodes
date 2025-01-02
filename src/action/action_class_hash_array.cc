@@ -44,41 +44,28 @@ grib_action* grib_action_create_hash_array(grib_context* context,
                                            const char* basename, const char* name_space, const char* defaultkey,
                                            const char* masterDir, const char* localDir, const char* ecmfDir, int flags, int nofail)
 {
-    eccodes::action::HashArray* act = new eccodes::action::HashArray();
+    return new eccodes::action::HashArray(context, name, hash_array, basename, name_space, defaultkey, masterDir, localDir, ecmfDir, flags, nofail);
+}
 
-    act->op_      = grib_context_strdup_persistent(context, "hash_array");
-    act->context_ = context;
-    act->flags_   = flags;
+namespace eccodes::action
+{
 
-    if (name_space)
-        act->name_space_ = grib_context_strdup_persistent(context, name_space);
+HashArray::HashArray(grib_context* context,
+                     const char* name,
+                     grib_hash_array_value* hash_array,
+                     const char* basename, const char* name_space, const char* defaultkey,
+                     const char* masterDir, const char* localDir, const char* ecmfDir, int flags, int nofail) :
+    Gen(context, name, "hash_array", 0, NULL, NULL, flags, name_space, NULL)
+{
+    class_name_ = "action_class_hash_array";
+    basename_   = basename ? grib_context_strdup_persistent(context, basename) : nullptr;
+    masterDir_  = masterDir ? grib_context_strdup_persistent(context, masterDir) : nullptr;
+    localDir_   = localDir ? grib_context_strdup_persistent(context, localDir) : nullptr;
+    ecmfDir_    = ecmfDir ? grib_context_strdup_persistent(context, ecmfDir) : nullptr;
+    defaultkey_ = defaultkey ? grib_context_strdup_persistent(context, defaultkey) : nullptr;
+    nofail_     = nofail;
+    hash_array_ = hash_array;
 
-    if (basename)
-        act->basename_ = grib_context_strdup_persistent(context, basename);
-    else
-        act->basename_ = NULL;
-
-    if (masterDir)
-        act->masterDir_ = grib_context_strdup_persistent(context, masterDir);
-    else
-        act->masterDir_ = NULL;
-
-    if (localDir)
-        act->localDir_ = grib_context_strdup_persistent(context, localDir);
-    else
-        act->localDir_ = NULL;
-
-    if (ecmfDir)
-        act->ecmfDir_ = grib_context_strdup_persistent(context, ecmfDir);
-    else
-        act->ecmfDir_ = NULL;
-
-    act->full_path_ = NULL;
-
-    if (defaultkey)
-        act->defaultkey_ = grib_context_strdup_persistent(context, defaultkey);
-
-    act->hash_array_ = hash_array;
     if (hash_array) {
         grib_context_log(context, GRIB_LOG_FATAL, "%s: 'hash_array_list' not implemented", __func__);
         // grib_hash_array_value* ha = hash_array;
@@ -89,15 +76,26 @@ grib_action* grib_action_create_hash_array(grib_context* context,
         //     ha = ha->next;
         // }
     }
-    act->name_ = grib_context_strdup_persistent(context, name);
-
-    act->nofail_ = nofail;
-
-    return act;
 }
 
-namespace eccodes::action
+HashArray::~HashArray()
 {
+    // This is currently unset. So assert that it is NULL
+    const grib_hash_array_value* v = hash_array_;
+    ECCODES_ASSERT(v == NULL);
+    // if (v)
+    //     grib_trie_delete(v->index);
+    // while (v) {
+    //     grib_hash_array_value* n = v->next;
+    //     grib_hash_array_value_delete(context_, v);
+    //     v = n;
+    // }
+
+    grib_context_free_persistent(context_, masterDir_);
+    grib_context_free_persistent(context_, localDir_);
+    grib_context_free_persistent(context_, ecmfDir_);
+    grib_context_free_persistent(context_, basename_);
+}
 
 void HashArray::dump(FILE* f, int lvl)
 {
@@ -107,28 +105,6 @@ void HashArray::dump(FILE* f, int lvl)
     // for (int i = 0; i < lvl; i++)
     //     grib_context_print(act->context, f, "     ");
     // printf("}\n");
-}
-
-
-void HashArray::destroy(grib_context* context)
-{
-    // This is currently unset. So assert that it is NULL
-    const grib_hash_array_value* v = hash_array_;
-    ECCODES_ASSERT(v == NULL);
-    // if (v)
-    //     grib_trie_delete(v->index);
-    // while (v) {
-    //     grib_hash_array_value* n = v->next;
-    //     grib_hash_array_value_delete(context, v);
-    //     v = n;
-    // }
-
-    grib_context_free_persistent(context, masterDir_);
-    grib_context_free_persistent(context, localDir_);
-    grib_context_free_persistent(context, ecmfDir_);
-    grib_context_free_persistent(context, basename_);
-
-    Gen::destroy(context);
 }
 
 grib_hash_array_value* HashArray::get_hash_array_impl(grib_handle* h)

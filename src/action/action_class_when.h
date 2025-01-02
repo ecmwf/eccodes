@@ -18,10 +18,10 @@ namespace eccodes::action
 class When : public Action
 {
 public:
-    When() { class_name_ = "action_class_when"; }
+    When(grib_context* context, grib_expression* expression, grib_action* block_true, grib_action* block_false);
+    ~When() override;
 
     void dump(FILE*, int) override;
-    void destroy(grib_context*) override;
     int create_accessor(grib_section*, grib_loader*) override;
     int notify_change(grib_accessor* observer, grib_accessor* observed) override;
 

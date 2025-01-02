@@ -16,39 +16,69 @@ grib_action* grib_action_create_if(grib_context* context,
                                    grib_action* block_true, grib_action* block_false, int transient,
                                    int lineno, const char* file_being_parsed)
 {
+    return new eccodes::action::If(context, expression, block_true, block_false, transient, lineno, file_being_parsed);  
+}
+
+namespace eccodes::action
+{
+
+If::If(grib_context* context,
+       grib_expression* expression,
+       grib_action* block_true, grib_action* block_false, int transient,
+       int lineno, const char* file_being_parsed)
+{
     char name[1024];
     const size_t nameLen = sizeof(name);
 
-    eccodes::action::If* act = new eccodes::action::If();
-
-    act->op_          = grib_context_strdup_persistent(context, "section");
-    act->context_     = context;
-    act->expression_  = expression;
-    act->block_true_  = block_true;
-    act->block_false_ = block_false;
-    act->transient_   = transient;
+    class_name_  = "action_class_if";
+    op_          = grib_context_strdup_persistent(context, "section");
+    context_     = context;
+    expression_  = expression;
+    block_true_  = block_true;
+    block_false_ = block_false;
+    transient_   = transient;
 
     if (transient)
-        snprintf(name, nameLen, "__if%p", (void*)act);
+        snprintf(name, nameLen, "__if%p", (void*)this);
     else
-        snprintf(name, nameLen, "_if%p", (void*)act);
+        snprintf(name, nameLen, "_if%p", (void*)this);
 
-    act->name_       = grib_context_strdup_persistent(context, name);
-    act->debug_info_ = NULL;
+    name_       = grib_context_strdup_persistent(context, name);
+    debug_info_ = NULL;
     if (context->debug > 0 && file_being_parsed) {
         /* Construct debug information showing definition file and line */
         /* number of IF statement */
         char debug_info[1024];
         const size_t infoLen = sizeof(debug_info);
         snprintf(debug_info, infoLen, "File=%s line=%d", file_being_parsed, lineno);
-        act->debug_info_ = grib_context_strdup_persistent(context, debug_info);
+        debug_info_ = grib_context_strdup_persistent(context, debug_info);
     }
-
-    return act;
 }
 
-namespace eccodes::action
+If::~If()
 {
+    Action* t = block_true_;
+    Action* f = block_false_;
+
+    while (t) {
+        Action* nt = t->next_;
+        delete t;
+        t = nt;
+    }
+
+    while (f) {
+        Action* nf = f->next_;
+        delete f;
+        f = nf;
+    }
+
+    expression_->destroy(context_);
+    delete expression_;
+
+    grib_context_free_persistent(context_, name_);
+    grib_context_free_persistent(context_, debug_info_);
+    grib_context_free_persistent(context_, op_);
+}
 
 int If::create_accessor(grib_section* p, grib_loader* h)
 {
@@ -195,35 +225,6 @@ grib_action* If::reparse(grib_accessor* acc, int* doit)
         return block_true_;
     else
         return block_false_;
-}
-
-void If::destroy(grib_context* context)
-{
-    Action* t = block_true_;
-    Action* f = block_false_;
-
-    while (t) {
-        Action* nt = t->next_;
-        t->destroy(context);
-        delete t;
-        t = nt;
-    }
-
-    while (f) {
-        Action* nf = f->next_;
-        f->destroy(context);
-        delete f;
-        f = nf;
-    }
-
-    expression_->destroy(context);
-    delete expression_;
-
-    grib_context_free_persistent(context, name_);
-    grib_context_free_persistent(context, debug_info_);
-    grib_context_free_persistent(context, op_);
-
-    Section::destroy(context);
 }
 
 }  // namespace eccodes::action

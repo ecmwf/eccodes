@@ -12,20 +12,25 @@
 
 grib_action* grib_action_create_transient_darray(grib_context* context, const char* name, grib_darray* darray, int flags)
 {
-    eccodes::action::TransientDArray* act = new eccodes::action::TransientDArray();
-
-    act->op_      = grib_context_strdup_persistent(context, "transient_darray");
-    act->context_ = context;
-    act->flags_   = flags;
-    act->darray_  = darray;
-    act->name2_   = grib_context_strdup_persistent(context, name);
-    act->name_    = grib_context_strdup_persistent(context, name);
-
-    return act;
+    return new eccodes::action::TransientDArray(context, name, darray, flags);
 }
 
 namespace eccodes::action
 {
+
+TransientDArray::TransientDArray(grib_context* context, const char* name, grib_darray* darray, int flags) :
+    Gen(context, name, "transient_darray", 0, NULL, NULL, flags, NULL, NULL)
+{
+    class_name_ = "action_class_transient_darray";
+    darray_     = darray;
+    name2_      = grib_context_strdup_persistent(context, name);
+}
+
+TransientDArray::~TransientDArray()
+{
+    grib_context_free_persistent(context_, name2_);
+    grib_darray_delete(darray_);
+}
 
 int TransientDArray::execute(grib_handle* h)
 {
@@ -52,14 +57,6 @@ void TransientDArray::dump(FILE* f, int lvl)
         grib_context_print(context_, f, "     ");
     grib_context_print(context_, f, name2_);
     printf("\n");
-}
-
-void TransientDArray::destroy(grib_context* context)
-{
-    grib_context_free_persistent(context, name2_);
-    grib_darray_delete(darray_);
-
-    Gen::destroy(context);
 }
 
 }  // namespace eccodes::action

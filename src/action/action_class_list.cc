@@ -12,22 +12,41 @@
 
 grib_action* grib_action_create_list(grib_context* context, const char* name, grib_expression* expression, grib_action* block)
 {
-    eccodes::action::List* act = new eccodes::action::List();
-
-    act->context_    = context;
-    act->next_       = NULL;
-    act->name_       = grib_context_strdup_persistent(context, name);
-    act->op_         = grib_context_strdup_persistent(context, "section");
-    act->expression_ = expression;
-    act->block_list_ = block;
-
-    grib_context_log(context, GRIB_LOG_DEBUG, " Action List %s is created  \n", act->name_);
-    return act;
+    return new eccodes::action::List(context, name, expression, block);
 }
 
 
 namespace eccodes::action
 {
+
+List::List(grib_context* context, const char* name, grib_expression* expression, grib_action* block)
+{
+    class_name_ = "action_class_list";
+    context_    = context;
+    next_       = NULL;
+    name_       = grib_context_strdup_persistent(context, name);
+    op_         = grib_context_strdup_persistent(context, "section");
+    expression_ = expression;
+    block_list_ = block;
+
+    grib_context_log(context, GRIB_LOG_DEBUG, " Action List %s is created  \n", name_);
+}
+
+List::~List()
+{
+    grib_action* a = block_list_;
+
+    while (a) {
+        grib_action* na = a->next_;
+        delete a;
+        a = na;
+    }
+
+    grib_context_free_persistent(context_, name_);
+    grib_context_free_persistent(context_, op_);
+    expression_->destroy(context_);
+    delete expression_;
+}
 
 void List::dump(FILE* f, int lvl)
 {
@@ -93,25 +112,6 @@ grib_action* List::reparse(grib_accessor* acc, int* doit)
     *doit = (val != acc->loop_);
 
     return block_list_;
-}
-
-void List::destroy(grib_context* context)
-{
-    grib_action* a = block_list_;
-
-    while (a) {
-        grib_action* na = a->next_;
-        a->destroy(context);
-        delete a;
-        a = na;
-    }
-
-    grib_context_free_persistent(context, name_);
-    grib_context_free_persistent(context, op_);
-    expression_->destroy(context);
-    delete expression_;
-
-    Section::destroy(context);
 }
 
 }  // namespace eccodes::action

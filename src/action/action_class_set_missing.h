@@ -18,9 +18,9 @@ namespace eccodes::action
 class SetMissing : public Action
 {
 public:
-    SetMissing() { class_name_ = "action_class_set_missing"; }
+    SetMissing(grib_context* context, const char* name);
+    ~SetMissing() override;
 
-    void destroy(grib_context*) override;
     int execute(grib_handle* h) override;
 
     char* name2_ = nullptr;

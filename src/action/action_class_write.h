@@ -18,9 +18,9 @@ namespace eccodes::action
 class Write : public Action
 {
 public:
-    Write() { class_name_ = "action_class_write"; }
+    Write(grib_context* context, const char* name, int append, int padtomultiple);
+    ~Write() override;
 
-    void destroy(grib_context*) override;
     int execute(grib_handle* h) override;
 
     char* name2_       = nullptr;

@@ -12,19 +12,28 @@
 
 grib_action* grib_action_create_modify(grib_context* context, const char* name, long flags)
 {
-    eccodes::action::Modify* act = new eccodes::action::Modify();
-
-    act->op_        = grib_context_strdup_persistent(context, "section");
-    act->context_   = context;
-    act->flags_     = flags;
-    act->name_      = grib_context_strdup_persistent(context, name);
-    act->type_name_ = grib_context_strdup_persistent(context, "flags");
-
-    return act;
+    return new eccodes::action::Modify(context, name, flags);
 }
 
 namespace eccodes::action
 {
+
+Modify::Modify(grib_context* context, const char* name, long flags)
+{
+    class_name_ = "action_class_modify";
+    op_         = grib_context_strdup_persistent(context, "section");
+    context_    = context;
+    flags_      = flags;
+    name_       = grib_context_strdup_persistent(context, name);
+    type_name_  = grib_context_strdup_persistent(context, "flags");
+}
+
+Modify::~Modify()
+{
+    grib_context_free_persistent(context_, name_);
+    grib_context_free_persistent(context_, type_name_);
+    grib_context_free_persistent(context_, op_);
+}
 
 int Modify::create_accessor(grib_section* p, grib_loader* h)
 {
@@ -42,15 +51,5 @@ int Modify::create_accessor(grib_section* p, grib_loader* h)
     }
     return GRIB_SUCCESS;
 }
-
-void Modify::destroy(grib_context* context)
-{
-    grib_context_free_persistent(context, name_);
-    grib_context_free_persistent(context, type_name_);
-    grib_context_free_persistent(context, op_);
-
-    Action::destroy(context);
-}
-
 
 }  // namespace eccodes::action

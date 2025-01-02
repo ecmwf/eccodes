@@ -18,10 +18,14 @@ namespace eccodes::action
 class Concept : public Gen
 {
 public:
-    Concept() { class_name_ = "action_class_concept"; }
+    Concept(grib_context* context,
+            const char* name,
+            grib_concept_value* concept_value,
+            const char* basename, const char* name_space, const char* defaultkey,
+            const char* masterDir, const char* localDir, const char* ecmfDir, int flags, int nofail);
+    ~Concept() override;
 
     void dump(FILE*, int) override;
-    void destroy(grib_context*) override;
 
     grib_concept_value* get_concept_impl(grib_handle* h);
     grib_concept_value* get_concept(grib_handle* h);

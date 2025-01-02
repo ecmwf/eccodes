@@ -18,9 +18,9 @@ namespace eccodes::action
 class Noop : public Action
 {
 public:
-    Noop() { class_name_ = "action_class_noop"; }
+    Noop(grib_context* context, const char* fname);
+    ~Noop() override;
 
-    void destroy(grib_context*) override;
     int execute(grib_handle* h) override;
 };
 

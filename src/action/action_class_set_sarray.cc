@@ -13,24 +13,33 @@
 
 grib_action* grib_action_create_set_sarray(grib_context* context, const char* name, grib_sarray* sarray)
 {
-    char buf[1024];
-
-    eccodes::action::SetSArray* act = new eccodes::action::SetSArray();
-
-    act->op_              = grib_context_strdup_persistent(context, "section");
-    act->context_ = context;
-    act->sarray_ = sarray;
-    act->name2_   = grib_context_strdup_persistent(context, name);
-
-    snprintf(buf, 1024, "set_sarray%p", (void*)sarray);
-
-    act->name_ = grib_context_strdup_persistent(context, buf);
-
-    return act;
+    return new eccodes::action::SetSArray(context, name, sarray);
 }
 
 namespace eccodes::action
 {
+
+SetSArray::SetSArray(grib_context* context, const char* name, grib_sarray* sarray)
+{
+    class_name_ = "action_class_set_sarray";
+    op_         = grib_context_strdup_persistent(context, "section");
+    context_    = context;
+    sarray_     = sarray;
+    name2_      = grib_context_strdup_persistent(context, name);
+
+    char buf[1024];
+    snprintf(buf, sizeof(buf), "set_sarray%p", (void*)sarray);
+
+    name_ = grib_context_strdup_persistent(context, buf);
+}
+
+SetSArray::~SetSArray()
+{
+    grib_context_free_persistent(context_, name2_);
+    grib_sarray_delete(sarray_);
+    grib_context_free_persistent(context_, name_);
+    grib_context_free_persistent(context_, op_);
+}
 
 int SetSArray::execute(grib_handle* h)
 {
@@ -44,16 +53,6 @@ void SetSArray::dump(FILE* f, int lvl)
         grib_context_print(context_, f, "     ");
     grib_context_print(context_, f, name2_);
     printf("\n");
-}
-
-void SetSArray::destroy(grib_context* context)
-{
-    grib_context_free_persistent(context, name2_);
-    grib_sarray_delete(sarray_);
-    grib_context_free_persistent(context, name_);
-    grib_context_free_persistent(context, op_);
-
-    Action::destroy(context);
 }
 
 }  // namespace eccodes::action

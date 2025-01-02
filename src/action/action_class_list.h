@@ -18,10 +18,10 @@ namespace eccodes::action
 class List : public Section
 {
 public:
-    List() { class_name_ = "action_class_list"; }
+    List(grib_context* context, const char* name, grib_expression* expression, grib_action* block);
+    ~List() override;
 
     void dump(FILE*, int) override;
-    void destroy(grib_context*) override;
     int create_accessor(grib_section*, grib_loader*) override;
     grib_action* reparse(grib_accessor* acc, int* doit) override;
 

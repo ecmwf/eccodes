@@ -24,22 +24,34 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 
 grib_action* grib_action_create_alias(grib_context* context, const char* name, const char* arg1, const char* name_space, int flags)
 {
-    eccodes::action::Alias* act = new eccodes::action::Alias();
-
-    act->context_ = context;
-    act->op_      = NULL;
-    act->name_    = grib_context_strdup_persistent(context, name);
-    if (name_space)
-        act->name_space_ = grib_context_strdup_persistent(context, name_space);
-
-    act->flags_  = flags;
-    act->target_ = arg1 ? grib_context_strdup_persistent(context, arg1) : NULL;
-
-    return act;
+    return new eccodes::action::Alias(context, name, arg1, name_space, flags);
 }
 
 namespace eccodes::action
 {
+
+Alias::Alias(grib_context* context, const char* name, const char* arg1, const char* name_space, int flags)
+{
+    class_name_ = "action_class_alias";
+    context_    = context;
+    op_         = NULL;
+    name_       = grib_context_strdup_persistent(context, name);
+    if (name_space)
+        name_space_ = grib_context_strdup_persistent(context, name_space);
+
+    flags_  = flags;
+    target_ = arg1 ? grib_context_strdup_persistent(context, arg1) : NULL;
+}
+
+Alias::~Alias()
+{
+    if (target_)
+        grib_context_free_persistent(context_, target_);
+
+    grib_context_free_persistent(context_, name_);
+    grib_context_free_persistent(context_, op_);
+    grib_context_free_persistent(context_, name_space_);
+}
 
 static int same(const char* a, const char* b)
 {
@@ -208,18 +220,6 @@ void Alias::dump(FILE* f, int lvl)
         grib_context_print(context_, f, " alias %s  %s \n", name_, target_);
     else
         grib_context_print(context_, f, " unalias %s  \n", name_);
-}
-
-void Alias::destroy(grib_context* context)
-{
-    if (target_)
-        grib_context_free_persistent(context, target_);
-
-    grib_context_free_persistent(context, name_);
-    grib_context_free_persistent(context, op_);
-    grib_context_free_persistent(context, name_space_);
-
-    Action::destroy(context);
 }
 
 }  // namespace eccodes::action
