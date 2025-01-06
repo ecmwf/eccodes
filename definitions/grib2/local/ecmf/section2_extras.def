@@ -1,9 +1,8 @@
 # (C) Copyright 2005- ECMWF.
 # ECMWF specific section 2 extras
 
-constant tablesVersionMTG2Switch=33: hidden;
-
-# MTG2 behaviour based on tablesVersion above
+# MTG2 behaviour based on tablesVersion defined in boot.def
+# Without accessing this logic (i.e. no ECMWF Section 2) the default is 1 = post-MTG2
 # 0 = pre-MTG2 encoding used
 # 1 = post-MTG2 encoding used
 # 2 = post-MTG2 encoding with paramId + chemId used
@@ -59,6 +58,5 @@ if (tablesVersion <= tablesVersionMTG2Switch) {
 #     }
 # }
 
-# Now evaluate concept
-
-concept MTG2Switch(MTG2SwitchDefault, "MTG2SwitchConcept.def", conceptsDir2,conceptsDir1): no_copy, read_only, long_type;
+# Evaluate concept itself in parameters.def
+# This allows non-ECMWF centres to also access functionality of switch
