@@ -1239,7 +1239,7 @@ match
 rdbtimeDate=20121030 rdbtimeTime=001019 rdbDateTime=2456230.507164 mystart=2456230.708333 myend=2456230.708333
 rdbDateTime=20121030 001019
 myEndDate=2017-05-22 12:15:23 myEndDateTime=2457896.01068 myEndDate=20170522 myEndTime=121523
-myEndDate=2012-10-30 00:10:19 myEndDateTime=2456230.50716 myEndDate=20121030 myEndTime=1019
+myEndDate=2012-10-30 10:19:00 myEndDateTime=2456230.50716 myEndDate=20121030 myEndTime=1019
 userDateTimeStart=2457896.88347 userDateStart=20170523 userTimeStart=91212 2017/05/23 09-12:12
 userDateTimeStart=2457896.88347 userDateStart=20170523 userTimeStart=91212 20170523 091212
 userDateTimeStart=2457896.88347 userDateStart=20170523 userTimeStart=91212 20170523091212
