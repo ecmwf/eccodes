@@ -1,34 +1,23 @@
 # (C) Copyright 2005- ECMWF.
 
 transient dummyc=0: hidden;
-# If MTG2Switch is defined and it is 0 (pre-MTG2) we need to look at pre-MTG2 definitions.
-# Otherwise (if it is different from 0, or not defined) look at new definitions.
+# Evaluate MTG2Switch concept.
+# Default is 1 unless changed by centre or pseudocentre, set in boot.def.
+# To be discussed. This means that all centres are default post-MTG2 unless entry is added in concept.
 
-# Add support for "datasetForLocal" condition (e.g. S2S).
-# These datasets will always use pre-MTG2 definitions
-# TODO(mamg): Ideally shouldn't list all these datasets here
-if (datasetForLocal isnot "unknown") {
-    if ( datasetForLocal is "cerise" ||
-         datasetForLocal is "era" ||
-         datasetForLocal is "hydro" ||
-         datasetForLocal is "s2s" ||
-         datasetForLocal is "tigge" ||
-         datasetForLocal is "uerra" ) {
+concept MTG2Switch(MTG2SwitchDefault, "MTG2SwitchConcept.def", conceptsDir2,conceptsDir1): no_copy, read_only, long_type;
 
-        constant tablesVersionMTG2Switch=33: hidden;
-        constant MTG2Switch = 0 : no_copy, read_only;
+# If MTG2Switch is 0 (pre-MTG2) we need to look at pre-MTG2 definitions, tableVersion defined in boot.def.
+# Otherwise look at new definitions.
 
-    }
-}
-
-if ( defined(MTG2Switch) and MTG2Switch == 0 ) {
+if ( MTG2Switch == 0 ) {
 
     constant paramIdFilename = "paramId.[tablesVersionMTG2Switch].def" : hidden ;
     constant shortNameFilename = "shortName.[tablesVersionMTG2Switch].def" : hidden ;
     constant unitsFilename = "units.[tablesVersionMTG2Switch].def" : hidden ;
     constant nameFilename = "name.[tablesVersionMTG2Switch].def" : hidden ;
 
-# All other cases other than existing data and pre-MTG2 fall into default parameter files
+# All other cases other than pre-MTG2 fall into default parameter files
 } else {
 
     constant paramIdFilename = "paramId.def" : hidden ;
