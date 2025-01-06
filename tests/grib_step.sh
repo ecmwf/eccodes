@@ -153,7 +153,7 @@ grib_check_key_equals $temp "stepRange,startStep,endStep" "14 14 14"
 input=${data_dir}/constant_field.grib2
 grib_check_key_equals $input "dataDate,dataTime,step" "20061205 1200 6"
 grib_check_key_equals $input "validityDate,validityTime" "20061205 1800"
-grib_check_key_equals $input "validityDateTime:s" "20061205 001800"
+grib_check_key_equals $input "validityDateTime:s" "20061205 180000"
 
 # ECC-1704: Key validityTime as string
 # -------------------------------------
