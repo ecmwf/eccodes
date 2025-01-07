@@ -253,7 +253,20 @@ static int rectify_concept_apply(grib_handle* h, const char* key)
 static int concept_conditions_iarray_apply(grib_handle* h, grib_concept_condition* c)
 {
     const size_t size = grib_iarray_used_size(c->iarray);
-    return grib_set_long_array(h, c->name, c->iarray->v, size);
+    int err = grib_set_long_array(h, c->name, c->iarray->v, size);
+    // ECC-1992: Special case for GRIB2
+    // When typeOfStatisticalProcessing is an array, must also set numberOfTimeRanges
+    if (err == GRIB_NOT_FOUND && STR_EQUAL(c->name, "typeOfStatisticalProcessing")) {
+        grib_context_log(h->context, GRIB_LOG_DEBUG, "Concept: Key %s not found, setting PDTN", c->name);
+        if (grib_set_long(h, "selectStepTemplateInterval", 1) == GRIB_SUCCESS) {
+            // Now should have the correct PDTN
+            err = grib_set_long(h, "numberOfTimeRanges", (long)size);
+            if (!err) {
+                err = grib_set_long_array(h, c->name, c->iarray->v, size);  //re-apply
+            }
+        }
+    }
+    return err;
 }
 
 static int concept_conditions_apply(grib_handle* h, grib_concept_condition* c, grib_values* values, grib_sarray* sa, int* n)
