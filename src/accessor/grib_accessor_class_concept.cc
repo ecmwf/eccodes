@@ -414,7 +414,8 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
     e  = c->conditions;
     sa = grib_sarray_new(10, 10);
     while (e) {
-        concept_conditions_apply(h, e, values, sa, &count);
+        err = concept_conditions_apply(h, e, values, sa, &count);
+        if (err) return err;
         e = e->next;
     }
     grib_sarray_delete(sa);
