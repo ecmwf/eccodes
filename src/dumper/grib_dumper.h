@@ -29,8 +29,8 @@ public:
     virtual void dump_bits(grib_accessor*, const char*)                 = 0;
     virtual void dump_section(grib_accessor*, grib_block_of_accessors*) = 0;
     virtual void dump_values(grib_accessor*)                            = 0;
-    virtual void header(const grib_handle*) {};
-    virtual void footer(const grib_handle*) {};
+    virtual void header(const grib_handle*) const {};
+    virtual void footer(const grib_handle*) const {};
 
     long count() { return count_; }
     void count(long count) { count_ = count; }

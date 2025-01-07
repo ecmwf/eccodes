@@ -30,8 +30,8 @@ public:
     void dump_values(grib_accessor*) override;
     void dump_label(grib_accessor*, const char*) override;
     void dump_section(grib_accessor*, grib_block_of_accessors*) override;
-    void header(const grib_handle*) override;
-    void footer(const grib_handle*) override;
+    void header(const grib_handle*) const override;
+    void footer(const grib_handle*) const override;
 
 
 private:

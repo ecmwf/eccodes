@@ -752,7 +752,7 @@ void BufrEncodeC::dump_attributes(grib_accessor* a, const char* prefix)
     isAttribute_ = 0;
 }
 
-void BufrEncodeC::header(const grib_handle* h)
+void BufrEncodeC::header(const grib_handle* h) const
 {
     char sampleName[200] = { 0 };
     long localSectionPresent, edition, bufrHeaderCentre, isSatellite;
@@ -799,7 +799,7 @@ void BufrEncodeC::header(const grib_handle* h)
     fprintf(out_, "  }\n");
 }
 
-void BufrEncodeC::footer(const grib_handle* h)
+void BufrEncodeC::footer(const grib_handle* h) const
 {
     fprintf(out_, "\n  /* Encode the keys back in the data section */\n");
     fprintf(out_, "  CODES_CHECK(codes_set_long(h, \"pack\", 1), 0);\n\n");
