@@ -109,3 +109,13 @@ if (is_ocean3d_param) {
    alias mars.levtype = oceanLevName;
    unalias mars.levelist;
 }
+
+# MTG2 support given lack of local section
+# This comes after the paramId is already decided, so doesn't work.
+# if (tablesVersion <= tablesVersionMTG2Switch) {
+#     # Pre-MTG2
+#     constant MTG2SwitchDefault = 0;
+# } else {
+#     # All other cases we are post-MTG2
+#     constant MTG2SwitchDefault = 1;
+# }
