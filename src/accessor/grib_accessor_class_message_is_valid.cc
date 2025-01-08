@@ -108,6 +108,27 @@ static int check_geoiterator(grib_handle* h)
     return err;
 }
 
+static int check_steps(grib_handle* h)
+{
+    char stepType[32] = {0,};
+    size_t size = sizeof(stepType) / sizeof(*stepType);
+    int err = grib_get_string_internal(h, "stepType", stepType, &size);
+    if (err) return err;
+    if (!STR_EQUAL(stepType, "instant")) {
+        // check start and end steps
+        long startStep = 0;
+        err = grib_get_long_internal(h, "startStep", &startStep);
+        if (err) return err;
+        long endStep = 0;
+        err = grib_get_long_internal(h, "endStep", &endStep);
+        if (err) return err;
+        if (startStep > endStep) {
+            grib_context_log(h->context, GRIB_LOG_ERROR, "Invalid step: startStep > endStep (%ld > %ld)", startStep, endStep);
+            return GRIB_WRONG_STEP;
+        }
+    }
+    return GRIB_SUCCESS;
+}
 
 static int check_section_numbers(grib_handle* h, long edition, const int* sec_nums, size_t N)
 {
@@ -149,7 +170,8 @@ static proj_func check_functions[] = {
     check_sections,
     check_field_values,
     check_grid_pl_array,
-    check_geoiterator
+    check_geoiterator,
+    check_steps
 };
 
 int grib_accessor_message_is_valid_t::unpack_long(long* val, size_t* len)
