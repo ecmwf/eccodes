@@ -55,8 +55,18 @@ int grib_accessor_g2_concept_dir_t::unpack_string(char* v, size_t* len)
     if (err) return err;
 
     size = sizeof(datasetForLocal);
+    bool datasetForLocalExists = true;
     err = grib_get_string(h, datasetForLocal_, datasetForLocal, &size);
-    if (err) return err;
+    if (err) {
+        if (err == GRIB_NOT_FOUND) {
+            // This can happen if accessor is called before section 4
+            datasetForLocalExists = false;
+            err = 0;
+        }
+        else {
+            return err;
+        }
+    }
 
     const size_t dsize = string_length() - 1; // size for destination string "v"
     if (preferLocal) {
@@ -74,25 +84,14 @@ int grib_accessor_g2_concept_dir_t::unpack_string(char* v, size_t* len)
         }
     }
 
-    // Override if datasetForLocal is not unknown
-    if (!STR_EQUAL(datasetForLocal, "unknown")) {
+    // Override if datasetForLocal exists and is not unknown
+    if (datasetForLocalExists && !STR_EQUAL(datasetForLocal, "unknown")) {
         if (mode_ == 1) {
             snprintf(v, dsize, "%s", masterDir); // conceptsDir1
         } else {
             snprintf(v, dsize, "grib2/localConcepts/%s", datasetForLocal); // conceptsDir2
         }
     }
-
-    // if (mode_ == 1) {
-    //     if (STR_EQUAL(datasetForLocal, "unknown")) {
-    //         char centre[64] = {0,};
-    //         size = sizeof(centre) / sizeof(*centre);
-    //         grib_get_string(h, "centre", centre, &size);
-    //         snprintf(v, 256, "grib2/localConcepts/%s", centre);
-    //     } else {
-    //         snprintf(v, 64, "grib2");
-    //     }
-    // }
 
     size = strlen(v);
     ECCODES_ASSERT(size > 0);
