@@ -10,7 +10,6 @@
 
 . ./include.ctest.sh
 
-# data="${data_dir}/*grib1 ${data_dir}/*grib2"
 data="
 constant_field.grib1
 lfpw.grib1
@@ -86,3 +85,10 @@ do
   rm -f $tmp
 
 done
+
+# Test MeteoFrance concept with string value
+${tools_dir}/grib_set -s centre=lfpw,paramId=85001156 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $tmp
+grib_check_key_equals $tmp productDefinitionTemplateNumber,stepType '8 accum'
+grib_check_key_equals $tmp paramId,shortName '85001156 PREC_CONVEC'
+
+rm -f $tmp

@@ -96,3 +96,12 @@ concept marsStream(unknown) {
 
 alias mars.stream = marsStream;
 alias mars.type   = marsType;
+
+# MTG2 support given lack of local section
+if (tablesVersion <= tablesVersionMTG2Switch) {
+    # Pre-MTG2
+    constant MTG2SwitchDefault = 0;
+} else {
+    # All other cases we are post-MTG2
+    constant MTG2SwitchDefault = 1;
+}
