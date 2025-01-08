@@ -231,7 +231,7 @@ static int rectify_concept_apply(grib_handle* h, const char* key)
     // a secondary key
     // e.g.,
     // GRIB is instantaneous but paramId being set is for accum/avg
-    // 
+    //
     int ret = GRIB_NOT_FOUND;
     static const std::map<std::string_view, std::pair<std::string_view, long>> keyMap = {
         { "typeOfStatisticalProcessing", { "selectStepTemplateInterval", 1 } },

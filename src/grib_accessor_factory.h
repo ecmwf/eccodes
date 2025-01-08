@@ -87,6 +87,7 @@
 { "g1verificationdate", &grib_accessor_g1verificationdate, },
 { "g2_aerosol", &grib_accessor_g2_aerosol, },
 { "g2_chemical", &grib_accessor_g2_chemical, },
+{ "g2_concept_dir", &grib_accessor_g2_concept_dir, },
 { "g2_eps", &grib_accessor_g2_eps, },
 { "g2_mars_labeling", &grib_accessor_g2_mars_labeling, },
 { "g2bitmap", &grib_accessor_g2bitmap, },
