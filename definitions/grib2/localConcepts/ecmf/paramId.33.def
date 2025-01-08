@@ -194,6 +194,30 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 46 ;
 	}
+#Maximum temperature at 2 metres in the last 24 hours
+'51' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 lengthOfTimeRange = 24 ;
+	}
+#Minimum temperature at 2 metres in the last 24 hours
+'52' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 lengthOfTimeRange = 24 ;
+	}
 #Observation count
 '62' = {
 	 discipline = 192 ;
@@ -475,6 +499,12 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 120 ;
+	}
+#Maximum 10 metre wind gust in the last 6 hours
+'123' = {
+	 discipline = 192 ;
+	 parameterCategory = 128 ;
+	 parameterNumber = 123 ;
 	}
 #Vertically integrated total energy
 '125' = {
@@ -2495,7 +2525,7 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 122 ;
 	}
-#Mean surface runoff rate
+#Time-mean surface runoff rate
 '172008' = {
 	 localTablesVersion = 1 ;
 	 discipline = 2 ;
@@ -2504,7 +2534,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean sub-surface runoff rate
+#Time-mean sub-surface runoff rate
 '172009' = {
 	 localTablesVersion = 1 ;
 	 discipline = 2 ;
@@ -5291,12 +5321,6 @@
 	 parameterCategory = 213 ;
 	 parameterNumber = 221 ;
 	}
-#Cosine of solar zenith angle
-'214001' = {
-	 discipline = 192 ;
-	 parameterCategory = 214 ;
-	 parameterNumber = 1 ;
-	}
 #UV biologically effective dose
 '214002' = {
 	 discipline = 192 ;
@@ -5753,13 +5777,13 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 25 ;
 	}
-#Source/gain of dust aerosol (0.55 - 9 um)
+#Source/gain of dust aerosol (0.55 - 0.9 um)
 '215026' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 26 ;
 	}
-#Source/gain of dust aerosol (9 - 20 um)
+#Source/gain of dust aerosol (0.9 - 20 um)
 '215027' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
@@ -5771,13 +5795,13 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 28 ;
 	}
-#Dry deposition of dust aerosol (0.55 - 9 um)
+#Dry deposition of dust aerosol (0.55 - 0.9 um)
 '215029' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 29 ;
 	}
-#Dry deposition of dust aerosol (9 - 20 um)
+#Dry deposition of dust aerosol (0.9 - 20 um)
 '215030' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
@@ -5789,13 +5813,13 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 31 ;
 	}
-#Sedimentation of dust aerosol (0.55 - 9 um)
+#Sedimentation of dust aerosol (0.55 - 0.9 um)
 '215032' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 32 ;
 	}
-#Sedimentation of dust aerosol (9 - 20 um)
+#Sedimentation of dust aerosol (0.9 - 20 um)
 '215033' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
@@ -5807,13 +5831,13 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 34 ;
 	}
-#Wet deposition of dust aerosol (0.55 - 9 um) by large-scale precipitation
+#Wet deposition of dust aerosol (0.55 - 0.9 um) by large-scale precipitation
 '215035' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 35 ;
 	}
-#Wet deposition of dust aerosol (9 - 20 um) by large-scale precipitation
+#Wet deposition of dust aerosol (0.9 - 20 um) by large-scale precipitation
 '215036' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
@@ -5825,13 +5849,13 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 37 ;
 	}
-#Wet deposition of dust aerosol (0.55 - 9 um) by convective precipitation
+#Wet deposition of dust aerosol (0.55 - 0.9 um) by convective precipitation
 '215038' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 38 ;
 	}
-#Wet deposition of dust aerosol (9 - 20 um) by convective precipitation
+#Wet deposition of dust aerosol (0.9 - 20 um) by convective precipitation
 '215039' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
@@ -5843,13 +5867,13 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 40 ;
 	}
-#Negative fixer of dust aerosol (0.55 - 9 um)
+#Negative fixer of dust aerosol (0.55 - 0.9 um)
 '215041' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 41 ;
 	}
-#Negative fixer of dust aerosol (9 - 20 um)
+#Negative fixer of dust aerosol (0.9 - 20 um)
 '215042' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
@@ -5861,13 +5885,13 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 43 ;
 	}
-#Vertically integrated mass of dust aerosol (0.55 - 9 um)
+#Vertically integrated mass of dust aerosol (0.55 - 0.9 um)
 '215044' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 44 ;
 	}
-#Vertically integrated mass of dust aerosol (9 - 20 um)
+#Vertically integrated mass of dust aerosol (0.9 - 20 um)
 '215045' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
@@ -5879,13 +5903,13 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 46 ;
 	}
-#Dust aerosol (0.55 - 9 um) optical depth
+#Dust aerosol (0.55 - 0.9 um) optical depth
 '215047' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 47 ;
 	}
-#Dust aerosol (9 - 20 um) optical depth
+#Dust aerosol (0.9 - 20 um) optical depth
 '215048' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
@@ -13561,6 +13585,30 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 25 ;
 	}
+#Maximum temperature at 2 metres in the last 3 hours
+'228026' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 lengthOfTimeRange = 3 ;
+	}
+#Minimum temperature at 2 metres in the last 3 hours
+'228027' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 lengthOfTimeRange = 3 ;
+	}
 #Soil wetness index in layer 1
 '228040' = {
 	 discipline = 192 ;
@@ -14022,53 +14070,6 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Volume-mean total column mixing ratio
-'409000' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 195 ;
-	}
-#Emission mass flux from vegetation
-'412000' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 192 ;
-	}
-#Emission mass flux from biomass burning
-'417000' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 193 ;
-	}
-#Emission mass flux from settlements
-'432000' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 194 ;
-	}
-#Emission mass flux from soil
-'442000' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 195 ;
-	}
-#Emission mass flux from wild animals
-'443000' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 196 ;
-	}
 #Aerosol negative fixer mass flux
 '451000' = {
 	 localTablesVersion = 1 ;
@@ -14089,38 +14090,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 192 ;
-	}
-#Emission mass flux from commercial buildings heating
-'463000' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 197 ;
-	}
-#Emission mass flux from residential heating
-'464000' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 198 ;
-	}
-#Emission mass flux from oil refineries and transformation industry
-'465000' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 199 ;
-	}
-#Emission mass flux from gas production
-'466000' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 200 ;
 	}
 #Stream function gradient
 '129001' = {
@@ -18608,7 +18577,7 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 45 ;
 	}
-#Mean large-scale precipitation rate
+#Time-mean large-scale precipitation rate
 '172142' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -18617,7 +18586,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean convective precipitation rate
+#Time-mean convective precipitation rate
 '172143' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -18626,7 +18595,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean total snowfall rate
+#Time-mean total snowfall rate
 '172144' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -18635,19 +18604,19 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean short-wave heating rate
+#Time-mean short-wave (solar) heating rate
 '172153' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 153 ;
 	}
-#Mean long-wave heating rate
+#Time-mean long-wave (thermal) heating rate
 '172154' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 154 ;
 	}
-#Evaporation
+#Time-mean evaporation rate
 '172182' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -18656,7 +18625,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean runoff rate
+#Time-mean runoff rate
 '172205' = {
 	 localTablesVersion = 1 ;
 	 discipline = 2 ;
@@ -18665,7 +18634,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean total precipitation rate
+#Time-mean total precipitation rate
 '172228' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -18674,13 +18643,13 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Convective snowfall
+#Time-mean convective snowfall rate
 '172239' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 239 ;
 	}
-#Large scale snowfall
+#Time-mean large-scale snowfall rate
 '172240' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
@@ -18949,6 +18918,12 @@
 	 discipline = 192 ;
 	 parameterCategory = 174 ;
 	 parameterNumber = 42 ;
+	}
+#10 metre wind gust in the last 24 hours
+'174049' = {
+	 discipline = 192 ;
+	 parameterCategory = 174 ;
+	 parameterNumber = 49 ;
 	}
 #1.5m temperature - mean in the last 24 hours
 '174055' = {
