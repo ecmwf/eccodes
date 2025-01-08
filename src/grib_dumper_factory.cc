@@ -75,12 +75,15 @@ eccodes::Dumper* grib_dumper_factory(const char* op, const grib_handle* h, FILE*
             eccodes::Dumper* d = *(table[i].dumper);
             GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
             GRIB_MUTEX_LOCK(&mutex);
-            d->depth_          = 0;
-            d->context_        = h->context;
-            d->option_flags_   = option_flags;
-            d->arg_            = arg;
-            d->out_            = out;
-            d->init();
+            if (!d->inited_) {
+                d->depth_          = 0;
+                d->context_        = h->context;
+                d->option_flags_   = option_flags;
+                d->arg_            = arg;
+                d->out_            = out;
+                d->init();
+                d->inited_ = 1;
+            }
             GRIB_MUTEX_UNLOCK(&mutex);
             grib_context_log(
                 h->context, GRIB_LOG_DEBUG, "Creating dumper of type : %s ", op);
@@ -115,35 +118,26 @@ void grib_dump_content(const grib_handle* h, FILE* f, const char* mode, unsigned
 void grib_dump_accessors_block(eccodes::Dumper* dumper, grib_block_of_accessors* block)
 {
     grib_accessor* a = block->first;
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
     while (a) {
         a->dump(dumper);
         a = a->next_;
     }
-    GRIB_MUTEX_UNLOCK(&mutex);
 }
 
 void grib_dump_accessors_list(eccodes::Dumper* dumper, grib_accessors_list* al)
 {
     grib_accessors_list* cur = al;
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
     while (cur) {
         cur->accessor->dump(dumper);
         cur = cur->next_;
     }
-    GRIB_MUTEX_UNLOCK(&mutex);
 }
 
 int grib_print(grib_handle* h, const char* name, eccodes::Dumper* d)
 {
     grib_accessor* act = grib_find_accessor(h, name);
     if (act) {
-        GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-        GRIB_MUTEX_LOCK(&mutex);
         act->dump(d);
-        GRIB_MUTEX_UNLOCK(&mutex);
         return GRIB_SUCCESS;
     }
     return GRIB_NOT_FOUND;
@@ -159,10 +153,7 @@ void grib_dump_keys(grib_handle* h, FILE* f, const char* mode, unsigned long fla
     for (size_t i = 0; i < num_keys; ++i) {
         acc = grib_find_accessor(h, keys[i]);
         if (acc) {
-            GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-            GRIB_MUTEX_LOCK(&mutex);
             acc->dump(dumper);
-            GRIB_MUTEX_UNLOCK(&mutex);
         }
     }
     dumper->destroy();
