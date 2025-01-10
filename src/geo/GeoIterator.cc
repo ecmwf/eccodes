@@ -11,7 +11,7 @@
 
 #include "geo/GeoIterator.h"
 
-#include "eckit/exception/Exceptions.h"
+#include "eckit/geo/Exceptions.h"
 
 #include "geo/GribSpec.h"
 
@@ -75,6 +75,10 @@ int GeoIterator::next(double* lat, double* lon, double* val) const
         }
 
         ++iter_;
+    }
+    catch (eckit::geo::Exception& e) {
+        grib_context_log(h_->context, GRIB_LOG_FATAL, "GeoIterator::next: geo::Exception thrown (%s)", e.what());
+        return 0;
     }
     catch (std::exception& e) {
         grib_context_log(h_->context, GRIB_LOG_FATAL, "GeoIterator::next: Exception thrown (%s)", e.what());
