@@ -54,10 +54,9 @@ concept datasetForLocal(unknown) {
   "unknown"     = { dummy=1; }
 }
 
-if (datasetForLocal isnot "unknown") {
-   constant conceptsDir2 = "grib2/localConcepts/[datasetForLocal]": hidden;
-   constant conceptsDir1 = "grib2": hidden;
-}
+# ECC-2002
+# if datasetForLocal is not "unknown", we remap conceptsDir1 and conceptsDir2
+# See the g2_concept_dir accessor
 
 codetable[2] productDefinitionTemplateNumber('4.0.table',masterDir,localDir) : dump;
 

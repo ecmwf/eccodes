@@ -192,7 +192,7 @@ static const char* concept_evaluate(grib_accessor* a)
     return best;
 }
 
-#define MAX_NUM_CONCEPT_VALUES 40
+// Note: This function does not change the handle, but stores the results in the "values" array to be applied later
 static int concept_conditions_expression_apply(grib_handle* h, grib_concept_condition* e, grib_values* values, grib_sarray* sa, int* n)
 {
     long lres   = 0;
@@ -231,7 +231,7 @@ static int rectify_concept_apply(grib_handle* h, const char* key)
     // a secondary key
     // e.g.,
     // GRIB is instantaneous but paramId being set is for accum/avg
-    // 
+    //
     int ret = GRIB_NOT_FOUND;
     static const std::map<std::string_view, std::pair<std::string_view, long>> keyMap = {
         { "typeOfStatisticalProcessing", { "selectStepTemplateInterval", 1 } },
@@ -250,13 +250,16 @@ static int rectify_concept_apply(grib_handle* h, const char* key)
     return ret;
 }
 
+// Note: This applies the changes to the handle passed in
 static int concept_conditions_iarray_apply(grib_handle* h, grib_concept_condition* c)
 {
     const size_t size = grib_iarray_used_size(c->iarray);
     int err = grib_set_long_array(h, c->name, c->iarray->v, size);
     // ECC-1992: Special case for GRIB2
     // When typeOfStatisticalProcessing is an array, must also set numberOfTimeRanges
-    if (err == GRIB_NOT_FOUND && STR_EQUAL(c->name, "typeOfStatisticalProcessing")) {
+    if ((err == GRIB_NOT_FOUND || err == GRIB_ARRAY_TOO_SMALL) &&
+        STR_EQUAL(c->name, "typeOfStatisticalProcessing"))
+    {
         grib_context_log(h->context, GRIB_LOG_DEBUG, "Concept: Key %s not found, setting PDTN", c->name);
         if (grib_set_long(h, "selectStepTemplateInterval", 1) == GRIB_SUCCESS) {
             // Now should have the correct PDTN
@@ -312,6 +315,8 @@ bool blacklisted(grib_handle* h, long edition, const char* concept_name, const c
     }
     return false;
 }
+
+#define MAX_NUM_CONCEPT_VALUES 40
 
 static void print_user_friendly_message(grib_handle* h, const char* name, grib_concept_value* concepts, grib_action* act)
 {
@@ -409,7 +414,8 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
     e  = c->conditions;
     sa = grib_sarray_new(10, 10);
     while (e) {
-        concept_conditions_apply(h, e, values, sa, &count);
+        err = concept_conditions_apply(h, e, values, sa, &count);
+        if (err) return err;
         e = e->next;
     }
     grib_sarray_delete(sa);

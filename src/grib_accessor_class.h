@@ -88,6 +88,7 @@ extern grib_accessor* grib_accessor_g1step_range;
 extern grib_accessor* grib_accessor_g1verificationdate;
 extern grib_accessor* grib_accessor_g2_aerosol;
 extern grib_accessor* grib_accessor_g2_chemical;
+extern grib_accessor* grib_accessor_g2_concept_dir;
 extern grib_accessor* grib_accessor_g2_eps;
 extern grib_accessor* grib_accessor_g2_mars_labeling;
 extern grib_accessor* grib_accessor_g2bitmap;

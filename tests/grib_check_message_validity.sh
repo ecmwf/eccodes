@@ -28,6 +28,13 @@ if [ $HAVE_GEOGRAPHY -eq 1 ]; then
    grep -q "Error instantiating iterator gaussian_reduced" $tempText
 fi
 
+# Check steps
+# ------------------------------
+${tools_dir}/grib_set -s stepType=accum,startStep=12,endStep=6  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "Invalid step: startStep > endStep" $tempText
+
+
 # Check regular lat/lon
 # ------------------------------
 if [ $HAVE_GEOGRAPHY -eq 1 ]; then
