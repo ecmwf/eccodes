@@ -16,11 +16,11 @@ grib_accessor* grib_accessor_data_g1complex_packing = &_grib_accessor_data_g1com
 void grib_accessor_data_g1complex_packing_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_data_complex_packing_t::init(v, args);
-    half_byte_    = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
-    N_            = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
-    packingType_  = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
-    ieee_packing_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
-    precision_    = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
+    half_byte_    = args->get_name(grib_handle_of_accessor(this), carg_++);
+    N_            = args->get_name(grib_handle_of_accessor(this), carg_++);
+    packingType_  = args->get_name(grib_handle_of_accessor(this), carg_++);
+    ieee_packing_ = args->get_name(grib_handle_of_accessor(this), carg_++);
+    precision_    = args->get_name(grib_handle_of_accessor(this), carg_++);
     edition_      = 1;
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
@@ -71,7 +71,7 @@ int grib_accessor_data_g1complex_packing_t::pack_double(const double* val, size_
 
     dirty_ = 1;
 
-    Assert((sub_j == sub_k) && (sub_m == sub_j));
+    ECCODES_ASSERT((sub_j == sub_k) && (sub_m == sub_j));
 
     ret = grib_accessor_data_complex_packing_t::pack_double(val, len);
 

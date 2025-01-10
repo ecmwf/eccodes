@@ -21,9 +21,9 @@ void grib_accessor_when_t::init(const long len, grib_arguments* arg)
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-void grib_accessor_when_t::dump(grib_dumper* dumper)
+void grib_accessor_when_t::dump(eccodes::Dumper* dumper)
 {
-    /* grib_dump_when(dumper,a,NULL); */
+    /* dumper->dump_when(a,NULL); */
 }
 
 int grib_accessor_when_t::notify_change(grib_accessor* changed)

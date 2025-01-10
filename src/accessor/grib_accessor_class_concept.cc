@@ -12,17 +12,15 @@
 #include <unordered_map>
 #include <string>
 #include <utility>
+#include <map>
 
 grib_accessor_concept_t _grib_accessor_concept{};
 grib_accessor* grib_accessor_concept = &_grib_accessor_concept;
 
 #define MAX_CONCEPT_STRING_LENGTH 255
 
-#define FALSE 0
-#define TRUE  1
-
-/* Note: A fast cut-down version of strcmp which does NOT return -1 */
-/* 0 means input strings are equal and 1 means not equal */
+// Note: A fast cut-down version of strcmp which does NOT return -1
+// 0 means input strings are equal and 1 means not equal
 GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 {
     if (*a != *b)
@@ -40,9 +38,9 @@ void grib_accessor_concept_t::init(const long len, grib_arguments* args)
     length_ = 0;
 }
 
-void grib_accessor_concept_t::dump(grib_dumper* dumper)
+void grib_accessor_concept_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_string(dumper, this, NULL);
+    dumper->dump_string(this, NULL);
 }
 
 // See ECC-1905
@@ -55,7 +53,7 @@ static int grib_get_long_memoize(
     if (pos == memo.end()) { // not in map so decode & insert
         err = grib_get_long(h, key, value);
         if (!err) {
-            memo.insert( std::make_pair(key, *value) );
+            memo.insert(std::make_pair(key, *value));
         }
     } else {
         *value = pos->second; // found in map
@@ -63,20 +61,20 @@ static int grib_get_long_memoize(
     return err;
 }
 
-/* Return 1 (=True) or 0 (=False) */
+// Return 1 (=True) or 0 (=False)
 static int concept_condition_expression_true(
     grib_handle* h, grib_concept_condition* c,
     std::unordered_map<std::string_view, long>& memo)
 {
     long lval;
     long lres      = 0;
-    int ok         = FALSE; /* Boolean */
+    int ok         = 0; // Boolean
     int err        = 0;
-    const int type = grib_expression_native_type(h, c->expression);
+    const int type = c->expression->native_type(h);
 
     switch (type) {
         case GRIB_TYPE_LONG:
-            grib_expression_evaluate_long(h, c->expression, &lres);
+            c->expression->evaluate_long(h, &lres);
             // Use memoization for the most common type (integer keys)
             ok = (grib_get_long_memoize(h, c->name, &lval, memo) == GRIB_SUCCESS) &&
                  (lval == lres);
@@ -86,7 +84,7 @@ static int concept_condition_expression_true(
         case GRIB_TYPE_DOUBLE: {
             double dval;
             double dres = 0.0;
-            grib_expression_evaluate_double(h, c->expression, &dres);
+            c->expression->evaluate_double(h, &dres);
             ok = (grib_get_double(h, c->name, &dval) == GRIB_SUCCESS) &&
                  (dval == dres);
             break;
@@ -100,41 +98,42 @@ static int concept_condition_expression_true(
             size_t size = sizeof(tmp);
 
             ok = (grib_get_string(h, c->name, buf, &len) == GRIB_SUCCESS) &&
-                 ((cval = grib_expression_evaluate_string(h, c->expression, tmp, &size, &err)) != NULL) &&
+                 ((cval = c->expression->evaluate_string(h, tmp, &size, &err)) != NULL) &&
                  (err == 0) && (grib_inline_strcmp(buf, cval) == 0);
             break;
         }
 
         default:
-            /* TODO: */
+            // TODO
             break;
     }
     return ok;
 }
 
-/* Return 1 (=True) or 0 (=False) */
-static int concept_condition_iarray_true(grib_handle* h, grib_concept_condition* c)
+// Return 0 (=no match) or >0 which is the count of matches
+// See ECC-1992
+static int concept_condition_iarray_true_count(grib_handle* h, grib_concept_condition* c)
 {
-    long* val   = NULL;
-    size_t size = 0, i;
-    int ret; /* Boolean */
-    int err = 0;
+    size_t size = 0;
+    int ret = 0; // count of matches
 
-    err = grib_get_size(h, c->name, &size);
+    int err = grib_get_size(h, c->name, &size);
     if (err || size != grib_iarray_used_size(c->iarray))
-        return FALSE;
+        return 0; // no match
 
-    val = (long*)grib_context_malloc_clear(h->context, sizeof(long) * size);
+    long* val = (long*)grib_context_malloc_clear(h->context, sizeof(long) * size);
+    if (!val) return 0;
 
     err = grib_get_long_array(h, c->name, val, &size);
     if (err) {
         grib_context_free(h->context, val);
-        return FALSE;
+        return 0; // no match
     }
-    ret = TRUE;
-    for (i = 0; i < size; i++) {
+
+    ret = (int)size; // Assume all array entries match
+    for (size_t i = 0; i < size; i++) {
         if (val[i] != c->iarray->v[i]) {
-            ret = FALSE;
+            ret = 0; // no match
             break;
         }
     }
@@ -143,13 +142,13 @@ static int concept_condition_iarray_true(grib_handle* h, grib_concept_condition*
     return ret;
 }
 
-/* Return 1 (=True) or 0 (=False) */
-static int concept_condition_true(
+// Return 0 (=no match) or >0 (=match count)
+static int concept_condition_true_count(
     grib_handle* h, grib_concept_condition* c,
     std::unordered_map<std::string_view, long>& memo)
 {
     if (c->expression == NULL)
-        return concept_condition_iarray_true(h, c);
+        return concept_condition_iarray_true_count(h, c);
     else
         return concept_condition_expression_true(h, c, memo);
 }
@@ -158,38 +157,42 @@ static const char* concept_evaluate(grib_accessor* a)
 {
     int match        = 0;
     const char* best = 0;
-    /* const char* prev = 0; */
+    //const char* prev = 0;
     grib_concept_value* c = action_concept_get_concept(a);
     grib_handle* h        = grib_handle_of_accessor(a);
 
     std::unordered_map<std::string_view, long> memo; // See ECC-1905
-    
-    // fprintf(stderr, "DEBUG: concept_evaluate: %s %s\n", name_ , c->name);
+
     while (c) {
+        // printf("DEBUG: %s concept=%s while loop c->name=%s\n", __func__, a->name_, c->name);
         grib_concept_condition* e = c->conditions;
-        int cnt                   = 0;
+        int cnt = 0;
         while (e) {
-            if (!concept_condition_true(h, e, memo))
+            const int cc_count = concept_condition_true_count(h, e, memo);
+            if (cc_count == 0) // match failed
                 break;
             e = e->next;
-            cnt++;
+            cnt += cc_count; // ECC-1992
         }
 
         if (e == NULL) {
             if (cnt >= match) {
-                /* prev  = (cnt > match) ? NULL : best; */
+                // prev  = (cnt > match) ? NULL : best;
+                // A better candidate was found. Update 'match' and 'best'
                 match = cnt;
                 best  = c->name;
+                // printf("DEBUG: %s concept=%s current best=%s\n", __func__, a->name_, best);
             }
         }
 
         c = c->next;
     }
 
+    // printf("DEBUG: %s concept=%s final best=%s\n", __func__, a->name_, best);
     return best;
 }
 
-#define MAX_NUM_CONCEPT_VALUES 40
+// Note: This function does not change the handle, but stores the results in the "values" array to be applied later
 static int concept_conditions_expression_apply(grib_handle* h, grib_concept_condition* e, grib_values* values, grib_sarray* sa, int* n)
 {
     long lres   = 0;
@@ -198,22 +201,22 @@ static int concept_conditions_expression_apply(grib_handle* h, grib_concept_cond
     size_t size;
     int err = 0;
 
-    Assert(count < 1024);
+    ECCODES_ASSERT(count < 1024);
     values[count].name = e->name;
 
-    values[count].type = grib_expression_native_type(h, e->expression);
+    values[count].type = e->expression->native_type(h);
     switch (values[count].type) {
         case GRIB_TYPE_LONG:
-            grib_expression_evaluate_long(h, e->expression, &lres);
+            e->expression->evaluate_long(h, &lres);
             values[count].long_value = lres;
             break;
         case GRIB_TYPE_DOUBLE:
-            grib_expression_evaluate_double(h, e->expression, &dres);
+            e->expression->evaluate_double(h, &dres);
             values[count].double_value = dres;
             break;
         case GRIB_TYPE_STRING:
             size                       = sizeof(sa->v[count]);
-            values[count].string_value = grib_expression_evaluate_string(h, e->expression, sa->v[count], &size, &err);
+            values[count].string_value = e->expression->evaluate_string(h, sa->v[count], &size, &err);
             break;
         default:
             return GRIB_NOT_IMPLEMENTED;
@@ -222,10 +225,51 @@ static int concept_conditions_expression_apply(grib_handle* h, grib_concept_cond
     return err;
 }
 
+static int rectify_concept_apply(grib_handle* h, const char* key)
+{
+    // The key was not found. In specific cases, rectify the problem by setting
+    // a secondary key
+    // e.g.,
+    // GRIB is instantaneous but paramId being set is for accum/avg
+    //
+    int ret = GRIB_NOT_FOUND;
+    static const std::map<std::string_view, std::pair<std::string_view, long>> keyMap = {
+        { "typeOfStatisticalProcessing", { "selectStepTemplateInterval", 1 } },
+        { "typeOfWavePeriodInterval", { "productDefinitionTemplateNumber", 103 } },
+        { "sourceSinkChemicalPhysicalProcess", { "is_chemical_srcsink", 1 } },
+        // TODO(masn): Add a new key e.g. is_probability_forecast
+        { "probabilityType", { "productDefinitionTemplateNumber", 5 } }
+    };
+    const auto mapIter = keyMap.find(key);
+    if (mapIter != keyMap.end()) {
+        const char* key2 = mapIter->second.first.data();
+        const long val2  = mapIter->second.second;
+        grib_context_log(h->context, GRIB_LOG_DEBUG, "Concept: Key %s not found, setting %s to %ld", key, key2, val2);
+        ret = grib_set_long(h, key2, val2);
+    }
+    return ret;
+}
+
+// Note: This applies the changes to the handle passed in
 static int concept_conditions_iarray_apply(grib_handle* h, grib_concept_condition* c)
 {
-    size_t size = grib_iarray_used_size(c->iarray);
-    return grib_set_long_array(h, c->name, c->iarray->v, size);
+    const size_t size = grib_iarray_used_size(c->iarray);
+    int err = grib_set_long_array(h, c->name, c->iarray->v, size);
+    // ECC-1992: Special case for GRIB2
+    // When typeOfStatisticalProcessing is an array, must also set numberOfTimeRanges
+    if ((err == GRIB_NOT_FOUND || err == GRIB_ARRAY_TOO_SMALL) &&
+        STR_EQUAL(c->name, "typeOfStatisticalProcessing"))
+    {
+        grib_context_log(h->context, GRIB_LOG_DEBUG, "Concept: Key %s not found, setting PDTN", c->name);
+        if (grib_set_long(h, "selectStepTemplateInterval", 1) == GRIB_SUCCESS) {
+            // Now should have the correct PDTN
+            err = grib_set_long(h, "numberOfTimeRanges", (long)size);
+            if (!err) {
+                err = grib_set_long_array(h, c->name, c->iarray->v, size);  //re-apply
+            }
+        }
+    }
+    return err;
 }
 
 static int concept_conditions_apply(grib_handle* h, grib_concept_condition* c, grib_values* values, grib_sarray* sa, int* n)
@@ -238,9 +282,9 @@ static int concept_conditions_apply(grib_handle* h, grib_concept_condition* c, g
 
 static int cmpstringp(const void* p1, const void* p2)
 {
-    /* The actual arguments to this function are "pointers to
-       pointers to char", but strcmp(3) arguments are "pointers
-       to char", hence the following cast plus dereference */
+    // The actual arguments to this function are "pointers to
+    // pointers to char", but strcmp(3) arguments are "pointers
+    // to char", hence the following cast plus dereference */
     return strcmp(*(char* const*)p1, *(char* const*)p2);
 }
 
@@ -272,13 +316,15 @@ bool blacklisted(grib_handle* h, long edition, const char* concept_name, const c
     return false;
 }
 
+#define MAX_NUM_CONCEPT_VALUES 40
+
 static void print_user_friendly_message(grib_handle* h, const char* name, grib_concept_value* concepts, grib_action* act)
 {
     size_t i = 0, concept_count = 0;
     long dummy = 0, editionNumber = 0;
     char centre_s[32] = {0,};
     size_t centre_len = sizeof(centre_s);
-    char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {NULL,}; /* sorted array containing concept values */
+    char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {NULL,}; // sorted array containing concept values
     grib_concept_value* pCon = concepts;
 
     grib_context_log(h->context, GRIB_LOG_ERROR, "concept: no match for %s=%s", act->name, name);
@@ -368,7 +414,8 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
     e  = c->conditions;
     sa = grib_sarray_new(10, 10);
     while (e) {
-        concept_conditions_apply(h, e, values, sa, &count);
+        err = concept_conditions_apply(h, e, values, sa, &count);
+        if (err) return err;
         e = e->next;
     }
     grib_sarray_delete(sa);
@@ -376,33 +423,14 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
     if (count) {
         err = grib_set_values_silent(h, values, count, /*silent=*/1);
         if (err) {
-            // GRIB2 product template selection
+            // Encoding of the concept failed. Can we recover?
             bool resubmit = false;
             for (int i = 0; i < count; i++) {
                 if (values[i].error == GRIB_NOT_FOUND) {
-                    // Repair the most common cause of failure: input GRIB2 handle
-                    // is instantaneous but paramId/shortName being set is for accum/avg etc
-                    if (STR_EQUAL(values[i].name, "typeOfStatisticalProcessing")) {
-                        grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Switch from instantaneous to interval-based", __func__);
-                        if (grib_set_long(h, "selectStepTemplateInterval", 1) == GRIB_SUCCESS) {
-                            resubmit = true;
-                            grib_set_values(h, &values[i], 1);
-                        }
-                    }
-                    else if (STR_EQUAL(values[i].name, "typeOfWavePeriodInterval")) {
-                        grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Switch to waves selected by period range", __func__);
-                        // TODO(masn): Add a new key e.g. is_wave_period_range
-                        if (grib_set_long(h, "productDefinitionTemplateNumber", 103) == GRIB_SUCCESS) {
-                            resubmit = true;
-                            grib_set_values(h, &values[i], 1);
-                        }
-                    }
-                    else if (STR_EQUAL(values[i].name, "sourceSinkChemicalPhysicalProcess")) {
-                    grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Switch to chemical src/sink", __func__);
-                        if (grib_set_long(h, "is_chemical_srcsink", 1) == GRIB_SUCCESS) {
-                            resubmit = true;
-                            grib_set_values(h, &values[i], 1);
-                        }
+                    // Try to rectify the most common causes of failure
+                    if (rectify_concept_apply(h, values[i].name) == GRIB_SUCCESS) {
+                        resubmit = true;
+                        grib_set_values(h, &values[i], 1);
                     }
                 }
             }
@@ -464,13 +492,11 @@ int grib_accessor_concept_t::pack_long(const long* val, size_t* len)
 
 int grib_accessor_concept_t::unpack_double(double* val, size_t* len)
 {
-    /*
-     * If we want to have a condition which contains tests for paramId as well
-     * as a floating point key, then need to be able to evaluate paramId as a
-     * double. E.g.
-     *   if (referenceValue > 0 && paramId == 129)
-     */
-    /*return GRIB_NOT_IMPLEMENTED*/
+    //  If we want to have a condition which contains tests for paramId as well
+    //  as a floating point key, then need to be able to evaluate paramId as a
+    //  double. E.g.
+    //     if (referenceValue > 0 && paramId == 129)
+    // return GRIB_NOT_IMPLEMENTED
     int ret = 0;
     if (flags_ & GRIB_ACCESSOR_FLAG_LONG_TYPE) {
         long lval = 0;

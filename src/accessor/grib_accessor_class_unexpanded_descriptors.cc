@@ -20,8 +20,8 @@ void grib_accessor_unexpanded_descriptors_t::init(const long len, grib_arguments
 
     int n                         = 0;
     grib_handle* hand             = grib_handle_of_accessor(this);
-    unexpandedDescriptorsEncoded_ = grib_find_accessor(hand, grib_arguments_get_name(hand, args, n++));
-    createNewData_                = grib_arguments_get_name(hand, args, n++);
+    unexpandedDescriptorsEncoded_ = grib_find_accessor(hand, args->get_name(hand, n++));
+    createNewData_                = args->get_name(hand, n++);
     length_                       = 0;
 }
 
@@ -97,7 +97,7 @@ int grib_accessor_unexpanded_descriptors_t::pack_long(const long* val, size_t* l
         return ret;
 
     expanded = dynamic_cast<grib_accessor_expanded_descriptors_t*>(grib_find_accessor(hand, "expandedCodes"));
-    Assert(expanded != NULL);
+    ECCODES_ASSERT(expanded != NULL);
     ret = expanded->grib_accessor_expanded_descriptors_set_do_expand(1);
     if (ret != GRIB_SUCCESS)
         return ret;

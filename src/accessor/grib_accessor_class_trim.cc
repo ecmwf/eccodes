@@ -19,9 +19,9 @@ void grib_accessor_trim_t::init(const long l, grib_arguments* arg)
     int n          = 0;
     grib_handle* h = grib_handle_of_accessor(this);
 
-    input_      = grib_arguments_get_name(h, arg, n++);
-    trim_left_  = grib_arguments_get_long(h, arg, n++);
-    trim_right_ = grib_arguments_get_long(h, arg, n++);
+    input_      = arg->get_name(h, n++);
+    trim_left_  = arg->get_long(h, n++);
+    trim_right_ = arg->get_long(h, n++);
     DEBUG_ASSERT(trim_left_ == 0 || trim_left_ == 1);
     DEBUG_ASSERT(trim_right_ == 0 || trim_right_ == 1);
 }

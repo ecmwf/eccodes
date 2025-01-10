@@ -19,12 +19,12 @@ void grib_accessor_number_of_values_t::init(const long l, grib_arguments* c)
     int n             = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
 
-    values_              = grib_arguments_get_name(hand, c, n++);
-    bitsPerValue_        = grib_arguments_get_name(hand, c, n++);
-    numberOfPoints_      = grib_arguments_get_name(hand, c, n++);
-    bitmapPresent_       = grib_arguments_get_name(hand, c, n++);
-    bitmap_              = grib_arguments_get_name(hand, c, n++);
-    numberOfCodedValues_ = grib_arguments_get_name(hand, c, n++);
+    values_              = c->get_name(hand, n++);
+    bitsPerValue_        = c->get_name(hand, n++);
+    numberOfPoints_      = c->get_name(hand, n++);
+    bitmapPresent_       = c->get_name(hand, n++);
+    bitmap_              = c->get_name(hand, n++);
+    numberOfCodedValues_ = c->get_name(hand, n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 
     length_ = 0;

@@ -18,20 +18,20 @@ void grib_accessor_g1forecastmonth_t::init(const long l, grib_arguments* c)
     grib_accessor_long_t::init(l, c);
     grib_handle* h  = grib_handle_of_accessor(this);
     int n           = 0;
-    const int count = grib_arguments_get_count(c);
+    const int count = c->get_count();
     if (count == 6) { /* GRIB1 case -- this needs to be refactored */
-        verification_yearmonth_ = grib_arguments_get_name(h, c, n++);
-        base_date_              = grib_arguments_get_name(h, c, n++);
-        day_                    = grib_arguments_get_name(h, c, n++);
-        hour_                   = grib_arguments_get_name(h, c, n++);
-        fcmonth_                = grib_arguments_get_name(h, c, n++);
-        check_                  = grib_arguments_get_name(h, c, n++);
+        verification_yearmonth_ = c->get_name(h, n++);
+        base_date_              = c->get_name(h, n++);
+        day_                    = c->get_name(h, n++);
+        hour_                   = c->get_name(h, n++);
+        fcmonth_                = c->get_name(h, n++);
+        check_                  = c->get_name(h, n++);
     }
 }
 
-void grib_accessor_g1forecastmonth_t::dump(grib_dumper* dumper)
+void grib_accessor_g1forecastmonth_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_long(dumper, this, NULL);
+    dumper->dump_long(this, NULL);
 }
 
 static int calculate_fcmonth(grib_accessor* a, long verification_yearmonth, long base_date, long day, long hour, long* result)
@@ -138,7 +138,7 @@ int grib_accessor_g1forecastmonth_t::unpack_long_edition1(long* val, size_t* len
         if (check) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s=%ld (%s-%s)=%ld", fcmonth_,
                              gribForecastMonth, base_date, verification_yearmonth_, fcmonth);
-            Assert(gribForecastMonth == fcmonth);
+            ECCODES_ASSERT(gribForecastMonth == fcmonth);
         }
         else {
             *val = gribForecastMonth;

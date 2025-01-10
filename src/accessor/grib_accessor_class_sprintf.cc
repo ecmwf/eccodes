@@ -36,7 +36,7 @@ int grib_accessor_sprintf_t::unpack_string(char* val, size_t* len)
     const char* tempname = NULL;
     size_t uname_len     = 0;
 
-    uname = grib_arguments_get_string(grib_handle_of_accessor(this), args_, carg++);
+    uname = args_->get_string(grib_handle_of_accessor(this), carg++);
     snprintf(result, sizeof(result), "%s", "");
     uname_len = strlen(uname);
 
@@ -48,13 +48,13 @@ int grib_accessor_sprintf_t::unpack_string(char* val, size_t* len)
                 char *theEnd = NULL, *start;
                 start        = (char*)&(uname[++i]);
                 precision    = strtol(start, &theEnd, 10);
-                Assert(*theEnd != 0);
+                ECCODES_ASSERT(*theEnd != 0);
                 while (uname[i] != *theEnd)
                     i++;
             }
             switch (uname[i]) {
                 case 'd':
-                    tempname = grib_arguments_get_name(grib_handle_of_accessor(this), args_, carg++);
+                    tempname = args_->get_name(grib_handle_of_accessor(this), carg++);
 
                     if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), tempname, &ires)) != GRIB_SUCCESS)
                         return ret;
@@ -80,7 +80,7 @@ int grib_accessor_sprintf_t::unpack_string(char* val, size_t* len)
                     break;
 
                 case 'g':
-                    tempname = grib_arguments_get_name(grib_handle_of_accessor(this), args_, carg++);
+                    tempname = args_->get_name(grib_handle_of_accessor(this), carg++);
                     if ((ret = grib_get_double_internal(grib_handle_of_accessor(this), tempname, &dres)) != GRIB_SUCCESS)
                         return ret;
                     snprintf(tempBuffer, sizeof(tempBuffer), "%s%g", result, dres);
@@ -89,7 +89,7 @@ int grib_accessor_sprintf_t::unpack_string(char* val, size_t* len)
                     break;
 
                 case 's':
-                    tempname = grib_arguments_get_name(grib_handle_of_accessor(this), args_, carg++);
+                    tempname = args_->get_name(grib_handle_of_accessor(this), carg++);
                     if ((ret = grib_get_string_internal(grib_handle_of_accessor(this), tempname, sres, &replen)) != GRIB_SUCCESS)
                         return ret;
                     snprintf(tempBuffer, sizeof(tempBuffer), "%s%s", result, sres);

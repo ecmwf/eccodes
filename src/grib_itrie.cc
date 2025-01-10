@@ -339,7 +339,7 @@ int grib_itrie_get_id(grib_itrie* t, const char* key)
     const char* k    = key;
     grib_itrie* last = t;
     if (!t) {
-        Assert(!"grib_itrie_get_id: grib_trie==NULL");
+        ECCODES_ASSERT(!"grib_itrie_get_id: grib_trie==NULL");
         return -1;
     }
 
@@ -367,7 +367,7 @@ int grib_itrie_insert(grib_itrie* t, const char* key)
     int* count;
 
     if (!t) {
-        Assert(!"grib_itrie_insert: grib_trie==NULL");
+        ECCODES_ASSERT(!"grib_itrie_insert: grib_trie==NULL");
         return -1;
     }
 
@@ -398,7 +398,7 @@ int grib_itrie_insert(grib_itrie* t, const char* key)
     else {
         grib_context_log(t->context, GRIB_LOG_ERROR,
                          "grib_itrie_insert: too many accessors, increase MAX_NUM_CONCEPTS\n");
-        Assert(*(t->count) < MAX_NUM_CONCEPTS);
+        ECCODES_ASSERT(*(t->count) < MAX_NUM_CONCEPTS);
     }
 
     GRIB_MUTEX_UNLOCK(&mutex);

@@ -18,8 +18,8 @@ void grib_accessor_number_of_values_data_raw_packing_t::init(const long v, grib_
     grib_accessor_gen_t::init(v, args);
     int n = 0;
 
-    values_    = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    precision_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
+    values_    = args->get_name(grib_handle_of_accessor(this), n++);
+    precision_ = args->get_name(grib_handle_of_accessor(this), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     length_ = 0;
 }
@@ -33,7 +33,7 @@ int grib_accessor_number_of_values_data_raw_packing_t::unpack_long(long* val, si
     long byte_count      = 0;
 
     adata = grib_find_accessor(grib_handle_of_accessor(this), values_);
-    Assert(adata != NULL);
+    ECCODES_ASSERT(adata != NULL);
     byte_count = adata->byte_count();
     if ((err = grib_get_long_internal(grib_handle_of_accessor(this), precision_, &precision)) != GRIB_SUCCESS)
         return err;

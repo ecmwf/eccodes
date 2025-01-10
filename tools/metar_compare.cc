@@ -150,7 +150,7 @@ static int blocklisted(const char* name)
     grib_string_list* b = blocklist;
     if (!name) return 0;
     while (b) {
-        Assert(b->value);
+        ECCODES_ASSERT(b->value);
         if (!strcmp(name, b->value))
             return 1;
         b = b->next;
@@ -491,7 +491,7 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
         return err;
     }
 
-    Assert(options->mode == MODE_METAR);
+    ECCODES_ASSERT(options->mode == MODE_METAR);
     //     // TODO: Ignore missing values for keys in METAR. Not yet implemented
     //     isMissing1 = ((grib_is_missing(h1, name, &err1) == 1) && (err1 == 0)) ? 1 : 0;
     //     isMissing2 = ((grib_is_missing(h2, name, &err2) == 1) && (err2 == 0)) ? 1 : 0;

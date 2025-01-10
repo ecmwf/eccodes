@@ -19,17 +19,17 @@ void grib_accessor_global_gaussian_t::init(const long l, grib_arguments* c)
     int n          = 0;
     grib_handle* h = grib_handle_of_accessor(this);
 
-    N_           = grib_arguments_get_name(h, c, n++);
-    Ni_          = grib_arguments_get_name(h, c, n++);
-    di_          = grib_arguments_get_name(h, c, n++);
-    latfirst_    = grib_arguments_get_name(h, c, n++);
-    lonfirst_    = grib_arguments_get_name(h, c, n++);
-    latlast_     = grib_arguments_get_name(h, c, n++);
-    lonlast_     = grib_arguments_get_name(h, c, n++);
-    plpresent_   = grib_arguments_get_name(h, c, n++);
-    pl_          = grib_arguments_get_name(h, c, n++);
-    basic_angle_ = grib_arguments_get_name(h, c, n++);
-    subdivision_ = grib_arguments_get_name(h, c, n++);
+    N_           = c->get_name(h, n++);
+    Ni_          = c->get_name(h, n++);
+    di_          = c->get_name(h, n++);
+    latfirst_    = c->get_name(h, n++);
+    lonfirst_    = c->get_name(h, n++);
+    latlast_     = c->get_name(h, n++);
+    lonlast_     = c->get_name(h, n++);
+    plpresent_   = c->get_name(h, n++);
+    pl_          = c->get_name(h, n++);
+    basic_angle_ = c->get_name(h, n++);
+    subdivision_ = c->get_name(h, n++);
 }
 
 int grib_accessor_global_gaussian_t::unpack_long(long* val, size_t* len)
@@ -110,7 +110,7 @@ int grib_accessor_global_gaussian_t::unpack_long(long* val, size_t* len)
         long* pl = NULL; /* pl array */
         if ((ret = grib_get_size(h, pl_, &plsize)) != GRIB_SUCCESS)
             return ret;
-        Assert(plsize);
+        ECCODES_ASSERT(plsize);
         pl = (long*)grib_context_malloc_clear(c, sizeof(long) * plsize);
         grib_get_long_array_internal(h, pl_, pl, &plsize);
 
@@ -199,13 +199,13 @@ int grib_accessor_global_gaussian_t::pack_long(const long* val, size_t* len)
 
         if ((ret = grib_get_size(h, pl_, &plsize)) != GRIB_SUCCESS)
             return ret;
-        Assert(plsize);
+        ECCODES_ASSERT(plsize);
         pl = (long*)grib_context_malloc_clear(c, sizeof(long) * plsize);
         grib_get_long_array_internal(h, pl_, pl, &plsize);
 
         max_pl = pl[0];
         for (i = 1; i < plsize; i++) {
-            Assert(pl[i] > 0);
+            ECCODES_ASSERT(pl[i] > 0);
             if (pl[i] > max_pl)
                 max_pl = pl[i];
         }

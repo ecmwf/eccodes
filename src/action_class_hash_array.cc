@@ -195,7 +195,7 @@ static void destroy(grib_context* context, grib_action* act)
 
     // This is currently unset. So assert that it is NULL
     const grib_hash_array_value* v = self->hash_array;
-    Assert(v == NULL);
+    ECCODES_ASSERT(v == NULL);
     // if (v)
     //     grib_trie_delete(v->index);
     // while (v) {
@@ -233,7 +233,7 @@ static grib_hash_array_value* get_hash_array_impl(grib_handle* h, grib_action* a
     if (self->hash_array != NULL)
         return self->hash_array;
 
-    Assert(self->masterDir);
+    ECCODES_ASSERT(self->masterDir);
     grib_get_string(h, self->masterDir, masterDir, &lenMasterDir);
 
     snprintf(buf, 4096, "%s/%s", masterDir, self->basename);

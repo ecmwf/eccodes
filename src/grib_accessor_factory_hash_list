@@ -88,6 +88,7 @@ g1step_range, &grib_accessor_g1step_range
 g1verificationdate, &grib_accessor_g1verificationdate
 g2_aerosol, &grib_accessor_g2_aerosol
 g2_chemical, &grib_accessor_g2_chemical
+g2_concept_dir, &grib_accessor_g2_concept_dir
 g2_eps, &grib_accessor_g2_eps
 g2_mars_labeling, &grib_accessor_g2_mars_labeling
 g2bitmap, &grib_accessor_g2bitmap
@@ -130,6 +131,7 @@ mars_step, &grib_accessor_mars_step
 md5, &grib_accessor_md5
 message, &grib_accessor_message
 message_copy, &grib_accessor_message_copy
+message_is_valid, &grib_accessor_message_is_valid
 multdouble, &grib_accessor_multdouble
 nearest, &grib_accessor_nearest
 non_alpha, &grib_accessor_non_alpha

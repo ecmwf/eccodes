@@ -21,14 +21,14 @@ void grib_accessor_long_vector_t::init(const long l, grib_arguments* c)
     grib_accessor_abstract_long_vector_t* v = NULL;
     int n                                   = 0;
 
-    vector_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    vector_ = c->get_name(grib_handle_of_accessor(this), n++);
     va      = (grib_accessor*)grib_find_accessor(grib_handle_of_accessor(this), vector_);
     v       = (grib_accessor_abstract_long_vector_t*)va;
 
-    index_ = grib_arguments_get_long(grib_handle_of_accessor(this), c, n++);
+    index_ = c->get_long(grib_handle_of_accessor(this), n++);
 
     /* check index_ on init and never change it */
-    Assert(index_ < v->number_of_elements_ && index_ >= 0);
+    ECCODES_ASSERT(index_ < v->number_of_elements_ && index_ >= 0);
 
     length_ = 0;
 }

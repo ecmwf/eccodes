@@ -354,7 +354,7 @@ static const char* get_packing_spec_packing_name(long packing_spec_packing)
         return "GRIB_UTIL_PACKING_USE_PROVIDED";
     if (GRIB_UTIL_PACKING_SAME_AS_INPUT == packing_spec_packing)
         return "GRIB_UTIL_PACKING_SAME_AS_INPUT";
-    Assert(!"get_packing_spec_packing_name: invalid packing");
+    ECCODES_ASSERT(!"get_packing_spec_packing_name: invalid packing");
     return NULL;
 }
 
@@ -380,7 +380,7 @@ static const char* get_packing_spec_packing_type_name(long packing_spec_packing_
         return "GRIB_UTIL_PACKING_TYPE_CCSDS";
     if (GRIB_UTIL_PACKING_TYPE_IEEE == packing_spec_packing_type)
         return "GRIB_UTIL_PACKING_TYPE_IEEE";
-    Assert(!"get_packing_spec_packing_type_name: invalid packing_type");
+    ECCODES_ASSERT(!"get_packing_spec_packing_type_name: invalid packing_type");
     return NULL;
 }
 
@@ -487,7 +487,7 @@ static void print_values(const grib_context* c,
 // static int angle_can_be_encoded(const double angle, const double angular_precision)
 // {
 //     const double angle_expanded = angle * angular_precision;
-//     Assert(angular_precision>0);
+//     ECCODES_ASSERT(angular_precision>0);
 //     double rounded = (long)(angle_expanded+0.5)/angular_precision;
 //     if (angle<0) {
 //         rounded = (long)(angle_expanded-0.5)/angular_precision;
@@ -512,7 +512,7 @@ static int angle_can_be_encoded(const grib_handle* h, const double angle)
         return ret;
     if ((ret = grib_get_long(h, "angleSubdivisions", &angle_subdivisions)) != 0)
         return ret;
-    Assert(angle_subdivisions > 0);
+    ECCODES_ASSERT(angle_subdivisions > 0);
 
     snprintf(sample_name, sizeof(sample_name), "GRIB%ld", edition);
     h2 = grib_handle_new_from_samples(0, sample_name);
@@ -535,7 +535,7 @@ static int angle_can_be_encoded(const grib_handle* h, const double angle)
 static double adjust_angle(const double angle, const RoundingPolicy policy, const double angle_subdivisions)
 {
     double result = 0;
-    Assert(angle_subdivisions > 0);
+    ECCODES_ASSERT(angle_subdivisions > 0);
     result = angle * angle_subdivisions;
     if (policy == eROUND_ANGLE_UP)
         result = round(result + 0.5);
@@ -938,7 +938,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 {
 #define SET_LONG_VALUE(n, v)                       \
     do {                                           \
-        Assert(count < 1024);                      \
+        ECCODES_ASSERT(count < 1024);                      \
         values[count].name       = n;              \
         values[count].type       = GRIB_TYPE_LONG; \
         values[count].long_value = v;              \
@@ -946,7 +946,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     } while (0)
 #define SET_DOUBLE_VALUE(n, v)                         \
     do {                                               \
-        Assert(count < 1024);                          \
+        ECCODES_ASSERT(count < 1024);                          \
         values[count].name         = n;                \
         values[count].type         = GRIB_TYPE_DOUBLE; \
         values[count].double_value = v;                \
@@ -954,7 +954,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     } while (0)
 #define SET_STRING_VALUE(n, v)                         \
     do {                                               \
-        Assert(count < 1024);                          \
+        ECCODES_ASSERT(count < 1024);                          \
         values[count].name         = n;                \
         values[count].type         = GRIB_TYPE_STRING; \
         values[count].string_value = v;                \
@@ -963,7 +963,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 
 #define COPY_SPEC_LONG(x)                          \
     do {                                           \
-        Assert(count < 1024);                      \
+        ECCODES_ASSERT(count < 1024);                      \
         values[count].name       = #x;             \
         values[count].type       = GRIB_TYPE_LONG; \
         values[count].long_value = spec->x;        \
@@ -971,7 +971,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     } while (0)
 #define COPY_SPEC_DOUBLE(x)                            \
     do {                                               \
-        Assert(count < 1024);                          \
+        ECCODES_ASSERT(count < 1024);                          \
         values[count].name         = #x;               \
         values[count].type         = GRIB_TYPE_DOUBLE; \
         values[count].double_value = spec->x;          \
@@ -995,7 +995,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     bool global_grid               = false;
     int expandBoundingBox         = 0;
 
-    Assert(h);
+    ECCODES_ASSERT(h);
 
     // Get edition number from input handle
     if ((*err = grib_get_long(h, "edition", &editionNumber)) != 0) {
@@ -1106,7 +1106,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
 
-            // TODO(masn): add Assert
+            // TODO(masn): add ECCODES_ASSERT
             COPY_SPEC_LONG(Ni);
             COPY_SPEC_DOUBLE(iDirectionIncrementInDegrees);
             COPY_SPEC_LONG(Nj);
@@ -1352,7 +1352,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
             }
             else
             {
-                Assert(grib_get_long(h, "bitsPerValue", &bitsPerValue) == 0);
+                ECCODES_ASSERT(grib_get_long(h, "bitsPerValue", &bitsPerValue) == 0);
                 SET_LONG_VALUE("bitsPerValue", bitsPerValue);
             }
         }
@@ -1371,7 +1371,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 
         case GRIB_UTIL_ACCURACY_SAME_DECIMAL_SCALE_FACTOR_AS_INPUT: {
             long decimalScaleFactor = 0;
-            Assert(grib_get_long(h, "decimalScaleFactor", &decimalScaleFactor) == 0);
+            ECCODES_ASSERT(grib_get_long(h, "decimalScaleFactor", &decimalScaleFactor) == 0);
             SET_LONG_VALUE("decimalScaleFactor", decimalScaleFactor);
         }
         break;
@@ -1389,7 +1389,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 
     if (packing_spec->extra_settings_count) {
         for (i = 0; i < packing_spec->extra_settings_count; i++) {
-            Assert(count < 1024);
+            ECCODES_ASSERT(count < 1024);
             if (strcmp(packing_spec->extra_settings[i].name, "expandBoundingBox") == 0) {
                 if (packing_spec->extra_settings[i].long_value == 1) {
                     /* ECC-625: Request is for expansion of bounding box (sub-area).
@@ -1416,10 +1416,10 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     }
 
     grib_handle_delete(h_sample);
-    Assert(*err == 0);
+    ECCODES_ASSERT(*err == 0);
 
     // GRIB-857: Set "pl" array if provided (For reduced Gaussian grids)
-    Assert(spec->pl_size >= 0);
+    ECCODES_ASSERT(spec->pl_size >= 0);
     if (spec->pl && spec->pl_size == 0) {
         fprintf(stderr, "%s: pl array not NULL but pl_size == 0!\n", __func__);
         goto cleanup;
@@ -1598,7 +1598,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 
     // ECC-445
     if (expandBoundingBox) {
-        Assert(!global_grid); // ECC-576: "global" should not be set
+        ECCODES_ASSERT(!global_grid); // ECC-576: "global" should not be set
     }
 
     if ((*err = check_geometry(h_out, spec, data_values_count, global_grid)) != GRIB_SUCCESS) {
@@ -1829,7 +1829,7 @@ int parse_keyval_string(const char* grib_tool,
     p = strtok_r(arg, ",", &lasts);
     while (p != NULL) {
         values[i].name = (char*)calloc(1, strlen(p) + 1);
-        Assert(values[i].name);
+        ECCODES_ASSERT(values[i].name);
         strcpy((char*)values[i].name, p);
         p = strtok_r(NULL, ",", &lasts);
         i++;
@@ -1950,12 +1950,13 @@ int grib2_is_PDTN_ChemicalDistFunc(long pdtn)
 // Return 1 if the productDefinitionTemplateNumber (GRIB2) is for aerosols
 int grib2_is_PDTN_Aerosol(long pdtn)
 {
-    // Notes: PDT 44 is deprecated and replaced by 48
+    // Notes: PDT 44 is deprecated and replaced by 50
     //        PDT 47 is deprecated and replaced by 85
     return (
         pdtn == 44 ||
         pdtn == 48 ||
         pdtn == 49 ||
+        pdtn == 50 ||
         pdtn == 45 ||
         pdtn == 46 ||
         pdtn == 47 ||
@@ -2014,6 +2015,9 @@ int grib2_choose_PDTN(int current_PDTN, bool is_det, bool is_instant)
         if (is_interval && is_ens) return 85;
         if (is_interval && is_det) return 46;
     }
+    if (current_PDTN == 50) {
+        if (is_instant && is_ens) return 45;
+    }
 
     return current_PDTN;  // no change
 }
@@ -2033,7 +2037,7 @@ int grib2_select_PDTN(int is_eps, int is_instant,
     // At most one has to be set. All could be 0
     // Unfortunately if PDTN=48 then both aerosol and aerosol_optical can be 1!
     const int sum = is_chemical + is_chemical_srcsink + is_chemical_distfn + is_aerosol + is_aerosol_optical;
-    Assert(sum == 0 || sum == 1 || sum == 2);
+    ECCODES_ASSERT(sum == 0 || sum == 1 || sum == 2);
 
     if (is_chemical) {
         if (is_eps) {
@@ -2102,7 +2106,7 @@ int grib2_select_PDTN(int is_eps, int is_instant,
         }
         else {
             if (is_instant)
-                return 48; // 44 is deprecated
+                return 50; // ECC-1963: 44 is deprecated
             else
                 return 46;
         }
@@ -2224,7 +2228,7 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
     // If grib_data_quality_checks == 1, limits failure results in an error
     // If grib_data_quality_checks == 2, limits failure results in a warning
 
-    Assert(ctx->grib_data_quality_checks == 1 || ctx->grib_data_quality_checks == 2);
+    ECCODES_ASSERT(ctx->grib_data_quality_checks == 1 || ctx->grib_data_quality_checks == 2);
     is_error = (ctx->grib_data_quality_checks == 1);
 
     len = sizeof(shortName);

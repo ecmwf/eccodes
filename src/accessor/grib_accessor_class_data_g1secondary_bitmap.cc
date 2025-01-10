@@ -16,7 +16,7 @@ grib_accessor* grib_accessor_data_g1secondary_bitmap = &_grib_accessor_data_g1se
 void grib_accessor_data_g1secondary_bitmap_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_data_secondary_bitmap_t::init(v, args);
-    number_of_ones_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, 4);
+    number_of_ones_ = args->get_name(grib_handle_of_accessor(this), 4);
 }
 
 int grib_accessor_data_g1secondary_bitmap_t::value_count(long* count)
@@ -108,7 +108,7 @@ int grib_accessor_data_g1secondary_bitmap_t::pack_double(const double* val, size
     *len = k;
 
     /*printf("QQQQQQQ %ld %ld second=%ld\n",primary_len,on,m);*/
-    Assert(k == primary_len);
+    ECCODES_ASSERT(k == primary_len);
 
     err = grib_set_double_array_internal(grib_handle_of_accessor(this), primary_bitmap_, primary_bitmap, k);
     if (err == GRIB_SUCCESS)

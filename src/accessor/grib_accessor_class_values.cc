@@ -37,7 +37,7 @@ long grib_accessor_values_t::init_length()
     /* When reparsing */
     if (offsetdata < offsetsection) {
         /* printf("init_length offsetdata < offsetsection=0\n"); */
-        Assert(grib_handle_of_accessor(this)->loader);
+        ECCODES_ASSERT(grib_handle_of_accessor(this)->loader);
         return 0;
     }
 
@@ -49,13 +49,13 @@ void grib_accessor_values_t::init(const long v, grib_arguments* params)
     grib_accessor_gen_t::init(v, params);
     carg_ = 0;
 
-    seclen_        = grib_arguments_get_name(grib_handle_of_accessor(this), params, carg_++);
-    offsetdata_    = grib_arguments_get_name(grib_handle_of_accessor(this), params, carg_++);
-    offsetsection_ = grib_arguments_get_name(grib_handle_of_accessor(this), params, carg_++);
+    seclen_        = params->get_name(grib_handle_of_accessor(this), carg_++);
+    offsetdata_    = params->get_name(grib_handle_of_accessor(this), carg_++);
+    offsetsection_ = params->get_name(grib_handle_of_accessor(this), carg_++);
     values_dirty_  = 1;
 
     length_ = init_length();
-    /* Assert(length_ >=0); */
+    /* ECCODES_ASSERT(length_ >=0); */
 }
 
 long grib_accessor_values_t::get_native_type()
@@ -63,9 +63,9 @@ long grib_accessor_values_t::get_native_type()
     return GRIB_TYPE_DOUBLE;
 }
 
-void grib_accessor_values_t::dump(grib_dumper* dumper)
+void grib_accessor_values_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_values(dumper, this);
+    dumper->dump_values(this);
 }
 
 long grib_accessor_values_t::byte_count()
@@ -88,7 +88,7 @@ void grib_accessor_values_t::update_size(size_t s)
 {
     grib_context_log(context_, GRIB_LOG_DEBUG, "updating size of %s old %ld new %ld", name_, length_, s);
     length_ = s;
-    Assert(length_ >= 0);
+    ECCODES_ASSERT(length_ >= 0);
 }
 
 int grib_accessor_values_t::compare(grib_accessor* b)

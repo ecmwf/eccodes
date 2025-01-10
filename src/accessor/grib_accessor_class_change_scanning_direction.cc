@@ -19,14 +19,14 @@ void grib_accessor_change_scanning_direction_t::init(const long len, grib_argume
     grib_handle* h = grib_handle_of_accessor(this);
     int n          = 0;
 
-    values_             = grib_arguments_get_name(h, args, n++);
-    Ni_                 = grib_arguments_get_name(h, args, n++);
-    Nj_                 = grib_arguments_get_name(h, args, n++);
-    i_scans_negatively_ = grib_arguments_get_name(h, args, n++);
-    j_scans_positively_ = grib_arguments_get_name(h, args, n++);
-    first_              = grib_arguments_get_name(h, args, n++);
-    last_               = grib_arguments_get_name(h, args, n++);
-    axis_               = grib_arguments_get_name(h, args, n++);
+    values_             = args->get_name(h, n++);
+    Ni_                 = args->get_name(h, n++);
+    Nj_                 = args->get_name(h, n++);
+    i_scans_negatively_ = args->get_name(h, n++);
+    j_scans_positively_ = args->get_name(h, n++);
+    first_              = args->get_name(h, n++);
+    last_               = args->get_name(h, n++);
+    axis_               = args->get_name(h, n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
@@ -91,8 +91,8 @@ int grib_accessor_change_scanning_direction_t::pack_long(const long* val, size_t
         return err;
     }
 
-    Assert(axis_);
-    Assert(strcmp(axis_, "x") == 0 || strcmp(axis_, "y") == 0);
+    ECCODES_ASSERT(axis_);
+    ECCODES_ASSERT(strcmp(axis_, "x") == 0 || strcmp(axis_, "y") == 0);
 
     if (axis_[0] == 'x') {
         theEnd = Ni / 2;

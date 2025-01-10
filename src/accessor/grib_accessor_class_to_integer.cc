@@ -18,9 +18,9 @@ void grib_accessor_to_integer_t::init(const long len, grib_arguments* arg)
     grib_accessor_gen_t::init(len, arg);
     grib_handle* hand = grib_handle_of_accessor(this);
 
-    key_        = grib_arguments_get_name(hand, arg, 0);
-    start_      = grib_arguments_get_long(hand, arg, 1);
-    str_length_ = grib_arguments_get_long(hand, arg, 2);
+    key_        = arg->get_name(hand, 0);
+    start_      = arg->get_long(hand, 1);
+    str_length_ = arg->get_long(hand, 2);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     grib_accessor::length_ = 0;
@@ -47,9 +47,9 @@ size_t grib_accessor_to_integer_t::string_length()
     return size;
 }
 
-void grib_accessor_to_integer_t::dump(grib_dumper* dumper)
+void grib_accessor_to_integer_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_long(dumper, this, NULL);
+    dumper->dump_long(this, NULL);
 }
 
 long grib_accessor_to_integer_t::get_native_type()

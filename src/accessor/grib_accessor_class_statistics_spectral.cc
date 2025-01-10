@@ -19,11 +19,11 @@ void grib_accessor_statistics_spectral_t::init(const long l, grib_arguments* c)
     int n = 0;
     grib_handle* h  = grib_handle_of_accessor(this);
 
-    values_ = grib_arguments_get_name(h, c, n++);
-    J_      = grib_arguments_get_name(h, c, n++);
-    K_      = grib_arguments_get_name(h, c, n++);
-    M_      = grib_arguments_get_name(h, c, n++);
-    JS_     = grib_arguments_get_name(h, c, n++);
+    values_ = c->get_name(h, n++);
+    J_      = c->get_name(h, n++);
+    K_      = c->get_name(h, n++);
+    M_      = c->get_name(h, n++);
+    JS_     = c->get_name(h, n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;

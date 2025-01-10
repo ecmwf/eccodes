@@ -124,3 +124,5 @@ if(kindOfProduct == `WRAP`){
  constant WRAPstr="WRAP";
  alias ls.identifier=WRAPstr;
 }
+
+meta isMessageValid message_is_valid(kindOfProduct) : hidden;

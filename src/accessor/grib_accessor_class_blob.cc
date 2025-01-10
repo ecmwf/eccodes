@@ -17,8 +17,8 @@ void grib_accessor_blob_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
     grib_get_long_internal(grib_handle_of_accessor(this),
-                           grib_arguments_get_name(parent_->h, arg, 0), &length_);
-    Assert(length_ >= 0);
+                           arg->get_name(parent_->h, 0), &length_);
+    ECCODES_ASSERT(length_ >= 0);
 }
 
 long grib_accessor_blob_t::get_native_type()
@@ -39,7 +39,7 @@ int grib_accessor_blob_t::unpack_bytes(unsigned char* buffer, size_t* len)
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_blob_t::dump(grib_dumper* dumper)
+void grib_accessor_blob_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_bytes(dumper, this, NULL);
+    dumper->dump_bytes(this, NULL);
 }

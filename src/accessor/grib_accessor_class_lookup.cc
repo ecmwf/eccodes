@@ -18,9 +18,9 @@ void grib_accessor_lookup_t::init(const long len, grib_arguments* arg)
     grib_accessor_long_t::init(len, arg);
     length_  = 0;
     llength_ = len;
-    loffset_ = grib_arguments_get_long(grib_handle_of_accessor(this), arg, 0);
+    loffset_ = arg->get_long(grib_handle_of_accessor(this), 0);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    real_name_ = grib_arguments_get_expression(grib_handle_of_accessor(this), arg, 1);
+    real_name_ = arg->get_expression(grib_handle_of_accessor(this), 1);
 }
 
 void grib_accessor_lookup_t::post_init()
@@ -30,7 +30,7 @@ void grib_accessor_lookup_t::post_init()
     }
 }
 
-void grib_accessor_lookup_t::dump(grib_dumper* dumper)
+void grib_accessor_lookup_t::dump(eccodes::Dumper* dumper)
 {
     unsigned char bytes[1024] = {0,};
     char msg[1024] = {0,};
@@ -50,7 +50,7 @@ void grib_accessor_lookup_t::dump(grib_dumper* dumper)
 
     snprintf(buf, sizeof(buf), "%s %lu %ld-%ld", msg, v, (long)offset_ + loffset_, (long)llength_);
 
-    grib_dump_long(dumper, this, buf);
+    dumper->dump_long(this, buf);
 }
 
 int grib_accessor_lookup_t::unpack_string(char* v, size_t* len)
@@ -97,7 +97,7 @@ int grib_accessor_lookup_t::unpack_long(long* val, size_t* len)
 
     /* This is used when reparsing or rebuilding */
     if (h->loader) {
-        Assert(*len == 1);
+        ECCODES_ASSERT(*len == 1);
         return h->loader->lookup_long(h->context, h->loader, name_, val);
     }
 

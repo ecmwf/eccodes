@@ -18,7 +18,7 @@ void grib_accessor_bytes_t::init(const long len, grib_arguments* arg)
     grib_accessor_gen_t::init(len, arg);
     /*grib_accessor_signed* self = (grib_accessor_signed*)a;  */
     length_ = len;
-    Assert(length_ >= 0);
+    ECCODES_ASSERT(length_ >= 0);
 }
 
 long grib_accessor_bytes_t::get_native_type()
@@ -93,7 +93,7 @@ int grib_accessor_bytes_t::pack_string(const char* val, size_t* len)
             grib_context_free(c, bytearray);
             return GRIB_INVALID_KEY_VALUE;
         }
-        Assert(byteVal < 256);
+        ECCODES_ASSERT(byteVal < 256);
         bytearray[i] = (int)byteVal;
     }
 

@@ -17,8 +17,8 @@ void grib_accessor_bits_per_value_t::init(const long l, grib_arguments* args)
 {
     grib_accessor_long_t::init(l, args);
     int n           = 0;
-    values_         = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    bits_per_value_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
+    values_         = args->get_name(grib_handle_of_accessor(this), n++);
+    bits_per_value_ = args->get_name(grib_handle_of_accessor(this), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
 }

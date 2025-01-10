@@ -21,16 +21,16 @@ void grib_accessor_data_png_packing_t::init(const long v, grib_arguments* args)
     grib_accessor_values_t::init(v, args);
     grib_handle* h = grib_handle_of_accessor(this);
 
-    number_of_values_      = grib_arguments_get_name(h, args, carg_++);
-    reference_value_       = grib_arguments_get_name(h, args, carg_++);
-    binary_scale_factor_   = grib_arguments_get_name(h, args, carg_++);
-    decimal_scale_factor_  = grib_arguments_get_name(h, args, carg_++);
-    bits_per_value_        = grib_arguments_get_name(h, args, carg_++);
-    ni_                    = grib_arguments_get_name(h, args, carg_++);
-    nj_                    = grib_arguments_get_name(h, args, carg_++);
-    list_defining_points_  = grib_arguments_get_name(h, args, carg_++);
-    number_of_data_points_ = grib_arguments_get_name(h, args, carg_++);
-    scanning_mode_         = grib_arguments_get_name(h, args, carg_++);
+    number_of_values_      = args->get_name(h, carg_++);
+    reference_value_       = args->get_name(h, carg_++);
+    binary_scale_factor_   = args->get_name(h, carg_++);
+    decimal_scale_factor_  = args->get_name(h, carg_++);
+    bits_per_value_        = args->get_name(h, carg_++);
+    ni_                    = args->get_name(h, carg_++);
+    nj_                    = args->get_name(h, carg_++);
+    list_defining_points_  = args->get_name(h, carg_++);
+    number_of_data_points_ = args->get_name(h, carg_++);
+    scanning_mode_         = args->get_name(h, carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
@@ -54,7 +54,7 @@ typedef struct png_read_callback_data
 static void png_read_callback(png_structp png, png_bytep data, png_size_t length)
 {
     png_read_callback_data* p = (png_read_callback_data*)png_get_io_ptr(png);
-    Assert(p->offset + length <= p->length);
+    ECCODES_ASSERT(p->offset + length <= p->length);
     memcpy(data, p->buffer + p->offset, length);
     p->offset += length;
 }
@@ -63,7 +63,7 @@ static void png_write_callback(png_structp png, png_bytep data, png_size_t lengt
 {
     png_read_callback_data* p = (png_read_callback_data*)png_get_io_ptr(png);
     /* printf("p.offset=%zu  len=%zu p.len=%zu\n", p->offset, length, p->length); */
-    /* Assert(p->offset + length <= p->length); */
+    /* ECCODES_ASSERT(p->offset + length <= p->length); */
     if (p->offset + length > p->length) {
         /* Errors handled through png_error() are fatal, meaning that png_error() should never return to its caller.
            Currently, this is handled via setjmp() and longjmp() */
@@ -174,7 +174,7 @@ int grib_accessor_data_png_packing_t::unpack_double(double* val, size_t* len)
     png_set_read_fn(png, &callback_data, png_read_callback);
     png_read_png(png, info, PNG_TRANSFORM_IDENTITY, NULL);
 
-    Assert(callback_data.offset == callback_data.length);
+    ECCODES_ASSERT(callback_data.offset == callback_data.length);
 
     rows = png_get_rows(png, info);
 
@@ -192,9 +192,9 @@ int grib_accessor_data_png_packing_t::unpack_double(double* val, size_t* len)
     bits8 = ((bits_per_value + 7) / 8) * 8;
 
     #ifdef PNG_ANYBITS
-    Assert(depth == bits8);
+    ECCODES_ASSERT(depth == bits8);
     #else
-    Assert(bits_per_value % 8 == 0);
+    ECCODES_ASSERT(bits_per_value % 8 == 0);
     #endif
 
     i = 0;
@@ -296,7 +296,7 @@ int grib_accessor_data_png_packing_t::pack_double(const double* val, size_t* len
     if (is_constant_field) {
     #ifdef DEBUG
         for (i = 1; i < n_vals; i++) {
-            Assert(val[i] == val[0]);
+            ECCODES_ASSERT(val[i] == val[0]);
         }
     #endif
         if ((err = grib_set_double_internal(grib_handle_of_accessor(this), reference_value_, val[0])) != GRIB_SUCCESS)
@@ -399,7 +399,7 @@ int grib_accessor_data_png_packing_t::pack_double(const double* val, size_t* len
     divisor             = codes_power<double>(-binary_scale_factor, 2);
 
     #ifndef PNG_ANYBITS
-    Assert(bits_per_value % 8 == 0);
+    ECCODES_ASSERT(bits_per_value % 8 == 0);
     #endif
     bits8   = (bits_per_value + 7) / 8 * 8;
     encoded = (unsigned char*)grib_context_buffer_malloc_clear(context_, bits8 / 8 * n_vals);
@@ -511,7 +511,7 @@ int grib_accessor_data_png_packing_t::pack_double(const double* val, size_t* len
 
     png_write_png(png, info, PNG_TRANSFORM_IDENTITY, NULL);
 
-    Assert(callback_data.offset <= callback_data.length);
+    ECCODES_ASSERT(callback_data.offset <= callback_data.length);
 
     grib_buffer_replace(this, buf, callback_data.offset, 1, 1);
 

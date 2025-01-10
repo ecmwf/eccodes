@@ -18,8 +18,8 @@ grib_accessor* grib_accessor_data_g2simple_packing_with_preprocessing = &_grib_a
 void grib_accessor_data_g2simple_packing_with_preprocessing_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_data_g2simple_packing_t::init(v, args);
-    pre_processing_           = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
-    pre_processing_parameter_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
+    pre_processing_           = args->get_name(grib_handle_of_accessor(this), carg_++);
+    pre_processing_parameter_ = args->get_name(grib_handle_of_accessor(this), carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
@@ -36,7 +36,7 @@ static int pre_processing_func(double* values, long length, long pre_processing,
     int i = 0, ret = 0;
     double min      = values[0];
     double next_min = values[0];
-    Assert(length > 0);
+    ECCODES_ASSERT(length > 0);
 
     switch (pre_processing) {
         /* NONE */
@@ -75,7 +75,7 @@ static int pre_processing_func(double* values, long length, long pre_processing,
                 }
             }
             else {
-                Assert(mode == INVERSE);
+                ECCODES_ASSERT(mode == INVERSE);
                 if (*pre_processing_parameter == 0) {
                     for (i = 0; i < length; i++)
                         values[i] = exp(values[i]);

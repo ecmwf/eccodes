@@ -18,17 +18,17 @@ void grib_accessor_data_apply_boustrophedonic_t::init(const long v, grib_argumen
     grib_accessor_gen_t::init(v, args);
 
     int n            = 0;
-    values_          = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    numberOfRows_    = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    numberOfColumns_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    numberOfPoints_  = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
-    pl_              = grib_arguments_get_name(grib_handle_of_accessor(this), args, n++);
+    values_          = args->get_name(grib_handle_of_accessor(this), n++);
+    numberOfRows_    = args->get_name(grib_handle_of_accessor(this), n++);
+    numberOfColumns_ = args->get_name(grib_handle_of_accessor(this), n++);
+    numberOfPoints_  = args->get_name(grib_handle_of_accessor(this), n++);
+    pl_              = args->get_name(grib_handle_of_accessor(this), n++);
 
     length_ = 0;
 }
-void grib_accessor_data_apply_boustrophedonic_t::dump(grib_dumper* dumper)
+void grib_accessor_data_apply_boustrophedonic_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_values(dumper, this);
+    dumper->dump_values(this);
 }
 
 int grib_accessor_data_apply_boustrophedonic_t::value_count(long* numberOfPoints)
@@ -90,7 +90,7 @@ int grib_accessor_data_apply_boustrophedonic_t::unpack(T* val, size_t* len)
         return ret;
 
     if (grib_get_size(grib_handle_of_accessor(this), pl_, &plSize) == GRIB_SUCCESS) {
-        Assert(plSize == numberOfRows);
+        ECCODES_ASSERT(plSize == numberOfRows);
         pl  = (long*)grib_context_malloc_clear(context_, sizeof(long) * plSize);
         ret = grib_get_long_array_internal(grib_handle_of_accessor(this), pl_, pl, &plSize);
         if (ret)
@@ -228,7 +228,7 @@ int grib_accessor_data_apply_boustrophedonic_t::pack_double(const double* val, s
         return ret;
 
     if (grib_get_size(grib_handle_of_accessor(this), pl_, &plSize) == GRIB_SUCCESS) {
-        Assert(plSize == numberOfRows);
+        ECCODES_ASSERT(plSize == numberOfRows);
         pl  = (long*)grib_context_malloc_clear(context_, sizeof(long) * plSize);
         ret = grib_get_long_array_internal(grib_handle_of_accessor(this), pl_, pl, &plSize);
         if (ret)

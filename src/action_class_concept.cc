@@ -230,12 +230,12 @@ static grib_concept_value* get_concept_impl(grib_handle* h, grib_action_concept*
     if (self->concept_value != NULL)
         return self->concept_value;
 
-    Assert(self->masterDir);
+    ECCODES_ASSERT(self->masterDir);
     grib_get_string(h, self->masterDir, masterDir, &lenMasterDir);
 
     // See ECC-1920: The basename could be a key or a string
     char* basename = self->basename; // default is a string
-    Assert(basename);
+    ECCODES_ASSERT(basename);
     char baseNameValue[1024] = {0,}; // its value if a key
     size_t lenBaseName = sizeof(baseNameValue);
     if (grib_get_string(h, self->basename, baseNameValue, &lenBaseName) == GRIB_SUCCESS) {
@@ -321,11 +321,11 @@ static int concept_condition_expression_true(grib_handle* h, grib_concept_condit
     long lres = 0;
     int ok    = 0;
     int err   = 0;
-    const int type = grib_expression_native_type(h, c->expression);
+    const int type = c->expression->native_type(h);
 
     switch (type) {
         case GRIB_TYPE_LONG:
-            grib_expression_evaluate_long(h, c->expression, &lres);
+            c->expression->evaluate_long(h, &lres);
             ok = (grib_get_long(h, c->name, &lval) == GRIB_SUCCESS) &&
                  (lval == lres);
             if (ok)
@@ -335,7 +335,7 @@ static int concept_condition_expression_true(grib_handle* h, grib_concept_condit
         case GRIB_TYPE_DOUBLE: {
             double dval;
             double dres = 0.0;
-            grib_expression_evaluate_double(h, c->expression, &dres);
+            c->expression->evaluate_double(h, &dres);
             ok = (grib_get_double(h, c->name, &dval) == GRIB_SUCCESS) &&
                  (dval == dres);
             if (ok)
@@ -351,7 +351,7 @@ static int concept_condition_expression_true(grib_handle* h, grib_concept_condit
             size_t size = sizeof(tmp);
 
             ok = (grib_get_string(h, c->name, buf, &len) == GRIB_SUCCESS) &&
-                 ((cval = grib_expression_evaluate_string(h, c->expression, tmp, &size, &err)) != NULL) &&
+                 ((cval = c->expression->evaluate_string(h, tmp, &size, &err)) != NULL) &&
                  (err == 0) && (strcmp(buf, cval) == 0);
             if (ok) {
                 snprintf(exprVal, size, "%s", cval);
@@ -399,7 +399,7 @@ int get_concept_condition_string(grib_handle* h, const char* key, const char* va
             while (concept_condition) {
                 //grib_expression* expression = concept_condition->expression;
                 const char* condition_name  = concept_condition->name;
-                //Assert(expression);
+                //ECCODES_ASSERT(expression);
                 if (concept_condition_expression_true(h, concept_condition, exprVal) && strcmp(condition_name, "one") != 0) {
                     length += snprintf(result + length, 2048, "%s%s=%s",
                                       (length == 0 ? "" : ","), condition_name, exprVal);

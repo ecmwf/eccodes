@@ -17,7 +17,7 @@ void grib_accessor_ascii_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
     length_ = len;
-    Assert(length_ >= 0);
+    ECCODES_ASSERT(length_ >= 0);
 }
 
 int grib_accessor_ascii_t::value_count(long* count)
@@ -31,9 +31,9 @@ size_t grib_accessor_ascii_t::string_length()
     return length_;
 }
 
-void grib_accessor_ascii_t::dump(grib_dumper* dumper)
+void grib_accessor_ascii_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_string(dumper, this, NULL);
+    dumper->dump_string(this, NULL);
 }
 
 long grib_accessor_ascii_t::get_native_type()
@@ -139,7 +139,7 @@ int grib_accessor_ascii_t::unpack_long(long* v, size_t* len)
 
     *v = strtol(val, &last, 10);
 
-    grib_context_log(this->context_, GRIB_LOG_DEBUG, " Casting string %s to long", name_);
+    grib_context_log(this->context_, GRIB_LOG_DEBUG, "Casting string %s to long", name_);
     return GRIB_SUCCESS;
 }
 
@@ -155,7 +155,7 @@ int grib_accessor_ascii_t::unpack_double(double* v, size_t* len)
     *v = strtod(val, &last);
 
     if (*last == 0) {
-        grib_context_log(this->context_, GRIB_LOG_DEBUG, " Casting string %s to long", name_);
+        grib_context_log(this->context_, GRIB_LOG_DEBUG, "Casting string %s to long", name_);
         return GRIB_SUCCESS;
     }
 

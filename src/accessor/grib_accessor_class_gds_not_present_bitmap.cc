@@ -19,11 +19,11 @@ void grib_accessor_gds_not_present_bitmap_t::init(const long v, grib_arguments* 
     int n             = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
 
-    missing_value_           = grib_arguments_get_name(hand, args, n++);
-    number_of_values_        = grib_arguments_get_name(hand, args, n++);
-    number_of_points_        = grib_arguments_get_name(hand, args, n++);
-    latitude_of_first_point_ = grib_arguments_get_name(hand, args, n++);
-    ni_                      = grib_arguments_get_name(hand, args, n++);
+    missing_value_           = args->get_name(hand, n++);
+    number_of_values_        = args->get_name(hand, n++);
+    number_of_points_        = args->get_name(hand, n++);
+    latitude_of_first_point_ = args->get_name(hand, n++);
+    ni_                      = args->get_name(hand, n++);
     length_                  = 0;
 }
 

@@ -16,13 +16,15 @@ grib_accessor* grib_accessor_julian_date = &_grib_accessor_julian_date;
 void grib_accessor_julian_date_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_double_t::init(l, c);
-    int n          = 0;
     grib_handle* h = grib_handle_of_accessor(this);
+    const int arg_count = c->get_count();
+    ECCODES_ASSERT( arg_count == 2 || arg_count == 6);
 
-    year_  = grib_arguments_get_name(h, c, n++);
-    month_ = grib_arguments_get_name(h, c, n++);
+    int n = 0;
+    year_  = c->get_name(h, n++);
+    month_ = c->get_name(h, n++);
 
-    day_ = grib_arguments_get_name(h, c, n++);
+    day_ = c->get_name(h, n++);
     if (day_ == NULL) {
         hour_   = 0;
         minute_ = 0;
@@ -35,9 +37,9 @@ void grib_accessor_julian_date_t::init(const long l, grib_arguments* c)
     else {
         ymd_    = 0;
         hms_    = 0;
-        hour_   = grib_arguments_get_name(h, c, n++);
-        minute_ = grib_arguments_get_name(h, c, n++);
-        second_ = grib_arguments_get_name(h, c, n++);
+        hour_   = c->get_name(h, n++);
+        minute_ = c->get_name(h, n++);
+        second_ = c->get_name(h, n++);
     }
     sep_[0] = ' ';
     sep_[1] = 0;
@@ -48,9 +50,9 @@ void grib_accessor_julian_date_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-void grib_accessor_julian_date_t::dump(grib_dumper* dumper)
+void grib_accessor_julian_date_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_string(dumper, this, NULL);
+    dumper->dump_string(this, NULL);
 }
 
 int grib_accessor_julian_date_t::unpack_double(double* val, size_t* len)
@@ -200,6 +202,13 @@ int grib_accessor_julian_date_t::unpack_string(char* val, size_t* len)
         ret = grib_get_long(h, hms_, &hms);
         if (ret != GRIB_SUCCESS)
             return ret;
+
+        // ECC-1999: If hms_ is passed in in 'hhmm' format
+        // its largest value would be 2459
+        if (hms < 2500) {
+            hms *= 100; // convert to seconds e.g., 1205 -> 120500
+        }
+
         hour = hms / 10000;
         hms %= 10000;
         minute = hms / 100;
@@ -312,10 +321,10 @@ int grib_accessor_julian_date_t::pack_expression(grib_expression* e)
     int ret           = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
 
-    switch (grib_expression_native_type(hand, e)) {
+    switch (e->native_type(hand)) {
         case GRIB_TYPE_LONG: {
             len = 1;
-            ret = grib_expression_evaluate_long(hand, e, &lval);
+            ret = e->evaluate_long(hand, &lval);
             if (ret != GRIB_SUCCESS) {
                 grib_context_log(context_, GRIB_LOG_ERROR, "Unable to set %s as long", name_);
                 return ret;
@@ -327,7 +336,7 @@ int grib_accessor_julian_date_t::pack_expression(grib_expression* e)
 
         case GRIB_TYPE_DOUBLE: {
             len = 1;
-            ret = grib_expression_evaluate_double(hand, e, &dval);
+            ret = e->evaluate_double(hand, &dval);
             /*if (hand->context->debug)
                     printf("ECCODES DEBUG grib_accessor_gen::pack_expression %s %g\n", name_ , dval);*/
             return pack_double(&dval, &len);
@@ -336,7 +345,7 @@ int grib_accessor_julian_date_t::pack_expression(grib_expression* e)
         case GRIB_TYPE_STRING: {
             char tmp[1024];
             len  = sizeof(tmp);
-            cval = grib_expression_evaluate_string(hand, e, tmp, &len, &ret);
+            cval = e->evaluate_string(hand, tmp, &len, &ret);
             if (ret != GRIB_SUCCESS) {
                 grib_context_log(context_, GRIB_LOG_ERROR, "Unable to set %s as string", name_);
                 return ret;

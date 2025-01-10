@@ -22,24 +22,24 @@ int main(int argc, char** argv)
     size_t size1             = 0;
     grib_handle* h_partial   = 0;
 
-    Assert(argc == 2);
+    ECCODES_ASSERT(argc == 2);
     infilename = argv[1];
 
     printf("Processing file %s\n", infilename);
     in = fopen(infilename, "rb");
-    Assert(in);
+    ECCODES_ASSERT(in);
 
     h_full = grib_handle_new_from_file(0, in, &err);
-    Assert(h_full);
-    Assert(!err);
+    ECCODES_ASSERT(h_full);
+    ECCODES_ASSERT(!err);
 
     GRIB_CHECK(grib_get_message_headers(h_full, &msg1, &size1), 0);
 
     h_partial = grib_handle_new_from_partial_message(h_full->context, msg1, size1);
-    Assert(h_partial);
+    ECCODES_ASSERT(h_partial);
 
     iter = grib_keys_iterator_new(h_partial, GRIB_KEYS_ITERATOR_SKIP_COMPUTED, NULL);
-    Assert(iter);
+    ECCODES_ASSERT(iter);
 
     while (grib_keys_iterator_next(iter)) {
         name = grib_keys_iterator_get_name(iter);

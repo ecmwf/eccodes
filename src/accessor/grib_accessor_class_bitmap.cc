@@ -26,10 +26,10 @@ void grib_accessor_bitmap_t::compute_size()
         grib_accessor* seclen;
         size_t size;
         /* Assume reparsing */
-        Assert(hand->loader != 0);
+        ECCODES_ASSERT(hand->loader != 0);
         if (hand->loader != 0) {
             seclen = grib_find_accessor(hand, sLength_);
-            Assert(seclen);
+            ECCODES_ASSERT(seclen);
             grib_get_block_length(seclen->parent_, &size);
             slen = size;
         }
@@ -41,11 +41,11 @@ void grib_accessor_bitmap_t::compute_size()
 
     if (length_ < 0) {
         /* Assume reparsing */
-        /*Assert(hand->loader != 0);*/
+        /*ECCODES_ASSERT(hand->loader != 0);*/
         length_ = 0;
     }
 
-    Assert(length_ >= 0);
+    ECCODES_ASSERT(length_ >= 0);
 }
 
 void grib_accessor_bitmap_t::init(const long len, grib_arguments* arg)
@@ -54,10 +54,10 @@ void grib_accessor_bitmap_t::init(const long len, grib_arguments* arg)
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
-    tableReference_ = grib_arguments_get_name(hand, arg, n++);
-    missing_value_  = grib_arguments_get_name(hand, arg, n++);
-    offsetbsec_     = grib_arguments_get_name(hand, arg, n++);
-    sLength_        = grib_arguments_get_name(hand, arg, n++);
+    tableReference_ = arg->get_name(hand, n++);
+    missing_value_  = arg->get_name(hand, n++);
+    offsetbsec_     = arg->get_name(hand, n++);
+    sLength_        = arg->get_name(hand, n++);
 
     compute_size();
 }
@@ -67,14 +67,14 @@ long grib_accessor_bitmap_t::next_offset()
     return byte_offset() + byte_count();
 }
 
-void grib_accessor_bitmap_t::dump(grib_dumper* dumper)
+void grib_accessor_bitmap_t::dump(eccodes::Dumper* dumper)
 {
     long len = 0;
     char label[1024];
 
     value_count(&len);
     snprintf(label, sizeof(label), "Bitmap of %ld values", len);
-    grib_dump_bytes(dumper, this, label);
+    dumper->dump_bytes(this, label);
 }
 
 int grib_accessor_bitmap_t::unpack_long(long* val, size_t* len)

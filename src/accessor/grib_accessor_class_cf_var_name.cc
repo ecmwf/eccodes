@@ -17,7 +17,7 @@ void grib_accessor_cf_var_name_t::init(const long l, grib_arguments* arg)
 {
     grib_accessor_ascii_t::init(l, arg);
     grib_handle* h = grib_handle_of_accessor(this);
-    defaultKey_    = grib_arguments_get_name(h, arg, 0);
+    defaultKey_    = arg->get_name(h, 0);
 }
 
 int grib_accessor_cf_var_name_t::unpack_string(char* val, size_t* len)
@@ -29,8 +29,8 @@ int grib_accessor_cf_var_name_t::unpack_string(char* val, size_t* len)
 
     int err = grib_get_string(h, defaultKey_, defaultKey, &size);
     if (err) return err;
-    Assert(size > 0);
-    Assert(strlen(defaultKey) > 0);
+    ECCODES_ASSERT(size > 0);
+    ECCODES_ASSERT(strlen(defaultKey) > 0);
 
     if (STR_EQUAL(defaultKey, "~") || isdigit(defaultKey[0])) {
         // NetCDF variables cannot start with a digit

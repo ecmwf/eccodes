@@ -47,9 +47,9 @@ void grib_accessor_bufr_elements_table_t::init(const long len, grib_arguments* p
     grib_accessor_gen_t::init(len, params);
     int n = 0;
 
-    dictionary_ = grib_arguments_get_string(grib_handle_of_accessor(this), params, n++);
-    masterDir_  = grib_arguments_get_name(grib_handle_of_accessor(this), params, n++);
-    localDir_   = grib_arguments_get_name(grib_handle_of_accessor(this), params, n++);
+    dictionary_ = params->get_string(grib_handle_of_accessor(this), n++);
+    masterDir_  = params->get_name(grib_handle_of_accessor(this), n++);
+    localDir_   = params->get_name(grib_handle_of_accessor(this), n++);
 
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -234,8 +234,8 @@ int grib_accessor_bufr_elements_table_t::bufr_get_from_table(bufr_descriptor* v)
         /* ECC-1137: check descriptor key name and unit lengths */
         const size_t maxlen_shortName = sizeof(v->shortName);
         const size_t maxlen_units     = sizeof(v->units);
-        Assert(strlen(list[1]) < maxlen_shortName);
-        Assert(strlen(list[4]) < maxlen_units);
+        ECCODES_ASSERT(strlen(list[1]) < maxlen_shortName);
+        ECCODES_ASSERT(strlen(list[4]) < maxlen_units);
     }
 #endif
 

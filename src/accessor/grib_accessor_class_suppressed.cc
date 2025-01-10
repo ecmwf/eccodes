@@ -31,9 +31,9 @@ void grib_accessor_suppressed_t::log_message()
                      "key '%s' is unavailable in this version.", name_);
     grib_context_log(context_, GRIB_LOG_ERROR,
                      "Please use the following key(s):");
-    while (grib_arguments_get_name(hand, args_, i)) {
+    while (args_->get_name(hand, i)) {
         grib_context_log(context_, GRIB_LOG_ERROR, "\t- %s",
-                         grib_arguments_get_name(hand, args_, i));
+                         args_->get_name(hand, i));
         i++;
     }
 }
