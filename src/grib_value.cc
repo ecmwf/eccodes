@@ -18,34 +18,6 @@
 #include <limits>
 #include <type_traits>
 
-#if GRIB_PTHREADS
-static pthread_once_t once   = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex;
-
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_dumper_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex);
-            once = 1;
-        }
-    }
-}
-#endif
-
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */
 GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
@@ -154,34 +126,28 @@ int grib_set_long(grib_handle* h, const char* name, long val)
     grib_accessor* a = NULL;
     size_t l         = 1;
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
     a = grib_find_accessor(h, name);
 
     if (a) {
         if (h->context->debug) {
-            if (strcmp(name, a->name_)!=0)
+            if (strcmp(name, a->name_) != 0)
                 fprintf(stderr, "ECCODES DEBUG grib_set_long h=%p %s=%ld (a->name_=%s)\n", (void*)h, name, val, a->name_);
             else
                 fprintf(stderr, "ECCODES DEBUG grib_set_long h=%p %s=%ld\n", (void*)h, name, val);
         }
 
         if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) {
-            GRIB_MUTEX_UNLOCK(&mutex);
             return GRIB_READ_ONLY;
         }
 
         ret = a->pack_long(&val, &l);
         if (ret == GRIB_SUCCESS) {
             auto ret = grib_dependency_notify_change(a);
-            GRIB_MUTEX_UNLOCK(&mutex);
             return ret;
         }
 
-        GRIB_MUTEX_UNLOCK(&mutex);
         return ret;
     }
-    GRIB_MUTEX_UNLOCK(&mutex);
 
     if (h->context->debug) {
         fprintf(stderr, "ECCODES DEBUG grib_set_long h=%p %s=%ld (Key not found)\n", (void*)h, name, val);
