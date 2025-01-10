@@ -147,7 +147,13 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 
     if (idx->count)
         grib_index_write(idx, options->outfile->name);
+
+    // See ECC-2006
+    grib_context* c = grib_context_get_default();
+    if (c->debug) grib_file_pool_print("ECCODES DEBUG file_pool before grib_index_delete", stderr);
     grib_index_delete(idx);
+    if (c->debug) grib_file_pool_print("ECCODES DEBUG file_pool after grib_index_delete", stderr);
+
     return 0;
 }
 
