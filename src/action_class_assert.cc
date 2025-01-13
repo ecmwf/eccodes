@@ -94,6 +94,11 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
         return GRIB_INTERNAL_ERROR;
     grib_dependency_observe_expression(as, self->expression);
 
+    const int err = execute(act, p->h);
+    if (err == GRIB_ASSERTION_FAILURE) {
+        grib_context_log(act->context, GRIB_LOG_FATAL, "Assert failed");
+    }
+
     grib_push_accessor(as, p->block);
 
     return GRIB_SUCCESS;

@@ -61,3 +61,4 @@ grep -q "Value is read only" $tempLog
 
 # Clean up
 rm -f $tempGrib $tempFilt $tempLog $tempOut $tempRef
+rm -f $temp2Grib
