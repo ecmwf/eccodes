@@ -236,6 +236,7 @@ list( APPEND eccodes_src_files
     accessor/grib_accessor_class_g2_eps.cc
     accessor/grib_accessor_class_g2_aerosol.cc
     accessor/grib_accessor_class_g2_chemical.cc
+    accessor/grib_accessor_class_g2_concept_dir.cc
     accessor/grib_accessor_class_g2_mars_labeling.cc
     accessor/grib_accessor_class_md5.cc
     accessor/grib_accessor_class_proj_string.cc

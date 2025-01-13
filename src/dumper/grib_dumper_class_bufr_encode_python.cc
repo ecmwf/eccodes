@@ -740,7 +740,7 @@ void BufrEncodePython::dump_attributes(grib_accessor* a, const char* prefix)
     isAttribute_ = 0;
 }
 
-void BufrEncodePython::header(const grib_handle* h)
+void BufrEncodePython::header(const grib_handle* h) const
 {
     char sampleName[200] = { 0 };
     long localSectionPresent, edition, bufrHeaderCentre, isSatellite;
@@ -774,7 +774,7 @@ void BufrEncodePython::header(const grib_handle* h)
     fprintf(out_, "    ibufr = codes_bufr_new_from_samples('%s')\n", sampleName);
 }
 
-void BufrEncodePython::footer(const grib_handle* h)
+void BufrEncodePython::footer(const grib_handle* h) const
 {
     fprintf(out_, "\n    # Encode the keys back in the data section\n");
     fprintf(out_, "    codes_set(ibufr, 'pack', 1)\n\n");

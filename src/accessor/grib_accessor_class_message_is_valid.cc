@@ -110,6 +110,35 @@ static int check_geoiterator(grib_handle* h)
     return err;
 }
 
+static int check_7777(grib_handle* h)
+{
+    if (!grib_is_defined(h, "7777")) {
+        return GRIB_7777_NOT_FOUND;
+    }
+    return GRIB_SUCCESS;
+}
+
+static int check_steps(grib_handle* h)
+{
+    char stepType[32] = {0,};
+    size_t size = sizeof(stepType) / sizeof(*stepType);
+    int err = grib_get_string_internal(h, "stepType", stepType, &size);
+    if (err) return err;
+    if (!STR_EQUAL(stepType, "instant")) {
+        // check start and end steps
+        long startStep = 0;
+        err = grib_get_long_internal(h, "startStep", &startStep);
+        if (err) return err;
+        long endStep = 0;
+        err = grib_get_long_internal(h, "endStep", &endStep);
+        if (err) return err;
+        if (startStep > endStep) {
+            grib_context_log(h->context, GRIB_LOG_ERROR, "Invalid step: startStep > endStep (%ld > %ld)", startStep, endStep);
+            return GRIB_WRONG_STEP;
+        }
+    }
+    return GRIB_SUCCESS;
+}
 
 static int check_section_numbers(grib_handle* h, long edition, const int* sec_nums, size_t N)
 {
@@ -122,6 +151,30 @@ static int check_section_numbers(grib_handle* h, long edition, const int* sec_nu
             return GRIB_INVALID_MESSAGE;
         }
     }
+    return GRIB_SUCCESS;
+}
+
+static int check_namespace_keys(grib_handle* h)
+{
+    const char* ns = "ls";
+    grib_keys_iterator* kiter = grib_keys_iterator_new(h, /*flags=*/0, ns);
+    if (!kiter) return GRIB_DECODING_ERROR;
+    int count = 0;
+    while (grib_keys_iterator_next(kiter)) {
+        ++count;
+        const char* name = grib_keys_iterator_get_name(kiter);
+        int type = 0;
+        grib_get_native_type(h, name, &type);
+        if ( STR_EQUAL(grib_get_type_name(type), "unknown") ) {
+            grib_context_log(h->context, GRIB_LOG_ERROR, "Key %s has unknown type", name);
+            return GRIB_DECODING_ERROR;
+        }
+    }
+    if (count == 0) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Message has no keys in the '%s' namespace", ns);
+        return GRIB_DECODING_ERROR;
+    }
+    grib_keys_iterator_delete(kiter);
     return GRIB_SUCCESS;
 }
 
@@ -151,7 +204,10 @@ static proj_func check_functions[] = {
     check_sections,
     check_field_values,
     check_grid_pl_array,
-    check_geoiterator
+    check_geoiterator,
+    check_steps,
+    check_7777,
+    check_namespace_keys
 };
 
 int grib_accessor_message_is_valid_t::unpack_long(long* val, size_t* len)

@@ -30,8 +30,8 @@ public:
     virtual void dump_bits(grib_accessor*, const char*)                 = 0;
     virtual void dump_section(grib_accessor*, grib_block_of_accessors*) = 0;
     virtual void dump_values(grib_accessor*)                            = 0;
-    virtual void header(const grib_handle*) {};
-    virtual void footer(const grib_handle*) {};
+    virtual void header(const grib_handle*) const {};
+    virtual void footer(const grib_handle*) const {};
 
     long count() { return count_; }
     void count(long count) { count_ = count; }
@@ -41,6 +41,7 @@ public:
     unsigned long option_flags_ = 0;
     grib_context* context_      = nullptr;
     FILE* out_                  = nullptr;
+    int inited_                 = 0;
 
 protected:
     const char* class_name_ = nullptr;

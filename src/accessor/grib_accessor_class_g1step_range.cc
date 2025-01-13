@@ -623,7 +623,13 @@ int grib_accessor_g1step_range_t::unpack_long(long* val, size_t* len)
     v_[1]  = theEnd;
     dirty_ = 0;
 
-    return 0;
+    if (start > theEnd) {
+        // For now just a warning. Will later change to an error
+        fprintf(stderr, "ECCODES WARNING :  endStep < startStep (%ld < %ld)\n", theEnd, start);
+        //grib_context_log(context_, GRIB_LOG_ERROR, "endStep < startStep (%ld < %ld)", theEnd, start);
+        //return GRIB_WRONG_STEP;
+    }
+    return GRIB_SUCCESS;
 }
 
 long grib_accessor_g1step_range_t::get_native_type()

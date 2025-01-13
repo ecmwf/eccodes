@@ -797,7 +797,7 @@ void BufrEncodeFortran::dump_attributes(grib_accessor* a, const char* prefix)
     isAttribute_ = 0;
 }
 
-void BufrEncodeFortran::header(const grib_handle* h)
+void BufrEncodeFortran::header(const grib_handle* h) const
 {
     char sampleName[200] = { 0 };
     long localSectionPresent, edition, bufrHeaderCentre, isSatellite;
@@ -840,7 +840,7 @@ void BufrEncodeFortran::header(const grib_handle* h)
     fprintf(out_, "  endif\n");
 }
 
-void BufrEncodeFortran::footer(const grib_handle* h)
+void BufrEncodeFortran::footer(const grib_handle* h) const
 {
     fprintf(out_, "\n  ! Encode the keys back in the data section\n");
     fprintf(out_, "  call codes_set(ibufr,'pack',1)\n\n");
