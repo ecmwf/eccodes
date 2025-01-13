@@ -36,7 +36,6 @@ public:
     virtual grib_action* reparse(grib_accessor* acc, int* doit)
     {
         DEBUG_ASSERT(0);
-        return 0;
         return nullptr;
     };
     virtual int execute(grib_handle* h)
