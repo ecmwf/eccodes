@@ -160,15 +160,15 @@ void grib_dump_keys(grib_handle* h, FILE* f, const char* mode, unsigned long fla
     eccodes::Dumper* dumper = grib_dumper_factory(mode ? mode : "serialize", h, f, flags, data);
     if (!dumper)
         return;
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
+    GRIB_MUTEX_LOCK(&mutex);
     for (size_t i = 0; i < num_keys; ++i) {
         acc = grib_find_accessor(h, keys[i]);
         if (acc) {
-            GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-            GRIB_MUTEX_LOCK(&mutex);
             acc->dump(dumper);
-            GRIB_MUTEX_UNLOCK(&mutex);
         }
     }
+    GRIB_MUTEX_UNLOCK(&mutex);
     dumper->destroy();
 }
 
