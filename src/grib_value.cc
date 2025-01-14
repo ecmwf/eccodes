@@ -136,15 +136,12 @@ int grib_set_long(grib_handle* h, const char* name, long val)
                 fprintf(stderr, "ECCODES DEBUG grib_set_long h=%p %s=%ld\n", (void*)h, name, val);
         }
 
-        if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) {
+        if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY)
             return GRIB_READ_ONLY;
-        }
 
         ret = a->pack_long(&val, &l);
-        if (ret == GRIB_SUCCESS) {
-            auto ret = grib_dependency_notify_change(a);
-            return ret;
-        }
+        if (ret == GRIB_SUCCESS)
+            return grib_dependency_notify_change(a);
 
         return ret;
     }
