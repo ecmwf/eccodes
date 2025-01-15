@@ -40,7 +40,6 @@ public:
     unsigned long option_flags_ = 0;
     grib_context* context_      = nullptr;
     FILE* out_                  = nullptr;
-    int inited_                 = 0;
 
 protected:
     const char* class_name_ = nullptr;

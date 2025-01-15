@@ -75,15 +75,12 @@ eccodes::Dumper* grib_dumper_factory(const char* op, const grib_handle* h, FILE*
             eccodes::Dumper* d = *(table[i].dumper);
             GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
             GRIB_MUTEX_LOCK(&mutex);
-            if (!d->inited_) {
-                d->depth_          = 0;
-                d->context_        = h->context;
-                d->option_flags_   = option_flags;
-                d->arg_            = arg;
-                d->out_            = out;
-                d->init();
-                d->inited_ = 1;
-            }
+            d->depth_          = 0;
+            d->context_        = h->context;
+            d->option_flags_   = option_flags;
+            d->arg_            = arg;
+            d->out_            = out;
+            d->init();
             GRIB_MUTEX_UNLOCK(&mutex);
             grib_context_log(
                 h->context, GRIB_LOG_DEBUG, "Creating dumper of type : %s ", op);
