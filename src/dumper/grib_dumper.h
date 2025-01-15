@@ -33,7 +33,7 @@ public:
     virtual void header(const grib_handle*) const {};
     virtual void footer(const grib_handle*) const {};
 
-    long count() { return count_; }
+    long count() const { return count_; }
     void count(long count) { count_ = count; }
 
     int depth_                  = 0;
@@ -41,7 +41,6 @@ public:
     unsigned long option_flags_ = 0;
     grib_context* context_      = nullptr;
     FILE* out_                  = nullptr;
-    int inited_                 = 0;
 
 protected:
     const char* class_name_ = nullptr;
