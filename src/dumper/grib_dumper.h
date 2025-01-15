@@ -32,7 +32,7 @@ public:
     virtual void header(const grib_handle*) const {};
     virtual void footer(const grib_handle*) const {};
 
-    long count() { return count_; }
+    long count() const { return count_; }
     void count(long count) { count_ = count; }
 
     int depth_                  = 0;
