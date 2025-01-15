@@ -32,7 +32,7 @@ static omp_nest_lock_t mutex;
 
 static void init_mutex()
 {
-    GRIB_OMP_CRITICAL(lock_dumper_c)
+    GRIB_OMP_CRITICAL(lock_grib_dumper_factory_c)
     {
         if (once == 0) {
             omp_init_nest_lock(&mutex);
@@ -50,50 +50,46 @@ struct table_entry
 };
 
 static struct table_entry table[] = {
-  {"bufr_decode_C",&grib_dumper_bufr_decode_c,},
-  {"bufr_decode_filter",&grib_dumper_bufr_decode_filter,},
-  {"bufr_decode_fortran",&grib_dumper_bufr_decode_fortran,},
-  {"bufr_decode_python",&grib_dumper_bufr_decode_python,},
-  {"bufr_encode_C",&grib_dumper_bufr_encode_c,},
-  {"bufr_encode_filter",&grib_dumper_bufr_encode_filter,},
-  {"bufr_encode_fortran",&grib_dumper_bufr_encode_fortran,},
-  {"bufr_encode_python",&grib_dumper_bufr_encode_python,},
-  {"bufr_simple",&grib_dumper_bufr_simple,},
-  {"debug",&grib_dumper_debug,},
-  {"default",&grib_dumper_default,},
-  {"grib_encode_c",&grib_dumper_grib_encode_c,},
-  {"json",&grib_dumper_json,},
-  {"serialize",&grib_dumper_serialize,},
-  {"wmo",&grib_dumper_wmo,},
+    {"bufr_decode_C",&grib_dumper_bufr_decode_c,},
+    {"bufr_decode_filter",&grib_dumper_bufr_decode_filter,},
+    {"bufr_decode_fortran",&grib_dumper_bufr_decode_fortran,},
+    {"bufr_decode_python",&grib_dumper_bufr_decode_python,},
+    {"bufr_encode_C",&grib_dumper_bufr_encode_c,},
+    {"bufr_encode_filter",&grib_dumper_bufr_encode_filter,},
+    {"bufr_encode_fortran",&grib_dumper_bufr_encode_fortran,},
+    {"bufr_encode_python",&grib_dumper_bufr_encode_python,},
+    {"bufr_simple",&grib_dumper_bufr_simple,},
+    {"debug",&grib_dumper_debug,},
+    {"default",&grib_dumper_default,},
+    {"grib_encode_c",&grib_dumper_grib_encode_c,},
+    {"json",&grib_dumper_json,},
+    {"serialize",&grib_dumper_serialize,},
+    {"wmo",&grib_dumper_wmo,},
 };
 
 eccodes::Dumper* grib_dumper_factory(const char* op, const grib_handle* h, FILE* out, unsigned long option_flags, void* arg)
 {
     constexpr size_t num_table_entries = sizeof(table) / sizeof(table[0]);
-    for (size_t i = 0; i < num_table_entries; i++)
+    for (size_t i = 0; i < num_table_entries; i++) {
         if (strcmp(op, table[i].type) == 0) {
             eccodes::Dumper* d = *(table[i].dumper);
             GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
             GRIB_MUTEX_LOCK(&mutex);
-            if (!d->inited_) {
-                d->depth_          = 0;
-                d->context_        = h->context;
-                d->option_flags_   = option_flags;
-                d->arg_            = arg;
-                d->out_            = out;
-                d->init();
-                d->inited_ = 1;
-            }
+            d->depth_          = 0;
+            d->context_        = h->context;
+            d->option_flags_   = option_flags;
+            d->arg_            = arg;
+            d->out_            = out;
+            d->init();
             GRIB_MUTEX_UNLOCK(&mutex);
             grib_context_log(
                 h->context, GRIB_LOG_DEBUG, "Creating dumper of type : %s ", op);
             return d;
         }
-    grib_context_log(
-        h->context, GRIB_LOG_ERROR, "Unknown type : '%s' for dumper", op);
+    }
+    grib_context_log(h->context, GRIB_LOG_ERROR, "Unknown type : '%s' for dumper", op);
     return NULL;
 }
-
 
 void grib_dump_content(const grib_handle* h, FILE* f, const char* mode, unsigned long flags, void* data)
 {
@@ -114,7 +110,6 @@ void grib_dump_content(const grib_handle* h, FILE* f, const char* mode, unsigned
     dumper->footer(h);
     dumper->destroy();
 }
-
 
 void grib_dump_accessors_block(eccodes::Dumper* dumper, grib_block_of_accessors* block)
 {
@@ -160,15 +155,15 @@ void grib_dump_keys(grib_handle* h, FILE* f, const char* mode, unsigned long fla
     eccodes::Dumper* dumper = grib_dumper_factory(mode ? mode : "serialize", h, f, flags, data);
     if (!dumper)
         return;
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
+    GRIB_MUTEX_LOCK(&mutex);
     for (size_t i = 0; i < num_keys; ++i) {
         acc = grib_find_accessor(h, keys[i]);
         if (acc) {
-            GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-            GRIB_MUTEX_LOCK(&mutex);
             acc->dump(dumper);
-            GRIB_MUTEX_UNLOCK(&mutex);
         }
     }
+    GRIB_MUTEX_UNLOCK(&mutex);
     dumper->destroy();
 }
 

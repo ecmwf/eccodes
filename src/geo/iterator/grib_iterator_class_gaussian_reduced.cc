@@ -303,10 +303,10 @@ int GaussianReduced::init(grib_handle* h, grib_arguments* args)
 
     grib_get_long_array_internal(h, spl, pl, &plsize);
 
-    lats_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
+    lats_ = (double*)grib_context_malloc_clear(h->context, nv_ * sizeof(double));
     if (!lats_)
         return GRIB_OUT_OF_MEMORY;
-    lons_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
+    lons_ = (double*)grib_context_malloc_clear(h->context, nv_ * sizeof(double));
     if (!lons_)
         return GRIB_OUT_OF_MEMORY;
 
