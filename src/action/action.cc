@@ -124,10 +124,10 @@ static void init_mutex()
 int grib_create_accessor(grib_section* p, grib_action* a, grib_loader* h)
 {
     /* ECC-604: Do not lock excessively */
-    GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
-    GRIB_MUTEX_LOCK(&mutex1);
+    // GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
+    // GRIB_MUTEX_LOCK(&mutex1);
     auto accessor = a->create_accessor(p, h);
-    GRIB_MUTEX_UNLOCK(&mutex1);
+    // GRIB_MUTEX_UNLOCK(&mutex1);
     return accessor;
 }
 
