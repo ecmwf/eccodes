@@ -10,176 +10,16 @@
 
 #include "action.h"
 
-#if GRIB_PTHREADS
-static pthread_once_t once    = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
-
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex1, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex1;
-
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_action_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex1);
-            once = 1;
-        }
-    }
-}
-#endif
-
-
-// static void init(grib_action_class* c)
+// int grib_create_accessor(grib_section* p, grib_action* a, grib_loader* h)
 // {
-//     if (!c)
-//         return;
-//
-//     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-//     GRIB_MUTEX_LOCK(&mutex1);
-//     if (!c->inited) {
-//         if (c->super) {
-//             init(*(c->super));
-//         }
-//         c->init_class(c);
-//         c->inited = 1;
-//     }
-//     GRIB_MUTEX_UNLOCK(&mutex1);
-// }
-//
-// // A non-recursive version
-// // static void init(grib_action_class *c)
-// // {
-// //     if (!c) return;
-//
-// //     GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
-// //     GRIB_MUTEX_LOCK(&mutex1);
-// //     if(!c->inited)
-// //     {
-// //         if(c->super) {
-// //             grib_action_class *g = *(c->super);
-// //             if (g && !g->inited) {
-// //                 Assert(g->super == NULL);
-// //                 g->init_class(g);
-// //                 g->inited = 1;
-// //             }
-// //         }
-// //         c->init_class(c);
-// //         c->inited = 1;
-// //     }
-// //     GRIB_MUTEX_UNLOCK(&mutex1);
-// // }
-//
-// static void grib_dump(grib_action* a, FILE* f, int l)
-// {
-//     grib_action_class* c = a->cclass;
-//     init(c);
-//
-//     while (c) {
-//         if (c->dump) {
-//             c->dump(a, f, l);
-//             return;
-//         }
-//         c = c->super ? *(c->super) : NULL;
-//     }
-// }
-//
-// // void grib_xref(grib_action* a, FILE* f, const char* path)
-// // {
-// //     grib_action_class* c = a->cclass;
-// //     init(c);
-//
-// //     while (c) {
-// //         if (c->xref) {
-// //             c->xref(a, f, path);
-// //             return;
-// //         }
-// //         c = c->super ? *(c->super) : NULL;
-// //     }
-// //     printf("xref not implemented for %s\n", a->cclass->name);
-// //     DEBUG_ASSERT(0);
-// // }
-//
-// void grib_action_delete(grib_context* context, grib_action* a)
-// {
-//     grib_action_class* c = a->cclass;
-//     init(c);
-//     while (c) {
-//         if (c->destroy)
-//             c->destroy(context, a);
-//         c = c->super ? *(c->super) : NULL;
-//     }
-//     grib_context_free_persistent(context, a);
+//     /* ECC-604: Do not lock excessively */
+//     // GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
+//     // GRIB_MUTEX_LOCK(&mutex1);
+//     auto accessor = a->create_accessor(p, h);
+//     // GRIB_MUTEX_UNLOCK(&mutex1);
+//     return accessor;
 // }
 
-int grib_create_accessor(grib_section* p, grib_action* a, grib_loader* h)
-{
-    /* ECC-604: Do not lock excessively */
-    // GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
-    // GRIB_MUTEX_LOCK(&mutex1);
-    auto accessor = a->create_accessor(p, h);
-    // GRIB_MUTEX_UNLOCK(&mutex1);
-    return accessor;
-}
-
-// int grib_action_notify_change(grib_action* a, grib_accessor* observer, grib_accessor* observed)
-// {
-//     grib_action_class* c = a->cclass;
-//
-//     /* See ECC-604 for why we removed the mutexes/locks in this function */
-//
-//     /*GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);*/
-//     /*GRIB_MUTEX_LOCK(&mutex1);*/
-//
-//     init(c);
-//     while (c) {
-//         if (c->notify_change) {
-//             int result = c->notify_change(a, observer, observed);
-//             /*GRIB_MUTEX_UNLOCK(&mutex1);*/
-//             return result;
-//         }
-//         c = c->super ? *(c->super) : NULL;
-//     }
-//     /*GRIB_MUTEX_UNLOCK(&mutex1);*/
-//     DEBUG_ASSERT(0);
-//     return 0;
-// }
-//
-// grib_action* grib_action_reparse(grib_action* a, grib_accessor* acc, int* doit)
-// {
-//     grib_action_class* c = a->cclass;
-//     init(c);
-//     while (c) {
-//         if (c->reparse)
-//             return c->reparse(a, acc, doit);
-//         c = c->super ? *(c->super) : NULL;
-//     }
-//     DEBUG_ASSERT(0);
-//     return 0;
-// }
-//
-// int grib_action_execute(grib_action* a, grib_handle* h)
-// {
-//     grib_action_class* c = a->cclass;
-//     init(c);
-//     while (c) {
-//         if (c->execute)
-//             return c->execute(a, h);
-//         c = c->super ? *(c->super) : NULL;
-//     }
-//     DEBUG_ASSERT(0);
-//     return 0;
-// }
-//
 void grib_dump_action_branch(FILE* out, grib_action* a, int decay)
 {
     while (a) {
@@ -216,11 +56,3 @@ void grib_dump_action_tree(grib_context* ctx, FILE* out)
         }
     }
 }
-
-// void grib_xref_action_branch(FILE* out, grib_action* a, const char* path)
-// {
-//     while (a) {
-//         grib_xref(a, out, path);
-//         a = a->next;
-//     }
-// }

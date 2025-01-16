@@ -89,7 +89,7 @@ int List::create_accessor(grib_section* p, grib_loader* h)
     while (val--) {
         next = la;
         while (next) {
-            ret = grib_create_accessor(gs, next, h);
+            ret = next->create_accessor(gs, h);
             if (ret != GRIB_SUCCESS)
                 return ret;
             next = next->next_;

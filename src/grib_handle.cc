@@ -200,7 +200,7 @@ static grib_handle* grib_handle_create(grib_handle* gl, grib_context* c, const v
 
     next = gl->context->grib_reader->first->root;
     while (next) {
-        if (grib_create_accessor(gl->root, next, NULL) != GRIB_SUCCESS)
+        if (next->create_accessor(gl->root, NULL) != GRIB_SUCCESS)
             break;
         next = next->next_;
     }

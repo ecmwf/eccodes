@@ -103,7 +103,7 @@ int Template::create_accessor(grib_section* p, grib_loader* h)
         next = la;
 
         while (next) {
-            ret = grib_create_accessor(gs, next, h);
+            ret = next->create_accessor(gs, h);
             if (ret != GRIB_SUCCESS) {
                 if (p->h->context->debug) {
                     grib_context_log(p->h->context, GRIB_LOG_ERROR,

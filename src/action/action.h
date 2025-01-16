@@ -61,6 +61,5 @@ public:
 
 using grib_action = eccodes::Action;
 
-int grib_create_accessor(grib_section* p, grib_action* a, grib_loader* h);
 void grib_dump_action_branch(FILE* out, grib_action* a, int decay);
 void grib_dump_action_tree(grib_context* ctx, FILE* out);

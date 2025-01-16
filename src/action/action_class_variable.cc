@@ -28,7 +28,7 @@ Gen(context, name, op, len, params, default_value, flags, name_space, NULL)
 
 int Variable::execute(grib_handle* h)
 {
-    return grib_create_accessor(h->root, this, NULL);
+    return create_accessor(h->root, NULL);
 }
 
 }  // namespace eccodes::action
