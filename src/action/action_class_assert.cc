@@ -43,6 +43,11 @@ int Assert::create_accessor(grib_section* p, grib_loader* h)
         return GRIB_INTERNAL_ERROR;
     grib_dependency_observe_expression(as, expression_);
 
+    const int err = execute(p->h);
+    if (err == GRIB_ASSERTION_FAILURE) {
+        grib_context_log(context_, GRIB_LOG_FATAL, "Assert failed");
+    }
+
     grib_push_accessor(as, p->block);
 
     return GRIB_SUCCESS;
