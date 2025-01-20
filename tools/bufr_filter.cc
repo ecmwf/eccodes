@@ -58,7 +58,7 @@ int grib_tool_init(grib_runtime_options* options)
     }
 
     if (options->outfile && options->outfile->name)
-        options->action->context->outfilename = options->outfile->name;
+        options->action->context_->outfilename = options->outfile->name;
 
     /* Turn off GRIB multi-field support mode. Not relevant for BUFR */
     grib_multi_support_off(grib_context_get_default());

@@ -12,6 +12,36 @@
 %{
 
 #include "grib_api_internal.h"
+
+#include "action_class_alias.h"
+#include "action_class_assert.h"
+#include "action_class_close.h"
+#include "action_class_concept.h"
+#include "action_class_gen.h"
+#include "action_class_hash_array.h"
+#include "action_class_if.h"
+#include "action_class_list.h"
+#include "action_class_meta.h"
+#include "action_class_modify.h"
+#include "action_class_noop.h"
+#include "action_class_print.h"
+#include "action_class_put.h"
+#include "action_class_remove.h"
+#include "action_class_rename.h"
+#include "action_class_section.h"
+#include "action_class_set.h"
+#include "action_class_set_darray.h"
+#include "action_class_set_missing.h"
+#include "action_class_set_sarray.h"
+#include "action_class_switch.h"
+#include "action_class_template.h"
+#include "action_class_transient_darray.h"
+#include "action_class_trigger.h"
+#include "action_class_variable.h"
+#include "action_class_when.h"
+#include "action_class_while.h"
+#include "action_class_write.h"
+
 /* #include "grib_parser.h" */
 
 extern int yylex(void);
@@ -290,8 +320,8 @@ integer_array:  INTEGER  { $$=grib_iarray_push(0,$1);}
    ;
 
 instructions: instruction
-         | instruction instructions { $1->next = $2; $$ = $1; }
-         | instruction ';'  instructions { $1->next = $3; $$ = $1; }
+         | instruction instructions { $1->next_ = $2; $$ = $1; }
+         | instruction ';'  instructions { $1->next_ = $3; $$ = $1; }
          | instruction ';'  {  $$ = $1;}
    ;
 
@@ -660,7 +690,7 @@ set: SET IDENT '=' expression { $$ = grib_action_create_set(grib_parser_context,
   ;
 
 set_list: set semi
-         | set_list set semi { $1->next = $2; $$ = $1; }
+         | set_list set semi { $1->next_ = $2; $$ = $1; }
          ;
 
 

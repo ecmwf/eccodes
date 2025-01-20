@@ -9,6 +9,7 @@
  */
 
 #include "grib_accessor_class_hash_array.h"
+#include "action_class_hash_array.h"
 
 grib_accessor_hash_array_t _grib_accessor_hash_array{};
 grib_accessor* grib_accessor_hash_array = &_grib_accessor_hash_array;
@@ -69,10 +70,12 @@ grib_hash_array_value* grib_accessor_hash_array_t::find_hash_value(int* err)
     grib_hash_array_value* ha_ret    = 0;
     grib_hash_array_value* ha        = NULL;
 
-    ha = get_hash_array(grib_handle_of_accessor(this), creator_);
+    eccodes::action::HashArray* hash_array = dynamic_cast<eccodes::action::HashArray*>(creator_);
+
+    ha = hash_array->get_hash_array(grib_handle_of_accessor(this));
     if (!ha) {
         grib_context_log(context_, GRIB_LOG_ERROR,
-                         "unable to get hash value for %s", creator_->name);
+                         "unable to get hash value for %s", creator_->name_);
         *err = GRIB_HASH_ARRAY_NO_MATCH;
         return NULL;
     }
@@ -82,7 +85,7 @@ grib_hash_array_value* grib_accessor_hash_array_t::find_hash_value(int* err)
     ECCODES_ASSERT(ha != NULL);
     if (!key_) {
         grib_context_log(context_, GRIB_LOG_ERROR,
-                         "unable to get hash value for %s, set before getting", creator_->name);
+                         "unable to get hash value for %s, set before getting", creator_->name_);
         *err = GRIB_HASH_ARRAY_NO_MATCH;
         return NULL;
     }
@@ -95,8 +98,8 @@ grib_hash_array_value* grib_accessor_hash_array_t::find_hash_value(int* err)
         *err = GRIB_HASH_ARRAY_NO_MATCH;
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "hash_array: no match for %s=%s",
-                         creator_->name, key_);
-        const char* full_path = get_hash_array_full_path(creator_);
+                         creator_->name_, key_);
+        const char* full_path = hash_array->get_hash_array_full_path();
         if (full_path) {
             grib_context_log(context_, GRIB_LOG_ERROR, "hash_array: file path = %s", full_path);
         }

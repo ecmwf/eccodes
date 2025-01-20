@@ -1652,16 +1652,13 @@ void grib_accessor_bufr_data_array_t::push_zero_element(grib_darray* dval)
 
 grib_accessor* grib_accessor_bufr_data_array_t::create_attribute_variable(const char* name, grib_section* section, int type, char* sval, double dval, long lval, unsigned long flags)
 {
-    grib_action creator = {
-        0,
-    };
+    grib_action creator;
     size_t len;
-    creator.op         = (char*)"variable";
-    creator.name_space = (char*)"";
-    creator.flags      = GRIB_ACCESSOR_FLAG_READ_ONLY | flags;
-    creator.set        = 0;
-
-    creator.name                 = (char*)name;
+    creator.op_         = (char*)"variable";
+    creator.name_space_ = (char*)"";
+    creator.flags_      = GRIB_ACCESSOR_FLAG_READ_ONLY | flags;
+    creator.set_        = 0;
+    creator.name_                 = (char*)name;
     grib_accessor* a             = grib_accessor_factory(section, &creator, 0, NULL);
     a->parent_                   = NULL;
     a->h_                        = section->h;
@@ -1692,70 +1689,70 @@ static void set_creator_name(grib_action* creator, int code)
 {
     switch (code) {
         case 222000:
-            creator->name = (char*)"qualityInformationFollows";
+            creator->name_ = (char*)"qualityInformationFollows";
             break;
         case 223000:
-            creator->name = (char*)"substitutedValuesOperator";
+            creator->name_ = (char*)"substitutedValuesOperator";
             break;
         case 223255:
-            creator->name = (char*)"substitutedValue";
+            creator->name_ = (char*)"substitutedValue";
             break;
         case 224000:
-            creator->name = (char*)"firstOrderStatiticalValuesFollow";
+            creator->name_ = (char*)"firstOrderStatiticalValuesFollow";
             break;
         case 224255:
-            creator->name = (char*)"firstOrderStatisticalValue";
+            creator->name_ = (char*)"firstOrderStatisticalValue";
             break;
         case 225000:
-            creator->name = (char*)"differenceStatisticalValuesFollow";
+            creator->name_ = (char*)"differenceStatisticalValuesFollow";
             break;
         case 225255:
-            creator->name = (char*)"differenceStatisticalValue";
+            creator->name_ = (char*)"differenceStatisticalValue";
             break;
         case 232000:
-            creator->name = (char*)"replacedRetainedValuesFollow";
+            creator->name_ = (char*)"replacedRetainedValuesFollow";
             break;
         case 232255:
-            creator->name = (char*)"replacedRetainedValue";
+            creator->name_ = (char*)"replacedRetainedValue";
             break;
         case 235000:
-            creator->name = (char*)"cancelBackwardDataReference";
+            creator->name_ = (char*)"cancelBackwardDataReference";
             break;
         case 236000:
-            creator->name = (char*)"defineDataPresentBitmap";
+            creator->name_ = (char*)"defineDataPresentBitmap";
             break;
         case 237000:
-            creator->name = (char*)"useDefinedDataPresentBitmap";
+            creator->name_ = (char*)"useDefinedDataPresentBitmap";
             break;
         case 237255:
-            creator->name = (char*)"cancelUseDefinedDataPresentBitmap";
+            creator->name_ = (char*)"cancelUseDefinedDataPresentBitmap";
             break;
         case 241000:
-            creator->name = (char*)"defineEvent";
+            creator->name_ = (char*)"defineEvent";
             break;
         case 241255:
-            creator->name = (char*)"cancelDefineEvent";
+            creator->name_ = (char*)"cancelDefineEvent";
             break;
         case 242000:
-            creator->name = (char*)"defineConditioningEvent";
+            creator->name_ = (char*)"defineConditioningEvent";
             break;
         case 242255:
-            creator->name = (char*)"canceDefineConditioningEvent";
+            creator->name_ = (char*)"canceDefineConditioningEvent";
             break;
         case 243000:
-            creator->name = (char*)"categoricalForecastValuesFollow";
+            creator->name_ = (char*)"categoricalForecastValuesFollow";
             break;
         case 243255:
-            creator->name = (char*)"cancelCategoricalForecastValuesFollow";
+            creator->name_ = (char*)"cancelCategoricalForecastValuesFollow";
             break;
         case 999999:
-            creator->name = (char*)"associatedField";
+            creator->name_ = (char*)"associatedField";
             break;
         default:
             if (code > 204999 && code < 206000)
-                creator->name = (char*)"text";
+                creator->name_ = (char*)"text";
             else
-                creator->name = (char*)"operator";
+                creator->name_ = (char*)"operator";
             break;
     }
 }
@@ -1779,31 +1776,31 @@ grib_accessor* grib_accessor_bufr_data_array_t::create_accessor_from_descriptor(
     char* temp_str              = NULL;
     int idx                     = 0;
     unsigned long flags         = GRIB_ACCESSOR_FLAG_READ_ONLY;
-    grib_action operatorCreator = {0,};
+    grib_action operatorCreator;
     grib_accessor* accessor = NULL;
     grib_accessor_bufr_data_element_t* elementAccessor = NULL;
     grib_accessor_variable_t* variableAccessor = NULL;
-    grib_action creator            = {0,};
-    creator.op         = (char*)"bufr_data_element";
-    creator.name_space = (char*)"";
-    creator.set        = 0;
+    grib_action creator;
+    creator.op_         = (char*)"bufr_data_element";
+    creator.name_space_ = (char*)"";
+    creator.set_        = 0;
 
-    operatorCreator.op         = (char*)"variable";
-    operatorCreator.name_space = (char*)"";
-    operatorCreator.flags      = GRIB_ACCESSOR_FLAG_READ_ONLY;
-    operatorCreator.set        = 0;
-    operatorCreator.name       = (char*)"operator";
+    operatorCreator.op_         = (char*)"variable";
+    operatorCreator.name_space_ = (char*)"";
+    operatorCreator.flags_      = GRIB_ACCESSOR_FLAG_READ_ONLY;
+    operatorCreator.set_        = 0;
+    operatorCreator.name_       = (char*)"operator";
 
     if (attribute) {
         DEBUG_ASSERT(attribute->parent_ == NULL);
     }
 
     if (add_dump_flag) {
-        creator.flags = GRIB_ACCESSOR_FLAG_DUMP;
-        operatorCreator.flags |= GRIB_ACCESSOR_FLAG_DUMP;
+        creator.flags_ = GRIB_ACCESSOR_FLAG_DUMP;
+        operatorCreator.flags_ |= GRIB_ACCESSOR_FLAG_DUMP;
     }
     if (add_coord_flag) {
-        creator.flags |= GRIB_ACCESSOR_FLAG_BUFR_COORD;  // ECC-1611
+        creator.flags_ |= GRIB_ACCESSOR_FLAG_BUFR_COORD;  // ECC-1611
     }
 
     idx = compressedData_ ? elementsDescriptorsIndex_->v[0]->v[ide] : elementsDescriptorsIndex_->v[subset]->v[ide];
@@ -1811,10 +1808,10 @@ grib_accessor* grib_accessor_bufr_data_array_t::create_accessor_from_descriptor(
     switch (expanded_->v[idx]->F) {
         case 0:
         case 1:
-            creator.name = grib_context_strdup(context_, expanded_->v[idx]->shortName);
+            creator.name_ = grib_context_strdup(context_, expanded_->v[idx]->shortName);
 
             /* ECC-325: store alloc'd string (due to strdup) for clean up later */
-            grib_sarray_push(tempStrings_, creator.name);
+            grib_sarray_push(tempStrings_, creator.name_);
             accessor = grib_accessor_factory(section, &creator, 0, NULL);
             if (canBeMissing_[idx])
                 accessor->flags_ |= GRIB_ACCESSOR_FLAG_CAN_BE_MISSING;
@@ -2264,9 +2261,7 @@ int grib_accessor_bufr_data_array_t::create_keys(long onlySubset, long startSubs
     int add_extra_attributes = 1;
 
     grib_accessor* gaGroup   = 0;
-    grib_action creatorGroup = {
-        0,
-    };
+    grib_action creatorGroup;
     grib_accessor* significanceQualifierGroup[NUMBER_OF_QUALIFIERS_PER_CATEGORY * NUMBER_OF_QUALIFIERS_CATEGORIES] = {
         0,
     };
@@ -2295,11 +2290,11 @@ int grib_accessor_bufr_data_array_t::create_keys(long onlySubset, long startSubs
     int add_dump_flag = 1, add_coord_flag = 0, count = 0;
     /*int forceGroupClosure=0;*/
 
-    creatorGroup.op         = (char*)"bufr_group";
-    creatorGroup.name       = (char*)"groupNumber";
-    creatorGroup.name_space = (char*)"";
-    creatorGroup.flags      = GRIB_ACCESSOR_FLAG_DUMP;
-    creatorGroup.set        = 0;
+    creatorGroup.op_         = (char*)"bufr_group";
+    creatorGroup.name_       = (char*)"groupNumber";
+    creatorGroup.name_space_ = (char*)"";
+    creatorGroup.flags_      = GRIB_ACCESSOR_FLAG_DUMP;
+    creatorGroup.set_        = 0;
 
     if (dataAccessors_) {
         grib_accessors_list_delete(c, dataAccessors_);
@@ -2349,7 +2344,8 @@ int grib_accessor_bufr_data_array_t::create_keys(long onlySubset, long startSubs
         associatedFieldAccessor = NULL;
         if (associatedFieldSignificanceAccessor) {
             associatedFieldSignificanceAccessor->destroy(c);
-            associatedFieldSignificanceAccessor = NULL;
+            delete associatedFieldSignificanceAccessor;
+            associatedFieldSignificanceAccessor = nullptr;
         }
         for (ide = 0; ide < elementsInSubset; ide++) {
             idx = compressedData_ ? elementsDescriptorsIndex_->v[0]->v[ide] : elementsDescriptorsIndex_->v[iss]->v[ide];
@@ -2488,15 +2484,13 @@ int grib_accessor_bufr_data_array_t::create_keys(long onlySubset, long startSubs
             if (ide == 0 && !compressedData_) {
                 long subsetNumber     = iss + 1;
                 size_t len            = 1;
-                grib_action creatorsn = {
-                    0,
-                };
-                creatorsn.op         = (char*)"variable";
-                creatorsn.name_space = (char*)"";
-                creatorsn.flags      = GRIB_ACCESSOR_FLAG_READ_ONLY | GRIB_ACCESSOR_FLAG_DUMP;
-                creatorsn.set        = 0;
+                grib_action creatorsn;
+                creatorsn.op_         = (char*)"variable";
+                creatorsn.name_space_ = (char*)"";
+                creatorsn.flags_      = GRIB_ACCESSOR_FLAG_READ_ONLY | GRIB_ACCESSOR_FLAG_DUMP;
+                creatorsn.set_        = 0;
 
-                creatorsn.name                = (char*)"subsetNumber";
+                creatorsn.name_                = (char*)"subsetNumber";
                 grib_accessor* a              = grib_accessor_factory(section, &creatorsn, 0, NULL);
                 grib_accessor_variable_t* asn = dynamic_cast<grib_accessor_variable_t*>(a);
                 asn->accessor_variable_set_type(GRIB_TYPE_LONG);
@@ -2550,8 +2544,11 @@ int grib_accessor_bufr_data_array_t::create_keys(long onlySubset, long startSubs
                         }
                         break;
                     case 31021:
-                        if (associatedFieldSignificanceAccessor)
+                        if (associatedFieldSignificanceAccessor) {
                             associatedFieldSignificanceAccessor->destroy(c);
+                            delete associatedFieldSignificanceAccessor;
+                            associatedFieldSignificanceAccessor = nullptr;
+                        }
                         associatedFieldSignificanceAccessor = elementAccessor;
                         break;
                         /*case 33007:*/

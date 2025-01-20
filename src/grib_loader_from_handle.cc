@@ -251,7 +251,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
 
         default:
             grib_context_log(h->context, GRIB_LOG_ERROR,
-                "Copying %s, cannot establish type %ld [%s]", name, ga->get_native_type(), ga->creator_->cclass->name);
+                "Copying %s, cannot establish type %ld [%s]", name, ga->get_native_type(), ga->creator_->class_name_);
             break;
     }
 

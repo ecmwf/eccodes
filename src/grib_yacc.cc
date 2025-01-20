@@ -71,6 +71,36 @@
 
 
 #include "grib_api_internal.h"
+
+#include "action_class_alias.h"
+#include "action_class_assert.h"
+#include "action_class_close.h"
+#include "action_class_concept.h"
+#include "action_class_gen.h"
+#include "action_class_hash_array.h"
+#include "action_class_if.h"
+#include "action_class_list.h"
+#include "action_class_meta.h"
+#include "action_class_modify.h"
+#include "action_class_noop.h"
+#include "action_class_print.h"
+#include "action_class_put.h"
+#include "action_class_remove.h"
+#include "action_class_rename.h"
+#include "action_class_section.h"
+#include "action_class_set.h"
+#include "action_class_set_darray.h"
+#include "action_class_set_missing.h"
+#include "action_class_set_sarray.h"
+#include "action_class_switch.h"
+#include "action_class_template.h"
+#include "action_class_transient_darray.h"
+#include "action_class_trigger.h"
+#include "action_class_variable.h"
+#include "action_class_when.h"
+#include "action_class_while.h"
+#include "action_class_write.h"
+
 /* #include "grib_parser.h" */
 
 extern int grib_yylex(void);
@@ -94,7 +124,7 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
 
 
 
-#line 98 "y.tab.c"
+#line 128 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -401,7 +431,7 @@ extern int grib_yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 39 "griby.y"
+#line 69 "griby.y"
 
     char                    *str;
     long                    lval;
@@ -419,7 +449,7 @@ union YYSTYPE
   grib_rule               *rules;
   grib_rule_entry         *rule_entry;
 
-#line 423 "y.tab.c"
+#line 453 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -1032,34 +1062,34 @@ static const grib_yytype_uint8 grib_yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const grib_yytype_int16 grib_yyrline[] =
 {
-       0,   263,   263,   265,   266,   267,   268,   270,   274,   277,
-     278,   279,   280,   283,   284,   288,   289,   292,   293,   294,
-     295,   298,   299,   300,   301,   302,   303,   304,   305,   306,
-     310,   311,   314,   315,   318,   319,   322,   326,   329,   332,
-     335,   338,   341,   344,   347,   350,   353,   356,   360,   363,
-     366,   369,   372,   375,   378,   381,   384,   387,   398,   402,
-     405,   408,   411,   414,   417,   420,   423,   426,   429,   432,
-     435,   439,   442,   445,   448,   451,   454,   457,   460,   463,
-     466,   469,   472,   475,   478,   481,   485,   488,   491,   494,
-     497,   499,   502,   505,   508,   511,   514,   517,   520,   523,
-     526,   529,   532,   535,   538,   541,   544,   546,   548,   551,
-     554,   557,   561,   565,   568,   571,   583,   595,   607,   610,
-     613,   615,   618,   621,   622,   623,   624,   626,   629,   630,
-     631,   632,   633,   634,   635,   636,   638,   639,   640,   641,
-     642,   646,   647,   648,   649,   653,   654,   655,   658,   659,
-     662,   663,   667,   668,   671,   672,   675,   676,   679,   680,
-     681,   682,   683,   684,   685,   686,   687,   688,   689,   690,
-     691,   692,   695,   698,   701,   704,   705,   706,   707,   708,
-     709,   711,   712,   713,   714,   715,   717,   718,   719,   720,
-     721,   722,   723,   724,   728,   729,   732,   733,   736,   737,
-     740,   741,   744,   748,   749,   750,   753,   755,   757,   759,
-     763,   764,   767,   768,   772,   774,   778,   779,   780,   781,
-     784,   785,   786,   788,   789,   790,   791,   792,   793,   797,
-     798,   801,   802,   803,   804,   805,   806,   807,   808,   809,
-     810,   811,   812,   815,   816,   817,   820,   822,   823,   824,
-     825,   826,   827,   828,   833,   834,   837,   838,   841,   842,
-     845,   851,   852,   855,   856,   859,   860,   863,   867,   870,
-     871
+       0,   293,   293,   295,   296,   297,   298,   300,   304,   307,
+     308,   309,   310,   313,   314,   318,   319,   322,   323,   324,
+     325,   328,   329,   330,   331,   332,   333,   334,   335,   336,
+     340,   341,   344,   345,   348,   349,   352,   356,   359,   362,
+     365,   368,   371,   374,   377,   380,   383,   386,   390,   393,
+     396,   399,   402,   405,   408,   411,   414,   417,   428,   432,
+     435,   438,   441,   444,   447,   450,   453,   456,   459,   462,
+     465,   469,   472,   475,   478,   481,   484,   487,   490,   493,
+     496,   499,   502,   505,   508,   511,   515,   518,   521,   524,
+     527,   529,   532,   535,   538,   541,   544,   547,   550,   553,
+     556,   559,   562,   565,   568,   571,   574,   576,   578,   581,
+     584,   587,   591,   595,   598,   601,   613,   625,   637,   640,
+     643,   645,   648,   651,   652,   653,   654,   656,   659,   660,
+     661,   662,   663,   664,   665,   666,   668,   669,   670,   671,
+     672,   676,   677,   678,   679,   683,   684,   685,   688,   689,
+     692,   693,   697,   698,   701,   702,   705,   706,   709,   710,
+     711,   712,   713,   714,   715,   716,   717,   718,   719,   720,
+     721,   722,   725,   728,   731,   734,   735,   736,   737,   738,
+     739,   741,   742,   743,   744,   745,   747,   748,   749,   750,
+     751,   752,   753,   754,   758,   759,   762,   763,   766,   767,
+     770,   771,   774,   778,   779,   780,   783,   785,   787,   789,
+     793,   794,   797,   798,   802,   804,   808,   809,   810,   811,
+     814,   815,   816,   818,   819,   820,   821,   822,   823,   827,
+     828,   831,   832,   833,   834,   835,   836,   837,   838,   839,
+     840,   841,   842,   845,   846,   847,   850,   852,   853,   854,
+     855,   856,   857,   858,   863,   864,   867,   868,   871,   872,
+     875,   881,   882,   885,   886,   889,   890,   893,   897,   900,
+     901
 };
 #endif
 
@@ -2348,249 +2378,249 @@ grib_yyreduce:
   switch (grib_yyn)
     {
   case 2: /* all: empty  */
-#line 263 "griby.y"
+#line 293 "griby.y"
                   { grib_parser_all_actions = 0;grib_parser_concept=0; 
                             grib_parser_hash_array=0;grib_parser_rules=0; }
-#line 2355 "y.tab.c"
+#line 2385 "y.tab.c"
     break;
 
   case 3: /* all: concept_list  */
-#line 265 "griby.y"
+#line 295 "griby.y"
                           { grib_parser_concept     = reverse_concept((grib_yyvsp[0].concept_value)); }
-#line 2361 "y.tab.c"
+#line 2391 "y.tab.c"
     break;
 
   case 4: /* all: hash_array_list  */
-#line 266 "griby.y"
+#line 296 "griby.y"
                              { grib_parser_hash_array     = reverse_hash_array((grib_yyvsp[0].hash_array_value)); }
-#line 2367 "y.tab.c"
+#line 2397 "y.tab.c"
     break;
 
   case 5: /* all: instructions  */
-#line 267 "griby.y"
+#line 297 "griby.y"
                           { grib_parser_all_actions = (grib_yyvsp[0].act); }
-#line 2373 "y.tab.c"
+#line 2403 "y.tab.c"
     break;
 
   case 6: /* all: rules  */
-#line 268 "griby.y"
+#line 298 "griby.y"
                           { grib_parser_rules       = (grib_yyvsp[0].rules); }
-#line 2379 "y.tab.c"
+#line 2409 "y.tab.c"
     break;
 
   case 7: /* all: error  */
-#line 270 "griby.y"
+#line 300 "griby.y"
                       { grib_parser_all_actions = 0; grib_parser_concept=0; 
 	                    grib_parser_hash_array=0; grib_parser_rules=0; }
-#line 2386 "y.tab.c"
-    break;
-
-  case 9: /* dvalues: FLOAT  */
-#line 277 "griby.y"
-                 { (grib_yyval.dvalue)=grib_darray_push(0,(grib_yyvsp[0].dval));}
-#line 2392 "y.tab.c"
-    break;
-
-  case 10: /* dvalues: dvalues ',' FLOAT  */
-#line 278 "griby.y"
-                         { (grib_yyval.dvalue)=grib_darray_push((grib_yyvsp[-2].dvalue),(grib_yyvsp[0].dval));}
-#line 2398 "y.tab.c"
-    break;
-
-  case 11: /* dvalues: INTEGER  */
-#line 279 "griby.y"
-               { (grib_yyval.dvalue)=grib_darray_push(0,(grib_yyvsp[0].lval));}
-#line 2404 "y.tab.c"
-    break;
-
-  case 12: /* dvalues: dvalues ',' INTEGER  */
-#line 280 "griby.y"
-                           { (grib_yyval.dvalue)=grib_darray_push((grib_yyvsp[-2].dvalue),(grib_yyvsp[0].lval));}
-#line 2410 "y.tab.c"
-    break;
-
-  case 13: /* svalues: STRING  */
-#line 283 "griby.y"
-                { (grib_yyval.svalue)=grib_sarray_push(0,(grib_yyvsp[0].str));}
 #line 2416 "y.tab.c"
     break;
 
-  case 14: /* svalues: svalues ',' STRING  */
-#line 284 "griby.y"
-                          { (grib_yyval.svalue)=grib_sarray_push((grib_yyvsp[-2].svalue),(grib_yyvsp[0].str));}
+  case 9: /* dvalues: FLOAT  */
+#line 307 "griby.y"
+                 { (grib_yyval.dvalue)=grib_darray_push(0,(grib_yyvsp[0].dval));}
 #line 2422 "y.tab.c"
     break;
 
-  case 15: /* integer_array: INTEGER  */
-#line 288 "griby.y"
-                         { (grib_yyval.ivalue)=grib_iarray_push(0,(grib_yyvsp[0].lval));}
+  case 10: /* dvalues: dvalues ',' FLOAT  */
+#line 308 "griby.y"
+                         { (grib_yyval.dvalue)=grib_darray_push((grib_yyvsp[-2].dvalue),(grib_yyvsp[0].dval));}
 #line 2428 "y.tab.c"
     break;
 
-  case 16: /* integer_array: integer_array ',' INTEGER  */
-#line 289 "griby.y"
-                                 { (grib_yyval.ivalue)=grib_iarray_push((grib_yyvsp[-2].ivalue),(grib_yyvsp[0].lval));}
+  case 11: /* dvalues: INTEGER  */
+#line 309 "griby.y"
+               { (grib_yyval.dvalue)=grib_darray_push(0,(grib_yyvsp[0].lval));}
 #line 2434 "y.tab.c"
     break;
 
-  case 18: /* instructions: instruction instructions  */
-#line 293 "griby.y"
-                                    { (grib_yyvsp[-1].act)->next = (grib_yyvsp[0].act); (grib_yyval.act) = (grib_yyvsp[-1].act); }
+  case 12: /* dvalues: dvalues ',' INTEGER  */
+#line 310 "griby.y"
+                           { (grib_yyval.dvalue)=grib_darray_push((grib_yyvsp[-2].dvalue),(grib_yyvsp[0].lval));}
 #line 2440 "y.tab.c"
     break;
 
-  case 19: /* instructions: instruction ';' instructions  */
-#line 294 "griby.y"
-                                         { (grib_yyvsp[-2].act)->next = (grib_yyvsp[0].act); (grib_yyval.act) = (grib_yyvsp[-2].act); }
+  case 13: /* svalues: STRING  */
+#line 313 "griby.y"
+                { (grib_yyval.svalue)=grib_sarray_push(0,(grib_yyvsp[0].str));}
 #line 2446 "y.tab.c"
     break;
 
-  case 20: /* instructions: instruction ';'  */
-#line 295 "griby.y"
-                            {  (grib_yyval.act) = (grib_yyvsp[-1].act);}
+  case 14: /* svalues: svalues ',' STRING  */
+#line 314 "griby.y"
+                          { (grib_yyval.svalue)=grib_sarray_push((grib_yyvsp[-2].svalue),(grib_yyvsp[0].str));}
 #line 2452 "y.tab.c"
     break;
 
-  case 32: /* argument_list: empty  */
-#line 314 "griby.y"
-                           { (grib_yyval.explist) = 0; }
+  case 15: /* integer_array: INTEGER  */
+#line 318 "griby.y"
+                         { (grib_yyval.ivalue)=grib_iarray_push(0,(grib_yyvsp[0].lval));}
 #line 2458 "y.tab.c"
     break;
 
-  case 35: /* arguments: argument ',' arguments  */
+  case 16: /* integer_array: integer_array ',' INTEGER  */
 #line 319 "griby.y"
-                                       { (grib_yyvsp[-2].explist)->next_ = (grib_yyvsp[0].explist); (grib_yyval.explist) = (grib_yyvsp[-2].explist); }
+                                 { (grib_yyval.ivalue)=grib_iarray_push((grib_yyvsp[-2].ivalue),(grib_yyvsp[0].lval));}
 #line 2464 "y.tab.c"
     break;
 
-  case 36: /* argument: expression  */
-#line 322 "griby.y"
-                     { (grib_yyval.explist) = grib_arguments_new(grib_parser_context,(grib_yyvsp[0].exp),NULL); }
+  case 18: /* instructions: instruction instructions  */
+#line 323 "griby.y"
+                                    { (grib_yyvsp[-1].act)->next_ = (grib_yyvsp[0].act); (grib_yyval.act) = (grib_yyvsp[-1].act); }
 #line 2470 "y.tab.c"
     break;
 
-  case 37: /* simple: UNSIGNED '[' INTEGER ']' IDENT default flags  */
-#line 327 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"unsigned",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);        free((grib_yyvsp[-2].str));  }
+  case 19: /* instructions: instruction ';' instructions  */
+#line 324 "griby.y"
+                                         { (grib_yyvsp[-2].act)->next_ = (grib_yyvsp[0].act); (grib_yyval.act) = (grib_yyvsp[-2].act); }
 #line 2476 "y.tab.c"
     break;
 
-  case 38: /* simple: UNSIGNED '[' INTEGER ']' IDENT '[' argument_list ']' default flags  */
-#line 330 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"unsigned",(grib_yyvsp[-7].lval),(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);        free((grib_yyvsp[-5].str));  }
+  case 20: /* instructions: instruction ';'  */
+#line 325 "griby.y"
+                            {  (grib_yyval.act) = (grib_yyvsp[-1].act);}
 #line 2482 "y.tab.c"
     break;
 
-  case 39: /* simple: UNSIGNED '(' INTEGER ')' IDENT default flags  */
-#line 333 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"unsigned_bits",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);        free((grib_yyvsp[-2].str));  }
+  case 32: /* argument_list: empty  */
+#line 344 "griby.y"
+                           { (grib_yyval.explist) = 0; }
 #line 2488 "y.tab.c"
     break;
 
-  case 40: /* simple: UNSIGNED '(' INTEGER ')' IDENT '[' argument_list ']' default flags  */
-#line 336 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"unsigned_bits",(grib_yyvsp[-7].lval),(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);        free((grib_yyvsp[-5].str));  }
+  case 35: /* arguments: argument ',' arguments  */
+#line 349 "griby.y"
+                                       { (grib_yyvsp[-2].explist)->next_ = (grib_yyvsp[0].explist); (grib_yyval.explist) = (grib_yyvsp[-2].explist); }
 #line 2494 "y.tab.c"
     break;
 
-  case 41: /* simple: ASCII '[' INTEGER ']' IDENT default flags  */
-#line 339 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ascii",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-2].str));  }
+  case 36: /* argument: expression  */
+#line 352 "griby.y"
+                     { (grib_yyval.explist) = grib_arguments_new(grib_parser_context,(grib_yyvsp[0].exp),NULL); }
 #line 2500 "y.tab.c"
     break;
 
-  case 42: /* simple: GROUP IDENT default flags  */
-#line 342 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"group",0,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-2].str));  }
+  case 37: /* simple: UNSIGNED '[' INTEGER ']' IDENT default flags  */
+#line 357 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"unsigned",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);        free((grib_yyvsp[-2].str));  }
 #line 2506 "y.tab.c"
     break;
 
-  case 43: /* simple: GROUP IDENT '(' argument_list ')' default flags  */
-#line 345 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"group",0,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-5].str));  }
+  case 38: /* simple: UNSIGNED '[' INTEGER ']' IDENT '[' argument_list ']' default flags  */
+#line 360 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"unsigned",(grib_yyvsp[-7].lval),(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);        free((grib_yyvsp[-5].str));  }
 #line 2512 "y.tab.c"
     break;
 
-  case 44: /* simple: IDENT '=' TO_INTEGER '(' argument_list ')' flags  */
-#line 348 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-6].str),"to_integer",0,(grib_yyvsp[-2].explist),0,(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-6].str));  }
+  case 39: /* simple: UNSIGNED '(' INTEGER ')' IDENT default flags  */
+#line 363 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"unsigned_bits",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);        free((grib_yyvsp[-2].str));  }
 #line 2518 "y.tab.c"
     break;
 
-  case 45: /* simple: IDENT '=' SEX2DEC '(' argument_list ')' flags  */
-#line 351 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-6].str),"sexagesimal2decimal",0,(grib_yyvsp[-2].explist),0,(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-6].str));  }
+  case 40: /* simple: UNSIGNED '(' INTEGER ')' IDENT '[' argument_list ']' default flags  */
+#line 366 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"unsigned_bits",(grib_yyvsp[-7].lval),(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);        free((grib_yyvsp[-5].str));  }
 #line 2524 "y.tab.c"
     break;
 
-  case 46: /* simple: IDENT '=' TO_STRING '(' argument_list ')' flags  */
-#line 354 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-6].str),"to_string",0,(grib_yyvsp[-2].explist),0,(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-6].str));  }
+  case 41: /* simple: ASCII '[' INTEGER ']' IDENT default flags  */
+#line 369 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ascii",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-2].str));  }
 #line 2530 "y.tab.c"
     break;
 
-  case 47: /* simple: NON_ALPHA IDENT default flags  */
-#line 357 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"non_alpha",0,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-2].str));  }
+  case 42: /* simple: GROUP IDENT default flags  */
+#line 372 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"group",0,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-2].str));  }
 #line 2536 "y.tab.c"
     break;
 
-  case 48: /* simple: ASCII '[' INTEGER ']' STRING default flags  */
-#line 361 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ascii",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-2].str));  }
+  case 43: /* simple: GROUP IDENT '(' argument_list ')' default flags  */
+#line 375 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"group",0,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-5].str));  }
 #line 2542 "y.tab.c"
     break;
 
-  case 49: /* simple: BYTE '[' INTEGER ']' IDENT default flags  */
-#line 364 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"bytes",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);      free((grib_yyvsp[-2].str));  }
+  case 44: /* simple: IDENT '=' TO_INTEGER '(' argument_list ')' flags  */
+#line 378 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-6].str),"to_integer",0,(grib_yyvsp[-2].explist),0,(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-6].str));  }
 #line 2548 "y.tab.c"
     break;
 
-  case 50: /* simple: BYTE '[' INTEGER ']' IDENT '[' argument_list ']' default flags  */
-#line 367 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"bytes",(grib_yyvsp[-7].lval),(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);      free((grib_yyvsp[-5].str));  }
+  case 45: /* simple: IDENT '=' SEX2DEC '(' argument_list ')' flags  */
+#line 381 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-6].str),"sexagesimal2decimal",0,(grib_yyvsp[-2].explist),0,(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-6].str));  }
 #line 2554 "y.tab.c"
     break;
 
-  case 51: /* simple: KSEC1EXPVER '[' INTEGER ']' IDENT default flags  */
-#line 370 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ksec1expver",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-2].str));  }
+  case 46: /* simple: IDENT '=' TO_STRING '(' argument_list ')' flags  */
+#line 384 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-6].str),"to_string",0,(grib_yyvsp[-2].explist),0,(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-6].str));  }
 #line 2560 "y.tab.c"
     break;
 
-  case 52: /* simple: SIGNED '[' INTEGER ']' IDENT default flags  */
-#line 373 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"signed",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);      free((grib_yyvsp[-2].str));  }
+  case 47: /* simple: NON_ALPHA IDENT default flags  */
+#line 387 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"non_alpha",0,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-2].str));  }
 #line 2566 "y.tab.c"
     break;
 
-  case 53: /* simple: SIGNED '[' INTEGER ']' IDENT '[' argument_list ']' default flags  */
-#line 376 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"signed",(grib_yyvsp[-7].lval),(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);      free((grib_yyvsp[-5].str));  }
+  case 48: /* simple: ASCII '[' INTEGER ']' STRING default flags  */
+#line 391 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ascii",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-2].str));  }
 #line 2572 "y.tab.c"
     break;
 
-  case 54: /* simple: SIGNED '(' INTEGER ')' IDENT default flags  */
-#line 379 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"signed_bits",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);      free((grib_yyvsp[-2].str));  }
+  case 49: /* simple: BYTE '[' INTEGER ']' IDENT default flags  */
+#line 394 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"bytes",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);      free((grib_yyvsp[-2].str));  }
 #line 2578 "y.tab.c"
     break;
 
-  case 55: /* simple: SIGNED '(' INTEGER ')' IDENT '[' argument_list ']' default flags  */
-#line 382 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"signed_bits",(grib_yyvsp[-7].lval),(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);      free((grib_yyvsp[-5].str));  }
+  case 50: /* simple: BYTE '[' INTEGER ']' IDENT '[' argument_list ']' default flags  */
+#line 397 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"bytes",(grib_yyvsp[-7].lval),(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);      free((grib_yyvsp[-5].str));  }
 #line 2584 "y.tab.c"
     break;
 
-  case 56: /* simple: CODETABLE '[' INTEGER ']' IDENT argument default flags  */
-#line 385 "griby.y"
-    { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"codetable",(grib_yyvsp[-5].lval), (grib_yyvsp[-2].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-3].str)); }
+  case 51: /* simple: KSEC1EXPVER '[' INTEGER ']' IDENT default flags  */
+#line 400 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ksec1expver",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-2].str));  }
 #line 2590 "y.tab.c"
     break;
 
+  case 52: /* simple: SIGNED '[' INTEGER ']' IDENT default flags  */
+#line 403 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"signed",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);      free((grib_yyvsp[-2].str));  }
+#line 2596 "y.tab.c"
+    break;
+
+  case 53: /* simple: SIGNED '[' INTEGER ']' IDENT '[' argument_list ']' default flags  */
+#line 406 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"signed",(grib_yyvsp[-7].lval),(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);      free((grib_yyvsp[-5].str));  }
+#line 2602 "y.tab.c"
+    break;
+
+  case 54: /* simple: SIGNED '(' INTEGER ')' IDENT default flags  */
+#line 409 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"signed_bits",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);      free((grib_yyvsp[-2].str));  }
+#line 2608 "y.tab.c"
+    break;
+
+  case 55: /* simple: SIGNED '(' INTEGER ')' IDENT '[' argument_list ']' default flags  */
+#line 412 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"signed_bits",(grib_yyvsp[-7].lval),(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);      free((grib_yyvsp[-5].str));  }
+#line 2614 "y.tab.c"
+    break;
+
+  case 56: /* simple: CODETABLE '[' INTEGER ']' IDENT argument default flags  */
+#line 415 "griby.y"
+    { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"codetable",(grib_yyvsp[-5].lval), (grib_yyvsp[-2].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-3].str)); }
+#line 2620 "y.tab.c"
+    break;
+
   case 57: /* simple: CODETABLE '[' IDENT ']' IDENT argument default flags  */
-#line 388 "griby.y"
+#line 418 "griby.y"
     {
       /* ECC-485: Set length to 0 and prepend the new argument */
       grib_arguments* a = grib_arguments_new(grib_parser_context, new_accessor_expression(grib_parser_context,(grib_yyvsp[-5].str),0,0),NULL);
@@ -2600,358 +2630,358 @@ grib_yyreduce:
                                   (grib_yyvsp[-1].explist), (grib_yyvsp[0].lval), NULL, NULL);
       free((grib_yyvsp[-3].str));
     }
-#line 2604 "y.tab.c"
+#line 2634 "y.tab.c"
     break;
 
   case 58: /* simple: CODETABLE '[' INTEGER ']' IDENT argument default SET '(' IDENT ')' flags  */
-#line 399 "griby.y"
+#line 429 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-7].str),"codetable",(grib_yyvsp[-9].lval), (grib_yyvsp[-6].explist),(grib_yyvsp[-5].explist),(grib_yyvsp[0].lval),NULL,(grib_yyvsp[-2].str));
            free((grib_yyvsp[-7].str));free((grib_yyvsp[-2].str)); }
-#line 2611 "y.tab.c"
-    break;
-
-  case 59: /* simple: CODETABLE '[' INTEGER ']' IDENT '(' argument_list ')' default flags  */
-#line 403 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"codetable",(grib_yyvsp[-7].lval), (grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-5].str)); }
-#line 2617 "y.tab.c"
-    break;
-
-  case 60: /* simple: SMART_TABLE IDENT '(' argument_list ')' default flags  */
-#line 406 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"smart_table",0,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-5].str)); }
-#line 2623 "y.tab.c"
-    break;
-
-  case 61: /* simple: IDENT '=' DICTIONARY '(' argument_list ')' default flags  */
-#line 409 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-7].str),"dictionary",0,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-7].str)); }
-#line 2629 "y.tab.c"
-    break;
-
-  case 62: /* simple: IDENT '=' GETENV '(' argument_list ')' default flags  */
-#line 412 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-7].str),"getenv",0,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-7].str)); }
-#line 2635 "y.tab.c"
-    break;
-
-  case 63: /* simple: COMPLEX_CODETABLE '[' INTEGER ']' IDENT argument default flags  */
-#line 415 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"complex_codetable",(grib_yyvsp[-5].lval), (grib_yyvsp[-2].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-3].str)); }
 #line 2641 "y.tab.c"
     break;
 
-  case 64: /* simple: COMPLEX_CODETABLE '[' INTEGER ']' IDENT '(' argument_list ')' default flags  */
-#line 418 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"complex_codetable",(grib_yyvsp[-7].lval), (grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-5].str)); }
+  case 59: /* simple: CODETABLE '[' INTEGER ']' IDENT '(' argument_list ')' default flags  */
+#line 433 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"codetable",(grib_yyvsp[-7].lval), (grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-5].str)); }
 #line 2647 "y.tab.c"
     break;
 
-  case 65: /* simple: FLAG '[' INTEGER ']' IDENT argument default flags  */
-#line 421 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"codeflag",(grib_yyvsp[-5].lval), (grib_yyvsp[-2].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-3].str)); }
+  case 60: /* simple: SMART_TABLE IDENT '(' argument_list ')' default flags  */
+#line 436 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"smart_table",0,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-5].str)); }
 #line 2653 "y.tab.c"
     break;
 
-  case 66: /* simple: LOOKUP '[' INTEGER ']' IDENT '(' argument_list ')' flags  */
-#line 424 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-4].str),"lookup",(grib_yyvsp[-6].lval),(grib_yyvsp[-2].explist),NULL,(grib_yyvsp[0].lval),NULL,NULL); free((grib_yyvsp[-4].str)); }
+  case 61: /* simple: IDENT '=' DICTIONARY '(' argument_list ')' default flags  */
+#line 439 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-7].str),"dictionary",0,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-7].str)); }
 #line 2659 "y.tab.c"
     break;
 
-  case 67: /* simple: FLAGBIT IDENT '(' argument_list ')' default flags  */
-#line 427 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"bit",0,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL); free((grib_yyvsp[-5].str)); }
+  case 62: /* simple: IDENT '=' GETENV '(' argument_list ')' default flags  */
+#line 442 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-7].str),"getenv",0,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-7].str)); }
 #line 2665 "y.tab.c"
     break;
 
-  case 68: /* simple: LABEL IDENT  */
-#line 430 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[0].str),"label",0,NULL,NULL,0,NULL,NULL);   free((grib_yyvsp[0].str));  }
+  case 63: /* simple: COMPLEX_CODETABLE '[' INTEGER ']' IDENT argument default flags  */
+#line 445 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"complex_codetable",(grib_yyvsp[-5].lval), (grib_yyvsp[-2].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-3].str)); }
 #line 2671 "y.tab.c"
     break;
 
-  case 69: /* simple: LABEL STRING  */
-#line 433 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[0].str),"label",0,NULL,NULL,0,NULL,NULL);   free((grib_yyvsp[0].str));  }
+  case 64: /* simple: COMPLEX_CODETABLE '[' INTEGER ']' IDENT '(' argument_list ')' default flags  */
+#line 448 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"complex_codetable",(grib_yyvsp[-7].lval), (grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-5].str)); }
 #line 2677 "y.tab.c"
     break;
 
-  case 70: /* simple: IBMFLOAT IDENT default flags  */
-#line 436 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ibmfloat",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
+  case 65: /* simple: FLAG '[' INTEGER ']' IDENT argument default flags  */
+#line 451 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"codeflag",(grib_yyvsp[-5].lval), (grib_yyvsp[-2].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-3].str)); }
 #line 2683 "y.tab.c"
     break;
 
-  case 71: /* simple: INT8 IDENT default flags  */
-#line 440 "griby.y"
-  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int8",1,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
+  case 66: /* simple: LOOKUP '[' INTEGER ']' IDENT '(' argument_list ')' flags  */
+#line 454 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-4].str),"lookup",(grib_yyvsp[-6].lval),(grib_yyvsp[-2].explist),NULL,(grib_yyvsp[0].lval),NULL,NULL); free((grib_yyvsp[-4].str)); }
 #line 2689 "y.tab.c"
     break;
 
-  case 72: /* simple: UINT8 IDENT default flags  */
-#line 443 "griby.y"
-  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint8",1,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
+  case 67: /* simple: FLAGBIT IDENT '(' argument_list ')' default flags  */
+#line 457 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"bit",0,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL); free((grib_yyvsp[-5].str)); }
 #line 2695 "y.tab.c"
     break;
 
-  case 73: /* simple: INT16 IDENT default flags  */
-#line 446 "griby.y"
-  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int16",2,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
+  case 68: /* simple: LABEL IDENT  */
+#line 460 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[0].str),"label",0,NULL,NULL,0,NULL,NULL);   free((grib_yyvsp[0].str));  }
 #line 2701 "y.tab.c"
     break;
 
-  case 74: /* simple: UINT16 IDENT default flags  */
-#line 449 "griby.y"
-  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint16",2,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
+  case 69: /* simple: LABEL STRING  */
+#line 463 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[0].str),"label",0,NULL,NULL,0,NULL,NULL);   free((grib_yyvsp[0].str));  }
 #line 2707 "y.tab.c"
     break;
 
-  case 75: /* simple: INT16_LITTLE_ENDIAN IDENT default flags  */
-#line 452 "griby.y"
-  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int16_little_endian",2,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
+  case 70: /* simple: IBMFLOAT IDENT default flags  */
+#line 466 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ibmfloat",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
 #line 2713 "y.tab.c"
     break;
 
-  case 76: /* simple: UINT16_LITTLE_ENDIAN IDENT default flags  */
-#line 455 "griby.y"
-  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint16_little_endian",2,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
+  case 71: /* simple: INT8 IDENT default flags  */
+#line 470 "griby.y"
+  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int8",1,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
 #line 2719 "y.tab.c"
     break;
 
-  case 77: /* simple: INT32 IDENT default flags  */
-#line 458 "griby.y"
-  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int32",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
+  case 72: /* simple: UINT8 IDENT default flags  */
+#line 473 "griby.y"
+  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint8",1,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
 #line 2725 "y.tab.c"
     break;
 
-  case 78: /* simple: UINT32 IDENT default flags  */
-#line 461 "griby.y"
-  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint32",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
+  case 73: /* simple: INT16 IDENT default flags  */
+#line 476 "griby.y"
+  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int16",2,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
 #line 2731 "y.tab.c"
     break;
 
-  case 79: /* simple: INT32_LITTLE_ENDIAN IDENT default flags  */
-#line 464 "griby.y"
-  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int32_little_endian",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
+  case 74: /* simple: UINT16 IDENT default flags  */
+#line 479 "griby.y"
+  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint16",2,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
 #line 2737 "y.tab.c"
     break;
 
-  case 80: /* simple: UINT32_LITTLE_ENDIAN IDENT default flags  */
-#line 467 "griby.y"
-  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint32_little_endian",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
+  case 75: /* simple: INT16_LITTLE_ENDIAN IDENT default flags  */
+#line 482 "griby.y"
+  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int16_little_endian",2,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
 #line 2743 "y.tab.c"
     break;
 
-  case 81: /* simple: INT64 IDENT default flags  */
-#line 470 "griby.y"
-  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int64",8,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
+  case 76: /* simple: UINT16_LITTLE_ENDIAN IDENT default flags  */
+#line 485 "griby.y"
+  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint16_little_endian",2,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
 #line 2749 "y.tab.c"
     break;
 
-  case 82: /* simple: UINT64 IDENT default flags  */
-#line 473 "griby.y"
-  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint64",8,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
+  case 77: /* simple: INT32 IDENT default flags  */
+#line 488 "griby.y"
+  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int32",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
 #line 2755 "y.tab.c"
     break;
 
-  case 83: /* simple: INT64_LITTLE_ENDIAN IDENT default flags  */
-#line 476 "griby.y"
-  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int64_little_endian",8,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
+  case 78: /* simple: UINT32 IDENT default flags  */
+#line 491 "griby.y"
+  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint32",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
 #line 2761 "y.tab.c"
     break;
 
-  case 84: /* simple: UINT64_LITTLE_ENDIAN IDENT default flags  */
-#line 479 "griby.y"
-  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint64_little_endian",8,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
+  case 79: /* simple: INT32_LITTLE_ENDIAN IDENT default flags  */
+#line 494 "griby.y"
+  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int32_little_endian",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
 #line 2767 "y.tab.c"
     break;
 
-  case 85: /* simple: BLOB IDENT '[' argument_list ']' default flags  */
-#line 482 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"blob",0,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);        free((grib_yyvsp[-5].str));  }
+  case 80: /* simple: UINT32_LITTLE_ENDIAN IDENT default flags  */
+#line 497 "griby.y"
+  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint32_little_endian",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
 #line 2773 "y.tab.c"
     break;
 
-  case 86: /* simple: IBMFLOAT IDENT '.' IDENT default flags  */
-#line 486 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ibmfloat",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),(grib_yyvsp[-4].str),NULL);free((grib_yyvsp[-2].str)); free((grib_yyvsp[-4].str)); }
+  case 81: /* simple: INT64 IDENT default flags  */
+#line 500 "griby.y"
+  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int64",8,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
 #line 2779 "y.tab.c"
     break;
 
-  case 87: /* simple: IBMFLOAT IDENT '[' argument ']' default flags  */
-#line 489 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"ibmfloat",4,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-5].str));  }
+  case 82: /* simple: UINT64 IDENT default flags  */
+#line 503 "griby.y"
+  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint64",8,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
 #line 2785 "y.tab.c"
     break;
 
-  case 88: /* simple: POS IDENT  */
-#line 492 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[0].str),"position",0,NULL,NULL,0,NULL,NULL);     free((grib_yyvsp[0].str));  }
+  case 83: /* simple: INT64_LITTLE_ENDIAN IDENT default flags  */
+#line 506 "griby.y"
+  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int64_little_endian",8,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
 #line 2791 "y.tab.c"
     break;
 
-  case 89: /* simple: INTCONST IDENT '=' argument flags  */
-#line 495 "griby.y"
-        { (grib_yyval.act) = grib_action_create_variable(grib_parser_context,(grib_yyvsp[-3].str),"constant",0,(grib_yyvsp[-1].explist),NULL,(grib_yyvsp[0].lval),NULL);free((grib_yyvsp[-3].str)); }
+  case 84: /* simple: UINT64_LITTLE_ENDIAN IDENT default flags  */
+#line 509 "griby.y"
+  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint64_little_endian",8,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
 #line 2797 "y.tab.c"
     break;
 
-  case 90: /* simple: TRANS IDENT '=' argument flags  */
-#line 498 "griby.y"
-        { (grib_yyval.act) = grib_action_create_variable(grib_parser_context,(grib_yyvsp[-3].str),"transient",0,(grib_yyvsp[-1].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL);   free((grib_yyvsp[-3].str)); }
+  case 85: /* simple: BLOB IDENT '[' argument_list ']' default flags  */
+#line 512 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"blob",0,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);        free((grib_yyvsp[-5].str));  }
 #line 2803 "y.tab.c"
     break;
 
-  case 91: /* simple: TRANS IDENT '=' '{' dvalues '}' flags  */
-#line 500 "griby.y"
-        { (grib_yyval.act) = grib_action_create_transient_darray(grib_parser_context,(grib_yyvsp[-5].str),(grib_yyvsp[-2].dvalue),(grib_yyvsp[0].lval)); free((grib_yyvsp[-5].str)); }
+  case 86: /* simple: IBMFLOAT IDENT '.' IDENT default flags  */
+#line 516 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ibmfloat",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),(grib_yyvsp[-4].str),NULL);free((grib_yyvsp[-2].str)); free((grib_yyvsp[-4].str)); }
 #line 2809 "y.tab.c"
     break;
 
-  case 92: /* simple: FLOAT IDENT default flags  */
-#line 503 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ieeefloat",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);   free((grib_yyvsp[-2].str));  }
+  case 87: /* simple: IBMFLOAT IDENT '[' argument ']' default flags  */
+#line 519 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"ibmfloat",4,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-5].str));  }
 #line 2815 "y.tab.c"
     break;
 
-  case 93: /* simple: FLOAT IDENT '.' IDENT default flags  */
-#line 506 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ieeefloat",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),(grib_yyvsp[-4].str),NULL);  free((grib_yyvsp[-2].str));free((grib_yyvsp[-4].str));}
+  case 88: /* simple: POS IDENT  */
+#line 522 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[0].str),"position",0,NULL,NULL,0,NULL,NULL);     free((grib_yyvsp[0].str));  }
 #line 2821 "y.tab.c"
     break;
 
-  case 94: /* simple: FLOAT IDENT '[' argument ']' default flags  */
-#line 509 "griby.y"
-   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"ieeefloat",4,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-5].str));  }
+  case 89: /* simple: INTCONST IDENT '=' argument flags  */
+#line 525 "griby.y"
+        { (grib_yyval.act) = grib_action_create_variable(grib_parser_context,(grib_yyvsp[-3].str),"constant",0,(grib_yyvsp[-1].explist),NULL,(grib_yyvsp[0].lval),NULL);free((grib_yyvsp[-3].str)); }
 #line 2827 "y.tab.c"
     break;
 
-  case 95: /* simple: G1_HALF_BYTE IDENT  */
-#line 512 "griby.y"
-   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[0].str),"g1_half_byte_codeflag",0,NULL,NULL,0,NULL,NULL);free((grib_yyvsp[0].str));  }
+  case 90: /* simple: TRANS IDENT '=' argument flags  */
+#line 528 "griby.y"
+        { (grib_yyval.act) = grib_action_create_variable(grib_parser_context,(grib_yyvsp[-3].str),"transient",0,(grib_yyvsp[-1].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL);   free((grib_yyvsp[-3].str)); }
 #line 2833 "y.tab.c"
     break;
 
-  case 96: /* simple: SECTION_LENGTH '[' INTEGER ']' IDENT default  */
-#line 515 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-1].str),"section_length",(grib_yyvsp[-3].lval),NULL,(grib_yyvsp[0].explist),0,NULL,NULL);free((grib_yyvsp[-1].str));  }
+  case 91: /* simple: TRANS IDENT '=' '{' dvalues '}' flags  */
+#line 530 "griby.y"
+        { (grib_yyval.act) = grib_action_create_transient_darray(grib_parser_context,(grib_yyvsp[-5].str),(grib_yyvsp[-2].dvalue),(grib_yyvsp[0].lval)); free((grib_yyvsp[-5].str)); }
 #line 2839 "y.tab.c"
     break;
 
-  case 97: /* simple: G1_MESSAGE_LENGTH '[' INTEGER ']' IDENT '(' argument_list ')'  */
-#line 518 "griby.y"
-   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"g1_message_length",(grib_yyvsp[-5].lval),(grib_yyvsp[-1].explist),NULL,0,NULL,NULL);free((grib_yyvsp[-3].str));  }
+  case 92: /* simple: FLOAT IDENT default flags  */
+#line 533 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ieeefloat",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);   free((grib_yyvsp[-2].str));  }
 #line 2845 "y.tab.c"
     break;
 
-  case 98: /* simple: G1_SECTION4_LENGTH '[' INTEGER ']' IDENT '(' argument_list ')'  */
-#line 521 "griby.y"
-  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"g1_section4_length",(grib_yyvsp[-5].lval),(grib_yyvsp[-1].explist),NULL,0,NULL,NULL);free((grib_yyvsp[-3].str));  }
+  case 93: /* simple: FLOAT IDENT '.' IDENT default flags  */
+#line 536 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ieeefloat",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),(grib_yyvsp[-4].str),NULL);  free((grib_yyvsp[-2].str));free((grib_yyvsp[-4].str));}
 #line 2851 "y.tab.c"
     break;
 
-  case 99: /* simple: KSEC IDENT argument  */
-#line 524 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-1].str),"ksec",0,(grib_yyvsp[0].explist),NULL,0,NULL,NULL);free((grib_yyvsp[-1].str)); }
+  case 94: /* simple: FLOAT IDENT '[' argument ']' default flags  */
+#line 539 "griby.y"
+   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"ieeefloat",4,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-5].str));  }
 #line 2857 "y.tab.c"
     break;
 
-  case 100: /* simple: PAD IDENT '(' argument_list ')'  */
-#line 527 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"pad",0,(grib_yyvsp[-1].explist),0,0,NULL,NULL);   free((grib_yyvsp[-3].str)); }
+  case 95: /* simple: G1_HALF_BYTE IDENT  */
+#line 542 "griby.y"
+   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[0].str),"g1_half_byte_codeflag",0,NULL,NULL,0,NULL,NULL);free((grib_yyvsp[0].str));  }
 #line 2863 "y.tab.c"
     break;
 
-  case 101: /* simple: PADTO IDENT '(' argument_list ')'  */
-#line 530 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"padto",0,(grib_yyvsp[-1].explist),0,0,NULL,NULL);   free((grib_yyvsp[-3].str)); }
+  case 96: /* simple: SECTION_LENGTH '[' INTEGER ']' IDENT default  */
+#line 545 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-1].str),"section_length",(grib_yyvsp[-3].lval),NULL,(grib_yyvsp[0].explist),0,NULL,NULL);free((grib_yyvsp[-1].str));  }
 #line 2869 "y.tab.c"
     break;
 
-  case 102: /* simple: PADTOEVEN IDENT '(' argument_list ')'  */
-#line 533 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"padtoeven",0,(grib_yyvsp[-1].explist),0,0,NULL,NULL);   free((grib_yyvsp[-3].str)); }
+  case 97: /* simple: G1_MESSAGE_LENGTH '[' INTEGER ']' IDENT '(' argument_list ')'  */
+#line 548 "griby.y"
+   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"g1_message_length",(grib_yyvsp[-5].lval),(grib_yyvsp[-1].explist),NULL,0,NULL,NULL);free((grib_yyvsp[-3].str));  }
 #line 2875 "y.tab.c"
     break;
 
-  case 103: /* simple: PADTOMULTIPLE IDENT '(' argument_list ')'  */
-#line 536 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"padtomultiple",0,(grib_yyvsp[-1].explist),0,0,NULL,NULL);   free((grib_yyvsp[-3].str)); }
+  case 98: /* simple: G1_SECTION4_LENGTH '[' INTEGER ']' IDENT '(' argument_list ')'  */
+#line 551 "griby.y"
+  { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"g1_section4_length",(grib_yyvsp[-5].lval),(grib_yyvsp[-1].explist),NULL,0,NULL,NULL);free((grib_yyvsp[-3].str));  }
 #line 2881 "y.tab.c"
     break;
 
-  case 104: /* simple: MESSAGE '[' INTEGER ']' IDENT flags  */
-#line 539 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-1].str),"message",(grib_yyvsp[-3].lval),0,0,(grib_yyvsp[0].lval),NULL,NULL);   free((grib_yyvsp[-1].str));  }
+  case 99: /* simple: KSEC IDENT argument  */
+#line 554 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-1].str),"ksec",0,(grib_yyvsp[0].explist),NULL,0,NULL,NULL);free((grib_yyvsp[-1].str)); }
 #line 2887 "y.tab.c"
     break;
 
-  case 105: /* simple: MESSAGE_COPY IDENT flags  */
-#line 542 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-1].str),"message_copy",0,0,0,(grib_yyvsp[0].lval),NULL,NULL);   free((grib_yyvsp[-1].str));  }
+  case 100: /* simple: PAD IDENT '(' argument_list ')'  */
+#line 557 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"pad",0,(grib_yyvsp[-1].explist),0,0,NULL,NULL);   free((grib_yyvsp[-3].str)); }
 #line 2893 "y.tab.c"
     break;
 
-  case 106: /* simple: SECTION_PADDING IDENT flags  */
-#line 545 "griby.y"
-        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-1].str),"section_padding",0,0,0,(grib_yyvsp[0].lval),NULL,NULL);   free((grib_yyvsp[-1].str));  }
+  case 101: /* simple: PADTO IDENT '(' argument_list ')'  */
+#line 560 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"padto",0,(grib_yyvsp[-1].explist),0,0,NULL,NULL);   free((grib_yyvsp[-3].str)); }
 #line 2899 "y.tab.c"
     break;
 
-  case 107: /* simple: TEMPLATE IDENT STRING  */
-#line 547 "griby.y"
-        { (grib_yyval.act) = grib_action_create_template(grib_parser_context,0,(grib_yyvsp[-1].str),(grib_yyvsp[0].str)); free((grib_yyvsp[-1].str)); free((grib_yyvsp[0].str));}
+  case 102: /* simple: PADTOEVEN IDENT '(' argument_list ')'  */
+#line 563 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"padtoeven",0,(grib_yyvsp[-1].explist),0,0,NULL,NULL);   free((grib_yyvsp[-3].str)); }
 #line 2905 "y.tab.c"
     break;
 
-  case 108: /* simple: TEMPLATE_NOFAIL IDENT STRING  */
-#line 549 "griby.y"
-    { (grib_yyval.act) = grib_action_create_template(grib_parser_context,1,(grib_yyvsp[-1].str),(grib_yyvsp[0].str)); free((grib_yyvsp[-1].str)); free((grib_yyvsp[0].str));}
+  case 103: /* simple: PADTOMULTIPLE IDENT '(' argument_list ')'  */
+#line 566 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"padtomultiple",0,(grib_yyvsp[-1].explist),0,0,NULL,NULL);   free((grib_yyvsp[-3].str)); }
 #line 2911 "y.tab.c"
     break;
 
-  case 109: /* simple: ALIAS IDENT '=' IDENT flags  */
-#line 552 "griby.y"
-        { (grib_yyval.act) = grib_action_create_alias(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].str),NULL,(grib_yyvsp[0].lval));  free((grib_yyvsp[-3].str)); free((grib_yyvsp[-1].str)); }
+  case 104: /* simple: MESSAGE '[' INTEGER ']' IDENT flags  */
+#line 569 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-1].str),"message",(grib_yyvsp[-3].lval),0,0,(grib_yyvsp[0].lval),NULL,NULL);   free((grib_yyvsp[-1].str));  }
 #line 2917 "y.tab.c"
     break;
 
-  case 110: /* simple: UNALIAS IDENT  */
-#line 555 "griby.y"
-        { (grib_yyval.act) = grib_action_create_alias(grib_parser_context,(grib_yyvsp[0].str),NULL,NULL,0);  free((grib_yyvsp[0].str)); }
+  case 105: /* simple: MESSAGE_COPY IDENT flags  */
+#line 572 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-1].str),"message_copy",0,0,0,(grib_yyvsp[0].lval),NULL,NULL);   free((grib_yyvsp[-1].str));  }
 #line 2923 "y.tab.c"
     break;
 
+  case 106: /* simple: SECTION_PADDING IDENT flags  */
+#line 575 "griby.y"
+        { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-1].str),"section_padding",0,0,0,(grib_yyvsp[0].lval),NULL,NULL);   free((grib_yyvsp[-1].str));  }
+#line 2929 "y.tab.c"
+    break;
+
+  case 107: /* simple: TEMPLATE IDENT STRING  */
+#line 577 "griby.y"
+        { (grib_yyval.act) = grib_action_create_template(grib_parser_context,0,(grib_yyvsp[-1].str),(grib_yyvsp[0].str)); free((grib_yyvsp[-1].str)); free((grib_yyvsp[0].str));}
+#line 2935 "y.tab.c"
+    break;
+
+  case 108: /* simple: TEMPLATE_NOFAIL IDENT STRING  */
+#line 579 "griby.y"
+    { (grib_yyval.act) = grib_action_create_template(grib_parser_context,1,(grib_yyvsp[-1].str),(grib_yyvsp[0].str)); free((grib_yyvsp[-1].str)); free((grib_yyvsp[0].str));}
+#line 2941 "y.tab.c"
+    break;
+
+  case 109: /* simple: ALIAS IDENT '=' IDENT flags  */
+#line 582 "griby.y"
+        { (grib_yyval.act) = grib_action_create_alias(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].str),NULL,(grib_yyvsp[0].lval));  free((grib_yyvsp[-3].str)); free((grib_yyvsp[-1].str)); }
+#line 2947 "y.tab.c"
+    break;
+
+  case 110: /* simple: UNALIAS IDENT  */
+#line 585 "griby.y"
+        { (grib_yyval.act) = grib_action_create_alias(grib_parser_context,(grib_yyvsp[0].str),NULL,NULL,0);  free((grib_yyvsp[0].str)); }
+#line 2953 "y.tab.c"
+    break;
+
   case 111: /* simple: ALIAS IDENT '.' IDENT '=' IDENT flags  */
-#line 558 "griby.y"
+#line 588 "griby.y"
         {
          (grib_yyval.act) = grib_action_create_alias(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].str),(grib_yyvsp[-5].str),(grib_yyvsp[0].lval));  free((grib_yyvsp[-5].str)); free((grib_yyvsp[-3].str)); free((grib_yyvsp[-1].str));
     }
-#line 2931 "y.tab.c"
+#line 2961 "y.tab.c"
     break;
 
   case 112: /* simple: UNALIAS IDENT '.' IDENT  */
-#line 562 "griby.y"
+#line 592 "griby.y"
         {
          (grib_yyval.act) = grib_action_create_alias(grib_parser_context,(grib_yyvsp[0].str),NULL,(grib_yyvsp[-2].str),0);  free((grib_yyvsp[-2].str)); free((grib_yyvsp[0].str)); 
     }
-#line 2939 "y.tab.c"
+#line 2969 "y.tab.c"
     break;
 
   case 113: /* simple: META IDENT IDENT '(' argument_list ')' default flags  */
-#line 566 "griby.y"
+#line 596 "griby.y"
         { (grib_yyval.act) = grib_action_create_meta(grib_parser_context,(grib_yyvsp[-6].str),(grib_yyvsp[-5].str),(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL); free((grib_yyvsp[-6].str));free((grib_yyvsp[-5].str));}
-#line 2945 "y.tab.c"
+#line 2975 "y.tab.c"
     break;
 
   case 114: /* simple: META IDENT '.' IDENT IDENT '(' argument_list ')' default flags  */
-#line 569 "griby.y"
+#line 599 "griby.y"
     { (grib_yyval.act) = grib_action_create_meta(grib_parser_context,(grib_yyvsp[-6].str),(grib_yyvsp[-5].str),(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),(grib_yyvsp[-8].str)); free((grib_yyvsp[-6].str));free((grib_yyvsp[-5].str));free((grib_yyvsp[-8].str));}
-#line 2951 "y.tab.c"
+#line 2981 "y.tab.c"
     break;
 
   case 115: /* simple: ITERATOR IDENT '(' argument_list ')'  */
-#line 572 "griby.y"
+#line 602 "griby.y"
         {
       grib_arguments* a = grib_arguments_new(
         grib_parser_context,
@@ -2963,11 +2993,11 @@ grib_yyreduce:
       "ITERATOR","iterator",a,NULL,
       GRIB_ACCESSOR_FLAG_HIDDEN|GRIB_ACCESSOR_FLAG_READ_ONLY,NULL); free((grib_yyvsp[-3].str));
     }
-#line 2967 "y.tab.c"
+#line 2997 "y.tab.c"
     break;
 
   case 116: /* simple: NEAREST IDENT '(' argument_list ')'  */
-#line 584 "griby.y"
+#line 614 "griby.y"
         {
       grib_arguments* a = grib_arguments_new(
         grib_parser_context,
@@ -2979,11 +3009,11 @@ grib_yyreduce:
       "NEAREST","nearest",a,NULL,
       GRIB_ACCESSOR_FLAG_HIDDEN|GRIB_ACCESSOR_FLAG_READ_ONLY,NULL); free((grib_yyvsp[-3].str));
     }
-#line 2983 "y.tab.c"
+#line 3013 "y.tab.c"
     break;
 
   case 117: /* simple: BOX IDENT '(' argument_list ')'  */
-#line 596 "griby.y"
+#line 626 "griby.y"
         {
       grib_arguments* a = grib_arguments_new(
         grib_parser_context,
@@ -2995,827 +3025,827 @@ grib_yyreduce:
       "BOX","box",a,NULL,
       GRIB_ACCESSOR_FLAG_HIDDEN|GRIB_ACCESSOR_FLAG_READ_ONLY,NULL); free((grib_yyvsp[-3].str));
     }
-#line 2999 "y.tab.c"
-    break;
-
-  case 118: /* simple: EXPORT IDENT '(' argument_list ')'  */
-#line 608 "griby.y"
-       { (grib_yyval.act) = grib_action_create_put(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].explist));free((grib_yyvsp[-3].str));}
-#line 3005 "y.tab.c"
-    break;
-
-  case 119: /* simple: REMOVE argument_list  */
-#line 611 "griby.y"
-       { (grib_yyval.act) = grib_action_create_remove(grib_parser_context,(grib_yyvsp[0].explist));}
-#line 3011 "y.tab.c"
-    break;
-
-  case 120: /* simple: RENAME '(' IDENT ',' IDENT ')'  */
-#line 613 "griby.y"
-                                     { (grib_yyval.act) = grib_action_create_rename(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].str));free((grib_yyvsp[-3].str));free((grib_yyvsp[-1].str));}
-#line 3017 "y.tab.c"
-    break;
-
-  case 121: /* simple: ASSERT '(' expression ')'  */
-#line 616 "griby.y"
-       { (grib_yyval.act) = grib_action_create_assert(grib_parser_context,(grib_yyvsp[-1].exp));}
-#line 3023 "y.tab.c"
-    break;
-
-  case 122: /* simple: MODIFY IDENT flags  */
-#line 619 "griby.y"
-       { (grib_yyval.act) = grib_action_create_modify(grib_parser_context,(grib_yyvsp[-1].str),(grib_yyvsp[0].lval)); free((grib_yyvsp[-1].str));}
 #line 3029 "y.tab.c"
     break;
 
-  case 123: /* simple: SET IDENT '=' MISSING  */
-#line 621 "griby.y"
-                          { (grib_yyval.act) = grib_action_create_set_missing(grib_parser_context,(grib_yyvsp[-2].str)); free((grib_yyvsp[-2].str)); }
+  case 118: /* simple: EXPORT IDENT '(' argument_list ')'  */
+#line 638 "griby.y"
+       { (grib_yyval.act) = grib_action_create_put(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].explist));free((grib_yyvsp[-3].str));}
 #line 3035 "y.tab.c"
     break;
 
-  case 124: /* simple: SET IDENT '=' expression  */
-#line 622 "griby.y"
-                             { (grib_yyval.act) = grib_action_create_set(grib_parser_context,(grib_yyvsp[-2].str),(grib_yyvsp[0].exp),0); free((grib_yyvsp[-2].str)); }
+  case 119: /* simple: REMOVE argument_list  */
+#line 641 "griby.y"
+       { (grib_yyval.act) = grib_action_create_remove(grib_parser_context,(grib_yyvsp[0].explist));}
 #line 3041 "y.tab.c"
     break;
 
-  case 125: /* simple: SET IDENT '=' '{' dvalues '}'  */
-#line 623 "griby.y"
-                                  { (grib_yyval.act) = grib_action_create_set_darray(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-1].dvalue)); free((grib_yyvsp[-4].str)); }
+  case 120: /* simple: RENAME '(' IDENT ',' IDENT ')'  */
+#line 643 "griby.y"
+                                     { (grib_yyval.act) = grib_action_create_rename(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].str));free((grib_yyvsp[-3].str));free((grib_yyvsp[-1].str));}
 #line 3047 "y.tab.c"
     break;
 
-  case 126: /* simple: SET IDENT '=' '{' svalues '}'  */
-#line 624 "griby.y"
-                                  { (grib_yyval.act) = grib_action_create_set_sarray(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-1].svalue)); free((grib_yyvsp[-4].str)); }
+  case 121: /* simple: ASSERT '(' expression ')'  */
+#line 646 "griby.y"
+       { (grib_yyval.act) = grib_action_create_assert(grib_parser_context,(grib_yyvsp[-1].exp));}
 #line 3053 "y.tab.c"
     break;
 
-  case 127: /* simple: SET_NOFAIL IDENT '=' expression  */
-#line 626 "griby.y"
-                                    { (grib_yyval.act) = grib_action_create_set(grib_parser_context,(grib_yyvsp[-2].str),(grib_yyvsp[0].exp),1); free((grib_yyvsp[-2].str)); }
+  case 122: /* simple: MODIFY IDENT flags  */
+#line 649 "griby.y"
+       { (grib_yyval.act) = grib_action_create_modify(grib_parser_context,(grib_yyvsp[-1].str),(grib_yyvsp[0].lval)); free((grib_yyvsp[-1].str));}
 #line 3059 "y.tab.c"
     break;
 
-  case 128: /* simple: WRITE STRING  */
-#line 629 "griby.y"
-                 { (grib_yyval.act) = grib_action_create_write(grib_parser_context,(grib_yyvsp[0].str),0,0); free((grib_yyvsp[0].str));}
+  case 123: /* simple: SET IDENT '=' MISSING  */
+#line 651 "griby.y"
+                          { (grib_yyval.act) = grib_action_create_set_missing(grib_parser_context,(grib_yyvsp[-2].str)); free((grib_yyvsp[-2].str)); }
 #line 3065 "y.tab.c"
     break;
 
-  case 129: /* simple: WRITE  */
-#line 630 "griby.y"
-          { (grib_yyval.act) = grib_action_create_write(grib_parser_context,"",0,0); }
+  case 124: /* simple: SET IDENT '=' expression  */
+#line 652 "griby.y"
+                             { (grib_yyval.act) = grib_action_create_set(grib_parser_context,(grib_yyvsp[-2].str),(grib_yyvsp[0].exp),0); free((grib_yyvsp[-2].str)); }
 #line 3071 "y.tab.c"
     break;
 
-  case 130: /* simple: WRITE '(' INTEGER ')' STRING  */
-#line 631 "griby.y"
-                                 { (grib_yyval.act) = grib_action_create_write(grib_parser_context,(grib_yyvsp[0].str),0,(grib_yyvsp[-2].lval)); free((grib_yyvsp[0].str));}
+  case 125: /* simple: SET IDENT '=' '{' dvalues '}'  */
+#line 653 "griby.y"
+                                  { (grib_yyval.act) = grib_action_create_set_darray(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-1].dvalue)); free((grib_yyvsp[-4].str)); }
 #line 3077 "y.tab.c"
     break;
 
-  case 131: /* simple: WRITE '(' INTEGER ')'  */
-#line 632 "griby.y"
-                          { (grib_yyval.act) = grib_action_create_write(grib_parser_context,"",0,(grib_yyvsp[-1].lval)); }
+  case 126: /* simple: SET IDENT '=' '{' svalues '}'  */
+#line 654 "griby.y"
+                                  { (grib_yyval.act) = grib_action_create_set_sarray(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-1].svalue)); free((grib_yyvsp[-4].str)); }
 #line 3083 "y.tab.c"
     break;
 
-  case 132: /* simple: APPEND STRING  */
-#line 633 "griby.y"
-                  { (grib_yyval.act) = grib_action_create_write(grib_parser_context,(grib_yyvsp[0].str),1,0); free((grib_yyvsp[0].str));}
+  case 127: /* simple: SET_NOFAIL IDENT '=' expression  */
+#line 656 "griby.y"
+                                    { (grib_yyval.act) = grib_action_create_set(grib_parser_context,(grib_yyvsp[-2].str),(grib_yyvsp[0].exp),1); free((grib_yyvsp[-2].str)); }
 #line 3089 "y.tab.c"
     break;
 
-  case 133: /* simple: APPEND  */
-#line 634 "griby.y"
-           { (grib_yyval.act) = grib_action_create_write(grib_parser_context,"",1,0); }
+  case 128: /* simple: WRITE STRING  */
+#line 659 "griby.y"
+                 { (grib_yyval.act) = grib_action_create_write(grib_parser_context,(grib_yyvsp[0].str),0,0); free((grib_yyvsp[0].str));}
 #line 3095 "y.tab.c"
     break;
 
-  case 134: /* simple: APPEND '(' INTEGER ')' STRING  */
-#line 635 "griby.y"
-                                  { (grib_yyval.act) = grib_action_create_write(grib_parser_context,(grib_yyvsp[0].str),1,(grib_yyvsp[-2].lval)); free((grib_yyvsp[0].str));}
+  case 129: /* simple: WRITE  */
+#line 660 "griby.y"
+          { (grib_yyval.act) = grib_action_create_write(grib_parser_context,"",0,0); }
 #line 3101 "y.tab.c"
     break;
 
-  case 135: /* simple: APPEND '(' INTEGER ')'  */
-#line 636 "griby.y"
-                           { (grib_yyval.act) = grib_action_create_write(grib_parser_context,"",1,(grib_yyvsp[-1].lval)); }
+  case 130: /* simple: WRITE '(' INTEGER ')' STRING  */
+#line 661 "griby.y"
+                                 { (grib_yyval.act) = grib_action_create_write(grib_parser_context,(grib_yyvsp[0].str),0,(grib_yyvsp[-2].lval)); free((grib_yyvsp[0].str));}
 #line 3107 "y.tab.c"
     break;
 
-  case 136: /* simple: CLOSE '(' IDENT ')'  */
-#line 638 "griby.y"
-                        { (grib_yyval.act) = grib_action_create_close(grib_parser_context,(grib_yyvsp[-1].str)); free((grib_yyvsp[-1].str));}
+  case 131: /* simple: WRITE '(' INTEGER ')'  */
+#line 662 "griby.y"
+                          { (grib_yyval.act) = grib_action_create_write(grib_parser_context,"",0,(grib_yyvsp[-1].lval)); }
 #line 3113 "y.tab.c"
     break;
 
-  case 137: /* simple: PRINT STRING  */
-#line 639 "griby.y"
-                 { (grib_yyval.act) = grib_action_create_print(grib_parser_context,(grib_yyvsp[0].str),0); free((grib_yyvsp[0].str)); }
+  case 132: /* simple: APPEND STRING  */
+#line 663 "griby.y"
+                  { (grib_yyval.act) = grib_action_create_write(grib_parser_context,(grib_yyvsp[0].str),1,0); free((grib_yyvsp[0].str));}
 #line 3119 "y.tab.c"
     break;
 
-  case 138: /* simple: PRINT '(' STRING ')' STRING  */
-#line 640 "griby.y"
-                                { (grib_yyval.act) = grib_action_create_print(grib_parser_context,(grib_yyvsp[0].str),(grib_yyvsp[-2].str)); free((grib_yyvsp[0].str)); free((grib_yyvsp[-2].str));}
+  case 133: /* simple: APPEND  */
+#line 664 "griby.y"
+           { (grib_yyval.act) = grib_action_create_write(grib_parser_context,"",1,0); }
 #line 3125 "y.tab.c"
     break;
 
-  case 139: /* simple: PRINT '(' IDENT ')' STRING  */
-#line 641 "griby.y"
-                               { (grib_yyval.act) = grib_action_create_print(grib_parser_context,(grib_yyvsp[0].str),(grib_yyvsp[-2].str)); free((grib_yyvsp[0].str)); free((grib_yyvsp[-2].str));}
+  case 134: /* simple: APPEND '(' INTEGER ')' STRING  */
+#line 665 "griby.y"
+                                  { (grib_yyval.act) = grib_action_create_write(grib_parser_context,(grib_yyvsp[0].str),1,(grib_yyvsp[-2].lval)); free((grib_yyvsp[0].str));}
 #line 3131 "y.tab.c"
     break;
 
-  case 140: /* simple: PRINT  */
-#line 642 "griby.y"
-          { (grib_yyval.act) = grib_action_create_print(grib_parser_context,"",0);  }
+  case 135: /* simple: APPEND '(' INTEGER ')'  */
+#line 666 "griby.y"
+                           { (grib_yyval.act) = grib_action_create_write(grib_parser_context,"",1,(grib_yyvsp[-1].lval)); }
 #line 3137 "y.tab.c"
     break;
 
-  case 141: /* if_block: IF '(' expression ')' '{' instructions '}'  */
-#line 646 "griby.y"
-                                             { (grib_yyval.act) = grib_action_create_if(grib_parser_context,(grib_yyvsp[-4].exp),(grib_yyvsp[-1].act),0,0,grib_yylineno,file_being_parsed()); }
+  case 136: /* simple: CLOSE '(' IDENT ')'  */
+#line 668 "griby.y"
+                        { (grib_yyval.act) = grib_action_create_close(grib_parser_context,(grib_yyvsp[-1].str)); free((grib_yyvsp[-1].str));}
 #line 3143 "y.tab.c"
     break;
 
-  case 142: /* if_block: IF '(' expression ')' '{' instructions '}' ELSE '{' instructions '}'  */
-#line 647 "griby.y"
-                                                                        { (grib_yyval.act) = grib_action_create_if(grib_parser_context,(grib_yyvsp[-8].exp),(grib_yyvsp[-5].act),(grib_yyvsp[-1].act),0,grib_yylineno,file_being_parsed()); }
+  case 137: /* simple: PRINT STRING  */
+#line 669 "griby.y"
+                 { (grib_yyval.act) = grib_action_create_print(grib_parser_context,(grib_yyvsp[0].str),0); free((grib_yyvsp[0].str)); }
 #line 3149 "y.tab.c"
     break;
 
-  case 143: /* if_block: IF_TRANSIENT '(' expression ')' '{' instructions '}'  */
-#line 648 "griby.y"
-                                                       { (grib_yyval.act) = grib_action_create_if(grib_parser_context,(grib_yyvsp[-4].exp),(grib_yyvsp[-1].act),0,1,grib_yylineno,file_being_parsed()); }
+  case 138: /* simple: PRINT '(' STRING ')' STRING  */
+#line 670 "griby.y"
+                                { (grib_yyval.act) = grib_action_create_print(grib_parser_context,(grib_yyvsp[0].str),(grib_yyvsp[-2].str)); free((grib_yyvsp[0].str)); free((grib_yyvsp[-2].str));}
 #line 3155 "y.tab.c"
     break;
 
-  case 144: /* if_block: IF_TRANSIENT '(' expression ')' '{' instructions '}' ELSE '{' instructions '}'  */
-#line 649 "griby.y"
-                                                                                  { (grib_yyval.act) = grib_action_create_if(grib_parser_context,(grib_yyvsp[-8].exp),(grib_yyvsp[-5].act),(grib_yyvsp[-1].act),1,grib_yylineno,file_being_parsed()); }
+  case 139: /* simple: PRINT '(' IDENT ')' STRING  */
+#line 671 "griby.y"
+                               { (grib_yyval.act) = grib_action_create_print(grib_parser_context,(grib_yyvsp[0].str),(grib_yyvsp[-2].str)); free((grib_yyvsp[0].str)); free((grib_yyvsp[-2].str));}
 #line 3161 "y.tab.c"
     break;
 
-  case 145: /* when_block: WHEN '(' expression ')' set semi  */
-#line 653 "griby.y"
-                                     { (grib_yyval.act) = grib_action_create_when(grib_parser_context,(grib_yyvsp[-3].exp),(grib_yyvsp[-1].act),NULL); }
+  case 140: /* simple: PRINT  */
+#line 672 "griby.y"
+          { (grib_yyval.act) = grib_action_create_print(grib_parser_context,"",0);  }
 #line 3167 "y.tab.c"
     break;
 
-  case 146: /* when_block: WHEN '(' expression ')' '{' set_list '}'  */
-#line 654 "griby.y"
-                                               { (grib_yyval.act) = grib_action_create_when(grib_parser_context,(grib_yyvsp[-4].exp),(grib_yyvsp[-1].act),NULL); }
+  case 141: /* if_block: IF '(' expression ')' '{' instructions '}'  */
+#line 676 "griby.y"
+                                             { (grib_yyval.act) = grib_action_create_if(grib_parser_context,(grib_yyvsp[-4].exp),(grib_yyvsp[-1].act),0,0,grib_yylineno,file_being_parsed()); }
 #line 3173 "y.tab.c"
     break;
 
-  case 147: /* when_block: WHEN '(' expression ')' '{' set_list '}' ELSE '{' set_list '}'  */
-#line 655 "griby.y"
-                                                                   { (grib_yyval.act) = grib_action_create_when(grib_parser_context,(grib_yyvsp[-8].exp),(grib_yyvsp[-5].act),(grib_yyvsp[-1].act)); }
+  case 142: /* if_block: IF '(' expression ')' '{' instructions '}' ELSE '{' instructions '}'  */
+#line 677 "griby.y"
+                                                                        { (grib_yyval.act) = grib_action_create_if(grib_parser_context,(grib_yyvsp[-8].exp),(grib_yyvsp[-5].act),(grib_yyvsp[-1].act),0,grib_yylineno,file_being_parsed()); }
 #line 3179 "y.tab.c"
     break;
 
-  case 148: /* set: SET IDENT '=' expression  */
-#line 658 "griby.y"
-                              { (grib_yyval.act) = grib_action_create_set(grib_parser_context,(grib_yyvsp[-2].str),(grib_yyvsp[0].exp),0); free((grib_yyvsp[-2].str)); }
+  case 143: /* if_block: IF_TRANSIENT '(' expression ')' '{' instructions '}'  */
+#line 678 "griby.y"
+                                                       { (grib_yyval.act) = grib_action_create_if(grib_parser_context,(grib_yyvsp[-4].exp),(grib_yyvsp[-1].act),0,1,grib_yylineno,file_being_parsed()); }
 #line 3185 "y.tab.c"
     break;
 
-  case 149: /* set: SET_NOFAIL IDENT '=' expression  */
-#line 659 "griby.y"
-                                    { (grib_yyval.act) = grib_action_create_set(grib_parser_context,(grib_yyvsp[-2].str),(grib_yyvsp[0].exp),1); free((grib_yyvsp[-2].str)); }
+  case 144: /* if_block: IF_TRANSIENT '(' expression ')' '{' instructions '}' ELSE '{' instructions '}'  */
+#line 679 "griby.y"
+                                                                                  { (grib_yyval.act) = grib_action_create_if(grib_parser_context,(grib_yyvsp[-8].exp),(grib_yyvsp[-5].act),(grib_yyvsp[-1].act),1,grib_yylineno,file_being_parsed()); }
 #line 3191 "y.tab.c"
     break;
 
-  case 151: /* set_list: set_list set semi  */
-#line 663 "griby.y"
-                             { (grib_yyvsp[-2].act)->next = (grib_yyvsp[-1].act); (grib_yyval.act) = (grib_yyvsp[-2].act); }
+  case 145: /* when_block: WHEN '(' expression ')' set semi  */
+#line 683 "griby.y"
+                                     { (grib_yyval.act) = grib_action_create_when(grib_parser_context,(grib_yyvsp[-3].exp),(grib_yyvsp[-1].act),NULL); }
 #line 3197 "y.tab.c"
     break;
 
-  case 152: /* default: empty  */
-#line 667 "griby.y"
-               { (grib_yyval.explist) = NULL ;}
+  case 146: /* when_block: WHEN '(' expression ')' '{' set_list '}'  */
+#line 684 "griby.y"
+                                               { (grib_yyval.act) = grib_action_create_when(grib_parser_context,(grib_yyvsp[-4].exp),(grib_yyvsp[-1].act),NULL); }
 #line 3203 "y.tab.c"
     break;
 
-  case 153: /* default: '=' argument_list  */
-#line 668 "griby.y"
-                       { (grib_yyval.explist) = (grib_yyvsp[0].explist) ;}
+  case 147: /* when_block: WHEN '(' expression ')' '{' set_list '}' ELSE '{' set_list '}'  */
+#line 685 "griby.y"
+                                                                   { (grib_yyval.act) = grib_action_create_when(grib_parser_context,(grib_yyvsp[-8].exp),(grib_yyvsp[-5].act),(grib_yyvsp[-1].act)); }
 #line 3209 "y.tab.c"
     break;
 
-  case 154: /* flags: empty  */
-#line 671 "griby.y"
-                     { (grib_yyval.lval) = 0 ; }
+  case 148: /* set: SET IDENT '=' expression  */
+#line 688 "griby.y"
+                              { (grib_yyval.act) = grib_action_create_set(grib_parser_context,(grib_yyvsp[-2].str),(grib_yyvsp[0].exp),0); free((grib_yyvsp[-2].str)); }
 #line 3215 "y.tab.c"
     break;
 
-  case 155: /* flags: ':' flag_list  */
-#line 672 "griby.y"
-                      { (grib_yyval.lval) = (grib_yyvsp[0].lval); }
+  case 149: /* set: SET_NOFAIL IDENT '=' expression  */
+#line 689 "griby.y"
+                                    { (grib_yyval.act) = grib_action_create_set(grib_parser_context,(grib_yyvsp[-2].str),(grib_yyvsp[0].exp),1); free((grib_yyvsp[-2].str)); }
 #line 3221 "y.tab.c"
     break;
 
-  case 157: /* flag_list: flag_list ',' flag  */
-#line 676 "griby.y"
-                        { (grib_yyval.lval) = (grib_yyvsp[-2].lval) | (grib_yyvsp[0].lval); }
+  case 151: /* set_list: set_list set semi  */
+#line 693 "griby.y"
+                             { (grib_yyvsp[-2].act)->next_ = (grib_yyvsp[-1].act); (grib_yyval.act) = (grib_yyvsp[-2].act); }
 #line 3227 "y.tab.c"
     break;
 
-  case 158: /* flag: READ_ONLY  */
-#line 679 "griby.y"
-                        { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_READ_ONLY; }
+  case 152: /* default: empty  */
+#line 697 "griby.y"
+               { (grib_yyval.explist) = NULL ;}
 #line 3233 "y.tab.c"
     break;
 
-  case 159: /* flag: LOWERCASE  */
-#line 680 "griby.y"
-                           { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_LOWERCASE; }
+  case 153: /* default: '=' argument_list  */
+#line 698 "griby.y"
+                       { (grib_yyval.explist) = (grib_yyvsp[0].explist) ;}
 #line 3239 "y.tab.c"
     break;
 
-  case 160: /* flag: DUMP  */
-#line 681 "griby.y"
-                      { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_DUMP; }
+  case 154: /* flags: empty  */
+#line 701 "griby.y"
+                     { (grib_yyval.lval) = 0 ; }
 #line 3245 "y.tab.c"
     break;
 
-  case 161: /* flag: NO_COPY  */
-#line 682 "griby.y"
-                         { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_NO_COPY; }
+  case 155: /* flags: ':' flag_list  */
+#line 702 "griby.y"
+                      { (grib_yyval.lval) = (grib_yyvsp[0].lval); }
 #line 3251 "y.tab.c"
     break;
 
-  case 162: /* flag: NO_FAIL  */
-#line 683 "griby.y"
-                               { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_NO_FAIL; }
+  case 157: /* flag_list: flag_list ',' flag  */
+#line 706 "griby.y"
+                        { (grib_yyval.lval) = (grib_yyvsp[-2].lval) | (grib_yyvsp[0].lval); }
 #line 3257 "y.tab.c"
     break;
 
-  case 163: /* flag: HIDDEN  */
-#line 684 "griby.y"
-                        { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_HIDDEN; }
+  case 158: /* flag: READ_ONLY  */
+#line 709 "griby.y"
+                        { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_READ_ONLY; }
 #line 3263 "y.tab.c"
     break;
 
-  case 164: /* flag: EDITION_SPECIFIC  */
-#line 685 "griby.y"
-                        { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC; }
+  case 159: /* flag: LOWERCASE  */
+#line 710 "griby.y"
+                           { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_LOWERCASE; }
 #line 3269 "y.tab.c"
     break;
 
-  case 165: /* flag: CAN_BE_MISSING  */
-#line 686 "griby.y"
-                        { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_CAN_BE_MISSING; }
+  case 160: /* flag: DUMP  */
+#line 711 "griby.y"
+                      { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_DUMP; }
 #line 3275 "y.tab.c"
     break;
 
-  case 166: /* flag: CONSTRAINT  */
-#line 687 "griby.y"
-                        { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_CONSTRAINT; }
+  case 161: /* flag: NO_COPY  */
+#line 712 "griby.y"
+                         { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_NO_COPY; }
 #line 3281 "y.tab.c"
     break;
 
-  case 167: /* flag: COPY_OK  */
-#line 688 "griby.y"
-                        { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_COPY_OK; }
+  case 162: /* flag: NO_FAIL  */
+#line 713 "griby.y"
+                               { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_NO_FAIL; }
 #line 3287 "y.tab.c"
     break;
 
-  case 168: /* flag: TRANS  */
-#line 689 "griby.y"
-                    { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_TRANSIENT; }
+  case 163: /* flag: HIDDEN  */
+#line 714 "griby.y"
+                        { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_HIDDEN; }
 #line 3293 "y.tab.c"
     break;
 
-  case 169: /* flag: STRING_TYPE  */
-#line 690 "griby.y"
-                          { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_STRING_TYPE; }
+  case 164: /* flag: EDITION_SPECIFIC  */
+#line 715 "griby.y"
+                        { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC; }
 #line 3299 "y.tab.c"
     break;
 
-  case 170: /* flag: LONG_TYPE  */
-#line 691 "griby.y"
-                        { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_LONG_TYPE; }
+  case 165: /* flag: CAN_BE_MISSING  */
+#line 716 "griby.y"
+                        { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_CAN_BE_MISSING; }
 #line 3305 "y.tab.c"
     break;
 
-  case 171: /* flag: DOUBLE_TYPE  */
-#line 692 "griby.y"
-                        { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_DOUBLE_TYPE; }
+  case 166: /* flag: CONSTRAINT  */
+#line 717 "griby.y"
+                        { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_CONSTRAINT; }
 #line 3311 "y.tab.c"
     break;
 
-  case 172: /* list_block: IDENT LIST '(' expression ')' '{' instructions '}'  */
-#line 695 "griby.y"
-                                                               { (grib_yyval.act) = grib_action_create_list(grib_parser_context,(grib_yyvsp[-7].str),(grib_yyvsp[-4].exp),(grib_yyvsp[-1].act)); free((grib_yyvsp[-7].str)); }
+  case 167: /* flag: COPY_OK  */
+#line 718 "griby.y"
+                        { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_COPY_OK; }
 #line 3317 "y.tab.c"
     break;
 
-  case 173: /* while_block: WHILE '(' expression ')' '{' instructions '}'  */
-#line 698 "griby.y"
-                                                           { (grib_yyval.act) = grib_action_create_while(grib_parser_context,(grib_yyvsp[-4].exp),(grib_yyvsp[-1].act));  }
+  case 168: /* flag: TRANS  */
+#line 719 "griby.y"
+                    { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_TRANSIENT; }
 #line 3323 "y.tab.c"
     break;
 
-  case 174: /* trigger_block: TRIGGER '(' argument_list ')' '{' instructions '}'  */
-#line 701 "griby.y"
-                                                                  { (grib_yyval.act) = grib_action_create_trigger(grib_parser_context,(grib_yyvsp[-4].explist),(grib_yyvsp[-1].act));  }
+  case 169: /* flag: STRING_TYPE  */
+#line 720 "griby.y"
+                          { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_STRING_TYPE; }
 #line 3329 "y.tab.c"
     break;
 
-  case 175: /* concept_block: CONCEPT IDENT '{' concept_list '}' flags  */
-#line 704 "griby.y"
-                                                        { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].concept_value),0,0,0,0,0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-4].str)); }
+  case 170: /* flag: LONG_TYPE  */
+#line 721 "griby.y"
+                        { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_LONG_TYPE; }
 #line 3335 "y.tab.c"
     break;
 
-  case 176: /* concept_block: CONCEPT IDENT '(' IDENT ')' '{' concept_list '}' flags  */
-#line 705 "griby.y"
-                                                            { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-7].str),(grib_yyvsp[-2].concept_value),0,0,(grib_yyvsp[-5].str),0,0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-7].str));free((grib_yyvsp[-5].str)); }
+  case 171: /* flag: DOUBLE_TYPE  */
+#line 722 "griby.y"
+                        { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_DOUBLE_TYPE; }
 #line 3341 "y.tab.c"
     break;
 
-  case 177: /* concept_block: CONCEPT IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags  */
-#line 706 "griby.y"
-                                                                      { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-10].str),0,(grib_yyvsp[-6].str),0,(grib_yyvsp[-8].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),0,(grib_yyvsp[0].lval),0); free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-2].str)); }
+  case 172: /* list_block: IDENT LIST '(' expression ')' '{' instructions '}'  */
+#line 725 "griby.y"
+                                                               { (grib_yyval.act) = grib_action_create_list(grib_parser_context,(grib_yyvsp[-7].str),(grib_yyvsp[-4].exp),(grib_yyvsp[-1].act)); free((grib_yyvsp[-7].str)); }
 #line 3347 "y.tab.c"
     break;
 
-  case 178: /* concept_block: CONCEPT IDENT '(' IDENT ',' IDENT ',' IDENT ',' IDENT ')' flags  */
-#line 707 "griby.y"
-                                                                      { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-10].str),0,(grib_yyvsp[-6].str),0,(grib_yyvsp[-8].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),0,(grib_yyvsp[0].lval),0); free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-2].str)); }
+  case 173: /* while_block: WHILE '(' expression ')' '{' instructions '}'  */
+#line 728 "griby.y"
+                                                           { (grib_yyval.act) = grib_action_create_while(grib_parser_context,(grib_yyvsp[-4].exp),(grib_yyvsp[-1].act));  }
 #line 3353 "y.tab.c"
     break;
 
-  case 179: /* concept_block: CONCEPT IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ',' IDENT ')' flags  */
-#line 708 "griby.y"
-                                                                                { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-12].str),0,(grib_yyvsp[-8].str),0,(grib_yyvsp[-10].str),(grib_yyvsp[-6].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-12].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-2].str)); }
+  case 174: /* trigger_block: TRIGGER '(' argument_list ')' '{' instructions '}'  */
+#line 731 "griby.y"
+                                                                  { (grib_yyval.act) = grib_action_create_trigger(grib_parser_context,(grib_yyvsp[-4].explist),(grib_yyvsp[-1].act));  }
 #line 3359 "y.tab.c"
     break;
 
-  case 180: /* concept_block: CONCEPT IDENT '(' IDENT ',' STRING ',' IDENT ')' flags  */
-#line 709 "griby.y"
-                                                            { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-8].str),0,(grib_yyvsp[-4].str),0,(grib_yyvsp[-6].str),(grib_yyvsp[-2].str),0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-2].str)); }
+  case 175: /* concept_block: CONCEPT IDENT '{' concept_list '}' flags  */
+#line 734 "griby.y"
+                                                        { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].concept_value),0,0,0,0,0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-4].str)); }
 #line 3365 "y.tab.c"
     break;
 
-  case 181: /* concept_block: CONCEPT IDENT '.' IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags  */
-#line 711 "griby.y"
-                                                                                { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-10].str),0,(grib_yyvsp[-6].str),(grib_yyvsp[-12].str),(grib_yyvsp[-8].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str)); free((grib_yyvsp[-2].str)); free((grib_yyvsp[-12].str));}
+  case 176: /* concept_block: CONCEPT IDENT '(' IDENT ')' '{' concept_list '}' flags  */
+#line 735 "griby.y"
+                                                            { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-7].str),(grib_yyvsp[-2].concept_value),0,0,(grib_yyvsp[-5].str),0,0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-7].str));free((grib_yyvsp[-5].str)); }
 #line 3371 "y.tab.c"
     break;
 
-  case 182: /* concept_block: CONCEPT IDENT '.' IDENT '(' IDENT ',' IDENT ',' IDENT ',' IDENT ')' flags  */
-#line 712 "griby.y"
-                                                                                { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-10].str),0,(grib_yyvsp[-6].str),(grib_yyvsp[-12].str),(grib_yyvsp[-8].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str)); free((grib_yyvsp[-2].str)); free((grib_yyvsp[-12].str));}
+  case 177: /* concept_block: CONCEPT IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags  */
+#line 736 "griby.y"
+                                                                      { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-10].str),0,(grib_yyvsp[-6].str),0,(grib_yyvsp[-8].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),0,(grib_yyvsp[0].lval),0); free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-2].str)); }
 #line 3377 "y.tab.c"
     break;
 
-  case 183: /* concept_block: CONCEPT IDENT '.' IDENT '(' IDENT ',' STRING ',' IDENT ')' flags  */
-#line 713 "griby.y"
-                                                                      { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-8].str),0,(grib_yyvsp[-4].str),(grib_yyvsp[-10].str),(grib_yyvsp[-6].str),(grib_yyvsp[-2].str),0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-2].str)); free((grib_yyvsp[-10].str));}
+  case 178: /* concept_block: CONCEPT IDENT '(' IDENT ',' IDENT ',' IDENT ',' IDENT ')' flags  */
+#line 737 "griby.y"
+                                                                      { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-10].str),0,(grib_yyvsp[-6].str),0,(grib_yyvsp[-8].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),0,(grib_yyvsp[0].lval),0); free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-2].str)); }
 #line 3383 "y.tab.c"
     break;
 
-  case 184: /* concept_block: CONCEPT IDENT '.' IDENT '{' concept_list '}' flags  */
-#line 714 "griby.y"
-                                                        { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].concept_value),0,(grib_yyvsp[-6].str),0,0,0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-6].str));free((grib_yyvsp[-4].str)); }
+  case 179: /* concept_block: CONCEPT IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ',' IDENT ')' flags  */
+#line 738 "griby.y"
+                                                                                { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-12].str),0,(grib_yyvsp[-8].str),0,(grib_yyvsp[-10].str),(grib_yyvsp[-6].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-12].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-2].str)); }
 #line 3389 "y.tab.c"
     break;
 
-  case 185: /* concept_block: CONCEPT IDENT '.' IDENT '(' IDENT ')' '{' concept_list '}' flags  */
-#line 715 "griby.y"
-                                                                      { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-7].str),(grib_yyvsp[-2].concept_value),0,(grib_yyvsp[-9].str),(grib_yyvsp[-5].str),0,0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-9].str));free((grib_yyvsp[-7].str));free((grib_yyvsp[-5].str)); }
+  case 180: /* concept_block: CONCEPT IDENT '(' IDENT ',' STRING ',' IDENT ')' flags  */
+#line 739 "griby.y"
+                                                            { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-8].str),0,(grib_yyvsp[-4].str),0,(grib_yyvsp[-6].str),(grib_yyvsp[-2].str),0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-2].str)); }
 #line 3395 "y.tab.c"
     break;
 
-  case 186: /* concept_block: CONCEPT_NOFAIL IDENT '{' concept_list '}' flags  */
-#line 717 "griby.y"
-                                                     { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].concept_value),0,0,0,0,0,0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-4].str)); }
+  case 181: /* concept_block: CONCEPT IDENT '.' IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags  */
+#line 741 "griby.y"
+                                                                                { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-10].str),0,(grib_yyvsp[-6].str),(grib_yyvsp[-12].str),(grib_yyvsp[-8].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str)); free((grib_yyvsp[-2].str)); free((grib_yyvsp[-12].str));}
 #line 3401 "y.tab.c"
     break;
 
-  case 187: /* concept_block: CONCEPT_NOFAIL IDENT '(' IDENT ')' '{' concept_list '}' flags  */
-#line 718 "griby.y"
-                                                                   { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-7].str),(grib_yyvsp[-2].concept_value),0,0,(grib_yyvsp[-5].str),0,0,0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-7].str));free((grib_yyvsp[-5].str)); }
+  case 182: /* concept_block: CONCEPT IDENT '.' IDENT '(' IDENT ',' IDENT ',' IDENT ',' IDENT ')' flags  */
+#line 742 "griby.y"
+                                                                                { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-10].str),0,(grib_yyvsp[-6].str),(grib_yyvsp[-12].str),(grib_yyvsp[-8].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str)); free((grib_yyvsp[-2].str)); free((grib_yyvsp[-12].str));}
 #line 3407 "y.tab.c"
     break;
 
-  case 188: /* concept_block: CONCEPT_NOFAIL IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags  */
-#line 719 "griby.y"
-                                                                             { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-10].str),0,(grib_yyvsp[-6].str),0,(grib_yyvsp[-8].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-2].str)); }
+  case 183: /* concept_block: CONCEPT IDENT '.' IDENT '(' IDENT ',' STRING ',' IDENT ')' flags  */
+#line 743 "griby.y"
+                                                                      { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-8].str),0,(grib_yyvsp[-4].str),(grib_yyvsp[-10].str),(grib_yyvsp[-6].str),(grib_yyvsp[-2].str),0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-2].str)); free((grib_yyvsp[-10].str));}
 #line 3413 "y.tab.c"
     break;
 
-  case 189: /* concept_block: CONCEPT_NOFAIL IDENT '(' IDENT ',' STRING ',' IDENT ')' flags  */
-#line 720 "griby.y"
-                                                                   { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-8].str),0,(grib_yyvsp[-4].str),0,(grib_yyvsp[-6].str),(grib_yyvsp[-2].str),0,0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-2].str)); }
+  case 184: /* concept_block: CONCEPT IDENT '.' IDENT '{' concept_list '}' flags  */
+#line 744 "griby.y"
+                                                        { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].concept_value),0,(grib_yyvsp[-6].str),0,0,0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-6].str));free((grib_yyvsp[-4].str)); }
 #line 3419 "y.tab.c"
     break;
 
-  case 190: /* concept_block: CONCEPT_NOFAIL IDENT '.' IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags  */
-#line 721 "griby.y"
-                                                                                       { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-10].str),0,(grib_yyvsp[-6].str),(grib_yyvsp[-12].str),(grib_yyvsp[-8].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-2].str)); free((grib_yyvsp[-12].str));}
+  case 185: /* concept_block: CONCEPT IDENT '.' IDENT '(' IDENT ')' '{' concept_list '}' flags  */
+#line 745 "griby.y"
+                                                                      { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-7].str),(grib_yyvsp[-2].concept_value),0,(grib_yyvsp[-9].str),(grib_yyvsp[-5].str),0,0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-9].str));free((grib_yyvsp[-7].str));free((grib_yyvsp[-5].str)); }
 #line 3425 "y.tab.c"
     break;
 
-  case 191: /* concept_block: CONCEPT_NOFAIL IDENT '.' IDENT '(' IDENT ',' STRING ',' IDENT ')' flags  */
-#line 722 "griby.y"
-                                                                             { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-8].str),0,(grib_yyvsp[-4].str),(grib_yyvsp[-10].str),(grib_yyvsp[-6].str),(grib_yyvsp[-2].str),0,0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-2].str)); free((grib_yyvsp[-10].str));}
+  case 186: /* concept_block: CONCEPT_NOFAIL IDENT '{' concept_list '}' flags  */
+#line 747 "griby.y"
+                                                     { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].concept_value),0,0,0,0,0,0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-4].str)); }
 #line 3431 "y.tab.c"
     break;
 
-  case 192: /* concept_block: CONCEPT_NOFAIL IDENT '.' IDENT '{' concept_list '}' flags  */
-#line 723 "griby.y"
-                                                               { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].concept_value),0,(grib_yyvsp[-6].str),0,0,0,0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-6].str));free((grib_yyvsp[-4].str)); }
+  case 187: /* concept_block: CONCEPT_NOFAIL IDENT '(' IDENT ')' '{' concept_list '}' flags  */
+#line 748 "griby.y"
+                                                                   { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-7].str),(grib_yyvsp[-2].concept_value),0,0,(grib_yyvsp[-5].str),0,0,0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-7].str));free((grib_yyvsp[-5].str)); }
 #line 3437 "y.tab.c"
     break;
 
-  case 193: /* concept_block: CONCEPT_NOFAIL IDENT '.' IDENT '(' IDENT ')' '{' concept_list '}' flags  */
-#line 724 "griby.y"
-                                                                             { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-7].str),(grib_yyvsp[-2].concept_value),0,(grib_yyvsp[-9].str),(grib_yyvsp[-5].str),0,0,0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-9].str));free((grib_yyvsp[-7].str));free((grib_yyvsp[-5].str)); }
+  case 188: /* concept_block: CONCEPT_NOFAIL IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags  */
+#line 749 "griby.y"
+                                                                             { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-10].str),0,(grib_yyvsp[-6].str),0,(grib_yyvsp[-8].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-2].str)); }
 #line 3443 "y.tab.c"
     break;
 
-  case 195: /* concept_list: concept_list concept_value  */
-#line 729 "griby.y"
-                                          { (grib_yyval.concept_value) = (grib_yyvsp[0].concept_value); (grib_yyvsp[0].concept_value)->next = (grib_yyvsp[-1].concept_value);   }
+  case 189: /* concept_block: CONCEPT_NOFAIL IDENT '(' IDENT ',' STRING ',' IDENT ')' flags  */
+#line 750 "griby.y"
+                                                                   { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-8].str),0,(grib_yyvsp[-4].str),0,(grib_yyvsp[-6].str),(grib_yyvsp[-2].str),0,0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-2].str)); }
 #line 3449 "y.tab.c"
     break;
 
-  case 197: /* hash_array_list: hash_array_list hash_array_value  */
-#line 733 "griby.y"
-                                                { (grib_yyval.hash_array_value) = (grib_yyvsp[0].hash_array_value); (grib_yyvsp[0].hash_array_value)->next = (grib_yyvsp[-1].hash_array_value);   }
+  case 190: /* concept_block: CONCEPT_NOFAIL IDENT '.' IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags  */
+#line 751 "griby.y"
+                                                                                       { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-10].str),0,(grib_yyvsp[-6].str),(grib_yyvsp[-12].str),(grib_yyvsp[-8].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-2].str)); free((grib_yyvsp[-12].str));}
 #line 3455 "y.tab.c"
     break;
 
-  case 198: /* hash_array_block: HASH_ARRAY IDENT '{' hash_array_list '}' flags  */
-#line 736 "griby.y"
-                                                                 { (grib_yyval.act) = grib_action_create_hash_array(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].hash_array_value),0,0,0,0,0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-4].str)); }
+  case 191: /* concept_block: CONCEPT_NOFAIL IDENT '.' IDENT '(' IDENT ',' STRING ',' IDENT ')' flags  */
+#line 752 "griby.y"
+                                                                             { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-8].str),0,(grib_yyvsp[-4].str),(grib_yyvsp[-10].str),(grib_yyvsp[-6].str),(grib_yyvsp[-2].str),0,0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-2].str)); free((grib_yyvsp[-10].str));}
 #line 3461 "y.tab.c"
     break;
 
-  case 199: /* hash_array_block: HASH_ARRAY IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags  */
-#line 737 "griby.y"
-                                                                         { (grib_yyval.act) = grib_action_create_hash_array(grib_parser_context,(grib_yyvsp[-10].str),0,(grib_yyvsp[-6].str),0,(grib_yyvsp[-8].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-2].str)); }
+  case 192: /* concept_block: CONCEPT_NOFAIL IDENT '.' IDENT '{' concept_list '}' flags  */
+#line 753 "griby.y"
+                                                               { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].concept_value),0,(grib_yyvsp[-6].str),0,0,0,0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-6].str));free((grib_yyvsp[-4].str)); }
 #line 3467 "y.tab.c"
     break;
 
-  case 201: /* case_list: case_list case_value  */
-#line 741 "griby.y"
-                                    { (grib_yyval.case_value) = (grib_yyvsp[0].case_value); (grib_yyvsp[0].case_value)->next = (grib_yyvsp[-1].case_value);   }
+  case 193: /* concept_block: CONCEPT_NOFAIL IDENT '.' IDENT '(' IDENT ')' '{' concept_list '}' flags  */
+#line 754 "griby.y"
+                                                                             { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-7].str),(grib_yyvsp[-2].concept_value),0,(grib_yyvsp[-9].str),(grib_yyvsp[-5].str),0,0,0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-9].str));free((grib_yyvsp[-7].str));free((grib_yyvsp[-5].str)); }
 #line 3473 "y.tab.c"
     break;
 
-  case 202: /* case_value: CASE arguments ':' instructions  */
-#line 744 "griby.y"
-                                              { (grib_yyval.case_value) = grib_case_new(grib_parser_context,(grib_yyvsp[-2].explist),(grib_yyvsp[0].act));  }
+  case 195: /* concept_list: concept_list concept_value  */
+#line 759 "griby.y"
+                                          { (grib_yyval.concept_value) = (grib_yyvsp[0].concept_value); (grib_yyvsp[0].concept_value)->next = (grib_yyvsp[-1].concept_value);   }
 #line 3479 "y.tab.c"
     break;
 
-  case 203: /* switch_block: SWITCH '(' argument_list ')' '{' case_list DEFAULT ':' instructions '}'  */
-#line 748 "griby.y"
-                                                                           { (grib_yyval.act) = grib_action_create_switch(grib_parser_context,(grib_yyvsp[-7].explist),(grib_yyvsp[-4].case_value),(grib_yyvsp[-1].act)); }
+  case 197: /* hash_array_list: hash_array_list hash_array_value  */
+#line 763 "griby.y"
+                                                { (grib_yyval.hash_array_value) = (grib_yyvsp[0].hash_array_value); (grib_yyvsp[0].hash_array_value)->next = (grib_yyvsp[-1].hash_array_value);   }
 #line 3485 "y.tab.c"
     break;
 
-  case 204: /* switch_block: SWITCH '(' argument_list ')' '{' case_list DEFAULT ':' '}'  */
-#line 749 "griby.y"
-                                                               { (grib_yyval.act) = grib_action_create_switch(grib_parser_context,(grib_yyvsp[-6].explist),(grib_yyvsp[-3].case_value),grib_action_create_noop(grib_parser_context,"continue")); }
+  case 198: /* hash_array_block: HASH_ARRAY IDENT '{' hash_array_list '}' flags  */
+#line 766 "griby.y"
+                                                                 { (grib_yyval.act) = grib_action_create_hash_array(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].hash_array_value),0,0,0,0,0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-4].str)); }
 #line 3491 "y.tab.c"
     break;
 
-  case 205: /* switch_block: SWITCH '(' argument_list ')' '{' case_list '}'  */
-#line 750 "griby.y"
-                                                   { (grib_yyval.act) = grib_action_create_switch(grib_parser_context,(grib_yyvsp[-4].explist),(grib_yyvsp[-1].case_value),0); }
+  case 199: /* hash_array_block: HASH_ARRAY IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags  */
+#line 767 "griby.y"
+                                                                         { (grib_yyval.act) = grib_action_create_hash_array(grib_parser_context,(grib_yyvsp[-10].str),0,(grib_yyvsp[-6].str),0,(grib_yyvsp[-8].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-2].str)); }
 #line 3497 "y.tab.c"
     break;
 
+  case 201: /* case_list: case_list case_value  */
+#line 771 "griby.y"
+                                    { (grib_yyval.case_value) = (grib_yyvsp[0].case_value); (grib_yyvsp[0].case_value)->next = (grib_yyvsp[-1].case_value);   }
+#line 3503 "y.tab.c"
+    break;
+
+  case 202: /* case_value: CASE arguments ':' instructions  */
+#line 774 "griby.y"
+                                              { (grib_yyval.case_value) = grib_case_new(grib_parser_context,(grib_yyvsp[-2].explist),(grib_yyvsp[0].act));  }
+#line 3509 "y.tab.c"
+    break;
+
+  case 203: /* switch_block: SWITCH '(' argument_list ')' '{' case_list DEFAULT ':' instructions '}'  */
+#line 778 "griby.y"
+                                                                           { (grib_yyval.act) = grib_action_create_switch(grib_parser_context,(grib_yyvsp[-7].explist),(grib_yyvsp[-4].case_value),(grib_yyvsp[-1].act)); }
+#line 3515 "y.tab.c"
+    break;
+
+  case 204: /* switch_block: SWITCH '(' argument_list ')' '{' case_list DEFAULT ':' '}'  */
+#line 779 "griby.y"
+                                                               { (grib_yyval.act) = grib_action_create_switch(grib_parser_context,(grib_yyvsp[-6].explist),(grib_yyvsp[-3].case_value),grib_action_create_noop(grib_parser_context,"continue")); }
+#line 3521 "y.tab.c"
+    break;
+
+  case 205: /* switch_block: SWITCH '(' argument_list ')' '{' case_list '}'  */
+#line 780 "griby.y"
+                                                   { (grib_yyval.act) = grib_action_create_switch(grib_parser_context,(grib_yyvsp[-4].explist),(grib_yyvsp[-1].case_value),0); }
+#line 3527 "y.tab.c"
+    break;
+
   case 206: /* concept_value: STRING '=' '{' concept_conditions '}'  */
-#line 753 "griby.y"
+#line 783 "griby.y"
                                                       {
 	  				(grib_yyval.concept_value) = grib_concept_value_new(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-1].concept_condition)); free((grib_yyvsp[-4].str));}
-#line 3504 "y.tab.c"
+#line 3534 "y.tab.c"
     break;
 
   case 207: /* concept_value: IDENT '=' '{' concept_conditions '}'  */
-#line 755 "griby.y"
+#line 785 "griby.y"
                                                                        {
 	  				(grib_yyval.concept_value) = grib_concept_value_new(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-1].concept_condition)); free((grib_yyvsp[-4].str));}
-#line 3511 "y.tab.c"
+#line 3541 "y.tab.c"
     break;
 
   case 208: /* concept_value: INTEGER '=' '{' concept_conditions '}'  */
-#line 757 "griby.y"
+#line 787 "griby.y"
                                                                          {
 					char buf[80]; snprintf(buf, sizeof(buf), "%ld",(long)(grib_yyvsp[-4].lval)); (grib_yyval.concept_value) = grib_concept_value_new(grib_parser_context,buf,(grib_yyvsp[-1].concept_condition));}
-#line 3518 "y.tab.c"
+#line 3548 "y.tab.c"
     break;
 
   case 209: /* concept_value: FLOAT '=' '{' concept_conditions '}'  */
-#line 759 "griby.y"
+#line 789 "griby.y"
                                                                        {
 					char buf[80]; snprintf(buf, sizeof(buf), "%g", (double)(grib_yyvsp[-4].dval)); (grib_yyval.concept_value) = grib_concept_value_new(grib_parser_context,buf,(grib_yyvsp[-1].concept_condition));}
-#line 3525 "y.tab.c"
+#line 3555 "y.tab.c"
     break;
 
   case 211: /* concept_conditions: concept_condition concept_conditions  */
-#line 764 "griby.y"
+#line 794 "griby.y"
                                                        { (grib_yyvsp[-1].concept_condition)->next = (grib_yyvsp[0].concept_condition); (grib_yyval.concept_condition) = (grib_yyvsp[-1].concept_condition); }
-#line 3531 "y.tab.c"
+#line 3561 "y.tab.c"
     break;
 
   case 212: /* concept_condition: IDENT '=' expression ';'  */
-#line 767 "griby.y"
+#line 797 "griby.y"
                                             { (grib_yyval.concept_condition) = grib_concept_condition_new(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].exp),0); free((grib_yyvsp[-3].str)); }
-#line 3537 "y.tab.c"
+#line 3567 "y.tab.c"
     break;
 
   case 213: /* concept_condition: IDENT '=' '[' integer_array ']' ';'  */
-#line 768 "griby.y"
+#line 798 "griby.y"
                                                { (grib_yyval.concept_condition) = grib_concept_condition_new(grib_parser_context,(grib_yyvsp[-5].str),0,(grib_yyvsp[-2].ivalue)); free((grib_yyvsp[-5].str)); }
-#line 3543 "y.tab.c"
+#line 3573 "y.tab.c"
     break;
 
   case 214: /* hash_array_value: STRING '=' '[' integer_array ']'  */
-#line 772 "griby.y"
+#line 802 "griby.y"
                                                     {
 	  				(grib_yyval.hash_array_value) = grib_integer_hash_array_value_new((grib_yyvsp[-4].str),(grib_yyvsp[-1].ivalue)); free((grib_yyvsp[-4].str));}
-#line 3550 "y.tab.c"
+#line 3580 "y.tab.c"
     break;
 
   case 215: /* hash_array_value: IDENT '=' '[' integer_array ']'  */
-#line 774 "griby.y"
+#line 804 "griby.y"
                                                                   {
 	  				(grib_yyval.hash_array_value) = grib_integer_hash_array_value_new((grib_yyvsp[-4].str),(grib_yyvsp[-1].ivalue)); free((grib_yyvsp[-4].str));}
-#line 3557 "y.tab.c"
-    break;
-
-  case 216: /* string_or_ident: SUBSTR '(' IDENT ',' INTEGER ',' INTEGER ')'  */
-#line 778 "griby.y"
-                                                              { (grib_yyval.exp) = new_accessor_expression(grib_parser_context,(grib_yyvsp[-5].str),(grib_yyvsp[-3].lval),(grib_yyvsp[-1].lval)); free((grib_yyvsp[-5].str)); }
-#line 3563 "y.tab.c"
-    break;
-
-  case 217: /* string_or_ident: IDENT  */
-#line 779 "griby.y"
-                                          { (grib_yyval.exp) = new_accessor_expression(grib_parser_context,(grib_yyvsp[0].str),0,0); free((grib_yyvsp[0].str)); }
-#line 3569 "y.tab.c"
-    break;
-
-  case 218: /* string_or_ident: SUBSTR '(' STRING ',' INTEGER ',' INTEGER ')'  */
-#line 780 "griby.y"
-                                                                { (grib_yyval.exp) = new_sub_string_expression(grib_parser_context,(grib_yyvsp[-5].str),(grib_yyvsp[-3].lval),(grib_yyvsp[-1].lval)); free((grib_yyvsp[-5].str)); }
-#line 3575 "y.tab.c"
-    break;
-
-  case 219: /* string_or_ident: STRING  */
-#line 781 "griby.y"
-                          { (grib_yyval.exp) = new_string_expression(grib_parser_context,(grib_yyvsp[0].str));  free((grib_yyvsp[0].str)); }
-#line 3581 "y.tab.c"
-    break;
-
-  case 221: /* atom: INTEGER  */
-#line 785 "griby.y"
-                { (grib_yyval.exp) = new_long_expression(grib_parser_context,(grib_yyvsp[0].lval));  }
 #line 3587 "y.tab.c"
     break;
 
-  case 222: /* atom: FLOAT  */
-#line 786 "griby.y"
-              { (grib_yyval.exp) = new_double_expression(grib_parser_context,(grib_yyvsp[0].dval));  /* TODO: change to new_float_expression*/}
+  case 216: /* string_or_ident: SUBSTR '(' IDENT ',' INTEGER ',' INTEGER ')'  */
+#line 808 "griby.y"
+                                                              { (grib_yyval.exp) = new_accessor_expression(grib_parser_context,(grib_yyvsp[-5].str),(grib_yyvsp[-3].lval),(grib_yyvsp[-1].lval)); free((grib_yyvsp[-5].str)); }
 #line 3593 "y.tab.c"
     break;
 
-  case 223: /* atom: NIL  */
-#line 788 "griby.y"
-              { (grib_yyval.exp) = NULL; }
+  case 217: /* string_or_ident: IDENT  */
+#line 809 "griby.y"
+                                          { (grib_yyval.exp) = new_accessor_expression(grib_parser_context,(grib_yyvsp[0].str),0,0); free((grib_yyvsp[0].str)); }
 #line 3599 "y.tab.c"
     break;
 
-  case 224: /* atom: DUMMY  */
-#line 789 "griby.y"
-                    { (grib_yyval.exp) = new_true_expression(grib_parser_context); }
+  case 218: /* string_or_ident: SUBSTR '(' STRING ',' INTEGER ',' INTEGER ')'  */
+#line 810 "griby.y"
+                                                                { (grib_yyval.exp) = new_sub_string_expression(grib_parser_context,(grib_yyvsp[-5].str),(grib_yyvsp[-3].lval),(grib_yyvsp[-1].lval)); free((grib_yyvsp[-5].str)); }
 #line 3605 "y.tab.c"
     break;
 
-  case 225: /* atom: '(' expression ')'  */
-#line 790 "griby.y"
-                           { (grib_yyval.exp) = (grib_yyvsp[-1].exp); }
+  case 219: /* string_or_ident: STRING  */
+#line 811 "griby.y"
+                          { (grib_yyval.exp) = new_string_expression(grib_parser_context,(grib_yyvsp[0].str));  free((grib_yyvsp[0].str)); }
 #line 3611 "y.tab.c"
     break;
 
-  case 226: /* atom: '-' atom  */
-#line 791 "griby.y"
-                 { (grib_yyval.exp) = new_unop_expression(grib_parser_context,&grib_op_neg,&grib_op_neg_d,(grib_yyvsp[0].exp)); }
+  case 221: /* atom: INTEGER  */
+#line 815 "griby.y"
+                { (grib_yyval.exp) = new_long_expression(grib_parser_context,(grib_yyvsp[0].lval));  }
 #line 3617 "y.tab.c"
     break;
 
-  case 227: /* atom: IDENT '(' ')'  */
-#line 792 "griby.y"
-                    { (grib_yyval.exp) = new_func_expression(grib_parser_context,(grib_yyvsp[-2].str),NULL); free((grib_yyvsp[-2].str));}
+  case 222: /* atom: FLOAT  */
+#line 816 "griby.y"
+              { (grib_yyval.exp) = new_double_expression(grib_parser_context,(grib_yyvsp[0].dval));  /* TODO: change to new_float_expression*/}
 #line 3623 "y.tab.c"
     break;
 
-  case 228: /* atom: IDENT '(' argument_list ')'  */
-#line 793 "griby.y"
-                                  { (grib_yyval.exp) = new_func_expression(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].explist)); free((grib_yyvsp[-3].str));}
+  case 223: /* atom: NIL  */
+#line 818 "griby.y"
+              { (grib_yyval.exp) = NULL; }
 #line 3629 "y.tab.c"
     break;
 
-  case 229: /* power: atom '^' power  */
-#line 797 "griby.y"
-                          { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_pow,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+  case 224: /* atom: DUMMY  */
+#line 819 "griby.y"
+                    { (grib_yyval.exp) = new_true_expression(grib_parser_context); }
 #line 3635 "y.tab.c"
     break;
 
-  case 231: /* factor: factor '*' power  */
-#line 801 "griby.y"
-                            { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_mul,&grib_op_mul_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+  case 225: /* atom: '(' expression ')'  */
+#line 820 "griby.y"
+                           { (grib_yyval.exp) = (grib_yyvsp[-1].exp); }
 #line 3641 "y.tab.c"
     break;
 
-  case 232: /* factor: factor '/' power  */
-#line 802 "griby.y"
-                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_div,&grib_op_div_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+  case 226: /* atom: '-' atom  */
+#line 821 "griby.y"
+                 { (grib_yyval.exp) = new_unop_expression(grib_parser_context,&grib_op_neg,&grib_op_neg_d,(grib_yyvsp[0].exp)); }
 #line 3647 "y.tab.c"
     break;
 
-  case 233: /* factor: factor '%' power  */
-#line 803 "griby.y"
-                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_modulo,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+  case 227: /* atom: IDENT '(' ')'  */
+#line 822 "griby.y"
+                    { (grib_yyval.exp) = new_func_expression(grib_parser_context,(grib_yyvsp[-2].str),NULL); free((grib_yyvsp[-2].str));}
 #line 3653 "y.tab.c"
     break;
 
-  case 234: /* factor: factor BIT power  */
-#line 804 "griby.y"
-                                  { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_bit,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+  case 228: /* atom: IDENT '(' argument_list ')'  */
+#line 823 "griby.y"
+                                  { (grib_yyval.exp) = new_func_expression(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].explist)); free((grib_yyvsp[-3].str));}
 #line 3659 "y.tab.c"
     break;
 
-  case 235: /* factor: factor BITOFF power  */
-#line 805 "griby.y"
-                                  { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_bitoff,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+  case 229: /* power: atom '^' power  */
+#line 827 "griby.y"
+                          { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_pow,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3665 "y.tab.c"
     break;
 
-  case 237: /* factor: LENGTH '(' IDENT ')'  */
-#line 807 "griby.y"
-                                   { (grib_yyval.exp) = new_length_expression(grib_parser_context,(grib_yyvsp[-1].str)); free((grib_yyvsp[-1].str));}
+  case 231: /* factor: factor '*' power  */
+#line 831 "griby.y"
+                            { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_mul,&grib_op_mul_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3671 "y.tab.c"
     break;
 
-  case 238: /* factor: IS_IN_LIST '(' IDENT ',' STRING ')'  */
-#line 808 "griby.y"
-                                                  { (grib_yyval.exp) = new_is_in_list_expression(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].str)); free((grib_yyvsp[-3].str));free((grib_yyvsp[-1].str));}
+  case 232: /* factor: factor '/' power  */
+#line 832 "griby.y"
+                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_div,&grib_op_div_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3677 "y.tab.c"
     break;
 
-  case 239: /* factor: IS_IN_DICT '(' IDENT ',' STRING ')'  */
-#line 809 "griby.y"
-                                                  { (grib_yyval.exp) = new_is_in_dict_expression(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].str)); free((grib_yyvsp[-3].str));free((grib_yyvsp[-1].str));}
+  case 233: /* factor: factor '%' power  */
+#line 833 "griby.y"
+                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_modulo,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3683 "y.tab.c"
     break;
 
-  case 240: /* factor: IS_INTEGER '(' IDENT ',' INTEGER ')'  */
-#line 810 "griby.y"
-                                                   { (grib_yyval.exp) = new_is_integer_expression(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].lval),0); free((grib_yyvsp[-3].str));}
+  case 234: /* factor: factor BIT power  */
+#line 834 "griby.y"
+                                  { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_bit,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3689 "y.tab.c"
     break;
 
-  case 241: /* factor: IS_INTEGER '(' IDENT ',' INTEGER ',' INTEGER ')'  */
-#line 811 "griby.y"
-                                                               { (grib_yyval.exp) = new_is_integer_expression(grib_parser_context,(grib_yyvsp[-5].str),(grib_yyvsp[-3].lval),(grib_yyvsp[-1].lval)); free((grib_yyvsp[-5].str));}
+  case 235: /* factor: factor BITOFF power  */
+#line 835 "griby.y"
+                                  { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_bitoff,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3695 "y.tab.c"
     break;
 
-  case 242: /* factor: IS_INTEGER '(' IDENT ')'  */
-#line 812 "griby.y"
-                                       { (grib_yyval.exp) = new_is_integer_expression(grib_parser_context,(grib_yyvsp[-1].str),0,0); free((grib_yyvsp[-1].str));}
+  case 237: /* factor: LENGTH '(' IDENT ')'  */
+#line 837 "griby.y"
+                                   { (grib_yyval.exp) = new_length_expression(grib_parser_context,(grib_yyvsp[-1].str)); free((grib_yyvsp[-1].str));}
 #line 3701 "y.tab.c"
     break;
 
-  case 243: /* term: term '+' factor  */
-#line 815 "griby.y"
-                         { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_add,&grib_op_add_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+  case 238: /* factor: IS_IN_LIST '(' IDENT ',' STRING ')'  */
+#line 838 "griby.y"
+                                                  { (grib_yyval.exp) = new_is_in_list_expression(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].str)); free((grib_yyvsp[-3].str));free((grib_yyvsp[-1].str));}
 #line 3707 "y.tab.c"
     break;
 
-  case 244: /* term: term '-' factor  */
-#line 816 "griby.y"
-                                    { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_sub,&grib_op_sub_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+  case 239: /* factor: IS_IN_DICT '(' IDENT ',' STRING ')'  */
+#line 839 "griby.y"
+                                                  { (grib_yyval.exp) = new_is_in_dict_expression(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].str)); free((grib_yyvsp[-3].str));free((grib_yyvsp[-1].str));}
 #line 3713 "y.tab.c"
     break;
 
-  case 246: /* condition: condition GT term  */
-#line 820 "griby.y"
-                                { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_gt,&grib_op_gt_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+  case 240: /* factor: IS_INTEGER '(' IDENT ',' INTEGER ')'  */
+#line 840 "griby.y"
+                                                   { (grib_yyval.exp) = new_is_integer_expression(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].lval),0); free((grib_yyvsp[-3].str));}
 #line 3719 "y.tab.c"
     break;
 
-  case 247: /* condition: condition EQ term  */
-#line 822 "griby.y"
-                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_eq,&grib_op_eq_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+  case 241: /* factor: IS_INTEGER '(' IDENT ',' INTEGER ',' INTEGER ')'  */
+#line 841 "griby.y"
+                                                               { (grib_yyval.exp) = new_is_integer_expression(grib_parser_context,(grib_yyvsp[-5].str),(grib_yyvsp[-3].lval),(grib_yyvsp[-1].lval)); free((grib_yyvsp[-5].str));}
 #line 3725 "y.tab.c"
     break;
 
-  case 248: /* condition: condition LT term  */
-#line 823 "griby.y"
-                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_lt,&grib_op_lt_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+  case 242: /* factor: IS_INTEGER '(' IDENT ')'  */
+#line 842 "griby.y"
+                                       { (grib_yyval.exp) = new_is_integer_expression(grib_parser_context,(grib_yyvsp[-1].str),0,0); free((grib_yyvsp[-1].str));}
 #line 3731 "y.tab.c"
     break;
 
-  case 249: /* condition: condition GE term  */
-#line 824 "griby.y"
-                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_ge,&grib_op_ge_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+  case 243: /* term: term '+' factor  */
+#line 845 "griby.y"
+                         { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_add,&grib_op_add_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3737 "y.tab.c"
     break;
 
-  case 250: /* condition: condition LE term  */
-#line 825 "griby.y"
-                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_le,&grib_op_le_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+  case 244: /* term: term '-' factor  */
+#line 846 "griby.y"
+                                    { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_sub,&grib_op_sub_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3743 "y.tab.c"
     break;
 
-  case 251: /* condition: condition NE term  */
-#line 826 "griby.y"
-                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_ne,&grib_op_ne_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+  case 246: /* condition: condition GT term  */
+#line 850 "griby.y"
+                                { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_gt,&grib_op_gt_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3749 "y.tab.c"
     break;
 
-  case 252: /* condition: string_or_ident IS string_or_ident  */
-#line 827 "griby.y"
-                                                  { (grib_yyval.exp) = new_string_compare_expression(grib_parser_context,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp),1); }
+  case 247: /* condition: condition EQ term  */
+#line 852 "griby.y"
+                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_eq,&grib_op_eq_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3755 "y.tab.c"
     break;
 
-  case 253: /* condition: string_or_ident ISNOT string_or_ident  */
-#line 828 "griby.y"
-                                                     { (grib_yyval.exp) = new_string_compare_expression(grib_parser_context,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp),0); }
+  case 248: /* condition: condition LT term  */
+#line 853 "griby.y"
+                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_lt,&grib_op_lt_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3761 "y.tab.c"
     break;
 
-  case 254: /* condition: NOT condition  */
-#line 833 "griby.y"
-                                      { (grib_yyval.exp) = new_unop_expression(grib_parser_context,&grib_op_not,NULL,(grib_yyvsp[0].exp)); }
+  case 249: /* condition: condition GE term  */
+#line 854 "griby.y"
+                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_ge,&grib_op_ge_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3767 "y.tab.c"
     break;
 
-  case 256: /* conjunction: conjunction AND condition  */
-#line 837 "griby.y"
-                                       { (grib_yyval.exp) = new_logical_and_expression(grib_parser_context,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+  case 250: /* condition: condition LE term  */
+#line 855 "griby.y"
+                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_le,&grib_op_le_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3773 "y.tab.c"
     break;
 
-  case 258: /* disjunction: disjunction OR conjunction  */
-#line 841 "griby.y"
-                                        { (grib_yyval.exp) = new_logical_or_expression(grib_parser_context,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp));}
+  case 251: /* condition: condition NE term  */
+#line 856 "griby.y"
+                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_ne,&grib_op_ne_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3779 "y.tab.c"
     break;
 
-  case 263: /* rule_entry: IDENT '=' expression ';'  */
-#line 855 "griby.y"
-                                      { (grib_yyval.rule_entry) = grib_new_rule_entry(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].exp)); free((grib_yyvsp[-3].str)); }
+  case 252: /* condition: string_or_ident IS string_or_ident  */
+#line 857 "griby.y"
+                                                  { (grib_yyval.exp) = new_string_compare_expression(grib_parser_context,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp),1); }
 #line 3785 "y.tab.c"
     break;
 
-  case 264: /* rule_entry: SKIP ';'  */
-#line 856 "griby.y"
-                       { (grib_yyval.rule_entry) = grib_new_rule_entry(grib_parser_context,"skip",0);}
+  case 253: /* condition: string_or_ident ISNOT string_or_ident  */
+#line 858 "griby.y"
+                                                     { (grib_yyval.exp) = new_string_compare_expression(grib_parser_context,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp),0); }
 #line 3791 "y.tab.c"
     break;
 
-  case 266: /* rule_entries: rule_entry rule_entries  */
-#line 860 "griby.y"
-                                       { (grib_yyvsp[-1].rule_entry)->next = (grib_yyvsp[0].rule_entry); (grib_yyval.rule_entry) = (grib_yyvsp[-1].rule_entry); }
+  case 254: /* condition: NOT condition  */
+#line 863 "griby.y"
+                                      { (grib_yyval.exp) = new_unop_expression(grib_parser_context,&grib_op_not,NULL,(grib_yyvsp[0].exp)); }
 #line 3797 "y.tab.c"
     break;
 
-  case 267: /* fact: rule_entry  */
-#line 863 "griby.y"
-                  { (grib_yyval.rules) = grib_new_rule(grib_parser_context,NULL,(grib_yyvsp[0].rule_entry)); }
+  case 256: /* conjunction: conjunction AND condition  */
+#line 867 "griby.y"
+                                       { (grib_yyval.exp) = new_logical_and_expression(grib_parser_context,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3803 "y.tab.c"
     break;
 
-  case 268: /* conditional_rule: IF '(' expression ')' '{' rule_entries '}'  */
-#line 867 "griby.y"
-                                                             { (grib_yyval.rules) = grib_new_rule(grib_parser_context,(grib_yyvsp[-4].exp),(grib_yyvsp[-1].rule_entry)); }
+  case 258: /* disjunction: disjunction OR conjunction  */
+#line 871 "griby.y"
+                                        { (grib_yyval.exp) = new_logical_or_expression(grib_parser_context,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp));}
 #line 3809 "y.tab.c"
     break;
 
-  case 270: /* rules: rule rules  */
-#line 871 "griby.y"
-                   { (grib_yyvsp[-1].rules)->next = (grib_yyvsp[0].rules); (grib_yyval.rules) = (grib_yyvsp[-1].rules); }
+  case 263: /* rule_entry: IDENT '=' expression ';'  */
+#line 885 "griby.y"
+                                      { (grib_yyval.rule_entry) = grib_new_rule_entry(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].exp)); free((grib_yyvsp[-3].str)); }
 #line 3815 "y.tab.c"
     break;
 
+  case 264: /* rule_entry: SKIP ';'  */
+#line 886 "griby.y"
+                       { (grib_yyval.rule_entry) = grib_new_rule_entry(grib_parser_context,"skip",0);}
+#line 3821 "y.tab.c"
+    break;
 
-#line 3819 "y.tab.c"
+  case 266: /* rule_entries: rule_entry rule_entries  */
+#line 890 "griby.y"
+                                       { (grib_yyvsp[-1].rule_entry)->next = (grib_yyvsp[0].rule_entry); (grib_yyval.rule_entry) = (grib_yyvsp[-1].rule_entry); }
+#line 3827 "y.tab.c"
+    break;
+
+  case 267: /* fact: rule_entry  */
+#line 893 "griby.y"
+                  { (grib_yyval.rules) = grib_new_rule(grib_parser_context,NULL,(grib_yyvsp[0].rule_entry)); }
+#line 3833 "y.tab.c"
+    break;
+
+  case 268: /* conditional_rule: IF '(' expression ')' '{' rule_entries '}'  */
+#line 897 "griby.y"
+                                                             { (grib_yyval.rules) = grib_new_rule(grib_parser_context,(grib_yyvsp[-4].exp),(grib_yyvsp[-1].rule_entry)); }
+#line 3839 "y.tab.c"
+    break;
+
+  case 270: /* rules: rule rules  */
+#line 901 "griby.y"
+                   { (grib_yyvsp[-1].rules)->next = (grib_yyvsp[0].rules); (grib_yyval.rules) = (grib_yyvsp[-1].rules); }
+#line 3845 "y.tab.c"
+    break;
+
+
+#line 3849 "y.tab.c"
 
       default: break;
     }
@@ -4008,7 +4038,7 @@ grib_yyreturnlab:
   return grib_yyresult;
 }
 
-#line 875 "griby.y"
+#line 905 "griby.y"
 
 
 static grib_concept_value *_reverse_concept(grib_concept_value *r,grib_concept_value *s)

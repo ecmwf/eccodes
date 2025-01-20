@@ -8,8 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "eccodes.h"
+#include "action/action_class_concept.h"
 
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 

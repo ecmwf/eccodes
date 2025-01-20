@@ -44,7 +44,3 @@ public:
 }  // namespace eccodes
 
 using grib_expression = eccodes::Expression;
-
-// Defined in grib_expression_class_accessor.cc
-// grib_expression* new_accessor_expression(grib_context*, const char*, long, size_t);
-void grib_expression_free(grib_context*, grib_expression*);

@@ -40,6 +40,7 @@ static int check_field_values(grib_handle* h)
         return GRIB_OUT_OF_MEMORY;
 
     if ((ret = grib_get_double_array(h, "values", values, &size)) != GRIB_SUCCESS) {
+        grib_context_free(c, values);
         return ret;
     }
     grib_context_free(c, values);
@@ -81,6 +82,7 @@ static int check_grid_pl_array(grib_handle* h)
     for (size_t j = 0; j < plsize; j++) {
         if (pl[j] == 0) {
             grib_context_log(c, GRIB_LOG_ERROR, "Invalid PL array: entry at index=%d is zero", j);
+            grib_context_free(c, pl);
             return GRIB_WRONG_GRID;
         }
     }

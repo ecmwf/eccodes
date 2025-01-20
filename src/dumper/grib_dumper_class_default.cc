@@ -73,7 +73,7 @@ void Default::dump_long(grib_accessor* a, const char* comment)
 
     if ((option_flags_ & GRIB_DUMP_FLAG_TYPE) != 0) {
         fprintf(out_, "  ");
-        fprintf(out_, "# type %s (int)\n", a->creator_->op);
+        fprintf(out_, "# type %s (int)\n", a->creator_->op_);
     }
 
     if (size > 1) {
@@ -148,7 +148,7 @@ void Default::dump_bits(grib_accessor* a, const char* comment)
 
     if ((option_flags_ & GRIB_DUMP_FLAG_TYPE) != 0) {
         fprintf(out_, "  ");
-        fprintf(out_, "# type %s \n", a->creator_->op);
+        fprintf(out_, "# type %s \n", a->creator_->op_);
     }
 
     aliases(a);
@@ -202,7 +202,7 @@ void Default::dump_double(grib_accessor* a, const char* comment)
 
     if ((option_flags_ & GRIB_DUMP_FLAG_TYPE) != 0) {
         fprintf(out_, "  ");
-        fprintf(out_, "# type %s (double)\n", a->creator_->op);
+        fprintf(out_, "# type %s (double)\n", a->creator_->op_);
     }
 
     aliases(a);
@@ -262,7 +262,7 @@ void Default::dump_string_array(grib_accessor* a, const char* comment)
 
     if ((option_flags_ & GRIB_DUMP_FLAG_TYPE) != 0) {
         fprintf(out_, "  ");
-        fprintf(out_, "# type %s (str)\n", a->creator_->op);
+        fprintf(out_, "# type %s (str)\n", a->creator_->op_);
     }
 
     aliases(a);
@@ -331,7 +331,7 @@ void Default::dump_string(grib_accessor* a, const char* comment)
 
     if ((option_flags_ & GRIB_DUMP_FLAG_TYPE) != 0) {
         fprintf(out_, "  ");
-        fprintf(out_, "# type %s (str)\n", a->creator_->op);
+        fprintf(out_, "# type %s (str)\n", a->creator_->op_);
     }
 
     aliases(a);
@@ -465,7 +465,7 @@ void Default::dump_values(grib_accessor* a)
         else if (native_type == GRIB_TYPE_STRING)
             strcpy(type_name, "(str)");
         fprintf(out_, "  ");
-        fprintf(out_, "# type %s %s\n", a->creator_->op, type_name);
+        fprintf(out_, "# type %s %s\n", a->creator_->op_, type_name);
     }
 
     aliases(a);
@@ -540,7 +540,7 @@ void Default::dump_section(grib_accessor* a, grib_block_of_accessors* block)
     char *p = NULL, *q = NULL;
     if (!strncmp(a->name_, "section", 7))
         is_default_section = 1;
-    if (!strcmp(a->creator_->op, "bufr_group")) {
+    if (!strcmp(a->creator_->op_, "bufr_group")) {
         dump_long(a, NULL);
     }
 

@@ -9,8 +9,8 @@
  */
 
 #include "grib_accessor_class_concept.h"
+#include "action_class_concept.h"
 #include <unordered_map>
-#include <string>
 #include <utility>
 #include <map>
 
@@ -327,7 +327,7 @@ static void print_user_friendly_message(grib_handle* h, const char* name, grib_c
     char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {NULL,}; // sorted array containing concept values
     grib_concept_value* pCon = concepts;
 
-    grib_context_log(h->context, GRIB_LOG_ERROR, "concept: no match for %s=%s", act->name, name);
+    grib_context_log(h->context, GRIB_LOG_ERROR, "concept: no match for %s=%s", act->name_, name);
     if (grib_get_long(h, "edition", &editionNumber) == GRIB_SUCCESS &&
         grib_get_string(h, "centre", centre_s, &centre_len) == GRIB_SUCCESS) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle edition=%ld, centre=%s", editionNumber, centre_s);
@@ -337,7 +337,7 @@ static void print_user_friendly_message(grib_handle* h, const char* name, grib_c
     if (grib_get_string(h, "datasetForLocal", dataset_s, &dataset_len) == GRIB_SUCCESS && !STR_EQUAL(dataset_s, "unknown")) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle dataset=%s", dataset_s);
     }
-    if (strcmp(act->name, "paramId") == 0) {
+    if (strcmp(act->name_, "paramId") == 0) {
         if (string_to_long(name, &dummy, 1) == GRIB_SUCCESS) {
             // The paramId value is an integer. Show them the param DB
             grib_context_log(h->context, GRIB_LOG_ERROR,
@@ -349,7 +349,7 @@ static void print_user_friendly_message(grib_handle* h, const char* name, grib_c
                              "The paramId value should be an integer. Are you trying to set the shortName?");
         }
     }
-    if (strcmp(act->name, "shortName") == 0) {
+    if (strcmp(act->name_, "shortName") == 0) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
                          "Please check the Parameter Database 'https://codes.ecmwf.int/grib/param-db/'");
     }
@@ -365,7 +365,7 @@ static void print_user_friendly_message(grib_handle* h, const char* name, grib_c
     // Only print out all concepts if fewer than MAX_NUM_CONCEPT_VALUES.
     // Printing out all values for concepts like paramId would be silly!
     if (concept_count < MAX_NUM_CONCEPT_VALUES) {
-        fprintf(stderr, "Here are some possible values for concept %s:\n", act->name);
+        fprintf(stderr, "Here are some possible values for concept %s:\n", act->name_);
         qsort(&all_concept_vals, concept_count, sizeof(char*), cmpstringp);
         for (i = 0; i < concept_count; ++i) {
             if (all_concept_vals[i]) {
@@ -373,7 +373,7 @@ static void print_user_friendly_message(grib_handle* h, const char* name, grib_c
                 if (i > 0 && all_concept_vals[i - 1] && strcmp(all_concept_vals[i], all_concept_vals[i - 1]) == 0) {
                     print_it = false; // skip duplicate entries
                 }
-                if (blacklisted(h, editionNumber, act->name, all_concept_vals[i])) {
+                if (blacklisted(h, editionNumber, act->name_, all_concept_vals[i])) {
                     print_it = false;
                 }
                 if (print_it) {
@@ -510,8 +510,8 @@ int grib_accessor_concept_t::unpack_double(double* val, size_t* len)
 
         if (!p) {
             grib_handle* h = grib_handle_of_accessor(this);
-            if (creator_->defaultkey)
-                return grib_get_double_internal(h, creator_->defaultkey, val);
+            if (creator_->defaultkey_)
+                return grib_get_double_internal(h, creator_->defaultkey_, val);
 
             return GRIB_NOT_FOUND;
         }
@@ -527,8 +527,8 @@ int grib_accessor_concept_t::unpack_long(long* val, size_t* len)
 
     if (!p) {
         grib_handle* h = grib_handle_of_accessor(this);
-        if (creator_->defaultkey)
-            return grib_get_long_internal(h, creator_->defaultkey, val);
+        if (creator_->defaultkey_)
+            return grib_get_long_internal(h, creator_->defaultkey_, val);
 
         return GRIB_NOT_FOUND;
     }
@@ -580,8 +580,8 @@ int grib_accessor_concept_t::unpack_string(char* val, size_t* len)
 
     if (!p) {
         grib_handle* h = grib_handle_of_accessor(this);
-        if (creator_->defaultkey)
-            return grib_get_string_internal(h, creator_->defaultkey, val, len);
+        if (creator_->defaultkey_)
+            return grib_get_string_internal(h, creator_->defaultkey_, val, len);
 
         return GRIB_NOT_FOUND;
     }
