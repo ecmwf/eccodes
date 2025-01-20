@@ -31,9 +31,7 @@ void grib_accessor_hash_array_t::dump(eccodes::Dumper* dumper)
 
 int grib_accessor_hash_array_t::pack_double(const double* val, size_t* len)
 {
-    char s[200] = {
-        0,
-    };
+    char s[200] = {0,};
     snprintf(s, sizeof(s), "%g", *val);
     key_ = grib_context_strdup(context_, s);
     ha_  = 0;
@@ -42,9 +40,7 @@ int grib_accessor_hash_array_t::pack_double(const double* val, size_t* len)
 
 int grib_accessor_hash_array_t::pack_long(const long* val, size_t* len)
 {
-    char s[200] = {
-        0,
-    };
+    char s[200] = {0,};
     snprintf(s, sizeof(s), "%ld", *val);
     if (key_)
         grib_context_free(context_, key_);

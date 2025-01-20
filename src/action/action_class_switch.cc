@@ -67,7 +67,7 @@ Switch::~Switch()
 
 int Switch::execute(grib_handle* h)
 {
-    grib_case* c         = Case_;
+    const grib_case* c    = Case_;
     grib_action* next    = Default_;
     grib_arguments* args = args_;
     grib_arguments* values;

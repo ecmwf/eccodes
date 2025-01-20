@@ -53,14 +53,14 @@ int Assert::create_accessor(grib_section* p, grib_loader* h)
     return GRIB_SUCCESS;
 }
 
-void Assert::dump(FILE* f, int lvl)
-{
+//void Assert::dump(FILE* f, int lvl)
+//{
     // int i = 0;
     // for (i = 0; i < lvl; i++)
     //     grib_context_print(act->context, f, "     ");
     // grib_expression_print(act->context, self->expression, 0);
     // printf("\n");
-}
+//}
 
 int Assert::execute(grib_handle* h)
 {

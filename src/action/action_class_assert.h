@@ -21,7 +21,6 @@ public:
     Assert(grib_context* context, grib_expression* expression);
     ~Assert() override;
 
-    void dump(FILE*, int) override;
     int create_accessor(grib_section*, grib_loader*) override;
     int notify_change(grib_accessor* observer, grib_accessor* observed) override;
     int execute(grib_handle* h) override;
