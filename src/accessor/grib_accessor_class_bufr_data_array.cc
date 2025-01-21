@@ -2657,21 +2657,11 @@ int grib_accessor_bufr_data_array_t::process_elements(int flag, long onlySubset,
 {
     int err = 0;
     long inr, innr, ir, ip;
-    long n[MAX_NESTED_REPLICATIONS] = {
-        0,
-    };
-    long nn[MAX_NESTED_REPLICATIONS] = {
-        0,
-    };
-    long numberOfElementsToRepeat[MAX_NESTED_REPLICATIONS] = {
-        0,
-    };
-    long numberOfRepetitions[MAX_NESTED_REPLICATIONS] = {
-        0,
-    };
-    long startRepetition[MAX_NESTED_REPLICATIONS] = {
-        0,
-    };
+    long n[MAX_NESTED_REPLICATIONS] = {0,};
+    long nn[MAX_NESTED_REPLICATIONS] = {0,};
+    long numberOfElementsToRepeat[MAX_NESTED_REPLICATIONS] = {0,};
+    long numberOfRepetitions[MAX_NESTED_REPLICATIONS] = {0,};
+    long startRepetition[MAX_NESTED_REPLICATIONS] = {0,};
     long numberOfNestedRepetitions = 0;
     unsigned char* data            = 0;
     size_t subsetListSize          = 0;
