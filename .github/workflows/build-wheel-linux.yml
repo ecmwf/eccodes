@@ -35,10 +35,12 @@ jobs:
         # NOTE we dont use action checkout because it doesnt cleanup after itself correctly
       - run: git clone --depth=1 --branch="${GITHUB_REF#refs/heads/}" https://github.com/$GITHUB_REPOSITORY /proj
       - run: cd /proj && /buildscripts/prepare_deps.sh ./python_wrapper/buildconfig 3.11
+      - run: cd /proj && python_wrapper/pre-compile.sh
       - run: cd /proj && /buildscripts/compile.sh ./python_wrapper/buildconfig
       - run: cd /proj && PYTHONPATH=/buildscripts /buildscripts/wheel-linux.sh ./python_wrapper/buildconfig 3.11
-      - run: cd /proj && /buildscripts/test-wheel.sh ./python_wrapper/buildconfig 3.11 /tmp/build/wheel/*whl
-      - run: cd /proj && /buildscripts/upload-pypi.sh /tmp/build/wheel/*whl
+      - run: cd /proj && python_wrapper/post-build.sh
+      - run: cd /proj && /buildscripts/test-wheel.sh ./python_wrapper/buildconfig 3.11
+      - run: cd /proj && /buildscripts/upload-pypi.sh ./python_wrapper/buildconfig
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
