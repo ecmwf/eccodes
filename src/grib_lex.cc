@@ -47,6 +47,7 @@ typedef int16_t flex_int16_t;
 typedef uint16_t flex_uint16_t;
 typedef int32_t flex_int32_t;
 typedef uint32_t flex_uint32_t;
+typedef uint64_t flex_uint64_t;
 #else
 typedef signed char flex_int8_t;
 typedef short int flex_int16_t;
@@ -155,7 +156,7 @@ typedef struct grib_yy_buffer_state *YY_BUFFER_STATE;
 typedef size_t grib_yy_size_t;
 #endif
 
-extern int grib_yyleng;
+extern grib_yy_size_t grib_yyleng;
 
 extern FILE *grib_yyin, *grib_yyout;
 
@@ -198,7 +199,7 @@ struct grib_yy_buffer_state
 	/* Number of characters read into grib_yy_ch_buf, not including EOB
 	 * characters.
 	 */
-	int grib_yy_n_chars;
+	grib_yy_size_t grib_yy_n_chars;
 
 	/* Whether we "own" the buffer - i.e., we know we created it,
 	 * and can realloc() it to grow it, and should free() it to
@@ -267,8 +268,8 @@ static YY_BUFFER_STATE * grib_yy_buffer_stack = NULL; /**< Stack as an array. */
 
 /* grib_yy_hold_char holds the character lost when grib_yytext is formed. */
 static char grib_yy_hold_char;
-static int grib_yy_n_chars;		/* number of characters read into grib_yy_ch_buf */
-int grib_yyleng;
+static grib_yy_size_t grib_yy_n_chars;		/* number of characters read into grib_yy_ch_buf */
+grib_yy_size_t grib_yyleng;
 
 /* Points to current character in buffer. */
 static char *grib_yy_c_buf_p = NULL;
@@ -295,7 +296,7 @@ static void grib_yy_init_buffer ( YY_BUFFER_STATE b, FILE *file  );
 
 YY_BUFFER_STATE grib_yy_scan_buffer ( char *base, grib_yy_size_t size  );
 YY_BUFFER_STATE grib_yy_scan_string ( const char *grib_yy_str  );
-YY_BUFFER_STATE grib_yy_scan_bytes ( const char *bytes, int len  );
+YY_BUFFER_STATE grib_yy_scan_bytes ( const char *bytes, grib_yy_size_t len  );
 
 void *grib_yyalloc ( grib_yy_size_t  );
 void *grib_yyrealloc ( void *, grib_yy_size_t  );
@@ -348,7 +349,7 @@ static void grib_yynoreturn grib_yy_fatal_error ( const char* msg  );
  */
 #define YY_DO_BEFORE_ACTION \
 	(grib_yytext_ptr) = grib_yy_bp; \
-	grib_yyleng = (int) (grib_yy_cp - grib_yy_bp); \
+	grib_yyleng = (grib_yy_size_t) (grib_yy_cp - grib_yy_bp); \
 	(grib_yy_hold_char) = *grib_yy_cp; \
 	*grib_yy_cp = '\0'; \
 	(grib_yy_c_buf_p) = grib_yy_cp;
@@ -1198,8 +1199,8 @@ void _grib_ignore_grib_yyunput_unused_error() { grib_yyunput(0,0); }
  #define GET_INPUT input
 #endif
 
-#line 1201 "gribl.cc"
 #line 1202 "gribl.cc"
+#line 1203 "gribl.cc"
 
 #define INITIAL 0
 
@@ -1238,7 +1239,7 @@ FILE *grib_yyget_out ( void );
 
 void grib_yyset_out  ( FILE * _out_str  );
 
-			int grib_yyget_leng ( void );
+			grib_yy_size_t grib_yyget_leng ( void );
 
 char *grib_yyget_text ( void );
 
@@ -1307,7 +1308,7 @@ static int input ( void );
 	if ( YY_CURRENT_BUFFER_LVALUE->grib_yy_is_interactive ) \
 		{ \
 		int c = '*'; \
-		int n; \
+		grib_yy_size_t n; \
 		for ( n = 0; n < max_size && \
 			     (c = getc( grib_yyin )) != EOF && c != '\n'; ++n ) \
 			buf[n] = (char) c; \
@@ -1420,7 +1421,7 @@ YY_DECL
 
 
 
-#line 1423 "gribl.cc"
+#line 1424 "gribl.cc"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -2221,7 +2222,7 @@ YY_RULE_SETUP
 #line 285 "gribl.l"
 ECHO;
 	YY_BREAK
-#line 2224 "gribl.cc"
+#line 2225 "gribl.cc"
 case YY_STATE_EOF(INITIAL):
 	grib_yyterminate();
 
@@ -2408,7 +2409,7 @@ static int grib_yy_get_next_buffer (void)
 
 	else
 		{
-			int num_to_read =
+			grib_yy_size_t num_to_read =
 			YY_CURRENT_BUFFER_LVALUE->grib_yy_buf_size - number_to_move - 1;
 
 		while ( num_to_read <= 0 )
@@ -2422,7 +2423,7 @@ static int grib_yy_get_next_buffer (void)
 
 			if ( b->grib_yy_is_our_buffer )
 				{
-				int new_size = b->grib_yy_buf_size * 2;
+				grib_yy_size_t new_size = b->grib_yy_buf_size * 2;
 
 				if ( new_size <= 0 )
 					b->grib_yy_buf_size += b->grib_yy_buf_size / 8;
@@ -2480,7 +2481,7 @@ static int grib_yy_get_next_buffer (void)
 
 	if (((grib_yy_n_chars) + number_to_move) > YY_CURRENT_BUFFER_LVALUE->grib_yy_buf_size) {
 		/* Extend the array by 50%, plus the number we really need. */
-		int new_size = (grib_yy_n_chars) + number_to_move + ((grib_yy_n_chars) >> 1);
+		grib_yy_size_t new_size = (grib_yy_n_chars) + number_to_move + ((grib_yy_n_chars) >> 1);
 		YY_CURRENT_BUFFER_LVALUE->grib_yy_ch_buf = (char *) grib_yyrealloc(
 			(void *) YY_CURRENT_BUFFER_LVALUE->grib_yy_ch_buf, (grib_yy_size_t) new_size  );
 		if ( ! YY_CURRENT_BUFFER_LVALUE->grib_yy_ch_buf )
@@ -2569,7 +2570,7 @@ static int grib_yy_get_next_buffer (void)
 	if ( grib_yy_cp < YY_CURRENT_BUFFER_LVALUE->grib_yy_ch_buf + 2 )
 		{ /* need to shift things up to make room */
 		/* +2 for EOB chars. */
-		int number_to_move = (grib_yy_n_chars) + 2;
+		grib_yy_size_t number_to_move = (grib_yy_n_chars) + 2;
 		char *dest = &YY_CURRENT_BUFFER_LVALUE->grib_yy_ch_buf[
 					YY_CURRENT_BUFFER_LVALUE->grib_yy_buf_size + 2];
 		char *source =
@@ -2620,7 +2621,7 @@ static int grib_yy_get_next_buffer (void)
 
 		else
 			{ /* need more input */
-			int offset = (int) ((grib_yy_c_buf_p) - (grib_yytext_ptr));
+			grib_yy_size_t offset = (grib_yy_c_buf_p) - (grib_yytext_ptr);
 			++(grib_yy_c_buf_p);
 
 			switch ( grib_yy_get_next_buffer(  ) )
@@ -2989,12 +2990,12 @@ YY_BUFFER_STATE grib_yy_scan_string (const char * grib_yystr )
  * 
  * @return the newly allocated buffer state object.
  */
-YY_BUFFER_STATE grib_yy_scan_bytes  (const char * grib_yybytes, int  _grib_yybytes_len )
+YY_BUFFER_STATE grib_yy_scan_bytes  (const char * grib_yybytes, grib_yy_size_t  _grib_yybytes_len )
 {
 	YY_BUFFER_STATE b;
 	char *buf;
 	grib_yy_size_t n;
-	int i;
+	grib_yy_size_t i;
     
 	/* Get memory for full buffer, including space for trailing EOB's. */
 	n = (grib_yy_size_t) (_grib_yybytes_len + 2);
@@ -3036,7 +3037,7 @@ static void grib_yynoreturn grib_yy_fatal_error (const char* msg )
 	do \
 		{ \
 		/* Undo effects of setting up grib_yytext. */ \
-        int grib_yyless_macro_arg = (n); \
+        grib_yy_size_t grib_yyless_macro_arg = (n); \
         YY_LESS_LINENO(grib_yyless_macro_arg);\
 		grib_yytext[grib_yyleng] = (grib_yy_hold_char); \
 		(grib_yy_c_buf_p) = grib_yytext + grib_yyless_macro_arg; \
@@ -3076,7 +3077,7 @@ FILE *grib_yyget_out  (void)
 /** Get the length of the current token.
  * 
  */
-int grib_yyget_leng  (void)
+grib_yy_size_t grib_yyget_leng  (void)
 {
         return grib_yyleng;
 }

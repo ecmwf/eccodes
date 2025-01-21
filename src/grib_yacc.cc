@@ -2930,13 +2930,13 @@ grib_yyreduce:
 
   case 107: /* simple: TEMPLATE IDENT STRING  */
 #line 577 "griby.y"
-        { (grib_yyval.act) = grib_action_create_template(grib_parser_context,0,(grib_yyvsp[-1].str),(grib_yyvsp[0].str)); free((grib_yyvsp[-1].str)); free((grib_yyvsp[0].str));}
+        { (grib_yyval.act) = grib_action_create_template(grib_parser_context,0,(grib_yyvsp[-1].str),(grib_yyvsp[0].str),grib_yylineno); free((grib_yyvsp[-1].str)); free((grib_yyvsp[0].str));}
 #line 2935 "y.tab.c"
     break;
 
   case 108: /* simple: TEMPLATE_NOFAIL IDENT STRING  */
 #line 579 "griby.y"
-    { (grib_yyval.act) = grib_action_create_template(grib_parser_context,1,(grib_yyvsp[-1].str),(grib_yyvsp[0].str)); free((grib_yyvsp[-1].str)); free((grib_yyvsp[0].str));}
+    { (grib_yyval.act) = grib_action_create_template(grib_parser_context,1,(grib_yyvsp[-1].str),(grib_yyvsp[0].str),grib_yylineno); free((grib_yyvsp[-1].str)); free((grib_yyvsp[0].str));}
 #line 2941 "y.tab.c"
     break;
 

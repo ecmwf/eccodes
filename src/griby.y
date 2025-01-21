@@ -574,9 +574,9 @@ simple: UNSIGNED '[' INTEGER ']'   IDENT   default flags
     | SECTION_PADDING     IDENT  flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$2,"section_padding",0,0,0,$3,NULL,NULL);   free($2);  }
     | TEMPLATE    IDENT  STRING
-        { $$ = grib_action_create_template(grib_parser_context,0,$2,$3); free($2); free($3);}
+        { $$ = grib_action_create_template(grib_parser_context,0,$2,$3,yylineno); free($2); free($3);}
     | TEMPLATE_NOFAIL    IDENT  STRING
-    { $$ = grib_action_create_template(grib_parser_context,1,$2,$3); free($2); free($3);}
+    { $$ = grib_action_create_template(grib_parser_context,1,$2,$3,yylineno); free($2); free($3);}
 
     | ALIAS  IDENT '=' IDENT flags
         { $$ = grib_action_create_alias(grib_parser_context,$2,$4,NULL,$5);  free($2); free($4); }

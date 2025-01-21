@@ -18,7 +18,7 @@ namespace eccodes::action
 class Template : public Section
 {
 public:
-    Template(grib_context* context, int nofail, const char* name, const char* arg1);
+    Template(grib_context* context, int nofail, const char* name, const char* arg1, int lineno);
     ~Template() override;
 
     void dump(FILE*, int) override;
@@ -31,4 +31,4 @@ public:
 
 }  // namespace eccodes::action
 
-grib_action* grib_action_create_template(grib_context* context, int nofail, const char* name, const char* arg1);
+grib_action* grib_action_create_template(grib_context* context, int nofail, const char* name, const char* arg1, int lineno);

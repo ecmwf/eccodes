@@ -10,15 +10,15 @@
 
 #include "action_class_template.h"
 
-grib_action* grib_action_create_template(grib_context* context, int nofail, const char* name, const char* arg1)
+grib_action* grib_action_create_template(grib_context* context, int nofail, const char* name, const char* arg1, int lineno)
 {
-    return new eccodes::action::Template(context, nofail, name, arg1);
+    return new eccodes::action::Template(context, nofail, name, arg1, lineno);
 }
 
 namespace eccodes::action
 {
 
-Template::Template(grib_context* context, int nofail, const char* name, const char* arg1)
+Template::Template(grib_context* context, int nofail, const char* name, const char* arg1, int lineno)
 {
     class_name_ = "action_class_template";
     name_       = grib_context_strdup_persistent(context, name);
@@ -30,6 +30,15 @@ Template::Template(grib_context* context, int nofail, const char* name, const ch
         arg_ = grib_context_strdup_persistent(context, arg1);
     else
         arg_ = nullptr;
+
+    if (context->debug > 0 && file_being_parsed()) {
+        // Construct debug information showing definition file and line
+        // number of statement
+        char debug_info[1024];
+        const size_t infoLen = sizeof(debug_info);
+        snprintf(debug_info, infoLen, "File=%s line=%d", file_being_parsed(), lineno+1);
+        this->debug_info_ = grib_context_strdup_persistent(context, debug_info);
+    }
 }
 
 Template::~Template()
