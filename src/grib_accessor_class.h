@@ -133,6 +133,7 @@ extern grib_accessor* grib_accessor_md5;
 extern grib_accessor* grib_accessor_message;
 extern grib_accessor* grib_accessor_message_copy;
 extern grib_accessor* grib_accessor_message_is_valid;
+extern grib_accessor* grib_accessor_mtg2_switch_default;
 extern grib_accessor* grib_accessor_multdouble;
 extern grib_accessor* grib_accessor_nearest;
 extern grib_accessor* grib_accessor_non_alpha;

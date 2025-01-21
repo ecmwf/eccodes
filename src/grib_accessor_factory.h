@@ -131,6 +131,7 @@
 { "message", &grib_accessor_message, },
 { "message_copy", &grib_accessor_message_copy, },
 { "message_is_valid", &grib_accessor_message_is_valid, },
+{ "mtg2_switch_default", &grib_accessor_mtg2_switch_default, },
 { "multdouble", &grib_accessor_multdouble, },
 { "nearest", &grib_accessor_nearest, },
 { "non_alpha", &grib_accessor_non_alpha, },

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -24,7 +23,6 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    // preferLocalConcepts, conceptsMasterDir, conceptsLocalDirAll, datasetForLocal, 1
     const char* preferLocal_     = nullptr;
     const char* masterDir_       = nullptr;
     const char* localDir_        = nullptr;
