@@ -415,7 +415,11 @@ endif()
 
 ### export package to other ecbuild packages
 
-set( ECCODES_INCLUDE_DIRS    ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src )
+set( ECCODES_INCLUDE_DIRS
+  ${CMAKE_CURRENT_BINARY_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/eccodes
+  ${CMAKE_CURRENT_BINARY_DIR}/src/eccodes
+)
 set( ECCODES_LIBRARIES       eccodes )
 
 get_directory_property( COMPILE_DEFINITIONS ECCODES_DEFINITIONS )
