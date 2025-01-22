@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_closest_date.h"
+#include "ClosestDate.h"
 #include <float.h>
 
 grib_accessor_closest_date_t _grib_accessor_closest_date{};

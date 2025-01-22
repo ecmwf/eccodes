@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_statistics_spectral.h"
+#include "StatisticsSpectral.h"
 
 grib_accessor_statistics_spectral_t _grib_accessor_statistics_spectral{};
 grib_accessor* grib_accessor_statistics_spectral = &_grib_accessor_statistics_spectral;

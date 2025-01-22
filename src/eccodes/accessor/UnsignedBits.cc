@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_unsigned_bits.h"
+#include "UnsignedBits.h"
 
 grib_accessor_unsigned_bits_t _grib_accessor_unsigned_bits{};
 grib_accessor* grib_accessor_unsigned_bits = &_grib_accessor_unsigned_bits;

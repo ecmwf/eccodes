@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_g1day_of_the_year_date.h"
+#include "G1dayOfTheYearDate.h"
 
 grib_accessor_g1day_of_the_year_date_t _grib_accessor_g1day_of_the_year_date{};
 grib_accessor* grib_accessor_g1day_of_the_year_date = &_grib_accessor_g1day_of_the_year_date;

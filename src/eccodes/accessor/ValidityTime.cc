@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_validity_time.h"
+#include "ValidityTime.h"
 
 grib_accessor_validity_time_t _grib_accessor_validity_time{};
 grib_accessor* grib_accessor_validity_time = &_grib_accessor_validity_time;

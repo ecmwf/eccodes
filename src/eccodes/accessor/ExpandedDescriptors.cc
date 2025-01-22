@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_expanded_descriptors.h"
+#include "ExpandedDescriptors.h"
 #include "grib_scaling.h"
 
 grib_accessor_expanded_descriptors_t _grib_accessor_expanded_descriptors{};

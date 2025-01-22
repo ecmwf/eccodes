@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_accessor_class_data_simple_packing.h"
+#include "DataSimplePacking.h"
 #include "grib_scaling.h"
 #include "grib_ieeefloat.h"
 

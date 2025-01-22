@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_accessor_class_gen.h"
+#include "Gen.h"
 
 class grib_accessor_non_alpha_t : public grib_accessor_gen_t
 {

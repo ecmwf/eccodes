@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_g2_mars_labeling.h"
+#include "G2MarsLabeling.h"
 
 grib_accessor_g2_mars_labeling_t _grib_accessor_g2_mars_labeling{};
 grib_accessor* grib_accessor_g2_mars_labeling = &_grib_accessor_g2_mars_labeling;

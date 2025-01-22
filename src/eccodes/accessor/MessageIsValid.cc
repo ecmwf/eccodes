@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_message_is_valid.h"
+#include "MessageIsValid.h"
 #include <cstdio>
 
 grib_accessor_message_is_valid_t _grib_accessor_message_is_valid{};

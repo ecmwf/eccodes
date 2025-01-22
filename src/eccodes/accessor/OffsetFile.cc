@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_offset_file.h"
+#include "OffsetFile.h"
 
 grib_accessor_offset_file_t _grib_accessor_offset_file{};
 grib_accessor* grib_accessor_offset_file = &_grib_accessor_offset_file;

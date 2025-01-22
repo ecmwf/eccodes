@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_g1_half_byte_codeflag.h"
+#include "G1HalfByteCodeflag.h"
 
 grib_accessor_g1_half_byte_codeflag_t _grib_accessor_g1_half_byte_codeflag{};
 grib_accessor* grib_accessor_g1_half_byte_codeflag = &_grib_accessor_g1_half_byte_codeflag;

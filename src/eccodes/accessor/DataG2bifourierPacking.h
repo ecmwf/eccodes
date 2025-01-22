@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_accessor_class_data_simple_packing.h"
+#include "DataSimplePacking.h"
 
 typedef unsigned long (*encode_float_proc)(double);
 typedef double (*decode_float_proc)(unsigned long);

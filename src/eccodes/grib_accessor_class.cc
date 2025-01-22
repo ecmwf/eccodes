@@ -12,7 +12,7 @@
 #include "grib_api_internal.h"
 #include "grib_accessor_classes_hash.cc"
 //#include <iostream>
-#include "accessor/grib_accessor.h"
+#include "accessor/Accessor.h"
 
 #if GRIB_PTHREADS
 static pthread_once_t once    = PTHREAD_ONCE_INIT;

@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_hash_array.h"
+#include "HashArray.h"
 #include "action_class_hash_array.h"
 
 grib_accessor_hash_array_t _grib_accessor_hash_array{};

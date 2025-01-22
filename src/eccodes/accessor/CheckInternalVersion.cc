@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_check_internal_version.h"
+#include "CheckInternalVersion.h"
 
 grib_accessor_check_internal_version_t _grib_accessor_check_internal_version{};
 grib_accessor* grib_accessor_check_internal_version = &_grib_accessor_check_internal_version;

@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_accessor_class_g1date.h"
+#include "G1date.h"
 
 class grib_accessor_g1day_of_the_year_date_t : public grib_accessor_g1date_t
 {

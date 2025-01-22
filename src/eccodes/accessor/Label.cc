@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_label.h"
+#include "Label.h"
 
 grib_accessor_label_t _grib_accessor_label{};
 grib_accessor* grib_accessor_label = &_grib_accessor_label;

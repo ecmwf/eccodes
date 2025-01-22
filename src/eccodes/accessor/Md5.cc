@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_md5.h"
+#include "Md5.h"
 #include "md5.h"
 
 grib_accessor_md5_t _grib_accessor_md5{};

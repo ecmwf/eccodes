@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_lookup.h"
+#include "Lookup.h"
 
 grib_accessor_lookup_t _grib_accessor_lookup{};
 grib_accessor* grib_accessor_lookup = &_grib_accessor_lookup;

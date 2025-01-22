@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_g2_concept_dir.h"
+#include "G2ConceptDir.h"
 
 grib_accessor_g2_concept_dir_t _grib_accessor_g2_concept_dir{};
 grib_accessor* grib_accessor_g2_concept_dir = &_grib_accessor_g2_concept_dir;

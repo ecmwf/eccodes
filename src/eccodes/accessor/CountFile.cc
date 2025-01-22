@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_count_file.h"
+#include "CountFile.h"
 
 grib_accessor_count_file_t _grib_accessor_count_file{};
 grib_accessor* grib_accessor_count_file = &_grib_accessor_count_file;

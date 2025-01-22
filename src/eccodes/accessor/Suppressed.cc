@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_suppressed.h"
+#include "Suppressed.h"
 
 grib_accessor_suppressed_t _grib_accessor_suppressed{};
 grib_accessor* grib_accessor_suppressed = &_grib_accessor_suppressed;

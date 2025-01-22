@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_transient_darray.h"
+#include "TransientDarray.h"
 
 grib_accessor_transient_darray_t _grib_accessor_transient_darray{};
 grib_accessor* grib_accessor_transient_darray = &_grib_accessor_transient_darray;

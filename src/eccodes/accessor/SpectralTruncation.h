@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_accessor_class_long.h"
+#include "Long.h"
 
 class grib_accessor_spectral_truncation_t : public grib_accessor_long_t
 {

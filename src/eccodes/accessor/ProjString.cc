@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_proj_string.h"
+#include "ProjString.h"
 
 grib_accessor_proj_string_t _grib_accessor_proj_string{};
 grib_accessor* grib_accessor_proj_string = &_grib_accessor_proj_string;

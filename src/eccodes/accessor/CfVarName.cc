@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_cf_var_name.h"
+#include "CfVarName.h"
 
 grib_accessor_cf_var_name_t _grib_accessor_cf_var_name{};
 grib_accessor* grib_accessor_cf_var_name = &_grib_accessor_cf_var_name;

@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_optimal_step_units.h"
+#include "OptimalStepUnits.h"
 #include "step.h"
 #include "step_utilities.h"
 

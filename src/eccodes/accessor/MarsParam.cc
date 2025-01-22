@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_mars_param.h"
+#include "MarsParam.h"
 
 grib_accessor_mars_param_t _grib_accessor_mars_param{};
 grib_accessor* grib_accessor_mars_param = &_grib_accessor_mars_param;

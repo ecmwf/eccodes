@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_local_definition.h"
+#include "LocalDefinition.h"
 
 grib_accessor_local_definition_t _grib_accessor_local_definition{};
 grib_accessor* grib_accessor_local_definition = &_grib_accessor_local_definition;

@@ -8,8 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_long_vector.h"
-#include "grib_accessor_class_abstract_long_vector.h"
+#include "LongVector.h"
+#include "AbstractLongVector.h"
 
 grib_accessor_long_vector_t _grib_accessor_long_vector{};
 grib_accessor* grib_accessor_long_vector = &_grib_accessor_long_vector;

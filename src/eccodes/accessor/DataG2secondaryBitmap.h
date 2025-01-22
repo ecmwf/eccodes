@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_accessor_class_data_secondary_bitmap.h"
+#include "DataSecondaryBitmap.h"
 
 class grib_accessor_data_g2secondary_bitmap_t : public grib_accessor_data_secondary_bitmap_t
 {

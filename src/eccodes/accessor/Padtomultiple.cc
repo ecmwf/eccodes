@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_padtomultiple.h"
+#include "Padtomultiple.h"
 
 grib_accessor_padtomultiple_t _grib_accessor_padtomultiple{};
 grib_accessor* grib_accessor_padtomultiple = &_grib_accessor_padtomultiple;

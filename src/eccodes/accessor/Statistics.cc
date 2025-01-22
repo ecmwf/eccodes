@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_statistics.h"
+#include "Statistics.h"
 
 grib_accessor_statistics_t _grib_accessor_statistics{};
 grib_accessor* grib_accessor_statistics = &_grib_accessor_statistics;

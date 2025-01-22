@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_sum.h"
+#include "Sum.h"
 
 grib_accessor_sum_t _grib_accessor_sum{};
 grib_accessor* grib_accessor_sum = &_grib_accessor_sum;

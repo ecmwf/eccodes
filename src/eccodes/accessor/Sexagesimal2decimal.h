@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_accessor_class_to_double.h"
+#include "ToDouble.h"
 
 class grib_accessor_sexagesimal2decimal_t : public grib_accessor_to_double_t
 {

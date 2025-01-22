@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_decimal_precision.h"
+#include "DecimalPrecision.h"
 
 grib_accessor_decimal_precision_t _grib_accessor_decimal_precision{};
 grib_accessor* grib_accessor_decimal_precision = &_grib_accessor_decimal_precision;

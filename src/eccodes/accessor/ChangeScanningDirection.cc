@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_change_scanning_direction.h"
+#include "ChangeScanningDirection.h"
 
 grib_accessor_change_scanning_direction_t _grib_accessor_change_scanning_direction{};
 grib_accessor* grib_accessor_change_scanning_direction = &_grib_accessor_change_scanning_direction;

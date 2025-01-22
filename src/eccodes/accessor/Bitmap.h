@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_accessor_class_bytes.h"
+#include "Bytes.h"
 
 class grib_accessor_bitmap_t : public grib_accessor_bytes_t
 {

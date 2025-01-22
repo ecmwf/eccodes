@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_accessor_class_data_complex_packing.h"
+#include "DataComplexPacking.h"
 
 class grib_accessor_data_g1complex_packing_t : public grib_accessor_data_complex_packing_t
 {

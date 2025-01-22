@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_reference_value_error.h"
+#include "ReferenceValueError.h"
 
 grib_accessor_reference_value_error_t _grib_accessor_reference_value_error{};
 grib_accessor* grib_accessor_reference_value_error = &_grib_accessor_reference_value_error;

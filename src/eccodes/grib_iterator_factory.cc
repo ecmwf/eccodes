@@ -9,7 +9,7 @@
  */
 
 #include "grib_iterator_factory.h"
-#include "accessor/grib_accessor_class_iterator.h"
+#include "accessor/Iterator.h"
 
 #if GRIB_PTHREADS
 static pthread_once_t once   = PTHREAD_ONCE_INIT;

@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_data_ccsds_packing.h"
+#include "DataCcsdsPacking.h"
 
 #if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
     #include <libaec.h>

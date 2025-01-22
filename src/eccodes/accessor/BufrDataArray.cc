@@ -9,10 +9,10 @@
  */
 
 #include "grib_scaling.h"
-#include "grib_accessor_class_bufr_data_array.h"
-#include "grib_accessor_class_expanded_descriptors.h"
-#include "grib_accessor_class_bufr_data_element.h"
-#include "grib_accessor_class_variable.h"
+#include "BufrDataArray.h"
+#include "ExpandedDescriptors.h"
+#include "BufrDataElement.h"
+#include "Variable.h"
 #include "ecc_numeric_limits.h"
 
 grib_accessor_bufr_data_array_t _grib_accessor_bufr_data_array{};

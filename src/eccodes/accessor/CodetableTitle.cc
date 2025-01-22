@@ -8,8 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_codetable_title.h"
-#include "grib_accessor_class_codetable.h"
+#include "CodetableTitle.h"
+#include "Codetable.h"
 
 grib_accessor_codetable_title_t _grib_accessor_codetable_title{};
 grib_accessor* grib_accessor_codetable_title = &_grib_accessor_codetable_title;

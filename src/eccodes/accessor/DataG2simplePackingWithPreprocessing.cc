@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_data_g2simple_packing_with_preprocessing.h"
+#include "DataG2simplePackingWithPreprocessing.h"
 #define DIRECT  0
 #define INVERSE 1
 

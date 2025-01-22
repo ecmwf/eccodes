@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_message_copy.h"
+#include "MessageCopy.h"
 
 grib_accessor_message_copy_t _grib_accessor_message_copy{};
 grib_accessor* grib_accessor_message_copy = &_grib_accessor_message_copy;

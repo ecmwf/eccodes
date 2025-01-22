@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_ksec1expver.h"
+#include "Ksec1expver.h"
 
 grib_accessor_ksec1expver_t _grib_accessor_ksec1expver{};
 grib_accessor* grib_accessor_ksec1expver = &_grib_accessor_ksec1expver;

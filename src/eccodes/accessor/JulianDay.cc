@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_julian_day.h"
+#include "JulianDay.h"
 
 grib_accessor_julian_day_t _grib_accessor_julian_day{};
 grib_accessor* grib_accessor_julian_day = &_grib_accessor_julian_day;

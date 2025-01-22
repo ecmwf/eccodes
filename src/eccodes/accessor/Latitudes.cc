@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_latitudes.h"
+#include "Latitudes.h"
 
 grib_accessor_latitudes_t _grib_accessor_latitudes{};
 grib_accessor* grib_accessor_latitudes = &_grib_accessor_latitudes;

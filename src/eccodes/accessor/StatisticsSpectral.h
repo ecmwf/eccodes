@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_accessor_class_abstract_vector.h"
+#include "AbstractVector.h"
 
 class grib_accessor_statistics_spectral_t : public grib_accessor_abstract_vector_t
 {

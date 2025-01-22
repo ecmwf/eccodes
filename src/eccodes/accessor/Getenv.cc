@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_getenv.h"
+#include "Getenv.h"
 
 grib_accessor_getenv_t _grib_accessor_getenv{};
 grib_accessor* grib_accessor_getenv = &_grib_accessor_getenv;

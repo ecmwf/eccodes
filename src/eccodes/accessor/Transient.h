@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_accessor_class_variable.h"
+#include "Variable.h"
 
 class grib_accessor_transient_t : public grib_accessor_variable_t
 {

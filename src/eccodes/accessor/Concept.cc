@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_concept.h"
+#include "Concept.h"
 #include "action_class_concept.h"
 #include <unordered_map>
 #include <utility>

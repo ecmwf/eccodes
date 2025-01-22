@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_count_missing.h"
+#include "CountMissing.h"
 
 grib_accessor_count_missing_t _grib_accessor_count_missing{};
 grib_accessor* grib_accessor_count_missing = &_grib_accessor_count_missing;

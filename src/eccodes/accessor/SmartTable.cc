@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_smart_table.h"
+#include "SmartTable.h"
 #include <cctype>
 
 grib_accessor_smart_table_t _grib_accessor_smart_table{};

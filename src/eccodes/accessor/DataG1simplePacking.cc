@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_data_g1simple_packing.h"
+#include "DataG1simplePacking.h"
 #include "grib_scaling.h"
 
 grib_accessor_data_g1simple_packing_t _grib_accessor_data_g1simple_packing{};

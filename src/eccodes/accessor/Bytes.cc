@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_bytes.h"
+#include "Bytes.h"
 
 grib_accessor_bytes_t _grib_accessor_bytes{};
 grib_accessor* grib_accessor_bytes = &_grib_accessor_bytes;

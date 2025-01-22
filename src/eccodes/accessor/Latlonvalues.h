@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_accessor_class_double.h"
+#include "Double.h"
 
 class grib_accessor_latlonvalues_t : public grib_accessor_double_t
 {

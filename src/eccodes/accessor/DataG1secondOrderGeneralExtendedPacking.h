@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_accessor_class_data_simple_packing.h"
+#include "DataSimplePacking.h"
 
 class grib_accessor_data_g1second_order_general_extended_packing_t : public grib_accessor_data_simple_packing_t
 {

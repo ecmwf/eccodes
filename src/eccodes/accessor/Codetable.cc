@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_codetable.h"
+#include "Codetable.h"
 #include <cctype>
 
 grib_accessor_codetable_t _grib_accessor_codetable{};

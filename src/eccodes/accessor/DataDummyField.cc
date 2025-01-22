@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_data_dummy_field.h"
+#include "DataDummyField.h"
 
 grib_accessor_data_dummy_field_t _grib_accessor_data_dummy_field{};
 grib_accessor* grib_accessor_data_dummy_field = &_grib_accessor_data_dummy_field;

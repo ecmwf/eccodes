@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_octahedral_gaussian.h"
+#include "OctahedralGaussian.h"
 
 grib_accessor_octahedral_gaussian_t _grib_accessor_octahedral_gaussian{};
 grib_accessor* grib_accessor_octahedral_gaussian = &_grib_accessor_octahedral_gaussian;

@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_gaussian_grid_name.h"
+#include "GaussianGridName.h"
 
 grib_accessor_gaussian_grid_name_t _grib_accessor_gaussian_grid_name{};
 grib_accessor* grib_accessor_gaussian_grid_name = &_grib_accessor_gaussian_grid_name;

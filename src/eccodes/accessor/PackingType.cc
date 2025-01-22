@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_packing_type.h"
+#include "PackingType.h"
 
 grib_accessor_packing_type_t _grib_accessor_packing_type{};
 grib_accessor* grib_accessor_packing_type = &_grib_accessor_packing_type;

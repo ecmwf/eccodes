@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_second_order_bits_per_value.h"
+#include "SecondOrderBitsPerValue.h"
 #include "grib_scaling.h"
 
 grib_accessor_second_order_bits_per_value_t _grib_accessor_second_order_bits_per_value{};

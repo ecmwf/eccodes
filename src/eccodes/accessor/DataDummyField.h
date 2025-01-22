@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_accessor_class_data_g1simple_packing.h"
+#include "DataG1simplePacking.h"
 
 class grib_accessor_data_dummy_field_t : public grib_accessor_data_g1simple_packing_t
 {

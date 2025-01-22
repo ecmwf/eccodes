@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_g1forecastmonth.h"
+#include "G1forecastmonth.h"
 
 grib_accessor_g1forecastmonth_t _grib_accessor_g1forecastmonth{};
 grib_accessor* grib_accessor_g1forecastmonth = &_grib_accessor_g1forecastmonth;

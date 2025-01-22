@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_accessor_class_ascii.h"
+#include "Ascii.h"
 
 class grib_accessor_trim_t : public grib_accessor_ascii_t
 {

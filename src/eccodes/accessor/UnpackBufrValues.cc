@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_unpack_bufr_values.h"
+#include "UnpackBufrValues.h"
 
 grib_accessor_unpack_bufr_values_t _grib_accessor_unpack_bufr_values{};
 grib_accessor* grib_accessor_unpack_bufr_values = &_grib_accessor_unpack_bufr_values;

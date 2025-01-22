@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_bits.h"
+#include "Bits.h"
 #include "ecc_numeric_limits.h"
 
 

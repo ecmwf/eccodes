@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_gts_header.h"
+#include "GtsHeader.h"
 
 grib_accessor_gts_header_t _grib_accessor_gts_header{};
 grib_accessor* grib_accessor_gts_header = &_grib_accessor_gts_header;

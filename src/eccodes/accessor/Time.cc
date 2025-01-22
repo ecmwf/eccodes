@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_time.h"
+#include "Time.h"
 
 grib_accessor_time_t _grib_accessor_time{};
 grib_accessor* grib_accessor_time = &_grib_accessor_time;

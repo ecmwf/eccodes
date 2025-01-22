@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_from_scale_factor_scaled_value.h"
+#include "FromScaleFactorScaledValue.h"
 #include "ecc_numeric_limits.h"
 
 grib_accessor_from_scale_factor_scaled_value_t _grib_accessor_from_scale_factor_scaled_value{};

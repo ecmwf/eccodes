@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_data_simple_packing.h"
+#include "DataSimplePacking.h"
 #include "grib_optimize_decimal_factor.h"
 #include "grib_bits_any_endian_simple.h"
 #include <float.h>

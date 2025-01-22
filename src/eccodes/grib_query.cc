@@ -12,7 +12,7 @@
  *  Jean Baptiste Filippi - 01.11.2005                                    *
  **************************************************************************/
 #include "grib_api_internal.h"
-#include "accessor/grib_accessor_class_bufr_data_array.h"
+#include "accessor/BufrDataArray.h"
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */

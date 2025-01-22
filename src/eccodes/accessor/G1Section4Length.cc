@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_g1_section4_length.h"
+#include "G1Section4Length.h"
 
 grib_accessor_g1_section4_length_t _grib_accessor_g1_section4_length{};
 grib_accessor* grib_accessor_g1_section4_length = &_grib_accessor_g1_section4_length;

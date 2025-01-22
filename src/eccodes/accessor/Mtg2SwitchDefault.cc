@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_mtg2_switch_default.h"
+#include "Mtg2SwitchDefault.h"
 
 grib_accessor_mtg2_switch_default_t _grib_accessor_mtg2_switch_default{};
 grib_accessor* grib_accessor_mtg2_switch_default = &_grib_accessor_mtg2_switch_default;

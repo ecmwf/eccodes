@@ -9,7 +9,7 @@
  * nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_gen.h"
+#include "Gen.h"
 #include "grib_accessor_class.h"
 #include <stdexcept>
 

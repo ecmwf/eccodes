@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_g1step_range.h"
+#include "G1stepRange.h"
 
 grib_accessor_g1step_range_t _grib_accessor_g1step_range{};
 grib_accessor* grib_accessor_g1step_range = &_grib_accessor_g1step_range;

@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_gds_is_present.h"
+#include "GdsIsPresent.h"
 
 grib_accessor_gds_is_present_t _grib_accessor_gds_is_present{};
 grib_accessor* grib_accessor_gds_is_present = &_grib_accessor_gds_is_present;

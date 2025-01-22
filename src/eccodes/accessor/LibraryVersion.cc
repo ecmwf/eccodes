@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_library_version.h"
+#include "LibraryVersion.h"
 
 grib_accessor_library_version_t _grib_accessor_library_version{};
 grib_accessor* grib_accessor_library_version = &_grib_accessor_library_version;

@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_padding.h"
+#include "Padding.h"
 
 grib_accessor_padding_t _grib_accessor_padding{};
 grib_accessor* grib_accessor_padding = &_grib_accessor_padding;

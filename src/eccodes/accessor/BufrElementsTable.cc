@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_bufr_elements_table.h"
+#include "BufrElementsTable.h"
 #include "grib_scaling.h"
 
 #if GRIB_PTHREADS

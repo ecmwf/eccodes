@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_spectral_truncation.h"
+#include "SpectralTruncation.h"
 
 grib_accessor_spectral_truncation_t _grib_accessor_spectral_truncation{};
 grib_accessor* grib_accessor_spectral_truncation = &_grib_accessor_spectral_truncation;

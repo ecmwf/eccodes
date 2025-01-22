@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_variable.h"
+#include "Variable.h"
 
 class grib_accessor_constant_t : public grib_accessor_variable_t
 {

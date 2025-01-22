@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_sexagesimal2decimal.h"
+#include "Sexagesimal2decimal.h"
 
 grib_accessor_sexagesimal2decimal_t _grib_accessor_sexagesimal2decimal{};
 grib_accessor* grib_accessor_sexagesimal2decimal = &_grib_accessor_sexagesimal2decimal;

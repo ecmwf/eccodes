@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_blob.h"
+#include "Blob.h"
 
 grib_accessor_blob_t _grib_accessor_blob{};
 grib_accessor* grib_accessor_blob = &_grib_accessor_blob;

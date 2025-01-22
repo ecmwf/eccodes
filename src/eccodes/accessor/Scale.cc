@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_scale.h"
+#include "Scale.h"
 
 grib_accessor_scale_t _grib_accessor_scale{};
 grib_accessor* grib_accessor_scale = &_grib_accessor_scale;

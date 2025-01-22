@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_sprintf.h"
+#include "Sprintf.h"
 
 grib_accessor_sprintf_t _grib_accessor_sprintf{};
 grib_accessor* grib_accessor_sprintf = &_grib_accessor_sprintf;

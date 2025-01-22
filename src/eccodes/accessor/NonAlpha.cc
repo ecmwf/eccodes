@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_non_alpha.h"
+#include "NonAlpha.h"
 
 grib_accessor_non_alpha_t _grib_accessor_non_alpha{};
 grib_accessor* grib_accessor_non_alpha = &_grib_accessor_non_alpha;

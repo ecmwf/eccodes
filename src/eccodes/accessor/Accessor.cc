@@ -12,7 +12,7 @@
  *   Jean Baptiste Filippi - 01.11.2005
  ***************************************************************************/
 
-#include "grib_accessor.h"
+#include "Accessor.h"
 
 // Note: A fast cut-down version of strcmp which does NOT return -1
 // 0 means input strings are equal and 1 means not equal

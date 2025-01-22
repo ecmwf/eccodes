@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_gds_not_present_bitmap.h"
+#include "GdsNotPresentBitmap.h"
 
 grib_accessor_gds_not_present_bitmap_t _grib_accessor_gds_not_present_bitmap{};
 grib_accessor* grib_accessor_gds_not_present_bitmap = &_grib_accessor_gds_not_present_bitmap;

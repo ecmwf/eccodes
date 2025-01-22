@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_accessor_class_abstract_long_vector.h"
+#include "AbstractLongVector.h"
 
 class grib_accessor_long_vector_t : public grib_accessor_abstract_long_vector_t
 {

@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_to_integer.h"
+#include "ToInteger.h"
 
 grib_accessor_to_integer_t _grib_accessor_to_integer{};
 grib_accessor* grib_accessor_to_integer = &_grib_accessor_to_integer;

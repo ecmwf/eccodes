@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_section_pointer.h"
+#include "SectionPointer.h"
 
 grib_accessor_section_pointer_t _grib_accessor_section_pointer{};
 grib_accessor* grib_accessor_section_pointer = &_grib_accessor_section_pointer;

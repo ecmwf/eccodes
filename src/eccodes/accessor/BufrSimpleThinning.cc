@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_bufr_simple_thinning.h"
+#include "BufrSimpleThinning.h"
 
 grib_accessor_bufr_simple_thinning_t _grib_accessor_bufr_simple_thinning{};
 grib_accessor* grib_accessor_bufr_simple_thinning = &_grib_accessor_bufr_simple_thinning;

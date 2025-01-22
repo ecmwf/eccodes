@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_round.h"
+#include "Round.h"
 
 grib_accessor_round_t _grib_accessor_round{};
 grib_accessor* grib_accessor_round = &_grib_accessor_round;

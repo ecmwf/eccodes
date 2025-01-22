@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_uint64_little_endian.h"
+#include "Uint64LittleEndian.h"
 
 grib_accessor_uint64_little_endian_t _grib_accessor_uint64_little_endian{};
 grib_accessor* grib_accessor_uint64_little_endian = &_grib_accessor_uint64_little_endian;

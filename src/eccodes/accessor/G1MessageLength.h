@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_accessor_class_section_length.h"
+#include "SectionLength.h"
 
 class grib_accessor_g1_message_length_t : public grib_accessor_section_length_t
 {

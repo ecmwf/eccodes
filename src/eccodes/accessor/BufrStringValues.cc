@@ -8,8 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_bufr_string_values.h"
-#include "grib_accessor_class_bufr_data_array.h"
+#include "BufrStringValues.h"
+#include "BufrDataArray.h"
 
 grib_accessor_bufr_string_values_t _grib_accessor_bufr_string_values{};
 grib_accessor* grib_accessor_bufr_string_values = &_grib_accessor_bufr_string_values;

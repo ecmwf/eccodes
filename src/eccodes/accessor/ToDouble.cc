@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_to_double.h"
+#include "ToDouble.h"
 
 grib_accessor_to_double_t _grib_accessor_to_double{};
 grib_accessor* grib_accessor_to_double = &_grib_accessor_to_double;

@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_accessor_class_unsigned.h"
+#include "Unsigned.h"
 #include <cctype>
 
 class grib_accessor_smart_table_t : public grib_accessor_unsigned_t

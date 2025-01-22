@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_g1end_of_interval_monthly.h"
+#include "G1endOfIntervalMonthly.h"
 
 grib_accessor_g1end_of_interval_monthly_t _grib_accessor_g1end_of_interval_monthly{};
 grib_accessor* grib_accessor_g1end_of_interval_monthly = &_grib_accessor_g1end_of_interval_monthly;

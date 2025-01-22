@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_step_in_units.h"
+#include "StepInUnits.h"
 #include "step_utilities.h"
 #include <stdexcept>
 

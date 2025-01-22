@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_g2_chemical.h"
+#include "G2Chemical.h"
 
 grib_accessor_g2_chemical_t _grib_accessor_g2_chemical{};
 grib_accessor* grib_accessor_g2_chemical = &_grib_accessor_g2_chemical;

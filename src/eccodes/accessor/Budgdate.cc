@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_budgdate.h"
+#include "Budgdate.h"
 
 grib_accessor_budgdate_t _grib_accessor_budgdate{};
 grib_accessor* grib_accessor_budgdate = &_grib_accessor_budgdate;

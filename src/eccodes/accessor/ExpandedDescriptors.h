@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_accessor_class_long.h"
+#include "Long.h"
 
 typedef struct change_coding_params
 {

@@ -27,7 +27,7 @@
 
 #include "grib_iterator.h"
 #include "grib_iterator_factory.h"
-#include "accessor/grib_accessor_class_iterator.h"
+#include "accessor/Iterator.h"
 
 namespace eccodes::geo_iterator {
 

@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_constant.h"
+#include "Constant.h"
 
 grib_accessor_constant_t _grib_accessor_constant{};
 grib_accessor* grib_accessor_constant = &_grib_accessor_constant;

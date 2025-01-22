@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_data_jpeg2000_packing.h"
+#include "DataJpeg2000Packing.h"
 
 grib_accessor_data_jpeg2000_packing_t _grib_accessor_data_jpeg2000_packing{};
 grib_accessor* grib_accessor_data_jpeg2000_packing = &_grib_accessor_data_jpeg2000_packing;

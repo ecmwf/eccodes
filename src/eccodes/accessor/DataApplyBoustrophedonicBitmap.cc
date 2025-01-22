@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_data_apply_boustrophedonic_bitmap.h"
+#include "DataApplyBoustrophedonicBitmap.h"
 
 grib_accessor_data_apply_boustrophedonic_bitmap_t _grib_accessor_data_apply_boustrophedonic_bitmap{};
 grib_accessor* grib_accessor_data_apply_boustrophedonic_bitmap = &_grib_accessor_data_apply_boustrophedonic_bitmap;

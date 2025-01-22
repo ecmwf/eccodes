@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_ascii.h"
+#include "Ascii.h"
 
 grib_accessor_ascii_t _grib_accessor_ascii{};
 grib_accessor* grib_accessor_ascii = &_grib_accessor_ascii;

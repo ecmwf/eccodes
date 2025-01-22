@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_accessor_class_g1step_range.h"
+#include "G1stepRange.h"
 
 class grib_accessor_g1fcperiod_t : public grib_accessor_g1step_range_t
 {

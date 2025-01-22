@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_ieeefloat.h"
+#include "Ieeefloat.h"
 
 grib_accessor_ieeefloat_t _grib_accessor_ieeefloat{};
 grib_accessor* grib_accessor_ieeefloat = &_grib_accessor_ieeefloat;

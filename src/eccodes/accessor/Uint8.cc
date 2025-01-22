@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_uint8.h"
+#include "Uint8.h"
 
 grib_accessor_uint8_t _grib_accessor_uint8{};
 grib_accessor* grib_accessor_uint8 = &_grib_accessor_uint8;

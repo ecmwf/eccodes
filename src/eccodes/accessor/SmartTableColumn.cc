@@ -8,8 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_smart_table_column.h"
-#include "grib_accessor_class_smart_table.h"
+#include "SmartTableColumn.h"
+#include "SmartTable.h"
 
 grib_accessor_smart_table_column_t _grib_accessor_smart_table_column{};
 grib_accessor* grib_accessor_smart_table_column = &_grib_accessor_smart_table_column;

@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_codeflag.h"
+#include "Codeflag.h"
 
 grib_accessor_codeflag_t _grib_accessor_codeflag{};
 grib_accessor* grib_accessor_codeflag = &_grib_accessor_codeflag;

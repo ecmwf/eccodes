@@ -9,7 +9,7 @@
  */
 
 #include "grib_nearest_factory.h"
-#include "accessor/grib_accessor_class_nearest.h"
+#include "accessor/Nearest.h"
 
 struct table_entry
 {

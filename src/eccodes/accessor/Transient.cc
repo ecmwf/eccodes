@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_transient.h"
+#include "Transient.h"
 
 grib_accessor_transient_t _grib_accessor_transient{};
 grib_accessor* grib_accessor_transient = &_grib_accessor_transient;

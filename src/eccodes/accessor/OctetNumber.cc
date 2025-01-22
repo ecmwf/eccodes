@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_octet_number.h"
+#include "OctetNumber.h"
 
 grib_accessor_octet_number_t _grib_accessor_octet_number{};
 grib_accessor* grib_accessor_octet_number = &_grib_accessor_octet_number;

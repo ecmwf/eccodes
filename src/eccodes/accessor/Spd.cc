@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_spd.h"
+#include "Spd.h"
 
 grib_accessor_spd_t _grib_accessor_spd{};
 grib_accessor* grib_accessor_spd = &_grib_accessor_spd;

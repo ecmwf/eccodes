@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_step_human_readable.h"
+#include "StepHumanReadable.h"
 
 grib_accessor_step_human_readable_t _grib_accessor_step_human_readable{};
 grib_accessor* grib_accessor_step_human_readable = &_grib_accessor_step_human_readable;

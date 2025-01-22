@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_latlonvalues.h"
+#include "Latlonvalues.h"
 
 grib_accessor_latlonvalues_t _grib_accessor_latlonvalues{};
 grib_accessor* grib_accessor_latlonvalues = &_grib_accessor_latlonvalues;

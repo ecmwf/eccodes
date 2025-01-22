@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_data_sh_packed.h"
+#include "DataShPacked.h"
 #include "grib_scaling.h"
 
 grib_accessor_data_sh_packed_t _grib_accessor_data_sh_packed{};

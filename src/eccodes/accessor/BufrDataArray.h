@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include "grib_accessor_class_gen.h"
-#include "grib_accessor_class_expanded_descriptors.h"
+#include "Gen.h"
+#include "ExpandedDescriptors.h"
 
 typedef struct bitmap_s
 {

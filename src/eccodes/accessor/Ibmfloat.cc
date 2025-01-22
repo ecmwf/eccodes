@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_ibmfloat.h"
+#include "Ibmfloat.h"
 
 grib_accessor_ibmfloat_t _grib_accessor_ibmfloat{};
 grib_accessor* grib_accessor_ibmfloat = &_grib_accessor_ibmfloat;

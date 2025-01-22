@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_signed.h"
+#include "Signed.h"
 #include "ecc_numeric_limits.h"
 
 grib_accessor_signed_t _grib_accessor_signed{};

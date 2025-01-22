@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_data_g22order_packing.h"
+#include "DataG22orderPacking.h"
 
 grib_accessor_data_g22order_packing_t _grib_accessor_data_g22order_packing{};
 grib_accessor* grib_accessor_data_g22order_packing = &_grib_accessor_data_g22order_packing;
