@@ -1,12 +1,18 @@
 'IFS' = {
     backgroundProcess = 255;
 }
-'aifs-single-mse' = {
+'AIFS' = {
     backgroundProcess = 1;
 }
-'aifs-ens-crps' = {
+'ICON' = {
     backgroundProcess = 2;
 }
-'aifs-ens-diff' = {
+'ALARO' = {
     backgroundProcess = 3;
+}
+'AROME' = {
+    backgroundProcess = 4;
+}
+'HARMONIE-AROME' = {
+    backgroundProcess = 5;
 }
