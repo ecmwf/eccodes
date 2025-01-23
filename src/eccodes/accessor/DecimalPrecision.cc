@@ -13,6 +13,9 @@
 grib_accessor_decimal_precision_t _grib_accessor_decimal_precision{};
 grib_accessor* grib_accessor_decimal_precision = &_grib_accessor_decimal_precision;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_decimal_precision_t::init(const long l, grib_arguments* args)
 {
     grib_accessor_long_t::init(l, args);
@@ -99,3 +102,5 @@ int grib_accessor_decimal_precision_t::pack_long(const long* val, size_t* len)
 
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

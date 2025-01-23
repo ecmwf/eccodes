@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_proj_string_t : public grib_accessor_gen_t
 {
 public:
@@ -26,3 +29,5 @@ private:
     const char* grid_type_ = nullptr;
     int endpoint_ = 0;
 };
+
+}  // namespace eccodes::accessor

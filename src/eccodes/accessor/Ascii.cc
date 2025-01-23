@@ -13,6 +13,9 @@
 grib_accessor_ascii_t _grib_accessor_ascii{};
 grib_accessor* grib_accessor_ascii = &_grib_accessor_ascii;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_ascii_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
@@ -194,3 +197,5 @@ int grib_accessor_ascii_t::compare(grib_accessor* b)
 
     return retval;
 }
+
+}  // namespace eccodes::accessor

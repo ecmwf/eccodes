@@ -13,6 +13,9 @@
 grib_accessor_bit_t _grib_accessor_bit{};
 grib_accessor* grib_accessor_bit = &_grib_accessor_bit;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_bit_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_long_t::init(len, arg);
@@ -74,3 +77,5 @@ int grib_accessor_bit_t::pack_long(const long* val, size_t* len)
     *len = 1;
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

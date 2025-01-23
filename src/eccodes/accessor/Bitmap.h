@@ -12,6 +12,9 @@
 
 #include "Bytes.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_bitmap_t : public grib_accessor_bytes_t
 {
 public:
@@ -40,3 +43,5 @@ private:
 
     void compute_size();
 };
+
+}  // namespace eccodes::accessor

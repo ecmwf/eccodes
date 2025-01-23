@@ -13,6 +13,9 @@
 grib_accessor_data_g22order_packing_t _grib_accessor_data_g22order_packing{};
 grib_accessor* grib_accessor_data_g22order_packing = &_grib_accessor_data_g22order_packing;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_data_g22order_packing_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_values_t::init(v, args);
@@ -1787,3 +1790,5 @@ int grib_accessor_data_g22order_packing_t::value_count(long* count)
     *count = 0;
     return grib_get_long_internal(grib_handle_of_accessor(this), numberOfValues_, count);
 }
+
+}  // namespace eccodes::accessor

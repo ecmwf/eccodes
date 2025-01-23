@@ -12,6 +12,9 @@
 
 #include "Unsigned.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_codeflag_t : public grib_accessor_unsigned_t
 {
 public:
@@ -27,3 +30,5 @@ private:
 
     int grib_get_codeflag(long code, char* codename);
 };
+
+}  // namespace eccodes::accessor

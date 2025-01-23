@@ -13,6 +13,9 @@
 grib_accessor_count_missing_t _grib_accessor_count_missing{};
 grib_accessor* grib_accessor_count_missing = &_grib_accessor_count_missing;
 
+namespace eccodes::accessor
+{
+
 static const unsigned char bitsoff[] = {
     8, 7, 7, 6, 7, 6, 6, 5, 7, 6, 6, 5, 6, 5, 5, 4, 7,
     6, 6, 5, 6, 5, 5, 4, 6, 5, 5, 4, 5, 4, 4, 3, 7, 6,
@@ -132,3 +135,5 @@ int grib_accessor_count_missing_t::value_count(long* count)
     *count = 1;
     return 0;
 }
+
+}  // namespace eccodes::accessor

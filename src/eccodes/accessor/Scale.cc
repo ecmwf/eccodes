@@ -13,6 +13,9 @@
 grib_accessor_scale_t _grib_accessor_scale{};
 grib_accessor* grib_accessor_scale = &_grib_accessor_scale;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_scale_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_double_t::init(l, c);
@@ -131,3 +134,5 @@ int grib_accessor_scale_t::is_missing()
     //     }
     //     return (value == GRIB_MISSING_LONG);
 }
+
+}  // namespace eccodes::accessor

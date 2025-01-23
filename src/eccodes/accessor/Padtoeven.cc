@@ -13,6 +13,9 @@
 grib_accessor_padtoeven_t _grib_accessor_padtoeven{};
 grib_accessor* grib_accessor_padtoeven = &_grib_accessor_padtoeven;
 
+namespace eccodes::accessor
+{
+
 size_t grib_accessor_padtoeven_t::preferred_size(int from_handle)
 {
     long offset = 0;
@@ -44,3 +47,5 @@ void grib_accessor_padtoeven_t::init(const long len, grib_arguments* args)
 
     length_ = preferred_size(1);
 }
+
+}  // namespace eccodes::accessor

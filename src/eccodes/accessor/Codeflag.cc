@@ -13,6 +13,9 @@
 grib_accessor_codeflag_t _grib_accessor_codeflag{};
 grib_accessor* grib_accessor_codeflag = &_grib_accessor_codeflag;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_codeflag_t::init(const long len, grib_arguments* param)
 {
     grib_accessor_unsigned_t::init(len, param);
@@ -115,3 +118,5 @@ void grib_accessor_codeflag_t::dump(eccodes::Dumper* dumper)
 
     dumper->dump_bits(this, flagname);
 }
+
+}  // namespace eccodes::accessor

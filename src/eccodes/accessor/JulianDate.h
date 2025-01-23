@@ -12,6 +12,9 @@
 
 #include "Double.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_julian_date_t : public grib_accessor_double_t
 {
 public:
@@ -39,3 +42,5 @@ private:
     const char* hms_ = nullptr;
     char sep_[5];
 };
+
+}  // namespace eccodes::accessor

@@ -13,6 +13,9 @@
 grib_accessor_julian_date_t _grib_accessor_julian_date{};
 grib_accessor* grib_accessor_julian_date = &_grib_accessor_julian_date;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_julian_date_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_double_t::init(l, c);
@@ -359,3 +362,5 @@ int grib_accessor_julian_date_t::pack_expression(grib_expression* e)
 
     return GRIB_NOT_IMPLEMENTED;
 }
+
+}  // namespace eccodes::accessor

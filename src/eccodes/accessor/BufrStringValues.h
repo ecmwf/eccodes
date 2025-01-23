@@ -12,6 +12,9 @@
 
 #include "Ascii.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_bufr_string_values_t : public grib_accessor_ascii_t
 {
 public:
@@ -31,3 +34,5 @@ private:
 
     grib_accessor* get_accessor();
 };
+
+}  // namespace eccodes::accessor

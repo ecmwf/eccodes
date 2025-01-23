@@ -13,6 +13,9 @@
 grib_accessor_g2_chemical_t _grib_accessor_g2_chemical{};
 grib_accessor* grib_accessor_g2_chemical = &_grib_accessor_g2_chemical;
 
+namespace eccodes::accessor
+{
+
 // Meaning of data member chemical_type_:
 //  0 = atmospheric chemical constituents
 //  1 = atmospheric chemical constituents based on a distribution function
@@ -131,3 +134,5 @@ int grib_accessor_g2_chemical_t::value_count(long* count)
     *count = 1;
     return 0;
 }
+
+}  // namespace eccodes::accessor

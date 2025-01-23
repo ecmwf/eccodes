@@ -12,6 +12,9 @@
 
 #include "AbstractVector.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_statistics_t : public grib_accessor_abstract_vector_t
 {
 public:
@@ -29,3 +32,5 @@ private:
     const char* values_ = nullptr;
     const char* missing_value_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

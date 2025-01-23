@@ -13,6 +13,9 @@
 grib_accessor_latlon_increment_t _grib_accessor_latlon_increment{};
 grib_accessor* grib_accessor_latlon_increment = &_grib_accessor_latlon_increment;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_latlon_increment_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_double_t::init(l, c);
@@ -208,3 +211,5 @@ int grib_accessor_latlon_increment_t::is_missing()
 
     return (val == GRIB_MISSING_DOUBLE);
 }
+
+}  // namespace eccodes::accessor

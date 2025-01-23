@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_ascii_t : public grib_accessor_gen_t
 {
 public:
@@ -31,3 +34,5 @@ public:
     void init(const long, grib_arguments*) override;
     int compare(grib_accessor*) override;
 };
+
+}  // namespace eccodes::accessor

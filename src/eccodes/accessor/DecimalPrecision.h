@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_decimal_precision_t : public grib_accessor_long_t
 {
 public:
@@ -28,3 +31,5 @@ private:
     const char* changing_precision_ = nullptr;
     const char* decimal_scale_factor_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

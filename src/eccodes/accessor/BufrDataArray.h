@@ -23,6 +23,9 @@ typedef struct bitmap_s
 
 class grib_accessor_bufr_data_array_t;
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_bufr_data_array_t : public grib_accessor_gen_t
 {
 public:
@@ -137,3 +140,5 @@ private:
     friend int encode_element(grib_context*, grib_accessor_bufr_data_array_t*, int, grib_buffer*, unsigned char*, long*, int, bufr_descriptor*, long, grib_darray*, grib_sarray*);
     friend int encode_replication(grib_context*, grib_accessor_bufr_data_array_t*, int, grib_buffer*, unsigned char*, long*, int, long, grib_darray*, long*);
 };
+
+}  // namespace eccodes::accessor

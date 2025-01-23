@@ -14,6 +14,9 @@
 grib_accessor_vector_t _grib_accessor_vector{};
 grib_accessor* grib_accessor_vector = &_grib_accessor_vector;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_vector_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_abstract_vector_t::init(l, c);
@@ -58,3 +61,5 @@ int grib_accessor_vector_t::unpack_double(double* val, size_t* len)
 
     return err;
 }
+
+}  // namespace eccodes::accessor

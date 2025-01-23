@@ -14,6 +14,9 @@
 grib_accessor_codetable_t _grib_accessor_codetable{};
 grib_accessor* grib_accessor_codetable = &_grib_accessor_codetable;
 
+namespace eccodes::accessor
+{
+
 #if GRIB_PTHREADS
 static pthread_once_t once    = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
@@ -846,3 +849,5 @@ int grib_accessor_codetable_t::pack_missing()
 
     return err;
 }
+
+}  // namespace eccodes::accessor

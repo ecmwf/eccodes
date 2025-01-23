@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_optimal_step_units_t : public grib_accessor_gen_t
 {
 public:
@@ -36,3 +39,5 @@ private:
     const char* time_range_unit_ = nullptr;
     long overwriteStepUnits_ = 0;
 };
+
+}  // namespace eccodes::accessor

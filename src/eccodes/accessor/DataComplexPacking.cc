@@ -13,6 +13,9 @@
 grib_accessor_data_complex_packing_t _grib_accessor_data_complex_packing{};
 grib_accessor* grib_accessor_data_complex_packing = &_grib_accessor_data_complex_packing;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_data_complex_packing_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_data_simple_packing_t::init(v, args);
@@ -786,3 +789,5 @@ int grib_accessor_data_complex_packing_t::unpack_float(float* val, size_t* len)
 
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

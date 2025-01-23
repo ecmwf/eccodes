@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_bufrdc_expanded_descriptors_t : public grib_accessor_long_t
 {
 public:
@@ -30,3 +33,5 @@ private:
 
     grib_accessor* get_accessor();
 };
+
+}  // namespace eccodes::accessor

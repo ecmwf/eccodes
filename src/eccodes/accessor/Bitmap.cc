@@ -13,6 +13,9 @@
 grib_accessor_bitmap_t _grib_accessor_bitmap{};
 grib_accessor* grib_accessor_bitmap = &_grib_accessor_bitmap;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_bitmap_t::compute_size()
 {
     long slen                    = 0;
@@ -183,3 +186,5 @@ int grib_accessor_bitmap_t::unpack_string(char* val, size_t* len)
 
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

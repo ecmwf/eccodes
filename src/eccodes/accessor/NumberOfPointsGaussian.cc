@@ -13,6 +13,9 @@
 grib_accessor_number_of_points_gaussian_t _grib_accessor_number_of_points_gaussian{};
 grib_accessor* grib_accessor_number_of_points_gaussian = &_grib_accessor_number_of_points_gaussian;
 
+namespace eccodes::accessor
+{
+
 #define EFDEBUG 0
 
 void grib_accessor_number_of_points_gaussian_t::init(const long l, grib_arguments* c)
@@ -379,3 +382,5 @@ int grib_accessor_number_of_points_gaussian_t::unpack_long_with_legacy_support(l
 
     return err;
 }
+
+}  // namespace eccodes::accessor

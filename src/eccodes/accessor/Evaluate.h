@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_evaluate_t : public grib_accessor_long_t
 {
 public:
@@ -24,3 +27,5 @@ public:
 protected:
     grib_arguments* arg_ = nullptr; // expression to be evaluated
 };
+
+}  // namespace eccodes::accessor

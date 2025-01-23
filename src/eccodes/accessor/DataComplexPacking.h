@@ -17,6 +17,9 @@
 typedef unsigned long (*encode_float_proc)(double);
 typedef double (*decode_float_proc)(unsigned long);
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_complex_packing_t : public grib_accessor_data_simple_packing_t
 {
 public:
@@ -45,3 +48,5 @@ private:
 
     template <typename T> int unpack_real(T* val, size_t* len);
 };
+
+}  // namespace eccodes::accessor

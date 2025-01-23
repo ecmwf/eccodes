@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_spectral_truncation_t : public grib_accessor_long_t
 {
 public:
@@ -27,3 +30,5 @@ private:
     const char* M_ = nullptr;
     const char* T_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

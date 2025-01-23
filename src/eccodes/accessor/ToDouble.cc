@@ -13,6 +13,9 @@
 grib_accessor_to_double_t _grib_accessor_to_double{};
 grib_accessor* grib_accessor_to_double = &_grib_accessor_to_double;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_to_double_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
@@ -130,3 +133,5 @@ long grib_accessor_to_double_t::next_offset()
 {
     return offset_ + grib_accessor::length_;
 }
+
+}  // namespace eccodes::accessor

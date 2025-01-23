@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_smart_table_column_t : public grib_accessor_gen_t
 {
 public:
@@ -30,3 +33,5 @@ private:
     const char* smartTable_ = nullptr;
     int index_ = 0;
 };
+
+}  // namespace eccodes::accessor

@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_validity_time_t : public grib_accessor_long_t
 {
 public:
@@ -30,3 +33,5 @@ private:
     const char* hours_ = nullptr;
     const char* minutes_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

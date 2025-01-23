@@ -13,6 +13,9 @@
 grib_accessor_section_pointer_t _grib_accessor_section_pointer{};
 grib_accessor* grib_accessor_section_pointer = &_grib_accessor_section_pointer;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_section_pointer_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
@@ -93,3 +96,5 @@ long grib_accessor_section_pointer_t::byte_offset()
 
     return sectionOffset;
 }
+
+}  // namespace eccodes::accessor

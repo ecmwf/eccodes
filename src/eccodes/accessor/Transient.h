@@ -12,6 +12,9 @@
 
 #include "Variable.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_transient_t : public grib_accessor_variable_t
 {
 public:
@@ -20,3 +23,5 @@ public:
         grib_accessor_variable_t() { class_name_ = "transient"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_transient_t{}; }
 };
+
+}  // namespace eccodes::accessor

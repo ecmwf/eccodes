@@ -13,6 +13,9 @@
 grib_accessor_non_alpha_t _grib_accessor_non_alpha{};
 grib_accessor* grib_accessor_non_alpha = &_grib_accessor_non_alpha;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_non_alpha_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
@@ -114,3 +117,5 @@ long grib_accessor_non_alpha_t::next_offset()
 {
     return offset_ + length_;
 }
+
+}  // namespace eccodes::accessor

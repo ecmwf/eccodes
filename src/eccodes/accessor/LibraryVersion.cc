@@ -13,6 +13,9 @@
 grib_accessor_library_version_t _grib_accessor_library_version{};
 grib_accessor* grib_accessor_library_version = &_grib_accessor_library_version;
 
+namespace eccodes::accessor
+{
+
 int grib_accessor_library_version_t::unpack_string(char* val, size_t* len)
 {
     char result[30] = {0,};
@@ -44,3 +47,5 @@ size_t grib_accessor_library_version_t::string_length()
 {
     return 255;
 }
+
+}  // namespace eccodes::accessor

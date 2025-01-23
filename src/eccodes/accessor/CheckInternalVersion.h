@@ -12,6 +12,9 @@
 
 #include "Ascii.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_check_internal_version_t : public grib_accessor_ascii_t
 {
 public:
@@ -22,3 +25,5 @@ public:
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
 };
+
+}  // namespace eccodes::accessor

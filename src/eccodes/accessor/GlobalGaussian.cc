@@ -13,6 +13,9 @@
 grib_accessor_global_gaussian_t _grib_accessor_global_gaussian{};
 grib_accessor* grib_accessor_global_gaussian = &_grib_accessor_global_gaussian;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_global_gaussian_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -245,3 +248,5 @@ int grib_accessor_global_gaussian_t::pack_long(const long* val, size_t* len)
 
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

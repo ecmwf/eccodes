@@ -13,6 +13,9 @@
 grib_accessor_lookup_t _grib_accessor_lookup{};
 grib_accessor* grib_accessor_lookup = &_grib_accessor_lookup;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_lookup_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_long_t::init(len, arg);
@@ -129,3 +132,5 @@ int grib_accessor_lookup_t::notify_change(grib_accessor* changed)
     /* Forward changes */
     return grib_dependency_notify_change(this);
 }
+
+}  // namespace eccodes::accessor

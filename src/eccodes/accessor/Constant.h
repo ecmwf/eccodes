@@ -10,6 +10,9 @@
 
 #include "Variable.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_constant_t : public grib_accessor_variable_t
 {
 public:
@@ -19,3 +22,5 @@ public:
     void init(const long, grib_arguments*) override;
 
 };
+
+}  // namespace eccodes::accessor

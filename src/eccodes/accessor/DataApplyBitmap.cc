@@ -13,6 +13,9 @@
 grib_accessor_data_apply_bitmap_t _grib_accessor_data_apply_bitmap{};
 grib_accessor* grib_accessor_data_apply_bitmap = &_grib_accessor_data_apply_bitmap;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_data_apply_bitmap_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_gen_t::init(v, args);
@@ -367,3 +370,5 @@ int grib_accessor_data_apply_bitmap_t::compare(grib_accessor* b)
 
     return retval;
 }
+
+}  // namespace eccodes::accessor

@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_g2step_range_t : public grib_accessor_gen_t
 {
 public:
@@ -32,3 +35,5 @@ private:
     const char* start_step_ = nullptr;
     const char* end_step_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

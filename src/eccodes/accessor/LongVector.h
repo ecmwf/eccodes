@@ -12,6 +12,9 @@
 
 #include "AbstractLongVector.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_long_vector_t : public grib_accessor_abstract_long_vector_t
 {
 public:
@@ -28,3 +31,5 @@ private:
     const char* vector_ = nullptr;
     int index_ = 0;
 };
+
+}  // namespace eccodes::accessor

@@ -13,6 +13,9 @@
 grib_accessor_number_of_values_data_raw_packing_t _grib_accessor_number_of_values_data_raw_packing{};
 grib_accessor* grib_accessor_number_of_values_data_raw_packing = &_grib_accessor_number_of_values_data_raw_packing;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_number_of_values_data_raw_packing_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_gen_t::init(v, args);
@@ -60,3 +63,5 @@ long grib_accessor_number_of_values_data_raw_packing_t::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
+
+}  // namespace eccodes::accessor

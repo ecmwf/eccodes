@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_count_file_t : public grib_accessor_long_t
 {
 public:
@@ -21,3 +24,5 @@ public:
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 };
+
+}  // namespace eccodes::accessor

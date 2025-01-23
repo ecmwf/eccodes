@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_step_in_units_t : public grib_accessor_long_t
 {
 public:
@@ -36,3 +39,5 @@ private:
 
     int pack_long_new_(const long start_step_value, const long start_step_unit, const long force_step_units);
 };
+
+}  // namespace eccodes::accessor

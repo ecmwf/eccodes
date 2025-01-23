@@ -12,6 +12,9 @@
 
 #include "Unsigned.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_g2_aerosol_t : public grib_accessor_unsigned_t
 {
 public:
@@ -28,3 +31,5 @@ private:
     const char* stepType_ = nullptr;
     int optical_ = 0;
 };
+
+}  // namespace eccodes::accessor

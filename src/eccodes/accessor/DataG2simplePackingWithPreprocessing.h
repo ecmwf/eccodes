@@ -12,6 +12,9 @@
 
 #include "DataG2simplePacking.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_g2simple_packing_with_preprocessing_t : public grib_accessor_data_g2simple_packing_t
 {
 public:
@@ -27,3 +30,5 @@ private:
     const char* pre_processing_ = nullptr;
     const char* pre_processing_parameter_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

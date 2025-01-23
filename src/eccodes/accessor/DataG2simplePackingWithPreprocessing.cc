@@ -15,6 +15,9 @@
 grib_accessor_data_g2simple_packing_with_preprocessing_t _grib_accessor_data_g2simple_packing_with_preprocessing{};
 grib_accessor* grib_accessor_data_g2simple_packing_with_preprocessing = &_grib_accessor_data_g2simple_packing_with_preprocessing;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_data_g2simple_packing_with_preprocessing_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_data_g2simple_packing_t::init(v, args);
@@ -165,3 +168,5 @@ int grib_accessor_data_g2simple_packing_with_preprocessing_t::pack_double(const 
 
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

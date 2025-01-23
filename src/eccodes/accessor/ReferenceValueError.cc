@@ -13,6 +13,9 @@
 grib_accessor_reference_value_error_t _grib_accessor_reference_value_error{};
 grib_accessor* grib_accessor_reference_value_error = &_grib_accessor_reference_value_error;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_reference_value_error_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_double_t::init(l, c);
@@ -46,3 +49,5 @@ int grib_accessor_reference_value_error_t::unpack_double(double* val, size_t* le
 
     return ret;
 }
+
+}  // namespace eccodes::accessor

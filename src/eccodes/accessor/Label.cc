@@ -13,6 +13,9 @@
 grib_accessor_label_t _grib_accessor_label{};
 grib_accessor* grib_accessor_label = &_grib_accessor_label;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_label_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
@@ -40,3 +43,5 @@ int grib_accessor_label_t::unpack_string(char* val, size_t* len)
     strcpy(val, name_);
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

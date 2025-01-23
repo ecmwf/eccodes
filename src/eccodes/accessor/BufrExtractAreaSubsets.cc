@@ -13,6 +13,9 @@
 grib_accessor_bufr_extract_area_subsets_t _grib_accessor_bufr_extract_area_subsets{};
 grib_accessor* grib_accessor_bufr_extract_area_subsets = &_grib_accessor_bufr_extract_area_subsets;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_bufr_extract_area_subsets_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
@@ -181,3 +184,5 @@ int grib_accessor_bufr_extract_area_subsets_t::pack_long(const long* val, size_t
         return GRIB_SUCCESS;
     return select_area();
 }
+
+}  // namespace eccodes::accessor

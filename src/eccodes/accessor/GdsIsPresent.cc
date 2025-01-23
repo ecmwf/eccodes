@@ -13,6 +13,9 @@
 grib_accessor_gds_is_present_t _grib_accessor_gds_is_present{};
 grib_accessor* grib_accessor_gds_is_present = &_grib_accessor_gds_is_present;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_gds_is_present_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -81,3 +84,5 @@ int grib_accessor_gds_is_present_t::unpack_long(long* val, size_t* len)
 
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

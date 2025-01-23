@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_secondary_bitmap_t : public grib_accessor_gen_t
 {
 public:
@@ -29,3 +32,5 @@ protected:
     const char* missing_value_ = nullptr;
     const char* expand_by_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

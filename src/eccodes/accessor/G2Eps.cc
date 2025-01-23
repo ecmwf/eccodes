@@ -13,6 +13,9 @@
 grib_accessor_g2_eps_t _grib_accessor_g2_eps{};
 grib_accessor* grib_accessor_g2_eps = &_grib_accessor_g2_eps;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g2_eps_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_unsigned_t::init(l, c);
@@ -131,3 +134,5 @@ int grib_accessor_g2_eps_t::value_count(long* count)
     *count = 1;
     return 0;
 }
+
+}  // namespace eccodes::accessor

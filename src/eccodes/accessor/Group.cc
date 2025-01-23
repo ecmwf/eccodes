@@ -13,6 +13,9 @@
 grib_accessor_group_t _grib_accessor_group{};
 grib_accessor* grib_accessor_group = &_grib_accessor_group;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_group_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
@@ -165,3 +168,5 @@ long grib_accessor_group_t::next_offset()
 {
     return offset_ + length_;
 }
+
+}  // namespace eccodes::accessor

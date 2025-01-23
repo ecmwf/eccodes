@@ -14,6 +14,9 @@
 grib_accessor_long_vector_t _grib_accessor_long_vector{};
 grib_accessor* grib_accessor_long_vector = &_grib_accessor_long_vector;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_long_vector_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_abstract_long_vector_t::init(l, c);
@@ -93,3 +96,5 @@ long grib_accessor_long_vector_t::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
+
+}  // namespace eccodes::accessor

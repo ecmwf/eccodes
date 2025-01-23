@@ -15,6 +15,9 @@
 grib_accessor_optimal_step_units_t _grib_accessor_optimal_step_units{};
 grib_accessor* grib_accessor_optimal_step_units = &_grib_accessor_optimal_step_units;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_optimal_step_units_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_gen_t::init(l, c);
@@ -219,3 +222,5 @@ long grib_accessor_optimal_step_units_t::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
+
+}  // namespace eccodes::accessor

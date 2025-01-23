@@ -13,6 +13,9 @@
 grib_accessor_g1monthlydate_t _grib_accessor_g1monthlydate{};
 grib_accessor* grib_accessor_g1monthlydate = &_grib_accessor_g1monthlydate;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g1monthlydate_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -36,3 +39,5 @@ int grib_accessor_g1monthlydate_t::unpack_long(long* val, size_t* len)
 
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

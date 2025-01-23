@@ -13,6 +13,9 @@
 grib_accessor_g2_concept_dir_t _grib_accessor_g2_concept_dir{};
 grib_accessor* grib_accessor_g2_concept_dir = &_grib_accessor_g2_concept_dir;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g2_concept_dir_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
@@ -98,3 +101,5 @@ int grib_accessor_g2_concept_dir_t::unpack_string(char* v, size_t* len)
     *len = size + 1;
     return err;
 }
+
+}  // namespace eccodes::accessor

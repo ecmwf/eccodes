@@ -14,6 +14,9 @@
 grib_accessor_data_g1second_order_general_extended_packing_t _grib_accessor_data_g1second_order_general_extended_packing{};
 grib_accessor* grib_accessor_data_g1second_order_general_extended_packing = &_grib_accessor_data_g1second_order_general_extended_packing;
 
+namespace eccodes::accessor
+{
+
 #define MAX_NUMBER_OF_GROUPS 65534
 #define EFDEBUG              0
 
@@ -1215,3 +1218,5 @@ void grib_accessor_data_g1second_order_general_extended_packing_t::destroy(grib_
     }
     grib_accessor_data_simple_packing_t::destroy(context);
 }
+
+}  // namespace eccodes::accessor

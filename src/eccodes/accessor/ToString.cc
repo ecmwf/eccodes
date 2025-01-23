@@ -13,6 +13,9 @@
 grib_accessor_to_string_t _grib_accessor_to_string{};
 grib_accessor* grib_accessor_to_string = &_grib_accessor_to_string;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_to_string_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
@@ -118,3 +121,5 @@ long grib_accessor_to_string_t::next_offset()
 {
     return offset_ + grib_accessor_gen_t::length_;
 }
+
+}  // namespace eccodes::accessor

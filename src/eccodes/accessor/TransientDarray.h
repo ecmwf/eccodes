@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_transient_darray_t : public grib_accessor_gen_t
 {
 public:
@@ -32,3 +35,5 @@ private:
     grib_darray* arr_ = nullptr;
     int type_ = 0;
 };
+
+}  // namespace eccodes::accessor

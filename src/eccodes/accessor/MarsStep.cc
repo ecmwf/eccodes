@@ -13,6 +13,9 @@
 grib_accessor_mars_step_t _grib_accessor_mars_step{};
 grib_accessor* grib_accessor_mars_step = &_grib_accessor_mars_step;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_mars_step_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_ascii_t::init(l, c);
@@ -116,3 +119,5 @@ long grib_accessor_mars_step_t::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
+
+}  // namespace eccodes::accessor

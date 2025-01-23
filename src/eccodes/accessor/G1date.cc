@@ -13,6 +13,9 @@
 grib_accessor_g1date_t _grib_accessor_g1date{};
 grib_accessor* grib_accessor_g1date = &_grib_accessor_g1date;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g1date_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -162,3 +165,5 @@ int grib_accessor_g1date_t::value_count(long* count)
     *count = 1;
     return 0;
 }
+
+}  // namespace eccodes::accessor

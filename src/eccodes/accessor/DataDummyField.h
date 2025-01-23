@@ -12,6 +12,9 @@
 
 #include "DataG1simplePacking.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_dummy_field_t : public grib_accessor_data_g1simple_packing_t
 {
 public:
@@ -28,3 +31,5 @@ private:
     const char* numberOfPoints_ = nullptr;
     const char* bitmap_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

@@ -13,6 +13,9 @@
 grib_accessor_g1_half_byte_codeflag_t _grib_accessor_g1_half_byte_codeflag{};
 grib_accessor* grib_accessor_g1_half_byte_codeflag = &_grib_accessor_g1_half_byte_codeflag;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g1_half_byte_codeflag_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
@@ -61,3 +64,5 @@ long grib_accessor_g1_half_byte_codeflag_t::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
+
+}  // namespace eccodes::accessor

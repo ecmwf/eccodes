@@ -16,6 +16,9 @@
 grib_accessor_data_png_packing_t _grib_accessor_data_png_packing{};
 grib_accessor* grib_accessor_data_png_packing = &_grib_accessor_data_png_packing;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_data_png_packing_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_values_t::init(v, args);
@@ -638,3 +641,5 @@ int grib_accessor_data_png_packing_t::unpack_double_element_set(const size_t* in
 }
 
 #endif
+
+}  // namespace eccodes::accessor

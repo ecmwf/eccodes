@@ -12,6 +12,9 @@
 
 #include "DataShsimplePacking.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_g1shsimple_packing_t : public grib_accessor_data_shsimple_packing_t
 {
 public:
@@ -21,3 +24,5 @@ public:
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
 };
+
+}  // namespace eccodes::accessor

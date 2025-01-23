@@ -27,13 +27,17 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
     return (*a == 0 && *b == 0) ? 0 : 1;
 }
 
-int grib_accessor::compare_accessors(grib_accessor* a2, int compare_flags)
+
+namespace eccodes
+{
+
+int Accessor::compare_accessors(Accessor* a2, int compare_flags)
 {
     int ret           = 0;
     long type1        = 0;
     long type2        = 0;
     int type_mismatch = 0;
-    grib_accessor* a1 = this;
+    Accessor* a1 = this;
 
     if ((compare_flags & GRIB_COMPARE_NAMES) && grib_inline_strcmp(a1->name_, a2->name_))
         return GRIB_NAME_MISMATCH;
@@ -54,12 +58,12 @@ int grib_accessor::compare_accessors(grib_accessor* a2, int compare_flags)
     return ret;
 }
 
-int grib_accessor::add_attribute(grib_accessor* attr, int nest_if_clash)
+int Accessor::add_attribute(Accessor* attr, int nest_if_clash)
 {
     int id               = 0;
     int idx              = 0;
-    grib_accessor* pSame = NULL;
-    grib_accessor* pAloc = this;
+    Accessor* pSame = NULL;
+    Accessor* pAloc = this;
 
     if (this->has_attributes()) {
         pSame = this->get_attribute_index(attr->name_, &id);
@@ -86,7 +90,7 @@ int grib_accessor::add_attribute(grib_accessor* attr, int nest_if_clash)
     return GRIB_TOO_MANY_ATTRIBUTES;
 }
 
-grib_accessor* grib_accessor::get_attribute_index(const char* name_, int* index)
+Accessor* Accessor::get_attribute_index(const char* name_, int* index)
 {
     int i = 0;
     while (i < MAX_ACCESSOR_ATTRIBUTES && this->attributes_[i]) {
@@ -99,18 +103,18 @@ grib_accessor* grib_accessor::get_attribute_index(const char* name_, int* index)
     return NULL;
 }
 
-int grib_accessor::has_attributes()
+int Accessor::has_attributes()
 {
     return this->attributes_[0] ? 1 : 0;
 }
 
-grib_accessor* grib_accessor::get_attribute(const char* name_)
+Accessor* Accessor::get_attribute(const char* name_)
 {
     int index                  = 0;
     const char* p              = 0;
     char* basename             = NULL;
     const char* attribute_name = NULL;
-    grib_accessor* acc         = NULL;
+    Accessor* acc         = NULL;
     p                          = name_;
     while (*(p + 1) != '\0' && (*p != '-' || *(p + 1) != '>'))
         p++;
@@ -130,3 +134,5 @@ grib_accessor* grib_accessor::get_attribute(const char* name_)
             return NULL;
     }
 }
+
+}  // namespace eccodes

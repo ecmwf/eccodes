@@ -13,6 +13,9 @@
 grib_accessor_bufr_extract_subsets_t _grib_accessor_bufr_extract_subsets{};
 grib_accessor* grib_accessor_bufr_extract_subsets = &_grib_accessor_bufr_extract_subsets;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_bufr_extract_subsets_t::get_accessors()
 {
     const grib_handle* h                       = grib_handle_of_accessor(this);
@@ -59,3 +62,5 @@ int grib_accessor_bufr_extract_subsets_t::pack_long(const long* val, size_t* len
 
     return err;
 }
+
+}  // namespace eccodes::accessor

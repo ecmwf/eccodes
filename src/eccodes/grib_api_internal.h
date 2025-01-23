@@ -239,21 +239,24 @@ namespace eccodes {
 class Expression;
 class Arguments;
 class Action;
+class Accessor;
+class AccessorsList;
 }  // namespace eccodes
+//
 using grib_expression = eccodes::Expression;
 using grib_arguments  = eccodes::Arguments;
 using grib_action = eccodes::Action;
+using grib_accessor = eccodes::Accessor;
+using grib_accessors_list = eccodes::AccessorsList;
 
 typedef struct grib_action_file grib_action_file;
 typedef struct grib_action_file_list grib_action_file_list;
 typedef struct grib_block_of_accessors grib_block_of_accessors;
 typedef struct grib_buffer grib_buffer;
-class grib_accessor_class;
 typedef struct grib_section grib_section;
 typedef struct grib_codetable grib_codetable;
 typedef struct grib_smart_table grib_smart_table;
 
-class grib_accessor;
 namespace eccodes::geo_iterator {
 class Iterator;
 }
@@ -320,7 +323,6 @@ struct grib_loader
     int changing_edition;
 };
 
-class grib_accessors_list;
 
 /**
  *  A buffer

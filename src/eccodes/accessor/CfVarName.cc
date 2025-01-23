@@ -13,6 +13,9 @@
 grib_accessor_cf_var_name_t _grib_accessor_cf_var_name{};
 grib_accessor* grib_accessor_cf_var_name = &_grib_accessor_cf_var_name;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_cf_var_name_t::init(const long l, grib_arguments* arg)
 {
     grib_accessor_ascii_t::init(l, arg);
@@ -53,3 +56,5 @@ size_t grib_accessor_cf_var_name_t::string_length()
 {
     return 1024;
 }
+
+}  // namespace eccodes::accessor

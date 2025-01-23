@@ -12,6 +12,9 @@
 
 #include "Unsigned.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_g2_eps_t : public grib_accessor_unsigned_t
 {
 public:
@@ -30,3 +33,5 @@ private:
     const char* stepType_ = nullptr;
     const char* derivedForecast_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

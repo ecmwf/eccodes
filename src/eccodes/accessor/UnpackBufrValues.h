@@ -13,6 +13,9 @@
 #include "Gen.h"
 #include "BufrDataArray.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_unpack_bufr_values_t : public grib_accessor_gen_t
 {
 public:
@@ -34,3 +37,5 @@ public:
 private:
     grib_accessor_bufr_data_array_t* data_accessor_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

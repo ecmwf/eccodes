@@ -14,6 +14,9 @@
 grib_accessor_data_g2simple_packing_t _grib_accessor_data_g2simple_packing{};
 grib_accessor* grib_accessor_data_g2simple_packing = &_grib_accessor_data_g2simple_packing;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_data_g2simple_packing_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_data_simple_packing_t::init(v, args);
@@ -152,3 +155,5 @@ int grib_accessor_data_g2simple_packing_t::pack_bytes(const unsigned char* val, 
     grib_buffer_replace(this, val, length, 1, 1);
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

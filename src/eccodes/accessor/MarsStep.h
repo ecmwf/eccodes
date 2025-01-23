@@ -12,6 +12,9 @@
 
 #include "Ascii.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_mars_step_t : public grib_accessor_ascii_t
 {
 public:
@@ -31,3 +34,5 @@ private:
     const char* stepRange_ = nullptr;
     const char* stepType_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

@@ -18,6 +18,9 @@
 grib_accessor_bufr_data_array_t _grib_accessor_bufr_data_array{};
 grib_accessor* grib_accessor_bufr_data_array = &_grib_accessor_bufr_data_array;
 
+namespace eccodes::accessor
+{
+
 typedef int (*codec_element_proc)(grib_context*, grib_accessor_bufr_data_array_t*, int, grib_buffer*, unsigned char*, long*, int, bufr_descriptor*, long, grib_darray*, grib_sarray*);
 typedef int (*codec_replication_proc)(grib_context*, grib_accessor_bufr_data_array_t*, int, grib_buffer*, unsigned char*, long*, int, long, grib_darray*, long*);
 
@@ -3318,3 +3321,5 @@ void grib_accessor_bufr_data_array_t::destroy(grib_context* c)
     grib_iarray_delete(iss_list_);
     grib_accessor_gen_t::destroy(c);
 }
+
+}  // namespace eccodes::accessor

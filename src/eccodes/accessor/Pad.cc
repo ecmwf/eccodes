@@ -13,6 +13,9 @@
 grib_accessor_pad_t _grib_accessor_pad{};
 grib_accessor* grib_accessor_pad = &_grib_accessor_pad;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_pad_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_padding_t::init(len, arg);
@@ -29,3 +32,5 @@ size_t grib_accessor_pad_t::preferred_size(int from_handle)
 
     return length > 0 ? length : 0;
 }
+
+}  // namespace eccodes::accessor

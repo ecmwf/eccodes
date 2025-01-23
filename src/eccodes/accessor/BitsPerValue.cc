@@ -13,6 +13,9 @@
 grib_accessor_bits_per_value_t _grib_accessor_bits_per_value{};
 grib_accessor* grib_accessor_bits_per_value = &_grib_accessor_bits_per_value;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_bits_per_value_t::init(const long l, grib_arguments* args)
 {
     grib_accessor_long_t::init(l, args);
@@ -69,3 +72,5 @@ int grib_accessor_bits_per_value_t::pack_long(const long* val, size_t* len)
 
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

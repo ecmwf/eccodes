@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_g2end_step_t : public grib_accessor_long_t
 {
 public:
@@ -53,3 +56,5 @@ private:
     int unpack_multiple_time_ranges_double_(double* val, size_t* len);
     int pack_long_(const long end_step_value, const long end_step_unit);
 };
+
+}  // namespace eccodes::accessor

@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_validity_date_t : public grib_accessor_long_t
 {
 public:
@@ -30,3 +33,5 @@ private:
     const char* month_ = nullptr;
     const char* day_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

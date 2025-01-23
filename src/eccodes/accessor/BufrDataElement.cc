@@ -13,6 +13,9 @@
 grib_accessor_bufr_data_element_t _grib_accessor_bufr_data_element{};
 grib_accessor* grib_accessor_bufr_data_element = &_grib_accessor_bufr_data_element;
 
+namespace eccodes::accessor
+{
+
 grib_accessor* grib_accessor_bufr_data_element_t::make_clone(grib_section* s, int* err)
 {
     grib_accessor* the_clone = NULL;
@@ -577,3 +580,5 @@ int grib_accessor_bufr_data_element_t::pack_missing()
 
     return err;
 }
+
+}  // namespace eccodes::accessor

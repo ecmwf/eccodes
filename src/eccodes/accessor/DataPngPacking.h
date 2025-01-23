@@ -12,6 +12,9 @@
 
 #include "Values.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_png_packing_t : public grib_accessor_values_t
 {
 public:
@@ -37,3 +40,5 @@ private:
     const char* number_of_data_points_ = nullptr;
     const char* scanning_mode_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

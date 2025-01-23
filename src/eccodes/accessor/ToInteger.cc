@@ -13,6 +13,9 @@
 grib_accessor_to_integer_t _grib_accessor_to_integer{};
 grib_accessor* grib_accessor_to_integer = &_grib_accessor_to_integer;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_to_integer_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
@@ -134,3 +137,5 @@ long grib_accessor_to_integer_t::next_offset()
 {
     return offset_ + grib_accessor::length_;
 }
+
+}  // namespace eccodes::accessor

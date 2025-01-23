@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_md5_t : public grib_accessor_gen_t
 {
 public:
@@ -30,3 +33,5 @@ private:
     grib_expression* length_key_ = nullptr;
     grib_string_list* blocklist_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

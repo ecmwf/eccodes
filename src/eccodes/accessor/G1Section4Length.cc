@@ -13,6 +13,9 @@
 grib_accessor_g1_section4_length_t _grib_accessor_g1_section4_length{};
 grib_accessor* grib_accessor_g1_section4_length = &_grib_accessor_g1_section4_length;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g1_section4_length_t::init(const long len, grib_arguments* args)
 {
     grib_accessor_section_length_t::init(len, args);
@@ -50,3 +53,5 @@ int grib_accessor_g1_section4_length_t::unpack_long(long* val, size_t* len)
 
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

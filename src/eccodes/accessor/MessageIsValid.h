@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_message_is_valid_t : public grib_accessor_long_t
 {
 public:
@@ -24,3 +27,5 @@ public:
 private:
     const char* product_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

@@ -13,6 +13,9 @@
 grib_accessor_g2_mars_labeling_t _grib_accessor_g2_mars_labeling{};
 grib_accessor* grib_accessor_g2_mars_labeling = &_grib_accessor_g2_mars_labeling;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g2_mars_labeling_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_gen_t::init(l, c);
@@ -402,3 +405,5 @@ long grib_accessor_g2_mars_labeling_t::get_native_type()
                          "unable to get native type for %s", key);
     return type;
 }
+
+}  // namespace eccodes::accessor

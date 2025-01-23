@@ -13,6 +13,9 @@
 #include "Gen.h"
 #include "geo/nearest/Nearest.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_nearest_t : public grib_accessor_gen_t
 {
 public:
@@ -26,3 +29,5 @@ private:
     grib_arguments* args_ = nullptr;
     friend eccodes::geo_nearest::Nearest* eccodes::geo_nearest::gribNearestNew(const grib_handle* ch, int* error);
 };
+
+}  // namespace eccodes::accessor

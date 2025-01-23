@@ -20,6 +20,9 @@
 grib_accessor_data_ccsds_packing_t _grib_accessor_data_ccsds_packing{};
 grib_accessor* grib_accessor_data_ccsds_packing = &_grib_accessor_data_ccsds_packing;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_data_ccsds_packing_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_values_t::init(v, args);
@@ -638,3 +641,5 @@ int grib_accessor_data_ccsds_packing_t::unpack_double_element_set(const size_t* 
 }
 
 #endif
+
+}  // namespace eccodes::accessor

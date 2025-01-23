@@ -13,6 +13,9 @@
 grib_accessor_check_internal_version_t _grib_accessor_check_internal_version{};
 grib_accessor* grib_accessor_check_internal_version = &_grib_accessor_check_internal_version;
 
+namespace eccodes::accessor
+{
+
 /* This is the internal engine version number */
 /* We check this against the version number found in the definitions boot.def file */
 /* See the key "internalVersion"  */
@@ -50,3 +53,5 @@ size_t grib_accessor_check_internal_version_t::string_length()
 {
     return 255;
 }
+
+}  // namespace eccodes::accessor

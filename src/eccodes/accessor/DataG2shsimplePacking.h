@@ -12,6 +12,9 @@
 
 #include "DataShsimplePacking.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_g2shsimple_packing_t : public grib_accessor_data_shsimple_packing_t
 {
 public:
@@ -27,3 +30,5 @@ private:
     const char* numberOfValues_ = nullptr;
     const char* numberOfDataPoints_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

@@ -14,6 +14,9 @@
 grib_accessor_closest_date_t _grib_accessor_closest_date{};
 grib_accessor* grib_accessor_closest_date = &_grib_accessor_closest_date;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_closest_date_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_double_t::init(l, c);
@@ -142,3 +145,5 @@ cleanup:
 
     return err;
 }
+
+}  // namespace eccodes::accessor

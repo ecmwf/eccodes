@@ -12,15 +12,18 @@
 
 #include "Accessor.h"
 
-class grib_accessors_list
+namespace eccodes
+{
+
+class AccessorsList
 {
 public:
-    grib_accessors_list();
-    ~grib_accessors_list();
+    AccessorsList();
+    ~AccessorsList();
 
     int value_count(size_t* count);
     void push(grib_accessor* a, int rank);
-    grib_accessors_list* last();
+    AccessorsList* last();
     int unpack_long(long* val, size_t* buffer_len);
     int unpack_double(double* val, size_t* buffer_len);
     int unpack_float(float* val, size_t* buffer_len);
@@ -29,13 +32,15 @@ public:
     int rank() const { return rank_; }
 
     grib_accessor* accessor    = nullptr;
-    grib_accessors_list* next_ = nullptr;
-    grib_accessors_list* prev_ = nullptr;
-    grib_accessors_list* last_ = nullptr;
+    AccessorsList* next_ = nullptr;
+    AccessorsList* prev_ = nullptr;
+    AccessorsList* last_ = nullptr;
 
 private:
     int rank_ = 0;
 };
 
-grib_accessors_list* grib_accessors_list_create(grib_context* c);
-void grib_accessors_list_delete(grib_context* c, grib_accessors_list* al);
+AccessorsList* grib_accessors_list_create(grib_context* c);
+void grib_accessors_list_delete(grib_context* c, AccessorsList* al);
+
+}  // namespace eccodes

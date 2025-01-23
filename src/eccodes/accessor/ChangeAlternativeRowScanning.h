@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_change_alternative_row_scanning_t : public grib_accessor_gen_t
 {
 public:
@@ -29,3 +32,5 @@ private:
     const char* Nj_ = nullptr;
     const char* alternativeRowScanning_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

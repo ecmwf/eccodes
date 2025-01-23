@@ -13,6 +13,9 @@
 grib_accessor_section_length_t _grib_accessor_section_length{};
 grib_accessor* grib_accessor_section_length = &_grib_accessor_section_length;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_section_length_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_unsigned_t::init(len, arg);
@@ -33,3 +36,5 @@ int grib_accessor_section_length_t::value_count(long* c)
     *c = 1;
     return 0;
 }
+
+}  // namespace eccodes::accessor

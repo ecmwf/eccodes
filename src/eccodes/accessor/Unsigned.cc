@@ -14,6 +14,9 @@
 grib_accessor_unsigned_t _grib_accessor_unsigned{};
 grib_accessor* grib_accessor_unsigned = &_grib_accessor_unsigned;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_unsigned_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_long_t::init(len, arg);
@@ -263,3 +266,5 @@ void grib_accessor_unsigned_t::destroy(grib_context* context)
     vvalue_ = NULL;
     grib_accessor_long_t::destroy(context);
 }
+
+}  // namespace eccodes::accessor

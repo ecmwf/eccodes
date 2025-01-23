@@ -12,6 +12,9 @@
 
 #include "Double.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_scale_t : public grib_accessor_double_t
 {
 public:
@@ -30,3 +33,5 @@ private:
     const char* divisor_ = nullptr;
     const char* truncating_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

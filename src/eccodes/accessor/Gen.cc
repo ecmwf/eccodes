@@ -16,6 +16,9 @@
 grib_accessor_gen_t _grib_accessor_gen = grib_accessor_gen_t{};
 grib_accessor* grib_accessor_gen       = &_grib_accessor_gen;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_gen_t::init_accessor(const long len, grib_arguments* args)
 {
     init(len, args);
@@ -638,3 +641,5 @@ int grib_accessor_gen_t::unpack_float_element_set(const size_t*,
     throw std::runtime_error(
         "grib_accessor_gen_t::unpack_float_element_set not implemented");
 }
+
+}  // namespace eccodes::accessor

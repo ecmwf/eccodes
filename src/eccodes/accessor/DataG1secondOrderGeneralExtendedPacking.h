@@ -12,6 +12,9 @@
 
 #include "DataSimplePacking.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_g1second_order_general_extended_packing_t : public grib_accessor_data_simple_packing_t
 {
 public:
@@ -59,3 +62,5 @@ private:
     int float_dirty_ = 0;
     size_t size_ = 0;
 };
+
+}  // namespace eccodes::accessor

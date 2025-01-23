@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_bufr_extract_datetime_subsets_t : public grib_accessor_gen_t
 {
 public:
@@ -29,3 +32,5 @@ private:
 
     int select_datetime();
 };
+
+}  // namespace eccodes::accessor

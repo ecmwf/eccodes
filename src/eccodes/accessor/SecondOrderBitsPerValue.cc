@@ -14,6 +14,9 @@
 grib_accessor_second_order_bits_per_value_t _grib_accessor_second_order_bits_per_value{};
 grib_accessor* grib_accessor_second_order_bits_per_value = &_grib_accessor_second_order_bits_per_value;
 
+namespace eccodes::accessor
+{
+
 static const size_t nbits[64] = {
     0x1, 0x2, 0x4, 0x8,
     0x10, 0x20, 0x40, 0x80,
@@ -124,3 +127,5 @@ int grib_accessor_second_order_bits_per_value_t::unpack_long(long* val, size_t* 
 
     return ret;
 }
+
+}  // namespace eccodes::accessor

@@ -13,6 +13,9 @@
 #include "Values.h"
 #include "grib_scaling.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_g22order_packing_t : public grib_accessor_values_t
 {
 public:
@@ -51,3 +54,5 @@ private:
 
     template <typename T> int unpack(T* val, size_t* len);
 };
+
+}  // namespace eccodes::accessor

@@ -12,6 +12,9 @@
 
 #include "DataComplexPacking.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_g2complex_packing_t : public grib_accessor_data_complex_packing_t
 {
 public:
@@ -25,3 +28,5 @@ public:
 private:
     const char* numberOfValues_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

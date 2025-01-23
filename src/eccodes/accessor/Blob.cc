@@ -13,6 +13,9 @@
 grib_accessor_blob_t _grib_accessor_blob{};
 grib_accessor* grib_accessor_blob = &_grib_accessor_blob;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_blob_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
@@ -43,3 +46,5 @@ void grib_accessor_blob_t::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_bytes(this, NULL);
 }
+
+}  // namespace eccodes::accessor

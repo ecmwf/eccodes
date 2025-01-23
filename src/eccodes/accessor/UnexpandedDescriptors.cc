@@ -14,6 +14,9 @@
 grib_accessor_unexpanded_descriptors_t _grib_accessor_unexpanded_descriptors{};
 grib_accessor* grib_accessor_unexpanded_descriptors = &_grib_accessor_unexpanded_descriptors;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_unexpanded_descriptors_t::init(const long len, grib_arguments* args)
 {
     grib_accessor_long_t::init(len, args);
@@ -135,3 +138,5 @@ long grib_accessor_unexpanded_descriptors_t::next_offset()
 {
     return byte_offset() + length_;
 }
+
+}  // namespace eccodes::accessor

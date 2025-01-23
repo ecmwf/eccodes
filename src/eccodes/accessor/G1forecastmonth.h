@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_g1forecastmonth_t : public grib_accessor_long_t
 {
 public:
@@ -33,3 +36,5 @@ private:
 
     int unpack_long_edition1(long* val, size_t* len);
 };
+
+}  // namespace eccodes::accessor

@@ -15,6 +15,9 @@
 grib_accessor_bits_t _grib_accessor_bits{};
 grib_accessor* grib_accessor_bits = &_grib_accessor_bits;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_bits_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_gen_t::init(l, c);
@@ -234,3 +237,5 @@ int grib_accessor_bits_t::unpack_bytes(unsigned char* buffer, size_t* len)
 
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

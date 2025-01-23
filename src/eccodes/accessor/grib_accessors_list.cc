@@ -10,14 +10,18 @@
 
 #include "grib_accessors_list.h"
 
-grib_accessors_list* grib_accessors_list_create(grib_context* c)
+
+namespace eccodes
 {
-    return (grib_accessors_list*)grib_context_malloc_clear(c, sizeof(grib_accessors_list));
+
+AccessorsList* grib_accessors_list_create(grib_context* c)
+{
+    return (AccessorsList*)grib_context_malloc_clear(c, sizeof(AccessorsList));
 }
 
-void grib_accessors_list_delete(grib_context* c, grib_accessors_list* al)
+void grib_accessors_list_delete(grib_context* c, AccessorsList* al)
 {
-    grib_accessors_list* tmp;
+    AccessorsList* tmp;
     while (al) {
         tmp = al->next_;
         grib_context_free(c, al);
@@ -25,11 +29,11 @@ void grib_accessors_list_delete(grib_context* c, grib_accessors_list* al)
     }
 }
 
-int grib_accessors_list::value_count(size_t* count)
+int AccessorsList::value_count(size_t* count)
 {
     long lcount             = 0;
     *count                  = 0;
-    grib_accessors_list* al = this;
+    AccessorsList* al = this;
     while (al) {
         al->accessor->value_count(&lcount);
         *count += lcount;
@@ -38,13 +42,13 @@ int grib_accessors_list::value_count(size_t* count)
     return 0;
 }
 
-void grib_accessors_list::push(grib_accessor* a, int rank)
+void AccessorsList::push(grib_accessor* a, int rank)
 {
     const grib_context* c = a->context_;
 
-    grib_accessors_list* last_acc = this->last();
+    AccessorsList* last_acc = this->last();
     if (last_acc && last_acc->accessor) {
-        last_acc->next_           = (grib_accessors_list*)grib_context_malloc_clear(c, sizeof(grib_accessors_list));
+        last_acc->next_           = (AccessorsList*)grib_context_malloc_clear(c, sizeof(AccessorsList));
         last_acc->next_->accessor = a;
         last_acc->next_->prev_    = last_acc;
         last_acc->next_->rank_    = rank;
@@ -57,17 +61,17 @@ void grib_accessors_list::push(grib_accessor* a, int rank)
     }
 }
 
-grib_accessors_list* grib_accessors_list::last()
+AccessorsList* AccessorsList::last()
 {
     return last_;
 }
 
-grib_accessors_list::~grib_accessors_list()
+AccessorsList::~AccessorsList()
 {
-    grib_accessors_list* tmp;
+    AccessorsList* tmp;
     grib_context* c = grib_context_get_default();
 
-    grib_accessors_list* al = this;
+    AccessorsList* al = this;
     while (al) {
         tmp = al->next_;
         // grib_accessor_delete(c, al->accessor);
@@ -76,13 +80,13 @@ grib_accessors_list::~grib_accessors_list()
     }
 }
 
-int grib_accessors_list::unpack_long(long* val, size_t* buffer_len)
+int AccessorsList::unpack_long(long* val, size_t* buffer_len)
 {
     int err             = GRIB_SUCCESS;
     size_t unpacked_len = 0;
     size_t len          = 0;
 
-    grib_accessors_list* al = this;
+    AccessorsList* al = this;
     while (al && err == GRIB_SUCCESS) {
         len = *buffer_len - unpacked_len;
         err = al->accessor->unpack_long(val + unpacked_len, &len);
@@ -94,13 +98,13 @@ int grib_accessors_list::unpack_long(long* val, size_t* buffer_len)
     return err;
 }
 
-int grib_accessors_list::unpack_double(double* val, size_t* buffer_len)
+int AccessorsList::unpack_double(double* val, size_t* buffer_len)
 {
     int err             = GRIB_SUCCESS;
     size_t unpacked_len = 0;
     size_t len          = 0;
 
-    grib_accessors_list* al = this;
+    AccessorsList* al = this;
     while (al && err == GRIB_SUCCESS) {
         len = *buffer_len - unpacked_len;
         err = al->accessor->unpack_double(val + unpacked_len, &len);
@@ -112,13 +116,13 @@ int grib_accessors_list::unpack_double(double* val, size_t* buffer_len)
     return err;
 }
 
-int grib_accessors_list::unpack_float(float* val, size_t* buffer_len)
+int AccessorsList::unpack_float(float* val, size_t* buffer_len)
 {
     int err             = GRIB_SUCCESS;
     size_t unpacked_len = 0;
     size_t len          = 0;
 
-    grib_accessors_list* al = this;
+    AccessorsList* al = this;
     while (al && err == GRIB_SUCCESS) {
         len = *buffer_len - unpacked_len;
         err = al->accessor->unpack_float(val + unpacked_len, &len);
@@ -130,13 +134,13 @@ int grib_accessors_list::unpack_float(float* val, size_t* buffer_len)
     return err;
 }
 
-int grib_accessors_list::unpack_string(char** val, size_t* buffer_len)
+int AccessorsList::unpack_string(char** val, size_t* buffer_len)
 {
     int err             = GRIB_SUCCESS;
     size_t unpacked_len = 0;
     size_t len          = 0;
 
-    grib_accessors_list* al = this;
+    AccessorsList* al = this;
     while (al && err == GRIB_SUCCESS) {
         len = *buffer_len - unpacked_len;
         err = al->accessor->unpack_string_array(val + unpacked_len, &len);
@@ -147,3 +151,5 @@ int grib_accessors_list::unpack_string(char** val, size_t* buffer_len)
     *buffer_len = unpacked_len;
     return err;
 }
+
+}  // namespace eccodes

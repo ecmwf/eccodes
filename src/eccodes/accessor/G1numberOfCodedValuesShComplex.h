@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_g1number_of_coded_values_sh_complex_t : public grib_accessor_long_t
 {
 public:
@@ -31,3 +34,5 @@ private:
     const char* KS_ = nullptr;
     const char* MS_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

@@ -13,6 +13,9 @@
 grib_accessor_offset_file_t _grib_accessor_offset_file{};
 grib_accessor* grib_accessor_offset_file = &_grib_accessor_offset_file;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_offset_file_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_double_t::init(l, c);
@@ -54,3 +57,5 @@ int grib_accessor_offset_file_t::unpack_string(char* v, size_t* len)
     strcpy(v, repres);
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

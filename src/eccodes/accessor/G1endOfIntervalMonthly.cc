@@ -13,6 +13,9 @@
 grib_accessor_g1end_of_interval_monthly_t _grib_accessor_g1end_of_interval_monthly{};
 grib_accessor* grib_accessor_g1end_of_interval_monthly = &_grib_accessor_g1end_of_interval_monthly;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g1end_of_interval_monthly_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_abstract_vector_t::init(l, c);
@@ -138,3 +141,5 @@ int grib_accessor_g1end_of_interval_monthly_t::compare(grib_accessor* b)
 
     return retval;
 }
+
+}  // namespace eccodes::accessor

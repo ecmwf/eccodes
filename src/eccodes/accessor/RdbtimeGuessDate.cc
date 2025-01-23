@@ -13,6 +13,9 @@
 grib_accessor_rdbtime_guess_date_t _grib_accessor_rdbtime_guess_date{};
 grib_accessor* grib_accessor_rdbtime_guess_date = &_grib_accessor_rdbtime_guess_date;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_rdbtime_guess_date_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -72,3 +75,5 @@ int grib_accessor_rdbtime_guess_date_t::pack_long(const long* v, size_t* len)
     /* do nothing*/
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

@@ -13,6 +13,9 @@
 grib_accessor_time_t _grib_accessor_time{};
 grib_accessor* grib_accessor_time = &_grib_accessor_time;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_time_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -108,3 +111,5 @@ int grib_accessor_time_t::unpack_string(char* val, size_t* len)
     len[0] = lmin;
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

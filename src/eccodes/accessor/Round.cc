@@ -13,6 +13,9 @@
 grib_accessor_round_t _grib_accessor_round{};
 grib_accessor* grib_accessor_round = &_grib_accessor_round;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_round_t::init(const long l, grib_arguments* arg)
 {
     grib_accessor_evaluate_t::init(l, arg);
@@ -79,3 +82,5 @@ int grib_accessor_round_t::unpack_string(char* val, size_t* len)
 
     return ret;
 }
+
+}  // namespace eccodes::accessor

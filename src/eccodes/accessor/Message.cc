@@ -13,6 +13,9 @@
 grib_accessor_message_t _grib_accessor_message{};
 grib_accessor* grib_accessor_message = &_grib_accessor_message;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_message_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_bytes_t::init(len, arg);
@@ -76,3 +79,5 @@ size_t grib_accessor_message_t::string_length()
 {
     return length_;
 }
+
+}  // namespace eccodes::accessor

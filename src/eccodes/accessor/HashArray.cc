@@ -14,6 +14,9 @@
 grib_accessor_hash_array_t _grib_accessor_hash_array{};
 grib_accessor* grib_accessor_hash_array = &_grib_accessor_hash_array;
 
+namespace eccodes::accessor
+{
+
 #define MAX_HASH_ARRAY_STRING_LENGTH 255
 
 void grib_accessor_hash_array_t::init(const long len, grib_arguments* args)
@@ -181,3 +184,5 @@ int grib_accessor_hash_array_t::compare(grib_accessor* b)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
+
+}  // namespace eccodes::accessor

@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_rdbtime_guess_date_t : public grib_accessor_long_t
 {
 public:
@@ -29,3 +32,5 @@ private:
     const char* rdbDay_ = nullptr;
     long yearOrMonth_ = 0;
 };
+
+}  // namespace eccodes::accessor

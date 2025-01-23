@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_bufr_data_element_t : public grib_accessor_gen_t
 {
 public:
@@ -58,3 +61,5 @@ private:
     grib_viarray* elementsDescriptorsIndex_ = nullptr;
     char* cname_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

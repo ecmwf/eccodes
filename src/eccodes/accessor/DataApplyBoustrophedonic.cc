@@ -13,6 +13,9 @@
 grib_accessor_data_apply_boustrophedonic_t _grib_accessor_data_apply_boustrophedonic{};
 grib_accessor* grib_accessor_data_apply_boustrophedonic = &_grib_accessor_data_apply_boustrophedonic;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_data_apply_boustrophedonic_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_gen_t::init(v, args);
@@ -277,3 +280,5 @@ long grib_accessor_data_apply_boustrophedonic_t::get_native_type()
 {
     return GRIB_TYPE_DOUBLE;
 }
+
+}  // namespace eccodes::accessor

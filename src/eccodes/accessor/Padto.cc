@@ -13,6 +13,9 @@
 grib_accessor_padto_t _grib_accessor_padto{};
 grib_accessor* grib_accessor_padto = &_grib_accessor_padto;
 
+namespace eccodes::accessor
+{
+
 size_t grib_accessor_padto_t::preferred_size(int from_handle)
 {
     long length = 0;
@@ -39,3 +42,5 @@ void grib_accessor_padto_t::dump(eccodes::Dumper* dumper)
 {
     /*dumper->dump_string(a,NULL);*/
 }
+
+}  // namespace eccodes::accessor

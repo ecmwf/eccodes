@@ -13,6 +13,9 @@
 grib_accessor_ieeefloat_t _grib_accessor_ieeefloat{};
 grib_accessor* grib_accessor_ieeefloat = &_grib_accessor_ieeefloat;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_ieeefloat_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_double_t::init(len, arg);
@@ -127,3 +130,5 @@ int grib_accessor_ieeefloat_t::nearest_smaller_value(double val, double* nearest
 {
     return grib_nearest_smaller_ieee_float(val, nearest);
 }
+
+}  // namespace eccodes::accessor

@@ -12,6 +12,9 @@
 
 #include "Double.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_g2grid_t : public grib_accessor_double_t
 {
 public:
@@ -33,3 +36,5 @@ private:
     const char* basic_angle_ = nullptr;
     const char* sub_division_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

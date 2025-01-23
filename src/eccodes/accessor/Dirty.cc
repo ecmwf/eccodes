@@ -13,6 +13,9 @@
 grib_accessor_dirty_t _grib_accessor_dirty{};
 grib_accessor* grib_accessor_dirty = &_grib_accessor_dirty;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_dirty_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -46,3 +49,5 @@ int grib_accessor_dirty_t::unpack_long(long* val, size_t* len)
 
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

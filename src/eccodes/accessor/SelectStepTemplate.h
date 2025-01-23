@@ -12,6 +12,9 @@
 
 #include "Unsigned.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_select_step_template_t : public grib_accessor_unsigned_t
 {
 public:
@@ -27,3 +30,5 @@ private:
     const char* productDefinitionTemplateNumber_ = nullptr;
     int instant_ = 0;
 };
+
+}  // namespace eccodes::accessor

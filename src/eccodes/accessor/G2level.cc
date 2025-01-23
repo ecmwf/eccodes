@@ -13,6 +13,9 @@
 grib_accessor_g2level_t _grib_accessor_g2level{};
 grib_accessor* grib_accessor_g2level = &_grib_accessor_g2level;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g2level_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -270,3 +273,5 @@ int grib_accessor_g2level_t::is_missing()
               grib_is_missing(hand, value_first_, &err);
     return ret;
 }
+
+}  // namespace eccodes::accessor

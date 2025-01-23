@@ -12,6 +12,9 @@
 
 #include "Double.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_from_scale_factor_scaled_value_t : public grib_accessor_double_t
 {
 public:
@@ -28,3 +31,5 @@ private:
     const char* scaleFactor_ = nullptr;
     const char* scaledValue_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

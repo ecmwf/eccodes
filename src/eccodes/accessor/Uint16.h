@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_uint16_t : public grib_accessor_gen_t
 {
 public:
@@ -21,3 +24,5 @@ public:
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
 };
+
+}  // namespace eccodes::accessor

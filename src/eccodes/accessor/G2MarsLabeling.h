@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_g2_mars_labeling_t : public grib_accessor_gen_t
 {
 public:
@@ -40,3 +43,5 @@ private:
 
     int extra_set(long val);
 };
+
+}  // namespace eccodes::accessor

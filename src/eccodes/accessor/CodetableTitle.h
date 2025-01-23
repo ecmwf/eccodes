@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_codetable_title_t : public grib_accessor_gen_t
 {
 public:
@@ -25,3 +28,5 @@ public:
 private:
     const char* codetable_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

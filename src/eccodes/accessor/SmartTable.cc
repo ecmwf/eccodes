@@ -14,6 +14,9 @@
 grib_accessor_smart_table_t _grib_accessor_smart_table{};
 grib_accessor* grib_accessor_smart_table = &_grib_accessor_smart_table;
 
+namespace eccodes::accessor
+{
+
 #if GRIB_PTHREADS
 static pthread_once_t once   = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -432,3 +435,5 @@ int grib_accessor_smart_table_t::unpack_long(long* val, size_t* len)
 
     return err;
 }
+
+}  // namespace eccodes::accessor

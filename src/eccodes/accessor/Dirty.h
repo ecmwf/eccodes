@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_dirty_t : public grib_accessor_long_t
 {
 public:
@@ -25,3 +28,5 @@ public:
 private:
     const char* accessor_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

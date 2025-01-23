@@ -13,6 +13,9 @@
 grib_accessor_change_scanning_direction_t _grib_accessor_change_scanning_direction{};
 grib_accessor* grib_accessor_change_scanning_direction = &_grib_accessor_change_scanning_direction;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_change_scanning_direction_t::init(const long len, grib_arguments* args)
 {
     grib_accessor_gen_t::init(len, args);
@@ -155,3 +158,5 @@ int grib_accessor_change_scanning_direction_t::unpack_long(long* v, size_t* len)
     *v = -1;
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

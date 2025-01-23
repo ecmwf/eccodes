@@ -13,6 +13,9 @@
 grib_accessor_position_t _grib_accessor_position{};
 grib_accessor* grib_accessor_position = &_grib_accessor_position;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_position_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
@@ -50,3 +53,5 @@ int grib_accessor_position_t::unpack_long(long* val, size_t* len)
 //         return GRIB_OFFSET_MISMATCH;
 //     return GRIB_SUCCESS;
 // }
+
+}  // namespace eccodes::accessor

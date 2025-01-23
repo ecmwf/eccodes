@@ -13,6 +13,9 @@
 grib_accessor_iterator_t _grib_accessor_iterator{};
 grib_accessor* grib_accessor_iterator = &_grib_accessor_iterator;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_iterator_t::init(const long l, grib_arguments* args)
 {
     grib_accessor_gen_t::init(l, args);
@@ -24,3 +27,5 @@ void grib_accessor_iterator_t::dump(eccodes::Dumper* dumper)
     /* TODO: pass args */
     dumper->dump_label(this, NULL);
 }
+
+}  // namespace eccodes::accessor

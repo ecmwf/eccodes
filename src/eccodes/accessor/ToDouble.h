@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_to_double_t : public grib_accessor_gen_t
 {
 public:
@@ -36,3 +39,5 @@ protected:
 private:
     long scale_ = 0;
 };
+
+}  // namespace eccodes::accessor

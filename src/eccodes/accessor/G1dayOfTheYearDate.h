@@ -12,6 +12,9 @@
 
 #include "G1date.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_g1day_of_the_year_date_t : public grib_accessor_g1date_t
 {
 public:
@@ -22,3 +25,5 @@ public:
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
 };
+
+}  // namespace eccodes::accessor

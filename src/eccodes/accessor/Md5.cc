@@ -14,6 +14,9 @@
 grib_accessor_md5_t _grib_accessor_md5{};
 grib_accessor* grib_accessor_md5 = &_grib_accessor_md5;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_md5_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
@@ -155,3 +158,5 @@ int grib_accessor_md5_t::value_count(long* count)
     *count = 1; /* ECC-1475 */
     return 0;
 }
+
+}  // namespace eccodes::accessor

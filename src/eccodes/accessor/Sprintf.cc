@@ -13,6 +13,9 @@
 grib_accessor_sprintf_t _grib_accessor_sprintf{};
 grib_accessor* grib_accessor_sprintf = &_grib_accessor_sprintf;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_sprintf_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_ascii_t::init(l, c);
@@ -126,3 +129,5 @@ size_t grib_accessor_sprintf_t::string_length()
 {
     return 1024;
 }
+
+}  // namespace eccodes::accessor

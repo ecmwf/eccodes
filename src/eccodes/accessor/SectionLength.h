@@ -12,6 +12,9 @@
 
 #include "Unsigned.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_section_length_t : public grib_accessor_unsigned_t
 {
 public:
@@ -22,3 +25,5 @@ public:
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
 };
+
+}  // namespace eccodes::accessor

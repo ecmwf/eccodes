@@ -13,6 +13,9 @@
 grib_accessor_gts_header_t _grib_accessor_gts_header{};
 grib_accessor* grib_accessor_gts_header = &_grib_accessor_gts_header;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_gts_header_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_ascii_t::init(l, c);
@@ -57,3 +60,5 @@ size_t grib_accessor_gts_header_t::string_length()
     const grib_handle* h = grib_handle_of_accessor(this);
     return h->gts_header_len;
 }
+
+}  // namespace eccodes::accessor

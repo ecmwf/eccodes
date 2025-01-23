@@ -12,6 +12,9 @@
 
 #include "DataComplexPacking.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_g1complex_packing_t : public grib_accessor_data_complex_packing_t
 {
 public:
@@ -28,3 +31,5 @@ private:
     const char* ieee_packing_ = nullptr;
     const char* precision_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

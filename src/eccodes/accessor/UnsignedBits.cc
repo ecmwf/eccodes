@@ -13,6 +13,9 @@
 grib_accessor_unsigned_bits_t _grib_accessor_unsigned_bits{};
 grib_accessor* grib_accessor_unsigned_bits = &_grib_accessor_unsigned_bits;
 
+namespace eccodes::accessor
+{
+
 long grib_accessor_unsigned_bits_t::compute_byte_count()
 {
     long numberOfBits;
@@ -157,3 +160,5 @@ long grib_accessor_unsigned_bits_t::next_offset()
 {
     return byte_offset() + length_;
 }
+
+}  // namespace eccodes::accessor

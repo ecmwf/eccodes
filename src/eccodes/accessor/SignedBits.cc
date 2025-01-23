@@ -13,6 +13,9 @@
 grib_accessor_signed_bits_t _grib_accessor_signed_bits{};
 grib_accessor* grib_accessor_signed_bits = &_grib_accessor_signed_bits;
 
+namespace eccodes::accessor
+{
+
 long grib_accessor_signed_bits_t::byte_count()
 {
     return length_;
@@ -152,3 +155,5 @@ long grib_accessor_signed_bits_t::next_offset()
 {
     return byte_offset() + byte_count();
 }
+
+}  // namespace eccodes::accessor

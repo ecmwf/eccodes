@@ -13,6 +13,9 @@
 grib_accessor_suppressed_t _grib_accessor_suppressed{};
 grib_accessor* grib_accessor_suppressed = &_grib_accessor_suppressed;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_suppressed_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -66,3 +69,5 @@ long grib_accessor_suppressed_t::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
+
+}  // namespace eccodes::accessor

@@ -13,6 +13,9 @@
 grib_accessor_number_of_points_t _grib_accessor_number_of_points{};
 grib_accessor* grib_accessor_number_of_points = &_grib_accessor_number_of_points;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_number_of_points_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -75,3 +78,5 @@ int grib_accessor_number_of_points_t::unpack_long(long* val, size_t* len)
 
     return ret;
 }
+
+}  // namespace eccodes::accessor

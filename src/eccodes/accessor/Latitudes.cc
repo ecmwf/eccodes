@@ -13,6 +13,9 @@
 grib_accessor_latitudes_t _grib_accessor_latitudes{};
 grib_accessor* grib_accessor_latitudes = &_grib_accessor_latitudes;
 
+namespace eccodes::accessor
+{
+
 static int get_distinct(grib_accessor* a, double** val, long* len);
 static int compare_doubles(const void* a, const void* b, int ascending)
 {
@@ -215,3 +218,5 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     *len = count;
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

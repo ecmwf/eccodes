@@ -13,6 +13,9 @@
 grib_accessor_padtomultiple_t _grib_accessor_padtomultiple{};
 grib_accessor* grib_accessor_padtomultiple = &_grib_accessor_padtomultiple;
 
+namespace eccodes::accessor
+{
+
 size_t grib_accessor_padtomultiple_t::preferred_size(int from_handle)
 {
     long padding  = 0;
@@ -36,3 +39,5 @@ void grib_accessor_padtomultiple_t::init(const long len, grib_arguments* arg)
     multiple_ = arg->get_expression(grib_handle_of_accessor(this), 1);
     length_   = preferred_size(1);
 }
+
+}  // namespace eccodes::accessor

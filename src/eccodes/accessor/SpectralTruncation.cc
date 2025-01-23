@@ -13,6 +13,9 @@
 grib_accessor_spectral_truncation_t _grib_accessor_spectral_truncation{};
 grib_accessor* grib_accessor_spectral_truncation = &_grib_accessor_spectral_truncation;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_spectral_truncation_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -77,3 +80,5 @@ int grib_accessor_spectral_truncation_t::unpack_long(long* val, size_t* len)
 
     return ret;
 }
+
+}  // namespace eccodes::accessor

@@ -14,6 +14,9 @@
 grib_accessor_codetable_title_t _grib_accessor_codetable_title{};
 grib_accessor* grib_accessor_codetable_title = &_grib_accessor_codetable_title;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_codetable_title_t::init(const long len, grib_arguments* params)
 {
     grib_accessor_gen_t::init(len, params);
@@ -66,3 +69,5 @@ int grib_accessor_codetable_title_t::unpack_string(char* buffer, size_t* len)
 
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

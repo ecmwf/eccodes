@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_ifs_param_t : public grib_accessor_gen_t
 {
 public:
@@ -27,3 +30,5 @@ private:
     const char* paramId_ = nullptr;
     const char* type_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

@@ -13,6 +13,9 @@
 grib_accessor_sum_t _grib_accessor_sum{};
 grib_accessor* grib_accessor_sum = &_grib_accessor_sum;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_sum_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_double_t::init(l, c);
@@ -103,3 +106,5 @@ int grib_accessor_sum_t::value_count(long* count)
 
     return ret;
 }
+
+}  // namespace eccodes::accessor

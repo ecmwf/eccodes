@@ -16,6 +16,9 @@
 grib_accessor_g2step_range_t _grib_accessor_g2step_range{};
 grib_accessor* grib_accessor_g2step_range = &_grib_accessor_g2step_range;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g2step_range_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_gen_t::init(l, c);
@@ -266,3 +269,5 @@ long grib_accessor_g2step_range_t::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
+
+}  // namespace eccodes::accessor

@@ -13,6 +13,9 @@
 #include "Unsigned.h"
 #include <cctype>
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_smart_table_t : public grib_accessor_unsigned_t
 {
 public:
@@ -44,3 +47,5 @@ private:
     grib_smart_table* load_table();
     int get_table_codes();
 };
+
+}  // namespace eccodes::accessor

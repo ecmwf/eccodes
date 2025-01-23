@@ -12,6 +12,9 @@
 
 #include "Ascii.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_mars_param_t : public grib_accessor_ascii_t
 {
 public:
@@ -27,3 +30,5 @@ private:
     const char* table_ = nullptr;
     const char* param_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

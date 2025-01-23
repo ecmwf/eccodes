@@ -14,6 +14,9 @@
 grib_accessor_data_sh_unpacked_t _grib_accessor_data_sh_unpacked{};
 grib_accessor* grib_accessor_data_sh_unpacked = &_grib_accessor_data_sh_unpacked;
 
+namespace eccodes::accessor
+{
+
 typedef unsigned long (*encode_float_proc)(double);
 typedef double (*decode_float_proc)(unsigned long);
 
@@ -232,3 +235,5 @@ int grib_accessor_data_sh_unpacked_t::unpack_double(double* val, size_t* len)
 
     return ret;
 }
+
+}  // namespace eccodes::accessor

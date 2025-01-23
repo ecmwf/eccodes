@@ -13,6 +13,9 @@
 grib_accessor_section_t _grib_accessor_section{};
 grib_accessor* grib_accessor_section = &_grib_accessor_section;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_section_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
@@ -100,3 +103,5 @@ grib_accessor* grib_accessor_section_t::next(grib_accessor* a, int explore)
     }
     return next;
 }
+
+}  // namespace eccodes::accessor

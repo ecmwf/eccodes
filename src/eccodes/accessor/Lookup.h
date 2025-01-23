@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_lookup_t : public grib_accessor_long_t
 {
 public:
@@ -33,3 +36,5 @@ private:
     long loffset_ = 0;
     grib_expression* real_name_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

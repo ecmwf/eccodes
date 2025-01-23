@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_section_pointer_t : public grib_accessor_gen_t
 {
 public:
@@ -29,3 +32,5 @@ private:
     const char* sectionLength_ = nullptr;
     long sectionNumber_ = 0;
 };
+
+}  // namespace eccodes::accessor

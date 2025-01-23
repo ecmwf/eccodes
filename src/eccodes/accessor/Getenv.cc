@@ -13,6 +13,9 @@
 grib_accessor_getenv_t _grib_accessor_getenv{};
 grib_accessor* grib_accessor_getenv = &_grib_accessor_getenv;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_getenv_t::init(const long l, grib_arguments* args)
 {
     grib_accessor_ascii_t::init(l, args);
@@ -61,3 +64,5 @@ size_t grib_accessor_getenv_t::string_length()
 {
     return 1024;
 }
+
+}  // namespace eccodes::accessor

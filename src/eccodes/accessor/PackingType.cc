@@ -13,6 +13,9 @@
 grib_accessor_packing_type_t _grib_accessor_packing_type{};
 grib_accessor* grib_accessor_packing_type = &_grib_accessor_packing_type;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_packing_type_t::init(const long l, grib_arguments* args)
 {
     grib_accessor_gen_t::init(l, args);
@@ -72,3 +75,5 @@ int grib_accessor_packing_type_t::unpack_string(char* val, size_t* len)
 
     return grib_get_string(h, packing_type_, val, len);
 }
+
+}  // namespace eccodes::accessor

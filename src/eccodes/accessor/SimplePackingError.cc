@@ -14,6 +14,9 @@
 grib_accessor_simple_packing_error_t _grib_accessor_simple_packing_error{};
 grib_accessor* grib_accessor_simple_packing_error = &_grib_accessor_simple_packing_error;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_simple_packing_error_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_double_t::init(l, c);
@@ -65,3 +68,5 @@ int grib_accessor_simple_packing_error_t::unpack_double(double* val, size_t* len
 
     return ret;
 }
+
+}  // namespace eccodes::accessor

@@ -13,6 +13,9 @@
 grib_accessor_latlonvalues_t _grib_accessor_latlonvalues{};
 grib_accessor* grib_accessor_latlonvalues = &_grib_accessor_latlonvalues;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_latlonvalues_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_double_t::init(l, c);
@@ -73,3 +76,5 @@ int grib_accessor_latlonvalues_t::value_count(long* count)
     *count = 3 * size;
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

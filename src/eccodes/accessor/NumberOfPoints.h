@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_number_of_points_t : public grib_accessor_long_t
 {
 public:
@@ -27,3 +30,5 @@ private:
     const char* plpresent_ = nullptr;
     const char* pl_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

@@ -12,6 +12,9 @@
 
 #include "Bytes.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_padding_t : public grib_accessor_bytes_t
 {
 public:
@@ -26,3 +29,5 @@ public:
     void resize(size_t) override;
     int compare(grib_accessor*) override;
 };
+
+}  // namespace eccodes::accessor

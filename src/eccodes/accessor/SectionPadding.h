@@ -12,6 +12,9 @@
 
 #include "Padding.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_section_padding_t : public grib_accessor_padding_t
 {
 public:
@@ -24,3 +27,5 @@ public:
 private:
     int preserve_ = 0;
 };
+
+}  // namespace eccodes::accessor

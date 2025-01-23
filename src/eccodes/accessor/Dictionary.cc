@@ -13,6 +13,9 @@
 grib_accessor_dictionary_t _grib_accessor_dictionary{};
 grib_accessor* grib_accessor_dictionary = &_grib_accessor_dictionary;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_dictionary_t::init(const long len, grib_arguments* params)
 {
     grib_accessor_gen_t::init(len, params);
@@ -259,3 +262,5 @@ int grib_accessor_dictionary_t::unpack_double(double* val, size_t* len)
 
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

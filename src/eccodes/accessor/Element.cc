@@ -13,6 +13,9 @@
 grib_accessor_element_t _grib_accessor_element{};
 grib_accessor* grib_accessor_element = &_grib_accessor_element;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_element_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -217,3 +220,5 @@ the_end:
     grib_context_free(c, ar);
     return ret;
 }
+
+}  // namespace eccodes::accessor

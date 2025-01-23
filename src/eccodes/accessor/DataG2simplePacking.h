@@ -12,6 +12,9 @@
 
 #include "DataSimplePacking.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_g2simple_packing_t : public grib_accessor_data_simple_packing_t
 {
 public:
@@ -23,3 +26,5 @@ public:
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
 };
+
+}  // namespace eccodes::accessor

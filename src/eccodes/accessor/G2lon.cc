@@ -13,6 +13,9 @@
 grib_accessor_g2lon_t _grib_accessor_g2lon{};
 grib_accessor* grib_accessor_g2lon = &_grib_accessor_g2lon;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g2lon_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_double_t::init(l, c);
@@ -54,3 +57,5 @@ int grib_accessor_g2lon_t::pack_double(const double* val, size_t* len)
     }
     return grib_set_long(grib_handle_of_accessor(this), longitude_, longitude);
 }
+
+}  // namespace eccodes::accessor

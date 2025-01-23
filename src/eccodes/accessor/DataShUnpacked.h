@@ -12,6 +12,9 @@
 
 #include "DataSimplePacking.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_sh_unpacked_t : public grib_accessor_data_simple_packing_t
 {
 public:
@@ -34,3 +37,5 @@ private:
     const char* pen_k_ = nullptr;
     const char* pen_m_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

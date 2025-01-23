@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_apply_boustrophedonic_bitmap_t : public grib_accessor_gen_t
 {
 public:
@@ -36,3 +39,5 @@ private:
     const char* numberOfColumns_ = nullptr;
     const char* numberOfPoints_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

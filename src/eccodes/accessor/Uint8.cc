@@ -13,6 +13,9 @@
 grib_accessor_uint8_t _grib_accessor_uint8{};
 grib_accessor* grib_accessor_uint8 = &_grib_accessor_uint8;
 
+namespace eccodes::accessor
+{
+
 int grib_accessor_uint8_t::unpack_long(long* val, size_t* len)
 {
     long value                = 0;
@@ -34,3 +37,5 @@ long grib_accessor_uint8_t::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
+
+}  // namespace eccodes::accessor

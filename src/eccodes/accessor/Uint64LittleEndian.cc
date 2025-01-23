@@ -13,6 +13,9 @@
 grib_accessor_uint64_little_endian_t _grib_accessor_uint64_little_endian{};
 grib_accessor* grib_accessor_uint64_little_endian = &_grib_accessor_uint64_little_endian;
 
+namespace eccodes::accessor
+{
+
 int grib_accessor_uint64_little_endian_t::unpack_long(long* val, size_t* len)
 {
     long value                = 0;
@@ -47,3 +50,5 @@ long grib_accessor_uint64_little_endian_t::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
+
+}  // namespace eccodes::accessor

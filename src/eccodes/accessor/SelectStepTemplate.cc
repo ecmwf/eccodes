@@ -13,6 +13,9 @@
 grib_accessor_select_step_template_t _grib_accessor_select_step_template{};
 grib_accessor* grib_accessor_select_step_template = &_grib_accessor_select_step_template;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_select_step_template_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_unsigned_t::init(l, c);
@@ -194,3 +197,5 @@ int grib_accessor_select_step_template_t::value_count(long* c)
     *c = 1;
     return 0;
 }
+
+}  // namespace eccodes::accessor

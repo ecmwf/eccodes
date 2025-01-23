@@ -14,6 +14,9 @@
 grib_accessor_variable_t _grib_accessor_variable{};
 grib_accessor* grib_accessor_variable = &_grib_accessor_variable;
 
+namespace eccodes::accessor
+{
+
 //
 // This accessor is used for:
 //  constant
@@ -341,3 +344,5 @@ grib_accessor* grib_accessor_variable_t::make_clone(grib_section* s, int* err)
 
     return the_clone;
 }
+
+}  // namespace eccodes::accessor

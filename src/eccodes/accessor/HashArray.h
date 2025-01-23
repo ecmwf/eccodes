@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_hash_array_t : public grib_accessor_gen_t
 {
 public:
@@ -38,3 +41,5 @@ private:
 
     grib_hash_array_value* find_hash_value(int* err);
 };
+
+}  // namespace eccodes::accessor

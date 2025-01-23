@@ -13,6 +13,9 @@
 grib_accessor_statistics_spectral_t _grib_accessor_statistics_spectral{};
 grib_accessor* grib_accessor_statistics_spectral = &_grib_accessor_statistics_spectral;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_statistics_spectral_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_abstract_vector_t::init(l, c);
@@ -166,3 +169,5 @@ int grib_accessor_statistics_spectral_t::compare(grib_accessor* b)
 
     return retval;
 }
+
+}  // namespace eccodes::accessor

@@ -13,6 +13,9 @@
 grib_accessor_unpack_bufr_values_t _grib_accessor_unpack_bufr_values{};
 grib_accessor* grib_accessor_unpack_bufr_values = &_grib_accessor_unpack_bufr_values;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_unpack_bufr_values_t::init(const long len, grib_arguments* params)
 {
     grib_accessor_gen_t::init(len, params);
@@ -97,3 +100,5 @@ int grib_accessor_unpack_bufr_values_t::pack_double(const double* val, size_t* l
 {
     return data_accessor_->unpack_double(0, 0);
 }
+
+}  // namespace eccodes::accessor

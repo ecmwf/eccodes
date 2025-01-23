@@ -13,6 +13,9 @@
 grib_accessor_longitudes_t _grib_accessor_longitudes{};
 grib_accessor* grib_accessor_longitudes = &_grib_accessor_longitudes;
 
+namespace eccodes::accessor
+{
+
 static int get_distinct(grib_accessor* a, double** val, long* len);
 void grib_accessor_longitudes_t::init(const long l, grib_arguments* c)
 {
@@ -185,3 +188,5 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     *len = count;
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

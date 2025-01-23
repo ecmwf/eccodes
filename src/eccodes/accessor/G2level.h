@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_g2level_t : public grib_accessor_long_t
 {
 public:
@@ -31,3 +34,5 @@ private:
     const char* value_first_ = nullptr;
     const char* pressure_units_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

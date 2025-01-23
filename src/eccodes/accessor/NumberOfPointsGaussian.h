@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_number_of_points_gaussian_t : public grib_accessor_long_t
 {
 public:
@@ -36,3 +39,5 @@ private:
     int unpack_long_new(long* val, size_t* len);
     int unpack_long_with_legacy_support(long* val, size_t* len);
 };
+
+}  // namespace eccodes::accessor

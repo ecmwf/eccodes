@@ -13,6 +13,9 @@
 grib_accessor_g2bitmap_present_t _grib_accessor_g2bitmap_present{};
 grib_accessor* grib_accessor_g2bitmap_present = &_grib_accessor_g2bitmap_present;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g2bitmap_present_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -54,3 +57,5 @@ int grib_accessor_g2bitmap_present_t::pack_long(const long* val, size_t* len)
 
     return grib_set_long(grib_handle_of_accessor(this), bitmapIndicator_, bitmapIndicator);
 }
+
+}  // namespace eccodes::accessor

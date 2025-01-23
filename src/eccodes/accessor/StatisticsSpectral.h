@@ -12,6 +12,9 @@
 
 #include "AbstractVector.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_statistics_spectral_t : public grib_accessor_abstract_vector_t
 {
 public:
@@ -31,3 +34,5 @@ private:
     const char* M_ = nullptr;
     const char* JS_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

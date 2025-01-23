@@ -12,6 +12,9 @@
 
 #include "Ascii.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_cf_var_name_t : public grib_accessor_ascii_t
 {
 public:
@@ -25,3 +28,5 @@ public:
 private:
     const char* defaultKey_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

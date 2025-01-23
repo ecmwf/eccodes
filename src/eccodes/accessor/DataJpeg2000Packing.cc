@@ -13,6 +13,9 @@
 grib_accessor_data_jpeg2000_packing_t _grib_accessor_data_jpeg2000_packing{};
 grib_accessor* grib_accessor_data_jpeg2000_packing = &_grib_accessor_data_jpeg2000_packing;
 
+namespace eccodes::accessor
+{
+
 static int first = 1;
 
 #define JASPER_LIB   1
@@ -530,3 +533,5 @@ int grib_accessor_data_jpeg2000_packing_t::unpack_double_element_set(const size_
     grib_context_free(context_, values);
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

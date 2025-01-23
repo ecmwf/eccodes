@@ -12,6 +12,9 @@
 
 #include "Padding.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_padtoeven_t : public grib_accessor_padding_t
 {
 public:
@@ -25,3 +28,5 @@ private:
     const char* section_offset_ = nullptr;
     const char* section_length_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

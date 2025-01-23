@@ -13,6 +13,9 @@
 grib_accessor_g1verificationdate_t _grib_accessor_g1verificationdate{};
 grib_accessor* grib_accessor_g1verificationdate = &_grib_accessor_g1verificationdate;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g1verificationdate_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -60,3 +63,5 @@ int grib_accessor_g1verificationdate_t::unpack_long(long* val, size_t* len)
     // fprintf(stdout,"\n********\n %d cdate %d vd %d\n********\n", vdate, cdate, step);
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

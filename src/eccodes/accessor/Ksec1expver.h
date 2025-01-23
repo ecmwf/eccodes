@@ -12,6 +12,9 @@
 
 #include "Ascii.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_ksec1expver_t : public grib_accessor_ascii_t
 {
 public:
@@ -23,3 +26,5 @@ public:
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 };
+
+}  // namespace eccodes::accessor

@@ -13,6 +13,9 @@
 #include "Unsigned.h"
 #include <cctype>
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_codetable_t : public grib_accessor_unsigned_t
 {
 public:
@@ -41,3 +44,5 @@ private:
 
     grib_codetable* load_table();
 };
+
+}  // namespace eccodes::accessor

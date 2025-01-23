@@ -13,6 +13,9 @@
 grib_accessor_data_g2secondary_bitmap_t _grib_accessor_data_g2secondary_bitmap{};
 grib_accessor* grib_accessor_data_g2secondary_bitmap = &_grib_accessor_data_g2secondary_bitmap;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_data_g2secondary_bitmap_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_data_secondary_bitmap_t::init(v, args);
@@ -103,3 +106,5 @@ int grib_accessor_data_g2secondary_bitmap_t::pack_double(const double* val, size
 
     return err;
 }
+
+}  // namespace eccodes::accessor

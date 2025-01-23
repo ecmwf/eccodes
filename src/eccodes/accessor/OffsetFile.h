@@ -12,6 +12,9 @@
 
 #include "Double.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_offset_file_t : public grib_accessor_double_t
 {
 public:
@@ -22,3 +25,5 @@ public:
     int unpack_string(char*, size_t* len) override;
     void init(const long, grib_arguments*) override;
 };
+
+}  // namespace eccodes::accessor

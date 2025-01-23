@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_packing_type_t : public grib_accessor_gen_t
 {
 public:
@@ -28,3 +31,5 @@ private:
     const char* values_ = nullptr;
     const char* packing_type_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

@@ -18,9 +18,12 @@ namespace eccodes {
 class Dumper;
 }
 
-class grib_accessor {
+namespace eccodes
+{
+
+class Accessor {
 public:
-  grib_accessor()
+  Accessor()
       : context_(nullptr),
         name_(nullptr),
         class_name_(nullptr),
@@ -41,7 +44,7 @@ public:
         set_(nullptr),
         parent_as_attribute_(nullptr) {}
 
-  grib_accessor(const char *name)
+  Accessor(const char *name)
       : context_(nullptr),
         name_(name),
         class_name_(nullptr),
@@ -61,12 +64,12 @@ public:
         vvalue_(nullptr),
         set_(nullptr),
         parent_as_attribute_(nullptr) {}
-  virtual ~grib_accessor() {}
+  virtual ~Accessor() {}
 
   virtual void init_accessor(const long, grib_arguments *) = 0;
   virtual void dump(eccodes::Dumper *f) = 0;
   virtual int pack_missing() = 0;
-  // virtual int grib_pack_zero(grib_accessor* a) = 0;
+  // virtual int grib_pack_zero(Accessor* a) = 0;
   virtual int is_missing_internal() = 0;
   virtual int pack_double(const double *v, size_t *len) = 0;
   virtual int pack_float(const float *v, size_t *len) = 0;
@@ -96,29 +99,29 @@ public:
   virtual long byte_offset() = 0;
   virtual long byte_count() = 0;
   virtual int value_count(long *count) = 0;
-  virtual int notify_change(grib_accessor *changed) = 0;
-  virtual grib_accessor *clone(grib_section *s, int *err) = 0;
+  virtual int notify_change(Accessor *changed) = 0;
+  virtual Accessor *clone(grib_section *s, int *err) = 0;
   virtual void update_size(size_t len) = 0;
   virtual int nearest_smaller_value(double val, double *nearest) = 0;
   virtual size_t preferred_size(int from_handle) = 0;
-  virtual grib_accessor *next_accessor() = 0;
+  virtual Accessor *next_accessor() = 0;
   virtual void resize(size_t new_size) = 0;
   virtual void destroy(grib_context *ct) = 0;
-  virtual int compare_accessors(grib_accessor *a2, int compare_flags);
-  virtual int compare(grib_accessor *) = 0;
-  virtual int add_attribute(grib_accessor *attr, int nest_if_clash);
-  virtual grib_accessor *get_attribute_index(const char *name, int *index);
+  virtual int compare_accessors(Accessor *a2, int compare_flags);
+  virtual int compare(Accessor *) = 0;
+  virtual int add_attribute(Accessor *attr, int nest_if_clash);
+  virtual Accessor *get_attribute_index(const char *name, int *index);
   virtual int has_attributes();
-  virtual grib_accessor *get_attribute(const char *name);
+  virtual Accessor *get_attribute(const char *name);
   virtual void init(const long, grib_arguments *) = 0;
   virtual void post_init() = 0;
   virtual grib_section *sub_section() = 0;
-  virtual grib_accessor *create_empty_accessor() = 0;
+  virtual Accessor *create_empty_accessor() = 0;
   virtual int is_missing() = 0;
   virtual long next_offset() = 0;
-  virtual grib_accessor *next(grib_accessor *, int) = 0;
+  virtual Accessor *next(Accessor *, int) = 0;
   virtual int clear() = 0;
-  virtual grib_accessor *make_clone(grib_section *, int *) = 0;
+  virtual Accessor *make_clone(grib_section *, int *) = 0;
 
 public:
   // TODO(maee): make private
@@ -132,8 +135,8 @@ public:
   long length_ = 0;                // byte length of the accessor
   long offset_ = 0;                // offset of the data in the buffer
   grib_section *parent_ = nullptr; // section to which the accessor is attached
-  grib_accessor *next_ = nullptr;  // next accessor in list
-  grib_accessor *previous_ = nullptr; // next accessor in list
+  Accessor *next_ = nullptr;  // next accessor in list
+  Accessor *previous_ = nullptr; // next accessor in list
   unsigned long flags_ = 0;           // Various flags
   grib_section *sub_section_ = nullptr;
 
@@ -145,13 +148,15 @@ public:
   }; // namespace to which the accessor belongs
   int dirty_ = 0;
 
-  grib_accessor *same_ = nullptr; // accessors with the same name
+  Accessor *same_ = nullptr; // accessors with the same name
   long loop_ = 0;                 // used in lists
   grib_virtual_value *vvalue_ =
       nullptr; // virtual value used when transient flag on
   const char *set_ = nullptr;
-  grib_accessor *attributes_[MAX_ACCESSOR_ATTRIBUTES] = {
+  Accessor *attributes_[MAX_ACCESSOR_ATTRIBUTES] = {
       0,
   }; // attributes are accessors
-  grib_accessor *parent_as_attribute_ = nullptr;
+  Accessor *parent_as_attribute_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

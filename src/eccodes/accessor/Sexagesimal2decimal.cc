@@ -13,6 +13,9 @@
 grib_accessor_sexagesimal2decimal_t _grib_accessor_sexagesimal2decimal{};
 grib_accessor* grib_accessor_sexagesimal2decimal = &_grib_accessor_sexagesimal2decimal;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_sexagesimal2decimal_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_to_double_t::init(len, arg);
@@ -145,3 +148,5 @@ int grib_accessor_sexagesimal2decimal_t::unpack_string(char* val, size_t* len)
     len[0] = length;
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

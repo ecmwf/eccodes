@@ -13,6 +13,9 @@
 grib_accessor_gds_not_present_bitmap_t _grib_accessor_gds_not_present_bitmap{};
 grib_accessor* grib_accessor_gds_not_present_bitmap = &_grib_accessor_gds_not_present_bitmap;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_gds_not_present_bitmap_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_gen_t::init(v, args);
@@ -107,3 +110,5 @@ long grib_accessor_gds_not_present_bitmap_t::get_native_type()
 {
     return GRIB_TYPE_DOUBLE;
 }
+
+}  // namespace eccodes::accessor

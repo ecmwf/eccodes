@@ -13,6 +13,9 @@
 grib_accessor_offset_values_t _grib_accessor_offset_values{};
 grib_accessor* grib_accessor_offset_values = &_grib_accessor_offset_values;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_offset_values_t::init(const long l, grib_arguments* args)
 {
     grib_accessor_double_t::init(l, args);
@@ -80,3 +83,5 @@ int grib_accessor_offset_values_t::pack_double(const double* val, size_t* len)
 
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

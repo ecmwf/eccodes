@@ -12,6 +12,9 @@
 
 #include "AbstractLongVector.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_g1step_range_t : public grib_accessor_abstract_long_vector_t
 {
 public:
@@ -42,3 +45,5 @@ private:
     const char* patch_fp_precip_ = nullptr;
     int error_on_units_ = 0;
 };
+
+}  // namespace eccodes::accessor

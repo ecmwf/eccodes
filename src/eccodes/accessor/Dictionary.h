@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_dictionary_t : public grib_accessor_gen_t
 {
 public:
@@ -35,3 +38,5 @@ private:
 
     grib_trie* load_dictionary(int* err);
 };
+
+}  // namespace eccodes::accessor

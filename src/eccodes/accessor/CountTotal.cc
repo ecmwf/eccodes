@@ -13,6 +13,9 @@
 grib_accessor_count_total_t _grib_accessor_count_total{};
 grib_accessor* grib_accessor_count_total = &_grib_accessor_count_total;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_count_total_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -26,3 +29,5 @@ int grib_accessor_count_total_t::unpack_long(long* val, size_t* len)
     *len = 1;
     return 0;
 }
+
+}  // namespace eccodes::accessor

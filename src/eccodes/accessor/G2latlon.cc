@@ -13,6 +13,9 @@
 grib_accessor_g2latlon_t _grib_accessor_g2latlon{};
 grib_accessor* grib_accessor_g2latlon = &_grib_accessor_g2latlon;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g2latlon_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_double_t::init(l, c);
@@ -111,3 +114,5 @@ int grib_accessor_g2latlon_t::is_missing()
 
     return !given;
 }
+
+}  // namespace eccodes::accessor

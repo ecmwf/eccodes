@@ -13,6 +13,9 @@
 grib_accessor_g1number_of_coded_values_sh_simple_t _grib_accessor_g1number_of_coded_values_sh_simple{};
 grib_accessor* grib_accessor_g1number_of_coded_values_sh_simple = &_grib_accessor_g1number_of_coded_values_sh_simple;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g1number_of_coded_values_sh_simple_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -57,3 +60,5 @@ int grib_accessor_g1number_of_coded_values_sh_simple_t::unpack_long(long* val, s
     }
     return ret;
 }
+
+}  // namespace eccodes::accessor

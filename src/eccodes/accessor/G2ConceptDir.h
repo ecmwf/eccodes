@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_g2_concept_dir_t : public grib_accessor_gen_t
 {
 public:
@@ -29,3 +32,5 @@ private:
     const char* datasetForLocal_ = nullptr;
     int mode_                    = 0;  // 1=conceptsDir1 or 2=conceptsDir2
 };
+
+}  // namespace eccodes::accessor

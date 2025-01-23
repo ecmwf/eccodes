@@ -13,6 +13,9 @@
 grib_accessor_g1fcperiod_t _grib_accessor_g1fcperiod{};
 grib_accessor* grib_accessor_g1fcperiod = &_grib_accessor_g1fcperiod;
 
+namespace eccodes::accessor
+{
+
 int grib_accessor_g1fcperiod_t::unpack_string(char* val, size_t* len)
 {
     long start = 0, theEnd = 0;
@@ -38,3 +41,5 @@ int grib_accessor_g1fcperiod_t::unpack_string(char* val, size_t* len)
 
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

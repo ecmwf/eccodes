@@ -13,6 +13,9 @@
 grib_accessor_mtg2_switch_default_t _grib_accessor_mtg2_switch_default{};
 grib_accessor* grib_accessor_mtg2_switch_default = &_grib_accessor_mtg2_switch_default;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_mtg2_switch_default_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_long_t::init(len, arg);
@@ -67,3 +70,5 @@ int grib_accessor_mtg2_switch_default_t::unpack_long(long* val, size_t* len)
 
     return err;
 }
+
+}  // namespace eccodes::accessor

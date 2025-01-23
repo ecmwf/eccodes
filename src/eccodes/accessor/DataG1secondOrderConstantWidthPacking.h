@@ -12,6 +12,9 @@
 
 #include "DataSimplePacking.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_g1second_order_constant_width_packing_t : public grib_accessor_data_simple_packing_t
 {
 public:
@@ -44,3 +47,5 @@ private:
     const char* bitmap_ = nullptr;
     const char* groupWidth_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

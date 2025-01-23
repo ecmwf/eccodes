@@ -13,6 +13,9 @@
 grib_accessor_g1day_of_the_year_date_t _grib_accessor_g1day_of_the_year_date{};
 grib_accessor* grib_accessor_g1day_of_the_year_date = &_grib_accessor_g1day_of_the_year_date;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g1day_of_the_year_date_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_g1date_t::init(l, c);
@@ -57,3 +60,5 @@ int grib_accessor_g1day_of_the_year_date_t::unpack_string(char* val, size_t* len
 
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

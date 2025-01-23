@@ -12,6 +12,9 @@
 
 #include "Padding.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_padto_t : public grib_accessor_padding_t
 {
 public:
@@ -25,3 +28,5 @@ public:
 private:
     grib_expression* expression_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

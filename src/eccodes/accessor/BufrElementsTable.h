@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_bufr_elements_table_t : public grib_accessor_gen_t
 {
 public:
@@ -38,3 +41,5 @@ private:
 
 int bufr_descriptor_is_marker(bufr_descriptor* d);
 bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, int code, int* err);
+
+}  // namespace eccodes::accessor

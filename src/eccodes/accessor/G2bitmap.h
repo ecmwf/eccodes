@@ -12,6 +12,9 @@
 
 #include "Bitmap.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_g2bitmap_t : public grib_accessor_bitmap_t
 {
 public:
@@ -25,3 +28,5 @@ public:
 private:
     const char* numberOfValues_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

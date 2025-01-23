@@ -16,6 +16,9 @@
 grib_accessor_g2end_step_t _grib_accessor_g2end_step{};
 grib_accessor* grib_accessor_g2end_step = &_grib_accessor_g2end_step;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g2end_step_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -652,3 +655,5 @@ long grib_accessor_g2end_step_t::get_native_type()
 
     return GRIB_TYPE_STRING;
 }
+
+}  // namespace eccodes::accessor

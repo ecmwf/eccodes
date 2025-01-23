@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_non_alpha_t : public grib_accessor_gen_t
 {
 public:
@@ -28,3 +31,5 @@ public:
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
 };
+
+}  // namespace eccodes::accessor

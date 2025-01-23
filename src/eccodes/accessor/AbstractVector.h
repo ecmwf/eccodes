@@ -12,6 +12,9 @@
 
 #include "Double.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_abstract_vector_t : public grib_accessor_double_t
 {
 public:
@@ -24,3 +27,5 @@ public:
     double* v_ = nullptr;
     int number_of_elements_ = 0;
 };
+
+}  // namespace eccodes::accessor

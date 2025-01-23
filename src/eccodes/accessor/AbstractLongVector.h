@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_abstract_long_vector_t : public grib_accessor_gen_t
 {
 public:
@@ -25,3 +28,5 @@ public:
     long pack_index_ = 0;
     int number_of_elements_ = 0;
 };
+
+}  // namespace eccodes::accessor

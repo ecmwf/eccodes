@@ -13,6 +13,9 @@
 grib_accessor_statistics_t _grib_accessor_statistics{};
 grib_accessor* grib_accessor_statistics = &_grib_accessor_statistics;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_statistics_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_abstract_vector_t::init(l, c);
@@ -224,3 +227,5 @@ int grib_accessor_statistics_t::unpack_string(char* v, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
+
+}  // namespace eccodes::accessor

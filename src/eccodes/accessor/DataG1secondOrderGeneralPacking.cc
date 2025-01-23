@@ -13,6 +13,9 @@
 grib_accessor_data_g1second_order_general_packing_t _grib_accessor_data_g1second_order_general_packing{};
 grib_accessor* grib_accessor_data_g1second_order_general_packing = &_grib_accessor_data_g1second_order_general_packing;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_data_g1second_order_general_packing_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_data_simple_packing_t::init(v, args);
@@ -173,3 +176,5 @@ int grib_accessor_data_g1second_order_general_packing_t::pack_double(const doubl
 
     return grib_set_double_array(hand, "values", cval, *len);
 }
+
+}  // namespace eccodes::accessor

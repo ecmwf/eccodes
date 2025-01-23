@@ -13,6 +13,9 @@
 grib_accessor_bufr_simple_thinning_t _grib_accessor_bufr_simple_thinning{};
 grib_accessor* grib_accessor_bufr_simple_thinning = &_grib_accessor_bufr_simple_thinning;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_bufr_simple_thinning_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
@@ -109,3 +112,5 @@ int grib_accessor_bufr_simple_thinning_t::pack_long(const long* val, size_t* len
 
     return grib_set_long(parent_->h, doExtractSubsets_, 1);
 }
+
+}  // namespace eccodes::accessor

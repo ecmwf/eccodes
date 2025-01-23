@@ -12,6 +12,9 @@
 
 #include "AbstractVector.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_g1end_of_interval_monthly_t : public grib_accessor_abstract_vector_t
 {
 public:
@@ -27,3 +30,5 @@ public:
 private:
     const char* verifyingMonth_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

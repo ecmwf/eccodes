@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_second_order_bits_per_value_t : public grib_accessor_long_t
 {
 public:
@@ -28,3 +31,5 @@ private:
     const char* decimalScaleFactor_ = nullptr;
     long bitsPerValue_ = 0;
 };
+
+}  // namespace eccodes::accessor

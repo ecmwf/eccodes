@@ -12,6 +12,9 @@
 
 #include "Values.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_raw_packing_t : public grib_accessor_values_t
 {
 public:
@@ -29,3 +32,5 @@ private:
     const char* number_of_values_ = nullptr;
     const char* precision_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

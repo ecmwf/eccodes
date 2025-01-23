@@ -17,6 +17,9 @@
 grib_accessor_concept_t _grib_accessor_concept{};
 grib_accessor* grib_accessor_concept = &_grib_accessor_concept;
 
+namespace eccodes::accessor
+{
+
 #define MAX_CONCEPT_STRING_LENGTH 255
 
 // Note: A fast cut-down version of strcmp which does NOT return -1
@@ -664,3 +667,5 @@ int grib_accessor_concept_t::compare(grib_accessor* b)
 
     return retval;
 }
+
+}  // namespace eccodes::accessor

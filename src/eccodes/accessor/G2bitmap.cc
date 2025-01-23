@@ -13,6 +13,9 @@
 grib_accessor_g2bitmap_t _grib_accessor_g2bitmap{};
 grib_accessor* grib_accessor_g2bitmap = &_grib_accessor_g2bitmap;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g2bitmap_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_bitmap_t::init(len, arg);
@@ -74,3 +77,5 @@ int grib_accessor_g2bitmap_t::value_count(long* tlen)
     err = grib_get_long_internal(grib_handle_of_accessor(this), numberOfValues_, tlen);
     return err;
 }
+
+}  // namespace eccodes::accessor

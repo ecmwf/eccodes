@@ -13,6 +13,9 @@
 grib_accessor_nearest_t _grib_accessor_nearest{};
 grib_accessor* grib_accessor_nearest = &_grib_accessor_nearest;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_nearest_t::init(const long l, grib_arguments* args)
 {
     grib_accessor_gen_t::init(l, args);
@@ -25,3 +28,5 @@ void grib_accessor_nearest_t::dump(eccodes::Dumper* dumper)
     dumper->dump_label(this, NULL);
 }
 
+
+}  // namespace eccodes::accessor

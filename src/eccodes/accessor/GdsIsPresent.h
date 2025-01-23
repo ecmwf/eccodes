@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_gds_is_present_t : public grib_accessor_long_t
 {
 public:
@@ -28,3 +31,5 @@ private:
     const char* bitmap_present_ = nullptr;
     const char* values_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

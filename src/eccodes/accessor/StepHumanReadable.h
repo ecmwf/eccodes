@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_step_human_readable_t : public grib_accessor_gen_t
 {
 public:
@@ -26,3 +29,5 @@ private:
     const char* stepUnits_ = nullptr;
     const char* step_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

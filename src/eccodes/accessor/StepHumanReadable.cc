@@ -13,6 +13,9 @@
 grib_accessor_step_human_readable_t _grib_accessor_step_human_readable{};
 grib_accessor* grib_accessor_step_human_readable = &_grib_accessor_step_human_readable;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_step_human_readable_t::init(const long len, grib_arguments* params)
 {
     grib_accessor_gen_t::init(len, params);
@@ -80,3 +83,5 @@ int grib_accessor_step_human_readable_t::unpack_string(char* buffer, size_t* len
     grib_set_long(h, stepUnits_, stepUnits);
     return err;
 }
+
+}  // namespace eccodes::accessor

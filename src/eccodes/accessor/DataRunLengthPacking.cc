@@ -14,6 +14,9 @@
 grib_accessor_data_run_length_packing_t _grib_accessor_data_run_length_packing{};
 grib_accessor* grib_accessor_data_run_length_packing = &_grib_accessor_data_run_length_packing;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_data_run_length_packing_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_values_t::init(v, args);
@@ -273,3 +276,5 @@ int grib_accessor_data_run_length_packing_t::pack_double(const double* val, size
     grib_context_buffer_free(context_, buf);
     return err;
 }
+
+}  // namespace eccodes::accessor

@@ -13,6 +13,9 @@
 grib_accessor_when_t _grib_accessor_when{};
 grib_accessor* grib_accessor_when = &_grib_accessor_when;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_when_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
@@ -35,3 +38,5 @@ long grib_accessor_when_t::get_native_type()
 {
     return GRIB_TYPE_UNDEFINED;
 }
+
+}  // namespace eccodes::accessor

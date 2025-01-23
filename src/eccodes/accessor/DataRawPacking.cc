@@ -14,6 +14,9 @@
 grib_accessor_data_raw_packing_t _grib_accessor_data_raw_packing{};
 grib_accessor* grib_accessor_data_raw_packing = &_grib_accessor_data_raw_packing;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_data_raw_packing_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_values_t::init(v, args);
@@ -191,3 +194,5 @@ int grib_accessor_data_raw_packing_t::unpack_double_element_set(const size_t* in
     }
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

@@ -13,6 +13,9 @@
 grib_accessor_g1forecastmonth_t _grib_accessor_g1forecastmonth{};
 grib_accessor* grib_accessor_g1forecastmonth = &_grib_accessor_g1forecastmonth;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g1forecastmonth_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -171,3 +174,5 @@ int grib_accessor_g1forecastmonth_t::pack_long(const long* val, size_t* len)
 {
     return grib_set_long_internal(grib_handle_of_accessor(this), fcmonth_, *val);
 }
+
+}  // namespace eccodes::accessor

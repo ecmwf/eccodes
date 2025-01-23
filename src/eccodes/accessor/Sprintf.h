@@ -12,6 +12,9 @@
 
 #include "Ascii.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_sprintf_t : public grib_accessor_ascii_t
 {
 public:
@@ -26,3 +29,5 @@ public:
 private:
     grib_arguments* args_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

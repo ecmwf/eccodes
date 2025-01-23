@@ -12,6 +12,9 @@
 
 #include "Bytes.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_message_t : public grib_accessor_bytes_t
 {
 public:
@@ -25,3 +28,5 @@ public:
     void update_size(size_t) override;
     void resize(size_t) override;
 };
+
+}  // namespace eccodes::accessor

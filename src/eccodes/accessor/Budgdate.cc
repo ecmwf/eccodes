@@ -13,6 +13,9 @@
 grib_accessor_budgdate_t _grib_accessor_budgdate{};
 grib_accessor* grib_accessor_budgdate = &_grib_accessor_budgdate;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_budgdate_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -78,3 +81,5 @@ int grib_accessor_budgdate_t::pack_long(const long* val, size_t* len)
 
     return ret;
 }
+
+}  // namespace eccodes::accessor

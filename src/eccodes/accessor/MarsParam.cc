@@ -13,6 +13,9 @@
 grib_accessor_mars_param_t _grib_accessor_mars_param{};
 grib_accessor* grib_accessor_mars_param = &_grib_accessor_mars_param;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_mars_param_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_ascii_t::init(l, c);
@@ -50,3 +53,5 @@ size_t grib_accessor_mars_param_t::string_length()
 {
     return 7;
 }
+
+}  // namespace eccodes::accessor

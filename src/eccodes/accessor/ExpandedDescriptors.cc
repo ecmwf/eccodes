@@ -14,6 +14,9 @@
 grib_accessor_expanded_descriptors_t _grib_accessor_expanded_descriptors{};
 grib_accessor* grib_accessor_expanded_descriptors = &_grib_accessor_expanded_descriptors;
 
+namespace eccodes::accessor
+{
+
 #define MYDEBUG        0
 #define DESC_SIZE_INIT 400 /* Initial size for grib_bufr_descriptors_array_new */
 #define DESC_SIZE_INCR 400 /* Increment size for grib_bufr_descriptors_array_new */
@@ -742,3 +745,5 @@ long grib_accessor_expanded_descriptors_t::get_native_type()
     else
         return GRIB_TYPE_LONG;
 }
+
+}  // namespace eccodes::accessor

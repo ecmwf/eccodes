@@ -12,6 +12,9 @@
 
 #include "Double.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_longitudes_t : public grib_accessor_double_t
 {
 public:
@@ -29,3 +32,5 @@ private:
     long size_ = 0;
     int save_ = 0;
 };
+
+}  // namespace eccodes::accessor

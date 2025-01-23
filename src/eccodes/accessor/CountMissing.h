@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_count_missing_t : public grib_accessor_long_t
 {
 public:
@@ -28,3 +31,5 @@ private:
     const char* numberOfDataPoints_ = nullptr;
     const char* missingValueManagementUsed_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

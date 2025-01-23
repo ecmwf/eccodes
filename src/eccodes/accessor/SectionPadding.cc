@@ -13,6 +13,9 @@
 grib_accessor_section_padding_t _grib_accessor_section_padding{};
 grib_accessor* grib_accessor_section_padding = &_grib_accessor_section_padding;
 
+namespace eccodes::accessor
+{
+
 size_t grib_accessor_section_padding_t::preferred_size(int from_handle)
 {
     grib_accessor* b              = this;
@@ -65,3 +68,5 @@ void grib_accessor_section_padding_t::init(const long len, grib_arguments* arg)
     preserve_ = 1; /* This should be a parameter */
     length_   = preferred_size(1);
 }
+
+}  // namespace eccodes::accessor

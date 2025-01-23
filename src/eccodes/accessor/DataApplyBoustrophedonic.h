@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_apply_boustrophedonic_t : public grib_accessor_gen_t
 {
 public:
@@ -37,3 +40,5 @@ private:
 
     template <typename T> int unpack(T* val, size_t* len);
 };
+
+}  // namespace eccodes::accessor

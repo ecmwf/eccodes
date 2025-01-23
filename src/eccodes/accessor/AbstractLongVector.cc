@@ -12,3 +12,8 @@
 
 grib_accessor_abstract_long_vector_t _grib_accessor_abstract_long_vector{};
 grib_accessor* grib_accessor_abstract_long_vector = &_grib_accessor_abstract_long_vector;
+
+namespace eccodes::accessor
+{
+
+}  // namespace eccodes::accessor

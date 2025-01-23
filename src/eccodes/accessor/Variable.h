@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_variable_t : public grib_accessor_gen_t
 {
 public:
@@ -44,3 +47,5 @@ private:
     char* cname_ = nullptr;
     int type_ = 0;
 };
+
+}  // namespace eccodes::accessor

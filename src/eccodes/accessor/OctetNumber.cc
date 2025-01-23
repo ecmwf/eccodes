@@ -13,6 +13,9 @@
 grib_accessor_octet_number_t _grib_accessor_octet_number{};
 grib_accessor* grib_accessor_octet_number = &_grib_accessor_octet_number;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_octet_number_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -44,3 +47,5 @@ int grib_accessor_octet_number_t::pack_long(const long* val, size_t* len)
 {
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

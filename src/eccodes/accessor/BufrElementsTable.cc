@@ -42,6 +42,9 @@ static void init_mutex()
 grib_accessor_bufr_elements_table_t _grib_accessor_bufr_elements_table{};
 grib_accessor* grib_accessor_bufr_elements_table = &_grib_accessor_bufr_elements_table;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_bufr_elements_table_t::init(const long len, grib_arguments* params)
 {
     grib_accessor_gen_t::init(len, params);
@@ -335,3 +338,5 @@ int grib_accessor_bufr_elements_table_t::unpack_double(double* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
+
+}  // namespace eccodes::accessor

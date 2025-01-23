@@ -13,6 +13,9 @@
 grib_accessor_bufr_group_t _grib_accessor_bufr_group{};
 grib_accessor* grib_accessor_bufr_group = &_grib_accessor_bufr_group;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_bufr_group_t::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_section(this, sub_section_->block);
@@ -35,3 +38,5 @@ grib_accessor* grib_accessor_bufr_group_t::next(grib_accessor* a, int explore)
     }
     return next;
 }
+
+}  // namespace eccodes::accessor

@@ -13,6 +13,9 @@
 grib_accessor_gaussian_grid_name_t _grib_accessor_gaussian_grid_name{};
 grib_accessor* grib_accessor_gaussian_grid_name = &_grib_accessor_gaussian_grid_name;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_gaussian_grid_name_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
@@ -80,3 +83,5 @@ size_t grib_accessor_gaussian_grid_name_t::string_length()
 {
     return MAX_GRIDNAME_LEN;
 }
+
+}  // namespace eccodes::accessor

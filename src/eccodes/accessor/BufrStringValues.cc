@@ -14,6 +14,9 @@
 grib_accessor_bufr_string_values_t _grib_accessor_bufr_string_values{};
 grib_accessor* grib_accessor_bufr_string_values = &_grib_accessor_bufr_string_values;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_bufr_string_values_t::init(const long len, grib_arguments* args)
 {
     grib_accessor_ascii_t::init(len, args);
@@ -85,3 +88,5 @@ void grib_accessor_bufr_string_values_t::destroy(grib_context* c)
 {
     grib_accessor_ascii_t::destroy(c);
 }
+
+}  // namespace eccodes::accessor

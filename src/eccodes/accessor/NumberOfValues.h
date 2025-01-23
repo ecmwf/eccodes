@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_number_of_values_t : public grib_accessor_long_t
 {
 public:
@@ -29,3 +32,5 @@ private:
     const char* bitmap_ = nullptr;
     const char* numberOfCodedValues_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

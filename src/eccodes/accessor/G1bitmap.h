@@ -12,6 +12,9 @@
 
 #include "Bitmap.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_g1bitmap_t : public grib_accessor_bitmap_t
 {
 public:
@@ -26,3 +29,5 @@ public:
 private:
     const char* unusedBits_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

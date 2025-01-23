@@ -12,6 +12,9 @@
 
 #include "Double.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_latlon_increment_t : public grib_accessor_double_t
 {
 public:
@@ -34,3 +37,5 @@ private:
     const char* angleDivisor_ = nullptr;
     long isLongitude_ = 0;
 };
+
+}  // namespace eccodes::accessor

@@ -13,6 +13,9 @@
 grib_accessor_g1step_range_t _grib_accessor_g1step_range{};
 grib_accessor* grib_accessor_g1step_range = &_grib_accessor_g1step_range;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g1step_range_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_abstract_long_vector_t::init(l, c);
@@ -642,3 +645,5 @@ void grib_accessor_g1step_range_t::destroy(grib_context* c)
     grib_context_free(c, v_);
     grib_accessor_abstract_long_vector_t::destroy(c);
 }
+
+}  // namespace eccodes::accessor

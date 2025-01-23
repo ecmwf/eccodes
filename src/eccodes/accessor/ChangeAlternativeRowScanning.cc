@@ -13,6 +13,9 @@
 grib_accessor_change_alternative_row_scanning_t _grib_accessor_change_alternative_row_scanning{};
 grib_accessor* grib_accessor_change_alternative_row_scanning = &_grib_accessor_change_alternative_row_scanning;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_change_alternative_row_scanning_t::init(const long len, grib_arguments* args)
 {
     grib_accessor_gen_t::init(len, args);
@@ -115,3 +118,5 @@ int grib_accessor_change_alternative_row_scanning_t::unpack_long(long* v, size_t
     *v = -1;
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

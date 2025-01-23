@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_g1verificationdate_t : public grib_accessor_long_t
 {
 public:
@@ -26,3 +29,5 @@ private:
     const char* time_ = nullptr;
     const char* step_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

@@ -13,6 +13,9 @@
 grib_accessor_data_shsimple_packing_t _grib_accessor_data_shsimple_packing{};
 grib_accessor* grib_accessor_data_shsimple_packing = &_grib_accessor_data_shsimple_packing;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_data_shsimple_packing_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_gen_t::init(v, args);
@@ -58,3 +61,5 @@ long grib_accessor_data_shsimple_packing_t::get_native_type()
 {
     return GRIB_TYPE_DOUBLE;
 }
+
+}  // namespace eccodes::accessor

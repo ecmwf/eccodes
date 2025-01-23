@@ -12,6 +12,9 @@
 
 #include "SectionLength.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_g1_message_length_t : public grib_accessor_section_length_t
 {
 public:
@@ -25,3 +28,5 @@ public:
 private:
     const char* sec4_length_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

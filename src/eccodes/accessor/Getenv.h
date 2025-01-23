@@ -12,6 +12,9 @@
 
 #include "Ascii.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_getenv_t : public grib_accessor_ascii_t
 {
 public:
@@ -29,3 +32,5 @@ private:
     char* value_ = nullptr;
     const char* default_value_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

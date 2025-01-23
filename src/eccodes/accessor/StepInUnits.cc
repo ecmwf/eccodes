@@ -15,6 +15,9 @@
 grib_accessor_step_in_units_t _grib_accessor_step_in_units{};
 grib_accessor* grib_accessor_step_in_units = &_grib_accessor_step_in_units;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_step_in_units_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -253,3 +256,5 @@ long grib_accessor_step_in_units_t::get_native_type()
     }
     return GRIB_TYPE_STRING;
 }
+
+}  // namespace eccodes::accessor

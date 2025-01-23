@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_mtg2_switch_default_t : public grib_accessor_long_t
 {
 public:
@@ -27,3 +30,5 @@ private:
     const char* tablesVersionMTG2Switch_ = nullptr;
     const char* marsClass_               = nullptr;
 };
+
+}  // namespace eccodes::accessor

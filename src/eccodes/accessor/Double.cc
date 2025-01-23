@@ -13,6 +13,9 @@
 grib_accessor_double_t _grib_accessor_double{};
 grib_accessor* grib_accessor_double = &_grib_accessor_double;
 
+namespace eccodes::accessor
+{
+
 long grib_accessor_double_t::get_native_type()
 {
     return GRIB_TYPE_DOUBLE;
@@ -109,3 +112,5 @@ int grib_accessor_double_t::pack_missing()
         return pack_double(&value, &len);
     return GRIB_VALUE_CANNOT_BE_MISSING;
 }
+
+}  // namespace eccodes::accessor

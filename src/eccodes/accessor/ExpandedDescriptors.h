@@ -22,6 +22,9 @@ typedef struct change_coding_params
     double referenceFactor;
 } change_coding_params;
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_expanded_descriptors_t : public grib_accessor_long_t
 {
 public:
@@ -55,3 +58,5 @@ private:
     void __expand(bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded, change_coding_params* ccp, int* err);
     bufr_descriptors_array* do_expand(bufr_descriptors_array* unexpanded, change_coding_params* ccp, int* err);
 };
+
+}  // namespace eccodes::accessor

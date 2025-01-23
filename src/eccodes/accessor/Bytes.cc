@@ -13,6 +13,9 @@
 grib_accessor_bytes_t _grib_accessor_bytes{};
 grib_accessor* grib_accessor_bytes = &_grib_accessor_bytes;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_bytes_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
@@ -102,3 +105,5 @@ int grib_accessor_bytes_t::pack_string(const char* val, size_t* len)
     grib_context_free(c, bytearray);
     return err;
 }
+
+}  // namespace eccodes::accessor

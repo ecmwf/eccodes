@@ -13,6 +13,9 @@
 grib_accessor_long_t _grib_accessor_long{};
 grib_accessor* grib_accessor_long = &_grib_accessor_long;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_long_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
@@ -181,3 +184,5 @@ int grib_accessor_long_t::pack_string(const char* val, size_t* len)
     }
     return pack_long(&v, len);
 }
+
+}  // namespace eccodes::accessor

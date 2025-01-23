@@ -14,6 +14,9 @@
 grib_accessor_smart_table_column_t _grib_accessor_smart_table_column{};
 grib_accessor* grib_accessor_smart_table_column = &_grib_accessor_smart_table_column;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_smart_table_column_t::init(const long len, grib_arguments* params)
 {
     grib_accessor_gen_t::init(len, params);
@@ -177,3 +180,5 @@ long grib_accessor_smart_table_column_t::get_native_type()
         type = GRIB_TYPE_STRING;
     return type;
 }
+
+}  // namespace eccodes::accessor

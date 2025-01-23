@@ -12,6 +12,9 @@
 
 #include "Values.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_run_length_packing_t : public grib_accessor_values_t
 {
 public:
@@ -31,3 +34,5 @@ private:
     const char* decimal_scale_factor_ = nullptr;
     const char* level_values_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

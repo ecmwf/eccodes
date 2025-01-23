@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_change_scanning_direction_t : public grib_accessor_gen_t
 {
 public:
@@ -33,3 +36,5 @@ private:
     const char* last_ = nullptr;
     const char* axis_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

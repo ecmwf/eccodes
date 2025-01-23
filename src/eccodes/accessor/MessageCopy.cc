@@ -13,6 +13,9 @@
 grib_accessor_message_copy_t _grib_accessor_message_copy{};
 grib_accessor* grib_accessor_message_copy = &_grib_accessor_message_copy;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_message_copy_t::init(const long length, grib_arguments* args)
 {
     grib_accessor_gen_t::init(length, args);
@@ -61,3 +64,5 @@ long grib_accessor_message_copy_t::byte_count()
 {
     return length_;
 }
+
+}  // namespace eccodes::accessor

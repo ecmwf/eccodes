@@ -12,6 +12,9 @@
 
 #include "DataSecondaryBitmap.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_g2secondary_bitmap_t : public grib_accessor_data_secondary_bitmap_t
 {
 public:
@@ -25,3 +28,5 @@ public:
 private:
     const char* number_of_values_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

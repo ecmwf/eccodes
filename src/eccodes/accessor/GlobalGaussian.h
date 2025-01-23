@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_global_gaussian_t : public grib_accessor_long_t
 {
 public:
@@ -35,3 +38,5 @@ private:
     const char* basic_angle_ = nullptr;
     const char* subdivision_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

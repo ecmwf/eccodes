@@ -12,6 +12,9 @@
 
 #include "Double.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_divdouble_t : public grib_accessor_double_t
 {
 public:
@@ -25,3 +28,5 @@ private:
     const char* val_ = nullptr;
     double divisor_ = 0.;
 };
+
+}  // namespace eccodes::accessor

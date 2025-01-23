@@ -14,6 +14,9 @@
 grib_accessor_signed_t _grib_accessor_signed{};
 grib_accessor* grib_accessor_signed = &_grib_accessor_signed;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_signed_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_long_t::init(len, arg);
@@ -210,3 +213,5 @@ int grib_accessor_signed_t::is_missing()
 
     return 1;
 }
+
+}  // namespace eccodes::accessor

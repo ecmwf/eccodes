@@ -13,6 +13,9 @@
 grib_accessor_evaluate_t _grib_accessor_evaluate{};
 grib_accessor* grib_accessor_evaluate = &_grib_accessor_evaluate;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_evaluate_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -32,3 +35,5 @@ int grib_accessor_evaluate_t::unpack_long(long* val, size_t* len)
 
     return ret;
 }
+
+}  // namespace eccodes::accessor

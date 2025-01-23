@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_bufr_extract_area_subsets_t : public grib_accessor_gen_t
 {
 public:
@@ -36,3 +39,5 @@ private:
 
     int select_area();
 };
+
+}  // namespace eccodes::accessor

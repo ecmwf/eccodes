@@ -13,6 +13,9 @@
 grib_accessor_g2grid_t _grib_accessor_g2grid{};
 grib_accessor* grib_accessor_g2grid = &_grib_accessor_g2grid;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g2grid_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_double_t::init(l, c);
@@ -236,3 +239,5 @@ int grib_accessor_g2grid_t::pack_double(const double* val, size_t* len)
 
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

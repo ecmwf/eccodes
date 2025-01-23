@@ -13,6 +13,9 @@
 grib_accessor_trim_t _grib_accessor_trim{};
 grib_accessor* grib_accessor_trim = &_grib_accessor_trim;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_trim_t::init(const long l, grib_arguments* arg)
 {
     grib_accessor_ascii_t::init(l, arg);
@@ -73,3 +76,5 @@ size_t grib_accessor_trim_t::string_length()
 {
     return 1024;
 }
+
+}  // namespace eccodes::accessor

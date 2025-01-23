@@ -41,6 +41,9 @@ typedef struct bif_trunc_t
 } bif_trunc_t;
 
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_g2bifourier_packing_t : public grib_accessor_data_simple_packing_t
 {
 public:
@@ -69,3 +72,5 @@ private:
 
     bif_trunc_t* new_bif_trunc();
 };
+
+}  // namespace eccodes::accessor

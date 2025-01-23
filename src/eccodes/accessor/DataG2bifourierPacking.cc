@@ -15,6 +15,9 @@
 grib_accessor_data_g2bifourier_packing_t _grib_accessor_data_g2bifourier_packing{};
 grib_accessor* grib_accessor_data_g2bifourier_packing = &_grib_accessor_data_g2bifourier_packing;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_data_g2bifourier_packing_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_data_simple_packing_t::init(v, args);
@@ -740,3 +743,5 @@ cleanup:
 
     return ret;
 }
+
+}  // namespace eccodes::accessor

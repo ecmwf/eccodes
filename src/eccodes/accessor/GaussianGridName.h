@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_gaussian_grid_name_t : public grib_accessor_gen_t
 {
 public:
@@ -28,3 +31,5 @@ private:
     const char* Ni_ = nullptr;
     const char* isOctahedral_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

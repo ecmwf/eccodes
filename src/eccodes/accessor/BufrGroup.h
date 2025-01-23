@@ -12,6 +12,9 @@
 
 #include "Variable.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_bufr_group_t : public grib_accessor_variable_t
 {
 public:
@@ -21,3 +24,5 @@ public:
     void dump(eccodes::Dumper*) override;
     grib_accessor* next(grib_accessor*, int explore) override;
 };
+
+}  // namespace eccodes::accessor

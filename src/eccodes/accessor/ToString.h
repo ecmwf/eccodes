@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_to_string_t : public grib_accessor_gen_t
 {
 public:
@@ -33,3 +36,5 @@ private:
     long start_ = 0;
     size_t str_length_ = 0;
 };
+
+}  // namespace eccodes::accessor

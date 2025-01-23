@@ -13,6 +13,9 @@
 grib_accessor_ksec1expver_t _grib_accessor_ksec1expver{};
 grib_accessor* grib_accessor_ksec1expver = &_grib_accessor_ksec1expver;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_ksec1expver_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_ascii_t::init(len, arg);
@@ -95,3 +98,5 @@ int grib_accessor_ksec1expver_t::pack_long(const long* val, size_t* len)
     snprintf(sval, sizeof(sval), "%04d", (int)(*val));
     return pack_string(sval, &slen);
 }
+
+}  // namespace eccodes::accessor

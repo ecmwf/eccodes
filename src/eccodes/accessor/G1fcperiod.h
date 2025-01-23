@@ -12,6 +12,9 @@
 
 #include "G1stepRange.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_g1fcperiod_t : public grib_accessor_g1step_range_t
 {
 public:
@@ -20,3 +23,5 @@ public:
     grib_accessor* create_empty_accessor() override { return new grib_accessor_g1fcperiod_t{}; }
     int unpack_string(char*, size_t* len) override;
 };
+
+}  // namespace eccodes::accessor

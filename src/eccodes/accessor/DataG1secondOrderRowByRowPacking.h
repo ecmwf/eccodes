@@ -13,6 +13,9 @@
 #include "DataSimplePacking.h"
 #include "grib_scaling.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_g1second_order_row_by_row_packing_t : public grib_accessor_data_simple_packing_t
 {
 public:
@@ -45,3 +48,5 @@ private:
 
     template <typename T> int unpack_real(T* values, size_t* len);
 };
+
+}  // namespace eccodes::accessor

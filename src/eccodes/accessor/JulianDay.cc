@@ -13,6 +13,9 @@
 grib_accessor_julian_day_t _grib_accessor_julian_day{};
 grib_accessor* grib_accessor_julian_day = &_grib_accessor_julian_day;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_julian_day_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_double_t::init(l, c);
@@ -106,3 +109,5 @@ int grib_accessor_julian_day_t::unpack_double(double* val, size_t* len)
 
     return ret;
 }
+
+}  // namespace eccodes::accessor

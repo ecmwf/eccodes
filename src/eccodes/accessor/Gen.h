@@ -15,6 +15,8 @@
 #include "grib_value.h"
 #include <bitset>
 
+namespace eccodes::accessor
+{
 
 class grib_accessor_gen_t : public grib_accessor
 {
@@ -135,3 +137,5 @@ int grib_accessor_gen_t::unpack_helper(grib_accessor* a, T* v, size_t* len)
 
     return GRIB_NOT_IMPLEMENTED;
 }
+
+}  // namespace eccodes::accessor

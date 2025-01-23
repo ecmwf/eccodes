@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_section_t : public grib_accessor_gen_t
 {
 public:
@@ -28,3 +31,5 @@ public:
     grib_section* sub_section() override;
     grib_accessor* next(grib_accessor*, int) override;
 };
+
+}  // namespace eccodes::accessor

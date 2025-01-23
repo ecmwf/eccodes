@@ -12,6 +12,9 @@
 
 #include "Long.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_bit_t : public grib_accessor_long_t
 {
 public:
@@ -26,3 +29,5 @@ private:
     const char* owner_ = nullptr;
     int bit_index_ = 0;
 };
+
+}  // namespace eccodes::accessor

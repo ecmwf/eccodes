@@ -12,6 +12,9 @@
 
 #include "DataSimplePacking.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_data_jpeg2000_packing_t : public grib_accessor_data_simple_packing_t
 {
 public:
@@ -37,3 +40,5 @@ private:
     int jpeg_lib_ = 0;
     const char* dump_jpg_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

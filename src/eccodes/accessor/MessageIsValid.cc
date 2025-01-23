@@ -14,6 +14,9 @@
 grib_accessor_message_is_valid_t _grib_accessor_message_is_valid{};
 grib_accessor* grib_accessor_message_is_valid = &_grib_accessor_message_is_valid;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_message_is_valid_t::init(const long l, grib_arguments* arg)
 {
     grib_accessor_long_t::init(l, arg);
@@ -239,3 +242,5 @@ int grib_accessor_message_is_valid_t::unpack_long(long* val, size_t* len)
 
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

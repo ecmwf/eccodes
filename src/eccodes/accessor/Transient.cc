@@ -13,7 +13,12 @@
 grib_accessor_transient_t _grib_accessor_transient{};
 grib_accessor* grib_accessor_transient = &_grib_accessor_transient;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_transient_t::init(const long l, grib_arguments* args)
 {
     grib_accessor_variable_t::init(l, args);
 }
+
+}  // namespace eccodes::accessor

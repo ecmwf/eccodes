@@ -12,6 +12,9 @@
 
 #include "Double.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_ibmfloat_t : public grib_accessor_double_t
 {
 public:
@@ -32,3 +35,5 @@ public:
 private:
     grib_arguments* arg_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

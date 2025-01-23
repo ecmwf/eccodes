@@ -12,6 +12,9 @@
 
 #include "Double.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_g2latlon_t : public grib_accessor_double_t
 {
 public:
@@ -29,3 +32,5 @@ private:
     int index_ = 0;
     const char* given_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

@@ -14,6 +14,9 @@
 grib_accessor_from_scale_factor_scaled_value_t _grib_accessor_from_scale_factor_scaled_value{};
 grib_accessor* grib_accessor_from_scale_factor_scaled_value = &_grib_accessor_from_scale_factor_scaled_value;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_from_scale_factor_scaled_value_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_double_t::init(l, c);
@@ -187,3 +190,5 @@ int grib_accessor_from_scale_factor_scaled_value_t::value_count(long* len)
     *len = (long)vsize;
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

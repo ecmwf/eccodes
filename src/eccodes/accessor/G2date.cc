@@ -13,6 +13,9 @@
 grib_accessor_g2date_t _grib_accessor_g2date{};
 grib_accessor* grib_accessor_g2date = &_grib_accessor_g2date;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_g2date_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_long_t::init(l, c);
@@ -77,3 +80,5 @@ int grib_accessor_g2date_t::pack_long(const long* val, size_t* len)
 
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

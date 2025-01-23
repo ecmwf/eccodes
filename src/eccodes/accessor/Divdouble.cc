@@ -13,6 +13,9 @@
 grib_accessor_divdouble_t _grib_accessor_divdouble{};
 grib_accessor* grib_accessor_divdouble = &_grib_accessor_divdouble;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_divdouble_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_double_t::init(l, c);
@@ -39,3 +42,5 @@ int grib_accessor_divdouble_t::unpack_double(double* val, size_t* len)
     *len = 1;
     return GRIB_SUCCESS;
 }
+
+}  // namespace eccodes::accessor

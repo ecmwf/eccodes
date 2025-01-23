@@ -12,6 +12,9 @@
 
 #include "Double.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_reference_value_error_t : public grib_accessor_double_t
 {
 public:
@@ -25,3 +28,5 @@ private:
     const char* referenceValue_ = nullptr;
     const char* floatType_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

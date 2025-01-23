@@ -12,6 +12,9 @@
 
 #include "Double.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_scale_values_t : public grib_accessor_double_t
 {
 public:
@@ -26,3 +29,5 @@ private:
     const char* values_ = nullptr;
     const char* missingValue_ = nullptr;
 };
+
+}  // namespace eccodes::accessor

@@ -13,6 +13,9 @@
 grib_accessor_data_dummy_field_t _grib_accessor_data_dummy_field{};
 grib_accessor* grib_accessor_data_dummy_field = &_grib_accessor_data_dummy_field;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_data_dummy_field_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_data_g1simple_packing_t::init(v, args);
@@ -97,3 +100,5 @@ int grib_accessor_data_dummy_field_t::value_count(long* numberOfPoints)
 
     return err;
 }
+
+}  // namespace eccodes::accessor

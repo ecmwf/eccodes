@@ -12,6 +12,9 @@
 
 #include "Ascii.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_gts_header_t : public grib_accessor_ascii_t
 {
 public:
@@ -27,3 +30,5 @@ private:
     int gts_offset_ = 0;
     int gts_length_ = 0;
 };
+
+}  // namespace eccodes::accessor

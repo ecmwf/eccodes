@@ -12,6 +12,9 @@
 
 #include "ToDouble.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_sexagesimal2decimal_t : public grib_accessor_to_double_t
 {
 public:
@@ -23,3 +26,5 @@ public:
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
 };
+
+}  // namespace eccodes::accessor

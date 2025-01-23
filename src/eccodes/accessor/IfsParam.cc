@@ -13,6 +13,9 @@
 grib_accessor_ifs_param_t _grib_accessor_ifs_param{};
 grib_accessor* grib_accessor_ifs_param = &_grib_accessor_ifs_param;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_ifs_param_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_gen_t::init(l, c);
@@ -90,3 +93,5 @@ long grib_accessor_ifs_param_t::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
+
+}  // namespace eccodes::accessor

@@ -13,6 +13,9 @@
 grib_accessor_bufrdc_expanded_descriptors_t _grib_accessor_bufrdc_expanded_descriptors{};
 grib_accessor* grib_accessor_bufrdc_expanded_descriptors = &_grib_accessor_bufrdc_expanded_descriptors;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_bufrdc_expanded_descriptors_t::init(const long len, grib_arguments* args)
 {
     grib_accessor_long_t::init(len, args);
@@ -102,3 +105,5 @@ void grib_accessor_bufrdc_expanded_descriptors_t::destroy(grib_context* c)
 {
     grib_accessor_long_t::destroy(c);
 }
+
+}  // namespace eccodes::accessor

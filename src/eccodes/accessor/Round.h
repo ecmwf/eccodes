@@ -12,6 +12,9 @@
 
 #include "Evaluate.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_round_t : public grib_accessor_evaluate_t
 {
 public:
@@ -24,3 +27,5 @@ public:
     void destroy(grib_context*) override;
     void dump(eccodes::Dumper*) override;
 };
+
+}  // namespace eccodes::accessor

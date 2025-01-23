@@ -12,6 +12,9 @@
 
 #include "Gen.h"
 
+namespace eccodes::accessor
+{
+
 class grib_accessor_bits_t : public grib_accessor_gen_t
 {
 public:
@@ -36,3 +39,5 @@ private:
     double referenceValuePresent_ = 0.;
     double scale_ = 0.;
 };
+
+}  // namespace eccodes::accessor

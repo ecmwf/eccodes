@@ -13,6 +13,9 @@
 grib_accessor_ibmfloat_t _grib_accessor_ibmfloat{};
 grib_accessor* grib_accessor_ibmfloat = &_grib_accessor_ibmfloat;
 
+namespace eccodes::accessor
+{
+
 void grib_accessor_ibmfloat_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_double_t::init(len, arg);
@@ -156,3 +159,5 @@ int grib_accessor_ibmfloat_t::nearest_smaller_value(double val, double* nearest)
     }
     return ret;
 }
+
+}  // namespace eccodes::accessor
