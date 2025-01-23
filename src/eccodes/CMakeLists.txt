@@ -292,21 +292,23 @@ list( APPEND eccodes_src_files
     grib_ieeefloat.cc
     grib_memory.cc
     grib_buffer.cc
-    dumper/grib_dumper_class_serialize.cc
-    dumper/grib_dumper_class_debug.cc
-    dumper/grib_dumper_class_default.cc
-    dumper/grib_dumper_class_bufr_encode_C.cc
-    dumper/grib_dumper_class_bufr_encode_filter.cc
-    dumper/grib_dumper_class_bufr_encode_fortran.cc
-    dumper/grib_dumper_class_bufr_encode_python.cc
-    dumper/grib_dumper_class_bufr_decode_C.cc
-    dumper/grib_dumper_class_bufr_decode_filter.cc
-    dumper/grib_dumper_class_bufr_decode_fortran.cc
-    dumper/grib_dumper_class_bufr_decode_python.cc
-    dumper/grib_dumper_class_bufr_simple.cc
-    dumper/grib_dumper_class_json.cc
-    dumper/grib_dumper_class_grib_encode_C.cc
-    dumper/grib_dumper_class_wmo.cc
+
+    dumper/Serialize.cc
+    dumper/Debug.cc
+    dumper/Default.cc
+    dumper/BufrEncodeC.cc
+    dumper/BufrEncodeFilter.cc
+    dumper/BufrEncodeFortran.cc
+    dumper/BufrEncodePython.cc
+    dumper/BufrDecodeC.cc
+    dumper/BufrDecodeFilter.cc
+    dumper/BufrDecodeFortran.cc
+    dumper/BufrDecodePython.cc
+    dumper/BufrSimple.cc
+    dumper/Json.cc
+    dumper/GribEncodeC.cc
+    dumper/Wmo.cc
+
     grib_context.cc
     grib_date.cc
     grib_fieldset.cc
