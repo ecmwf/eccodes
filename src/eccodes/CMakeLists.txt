@@ -331,25 +331,25 @@ list( APPEND eccodes_src_files
     grib_value.cc
     grib_errors.cc
 
-    expression/grib_arguments.cc
+    grib_arguments.cc
 
-    expression/grib_expression.cc
-    expression/grib_expression_class_binop.cc
-    expression/grib_expression_class_logical_and.cc
-    expression/grib_expression_class_logical_or.cc
-    expression/grib_expression_class_is_in_dict.cc
-    expression/grib_expression_class_true.cc
-    expression/grib_expression_class_string_compare.cc
-    expression/grib_expression_class_unop.cc
-    expression/grib_expression_class_functor.cc
-    expression/grib_expression_class_accessor.cc
-    expression/grib_expression_class_is_in_list.cc
-    expression/grib_expression_class_is_integer.cc
-    expression/grib_expression_class_length.cc
-    expression/grib_expression_class_long.cc
-    expression/grib_expression_class_double.cc
-    expression/grib_expression_class_string.cc
-    expression/grib_expression_class_sub_string.cc
+    expression/Expression.cc
+    expression/Binop.cc
+    expression/LogicalAnd.cc
+    expression/LogicalOr.cc
+    expression/IsInDict.cc
+    expression/True.cc
+    expression/StringCompare.cc
+    expression/Unop.cc
+    expression/Functor.cc
+    expression/Accessor.cc
+    expression/IsInList.cc
+    expression/IsInteger.cc
+    expression/Length.cc
+    expression/Long.cc
+    expression/Double.cc
+    expression/String.cc
+    expression/SubString.cc
 
     geo/nearest/grib_nearest.cc
     geo/nearest/grib_nearest_class_gen.cc
