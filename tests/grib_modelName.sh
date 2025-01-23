@@ -31,7 +31,7 @@ grib_check_key_equals $tempGrib modelName,modelVersion "IFS cy48r1"
 ${tools_dir}/grib_set -s generatingProcessIdentifier=100 $sample $tempGrib
 grib_check_key_equals $tempGrib modelName,modelVersion "IFS unknown"
 
-# Check that this only works for centre ecmf
+# Check that this only works for centre ecmf
 ${tools_dir}/grib_set -s generatingProcessIdentifier=1,backgroundProcess=1,centre=84 $sample $tempGrib
 [ $( ${tools_dir}/grib_get -f -p modelName $tempGrib ) = "not_found" ]
 [ $( ${tools_dir}/grib_get -f -p modelVersion $tempGrib ) = "not_found" ]
@@ -42,6 +42,17 @@ grib_check_key_equals $tempGrib modelName,modelVersion "ALARO cy46h1"
 ${tools_dir}/grib_set -s productionStatusOfProcessedData=0 $tempGrib $temp2Grib
 [ $( ${tools_dir}/grib_get -f -p modelName $temp2Grib ) = "aifs-ens-diff" ]
 [ $( ${tools_dir}/grib_get -f -p modelVersion $temp2Grib ) = "v1" ]
+
+
+# ECC-2010
+${tools_dir}/grib_set -s marsClass=ai,typeOfProcessedData=missing,backgroundProcess=1,generatingProcessIdentifier=1 \
+    $ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl $temp2Grib
+grib_check_key_equals $temp2Grib mars.model 'aifs-single-mse'
+
+${tools_dir}/grib_set -s marsClass=ai,typeOfProcessedData=missing,backgroundProcess=2,generatingProcessIdentifier=1 \
+    $ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl $temp2Grib
+grib_check_key_equals $temp2Grib mars.model 'aifs-ens-crps'
+
 
 # Keys are read-only (may change this later)
 set +e
