@@ -8,7 +8,7 @@ concept modelName(unknown, "modelNameConcept.def", conceptsDir2, conceptsLocalDi
 
 if (modelName isnot "unknown") {
    concept modelVersion(unknown, "modelVersionConcept.[modelName].def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
-   if ( marsClass == "ai" || marsClass == "ml") {
+   if ( marsClass is "ai" || marsClass is "ml") {
       alias ls.model = modelName;
       alias mars.model = modelName;
    }
