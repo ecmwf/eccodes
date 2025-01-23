@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_iterator_class_polar_stereographic.h"
+#include "PolarStereographic.h"
 
 eccodes::geo_iterator::PolarStereographic _grib_iterator_polar_stereographic{};
 eccodes::geo_iterator::Iterator* grib_iterator_polar_stereographic = &_grib_iterator_polar_stereographic;

@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_iterator_class_gen.h"
+#include "Gen.h"
 
 namespace eccodes::geo_iterator {
 

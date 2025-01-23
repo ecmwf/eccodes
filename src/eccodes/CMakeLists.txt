@@ -363,20 +363,20 @@ list( APPEND eccodes_src_files
     geo/nearest/grib_nearest_class_regular.cc
     geo/nearest/grib_nearest_class_space_view.cc
 
-    geo/iterator/grib_iterator.cc
-    geo/iterator/grib_iterator_class_gaussian.cc
-    geo/iterator/grib_iterator_class_gaussian_reduced.cc
-    geo/iterator/grib_iterator_class_gen.cc
-    geo/iterator/grib_iterator_class_healpix.cc
-    geo/iterator/grib_iterator_class_lambert_azimuthal_equal_area.cc
-    geo/iterator/grib_iterator_class_lambert_conformal.cc
-    geo/iterator/grib_iterator_class_latlon.cc
-    geo/iterator/grib_iterator_class_latlon_reduced.cc
-    geo/iterator/grib_iterator_class_mercator.cc
-    geo/iterator/grib_iterator_class_polar_stereographic.cc
-    geo/iterator/grib_iterator_class_regular.cc
-    geo/iterator/grib_iterator_class_space_view.cc
-    geo/iterator/grib_iterator_class_unstructured.cc
+    geo/iterator/Iterator.cc
+    geo/iterator/Gaussian.cc
+    geo/iterator/GaussianReduced.cc
+    geo/iterator/Gen.cc
+    geo/iterator/Healpix.cc
+    geo/iterator/LambertAzimuthalEqualArea.cc
+    geo/iterator/LambertConformal.cc
+    geo/iterator/Latlon.cc
+    geo/iterator/LatlonReduced.cc
+    geo/iterator/Mercator.cc
+    geo/iterator/PolarStereographic.cc
+    geo/iterator/Regular.cc
+    geo/iterator/SpaceView.cc
+    geo/iterator/Unstructured.cc
 
     codes_util.cc
     grib_util.cc

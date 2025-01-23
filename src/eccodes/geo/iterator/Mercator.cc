@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_iterator_class_mercator.h"
+#include "Mercator.h"
 
 eccodes::geo_iterator::Mercator _grib_iterator_mercator{};
 eccodes::geo_iterator::Iterator* grib_iterator_mercator = &_grib_iterator_mercator;

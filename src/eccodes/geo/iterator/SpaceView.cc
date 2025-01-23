@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_iterator_class_space_view.h"
+#include "SpaceView.h"
 
 eccodes::geo_iterator::SpaceView _grib_iterator_space_view{};
 eccodes::geo_iterator::Iterator* grib_iterator_space_view = &_grib_iterator_space_view;

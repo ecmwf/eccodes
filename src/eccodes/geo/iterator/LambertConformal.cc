@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_iterator_class_lambert_conformal.h"
+#include "LambertConformal.h"
 #include <cmath>
 
 eccodes::geo_iterator::LambertConformal _grib_iterator_lambert_conformal{};

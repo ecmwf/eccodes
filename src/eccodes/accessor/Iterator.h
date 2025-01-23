@@ -11,7 +11,7 @@
 #pragma once
 
 #include "Gen.h"
-#include "geo/iterator/grib_iterator.h"
+#include "geo/iterator/Iterator.h"
 
 class grib_accessor_iterator_t : public grib_accessor_gen_t
 {

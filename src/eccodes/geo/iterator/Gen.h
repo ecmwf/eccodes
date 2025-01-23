@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_iterator.h"
+#include "Iterator.h"
 
 namespace eccodes::geo_iterator {
 

@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_iterator_class_gaussian_reduced.h"
+#include "GaussianReduced.h"
 #include <cmath>
 
 eccodes::geo_iterator::GaussianReduced _grib_iterator_gaussian_reduced{};

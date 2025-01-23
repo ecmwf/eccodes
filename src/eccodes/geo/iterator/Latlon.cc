@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_iterator_class_latlon.h"
+#include "Latlon.h"
 
 eccodes::geo_iterator::Latlon _grib_iterator_latlon{};
 eccodes::geo_iterator::Iterator* grib_iterator_latlon = &_grib_iterator_latlon;

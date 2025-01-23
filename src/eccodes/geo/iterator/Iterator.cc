@@ -25,7 +25,7 @@
     #endif
 #endif
 
-#include "grib_iterator.h"
+#include "Iterator.h"
 #include "grib_iterator_factory.h"
 #include "accessor/Iterator.h"
 
