@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "dumper/grib_dumper.h"
+#include "dumper/Dumper.h"
 
 extern eccodes::Dumper* grib_dumper_bufr_decode_c;
 extern eccodes::Dumper* grib_dumper_bufr_decode_filter;

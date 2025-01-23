@@ -12,7 +12,7 @@
 #pragma once
 
 #include "grib_api_internal.h"
-#include "dumper/grib_dumper.h"
+#include "dumper/Dumper.h"
 
 namespace eccodes {
 class Dumper;

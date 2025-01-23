@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_dumper_class_serialize.h"
+#include "Serialize.h"
 #include "grib_dumper_factory.h"
 #include <cctype>
 

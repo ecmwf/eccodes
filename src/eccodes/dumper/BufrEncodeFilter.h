@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_dumper.h"
+#include "Dumper.h"
 
 namespace eccodes::dumper
 {

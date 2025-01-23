@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_dumper_class_bufr_decode_C.h"
+#include "BufrDecodeC.h"
 #include "grib_dumper_factory.h"
 #include <cctype>
 
