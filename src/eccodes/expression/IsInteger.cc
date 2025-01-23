@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_expression_class_is_integer.h"
+#include "IsInteger.h"
 
 namespace eccodes::expression {
 

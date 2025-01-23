@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_expression_class_is_in_list.h"
+#include "IsInList.h"
 #include "eccodes_prototypes.h"
 
 namespace eccodes::expression {

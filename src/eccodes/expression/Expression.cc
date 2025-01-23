@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_expression.h"
+#include "Expression.h"
 
 namespace eccodes {
 

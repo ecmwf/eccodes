@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_expression.h"
+#include "Expression.h"
 
 namespace eccodes::expression {
 

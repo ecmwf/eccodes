@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_expression_class_unop.h"
+#include "Unop.h"
 
 namespace eccodes::expression {
 

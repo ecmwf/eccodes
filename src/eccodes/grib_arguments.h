@@ -11,7 +11,7 @@
 #pragma once
 
 #include "grib_api_internal.h"
-#include "grib_expression.h"
+#include "expression/Expression.h"
 
 namespace eccodes {
 
