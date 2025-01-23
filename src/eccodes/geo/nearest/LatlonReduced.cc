@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_nearest_class_latlon_reduced.h"
+#include "LatlonReduced.h"
 
 eccodes::geo_nearest::LatlonReduced _grib_nearest_latlon_reduced{};
 eccodes::geo_nearest::Nearest* grib_nearest_latlon_reduced = &_grib_nearest_latlon_reduced;

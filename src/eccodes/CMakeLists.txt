@@ -351,17 +351,17 @@ list( APPEND eccodes_src_files
     expression/String.cc
     expression/SubString.cc
 
-    geo/nearest/grib_nearest.cc
-    geo/nearest/grib_nearest_class_gen.cc
-    geo/nearest/grib_nearest_class_healpix.cc
-    geo/nearest/grib_nearest_class_lambert_azimuthal_equal_area.cc
-    geo/nearest/grib_nearest_class_lambert_conformal.cc
-    geo/nearest/grib_nearest_class_latlon_reduced.cc
-    geo/nearest/grib_nearest_class_mercator.cc
-    geo/nearest/grib_nearest_class_polar_stereographic.cc
-    geo/nearest/grib_nearest_class_reduced.cc
-    geo/nearest/grib_nearest_class_regular.cc
-    geo/nearest/grib_nearest_class_space_view.cc
+    geo/nearest/Nearest.cc
+    geo/nearest/Gen.cc
+    geo/nearest/Healpix.cc
+    geo/nearest/LambertAzimuthalEqualArea.cc
+    geo/nearest/LambertConformal.cc
+    geo/nearest/LatlonReduced.cc
+    geo/nearest/Mercator.cc
+    geo/nearest/PolarStereographic.cc
+    geo/nearest/Reduced.cc
+    geo/nearest/Regular.cc
+    geo/nearest/SpaceView.cc
 
     geo/iterator/Iterator.cc
     geo/iterator/Gaussian.cc

@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "grib_nearest.h"
+#include "Nearest.h"
 
 namespace eccodes::geo_nearest {
 

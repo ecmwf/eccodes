@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_nearest_class_space_view.h"
+#include "SpaceView.h"
 
 eccodes::geo_nearest::SpaceView _grib_nearest_space_view{};
 eccodes::geo_nearest::Nearest* grib_nearest_space_view = &_grib_nearest_space_view;

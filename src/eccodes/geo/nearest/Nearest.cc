@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_nearest.h"
+#include "Nearest.h"
 #include "grib_nearest_factory.h"
 #include "accessor/Nearest.h"
 

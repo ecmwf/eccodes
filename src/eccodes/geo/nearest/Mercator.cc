@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_nearest_class_mercator.h"
+#include "Mercator.h"
 
 eccodes::geo_nearest::Mercator _grib_nearest_mercator{};
 eccodes::geo_nearest::Nearest* grib_nearest_mercator = &_grib_nearest_mercator;

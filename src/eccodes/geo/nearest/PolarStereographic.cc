@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_nearest_class_polar_stereographic.h"
+#include "PolarStereographic.h"
 
 eccodes::geo_nearest::PolarStereographic _grib_nearest_polar_stereographic{};
 eccodes::geo_nearest::Nearest* grib_nearest_polar_stereographic = &_grib_nearest_polar_stereographic;

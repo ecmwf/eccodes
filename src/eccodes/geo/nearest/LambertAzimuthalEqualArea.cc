@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_nearest_class_lambert_azimuthal_equal_area.h"
+#include "LambertAzimuthalEqualArea.h"
 
 eccodes::geo_nearest::LambertAzimuthalEqualArea _grib_nearest_lambert_azimuthal_equal_area{};
 eccodes::geo_nearest::Nearest* grib_nearest_lambert_azimuthal_equal_area = &_grib_nearest_lambert_azimuthal_equal_area;
