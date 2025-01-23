@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "action_class_hash_array.h"
+#include "HashArray.h"
 
 #if GRIB_PTHREADS
 static pthread_once_t once   = PTHREAD_ONCE_INIT;

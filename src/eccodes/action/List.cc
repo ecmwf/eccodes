@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "action_class_list.h"
+#include "List.h"
 
 grib_action* grib_action_create_list(grib_context* context, const char* name, grib_expression* expression, grib_action* block)
 {

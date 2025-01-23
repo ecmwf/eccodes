@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "action_class_set_sarray.h"
+#include "SetSarray.h"
 
 
 grib_action* grib_action_create_set_sarray(grib_context* context, const char* name, grib_sarray* sarray)

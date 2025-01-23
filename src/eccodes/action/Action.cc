@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "action.h"
+#include "Action.h"
 
 // int grib_create_accessor(grib_section* p, grib_action* a, grib_loader* h)
 // {

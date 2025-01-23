@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "action_class_meta.h"
+#include "Meta.h"
 
 grib_action* grib_action_create_meta(grib_context* context, const char* name, const char* op,
                                      grib_arguments* params, grib_arguments* default_value, unsigned long flags, const char* name_space)

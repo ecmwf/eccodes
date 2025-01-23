@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "action_class_while.h"
+#include "While.h"
 
 grib_action* grib_action_create_while(grib_context* context, grib_expression* expression, grib_action* block)
 {

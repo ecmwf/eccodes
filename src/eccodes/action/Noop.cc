@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "action_class_noop.h"
+#include "Noop.h"
 
 grib_action* grib_action_create_noop(grib_context* context, const char* fname)
 {

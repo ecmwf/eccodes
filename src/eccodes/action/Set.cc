@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "action_class_set.h"
+#include "Set.h"
 
 grib_action* grib_action_create_set(grib_context* context,
                                     const char* name, grib_expression* expression, int nofail)

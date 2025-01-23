@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "action_class_rename.h"
+#include "Rename.h"
 
 
 grib_action* grib_action_create_rename(grib_context* context, char* the_old, char* the_new)

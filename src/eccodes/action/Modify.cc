@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "action_class_modify.h"
+#include "Modify.h"
 
 grib_action* grib_action_create_modify(grib_context* context, const char* name, long flags)
 {

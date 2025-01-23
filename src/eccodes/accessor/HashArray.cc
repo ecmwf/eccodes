@@ -9,7 +9,7 @@
  */
 
 #include "HashArray.h"
-#include "action_class_hash_array.h"
+#include "action/HashArray.h"
 
 grib_accessor_hash_array_t _grib_accessor_hash_array{};
 grib_accessor* grib_accessor_hash_array = &_grib_accessor_hash_array;

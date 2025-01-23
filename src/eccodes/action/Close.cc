@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "action_class_close.h"
+#include "Close.h"
 
 grib_action* grib_action_create_close(grib_context* context, const char* filename)
 {

@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "action_class_assert.h"
+#include "Assert.h"
 
 grib_action* grib_action_create_assert(grib_context* context, grib_expression* expression)
 {

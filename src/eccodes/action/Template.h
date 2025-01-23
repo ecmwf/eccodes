@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "action_class_section.h"
+#include "Section.h"
 
 namespace eccodes::action
 {

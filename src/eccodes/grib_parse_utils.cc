@@ -12,7 +12,7 @@
  *   Jean Baptiste Filippi - 01.11.2005                                    *
  ***************************************************************************/
 #include "grib_api_internal.h"
-#include "action_class_noop.h"
+#include "action/Noop.h"
 
 grib_action* grib_parser_all_actions          = 0;
 grib_context* grib_parser_context             = 0;

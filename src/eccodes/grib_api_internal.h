@@ -1133,7 +1133,7 @@ typedef struct j2k_encode_helper
 #include "eccodes_prototypes.h"
 #ifdef __cplusplus
 }
-    #include "action/action.h"
+    #include "action/Action.h"
     #include "accessor/Accessor.h"
     #include "accessor/grib_accessors_list.h"
     #include "geo/iterator/grib_iterator.h"

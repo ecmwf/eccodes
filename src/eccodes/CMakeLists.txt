@@ -25,35 +25,35 @@ list( APPEND eccodes_src_files
     grib_timer.cc
     eccodes.h
 
-    action/action.cc
-    action/action_class_alias.cc
-    action/action_class_gen.cc
-    action/action_class_if.cc
-    action/action_class_switch.cc
-    action/action_class_section.cc
-    action/action_class_list.cc
-    action/action_class_while.cc
-    action/action_class_put.cc
-    action/action_class_meta.cc
-    action/action_class_remove.cc
-    action/action_class_rename.cc
-    action/action_class_assert.cc
-    action/action_class_template.cc
-    action/action_class_trigger.cc
-    action/action_class_when.cc
-    action/action_class_concept.cc
-    action/action_class_hash_array.cc
-    action/action_class_set.cc
-    action/action_class_set_sarray.cc
-    action/action_class_set_darray.cc
-    action/action_class_noop.cc
-    action/action_class_write.cc
-    action/action_class_print.cc
-    action/action_class_close.cc
-    action/action_class_variable.cc
-    action/action_class_modify.cc
-    action/action_class_transient_darray.cc
-    action/action_class_set_missing.cc
+    action/Action.cc
+    action/Alias.cc
+    action/Gen.cc
+    action/If.cc
+    action/Switch.cc
+    action/Section.cc
+    action/List.cc
+    action/While.cc
+    action/Put.cc
+    action/Meta.cc
+    action/Remove.cc
+    action/Rename.cc
+    action/Assert.cc
+    action/Template.cc
+    action/Trigger.cc
+    action/When.cc
+    action/Concept.cc
+    action/HashArray.cc
+    action/Set.cc
+    action/SetSarray.cc
+    action/SetDarray.cc
+    action/Noop.cc
+    action/Write.cc
+    action/Print.cc
+    action/Close.cc
+    action/Variable.cc
+    action/Modify.cc
+    action/TransientDarray.cc
+    action/SetMissing.cc
 
     eccodes.cc
     grib_concept.cc

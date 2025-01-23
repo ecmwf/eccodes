@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "action_class_gen.h"
+#include "Gen.h"
 
 namespace eccodes::action
 {

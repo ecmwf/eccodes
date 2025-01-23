@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "action_class_template.h"
+#include "Template.h"
 
 grib_action* grib_action_create_template(grib_context* context, int nofail, const char* name, const char* arg1, int lineno)
 {

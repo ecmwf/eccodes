@@ -9,7 +9,7 @@
  */
 
 #include "Concept.h"
-#include "action_class_concept.h"
+#include "action/Concept.h"
 #include <unordered_map>
 #include <utility>
 #include <map>

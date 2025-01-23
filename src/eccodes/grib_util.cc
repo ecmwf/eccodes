@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-#include "action_class_concept.h"
+#include "action/Concept.h"
 #include <float.h>
 #include <string>
 #include <sstream>

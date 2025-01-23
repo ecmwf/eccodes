@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "action_class_when.h"
+#include "When.h"
 
 
 /* The check on self->loop can only be done in non-threaded mode */
