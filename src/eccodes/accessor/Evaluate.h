@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_evaluate_t : public grib_accessor_long_t
+class Evaluate : public Long
 {
 public:
-    grib_accessor_evaluate_t() :
-        grib_accessor_long_t() { class_name_ = "evaluate"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_evaluate_t{}; }
+    Evaluate() :
+        Long() { class_name_ = "evaluate"; }
+    grib_accessor* create_empty_accessor() override { return new Evaluate{}; }
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 

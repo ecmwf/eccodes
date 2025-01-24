@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_blob_t : public grib_accessor_gen_t
+class Blob : public Gen
 {
 public:
-    grib_accessor_blob_t() :
-        grib_accessor_gen_t() { class_name_ = "blob"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_blob_t{}; }
+    Blob() :
+        Gen() { class_name_ = "blob"; }
+    grib_accessor* create_empty_accessor() override { return new Blob{}; }
     long get_native_type() override;
     int unpack_bytes(unsigned char*, size_t* len) override;
     void dump(eccodes::Dumper*) override;

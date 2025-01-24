@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_count_missing_t : public grib_accessor_long_t
+class CountMissing : public Long
 {
 public:
-    grib_accessor_count_missing_t() :
-        grib_accessor_long_t() { class_name_ = "count_missing"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_count_missing_t{}; }
+    CountMissing() :
+        Long() { class_name_ = "count_missing"; }
+    grib_accessor* create_empty_accessor() override { return new CountMissing{}; }
     int unpack_long(long* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;

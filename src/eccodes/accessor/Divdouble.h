@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_divdouble_t : public grib_accessor_double_t
+class Divdouble : public Double
 {
 public:
-    grib_accessor_divdouble_t() :
-        grib_accessor_double_t() { class_name_ = "divdouble"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_divdouble_t{}; }
+    Divdouble() :
+        Double() { class_name_ = "divdouble"; }
+    grib_accessor* create_empty_accessor() override { return new Divdouble{}; }
     int unpack_double(double* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 

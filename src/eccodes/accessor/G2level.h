@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_g2level_t : public grib_accessor_long_t
+class G2level : public Long
 {
 public:
-    grib_accessor_g2level_t() :
-        grib_accessor_long_t() { class_name_ = "g2level"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_g2level_t{}; }
+    G2level() :
+        Long() { class_name_ = "g2level"; }
+    grib_accessor* create_empty_accessor() override { return new G2level{}; }
     int is_missing() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;

@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_g1bitmap_t : public grib_accessor_bitmap_t
+class G1bitmap : public Bitmap
 {
 public:
-    grib_accessor_g1bitmap_t() :
-        grib_accessor_bitmap_t() { class_name_ = "g1bitmap"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_g1bitmap_t{}; }
+    G1bitmap() :
+        Bitmap() { class_name_ = "g1bitmap"; }
+    grib_accessor* create_empty_accessor() override { return new G1bitmap{}; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_bytes(unsigned char*, size_t* len) override;
     int value_count(long*) override;

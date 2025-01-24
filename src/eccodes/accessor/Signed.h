@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_signed_t : public grib_accessor_long_t
+class Signed : public Long
 {
 public:
-    grib_accessor_signed_t() :
-        grib_accessor_long_t() { class_name_ = "signed"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_signed_t{}; }
+    Signed() :
+        Long() { class_name_ = "signed"; }
+    grib_accessor* create_empty_accessor() override { return new Signed{}; }
     int is_missing() override;
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;

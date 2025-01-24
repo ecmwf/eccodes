@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_concept_t : public grib_accessor_gen_t
+class Concept : public Gen
 {
 public:
-    grib_accessor_concept_t() :
-        grib_accessor_gen_t() { class_name_ = "concept"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_concept_t{}; }
+    Concept() :
+        Gen() { class_name_ = "concept"; }
+    grib_accessor* create_empty_accessor() override { return new Concept{}; }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;

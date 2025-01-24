@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_mars_param_t : public grib_accessor_ascii_t
+class MarsParam : public Ascii
 {
 public:
-    grib_accessor_mars_param_t() :
-        grib_accessor_ascii_t() { class_name_ = "mars_param"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_mars_param_t{}; }
+    MarsParam() :
+        Ascii() { class_name_ = "mars_param"; }
+    grib_accessor* create_empty_accessor() override { return new MarsParam{}; }
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
     void init(const long, grib_arguments*) override;

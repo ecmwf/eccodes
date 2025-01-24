@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_julian_date_t : public grib_accessor_double_t
+class JulianDate : public Double
 {
 public:
-    grib_accessor_julian_date_t() :
-        grib_accessor_double_t() { class_name_ = "julian_date"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_julian_date_t{}; }
+    JulianDate() :
+        Double() { class_name_ = "julian_date"; }
+    grib_accessor* create_empty_accessor() override { return new JulianDate{}; }
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;
     int pack_string(const char*, size_t* len) override;

@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_g1fcperiod_t : public grib_accessor_g1step_range_t
+class G1fcperiod : public G1stepRange
 {
 public:
-    grib_accessor_g1fcperiod_t() :
-        grib_accessor_g1step_range_t() { class_name_ = "g1fcperiod"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_g1fcperiod_t{}; }
+    G1fcperiod() :
+        G1stepRange() { class_name_ = "g1fcperiod"; }
+    grib_accessor* create_empty_accessor() override { return new G1fcperiod{}; }
     int unpack_string(char*, size_t* len) override;
 };
 

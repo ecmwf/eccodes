@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_bufr_string_values_t : public grib_accessor_ascii_t
+class BufrStringValues : public Ascii
 {
 public:
-    grib_accessor_bufr_string_values_t() :
-        grib_accessor_ascii_t() { class_name_ = "bufr_string_values"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_bufr_string_values_t{}; }
+    BufrStringValues() :
+        Ascii() { class_name_ = "bufr_string_values"; }
+    grib_accessor* create_empty_accessor() override { return new BufrStringValues{}; }
     int unpack_string(char*, size_t* len) override;
     int unpack_string_array(char**, size_t* len) override;
     int value_count(long*) override;

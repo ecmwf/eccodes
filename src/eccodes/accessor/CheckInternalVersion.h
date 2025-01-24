@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_check_internal_version_t : public grib_accessor_ascii_t
+class CheckInternalVersion : public Ascii
 {
 public:
-    grib_accessor_check_internal_version_t() :
-        grib_accessor_ascii_t() { class_name_ = "check_internal_version"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_check_internal_version_t{}; }
+    CheckInternalVersion() :
+        Ascii() { class_name_ = "check_internal_version"; }
+    grib_accessor* create_empty_accessor() override { return new CheckInternalVersion{}; }
     size_t string_length() override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;

@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_cf_var_name_t : public grib_accessor_ascii_t
+class CfVarName : public Ascii
 {
 public:
-    grib_accessor_cf_var_name_t() :
-        grib_accessor_ascii_t() { class_name_ = "cf_var_name"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_cf_var_name_t{}; }
+    CfVarName() :
+        Ascii() { class_name_ = "cf_var_name"; }
+    grib_accessor* create_empty_accessor() override { return new CfVarName{}; }
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
     void init(const long, grib_arguments*) override;

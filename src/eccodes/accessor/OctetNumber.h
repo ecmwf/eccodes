@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_octet_number_t : public grib_accessor_long_t
+class OctetNumber : public Long
 {
 public:
-    grib_accessor_octet_number_t() :
-        grib_accessor_long_t() { class_name_ = "octet_number"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_octet_number_t{}; }
+    OctetNumber() :
+        Long() { class_name_ = "octet_number"; }
+    grib_accessor* create_empty_accessor() override { return new OctetNumber{}; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

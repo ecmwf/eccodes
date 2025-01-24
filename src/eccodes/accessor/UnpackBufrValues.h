@@ -16,12 +16,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_unpack_bufr_values_t : public grib_accessor_gen_t
+class UnpackBufrValues : public Gen
 {
 public:
-    grib_accessor_unpack_bufr_values_t() :
-        grib_accessor_gen_t() { class_name_ = "unpack_bufr_values"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_unpack_bufr_values_t{}; }
+    UnpackBufrValues() :
+        Gen() { class_name_ = "unpack_bufr_values"; }
+    grib_accessor* create_empty_accessor() override { return new UnpackBufrValues{}; }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;
@@ -35,7 +35,7 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    grib_accessor_bufr_data_array_t* data_accessor_ = nullptr;
+    BufrDataArray* data_accessor_ = nullptr;
 };
 
 }  // namespace eccodes::accessor

@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_g2_mars_labeling_t : public grib_accessor_gen_t
+class G2MarsLabeling : public Gen
 {
 public:
-    grib_accessor_g2_mars_labeling_t() :
-        grib_accessor_gen_t() { class_name_ = "g2_mars_labeling"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_g2_mars_labeling_t{}; }
+    G2MarsLabeling() :
+        Gen() { class_name_ = "g2_mars_labeling"; }
+    grib_accessor* create_empty_accessor() override { return new G2MarsLabeling{}; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int pack_string(const char*, size_t* len) override;

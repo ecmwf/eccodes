@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_g1number_of_coded_values_sh_complex_t : public grib_accessor_long_t
+class G1numberOfCodedValuesShComplex : public Long
 {
 public:
-    grib_accessor_g1number_of_coded_values_sh_complex_t() :
-        grib_accessor_long_t() { class_name_ = "g1number_of_coded_values_sh_complex"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_g1number_of_coded_values_sh_complex_t{}; }
+    G1numberOfCodedValuesShComplex() :
+        Long() { class_name_ = "g1number_of_coded_values_sh_complex"; }
+    grib_accessor* create_empty_accessor() override { return new G1numberOfCodedValuesShComplex{}; }
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 

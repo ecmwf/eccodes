@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_uint64_t : public grib_accessor_gen_t
+class Uint64 : public Gen
 {
 public:
-    grib_accessor_uint64_t() :
-        grib_accessor_gen_t() { class_name_ = "uint64"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_uint64_t{}; }
+    Uint64() :
+        Gen() { class_name_ = "uint64"; }
+    grib_accessor* create_empty_accessor() override { return new Uint64{}; }
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
 };

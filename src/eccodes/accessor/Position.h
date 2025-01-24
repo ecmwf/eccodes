@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_position_t : public grib_accessor_gen_t
+class Position : public Gen
 {
 public:
-    grib_accessor_position_t() :
-        grib_accessor_gen_t() { class_name_ = "position"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_position_t{}; }
+    Position() :
+        Gen() { class_name_ = "position"; }
+    grib_accessor* create_empty_accessor() override { return new Position{}; }
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
     void dump(eccodes::Dumper*) override;

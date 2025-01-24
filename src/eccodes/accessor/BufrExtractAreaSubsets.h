@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_bufr_extract_area_subsets_t : public grib_accessor_gen_t
+class BufrExtractAreaSubsets : public Gen
 {
 public:
-    grib_accessor_bufr_extract_area_subsets_t() :
-        grib_accessor_gen_t() { class_name_ = "bufr_extract_area_subsets"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_bufr_extract_area_subsets_t{}; }
+    BufrExtractAreaSubsets() :
+        Gen() { class_name_ = "bufr_extract_area_subsets"; }
+    grib_accessor* create_empty_accessor() override { return new BufrExtractAreaSubsets{}; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

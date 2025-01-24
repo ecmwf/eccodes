@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_spd_t : public grib_accessor_long_t
+class Spd : public Long
 {
 public:
-    grib_accessor_spd_t() :
-        grib_accessor_long_t() { class_name_ = "spd"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_spd_t{}; }
+    Spd() :
+        Long() { class_name_ = "spd"; }
+    grib_accessor* create_empty_accessor() override { return new Spd{}; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     long byte_count() override;

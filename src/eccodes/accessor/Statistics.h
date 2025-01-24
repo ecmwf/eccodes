@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_statistics_t : public grib_accessor_abstract_vector_t
+class Statistics : public AbstractVector
 {
 public:
-    grib_accessor_statistics_t() :
-        grib_accessor_abstract_vector_t() { class_name_ = "statistics"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_statistics_t{}; }
+    Statistics() :
+        AbstractVector() { class_name_ = "statistics"; }
+    grib_accessor* create_empty_accessor() override { return new Statistics{}; }
     int unpack_double(double* val, size_t* len) override;
     int unpack_string(char*, size_t* len) override;
     int value_count(long*) override;

@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_codetable_title_t : public grib_accessor_gen_t
+class CodetableTitle : public Gen
 {
 public:
-    grib_accessor_codetable_title_t() :
-        grib_accessor_gen_t() { class_name_ = "codetable_title"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_codetable_title_t{}; }
+    CodetableTitle() :
+        Gen() { class_name_ = "codetable_title"; }
+    grib_accessor* create_empty_accessor() override { return new CodetableTitle{}; }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     void init(const long, grib_arguments*) override;

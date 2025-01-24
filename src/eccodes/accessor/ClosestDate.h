@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_closest_date_t : public grib_accessor_double_t
+class ClosestDate : public Double
 {
 public:
-    grib_accessor_closest_date_t() :
-        grib_accessor_double_t() { class_name_ = "closest_date"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_closest_date_t{}; }
+    ClosestDate() :
+        Double() { class_name_ = "closest_date"; }
+    grib_accessor* create_empty_accessor() override { return new ClosestDate{}; }
     int unpack_double(double* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void dump(eccodes::Dumper*) override;

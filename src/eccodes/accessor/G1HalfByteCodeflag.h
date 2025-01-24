@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_g1_half_byte_codeflag_t : public grib_accessor_gen_t
+class G1HalfByteCodeflag : public Gen
 {
 public:
-    grib_accessor_g1_half_byte_codeflag_t() :
-        grib_accessor_gen_t() { class_name_ = "g1_half_byte_codeflag"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_g1_half_byte_codeflag_t{}; }
+    G1HalfByteCodeflag() :
+        Gen() { class_name_ = "g1_half_byte_codeflag"; }
+    grib_accessor* create_empty_accessor() override { return new G1HalfByteCodeflag{}; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;

@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_decimal_precision_t : public grib_accessor_long_t
+class DecimalPrecision : public Long
 {
 public:
-    grib_accessor_decimal_precision_t() :
-        grib_accessor_long_t() { class_name_ = "decimal_precision"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_decimal_precision_t{}; }
+    DecimalPrecision() :
+        Long() { class_name_ = "decimal_precision"; }
+    grib_accessor* create_empty_accessor() override { return new DecimalPrecision{}; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

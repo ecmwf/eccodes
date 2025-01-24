@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_octahedral_gaussian_t : public grib_accessor_long_t
+class OctahedralGaussian : public Long
 {
 public:
-    grib_accessor_octahedral_gaussian_t() :
-        grib_accessor_long_t() { class_name_ = "octahedral_gaussian"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_octahedral_gaussian_t{}; }
+    OctahedralGaussian() :
+        Long() { class_name_ = "octahedral_gaussian"; }
+    grib_accessor* create_empty_accessor() override { return new OctahedralGaussian{}; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

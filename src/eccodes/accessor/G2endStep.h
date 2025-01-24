@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_g2end_step_t : public grib_accessor_long_t
+class G2endStep : public Long
 {
 public:
-    grib_accessor_g2end_step_t() :
-        grib_accessor_long_t() { class_name_ = "g2end_step"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_g2end_step_t{}; }
+    G2endStep() :
+        Long() { class_name_ = "g2end_step"; }
+    grib_accessor* create_empty_accessor() override { return new G2endStep{}; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int pack_string(const char*, size_t* len) override;

@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_g1day_of_the_year_date_t : public grib_accessor_g1date_t
+class G1dayOfTheYearDate : public G1date
 {
 public:
-    grib_accessor_g1day_of_the_year_date_t() :
-        grib_accessor_g1date_t() { class_name_ = "g1day_of_the_year_date"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_g1day_of_the_year_date_t{}; }
+    G1dayOfTheYearDate() :
+        G1date() { class_name_ = "g1day_of_the_year_date"; }
+    grib_accessor* create_empty_accessor() override { return new G1dayOfTheYearDate{}; }
     int unpack_string(char*, size_t* len) override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;

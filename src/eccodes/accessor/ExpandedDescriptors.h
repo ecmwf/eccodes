@@ -25,12 +25,12 @@ typedef struct change_coding_params
 namespace eccodes::accessor
 {
 
-class grib_accessor_expanded_descriptors_t : public grib_accessor_long_t
+class ExpandedDescriptors : public Long
 {
 public:
-    grib_accessor_expanded_descriptors_t() :
-        grib_accessor_long_t() { class_name_ = "expanded_descriptors"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_expanded_descriptors_t{}; }
+    ExpandedDescriptors() :
+        Long() { class_name_ = "expanded_descriptors"; }
+    grib_accessor* create_empty_accessor() override { return new ExpandedDescriptors{}; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
@@ -50,7 +50,7 @@ private:
     const char* tablesAccessorName_ = nullptr;
     bufr_descriptors_array* expanded_ = nullptr;
     int rank_ = 0;
-    grib_accessor_expanded_descriptors_t* expandedAccessor_ = nullptr;
+    ExpandedDescriptors* expandedAccessor_ = nullptr;
     int do_expand_ = 0;
     grib_accessor* tablesAccessor_ = nullptr;
 

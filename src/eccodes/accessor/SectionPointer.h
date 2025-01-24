@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_section_pointer_t : public grib_accessor_gen_t
+class SectionPointer : public Gen
 {
 public:
-    grib_accessor_section_pointer_t() :
-        grib_accessor_gen_t() { class_name_ = "section_pointer"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_section_pointer_t{}; }
+    SectionPointer() :
+        Gen() { class_name_ = "section_pointer"; }
+    grib_accessor* create_empty_accessor() override { return new SectionPointer{}; }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     long byte_count() override;

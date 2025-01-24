@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_rdbtime_guess_date_t : public grib_accessor_long_t
+class RdbtimeGuessDate : public Long
 {
 public:
-    grib_accessor_rdbtime_guess_date_t() :
-        grib_accessor_long_t() { class_name_ = "rdbtime_guess_date"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_rdbtime_guess_date_t{}; }
+    RdbtimeGuessDate() :
+        Long() { class_name_ = "rdbtime_guess_date"; }
+    grib_accessor* create_empty_accessor() override { return new RdbtimeGuessDate{}; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

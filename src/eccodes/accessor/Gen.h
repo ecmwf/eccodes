@@ -18,15 +18,15 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_gen_t : public grib_accessor
+class Gen : public grib_accessor
 {
 public:
-    grib_accessor_gen_t() :
+    Gen() :
         grib_accessor{} { class_name_ = "gen"; }
-    ~grib_accessor_gen_t();
+    ~Gen();
 
     void init_accessor(const long, grib_arguments*) override;  // TODO: Implement
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_gen_t{}; }
+    grib_accessor* create_empty_accessor() override { return new Gen{}; }
     grib_section* sub_section() override;
     long get_native_type() override;
     int pack_missing() override;
@@ -92,7 +92,7 @@ private:
 
 
 template <typename T>
-int grib_accessor_gen_t::unpack_helper(grib_accessor* a, T* v, size_t* len)
+int Gen::unpack_helper(grib_accessor* a, T* v, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     int type          = GRIB_TYPE_UNDEFINED;

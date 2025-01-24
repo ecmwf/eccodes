@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_bufr_group_t : public grib_accessor_variable_t
+class BufrGroup : public Variable
 {
 public:
-    grib_accessor_bufr_group_t() :
-        grib_accessor_variable_t() { class_name_ = "bufr_group"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_bufr_group_t{}; }
+    BufrGroup() :
+        Variable() { class_name_ = "bufr_group"; }
+    grib_accessor* create_empty_accessor() override { return new BufrGroup{}; }
     void dump(eccodes::Dumper*) override;
     grib_accessor* next(grib_accessor*, int explore) override;
 };

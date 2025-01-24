@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_abstract_long_vector_t : public grib_accessor_gen_t
+class AbstractLongVector : public Gen
 {
 public:
-    grib_accessor_abstract_long_vector_t() :
-        grib_accessor_gen_t() { class_name_ = "abstract_long_vector"; }
-    // grib_accessor* create_empty_accessor() override { return new grib_accessor_abstract_long_vector_t{}; }
+    AbstractLongVector() :
+        Gen() { class_name_ = "abstract_long_vector"; }
+    // grib_accessor* create_empty_accessor() override { return new AbstractLongVector{}; }
 
 public:
     // TODO(maee): make private

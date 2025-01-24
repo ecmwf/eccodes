@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_data_g2simple_packing_with_preprocessing_t : public grib_accessor_data_g2simple_packing_t
+class DataG2simplePackingWithPreprocessing : public DataG2simplePacking
 {
 public:
-    grib_accessor_data_g2simple_packing_with_preprocessing_t() :
-        grib_accessor_data_g2simple_packing_t() { class_name_ = "data_g2simple_packing_with_preprocessing"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_data_g2simple_packing_with_preprocessing_t{}; }
+    DataG2simplePackingWithPreprocessing() :
+        DataG2simplePacking() { class_name_ = "data_g2simple_packing_with_preprocessing"; }
+    grib_accessor* create_empty_accessor() override { return new DataG2simplePackingWithPreprocessing{}; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;

@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_library_version_t : public grib_accessor_ascii_t
+class LibraryVersion : public Ascii
 {
 public:
-    grib_accessor_library_version_t() :
-        grib_accessor_ascii_t() { class_name_ = "library_version"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_library_version_t{}; }
+    LibraryVersion() :
+        Ascii() { class_name_ = "library_version"; }
+    grib_accessor* create_empty_accessor() override { return new LibraryVersion{}; }
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
     int value_count(long*) override;

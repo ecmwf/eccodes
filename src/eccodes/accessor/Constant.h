@@ -13,12 +13,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_constant_t : public grib_accessor_variable_t
+class Constant : public Variable
 {
 public:
-    grib_accessor_constant_t() :
-        grib_accessor_variable_t() { class_name_ = "constant"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_constant_t{}; }
+    Constant() :
+        Variable() { class_name_ = "constant"; }
+    grib_accessor* create_empty_accessor() override { return new Constant{}; }
     void init(const long, grib_arguments*) override;
 
 };

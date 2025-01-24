@@ -20,12 +20,12 @@ typedef double (*decode_float_proc)(unsigned long);
 namespace eccodes::accessor
 {
 
-class grib_accessor_data_complex_packing_t : public grib_accessor_data_simple_packing_t
+class DataComplexPacking : public DataSimplePacking
 {
 public:
-    grib_accessor_data_complex_packing_t() :
-        grib_accessor_data_simple_packing_t() { class_name_ = "data_complex_packing"; }
-    // grib_accessor* create_empty_accessor() override { return new grib_accessor_data_complex_packing_t{}; }
+    DataComplexPacking() :
+        DataSimplePacking() { class_name_ = "data_complex_packing"; }
+    // grib_accessor* create_empty_accessor() override { return new DataComplexPacking{}; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_float(float* val, size_t* len) override;

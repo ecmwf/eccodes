@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_md5_t : public grib_accessor_gen_t
+class Md5 : public Gen
 {
 public:
-    grib_accessor_md5_t() :
-        grib_accessor_gen_t() { class_name_ = "md5"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_md5_t{}; }
+    Md5() :
+        Gen() { class_name_ = "md5"; }
+    grib_accessor* create_empty_accessor() override { return new Md5{}; }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     int value_count(long*) override;

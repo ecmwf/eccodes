@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_transient_darray_t : public grib_accessor_gen_t
+class TransientDarray : public Gen
 {
 public:
-    grib_accessor_transient_darray_t() :
-        grib_accessor_gen_t() { class_name_ = "transient_darray"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_transient_darray_t{}; }
+    TransientDarray() :
+        Gen() { class_name_ = "transient_darray"; }
+    grib_accessor* create_empty_accessor() override { return new TransientDarray{}; }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;

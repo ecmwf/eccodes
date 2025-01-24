@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_packing_type_t : public grib_accessor_gen_t
+class PackingType : public Gen
 {
 public:
-    grib_accessor_packing_type_t() :
-        grib_accessor_gen_t() { class_name_ = "packing_type"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_packing_type_t{}; }
+    PackingType() :
+        Gen() { class_name_ = "packing_type"; }
+    grib_accessor* create_empty_accessor() override { return new PackingType{}; }
     long get_native_type() override;
     int pack_string(const char*, size_t* len) override;
     int unpack_string(char*, size_t* len) override;

@@ -21,17 +21,17 @@ typedef struct bitmap_s
 } bitmap_s;
 
 
-class grib_accessor_bufr_data_array_t;
+class BufrDataArray;
 
 namespace eccodes::accessor
 {
 
-class grib_accessor_bufr_data_array_t : public grib_accessor_gen_t
+class BufrDataArray : public Gen
 {
 public:
-    grib_accessor_bufr_data_array_t() :
-        grib_accessor_gen_t() { class_name_ = "bufr_data_array"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_bufr_data_array_t{}; }
+    BufrDataArray() :
+        Gen() { class_name_ = "bufr_data_array"; }
+    grib_accessor* create_empty_accessor() override { return new BufrDataArray{}; }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;
@@ -58,7 +58,7 @@ private:
     const char* elementsDescriptorsIndexName_ = nullptr;
     const char* compressedDataName_ = nullptr;
     bufr_descriptors_array* expanded_ = nullptr;
-    grib_accessor_expanded_descriptors_t* expandedAccessor_ = nullptr;
+    ExpandedDescriptors* expandedAccessor_ = nullptr;
     int* canBeMissing_ = nullptr;
     long numberOfSubsets_ = 0;
     long compressedData_ = 0;
@@ -132,13 +132,13 @@ private:
     void self_clear();
     grib_darray* decode_double_array(grib_context* c, unsigned char* data, long* pos, bufr_descriptor* bd, int canBeMissing, int*);
 
-    friend int check_end_data(grib_context*, bufr_descriptor*, grib_accessor_bufr_data_array_t*, int);
-    friend int decode_element(grib_context*, grib_accessor_bufr_data_array_t*, int, grib_buffer*, unsigned char*, long*, int, bufr_descriptor*, long, grib_darray*, grib_sarray*);
-    friend int decode_replication(grib_context*, grib_accessor_bufr_data_array_t*, int, grib_buffer*, unsigned char*, long*, int, long, grib_darray*, long*);
-    friend int encode_new_element(grib_context*, grib_accessor_bufr_data_array_t*, int, grib_buffer*, unsigned char*, long*, int, bufr_descriptor*, long, grib_darray*, grib_sarray*);
-    friend int encode_new_replication(grib_context*, grib_accessor_bufr_data_array_t*, int, grib_buffer*, unsigned char*, long*, int, long, grib_darray*, long*);
-    friend int encode_element(grib_context*, grib_accessor_bufr_data_array_t*, int, grib_buffer*, unsigned char*, long*, int, bufr_descriptor*, long, grib_darray*, grib_sarray*);
-    friend int encode_replication(grib_context*, grib_accessor_bufr_data_array_t*, int, grib_buffer*, unsigned char*, long*, int, long, grib_darray*, long*);
+    friend int check_end_data(grib_context*, bufr_descriptor*, BufrDataArray*, int);
+    friend int decode_element(grib_context*, BufrDataArray*, int, grib_buffer*, unsigned char*, long*, int, bufr_descriptor*, long, grib_darray*, grib_sarray*);
+    friend int decode_replication(grib_context*, BufrDataArray*, int, grib_buffer*, unsigned char*, long*, int, long, grib_darray*, long*);
+    friend int encode_new_element(grib_context*, BufrDataArray*, int, grib_buffer*, unsigned char*, long*, int, bufr_descriptor*, long, grib_darray*, grib_sarray*);
+    friend int encode_new_replication(grib_context*, BufrDataArray*, int, grib_buffer*, unsigned char*, long*, int, long, grib_darray*, long*);
+    friend int encode_element(grib_context*, BufrDataArray*, int, grib_buffer*, unsigned char*, long*, int, bufr_descriptor*, long, grib_darray*, grib_sarray*);
+    friend int encode_replication(grib_context*, BufrDataArray*, int, grib_buffer*, unsigned char*, long*, int, long, grib_darray*, long*);
 };
 
 }  // namespace eccodes::accessor

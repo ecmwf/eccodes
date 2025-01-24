@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_multdouble_t : public grib_accessor_double_t
+class Multdouble : public Double
 {
 public:
-    grib_accessor_multdouble_t() :
-        grib_accessor_double_t() { class_name_ = "multdouble"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_multdouble_t{}; }
+    Multdouble() :
+        Double() { class_name_ = "multdouble"; }
+    grib_accessor* create_empty_accessor() override { return new Multdouble{}; }
     int unpack_double(double* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 

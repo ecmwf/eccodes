@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_scale_values_t : public grib_accessor_double_t
+class ScaleValues : public Double
 {
 public:
-    grib_accessor_scale_values_t() :
-        grib_accessor_double_t() { class_name_ = "scale_values"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_scale_values_t{}; }
+    ScaleValues() :
+        Double() { class_name_ = "scale_values"; }
+    grib_accessor* create_empty_accessor() override { return new ScaleValues{}; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

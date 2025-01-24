@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_latlon_increment_t : public grib_accessor_double_t
+class LatlonIncrement : public Double
 {
 public:
-    grib_accessor_latlon_increment_t() :
-        grib_accessor_double_t() { class_name_ = "latlon_increment"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_latlon_increment_t{}; }
+    LatlonIncrement() :
+        Double() { class_name_ = "latlon_increment"; }
+    grib_accessor* create_empty_accessor() override { return new LatlonIncrement{}; }
     int is_missing() override;
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;

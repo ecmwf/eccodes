@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_step_human_readable_t : public grib_accessor_gen_t
+class StepHumanReadable : public Gen
 {
 public:
-    grib_accessor_step_human_readable_t() :
-        grib_accessor_gen_t() { class_name_ = "step_human_readable"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_step_human_readable_t{}; }
+    StepHumanReadable() :
+        Gen() { class_name_ = "step_human_readable"; }
+    grib_accessor* create_empty_accessor() override { return new StepHumanReadable{}; }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     void init(const long, grib_arguments*) override;

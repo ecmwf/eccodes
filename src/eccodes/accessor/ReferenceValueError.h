@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_reference_value_error_t : public grib_accessor_double_t
+class ReferenceValueError : public Double
 {
 public:
-    grib_accessor_reference_value_error_t() :
-        grib_accessor_double_t() { class_name_ = "reference_value_error"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_reference_value_error_t{}; }
+    ReferenceValueError() :
+        Double() { class_name_ = "reference_value_error"; }
+    grib_accessor* create_empty_accessor() override { return new ReferenceValueError{}; }
     int unpack_double(double* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 

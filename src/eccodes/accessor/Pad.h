@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_pad_t : public grib_accessor_padding_t
+class Pad : public Padding
 {
 public:
-    grib_accessor_pad_t() :
-        grib_accessor_padding_t() { class_name_ = "pad"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_pad_t{}; }
+    Pad() :
+        Padding() { class_name_ = "pad"; }
+    grib_accessor* create_empty_accessor() override { return new Pad{}; }
     void init(const long, grib_arguments*) override;
     size_t preferred_size(int) override;
 

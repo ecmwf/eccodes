@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_g2_concept_dir_t : public grib_accessor_gen_t
+class G2ConceptDir : public Gen
 {
 public:
-    grib_accessor_g2_concept_dir_t() :
-        grib_accessor_gen_t() { class_name_ = "g2_concept_dir"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_g2_concept_dir_t{}; }
+    G2ConceptDir() :
+        Gen() { class_name_ = "g2_concept_dir"; }
+    grib_accessor* create_empty_accessor() override { return new G2ConceptDir{}; }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     void init(const long, grib_arguments*) override;

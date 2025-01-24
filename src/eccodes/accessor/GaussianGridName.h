@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_gaussian_grid_name_t : public grib_accessor_gen_t
+class GaussianGridName : public Gen
 {
 public:
-    grib_accessor_gaussian_grid_name_t() :
-        grib_accessor_gen_t() { class_name_ = "gaussian_grid_name"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_gaussian_grid_name_t{}; }
+    GaussianGridName() :
+        Gen() { class_name_ = "gaussian_grid_name"; }
+    grib_accessor* create_empty_accessor() override { return new GaussianGridName{}; }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;

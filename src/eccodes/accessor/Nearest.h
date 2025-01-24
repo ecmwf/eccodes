@@ -16,12 +16,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_nearest_t : public grib_accessor_gen_t
+class Nearest : public Gen
 {
 public:
-    grib_accessor_nearest_t() :
-        grib_accessor_gen_t() { class_name_ = "nearest"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_nearest_t{}; }
+    Nearest() :
+        Gen() { class_name_ = "nearest"; }
+    grib_accessor* create_empty_accessor() override { return new Nearest{}; }
     void init(const long l, grib_arguments* args) override;
     void dump(eccodes::Dumper* dumper) override;
 

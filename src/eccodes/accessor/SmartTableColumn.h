@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_smart_table_column_t : public grib_accessor_gen_t
+class SmartTableColumn : public Gen
 {
 public:
-    grib_accessor_smart_table_column_t() :
-        grib_accessor_gen_t() { class_name_ = "smart_table_column"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_smart_table_column_t{}; }
+    SmartTableColumn() :
+        Gen() { class_name_ = "smart_table_column"; }
+    grib_accessor* create_empty_accessor() override { return new SmartTableColumn{}; }
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
     int unpack_string_array(char**, size_t* len) override;

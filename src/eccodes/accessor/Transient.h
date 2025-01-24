@@ -15,13 +15,13 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_transient_t : public grib_accessor_variable_t
+class Transient : public Variable
 {
 public:
     void init(const long l, grib_arguments* args) override;
-    grib_accessor_transient_t() :
-        grib_accessor_variable_t() { class_name_ = "transient"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_transient_t{}; }
+    Transient() :
+        Variable() { class_name_ = "transient"; }
+    grib_accessor* create_empty_accessor() override { return new Transient{}; }
 };
 
 }  // namespace eccodes::accessor

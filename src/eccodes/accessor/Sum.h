@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_sum_t : public grib_accessor_double_t
+class Sum : public Double
 {
 public:
-    grib_accessor_sum_t() :
-        grib_accessor_double_t() { class_name_ = "sum"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_sum_t{}; }
+    Sum() :
+        Double() { class_name_ = "sum"; }
+    grib_accessor* create_empty_accessor() override { return new Sum{}; }
     int unpack_double(double* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     int value_count(long*) override;

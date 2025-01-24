@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_data_g1shsimple_packing_t : public grib_accessor_data_shsimple_packing_t
+class DataG1shsimplePacking : public DataShsimplePacking
 {
 public:
-    grib_accessor_data_g1shsimple_packing_t() :
-        grib_accessor_data_shsimple_packing_t() { class_name_ = "data_g1shsimple_packing"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_data_g1shsimple_packing_t{}; }
+    DataG1shsimplePacking() :
+        DataShsimplePacking() { class_name_ = "data_g1shsimple_packing"; }
+    grib_accessor* create_empty_accessor() override { return new DataG1shsimplePacking{}; }
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
 };

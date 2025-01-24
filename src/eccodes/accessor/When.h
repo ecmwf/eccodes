@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_when_t : public grib_accessor_gen_t
+class When : public Gen
 {
 public:
-    grib_accessor_when_t() :
-        grib_accessor_gen_t() { class_name_ = "when"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_when_t{}; }
+    When() :
+        Gen() { class_name_ = "when"; }
+    grib_accessor* create_empty_accessor() override { return new When{}; }
     long get_native_type() override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;

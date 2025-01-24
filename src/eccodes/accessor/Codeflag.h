@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_codeflag_t : public grib_accessor_unsigned_t
+class Codeflag : public Unsigned
 {
 public:
-    grib_accessor_codeflag_t() :
-        grib_accessor_unsigned_t() { class_name_ = "codeflag"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_codeflag_t{}; }
+    Codeflag() :
+        Unsigned() { class_name_ = "codeflag"; }
+    grib_accessor* create_empty_accessor() override { return new Codeflag{}; }
     int value_count(long*) override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;

@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_abstract_vector_t : public grib_accessor_double_t
+class AbstractVector : public Double
 {
 public:
-    grib_accessor_abstract_vector_t() :
-        grib_accessor_double_t() { class_name_ = "abstract_vector"; }
-    // grib_accessor* create_empty_accessor() override { return new grib_accessor_abstract_vector_t{}; }
+    AbstractVector() :
+        Double() { class_name_ = "abstract_vector"; }
+    // grib_accessor* create_empty_accessor() override { return new AbstractVector{}; }
 
 public:
     // TODO(maee): make private

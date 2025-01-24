@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class grib_accessor_g2_aerosol_t : public grib_accessor_unsigned_t
+class G2Aerosol : public Unsigned
 {
 public:
-    grib_accessor_g2_aerosol_t() :
-        grib_accessor_unsigned_t() { class_name_ = "g2_aerosol"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_g2_aerosol_t{}; }
+    G2Aerosol() :
+        Unsigned() { class_name_ = "g2_aerosol"; }
+    grib_accessor* create_empty_accessor() override { return new G2Aerosol{}; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     int value_count(long*) override;
