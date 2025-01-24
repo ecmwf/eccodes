@@ -185,7 +185,7 @@ void grib_viarray_delete_content(grib_viarray* v);
 
 /* grib_accessor_class_bufr_elements_table.cc */
 int bufr_descriptor_is_marker(bufr_descriptor* d);
-bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, int code, int* err);
+// bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, int code, int* err);
 
 /* grib_accessor_class.cc */
 grib_section* grib_create_root_section(const grib_context* context, grib_handle* h);

@@ -10,20 +10,20 @@
 
 #include "Ksec1expver.h"
 
-grib_accessor_ksec1expver_t _grib_accessor_ksec1expver{};
-grib_accessor* grib_accessor_ksec1expver = &_grib_accessor_ksec1expver;
+eccodes::accessor::Ksec1expver _grib_accessor_ksec1expver;
+eccodes::Accessor* grib_accessor_ksec1expver = &_grib_accessor_ksec1expver;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_ksec1expver_t::init(const long len, grib_arguments* arg)
+void Ksec1expver::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_ascii_t::init(len, arg);
+    Ascii::init(len, arg);
     length_ = len;
     ECCODES_ASSERT(length_ >= 0);
 }
 
-int grib_accessor_ksec1expver_t::unpack_long(long* val, size_t* len)
+int Ksec1expver::unpack_long(long* val, size_t* len)
 {
     long value  = 0;
     long pos    = offset_ * 8;
@@ -71,7 +71,7 @@ int grib_accessor_ksec1expver_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_ksec1expver_t::pack_string(const char* val, size_t* len)
+int Ksec1expver::pack_string(const char* val, size_t* len)
 {
     int i = 0;
     if (len[0] != 4) {
@@ -91,7 +91,7 @@ int grib_accessor_ksec1expver_t::pack_string(const char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_ksec1expver_t::pack_long(const long* val, size_t* len)
+int Ksec1expver::pack_long(const long* val, size_t* len)
 {
     char sval[5] = {0,};
     size_t slen = 4;

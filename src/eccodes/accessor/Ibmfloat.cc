@@ -10,15 +10,15 @@
 
 #include "Ibmfloat.h"
 
-grib_accessor_ibmfloat_t _grib_accessor_ibmfloat{};
-grib_accessor* grib_accessor_ibmfloat = &_grib_accessor_ibmfloat;
+eccodes::accessor::Ibmfloat _grib_accessor_ibmfloat;
+eccodes::Accessor* grib_accessor_ibmfloat = &_grib_accessor_ibmfloat;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_ibmfloat_t::init(const long len, grib_arguments* arg)
+void Ibmfloat::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_double_t::init(len, arg);
+    Double::init(len, arg);
     long count = 0;
 
     arg_ = arg;
@@ -56,17 +56,17 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_ibmfloat_t::unpack_double(double* val, size_t* len)
+int Ibmfloat::unpack_double(double* val, size_t* len)
 {
     return unpack<double>(this, val, len);
 }
 
-int grib_accessor_ibmfloat_t::unpack_float(float* val, size_t* len)
+int Ibmfloat::unpack_float(float* val, size_t* len)
 {
     return unpack<float>(this, val, len);
 }
 
-int grib_accessor_ibmfloat_t::pack_double(const double* val, size_t* len)
+int Ibmfloat::pack_double(const double* val, size_t* len)
 {
     int ret            = 0;
     unsigned long i    = 0;
@@ -118,12 +118,12 @@ int grib_accessor_ibmfloat_t::pack_double(const double* val, size_t* len)
     return ret;
 }
 
-long grib_accessor_ibmfloat_t::byte_count()
+long Ibmfloat::byte_count()
 {
     return length_;
 }
 
-int grib_accessor_ibmfloat_t::value_count(long* len)
+int Ibmfloat::value_count(long* len)
 {
     *len = 0;
     if (!arg_) {
@@ -133,23 +133,23 @@ int grib_accessor_ibmfloat_t::value_count(long* len)
     return grib_get_long_internal(grib_handle_of_accessor(this), arg_->get_name(parent_->h, 0), len);
 }
 
-long grib_accessor_ibmfloat_t::byte_offset()
+long Ibmfloat::byte_offset()
 {
     return offset_;
 }
 
-void grib_accessor_ibmfloat_t::update_size(size_t s)
+void Ibmfloat::update_size(size_t s)
 {
     length_ = (long)s;
     ECCODES_ASSERT(length_ >= 0);
 }
 
-long grib_accessor_ibmfloat_t::next_offset()
+long Ibmfloat::next_offset()
 {
     return byte_offset() + byte_count();
 }
 
-int grib_accessor_ibmfloat_t::nearest_smaller_value(double val, double* nearest)
+int Ibmfloat::nearest_smaller_value(double val, double* nearest)
 {
     int ret = 0;
     if (grib_nearest_smaller_ibm_float(val, nearest) == GRIB_INTERNAL_ERROR) {

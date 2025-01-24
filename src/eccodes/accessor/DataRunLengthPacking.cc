@@ -11,15 +11,15 @@
 #include "DataRunLengthPacking.h"
 #include "grib_scaling.h"
 
-grib_accessor_data_run_length_packing_t _grib_accessor_data_run_length_packing{};
-grib_accessor* grib_accessor_data_run_length_packing = &_grib_accessor_data_run_length_packing;
+eccodes::accessor::DataRunLengthPacking _grib_accessor_data_run_length_packing;
+eccodes::Accessor* grib_accessor_data_run_length_packing = &_grib_accessor_data_run_length_packing;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_data_run_length_packing_t::init(const long v, grib_arguments* args)
+void DataRunLengthPacking::init(const long v, grib_arguments* args)
 {
-    grib_accessor_values_t::init(v, args);
+    Values::init(v, args);
     grib_handle* gh         = grib_handle_of_accessor(this);
     number_of_values_       = args->get_name(gh, carg_++);
     bits_per_value_         = args->get_name(gh, carg_++);
@@ -30,13 +30,13 @@ void grib_accessor_data_run_length_packing_t::init(const long v, grib_arguments*
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_data_run_length_packing_t::value_count(long* number_of_values)
+int DataRunLengthPacking::value_count(long* number_of_values)
 {
     *number_of_values = 0;
     return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, number_of_values);
 }
 
-int grib_accessor_data_run_length_packing_t::unpack_double(double* val, size_t* len)
+int DataRunLengthPacking::unpack_double(double* val, size_t* len)
 {
     grib_handle* gh         = grib_handle_of_accessor(this);
     int err                 = GRIB_SUCCESS;
@@ -140,7 +140,7 @@ int grib_accessor_data_run_length_packing_t::unpack_double(double* val, size_t* 
     return err;
 }
 
-int grib_accessor_data_run_length_packing_t::pack_double(const double* val, size_t* len)
+int DataRunLengthPacking::pack_double(const double* val, size_t* len)
 {
     grib_handle* gh         = grib_handle_of_accessor(this);
     int err                 = GRIB_SUCCESS;

@@ -10,15 +10,15 @@
 
 #include "G2latlon.h"
 
-grib_accessor_g2latlon_t _grib_accessor_g2latlon{};
-grib_accessor* grib_accessor_g2latlon = &_grib_accessor_g2latlon;
+eccodes::accessor::G2latlon _grib_accessor_g2latlon;
+eccodes::Accessor* grib_accessor_g2latlon = &_grib_accessor_g2latlon;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_g2latlon_t::init(const long l, grib_arguments* c)
+void G2latlon::init(const long l, grib_arguments* c)
 {
-    grib_accessor_double_t::init(l, c);
+    Double::init(l, c);
     int n = 0;
 
     grid_  = c->get_name(grib_handle_of_accessor(this), n++);
@@ -26,7 +26,7 @@ void grib_accessor_g2latlon_t::init(const long l, grib_arguments* c)
     given_ = c->get_name(grib_handle_of_accessor(this), n++);
 }
 
-int grib_accessor_g2latlon_t::unpack_double(double* val, size_t* len)
+int G2latlon::unpack_double(double* val, size_t* len)
 {
     int ret = 0;
 
@@ -56,7 +56,7 @@ int grib_accessor_g2latlon_t::unpack_double(double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_g2latlon_t::pack_double(const double* val, size_t* len)
+int G2latlon::pack_double(const double* val, size_t* len)
 {
     int ret = 0;
     double grid[6];
@@ -94,7 +94,7 @@ int grib_accessor_g2latlon_t::pack_double(const double* val, size_t* len)
     return grib_set_double_array_internal(hand, grid_, grid, size);
 }
 
-int grib_accessor_g2latlon_t::pack_missing()
+int G2latlon::pack_missing()
 {
     double missing = GRIB_MISSING_DOUBLE;
     size_t size    = 1;
@@ -105,7 +105,7 @@ int grib_accessor_g2latlon_t::pack_missing()
     return pack_double(&missing, &size);
 }
 
-int grib_accessor_g2latlon_t::is_missing()
+int G2latlon::is_missing()
 {
     long given = 1;
 

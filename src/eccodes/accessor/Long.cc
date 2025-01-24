@@ -10,28 +10,28 @@
 
 #include "Long.h"
 
-grib_accessor_long_t _grib_accessor_long{};
-grib_accessor* grib_accessor_long = &_grib_accessor_long;
+eccodes::accessor::Long _grib_accessor_long;
+eccodes::Accessor* grib_accessor_long = &_grib_accessor_long;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_long_t::init(const long len, grib_arguments* arg)
+void Long::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
 }
 
-long grib_accessor_long_t::get_native_type()
+long Long::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
 
-void grib_accessor_long_t::dump(eccodes::Dumper* dumper)
+void Long::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_long(this, NULL);
 }
 
-int grib_accessor_long_t::unpack_string(char* v, size_t* len)
+int Long::unpack_string(char* v, size_t* len)
 {
     long val = 0;
     size_t l = 1;
@@ -69,7 +69,7 @@ int grib_accessor_long_t::unpack_string(char* v, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_long_t::pack_missing()
+int Long::pack_missing()
 {
     size_t len = 1;
     long value = GRIB_MISSING_LONG;
@@ -80,7 +80,7 @@ int grib_accessor_long_t::pack_missing()
     return GRIB_VALUE_CANNOT_BE_MISSING;
 }
 
-int grib_accessor_long_t::unpack_double(double* val, size_t* len)
+int Long::unpack_double(double* val, size_t* len)
 {
     size_t rlen     = 0;
     long count      = 0;
@@ -127,7 +127,7 @@ int grib_accessor_long_t::unpack_double(double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_long_t::compare(grib_accessor* b)
+int Long::compare(grib_accessor* b)
 {
     int retval = 0;
     long* aval = 0;
@@ -168,7 +168,7 @@ int grib_accessor_long_t::compare(grib_accessor* b)
     return retval;
 }
 
-int grib_accessor_long_t::pack_string(const char* val, size_t* len)
+int Long::pack_string(const char* val, size_t* len)
 {
     long v = 0; /* The converted value */
 

@@ -10,15 +10,15 @@
 
 #include "G2MarsLabeling.h"
 
-grib_accessor_g2_mars_labeling_t _grib_accessor_g2_mars_labeling{};
-grib_accessor* grib_accessor_g2_mars_labeling = &_grib_accessor_g2_mars_labeling;
+eccodes::accessor::G2MarsLabeling _grib_accessor_g2_mars_labeling;
+eccodes::Accessor* grib_accessor_g2_mars_labeling = &_grib_accessor_g2_mars_labeling;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_g2_mars_labeling_t::init(const long l, grib_arguments* c)
+void G2MarsLabeling::init(const long l, grib_arguments* c)
 {
-    grib_accessor_gen_t::init(l, c);
+    Gen::init(l, c);
     int n             = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
 
@@ -34,7 +34,7 @@ void grib_accessor_g2_mars_labeling_t::init(const long l, grib_arguments* c)
     typeOfGeneratingProcess_         = c->get_name(hand, n++);
 }
 
-int grib_accessor_g2_mars_labeling_t::unpack_long(long* val, size_t* len)
+int G2MarsLabeling::unpack_long(long* val, size_t* len)
 {
     char* key = NULL;
 
@@ -57,7 +57,7 @@ int grib_accessor_g2_mars_labeling_t::unpack_long(long* val, size_t* len)
     return grib_get_long(grib_handle_of_accessor(this), key, val);
 }
 
-int grib_accessor_g2_mars_labeling_t::unpack_string(char* val, size_t* len)
+int G2MarsLabeling::unpack_string(char* val, size_t* len)
 {
     char* key = NULL;
 
@@ -80,7 +80,7 @@ int grib_accessor_g2_mars_labeling_t::unpack_string(char* val, size_t* len)
     return grib_get_string(grib_handle_of_accessor(this), key, val, len);
 }
 
-int grib_accessor_g2_mars_labeling_t::extra_set(long val)
+int G2MarsLabeling::extra_set(long val)
 {
     int ret                                = 0;
     grib_handle* hand                      = grib_handle_of_accessor(this);
@@ -310,7 +310,7 @@ int grib_accessor_g2_mars_labeling_t::extra_set(long val)
     return ret;
 }
 
-int grib_accessor_g2_mars_labeling_t::pack_string(const char* val, size_t* len)
+int G2MarsLabeling::pack_string(const char* val, size_t* len)
 {
     char* key = NULL;
     int ret   = 0;
@@ -343,7 +343,7 @@ int grib_accessor_g2_mars_labeling_t::pack_string(const char* val, size_t* len)
     return extra_set(lval);
 }
 
-int grib_accessor_g2_mars_labeling_t::pack_long(const long* val, size_t* len)
+int G2MarsLabeling::pack_long(const long* val, size_t* len)
 {
     char* key = NULL;
     int ret   = 0;
@@ -371,13 +371,13 @@ int grib_accessor_g2_mars_labeling_t::pack_long(const long* val, size_t* len)
     return extra_set(*val);
 }
 
-int grib_accessor_g2_mars_labeling_t::value_count(long* count)
+int G2MarsLabeling::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-long grib_accessor_g2_mars_labeling_t::get_native_type()
+long G2MarsLabeling::get_native_type()
 {
     char* key = NULL;
     int ret   = 0;

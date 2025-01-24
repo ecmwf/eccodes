@@ -12,15 +12,15 @@
 #include "grib_scaling.h"
 #include <algorithm>
 
-grib_accessor_data_g2bifourier_packing_t _grib_accessor_data_g2bifourier_packing{};
-grib_accessor* grib_accessor_data_g2bifourier_packing = &_grib_accessor_data_g2bifourier_packing;
+eccodes::accessor::DataG2bifourierPacking _grib_accessor_data_g2bifourier_packing;
+eccodes::Accessor* grib_accessor_data_g2bifourier_packing = &_grib_accessor_data_g2bifourier_packing;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_data_g2bifourier_packing_t::init(const long v, grib_arguments* args)
+void DataG2bifourierPacking::init(const long v, grib_arguments* args)
 {
-    grib_accessor_data_simple_packing_t::init(v, args);
+    DataSimplePacking::init(v, args);
     grib_handle* gh = grib_handle_of_accessor(this);
 
     ieee_floats_                         = args->get_name(gh, carg_++);
@@ -41,7 +41,7 @@ void grib_accessor_data_g2bifourier_packing_t::init(const long v, grib_arguments
     dirty_ = 1;
 }
 
-int grib_accessor_data_g2bifourier_packing_t::value_count(long* numberOfValues)
+int DataG2bifourierPacking::value_count(long* numberOfValues)
 {
     grib_handle* gh = grib_handle_of_accessor(this);
     *numberOfValues = 0;
@@ -331,7 +331,7 @@ static void free_bif_trunc(bif_trunc_t* bt, grib_accessor* a)
     grib_context_free(gh->context, bt);
 }
 
-bif_trunc_t* grib_accessor_data_g2bifourier_packing_t::new_bif_trunc()
+bif_trunc_t* DataG2bifourierPacking::new_bif_trunc()
 {
     int ret;
 
@@ -443,7 +443,7 @@ cleanup:
     return NULL;
 }
 
-int grib_accessor_data_g2bifourier_packing_t::unpack_double(double* val, size_t* len)
+int DataG2bifourierPacking::unpack_double(double* val, size_t* len)
 {
     grib_handle* gh = grib_handle_of_accessor(this);
 
@@ -540,7 +540,7 @@ cleanup:
     return ret;
 }
 
-int grib_accessor_data_g2bifourier_packing_t::pack_double(const double* val, size_t* len)
+int DataG2bifourierPacking::pack_double(const double* val, size_t* len)
 {
     grib_handle* gh = grib_handle_of_accessor(this);
 

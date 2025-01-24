@@ -10,15 +10,15 @@
 
 #include "G1numberOfCodedValuesShComplex.h"
 
-grib_accessor_g1number_of_coded_values_sh_complex_t _grib_accessor_g1number_of_coded_values_sh_complex{};
-grib_accessor* grib_accessor_g1number_of_coded_values_sh_complex = &_grib_accessor_g1number_of_coded_values_sh_complex;
+eccodes::accessor::G1numberOfCodedValuesShComplex _grib_accessor_g1number_of_coded_values_sh_complex;
+eccodes::Accessor* grib_accessor_g1number_of_coded_values_sh_complex = &_grib_accessor_g1number_of_coded_values_sh_complex;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_g1number_of_coded_values_sh_complex_t::init(const long l, grib_arguments* c)
+void G1numberOfCodedValuesShComplex::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     int n             = 0;
     bitsPerValue_     = c->get_name(grib_handle_of_accessor(this), n++);
     offsetBeforeData_ = c->get_name(grib_handle_of_accessor(this), n++);
@@ -33,7 +33,7 @@ void grib_accessor_g1number_of_coded_values_sh_complex_t::init(const long l, gri
     length_ = 0;
 }
 
-int grib_accessor_g1number_of_coded_values_sh_complex_t::unpack_long(long* val, size_t* len)
+int G1numberOfCodedValuesShComplex::unpack_long(long* val, size_t* len)
 {
     int ret               = GRIB_SUCCESS;
     long bpv              = 0;

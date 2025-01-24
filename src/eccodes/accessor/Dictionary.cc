@@ -10,15 +10,15 @@
 
 #include "Dictionary.h"
 
-grib_accessor_dictionary_t _grib_accessor_dictionary{};
-grib_accessor* grib_accessor_dictionary = &_grib_accessor_dictionary;
+eccodes::accessor::Dictionary _grib_accessor_dictionary;
+eccodes::Accessor* grib_accessor_dictionary = &_grib_accessor_dictionary;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_dictionary_t::init(const long len, grib_arguments* params)
+void Dictionary::init(const long len, grib_arguments* params)
 {
-    grib_accessor_gen_t::init(len, params);
+    Gen::init(len, params);
     int n = 0;
 
     dictionary_ = params->get_string(grib_handle_of_accessor(this), n++);
@@ -31,7 +31,7 @@ void grib_accessor_dictionary_t::init(const long len, grib_arguments* params)
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-grib_trie* grib_accessor_dictionary_t::load_dictionary(int* err)
+grib_trie* Dictionary::load_dictionary(int* err)
 {
     char* filename  = NULL;
     char line[1024] = {0,};
@@ -146,7 +146,7 @@ grib_trie* grib_accessor_dictionary_t::load_dictionary(int* err)
     return dictionary;
 }
 
-void grib_accessor_dictionary_t::dump(eccodes::Dumper* dumper)
+void Dictionary::dump(eccodes::Dumper* dumper)
 {
     switch (get_native_type()) {
         case GRIB_TYPE_STRING:
@@ -161,7 +161,7 @@ void grib_accessor_dictionary_t::dump(eccodes::Dumper* dumper)
     }
 }
 
-int grib_accessor_dictionary_t::unpack_string(char* buffer, size_t* len)
+int Dictionary::unpack_string(char* buffer, size_t* len)
 {
     int err        = GRIB_SUCCESS;
     char key[1024] = {0,};
@@ -215,13 +215,13 @@ int grib_accessor_dictionary_t::unpack_string(char* buffer, size_t* len)
     return err;
 }
 
-int grib_accessor_dictionary_t::value_count(long* count)
+int Dictionary::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-long grib_accessor_dictionary_t::get_native_type()
+long Dictionary::get_native_type()
 {
     int type = GRIB_TYPE_DOUBLE;
     if (flags_ & GRIB_ACCESSOR_FLAG_LONG_TYPE)
@@ -231,7 +231,7 @@ long grib_accessor_dictionary_t::get_native_type()
     return type;
 }
 
-int grib_accessor_dictionary_t::unpack_long(long* val, size_t* len)
+int Dictionary::unpack_long(long* val, size_t* len)
 {
     int err           = 0;
     char buffer[1024] = {0,};
@@ -247,7 +247,7 @@ int grib_accessor_dictionary_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_dictionary_t::unpack_double(double* val, size_t* len)
+int Dictionary::unpack_double(double* val, size_t* len)
 {
     int err           = 0;
     char buffer[1024] = {0,};

@@ -10,15 +10,15 @@
 
 #include "GaussianGridName.h"
 
-grib_accessor_gaussian_grid_name_t _grib_accessor_gaussian_grid_name{};
-grib_accessor* grib_accessor_gaussian_grid_name = &_grib_accessor_gaussian_grid_name;
+eccodes::accessor::GaussianGridName _grib_accessor_gaussian_grid_name;
+eccodes::Accessor* grib_accessor_gaussian_grid_name = &_grib_accessor_gaussian_grid_name;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_gaussian_grid_name_t::init(const long len, grib_arguments* arg)
+void GaussianGridName::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
     int n = 0;
 
     N_            = arg->get_name(parent_->h, n++);
@@ -29,14 +29,14 @@ void grib_accessor_gaussian_grid_name_t::init(const long len, grib_arguments* ar
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
 
-long grib_accessor_gaussian_grid_name_t::get_native_type()
+long GaussianGridName::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
 
 #define MAX_GRIDNAME_LEN 16
 
-int grib_accessor_gaussian_grid_name_t::unpack_string(char* v, size_t* len)
+int GaussianGridName::unpack_string(char* v, size_t* len)
 {
     long N = 0, Ni = 0;
     char tmp[MAX_GRIDNAME_LEN] = {0,};
@@ -79,7 +79,7 @@ int grib_accessor_gaussian_grid_name_t::unpack_string(char* v, size_t* len)
     return GRIB_SUCCESS;
 }
 
-size_t grib_accessor_gaussian_grid_name_t::string_length()
+size_t GaussianGridName::string_length()
 {
     return MAX_GRIDNAME_LEN;
 }

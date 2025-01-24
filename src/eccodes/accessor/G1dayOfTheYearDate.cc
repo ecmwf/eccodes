@@ -10,24 +10,24 @@
 
 #include "G1dayOfTheYearDate.h"
 
-grib_accessor_g1day_of_the_year_date_t _grib_accessor_g1day_of_the_year_date{};
-grib_accessor* grib_accessor_g1day_of_the_year_date = &_grib_accessor_g1day_of_the_year_date;
+eccodes::accessor::G1dayOfTheYearDate _grib_accessor_g1day_of_the_year_date;
+eccodes::Accessor* grib_accessor_g1day_of_the_year_date = &_grib_accessor_g1day_of_the_year_date;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_g1day_of_the_year_date_t::init(const long l, grib_arguments* c)
+void G1dayOfTheYearDate::init(const long l, grib_arguments* c)
 {
-    grib_accessor_g1date_t::init(l, c);
+    G1date::init(l, c);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-void grib_accessor_g1day_of_the_year_date_t::dump(eccodes::Dumper* dumper)
+void G1dayOfTheYearDate::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_string(this, NULL);
 }
 
-int grib_accessor_g1day_of_the_year_date_t::unpack_string(char* val, size_t* len)
+int G1dayOfTheYearDate::unpack_string(char* val, size_t* len)
 {
     /* special clim case where each mont have 30 days.. to comply with mars*/
     grib_handle* hand = grib_handle_of_accessor(this);

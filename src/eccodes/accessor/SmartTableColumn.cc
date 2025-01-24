@@ -11,15 +11,15 @@
 #include "SmartTableColumn.h"
 #include "SmartTable.h"
 
-grib_accessor_smart_table_column_t _grib_accessor_smart_table_column{};
-grib_accessor* grib_accessor_smart_table_column = &_grib_accessor_smart_table_column;
+eccodes::accessor::SmartTableColumn _grib_accessor_smart_table_column;
+eccodes::Accessor* grib_accessor_smart_table_column = &_grib_accessor_smart_table_column;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_smart_table_column_t::init(const long len, grib_arguments* params)
+void SmartTableColumn::init(const long len, grib_arguments* params)
 {
-    grib_accessor_gen_t::init(len, params);
+    Gen::init(len, params);
     int n = 0;
 
     smartTable_ = params->get_name(grib_handle_of_accessor(this), n++);
@@ -29,7 +29,7 @@ void grib_accessor_smart_table_column_t::init(const long len, grib_arguments* pa
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-void grib_accessor_smart_table_column_t::dump(eccodes::Dumper* dumper)
+void SmartTableColumn::dump(eccodes::Dumper* dumper)
 {
     int type = get_native_type();
 
@@ -43,9 +43,9 @@ void grib_accessor_smart_table_column_t::dump(eccodes::Dumper* dumper)
     }
 }
 
-int grib_accessor_smart_table_column_t::unpack_string_array(char** buffer, size_t* len)
+int SmartTableColumn::unpack_string_array(char** buffer, size_t* len)
 {
-    grib_accessor_smart_table_t* tableAccessor = NULL;
+    SmartTable* tableAccessor = NULL;
     grib_smart_table* table                    = NULL;
 
     size_t size = 1;
@@ -54,7 +54,7 @@ int grib_accessor_smart_table_column_t::unpack_string_array(char** buffer, size_
     char tmp[1024] = {0,};
     int i = 0;
 
-    tableAccessor = (grib_accessor_smart_table_t*)grib_find_accessor(grib_handle_of_accessor(this), smartTable_);
+    tableAccessor = (SmartTable*)grib_find_accessor(grib_handle_of_accessor(this), smartTable_);
     if (!tableAccessor) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "Unable to find accessor %s", smartTable_);
@@ -97,9 +97,9 @@ int grib_accessor_smart_table_column_t::unpack_string_array(char** buffer, size_
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_smart_table_column_t::unpack_long(long* val, size_t* len)
+int SmartTableColumn::unpack_long(long* val, size_t* len)
 {
-    grib_accessor_smart_table_t* tableAccessor = NULL;
+    SmartTable* tableAccessor = NULL;
     grib_smart_table* table                    = NULL;
 
     size_t size = 1;
@@ -110,7 +110,7 @@ int grib_accessor_smart_table_column_t::unpack_long(long* val, size_t* len)
     for (i = 0; i < *len; i++)
         val[i] = GRIB_MISSING_LONG;
 
-    tableAccessor = (grib_accessor_smart_table_t*)grib_find_accessor(grib_handle_of_accessor(this), smartTable_);
+    tableAccessor = (SmartTable*)grib_find_accessor(grib_handle_of_accessor(this), smartTable_);
     if (!tableAccessor) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "Unable to find accessor %s", smartTable_);
@@ -147,7 +147,7 @@ int grib_accessor_smart_table_column_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_smart_table_column_t::value_count(long* count)
+int SmartTableColumn::value_count(long* count)
 {
     size_t size = 0;
     int err     = 0;
@@ -161,17 +161,17 @@ int grib_accessor_smart_table_column_t::value_count(long* count)
     return err;
 }
 
-void grib_accessor_smart_table_column_t::destroy(grib_context* context)
+void SmartTableColumn::destroy(grib_context* context)
 {
     if (vvalue_ != NULL) {
         grib_context_free(context, vvalue_);
         vvalue_ = NULL;
     }
 
-    grib_accessor_gen_t::destroy(context);
+    Gen::destroy(context);
 }
 
-long grib_accessor_smart_table_column_t::get_native_type()
+long SmartTableColumn::get_native_type()
 {
     int type = GRIB_TYPE_LONG;
     /*printf("---------- %s flags=%ld GRIB_ACCESSOR_FLAG_STRING_TYPE=%d\n",

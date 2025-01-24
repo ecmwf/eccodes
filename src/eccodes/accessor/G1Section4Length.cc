@@ -10,19 +10,19 @@
 
 #include "G1Section4Length.h"
 
-grib_accessor_g1_section4_length_t _grib_accessor_g1_section4_length{};
-grib_accessor* grib_accessor_g1_section4_length = &_grib_accessor_g1_section4_length;
+eccodes::accessor::G1Section4Length _grib_accessor_g1_section4_length;
+eccodes::Accessor* grib_accessor_g1_section4_length = &_grib_accessor_g1_section4_length;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_g1_section4_length_t::init(const long len, grib_arguments* args)
+void G1Section4Length::init(const long len, grib_arguments* args)
 {
-    grib_accessor_section_length_t::init(len, args);
+    SectionLength::init(len, args);
     total_length_ = args->get_name(grib_handle_of_accessor(this), 0);
 }
 
-int grib_accessor_g1_section4_length_t::pack_long(const long* val, size_t* len)
+int G1Section4Length::pack_long(const long* val, size_t* len)
 {
     // Old implementation:
     //   Here we assume that the totalLength will be coded AFTER the section4 length, and
@@ -36,7 +36,7 @@ int grib_accessor_g1_section4_length_t::pack_long(const long* val, size_t* len)
     return pack_long_unsigned_helper(val, len, /*check=*/0);
 }
 
-int grib_accessor_g1_section4_length_t::unpack_long(long* val, size_t* len)
+int G1Section4Length::unpack_long(long* val, size_t* len)
 {
     int ret           = 0;
     long total_length = 0, sec4_length = 0;

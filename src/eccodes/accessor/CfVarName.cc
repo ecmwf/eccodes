@@ -10,20 +10,20 @@
 
 #include "CfVarName.h"
 
-grib_accessor_cf_var_name_t _grib_accessor_cf_var_name{};
-grib_accessor* grib_accessor_cf_var_name = &_grib_accessor_cf_var_name;
+eccodes::accessor::CfVarName _grib_accessor_cf_var_name;
+eccodes::Accessor* grib_accessor_cf_var_name = &_grib_accessor_cf_var_name;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_cf_var_name_t::init(const long l, grib_arguments* arg)
+void CfVarName::init(const long l, grib_arguments* arg)
 {
-    grib_accessor_ascii_t::init(l, arg);
+    Ascii::init(l, arg);
     grib_handle* h = grib_handle_of_accessor(this);
     defaultKey_    = arg->get_name(h, 0);
 }
 
-int grib_accessor_cf_var_name_t::unpack_string(char* val, size_t* len)
+int CfVarName::unpack_string(char* val, size_t* len)
 {
     grib_handle* h       = grib_handle_of_accessor(this);
     char defaultKey[256] = {0,};
@@ -52,7 +52,7 @@ int grib_accessor_cf_var_name_t::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-size_t grib_accessor_cf_var_name_t::string_length()
+size_t CfVarName::string_length()
 {
     return 1024;
 }

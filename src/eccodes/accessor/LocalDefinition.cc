@@ -10,15 +10,15 @@
 
 #include "LocalDefinition.h"
 
-grib_accessor_local_definition_t _grib_accessor_local_definition{};
-grib_accessor* grib_accessor_local_definition = &_grib_accessor_local_definition;
+eccodes::accessor::LocalDefinition _grib_accessor_local_definition;
+eccodes::Accessor* grib_accessor_local_definition = &_grib_accessor_local_definition;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_local_definition_t::init(const long l, grib_arguments* c)
+void LocalDefinition::init(const long l, grib_arguments* c)
 {
-    grib_accessor_unsigned_t::init(l, c);
+    Unsigned::init(l, c);
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
@@ -33,12 +33,12 @@ void grib_accessor_local_definition_t::init(const long l, grib_arguments* c)
     derivedForecast_                         = c->get_name(hand, n++);
 }
 
-int grib_accessor_local_definition_t::unpack_long(long* val, size_t* len)
+int LocalDefinition::unpack_long(long* val, size_t* len)
 {
     return grib_get_long(grib_handle_of_accessor(this), grib2LocalSectionNumber_, val);
 }
 
-int grib_accessor_local_definition_t::pack_long(const long* val, size_t* len)
+int LocalDefinition::pack_long(const long* val, size_t* len)
 {
     grib_handle* hand                            = grib_handle_of_accessor(this);
     long productDefinitionTemplateNumber         = -1;
@@ -203,7 +203,7 @@ int grib_accessor_local_definition_t::pack_long(const long* val, size_t* len)
 #ifdef DEBUG
             // In test & development mode, fail so we remember to adjust PDTN
             grib_context_log(context_, GRIB_LOG_ERROR,
-                             "grib_accessor_local_definition_t: Invalid localDefinitionNumber %d", localDefinitionNumber);
+                             "LocalDefinition: Invalid localDefinitionNumber %d", localDefinitionNumber);
             // return GRIB_ENCODING_ERROR;
 #endif
             // ECC-1253: Do not fail in operations. Leave PDTN as is
@@ -218,7 +218,7 @@ int grib_accessor_local_definition_t::pack_long(const long* val, size_t* len)
 
     if (productDefinitionTemplateNumberNew >= 0 && productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
         if (context_->debug) {
-            fprintf(stderr, "ECCODES DEBUG grib_accessor_local_definition_t: ldNumber=%d, newPDTN=%ld\n",
+            fprintf(stderr, "ECCODES DEBUG LocalDefinition: ldNumber=%d, newPDTN=%ld\n",
                     localDefinitionNumber, productDefinitionTemplateNumberNew);
         }
         if (tooEarly)
@@ -234,7 +234,7 @@ int grib_accessor_local_definition_t::pack_long(const long* val, size_t* len)
     return 0;
 }
 
-int grib_accessor_local_definition_t::value_count(long* count)
+int LocalDefinition::value_count(long* count)
 {
     *count = 1;
     return 0;

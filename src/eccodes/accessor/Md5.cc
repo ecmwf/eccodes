@@ -11,15 +11,15 @@
 #include "Md5.h"
 #include "md5.h"
 
-grib_accessor_md5_t _grib_accessor_md5{};
-grib_accessor* grib_accessor_md5 = &_grib_accessor_md5;
+eccodes::accessor::Md5 _grib_accessor_md5;
+eccodes::Accessor* grib_accessor_md5 = &_grib_accessor_md5;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_md5_t::init(const long len, grib_arguments* arg)
+void Md5::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
     char* b                   = 0;
     int n                     = 0;
     grib_string_list* current = 0;
@@ -49,12 +49,12 @@ void grib_accessor_md5_t::init(const long len, grib_arguments* arg)
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
 
-long grib_accessor_md5_t::get_native_type()
+long Md5::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
 
-int grib_accessor_md5_t::compare(grib_accessor* b)
+int Md5::compare(grib_accessor* b)
 {
     int retval = GRIB_SUCCESS;
 
@@ -79,7 +79,7 @@ int grib_accessor_md5_t::compare(grib_accessor* b)
     return retval;
 }
 
-int grib_accessor_md5_t::unpack_string(char* v, size_t* len)
+int Md5::unpack_string(char* v, size_t* len)
 {
     unsigned mess_len;
     unsigned char* mess;
@@ -138,7 +138,7 @@ int grib_accessor_md5_t::unpack_string(char* v, size_t* len)
     return ret;
 }
 
-void grib_accessor_md5_t::destroy(grib_context* c)
+void Md5::destroy(grib_context* c)
 {
     if (blocklist_) {
         grib_string_list* next = blocklist_;
@@ -150,10 +150,10 @@ void grib_accessor_md5_t::destroy(grib_context* c)
             grib_context_free(c, cur);
         }
     }
-    grib_accessor_gen_t::destroy(c);
+    Gen::destroy(c);
 }
 
-int grib_accessor_md5_t::value_count(long* count)
+int Md5::value_count(long* count)
 {
     *count = 1; /* ECC-1475 */
     return 0;

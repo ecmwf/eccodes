@@ -10,15 +10,15 @@
 
 #include "BufrdcExpandedDescriptors.h"
 
-grib_accessor_bufrdc_expanded_descriptors_t _grib_accessor_bufrdc_expanded_descriptors{};
-grib_accessor* grib_accessor_bufrdc_expanded_descriptors = &_grib_accessor_bufrdc_expanded_descriptors;
+eccodes::accessor::BufrdcExpandedDescriptors _grib_accessor_bufrdc_expanded_descriptors;
+eccodes::Accessor* grib_accessor_bufrdc_expanded_descriptors = &_grib_accessor_bufrdc_expanded_descriptors;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_bufrdc_expanded_descriptors_t::init(const long len, grib_arguments* args)
+void BufrdcExpandedDescriptors::init(const long len, grib_arguments* args)
 {
-    grib_accessor_long_t::init(len, args);
+    Long::init(len, args);
     int n                        = 0;
     expandedDescriptors_         = args->get_name(grib_handle_of_accessor(this), n++);
     expandedDescriptorsAccessor_ = 0;
@@ -26,7 +26,7 @@ void grib_accessor_bufrdc_expanded_descriptors_t::init(const long len, grib_argu
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-grib_accessor* grib_accessor_bufrdc_expanded_descriptors_t::get_accessor()
+grib_accessor* BufrdcExpandedDescriptors::get_accessor()
 {
     if (!expandedDescriptorsAccessor_) {
         expandedDescriptorsAccessor_ = grib_find_accessor(grib_handle_of_accessor(this), expandedDescriptors_);
@@ -34,7 +34,7 @@ grib_accessor* grib_accessor_bufrdc_expanded_descriptors_t::get_accessor()
     return expandedDescriptorsAccessor_;
 }
 
-int grib_accessor_bufrdc_expanded_descriptors_t::unpack_long(long* val, size_t* len)
+int BufrdcExpandedDescriptors::unpack_long(long* val, size_t* len)
 {
     grib_accessor* descriptors = 0;
     size_t rlen                = 0, l;
@@ -61,7 +61,7 @@ int grib_accessor_bufrdc_expanded_descriptors_t::unpack_long(long* val, size_t* 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_bufrdc_expanded_descriptors_t::unpack_string_array(char** buffer, size_t* len)
+int BufrdcExpandedDescriptors::unpack_string_array(char** buffer, size_t* len)
 {
     int err                    = 0;
     grib_accessor* descriptors = 0;
@@ -94,16 +94,16 @@ int grib_accessor_bufrdc_expanded_descriptors_t::unpack_string_array(char** buff
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_bufrdc_expanded_descriptors_t::value_count(long* rlen)
+int BufrdcExpandedDescriptors::value_count(long* rlen)
 {
     grib_accessor* descriptors = get_accessor();
 
     return descriptors->value_count(rlen);
 }
 
-void grib_accessor_bufrdc_expanded_descriptors_t::destroy(grib_context* c)
+void BufrdcExpandedDescriptors::destroy(grib_context* c)
 {
-    grib_accessor_long_t::destroy(c);
+    Long::destroy(c);
 }
 
 }  // namespace eccodes::accessor

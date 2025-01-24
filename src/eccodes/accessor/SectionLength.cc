@@ -10,15 +10,15 @@
 
 #include "SectionLength.h"
 
-grib_accessor_section_length_t _grib_accessor_section_length{};
-grib_accessor* grib_accessor_section_length = &_grib_accessor_section_length;
+eccodes::accessor::SectionLength _grib_accessor_section_length;
+eccodes::Accessor* grib_accessor_section_length = &_grib_accessor_section_length;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_section_length_t::init(const long len, grib_arguments* arg)
+void SectionLength::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_unsigned_t::init(len, arg);
+    Unsigned::init(len, arg);
     parent_->aclength = this;
     length_           = len;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -26,12 +26,12 @@ void grib_accessor_section_length_t::init(const long len, grib_arguments* arg)
     ECCODES_ASSERT(length_ >= 0);
 }
 
-void grib_accessor_section_length_t::dump(eccodes::Dumper* dumper)
+void SectionLength::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_long(this, NULL);
 }
 
-int grib_accessor_section_length_t::value_count(long* c)
+int SectionLength::value_count(long* c)
 {
     *c = 1;
     return 0;

@@ -11,15 +11,15 @@
 #include "SimplePackingError.h"
 #include "grib_scaling.h"
 
-grib_accessor_simple_packing_error_t _grib_accessor_simple_packing_error{};
-grib_accessor* grib_accessor_simple_packing_error = &_grib_accessor_simple_packing_error;
+eccodes::accessor::SimplePackingError _grib_accessor_simple_packing_error;
+eccodes::Accessor* grib_accessor_simple_packing_error = &_grib_accessor_simple_packing_error;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_simple_packing_error_t::init(const long l, grib_arguments* c)
+void SimplePackingError::init(const long l, grib_arguments* c)
 {
-    grib_accessor_double_t::init(l, c);
+    Double::init(l, c);
     int n          = 0;
     grib_handle* h = grib_handle_of_accessor(this);
 
@@ -33,7 +33,7 @@ void grib_accessor_simple_packing_error_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-int grib_accessor_simple_packing_error_t::unpack_double(double* val, size_t* len)
+int SimplePackingError::unpack_double(double* val, size_t* len)
 {
     int ret                 = 0;
     long binaryScaleFactor  = 0;

@@ -10,15 +10,15 @@
 
 #include "ToInteger.h"
 
-grib_accessor_to_integer_t _grib_accessor_to_integer{};
-grib_accessor* grib_accessor_to_integer = &_grib_accessor_to_integer;
+eccodes::accessor::ToInteger _grib_accessor_to_integer;
+eccodes::Accessor* grib_accessor_to_integer = &_grib_accessor_to_integer;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_to_integer_t::init(const long len, grib_arguments* arg)
+void ToInteger::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
     grib_handle* hand = grib_handle_of_accessor(this);
 
     key_        = arg->get_name(hand, 0);
@@ -29,7 +29,7 @@ void grib_accessor_to_integer_t::init(const long len, grib_arguments* arg)
     grib_accessor::length_ = 0;
 }
 
-int grib_accessor_to_integer_t::value_count(long* count)
+int ToInteger::value_count(long* count)
 {
     size_t size = 0;
 
@@ -39,7 +39,7 @@ int grib_accessor_to_integer_t::value_count(long* count)
     return err;
 }
 
-size_t grib_accessor_to_integer_t::string_length()
+size_t ToInteger::string_length()
 {
     size_t size = 0;
 
@@ -50,17 +50,17 @@ size_t grib_accessor_to_integer_t::string_length()
     return size;
 }
 
-void grib_accessor_to_integer_t::dump(eccodes::Dumper* dumper)
+void ToInteger::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_long(this, NULL);
 }
 
-long grib_accessor_to_integer_t::get_native_type()
+long ToInteger::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
 
-int grib_accessor_to_integer_t::unpack_string(char* val, size_t* len)
+int ToInteger::unpack_string(char* val, size_t* len)
 {
     int err        = 0;
     char buff[512] = {0,};
@@ -90,24 +90,24 @@ int grib_accessor_to_integer_t::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_to_integer_t::pack_string(const char* val, size_t* len)
+int ToInteger::pack_string(const char* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_to_integer_t::pack_long(const long* v, size_t* len)
+int ToInteger::pack_long(const long* v, size_t* len)
 {
     grib_context_log(context_, GRIB_LOG_ERROR, "Should not pack %s as an integer", name_);
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_to_integer_t::pack_double(const double* v, size_t* len)
+int ToInteger::pack_double(const double* v, size_t* len)
 {
     grib_context_log(context_, GRIB_LOG_ERROR, "Should not pack %s as a double", name_);
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_to_integer_t::unpack_long(long* v, size_t* len)
+int ToInteger::unpack_long(long* v, size_t* len)
 {
     char val[1024] = {0,};
     size_t l   = sizeof(val);
@@ -123,7 +123,7 @@ int grib_accessor_to_integer_t::unpack_long(long* v, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_to_integer_t::unpack_double(double* v, size_t* len)
+int ToInteger::unpack_double(double* v, size_t* len)
 {
     size_t l = 1;
     long val = 0;
@@ -133,7 +133,7 @@ int grib_accessor_to_integer_t::unpack_double(double* v, size_t* len)
     return err;
 }
 
-long grib_accessor_to_integer_t::next_offset()
+long ToInteger::next_offset()
 {
     return offset_ + grib_accessor::length_;
 }

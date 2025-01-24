@@ -11,15 +11,15 @@
 #include "Vector.h"
 #include "AbstractVector.h"
 
-grib_accessor_vector_t _grib_accessor_vector{};
-grib_accessor* grib_accessor_vector = &_grib_accessor_vector;
+eccodes::accessor::Vector _grib_accessor_vector;
+eccodes::Accessor* grib_accessor_vector = &_grib_accessor_vector;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_vector_t::init(const long l, grib_arguments* c)
+void Vector::init(const long l, grib_arguments* c)
 {
-    grib_accessor_abstract_vector_t::init(l, c);
+    AbstractVector::init(l, c);
     int n = 0;
 
     vector_ = c->get_name(grib_handle_of_accessor(this), n++);
@@ -29,13 +29,13 @@ void grib_accessor_vector_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-int grib_accessor_vector_t::unpack_double(double* val, size_t* len)
+int Vector::unpack_double(double* val, size_t* len)
 {
     int err     = 0;
     size_t size = 0;
     double* stat;
     grib_accessor* va                  = (grib_accessor*)grib_find_accessor(grib_handle_of_accessor(this), vector_);
-    grib_accessor_abstract_vector_t* v = (grib_accessor_abstract_vector_t*)va;
+    accessor::AbstractVector* v = (accessor::AbstractVector*)va;
 
     ECCODES_ASSERT(index_ >= 0);
 
@@ -45,7 +45,7 @@ int grib_accessor_vector_t::unpack_double(double* val, size_t* len)
     }
 
     if (va->dirty_) {
-        // printf("\ngrib_accessor_class_vector_t::unpack_double  accessor=%s is DIRTY\n", name_);
+        // printf("\nClassVector::unpack_double  accessor=%s is DIRTY\n", name_);
         grib_get_size(grib_handle_of_accessor(this), vector_, &size);
         stat = (double*)grib_context_malloc_clear(context_, sizeof(double) * size);
         err  = va->unpack_double(stat, &size);
@@ -54,7 +54,7 @@ int grib_accessor_vector_t::unpack_double(double* val, size_t* len)
             return err;
     }
     else {
-        // printf("\ngrib_accessor_class_vector_t::unpack_double  accessor=%s is CLEAN\n",a->name);
+        // printf("\nClassVector::unpack_double  accessor=%s is CLEAN\n",a->name);
     }
 
     *val = v->v_[index_];

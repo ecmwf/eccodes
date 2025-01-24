@@ -10,15 +10,15 @@
 
 #include "Scale.h"
 
-grib_accessor_scale_t _grib_accessor_scale{};
-grib_accessor* grib_accessor_scale = &_grib_accessor_scale;
+eccodes::accessor::Scale _grib_accessor_scale;
+eccodes::Accessor* grib_accessor_scale = &_grib_accessor_scale;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_scale_t::init(const long l, grib_arguments* c)
+void Scale::init(const long l, grib_arguments* c)
 {
-    grib_accessor_double_t::init(l, c);
+    Double::init(l, c);
     int n = 0;
 
     value_      = c->get_name(grib_handle_of_accessor(this), n++);
@@ -27,7 +27,7 @@ void grib_accessor_scale_t::init(const long l, grib_arguments* c)
     truncating_ = c->get_name(grib_handle_of_accessor(this), n++);
 }
 
-int grib_accessor_scale_t::unpack_double(double* val, size_t* len)
+int Scale::unpack_double(double* val, size_t* len)
 {
     int ret         = 0;
     long value      = 0;
@@ -62,13 +62,13 @@ int grib_accessor_scale_t::unpack_double(double* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_scale_t::pack_long(const long* val, size_t* len)
+int Scale::pack_long(const long* val, size_t* len)
 {
     const double dval = (double)*val;
     return pack_double(&dval, len);
 }
 
-int grib_accessor_scale_t::pack_double(const double* val, size_t* len)
+int Scale::pack_double(const double* val, size_t* len)
 {
     int ret = 0;
 
@@ -117,7 +117,7 @@ int grib_accessor_scale_t::pack_double(const double* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_scale_t::is_missing()
+int Scale::is_missing()
 {
     grib_accessor* av = grib_find_accessor(grib_handle_of_accessor(this), value_);
 

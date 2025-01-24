@@ -10,15 +10,15 @@
 
 #include "ChangeAlternativeRowScanning.h"
 
-grib_accessor_change_alternative_row_scanning_t _grib_accessor_change_alternative_row_scanning{};
-grib_accessor* grib_accessor_change_alternative_row_scanning = &_grib_accessor_change_alternative_row_scanning;
+eccodes::accessor::ChangeAlternativeRowScanning _grib_accessor_change_alternative_row_scanning;
+eccodes::Accessor* grib_accessor_change_alternative_row_scanning = &_grib_accessor_change_alternative_row_scanning;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_change_alternative_row_scanning_t::init(const long len, grib_arguments* args)
+void ChangeAlternativeRowScanning::init(const long len, grib_arguments* args)
 {
-    grib_accessor_gen_t::init(len, args);
+    Gen::init(len, args);
     int n = 0;
 
     values_                 = args->get_name(grib_handle_of_accessor(this), n++);
@@ -30,7 +30,7 @@ void grib_accessor_change_alternative_row_scanning_t::init(const long len, grib_
     length_ = 0;
 }
 
-int grib_accessor_change_alternative_row_scanning_t::pack_long(const long* val, size_t* len)
+int ChangeAlternativeRowScanning::pack_long(const long* val, size_t* len)
 {
     int err               = 0;
     const grib_context* c = context_;
@@ -107,12 +107,12 @@ int grib_accessor_change_alternative_row_scanning_t::pack_long(const long* val, 
     return GRIB_SUCCESS;
 }
 
-long grib_accessor_change_alternative_row_scanning_t::get_native_type()
+long ChangeAlternativeRowScanning::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
 
-int grib_accessor_change_alternative_row_scanning_t::unpack_long(long* v, size_t* len)
+int ChangeAlternativeRowScanning::unpack_long(long* v, size_t* len)
 {
     /* Decoding this accessor doesn't make sense so we return a dummy value */
     *v = -1;

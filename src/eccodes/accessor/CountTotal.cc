@@ -10,20 +10,20 @@
 
 #include "CountTotal.h"
 
-grib_accessor_count_total_t _grib_accessor_count_total{};
-grib_accessor* grib_accessor_count_total = &_grib_accessor_count_total;
+eccodes::accessor::CountTotal _grib_accessor_count_total;
+eccodes::Accessor* grib_accessor_count_total = &_grib_accessor_count_total;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_count_total_t::init(const long l, grib_arguments* c)
+void CountTotal::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     length_ = 0;
 }
 
-int grib_accessor_count_total_t::unpack_long(long* val, size_t* len)
+int CountTotal::unpack_long(long* val, size_t* len)
 {
     *val = grib_context_get_handle_total_count(context_);
     *len = 1;

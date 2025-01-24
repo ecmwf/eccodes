@@ -10,15 +10,15 @@
 
 #include "GdsIsPresent.h"
 
-grib_accessor_gds_is_present_t _grib_accessor_gds_is_present{};
-grib_accessor* grib_accessor_gds_is_present = &_grib_accessor_gds_is_present;
+eccodes::accessor::GdsIsPresent _grib_accessor_gds_is_present;
+eccodes::Accessor* grib_accessor_gds_is_present = &_grib_accessor_gds_is_present;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_gds_is_present_t::init(const long l, grib_arguments* c)
+void GdsIsPresent::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     int n            = 0;
     grib_handle* h   = grib_handle_of_accessor(this);
     gds_present_     = c->get_name(h, n++);
@@ -31,7 +31,7 @@ void grib_accessor_gds_is_present_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-int grib_accessor_gds_is_present_t::pack_long(const long* val, size_t* len)
+int GdsIsPresent::pack_long(const long* val, size_t* len)
 {
     long missing    = 255;
     int ret         = 0;
@@ -72,7 +72,7 @@ int grib_accessor_gds_is_present_t::pack_long(const long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_gds_is_present_t::unpack_long(long* val, size_t* len)
+int GdsIsPresent::unpack_long(long* val, size_t* len)
 {
     int ret        = 0;
     grib_handle* h = grib_handle_of_accessor(this);

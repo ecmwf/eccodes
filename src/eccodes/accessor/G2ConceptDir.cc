@@ -10,15 +10,15 @@
 
 #include "G2ConceptDir.h"
 
-grib_accessor_g2_concept_dir_t _grib_accessor_g2_concept_dir{};
-grib_accessor* grib_accessor_g2_concept_dir = &_grib_accessor_g2_concept_dir;
+eccodes::accessor::G2ConceptDir _grib_accessor_g2_concept_dir;
+eccodes::Accessor* grib_accessor_g2_concept_dir = &_grib_accessor_g2_concept_dir;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_g2_concept_dir_t::init(const long len, grib_arguments* arg)
+void G2ConceptDir::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
     grib_handle* h = grib_handle_of_accessor(this);
 
     this->preferLocal_ = arg->get_name(h, 0);
@@ -32,12 +32,12 @@ void grib_accessor_g2_concept_dir_t::init(const long len, grib_arguments* arg)
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
 
-long grib_accessor_g2_concept_dir_t::get_native_type()
+long G2ConceptDir::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
 
-int grib_accessor_g2_concept_dir_t::unpack_string(char* v, size_t* len)
+int G2ConceptDir::unpack_string(char* v, size_t* len)
 {
     grib_handle* h = grib_handle_of_accessor(this);
     int err = 0;

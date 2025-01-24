@@ -12,15 +12,15 @@
 #include "step.h"
 #include "step_utilities.h"
 
-grib_accessor_optimal_step_units_t _grib_accessor_optimal_step_units{};
-grib_accessor* grib_accessor_optimal_step_units = &_grib_accessor_optimal_step_units;
+eccodes::accessor::OptimalStepUnits _grib_accessor_optimal_step_units;
+eccodes::Accessor* grib_accessor_optimal_step_units = &_grib_accessor_optimal_step_units;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_optimal_step_units_t::init(const long l, grib_arguments* c)
+void OptimalStepUnits::init(const long l, grib_arguments* c)
 {
-    grib_accessor_gen_t::init(l, c);
+    Gen::init(l, c);
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
@@ -32,17 +32,17 @@ void grib_accessor_optimal_step_units_t::init(const long l, grib_arguments* c)
     overwriteStepUnits_  = eccodes::Unit{ eccodes::Unit::Value::MISSING }.value<long>();
 }
 
-void grib_accessor_optimal_step_units_t::dump(eccodes::Dumper* dumper)
+void OptimalStepUnits::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_string(this, NULL);
 }
 
-size_t grib_accessor_optimal_step_units_t::string_length()
+size_t OptimalStepUnits::string_length()
 {
     return 255;
 }
 
-int grib_accessor_optimal_step_units_t::pack_expression(grib_expression* e)
+int OptimalStepUnits::pack_expression(grib_expression* e)
 {
     const char* cval        = NULL;
     int ret                 = 0;
@@ -72,7 +72,7 @@ int grib_accessor_optimal_step_units_t::pack_expression(grib_expression* e)
     return ret;
 }
 
-int grib_accessor_optimal_step_units_t::pack_long(const long* val, size_t* len)
+int OptimalStepUnits::pack_long(const long* val, size_t* len)
 {
     grib_handle* h = grib_handle_of_accessor(this);
 
@@ -143,7 +143,7 @@ int grib_accessor_optimal_step_units_t::pack_long(const long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_optimal_step_units_t::unpack_long(long* val, size_t* len)
+int OptimalStepUnits::unpack_long(long* val, size_t* len)
 {
     grib_handle* h = grib_handle_of_accessor(this);
 
@@ -179,7 +179,7 @@ int grib_accessor_optimal_step_units_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_optimal_step_units_t::pack_string(const char* val, size_t* len)
+int OptimalStepUnits::pack_string(const char* val, size_t* len)
 {
     try {
         long unit = eccodes::Unit{ val }.value<long>();
@@ -200,7 +200,7 @@ int grib_accessor_optimal_step_units_t::pack_string(const char* val, size_t* len
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_optimal_step_units_t::unpack_string(char* val, size_t* len)
+int OptimalStepUnits::unpack_string(char* val, size_t* len)
 {
     int ret         = 0;
     long unit       = 0;
@@ -213,12 +213,12 @@ int grib_accessor_optimal_step_units_t::unpack_string(char* val, size_t* len)
 
 // Step units are never missing
 // If the user does not specify a step unit, we default to hours
-int grib_accessor_optimal_step_units_t::is_missing()
+int OptimalStepUnits::is_missing()
 {
     return 0;
 }
 
-long grib_accessor_optimal_step_units_t::get_native_type()
+long OptimalStepUnits::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }

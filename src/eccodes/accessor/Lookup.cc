@@ -10,15 +10,15 @@
 
 #include "Lookup.h"
 
-grib_accessor_lookup_t _grib_accessor_lookup{};
-grib_accessor* grib_accessor_lookup = &_grib_accessor_lookup;
+eccodes::accessor::Lookup _grib_accessor_lookup;
+eccodes::Accessor* grib_accessor_lookup = &_grib_accessor_lookup;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_lookup_t::init(const long len, grib_arguments* arg)
+void Lookup::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_long_t::init(len, arg);
+    Long::init(len, arg);
     length_  = 0;
     llength_ = len;
     loffset_ = arg->get_long(grib_handle_of_accessor(this), 0);
@@ -26,14 +26,14 @@ void grib_accessor_lookup_t::init(const long len, grib_arguments* arg)
     real_name_ = arg->get_expression(grib_handle_of_accessor(this), 1);
 }
 
-void grib_accessor_lookup_t::post_init()
+void Lookup::post_init()
 {
     if (real_name_) {
         grib_dependency_observe_expression(this, real_name_);
     }
 }
 
-void grib_accessor_lookup_t::dump(eccodes::Dumper* dumper)
+void Lookup::dump(eccodes::Dumper* dumper)
 {
     unsigned char bytes[1024] = {0,};
     char msg[1024] = {0,};
@@ -56,7 +56,7 @@ void grib_accessor_lookup_t::dump(eccodes::Dumper* dumper)
     dumper->dump_long(this, buf);
 }
 
-int grib_accessor_lookup_t::unpack_string(char* v, size_t* len)
+int Lookup::unpack_string(char* v, size_t* len)
 {
     unsigned char bytes[1024] = {0,};
 
@@ -86,7 +86,7 @@ int grib_accessor_lookup_t::unpack_string(char* v, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_lookup_t::unpack_long(long* val, size_t* len)
+int Lookup::unpack_long(long* val, size_t* len)
 {
     grib_handle* h = grib_handle_of_accessor(this);
 
@@ -112,22 +112,22 @@ int grib_accessor_lookup_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_lookup_t::pack_long(const long* val, size_t* len)
+int Lookup::pack_long(const long* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-long grib_accessor_lookup_t::byte_count()
+long Lookup::byte_count()
 {
     return llength_;
 }
 
-long grib_accessor_lookup_t::byte_offset()
+long Lookup::byte_offset()
 {
     return loffset_;
 }
 
-int grib_accessor_lookup_t::notify_change(grib_accessor* changed)
+int Lookup::notify_change(grib_accessor* changed)
 {
     /* Forward changes */
     return grib_dependency_notify_change(this);

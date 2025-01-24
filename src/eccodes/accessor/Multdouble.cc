@@ -10,22 +10,22 @@
 
 #include "Multdouble.h"
 
-grib_accessor_multdouble_t _grib_accessor_multdouble{};
-grib_accessor* grib_accessor_multdouble = &_grib_accessor_multdouble;
+eccodes::accessor::Multdouble _grib_accessor_multdouble;
+eccodes::Accessor* grib_accessor_multdouble = &_grib_accessor_multdouble;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_multdouble_t::init(const long l, grib_arguments* c)
+void Multdouble::init(const long l, grib_arguments* c)
 {
-    grib_accessor_double_t::init(l, c);
+    Double::init(l, c);
     int n = 0;
 
     val_        = c->get_name(grib_handle_of_accessor(this), n++);
     multiplier_ = c->get_double(grib_handle_of_accessor(this), n++);
 }
 
-int grib_accessor_multdouble_t::unpack_double(double* val, size_t* len)
+int Multdouble::unpack_double(double* val, size_t* len)
 {
     int ret      = GRIB_SUCCESS;
     double value = 0;

@@ -10,16 +10,16 @@
 
 #include "Longitudes.h"
 
-grib_accessor_longitudes_t _grib_accessor_longitudes{};
-grib_accessor* grib_accessor_longitudes = &_grib_accessor_longitudes;
+eccodes::accessor::Longitudes _grib_accessor_longitudes;
+eccodes::Accessor* grib_accessor_longitudes = &_grib_accessor_longitudes;
 
 namespace eccodes::accessor
 {
 
 static int get_distinct(grib_accessor* a, double** val, long* len);
-void grib_accessor_longitudes_t::init(const long l, grib_arguments* c)
+void Longitudes::init(const long l, grib_arguments* c)
 {
-    grib_accessor_double_t::init(l, c);
+    Double::init(l, c);
     int n = 0;
 
     values_   = c->get_name(grib_handle_of_accessor(this), n++);
@@ -31,7 +31,7 @@ void grib_accessor_longitudes_t::init(const long l, grib_arguments* c)
 }
 
 
-int grib_accessor_longitudes_t::unpack_double(double* val, size_t* len)
+int Longitudes::unpack_double(double* val, size_t* len)
 {
     grib_context* c     = context_;
     int ret             = 0;
@@ -84,7 +84,7 @@ int grib_accessor_longitudes_t::unpack_double(double* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_longitudes_t::value_count(long* len)
+int Longitudes::value_count(long* len)
 {
     grib_handle* h  = grib_handle_of_accessor(this);
     grib_context* c = context_;

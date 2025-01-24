@@ -12,21 +12,21 @@
 #define DIRECT  0
 #define INVERSE 1
 
-grib_accessor_data_g2simple_packing_with_preprocessing_t _grib_accessor_data_g2simple_packing_with_preprocessing{};
-grib_accessor* grib_accessor_data_g2simple_packing_with_preprocessing = &_grib_accessor_data_g2simple_packing_with_preprocessing;
+eccodes::accessor::DataG2simplePackingWithPreprocessing _grib_accessor_data_g2simple_packing_with_preprocessing;
+eccodes::Accessor* grib_accessor_data_g2simple_packing_with_preprocessing = &_grib_accessor_data_g2simple_packing_with_preprocessing;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_data_g2simple_packing_with_preprocessing_t::init(const long v, grib_arguments* args)
+void DataG2simplePackingWithPreprocessing::init(const long v, grib_arguments* args)
 {
-    grib_accessor_data_g2simple_packing_t::init(v, args);
+    DataG2simplePacking::init(v, args);
     pre_processing_           = args->get_name(grib_handle_of_accessor(this), carg_++);
     pre_processing_parameter_ = args->get_name(grib_handle_of_accessor(this), carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_data_g2simple_packing_with_preprocessing_t::value_count(long* n_vals)
+int DataG2simplePackingWithPreprocessing::value_count(long* n_vals)
 {
     *n_vals = 0;
 
@@ -97,7 +97,7 @@ static int pre_processing_func(double* values, long length, long pre_processing,
     return ret;
 }
 
-int grib_accessor_data_g2simple_packing_with_preprocessing_t::unpack_double(double* val, size_t* len)
+int DataG2simplePackingWithPreprocessing::unpack_double(double* val, size_t* len)
 {
     size_t n_vals = 0;
     long nn       = 0;
@@ -126,7 +126,7 @@ int grib_accessor_data_g2simple_packing_with_preprocessing_t::unpack_double(doub
         return err;
     }
 
-    err = grib_accessor_data_simple_packing_t::unpack_double(val, &n_vals);
+    err = DataSimplePacking::unpack_double(val, &n_vals);
     if (err != GRIB_SUCCESS)
         return err;
 
@@ -139,7 +139,7 @@ int grib_accessor_data_g2simple_packing_with_preprocessing_t::unpack_double(doub
     return err;
 }
 
-int grib_accessor_data_g2simple_packing_with_preprocessing_t::pack_double(const double* val, size_t* len)
+int DataG2simplePackingWithPreprocessing::pack_double(const double* val, size_t* len)
 {
     size_t n_vals = *len;
     int err       = 0;
@@ -156,7 +156,7 @@ int grib_accessor_data_g2simple_packing_with_preprocessing_t::pack_double(const 
     if (err != GRIB_SUCCESS)
         return err;
 
-    err = grib_accessor_data_g2simple_packing_t::pack_double(val, len);
+    err = DataG2simplePacking::pack_double(val, len);
     if (err != GRIB_SUCCESS)
         return err;
 

@@ -10,8 +10,8 @@
 
 #include "CountMissing.h"
 
-grib_accessor_count_missing_t _grib_accessor_count_missing{};
-grib_accessor* grib_accessor_count_missing = &_grib_accessor_count_missing;
+eccodes::accessor::CountMissing _grib_accessor_count_missing;
+eccodes::Accessor* grib_accessor_count_missing = &_grib_accessor_count_missing;
 
 namespace eccodes::accessor
 {
@@ -35,9 +35,9 @@ static const unsigned char bitsoff[] = {
     0
 };
 
-void grib_accessor_count_missing_t::init(const long len, grib_arguments* arg)
+void CountMissing::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_long_t::init(len, arg);
+    Long::init(len, arg);
     int n          = 0;
     grib_handle* h = grib_handle_of_accessor(this);
     length_        = 0;
@@ -74,7 +74,7 @@ static int get_count_of_missing_values(grib_handle* h, long* p_count_of_missing)
 
     return GRIB_SUCCESS;
 }
-int grib_accessor_count_missing_t::unpack_long(long* val, size_t* len)
+int CountMissing::unpack_long(long* val, size_t* len)
 {
     unsigned char* p;
     int i;
@@ -130,7 +130,7 @@ int grib_accessor_count_missing_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_count_missing_t::value_count(long* count)
+int CountMissing::value_count(long* count)
 {
     *count = 1;
     return 0;

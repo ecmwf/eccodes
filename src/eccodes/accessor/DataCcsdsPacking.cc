@@ -17,15 +17,15 @@
     #endif
 #endif
 
-grib_accessor_data_ccsds_packing_t _grib_accessor_data_ccsds_packing{};
-grib_accessor* grib_accessor_data_ccsds_packing = &_grib_accessor_data_ccsds_packing;
+eccodes::accessor::DataCcsdsPacking _grib_accessor_data_ccsds_packing;
+eccodes::Accessor* grib_accessor_data_ccsds_packing = &_grib_accessor_data_ccsds_packing;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_data_ccsds_packing_t::init(const long v, grib_arguments* args)
+void DataCcsdsPacking::init(const long v, grib_arguments* args)
 {
-    grib_accessor_values_t::init(v, args);
+    Values::init(v, args);
 
     grib_handle* h           = grib_handle_of_accessor(this);
     number_of_values_        = args->get_name(h, carg_++);
@@ -42,7 +42,7 @@ void grib_accessor_data_ccsds_packing_t::init(const long v, grib_arguments* args
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_data_ccsds_packing_t::value_count(long* count)
+int DataCcsdsPacking::value_count(long* count)
 {
     *count = 0;
     return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, count);
@@ -88,7 +88,7 @@ static void print_aec_stream_info(struct aec_stream* strm, const char* func)
 }
 
 #define MAX_BITS_PER_VALUE 32
-int grib_accessor_data_ccsds_packing_t::pack_double(const double* val, size_t* len)
+int DataCcsdsPacking::pack_double(const double* val, size_t* len)
 {
     grib_handle* hand       = grib_handle_of_accessor(this);
     int err                 = GRIB_SUCCESS;
@@ -380,7 +380,7 @@ cleanup:
 }
 
 template <typename T>
-int grib_accessor_data_ccsds_packing_t::unpack(T* val, size_t* len)
+int DataCcsdsPacking::unpack(T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     grib_handle* hand       = grib_handle_of_accessor(this);
@@ -515,17 +515,17 @@ cleanup:
     return err;
 }
 
-int grib_accessor_data_ccsds_packing_t::unpack_double(double* val, size_t* len)
+int DataCcsdsPacking::unpack_double(double* val, size_t* len)
 {
     return unpack<double>(val, len);
 }
 
-int grib_accessor_data_ccsds_packing_t::unpack_float(float* val, size_t* len)
+int DataCcsdsPacking::unpack_float(float* val, size_t* len)
 {
     return unpack<float>(val, len);
 }
 
-int grib_accessor_data_ccsds_packing_t::unpack_double_element(size_t idx, double* val)
+int DataCcsdsPacking::unpack_double_element(size_t idx, double* val)
 {
     // The index idx relates to codedValues NOT values!
     grib_handle* hand      = grib_handle_of_accessor(this);
@@ -561,7 +561,7 @@ int grib_accessor_data_ccsds_packing_t::unpack_double_element(size_t idx, double
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_data_ccsds_packing_t::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
+int DataCcsdsPacking::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
     size_t size = 0, i = 0;
@@ -614,27 +614,27 @@ static void print_error_feature_not_enabled(grib_context* c)
                      "CCSDS support not enabled. "
                      "Please rebuild with -DENABLE_AEC=ON (Adaptive Entropy Coding library)");
 }
-int grib_accessor_data_ccsds_packing_t::pack_double(const double* val, size_t* len)
+int DataCcsdsPacking::pack_double(const double* val, size_t* len)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int grib_accessor_data_ccsds_packing_t::unpack_double(double* val, size_t* len)
+int DataCcsdsPacking::unpack_double(double* val, size_t* len)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int grib_accessor_data_ccsds_packing_t::unpack_float(float* val, size_t* len)
+int DataCcsdsPacking::unpack_float(float* val, size_t* len)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int grib_accessor_data_ccsds_packing_t::unpack_double_element(size_t idx, double* val)
+int DataCcsdsPacking::unpack_double_element(size_t idx, double* val)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int grib_accessor_data_ccsds_packing_t::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
+int DataCcsdsPacking::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;

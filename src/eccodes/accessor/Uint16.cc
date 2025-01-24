@@ -10,13 +10,13 @@
 
 #include "Uint16.h"
 
-grib_accessor_uint16_t _grib_accessor_uint16{};
-grib_accessor* grib_accessor_uint16 = &_grib_accessor_uint16;
+eccodes::accessor::Uint16 _grib_accessor_uint16;
+eccodes::Accessor* grib_accessor_uint16 = &_grib_accessor_uint16;
 
 namespace eccodes::accessor
 {
 
-int grib_accessor_uint16_t::unpack_long(long* val, size_t* len)
+int Uint16::unpack_long(long* val, size_t* len)
 {
     long value = 0;
     /*long pos = offset_ ;*/
@@ -31,7 +31,7 @@ int grib_accessor_uint16_t::unpack_long(long* val, size_t* len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-long grib_accessor_uint16_t::get_native_type()
+long Uint16::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }

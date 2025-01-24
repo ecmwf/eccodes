@@ -28,6 +28,8 @@ public:
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
 
+    bufr_descriptor* get_descriptor(int code, int* err);
+
 private:
     const char* dictionary_ = nullptr;
     const char* masterDir_ = nullptr;
@@ -35,11 +37,8 @@ private:
 
     grib_trie* load_bufr_elements_table(int* err);
     int bufr_get_from_table(bufr_descriptor* v);
-
-    friend bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, int code, int* err);
 };
 
 int bufr_descriptor_is_marker(bufr_descriptor* d);
-bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, int code, int* err);
 
 }  // namespace eccodes::accessor

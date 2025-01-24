@@ -212,7 +212,7 @@ static char* get_condition(const char* name, codes_condition* condition)
 
 static grib_accessor* _search_by_rank(grib_accessor* a, const char* name, int rank)
 {
-    grib_accessor_bufr_data_array_t* data_accessor = dynamic_cast<grib_accessor_bufr_data_array_t*>(a);
+    eccodes::accessor::BufrDataArray* data_accessor = dynamic_cast<eccodes::accessor::BufrDataArray*>(a);
     grib_trie_with_rank* t = data_accessor->accessor_bufr_data_array_get_dataAccessorsTrie();
     grib_accessor* ret = (grib_accessor*)grib_trie_with_rank_get(t, name, rank);
     return ret;
@@ -433,7 +433,7 @@ static grib_accessors_list* search_by_condition(grib_handle* h, const char* name
     grib_accessors_list* al;
     grib_accessors_list* result = NULL;
     grib_accessor* a = search_and_cache(h, "dataAccessors", 0);
-    grib_accessor_bufr_data_array_t* data_accessor = dynamic_cast<grib_accessor_bufr_data_array_t*>(a);
+    eccodes::accessor::BufrDataArray* data_accessor = dynamic_cast<eccodes::accessor::BufrDataArray*>(a);
     if (data_accessor && condition->left) {
         al = data_accessor->accessor_bufr_data_array_get_dataAccessors();
         if (!al)

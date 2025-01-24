@@ -10,15 +10,25 @@
 
 #include "Raw.h"
 
-grib_accessor_raw_t _grib_accessor_raw{};
-grib_accessor* grib_accessor_raw = &_grib_accessor_raw;
+eccodes::accessor::Raw _grib_accessor_raw;
+eccodes::Accessor* grib_accessor_raw = &_grib_accessor_raw;
+
+void accessor_raw_set_length(grib_accessor* a, size_t len)
+{
+    a->length_ = len;
+}
+
+long accessor_raw_get_offset(grib_accessor* a)
+{
+    return a->offset_;
+}
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_raw_t::init(const long len, grib_arguments* arg)
+void Raw::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
     int n   = 0;
     int err = 0;
     long sectionLength;
@@ -43,12 +53,12 @@ void grib_accessor_raw_t::init(const long len, grib_arguments* arg)
     /* ECCODES_ASSERT(length_ >=0); */
 }
 
-long grib_accessor_raw_t::get_native_type()
+long Raw::get_native_type()
 {
     return GRIB_TYPE_BYTES;
 }
 
-int grib_accessor_raw_t::compare(grib_accessor* b)
+int Raw::compare(grib_accessor* b)
 {
     int retval = GRIB_SUCCESS;
 
@@ -60,18 +70,18 @@ int grib_accessor_raw_t::compare(grib_accessor* b)
     return retval;
 }
 
-long grib_accessor_raw_t::byte_count()
+long Raw::byte_count()
 {
     return length_;
 }
 
-int grib_accessor_raw_t::value_count(long* len)
+int Raw::value_count(long* len)
 {
     *len = length_;
     return 0;
 }
 
-int grib_accessor_raw_t::unpack_bytes(unsigned char* buffer, size_t* len)
+int Raw::unpack_bytes(unsigned char* buffer, size_t* len)
 {
     if (*len < length_) {
         *len = length_;
@@ -84,24 +94,14 @@ int grib_accessor_raw_t::unpack_bytes(unsigned char* buffer, size_t* len)
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_raw_t::update_size(size_t s)
+void Raw::update_size(size_t s)
 {
     grib_context_log(context_, GRIB_LOG_DEBUG, "updating size of %s old %ld new %ld", name_, length_, s);
     length_ = s;
     ECCODES_ASSERT(length_ >= 0);
 }
 
-void accessor_raw_set_length(grib_accessor* a, size_t len)
-{
-    a->length_ = len;
-}
-
-long accessor_raw_get_offset(grib_accessor* a)
-{
-    return a->offset_;
-}
-
-int grib_accessor_raw_t::pack_bytes(const unsigned char* val, size_t* len)
+int Raw::pack_bytes(const unsigned char* val, size_t* len)
 {
     size_t length = *len;
     long totalLength;

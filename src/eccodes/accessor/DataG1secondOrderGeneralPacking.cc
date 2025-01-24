@@ -10,15 +10,15 @@
 
 #include "DataG1secondOrderGeneralPacking.h"
 
-grib_accessor_data_g1second_order_general_packing_t _grib_accessor_data_g1second_order_general_packing{};
-grib_accessor* grib_accessor_data_g1second_order_general_packing = &_grib_accessor_data_g1second_order_general_packing;
+eccodes::accessor::DataG1secondOrderGeneralPacking _grib_accessor_data_g1second_order_general_packing;
+eccodes::Accessor* grib_accessor_data_g1second_order_general_packing = &_grib_accessor_data_g1second_order_general_packing;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_data_g1second_order_general_packing_t::init(const long v, grib_arguments* args)
+void DataG1secondOrderGeneralPacking::init(const long v, grib_arguments* args)
 {
-    grib_accessor_data_simple_packing_t::init(v, args);
+    DataSimplePacking::init(v, args);
     grib_handle* hand = grib_handle_of_accessor(this);
 
     half_byte_                       = args->get_name(hand, carg_++);
@@ -41,7 +41,7 @@ void grib_accessor_data_g1second_order_general_packing_t::init(const long v, gri
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_data_g1second_order_general_packing_t::value_count(long* numberOfSecondOrderPackedValues)
+int DataG1secondOrderGeneralPacking::value_count(long* numberOfSecondOrderPackedValues)
 {
     *numberOfSecondOrderPackedValues = 0;
 
@@ -51,7 +51,7 @@ int grib_accessor_data_g1second_order_general_packing_t::value_count(long* numbe
 }
 
 template <typename T>
-int grib_accessor_data_g1second_order_general_packing_t::unpack_real(T* values, size_t* len)
+int DataG1secondOrderGeneralPacking::unpack_real(T* values, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     int ret = 0;
@@ -153,17 +153,17 @@ int grib_accessor_data_g1second_order_general_packing_t::unpack_real(T* values, 
     return ret;
 }
 
-int grib_accessor_data_g1second_order_general_packing_t::unpack_float(float* values, size_t* len)
+int DataG1secondOrderGeneralPacking::unpack_float(float* values, size_t* len)
 {
     return unpack_real<float>(values, len);
 }
 
-int grib_accessor_data_g1second_order_general_packing_t::unpack_double(double* values, size_t* len)
+int DataG1secondOrderGeneralPacking::unpack_double(double* values, size_t* len)
 {
     return unpack_real<double>(values, len);
 }
 
-int grib_accessor_data_g1second_order_general_packing_t::pack_double(const double* cval, size_t* len)
+int DataG1secondOrderGeneralPacking::pack_double(const double* cval, size_t* len)
 {
     /* return GRIB_NOT_IMPLEMENTED; */
     char type[]       = "grid_second_order";

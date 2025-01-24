@@ -11,15 +11,15 @@
 #include "Signed.h"
 #include "ecc_numeric_limits.h"
 
-grib_accessor_signed_t _grib_accessor_signed{};
-grib_accessor* grib_accessor_signed = &_grib_accessor_signed;
+eccodes::accessor::Signed _grib_accessor_signed;
+eccodes::Accessor* grib_accessor_signed = &_grib_accessor_signed;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_signed_t::init(const long len, grib_arguments* arg)
+void Signed::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_long_t::init(len, arg);
+    Long::init(len, arg);
     long count = 0;
 
     arg_ = arg;
@@ -29,7 +29,7 @@ void grib_accessor_signed_t::init(const long len, grib_arguments* arg)
     ECCODES_ASSERT(length_ >= 0);
 }
 
-void grib_accessor_signed_t::dump(eccodes::Dumper* dumper)
+void Signed::dump(eccodes::Dumper* dumper)
 {
     long rlen = 0;
     value_count(&rlen);
@@ -47,7 +47,7 @@ static const long ones[] = {
     -0x7fffffff,
 };
 
-int grib_accessor_signed_t::unpack_long(long* val, size_t* len)
+int Signed::unpack_long(long* val, size_t* len)
 {
     unsigned long rlen = 0;
     int err            = 0;
@@ -85,7 +85,7 @@ int grib_accessor_signed_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_signed_t::pack_long(const long* val, size_t* len)
+int Signed::pack_long(const long* val, size_t* len)
 {
     int ret            = 0;
     long off           = 0;
@@ -137,7 +137,7 @@ int grib_accessor_signed_t::pack_long(const long* val, size_t* len)
         if (ret == GRIB_SUCCESS)
             len[0] = 1;
         if (*len > 1)
-            grib_context_log(context_, GRIB_LOG_WARNING, "grib_accessor_signed_t : Trying to pack %d values in a scalar %s, packing first value", *len, name_);
+            grib_context_log(context_, GRIB_LOG_WARNING, "Signed : Trying to pack %d values in a scalar %s, packing first value", *len, name_);
         len[0] = 1;
         return ret;
     }
@@ -163,12 +163,12 @@ int grib_accessor_signed_t::pack_long(const long* val, size_t* len)
     return ret;
 }
 
-long grib_accessor_signed_t::byte_count()
+long Signed::byte_count()
 {
     return length_;
 }
 
-int grib_accessor_signed_t::value_count(long* len)
+int Signed::value_count(long* len)
 {
     *len = 0;
     if (!arg_) {
@@ -178,23 +178,23 @@ int grib_accessor_signed_t::value_count(long* len)
     return grib_get_long_internal(grib_handle_of_accessor(this), arg_->get_name(parent_->h, 0), len);
 }
 
-long grib_accessor_signed_t::byte_offset()
+long Signed::byte_offset()
 {
     return offset_;
 }
 
-void grib_accessor_signed_t::update_size(size_t s)
+void Signed::update_size(size_t s)
 {
     length_ = s;
     ECCODES_ASSERT(length_ >= 0);
 }
 
-long grib_accessor_signed_t::next_offset()
+long Signed::next_offset()
 {
     return byte_offset() + byte_count();
 }
 
-int grib_accessor_signed_t::is_missing()
+int Signed::is_missing()
 {
     unsigned char ff     = 0xff;
     unsigned long offset = offset_;

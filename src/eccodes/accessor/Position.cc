@@ -10,32 +10,32 @@
 
 #include "Position.h"
 
-grib_accessor_position_t _grib_accessor_position{};
-grib_accessor* grib_accessor_position = &_grib_accessor_position;
+eccodes::accessor::Position _grib_accessor_position;
+eccodes::Accessor* grib_accessor_position = &_grib_accessor_position;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_position_t::init(const long len, grib_arguments* arg)
+void Position::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
 
-long grib_accessor_position_t::get_native_type()
+long Position::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
 
-void grib_accessor_position_t::dump(eccodes::Dumper* dumper)
+void Position::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_long(this, NULL);
 }
 
-int grib_accessor_position_t::unpack_long(long* val, size_t* len)
+int Position::unpack_long(long* val, size_t* len)
 {
     if (*len < 1) {
         grib_context_log(context_, GRIB_LOG_ERROR, "Wrong size for %s, it contains %d values ", name_, 1);

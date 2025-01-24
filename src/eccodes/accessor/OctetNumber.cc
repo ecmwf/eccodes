@@ -10,15 +10,15 @@
 
 #include "OctetNumber.h"
 
-grib_accessor_octet_number_t _grib_accessor_octet_number{};
-grib_accessor* grib_accessor_octet_number = &_grib_accessor_octet_number;
+eccodes::accessor::OctetNumber _grib_accessor_octet_number;
+eccodes::Accessor* grib_accessor_octet_number = &_grib_accessor_octet_number;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_octet_number_t::init(const long l, grib_arguments* c)
+void OctetNumber::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
 
     int n  = 0;
     left_  = c->get_name(grib_handle_of_accessor(this), n++);
@@ -27,7 +27,7 @@ void grib_accessor_octet_number_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-int grib_accessor_octet_number_t::unpack_long(long* val, size_t* len)
+int OctetNumber::unpack_long(long* val, size_t* len)
 {
     int ret = GRIB_SUCCESS;
     long offset;
@@ -43,7 +43,7 @@ int grib_accessor_octet_number_t::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_octet_number_t::pack_long(const long* val, size_t* len)
+int OctetNumber::pack_long(const long* val, size_t* len)
 {
     return GRIB_SUCCESS;
 }

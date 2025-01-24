@@ -10,26 +10,26 @@
 
 #include "Blob.h"
 
-grib_accessor_blob_t _grib_accessor_blob{};
-grib_accessor* grib_accessor_blob = &_grib_accessor_blob;
+eccodes::accessor::Blob _grib_accessor_blob;
+eccodes::Accessor* grib_accessor_blob = &_grib_accessor_blob;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_blob_t::init(const long len, grib_arguments* arg)
+void Blob::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
     grib_get_long_internal(grib_handle_of_accessor(this),
                            arg->get_name(parent_->h, 0), &length_);
     ECCODES_ASSERT(length_ >= 0);
 }
 
-long grib_accessor_blob_t::get_native_type()
+long Blob::get_native_type()
 {
     return GRIB_TYPE_BYTES;
 }
 
-int grib_accessor_blob_t::unpack_bytes(unsigned char* buffer, size_t* len)
+int Blob::unpack_bytes(unsigned char* buffer, size_t* len)
 {
     if (*len < (size_t)length_) {
         *len = length_;
@@ -42,7 +42,7 @@ int grib_accessor_blob_t::unpack_bytes(unsigned char* buffer, size_t* len)
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_blob_t::dump(eccodes::Dumper* dumper)
+void Blob::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_bytes(this, NULL);
 }

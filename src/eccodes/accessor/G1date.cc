@@ -10,15 +10,15 @@
 
 #include "G1date.h"
 
-grib_accessor_g1date_t _grib_accessor_g1date{};
-grib_accessor* grib_accessor_g1date = &_grib_accessor_g1date;
+eccodes::accessor::G1date _grib_accessor_g1date;
+eccodes::Accessor* grib_accessor_g1date = &_grib_accessor_g1date;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_g1date_t::init(const long l, grib_arguments* c)
+void G1date::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
@@ -28,7 +28,7 @@ void grib_accessor_g1date_t::init(const long l, grib_arguments* c)
     day_     = c->get_name(hand, n++);
 }
 
-int grib_accessor_g1date_t::unpack_long(long* val, size_t* len)
+int G1date::unpack_long(long* val, size_t* len)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
 
@@ -60,7 +60,7 @@ int grib_accessor_g1date_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_g1date_t::pack_long(const long* val, size_t* len)
+int G1date::pack_long(const long* val, size_t* len)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
 
@@ -73,7 +73,7 @@ int grib_accessor_g1date_t::pack_long(const long* val, size_t* len)
 
     long d = grib_julian_to_date(grib_date_to_julian(v));
     if (v != d) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "grib_accessor_g1date_t: pack_long invalid date %ld, changed to %ld", v, d);
+        grib_context_log(context_, GRIB_LOG_ERROR, "G1date: pack_long invalid date %ld, changed to %ld", v, d);
         return GRIB_ENCODING_ERROR;
     }
 
@@ -117,7 +117,7 @@ static const char* months[] = {
     "dec",
 };
 
-int grib_accessor_g1date_t::unpack_string(char* val, size_t* len)
+int G1date::unpack_string(char* val, size_t* len)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
 
@@ -160,7 +160,7 @@ int grib_accessor_g1date_t::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_g1date_t::value_count(long* count)
+int G1date::value_count(long* count)
 {
     *count = 1;
     return 0;

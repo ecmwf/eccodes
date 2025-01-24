@@ -10,22 +10,22 @@
 
 #include "Size.h"
 
-grib_accessor_size_t _grib_accessor_size{};
-grib_accessor* grib_accessor_size = &_grib_accessor_size;
+eccodes::accessor::Size _grib_accessor_size;
+eccodes::Accessor* grib_accessor_size = &_grib_accessor_size;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_size_t::init(const long l, grib_arguments* c)
+void Size::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     accessor_ = c->get_name(grib_handle_of_accessor(this), 0);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
 }
 
-int grib_accessor_size_t::unpack_long(long* val, size_t* len)
+int Size::unpack_long(long* val, size_t* len)
 {
     size_t size = 0;
     int ret     = grib_get_size(grib_handle_of_accessor(this), accessor_, &size);

@@ -10,20 +10,20 @@
 
 #include "Evaluate.h"
 
-grib_accessor_evaluate_t _grib_accessor_evaluate{};
-grib_accessor* grib_accessor_evaluate = &_grib_accessor_evaluate;
+eccodes::accessor::Evaluate _grib_accessor_evaluate;
+eccodes::Accessor* grib_accessor_evaluate = &_grib_accessor_evaluate;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_evaluate_t::init(const long l, grib_arguments* c)
+void Evaluate::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     arg_ = c; // the expression to be evaluated
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_evaluate_t::unpack_long(long* val, size_t* len)
+int Evaluate::unpack_long(long* val, size_t* len)
 {
     if (!arg_) return GRIB_INVALID_ARGUMENT;
 

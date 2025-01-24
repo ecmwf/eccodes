@@ -10,15 +10,15 @@
 
 #include "PackingType.h"
 
-grib_accessor_packing_type_t _grib_accessor_packing_type{};
-grib_accessor* grib_accessor_packing_type = &_grib_accessor_packing_type;
+eccodes::accessor::PackingType _grib_accessor_packing_type;
+eccodes::Accessor* grib_accessor_packing_type = &_grib_accessor_packing_type;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_packing_type_t::init(const long l, grib_arguments* args)
+void PackingType::init(const long l, grib_arguments* args)
 {
-    grib_accessor_gen_t::init(l, args);
+    Gen::init(l, args);
     int n         = 0;
     values_       = args->get_name(grib_handle_of_accessor(this), n++);
     packing_type_ = args->get_name(grib_handle_of_accessor(this), n++);
@@ -26,17 +26,17 @@ void grib_accessor_packing_type_t::init(const long l, grib_arguments* args)
     length_ = 0;
 }
 
-size_t grib_accessor_packing_type_t::string_length()
+size_t PackingType::string_length()
 {
     return 1024;
 }
 
-long grib_accessor_packing_type_t::get_native_type()
+long PackingType::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
 
-int grib_accessor_packing_type_t::pack_string(const char* sval, size_t* len)
+int PackingType::pack_string(const char* sval, size_t* len)
 {
     grib_handle* h  = grib_handle_of_accessor(this);
     double* values  = NULL;
@@ -69,7 +69,7 @@ int grib_accessor_packing_type_t::pack_string(const char* sval, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_packing_type_t::unpack_string(char* val, size_t* len)
+int PackingType::unpack_string(char* val, size_t* len)
 {
     grib_handle* h = grib_handle_of_accessor(this);
 

@@ -10,8 +10,8 @@
 
 #include "Latitudes.h"
 
-grib_accessor_latitudes_t _grib_accessor_latitudes{};
-grib_accessor* grib_accessor_latitudes = &_grib_accessor_latitudes;
+eccodes::accessor::Latitudes _grib_accessor_latitudes;
+eccodes::Accessor* grib_accessor_latitudes = &_grib_accessor_latitudes;
 
 namespace eccodes::accessor
 {
@@ -46,9 +46,9 @@ static int compare_doubles_descending(const void* a, const void* b)
     return compare_doubles(a, b, 0);
 }
 
-void grib_accessor_latitudes_t::init(const long l, grib_arguments* c)
+void Latitudes::init(const long l, grib_arguments* c)
 {
-    grib_accessor_double_t::init(l, c);
+    Double::init(l, c);
     int n = 0;
 
     values_   = c->get_name(grib_handle_of_accessor(this), n++);
@@ -58,7 +58,7 @@ void grib_accessor_latitudes_t::init(const long l, grib_arguments* c)
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_latitudes_t::unpack_double(double* val, size_t* len)
+int Latitudes::unpack_double(double* val, size_t* len)
 {
     grib_context* c     = context_;
     int ret             = 0;
@@ -110,7 +110,7 @@ int grib_accessor_latitudes_t::unpack_double(double* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_latitudes_t::value_count(long* len)
+int Latitudes::value_count(long* len)
 {
     grib_handle* h  = grib_handle_of_accessor(this);
     grib_context* c = context_;

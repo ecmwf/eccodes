@@ -10,21 +10,21 @@
 
 #include "DataDummyField.h"
 
-grib_accessor_data_dummy_field_t _grib_accessor_data_dummy_field{};
-grib_accessor* grib_accessor_data_dummy_field = &_grib_accessor_data_dummy_field;
+eccodes::accessor::DataDummyField _grib_accessor_data_dummy_field;
+eccodes::Accessor* grib_accessor_data_dummy_field = &_grib_accessor_data_dummy_field;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_data_dummy_field_t::init(const long v, grib_arguments* args)
+void DataDummyField::init(const long v, grib_arguments* args)
 {
-    grib_accessor_data_g1simple_packing_t::init(v, args);
+    DataG1simplePacking::init(v, args);
     missing_value_  = args->get_name(grib_handle_of_accessor(this), carg_++);
     numberOfPoints_ = args->get_name(grib_handle_of_accessor(this), carg_++);
     bitmap_         = args->get_name(grib_handle_of_accessor(this), carg_++);
 }
 
-int grib_accessor_data_dummy_field_t::unpack_double(double* val, size_t* len)
+int DataDummyField::unpack_double(double* val, size_t* len)
 {
     size_t i = 0, n_vals = 0;
     long numberOfPoints;
@@ -55,7 +55,7 @@ int grib_accessor_data_dummy_field_t::unpack_double(double* val, size_t* len)
     return err;
 }
 
-int grib_accessor_data_dummy_field_t::pack_double(const double* val, size_t* len)
+int DataDummyField::pack_double(const double* val, size_t* len)
 {
     size_t n_vals       = *len;
     int err             = 0;
@@ -89,7 +89,7 @@ int grib_accessor_data_dummy_field_t::pack_double(const double* val, size_t* len
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_data_dummy_field_t::value_count(long* numberOfPoints)
+int DataDummyField::value_count(long* numberOfPoints)
 {
     int err         = 0;
     *numberOfPoints = 0;

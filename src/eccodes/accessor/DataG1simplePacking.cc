@@ -11,15 +11,15 @@
 #include "DataG1simplePacking.h"
 #include "grib_scaling.h"
 
-grib_accessor_data_g1simple_packing_t _grib_accessor_data_g1simple_packing{};
-grib_accessor* grib_accessor_data_g1simple_packing = &_grib_accessor_data_g1simple_packing;
+eccodes::accessor::DataG1simplePacking _grib_accessor_data_g1simple_packing;
+eccodes::Accessor* grib_accessor_data_g1simple_packing = &_grib_accessor_data_g1simple_packing;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_data_g1simple_packing_t::init(const long v, grib_arguments* args)
+void DataG1simplePacking::init(const long v, grib_arguments* args)
 {
-    grib_accessor_data_simple_packing_t::init(v, args);
+    DataSimplePacking::init(v, args);
 
     half_byte_    = args->get_name(grib_handle_of_accessor(this), carg_++);
     packingType_  = args->get_name(grib_handle_of_accessor(this), carg_++);
@@ -29,7 +29,7 @@ void grib_accessor_data_g1simple_packing_t::init(const long v, grib_arguments* a
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_data_g1simple_packing_t::value_count(long* number_of_values)
+int DataG1simplePacking::value_count(long* number_of_values)
 {
     *number_of_values = 0;
 
@@ -40,7 +40,7 @@ int grib_accessor_data_g1simple_packing_t::value_count(long* number_of_values)
     return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, number_of_values);
 }
 
-int grib_accessor_data_g1simple_packing_t::pack_double(const double* cval, size_t* len)
+int DataG1simplePacking::pack_double(const double* cval, size_t* len)
 {
     size_t n_vals             = *len;
     long half_byte            = 0;
@@ -122,7 +122,7 @@ int grib_accessor_data_g1simple_packing_t::pack_double(const double* cval, size_
         }
     }
 
-    ret = grib_accessor_data_simple_packing_t::pack_double(val, len);
+    ret = DataSimplePacking::pack_double(val, len);
     switch (ret) {
         case GRIB_CONSTANT_FIELD:
             ret = grib_get_long(grib_handle_of_accessor(this), "constantFieldHalfByte", &constantFieldHalfByte);
@@ -207,7 +207,7 @@ int grib_accessor_data_g1simple_packing_t::pack_double(const double* cval, size_
     grib_encode_double_array(n_vals, val, bits_per_value, reference_value, decimal, divisor, encoded, &off);
 
     grib_context_log(context_, GRIB_LOG_DEBUG,
-                     "grib_accessor_data_g1simple_packing_t : pack_double : packing %s, %d values", name_, n_vals);
+                     "DataG1simplePacking : pack_double : packing %s, %d values", name_, n_vals);
 
     ret = grib_buffer_replace(this, buf, buflen, 1, 1);
     if (ret != GRIB_SUCCESS) return ret;

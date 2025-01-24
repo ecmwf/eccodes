@@ -10,15 +10,15 @@
 
 #include "DataApplyBoustrophedonic.h"
 
-grib_accessor_data_apply_boustrophedonic_t _grib_accessor_data_apply_boustrophedonic{};
-grib_accessor* grib_accessor_data_apply_boustrophedonic = &_grib_accessor_data_apply_boustrophedonic;
+eccodes::accessor::DataApplyBoustrophedonic _grib_accessor_data_apply_boustrophedonic;
+eccodes::Accessor* grib_accessor_data_apply_boustrophedonic = &_grib_accessor_data_apply_boustrophedonic;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_data_apply_boustrophedonic_t::init(const long v, grib_arguments* args)
+void DataApplyBoustrophedonic::init(const long v, grib_arguments* args)
 {
-    grib_accessor_gen_t::init(v, args);
+    Gen::init(v, args);
 
     int n            = 0;
     values_          = args->get_name(grib_handle_of_accessor(this), n++);
@@ -29,19 +29,19 @@ void grib_accessor_data_apply_boustrophedonic_t::init(const long v, grib_argumen
 
     length_ = 0;
 }
-void grib_accessor_data_apply_boustrophedonic_t::dump(eccodes::Dumper* dumper)
+void DataApplyBoustrophedonic::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_values(this);
 }
 
-int grib_accessor_data_apply_boustrophedonic_t::value_count(long* numberOfPoints)
+int DataApplyBoustrophedonic::value_count(long* numberOfPoints)
 {
     *numberOfPoints = 0;
     return grib_get_long_internal(grib_handle_of_accessor(this), numberOfPoints_, numberOfPoints);
 }
 
 template <typename T>
-int grib_accessor_data_apply_boustrophedonic_t::unpack(T* val, size_t* len)
+int DataApplyBoustrophedonic::unpack(T* val, size_t* len)
 {
     size_t plSize                                    = 0;
     long* pl                                         = 0;
@@ -134,17 +134,17 @@ int grib_accessor_data_apply_boustrophedonic_t::unpack(T* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_data_apply_boustrophedonic_t::unpack_double(double* val, size_t* len)
+int DataApplyBoustrophedonic::unpack_double(double* val, size_t* len)
 {
     return unpack<double>(val, len);
 }
 
-int grib_accessor_data_apply_boustrophedonic_t::unpack_float(float* val, size_t* len)
+int DataApplyBoustrophedonic::unpack_float(float* val, size_t* len)
 {
     return unpack<float>(val, len);
 }
 
-int grib_accessor_data_apply_boustrophedonic_t::unpack_double_element(size_t idx, double* val)
+int DataApplyBoustrophedonic::unpack_double_element(size_t idx, double* val)
 {
     size_t size;
     double* values;
@@ -167,7 +167,7 @@ int grib_accessor_data_apply_boustrophedonic_t::unpack_double_element(size_t idx
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_data_apply_boustrophedonic_t::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
+int DataApplyBoustrophedonic::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
     size_t size = 0, i = 0;
     double* values;
@@ -195,7 +195,7 @@ int grib_accessor_data_apply_boustrophedonic_t::unpack_double_element_set(const 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_data_apply_boustrophedonic_t::pack_double(const double* val, size_t* len)
+int DataApplyBoustrophedonic::pack_double(const double* val, size_t* len)
 {
     size_t plSize     = 0;
     long* pl          = 0;
@@ -276,7 +276,7 @@ int grib_accessor_data_apply_boustrophedonic_t::pack_double(const double* val, s
     return GRIB_SUCCESS;
 }
 
-long grib_accessor_data_apply_boustrophedonic_t::get_native_type()
+long DataApplyBoustrophedonic::get_native_type()
 {
     return GRIB_TYPE_DOUBLE;
 }

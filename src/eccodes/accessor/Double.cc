@@ -10,18 +10,18 @@
 
 #include "Double.h"
 
-grib_accessor_double_t _grib_accessor_double{};
-grib_accessor* grib_accessor_double = &_grib_accessor_double;
+eccodes::accessor::Double _grib_accessor_double;
+eccodes::Accessor* grib_accessor_double = &_grib_accessor_double;
 
 namespace eccodes::accessor
 {
 
-long grib_accessor_double_t::get_native_type()
+long Double::get_native_type()
 {
     return GRIB_TYPE_DOUBLE;
 }
 
-int grib_accessor_double_t::unpack_string(char* v, size_t* len)
+int Double::unpack_string(char* v, size_t* len)
 {
     double val = 0;
     size_t l   = 1;
@@ -56,12 +56,12 @@ int grib_accessor_double_t::unpack_string(char* v, size_t* len)
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_double_t::dump(eccodes::Dumper* dumper)
+void Double::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_values(this);
 }
 
-int grib_accessor_double_t::compare(grib_accessor* b)
+int Double::compare(grib_accessor* b)
 {
     int retval   = 0;
     double* aval = 0;
@@ -103,7 +103,7 @@ int grib_accessor_double_t::compare(grib_accessor* b)
     return retval;
 }
 
-int grib_accessor_double_t::pack_missing()
+int Double::pack_missing()
 {
     size_t len   = 1;
     double value = GRIB_MISSING_DOUBLE;

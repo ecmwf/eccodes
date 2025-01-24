@@ -10,29 +10,29 @@
 
 #include "Sexagesimal2decimal.h"
 
-grib_accessor_sexagesimal2decimal_t _grib_accessor_sexagesimal2decimal{};
-grib_accessor* grib_accessor_sexagesimal2decimal = &_grib_accessor_sexagesimal2decimal;
+eccodes::accessor::Sexagesimal2decimal _grib_accessor_sexagesimal2decimal;
+eccodes::Accessor* grib_accessor_sexagesimal2decimal = &_grib_accessor_sexagesimal2decimal;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_sexagesimal2decimal_t::init(const long len, grib_arguments* arg)
+void Sexagesimal2decimal::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_to_double_t::init(len, arg);
+    ToDouble::init(len, arg);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-void grib_accessor_sexagesimal2decimal_t::dump(eccodes::Dumper* dumper)
+void Sexagesimal2decimal::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_double(this, NULL);
 }
 
-long grib_accessor_sexagesimal2decimal_t::get_native_type()
+long Sexagesimal2decimal::get_native_type()
 {
     return GRIB_TYPE_DOUBLE;
 }
 
-int grib_accessor_sexagesimal2decimal_t::unpack_string(char* val, size_t* len)
+int Sexagesimal2decimal::unpack_string(char* val, size_t* len)
 {
     int err        = 0;
     char buff[512] = {0,};

@@ -11,8 +11,8 @@
 #include "Variable.h"
 #include <limits.h>
 
-grib_accessor_variable_t _grib_accessor_variable{};
-grib_accessor* grib_accessor_variable = &_grib_accessor_variable;
+eccodes::accessor::Variable _grib_accessor_variable;
+eccodes::Accessor* grib_accessor_variable = &_grib_accessor_variable;
 
 namespace eccodes::accessor
 {
@@ -25,9 +25,9 @@ namespace eccodes::accessor
 
 #define MAX_VARIABLE_STRING_LENGTH 255
 
-void grib_accessor_variable_t::init(const long length, grib_arguments* args)
+void Variable::init(const long length, grib_arguments* args)
 {
-    grib_accessor_gen_t::init(length, args);
+    Gen::init(length, args);
 
     grib_handle* hand           = grib_handle_of_accessor(this);
     grib_expression* expression = nullptr;
@@ -75,12 +75,12 @@ void grib_accessor_variable_t::init(const long length, grib_arguments* args)
     }
 }
 
-void grib_accessor_variable_t::accessor_variable_set_type(int type)
+void Variable::accessor_variable_set_type(int type)
 {
     type_ = type;
 }
 
-void grib_accessor_variable_t::dump(eccodes::Dumper* dumper)
+void Variable::dump(eccodes::Dumper* dumper)
 {
     switch (type_) {
         case GRIB_TYPE_DOUBLE:
@@ -97,7 +97,7 @@ void grib_accessor_variable_t::dump(eccodes::Dumper* dumper)
     }
 }
 
-int grib_accessor_variable_t::pack_double(const double* val, size_t* len)
+int Variable::pack_double(const double* val, size_t* len)
 {
     const double dval = *val;
 
@@ -121,7 +121,7 @@ int grib_accessor_variable_t::pack_double(const double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_variable_t::pack_float(const float* val, size_t* len)
+int Variable::pack_float(const float* val, size_t* len)
 {
     const double fval = *val;
 
@@ -140,7 +140,7 @@ int grib_accessor_variable_t::pack_float(const float* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_variable_t::pack_long(const long* val, size_t* len)
+int Variable::pack_long(const long* val, size_t* len)
 {
     if (*len != 1) {
         grib_context_log(context_, GRIB_LOG_ERROR, "Wrong size for %s it contains 1 value", name_);
@@ -155,7 +155,7 @@ int grib_accessor_variable_t::pack_long(const long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_variable_t::unpack_double(double* val, size_t* len)
+int Variable::unpack_double(double* val, size_t* len)
 {
     if (*len < 1) {
         grib_context_log(context_, GRIB_LOG_ERROR, "Wrong size for %s, it contains %d values", name_, 1);
@@ -167,7 +167,7 @@ int grib_accessor_variable_t::unpack_double(double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_variable_t::unpack_float(float* val, size_t* len)
+int Variable::unpack_float(float* val, size_t* len)
 {
     if (*len < 1) {
         grib_context_log(context_, GRIB_LOG_ERROR, "Wrong size for %s, it contains %d values", name_, 1);
@@ -179,7 +179,7 @@ int grib_accessor_variable_t::unpack_float(float* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_variable_t::unpack_long(long* val, size_t* len)
+int Variable::unpack_long(long* val, size_t* len)
 {
     if (*len < 1) {
         grib_context_log(context_, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", name_, 1);
@@ -191,12 +191,12 @@ int grib_accessor_variable_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-long grib_accessor_variable_t::get_native_type()
+long Variable::get_native_type()
 {
     return type_;
 }
 
-void grib_accessor_variable_t::destroy(grib_context* c)
+void Variable::destroy(grib_context* c)
 {
     int i = 0;
 
@@ -212,10 +212,10 @@ void grib_accessor_variable_t::destroy(grib_context* c)
         ++i;
     }
 
-    grib_accessor_gen_t::destroy(c);
+    Gen::destroy(c);
 }
 
-int grib_accessor_variable_t::unpack_string(char* val, size_t* len)
+int Variable::unpack_string(char* val, size_t* len)
 {
     char buf[80];
     char* p     = buf;
@@ -242,7 +242,7 @@ int grib_accessor_variable_t::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_variable_t::pack_string(const char* val, size_t* len)
+int Variable::pack_string(const char* val, size_t* len)
 {
     const grib_context* c = context_;
 
@@ -255,13 +255,13 @@ int grib_accessor_variable_t::pack_string(const char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_variable_t::value_count(long* count)
+int Variable::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_variable_t::string_length()
+size_t Variable::string_length()
 {
     if (type_ == GRIB_TYPE_STRING)
         return strlen(cval_);
@@ -269,12 +269,12 @@ size_t grib_accessor_variable_t::string_length()
         return MAX_VARIABLE_STRING_LENGTH;
 }
 
-long grib_accessor_variable_t::byte_count()
+long Variable::byte_count()
 {
     return length_;
 }
 
-int grib_accessor_variable_t::compare(grib_accessor* b)
+int Variable::compare(grib_accessor* b)
 {
     int retval   = GRIB_SUCCESS;
     double* aval = 0;
@@ -315,10 +315,10 @@ int grib_accessor_variable_t::compare(grib_accessor* b)
     return retval;
 }
 
-grib_accessor* grib_accessor_variable_t::make_clone(grib_section* s, int* err)
+grib_accessor* Variable::make_clone(grib_section* s, int* err)
 {
     grib_accessor* the_clone                   = NULL;
-    grib_accessor_variable_t* variableAccessor = NULL;
+    Variable* variableAccessor = NULL;
     grib_action creator;
     creator.op_         = (char*)"variable";
     creator.name_space_ = (char*)"";
@@ -329,7 +329,7 @@ grib_accessor* grib_accessor_variable_t::make_clone(grib_section* s, int* err)
     the_clone->parent_       = NULL;
     the_clone->h_            = s->h;
     the_clone->flags_        = flags_;
-    variableAccessor         = (grib_accessor_variable_t*)the_clone;
+    variableAccessor         = (Variable*)the_clone;
     variableAccessor->cname_ = creator.name_; /* ECC-765: Store for later freeing memory */
 
     *err                    = 0;

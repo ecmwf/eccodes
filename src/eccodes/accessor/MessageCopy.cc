@@ -10,30 +10,30 @@
 
 #include "MessageCopy.h"
 
-grib_accessor_message_copy_t _grib_accessor_message_copy{};
-grib_accessor* grib_accessor_message_copy = &_grib_accessor_message_copy;
+eccodes::accessor::MessageCopy _grib_accessor_message_copy;
+eccodes::Accessor* grib_accessor_message_copy = &_grib_accessor_message_copy;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_message_copy_t::init(const long length, grib_arguments* args)
+void MessageCopy::init(const long length, grib_arguments* args)
 {
-    grib_accessor_gen_t::init(length, args);
+    Gen::init(length, args);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     length_ = 0;
 }
 
-void grib_accessor_message_copy_t::dump(eccodes::Dumper* dumper)
+void MessageCopy::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_string(this, NULL);
 }
 
-long grib_accessor_message_copy_t::get_native_type()
+long MessageCopy::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
 
-int grib_accessor_message_copy_t::unpack_string(char* val, size_t* len)
+int MessageCopy::unpack_string(char* val, size_t* len)
 {
     size_t slen = grib_handle_of_accessor(this)->buffer->ulength;
     size_t i;
@@ -55,12 +55,12 @@ int grib_accessor_message_copy_t::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-size_t grib_accessor_message_copy_t::string_length()
+size_t MessageCopy::string_length()
 {
     return grib_handle_of_accessor(this)->buffer->ulength;
 }
 
-long grib_accessor_message_copy_t::byte_count()
+long MessageCopy::byte_count()
 {
     return length_;
 }

@@ -10,15 +10,15 @@
 
 #include "Constant.h"
 
-grib_accessor_constant_t _grib_accessor_constant{};
-grib_accessor* grib_accessor_constant = &_grib_accessor_constant;
+eccodes::accessor::Constant _grib_accessor_constant;
+eccodes::Accessor* grib_accessor_constant = &_grib_accessor_constant;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_constant_t::init(const long len, grib_arguments* arg)
+void Constant::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_variable_t::init(len, arg);
+    Variable::init(len, arg);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 

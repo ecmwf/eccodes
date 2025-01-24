@@ -10,22 +10,22 @@
 
 #include "Suppressed.h"
 
-grib_accessor_suppressed_t _grib_accessor_suppressed{};
-grib_accessor* grib_accessor_suppressed = &_grib_accessor_suppressed;
+eccodes::accessor::Suppressed _grib_accessor_suppressed;
+eccodes::Accessor* grib_accessor_suppressed = &_grib_accessor_suppressed;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_suppressed_t::init(const long l, grib_arguments* c)
+void Suppressed::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     args_ = c;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
 }
 
-void grib_accessor_suppressed_t::log_message()
+void Suppressed::log_message()
 {
     int i                            = 0;
     grib_handle* hand                = grib_handle_of_accessor(this);
@@ -41,31 +41,31 @@ void grib_accessor_suppressed_t::log_message()
     }
 }
 
-int grib_accessor_suppressed_t::unpack_string(char* val, size_t* len)
+int Suppressed::unpack_string(char* val, size_t* len)
 {
     log_message();
     return GRIB_NOT_FOUND;
 }
 
-int grib_accessor_suppressed_t::unpack_long(long* val, size_t* len)
+int Suppressed::unpack_long(long* val, size_t* len)
 {
     log_message();
     return GRIB_NOT_FOUND;
 }
 
-int grib_accessor_suppressed_t::unpack_double(double* val, size_t* len)
+int Suppressed::unpack_double(double* val, size_t* len)
 {
     log_message();
     return GRIB_NOT_FOUND;
 }
 
-int grib_accessor_suppressed_t::value_count(long* count)
+int Suppressed::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-long grib_accessor_suppressed_t::get_native_type()
+long Suppressed::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }

@@ -10,15 +10,15 @@
 
 #include "Message.h"
 
-grib_accessor_message_t _grib_accessor_message{};
-grib_accessor* grib_accessor_message = &_grib_accessor_message;
+eccodes::accessor::Message _grib_accessor_message;
+eccodes::Accessor* grib_accessor_message = &_grib_accessor_message;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_message_t::init(const long len, grib_arguments* arg)
+void Message::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_bytes_t::init(len, arg);
+    Bytes::init(len, arg);
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     length_ = grib_handle_of_accessor(this)->buffer->ulength - len - offset_;
@@ -31,12 +31,12 @@ void grib_accessor_message_t::init(const long len, grib_arguments* arg)
 //     return GRIB_SUCCESS;
 // }
 
-void grib_accessor_message_t::update_size(size_t new_size)
+void Message::update_size(size_t new_size)
 {
     length_ = new_size;
 }
 
-void grib_accessor_message_t::resize(size_t new_size)
+void Message::resize(size_t new_size)
 {
     grib_context_log(context_, GRIB_LOG_FATAL, "%s %s: Not supported", class_name_, __func__);
 
@@ -48,13 +48,13 @@ void grib_accessor_message_t::resize(size_t new_size)
     // ECCODES_ASSERT(new_size == length_ );
 }
 
-int grib_accessor_message_t::value_count(long* count)
+int Message::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-int grib_accessor_message_t::unpack_string(char* val, size_t* len)
+int Message::unpack_string(char* val, size_t* len)
 {
     long i         = 0;
     size_t l       = string_length() + 1;
@@ -75,7 +75,7 @@ int grib_accessor_message_t::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-size_t grib_accessor_message_t::string_length()
+size_t Message::string_length()
 {
     return length_;
 }

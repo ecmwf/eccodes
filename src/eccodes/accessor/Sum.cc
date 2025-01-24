@@ -10,22 +10,22 @@
 
 #include "Sum.h"
 
-grib_accessor_sum_t _grib_accessor_sum{};
-grib_accessor* grib_accessor_sum = &_grib_accessor_sum;
+eccodes::accessor::Sum _grib_accessor_sum;
+eccodes::Accessor* grib_accessor_sum = &_grib_accessor_sum;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_sum_t::init(const long l, grib_arguments* c)
+void Sum::init(const long l, grib_arguments* c)
 {
-    grib_accessor_double_t::init(l, c);
+    Double::init(l, c);
     int n   = 0;
     values_ = c->get_name(grib_handle_of_accessor(this), n++);
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_sum_t::unpack_long(long* val, size_t* len)
+int Sum::unpack_long(long* val, size_t* len)
 {
     int ret      = 0;
     size_t size  = 0;
@@ -57,7 +57,7 @@ int grib_accessor_sum_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_sum_t::unpack_double(double* val, size_t* len)
+int Sum::unpack_double(double* val, size_t* len)
 {
     int ret        = 0;
     size_t size    = 0;
@@ -92,7 +92,7 @@ int grib_accessor_sum_t::unpack_double(double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_sum_t::value_count(long* count)
+int Sum::value_count(long* count)
 {
     size_t n = 0;
     int ret  = GRIB_SUCCESS;

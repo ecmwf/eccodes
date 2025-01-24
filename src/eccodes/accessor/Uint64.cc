@@ -10,13 +10,13 @@
 
 #include "Uint64.h"
 
-grib_accessor_uint64_t _grib_accessor_uint64{};
-grib_accessor* grib_accessor_uint64 = &_grib_accessor_uint64;
+eccodes::accessor::Uint64 _grib_accessor_uint64;
+eccodes::Accessor* grib_accessor_uint64 = &_grib_accessor_uint64;
 
 namespace eccodes::accessor
 {
 
-int grib_accessor_uint64_t::unpack_long(long* val, size_t* len)
+int Uint64::unpack_long(long* val, size_t* len)
 {
     long value                = 0;
     long pos                  = offset_;
@@ -47,7 +47,7 @@ int grib_accessor_uint64_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-long grib_accessor_uint64_t::get_native_type()
+long Uint64::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }

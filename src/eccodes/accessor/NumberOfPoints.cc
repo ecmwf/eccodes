@@ -10,15 +10,15 @@
 
 #include "NumberOfPoints.h"
 
-grib_accessor_number_of_points_t _grib_accessor_number_of_points{};
-grib_accessor* grib_accessor_number_of_points = &_grib_accessor_number_of_points;
+eccodes::accessor::NumberOfPoints _grib_accessor_number_of_points;
+eccodes::Accessor* grib_accessor_number_of_points = &_grib_accessor_number_of_points;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_number_of_points_t::init(const long l, grib_arguments* c)
+void NumberOfPoints::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     int n             = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
 
@@ -31,7 +31,7 @@ void grib_accessor_number_of_points_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-int grib_accessor_number_of_points_t::unpack_long(long* val, size_t* len)
+int NumberOfPoints::unpack_long(long* val, size_t* len)
 {
     int ret = GRIB_SUCCESS;
     long ni = 0, nj = 0, plpresent = 0;

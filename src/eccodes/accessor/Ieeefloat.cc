@@ -10,15 +10,15 @@
 
 #include "Ieeefloat.h"
 
-grib_accessor_ieeefloat_t _grib_accessor_ieeefloat{};
-grib_accessor* grib_accessor_ieeefloat = &_grib_accessor_ieeefloat;
+eccodes::accessor::Ieeefloat _grib_accessor_ieeefloat;
+eccodes::Accessor* grib_accessor_ieeefloat = &_grib_accessor_ieeefloat;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_ieeefloat_t::init(const long len, grib_arguments* arg)
+void Ieeefloat::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_double_t::init(len, arg);
+    Double::init(len, arg);
     long count = 0;
     arg_       = arg;
     value_count(&count);
@@ -26,7 +26,7 @@ void grib_accessor_ieeefloat_t::init(const long len, grib_arguments* arg)
     ECCODES_ASSERT(length_ >= 0);
 }
 
-int grib_accessor_ieeefloat_t::value_count(long* len)
+int Ieeefloat::value_count(long* len)
 {
     *len = 0;
 
@@ -37,7 +37,7 @@ int grib_accessor_ieeefloat_t::value_count(long* len)
     return grib_get_long_internal(grib_handle_of_accessor(this), arg_->get_name(parent_->h, 0), len);
 }
 
-int grib_accessor_ieeefloat_t::pack_double(const double* val, size_t* len)
+int Ieeefloat::pack_double(const double* val, size_t* len)
 {
     int ret            = 0;
     unsigned long i    = 0;
@@ -110,23 +110,23 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_ieeefloat_t::unpack_double(double* val, size_t* len)
+int Ieeefloat::unpack_double(double* val, size_t* len)
 {
     return unpack<double>(this, val, len);
 }
 
-int grib_accessor_ieeefloat_t::unpack_float(float* val, size_t* len)
+int Ieeefloat::unpack_float(float* val, size_t* len)
 {
     return unpack<float>(this, val, len);
 }
 
-void grib_accessor_ieeefloat_t::update_size(size_t s)
+void Ieeefloat::update_size(size_t s)
 {
     length_ = (long)s;
     ECCODES_ASSERT(length_ >= 0);
 }
 
-int grib_accessor_ieeefloat_t::nearest_smaller_value(double val, double* nearest)
+int Ieeefloat::nearest_smaller_value(double val, double* nearest)
 {
     return grib_nearest_smaller_ieee_float(val, nearest);
 }

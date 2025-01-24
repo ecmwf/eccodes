@@ -10,28 +10,28 @@
 
 #include "DataG2shsimplePacking.h"
 
-grib_accessor_data_g2shsimple_packing_t _grib_accessor_data_g2shsimple_packing{};
-grib_accessor* grib_accessor_data_g2shsimple_packing = &_grib_accessor_data_g2shsimple_packing;
+eccodes::accessor::DataG2shsimplePacking _grib_accessor_data_g2shsimple_packing;
+eccodes::Accessor* grib_accessor_data_g2shsimple_packing = &_grib_accessor_data_g2shsimple_packing;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_data_g2shsimple_packing_t::init(const long v, grib_arguments* args)
+void DataG2shsimplePacking::init(const long v, grib_arguments* args)
 {
-    grib_accessor_data_shsimple_packing_t::init(v, args);
+    DataShsimplePacking::init(v, args);
 
     numberOfValues_     = args->get_name(grib_handle_of_accessor(this), 2);
     numberOfDataPoints_ = args->get_name(grib_handle_of_accessor(this), 3);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_data_g2shsimple_packing_t::value_count(long* len)
+int DataG2shsimplePacking::value_count(long* len)
 {
     *len = 0;
     return grib_get_long(grib_handle_of_accessor(this), numberOfValues_, len);
 }
 
-int grib_accessor_data_g2shsimple_packing_t::unpack_double(double* val, size_t* len)
+int DataG2shsimplePacking::unpack_double(double* val, size_t* len)
 {
     int err = GRIB_SUCCESS;
 
@@ -62,7 +62,7 @@ int grib_accessor_data_g2shsimple_packing_t::unpack_double(double* val, size_t* 
     return err;
 }
 
-int grib_accessor_data_g2shsimple_packing_t::pack_double(const double* val, size_t* len)
+int DataG2shsimplePacking::pack_double(const double* val, size_t* len)
 {
     int err = GRIB_SUCCESS;
 

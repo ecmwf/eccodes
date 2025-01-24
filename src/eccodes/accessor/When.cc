@@ -10,31 +10,31 @@
 
 #include "When.h"
 
-grib_accessor_when_t _grib_accessor_when{};
-grib_accessor* grib_accessor_when = &_grib_accessor_when;
+eccodes::accessor::When _grib_accessor_when;
+eccodes::Accessor* grib_accessor_when = &_grib_accessor_when;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_when_t::init(const long len, grib_arguments* arg)
+void When::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-void grib_accessor_when_t::dump(eccodes::Dumper* dumper)
+void When::dump(eccodes::Dumper* dumper)
 {
     /* dumper->dump_when(a,NULL); */
 }
 
-int grib_accessor_when_t::notify_change(grib_accessor* changed)
+int When::notify_change(grib_accessor* changed)
 {
     return creator_->notify_change(this, changed);
 }
 
-long grib_accessor_when_t::get_native_type()
+long When::get_native_type()
 {
     return GRIB_TYPE_UNDEFINED;
 }

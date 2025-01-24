@@ -10,19 +10,8 @@
 
 #include "Codeflag.h"
 
-grib_accessor_codeflag_t _grib_accessor_codeflag{};
-grib_accessor* grib_accessor_codeflag = &_grib_accessor_codeflag;
-
-namespace eccodes::accessor
-{
-
-void grib_accessor_codeflag_t::init(const long len, grib_arguments* param)
-{
-    grib_accessor_unsigned_t::init(len, param);
-    length_    = len;
-    tablename_ = param->get_string(grib_handle_of_accessor(this), 0);
-    ECCODES_ASSERT(length_ >= 0);
-}
+eccodes::accessor::Codeflag _grib_accessor_codeflag;
+eccodes::Accessor* grib_accessor_codeflag = &_grib_accessor_codeflag;
 
 static int test_bit(long a, long b)
 {
@@ -30,7 +19,18 @@ static int test_bit(long a, long b)
     return a & (1 << b);
 }
 
-int grib_accessor_codeflag_t::grib_get_codeflag(long code, char* codename)
+namespace eccodes::accessor
+{
+
+void Codeflag::init(const long len, grib_arguments* param)
+{
+    Unsigned::init(len, param);
+    length_    = len;
+    tablename_ = param->get_string(grib_handle_of_accessor(this), 0);
+    ECCODES_ASSERT(length_ >= 0);
+}
+
+int Codeflag::grib_get_codeflag(long code, char* codename)
 {
     FILE* f                              = NULL;
     char fname[1024];
@@ -98,13 +98,13 @@ int grib_accessor_codeflag_t::grib_get_codeflag(long code, char* codename)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_codeflag_t::value_count(long* count)
+int Codeflag::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-void grib_accessor_codeflag_t::dump(eccodes::Dumper* dumper)
+void Codeflag::dump(eccodes::Dumper* dumper)
 {
     long v              = 0;
     char flagname[1024] = {0,};

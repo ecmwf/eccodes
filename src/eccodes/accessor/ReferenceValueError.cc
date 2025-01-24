@@ -10,15 +10,15 @@
 
 #include "ReferenceValueError.h"
 
-grib_accessor_reference_value_error_t _grib_accessor_reference_value_error{};
-grib_accessor* grib_accessor_reference_value_error = &_grib_accessor_reference_value_error;
+eccodes::accessor::ReferenceValueError _grib_accessor_reference_value_error;
+eccodes::Accessor* grib_accessor_reference_value_error = &_grib_accessor_reference_value_error;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_reference_value_error_t::init(const long l, grib_arguments* c)
+void ReferenceValueError::init(const long l, grib_arguments* c)
 {
-    grib_accessor_double_t::init(l, c);
+    Double::init(l, c);
     int n = 0;
 
     referenceValue_ = c->get_name(grib_handle_of_accessor(this), n++);
@@ -28,7 +28,7 @@ void grib_accessor_reference_value_error_t::init(const long l, grib_arguments* c
     length_ = 0;
 }
 
-int grib_accessor_reference_value_error_t::unpack_double(double* val, size_t* len)
+int ReferenceValueError::unpack_double(double* val, size_t* len)
 {
     int ret               = GRIB_SUCCESS;
     double referenceValue = 0;

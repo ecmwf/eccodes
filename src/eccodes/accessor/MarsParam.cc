@@ -10,15 +10,15 @@
 
 #include "MarsParam.h"
 
-grib_accessor_mars_param_t _grib_accessor_mars_param{};
-grib_accessor* grib_accessor_mars_param = &_grib_accessor_mars_param;
+eccodes::accessor::MarsParam _grib_accessor_mars_param;
+eccodes::Accessor* grib_accessor_mars_param = &_grib_accessor_mars_param;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_mars_param_t::init(const long l, grib_arguments* c)
+void MarsParam::init(const long l, grib_arguments* c)
 {
-    grib_accessor_ascii_t::init(l, c);
+    Ascii::init(l, c);
     int n    = 0;
     paramId_ = c->get_name(grib_handle_of_accessor(this), n++);
     table_   = c->get_name(grib_handle_of_accessor(this), n++);
@@ -31,7 +31,7 @@ void grib_accessor_mars_param_t::init(const long l, grib_arguments* c)
 // For an alternative implementation of unpack_string, see
 //   src/deprecated/grib_accessor_mars_param.cc
 //
-int grib_accessor_mars_param_t::unpack_string(char* val, size_t* len)
+int MarsParam::unpack_string(char* val, size_t* len)
 {
     long param = 0;
     long table = 0;
@@ -49,7 +49,7 @@ int grib_accessor_mars_param_t::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-size_t grib_accessor_mars_param_t::string_length()
+size_t MarsParam::string_length()
 {
     return 7;
 }

@@ -10,13 +10,13 @@
 
 #include "LibraryVersion.h"
 
-grib_accessor_library_version_t _grib_accessor_library_version{};
-grib_accessor* grib_accessor_library_version = &_grib_accessor_library_version;
+eccodes::accessor::LibraryVersion _grib_accessor_library_version;
+eccodes::Accessor* grib_accessor_library_version = &_grib_accessor_library_version;
 
 namespace eccodes::accessor
 {
 
-int grib_accessor_library_version_t::unpack_string(char* val, size_t* len)
+int LibraryVersion::unpack_string(char* val, size_t* len)
 {
     char result[30] = {0,};
     size_t size = 0;
@@ -37,13 +37,13 @@ int grib_accessor_library_version_t::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_library_version_t::value_count(long* count)
+int LibraryVersion::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_library_version_t::string_length()
+size_t LibraryVersion::string_length()
 {
     return 255;
 }

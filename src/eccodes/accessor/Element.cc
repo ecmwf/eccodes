@@ -10,15 +10,15 @@
 
 #include "Element.h"
 
-grib_accessor_element_t _grib_accessor_element{};
-grib_accessor* grib_accessor_element = &_grib_accessor_element;
+eccodes::accessor::Element _grib_accessor_element;
+eccodes::Accessor* grib_accessor_element = &_grib_accessor_element;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_element_t::init(const long l, grib_arguments* c)
+void Element::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     grib_handle* hand = grib_handle_of_accessor(this);
 
     int n    = 0;
@@ -37,7 +37,7 @@ static int check_element_index(const char* func, const char* array_name, long in
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_element_t::unpack_long(long* val, size_t* len)
+int Element::unpack_long(long* val, size_t* len)
 {
     int ret               = 0;
     size_t size           = 0;
@@ -79,7 +79,7 @@ the_end:
     return ret;
 }
 
-int grib_accessor_element_t::pack_long(const long* val, size_t* len)
+int Element::pack_long(const long* val, size_t* len)
 {
     int ret               = 0;
     size_t size           = 0;
@@ -132,7 +132,7 @@ the_end:
     return ret;
 }
 
-int grib_accessor_element_t::pack_double(const double* v, size_t* len)
+int Element::pack_double(const double* v, size_t* len)
 {
     int ret               = 0;
     size_t size           = 0;
@@ -179,7 +179,7 @@ the_end:
     return ret;
 }
 
-int grib_accessor_element_t::unpack_double(double* val, size_t* len)
+int Element::unpack_double(double* val, size_t* len)
 {
     int ret                 = 0;
     size_t size             = 0;

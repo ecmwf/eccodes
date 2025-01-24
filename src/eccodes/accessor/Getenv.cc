@@ -10,15 +10,15 @@
 
 #include "Getenv.h"
 
-grib_accessor_getenv_t _grib_accessor_getenv{};
-grib_accessor* grib_accessor_getenv = &_grib_accessor_getenv;
+eccodes::accessor::Getenv _grib_accessor_getenv;
+eccodes::Accessor* grib_accessor_getenv = &_grib_accessor_getenv;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_getenv_t::init(const long l, grib_arguments* args)
+void Getenv::init(const long l, grib_arguments* args)
 {
-    grib_accessor_ascii_t::init(l, args);
+    Ascii::init(l, args);
     static char undefined[] = "undefined";
 
     envvar_          = args->get_string(grib_handle_of_accessor(this), 0);
@@ -28,12 +28,12 @@ void grib_accessor_getenv_t::init(const long l, grib_arguments* args)
     value_ = 0;
 }
 
-int grib_accessor_getenv_t::pack_string(const char* val, size_t* len)
+int Getenv::pack_string(const char* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_getenv_t::unpack_string(char* val, size_t* len)
+int Getenv::unpack_string(char* val, size_t* len)
 {
     char* v  = 0;
     size_t l = 0;
@@ -54,13 +54,13 @@ int grib_accessor_getenv_t::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_getenv_t::value_count(long* count)
+int Getenv::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_getenv_t::string_length()
+size_t Getenv::string_length()
 {
     return 1024;
 }

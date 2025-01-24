@@ -10,26 +10,26 @@
 
 #include "Bytes.h"
 
-grib_accessor_bytes_t _grib_accessor_bytes{};
-grib_accessor* grib_accessor_bytes = &_grib_accessor_bytes;
+eccodes::accessor::Bytes _grib_accessor_bytes;
+eccodes::Accessor* grib_accessor_bytes = &_grib_accessor_bytes;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_bytes_t::init(const long len, grib_arguments* arg)
+void Bytes::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
     /*grib_accessor_signed* self = (grib_accessor_signed*)a;  */
     length_ = len;
     ECCODES_ASSERT(length_ >= 0);
 }
 
-long grib_accessor_bytes_t::get_native_type()
+long Bytes::get_native_type()
 {
     return GRIB_TYPE_BYTES;
 }
 
-int grib_accessor_bytes_t::compare(grib_accessor* b)
+int Bytes::compare(grib_accessor* b)
 {
     int retval = GRIB_SUCCESS;
 
@@ -41,7 +41,7 @@ int grib_accessor_bytes_t::compare(grib_accessor* b)
     return retval;
 }
 
-int grib_accessor_bytes_t::unpack_string(char* v, size_t* len)
+int Bytes::unpack_string(char* v, size_t* len)
 {
     unsigned char* p   = NULL;
     char* s            = v;
@@ -65,7 +65,7 @@ int grib_accessor_bytes_t::unpack_string(char* v, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_bytes_t::pack_string(const char* val, size_t* len)
+int Bytes::pack_string(const char* val, size_t* len)
 {
     /* The string representation (val) of the byte array will have two chars
      * per byte e.g. 4C5B means the 2 bytes 0114 and 0133 in octal
@@ -101,7 +101,7 @@ int grib_accessor_bytes_t::pack_string(const char* val, size_t* len)
     }
 
     /* Forward to base class to pack the byte array */
-    err = grib_accessor_gen_t::pack_bytes(bytearray, &nbytes);
+    err = Gen::pack_bytes(bytearray, &nbytes);
     grib_context_free(c, bytearray);
     return err;
 }

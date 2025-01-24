@@ -10,15 +10,15 @@
 
 #include "Trim.h"
 
-grib_accessor_trim_t _grib_accessor_trim{};
-grib_accessor* grib_accessor_trim = &_grib_accessor_trim;
+eccodes::accessor::Trim _grib_accessor_trim;
+eccodes::Accessor* grib_accessor_trim = &_grib_accessor_trim;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_trim_t::init(const long l, grib_arguments* arg)
+void Trim::init(const long l, grib_arguments* arg)
 {
-    grib_accessor_ascii_t::init(l, arg);
+    Ascii::init(l, arg);
     int n          = 0;
     grib_handle* h = grib_handle_of_accessor(this);
 
@@ -29,7 +29,7 @@ void grib_accessor_trim_t::init(const long l, grib_arguments* arg)
     DEBUG_ASSERT(trim_right_ == 0 || trim_right_ == 1);
 }
 
-int grib_accessor_trim_t::unpack_string(char* val, size_t* len)
+int Trim::unpack_string(char* val, size_t* len)
 {
     int err         = 0;
     grib_handle* h  = grib_handle_of_accessor(this);
@@ -47,7 +47,7 @@ int grib_accessor_trim_t::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_trim_t::pack_string(const char* val, size_t* len)
+int Trim::pack_string(const char* val, size_t* len)
 {
     char input[256] = {0,};
 
@@ -72,7 +72,7 @@ int grib_accessor_trim_t::pack_string(const char* val, size_t* len)
     return inputAccesstor->pack_string(pBuf, len);
 }
 
-size_t grib_accessor_trim_t::string_length()
+size_t Trim::string_length()
 {
     return 1024;
 }

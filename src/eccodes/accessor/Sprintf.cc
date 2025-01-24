@@ -10,20 +10,20 @@
 
 #include "Sprintf.h"
 
-grib_accessor_sprintf_t _grib_accessor_sprintf{};
-grib_accessor* grib_accessor_sprintf = &_grib_accessor_sprintf;
+eccodes::accessor::Sprintf _grib_accessor_sprintf;
+eccodes::Accessor* grib_accessor_sprintf = &_grib_accessor_sprintf;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_sprintf_t::init(const long l, grib_arguments* c)
+void Sprintf::init(const long l, grib_arguments* c)
 {
-    grib_accessor_ascii_t::init(l, c);
+    Ascii::init(l, c);
     args_ = c;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_sprintf_t::unpack_string(char* val, size_t* len)
+int Sprintf::unpack_string(char* val, size_t* len)
 {
     char result[1024];
     char tempBuffer[2048];
@@ -119,13 +119,13 @@ int grib_accessor_sprintf_t::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_sprintf_t::value_count(long* count)
+int Sprintf::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_sprintf_t::string_length()
+size_t Sprintf::string_length()
 {
     return 1024;
 }

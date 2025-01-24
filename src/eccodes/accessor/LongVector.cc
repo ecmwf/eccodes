@@ -11,22 +11,22 @@
 #include "LongVector.h"
 #include "AbstractLongVector.h"
 
-grib_accessor_long_vector_t _grib_accessor_long_vector{};
-grib_accessor* grib_accessor_long_vector = &_grib_accessor_long_vector;
+eccodes::accessor::LongVector _grib_accessor_long_vector;
+eccodes::Accessor* grib_accessor_long_vector = &_grib_accessor_long_vector;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_long_vector_t::init(const long l, grib_arguments* c)
+void LongVector::init(const long l, grib_arguments* c)
 {
-    grib_accessor_abstract_long_vector_t::init(l, c);
+    AbstractLongVector::init(l, c);
     grib_accessor* va                       = NULL;
-    grib_accessor_abstract_long_vector_t* v = NULL;
+    AbstractLongVector* v = NULL;
     int n                                   = 0;
 
     vector_ = c->get_name(grib_handle_of_accessor(this), n++);
     va      = (grib_accessor*)grib_find_accessor(grib_handle_of_accessor(this), vector_);
-    v       = (grib_accessor_abstract_long_vector_t*)va;
+    v       = (AbstractLongVector*)va;
 
     index_ = c->get_long(grib_handle_of_accessor(this), n++);
 
@@ -36,16 +36,16 @@ void grib_accessor_long_vector_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-int grib_accessor_long_vector_t::unpack_long(long* val, size_t* len)
+int LongVector::unpack_long(long* val, size_t* len)
 {
     size_t size = 0;
     int err     = 0;
     long* vector;
     grib_accessor* va                       = NULL;
-    grib_accessor_abstract_long_vector_t* v = NULL;
+    AbstractLongVector* v = NULL;
 
     va = (grib_accessor*)grib_find_accessor(grib_handle_of_accessor(this), vector_);
-    v  = (grib_accessor_abstract_long_vector_t*)va;
+    v  = (AbstractLongVector*)va;
 
     /*TODO implement the dirty mechanism to avoid to unpack every time */
     err = grib_get_size(grib_handle_of_accessor(this), vector_, &size);
@@ -61,14 +61,14 @@ int grib_accessor_long_vector_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_long_vector_t::unpack_double(double* val, size_t* len)
+int LongVector::unpack_double(double* val, size_t* len)
 {
     long lval                               = 0;
     int err                                 = 0;
     grib_accessor* va                       = NULL;
-    grib_accessor_abstract_long_vector_t* v = NULL;
+    AbstractLongVector* v = NULL;
     va                                      = (grib_accessor*)grib_find_accessor(grib_handle_of_accessor(this), vector_);
-    v                                       = (grib_accessor_abstract_long_vector_t*)va;
+    v                                       = (AbstractLongVector*)va;
 
     err = unpack_long(&lval, len);
 
@@ -77,14 +77,14 @@ int grib_accessor_long_vector_t::unpack_double(double* val, size_t* len)
     return err;
 }
 
-int grib_accessor_long_vector_t::pack_long(const long* val, size_t* len)
+int LongVector::pack_long(const long* val, size_t* len)
 {
     int err                                 = 0;
     grib_accessor* va                       = NULL;
-    grib_accessor_abstract_long_vector_t* v = NULL;
+    AbstractLongVector* v = NULL;
 
     va = (grib_accessor*)grib_find_accessor(grib_handle_of_accessor(this), vector_);
-    v  = (grib_accessor_abstract_long_vector_t*)va;
+    v  = (AbstractLongVector*)va;
 
     v->pack_index_ = index_;
 
@@ -92,7 +92,7 @@ int grib_accessor_long_vector_t::pack_long(const long* val, size_t* len)
     return err;
 }
 
-long grib_accessor_long_vector_t::get_native_type()
+long LongVector::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }

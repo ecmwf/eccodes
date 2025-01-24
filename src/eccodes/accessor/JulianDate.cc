@@ -10,15 +10,15 @@
 
 #include "JulianDate.h"
 
-grib_accessor_julian_date_t _grib_accessor_julian_date{};
-grib_accessor* grib_accessor_julian_date = &_grib_accessor_julian_date;
+eccodes::accessor::JulianDate _grib_accessor_julian_date;
+eccodes::Accessor* grib_accessor_julian_date = &_grib_accessor_julian_date;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_julian_date_t::init(const long l, grib_arguments* c)
+void JulianDate::init(const long l, grib_arguments* c)
 {
-    grib_accessor_double_t::init(l, c);
+    Double::init(l, c);
     grib_handle* h = grib_handle_of_accessor(this);
     const int arg_count = c->get_count();
     ECCODES_ASSERT( arg_count == 2 || arg_count == 6);
@@ -53,12 +53,12 @@ void grib_accessor_julian_date_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-void grib_accessor_julian_date_t::dump(eccodes::Dumper* dumper)
+void JulianDate::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_string(this, NULL);
 }
 
-int grib_accessor_julian_date_t::unpack_double(double* val, size_t* len)
+int JulianDate::unpack_double(double* val, size_t* len)
 {
     int ret = 0;
     long hour, minute, second;
@@ -111,7 +111,7 @@ int grib_accessor_julian_date_t::unpack_double(double* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_julian_date_t::pack_double(const double* val, size_t* len)
+int JulianDate::pack_double(const double* val, size_t* len)
 {
     int ret     = 0;
     long hour   = 0;
@@ -160,7 +160,7 @@ int grib_accessor_julian_date_t::pack_double(const double* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_julian_date_t::unpack_string(char* val, size_t* len)
+int JulianDate::unpack_string(char* val, size_t* len)
 {
     int ret = 0;
     long hour, minute, second;
@@ -233,7 +233,7 @@ int grib_accessor_julian_date_t::unpack_string(char* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_julian_date_t::pack_string(const char* val, size_t* len)
+int JulianDate::pack_string(const char* val, size_t* len)
 {
     int ret = 0;
     long hour, minute, second;
@@ -304,18 +304,18 @@ int grib_accessor_julian_date_t::pack_string(const char* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_julian_date_t::unpack_long(long* val, size_t* len)
+int JulianDate::unpack_long(long* val, size_t* len)
 {
     grib_context_log(context_, GRIB_LOG_ERROR, " Cannot unpack %s as long", name_);
     return GRIB_NOT_IMPLEMENTED;
 }
-int grib_accessor_julian_date_t::pack_long(const long* v, size_t* len)
+int JulianDate::pack_long(const long* v, size_t* len)
 {
     grib_context_log(context_, GRIB_LOG_ERROR, " Cannot pack %s as long", name_);
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_julian_date_t::pack_expression(grib_expression* e)
+int JulianDate::pack_expression(grib_expression* e)
 {
     size_t len        = 1;
     long lval         = 0;

@@ -10,15 +10,15 @@
 
 #include "ToString.h"
 
-grib_accessor_to_string_t _grib_accessor_to_string{};
-grib_accessor* grib_accessor_to_string = &_grib_accessor_to_string;
+eccodes::accessor::ToString _grib_accessor_to_string;
+eccodes::Accessor* grib_accessor_to_string = &_grib_accessor_to_string;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_to_string_t::init(const long len, grib_arguments* arg)
+void ToString::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
     grib_handle* hand = grib_handle_of_accessor(this);
 
     key_        = arg->get_name(hand, 0);
@@ -26,10 +26,10 @@ void grib_accessor_to_string_t::init(const long len, grib_arguments* arg)
     str_length_ = arg->get_long(hand, 2);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    grib_accessor_gen_t::length_ = 0;
+    Gen::length_ = 0;
 }
 
-int grib_accessor_to_string_t::value_count(long* count)
+int ToString::value_count(long* count)
 {
     size_t size = 0;
 
@@ -39,7 +39,7 @@ int grib_accessor_to_string_t::value_count(long* count)
     return err;
 }
 
-size_t grib_accessor_to_string_t::string_length()
+size_t ToString::string_length()
 {
     if (str_length_)
         return str_length_;
@@ -49,17 +49,17 @@ size_t grib_accessor_to_string_t::string_length()
     return size;
 }
 
-void grib_accessor_to_string_t::dump(eccodes::Dumper* dumper)
+void ToString::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_string(this, NULL);
 }
 
-long grib_accessor_to_string_t::get_native_type()
+long ToString::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
 
-int grib_accessor_to_string_t::unpack_string(char* val, size_t* len)
+int ToString::unpack_string(char* val, size_t* len)
 {
     int err        = 0;
     char buff[512] = {0,};
@@ -89,7 +89,7 @@ int grib_accessor_to_string_t::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_to_string_t::unpack_long(long* v, size_t* len)
+int ToString::unpack_long(long* v, size_t* len)
 {
     char val[1024] = {0,};
     size_t l   = sizeof(val);
@@ -107,7 +107,7 @@ int grib_accessor_to_string_t::unpack_long(long* v, size_t* len)
     return err;
 }
 
-int grib_accessor_to_string_t::unpack_double(double* v, size_t* len)
+int ToString::unpack_double(double* v, size_t* len)
 {
     size_t l = 1;
     long val = 0;
@@ -117,9 +117,9 @@ int grib_accessor_to_string_t::unpack_double(double* v, size_t* len)
     return err;
 }
 
-long grib_accessor_to_string_t::next_offset()
+long ToString::next_offset()
 {
-    return offset_ + grib_accessor_gen_t::length_;
+    return offset_ + Gen::length_;
 }
 
 }  // namespace eccodes::accessor

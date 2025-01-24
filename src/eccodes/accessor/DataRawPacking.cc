@@ -11,28 +11,28 @@
 #include "DataRawPacking.h"
 #include "grib_ieeefloat.h"
 
-grib_accessor_data_raw_packing_t _grib_accessor_data_raw_packing{};
-grib_accessor* grib_accessor_data_raw_packing = &_grib_accessor_data_raw_packing;
+eccodes::accessor::DataRawPacking _grib_accessor_data_raw_packing;
+eccodes::Accessor* grib_accessor_data_raw_packing = &_grib_accessor_data_raw_packing;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_data_raw_packing_t::init(const long v, grib_arguments* args)
+void DataRawPacking::init(const long v, grib_arguments* args)
 {
-    grib_accessor_values_t::init(v, args);
+    Values::init(v, args);
 
     number_of_values_ = args->get_name(grib_handle_of_accessor(this), carg_++);
     precision_        = args->get_name(grib_handle_of_accessor(this), carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_data_raw_packing_t::value_count(long* n_vals)
+int DataRawPacking::value_count(long* n_vals)
 {
     *n_vals = 0;
     return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, n_vals);
 }
 
-int grib_accessor_data_raw_packing_t::unpack_double(double* val, size_t* len)
+int DataRawPacking::unpack_double(double* val, size_t* len)
 {
     unsigned char* buf = NULL;
     int bytes          = 0;
@@ -72,7 +72,7 @@ int grib_accessor_data_raw_packing_t::unpack_double(double* val, size_t* len)
     return code;
 }
 
-int grib_accessor_data_raw_packing_t::pack_double(const double* val, size_t* len)
+int DataRawPacking::pack_double(const double* val, size_t* len)
 {
     int bytes             = 0;
     unsigned char* buffer = NULL;
@@ -142,7 +142,7 @@ clean_up:
     return code;
 }
 
-int grib_accessor_data_raw_packing_t::unpack_double_element(size_t idx, double* val)
+int DataRawPacking::unpack_double_element(size_t idx, double* val)
 {
     int ret            = 0;
     unsigned char* buf = NULL;
@@ -184,7 +184,7 @@ int grib_accessor_data_raw_packing_t::unpack_double_element(size_t idx, double* 
     return ret;
 }
 
-int grib_accessor_data_raw_packing_t::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
+int DataRawPacking::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
     int err  = 0;
     size_t i = 0;

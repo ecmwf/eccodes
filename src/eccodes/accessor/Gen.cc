@@ -13,18 +13,18 @@
 #include "grib_accessor_class.h"
 #include <stdexcept>
 
-grib_accessor_gen_t _grib_accessor_gen = grib_accessor_gen_t{};
-grib_accessor* grib_accessor_gen       = &_grib_accessor_gen;
+eccodes::accessor::Gen _grib_accessor_gen;
+eccodes::Accessor* grib_accessor_gen = &_grib_accessor_gen;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_gen_t::init_accessor(const long len, grib_arguments* args)
+void Gen::init_accessor(const long len, grib_arguments* args)
 {
     init(len, args);
 }
 
-void grib_accessor_gen_t::init(const long len, grib_arguments* param)
+void Gen::init(const long len, grib_arguments* param)
 {
     grib_action* act = (grib_action*)(creator_);
     if (flags_ & GRIB_ACCESSOR_FLAG_TRANSIENT) {
@@ -73,7 +73,7 @@ void grib_accessor_gen_t::init(const long len, grib_arguments* param)
     }
 }
 
-void grib_accessor_gen_t::dump(eccodes::Dumper* dumper)
+void Gen::dump(eccodes::Dumper* dumper)
 {
     const int type = get_native_type();
     switch (type) {
@@ -91,28 +91,28 @@ void grib_accessor_gen_t::dump(eccodes::Dumper* dumper)
     }
 }
 
-long grib_accessor_gen_t::next_offset()
+long Gen::next_offset()
 {
     return offset_ + length_;
 }
 
-int grib_accessor_gen_t::value_count(long* count)
+int Gen::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_gen_t::string_length()
+size_t Gen::string_length()
 {
     return 1024;
 }
 
-long grib_accessor_gen_t::byte_count()
+long Gen::byte_count()
 {
     return length_;
 }
 
-long grib_accessor_gen_t::get_native_type()
+long Gen::get_native_type()
 {
     grib_context_log(context_,
                      GRIB_LOG_ERROR,
@@ -122,12 +122,12 @@ long grib_accessor_gen_t::get_native_type()
     return GRIB_TYPE_UNDEFINED;
 }
 
-long grib_accessor_gen_t::byte_offset()
+long Gen::byte_offset()
 {
     return offset_;
 }
 
-int grib_accessor_gen_t::unpack_bytes(unsigned char* val, size_t* len)
+int Gen::unpack_bytes(unsigned char* val, size_t* len)
 {
     const unsigned char* buf = grib_handle_of_accessor(this)->buffer->data;
     const long length        = byte_count();
@@ -149,7 +149,7 @@ int grib_accessor_gen_t::unpack_bytes(unsigned char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_gen_t::clear()
+int Gen::clear()
 {
     unsigned char* buf = grib_handle_of_accessor(this)->buffer->data;
     const long length  = byte_count();
@@ -160,7 +160,7 @@ int grib_accessor_gen_t::clear()
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_gen_t::unpack_long(long* v, size_t* len)
+int Gen::unpack_long(long* v, size_t* len)
 {
     is_overridden_[UNPACK_LONG] = 0;
     int type                    = GRIB_TYPE_UNDEFINED;
@@ -208,17 +208,17 @@ int grib_accessor_gen_t::unpack_long(long* v, size_t* len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_gen_t::unpack_double(double* v, size_t* len)
+int Gen::unpack_double(double* v, size_t* len)
 {
     return unpack_helper<double>(this, v, len);
 }
 
-int grib_accessor_gen_t::unpack_float(float* v, size_t* len)
+int Gen::unpack_float(float* v, size_t* len)
 {
     return unpack_helper<float>(this, v, len);
 }
 
-int grib_accessor_gen_t::unpack_string(char* v, size_t* len)
+int Gen::unpack_string(char* v, size_t* len)
 {
     is_overridden_[UNPACK_STRING] = 0;
 
@@ -256,7 +256,7 @@ int grib_accessor_gen_t::unpack_string(char* v, size_t* len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_gen_t::unpack_string_array(char** v, size_t* len)
+int Gen::unpack_string_array(char** v, size_t* len)
 {
     size_t length = 0;
 
@@ -270,7 +270,7 @@ int grib_accessor_gen_t::unpack_string_array(char** v, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_gen_t::pack_expression(grib_expression* e)
+int Gen::pack_expression(grib_expression* e)
 {
     size_t len        = 1;
     long lval         = 0;
@@ -291,7 +291,7 @@ int grib_accessor_gen_t::pack_expression(grib_expression* e)
                 return ret;
             }
             /*if (hand->context->debug)
-                printf("ECCODES DEBUG grib_accessor_gen_t::pack_expression %s %ld\n", name,lval);*/
+                printf("ECCODES DEBUG Gen::pack_expression %s %ld\n", name,lval);*/
             return pack_long(&lval, &len);
         }
 
@@ -304,7 +304,7 @@ int grib_accessor_gen_t::pack_expression(grib_expression* e)
                 return ret;
             }
             /*if (hand->context->debug)
-                printf("ECCODES DEBUG grib_accessor_gen_t::pack_expression %s %g\n", name, dval);*/
+                printf("ECCODES DEBUG Gen::pack_expression %s %g\n", name, dval);*/
             return pack_double(&dval, &len);
         }
 
@@ -319,7 +319,7 @@ int grib_accessor_gen_t::pack_expression(grib_expression* e)
             }
             len = strlen(cval);
             /*if (hand->context->debug)
-                printf("ECCODES DEBUG grib_accessor_gen_t::pack_expression %s %s\n", name, cval);*/
+                printf("ECCODES DEBUG Gen::pack_expression %s %s\n", name, cval);*/
             return pack_string(cval, &len);
         }
     }
@@ -327,7 +327,7 @@ int grib_accessor_gen_t::pack_expression(grib_expression* e)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_gen_t::pack_long(const long* v, size_t* len)
+int Gen::pack_long(const long* v, size_t* len)
 {
     is_overridden_[PACK_LONG] = 0;
     grib_context* c           = context_;
@@ -376,7 +376,7 @@ int pack_double_array_as_long(grib_accessor* a, const double* v, size_t* len)
     return ret;
 }
 
-int grib_accessor_gen_t::pack_double(const double* v, size_t* len)
+int Gen::pack_double(const double* v, size_t* len)
 {
     is_overridden_[PACK_DOUBLE] = 0;
     grib_context* c             = context_;
@@ -394,7 +394,7 @@ int grib_accessor_gen_t::pack_double(const double* v, size_t* len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_gen_t::pack_string_array(const char** v, size_t* len)
+int Gen::pack_string_array(const char** v, size_t* len)
 {
     int err           = 0;
     size_t length     = 0;
@@ -413,7 +413,7 @@ int grib_accessor_gen_t::pack_string_array(const char** v, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_gen_t::pack_string(const char* v, size_t* len)
+int Gen::pack_string(const char* v, size_t* len)
 {
     is_overridden_[PACK_STRING] = 0;
     if (is_overridden_[PACK_DOUBLE]) {
@@ -447,7 +447,7 @@ int grib_accessor_gen_t::pack_string(const char* v, size_t* len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_gen_t::pack_bytes(const unsigned char* val, size_t* len)
+int Gen::pack_bytes(const unsigned char* val, size_t* len)
 {
     const size_t length = *len;
     if (length_ != length) {
@@ -464,7 +464,7 @@ int grib_accessor_gen_t::pack_bytes(const unsigned char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_gen_t::destroy(grib_context* ct)
+void Gen::destroy(grib_context* ct)
 {
     grib_dependency_remove_observed(this);
     grib_dependency_remove_observer(this);
@@ -475,18 +475,18 @@ void grib_accessor_gen_t::destroy(grib_context* ct)
     /*grib_context_log(ct,GRIB_LOG_DEBUG,"address=%p",a);*/
 }
 
-grib_section* grib_accessor_gen_t::sub_section()
+grib_section* Gen::sub_section()
 {
     return NULL;
 }
 
-int grib_accessor_gen_t::notify_change(grib_accessor* observed)
+int Gen::notify_change(grib_accessor* observed)
 {
     /* Default behaviour is to notify creator */
     return creator_->notify_change(this, observed);
 }
 
-void grib_accessor_gen_t::update_size(size_t s)
+void Gen::update_size(size_t s)
 {
     grib_context_log(context_,
                      GRIB_LOG_FATAL,
@@ -495,12 +495,12 @@ void grib_accessor_gen_t::update_size(size_t s)
                      class_name_);
 }
 
-grib_accessor* grib_accessor_gen_t::next_accessor()
+grib_accessor* Gen::next_accessor()
 {
     return next(this, 1);
 }
 
-grib_accessor* grib_accessor_gen_t::next(grib_accessor* a, int mod)
+grib_accessor* Gen::next(grib_accessor* a, int mod)
 {
     grib_accessor* next = NULL;
     if (a->next_) {
@@ -513,24 +513,24 @@ grib_accessor* grib_accessor_gen_t::next(grib_accessor* a, int mod)
     return next;
 }
 
-int grib_accessor_gen_t::compare(grib_accessor* b)
+int Gen::compare(grib_accessor* b)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
 /* Redefined in all padding */
 
-size_t grib_accessor_gen_t::preferred_size(int from_handle)
+size_t Gen::preferred_size(int from_handle)
 {
     return length_;
 }
 
-int grib_accessor_gen_t::is_missing_internal()
+int Gen::is_missing_internal()
 {
     return is_missing();
 }
 
-int grib_accessor_gen_t::is_missing()
+int Gen::is_missing()
 {
     int i              = 0;
     int is_missing     = 1;
@@ -544,7 +544,7 @@ int grib_accessor_gen_t::is_missing()
                              "%s internal error (flags=0x%lX)",
                              name_,
                              flags_);
-            ECCODES_ASSERT(!"grib_accessor_gen_t::is_missing(): vvalue == NULL");
+            ECCODES_ASSERT(!"Gen::is_missing(): vvalue == NULL");
             return 0;
         }
         return vvalue_->missing;
@@ -564,82 +564,82 @@ int grib_accessor_gen_t::is_missing()
     return is_missing;
 }
 
-int grib_accessor_gen_t::unpack_double_element(size_t i, double* val)
+int Gen::unpack_double_element(size_t i, double* val)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_gen_t::unpack_double_element_set(const size_t* index_array,
+int Gen::unpack_double_element_set(const size_t* index_array,
                                                    size_t len,
                                                    double* val_array)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_gen_t::unpack_double_subarray(double* val,
+int Gen::unpack_double_subarray(double* val,
                                                 size_t start,
                                                 size_t len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-grib_accessor* grib_accessor_gen_t::clone(grib_section* s, int* err)
+grib_accessor* Gen::clone(grib_section* s, int* err)
 {
     grib_context* ct = context_;
     grib_context_log(ct, GRIB_LOG_DEBUG, "clone %s ==> %s", class_name_, name_);
     return make_clone(s, err);
 }
 
-grib_accessor* grib_accessor_gen_t::make_clone(grib_section* s, int* err)
+grib_accessor* Gen::make_clone(grib_section* s, int* err)
 {
     *err = GRIB_NOT_IMPLEMENTED;
     return NULL;
 }
 
-long grib_accessor_gen_t::get_next_position_offset()
+long Gen::get_next_position_offset()
 {
     return next_offset();
 }
 
-grib_accessor_gen_t::~grib_accessor_gen_t() {}
+Gen::~Gen() {}
 
-void grib_accessor_gen_t::post_init()
+void Gen::post_init()
 {
     return;
 }
-int grib_accessor_gen_t::pack_missing()
+int Gen::pack_missing()
 {
-    throw std::runtime_error("grib_accessor_gen_t::pack_missing not implemented");
+    throw std::runtime_error("Gen::pack_missing not implemented");
 }
-int grib_accessor_gen_t::pack_float(const float*, size_t* len)
+int Gen::pack_float(const float*, size_t* len)
 {
-    throw std::runtime_error("grib_accessor_gen_t::pack_float not implemented");
+    throw std::runtime_error("Gen::pack_float not implemented");
 }
-void grib_accessor_gen_t::resize(size_t)
+void Gen::resize(size_t)
 {
-    throw std::runtime_error("grib_accessor_gen_t::resize not implemented");
+    throw std::runtime_error("Gen::resize not implemented");
 }
-int grib_accessor_gen_t::nearest_smaller_value(double, double*)
+int Gen::nearest_smaller_value(double, double*)
 {
     throw std::runtime_error(
-        "grib_accessor_gen_t::nearest_smaller_value not implemented");
+        "Gen::nearest_smaller_value not implemented");
 }
-int grib_accessor_gen_t::unpack_float_element(size_t, float*)
+int Gen::unpack_float_element(size_t, float*)
 {
     throw std::runtime_error(
-        "grib_accessor_gen_t::unpack_float_element not implemented");
+        "Gen::unpack_float_element not implemented");
 }
 int unpack_element_set(const size_t*, size_t, double*)
 {
     throw std::runtime_error(
-        "grib_accessor_gen_t::unpack_element_set not implemented");
+        "Gen::unpack_element_set not implemented");
 }
-int grib_accessor_gen_t::unpack_float_element_set(const size_t*,
+int Gen::unpack_float_element_set(const size_t*,
                                                   size_t,
                                                   float*)
 {
     throw std::runtime_error(
-        "grib_accessor_gen_t::unpack_float_element_set not implemented");
+        "Gen::unpack_float_element_set not implemented");
 }
 
 }  // namespace eccodes::accessor

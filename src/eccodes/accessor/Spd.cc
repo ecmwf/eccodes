@@ -10,18 +10,18 @@
 
 #include "Spd.h"
 
-grib_accessor_spd_t _grib_accessor_spd{};
-grib_accessor* grib_accessor_spd = &_grib_accessor_spd;
+eccodes::accessor::Spd _grib_accessor_spd;
+eccodes::Accessor* grib_accessor_spd = &_grib_accessor_spd;
 
 namespace eccodes::accessor
 {
 
-long grib_accessor_spd_t::byte_count()
+long Spd::byte_count()
 {
     return length_;
 }
 
-long grib_accessor_spd_t::compute_byte_count()
+long Spd::compute_byte_count()
 {
     long numberOfBits         = 0;
     long numberOfElements     = 0;
@@ -44,16 +44,16 @@ long grib_accessor_spd_t::compute_byte_count()
     return (numberOfBits * numberOfElements + 7) / 8;
 }
 
-void grib_accessor_spd_t::init(const long len, grib_arguments* args)
+void Spd::init(const long len, grib_arguments* args)
 {
-    grib_accessor_long_t::init(len, args);
+    Long::init(len, args);
     int n             = 0;
     numberOfBits_     = args->get_name(grib_handle_of_accessor(this), n++);
     numberOfElements_ = args->get_name(grib_handle_of_accessor(this), n++);
     length_           = compute_byte_count();
 }
 
-int grib_accessor_spd_t::unpack_long(long* val, size_t* len)
+int Spd::unpack_long(long* val, size_t* len)
 {
     long pos          = offset_ * 8;
     long rlen         = 0;
@@ -88,7 +88,7 @@ int grib_accessor_spd_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_spd_t::pack_long(const long* val, size_t* len)
+int Spd::pack_long(const long* val, size_t* len)
 {
     int ret            = 0;
     long off           = 0;
@@ -128,7 +128,7 @@ int grib_accessor_spd_t::pack_long(const long* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_spd_t::value_count(long* numberOfElements)
+int Spd::value_count(long* numberOfElements)
 {
     int ret;
     *numberOfElements = 0;
@@ -144,17 +144,17 @@ int grib_accessor_spd_t::value_count(long* numberOfElements)
     return ret;
 }
 
-long grib_accessor_spd_t::byte_offset()
+long Spd::byte_offset()
 {
     return offset_;
 }
 
-void grib_accessor_spd_t::update_size(size_t s)
+void Spd::update_size(size_t s)
 {
     length_ = s;
 }
 
-long grib_accessor_spd_t::next_offset()
+long Spd::next_offset()
 {
     return byte_offset() + length_;
 }

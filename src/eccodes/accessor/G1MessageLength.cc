@@ -10,17 +10,8 @@
 
 #include "G1MessageLength.h"
 
-grib_accessor_g1_message_length_t _grib_accessor_g1_message_length{};
-grib_accessor* grib_accessor_g1_message_length = &_grib_accessor_g1_message_length;
-
-namespace eccodes::accessor
-{
-
-void grib_accessor_g1_message_length_t::init(const long len, grib_arguments* args)
-{
-    grib_accessor_section_length_t::init(len, args);
-    sec4_length_ = args->get_name(grib_handle_of_accessor(this), 0);
-}
+eccodes::accessor::G1MessageLength _grib_accessor_g1_message_length;
+eccodes::Accessor* grib_accessor_g1_message_length = &_grib_accessor_g1_message_length;
 
 int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s4,
                              long* total_length, long* sec4_len)
@@ -61,7 +52,16 @@ int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_g1_message_length_t::pack_long(const long* val, size_t* len)
+namespace eccodes::accessor
+{
+
+void G1MessageLength::init(const long len, grib_arguments* args)
+{
+    SectionLength::init(len, args);
+    sec4_length_ = args->get_name(grib_handle_of_accessor(this), 0);
+}
+
+int G1MessageLength::pack_long(const long* val, size_t* len)
 {
     /*grib_accessor* super = *(cclass_ ->super);*/
 
@@ -122,7 +122,7 @@ int grib_accessor_g1_message_length_t::pack_long(const long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_g1_message_length_t::unpack_long(long* val, size_t* len)
+int G1MessageLength::unpack_long(long* val, size_t* len)
 {
     int ret;
     long total_length, sec4_length;

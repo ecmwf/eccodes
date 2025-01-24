@@ -11,11 +11,13 @@
 
 #include "grib_api_internal.h"
 #include "accessor/BufrDataArray.h"
+#include "accessor/BufrElementsTable.h"
 #include "grib_scaling.h"
 
 bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor, int code, int silent, int* err)
 {
-    bufr_descriptor* ret = accessor_bufr_elements_table_get_descriptor(tables_accessor, code, err);
+    eccodes::accessor::BufrElementsTable* tab = (eccodes::accessor::BufrElementsTable*)tables_accessor;
+    bufr_descriptor* ret = tab->get_descriptor(code, err);
     if (!silent && *err)
         grib_context_log(tables_accessor->context_, GRIB_LOG_ERROR,
                          "unable to get descriptor %06d from table", code);

@@ -10,15 +10,15 @@
 
 #include "Group.h"
 
-grib_accessor_group_t _grib_accessor_group{};
-grib_accessor* grib_accessor_group = &_grib_accessor_group;
+eccodes::accessor::Group _grib_accessor_group;
+eccodes::Accessor* grib_accessor_group = &_grib_accessor_group;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_group_t::init(const long len, grib_arguments* arg)
+void Group::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
     const grib_buffer* buffer = grib_handle_of_accessor(this)->buffer;
 
     size_t i = 0;
@@ -53,28 +53,28 @@ void grib_accessor_group_t::init(const long len, grib_arguments* arg)
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_group_t::value_count(long* count)
+int Group::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_group_t::string_length()
+size_t Group::string_length()
 {
     return length_;
 }
 
-void grib_accessor_group_t::dump(eccodes::Dumper* dumper)
+void Group::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_string(this, NULL);
 }
 
-long grib_accessor_group_t::get_native_type()
+long Group::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
 
-int grib_accessor_group_t::unpack_string(char* val, size_t* len)
+int Group::unpack_string(char* val, size_t* len)
 {
     long i         = 0;
     size_t l       = length_ + 1;
@@ -95,7 +95,7 @@ int grib_accessor_group_t::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_group_t::unpack_long(long* v, size_t* len)
+int Group::unpack_long(long* v, size_t* len)
 {
     char val[1024] = {0,};
     size_t l   = sizeof(val);
@@ -122,7 +122,7 @@ int grib_accessor_group_t::unpack_long(long* v, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_group_t::unpack_double(double* v, size_t* len)
+int Group::unpack_double(double* v, size_t* len)
 {
     char val[1024];
     size_t l   = sizeof(val);
@@ -138,7 +138,7 @@ int grib_accessor_group_t::unpack_double(double* v, size_t* len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_group_t::compare(grib_accessor* b)
+int Group::compare(grib_accessor* b)
 {
     grib_context_log(context_, GRIB_LOG_ERROR, "%s:%s not implemented", __func__, name_);
     return GRIB_NOT_IMPLEMENTED;
@@ -164,7 +164,7 @@ int grib_accessor_group_t::compare(grib_accessor* b)
     // return retval;
 }
 
-long grib_accessor_group_t::next_offset()
+long Group::next_offset()
 {
     return offset_ + length_;
 }

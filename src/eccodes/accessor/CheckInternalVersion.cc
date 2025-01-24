@@ -10,8 +10,8 @@
 
 #include "CheckInternalVersion.h"
 
-grib_accessor_check_internal_version_t _grib_accessor_check_internal_version{};
-grib_accessor* grib_accessor_check_internal_version = &_grib_accessor_check_internal_version;
+eccodes::accessor::CheckInternalVersion _grib_accessor_check_internal_version;
+eccodes::Accessor* grib_accessor_check_internal_version = &_grib_accessor_check_internal_version;
 
 namespace eccodes::accessor
 {
@@ -21,9 +21,9 @@ namespace eccodes::accessor
 /* See the key "internalVersion"  */
 #define LATEST_ENGINE_VERSION 30
 
-void grib_accessor_check_internal_version_t::init(const long l, grib_arguments* args)
+void CheckInternalVersion::init(const long l, grib_arguments* args)
 {
-    grib_accessor_ascii_t::init(l, args);
+    Ascii::init(l, args);
     /* Check version of definition files is compatible with the engine */
     int err                    = 0;
     long defs_file_version     = 0;
@@ -43,13 +43,13 @@ void grib_accessor_check_internal_version_t::init(const long l, grib_arguments* 
     }
 }
 
-int grib_accessor_check_internal_version_t::value_count(long* count)
+int CheckInternalVersion::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_check_internal_version_t::string_length()
+size_t CheckInternalVersion::string_length()
 {
     return 255;
 }

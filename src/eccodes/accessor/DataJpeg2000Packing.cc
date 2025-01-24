@@ -10,8 +10,8 @@
 
 #include "DataJpeg2000Packing.h"
 
-grib_accessor_data_jpeg2000_packing_t _grib_accessor_data_jpeg2000_packing{};
-grib_accessor* grib_accessor_data_jpeg2000_packing = &_grib_accessor_data_jpeg2000_packing;
+eccodes::accessor::DataJpeg2000Packing _grib_accessor_data_jpeg2000_packing;
+eccodes::Accessor* grib_accessor_data_jpeg2000_packing = &_grib_accessor_data_jpeg2000_packing;
 
 namespace eccodes::accessor
 {
@@ -21,9 +21,9 @@ static int first = 1;
 #define JASPER_LIB   1
 #define OPENJPEG_LIB 2
 
-void grib_accessor_data_jpeg2000_packing_t::init(const long v, grib_arguments* args)
+void DataJpeg2000Packing::init(const long v, grib_arguments* args)
 {
-    grib_accessor_data_simple_packing_t::init(v, args);
+    DataSimplePacking::init(v, args);
     const char* user_lib = NULL;
     grib_handle* hand    = grib_handle_of_accessor(this);
 
@@ -79,7 +79,7 @@ void grib_accessor_data_jpeg2000_packing_t::init(const long v, grib_arguments* a
     }
 }
 
-int grib_accessor_data_jpeg2000_packing_t::value_count(long* n_vals)
+int DataJpeg2000Packing::value_count(long* n_vals)
 {
     *n_vals = 0;
 
@@ -89,12 +89,12 @@ int grib_accessor_data_jpeg2000_packing_t::value_count(long* n_vals)
 #define EXTRA_BUFFER_SIZE 10240
 
 #if HAVE_JPEG
-int grib_accessor_data_jpeg2000_packing_t::unpack_float(float* val, size_t* len)
+int DataJpeg2000Packing::unpack_float(float* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_data_jpeg2000_packing_t::unpack_double(double* val, size_t* len)
+int DataJpeg2000Packing::unpack_double(double* val, size_t* len)
 {
     int err            = GRIB_SUCCESS;
     grib_handle* hand  = grib_handle_of_accessor(this);
@@ -195,7 +195,7 @@ int grib_accessor_data_jpeg2000_packing_t::unpack_double(double* val, size_t* le
     return err;
 }
 
-int grib_accessor_data_jpeg2000_packing_t::pack_double(const double* cval, size_t* len)
+int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
 {
     size_t n_vals = *len;
     int err       = 0;
@@ -251,7 +251,7 @@ int grib_accessor_data_jpeg2000_packing_t::pack_double(const double* cval, size_
         for (size_t i = 0; i < n_vals; i++)
             val[i] += units_bias;
 
-    ret = grib_accessor_data_simple_packing_t::pack_double(val, len);
+    ret = DataSimplePacking::pack_double(val, len);
 
     switch (ret) {
         case GRIB_CONSTANT_FIELD:
@@ -435,18 +435,18 @@ static void print_error_feature_not_enabled(grib_context* c)
     grib_context_log(c, GRIB_LOG_ERROR,
                      "JPEG support not enabled. Please rebuild with -DENABLE_JPG=ON");
 }
-int grib_accessor_data_jpeg2000_packing_t::unpack_float(float* val, size_t* len)
+int DataJpeg2000Packing::unpack_float(float* val, size_t* len)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int grib_accessor_data_jpeg2000_packing_t::unpack_double(double* val, size_t* len)
+int DataJpeg2000Packing::unpack_double(double* val, size_t* len)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
-int grib_accessor_data_jpeg2000_packing_t::pack_double(const double* val, size_t* len)
+int DataJpeg2000Packing::pack_double(const double* val, size_t* len)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
@@ -454,7 +454,7 @@ int grib_accessor_data_jpeg2000_packing_t::pack_double(const double* val, size_t
 
 #endif
 
-int grib_accessor_data_jpeg2000_packing_t::unpack_double_element(size_t idx, double* val)
+int DataJpeg2000Packing::unpack_double_element(size_t idx, double* val)
 {
     grib_handle* hand      = grib_handle_of_accessor(this);
     size_t size            = 0;
@@ -492,7 +492,7 @@ int grib_accessor_data_jpeg2000_packing_t::unpack_double_element(size_t idx, dou
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_data_jpeg2000_packing_t::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
+int DataJpeg2000Packing::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
     size_t size = 0, i = 0;

@@ -10,15 +10,15 @@
 
 #include "Mtg2SwitchDefault.h"
 
-grib_accessor_mtg2_switch_default_t _grib_accessor_mtg2_switch_default{};
-grib_accessor* grib_accessor_mtg2_switch_default = &_grib_accessor_mtg2_switch_default;
+eccodes::accessor::Mtg2SwitchDefault _grib_accessor_mtg2_switch_default;
+eccodes::Accessor* grib_accessor_mtg2_switch_default = &_grib_accessor_mtg2_switch_default;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_mtg2_switch_default_t::init(const long len, grib_arguments* arg)
+void Mtg2SwitchDefault::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_long_t::init(len, arg);
+    Long::init(len, arg);
 
     grib_handle* h = grib_handle_of_accessor(this);
 
@@ -31,7 +31,7 @@ void grib_accessor_mtg2_switch_default_t::init(const long len, grib_arguments* a
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
 
-int grib_accessor_mtg2_switch_default_t::unpack_long(long* val, size_t* len)
+int Mtg2SwitchDefault::unpack_long(long* val, size_t* len)
 {
     grib_handle* h = grib_handle_of_accessor(this);
     int err = 0;

@@ -10,15 +10,15 @@
 
 #include "GlobalGaussian.h"
 
-grib_accessor_global_gaussian_t _grib_accessor_global_gaussian{};
-grib_accessor* grib_accessor_global_gaussian = &_grib_accessor_global_gaussian;
+eccodes::accessor::GlobalGaussian _grib_accessor_global_gaussian;
+eccodes::Accessor* grib_accessor_global_gaussian = &_grib_accessor_global_gaussian;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_global_gaussian_t::init(const long l, grib_arguments* c)
+void GlobalGaussian::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     int n          = 0;
     grib_handle* h = grib_handle_of_accessor(this);
 
@@ -35,7 +35,7 @@ void grib_accessor_global_gaussian_t::init(const long l, grib_arguments* c)
     subdivision_ = c->get_name(h, n++);
 }
 
-int grib_accessor_global_gaussian_t::unpack_long(long* val, size_t* len)
+int GlobalGaussian::unpack_long(long* val, size_t* len)
 {
     int ret = GRIB_SUCCESS;
     long latfirst, latlast, lonfirst, lonlast, basic_angle, subdivision, N, Ni;
@@ -141,7 +141,7 @@ int grib_accessor_global_gaussian_t::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_global_gaussian_t::pack_long(const long* val, size_t* len)
+int GlobalGaussian::pack_long(const long* val, size_t* len)
 {
     int ret = GRIB_SUCCESS;
     long latfirst, latlast, lonfirst, lonlast, di, diold, basic_angle = 0, N, Ni;

@@ -11,15 +11,15 @@
 #include "MessageIsValid.h"
 #include <cstdio>
 
-grib_accessor_message_is_valid_t _grib_accessor_message_is_valid{};
-grib_accessor* grib_accessor_message_is_valid = &_grib_accessor_message_is_valid;
+eccodes::accessor::MessageIsValid _grib_accessor_message_is_valid;
+eccodes::Accessor* grib_accessor_message_is_valid = &_grib_accessor_message_is_valid;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_message_is_valid_t::init(const long l, grib_arguments* arg)
+void MessageIsValid::init(const long l, grib_arguments* arg)
 {
-    grib_accessor_long_t::init(l, arg);
+    Long::init(l, arg);
 
     grib_handle* h = grib_handle_of_accessor(this);
     product_ = arg->get_name(h, 0);
@@ -213,7 +213,7 @@ static proj_func check_functions[] = {
     check_namespace_keys
 };
 
-int grib_accessor_message_is_valid_t::unpack_long(long* val, size_t* len)
+int MessageIsValid::unpack_long(long* val, size_t* len)
 {
     int ret = 0;
     grib_handle* h = grib_handle_of_accessor(this);

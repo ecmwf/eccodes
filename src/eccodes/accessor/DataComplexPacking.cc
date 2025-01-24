@@ -10,15 +10,15 @@
 
 #include "DataComplexPacking.h"
 
-grib_accessor_data_complex_packing_t _grib_accessor_data_complex_packing{};
-grib_accessor* grib_accessor_data_complex_packing = &_grib_accessor_data_complex_packing;
+eccodes::accessor::DataComplexPacking _grib_accessor_data_complex_packing;
+eccodes::Accessor* grib_accessor_data_complex_packing = &_grib_accessor_data_complex_packing;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_data_complex_packing_t::init(const long v, grib_arguments* args)
+void DataComplexPacking::init(const long v, grib_arguments* args)
 {
-    grib_accessor_data_simple_packing_t::init(v, args);
+    DataSimplePacking::init(v, args);
     grib_handle* gh = grib_handle_of_accessor(this);
 
     GRIBEX_sh_bug_present_  = args->get_name(gh, carg_++);
@@ -35,7 +35,7 @@ void grib_accessor_data_complex_packing_t::init(const long v, grib_arguments* ar
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_data_complex_packing_t::value_count(long* count)
+int DataComplexPacking::value_count(long* count)
 {
     int ret         = GRIB_SUCCESS;
     grib_handle* gh = grib_handle_of_accessor(this);
@@ -168,7 +168,7 @@ double calculate_pfactor(const grib_context* ctx, const double* spectralField, l
     return pFactor;
 }
 
-int grib_accessor_data_complex_packing_t::pack_double(const double* val, size_t* len)
+int DataComplexPacking::pack_double(const double* val, size_t* len)
 {
     grib_handle* gh = grib_handle_of_accessor(this);
 
@@ -535,7 +535,7 @@ int grib_accessor_data_complex_packing_t::pack_double(const double* val, size_t*
 }
 
 template <typename T>
-int grib_accessor_data_complex_packing_t::unpack_real(T* val, size_t* len)
+int DataComplexPacking::unpack_real(T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     grib_handle* gh         = grib_handle_of_accessor(this);
@@ -761,12 +761,12 @@ int grib_accessor_data_complex_packing_t::unpack_real(T* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_data_complex_packing_t::unpack_double(double* val, size_t* len)
+int DataComplexPacking::unpack_double(double* val, size_t* len)
 {
     return unpack_real<double>(val, len);
 }
 
-int grib_accessor_data_complex_packing_t::unpack_float(float* val, size_t* len)
+int DataComplexPacking::unpack_float(float* val, size_t* len)
 {
     // TODO(maee): See ECC-1579
     // Investigate why results are not bit-identical

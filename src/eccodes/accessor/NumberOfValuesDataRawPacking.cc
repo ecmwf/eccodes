@@ -10,15 +10,15 @@
 
 #include "NumberOfValuesDataRawPacking.h"
 
-grib_accessor_number_of_values_data_raw_packing_t _grib_accessor_number_of_values_data_raw_packing{};
-grib_accessor* grib_accessor_number_of_values_data_raw_packing = &_grib_accessor_number_of_values_data_raw_packing;
+eccodes::accessor::NumberOfValuesDataRawPacking _grib_accessor_number_of_values_data_raw_packing;
+eccodes::Accessor* grib_accessor_number_of_values_data_raw_packing = &_grib_accessor_number_of_values_data_raw_packing;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_number_of_values_data_raw_packing_t::init(const long v, grib_arguments* args)
+void NumberOfValuesDataRawPacking::init(const long v, grib_arguments* args)
 {
-    grib_accessor_gen_t::init(v, args);
+    Gen::init(v, args);
     int n = 0;
 
     values_    = args->get_name(grib_handle_of_accessor(this), n++);
@@ -27,7 +27,7 @@ void grib_accessor_number_of_values_data_raw_packing_t::init(const long v, grib_
     length_ = 0;
 }
 
-int grib_accessor_number_of_values_data_raw_packing_t::unpack_long(long* val, size_t* len)
+int NumberOfValuesDataRawPacking::unpack_long(long* val, size_t* len)
 {
     int err              = 0;
     grib_accessor* adata = NULL;
@@ -59,7 +59,7 @@ int grib_accessor_number_of_values_data_raw_packing_t::unpack_long(long* val, si
     return err;
 }
 
-long grib_accessor_number_of_values_data_raw_packing_t::get_native_type()
+long NumberOfValuesDataRawPacking::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }

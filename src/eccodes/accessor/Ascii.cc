@@ -10,41 +10,41 @@
 
 #include "Ascii.h"
 
-grib_accessor_ascii_t _grib_accessor_ascii{};
-grib_accessor* grib_accessor_ascii = &_grib_accessor_ascii;
+eccodes::accessor::Ascii _grib_accessor_ascii;
+eccodes::Accessor* grib_accessor_ascii = &_grib_accessor_ascii;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_ascii_t::init(const long len, grib_arguments* arg)
+void Ascii::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
     length_ = len;
     ECCODES_ASSERT(length_ >= 0);
 }
 
-int grib_accessor_ascii_t::value_count(long* count)
+int Ascii::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_ascii_t::string_length()
+size_t Ascii::string_length()
 {
     return length_;
 }
 
-void grib_accessor_ascii_t::dump(eccodes::Dumper* dumper)
+void Ascii::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_string(this, NULL);
 }
 
-long grib_accessor_ascii_t::get_native_type()
+long Ascii::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
 
-int grib_accessor_ascii_t::unpack_string(char* val, size_t* len)
+int Ascii::unpack_string(char* val, size_t* len)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
     const size_t alen = length_;
@@ -65,7 +65,7 @@ int grib_accessor_ascii_t::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_ascii_t::pack_string(const char* val, size_t* len)
+int Ascii::pack_string(const char* val, size_t* len)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
     const size_t alen = length_;
@@ -107,19 +107,19 @@ int grib_accessor_ascii_t::pack_string(const char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_ascii_t::pack_long(const long* v, size_t* len)
+int Ascii::pack_long(const long* v, size_t* len)
 {
     grib_context_log(this->context_, GRIB_LOG_ERROR, "Should not pack %s as long (It's a string)", name_);
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_ascii_t::pack_double(const double* v, size_t* len)
+int Ascii::pack_double(const double* v, size_t* len)
 {
     grib_context_log(this->context_, GRIB_LOG_ERROR, "Should not pack %s as double (It's a string)", name_);
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_ascii_t::unpack_long(long* v, size_t* len)
+int Ascii::unpack_long(long* v, size_t* len)
 {
     char val[1024] = {0,};
     size_t l   = sizeof(val);
@@ -146,7 +146,7 @@ int grib_accessor_ascii_t::unpack_long(long* v, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_ascii_t::unpack_double(double* v, size_t* len)
+int Ascii::unpack_double(double* v, size_t* len)
 {
     char val[1024];
     size_t l   = sizeof(val);
@@ -167,7 +167,7 @@ int grib_accessor_ascii_t::unpack_double(double* v, size_t* len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_ascii_t::compare(grib_accessor* b)
+int Ascii::compare(grib_accessor* b)
 {
     int retval = 0;
     char* aval = 0;

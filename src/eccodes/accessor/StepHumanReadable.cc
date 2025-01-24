@@ -10,15 +10,15 @@
 
 #include "StepHumanReadable.h"
 
-grib_accessor_step_human_readable_t _grib_accessor_step_human_readable{};
-grib_accessor* grib_accessor_step_human_readable = &_grib_accessor_step_human_readable;
+eccodes::accessor::StepHumanReadable _grib_accessor_step_human_readable;
+eccodes::Accessor* grib_accessor_step_human_readable = &_grib_accessor_step_human_readable;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_step_human_readable_t::init(const long len, grib_arguments* params)
+void StepHumanReadable::init(const long len, grib_arguments* params)
 {
-    grib_accessor_gen_t::init(len, params);
+    Gen::init(len, params);
     int n          = 0;
     grib_handle* h = grib_handle_of_accessor(this);
 
@@ -28,7 +28,7 @@ void grib_accessor_step_human_readable_t::init(const long len, grib_arguments* p
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-long grib_accessor_step_human_readable_t::get_native_type()
+long StepHumanReadable::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
@@ -66,7 +66,7 @@ static int get_step_human_readable(grib_handle* h, char* result, size_t* length)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_step_human_readable_t::unpack_string(char* buffer, size_t* len)
+int StepHumanReadable::unpack_string(char* buffer, size_t* len)
 {
     grib_handle* h = grib_handle_of_accessor(this);
     long stepUnits = 0;

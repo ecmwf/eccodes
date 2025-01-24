@@ -11,27 +11,27 @@
 #include "CodetableTitle.h"
 #include "Codetable.h"
 
-grib_accessor_codetable_title_t _grib_accessor_codetable_title{};
-grib_accessor* grib_accessor_codetable_title = &_grib_accessor_codetable_title;
+eccodes::accessor::CodetableTitle _grib_accessor_codetable_title;
+eccodes::Accessor* grib_accessor_codetable_title = &_grib_accessor_codetable_title;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_codetable_title_t::init(const long len, grib_arguments* params)
+void CodetableTitle::init(const long len, grib_arguments* params)
 {
-    grib_accessor_gen_t::init(len, params);
+    Gen::init(len, params);
     int n      = 0;
     codetable_ = params->get_name(grib_handle_of_accessor(this), n++);
     length_    = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-long grib_accessor_codetable_title_t::get_native_type()
+long CodetableTitle::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
 
-int grib_accessor_codetable_title_t::unpack_string(char* buffer, size_t* len)
+int CodetableTitle::unpack_string(char* buffer, size_t* len)
 {
     grib_codetable* table = NULL;
 
@@ -40,7 +40,7 @@ int grib_accessor_codetable_title_t::unpack_string(char* buffer, size_t* len)
     int err = GRIB_SUCCESS;
     char tmp[1024];
     size_t l = 1024;
-    grib_accessor_codetable_t* ca = (grib_accessor_codetable_t*)grib_find_accessor(grib_handle_of_accessor(this), codetable_);
+    accessor::Codetable* ca = (accessor::Codetable*)grib_find_accessor(grib_handle_of_accessor(this), codetable_);
 
     if ((err = ((grib_accessor*)ca)->unpack_long(&value, &size)) != GRIB_SUCCESS)
         return err;

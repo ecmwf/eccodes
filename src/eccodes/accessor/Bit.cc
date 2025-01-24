@@ -10,27 +10,27 @@
 
 #include "Bit.h"
 
-grib_accessor_bit_t _grib_accessor_bit{};
-grib_accessor* grib_accessor_bit = &_grib_accessor_bit;
+eccodes::accessor::Bit _grib_accessor_bit;
+eccodes::Accessor* grib_accessor_bit = &_grib_accessor_bit;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_bit_t::init(const long len, grib_arguments* arg)
+void Bit::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_long_t::init(len, arg);
+    Long::init(len, arg);
     length_    = 0;
     owner_     = arg->get_name(grib_handle_of_accessor(this), 0);
     bit_index_ = arg->get_long(grib_handle_of_accessor(this), 1);
 }
 
-int grib_accessor_bit_t::unpack_long(long* val, size_t* len)
+int Bit::unpack_long(long* val, size_t* len)
 {
     int ret   = 0;
     long data = 0;
 
     if (*len < 1) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "grib_accessor_bit_t: unpack_long: Wrong size for %s, it contains %d values ", name_, 1);
+        grib_context_log(context_, GRIB_LOG_ERROR, "Bit: unpack_long: Wrong size for %s, it contains %d values ", name_, 1);
         *len = 1;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -49,17 +49,17 @@ int grib_accessor_bit_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_bit_t::pack_long(const long* val, size_t* len)
+int Bit::pack_long(const long* val, size_t* len)
 {
     if (*len < 1) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "grib_accessor_bit_t: pack_long: At least one value to pack for %s", name_);
+        grib_context_log(context_, GRIB_LOG_ERROR, "Bit: pack_long: At least one value to pack for %s", name_);
         *len = 1;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
     grib_accessor* owner = grib_find_accessor(grib_handle_of_accessor(this), owner_);
     if (!owner) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "grib_accessor_bit_t: Cannot get the owner %s for computing the bit value of %s",
+        grib_context_log(context_, GRIB_LOG_ERROR, "Bit: Cannot get the owner %s for computing the bit value of %s",
                          owner_, name_);
         *len = 0;
         return GRIB_NOT_FOUND;

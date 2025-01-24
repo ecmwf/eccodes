@@ -10,21 +10,21 @@
 
 #include "Pad.h"
 
-grib_accessor_pad_t _grib_accessor_pad{};
-grib_accessor* grib_accessor_pad = &_grib_accessor_pad;
+eccodes::accessor::Pad _grib_accessor_pad;
+eccodes::Accessor* grib_accessor_pad = &_grib_accessor_pad;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_pad_t::init(const long len, grib_arguments* arg)
+void Pad::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_padding_t::init(len, arg);
+    Padding::init(len, arg);
 
     expression_ = arg->get_expression(grib_handle_of_accessor(this), 0);
     length_     = preferred_size(1);
 }
 
-size_t grib_accessor_pad_t::preferred_size(int from_handle)
+size_t Pad::preferred_size(int from_handle)
 {
     long length = 0;
 

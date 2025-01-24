@@ -10,15 +10,15 @@
 
 #include "G1stepRange.h"
 
-grib_accessor_g1step_range_t _grib_accessor_g1step_range{};
-grib_accessor* grib_accessor_g1step_range = &_grib_accessor_g1step_range;
+eccodes::accessor::G1stepRange _grib_accessor_g1step_range;
+eccodes::Accessor* grib_accessor_g1step_range = &_grib_accessor_g1step_range;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_g1step_range_t::init(const long l, grib_arguments* c)
+void G1stepRange::init(const long l, grib_arguments* c)
 {
-    grib_accessor_abstract_long_vector_t::init(l, c);
+    AbstractLongVector::init(l, c);
     grib_handle* h      = grib_handle_of_accessor(this);
     int n               = 0;
     p1_                 = c->get_name(h, n++);
@@ -39,7 +39,7 @@ void grib_accessor_g1step_range_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-void grib_accessor_g1step_range_t::dump(eccodes::Dumper* dumper)
+void G1stepRange::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_string(this, NULL);
 }
@@ -86,7 +86,7 @@ static const int u2s[] = {
     1800     /* (15) 30 minutes  */
 };
 
-int grib_accessor_g1step_range_t::grib_g1_step_get_steps(long* start, long* theEnd)
+int G1stepRange::grib_g1_step_get_steps(long* start, long* theEnd)
 {
     int err                            = 0;
     long p1 = 0, p2 = 0, unit = 0, timeRangeIndicator = 0, timeRangeIndicatorFromStepRange = 0;
@@ -182,7 +182,7 @@ int grib_accessor_g1step_range_t::grib_g1_step_get_steps(long* start, long* theE
     return 0;
 }
 
-int grib_accessor_g1step_range_t::unpack_string(char* val, size_t* len)
+int G1stepRange::unpack_string(char* val, size_t* len)
 {
     char buf[100];
     size_t size = 0;
@@ -333,7 +333,7 @@ static int grib_g1_step_apply_units(
     return GRIB_WRONG_STEP;
 }
 
-int grib_accessor_g1step_range_t::pack_string(const char* val, size_t* len)
+int G1stepRange::pack_string(const char* val, size_t* len)
 {
     grib_handle* h          = grib_handle_of_accessor(this);
     long timeRangeIndicator = 0, P1 = 0, P2 = 0;
@@ -513,18 +513,18 @@ int grib_accessor_g1step_range_t::pack_string(const char* val, size_t* len)
     return 0;
 }
 
-int grib_accessor_g1step_range_t::value_count(long* count)
+int G1stepRange::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_g1step_range_t::string_length()
+size_t G1stepRange::string_length()
 {
     return 255;
 }
 
-int grib_accessor_g1step_range_t::pack_long(const long* val, size_t* len)
+int G1stepRange::pack_long(const long* val, size_t* len)
 {
     char buff[256];
     size_t bufflen    = 100;
@@ -599,7 +599,7 @@ int grib_accessor_g1step_range_t::pack_long(const long* val, size_t* len)
     return GRIB_INTERNAL_ERROR;
 }
 
-int grib_accessor_g1step_range_t::unpack_long(long* val, size_t* len)
+int G1stepRange::unpack_long(long* val, size_t* len)
 {
     char buff[100];
     size_t bufflen = 100;
@@ -635,15 +635,15 @@ int grib_accessor_g1step_range_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-long grib_accessor_g1step_range_t::get_native_type()
+long G1stepRange::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
 
-void grib_accessor_g1step_range_t::destroy(grib_context* c)
+void G1stepRange::destroy(grib_context* c)
 {
     grib_context_free(c, v_);
-    grib_accessor_abstract_long_vector_t::destroy(c);
+    AbstractLongVector::destroy(c);
 }
 
 }  // namespace eccodes::accessor

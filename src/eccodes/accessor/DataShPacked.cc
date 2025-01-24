@@ -11,8 +11,8 @@
 #include "DataShPacked.h"
 #include "grib_scaling.h"
 
-grib_accessor_data_sh_packed_t _grib_accessor_data_sh_packed{};
-grib_accessor* grib_accessor_data_sh_packed = &_grib_accessor_data_sh_packed;
+eccodes::accessor::DataShPacked _grib_accessor_data_sh_packed;
+eccodes::Accessor* grib_accessor_data_sh_packed = &_grib_accessor_data_sh_packed;
 
 namespace eccodes::accessor
 {
@@ -20,9 +20,9 @@ namespace eccodes::accessor
 typedef unsigned long (*encode_float_proc)(double);
 typedef double (*decode_float_proc)(unsigned long);
 
-void grib_accessor_data_sh_packed_t::init(const long v, grib_arguments* args)
+void DataShPacked::init(const long v, grib_arguments* args)
 {
-    grib_accessor_data_simple_packing_t::init(v, args);
+    DataSimplePacking::init(v, args);
     grib_handle* hand = grib_handle_of_accessor(this);
 
     GRIBEX_sh_bug_present_  = args->get_name(hand, carg_++);
@@ -40,7 +40,7 @@ void grib_accessor_data_sh_packed_t::init(const long v, grib_arguments* args)
     length_ = 0;
 }
 
-int grib_accessor_data_sh_packed_t::value_count(long* count)
+int DataShPacked::value_count(long* count)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
     int ret = 0;
@@ -75,7 +75,7 @@ int grib_accessor_data_sh_packed_t::value_count(long* count)
     return ret;
 }
 
-int grib_accessor_data_sh_packed_t::unpack_double(double* val, size_t* len)
+int DataShPacked::unpack_double(double* val, size_t* len)
 {
     size_t i = 0;
     int ret  = GRIB_SUCCESS;

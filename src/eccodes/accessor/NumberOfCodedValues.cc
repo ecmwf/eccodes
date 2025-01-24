@@ -10,15 +10,15 @@
 
 #include "NumberOfCodedValues.h"
 
-grib_accessor_number_of_coded_values_t _grib_accessor_number_of_coded_values{};
-grib_accessor* grib_accessor_number_of_coded_values = &_grib_accessor_number_of_coded_values;
+eccodes::accessor::NumberOfCodedValues _grib_accessor_number_of_coded_values;
+eccodes::Accessor* grib_accessor_number_of_coded_values = &_grib_accessor_number_of_coded_values;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_number_of_coded_values_t::init(const long l, grib_arguments* c)
+void NumberOfCodedValues::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     grib_handle* h  = grib_handle_of_accessor(this);
 
     int n             = 0;
@@ -32,7 +32,7 @@ void grib_accessor_number_of_coded_values_t::init(const long l, grib_arguments* 
     length_ = 0;
 }
 
-int grib_accessor_number_of_coded_values_t::unpack_long(long* val, size_t* len)
+int NumberOfCodedValues::unpack_long(long* val, size_t* len)
 {
     int ret  = GRIB_SUCCESS;
     long bpv = 0, offsetBeforeData = 0, offsetAfterData = 0, unusedBits = 0, numberOfValues;
@@ -52,7 +52,7 @@ int grib_accessor_number_of_coded_values_t::unpack_long(long* val, size_t* len)
 
     if (bpv != 0) {
         grib_context_log(context_, GRIB_LOG_DEBUG,
-                        "grib_accessor_number_of_coded_values_t: offsetAfterData=%ld offsetBeforeData=%ld unusedBits=%ld bpv=%ld",
+                        "NumberOfCodedValues: offsetAfterData=%ld offsetBeforeData=%ld unusedBits=%ld bpv=%ld",
                         offsetAfterData, offsetBeforeData, unusedBits, bpv);
         DEBUG_ASSERT(offsetAfterData > offsetBeforeData);
         *val = ((offsetAfterData - offsetBeforeData) * 8 - unusedBits) / bpv;

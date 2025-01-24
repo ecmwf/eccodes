@@ -14,15 +14,15 @@
 #include <float.h>
 #include <type_traits>
 
-grib_accessor_data_simple_packing_t _grib_accessor_data_simple_packing{};
-grib_accessor* grib_accessor_data_simple_packing = &_grib_accessor_data_simple_packing;
+eccodes::accessor::DataSimplePacking _grib_accessor_data_simple_packing;
+eccodes::Accessor* grib_accessor_data_simple_packing = &_grib_accessor_data_simple_packing;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_data_simple_packing_t::init(const long v, grib_arguments* args)
+void DataSimplePacking::init(const long v, grib_arguments* args)
 {
-    grib_accessor_values_t::init(v, args);
+    Values::init(v, args);
     grib_handle* gh          = grib_handle_of_accessor(this);
     units_factor_            = args->get_name(gh, carg_++);
     units_bias_              = args->get_name(gh, carg_++);
@@ -61,14 +61,14 @@ static int number_of_bits(unsigned long x, long* result)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_data_simple_packing_t::value_count(long* number_of_values)
+int DataSimplePacking::value_count(long* number_of_values)
 {
     *number_of_values = 0;
 
     return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, number_of_values);
 }
 
-int grib_accessor_data_simple_packing_t::unpack_double_element(size_t idx, double* val)
+int DataSimplePacking::unpack_double_element(size_t idx, double* val)
 {
     long n_vals     = 0;
     int err         = 0;
@@ -147,7 +147,7 @@ int grib_accessor_data_simple_packing_t::unpack_double_element(size_t idx, doubl
     return err;
 }
 
-int grib_accessor_data_simple_packing_t::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
+int DataSimplePacking::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
     int err  = 0;
     size_t i = 0;
@@ -159,7 +159,7 @@ int grib_accessor_data_simple_packing_t::unpack_double_element_set(const size_t*
 }
 
 template <typename T>
-int grib_accessor_data_simple_packing_t::unpack(T* val, size_t* len)
+int DataSimplePacking::unpack(T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
 
@@ -300,19 +300,19 @@ int grib_accessor_data_simple_packing_t::unpack(T* val, size_t* len)
     return err;
 }
 
-int grib_accessor_data_simple_packing_t::unpack_double(double* val, size_t* len)
+int DataSimplePacking::unpack_double(double* val, size_t* len)
 {
     return unpack<double>(val, len);
 }
 
-int grib_accessor_data_simple_packing_t::unpack_float(float* val, size_t* len)
+int DataSimplePacking::unpack_float(float* val, size_t* len)
 {
     return unpack<float>(val, len);
 }
 
-int grib_accessor_data_simple_packing_t::_unpack_double(double* val, size_t* len, unsigned char* buf, long pos, size_t n_vals)
+int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* buf, long pos, size_t n_vals)
 {
-    grib_accessor_data_simple_packing_t* self = (grib_accessor_data_simple_packing_t*)this;
+    accessor::DataSimplePacking* self = (accessor::DataSimplePacking*)this;
     grib_handle* gh                           = grib_handle_of_accessor(this);
 
     size_t i = 0;
@@ -436,7 +436,7 @@ int grib_accessor_data_simple_packing_t::_unpack_double(double* val, size_t* len
     return err;
 }
 
-int grib_accessor_data_simple_packing_t::unpack_double_subarray(double* val, size_t start, size_t len)
+int DataSimplePacking::unpack_double_subarray(double* val, size_t start, size_t len)
 {
     unsigned char* buf  = (unsigned char*)grib_handle_of_accessor(this)->buffer->data;
     size_t nvals        = len;
@@ -454,7 +454,7 @@ int grib_accessor_data_simple_packing_t::unpack_double_subarray(double* val, siz
     return _unpack_double(val, plen, buf, pos, nvals);
 }
 
-int grib_accessor_data_simple_packing_t::pack_double(const double* val, size_t* len)
+int DataSimplePacking::pack_double(const double* val, size_t* len)
 {
     grib_handle* gh = grib_handle_of_accessor(this);
 

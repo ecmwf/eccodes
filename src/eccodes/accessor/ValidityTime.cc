@@ -10,15 +10,15 @@
 
 #include "ValidityTime.h"
 
-grib_accessor_validity_time_t _grib_accessor_validity_time{};
-grib_accessor* grib_accessor_validity_time = &_grib_accessor_validity_time;
+eccodes::accessor::ValidityTime _grib_accessor_validity_time;
+eccodes::Accessor* grib_accessor_validity_time = &_grib_accessor_validity_time;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_validity_time_t::init(const long l, grib_arguments* c)
+void ValidityTime::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
@@ -32,7 +32,7 @@ void grib_accessor_validity_time_t::init(const long l, grib_arguments* c)
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_validity_time_t::unpack_long(long* val, size_t* len)
+int ValidityTime::unpack_long(long* val, size_t* len)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
     int ret           = 0;
@@ -92,7 +92,7 @@ int grib_accessor_validity_time_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_validity_time_t::unpack_string(char* val, size_t* len)
+int ValidityTime::unpack_string(char* val, size_t* len)
 {
     int err      = 0;
     long v       = 0;

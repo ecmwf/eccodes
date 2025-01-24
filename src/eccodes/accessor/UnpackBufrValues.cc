@@ -10,33 +10,33 @@
 
 #include "UnpackBufrValues.h"
 
-grib_accessor_unpack_bufr_values_t _grib_accessor_unpack_bufr_values{};
-grib_accessor* grib_accessor_unpack_bufr_values = &_grib_accessor_unpack_bufr_values;
+eccodes::accessor::UnpackBufrValues _grib_accessor_unpack_bufr_values;
+eccodes::Accessor* grib_accessor_unpack_bufr_values = &_grib_accessor_unpack_bufr_values;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_unpack_bufr_values_t::init(const long len, grib_arguments* params)
+void UnpackBufrValues::init(const long len, grib_arguments* params)
 {
-    grib_accessor_gen_t::init(len, params);
+    Gen::init(len, params);
     char* key;
     key            = (char*)params->get_name(grib_handle_of_accessor(this), 0);
-    data_accessor_ = dynamic_cast<grib_accessor_bufr_data_array_t*>(grib_find_accessor(grib_handle_of_accessor(this), key));
+    data_accessor_ = dynamic_cast<BufrDataArray*>(grib_find_accessor(grib_handle_of_accessor(this), key));
 
     length_ = 0;
 }
 
-void grib_accessor_unpack_bufr_values_t::dump(eccodes::Dumper* dumper)
+void UnpackBufrValues::dump(eccodes::Dumper* dumper)
 {
 }
 
-int grib_accessor_unpack_bufr_values_t::unpack_string_array(char** buffer, size_t* len)
+int UnpackBufrValues::unpack_string_array(char** buffer, size_t* len)
 {
     grib_accessor* data = (grib_accessor*)data_accessor_;
     return data->unpack_double(0, 0);
 }
 
-int grib_accessor_unpack_bufr_values_t::unpack_string(char* buffer, size_t* len)
+int UnpackBufrValues::unpack_string(char* buffer, size_t* len)
 {
     grib_accessor* data = (grib_accessor*)data_accessor_;
     strcpy(buffer, "0");
@@ -45,31 +45,31 @@ int grib_accessor_unpack_bufr_values_t::unpack_string(char* buffer, size_t* len)
     return data->unpack_double(0, 0);
 }
 
-int grib_accessor_unpack_bufr_values_t::unpack_long(long* val, size_t* len)
+int UnpackBufrValues::unpack_long(long* val, size_t* len)
 {
     grib_accessor* data = (grib_accessor*)data_accessor_;
     return data->unpack_double(0, 0);
 }
 
-int grib_accessor_unpack_bufr_values_t::unpack_double(double* val, size_t* len)
+int UnpackBufrValues::unpack_double(double* val, size_t* len)
 {
     grib_accessor* data = (grib_accessor*)data_accessor_;
 
     return data->unpack_double(0, 0);
 }
 
-int grib_accessor_unpack_bufr_values_t::value_count(long* count)
+int UnpackBufrValues::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-void grib_accessor_unpack_bufr_values_t::destroy(grib_context* context)
+void UnpackBufrValues::destroy(grib_context* context)
 {
-    grib_accessor_gen_t::destroy(context);
+    Gen::destroy(context);
 }
 
-long grib_accessor_unpack_bufr_values_t::get_native_type()
+long UnpackBufrValues::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
@@ -82,7 +82,7 @@ long grib_accessor_unpack_bufr_values_t::get_native_type()
 //     return "unknown proc flag";
 // }
 
-int grib_accessor_unpack_bufr_values_t::pack_long(const long* val, size_t* len)
+int UnpackBufrValues::pack_long(const long* val, size_t* len)
 {
     int unpackMode = CODES_BUFR_UNPACK_STRUCTURE;
 
@@ -96,7 +96,7 @@ int grib_accessor_unpack_bufr_values_t::pack_long(const long* val, size_t* len)
     return data_accessor_->unpack_double(0, 0);
 }
 
-int grib_accessor_unpack_bufr_values_t::pack_double(const double* val, size_t* len)
+int UnpackBufrValues::pack_double(const double* val, size_t* len)
 {
     return data_accessor_->unpack_double(0, 0);
 }

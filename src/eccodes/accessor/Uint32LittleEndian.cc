@@ -10,13 +10,13 @@
 
 #include "Uint32LittleEndian.h"
 
-grib_accessor_uint32_little_endian_t _grib_accessor_uint32_little_endian{};
-grib_accessor* grib_accessor_uint32_little_endian = &_grib_accessor_uint32_little_endian;
+eccodes::accessor::Uint32LittleEndian _grib_accessor_uint32_little_endian;
+eccodes::Accessor* grib_accessor_uint32_little_endian = &_grib_accessor_uint32_little_endian;
 
 namespace eccodes::accessor
 {
 
-int grib_accessor_uint32_little_endian_t::unpack_long(long* val, size_t* len)
+int Uint32LittleEndian::unpack_long(long* val, size_t* len)
 {
     long value = 0;
     /* long pos = offset_ ; */
@@ -31,7 +31,7 @@ int grib_accessor_uint32_little_endian_t::unpack_long(long* val, size_t* len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-long grib_accessor_uint32_little_endian_t::get_native_type()
+long Uint32LittleEndian::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }

@@ -10,15 +10,15 @@
 
 #include "G2date.h"
 
-grib_accessor_g2date_t _grib_accessor_g2date{};
-grib_accessor* grib_accessor_g2date = &_grib_accessor_g2date;
+eccodes::accessor::G2date _grib_accessor_g2date;
+eccodes::Accessor* grib_accessor_g2date = &_grib_accessor_g2date;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_g2date_t::init(const long l, grib_arguments* c)
+void G2date::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     int n = 0;
 
     year_  = c->get_name(grib_handle_of_accessor(this), n++);
@@ -26,7 +26,7 @@ void grib_accessor_g2date_t::init(const long l, grib_arguments* c)
     day_   = c->get_name(grib_handle_of_accessor(this), n++);
 }
 
-int grib_accessor_g2date_t::unpack_long(long* val, size_t* len)
+int G2date::unpack_long(long* val, size_t* len)
 {
     int ret    = 0;
     long year  = 0;
@@ -48,7 +48,7 @@ int grib_accessor_g2date_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_g2date_t::pack_long(const long* val, size_t* len)
+int G2date::pack_long(const long* val, size_t* len)
 {
     int ret    = GRIB_SUCCESS;
     long v     = val[0];

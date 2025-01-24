@@ -10,15 +10,15 @@
 
 #include "NonAlpha.h"
 
-grib_accessor_non_alpha_t _grib_accessor_non_alpha{};
-grib_accessor* grib_accessor_non_alpha = &_grib_accessor_non_alpha;
+eccodes::accessor::NonAlpha _grib_accessor_non_alpha;
+eccodes::Accessor* grib_accessor_non_alpha = &_grib_accessor_non_alpha;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_non_alpha_t::init(const long len, grib_arguments* arg)
+void NonAlpha::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
     const grib_buffer* buffer = grib_handle_of_accessor(this)->buffer;
     unsigned char* v = buffer->data + offset_;
     size_t i            = 0;
@@ -31,28 +31,28 @@ void grib_accessor_non_alpha_t::init(const long len, grib_arguments* arg)
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_non_alpha_t::value_count(long* count)
+int NonAlpha::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_non_alpha_t::string_length()
+size_t NonAlpha::string_length()
 {
     return length_;
 }
 
-void grib_accessor_non_alpha_t::dump(eccodes::Dumper* dumper)
+void NonAlpha::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_string(this, NULL);
 }
 
-long grib_accessor_non_alpha_t::get_native_type()
+long NonAlpha::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
 
-int grib_accessor_non_alpha_t::unpack_string(char* val, size_t* len)
+int NonAlpha::unpack_string(char* val, size_t* len)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
     long i            = 0;
@@ -72,7 +72,7 @@ int grib_accessor_non_alpha_t::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_non_alpha_t::unpack_long(long* v, size_t* len)
+int NonAlpha::unpack_long(long* v, size_t* len)
 {
     char val[1024] = {0,};
     size_t l   = sizeof(val);
@@ -98,7 +98,7 @@ int grib_accessor_non_alpha_t::unpack_long(long* v, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_non_alpha_t::unpack_double(double* v, size_t* len)
+int NonAlpha::unpack_double(double* v, size_t* len)
 {
     char val[1024] = {0,};
     size_t l = sizeof(val);
@@ -113,7 +113,7 @@ int grib_accessor_non_alpha_t::unpack_double(double* v, size_t* len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-long grib_accessor_non_alpha_t::next_offset()
+long NonAlpha::next_offset()
 {
     return offset_ + length_;
 }

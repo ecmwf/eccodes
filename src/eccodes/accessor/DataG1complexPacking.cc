@@ -10,15 +10,15 @@
 
 #include "DataG1complexPacking.h"
 
-grib_accessor_data_g1complex_packing_t _grib_accessor_data_g1complex_packing{};
-grib_accessor* grib_accessor_data_g1complex_packing = &_grib_accessor_data_g1complex_packing;
+eccodes::accessor::DataG1complexPacking _grib_accessor_data_g1complex_packing;
+eccodes::Accessor* grib_accessor_data_g1complex_packing = &_grib_accessor_data_g1complex_packing;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_data_g1complex_packing_t::init(const long v, grib_arguments* args)
+void DataG1complexPacking::init(const long v, grib_arguments* args)
 {
-    grib_accessor_data_complex_packing_t::init(v, args);
+    DataComplexPacking::init(v, args);
     half_byte_    = args->get_name(grib_handle_of_accessor(this), carg_++);
     N_            = args->get_name(grib_handle_of_accessor(this), carg_++);
     packingType_  = args->get_name(grib_handle_of_accessor(this), carg_++);
@@ -28,7 +28,7 @@ void grib_accessor_data_g1complex_packing_t::init(const long v, grib_arguments* 
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_data_g1complex_packing_t::pack_double(const double* val, size_t* len)
+int DataG1complexPacking::pack_double(const double* val, size_t* len)
 {
     int ret             = GRIB_SUCCESS;
     long seclen         = 0;
@@ -76,7 +76,7 @@ int grib_accessor_data_g1complex_packing_t::pack_double(const double* val, size_
 
     ECCODES_ASSERT((sub_j == sub_k) && (sub_m == sub_j));
 
-    ret = grib_accessor_data_complex_packing_t::pack_double(val, len);
+    ret = DataComplexPacking::pack_double(val, len);
 
     if (ret == GRIB_SUCCESS) {
         n = offset_ + 4 * ((sub_k + 1) * (sub_k + 2));

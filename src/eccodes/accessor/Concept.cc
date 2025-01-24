@@ -14,8 +14,8 @@
 #include <utility>
 #include <map>
 
-grib_accessor_concept_t _grib_accessor_concept{};
-grib_accessor* grib_accessor_concept = &_grib_accessor_concept;
+eccodes::accessor::Concept _grib_accessor_concept;
+eccodes::Accessor* grib_accessor_concept = &_grib_accessor_concept;
 
 namespace eccodes::accessor
 {
@@ -35,13 +35,13 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
     return (*a == 0 && *b == 0) ? 0 : 1;
 }
 
-void grib_accessor_concept_t::init(const long len, grib_arguments* args)
+void Concept::init(const long len, grib_arguments* args)
 {
-    grib_accessor_gen_t::init(len, args);
+    Gen::init(len, args);
     length_ = 0;
 }
 
-void grib_accessor_concept_t::dump(eccodes::Dumper* dumper)
+void Concept::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_string(this, NULL);
 }
@@ -459,12 +459,12 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
     return err;
 }
 
-int grib_accessor_concept_t::pack_double(const double* val, size_t* len)
+int Concept::pack_double(const double* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_concept_t::pack_long(const long* val, size_t* len)
+int Concept::pack_long(const long* val, size_t* len)
 {
     char buf[80];
     size_t s;
@@ -493,7 +493,7 @@ int grib_accessor_concept_t::pack_long(const long* val, size_t* len)
     return pack_string(buf, &s);
 }
 
-int grib_accessor_concept_t::unpack_double(double* val, size_t* len)
+int Concept::unpack_double(double* val, size_t* len)
 {
     //  If we want to have a condition which contains tests for paramId as well
     //  as a floating point key, then need to be able to evaluate paramId as a
@@ -524,7 +524,7 @@ int grib_accessor_concept_t::unpack_double(double* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_concept_t::unpack_long(long* val, size_t* len)
+int Concept::unpack_long(long* val, size_t* len)
 {
     const char* p = concept_evaluate(this);
 
@@ -560,7 +560,7 @@ int grib_accessor_concept_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-long grib_accessor_concept_t::get_native_type()
+long Concept::get_native_type()
 {
     int type = GRIB_TYPE_STRING;
     if (flags_ & GRIB_ACCESSOR_FLAG_LONG_TYPE)
@@ -569,14 +569,14 @@ long grib_accessor_concept_t::get_native_type()
     return type;
 }
 
-void grib_accessor_concept_t::destroy(grib_context* c)
+void Concept::destroy(grib_context* c)
 {
-    // grib_accessor_concept_t *self = (grib_accessor_concept_t*)a;
+    // grib_accessor_concept_t *self = (Concept*)a;
     // grib_context_free(c,cval_ );
-    grib_accessor_gen_t::destroy(c);
+    Gen::destroy(c);
 }
 
-int grib_accessor_concept_t::unpack_string(char* val, size_t* len)
+int Concept::unpack_string(char* val, size_t* len)
 {
     size_t slen;
     const char* p = concept_evaluate(this);
@@ -610,23 +610,23 @@ int grib_accessor_concept_t::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_concept_t::pack_string(const char* val, size_t* len)
+int Concept::pack_string(const char* val, size_t* len)
 {
     return grib_concept_apply(this, val);
 }
 
-size_t grib_accessor_concept_t::string_length()
+size_t Concept::string_length()
 {
     return MAX_CONCEPT_STRING_LENGTH;
 }
 
-int grib_accessor_concept_t::value_count(long* count)
+int Concept::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-int grib_accessor_concept_t::compare(grib_accessor* b)
+int Concept::compare(grib_accessor* b)
 {
     int retval = 0;
     char* aval = 0;

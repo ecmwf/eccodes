@@ -13,15 +13,15 @@
 
 #define PNG_ANYBITS
 
-grib_accessor_data_png_packing_t _grib_accessor_data_png_packing{};
-grib_accessor* grib_accessor_data_png_packing = &_grib_accessor_data_png_packing;
+eccodes::accessor::DataPngPacking _grib_accessor_data_png_packing;
+eccodes::Accessor* grib_accessor_data_png_packing = &_grib_accessor_data_png_packing;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_data_png_packing_t::init(const long v, grib_arguments* args)
+void DataPngPacking::init(const long v, grib_arguments* args)
 {
-    grib_accessor_values_t::init(v, args);
+    Values::init(v, args);
     grib_handle* h = grib_handle_of_accessor(this);
 
     number_of_values_      = args->get_name(h, carg_++);
@@ -37,7 +37,7 @@ void grib_accessor_data_png_packing_t::init(const long v, grib_arguments* args)
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_data_png_packing_t::value_count(long* n_vals)
+int DataPngPacking::value_count(long* n_vals)
 {
     *n_vals = 0;
     return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, n_vals);
@@ -81,7 +81,7 @@ static void png_flush_callback(png_structp png)
     /* Empty */
 }
 
-int grib_accessor_data_png_packing_t::unpack_double(double* val, size_t* len)
+int DataPngPacking::unpack_double(double* val, size_t* len)
 {
     int err = GRIB_SUCCESS;
     int i, j;
@@ -236,7 +236,7 @@ static bool is_constant(const double* values, size_t n_vals)
     return isConstant;
 }
 
-int grib_accessor_data_png_packing_t::pack_double(const double* val, size_t* len)
+int DataPngPacking::pack_double(const double* val, size_t* len)
 {
     int err = GRIB_SUCCESS;
     bool is_constant_field = false;
@@ -425,7 +425,7 @@ int grib_accessor_data_png_packing_t::pack_double(const double* val, size_t* len
     }
     /* buflen = n_vals*(bits_per_value/8); */
     grib_context_log(context_, GRIB_LOG_DEBUG,
-                     "grib_accessor_data_png_packing_t : pack_double : packing %s, %d values", name_, n_vals);
+                     "DataPngPacking : pack_double : packing %s, %d values", name_, n_vals);
     buf = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
 
     if (!buf) {
@@ -532,7 +532,7 @@ cleanup:
     return err;
 }
 
-int grib_accessor_data_png_packing_t::unpack_double_element(size_t idx, double* val)
+int DataPngPacking::unpack_double_element(size_t idx, double* val)
 {
     /* The index idx relates to codedValues NOT values! */
     grib_handle* hand      = grib_handle_of_accessor(this);
@@ -567,7 +567,7 @@ int grib_accessor_data_png_packing_t::unpack_double_element(size_t idx, double* 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_data_png_packing_t::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
+int DataPngPacking::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
     /* The index idx relates to codedValues NOT values! */
     grib_handle* hand = grib_handle_of_accessor(this);
@@ -619,22 +619,22 @@ static void print_error_feature_not_enabled(grib_context* c)
                      "PNG support not enabled. Please rebuild with -DENABLE_PNG=ON");
 }
 
-int grib_accessor_data_png_packing_t::unpack_double(double* val, size_t* len)
+int DataPngPacking::unpack_double(double* val, size_t* len)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int grib_accessor_data_png_packing_t::pack_double(const double* val, size_t* len)
+int DataPngPacking::pack_double(const double* val, size_t* len)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int grib_accessor_data_png_packing_t::unpack_double_element(size_t idx, double* val)
+int DataPngPacking::unpack_double_element(size_t idx, double* val)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int grib_accessor_data_png_packing_t::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
+int DataPngPacking::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;

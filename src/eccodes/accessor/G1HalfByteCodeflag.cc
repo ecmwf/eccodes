@@ -10,26 +10,26 @@
 
 #include "G1HalfByteCodeflag.h"
 
-grib_accessor_g1_half_byte_codeflag_t _grib_accessor_g1_half_byte_codeflag{};
-grib_accessor* grib_accessor_g1_half_byte_codeflag = &_grib_accessor_g1_half_byte_codeflag;
+eccodes::accessor::G1HalfByteCodeflag _grib_accessor_g1_half_byte_codeflag;
+eccodes::Accessor* grib_accessor_g1_half_byte_codeflag = &_grib_accessor_g1_half_byte_codeflag;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_g1_half_byte_codeflag_t::init(const long len, grib_arguments* arg)
+void G1HalfByteCodeflag::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
 
-void grib_accessor_g1_half_byte_codeflag_t::dump(eccodes::Dumper* dumper)
+void G1HalfByteCodeflag::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_long(this, NULL);
 }
 
-int grib_accessor_g1_half_byte_codeflag_t::unpack_long(long* val, size_t* len)
+int G1HalfByteCodeflag::unpack_long(long* val, size_t* len)
 {
     unsigned char dat = 0;
     if (*len < 1) {
@@ -44,7 +44,7 @@ int grib_accessor_g1_half_byte_codeflag_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_g1_half_byte_codeflag_t::pack_long(const long* val, size_t* len)
+int G1HalfByteCodeflag::pack_long(const long* val, size_t* len)
 {
     int ret = 0;
     if (*len < 1) {
@@ -60,7 +60,7 @@ int grib_accessor_g1_half_byte_codeflag_t::pack_long(const long* val, size_t* le
     return ret;
 }
 
-long grib_accessor_g1_half_byte_codeflag_t::get_native_type()
+long G1HalfByteCodeflag::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }

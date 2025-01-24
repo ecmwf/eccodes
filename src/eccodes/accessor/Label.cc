@@ -10,31 +10,31 @@
 
 #include "Label.h"
 
-grib_accessor_label_t _grib_accessor_label{};
-grib_accessor* grib_accessor_label = &_grib_accessor_label;
+eccodes::accessor::Label _grib_accessor_label;
+eccodes::Accessor* grib_accessor_label = &_grib_accessor_label;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_label_t::init(const long len, grib_arguments* arg)
+void Label::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
     length_ = 0;
 }
 
-void grib_accessor_label_t::dump(eccodes::Dumper* dumper)
+void Label::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_label(this, NULL);
 }
 
-long grib_accessor_label_t::get_native_type()
+long Label::get_native_type()
 {
     return GRIB_TYPE_LABEL;
 }
 
-int grib_accessor_label_t::unpack_string(char* val, size_t* len)
+int Label::unpack_string(char* val, size_t* len)
 {
     size_t vlen = strlen(name_);
     if (vlen > *len)

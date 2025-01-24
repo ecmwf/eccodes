@@ -10,15 +10,15 @@
 
 #include "G2Eps.h"
 
-grib_accessor_g2_eps_t _grib_accessor_g2_eps{};
-grib_accessor* grib_accessor_g2_eps = &_grib_accessor_g2_eps;
+eccodes::accessor::G2Eps _grib_accessor_g2_eps;
+eccodes::Accessor* grib_accessor_g2_eps = &_grib_accessor_g2_eps;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_g2_eps_t::init(const long l, grib_arguments* c)
+void G2Eps::init(const long l, grib_arguments* c)
 {
-    grib_accessor_unsigned_t::init(l, c);
+    Unsigned::init(l, c);
     int n = 0;
 
     productDefinitionTemplateNumber_ = c->get_name(grib_handle_of_accessor(this), n++);
@@ -28,7 +28,7 @@ void grib_accessor_g2_eps_t::init(const long l, grib_arguments* c)
     derivedForecast_                 = c->get_name(grib_handle_of_accessor(this), n++);
 }
 
-int grib_accessor_g2_eps_t::unpack_long(long* val, size_t* len)
+int G2Eps::unpack_long(long* val, size_t* len)
 {
     long productDefinitionTemplateNumber = 0;
     int err                              = 0;
@@ -47,7 +47,7 @@ int grib_accessor_g2_eps_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_g2_eps_t::pack_long(const long* val, size_t* len)
+int G2Eps::pack_long(const long* val, size_t* len)
 {
     grib_handle* hand                       = grib_handle_of_accessor(this);
     long productDefinitionTemplateNumber    = -1;
@@ -129,7 +129,7 @@ int grib_accessor_g2_eps_t::pack_long(const long* val, size_t* len)
     return 0;
 }
 
-int grib_accessor_g2_eps_t::value_count(long* count)
+int G2Eps::value_count(long* count)
 {
     *count = 1;
     return 0;

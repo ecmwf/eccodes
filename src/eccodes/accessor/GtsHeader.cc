@@ -10,21 +10,21 @@
 
 #include "GtsHeader.h"
 
-grib_accessor_gts_header_t _grib_accessor_gts_header{};
-grib_accessor* grib_accessor_gts_header = &_grib_accessor_gts_header;
+eccodes::accessor::GtsHeader _grib_accessor_gts_header;
+eccodes::Accessor* grib_accessor_gts_header = &_grib_accessor_gts_header;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_gts_header_t::init(const long l, grib_arguments* c)
+void GtsHeader::init(const long l, grib_arguments* c)
 {
-    grib_accessor_ascii_t::init(l, c);
+    Ascii::init(l, c);
     gts_offset_ = c ? c->get_long(grib_handle_of_accessor(this), 0) : 0;
     gts_length_ = c ? c->get_long(grib_handle_of_accessor(this), 1) : 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_gts_header_t::unpack_string(char* val, size_t* len)
+int GtsHeader::unpack_string(char* val, size_t* len)
 {
     grib_handle* h = grib_handle_of_accessor(this);
     int offset     = 0;
@@ -49,13 +49,13 @@ int grib_accessor_gts_header_t::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_gts_header_t::value_count(long* count)
+int GtsHeader::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_gts_header_t::string_length()
+size_t GtsHeader::string_length()
 {
     const grib_handle* h = grib_handle_of_accessor(this);
     return h->gts_header_len;

@@ -10,27 +10,27 @@
 
 #include "OffsetFile.h"
 
-grib_accessor_offset_file_t _grib_accessor_offset_file{};
-grib_accessor* grib_accessor_offset_file = &_grib_accessor_offset_file;
+eccodes::accessor::OffsetFile _grib_accessor_offset_file;
+eccodes::Accessor* grib_accessor_offset_file = &_grib_accessor_offset_file;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_offset_file_t::init(const long l, grib_arguments* c)
+void OffsetFile::init(const long l, grib_arguments* c)
 {
-    grib_accessor_double_t::init(l, c);
+    Double::init(l, c);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     length_ = 0;
 }
 
-int grib_accessor_offset_file_t::unpack_double(double* val, size_t* len)
+int OffsetFile::unpack_double(double* val, size_t* len)
 {
     *val = (double)grib_handle_of_accessor(this)->offset;
     *len = 1;
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_offset_file_t::unpack_string(char* v, size_t* len)
+int OffsetFile::unpack_string(char* v, size_t* len)
 {
     double val        = 0;
     size_t l          = 1;

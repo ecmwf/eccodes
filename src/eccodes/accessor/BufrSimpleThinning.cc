@@ -10,15 +10,15 @@
 
 #include "BufrSimpleThinning.h"
 
-grib_accessor_bufr_simple_thinning_t _grib_accessor_bufr_simple_thinning{};
-grib_accessor* grib_accessor_bufr_simple_thinning = &_grib_accessor_bufr_simple_thinning;
+eccodes::accessor::BufrSimpleThinning _grib_accessor_bufr_simple_thinning;
+eccodes::Accessor* grib_accessor_bufr_simple_thinning = &_grib_accessor_bufr_simple_thinning;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_bufr_simple_thinning_t::init(const long len, grib_arguments* arg)
+void BufrSimpleThinning::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
     grib_handle* h = grib_handle_of_accessor(this);
     int n          = 0;
 
@@ -33,12 +33,12 @@ void grib_accessor_bufr_simple_thinning_t::init(const long len, grib_arguments* 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }
 
-long grib_accessor_bufr_simple_thinning_t::get_native_type()
+long BufrSimpleThinning::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
 
-int grib_accessor_bufr_simple_thinning_t::apply_thinning()
+int BufrSimpleThinning::apply_thinning()
 {
     long skip;
     grib_handle* h  = grib_handle_of_accessor(this);
@@ -102,7 +102,7 @@ int grib_accessor_bufr_simple_thinning_t::apply_thinning()
     return ret;
 }
 
-int grib_accessor_bufr_simple_thinning_t::pack_long(const long* val, size_t* len)
+int BufrSimpleThinning::pack_long(const long* val, size_t* len)
 {
     if (*len == 0)
         return GRIB_SUCCESS;

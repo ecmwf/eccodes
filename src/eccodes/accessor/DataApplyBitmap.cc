@@ -10,15 +10,15 @@
 
 #include "DataApplyBitmap.h"
 
-grib_accessor_data_apply_bitmap_t _grib_accessor_data_apply_bitmap{};
-grib_accessor* grib_accessor_data_apply_bitmap = &_grib_accessor_data_apply_bitmap;
+eccodes::accessor::DataApplyBitmap _grib_accessor_data_apply_bitmap;
+eccodes::Accessor* grib_accessor_data_apply_bitmap = &_grib_accessor_data_apply_bitmap;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_data_apply_bitmap_t::init(const long v, grib_arguments* args)
+void DataApplyBitmap::init(const long v, grib_arguments* args)
 {
-    grib_accessor_gen_t::init(v, args);
+    Gen::init(v, args);
     int n = 0;
 
     coded_values_          = args->get_name(grib_handle_of_accessor(this), n++);
@@ -30,12 +30,12 @@ void grib_accessor_data_apply_bitmap_t::init(const long v, grib_arguments* args)
 
     length_ = 0;
 }
-void grib_accessor_data_apply_bitmap_t::dump(eccodes::Dumper* dumper)
+void DataApplyBitmap::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_values(this);
 }
 
-int grib_accessor_data_apply_bitmap_t::value_count(long* count)
+int DataApplyBitmap::value_count(long* count)
 {
     size_t len = 0;
     int ret    = GRIB_SUCCESS;
@@ -50,7 +50,7 @@ int grib_accessor_data_apply_bitmap_t::value_count(long* count)
     return ret;
 }
 
-int grib_accessor_data_apply_bitmap_t::unpack_double_element(size_t idx, double* val)
+int DataApplyBitmap::unpack_double_element(size_t idx, double* val)
 {
     grib_handle* gh = grib_handle_of_accessor(this);
     size_t i = 0, cidx = 0;
@@ -95,7 +95,7 @@ int grib_accessor_data_apply_bitmap_t::unpack_double_element(size_t idx, double*
     return grib_get_double_element_internal(gh, coded_values_, cidx, val);
 }
 
-int grib_accessor_data_apply_bitmap_t::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
+int DataApplyBitmap::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
     grib_handle* gh = grib_handle_of_accessor(this);
     int err = 0, all_missing = 1;
@@ -175,7 +175,7 @@ int grib_accessor_data_apply_bitmap_t::unpack_double_element_set(const size_t* i
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_data_apply_bitmap_t::pack_double(const double* val, size_t* len)
+int DataApplyBitmap::pack_double(const double* val, size_t* len)
 {
     int err              = 0;
     size_t bmaplen       = *len;
@@ -235,7 +235,7 @@ int grib_accessor_data_apply_bitmap_t::pack_double(const double* val, size_t* le
 }
 
 template <typename T>
-int grib_accessor_data_apply_bitmap_t::unpack(T* val, size_t* len)
+int DataApplyBitmap::unpack(T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
 
@@ -314,24 +314,24 @@ int grib_accessor_data_apply_bitmap_t::unpack(T* val, size_t* len)
     return err;
 }
 
-int grib_accessor_data_apply_bitmap_t::unpack_double(double* val, size_t* len)
+int DataApplyBitmap::unpack_double(double* val, size_t* len)
 {
     return unpack<double>(val, len);
 }
 
-int grib_accessor_data_apply_bitmap_t::unpack_float(float* val, size_t* len)
+int DataApplyBitmap::unpack_float(float* val, size_t* len)
 {
     return unpack<float>(val, len);
 }
 
-long grib_accessor_data_apply_bitmap_t::get_native_type()
+long DataApplyBitmap::get_native_type()
 {
-    // grib_accessor_data_apply_bitmap_t* self =  (grib_accessor_data_apply_bitmap_t*)a;
-    // return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(this),coded_values_ ));
+    // grib_accessor_data_apply_bitmap_t* self =  (DataApplyBitmap*)a;
+    // return GetNativeype(grib_find_accessor(grib_handle_of_accessor(this),coded_values_ ));
     return GRIB_TYPE_DOUBLE;
 }
 
-int grib_accessor_data_apply_bitmap_t::compare(grib_accessor* b)
+int DataApplyBitmap::compare(grib_accessor* b)
 {
     int retval   = GRIB_SUCCESS;
     double* aval = 0;

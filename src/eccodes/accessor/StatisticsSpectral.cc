@@ -10,15 +10,15 @@
 
 #include "StatisticsSpectral.h"
 
-grib_accessor_statistics_spectral_t _grib_accessor_statistics_spectral{};
-grib_accessor* grib_accessor_statistics_spectral = &_grib_accessor_statistics_spectral;
+eccodes::accessor::StatisticsSpectral _grib_accessor_statistics_spectral;
+eccodes::Accessor* grib_accessor_statistics_spectral = &_grib_accessor_statistics_spectral;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_statistics_spectral_t::init(const long l, grib_arguments* c)
+void StatisticsSpectral::init(const long l, grib_arguments* c)
 {
-    grib_accessor_abstract_vector_t::init(l, c);
+    AbstractVector::init(l, c);
     int n = 0;
     grib_handle* h  = grib_handle_of_accessor(this);
 
@@ -38,7 +38,7 @@ void grib_accessor_statistics_spectral_t::init(const long l, grib_arguments* c)
     dirty_  = 1;
 }
 
-int grib_accessor_statistics_spectral_t::unpack_double(double* val, size_t* len)
+int StatisticsSpectral::unpack_double(double* val, size_t* len)
 {
     int ret = 0, i = 0;
     double* values;
@@ -115,19 +115,19 @@ int grib_accessor_statistics_spectral_t::unpack_double(double* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_statistics_spectral_t::value_count(long* count)
+int StatisticsSpectral::value_count(long* count)
 {
     *count = number_of_elements_;
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_statistics_spectral_t::destroy(grib_context* c)
+void StatisticsSpectral::destroy(grib_context* c)
 {
     grib_context_free(c, v_);
-    grib_accessor_abstract_vector_t::destroy(c);
+    AbstractVector::destroy(c);
 }
 
-int grib_accessor_statistics_spectral_t::compare(grib_accessor* b)
+int StatisticsSpectral::compare(grib_accessor* b)
 {
     int retval   = GRIB_SUCCESS;
     double* aval = 0;

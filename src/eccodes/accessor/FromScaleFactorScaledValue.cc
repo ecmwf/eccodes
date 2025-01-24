@@ -11,15 +11,15 @@
 #include "FromScaleFactorScaledValue.h"
 #include "ecc_numeric_limits.h"
 
-grib_accessor_from_scale_factor_scaled_value_t _grib_accessor_from_scale_factor_scaled_value{};
-grib_accessor* grib_accessor_from_scale_factor_scaled_value = &_grib_accessor_from_scale_factor_scaled_value;
+eccodes::accessor::FromScaleFactorScaledValue _grib_accessor_from_scale_factor_scaled_value;
+eccodes::Accessor* grib_accessor_from_scale_factor_scaled_value = &_grib_accessor_from_scale_factor_scaled_value;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_from_scale_factor_scaled_value_t::init(const long l, grib_arguments* c)
+void FromScaleFactorScaledValue::init(const long l, grib_arguments* c)
 {
-    grib_accessor_double_t::init(l, c);
+    Double::init(l, c);
     int n             = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
 
@@ -30,7 +30,7 @@ void grib_accessor_from_scale_factor_scaled_value_t::init(const long l, grib_arg
     // flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_from_scale_factor_scaled_value_t::pack_double(const double* val, size_t* len)
+int FromScaleFactorScaledValue::pack_double(const double* val, size_t* len)
 {
     // See ECC-979 and ECC-1416
     // Evaluate scaleFactor and scaledValue_ from input double '*val'
@@ -87,7 +87,7 @@ int grib_accessor_from_scale_factor_scaled_value_t::pack_double(const double* va
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_from_scale_factor_scaled_value_t::unpack_double(double* val, size_t* len)
+int FromScaleFactorScaledValue::unpack_double(double* val, size_t* len)
 {
     int err          = 0;
     long scaleFactor = 0, scaledValue = 0;
@@ -164,7 +164,7 @@ int grib_accessor_from_scale_factor_scaled_value_t::unpack_double(double* val, s
     return err;
 }
 
-int grib_accessor_from_scale_factor_scaled_value_t::is_missing()
+int FromScaleFactorScaledValue::is_missing()
 {
     grib_handle* hand = grib_handle_of_accessor(this);
     int err           = 0;
@@ -179,7 +179,7 @@ int grib_accessor_from_scale_factor_scaled_value_t::is_missing()
     return ((scaleFactor == GRIB_MISSING_LONG) || (scaledValue == GRIB_MISSING_LONG));
 }
 
-int grib_accessor_from_scale_factor_scaled_value_t::value_count(long* len)
+int FromScaleFactorScaledValue::value_count(long* len)
 {
     int err           = 0;
     grib_handle* hand = grib_handle_of_accessor(this);

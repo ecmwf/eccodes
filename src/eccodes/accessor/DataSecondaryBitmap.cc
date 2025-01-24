@@ -10,15 +10,15 @@
 
 #include "DataSecondaryBitmap.h"
 
-grib_accessor_data_secondary_bitmap_t _grib_accessor_data_secondary_bitmap{};
-grib_accessor* grib_accessor_data_secondary_bitmap = &_grib_accessor_data_secondary_bitmap;
+eccodes::accessor::DataSecondaryBitmap _grib_accessor_data_secondary_bitmap;
+eccodes::Accessor* grib_accessor_data_secondary_bitmap = &_grib_accessor_data_secondary_bitmap;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_data_secondary_bitmap_t::init(const long v, grib_arguments* args)
+void DataSecondaryBitmap::init(const long v, grib_arguments* args)
 {
-    grib_accessor_gen_t::init(v, args);
+    Gen::init(v, args);
     primary_bitmap_   = args->get_name(grib_handle_of_accessor(this), 0);
     secondary_bitmap_ = args->get_name(grib_handle_of_accessor(this), 1);
     missing_value_    = args->get_name(grib_handle_of_accessor(this), 2);
@@ -27,12 +27,12 @@ void grib_accessor_data_secondary_bitmap_t::init(const long v, grib_arguments* a
     length_ = 0;
 }
 
-void grib_accessor_data_secondary_bitmap_t::dump(eccodes::Dumper* dumper)
+void DataSecondaryBitmap::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_values(this);
 }
 
-int grib_accessor_data_secondary_bitmap_t::unpack_double(double* val, size_t* len)
+int DataSecondaryBitmap::unpack_double(double* val, size_t* len)
 {
     size_t i       = 0;
     size_t j       = 0;
@@ -113,10 +113,10 @@ int grib_accessor_data_secondary_bitmap_t::unpack_double(double* val, size_t* le
     return err;
 }
 
-long grib_accessor_data_secondary_bitmap_t::get_native_type()
+long DataSecondaryBitmap::get_native_type()
 {
-    // grib_accessor_data_secondary_bitmap_t* self =  (grib_accessor_data_secondary_bitmap_t*)a;
-    // return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(this),coded_values_ ));
+    // grib_accessor_data_secondary_bitmap_t* self =  (DataSecondaryBitmap*)a;
+    // return GetNativeype(grib_find_accessor(grib_handle_of_accessor(this),coded_values_ ));
     return GRIB_TYPE_DOUBLE;
 }
 

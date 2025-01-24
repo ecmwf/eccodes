@@ -10,15 +10,15 @@
 
 #include "ValidityDate.h"
 
-grib_accessor_validity_date_t _grib_accessor_validity_date{};
-grib_accessor* grib_accessor_validity_date = &_grib_accessor_validity_date;
+eccodes::accessor::ValidityDate _grib_accessor_validity_date;
+eccodes::Accessor* grib_accessor_validity_date = &_grib_accessor_validity_date;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_validity_date_t::init(const long l, grib_arguments* c)
+void ValidityDate::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
@@ -33,7 +33,7 @@ void grib_accessor_validity_date_t::init(const long l, grib_arguments* c)
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_validity_date_t::unpack_long(long* val, size_t* len)
+int ValidityDate::unpack_long(long* val, size_t* len)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
     int ret           = 0;

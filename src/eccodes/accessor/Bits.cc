@@ -12,15 +12,15 @@
 #include "ecc_numeric_limits.h"
 
 
-grib_accessor_bits_t _grib_accessor_bits{};
-grib_accessor* grib_accessor_bits = &_grib_accessor_bits;
+eccodes::accessor::Bits _grib_accessor_bits;
+eccodes::Accessor* grib_accessor_bits = &_grib_accessor_bits;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_bits_t::init(const long l, grib_arguments* c)
+void Bits::init(const long l, grib_arguments* c)
 {
-    grib_accessor_gen_t::init(l, c);
+    Gen::init(l, c);
     grib_handle* hand  = grib_handle_of_accessor(this);
     grib_expression* e = NULL;
     int n              = 0;
@@ -47,7 +47,7 @@ void grib_accessor_bits_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-int grib_accessor_bits_t::unpack_long(long* val, size_t* len)
+int Bits::unpack_long(long* val, size_t* len)
 {
     grib_accessor* x = NULL;
     unsigned char* p = NULL;
@@ -73,7 +73,7 @@ int grib_accessor_bits_t::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_bits_t::unpack_double(double* val, size_t* len)
+int Bits::unpack_double(double* val, size_t* len)
 {
     grib_accessor* x = NULL;
     unsigned char* p = NULL;
@@ -101,7 +101,7 @@ int grib_accessor_bits_t::unpack_double(double* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_bits_t::pack_double(const double* val, size_t* len)
+int Bits::pack_double(const double* val, size_t* len)
 {
     grib_accessor* x = NULL;
     grib_handle* h   = grib_handle_of_accessor(this);
@@ -123,7 +123,7 @@ int grib_accessor_bits_t::pack_double(const double* val, size_t* len)
     return grib_encode_unsigned_longb(p, lval, &start, length);
 }
 
-int grib_accessor_bits_t::pack_long(const long* val, size_t* len)
+int Bits::pack_long(const long* val, size_t* len)
 {
     grib_accessor* x = NULL;
     grib_handle* h   = grib_handle_of_accessor(this);
@@ -177,7 +177,7 @@ int grib_accessor_bits_t::pack_long(const long* val, size_t* len)
     return grib_encode_unsigned_longb(p, *val, &start, length);
 }
 
-long grib_accessor_bits_t::get_native_type()
+long Bits::get_native_type()
 {
     int type = GRIB_TYPE_BYTES;
 
@@ -193,7 +193,7 @@ long grib_accessor_bits_t::get_native_type()
     return type;
 }
 
-int grib_accessor_bits_t::unpack_string(char* v, size_t* len)
+int Bits::unpack_string(char* v, size_t* len)
 {
     int ret     = 0;
     double dval = 0;
@@ -214,18 +214,18 @@ int grib_accessor_bits_t::unpack_string(char* v, size_t* len)
             break;
 
         default:
-            ret = grib_accessor_gen_t::unpack_string(v, len);
+            ret = Gen::unpack_string(v, len);
     }
     return ret;
 }
 
-long grib_accessor_bits_t::byte_count()
+long Bits::byte_count()
 {
     grib_context_log(context_, GRIB_LOG_DEBUG, "byte_count of %s = %ld", name_, length_);
     return length_;
 }
 
-int grib_accessor_bits_t::unpack_bytes(unsigned char* buffer, size_t* len)
+int Bits::unpack_bytes(unsigned char* buffer, size_t* len)
 {
     if (*len < length_) {
         *len = length_;

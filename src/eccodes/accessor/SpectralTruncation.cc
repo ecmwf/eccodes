@@ -10,15 +10,15 @@
 
 #include "SpectralTruncation.h"
 
-grib_accessor_spectral_truncation_t _grib_accessor_spectral_truncation{};
-grib_accessor* grib_accessor_spectral_truncation = &_grib_accessor_spectral_truncation;
+eccodes::accessor::SpectralTruncation _grib_accessor_spectral_truncation;
+eccodes::Accessor* grib_accessor_spectral_truncation = &_grib_accessor_spectral_truncation;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_spectral_truncation_t::init(const long l, grib_arguments* c)
+void SpectralTruncation::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     int n = 0;
 
     J_ = c->get_name(grib_handle_of_accessor(this), n++);
@@ -29,7 +29,7 @@ void grib_accessor_spectral_truncation_t::init(const long l, grib_arguments* c)
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_spectral_truncation_t::unpack_long(long* val, size_t* len)
+int SpectralTruncation::unpack_long(long* val, size_t* len)
 {
     int ret = 0;
 

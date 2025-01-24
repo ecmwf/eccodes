@@ -10,28 +10,28 @@
 
 #include "Round.h"
 
-grib_accessor_round_t _grib_accessor_round{};
-grib_accessor* grib_accessor_round = &_grib_accessor_round;
+eccodes::accessor::Round _grib_accessor_round;
+eccodes::Accessor* grib_accessor_round = &_grib_accessor_round;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_round_t::init(const long l, grib_arguments* arg)
+void Round::init(const long l, grib_arguments* arg)
 {
-    grib_accessor_evaluate_t::init(l, arg);
+    Evaluate::init(l, arg);
 }
 
-void grib_accessor_round_t::destroy(grib_context* c)
+void Round::destroy(grib_context* c)
 {
-    grib_accessor_evaluate_t::destroy(c);
+    Evaluate::destroy(c);
 }
 
-void grib_accessor_round_t::dump(eccodes::Dumper* dumper)
+void Round::dump(eccodes::Dumper* dumper)
 {
-    grib_accessor_evaluate_t::dump(dumper);
+    Evaluate::dump(dumper);
 }
 
-int grib_accessor_round_t::unpack_double(double* val, size_t* len)
+int Round::unpack_double(double* val, size_t* len)
 {
     int ret = GRIB_SUCCESS;
 
@@ -57,7 +57,7 @@ int grib_accessor_round_t::unpack_double(double* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_round_t::unpack_string(char* val, size_t* len)
+int Round::unpack_string(char* val, size_t* len)
 {
     char result[1024];
     int ret       = GRIB_SUCCESS;

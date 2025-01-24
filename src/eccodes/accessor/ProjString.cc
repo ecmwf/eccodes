@@ -10,15 +10,15 @@
 
 #include "ProjString.h"
 
-grib_accessor_proj_string_t _grib_accessor_proj_string{};
-grib_accessor* grib_accessor_proj_string = &_grib_accessor_proj_string;
+eccodes::accessor::ProjString _grib_accessor_proj_string;
+eccodes::Accessor* grib_accessor_proj_string = &_grib_accessor_proj_string;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_proj_string_t::init(const long len, grib_arguments* arg)
+void ProjString::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
     grib_handle* h = grib_handle_of_accessor(this);
 
     grid_type_ = arg->get_name(h, 0);
@@ -28,7 +28,7 @@ void grib_accessor_proj_string_t::init(const long len, grib_arguments* arg)
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
 
-long grib_accessor_proj_string_t::get_native_type()
+long ProjString::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
@@ -208,7 +208,7 @@ static proj_mapping proj_mappings[] = {
 
 #define ENDPOINT_SOURCE 0
 #define ENDPOINT_TARGET 1
-int grib_accessor_proj_string_t::unpack_string(char* v, size_t* len)
+int ProjString::unpack_string(char* v, size_t* len)
 {
     int err = 0, found = 0;
     size_t i           = 0;

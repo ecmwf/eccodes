@@ -10,15 +10,15 @@
 
 #include "ChangeScanningDirection.h"
 
-grib_accessor_change_scanning_direction_t _grib_accessor_change_scanning_direction{};
-grib_accessor* grib_accessor_change_scanning_direction = &_grib_accessor_change_scanning_direction;
+eccodes::accessor::ChangeScanningDirection _grib_accessor_change_scanning_direction;
+eccodes::Accessor* grib_accessor_change_scanning_direction = &_grib_accessor_change_scanning_direction;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_change_scanning_direction_t::init(const long len, grib_arguments* args)
+void ChangeScanningDirection::init(const long len, grib_arguments* args)
 {
-    grib_accessor_gen_t::init(len, args);
+    Gen::init(len, args);
     grib_handle* h = grib_handle_of_accessor(this);
     int n          = 0;
 
@@ -35,7 +35,7 @@ void grib_accessor_change_scanning_direction_t::init(const long len, grib_argume
     length_ = 0;
 }
 
-int grib_accessor_change_scanning_direction_t::pack_long(const long* val, size_t* len)
+int ChangeScanningDirection::pack_long(const long* val, size_t* len)
 {
     int err = 0;
     long i, j, jr, theEnd, Ni, Nj, k, kp;
@@ -147,12 +147,12 @@ int grib_accessor_change_scanning_direction_t::pack_long(const long* val, size_t
     return GRIB_SUCCESS;
 }
 
-long grib_accessor_change_scanning_direction_t::get_native_type()
+long ChangeScanningDirection::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
 
-int grib_accessor_change_scanning_direction_t::unpack_long(long* v, size_t* len)
+int ChangeScanningDirection::unpack_long(long* v, size_t* len)
 {
     /* ECC-976: decoding this accessor doesn't make sense so we return a dummy value */
     *v = -1;

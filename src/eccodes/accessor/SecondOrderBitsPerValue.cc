@@ -11,8 +11,8 @@
 #include "SecondOrderBitsPerValue.h"
 #include "grib_scaling.h"
 
-grib_accessor_second_order_bits_per_value_t _grib_accessor_second_order_bits_per_value{};
-grib_accessor* grib_accessor_second_order_bits_per_value = &_grib_accessor_second_order_bits_per_value;
+eccodes::accessor::SecondOrderBitsPerValue _grib_accessor_second_order_bits_per_value;
+eccodes::Accessor* grib_accessor_second_order_bits_per_value = &_grib_accessor_second_order_bits_per_value;
 
 namespace eccodes::accessor
 {
@@ -51,9 +51,9 @@ static int number_of_bits(size_t x, long* result)
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_second_order_bits_per_value_t::init(const long l, grib_arguments* c)
+void SecondOrderBitsPerValue::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     int n               = 0;
     values_             = c->get_name(grib_handle_of_accessor(this), n++);
     binaryScaleFactor_  = c->get_name(grib_handle_of_accessor(this), n++);
@@ -63,7 +63,7 @@ void grib_accessor_second_order_bits_per_value_t::init(const long l, grib_argume
     length_ = 0;
 }
 
-int grib_accessor_second_order_bits_per_value_t::pack_long(const long* val, size_t* len)
+int SecondOrderBitsPerValue::pack_long(const long* val, size_t* len)
 {
     bitsPerValue_ = (long)*val;
     *len          = 1;
@@ -71,7 +71,7 @@ int grib_accessor_second_order_bits_per_value_t::pack_long(const long* val, size
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_second_order_bits_per_value_t::unpack_long(long* val, size_t* len)
+int SecondOrderBitsPerValue::unpack_long(long* val, size_t* len)
 {
     int ret     = GRIB_SUCCESS;
     size_t size = 0;

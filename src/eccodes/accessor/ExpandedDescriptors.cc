@@ -11,8 +11,8 @@
 #include "ExpandedDescriptors.h"
 #include "grib_scaling.h"
 
-grib_accessor_expanded_descriptors_t _grib_accessor_expanded_descriptors{};
-grib_accessor* grib_accessor_expanded_descriptors = &_grib_accessor_expanded_descriptors;
+eccodes::accessor::ExpandedDescriptors _grib_accessor_expanded_descriptors;
+eccodes::Accessor* grib_accessor_expanded_descriptors = &_grib_accessor_expanded_descriptors;
 
 namespace eccodes::accessor
 {
@@ -32,16 +32,16 @@ namespace eccodes::accessor
         result = grib_bufr_descriptors_array_pop_front(array); \
     }
 
-void grib_accessor_expanded_descriptors_t::init(const long len, grib_arguments* args)
+void ExpandedDescriptors::init(const long len, grib_arguments* args)
 {
-    grib_accessor_long_t::init(len, args);
+    Long::init(len, args);
     int n               = 0;
     grib_handle* hand   = grib_handle_of_accessor(this);
     tablesAccessorName_ = args->get_name(hand, n++);
     expandedName_       = args->get_name(hand, n++);
     rank_               = args->get_long(hand, n++);
     if (rank_ != 0) {
-        expandedAccessor_ = dynamic_cast<grib_accessor_expanded_descriptors_t*>(grib_find_accessor(hand, expandedName_));
+        expandedAccessor_ = dynamic_cast<ExpandedDescriptors*>(grib_find_accessor(hand, expandedName_));
     }
     else {
         expandedAccessor_ = 0;
@@ -88,7 +88,7 @@ static const char* descriptor_type_name(int dtype)
 }
 #endif
 
-void grib_accessor_expanded_descriptors_t::__expand(bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded, change_coding_params* ccp, int* err)
+void ExpandedDescriptors::__expand(bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded, change_coding_params* ccp, int* err)
 {
     int k, j, i;
     size_t size         = 0;
@@ -407,7 +407,7 @@ cleanup:
     if (us) grib_bufr_descriptor_delete(us);
 }
 
-bufr_descriptors_array* grib_accessor_expanded_descriptors_t::do_expand(bufr_descriptors_array* unexpanded, change_coding_params* ccp, int* err)
+bufr_descriptors_array* ExpandedDescriptors::do_expand(bufr_descriptors_array* unexpanded, change_coding_params* ccp, int* err)
 {
     bufr_descriptors_array* expanded = NULL;
 
@@ -469,7 +469,7 @@ bufr_descriptors_array* grib_accessor_expanded_descriptors_t::do_expand(bufr_des
     return expanded;
 }
 
-int grib_accessor_expanded_descriptors_t::expand()
+int ExpandedDescriptors::expand()
 {
     int err               = 0;
     size_t unexpandedSize = 0;
@@ -492,7 +492,7 @@ int grib_accessor_expanded_descriptors_t::expand()
     do_expand_ = 0;
     if (rank_ != 0) {
         err       = expandedAccessor_->expand();
-        expanded_ = ((grib_accessor_expanded_descriptors_t*)expandedAccessor_)->expanded_;
+        expanded_ = ((ExpandedDescriptors*)expandedAccessor_)->expanded_;
         return err;
     }
 
@@ -591,19 +591,19 @@ int grib_accessor_expanded_descriptors_t::expand()
     return err;
 }
 
-int grib_accessor_expanded_descriptors_t::grib_accessor_expanded_descriptors_set_do_expand(long do_expand)
+int ExpandedDescriptors::grib_accessor_expanded_descriptors_set_do_expand(long do_expand)
 {
     do_expand_ = do_expand;
     return 0;
 }
 
-bufr_descriptors_array* grib_accessor_expanded_descriptors_t::grib_accessor_expanded_descriptors_get_expanded(int* err)
+bufr_descriptors_array* ExpandedDescriptors::grib_accessor_expanded_descriptors_get_expanded(int* err)
 {
     *err = expand();
     return expanded_;
 }
 
-int grib_accessor_expanded_descriptors_t::unpack_double(double* val, size_t* len)
+int ExpandedDescriptors::unpack_double(double* val, size_t* len)
 {
     int ret  = 0;
     size_t i = 0;
@@ -637,7 +637,7 @@ int grib_accessor_expanded_descriptors_t::unpack_double(double* val, size_t* len
     return ret;
 }
 
-int grib_accessor_expanded_descriptors_t::unpack_long(long* val, size_t* len)
+int ExpandedDescriptors::unpack_long(long* val, size_t* len)
 {
     int ret     = 0;
     size_t rlen = 0;
@@ -682,7 +682,7 @@ int grib_accessor_expanded_descriptors_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_expanded_descriptors_t::unpack_string_array(char** buffer, size_t* len)
+int ExpandedDescriptors::unpack_string_array(char** buffer, size_t* len)
 {
     int err      = 0;
     long* v      = NULL;
@@ -709,13 +709,13 @@ int grib_accessor_expanded_descriptors_t::unpack_string_array(char** buffer, siz
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_expanded_descriptors_t::pack_long(const long* val, size_t* len)
+int ExpandedDescriptors::pack_long(const long* val, size_t* len)
 {
     do_expand_ = 1;
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_expanded_descriptors_t::value_count(long* rlen)
+int ExpandedDescriptors::value_count(long* rlen)
 {
     int err = 0;
     *rlen   = 0;
@@ -730,15 +730,15 @@ int grib_accessor_expanded_descriptors_t::value_count(long* rlen)
     return err;
 }
 
-void grib_accessor_expanded_descriptors_t::destroy(grib_context* c)
+void ExpandedDescriptors::destroy(grib_context* c)
 {
-    grib_accessor_long_t::destroy(c);
-    // grib_accessor_expanded_descriptors_t* self = (grib_accessor_expanded_descriptors_t*)a;
+    Long::destroy(c);
+    // grib_accessor_expanded_descriptors_t* self = (ExpandedDescriptors*)a;
     // if (rank==0 && expanded_ )
     //  grib_bufr_descriptors_array_delete(expanded_ );
 }
 
-long grib_accessor_expanded_descriptors_t::get_native_type()
+long ExpandedDescriptors::get_native_type()
 {
     if (rank_ == 2)
         return GRIB_TYPE_DOUBLE;

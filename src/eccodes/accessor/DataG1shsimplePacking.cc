@@ -10,13 +10,13 @@
 
 #include "DataG1shsimplePacking.h"
 
-grib_accessor_data_g1shsimple_packing_t _grib_accessor_data_g1shsimple_packing{};
-grib_accessor* grib_accessor_data_g1shsimple_packing = &_grib_accessor_data_g1shsimple_packing;
+eccodes::accessor::DataG1shsimplePacking _grib_accessor_data_g1shsimple_packing;
+eccodes::Accessor* grib_accessor_data_g1shsimple_packing = &_grib_accessor_data_g1shsimple_packing;
 
 namespace eccodes::accessor
 {
 
-int grib_accessor_data_g1shsimple_packing_t::value_count(long* count)
+int DataG1shsimplePacking::value_count(long* count)
 {
     size_t len = 0;
     int err    = 0;
@@ -28,7 +28,7 @@ int grib_accessor_data_g1shsimple_packing_t::value_count(long* count)
     return err;
 }
 
-int grib_accessor_data_g1shsimple_packing_t::unpack_double(double* val, size_t* len)
+int DataG1shsimplePacking::unpack_double(double* val, size_t* len)
 {
     int err = GRIB_SUCCESS;
 
@@ -54,7 +54,7 @@ int grib_accessor_data_g1shsimple_packing_t::unpack_double(double* val, size_t* 
         return err;
 
     grib_context_log(context_, GRIB_LOG_DEBUG,
-                     "grib_accessor_data_g1shsimple_packing_t_bitmap : unpack_double : creating %s, %d values",
+                     "DataG1shsimplePacking_bitmap : unpack_double : creating %s, %d values",
                      name_, n_vals);
 
     *len = n_vals;

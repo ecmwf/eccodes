@@ -10,8 +10,8 @@
 
 #include "G2Chemical.h"
 
-grib_accessor_g2_chemical_t _grib_accessor_g2_chemical{};
-grib_accessor* grib_accessor_g2_chemical = &_grib_accessor_g2_chemical;
+eccodes::accessor::G2Chemical _grib_accessor_g2_chemical;
+eccodes::Accessor* grib_accessor_g2_chemical = &_grib_accessor_g2_chemical;
 
 namespace eccodes::accessor
 {
@@ -25,9 +25,9 @@ namespace eccodes::accessor
 #define CHEM_DISTRIB 1
 #define CHEM_SRCSINK 2
 
-void grib_accessor_g2_chemical_t::init(const long l, grib_arguments* c)
+void G2Chemical::init(const long l, grib_arguments* c)
 {
-    grib_accessor_unsigned_t::init(l, c);
+    Unsigned::init(l, c);
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
@@ -36,7 +36,7 @@ void grib_accessor_g2_chemical_t::init(const long l, grib_arguments* c)
     chemical_type_                   = c->get_long(hand, n++);
 }
 
-int grib_accessor_g2_chemical_t::unpack_long(long* val, size_t* len)
+int G2Chemical::unpack_long(long* val, size_t* len)
 {
     long productDefinitionTemplateNumber = 0;
     grib_get_long(grib_handle_of_accessor(this), productDefinitionTemplateNumber_, &productDefinitionTemplateNumber);
@@ -52,7 +52,7 @@ int grib_accessor_g2_chemical_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_g2_chemical_t::pack_long(const long* val, size_t* len)
+int G2Chemical::pack_long(const long* val, size_t* len)
 {
     grib_handle* hand                       = grib_handle_of_accessor(this);
     long productDefinitionTemplateNumber    = -1;
@@ -129,7 +129,7 @@ int grib_accessor_g2_chemical_t::pack_long(const long* val, size_t* len)
     return 0;
 }
 
-int grib_accessor_g2_chemical_t::value_count(long* count)
+int G2Chemical::value_count(long* count)
 {
     *count = 1;
     return 0;

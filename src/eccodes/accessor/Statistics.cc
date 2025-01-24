@@ -10,15 +10,15 @@
 
 #include "Statistics.h"
 
-grib_accessor_statistics_t _grib_accessor_statistics{};
-grib_accessor* grib_accessor_statistics = &_grib_accessor_statistics;
+eccodes::accessor::Statistics _grib_accessor_statistics;
+eccodes::Accessor* grib_accessor_statistics = &_grib_accessor_statistics;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_statistics_t::init(const long l, grib_arguments* c)
+void Statistics::init(const long l, grib_arguments* c)
 {
-    grib_accessor_abstract_vector_t::init(l, c);
+    AbstractVector::init(l, c);
     int n = 0;
 
     missing_value_ = c->get_name(grib_handle_of_accessor(this), n++);
@@ -35,7 +35,7 @@ void grib_accessor_statistics_t::init(const long l, grib_arguments* c)
     dirty_  = 1;
 }
 
-int grib_accessor_statistics_t::unpack_double(double* val, size_t* len)
+int Statistics::unpack_double(double* val, size_t* len)
 {
     int ret        = 0;
     double* values = NULL;
@@ -57,7 +57,7 @@ int grib_accessor_statistics_t::unpack_double(double* val, size_t* len)
         return ret;
 
     grib_context_log(context_, GRIB_LOG_DEBUG,
-                     "grib_accessor_statistics_t: computing statistics for %d values", size);
+                     "Statistics: computing statistics for %d values", size);
 
     if ((ret = grib_get_double(h, missing_value_, &missing)) != GRIB_SUCCESS)
         return ret;
@@ -148,7 +148,7 @@ int grib_accessor_statistics_t::unpack_double(double* val, size_t* len)
         skew = m3 / (sd * sd * sd);
         kurt = m4 / (m2 * m2) - 3.0;
     }
-    // printf("\ngrib_accessor_class_statistics_t::unpack_double   Computed. So setting dirty to 0....... \n");
+    // printf("\nClassStatistics::unpack_double   Computed. So setting dirty to 0....... \n");
     dirty_ = 0;
 
     grib_context_free(c, values);
@@ -168,19 +168,19 @@ int grib_accessor_statistics_t::unpack_double(double* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_statistics_t::value_count(long* count)
+int Statistics::value_count(long* count)
 {
     *count = number_of_elements_;
     return 0;
 }
 
-void grib_accessor_statistics_t::destroy(grib_context* c)
+void Statistics::destroy(grib_context* c)
 {
     grib_context_free(c, v_);
-    grib_accessor_abstract_vector_t::destroy(c);
+    AbstractVector::destroy(c);
 }
 
-int grib_accessor_statistics_t::compare(grib_accessor* b)
+int Statistics::compare(grib_accessor* b)
 {
     int retval   = GRIB_SUCCESS;
     double* aval = 0;
@@ -223,7 +223,7 @@ int grib_accessor_statistics_t::compare(grib_accessor* b)
     return retval;
 }
 
-int grib_accessor_statistics_t::unpack_string(char* v, size_t* len)
+int Statistics::unpack_string(char* v, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }

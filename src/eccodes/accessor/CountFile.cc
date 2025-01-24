@@ -10,20 +10,20 @@
 
 #include "CountFile.h"
 
-grib_accessor_count_file_t _grib_accessor_count_file{};
-grib_accessor* grib_accessor_count_file = &_grib_accessor_count_file;
+eccodes::accessor::CountFile _grib_accessor_count_file;
+eccodes::Accessor* grib_accessor_count_file = &_grib_accessor_count_file;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_count_file_t::init(const long l, grib_arguments* c)
+void CountFile::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     length_ = 0;
 }
 
-int grib_accessor_count_file_t::unpack_long(long* val, size_t* len)
+int CountFile::unpack_long(long* val, size_t* len)
 {
     *val = grib_context_get_handle_file_count(context_);
     *len = 1;

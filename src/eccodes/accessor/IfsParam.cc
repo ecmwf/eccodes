@@ -10,22 +10,22 @@
 
 #include "IfsParam.h"
 
-grib_accessor_ifs_param_t _grib_accessor_ifs_param{};
-grib_accessor* grib_accessor_ifs_param = &_grib_accessor_ifs_param;
+eccodes::accessor::IfsParam _grib_accessor_ifs_param;
+eccodes::Accessor* grib_accessor_ifs_param = &_grib_accessor_ifs_param;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_ifs_param_t::init(const long l, grib_arguments* c)
+void IfsParam::init(const long l, grib_arguments* c)
 {
-    grib_accessor_gen_t::init(l, c);
+    Gen::init(l, c);
     int n = 0;
 
     paramId_ = c->get_name(grib_handle_of_accessor(this), n++);
     type_    = c->get_name(grib_handle_of_accessor(this), n++);
 }
 
-int grib_accessor_ifs_param_t::unpack_long(long* val, size_t* len)
+int IfsParam::unpack_long(long* val, size_t* len)
 {
     int ret      = 0;
     long paramId = 0;
@@ -45,7 +45,7 @@ int grib_accessor_ifs_param_t::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_ifs_param_t::pack_long(const long* val, size_t* len)
+int IfsParam::pack_long(const long* val, size_t* len)
 {
     long type    = 0;
     long table   = 128;
@@ -89,7 +89,7 @@ int grib_accessor_ifs_param_t::pack_long(const long* val, size_t* len)
     return grib_set_long_internal(grib_handle_of_accessor(this), paramId_, paramId);
 }
 
-long grib_accessor_ifs_param_t::get_native_type()
+long IfsParam::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }

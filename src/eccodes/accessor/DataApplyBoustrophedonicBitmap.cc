@@ -10,15 +10,15 @@
 
 #include "DataApplyBoustrophedonicBitmap.h"
 
-grib_accessor_data_apply_boustrophedonic_bitmap_t _grib_accessor_data_apply_boustrophedonic_bitmap{};
-grib_accessor* grib_accessor_data_apply_boustrophedonic_bitmap = &_grib_accessor_data_apply_boustrophedonic_bitmap;
+eccodes::accessor::DataApplyBoustrophedonicBitmap _grib_accessor_data_apply_boustrophedonic_bitmap;
+eccodes::Accessor* grib_accessor_data_apply_boustrophedonic_bitmap = &_grib_accessor_data_apply_boustrophedonic_bitmap;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_data_apply_boustrophedonic_bitmap_t::init(const long v, grib_arguments* args)
+void DataApplyBoustrophedonicBitmap::init(const long v, grib_arguments* args)
 {
-    grib_accessor_gen_t::init(v, args);
+    Gen::init(v, args);
     int n           = 0;
     grib_handle* gh = grib_handle_of_accessor(this);
 
@@ -34,12 +34,12 @@ void grib_accessor_data_apply_boustrophedonic_bitmap_t::init(const long v, grib_
     length_ = 0;
 }
 
-void grib_accessor_data_apply_boustrophedonic_bitmap_t::dump(eccodes::Dumper* dumper)
+void DataApplyBoustrophedonicBitmap::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_values(this);
 }
 
-int grib_accessor_data_apply_boustrophedonic_bitmap_t::value_count(long* count)
+int DataApplyBoustrophedonicBitmap::value_count(long* count)
 {
     grib_handle* gh = grib_handle_of_accessor(this);
     size_t len      = 0;
@@ -53,7 +53,7 @@ int grib_accessor_data_apply_boustrophedonic_bitmap_t::value_count(long* count)
     return ret;
 }
 
-int grib_accessor_data_apply_boustrophedonic_bitmap_t::unpack_double(double* val, size_t* len)
+int DataApplyBoustrophedonicBitmap::unpack_double(double* val, size_t* len)
 {
     grib_handle* gh = grib_handle_of_accessor(this);
 
@@ -162,7 +162,7 @@ int grib_accessor_data_apply_boustrophedonic_bitmap_t::unpack_double(double* val
     return err;
 }
 
-int grib_accessor_data_apply_boustrophedonic_bitmap_t::unpack_double_element(size_t idx, double* val)
+int DataApplyBoustrophedonicBitmap::unpack_double_element(size_t idx, double* val)
 {
     grib_handle* gh = grib_handle_of_accessor(this);
     int err = 0, i = 0;
@@ -208,7 +208,7 @@ int grib_accessor_data_apply_boustrophedonic_bitmap_t::unpack_double_element(siz
     return grib_get_double_element_internal(gh, coded_values_, cidx, val);
 }
 
-int grib_accessor_data_apply_boustrophedonic_bitmap_t::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
+int DataApplyBoustrophedonicBitmap::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
     grib_handle* gh = grib_handle_of_accessor(this);
     int err = 0, all_missing = 1;
@@ -288,7 +288,7 @@ int grib_accessor_data_apply_boustrophedonic_bitmap_t::unpack_double_element_set
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_data_apply_boustrophedonic_bitmap_t::pack_double(const double* val, size_t* len)
+int DataApplyBoustrophedonicBitmap::pack_double(const double* val, size_t* len)
 {
     grib_handle* gh    = grib_handle_of_accessor(this);
     int err            = 0;
@@ -387,10 +387,10 @@ int grib_accessor_data_apply_boustrophedonic_bitmap_t::pack_double(const double*
     return err;
 }
 
-long grib_accessor_data_apply_boustrophedonic_bitmap_t::get_native_type()
+long DataApplyBoustrophedonicBitmap::get_native_type()
 {
-    // grib_accessor_data_apply_boustrophedonic_bitmap_t* self =  (grib_accessor_data_apply_boustrophedonic_bitmap_t*)a;
-    // return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(this),coded_values_ ));
+    // grib_accessor_data_apply_boustrophedonic_bitmap_t* self =  (DataApplyBoustrophedonicBitmap*)a;
+    // return GetNativeype(grib_find_accessor(grib_handle_of_accessor(this),coded_values_ ));
 
     return GRIB_TYPE_DOUBLE;
 }

@@ -10,18 +10,18 @@
 
 #include "SignedBits.h"
 
-grib_accessor_signed_bits_t _grib_accessor_signed_bits{};
-grib_accessor* grib_accessor_signed_bits = &_grib_accessor_signed_bits;
+eccodes::accessor::SignedBits _grib_accessor_signed_bits;
+eccodes::Accessor* grib_accessor_signed_bits = &_grib_accessor_signed_bits;
 
 namespace eccodes::accessor
 {
 
-long grib_accessor_signed_bits_t::byte_count()
+long SignedBits::byte_count()
 {
     return length_;
 }
 
-long grib_accessor_signed_bits_t::compute_byte_count()
+long SignedBits::compute_byte_count()
 {
     long numberOfBits;
     long numberOfElements;
@@ -44,16 +44,16 @@ long grib_accessor_signed_bits_t::compute_byte_count()
     return (numberOfBits * numberOfElements + 7) / 8;
 }
 
-void grib_accessor_signed_bits_t::init(const long len, grib_arguments* args)
+void SignedBits::init(const long len, grib_arguments* args)
 {
-    grib_accessor_long_t::init(len, args);
+    Long::init(len, args);
     int n             = 0;
     numberOfBits_     = args->get_name(grib_handle_of_accessor(this), n++);
     numberOfElements_ = args->get_name(grib_handle_of_accessor(this), n++);
     length_           = compute_byte_count();
 }
 
-int grib_accessor_signed_bits_t::unpack_long(long* val, size_t* len)
+int SignedBits::unpack_long(long* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 #if 0
@@ -93,7 +93,7 @@ int grib_accessor_signed_bits_t::unpack_long(long* val, size_t* len)
 #endif
 }
 
-int grib_accessor_signed_bits_t::pack_long(const long* val, size_t* len)
+int SignedBits::pack_long(const long* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 #if 0
@@ -134,24 +134,24 @@ int grib_accessor_signed_bits_t::pack_long(const long* val, size_t* len)
 #endif
 }
 
-int grib_accessor_signed_bits_t::value_count(long* numberOfElements)
+int SignedBits::value_count(long* numberOfElements)
 {
     *numberOfElements = 0;
 
     return grib_get_long(grib_handle_of_accessor(this), numberOfElements_, numberOfElements);
 }
 
-long grib_accessor_signed_bits_t::byte_offset()
+long SignedBits::byte_offset()
 {
     return offset_;
 }
 
-void grib_accessor_signed_bits_t::update_size(size_t s)
+void SignedBits::update_size(size_t s)
 {
     length_ = s;
 }
 
-long grib_accessor_signed_bits_t::next_offset()
+long SignedBits::next_offset()
 {
     return byte_offset() + byte_count();
 }

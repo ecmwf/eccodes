@@ -10,29 +10,8 @@
 
 #include "BufrExtractDatetimeSubsets.h"
 
-grib_accessor_bufr_extract_datetime_subsets_t _grib_accessor_bufr_extract_datetime_subsets{};
-grib_accessor* grib_accessor_bufr_extract_datetime_subsets = &_grib_accessor_bufr_extract_datetime_subsets;
-
-namespace eccodes::accessor
-{
-
-void grib_accessor_bufr_extract_datetime_subsets_t::init(const long len, grib_arguments* arg)
-{
-    grib_accessor_gen_t::init(len, arg);
-    int n = 0;
-
-    length_            = 0;
-    doExtractSubsets_  = arg->get_name(grib_handle_of_accessor(this), n++);
-    numberOfSubsets_   = arg->get_name(grib_handle_of_accessor(this), n++);
-    extractSubsetList_ = arg->get_name(grib_handle_of_accessor(this), n++);
-
-    flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
-}
-
-long grib_accessor_bufr_extract_datetime_subsets_t::get_native_type()
-{
-    return GRIB_TYPE_LONG;
-}
+eccodes::accessor::BufrExtractDatetimeSubsets _grib_accessor_bufr_extract_datetime_subsets;
+eccodes::Accessor* grib_accessor_bufr_extract_datetime_subsets = &_grib_accessor_bufr_extract_datetime_subsets;
 
 /* Convert input date to Julian number. If date is invalid, return -1 */
 double date_to_julian(long year, long month, long day, long hour, long minute, double second)
@@ -107,7 +86,28 @@ static int build_long_array(grib_context* c, grib_handle* h, int compressed,
     return err;
 }
 
-int grib_accessor_bufr_extract_datetime_subsets_t::select_datetime()
+namespace eccodes::accessor
+{
+
+void BufrExtractDatetimeSubsets::init(const long len, grib_arguments* arg)
+{
+    Gen::init(len, arg);
+    int n = 0;
+
+    length_            = 0;
+    doExtractSubsets_  = arg->get_name(grib_handle_of_accessor(this), n++);
+    numberOfSubsets_   = arg->get_name(grib_handle_of_accessor(this), n++);
+    extractSubsetList_ = arg->get_name(grib_handle_of_accessor(this), n++);
+
+    flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
+}
+
+long BufrExtractDatetimeSubsets::get_native_type()
+{
+    return GRIB_TYPE_LONG;
+}
+
+int BufrExtractDatetimeSubsets::select_datetime()
 {
     int ret         = 0;
     long compressed = 0;
@@ -337,9 +337,9 @@ cleanup:
     return ret;
 }
 
-int grib_accessor_bufr_extract_datetime_subsets_t::pack_long(const long* val, size_t* len)
+int BufrExtractDatetimeSubsets::pack_long(const long* val, size_t* len)
 {
-    /*grib_accessor_bufr_extract_datetime_subsets_t *self =(grib_accessor_bufr_extract_datetime_subsets_t*)a;*/
+    /*grib_accessor_bufr_extract_datetime_subsets_t *self =(BufrExtractDatetimeSubsets*)a;*/
 
     if (*len == 0)
         return GRIB_SUCCESS;

@@ -10,15 +10,15 @@
 
 #include "SelectStepTemplate.h"
 
-grib_accessor_select_step_template_t _grib_accessor_select_step_template{};
-grib_accessor* grib_accessor_select_step_template = &_grib_accessor_select_step_template;
+eccodes::accessor::SelectStepTemplate _grib_accessor_select_step_template;
+eccodes::Accessor* grib_accessor_select_step_template = &_grib_accessor_select_step_template;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_select_step_template_t::init(const long l, grib_arguments* c)
+void SelectStepTemplate::init(const long l, grib_arguments* c)
 {
-    grib_accessor_unsigned_t::init(l, c);
+    Unsigned::init(l, c);
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
@@ -26,13 +26,13 @@ void grib_accessor_select_step_template_t::init(const long l, grib_arguments* c)
     instant_                         = c->get_long(hand, n++);
 }
 
-int grib_accessor_select_step_template_t::unpack_long(long* val, size_t* len)
+int SelectStepTemplate::unpack_long(long* val, size_t* len)
 {
     *val = 1;
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_select_step_template_t::pack_long(const long* val, size_t* len)
+int SelectStepTemplate::pack_long(const long* val, size_t* len)
 {
     grib_handle* hand                       = grib_handle_of_accessor(this);
     long productDefinitionTemplateNumber    = 0;
@@ -192,7 +192,7 @@ int grib_accessor_select_step_template_t::pack_long(const long* val, size_t* len
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_select_step_template_t::value_count(long* c)
+int SelectStepTemplate::value_count(long* c)
 {
     *c = 1;
     return 0;

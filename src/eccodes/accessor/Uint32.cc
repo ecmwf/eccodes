@@ -10,13 +10,13 @@
 
 #include "Uint32.h"
 
-grib_accessor_uint32_t _grib_accessor_uint32{};
-grib_accessor* grib_accessor_uint32 = &_grib_accessor_uint32;
+eccodes::accessor::Uint32 _grib_accessor_uint32;
+eccodes::Accessor* grib_accessor_uint32 = &_grib_accessor_uint32;
 
 namespace eccodes::accessor
 {
 
-int grib_accessor_uint32_t::unpack_long(long* val, size_t* len)
+int Uint32::unpack_long(long* val, size_t* len)
 {
     long value = 0;
     /* long pos = offset_ ; */
@@ -31,7 +31,7 @@ int grib_accessor_uint32_t::unpack_long(long* val, size_t* len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-long grib_accessor_uint32_t::get_native_type()
+long Uint32::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }

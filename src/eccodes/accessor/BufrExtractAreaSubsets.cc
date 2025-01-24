@@ -10,15 +10,23 @@
 
 #include "BufrExtractAreaSubsets.h"
 
-grib_accessor_bufr_extract_area_subsets_t _grib_accessor_bufr_extract_area_subsets{};
-grib_accessor* grib_accessor_bufr_extract_area_subsets = &_grib_accessor_bufr_extract_area_subsets;
+eccodes::accessor::BufrExtractAreaSubsets _grib_accessor_bufr_extract_area_subsets;
+eccodes::Accessor* grib_accessor_bufr_extract_area_subsets = &_grib_accessor_bufr_extract_area_subsets;
+
+/* Copy first element of array into all others */
+static void fill_in(double a[], long length)
+{
+    long i;
+    for (i = 1; i < length; ++i)
+        a[i] = a[0];
+}
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_bufr_extract_area_subsets_t::init(const long len, grib_arguments* arg)
+void BufrExtractAreaSubsets::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
     grib_handle* h = grib_handle_of_accessor(this);
     int n = 0;
 
@@ -37,20 +45,12 @@ void grib_accessor_bufr_extract_area_subsets_t::init(const long len, grib_argume
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }
 
-long grib_accessor_bufr_extract_area_subsets_t::get_native_type()
+long BufrExtractAreaSubsets::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
 
-/* Copy first element of array into all others */
-static void fill_in(double a[], long length)
-{
-    long i;
-    for (i = 1; i < length; ++i)
-        a[i] = a[0];
-}
-
-int grib_accessor_bufr_extract_area_subsets_t::select_area()
+int BufrExtractAreaSubsets::select_area()
 {
     int ret         = 0;
     long compressed = 0;
@@ -178,7 +178,7 @@ int grib_accessor_bufr_extract_area_subsets_t::select_area()
     return ret;
 }
 
-int grib_accessor_bufr_extract_area_subsets_t::pack_long(const long* val, size_t* len)
+int BufrExtractAreaSubsets::pack_long(const long* val, size_t* len)
 {
     if (*len == 0)
         return GRIB_SUCCESS;

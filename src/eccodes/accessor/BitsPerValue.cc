@@ -10,15 +10,15 @@
 
 #include "BitsPerValue.h"
 
-grib_accessor_bits_per_value_t _grib_accessor_bits_per_value{};
-grib_accessor* grib_accessor_bits_per_value = &_grib_accessor_bits_per_value;
+eccodes::accessor::BitsPerValue _grib_accessor_bits_per_value;
+eccodes::Accessor* grib_accessor_bits_per_value = &_grib_accessor_bits_per_value;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_bits_per_value_t::init(const long l, grib_arguments* args)
+void BitsPerValue::init(const long l, grib_arguments* args)
 {
-    grib_accessor_long_t::init(l, args);
+    Long::init(l, args);
     int n           = 0;
     values_         = args->get_name(grib_handle_of_accessor(this), n++);
     bits_per_value_ = args->get_name(grib_handle_of_accessor(this), n++);
@@ -26,7 +26,7 @@ void grib_accessor_bits_per_value_t::init(const long l, grib_arguments* args)
     length_ = 0;
 }
 
-int grib_accessor_bits_per_value_t::unpack_long(long* val, size_t* len)
+int BitsPerValue::unpack_long(long* val, size_t* len)
 {
     int ret        = 0;
     grib_handle* h = grib_handle_of_accessor(this);
@@ -38,7 +38,7 @@ int grib_accessor_bits_per_value_t::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_bits_per_value_t::pack_long(const long* val, size_t* len)
+int BitsPerValue::pack_long(const long* val, size_t* len)
 {
     double* values  = NULL;
     size_t size     = 0;

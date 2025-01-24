@@ -10,26 +10,26 @@
 
 #include "Section.h"
 
-grib_accessor_section_t _grib_accessor_section{};
-grib_accessor* grib_accessor_section = &_grib_accessor_section;
+eccodes::accessor::Section _grib_accessor_section;
+eccodes::Accessor* grib_accessor_section = &_grib_accessor_section;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_section_t::init(const long len, grib_arguments* arg)
+void Section::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
     sub_section_ = grib_section_create(grib_handle_of_accessor(this), this);
     length_      = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-void grib_accessor_section_t::dump(eccodes::Dumper* dumper)
+void Section::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_section(this, sub_section_->block);
 }
 
-long grib_accessor_section_t::byte_count()
+long Section::byte_count()
 {
     if (!length_ || grib_handle_of_accessor(this)->loader) {
         if (name_[1] == '_')
@@ -44,28 +44,28 @@ long grib_accessor_section_t::byte_count()
     return length_;
 }
 
-long grib_accessor_section_t::next_offset()
+long Section::next_offset()
 {
     return offset_ + byte_count();
 }
 
-void grib_accessor_section_t::destroy(grib_context* ct)
+void Section::destroy(grib_context* ct)
 {
     grib_section_delete(ct, sub_section_);
-    grib_accessor_gen_t::destroy(ct);
+    Gen::destroy(ct);
 }
 
-long grib_accessor_section_t::get_native_type()
+long Section::get_native_type()
 {
     return GRIB_TYPE_SECTION;
 }
 
-grib_section* grib_accessor_section_t::sub_section()
+grib_section* Section::sub_section()
 {
     return sub_section_;
 }
 
-void grib_accessor_section_t::update_size(size_t length)
+void Section::update_size(size_t length)
 {
     size_t size = 1;
     long len    = length;
@@ -86,7 +86,7 @@ void grib_accessor_section_t::update_size(size_t length)
     ECCODES_ASSERT(length_ >= 0);
 }
 
-grib_accessor* grib_accessor_section_t::next(grib_accessor* a, int explore)
+grib_accessor* Section::next(grib_accessor* a, int explore)
 {
     grib_accessor* next = NULL;
     if (explore) {

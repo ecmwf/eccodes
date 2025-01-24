@@ -227,7 +227,7 @@ eccodes::geo_nearest::Nearest* gribNearestNew(const grib_handle* ch, int* error)
 
     grib_handle* h             = (grib_handle*)ch;
     grib_accessor* a           = grib_find_accessor(h, "NEAREST");
-    grib_accessor_nearest_t* n = (grib_accessor_nearest_t*)a;
+    accessor::Nearest* n = (accessor::Nearest*)a;
 
     if (!a)
         return NULL;

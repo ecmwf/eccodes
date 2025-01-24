@@ -10,15 +10,15 @@
 
 #include "ToDouble.h"
 
-grib_accessor_to_double_t _grib_accessor_to_double{};
-grib_accessor* grib_accessor_to_double = &_grib_accessor_to_double;
+eccodes::accessor::ToDouble _grib_accessor_to_double;
+eccodes::Accessor* grib_accessor_to_double = &_grib_accessor_to_double;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_to_double_t::init(const long len, grib_arguments* arg)
+void ToDouble::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
     grib_handle* hand = grib_handle_of_accessor(this);
 
     key_        = arg->get_name(hand, 0);
@@ -32,7 +32,7 @@ void grib_accessor_to_double_t::init(const long len, grib_arguments* arg)
     grib_accessor::length_ = 0;
 }
 
-int grib_accessor_to_double_t::value_count(long* count)
+int ToDouble::value_count(long* count)
 {
     size_t size = 0;
 
@@ -42,7 +42,7 @@ int grib_accessor_to_double_t::value_count(long* count)
     return err;
 }
 
-size_t grib_accessor_to_double_t::string_length()
+size_t ToDouble::string_length()
 {
     size_t size = 0;
 
@@ -53,17 +53,17 @@ size_t grib_accessor_to_double_t::string_length()
     return size;
 }
 
-void grib_accessor_to_double_t::dump(eccodes::Dumper* dumper)
+void ToDouble::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_string(this, NULL);
 }
 
-long grib_accessor_to_double_t::get_native_type()
+long ToDouble::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }
 
-int grib_accessor_to_double_t::unpack_string(char* val, size_t* len)
+int ToDouble::unpack_string(char* val, size_t* len)
 {
     int err        = 0;
     char buff[512] = {0,};
@@ -93,7 +93,7 @@ int grib_accessor_to_double_t::unpack_string(char* val, size_t* len)
     return err;
 }
 
-int grib_accessor_to_double_t::unpack_long(long* v, size_t* len)
+int ToDouble::unpack_long(long* v, size_t* len)
 {
     char val[1024] = {0,};
     size_t l   = sizeof(val);
@@ -111,7 +111,7 @@ int grib_accessor_to_double_t::unpack_long(long* v, size_t* len)
     return err;
 }
 
-int grib_accessor_to_double_t::unpack_double(double* v, size_t* len)
+int ToDouble::unpack_double(double* v, size_t* len)
 {
     char val[1024] = {0,};
     size_t l   = sizeof(val);
@@ -129,7 +129,7 @@ int grib_accessor_to_double_t::unpack_double(double* v, size_t* len)
     return err;
 }
 
-long grib_accessor_to_double_t::next_offset()
+long ToDouble::next_offset()
 {
     return offset_ + grib_accessor::length_;
 }

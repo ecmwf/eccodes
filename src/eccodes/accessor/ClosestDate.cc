@@ -11,15 +11,15 @@
 #include "ClosestDate.h"
 #include <float.h>
 
-grib_accessor_closest_date_t _grib_accessor_closest_date{};
-grib_accessor* grib_accessor_closest_date = &_grib_accessor_closest_date;
+eccodes::accessor::ClosestDate _grib_accessor_closest_date;
+eccodes::Accessor* grib_accessor_closest_date = &_grib_accessor_closest_date;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_closest_date_t::init(const long l, grib_arguments* c)
+void ClosestDate::init(const long l, grib_arguments* c)
 {
-    grib_accessor_double_t::init(l, c);
+    Double::init(l, c);
     grib_handle* h = grib_handle_of_accessor(this);
     int n          = 0;
 
@@ -36,12 +36,12 @@ void grib_accessor_closest_date_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-void grib_accessor_closest_date_t::dump(eccodes::Dumper* dumper)
+void ClosestDate::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_string(this, NULL);
 }
 
-int grib_accessor_closest_date_t::unpack_long(long* val, size_t* len)
+int ClosestDate::unpack_long(long* val, size_t* len)
 {
     int ret  = 0;
     double v = 0;
@@ -53,7 +53,7 @@ int grib_accessor_closest_date_t::unpack_long(long* val, size_t* len)
 }
 
 /* Sets val to the 'index' of the closes date */
-int grib_accessor_closest_date_t::unpack_double(double* val, size_t* len)
+int ClosestDate::unpack_double(double* val, size_t* len)
 {
     int err            = 0;
     long num_forecasts = 0; /* numberOfForecastsUsedInLocalTime */

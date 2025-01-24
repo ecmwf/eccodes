@@ -10,15 +10,15 @@
 
 #include "SectionPointer.h"
 
-grib_accessor_section_pointer_t _grib_accessor_section_pointer{};
-grib_accessor* grib_accessor_section_pointer = &_grib_accessor_section_pointer;
+eccodes::accessor::SectionPointer _grib_accessor_section_pointer;
+eccodes::Accessor* grib_accessor_section_pointer = &_grib_accessor_section_pointer;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_section_pointer_t::init(const long len, grib_arguments* arg)
+void SectionPointer::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_gen_t::init(len, arg);
+    Gen::init(len, arg);
 
     int n          = 0;
     sectionOffset_ = arg->get_name(grib_handle_of_accessor(this), n++);
@@ -43,12 +43,12 @@ void grib_accessor_section_pointer_t::init(const long len, grib_arguments* arg)
     length_ = 0;
 }
 
-long grib_accessor_section_pointer_t::get_native_type()
+long SectionPointer::get_native_type()
 {
     return GRIB_TYPE_BYTES;
 }
 
-int grib_accessor_section_pointer_t::unpack_string(char* v, size_t* len)
+int SectionPointer::unpack_string(char* v, size_t* len)
 {
     //   unsigned char* p=NULL;
     //   char* s=v;
@@ -67,7 +67,7 @@ int grib_accessor_section_pointer_t::unpack_string(char* v, size_t* len)
     return GRIB_SUCCESS;
 }
 
-long grib_accessor_section_pointer_t::byte_count()
+long SectionPointer::byte_count()
 {
     long sectionLength = 0;
 
@@ -82,7 +82,7 @@ long grib_accessor_section_pointer_t::byte_count()
     return sectionLength;
 }
 
-long grib_accessor_section_pointer_t::byte_offset()
+long SectionPointer::byte_offset()
 {
     long sectionOffset = 0;
 

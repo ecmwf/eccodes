@@ -10,15 +10,15 @@
 
 #include "OctahedralGaussian.h"
 
-grib_accessor_octahedral_gaussian_t _grib_accessor_octahedral_gaussian{};
-grib_accessor* grib_accessor_octahedral_gaussian = &_grib_accessor_octahedral_gaussian;
+eccodes::accessor::OctahedralGaussian _grib_accessor_octahedral_gaussian;
+eccodes::Accessor* grib_accessor_octahedral_gaussian = &_grib_accessor_octahedral_gaussian;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_octahedral_gaussian_t::init(const long l, grib_arguments* c)
+void OctahedralGaussian::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     int n             = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
 
@@ -71,7 +71,7 @@ static int is_pl_octahedral(const long pl[], size_t size)
     return 1; /* it's octahedral */
 }
 
-int grib_accessor_octahedral_gaussian_t::unpack_long(long* val, size_t* len)
+int OctahedralGaussian::unpack_long(long* val, size_t* len)
 {
     int ret = GRIB_SUCCESS;
     long Ni;
@@ -117,7 +117,7 @@ int grib_accessor_octahedral_gaussian_t::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_octahedral_gaussian_t::pack_long(const long* val, size_t* len)
+int OctahedralGaussian::pack_long(const long* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }

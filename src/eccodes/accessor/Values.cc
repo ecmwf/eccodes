@@ -10,13 +10,13 @@
 
 #include "Values.h"
 
-grib_accessor_values_t _grib_accessor_values{};
-grib_accessor* grib_accessor_values = &_grib_accessor_values;
+eccodes::accessor::Values _grib_accessor_values;
+eccodes::Accessor* grib_accessor_values = &_grib_accessor_values;
 
 namespace eccodes::accessor
 {
 
-long grib_accessor_values_t::init_length()
+long Values::init_length()
 {
     int ret = 0;
     long seclen        = 0;
@@ -47,9 +47,9 @@ long grib_accessor_values_t::init_length()
     return seclen - (offsetdata - offsetsection);
 }
 
-void grib_accessor_values_t::init(const long v, grib_arguments* params)
+void Values::init(const long v, grib_arguments* params)
 {
-    grib_accessor_gen_t::init(v, params);
+    Gen::init(v, params);
     carg_ = 0;
 
     seclen_        = params->get_name(grib_handle_of_accessor(this), carg_++);
@@ -61,40 +61,40 @@ void grib_accessor_values_t::init(const long v, grib_arguments* params)
     /* ECCODES_ASSERT(length_ >=0); */
 }
 
-long grib_accessor_values_t::get_native_type()
+long Values::get_native_type()
 {
     return GRIB_TYPE_DOUBLE;
 }
 
-void grib_accessor_values_t::dump(eccodes::Dumper* dumper)
+void Values::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_values(this);
 }
 
-long grib_accessor_values_t::byte_count()
+long Values::byte_count()
 {
     grib_context_log(context_, GRIB_LOG_DEBUG, "byte_count of %s = %ld", name_, length_);
     return length_;
 }
 
-long grib_accessor_values_t::byte_offset()
+long Values::byte_offset()
 {
     return offset_;
 }
 
-long grib_accessor_values_t::next_offset()
+long Values::next_offset()
 {
     return offset_ + length_;
 }
 
-void grib_accessor_values_t::update_size(size_t s)
+void Values::update_size(size_t s)
 {
     grib_context_log(context_, GRIB_LOG_DEBUG, "updating size of %s old %ld new %ld", name_, length_, s);
     length_ = s;
     ECCODES_ASSERT(length_ >= 0);
 }
 
-int grib_accessor_values_t::compare(grib_accessor* b)
+int Values::compare(grib_accessor* b)
 {
     int retval   = 0;
     double* aval = 0;
@@ -134,7 +134,7 @@ int grib_accessor_values_t::compare(grib_accessor* b)
     return retval;
 }
 
-int grib_accessor_values_t::pack_long(const long* val, size_t* len)
+int Values::pack_long(const long* val, size_t* len)
 {
     double* dval = (double*)grib_context_malloc(context_, *len * sizeof(double));
 

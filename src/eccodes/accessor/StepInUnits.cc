@@ -12,15 +12,15 @@
 #include "step_utilities.h"
 #include <stdexcept>
 
-grib_accessor_step_in_units_t _grib_accessor_step_in_units{};
-grib_accessor* grib_accessor_step_in_units = &_grib_accessor_step_in_units;
+eccodes::accessor::StepInUnits _grib_accessor_step_in_units;
+eccodes::Accessor* grib_accessor_step_in_units = &_grib_accessor_step_in_units;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_step_in_units_t::init(const long l, grib_arguments* c)
+void StepInUnits::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
@@ -31,12 +31,12 @@ void grib_accessor_step_in_units_t::init(const long l, grib_arguments* c)
     time_range_value_    = c->get_name(hand, n++);
 }
 
-void grib_accessor_step_in_units_t::dump(eccodes::Dumper* dumper)
+void StepInUnits::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_double(this, NULL);
 }
 
-int grib_accessor_step_in_units_t::unpack_long(long* val, size_t* len)
+int StepInUnits::unpack_long(long* val, size_t* len)
 {
     int err = 0;
     long forecast_time_value, forecast_time_unit, step_units;
@@ -66,7 +66,7 @@ int grib_accessor_step_in_units_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_step_in_units_t::unpack_double(double* val, size_t* len)
+int StepInUnits::unpack_double(double* val, size_t* len)
 {
     int err = 0;
     long forecast_time_value, forecast_time_unit, step_units;
@@ -95,7 +95,7 @@ int grib_accessor_step_in_units_t::unpack_double(double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_step_in_units_t::pack_long_new_(const long start_step_value, const long start_step_unit, const long force_step_units)
+int StepInUnits::pack_long_new_(const long start_step_value, const long start_step_unit, const long force_step_units)
 {
     grib_handle* h                            = grib_handle_of_accessor(this);
     int err                                   = 0;
@@ -144,7 +144,7 @@ int grib_accessor_step_in_units_t::pack_long_new_(const long start_step_value, c
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_step_in_units_t::pack_long(const long* val, size_t* len)
+int StepInUnits::pack_long(const long* val, size_t* len)
 {
     grib_handle* h = grib_handle_of_accessor(this);
     int ret        = GRIB_SUCCESS;
@@ -176,7 +176,7 @@ int grib_accessor_step_in_units_t::pack_long(const long* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_step_in_units_t::pack_string(const char* val, size_t* len)
+int StepInUnits::pack_string(const char* val, size_t* len)
 {
     grib_handle* h = grib_handle_of_accessor(this);
     // long force_step_units = eccodes::Unit(eccodes::Unit::Value::MISSING).value<long>();
@@ -198,7 +198,7 @@ int grib_accessor_step_in_units_t::pack_string(const char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_step_in_units_t::unpack_string(char* val, size_t* len)
+int StepInUnits::unpack_string(char* val, size_t* len)
 {
     grib_handle* h        = grib_handle_of_accessor(this);
     int ret               = GRIB_SUCCESS;
@@ -241,7 +241,7 @@ int grib_accessor_step_in_units_t::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-long grib_accessor_step_in_units_t::get_native_type()
+long StepInUnits::get_native_type()
 {
     grib_handle* h                 = grib_handle_of_accessor(this);
     const int show_units_for_hours = context_->grib_hourly_steps_with_units;

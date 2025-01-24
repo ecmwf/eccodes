@@ -13,15 +13,15 @@
 #include "step_utilities.h"
 #include <iostream>
 
-grib_accessor_g2step_range_t _grib_accessor_g2step_range{};
-grib_accessor* grib_accessor_g2step_range = &_grib_accessor_g2step_range;
+eccodes::accessor::G2stepRange _grib_accessor_g2step_range;
+eccodes::Accessor* grib_accessor_g2step_range = &_grib_accessor_g2step_range;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_g2step_range_t::init(const long l, grib_arguments* c)
+void G2stepRange::init(const long l, grib_arguments* c)
 {
-    grib_accessor_gen_t::init(l, c);
+    Gen::init(l, c);
 
     int n = 0;
 
@@ -36,7 +36,7 @@ void grib_accessor_g2step_range_t::init(const long l, grib_arguments* c)
 // dumper->dump_string(a, NULL);
 //}
 
-int grib_accessor_g2step_range_t::unpack_string(char* val, size_t* len)
+int G2stepRange::unpack_string(char* val, size_t* len)
 {
     grib_handle* h          = grib_handle_of_accessor(this);
     int ret                 = 0;
@@ -91,7 +91,7 @@ int grib_accessor_g2step_range_t::unpack_string(char* val, size_t* len)
         memcpy(val, ss.str().c_str(), size);
     }
     catch (std::exception& e) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "grib_accessor_g2step_range_t::unpack_string: %s", e.what());
+        grib_context_log(context_, GRIB_LOG_ERROR, "G2stepRange::unpack_string: %s", e.what());
         return GRIB_DECODING_ERROR;
     }
 
@@ -102,7 +102,7 @@ int grib_accessor_g2step_range_t::unpack_string(char* val, size_t* len)
 // <start_step> and <end_step> can be in different units
 // stepRange="X" in instantaneous field is equivalent to set step=X
 // stepRange="X" in accumulated field is equivalent to startStep=X, endStep=startStep
-int grib_accessor_g2step_range_t::pack_string(const char* val, size_t* len)
+int G2stepRange::pack_string(const char* val, size_t* len)
 {
     grib_handle* h = grib_handle_of_accessor(this);
     int ret        = 0;
@@ -170,18 +170,18 @@ int grib_accessor_g2step_range_t::pack_string(const char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_g2step_range_t::value_count(long* count)
+int G2stepRange::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_g2step_range_t::string_length()
+size_t G2stepRange::string_length()
 {
     return 255;
 }
 
-int grib_accessor_g2step_range_t::pack_long(const long* val, size_t* len)
+int G2stepRange::pack_long(const long* val, size_t* len)
 {
     char buff[100];
     size_t bufflen = 100;
@@ -190,7 +190,7 @@ int grib_accessor_g2step_range_t::pack_long(const long* val, size_t* len)
     return pack_string(buff, &bufflen);
 }
 
-int grib_accessor_g2step_range_t::unpack_long(long* val, size_t* len)
+int G2stepRange::unpack_long(long* val, size_t* len)
 {
     grib_handle* h       = grib_handle_of_accessor(this);
     int ret              = 0;
@@ -227,7 +227,7 @@ int grib_accessor_g2step_range_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_g2step_range_t::unpack_double(double* val, size_t* len)
+int G2stepRange::unpack_double(double* val, size_t* len)
 {
     grib_handle* h         = grib_handle_of_accessor(this);
     int ret                = 0;
@@ -265,7 +265,7 @@ int grib_accessor_g2step_range_t::unpack_double(double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-long grib_accessor_g2step_range_t::get_native_type()
+long G2stepRange::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }

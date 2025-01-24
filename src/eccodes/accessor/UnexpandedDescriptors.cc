@@ -11,15 +11,15 @@
 #include "ExpandedDescriptors.h"
 #include "UnexpandedDescriptors.h"
 
-grib_accessor_unexpanded_descriptors_t _grib_accessor_unexpanded_descriptors{};
-grib_accessor* grib_accessor_unexpanded_descriptors = &_grib_accessor_unexpanded_descriptors;
+eccodes::accessor::UnexpandedDescriptors _grib_accessor_unexpanded_descriptors;
+eccodes::Accessor* grib_accessor_unexpanded_descriptors = &_grib_accessor_unexpanded_descriptors;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_unexpanded_descriptors_t::init(const long len, grib_arguments* args)
+void UnexpandedDescriptors::init(const long len, grib_arguments* args)
 {
-    grib_accessor_long_t::init(len, args);
+    Long::init(len, args);
 
     int n                         = 0;
     grib_handle* hand             = grib_handle_of_accessor(this);
@@ -28,7 +28,7 @@ void grib_accessor_unexpanded_descriptors_t::init(const long len, grib_arguments
     length_                       = 0;
 }
 
-int grib_accessor_unexpanded_descriptors_t::unpack_long(long* val, size_t* len)
+int UnexpandedDescriptors::unpack_long(long* val, size_t* len)
 {
     int ret   = 0;
     long pos  = 0;
@@ -67,13 +67,13 @@ int grib_accessor_unexpanded_descriptors_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_unexpanded_descriptors_t::pack_long(const long* val, size_t* len)
+int UnexpandedDescriptors::pack_long(const long* val, size_t* len)
 {
     int ret  = 0;
     long pos = 0;
     unsigned long f, x, y;
     unsigned char* buf      = NULL;
-    grib_accessor_expanded_descriptors_t* expanded = NULL;
+    ExpandedDescriptors* expanded = NULL;
     size_t buflen           = *len * 2;
     size_t i = 0, length = *len;
     long createNewData = 1;
@@ -99,7 +99,7 @@ int grib_accessor_unexpanded_descriptors_t::pack_long(const long* val, size_t* l
     if (createNewData == 0)
         return ret;
 
-    expanded = dynamic_cast<grib_accessor_expanded_descriptors_t*>(grib_find_accessor(hand, "expandedCodes"));
+    expanded = dynamic_cast<ExpandedDescriptors*>(grib_find_accessor(hand, "expandedCodes"));
     ECCODES_ASSERT(expanded != NULL);
     ret = expanded->grib_accessor_expanded_descriptors_set_do_expand(1);
     if (ret != GRIB_SUCCESS)
@@ -114,7 +114,7 @@ int grib_accessor_unexpanded_descriptors_t::pack_long(const long* val, size_t* l
     return ret;
 }
 
-int grib_accessor_unexpanded_descriptors_t::value_count(long* numberOfUnexpandedDescriptors)
+int UnexpandedDescriptors::value_count(long* numberOfUnexpandedDescriptors)
 {
     long n = 0;
 
@@ -124,17 +124,17 @@ int grib_accessor_unexpanded_descriptors_t::value_count(long* numberOfUnexpanded
     return 0;
 }
 
-long grib_accessor_unexpanded_descriptors_t::byte_offset()
+long UnexpandedDescriptors::byte_offset()
 {
     return offset_;
 }
 
-void grib_accessor_unexpanded_descriptors_t::update_size(size_t s)
+void UnexpandedDescriptors::update_size(size_t s)
 {
     length_ = s;
 }
 
-long grib_accessor_unexpanded_descriptors_t::next_offset()
+long UnexpandedDescriptors::next_offset()
 {
     return byte_offset() + length_;
 }

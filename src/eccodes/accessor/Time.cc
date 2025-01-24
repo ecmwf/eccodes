@@ -10,15 +10,15 @@
 
 #include "Time.h"
 
-grib_accessor_time_t _grib_accessor_time{};
-grib_accessor* grib_accessor_time = &_grib_accessor_time;
+eccodes::accessor::Time _grib_accessor_time;
+eccodes::Accessor* grib_accessor_time = &_grib_accessor_time;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_time_t::init(const long l, grib_arguments* c)
+void Time::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
@@ -27,7 +27,7 @@ void grib_accessor_time_t::init(const long l, grib_arguments* c)
     second_ = c->get_name(hand, n++);
 }
 
-int grib_accessor_time_t::unpack_long(long* val, size_t* len)
+int Time::unpack_long(long* val, size_t* len)
 {
     int ret   = 0;
     long hour = 0, minute = 0, second = 0;
@@ -60,7 +60,7 @@ int grib_accessor_time_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_time_t::pack_long(const long* val, size_t* len)
+int Time::pack_long(const long* val, size_t* len)
 {
     int ret           = 0;
     long v            = val[0];
@@ -91,7 +91,7 @@ int grib_accessor_time_t::pack_long(const long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_time_t::unpack_string(char* val, size_t* len)
+int Time::unpack_string(char* val, size_t* len)
 {
     long v       = 0;
     size_t lsize = 1, lmin = 5;

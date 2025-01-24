@@ -11,15 +11,15 @@
 #include "DataG1secondOrderConstantWidthPacking.h"
 #include "grib_scaling.h"
 
-grib_accessor_data_g1second_order_constant_width_packing_t _grib_accessor_data_g1second_order_constant_width_packing{};
-grib_accessor* grib_accessor_data_g1second_order_constant_width_packing = &_grib_accessor_data_g1second_order_constant_width_packing;
+eccodes::accessor::DataG1secondOrderConstantWidthPacking _grib_accessor_data_g1second_order_constant_width_packing;
+eccodes::Accessor* grib_accessor_data_g1second_order_constant_width_packing = &_grib_accessor_data_g1second_order_constant_width_packing;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_data_g1second_order_constant_width_packing_t::init(const long v, grib_arguments* args)
+void DataG1secondOrderConstantWidthPacking::init(const long v, grib_arguments* args)
 {
-    grib_accessor_data_simple_packing_t::init(v, args);
+    DataSimplePacking::init(v, args);
     grib_handle* hand = grib_handle_of_accessor(this);
 
     half_byte_                       = args->get_name(hand, carg_++);
@@ -42,7 +42,7 @@ void grib_accessor_data_g1second_order_constant_width_packing_t::init(const long
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_data_g1second_order_constant_width_packing_t::value_count(long* numberOfSecondOrderPackedValues)
+int DataG1secondOrderConstantWidthPacking::value_count(long* numberOfSecondOrderPackedValues)
 {
     int err                          = 0;
     *numberOfSecondOrderPackedValues = 0;
@@ -52,12 +52,12 @@ int grib_accessor_data_g1second_order_constant_width_packing_t::value_count(long
     return err;
 }
 
-int grib_accessor_data_g1second_order_constant_width_packing_t::unpack_float(float* val, size_t* len)
+int DataG1secondOrderConstantWidthPacking::unpack_float(float* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_data_g1second_order_constant_width_packing_t::unpack_double(double* values, size_t* len)
+int DataG1secondOrderConstantWidthPacking::unpack_double(double* values, size_t* len)
 {
     int ret = 0;
     long numberOfGroups, numberOfSecondOrderPackedValues;
@@ -179,13 +179,13 @@ int grib_accessor_data_g1second_order_constant_width_packing_t::unpack_double(do
     return ret;
 }
 
-int grib_accessor_data_g1second_order_constant_width_packing_t::pack_double(const double* cval, size_t* len)
+int DataG1secondOrderConstantWidthPacking::pack_double(const double* cval, size_t* len)
 {
     grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s: Not implemented", class_name_, __func__);
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_data_g1second_order_constant_width_packing_t::unpack_double_element(size_t idx, double* val)
+int DataG1secondOrderConstantWidthPacking::unpack_double_element(size_t idx, double* val)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
     size_t size       = 0;
@@ -211,7 +211,7 @@ int grib_accessor_data_g1second_order_constant_width_packing_t::unpack_double_el
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_data_g1second_order_constant_width_packing_t::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
+int DataG1secondOrderConstantWidthPacking::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
     size_t size = 0, i = 0;

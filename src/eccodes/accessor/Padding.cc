@@ -10,32 +10,32 @@
 
 #include "Padding.h"
 
-grib_accessor_padding_t _grib_accessor_padding{};
-grib_accessor* grib_accessor_padding = &_grib_accessor_padding;
+eccodes::accessor::Padding _grib_accessor_padding;
+eccodes::Accessor* grib_accessor_padding = &_grib_accessor_padding;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_padding_t::init(const long len, grib_arguments* arg)
+void Padding::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_bytes_t::init(len, arg);
+    Bytes::init(len, arg);
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_padding_t::compare(grib_accessor* b)
+int Padding::compare(grib_accessor* b)
 {
     if (length_ != b->length_)
         return GRIB_COUNT_MISMATCH;
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_padding_t::update_size(size_t new_size)
+void Padding::update_size(size_t new_size)
 {
     length_ = new_size;
 }
 
-void grib_accessor_padding_t::resize(size_t new_size)
+void Padding::resize(size_t new_size)
 {
     void* zero = grib_context_malloc_clear(context_, new_size);
 
@@ -49,18 +49,18 @@ void grib_accessor_padding_t::resize(size_t new_size)
     ECCODES_ASSERT(new_size == length_);
 }
 
-int grib_accessor_padding_t::value_count(long* c)
+int Padding::value_count(long* c)
 {
     *c = length_;
     return 0;
 }
 
-long grib_accessor_padding_t::byte_count()
+long Padding::byte_count()
 {
     return length_;
 }
 
-size_t grib_accessor_padding_t::string_length()
+size_t Padding::string_length()
 {
     return (size_t)length_;
 }

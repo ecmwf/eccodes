@@ -10,17 +10,17 @@
 
 #include "NumberOfPointsGaussian.h"
 
-grib_accessor_number_of_points_gaussian_t _grib_accessor_number_of_points_gaussian{};
-grib_accessor* grib_accessor_number_of_points_gaussian = &_grib_accessor_number_of_points_gaussian;
+eccodes::accessor::NumberOfPointsGaussian _grib_accessor_number_of_points_gaussian;
+eccodes::Accessor* grib_accessor_number_of_points_gaussian = &_grib_accessor_number_of_points_gaussian;
 
 namespace eccodes::accessor
 {
 
 #define EFDEBUG 0
 
-void grib_accessor_number_of_points_gaussian_t::init(const long l, grib_arguments* c)
+void NumberOfPointsGaussian::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     int n          = 0;
     grib_handle* h = grib_handle_of_accessor(this);
 
@@ -112,7 +112,7 @@ static int get_number_of_data_values(grib_handle* h, size_t* numDataValues)
     return err;
 }
 
-int grib_accessor_number_of_points_gaussian_t::unpack_long(long* val, size_t* len)
+int NumberOfPointsGaussian::unpack_long(long* val, size_t* len)
 {
     int err             = GRIB_SUCCESS;
     long support_legacy = 1;
@@ -128,7 +128,7 @@ int grib_accessor_number_of_points_gaussian_t::unpack_long(long* val, size_t* le
 }
 
 /* New algorithm */
-int grib_accessor_number_of_points_gaussian_t::unpack_long_new(long* val, size_t* len)
+int NumberOfPointsGaussian::unpack_long_new(long* val, size_t* len)
 {
     int err                                         = GRIB_SUCCESS;
     int is_global                                   = 0;
@@ -236,7 +236,7 @@ int grib_accessor_number_of_points_gaussian_t::unpack_long_new(long* val, size_t
 }
 
 /* With Legacy support */
-int grib_accessor_number_of_points_gaussian_t::unpack_long_with_legacy_support(long* val, size_t* len)
+int NumberOfPointsGaussian::unpack_long_with_legacy_support(long* val, size_t* len)
 {
     int err                                         = GRIB_SUCCESS;
     int is_global                                   = 0;

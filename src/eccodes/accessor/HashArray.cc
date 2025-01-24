@@ -11,28 +11,28 @@
 #include "HashArray.h"
 #include "action/HashArray.h"
 
-grib_accessor_hash_array_t _grib_accessor_hash_array{};
-grib_accessor* grib_accessor_hash_array = &_grib_accessor_hash_array;
+eccodes::accessor::HashArray _grib_accessor_hash_array;
+eccodes::Accessor* grib_accessor_hash_array = &_grib_accessor_hash_array;
 
 namespace eccodes::accessor
 {
 
 #define MAX_HASH_ARRAY_STRING_LENGTH 255
 
-void grib_accessor_hash_array_t::init(const long len, grib_arguments* args)
+void HashArray::init(const long len, grib_arguments* args)
 {
-    grib_accessor_gen_t::init(len, args);
+    Gen::init(len, args);
     length_ = 0;
     key_    = 0;
     ha_     = NULL;
 }
 
-void grib_accessor_hash_array_t::dump(eccodes::Dumper* dumper)
+void HashArray::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_string(this, NULL);
 }
 
-int grib_accessor_hash_array_t::pack_double(const double* val, size_t* len)
+int HashArray::pack_double(const double* val, size_t* len)
 {
     char s[200] = {0,};
     snprintf(s, sizeof(s), "%g", *val);
@@ -41,7 +41,7 @@ int grib_accessor_hash_array_t::pack_double(const double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_hash_array_t::pack_long(const long* val, size_t* len)
+int HashArray::pack_long(const long* val, size_t* len)
 {
     char s[200] = {0,};
     snprintf(s, sizeof(s), "%ld", *val);
@@ -52,19 +52,19 @@ int grib_accessor_hash_array_t::pack_long(const long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_hash_array_t::pack_string(const char* v, size_t* len)
+int HashArray::pack_string(const char* v, size_t* len)
 {
     key_ = grib_context_strdup(context_, v);
     ha_  = 0;
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_hash_array_t::unpack_double(double* val, size_t* len)
+int HashArray::unpack_double(double* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-grib_hash_array_value* grib_accessor_hash_array_t::find_hash_value(int* err)
+grib_hash_array_value* HashArray::find_hash_value(int* err)
 {
     grib_hash_array_value* ha_ret    = 0;
     grib_hash_array_value* ha        = NULL;
@@ -108,7 +108,7 @@ grib_hash_array_value* grib_accessor_hash_array_t::find_hash_value(int* err)
     return ha_ret;
 }
 
-int grib_accessor_hash_array_t::unpack_long(long* val, size_t* len)
+int HashArray::unpack_long(long* val, size_t* len)
 {
     grib_hash_array_value* ha = 0;
     int err                   = 0;
@@ -138,7 +138,7 @@ int grib_accessor_hash_array_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-long grib_accessor_hash_array_t::get_native_type()
+long HashArray::get_native_type()
 {
     int type = GRIB_TYPE_STRING;
     if (flags_ & GRIB_ACCESSOR_FLAG_LONG_TYPE)
@@ -147,24 +147,24 @@ long grib_accessor_hash_array_t::get_native_type()
     return type;
 }
 
-void grib_accessor_hash_array_t::destroy(grib_context* c)
+void HashArray::destroy(grib_context* c)
 {
     if (key_)
         grib_context_free(c, key_);
-    grib_accessor_gen_t::destroy(c);
+    Gen::destroy(c);
 }
 
-int grib_accessor_hash_array_t::unpack_string(char* val, size_t* len)
+int HashArray::unpack_string(char* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-size_t grib_accessor_hash_array_t::string_length()
+size_t HashArray::string_length()
 {
     return MAX_HASH_ARRAY_STRING_LENGTH;
 }
 
-int grib_accessor_hash_array_t::value_count(long* count)
+int HashArray::value_count(long* count)
 {
     int err                   = 0;
     grib_hash_array_value* ha = 0;
@@ -180,7 +180,7 @@ int grib_accessor_hash_array_t::value_count(long* count)
     return err;
 }
 
-int grib_accessor_hash_array_t::compare(grib_accessor* b)
+int HashArray::compare(grib_accessor* b)
 {
     return GRIB_NOT_IMPLEMENTED;
 }

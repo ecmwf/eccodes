@@ -234,7 +234,7 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 extern const int max_nbits;
 
 // typedef struct grib_expression grib_expression;
-//
+
 namespace eccodes {
 class Expression;
 class Arguments;
@@ -242,7 +242,7 @@ class Action;
 class Accessor;
 class AccessorsList;
 }  // namespace eccodes
-//
+
 using grib_expression = eccodes::Expression;
 using grib_arguments  = eccodes::Arguments;
 using grib_action = eccodes::Action;
@@ -256,6 +256,8 @@ typedef struct grib_buffer grib_buffer;
 typedef struct grib_section grib_section;
 typedef struct grib_codetable grib_codetable;
 typedef struct grib_smart_table grib_smart_table;
+
+class grib_accessor_class;
 
 namespace eccodes::geo_iterator {
 class Iterator;

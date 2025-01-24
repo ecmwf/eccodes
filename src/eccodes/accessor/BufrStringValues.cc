@@ -11,15 +11,15 @@
 #include "BufrStringValues.h"
 #include "BufrDataArray.h"
 
-grib_accessor_bufr_string_values_t _grib_accessor_bufr_string_values{};
-grib_accessor* grib_accessor_bufr_string_values = &_grib_accessor_bufr_string_values;
+eccodes::accessor::BufrStringValues _grib_accessor_bufr_string_values;
+eccodes::Accessor* grib_accessor_bufr_string_values = &_grib_accessor_bufr_string_values;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_bufr_string_values_t::init(const long len, grib_arguments* args)
+void BufrStringValues::init(const long len, grib_arguments* args)
 {
-    grib_accessor_ascii_t::init(len, args);
+    Ascii::init(len, args);
     int n             = 0;
     dataAccessorName_ = args->get_name(grib_handle_of_accessor(this), n++);
     dataAccessor_     = NULL;
@@ -27,12 +27,12 @@ void grib_accessor_bufr_string_values_t::init(const long len, grib_arguments* ar
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-void grib_accessor_bufr_string_values_t::dump(eccodes::Dumper* dumper)
+void BufrStringValues::dump(Dumper* dumper)
 {
     dumper->dump_string_array(this, NULL);
 }
 
-grib_accessor* grib_accessor_bufr_string_values_t::get_accessor()
+grib_accessor* BufrStringValues::get_accessor()
 {
     if (!dataAccessor_) {
         dataAccessor_ = grib_find_accessor(grib_handle_of_accessor(this), dataAccessorName_);
@@ -40,7 +40,7 @@ grib_accessor* grib_accessor_bufr_string_values_t::get_accessor()
     return dataAccessor_;
 }
 
-int grib_accessor_bufr_string_values_t::unpack_string_array(char** buffer, size_t* len)
+int BufrStringValues::unpack_string_array(char** buffer, size_t* len)
 {
     grib_context* c = context_;
     grib_vsarray* stringValues = NULL;
@@ -48,7 +48,7 @@ int grib_accessor_bufr_string_values_t::unpack_string_array(char** buffer, size_
     size_t i, j, n = 0;
     char** b = buffer;
 
-    grib_accessor_bufr_data_array_t* data = dynamic_cast<grib_accessor_bufr_data_array_t*>(get_accessor());
+  accessor::BufrDataArray* data = dynamic_cast<accessor::BufrDataArray*>(get_accessor());
     if (!data)
         return GRIB_NOT_FOUND;
 
@@ -73,20 +73,20 @@ int grib_accessor_bufr_string_values_t::unpack_string_array(char** buffer, size_
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_bufr_string_values_t::unpack_string(char* val, size_t* len)
+int BufrStringValues::unpack_string(char* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_bufr_string_values_t::value_count(long* rlen)
+int BufrStringValues::value_count(long* rlen)
 {
     grib_accessor* descriptors = get_accessor();
     return descriptors->value_count(rlen);
 }
 
-void grib_accessor_bufr_string_values_t::destroy(grib_context* c)
+void BufrStringValues::destroy(grib_context* c)
 {
-    grib_accessor_ascii_t::destroy(c);
+    Ascii::destroy(c);
 }
 
 }  // namespace eccodes::accessor

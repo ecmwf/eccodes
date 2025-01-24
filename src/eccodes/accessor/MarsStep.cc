@@ -10,21 +10,21 @@
 
 #include "MarsStep.h"
 
-grib_accessor_mars_step_t _grib_accessor_mars_step{};
-grib_accessor* grib_accessor_mars_step = &_grib_accessor_mars_step;
+eccodes::accessor::MarsStep _grib_accessor_mars_step;
+eccodes::Accessor* grib_accessor_mars_step = &_grib_accessor_mars_step;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_mars_step_t::init(const long l, grib_arguments* c)
+void MarsStep::init(const long l, grib_arguments* c)
 {
-    grib_accessor_ascii_t::init(l, c);
+    Ascii::init(l, c);
     int n      = 0;
     stepRange_ = c->get_name(grib_handle_of_accessor(this), n++);
     stepType_  = c->get_name(grib_handle_of_accessor(this), n++);
 }
 
-int grib_accessor_mars_step_t::pack_string(const char* val, size_t* len)
+int MarsStep::pack_string(const char* val, size_t* len)
 {
     char stepType[100];
     size_t stepTypeLen = 100;
@@ -48,7 +48,7 @@ int grib_accessor_mars_step_t::pack_string(const char* val, size_t* len)
     return stepRangeAcc->pack_string(buf, len);
 }
 
-int grib_accessor_mars_step_t::unpack_string(char* val, size_t* len)
+int MarsStep::unpack_string(char* val, size_t* len)
 {
     int ret       = 0;
     char buf[100] = {0,};
@@ -84,7 +84,7 @@ int grib_accessor_mars_step_t::unpack_string(char* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_mars_step_t::pack_long(const long* val, size_t* len)
+int MarsStep::pack_long(const long* val, size_t* len)
 {
     char buff[100] = {0,};
     size_t bufflen = 100;
@@ -94,7 +94,7 @@ int grib_accessor_mars_step_t::pack_long(const long* val, size_t* len)
     return pack_string(buff, &bufflen);
 }
 
-int grib_accessor_mars_step_t::unpack_long(long* val, size_t* len)
+int MarsStep::unpack_long(long* val, size_t* len)
 {
     grib_accessor* stepRangeAcc = grib_find_accessor(grib_handle_of_accessor(this), stepRange_);
 
@@ -104,18 +104,18 @@ int grib_accessor_mars_step_t::unpack_long(long* val, size_t* len)
     return stepRangeAcc->unpack_long(val, len);
 }
 
-int grib_accessor_mars_step_t::value_count(long* count)
+int MarsStep::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-size_t grib_accessor_mars_step_t::string_length()
+size_t MarsStep::string_length()
 {
     return 16;
 }
 
-long grib_accessor_mars_step_t::get_native_type()
+long MarsStep::get_native_type()
 {
     return GRIB_TYPE_LONG;
 }

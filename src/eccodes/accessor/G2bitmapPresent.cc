@@ -10,22 +10,22 @@
 
 #include "G2bitmapPresent.h"
 
-grib_accessor_g2bitmap_present_t _grib_accessor_g2bitmap_present{};
-grib_accessor* grib_accessor_g2bitmap_present = &_grib_accessor_g2bitmap_present;
+eccodes::accessor::G2bitmapPresent _grib_accessor_g2bitmap_present;
+eccodes::Accessor* grib_accessor_g2bitmap_present = &_grib_accessor_g2bitmap_present;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_g2bitmap_present_t::init(const long l, grib_arguments* c)
+void G2bitmapPresent::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     int n            = 0;
     bitmapIndicator_ = c->get_name(grib_handle_of_accessor(this), n++);
 
     length_ = 0;
 }
 
-int grib_accessor_g2bitmap_present_t::unpack_long(long* val, size_t* len)
+int G2bitmapPresent::unpack_long(long* val, size_t* len)
 {
     int ret              = GRIB_SUCCESS;
     long bitmapIndicator = 0;
@@ -48,7 +48,7 @@ int grib_accessor_g2bitmap_present_t::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_g2bitmap_present_t::pack_long(const long* val, size_t* len)
+int G2bitmapPresent::pack_long(const long* val, size_t* len)
 {
     long bitmapIndicator = 0;
 

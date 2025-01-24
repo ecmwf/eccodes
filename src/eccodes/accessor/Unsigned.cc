@@ -11,15 +11,15 @@
 #include "Unsigned.h"
 #include "ecc_numeric_limits.h"
 
-grib_accessor_unsigned_t _grib_accessor_unsigned{};
-grib_accessor* grib_accessor_unsigned = &_grib_accessor_unsigned;
+eccodes::accessor::Unsigned _grib_accessor_unsigned;
+eccodes::Accessor* grib_accessor_unsigned = &_grib_accessor_unsigned;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_unsigned_t::init(const long len, grib_arguments* arg)
+void Unsigned::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_long_t::init(len, arg);
+    Long::init(len, arg);
     nbytes_ = len;
     arg_    = arg;
 
@@ -39,7 +39,7 @@ void grib_accessor_unsigned_t::init(const long len, grib_arguments* arg)
     }
 }
 
-void grib_accessor_unsigned_t::dump(eccodes::Dumper* dumper)
+void Unsigned::dump(eccodes::Dumper* dumper)
 {
     long rlen = 0;
     value_count(&rlen);
@@ -65,7 +65,7 @@ int value_is_missing(long val)
     return (val == GRIB_MISSING_LONG || val == all_ones);
 }
 
-int grib_accessor_unsigned_t::pack_long_unsigned_helper(const long* val, size_t* len, int check)
+int Unsigned::pack_long_unsigned_helper(const long* val, size_t* len, int check)
 {
     int ret   = 0;
     long off  = 0;
@@ -160,7 +160,7 @@ int grib_accessor_unsigned_t::pack_long_unsigned_helper(const long* val, size_t*
     return ret;
 }
 
-int grib_accessor_unsigned_t::unpack_long(long* val, size_t* len)
+int Unsigned::unpack_long(long* val, size_t* len)
 {
     long rlen             = 0;
     unsigned long i       = 0;
@@ -203,18 +203,18 @@ int grib_accessor_unsigned_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_unsigned_t::pack_long(const long* val, size_t* len)
+int Unsigned::pack_long(const long* val, size_t* len)
 {
     /* See GRIB-262 as example of why we do the checks */
     return pack_long_unsigned_helper(val, len, /*check=*/1);
 }
 
-long grib_accessor_unsigned_t::byte_count()
+long Unsigned::byte_count()
 {
     return length_;
 }
 
-int grib_accessor_unsigned_t::value_count(long* len)
+int Unsigned::value_count(long* len)
 {
     if (!arg_) {
         *len = 1;
@@ -223,22 +223,22 @@ int grib_accessor_unsigned_t::value_count(long* len)
     return grib_get_long_internal(grib_handle_of_accessor(this), arg_->get_name(parent_->h, 0), len);
 }
 
-long grib_accessor_unsigned_t::byte_offset()
+long Unsigned::byte_offset()
 {
     return offset_;
 }
 
-void grib_accessor_unsigned_t::update_size(size_t s)
+void Unsigned::update_size(size_t s)
 {
     length_ = s;
 }
 
-long grib_accessor_unsigned_t::next_offset()
+long Unsigned::next_offset()
 {
     return byte_offset() + byte_count();
 }
 
-int grib_accessor_unsigned_t::is_missing()
+int Unsigned::is_missing()
 {
     const unsigned char ff  = 0xff;
     unsigned long offset    = offset_;
@@ -258,13 +258,13 @@ int grib_accessor_unsigned_t::is_missing()
     return 1;
 }
 
-void grib_accessor_unsigned_t::destroy(grib_context* context)
+void Unsigned::destroy(grib_context* context)
 {
     if (vvalue_ != NULL)
         grib_context_free(context, vvalue_);
 
     vvalue_ = NULL;
-    grib_accessor_long_t::destroy(context);
+    Long::destroy(context);
 }
 
 }  // namespace eccodes::accessor

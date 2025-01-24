@@ -10,15 +10,15 @@
 
 #include "JulianDay.h"
 
-grib_accessor_julian_day_t _grib_accessor_julian_day{};
-grib_accessor* grib_accessor_julian_day = &_grib_accessor_julian_day;
+eccodes::accessor::JulianDay _grib_accessor_julian_day;
+eccodes::Accessor* grib_accessor_julian_day = &_grib_accessor_julian_day;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_julian_day_t::init(const long l, grib_arguments* c)
+void JulianDay::init(const long l, grib_arguments* c)
 {
-    grib_accessor_double_t::init(l, c);
+    Double::init(l, c);
     int n = 0;
     grib_handle* h  = grib_handle_of_accessor(this);
 
@@ -30,18 +30,18 @@ void grib_accessor_julian_day_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-void grib_accessor_julian_day_t::dump(eccodes::Dumper* dumper)
+void JulianDay::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_string(this, NULL);
 }
 
-int grib_accessor_julian_day_t::pack_long(const long* val, size_t* len)
+int JulianDay::pack_long(const long* val, size_t* len)
 {
     const double v = *val;
     return pack_double(&v, len);
 }
 
-int grib_accessor_julian_day_t::pack_double(const double* val, size_t* len)
+int JulianDay::pack_double(const double* val, size_t* len)
 {
     int ret = GRIB_SUCCESS;
     long hour = 0, minute = 0, second = 0;
@@ -68,7 +68,7 @@ int grib_accessor_julian_day_t::pack_double(const double* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_julian_day_t::unpack_long(long* val, size_t* len)
+int JulianDay::unpack_long(long* val, size_t* len)
 {
     int ret  = 0;
     double v = 0;
@@ -79,7 +79,7 @@ int grib_accessor_julian_day_t::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_julian_day_t::unpack_double(double* val, size_t* len)
+int JulianDay::unpack_double(double* val, size_t* len)
 {
     int ret = 0;
     long date, hour, minute, second;

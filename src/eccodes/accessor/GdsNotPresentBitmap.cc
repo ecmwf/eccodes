@@ -10,15 +10,15 @@
 
 #include "GdsNotPresentBitmap.h"
 
-grib_accessor_gds_not_present_bitmap_t _grib_accessor_gds_not_present_bitmap{};
-grib_accessor* grib_accessor_gds_not_present_bitmap = &_grib_accessor_gds_not_present_bitmap;
+eccodes::accessor::GdsNotPresentBitmap _grib_accessor_gds_not_present_bitmap;
+eccodes::Accessor* grib_accessor_gds_not_present_bitmap = &_grib_accessor_gds_not_present_bitmap;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_gds_not_present_bitmap_t::init(const long v, grib_arguments* args)
+void GdsNotPresentBitmap::init(const long v, grib_arguments* args)
 {
-    grib_accessor_gen_t::init(v, args);
+    Gen::init(v, args);
     int n             = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
 
@@ -30,13 +30,13 @@ void grib_accessor_gds_not_present_bitmap_t::init(const long v, grib_arguments* 
     length_                  = 0;
 }
 
-int grib_accessor_gds_not_present_bitmap_t::value_count(long* number_of_points)
+int GdsNotPresentBitmap::value_count(long* number_of_points)
 {
     *number_of_points = 0;
     return grib_get_long_internal(grib_handle_of_accessor(this), number_of_points_, number_of_points);
 }
 
-int grib_accessor_gds_not_present_bitmap_t::unpack_double(double* val, size_t* len)
+int GdsNotPresentBitmap::unpack_double(double* val, size_t* len)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
 
@@ -99,14 +99,14 @@ int grib_accessor_gds_not_present_bitmap_t::unpack_double(double* val, size_t* l
     return err;
 }
 
-int grib_accessor_gds_not_present_bitmap_t::pack_double(const double* val, size_t* len)
+int GdsNotPresentBitmap::pack_double(const double* val, size_t* len)
 {
     // See deprecated/grib_accessor_gds_not_present_bitmap.cc for
     // a possible implementation
     return GRIB_NOT_IMPLEMENTED;
 }
 
-long grib_accessor_gds_not_present_bitmap_t::get_native_type()
+long GdsNotPresentBitmap::get_native_type()
 {
     return GRIB_TYPE_DOUBLE;
 }

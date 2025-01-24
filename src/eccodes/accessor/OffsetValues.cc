@@ -10,15 +10,15 @@
 
 #include "OffsetValues.h"
 
-grib_accessor_offset_values_t _grib_accessor_offset_values{};
-grib_accessor* grib_accessor_offset_values = &_grib_accessor_offset_values;
+eccodes::accessor::OffsetValues _grib_accessor_offset_values;
+eccodes::Accessor* grib_accessor_offset_values = &_grib_accessor_offset_values;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_offset_values_t::init(const long l, grib_arguments* args)
+void OffsetValues::init(const long l, grib_arguments* args)
 {
-    grib_accessor_double_t::init(l, args);
+    Double::init(l, args);
     int n         = 0;
     values_       = args->get_name(grib_handle_of_accessor(this), n++);
     missingValue_ = args->get_name(grib_handle_of_accessor(this), n++);
@@ -26,7 +26,7 @@ void grib_accessor_offset_values_t::init(const long l, grib_arguments* args)
     length_ = 0;
 }
 
-int grib_accessor_offset_values_t::unpack_double(double* val, size_t* len)
+int OffsetValues::unpack_double(double* val, size_t* len)
 {
     int ret = 0;
     *val    = 0;
@@ -34,7 +34,7 @@ int grib_accessor_offset_values_t::unpack_double(double* val, size_t* len)
     return ret;
 }
 
-int grib_accessor_offset_values_t::pack_double(const double* val, size_t* len)
+int OffsetValues::pack_double(const double* val, size_t* len)
 {
     double* values            = NULL;
     size_t size               = 0;

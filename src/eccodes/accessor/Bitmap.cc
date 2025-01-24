@@ -10,13 +10,13 @@
 
 #include "Bitmap.h"
 
-grib_accessor_bitmap_t _grib_accessor_bitmap{};
-grib_accessor* grib_accessor_bitmap = &_grib_accessor_bitmap;
+eccodes::accessor::Bitmap _grib_accessor_bitmap;
+eccodes::Accessor* grib_accessor_bitmap = &_grib_accessor_bitmap;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_bitmap_t::compute_size()
+void Bitmap::compute_size()
 {
     long slen                    = 0;
     long off                     = 0;
@@ -51,9 +51,9 @@ void grib_accessor_bitmap_t::compute_size()
     ECCODES_ASSERT(length_ >= 0);
 }
 
-void grib_accessor_bitmap_t::init(const long len, grib_arguments* arg)
+void Bitmap::init(const long len, grib_arguments* arg)
 {
-    grib_accessor_bytes_t::init(len, arg);
+    Bytes::init(len, arg);
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
@@ -65,12 +65,12 @@ void grib_accessor_bitmap_t::init(const long len, grib_arguments* arg)
     compute_size();
 }
 
-long grib_accessor_bitmap_t::next_offset()
+long Bitmap::next_offset()
 {
     return byte_offset() + byte_count();
 }
 
-void grib_accessor_bitmap_t::dump(eccodes::Dumper* dumper)
+void Bitmap::dump(eccodes::Dumper* dumper)
 {
     long len = 0;
     char label[1024];
@@ -80,7 +80,7 @@ void grib_accessor_bitmap_t::dump(eccodes::Dumper* dumper)
     dumper->dump_bytes(this, label);
 }
 
-int grib_accessor_bitmap_t::unpack_long(long* val, size_t* len)
+int Bitmap::unpack_long(long* val, size_t* len)
 {
     long pos                = offset_ * 8;
     long tlen               = 0;
@@ -128,17 +128,17 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_bitmap_t::unpack_double(double* val, size_t* len)
+int Bitmap::unpack_double(double* val, size_t* len)
 {
     return unpack<double>(this, val, len);
 }
 
-int grib_accessor_bitmap_t::unpack_float(float* val, size_t* len)
+int Bitmap::unpack_float(float* val, size_t* len)
 {
     return unpack<float>(this, val, len);
 }
 
-int grib_accessor_bitmap_t::unpack_double_element(size_t idx, double* val)
+int Bitmap::unpack_double_element(size_t idx, double* val)
 {
     long pos = offset_ * 8;
 
@@ -147,7 +147,7 @@ int grib_accessor_bitmap_t::unpack_double_element(size_t idx, double* val)
 
     return GRIB_SUCCESS;
 }
-int grib_accessor_bitmap_t::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
+int Bitmap::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
     for (size_t i = 0; i < len; ++i) {
         unpack_double_element(index_array[i], val_array + i);
@@ -155,17 +155,17 @@ int grib_accessor_bitmap_t::unpack_double_element_set(const size_t* index_array,
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_bitmap_t::update_size(size_t s)
+void Bitmap::update_size(size_t s)
 {
     length_ = s;
 }
 
-size_t grib_accessor_bitmap_t::string_length()
+size_t Bitmap::string_length()
 {
     return length_;
 }
 
-int grib_accessor_bitmap_t::unpack_string(char* val, size_t* len)
+int Bitmap::unpack_string(char* val, size_t* len)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
     const size_t l    = length_;

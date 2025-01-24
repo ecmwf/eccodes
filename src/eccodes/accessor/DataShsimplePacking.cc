@@ -10,15 +10,15 @@
 
 #include "DataShsimplePacking.h"
 
-grib_accessor_data_shsimple_packing_t _grib_accessor_data_shsimple_packing{};
-grib_accessor* grib_accessor_data_shsimple_packing = &_grib_accessor_data_shsimple_packing;
+eccodes::accessor::DataShsimplePacking _grib_accessor_data_shsimple_packing;
+eccodes::Accessor* grib_accessor_data_shsimple_packing = &_grib_accessor_data_shsimple_packing;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_data_shsimple_packing_t::init(const long v, grib_arguments* args)
+void DataShsimplePacking::init(const long v, grib_arguments* args)
 {
-    grib_accessor_gen_t::init(v, args);
+    Gen::init(v, args);
 
     coded_values_ = args->get_name(grib_handle_of_accessor(this), 0);
     real_part_    = args->get_name(grib_handle_of_accessor(this), 1);
@@ -27,12 +27,12 @@ void grib_accessor_data_shsimple_packing_t::init(const long v, grib_arguments* a
     length_ = 0;
 }
 
-void grib_accessor_data_shsimple_packing_t::dump(eccodes::Dumper* dumper)
+void DataShsimplePacking::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_values(this);
 }
 
-int grib_accessor_data_shsimple_packing_t::pack_double(const double* val, size_t* len)
+int DataShsimplePacking::pack_double(const double* val, size_t* len)
 {
     int err = GRIB_SUCCESS;
 
@@ -57,7 +57,7 @@ int grib_accessor_data_shsimple_packing_t::pack_double(const double* val, size_t
     return err;
 }
 
-long grib_accessor_data_shsimple_packing_t::get_native_type()
+long DataShsimplePacking::get_native_type()
 {
     return GRIB_TYPE_DOUBLE;
 }

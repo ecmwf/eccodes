@@ -15,6 +15,21 @@
 static pthread_once_t once    = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 
+int bufr_descriptor_is_marker(bufr_descriptor* d)
+{
+    int isMarker = 0;
+    switch (d->code) {
+        case 223255:
+        case 224255:
+        case 225255:
+        case 232255:
+            return 1;
+    }
+    if (d->F == 2 && d->X == 5)
+        isMarker = 1;
+    return isMarker;
+}
+
 static void init_mutex()
 {
     pthread_mutexattr_t attr;
@@ -29,7 +44,7 @@ static omp_nest_lock_t mutex1;
 
 static void init_mutex()
 {
-    GRIB_OMP_CRITICAL(lock_grib_accessor_bufr_elements_table_c)
+    GRIB_OMP_CRITICAL(lock_BufrElementsable_c)
     {
         if (once == 0) {
             omp_init_nest_lock(&mutex1);
@@ -39,15 +54,15 @@ static void init_mutex()
 }
 #endif
 
-grib_accessor_bufr_elements_table_t _grib_accessor_bufr_elements_table{};
-grib_accessor* grib_accessor_bufr_elements_table = &_grib_accessor_bufr_elements_table;
+eccodes::accessor::BufrElementsTable _grib_accessor_bufr_elements_table;
+eccodes::Accessor* grib_accessor_bufr_elements_table = &_grib_accessor_bufr_elements_table;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_bufr_elements_table_t::init(const long len, grib_arguments* params)
+void BufrElementsTable::init(const long len, grib_arguments* params)
 {
-    grib_accessor_gen_t::init(len, params);
+    Gen::init(len, params);
     int n = 0;
 
     dictionary_ = params->get_string(grib_handle_of_accessor(this), n++);
@@ -58,7 +73,7 @@ void grib_accessor_bufr_elements_table_t::init(const long len, grib_arguments* p
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-grib_trie* grib_accessor_bufr_elements_table_t::load_bufr_elements_table(int* err)
+grib_trie* BufrElementsTable::load_bufr_elements_table(int* err)
 {
     char* filename = NULL;
     char line[1024] = {0,};
@@ -215,7 +230,7 @@ static long atol_fast(const char* input)
     return atol(input);
 }
 
-int grib_accessor_bufr_elements_table_t::bufr_get_from_table(bufr_descriptor* v)
+int BufrElementsTable::bufr_get_from_table(bufr_descriptor* v)
 {
     int ret              = 0;
     char** list          = 0;
@@ -257,31 +272,15 @@ int grib_accessor_bufr_elements_table_t::bufr_get_from_table(bufr_descriptor* v)
     return GRIB_SUCCESS;
 }
 
-int bufr_descriptor_is_marker(bufr_descriptor* d)
+bufr_descriptor* BufrElementsTable::get_descriptor(int code, int* err)
 {
-    int isMarker = 0;
-    switch (d->code) {
-        case 223255:
-        case 224255:
-        case 225255:
-        case 232255:
-            return 1;
-    }
-    if (d->F == 2 && d->X == 5)
-        isMarker = 1;
-    return isMarker;
-}
-
-bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, int code, int* err)
-{
-    grib_accessor_bufr_elements_table_t* self = (grib_accessor_bufr_elements_table_t*)a;
     grib_context* c;
     bufr_descriptor* v = NULL;
 
-    if (!a)
-        return NULL;
+    // if (!this)  // TODO(maee): Check if this is needed
+    //     return NULL;
 
-    c = a->context_;
+    c = context_;
     DEBUG_ASSERT(c);
     v = (bufr_descriptor*)grib_context_malloc_clear(c, sizeof(bufr_descriptor));
     if (!v) {
@@ -297,7 +296,7 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, i
 
     switch (v->F) {
         case 0:
-            *err = self->bufr_get_from_table(v);
+            *err = bufr_get_from_table(v);
             break;
         case 1:
             v->type = BUFR_DESCRIPTOR_TYPE_REPLICATION;
@@ -313,28 +312,28 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, i
     return v;
 }
 
-int grib_accessor_bufr_elements_table_t::unpack_string(char* buffer, size_t* len)
+int BufrElementsTable::unpack_string(char* buffer, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_bufr_elements_table_t::value_count(long* count)
+int BufrElementsTable::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-long grib_accessor_bufr_elements_table_t::get_native_type()
+long BufrElementsTable::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
 
-int grib_accessor_bufr_elements_table_t::unpack_long(long* val, size_t* len)
+int BufrElementsTable::unpack_long(long* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_bufr_elements_table_t::unpack_double(double* val, size_t* len)
+int BufrElementsTable::unpack_double(double* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }

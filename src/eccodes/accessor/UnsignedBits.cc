@@ -10,13 +10,13 @@
 
 #include "UnsignedBits.h"
 
-grib_accessor_unsigned_bits_t _grib_accessor_unsigned_bits{};
-grib_accessor* grib_accessor_unsigned_bits = &_grib_accessor_unsigned_bits;
+eccodes::accessor::UnsignedBits _grib_accessor_unsigned_bits;
+eccodes::Accessor* grib_accessor_unsigned_bits = &_grib_accessor_unsigned_bits;
 
 namespace eccodes::accessor
 {
 
-long grib_accessor_unsigned_bits_t::compute_byte_count()
+long UnsignedBits::compute_byte_count()
 {
     long numberOfBits;
     long numberOfElements;
@@ -39,16 +39,16 @@ long grib_accessor_unsigned_bits_t::compute_byte_count()
     return (numberOfBits * numberOfElements + 7) / 8;
 }
 
-void grib_accessor_unsigned_bits_t::init(const long len, grib_arguments* args)
+void UnsignedBits::init(const long len, grib_arguments* args)
 {
-    grib_accessor_long_t::init(len, args);
+    Long::init(len, args);
     int n             = 0;
     numberOfBits_     = args->get_name(grib_handle_of_accessor(this), n++);
     numberOfElements_ = args->get_name(grib_handle_of_accessor(this), n++);
     length_           = compute_byte_count();
 }
 
-int grib_accessor_unsigned_bits_t::unpack_long(long* val, size_t* len)
+int UnsignedBits::unpack_long(long* val, size_t* len)
 {
     int ret           = 0;
     long pos          = offset_ * 8;
@@ -83,7 +83,7 @@ int grib_accessor_unsigned_bits_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_unsigned_bits_t::pack_long(const long* val, size_t* len)
+int UnsignedBits::pack_long(const long* val, size_t* len)
 {
     int ret            = 0;
     long off           = 0;
@@ -127,12 +127,12 @@ int grib_accessor_unsigned_bits_t::pack_long(const long* val, size_t* len)
     return ret;
 }
 
-long grib_accessor_unsigned_bits_t::byte_count()
+long UnsignedBits::byte_count()
 {
     return length_;
 }
 
-int grib_accessor_unsigned_bits_t::value_count(long* numberOfElements)
+int UnsignedBits::value_count(long* numberOfElements)
 {
     int ret;
     *numberOfElements = 0;
@@ -146,17 +146,17 @@ int grib_accessor_unsigned_bits_t::value_count(long* numberOfElements)
     return ret;
 }
 
-long grib_accessor_unsigned_bits_t::byte_offset()
+long UnsignedBits::byte_offset()
 {
     return offset_;
 }
 
-void grib_accessor_unsigned_bits_t::update_size(size_t s)
+void UnsignedBits::update_size(size_t s)
 {
     length_ = s;
 }
 
-long grib_accessor_unsigned_bits_t::next_offset()
+long UnsignedBits::next_offset()
 {
     return byte_offset() + length_;
 }

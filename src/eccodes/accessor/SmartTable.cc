@@ -11,8 +11,40 @@
 #include "SmartTable.h"
 #include <cctype>
 
-grib_accessor_smart_table_t _grib_accessor_smart_table{};
-grib_accessor* grib_accessor_smart_table = &_grib_accessor_smart_table;
+eccodes::accessor::SmartTable _grib_accessor_smart_table;
+eccodes::Accessor* grib_accessor_smart_table = &_grib_accessor_smart_table;
+
+void grib_smart_table_delete(grib_context* c)
+{
+    grib_smart_table* t = c->smart_table;
+    while (t) {
+        grib_smart_table* s = t->next;
+        int i;
+        int k;
+
+        for (i = 0; i < t->numberOfEntries; i++) {
+            if (t->entries[i].abbreviation)
+                grib_context_free_persistent(c, t->entries[i].abbreviation);
+            for (k = 0; k < MAX_SMART_TABLE_COLUMNS; k++) {
+                if (t->entries[i].column[k])
+                    grib_context_free_persistent(c, t->entries[i].column[k]);
+            }
+        }
+        grib_context_free_persistent(c, t->entries);
+        grib_context_free_persistent(c, t->filename[0]);
+        if (t->filename[1])
+            grib_context_free_persistent(c, t->filename[1]);
+        if (t->filename[2])
+            grib_context_free_persistent(c, t->filename[2]);
+        grib_context_free_persistent(c, t->recomposed_name[0]);
+        if (t->recomposed_name[1])
+            grib_context_free_persistent(c, t->recomposed_name[1]);
+        if (t->recomposed_name[2])
+            grib_context_free_persistent(c, t->recomposed_name[2]);
+        grib_context_free_persistent(c, t);
+        t = s;
+    }
+}
 
 namespace eccodes::accessor
 {
@@ -35,7 +67,7 @@ static omp_nest_lock_t mutex;
 
 static void init_mutex()
 {
-    GRIB_OMP_CRITICAL(lock_grib_accessor_smart_table_c)
+    GRIB_OMP_CRITICAL(lock_Smartable_c)
     {
         if (once == 0) {
             omp_init_nest_lock(&mutex);
@@ -47,7 +79,7 @@ static void init_mutex()
 
 static int grib_load_smart_table(grib_context* c, const char* filename, const char* recomposed_name, size_t size, grib_smart_table* t);
 
-void grib_accessor_smart_table_t::init(const long len, grib_arguments* params)
+void SmartTable::init(const long len, grib_arguments* params)
 {
     int n             = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
@@ -60,7 +92,7 @@ void grib_accessor_smart_table_t::init(const long len, grib_arguments* params)
     extraDir_    = params->get_name(hand, n++);
     extraTable_  = params->get_string(hand, n++);
 
-    grib_accessor_unsigned_t::length_ = 0;
+    Unsigned::length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     dirty_          = 1;
     tableCodesSize_ = 0;
@@ -68,7 +100,7 @@ void grib_accessor_smart_table_t::init(const long len, grib_arguments* params)
     table_          = NULL;
 }
 
-grib_smart_table* grib_accessor_smart_table_t::load_table()
+grib_smart_table* SmartTable::load_table()
 {
     size_t size                       = 0;
     grib_handle* h                    = this->parent_->h;
@@ -248,44 +280,12 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
     return 0;
 }
 
-void grib_smart_table_delete(grib_context* c)
-{
-    grib_smart_table* t = c->smart_table;
-    while (t) {
-        grib_smart_table* s = t->next;
-        int i;
-        int k;
-
-        for (i = 0; i < t->numberOfEntries; i++) {
-            if (t->entries[i].abbreviation)
-                grib_context_free_persistent(c, t->entries[i].abbreviation);
-            for (k = 0; k < MAX_SMART_TABLE_COLUMNS; k++) {
-                if (t->entries[i].column[k])
-                    grib_context_free_persistent(c, t->entries[i].column[k]);
-            }
-        }
-        grib_context_free_persistent(c, t->entries);
-        grib_context_free_persistent(c, t->filename[0]);
-        if (t->filename[1])
-            grib_context_free_persistent(c, t->filename[1]);
-        if (t->filename[2])
-            grib_context_free_persistent(c, t->filename[2]);
-        grib_context_free_persistent(c, t->recomposed_name[0]);
-        if (t->recomposed_name[1])
-            grib_context_free_persistent(c, t->recomposed_name[1]);
-        if (t->recomposed_name[2])
-            grib_context_free_persistent(c, t->recomposed_name[2]);
-        grib_context_free_persistent(c, t);
-        t = s;
-    }
-}
-
-void grib_accessor_smart_table_t::dump(eccodes::Dumper* dumper)
+void SmartTable::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_long(this, NULL);
 }
 
-int grib_accessor_smart_table_t::unpack_string(char* buffer, size_t* len)
+int SmartTable::unpack_string(char* buffer, size_t* len)
 {
     grib_smart_table* table = NULL;
 
@@ -323,7 +323,7 @@ int grib_accessor_smart_table_t::unpack_string(char* buffer, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_smart_table_t::get_table_codes()
+int SmartTable::get_table_codes()
 {
     size_t size                       = 0;
     long* v                           = 0;
@@ -374,7 +374,7 @@ int grib_accessor_smart_table_t::get_table_codes()
     return 0;
 }
 
-int grib_accessor_smart_table_t::value_count(long* count)
+int SmartTable::value_count(long* count)
 {
     int err = 0;
     *count  = 0;
@@ -389,7 +389,7 @@ int grib_accessor_smart_table_t::value_count(long* count)
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_smart_table_t::destroy(grib_context* context)
+void SmartTable::destroy(grib_context* context)
 {
     if (vvalue_ != NULL) {
         grib_context_free(context, vvalue_);
@@ -398,10 +398,10 @@ void grib_accessor_smart_table_t::destroy(grib_context* context)
     if (tableCodes_)
         grib_context_free(context_, tableCodes_);
 
-    grib_accessor_unsigned_t::destroy(context);
+    Unsigned::destroy(context);
 }
 
-long grib_accessor_smart_table_t::get_native_type()
+long SmartTable::get_native_type()
 {
     int type = GRIB_TYPE_LONG;
     // printf("---------- %s flags=%ld GRIB_ACCESSOR_FLAG_STRING_TYPE=%d\n",
@@ -411,7 +411,7 @@ long grib_accessor_smart_table_t::get_native_type()
     return type;
 }
 
-int grib_accessor_smart_table_t::unpack_long(long* val, size_t* len)
+int SmartTable::unpack_long(long* val, size_t* len)
 {
     int err = 0;
     size_t i;

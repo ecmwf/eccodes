@@ -10,18 +10,18 @@
 
 #include "BufrGroup.h"
 
-grib_accessor_bufr_group_t _grib_accessor_bufr_group{};
-grib_accessor* grib_accessor_bufr_group = &_grib_accessor_bufr_group;
+eccodes::accessor::BufrGroup _grib_accessor_bufr_group;
+eccodes::Accessor* grib_accessor_bufr_group = &_grib_accessor_bufr_group;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_bufr_group_t::dump(eccodes::Dumper* dumper)
+void BufrGroup::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_section(this, sub_section_->block);
 }
 
-grib_accessor* grib_accessor_bufr_group_t::next(grib_accessor* a, int explore)
+grib_accessor* BufrGroup::next(grib_accessor* a, int explore)
 {
     grib_accessor* next = NULL;
     if (explore) {

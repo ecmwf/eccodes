@@ -10,15 +10,15 @@
 
 #include "NumberOfValues.h"
 
-grib_accessor_number_of_values_t _grib_accessor_number_of_values{};
-grib_accessor* grib_accessor_number_of_values = &_grib_accessor_number_of_values;
+eccodes::accessor::NumberOfValues _grib_accessor_number_of_values;
+eccodes::Accessor* grib_accessor_number_of_values = &_grib_accessor_number_of_values;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_number_of_values_t::init(const long l, grib_arguments* c)
+void NumberOfValues::init(const long l, grib_arguments* c)
 {
-    grib_accessor_long_t::init(l, c);
+    Long::init(l, c);
     int n             = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
 
@@ -33,7 +33,7 @@ void grib_accessor_number_of_values_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-int grib_accessor_number_of_values_t::unpack_long(long* val, size_t* len)
+int NumberOfValues::unpack_long(long* val, size_t* len)
 {
     int ret      = GRIB_SUCCESS;
     long npoints = 0, bitmap_present = 0;

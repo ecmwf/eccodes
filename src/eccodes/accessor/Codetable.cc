@@ -11,8 +11,121 @@
 #include "Codetable.h"
 #include <cctype>
 
-grib_accessor_codetable_t _grib_accessor_codetable{};
-grib_accessor* grib_accessor_codetable = &_grib_accessor_codetable;
+eccodes::accessor::Codetable _grib_accessor_codetable;
+eccodes::Accessor* grib_accessor_codetable = &_grib_accessor_codetable;
+
+int codes_codetable_get_contents_malloc(const grib_handle* h, const char* key, code_table_entry** entries, size_t* num_entries)
+{
+    long lvalue     = 0;
+    size_t size     = 1;
+    int err         = 0;
+    grib_context* c = h->context;
+
+    grib_accessor* aa = grib_find_accessor(h, key);
+    if (!aa) return GRIB_NOT_FOUND;
+
+    if (!STR_EQUAL(aa->class_name_, "codetable")) {
+        return GRIB_INVALID_ARGUMENT;  // key is not a codetable
+    }
+
+    const eccodes::accessor::Codetable* ca = (const eccodes::accessor::Codetable*)aa;  // could be dynamic_cast
+
+    // Decode the key itself. This will either fetch it from the cache or place it there
+    if ((err = aa->unpack_long(&lvalue, &size)) != GRIB_SUCCESS) {
+        return err;
+    }
+
+    const grib_codetable* table = ca->codetable();
+    if (!table) return GRIB_INTERNAL_ERROR;
+
+    grib_codetable* cached_table = c->codetable;  // Access the codetable cache
+    while (cached_table) {
+        if (STR_EQUAL(table->recomposed_name[0], cached_table->recomposed_name[0])) {
+            // Found a cache entry that matches the recomposed name of ours
+            *num_entries = cached_table->size;
+            *entries     = (code_table_entry*)calloc(cached_table->size, sizeof(code_table_entry));
+            if (!*entries) {
+                return GRIB_OUT_OF_MEMORY;
+            }
+            for (size_t i = 0; i < cached_table->size; i++) {
+                (*entries)[i] = cached_table->entries[i];
+            }
+            return GRIB_SUCCESS;
+        }
+        cached_table = cached_table->next;
+    }
+
+    return GRIB_CODE_NOT_FOUND_IN_TABLE;
+}
+
+void grib_codetable_delete(grib_context* c)
+{
+    grib_codetable* t = c->codetable;
+
+    while (t) {
+        grib_codetable* s = t->next;
+        int i;
+
+        for (i = 0; i < t->size; i++) {
+            grib_context_free_persistent(c, t->entries[i].abbreviation);
+            grib_context_free_persistent(c, t->entries[i].title);
+            grib_context_free_persistent(c, t->entries[i].units);
+        }
+        grib_context_free_persistent(c, t->filename[0]);
+        if (t->filename[1])
+            grib_context_free_persistent(c, t->filename[1]);
+        grib_context_free_persistent(c, t->recomposed_name[0]);
+        if (t->recomposed_name[1])
+            grib_context_free_persistent(c, t->recomposed_name[1]);
+        grib_context_free_persistent(c, t);
+        t = s;
+    }
+}
+
+int codes_codetable_check_code_figure(const grib_handle* h, const char* key, long code_figure)
+{
+    code_table_entry* entries = NULL;
+    size_t num_entries        = 0;
+    int err                   = 0;
+    err                       = codes_codetable_get_contents_malloc(h, key, &entries, &num_entries);
+    if (err) return err;
+
+    if (code_figure < 0 || (size_t)code_figure >= num_entries) {
+        err = GRIB_OUT_OF_RANGE;
+        goto cleanup;
+    }
+
+    if (entries[code_figure].abbreviation == NULL) {
+        err = GRIB_INVALID_KEY_VALUE;
+        goto cleanup;
+    }
+cleanup:
+    free(entries);
+    return err;
+}
+
+int codes_codetable_check_abbreviation(const grib_handle* h, const char* key, const char* abbreviation)
+{
+    code_table_entry* entries = NULL;
+    size_t num_entries        = 0;
+    int err                   = 0;
+    err                       = codes_codetable_get_contents_malloc(h, key, &entries, &num_entries);
+    if (err) return err;
+
+    bool found = false;
+    for (size_t i = 0; i < num_entries; ++i) {
+        const char* abbrev = entries[i].abbreviation;
+        if (abbrev && STR_EQUAL(abbrev, abbreviation)) {
+            found = true;
+            break;
+        }
+    }
+    if (!found) err = GRIB_INVALID_KEY_VALUE;
+
+    free(entries);
+    return err;
+}
+
 
 namespace eccodes::accessor
 {
@@ -47,9 +160,9 @@ static void init_mutex()
 
 static int grib_load_codetable(grib_context* c, const char* filename, const char* recomposed_name, size_t size, grib_codetable* t);
 
-void grib_accessor_codetable_t::init(const long len, grib_arguments* params)
+void Codetable::init(const long len, grib_arguments* params)
 {
-    grib_accessor_unsigned_t::init(len, params);
+    Unsigned::init(len, params);
 
     int n             = 0;
     long new_len      = len;
@@ -167,7 +280,7 @@ static void dump_codetable(grib_codetable* atable)
 }
 #endif
 
-grib_codetable* grib_accessor_codetable_t::load_table()
+grib_codetable* Codetable::load_table()
 {
     size_t size                     = 0;
     grib_handle* h                  = parent_->h;
@@ -397,119 +510,8 @@ static int grib_load_codetable(grib_context* c, const char* filename,
     return 0;
 }
 
-void grib_codetable_delete(grib_context* c)
-{
-    grib_codetable* t = c->codetable;
 
-    while (t) {
-        grib_codetable* s = t->next;
-        int i;
-
-        for (i = 0; i < t->size; i++) {
-            grib_context_free_persistent(c, t->entries[i].abbreviation);
-            grib_context_free_persistent(c, t->entries[i].title);
-            grib_context_free_persistent(c, t->entries[i].units);
-        }
-        grib_context_free_persistent(c, t->filename[0]);
-        if (t->filename[1])
-            grib_context_free_persistent(c, t->filename[1]);
-        grib_context_free_persistent(c, t->recomposed_name[0]);
-        if (t->recomposed_name[1])
-            grib_context_free_persistent(c, t->recomposed_name[1]);
-        grib_context_free_persistent(c, t);
-        t = s;
-    }
-}
-
-int codes_codetable_get_contents_malloc(const grib_handle* h, const char* key, code_table_entry** entries, size_t* num_entries)
-{
-    long lvalue     = 0;
-    size_t size     = 1;
-    int err         = 0;
-    grib_context* c = h->context;
-
-    grib_accessor* aa = grib_find_accessor(h, key);
-    if (!aa) return GRIB_NOT_FOUND;
-
-    if (!STR_EQUAL(aa->class_name_, "codetable")) {
-        return GRIB_INVALID_ARGUMENT;  // key is not a codetable
-    }
-
-    const grib_accessor_codetable_t* ca = (const grib_accessor_codetable_t*)aa;  // could be dynamic_cast
-
-    // Decode the key itself. This will either fetch it from the cache or place it there
-    if ((err = aa->unpack_long(&lvalue, &size)) != GRIB_SUCCESS) {
-        return err;
-    }
-
-    const grib_codetable* table = ca->codetable();
-    if (!table) return GRIB_INTERNAL_ERROR;
-
-    grib_codetable* cached_table = c->codetable;  // Access the codetable cache
-    while (cached_table) {
-        if (STR_EQUAL(table->recomposed_name[0], cached_table->recomposed_name[0])) {
-            // Found a cache entry that matches the recomposed name of ours
-            *num_entries = cached_table->size;
-            *entries     = (code_table_entry*)calloc(cached_table->size, sizeof(code_table_entry));
-            if (!*entries) {
-                return GRIB_OUT_OF_MEMORY;
-            }
-            for (size_t i = 0; i < cached_table->size; i++) {
-                (*entries)[i] = cached_table->entries[i];
-            }
-            return GRIB_SUCCESS;
-        }
-        cached_table = cached_table->next;
-    }
-
-    return GRIB_CODE_NOT_FOUND_IN_TABLE;
-}
-
-int codes_codetable_check_code_figure(const grib_handle* h, const char* key, long code_figure)
-{
-    code_table_entry* entries = NULL;
-    size_t num_entries        = 0;
-    int err                   = 0;
-    err                       = codes_codetable_get_contents_malloc(h, key, &entries, &num_entries);
-    if (err) return err;
-
-    if (code_figure < 0 || (size_t)code_figure >= num_entries) {
-        err = GRIB_OUT_OF_RANGE;
-        goto cleanup;
-    }
-
-    if (entries[code_figure].abbreviation == NULL) {
-        err = GRIB_INVALID_KEY_VALUE;
-        goto cleanup;
-    }
-cleanup:
-    free(entries);
-    return err;
-}
-
-int codes_codetable_check_abbreviation(const grib_handle* h, const char* key, const char* abbreviation)
-{
-    code_table_entry* entries = NULL;
-    size_t num_entries        = 0;
-    int err                   = 0;
-    err                       = codes_codetable_get_contents_malloc(h, key, &entries, &num_entries);
-    if (err) return err;
-
-    bool found = false;
-    for (size_t i = 0; i < num_entries; ++i) {
-        const char* abbrev = entries[i].abbreviation;
-        if (abbrev && STR_EQUAL(abbrev, abbreviation)) {
-            found = true;
-            break;
-        }
-    }
-    if (!found) err = GRIB_INVALID_KEY_VALUE;
-
-    free(entries);
-    return err;
-}
-
-void grib_accessor_codetable_t::dump(eccodes::Dumper* dumper)
+void Codetable::dump(eccodes::Dumper* dumper)
 {
     char comment[2048];
     grib_codetable* table;
@@ -566,7 +568,7 @@ void grib_accessor_codetable_t::dump(eccodes::Dumper* dumper)
     dumper->dump_long(this, comment);
 }
 
-int grib_accessor_codetable_t::unpack_string(char* buffer, size_t* len)
+int Codetable::unpack_string(char* buffer, size_t* len)
 {
     grib_codetable* table = NULL;
 
@@ -608,7 +610,7 @@ int grib_accessor_codetable_t::unpack_string(char* buffer, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_codetable_t::value_count(long* count)
+int Codetable::value_count(long* count)
 {
     *count = 1;
     return 0;
@@ -631,7 +633,7 @@ bool strings_equal(const char* s1, const char* s2, bool case_sensitive)
     return (strcmp_nocase(s1, s2) == 0);
 }
 
-int grib_accessor_codetable_t::pack_string(const char* buffer, size_t* len)
+int Codetable::pack_string(const char* buffer, size_t* len)
 {
     long lValue = 0;
     ECCODES_ASSERT(buffer);
@@ -730,7 +732,7 @@ int grib_accessor_codetable_t::pack_string(const char* buffer, size_t* len)
     return GRIB_ENCODING_ERROR;
 }
 
-int grib_accessor_codetable_t::pack_expression(grib_expression* e)
+int Codetable::pack_expression(grib_expression* e)
 {
     const char* cval  = NULL;
     int ret           = 0;
@@ -761,16 +763,16 @@ int grib_accessor_codetable_t::pack_expression(grib_expression* e)
     return ret;
 }
 
-void grib_accessor_codetable_t::destroy(grib_context* context)
+void Codetable::destroy(grib_context* context)
 {
     if (vvalue_ != NULL) {
         grib_context_free(context, vvalue_);
         vvalue_ = NULL;
     }
-    grib_accessor_unsigned_t::destroy(context);
+    Unsigned::destroy(context);
 }
 
-long grib_accessor_codetable_t::get_native_type()
+long Codetable::get_native_type()
 {
     int type = GRIB_TYPE_LONG;
     /*printf("---------- %s flags=%ld GRIB_ACCESSOR_FLAG_STRING_TYPE=%d\n",
@@ -780,7 +782,7 @@ long grib_accessor_codetable_t::get_native_type()
     return type;
 }
 
-int grib_accessor_codetable_t::unpack_long(long* val, size_t* len)
+int Codetable::unpack_long(long* val, size_t* len)
 {
     long rlen = 0, i = 0;
     long pos          = offset_ * 8;
@@ -827,7 +829,7 @@ int grib_accessor_codetable_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_codetable_t::pack_missing()
+int Codetable::pack_missing()
 {
     // Many of the code tables do have a 'Missing' entry (all bits = 1)
     // So it is more user-friendly to allow setting codetable keys to

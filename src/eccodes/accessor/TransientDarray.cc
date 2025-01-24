@@ -10,26 +10,26 @@
 
 #include "TransientDarray.h"
 
-grib_accessor_transient_darray_t _grib_accessor_transient_darray{};
-grib_accessor* grib_accessor_transient_darray = &_grib_accessor_transient_darray;
+eccodes::accessor::TransientDarray _grib_accessor_transient_darray;
+eccodes::Accessor* grib_accessor_transient_darray = &_grib_accessor_transient_darray;
 
 namespace eccodes::accessor
 {
 
-void grib_accessor_transient_darray_t::init(const long length, grib_arguments* args)
+void TransientDarray::init(const long length, grib_arguments* args)
 {
-    grib_accessor_gen_t::init(length, args);
+    Gen::init(length, args);
     arr_    = NULL;
     type_   = GRIB_TYPE_DOUBLE;
     length_ = 0;
 }
 
-void grib_accessor_transient_darray_t::dump(eccodes::Dumper* dumper)
+void TransientDarray::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_double(this, NULL);
 }
 
-int grib_accessor_transient_darray_t::pack_double(const double* val, size_t* len)
+int TransientDarray::pack_double(const double* val, size_t* len)
 {
     if (arr_)
         grib_darray_delete(arr_);
@@ -41,7 +41,7 @@ int grib_accessor_transient_darray_t::pack_double(const double* val, size_t* len
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_transient_darray_t::pack_long(const long* val, size_t* len)
+int TransientDarray::pack_long(const long* val, size_t* len)
 {
     if (arr_)
         grib_darray_delete(arr_);
@@ -53,7 +53,7 @@ int grib_accessor_transient_darray_t::pack_long(const long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_transient_darray_t::unpack_double(double* val, size_t* len)
+int TransientDarray::unpack_double(double* val, size_t* len)
 {
     long count = 0;
 
@@ -71,7 +71,7 @@ int grib_accessor_transient_darray_t::unpack_double(double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_transient_darray_t::unpack_long(long* val, size_t* len)
+int TransientDarray::unpack_long(long* val, size_t* len)
 {
     long count = 0;
 
@@ -89,14 +89,14 @@ int grib_accessor_transient_darray_t::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_transient_darray_t::destroy(grib_context* c)
+void TransientDarray::destroy(grib_context* c)
 {
     if (arr_)
         grib_darray_delete(arr_);
-    grib_accessor_gen_t::destroy(c);
+    Gen::destroy(c);
 }
 
-int grib_accessor_transient_darray_t::value_count(long* count)
+int TransientDarray::value_count(long* count)
 {
     if (arr_)
         *count = grib_darray_used_size(arr_);
@@ -106,7 +106,7 @@ int grib_accessor_transient_darray_t::value_count(long* count)
     return 0;
 }
 
-long grib_accessor_transient_darray_t::get_native_type()
+long TransientDarray::get_native_type()
 {
     return type_;
 }
