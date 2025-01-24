@@ -127,7 +127,7 @@ static int check_surface_keys(grib_handle* h)
     if (!grib_is_defined(h, "typeOfFirstFixedSurface"))
         return GRIB_SUCCESS; // nothing to do
 
-    long stype=0, sval=0, sfac=0;
+    long stype=0;
     grib_get_long_internal(h, "typeOfFirstFixedSurface", &stype);
     int sfac_missing = grib_is_missing(h, "scaleFactorOfFirstFixedSurface", &err);
     int sval_missing = grib_is_missing(h, "scaledValueOfFirstFixedSurface", &err);
