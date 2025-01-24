@@ -14,6 +14,8 @@
 grib_accessor_message_is_valid_t _grib_accessor_message_is_valid{};
 grib_accessor* grib_accessor_message_is_valid = &_grib_accessor_message_is_valid;
 
+static const char* TITLE = "Message Validity Checks";
+
 void grib_accessor_message_is_valid_t::init(const long l, grib_arguments* arg)
 {
     grib_accessor_long_t::init(l, arg);
@@ -70,7 +72,7 @@ static int check_grid_pl_array(grib_handle* h)
     // If we have a PL array and PLPresent=true, then Ni must be missing
     ret = grib_get_long(h, "Ni", &Ni);
     if (ret == GRIB_SUCCESS && Ni != GRIB_MISSING_LONG) {
-        grib_context_log(c, GRIB_LOG_ERROR, "Invalid Ni: If there is a PL array, Ni must be set to MISSING");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Invalid Ni: If there is a PL array, Ni must be set to MISSING", TITLE);
         return GRIB_WRONG_GRID;
     }
 
@@ -81,7 +83,7 @@ static int check_grid_pl_array(grib_handle* h)
 
     for (size_t j = 0; j < plsize; j++) {
         if (pl[j] == 0) {
-            grib_context_log(c, GRIB_LOG_ERROR, "Invalid PL array: entry at index=%d is zero", j);
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Invalid PL array: entry at index=%d is zero", TITLE, j);
             grib_context_free(c, pl);
             return GRIB_WRONG_GRID;
         }
@@ -103,7 +105,7 @@ static int check_geoiterator(grib_handle* h)
         return GRIB_SUCCESS; // GRIB_NOT_IMPLEMENTED is OK e.g., for spectral fields
     }
 
-    grib_context_log(h->context, GRIB_LOG_ERROR, "%s", grib_get_error_message(err));
+    grib_context_log(h->context, GRIB_LOG_ERROR, "%s: %s", TITLE, grib_get_error_message(err));
     grib_iterator_delete(iter);
 #endif
 
@@ -120,6 +122,7 @@ static int check_7777(grib_handle* h)
 
 static int check_surface_keys(grib_handle* h)
 {
+    const grib_context* c = h->context;
     long edition = 0;
     int err = grib_get_long_internal(h, "edition", &edition);
     if (edition != 2) return GRIB_SUCCESS;
@@ -132,11 +135,11 @@ static int check_surface_keys(grib_handle* h)
     int sfac_missing = grib_is_missing(h, "scaleFactorOfFirstFixedSurface", &err);
     int sval_missing = grib_is_missing(h, "scaledValueOfFirstFixedSurface", &err);
     if ((stype == 255 && !sfac_missing) || (stype == 255 && !sval_missing)) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "First fixed surface: If the type of surface is missing so should its scaled keys");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: First fixed surface: If the type of surface is missing so should its scaled keys", TITLE);
         return GRIB_INVALID_KEY_VALUE;
     }
     if (sfac_missing != sval_missing) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "First fixed surface: If the scale factor is missing so should the scaled value and vice versa");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: First fixed surface: If the scale factor is missing so should the scaled value and vice versa", TITLE);
         return GRIB_INVALID_KEY_VALUE;
     }
 
@@ -144,11 +147,11 @@ static int check_surface_keys(grib_handle* h)
     sfac_missing = grib_is_missing(h, "scaleFactorOfSecondFixedSurface", &err);
     sval_missing = grib_is_missing(h, "scaledValueOfSecondFixedSurface", &err);
     if ((stype == 255 && !sfac_missing) || (stype == 255 && !sval_missing)) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Second fixed surface: If the type of surface is missing so should its scaled keys");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Second fixed surface: If the type of surface is missing so should its scaled keys", TITLE);
         return GRIB_INVALID_KEY_VALUE;
     }
     if (sfac_missing != sval_missing) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Second fixed surface: If the scale factor is missing so should the scaled value and vice versa");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Second fixed surface: If the scale factor is missing so should the scaled value and vice versa", TITLE);
         return GRIB_INVALID_KEY_VALUE;
     }
 
@@ -170,7 +173,7 @@ static int check_steps(grib_handle* h)
         err = grib_get_long_internal(h, "endStep", &endStep);
         if (err) return err;
         if (startStep > endStep) {
-            grib_context_log(h->context, GRIB_LOG_ERROR, "Invalid step: startStep > endStep (%ld > %ld)", startStep, endStep);
+            grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Invalid step: startStep > endStep (%ld > %ld)", TITLE, startStep, endStep);
             return GRIB_WRONG_STEP;
         }
     }
@@ -184,7 +187,7 @@ static int check_section_numbers(grib_handle* h, long edition, const int* sec_nu
         const int sec_num = sec_nums[i];
         snprintf(sname, sizeof(sname), "section_%d", sec_num);
         if (!grib_is_defined(h, sname)) {
-            grib_context_log(h->context, GRIB_LOG_ERROR, "GRIB%ld: Section %d is missing!", edition, sec_num);
+            grib_context_log(h->context, GRIB_LOG_ERROR, "%s: GRIB%ld: Section %d is missing!", TITLE, edition, sec_num);
             return GRIB_INVALID_MESSAGE;
         }
     }
@@ -203,12 +206,12 @@ static int check_namespace_keys(grib_handle* h)
         int type = 0;
         grib_get_native_type(h, name, &type);
         if ( STR_EQUAL(grib_get_type_name(type), "unknown") ) {
-            grib_context_log(h->context, GRIB_LOG_ERROR, "Key %s has unknown type", name);
+            grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Key %s has unknown type", TITLE, name);
             return GRIB_DECODING_ERROR;
         }
     }
     if (count == 0) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Message has no keys in the '%s' namespace", ns);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Message has no keys in the '%s' namespace", TITLE, ns);
         return GRIB_DECODING_ERROR;
     }
     grib_keys_iterator_delete(kiter);

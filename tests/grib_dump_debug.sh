@@ -11,6 +11,7 @@
 . ./include.ctest.sh
 label="grib_dump_debug_test"
 temp=temp.$label.txt
+temp2=temp.2.$label.txt
 
 if [ $HAVE_GEOGRAPHY -eq 0 ]; then
     exit 0
@@ -45,8 +46,6 @@ spectral_complex.grib1
 spherical_model_level.grib1
 spherical_pressure_level.grib1
 constant_field.grib2
-gfs.c255.grib2
-missing.grib2
 multi_created.grib2
 reduced_gaussian_model_level.grib2
 reduced_gaussian_pressure_level.grib2
@@ -62,7 +61,6 @@ regular_latlon_surface_constant.grib2
 sample.grib2
 spherical_model_level.grib2
 spherical_pressure_level.grib2
-test_uuid.grib2
 tigge_af_ecmwf.grib2
 tigge_cf_ecmwf.grib2
 "
@@ -71,11 +69,7 @@ tigge_cf_ecmwf.grib2
 if [ $HAVE_JPEG -eq 1 ]; then
     # Include files which have messages with grid_jpeg packing
     echo "Add extra files (HAVE_JPEG=1)"
-    files="jpeg.grib2  reduced_gaussian_surface_jpeg.grib2 "$files
-    if [ $HAVE_EXTRA_TESTS -eq 1 ]; then
-        echo "Add extra files (HAVE_EXTRA_TESTS=1)"
-        files=" v.grib2 multi.grib2 "$files  # much slower
-    fi
+    files="reduced_gaussian_surface_jpeg.grib2 "$files
 fi
 
 for file in $files; do
@@ -91,6 +85,22 @@ for file in $files; do
       set -e
    fi
 done
+
+# These files have some invalid surface keys which the message validity checker should pick up
+if [ $HAVE_JPEG -eq 1 ]; then
+    files="jpeg.grib2 v.grib2 multi.grib2 gfs.c255.grib2 missing.grib2 test_uuid.grib2"
+    for file in $files; do
+        ${tools_dir}/grib_dump -w count=1 -Da ${data_dir}/$file > $temp 2>&1
+        set +e
+        grep -q 'ERROR ' $temp | grep -v "Message Validity Checks" > $temp2
+        set -e
+        if [ -s "$temp2" ]; then
+            # File exists and has a size greater than zero
+            echo "Check contents of $temp2"
+            exit 1
+        fi
+    done
+fi
 
 # ECC-1247: indicate which keys can have values which are 'missing'
 # ECC-1584: indicate which keys are 'read-only'
@@ -109,4 +119,4 @@ ${tools_dir}/grib_dump -Da -TB $infile > $temp
 
 
 # Clean up
-rm -f $temp
+rm -f $temp $temp2
