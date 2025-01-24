@@ -44,6 +44,17 @@ ${tools_dir}/grib_set -s scaledValueOfSecondFixedSurface=0,scaleFactorOfSecondFi
 grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "Second fixed surface: If the scale factor is missing so should the scaled value and vice versa" $tempText
 
+# Some of our grib2 test data have problems!
+input=$data_dir/test_uuid.grib2
+result=$( ${tools_dir}/grib_get -w count=1 -p isMessageValid $input 2>$tempText )
+[ $result -eq 0 ]
+grep -q "Second fixed surface: If the scale factor is missing so should the scaled value and vice versa" $tempText
+
+input=$data_dir/missing.grib2
+result=$( ${tools_dir}/grib_get -w count=1 -p isMessageValid $input 2>$tempText )
+[ $result -eq 0 ]
+grep -q "Second fixed surface: If the type of surface is missing so should its scaled keys" $tempText
+
 
 # Check steps
 # ------------------------------
