@@ -79,7 +79,7 @@ for file in $files; do
       # Look for the word ERROR in output. We should not find any
       grep -q 'ERROR ' $temp
       if [ $? -eq 0 ]; then
-         echo "File $file: found string ERROR in grib_dump output!"
+         echo "File $file: found string ERROR in grib_dump output! See file $temp"
          exit 1
       fi
       set -e
@@ -96,7 +96,7 @@ if [ $HAVE_JPEG -eq 1 ]; then
         set -e
         if [ -s "$temp2" ]; then
             # File exists and has a size greater than zero
-            echo "Check contents of $temp2"
+            echo "File $file: Check contents of $temp2"
             exit 1
         fi
     done
