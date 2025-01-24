@@ -1,6 +1,12 @@
 'IFS' = {
     backgroundProcess = 255;
 }
-'AIFS' = {
+'aifs-single-mse' = {
     backgroundProcess = 1;
+}
+'aifs-ens-crps' = {
+    backgroundProcess = 2;
+}
+'aifs-ens-diff' = {
+    backgroundProcess = 3;
 }
