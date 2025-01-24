@@ -115,7 +115,7 @@ grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int
 
     #if defined(HAVE_ECKIT_GEO)
     const int eckit_geo = ch->context->eckit_geo; // check environment variable
-    if (eckit_geo) {
+    if (eckit_geo != 0) {
         struct InitMain
         {
             InitMain()
@@ -126,10 +126,15 @@ grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int
                 }
             }
         } static const init_main;
+
         try {
             i->iterator = new eccodes::geo::GeoIterator(const_cast<grib_handle*>(ch), flags);
         }
-        catch(std::exception& e) {
+        catch (eckit::geo::Exception& e) {
+            grib_context_log(ch->context, GRIB_LOG_FATAL, "grib_iterator_new: geo::Exception thrown (%s)", e.what());
+            return 0;
+        }
+        catch (std::exception& e) {
             grib_context_log(ch->context, GRIB_LOG_ERROR, "grib_iterator_new: Exception thrown (%s)", e.what());
             *error = GRIB_GEOCALCULUS_PROBLEM;
             return NULL;
