@@ -118,6 +118,43 @@ static int check_7777(grib_handle* h)
     return GRIB_SUCCESS;
 }
 
+static int check_surface_keys(grib_handle* h)
+{
+    long edition = 0;
+    int err = grib_get_long_internal(h, "edition", &edition);
+    if (edition != 2) return GRIB_SUCCESS;
+
+    if (!grib_is_defined(h, "typeOfFirstFixedSurface"))
+        return GRIB_SUCCESS; // nothing to do
+
+    long stype=0, sval=0, sfac=0;
+    grib_get_long_internal(h, "typeOfFirstFixedSurface", &stype);
+    int sfac_missing = grib_is_missing(h, "scaleFactorOfFirstFixedSurface", &err);
+    int sval_missing = grib_is_missing(h, "scaledValueOfFirstFixedSurface", &err);
+    if ((stype == 255 && !sfac_missing) || (stype == 255 && !sval_missing)) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "First fixed surface: If the type of surface is missing so should its scaled keys");
+        return GRIB_INVALID_KEY_VALUE;
+    }
+    if (sfac_missing != sval_missing) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "First fixed surface: If the scale factor is missing so should the scaled value and vice versa");
+        return GRIB_INVALID_KEY_VALUE;
+    }
+
+    grib_get_long_internal(h, "typeOfSecondFixedSurface", &stype);
+    sfac_missing = grib_is_missing(h, "scaleFactorOfSecondFixedSurface", &err);
+    sval_missing = grib_is_missing(h, "scaledValueOfSecondFixedSurface", &err);
+    if ((stype == 255 && !sfac_missing) || (stype == 255 && !sval_missing)) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Second fixed surface: If the type of surface is missing so should its scaled keys");
+        return GRIB_INVALID_KEY_VALUE;
+    }
+    if (sfac_missing != sval_missing) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Second fixed surface: If the scale factor is missing so should the scaled value and vice versa");
+        return GRIB_INVALID_KEY_VALUE;
+    }
+
+    return GRIB_SUCCESS;
+}
+
 static int check_steps(grib_handle* h)
 {
     char stepType[32] = {0,};
@@ -207,7 +244,8 @@ static proj_func check_functions[] = {
     check_geoiterator,
     check_steps,
     check_7777,
-    check_namespace_keys
+    check_namespace_keys,
+    check_surface_keys
 };
 
 int grib_accessor_message_is_valid_t::unpack_long(long* val, size_t* len)

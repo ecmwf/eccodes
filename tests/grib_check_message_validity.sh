@@ -28,6 +28,23 @@ if [ $HAVE_GEOGRAPHY -eq 1 ]; then
    grep -q "Error instantiating iterator gaussian_reduced" $tempText
 fi
 
+# Bad grib2 surface keys
+# -----------------------
+sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
+${tools_dir}/grib_set -s scaleFactorOfSecondFixedSurface=99 $sample $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "Second fixed surface: If the type of surface is missing so should its scaled keys" $tempText
+
+${tools_dir}/grib_set -s typeOfFirstFixedSurface=missing,scaleFactorOfFirstFixedSurface=99 $sample $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "First fixed surface: If the type of surface is missing so should its scaled keys" $tempText
+
+${tools_dir}/grib_set -s scaledValueOfSecondFixedSurface=0,scaleFactorOfSecondFixedSurface=missing,typeOfSecondFixedSurface=1 $sample $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "Second fixed surface: If the scale factor is missing so should the scaled value and vice versa" $tempText
+
+
 # Check steps
 # ------------------------------
 ${tools_dir}/grib_set -s stepType=accum,startStep=12,endStep=6  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrib
