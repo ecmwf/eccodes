@@ -91,6 +91,7 @@ extern grib_accessor* grib_accessor_g2_chemical;
 extern grib_accessor* grib_accessor_g2_concept_dir;
 extern grib_accessor* grib_accessor_g2_eps;
 extern grib_accessor* grib_accessor_g2_mars_labeling;
+extern grib_accessor* grib_accessor_g2_param_concept_filename;
 extern grib_accessor* grib_accessor_g2bitmap;
 extern grib_accessor* grib_accessor_g2bitmap_present;
 extern grib_accessor* grib_accessor_g2date;
