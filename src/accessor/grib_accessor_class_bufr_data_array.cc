@@ -1656,12 +1656,12 @@ grib_accessor* grib_accessor_bufr_data_array_t::create_attribute_variable(const 
     size_t len;
     creator.op_         = (char*)"variable";
     creator.name_space_ = (char*)"";
-    creator.flags_      = GRIB_ACCESSOR_FLAG_READ_ONLY | flags;
+    creator.flags_      = GRIB_ACCESSOR_FLAG_READ_ONLY | GRIB_ACCESSOR_FLAG_BUFR_DATA | flags;
     creator.set_        = 0;
-    creator.name_                 = (char*)name;
-    grib_accessor* a             = grib_accessor_factory(section, &creator, 0, NULL);
-    a->parent_                   = NULL;
-    a->h_                        = section->h;
+    creator.name_       = (char*)name;
+    grib_accessor* a    = grib_accessor_factory(section, &creator, 0, NULL);
+    a->parent_          = NULL;
+    a->h_               = section->h;
     grib_accessor_variable_t* va = dynamic_cast<grib_accessor_variable_t*>(a);
     va->accessor_variable_set_type(type);
     len = 1;
@@ -2541,6 +2541,8 @@ int grib_accessor_bufr_data_array_t::create_keys(long onlySubset, long startSubs
                                 return err;
                             }
                             associatedFieldAccessor->add_attribute(newAccessor, 1);
+                            //newAccessor->flags_ |= GRIB_ACCESSOR_FLAG_BUFR_DATA;
+                            //associatedFieldAccessor->flags_ |= GRIB_ACCESSOR_FLAG_BUFR_DATA;
                         }
                         break;
                     case 31021:
