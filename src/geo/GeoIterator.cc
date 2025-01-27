@@ -12,6 +12,7 @@
 #include "geo/GeoIterator.h"
 
 #include "eckit/geo/Exceptions.h"
+#include "eckit/geo/NextIterator.h"
 
 #include "geo/GribSpec.h"
 
@@ -21,7 +22,7 @@ namespace eccodes::geo
 
 
 GeoIterator::GeoIterator(grib_handle* h, unsigned long flags) :
-    spec_(new GribSpec(h)), grid_(eckit::geo::GridFactory::build(*spec_)), iter_(grid_->cbegin().release()), end_(grid_->cend().release()), next_first_(true)
+    spec_(new GribSpec(h)), grid_(eckit::geo::GridFactory::build(*spec_)), iter_(*grid_)
 {
     h_          = h;
     class_name_ = "geo_iterator";
@@ -55,26 +56,19 @@ int GeoIterator::init(grib_handle*, grib_arguments*)
 // So any exception thrown by eckit is fatal!
 int GeoIterator::next(double* lat, double* lon, double* val) const
 {
-    if (iter_ == end_) {
-        return 0;  // (false)
-    }
-
     try {
-        const auto p  = *iter_;
-        const auto& q = std::get<eckit::geo::PointLonLat>(p);
+        eckit::geo::Point p = eckit::geo::PointLonLat{};
+        if (iter_.next(p)) {
+            const auto& q = std::get<eckit::geo::PointLonLat>(p);
 
-        *lat = q.lat;
-        *lon = q.lon;
-        if (val != nullptr && data_ != nullptr) {
-            *val = data_[iter_->index()];
-        }
+            *lat = q.lat;
+            *lon = q.lon;
+            if (val != nullptr && data_ != nullptr) {
+                *val = data_[iter_.index()];
+            }
 
-        if (next_first_) {
-            next_first_ = false;
             return 1;  // (true)
         }
-
-        ++iter_;
     }
     catch (eckit::geo::Exception& e) {
         grib_context_log(h_->context, GRIB_LOG_FATAL, "GeoIterator::next: geo::Exception thrown (%s)", e.what());
@@ -85,7 +79,7 @@ int GeoIterator::next(double* lat, double* lon, double* val) const
         return 0;
     }
 
-    return 1;  // (true)
+    return 0;  // (false)
 }
 
 
@@ -97,8 +91,7 @@ int GeoIterator::previous(double*, double*, double*) const
 
 int GeoIterator::reset()
 {
-    iter_.reset(grid_->cbegin().release());
-    return GRIB_SUCCESS;
+    NOTIMP;
 }
 
 
@@ -113,7 +106,7 @@ int GeoIterator::destroy()
 
 bool GeoIterator::has_next() const
 {
-    return iter_ != end_;
+    NOTIMP;
 }
 
 

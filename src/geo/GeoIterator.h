@@ -14,6 +14,7 @@
 #include <memory>
 
 #include "eckit/geo/Grid.h"
+#include "eckit/geo/NextIterator.h"
 
 #include "geo/iterator/grib_iterator.h"
 
@@ -30,9 +31,7 @@ private:
     std::unique_ptr<const eckit::geo::Spec> spec_;
     std::unique_ptr<const eckit::geo::Grid> grid_;
 
-    mutable eckit::geo::Grid::Iterator iter_;
-    const eckit::geo::Grid::Iterator end_;
-    mutable bool next_first_;
+    mutable eckit::geo::NextIterator iter_;
 
     int init(grib_handle*, grib_arguments*) override;
     int next(double* lat, double* lon, double* val) const override;
