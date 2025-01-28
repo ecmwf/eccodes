@@ -18,11 +18,8 @@ namespace eccodes::geo_iterator
 class LambertConformal : public Gen
 {
 public:
-    LambertConformal() = default;
+    LambertConformal(grib_handle*, grib_arguments*, unsigned long flags, int& err);
 
-    Iterator* create() const override { return new LambertConformal(); }
-
-    int init(grib_handle*, grib_arguments*) override;
     int next(double*, double*, double*) const override;
     int destroy() override;
 

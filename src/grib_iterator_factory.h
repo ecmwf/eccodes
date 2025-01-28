@@ -36,17 +36,14 @@ namespace eccodes::geo_iterator
 
 struct Factory
 {
-    static Iterator* build(grib_handle*, grib_arguments* args, unsigned long flags, int* error);
-
-private:
-    static Factory& instance();
+    static Iterator* build(grib_handle*, grib_arguments* args, unsigned long flags, int& err);
 };
 
 
 struct FactoryBuilder
 {
     explicit FactoryBuilder(const std::string& name);
-    virtual Iterator* make() const = 0;
+    virtual Iterator* make(grib_handle*, grib_arguments* args, unsigned long flags, int& err) const = 0;
 };
 
 
@@ -55,7 +52,7 @@ struct FactoryBuilderGeneric : FactoryBuilder
 {
     FactoryBuilderGeneric(const std::string& name) :
         FactoryBuilder(name) {}
-    Iterator* make() const override { return new T(); }
+    Iterator* make(grib_handle* h, grib_arguments* args, unsigned long flags, int& err) const override { return new T(h, args, flags, err); }
 };
 
 

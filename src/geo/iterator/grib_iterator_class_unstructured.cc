@@ -11,9 +11,6 @@
 #include "grib_iterator_class_unstructured.h"
 #include "grib_iterator_factory.h"
 
-eccodes::geo_iterator::Unstructured _grib_iterator_unstructured{};
-eccodes::geo_iterator::Iterator* grib_iterator_unstructured = &_grib_iterator_unstructured;
-
 namespace eccodes::geo_iterator
 {
 
@@ -36,11 +33,11 @@ int Unstructured::next(double* lat, double* lon, double* val) const
     return 1;
 }
 
-int Unstructured::init(grib_handle* h, grib_arguments* args)
+Unstructured::Unstructured(grib_handle* h, grib_arguments* args, unsigned long flags, int& err) :
+    Gen(h, args, flags, err)
 {
-    int ret = GRIB_SUCCESS;
-    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS) {
-        return ret;
+    if (err != GRIB_SUCCESS) {
+        return;
     }
 
     const char* s_uuidOfHGrid = args->get_name(h, carg_++);
@@ -48,24 +45,24 @@ int Unstructured::init(grib_handle* h, grib_arguments* args)
         0,
     };
     auto slen = sizeof(uuidOfHGrid);
-    if ((ret = grib_get_string_internal(h, s_uuidOfHGrid, uuidOfHGrid, &slen)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_string_internal(h, s_uuidOfHGrid, uuidOfHGrid, &slen)) != GRIB_SUCCESS) {
+        return;
     }
 
     lats_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
     if (!lats_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv_ * sizeof(double));
-        return GRIB_OUT_OF_MEMORY;
+        err = GRIB_OUT_OF_MEMORY;
+        return;
     }
     lons_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
     if (!lons_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv_ * sizeof(double));
-        return GRIB_OUT_OF_MEMORY;
+        err = GRIB_OUT_OF_MEMORY;
+        return;
     }
 
     e_ = -1;
-
-    return ret;
 }
 
 int Unstructured::destroy()

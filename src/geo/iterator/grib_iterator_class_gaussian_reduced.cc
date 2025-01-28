@@ -13,9 +13,6 @@
 #include "grib_iterator_class_gaussian_reduced.h"
 #include "grib_iterator_factory.h"
 
-eccodes::geo_iterator::GaussianReduced _grib_iterator_gaussian_reduced{};
-eccodes::geo_iterator::Iterator* grib_iterator_gaussian_reduced = &_grib_iterator_gaussian_reduced;
-
 namespace eccodes::geo_iterator
 {
 
@@ -239,11 +236,11 @@ int GaussianReduced::iterate_reduced_gaussian_subarea(grib_handle* h,
     return err;
 }
 
-int GaussianReduced::init(grib_handle* h, grib_arguments* args)
+GaussianReduced::GaussianReduced(grib_handle* h, grib_arguments* args, unsigned long flags, int& err) :
+    Gen(h, args, flags, err)
 {
-    int ret = GRIB_SUCCESS;
-    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS) {
-        return ret;
+    if (err != GRIB_SUCCESS) {
+        return;
     }
 
     int j;
@@ -278,41 +275,42 @@ int GaussianReduced::init(grib_handle* h, grib_arguments* args)
     southPoleLon_    = 0;
     disableUnrotate_ = 0; /* unrotate enabled by default */
 
-    ret = grib_get_long(h, "isRotatedGrid", &isRotated_);
-    if (ret == GRIB_SUCCESS && isRotated_) {
-        if ((ret = grib_get_double_internal(h, "angleOfRotation", &angleOfRotation_))) {
-            return ret;
+    err = grib_get_long(h, "isRotatedGrid", &isRotated_);
+    if (err == GRIB_SUCCESS && isRotated_) {
+        if ((err = grib_get_double_internal(h, "angleOfRotation", &angleOfRotation_))) {
+            return;
         }
-        if ((ret = grib_get_double_internal(h, "latitudeOfSouthernPoleInDegrees", &southPoleLat_))) {
-            return ret;
+        if ((err = grib_get_double_internal(h, "latitudeOfSouthernPoleInDegrees", &southPoleLat_))) {
+            return;
         }
-        if ((ret = grib_get_double_internal(h, "longitudeOfSouthernPoleInDegrees", &southPoleLon_))) {
-            return ret;
+        if ((err = grib_get_double_internal(h, "longitudeOfSouthernPoleInDegrees", &southPoleLon_))) {
+            return;
         }
     }
 
-    if ((ret = grib_get_double_internal(h, slat_first, &lat_first)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_double_internal(h, slat_first, &lat_first)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_double_internal(h, slon_first, &lon_first)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_double_internal(h, slon_first, &lon_first)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_double_internal(h, slat_last, &lat_last)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_double_internal(h, slat_last, &lat_last)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_double_internal(h, slon_last, &lon_last)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_double_internal(h, slon_last, &lon_last)) != GRIB_SUCCESS) {
+        return;
     }
 
-    if ((ret = grib_get_long_internal(h, sorder, &order)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_long_internal(h, sorder, &order)) != GRIB_SUCCESS) {
+        return;
     }
     if (order == 0) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Invalid grid: N cannot be 0!", ITER);
-        return GRIB_WRONG_GRID;
+        err = GRIB_WRONG_GRID;
+        return;
     }
-    if ((ret = grib_get_long_internal(h, snj, &nj)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_long_internal(h, snj, &nj)) != GRIB_SUCCESS) {
+        return;
     }
 
     if (grib_get_long(h, "angleSubdivisions", &angleSubdivisions) == GRIB_SUCCESS) {
@@ -323,31 +321,35 @@ int GaussianReduced::init(grib_handle* h, grib_arguments* args)
     numlats = order * 2;
     lats    = (double*)grib_context_malloc(h->context, sizeof(double) * numlats);
     if (!lats) {
-        return GRIB_OUT_OF_MEMORY;
+        err = GRIB_OUT_OF_MEMORY;
+        return;
     }
-    if ((ret = grib_get_gaussian_latitudes(order, lats)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_gaussian_latitudes(order, lats)) != GRIB_SUCCESS) {
+        return;
     }
 
-    if ((ret = grib_get_size(h, spl, &plsize)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_size(h, spl, &plsize)) != GRIB_SUCCESS) {
+        return;
     }
 
     ECCODES_ASSERT(plsize);
     pl = (long*)grib_context_malloc(c, sizeof(long) * plsize);
     if (!pl) {
-        return GRIB_OUT_OF_MEMORY;
+        err = GRIB_OUT_OF_MEMORY;
+        return;
     }
 
     grib_get_long_array_internal(h, spl, pl, &plsize);
 
     lats_ = (double*)grib_context_malloc_clear(h->context, nv_ * sizeof(double));
     if (!lats_) {
-        return GRIB_OUT_OF_MEMORY;
+        err = GRIB_OUT_OF_MEMORY;
+        return;
     }
     lons_ = (double*)grib_context_malloc_clear(h->context, nv_ * sizeof(double));
     if (!lons_) {
-        return GRIB_OUT_OF_MEMORY;
+        err = GRIB_OUT_OF_MEMORY;
+        return;
     }
 
     while (lon_last < 0) {
@@ -369,7 +371,7 @@ int GaussianReduced::init(grib_handle* h, grib_arguments* args)
     is_global = is_gaussian_global(lat_first, lat_last, lon_first, lon_last, max_pl, lats, angular_precision);
     if (!is_global) {
         /*sub area*/
-        ret = iterate_reduced_gaussian_subarea(h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, numlats);
+        err = iterate_reduced_gaussian_subarea(h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, numlats);
     }
     else {
         /*global*/
@@ -386,8 +388,8 @@ int GaussianReduced::init(grib_handle* h, grib_arguments* args)
                     /*grib_context_log(h->context,GRIB_LOG_ERROR, "Failed to initialise reduced Gaussian iterator (global)");*/
                     /*return GRIB_WRONG_GRID;*/
                     /*Try now as NON-global*/
-                    ret = iterate_reduced_gaussian_subarea(h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, numlats);
-                    if (ret != GRIB_SUCCESS) {
+                    err = iterate_reduced_gaussian_subarea(h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, numlats);
+                    if (err != GRIB_SUCCESS) {
                         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Failed to initialise iterator (global)", ITER);
                     }
                     goto finalise;
@@ -404,8 +406,6 @@ finalise:
     e_ = -1;
     grib_context_free(h->context, lats);
     grib_context_free(h->context, pl);
-
-    return ret;
 }
 
 int GaussianReduced::destroy()

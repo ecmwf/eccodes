@@ -11,9 +11,6 @@
 #include "grib_iterator_class_latlon_reduced.h"
 #include "grib_iterator_factory.h"
 
-eccodes::geo_iterator::LatlonReduced _grib_iterator_latlon_reduced{};
-eccodes::geo_iterator::Iterator* grib_iterator_latlon_reduced = &_grib_iterator_latlon_reduced;
-
 namespace eccodes::geo_iterator
 {
 
@@ -34,11 +31,11 @@ int LatlonReduced::next(double* lat, double* lon, double* val) const
     return 1;
 }
 
-int LatlonReduced::init(grib_handle* h, grib_arguments* args)
+LatlonReduced::LatlonReduced(grib_handle* h, grib_arguments* args, unsigned long flags, int& ret) :
+    Gen(h, args, flags, ret)
 {
-    int ret = GRIB_SUCCESS;
-    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS) {
-        return ret;
+    if (ret != GRIB_SUCCESS) {
+        return;
     }
 
     double laf;
@@ -70,25 +67,25 @@ int LatlonReduced::init(grib_handle* h, grib_arguments* args)
     const char* plac        = args->get_name(h, carg_++);
 
     if ((ret = grib_get_double_internal(h, latofirst, &laf))) {
-        return ret;
+        return;
     }
     if ((ret = grib_get_double_internal(h, longoffirst, &lof))) {
-        return ret;
+        return;
     }
 
     if ((ret = grib_get_double_internal(h, latoflast, &lal))) {
-        return ret;
+        return;
     }
     if ((ret = grib_get_double_internal(h, longoflast, &lol))) {
-        return ret;
+        return;
     }
 
     if ((ret = grib_get_long_internal(h, nlats_name, &nlats))) {
-        return ret;
+        return;
     }
 
     if ((ret = grib_get_double_internal(h, jdirec, &jdirinc))) {
-        return ret;
+        return;
     }
 
     plsize = nlats;
@@ -145,8 +142,6 @@ int LatlonReduced::init(grib_handle* h, grib_arguments* args)
 
     e_ = -1;
     grib_context_free(h->context, pl);
-
-    return ret;
 }
 
 int LatlonReduced::destroy()

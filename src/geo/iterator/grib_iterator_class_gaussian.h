@@ -18,11 +18,7 @@ namespace eccodes::geo_iterator
 class Gaussian : public Regular
 {
 public:
-    Gaussian() = default;
-
-    Iterator* create() const override { return new Gaussian(); }
-
-    int init(grib_handle*, grib_arguments*) override;
+    Gaussian(grib_handle*, grib_arguments*, unsigned long flags, int& err);
 };
 
 }  // namespace eccodes::geo_iterator

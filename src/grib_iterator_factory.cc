@@ -9,6 +9,19 @@
  */
 
 #include <map>
+#include <stdexcept>
+
+#include "eccodes_config.h"
+#if defined(HAVE_ECKIT_GEO)
+    #include "eckit/runtime/Main.h"
+
+    #include "geo/GeoIterator.h"
+
+// eccodes macros conflict with eckit
+    #ifdef ECCODES_ASSERT
+        #undef ECCODES_ASSERT
+    #endif
+#endif
 
 #include "grib_iterator_factory.h"
 #include "accessor/grib_accessor_class_iterator.h"
@@ -41,61 +54,14 @@ static void init_mutex()
 }
 #endif
 
-struct table_entry
-{
-    const char* type;
-    eccodes::geo_iterator::Iterator** iterator;
-};
-
-static const struct table_entry table[] = {
-    { "gaussian", &grib_iterator_gaussian, },
-    { "gaussian_reduced", &grib_iterator_gaussian_reduced, },
-    { "healpix", &grib_iterator_healpix, },
-    { "lambert_azimuthal_equal_area", &grib_iterator_lambert_azimuthal_equal_area, },
-    { "lambert_conformal", &grib_iterator_lambert_conformal, },
-    { "latlon", &grib_iterator_latlon, },
-    { "latlon_reduced", &grib_iterator_latlon_reduced, },
-    { "mercator", &grib_iterator_mercator, },
-    { "polar_stereographic", &grib_iterator_polar_stereographic, },
-    { "space_view", &grib_iterator_space_view, },
-    { "unstructured", &grib_iterator_unstructured, },
-};
-
 eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* error)
 {
-    size_t i = 0, num_table_entries = 0;
-    const char* type = (char*)args->get_name(h, 0);
-    *error = GRIB_NOT_IMPLEMENTED;
-
-    num_table_entries = sizeof(table) / sizeof(table[0]);
-    for (i = 0; i < num_table_entries; i++) {
-        if (strcmp(type, table[i].type) == 0) {
-            eccodes::geo_iterator::Iterator* builder = *(table[i].iterator);
-            eccodes::geo_iterator::Iterator* it = builder->create();
-            it->flags_              = flags;
-
-            GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-            GRIB_MUTEX_LOCK(&mutex);
-            *error = it->init(h, args);
-            GRIB_MUTEX_UNLOCK(&mutex);
-
-            if (*error == GRIB_SUCCESS)
-                return it;
-            grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator factory: Error instantiating iterator %s (%s)",
-                             table[i].type, grib_get_error_message(*error));
-            gribIteratorDelete(it);
-            return NULL;
-        }
-    }
-
-    grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator factory: Unknown type: %s", type);
-
-    return NULL;
+    return eccodes::geo_iterator::Factory::build(h, args, flags, *error);
 }
 
 int grib_get_data(const grib_handle* h, double* lats, double* lons, double* values)
 {
-    int err             = 0;
+    int err                               = 0;
     eccodes::geo_iterator::Iterator* iter = NULL;
     double *lat, *lon, *val;
 
@@ -139,7 +105,7 @@ static double* pointer_to_data(unsigned int i, unsigned int j,
 /* Apply the scanning mode flags which may require data array to be transformed
  * to standard west-to-east (+i) south-to-north (+j) mode.
  * The data array passed in should have 'numPoints' elements.
-*/
+ */
 int transform_iterator_data(grib_context* context, double* data,
                             long iScansNegatively, long jScansPositively,
                             long jPointsAreConsecutive, long alternativeRowScanning,
@@ -187,7 +153,7 @@ int transform_iterator_data(grib_context* context, double* data,
     pData0 = data2;
     for (iy = 0; iy < ny; iy++) {
         long deltaX = 0;
-        pData1 = pointer_to_data(0, iy, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning, nx, ny, data);
+        pData1      = pointer_to_data(0, iy, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning, nx, ny, data);
         if (!pData1) {
             grib_context_free(context, data2);
             return GRIB_GEOCALCULUS_PROBLEM;
@@ -214,36 +180,84 @@ namespace eccodes::geo_iterator
 {
 
 
-static std::map<std::string, eccodes::geo_iterator::FactoryBuilder*> factory_builders;
+struct FactoryInstance
+{
+    using builders_type = std::map<std::string, FactoryBuilder*>;
+    static builders_type& builders() { return instance().builders_; }
+
+private:
+    static FactoryInstance& instance()
+    {
+        static FactoryInstance instance;
+        return instance;
+    }
+
+    FactoryInstance() = default;
+
+    builders_type builders_;
+};
 
 
-Iterator* Factory::build(grib_handle* h, grib_arguments* args, unsigned long flags, int* error)
+struct lock_type
+{
+    lock_type() { GRIB_MUTEX_LOCK(&mutex); }
+    ~lock_type() { GRIB_MUTEX_UNLOCK(&mutex); }
+};
+
+
+Iterator* Factory::build(grib_handle* h, grib_arguments* args, unsigned long flags, int& err)
 {
     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
 
     std::string name = args->get_name(h, 0);
-    *error           = GRIB_NOT_IMPLEMENTED;
+    err              = GRIB_NOT_IMPLEMENTED;
 
-    if (auto j = factory_builders.find(name); j != factory_builders.end()) {
-        auto* it   = j->second->make();
-        it->flags_ = flags;
+#if defined(HAVE_ECKIT_GEO)
+    const int eckit_geo = h->context->eckit_geo;  // check environment variable
+    if (eckit_geo != 0) {
+        struct InitMain
+        {
+            InitMain()
+            {
+                if (!eckit::Main::ready()) {
+                    static char* argv[]{ const_cast<char*>("grib_iterator_new") };
+                    eckit::Main::initialise(1, argv);
+                }
+            }
+        } static const init_main;
 
-        GRIB_MUTEX_LOCK(&mutex);
-        *error = it->init(h, args);
-        GRIB_MUTEX_UNLOCK(&mutex);
-
-        if (*error == GRIB_SUCCESS) {
-            return it;
+        try {
+            return new eccodes::geo::GeoIterator(h, args, flags, err);
         }
+        catch (eckit::geo::Exception& e) {
+            grib_context_log(h->context, GRIB_LOG_FATAL, "grib_iterator_new: geo::Exception thrown (%s)", e.what());
+            return nullptr;
+        }
+        catch (std::exception& e) {
+            grib_context_log(h->context, GRIB_LOG_ERROR, "grib_iterator_new: Exception thrown (%s)", e.what());
+            err = GRIB_GEOCALCULUS_PROBLEM;
+            return nullptr;
+        }
+    }
+#endif
+    Iterator* it = nullptr;
 
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator factory: Error instantiating iterator %s (%s)",
-                         name.c_str(), grib_get_error_message(*error));
+    if (auto j = FactoryInstance::builders().find(name); j != FactoryInstance::builders().end()) {
+        lock_type lock;
+        it         = j->second->make(h, args, flags, err);
+        it->flags_ = flags;
+    }
 
-        GRIB_MUTEX_LOCK(&mutex);
+    if (err == GRIB_SUCCESS) {
+        return it;
+    }
+
+    grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator factory: Error instantiating iterator %s (%s)",
+                     name.c_str(), grib_get_error_message(err));
+
+    {
+        lock_type lock;
         gribIteratorDelete(it);
-        GRIB_MUTEX_UNLOCK(&mutex);
-
-        return nullptr;
     }
 
     grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator factory: Unknown type: %s", name.c_str());
@@ -251,27 +265,14 @@ Iterator* Factory::build(grib_handle* h, grib_arguments* args, unsigned long fla
 }
 
 
-Factory& Factory::instance()
-{
-    static Factory factory;
-    return factory;
-}
-
-
 FactoryBuilder::FactoryBuilder(const std::string& name)
 {
     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
+    lock_type lock;
 
-    if (factory_builders.find(name) != factory_builders.end()) {
-        static auto* factory_context = new grib_context;  // FIXME context from handle
-        grib_context_log(factory_context, GRIB_LOG_ERROR, "Geoiterator factory: duplicate iterator name %s",
-                         name.c_str());
+    if (!FactoryInstance::builders().insert({ name, this }).second) {
+        throw std::invalid_argument("Geoiterator factory: Duplicate name '" + name + "'");
     }
-
-    factory_builders[name] = this;
-
-    GRIB_MUTEX_UNLOCK(&mutex);
 }
 
 

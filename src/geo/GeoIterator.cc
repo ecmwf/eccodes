@@ -20,11 +20,19 @@ namespace eccodes::geo
 {
 
 
-GeoIterator::GeoIterator(grib_handle* h, unsigned long flags) :
-    spec_(new GribSpec(h)), grid_(eckit::geo::GridFactory::build(*spec_)), iter_(grid_->next_iterator()), point_(eckit::geo::PointLonLat{})
+GeoIterator::GeoIterator(grib_handle* h, grib_arguments* args, unsigned long flags, int& err) :
+    Iterator(h, args, flags, err),
+    spec_(new GribSpec(h)),
+    grid_(eckit::geo::GridFactory::build(*spec_)),
+    iter_(grid_->next_iterator()),
+    point_(eckit::geo::PointLonLat{})
 {
-    h_          = h;
-    flags_      = flags;
+    if (err != GRIB_SUCCESS) {
+        return;
+    }
+
+    h_     = h;
+    flags_ = flags;
     ECCODES_ASSERT(h_ != nullptr);
 
     CODES_CHECK(codes_get_size(h_, "values", &nv_), "");
@@ -43,11 +51,8 @@ GeoIterator::GeoIterator(grib_handle* h, unsigned long flags) :
         auto size = nv_;
         CODES_CHECK(codes_get_double_array(h_, "values", data_, &size), "");
     }
-}
 
-int GeoIterator::init(grib_handle*, grib_arguments*)
-{
-    NOTIMP;
+    err = GRIB_SUCCESS;
 }
 
 // The C public API for this does not have a way of returning an error,
@@ -104,13 +109,6 @@ int GeoIterator::destroy()
 bool GeoIterator::has_next() const
 {
     NOTIMP;
-}
-
-
-geo_iterator::Iterator*
-GeoIterator::create() const
-{
-    return new GeoIterator{ h_, flags_ };
 }
 
 

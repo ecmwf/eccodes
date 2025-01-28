@@ -11,9 +11,6 @@
 #include "grib_iterator_class_gaussian.h"
 #include "grib_iterator_factory.h"
 
-eccodes::geo_iterator::Gaussian _grib_iterator_gaussian{};
-eccodes::geo_iterator::Iterator* grib_iterator_gaussian = &_grib_iterator_gaussian;
-
 namespace eccodes::geo_iterator
 {
 
@@ -21,11 +18,11 @@ static FactoryBuilderGeneric<Gaussian> __builder("gaussian");
 
 static void binary_search_gaussian_latitudes(const double array[], unsigned long n, double x, long* j);
 
-int Gaussian::init(grib_handle* h, grib_arguments* args)
+Gaussian::Gaussian(grib_handle* h, grib_arguments* args, unsigned long flags, int& err) :
+    Regular(h, args, flags, err)
 {
-    int ret = GRIB_SUCCESS;
-    if ((ret = Regular::init(h, args)) != GRIB_SUCCESS) {
-        return ret;
+    if (err != GRIB_SUCCESS) {
+        return;
     }
 
     double* lats = nullptr;
@@ -43,17 +40,17 @@ int Gaussian::init(grib_handle* h, grib_arguments* args)
     const char* numtrunc           = args->get_name(h, carg_++);
     const char* s_jScansPositively = args->get_name(h, carg_++);
 
-    if ((ret = grib_get_double_internal(h, latofirst, &laf))) {
-        return ret;
+    if ((err = grib_get_double_internal(h, latofirst, &laf))) {
+        return;
     }
-    if ((ret = grib_get_double_internal(h, latoflast, &lal))) {
-        return ret;
+    if ((err = grib_get_double_internal(h, latoflast, &lal))) {
+        return;
     }
-    if ((ret = grib_get_long_internal(h, numtrunc, &trunc))) {
-        return ret;
+    if ((err = grib_get_long_internal(h, numtrunc, &trunc))) {
+        return;
     }
-    if ((ret = grib_get_long_internal(h, s_jScansPositively, &jScansPositively))) {
-        return ret;
+    if ((err = grib_get_long_internal(h, s_jScansPositively, &jScansPositively))) {
+        return;
     }
 
     start = laf;
@@ -62,11 +59,9 @@ int Gaussian::init(grib_handle* h, grib_arguments* args)
 
     lats = (double*)grib_context_malloc(h->context, size * sizeof(double));
 
-    ret = grib_get_gaussian_latitudes(trunc, lats);
-
-    if (ret != GRIB_SUCCESS) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Error calculating gaussian points: %s", grib_get_error_message(ret));
-        return ret;
+    if ((err = grib_get_gaussian_latitudes(trunc, lats)) != GRIB_SUCCESS) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Error calculating gaussian points: %s", grib_get_error_message(err));
+        return;
     }
     /*
      for(loi=(trunc*2)-1;loi>=0;loi--)
@@ -79,7 +74,8 @@ int Gaussian::init(grib_handle* h, grib_arguments* args)
     binary_search_gaussian_latitudes(lats, size - 1, start, &istart);
     if (istart < 0 || istart >= size) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "Failed to find index for latitude=%g", start);
-        return GRIB_GEOCALCULUS_PROBLEM;
+        err = GRIB_GEOCALCULUS_PROBLEM;
+        return;
     }
 
     if (jScansPositively) {
@@ -101,8 +97,6 @@ int Gaussian::init(grib_handle* h, grib_arguments* args)
     }
 
     grib_context_free(h->context, lats);
-
-    return ret;
 }
 
 #define EPSILON 1e-3

@@ -57,11 +57,11 @@ int Regular::destroy()
     return Gen::destroy();
 }
 
-int Regular::init(grib_handle* h, grib_arguments* args)
+Regular::Regular(grib_handle* h, grib_arguments* args, unsigned long flags, int& err) :
+    Gen(h, args, flags, err)
 {
-    int ret = Gen::init(h, args);
-    if (ret != GRIB_SUCCESS) {
-        return ret;
+    if (err != GRIB_SUCCESS) {
+        return;
     }
 
     long Ni; /* Number of points along a parallel = Nx */
@@ -78,39 +78,42 @@ int Regular::init(grib_handle* h, grib_arguments* args)
     const char* s_Nj        = args->get_name(h, carg_++);
     const char* s_iScansNeg = args->get_name(h, carg_++);
 
-    if ((ret = grib_get_double_internal(h, s_lon1, &lon1))) {
-        return ret;
+    if ((err = grib_get_double_internal(h, s_lon1, &lon1))) {
+        return;
     }
-    if ((ret = grib_get_double_internal(h, "longitudeOfLastGridPointInDegrees", &lon2))) {
-        return ret;
+    if ((err = grib_get_double_internal(h, "longitudeOfLastGridPointInDegrees", &lon2))) {
+        return;
     }
-    if ((ret = grib_get_double_internal(h, s_idir, &idir))) {  // can be GRIB_MISSING_DOUBLE
-        return ret;
+    if ((err = grib_get_double_internal(h, s_idir, &idir))) {  // can be GRIB_MISSING_DOUBLE
+        return;
     }
     idir_coded = idir;
-    if ((ret = grib_get_long_internal(h, s_Ni, &Ni))) {
-        return ret;
+    if ((err = grib_get_long_internal(h, s_Ni, &Ni))) {
+        return;
     }
-    if (grib_is_missing(h, s_Ni, &ret) && ret == GRIB_SUCCESS) {
+    if (grib_is_missing(h, s_Ni, &err) && err == GRIB_SUCCESS) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Key %s cannot be 'missing' for a regular grid!", ITER, s_Ni);
-        return GRIB_WRONG_GRID;
+        err = GRIB_WRONG_GRID;
+        return;
     }
 
-    if ((ret = grib_get_long_internal(h, s_Nj, &Nj))) {
-        return ret;
+    if ((err = grib_get_long_internal(h, s_Nj, &Nj))) {
+        return;
     }
-    if (grib_is_missing(h, s_Nj, &ret) && ret == GRIB_SUCCESS) {
+    if (grib_is_missing(h, s_Nj, &err) && err == GRIB_SUCCESS) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Key %s cannot be 'missing' for a regular grid!", ITER, s_Nj);
-        return GRIB_WRONG_GRID;
+        err = GRIB_WRONG_GRID;
+        return;
     }
 
     if (Ni * Nj != nv_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Ni*Nj!=numberOfDataPoints (%ld*%ld!=%zu)", ITER, Ni, Nj, nv_);
-        return GRIB_WRONG_GRID;
+        err = GRIB_WRONG_GRID;
+        return;
     }
 
-    if ((ret = grib_get_long_internal(h, s_iScansNeg, &iScansNegatively_))) {
-        return ret;
+    if ((err = grib_get_long_internal(h, s_iScansNeg, &iScansNegatively_))) {
+        return;
     }
 
     /* GRIB-801: Careful of case with a single point! Ni==1 */
@@ -168,8 +171,6 @@ int Regular::init(grib_handle* h, grib_arguments* args)
         lon2 = normalise_longitude_in_degrees(lon2);
     }
     lons_[Ni - 1] = lon2;
-
-    return ret;
 }
 
 }  // namespace eccodes::geo_iterator

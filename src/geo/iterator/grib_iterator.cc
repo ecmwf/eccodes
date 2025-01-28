@@ -14,17 +14,6 @@
 
 #include "eccodes_config.h"
 
-#if defined(HAVE_ECKIT_GEO)
-    #include "eckit/runtime/Main.h"
-
-    #include "geo/GeoIterator.h"
-
-    // eccodes macros conflict with eckit
-    #ifdef ECCODES_ASSERT
-        #undef ECCODES_ASSERT
-    #endif
-#endif
-
 #include "grib_iterator.h"
 #include "grib_iterator_factory.h"
 #include "accessor/grib_accessor_class_iterator.h"
@@ -32,10 +21,10 @@
 namespace eccodes::geo_iterator
 {
 
-int Iterator::init(grib_handle* h, grib_arguments* args)
+Iterator::Iterator(grib_handle* h, grib_arguments*, unsigned long flags, int& err)
 {
-    h_ = h;
-    return GRIB_SUCCESS;
+    h_  = h;
+    err = GRIB_SUCCESS;
 }
 
 /* For this one, ALL destroy are called */
@@ -113,40 +102,8 @@ int grib_iterator_destroy(grib_context* c, grib_iterator* i)
 #if defined(HAVE_GEOGRAPHY)
 grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int* error)
 {
-    auto* i = static_cast<grib_iterator*>(grib_context_malloc_clear(ch->context, sizeof(grib_iterator)));
-
-    #if defined(HAVE_ECKIT_GEO)
-    const int eckit_geo = ch->context->eckit_geo;  // check environment variable
-    if (eckit_geo != 0) {
-        struct InitMain
-        {
-            InitMain()
-            {
-                if (!eckit::Main::ready()) {
-                    static char* argv[]{ const_cast<char*>("grib_iterator_new") };
-                    eckit::Main::initialise(1, argv);
-                }
-            }
-        } static const init_main;
-
-        try {
-            i->iterator = new eccodes::geo::GeoIterator(const_cast<grib_handle*>(ch), flags);
-        }
-        catch (eckit::geo::Exception& e) {
-            grib_context_log(ch->context, GRIB_LOG_FATAL, "grib_iterator_new: geo::Exception thrown (%s)", e.what());
-            return nullptr;
-        }
-        catch (std::exception& e) {
-            grib_context_log(ch->context, GRIB_LOG_ERROR, "grib_iterator_new: Exception thrown (%s)", e.what());
-            *error = GRIB_GEOCALCULUS_PROBLEM;
-            return nullptr;
-        }
-    }
-    else
-    #endif
-    {
-        i->iterator = eccodes::geo_iterator::gribIteratorNew(ch, flags, error);
-    }
+    auto* i     = static_cast<grib_iterator*>(grib_context_malloc_clear(ch->context, sizeof(grib_iterator)));
+    i->iterator = eccodes::geo_iterator::gribIteratorNew(ch, flags, error);
 
     if (!i->iterator) {
         grib_context_free(ch->context, i);

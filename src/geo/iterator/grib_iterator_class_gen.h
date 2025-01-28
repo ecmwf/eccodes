@@ -18,7 +18,6 @@ namespace eccodes::geo_iterator
 class Gen : public Iterator
 {
 public:
-    int init(grib_handle*, grib_arguments*) override;
     int next(double*, double*, double*) const override;
     int previous(double*, double*, double*) const override;
     int reset() override;
@@ -26,7 +25,7 @@ public:
     bool has_next() const override;
 
 protected:
-    Gen() = default;
+    Gen(grib_handle*, grib_arguments*, unsigned long flags, int& err);
 
     int carg_     = 0;
     double* lats_ = nullptr;

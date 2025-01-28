@@ -11,9 +11,6 @@
 #include "grib_iterator_class_space_view.h"
 #include "grib_iterator_factory.h"
 
-eccodes::geo_iterator::SpaceView _grib_iterator_space_view{};
-eccodes::geo_iterator::Iterator* grib_iterator_space_view = &_grib_iterator_space_view;
-
 namespace eccodes::geo_iterator
 {
 
@@ -79,11 +76,11 @@ int SpaceView::next(double* lat, double* lon, double* val) const
 #define RAD2DEG 57.29577951308232087684 /* 180 over pi */
 #define DEG2RAD 0.01745329251994329576  /* pi over 180 */
 
-int SpaceView::init(grib_handle* h, grib_arguments* args)
+SpaceView::SpaceView(grib_handle* h, grib_arguments* args, unsigned long flags, int& err) :
+    Gen(h, args, flags, err)
 {
-    int ret = GRIB_SUCCESS;
-    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS) {
-        return ret;
+    if (err != GRIB_SUCCESS) {
+        return;
     }
 
     /* REFERENCE:
@@ -168,82 +165,84 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
     const char* sjPointsAreConsecutive  = args->get_name(h, carg_++);
     const char* sAlternativeRowScanning = args->get_name(h, carg_++);
 
-    if ((ret = grib_get_long_internal(h, snx, &nx)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_long_internal(h, snx, &nx)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_long_internal(h, sny, &ny)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_long_internal(h, sny, &ny)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_long_internal(h, sEarthIsOblate, &earthIsOblate)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_long_internal(h, sEarthIsOblate, &earthIsOblate)) != GRIB_SUCCESS) {
+        return;
     }
 
     if (earthIsOblate) {
-        if ((ret = grib_get_double_internal(h, sMajorAxisInMetres, &major)) != GRIB_SUCCESS) {
-            return ret;
+        if ((err = grib_get_double_internal(h, sMajorAxisInMetres, &major)) != GRIB_SUCCESS) {
+            return;
         }
-        if ((ret = grib_get_double_internal(h, sMinorAxisInMetres, &minor)) != GRIB_SUCCESS) {
-            return ret;
+        if ((err = grib_get_double_internal(h, sMinorAxisInMetres, &minor)) != GRIB_SUCCESS) {
+            return;
         }
     }
     else {
-        if ((ret = grib_get_double_internal(h, sradius, &radius)) != GRIB_SUCCESS) {
-            return ret;
+        if ((err = grib_get_double_internal(h, sradius, &radius)) != GRIB_SUCCESS) {
+            return;
         }
     }
 
     if (nv_ != nx * ny) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, nv_, nx, ny);
-        return GRIB_WRONG_GRID;
+        err = GRIB_WRONG_GRID;
+        return;
     }
-    if ((ret = grib_get_double_internal(h, sLatOfSubSatellitePointInDegrees, &latOfSubSatellitePointInDegrees)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_double_internal(h, sLatOfSubSatellitePointInDegrees, &latOfSubSatellitePointInDegrees)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_double_internal(h, sLonOfSubSatellitePointInDegrees, &lonOfSubSatellitePointInDegrees)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_double_internal(h, sLonOfSubSatellitePointInDegrees, &lonOfSubSatellitePointInDegrees)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_double_internal(h, sDx, &dx)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_double_internal(h, sDx, &dx)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_double_internal(h, sDy, &dy)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_double_internal(h, sDy, &dy)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_double_internal(h, sXpInGridLengths, &xpInGridLengths)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_double_internal(h, sXpInGridLengths, &xpInGridLengths)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_double_internal(h, sYpInGridLengths, &ypInGridLengths)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_double_internal(h, sYpInGridLengths, &ypInGridLengths)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_double_internal(h, sOrientationInDegrees, &orientationInDegrees)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_double_internal(h, sOrientationInDegrees, &orientationInDegrees)) != GRIB_SUCCESS) {
+        return;
     }
 
     /* Orthographic not supported. This happens when Nr (camera altitude) is missing */
-    if (grib_is_missing(h, "Nr", &ret)) {
+    if (grib_is_missing(h, "Nr", &err)) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Orthographic view (Nr missing) not supported", ITER);
-        return GRIB_GEOCALCULUS_PROBLEM;
+        err = GRIB_GEOCALCULUS_PROBLEM;
+        return;
     }
-    if ((ret = grib_get_double_internal(h, sNrInRadiusOfEarthScaled, &nrInRadiusOfEarth)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_double_internal(h, sNrInRadiusOfEarthScaled, &nrInRadiusOfEarth)) != GRIB_SUCCESS) {
+        return;
     }
 
-    if ((ret = grib_get_long_internal(h, sXo, &Xo)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_long_internal(h, sXo, &Xo)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_long_internal(h, sYo, &Yo)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_long_internal(h, sYo, &Yo)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_long_internal(h, sjPointsAreConsecutive, &jPointsAreConsecutive)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_long_internal(h, sjPointsAreConsecutive, &jPointsAreConsecutive)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_long_internal(h, sjScansPositively, &jScansPositively)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_long_internal(h, sjScansPositively, &jScansPositively)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_long_internal(h, siScansNegatively, &iScansNegatively)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_long_internal(h, siScansNegatively, &iScansNegatively)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_long_internal(h, sAlternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_long_internal(h, sAlternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS) {
+        return;
     }
 
     if (earthIsOblate) {
@@ -256,7 +255,8 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
 
     if (nrInRadiusOfEarth == 0) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Key %s must be greater than zero", ITER, sNrInRadiusOfEarthScaled);
-        return GRIB_GEOCALCULUS_PROBLEM;
+        err = GRIB_GEOCALCULUS_PROBLEM;
+        return;
     }
 
     angular_size = 2.0 * asin(1.0 / nrInRadiusOfEarth);
@@ -268,7 +268,8 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
         grib_context_log(h->context, GRIB_LOG_ERROR,
                          "%s: Key %s must be 0 (satellite must be located in the equator plane)",
                          ITER, sLatOfSubSatellitePointInDegrees);
-        return GRIB_GEOCALCULUS_PROBLEM;
+        err = GRIB_GEOCALCULUS_PROBLEM;
+        return;
     }
 
     /*orient_angle = orientationInDegrees;*/
@@ -282,7 +283,8 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
     /* adjustBadlyEncodedEcmwfGribs(h, &nx, &ny, &dx, &dy, &xp, &yp); */
     if (dx == 0 || dy == 0) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Keys %s and %s must be greater than zero", ITER, sDx, sDy);
-        return GRIB_GEOCALCULUS_PROBLEM;
+        err = GRIB_GEOCALCULUS_PROBLEM;
+        return;
     }
     rx = angular_size / dx;
     ry = (r_pol / r_eq) * angular_size / dy;
@@ -290,12 +292,14 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
     lats_ = (double*)grib_context_malloc(h->context, array_size);
     if (!lats_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, array_size);
-        return GRIB_OUT_OF_MEMORY;
+        err = GRIB_OUT_OF_MEMORY;
+        return;
     }
     lons_ = (double*)grib_context_malloc(h->context, array_size);
     if (!lons_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, array_size);
-        return GRIB_OUT_OF_MEMORY;
+        err = GRIB_OUT_OF_MEMORY;
+        return;
     }
     lats = lats_;
     lons = lons_;
@@ -320,12 +324,14 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
     s_x = (double*)grib_context_malloc(h->context, nx * sizeof(double));
     if (!s_x) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nx * sizeof(double));
-        return GRIB_OUT_OF_MEMORY;
+        err = GRIB_OUT_OF_MEMORY;
+        return;
     }
     c_x = (double*)grib_context_malloc(h->context, nx * sizeof(double));
     if (!c_x) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nx * sizeof(double));
-        return GRIB_OUT_OF_MEMORY;
+        err = GRIB_OUT_OF_MEMORY;
+        return;
     }
 
     for (ix = 0; ix < nx; ix++) {
@@ -375,8 +381,6 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
     grib_context_free(h->context, s_x);
     grib_context_free(h->context, c_x);
     e_ = -1;
-
-    return ret;
 }
 
 int SpaceView::destroy()

@@ -11,9 +11,6 @@
 #include "grib_iterator_class_mercator.h"
 #include "grib_iterator_factory.h"
 
-eccodes::geo_iterator::Mercator _grib_iterator_mercator{};
-eccodes::geo_iterator::Iterator* grib_iterator_mercator = &_grib_iterator_mercator;
-
 namespace eccodes::geo_iterator
 {
 
@@ -187,11 +184,11 @@ int Mercator::init_mercator(grib_handle* h,
     return GRIB_SUCCESS;
 }
 
-int Mercator::init(grib_handle* h, grib_arguments* args)
+Mercator::Mercator(grib_handle* h, grib_arguments* args, unsigned long flags, int& err) :
+    Gen(h, args, flags, err)
 {
-    int err = GRIB_SUCCESS;
-    if ((err = Gen::init(h, args)) != GRIB_SUCCESS) {
-        return err;
+    if (err != GRIB_SUCCESS) {
+        return;
     }
 
     long ni;
@@ -236,68 +233,69 @@ int Mercator::init(grib_handle* h, grib_arguments* args)
     const char* sAlternativeRowScanning = args->get_name(h, carg_++);
 
     if ((err = grib_get_long_internal(h, sNi, &ni)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_long_internal(h, sNj, &nj)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
 
     if (grib_is_earth_oblate(h)) {
         if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) {
-            return err;
+            return;
         }
         if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) {
-            return err;
+            return;
         }
     }
     else {
         if ((err = grib_get_double_internal(h, sRadius, &radius)) != GRIB_SUCCESS) {
-            return err;
+            return;
         }
         earthMinorAxisInMetres = earthMajorAxisInMetres = radius;
     }
 
     if (nv_ != ni * nj) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, nv_, ni, nj);
-        return GRIB_WRONG_GRID;
+        err = GRIB_WRONG_GRID;
+        return;
     }
 
     if ((err = grib_get_double_internal(h, sLaDInDegrees, &LaDInDegrees)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_double_internal(h, sLatFirstInDegrees, &latFirstInDegrees)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_double_internal(h, sLonFirstInDegrees, &lonFirstInDegrees)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_double_internal(h, sLatLastInDegrees, &latLastInDegrees)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_double_internal(h, sLonLastInDegrees, &lonLastInDegrees)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_double_internal(h, sOrientationInDegrees, &orientationInDegrees)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
 
     if ((err = grib_get_double_internal(h, sDi, &DiInMetres)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_double_internal(h, sDj, &DjInMetres)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_long_internal(h, sjPointsAreConsecutive, &jPointsAreConsecutive)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_long_internal(h, sjScansPositively, &jScansPositively)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_long_internal(h, siScansNegatively, &iScansNegatively)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_long_internal(h, sAlternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
 
     latFirstInRadians    = latFirstInDegrees * DEG2RAD;
@@ -307,13 +305,12 @@ int Mercator::init(grib_handle* h, grib_arguments* args)
     LaDInRadians         = LaDInDegrees * DEG2RAD;
     orientationInRadians = orientationInDegrees * DEG2RAD;
 
-    err = init_mercator(h, nv_, ni, nj,
-                        DiInMetres, DjInMetres, earthMinorAxisInMetres, earthMajorAxisInMetres,
-                        latFirstInRadians, lonFirstInRadians,
-                        latLastInRadians, lonLastInRadians,
-                        LaDInRadians, orientationInRadians);
-    if (err) {
-        return err;
+    if ((err = init_mercator(h, nv_, ni, nj,
+                             DiInMetres, DjInMetres, earthMinorAxisInMetres, earthMajorAxisInMetres,
+                             latFirstInRadians, lonFirstInRadians,
+                             latLastInRadians, lonLastInRadians,
+                             LaDInRadians, orientationInRadians))) {
+        return;
     }
 
     e_ = -1;
@@ -322,7 +319,6 @@ int Mercator::init(grib_handle* h, grib_arguments* args)
     err = transform_iterator_data(h->context, data_,
                                   iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning,
                                   nv_, ni, nj);
-    return err;
 }
 
 int Mercator::next(double* lat, double* lon, double* val) const

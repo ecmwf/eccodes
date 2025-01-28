@@ -17,9 +17,6 @@
 #include "grib_iterator_class_healpix.h"
 #include "grib_iterator_factory.h"
 
-eccodes::geo_iterator::Healpix _grib_iterator_healpix;
-eccodes::geo_iterator::Iterator* grib_iterator_healpix = &_grib_iterator_healpix;
-
 namespace eccodes::geo_iterator
 {
 
@@ -266,11 +263,11 @@ int Healpix::iterate_healpix(long N)
     return GRIB_SUCCESS;
 }
 
-int Healpix::init(grib_handle* h, grib_arguments* args)
+Healpix::Healpix(grib_handle* h, grib_arguments* args, unsigned long flags, int& err) :
+    Gen(h, args, flags, err)
 {
-    int err = GRIB_SUCCESS;
-    if ((err = Gen::init(h, args)) != GRIB_SUCCESS) {
-        return err;
+    if (err != GRIB_SUCCESS) {
+        return;
     }
 
     const char* snside = args->get_name(h, carg_++);
@@ -278,11 +275,12 @@ int Healpix::init(grib_handle* h, grib_arguments* args)
 
     long N = 0;
     if ((err = grib_get_long_internal(h, snside, &N)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if (N <= 0) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Key %s must be greater than zero", ITER, snside);
-        return GRIB_WRONG_GRID;
+        err = GRIB_WRONG_GRID;
+        return;
     }
 
     char ordering[32] = {
@@ -290,13 +288,14 @@ int Healpix::init(grib_handle* h, grib_arguments* args)
     };
     size_t slen = sizeof(ordering);
     if ((err = grib_get_string_internal(h, sorder, ordering, &slen)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
 
     nested_ = STR_EQUAL(ordering, "nested");
     if (!STR_EQUAL(ordering, "ring") && !nested_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only orderingConvention=(ring|nested) are supported", ITER);
-        return GRIB_GEOCALCULUS_PROBLEM;
+        err = GRIB_GEOCALCULUS_PROBLEM;
+        return;
     }
     // if (nested && N == 1) {
     //     grib_context_log(h->context, GRIB_LOG_ERROR, "%s: For orderingConvention=nested, N must be greater than 1", ITER);
@@ -305,35 +304,38 @@ int Healpix::init(grib_handle* h, grib_arguments* args)
 
     if (grib_is_earth_oblate(h)) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only spherical earth is supported", ITER);
-        return GRIB_WRONG_GRID;
+        err = GRIB_WRONG_GRID;
+        return;
     }
 
     if (nv_ != 12 * N * N) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=12x%ldx%ld)",
                          ITER, nv_, N, N);
-        return GRIB_WRONG_GRID;
+        err = GRIB_WRONG_GRID;
+        return;
     }
 
     lats_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
     if (lats_ == nullptr) {
-        return GRIB_OUT_OF_MEMORY;
+        err = GRIB_OUT_OF_MEMORY;
+        return;
     }
 
     lons_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
     if (lons_ == nullptr) {
-        return GRIB_OUT_OF_MEMORY;
+        err = GRIB_OUT_OF_MEMORY;
+        return;
     }
 
     try {
         err = iterate_healpix(N);
     }
     catch (...) {
-        return GRIB_INTERNAL_ERROR;
+        err = GRIB_INTERNAL_ERROR;
+        return;
     }
 
     e_ = -1;
-
-    return err;
 }
 
 int Healpix::next(double* lat, double* lon, double* val) const

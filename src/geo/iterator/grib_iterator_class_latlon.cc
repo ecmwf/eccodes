@@ -11,9 +11,6 @@
 #include "grib_iterator_class_latlon.h"
 #include "grib_iterator_factory.h"
 
-eccodes::geo_iterator::Latlon _grib_iterator_latlon{};
-eccodes::geo_iterator::Iterator* grib_iterator_latlon = &_grib_iterator_latlon;
-
 namespace eccodes::geo_iterator
 {
 
@@ -70,11 +67,11 @@ int Latlon::next(double* lat, double* lon, double* val) const
     return 1;
 }
 
-int Latlon::init(grib_handle* h, grib_arguments* args)
+Latlon::Latlon(grib_handle* h, grib_arguments* args, unsigned long flags, int& err) :
+    Regular(h, args, flags, err)
 {
-    int err = 0;
-    if ((err = Regular::init(h, args)) != GRIB_SUCCESS) {
-        return err;
+    if (err != GRIB_SUCCESS) {
+        return;
     }
 
     double jdir;
@@ -101,37 +98,37 @@ int Latlon::init(grib_handle* h, grib_arguments* args)
     disableUnrotate_ = 0; /* unrotate enabled by default */
 
     if ((err = grib_get_long(h, s_isRotatedGrid, &isRotated_))) {
-        return err;
+        return;
     }
     if (isRotated_) {
         if ((err = grib_get_double_internal(h, s_angleOfRotation, &angleOfRotation_))) {
-            return err;
+            return;
         }
         if ((err = grib_get_double_internal(h, s_latSouthernPole, &southPoleLat_))) {
-            return err;
+            return;
         }
         if ((err = grib_get_double_internal(h, s_lonSouthernPole, &southPoleLon_))) {
-            return err;
+            return;
         }
     }
 
     if ((err = grib_get_double_internal(h, s_lat1, &lat1))) {
-        return err;
+        return;
     }
     if ((err = grib_get_double_internal(h, "latitudeLastInDegrees", &lat2))) {
-        return err;
+        return;
     }
     if ((err = grib_get_double_internal(h, s_jdir, &jdir))) {  // can be GRIB_MISSING_DOUBLE
-        return err;
+        return;
     }
     if ((err = grib_get_long_internal(h, s_jScansPos, &jScansPositively))) {
-        return err;
+        return;
     }
     if ((err = grib_get_long_internal(h, s_jPtsConsec, &jPointsAreConsecutive_))) {
-        return err;
+        return;
     }
     if ((err = grib_get_long(h, "iteratorDisableUnrotate", &disableUnrotate_))) {
-        return err;
+        return;
     }
 
     /* ECC-984: If jDirectionIncrement is missing, then we cannot use it (See jDirectionIncrementGiven) */
@@ -161,7 +158,8 @@ int Latlon::init(grib_handle* h, grib_arguments* args)
         grib_context_log(h->context, GRIB_LOG_ERROR,
                          "Lat/Lon Geoiterator: First and last latitudes are inconsistent with scanning order: lat1=%g, lat2=%g jScansPositively=%ld",
                          lat1, lat2, jScansPositively);
-        return GRIB_WRONG_GRID;
+        err = GRIB_WRONG_GRID;
+        return;
     }
 
     for (lai = 0; lai < Nj_; lai++) {
@@ -174,7 +172,6 @@ int Latlon::init(grib_handle* h, grib_arguments* args)
     lats_[Nj_ - 1] = lat2;
 
     e_ = -1;
-    return err;
 }
 
 }  // namespace eccodes::geo_iterator

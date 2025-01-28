@@ -24,18 +24,16 @@ class Iterator
 public:
     virtual ~Iterator() = default;
 
-    virtual int init(grib_handle*, grib_arguments*)       = 0;
     virtual int next(double*, double*, double*) const     = 0;
     virtual int previous(double*, double*, double*) const = 0;
     virtual int reset()                                   = 0;
     virtual int destroy()                                 = 0;
     virtual bool has_next() const                         = 0;
-    virtual Iterator* create() const                      = 0;
 
     unsigned long flags_ = 0;
 
 protected:
-    Iterator() = default;
+    Iterator(grib_handle*, grib_arguments*, unsigned long flags, int& err);
 
     grib_handle* h_ = nullptr;
     double* data_   = nullptr;  // data values

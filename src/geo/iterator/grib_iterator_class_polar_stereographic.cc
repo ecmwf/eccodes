@@ -11,9 +11,6 @@
 #include "grib_iterator_class_polar_stereographic.h"
 #include "grib_iterator_factory.h"
 
-eccodes::geo_iterator::PolarStereographic _grib_iterator_polar_stereographic{};
-eccodes::geo_iterator::Iterator* grib_iterator_polar_stereographic = &_grib_iterator_polar_stereographic;
-
 namespace eccodes::geo_iterator
 {
 
@@ -54,11 +51,11 @@ struct proj_data_t
 #define PI_OVER_2 1.5707963267948966      /* half pi */
 #define EPSILON   1.0e-10
 
-int PolarStereographic::init(grib_handle* h, grib_arguments* args)
+PolarStereographic::PolarStereographic(grib_handle* h, grib_arguments* args, unsigned long flags, int& err) :
+    Gen(h, args, flags, err)
 {
-    int ret = GRIB_SUCCESS;
-    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS) {
-        return ret;
+    if (err != GRIB_SUCCESS) {
+        return;
     }
 
     double* lats = nullptr;
@@ -114,55 +111,57 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
 
     if (grib_is_earth_oblate(h)) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only supported for spherical earth.", ITER);
-        return GRIB_GEOCALCULUS_PROBLEM;
+        err = GRIB_GEOCALCULUS_PROBLEM;
+        return;
     }
 
-    if ((ret = grib_get_double_internal(h, s_radius, &radius)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_double_internal(h, s_radius, &radius)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_long_internal(h, s_nx, &nx)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_long_internal(h, s_nx, &nx)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_long_internal(h, s_ny, &ny)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_long_internal(h, s_ny, &ny)) != GRIB_SUCCESS) {
+        return;
     }
 
     if (nv_ != nx * ny) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, nv_, nx, ny);
-        return GRIB_WRONG_GRID;
+        err = GRIB_WRONG_GRID;
+        return;
     }
-    if ((ret = grib_get_double_internal(h, s_latFirstInDegrees, &latFirstInDegrees)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_double_internal(h, s_latFirstInDegrees, &latFirstInDegrees)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_double_internal(h, s_lonFirstInDegrees, &lonFirstInDegrees)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_double_internal(h, s_lonFirstInDegrees, &lonFirstInDegrees)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_long_internal(h, s_southPoleOnPlane, &southPoleOnPlane)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_long_internal(h, s_southPoleOnPlane, &southPoleOnPlane)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_double_internal(h, s_centralLongitude, &centralLongitudeInDegrees)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_double_internal(h, s_centralLongitude, &centralLongitudeInDegrees)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_double_internal(h, s_centralLatitude, &centralLatitudeInDegrees)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_double_internal(h, s_centralLatitude, &centralLatitudeInDegrees)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_double_internal(h, s_Dx, &Dx)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_double_internal(h, s_Dx, &Dx)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_double_internal(h, s_Dy, &Dy)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_double_internal(h, s_Dy, &Dy)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_long_internal(h, s_jPointsAreConsecutive, &jPointsAreConsecutive)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_long_internal(h, s_jPointsAreConsecutive, &jPointsAreConsecutive)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_long_internal(h, s_jScansPositively, &jScansPositively)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_long_internal(h, s_jScansPositively, &jScansPositively)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_long_internal(h, s_iScansNegatively, &iScansNegatively)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_long_internal(h, s_iScansNegatively, &iScansNegatively)) != GRIB_SUCCESS) {
+        return;
     }
-    if ((ret = grib_get_long_internal(h, s_alternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS) {
-        return ret;
+    if ((err = grib_get_long_internal(h, s_alternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS) {
+        return;
     }
 
     centralLongitude = centralLongitudeInDegrees * DEG2RAD;
@@ -226,12 +225,14 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
     lats_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
     if (!lats_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv_ * sizeof(double));
-        return GRIB_OUT_OF_MEMORY;
+        err = GRIB_OUT_OF_MEMORY;
+        return;
     }
     lons_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
     if (!lons_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv_ * sizeof(double));
-        return GRIB_OUT_OF_MEMORY;
+        err = GRIB_OUT_OF_MEMORY;
+        return;
     }
     lats = lats_;
     lons = lons_;
@@ -340,11 +341,9 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
     e_ = -1;
 
     /* Apply the scanning mode flags which may require data array to be transformed */
-    ret = transform_iterator_data(h->context, data_,
+    err = transform_iterator_data(h->context, data_,
                                   iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning,
                                   nv_, nx, ny);
-
-    return ret;
 }
 
 int PolarStereographic::destroy()

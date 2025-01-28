@@ -24,7 +24,7 @@ namespace eccodes::geo
 class GeoIterator : public geo_iterator::Iterator
 {
 public:
-    explicit GeoIterator(grib_handle*, unsigned long flags);
+    GeoIterator(grib_handle*, grib_arguments*, unsigned long flags, int& err);
 
 private:
     std::unique_ptr<const eckit::geo::Spec> spec_;
@@ -33,13 +33,11 @@ private:
     mutable eckit::geo::Grid::NextIterator iter_;
     mutable eckit::geo::Point point_;
 
-    int init(grib_handle*, grib_arguments*) override;
     int next(double* lat, double* lon, double* val) const override;
     int previous(double* lat, double* lon, double* val) const override;
     int reset() override;
     int destroy() override;
     bool has_next() const override;
-    geo_iterator::Iterator* create() const override;
 };
 
 }  // namespace eccodes::geo

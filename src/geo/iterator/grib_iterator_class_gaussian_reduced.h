@@ -18,11 +18,8 @@ namespace eccodes::geo_iterator
 class GaussianReduced : public Gen
 {
 public:
-    GaussianReduced() = default;
+    GaussianReduced(grib_handle*, grib_arguments*, unsigned long flags, int& err);
 
-    Iterator* create() const override { return new GaussianReduced(); }
-
-    int init(grib_handle*, grib_arguments*) override;
     int next(double*, double*, double*) const override;
     int destroy() override;
 

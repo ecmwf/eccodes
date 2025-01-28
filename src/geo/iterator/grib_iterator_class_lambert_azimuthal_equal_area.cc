@@ -11,9 +11,6 @@
 #include "grib_iterator_class_lambert_azimuthal_equal_area.h"
 #include "grib_iterator_factory.h"
 
-eccodes::geo_iterator::LambertAzimuthalEqualArea _grib_iterator_lambert_azimuthal_equal_area{};
-eccodes::geo_iterator::Iterator* grib_iterator_lambert_azimuthal_equal_area = &_grib_iterator_lambert_azimuthal_equal_area;
-
 namespace eccodes::geo_iterator
 {
 
@@ -386,11 +383,11 @@ int LambertAzimuthalEqualArea::init_sphere(grib_handle* h,
     return GRIB_SUCCESS;
 }
 
-int LambertAzimuthalEqualArea::init(grib_handle* h, grib_arguments* args)
+LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(grib_handle* h, grib_arguments* args, unsigned long flags, int& err) :
+    Gen(h, args, flags, err)
 {
-    int err = 0;
-    if ((err = Gen::init(h, args)) != GRIB_SUCCESS) {
-        return err;
+    if (err != GRIB_SUCCESS) {
+        return;
     }
 
     int is_oblate = 0;
@@ -432,58 +429,59 @@ int LambertAzimuthalEqualArea::init(grib_handle* h, grib_arguments* args)
     is_oblate = grib_is_earth_oblate(h);
     if (is_oblate) {
         if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) {
-            return err;
+            return;
         }
         if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) {
-            return err;
+            return;
         }
     }
     else {
         if ((err = grib_get_double_internal(h, sradius, &radius)) != GRIB_SUCCESS) {
-            return err;
+            return;
         }
     }
 
     if ((err = grib_get_long_internal(h, snx, &nx)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_long_internal(h, sny, &ny)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
 
     if (nv_ != nx * ny) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, nv_, nx, ny);
-        return GRIB_WRONG_GRID;
+        err = GRIB_WRONG_GRID;
+        return;
     }
     if ((err = grib_get_double_internal(h, slatFirstInDegrees, &latFirstInDegrees)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_double_internal(h, slonFirstInDegrees, &lonFirstInDegrees)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_double_internal(h, sstandardParallel, &standardParallelInDegrees)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_double_internal(h, scentralLongitude, &centralLongitudeInDegrees)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_double_internal(h, sDx, &Dx)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_double_internal(h, sDy, &Dy)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_long_internal(h, sjPointsAreConsecutive, &jPointsAreConsecutive)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_long_internal(h, sjScansPositively, &jScansPositively)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_long_internal(h, siScansNegatively, &iScansNegatively)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
     if ((err = grib_get_long_internal(h, salternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
 
     latFirstInRadians         = latFirstInDegrees * d2r;
@@ -506,12 +504,10 @@ int LambertAzimuthalEqualArea::init(grib_handle* h, grib_arguments* args)
                           iScansNegatively, jScansPositively, jPointsAreConsecutive);
     }
     if (err) {
-        return err;
+        return;
     }
 
     e_ = -1;
-
-    return GRIB_SUCCESS;
 }
 
 int LambertAzimuthalEqualArea::destroy()

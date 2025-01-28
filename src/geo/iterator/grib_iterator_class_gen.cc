@@ -13,14 +13,14 @@
 namespace eccodes::geo_iterator
 {
 
-int Gen::init(grib_handle* h, grib_arguments* args)
+Gen::Gen(grib_handle* h, grib_arguments* args, unsigned long flags, int& err) :
+    Iterator(h, args, flags, err)
 {
-    int err = GRIB_SUCCESS;
-    lats_ = lons_ = data_ = nullptr;
-
-    if ((err = Iterator::init(h, args)) != GRIB_SUCCESS) {
-        return err;
+    if (err == GRIB_SUCCESS) {
+        return;
     }
+
+    lats_ = lons_ = data_ = nullptr;
 
     // Skip the 1st argument which is the name of the iterator itself
     // e.g., latlon, gaussian_reduced etc
@@ -33,12 +33,12 @@ int Gen::init(grib_handle* h, grib_arguments* args)
 
     size_t dli = 0;
     if ((err = grib_get_size(h, s_rawData, &dli)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
 
     long numberOfPoints = 0;
     if ((err = grib_get_long_internal(h, s_numPoints, &numberOfPoints)) != GRIB_SUCCESS) {
-        return err;
+        return;
     }
 
     // See ECC-1792. If we don't want to decode the Data Section, we should not do a check
@@ -52,14 +52,16 @@ int Gen::init(grib_handle* h, grib_arguments* args)
         if (numberOfPoints != dli) {
             grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator: %s != size(%s) (%ld!=%ld)",
                              s_numPoints, s_rawData, numberOfPoints, dli);
-            return GRIB_WRONG_GRID;
+            err = GRIB_WRONG_GRID;
+            return;
         }
         nv_ = dli;
     }
 
     if (nv_ == 0) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator: size(%s) is %ld", s_rawData, dli);
-        return GRIB_WRONG_GRID;
+        err = GRIB_WRONG_GRID;
+        return;
     }
 
     if ((flags_ & GRIB_GEOITERATOR_NO_VALUES) == 0) {
@@ -69,12 +71,11 @@ int Gen::init(grib_handle* h, grib_arguments* args)
         data_ = (double*)grib_context_malloc(h->context, (nv_) * sizeof(double));
 
         if ((err = grib_get_double_array_internal(h, s_rawData, data_, &(nv_)))) {
-            return err;
+            return;
         }
     }
-    e_ = -1;
 
-    return err;
+    e_ = -1;
 }
 
 int Gen::reset()

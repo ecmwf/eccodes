@@ -18,11 +18,8 @@ namespace eccodes::geo_iterator
 class LatlonReduced : public Gen
 {
 public:
-    LatlonReduced() = default;
+    LatlonReduced(grib_handle*, grib_arguments*, unsigned long flags, int& err);
 
-    Iterator* create() const override { return new LatlonReduced(); }
-
-    int init(grib_handle*, grib_arguments*) override;
     int next(double*, double*, double*) const override;
     int destroy() override;
 };
