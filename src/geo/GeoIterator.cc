@@ -21,7 +21,7 @@ namespace eccodes::geo
 
 
 GeoIterator::GeoIterator(grib_handle* h, unsigned long flags) :
-    spec_(new GribSpec(h)), grid_(eckit::geo::GridFactory::build(*spec_)), iter_(grid_->next_iterator())
+    spec_(new GribSpec(h)), grid_(eckit::geo::GridFactory::build(*spec_)), iter_(grid_->next_iterator()), point_(eckit::geo::PointLonLat{})
 {
     h_          = h;
     class_name_ = "geo_iterator";
@@ -56,9 +56,8 @@ int GeoIterator::init(grib_handle*, grib_arguments*)
 int GeoIterator::next(double* lat, double* lon, double* val) const
 {
     try {
-        eckit::geo::Point p = eckit::geo::PointLonLat{};
-        if (iter_.next(p)) {
-            const auto& q = std::get<eckit::geo::PointLonLat>(p);
+        if (iter_.next(point_)) {
+            const auto& q = std::get<eckit::geo::PointLonLat>(point_);
 
             *lat = q.lat;
             *lon = q.lon;
