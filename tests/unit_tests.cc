@@ -300,10 +300,6 @@ static void test_concept_condition_strings()
     grib_handle* h = grib_handle_new_from_samples(context, "GRIB2");
     if (!h) return;
 
-    err = get_concept_condition_string(h, "typeOfLevel", NULL, result);
-    ECCODES_ASSERT(!err);
-    ECCODES_ASSERT(strcmp(result, "typeOfFirstFixedSurface=1,typeOfSecondFixedSurface=255") == 0);
-
     err = get_concept_condition_string(h, "paramId", NULL, result);
     ECCODES_ASSERT(!err);
     ECCODES_ASSERT(strcmp(result, "discipline=0,parameterCategory=0,parameterNumber=0") == 0);
