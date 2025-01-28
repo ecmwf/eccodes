@@ -12,7 +12,6 @@
 #include "geo/GeoIterator.h"
 
 #include "eckit/geo/Exceptions.h"
-#include "eckit/geo/NextIterator.h"
 
 #include "geo/GribSpec.h"
 
@@ -22,7 +21,7 @@ namespace eccodes::geo
 
 
 GeoIterator::GeoIterator(grib_handle* h, unsigned long flags) :
-    spec_(new GribSpec(h)), grid_(eckit::geo::GridFactory::build(*spec_)), iter_(*grid_)
+    spec_(new GribSpec(h)), grid_(eckit::geo::GridFactory::build(*spec_)), iter_(grid_->next_iterator())
 {
     h_          = h;
     class_name_ = "geo_iterator";
