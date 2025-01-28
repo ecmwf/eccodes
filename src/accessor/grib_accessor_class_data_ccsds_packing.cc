@@ -181,6 +181,11 @@ int grib_accessor_data_ccsds_packing_t::pack_double(const double* val, size_t* l
 
         if ((err = grib_set_long_internal(hand, number_of_values_, n_vals)) != GRIB_SUCCESS)
             return err;
+
+        // ECC-2012
+        if ((err = grib_set_long_internal(hand, binary_scale_factor_, 0)) != GRIB_SUCCESS)
+            return err;
+
         bits_per_value = 0;  // ECC-1387
         if ((err = grib_set_long_internal(hand, bits_per_value_, bits_per_value)) != GRIB_SUCCESS)
             return err;
