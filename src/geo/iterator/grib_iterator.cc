@@ -128,7 +128,7 @@ grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int
         } static const init_main;
 
         try {
-            i->iterator = new eccodes::geo::GeoIterator(const_cast<grib_handle*>(ch), flags);
+            i->iterator = new eccodes::geo_iterator::GeoIterator(const_cast<grib_handle*>(ch), flags);
         }
         catch (eckit::geo::Exception& e) {
             grib_context_log(ch->context, GRIB_LOG_FATAL, "grib_iterator_new: geo::Exception thrown (%s)", e.what());

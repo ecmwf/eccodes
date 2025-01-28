@@ -16,12 +16,12 @@
 #include "geo/GribSpec.h"
 
 
-namespace eccodes::geo
+namespace eccodes::geo_iterator
 {
 
 
 GeoIterator::GeoIterator(grib_handle* h, unsigned long flags) :
-    spec_(new GribSpec(h)), grid_(eckit::geo::GridFactory::build(*spec_)), iter_(grid_->next_iterator()), point_(eckit::geo::PointLonLat{})
+    spec_(new eccodes::geo::GribSpec(h)), grid_(eckit::geo::GridFactory::build(*spec_)), iter_(grid_->make_next_iterator()), point_(eckit::geo::PointLonLat{})
 {
     h_          = h;
     class_name_ = "geo_iterator";
@@ -56,13 +56,13 @@ int GeoIterator::init(grib_handle*, grib_arguments*)
 int GeoIterator::next(double* lat, double* lon, double* val) const
 {
     try {
-        if (iter_.next(point_)) {
+        if (iter_->next(point_)) {
             const auto& q = std::get<eckit::geo::PointLonLat>(point_);
 
             *lat = q.lat;
             *lon = q.lon;
             if (val != nullptr && data_ != nullptr) {
-                *val = data_[iter_.index()];
+                *val = data_[iter_->index()];
             }
 
             return 1;  // (true)
@@ -70,11 +70,9 @@ int GeoIterator::next(double* lat, double* lon, double* val) const
     }
     catch (eckit::geo::Exception& e) {
         grib_context_log(h_->context, GRIB_LOG_FATAL, "GeoIterator::next: geo::Exception thrown (%s)", e.what());
-        return 0;
     }
     catch (std::exception& e) {
         grib_context_log(h_->context, GRIB_LOG_FATAL, "GeoIterator::next: Exception thrown (%s)", e.what());
-        return 0;
     }
 
     return 0;  // (false)
@@ -89,30 +87,28 @@ int GeoIterator::previous(double*, double*, double*) const
 
 int GeoIterator::reset()
 {
-    NOTIMP;
+    iter_.reset(grid_->make_next_iterator());
+    return GRIB_SUCCESS;
 }
 
 
 int GeoIterator::destroy()
 {
-    if (data_ != nullptr) {
-        grib_context_free(h_->context, data_);
-    }
+    grib_context_free(h_->context, data_);
     return Iterator::destroy();
 }
 
 
 bool GeoIterator::has_next() const
 {
-    NOTIMP;
+    return iter_->has_next();
 }
 
 
-geo_iterator::Iterator*
-GeoIterator::create() const
+Iterator* GeoIterator::create() const
 {
     return new GeoIterator{ h_, flags_ };
 }
 
 
-}  // namespace eccodes::geo
+}  // namespace eccodes::geo_iterator
