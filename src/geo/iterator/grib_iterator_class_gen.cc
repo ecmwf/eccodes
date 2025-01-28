@@ -112,17 +112,4 @@ int Gen::next(double*, double*, double*) const
     return GRIB_NOT_IMPLEMENTED;
 }
 
-// int Gen::get(double* lat, double* lon, double* val)
-//{
-//     if (e_ >= (long)(nv_ - 1))
-//         return GRIB_END_OF_ITERATION;
-
-//    e_++;
-//    if (lat) *lat = 0;
-//    if (lon) *lon = 0;
-//    if (val) *val = 0;
-
-//    return 1;
-//}
-
 }  // namespace eccodes::geo_iterator

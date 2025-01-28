@@ -10,9 +10,6 @@
 
 #include "grib_iterator_class_regular.h"
 
-eccodes::geo_iterator::Regular _grib_iterator_regular{};
-eccodes::geo_iterator::Iterator* grib_iterator_regular = &_grib_iterator_regular;
-
 namespace eccodes::geo_iterator
 {
 

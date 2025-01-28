@@ -18,7 +18,8 @@ namespace eccodes::geo_iterator
 class Mercator : public Gen
 {
 public:
-    Mercator() { class_name_ = "mercator"; }
+    Mercator() = default;
+
     Iterator* create() const override { return new Mercator(); }
 
     int init(grib_handle*, grib_arguments*) override;

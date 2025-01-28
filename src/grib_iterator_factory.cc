@@ -8,6 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include <map>
+
 #include "grib_iterator_factory.h"
 #include "accessor/grib_accessor_class_iterator.h"
 
@@ -55,7 +57,6 @@ static const struct table_entry table[] = {
     { "latlon_reduced", &grib_iterator_latlon_reduced, },
     { "mercator", &grib_iterator_mercator, },
     { "polar_stereographic", &grib_iterator_polar_stereographic, },
-    { "regular", &grib_iterator_regular, },
     { "space_view", &grib_iterator_space_view, },
     { "unstructured", &grib_iterator_unstructured, },
 };
@@ -207,3 +208,71 @@ int transform_iterator_data(grib_context* context, double* data,
 
     return GRIB_SUCCESS;
 }
+
+
+namespace eccodes::geo_iterator
+{
+
+
+static std::map<std::string, eccodes::geo_iterator::FactoryBuilder*> factory_builders;
+
+
+Iterator* Factory::build(grib_handle* h, grib_arguments* args, unsigned long flags, int* error)
+{
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
+
+    std::string name = args->get_name(h, 0);
+    *error           = GRIB_NOT_IMPLEMENTED;
+
+    if (auto j = factory_builders.find(name); j != factory_builders.end()) {
+        auto* it   = j->second->make();
+        it->flags_ = flags;
+
+        GRIB_MUTEX_LOCK(&mutex);
+        *error = it->init(h, args);
+        GRIB_MUTEX_UNLOCK(&mutex);
+
+        if (*error == GRIB_SUCCESS) {
+            return it;
+        }
+
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator factory: Error instantiating iterator %s (%s)",
+                         name.c_str(), grib_get_error_message(*error));
+
+        GRIB_MUTEX_LOCK(&mutex);
+        gribIteratorDelete(it);
+        GRIB_MUTEX_UNLOCK(&mutex);
+
+        return nullptr;
+    }
+
+    grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator factory: Unknown type: %s", name.c_str());
+    return nullptr;
+}
+
+
+Factory& Factory::instance()
+{
+    static Factory factory;
+    return factory;
+}
+
+
+FactoryBuilder::FactoryBuilder(const std::string& name)
+{
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
+    GRIB_MUTEX_LOCK(&mutex);
+
+    if (factory_builders.find(name) != factory_builders.end()) {
+        static auto* factory_context = new grib_context;  // FIXME context from handle
+        grib_context_log(factory_context, GRIB_LOG_ERROR, "Geoiterator factory: duplicate iterator name %s",
+                         name.c_str());
+    }
+
+    factory_builders[name] = this;
+
+    GRIB_MUTEX_UNLOCK(&mutex);
+}
+
+
+}  // namespace eccodes::geo_iterator

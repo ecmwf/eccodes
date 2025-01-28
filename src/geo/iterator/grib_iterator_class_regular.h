@@ -18,15 +18,14 @@ namespace eccodes::geo_iterator
 class Regular : public Gen
 {
 public:
-    Regular() { class_name_ = "regular"; }
-    Iterator* create() const override { return new Regular(); }
-
     int init(grib_handle*, grib_arguments*) override;
     int next(double*, double*, double*) const override;
     int previous(double*, double*, double*) const override;
     int destroy() override;
 
 protected:
+    Regular() = default;
+
     long Ni_                    = 0;
     long Nj_                    = 0;
     long iScansNegatively_      = 0;

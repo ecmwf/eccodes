@@ -8,19 +8,22 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_iterator_class_healpix.h"
-
 #include <algorithm>
 #include <bitset>
 #include <cmath>
 #include <cstdint>
 #include <vector>
 
+#include "grib_iterator_class_healpix.h"
+#include "grib_iterator_factory.h"
+
 eccodes::geo_iterator::Healpix _grib_iterator_healpix;
 eccodes::geo_iterator::Iterator* grib_iterator_healpix = &_grib_iterator_healpix;
 
 namespace eccodes::geo_iterator
 {
+
+static FactoryBuilderGeneric<Healpix> __builder("healpix");
 
 #define ITER "HEALPix Geoiterator"
 constexpr double RAD2DEG = 57.29577951308232087684;  // 180 over pi

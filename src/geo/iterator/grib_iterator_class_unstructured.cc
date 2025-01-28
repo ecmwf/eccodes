@@ -9,12 +9,15 @@
  */
 
 #include "grib_iterator_class_unstructured.h"
+#include "grib_iterator_factory.h"
 
 eccodes::geo_iterator::Unstructured _grib_iterator_unstructured{};
 eccodes::geo_iterator::Iterator* grib_iterator_unstructured = &_grib_iterator_unstructured;
 
 namespace eccodes::geo_iterator
 {
+
+FactoryBuilderGeneric<Unstructured> __builder("unstructured");
 
 #define ITER "Unstructured grid Geoiterator"
 

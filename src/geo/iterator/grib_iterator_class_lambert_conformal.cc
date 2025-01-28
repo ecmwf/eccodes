@@ -8,14 +8,19 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_iterator_class_lambert_conformal.h"
 #include <cmath>
+
+#include "grib_iterator_class_lambert_conformal.h"
+#include "grib_iterator_factory.h"
 
 eccodes::geo_iterator::LambertConformal _grib_iterator_lambert_conformal{};
 eccodes::geo_iterator::Iterator* grib_iterator_lambert_conformal = &_grib_iterator_lambert_conformal;
 
+
 namespace eccodes::geo_iterator
 {
+
+static FactoryBuilderGeneric<LambertConformal> __builder("lambert_conformal");
 
 #define ITER    "Lambert conformal Geoiterator"
 #define EPSILON 1.0e-10

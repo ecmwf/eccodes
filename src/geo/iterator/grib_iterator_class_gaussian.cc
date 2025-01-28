@@ -9,12 +9,15 @@
  */
 
 #include "grib_iterator_class_gaussian.h"
+#include "grib_iterator_factory.h"
 
 eccodes::geo_iterator::Gaussian _grib_iterator_gaussian{};
 eccodes::geo_iterator::Iterator* grib_iterator_gaussian = &_grib_iterator_gaussian;
 
 namespace eccodes::geo_iterator
 {
+
+static FactoryBuilderGeneric<Gaussian> __builder("gaussian");
 
 static void binary_search_gaussian_latitudes(const double array[], unsigned long n, double x, long* j);
 

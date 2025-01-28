@@ -9,12 +9,15 @@
  */
 
 #include "grib_iterator_class_mercator.h"
+#include "grib_iterator_factory.h"
 
 eccodes::geo_iterator::Mercator _grib_iterator_mercator{};
 eccodes::geo_iterator::Iterator* grib_iterator_mercator = &_grib_iterator_mercator;
 
 namespace eccodes::geo_iterator
 {
+
+static FactoryBuilderGeneric<Mercator> __builder("mercator");
 
 #define ITER    "Mercator Geoiterator"
 #define EPSILON 1.0e-10

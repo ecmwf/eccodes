@@ -18,8 +18,8 @@ namespace eccodes::geo_iterator
 class Unstructured : public Gen
 {
 public:
-    Unstructured() :
-        Gen() { class_name_ = "unstructured"; }
+    Unstructured() = default;
+
     Iterator* create() const override { return new Unstructured(); }
 
     int init(grib_handle*, grib_arguments*) override;

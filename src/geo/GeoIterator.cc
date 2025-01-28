@@ -24,7 +24,6 @@ GeoIterator::GeoIterator(grib_handle* h, unsigned long flags) :
     spec_(new GribSpec(h)), grid_(eckit::geo::GridFactory::build(*spec_)), iter_(grid_->next_iterator()), point_(eckit::geo::PointLonLat{})
 {
     h_          = h;
-    class_name_ = "geo_iterator";
     flags_      = flags;
     ECCODES_ASSERT(h_ != nullptr);
 

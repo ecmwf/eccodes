@@ -8,14 +8,18 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_iterator_class_gaussian_reduced.h"
 #include <cmath>
+
+#include "grib_iterator_class_gaussian_reduced.h"
+#include "grib_iterator_factory.h"
 
 eccodes::geo_iterator::GaussianReduced _grib_iterator_gaussian_reduced{};
 eccodes::geo_iterator::Iterator* grib_iterator_gaussian_reduced = &_grib_iterator_gaussian_reduced;
 
 namespace eccodes::geo_iterator
 {
+
+static FactoryBuilderGeneric<GaussianReduced> __builder("gaussian_reduced");
 
 #define ITER "Reduced Gaussian grid Geoiterator"
 

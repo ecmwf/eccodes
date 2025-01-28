@@ -9,12 +9,15 @@
  */
 
 #include "grib_iterator_class_latlon.h"
+#include "grib_iterator_factory.h"
 
 eccodes::geo_iterator::Latlon _grib_iterator_latlon{};
 eccodes::geo_iterator::Iterator* grib_iterator_latlon = &_grib_iterator_latlon;
 
 namespace eccodes::geo_iterator
 {
+
+static FactoryBuilderGeneric<Latlon> __builder("latlon");
 
 int Latlon::next(double* lat, double* lon, double* val) const
 {

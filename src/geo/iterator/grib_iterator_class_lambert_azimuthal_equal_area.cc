@@ -9,12 +9,15 @@
  */
 
 #include "grib_iterator_class_lambert_azimuthal_equal_area.h"
+#include "grib_iterator_factory.h"
 
 eccodes::geo_iterator::LambertAzimuthalEqualArea _grib_iterator_lambert_azimuthal_equal_area{};
 eccodes::geo_iterator::Iterator* grib_iterator_lambert_azimuthal_equal_area = &_grib_iterator_lambert_azimuthal_equal_area;
 
 namespace eccodes::geo_iterator
 {
+
+static FactoryBuilderGeneric<LambertAzimuthalEqualArea> __builder("lambert_azimuthal_equal_area");
 
 #define ITER "Lambert azimuthal equal area Geoiterator"
 

@@ -9,12 +9,15 @@
  */
 
 #include "grib_iterator_class_space_view.h"
+#include "grib_iterator_factory.h"
 
 eccodes::geo_iterator::SpaceView _grib_iterator_space_view{};
 eccodes::geo_iterator::Iterator* grib_iterator_space_view = &_grib_iterator_space_view;
 
 namespace eccodes::geo_iterator
 {
+
+static FactoryBuilderGeneric<SpaceView> __builder("space_view");
 
 #define ITER "Space view Geoiterator"
 

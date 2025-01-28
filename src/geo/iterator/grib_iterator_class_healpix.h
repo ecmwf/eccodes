@@ -18,8 +18,8 @@ namespace eccodes::geo_iterator
 class Healpix : public Gen
 {
 public:
-    Healpix() :
-        Gen() { class_name_ = "healpix"; }
+    Healpix() = default;
+
     Iterator* create() const override { return new Healpix(); }
 
     int init(grib_handle*, grib_arguments*) override;

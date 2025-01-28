@@ -9,12 +9,15 @@
  */
 
 #include "grib_iterator_class_polar_stereographic.h"
+#include "grib_iterator_factory.h"
 
 eccodes::geo_iterator::PolarStereographic _grib_iterator_polar_stereographic{};
 eccodes::geo_iterator::Iterator* grib_iterator_polar_stereographic = &_grib_iterator_polar_stereographic;
 
 namespace eccodes::geo_iterator
 {
+
+static FactoryBuilderGeneric<PolarStereographic> __builder("polar_stereographic");
 
 #define ITER "Polar stereographic Geoiterator"
 

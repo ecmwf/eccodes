@@ -18,8 +18,8 @@ namespace eccodes::geo_iterator
 class LambertAzimuthalEqualArea : public Gen
 {
 public:
-    LambertAzimuthalEqualArea() :
-        Gen() { class_name_ = "lambert_azimuthal_equal_area"; }
+    LambertAzimuthalEqualArea() = default;
+
     Iterator* create() const override { return new LambertAzimuthalEqualArea(); }
 
     int init(grib_handle*, grib_arguments*) override;

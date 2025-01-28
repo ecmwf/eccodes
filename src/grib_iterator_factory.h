@@ -28,3 +28,35 @@ extern eccodes::geo_iterator::Iterator* grib_iterator_unstructured;
 
 
 eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* error);
+
+
+namespace eccodes::geo_iterator
+{
+
+
+struct Factory
+{
+    static Iterator* build(grib_handle*, grib_arguments* args, unsigned long flags, int* error);
+
+private:
+    static Factory& instance();
+};
+
+
+struct FactoryBuilder
+{
+    explicit FactoryBuilder(const std::string& name);
+    virtual Iterator* make() const = 0;
+};
+
+
+template <typename T>
+struct FactoryBuilderGeneric : FactoryBuilder
+{
+    FactoryBuilderGeneric(const std::string& name) :
+        FactoryBuilder(name) {}
+    Iterator* make() const override { return new T(); }
+};
+
+
+}  // namespace eccodes::geo_iterator

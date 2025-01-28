@@ -18,7 +18,8 @@ namespace eccodes::geo_iterator
 class SpaceView : public Gen
 {
 public:
-    SpaceView() { class_name_ = "space_view"; }
+    SpaceView() = default;
+
     Iterator* create() const override { return new SpaceView(); }
 
     int init(grib_handle*, grib_arguments*) override;

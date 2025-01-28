@@ -18,8 +18,8 @@ namespace eccodes::geo_iterator
 class PolarStereographic : public Gen
 {
 public:
-    PolarStereographic() :
-        Gen() { class_name_ = "polar_stereographic"; }
+    PolarStereographic() = default;
+
     Iterator* create() const override { return new PolarStereographic(); }
 
     int init(grib_handle*, grib_arguments*) override;
