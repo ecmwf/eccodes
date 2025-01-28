@@ -19,9 +19,9 @@ class Mercator : public Gen
 {
 public:
     Mercator(grib_handle*, grib_arguments*, unsigned long flags, int& err);
+    ~Mercator() override;
 
     int next(double*, double*, double*) const override;
-    int destroy() override;
 
 private:
     int init_mercator(grib_handle*,

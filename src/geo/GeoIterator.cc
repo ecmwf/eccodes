@@ -14,15 +14,17 @@
 #include "eckit/geo/Exceptions.h"
 
 #include "geo/GribSpec.h"
+#include "grib_iterator_factory.h"
 
 
-namespace eccodes::geo
+namespace eccodes::geo_iterator
 {
 
+static FactoryBuilderGeneric<GeoIterator> __builder("eccodes::geo::GeoIterator");
 
 GeoIterator::GeoIterator(grib_handle* h, grib_arguments* args, unsigned long flags, int& err) :
     Iterator(h, args, flags, err),
-    spec_(new GribSpec(h)),
+    spec_(new eccodes::geo::GribSpec(h)),
     grid_(eckit::geo::GridFactory::build(*spec_)),
     iter_(grid_->next_iterator()),
     point_(eckit::geo::PointLonLat{})
@@ -97,12 +99,9 @@ int GeoIterator::reset()
 }
 
 
-int GeoIterator::destroy()
+GeoIterator::~GeoIterator()
 {
-    if (data_ != nullptr) {
-        grib_context_free(h_->context, data_);
-    }
-    return Iterator::destroy();
+    grib_context_free(h_->context, data_);
 }
 
 
@@ -112,4 +111,4 @@ bool GeoIterator::has_next() const
 }
 
 
-}  // namespace eccodes::geo
+}  // namespace eccodes::geo_iterator

@@ -19,9 +19,9 @@ class LatlonReduced : public Gen
 {
 public:
     LatlonReduced(grib_handle*, grib_arguments*, unsigned long flags, int& err);
+    ~LatlonReduced() override;
 
     int next(double*, double*, double*) const override;
-    int destroy() override;
 };
 
 }  // namespace eccodes::geo_iterator

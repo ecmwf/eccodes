@@ -19,9 +19,9 @@ class PolarStereographic : public Gen
 {
 public:
     PolarStereographic(grib_handle*, grib_arguments*, unsigned long flags, int& err);
+    ~PolarStereographic() override;
 
     int next(double*, double*, double*) const override;
-    int destroy() override;
 };
 
 }  // namespace eccodes::geo_iterator

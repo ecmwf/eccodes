@@ -84,12 +84,9 @@ int Gen::reset()
     return 0;
 }
 
-int Gen::destroy()
+Gen::~Gen()
 {
-    const grib_context* c = h_->context;
-    grib_context_free(c, data_);
-
-    return Iterator::destroy();
+    grib_context_free(h_->context, data_);
 }
 
 bool Gen::has_next() const

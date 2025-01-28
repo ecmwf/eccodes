@@ -46,15 +46,12 @@ int Regular::previous(double* lat, double* lon, double* val) const
     return 1;
 }
 
-int Regular::destroy()
+Regular::~Regular()
 {
-    DEBUG_ASSERT(h_);
-    const grib_context* c = h_->context;
-    grib_context_free(c, lats_);
-    grib_context_free(c, lons_);
-    lats_ = lons_ = nullptr;
-
-    return Gen::destroy();
+    grib_context_free(h_->context, lats_);
+    grib_context_free(h_->context, lons_);
+    lats_ = nullptr;
+    lons_ = nullptr;
 }
 
 Regular::Regular(grib_handle* h, grib_arguments* args, unsigned long flags, int& err) :

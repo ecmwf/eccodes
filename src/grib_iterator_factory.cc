@@ -14,8 +14,7 @@
 #include "eccodes_config.h"
 #if defined(HAVE_ECKIT_GEO)
     #include "eckit/runtime/Main.h"
-
-    #include "geo/GeoIterator.h"
+    #include "eckit/geo/Exceptions.h"
 
 // eccodes macros conflict with eckit
     #ifdef ECCODES_ASSERT
@@ -209,8 +208,8 @@ Iterator* Factory::build(grib_handle* h, grib_arguments* args, unsigned long fla
 {
     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
 
+    Iterator* it     = nullptr;
     std::string name = args->get_name(h, 0);
-    err              = GRIB_NOT_IMPLEMENTED;
 
 #if defined(HAVE_ECKIT_GEO)
     const int eckit_geo = h->context->eckit_geo;  // check environment variable
@@ -227,10 +226,11 @@ Iterator* Factory::build(grib_handle* h, grib_arguments* args, unsigned long fla
         } static const init_main;
 
         try {
-            return new eccodes::geo::GeoIterator(h, args, flags, err);
+            return FactoryInstance::builders()["eccodes::geo::GeoIterator"]->make(h, args, flags, err);
         }
         catch (eckit::geo::Exception& e) {
             grib_context_log(h->context, GRIB_LOG_FATAL, "grib_iterator_new: geo::Exception thrown (%s)", e.what());
+            err = GRIB_NOT_IMPLEMENTED;
             return nullptr;
         }
         catch (std::exception& e) {
@@ -239,10 +239,9 @@ Iterator* Factory::build(grib_handle* h, grib_arguments* args, unsigned long fla
             return nullptr;
         }
     }
+    else
 #endif
-    Iterator* it = nullptr;
-
-    if (auto j = FactoryInstance::builders().find(name); j != FactoryInstance::builders().end()) {
+        if (auto j = FactoryInstance::builders().find(name); j != FactoryInstance::builders().end()) {
         lock_type lock;
         it         = j->second->make(h, args, flags, err);
         it->flags_ = flags;

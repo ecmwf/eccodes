@@ -510,14 +510,10 @@ LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(grib_handle* h, grib_argume
     e_ = -1;
 }
 
-int LambertAzimuthalEqualArea::destroy()
+LambertAzimuthalEqualArea::~LambertAzimuthalEqualArea()
 {
-    DEBUG_ASSERT(h_);
-    const grib_context* c = h_->context;
-    grib_context_free(c, lats_);
-    grib_context_free(c, lons_);
-
-    return Gen::destroy();
+    grib_context_free(h_->context, lats_);
+    grib_context_free(h_->context, lons_);
 }
 
 }  // namespace eccodes::geo_iterator

@@ -19,9 +19,9 @@ class LambertConformal : public Gen
 {
 public:
     LambertConformal(grib_handle*, grib_arguments*, unsigned long flags, int& err);
+    ~LambertConformal() override;
 
     int next(double*, double*, double*) const override;
-    int destroy() override;
 
 private:
     int init_sphere(const grib_handle*,

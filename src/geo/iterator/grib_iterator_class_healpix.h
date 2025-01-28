@@ -19,9 +19,9 @@ class Healpix : public Gen
 {
 public:
     Healpix(grib_handle*, grib_arguments*, unsigned long flags, int& err);
+    ~Healpix() override;
 
     int next(double*, double*, double*) const override;
-    int destroy() override;
 
 private:
     // long Nsides_ = 0;

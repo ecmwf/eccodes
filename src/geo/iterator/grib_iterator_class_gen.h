@@ -21,11 +21,11 @@ public:
     int next(double*, double*, double*) const override;
     int previous(double*, double*, double*) const override;
     int reset() override;
-    int destroy() override;
     bool has_next() const override;
 
 protected:
     Gen(grib_handle*, grib_arguments*, unsigned long flags, int& err);
+    ~Gen() override;
 
     int carg_     = 0;
     double* lats_ = nullptr;

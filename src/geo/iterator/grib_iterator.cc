@@ -21,42 +21,33 @@
 namespace eccodes::geo_iterator
 {
 
-Iterator::Iterator(grib_handle* h, grib_arguments*, unsigned long flags, int& err)
+Iterator::Iterator(grib_handle* h, grib_arguments*, unsigned long flags, int& err) :
+    h_(h), data_(nullptr), e_(0), nv_(0)
 {
-    h_  = h;
+    DEBUG_ASSERT(h_);
     err = GRIB_SUCCESS;
 }
 
-/* For this one, ALL destroy are called */
-int Iterator::destroy()
-{
-    return GRIB_SUCCESS;
-}
+Iterator::~Iterator() = default;
 
-eccodes::geo_iterator::Iterator* gribIteratorNew(const grib_handle* ch, unsigned long flags, int* error)
+Iterator* gribIteratorNew(const grib_handle* ch, unsigned long flags, int* error)
 {
+    auto* a = dynamic_cast<grib_accessor_iterator_t*>(grib_find_accessor(ch, "ITERATOR"));
+    if (a != nullptr) {
+        *error     = GRIB_SUCCESS;
+        auto* iter = grib_iterator_factory(const_cast<grib_handle*>(ch), a->args_, flags, error);
+        if (iter != nullptr) {
+            return iter;
+        }
+    }
+
     *error = GRIB_NOT_IMPLEMENTED;
-
-    auto* h   = const_cast<grib_handle*>(ch);
-    auto* ita = dynamic_cast<grib_accessor_iterator_t*>(grib_find_accessor(h, "ITERATOR"));
-
-    if (!ita) {
-        return nullptr;
-    }
-
-    auto* iter = grib_iterator_factory(h, ita->args_, flags, error);
-
-    if (iter) {
-        *error = GRIB_SUCCESS;
-    }
-
-    return iter;
+    return nullptr;
 }
 
-int gribIteratorDelete(eccodes::geo_iterator::Iterator* i)
+int gribIteratorDelete(Iterator* i)
 {
-    if (i) {
-        i->destroy();
+    if (i != nullptr) {
         delete i;
         i = nullptr;
     }
@@ -79,7 +70,7 @@ int grib_iterator_reset(grib_iterator* i)
 
 int grib_iterator_has_next(grib_iterator* i)
 {
-    return i->iterator->has_next();
+    return i->iterator->has_next() ? 1 : 0;
 }
 
 int grib_iterator_next(grib_iterator* i, double* lat, double* lon, double* value)
@@ -94,9 +85,8 @@ int grib_iterator_previous(grib_iterator* i, double* lat, double* lon, double* v
 
 int grib_iterator_destroy(grib_context* c, grib_iterator* i)
 {
-    int ret = i->iterator->destroy();
     delete i;
-    return ret;
+    return GRIB_SUCCESS;
 }
 
 #if defined(HAVE_GEOGRAPHY)
@@ -105,7 +95,7 @@ grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int
     auto* i     = static_cast<grib_iterator*>(grib_context_malloc_clear(ch->context, sizeof(grib_iterator)));
     i->iterator = eccodes::geo_iterator::gribIteratorNew(ch, flags, error);
 
-    if (!i->iterator) {
+    if (i->iterator == nullptr) {
         grib_context_free(ch->context, i);
         return nullptr;
     }
@@ -114,7 +104,7 @@ grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int
 
 int grib_iterator_delete(grib_iterator* i)
 {
-    if (i) {
+    if (i != nullptr) {
         grib_context* c = grib_context_get_default();
         gribIteratorDelete(i->iterator);
         grib_context_free(c, i);

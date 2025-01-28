@@ -65,14 +65,10 @@ Unstructured::Unstructured(grib_handle* h, grib_arguments* args, unsigned long f
     e_ = -1;
 }
 
-int Unstructured::destroy()
+Unstructured::~Unstructured()
 {
-    DEBUG_ASSERT(h_);
-    const grib_context* c = h_->context;
-    grib_context_free(c, lats_);
-    grib_context_free(c, lons_);
-
-    return Gen::destroy();
+    grib_context_free(h_->context, lats_);
+    grib_context_free(h_->context, lons_);
 }
 
 }  // namespace eccodes::geo_iterator

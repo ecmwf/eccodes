@@ -18,13 +18,14 @@
 #include "geo/iterator/grib_iterator.h"
 
 
-namespace eccodes::geo
+namespace eccodes::geo_iterator
 {
 
 class GeoIterator : public geo_iterator::Iterator
 {
 public:
     GeoIterator(grib_handle*, grib_arguments*, unsigned long flags, int& err);
+    ~GeoIterator() override;
 
 private:
     std::unique_ptr<const eckit::geo::Spec> spec_;
@@ -36,8 +37,7 @@ private:
     int next(double* lat, double* lon, double* val) const override;
     int previous(double* lat, double* lon, double* val) const override;
     int reset() override;
-    int destroy() override;
     bool has_next() const override;
 };
 
-}  // namespace eccodes::geo
+}  // namespace eccodes::geo_iterator

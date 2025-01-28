@@ -19,10 +19,10 @@ class Regular : public Gen
 {
 protected:
     Regular(grib_handle*, grib_arguments*, unsigned long flags, int& err);
+    ~Regular() override;
 
     int next(double*, double*, double*) const override;
     int previous(double*, double*, double*) const override;
-    int destroy() override;
 
     long Ni_                    = 0;
     long Nj_                    = 0;

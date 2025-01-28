@@ -19,9 +19,9 @@ class LambertAzimuthalEqualArea : public Gen
 {
 public:
     LambertAzimuthalEqualArea(grib_handle*, grib_arguments*, unsigned long flags, int& err);
+    ~LambertAzimuthalEqualArea() override;
 
     int next(double*, double*, double*) const override;
-    int destroy() override;
 
 private:
     int init_sphere(grib_handle*,

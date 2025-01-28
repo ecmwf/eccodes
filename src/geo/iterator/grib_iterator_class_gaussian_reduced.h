@@ -19,9 +19,9 @@ class GaussianReduced : public Gen
 {
 public:
     GaussianReduced(grib_handle*, grib_arguments*, unsigned long flags, int& err);
+    ~GaussianReduced() override;
 
     int next(double*, double*, double*) const override;
-    int destroy() override;
 
 private:
     long isRotated_         = 0;
