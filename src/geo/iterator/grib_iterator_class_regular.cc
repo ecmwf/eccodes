@@ -13,19 +13,21 @@
 eccodes::geo_iterator::Regular _grib_iterator_regular{};
 eccodes::geo_iterator::Iterator* grib_iterator_regular = &_grib_iterator_regular;
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 #define ITER "Regular grid Geoiterator"
 
 int Regular::next(double* lat, double* lon, double* val) const
 {
-    if ((long)e_ >= (long)(nv_ - 1))
+    if (e_ >= static_cast<long>(nv_ - 1)) {
         return 0;
+    }
 
     e_++;
 
-    *lat = lats_[(long)floor(e_ / Ni_)];
-    *lon = lons_[(long)e_ % Ni_];
+    *lat = lats_[static_cast<long>(floor(e_ / Ni_))];
+    *lon = lons_[e_ % Ni_];
     if (val && data_) {
         *val = data_[e_];
     }
@@ -34,9 +36,10 @@ int Regular::next(double* lat, double* lon, double* val) const
 
 int Regular::previous(double* lat, double* lon, double* val) const
 {
-    if (e_ < 0)
+    if (e_ < 0) {
         return 0;
-    *lat = lats_[(long)floor(e_ / Ni_)];
+    }
+    *lat = lats_[static_cast<long>(floor(e_ / Ni_))];
     *lon = lons_[e_ % Ni_];
     if (val && data_) {
         *val = data_[e_];
@@ -52,7 +55,7 @@ int Regular::destroy()
     const grib_context* c = h_->context;
     grib_context_free(c, lats_);
     grib_context_free(c, lons_);
-    lats_ = lons_ = NULL;
+    lats_ = lons_ = nullptr;
 
     return Gen::destroy();
 }
@@ -60,11 +63,16 @@ int Regular::destroy()
 int Regular::init(grib_handle* h, grib_arguments* args)
 {
     int ret = Gen::init(h, args);
-    if (ret != GRIB_SUCCESS) return ret;
+    if (ret != GRIB_SUCCESS) {
+        return ret;
+    }
 
     long Ni; /* Number of points along a parallel = Nx */
     long Nj; /* Number of points along a meridian = Ny */
-    double idir, idir_coded, lon1, lon2;
+    double idir;
+    double idir_coded;
+    double lon1;
+    double lon2;
     long loi;
 
     const char* s_lon1      = args->get_name(h, carg_++);
@@ -73,22 +81,27 @@ int Regular::init(grib_handle* h, grib_arguments* args)
     const char* s_Nj        = args->get_name(h, carg_++);
     const char* s_iScansNeg = args->get_name(h, carg_++);
 
-    if ((ret = grib_get_double_internal(h, s_lon1, &lon1)))
+    if ((ret = grib_get_double_internal(h, s_lon1, &lon1))) {
         return ret;
-    if ((ret = grib_get_double_internal(h, "longitudeOfLastGridPointInDegrees", &lon2)))
+    }
+    if ((ret = grib_get_double_internal(h, "longitudeOfLastGridPointInDegrees", &lon2))) {
         return ret;
-    if ((ret = grib_get_double_internal(h, s_idir, &idir)))  // can be GRIB_MISSING_DOUBLE
+    }
+    if ((ret = grib_get_double_internal(h, s_idir, &idir))) {  // can be GRIB_MISSING_DOUBLE
         return ret;
+    }
     idir_coded = idir;
-    if ((ret = grib_get_long_internal(h, s_Ni, &Ni)))
+    if ((ret = grib_get_long_internal(h, s_Ni, &Ni))) {
         return ret;
+    }
     if (grib_is_missing(h, s_Ni, &ret) && ret == GRIB_SUCCESS) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Key %s cannot be 'missing' for a regular grid!", ITER, s_Ni);
         return GRIB_WRONG_GRID;
     }
 
-    if ((ret = grib_get_long_internal(h, s_Nj, &Nj)))
+    if ((ret = grib_get_long_internal(h, s_Nj, &Nj))) {
         return ret;
+    }
     if (grib_is_missing(h, s_Nj, &ret) && ret == GRIB_SUCCESS) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Key %s cannot be 'missing' for a regular grid!", ITER, s_Nj);
         return GRIB_WRONG_GRID;
@@ -99,26 +112,27 @@ int Regular::init(grib_handle* h, grib_arguments* args)
         return GRIB_WRONG_GRID;
     }
 
-    if ((ret = grib_get_long_internal(h, s_iScansNeg, &iScansNegatively_)))
+    if ((ret = grib_get_long_internal(h, s_iScansNeg, &iScansNegatively_))) {
         return ret;
+    }
 
     /* GRIB-801: Careful of case with a single point! Ni==1 */
     if (Ni > 1) {
         /* Note: If first and last longitudes are equal I assume you wanna go round the globe */
         if (iScansNegatively_) {
             if (lon1 > lon2) {
-                idir = (lon1 - lon2) / (Ni - 1);
+                idir = (lon1 - lon2) / static_cast<double>(Ni - 1);
             }
             else {
-                idir = (lon1 + 360.0 - lon2) / (Ni - 1);
+                idir = (lon1 + 360.0 - lon2) / static_cast<double>(Ni - 1);
             }
         }
         else {
             if (lon2 > lon1) {
-                idir = (lon2 - lon1) / (Ni - 1);
+                idir = (lon2 - lon1) / static_cast<double>(Ni - 1);
             }
             else {
-                idir = (lon2 + 360.0 - lon1) / (Ni - 1);
+                idir = (lon2 + 360.0 - lon1) / static_cast<double>(Ni - 1);
             }
         }
     }
@@ -126,8 +140,9 @@ int Regular::init(grib_handle* h, grib_arguments* args)
         idir = -idir;
     }
     else {
-        if (lon1 + (Ni - 2) * idir > 360)
+        if (lon1 + (Ni - 2) * idir > 360) {
             lon1 -= 360;
+        }
         /*See ECC-704, GRIB-396*/
         /*else if ( (lon1+(Ni-1)*idir)-360 > epsilon ){
             idir=360.0/(float)Ni;

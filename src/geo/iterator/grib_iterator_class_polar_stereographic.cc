@@ -13,14 +13,16 @@
 eccodes::geo_iterator::PolarStereographic _grib_iterator_polar_stereographic{};
 eccodes::geo_iterator::Iterator* grib_iterator_polar_stereographic = &_grib_iterator_polar_stereographic;
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 #define ITER "Polar stereographic Geoiterator"
 
 int PolarStereographic::next(double* lat, double* lon, double* val) const
 {
-    if ((long)e_ >= (long)(nv_ - 1))
+    if (e_ >= static_cast<long>(nv_ - 1)) {
         return 0;
+    }
     e_++;
 
     *lat = lats_[e_];
@@ -32,7 +34,7 @@ int PolarStereographic::next(double* lat, double* lon, double* val) const
 }
 
 /* Data struct for Forward and Inverse Projections */
-typedef struct proj_data_t
+struct proj_data_t
 {
     double centre_lon;     /* central longitude */
     double centre_lat;     /* central latitude */
@@ -42,7 +44,7 @@ typedef struct proj_data_t
     double tcs;            /* small t */
     double false_northing; /* y offset in meters */
     double false_easting;  /* x offset in meters */
-} proj_data_t;
+};
 
 #define RAD2DEG   57.29577951308232087684 /* 180 over pi */
 #define DEG2RAD   0.01745329251994329576  /* pi over 180 */
@@ -52,21 +54,39 @@ typedef struct proj_data_t
 int PolarStereographic::init(grib_handle* h, grib_arguments* args)
 {
     int ret = GRIB_SUCCESS;
-    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS)
+    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS) {
         return ret;
+    }
 
-    double *lats, *lons; /* arrays for latitudes and longitudes */
-    double lonFirstInDegrees, latFirstInDegrees, radius;
-    double x, y, Dx, Dy;
-    long nx, ny;
-    double centralLongitudeInDegrees, centralLatitudeInDegrees;
-    long alternativeRowScanning, iScansNegatively, i, j;
-    long jScansPositively, jPointsAreConsecutive, southPoleOnPlane;
-    double centralLongitude, centralLatitude; /* in radians */
-    double con1;                              /* temporary angle */
-    double ts;                                /* value of small t */
-    double height;                            /* height above ellipsoid */
-    double x0, y0, lonFirst, latFirst;
+    double* lats = nullptr;
+    double* lons = nullptr; /* arrays for latitudes and longitudes */
+    double lonFirstInDegrees;
+    double latFirstInDegrees;
+    double radius;
+    double x;
+    double y;
+    double Dx;
+    double Dy;
+    long nx;
+    long ny;
+    double centralLongitudeInDegrees;
+    double centralLatitudeInDegrees;
+    long alternativeRowScanning;
+    long iScansNegatively;
+    long i;
+    long j;
+    long jScansPositively;
+    long jPointsAreConsecutive;
+    long southPoleOnPlane;
+    double centralLongitude;
+    double centralLatitude; /* in radians */
+    double con1;            /* temporary angle */
+    double ts;              /* value of small t */
+    double height;          /* height above ellipsoid */
+    double x0;
+    double y0;
+    double lonFirst;
+    double latFirst;
     proj_data_t fwd_proj_data = {
         0,
     };
@@ -94,39 +114,53 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
         return GRIB_GEOCALCULUS_PROBLEM;
     }
 
-    if ((ret = grib_get_double_internal(h, s_radius, &radius)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(h, s_radius, &radius)) != GRIB_SUCCESS) {
         return ret;
-    if ((ret = grib_get_long_internal(h, s_nx, &nx)) != GRIB_SUCCESS)
+    }
+    if ((ret = grib_get_long_internal(h, s_nx, &nx)) != GRIB_SUCCESS) {
         return ret;
-    if ((ret = grib_get_long_internal(h, s_ny, &ny)) != GRIB_SUCCESS)
+    }
+    if ((ret = grib_get_long_internal(h, s_ny, &ny)) != GRIB_SUCCESS) {
         return ret;
+    }
 
     if (nv_ != nx * ny) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, nv_, nx, ny);
         return GRIB_WRONG_GRID;
     }
-    if ((ret = grib_get_double_internal(h, s_latFirstInDegrees, &latFirstInDegrees)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(h, s_latFirstInDegrees, &latFirstInDegrees)) != GRIB_SUCCESS) {
         return ret;
-    if ((ret = grib_get_double_internal(h, s_lonFirstInDegrees, &lonFirstInDegrees)) != GRIB_SUCCESS)
+    }
+    if ((ret = grib_get_double_internal(h, s_lonFirstInDegrees, &lonFirstInDegrees)) != GRIB_SUCCESS) {
         return ret;
-    if ((ret = grib_get_long_internal(h, s_southPoleOnPlane, &southPoleOnPlane)) != GRIB_SUCCESS)
+    }
+    if ((ret = grib_get_long_internal(h, s_southPoleOnPlane, &southPoleOnPlane)) != GRIB_SUCCESS) {
         return ret;
-    if ((ret = grib_get_double_internal(h, s_centralLongitude, &centralLongitudeInDegrees)) != GRIB_SUCCESS)
+    }
+    if ((ret = grib_get_double_internal(h, s_centralLongitude, &centralLongitudeInDegrees)) != GRIB_SUCCESS) {
         return ret;
-    if ((ret = grib_get_double_internal(h, s_centralLatitude, &centralLatitudeInDegrees)) != GRIB_SUCCESS)
+    }
+    if ((ret = grib_get_double_internal(h, s_centralLatitude, &centralLatitudeInDegrees)) != GRIB_SUCCESS) {
         return ret;
-    if ((ret = grib_get_double_internal(h, s_Dx, &Dx)) != GRIB_SUCCESS)
+    }
+    if ((ret = grib_get_double_internal(h, s_Dx, &Dx)) != GRIB_SUCCESS) {
         return ret;
-    if ((ret = grib_get_double_internal(h, s_Dy, &Dy)) != GRIB_SUCCESS)
+    }
+    if ((ret = grib_get_double_internal(h, s_Dy, &Dy)) != GRIB_SUCCESS) {
         return ret;
-    if ((ret = grib_get_long_internal(h, s_jPointsAreConsecutive, &jPointsAreConsecutive)) != GRIB_SUCCESS)
+    }
+    if ((ret = grib_get_long_internal(h, s_jPointsAreConsecutive, &jPointsAreConsecutive)) != GRIB_SUCCESS) {
         return ret;
-    if ((ret = grib_get_long_internal(h, s_jScansPositively, &jScansPositively)) != GRIB_SUCCESS)
+    }
+    if ((ret = grib_get_long_internal(h, s_jScansPositively, &jScansPositively)) != GRIB_SUCCESS) {
         return ret;
-    if ((ret = grib_get_long_internal(h, s_iScansNegatively, &iScansNegatively)) != GRIB_SUCCESS)
+    }
+    if ((ret = grib_get_long_internal(h, s_iScansNegatively, &iScansNegatively)) != GRIB_SUCCESS) {
         return ret;
-    if ((ret = grib_get_long_internal(h, s_alternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS)
+    }
+    if ((ret = grib_get_long_internal(h, s_alternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS) {
         return ret;
+    }
 
     centralLongitude = centralLongitudeInDegrees * DEG2RAD;
     centralLatitude  = centralLatitudeInDegrees * DEG2RAD;
@@ -138,10 +172,12 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
     fwd_proj_data.false_easting  = 0;
     fwd_proj_data.centre_lon     = centralLongitude;
     fwd_proj_data.centre_lat     = centralLatitude;
-    if (centralLatitude < 0)
+    if (centralLatitude < 0) {
         fwd_proj_data.sign = -1.0;
-    else
+    }
+    else {
         fwd_proj_data.sign = +1.0;
+    }
     fwd_proj_data.ind = 0;
     if (fabs(fabs(centralLatitude) - PI_OVER_2) > EPSILON) {
         /* central latitude different from 90 i.e. not north/south polar */
@@ -154,10 +190,12 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
     /* Forward projection from initial lat,lon to initial x,y */
     con1 = fwd_proj_data.sign * (lonFirst - fwd_proj_data.centre_lon);
     ts   = tan(0.5 * (PI_OVER_2 - fwd_proj_data.sign * latFirst));
-    if (fwd_proj_data.ind)
+    if (fwd_proj_data.ind) {
         height = radius * fwd_proj_data.mcs * ts / fwd_proj_data.tcs;
-    else
+    }
+    else {
         height = 2.0 * radius * ts;
+    }
     x0 = fwd_proj_data.sign * height * sin(con1) + fwd_proj_data.false_easting;
     y0 = -fwd_proj_data.sign * height * cos(con1) + fwd_proj_data.false_northing;
 
@@ -169,10 +207,12 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
     inv_proj_data.false_northing = y0;
     inv_proj_data.centre_lon     = centralLongitude;
     inv_proj_data.centre_lat     = centralLatitude;
-    if (centralLatitude < 0)
+    if (centralLatitude < 0) {
         inv_proj_data.sign = -1.0;
-    else
+    }
+    else {
         inv_proj_data.sign = +1.0;
+    }
     inv_proj_data.ind = 0;
     if (fabs(fabs(centralLatitude) - PI_OVER_2) > EPSILON) {
         inv_proj_data.ind = 1;
@@ -205,10 +245,12 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
             double _x = (x - inv_proj_data.false_easting) * inv_proj_data.sign;
             double _y = (y - inv_proj_data.false_northing) * inv_proj_data.sign;
             double rh = sqrt(_x * _x + _y * _y);
-            if (inv_proj_data.ind)
+            if (inv_proj_data.ind) {
                 ts = rh * inv_proj_data.tcs / (radius * inv_proj_data.mcs);
-            else
+            }
+            else {
                 ts = rh / (radius * 2.0);
+            }
             *lats = inv_proj_data.sign * (PI_OVER_2 - 2 * atan(ts));
             if (rh == 0) {
                 *lons = inv_proj_data.sign * inv_proj_data.centre_lon;
@@ -219,10 +261,12 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
             }
             *lats = *lats * RAD2DEG;
             *lons = *lons * RAD2DEG;
-            while (*lons < 0)
+            while (*lons < 0) {
                 *lons += 360;
-            while (*lons > 360)
+            }
+            while (*lons > 360) {
                 *lons -= 360;
+            }
             lons++;
             lats++;
 

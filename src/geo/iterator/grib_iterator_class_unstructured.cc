@@ -13,14 +13,16 @@
 eccodes::geo_iterator::Unstructured _grib_iterator_unstructured{};
 eccodes::geo_iterator::Iterator* grib_iterator_unstructured = &_grib_iterator_unstructured;
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 #define ITER "Unstructured grid Geoiterator"
 
 int Unstructured::next(double* lat, double* lon, double* val) const
 {
-    if ((long)e_ >= (long)(nv_ - 1))
+    if (e_ >= static_cast<long>(nv_ - 1)) {
         return 0;
+    }
     e_++;
 
     *lat = lats_[e_];
@@ -34,11 +36,14 @@ int Unstructured::next(double* lat, double* lon, double* val) const
 int Unstructured::init(grib_handle* h, grib_arguments* args)
 {
     int ret = GRIB_SUCCESS;
-    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS)
+    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS) {
         return ret;
+    }
 
     const char* s_uuidOfHGrid = args->get_name(h, carg_++);
-    char uuidOfHGrid[32] = {0,};
+    char uuidOfHGrid[32]      = {
+        0,
+    };
     auto slen = sizeof(uuidOfHGrid);
     if ((ret = grib_get_string_internal(h, s_uuidOfHGrid, uuidOfHGrid, &slen)) != GRIB_SUCCESS) {
         return ret;

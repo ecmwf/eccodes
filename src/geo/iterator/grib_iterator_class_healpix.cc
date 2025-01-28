@@ -19,7 +19,8 @@
 eccodes::geo_iterator::Healpix _grib_iterator_healpix;
 eccodes::geo_iterator::Iterator* grib_iterator_healpix = &_grib_iterator_healpix;
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 #define ITER "HEALPix Geoiterator"
 constexpr double RAD2DEG = 57.29577951308232087684;  // 180 over pi
@@ -265,8 +266,9 @@ int Healpix::iterate_healpix(long N)
 int Healpix::init(grib_handle* h, grib_arguments* args)
 {
     int err = GRIB_SUCCESS;
-    if ((err = Gen::init(h, args)) != GRIB_SUCCESS)
+    if ((err = Gen::init(h, args)) != GRIB_SUCCESS) {
         return err;
+    }
 
     const char* snside = args->get_name(h, carg_++);
     const char* sorder = args->get_name(h, carg_++);
@@ -280,7 +282,9 @@ int Healpix::init(grib_handle* h, grib_arguments* args)
         return GRIB_WRONG_GRID;
     }
 
-    char ordering[32] = {0,};
+    char ordering[32] = {
+        0,
+    };
     size_t slen = sizeof(ordering);
     if ((err = grib_get_string_internal(h, sorder, ordering, &slen)) != GRIB_SUCCESS) {
         return err;

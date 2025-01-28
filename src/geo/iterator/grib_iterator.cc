@@ -29,7 +29,8 @@
 #include "grib_iterator_factory.h"
 #include "accessor/grib_accessor_class_iterator.h"
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 int Iterator::init(grib_handle* h, grib_arguments* args)
 {
@@ -47,17 +48,18 @@ eccodes::geo_iterator::Iterator* gribIteratorNew(const grib_handle* ch, unsigned
 {
     *error = GRIB_NOT_IMPLEMENTED;
 
-    grib_handle* h = (grib_handle*)ch;
-    grib_accessor* a = grib_find_accessor(h, "ITERATOR");
-    grib_accessor_iterator_t* ita = (grib_accessor_iterator_t*)a;
+    auto* h   = const_cast<grib_handle*>(ch);
+    auto* ita = dynamic_cast<grib_accessor_iterator_t*>(grib_find_accessor(h, "ITERATOR"));
 
-    if (!a)
-        return NULL;
+    if (!ita) {
+        return nullptr;
+    }
 
-    eccodes::geo_iterator::Iterator* iter = grib_iterator_factory(h, ita->args_, flags, error);
+    auto* iter = grib_iterator_factory(h, ita->args_, flags, error);
 
-    if (iter)
+    if (iter) {
         *error = GRIB_SUCCESS;
+    }
 
     return iter;
 }
@@ -111,10 +113,10 @@ int grib_iterator_destroy(grib_context* c, grib_iterator* i)
 #if defined(HAVE_GEOGRAPHY)
 grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int* error)
 {
-    grib_iterator* i = (grib_iterator*)grib_context_malloc_clear(ch->context, sizeof(grib_iterator));
+    auto* i = static_cast<grib_iterator*>(grib_context_malloc_clear(ch->context, sizeof(grib_iterator)));
 
     #if defined(HAVE_ECKIT_GEO)
-    const int eckit_geo = ch->context->eckit_geo; // check environment variable
+    const int eckit_geo = ch->context->eckit_geo;  // check environment variable
     if (eckit_geo != 0) {
         struct InitMain
         {
@@ -132,12 +134,12 @@ grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int
         }
         catch (eckit::geo::Exception& e) {
             grib_context_log(ch->context, GRIB_LOG_FATAL, "grib_iterator_new: geo::Exception thrown (%s)", e.what());
-            return 0;
+            return nullptr;
         }
         catch (std::exception& e) {
             grib_context_log(ch->context, GRIB_LOG_ERROR, "grib_iterator_new: Exception thrown (%s)", e.what());
             *error = GRIB_GEOCALCULUS_PROBLEM;
-            return NULL;
+            return nullptr;
         }
     }
     else
@@ -148,7 +150,7 @@ grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int
 
     if (!i->iterator) {
         grib_context_free(ch->context, i);
-        return NULL;
+        return nullptr;
     }
     return i;
 }

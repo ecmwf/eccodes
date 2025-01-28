@@ -12,7 +12,8 @@
 
 #include "grib_iterator_class_regular.h"
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 class Latlon : public Regular
 {

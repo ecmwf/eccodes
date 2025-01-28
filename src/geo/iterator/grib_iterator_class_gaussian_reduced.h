@@ -12,7 +12,8 @@
 
 #include "grib_iterator_class_gen.h"
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 class GaussianReduced : public Gen
 {
@@ -26,11 +27,11 @@ public:
     int destroy() override;
 
 private:
-    long isRotated_ = 0;
+    long isRotated_         = 0;
     double angleOfRotation_ = 0.;
-    double southPoleLat_ = 0.;
-    double southPoleLon_ = 0.;
-    long disableUnrotate_ = 0;
+    double southPoleLat_    = 0.;
+    double southPoleLon_    = 0.;
+    long disableUnrotate_   = 0;
 
     int iterate_reduced_gaussian_subarea_legacy(grib_handle*,
                                                 double, double,

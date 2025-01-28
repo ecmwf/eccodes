@@ -13,12 +13,14 @@
 eccodes::geo_iterator::LatlonReduced _grib_iterator_latlon_reduced{};
 eccodes::geo_iterator::Iterator* grib_iterator_latlon_reduced = &_grib_iterator_latlon_reduced;
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 int LatlonReduced::next(double* lat, double* lon, double* val) const
 {
-    if ((long)e_ >= (long)(nv_ - 1))
+    if (e_ >= static_cast<long>(nv_ - 1)) {
         return 0;
+    }
     e_++;
 
     *lat = lats_[e_];
@@ -32,18 +34,24 @@ int LatlonReduced::next(double* lat, double* lon, double* val) const
 int LatlonReduced::init(grib_handle* h, grib_arguments* args)
 {
     int ret = GRIB_SUCCESS;
-    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS)
+    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS) {
         return ret;
+    }
 
     double laf;
     double lal;
     long nlats;
-    double lof, tlof;
-    double lol, dimin;
-    long* pl;
+    double lof;
+    double tlof;
+    double lol;
+    double dimin;
+    long* pl      = nullptr;
     size_t plsize = 0;
-    long k, j, ii;
-    long nlons, plmax;
+    long k;
+    long j;
+    long ii;
+    long nlons;
+    long plmax;
     double jdirinc = 0;
     double idirinc = 0;
     double dlon    = 0;
@@ -58,21 +66,27 @@ int LatlonReduced::init(grib_handle* h, grib_arguments* args)
     const char* jdirec      = args->get_name(h, carg_++);
     const char* plac        = args->get_name(h, carg_++);
 
-    if ((ret = grib_get_double_internal(h, latofirst, &laf)))
+    if ((ret = grib_get_double_internal(h, latofirst, &laf))) {
         return ret;
-    if ((ret = grib_get_double_internal(h, longoffirst, &lof)))
+    }
+    if ((ret = grib_get_double_internal(h, longoffirst, &lof))) {
         return ret;
+    }
 
-    if ((ret = grib_get_double_internal(h, latoflast, &lal)))
+    if ((ret = grib_get_double_internal(h, latoflast, &lal))) {
         return ret;
-    if ((ret = grib_get_double_internal(h, longoflast, &lol)))
+    }
+    if ((ret = grib_get_double_internal(h, longoflast, &lol))) {
         return ret;
+    }
 
-    if ((ret = grib_get_long_internal(h, nlats_name, &nlats)))
+    if ((ret = grib_get_long_internal(h, nlats_name, &nlats))) {
         return ret;
+    }
 
-    if ((ret = grib_get_double_internal(h, jdirec, &jdirinc)))
+    if ((ret = grib_get_double_internal(h, jdirec, &jdirinc))) {
         return ret;
+    }
 
     plsize = nlats;
     pl     = (long*)grib_context_malloc(h->context, plsize * sizeof(long));
@@ -82,10 +96,12 @@ int LatlonReduced::init(grib_handle* h, grib_arguments* args)
     lons_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
 
     plmax = pl[0];
-    for (j = 0; j < nlats; j++)
-        if (plmax < pl[j])
+    for (j = 0; j < nlats; j++) {
+        if (plmax < pl[j]) {
             plmax = pl[j];
-    dimin = 360.0 / plmax;
+        }
+    }
+    dimin = 360.0 / static_cast<double>(plmax);
 
     if (360 - fabs(lol - lof) < 2 * dimin) {
         dlon    = 360;
@@ -102,17 +118,19 @@ int LatlonReduced::init(grib_handle* h, grib_arguments* args)
         islocal = 1;
     }
 
-    if (laf > lal)
+    if (laf > lal) {
         jdirinc = -jdirinc;
+    }
     k = 0;
     for (j = 0; j < nlats; j++) {
         nlons  = pl[j];
         tlof   = lof;
         nlons2 = nlons - islocal;
         /*Sometimes there are no points on a latitude! Protect against div by zero*/
-        if (nlons2 < 1)
+        if (nlons2 < 1) {
             nlons2 = 1;
-        idirinc = dlon / nlons2;
+        }
+        idirinc = dlon / static_cast<double>(nlons2);
         for (ii = 0; ii < nlons; ii++) {
             lats_[k] = laf;
             lons_[k] = tlof;

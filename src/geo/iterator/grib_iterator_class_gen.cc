@@ -10,32 +10,36 @@
 
 #include "grib_iterator_class_gen.h"
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 int Gen::init(grib_handle* h, grib_arguments* args)
 {
     int err = GRIB_SUCCESS;
-    lats_ = lons_ = data_ = NULL;
+    lats_ = lons_ = data_ = nullptr;
 
-    if ((err = Iterator::init(h, args)) != GRIB_SUCCESS)
+    if ((err = Iterator::init(h, args)) != GRIB_SUCCESS) {
         return err;
+    }
 
     // Skip the 1st argument which is the name of the iterator itself
     // e.g., latlon, gaussian_reduced etc
-    carg_ = 1; // start from 1 and not 0
+    carg_ = 1;  // start from 1 and not 0
 
-    const char* s_numPoints    = args->get_name(h, carg_++);
+    const char* s_numPoints = args->get_name(h, carg_++);
     // The missingValue argument is not currently used. Skip it
-    carg_++;  //const char* s_missingValue = args->get_name(h, carg_++);
-    const char* s_rawData      = args->get_name(h, carg_++);
+    carg_++;  // const char* s_missingValue = args->get_name(h, carg_++);
+    const char* s_rawData = args->get_name(h, carg_++);
 
     size_t dli = 0;
-    if ((err = grib_get_size(h, s_rawData, &dli)) != GRIB_SUCCESS)
+    if ((err = grib_get_size(h, s_rawData, &dli)) != GRIB_SUCCESS) {
         return err;
+    }
 
     long numberOfPoints = 0;
-    if ((err = grib_get_long_internal(h, s_numPoints, &numberOfPoints)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(h, s_numPoints, &numberOfPoints)) != GRIB_SUCCESS) {
         return err;
+    }
 
     // See ECC-1792. If we don't want to decode the Data Section, we should not do a check
     // to see if it is consistent with the Grid Section
@@ -89,10 +93,12 @@ int Gen::destroy()
 
 bool Gen::has_next() const
 {
-    if (flags_ == 0 && data_ == NULL)
+    if (flags_ == 0 && data_ == nullptr) {
         return false;
-    if (e_ >= (long)(nv_ - 1))
+    }
+    if (e_ >= static_cast<long>(nv_ - 1)) {
         return false;
+    }
     return true;
 }
 

@@ -14,16 +14,19 @@
 eccodes::geo_iterator::GaussianReduced _grib_iterator_gaussian_reduced{};
 eccodes::geo_iterator::Iterator* grib_iterator_gaussian_reduced = &_grib_iterator_gaussian_reduced;
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 #define ITER "Reduced Gaussian grid Geoiterator"
 
 int GaussianReduced::next(double* lat, double* lon, double* val) const
 {
-    double ret_lat = 0, ret_lon = 0;
+    double ret_lat = 0;
+    double ret_lon = 0;
 
-    if (e_ >= (long)(nv_ - 1))
+    if (e_ >= static_cast<long>(nv_ - 1)) {
         return 0;
+    }
     e_++;
 
     ret_lat = lats_[e_];
@@ -33,7 +36,8 @@ int GaussianReduced::next(double* lat, double* lon, double* val) const
     }
 
     if (isRotated_ && !disableUnrotate_) {
-        double new_lat = 0, new_lon = 0;
+        double new_lat = 0;
+        double new_lon = 0;
         unrotate(ret_lat, ret_lon,
                  angleOfRotation_, southPoleLat_, southPoleLon_,
                  &new_lat, &new_lon);
@@ -46,7 +50,7 @@ int GaussianReduced::next(double* lat, double* lon, double* val) const
     return 1;
 }
 
-typedef void (*get_reduced_row_proc)(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last);
+using get_reduced_row_proc = void (*)(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last);
 
 /* For a reduced Gaussian grid which is GLOBAL, the number of points is the sum of the 'pl' array */
 /* i.e. the total number of points on all latitudes */
@@ -57,10 +61,12 @@ static size_t count_global_points(const long* pl, size_t plsize)
 static size_t count_subarea_points(grib_handle* h, get_reduced_row_proc get_reduced_row,
                                    long* pl, size_t plsize, double lon_first, double lon_last)
 {
-    size_t j = 0, result = 0;
+    size_t j        = 0;
+    size_t result   = 0;
     long row_count  = 0;
-    long ilon_first = 0, ilon_last = 0; /*unused*/
-    long Nj = 0;
+    long ilon_first = 0;
+    long ilon_last  = 0; /*unused*/
+    long Nj         = 0;
     grib_get_long_internal(h, "Nj", &Nj);
     for (j = 0; j < Nj; j++) {
         row_count = 0;
@@ -76,7 +82,9 @@ static void binary_search(const double xx[], const unsigned long n, double x, lo
     /*This routine works only on descending ordered arrays*/
 #define EPSILON 1e-3
 
-    unsigned long ju, jm, jl;
+    unsigned long ju;
+    unsigned long jm;
+    unsigned long jl;
     jl = 0;
     ju = n;
     while (ju - jl > 1) {
@@ -86,10 +94,12 @@ static void binary_search(const double xx[], const unsigned long n, double x, lo
             *j = jm;
             return;
         }
-        if (x < xx[jm])
+        if (x < xx[jm]) {
             jl = jm;
-        else
+        }
+        else {
             ju = jm;
+        }
     }
     *j = jl;
 }
@@ -105,7 +115,9 @@ int GaussianReduced::iterate_reduced_gaussian_subarea_legacy(grib_handle* h,
     size_t j       = 0;
     long row_count = 0;
     double d       = 0;
-    long ilon_first, ilon_last, i;
+    long ilon_first;
+    long ilon_last;
+    long i;
     /*get_reduced_row_proc get_reduced_row = &grib_get_reduced_row;*/
     get_reduced_row_proc get_reduced_row = &grib_get_reduced_row_legacy; /* legacy algorithm */
 
@@ -126,8 +138,9 @@ int GaussianReduced::iterate_reduced_gaussian_subarea_legacy(grib_handle* h,
         row_count = 0;
         get_reduced_row(pl[j], lon_first, lon_last, &row_count, &ilon_first, &ilon_last);
         /*printf("iterate_reduced_gaussian_subarea %ld %g %g count=%ld, (i1=%ld, i2=%ld)\n",pl[j],lon_first,lon_last, row_count, ilon_first,ilon_last);*/
-        if (ilon_first > ilon_last)
+        if (ilon_first > ilon_last) {
             ilon_first -= pl[j];
+        }
         for (i = ilon_first; i <= ilon_last; i++) {
             if (e_ >= nv_) {
                 size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
@@ -136,7 +149,7 @@ int GaussianReduced::iterate_reduced_gaussian_subarea_legacy(grib_handle* h,
                 return GRIB_WRONG_GRID;
             }
 
-            lons_[e_] = ((i) * 360.0) / pl[j];
+            lons_[e_] = 360.0 * static_cast<double>(i) / static_cast<double>(pl[j]);
             lats_[e_] = lats[j + l];
             e_++;
             k++;
@@ -165,8 +178,10 @@ int GaussianReduced::iterate_reduced_gaussian_subarea(grib_handle* h,
     int err        = 0;
     long l         = 0;
     size_t j       = 0;
-    long row_count = 0, i = 0;
-    double olon_first, olon_last;
+    long row_count = 0;
+    long i         = 0;
+    double olon_first;
+    double olon_last;
     get_reduced_row_proc get_reduced_row = &grib_get_reduced_row;
 
     if (h->context->debug) {
@@ -188,11 +203,11 @@ int GaussianReduced::iterate_reduced_gaussian_subarea(grib_handle* h,
 
     e_ = 0;
     for (j = 0; j < plsize; j++) {
-        const double delta = 360.0 / pl[j];
+        const double delta = 360.0 / static_cast<double>(pl[j]);
         row_count          = 0;
         grib_get_reduced_row_p(pl[j], lon_first, lon_last, &row_count, &olon_first, &olon_last);
         for (i = 0; i < row_count; ++i) {
-            double lon2 = olon_first + i * delta;
+            double lon2 = olon_first + static_cast<double>(i) * delta;
             if (e_ >= nv_) {
                 /* Only print error message on the second pass */
                 size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
@@ -214,9 +229,8 @@ int GaussianReduced::iterate_reduced_gaussian_subarea(grib_handle* h,
             /* Legacy (produced by PRODGEN/LIBEMOS) */
             return iterate_reduced_gaussian_subarea_legacy(h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);
         }
-        else {
-            /* TODO: A gap exists! Not all values can be mapped. Inconsistent grid or error in calculating num. points! */
-        }
+
+        /* TODO: A gap exists! Not all values can be mapped. Inconsistent grid or error in calculating num. points! */
     }
     return err;
 }
@@ -224,18 +238,25 @@ int GaussianReduced::iterate_reduced_gaussian_subarea(grib_handle* h,
 int GaussianReduced::init(grib_handle* h, grib_arguments* args)
 {
     int ret = GRIB_SUCCESS;
-    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS)
+    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS) {
         return ret;
+    }
 
-    int j, is_global = 0;
-    double lat_first = 0, lon_first = 0, lat_last = 0, lon_last = 0;
+    int j;
+    int is_global            = 0;
+    double lat_first         = 0;
+    double lon_first         = 0;
+    double lat_last          = 0;
+    double lon_last          = 0;
     double angular_precision = 1.0 / 1000000.0;
-    double* lats;
-    size_t plsize  = 0;
-    size_t numlats = 0;
-    long* pl;
-    long max_pl = 0;
-    long nj = 0, order = 0, i;
+    double* lats             = nullptr;
+    size_t plsize            = 0;
+    size_t numlats           = 0;
+    long* pl                 = nullptr;
+    long max_pl              = 0;
+    long nj                  = 0;
+    long order               = 0;
+    long i;
     long row_count         = 0;
     long angleSubdivisions = 0;
     const grib_context* c  = h->context;
@@ -255,72 +276,90 @@ int GaussianReduced::init(grib_handle* h, grib_arguments* args)
 
     ret = grib_get_long(h, "isRotatedGrid", &isRotated_);
     if (ret == GRIB_SUCCESS && isRotated_) {
-        if ((ret = grib_get_double_internal(h, "angleOfRotation", &angleOfRotation_)))
+        if ((ret = grib_get_double_internal(h, "angleOfRotation", &angleOfRotation_))) {
             return ret;
-        if ((ret = grib_get_double_internal(h, "latitudeOfSouthernPoleInDegrees", &southPoleLat_)))
+        }
+        if ((ret = grib_get_double_internal(h, "latitudeOfSouthernPoleInDegrees", &southPoleLat_))) {
             return ret;
-        if ((ret = grib_get_double_internal(h, "longitudeOfSouthernPoleInDegrees", &southPoleLon_)))
+        }
+        if ((ret = grib_get_double_internal(h, "longitudeOfSouthernPoleInDegrees", &southPoleLon_))) {
             return ret;
+        }
     }
 
-    if ((ret = grib_get_double_internal(h, slat_first, &lat_first)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(h, slat_first, &lat_first)) != GRIB_SUCCESS) {
         return ret;
-    if ((ret = grib_get_double_internal(h, slon_first, &lon_first)) != GRIB_SUCCESS)
+    }
+    if ((ret = grib_get_double_internal(h, slon_first, &lon_first)) != GRIB_SUCCESS) {
         return ret;
-    if ((ret = grib_get_double_internal(h, slat_last, &lat_last)) != GRIB_SUCCESS)
+    }
+    if ((ret = grib_get_double_internal(h, slat_last, &lat_last)) != GRIB_SUCCESS) {
         return ret;
-    if ((ret = grib_get_double_internal(h, slon_last, &lon_last)) != GRIB_SUCCESS)
+    }
+    if ((ret = grib_get_double_internal(h, slon_last, &lon_last)) != GRIB_SUCCESS) {
         return ret;
+    }
 
-    if ((ret = grib_get_long_internal(h, sorder, &order)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, sorder, &order)) != GRIB_SUCCESS) {
         return ret;
+    }
     if (order == 0) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Invalid grid: N cannot be 0!", ITER);
         return GRIB_WRONG_GRID;
     }
-    if ((ret = grib_get_long_internal(h, snj, &nj)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, snj, &nj)) != GRIB_SUCCESS) {
         return ret;
+    }
 
     if (grib_get_long(h, "angleSubdivisions", &angleSubdivisions) == GRIB_SUCCESS) {
         ECCODES_ASSERT(angleSubdivisions > 0);
-        angular_precision = 1.0 / angleSubdivisions;
+        angular_precision = 1.0 / static_cast<double>(angleSubdivisions);
     }
 
     numlats = order * 2;
     lats    = (double*)grib_context_malloc(h->context, sizeof(double) * numlats);
-    if (!lats)
+    if (!lats) {
         return GRIB_OUT_OF_MEMORY;
-    if ((ret = grib_get_gaussian_latitudes(order, lats)) != GRIB_SUCCESS)
+    }
+    if ((ret = grib_get_gaussian_latitudes(order, lats)) != GRIB_SUCCESS) {
         return ret;
+    }
 
-    if ((ret = grib_get_size(h, spl, &plsize)) != GRIB_SUCCESS)
+    if ((ret = grib_get_size(h, spl, &plsize)) != GRIB_SUCCESS) {
         return ret;
+    }
 
     ECCODES_ASSERT(plsize);
     pl = (long*)grib_context_malloc(c, sizeof(long) * plsize);
-    if (!pl)
+    if (!pl) {
         return GRIB_OUT_OF_MEMORY;
+    }
 
     grib_get_long_array_internal(h, spl, pl, &plsize);
 
     lats_ = (double*)grib_context_malloc_clear(h->context, nv_ * sizeof(double));
-    if (!lats_)
+    if (!lats_) {
         return GRIB_OUT_OF_MEMORY;
+    }
     lons_ = (double*)grib_context_malloc_clear(h->context, nv_ * sizeof(double));
-    if (!lons_)
+    if (!lons_) {
         return GRIB_OUT_OF_MEMORY;
+    }
 
-    while (lon_last < 0)
+    while (lon_last < 0) {
         lon_last += 360;
-    while (lon_first < 0)
+    }
+    while (lon_first < 0) {
         lon_first += 360;
+    }
 
     /* Find the maximum element of "pl" array, do not assume it's 4*N! */
     /* This could be an Octahedral Gaussian Grid */
     max_pl = pl[0];
     for (j = 1; j < plsize; j++) {
-        if (pl[j] > max_pl)
+        if (pl[j] > max_pl) {
             max_pl = pl[j];
+        }
     }
 
     is_global = is_gaussian_global(lat_first, lat_last, lon_first, lon_last, max_pl, lats, angular_precision);
@@ -344,12 +383,13 @@ int GaussianReduced::init(grib_handle* h, grib_arguments* args)
                     /*return GRIB_WRONG_GRID;*/
                     /*Try now as NON-global*/
                     ret = iterate_reduced_gaussian_subarea(h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, numlats);
-                    if (ret != GRIB_SUCCESS)
+                    if (ret != GRIB_SUCCESS) {
                         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Failed to initialise iterator (global)", ITER);
+                    }
                     goto finalise;
                 }
 
-                lons_[e_] = (i * 360.0) / row_count;
+                lons_[e_] = 360.0 * static_cast<double>(i) / static_cast<double>(row_count);
                 lats_[e_] = lats[j];
                 e_++;
             }
@@ -374,4 +414,4 @@ int GaussianReduced::destroy()
     return Gen::destroy();
 }
 
-} // namespace eccodes::geo_iterator
+}  // namespace eccodes::geo_iterator

@@ -13,14 +13,16 @@
 eccodes::geo_iterator::LambertAzimuthalEqualArea _grib_iterator_lambert_azimuthal_equal_area{};
 eccodes::geo_iterator::Iterator* grib_iterator_lambert_azimuthal_equal_area = &_grib_iterator_lambert_azimuthal_equal_area;
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 #define ITER "Lambert azimuthal equal area Geoiterator"
 
 int LambertAzimuthalEqualArea::next(double* lat, double* lon, double* val) const
 {
-    if ((long)e_ >= (long)(nv_ - 1))
+    if (e_ >= static_cast<long>(nv_ - 1)) {
         return 0;
+    }
     e_++;
 
     *lat = lats_[e_];
@@ -73,7 +75,9 @@ static double pj_authlat(double beta, const double* APA)
 
 static double pj_qsfn(double sinphi, double e, double one_es)
 {
-    double con, div1, div2;
+    double con;
+    double div1;
+    double div2;
     const double EPSILON = 1.0e-7;
 
     if (e >= EPSILON) {
@@ -82,34 +86,59 @@ static double pj_qsfn(double sinphi, double e, double one_es)
         div2 = 1.0 + con;
 
         /* avoid zero division, fail gracefully */
-        if (div1 == 0.0 || div2 == 0.0)
+        if (div1 == 0.0 || div2 == 0.0) {
             return HUGE_VAL;
+        }
 
         return (one_es * (sinphi / div1 - (.5 / e) * log((1. - con) / div2)));
     }
-    else
-        return (sinphi + sinphi);
+
+    return (sinphi + sinphi);
 }
 
 #define EPS10 1.e-10
 int LambertAzimuthalEqualArea::init_oblate(grib_handle* h,
-                       size_t nv, long nx, long ny,
-                       double Dx, double Dy, double earthMinorAxisInMetres, double earthMajorAxisInMetres,
-                       double latFirstInRadians, double lonFirstInRadians,
-                       double centralLongitudeInRadians, double standardParallelInRadians,
-                       long iScansNegatively, long jScansPositively, long jPointsAreConsecutive)
+                                           size_t nv, long nx, long ny,
+                                           double Dx, double Dy, double earthMinorAxisInMetres, double earthMajorAxisInMetres,
+                                           double latFirstInRadians, double lonFirstInRadians,
+                                           double centralLongitudeInRadians, double standardParallelInRadians,
+                                           long iScansNegatively, long jScansPositively, long jPointsAreConsecutive)
 {
-    double *lats, *lons;
-    long i, j;
-    double x0, y0, x, y;
-    double coslam, sinlam, sinphi, sinphi_, q, sinb = 0.0, cosb = 0.0, b = 0.0, cosb2;
-    double Q__qp = 0, Q__rq = 0, Q__cosb1, Q__sinb1, Q__dd, Q__xmf, Q__ymf, t;
+    double* lats = nullptr;
+    double* lons = nullptr;
+    long i;
+    long j;
+    double x0;
+    double y0;
+    double x;
+    double y;
+    double coslam;
+    double sinlam;
+    double sinphi;
+    double sinphi_;
+    double q;
+    double sinb = 0.0;
+    double cosb = 0.0;
+    double b    = 0.0;
+    double cosb2;
+    double Q__qp = 0;
+    double Q__rq = 0;
+    double Q__cosb1;
+    double Q__sinb1;
+    double Q__dd;
+    double Q__xmf;
+    double Q__ymf;
+    double t;
     /* double Q__mmf = 0; */
-    double e, es, temp, one_es;
+    double e;
+    double es;
+    double temp;
+    double one_es;
     double APA[3] = {
         0,
     };
-    double xFirst, yFirst;
+    double xFirst;
+    double yFirst;
 
     Dx = iScansNegatively == 0 ? Dx / 1000 : -Dx / 1000;
     Dy = jScansPositively == 1 ? Dy / 1000 : -Dy / 1000;
@@ -186,7 +215,14 @@ int LambertAzimuthalEqualArea::init_oblate(grib_handle* h,
         for (j = 0; j < ny; j++) {
             x = xFirst;
             for (i = 0; i < nx; i++) {
-                double cCe, sCe, rho, ab = 0.0, lp__lam, lp__phi, xy_x = x, xy_y = y;
+                double cCe;
+                double sCe;
+                double rho;
+                double ab = 0.0;
+                double lp__lam;
+                double lp__phi;
+                double xy_x = x;
+                double xy_y = y;
                 xy_x /= Q__dd;
                 xy_y *= Q__dd;
                 rho = hypot(xy_x, xy_y);
@@ -226,19 +262,33 @@ int LambertAzimuthalEqualArea::init_oblate(grib_handle* h,
 }
 
 int LambertAzimuthalEqualArea::init_sphere(grib_handle* h,
-                       size_t nv, long nx, long ny,
-                       double Dx, double Dy, double radius,
-                       double latFirstInRadians, double lonFirstInRadians,
-                       double centralLongitudeInRadians, double standardParallelInRadians,
-                       long iScansNegatively, long jScansPositively, long jPointsAreConsecutive)
+                                           size_t nv, long nx, long ny,
+                                           double Dx, double Dy, double radius,
+                                           double latFirstInRadians, double lonFirstInRadians,
+                                           double centralLongitudeInRadians, double standardParallelInRadians,
+                                           long iScansNegatively, long jScansPositively, long jPointsAreConsecutive)
 {
-    double *lats, *lons;
-    double phi1, lambda0, xFirst, yFirst, x, y;
-    double kp, sinphi1, cosphi1;
-    double sinphi, cosphi, cosdlambda, sindlambda;
-    double cosc, sinc;
-    long i, j;
-    double c, rho;
+    double* lats = nullptr;
+    double* lons = nullptr;
+    double phi1;
+    double lambda0;
+    double xFirst;
+    double yFirst;
+    double x;
+    double y;
+    double kp;
+    double sinphi1;
+    double cosphi1;
+    double sinphi;
+    double cosphi;
+    double cosdlambda;
+    double sindlambda;
+    double cosc;
+    double sinc;
+    long i;
+    long j;
+    double c;
+    double rho;
     const double epsilon = 1.0e-20;
     const double d2r     = acos(0.0) / 90.0;
 
@@ -248,8 +298,8 @@ int LambertAzimuthalEqualArea::init_sphere(grib_handle* h,
     cosphi1 = cos(phi1);
     sinphi1 = sin(phi1);
 
-    Dx          = iScansNegatively == 0 ? Dx / 1000 : -Dx / 1000;
-    Dy          = jScansPositively == 1 ? Dy / 1000 : -Dy / 1000;
+    Dx    = iScansNegatively == 0 ? Dx / 1000 : -Dx / 1000;
+    Dy    = jScansPositively == 1 ? Dy / 1000 : -Dy / 1000;
     lats_ = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!lats_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv * sizeof(double));
@@ -290,8 +340,9 @@ int LambertAzimuthalEqualArea::init_sphere(grib_handle* h,
                     *lats = phi1 / d2r;
                     *lons = lambda0 / d2r;
                 }
-                if (*lons < 0)
+                if (*lons < 0) {
                     *lons += 360;
+                }
                 lons++;
                 lats++;
 
@@ -318,8 +369,9 @@ int LambertAzimuthalEqualArea::init_sphere(grib_handle* h,
                     *lats = phi1 / d2r;
                     *lons = lambda0 / d2r;
                 }
-                if (*lons < 0)
+                if (*lons < 0) {
                     *lons += 360;
+                }
                 lons++;
                 lats++;
 
@@ -334,18 +386,30 @@ int LambertAzimuthalEqualArea::init_sphere(grib_handle* h,
 int LambertAzimuthalEqualArea::init(grib_handle* h, grib_arguments* args)
 {
     int err = 0;
-    if ((err = Gen::init(h, args)) != GRIB_SUCCESS)
+    if ((err = Gen::init(h, args)) != GRIB_SUCCESS) {
         return err;
+    }
 
     int is_oblate = 0;
-    double lonFirstInDegrees, latFirstInDegrees, lonFirstInRadians, latFirstInRadians, radius = 0;
-    long nx, ny;
-    double standardParallelInDegrees, centralLongitudeInDegrees;
-    double standardParallelInRadians, centralLongitudeInRadians;
-    double Dx, Dy;
-    long alternativeRowScanning, iScansNegatively;
-    long jScansPositively, jPointsAreConsecutive;
-    double earthMajorAxisInMetres = 0, earthMinorAxisInMetres = 0;
+    double lonFirstInDegrees;
+    double latFirstInDegrees;
+    double lonFirstInRadians;
+    double latFirstInRadians;
+    double radius = 0;
+    long nx;
+    long ny;
+    double standardParallelInDegrees;
+    double centralLongitudeInDegrees;
+    double standardParallelInRadians;
+    double centralLongitudeInRadians;
+    double Dx;
+    double Dy;
+    long alternativeRowScanning;
+    long iScansNegatively;
+    long jScansPositively;
+    long jPointsAreConsecutive;
+    double earthMajorAxisInMetres = 0;
+    double earthMinorAxisInMetres = 0;
 
     const char* sradius                 = args->get_name(h, carg_++);
     const char* snx                     = args->get_name(h, carg_++);
@@ -364,42 +428,60 @@ int LambertAzimuthalEqualArea::init(grib_handle* h, grib_arguments* args)
 
     is_oblate = grib_is_earth_oblate(h);
     if (is_oblate) {
-        if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) return err;
-        if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) return err;
+        if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) {
+            return err;
+        }
+        if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) {
+            return err;
+        }
     }
     else {
-        if ((err = grib_get_double_internal(h, sradius, &radius)) != GRIB_SUCCESS) return err;
+        if ((err = grib_get_double_internal(h, sradius, &radius)) != GRIB_SUCCESS) {
+            return err;
+        }
     }
 
-    if ((err = grib_get_long_internal(h, snx, &nx)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(h, snx, &nx)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_long_internal(h, sny, &ny)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_long_internal(h, sny, &ny)) != GRIB_SUCCESS) {
         return err;
+    }
 
     if (nv_ != nx * ny) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, nv_, nx, ny);
         return GRIB_WRONG_GRID;
     }
-    if ((err = grib_get_double_internal(h, slatFirstInDegrees, &latFirstInDegrees)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(h, slatFirstInDegrees, &latFirstInDegrees)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_double_internal(h, slonFirstInDegrees, &lonFirstInDegrees)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_double_internal(h, slonFirstInDegrees, &lonFirstInDegrees)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_double_internal(h, sstandardParallel, &standardParallelInDegrees)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_double_internal(h, sstandardParallel, &standardParallelInDegrees)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_double_internal(h, scentralLongitude, &centralLongitudeInDegrees)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_double_internal(h, scentralLongitude, &centralLongitudeInDegrees)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_double_internal(h, sDx, &Dx)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_double_internal(h, sDx, &Dx)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_double_internal(h, sDy, &Dy)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_double_internal(h, sDy, &Dy)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_long_internal(h, sjPointsAreConsecutive, &jPointsAreConsecutive)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_long_internal(h, sjPointsAreConsecutive, &jPointsAreConsecutive)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_long_internal(h, sjScansPositively, &jScansPositively)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_long_internal(h, sjScansPositively, &jScansPositively)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_long_internal(h, siScansNegatively, &iScansNegatively)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_long_internal(h, siScansNegatively, &iScansNegatively)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_long_internal(h, salternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_long_internal(h, salternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS) {
         return err;
+    }
 
     latFirstInRadians         = latFirstInDegrees * d2r;
     lonFirstInRadians         = lonFirstInDegrees * d2r;
@@ -420,7 +502,9 @@ int LambertAzimuthalEqualArea::init(grib_handle* h, grib_arguments* args)
                           centralLongitudeInRadians, standardParallelInRadians,
                           iScansNegatively, jScansPositively, jPointsAreConsecutive);
     }
-    if (err) return err;
+    if (err) {
+        return err;
+    }
 
     e_ = -1;
 

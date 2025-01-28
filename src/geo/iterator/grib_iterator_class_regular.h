@@ -12,7 +12,8 @@
 
 #include "grib_iterator_class_gen.h"
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 class Regular : public Gen
 {
@@ -26,15 +27,15 @@ public:
     int destroy() override;
 
 protected:
-    long Ni_ = 0;
-    long Nj_ = 0;
-    long iScansNegatively_ = 0;
-    long isRotated_ = 0;
-    double angleOfRotation_ = 0.;
-    double southPoleLat_ = 0.;
-    double southPoleLon_ = 0.;
+    long Ni_                    = 0;
+    long Nj_                    = 0;
+    long iScansNegatively_      = 0;
+    long isRotated_             = 0;
+    double angleOfRotation_     = 0.;
+    double southPoleLat_        = 0.;
+    double southPoleLon_        = 0.;
     long jPointsAreConsecutive_ = 0;
-    long disableUnrotate_ = 0;
+    long disableUnrotate_       = 0;
 };
 
 }  // namespace eccodes::geo_iterator

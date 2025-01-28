@@ -12,7 +12,8 @@
 
 #include "grib_iterator.h"
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 class Gen : public Iterator
 {
@@ -29,12 +30,12 @@ public:
     bool has_next() const override;
 
 protected:
-    int carg_ = 0;
+    int carg_     = 0;
     double* lats_ = nullptr;
     double* lons_ = nullptr;
 
 private:
-    //int get(double*, double*, double*);
+    // int get(double*, double*, double*);
 };
 
 }  // namespace eccodes::geo_iterator

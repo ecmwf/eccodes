@@ -13,7 +13,8 @@
 eccodes::geo_iterator::Mercator _grib_iterator_mercator{};
 eccodes::geo_iterator::Iterator* grib_iterator_mercator = &_grib_iterator_mercator;
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 #define ITER    "Mercator Geoiterator"
 #define EPSILON 1.0e-10
@@ -36,8 +37,12 @@ namespace eccodes::geo_iterator {
 /* Adjust longitude (in radians) to range -180 to 180 */
 static double adjust_lon_radians(double lon)
 {
-    if (lon > M_PI) lon -= 2 * M_PI;
-    if (lon < -M_PI) lon += 2 * M_PI;
+    if (lon > M_PI) {
+        lon -= 2 * M_PI;
+    }
+    if (lon < -M_PI) {
+        lon += 2 * M_PI;
+    }
     return lon;
 }
 
@@ -53,8 +58,13 @@ static double compute_phi(
     double ts,     /* Constant value t */
     int* error)
 {
-    double eccnth, phi, con, dphi, sinpi;
-    int i, MAX_ITER = 15;
+    double eccnth;
+    double phi;
+    double con;
+    double dphi;
+    double sinpi;
+    int i;
+    int MAX_ITER = 15;
 
     eccnth = 0.5 * eccent;
     phi    = M_PI_2 - 2 * atan(ts);
@@ -63,8 +73,9 @@ static double compute_phi(
         con   = eccent * sinpi;
         dphi  = M_PI_2 - 2 * atan(ts * (pow(((1.0 - con) / (1.0 + con)), eccnth))) - phi;
         phi += dphi;
-        if (fabs(dphi) <= EPSILON)
+        if (fabs(dphi) <= EPSILON) {
             return phi;
+        }
     }
     *error = GRIB_INTERNAL_ERROR;
     return 0;
@@ -90,12 +101,23 @@ int Mercator::init_mercator(grib_handle* h,
                             double latLastInRadians, double lonLastInRadians,
                             double LaDInRadians, double orientationInRadians)
 {
-    int i, j, err = 0;
-    double x0, y0, x, y, latRad, lonRad, latDeg, lonDeg, sinphi, ts;
+    int err = 0;
+    double x0;
+    double y0;
+    double x;
+    double y;
+    double latRad;
+    double lonRad;
+    double latDeg;
+    double lonDeg;
+    double sinphi;
+    double ts;
     double false_easting;  /* x offset in meters */
     double false_northing; /* y offset in meters */
     double m1;             /* small value m */
-    double temp, e, es;
+    double temp;
+    double e;
+    double es;
 
     temp = earthMinorAxisInMetres / earthMajorAxisInMetres;
     es   = 1.0 - (temp * temp);
@@ -107,12 +129,12 @@ int Mercator::init_mercator(grib_handle* h,
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Transformation cannot be computed at the poles", ITER);
         return GRIB_GEOCALCULUS_PROBLEM;
     }
-    else {
-        sinphi = sin(latFirstInRadians);
-        ts     = compute_t(e, latFirstInRadians, sinphi);
-        x0     = earthMajorAxisInMetres * m1 * adjust_lon_radians(lonFirstInRadians - orientationInRadians);
-        y0     = 0 - earthMajorAxisInMetres * m1 * log(ts);
-    }
+
+    sinphi = sin(latFirstInRadians);
+    ts     = compute_t(e, latFirstInRadians, sinphi);
+    x0     = earthMajorAxisInMetres * m1 * adjust_lon_radians(lonFirstInRadians - orientationInRadians);
+    y0     = 0 - earthMajorAxisInMetres * m1 * log(ts);
+
     x0 = -x0;
     y0 = -y0;
 
@@ -131,11 +153,12 @@ int Mercator::init_mercator(grib_handle* h,
     /* Populate our arrays */
     false_easting  = x0;
     false_northing = y0;
-    for (j = 0; j < ny; j++) {
+    for (long j = 0; j < ny; j++) {
         y = j * DjInMetres;
-        for (i = 0; i < nx; i++) {
-            const int index = i + j * nx;
-            double _x, _y;
+        for (long i = 0; i < nx; i++) {
+            long index = i + j * nx;
+            double _x;
+            double _y;
             x = i * DiInMetres;
             /* Inverse projection to convert from x,y to lat,lon */
             _x     = x - false_easting;
@@ -164,15 +187,33 @@ int Mercator::init_mercator(grib_handle* h,
 int Mercator::init(grib_handle* h, grib_arguments* args)
 {
     int err = GRIB_SUCCESS;
-    if ((err = Gen::init(h, args)) != GRIB_SUCCESS)
+    if ((err = Gen::init(h, args)) != GRIB_SUCCESS) {
         return err;
+    }
 
-    long ni, nj, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning;
-    double latFirstInDegrees, lonFirstInDegrees, LaDInDegrees;
-    double latLastInDegrees, lonLastInDegrees, orientationInDegrees, DiInMetres, DjInMetres, radius = 0;
-    double latFirstInRadians, lonFirstInRadians, latLastInRadians, lonLastInRadians,
-        LaDInRadians, orientationInRadians;
-    double earthMajorAxisInMetres = 0, earthMinorAxisInMetres = 0;
+    long ni;
+    long nj;
+    long iScansNegatively;
+    long jScansPositively;
+    long jPointsAreConsecutive;
+    long alternativeRowScanning;
+    double latFirstInDegrees;
+    double lonFirstInDegrees;
+    double LaDInDegrees;
+    double latLastInDegrees;
+    double lonLastInDegrees;
+    double orientationInDegrees;
+    double DiInMetres;
+    double DjInMetres;
+    double radius = 0;
+    double latFirstInRadians;
+    double lonFirstInRadians;
+    double latLastInRadians;
+    double lonLastInRadians;
+    double LaDInRadians;
+    double orientationInRadians;
+    double earthMajorAxisInMetres = 0;
+    double earthMinorAxisInMetres = 0;
 
     const char* sRadius               = args->get_name(h, carg_++);
     const char* sNi                   = args->get_name(h, carg_++);
@@ -191,15 +232,25 @@ int Mercator::init(grib_handle* h, grib_arguments* args)
     const char* sjPointsAreConsecutive  = args->get_name(h, carg_++);
     const char* sAlternativeRowScanning = args->get_name(h, carg_++);
 
-    if ((err = grib_get_long_internal(h, sNi, &ni)) != GRIB_SUCCESS) return err;
-    if ((err = grib_get_long_internal(h, sNj, &nj)) != GRIB_SUCCESS) return err;
+    if ((err = grib_get_long_internal(h, sNi, &ni)) != GRIB_SUCCESS) {
+        return err;
+    }
+    if ((err = grib_get_long_internal(h, sNj, &nj)) != GRIB_SUCCESS) {
+        return err;
+    }
 
     if (grib_is_earth_oblate(h)) {
-        if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) return err;
-        if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) return err;
+        if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) {
+            return err;
+        }
+        if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) {
+            return err;
+        }
     }
     else {
-        if ((err = grib_get_double_internal(h, sRadius, &radius)) != GRIB_SUCCESS) return err;
+        if ((err = grib_get_double_internal(h, sRadius, &radius)) != GRIB_SUCCESS) {
+            return err;
+        }
         earthMinorAxisInMetres = earthMajorAxisInMetres = radius;
     }
 
@@ -208,31 +259,43 @@ int Mercator::init(grib_handle* h, grib_arguments* args)
         return GRIB_WRONG_GRID;
     }
 
-    if ((err = grib_get_double_internal(h, sLaDInDegrees, &LaDInDegrees)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(h, sLaDInDegrees, &LaDInDegrees)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_double_internal(h, sLatFirstInDegrees, &latFirstInDegrees)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_double_internal(h, sLatFirstInDegrees, &latFirstInDegrees)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_double_internal(h, sLonFirstInDegrees, &lonFirstInDegrees)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_double_internal(h, sLonFirstInDegrees, &lonFirstInDegrees)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_double_internal(h, sLatLastInDegrees, &latLastInDegrees)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_double_internal(h, sLatLastInDegrees, &latLastInDegrees)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_double_internal(h, sLonLastInDegrees, &lonLastInDegrees)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_double_internal(h, sLonLastInDegrees, &lonLastInDegrees)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_double_internal(h, sOrientationInDegrees, &orientationInDegrees)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_double_internal(h, sOrientationInDegrees, &orientationInDegrees)) != GRIB_SUCCESS) {
         return err;
+    }
 
-    if ((err = grib_get_double_internal(h, sDi, &DiInMetres)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(h, sDi, &DiInMetres)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_double_internal(h, sDj, &DjInMetres)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_double_internal(h, sDj, &DjInMetres)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_long_internal(h, sjPointsAreConsecutive, &jPointsAreConsecutive)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_long_internal(h, sjPointsAreConsecutive, &jPointsAreConsecutive)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_long_internal(h, sjScansPositively, &jScansPositively)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_long_internal(h, sjScansPositively, &jScansPositively)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_long_internal(h, siScansNegatively, &iScansNegatively)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_long_internal(h, siScansNegatively, &iScansNegatively)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_long_internal(h, sAlternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_long_internal(h, sAlternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS) {
         return err;
+    }
 
     latFirstInRadians    = latFirstInDegrees * DEG2RAD;
     lonFirstInRadians    = lonFirstInDegrees * DEG2RAD;
@@ -246,7 +309,9 @@ int Mercator::init(grib_handle* h, grib_arguments* args)
                         latFirstInRadians, lonFirstInRadians,
                         latLastInRadians, lonLastInRadians,
                         LaDInRadians, orientationInRadians);
-    if (err) return err;
+    if (err) {
+        return err;
+    }
 
     e_ = -1;
 
@@ -259,8 +324,9 @@ int Mercator::init(grib_handle* h, grib_arguments* args)
 
 int Mercator::next(double* lat, double* lon, double* val) const
 {
-    if ((long)e_ >= (long)(nv_ - 1))
+    if (e_ >= static_cast<long>(nv_ - 1)) {
         return 0;
+    }
     e_++;
 
     *lat = lats_[e_];

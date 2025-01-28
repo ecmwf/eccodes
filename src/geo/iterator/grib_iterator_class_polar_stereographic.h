@@ -12,7 +12,8 @@
 
 #include "grib_iterator_class_gen.h"
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 class PolarStereographic : public Gen
 {

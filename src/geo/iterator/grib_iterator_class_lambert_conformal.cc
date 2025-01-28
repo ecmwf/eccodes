@@ -14,7 +14,8 @@
 eccodes::geo_iterator::LambertConformal _grib_iterator_lambert_conformal{};
 eccodes::geo_iterator::Iterator* grib_iterator_lambert_conformal = &_grib_iterator_lambert_conformal;
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 #define ITER    "Lambert conformal Geoiterator"
 #define EPSILON 1.0e-10
@@ -37,8 +38,12 @@ namespace eccodes::geo_iterator {
 // Adjust longitude (in radians) to range -180 to 180
 static double adjust_lon_radians(double lon)
 {
-    if (lon > M_PI) lon -= 2 * M_PI;
-    if (lon < -M_PI) lon += 2 * M_PI;
+    if (lon > M_PI) {
+        lon -= 2 * M_PI;
+    }
+    if (lon < -M_PI) {
+        lon += 2 * M_PI;
+    }
     return lon;
 }
 
@@ -53,8 +58,13 @@ static double compute_phi(
     double ts,      // Constant value t
     int* error)
 {
-    double eccnth, phi, con, dphi, sinpi;
-    int i, MAX_ITER = 15;
+    double eccnth;
+    double phi;
+    double con;
+    double dphi;
+    double sinpi;
+    int i;
+    int MAX_ITER = 15;
 
     eccnth = 0.5 * eccent;
     phi    = M_PI_2 - 2 * atan(ts);
@@ -63,8 +73,9 @@ static double compute_phi(
         con   = eccent * sinpi;
         dphi  = M_PI_2 - 2 * atan(ts * (pow(((1.0 - con) / (1.0 + con)), eccnth))) - phi;
         phi += dphi;
-        if (fabs(dphi) <= 0.0000000001)
+        if (fabs(dphi) <= 0.0000000001) {
             return (phi);
+        }
     }
     *error = GRIB_INTERNAL_ERROR;
     return 0;
@@ -131,7 +142,9 @@ int LambertConformal::init_sphere(const grib_handle* h,
                                   double LoVInRadians, double Latin1InRadians, double Latin2InRadians,
                                   double LaDInRadians)
 {
-    double n, x, y;
+    double n;
+    double x;
+    double y;
 
     if (fabs(Latin1InRadians - Latin2InRadians) < 1E-09) {
         n = sin(Latin1InRadians);
@@ -148,10 +161,12 @@ int LambertConformal::init_sphere(const grib_handle* h,
     double lonDiff   = lonFirstInRadians - LoVInRadians;
 
     // Adjust longitude to range -180 to 180
-    if (lonDiff > M_PI)
+    if (lonDiff > M_PI) {
         lonDiff -= 2 * M_PI;
-    if (lonDiff < -M_PI)
+    }
+    if (lonDiff < -M_PI) {
         lonDiff += 2 * M_PI;
+    }
     double angle = n * lonDiff;
     double x0    = rho * sin(angle);
     double y0    = rho0 - rho * cos(angle);
@@ -171,7 +186,8 @@ int LambertConformal::init_sphere(const grib_handle* h,
         return GRIB_OUT_OF_MEMORY;
     }
 
-    double latDeg = 0, lonDeg = 0;
+    double latDeg = 0;
+    double lonDeg = 0;
     for (long j = 0; j < ny; j++) {
         y = y0 + j * Dy;
         for (long i = 0; i < nx; i++) {
@@ -222,8 +238,19 @@ int LambertConformal::init_oblate(const grib_handle* h,
                                   double LoVInRadians, double Latin1InRadians, double Latin2InRadians,
                                   double LaDInRadians)
 {
-    int i, j, err = 0;
-    double x0, y0, x, y, latRad, lonRad, latDeg, lonDeg, sinphi, ts, rh1, theta;
+    int err = 0;
+    double x0;
+    double y0;
+    double x;
+    double y;
+    double latRad;
+    double lonRad;
+    double latDeg;
+    double lonDeg;
+    double sinphi;
+    double ts;
+    double rh1;
+    double theta;
     double false_easting;   // x offset in meters
     double false_northing;  // y offset in meters
 
@@ -299,11 +326,12 @@ int LambertConformal::init_oblate(const grib_handle* h,
     // Populate our arrays
     false_easting  = x0;
     false_northing = y0;
-    for (j = 0; j < ny; j++) {
+    for (long j = 0; j < ny; j++) {
         y = j * Dy;
-        for (i = 0; i < nx; i++) {
-            const int index = i + j * nx;
-            double _x, _y;
+        for (long i = 0; i < nx; i++) {
+            long index = i + j * nx;
+            double _x;
+            double _y;
             x = i * Dx;
             // Inverse projection to convert from x,y to lat,lon
             _x  = x - false_easting;
@@ -315,8 +343,9 @@ int LambertConformal::init_oblate(const grib_handle* h,
                 con = -con;
             }
             theta = 0.0;
-            if (rh1 != 0)
+            if (rh1 != 0) {
                 theta = atan2((con * _x), (con * _y));
+            }
             if ((rh1 != 0) || (ns > 0.0)) {
                 con    = 1.0 / ns;
                 ts     = pow((rh1 / (earthMajorAxisInMetres * F)), con);
@@ -348,16 +377,34 @@ int LambertConformal::init_oblate(const grib_handle* h,
 int LambertConformal::init(grib_handle* h, grib_arguments* args)
 {
     int err = GRIB_SUCCESS;
-    if ((err = Gen::init(h, args)) != GRIB_SUCCESS)
+    if ((err = Gen::init(h, args)) != GRIB_SUCCESS) {
         return err;
+    }
 
     int is_oblate = 0;
-    long nx, ny, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning;
-    double LoVInDegrees, LaDInDegrees, Latin1InDegrees, Latin2InDegrees, latFirstInDegrees,
-        lonFirstInDegrees, Dx, Dy, radius = 0;
-    double latFirstInRadians, lonFirstInRadians, LoVInRadians, Latin1InRadians, Latin2InRadians,
-        LaDInRadians;
-    double earthMajorAxisInMetres = 0, earthMinorAxisInMetres = 0;
+    long nx;
+    long ny;
+    long iScansNegatively;
+    long jScansPositively;
+    long jPointsAreConsecutive;
+    long alternativeRowScanning;
+    double LoVInDegrees;
+    double LaDInDegrees;
+    double Latin1InDegrees;
+    double Latin2InDegrees;
+    double latFirstInDegrees;
+    double lonFirstInDegrees;
+    double Dx;
+    double Dy;
+    double radius = 0;
+    double latFirstInRadians;
+    double lonFirstInRadians;
+    double LoVInRadians;
+    double Latin1InRadians;
+    double Latin2InRadians;
+    double LaDInRadians;
+    double earthMajorAxisInMetres = 0;
+    double earthMinorAxisInMetres = 0;
 
     const char* sradius            = args->get_name(h, carg_++);
     const char* snx                = args->get_name(h, carg_++);
@@ -376,17 +423,27 @@ int LambertConformal::init(grib_handle* h, grib_arguments* args)
     const char* sjPointsAreConsecutive  = args->get_name(h, carg_++);
     const char* salternativeRowScanning = args->get_name(h, carg_++);
 
-    if ((err = grib_get_long_internal(h, snx, &nx)) != GRIB_SUCCESS) return err;
-    if ((err = grib_get_long_internal(h, sny, &ny)) != GRIB_SUCCESS) return err;
+    if ((err = grib_get_long_internal(h, snx, &nx)) != GRIB_SUCCESS) {
+        return err;
+    }
+    if ((err = grib_get_long_internal(h, sny, &ny)) != GRIB_SUCCESS) {
+        return err;
+    }
 
     is_oblate = grib_is_earth_oblate(h);
 
     if (is_oblate) {
-        if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) return err;
-        if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) return err;
+        if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) {
+            return err;
+        }
+        if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) {
+            return err;
+        }
     }
     else {
-        if ((err = grib_get_double_internal(h, sradius, &radius)) != GRIB_SUCCESS) return err;
+        if ((err = grib_get_double_internal(h, sradius, &radius)) != GRIB_SUCCESS) {
+            return err;
+        }
     }
 
     if (nv_ != nx * ny) {
@@ -394,30 +451,42 @@ int LambertConformal::init(grib_handle* h, grib_arguments* args)
         return GRIB_WRONG_GRID;
     }
 
-    if ((err = grib_get_double_internal(h, sLoVInDegrees, &LoVInDegrees)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(h, sLoVInDegrees, &LoVInDegrees)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_double_internal(h, sLaDInDegrees, &LaDInDegrees)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_double_internal(h, sLaDInDegrees, &LaDInDegrees)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_double_internal(h, sLatin1InDegrees, &Latin1InDegrees)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_double_internal(h, sLatin1InDegrees, &Latin1InDegrees)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_double_internal(h, sLatin2InDegrees, &Latin2InDegrees)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_double_internal(h, sLatin2InDegrees, &Latin2InDegrees)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_double_internal(h, slatFirstInDegrees, &latFirstInDegrees)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_double_internal(h, slatFirstInDegrees, &latFirstInDegrees)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_double_internal(h, slonFirstInDegrees, &lonFirstInDegrees)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_double_internal(h, slonFirstInDegrees, &lonFirstInDegrees)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_double_internal(h, sDx, &Dx)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_double_internal(h, sDx, &Dx)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_double_internal(h, sDy, &Dy)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_double_internal(h, sDy, &Dy)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_long_internal(h, sjPointsAreConsecutive, &jPointsAreConsecutive)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_long_internal(h, sjPointsAreConsecutive, &jPointsAreConsecutive)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_long_internal(h, sjScansPositively, &jScansPositively)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_long_internal(h, sjScansPositively, &jScansPositively)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_long_internal(h, siScansNegatively, &iScansNegatively)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_long_internal(h, siScansNegatively, &iScansNegatively)) != GRIB_SUCCESS) {
         return err;
-    if ((err = grib_get_long_internal(h, salternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS)
+    }
+    if ((err = grib_get_long_internal(h, salternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS) {
         return err;
+    }
 
     // Standard Parallels cannot be equal and on opposite sides of the equator
     if (fabs(Latin1InDegrees + Latin2InDegrees) < EPSILON) {
@@ -451,7 +520,9 @@ int LambertConformal::init(grib_handle* h, grib_arguments* args)
                           latFirstInRadians, lonFirstInRadians,
                           LoVInRadians, Latin1InRadians, Latin2InRadians, LaDInRadians);
     }
-    if (err) return err;
+    if (err) {
+        return err;
+    }
 
     e_ = -1;
 
@@ -464,8 +535,9 @@ int LambertConformal::init(grib_handle* h, grib_arguments* args)
 
 int LambertConformal::next(double* lat, double* lon, double* val) const
 {
-    if ((long)e_ >= (long)(nv_ - 1))
+    if (e_ >= static_cast<long>(nv_ - 1)) {
         return 0;
+    }
     e_++;
 
     *lat = lats_[e_];
