@@ -54,13 +54,10 @@ ${tools_dir}/grib_set -s marsClass=ai,typeOfProcessedData=missing,backgroundProc
 grib_check_key_equals $temp2Grib mars.model 'aifs-ens-crps'
 
 
-# Keys are read-only (may change this later)
-set +e
-${tools_dir}/grib_set -s modelName=AIFS $sample $tempGrib 2>$tempLog
-status=$?
-set -e
-[ $status -ne 0 ]
-grep -q "Value is read only" $tempLog
+# modelName not read-only
+${tools_dir}/grib_set -s class=ai,type=pf,stream=enfo,modelName='aifs-ens-crps' $ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl $tempGrib
+grib_check_key_equals $tempGrib mars.model 'aifs-ens-crps'
+grib_check_key_equals $tempGrib backgroundGeneratingProcessIdentifier 2
 
 set +e
 ${tools_dir}/grib_set -s modelVersion=cy48r1 $sample $tempGrib 2>$tempLog
