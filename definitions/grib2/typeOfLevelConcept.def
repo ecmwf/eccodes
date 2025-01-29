@@ -10,16 +10,38 @@
 }
 'surface' = {typeOfFirstFixedSurface=1; typeOfSecondFixedSurface=255;}
 
+'entireAtmosphere' = {
+    typeOfFirstFixedSurface=1;  scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=8; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+'entireAtmosphere' = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=8;}
 
-'entireAtmosphere'             = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=8;}
-'entireOcean'                  = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=9;}
-'entireLake'                   = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=162;}
-'cloudBase'                    = {typeOfFirstFixedSurface=2;   typeOfSecondFixedSurface=255;}
+'entireOcean' = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=9;}
+
+'entireLake' = {
+    typeOfFirstFixedSurface=1;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=162; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+'entireLake' = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=162;}
+
+'cloudBase' = {
+    typeOfFirstFixedSurface=2;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+'cloudBase' = {typeOfFirstFixedSurface=2;   typeOfSecondFixedSurface=255;}
+
 'cloudTop'                     = {typeOfFirstFixedSurface=3;   typeOfSecondFixedSurface=255;}
 'isothermZero'                 = {typeOfFirstFixedSurface=4;   typeOfSecondFixedSurface=255;}
 'adiabaticCondensation'        = {typeOfFirstFixedSurface=5;   typeOfSecondFixedSurface=255;}
 'maxWind'                      = {typeOfFirstFixedSurface=6;   typeOfSecondFixedSurface=255;}
-'tropopause'                   = {typeOfFirstFixedSurface=7;   typeOfSecondFixedSurface=255;}
+
+'tropopause' = {
+    typeOfFirstFixedSurface=7;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+'tropopause' = {typeOfFirstFixedSurface=7;   typeOfSecondFixedSurface=255;}
+
+
 'nominalTop'                   = {typeOfFirstFixedSurface=8;   typeOfSecondFixedSurface=255;}
 'seaBottom'                    = {typeOfFirstFixedSurface=9;   typeOfSecondFixedSurface=255;}
 # Note: We already had 'entireAtmosphere' mapped before adding this one so had to choose another name
