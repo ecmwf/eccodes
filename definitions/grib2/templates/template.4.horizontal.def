@@ -1,7 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
 # Type of first fixed surface
-codetable[1] typeOfFirstFixedSurface ('4.5.table',masterDir,localDir) : dump,edition_specific,string_type;
+codetable[1] typeOfFirstFixedSurface ('4.5.table',masterDir,localDir) : dump,edition_specific,string_type,copy_as_int;
 meta unitsOfFirstFixedSurface codetable_units(typeOfFirstFixedSurface) : dump;
 meta nameOfFirstFixedSurface codetable_title(typeOfFirstFixedSurface) : dump;
 
