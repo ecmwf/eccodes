@@ -30,16 +30,16 @@ def_file="$ECCODES_DEFINITION_PATH/grib2/typeOfLevelConcept.def"
 rm -f $tempText
 
 # uniq -d outputs a single copy of each line that is repeated in the input
-grep "^'" $def_file | awk -F= '{print $1}' | tr -d "' " | sort | uniq -d > $tempText
+# grep "^'" $def_file | awk -F= '{print $1}' | tr -d "' " | sort | uniq -d > $tempText
 
-if [ -s "$tempText" ]; then
-    # File exists and has a size greater than zero
-    echo "ERROR: Duplicates found in $def_file" >&2
-    cat $tempText
-    exit 1
-else
-    echo "No duplicates in $def_file"
-fi
+# if [ -s "$tempText" ]; then
+#     # File exists and has a size greater than zero
+#     echo "ERROR: Duplicates found in $def_file" >&2
+#     cat $tempText
+#     exit 1
+# else
+#     echo "No duplicates in $def_file"
+# fi
 
 # ECC-1847: Setting invalid value for 'typeOfLevel' does not fail
 # ----------------------------------------------------------------

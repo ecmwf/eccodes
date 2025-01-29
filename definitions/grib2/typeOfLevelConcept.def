@@ -1,5 +1,11 @@
 # Concept typeOfLevel
-'surface'                      = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=255;}
+'surface' = {
+    typeOfFirstFixedSurface=1;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+'surface' = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=255;}
+
+
 'entireAtmosphere'             = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=8;}
 'entireOcean'                  = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=9;}
 'entireLake'                   = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=162;}
