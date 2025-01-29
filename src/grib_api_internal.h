@@ -376,6 +376,7 @@ struct grib_virtual_value
 #define GRIB_ACCESSOR_FLAG_LOWERCASE                (1 << 17)
 #define GRIB_ACCESSOR_FLAG_BUFR_COORD               (1 << 18)
 #define GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION (1 << 19)
+#define GRIB_ACCESSOR_FLAG_COPY_AS_INT              (1 << 20)
 
 /**
  *  A section accessor

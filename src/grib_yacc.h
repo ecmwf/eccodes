@@ -130,56 +130,57 @@ extern int grib_yydebug;
     MISSING = 331,                 /* MISSING  */
     CONSTRAINT = 332,              /* CONSTRAINT  */
     COPY_OK = 333,                 /* COPY_OK  */
-    COPY_IF_CHANGING_EDITION = 334, /* COPY_IF_CHANGING_EDITION  */
-    WHEN = 335,                    /* WHEN  */
-    SET = 336,                     /* SET  */
-    SET_NOFAIL = 337,              /* SET_NOFAIL  */
-    WRITE = 338,                   /* WRITE  */
-    APPEND = 339,                  /* APPEND  */
-    PRINT = 340,                   /* PRINT  */
-    EXPORT = 341,                  /* EXPORT  */
-    REMOVE = 342,                  /* REMOVE  */
-    RENAME = 343,                  /* RENAME  */
-    SKIP = 344,                    /* SKIP  */
-    PAD = 345,                     /* PAD  */
-    SECTION_PADDING = 346,         /* SECTION_PADDING  */
-    MESSAGE = 347,                 /* MESSAGE  */
-    MESSAGE_COPY = 348,            /* MESSAGE_COPY  */
-    PADTO = 349,                   /* PADTO  */
-    PADTOEVEN = 350,               /* PADTOEVEN  */
-    PADTOMULTIPLE = 351,           /* PADTOMULTIPLE  */
-    G1_HALF_BYTE = 352,            /* G1_HALF_BYTE  */
-    G1_MESSAGE_LENGTH = 353,       /* G1_MESSAGE_LENGTH  */
-    G1_SECTION4_LENGTH = 354,      /* G1_SECTION4_LENGTH  */
-    SECTION_LENGTH = 355,          /* SECTION_LENGTH  */
-    LENGTH = 356,                  /* LENGTH  */
-    FLAG = 357,                    /* FLAG  */
-    ITERATOR = 358,                /* ITERATOR  */
-    NEAREST = 359,                 /* NEAREST  */
-    BOX = 360,                     /* BOX  */
-    KSEC = 361,                    /* KSEC  */
-    ASSERT = 362,                  /* ASSERT  */
-    SUBSTR = 363,                  /* SUBSTR  */
-    CASE = 364,                    /* CASE  */
-    SWITCH = 365,                  /* SWITCH  */
-    DEFAULT = 366,                 /* DEFAULT  */
-    EQ = 367,                      /* EQ  */
-    NE = 368,                      /* NE  */
-    GE = 369,                      /* GE  */
-    LE = 370,                      /* LE  */
-    LT = 371,                      /* LT  */
-    GT = 372,                      /* GT  */
-    BIT = 373,                     /* BIT  */
-    BITOFF = 374,                  /* BITOFF  */
-    AND = 375,                     /* AND  */
-    OR = 376,                      /* OR  */
-    NOT = 377,                     /* NOT  */
-    IS = 378,                      /* IS  */
-    ISNOT = 379,                   /* ISNOT  */
-    IDENT = 380,                   /* IDENT  */
-    STRING = 381,                  /* STRING  */
-    INTEGER = 382,                 /* INTEGER  */
-    FLOAT = 383                    /* FLOAT  */
+    COPY_AS_INT = 334,             /* COPY_AS_INT  */
+    COPY_IF_CHANGING_EDITION = 335, /* COPY_IF_CHANGING_EDITION  */
+    WHEN = 336,                    /* WHEN  */
+    SET = 337,                     /* SET  */
+    SET_NOFAIL = 338,              /* SET_NOFAIL  */
+    WRITE = 339,                   /* WRITE  */
+    APPEND = 340,                  /* APPEND  */
+    PRINT = 341,                   /* PRINT  */
+    EXPORT = 342,                  /* EXPORT  */
+    REMOVE = 343,                  /* REMOVE  */
+    RENAME = 344,                  /* RENAME  */
+    SKIP = 345,                    /* SKIP  */
+    PAD = 346,                     /* PAD  */
+    SECTION_PADDING = 347,         /* SECTION_PADDING  */
+    MESSAGE = 348,                 /* MESSAGE  */
+    MESSAGE_COPY = 349,            /* MESSAGE_COPY  */
+    PADTO = 350,                   /* PADTO  */
+    PADTOEVEN = 351,               /* PADTOEVEN  */
+    PADTOMULTIPLE = 352,           /* PADTOMULTIPLE  */
+    G1_HALF_BYTE = 353,            /* G1_HALF_BYTE  */
+    G1_MESSAGE_LENGTH = 354,       /* G1_MESSAGE_LENGTH  */
+    G1_SECTION4_LENGTH = 355,      /* G1_SECTION4_LENGTH  */
+    SECTION_LENGTH = 356,          /* SECTION_LENGTH  */
+    LENGTH = 357,                  /* LENGTH  */
+    FLAG = 358,                    /* FLAG  */
+    ITERATOR = 359,                /* ITERATOR  */
+    NEAREST = 360,                 /* NEAREST  */
+    BOX = 361,                     /* BOX  */
+    KSEC = 362,                    /* KSEC  */
+    ASSERT = 363,                  /* ASSERT  */
+    SUBSTR = 364,                  /* SUBSTR  */
+    CASE = 365,                    /* CASE  */
+    SWITCH = 366,                  /* SWITCH  */
+    DEFAULT = 367,                 /* DEFAULT  */
+    EQ = 368,                      /* EQ  */
+    NE = 369,                      /* NE  */
+    GE = 370,                      /* GE  */
+    LE = 371,                      /* LE  */
+    LT = 372,                      /* LT  */
+    GT = 373,                      /* GT  */
+    BIT = 374,                     /* BIT  */
+    BITOFF = 375,                  /* BITOFF  */
+    AND = 376,                     /* AND  */
+    OR = 377,                      /* OR  */
+    NOT = 378,                     /* NOT  */
+    IS = 379,                      /* IS  */
+    ISNOT = 380,                   /* ISNOT  */
+    IDENT = 381,                   /* IDENT  */
+    STRING = 382,                  /* STRING  */
+    INTEGER = 383,                 /* INTEGER  */
+    FLOAT = 384                    /* FLOAT  */
   };
   typedef enum grib_yytokentype grib_yytoken_kind_t;
 #endif
@@ -264,56 +265,57 @@ extern int grib_yydebug;
 #define MISSING 331
 #define CONSTRAINT 332
 #define COPY_OK 333
-#define COPY_IF_CHANGING_EDITION 334
-#define WHEN 335
-#define SET 336
-#define SET_NOFAIL 337
-#define WRITE 338
-#define APPEND 339
-#define PRINT 340
-#define EXPORT 341
-#define REMOVE 342
-#define RENAME 343
-#define SKIP 344
-#define PAD 345
-#define SECTION_PADDING 346
-#define MESSAGE 347
-#define MESSAGE_COPY 348
-#define PADTO 349
-#define PADTOEVEN 350
-#define PADTOMULTIPLE 351
-#define G1_HALF_BYTE 352
-#define G1_MESSAGE_LENGTH 353
-#define G1_SECTION4_LENGTH 354
-#define SECTION_LENGTH 355
-#define LENGTH 356
-#define FLAG 357
-#define ITERATOR 358
-#define NEAREST 359
-#define BOX 360
-#define KSEC 361
-#define ASSERT 362
-#define SUBSTR 363
-#define CASE 364
-#define SWITCH 365
-#define DEFAULT 366
-#define EQ 367
-#define NE 368
-#define GE 369
-#define LE 370
-#define LT 371
-#define GT 372
-#define BIT 373
-#define BITOFF 374
-#define AND 375
-#define OR 376
-#define NOT 377
-#define IS 378
-#define ISNOT 379
-#define IDENT 380
-#define STRING 381
-#define INTEGER 382
-#define FLOAT 383
+#define COPY_AS_INT 334
+#define COPY_IF_CHANGING_EDITION 335
+#define WHEN 336
+#define SET 337
+#define SET_NOFAIL 338
+#define WRITE 339
+#define APPEND 340
+#define PRINT 341
+#define EXPORT 342
+#define REMOVE 343
+#define RENAME 344
+#define SKIP 345
+#define PAD 346
+#define SECTION_PADDING 347
+#define MESSAGE 348
+#define MESSAGE_COPY 349
+#define PADTO 350
+#define PADTOEVEN 351
+#define PADTOMULTIPLE 352
+#define G1_HALF_BYTE 353
+#define G1_MESSAGE_LENGTH 354
+#define G1_SECTION4_LENGTH 355
+#define SECTION_LENGTH 356
+#define LENGTH 357
+#define FLAG 358
+#define ITERATOR 359
+#define NEAREST 360
+#define BOX 361
+#define KSEC 362
+#define ASSERT 363
+#define SUBSTR 364
+#define CASE 365
+#define SWITCH 366
+#define DEFAULT 367
+#define EQ 368
+#define NE 369
+#define GE 370
+#define LE 371
+#define LT 372
+#define GT 373
+#define BIT 374
+#define BITOFF 375
+#define AND 376
+#define OR 377
+#define NOT 378
+#define IS 379
+#define ISNOT 380
+#define IDENT 381
+#define STRING 382
+#define INTEGER 383
+#define FLOAT 384
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -337,7 +339,7 @@ union YYSTYPE
   grib_rule               *rules;
   grib_rule_entry         *rule_entry;
 
-#line 341 "y.tab.h"
+#line 343 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
