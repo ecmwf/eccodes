@@ -176,6 +176,7 @@ IDENT     {IDENT1}|{IDENT2}|{IDENT3}|{IDENT4}|{IDENT5}
 "constraint"               return CONSTRAINT;
 "override"                 return OVERRIDE;
 "copy_ok"                  return COPY_OK;
+"copy_as_int"              return COPY_AS_INT;
 "copy_if_changing_edition" return COPY_IF_CHANGING_EDITION;
 
 "uint8"                return UINT8;
