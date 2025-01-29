@@ -64,16 +64,16 @@ grib_check_key_equals $tempGribB typeOfLevel,productDefinitionTemplateNumber 'un
 ${tools_dir}/grib_set -s centre=ecmf,typeOfFirstFixedSurface=254 $sample_g2 $tempGribA
 grib_check_key_equals $tempGribA typeOfLevel abstractLevel
 
-# Ecc-2013
+# ECC-2013
 # Create a badly encoded GRIB with invalid sf/sv values
 ${tools_dir}/grib_filter -o $tempGribA - $sample_g2 <<EOF
-set typeOfFirstFixedSurface=1;
-set scaleFactorOfFirstFixedSurface=5;
-set scaledValueOfFirstFixedSurface=12;
-set typeOfSecondFixedSurface=255;
-set scaleFactorOfSecondFixedSurface=6;
-set scaledValueOfSecondFixedSurface=11;
-write;
+    set typeOfFirstFixedSurface=1;
+    set scaleFactorOfFirstFixedSurface=5;
+    set scaledValueOfFirstFixedSurface=12;
+    set typeOfSecondFixedSurface=255;
+    set scaleFactorOfSecondFixedSurface=6;
+    set scaledValueOfSecondFixedSurface=11;
+    write;
 EOF
 # It should still match surface
 grib_check_key_equals $tempGribA typeOfLevel surface
@@ -95,6 +95,15 @@ ${tools_dir}/grib_compare -b \
    $tempGribA $tempGribB
 grib_check_key_equals $tempGribB scaleFactorOfSecondFixedSurface,scaledValueOfFirstFixedSurface 'MISSING MISSING'
 grib_check_key_equals $tempGribB scaleFactorOfSecondFixedSurface,scaledValueOfFirstFixedSurface 'MISSING MISSING'
+
+# ECC-2013
+# Check copying works OK for typeOfFirstFixedSurface and typeOfLevel
+${tools_dir}/grib_set -s paramId=167,productDefinitionTemplateNumber=8 $sample_g2 $tempGribA
+grib_check_key_equals $tempGribA typeOfFirstFixedSurface:i,paramId,shortName '103 167 2t'
+
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=8,paramId=167 $sample_g2 $tempGribA
+grib_check_key_equals $tempGribA typeOfFirstFixedSurface:i,paramId,shortName '103 167 2t'
+
 
 # Clean up
 rm -f $tempText $tempGribA $tempGribB

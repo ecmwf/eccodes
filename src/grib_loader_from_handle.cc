@@ -157,12 +157,16 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
         pack_missing = 1;
     }
 
-    const long ga_type = ga->get_native_type();
+    long ga_type = ga->get_native_type();
 
     if ((ga->flags_ & GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION) && !loader->changing_edition) {
         // See ECC-1560 and ECC-1644
         grib_context_log(h->context, GRIB_LOG_DEBUG, "Skipping %s (only copied if changing edition)", ga->name_);
         return GRIB_SUCCESS;
+    }
+
+    if (STR_EQUAL(name, "typeOfFirstFixedSurface")) {
+        ga_type = GRIB_TYPE_LONG;
     }
 
     switch (ga_type) {
