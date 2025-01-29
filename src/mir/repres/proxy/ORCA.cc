@@ -17,8 +17,8 @@
 #include <vector>
 
 #include "mir/repres/Iterator.h"
-#include "mir/util/Atlas.h"
 #include "mir/util/Exceptions.h"
+#include "mir/util/Grib.h"
 #include "mir/util/Log.h"
 #include "mir/util/MeshGeneratorParameters.h"
 

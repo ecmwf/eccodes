@@ -15,8 +15,10 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/proxy/ProxyGrid.h"
 #include "mir/util/Atlas.h"
-#include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
+
+
+struct grib_info;
 
 
 namespace mir::repres::proxy {

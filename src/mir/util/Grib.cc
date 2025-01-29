@@ -17,7 +17,22 @@
 #include <ios>
 #include <utility>
 
+#include "mir/util/Exceptions.h"
 #include "mir/util/Log.h"
+
+
+bool grib_call(int e, const char* call, bool NOT_FOUND_IS_OK) {
+    if (static_cast<bool>(e)) {
+        if (NOT_FOUND_IS_OK && (e == CODES_NOT_FOUND)) {
+            return false;
+        }
+
+        std::ostringstream os;
+        os << call << ": " << codes_get_error_message(e);
+        throw mir::exception::SeriousBug(os.str());
+    }
+    return true;
+}
 
 
 void grib_reorder(std::vector<double>& values, long scanningMode, size_t Ni, size_t Nj) {
@@ -158,4 +173,9 @@ void grib_info::extra_set(const char* key, const char* value) {
 
     strings_.emplace_back(value);
     set.string_value = strings_.back().c_str();
+}
+
+
+HandleDeleter::HandleDeleter(grib_handle* h) : h_(h) {
+    ASSERT(h);
 }

@@ -18,21 +18,8 @@
 #include <string>
 #include <vector>
 
-#include "mir/util/Exceptions.h"
 
-
-inline bool grib_call(int e, const char* call, bool NOT_FOUND_IS_OK = false) {
-    if (static_cast<bool>(e)) {
-        if (NOT_FOUND_IS_OK && (e == CODES_NOT_FOUND)) {
-            return false;
-        }
-
-        std::ostringstream os;
-        os << call << ": " << codes_get_error_message(e);
-        throw mir::exception::SeriousBug(os.str());
-    }
-    return true;
-}
+bool grib_call(int e, const char* call, bool NOT_FOUND_IS_OK = false);
 
 
 #define GRIB_CALL(a) grib_call(a, #a)
@@ -42,6 +29,13 @@ inline bool grib_call(int e, const char* call, bool NOT_FOUND_IS_OK = false) {
 
 struct grib_info {
     grib_info();
+    grib_info(const grib_info&) = delete;
+    grib_info(grib_info&&)      = delete;
+
+    ~grib_info() = default;
+
+    void operator=(grib_info&&)      = delete;
+    void operator=(const grib_info&) = delete;
 
     void extra_set(const char* key, long);
     void extra_set(const char* key, double);
@@ -51,44 +45,56 @@ struct grib_info {
     codes_util_packing_spec packing;
 
 private:
-    grib_info(const grib_info&)      = delete;
-    void operator=(const grib_info&) = delete;
-
     std::vector<std::string> strings_;
     const size_t extra_settings_size_;
 };
 
 
-class HandleDeleter {
-    grib_handle* h_;
+struct HandleDeleter {
+    explicit HandleDeleter(grib_handle*);
 
-public:
-    HandleDeleter(grib_handle* h) : h_(h) { ASSERT(h); }
-    HandleDeleter(const HandleDeleter&)  = delete;
-    void operator=(const HandleDeleter&) = delete;
+    HandleDeleter(const HandleDeleter&) = delete;
+    HandleDeleter(HandleDeleter&&)      = delete;
+
     ~HandleDeleter() { codes_handle_delete(h_); }
+
+    void operator=(const HandleDeleter&) = delete;
+    void operator=(HandleDeleter&&)      = delete;
+
+private:
+    grib_handle* h_;
 };
 
 
-class GKeyIteratorDeleter {
-    codes_keys_iterator* h_;
+struct GKeyIteratorDeleter {
+    explicit GKeyIteratorDeleter(codes_keys_iterator* h) : h_(h) {}
 
-public:
-    GKeyIteratorDeleter(codes_keys_iterator* h) : h_(h) {}
     GKeyIteratorDeleter(const GKeyIteratorDeleter&) = delete;
-    void operator=(const GKeyIteratorDeleter&)      = delete;
+    GKeyIteratorDeleter(GKeyIteratorDeleter&&)      = delete;
+
     ~GKeyIteratorDeleter() { codes_keys_iterator_delete(h_); }
+
+    void operator=(GKeyIteratorDeleter&&)      = delete;
+    void operator=(const GKeyIteratorDeleter&) = delete;
+
+private:
+    codes_keys_iterator* h_;
 };
 
 
-class BKeyIteratorDeleter {
-    codes_bufr_keys_iterator* h_;
+struct BKeyIteratorDeleter {
+    explicit BKeyIteratorDeleter(codes_bufr_keys_iterator* h) : h_(h) {}
 
-public:
-    BKeyIteratorDeleter(codes_bufr_keys_iterator* h) : h_(h) {}
     BKeyIteratorDeleter(const BKeyIteratorDeleter&) = delete;
-    void operator=(const BKeyIteratorDeleter&)      = delete;
+    BKeyIteratorDeleter(BKeyIteratorDeleter&&)      = delete;
+
     ~BKeyIteratorDeleter() { codes_bufr_keys_iterator_delete(h_); }
+
+    void operator=(BKeyIteratorDeleter&&)      = delete;
+    void operator=(const BKeyIteratorDeleter&) = delete;
+
+private:
+    codes_bufr_keys_iterator* h_;
 };
 
 
