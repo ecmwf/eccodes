@@ -1,9 +1,14 @@
 # Concept typeOfLevel
+# In case of a repeated entry:
+#  set uses the FIRST one
+#  get returns the LAST match
+
+# See ECC-2013 re why we need two definitions
 'surface' = {
     typeOfFirstFixedSurface=1;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
     typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
 }
-'surface' = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=255;}
+'surface' = {typeOfFirstFixedSurface=1; typeOfSecondFixedSurface=255;}
 
 
 'entireAtmosphere'             = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=8;}

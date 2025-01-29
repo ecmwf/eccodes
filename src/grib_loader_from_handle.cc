@@ -165,6 +165,8 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
         return GRIB_SUCCESS;
     }
 
+    // ECC-2013: Unfortunately we mapped this key to be "string_type". Its code table 4.5 has multiple
+    // abbreviations of 'sfc' etc which clash! So we have to revert to integers which are unique
     if (STR_EQUAL(name, "typeOfFirstFixedSurface")) {
         ga_type = GRIB_TYPE_LONG;
     }
