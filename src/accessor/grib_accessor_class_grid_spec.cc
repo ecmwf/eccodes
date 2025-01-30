@@ -16,11 +16,13 @@ grib_accessor* grib_accessor_grid_spec = &_grib_accessor_grid_spec;
 void grib_accessor_grid_spec_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
-    grib_handle* h = grib_handle_of_accessor(this);
-
+    // grib_handle* h = grib_handle_of_accessor(this);
     // grid_type_ = arg->get_name(h, 0);
     // endpoint_  = arg->get_long(h, 1);
-    length_    = 0;
+    length_ = 0;
+
+    // For now read only but later we can make it settable
+    // and provide a pack_string method
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
