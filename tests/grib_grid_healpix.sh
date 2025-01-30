@@ -139,20 +139,25 @@ ${tools_dir}/grib_get_data $tempGrib > $tempLog
 # Invalid cases
 # ------------------
 # Bad ordering
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_set -s gridType=healpix,Nside=1,ordering=6 $input $tempGrib
 set +e
 ${tools_dir}/grib_get_data $tempGrib > $tempLog 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "Only orderingConvention.*are supported" $tempLog
+grep -q "Only ordering.*are supported" $tempLog
 
 # N = 0
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -s gridType=healpix $input $tempGrib
+grib_check_key_equals $tempGrib N 0
 set +e
-${tools_dir}/grib_get_data -sN=0 $tempGrib > $tempLog 2>&1
+${tools_dir}/grib_get_data $tempGrib > $tempLog 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
+cat $tempLog
 grep -q "Nside must be greater than zero" $tempLog
 
 
