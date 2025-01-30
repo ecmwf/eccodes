@@ -18,6 +18,7 @@
 #include <ostream>
 #include <utility>
 
+#include "eckit/filesystem/PathName.h"
 #include "eckit/utils/MD5.h"
 
 #include "mir/api/MIRJob.h"
