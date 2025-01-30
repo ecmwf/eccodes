@@ -60,10 +60,16 @@ int grib_accessor_g2_param_concept_filename_t::unpack_string(char* v, size_t* le
             return err;
         }
     }
-    (void)datasetForLocalExists; //// TODO(masn)
+
+    bool pre_MTG2_defs = false;
+    if (datasetForLocalExists) {
+        if ( STR_EQUAL(datasetForLocal, "s2s") || STR_EQUAL(datasetForLocal, "tigge") || STR_EQUAL(datasetForLocal, "uerra") ) {
+            pre_MTG2_defs = true;
+        }
+    }
 
     const size_t dsize = string_length() - 1; // size for destination string "v"
-    if ( MTG2Switch == 0 ) {
+    if ( MTG2Switch == 0 || pre_MTG2_defs ) {
         snprintf(v, dsize, "%s.%ld.def", basename_, tablesVersionMTG2Switch);
     } else {
         // All other cases other than pre-MTG2 fall into default parameter files
