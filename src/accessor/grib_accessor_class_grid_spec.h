@@ -12,18 +12,15 @@
 
 #include "grib_accessor_class_gen.h"
 
-class grib_accessor_g2_param_concept_filename_t : public grib_accessor_gen_t
+class grib_accessor_grid_spec_t : public grib_accessor_gen_t
 {
 public:
-    grib_accessor_g2_param_concept_filename_t() :
-        grib_accessor_gen_t() { class_name_ = "g2_param_concept_filename"; }
-    grib_accessor* create_empty_accessor() override { return new grib_accessor_g2_param_concept_filename_t{}; }
+    grib_accessor_grid_spec_t() :
+        grib_accessor_gen_t() { class_name_ = "grid_spec"; }
+    grib_accessor* create_empty_accessor() override { return new grib_accessor_grid_spec_t{}; }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* basename_                = nullptr;  // str: paramId, shortName, units, name
-    const char* MTG2Switch_              = nullptr;  // int: 0 or 1
-    const char* tablesVersionMTG2Switch_ = nullptr;  // int: e.g. 33
 };

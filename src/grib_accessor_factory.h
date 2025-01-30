@@ -105,6 +105,7 @@
 { "gen", &grib_accessor_gen, },
 { "getenv", &grib_accessor_getenv, },
 { "global_gaussian", &grib_accessor_global_gaussian, },
+{ "grid_spec", &grib_accessor_grid_spec, },
 { "group", &grib_accessor_group, },
 { "gts_header", &grib_accessor_gts_header, },
 { "hash_array", &grib_accessor_hash_array, },

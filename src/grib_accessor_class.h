@@ -106,6 +106,7 @@ extern grib_accessor* grib_accessor_gds_is_present;
 extern grib_accessor* grib_accessor_gen;
 extern grib_accessor* grib_accessor_getenv;
 extern grib_accessor* grib_accessor_global_gaussian;
+extern grib_accessor* grib_accessor_grid_spec;
 extern grib_accessor* grib_accessor_group;
 extern grib_accessor* grib_accessor_group_copy;
 extern grib_accessor* grib_accessor_gts_header;

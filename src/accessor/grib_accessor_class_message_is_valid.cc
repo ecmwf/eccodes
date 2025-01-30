@@ -63,6 +63,15 @@ static int check_grid_pl_array(grib_handle* h)
     if (ret != GRIB_SUCCESS || plpresent == 0)
         return GRIB_SUCCESS; // No PL array. So nothing to do
 
+    char gridType[128] = {0,};
+    size_t len = 128;
+    ret = grib_get_string(h, "gridType", gridType, &len);
+    if (ret == GRIB_SUCCESS && STR_EQUAL(gridType, "reduced_ll")) {
+        // Unfortunately in our archive we have such grids with zeroes in the pl!
+        return GRIB_SUCCESS;
+    }
+
+
     if ((ret = grib_get_size(h, "pl", &plsize)) != GRIB_SUCCESS)
         return ret;
     if (plsize == 0) { // pl array must have at least one element

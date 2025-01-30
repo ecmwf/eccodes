@@ -122,6 +122,4 @@ constant conceptsLocalDirECMF="grib2/localConcepts/ecmf" : hidden;
 meta conceptsDir1 g2_concept_dir(preferLocalConcepts, conceptsMasterDir, conceptsLocalDirAll, datasetForLocal, 1);
 meta conceptsDir2 g2_concept_dir(preferLocalConcepts, conceptsMasterDir, conceptsLocalDirAll, datasetForLocal, 2);
 
-# meta MTG2SwitchDefault mtg2_switch_default(tablesVersion, tablesVersionMTG2Switch, marsClass) : hidden, read_only;
-
 meta eps g2_eps(productDefinitionTemplateNumber, type, stream, stepType, derivedForecast);

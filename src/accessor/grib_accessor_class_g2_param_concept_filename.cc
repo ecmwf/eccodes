@@ -18,9 +18,9 @@ void grib_accessor_g2_param_concept_filename_t::init(const long len, grib_argume
     grib_accessor_gen_t::init(len, arg);
     grib_handle* h = grib_handle_of_accessor(this);
 
-    this->basename_   = arg->get_string(h, 0);
-    this->MTG2Switch_ = arg->get_name(h, 1);
-    this->tablesVersionMTG2Switch_ = arg->get_name(h, 2);
+    basename_                = arg->get_string(h, 0);
+    MTG2Switch_              = arg->get_name(h, 1);
+    tablesVersionMTG2Switch_ = arg->get_name(h, 2);
 
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;

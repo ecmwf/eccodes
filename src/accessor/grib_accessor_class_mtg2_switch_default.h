@@ -23,7 +23,8 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* tablesVersion_           = nullptr;
-    const char* tablesVersionMTG2Switch_ = nullptr;
-    const char* marsClass_               = nullptr;
+    const char* tablesVersion_           = nullptr;  // int
+    const char* tablesVersionMTG2Switch_ = nullptr;  // int
+    const char* marsClass_               = nullptr;  // str
+    const char* datasetForLocal_         = nullptr;  // str: e.g. tigge or s2s
 };
