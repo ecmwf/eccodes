@@ -242,6 +242,7 @@ list( APPEND eccodes_src_files
     accessor/grib_accessor_class_g2_mars_labeling.cc
     accessor/grib_accessor_class_md5.cc
     accessor/grib_accessor_class_proj_string.cc
+    accessor/grib_accessor_class_grid_spec.cc
     grib_jasper_encoding.cc
     grib_openjpeg_encoding.cc
     accessor/grib_accessor_class_number_of_points.cc
