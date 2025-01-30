@@ -26,5 +26,4 @@ private:
     const char* basename_                = nullptr;  // str: paramId, shortName, units, name
     const char* MTG2Switch_              = nullptr;  // int: 0 or 1
     const char* tablesVersionMTG2Switch_ = nullptr;  // int: e.g. 33
-    const char* datasetForLocal_         = nullptr;  // str: e.g. tigge or s2s
 };
