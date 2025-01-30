@@ -18,9 +18,10 @@ void grib_accessor_g2_param_concept_filename_t::init(const long len, grib_argume
     grib_accessor_gen_t::init(len, arg);
     grib_handle* h = grib_handle_of_accessor(this);
 
-    this->basename_   = arg->get_string(h, 0);
-    this->MTG2Switch_ = arg->get_name(h, 1);
-    this->tablesVersionMTG2Switch_ = arg->get_name(h, 2);
+    basename_                = arg->get_string(h, 0);
+    MTG2Switch_              = arg->get_name(h, 1);
+    tablesVersionMTG2Switch_ = arg->get_name(h, 2);
+    datasetForLocal_         = arg->get_name(h, 3);
 
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -45,6 +46,22 @@ int grib_accessor_g2_param_concept_filename_t::unpack_string(char* v, size_t* le
     err = grib_get_long(h, tablesVersionMTG2Switch_, &tablesVersionMTG2Switch);
     if (err) return err;
 
+    char datasetForLocal[128] = {0,};
+    size_t size = sizeof(datasetForLocal);
+    bool datasetForLocalExists = true;
+    err = grib_get_string(h, datasetForLocal_, datasetForLocal, &size);
+    if (err) {
+        if (err == GRIB_NOT_FOUND) {
+            // This can happen if accessor is called before section 4
+            datasetForLocalExists = false;
+            err = 0;
+        }
+        else {
+            return err;
+        }
+    }
+    (void)datasetForLocalExists; //// TODO(masn)
+
     const size_t dsize = string_length() - 1; // size for destination string "v"
     if ( MTG2Switch == 0 ) {
         snprintf(v, dsize, "%s.%ld.def", basename_, tablesVersionMTG2Switch);
@@ -53,7 +70,7 @@ int grib_accessor_g2_param_concept_filename_t::unpack_string(char* v, size_t* le
         snprintf(v, dsize, "%s.def", basename_);
     }
 
-    size_t size = strlen(v);
+    size = strlen(v);
     ECCODES_ASSERT(size > 0);
     *len = size + 1;
     return GRIB_SUCCESS;
