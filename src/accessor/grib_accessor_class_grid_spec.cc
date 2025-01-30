@@ -35,5 +35,17 @@ long grib_accessor_grid_spec_t::get_native_type()
 int grib_accessor_grid_spec_t::unpack_string(char* v, size_t* len)
 {
     // TODO(mapm): Please fill in
+    grib_handle* h = grib_handle_of_accessor(this);
+
+    char gridName[128] = {0,};
+    size_t size = sizeof(gridName);
+    int err = grib_get_string(h, "gridName", gridName, &size);
+    if (!err) {
+        const size_t dsize = string_length() - 1; // max size for destination string "v"
+        snprintf(v, dsize, "{\"grid\": \"%s\"}", gridName);
+        *len = strlen(v) + 1;
+        return GRIB_SUCCESS;
+    }
+
     return GRIB_NOT_IMPLEMENTED;
 }
