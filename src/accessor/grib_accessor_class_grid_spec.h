@@ -20,6 +20,7 @@ public:
     grib_accessor* create_empty_accessor() override { return new grib_accessor_grid_spec_t{}; }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
+    int pack_string(const char*, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
 private:
