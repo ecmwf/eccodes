@@ -41,8 +41,12 @@
 }
 'tropopause' = {typeOfFirstFixedSurface=7;   typeOfSecondFixedSurface=255;}
 
+'nominalTop' = {
+    typeOfFirstFixedSurface=8;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+'nominalTop' = {typeOfFirstFixedSurface=8;   typeOfSecondFixedSurface=255;}
 
-'nominalTop'                   = {typeOfFirstFixedSurface=8;   typeOfSecondFixedSurface=255;}
 'seaBottom'                    = {typeOfFirstFixedSurface=9;   typeOfSecondFixedSurface=255;}
 # Note: We already had 'entireAtmosphere' mapped before adding this one so had to choose another name
 'atmosphere'                   = {typeOfFirstFixedSurface=10;  typeOfSecondFixedSurface=255;}
