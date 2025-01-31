@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2005- ECMWF.
+ * (C) Copyright 2025- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -8,10 +8,26 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+
 #include "grib_accessor_class_grid_spec.h"
 
-grib_accessor_grid_spec_t _grib_accessor_grid_spec{};
+#include "eccodes_config.h"
+
+#if defined(HAVE_ECKIT_GEO)
+    #include <cstring>
+    #include <memory>
+
+    #include "eckit/geo/Grid.h"
+    #include "eckit/geo/Exceptions.h"
+
+    #include "geo/GribSpec.h"
+    #include "geo/EckitMainInit.h"
+#endif
+
+
+grib_accessor_grid_spec_t _grib_accessor_grid_spec;
 grib_accessor* grib_accessor_grid_spec = &_grib_accessor_grid_spec;
+
 
 void grib_accessor_grid_spec_t::init(const long len, grib_arguments* arg)
 {
@@ -34,18 +50,48 @@ long grib_accessor_grid_spec_t::get_native_type()
 
 int grib_accessor_grid_spec_t::unpack_string(char* v, size_t* len)
 {
-    // TODO(mapm): Please fill in
-    grib_handle* h = grib_handle_of_accessor(this);
+#if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
+    ECCODES_ASSERT(0 < *len);
+    ECCODES_ASSERT(v != nullptr);
 
-    char gridName[128] = {0,};
-    size_t size = sizeof(gridName);
-    int err = grib_get_string(h, "gridName", gridName, &size);
-    if (!err) {
-        const size_t dsize = string_length() - 1; // max size for destination string "v"
-        snprintf(v, dsize, "{\"grid\": \"%s\"}", gridName);
-        *len = strlen(v) + 1;
-        return GRIB_SUCCESS;
+    auto* h = grib_handle_of_accessor(this);
+    ECCODES_ASSERT(h != nullptr);
+
+    std::string spec_str;
+
+    try {
+        eccodes::geo::eckit_main_init();
+
+        std::unique_ptr<const eckit::geo::Spec> spec(new eccodes::geo::GribSpec(h));
+        std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(*spec));
+
+        spec_str = grid->spec_str();
+    }
+    catch (eckit::geo::Exception& e) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "grib_accessor_grid_spec_t: geo::Exception thrown (%s)", e.what());
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
+    catch (std::exception& e) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "grib_accessor_grid_spec_t: Exception thrown (%s)", e.what());
+        return GRIB_GEOCALCULUS_PROBLEM;
     }
 
+    // guarantee null-termination
+    auto length = spec_str.length();
+    if (*len < length + 1) {
+        grib_context_log(context_, GRIB_LOG_ERROR,
+                         "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
+                         class_name_, name_, length, *len);
+        return GRIB_BUFFER_TOO_SMALL;
+    }
+
+    std::strncpy(v, spec_str.c_str(), *len);
+    ECCODES_ASSERT(v[length] == '\0');
+
+    *len = length;
+
+    return GRIB_SUCCESS;
+#else
     return GRIB_NOT_IMPLEMENTED;
+#endif
 }
