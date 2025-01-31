@@ -1446,6 +1446,10 @@ int codes_extract_offsets_malloc(codes_context* c, const char* filename, Product
 int codes_extract_offsets_sizes_malloc(codes_context* c, const char* filename, ProductKind product,
                                        off_t** offsets, size_t** sizes, int* num_messages, int strict_mode);
 
+/* EXPERIMENTAL FEATURE */
+int codes_grib2_surface_type_requires_value(int type_of_surface_code, int* err);
+
+
 /* --------------------------------------- */
 #ifdef __cplusplus
 }
