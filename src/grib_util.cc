@@ -2145,7 +2145,10 @@ int codes_grib_surface_type_requires_value(int edition, int type_of_surface_code
         107, // Isentropic (theta) level (K)
         117, // Mixed layer depth (m)
         160, // Depth below sea level (m)
-        161  // Depth below water surface (m)
+        161, // Depth below water surface (m)
+        169, // Ocean level defined by water density (sigma-theta) difference from near-surface to level (kg m-3)
+        170, // Ocean level defined by water potential temperature difference from near-surface to level (K)
+        171, // Ocean level defined by vertical eddy diffusivity difference from near-surface to level (m2 s-1)
     };
     *err = GRIB_SUCCESS;
 
