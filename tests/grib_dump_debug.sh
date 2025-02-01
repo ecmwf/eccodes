@@ -46,7 +46,6 @@ spectral_complex.grib1
 spherical_model_level.grib1
 spherical_pressure_level.grib1
 constant_field.grib2
-multi_created.grib2
 reduced_gaussian_model_level.grib2
 reduced_gaussian_pressure_level.grib2
 reduced_gaussian_pressure_level_constant.grib2
@@ -58,7 +57,6 @@ regular_gaussian_pressure_level_constant.grib2
 regular_gaussian_surface.grib2
 regular_latlon_surface.grib2
 regular_latlon_surface_constant.grib2
-sample.grib2
 spherical_model_level.grib2
 spherical_pressure_level.grib2
 tigge_af_ecmwf.grib2

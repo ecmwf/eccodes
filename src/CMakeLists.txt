@@ -425,6 +425,8 @@ endif()
 
 if( eccodes_HAVE_GEOGRAPHY AND eccodes_HAVE_ECKIT_GEO )
     list( APPEND eccodes_src_files
+        geo/EckitMainInit.cc
+        geo/EckitMainInit.h
         geo/GeoIterator.cc
         geo/GeoIterator.h
         geo/GribSpec.cc
