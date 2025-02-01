@@ -16,6 +16,9 @@ tempFilt=temp.$label.filt
 
 grib_check_key_equals $ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl isMessageValid 1
 grib_check_key_equals $ECCODES_SAMPLES_PATH/GRIB2.tmpl isMessageValid 1
+grib_check_key_equals $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib1.tmpl isMessageValid 1
+grib_check_key_equals $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib2.tmpl isMessageValid 1
+grib_check_key_equals $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl isMessageValid 1
 
 
 # Bad sections
