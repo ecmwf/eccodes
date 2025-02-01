@@ -2155,7 +2155,7 @@ int codes_grib_surface_type_requires_value(int edition, int type_of_surface_code
     }
 
     // Surface type keys are 1 octet and cannot be -ve
-    if (type_of_surface_code < 0 || type_of_surface_code > 254) {
+    if (type_of_surface_code < 0 || type_of_surface_code > 255) {
         *err = GRIB_INVALID_ARGUMENT;
         return 0;
     }

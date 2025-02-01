@@ -31,6 +31,7 @@ private:
     int check_section_numbers(const int* sec_nums, size_t N);
     int check_namespace_keys();
     int check_sections();
+    int check_parameter();
 
 private:
     const char* product_ = nullptr;

@@ -14,7 +14,7 @@
 grib_accessor_message_is_valid_t _grib_accessor_message_is_valid{};
 grib_accessor* grib_accessor_message_is_valid = &_grib_accessor_message_is_valid;
 
-static const char* TITLE = "Message Validity Checks";
+static const char* TITLE = "Message validity checks";
 
 void grib_accessor_message_is_valid_t::init(const long l, grib_arguments* arg)
 {
@@ -130,6 +130,7 @@ int grib_accessor_message_is_valid_t::check_7777()
 
 int grib_accessor_message_is_valid_t::check_surface_keys()
 {
+    // printf("DEBUG  %s \n", __func__);
     int err = 0;
     const grib_context* c = handle_->context;
     if (edition_ != 2) return GRIB_SUCCESS;
@@ -149,6 +150,17 @@ int grib_accessor_message_is_valid_t::check_surface_keys()
         grib_context_log(c, GRIB_LOG_ERROR, "%s: First fixed surface: If the scale factor is missing so should the scaled value and vice versa", TITLE);
         return GRIB_INVALID_KEY_VALUE;
     }
+    if (stype != 255) {
+        int required_val = codes_grib_surface_type_requires_value(edition_, stype, &err);
+        if (err) return err;
+        if (required_val && (sfac_missing || sval_missing)) {
+            char name[128] = {0,};
+            size_t len = 128;
+            grib_get_string(handle_, "nameOfFirstFixedSurface", name, &len);
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: First fixed surface: Type %ld (%s) requires a level", TITLE, stype, name);
+            return GRIB_INVALID_KEY_VALUE;
+        }
+    }
 
     grib_get_long_internal(handle_, "typeOfSecondFixedSurface", &stype);
     sfac_missing = grib_is_missing(handle_, "scaleFactorOfSecondFixedSurface", &err);
@@ -160,6 +172,17 @@ int grib_accessor_message_is_valid_t::check_surface_keys()
     if (sfac_missing != sval_missing) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Second fixed surface: If the scale factor is missing so should the scaled value and vice versa", TITLE);
         return GRIB_INVALID_KEY_VALUE;
+    }
+    if (stype != 255) {
+        int required_val = codes_grib_surface_type_requires_value(edition_, stype, &err);
+        if (err) return err;
+        if (required_val && (sfac_missing || sval_missing)) {
+            char name[128] = {0,};
+            size_t len = 128;
+            grib_get_string(handle_, "nameOfSecondFixedSurface", name, &len);
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Second fixed surface: Type %ld (%s) requires a level", TITLE, stype, name);
+            return GRIB_INVALID_KEY_VALUE;
+        }
     }
 
     return GRIB_SUCCESS;
@@ -243,6 +266,27 @@ int grib_accessor_message_is_valid_t::check_sections()
     return GRIB_SUCCESS;
 }
 
+int grib_accessor_message_is_valid_t::check_parameter()
+{
+    //printf("DEBUG  %s \n", __func__);
+    int err = 0;
+    long centre = 0;
+    err = grib_get_long_internal(handle_, "centre", &centre);
+    if (err) return err;
+    if (centre == 98) {
+        // make sure paramId is valid for ECMWF data
+        long paramId = 0;
+        err = grib_get_long_internal(handle_, "paramId", &paramId);
+        if (err) return err;
+        if (paramId == 0) {
+            grib_context_log(handle_->context, GRIB_LOG_ERROR, "%s: Key paramId is 0 (parameter is not mapped)", TITLE);
+            return GRIB_INVALID_MESSAGE;
+        }
+    }
+
+    return err;
+}
+
 int grib_accessor_message_is_valid_t::unpack_long(long* val, size_t* len)
 {
     typedef int (grib_accessor_message_is_valid_t::*check_func)();
@@ -254,7 +298,8 @@ int grib_accessor_message_is_valid_t::unpack_long(long* val, size_t* len)
         &grib_accessor_message_is_valid_t::check_steps,
         &grib_accessor_message_is_valid_t::check_7777,
         &grib_accessor_message_is_valid_t::check_namespace_keys,
-        &grib_accessor_message_is_valid_t::check_surface_keys
+        &grib_accessor_message_is_valid_t::check_surface_keys,
+        &grib_accessor_message_is_valid_t::check_parameter
     };
 
     int err = 0;
