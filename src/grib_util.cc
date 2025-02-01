@@ -2128,12 +2128,12 @@ int grib2_select_PDTN(int is_eps, int is_instant,
     }
 }
 
-int codes_grib2_surface_type_requires_value(int type_of_surface_code, int* err)
+// Input argument must be an entry in Code Table 4.5 (Fixed surface types and units)
+// Output is:
+//  1 = means the surface type needs its scaledValue/scaleFactor i.e., has a level
+//  0 = means scaledValue/scaleFactor must be set to MISSING
+int codes_grib_surface_type_requires_value(int edition, int type_of_surface_code, int* err)
 {
-    // Input argument must be an entry in Code Table 4.5 (Fixed surface types and units)
-    // Output is:
-    //  1 = means the surface type needs its scaledValue/scaleFactor i.e., has a level
-    //  0 = means scaledValue/scaleFactor must be set to MISSING
     static const int types_with_values[] = {
         17,  // Departure level of the most unstable parcel of air (MUDL)
         18,  // Departure level of a mixed layer parcel of air with specified layer depth (Pa)
@@ -2143,9 +2143,16 @@ int codes_grib2_surface_type_requires_value(int type_of_surface_code, int* err)
         103, // Specified height level above ground (m)
         106, // Depth below land surface (m)
         107, // Isentropic (theta) level (K)
-        160  //Depth below sea level (m)
+        117, // Mixed layer depth (m)
+        160, // Depth below sea level (m)
+        161  // Depth below water surface (m)
     };
     *err = GRIB_SUCCESS;
+
+    if (edition != 2) {
+        *err = GRIB_NOT_IMPLEMENTED;
+        return 0;
+    }
 
     // Surface type keys are 1 octet and cannot be -ve
     if (type_of_surface_code < 0 || type_of_surface_code > 254) {

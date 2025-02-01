@@ -2218,7 +2218,7 @@ int grib_f_set_missing_(int* gid, char* key,int len)
     return grib_set_missing(h, cast_char(buf,key,len));
 }
 
-int grib_f_is_missing_(int* gid, char* key,int* isMissing,int len)
+int grib_f_is_missing_(int* gid, char* key, int* isMissing,int len)
 {
     int err=0;
     grib_handle *h = get_handle(*gid);
@@ -2226,6 +2226,13 @@ int grib_f_is_missing_(int* gid, char* key,int* isMissing,int len)
     if (!h) return GRIB_INVALID_GRIB;
 
     *isMissing=grib_is_missing(h, cast_char(buf,key,len),&err);
+    return err;
+}
+
+int grib_f_grib_surface_type_requires_value_(int* edition, int* type_of_surface_code, int* requires_value)
+{
+    int err = 0;
+    *requires_value = codes_grib_surface_type_requires_value(*edition, *type_of_surface_code, &err);
     return err;
 }
 
