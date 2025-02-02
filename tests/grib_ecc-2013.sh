@@ -68,6 +68,15 @@ do_test 1 162 entireLake
 do_test 7 255 tropopause
 do_test 8 255 nominalTop
 
+do_test 17 255 mostUnstableParcel
+do_test 18 255 mixedLayerParcel
+
+do_test 101 255 meanSea
+do_test 162 255 lakeBottom
+do_test 166 255 mixingLayer
+do_test 174 255 iceTopOnWater
+do_test 174 176 iceLayerOnWater
+
 
 # Clean up
 rm -f $tempGrib $tempFilt $tempLog $tempOut $tempRef
