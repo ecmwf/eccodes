@@ -86,6 +86,11 @@ ${tools_dir}/grib_set -s stepType=accum,startStep=12,endStep=6  $ECCODES_SAMPLES
 grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "Invalid step: startStep > endStep" $tempText
 
+# Wrong order of keys
+${tools_dir}/grib_set -s startStep=0,endStep=0,stepType=accum  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "Invalid steps: stepType=accum but startStep=endStep" $tempText
+
 
 # Check regular lat/lon
 # ------------------------------
