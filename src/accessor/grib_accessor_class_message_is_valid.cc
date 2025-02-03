@@ -143,11 +143,13 @@ int grib_accessor_message_is_valid_t::check_surface_keys()
     int sfac_missing = grib_is_missing(handle_, "scaleFactorOfFirstFixedSurface", &err);
     int sval_missing = grib_is_missing(handle_, "scaledValueOfFirstFixedSurface", &err);
     if ((stype == 255 && !sfac_missing) || (stype == 255 && !sval_missing)) {
-        grib_context_log(c, GRIB_LOG_ERROR, "%s: First fixed surface: If the type of surface is missing so should its scaled keys", TITLE);
+        grib_context_log(c, GRIB_LOG_ERROR,
+            "%s: First fixed surface: If the type of surface is missing so should its scaleFactor/scaledValue keys", TITLE);
         return GRIB_INVALID_KEY_VALUE;
     }
     if (sfac_missing != sval_missing) {
-        grib_context_log(c, GRIB_LOG_ERROR, "%s: First fixed surface: If the scale factor is missing so should the scaled value and vice versa", TITLE);
+        grib_context_log(c, GRIB_LOG_ERROR,
+            "%s: First fixed surface: If the scale factor is missing so should the scaled value and vice versa", TITLE);
         return GRIB_INVALID_KEY_VALUE;
     }
     if (stype != 255) {
@@ -160,13 +162,20 @@ int grib_accessor_message_is_valid_t::check_surface_keys()
             grib_context_log(c, GRIB_LOG_ERROR, "%s: First fixed surface: Type %ld (%s) requires a level", TITLE, stype, name);
             return GRIB_INVALID_KEY_VALUE;
         }
+        // TODO(masn): generalise this. Need to check with DGOV
+        if (stype == 1 && (!sfac_missing || !sval_missing)) {
+            grib_context_log(c, GRIB_LOG_ERROR,
+                "%s: First fixed surface: If type=%ld, scaleFactor/scaledValue keys must be set to missing", TITLE, stype);
+            return GRIB_INVALID_KEY_VALUE;
+        }
     }
 
     grib_get_long_internal(handle_, "typeOfSecondFixedSurface", &stype);
     sfac_missing = grib_is_missing(handle_, "scaleFactorOfSecondFixedSurface", &err);
     sval_missing = grib_is_missing(handle_, "scaledValueOfSecondFixedSurface", &err);
     if ((stype == 255 && !sfac_missing) || (stype == 255 && !sval_missing)) {
-        grib_context_log(c, GRIB_LOG_ERROR, "%s: Second fixed surface: If the type of surface is missing so should its scaled keys", TITLE);
+        grib_context_log(c, GRIB_LOG_ERROR,
+            "%s: Second fixed surface: If the type of surface is missing so should its scaleFactor/scaledValue keys", TITLE);
         return GRIB_INVALID_KEY_VALUE;
     }
     if (sfac_missing != sval_missing) {
