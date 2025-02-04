@@ -289,6 +289,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1942
         grib_ecc-2002
         grib_ecc-2006
+        grib_ecc-2019
         grib_modelName
         grib_sub_hourly
         grib_set_bytes
