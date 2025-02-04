@@ -1,6 +1,7 @@
 #!/bin/bash
 
-mkdir /tmp/eccodes/auditwheel
-auditwheel repair -w /tmp/eccodes/auditwheel /tmp/eccodes/build/wheel/*whl
-rm /tmp/eccodes/build/wheel/*whl
-mv /tmp/eccodes/auditwheel/*whl /tmp/eccodes/build/wheel/
+:
+# NOTE auditwheel is problematic since it changes libnames -- all is well from
+# the pov # of this very package's libs, but subsequent packages compiled with
+# this as a dependency end up not working
+# auditwheel repair -w /tmp/eccodes/auditwheel /tmp/eccodes/build/wheel/*whl
