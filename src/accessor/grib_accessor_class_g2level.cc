@@ -28,25 +28,25 @@ void grib_accessor_g2level_t::init(const long l, grib_arguments* c)
     flags_ |= GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION;
 }
 
-bool is_tigge(grib_handle* h)
+static bool is_tigge(grib_handle* h)
 {
     long productionStatus = 0;
-    int err               = grib_get_long(h, "productionStatusOfProcessedData", &productionStatus);
+    int err = grib_get_long(h, "productionStatusOfProcessedData", &productionStatus);
     if (err) return false;
     return (productionStatus == 4 || productionStatus == 5);
 }
 
 int grib_accessor_g2level_t::unpack_double(double* val, size_t* len)
 {
-    int ret           = 0;
+    int ret = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
 
-    long type_first         = 0;
-    long scale_first        = 0;
-    long value_first        = 0;
+    long type_first  = 0;
+    long scale_first = 0;
+    long value_first = 0;
     char pressure_units[10] = {0,};
     size_t pressure_units_len = 10;
-    bool tigge                = is_tigge(hand);
+    bool tigge = is_tigge(hand);
 
     double v;
 
@@ -188,16 +188,16 @@ int grib_accessor_g2level_t::pack_double(const double* val, size_t* len)
 
 int grib_accessor_g2level_t::pack_long(const long* val, size_t* len)
 {
-    int ret                 = 0;
-    long value_first        = *val;
-    long scale_first        = 0;
-    long type_first         = 0;
+    int ret = 0;
+    long value_first = *val;
+    long scale_first = 0;
+    long type_first  = 0;
     char pressure_units[10] = {0,};
     size_t pressure_units_len = 10;
 
-    grib_handle* hand          = grib_handle_of_accessor(this);
+    grib_handle* hand = grib_handle_of_accessor(this);
     int change_scale_and_value = 1;
-    bool tigge                 = is_tigge(hand);
+    bool tigge = is_tigge(hand);
 
     if (*len != 1)
         return GRIB_WRONG_ARRAY_SIZE;

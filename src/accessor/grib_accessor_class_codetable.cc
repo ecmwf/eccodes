@@ -612,7 +612,7 @@ int grib_accessor_codetable_t::value_count(long* count)
 }
 
 // Return true if the input is an integer (non-negative)
-bool is_number(const char* s)
+static bool is_number(const char* s)
 {
     while (*s) {
         if (!isdigit(*s))

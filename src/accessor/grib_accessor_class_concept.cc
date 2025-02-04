@@ -288,7 +288,7 @@ static int cmpstringp(const void* p1, const void* p2)
     return strcmp(*(char* const*)p1, *(char* const*)p2);
 }
 
-bool blacklisted(grib_handle* h, long edition, const char* concept_name, const char* concept_value)
+static bool blacklisted(grib_handle* h, long edition, const char* concept_name, const char* concept_value)
 {
     if (strcmp(concept_name, "packingType") == 0) {
         char input_packing_type[100];
