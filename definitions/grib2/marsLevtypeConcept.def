@@ -78,3 +78,5 @@
 'sol' = {typeOfFirstFixedSurface=187; typeOfSecondFixedSurface=255;}
 'sol' = {typeOfFirstFixedSurface=187; typeOfSecondFixedSurface=187;}
 'sfc' = {typeOfFirstFixedSurface=187; typeOfSecondFixedSurface=185;}
+'al'  = {typeOfFirstFixedSurface=191; scaleFactorOfFirstFixedSurface=missing(); scaledValueOfFirstFixedSurface=missing(); }
+'al'  = {typeOfFirstFixedSurface=191;}
