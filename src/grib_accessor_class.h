@@ -99,6 +99,7 @@ extern grib_accessor* grib_accessor_g2end_step;
 extern grib_accessor* grib_accessor_g2grid;
 extern grib_accessor* grib_accessor_g2latlon;
 extern grib_accessor* grib_accessor_g2level;
+extern grib_accessor* grib_accessor_g2levelist;
 extern grib_accessor* grib_accessor_g2lon;
 extern grib_accessor* grib_accessor_g2step_range;
 extern grib_accessor* grib_accessor_gaussian_grid_name;

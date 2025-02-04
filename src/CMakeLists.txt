@@ -134,6 +134,7 @@ list( APPEND eccodes_src_files
     accessor/grib_accessor_class_latlon_increment.cc
     accessor/grib_accessor_class_g2date.cc
     accessor/grib_accessor_class_g2level.cc
+    accessor/grib_accessor_class_g2levelist.cc
     accessor/grib_accessor_class_g2end_step.cc
     accessor/grib_accessor_class_g2latlon.cc
     accessor/grib_accessor_class_g2lon.cc

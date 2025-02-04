@@ -98,6 +98,7 @@
 { "g2grid", &grib_accessor_g2grid, },
 { "g2latlon", &grib_accessor_g2latlon, },
 { "g2level", &grib_accessor_g2level, },
+{ "g2levelist", &grib_accessor_g2levelist, },
 { "g2lon", &grib_accessor_g2lon, },
 { "g2step_range", &grib_accessor_g2step_range, },
 { "gaussian_grid_name", &grib_accessor_gaussian_grid_name, },

@@ -72,14 +72,16 @@ if (extraDim) {
     transient tempPressureUnits=pressureUnits;
     # Same as typeOfLevel != "surface" but much quicker to evaluate
     # than via the concept
-    if ( ! ((typeOfFirstFixedSurface == 1 && typeOfSecondFixedSurface == 255) || tempLevtype is "sfc" || tempLevtype is "o2d")) {
-        if (tempPressureUnits is "Pa") {
-            meta marsLevel scale(level,one,hundred) : read_only;
-            alias mars.levelist=marsLevel;
-        } else {
-            alias mars.levelist = level;
-        }
-    }
+    # if ( ! ((typeOfFirstFixedSurface == 1 && typeOfSecondFixedSurface == 255) || tempLevtype is "sfc" || tempLevtype is "o2d") ) {
+    #     if (tempPressureUnits is "Pa") {
+    #         meta marsLevel scale(level,one,hundred) : read_only;
+    #         # alias mars.levelist=marsLevel;
+    #     } else {
+    #         alias mars.levelist = level;
+    #     }
+    # }
+    meta marsLevel g2levelist(level, pressureUnits, levtype, typeOfLevel) : no_copy;
+    alias mars.levelist = marsLevel;
 }
 
 # See ECC-854, ECC-1435, ECC-1451, ECC-1462
