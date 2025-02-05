@@ -165,17 +165,19 @@ IDENT     {IDENT1}|{IDENT2}|{IDENT3}|{IDENT4}|{IDENT5}
 
 "assert"     return ASSERT    ;
 
-"read_only"           return READ_ONLY;
-"no_copy"           return NO_COPY;
-"edition_specific"    return EDITION_SPECIFIC;
-"dump"                return DUMP;
-"no_fail"            return NO_FAIL;
-"hidden"              return HIDDEN;
-"can_be_missing"      return CAN_BE_MISSING;
-"MISSING"      return MISSING;
-"constraint"      return CONSTRAINT;
-"override"      return OVERRIDE;
-"copy_ok"      return COPY_OK;
+"read_only"                return READ_ONLY;
+"no_copy"                  return NO_COPY;
+"edition_specific"         return EDITION_SPECIFIC;
+"dump"                     return DUMP;
+"no_fail"                  return NO_FAIL;
+"hidden"                   return HIDDEN;
+"can_be_missing"           return CAN_BE_MISSING;
+"MISSING"                  return MISSING;
+"constraint"               return CONSTRAINT;
+"override"                 return OVERRIDE;
+"copy_ok"                  return COPY_OK;
+"copy_as_int"              return COPY_AS_INT;
+"copy_if_changing_edition" return COPY_IF_CHANGING_EDITION;
 
 "uint8"                return UINT8;
 "int"                  return INT8;

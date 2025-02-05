@@ -100,6 +100,7 @@ void grib_empty_section(grib_context* c, grib_section* b)
             current->sub_section_ = 0;
         }
         current->destroy(c);
+        delete current;
         current = next;
     }
     b->block->first = b->block->last = 0;
@@ -199,9 +200,9 @@ static grib_handle* grib_handle_create(grib_handle* gl, grib_context* c, const v
 
     next = gl->context->grib_reader->first->root;
     while (next) {
-        if (grib_create_accessor(gl->root, next, NULL) != GRIB_SUCCESS)
+        if (next->create_accessor(gl->root, NULL) != GRIB_SUCCESS)
             break;
-        next = next->next;
+        next = next->next_;
     }
 
     err = grib_section_adjust_sizes(gl->root, 0, 0);
@@ -1535,7 +1536,7 @@ grib_action* grib_action_from_filter(const char* filter)
         grib_context_free_persistent(context, context->grib_reader);
     }
 
-    context->grib_reader = NULL;
+    context->grib_reader = nullptr;
     return a;
 }
 
@@ -1547,10 +1548,10 @@ int grib_handle_apply_action(grib_handle* h, grib_action* a)
         return GRIB_SUCCESS; /* TODO: return error */
 
     while (a) {
-        err = grib_action_execute(a, h);
+        err = a->execute(h);
         if (err != GRIB_SUCCESS)
             return err;
-        a = a->next;
+        a = a->next_;
     }
 
     return GRIB_SUCCESS;
@@ -1564,7 +1565,7 @@ int grib_handle_apply_action(grib_handle* h, grib_action* a)
 //         return GRIB_SUCCESS; /* TODO: return error */
 
 //     while (a) {
-//         err = grib_action_execute(a, h);
+//         err = a->execute(h);
 //         if (err != GRIB_SUCCESS)
 //             return err;
 //         a = a->next;

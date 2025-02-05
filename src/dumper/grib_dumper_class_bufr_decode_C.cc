@@ -577,7 +577,7 @@ void BufrDecodeC::dump_attributes(grib_accessor* a, const char* prefix)
     isAttribute_ = 0;
 }
 
-void BufrDecodeC::header(const grib_handle* h)
+void BufrDecodeC::header(const grib_handle* h) const
 {
     ECCODES_ASSERT(h->product_kind == PRODUCT_BUFR);
 
@@ -622,7 +622,7 @@ void BufrDecodeC::header(const grib_handle* h)
     fprintf(out_, "  CODES_CHECK(codes_set_long(h, \"unpack\", 1),0);\n\n");
 }
 
-void BufrDecodeC::footer(const grib_handle* h)
+void BufrDecodeC::footer(const grib_handle* h) const
 {
 
     /*fprintf(out_,"  fout = fopen(\"outfile.bufr\", \"w\");");*/

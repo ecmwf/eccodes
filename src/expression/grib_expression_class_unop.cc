@@ -51,6 +51,7 @@ void Unop::print(grib_context* c, grib_handle* f, FILE* out) const
 void Unop::destroy(grib_context* c)
 {
     exp_->destroy(c);
+    delete exp_;
 }
 
 void Unop::add_dependency(grib_accessor* observer)

@@ -10,13 +10,6 @@
 
 #include "grib_expression.h"
 
-void grib_expression_free(grib_context* ctx, grib_expression* g)
-{
-    if (g) {
-        delete g;
-    }
-}
-
 namespace eccodes {
 
 int Expression::native_type(grib_handle* h) const

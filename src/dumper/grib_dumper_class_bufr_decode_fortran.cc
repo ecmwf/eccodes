@@ -522,7 +522,7 @@ void BufrDecodeFortran::dump_attributes(grib_accessor* a, const char* prefix)
     isAttribute_ = 0;
 }
 
-void BufrDecodeFortran::header(const grib_handle* h)
+void BufrDecodeFortran::header(const grib_handle* h) const
 {
     if (count_ < 2) {
         /* This is the first message being processed */
@@ -553,7 +553,7 @@ void BufrDecodeFortran::header(const grib_handle* h)
     fprintf(out_, "  call codes_set(ibufr, 'unpack', 1)\n");
 }
 
-void BufrDecodeFortran::footer(const grib_handle* h)
+void BufrDecodeFortran::footer(const grib_handle* h) const
 {
     /*fprintf(dumper_.out,"  call codes_close_file(ifile)\n");*/
     fprintf(out_, "  call codes_release(ibufr)\n");

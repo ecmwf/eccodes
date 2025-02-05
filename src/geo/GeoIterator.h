@@ -18,7 +18,7 @@
 #include "geo/iterator/grib_iterator.h"
 
 
-namespace eccodes::geo
+namespace eccodes::geo_iterator
 {
 
 class GeoIterator : public geo_iterator::Iterator
@@ -29,8 +29,9 @@ public:
 private:
     std::unique_ptr<const eckit::geo::Spec> spec_;
     std::unique_ptr<const eckit::geo::Grid> grid_;
-    mutable eckit::geo::Grid::Iterator iter_;
-    eckit::geo::Grid::Iterator end_;
+
+    mutable std::unique_ptr<eckit::geo::Grid::NextIterator> iter_;
+    mutable eckit::geo::Point point_;
 
     int init(grib_handle*, grib_arguments*) override;
     int next(double* lat, double* lon, double* val) const override;
@@ -41,4 +42,4 @@ private:
     geo_iterator::Iterator* create() const override;
 };
 
-}  // namespace eccodes::geo
+}  // namespace eccodes::geo_iterator

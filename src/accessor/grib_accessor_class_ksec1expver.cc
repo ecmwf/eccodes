@@ -90,9 +90,7 @@ int grib_accessor_ksec1expver_t::pack_string(const char* val, size_t* len)
 
 int grib_accessor_ksec1expver_t::pack_long(const long* val, size_t* len)
 {
-    char sval[5] = {
-        0,
-    };
+    char sval[5] = {0,};
     size_t slen = 4;
     snprintf(sval, sizeof(sval), "%04d", (int)(*val));
     return pack_string(sval, &slen);

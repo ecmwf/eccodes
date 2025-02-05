@@ -104,6 +104,15 @@ grib_check_key_equals $outfile 'typeOfProcessedData:i' '255' # set to default
 input=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 ${tools_dir}/grib_set -s GDSPresent=1 $input $outfile
 
+# ECC-2018: Option "-p" does not print requested keys
+# ----------------------------------------------------
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -p productDefinitionTemplateNumber -s shortName=cp $input $outfile > $temp
+grep -q "^8" $temp
+# typeOfStatisticalProcessing should be 1 for accum
+${tools_dir}/grib_set -p productDefinitionTemplateNumber,typeOfStatisticalProcessing -s eps=1,shortName=cp $input $outfile > $temp
+grep -q "^11  *1" $temp
+
 
 # Clean up
 rm -f $outfile $temp
