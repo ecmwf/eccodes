@@ -68,12 +68,8 @@ int grib_accessor_message_is_valid_t::check_grid_pl_array()
 
     char gridType[128] = {0,};
     size_t len = 128;
-    ret = grib_get_string(handle_, "gridType", gridType, &len);
-    if (ret == GRIB_SUCCESS && STR_EQUAL(gridType, "reduced_ll")) {
-        // Unfortunately in our archive we have such grids with zeroes in the pl!
-        return GRIB_SUCCESS;
-    }
-
+    ret = grib_get_string_internal(handle_, "gridType", gridType, &len);
+    if (ret != GRIB_SUCCESS) return ret;
 
     if ((ret = grib_get_size(handle_, "pl", &plsize)) != GRIB_SUCCESS)
         return ret;
@@ -93,11 +89,14 @@ int grib_accessor_message_is_valid_t::check_grid_pl_array()
     if ((ret = grib_get_long_array(handle_, "pl", pl, &plsize)) != GRIB_SUCCESS)
         return ret;
 
-    for (size_t j = 0; j < plsize; j++) {
-        if (pl[j] == 0) {
-            grib_context_log(c, GRIB_LOG_ERROR, "%s: Invalid PL array: entry at index=%zu is zero", TITLE, j);
-            grib_context_free(c, pl);
-            return GRIB_WRONG_GRID;
+    // Unfortunately in our archive we have such reduced_ll grids with zeroes in the pl!
+    if (!STR_EQUAL(gridType, "reduced_ll")) {
+        for (size_t j = 0; j < plsize; j++) {
+            if (pl[j] == 0) {
+                grib_context_log(c, GRIB_LOG_ERROR, "%s: Invalid PL array: entry at index=%zu is zero", TITLE, j);
+                grib_context_free(c, pl);
+                return GRIB_WRONG_GRID;
+            }
         }
     }
     grib_context_free(c, pl);
