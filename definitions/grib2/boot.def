@@ -30,9 +30,6 @@ transient missingValue = 9999;
 constant ieeeFloats = 1 : edition_specific;
 constant isHindcast = 0;
 
-# Set MTG2 defaults
-constant tablesVersionMTG2Switch=33: hidden;
-constant MTG2SwitchDefault = 1;
 
 include "grib2/section.0.def"
 
