@@ -532,7 +532,7 @@ void BufrDecodePython::dump_attributes(grib_accessor* a, const char* prefix)
     isAttribute_ = 0;
 }
 
-void BufrDecodePython::header(const grib_handle* h)
+void BufrDecodePython::header(const grib_handle* h) const
 {
     if (count_ < 2) {
         /* This is the first message being processed */
@@ -552,7 +552,7 @@ void BufrDecodePython::header(const grib_handle* h)
     fprintf(out_, "    codes_set(ibufr, 'unpack', 1)\n");
 }
 
-void BufrDecodePython::footer(const grib_handle* h)
+void BufrDecodePython::footer(const grib_handle* h) const
 {
     fprintf(out_, "    codes_release(ibufr)\n");
 }

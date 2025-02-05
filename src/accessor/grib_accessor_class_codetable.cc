@@ -90,14 +90,14 @@ void grib_accessor_codetable_t::init(const long len, grib_arguments* params)
             vvalue_ = (grib_virtual_value*)grib_context_malloc_clear(context_, sizeof(grib_virtual_value));
         vvalue_->type   = get_native_type();
         vvalue_->length = new_len;
-        if (act->default_value != NULL) {
+        if (act->default_value_ != NULL) {
             const char* p = 0;
             size_t s_len  = 1;
             long l;
             int ret = 0;
             double d;
             char tmp[1024];
-            grib_expression* expression = act->default_value->get_expression(hand, 0);
+            grib_expression* expression = act->default_value_->get_expression(hand, 0);
             int type                    = expression->native_type(hand);
             switch (type) {
                 case GRIB_TYPE_DOUBLE:
@@ -612,7 +612,7 @@ int grib_accessor_codetable_t::value_count(long* count)
 }
 
 // Return true if the input is an integer (non-negative)
-bool is_number(const char* s)
+static bool is_number(const char* s)
 {
     while (*s) {
         if (!isdigit(*s))
@@ -676,14 +676,14 @@ int grib_accessor_codetable_t::pack_string(const char* buffer, size_t* len)
 
     if (flags_ & GRIB_ACCESSOR_FLAG_NO_FAIL) {
         grib_action* act = (grib_action*)(creator_);
-        if (act->default_value != NULL) {
+        if (act->default_value_ != NULL) {
             const char* p  = 0;
             size_t s_len   = 1;
             long l         = 0;
             int ret        = 0;
             double d       = 0;
             char tmp[1024] = {0,};
-            grib_expression* expression = act->default_value->get_expression(grib_handle_of_accessor(this), 0);
+            grib_expression* expression = act->default_value_->get_expression(grib_handle_of_accessor(this), 0);
             int type                    = expression->native_type(grib_handle_of_accessor(this));
             switch (type) {
                 case GRIB_TYPE_DOUBLE:

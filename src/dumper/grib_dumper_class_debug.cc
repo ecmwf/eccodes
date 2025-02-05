@@ -32,11 +32,11 @@ int Debug::destroy()
 void Debug::default_long_value(grib_accessor* a, long actualValue)
 {
     grib_action* act = a->creator_;
-    if (act->default_value == NULL)
+    if (act->default_value_ == NULL)
         return;
 
     grib_handle* h = grib_handle_of_accessor(a);
-    grib_expression* expression = act->default_value->get_expression(h, 0);
+    grib_expression* expression = act->default_value_->get_expression(h, 0);
     if (!expression)
         return;
 
@@ -128,7 +128,7 @@ void Debug::dump_long(grib_accessor* a, const char* comment)
         fprintf(out_, " ");
 
     if (size > 1) {
-        fprintf(out_, "%ld-%ld %s %s = {\n", begin_, theEnd_, a->creator_->op, a->name_);
+        fprintf(out_, "%ld-%ld %s %s = {\n", begin_, theEnd_, a->creator_->op_, a->name_);
         if (values) {
             int k = 0;
             if (size > 100) {
@@ -153,15 +153,15 @@ void Debug::dump_long(grib_accessor* a, const char* comment)
             }
             for (i = 0; i < depth_; i++)
                 fprintf(out_, " ");
-            fprintf(out_, "} # %s %s \n", a->creator_->op, a->name_);
+            fprintf(out_, "} # %s %s \n", a->creator_->op_, a->name_);
             grib_context_free(a->context_, values);
         }
     }
     else {
         if (((a->flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && a->is_missing_internal())
-            fprintf(out_, "%ld-%ld %s %s = MISSING", begin_, theEnd_, a->creator_->op, a->name_);
+            fprintf(out_, "%ld-%ld %s %s = MISSING", begin_, theEnd_, a->creator_->op_, a->name_);
         else
-            fprintf(out_, "%ld-%ld %s %s = %ld", begin_, theEnd_, a->creator_->op, a->name_, value);
+            fprintf(out_, "%ld-%ld %s %s = %ld", begin_, theEnd_, a->creator_->op_, a->name_, value);
         if (comment)
             fprintf(out_, " [%s]", comment);
         if ((option_flags_ & GRIB_DUMP_FLAG_TYPE) != 0)
@@ -196,7 +196,7 @@ void Debug::dump_bits(grib_accessor* a, const char* comment)
 
     for (int i = 0; i < depth_; i++)
         fprintf(out_, " ");
-    fprintf(out_, "%ld-%ld %s %s = %ld [", begin_, theEnd_, a->creator_->op, a->name_, value);
+    fprintf(out_, "%ld-%ld %s %s = %ld [", begin_, theEnd_, a->creator_->op_, a->name_, value);
     for (long i = 0; i < (a->length_ * 8); i++) {
         if (test_bit(value, a->length_ * 8 - i - 1))
             fprintf(out_, "1");
@@ -232,9 +232,9 @@ void Debug::dump_double(grib_accessor* a, const char* comment)
 
     if (((a->flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) &&
         a->is_missing_internal())
-        fprintf(out_, "%ld-%ld %s %s = MISSING", begin_, theEnd_, a->creator_->op, a->name_);
+        fprintf(out_, "%ld-%ld %s %s = MISSING", begin_, theEnd_, a->creator_->op_, a->name_);
     else
-        fprintf(out_, "%ld-%ld %s %s = %g", begin_, theEnd_, a->creator_->op, a->name_, value);
+        fprintf(out_, "%ld-%ld %s %s = %g", begin_, theEnd_, a->creator_->op_, a->name_, value);
     if (comment)
         fprintf(out_, " [%s]", comment);
     if ((option_flags_ & GRIB_DUMP_FLAG_TYPE) != 0)
@@ -282,7 +282,7 @@ void Debug::dump_string(grib_accessor* a, const char* comment)
 
     for (i = 0; i < depth_; i++)
         fprintf(out_, " ");
-    fprintf(out_, "%ld-%ld %s %s = %s", begin_, theEnd_, a->creator_->op, a->name_, value);
+    fprintf(out_, "%ld-%ld %s %s = %s", begin_, theEnd_, a->creator_->op_, a->name_, value);
     if (comment)
         fprintf(out_, " [%s]", comment);
     if ((option_flags_ & GRIB_DUMP_FLAG_TYPE) != 0)
@@ -331,7 +331,7 @@ void Debug::dump_string_array(grib_accessor* a, const char* comment)
 
     if ((option_flags_ & GRIB_DUMP_FLAG_TYPE) != 0) {
         fprintf(out_, "  ");
-        fprintf(out_, "# type %s (str) \n", a->creator_->op);
+        fprintf(out_, "# type %s (str) \n", a->creator_->op_);
     }
 
     aliases(a);
@@ -379,7 +379,7 @@ void Debug::dump_bytes(grib_accessor* a, const char* comment)
 
     for (i = 0; i < depth_; i++)
         fprintf(out_, " ");
-    fprintf(out_, "%ld-%ld %s %s = %ld", begin_, theEnd_, a->creator_->op, a->name_, a->length_);
+    fprintf(out_, "%ld-%ld %s %s = %ld", begin_, theEnd_, a->creator_->op_, a->name_, a->length_);
     aliases(a);
     fprintf(out_, " {");
 
@@ -427,7 +427,7 @@ void Debug::dump_bytes(grib_accessor* a, const char* comment)
 
     for (i = 0; i < depth_; i++)
         fprintf(out_, " ");
-    fprintf(out_, "} # %s %s \n", a->creator_->op, a->name_);
+    fprintf(out_, "} # %s %s \n", a->creator_->op_, a->name_);
     grib_context_free(context_, buf);
 }
 
@@ -454,7 +454,7 @@ void Debug::dump_values(grib_accessor* a)
 
     for (i = 0; i < depth_; i++)
         fprintf(out_, " ");
-    fprintf(out_, "%ld-%ld %s %s = (%ld,%ld)", begin_, theEnd_, a->creator_->op, a->name_, (long)size, a->length_);
+    fprintf(out_, "%ld-%ld %s %s = (%ld,%ld)", begin_, theEnd_, a->creator_->op_, a->name_, (long)size, a->length_);
     aliases(a);
     fprintf(out_, " {");
 
@@ -500,7 +500,7 @@ void Debug::dump_values(grib_accessor* a)
 
     for (i = 0; i < depth_; i++)
         fprintf(out_, " ");
-    fprintf(out_, "} # %s %s \n", a->creator_->op, a->name_);
+    fprintf(out_, "} # %s %s \n", a->creator_->op_, a->name_);
     grib_context_free(context_, buf);
 }
 
@@ -509,7 +509,7 @@ void Debug::dump_label(grib_accessor* a, const char* comment)
     int i;
     for (i = 0; i < depth_; i++)
         fprintf(out_, " ");
-    fprintf(out_, "----> %s %s %s\n", a->creator_->op, a->name_, comment ? comment : "");
+    fprintf(out_, "----> %s %s %s\n", a->creator_->op_, a->name_, comment ? comment : "");
 }
 
 void Debug::dump_section(grib_accessor* a, grib_block_of_accessors* block)
@@ -525,7 +525,7 @@ void Debug::dump_section(grib_accessor* a, grib_block_of_accessors* block)
 
     for (i = 0; i < depth_; i++)
         fprintf(out_, " ");
-    fprintf(out_, "======> %s %s (%ld,%ld,%ld)\n", a->creator_->op, a->name_, a->length_, (long)s->length, (long)s->padding);
+    fprintf(out_, "======> %s %s (%ld,%ld,%ld)\n", a->creator_->op_, a->name_, a->length_, (long)s->length, (long)s->padding);
     if (!strncmp(a->name_, "section", 7))
         section_offset_ = a->offset_;
     /*printf("------------- section_offset = %ld\n",section_offset_);*/
@@ -535,7 +535,7 @@ void Debug::dump_section(grib_accessor* a, grib_block_of_accessors* block)
 
     for (i = 0; i < depth_; i++)
         fprintf(out_, " ");
-    fprintf(out_, "<===== %s %s\n", a->creator_->op, a->name_);
+    fprintf(out_, "<===== %s %s\n", a->creator_->op_, a->name_);
 }
 
 void Debug::set_begin_end(grib_accessor* a)

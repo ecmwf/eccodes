@@ -75,3 +75,5 @@ data/bufr/*test
 build/
 *.back
 trash
+
+*swp
