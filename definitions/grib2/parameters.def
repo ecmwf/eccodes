@@ -1,36 +1,15 @@
 # (C) Copyright 2005- ECMWF.
 
 transient dummyc=0: hidden;
-# Evaluate MTG2Switch concept.
-# Default is 1 unless changed by centre or pseudocentre, set in boot.def.
-# To be discussed. This means that all centres are default post-MTG2 unless entry is added in concept.
 
-concept MTG2Switch(MTG2SwitchDefault, "MTG2SwitchConcept.def", conceptsDir2,conceptsDir1): no_copy, read_only, long_type;
+# With value of the switch defined in section.4.def, we read the corresponding def files. This works as follows:
+#      Pre-MTG2 ( MTG2Switch=0 ): static def files [concept].[tablesVersionMTG2Switch].def
+#      Else ( MTG2Switch!=0 ): default def files [concept].def. Ensures continuity of "status quo".
 
-# If MTG2Switch is 0 (pre-MTG2) we need to look at pre-MTG2 definitions, tableVersion defined in boot.def.
-# Otherwise look at new definitions.
-
-if ( MTG2Switch == 0 ) {
-
-    constant paramIdFilename = "paramId.[tablesVersionMTG2Switch].def" : hidden ;
-    constant shortNameFilename = "shortName.[tablesVersionMTG2Switch].def" : hidden ;
-    constant unitsFilename = "units.[tablesVersionMTG2Switch].def" : hidden ;
-    constant nameFilename = "name.[tablesVersionMTG2Switch].def" : hidden ;
-
-# All other cases other than pre-MTG2 fall into default parameter files
-} else {
-
-    constant paramIdFilename = "paramId.def" : hidden ;
-    constant shortNameFilename = "shortName.def" : hidden ;
-    constant unitsFilename = "units.def" : hidden ;
-    constant nameFilename = "name.def" : hidden ;
-
-}
-
-# meta paramIdFilename   g2_param_concept_filename("paramId",   MTG2Switch, tablesVersionMTG2Switch, datasetForLocal): hidden;
-# meta shortNameFilename g2_param_concept_filename("shortName", MTG2Switch, tablesVersionMTG2Switch, datasetForLocal): hidden;
-# meta unitsFilename     g2_param_concept_filename("units",     MTG2Switch, tablesVersionMTG2Switch, datasetForLocal): hidden;
-# meta nameFilename      g2_param_concept_filename("name",      MTG2Switch, tablesVersionMTG2Switch, datasetForLocal): hidden;
+meta paramIdFilename   g2_param_concept_filename("paramId",   MTG2Switch, tablesVersionMTG2Switch, datasetForLocal): hidden;
+meta shortNameFilename g2_param_concept_filename("shortName", MTG2Switch, tablesVersionMTG2Switch, datasetForLocal): hidden;
+meta unitsFilename     g2_param_concept_filename("units",     MTG2Switch, tablesVersionMTG2Switch, datasetForLocal): hidden;
+meta nameFilename      g2_param_concept_filename("name",      MTG2Switch, tablesVersionMTG2Switch, datasetForLocal): hidden;
 
 # Now deal with chemical parameter split, pre and post MTG2
 if (defined(MTG2Switch) and MTG2Switch == 2) {
@@ -65,7 +44,7 @@ concept nameLegacyECMF(defaultName,"name.legacy.def",conceptsMasterDir,conceptsL
 concept nameECMF(nameLegacyECMF,nameFilename,conceptsMasterDir,conceptsLocalDirECMF): no_copy;
 concept name(nameECMF,nameFilename,conceptsDir2,conceptsDir1): no_copy,dump;
 
-# cfName does not have pre and post MTG2 switch
+# cfName does not have pre and post MTG2 change in definition files
 
 concept cfNameLegacyECMF(defaultShortName,"cfName.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,hidden;
 concept cfNameECMF(cfNameLegacyECMF,"cfName.def",conceptsMasterDir,conceptsLocalDirECMF) : no_copy;

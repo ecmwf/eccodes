@@ -51,8 +51,5 @@ if ( addEmptySection2 == 0 ) {
     }
 }
 
-# Hook for local extras
-template_nofail extras "grib2/local/[centre]/section2_extras.def";
-
 section_padding section2Padding : read_only;
 
