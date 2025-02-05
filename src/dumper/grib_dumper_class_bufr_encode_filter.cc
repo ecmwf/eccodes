@@ -684,7 +684,7 @@ void BufrEncodeFilter::dump_attributes(grib_accessor* a, const char* prefix)
     isAttribute_ = 0;
 }
 
-void BufrEncodeFilter::header(const grib_handle* h)
+void BufrEncodeFilter::header(const grib_handle* h) const
 {
     char sampleName[128] = { 0 };
     long localSectionPresent, edition, bufrHeaderCentre, isSatellite;

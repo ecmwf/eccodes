@@ -11,17 +11,17 @@
 
 #include "geo/GeoIterator.h"
 
-#include "eckit/exception/Exceptions.h"
+#include "eckit/geo/Exceptions.h"
 
 #include "geo/GribSpec.h"
 
 
-namespace eccodes::geo
+namespace eccodes::geo_iterator
 {
 
 
 GeoIterator::GeoIterator(grib_handle* h, unsigned long flags) :
-    spec_(new GribSpec(h)), grid_(eckit::geo::GridFactory::build(*spec_)), iter_(grid_->cbegin().release()), end_(grid_->cend().release())
+    spec_(new eccodes::geo::GribSpec(h)), grid_(eckit::geo::GridFactory::build(*spec_)), iter_(grid_->make_next_iterator()), point_(eckit::geo::PointLonLat{})
 {
     h_          = h;
     class_name_ = "geo_iterator";
@@ -31,18 +31,18 @@ GeoIterator::GeoIterator(grib_handle* h, unsigned long flags) :
     CODES_CHECK(codes_get_size(h_, "values", &nv_), "");
     ECCODES_ASSERT(nv_ > 0);
 
-    //long numberOfPoints = 0;
-    //grib_get_long_internal(h, "numberOfPoints", &numberOfPoints);
+    long numberOfPoints = 0;
+    grib_get_long_internal(h, "numberOfPoints", &numberOfPoints);
+    ECCODES_ASSERT(static_cast<size_t>(numberOfPoints) == nv_);
 
     if (flags_ & GRIB_GEOITERATOR_NO_VALUES) {
         data_ = nullptr;
-    } else {
+    }
+    else {
         data_ = static_cast<double*>(grib_context_malloc(h_->context, nv_ * sizeof(double)));
         ECCODES_ASSERT(data_ != nullptr);
         auto size = nv_;
         CODES_CHECK(codes_get_double_array(h_, "values", data_, &size), "");
-        // Check numberOfPoints equals nv_
-        // if not, throw an exception
     }
 }
 
@@ -52,29 +52,30 @@ int GeoIterator::init(grib_handle*, grib_arguments*)
 }
 
 // The C public API for this does not have a way of returning an error,
-// So any exception thrown by eckit will is fatal!
+// So any exception thrown by eckit is fatal!
 int GeoIterator::next(double* lat, double* lon, double* val) const
 {
-    if (iter_ == end_) {
-        return 0;  // (false)
-    }
     try {
-        const auto p  = *iter_;
-        const auto& q = std::get<eckit::geo::PointLonLat>(p);
+        if (iter_->next(point_)) {
+            const auto& q = std::get<eckit::geo::PointLonLat>(point_);
 
-        *lat = q.lat;
-        *lon = q.lon;
-        if (val != nullptr && data_ != nullptr) {
-            *val = data_[iter_->index()];
+            *lat = q.lat;
+            *lon = q.lon;
+            if (val != nullptr && data_ != nullptr) {
+                *val = data_[iter_->index()];
+            }
+
+            return 1;  // (true)
         }
-
-        ++iter_;
     }
-    catch(std::exception& e) {
+    catch (eckit::geo::Exception& e) {
+        grib_context_log(h_->context, GRIB_LOG_FATAL, "GeoIterator::next: geo::Exception thrown (%s)", e.what());
+    }
+    catch (std::exception& e) {
         grib_context_log(h_->context, GRIB_LOG_FATAL, "GeoIterator::next: Exception thrown (%s)", e.what());
-        return 0;
     }
-    return 1;  // (true)
+
+    return 0;  // (false)
 }
 
 
@@ -86,31 +87,28 @@ int GeoIterator::previous(double*, double*, double*) const
 
 int GeoIterator::reset()
 {
-    iter_.reset(grid_->cbegin().release());
+    iter_.reset(grid_->make_next_iterator());
     return GRIB_SUCCESS;
 }
 
 
 int GeoIterator::destroy()
 {
-    if (data_ != nullptr) {
-        grib_context_free(h_->context, data_);
-    }
+    grib_context_free(h_->context, data_);
     return Iterator::destroy();
 }
 
 
 bool GeoIterator::has_next() const
 {
-    return iter_ != end_;
+    return iter_->has_next();
 }
 
 
-geo_iterator::Iterator*
-GeoIterator::create() const
+Iterator* GeoIterator::create() const
 {
     return new GeoIterator{ h_, flags_ };
 }
 
 
-}  // namespace eccodes::geo
+}  // namespace eccodes::geo_iterator

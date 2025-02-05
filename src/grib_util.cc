@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "action_class_concept.h"
 #include <float.h>
 #include <string>
 #include <sstream>
@@ -2125,6 +2126,48 @@ int grib2_select_PDTN(int is_eps, int is_instant,
         else
             return 8;
     }
+}
+
+// Input argument must be an entry in Code Table 4.5 (Fixed surface types and units)
+// Output is:
+//  1 = means the surface type needs its scaledValue/scaleFactor i.e., has a level
+//  0 = means scaledValue/scaleFactor must be set to MISSING
+int codes_grib_surface_type_requires_value(int edition, int type_of_surface_code, int* err)
+{
+    static const int types_with_values[] = {
+        17,  // Departure level of the most unstable parcel of air (MUDL)
+        18,  // Departure level of a mixed layer parcel of air with specified layer depth (Pa)
+        19,  // Lowest level where cloud cover exceeds the specified percentage (%)
+        20,  // Isothermal level (K)
+        102, // Specific altitude above mean sea level (m)
+        103, // Specified height level above ground (m)
+        106, // Depth below land surface (m)
+        107, // Isentropic (theta) level (K)
+        117, // Mixed layer depth (m)
+        160, // Depth below sea level (m)
+        161, // Depth below water surface (m)
+        169, // Ocean level defined by water density (sigma-theta) difference from near-surface to level (kg m-3)
+        170, // Ocean level defined by water potential temperature difference from near-surface to level (K)
+        171, // Ocean level defined by vertical eddy diffusivity difference from near-surface to level (m2 s-1)
+    };
+    *err = GRIB_SUCCESS;
+
+    if (edition != 2) {
+        *err = GRIB_NOT_IMPLEMENTED;
+        return 0;
+    }
+
+    // Surface type keys are 1 octet and cannot be -ve
+    if (type_of_surface_code < 0 || type_of_surface_code > 255) {
+        *err = GRIB_INVALID_ARGUMENT;
+        return 0;
+    }
+    static const size_t num = sizeof(types_with_values)/sizeof(types_with_values[0]);
+    for (size_t i=0; i<num; ++i) {
+        if (type_of_surface_code == types_with_values[i])
+            return 1;
+    }
+    return 0;
 }
 
 size_t sum_of_pl_array(const long* pl, size_t plsize)

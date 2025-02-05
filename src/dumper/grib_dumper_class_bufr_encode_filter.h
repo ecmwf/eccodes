@@ -30,7 +30,7 @@ public:
     void dump_values(grib_accessor* a) override;
     void dump_label(grib_accessor* a, const char* comment) override;
     void dump_section(grib_accessor* a, grib_block_of_accessors* block) override;
-    void header(const grib_handle*) override;
+    void header(const grib_handle*) const override;
 
 private:
     inline static int depth = 0;

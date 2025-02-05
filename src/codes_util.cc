@@ -218,7 +218,7 @@ int is_date_valid(long year, long month, long day, long hour, long minute, doubl
 // Note: In the 24-hour time notation, the day begins at midnight, 00:00 or 0:00,
 // and the last minute of the day begins at 23:59.
 // Where convenient, the notation 24:00 may also be used to refer to midnight
-// at the end of a given date — that is, 24:00 of one day is the same time
+// at the end of a given date - that is, 24:00 of one day is the same time
 // as 00:00 of the following day
 int is_time_valid(long number)
 {
