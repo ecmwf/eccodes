@@ -86,11 +86,27 @@ int grib_accessor_message_is_valid_t::check_grid_pl_array()
 
     pl = (long*)grib_context_malloc_clear(c, sizeof(long) * plsize);
     if (!pl) return GRIB_OUT_OF_MEMORY;
-    if ((ret = grib_get_long_array(handle_, "pl", pl, &plsize)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_array_internal(handle_, "pl", pl, &plsize)) != GRIB_SUCCESS)
         return ret;
 
-    // Unfortunately in our archive we have such reduced_ll grids with zeroes in the pl!
-    if (!STR_EQUAL(gridType, "reduced_ll")) {
+    long numberOfDataPoints = 0;
+    if ((ret = grib_get_long_internal(handle_, "numberOfDataPoints", &numberOfDataPoints)) != GRIB_SUCCESS)
+        return ret;
+    size_t sum_pl = 0;
+    for (size_t j = 0; j < plsize; j++) sum_pl += pl[j];
+
+    if (STR_EQUAL(gridType, "reduced_ll")) {
+        // For reduced_ll grids, sum(pl) must equal numberOfDataPoints in every situation
+        if (sum_pl != (size_t)numberOfDataPoints) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Sum of PL array (=%zu) must equal numberOfDataPoints (=%ld)",
+                             TITLE, sum_pl, numberOfDataPoints);
+            grib_context_free(c, pl);
+            return GRIB_WRONG_GRID;
+        }
+    }
+    else {
+        // Other reduced grids
+        // Unfortunately in our archive we have reduced_ll grids with zeroes in the pl!
         for (size_t j = 0; j < plsize; j++) {
             if (pl[j] == 0) {
                 grib_context_log(c, GRIB_LOG_ERROR, "%s: Invalid PL array: entry at index=%zu is zero", TITLE, j);
@@ -98,7 +114,14 @@ int grib_accessor_message_is_valid_t::check_grid_pl_array()
                 return GRIB_WRONG_GRID;
             }
         }
+        if (sum_pl < (size_t)numberOfDataPoints) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Sum of PL array (=%zu) cannot be less than numberOfDataPoints (=%ld)",
+                    TITLE, sum_pl, numberOfDataPoints);
+            grib_context_free(c, pl);
+            return GRIB_WRONG_GRID;
+        }
     }
+
     grib_context_free(c, pl);
 
     return GRIB_SUCCESS;
