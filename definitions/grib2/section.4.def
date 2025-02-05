@@ -15,13 +15,11 @@ alias numberOfCoordinatesValues=NV;
 # For table 4.5, code 150 Generalized vertical height coordinate
 alias numberOfVerticalGridDescriptors=NV ;
 
-#  Product Definition Template Number
-
 transient neitherPresent = 0;
 
-if (centre==7 || centre==46) {
-   alias disableGrib1LocalSection=true;
-}
+# if (centre==7 || centre==46) {
+#    alias disableGrib1LocalSection=true;
+# }
 
 concept datasetForLocal(unknown) {
   "tigge"       = {productionStatusOfProcessedData=4;}
@@ -70,9 +68,9 @@ if (section2Used == 1) {
 transient genVertHeightCoords = 0;
 
 if (productDefinitionTemplateNumber >= 32768) {
-  template productDefinition "grib2/local/[centreForLocal]/template.4.[productDefinitionTemplateNumber:l].def";
+   template productDefinition "grib2/local/[centreForLocal]/template.4.[productDefinitionTemplateNumber:l].def";
 } else {
-  template productDefinition "grib2/templates/template.4.[productDefinitionTemplateNumber:l].def";
+   template productDefinition "grib2/templates/template.4.[productDefinitionTemplateNumber:l].def";
 }
 
 if (defined(marsStream) && defined(marsType)) {
@@ -106,9 +104,9 @@ if (genVertHeightCoords) {
 }
 else {
    if (NV == 0){
-     transient PVPresent = 0;
+      transient PVPresent = 0;
    } else {
-     transient PVPresent = 1;
+      transient PVPresent = 1;
    }
    # See GRIB-547
    if (PVPresent || NV>0){
