@@ -18,6 +18,12 @@ void grib_accessor_g2_param_concept_filename_t::init(const long len, grib_argume
     grib_accessor_gen_t::init(len, arg);
     grib_handle* h = grib_handle_of_accessor(this);
 
+    const int numArgs = arg->get_count();
+    if (numArgs != 3) {
+        grib_context_log(context_, GRIB_LOG_FATAL, "Accessor %s (key %s): %d arguments provided but expected 3",
+                         class_name_, name_, numArgs);
+    }
+
     basename_                = arg->get_string(h, 0);
     MTG2Switch_              = arg->get_name(h, 1);
     tablesVersionMTG2Switch_ = arg->get_name(h, 2);
