@@ -69,6 +69,8 @@ int main(int argc, char* argv[])
                         return 1;
                     }
                 }
+                //printf(" name1 = %s \n",name1);
+                //assert( !codes_bufr_key_is_header(h, name1, &err) && !err );
             }
             else {
                 // header keys cannot be coordinate descriptors

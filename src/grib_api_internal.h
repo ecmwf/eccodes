@@ -238,17 +238,17 @@ extern const int max_nbits;
 namespace eccodes {
 class Expression;
 class Arguments;
+class Action;
 }  // namespace eccodes
 using grib_expression = eccodes::Expression;
 using grib_arguments  = eccodes::Arguments;
+using grib_action = eccodes::Action;
 
 typedef struct grib_action_file grib_action_file;
 typedef struct grib_action_file_list grib_action_file_list;
 typedef struct grib_block_of_accessors grib_block_of_accessors;
 typedef struct grib_buffer grib_buffer;
 class grib_accessor_class;
-typedef struct grib_action grib_action;
-typedef struct grib_action_class grib_action_class;
 typedef struct grib_section grib_section;
 typedef struct grib_codetable grib_codetable;
 typedef struct grib_smart_table grib_smart_table;
@@ -320,66 +320,7 @@ struct grib_loader
     int changing_edition;
 };
 
-/**
- *  An action
- *  Structure supporting the creation of accessor, resulting of a statement during a definition file parsing
- *
- *  @see  grib_action_class
- */
-struct grib_action
-{
-    char* name;                /**  name of the definition statement */
-    char* op;                  /**  operator of the definition statement */
-    char* name_space;          /**  namespace of the definition statement */
-    grib_action* next;         /**  next action in the list */
-    grib_action_class* cclass; /**  link to the structure containing a specific behaviour */
-    grib_context* context;     /**  Context */
-    unsigned long flags;
-    char* defaultkey;              /** name of the key used as default if not found */
-    grib_arguments* default_value; /** default expression as in .def file */
-    char* set;
-    char* debug_info; /** purely for debugging and tracing */
-};
-
 class grib_accessors_list;
-
-typedef int (*action_create_accessors_handle_proc)(grib_section* p, grib_action* a, grib_loader* h);
-typedef int (*action_notify_change_proc)(grib_action* a, grib_accessor* observer, grib_accessor* observed);
-
-typedef void (*grib_dump_proc)(grib_action*, FILE*, int);
-typedef void (*grib_xref_proc)(grib_action*, FILE*, const char*);
-typedef void (*action_init_class_proc)(grib_action_class* a);
-typedef void (*action_init_proc)(grib_action* a);
-typedef void (*action_destroy_proc)(grib_context* context, grib_action* a);
-typedef grib_action* (*action_reparse_proc)(grib_action* a, grib_accessor*, int*);
-typedef int (*action_execute_proc)(grib_action* a, grib_handle*);
-
-/**
- *  An action_class
- *  Structure supporting the specific behaviour of an action
- *
- *  @see  grib_action
- */
-struct grib_action_class
-{
-    grib_action_class** super; /** < link to a more general behaviour */
-    const char* name;          /** < name of the behaviour class */
-    size_t size;               /** < size in bytes of the structure */
-
-    int inited;
-    action_init_class_proc init_class;
-
-    action_init_proc init;
-    action_destroy_proc destroy; /** < destructor method to release the memory */
-
-    grib_dump_proc dump;                                 /** < dump method of the action  */
-    grib_xref_proc xref;                                 /** < dump method of the action  */
-    action_create_accessors_handle_proc create_accessor; /** < method to create the corresponding accessor from a handle*/
-    action_notify_change_proc notify_change;             /** < method to create the corresponding accessor from a handle*/
-
-    action_reparse_proc reparse;
-    action_execute_proc execute;
-};
 
 /**
  *  A buffer
@@ -435,6 +376,7 @@ struct grib_virtual_value
 #define GRIB_ACCESSOR_FLAG_LOWERCASE                (1 << 17)
 #define GRIB_ACCESSOR_FLAG_BUFR_COORD               (1 << 18)
 #define GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION (1 << 19)
+#define GRIB_ACCESSOR_FLAG_COPY_AS_INT              (1 << 20)
 
 /**
  *  A section accessor
@@ -861,6 +803,8 @@ struct grib_file
     char* buffer;
     long refcount;
     grib_file* next;
+    grib_file* pool_file;
+    long pool_file_refcount;
     short id;
 };
 
@@ -1190,6 +1134,7 @@ typedef struct j2k_encode_helper
 #include "eccodes_prototypes.h"
 #ifdef __cplusplus
 }
+    #include "action/action.h"
     #include "accessor/grib_accessor.h"
     #include "accessor/grib_accessors_list.h"
     #include "geo/iterator/grib_iterator.h"

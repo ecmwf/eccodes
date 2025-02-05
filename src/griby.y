@@ -12,6 +12,36 @@
 %{
 
 #include "grib_api_internal.h"
+
+#include "action_class_alias.h"
+#include "action_class_assert.h"
+#include "action_class_close.h"
+#include "action_class_concept.h"
+#include "action_class_gen.h"
+#include "action_class_hash_array.h"
+#include "action_class_if.h"
+#include "action_class_list.h"
+#include "action_class_meta.h"
+#include "action_class_modify.h"
+#include "action_class_noop.h"
+#include "action_class_print.h"
+#include "action_class_put.h"
+#include "action_class_remove.h"
+#include "action_class_rename.h"
+#include "action_class_section.h"
+#include "action_class_set.h"
+#include "action_class_set_darray.h"
+#include "action_class_set_missing.h"
+#include "action_class_set_sarray.h"
+#include "action_class_switch.h"
+#include "action_class_template.h"
+#include "action_class_transient_darray.h"
+#include "action_class_trigger.h"
+#include "action_class_variable.h"
+#include "action_class_when.h"
+#include "action_class_while.h"
+#include "action_class_write.h"
+
 /* #include "grib_parser.h" */
 
 extern int yylex(void);
@@ -140,6 +170,8 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
 %token MISSING
 %token CONSTRAINT
 %token COPY_OK
+%token COPY_AS_INT
+%token COPY_IF_CHANGING_EDITION
 
 %token WHEN
 %token SET
@@ -290,8 +322,8 @@ integer_array:  INTEGER  { $$=grib_iarray_push(0,$1);}
    ;
 
 instructions: instruction
-         | instruction instructions { $1->next = $2; $$ = $1; }
-         | instruction ';'  instructions { $1->next = $3; $$ = $1; }
+         | instruction instructions { $1->next_ = $2; $$ = $1; }
+         | instruction ';'  instructions { $1->next_ = $3; $$ = $1; }
          | instruction ';'  {  $$ = $1;}
    ;
 
@@ -544,9 +576,9 @@ simple: UNSIGNED '[' INTEGER ']'   IDENT   default flags
     | SECTION_PADDING     IDENT  flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$2,"section_padding",0,0,0,$3,NULL,NULL);   free($2);  }
     | TEMPLATE    IDENT  STRING
-        { $$ = grib_action_create_template(grib_parser_context,0,$2,$3); free($2); free($3);}
+        { $$ = grib_action_create_template(grib_parser_context,0,$2,$3,yylineno); free($2); free($3);}
     | TEMPLATE_NOFAIL    IDENT  STRING
-    { $$ = grib_action_create_template(grib_parser_context,1,$2,$3); free($2); free($3);}
+    { $$ = grib_action_create_template(grib_parser_context,1,$2,$3,yylineno); free($2); free($3);}
 
     | ALIAS  IDENT '=' IDENT flags
         { $$ = grib_action_create_alias(grib_parser_context,$2,$4,NULL,$5);  free($2); free($4); }
@@ -660,7 +692,7 @@ set: SET IDENT '=' expression { $$ = grib_action_create_set(grib_parser_context,
   ;
 
 set_list: set semi
-         | set_list set semi { $1->next = $2; $$ = $1; }
+         | set_list set semi { $1->next_ = $2; $$ = $1; }
          ;
 
 
@@ -676,20 +708,22 @@ flag_list: flag
    | flag_list ',' flag { $$ = $1 | $3; }
    ;
 
-flag: READ_ONLY         { $$ = GRIB_ACCESSOR_FLAG_READ_ONLY; }
-    | LOWERCASE            { $$ = GRIB_ACCESSOR_FLAG_LOWERCASE; }
-    | DUMP            { $$ = GRIB_ACCESSOR_FLAG_DUMP; }
+flag: READ_ONLY          { $$ = GRIB_ACCESSOR_FLAG_READ_ONLY; }
+    | LOWERCASE          { $$ = GRIB_ACCESSOR_FLAG_LOWERCASE; }
+    | DUMP               { $$ = GRIB_ACCESSOR_FLAG_DUMP; }
     | NO_COPY            { $$ = GRIB_ACCESSOR_FLAG_NO_COPY; }
-	  | NO_FAIL            { $$ = GRIB_ACCESSOR_FLAG_NO_FAIL; }
-    | HIDDEN            { $$ = GRIB_ACCESSOR_FLAG_HIDDEN; }
-    | EDITION_SPECIFIC  { $$ = GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC; }
-    | CAN_BE_MISSING    { $$ = GRIB_ACCESSOR_FLAG_CAN_BE_MISSING; }
-    | CONSTRAINT        { $$ = GRIB_ACCESSOR_FLAG_CONSTRAINT; }
-    | COPY_OK           { $$ = GRIB_ACCESSOR_FLAG_COPY_OK; }
-    | TRANS         { $$ = GRIB_ACCESSOR_FLAG_TRANSIENT; }
-    | STRING_TYPE         { $$ = GRIB_ACCESSOR_FLAG_STRING_TYPE; }
-    | LONG_TYPE         { $$ = GRIB_ACCESSOR_FLAG_LONG_TYPE; }
-    | DOUBLE_TYPE       { $$ = GRIB_ACCESSOR_FLAG_DOUBLE_TYPE; }
+	| NO_FAIL            { $$ = GRIB_ACCESSOR_FLAG_NO_FAIL; }
+    | HIDDEN             { $$ = GRIB_ACCESSOR_FLAG_HIDDEN; }
+    | EDITION_SPECIFIC   { $$ = GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC; }
+    | CAN_BE_MISSING     { $$ = GRIB_ACCESSOR_FLAG_CAN_BE_MISSING; }
+    | CONSTRAINT         { $$ = GRIB_ACCESSOR_FLAG_CONSTRAINT; }
+    | COPY_OK            { $$ = GRIB_ACCESSOR_FLAG_COPY_OK; }
+    | COPY_AS_INT        { $$ = GRIB_ACCESSOR_FLAG_COPY_AS_INT; }
+    | COPY_IF_CHANGING_EDITION { $$ = GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION; }
+    | TRANS              { $$ = GRIB_ACCESSOR_FLAG_TRANSIENT; }
+    | STRING_TYPE        { $$ = GRIB_ACCESSOR_FLAG_STRING_TYPE; }
+    | LONG_TYPE          { $$ = GRIB_ACCESSOR_FLAG_LONG_TYPE; }
+    | DOUBLE_TYPE        { $$ = GRIB_ACCESSOR_FLAG_DOUBLE_TYPE; }
     ;
 
 list_block: IDENT LIST '(' expression ')' '{' instructions '}' { $$ = grib_action_create_list(grib_parser_context,$1,$4,$7); free($1); }

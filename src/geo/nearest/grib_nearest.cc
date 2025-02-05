@@ -68,7 +68,6 @@ int Nearest::init(grib_handle* h, grib_arguments* args)
 /* For this one, ALL destroy are called */
 int Nearest::destroy()
 {
-    delete this;
     return GRIB_SUCCESS;
 }
 
@@ -243,8 +242,11 @@ eccodes::geo_nearest::Nearest* gribNearestNew(const grib_handle* ch, int* error)
 
 int gribNearestDelete(eccodes::geo_nearest::Nearest* i)
 {
-    if (i)
+    if (i) {
         i->destroy();
+        delete i;
+        i = nullptr;
+    }
     return GRIB_SUCCESS;
 }
 

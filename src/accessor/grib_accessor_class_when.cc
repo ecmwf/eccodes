@@ -28,7 +28,7 @@ void grib_accessor_when_t::dump(eccodes::Dumper* dumper)
 
 int grib_accessor_when_t::notify_change(grib_accessor* changed)
 {
-    return grib_action_notify_change(creator_, this, changed);
+    return creator_->notify_change(this, changed);
 }
 
 long grib_accessor_when_t::get_native_type()

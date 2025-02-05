@@ -130,7 +130,7 @@ int grib_set_long(grib_handle* h, const char* name, long val)
 
     if (a) {
         if (h->context->debug) {
-            if (strcmp(name, a->name_)!=0)
+            if (strcmp(name, a->name_) != 0)
                 fprintf(stderr, "ECCODES DEBUG grib_set_long h=%p %s=%ld (a->name_=%s)\n", (void*)h, name, val, a->name_);
             else
                 fprintf(stderr, "ECCODES DEBUG grib_set_long h=%p %s=%ld\n", (void*)h, name, val);

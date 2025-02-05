@@ -288,7 +288,7 @@ int Healpix::init(grib_handle* h, grib_arguments* args)
 
     nested_ = STR_EQUAL(ordering, "nested");
     if (!STR_EQUAL(ordering, "ring") && !nested_) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only orderingConvention=(ring|nested) are supported", ITER);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only ordering=(ring|nested) are supported", ITER);
         return GRIB_GEOCALCULUS_PROBLEM;
     }
     // if (nested && N == 1) {

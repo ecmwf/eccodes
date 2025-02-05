@@ -12,6 +12,7 @@
  *   Jean Baptiste Filippi - 01.11.2005                                    *
  ***************************************************************************/
 #include "grib_api_internal.h"
+#include "action_class_noop.h"
 
 grib_action* grib_parser_all_actions          = 0;
 grib_context* grib_parser_context             = 0;
@@ -851,8 +852,9 @@ grib_action* grib_parse_file(grib_context* gc, const char* filename)
         a = grib_parse_stream(gc, filename);
 
         if (error) {
-            if (a)
-                grib_action_delete(gc, a);
+            if (a) {
+                delete a;
+            }
             GRIB_MUTEX_UNLOCK(&mutex_file);
             return NULL;
         }

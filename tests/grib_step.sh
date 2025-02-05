@@ -284,6 +284,12 @@ set -e
 grep -q "Date/Time is not valid" $tempLog
 rm -f $tempGrbA $tempGrbB
 
+# Warning re startStep > endStep
+${tools_dir}/grib_set -s stepType=accum,startStep=12,endStep=6  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrbA
+${tools_dir}/grib_get -p step $tempGrbA 2>$tempLog
+grep -q "ECCODES WARNING :  endStep < startStep" $tempLog
+
+
 # Clean up
 rm -f $temp $tempLog $tempFilt
 rm -f $grib2File.p8tmp ${grib2File}.tmp x.grib

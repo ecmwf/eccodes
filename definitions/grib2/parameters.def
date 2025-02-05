@@ -27,6 +27,11 @@ if ( MTG2Switch == 0 ) {
 
 }
 
+# meta paramIdFilename   g2_param_concept_filename("paramId",   MTG2Switch, tablesVersionMTG2Switch, datasetForLocal): hidden;
+# meta shortNameFilename g2_param_concept_filename("shortName", MTG2Switch, tablesVersionMTG2Switch, datasetForLocal): hidden;
+# meta unitsFilename     g2_param_concept_filename("units",     MTG2Switch, tablesVersionMTG2Switch, datasetForLocal): hidden;
+# meta nameFilename      g2_param_concept_filename("name",      MTG2Switch, tablesVersionMTG2Switch, datasetForLocal): hidden;
+
 # Now deal with chemical parameter split, pre and post MTG2
 if (defined(MTG2Switch) and MTG2Switch == 2) {
   # Note: 0 is a valid chemId

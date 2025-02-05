@@ -121,3 +121,5 @@ constant conceptsLocalDirECMF="grib2/localConcepts/ecmf" : hidden;
 # Note: datasetForLocal is defined later in section 4
 meta conceptsDir1 g2_concept_dir(preferLocalConcepts, conceptsMasterDir, conceptsLocalDirAll, datasetForLocal, 1);
 meta conceptsDir2 g2_concept_dir(preferLocalConcepts, conceptsMasterDir, conceptsLocalDirAll, datasetForLocal, 2);
+
+meta eps g2_eps(productDefinitionTemplateNumber, type, stream, stepType, derivedForecast);

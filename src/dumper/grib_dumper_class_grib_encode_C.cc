@@ -300,7 +300,7 @@ void GribEncodeC::dump_section(grib_accessor* a, grib_block_of_accessors* block)
     grib_dump_accessors_block(this, block);
 }
 
-void GribEncodeC::header(const grib_handle* h)
+void GribEncodeC::header(const grib_handle* h) const
 {
     long edition                    = 0;
     int ret                         = 0;
@@ -342,7 +342,7 @@ void GribEncodeC::header(const grib_handle* h)
             (long)edition);
 }
 
-void GribEncodeC::footer(const grib_handle* h)
+void GribEncodeC::footer(const grib_handle* h) const
 {
 
     fprintf(out_,

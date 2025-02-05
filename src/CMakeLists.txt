@@ -10,6 +10,7 @@
 #
 
 include_directories(
+    "${CMAKE_CURRENT_SOURCE_DIR}/action"
     "${CMAKE_CURRENT_SOURCE_DIR}/dumper"
     "${CMAKE_CURRENT_SOURCE_DIR}/accessor"
     "${CMAKE_CURRENT_SOURCE_DIR}/geo/iterator"
@@ -26,37 +27,40 @@ list( APPEND eccodes_src_files
     grib_api.h
     grib_timer.cc
     eccodes.h
-    action.cc
-    action_class_alias.cc
-    action_class_gen.cc
-    action_class_if.cc
-    action_class_switch.cc
     accessor/grib_accessor_class_g1fcperiod.cc
     accessor/grib_accessor_class_g1end_of_interval_monthly.cc
     accessor/grib_accessor_class_mars_param.cc
-    action_class_section.cc
-    action_class_list.cc
-    action_class_while.cc
-    action_class_put.cc
-    action_class_meta.cc
-    action_class_remove.cc
-    action_class_rename.cc
-    action_class_assert.cc
-    action_class_template.cc
-    action_class_trigger.cc
-    action_class_when.cc
-    action_class_concept.cc
-    action_class_hash_array.cc
-    action_class_set.cc
-    action_class_set_sarray.cc
-    action_class_set_darray.cc
-    action_class_noop.cc
-    action_class_write.cc
-    action_class_print.cc
-    action_class_close.cc
-    action_class_variable.cc
-    action_class_modify.cc
-    action_class_transient_darray.cc
+
+    action/action.cc
+    action/action_class_alias.cc
+    action/action_class_gen.cc
+    action/action_class_if.cc
+    action/action_class_switch.cc
+    action/action_class_section.cc
+    action/action_class_list.cc
+    action/action_class_while.cc
+    action/action_class_put.cc
+    action/action_class_meta.cc
+    action/action_class_remove.cc
+    action/action_class_rename.cc
+    action/action_class_assert.cc
+    action/action_class_template.cc
+    action/action_class_trigger.cc
+    action/action_class_when.cc
+    action/action_class_concept.cc
+    action/action_class_hash_array.cc
+    action/action_class_set.cc
+    action/action_class_set_sarray.cc
+    action/action_class_set_darray.cc
+    action/action_class_noop.cc
+    action/action_class_write.cc
+    action/action_class_print.cc
+    action/action_class_close.cc
+    action/action_class_variable.cc
+    action/action_class_modify.cc
+    action/action_class_transient_darray.cc
+    action/action_class_set_missing.cc
+
     eccodes.cc
     grib_concept.cc
     grib_hash_array.cc
@@ -233,12 +237,14 @@ list( APPEND eccodes_src_files
     accessor/grib_accessor_class_g2_aerosol.cc
     accessor/grib_accessor_class_g2_chemical.cc
     accessor/grib_accessor_class_g2_concept_dir.cc
+    accessor/grib_accessor_class_g2_param_concept_filename.cc
+    accessor/grib_accessor_class_mtg2_switch_default.cc
     accessor/grib_accessor_class_g2_mars_labeling.cc
     accessor/grib_accessor_class_md5.cc
     accessor/grib_accessor_class_proj_string.cc
+    accessor/grib_accessor_class_grid_spec.cc
     grib_jasper_encoding.cc
     grib_openjpeg_encoding.cc
-    action_class_set_missing.cc
     accessor/grib_accessor_class_number_of_points.cc
     accessor/grib_accessor_class_suppressed.cc
     grib_index.cc
@@ -419,6 +425,8 @@ endif()
 
 if( eccodes_HAVE_GEOGRAPHY AND eccodes_HAVE_ECKIT_GEO )
     list( APPEND eccodes_src_files
+        geo/EckitMainInit.cc
+        geo/EckitMainInit.h
         geo/GeoIterator.cc
         geo/GeoIterator.h
         geo/GribSpec.cc
