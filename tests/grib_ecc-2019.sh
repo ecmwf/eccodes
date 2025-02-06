@@ -50,6 +50,8 @@ grib_check_key_equals $tempGrib mars.levelist "42"
 ${tools_dir}/grib_set -s typeOfLevel=isobaricInhPa,levelist=900 $sample_grib2 $tempGrib
 grib_check_key_equals $tempGrib mars.levelist "900"
 
+# Check keys iterator too
+$EXEC $test_dir/grib_ecc-2019
 
 # Clean up
 rm -f $tempGrib $tempFilt $tempLog $tempOut $tempRef $tempGribA $tempGribB
