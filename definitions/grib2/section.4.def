@@ -52,13 +52,6 @@ concept datasetForLocal(unknown) {
   "unknown"     = { dummy=1; }
 }
 
-# If the keys marsClass or productionStatusOfProcessedData change in memory,
-# need to trigger the change of conceptsDirs
-transient redo_concept_dirs = 0;
-when( changed(marsClass) || changed(productionStatusOfProcessedData) ) {
-   set redo_concept_dirs = 1;
-}
-
 # meta MTG2SwitchDefault mtg2_switch_default(tablesVersion, tablesVersionMTG2Switch, marsClass, datasetForLocal) : hidden, read_only;
 
 # ECC-2002
