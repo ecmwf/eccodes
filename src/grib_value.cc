@@ -416,10 +416,22 @@ static int preprocess_packingType_change(grib_handle* h, const char* keyname, co
     size_t len = sizeof(input_packing_type);
 
     if (grib_inline_strcmp(keyname, "packingType") == 0) {
+        if (strcmp(keyval, "grid_ccsds")==0) {
+            // packingType being changed to CCSDS
+            long isGridded = -1; //??
+            if ((err = grib_get_long(h, "isGridded", &isGridded)) == GRIB_SUCCESS && isGridded == 0) {
+                if (h->context->debug) {
+                    fprintf(stderr, "ECCODES DEBUG grib_set_string packingType: "
+                            "CCSDS packing does not apply to spectral fields. Packing not changed\n");
+                }
+                return 1;  /* Dealt with - no further action needed */
+            }
+        }
         /* Second order doesn't have a proper representation for constant fields.
            So best not to do the change of packing type.
            Use strncmp to catch all flavours of 2nd order packing e.g. grid_second_order_boustrophedonic */
         if (strncmp(keyval, "grid_second_order", 17) == 0) {
+            // packingType being changed to grid_second_order
             long bitsPerValue   = 0;
             size_t numCodedVals = 0;
             err = grib_get_long(h, "bitsPerValue", &bitsPerValue);
