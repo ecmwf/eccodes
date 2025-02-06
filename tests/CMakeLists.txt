@@ -46,8 +46,10 @@ list(APPEND test_c_bins
     grib_ecc-1431
     grib_ecc-1433
     grib_ecc-1764
+    grib_ecc-2019
     bufr_ecc-517
     bufr_ecc-1288
+    bufr_ecc-2011
     bufr_get_element
     bufr_extract_headers
     bufr_check_descriptors
@@ -112,6 +114,7 @@ if( HAVE_BUILD_TOOLS )
         grib_generalised_tiles
         # grib_true_imagery
         grib2_wave_spectra
+        grib2_probability
         grib_suppressed
         grib_destine_mars_keys
         grib_2nd_order_numValues
@@ -155,6 +158,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
+        bufr_ecc-2011
         grib_efas
         grib_sh_imag
         grib_spectral
@@ -287,6 +291,9 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1907
         grib_ecc-1941
         grib_ecc-1942
+        grib_ecc-2002
+        grib_ecc-2006
+        grib_ecc-2019
         grib_modelName
         grib_sub_hourly
         grib_set_bytes

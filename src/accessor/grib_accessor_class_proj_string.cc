@@ -213,7 +213,7 @@ int grib_accessor_proj_string_t::unpack_string(char* v, size_t* len)
     grib_handle* h = grib_handle_of_accessor(this);
     size_t size    = sizeof(grid_type) / sizeof(*grid_type);
 
-    Assert(endpoint_ == ENDPOINT_SOURCE || endpoint_ == ENDPOINT_TARGET);
+    ECCODES_ASSERT(endpoint_ == ENDPOINT_SOURCE || endpoint_ == ENDPOINT_TARGET);
 
     size_t l = 100;  // Safe bet
     if (*len < l) {
@@ -247,7 +247,7 @@ int grib_accessor_proj_string_t::unpack_string(char* v, size_t* len)
     }
 
     size = strlen(v);
-    Assert(size > 0);
+    ECCODES_ASSERT(size > 0);
     *len = size + 1;
     return err;
 }

@@ -6614,12 +6614,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 25 ;
 	}
-#Source/gain of dust aerosol (0.55 - 9 um)
+#Source/gain of dust aerosol (0.55 - 0.9 um)
 'kg m**-2 s**-1' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 26 ;
 	}
-#Source/gain of dust aerosol (9 - 20 um)
+#Source/gain of dust aerosol (0.9 - 20 um)
 'kg m**-2 s**-1' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 27 ;
@@ -6629,12 +6629,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 28 ;
 	}
-#Dry deposition of dust aerosol (0.55 - 9 um)
+#Dry deposition of dust aerosol (0.55 - 0.9 um)
 'kg m**-2 s**-1' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 29 ;
 	}
-#Dry deposition of dust aerosol (9 - 20 um)
+#Dry deposition of dust aerosol (0.9 - 20 um)
 'kg m**-2 s**-1' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 30 ;
@@ -6644,12 +6644,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 31 ;
 	}
-#Sedimentation of dust aerosol (0.55 - 9 um)
+#Sedimentation of dust aerosol (0.55 - 0.9 um)
 'kg m**-2 s**-1' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 32 ;
 	}
-#Sedimentation of dust aerosol (9 - 20 um)
+#Sedimentation of dust aerosol (0.9 - 20 um)
 'kg m**-2 s**-1' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 33 ;
@@ -6659,12 +6659,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 34 ;
 	}
-#Wet deposition of dust aerosol (0.55 - 9 um) by large-scale precipitation
+#Wet deposition of dust aerosol (0.55 - 0.9 um) by large-scale precipitation
 'kg m**-2 s**-1' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 35 ;
 	}
-#Wet deposition of dust aerosol (9 - 20 um) by large-scale precipitation
+#Wet deposition of dust aerosol (0.9 - 20 um) by large-scale precipitation
 'kg m**-2 s**-1' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 36 ;
@@ -6674,12 +6674,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 37 ;
 	}
-#Wet deposition of dust aerosol (0.55 - 9 um) by convective precipitation
+#Wet deposition of dust aerosol (0.55 - 0.9 um) by convective precipitation
 'kg m**-2 s**-1' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 38 ;
 	}
-#Wet deposition of dust aerosol (9 - 20 um) by convective precipitation
+#Wet deposition of dust aerosol (0.9 - 20 um) by convective precipitation
 'kg m**-2 s**-1' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 39 ;
@@ -6689,12 +6689,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 40 ;
 	}
-#Negative fixer of dust aerosol (0.55 - 9 um)
+#Negative fixer of dust aerosol (0.55 - 0.9 um)
 'kg m**-2 s**-1' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 41 ;
 	}
-#Negative fixer of dust aerosol (9 - 20 um)
+#Negative fixer of dust aerosol (0.9 - 20 um)
 'kg m**-2 s**-1' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 42 ;
@@ -6704,12 +6704,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 43 ;
 	}
-#Vertically integrated mass of dust aerosol (0.55 - 9 um)
+#Vertically integrated mass of dust aerosol (0.55 - 0.9 um)
 'kg m**-2' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 44 ;
 	}
-#Vertically integrated mass of dust aerosol (9 - 20 um)
+#Vertically integrated mass of dust aerosol (0.9 - 20 um)
 'kg m**-2' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 45 ;
@@ -6719,12 +6719,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 46 ;
 	}
-#Dust aerosol (0.55 - 9 um) optical depth
+#Dust aerosol (0.55 - 0.9 um) optical depth
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 47 ;
 	}
-#Dust aerosol (9 - 20 um) optical depth
+#Dust aerosol (0.9 - 20 um) optical depth
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 48 ;

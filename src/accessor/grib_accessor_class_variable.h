@@ -32,7 +32,7 @@ public:
     long byte_count() override;
     int value_count(long*) override;
     void destroy(grib_context*) override;
-    void dump(grib_dumper*) override;
+    void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
     int compare(grib_accessor*) override;
     grib_accessor* make_clone(grib_section*, int*) override;

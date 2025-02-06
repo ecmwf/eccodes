@@ -45,9 +45,9 @@ void grib_accessor_g2end_step_t::init(const long l, grib_arguments* c)
     numberOfTimeRanges_  = c->get_name(h, n++);
 }
 
-void grib_accessor_g2end_step_t::dump(grib_dumper* dumper)
+void grib_accessor_g2end_step_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_double(dumper, this, NULL);
+    dumper->dump_double(this, NULL);
 }
 
 // See GRIB-488
@@ -76,7 +76,7 @@ static int convert_time_range_long_(
     long* lengthOfTimeRange           /* time_range_value */
 )
 {
-    Assert(lengthOfTimeRange != NULL);
+    ECCODES_ASSERT(lengthOfTimeRange != NULL);
 
     if (indicatorOfUnitForTimeRange != stepUnits) {
         eccodes::Step time_range{ *lengthOfTimeRange, indicatorOfUnitForTimeRange };
@@ -337,10 +337,10 @@ int grib_accessor_g2end_step_t::unpack_long(long* val, size_t* len)
         return 0;
     }
 
-    Assert(numberOfTimeRanges_);
+    ECCODES_ASSERT(numberOfTimeRanges_);
     if ((ret = grib_get_long_internal(h, numberOfTimeRanges_, &numberOfTimeRanges)))
         return ret;
-    Assert(numberOfTimeRanges == 1 || numberOfTimeRanges == 2);
+    ECCODES_ASSERT(numberOfTimeRanges == 1 || numberOfTimeRanges == 2);
 
     try {
         if (numberOfTimeRanges == 1) {
@@ -379,10 +379,10 @@ int grib_accessor_g2end_step_t::unpack_double(double* val, size_t* len)
         return 0;
     }
 
-    Assert(numberOfTimeRanges_);
+    ECCODES_ASSERT(numberOfTimeRanges_);
     if ((ret = grib_get_long_internal(h, numberOfTimeRanges_, &numberOfTimeRanges)))
         return ret;
-    Assert(numberOfTimeRanges == 1 || numberOfTimeRanges == 2);
+    ECCODES_ASSERT(numberOfTimeRanges == 1 || numberOfTimeRanges == 2);
 
     try {
         if (numberOfTimeRanges == 1) {

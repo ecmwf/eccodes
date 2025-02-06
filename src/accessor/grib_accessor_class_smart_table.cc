@@ -173,7 +173,7 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
     if (!f)
         return GRIB_IO_PROBLEM;
 
-    Assert(t != NULL);
+    ECCODES_ASSERT(t != NULL);
 
     if (t->filename[0] == NULL) {
         t->filename[0]        = grib_context_strdup_persistent(c, filename);
@@ -277,9 +277,9 @@ void grib_smart_table_delete(grib_context* c)
     }
 }
 
-void grib_accessor_smart_table_t::dump(grib_dumper* dumper)
+void grib_accessor_smart_table_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_long(dumper, this, NULL);
+    dumper->dump_long(this, NULL);
 }
 
 int grib_accessor_smart_table_t::unpack_string(char* buffer, size_t* len)

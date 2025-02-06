@@ -90,7 +90,7 @@ diff $tempRef $tempOut
 # -------------------------------
 tables="$types_table $classes_table $streams_table"
 for table in $tables; do
-    echo "Testing numeric codes in $table ..."
+    echo "Testing numeric codes are unique in $table ..."
     awk '{print $1}' < $table > $tempOut
     count1=`sort -u $tempOut | wc -l`
     count2=`wc -l $tempOut | awk '{print $1}'`
@@ -101,7 +101,7 @@ done
 # -------------------------------
 tables="$types_table $classes_table $streams_table"
 for table in $tables; do
-    echo "Testing abbreviations in $table ..."
+    echo "Testing abbreviations are unique in $table ..."
     awk '{print $2}' < $table > $tempOut
     count1=`sort -u $tempOut | wc -l`
     count2=`wc -l $tempOut | awk '{print $1}'`

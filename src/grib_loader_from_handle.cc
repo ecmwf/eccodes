@@ -157,12 +157,19 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
         pack_missing = 1;
     }
 
-    const long ga_type = ga->get_native_type();
+    long ga_type = ga->get_native_type();
 
     if ((ga->flags_ & GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION) && !loader->changing_edition) {
         // See ECC-1560 and ECC-1644
         grib_context_log(h->context, GRIB_LOG_DEBUG, "Skipping %s (only copied if changing edition)", ga->name_);
         return GRIB_SUCCESS;
+    }
+
+    // ECC-2013: Unfortunately we mapped some keys to be "string_type" in the definitions,
+    // e.g., the grib2 key typeOfFirstFixedSurface. Its code table 4.5 has multiple
+    // abbreviations of "sfc" etc which clash! So we mark it with this flag to revert to integers which are unique
+    if ( ga->flags_ & GRIB_ACCESSOR_FLAG_COPY_AS_INT ) {
+        ga_type = GRIB_TYPE_LONG;
     }
 
     switch (ga_type) {
@@ -251,7 +258,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
 
         default:
             grib_context_log(h->context, GRIB_LOG_ERROR,
-                "Copying %s, cannot establish type %ld [%s]", name, ga->get_native_type(), ga->creator_->cclass->name);
+                "Copying %s, cannot establish type %ld [%s]", name, ga->get_native_type(), ga->creator_->class_name_);
             break;
     }
 

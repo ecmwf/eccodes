@@ -39,7 +39,7 @@ static void print_debug_info__set_array(grib_handle* h, const char* func, const 
     T minVal = std::numeric_limits<T>::max();
     T maxVal = -std::numeric_limits<T>::max();
     double missingValue = 0;
-    Assert( h->context->debug );
+    ECCODES_ASSERT( h->context->debug );
 
     if (grib_get_double(h, "missingValue", &missingValue)!=GRIB_SUCCESS) {
         missingValue = 9999.0;
@@ -130,7 +130,7 @@ int grib_set_long(grib_handle* h, const char* name, long val)
 
     if (a) {
         if (h->context->debug) {
-            if (strcmp(name, a->name_)!=0)
+            if (strcmp(name, a->name_) != 0)
                 fprintf(stderr, "ECCODES DEBUG grib_set_long h=%p %s=%ld (a->name_=%s)\n", (void*)h, name, val, a->name_);
             else
                 fprintf(stderr, "ECCODES DEBUG grib_set_long h=%p %s=%ld\n", (void*)h, name, val);
@@ -1373,8 +1373,8 @@ int grib_get_float_array(const grib_handle* h, const char* name, float* val, siz
         //grib_context_log(h->context, GRIB_LOG_ERROR, "grib_get_float_array only supported for GRIB");
         return GRIB_NOT_IMPLEMENTED;
     }
-    Assert(name[0]!='/');
-    Assert(name[0]!='#');
+    ECCODES_ASSERT(name[0]!='/');
+    ECCODES_ASSERT(name[0]!='#');
     *length = 0;
     return _grib_get_array_internal<float>(h,a,val,len,length);
 }
@@ -1796,7 +1796,7 @@ int grib_set_values_silent(grib_handle* h, grib_values* args, size_t count, int 
     int more  = 1;
     int stack = h->values_stack++;
 
-    Assert(h->values_stack < MAX_SET_VALUES - 1);
+    ECCODES_ASSERT(h->values_stack < MAX_SET_VALUES - 1);
 
     h->values[stack]       = args;
     h->values_count[stack] = count;
@@ -1878,13 +1878,13 @@ int grib_get_nearest_smaller_value(grib_handle* h, const char* name,
                                    double val, double* nearest)
 {
     grib_accessor* act = grib_find_accessor(h, name);
-    Assert(act);
+    ECCODES_ASSERT(act);
     return act->nearest_smaller_value(val, nearest);
 }
 
 void grib_print_values(const char* title, const grib_values* values, FILE* out, int count)
 {
-    Assert(values);
+    ECCODES_ASSERT(values);
     for (int i = 0; i < count; ++i) {
         const grib_values aVal = values[i];
         fprintf(out, "%s: %s=", title, aVal.name);

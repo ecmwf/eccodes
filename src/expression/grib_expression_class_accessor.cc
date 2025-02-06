@@ -36,7 +36,7 @@ Accessor::string Accessor::evaluate_string(grib_handle* h, char* buf, size_t* si
         return NULL;
     }
 
-    Assert(buf);
+    ECCODES_ASSERT(buf);
     if ((*err = grib_get_string_internal(h, name_, mybuf, size)) != GRIB_SUCCESS)
         return NULL;
 
@@ -90,7 +90,7 @@ void Accessor::add_dependency(grib_accessor* observer)
     if (!observed) {
         /* grib_context_log(observer->context, GRIB_LOG_ERROR, */
         /* "Error in accessor_add_dependency: cannot find [%s]", name_); */
-        /* Assert(observed); */
+        /* ECCODES_ASSERT(observed); */
         return;
     }
 

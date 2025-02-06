@@ -153,7 +153,7 @@ grib_check_key_equals $temp "stepRange,startStep,endStep" "14 14 14"
 input=${data_dir}/constant_field.grib2
 grib_check_key_equals $input "dataDate,dataTime,step" "20061205 1200 6"
 grib_check_key_equals $input "validityDate,validityTime" "20061205 1800"
-grib_check_key_equals $input "validityDateTime:s" "20061205 001800"
+grib_check_key_equals $input "validityDateTime:s" "20061205 180000"
 
 # ECC-1704: Key validityTime as string
 # -------------------------------------
@@ -283,6 +283,12 @@ set -e
 [ $status -ne 0 ]
 grep -q "Date/Time is not valid" $tempLog
 rm -f $tempGrbA $tempGrbB
+
+# Warning re startStep > endStep
+${tools_dir}/grib_set -s stepType=accum,startStep=12,endStep=6  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrbA
+${tools_dir}/grib_get -p step $tempGrbA 2>$tempLog
+grep -q "ECCODES WARNING :  endStep < startStep" $tempLog
+
 
 # Clean up
 rm -f $temp $tempLog $tempFilt

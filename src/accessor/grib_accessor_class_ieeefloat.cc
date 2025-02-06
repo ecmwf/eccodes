@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -21,7 +20,7 @@ void grib_accessor_ieeefloat_t::init(const long len, grib_arguments* arg)
     arg_       = arg;
     value_count(&count);
     length_ = 4 * count;
-    Assert(length_ >= 0);
+    ECCODES_ASSERT(length_ >= 0);
 }
 
 int grib_accessor_ieeefloat_t::value_count(long* len)
@@ -121,7 +120,7 @@ int grib_accessor_ieeefloat_t::unpack_float(float* val, size_t* len)
 void grib_accessor_ieeefloat_t::update_size(size_t s)
 {
     length_ = (long)s;
-    Assert(length_ >= 0);
+    ECCODES_ASSERT(length_ >= 0);
 }
 
 int grib_accessor_ieeefloat_t::nearest_smaller_value(double val, double* nearest)

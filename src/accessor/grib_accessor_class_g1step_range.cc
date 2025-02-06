@@ -36,9 +36,9 @@ void grib_accessor_g1step_range_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-void grib_accessor_g1step_range_t::dump(grib_dumper* dumper)
+void grib_accessor_g1step_range_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_string(dumper, this, NULL);
+    dumper->dump_string(this, NULL);
 }
 
 static const int u2s1[] = {
@@ -589,7 +589,7 @@ int grib_accessor_g1step_range_t::pack_long(const long* val, size_t* len)
             }
             return pack_string(buff, &bufflen);
         default:
-            Assert(pack_index_ < 2);
+            ECCODES_ASSERT(pack_index_ < 2);
             break;
     }
 
@@ -623,7 +623,13 @@ int grib_accessor_g1step_range_t::unpack_long(long* val, size_t* len)
     v_[1]  = theEnd;
     dirty_ = 0;
 
-    return 0;
+    if (start > theEnd) {
+        // For now just a warning. Will later change to an error
+        fprintf(stderr, "ECCODES WARNING :  endStep < startStep (%ld < %ld)\n", theEnd, start);
+        //grib_context_log(context_, GRIB_LOG_ERROR, "endStep < startStep (%ld < %ld)", theEnd, start);
+        //return GRIB_WRONG_STEP;
+    }
+    return GRIB_SUCCESS;
 }
 
 long grib_accessor_g1step_range_t::get_native_type()

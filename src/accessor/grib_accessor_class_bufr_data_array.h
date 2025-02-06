@@ -38,7 +38,7 @@ public:
     long next_offset() override;
     int value_count(long*) override;
     void destroy(grib_context*) override;
-    void dump(grib_dumper*) override;
+    void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
 
     void accessor_bufr_data_array_set_unpackMode(int);

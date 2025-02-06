@@ -37,7 +37,7 @@ int grib_decode_long_array(const unsigned char* p, long* bitp, long bitsPerValue
         while (bitsToRead > 0) {
             ret <<= 8;
             /*   ret += p[pi];         */
-            /*   Assert( (ret & p[pi]) == 0 ); */
+            /*   ECCODES_ASSERT( (ret & p[pi]) == 0 ); */
             ret = ret | p[pi];
             pi++;
             bitsToRead -= usefulBitsInByte;

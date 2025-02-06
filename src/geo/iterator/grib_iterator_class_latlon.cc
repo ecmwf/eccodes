@@ -114,7 +114,7 @@ int Latlon::init(grib_handle* h, grib_arguments* args)
     /* So try to compute the increment */
     if ((grib_is_missing(h, s_jdir, &err) && err == GRIB_SUCCESS) || (jdir == GRIB_MISSING_DOUBLE)) {
         const long Nj = Nj_;
-        Assert(Nj > 1);
+        ECCODES_ASSERT(Nj > 1);
         if (lat1 > lat2) {
             jdir = (lat1 - lat2) / (Nj - 1);
         }

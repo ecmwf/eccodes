@@ -29,15 +29,15 @@ int main(int argc, char** argv)
     double dmin, dmax, dval;
     float fval;
 
-    Assert(argc == 2);
+    ECCODES_ASSERT(argc == 2);
     const char* filename = argv[1];
 
     printf("Opening %s\n", filename);
     FILE* in = fopen(filename, "rb");
-    Assert(in);
+    ECCODES_ASSERT(in);
 
     codes_handle* h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
-    Assert(h);
+    ECCODES_ASSERT(h);
 
     CODES_CHECK(codes_get_float(h, "referenceValue", &fval), 0);
     CODES_CHECK(codes_get_double(h, "referenceValue", &dval), 0);
@@ -55,7 +55,7 @@ int main(int argc, char** argv)
         if (abs_error > max_abs_error) {
             fprintf(stderr, "ERROR:\n\tfvalue %e\n\tdvalue %e\n\terror %e\n\tmax_abs_error %e\n",
                     fvalues[i], dvalues[i], abs_error, max_abs_error);
-            Assert(!"Absolute error test failed\n");
+            ECCODES_ASSERT(!"Absolute error test failed\n");
         }
 
         dmin = dvalues[i] >= 0 ? dvalues[i] / (1 + tolerance) : dvalues[i] * (1 + tolerance);
@@ -71,7 +71,7 @@ int main(int argc, char** argv)
             fprintf(stderr, "\tmax - fvalue = %.20e (%s)\n",
                     dmax - fvalues[i], dmax - fvalues[i] >= 0 ? "OK" : "FAILED (should be positive)");
 
-            Assert(!"Relative tolerance test failed\n");
+            ECCODES_ASSERT(!"Relative tolerance test failed\n");
         }
     }
 

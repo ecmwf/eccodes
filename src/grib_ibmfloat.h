@@ -32,23 +32,24 @@ The table layout is as follows:
 +-------+----------------+------------------------+
 | idx (i) | multiplier (e) | value (v = mmin * e) |
 +-------+----------------+------------------------+
-| 0     | 16^(-70)       | 0x100000 * 2^(-70)     |
-| 1     | 16^(-69)       | 0x100000 * 2^(-69)     |
+| 0     | 16^(-70)       | 0x100000 * 16^(-70)     |
+| 1     | 16^(-69)       | 0x100000 * 16^(-69)     |
 | ...   | ...            | ...                    |
-| 126   | 16^56          | 0x100000 * 2^56        |
-| 127   | 16^57          | 0x100000 * 2^57        |
+| 126   | 16^56          | 0x100000 * 16^56        |
+| 127   | 16^57          | 0x100000 * 16^57        |
 +-------+----------------+------------------------+
 
 The vmin and vmax boundaries are defined as:
 
-- vmin =  0x100000 * 2^(-70)
-- vmax =  0xffffff * 2^57
+- vmin =  0x100000 * 16^(-70)
+- vmax =  0xffffff * 16^57
 */
 
-struct IbmTable {
+struct IbmTable
+{
 private:
-    using ValueType = double;
-    static constexpr int TABLESIZE = 128;
+    using ValueType                        = double;
+    static constexpr int TABLESIZE         = 128;
     static constexpr uint32_t mantissa_min = 0x100000;
     static constexpr uint32_t mantissa_max = 0xffffff;
 

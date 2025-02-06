@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -21,6 +20,6 @@ public:
     grib_accessor* create_empty_accessor() override { return new grib_accessor_position_t{}; }
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
-    void dump(grib_dumper*) override;
+    void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
 };

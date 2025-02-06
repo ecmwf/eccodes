@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -26,7 +25,7 @@ public:
     int unpack_long(long* val, size_t* len) override;
     int value_count(long*) override;
     void destroy(grib_context*) override;
-    void dump(grib_dumper*) override;
+    void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
 
 private:

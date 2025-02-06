@@ -100,6 +100,7 @@ void grib_empty_section(grib_context* c, grib_section* b)
             current->sub_section_ = 0;
         }
         current->destroy(c);
+        delete current;
         current = next;
     }
     b->block->first = b->block->last = 0;
@@ -199,9 +200,9 @@ static grib_handle* grib_handle_create(grib_handle* gl, grib_context* c, const v
 
     next = gl->context->grib_reader->first->root;
     while (next) {
-        if (grib_create_accessor(gl->root, next, NULL) != GRIB_SUCCESS)
+        if (next->create_accessor(gl->root, NULL) != GRIB_SUCCESS)
             break;
-        next = next->next;
+        next = next->next_;
     }
 
     err = grib_section_adjust_sizes(gl->root, 0, 0);
@@ -434,7 +435,7 @@ grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind pr
     if (product == PRODUCT_ANY)
         return any_new_from_file(c, f, error);
 
-    Assert(!"codes_handle_new_from_file: Invalid product");
+    ECCODES_ASSERT(!"codes_handle_new_from_file: Invalid product");
     return NULL;
 }
 
@@ -1417,9 +1418,9 @@ int codes_get_product_kind(const grib_handle* h, ProductKind* product_kind)
 int codes_check_message_header(const void* bytes, size_t length, ProductKind product)
 {
     const char* p = ((const char*)bytes);
-    Assert(p);
-    Assert(product == PRODUCT_GRIB || product == PRODUCT_BUFR); /* Others not yet implemented */
-    Assert(length > 4);
+    ECCODES_ASSERT(p);
+    ECCODES_ASSERT(product == PRODUCT_GRIB || product == PRODUCT_BUFR); /* Others not yet implemented */
+    ECCODES_ASSERT(length > 4);
     if (product == PRODUCT_GRIB) {
         if (p[0] != 'G' || p[1] != 'R' || p[2] != 'I' || p[3] != 'B')
             return GRIB_INVALID_MESSAGE;
@@ -1437,8 +1438,8 @@ int codes_check_message_header(const void* bytes, size_t length, ProductKind pro
 int codes_check_message_footer(const void* bytes, size_t length, ProductKind product)
 {
     const char* p = ((const char*)bytes);
-    Assert(p);
-    Assert(product == PRODUCT_GRIB || product == PRODUCT_BUFR); /* Others not yet implemented */
+    ECCODES_ASSERT(p);
+    ECCODES_ASSERT(product == PRODUCT_GRIB || product == PRODUCT_BUFR); /* Others not yet implemented */
 
     if (p[length - 4] != '7' || p[length - 3] != '7' || p[length - 2] != '7' || p[length - 1] != '7') {
         return GRIB_7777_NOT_FOUND;
@@ -1535,7 +1536,7 @@ grib_action* grib_action_from_filter(const char* filter)
         grib_context_free_persistent(context, context->grib_reader);
     }
 
-    context->grib_reader = NULL;
+    context->grib_reader = nullptr;
     return a;
 }
 
@@ -1547,10 +1548,10 @@ int grib_handle_apply_action(grib_handle* h, grib_action* a)
         return GRIB_SUCCESS; /* TODO: return error */
 
     while (a) {
-        err = grib_action_execute(a, h);
+        err = a->execute(h);
         if (err != GRIB_SUCCESS)
             return err;
-        a = a->next;
+        a = a->next_;
     }
 
     return GRIB_SUCCESS;
@@ -1564,7 +1565,7 @@ int grib_handle_apply_action(grib_handle* h, grib_action* a)
 //         return GRIB_SUCCESS; /* TODO: return error */
 
 //     while (a) {
-//         err = grib_action_execute(a, h);
+//         err = a->execute(h);
 //         if (err != GRIB_SUCCESS)
 //             return err;
 //         a = a->next;

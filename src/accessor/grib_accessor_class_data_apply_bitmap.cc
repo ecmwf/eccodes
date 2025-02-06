@@ -27,9 +27,9 @@ void grib_accessor_data_apply_bitmap_t::init(const long v, grib_arguments* args)
 
     length_ = 0;
 }
-void grib_accessor_data_apply_bitmap_t::dump(grib_dumper* dumper)
+void grib_accessor_data_apply_bitmap_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_values(dumper, this);
+    dumper->dump_values(this);
 }
 
 int grib_accessor_data_apply_bitmap_t::value_count(long* count)
@@ -150,7 +150,7 @@ int grib_accessor_data_apply_bitmap_t::unpack_double_element_set(const size_t* i
             for (j = 0; j < idx; j++) {
                 cidx += bvals[j];
             }
-            Assert(ci < count_1s);
+            ECCODES_ASSERT(ci < count_1s);
             cidx_array[ci++] = cidx;
         }
     }

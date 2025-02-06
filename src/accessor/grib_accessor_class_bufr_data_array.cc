@@ -225,7 +225,7 @@ void grib_accessor_bufr_data_array_t::init(const long v, grib_arguments* params)
     bitsToEndData_ = get_length() * 8;
     unpackMode_    = CODES_BUFR_UNPACK_STRUCTURE;
     inputBitmap_   = NULL;
-    /* Assert(length_ >=0); */
+    /* ECCODES_ASSERT(length_ >=0); */
 }
 
 // void clean_string(char* s,int len)
@@ -932,7 +932,7 @@ int decode_element(grib_context* c, grib_accessor_bufr_data_array_t* self, int s
     double cdval        = 0, x;
     int err             = 0;
     bufr_descriptor* bd = descriptor == NULL ? self->expanded_->v[i] : descriptor;
-    /* Assert( b->data == data); */
+    /* ECCODES_ASSERT( b->data == data); */
 
     if (self->change_ref_value_operand_ > 0 && self->change_ref_value_operand_ != 255) {
         /* Operator 203YYY: Change Reference Values: Definition phase */
@@ -1012,7 +1012,7 @@ int decode_replication(grib_context* c, grib_accessor_bufr_data_array_t* self, i
     err                           = &ret;
     descriptors                   = self->expanded_->v;
 
-    /* Assert(buff->data == data); */
+    /* ECCODES_ASSERT(buff->data == data); */
 
     grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data decoding: -%d- \tcode=%6.6ld width=%ld ",
                      i, self->expanded_->v[i]->code, self->expanded_->v[i]->width);
@@ -1098,7 +1098,7 @@ int grib_accessor_bufr_data_array_t::encode_overridden_reference_value(grib_cont
     long currRefVal = -1;
     long numBits    = change_ref_value_operand_;
     /* We must be encoding between 203YYY and 203255 */
-    Assert(change_ref_value_operand_ > 0 && change_ref_value_operand_ != 255);
+    ECCODES_ASSERT(change_ref_value_operand_ > 0 && change_ref_value_operand_ != 255);
     if (refValListSize_ == 0) {
         grib_context_log(c, GRIB_LOG_ERROR,
                          "encode_new_element: Overridden Reference Values array is empty! "
@@ -1262,7 +1262,7 @@ int encode_element(grib_context* c, grib_accessor_bufr_data_array_t* self, int s
     int idx, j;
     int err             = 0;
     bufr_descriptor* bd = descriptor == NULL ? self->expanded_->v[i] : descriptor;
-    /* Assert( buff->data == data); */
+    /* ECCODES_ASSERT( buff->data == data); */
 
     grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data encoding: -%d- \tcode=%6.6ld width=%ld pos=%ld ulength=%ld ulength_bits=%ld",
                      i, bd->code, bd->width, (long)*pos, buff->ulength, buff->ulength_bits);
@@ -1332,7 +1332,7 @@ int encode_replication(grib_context* c, grib_accessor_bufr_data_array_t* self, i
                        grib_buffer* buff, unsigned char* data, long* pos, int i, long elementIndex,
                        grib_darray* dval, long* numberOfRepetitions)
 {
-    /* Assert( buff->data == data); */
+    /* ECCODES_ASSERT( buff->data == data); */
     if (self->compressedData_) {
         DEBUG_ASSERT(grib_darray_used_size(self->numericValues_->v[elementIndex]) == 1);
         *numberOfRepetitions = self->numericValues_->v[elementIndex]->v[0];
@@ -1388,7 +1388,7 @@ int grib_accessor_bufr_data_array_t::build_bitmap(unsigned char* data, long* pos
             i = iBitmapOperator + 1;
             if (descriptors[i]->code == 101000) {
                 iDelayedReplication = iBitmapOperator + 2;
-                Assert(descriptors[iDelayedReplication]->code == 31001 ||
+                ECCODES_ASSERT(descriptors[iDelayedReplication]->code == 31001 ||
                        descriptors[iDelayedReplication]->code == 31002);
                 i = iDelayedReplication;
                 if (compressedData_) {
@@ -1458,7 +1458,7 @@ int grib_accessor_bufr_data_array_t::consume_bitmap(int iBitmapOperator)
                 bitmapSize = inputExtendedReplications_[iInputExtendedReplications_];
                 break;
             default:
-                Assert(0);
+                ECCODES_ASSERT(0);
         }
     }
     else if (descriptors[i]->code == 31031) {
@@ -1528,7 +1528,7 @@ int grib_accessor_bufr_data_array_t::build_bitmap_new_data(unsigned char* data, 
                         bitmapSize = inputExtendedReplications_[iInputExtendedReplications_];
                         break;
                     default:
-                        Assert(0);
+                        ECCODES_ASSERT(0);
                 }
             }
             else if (descriptors[i]->code == 31031) {
@@ -1652,19 +1652,16 @@ void grib_accessor_bufr_data_array_t::push_zero_element(grib_darray* dval)
 
 grib_accessor* grib_accessor_bufr_data_array_t::create_attribute_variable(const char* name, grib_section* section, int type, char* sval, double dval, long lval, unsigned long flags)
 {
-    grib_action creator = {
-        0,
-    };
+    grib_action creator;
     size_t len;
-    creator.op         = (char*)"variable";
-    creator.name_space = (char*)"";
-    creator.flags      = GRIB_ACCESSOR_FLAG_READ_ONLY | flags;
-    creator.set        = 0;
-
-    creator.name                 = (char*)name;
-    grib_accessor* a             = grib_accessor_factory(section, &creator, 0, NULL);
-    a->parent_                   = NULL;
-    a->h_                        = section->h;
+    creator.op_         = (char*)"variable";
+    creator.name_space_ = (char*)"";
+    creator.flags_      = GRIB_ACCESSOR_FLAG_READ_ONLY | GRIB_ACCESSOR_FLAG_BUFR_DATA | flags;
+    creator.set_        = 0;
+    creator.name_       = (char*)name;
+    grib_accessor* a    = grib_accessor_factory(section, &creator, 0, NULL);
+    a->parent_          = NULL;
+    a->h_               = section->h;
     grib_accessor_variable_t* va = dynamic_cast<grib_accessor_variable_t*>(a);
     va->accessor_variable_set_type(type);
     len = 1;
@@ -1692,70 +1689,70 @@ static void set_creator_name(grib_action* creator, int code)
 {
     switch (code) {
         case 222000:
-            creator->name = (char*)"qualityInformationFollows";
+            creator->name_ = (char*)"qualityInformationFollows";
             break;
         case 223000:
-            creator->name = (char*)"substitutedValuesOperator";
+            creator->name_ = (char*)"substitutedValuesOperator";
             break;
         case 223255:
-            creator->name = (char*)"substitutedValue";
+            creator->name_ = (char*)"substitutedValue";
             break;
         case 224000:
-            creator->name = (char*)"firstOrderStatiticalValuesFollow";
+            creator->name_ = (char*)"firstOrderStatiticalValuesFollow";
             break;
         case 224255:
-            creator->name = (char*)"firstOrderStatisticalValue";
+            creator->name_ = (char*)"firstOrderStatisticalValue";
             break;
         case 225000:
-            creator->name = (char*)"differenceStatisticalValuesFollow";
+            creator->name_ = (char*)"differenceStatisticalValuesFollow";
             break;
         case 225255:
-            creator->name = (char*)"differenceStatisticalValue";
+            creator->name_ = (char*)"differenceStatisticalValue";
             break;
         case 232000:
-            creator->name = (char*)"replacedRetainedValuesFollow";
+            creator->name_ = (char*)"replacedRetainedValuesFollow";
             break;
         case 232255:
-            creator->name = (char*)"replacedRetainedValue";
+            creator->name_ = (char*)"replacedRetainedValue";
             break;
         case 235000:
-            creator->name = (char*)"cancelBackwardDataReference";
+            creator->name_ = (char*)"cancelBackwardDataReference";
             break;
         case 236000:
-            creator->name = (char*)"defineDataPresentBitmap";
+            creator->name_ = (char*)"defineDataPresentBitmap";
             break;
         case 237000:
-            creator->name = (char*)"useDefinedDataPresentBitmap";
+            creator->name_ = (char*)"useDefinedDataPresentBitmap";
             break;
         case 237255:
-            creator->name = (char*)"cancelUseDefinedDataPresentBitmap";
+            creator->name_ = (char*)"cancelUseDefinedDataPresentBitmap";
             break;
         case 241000:
-            creator->name = (char*)"defineEvent";
+            creator->name_ = (char*)"defineEvent";
             break;
         case 241255:
-            creator->name = (char*)"cancelDefineEvent";
+            creator->name_ = (char*)"cancelDefineEvent";
             break;
         case 242000:
-            creator->name = (char*)"defineConditioningEvent";
+            creator->name_ = (char*)"defineConditioningEvent";
             break;
         case 242255:
-            creator->name = (char*)"canceDefineConditioningEvent";
+            creator->name_ = (char*)"canceDefineConditioningEvent";
             break;
         case 243000:
-            creator->name = (char*)"categoricalForecastValuesFollow";
+            creator->name_ = (char*)"categoricalForecastValuesFollow";
             break;
         case 243255:
-            creator->name = (char*)"cancelCategoricalForecastValuesFollow";
+            creator->name_ = (char*)"cancelCategoricalForecastValuesFollow";
             break;
         case 999999:
-            creator->name = (char*)"associatedField";
+            creator->name_ = (char*)"associatedField";
             break;
         default:
             if (code > 204999 && code < 206000)
-                creator->name = (char*)"text";
+                creator->name_ = (char*)"text";
             else
-                creator->name = (char*)"operator";
+                creator->name_ = (char*)"operator";
             break;
     }
 }
@@ -1779,31 +1776,31 @@ grib_accessor* grib_accessor_bufr_data_array_t::create_accessor_from_descriptor(
     char* temp_str              = NULL;
     int idx                     = 0;
     unsigned long flags         = GRIB_ACCESSOR_FLAG_READ_ONLY;
-    grib_action operatorCreator = {0,};
+    grib_action operatorCreator;
     grib_accessor* accessor = NULL;
     grib_accessor_bufr_data_element_t* elementAccessor = NULL;
     grib_accessor_variable_t* variableAccessor = NULL;
-    grib_action creator            = {0,};
-    creator.op         = (char*)"bufr_data_element";
-    creator.name_space = (char*)"";
-    creator.set        = 0;
+    grib_action creator;
+    creator.op_         = (char*)"bufr_data_element";
+    creator.name_space_ = (char*)"";
+    creator.set_        = 0;
 
-    operatorCreator.op         = (char*)"variable";
-    operatorCreator.name_space = (char*)"";
-    operatorCreator.flags      = GRIB_ACCESSOR_FLAG_READ_ONLY;
-    operatorCreator.set        = 0;
-    operatorCreator.name       = (char*)"operator";
+    operatorCreator.op_         = (char*)"variable";
+    operatorCreator.name_space_ = (char*)"";
+    operatorCreator.flags_      = GRIB_ACCESSOR_FLAG_READ_ONLY;
+    operatorCreator.set_        = 0;
+    operatorCreator.name_       = (char*)"operator";
 
     if (attribute) {
         DEBUG_ASSERT(attribute->parent_ == NULL);
     }
 
     if (add_dump_flag) {
-        creator.flags = GRIB_ACCESSOR_FLAG_DUMP;
-        operatorCreator.flags |= GRIB_ACCESSOR_FLAG_DUMP;
+        creator.flags_ = GRIB_ACCESSOR_FLAG_DUMP;
+        operatorCreator.flags_ |= GRIB_ACCESSOR_FLAG_DUMP;
     }
     if (add_coord_flag) {
-        creator.flags |= GRIB_ACCESSOR_FLAG_BUFR_COORD;  // ECC-1611
+        creator.flags_ |= GRIB_ACCESSOR_FLAG_BUFR_COORD;  // ECC-1611
     }
 
     idx = compressedData_ ? elementsDescriptorsIndex_->v[0]->v[ide] : elementsDescriptorsIndex_->v[subset]->v[ide];
@@ -1811,10 +1808,10 @@ grib_accessor* grib_accessor_bufr_data_array_t::create_accessor_from_descriptor(
     switch (expanded_->v[idx]->F) {
         case 0:
         case 1:
-            creator.name = grib_context_strdup(context_, expanded_->v[idx]->shortName);
+            creator.name_ = grib_context_strdup(context_, expanded_->v[idx]->shortName);
 
             /* ECC-325: store alloc'd string (due to strdup) for clean up later */
-            grib_sarray_push(tempStrings_, creator.name);
+            grib_sarray_push(tempStrings_, creator.name_);
             accessor = grib_accessor_factory(section, &creator, 0, NULL);
             if (canBeMissing_[idx])
                 accessor->flags_ |= GRIB_ACCESSOR_FLAG_CAN_BE_MISSING;
@@ -2043,10 +2040,10 @@ grib_iarray* grib_accessor_bufr_data_array_t::set_subset_list(
 
 #ifdef DEBUG
     if (subsetList == NULL) {
-        Assert(subsetListSize == 0);
+        ECCODES_ASSERT(subsetListSize == 0);
     }
     if (subsetListSize == 0) {
-        Assert(subsetList == NULL);
+        ECCODES_ASSERT(subsetList == NULL);
     }
 #endif
     if (startSubset > 0) {
@@ -2264,9 +2261,7 @@ int grib_accessor_bufr_data_array_t::create_keys(long onlySubset, long startSubs
     int add_extra_attributes = 1;
 
     grib_accessor* gaGroup   = 0;
-    grib_action creatorGroup = {
-        0,
-    };
+    grib_action creatorGroup;
     grib_accessor* significanceQualifierGroup[NUMBER_OF_QUALIFIERS_PER_CATEGORY * NUMBER_OF_QUALIFIERS_CATEGORIES] = {
         0,
     };
@@ -2295,11 +2290,11 @@ int grib_accessor_bufr_data_array_t::create_keys(long onlySubset, long startSubs
     int add_dump_flag = 1, add_coord_flag = 0, count = 0;
     /*int forceGroupClosure=0;*/
 
-    creatorGroup.op         = (char*)"bufr_group";
-    creatorGroup.name       = (char*)"groupNumber";
-    creatorGroup.name_space = (char*)"";
-    creatorGroup.flags      = GRIB_ACCESSOR_FLAG_DUMP;
-    creatorGroup.set        = 0;
+    creatorGroup.op_         = (char*)"bufr_group";
+    creatorGroup.name_       = (char*)"groupNumber";
+    creatorGroup.name_space_ = (char*)"";
+    creatorGroup.flags_      = GRIB_ACCESSOR_FLAG_DUMP;
+    creatorGroup.set_        = 0;
 
     if (dataAccessors_) {
         grib_accessors_list_delete(c, dataAccessors_);
@@ -2349,7 +2344,8 @@ int grib_accessor_bufr_data_array_t::create_keys(long onlySubset, long startSubs
         associatedFieldAccessor = NULL;
         if (associatedFieldSignificanceAccessor) {
             associatedFieldSignificanceAccessor->destroy(c);
-            associatedFieldSignificanceAccessor = NULL;
+            delete associatedFieldSignificanceAccessor;
+            associatedFieldSignificanceAccessor = nullptr;
         }
         for (ide = 0; ide < elementsInSubset; ide++) {
             idx = compressedData_ ? elementsDescriptorsIndex_->v[0]->v[ide] : elementsDescriptorsIndex_->v[iss]->v[ide];
@@ -2488,15 +2484,13 @@ int grib_accessor_bufr_data_array_t::create_keys(long onlySubset, long startSubs
             if (ide == 0 && !compressedData_) {
                 long subsetNumber     = iss + 1;
                 size_t len            = 1;
-                grib_action creatorsn = {
-                    0,
-                };
-                creatorsn.op         = (char*)"variable";
-                creatorsn.name_space = (char*)"";
-                creatorsn.flags      = GRIB_ACCESSOR_FLAG_READ_ONLY | GRIB_ACCESSOR_FLAG_DUMP;
-                creatorsn.set        = 0;
+                grib_action creatorsn;
+                creatorsn.op_         = (char*)"variable";
+                creatorsn.name_space_ = (char*)"";
+                creatorsn.flags_      = GRIB_ACCESSOR_FLAG_READ_ONLY | GRIB_ACCESSOR_FLAG_DUMP;
+                creatorsn.set_        = 0;
 
-                creatorsn.name                = (char*)"subsetNumber";
+                creatorsn.name_                = (char*)"subsetNumber";
                 grib_accessor* a              = grib_accessor_factory(section, &creatorsn, 0, NULL);
                 grib_accessor_variable_t* asn = dynamic_cast<grib_accessor_variable_t*>(a);
                 asn->accessor_variable_set_type(GRIB_TYPE_LONG);
@@ -2547,11 +2541,16 @@ int grib_accessor_bufr_data_array_t::create_keys(long onlySubset, long startSubs
                                 return err;
                             }
                             associatedFieldAccessor->add_attribute(newAccessor, 1);
+                            //newAccessor->flags_ |= GRIB_ACCESSOR_FLAG_BUFR_DATA;
+                            //associatedFieldAccessor->flags_ |= GRIB_ACCESSOR_FLAG_BUFR_DATA;
                         }
                         break;
                     case 31021:
-                        if (associatedFieldSignificanceAccessor)
+                        if (associatedFieldSignificanceAccessor) {
                             associatedFieldSignificanceAccessor->destroy(c);
+                            delete associatedFieldSignificanceAccessor;
+                            associatedFieldSignificanceAccessor = nullptr;
+                        }
                         associatedFieldSignificanceAccessor = elementAccessor;
                         break;
                         /*case 33007:*/
@@ -2660,21 +2659,11 @@ int grib_accessor_bufr_data_array_t::process_elements(int flag, long onlySubset,
 {
     int err = 0;
     long inr, innr, ir, ip;
-    long n[MAX_NESTED_REPLICATIONS] = {
-        0,
-    };
-    long nn[MAX_NESTED_REPLICATIONS] = {
-        0,
-    };
-    long numberOfElementsToRepeat[MAX_NESTED_REPLICATIONS] = {
-        0,
-    };
-    long numberOfRepetitions[MAX_NESTED_REPLICATIONS] = {
-        0,
-    };
-    long startRepetition[MAX_NESTED_REPLICATIONS] = {
-        0,
-    };
+    long n[MAX_NESTED_REPLICATIONS] = {0,};
+    long nn[MAX_NESTED_REPLICATIONS] = {0,};
+    long numberOfElementsToRepeat[MAX_NESTED_REPLICATIONS] = {0,};
+    long numberOfRepetitions[MAX_NESTED_REPLICATIONS] = {0,};
+    long startRepetition[MAX_NESTED_REPLICATIONS] = {0,};
     long numberOfNestedRepetitions = 0;
     unsigned char* data            = 0;
     size_t subsetListSize          = 0;
@@ -3224,11 +3213,11 @@ int grib_accessor_bufr_data_array_t::process_elements(int flag, long onlySubset,
     return err;
 }
 
-void grib_accessor_bufr_data_array_t::dump(grib_dumper* dumper)
+void grib_accessor_bufr_data_array_t::dump(eccodes::Dumper* dumper)
 {
     // grib_accessor_bufr_data_array_t *self =(grib_accessor_bufr_data_array_t*)a;
     // int err=process_elements(a,PROCESS_DECODE);
-    // grib_dump_section(dumper,a,self->dataKeys_ ->block);
+    // dumper->dump_section(a,self->dataKeys_ ->block);
     return;
 }
 

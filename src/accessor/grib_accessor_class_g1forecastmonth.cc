@@ -29,9 +29,9 @@ void grib_accessor_g1forecastmonth_t::init(const long l, grib_arguments* c)
     }
 }
 
-void grib_accessor_g1forecastmonth_t::dump(grib_dumper* dumper)
+void grib_accessor_g1forecastmonth_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_long(dumper, this, NULL);
+    dumper->dump_long(this, NULL);
 }
 
 static int calculate_fcmonth(grib_accessor* a, long verification_yearmonth, long base_date, long day, long hour, long* result)
@@ -138,7 +138,7 @@ int grib_accessor_g1forecastmonth_t::unpack_long_edition1(long* val, size_t* len
         if (check) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s=%ld (%s-%s)=%ld", fcmonth_,
                              gribForecastMonth, base_date, verification_yearmonth_, fcmonth);
-            Assert(gribForecastMonth == fcmonth);
+            ECCODES_ASSERT(gribForecastMonth == fcmonth);
         }
         else {
             *val = gribForecastMonth;

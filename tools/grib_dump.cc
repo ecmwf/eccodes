@@ -9,6 +9,7 @@
  */
 
 #include "grib_tools.h"
+#include "grib_dumper_factory.h"
 
 grib_option grib_options[] = {
     /*  {id, args, help}, on, command_line, value*/
@@ -126,7 +127,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
     if (json)
         return 0;
 
-    Assert(file);
+    ECCODES_ASSERT(file);
     exit_if_input_is_directory(tool_name, file->name);
 
     snprintf(tmp, sizeof(tmp), "FILE: %s ", options->current_infile->name);

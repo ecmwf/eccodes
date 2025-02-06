@@ -305,8 +305,8 @@ static int min_max_array(double* data, unsigned int n, double* min, double* max)
 static int post_process(grib_context* c, long* vals, long len, long order, long bias, const unsigned long extras[2])
 {
     unsigned long last, penultimate = 0, j = 0;
-    Assert(order > 0);
-    Assert(order <= 3);
+    ECCODES_ASSERT(order > 0);
+    ECCODES_ASSERT(order <= 3);
     if (!vals)
         return GRIB_INTERNAL_ERROR;
 

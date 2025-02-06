@@ -18,7 +18,7 @@ void grib_accessor_codeflag_t::init(const long len, grib_arguments* param)
     grib_accessor_unsigned_t::init(len, param);
     length_    = len;
     tablename_ = param->get_string(grib_handle_of_accessor(this), 0);
-    Assert(length_ >= 0);
+    ECCODES_ASSERT(length_ >= 0);
 }
 
 static int test_bit(long a, long b)
@@ -101,7 +101,7 @@ int grib_accessor_codeflag_t::value_count(long* count)
     return 0;
 }
 
-void grib_accessor_codeflag_t::dump(grib_dumper* dumper)
+void grib_accessor_codeflag_t::dump(eccodes::Dumper* dumper)
 {
     long v              = 0;
     char flagname[1024] = {0,};
@@ -113,5 +113,5 @@ void grib_accessor_codeflag_t::dump(grib_dumper* dumper)
     unpack_long(&v, &llen);
     grib_get_codeflag(v, flagname);
 
-    grib_dump_bits(dumper, this, flagname);
+    dumper->dump_bits(this, flagname);
 }

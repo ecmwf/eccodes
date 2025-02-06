@@ -312,6 +312,8 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
+rm -f $tempIndex1 $tempIndex2
+
 # Key unpackedValues
 #-------------------
 ${tools_dir}/grib_set -s scaleValuesBy=1.01 $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $temp1

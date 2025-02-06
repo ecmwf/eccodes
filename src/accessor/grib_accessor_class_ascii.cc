@@ -17,7 +17,7 @@ void grib_accessor_ascii_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_gen_t::init(len, arg);
     length_ = len;
-    Assert(length_ >= 0);
+    ECCODES_ASSERT(length_ >= 0);
 }
 
 int grib_accessor_ascii_t::value_count(long* count)
@@ -31,9 +31,9 @@ size_t grib_accessor_ascii_t::string_length()
     return length_;
 }
 
-void grib_accessor_ascii_t::dump(grib_dumper* dumper)
+void grib_accessor_ascii_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_string(dumper, this, NULL);
+    dumper->dump_string(this, NULL);
 }
 
 long grib_accessor_ascii_t::get_native_type()

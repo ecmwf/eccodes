@@ -16,9 +16,11 @@ grib_accessor* grib_accessor_julian_date = &_grib_accessor_julian_date;
 void grib_accessor_julian_date_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_double_t::init(l, c);
-    int n          = 0;
     grib_handle* h = grib_handle_of_accessor(this);
+    const int arg_count = c->get_count();
+    ECCODES_ASSERT( arg_count == 2 || arg_count == 6);
 
+    int n = 0;
     year_  = c->get_name(h, n++);
     month_ = c->get_name(h, n++);
 
@@ -48,9 +50,9 @@ void grib_accessor_julian_date_t::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-void grib_accessor_julian_date_t::dump(grib_dumper* dumper)
+void grib_accessor_julian_date_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_string(dumper, this, NULL);
+    dumper->dump_string(this, NULL);
 }
 
 int grib_accessor_julian_date_t::unpack_double(double* val, size_t* len)
@@ -200,6 +202,13 @@ int grib_accessor_julian_date_t::unpack_string(char* val, size_t* len)
         ret = grib_get_long(h, hms_, &hms);
         if (ret != GRIB_SUCCESS)
             return ret;
+
+        // ECC-1999: If hms_ is passed in in 'hhmm' format
+        // its largest value would be 2459
+        if (hms < 2500) {
+            hms *= 100; // convert to seconds e.g., 1205 -> 120500
+        }
+
         hour = hms / 10000;
         hms %= 10000;
         minute = hms / 100;

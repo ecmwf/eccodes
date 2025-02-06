@@ -132,7 +132,7 @@ double calculate_pfactor(const grib_context* ctx, const double* spectralField, l
      */
     for (loop = ismin; loop <= ismax; loop++) {
         x = log((double)(loop * (loop + 1)));
-        Assert(norms[loop] > 0);
+        ECCODES_ASSERT(norms[loop] > 0);
         y                = log(norms[loop]);
         weightedSumOverX = weightedSumOverX + x * weights[loop];
         weightedSumOverY = weightedSumOverY + y * weights[loop];
@@ -743,7 +743,7 @@ int grib_accessor_data_complex_packing_t::unpack_real(T* val, size_t* len)
         mmax++;
     }
 
-    //Assert(*len >= i);
+    //ECCODES_ASSERT(*len >= i);
     if (*len < i) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s::%s: Invalid values *len=%zu and i=%zu.",
                          class_name_, __func__, *len, i);
