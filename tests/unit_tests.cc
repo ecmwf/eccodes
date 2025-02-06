@@ -780,8 +780,8 @@ void test_grib2_select_PDTN()
     ECCODES_ASSERT( 85 == grib2_select_PDTN(eps, !instant,  0, 0, 0, aerosol, 0) );
 
     // Aerosol optical
-    Assert( 49 == grib2_select_PDTN(eps, instant,  0, 0, 0, 0, aerosol_optical) );
-    Assert( 50 == grib2_select_PDTN(!eps, instant, 0, 0, 0, 0, aerosol_optical) );
+    ECCODES_ASSERT( 49 == grib2_select_PDTN(eps, instant,  0, 0, 0, 0, aerosol_optical) );
+    ECCODES_ASSERT( 50 == grib2_select_PDTN(!eps, instant, 0, 0, 0, 0, aerosol_optical) );
 
     // Plain vanilla
     ECCODES_ASSERT(  0 == grib2_select_PDTN(!eps, instant,  !chemical, !chemical_srcsink, !chemical_distfn, !aerosol, 0) );
