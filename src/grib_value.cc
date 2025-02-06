@@ -417,8 +417,8 @@ static int preprocess_packingType_change(grib_handle* h, const char* keyname, co
 
     if (grib_inline_strcmp(keyname, "packingType") == 0) {
         if (strcmp(keyval, "grid_ccsds")==0) {
-            // packingType being changed to CCSDS
-            long isGridded = -1; //??
+            // ECC-2021: packingType being changed to CCSDS
+            long isGridded = -1;
             if ((err = grib_get_long(h, "isGridded", &isGridded)) == GRIB_SUCCESS && isGridded == 0) {
                 if (h->context->debug) {
                     fprintf(stderr, "ECCODES DEBUG grib_set_string packingType: "
