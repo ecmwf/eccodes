@@ -19,6 +19,14 @@ void grib_accessor_mtg2_switch_default_t::init(const long len, grib_arguments* a
 
     grib_handle* h = grib_handle_of_accessor(this);
 
+    if (context_->debug) {
+        const int numArgs = arg->get_count();
+        if (numArgs != 4) {
+            grib_context_log(context_, GRIB_LOG_FATAL, "Accessor %s (key %s): %d arguments provided but expected 4",
+                            class_name_, name_, numArgs);
+        }
+    }
+
     tablesVersion_           = arg->get_name(h, 0);
     tablesVersionMTG2Switch_ = arg->get_name(h, 1);
     marsClass_               = arg->get_name(h, 2);

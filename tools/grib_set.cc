@@ -71,6 +71,15 @@ int grib_tool_init(grib_runtime_options* options)
     }
     if (options->verbose)
         options->print_header = 1;
+
+    if (grib_options_on("p:")) { // ECC-2018
+        if (grib_options_get_option("p:")) {
+            options->verbose = 1;
+            options->print_header = 0;
+            options->print_statistics = 0;
+        }
+    }
+
     //  if (grib_options_on("n:")) {
     //     noise=atof(grib_options_get_option("n:"));
     //     options->repack=1;
