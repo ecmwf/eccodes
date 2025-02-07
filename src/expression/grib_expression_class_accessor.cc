@@ -29,14 +29,17 @@ int Accessor::evaluate_double(grib_handle* h, double* result) const
 
 Accessor::string Accessor::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
 {
-    char mybuf[1024]            = {0,};
+    char mybuf[1024] = {0,};
     long start = start_;
     if (length_ > sizeof(mybuf)) {
         *err = GRIB_INVALID_ARGUMENT;
         return NULL;
     }
 
-    ECCODES_ASSERT(buf);
+    if (!buf) {
+        *err = GRIB_INVALID_ARGUMENT;
+        return NULL;
+    }
     if ((*err = grib_get_string_internal(h, name_, mybuf, size)) != GRIB_SUCCESS)
         return NULL;
 
