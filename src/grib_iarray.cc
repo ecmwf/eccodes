@@ -15,7 +15,7 @@ void grib_iarray_print(const char* title, const grib_iarray* iarray)
 {
     size_t i;
     ECCODES_ASSERT(iarray);
-    printf("%s: iarray.n=%zu  \t", title, iarray->n);
+    printf("%s: iarray.size=%zu  iarray.n=%zu  \t", title, iarray->size, iarray->n);
     for (i = 0; i < iarray->n; i++) {
         printf("iarray[%zu]=%ld\t", i, iarray->v[i]);
     }

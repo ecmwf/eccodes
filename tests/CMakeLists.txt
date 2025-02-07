@@ -46,6 +46,7 @@ list(APPEND test_c_bins
     grib_ecc-1431
     grib_ecc-1433
     grib_ecc-1764
+    grib_ecc-2019
     bufr_ecc-517
     bufr_ecc-1288
     bufr_ecc-2011
@@ -196,6 +197,7 @@ if( HAVE_BUILD_TOOLS )
         grib_count
         grib_clone_headers_only
         grib_ifsParam
+        filter_dump_content
         wmo_read_bufr_from_file
         wmo_read_gts_from_file
         wmo_read_any_from_file
