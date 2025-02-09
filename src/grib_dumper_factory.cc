@@ -61,7 +61,7 @@ static struct table_entry table[] = {
     {"bufr_simple",&grib_dumper_bufr_simple,},
     {"debug",&grib_dumper_debug,},
     {"default",&grib_dumper_default,},
-    {"grib_encode_c",&grib_dumper_grib_encode_c,},
+    {"grib_encode_C",&grib_dumper_grib_encode_c,},
     {"json",&grib_dumper_json,},
     {"serialize",&grib_dumper_serialize,},
     {"wmo",&grib_dumper_wmo,},
