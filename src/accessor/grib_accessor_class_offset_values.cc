@@ -25,7 +25,7 @@ void grib_accessor_offset_values_t::init(const long l, grib_arguments* args)
 
 int grib_accessor_offset_values_t::unpack_double(double* val, size_t* len)
 {
-    *val    = 1;
+    *val    = 0;
     *len    = 1;
     // It does not make sense to decode this key!
     fprintf(stderr, "ECCODES WARNING :  Key %s is applicable only during encoding.\n", name_);
