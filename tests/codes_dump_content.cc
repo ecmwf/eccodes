@@ -26,6 +26,8 @@ int main(int argc, char* argv[])
     codes_handle* h = codes_handle_new_from_file(0, in, PRODUCT_ANY, &err);
     assert(h);
 
+    if (strlen(mode) == 0)
+        mode = NULL;
     grib_dump_content(h, stdout,  mode, 0, NULL);
 
     codes_handle_delete(h);

@@ -18,7 +18,7 @@ infiles="
     test_uuid.grib2
 "
 
-modes="default wmo json serialize debug grib_encode_C"
+modes="default wmo json debug grib_encode_C"
 for mode in $modes; do
     for gf in $infiles; do
         echo Doing $gf
@@ -27,6 +27,12 @@ for mode in $modes; do
     done
 done
 
+# Empty mode should use 'default'
+infile="$data_dir/sample.grib2"
+${test_dir}/codes_dump_content '' $infile
+
+
+infile="$data_dir/sample.grib2"
 ${test_dir}/codes_dump_content rubbish $infile > $temp 2>&1
 grep -q "ERROR.*Unknown type : 'rubbish' for dumper" $temp
 

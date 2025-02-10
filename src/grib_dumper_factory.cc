@@ -63,7 +63,7 @@ static struct table_entry table[] = {
     {"default",&grib_dumper_default,},
     {"grib_encode_C",&grib_dumper_grib_encode_c,},
     {"json",&grib_dumper_json,},
-    {"serialize",&grib_dumper_serialize,},
+    // {"serialize",&grib_dumper_serialize,},
     {"wmo",&grib_dumper_wmo,},
 };
 
@@ -147,7 +147,6 @@ int grib_print(grib_handle* h, const char* name, eccodes::Dumper* d)
     }
     return GRIB_NOT_FOUND;
 }
-
 
 void grib_dump_keys(grib_handle* h, FILE* f, const char* mode, unsigned long flags, void* data, const char** keys, size_t num_keys)
 {
