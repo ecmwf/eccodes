@@ -19,30 +19,7 @@ on:
   # TODO automation trigger
 
 jobs:
-  build:
-    name: Build manylinux_2_28
-    runs-on: [self-hosted, Linux, platform-builder-Rocky-8.6]
-    # TODO which manylinux do we want to build for? 2014? 2_28? 2_34? Matrix?
-    container:
-      image: eccr.ecmwf.int/wheelmaker/2_28:latest
-      credentials:
-        username: ${{ secrets.ECMWF_DOCKER_REGISTRY_USERNAME }}
-        password: ${{ secrets.ECMWF_DOCKER_REGISTRY_ACCESS_TOKEN }}
-    steps:
-        # TODO convert this to be matrix-friendly. Note it's a bit tricky since
-        # we'd ideally not reexecute the compile step multiple times, but it
-        # (non-essentially) depends on a matrix-based step
-        # NOTE we dont use action checkout because it doesnt cleanup after itself correctly
-      - run: git clone --depth=1 --branch="${GITHUB_REF#refs/heads/}" https://github.com/$GITHUB_REPOSITORY /proj
-      - run: cd /proj && /buildscripts/prepare_deps.sh ./python_wrapper/buildconfig 3.11
-      - run: cd /proj && python_wrapper/pre-compile.sh
-      - run: cd /proj && /buildscripts/compile.sh ./python_wrapper/buildconfig
-      - run: cd /proj && PYTHONPATH=/buildscripts /buildscripts/wheel-linux.sh ./python_wrapper/buildconfig 3.11
-      - run: cd /proj && python_wrapper/post-build.sh
-      - run: cd /proj && /buildscripts/test-wheel.sh ./python_wrapper/buildconfig 3.11
-      - run: cd /proj && /buildscripts/upload-pypi.sh ./python_wrapper/buildconfig
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        # NOTE temporary thing until all the mess gets cleared
-      - run: rm -rf ./* ./.git ./.github
+  python-wrapper-wheel:
+    name: Python Wrapper Wheel
+    uses: ecmwf-actions/reusable-workflows/.github/workflows/python-wrapper-wheel.yml@act/pyWrapWheel/reuploads
+    secrets: inherit
