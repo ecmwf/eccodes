@@ -93,7 +93,7 @@ eccodes::Dumper* grib_dumper_factory(const char* op, const grib_handle* h, FILE*
 
 void grib_dump_content(const grib_handle* h, FILE* f, const char* mode, unsigned long flags, void* data)
 {
-    eccodes::Dumper* dumper = grib_dumper_factory(mode ? mode : "serialize", h, f, flags, data);
+    eccodes::Dumper* dumper = grib_dumper_factory(mode ? mode : "default", h, f, flags, data);
     if (!dumper) {
         fprintf(stderr, "Here are some possible values for the dumper mode:\n");
         const size_t num_table_entries = sizeof(table) / sizeof(table[0]);
@@ -151,8 +151,8 @@ int grib_print(grib_handle* h, const char* name, eccodes::Dumper* d)
 
 void grib_dump_keys(grib_handle* h, FILE* f, const char* mode, unsigned long flags, void* data, const char** keys, size_t num_keys)
 {
-    grib_accessor* acc      = NULL;
-    eccodes::Dumper* dumper = grib_dumper_factory(mode ? mode : "serialize", h, f, flags, data);
+    grib_accessor* acc  = NULL;
+    eccodes::Dumper* dumper = grib_dumper_factory(mode ? mode : "default", h, f, flags, data);
     if (!dumper)
         return;
     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
@@ -176,7 +176,8 @@ eccodes::Dumper* grib_dump_content_with_dumper(grib_handle* h, eccodes::Dumper* 
         count++;
         // dumper->destroy();
     }
-    dumper = grib_dumper_factory(mode ? mode : "serialize", h, f, flags, data);
+
+    dumper = grib_dumper_factory(mode ? mode : "default", h, f, flags, data);
     if (!dumper)
         return NULL;
     dumper->count(count);
@@ -191,7 +192,8 @@ void codes_dump_bufr_flat(grib_accessors_list* al, grib_handle* h, FILE* f, cons
 {
     eccodes::Dumper* dumper = NULL;
     ECCODES_ASSERT(h->product_kind == PRODUCT_BUFR);
-    dumper = grib_dumper_factory(mode ? mode : "serialize", h, f, flags, data);
+
+    dumper = grib_dumper_factory(mode ? mode : "default", h, f, flags, data);
     if (!dumper)
         return;
     dumper->header(h);
