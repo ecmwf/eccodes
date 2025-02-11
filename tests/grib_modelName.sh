@@ -23,12 +23,13 @@ tempRef=temp.$label.ref
 sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 ${tools_dir}/grib_set -s generatingProcessIdentifier=1,backgroundProcess=1 $sample $tempGrib
-grib_check_key_equals $tempGrib modelName,modelVersion "aifs-single aifs-single-mse-v0.1"
+grib_check_key_equals $tempGrib modelName,modelVersion "aifs-single aifs-single-mse-v0.2.1"
 
-${tools_dir}/grib_set -s generatingProcessIdentifier=154 $sample $tempGrib
+# IFS is backgrounbdProcess=255 to preserve backward compatibility§
+${tools_dir}/grib_set -s generatingProcessIdentifier=154,backgroundProcess=255 $sample $tempGrib
 grib_check_key_equals $tempGrib modelName,modelVersion "IFS cy48r1"
 
-${tools_dir}/grib_set -s generatingProcessIdentifier=100 $sample $tempGrib
+${tools_dir}/grib_set -s generatingProcessIdentifier=100,backgroundProcess=255 $sample $tempGrib
 grib_check_key_equals $tempGrib modelName,modelVersion "IFS unknown"
 
 # Check that this only works for centre ecmf
@@ -41,7 +42,7 @@ ${tools_dir}/grib_set -s generatingProcessIdentifier=1,backgroundProcess=3,produ
 grib_check_key_equals $tempGrib modelName,modelVersion "ALARO cy46h1"
 ${tools_dir}/grib_set -s productionStatusOfProcessedData=0 $tempGrib $temp2Grib
 grib_check_key_equals  $temp2Grib modelName    'aifs-single-mse'
-grib_check_key_equals  $temp2Grib modelVersion 'v0.1'
+grib_check_key_equals  $temp2Grib modelVersion 'v0.2.1'
 # [ $( ${tools_dir}/grib_get -f -p modelName $temp2Grib ) = "aifs-ens-diff" ]
 #[ $( ${tools_dir}/grib_get -f -p modelVersion $temp2Grib ) = "v1" ]
 
