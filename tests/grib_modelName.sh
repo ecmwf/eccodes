@@ -56,9 +56,9 @@ grib_check_key_equals $temp2Grib mars.model 'aifs-ens'
 
 
 # modelName not read-only
-# ${tools_dir}/grib_set -s class=ai,type=pf,stream=enfo,modelName='aifs-ens-crps' $ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl $tempGrib
-# grib_check_key_equals $tempGrib mars.model 'aifs-ens-crps'
-# grib_check_key_equals $tempGrib backgroundGeneratingProcessIdentifier 4
+${tools_dir}/grib_set -s class=ai,type=pf,stream=enfo,modelName='aifs-ens-crps' $ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl $tempGrib
+grib_check_key_equals $tempGrib mars.model 'aifs-ens-crps'
+grib_check_key_equals $tempGrib backgroundGeneratingProcessIdentifier 4
 
 set +e
 ${tools_dir}/grib_set -s modelVersion=cy48r1 $sample $tempGrib 2>$tempLog
