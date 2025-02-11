@@ -19,17 +19,17 @@ void grib_accessor_julian_day_t::init(const long l, grib_arguments* c)
     int n = 0;
     grib_handle* h  = grib_handle_of_accessor(this);
 
-    date_   = grib_arguments_get_name(h, c, n++);
-    hour_   = grib_arguments_get_name(h, c, n++);
-    minute_ = grib_arguments_get_name(h, c, n++);
-    second_ = grib_arguments_get_name(h, c, n++);
+    date_   = c->get_name(h, n++);
+    hour_   = c->get_name(h, n++);
+    minute_ = c->get_name(h, n++);
+    second_ = c->get_name(h, n++);
 
     length_ = 0;
 }
 
-void grib_accessor_julian_day_t::dump(grib_dumper* dumper)
+void grib_accessor_julian_day_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_string(dumper, this, NULL);
+    dumper->dump_string(this, NULL);
 }
 
 int grib_accessor_julian_day_t::pack_long(const long* val, size_t* len)

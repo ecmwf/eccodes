@@ -41,7 +41,8 @@ grib_concept_condition* grib_concept_condition_new(grib_context* c, const char* 
 
 void grib_concept_condition_delete(grib_context* c, grib_concept_condition* v)
 {
-    grib_expression_free(c, v->expression);
+    v->expression->destroy(c);
+    delete v->expression;
     grib_context_free_persistent(c, v->name);
     grib_context_free_persistent(c, v);
 }

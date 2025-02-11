@@ -18,10 +18,10 @@ void grib_accessor_spectral_truncation_t::init(const long l, grib_arguments* c)
     grib_accessor_long_t::init(l, c);
     int n = 0;
 
-    J_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    K_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    M_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    T_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    J_ = c->get_name(grib_handle_of_accessor(this), n++);
+    K_ = c->get_name(grib_handle_of_accessor(this), n++);
+    M_ = c->get_name(grib_handle_of_accessor(this), n++);
+    T_ = c->get_name(grib_handle_of_accessor(this), n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }

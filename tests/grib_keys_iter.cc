@@ -20,9 +20,9 @@ int main(int argc, char* argv[])
     grib_handle* h = NULL;
     int err = 0;
 
-    Assert(argc == 2);
+    ECCODES_ASSERT(argc == 2);
     FILE* f = fopen(argv[1], "rb");
-    Assert(f);
+    ECCODES_ASSERT(f);
 
     while ((h = grib_handle_new_from_file(0, f, &err)) != NULL) {
         grib_keys_iterator* kiter = NULL;
@@ -30,35 +30,54 @@ int main(int argc, char* argv[])
         /* Use namespace of NULL to get ALL keys */
         /* Set flags to 0 to not filter any keys */
         kiter = grib_keys_iterator_new(h, /*flags=*/0, /*namespace=*/NULL);
-        Assert(kiter);
+        ECCODES_ASSERT(kiter);
 
         while (grib_keys_iterator_next(kiter)) {
             const char* name = grib_keys_iterator_get_name(kiter);
-            Assert(name);
+            ECCODES_ASSERT(name);
             int type = 0;
             GRIB_CHECK(grib_get_native_type(h, name, &type), 0);
-            Assert( type > 0 && type < 7 );
+            ECCODES_ASSERT( type > 0 && type < 7 );
             int ktype = grib_keys_iterator_get_native_type(kiter);
-            Assert(type == ktype);
+            if (type != ktype) {
+                fprintf(stderr, "ERROR: key=%s type=%s ktype=%s\n", name, grib_get_type_name(type), grib_get_type_name(ktype));
+                return 1;
+            }
             const char* type_name = grib_get_type_name(type);
-            Assert( !STR_EQUAL(type_name, "unknown") );
+            if (STR_EQUAL(type_name, "unknown")) {
+                fprintf(stderr, "ERROR: key=%s type is unknown!\n", name);
+                return 1;
+            }
             printf("%s = %s (%d)\n", name, type_name, type);
 
             if (STR_EQUAL(type_name, "label")) {
                 char value[MAX_VAL_LEN] = {0,};
                 size_t vlen = MAX_VAL_LEN;
                 GRIB_CHECK(grib_get_string(h, name, value, &vlen), name);
-                Assert( strlen(value) > 0 );
+                ECCODES_ASSERT( strlen(value) > 0 );
                 int e = grib_keys_iterator_get_string(kiter, value, &vlen);
-                Assert(!e);
-                Assert( STR_EQUAL(name, value) );
+                ECCODES_ASSERT(!e);
+                ECCODES_ASSERT( STR_EQUAL(name, value) );
             }
             if (STR_EQUAL(name, "editionNumber")) {
                 long lVal = 0;
                 size_t llen = 1;
                 int e = grib_keys_iterator_get_long(kiter, &lVal, &llen);
-                Assert(!e);
-                Assert(lVal == 1 || lVal == 2);
+                ECCODES_ASSERT(!e);
+                ECCODES_ASSERT(lVal == 1 || lVal == 2);
+                ECCODES_ASSERT(codes_key_is_computed(h, name, &e) == 0 && !e);
+            }
+            if (STR_EQUAL(name, "gridType")) {
+                int e = 0;
+                ECCODES_ASSERT(codes_key_is_computed(h, name, &e) == 1 && !e);
+            }
+            if (STR_EQUAL(name, "longitudeOfLastGridPointInDegrees")) {
+                int e = 0;
+                ECCODES_ASSERT(codes_key_is_computed(h, name, &e) == 1 && !e);
+            }
+            if (STR_EQUAL(name, "longitudeOfLastGridPoint")) {
+                int e = 0;
+                ECCODES_ASSERT(codes_key_is_computed(h, name, &e) == 0 && !e);
             }
         }
 

@@ -17,13 +17,13 @@ void grib_accessor_pack_bufr_values_t::init(const long len, grib_arguments* para
 {
     grib_accessor_gen_t::init(len, params);
     char* key;
-    key            = (char*)grib_arguments_get_name(grib_handle_of_accessor(this), params, 0);
+    key            = (char*)params->get_name(grib_handle_of_accessor(this), 0);
     data_accessor_ = grib_find_accessor(grib_handle_of_accessor(this), key);
 
     length_ = 0;
 }
 
-void grib_accessor_pack_bufr_values_t::dump(grib_dumper* dumper)
+void grib_accessor_pack_bufr_values_t::dump(eccodes::Dumper* dumper)
 {
 }
 

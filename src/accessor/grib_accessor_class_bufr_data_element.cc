@@ -20,13 +20,12 @@ grib_accessor* grib_accessor_bufr_data_element_t::make_clone(grib_section* s, in
     grib_accessor_bufr_data_element_t* elementAccessor;
     char* copied_name = NULL;
     int i;
-    grib_action creator = {
-        0,
-    };
-    creator.op         = (char*)"bufr_data_element";
-    creator.name_space = (char*)"";
-    creator.set        = 0;
-    creator.name       = (char*)"unknown";
+    grib_action creator;
+
+    creator.op_         = (char*)"bufr_data_element";
+    creator.name_space_ = (char*)"";
+    creator.set_        = 0;
+    creator.name_       = (char*)"unknown";
     if (strcmp(class_name_, "bufr_data_element")) {
         grib_context_log(context_, GRIB_LOG_FATAL, "wrong accessor type: '%s' should be '%s'", class_name_, "bufr_data_element");
     }
@@ -79,19 +78,19 @@ void grib_accessor_bufr_data_element_t::init(const long len, grib_arguments* par
     cname_                    = NULL;
 }
 
-void grib_accessor_bufr_data_element_t::dump(grib_dumper* dumper)
+void grib_accessor_bufr_data_element_t::dump(eccodes::Dumper* dumper)
 {
     const int ntype = get_native_type();
 
     switch (ntype) {
         case GRIB_TYPE_LONG:
-            grib_dump_long(dumper, this, NULL);
+            dumper->dump_long(this, NULL);
             break;
         case GRIB_TYPE_DOUBLE:
-            grib_dump_values(dumper, this);
+            dumper->dump_values(this);
             break;
         case GRIB_TYPE_STRING:
-            grib_dump_string_array(dumper, this, NULL);
+            dumper->dump_string_array(this, NULL);
             break;
     }
 }
@@ -446,6 +445,7 @@ void grib_accessor_bufr_data_element_t::destroy(grib_context* ct)
         /*grib_context_log(ct,GRIB_LOG_DEBUG,"deleting attribute %s->%s",a->name,attributes_ [i]->name);*/
         /*printf("bufr_data_element destroy %s %p\n", a->attributes_[i]->name, (void*)attributes_ [i]);*/
         attributes_[i]->destroy(ct);
+        delete attributes_[i];
         attributes_[i] = NULL;
         i++;
     }
@@ -476,7 +476,7 @@ int grib_accessor_bufr_data_element_t::is_missing()
             err = unpack_long(&value, &size2);
         }
         if (err) return 0; /* TODO: no way of propagating the error up */
-        Assert(size2 == size);
+        ECCODES_ASSERT(size2 == size);
         if (size > 1) {
             for (i = 0; i < size; i++) {
                 if (!grib_is_missing_long(this, values[i])) {
@@ -504,7 +504,7 @@ int grib_accessor_bufr_data_element_t::is_missing()
             err = unpack_double(&value, &size2);
         }
         if (err) return 0; /* TODO: no way of propagating the error up */
-        Assert(size2 == size);
+        ECCODES_ASSERT(size2 == size);
         if (size > 1) {
             for (i = 0; i < size; ++i) {
                 if (!grib_is_missing_double(this, values[i])) {

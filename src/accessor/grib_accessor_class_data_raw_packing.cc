@@ -18,8 +18,8 @@ void grib_accessor_data_raw_packing_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_values_t::init(v, args);
 
-    number_of_values_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
-    precision_        = grib_arguments_get_name(grib_handle_of_accessor(this), args, carg_++);
+    number_of_values_ = args->get_name(grib_handle_of_accessor(this), carg_++);
+    precision_        = args->get_name(grib_handle_of_accessor(this), carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
@@ -171,7 +171,7 @@ int grib_accessor_data_raw_packing_t::unpack_double_element(size_t idx, double* 
 
     pos = bytes * idx;
 
-    Assert(pos <= inlen);
+    ECCODES_ASSERT(pos <= inlen);
 
     nvals = 1;
     buf += pos;

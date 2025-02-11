@@ -1175,38 +1175,6 @@ void grib_context_set_debug(grib_context* c, int mode);
 void grib_context_set_data_quality_checks(grib_context* c, int val);
 
 /**
- *  Sets memory procedures of the context
- *
- * @param c           : the context to be modified
- * @param griballoc   : the memory allocation procedure to be set @see grib_malloc_proc
- * @param gribfree    : the memory freeing procedure to be set @see grib_free_proc
- */
-void grib_context_set_memory_proc(grib_context* c, grib_malloc_proc griballoc,
-                                  grib_free_proc gribfree,
-                                  grib_realloc_proc gribrealloc);
-
-/**
- *  Sets memory procedures of the context for persistent data
- *
- * @param c           : the context to be modified
- * @param griballoc   : the memory allocation procedure to be set @see grib_malloc_proc
- * @param gribfree    : the memory freeing procedure to be set @see grib_free_proc
- */
-void grib_context_set_persistent_memory_proc(grib_context* c, grib_malloc_proc griballoc,
-                                             grib_free_proc gribfree);
-
-/**
- *  Sets memory procedures of the context for large buffers
- *
- * @param c           : the context to be modified
- * @param griballoc   : the memory allocation procedure to be set @see grib_malloc_proc
- * @param gribfree    : the memory freeing procedure to be set @see grib_free_proc
- */
-void grib_context_set_buffer_memory_proc(grib_context* c, grib_malloc_proc griballoc,
-                                         grib_free_proc gribfree,
-                                         grib_realloc_proc gribrealloc);
-
-/**
  *  Sets the context printing procedure used for user interaction
  *
  * @param c            : the context to be modified

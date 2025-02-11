@@ -27,7 +27,8 @@ void grib_accessor_variable_t::init(const long length, grib_arguments* args)
     grib_accessor_gen_t::init(length, args);
 
     grib_handle* hand           = grib_handle_of_accessor(this);
-    grib_expression* expression = grib_arguments_get_expression(hand, args, 0);
+    grib_expression* expression = nullptr;
+    if (args) expression = args->get_expression(hand, 0);
     const char* p               = 0;
     size_t len                  = 1;
     long l                      = 0;
@@ -41,23 +42,23 @@ void grib_accessor_variable_t::init(const long length, grib_arguments* args)
 
     length_ = 0;
     if (type_ == GRIB_TYPE_UNDEFINED && expression) {
-        type_ = grib_expression_native_type(hand, expression);
+        type_ = expression->native_type(hand);
 
         switch (type_) {
             case GRIB_TYPE_DOUBLE:
-                grib_expression_evaluate_double(hand, expression, &d);
+                expression->evaluate_double(hand, &d);
                 pack_double(&d, &len);
                 break;
 
             case GRIB_TYPE_LONG:
-                grib_expression_evaluate_long(hand, expression, &l);
+                expression->evaluate_long(hand, &l);
                 pack_long(&l, &len);
                 break;
 
             default: {
                 char tmp[1024];
                 len = sizeof(tmp);
-                p   = grib_expression_evaluate_string(hand, expression, tmp, &len, &ret);
+                p   = expression->evaluate_string(hand, tmp, &len, &ret);
                 if (ret != GRIB_SUCCESS) {
                     grib_context_log(context_, GRIB_LOG_ERROR, "Unable to evaluate %s as string: %s",
                                      name_, grib_get_error_message(ret));
@@ -76,19 +77,19 @@ void grib_accessor_variable_t::accessor_variable_set_type(int type)
     type_ = type;
 }
 
-void grib_accessor_variable_t::dump(grib_dumper* dumper)
+void grib_accessor_variable_t::dump(eccodes::Dumper* dumper)
 {
     switch (type_) {
         case GRIB_TYPE_DOUBLE:
-            grib_dump_double(dumper, this, NULL);
+            dumper->dump_double(this, NULL);
             break;
 
         case GRIB_TYPE_LONG:
-            grib_dump_long(dumper, this, NULL);
+            dumper->dump_long(this, NULL);
             break;
 
         default:
-            grib_dump_string(dumper, this, NULL);
+            dumper->dump_string(this, NULL);
             break;
     }
 }
@@ -203,7 +204,8 @@ void grib_accessor_variable_t::destroy(grib_context* c)
     /* Note: BUFR operator descriptors are variables and have attributes so need to free them */
     while (i < MAX_ACCESSOR_ATTRIBUTES && attributes_[i]) {
         attributes_[i]->destroy(c);
-        attributes_[i] = NULL;
+        delete attributes_[i];
+        attributes_[i] = nullptr;
         ++i;
     }
 
@@ -314,20 +316,18 @@ grib_accessor* grib_accessor_variable_t::make_clone(grib_section* s, int* err)
 {
     grib_accessor* the_clone                   = NULL;
     grib_accessor_variable_t* variableAccessor = NULL;
-    grib_action creator                        = {
-        0,
-    };
-    creator.op         = (char*)"variable";
-    creator.name_space = (char*)"";
-    creator.set        = 0;
+    grib_action creator;
+    creator.op_         = (char*)"variable";
+    creator.name_space_ = (char*)"";
+    creator.set_        = 0;
 
-    creator.name             = grib_context_strdup(context_, name_);
+    creator.name_             = grib_context_strdup(context_, name_);
     the_clone                = grib_accessor_factory(s, &creator, 0, NULL);
     the_clone->parent_       = NULL;
     the_clone->h_            = s->h;
     the_clone->flags_        = flags_;
     variableAccessor         = (grib_accessor_variable_t*)the_clone;
-    variableAccessor->cname_ = creator.name; /* ECC-765: Store for later freeing memory */
+    variableAccessor->cname_ = creator.name_; /* ECC-765: Store for later freeing memory */
 
     *err                    = 0;
     variableAccessor->type_ = type_;

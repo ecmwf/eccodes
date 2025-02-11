@@ -20,19 +20,19 @@ void grib_accessor_data_g2bifourier_packing_t::init(const long v, grib_arguments
     grib_accessor_data_simple_packing_t::init(v, args);
     grib_handle* gh = grib_handle_of_accessor(this);
 
-    ieee_floats_                         = grib_arguments_get_name(gh, args, carg_++);
-    laplacianOperatorIsSet_              = grib_arguments_get_name(gh, args, carg_++);
-    laplacianOperator_                   = grib_arguments_get_name(gh, args, carg_++);
-    biFourierTruncationType_             = grib_arguments_get_name(gh, args, carg_++);
-    sub_i_                               = grib_arguments_get_name(gh, args, carg_++);
-    sub_j_                               = grib_arguments_get_name(gh, args, carg_++);
-    bif_i_                               = grib_arguments_get_name(gh, args, carg_++);
-    bif_j_                               = grib_arguments_get_name(gh, args, carg_++);
-    biFourierSubTruncationType_          = grib_arguments_get_name(gh, args, carg_++);
-    biFourierDoNotPackAxes_              = grib_arguments_get_name(gh, args, carg_++);
-    biFourierMakeTemplate_               = grib_arguments_get_name(gh, args, carg_++);
-    totalNumberOfValuesInUnpackedSubset_ = grib_arguments_get_name(gh, args, carg_++);
-    /*numberOfValues             = grib_arguments_get_name(gh,args,carg_ ++);*/
+    ieee_floats_                         = args->get_name(gh, carg_++);
+    laplacianOperatorIsSet_              = args->get_name(gh, carg_++);
+    laplacianOperator_                   = args->get_name(gh, carg_++);
+    biFourierTruncationType_             = args->get_name(gh, carg_++);
+    sub_i_                               = args->get_name(gh, carg_++);
+    sub_j_                               = args->get_name(gh, carg_++);
+    bif_i_                               = args->get_name(gh, carg_++);
+    bif_j_                               = args->get_name(gh, carg_++);
+    biFourierSubTruncationType_          = args->get_name(gh, carg_++);
+    biFourierDoNotPackAxes_              = args->get_name(gh, carg_++);
+    biFourierMakeTemplate_               = args->get_name(gh, carg_++);
+    totalNumberOfValuesInUnpackedSubset_ = args->get_name(gh, carg_++);
+    /*numberOfValues             = args->get_name(gh, carg_++);*/
 
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
     dirty_ = 1;
@@ -220,7 +220,7 @@ static double laplam(bif_trunc_t* bt, const double val[])
         free(itab2);
         return 0.;
     }
-    Assert(lmax > 0);
+    ECCODES_ASSERT(lmax > 0);
 
     /*
      * Now, itab2 contains all possible values of i*i+j*j, and itab1 contains
@@ -527,7 +527,7 @@ int grib_accessor_data_g2bifourier_packing_t::unpack_double(double* val, size_t*
         isp += 4;
     }
 
-    Assert(*len >= isp);
+    ECCODES_ASSERT(*len >= isp);
     *len = isp;
 
 cleanup:

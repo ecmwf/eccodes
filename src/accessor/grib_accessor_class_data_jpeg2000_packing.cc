@@ -25,13 +25,13 @@ void grib_accessor_data_jpeg2000_packing_t::init(const long v, grib_arguments* a
     grib_handle* hand    = grib_handle_of_accessor(this);
 
     jpeg_lib_                 = 0;
-    type_of_compression_used_ = grib_arguments_get_name(hand, args, carg_++);
-    target_compression_ratio_ = grib_arguments_get_name(hand, args, carg_++);
-    ni_                       = grib_arguments_get_name(hand, args, carg_++);
-    nj_                       = grib_arguments_get_name(hand, args, carg_++);
-    list_defining_points_     = grib_arguments_get_name(hand, args, carg_++);
-    number_of_data_points_    = grib_arguments_get_name(hand, args, carg_++);
-    scanning_mode_            = grib_arguments_get_name(hand, args, carg_++);
+    type_of_compression_used_ = args->get_name(hand, carg_++);
+    target_compression_ratio_ = args->get_name(hand, carg_++);
+    ni_                       = args->get_name(hand, carg_++);
+    nj_                       = args->get_name(hand, carg_++);
+    list_defining_points_     = args->get_name(hand, carg_++);
+    number_of_data_points_    = args->get_name(hand, carg_++);
+    scanning_mode_            = args->get_name(hand, carg_++);
     edition_                  = 2;
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 
@@ -62,7 +62,7 @@ void grib_accessor_data_jpeg2000_packing_t::init(const long v, grib_arguments* a
                 fprintf(stderr, "ECCODES DEBUG jpeg2000_packing: using OPENJPEG_LIB\n");
                 break;
             default:
-                Assert(0);
+                ECCODES_ASSERT(0);
                 break;
         }
     }
@@ -352,8 +352,8 @@ int grib_accessor_data_jpeg2000_packing_t::pack_double(const double* cval, size_
                                  class_name_, __func__, type_of_compression_used, target_compression_ratio_);
                 return GRIB_ENCODING_ERROR;
             }
-            Assert(target_compression_ratio != 255);
-            Assert(target_compression_ratio != 0);
+            ECCODES_ASSERT(target_compression_ratio != 255);
+            ECCODES_ASSERT(target_compression_ratio != 0);
             helper.compression = target_compression_ratio;
             break;
 
@@ -401,7 +401,7 @@ int grib_accessor_data_jpeg2000_packing_t::pack_double(const double* cval, size_
                          class_name_, jpeg_lib_ == OPENJPEG_LIB ? "openjpeg" : "jasper",
                          helper.jpeg_length, simple_packing_size);
 
-    Assert(helper.jpeg_length <= helper.buffer_size);
+    ECCODES_ASSERT(helper.jpeg_length <= helper.buffer_size);
 
     if (dump_jpg_) {
         FILE* f = fopen(dump_jpg_, "w");

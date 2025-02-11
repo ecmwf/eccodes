@@ -19,12 +19,12 @@ void grib_accessor_validity_time_t::init(const long l, grib_arguments* c)
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
-    date_      = grib_arguments_get_name(hand, c, n++);
-    time_      = grib_arguments_get_name(hand, c, n++);
-    step_      = grib_arguments_get_name(hand, c, n++);
-    stepUnits_ = grib_arguments_get_name(hand, c, n++);
-    hours_     = grib_arguments_get_name(hand, c, n++);
-    minutes_   = grib_arguments_get_name(hand, c, n++);
+    date_      = c->get_name(hand, n++);
+    time_      = c->get_name(hand, n++);
+    step_      = c->get_name(hand, n++);
+    stepUnits_ = c->get_name(hand, n++);
+    hours_     = c->get_name(hand, n++);
+    minutes_   = c->get_name(hand, n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }

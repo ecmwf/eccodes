@@ -16,17 +16,17 @@ grib_accessor* grib_accessor_data_secondary_bitmap = &_grib_accessor_data_second
 void grib_accessor_data_secondary_bitmap_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_gen_t::init(v, args);
-    primary_bitmap_   = grib_arguments_get_name(grib_handle_of_accessor(this), args, 0);
-    secondary_bitmap_ = grib_arguments_get_name(grib_handle_of_accessor(this), args, 1);
-    missing_value_    = grib_arguments_get_name(grib_handle_of_accessor(this), args, 2);
-    expand_by_        = grib_arguments_get_name(grib_handle_of_accessor(this), args, 3);
+    primary_bitmap_   = args->get_name(grib_handle_of_accessor(this), 0);
+    secondary_bitmap_ = args->get_name(grib_handle_of_accessor(this), 1);
+    missing_value_    = args->get_name(grib_handle_of_accessor(this), 2);
+    expand_by_        = args->get_name(grib_handle_of_accessor(this), 3);
 
     length_ = 0;
 }
 
-void grib_accessor_data_secondary_bitmap_t::dump(grib_dumper* dumper)
+void grib_accessor_data_secondary_bitmap_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_values(dumper, this);
+    dumper->dump_values(this);
 }
 
 int grib_accessor_data_secondary_bitmap_t::unpack_double(double* val, size_t* len)
@@ -98,8 +98,8 @@ int grib_accessor_data_secondary_bitmap_t::unpack_double(double* val, size_t* le
         }
     }
 
-    Assert(k <= *len);
-    Assert(m <= secondary_len);
+    ECCODES_ASSERT(k <= *len);
+    ECCODES_ASSERT(m <= secondary_len);
 
     /*printf("FOOBAR %d %d %ld %d\n",f,primary_len,expand_by,n_vals);*/
 

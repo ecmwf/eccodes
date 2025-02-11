@@ -13,7 +13,6 @@
  ***************************************************************************/
 
 #include "grib_accessor.h"
-#include <iostream>
 
 // Note: A fast cut-down version of strcmp which does NOT return -1
 // 0 means input strings are equal and 1 means not equal

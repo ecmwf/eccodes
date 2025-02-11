@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     double* pValue = NULL;
     bool verbose = false;
 
-    Assert(argc == 3);
+    ECCODES_ASSERT(argc == 3);
     option = argv[1];
     filename = argv[2];
     if (strcmp(option, "-n")==0) {
@@ -42,25 +42,25 @@ int main(int argc, char** argv)
     }
 
     fin = fopen(filename, "rb");
-    Assert(fin);
+    ECCODES_ASSERT(fin);
     h = grib_handle_new_from_file(0, fin, &err);
-    Assert(!err);
-    Assert(h);
+    ECCODES_ASSERT(!err);
+    ECCODES_ASSERT(h);
 
     GRIB_CHECK(grib_get_long(h,"numberOfDataPoints", &numberOfDataPoints),0);
 
     flags = (mode == NO_VALUES) ? GRIB_GEOITERATOR_NO_VALUES : 0;
     iter = grib_iterator_new(h, flags, &err);
-    Assert(!err);
-    Assert(iter);
+    ECCODES_ASSERT(!err);
+    ECCODES_ASSERT(iter);
 
-    Assert(grib_iterator_has_next(iter));
+    ECCODES_ASSERT(grib_iterator_has_next(iter));
     n = 0;
 
     pValue = (mode == NO_VALUES) ? NULL : &value;
     while (grib_iterator_next(iter, &lat, &lon, pValue)) {
         if (n < numberOfDataPoints - 1) {
-            Assert(grib_iterator_has_next(iter));
+            ECCODES_ASSERT(grib_iterator_has_next(iter));
         }
         if (verbose) {
             printf("%9.3f %9.3f ",lat, lon);
@@ -69,9 +69,9 @@ int main(int argc, char** argv)
         }
         n++;
     }
-    Assert(n == numberOfDataPoints);
+    ECCODES_ASSERT(n == numberOfDataPoints);
 
-    Assert(grib_iterator_has_next(iter) == 0);
+    ECCODES_ASSERT(grib_iterator_has_next(iter) == 0);
 
     {
         // Test getting the previous value from a geoiterator.
@@ -82,10 +82,10 @@ int main(int argc, char** argv)
         if (strstr(gridType, "regular_")) {
             double last_lat = 0, last_lon = 0, last_value = 0;
             int result = grib_iterator_previous(iter, &last_lat, &last_lon, &last_value);
-            Assert(result == 1);
-            Assert(lat == last_lat);
-            Assert(lon == last_lon);
-            Assert(value == last_value);
+            ECCODES_ASSERT(result == 1);
+            ECCODES_ASSERT(lat == last_lat);
+            ECCODES_ASSERT(lon == last_lon);
+            ECCODES_ASSERT(value == last_value);
         }
     }
 

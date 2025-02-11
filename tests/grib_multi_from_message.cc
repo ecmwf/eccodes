@@ -40,16 +40,16 @@ int main(int argc, char* argv[])
     else
         return 1;
 
-    Assert(filename);
+    ECCODES_ASSERT(filename);
     f = fopen(filename, "rb");
-    Assert(f);
+    ECCODES_ASSERT(f);
 
     stat(filename, &finfo);
     fsize = finfo.st_size;
 
     data = (unsigned char*)malloc(fsize);
     p    = data;
-    Assert(data);
+    ECCODES_ASSERT(data);
 
     if (fread(data, 1, fsize, f) != fsize) {
         perror(filename);

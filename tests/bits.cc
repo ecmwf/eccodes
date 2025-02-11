@@ -39,7 +39,7 @@ void test_bits(double x, unsigned long mode)
 
     if (!(mode & NO_NEAREST_SMALLER_IBM_FLOAT)) {
         err  = grib_nearest_smaller_ibm_float(x, &t);
-        Assert(!err);
+        ECCODES_ASSERT(!err);
         l  = grib_ibm_to_long(y);
         dt = t - x;
     }

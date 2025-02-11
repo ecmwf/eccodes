@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -32,7 +31,7 @@ public:
     int unpack_string_array(char**, size_t* len) override;
     int value_count(long*) override;
     void destroy(grib_context*) override;
-    void dump(grib_dumper*) override;
+    void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
     int unpack_double_element(size_t i, double* val) override;
     grib_accessor* make_clone(grib_section*, int*) override;

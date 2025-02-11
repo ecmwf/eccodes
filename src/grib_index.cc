@@ -767,7 +767,7 @@ void grib_index_delete(grib_index* index)
     while (file) {
         grib_file* f = file;
         file         = file->next;
-        grib_file_delete(f);
+        grib_file_pool_delete_clone(f);
     }
     grib_context_free(index->context, index);
 }
@@ -840,7 +840,7 @@ int grib_index_write(grib_index* index, const char* filename)
 
     if (index->product_kind == PRODUCT_GRIB) identifier = "GRBIDX1";
     if (index->product_kind == PRODUCT_BUFR) identifier = "BFRIDX1";
-    Assert(identifier);
+    ECCODES_ASSERT(identifier);
     err = grib_write_identifier(fh, identifier);
     if (err) {
         grib_context_log(index->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
@@ -1061,7 +1061,7 @@ static grib_handle* new_message_from_file(int message_type, grib_context* c, FIL
         return grib_new_from_file(c, f, 0, error); /* headers_only=0 */
     if (message_type == CODES_BUFR)
         return bufr_new_from_file(c, f, error);
-    Assert(!"new_message_from_file: invalid message type");
+    ECCODES_ASSERT(!"new_message_from_file: invalid message type");
     return NULL;
 }
 
@@ -1076,7 +1076,6 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
     char buf[1024] = {0,};
     int err = 0;
     grib_file* indfile;
-    grib_file* newfile;
 
     grib_index_key* index_key = NULL;
     grib_handle* h            = NULL;
@@ -1097,11 +1096,7 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
 
     if (!index->files) {
         grib_filesid++;
-        newfile         = (grib_file*)grib_context_malloc_clear(c, sizeof(grib_file));
-        newfile->id     = grib_filesid;
-        newfile->name   = strdup(file->name);
-        newfile->handle = file->handle;
-        index->files    = newfile;
+        index->files = grib_file_pool_create_clone(c, grib_filesid, file);
     }
     else {
         indfile = index->files;
@@ -1114,11 +1109,7 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
         while (indfile->next)
             indfile = indfile->next;
         grib_filesid++;
-        newfile         = (grib_file*)grib_context_malloc_clear(c, sizeof(grib_file));
-        newfile->id     = grib_filesid;
-        newfile->name   = strdup(file->name);
-        newfile->handle = file->handle;
-        indfile->next   = newfile;
+        indfile->next = grib_file_pool_create_clone(c, grib_filesid, file);
     }
 
     fseeko(file->handle, 0, SEEK_SET);
@@ -1597,7 +1588,7 @@ int grib_index_select_long(grib_index* index, const char* skey, long value)
                          "key \"%s\" not found in index", skey);
         return err;
     }
-    Assert(key);
+    ECCODES_ASSERT(key);
     snprintf(key->value, sizeof(key->value), "%ld", value);
     grib_index_rewind(index);
     return 0;
@@ -1629,7 +1620,7 @@ int grib_index_select_double(grib_index* index, const char* skey, double value)
                          "key \"%s\" not found in index", skey);
         return err;
     }
-    Assert(key);
+    ECCODES_ASSERT(key);
     snprintf(key->value, sizeof(key->value), "%g", value);
     grib_index_rewind(index);
     return 0;
@@ -1661,7 +1652,7 @@ int grib_index_select_string(grib_index* index, const char* skey, const char* va
                          "key \"%s\" not found in index", skey);
         return err;
     }
-    Assert(key);
+    ECCODES_ASSERT(key);
     snprintf(key->value, sizeof(key->value), "%s", value);
     grib_index_rewind(index);
     return 0;
@@ -1816,8 +1807,8 @@ int grib_index_dump_file(FILE* fout, const char* filename, unsigned long flags)
     grib_context* c   = grib_context_get_default();
     FILE* fh          = NULL;
 
-    Assert(fout);
-    Assert(filename);
+    ECCODES_ASSERT(fout);
+    ECCODES_ASSERT(filename);
     index = grib_index_read(c, filename, &err);
     if (err)
         return err;
@@ -1860,7 +1851,7 @@ void grib_index_dump(FILE* fout, grib_index* index, unsigned long flags)
 {
     if (!index)
         return;
-    Assert(fout);
+    ECCODES_ASSERT(fout);
 
     /* The grib_dump_files does not print anything as  */
     /* the index object does not store the file names! */

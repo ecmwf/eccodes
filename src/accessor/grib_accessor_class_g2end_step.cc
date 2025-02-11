@@ -22,42 +22,41 @@ void grib_accessor_g2end_step_t::init(const long l, grib_arguments* c)
     int n          = 0;
     grib_handle* h = grib_handle_of_accessor(this);
 
-    start_step_value_ = grib_arguments_get_name(h, c, n++);
-    step_units_       = grib_arguments_get_name(h, c, n++);
+    start_step_value_ = c->get_name(h, n++);
+    step_units_       = c->get_name(h, n++);
 
-    year_   = grib_arguments_get_name(h, c, n++);
-    month_  = grib_arguments_get_name(h, c, n++);
-    day_    = grib_arguments_get_name(h, c, n++);
-    hour_   = grib_arguments_get_name(h, c, n++);
-    minute_ = grib_arguments_get_name(h, c, n++);
-    second_ = grib_arguments_get_name(h, c, n++);
+    year_   = c->get_name(h, n++);
+    month_  = c->get_name(h, n++);
+    day_    = c->get_name(h, n++);
+    hour_   = c->get_name(h, n++);
+    minute_ = c->get_name(h, n++);
+    second_ = c->get_name(h, n++);
 
-    year_of_end_of_interval_   = grib_arguments_get_name(h, c, n++);
-    month_of_end_of_interval_  = grib_arguments_get_name(h, c, n++);
-    day_of_end_of_interval_    = grib_arguments_get_name(h, c, n++);
-    hour_of_end_of_interval_   = grib_arguments_get_name(h, c, n++);
-    minute_of_end_of_interval_ = grib_arguments_get_name(h, c, n++);
-    second_of_end_of_interval_ = grib_arguments_get_name(h, c, n++);
+    year_of_end_of_interval_   = c->get_name(h, n++);
+    month_of_end_of_interval_  = c->get_name(h, n++);
+    day_of_end_of_interval_    = c->get_name(h, n++);
+    hour_of_end_of_interval_   = c->get_name(h, n++);
+    minute_of_end_of_interval_ = c->get_name(h, n++);
+    second_of_end_of_interval_ = c->get_name(h, n++);
 
-    time_range_unit_     = grib_arguments_get_name(h, c, n++);
-    time_range_value_    = grib_arguments_get_name(h, c, n++);
-    typeOfTimeIncrement_ = grib_arguments_get_name(h, c, n++);
-    numberOfTimeRanges_  = grib_arguments_get_name(h, c, n++);
+    time_range_unit_     = c->get_name(h, n++);
+    time_range_value_    = c->get_name(h, n++);
+    typeOfTimeIncrement_ = c->get_name(h, n++);
+    numberOfTimeRanges_  = c->get_name(h, n++);
 }
 
-void grib_accessor_g2end_step_t::dump(grib_dumper* dumper)
+void grib_accessor_g2end_step_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_double(dumper, this, NULL);
+    dumper->dump_double(this, NULL);
 }
 
 // See GRIB-488
-bool is_special_expver(const grib_handle* h)
+static bool is_special_expver(const grib_handle* h)
 {
-    int ret                = 0;
     char strMarsExpVer[50] = {0,};
     char strMarsClass[50] = {0,};
     size_t slen = 50;
-    ret         = grib_get_string(h, "mars.class", strMarsClass, &slen);
+    int ret = grib_get_string(h, "mars.class", strMarsClass, &slen);
     if (ret == GRIB_SUCCESS && STR_EQUAL(strMarsClass, "em")) {
         // em = ERA-CLIM model integration for the 20th-century (ERA-20CM)
         slen = 50;
@@ -77,7 +76,7 @@ static int convert_time_range_long_(
     long* lengthOfTimeRange           /* time_range_value */
 )
 {
-    Assert(lengthOfTimeRange != NULL);
+    ECCODES_ASSERT(lengthOfTimeRange != NULL);
 
     if (indicatorOfUnitForTimeRange != stepUnits) {
         eccodes::Step time_range{ *lengthOfTimeRange, indicatorOfUnitForTimeRange };
@@ -338,10 +337,10 @@ int grib_accessor_g2end_step_t::unpack_long(long* val, size_t* len)
         return 0;
     }
 
-    Assert(numberOfTimeRanges_);
+    ECCODES_ASSERT(numberOfTimeRanges_);
     if ((ret = grib_get_long_internal(h, numberOfTimeRanges_, &numberOfTimeRanges)))
         return ret;
-    Assert(numberOfTimeRanges == 1 || numberOfTimeRanges == 2);
+    ECCODES_ASSERT(numberOfTimeRanges == 1 || numberOfTimeRanges == 2);
 
     try {
         if (numberOfTimeRanges == 1) {
@@ -380,10 +379,10 @@ int grib_accessor_g2end_step_t::unpack_double(double* val, size_t* len)
         return 0;
     }
 
-    Assert(numberOfTimeRanges_);
+    ECCODES_ASSERT(numberOfTimeRanges_);
     if ((ret = grib_get_long_internal(h, numberOfTimeRanges_, &numberOfTimeRanges)))
         return ret;
-    Assert(numberOfTimeRanges == 1 || numberOfTimeRanges == 2);
+    ECCODES_ASSERT(numberOfTimeRanges == 1 || numberOfTimeRanges == 2);
 
     try {
         if (numberOfTimeRanges == 1) {

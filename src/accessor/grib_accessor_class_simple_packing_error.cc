@@ -20,11 +20,11 @@ void grib_accessor_simple_packing_error_t::init(const long l, grib_arguments* c)
     int n          = 0;
     grib_handle* h = grib_handle_of_accessor(this);
 
-    bitsPerValue_       = grib_arguments_get_name(h, c, n++);
-    binaryScaleFactor_  = grib_arguments_get_name(h, c, n++);
-    decimalScaleFactor_ = grib_arguments_get_name(h, c, n++);
-    referenceValue_     = grib_arguments_get_name(h, c, n++);
-    floatType_          = grib_arguments_get_name(h, c, n++);
+    bitsPerValue_       = c->get_name(h, n++);
+    binaryScaleFactor_  = c->get_name(h, n++);
+    decimalScaleFactor_ = c->get_name(h, n++);
+    referenceValue_     = c->get_name(h, n++);
+    floatType_          = c->get_name(h, n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     length_ = 0;
@@ -55,7 +55,7 @@ int grib_accessor_simple_packing_error_t::unpack_double(double* val, size_t* len
     else if (!strcmp(floatType_, "ieee"))
         *val = grib_ieeefloat_error(referenceValue);
     else
-        Assert(1 == 0);
+        ECCODES_ASSERT(1 == 0);
 
     if (bitsPerValue != 0)
         *val = (*val + codes_power<double>(binaryScaleFactor, 2)) * codes_power<double>(-decimalScaleFactor, 10) * 0.5;

@@ -19,7 +19,7 @@ void grib_vsarray_print(const char* title, const grib_vsarray* vsarray)
         printf("%s: vsarray=NULL\n", title);
         return;
     }
-    printf("%s: vsarray.n=%zu\n", title, vsarray->n);
+    printf("%s: vsarray.size=%zu vsarray.n=%zu\n", title, vsarray->size, vsarray->n);
     for (i = 0; i < vsarray->n; i++) {
         snprintf(text, sizeof(text), " vsarray->v[%zu]", i);
         grib_sarray_print(text, vsarray->v[i]);

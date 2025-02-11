@@ -27,10 +27,10 @@ int main(int argc, char* argv[])
     oufile = argv[2];
 
     inf = fopen(infile, "rb");
-    Assert(inf);
+    ECCODES_ASSERT(inf);
 
     ouf = fopen(oufile, "wb");
-    Assert(ouf);
+    ECCODES_ASSERT(ouf);
 
     while ((h = grib_handle_new_from_file(0, inf, &err)) != NULL) {
         grib_update_sections_lengths(h);

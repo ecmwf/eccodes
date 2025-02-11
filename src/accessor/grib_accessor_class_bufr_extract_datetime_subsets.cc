@@ -19,9 +19,9 @@ void grib_accessor_bufr_extract_datetime_subsets_t::init(const long len, grib_ar
     int n = 0;
 
     length_            = 0;
-    doExtractSubsets_  = grib_arguments_get_name(grib_handle_of_accessor(this), arg, n++);
-    numberOfSubsets_   = grib_arguments_get_name(grib_handle_of_accessor(this), arg, n++);
-    extractSubsetList_ = grib_arguments_get_name(grib_handle_of_accessor(this), arg, n++);
+    doExtractSubsets_  = arg->get_name(grib_handle_of_accessor(this), n++);
+    numberOfSubsets_   = arg->get_name(grib_handle_of_accessor(this), n++);
+    extractSubsetList_ = arg->get_name(grib_handle_of_accessor(this), n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }
@@ -276,7 +276,7 @@ int grib_accessor_bufr_extract_datetime_subsets_t::select_datetime()
         goto cleanup;
     }
 
-    if (julianEnd <= julianStart) {
+    if (julianEnd < julianStart) {
         grib_context_log(c, GRIB_LOG_ERROR, "Wrong definition of time interval: end (%s) is not after start (%s)", end_str, start_str);
         ret = GRIB_INTERNAL_ERROR;
         goto cleanup;

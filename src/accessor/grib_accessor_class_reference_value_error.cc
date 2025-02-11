@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -19,8 +18,8 @@ void grib_accessor_reference_value_error_t::init(const long l, grib_arguments* c
     grib_accessor_double_t::init(l, c);
     int n = 0;
 
-    referenceValue_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    floatType_      = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    referenceValue_ = c->get_name(grib_handle_of_accessor(this), n++);
+    floatType_      = c->get_name(grib_handle_of_accessor(this), n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     length_ = 0;
@@ -40,7 +39,7 @@ int grib_accessor_reference_value_error_t::unpack_double(double* val, size_t* le
     else if (!strcmp(floatType_, "ieee"))
         *val = grib_ieeefloat_error(referenceValue);
     else
-        Assert(1 == 0);
+        ECCODES_ASSERT(1 == 0);
 
     if (ret == GRIB_SUCCESS)
         *len = 1;

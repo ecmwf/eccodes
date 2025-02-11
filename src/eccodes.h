@@ -1178,38 +1178,6 @@ void codes_context_set_debug(codes_context* c, int mode);
 void codes_context_set_data_quality_checks(codes_context* c, int val);
 
 /**
- *  Sets memory procedures of the context
- *
- * @param c         : the context to be modified
- * @param p_malloc  : the memory allocation procedure to be set @see codes_malloc_proc
- * @param p_free    : the memory freeing procedure to be set @see codes_free_proc
- * @param p_realloc : the memory reallocation procedure to be set @see codes_realloc_proc
- */
-void codes_context_set_memory_proc(codes_context* c, codes_malloc_proc p_malloc,
-                                   codes_free_proc p_free, codes_realloc_proc p_realloc) ECCODES_DEPRECATED;
-
-/**
- *  Sets memory procedures of the context for persistent data
- *
- * @param c           : the context to be modified
- * @param griballoc   : the memory allocation procedure to be set @see codes_malloc_proc
- * @param gribfree    : the memory freeing procedure to be set @see codes_free_proc
- */
-void codes_context_set_persistent_memory_proc(codes_context* c, codes_malloc_proc p_malloc,
-                                              codes_free_proc p_free) ECCODES_DEPRECATED;
-
-/**
- *  Sets memory procedures of the context for large buffers
- *
- * @param c        : the context to be modified
- * @param p_malloc : the memory allocation procedure to be set @see codes_malloc_proc
- * @param p_free   : the memory freeing procedure to be set @see codes_free_proc
- * @param p_free   : the memory reallocation procedure to be set @see codes_realloc_proc
- */
-void codes_context_set_buffer_memory_proc(codes_context* c, codes_malloc_proc p_malloc,
-                                          codes_free_proc p_free, codes_realloc_proc p_realloc) ECCODES_DEPRECATED;
-
-/**
  *  Sets the context printing procedure used for user interaction
  *
  * @param c        : the context to be modified
@@ -1371,6 +1339,9 @@ int codes_is_missing(const codes_handle* h, const char* key, int* err);
    Returns a bool i.e. 0 or 1 */
 int codes_is_defined(const codes_handle* h, const char* key);
 
+/* Returns 1 if the key is computed (virtual) and 0 if it is coded */
+int codes_key_is_computed(const grib_handle* h, const char* key, int* err);
+
 /* Returns 1 if the BUFR key is in the header and 0 if it is in the data section.
    The error code is the final argument */
 int codes_bufr_key_is_header(const codes_handle* h, const char* key, int* err);
@@ -1451,8 +1422,7 @@ codes_handle* codes_grib_util_set_spec(codes_handle* h,
                                        size_t data_values_count,
                                        int* err);
 
-/* EXPERIMENTAL FEATURE
- * Build an array of message headers from input BUFR file.
+/* Build an array of message headers from input BUFR file.
  * result = array of 'codes_bufr_header' structs with 'num_messages' elements.
  *          This array should be freed by the caller.
  * num_messages = number of messages found in the input file.
@@ -1462,8 +1432,7 @@ codes_handle* codes_grib_util_set_spec(codes_handle* h,
 int codes_bufr_extract_headers_malloc(codes_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode);
 int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* val, size_t* len);
 
-/* EXPERIMENTAL FEATURE
- * Build an array of message offsets from input file. The client has to supply the ProductKind (GRIB, BUFR etc)
+/* Build an array of message offsets from input file. The client has to supply the ProductKind (GRIB, BUFR etc)
  * result = array of offsets with 'num_messages' elements.
  *          This array should be freed by the caller.
  * num_messages = number of messages found in the input file.
@@ -1474,6 +1443,15 @@ int codes_extract_offsets_malloc(codes_context* c, const char* filename, Product
                                  off_t** offsets, int* num_messages, int strict_mode);
 int codes_extract_offsets_sizes_malloc(codes_context* c, const char* filename, ProductKind product,
                                        off_t** offsets, size_t** sizes, int* num_messages, int strict_mode);
+
+
+/* EXPERIMENTAL FEATURE
+ * For GRIB2, argument must be an entry in Code Table 4.5 (Fixed surface types and units).
+ * Output is 1 if the surface type requires its scaledValue/scaleFactor i.e., has a level
+ * Otherwise 0 i.e., scaledValue/scaleFactor must be set to MISSING
+ */
+int codes_grib_surface_type_requires_value(int edition, int type_of_surface_code, int* err);
+
 
 /* --------------------------------------- */
 #ifdef __cplusplus

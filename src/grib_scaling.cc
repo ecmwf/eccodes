@@ -50,7 +50,7 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* error)
         return 0;
     }
 
-    Assert(bpval >= 1);
+    ECCODES_ASSERT(bpval >= 1);
     if (range == 0)
         return 0;
 
@@ -79,7 +79,7 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* error)
         *error = GRIB_UNDERFLOW;
         scale = -last;
     }
-    Assert(scale <= last);
+    ECCODES_ASSERT(scale <= last);
     return scale;
 }
 
@@ -113,7 +113,7 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* error)
 //         scale++;
 //         zs /= 2;
 //     }
-//     Assert(scale >= -last && scale <= last);
+//     ECCODES_ASSERT(scale >= -last && scale <= last);
 //     /* printf("---- scale=%ld\n",scale);*/
 //     return scale;
 // }
@@ -127,7 +127,7 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* error)
 //     unsigned long maxint = codes_power<double>(bpval, 2) - 1;
 //     double dmaxint       = (double)maxint;
 //     range *= codes_power<double>(-binary_scale, 2);
-//     Assert(bpval >= 1);
+//     ECCODES_ASSERT(bpval >= 1);
 //     if (range == 0)
 //         return 0;
 //     while ((range * zs) > dmaxint) {
@@ -147,6 +147,6 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* error)
 //         zs *= 10;
 //     }
 //     /* printf("grib_api: decimal_scale_fact=%ld max=%g min=%g bits_per_value=%ld binary_scale=%ld\n",scale,max,min,bpval,binary_scale); */
-//     Assert(scale >= -last && scale <= last);
+//     ECCODES_ASSERT(scale >= -last && scale <= last);
 //     return scale;
 // }

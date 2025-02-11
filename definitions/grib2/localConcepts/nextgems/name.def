@@ -136,8 +136,8 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Mean surface runoff rate
-'Mean surface runoff rate' = {
+#Time-mean surface runoff rate
+'Time-mean surface runoff rate' = {
 	 localTablesVersion = 1 ;
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
@@ -145,8 +145,8 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean sub-surface runoff rate
-'Mean sub-surface runoff rate' = {
+#Time-mean sub-surface runoff rate
+'Time-mean sub-surface runoff rate' = {
 	 localTablesVersion = 1 ;
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
@@ -273,8 +273,8 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean total snowfall rate
-'Mean total snowfall rate' = {
+#Time-mean total snowfall rate
+'Time-mean total snowfall rate' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -282,8 +282,8 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Evaporation
-'Evaporation' = {
+#Time-mean evaporation rate
+'Time-mean evaporation rate' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -291,8 +291,8 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean total precipitation rate
-'Mean total precipitation rate' = {
+#Time-mean total precipitation rate
+'Time-mean total precipitation rate' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;

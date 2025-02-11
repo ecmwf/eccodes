@@ -19,15 +19,15 @@ void grib_accessor_local_definition_t::init(const long l, grib_arguments* c)
     grib_handle* hand = grib_handle_of_accessor(this);
     int n             = 0;
 
-    grib2LocalSectionNumber_                 = grib_arguments_get_name(hand, c, n++);
-    productDefinitionTemplateNumber_         = grib_arguments_get_name(hand, c, n++);
-    productDefinitionTemplateNumberInternal_ = grib_arguments_get_name(hand, c, n++);
-    type_                                    = grib_arguments_get_name(hand, c, n++);
-    stream_                                  = grib_arguments_get_name(hand, c, n++);
-    the_class_                               = grib_arguments_get_name(hand, c, n++);
-    eps_                                     = grib_arguments_get_name(hand, c, n++);
-    stepType_                                = grib_arguments_get_name(hand, c, n++);
-    derivedForecast_                         = grib_arguments_get_name(hand, c, n++);
+    grib2LocalSectionNumber_                 = c->get_name(hand, n++);
+    productDefinitionTemplateNumber_         = c->get_name(hand, n++);
+    productDefinitionTemplateNumberInternal_ = c->get_name(hand, n++);
+    type_                                    = c->get_name(hand, n++);
+    stream_                                  = c->get_name(hand, n++);
+    the_class_                               = c->get_name(hand, n++);
+    eps_                                     = c->get_name(hand, n++);
+    stepType_                                = c->get_name(hand, n++);
+    derivedForecast_                         = c->get_name(hand, n++);
 }
 
 int grib_accessor_local_definition_t::unpack_long(long* val, size_t* len)
@@ -57,7 +57,7 @@ int grib_accessor_local_definition_t::pack_long(const long* val, size_t* len)
     long editionNumber        = 0;
 
     if (grib_get_long(hand, "editionNumber", &editionNumber) == GRIB_SUCCESS) {
-        Assert(editionNumber != 1);
+        ECCODES_ASSERT(editionNumber != 1);
     }
 
     if (grib_get_long(hand, productDefinitionTemplateNumber_, &productDefinitionTemplateNumber) != GRIB_SUCCESS)

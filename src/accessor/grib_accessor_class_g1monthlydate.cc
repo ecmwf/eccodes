@@ -18,7 +18,7 @@ void grib_accessor_g1monthlydate_t::init(const long l, grib_arguments* c)
     grib_accessor_long_t::init(l, c);
     int n = 0;
 
-    date_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    date_ = c->get_name(grib_handle_of_accessor(this), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 

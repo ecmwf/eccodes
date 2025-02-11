@@ -88,8 +88,10 @@ g1step_range, &grib_accessor_g1step_range
 g1verificationdate, &grib_accessor_g1verificationdate
 g2_aerosol, &grib_accessor_g2_aerosol
 g2_chemical, &grib_accessor_g2_chemical
+g2_concept_dir, &grib_accessor_g2_concept_dir
 g2_eps, &grib_accessor_g2_eps
 g2_mars_labeling, &grib_accessor_g2_mars_labeling
+g2_param_concept_filename, &grib_accessor_g2_param_concept_filename
 g2bitmap, &grib_accessor_g2bitmap
 g2bitmap_present, &grib_accessor_g2bitmap_present
 g2date, &grib_accessor_g2date
@@ -104,6 +106,7 @@ gds_is_present, &grib_accessor_gds_is_present
 gen, &grib_accessor_gen
 getenv, &grib_accessor_getenv
 global_gaussian, &grib_accessor_global_gaussian
+grid_spec, &grib_accessor_grid_spec
 group, &grib_accessor_group
 gts_header, &grib_accessor_gts_header
 hash_array, &grib_accessor_hash_array
@@ -130,6 +133,8 @@ mars_step, &grib_accessor_mars_step
 md5, &grib_accessor_md5
 message, &grib_accessor_message
 message_copy, &grib_accessor_message_copy
+message_is_valid, &grib_accessor_message_is_valid
+mtg2_switch_default, &grib_accessor_mtg2_switch_default
 multdouble, &grib_accessor_multdouble
 nearest, &grib_accessor_nearest
 non_alpha, &grib_accessor_non_alpha

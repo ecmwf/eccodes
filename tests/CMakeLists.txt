@@ -46,8 +46,10 @@ list(APPEND test_c_bins
     grib_ecc-1431
     grib_ecc-1433
     grib_ecc-1764
+    grib_ecc-2019
     bufr_ecc-517
     bufr_ecc-1288
+    bufr_ecc-2011
     bufr_get_element
     bufr_extract_headers
     bufr_check_descriptors
@@ -112,7 +114,7 @@ if( HAVE_BUILD_TOOLS )
         grib_generalised_tiles
         # grib_true_imagery
         grib2_wave_spectra
-        grib_element
+        grib2_probability
         grib_suppressed
         grib_destine_mars_keys
         grib_2nd_order_numValues
@@ -156,6 +158,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
+        bufr_ecc-2011
         grib_efas
         grib_sh_imag
         grib_spectral
@@ -173,6 +176,7 @@ if( HAVE_BUILD_TOOLS )
     # and/or take much longer
     list(APPEND tests_extra
         grib_data_quality_checks
+        grib_check_message_validity
         grib_update_sections_lengths
         grib_units_bias_factor
         grib_set_large_message_fail
@@ -181,6 +185,7 @@ if( HAVE_BUILD_TOOLS )
         grib_bpv_limit
         grib_complex
         grib_double_cmp
+        grib_element
         grib_change_packing
         grib_run_length_packing
         grib_grid_space_view
@@ -192,6 +197,7 @@ if( HAVE_BUILD_TOOLS )
         grib_count
         grib_clone_headers_only
         grib_ifsParam
+        filter_dump_content
         wmo_read_bufr_from_file
         wmo_read_gts_from_file
         wmo_read_any_from_file
@@ -260,6 +266,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-1785
         bufr_ecc-1958
         bufr_ecc-1938
+        grib_488
         grib_ecc-490
         grib_ecc-756
         grib_ecc-806
@@ -282,6 +289,9 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1907
         grib_ecc-1941
         grib_ecc-1942
+        grib_ecc-2002
+        grib_ecc-2006
+        grib_ecc-2019
         grib_modelName
         grib_sub_hourly
         grib_set_bytes

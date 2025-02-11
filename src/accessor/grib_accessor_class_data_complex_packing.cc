@@ -18,16 +18,16 @@ void grib_accessor_data_complex_packing_t::init(const long v, grib_arguments* ar
     grib_accessor_data_simple_packing_t::init(v, args);
     grib_handle* gh = grib_handle_of_accessor(this);
 
-    GRIBEX_sh_bug_present_  = grib_arguments_get_name(gh, args, carg_++);
-    ieee_floats_            = grib_arguments_get_name(gh, args, carg_++);
-    laplacianOperatorIsSet_ = grib_arguments_get_name(gh, args, carg_++);
-    laplacianOperator_      = grib_arguments_get_name(gh, args, carg_++);
-    sub_j_                  = grib_arguments_get_name(gh, args, carg_++);
-    sub_k_                  = grib_arguments_get_name(gh, args, carg_++);
-    sub_m_                  = grib_arguments_get_name(gh, args, carg_++);
-    pen_j_                  = grib_arguments_get_name(gh, args, carg_++);
-    pen_k_                  = grib_arguments_get_name(gh, args, carg_++);
-    pen_m_                  = grib_arguments_get_name(gh, args, carg_++);
+    GRIBEX_sh_bug_present_  = args->get_name(gh, carg_++);
+    ieee_floats_            = args->get_name(gh, carg_++);
+    laplacianOperatorIsSet_ = args->get_name(gh, carg_++);
+    laplacianOperator_      = args->get_name(gh, carg_++);
+    sub_j_                  = args->get_name(gh, carg_++);
+    sub_k_                  = args->get_name(gh, carg_++);
+    sub_m_                  = args->get_name(gh, carg_++);
+    pen_j_                  = args->get_name(gh, carg_++);
+    pen_k_                  = args->get_name(gh, carg_++);
+    pen_m_                  = args->get_name(gh, carg_++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
@@ -132,7 +132,7 @@ double calculate_pfactor(const grib_context* ctx, const double* spectralField, l
      */
     for (loop = ismin; loop <= ismax; loop++) {
         x = log((double)(loop * (loop + 1)));
-        Assert(norms[loop] > 0);
+        ECCODES_ASSERT(norms[loop] > 0);
         y                = log(norms[loop]);
         weightedSumOverX = weightedSumOverX + x * weights[loop];
         weightedSumOverY = weightedSumOverY + y * weights[loop];
@@ -743,7 +743,7 @@ int grib_accessor_data_complex_packing_t::unpack_real(T* val, size_t* len)
         mmax++;
     }
 
-    //Assert(*len >= i);
+    //ECCODES_ASSERT(*len >= i);
     if (*len < i) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s::%s: Invalid values *len=%zu and i=%zu.",
                          class_name_, __func__, *len, i);

@@ -14,8 +14,8 @@
 void grib_iarray_print(const char* title, const grib_iarray* iarray)
 {
     size_t i;
-    Assert(iarray);
-    printf("%s: iarray.n=%zu  \t", title, iarray->n);
+    ECCODES_ASSERT(iarray);
+    printf("%s: iarray.size=%zu  iarray.n=%zu  \t", title, iarray->size, iarray->n);
     for (i = 0; i < iarray->n; i++) {
         printf("iarray[%zu]=%ld\t", i, iarray->v[i]);
     }
@@ -69,7 +69,7 @@ long grib_iarray_pop_front(grib_iarray* a)
     long v = a->v[0];
     /* size_t i=0; */
     if (a->n == 0)
-        Assert(0);
+        ECCODES_ASSERT(0);
     a->n--;
     a->v++;
     a->number_of_pop_front++;

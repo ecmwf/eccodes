@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -19,11 +18,11 @@ void grib_accessor_rdbtime_guess_date_t::init(const long l, grib_arguments* c)
     grib_accessor_long_t::init(l, c);
     int n = 0;
 
-    typicalYear_  = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    typicalMonth_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    typicalDay_   = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    rdbDay_       = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    yearOrMonth_  = grib_arguments_get_long(grib_handle_of_accessor(this), c, n++);
+    typicalYear_  = c->get_name(grib_handle_of_accessor(this), n++);
+    typicalMonth_ = c->get_name(grib_handle_of_accessor(this), n++);
+    typicalDay_   = c->get_name(grib_handle_of_accessor(this), n++);
+    rdbDay_       = c->get_name(grib_handle_of_accessor(this), n++);
+    yearOrMonth_  = c->get_long(grib_handle_of_accessor(this), n++);
 
     /* flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY; */
 }

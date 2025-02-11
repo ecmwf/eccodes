@@ -14,8 +14,8 @@
 void grib_sarray_print(const char* title, const grib_sarray* sarray)
 {
     size_t i;
-    Assert(sarray);
-    printf("%s: sarray.n=%zu  \t", title, sarray->n);
+    ECCODES_ASSERT(sarray);
+    printf("%s: sarray.size=%zu  sarray.n=%zu \t", title, sarray->size, sarray->n);
     for (i = 0; i < sarray->n; i++) {
         printf("sarray[%zu]=%s\t", i, sarray->v[i]);
     }

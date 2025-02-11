@@ -29,7 +29,7 @@ static omp_nest_lock_t mutex;
 
 static void init_mutex()
 {
-    GRIB_OMP_CRITICAL(lock_grib_accessor_class_c)
+    GRIB_OMP_CRITICAL(lock_grib_iterator_factory_c)
     {
         if (once == 0) {
             omp_init_nest_lock(&mutex);
@@ -63,7 +63,7 @@ static const struct table_entry table[] = {
 eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* error)
 {
     size_t i = 0, num_table_entries = 0;
-    const char* type = (char*)grib_arguments_get_name(h, args, 0);
+    const char* type = (char*)args->get_name(h, 0);
     *error = GRIB_NOT_IMPLEMENTED;
 
     num_table_entries = sizeof(table) / sizeof(table[0]);

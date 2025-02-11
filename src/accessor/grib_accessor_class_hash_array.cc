@@ -9,6 +9,7 @@
  */
 
 #include "grib_accessor_class_hash_array.h"
+#include "action_class_hash_array.h"
 
 grib_accessor_hash_array_t _grib_accessor_hash_array{};
 grib_accessor* grib_accessor_hash_array = &_grib_accessor_hash_array;
@@ -23,16 +24,14 @@ void grib_accessor_hash_array_t::init(const long len, grib_arguments* args)
     ha_     = NULL;
 }
 
-void grib_accessor_hash_array_t::dump(grib_dumper* dumper)
+void grib_accessor_hash_array_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_string(dumper, this, NULL);
+    dumper->dump_string(this, NULL);
 }
 
 int grib_accessor_hash_array_t::pack_double(const double* val, size_t* len)
 {
-    char s[200] = {
-        0,
-    };
+    char s[200] = {0,};
     snprintf(s, sizeof(s), "%g", *val);
     key_ = grib_context_strdup(context_, s);
     ha_  = 0;
@@ -41,9 +40,7 @@ int grib_accessor_hash_array_t::pack_double(const double* val, size_t* len)
 
 int grib_accessor_hash_array_t::pack_long(const long* val, size_t* len)
 {
-    char s[200] = {
-        0,
-    };
+    char s[200] = {0,};
     snprintf(s, sizeof(s), "%ld", *val);
     if (key_)
         grib_context_free(context_, key_);
@@ -69,20 +66,22 @@ grib_hash_array_value* grib_accessor_hash_array_t::find_hash_value(int* err)
     grib_hash_array_value* ha_ret    = 0;
     grib_hash_array_value* ha        = NULL;
 
-    ha = get_hash_array(grib_handle_of_accessor(this), creator_);
+    eccodes::action::HashArray* hash_array = dynamic_cast<eccodes::action::HashArray*>(creator_);
+
+    ha = hash_array->get_hash_array(grib_handle_of_accessor(this));
     if (!ha) {
         grib_context_log(context_, GRIB_LOG_ERROR,
-                         "unable to get hash value for %s", creator_->name);
+                         "unable to get hash value for %s", creator_->name_);
         *err = GRIB_HASH_ARRAY_NO_MATCH;
         return NULL;
     }
 
     *err = GRIB_SUCCESS;
 
-    Assert(ha != NULL);
+    ECCODES_ASSERT(ha != NULL);
     if (!key_) {
         grib_context_log(context_, GRIB_LOG_ERROR,
-                         "unable to get hash value for %s, set before getting", creator_->name);
+                         "unable to get hash value for %s, set before getting", creator_->name_);
         *err = GRIB_HASH_ARRAY_NO_MATCH;
         return NULL;
     }
@@ -95,8 +94,8 @@ grib_hash_array_value* grib_accessor_hash_array_t::find_hash_value(int* err)
         *err = GRIB_HASH_ARRAY_NO_MATCH;
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "hash_array: no match for %s=%s",
-                         creator_->name, key_);
-        const char* full_path = get_hash_array_full_path(creator_);
+                         creator_->name_, key_);
+        const char* full_path = hash_array->get_hash_array_full_path();
         if (full_path) {
             grib_context_log(context_, GRIB_LOG_ERROR, "hash_array: file path = %s", full_path);
         }

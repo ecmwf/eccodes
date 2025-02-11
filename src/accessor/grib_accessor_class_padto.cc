@@ -18,7 +18,7 @@ size_t grib_accessor_padto_t::preferred_size(int from_handle)
     long length = 0;
     long theEnd;
 
-    grib_expression_evaluate_long(grib_handle_of_accessor(this), expression_, &theEnd);
+    expression_->evaluate_long(grib_handle_of_accessor(this), &theEnd);
 
     length = theEnd - offset_;
 
@@ -31,11 +31,11 @@ void grib_accessor_padto_t::init(const long len, grib_arguments* arg)
 {
     grib_accessor_padding_t::init(len, arg);
 
-    expression_ = grib_arguments_get_expression(grib_handle_of_accessor(this), arg, 0);
+    expression_ = arg->get_expression(grib_handle_of_accessor(this), 0);
     length_     = preferred_size(1);
 }
 
-void grib_accessor_padto_t::dump(grib_dumper* dumper)
+void grib_accessor_padto_t::dump(eccodes::Dumper* dumper)
 {
-    /*grib_dump_string(dumper,a,NULL);*/
+    /*dumper->dump_string(a,NULL);*/
 }

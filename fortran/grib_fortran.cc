@@ -237,7 +237,7 @@ static int push_file(FILE* f, const char* open_mode, char* buffer)
 
     if(!file_set){
         file_set = (l_grib_file*)malloc(sizeof(l_grib_file));
-        Assert(file_set);
+        ECCODES_ASSERT(file_set);
         file_set->id     = myindex;
         file_set->f      = f;
         file_set->mode   = fmode;
@@ -261,7 +261,7 @@ static int push_file(FILE* f, const char* open_mode, char* buffer)
     }
 
     the_new = (l_grib_file*)malloc(sizeof(l_grib_file));
-    Assert(the_new);
+    ECCODES_ASSERT(the_new);
     the_new->id     = myindex;
     the_new->f      = f;
     the_new->mode   = fmode;
@@ -294,7 +294,7 @@ static void _push_handle(grib_handle *h,int *gid)
 
     if(!handle_set){
         handle_set = (l_grib_handle*)malloc(sizeof(l_grib_handle));
-        Assert(handle_set);
+        ECCODES_ASSERT(handle_set);
         handle_set->id   = myindex;
         handle_set->h    = h;
         handle_set->next = NULL;
@@ -319,7 +319,7 @@ static void _push_handle(grib_handle *h,int *gid)
     }
 
     the_new = (l_grib_handle*)malloc(sizeof(l_grib_handle));
-    Assert(the_new);
+    ECCODES_ASSERT(the_new);
     the_new->id   = myindex;
     the_new->h    = h;
     the_new->next = current;
@@ -352,7 +352,7 @@ static void _push_index(grib_index *h,int *gid)
 
     if(!index_set){
         index_set = (l_grib_index*)malloc(sizeof(l_grib_index));
-        Assert(index_set);
+        ECCODES_ASSERT(index_set);
         index_set->id   = myindex;
         index_set->h    = h;
         index_set->next = NULL;
@@ -377,7 +377,7 @@ static void _push_index(grib_index *h,int *gid)
     }
 
     the_new = (l_grib_index*)malloc(sizeof(l_grib_index));
-    Assert(the_new);
+    ECCODES_ASSERT(the_new);
     the_new->id   = myindex;
     the_new->h    = h;
     the_new->next = current;
@@ -410,7 +410,7 @@ static void _push_multi_handle(grib_multi_handle *h,int *gid)
 
     if(!multi_handle_set){
         multi_handle_set = (l_grib_multi_handle*)malloc(sizeof(l_grib_multi_handle));
-        Assert(multi_handle_set);
+        ECCODES_ASSERT(multi_handle_set);
         multi_handle_set->id   = myindex;
         multi_handle_set->h    = h;
         multi_handle_set->next = NULL;
@@ -435,7 +435,7 @@ static void _push_multi_handle(grib_multi_handle *h,int *gid)
     }
 
     the_new = (l_grib_multi_handle*)malloc(sizeof(l_grib_multi_handle));
-    Assert(the_new);
+    ECCODES_ASSERT(the_new);
     the_new->id   = myindex;
     the_new->h    = h;
     the_new->next = current;
@@ -481,7 +481,7 @@ static int _push_keys_iterator(grib_keys_iterator *i)
 
     if(!keys_iterator_set){
         keys_iterator_set = (l_grib_keys_iterator*)malloc(sizeof(l_grib_keys_iterator));
-        Assert(keys_iterator_set);
+        ECCODES_ASSERT(keys_iterator_set);
         keys_iterator_set->id   = myindex;
         keys_iterator_set->i    = i;
         keys_iterator_set->next = NULL;
@@ -503,7 +503,7 @@ static int _push_keys_iterator(grib_keys_iterator *i)
     if(!previous) return -1;
 
     the_new = (l_grib_keys_iterator*)malloc(sizeof(l_grib_keys_iterator));
-    Assert(the_new);
+    ECCODES_ASSERT(the_new);
     the_new->id   = myindex;
     the_new->i    = i;
     the_new->next = current;
@@ -532,7 +532,7 @@ static int _push_bufr_keys_iterator(bufr_keys_iterator *i)
 
     if(!bufr_keys_iterator_set){
         bufr_keys_iterator_set = (l_bufr_keys_iterator*)malloc(sizeof(l_bufr_keys_iterator));
-        Assert(bufr_keys_iterator_set);
+        ECCODES_ASSERT(bufr_keys_iterator_set);
         bufr_keys_iterator_set->id   = myindex;
         bufr_keys_iterator_set->i    = i;
         bufr_keys_iterator_set->next = NULL;
@@ -554,7 +554,7 @@ static int _push_bufr_keys_iterator(bufr_keys_iterator *i)
     if(!previous) return -1;
 
     the_new = (l_bufr_keys_iterator*)malloc(sizeof(l_bufr_keys_iterator));
-    Assert(the_new);
+    ECCODES_ASSERT(the_new);
     the_new->id    = myindex;
     the_new->i     = i;
     the_new->next  = current;
@@ -1020,7 +1020,7 @@ static int _push_iterator(grib_iterator *i)
 
     if(!iterator_set){
         iterator_set = (l_grib_iterator*)malloc(sizeof(l_grib_iterator));
-        Assert(iterator_set);
+        ECCODES_ASSERT(iterator_set);
         iterator_set->id   = myindex;
         iterator_set->i    = i;
         iterator_set->next = NULL;
@@ -1041,7 +1041,7 @@ static int _push_iterator(grib_iterator *i)
     }
 
     the_new = (l_grib_iterator*)malloc(sizeof(l_grib_iterator));
-    Assert(the_new);
+    ECCODES_ASSERT(the_new);
     the_new->id   = myindex;
     the_new->i    = i;
     the_new->next = current;
@@ -1281,7 +1281,7 @@ static int _codes_f_bufr_keys_iterator_new_(int* gid,int* iterid)
         *iterid=-1;
         return GRIB_NULL_HANDLE;
     }
-    Assert(h->product_kind==PRODUCT_BUFR);
+    ECCODES_ASSERT(h->product_kind==PRODUCT_BUFR);
     iter=codes_bufr_keys_iterator_new(h,0);
     if (iter)
         *iterid=push_bufr_keys_iterator(iter);
@@ -2218,14 +2218,21 @@ int grib_f_set_missing_(int* gid, char* key,int len)
     return grib_set_missing(h, cast_char(buf,key,len));
 }
 
-int grib_f_is_missing_(int* gid, char* key,int* isMissing,int len)
+int grib_f_is_missing_(int* gid, char* key, int* isMissing,int len)
 {
     int err=0;
     grib_handle *h = get_handle(*gid);
     char buf[1024];
-    if(!h)  return GRIB_INVALID_GRIB;
+    if (!h) return GRIB_INVALID_GRIB;
 
     *isMissing=grib_is_missing(h, cast_char(buf,key,len),&err);
+    return err;
+}
+
+int grib_f_grib_surface_type_requires_value_(int* edition, int* type_of_surface_code, int* requires_value)
+{
+    int err = 0;
+    *requires_value = codes_grib_surface_type_requires_value(*edition, *type_of_surface_code, &err);
     return err;
 }
 
@@ -2238,6 +2245,18 @@ int grib_f_is_defined_(int* gid, char* key,int* isDefined,int len)
 
     *isDefined=grib_is_defined(h, cast_char(buf,key,len));
     return GRIB_SUCCESS;
+}
+
+/*****************************************************************************/
+int grib_f_key_is_computed_(int* gid, char* key,int* isComputed,int len)
+{
+    int err = 0;
+    grib_handle *h = get_handle(*gid);
+    char buf[1024];
+    if (!h) return GRIB_INVALID_GRIB;
+
+    *isComputed = codes_key_is_computed(h, cast_char(buf,key,len), &err);
+    return err;
 }
 
 /*****************************************************************************/
@@ -2871,14 +2890,14 @@ int codes_f_bufr_multi_element_constant_arrays_off_(void)
 /*****************************************************************************/
 void grib_f_set_debug_(int* dmode)
 {
-    Assert(dmode);
+    ECCODES_ASSERT(dmode);
     grib_context* c = grib_context_get_default();
     grib_context_set_debug(c, *dmode);
 }
 /*****************************************************************************/
 void grib_f_set_data_quality_checks_(int* val)
 {
-    Assert(val);
+    ECCODES_ASSERT(val);
     grib_context* c = grib_context_get_default();
     grib_context_set_data_quality_checks(c, *val);
 }

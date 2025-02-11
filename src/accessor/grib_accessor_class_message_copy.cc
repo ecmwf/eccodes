@@ -20,9 +20,9 @@ void grib_accessor_message_copy_t::init(const long length, grib_arguments* args)
     length_ = 0;
 }
 
-void grib_accessor_message_copy_t::dump(grib_dumper* dumper)
+void grib_accessor_message_copy_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_string(dumper, this, NULL);
+    dumper->dump_string(this, NULL);
 }
 
 long grib_accessor_message_copy_t::get_native_type()

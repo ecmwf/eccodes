@@ -16,7 +16,7 @@
 #include "eccodes.h"
 #define NUM_THREADS 4
 
-void Assert(int condition)
+static void Assert(int condition)
 {
     if (!condition) {
         printf("Assertion failed\n");

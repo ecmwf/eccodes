@@ -20,22 +20,22 @@ void grib_accessor_closest_date_t::init(const long l, grib_arguments* c)
     grib_handle* h = grib_handle_of_accessor(this);
     int n          = 0;
 
-    dateLocal_    = grib_arguments_get_name(h, c, n++);
-    timeLocal_    = grib_arguments_get_name(h, c, n++);
-    numForecasts_ = grib_arguments_get_name(h, c, n++);
-    year_         = grib_arguments_get_name(h, c, n++);
-    month_        = grib_arguments_get_name(h, c, n++);
-    day_          = grib_arguments_get_name(h, c, n++);
-    hour_         = grib_arguments_get_name(h, c, n++);
-    minute_       = grib_arguments_get_name(h, c, n++);
-    second_       = grib_arguments_get_name(h, c, n++);
+    dateLocal_    = c->get_name(h, n++);
+    timeLocal_    = c->get_name(h, n++);
+    numForecasts_ = c->get_name(h, n++);
+    year_         = c->get_name(h, n++);
+    month_        = c->get_name(h, n++);
+    day_          = c->get_name(h, n++);
+    hour_         = c->get_name(h, n++);
+    minute_       = c->get_name(h, n++);
+    second_       = c->get_name(h, n++);
 
     length_ = 0;
 }
 
-void grib_accessor_closest_date_t::dump(grib_dumper* dumper)
+void grib_accessor_closest_date_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_string(dumper, this, NULL);
+    dumper->dump_string(this, NULL);
 }
 
 int grib_accessor_closest_date_t::unpack_long(long* val, size_t* len)
@@ -69,7 +69,7 @@ int grib_accessor_closest_date_t::unpack_double(double* val, size_t* len)
     *val                  = -1; /* initialise to an invalid index */
 
     if ((err = grib_get_long_internal(h, numForecasts_, &num_forecasts)) != GRIB_SUCCESS) return err;
-    Assert(num_forecasts > 1);
+    ECCODES_ASSERT(num_forecasts > 1);
 
     if ((err = grib_get_long(h, dateLocal_, &ymdLocal)) != GRIB_SUCCESS) return err;
     yearLocal = ymdLocal / 10000;
@@ -86,32 +86,32 @@ int grib_accessor_closest_date_t::unpack_double(double* val, size_t* len)
     secondLocal = hmsLocal;
 
     if ((err = grib_get_size(h, year_, &size)) != GRIB_SUCCESS) return err;
-    Assert(size == (size_t)num_forecasts);
+    ECCODES_ASSERT(size == (size_t)num_forecasts);
     yearArray = (long*)grib_context_malloc_clear(c, size * sizeof(long));
     if ((err = grib_get_long_array_internal(h, year_, yearArray, &size)) != GRIB_SUCCESS) return err;
 
     if ((err = grib_get_size(h, month_, &size)) != GRIB_SUCCESS) return err;
-    Assert(size == (size_t)num_forecasts);
+    ECCODES_ASSERT(size == (size_t)num_forecasts);
     monthArray = (long*)grib_context_malloc_clear(c, size * sizeof(long));
     if ((err = grib_get_long_array_internal(h, month_, monthArray, &size)) != GRIB_SUCCESS) return err;
 
     if ((err = grib_get_size(h, day_, &size)) != GRIB_SUCCESS) return err;
-    Assert(size == (size_t)num_forecasts);
+    ECCODES_ASSERT(size == (size_t)num_forecasts);
     dayArray = (long*)grib_context_malloc_clear(c, size * sizeof(long));
     if ((err = grib_get_long_array_internal(h, day_, dayArray, &size)) != GRIB_SUCCESS) return err;
 
     if ((err = grib_get_size(h, hour_, &size)) != GRIB_SUCCESS) return err;
-    Assert(size == (size_t)num_forecasts);
+    ECCODES_ASSERT(size == (size_t)num_forecasts);
     hourArray = (long*)grib_context_malloc_clear(c, size * sizeof(long));
     if ((err = grib_get_long_array_internal(h, hour_, hourArray, &size)) != GRIB_SUCCESS) return err;
 
     if ((err = grib_get_size(h, minute_, &size)) != GRIB_SUCCESS) return err;
-    Assert(size == (size_t)num_forecasts);
+    ECCODES_ASSERT(size == (size_t)num_forecasts);
     minuteArray = (long*)grib_context_malloc_clear(c, size * sizeof(long));
     if ((err = grib_get_long_array_internal(h, minute_, minuteArray, &size)) != GRIB_SUCCESS) return err;
 
     if ((err = grib_get_size(h, second_, &size)) != GRIB_SUCCESS) return err;
-    Assert(size == (size_t)num_forecasts);
+    ECCODES_ASSERT(size == (size_t)num_forecasts);
     secondArray = (long*)grib_context_malloc_clear(c, size * sizeof(long));
     if ((err = grib_get_long_array_internal(h, second_, secondArray, &size)) != GRIB_SUCCESS) return err;
 

@@ -20,12 +20,12 @@ void grib_accessor_bufr_simple_thinning_t::init(const long len, grib_arguments* 
     int n          = 0;
 
     length_                      = 0;
-    doExtractSubsets_            = grib_arguments_get_name(h, arg, n++);
-    numberOfSubsets_             = grib_arguments_get_name(h, arg, n++);
-    extractSubsetList_           = grib_arguments_get_name(h, arg, n++);
-    simpleThinningStart_         = grib_arguments_get_name(h, arg, n++);
-    simpleThinningMissingRadius_ = grib_arguments_get_name(h, arg, n++);
-    simpleThinningSkip_          = grib_arguments_get_name(h, arg, n++);
+    doExtractSubsets_            = arg->get_name(h, n++);
+    numberOfSubsets_             = arg->get_name(h, n++);
+    extractSubsetList_           = arg->get_name(h, n++);
+    simpleThinningStart_         = arg->get_name(h, n++);
+    simpleThinningMissingRadius_ = arg->get_name(h, n++);
+    simpleThinningSkip_          = arg->get_name(h, n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }

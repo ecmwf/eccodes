@@ -36,14 +36,14 @@ void grib_accessor_unsigned_t::init(const long len, grib_arguments* arg)
     }
 }
 
-void grib_accessor_unsigned_t::dump(grib_dumper* dumper)
+void grib_accessor_unsigned_t::dump(eccodes::Dumper* dumper)
 {
     long rlen = 0;
     value_count(&rlen);
     if (rlen == 1)
-        grib_dump_long(dumper, this, NULL);
+        dumper->dump_long(this, NULL);
     else
-        grib_dump_values(dumper, this);
+        dumper->dump_values(this);
 }
 
 static const unsigned long ones[] = {
@@ -78,7 +78,7 @@ int grib_accessor_unsigned_t::pack_long_unsigned_helper(const long* val, size_t*
         return err;
 
     if (flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) {
-        Assert(nbytes_ <= 4);
+        ECCODES_ASSERT(nbytes_ <= 4);
         missing = ones[nbytes_];
     }
 
@@ -146,7 +146,7 @@ int grib_accessor_unsigned_t::pack_long_unsigned_helper(const long* val, size_t*
     for (i = 0; i < *len; i++)
         grib_encode_unsigned_long(buf, val[i], &off, nbytes_ * 8);
 
-    ret = grib_set_long_internal(grib_handle_of_accessor(this), grib_arguments_get_name(parent_->h, arg_, 0), *len);
+    ret = grib_set_long_internal(grib_handle_of_accessor(this), arg_->get_name(parent_->h, 0), *len);
 
     if (ret == GRIB_SUCCESS)
         grib_buffer_replace(this, buf, buflen, 1, 1);
@@ -185,7 +185,7 @@ int grib_accessor_unsigned_t::unpack_long(long* val, size_t* len)
     }
 
     if (flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) {
-        Assert(nbytes_ <= 4);
+        ECCODES_ASSERT(nbytes_ <= 4);
         missing = ones[nbytes_];
     }
 
@@ -217,7 +217,7 @@ int grib_accessor_unsigned_t::value_count(long* len)
         *len = 1;
         return 0;
     }
-    return grib_get_long_internal(grib_handle_of_accessor(this), grib_arguments_get_name(parent_->h, arg_, 0), len);
+    return grib_get_long_internal(grib_handle_of_accessor(this), arg_->get_name(parent_->h, 0), len);
 }
 
 long grib_accessor_unsigned_t::byte_offset()
@@ -242,7 +242,7 @@ int grib_accessor_unsigned_t::is_missing()
     const grib_handle* hand = grib_handle_of_accessor(this);
 
     if (length_ == 0) {
-        Assert(vvalue_ != NULL);
+        ECCODES_ASSERT(vvalue_ != NULL);
         return vvalue_->missing;
     }
 

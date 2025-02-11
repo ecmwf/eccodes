@@ -18,9 +18,9 @@ void grib_accessor_budgdate_t::init(const long l, grib_arguments* c)
     grib_accessor_long_t::init(l, c);
     int n = 0;
 
-    year_  = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    month_ = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
-    day_   = grib_arguments_get_name(grib_handle_of_accessor(this), c, n++);
+    year_  = c->get_name(grib_handle_of_accessor(this), n++);
+    month_ = c->get_name(grib_handle_of_accessor(this), n++);
+    day_   = c->get_name(grib_handle_of_accessor(this), n++);
 }
 
 int grib_accessor_budgdate_t::unpack_long(long* val, size_t* len)
@@ -67,7 +67,7 @@ int grib_accessor_budgdate_t::pack_long(const long* val, size_t* len)
 
     year -= 1900;
 
-    Assert(year < 255);
+    ECCODES_ASSERT(year < 255);
 
     if ((ret = grib_set_long_internal(grib_handle_of_accessor(this), day_, day)) != GRIB_SUCCESS)
         return ret;

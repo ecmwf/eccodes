@@ -11,7 +11,7 @@
 #pragma once
 
 #include "grib_accessor_class_gen.h"
-#include "geo_iterator/grib_iterator.h"
+#include "geo/iterator/grib_iterator.h"
 
 class grib_accessor_iterator_t : public grib_accessor_gen_t
 {
@@ -20,7 +20,7 @@ public:
         grib_accessor_gen_t() { class_name_ = "iterator"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_iterator_t{}; }
     void init(const long l, grib_arguments* args) override;
-    void dump(grib_dumper* dumper) override;
+    void dump(eccodes::Dumper* dumper) override;
 
 private:
     grib_arguments* args_ = nullptr;

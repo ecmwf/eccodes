@@ -29,11 +29,6 @@ transient masterDir="grib2/tables/[tablesVersion]";
 if (tablesVersion > tablesVersionLatest) {
   transient masterDir="grib2/tables/[tablesVersionLatest]";
 }
-when (tablesVersion!=255) {
-  set masterDir="grib2/tables/[tablesVersion]";
-} else {
-  set masterDir="grib2/tables/4";
-}
 
 codetable[1] localTablesVersion 'grib2/tables/local/[centreForLocal]/1.1.table' ;
 alias versionNumberOfGribLocalTables=localTablesVersion;
@@ -95,6 +90,7 @@ concept stepType {
     "sum"     = {selectStepTemplateInterval=1; stepTypeInternal="sum";}
     "severity" = {selectStepTemplateInterval=1; stepTypeInternal="severity";}
     "mode"    = {selectStepTemplateInterval=1; stepTypeInternal="mode";}
+    "index"   = {selectStepTemplateInterval=1; stepTypeInternal="index";}
 }
 
 # 0=atmospheric chemical constituents
@@ -122,11 +118,8 @@ constant conceptsMasterDir="grib2" : hidden;
 constant conceptsLocalDirAll="grib2/localConcepts/[centre:s]" : hidden;
 constant conceptsLocalDirECMF="grib2/localConcepts/ecmf" : hidden;
 
-# ECC-806: Local concepts precedence order
-if (preferLocalConcepts) {
-  constant conceptsDir1 = conceptsMasterDir : hidden;
-  constant conceptsDir2 = conceptsLocalDirAll : hidden;
-} else {
-  constant conceptsDir1 = conceptsLocalDirAll : hidden;
-  constant conceptsDir2 = conceptsMasterDir : hidden;
-}
+# Note: datasetForLocal is defined later in section 4
+meta conceptsDir1 g2_concept_dir(preferLocalConcepts, conceptsMasterDir, conceptsLocalDirAll, datasetForLocal, 1);
+meta conceptsDir2 g2_concept_dir(preferLocalConcepts, conceptsMasterDir, conceptsLocalDirAll, datasetForLocal, 2);
+
+meta eps g2_eps(productDefinitionTemplateNumber, type, stream, stepType, derivedForecast);
