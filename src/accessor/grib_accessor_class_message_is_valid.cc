@@ -51,6 +51,46 @@ int grib_accessor_message_is_valid_t::check_field_values()
     return GRIB_SUCCESS;
 }
 
+int grib_accessor_message_is_valid_t::check_number_of_missing()
+{
+    if (edition_ != 2) return GRIB_SUCCESS;
+
+    int err = 0;
+    long isGridded = -1;
+    err = grib_get_long_internal(handle_, "isGridded", &isGridded);
+    if (!err && isGridded == 0)
+        return GRIB_SUCCESS; // Must be spectral. Nothing to do here
+
+    long missingValueManagementUsed = -1;
+    err = grib_get_long(handle_, "missingValueManagementUsed", &missingValueManagementUsed);
+    if (!err && missingValueManagementUsed == 1)
+        return GRIB_SUCCESS; // These oddities do not store missing values in the bitmap
+
+    char packing_type[100] = {0,};
+    size_t len = sizeof(packing_type);
+    err = grib_get_string(handle_, "packingType", packing_type, &len);
+    if (!err && STR_EQUAL(packing_type, "grid_run_length"))
+        return GRIB_SUCCESS; // These oddities do not store missing values in the bitmap
+
+    long numberOfDataPoints = 0;
+    if ((err = grib_get_long_internal(handle_, "numberOfDataPoints", &numberOfDataPoints)) != GRIB_SUCCESS)
+        return err;
+    long numberOfCodedValues = 0;
+    if ((err = grib_get_long_internal(handle_, "numberOfCodedValues", &numberOfCodedValues)) != GRIB_SUCCESS)
+        return err;
+    long numberOfMissing = 0;
+    if ((err = grib_get_long_internal(handle_, "numberOfMissing", &numberOfMissing)) != GRIB_SUCCESS)
+        return err;
+
+    if (numberOfCodedValues + numberOfMissing != numberOfDataPoints) {
+        grib_context_log(context_, GRIB_LOG_ERROR,
+                "%s: numberOfCodedValues + numberOfMissing != numberOfDataPoints (%ld + %ld != %ld)",
+                TITLE, numberOfCodedValues, numberOfMissing, numberOfDataPoints);
+        return GRIB_INVALID_MESSAGE;
+    }
+    return GRIB_SUCCESS;
+}
+
 int grib_accessor_message_is_valid_t::check_grid_pl_array()
 {
     grib_context_log(handle_->context, GRIB_LOG_DEBUG, "%s: %s", TITLE, __func__);
@@ -354,7 +394,8 @@ int grib_accessor_message_is_valid_t::unpack_long(long* val, size_t* len)
         &grib_accessor_message_is_valid_t::check_7777,
         &grib_accessor_message_is_valid_t::check_namespace_keys,
         &grib_accessor_message_is_valid_t::check_surface_keys,
-        &grib_accessor_message_is_valid_t::check_parameter
+        &grib_accessor_message_is_valid_t::check_parameter,
+        &grib_accessor_message_is_valid_t::check_number_of_missing
     };
 
     int err = 0;

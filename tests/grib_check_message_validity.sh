@@ -138,5 +138,12 @@ grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "Data section size mismatch" $tempText
 
 
+# Check number of values, missing etc
+# -----------------------------------
+${tools_dir}/grib_set -s values=5,numberOfDataPoints=55 $data_dir/sample.grib2 $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "numberOfCodedValues + numberOfMissing != numberOfDataPoints" $tempText
+
+
 # Clean up
 rm -f $tempGrib $tempText $tempFilt
