@@ -61,9 +61,9 @@ static struct table_entry table[] = {
     {"bufr_simple",&grib_dumper_bufr_simple,},
     {"debug",&grib_dumper_debug,},
     {"default",&grib_dumper_default,},
-    {"grib_encode_c",&grib_dumper_grib_encode_c,},
+    {"grib_encode_C",&grib_dumper_grib_encode_c,},
     {"json",&grib_dumper_json,},
-    {"serialize",&grib_dumper_serialize,},
+    // {"serialize",&grib_dumper_serialize,},
     {"wmo",&grib_dumper_wmo,},
 };
 
@@ -93,7 +93,7 @@ eccodes::Dumper* grib_dumper_factory(const char* op, const grib_handle* h, FILE*
 
 void grib_dump_content(const grib_handle* h, FILE* f, const char* mode, unsigned long flags, void* data)
 {
-    eccodes::Dumper* dumper = grib_dumper_factory(mode ? mode : "serialize", h, f, flags, data);
+    eccodes::Dumper* dumper = grib_dumper_factory(mode ? mode : "default", h, f, flags, data);
     if (!dumper) {
         fprintf(stderr, "Here are some possible values for the dumper mode:\n");
         const size_t num_table_entries = sizeof(table) / sizeof(table[0]);
@@ -148,11 +148,10 @@ int grib_print(grib_handle* h, const char* name, eccodes::Dumper* d)
     return GRIB_NOT_FOUND;
 }
 
-
 void grib_dump_keys(grib_handle* h, FILE* f, const char* mode, unsigned long flags, void* data, const char** keys, size_t num_keys)
 {
-    grib_accessor* acc      = NULL;
-    eccodes::Dumper* dumper = grib_dumper_factory(mode ? mode : "serialize", h, f, flags, data);
+    grib_accessor* acc  = NULL;
+    eccodes::Dumper* dumper = grib_dumper_factory(mode ? mode : "default", h, f, flags, data);
     if (!dumper)
         return;
     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
@@ -176,7 +175,8 @@ eccodes::Dumper* grib_dump_content_with_dumper(grib_handle* h, eccodes::Dumper* 
         count++;
         // dumper->destroy();
     }
-    dumper = grib_dumper_factory(mode ? mode : "serialize", h, f, flags, data);
+
+    dumper = grib_dumper_factory(mode ? mode : "default", h, f, flags, data);
     if (!dumper)
         return NULL;
     dumper->count(count);
@@ -191,7 +191,8 @@ void codes_dump_bufr_flat(grib_accessors_list* al, grib_handle* h, FILE* f, cons
 {
     eccodes::Dumper* dumper = NULL;
     ECCODES_ASSERT(h->product_kind == PRODUCT_BUFR);
-    dumper = grib_dumper_factory(mode ? mode : "serialize", h, f, flags, data);
+
+    dumper = grib_dumper_factory(mode ? mode : "default", h, f, flags, data);
     if (!dumper)
         return;
     dumper->header(h);

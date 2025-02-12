@@ -21,7 +21,7 @@ class grib_accessor_gen_t : public grib_accessor
 public:
     grib_accessor_gen_t() :
         grib_accessor{} { class_name_ = "gen"; }
-    ~grib_accessor_gen_t();
+    ~grib_accessor_gen_t() override;
 
     void init_accessor(const long, grib_arguments*) override;  // TODO: Implement
     grib_accessor* create_empty_accessor() override { return new grib_accessor_gen_t{}; }
