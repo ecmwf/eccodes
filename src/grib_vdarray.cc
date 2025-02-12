@@ -16,7 +16,7 @@ void grib_vdarray_print(const char* title, const grib_vdarray* vdarray)
     size_t i = 0;
     char text[100] = {0,};
     ECCODES_ASSERT(vdarray);
-    printf("%s: vdarray.n=%zu\n", title, vdarray->n);
+    printf("%s: vdarray.size=%zu  vdarray.n=%zu\n", title, vdarray->size, vdarray->n);
     for (i = 0; i < vdarray->n; i++) {
         snprintf(text, sizeof(text), " vdarray->v[%zu]", i);
         grib_darray_print(text, vdarray->v[i]);

@@ -200,5 +200,13 @@ if [ $HAVE_JPEG -eq 1 ]; then
   ${tools_dir}/grib_compare -c data:n $outfile1 $outfile2
 fi
 
+# ECC-2021: CCSDS packing should not be applied to spectral fields
+infile=$ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl
+grib_check_key_equals $infile isSpectral,isGridded '1 0'
+ECCODES_DEBUG=-1 ${tools_dir}/grib_set -s packingType=grid_ccsds $infile $outfile1 >$logfile 2>&1
+${tools_dir}/grib_compare $infile $outfile1
+grep -q "CCSDS packing does not apply to spectral fields" $logfile
+
+
 # Clean up
 rm -f $outfile1 $outfile2 $logfile

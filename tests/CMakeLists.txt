@@ -197,6 +197,7 @@ if( HAVE_BUILD_TOOLS )
         grib_count
         grib_clone_headers_only
         grib_ifsParam
+        filter_dump_content
         wmo_read_bufr_from_file
         wmo_read_gts_from_file
         wmo_read_any_from_file

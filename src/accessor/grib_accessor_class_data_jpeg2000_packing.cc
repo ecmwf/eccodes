@@ -352,8 +352,6 @@ int grib_accessor_data_jpeg2000_packing_t::pack_double(const double* cval, size_
                                  class_name_, __func__, type_of_compression_used, target_compression_ratio_);
                 return GRIB_ENCODING_ERROR;
             }
-            ECCODES_ASSERT(target_compression_ratio != 255);
-            ECCODES_ASSERT(target_compression_ratio != 0);
             helper.compression = target_compression_ratio;
             break;
 
