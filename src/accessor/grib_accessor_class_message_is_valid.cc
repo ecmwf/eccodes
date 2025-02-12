@@ -59,18 +59,20 @@ int grib_accessor_message_is_valid_t::check_number_of_missing()
     long isGridded = -1;
     err = grib_get_long_internal(handle_, "isGridded", &isGridded);
     if (!err && isGridded == 0)
-        return GRIB_SUCCESS; // Must be spectral. Nothing to do here
+        return GRIB_SUCCESS; // Spectral data does not have missing field values
 
+    // Some packing types like grid_complex and run length encoding
+    // do not store missing values in the bitmap
     long missingValueManagementUsed = -1;
     err = grib_get_long(handle_, "missingValueManagementUsed", &missingValueManagementUsed);
     if (!err && missingValueManagementUsed == 1)
-        return GRIB_SUCCESS; // These oddities do not store missing values in the bitmap
+        return GRIB_SUCCESS;
 
     char packing_type[100] = {0,};
     size_t len = sizeof(packing_type);
     err = grib_get_string(handle_, "packingType", packing_type, &len);
     if (!err && STR_EQUAL(packing_type, "grid_run_length"))
-        return GRIB_SUCCESS; // These oddities do not store missing values in the bitmap
+        return GRIB_SUCCESS;
 
     long numberOfDataPoints = 0;
     if ((err = grib_get_long_internal(handle_, "numberOfDataPoints", &numberOfDataPoints)) != GRIB_SUCCESS)
@@ -374,7 +376,7 @@ int grib_accessor_message_is_valid_t::check_parameter()
         err = grib_get_long_internal(handle_, "paramId", &paramId);
         if (err) return err;
         if (paramId == 0) {
-            grib_context_log(handle_->context, GRIB_LOG_ERROR, "%s: Key paramId is 0 (parameter is not mapped)", TITLE);
+            grib_context_log(handle_->context, GRIB_LOG_ERROR, "%s: paramId is 0 (parameter is not mapped)", TITLE);
             return GRIB_INVALID_MESSAGE;
         }
     }
@@ -386,16 +388,16 @@ int grib_accessor_message_is_valid_t::unpack_long(long* val, size_t* len)
 {
     typedef int (grib_accessor_message_is_valid_t::*check_func)();
     static check_func check_functions[] = {
-        &grib_accessor_message_is_valid_t::check_sections,
         &grib_accessor_message_is_valid_t::check_field_values,
+        &grib_accessor_message_is_valid_t::check_number_of_missing,
         &grib_accessor_message_is_valid_t::check_grid_pl_array,
         &grib_accessor_message_is_valid_t::check_geoiterator,
-        &grib_accessor_message_is_valid_t::check_steps,
         &grib_accessor_message_is_valid_t::check_7777,
-        &grib_accessor_message_is_valid_t::check_namespace_keys,
         &grib_accessor_message_is_valid_t::check_surface_keys,
+        &grib_accessor_message_is_valid_t::check_steps,
+        &grib_accessor_message_is_valid_t::check_namespace_keys,
+        &grib_accessor_message_is_valid_t::check_sections,
         &grib_accessor_message_is_valid_t::check_parameter,
-        &grib_accessor_message_is_valid_t::check_number_of_missing
     };
 
     int err = 0;
