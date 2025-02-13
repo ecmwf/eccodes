@@ -32,6 +32,7 @@ private:
     int check_namespace_keys();
     int check_sections();
     int check_parameter();
+    int check_number_of_missing();
 
 private:
     const char* product_ = nullptr;

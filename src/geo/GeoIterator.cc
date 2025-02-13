@@ -8,11 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-
 #include "geo/GeoIterator.h"
-
 #include "eckit/geo/Exceptions.h"
-
 #include "geo/GribSpec.h"
 
 
@@ -21,7 +18,10 @@ namespace eccodes::geo_iterator
 
 
 GeoIterator::GeoIterator(grib_handle* h, unsigned long flags) :
-    spec_(new eccodes::geo::GribSpec(h)), grid_(eckit::geo::GridFactory::build(*spec_)), iter_(grid_->make_next_iterator()), point_(eckit::geo::PointLonLat{})
+    spec_(new eccodes::geo::GribSpec(h)),
+    grid_(eckit::geo::GridFactory::build(*spec_)),
+    iter_(grid_->make_next_iterator()),
+    point_(eckit::geo::PointLonLat{})
 {
     h_          = h;
     class_name_ = "geo_iterator";
@@ -78,12 +78,10 @@ int GeoIterator::next(double* lat, double* lon, double* val) const
     return 0;  // (false)
 }
 
-
 int GeoIterator::previous(double*, double*, double*) const
 {
     return GRIB_NOT_IMPLEMENTED;
 }
-
 
 int GeoIterator::reset()
 {
@@ -91,24 +89,20 @@ int GeoIterator::reset()
     return GRIB_SUCCESS;
 }
 
-
 int GeoIterator::destroy()
 {
     grib_context_free(h_->context, data_);
     return Iterator::destroy();
 }
 
-
 bool GeoIterator::has_next() const
 {
     return iter_->has_next();
 }
 
-
 Iterator* GeoIterator::create() const
 {
     return new GeoIterator{ h_, flags_ };
 }
-
 
 }  // namespace eccodes::geo_iterator

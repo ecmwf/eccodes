@@ -152,7 +152,7 @@ static int str_eq(const char* a, const char* b)
 #ifdef DEBUGGING
 static void dump_codetable(grib_codetable* atable)
 {
-    grib_codetable* next = NULL;
+    const grib_codetable* next = NULL;
     int count            = 0;
 
     next = atable;
@@ -377,7 +377,10 @@ static int grib_load_codetable(grib_context* c, const char* filename,
         string_rtrim(title); /* ECC-1315 */
 
         if (t->entries[code].abbreviation != NULL) {
-            grib_context_log(c, GRIB_LOG_WARNING, "code_table_entry: duplicate code in %s: %d (table size=%ld)", filename, code, size);
+            // This can happen if in a file with the same name, we have the same code e.g.,
+            // definitions/grib2/tables/2/4.5.table
+            // definitions/grib2/tables/local/kwbc/1/4.5.table
+            //grib_context_log(c, GRIB_LOG_WARNING, "code_table_entry: duplicate code in %s: %d (table size=%ld)", filename, code, size);
             continue;
         }
 
@@ -509,7 +512,7 @@ int codes_codetable_check_abbreviation(const grib_handle* h, const char* key, co
 void grib_accessor_codetable_t::dump(eccodes::Dumper* dumper)
 {
     char comment[2048];
-    grib_codetable* table;
+    const grib_codetable* table;
 
     size_t llen = 1;
     long value;
