@@ -416,8 +416,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     if (grib_options_on("S:")) {
         long numberOfSubsets = 0, subsetNumber = 0;
-        char* str = grib_options_get_option("S:");
-        err       = grib_get_long(h, "numberOfSubsets", &numberOfSubsets);
+        const char* str = grib_options_get_option("S:");
+        err = grib_get_long(h, "numberOfSubsets", &numberOfSubsets);
         if (err) {
             fprintf(stderr, "%s: Failed to get numberOfSubsets.\n", tool_name);
             exit(1);

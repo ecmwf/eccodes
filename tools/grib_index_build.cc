@@ -106,9 +106,9 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
-    grib_index_key* the_keys;
-    grib_string_list* values;
-    int first;
+    const grib_index_key* the_keys = 0;
+    const grib_string_list* values = 0;
+    bool first = true;
     int err = 0;
 
     if (compress_index) {
@@ -118,26 +118,26 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     printf("--- %s: keys included in the index file %s:\n",
            tool_name, options->outfile->name);
     printf("--- ");
-    first    = 1;
+
     the_keys = idx->keys;
     while (the_keys) {
         if (!first)
             printf(", ");
         printf("%s", the_keys->name);
         the_keys = the_keys->next;
-        first    = 0;
+        first    = false;
     }
     printf("\n");
     the_keys = idx->keys;
     while (the_keys) {
         printf("--- %s = { ", the_keys->name);
         values = the_keys->values;
-        first  = 1;
+        first  = true;
         while (values) {
             if (!first)
                 printf(", ");
             printf("%s", values->value);
-            first  = 0;
+            first  = false;
             values = values->next;
         }
         printf(" }\n");
@@ -149,7 +149,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
         grib_index_write(idx, options->outfile->name);
 
     // See ECC-2006
-    grib_context* c = grib_context_get_default();
+    const grib_context* c = grib_context_get_default();
     if (c->debug) grib_file_pool_print("ECCODES DEBUG file_pool before grib_index_delete", stderr);
     grib_index_delete(idx);
     if (c->debug) grib_file_pool_print("ECCODES DEBUG file_pool after grib_index_delete", stderr);
