@@ -129,8 +129,8 @@ if [ -f "$latest_codetable_file" ]; then
   gtypes=$( awk '$1 !~ /#/ && $1 < 65000 {print $1}' $latest_codetable_file )
   for gt in $gtypes; do
     # echo "Doing $gt "
-    grib_set -s tablesVersion=$latestOfficial,gridDefinitionTemplateNumber=$gt $sample2 $tempGrib
-    grib_get -p isGridded,gridDefinitionDescription $tempGrib
+    ${tools_dir}/grib_set -s tablesVersion=$latestOfficial,gridDefinitionTemplateNumber=$gt $sample2 $tempGrib
+    ${tools_dir}/grib_get -p isGridded,gridDefinitionDescription $tempGrib
   done
 fi
 
