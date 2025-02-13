@@ -15,7 +15,7 @@ void grib_darray_print(const char* title, const grib_darray* darray)
 {
     size_t i;
     ECCODES_ASSERT(darray);
-    printf("%s: darray.n=%zu  \t", title, darray->n);
+    printf("%s: darray.size=%zu  darray.n=%zu  \t", title, darray->size, darray->n);
     for (i = 0; i < darray->n; i++) {
         printf("darray[%zu]=%g\t", i, darray->v[i]);
     }

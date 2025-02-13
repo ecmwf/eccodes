@@ -1279,6 +1279,10 @@ int encode_element(grib_context* c, grib_accessor_bufr_data_array_t* self, int s
                  bd->shortName,csval); */
         if (self->compressedData_) {
             idx = ((int)self->numericValues_->v[elementIndex]->v[0] / 1000 - 1) / self->numberOfSubsets_;
+            if (idx >= self->stringValues_->size) { // ECC-2024: BUFR: Repeated subset extraction segfaults
+                grib_context_log(c, GRIB_LOG_ERROR, "encode_element '%s': Invalid index %d", bd->shortName, idx);
+                return GRIB_INTERNAL_ERROR;
+            }
             err = self->encode_string_array(c, buff, pos, bd, self->stringValues_->v[idx]);
         }
         else {

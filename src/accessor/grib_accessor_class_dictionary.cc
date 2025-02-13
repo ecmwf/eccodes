@@ -36,7 +36,7 @@ grib_trie* grib_accessor_dictionary_t::load_dictionary(int* err)
     char masterDir[1024] = {0,};
     char localDir[1024] = {0,};
     char dictName[1024] = {0,};
-    char* localFilename   = 0;
+    const char* localFilename   = 0;
     char* list            = 0;
     size_t len            = 1024;
     grib_trie* dictionary = NULL;

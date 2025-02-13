@@ -17,6 +17,7 @@
 grib_accessor_data_simple_packing_t _grib_accessor_data_simple_packing{};
 grib_accessor* grib_accessor_data_simple_packing = &_grib_accessor_data_simple_packing;
 
+
 void grib_accessor_data_simple_packing_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_values_t::init(v, args);
@@ -473,7 +474,7 @@ int grib_accessor_data_simple_packing_t::pack_double(const double* val, size_t* 
     double range                  = 0;
     double minrange = 0, maxrange = 0;
     long changing_precision = 0;
-    grib_context* c         = context_;
+    const grib_context* c   = context_;
 
     decimal_scale_factor = 0;
 

@@ -369,7 +369,8 @@ static grib_context default_grib_context = {
     0,              /* bufr_multi_element_constant_arrays */
     0,              /* grib_data_quality_checks   */
     0,              /* single_precision           */
-    0,              /* eckit_geo             */
+    0,              /* enable_warnings            */
+    0,              /* eckit_geo                  */
     0,              /* log_stream                 */
     0,              /* classes                    */
     0,              /* lists                      */
@@ -407,6 +408,7 @@ grib_context* grib_context_get_default()
         const char* bufr_multi_element_constant_arrays  = NULL;
         const char* grib_data_quality_checks            = NULL;
         const char* single_precision                    = NULL;
+        const char* enable_warnings                     = NULL;
         const char* eckit_geo                           = NULL;
         const char* file_pool_max_opened_files          = NULL;
 
@@ -419,6 +421,7 @@ grib_context* grib_context_get_default()
         bufr_multi_element_constant_arrays  = getenv("ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS");
         grib_data_quality_checks            = getenv("ECCODES_GRIB_DATA_QUALITY_CHECKS");
         single_precision                    = getenv("ECCODES_SINGLE_PRECISION");
+        enable_warnings                     = getenv("ECCODES_ENABLE_WARNINGS");
         file_pool_max_opened_files          = getenv("ECCODES_FILE_POOL_MAX_OPENED_FILES");
         eckit_geo                           = getenv("ECCODES_ECKIT_GEO");
         // The following had an equivalent env. var in grib_api
@@ -568,6 +571,7 @@ grib_context* grib_context_get_default()
         default_grib_context.bufr_multi_element_constant_arrays = bufr_multi_element_constant_arrays ? atoi(bufr_multi_element_constant_arrays) : 0;
         default_grib_context.grib_data_quality_checks = grib_data_quality_checks ? atoi(grib_data_quality_checks) : 0;
         default_grib_context.single_precision = single_precision ? atoi(single_precision) : 0;
+        default_grib_context.enable_warnings = enable_warnings ? atoi(enable_warnings) : 0;
         default_grib_context.eckit_geo = eckit_geo ? atoi(eckit_geo) : 0;
         default_grib_context.file_pool_max_opened_files = file_pool_max_opened_files ? atoi(file_pool_max_opened_files) : DEFAULT_FILE_POOL_MAX_OPENED_FILES;
     }
@@ -1043,7 +1047,7 @@ void grib_context_log(const grib_context* c, int level, const char* fmt, ...)
 {
     /* Save some CPU */
     if ((level == GRIB_LOG_DEBUG && c->debug < 1) ||
-        (level == GRIB_LOG_WARNING && c->debug < 2)) {
+        (level == GRIB_LOG_WARNING && !c->enable_warnings)) {
         return;
     }
     else {

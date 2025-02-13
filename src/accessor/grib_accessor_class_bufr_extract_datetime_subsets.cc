@@ -276,7 +276,7 @@ int grib_accessor_bufr_extract_datetime_subsets_t::select_datetime()
         goto cleanup;
     }
 
-    if (julianEnd <= julianStart) {
+    if (julianEnd < julianStart) {
         grib_context_log(c, GRIB_LOG_ERROR, "Wrong definition of time interval: end (%s) is not after start (%s)", end_str, start_str);
         ret = GRIB_INTERNAL_ERROR;
         goto cleanup;

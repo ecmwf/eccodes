@@ -281,7 +281,6 @@ list( APPEND eccodes_src_files
     accessor/grib_accessor_class_reference_value_error.cc
     grib_memory.cc
     grib_buffer.cc
-    dumper/grib_dumper_class_serialize.cc
     dumper/grib_dumper_class_debug.cc
     dumper/grib_dumper_class_default.cc
     dumper/grib_dumper_class_bufr_encode_C.cc
