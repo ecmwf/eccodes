@@ -139,9 +139,6 @@ grib2_gridded_types="
   lambert_lam
   mercator_lam
   polar_stereographic_lam
-  lambert_bf
-  mercator_bf
-  polar_stereographic_bf
   healpix
 "
 grib2_spectral_types="
@@ -149,6 +146,9 @@ grib2_spectral_types="
   rotated_sh
   stretched_sh
   stretched_rotated_sh
+  lambert_bf
+  mercator_bf
+  polar_stereographic_bf
 "
 
 sample1_gridded=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
