@@ -22,6 +22,7 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
+    int check_grid_and_packing_type();
     int check_field_values();
     int check_grid_pl_array();
     int check_geoiterator();
