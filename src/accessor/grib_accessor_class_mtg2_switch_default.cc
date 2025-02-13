@@ -20,10 +20,11 @@ void grib_accessor_mtg2_switch_default_t::init(const long len, grib_arguments* a
     grib_handle* h = grib_handle_of_accessor(this);
 
     if (context_->debug) {
-        const int numArgs = arg->get_count();
-        if (numArgs != 4) {
-            grib_context_log(context_, GRIB_LOG_FATAL, "Accessor %s (key %s): %d arguments provided but expected 4",
-                            class_name_, name_, numArgs);
+        const int numActualArgs   = arg->get_count();
+        const int numExpectedArgs = 4;
+        if (numActualArgs != numExpectedArgs) {
+            grib_context_log(context_, GRIB_LOG_FATAL, "Accessor %s (key %s): %d arguments provided but expected %d",
+                             class_name_, name_, numActualArgs, numExpectedArgs);
         }
     }
 
@@ -113,5 +114,5 @@ int grib_accessor_mtg2_switch_default_t::unpack_long(long* val, size_t* len)
         *val = 1;  // Post-MTG2
     }
 
-    return err;
+    return GRIB_SUCCESS;
 }
