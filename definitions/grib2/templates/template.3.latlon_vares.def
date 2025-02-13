@@ -1,5 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
+constant isGridded = true;
+
 # Variable resolution latitude/longitude
 unsigned[4] Ni : dump;
 alias numberOfPointsAlongAParallel=Ni;
