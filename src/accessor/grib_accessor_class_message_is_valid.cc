@@ -48,7 +48,9 @@ int grib_accessor_message_is_valid_t::check_grid_and_packing_type()
                                       STR_EQUAL(packing_type, "spectral_simple") ||
                                       STR_EQUAL(packing_type, "bifourier_complex"));
 
-    if (is_spectral_grid && !is_spectral_packing) {
+    if ( (is_spectral_grid && !is_spectral_packing) ||
+         (!is_spectral_grid && is_spectral_packing) )
+    {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Mismatch between gridType (=%s) and packingType (=%s)",
                          TITLE, gridType, packing_type);
