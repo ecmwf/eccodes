@@ -114,5 +114,5 @@ int grib_accessor_mtg2_switch_default_t::unpack_long(long* val, size_t* len)
         *val = 1;  // Post-MTG2
     }
 
-    return err;
+    return GRIB_SUCCESS;
 }

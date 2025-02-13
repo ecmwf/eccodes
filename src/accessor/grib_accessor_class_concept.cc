@@ -325,7 +325,7 @@ static void print_user_friendly_message(grib_handle* h, const char* name, grib_c
     char centre_s[32] = {0,};
     size_t centre_len = sizeof(centre_s);
     char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {NULL,}; // sorted array containing concept values
-    grib_concept_value* pCon = concepts;
+    const grib_concept_value* pCon = concepts;
 
     grib_context_log(h->context, GRIB_LOG_ERROR, "concept: no match for %s=%s", act->name_, name);
     if (grib_get_long(h, "edition", &editionNumber) == GRIB_SUCCESS &&
