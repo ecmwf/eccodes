@@ -152,7 +152,7 @@ static int str_eq(const char* a, const char* b)
 #ifdef DEBUGGING
 static void dump_codetable(grib_codetable* atable)
 {
-    grib_codetable* next = NULL;
+    const grib_codetable* next = NULL;
     int count            = 0;
 
     next = atable;
@@ -512,7 +512,7 @@ int codes_codetable_check_abbreviation(const grib_handle* h, const char* key, co
 void grib_accessor_codetable_t::dump(eccodes::Dumper* dumper)
 {
     char comment[2048];
-    grib_codetable* table;
+    const grib_codetable* table;
 
     size_t llen = 1;
     long value;

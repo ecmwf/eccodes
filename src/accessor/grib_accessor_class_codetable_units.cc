@@ -31,7 +31,7 @@ long grib_accessor_codetable_units_t::get_native_type()
 
 int grib_accessor_codetable_units_t::unpack_string(char* buffer, size_t* len)
 {
-    grib_codetable* table = NULL;
+    const grib_codetable* table = NULL;
 
     size_t size = 1;
     long value;

@@ -35,8 +35,8 @@ int main(int argc, char* argv[])
     const char* resource_name  = NULL;
     ResourceType resource_type = UNKNOWN;
     char* full_path            = NULL;
-    char* out_file             = NULL;
-    char* option               = NULL;
+    const char* out_file       = NULL;
+    const char* option         = NULL;
     grib_context* c            = grib_context_get_default();
     FILE* fin                  = NULL;
     FILE* fout                 = NULL;
