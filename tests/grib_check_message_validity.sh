@@ -116,6 +116,12 @@ grep -q "Invalid Ni" $tempText
 grib_check_key_equals $tempGrib isMessageValid 0
 grib_check_key_equals $sample   isMessageValid 1
 
+# Check gridType and packingType
+# ------------------------------
+${tools_dir}/grib_set -s packingType=grid_simple $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "Mismatch between gridType .* and packingType" $tempText
+
 
 # Check reduced Gaussian grid pl
 # ------------------------------

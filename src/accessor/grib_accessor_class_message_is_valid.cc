@@ -28,6 +28,38 @@ void grib_accessor_message_is_valid_t::init(const long l, grib_arguments* arg)
     length_ = 0;
 }
 
+int grib_accessor_message_is_valid_t::check_grid_and_packing_type()
+{
+    char gridType[128] = {0,};
+    size_t len = sizeof(gridType);
+    int err = grib_get_string_internal(handle_, "gridType", gridType, &len);
+    if (err) return err;
+
+    char packing_type[128] = {0,};
+    len = sizeof(packing_type);
+    err = grib_get_string_internal(handle_, "packingType", packing_type, &len);
+    if (err) return err;
+
+    const bool is_spectral_grid = (STR_EQUAL(gridType, "sh") ||
+                                   STR_EQUAL(gridType, "rotated_sh") ||
+                                   STR_EQUAL(gridType, "stretched_sh") ||
+                                   STR_EQUAL(gridType, "stretched_rotated_sh"));
+    const bool is_spectral_packing = (STR_EQUAL(packing_type, "spectral_complex") ||
+                                      STR_EQUAL(packing_type, "spectral_simple") ||
+                                      STR_EQUAL(packing_type, "bifourier_complex"));
+
+    if ( (is_spectral_grid && !is_spectral_packing) ||
+         (!is_spectral_grid && is_spectral_packing) )
+    {
+        grib_context_log(context_, GRIB_LOG_ERROR,
+                         "%s: Mismatch between gridType (=%s) and packingType (=%s)",
+                         TITLE, gridType, packing_type);
+        return GRIB_INVALID_MESSAGE;
+    }
+
+    return GRIB_SUCCESS;
+}
+
 int grib_accessor_message_is_valid_t::check_field_values()
 {
     grib_context_log(handle_->context, GRIB_LOG_DEBUG, "%s: %s", TITLE, __func__);
@@ -388,6 +420,7 @@ int grib_accessor_message_is_valid_t::unpack_long(long* val, size_t* len)
 {
     typedef int (grib_accessor_message_is_valid_t::*check_func)();
     static check_func check_functions[] = {
+        &grib_accessor_message_is_valid_t::check_grid_and_packing_type,
         &grib_accessor_message_is_valid_t::check_field_values,
         &grib_accessor_message_is_valid_t::check_number_of_missing,
         &grib_accessor_message_is_valid_t::check_grid_pl_array,

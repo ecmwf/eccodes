@@ -1,6 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-# TEMPLATE 3.63, BiFourier coefficients on lambert projection
+# TEMPLATE 3.63, Spectral Lambert conformal with modelling subdomains definition
 
 transient biFourierMakeTemplate = 0;
 
