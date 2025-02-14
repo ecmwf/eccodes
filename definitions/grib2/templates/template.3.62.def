@@ -1,7 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-# TEMPLATE 3.62, Bi-Fourier coefficients on polar stereographic projection
-# Spectral polar stereographic with modelling subdomains definition
+# TEMPLATE 3.62, Spectral polar stereographic with modelling subdomains definition
 
 transient biFourierMakeTemplate = 0;
 
