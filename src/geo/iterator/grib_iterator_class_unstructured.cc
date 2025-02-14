@@ -33,31 +33,33 @@ int Unstructured::next(double* lat, double* lon, double* val) const
 
 int Unstructured::init(grib_handle* h, grib_arguments* args)
 {
-    int ret = GRIB_SUCCESS;
-    if ((ret = Gen::init(h, args)) != GRIB_SUCCESS)
-        return ret;
+    return GRIB_NOT_IMPLEMENTED;
 
-    const char* s_uuidOfHGrid = args->get_name(h, carg_++);
-    char uuidOfHGrid[32] = {0,};
-    auto slen = sizeof(uuidOfHGrid);
-    if ((ret = grib_get_string_internal(h, s_uuidOfHGrid, uuidOfHGrid, &slen)) != GRIB_SUCCESS) {
-        return ret;
-    }
+    // int ret = GRIB_SUCCESS;
+    // if ((ret = Gen::init(h, args)) != GRIB_SUCCESS)
+    //     return ret;
 
-    lats_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
-    if (!lats_) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv_ * sizeof(double));
-        return GRIB_OUT_OF_MEMORY;
-    }
-    lons_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
-    if (!lons_) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv_ * sizeof(double));
-        return GRIB_OUT_OF_MEMORY;
-    }
+    // const char* s_uuidOfHGrid = args->get_name(h, carg_++);
+    // char uuidOfHGrid[32] = {0,};
+    // auto slen = sizeof(uuidOfHGrid);
+    // if ((ret = grib_get_string_internal(h, s_uuidOfHGrid, uuidOfHGrid, &slen)) != GRIB_SUCCESS) {
+    //     return ret;
+    // }
 
-    e_ = -1;
+    // lats_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
+    // if (!lats_) {
+    //     grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv_ * sizeof(double));
+    //     return GRIB_OUT_OF_MEMORY;
+    // }
+    // lons_ = (double*)grib_context_malloc(h->context, nv_ * sizeof(double));
+    // if (!lons_) {
+    //     grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv_ * sizeof(double));
+    //     return GRIB_OUT_OF_MEMORY;
+    // }
 
-    return ret;
+    // e_ = -1;
+
+    // return ret;
 }
 
 int Unstructured::destroy()

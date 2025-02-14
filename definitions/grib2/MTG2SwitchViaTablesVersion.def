@@ -1,7 +1,0 @@
-# Concept by which we define which conditions will imply using the tablesVersion
-# to switch between pre and post MTG2
-1 = {centre = 98;}
-1 = {datasetForLocal = "cerise";}
-1 = {datasetForLocal = "tigge";}
-1 = {datasetForLocal = "s2s";}
-1 = {datasetForLocal = "uerra";}
