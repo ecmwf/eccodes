@@ -893,6 +893,53 @@ static void test_filepool()
     grib_file_pool_print("file_pool contents", stdout);
 }
 
+static void test_expressions()
+{
+    printf("Running %s ...\n", __func__);
+    grib_context* c = grib_context_get_default();
+
+    grib_expression* eTrue = new_true_expression(c);
+    ECCODES_ASSERT(eTrue);
+    const char* cname = eTrue->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eBinop = new_binop_expression(c, 0, 0, 0, 0);
+    ECCODES_ASSERT(eBinop);
+    cname = eBinop->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eSubStr = new_sub_string_expression(c, "atest", 0, 1);
+    ECCODES_ASSERT(eSubStr);
+    cname = eSubStr->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eLen = new_length_expression(c, "abc");
+    ECCODES_ASSERT(eLen);
+    cname = eLen->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eIsInt = new_is_integer_expression(c, "42", 0, 1);
+    ECCODES_ASSERT(eIsInt);
+    cname = eIsInt->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eStrCmp = new_string_compare_expression(c, 0, 0, 0);
+    ECCODES_ASSERT(eStrCmp);
+    cname = eStrCmp->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eLogAnd = new_logical_and_expression(c, 0, 0);
+    ECCODES_ASSERT(eLogAnd);
+    cname = eLogAnd->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eLogOr = new_logical_or_expression(c, 0 ,0);
+    ECCODES_ASSERT(eLogOr);
+    cname = eLogOr->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+}
+
 int main(int argc, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
@@ -966,6 +1013,8 @@ int main(int argc, char** argv)
     test_codes_is_feature_enabled();
     test_codes_get_features();
     test_filepool();
+    test_expressions();
 
+    printf("\n\nProgram %s finished\n", argv[0]);
     return 0;
 }
