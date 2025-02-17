@@ -52,8 +52,8 @@ concept datasetForLocal(unknown) {
   "unknown"     = { dummy=1; }
 }
 
-#concept MTG2SwitchViaTablesVersion(false, "MTG2SwitchViaTablesVersionConcept.def", conceptsDir2, conceptsDir1): hidden, read_only;
-# meta MTG2SwitchDefault mtg2_switch_default(tablesVersion, tablesVersionMTG2Switch, marsClass, datasetForLocal) : hidden, read_only;
+concept MTG2SwitchViaTablesVersion(false, "MTG2SwitchViaTablesVersionConcept.def", conceptsDir2, conceptsDir1): hidden, read_only;
+meta MTG2SwitchDefault mtg2_switch_default(tablesVersion, tablesVersionMTG2Switch, marsClass, MTG2SwitchViaTablesVersion) : hidden, read_only;
 
 # ECC-2002
 # if datasetForLocal is not "unknown", we remap conceptsDir1 and conceptsDir2
