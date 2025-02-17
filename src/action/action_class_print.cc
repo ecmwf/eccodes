@@ -86,15 +86,12 @@ int Print::create_accessor(grib_section* p, grib_loader* h)
     // actually create an accessor. So we just run it
 
     const int err = execute(p->h);
-    if (err)
-        grib_context_log(context_, GRIB_LOG_ERROR, "Print: '%s' (%s)", name_, grib_get_error_message(err));
-    return err;
+    if (err) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "Print: '%s' (%s)", name2_, grib_get_error_message(err));
+    }
 
-    // We may want to be forgiving and ignore the error
-    // if (context_->debug) {
-    //     return err;
-    // }
-    // return GRIB_SUCCESS;
+    // Note: Do not return the error code. We want to continue reading the rest of the definitions
+    return GRIB_SUCCESS;
 }
 
 }  // namespace eccodes::action

@@ -12,7 +12,7 @@
 
 namespace eccodes::expression {
 
-Expression::string Length::get_name() const
+const char* Length::get_name() const
 {
     return name_;
 }
@@ -41,7 +41,7 @@ int Length::evaluate_double(grib_handle* h, double* result) const
     return err;
 }
 
-Expression::string Length::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
+const char* Length::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
 {
     char mybuf[1024] = {0,};
     ECCODES_ASSERT(buf);

@@ -36,18 +36,10 @@ int Reduced::init(grib_handle* h, grib_arguments* args)
     grib_get_long(h, "global", &global_);
     if (!global_) {
         int err;
-        /*TODO longitudeOfFirstGridPointInDegrees from the def file*/
-        if ((err = grib_get_double(h, "longitudeOfFirstGridPointInDegrees", &lon_first_)) != GRIB_SUCCESS) {
-            grib_context_log(h->context, GRIB_LOG_ERROR,
-                             "grib_nearest_reduced: Unable to get longitudeOfFirstGridPointInDegrees %s\n",
-                             grib_get_error_message(err));
+        if ((err = grib_get_double_internal(h, "longitudeOfFirstGridPointInDegrees", &lon_first_)) != GRIB_SUCCESS) {
             return err;
         }
-        /*TODO longitudeOfLastGridPointInDegrees from the def file*/
-        if ((err = grib_get_double(h, "longitudeOfLastGridPointInDegrees", &lon_last_)) != GRIB_SUCCESS) {
-            grib_context_log(h->context, GRIB_LOG_ERROR,
-                             "grib_nearest_reduced: Unable to get longitudeOfLastGridPointInDegrees %s\n",
-                             grib_get_error_message(err));
+        if ((err = grib_get_double_internal(h, "longitudeOfLastGridPointInDegrees", &lon_last_)) != GRIB_SUCCESS) {
             return err;
         }
     }
@@ -59,20 +51,18 @@ typedef void (*get_reduced_row_proc)(long pl, double lon_first, double lon_last,
 
 static int is_legacy(grib_handle* h, int* legacy)
 {
-    int err   = 0;
     long lVal = 0;
     *legacy   = 0;  // false by default
-    err       = grib_get_long(h, "legacyGaussSubarea", &lVal);
+    int err   = grib_get_long(h, "legacyGaussSubarea", &lVal);
     if (err) return err;
     *legacy = (int)lVal;
     return GRIB_SUCCESS;
 }
 static int is_rotated(grib_handle* h, int* rotated)
 {
-    int err   = 0;
     long lVal = 0;
     *rotated  = 0;  // false by default
-    err       = grib_get_long(h, "isRotatedGrid", &lVal);
+    int err   = grib_get_long(h, "isRotatedGrid", &lVal);
     if (err) return err;
     *rotated = (int)lVal;
     return GRIB_SUCCESS;

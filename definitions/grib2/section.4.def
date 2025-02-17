@@ -52,7 +52,32 @@ concept datasetForLocal(unknown) {
   "unknown"     = { dummy=1; }
 }
 
-# meta MTG2SwitchDefault mtg2_switch_default(tablesVersion, tablesVersionMTG2Switch, marsClass, datasetForLocal) : hidden, read_only;
+# Set MTG2Switch default
+# By default centres will use post MTG2 parameter concepts (= 1) to
+# retain the status quo.
+# 0 = pre-MTG2 encoding used
+# 1 = post-MTG2 encoding used
+# 2 = post-MTG2 encoding with paramId + chemId used
+
+# The default can then modified based on the below tablesVersion, according to the
+# conditions defined in the MTG2SwitchViaTablesVersion concept
+# Currently this is ECMWF and pseudocentres CERISE, S2S, TIGGE and UERRA
+
+constant tablesVersionMTG2Switch=33: hidden;
+concept MTG2SwitchViaTablesVersion(false, "MTG2SwitchViaTablesVersionConcept.def", conceptsDir2, conceptsDir1): hidden, read_only;
+
+# Then the logic for the MTG2 switch default value in these cases is
+# applied in the below function. This is as follows:
+#     tablesVersion <= tablesVersionMTG2Switch, then MTG2SwitchDefault=0., i.e. we are pre-MTG2
+#     tablesVersion > tablesVersionMTG2Switch, and class=mc/cr  then MTG2SwitchDefault=2., i.e. we are post-MTG2 with param-chem split.
+#     tablesVersion > tablesVersionMTG2Switch  in all other cases then MTG2SwitchDefault=1., i.e. we are post-MTG2.
+
+meta MTG2SwitchDefault mtg2_switch_default(tablesVersion, tablesVersionMTG2Switch, marsClass, MTG2SwitchViaTablesVersion) : hidden, read_only;
+
+# This sets the default for the MTG2Switch concept which we then define below
+# Default is 1 unless changed by the above concept, or by adding an entry to the concept below in a given centre/pseudocentre.
+
+concept MTG2Switch(MTG2SwitchDefault, "MTG2SwitchConcept.def", conceptsDir2,conceptsDir1): read_only, long_type;
 
 # ECC-2002
 # if datasetForLocal is not "unknown", we remap conceptsDir1 and conceptsDir2

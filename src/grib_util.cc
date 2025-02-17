@@ -2135,7 +2135,6 @@ int grib2_select_PDTN(int is_eps, int is_instant,
 int codes_grib_surface_type_requires_value(int edition, int type_of_surface_code, int* err)
 {
     static const int types_with_values[] = {
-        17,  // Departure level of the most unstable parcel of air (MUDL)
         18,  // Departure level of a mixed layer parcel of air with specified layer depth (Pa)
         19,  // Lowest level where cloud cover exceeds the specified percentage (%)
         20,  // Isothermal level (K)

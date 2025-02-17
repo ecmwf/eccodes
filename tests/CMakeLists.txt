@@ -175,6 +175,7 @@ if( HAVE_BUILD_TOOLS )
     # These tests require data downloads
     # and/or take much longer
     list(APPEND tests_extra
+        grib_isGridded_isSpectral
         grib_data_quality_checks
         grib_check_message_validity
         grib_update_sections_lengths
