@@ -52,7 +52,7 @@ int grib_accessor_mtg2_switch_default_t::unpack_long(long* val, size_t* len)
 
     err = grib_get_long(h, tablesVersion_, &tablesVersion);
     if (err) return err;
-    err = grib_get_long(h, tablesVersionMTG2Switch_, &tablesVersionMTG2Switch);
+    err = grib_get_long_internal(h, tablesVersionMTG2Switch_, &tablesVersionMTG2Switch);
     if (err) return err;
 
     bool marsClassExists = true;
