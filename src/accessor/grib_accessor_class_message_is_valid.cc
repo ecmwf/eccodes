@@ -76,6 +76,9 @@ int grib_accessor_message_is_valid_t::check_field_values()
         return GRIB_OUT_OF_MEMORY;
 
     if ((ret = grib_get_double_array(handle_, "values", values, &size)) != GRIB_SUCCESS) {
+        if (ret == GRIB_FUNCTIONALITY_NOT_ENABLED) {
+            ret = GRIB_SUCCESS;
+        }
         grib_context_free(c, values);
         return ret;
     }
@@ -207,8 +210,8 @@ int grib_accessor_message_is_valid_t::check_geoiterator()
     int err = 0;
 
 #if defined(HAVE_GEOGRAPHY)
-    grib_iterator* iter = grib_iterator_new(handle_, 0, &err);
-    if (err == GRIB_NOT_IMPLEMENTED || err == GRIB_SUCCESS) {
+    grib_iterator* iter = grib_iterator_new(handle_, GRIB_GEOITERATOR_NO_VALUES, &err);
+    if (err == GRIB_NOT_IMPLEMENTED || err == GRIB_SUCCESS || err == GRIB_FUNCTIONALITY_NOT_ENABLED) {
         grib_iterator_delete(iter);
         return GRIB_SUCCESS; // GRIB_NOT_IMPLEMENTED is OK e.g., for spectral fields
     }
