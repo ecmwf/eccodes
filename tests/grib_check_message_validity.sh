@@ -25,6 +25,10 @@ grib_check_key_equals $IFS_SAMPLES_ROOT/grib1_mlgrib2_ccsds/gg_ml.tmpl        is
 grib_check_key_equals $IFS_SAMPLES_ROOT/grib1_mlgrib2_ccsds/gg_sfc_grib2.tmpl isMessageValid 1
 grib_check_key_equals $IFS_SAMPLES_ROOT/grib1_mlgrib2_ccsds/sh_ml.tmpl        isMessageValid 1
 
+# Do it with debug enabled
+ECCODES_DEBUG=-1  ${tools_dir}/grib_get -p isMessageValid $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
+
 # Bad sections
 # ---------------
 # Correct key order: NV=6,PVPresent=1

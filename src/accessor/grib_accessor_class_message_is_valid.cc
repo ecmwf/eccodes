@@ -30,6 +30,9 @@ void grib_accessor_message_is_valid_t::init(const long l, grib_arguments* arg)
 
 int grib_accessor_message_is_valid_t::check_grid_and_packing_type()
 {
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
     char gridType[128] = {0,};
     size_t len = sizeof(gridType);
     int err = grib_get_string_internal(handle_, "gridType", gridType, &len);
@@ -62,25 +65,26 @@ int grib_accessor_message_is_valid_t::check_grid_and_packing_type()
 
 int grib_accessor_message_is_valid_t::check_field_values()
 {
-    grib_context_log(handle_->context, GRIB_LOG_DEBUG, "%s: %s", TITLE, __func__);
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
-    int ret = GRIB_SUCCESS;
+    int err = GRIB_SUCCESS;
     double* values = NULL;
     size_t size = 0;
     grib_context* c = handle_->context;
 
-    if ((ret = grib_get_size(handle_, "values", &size)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_size(handle_, "values", &size)) != GRIB_SUCCESS)
+        return err;
     values = (double*)grib_context_malloc_clear(c, size * sizeof(double));
     if (!values)
         return GRIB_OUT_OF_MEMORY;
 
-    if ((ret = grib_get_double_array(handle_, "values", values, &size)) != GRIB_SUCCESS) {
-        if (ret == GRIB_FUNCTIONALITY_NOT_ENABLED) {
-            ret = GRIB_SUCCESS;
+    if ((err = grib_get_double_array(handle_, "values", values, &size)) != GRIB_SUCCESS) {
+        if (err == GRIB_FUNCTIONALITY_NOT_ENABLED) {
+            err = GRIB_SUCCESS;
         }
         grib_context_free(c, values);
-        return ret;
+        return err;
     }
     grib_context_free(c, values);
     return GRIB_SUCCESS;
@@ -130,45 +134,46 @@ int grib_accessor_message_is_valid_t::check_number_of_missing()
 
 int grib_accessor_message_is_valid_t::check_grid_pl_array()
 {
-    grib_context_log(handle_->context, GRIB_LOG_DEBUG, "%s: %s", TITLE, __func__);
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
-    int ret = GRIB_SUCCESS;
+    int err = GRIB_SUCCESS;
     long Ni = 0,plpresent  = 0;
     long* pl = NULL; // pl array
     size_t plsize = 0;
     grib_context* c = handle_->context;
 
     // is there a PL array?
-    ret = grib_get_long(handle_, "PLPresent", &plpresent);
-    if (ret != GRIB_SUCCESS || plpresent == 0)
+    err = grib_get_long(handle_, "PLPresent", &plpresent);
+    if (err != GRIB_SUCCESS || plpresent == 0)
         return GRIB_SUCCESS; // No PL array. So nothing to do
 
     char gridType[128] = {0,};
     size_t len = 128;
-    ret = grib_get_string_internal(handle_, "gridType", gridType, &len);
-    if (ret != GRIB_SUCCESS) return ret;
+    err = grib_get_string_internal(handle_, "gridType", gridType, &len);
+    if (err != GRIB_SUCCESS) return err;
 
-    if ((ret = grib_get_size(handle_, "pl", &plsize)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_size(handle_, "pl", &plsize)) != GRIB_SUCCESS)
+        return err;
     if (plsize == 0) { // pl array must have at least one element
         return GRIB_WRONG_GRID;
     }
 
     // If we have a PL array and PLPresent=true, then Ni must be missing
-    ret = grib_get_long(handle_, "Ni", &Ni);
-    if (ret == GRIB_SUCCESS && Ni != GRIB_MISSING_LONG) {
+    err = grib_get_long(handle_, "Ni", &Ni);
+    if (err == GRIB_SUCCESS && Ni != GRIB_MISSING_LONG) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Invalid Ni: If there is a PL array, Ni must be set to MISSING", TITLE);
         return GRIB_WRONG_GRID;
     }
 
     pl = (long*)grib_context_malloc_clear(c, sizeof(long) * plsize);
     if (!pl) return GRIB_OUT_OF_MEMORY;
-    if ((ret = grib_get_long_array_internal(handle_, "pl", pl, &plsize)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_long_array_internal(handle_, "pl", pl, &plsize)) != GRIB_SUCCESS)
+        return err;
 
     long numberOfDataPoints = 0;
-    if ((ret = grib_get_long_internal(handle_, "numberOfDataPoints", &numberOfDataPoints)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_long_internal(handle_, "numberOfDataPoints", &numberOfDataPoints)) != GRIB_SUCCESS)
+        return err;
     size_t sum_pl = 0;
     for (size_t j = 0; j < plsize; j++) sum_pl += pl[j];
 
@@ -206,7 +211,9 @@ int grib_accessor_message_is_valid_t::check_grid_pl_array()
 
 int grib_accessor_message_is_valid_t::check_geoiterator()
 {
-    grib_context_log(handle_->context, GRIB_LOG_DEBUG, "%s: %s", TITLE, __func__);
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
     int err = 0;
 
 #if defined(HAVE_GEOGRAPHY)
@@ -225,7 +232,8 @@ int grib_accessor_message_is_valid_t::check_geoiterator()
 
 int grib_accessor_message_is_valid_t::check_7777()
 {
-    grib_context_log(handle_->context, GRIB_LOG_DEBUG, "%s: %s", TITLE, __func__);
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
     if (!grib_is_defined(handle_, "7777")) {
         return GRIB_7777_NOT_FOUND;
@@ -235,7 +243,8 @@ int grib_accessor_message_is_valid_t::check_7777()
 
 int grib_accessor_message_is_valid_t::check_surface_keys()
 {
-    grib_context_log(handle_->context, GRIB_LOG_DEBUG, "%s: %s", TITLE, __func__);
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
     int err = 0;
     const grib_context* c = handle_->context;
@@ -306,7 +315,8 @@ int grib_accessor_message_is_valid_t::check_surface_keys()
 
 int grib_accessor_message_is_valid_t::check_steps()
 {
-    grib_context_log(handle_->context, GRIB_LOG_DEBUG, "%s: %s", TITLE, __func__);
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
     char stepType[32] = {0,};
     size_t size = sizeof(stepType) / sizeof(*stepType);
@@ -339,7 +349,8 @@ int grib_accessor_message_is_valid_t::check_steps()
 
 int grib_accessor_message_is_valid_t::check_section_numbers(const int* sec_nums, size_t N)
 {
-    grib_context_log(handle_->context, GRIB_LOG_DEBUG, "%s: %s", TITLE, __func__);
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
     for (size_t i = 0; i < N; ++i) {
         char sname[16] = {0,};
@@ -355,7 +366,9 @@ int grib_accessor_message_is_valid_t::check_section_numbers(const int* sec_nums,
 
 int grib_accessor_message_is_valid_t::check_namespace_keys()
 {
-    grib_context_log(handle_->context, GRIB_LOG_DEBUG, "%s: %s", TITLE, __func__);
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
     const char* ns = "ls";
     grib_keys_iterator* kiter = grib_keys_iterator_new(handle_, /*flags=*/0, ns);
     if (!kiter) return GRIB_DECODING_ERROR;
@@ -380,7 +393,9 @@ int grib_accessor_message_is_valid_t::check_namespace_keys()
 
 int grib_accessor_message_is_valid_t::check_sections()
 {
-    grib_context_log(handle_->context, GRIB_LOG_DEBUG, "%s: %s", TITLE, __func__);
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
     int err = 0;
     if (edition_ == 1) {
         const int grib1_section_nums[] = {1, 2, 4}; // section 3 is optional
@@ -399,7 +414,8 @@ int grib_accessor_message_is_valid_t::check_sections()
 
 int grib_accessor_message_is_valid_t::check_parameter()
 {
-    grib_context_log(handle_->context, GRIB_LOG_DEBUG, "%s: %s", TITLE, __func__);
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
     int err = 0;
     long centre = 0;
@@ -444,7 +460,7 @@ int grib_accessor_message_is_valid_t::unpack_long(long* val, size_t* len)
 
     char product[32] = {0,};
     size_t size = sizeof(product) / sizeof(*product);
-    err = grib_get_string(handle_, product_, product, &size);
+    err = grib_get_string_internal(handle_, product_, product, &size);
     if (err) return err;
 
     if (!STR_EQUAL(product, "GRIB")) {
