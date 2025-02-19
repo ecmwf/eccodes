@@ -27,11 +27,15 @@ for mode in $modes; do
     done
 done
 
+# BUFR
+infile="$data_dir/bufr/pgps_110.bufr"
+${test_dir}/codes_dump_content json $infile > $temp
+
 # Empty mode should use 'default'
 infile="$data_dir/sample.grib2"
-${test_dir}/codes_dump_content '' $infile
+${test_dir}/codes_dump_content '' $infile > $temp
 
-
+# Bad dump mode
 infile="$data_dir/sample.grib2"
 ${test_dir}/codes_dump_content rubbish $infile > $temp 2>&1
 grep -q "ERROR.*Unknown type : 'rubbish' for dumper" $temp

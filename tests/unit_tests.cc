@@ -903,6 +903,11 @@ static void test_expressions()
     const char* cname = eTrue->class_name();
     ECCODES_ASSERT( cname && strlen(cname) > 0 );
 
+    grib_expression* eUnOp = new_unop_expression(c, 0, 0, 0);
+    ECCODES_ASSERT(eUnOp);
+    cname = eUnOp->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
     grib_expression* eBinop = new_binop_expression(c, 0, 0, 0, 0);
     ECCODES_ASSERT(eBinop);
     cname = eBinop->class_name();
@@ -936,6 +941,16 @@ static void test_expressions()
     grib_expression* eLogOr = new_logical_or_expression(c, 0 ,0);
     ECCODES_ASSERT(eLogOr);
     cname = eLogOr->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eIsInDict = new_is_in_dict_expression(c, "a", "list");
+    ECCODES_ASSERT(eIsInDict);
+    cname = eIsInDict->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eIsInList = new_is_in_list_expression(c, "b", "list");
+    ECCODES_ASSERT(eIsInList);
+    cname = eIsInList->class_name();
     ECCODES_ASSERT( cname && strlen(cname) > 0 );
 
 }
