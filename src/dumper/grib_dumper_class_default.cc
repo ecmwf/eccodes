@@ -538,8 +538,13 @@ void Default::dump_section(grib_accessor* a, grib_block_of_accessors* block)
     int is_default_section = 0;
     char* upper            = NULL;
     char *p = NULL, *q = NULL;
+
     if (!strncmp(a->name_, "section", 7))
         is_default_section = 1;
+
+    if (strcmp(a->name_, "groupNumber") == 0)
+        return;
+
     if (!strcmp(a->creator_->op_, "bufr_group")) {
         dump_long(a, NULL);
     }

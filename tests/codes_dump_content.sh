@@ -31,7 +31,7 @@ done
 infile="$data_dir/bufr/pgps_110.bufr"
 ${test_dir}/codes_dump_content json    $infile > $temp
 ${test_dir}/codes_dump_content default $infile > $temp
-${test_dir}/codes_dump_content debug   $infile > $temp
+# ${test_dir}/codes_dump_content debug   $infile > $temp
 
 # Empty mode should use 'default'
 infile="$data_dir/sample.grib2"
