@@ -10,17 +10,17 @@
 
 #pragma once
 
-#include "DataShsimplePacking.h"
+#include "DataShSimplePacking.h"
 
 namespace eccodes::accessor
 {
 
-class DataG1AhAimplePacking : public DataShSimplePacking
+class DataG1ShSimplePacking : public DataShSimplePacking
 {
 public:
-    DataG1AhAimplePacking() :
+    DataG1ShSimplePacking() :
         DataShSimplePacking() { class_name_ = "data_g1shsimple_packing"; }
-    grib_accessor* create_empty_accessor() override { return new DataG1AhAimplePacking{}; }
+    grib_accessor* create_empty_accessor() override { return new DataG1ShSimplePacking{}; }
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
 };

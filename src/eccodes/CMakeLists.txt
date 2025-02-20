@@ -73,8 +73,8 @@ list( APPEND eccodes_src_files
     grib_accessor_class.cc
 
     accessor/Accessor.cc
-    accessor/G1fcperiod.cc
-    accessor/G1endOfIntervalMonthly.cc
+    accessor/G1FcPeriod.cc
+    accessor/G1EndOfIntervalMonthly.cc
     accessor/MarsParam.cc
     accessor/Gen.cc
     accessor/Ascii.cc
@@ -91,14 +91,14 @@ list( APPEND eccodes_src_files
     accessor/UnpackBufrValues.cc
     accessor/Group.cc
     accessor/NonAlpha.cc
-    accessor/G1bitmap.cc
-    accessor/G2bitmap.cc
+    accessor/G1Bitmap.cc
+    accessor/G2Bitmap.cc
     accessor/Concept.cc
     accessor/HashArray.cc
     accessor/DecimalPrecision.cc
-    accessor/Divdouble.cc
-    accessor/Multdouble.cc
-    accessor/Budgdate.cc
+    accessor/DivDouble.cc
+    accessor/MultDouble.cc
+    accessor/BudgDate.cc
     accessor/ValidityDate.cc
     accessor/ValidityTime.cc
     accessor/Bytes.cc
@@ -118,27 +118,27 @@ list( APPEND eccodes_src_files
     accessor/Double.cc
     accessor/Element.cc
     accessor/Evaluate.cc
-    accessor/G1date.cc
-    accessor/G1monthlydate.cc
+    accessor/G1Date.cc
+    accessor/G1MonthlyDate.cc
     accessor/LibraryVersion.cc
     accessor/When.cc
-    accessor/G1verificationdate.cc
-    accessor/G1dayOfTheYearDate.cc
+    accessor/G1VerificationDate.cc
+    accessor/G1DayOfTheYearDate.cc
     accessor/G1HalfByteCodeflag.cc
-    accessor/G1forecastmonth.cc
-    accessor/G1stepRange.cc
-    accessor/G2stepRange.cc
-    accessor/DataG22orderPacking.cc
+    accessor/G1ForecastMonth.cc
+    accessor/G1StepRange.cc
+    accessor/G2StepRange.cc
+    accessor/DataG22OrderPacking.cc
     accessor/MarsStep.cc
     accessor/MessageCopy.cc
     accessor/MessageIsValid.cc
     accessor/Dictionary.cc
-    accessor/LatlonIncrement.cc
-    accessor/G2date.cc
-    accessor/G2level.cc
-    accessor/G2endStep.cc
-    accessor/G2latlon.cc
-    accessor/G2lon.cc
+    accessor/LatLonIncrement.cc
+    accessor/G2Date.cc
+    accessor/G2Level.cc
+    accessor/G2EndStep.cc
+    accessor/G2Latlon.cc
+    accessor/G2Lon.cc
     accessor/GlobalGaussian.cc
     accessor/GaussianGridName.cc
     accessor/Getenv.cc
@@ -147,20 +147,20 @@ list( APPEND eccodes_src_files
     accessor/JulianDay.cc
     accessor/JulianDate.cc
     accessor/ClosestDate.cc
-    accessor/Latlonvalues.cc
+    accessor/LatLonValues.cc
     accessor/Latitudes.cc
     accessor/Longitudes.cc
     accessor/OffsetFile.cc
     accessor/Scale.cc
     accessor/FromScaleFactorScaledValue.cc
-    accessor/G2bitmapPresent.cc
-    accessor/Ibmfloat.cc
-    accessor/Ieeefloat.cc
+    accessor/G2BitmapPresent.cc
+    accessor/IbmFloat.cc
+    accessor/IeeeFloat.cc
     accessor/Constant.cc
     accessor/Iterator.cc
     accessor/Message.cc
     accessor/Nearest.cc
-    accessor/Ksec1expver.cc
+    accessor/Ksec1Expver.cc
     accessor/Label.cc
     accessor/Long.cc
     accessor/Lookup.cc
@@ -169,9 +169,9 @@ list( APPEND eccodes_src_files
     accessor/HeadersOnly.cc
     accessor/Padding.cc
     accessor/Pad.cc
-    accessor/Padto.cc
-    accessor/Padtoeven.cc
-    accessor/Padtomultiple.cc
+    accessor/PadTo.cc
+    accessor/PadToEven.cc
+    accessor/PadToMultiple.cc
     accessor/SectionPadding.cc
     accessor/PackingType.cc
     accessor/SectionPointer.cc
@@ -185,7 +185,7 @@ list( APPEND eccodes_src_files
     accessor/G1MessageLength.cc
     accessor/G1Section4Length.cc
     accessor/Size.cc
-    accessor/RdbtimeGuessDate.cc
+    accessor/RdbTimeGuessDate.cc
     accessor/ScaleValues.cc
     accessor/OffsetValues.cc
     accessor/Sprintf.cc
@@ -202,21 +202,21 @@ list( APPEND eccodes_src_files
     accessor/DataShPacked.cc
     accessor/DataShUnpacked.cc
     accessor/NumberOfValuesDataRawPacking.cc
-    accessor/DataG1simplePacking.cc
-    accessor/DataG1shsimplePacking.cc
-    accessor/DataShsimplePacking.cc
+    accessor/DataG1SimplePacking.cc
+    accessor/DataG1ShSimplePacking.cc
+    accessor/DataShSimplePacking.cc
     accessor/DataDummyField.cc
     accessor/Variable.cc
     accessor/SecondOrderBitsPerValue.cc
-    accessor/DataG2simplePacking.cc
-    accessor/DataG2simplePackingWithPreprocessing.cc
-    accessor/DataG2shsimplePacking.cc
-    accessor/DataG2complexPacking.cc
-    accessor/DataG1secondOrderRowByRowPacking.cc
-    accessor/DataG1secondOrderConstantWidthPacking.cc
-    accessor/DataG1secondOrderGeneralPacking.cc
-    accessor/DataG1secondOrderGeneralExtendedPacking.cc
-    accessor/G2grid.cc
+    accessor/DataG2SimplePacking.cc
+    accessor/DataG2SimplePackingWithPreprocessing.cc
+    accessor/DataG2ShSimplePacking.cc
+    accessor/DataG2ComplexPacking.cc
+    accessor/DataG1SecondOrderRowByRowPacking.cc
+    accessor/DataG1SecondOrderConstantWidthPacking.cc
+    accessor/DataG1SecondOrderGeneralPacking.cc
+    accessor/DataG1SecondOrderGeneralExtendedPacking.cc
+    accessor/G2Grid.cc
     accessor/UnexpandedDescriptors.cc
     accessor/ExpandedDescriptors.cc
     accessor/BufrdcExpandedDescriptors.cc
@@ -224,14 +224,14 @@ list( APPEND eccodes_src_files
     accessor/DataApplyBoustrophedonic.cc
     accessor/DataApplyBoustrophedonicBitmap.cc
     accessor/DataSecondaryBitmap.cc
-    accessor/DataG1secondaryBitmap.cc
-    accessor/DataG2secondaryBitmap.cc
+    accessor/DataG1SecondaryBitmap.cc
+    accessor/DataG2SecondaryBitmap.cc
     accessor/DataJpeg2000Packing.cc
     accessor/DataPngPacking.cc
     accessor/DataCcsdsPacking.cc
     accessor/DataRawPacking.cc
     accessor/DataComplexPacking.cc
-    accessor/DataG1complexPacking.cc
+    accessor/DataG1ComplexPacking.cc
     accessor/GdsIsPresent.cc
     accessor/SelectStepTemplate.cc
     accessor/LocalDefinition.cc
@@ -248,8 +248,8 @@ list( APPEND eccodes_src_files
     accessor/NumberOfPointsGaussian.cc
     accessor/NumberOfValues.cc
     accessor/NumberOfCodedValues.cc
-    accessor/G1numberOfCodedValuesShComplex.cc
-    accessor/G1numberOfCodedValuesShSimple.cc
+    accessor/G1NumberOfCodedValuesShComplex.cc
+    accessor/G1NumberOfCodedValuesShSimple.cc
     accessor/Dirty.cc
     accessor/Statistics.cc
     accessor/StatisticsSpectral.cc
@@ -265,7 +265,7 @@ list( APPEND eccodes_src_files
     accessor/ToInteger.cc
     accessor/ToDouble.cc
     accessor/ToString.cc
-    accessor/Sexagesimal2decimal.cc
+    accessor/Sexagesimal2Decimal.cc
     accessor/Vector.cc
     accessor/LongVector.cc
     accessor/AbstractVector.cc
@@ -278,7 +278,7 @@ list( APPEND eccodes_src_files
     accessor/Uint64LittleEndian.cc
     accessor/Uint8.cc
     accessor/Blob.cc
-    accessor/DataG2bifourierPacking.cc
+    accessor/DataG2BifourierPacking.cc
     accessor/DataRunLengthPacking.cc
 
 
