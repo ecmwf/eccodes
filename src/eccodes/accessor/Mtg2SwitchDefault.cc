@@ -22,10 +22,19 @@ void Mtg2SwitchDefault::init(const long len, grib_arguments* arg)
 
     grib_handle* h = grib_handle_of_accessor(this);
 
+    if (context_->debug) {
+        const int numActualArgs   = arg->get_count();
+        const int numExpectedArgs = 4;
+        if (numActualArgs != numExpectedArgs) {
+            grib_context_log(context_, GRIB_LOG_FATAL, "Accessor %s (key %s): %d arguments provided but expected %d",
+                             class_name_, name_, numActualArgs, numExpectedArgs);
+        }
+    }
+
     tablesVersion_           = arg->get_name(h, 0);
     tablesVersionMTG2Switch_ = arg->get_name(h, 1);
     marsClass_               = arg->get_name(h, 2);
-    datasetForLocal_         = arg->get_name(h, 3);
+    MTG2SwitchViaTablesVersion_ = arg->get_name(h, 3);
 
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -46,7 +55,7 @@ int Mtg2SwitchDefault::unpack_long(long* val, size_t* len)
 
     err = grib_get_long(h, tablesVersion_, &tablesVersion);
     if (err) return err;
-    err = grib_get_long(h, tablesVersionMTG2Switch_, &tablesVersionMTG2Switch);
+    err = grib_get_long_internal(h, tablesVersionMTG2Switch_, &tablesVersionMTG2Switch);
     if (err) return err;
 
     bool marsClassExists = true;
@@ -62,34 +71,12 @@ int Mtg2SwitchDefault::unpack_long(long* val, size_t* len)
         }
     }
 
-    char datasetForLocal[128] = {0,};
-    size = sizeof(datasetForLocal);
-    bool datasetForLocalExists = true;
-    err = grib_get_string(h, datasetForLocal_, datasetForLocal, &size);
-    if (err) {
-        if (err == GRIB_NOT_FOUND) {
-            // This can happen if accessor is called before section 4
-            datasetForLocalExists = false;
-            err = 0;
-        }
-        else {
-            return err;
-        }
-    }
-
-    long centre = 0;
-    err = grib_get_long(h, "centre", &centre);
+    // This is a boolean
+    long MTG2SwitchViaTablesVersion = 0;
+    err = grib_get_long(h, MTG2SwitchViaTablesVersion_, &MTG2SwitchViaTablesVersion);
     if (err) return err;
 
-    bool isSpecialDataset = false;
-    if (centre == 98) isSpecialDataset = true; // ECMWF
-    if (datasetForLocalExists) {
-        if (STR_EQUAL(datasetForLocal, "s2s") || STR_EQUAL(datasetForLocal, "tigge") || STR_EQUAL(datasetForLocal, "uerra")) {
-            isSpecialDataset = true;
-        }
-    }
-
-    if (isSpecialDataset) {
+    if (MTG2SwitchViaTablesVersion) {
         if (tablesVersion <= tablesVersionMTG2Switch) {
             *val = 0;  // Pre-MTG2
         }
@@ -108,7 +95,7 @@ int Mtg2SwitchDefault::unpack_long(long* val, size_t* len)
         *val = 1;  // Post-MTG2
     }
 
-    return err;
+    return GRIB_SUCCESS;
 }
 
 }  // namespace eccodes::accessor

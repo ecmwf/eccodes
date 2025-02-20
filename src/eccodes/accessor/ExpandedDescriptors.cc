@@ -542,6 +542,7 @@ int ExpandedDescriptors::expand()
     unexpanded           = grib_bufr_descriptors_array_new(unexpandedSize, DESC_SIZE_INCR);
     unexpanded_copy      = grib_bufr_descriptors_array_new(unexpandedSize, DESC_SIZE_INCR);
     operator206yyy_width = 0;
+    bool bad_descriptor = false;
     for (i = 0; i < unexpandedSize; i++) {
         bufr_descriptor *aDescriptor1, *aDescriptor2;
         /* ECC-1274: clear error and only issue msg once */
@@ -567,11 +568,22 @@ int ExpandedDescriptors::expand()
             operator206yyy_width                      = 0; /* Restore. Operator no longer in scope */
         }
 
+        // Table B descriptors must have a non-zero width
+        if (aDescriptor1->F == 0 && aDescriptor1->width <= 0) {
+            bad_descriptor = true;
+        }
+
         grib_bufr_descriptors_array_push(unexpanded, aDescriptor1);
         grib_bufr_descriptors_array_push(unexpanded_copy, aDescriptor2);
     }
 
     grib_context_free(c, u);
+
+    if (bad_descriptor) {
+        grib_bufr_descriptors_array_delete(unexpanded);
+        grib_bufr_descriptors_array_delete(unexpanded_copy);
+        return GRIB_DECODING_ERROR; // at least one descriptor with width==0 found
+    }
 
     ccp.extraWidth           = 0;
     ccp.localDescriptorWidth = -1;

@@ -199,16 +199,10 @@ int G2EndStep::unpack_multiple_time_ranges_long_(long* val, size_t* len)
     grib_handle* h          = grib_handle_of_accessor(this);
     long numberOfTimeRanges = 0, step_units = 0, start_step_value = 0;
 
-    size_t count                                      = 0;
-    long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {
-        0,
-    };
-    long arr_coded_unit[MAX_NUM_TIME_RANGES] = {
-        0,
-    };
-    long arr_coded_time_range[MAX_NUM_TIME_RANGES] = {
-        0,
-    };
+    size_t count = 0;
+    long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {0,};
+    long arr_coded_unit[MAX_NUM_TIME_RANGES] = {0,};
+    long arr_coded_time_range[MAX_NUM_TIME_RANGES] = {0,};
 
     if ((err = grib_get_long_internal(h, start_step_value_, &start_step_value)))
         return err;
@@ -260,16 +254,10 @@ int G2EndStep::unpack_multiple_time_ranges_double_(double* val, size_t* len)
     long start_step_value   = 0;
     long start_step_unit    = 0;
 
-    size_t count                                      = 0;
-    long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {
-        0,
-    };
-    long arr_coded_unit[MAX_NUM_TIME_RANGES] = {
-        0,
-    };
-    long arr_coded_time_range[MAX_NUM_TIME_RANGES] = {
-        0,
-    };
+    size_t count = 0;
+    long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {0,};
+    long arr_coded_unit[MAX_NUM_TIME_RANGES] = {0,};
+    long arr_coded_time_range[MAX_NUM_TIME_RANGES] = {0,};
 
     if ((err = grib_get_long_internal(h, start_step_value_, &start_step_value)))
         return err;

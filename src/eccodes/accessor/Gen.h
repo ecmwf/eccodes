@@ -21,8 +21,7 @@ namespace eccodes::accessor
 class Gen : public Accessor
 {
 public:
-    Gen() :
-        grib_accessor{} { class_name_ = "gen"; }
+    Gen() { class_name_ = "gen"; }
     ~Gen();
 
     void init_accessor(const long, grib_arguments*) override;  // TODO: Implement

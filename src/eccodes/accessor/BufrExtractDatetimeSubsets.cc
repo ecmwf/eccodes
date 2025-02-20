@@ -279,7 +279,7 @@ int BufrExtractDatetimeSubsets::select_datetime()
         goto cleanup;
     }
 
-    if (julianEnd <= julianStart) {
+    if (julianEnd < julianStart) {
         grib_context_log(c, GRIB_LOG_ERROR, "Wrong definition of time interval: end (%s) is not after start (%s)", end_str, start_str);
         ret = GRIB_INTERNAL_ERROR;
         goto cleanup;
@@ -339,8 +339,6 @@ cleanup:
 
 int BufrExtractDatetimeSubsets::pack_long(const long* val, size_t* len)
 {
-    /*grib_accessor_bufr_extract_datetime_subsets_t *self =(BufrExtractDatetimeSubsets*)a;*/
-
     if (*len == 0)
         return GRIB_SUCCESS;
     return select_datetime();

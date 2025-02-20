@@ -355,8 +355,6 @@ int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
                                  class_name_, __func__, type_of_compression_used, target_compression_ratio_);
                 return GRIB_ENCODING_ERROR;
             }
-            ECCODES_ASSERT(target_compression_ratio != 255);
-            ECCODES_ASSERT(target_compression_ratio != 0);
             helper.compression = target_compression_ratio;
             break;
 

@@ -20,6 +20,15 @@ void G2ParamConceptFilename::init(const long len, grib_arguments* arg)
 {
     grib_handle* h = grib_handle_of_accessor(this);
 
+    if (context_->debug) {
+        const int numActualArgs   = arg->get_count();
+        const int numExpectedArgs = 3;
+        if (numActualArgs != numExpectedArgs) {
+            grib_context_log(context_, GRIB_LOG_FATAL, "Accessor %s (key %s): %d arguments provided but expected %d",
+                             class_name_, name_, numActualArgs, numExpectedArgs);
+        }
+    }
+
     basename_                = arg->get_string(h, 0);
     MTG2Switch_              = arg->get_name(h, 1);
     tablesVersionMTG2Switch_ = arg->get_name(h, 2);
@@ -42,9 +51,9 @@ int G2ParamConceptFilename::unpack_string(char* v, size_t* len)
     int err = 0;
     long MTG2Switch = 0, tablesVersionMTG2Switch = 0;
 
-    err = grib_get_long(h, MTG2Switch_, &MTG2Switch);
+    err = grib_get_long_internal(h, MTG2Switch_, &MTG2Switch);
     if (err) return err;
-    err = grib_get_long(h, tablesVersionMTG2Switch_, &tablesVersionMTG2Switch);
+    err = grib_get_long_internal(h, tablesVersionMTG2Switch_, &tablesVersionMTG2Switch);
     if (err) return err;
 
     const size_t dsize = string_length() - 1; // size for destination string "v"

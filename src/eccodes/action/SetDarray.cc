@@ -47,13 +47,13 @@ int SetDArray::execute(grib_handle* h)
     return grib_set_double_array(h, name2_, darray_->v, darray_->n);
 }
 
-void SetDArray::dump(FILE* f, int lvl)
-{
-    int i = 0;
-    for (i = 0; i < lvl; i++)
-        grib_context_print(context_, f, "     ");
-    grib_context_print(context_, f, name2_);
-    printf("\n");
-}
+// void SetDArray::dump(FILE* f, int lvl)
+// {
+//     int i = 0;
+//     for (i = 0; i < lvl; i++)
+//         grib_context_print(context_, f, "     ");
+//     grib_context_print(context_, f, name2_);
+//     printf("\n");
+// }
 
 }  // namespace eccodes::action

@@ -29,7 +29,7 @@ private:
     const char* tablesVersion_           = nullptr;  // int
     const char* tablesVersionMTG2Switch_ = nullptr;  // int
     const char* marsClass_               = nullptr;  // str
-    const char* datasetForLocal_         = nullptr;  // str: e.g. tigge or s2s
+    const char* MTG2SwitchViaTablesVersion_  = nullptr;  //int
 };
 
 }  // namespace eccodes::accessor

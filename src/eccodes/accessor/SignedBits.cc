@@ -97,14 +97,14 @@ int SignedBits::pack_long(const long* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 #if 0
-    int ret                         = 0;
-    long off                        = 0;
-    long numberOfBits               = 0;
-    size_t buflen                   = 0;
-    unsigned char* buf              = NULL;
-    unsigned long i                 = 0;
-    unsigned long rlen              = 0;
-    long count                      = 0;
+    int ret            = 0;
+    long off           = 0;
+    long numberOfBits  = 0;
+    size_t buflen      = 0;
+    unsigned char* buf = NULL;
+    unsigned long i    = 0;
+    unsigned long rlen = 0;
+    long count         = 0;
 
     ret = value_count(a, &count);
     if (ret)

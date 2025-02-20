@@ -165,7 +165,7 @@ int JulianDate::unpack_string(char* val, size_t* len)
     int ret = 0;
     long hour, minute, second;
     long year, month, day, ymd, hms;
-    char* sep      = sep_;
+    const char* sep = sep_;
     grib_handle* h = grib_handle_of_accessor(this);
 
     if (*len < 15)
@@ -238,7 +238,7 @@ int JulianDate::pack_string(const char* val, size_t* len)
     int ret = 0;
     long hour, minute, second;
     long year, month, day, ymd, hms;
-    char* sep      = sep_;
+    char* sep = sep_;
     grib_handle* h = grib_handle_of_accessor(this);
 
     ret = sscanf(val, "%04ld%c%02ld%c%02ld%c%02ld%c%02ld%c%02ld",

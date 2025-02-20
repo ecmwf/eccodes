@@ -291,7 +291,7 @@ static int cmpstringp(const void* p1, const void* p2)
     return strcmp(*(char* const*)p1, *(char* const*)p2);
 }
 
-bool blacklisted(grib_handle* h, long edition, const char* concept_name, const char* concept_value)
+static bool blacklisted(grib_handle* h, long edition, const char* concept_name, const char* concept_value)
 {
     if (strcmp(concept_name, "packingType") == 0) {
         char input_packing_type[100];
@@ -328,7 +328,7 @@ static void print_user_friendly_message(grib_handle* h, const char* name, grib_c
     char centre_s[32] = {0,};
     size_t centre_len = sizeof(centre_s);
     char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {NULL,}; // sorted array containing concept values
-    grib_concept_value* pCon = concepts;
+    const grib_concept_value* pCon = concepts;
 
     grib_context_log(h->context, GRIB_LOG_ERROR, "concept: no match for %s=%s", act->name_, name);
     if (grib_get_long(h, "edition", &editionNumber) == GRIB_SUCCESS &&

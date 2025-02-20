@@ -31,75 +31,182 @@ void MessageIsValid::init(const long l, grib_arguments* arg)
     length_ = 0;
 }
 
+int MessageIsValid::check_grid_and_packing_type()
+{
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
+    char gridType[128] = {0,};
+    size_t len = sizeof(gridType);
+    int err = grib_get_string_internal(handle_, "gridType", gridType, &len);
+    if (err) return err;
+
+    char packing_type[128] = {0,};
+    len = sizeof(packing_type);
+    err = grib_get_string_internal(handle_, "packingType", packing_type, &len);
+    if (err) return err;
+
+    const bool is_spectral_grid = (STR_EQUAL(gridType, "sh") ||
+                                   STR_EQUAL(gridType, "rotated_sh") ||
+                                   STR_EQUAL(gridType, "stretched_sh") ||
+                                   STR_EQUAL(gridType, "stretched_rotated_sh"));
+    const bool is_spectral_packing = (STR_EQUAL(packing_type, "spectral_complex") ||
+                                      STR_EQUAL(packing_type, "spectral_simple") ||
+                                      STR_EQUAL(packing_type, "bifourier_complex"));
+
+    if ( (is_spectral_grid && !is_spectral_packing) ||
+         (!is_spectral_grid && is_spectral_packing) )
+    {
+        grib_context_log(context_, GRIB_LOG_ERROR,
+                         "%s: Mismatch between gridType (=%s) and packingType (=%s)",
+                         TITLE, gridType, packing_type);
+        return GRIB_INVALID_MESSAGE;
+    }
+
+    return GRIB_SUCCESS;
+}
+
 int MessageIsValid::check_field_values()
 {
-    //printf("DEBUG  %s \n", __func__);
-    int ret = GRIB_SUCCESS;
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
+    int err = GRIB_SUCCESS;
     double* values = NULL;
     size_t size = 0;
     grib_context* c = handle_->context;
 
-    if ((ret = grib_get_size(handle_, "values", &size)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_size(handle_, "values", &size)) != GRIB_SUCCESS)
+        return err;
     values = (double*)grib_context_malloc_clear(c, size * sizeof(double));
     if (!values)
         return GRIB_OUT_OF_MEMORY;
 
-    if ((ret = grib_get_double_array(handle_, "values", values, &size)) != GRIB_SUCCESS) {
+    if ((err = grib_get_double_array(handle_, "values", values, &size)) != GRIB_SUCCESS) {
+        if (err == GRIB_FUNCTIONALITY_NOT_ENABLED) {
+            err = GRIB_SUCCESS;
+        }
         grib_context_free(c, values);
-        return ret;
+        return err;
     }
     grib_context_free(c, values);
     return GRIB_SUCCESS;
 }
 
+int MessageIsValid::check_number_of_missing()
+{
+    if (edition_ != 2) return GRIB_SUCCESS;
+
+    int err = 0;
+    long isGridded = -1;
+    err = grib_get_long_internal(handle_, "isGridded", &isGridded);
+    if (!err && isGridded == 0)
+        return GRIB_SUCCESS; // Spectral data does not have missing field values
+
+    // Some packing types like grid_complex and run length encoding
+    // do not store missing values in the bitmap
+    long missingValueManagementUsed = -1;
+    err = grib_get_long(handle_, "missingValueManagementUsed", &missingValueManagementUsed);
+    if (!err && missingValueManagementUsed == 1)
+        return GRIB_SUCCESS;
+
+    char packing_type[100] = {0,};
+    size_t len = sizeof(packing_type);
+    err = grib_get_string(handle_, "packingType", packing_type, &len);
+    if (!err && STR_EQUAL(packing_type, "grid_run_length"))
+        return GRIB_SUCCESS;
+
+    long numberOfDataPoints = 0;
+    if ((err = grib_get_long_internal(handle_, "numberOfDataPoints", &numberOfDataPoints)) != GRIB_SUCCESS)
+        return err;
+    long numberOfCodedValues = 0;
+    if ((err = grib_get_long_internal(handle_, "numberOfCodedValues", &numberOfCodedValues)) != GRIB_SUCCESS)
+        return err;
+    long numberOfMissing = 0;
+    if ((err = grib_get_long_internal(handle_, "numberOfMissing", &numberOfMissing)) != GRIB_SUCCESS)
+        return err;
+
+    if (numberOfCodedValues + numberOfMissing != numberOfDataPoints) {
+        grib_context_log(context_, GRIB_LOG_ERROR,
+                "%s: numberOfCodedValues + numberOfMissing != numberOfDataPoints (%ld + %ld != %ld)",
+                TITLE, numberOfCodedValues, numberOfMissing, numberOfDataPoints);
+        return GRIB_INVALID_MESSAGE;
+    }
+    return GRIB_SUCCESS;
+}
+
 int MessageIsValid::check_grid_pl_array()
 {
-    int ret = GRIB_SUCCESS;
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
+    int err = GRIB_SUCCESS;
     long Ni = 0,plpresent  = 0;
     long* pl = NULL; // pl array
     size_t plsize = 0;
     grib_context* c = handle_->context;
 
     // is there a PL array?
-    ret = grib_get_long(handle_, "PLPresent", &plpresent);
-    if (ret != GRIB_SUCCESS || plpresent == 0)
+    err = grib_get_long(handle_, "PLPresent", &plpresent);
+    if (err != GRIB_SUCCESS || plpresent == 0)
         return GRIB_SUCCESS; // No PL array. So nothing to do
 
     char gridType[128] = {0,};
     size_t len = 128;
-    ret = grib_get_string(handle_, "gridType", gridType, &len);
-    if (ret == GRIB_SUCCESS && STR_EQUAL(gridType, "reduced_ll")) {
-        // Unfortunately in our archive we have such grids with zeroes in the pl!
-        return GRIB_SUCCESS;
-    }
+    err = grib_get_string_internal(handle_, "gridType", gridType, &len);
+    if (err != GRIB_SUCCESS) return err;
 
-
-    if ((ret = grib_get_size(handle_, "pl", &plsize)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_size(handle_, "pl", &plsize)) != GRIB_SUCCESS)
+        return err;
     if (plsize == 0) { // pl array must have at least one element
         return GRIB_WRONG_GRID;
     }
 
     // If we have a PL array and PLPresent=true, then Ni must be missing
-    ret = grib_get_long(handle_, "Ni", &Ni);
-    if (ret == GRIB_SUCCESS && Ni != GRIB_MISSING_LONG) {
+    err = grib_get_long(handle_, "Ni", &Ni);
+    if (err == GRIB_SUCCESS && Ni != GRIB_MISSING_LONG) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Invalid Ni: If there is a PL array, Ni must be set to MISSING", TITLE);
         return GRIB_WRONG_GRID;
     }
 
     pl = (long*)grib_context_malloc_clear(c, sizeof(long) * plsize);
     if (!pl) return GRIB_OUT_OF_MEMORY;
-    if ((ret = grib_get_long_array(handle_, "pl", pl, &plsize)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_long_array_internal(handle_, "pl", pl, &plsize)) != GRIB_SUCCESS)
+        return err;
 
-    for (size_t j = 0; j < plsize; j++) {
-        if (pl[j] == 0) {
-            grib_context_log(c, GRIB_LOG_ERROR, "%s: Invalid PL array: entry at index=%zu is zero", TITLE, j);
+    long numberOfDataPoints = 0;
+    if ((err = grib_get_long_internal(handle_, "numberOfDataPoints", &numberOfDataPoints)) != GRIB_SUCCESS)
+        return err;
+    size_t sum_pl = 0;
+    for (size_t j = 0; j < plsize; j++) sum_pl += pl[j];
+
+    if (STR_EQUAL(gridType, "reduced_ll")) {
+        // For reduced_ll grids, sum(pl) must equal numberOfDataPoints in every situation
+        if (sum_pl != (size_t)numberOfDataPoints) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Sum of PL array (=%zu) must equal numberOfDataPoints (=%ld)",
+                             TITLE, sum_pl, numberOfDataPoints);
             grib_context_free(c, pl);
             return GRIB_WRONG_GRID;
         }
     }
+    else {
+        // Other reduced grids
+        // Unfortunately in our archive we have reduced_ll grids with zeroes in the pl!
+        for (size_t j = 0; j < plsize; j++) {
+            if (pl[j] == 0) {
+                grib_context_log(c, GRIB_LOG_ERROR, "%s: Invalid PL array: entry at index=%zu is zero", TITLE, j);
+                grib_context_free(c, pl);
+                return GRIB_WRONG_GRID;
+            }
+        }
+        if (sum_pl < (size_t)numberOfDataPoints) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Sum of PL array (=%zu) cannot be less than numberOfDataPoints (=%ld)",
+                    TITLE, sum_pl, numberOfDataPoints);
+            grib_context_free(c, pl);
+            return GRIB_WRONG_GRID;
+        }
+    }
+
     grib_context_free(c, pl);
 
     return GRIB_SUCCESS;
@@ -107,11 +214,14 @@ int MessageIsValid::check_grid_pl_array()
 
 int MessageIsValid::check_geoiterator()
 {
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
     int err = 0;
 
 #if defined(HAVE_GEOGRAPHY)
-    grib_iterator* iter = grib_iterator_new(handle_, 0, &err);
-    if (err == GRIB_NOT_IMPLEMENTED || err == GRIB_SUCCESS) {
+    grib_iterator* iter = grib_iterator_new(handle_, GRIB_GEOITERATOR_NO_VALUES, &err);
+    if (err == GRIB_NOT_IMPLEMENTED || err == GRIB_SUCCESS || err == GRIB_FUNCTIONALITY_NOT_ENABLED) {
         grib_iterator_delete(iter);
         return GRIB_SUCCESS; // GRIB_NOT_IMPLEMENTED is OK e.g., for spectral fields
     }
@@ -125,6 +235,9 @@ int MessageIsValid::check_geoiterator()
 
 int MessageIsValid::check_7777()
 {
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
     if (!grib_is_defined(handle_, "7777")) {
         return GRIB_7777_NOT_FOUND;
     }
@@ -133,9 +246,12 @@ int MessageIsValid::check_7777()
 
 int MessageIsValid::check_surface_keys()
 {
-    // printf("DEBUG  %s \n", __func__);
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
     int err = 0;
     const grib_context* c = handle_->context;
+
     if (edition_ != 2) return GRIB_SUCCESS;
 
     if (!grib_is_defined(handle_, "typeOfFirstFixedSurface"))
@@ -146,11 +262,13 @@ int MessageIsValid::check_surface_keys()
     int sfac_missing = grib_is_missing(handle_, "scaleFactorOfFirstFixedSurface", &err);
     int sval_missing = grib_is_missing(handle_, "scaledValueOfFirstFixedSurface", &err);
     if ((stype == 255 && !sfac_missing) || (stype == 255 && !sval_missing)) {
-        grib_context_log(c, GRIB_LOG_ERROR, "%s: First fixed surface: If the type of surface is missing so should its scaled keys", TITLE);
+        grib_context_log(c, GRIB_LOG_ERROR,
+            "%s: First fixed surface: If the type of surface is missing so should its scaleFactor/scaledValue keys", TITLE);
         return GRIB_INVALID_KEY_VALUE;
     }
     if (sfac_missing != sval_missing) {
-        grib_context_log(c, GRIB_LOG_ERROR, "%s: First fixed surface: If the scale factor is missing so should the scaled value and vice versa", TITLE);
+        grib_context_log(c, GRIB_LOG_ERROR,
+            "%s: First fixed surface: If the scale factor is missing so should the scaled value and vice versa", TITLE);
         return GRIB_INVALID_KEY_VALUE;
     }
     if (stype != 255) {
@@ -163,13 +281,20 @@ int MessageIsValid::check_surface_keys()
             grib_context_log(c, GRIB_LOG_ERROR, "%s: First fixed surface: Type %ld (%s) requires a level", TITLE, stype, name);
             return GRIB_INVALID_KEY_VALUE;
         }
+        // TODO(masn): generalise this. Need to check with DGOV
+        if (stype == 1 && (!sfac_missing || !sval_missing)) {
+            grib_context_log(c, GRIB_LOG_ERROR,
+                "%s: First fixed surface: If type=%ld, scaleFactor/scaledValue keys must be set to missing", TITLE, stype);
+            return GRIB_INVALID_KEY_VALUE;
+        }
     }
 
     grib_get_long_internal(handle_, "typeOfSecondFixedSurface", &stype);
     sfac_missing = grib_is_missing(handle_, "scaleFactorOfSecondFixedSurface", &err);
     sval_missing = grib_is_missing(handle_, "scaledValueOfSecondFixedSurface", &err);
     if ((stype == 255 && !sfac_missing) || (stype == 255 && !sval_missing)) {
-        grib_context_log(c, GRIB_LOG_ERROR, "%s: Second fixed surface: If the type of surface is missing so should its scaled keys", TITLE);
+        grib_context_log(c, GRIB_LOG_ERROR,
+            "%s: Second fixed surface: If the type of surface is missing so should its scaleFactor/scaledValue keys", TITLE);
         return GRIB_INVALID_KEY_VALUE;
     }
     if (sfac_missing != sval_missing) {
@@ -193,6 +318,9 @@ int MessageIsValid::check_surface_keys()
 
 int MessageIsValid::check_steps()
 {
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
     char stepType[32] = {0,};
     size_t size = sizeof(stepType) / sizeof(*stepType);
     int err = grib_get_string_internal(handle_, "stepType", stepType, &size);
@@ -209,12 +337,24 @@ int MessageIsValid::check_steps()
             grib_context_log(handle_->context, GRIB_LOG_ERROR, "%s: Invalid step: startStep > endStep (%ld > %ld)", TITLE, startStep, endStep);
             return GRIB_WRONG_STEP;
         }
+        // Accumulations, average etc
+        // TODO(masn): Generalise this rule. Beware of index and stdanom where start == end!
+        if ( STR_EQUAL(stepType, "accum") || STR_EQUAL(stepType, "avg") || STR_EQUAL(stepType, "min") || STR_EQUAL(stepType, "max") ) {
+            if (startStep == endStep) {
+                grib_context_log(handle_->context, GRIB_LOG_ERROR,
+                    "%s: Invalid steps: stepType=%s but startStep=endStep", TITLE, stepType, startStep, endStep);
+                return GRIB_WRONG_STEP;
+            }
+        }
     }
     return GRIB_SUCCESS;
 }
 
 int MessageIsValid::check_section_numbers(const int* sec_nums, size_t N)
 {
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
     for (size_t i = 0; i < N; ++i) {
         char sname[16] = {0,};
         const int sec_num = sec_nums[i];
@@ -229,6 +369,9 @@ int MessageIsValid::check_section_numbers(const int* sec_nums, size_t N)
 
 int MessageIsValid::check_namespace_keys()
 {
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
     const char* ns = "ls";
     grib_keys_iterator* kiter = grib_keys_iterator_new(handle_, /*flags=*/0, ns);
     if (!kiter) return GRIB_DECODING_ERROR;
@@ -253,6 +396,9 @@ int MessageIsValid::check_namespace_keys()
 
 int MessageIsValid::check_sections()
 {
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
     int err = 0;
     if (edition_ == 1) {
         const int grib1_section_nums[] = {1, 2, 4}; // section 3 is optional
@@ -271,7 +417,9 @@ int MessageIsValid::check_sections()
 
 int MessageIsValid::check_parameter()
 {
-    //printf("DEBUG  %s \n", __func__);
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
     int err = 0;
     long centre = 0;
     err = grib_get_long_internal(handle_, "centre", &centre);
@@ -282,7 +430,7 @@ int MessageIsValid::check_parameter()
         err = grib_get_long_internal(handle_, "paramId", &paramId);
         if (err) return err;
         if (paramId == 0) {
-            grib_context_log(handle_->context, GRIB_LOG_ERROR, "%s: Key paramId is 0 (parameter is not mapped)", TITLE);
+            grib_context_log(handle_->context, GRIB_LOG_ERROR, "%s: paramId is 0 (parameter is not mapped)", TITLE);
             return GRIB_INVALID_MESSAGE;
         }
     }
@@ -294,15 +442,17 @@ int MessageIsValid::unpack_long(long* val, size_t* len)
 {
     typedef int (MessageIsValid::*check_func)();
     static check_func check_functions[] = {
-        &MessageIsValid::check_sections,
+        &MessageIsValid::check_grid_and_packing_type,
         &MessageIsValid::check_field_values,
+        &MessageIsValid::check_number_of_missing,
         &MessageIsValid::check_grid_pl_array,
         &MessageIsValid::check_geoiterator,
-        &MessageIsValid::check_steps,
         &MessageIsValid::check_7777,
-        &MessageIsValid::check_namespace_keys,
         &MessageIsValid::check_surface_keys,
-        &MessageIsValid::check_parameter
+        &MessageIsValid::check_steps,
+        &MessageIsValid::check_namespace_keys,
+        &MessageIsValid::check_sections,
+        &MessageIsValid::check_parameter,
     };
 
     int err = 0;
@@ -313,7 +463,7 @@ int MessageIsValid::unpack_long(long* val, size_t* len)
 
     char product[32] = {0,};
     size_t size = sizeof(product) / sizeof(*product);
-    err = grib_get_string(handle_, product_, product, &size);
+    err = grib_get_string_internal(handle_, product_, product, &size);
     if (err) return err;
 
     if (!STR_EQUAL(product, "GRIB")) {

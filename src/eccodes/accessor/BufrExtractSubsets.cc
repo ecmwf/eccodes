@@ -18,10 +18,10 @@ namespace eccodes::accessor
 
 void BufrExtractSubsets::get_accessors()
 {
-    const grib_handle* h                       = grib_handle_of_accessor(this);
-
     if (packAccessor_)
         return;
+
+    const grib_handle* h = grib_handle_of_accessor(this);
     numericValuesAccessor_ = grib_find_accessor(h, numericValues_);
     packAccessor_          = grib_find_accessor(h, pack_);
 }
@@ -52,7 +52,7 @@ int BufrExtractSubsets::pack_long(const long* val, size_t* len)
 
     get_accessors();
 
-    v[0]    = 1;
+    v[0] = 1;
     int err = packAccessor_->pack_long(v, &l);
     if (err) {
         if (err == GRIB_ENCODING_ERROR)

@@ -108,7 +108,7 @@ int IsInList::evaluate_double(grib_handle* h, double* result) const
     // return err;
 }
 
-Expression::string IsInList::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
+const char* IsInList::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
 {
     char mybuf[1024] = {0,};
     size_t sizebuf = 1024;

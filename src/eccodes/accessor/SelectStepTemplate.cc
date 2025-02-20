@@ -20,10 +20,10 @@ void SelectStepTemplate::init(const long l, grib_arguments* c)
 {
     Unsigned::init(l, c);
     grib_handle* hand = grib_handle_of_accessor(this);
-    int n             = 0;
+    int n = 0;
 
     productDefinitionTemplateNumber_ = c->get_name(hand, n++);
-    instant_                         = c->get_long(hand, n++);
+    instant_ = c->get_long(hand, n++);
 }
 
 int SelectStepTemplate::unpack_long(long* val, size_t* len)
@@ -34,7 +34,7 @@ int SelectStepTemplate::unpack_long(long* val, size_t* len)
 
 int SelectStepTemplate::pack_long(const long* val, size_t* len)
 {
-    grib_handle* hand                       = grib_handle_of_accessor(this);
+    grib_handle* hand = grib_handle_of_accessor(this);
     long productDefinitionTemplateNumber    = 0;
     long productDefinitionTemplateNumberNew = 0;
 

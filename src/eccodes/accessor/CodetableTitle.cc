@@ -33,7 +33,7 @@ long CodetableTitle::get_native_type()
 
 int CodetableTitle::unpack_string(char* buffer, size_t* len)
 {
-    grib_codetable* table = NULL;
+    const grib_codetable* table = NULL;
 
     size_t size = 1;
     long value;

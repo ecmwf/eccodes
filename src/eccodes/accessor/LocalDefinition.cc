@@ -20,7 +20,7 @@ void LocalDefinition::init(const long l, grib_arguments* c)
 {
     Unsigned::init(l, c);
     grib_handle* hand = grib_handle_of_accessor(this);
-    int n             = 0;
+    int n = 0;
 
     grib2LocalSectionNumber_                 = c->get_name(hand, n++);
     productDefinitionTemplateNumber_         = c->get_name(hand, n++);

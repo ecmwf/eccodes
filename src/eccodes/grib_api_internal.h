@@ -723,6 +723,7 @@ struct grib_context
     int bufr_multi_element_constant_arrays;
     int grib_data_quality_checks;
     int single_precision;
+    int enable_warnings;
     int eckit_geo;
     FILE* log_stream;
     grib_trie* classes;

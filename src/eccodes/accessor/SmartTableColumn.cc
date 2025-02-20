@@ -46,11 +46,11 @@ void SmartTableColumn::dump(eccodes::Dumper* dumper)
 int SmartTableColumn::unpack_string_array(char** buffer, size_t* len)
 {
     SmartTable* tableAccessor = NULL;
-    grib_smart_table* table                    = NULL;
+    const grib_smart_table* table = NULL;
 
     size_t size = 1;
     long* code;
-    int err        = GRIB_SUCCESS;
+    int err = GRIB_SUCCESS;
     char tmp[1024] = {0,};
     int i = 0;
 
@@ -100,12 +100,12 @@ int SmartTableColumn::unpack_string_array(char** buffer, size_t* len)
 int SmartTableColumn::unpack_long(long* val, size_t* len)
 {
     SmartTable* tableAccessor = NULL;
-    grib_smart_table* table                    = NULL;
+    const grib_smart_table* table = NULL;
 
     size_t size = 1;
     long* code;
     int err = GRIB_SUCCESS;
-    int i   = 0;
+    int i = 0;
 
     for (i = 0; i < *len; i++)
         val[i] = GRIB_MISSING_LONG;
@@ -156,7 +156,7 @@ int SmartTableColumn::value_count(long* count)
     if (!smartTable_)
         return 0;
 
-    err    = grib_get_size(grib_handle_of_accessor(this), smartTable_, &size);
+    err = grib_get_size(grib_handle_of_accessor(this), smartTable_, &size);
     *count = size;
     return err;
 }

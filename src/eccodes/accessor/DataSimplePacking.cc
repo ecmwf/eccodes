@@ -476,7 +476,7 @@ int DataSimplePacking::pack_double(const double* val, size_t* len)
     double range                  = 0;
     double minrange = 0, maxrange = 0;
     long changing_precision = 0;
-    grib_context* c         = context_;
+    const grib_context* c   = context_;
 
     decimal_scale_factor = 0;
 

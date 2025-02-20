@@ -34,13 +34,12 @@ long CodetableUnits::get_native_type()
 
 int CodetableUnits::unpack_string(char* buffer, size_t* len)
 {
-    grib_codetable* table = NULL;
+    const grib_codetable* table = NULL;
 
     size_t size = 1;
     long value;
     int err = GRIB_SUCCESS;
     char tmp[1024];
-    size_t l                      = sizeof(tmp);
     accessor::Codetable* ca = (accessor::Codetable*)grib_find_accessor(grib_handle_of_accessor(this), codetable_);
 
     if ((err = ((grib_accessor*)ca)->unpack_long(&value, &size)) != GRIB_SUCCESS)
@@ -55,7 +54,7 @@ int CodetableUnits::unpack_string(char* buffer, size_t* len)
         snprintf(tmp, sizeof(tmp), "%d", (int)value);
     }
 
-    l = strlen(tmp) + 1;
+    size_t l = strlen(tmp) + 1;
 
     if (*len < l) {
         grib_context_log(context_, GRIB_LOG_ERROR,

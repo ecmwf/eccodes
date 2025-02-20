@@ -301,5 +301,16 @@ ${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $temp 2>$errlog
 grep -q "WARNING.*Key '#1#second' is missing" $errlog
 rm -f $temp $errlog
 
+
+#-----------------------------------------------------------
+echo "Test ECC-2017 ..."
+# DateTime extraction doesn't work for singleton intervals
+#-----------------------------------------------------------
+inputBufr="b003_56.bufr"
+generate_filter 20121031001417 20121031001417 1
+${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr
+
+
+
 # Clean up
 rm -f $outputRef $outputFilt $outputBufr $fLog $fRules

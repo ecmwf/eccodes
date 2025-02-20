@@ -46,13 +46,13 @@ int SetSArray::execute(grib_handle* h)
     return grib_set_string_array(h, name2_, (const char**)sarray_->v, sarray_->n);
 }
 
-void SetSArray::dump(FILE* f, int lvl)
-{
-    int i = 0;
-    for (i = 0; i < lvl; i++)
-        grib_context_print(context_, f, "     ");
-    grib_context_print(context_, f, name2_);
-    printf("\n");
-}
+// void SetSArray::dump(FILE* f, int lvl)
+// {
+//     int i = 0;
+//     for (i = 0; i < lvl; i++)
+//         grib_context_print(context_, f, "     ");
+//     grib_context_print(context_, f, name2_);
+//     printf("\n");
+// }
 
 }  // namespace eccodes::action

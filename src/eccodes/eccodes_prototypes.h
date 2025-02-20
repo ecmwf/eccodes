@@ -74,7 +74,7 @@ void grib_vdarray_delete_content(grib_vdarray* v);
 size_t grib_vdarray_used_size(grib_vdarray* v);
 
 /* grib_vsarray.cc */
-void grib_vsarray_print(const char* title, const grib_vsarray* vdarray);
+void grib_vsarray_print(const char* title, const grib_vsarray* vsarray);
 grib_vsarray* grib_vsarray_new(size_t size, size_t incsize);
 grib_vsarray* grib_vsarray_push(grib_vsarray* v, grib_sarray* val);
 void grib_vsarray_delete(grib_vsarray* v);

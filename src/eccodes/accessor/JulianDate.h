@@ -32,15 +32,15 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* year_ = nullptr;
-    const char* month_ = nullptr;
-    const char* day_ = nullptr;
-    const char* hour_ = nullptr;
+    const char* year_   = nullptr;
+    const char* month_  = nullptr;
+    const char* day_    = nullptr;
+    const char* hour_   = nullptr;
     const char* minute_ = nullptr;
     const char* second_ = nullptr;
-    const char* ymd_ = nullptr;
-    const char* hms_ = nullptr;
-    char sep_[5];
+    const char* ymd_    = nullptr;
+    const char* hms_    = nullptr;
+    char sep_[5]        = {0,};
 };
 
 }  // namespace eccodes::accessor

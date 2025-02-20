@@ -674,10 +674,9 @@ static const struct accessor_class_hash* grib_accessor_hash(const char* str, siz
 
 #ifdef DEBUG
     {
-        const char* s;
         ECCODES_ASSERT(len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH);
         ECCODES_ASSERT(key <= MAX_HASH_VALUE);
-        s = classes[key].name;
+        const char* s = classes[key].name;
         ECCODES_ASSERT(*str == *s && strcmp(str + 1, s + 1) == 0);
     }
 #endif

@@ -76,6 +76,27 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
         return GRIB_SUCCESS;
     }
 
+    if (STR_EQUAL(name_, "dump_content")) {
+        const int n = args_ ? args_->get_count() : 0;
+        if (n != 1) {
+            grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Please provide an argument e.g. wmo", name_);
+            return GRIB_INVALID_ARGUMENT;
+        }
+        const char* dump_mode = args_->get_string(h, 0);
+        if (dump_mode) {
+            int dump_flags = 0;
+            if (STR_EQUAL(dump_mode, "wmo")) { // mimic grib_dump -O
+                dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
+            }
+            if (STR_EQUAL(dump_mode, "debug")) { // mimic grib_dump -Da
+                dump_flags = GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY | GRIB_DUMP_FLAG_ALIASES;
+            }
+            grib_dump_content(h, stdout, dump_mode, dump_flags, 0);
+            *lres = 1;
+            return GRIB_SUCCESS;
+        }
+    }
+
     if (STR_EQUAL(name_, "missing")) {
         const char* keyName = args_ ? args_->get_name(h, 0) : nullptr;
         if (keyName) {
