@@ -219,6 +219,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_get
         bufr_operators
         bufr_filter_misc
+        bufr_filter_datetime
         bufr_filter_fail
         bufr_filter_extract_subsets
         bufr_filter_extract_datetime
