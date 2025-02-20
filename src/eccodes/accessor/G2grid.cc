@@ -10,13 +10,13 @@
 
 #include "G2grid.h"
 
-eccodes::accessor::G2grid _grib_accessor_g2grid;
+eccodes::accessor::G2Grid _grib_accessor_g2grid;
 eccodes::Accessor* grib_accessor_g2grid = &_grib_accessor_g2grid;
 
 namespace eccodes::accessor
 {
 
-void G2grid::init(const long l, grib_arguments* c)
+void G2Grid::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
     grib_handle* hand = grib_handle_of_accessor(this);
@@ -34,7 +34,7 @@ void G2grid::init(const long l, grib_arguments* c)
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC | GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int G2grid::value_count(long* count)
+int G2Grid::value_count(long* count)
 {
     *count = 6;
     return 0;
@@ -43,7 +43,7 @@ int G2grid::value_count(long* count)
 // GRIB edition 2 uses microdegrees
 #define ANGLE_SUBDIVISIONS (1000 * 1000)
 
-int G2grid::unpack_double(double* val, size_t* len)
+int G2Grid::unpack_double(double* val, size_t* len)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
     int ret           = 0;
@@ -174,7 +174,7 @@ static int trial(const double* val, long v[6], long* basic_angle, long* sub_divi
     return is_ok(val, v, *basic_angle, *sub_division);
 }
 
-int G2grid::pack_double(const double* val, size_t* len)
+int G2Grid::pack_double(const double* val, size_t* len)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
     int ret;

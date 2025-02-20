@@ -15,10 +15,10 @@
 namespace eccodes::accessor
 {
 
-class DataShsimplePacking : public Gen
+class DataShSimplePacking : public Gen
 {
 public:
-    DataShsimplePacking() :
+    DataShSimplePacking() :
         Gen() { class_name_ = "data_shsimple_packing"; }
     // grib_accessor* create_empty_accessor() override { return new DataShsimplePacking{}; }
     long get_native_type() override;

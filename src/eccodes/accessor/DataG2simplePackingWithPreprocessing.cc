@@ -12,21 +12,21 @@
 #define DIRECT  0
 #define INVERSE 1
 
-eccodes::accessor::DataG2simplePackingWithPreprocessing _grib_accessor_data_g2simple_packing_with_preprocessing;
+eccodes::accessor::DataG2SimplePackingWithPreprocessing _grib_accessor_data_g2simple_packing_with_preprocessing;
 eccodes::Accessor* grib_accessor_data_g2simple_packing_with_preprocessing = &_grib_accessor_data_g2simple_packing_with_preprocessing;
 
 namespace eccodes::accessor
 {
 
-void DataG2simplePackingWithPreprocessing::init(const long v, grib_arguments* args)
+void DataG2SimplePackingWithPreprocessing::init(const long v, grib_arguments* args)
 {
-    DataG2simplePacking::init(v, args);
+    DataG2SimplePacking::init(v, args);
     pre_processing_           = args->get_name(grib_handle_of_accessor(this), carg_++);
     pre_processing_parameter_ = args->get_name(grib_handle_of_accessor(this), carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int DataG2simplePackingWithPreprocessing::value_count(long* n_vals)
+int DataG2SimplePackingWithPreprocessing::value_count(long* n_vals)
 {
     *n_vals = 0;
 
@@ -97,7 +97,7 @@ static int pre_processing_func(double* values, long length, long pre_processing,
     return ret;
 }
 
-int DataG2simplePackingWithPreprocessing::unpack_double(double* val, size_t* len)
+int DataG2SimplePackingWithPreprocessing::unpack_double(double* val, size_t* len)
 {
     size_t n_vals = 0;
     long nn       = 0;
@@ -139,7 +139,7 @@ int DataG2simplePackingWithPreprocessing::unpack_double(double* val, size_t* len
     return err;
 }
 
-int DataG2simplePackingWithPreprocessing::pack_double(const double* val, size_t* len)
+int DataG2SimplePackingWithPreprocessing::pack_double(const double* val, size_t* len)
 {
     size_t n_vals = *len;
     int err       = 0;
@@ -156,7 +156,7 @@ int DataG2simplePackingWithPreprocessing::pack_double(const double* val, size_t*
     if (err != GRIB_SUCCESS)
         return err;
 
-    err = DataG2simplePacking::pack_double(val, len);
+    err = DataG2SimplePacking::pack_double(val, len);
     if (err != GRIB_SUCCESS)
         return err;
 

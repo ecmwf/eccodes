@@ -11,26 +11,26 @@
 #include "DataG2simplePacking.h"
 #include "grib_scaling.h"
 
-eccodes::accessor::DataG2simplePacking _grib_accessor_data_g2simple_packing;
+eccodes::accessor::DataG2SimplePacking _grib_accessor_data_g2simple_packing;
 eccodes::Accessor* grib_accessor_data_g2simple_packing = &_grib_accessor_data_g2simple_packing;
 
 namespace eccodes::accessor
 {
 
-void DataG2simplePacking::init(const long v, grib_arguments* args)
+void DataG2SimplePacking::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
     edition_ = 2;
 }
 
-int DataG2simplePacking::value_count(long* n_vals)
+int DataG2SimplePacking::value_count(long* n_vals)
 {
     *n_vals = 0;
     return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, n_vals);
 }
 
-int DataG2simplePacking::pack_double(const double* cval, size_t* len)
+int DataG2SimplePacking::pack_double(const double* cval, size_t* len)
 {
     // grib_accessor* super                = *(cclass_ ->super);
     size_t n_vals             = *len;
@@ -149,7 +149,7 @@ int DataG2simplePacking::pack_double(const double* cval, size_t* len)
     return ret;
 }
 
-int DataG2simplePacking::pack_bytes(const unsigned char* val, size_t* len)
+int DataG2SimplePacking::pack_bytes(const unsigned char* val, size_t* len)
 {
     size_t length = *len;
     grib_buffer_replace(this, val, length, 1, 1);

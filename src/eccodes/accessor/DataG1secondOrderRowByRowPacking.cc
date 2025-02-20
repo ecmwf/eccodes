@@ -10,13 +10,13 @@
 
 #include "DataG1secondOrderRowByRowPacking.h"
 
-eccodes::accessor::DataG1secondOrderRowByRowPacking _grib_accessor_data_g1second_order_row_by_row_packing;
+eccodes::accessor::DataG1SecondOrderRowByRowPacking _grib_accessor_data_g1second_order_row_by_row_packing;
 eccodes::Accessor* grib_accessor_data_g1second_order_row_by_row_packing = &_grib_accessor_data_g1second_order_row_by_row_packing;
 
 namespace eccodes::accessor
 {
 
-void DataG1secondOrderRowByRowPacking::init(const long v, grib_arguments* args)
+void DataG1SecondOrderRowByRowPacking::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
     grib_handle* gh = grib_handle_of_accessor(this);
@@ -41,7 +41,7 @@ void DataG1secondOrderRowByRowPacking::init(const long v, grib_arguments* args)
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int DataG1secondOrderRowByRowPacking::value_count(long* count)
+int DataG1SecondOrderRowByRowPacking::value_count(long* count)
 {
     grib_handle* gh = grib_handle_of_accessor(this);
     long n = 0, i = 0;
@@ -116,7 +116,7 @@ int DataG1secondOrderRowByRowPacking::value_count(long* count)
 }
 
 template <typename T>
-int DataG1secondOrderRowByRowPacking::unpack_real(T* values, size_t* len)
+int DataG1SecondOrderRowByRowPacking::unpack_real(T* values, size_t* len)
 {
     grib_handle* gh                                              = grib_handle_of_accessor(this);
     int ret                                                      = 0;
@@ -281,17 +281,17 @@ int DataG1secondOrderRowByRowPacking::unpack_real(T* values, size_t* len)
     return ret;
 }
 
-int DataG1secondOrderRowByRowPacking::unpack_float(float* values, size_t* len)
+int DataG1SecondOrderRowByRowPacking::unpack_float(float* values, size_t* len)
 {
     return unpack_real<float>(values, len);
 }
 
-int DataG1secondOrderRowByRowPacking::unpack_double(double* values, size_t* len)
+int DataG1SecondOrderRowByRowPacking::unpack_double(double* values, size_t* len)
 {
     return unpack_real<double>(values, len);
 }
 
-int DataG1secondOrderRowByRowPacking::pack_double(const double* cval, size_t* len)
+int DataG1SecondOrderRowByRowPacking::pack_double(const double* cval, size_t* len)
 {
     int err         = 0;
     grib_handle* gh = grib_handle_of_accessor(this);

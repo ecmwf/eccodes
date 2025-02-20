@@ -44,12 +44,12 @@ typedef struct bif_trunc_t
 namespace eccodes::accessor
 {
 
-class DataG2bifourierPacking : public DataSimplePacking
+class DataG2BifourierPacking : public DataSimplePacking
 {
 public:
-    DataG2bifourierPacking() :
+    DataG2BifourierPacking() :
         DataSimplePacking() { class_name_ = "data_g2bifourier_packing"; }
-    grib_accessor* create_empty_accessor() override { return new DataG2bifourierPacking{}; }
+    grib_accessor* create_empty_accessor() override { return new DataG2BifourierPacking{}; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;

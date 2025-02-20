@@ -15,11 +15,11 @@
 namespace eccodes::accessor
 {
 
-class DataDummyField : public DataG1simplePacking
+class DataDummyField : public DataG1SimplePacking
 {
 public:
     DataDummyField() :
-        DataG1simplePacking() { class_name_ = "data_dummy_field"; }
+        DataG1SimplePacking() { class_name_ = "data_dummy_field"; }
     grib_accessor* create_empty_accessor() override { return new DataDummyField{}; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;

@@ -10,13 +10,13 @@
 
 #include "G1stepRange.h"
 
-eccodes::accessor::G1stepRange _grib_accessor_g1step_range;
+eccodes::accessor::G1StepRange _grib_accessor_g1step_range;
 eccodes::Accessor* grib_accessor_g1step_range = &_grib_accessor_g1step_range;
 
 namespace eccodes::accessor
 {
 
-void G1stepRange::init(const long l, grib_arguments* c)
+void G1StepRange::init(const long l, grib_arguments* c)
 {
     AbstractLongVector::init(l, c);
     grib_handle* h      = grib_handle_of_accessor(this);
@@ -39,7 +39,7 @@ void G1stepRange::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-void G1stepRange::dump(eccodes::Dumper* dumper)
+void G1StepRange::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_string(this, NULL);
 }
@@ -86,7 +86,7 @@ static const int u2s[] = {
     1800     /* (15) 30 minutes  */
 };
 
-int G1stepRange::grib_g1_step_get_steps(long* start, long* theEnd)
+int G1StepRange::grib_g1_step_get_steps(long* start, long* theEnd)
 {
     int err                            = 0;
     long p1 = 0, p2 = 0, unit = 0, timeRangeIndicator = 0, timeRangeIndicatorFromStepRange = 0;
@@ -182,7 +182,7 @@ int G1stepRange::grib_g1_step_get_steps(long* start, long* theEnd)
     return 0;
 }
 
-int G1stepRange::unpack_string(char* val, size_t* len)
+int G1StepRange::unpack_string(char* val, size_t* len)
 {
     char buf[100];
     size_t size = 0;
@@ -333,7 +333,7 @@ static int grib_g1_step_apply_units(
     return GRIB_WRONG_STEP;
 }
 
-int G1stepRange::pack_string(const char* val, size_t* len)
+int G1StepRange::pack_string(const char* val, size_t* len)
 {
     grib_handle* h          = grib_handle_of_accessor(this);
     long timeRangeIndicator = 0, P1 = 0, P2 = 0;
@@ -513,18 +513,18 @@ int G1stepRange::pack_string(const char* val, size_t* len)
     return 0;
 }
 
-int G1stepRange::value_count(long* count)
+int G1StepRange::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-size_t G1stepRange::string_length()
+size_t G1StepRange::string_length()
 {
     return 255;
 }
 
-int G1stepRange::pack_long(const long* val, size_t* len)
+int G1StepRange::pack_long(const long* val, size_t* len)
 {
     char buff[256];
     size_t bufflen    = 100;
@@ -599,7 +599,7 @@ int G1stepRange::pack_long(const long* val, size_t* len)
     return GRIB_INTERNAL_ERROR;
 }
 
-int G1stepRange::unpack_long(long* val, size_t* len)
+int G1StepRange::unpack_long(long* val, size_t* len)
 {
     char buff[100];
     size_t bufflen = 100;
@@ -635,12 +635,12 @@ int G1stepRange::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-long G1stepRange::get_native_type()
+long G1StepRange::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }
 
-void G1stepRange::destroy(grib_context* c)
+void G1StepRange::destroy(grib_context* c)
 {
     grib_context_free(c, v_);
     AbstractLongVector::destroy(c);

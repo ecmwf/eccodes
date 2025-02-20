@@ -10,13 +10,13 @@
 
 #include "RdbtimeGuessDate.h"
 
-eccodes::accessor::RdbtimeGuessDate _grib_accessor_rdbtime_guess_date;
+eccodes::accessor::RdbTimeGuessDate _grib_accessor_rdbtime_guess_date;
 eccodes::Accessor* grib_accessor_rdbtime_guess_date = &_grib_accessor_rdbtime_guess_date;
 
 namespace eccodes::accessor
 {
 
-void RdbtimeGuessDate::init(const long l, grib_arguments* c)
+void RdbTimeGuessDate::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n = 0;
@@ -30,7 +30,7 @@ void RdbtimeGuessDate::init(const long l, grib_arguments* c)
     /* flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY; */
 }
 
-int RdbtimeGuessDate::unpack_long(long* val, size_t* len)
+int RdbTimeGuessDate::unpack_long(long* val, size_t* len)
 {
     grib_handle* h = grib_handle_of_accessor(this);
     long typicalYear, typicalMonth, typicalDay, rdbDay;
@@ -70,7 +70,7 @@ int RdbtimeGuessDate::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int RdbtimeGuessDate::pack_long(const long* v, size_t* len)
+int RdbTimeGuessDate::pack_long(const long* v, size_t* len)
 {
     /* do nothing*/
     return GRIB_SUCCESS;

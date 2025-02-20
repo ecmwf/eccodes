@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class G2date : public Long
+class G2Date : public Long
 {
 public:
-    G2date() :
+    G2Date() :
         Long() { class_name_ = "g2date"; }
-    grib_accessor* create_empty_accessor() override { return new G2date{}; }
+    grib_accessor* create_empty_accessor() override { return new G2Date{}; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

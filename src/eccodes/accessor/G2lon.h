@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class G2lon : public Double
+class G2Lon : public Double
 {
 public:
-    G2lon() :
+    G2Lon() :
         Double() { class_name_ = "g2lon"; }
-    grib_accessor* create_empty_accessor() override { return new G2lon{}; }
+    grib_accessor* create_empty_accessor() override { return new G2Lon{}; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

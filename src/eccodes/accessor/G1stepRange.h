@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class G1stepRange : public AbstractLongVector
+class G1StepRange : public AbstractLongVector
 {
 public:
-    G1stepRange() :
+    G1StepRange() :
         AbstractLongVector() { class_name_ = "g1step_range"; }
-    grib_accessor* create_empty_accessor() override { return new G1stepRange{}; }
+    grib_accessor* create_empty_accessor() override { return new G1StepRange{}; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int pack_string(const char*, size_t* len) override;

@@ -10,13 +10,13 @@
 
 #include "G1verificationdate.h"
 
-eccodes::accessor::G1verificationdate _grib_accessor_g1verificationdate;
+eccodes::accessor::G1VerificationDate _grib_accessor_g1verificationdate;
 eccodes::Accessor* grib_accessor_g1verificationdate = &_grib_accessor_g1verificationdate;
 
 namespace eccodes::accessor
 {
 
-void G1verificationdate::init(const long l, grib_arguments* c)
+void G1VerificationDate::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n = 0;
@@ -28,7 +28,7 @@ void G1verificationdate::init(const long l, grib_arguments* c)
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int G1verificationdate::unpack_long(long* val, size_t* len)
+int G1VerificationDate::unpack_long(long* val, size_t* len)
 {
     int ret    = 0;
     long date  = 0;

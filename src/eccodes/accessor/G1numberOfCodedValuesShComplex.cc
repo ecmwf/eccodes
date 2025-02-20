@@ -10,13 +10,13 @@
 
 #include "G1numberOfCodedValuesShComplex.h"
 
-eccodes::accessor::G1numberOfCodedValuesShComplex _grib_accessor_g1number_of_coded_values_sh_complex;
+eccodes::accessor::G1NumberOfCodedValuesShComplex _grib_accessor_g1number_of_coded_values_sh_complex;
 eccodes::Accessor* grib_accessor_g1number_of_coded_values_sh_complex = &_grib_accessor_g1number_of_coded_values_sh_complex;
 
 namespace eccodes::accessor
 {
 
-void G1numberOfCodedValuesShComplex::init(const long l, grib_arguments* c)
+void G1NumberOfCodedValuesShComplex::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n             = 0;
@@ -33,7 +33,7 @@ void G1numberOfCodedValuesShComplex::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-int G1numberOfCodedValuesShComplex::unpack_long(long* val, size_t* len)
+int G1NumberOfCodedValuesShComplex::unpack_long(long* val, size_t* len)
 {
     int ret               = GRIB_SUCCESS;
     long bpv              = 0;

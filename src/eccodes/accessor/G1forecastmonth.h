@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class G1forecastmonth : public Long
+class G1ForecastMonth : public Long
 {
 public:
-    G1forecastmonth() :
+    G1ForecastMonth() :
         Long() { class_name_ = "g1forecastmonth"; }
-    grib_accessor* create_empty_accessor() override { return new G1forecastmonth{}; }
+    grib_accessor* create_empty_accessor() override { return new G1ForecastMonth{}; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void dump(eccodes::Dumper*) override;

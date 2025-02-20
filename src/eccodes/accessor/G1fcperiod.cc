@@ -10,13 +10,13 @@
 
 #include "G1fcperiod.h"
 
-eccodes::accessor::G1fcperiod _grib_accessor_g1fcperiod;
+eccodes::accessor::G1FcPeriod _grib_accessor_g1fcperiod;
 eccodes::Accessor* grib_accessor_g1fcperiod = &_grib_accessor_g1fcperiod;
 
 namespace eccodes::accessor
 {
 
-int G1fcperiod::unpack_string(char* val, size_t* len)
+int G1FcPeriod::unpack_string(char* val, size_t* len)
 {
     long start = 0, theEnd = 0;
     char tmp[1024];

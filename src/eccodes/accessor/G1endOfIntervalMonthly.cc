@@ -10,13 +10,13 @@
 
 #include "G1endOfIntervalMonthly.h"
 
-eccodes::accessor::G1endOfIntervalMonthly _grib_accessor_g1end_of_interval_monthly;
+eccodes::accessor::G1EndOfIntervalMonthly _grib_accessor_g1end_of_interval_monthly;
 eccodes::Accessor* grib_accessor_g1end_of_interval_monthly = &_grib_accessor_g1end_of_interval_monthly;
 
 namespace eccodes::accessor
 {
 
-void G1endOfIntervalMonthly::init(const long l, grib_arguments* c)
+void G1EndOfIntervalMonthly::init(const long l, grib_arguments* c)
 {
     AbstractVector::init(l, c);
     int n = 0;
@@ -33,7 +33,7 @@ void G1endOfIntervalMonthly::init(const long l, grib_arguments* c)
     dirty_  = 1;
 }
 
-int G1endOfIntervalMonthly::unpack_double(double* val, size_t* len)
+int G1EndOfIntervalMonthly::unpack_double(double* val, size_t* len)
 {
     int ret                = 0;
     char verifyingMonth[7] = {0,};
@@ -86,19 +86,19 @@ int G1endOfIntervalMonthly::unpack_double(double* val, size_t* len)
     return ret;
 }
 
-int G1endOfIntervalMonthly::value_count(long* count)
+int G1EndOfIntervalMonthly::value_count(long* count)
 {
     *count = number_of_elements_;
     return 0;
 }
 
-void G1endOfIntervalMonthly::destroy(grib_context* c)
+void G1EndOfIntervalMonthly::destroy(grib_context* c)
 {
     grib_context_free(c, v_);
     AbstractVector::destroy(c);
 }
 
-int G1endOfIntervalMonthly::compare(grib_accessor* b)
+int G1EndOfIntervalMonthly::compare(grib_accessor* b)
 {
     int retval   = GRIB_SUCCESS;
     double* aval = 0;

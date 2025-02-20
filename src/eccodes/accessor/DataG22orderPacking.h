@@ -16,12 +16,12 @@
 namespace eccodes::accessor
 {
 
-class DataG22orderPacking : public Values
+class DataG22OrderPacking : public Values
 {
 public:
-    DataG22orderPacking() :
+    DataG22OrderPacking() :
         Values() { class_name_ = "data_g22order_packing"; }
-    grib_accessor* create_empty_accessor() override { return new DataG22orderPacking{}; }
+    grib_accessor* create_empty_accessor() override { return new DataG22OrderPacking{}; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_float(float* val, size_t* len) override;

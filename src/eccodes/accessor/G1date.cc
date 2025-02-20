@@ -10,13 +10,13 @@
 
 #include "G1date.h"
 
-eccodes::accessor::G1date _grib_accessor_g1date;
+eccodes::accessor::G1Date _grib_accessor_g1date;
 eccodes::Accessor* grib_accessor_g1date = &_grib_accessor_g1date;
 
 namespace eccodes::accessor
 {
 
-void G1date::init(const long l, grib_arguments* c)
+void G1Date::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     grib_handle* hand = grib_handle_of_accessor(this);
@@ -28,7 +28,7 @@ void G1date::init(const long l, grib_arguments* c)
     day_     = c->get_name(hand, n++);
 }
 
-int G1date::unpack_long(long* val, size_t* len)
+int G1Date::unpack_long(long* val, size_t* len)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
 
@@ -60,7 +60,7 @@ int G1date::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G1date::pack_long(const long* val, size_t* len)
+int G1Date::pack_long(const long* val, size_t* len)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
 
@@ -117,7 +117,7 @@ static const char* months[] = {
     "dec",
 };
 
-int G1date::unpack_string(char* val, size_t* len)
+int G1Date::unpack_string(char* val, size_t* len)
 {
     grib_handle* hand = grib_handle_of_accessor(this);
 
@@ -160,7 +160,7 @@ int G1date::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G1date::value_count(long* count)
+int G1Date::value_count(long* count)
 {
     *count = 1;
     return 0;

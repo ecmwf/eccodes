@@ -10,13 +10,13 @@
 
 #include "Latlonvalues.h"
 
-eccodes::accessor::Latlonvalues _grib_accessor_latlonvalues;
+eccodes::accessor::LatLonvalues _grib_accessor_latlonvalues;
 eccodes::Accessor* grib_accessor_latlonvalues = &_grib_accessor_latlonvalues;
 
 namespace eccodes::accessor
 {
 
-void Latlonvalues::init(const long l, grib_arguments* c)
+void LatLonvalues::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
     int n = 0;
@@ -26,7 +26,7 @@ void Latlonvalues::init(const long l, grib_arguments* c)
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int Latlonvalues::unpack_double(double* val, size_t* len)
+int LatLonvalues::unpack_double(double* val, size_t* len)
 {
     grib_context* c = context_;
     int err         = 0;
@@ -63,7 +63,7 @@ int Latlonvalues::unpack_double(double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int Latlonvalues::value_count(long* count)
+int LatLonvalues::value_count(long* count)
 {
     grib_handle* h = grib_handle_of_accessor(this);
     int ret        = GRIB_SUCCESS;

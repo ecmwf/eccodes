@@ -11,7 +11,7 @@
 #include "DataG1secondOrderGeneralExtendedPacking.h"
 #include "grib_scaling.h"
 
-eccodes::accessor::DataG1secondOrderGeneralExtendedPacking _grib_accessor_data_g1second_order_general_extended_packing;
+eccodes::accessor::DataG1SecondOrderGeneralExtendedPacking _grib_accessor_data_g1second_order_general_extended_packing;
 eccodes::Accessor* grib_accessor_data_g1second_order_general_extended_packing = &_grib_accessor_data_g1second_order_general_extended_packing;
 
 namespace eccodes::accessor
@@ -56,7 +56,7 @@ long number_of_bits(grib_handle* h, unsigned long x)
     return i;
 }
 
-void DataG1secondOrderGeneralExtendedPacking::init(const long v, grib_arguments* args)
+void DataG1SecondOrderGeneralExtendedPacking::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
     grib_handle* handle = grib_handle_of_accessor(this);
@@ -92,7 +92,7 @@ void DataG1secondOrderGeneralExtendedPacking::init(const long v, grib_arguments*
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int DataG1secondOrderGeneralExtendedPacking::value_count(long* count)
+int DataG1SecondOrderGeneralExtendedPacking::value_count(long* count)
 {
     long numberOfCodedValues = 0;
     long numberOfGroups      = 0;
@@ -128,7 +128,7 @@ int DataG1secondOrderGeneralExtendedPacking::value_count(long* count)
     return err;
 }
 
-int DataG1secondOrderGeneralExtendedPacking::unpack_double_element(size_t idx, double* val)
+int DataG1SecondOrderGeneralExtendedPacking::unpack_double_element(size_t idx, double* val)
 {
     size_t size;
     double* values;
@@ -152,7 +152,7 @@ int DataG1secondOrderGeneralExtendedPacking::unpack_double_element(size_t idx, d
     return GRIB_SUCCESS;
 }
 
-int DataG1secondOrderGeneralExtendedPacking::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
+int DataG1SecondOrderGeneralExtendedPacking::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
     size_t size = 0, i = 0;
     double* values;
@@ -180,7 +180,7 @@ int DataG1secondOrderGeneralExtendedPacking::unpack_double_element_set(const siz
     return GRIB_SUCCESS;
 }
 
-int DataG1secondOrderGeneralExtendedPacking::unpack(double* dvalues, float* fvalues, size_t* len)
+int DataG1SecondOrderGeneralExtendedPacking::unpack(double* dvalues, float* fvalues, size_t* len)
 {
     int ret = 0;
     long numberOfGroups, numberOfSecondOrderPackedValues;
@@ -399,12 +399,12 @@ int DataG1secondOrderGeneralExtendedPacking::unpack(double* dvalues, float* fval
     return ret;
 }
 
-int DataG1secondOrderGeneralExtendedPacking::unpack_float(float* values, size_t* len)
+int DataG1SecondOrderGeneralExtendedPacking::unpack_float(float* values, size_t* len)
 {
     return unpack(NULL, values, len);
 }
 
-int DataG1secondOrderGeneralExtendedPacking::unpack_double(double* values, size_t* len)
+int DataG1SecondOrderGeneralExtendedPacking::unpack_double(double* values, size_t* len)
 {
     return unpack(values, NULL, len);
 }
@@ -543,7 +543,7 @@ static int get_bits_per_value(grib_handle* h, const char* bits_per_value_str, lo
 // For the old implementation of pack_double, see
 //  src/deprecated/grib_accessor_data_g1second_order_general_extended_packing.pack_double.cc
 // See ECC-441 and ECC-261
-int DataG1secondOrderGeneralExtendedPacking::pack_double(const double* val, size_t* len)
+int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size_t* len)
 {
     int ret   = 0;
     int grib2 = 0;
@@ -1206,7 +1206,7 @@ int DataG1secondOrderGeneralExtendedPacking::pack_double(const double* val, size
     return GRIB_SUCCESS;
 }
 
-void DataG1secondOrderGeneralExtendedPacking::destroy(grib_context* context)
+void DataG1SecondOrderGeneralExtendedPacking::destroy(grib_context* context)
 {
     if (dvalues_ != NULL) {
         grib_context_free(context, dvalues_);

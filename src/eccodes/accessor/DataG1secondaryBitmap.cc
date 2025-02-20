@@ -10,19 +10,19 @@
 
 #include "DataG1secondaryBitmap.h"
 
-eccodes::accessor::DataG1secondaryBitmap _grib_accessor_data_g1secondary_bitmap;
+eccodes::accessor::DataG1SecondaryBitmap _grib_accessor_data_g1secondary_bitmap;
 eccodes::Accessor* grib_accessor_data_g1secondary_bitmap = &_grib_accessor_data_g1secondary_bitmap;
 
 namespace eccodes::accessor
 {
 
-void DataG1secondaryBitmap::init(const long v, grib_arguments* args)
+void DataG1SecondaryBitmap::init(const long v, grib_arguments* args)
 {
     DataSecondaryBitmap::init(v, args);
     number_of_ones_ = args->get_name(grib_handle_of_accessor(this), 4);
 }
 
-int DataG1secondaryBitmap::value_count(long* count)
+int DataG1SecondaryBitmap::value_count(long* count)
 {
     size_t len = 0;
     int err    = 0;
@@ -41,7 +41,7 @@ int DataG1secondaryBitmap::value_count(long* count)
     return GRIB_SUCCESS;
 }
 
-int DataG1secondaryBitmap::pack_double(const double* val, size_t* len)
+int DataG1SecondaryBitmap::pack_double(const double* val, size_t* len)
 {
     int err                  = 0;
     long primary_len         = 0;

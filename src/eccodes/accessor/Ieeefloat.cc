@@ -10,13 +10,13 @@
 
 #include "Ieeefloat.h"
 
-eccodes::accessor::Ieeefloat _grib_accessor_ieeefloat;
+eccodes::accessor::IeeeFloat _grib_accessor_ieeefloat;
 eccodes::Accessor* grib_accessor_ieeefloat = &_grib_accessor_ieeefloat;
 
 namespace eccodes::accessor
 {
 
-void Ieeefloat::init(const long len, grib_arguments* arg)
+void IeeeFloat::init(const long len, grib_arguments* arg)
 {
     Double::init(len, arg);
     long count = 0;
@@ -26,7 +26,7 @@ void Ieeefloat::init(const long len, grib_arguments* arg)
     ECCODES_ASSERT(length_ >= 0);
 }
 
-int Ieeefloat::value_count(long* len)
+int IeeeFloat::value_count(long* len)
 {
     *len = 0;
 
@@ -37,7 +37,7 @@ int Ieeefloat::value_count(long* len)
     return grib_get_long_internal(grib_handle_of_accessor(this), arg_->get_name(parent_->h, 0), len);
 }
 
-int Ieeefloat::pack_double(const double* val, size_t* len)
+int IeeeFloat::pack_double(const double* val, size_t* len)
 {
     int ret            = 0;
     unsigned long i    = 0;
@@ -110,23 +110,23 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int Ieeefloat::unpack_double(double* val, size_t* len)
+int IeeeFloat::unpack_double(double* val, size_t* len)
 {
     return unpack<double>(this, val, len);
 }
 
-int Ieeefloat::unpack_float(float* val, size_t* len)
+int IeeeFloat::unpack_float(float* val, size_t* len)
 {
     return unpack<float>(this, val, len);
 }
 
-void Ieeefloat::update_size(size_t s)
+void IeeeFloat::update_size(size_t s)
 {
     length_ = (long)s;
     ECCODES_ASSERT(length_ >= 0);
 }
 
-int Ieeefloat::nearest_smaller_value(double val, double* nearest)
+int IeeeFloat::nearest_smaller_value(double val, double* nearest)
 {
     return grib_nearest_smaller_ieee_float(val, nearest);
 }

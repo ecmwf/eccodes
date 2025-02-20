@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class Ksec1expver : public Ascii
+class Ksec1Expver : public Ascii
 {
 public:
-    Ksec1expver() :
+    Ksec1Expver() :
         Ascii() { class_name_ = "ksec1expver"; }
-    grib_accessor* create_empty_accessor() override { return new Ksec1expver{}; }
+    grib_accessor* create_empty_accessor() override { return new Ksec1Expver{}; }
     int pack_long(const long* val, size_t* len) override;
     int pack_string(const char*, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;

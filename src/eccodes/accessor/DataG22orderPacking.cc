@@ -10,13 +10,13 @@
 
 #include "DataG22orderPacking.h"
 
-eccodes::accessor::DataG22orderPacking _grib_accessor_data_g22order_packing;
+eccodes::accessor::DataG22OrderPacking _grib_accessor_data_g22order_packing;
 eccodes::Accessor* grib_accessor_data_g22order_packing = &_grib_accessor_data_g22order_packing;
 
 namespace eccodes::accessor
 {
 
-void DataG22orderPacking::init(const long v, grib_arguments* args)
+void DataG22OrderPacking::init(const long v, grib_arguments* args)
 {
     Values::init(v, args);
     grib_handle* gh = grib_handle_of_accessor(this);
@@ -775,7 +775,7 @@ static void merge_j(struct section* h, int ref_bits, int width_bits, int has_und
     }
 }
 
-int DataG22orderPacking::pack_double(const double* val, size_t* len)
+int DataG22OrderPacking::pack_double(const double* val, size_t* len)
 {
     grib_handle* gh = grib_handle_of_accessor(this);
 
@@ -1470,7 +1470,7 @@ int DataG22orderPacking::pack_double(const double* val, size_t* len)
 }
 
 template <typename T>
-int DataG22orderPacking::unpack(T* val, size_t* len)
+int DataG22OrderPacking::unpack(T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
     grib_handle* gh = grib_handle_of_accessor(this);
@@ -1726,17 +1726,17 @@ int DataG22orderPacking::unpack(T* val, size_t* len)
     return err;
 }
 
-int DataG22orderPacking::unpack_double(double* val, size_t* len)
+int DataG22OrderPacking::unpack_double(double* val, size_t* len)
 {
     return unpack<double>(val, len);
 }
 
-int DataG22orderPacking::unpack_float(float* val, size_t* len)
+int DataG22OrderPacking::unpack_float(float* val, size_t* len)
 {
     return unpack<float>(val, len);
 }
 
-int DataG22orderPacking::unpack_double_element(size_t idx, double* val)
+int DataG22OrderPacking::unpack_double_element(size_t idx, double* val)
 {
     size_t size    = 0;
     double* values = NULL;
@@ -1757,7 +1757,7 @@ int DataG22orderPacking::unpack_double_element(size_t idx, double* val)
     return GRIB_SUCCESS;
 }
 
-int DataG22orderPacking::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
+int DataG22OrderPacking::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
     size_t size = 0, i = 0;
     double* values;
@@ -1785,7 +1785,7 @@ int DataG22orderPacking::unpack_double_element_set(const size_t* index_array, si
     return GRIB_SUCCESS;
 }
 
-int DataG22orderPacking::value_count(long* count)
+int DataG22OrderPacking::value_count(long* count)
 {
     *count = 0;
     return grib_get_long_internal(grib_handle_of_accessor(this), numberOfValues_, count);

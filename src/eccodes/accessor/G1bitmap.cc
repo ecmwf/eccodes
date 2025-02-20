@@ -10,19 +10,19 @@
 
 #include "G1bitmap.h"
 
-eccodes::accessor::G1bitmap _grib_accessor_g1bitmap;
+eccodes::accessor::G1Bitmap _grib_accessor_g1bitmap;
 eccodes::Accessor* grib_accessor_g1bitmap = &_grib_accessor_g1bitmap;
 
 namespace eccodes::accessor
 {
 
-void G1bitmap::init(const long len, grib_arguments* arg)
+void G1Bitmap::init(const long len, grib_arguments* arg)
 {
     Bitmap::init(len, arg);
     unusedBits_ = arg->get_name(grib_handle_of_accessor(this), 4);
 }
 
-int G1bitmap::pack_double(const double* val, size_t* len)
+int G1Bitmap::pack_double(const double* val, size_t* len)
 {
     size_t tlen;
 
@@ -62,7 +62,7 @@ int G1bitmap::pack_double(const double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G1bitmap::value_count(long* count)
+int G1Bitmap::value_count(long* count)
 {
     long tlen;
     int err;
@@ -74,7 +74,7 @@ int G1bitmap::value_count(long* count)
     return err;
 }
 
-int G1bitmap::unpack_bytes(unsigned char* val, size_t* len)
+int G1Bitmap::unpack_bytes(unsigned char* val, size_t* len)
 {
     unsigned char* buf = grib_handle_of_accessor(this)->buffer->data;
     long tlen;

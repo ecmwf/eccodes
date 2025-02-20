@@ -10,13 +10,13 @@
 
 #include "LatlonIncrement.h"
 
-eccodes::accessor::LatlonIncrement _grib_accessor_latlon_increment;
+eccodes::accessor::LatLonIncrement _grib_accessor_latlon_increment;
 eccodes::Accessor* grib_accessor_latlon_increment = &_grib_accessor_latlon_increment;
 
 namespace eccodes::accessor
 {
 
-void LatlonIncrement::init(const long l, grib_arguments* c)
+void LatLonIncrement::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
     int n             = 0;
@@ -33,7 +33,7 @@ void LatlonIncrement::init(const long l, grib_arguments* c)
     isLongitude_             = c->get_long(hand, n++);
 }
 
-int LatlonIncrement::unpack_double(double* val, size_t* len)
+int LatLonIncrement::unpack_double(double* val, size_t* len)
 {
     int ret           = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
@@ -119,7 +119,7 @@ int LatlonIncrement::unpack_double(double* val, size_t* len)
     return ret;
 }
 
-int LatlonIncrement::pack_double(const double* val, size_t* len)
+int LatLonIncrement::pack_double(const double* val, size_t* len)
 {
     int ret                  = 0;
     long codedNumberOfPoints = 0;
@@ -202,7 +202,7 @@ int LatlonIncrement::pack_double(const double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int LatlonIncrement::is_missing()
+int LatLonIncrement::is_missing()
 {
     size_t len = 1;
     double val = 0;

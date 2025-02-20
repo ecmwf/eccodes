@@ -10,13 +10,13 @@
 
 #include "G1monthlydate.h"
 
-eccodes::accessor::G1monthlydate _grib_accessor_g1monthlydate;
+eccodes::accessor::G1MonthlyDate _grib_accessor_g1monthlydate;
 eccodes::Accessor* grib_accessor_g1monthlydate = &_grib_accessor_g1monthlydate;
 
 namespace eccodes::accessor
 {
 
-void G1monthlydate::init(const long l, grib_arguments* c)
+void G1MonthlyDate::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n = 0;
@@ -25,7 +25,7 @@ void G1monthlydate::init(const long l, grib_arguments* c)
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int G1monthlydate::unpack_long(long* val, size_t* len)
+int G1MonthlyDate::unpack_long(long* val, size_t* len)
 {
     long date = 0;
 

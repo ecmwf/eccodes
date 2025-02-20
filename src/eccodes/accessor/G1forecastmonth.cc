@@ -10,13 +10,13 @@
 
 #include "G1forecastmonth.h"
 
-eccodes::accessor::G1forecastmonth _grib_accessor_g1forecastmonth;
+eccodes::accessor::G1ForecastMonth _grib_accessor_g1forecastmonth;
 eccodes::Accessor* grib_accessor_g1forecastmonth = &_grib_accessor_g1forecastmonth;
 
 namespace eccodes::accessor
 {
 
-void G1forecastmonth::init(const long l, grib_arguments* c)
+void G1ForecastMonth::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     grib_handle* h  = grib_handle_of_accessor(this);
@@ -32,7 +32,7 @@ void G1forecastmonth::init(const long l, grib_arguments* c)
     }
 }
 
-void G1forecastmonth::dump(eccodes::Dumper* dumper)
+void G1ForecastMonth::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_long(this, NULL);
 }
@@ -106,7 +106,7 @@ static int unpack_long_edition2(grib_accessor* a, long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G1forecastmonth::unpack_long_edition1(long* val, size_t* len)
+int G1ForecastMonth::unpack_long_edition1(long* val, size_t* len)
 {
     int err                               = 0;
 
@@ -152,7 +152,7 @@ int G1forecastmonth::unpack_long_edition1(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G1forecastmonth::unpack_long(long* val, size_t* len)
+int G1ForecastMonth::unpack_long(long* val, size_t* len)
 {
     int err           = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
@@ -170,7 +170,7 @@ int G1forecastmonth::unpack_long(long* val, size_t* len)
 }
 
 /* TODO: Check for a valid date */
-int G1forecastmonth::pack_long(const long* val, size_t* len)
+int G1ForecastMonth::pack_long(const long* val, size_t* len)
 {
     return grib_set_long_internal(grib_handle_of_accessor(this), fcmonth_, *val);
 }

@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class DataG1simplePacking : public DataSimplePacking
+class DataG1SimplePacking : public DataSimplePacking
 {
 public:
-    DataG1simplePacking() :
+    DataG1SimplePacking() :
         DataSimplePacking() { class_name_ = "data_g1simple_packing"; }
-    grib_accessor* create_empty_accessor() override { return new DataG1simplePacking{}; }
+    grib_accessor* create_empty_accessor() override { return new DataG1SimplePacking{}; }
     int pack_double(const double* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;

@@ -10,13 +10,13 @@
 
 #include "DataG1complexPacking.h"
 
-eccodes::accessor::DataG1complexPacking _grib_accessor_data_g1complex_packing;
+eccodes::accessor::DataG1ComplexPacking _grib_accessor_data_g1complex_packing;
 eccodes::Accessor* grib_accessor_data_g1complex_packing = &_grib_accessor_data_g1complex_packing;
 
 namespace eccodes::accessor
 {
 
-void DataG1complexPacking::init(const long v, grib_arguments* args)
+void DataG1ComplexPacking::init(const long v, grib_arguments* args)
 {
     DataComplexPacking::init(v, args);
     half_byte_    = args->get_name(grib_handle_of_accessor(this), carg_++);
@@ -28,7 +28,7 @@ void DataG1complexPacking::init(const long v, grib_arguments* args)
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int DataG1complexPacking::pack_double(const double* val, size_t* len)
+int DataG1ComplexPacking::pack_double(const double* val, size_t* len)
 {
     int ret             = GRIB_SUCCESS;
     long seclen         = 0;

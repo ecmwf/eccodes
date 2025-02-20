@@ -10,13 +10,13 @@
 
 #include "Budgdate.h"
 
-eccodes::accessor::Budgdate _grib_accessor_budgdate;
+eccodes::accessor::BudgDate _grib_accessor_budgdate;
 eccodes::Accessor* grib_accessor_budgdate = &_grib_accessor_budgdate;
 
 namespace eccodes::accessor
 {
 
-void Budgdate::init(const long l, grib_arguments* c)
+void BudgDate::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n = 0;
@@ -26,7 +26,7 @@ void Budgdate::init(const long l, grib_arguments* c)
     day_   = c->get_name(grib_handle_of_accessor(this), n++);
 }
 
-int Budgdate::unpack_long(long* val, size_t* len)
+int BudgDate::unpack_long(long* val, size_t* len)
 {
     int ret = 0;
 
@@ -50,7 +50,7 @@ int Budgdate::unpack_long(long* val, size_t* len)
 }
 
 /* TODO: Check for a valid date */
-int Budgdate::pack_long(const long* val, size_t* len)
+int BudgDate::pack_long(const long* val, size_t* len)
 {
     int ret = 0;
     long v  = val[0];

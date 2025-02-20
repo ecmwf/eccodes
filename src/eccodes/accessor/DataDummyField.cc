@@ -18,7 +18,7 @@ namespace eccodes::accessor
 
 void DataDummyField::init(const long v, grib_arguments* args)
 {
-    DataG1simplePacking::init(v, args);
+    DataG1SimplePacking::init(v, args);
     missing_value_  = args->get_name(grib_handle_of_accessor(this), carg_++);
     numberOfPoints_ = args->get_name(grib_handle_of_accessor(this), carg_++);
     bitmap_         = args->get_name(grib_handle_of_accessor(this), carg_++);

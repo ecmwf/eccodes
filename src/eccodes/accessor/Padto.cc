@@ -10,13 +10,13 @@
 
 #include "Padto.h"
 
-eccodes::accessor::Padto _grib_accessor_padto;
+eccodes::accessor::PadTo _grib_accessor_padto;
 eccodes::Accessor* grib_accessor_padto = &_grib_accessor_padto;
 
 namespace eccodes::accessor
 {
 
-size_t Padto::preferred_size(int from_handle)
+size_t PadTo::preferred_size(int from_handle)
 {
     long length = 0;
     long theEnd;
@@ -30,7 +30,7 @@ size_t Padto::preferred_size(int from_handle)
     return length > 0 ? length : 0;
 }
 
-void Padto::init(const long len, grib_arguments* arg)
+void PadTo::init(const long len, grib_arguments* arg)
 {
     Padding::init(len, arg);
 
@@ -38,7 +38,7 @@ void Padto::init(const long len, grib_arguments* arg)
     length_     = preferred_size(1);
 }
 
-void Padto::dump(eccodes::Dumper* dumper)
+void PadTo::dump(eccodes::Dumper* dumper)
 {
     /*dumper->dump_string(a,NULL);*/
 }

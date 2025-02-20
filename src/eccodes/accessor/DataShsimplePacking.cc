@@ -10,13 +10,13 @@
 
 #include "DataShsimplePacking.h"
 
-eccodes::accessor::DataShsimplePacking _grib_accessor_data_shsimple_packing;
+eccodes::accessor::DataShSimplePacking _grib_accessor_data_shsimple_packing;
 eccodes::Accessor* grib_accessor_data_shsimple_packing = &_grib_accessor_data_shsimple_packing;
 
 namespace eccodes::accessor
 {
 
-void DataShsimplePacking::init(const long v, grib_arguments* args)
+void DataShSimplePacking::init(const long v, grib_arguments* args)
 {
     Gen::init(v, args);
 
@@ -27,12 +27,12 @@ void DataShsimplePacking::init(const long v, grib_arguments* args)
     length_ = 0;
 }
 
-void DataShsimplePacking::dump(eccodes::Dumper* dumper)
+void DataShSimplePacking::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_values(this);
 }
 
-int DataShsimplePacking::pack_double(const double* val, size_t* len)
+int DataShSimplePacking::pack_double(const double* val, size_t* len)
 {
     int err = GRIB_SUCCESS;
 
@@ -57,7 +57,7 @@ int DataShsimplePacking::pack_double(const double* val, size_t* len)
     return err;
 }
 
-long DataShsimplePacking::get_native_type()
+long DataShSimplePacking::get_native_type()
 {
     return GRIB_TYPE_DOUBLE;
 }

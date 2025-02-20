@@ -10,13 +10,13 @@
 
 #include "Padtoeven.h"
 
-eccodes::accessor::Padtoeven _grib_accessor_padtoeven;
+eccodes::accessor::PadToEven _grib_accessor_padtoeven;
 eccodes::Accessor* grib_accessor_padtoeven = &_grib_accessor_padtoeven;
 
 namespace eccodes::accessor
 {
 
-size_t Padtoeven::preferred_size(int from_handle)
+size_t PadToEven::preferred_size(int from_handle)
 {
     long offset = 0;
     long length = 0;
@@ -38,7 +38,7 @@ size_t Padtoeven::preferred_size(int from_handle)
     return (seclen % 2) ? 1 : 0;
 }
 
-void Padtoeven::init(const long len, grib_arguments* args)
+void PadToEven::init(const long len, grib_arguments* args)
 {
     Padding::init(len, args);
 

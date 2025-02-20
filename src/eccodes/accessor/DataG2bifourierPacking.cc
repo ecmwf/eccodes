@@ -12,13 +12,13 @@
 #include "grib_scaling.h"
 #include <algorithm>
 
-eccodes::accessor::DataG2bifourierPacking _grib_accessor_data_g2bifourier_packing;
+eccodes::accessor::DataG2BifourierPacking _grib_accessor_data_g2bifourier_packing;
 eccodes::Accessor* grib_accessor_data_g2bifourier_packing = &_grib_accessor_data_g2bifourier_packing;
 
 namespace eccodes::accessor
 {
 
-void DataG2bifourierPacking::init(const long v, grib_arguments* args)
+void DataG2BifourierPacking::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
     grib_handle* gh = grib_handle_of_accessor(this);
@@ -41,7 +41,7 @@ void DataG2bifourierPacking::init(const long v, grib_arguments* args)
     dirty_ = 1;
 }
 
-int DataG2bifourierPacking::value_count(long* numberOfValues)
+int DataG2BifourierPacking::value_count(long* numberOfValues)
 {
     grib_handle* gh = grib_handle_of_accessor(this);
     *numberOfValues = 0;
@@ -331,7 +331,7 @@ static void free_bif_trunc(bif_trunc_t* bt, grib_accessor* a)
     grib_context_free(gh->context, bt);
 }
 
-bif_trunc_t* DataG2bifourierPacking::new_bif_trunc()
+bif_trunc_t* DataG2BifourierPacking::new_bif_trunc()
 {
     int ret;
 
@@ -443,7 +443,7 @@ cleanup:
     return NULL;
 }
 
-int DataG2bifourierPacking::unpack_double(double* val, size_t* len)
+int DataG2BifourierPacking::unpack_double(double* val, size_t* len)
 {
     grib_handle* gh = grib_handle_of_accessor(this);
 
@@ -540,7 +540,7 @@ cleanup:
     return ret;
 }
 
-int DataG2bifourierPacking::pack_double(const double* val, size_t* len)
+int DataG2BifourierPacking::pack_double(const double* val, size_t* len)
 {
     grib_handle* gh = grib_handle_of_accessor(this);
 

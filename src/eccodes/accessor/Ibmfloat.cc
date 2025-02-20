@@ -10,13 +10,13 @@
 
 #include "Ibmfloat.h"
 
-eccodes::accessor::Ibmfloat _grib_accessor_ibmfloat;
+eccodes::accessor::IbmFloat _grib_accessor_ibmfloat;
 eccodes::Accessor* grib_accessor_ibmfloat = &_grib_accessor_ibmfloat;
 
 namespace eccodes::accessor
 {
 
-void Ibmfloat::init(const long len, grib_arguments* arg)
+void IbmFloat::init(const long len, grib_arguments* arg)
 {
     Double::init(len, arg);
     long count = 0;
@@ -56,17 +56,17 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int Ibmfloat::unpack_double(double* val, size_t* len)
+int IbmFloat::unpack_double(double* val, size_t* len)
 {
     return unpack<double>(this, val, len);
 }
 
-int Ibmfloat::unpack_float(float* val, size_t* len)
+int IbmFloat::unpack_float(float* val, size_t* len)
 {
     return unpack<float>(this, val, len);
 }
 
-int Ibmfloat::pack_double(const double* val, size_t* len)
+int IbmFloat::pack_double(const double* val, size_t* len)
 {
     int ret            = 0;
     unsigned long i    = 0;
@@ -118,12 +118,12 @@ int Ibmfloat::pack_double(const double* val, size_t* len)
     return ret;
 }
 
-long Ibmfloat::byte_count()
+long IbmFloat::byte_count()
 {
     return length_;
 }
 
-int Ibmfloat::value_count(long* len)
+int IbmFloat::value_count(long* len)
 {
     *len = 0;
     if (!arg_) {
@@ -133,23 +133,23 @@ int Ibmfloat::value_count(long* len)
     return grib_get_long_internal(grib_handle_of_accessor(this), arg_->get_name(parent_->h, 0), len);
 }
 
-long Ibmfloat::byte_offset()
+long IbmFloat::byte_offset()
 {
     return offset_;
 }
 
-void Ibmfloat::update_size(size_t s)
+void IbmFloat::update_size(size_t s)
 {
     length_ = (long)s;
     ECCODES_ASSERT(length_ >= 0);
 }
 
-long Ibmfloat::next_offset()
+long IbmFloat::next_offset()
 {
     return byte_offset() + byte_count();
 }
 
-int Ibmfloat::nearest_smaller_value(double val, double* nearest)
+int IbmFloat::nearest_smaller_value(double val, double* nearest)
 {
     int ret = 0;
     if (grib_nearest_smaller_ibm_float(val, nearest) == GRIB_INTERNAL_ERROR) {

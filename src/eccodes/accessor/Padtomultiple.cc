@@ -10,13 +10,13 @@
 
 #include "Padtomultiple.h"
 
-eccodes::accessor::Padtomultiple _grib_accessor_padtomultiple;
+eccodes::accessor::PadToMultiple _grib_accessor_padtomultiple;
 eccodes::Accessor* grib_accessor_padtomultiple = &_grib_accessor_padtomultiple;
 
 namespace eccodes::accessor
 {
 
-size_t Padtomultiple::preferred_size(int from_handle)
+size_t PadToMultiple::preferred_size(int from_handle)
 {
     long padding  = 0;
     long begin    = 0;
@@ -31,7 +31,7 @@ size_t Padtomultiple::preferred_size(int from_handle)
     return padding == 0 ? multiple : padding;
 }
 
-void Padtomultiple::init(const long len, grib_arguments* arg)
+void PadToMultiple::init(const long len, grib_arguments* arg)
 {
     Padding::init(len, arg);
 

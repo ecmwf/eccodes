@@ -11,13 +11,13 @@
 #include "DataG1simplePacking.h"
 #include "grib_scaling.h"
 
-eccodes::accessor::DataG1simplePacking _grib_accessor_data_g1simple_packing;
+eccodes::accessor::DataG1SimplePacking _grib_accessor_data_g1simple_packing;
 eccodes::Accessor* grib_accessor_data_g1simple_packing = &_grib_accessor_data_g1simple_packing;
 
 namespace eccodes::accessor
 {
 
-void DataG1simplePacking::init(const long v, grib_arguments* args)
+void DataG1SimplePacking::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
 
@@ -29,7 +29,7 @@ void DataG1simplePacking::init(const long v, grib_arguments* args)
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int DataG1simplePacking::value_count(long* number_of_values)
+int DataG1SimplePacking::value_count(long* number_of_values)
 {
     *number_of_values = 0;
 
@@ -40,7 +40,7 @@ int DataG1simplePacking::value_count(long* number_of_values)
     return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, number_of_values);
 }
 
-int DataG1simplePacking::pack_double(const double* cval, size_t* len)
+int DataG1SimplePacking::pack_double(const double* cval, size_t* len)
 {
     size_t n_vals             = *len;
     long half_byte            = 0;

@@ -13,13 +13,13 @@
 #include "step_utilities.h"
 #include <iostream>
 
-eccodes::accessor::G2stepRange _grib_accessor_g2step_range;
+eccodes::accessor::G2StepRange _grib_accessor_g2step_range;
 eccodes::Accessor* grib_accessor_g2step_range = &_grib_accessor_g2step_range;
 
 namespace eccodes::accessor
 {
 
-void G2stepRange::init(const long l, grib_arguments* c)
+void G2StepRange::init(const long l, grib_arguments* c)
 {
     Gen::init(l, c);
 
@@ -36,7 +36,7 @@ void G2stepRange::init(const long l, grib_arguments* c)
 // dumper->dump_string(a, NULL);
 //}
 
-int G2stepRange::unpack_string(char* val, size_t* len)
+int G2StepRange::unpack_string(char* val, size_t* len)
 {
     grib_handle* h          = grib_handle_of_accessor(this);
     int ret                 = 0;
@@ -102,7 +102,7 @@ int G2stepRange::unpack_string(char* val, size_t* len)
 // <start_step> and <end_step> can be in different units
 // stepRange="X" in instantaneous field is equivalent to set step=X
 // stepRange="X" in accumulated field is equivalent to startStep=X, endStep=startStep
-int G2stepRange::pack_string(const char* val, size_t* len)
+int G2StepRange::pack_string(const char* val, size_t* len)
 {
     grib_handle* h = grib_handle_of_accessor(this);
     int ret        = 0;
@@ -170,18 +170,18 @@ int G2stepRange::pack_string(const char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G2stepRange::value_count(long* count)
+int G2StepRange::value_count(long* count)
 {
     *count = 1;
     return 0;
 }
 
-size_t G2stepRange::string_length()
+size_t G2StepRange::string_length()
 {
     return 255;
 }
 
-int G2stepRange::pack_long(const long* val, size_t* len)
+int G2StepRange::pack_long(const long* val, size_t* len)
 {
     char buff[100];
     size_t bufflen = 100;
@@ -190,7 +190,7 @@ int G2stepRange::pack_long(const long* val, size_t* len)
     return pack_string(buff, &bufflen);
 }
 
-int G2stepRange::unpack_long(long* val, size_t* len)
+int G2StepRange::unpack_long(long* val, size_t* len)
 {
     grib_handle* h       = grib_handle_of_accessor(this);
     int ret              = 0;
@@ -227,7 +227,7 @@ int G2stepRange::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G2stepRange::unpack_double(double* val, size_t* len)
+int G2StepRange::unpack_double(double* val, size_t* len)
 {
     grib_handle* h         = grib_handle_of_accessor(this);
     int ret                = 0;
@@ -265,7 +265,7 @@ int G2stepRange::unpack_double(double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-long G2stepRange::get_native_type()
+long G2StepRange::get_native_type()
 {
     return GRIB_TYPE_STRING;
 }

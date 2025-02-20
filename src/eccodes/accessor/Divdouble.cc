@@ -10,13 +10,13 @@
 
 #include "Divdouble.h"
 
-eccodes::accessor::Divdouble _grib_accessor_divdouble;
+eccodes::accessor::DivDouble _grib_accessor_divdouble;
 eccodes::Accessor* grib_accessor_divdouble = &_grib_accessor_divdouble;
 
 namespace eccodes::accessor
 {
 
-void Divdouble::init(const long l, grib_arguments* c)
+void DivDouble::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
     int n = 0;
@@ -25,7 +25,7 @@ void Divdouble::init(const long l, grib_arguments* c)
     divisor_ = c->get_double(grib_handle_of_accessor(this), n++);
 }
 
-int Divdouble::unpack_double(double* val, size_t* len)
+int DivDouble::unpack_double(double* val, size_t* len)
 {
     int ret      = GRIB_SUCCESS;
     double value = 0;

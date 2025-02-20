@@ -10,13 +10,13 @@
 
 #include "G2lon.h"
 
-eccodes::accessor::G2lon _grib_accessor_g2lon;
+eccodes::accessor::G2Lon _grib_accessor_g2lon;
 eccodes::Accessor* grib_accessor_g2lon = &_grib_accessor_g2lon;
 
 namespace eccodes::accessor
 {
 
-void G2lon::init(const long l, grib_arguments* c)
+void G2Lon::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
     int n = 0;
@@ -24,7 +24,7 @@ void G2lon::init(const long l, grib_arguments* c)
     longitude_ = c->get_name(grib_handle_of_accessor(this), n++);
 }
 
-int G2lon::unpack_double(double* val, size_t* len)
+int G2Lon::unpack_double(double* val, size_t* len)
 {
     int ret = 0;
     long longitude;
@@ -42,7 +42,7 @@ int G2lon::unpack_double(double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G2lon::pack_double(const double* val, size_t* len)
+int G2Lon::pack_double(const double* val, size_t* len)
 {
     long longitude;
     double value = *val;

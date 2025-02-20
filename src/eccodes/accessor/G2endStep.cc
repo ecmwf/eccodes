@@ -13,13 +13,13 @@
 #include "step_utilities.h"
 #include <stdexcept>
 
-eccodes::accessor::G2endStep _grib_accessor_g2end_step;
+eccodes::accessor::G2EndStep _grib_accessor_g2end_step;
 eccodes::Accessor* grib_accessor_g2end_step = &_grib_accessor_g2end_step;
 
 namespace eccodes::accessor
 {
 
-void G2endStep::init(const long l, grib_arguments* c)
+void G2EndStep::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n          = 0;
@@ -48,7 +48,7 @@ void G2endStep::init(const long l, grib_arguments* c)
     numberOfTimeRanges_  = c->get_name(h, n++);
 }
 
-void G2endStep::dump(eccodes::Dumper* dumper)
+void G2EndStep::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_double(this, NULL);
 }
@@ -93,7 +93,7 @@ static int convert_time_range_long_(
     return GRIB_SUCCESS;
 }
 
-int G2endStep::unpack_one_time_range_long_(long* val, size_t* len)
+int G2EndStep::unpack_one_time_range_long_(long* val, size_t* len)
 {
     int err = 0;
     long start_step_value;
@@ -141,7 +141,7 @@ int G2endStep::unpack_one_time_range_long_(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G2endStep::unpack_one_time_range_double_(double* val, size_t* len)
+int G2EndStep::unpack_one_time_range_double_(double* val, size_t* len)
 {
     int err                          = 0;
     double start_step_value;
@@ -193,7 +193,7 @@ int G2endStep::unpack_one_time_range_double_(double* val, size_t* len)
 }
 
 #define MAX_NUM_TIME_RANGES 16 /* maximum number of time range specifications */
-int G2endStep::unpack_multiple_time_ranges_long_(long* val, size_t* len)
+int G2EndStep::unpack_multiple_time_ranges_long_(long* val, size_t* len)
 {
     int i = 0, err = 0;
     grib_handle* h          = grib_handle_of_accessor(this);
@@ -251,7 +251,7 @@ int G2endStep::unpack_multiple_time_ranges_long_(long* val, size_t* len)
     return GRIB_DECODING_ERROR;
 }
 
-int G2endStep::unpack_multiple_time_ranges_double_(double* val, size_t* len)
+int G2EndStep::unpack_multiple_time_ranges_double_(double* val, size_t* len)
 {
     int i = 0, err = 0;
     grib_handle* h          = grib_handle_of_accessor(this);
@@ -319,7 +319,7 @@ int G2endStep::unpack_multiple_time_ranges_double_(double* val, size_t* len)
 // For the old implementation of unpack_long, see
 //  src/deprecated/grib_accessor_g2end_step.unpack_long.cc
 //
-int G2endStep::unpack_long(long* val, size_t* len)
+int G2EndStep::unpack_long(long* val, size_t* len)
 {
     grib_handle* h          = grib_handle_of_accessor(this);
     int ret                 = 0;
@@ -361,7 +361,7 @@ int G2endStep::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-int G2endStep::unpack_double(double* val, size_t* len)
+int G2EndStep::unpack_double(double* val, size_t* len)
 {
     grib_handle* h = grib_handle_of_accessor(this);
     int ret        = 0;
@@ -403,7 +403,7 @@ int G2endStep::unpack_double(double* val, size_t* len)
     return ret;
 }
 
-int G2endStep::pack_long_(const long end_step_value, const long end_step_unit)
+int G2EndStep::pack_long_(const long end_step_value, const long end_step_unit)
 {
     grib_handle* h = grib_handle_of_accessor(this);
     int err = 0;
@@ -541,7 +541,7 @@ int G2endStep::pack_long_(const long end_step_value, const long end_step_unit)
     return GRIB_SUCCESS;
 }
 
-int G2endStep::unpack_string(char* val, size_t* len)
+int G2EndStep::unpack_string(char* val, size_t* len)
 {
     grib_handle* h       = grib_handle_of_accessor(this);
     int ret              = 0;
@@ -584,7 +584,7 @@ int G2endStep::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G2endStep::pack_long(const long* val, size_t* len)
+int G2EndStep::pack_long(const long* val, size_t* len)
 {
     grib_handle* h = grib_handle_of_accessor(this);
     int ret;
@@ -614,7 +614,7 @@ int G2endStep::pack_long(const long* val, size_t* len)
     return ret;
 }
 
-int G2endStep::pack_string(const char* val, size_t* len)
+int G2EndStep::pack_string(const char* val, size_t* len)
 {
     grib_handle* h = grib_handle_of_accessor(this);
     int ret        = 0;
@@ -639,7 +639,7 @@ int G2endStep::pack_string(const char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-long G2endStep::get_native_type()
+long G2EndStep::get_native_type()
 {
     grib_handle* h = grib_handle_of_accessor(this);
     const int show_units_for_hours = context_->grib_hourly_steps_with_units;

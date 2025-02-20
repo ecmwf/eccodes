@@ -10,13 +10,13 @@
 
 #include "G2level.h"
 
-eccodes::accessor::G2level _grib_accessor_g2level;
+eccodes::accessor::G2Level _grib_accessor_g2level;
 eccodes::Accessor* grib_accessor_g2level = &_grib_accessor_g2level;
 
 namespace eccodes::accessor
 {
 
-void G2level::init(const long l, grib_arguments* c)
+void G2Level::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     grib_handle* hand = grib_handle_of_accessor(this);
@@ -39,7 +39,7 @@ bool is_tigge(grib_handle* h)
     return (productionStatus == 4 || productionStatus == 5);
 }
 
-int G2level::unpack_double(double* val, size_t* len)
+int G2Level::unpack_double(double* val, size_t* len)
 {
     int ret           = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
@@ -117,7 +117,7 @@ int G2level::unpack_double(double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G2level::unpack_long(long* val, size_t* len)
+int G2Level::unpack_long(long* val, size_t* len)
 {
     double dval = 0;
     int ret     = unpack_double(&dval, len);
@@ -127,7 +127,7 @@ int G2level::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-int G2level::pack_double(const double* val, size_t* len)
+int G2Level::pack_double(const double* val, size_t* len)
 {
     grib_handle* hand  = grib_handle_of_accessor(this);
     int ret            = 0;
@@ -189,7 +189,7 @@ int G2level::pack_double(const double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G2level::pack_long(const long* val, size_t* len)
+int G2Level::pack_long(const long* val, size_t* len)
 {
     int ret                 = 0;
     long value_first        = *val;
@@ -264,7 +264,7 @@ int G2level::pack_long(const long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G2level::is_missing()
+int G2Level::is_missing()
 {
     grib_handle* hand = grib_handle_of_accessor(this);
     int err           = 0;

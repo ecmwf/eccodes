@@ -18,7 +18,7 @@
 namespace eccodes::accessor
 {
 
-class Gen : public grib_accessor
+class Gen : public Accessor
 {
 public:
     Gen() :

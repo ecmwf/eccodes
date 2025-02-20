@@ -10,13 +10,13 @@
 
 #include "G2bitmap.h"
 
-eccodes::accessor::G2bitmap _grib_accessor_g2bitmap;
+eccodes::accessor::G2Bitmap _grib_accessor_g2bitmap;
 eccodes::Accessor* grib_accessor_g2bitmap = &_grib_accessor_g2bitmap;
 
 namespace eccodes::accessor
 {
 
-void G2bitmap::init(const long len, grib_arguments* arg)
+void G2Bitmap::init(const long len, grib_arguments* arg)
 {
     Bitmap::init(len, arg);
 
@@ -31,7 +31,7 @@ static GRIB_INLINE void set_bit_on(unsigned char* p, long* bitp)
     (*bitp)++;
 }
 
-int G2bitmap::pack_double(const double* val, size_t* len)
+int G2Bitmap::pack_double(const double* val, size_t* len)
 {
     unsigned char* buf = NULL;
     size_t i;
@@ -69,7 +69,7 @@ int G2bitmap::pack_double(const double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G2bitmap::value_count(long* tlen)
+int G2Bitmap::value_count(long* tlen)
 {
     int err;
     *tlen = 0;

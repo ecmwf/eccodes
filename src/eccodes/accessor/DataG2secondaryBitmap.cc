@@ -10,25 +10,25 @@
 
 #include "DataG2secondaryBitmap.h"
 
-eccodes::accessor::DataG2secondaryBitmap _grib_accessor_data_g2secondary_bitmap;
+eccodes::accessor::DataG2SecondaryBitmap _grib_accessor_data_g2secondary_bitmap;
 eccodes::Accessor* grib_accessor_data_g2secondary_bitmap = &_grib_accessor_data_g2secondary_bitmap;
 
 namespace eccodes::accessor
 {
 
-void DataG2secondaryBitmap::init(const long v, grib_arguments* args)
+void DataG2SecondaryBitmap::init(const long v, grib_arguments* args)
 {
     DataSecondaryBitmap::init(v, args);
     number_of_values_ = args->get_name(grib_handle_of_accessor(this), 4);
 }
 
-int DataG2secondaryBitmap::value_count(long* len)
+int DataG2SecondaryBitmap::value_count(long* len)
 {
     *len = 0;
     return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, len);
 }
 
-int DataG2secondaryBitmap::pack_double(const double* val, size_t* len)
+int DataG2SecondaryBitmap::pack_double(const double* val, size_t* len)
 {
     int err = 0;
 

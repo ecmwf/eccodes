@@ -15,12 +15,12 @@
 namespace eccodes::accessor
 {
 
-class Padtoeven : public Padding
+class PadToEven : public Padding
 {
 public:
-    Padtoeven() :
+    PadToEven() :
         Padding() { class_name_ = "padtoeven"; }
-    grib_accessor* create_empty_accessor() override { return new Padtoeven{}; }
+    grib_accessor* create_empty_accessor() override { return new PadToEven{}; }
     void init(const long, grib_arguments*) override;
     size_t preferred_size(int) override;
 
