@@ -8,15 +8,15 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "G2Latlon.h"
+#include "G2LatLon.h"
 
-eccodes::accessor::G2Latlon _grib_accessor_g2latlon;
+eccodes::accessor::G2LatLon _grib_accessor_g2latlon;
 eccodes::Accessor* grib_accessor_g2latlon = &_grib_accessor_g2latlon;
 
 namespace eccodes::accessor
 {
 
-void G2Latlon::init(const long l, grib_arguments* c)
+void G2LatLon::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
     int n = 0;
@@ -26,7 +26,7 @@ void G2Latlon::init(const long l, grib_arguments* c)
     given_ = c->get_name(grib_handle_of_accessor(this), n++);
 }
 
-int G2Latlon::unpack_double(double* val, size_t* len)
+int G2LatLon::unpack_double(double* val, size_t* len)
 {
     int ret = 0;
 
@@ -56,7 +56,7 @@ int G2Latlon::unpack_double(double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G2Latlon::pack_double(const double* val, size_t* len)
+int G2LatLon::pack_double(const double* val, size_t* len)
 {
     int ret = 0;
     double grid[6];
@@ -94,7 +94,7 @@ int G2Latlon::pack_double(const double* val, size_t* len)
     return grib_set_double_array_internal(hand, grid_, grid, size);
 }
 
-int G2Latlon::pack_missing()
+int G2LatLon::pack_missing()
 {
     double missing = GRIB_MISSING_DOUBLE;
     size_t size    = 1;
@@ -105,7 +105,7 @@ int G2Latlon::pack_missing()
     return pack_double(&missing, &size);
 }
 
-int G2Latlon::is_missing()
+int G2LatLon::is_missing()
 {
     long given = 1;
 

@@ -137,7 +137,7 @@ list( APPEND eccodes_src_files
     accessor/G2Date.cc
     accessor/G2Level.cc
     accessor/G2EndStep.cc
-    accessor/G2Latlon.cc
+    accessor/G2LatLon.cc
     accessor/G2Lon.cc
     accessor/GlobalGaussian.cc
     accessor/GaussianGridName.cc
