@@ -5,7 +5,7 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  *
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
- * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
 #include "grib_scaling.h"
@@ -1657,14 +1657,14 @@ grib_accessor* BufrDataArray::create_attribute_variable(const char* name, grib_s
 {
     grib_action creator;
     size_t len;
-    creator.op_         = (char*)"variable";
-    creator.name_space_ = (char*)"";
-    creator.flags_      = GRIB_ACCESSOR_FLAG_READ_ONLY | flags;
-    creator.set_        = 0;
-    creator.name_                 = (char*)name;
-    grib_accessor* a             = grib_accessor_factory(section, &creator, 0, NULL);
-    a->parent_                   = NULL;
-    a->h_                        = section->h;
+    creator.op_            = (char*)"variable";
+    creator.name_space_    = (char*)"";
+    creator.flags_         = GRIB_ACCESSOR_FLAG_READ_ONLY | GRIB_ACCESSOR_FLAG_BUFR_DATA | flags;
+    creator.set_           = 0;
+    creator.name_          = (char*)name;
+    grib_accessor* a       = grib_accessor_factory(section, &creator, 0, NULL);
+    a->parent_             = NULL;
+    a->h_                  = section->h;
     accessor::Variable* va = dynamic_cast<accessor::Variable*>(a);
     va->accessor_variable_set_type(type);
     len = 1;
@@ -2544,6 +2544,8 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
                                 return err;
                             }
                             associatedFieldAccessor->add_attribute(newAccessor, 1);
+                            //newAccessor->flags_ |= GRIB_ACCESSOR_FLAG_BUFR_DATA;
+                            //associatedFieldAccessor->flags_ |= GRIB_ACCESSOR_FLAG_BUFR_DATA;
                         }
                         break;
                     case 31021:

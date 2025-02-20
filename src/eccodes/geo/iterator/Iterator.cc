@@ -15,8 +15,7 @@
 #include "eccodes_config.h"
 
 #if defined(HAVE_ECKIT_GEO)
-    #include "eckit/runtime/Main.h"
-
+    #include "geo/EckitMainInit.h"
     #include "geo/GeoIterator.h"
 
     // eccodes macros conflict with eckit
@@ -29,7 +28,8 @@
 #include "grib_iterator_factory.h"
 #include "accessor/Iterator.h"
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 int Iterator::init(grib_handle* h, grib_arguments* args)
 {
@@ -47,8 +47,8 @@ eccodes::geo_iterator::Iterator* gribIteratorNew(const grib_handle* ch, unsigned
 {
     *error = GRIB_NOT_IMPLEMENTED;
 
-    grib_handle* h = (grib_handle*)ch;
-    grib_accessor* a = grib_find_accessor(h, "ITERATOR");
+    grib_handle* h          = (grib_handle*)ch;
+    grib_accessor* a        = grib_find_accessor(h, "ITERATOR");
     accessor::Iterator* ita = (accessor::Iterator*)a;
 
     if (!a)
@@ -114,26 +114,25 @@ grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int
     grib_iterator* i = (grib_iterator*)grib_context_malloc_clear(ch->context, sizeof(grib_iterator));
 
     #if defined(HAVE_ECKIT_GEO)
-    const int eckit_geo = ch->context->eckit_geo; // check environment variable
-    if (eckit_geo) {
-        struct InitMain
-        {
-            InitMain()
-            {
-                if (!eckit::Main::ready()) {
-                    static char* argv[]{ const_cast<char*>("grib_iterator_new") };
-                    eckit::Main::initialise(1, argv);
-                }
-            }
-        } static const init_main;
+    const int eckit_geo = ch->context->eckit_geo;  // check environment variable
+    if (eckit_geo != 0) {
+        eccodes::geo::eckit_main_init();
+
         try {
-            i->iterator = new eccodes::geo::GeoIterator(const_cast<grib_handle*>(ch), flags);
+            if (i->iterator = new eccodes::geo_iterator::GeoIterator(const_cast<grib_handle*>(ch), flags);
+                i->iterator != nullptr) {
+                return i;
+            }
         }
-        catch(std::exception& e) {
+        catch (eckit::geo::Exception& e) {
+            grib_context_log(ch->context, GRIB_LOG_ERROR, "grib_iterator_new: geo::Exception thrown (%s)", e.what());
+        }
+        catch (std::exception& e) {
             grib_context_log(ch->context, GRIB_LOG_ERROR, "grib_iterator_new: Exception thrown (%s)", e.what());
-            *error = GRIB_GEOCALCULUS_PROBLEM;
-            return NULL;
         }
+
+        *error = GRIB_GEOCALCULUS_PROBLEM;
+        return nullptr;
     }
     else
     #endif

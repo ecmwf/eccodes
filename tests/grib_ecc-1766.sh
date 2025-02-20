@@ -41,7 +41,7 @@ ${tools_dir}/grib_set -s activity=1,experiment=1,realization=1 $eerie_sample $te
 grib_check_key_equals $temp_grib "activity,experiment,realization" "1 1 1"
 grib_check_key_equals $temp_grib "activity:s,experiment:s" "CMIP6 hist"
 
-# ECC-1850: Additional keys added
+# ECC-1850: Additional keys added
 # Check additional keys are present and correct
 grib_check_key_exists $eerie_sample generation,model,resolution
 grib_check_key_equals $eerie_sample "generation,model,resolution" "255 0 0"

@@ -143,8 +143,8 @@ static int grib_check_param_concepts(const char* key, const char* filename)
             concept_condition = concept_condition->next;
         }
         /* Now check the scale factor/value pairs */
-        if (type1Missing == 1 && scaleFactor1Missing == 0 && scaledValue1Missing == 0) err = 1;
-        if (type2Missing == 1 && scaleFactor2Missing == 0 && scaledValue2Missing == 0) err = 1;
+        if (type1Missing == 1 && (scaleFactor1Missing == 0 || scaledValue1Missing == 0)) err = 1;
+        if (type2Missing == 1 && (scaleFactor2Missing == 0 || scaledValue2Missing == 0)) err = 1;
         if (scaleFactor1Missing == 1 && scaledValue1Missing == 0) err = 1;
         if (scaleFactor1Missing == 0 && scaledValue1Missing == 1) err = 1;
         if (scaleFactor2Missing == 1 && scaledValue2Missing == 0) err = 1;

@@ -22,19 +22,25 @@ void Mtg2SwitchDefault::init(const long len, grib_arguments* arg)
 
     grib_handle* h = grib_handle_of_accessor(this);
 
-    this->tablesVersion_           = arg->get_name(h, 0);
-    this->tablesVersionMTG2Switch_ = arg->get_name(h, 1);
-    this->marsClass_               = arg->get_name(h, 2);
+    tablesVersion_           = arg->get_name(h, 0);
+    tablesVersionMTG2Switch_ = arg->get_name(h, 1);
+    marsClass_               = arg->get_name(h, 2);
+    datasetForLocal_         = arg->get_name(h, 3);
 
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
 
+// MTG2 behaviour based on tablesVersion
+// Without accessing this logic (i.e. no ECMWF Section 2) the default is 1 = post-MTG2
+//  0 = pre-MTG2 encoding used
+//  1 = post-MTG2 encoding used
+//  2 = post-MTG2 encoding with paramId + chemId used
 int Mtg2SwitchDefault::unpack_long(long* val, size_t* len)
 {
-    grib_handle* h = grib_handle_of_accessor(this);
-    int err = 0;
+    grib_handle* h     = grib_handle_of_accessor(this);
+    int err            = 0;
     long tablesVersion = 0, tablesVersionMTG2Switch = 0;
     char marsClass[32] = {0,};
 
@@ -42,9 +48,9 @@ int Mtg2SwitchDefault::unpack_long(long* val, size_t* len)
     if (err) return err;
     err = grib_get_long(h, tablesVersionMTG2Switch_, &tablesVersionMTG2Switch);
     if (err) return err;
-    size_t size = sizeof(marsClass);
 
     bool marsClassExists = true;
+    size_t size = sizeof(marsClass);
     err = grib_get_string(h, marsClass_, marsClass, &size);
     if (err) {
         if (err == GRIB_NOT_FOUND) {
@@ -56,16 +62,50 @@ int Mtg2SwitchDefault::unpack_long(long* val, size_t* len)
         }
     }
 
-    if (tablesVersion <= tablesVersionMTG2Switch) {
-        *val = 0; // Pre-MTG2
-    } else {
-        // For class mc and cr post MTG2 we always want the param + chem split (value 2)
-        // For TIGGE, marsClass is not defined in the empty local Section 2, but is defined later on.
-        if ( marsClassExists && (STR_EQUAL(marsClass, "mc") || STR_EQUAL(marsClass, "cr")) ) {
-            *val = 2;
-        } else {
-            *val = 1; // All other cases we are post-MTG2
+    char datasetForLocal[128] = {0,};
+    size = sizeof(datasetForLocal);
+    bool datasetForLocalExists = true;
+    err = grib_get_string(h, datasetForLocal_, datasetForLocal, &size);
+    if (err) {
+        if (err == GRIB_NOT_FOUND) {
+            // This can happen if accessor is called before section 4
+            datasetForLocalExists = false;
+            err = 0;
         }
+        else {
+            return err;
+        }
+    }
+
+    long centre = 0;
+    err = grib_get_long(h, "centre", &centre);
+    if (err) return err;
+
+    bool isSpecialDataset = false;
+    if (centre == 98) isSpecialDataset = true; // ECMWF
+    if (datasetForLocalExists) {
+        if (STR_EQUAL(datasetForLocal, "s2s") || STR_EQUAL(datasetForLocal, "tigge") || STR_EQUAL(datasetForLocal, "uerra")) {
+            isSpecialDataset = true;
+        }
+    }
+
+    if (isSpecialDataset) {
+        if (tablesVersion <= tablesVersionMTG2Switch) {
+            *val = 0;  // Pre-MTG2
+        }
+        else {
+            // For class mc and cr post MTG2 we always want the param + chem split (value 2)
+            // For TIGGE, marsClass is not defined in the empty local Section 2, but is defined later on.
+            if (marsClassExists && (STR_EQUAL(marsClass, "mc") || STR_EQUAL(marsClass, "cr"))) {
+                *val = 2;
+            }
+            else {
+                *val = 1;  // Post-MTG2
+            }
+        }
+    }
+    else {
+        *val = 1;  // Post-MTG2
     }
 
     return err;

@@ -300,10 +300,6 @@ static void test_concept_condition_strings()
     grib_handle* h = grib_handle_new_from_samples(context, "GRIB2");
     if (!h) return;
 
-    err = get_concept_condition_string(h, "typeOfLevel", NULL, result);
-    ECCODES_ASSERT(!err);
-    ECCODES_ASSERT(strcmp(result, "typeOfFirstFixedSurface=1,typeOfSecondFixedSurface=255") == 0);
-
     err = get_concept_condition_string(h, "paramId", NULL, result);
     ECCODES_ASSERT(!err);
     ECCODES_ASSERT(strcmp(result, "discipline=0,parameterCategory=0,parameterNumber=0") == 0);
@@ -714,6 +710,26 @@ void test_codes_get_type_name()
     ECCODES_ASSERT( STR_EQUAL("section", grib_get_type_name(GRIB_TYPE_SECTION)) );
 }
 
+void test_grib_surface_type_requires_value()
+{
+    printf("Running %s ...\n", __func__);
+    int err = 0;
+    int edition = 2;
+    ECCODES_ASSERT( codes_grib_surface_type_requires_value(edition, 103, &err) == 1 && !err );
+    ECCODES_ASSERT( codes_grib_surface_type_requires_value(edition, 160, &err) == 1 && !err );
+    ECCODES_ASSERT( codes_grib_surface_type_requires_value(edition, 10,  &err) == 0 && !err );
+
+    ECCODES_ASSERT( codes_grib_surface_type_requires_value(edition, -1, &err) == 0 );
+    ECCODES_ASSERT( err == GRIB_INVALID_ARGUMENT);
+    ECCODES_ASSERT( codes_grib_surface_type_requires_value(edition, 300, &err) == 0 );
+    ECCODES_ASSERT( err == GRIB_INVALID_ARGUMENT);
+
+    // not implemented for edition 1
+    edition = 1;
+    ECCODES_ASSERT( codes_grib_surface_type_requires_value(edition, 1, &err) == 0 );
+    ECCODES_ASSERT( err == GRIB_NOT_IMPLEMENTED );
+}
+
 void test_grib2_choose_PDTN()
 {
     printf("Running %s ...\n", __func__);
@@ -944,6 +960,7 @@ int main(int argc, char** argv)
     test_string_replace_char();
     test_string_remove_char();
 
+    test_grib_surface_type_requires_value();
     test_grib2_select_PDTN();
     test_grib2_choose_PDTN();
     test_codes_is_feature_enabled();

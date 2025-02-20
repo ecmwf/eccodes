@@ -280,7 +280,8 @@ list( APPEND eccodes_src_files
     accessor/Blob.cc
     accessor/DataG2BifourierPacking.cc
     accessor/DataRunLengthPacking.cc
-
+    accessor/GridSpec.cc
+    accessor/G2ParamConceptFilename.cc
 
     grib_jasper_encoding.cc
     grib_openjpeg_encoding.cc
@@ -429,6 +430,8 @@ endif()
 
 if( eccodes_HAVE_GEOGRAPHY AND eccodes_HAVE_ECKIT_GEO )
     list( APPEND eccodes_src_files
+        geo/EckitMainInit.cc
+        geo/EckitMainInit.h
         geo/GeoIterator.cc
         geo/GeoIterator.h
         geo/GribSpec.cc

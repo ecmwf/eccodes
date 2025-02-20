@@ -1422,8 +1422,7 @@ codes_handle* codes_grib_util_set_spec(codes_handle* h,
                                        size_t data_values_count,
                                        int* err);
 
-/* EXPERIMENTAL FEATURE
- * Build an array of message headers from input BUFR file.
+/* Build an array of message headers from input BUFR file.
  * result = array of 'codes_bufr_header' structs with 'num_messages' elements.
  *          This array should be freed by the caller.
  * num_messages = number of messages found in the input file.
@@ -1433,8 +1432,7 @@ codes_handle* codes_grib_util_set_spec(codes_handle* h,
 int codes_bufr_extract_headers_malloc(codes_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode);
 int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* val, size_t* len);
 
-/* EXPERIMENTAL FEATURE
- * Build an array of message offsets from input file. The client has to supply the ProductKind (GRIB, BUFR etc)
+/* Build an array of message offsets from input file. The client has to supply the ProductKind (GRIB, BUFR etc)
  * result = array of offsets with 'num_messages' elements.
  *          This array should be freed by the caller.
  * num_messages = number of messages found in the input file.
@@ -1445,6 +1443,15 @@ int codes_extract_offsets_malloc(codes_context* c, const char* filename, Product
                                  off_t** offsets, int* num_messages, int strict_mode);
 int codes_extract_offsets_sizes_malloc(codes_context* c, const char* filename, ProductKind product,
                                        off_t** offsets, size_t** sizes, int* num_messages, int strict_mode);
+
+
+/* EXPERIMENTAL FEATURE
+ * For GRIB2, argument must be an entry in Code Table 4.5 (Fixed surface types and units).
+ * Output is 1 if the surface type requires its scaledValue/scaleFactor i.e., has a level
+ * Otherwise 0 i.e., scaledValue/scaleFactor must be set to MISSING
+ */
+int codes_grib_surface_type_requires_value(int edition, int type_of_surface_code, int* err);
+
 
 /* --------------------------------------- */
 #ifdef __cplusplus

@@ -48,6 +48,7 @@ list(APPEND test_c_bins
     grib_ecc-1764
     bufr_ecc-517
     bufr_ecc-1288
+    bufr_ecc-2011
     bufr_get_element
     bufr_extract_headers
     bufr_check_descriptors
@@ -156,6 +157,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
+        bufr_ecc-2011
         grib_efas
         grib_sh_imag
         grib_spectral

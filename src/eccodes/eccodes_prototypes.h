@@ -4,101 +4,6 @@
     #include <stdint.h>
 #endif
 
-/* action.cc */
-// void grib_action_delete(grib_context* context, grib_action* a);
-// int grib_create_accessor(grib_section* p, grib_action* a, grib_loader* h);
-// int grib_action_notify_change(grib_action* a, grib_accessor* observer, grib_accessor* observed);
-// grib_action* grib_action_reparse(grib_action* a, grib_accessor* acc, int* doit);
-// int grib_action_execute(grib_action* a, grib_handle* h);
-// void grib_dump_action_branch(FILE* out, grib_action* a, int decay);
-// void grib_dump_action_tree(grib_context* ctx, FILE* out);
-
-// /* action_class_alias.cc */
-// grib_action* grib_action_create_alias(grib_context* context, const char* name, const char* arg1, const char* name_space, int flags);
-//
-// /* action_class_gen.cc */
-// grib_action* grib_action_create_gen(grib_context* context, const char* name, const char* op, const long len, grib_arguments* params, grib_arguments* default_value, int flags, const char* name_space, const char* set);
-//
-// /* action_class_if.cc */
-// grib_action* grib_action_create_if(grib_context* context, grib_expression* expression, grib_action* block_true, grib_action* block_false, int transient, int lineno, const char* file_being_parsed);
-//
-// /* action_class_switch.cc */
-// grib_action* grib_action_create_switch(grib_context* context, grib_arguments* args, grib_case* Case, grib_action* Default);
-// grib_case* grib_case_new(grib_context* c, grib_arguments* values, grib_action* action);
-//
-// /* action_class_list.cc */
-// grib_action* grib_action_create_list(grib_context* context, const char* name, grib_expression* expression, grib_action* block);
-//
-// /* action_class_while.cc */
-// grib_action* grib_action_create_while(grib_context* context, grib_expression* expression, grib_action* block);
-//
-// /* action_class_put.cc */
-// grib_action* grib_action_create_put(grib_context* context, const char* name, grib_arguments* args);
-//
-// /* action_class_meta.cc */
-// grib_action* grib_action_create_meta(grib_context* context, const char* name, const char* op, grib_arguments* params, grib_arguments* default_value, unsigned long flags, const char* name_space);
-//
-// /* action_class_remove.cc */
-// grib_action* grib_action_create_remove(grib_context* context, grib_arguments* args);
-//
-// /* action_class_rename.cc */
-// grib_action* grib_action_create_rename(grib_context* context, char* the_old, char* the_new);
-//
-// /* action_class_assert.cc */
-// grib_action* grib_action_create_assert(grib_context* context, grib_expression* expression);
-//
-// /* action_class_template.cc */
-// grib_action* grib_action_create_template(grib_context* context, int nofail, const char* name, const char* arg1);
-//
-// /* action_class_trigger.cc */
-// grib_action* grib_action_create_trigger(grib_context* context, grib_arguments* args, grib_action* block);
-//
-// /* action_class_when.cc */
-// grib_action* grib_action_create_when(grib_context* context, grib_expression* expression, grib_action* block_true, grib_action* block_false);
-//
-// /* action_class_concept.cc */
-// grib_concept_value* action_concept_get_concept(grib_accessor* a);
-// int action_concept_get_nofail(grib_accessor* a);
-// grib_action* grib_action_create_concept(grib_context* context, const char* name, grib_concept_value* concept_value, const char* basename, const char* name_space, const char* defaultkey, const char* masterDir, const char* localDir, const char* ecmfDir, int flags, int nofail);
-// int get_concept_condition_string(grib_handle* h, const char* key, const char* value, char* result);
-//
-// /* action_class_hash_array.cc */
-// grib_action* grib_action_create_hash_array(grib_context* context, const char* name, grib_hash_array_value* hash_array, const char* basename, const char* name_space, const char* defaultkey, const char* masterDir, const char* localDir, const char* ecmfDir, int flags, int nofail);
-// grib_hash_array_value* get_hash_array(grib_handle* h, grib_action* a);
-// const char* get_hash_array_full_path(grib_action* a);
-//
-// /* action_class_set.cc */
-// grib_action* grib_action_create_set(grib_context* context, const char* name, grib_expression* expression, int nofail);
-//
-// /* action_class_set_darray.cc */
-// grib_action* grib_action_create_set_darray(grib_context* context, const char* name, grib_darray* darray);
-//
-// /* action_class_set_sarray.cc */
-// grib_action* grib_action_create_set_sarray(grib_context* context, const char* name, grib_sarray* sarray);
-//
-// /* action_class_noop.cc */
-// grib_action* grib_action_create_noop(grib_context* context, const char* fname);
-//
-// /* action_class_write.cc */
-// grib_action* grib_action_create_write(grib_context* context, const char* name, int append, int padtomultiple);
-//
-// /* action_class_print.cc */
-// grib_action* grib_action_create_print(grib_context* context, const char* name, char* outname);
-//
-// /* action_class_close.cc */
-// grib_action* grib_action_create_close(grib_context* context, const char* filename);
-//
-// /* action_class_variable.cc */
-// grib_action* grib_action_create_variable(grib_context* context, const char* name, const char* op, const long len, grib_arguments* params, grib_arguments* default_value, int flags, const char* name_space);
-//
-// /* action_class_modify.cc */
-// grib_action* grib_action_create_modify(grib_context* context, const char* name, long flags);
-//
-// /* action_class_transient_darray.cc */
-// grib_action* grib_action_create_transient_darray(grib_context* context, const char* name, grib_darray* darray, int flags);
-
-/* grib_accessor.cc*/
-
 /* grib_concept.cc */
 grib_concept_value* grib_concept_value_new(grib_context* c, const char* name, grib_concept_condition* conditions);
 void grib_concept_value_delete(grib_context* c, grib_concept_value* v);
@@ -783,7 +688,8 @@ int grib2_is_PDTN_ChemicalDistFunc(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_Aerosol(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_AerosolOptical(long productDefinitionTemplateNumber);
 int grib2_choose_PDTN(int current_PDTN, bool is_det, bool is_instant);
-int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemical_srcsink, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
+int grib2_select_PDTN(int is_eps, int is_instant, int is_chem, int is_chem_srcsink, int is_chem_distfn, int is_aerosol, int is_aerosol_optical);
+int codes_grib_surface_type_requires_value(int edition, int type_of_surface_code, int* err);
 size_t sum_of_pl_array(const long* pl, size_t plsize);
 int grib_is_earth_oblate(const grib_handle* h);
 int grib_check_data_values_minmax(grib_handle* h, const double min_val, const double max_val);

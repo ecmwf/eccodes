@@ -552,6 +552,10 @@ int DataSimplePacking::pack_double(const double* val, size_t* len)
             return GRIB_SUCCESS;
         }
         else {
+            // ECC-2012
+            if ((err = grib_set_long_internal(gh, binary_scale_factor_, 0)) != GRIB_SUCCESS)
+                return err;
+
             bits_per_value = 0;
             if ((err = grib_set_long_internal(gh, bits_per_value_, bits_per_value)) != GRIB_SUCCESS)
                 return err;

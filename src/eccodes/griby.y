@@ -170,6 +170,8 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
 %token MISSING
 %token CONSTRAINT
 %token COPY_OK
+%token COPY_AS_INT
+%token COPY_IF_CHANGING_EDITION
 
 %token WHEN
 %token SET
@@ -706,20 +708,22 @@ flag_list: flag
    | flag_list ',' flag { $$ = $1 | $3; }
    ;
 
-flag: READ_ONLY         { $$ = GRIB_ACCESSOR_FLAG_READ_ONLY; }
-    | LOWERCASE            { $$ = GRIB_ACCESSOR_FLAG_LOWERCASE; }
-    | DUMP            { $$ = GRIB_ACCESSOR_FLAG_DUMP; }
+flag: READ_ONLY          { $$ = GRIB_ACCESSOR_FLAG_READ_ONLY; }
+    | LOWERCASE          { $$ = GRIB_ACCESSOR_FLAG_LOWERCASE; }
+    | DUMP               { $$ = GRIB_ACCESSOR_FLAG_DUMP; }
     | NO_COPY            { $$ = GRIB_ACCESSOR_FLAG_NO_COPY; }
-	  | NO_FAIL            { $$ = GRIB_ACCESSOR_FLAG_NO_FAIL; }
-    | HIDDEN            { $$ = GRIB_ACCESSOR_FLAG_HIDDEN; }
-    | EDITION_SPECIFIC  { $$ = GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC; }
-    | CAN_BE_MISSING    { $$ = GRIB_ACCESSOR_FLAG_CAN_BE_MISSING; }
-    | CONSTRAINT        { $$ = GRIB_ACCESSOR_FLAG_CONSTRAINT; }
-    | COPY_OK           { $$ = GRIB_ACCESSOR_FLAG_COPY_OK; }
-    | TRANS         { $$ = GRIB_ACCESSOR_FLAG_TRANSIENT; }
-    | STRING_TYPE         { $$ = GRIB_ACCESSOR_FLAG_STRING_TYPE; }
-    | LONG_TYPE         { $$ = GRIB_ACCESSOR_FLAG_LONG_TYPE; }
-    | DOUBLE_TYPE       { $$ = GRIB_ACCESSOR_FLAG_DOUBLE_TYPE; }
+	| NO_FAIL            { $$ = GRIB_ACCESSOR_FLAG_NO_FAIL; }
+    | HIDDEN             { $$ = GRIB_ACCESSOR_FLAG_HIDDEN; }
+    | EDITION_SPECIFIC   { $$ = GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC; }
+    | CAN_BE_MISSING     { $$ = GRIB_ACCESSOR_FLAG_CAN_BE_MISSING; }
+    | CONSTRAINT         { $$ = GRIB_ACCESSOR_FLAG_CONSTRAINT; }
+    | COPY_OK            { $$ = GRIB_ACCESSOR_FLAG_COPY_OK; }
+    | COPY_AS_INT        { $$ = GRIB_ACCESSOR_FLAG_COPY_AS_INT; }
+    | COPY_IF_CHANGING_EDITION { $$ = GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION; }
+    | TRANS              { $$ = GRIB_ACCESSOR_FLAG_TRANSIENT; }
+    | STRING_TYPE        { $$ = GRIB_ACCESSOR_FLAG_STRING_TYPE; }
+    | LONG_TYPE          { $$ = GRIB_ACCESSOR_FLAG_LONG_TYPE; }
+    | DOUBLE_TYPE        { $$ = GRIB_ACCESSOR_FLAG_DOUBLE_TYPE; }
     ;
 
 list_block: IDENT LIST '(' expression ')' '{' instructions '}' { $$ = grib_action_create_list(grib_parser_context,$1,$4,$7); free($1); }
