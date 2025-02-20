@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "G1date.h"
+#include "G1Date.h"
 
 namespace eccodes::accessor
 {

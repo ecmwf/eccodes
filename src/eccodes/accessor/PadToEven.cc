@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "Padtoeven.h"
+#include "PadToEven.h"
 
 eccodes::accessor::PadToEven _grib_accessor_padtoeven;
 eccodes::Accessor* grib_accessor_padtoeven = &_grib_accessor_padtoeven;

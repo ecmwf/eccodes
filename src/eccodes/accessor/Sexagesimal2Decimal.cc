@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "Sexagesimal2decimal.h"
+#include "Sexagesimal2Decimal.h"
 
 eccodes::accessor::Sexagesimal2decimal _grib_accessor_sexagesimal2decimal;
 eccodes::Accessor* grib_accessor_sexagesimal2decimal = &_grib_accessor_sexagesimal2decimal;

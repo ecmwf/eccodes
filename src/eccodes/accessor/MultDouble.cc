@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "Multdouble.h"
+#include "MultDouble.h"
 
 eccodes::accessor::MultDouble _grib_accessor_multdouble;
 eccodes::Accessor* grib_accessor_multdouble = &_grib_accessor_multdouble;

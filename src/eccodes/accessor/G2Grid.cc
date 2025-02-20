@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "G2grid.h"
+#include "G2Grid.h"
 
 eccodes::accessor::G2Grid _grib_accessor_g2grid;
 eccodes::Accessor* grib_accessor_g2grid = &_grib_accessor_g2grid;

@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "Ieeefloat.h"
+#include "IeeeFloat.h"
 
 eccodes::accessor::IeeeFloat _grib_accessor_ieeefloat;
 eccodes::Accessor* grib_accessor_ieeefloat = &_grib_accessor_ieeefloat;

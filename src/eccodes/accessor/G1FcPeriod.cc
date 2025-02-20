@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "G1fcperiod.h"
+#include "G1FcPeriod.h"
 
 eccodes::accessor::G1FcPeriod _grib_accessor_g1fcperiod;
 eccodes::Accessor* grib_accessor_g1fcperiod = &_grib_accessor_g1fcperiod;

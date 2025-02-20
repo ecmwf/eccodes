@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "G2endStep.h"
+#include "G2EndStep.h"
 #include "step.h"
 #include "step_utilities.h"
 #include <stdexcept>

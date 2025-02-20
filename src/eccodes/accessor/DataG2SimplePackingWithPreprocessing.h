@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "DataG2simplePacking.h"
+#include "DataG2SimplePacking.h"
 
 namespace eccodes::accessor
 {

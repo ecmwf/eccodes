@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "Budgdate.h"
+#include "BudgDate.h"
 
 eccodes::accessor::BudgDate _grib_accessor_budgdate;
 eccodes::Accessor* grib_accessor_budgdate = &_grib_accessor_budgdate;

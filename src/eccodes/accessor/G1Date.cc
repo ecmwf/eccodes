@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "G1date.h"
+#include "G1Date.h"
 
 eccodes::accessor::G1Date _grib_accessor_g1date;
 eccodes::Accessor* grib_accessor_g1date = &_grib_accessor_g1date;

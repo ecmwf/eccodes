@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "DataShsimplePacking.h"
+#include "DataShSimplePacking.h"
 
 eccodes::accessor::DataShSimplePacking _grib_accessor_data_shsimple_packing;
 eccodes::Accessor* grib_accessor_data_shsimple_packing = &_grib_accessor_data_shsimple_packing;

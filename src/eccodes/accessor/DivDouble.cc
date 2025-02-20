@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "Divdouble.h"
+#include "DivDouble.h"
 
 eccodes::accessor::DivDouble _grib_accessor_divdouble;
 eccodes::Accessor* grib_accessor_divdouble = &_grib_accessor_divdouble;

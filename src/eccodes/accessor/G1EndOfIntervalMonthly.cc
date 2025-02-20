@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "G1endOfIntervalMonthly.h"
+#include "G1EndOfIntervalMonthly.h"
 
 eccodes::accessor::G1EndOfIntervalMonthly _grib_accessor_g1end_of_interval_monthly;
 eccodes::Accessor* grib_accessor_g1end_of_interval_monthly = &_grib_accessor_g1end_of_interval_monthly;

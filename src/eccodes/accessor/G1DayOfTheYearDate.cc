@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "G1dayOfTheYearDate.h"
+#include "G1DayOfTheYearDate.h"
 
 eccodes::accessor::G1DayOfTheYearDate _grib_accessor_g1day_of_the_year_date;
 eccodes::Accessor* grib_accessor_g1day_of_the_year_date = &_grib_accessor_g1day_of_the_year_date;

@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "Latlonvalues.h"
+#include "LatLonValues.h"
 
 eccodes::accessor::LatLonvalues _grib_accessor_latlonvalues;
 eccodes::Accessor* grib_accessor_latlonvalues = &_grib_accessor_latlonvalues;

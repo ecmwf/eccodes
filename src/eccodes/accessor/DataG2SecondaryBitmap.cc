@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "DataG2secondaryBitmap.h"
+#include "DataG2SecondaryBitmap.h"
 
 eccodes::accessor::DataG2SecondaryBitmap _grib_accessor_data_g2secondary_bitmap;
 eccodes::Accessor* grib_accessor_data_g2secondary_bitmap = &_grib_accessor_data_g2secondary_bitmap;

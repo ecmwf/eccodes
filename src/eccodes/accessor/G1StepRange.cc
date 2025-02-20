@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "G1stepRange.h"
+#include "G1StepRange.h"
 
 eccodes::accessor::G1StepRange _grib_accessor_g1step_range;
 eccodes::Accessor* grib_accessor_g1step_range = &_grib_accessor_g1step_range;

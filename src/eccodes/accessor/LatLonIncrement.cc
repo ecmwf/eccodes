@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "LatlonIncrement.h"
+#include "LatLonIncrement.h"
 
 eccodes::accessor::LatLonIncrement _grib_accessor_latlon_increment;
 eccodes::Accessor* grib_accessor_latlon_increment = &_grib_accessor_latlon_increment;

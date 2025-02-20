@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "G1numberOfCodedValuesShComplex.h"
+#include "G1NumberOfCodedValuesShComplex.h"
 
 eccodes::accessor::G1NumberOfCodedValuesShComplex _grib_accessor_g1number_of_coded_values_sh_complex;
 eccodes::Accessor* grib_accessor_g1number_of_coded_values_sh_complex = &_grib_accessor_g1number_of_coded_values_sh_complex;

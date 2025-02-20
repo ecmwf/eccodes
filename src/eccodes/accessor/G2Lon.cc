@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "G2lon.h"
+#include "G2Lon.h"
 
 eccodes::accessor::G2Lon _grib_accessor_g2lon;
 eccodes::Accessor* grib_accessor_g2lon = &_grib_accessor_g2lon;

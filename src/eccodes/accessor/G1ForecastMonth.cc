@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "G1forecastmonth.h"
+#include "G1ForecastMonth.h"
 
 eccodes::accessor::G1ForecastMonth _grib_accessor_g1forecastmonth;
 eccodes::Accessor* grib_accessor_g1forecastmonth = &_grib_accessor_g1forecastmonth;

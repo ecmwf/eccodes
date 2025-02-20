@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "DataG2bifourierPacking.h"
+#include "DataG2BifourierPacking.h"
 #include "grib_scaling.h"
 #include <algorithm>
 

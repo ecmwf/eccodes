@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "Padtomultiple.h"
+#include "PadToMultiple.h"
 
 eccodes::accessor::PadToMultiple _grib_accessor_padtomultiple;
 eccodes::Accessor* grib_accessor_padtomultiple = &_grib_accessor_padtomultiple;

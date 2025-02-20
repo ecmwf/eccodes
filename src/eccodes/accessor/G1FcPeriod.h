@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "G1stepRange.h"
+#include "G1StepRange.h"
 
 namespace eccodes::accessor
 {

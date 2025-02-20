@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "Padto.h"
+#include "PadTo.h"
 
 eccodes::accessor::PadTo _grib_accessor_padto;
 eccodes::Accessor* grib_accessor_padto = &_grib_accessor_padto;

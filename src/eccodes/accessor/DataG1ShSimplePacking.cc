@@ -8,15 +8,15 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "DataG1shsimplePacking.h"
+#include "DataG1ShSimplePacking.h"
 
-eccodes::accessor::DataG1AhAimplePacking _grib_accessor_data_g1shsimple_packing;
+eccodes::accessor::DataG1ShSimplePacking _grib_accessor_data_g1shsimple_packing;
 eccodes::Accessor* grib_accessor_data_g1shsimple_packing = &_grib_accessor_data_g1shsimple_packing;
 
 namespace eccodes::accessor
 {
 
-int DataG1AhAimplePacking::value_count(long* count)
+int DataG1ShSimplePacking::value_count(long* count)
 {
     size_t len = 0;
     int err    = 0;
@@ -28,7 +28,7 @@ int DataG1AhAimplePacking::value_count(long* count)
     return err;
 }
 
-int DataG1AhAimplePacking::unpack_double(double* val, size_t* len)
+int DataG1ShSimplePacking::unpack_double(double* val, size_t* len)
 {
     int err = GRIB_SUCCESS;
 

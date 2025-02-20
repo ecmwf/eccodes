@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "G1bitmap.h"
+#include "G1Bitmap.h"
 
 eccodes::accessor::G1Bitmap _grib_accessor_g1bitmap;
 eccodes::Accessor* grib_accessor_g1bitmap = &_grib_accessor_g1bitmap;

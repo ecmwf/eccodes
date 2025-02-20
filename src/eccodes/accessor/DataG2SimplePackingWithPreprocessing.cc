@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "DataG2simplePackingWithPreprocessing.h"
+#include "DataG2SimplePackingWithPreprocessing.h"
 #define DIRECT  0
 #define INVERSE 1
 

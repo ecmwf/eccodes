@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "DataG2simplePacking.h"
+#include "DataG2SimplePacking.h"
 #include "grib_scaling.h"
 
 eccodes::accessor::DataG2SimplePacking _grib_accessor_data_g2simple_packing;
