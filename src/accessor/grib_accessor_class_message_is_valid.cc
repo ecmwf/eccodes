@@ -339,7 +339,7 @@ int grib_accessor_message_is_valid_t::check_steps()
         if ( STR_EQUAL(stepType, "accum") || STR_EQUAL(stepType, "avg") || STR_EQUAL(stepType, "min") || STR_EQUAL(stepType, "max") ) {
             if (startStep == endStep) {
                 grib_context_log(handle_->context, GRIB_LOG_ERROR,
-                    "%s: Invalid steps: stepType=%s but startStep=endStep", TITLE, stepType, startStep, endStep);
+                    "%s: Invalid steps: stepType=%s but startStep=endStep", TITLE, stepType);
                 return GRIB_WRONG_STEP;
             }
         }
