@@ -71,7 +71,7 @@ concept MTG2SwitchViaTablesVersion(false, "MTG2SwitchViaTablesVersionConcept.def
 #     tablesVersion > tablesVersionMTG2Switch, and class=mc/cr  then MTG2SwitchDefault=2., i.e. we are post-MTG2 with param-chem split.
 #     tablesVersion > tablesVersionMTG2Switch  in all other cases then MTG2SwitchDefault=1., i.e. we are post-MTG2.
 
-meta MTG2SwitchDefault mtg2_switch_default(tablesVersion, tablesVersionMTG2Switch, marsClass, datasetForLocal) : hidden, read_only;
+meta MTG2SwitchDefault mtg2_switch_default(tablesVersion, tablesVersionMTG2Switch, marsClass, MTG2SwitchViaTablesVersion) : hidden, read_only;
 
 # This sets the default for the MTG2Switch concept which we then define below
 # Default is 1 unless changed by the above concept, or by adding an entry to the concept below in a given centre/pseudocentre.

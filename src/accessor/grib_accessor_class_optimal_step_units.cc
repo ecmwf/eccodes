@@ -19,7 +19,7 @@ void grib_accessor_optimal_step_units_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_gen_t::init(l, c);
     grib_handle* hand = grib_handle_of_accessor(this);
-    int n             = 0;
+    int n = 0;
 
     forecast_time_value_ = c->get_name(hand, n++);
     forecast_time_unit_  = c->get_name(hand, n++);
@@ -41,11 +41,11 @@ size_t grib_accessor_optimal_step_units_t::string_length()
 
 int grib_accessor_optimal_step_units_t::pack_expression(grib_expression* e)
 {
-    const char* cval        = NULL;
-    int ret                 = 0;
-    long lval               = 0;
-    size_t len              = 1;
-    grib_handle* hand       = grib_handle_of_accessor(this);
+    const char* cval  = NULL;
+    int ret           = 0;
+    long lval         = 0;
+    size_t len        = 1;
+    grib_handle* hand = grib_handle_of_accessor(this);
 
     if (strcmp(e->class_name(), "long") == 0) {
         e->evaluate_long(hand, &lval); /* TODO: check return value */
@@ -156,7 +156,7 @@ int grib_accessor_optimal_step_units_t::unpack_long(long* val, size_t* len)
         if (forecast_time_opt && time_range_opt) {
             auto [step_a, step_b] = find_common_units(forecast_time_opt.value().optimize_unit(),
                                                       (forecast_time_opt.value() + time_range_opt.value()).optimize_unit());
-            *val                  = step_a.unit().value<long>();
+            *val = step_a.unit().value<long>();
         }
         else if (forecast_time_opt && !time_range_opt) {
             *val = forecast_time_opt.value().optimize_unit().unit().value<long>();
@@ -199,8 +199,8 @@ int grib_accessor_optimal_step_units_t::pack_string(const char* val, size_t* len
 
 int grib_accessor_optimal_step_units_t::unpack_string(char* val, size_t* len)
 {
-    int ret         = 0;
-    long unit       = 0;
+    int ret = 0;
+    long unit = 0;
     size_t unit_len = 0;
     if ((ret = unpack_long(&unit, &unit_len)) != GRIB_SUCCESS)
         return ret;
