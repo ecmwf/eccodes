@@ -20,15 +20,25 @@ int main(int argc, char* argv[])
     char* mode = argv[1];
     char* filename = argv[2];
 
+    if (strlen(mode) == 0)
+    mode = NULL;
+
     FILE* in = fopen(filename, "rb");
     assert(in);
 
     codes_handle* h = codes_handle_new_from_file(0, in, PRODUCT_ANY, &err);
     assert(h);
+    assert(!err);
 
-    if (strlen(mode) == 0)
-        mode = NULL;
-    grib_dump_content(h, stdout,  mode, 0, NULL);
+    char product[32] = {0,};
+    size_t size = sizeof(product) / sizeof(*product);
+    err = codes_get_string(h, "kindOfProduct", product, &size);
+    if (!err && strcmp(product, "BUFR")==0) {
+        err = codes_set_long(h, "unpack", 1);
+    }
+    if (!err) {
+        grib_dump_content(h, stdout,  mode, 0, NULL);
+    }
 
     codes_handle_delete(h);
     fclose(in);

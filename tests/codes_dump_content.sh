@@ -13,25 +13,31 @@
 label="codes_dump_content_test"
 temp=temp.$label.txt
 
-infiles="
+grib_files="
     sample.grib2
     test_uuid.grib2
 "
 
 modes="default wmo json debug grib_encode_C"
 for mode in $modes; do
-    for gf in $infiles; do
+    for gf in $grib_files; do
         echo Doing $gf
         infile=$data_dir/$gf
         $EXEC ${test_dir}/codes_dump_content $mode $infile > $temp
     done
 done
 
+# BUFR
+infile="$data_dir/bufr/pgps_110.bufr"
+${test_dir}/codes_dump_content json    $infile > $temp
+${test_dir}/codes_dump_content default $infile > $temp
+# ${test_dir}/codes_dump_content debug   $infile > $temp
+
 # Empty mode should use 'default'
 infile="$data_dir/sample.grib2"
-${test_dir}/codes_dump_content '' $infile
+${test_dir}/codes_dump_content '' $infile > $temp
 
-
+# Bad dump mode
 infile="$data_dir/sample.grib2"
 ${test_dir}/codes_dump_content rubbish $infile > $temp 2>&1
 grep -q "ERROR.*Unknown type : 'rubbish' for dumper" $temp

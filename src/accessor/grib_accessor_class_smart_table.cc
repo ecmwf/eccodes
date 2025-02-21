@@ -46,7 +46,7 @@ static int grib_load_smart_table(grib_context* c, const char* filename, const ch
 
 void grib_accessor_smart_table_t::init(const long len, grib_arguments* params)
 {
-    int n             = 0;
+    int n = 0;
     grib_handle* hand = grib_handle_of_accessor(this);
 
     values_      = params->get_name(hand, n++);
@@ -67,20 +67,21 @@ void grib_accessor_smart_table_t::init(const long len, grib_arguments* params)
 
 grib_smart_table* grib_accessor_smart_table_t::load_table()
 {
-    size_t size                       = 0;
-    grib_handle* h                    = this->parent_->h;
-    grib_context* c                   = h->context;
-    grib_smart_table* t               = NULL;
-    grib_smart_table* next            = NULL;
-    char* filename                    = 0;
-    char recomposed[1024]             = {0,};
+    size_t size            = 0;
+    grib_handle* h         = this->parent_->h;
+    grib_context* c        = h->context;
+    grib_smart_table* t    = NULL;
+    grib_smart_table* next = NULL;
+    char* filename         = 0;
+
+    char recomposed[1024]      = {0,};
     char localRecomposed[1024] = {0,};
     char* localFilename        = 0;
     char extraRecomposed[1024] = {0,};
-    char* extraFilename  = 0;
+    char* extraFilename        = 0;
     char masterDir[1024] = {0,};
-    char localDir[1024] = {0,};
-    char extraDir[1024] = {0,};
+    char localDir[1024]  = {0,};
+    char extraDir[1024]  = {0,};
     size_t len = 1024;
 
     if (masterDir_ != NULL) {
@@ -138,8 +139,8 @@ grib_smart_table* grib_accessor_smart_table_t::load_table()
     //
     size = (1ULL << widthOfCode_);  // = 2^widthOfCode_ (as a 64 bit number)
 
-    t                  = (grib_smart_table*)grib_context_malloc_clear_persistent(c, sizeof(grib_smart_table));
-    t->entries         = (grib_smart_table_entry*)grib_context_malloc_clear_persistent(c, size * sizeof(grib_smart_table_entry));
+    t = (grib_smart_table*)grib_context_malloc_clear_persistent(c, sizeof(grib_smart_table));
+    t->entries = (grib_smart_table_entry*)grib_context_malloc_clear_persistent(c, size * sizeof(grib_smart_table_entry));
     t->numberOfEntries = size;
 
     if (filename != 0)
@@ -322,9 +323,9 @@ int grib_accessor_smart_table_t::unpack_string(char* buffer, size_t* len)
 
 int grib_accessor_smart_table_t::get_table_codes()
 {
-    size_t size                       = 0;
-    long* v                           = 0;
-    int err                           = 0;
+    size_t size = 0;
+    long* v     = 0;
+    int err     = 0;
     int count, j;
     size_t i;
 
@@ -357,7 +358,7 @@ int grib_accessor_smart_table_t::get_table_codes()
     if (tableCodes_)
         grib_context_free(context_, tableCodes_);
     tableCodes_ = (long*)grib_context_malloc_clear(context_, count * sizeof(long));
-    j                 = 0;
+    j = 0;
     for (i = 0; i < size; i++) {
         if (v[i] < table_size)
             tableCodes_[j++] = v[i];
@@ -366,7 +367,7 @@ int grib_accessor_smart_table_t::get_table_codes()
     grib_context_free(context_, v);
 
     tableCodesSize_ = count;
-    dirty_             = 0;
+    dirty_ = 0;
 
     return 0;
 }

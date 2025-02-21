@@ -219,6 +219,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_get
         bufr_operators
         bufr_filter_misc
+        bufr_filter_datetime
         bufr_filter_fail
         bufr_filter_extract_subsets
         bufr_filter_extract_datetime
@@ -267,6 +268,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-1785
         bufr_ecc-1958
         bufr_ecc-1938
+        bufr_ecc-2030
         grib_488
         grib_ecc-490
         grib_ecc-756

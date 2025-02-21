@@ -12,7 +12,7 @@
 
 REDIRECT=/dev/null
 
-label=grib_step_test
+label="grib_step_test"
 tempGrb=${data_dir}/temp.$label.out.grib
 tempLog=${data_dir}/temp.$label.log
 tempFilt=${data_dir}/temp.$label.filt

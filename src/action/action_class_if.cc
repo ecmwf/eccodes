@@ -16,7 +16,7 @@ grib_action* grib_action_create_if(grib_context* context,
                                    grib_action* block_true, grib_action* block_false, int transient,
                                    int lineno, const char* file_being_parsed)
 {
-    return new eccodes::action::If(context, expression, block_true, block_false, transient, lineno, file_being_parsed);  
+    return new eccodes::action::If(context, expression, block_true, block_false, transient, lineno, file_being_parsed);
 }
 
 namespace eccodes::action

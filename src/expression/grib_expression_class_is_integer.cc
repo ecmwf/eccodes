@@ -12,7 +12,7 @@
 
 namespace eccodes::expression {
 
-Expression::string IsInteger::get_name() const
+const char* IsInteger::get_name() const
 {
     return name_;
 }
@@ -53,7 +53,7 @@ int IsInteger::evaluate_double(grib_handle* h, double* result) const
     return err;
 }
 
-Expression::string IsInteger::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
+const char* IsInteger::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
 {
     long lresult   = 0;
     double dresult = 0.0;

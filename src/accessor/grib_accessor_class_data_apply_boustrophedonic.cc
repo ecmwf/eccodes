@@ -69,7 +69,7 @@ int grib_accessor_data_apply_boustrophedonic_t::unpack(T* val, size_t* len)
 
     if (valuesSize != numberOfPoints) {
         grib_context_log(context_, GRIB_LOG_ERROR, "boustrophedonic ordering error: ( %s=%ld ) != (sizeOf(%s)=%ld)",
-                         numberOfPoints, numberOfPoints, values_, (long)valuesSize);
+                         numberOfPoints_, numberOfPoints, values_, (long)valuesSize);
         return GRIB_DECODING_ERROR;
     }
 

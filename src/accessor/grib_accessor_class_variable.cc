@@ -29,16 +29,17 @@ void grib_accessor_variable_t::init(const long length, grib_arguments* args)
     grib_handle* hand           = grib_handle_of_accessor(this);
     grib_expression* expression = nullptr;
     if (args) expression = args->get_expression(hand, 0);
-    const char* p               = 0;
-    size_t len                  = 1;
-    long l                      = 0;
-    int ret                     = 0;
-    double d                    = 0;
-    cname_                      = NULL;
-    dval_                       = 0;
-    fval_                       = 0;
-    cval_                       = NULL;
-    type_                       = GRIB_TYPE_UNDEFINED;
+
+    const char* p = 0;
+    size_t len    = 1;
+    long l        = 0;
+    int ret       = 0;
+    double d      = 0;
+    cname_        = NULL;
+    dval_         = 0;
+    fval_         = 0;
+    cval_         = NULL;
+    type_         = GRIB_TYPE_UNDEFINED;
 
     length_ = 0;
     if (type_ == GRIB_TYPE_UNDEFINED && expression) {

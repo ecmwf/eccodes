@@ -24,8 +24,7 @@ public:
     virtual void destroy(grib_context*, grib_action*) {};
     virtual int create_accessor(grib_section*, grib_loader*)
     {
-        fprintf(stderr, "Cannot create accessor %s %s\n", name_, class_name_);
-        DEBUG_ASSERT(0);
+        grib_context_log(context_, GRIB_LOG_FATAL, "Cannot create accessor %s %s", name_, class_name_);
         return 0;
     }
     virtual int notify_change(grib_accessor* /*observer*/, grib_accessor* /*observed*/)

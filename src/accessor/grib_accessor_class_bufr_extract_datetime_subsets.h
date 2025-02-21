@@ -23,8 +23,8 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* doExtractSubsets_ = nullptr;
-    const char* numberOfSubsets_ = nullptr;
+    const char* doExtractSubsets_  = nullptr;
+    const char* numberOfSubsets_   = nullptr;
     const char* extractSubsetList_ = nullptr;
 
     int select_datetime();

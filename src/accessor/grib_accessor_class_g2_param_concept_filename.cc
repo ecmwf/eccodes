@@ -49,9 +49,9 @@ int grib_accessor_g2_param_concept_filename_t::unpack_string(char* v, size_t* le
     int err = 0;
     long MTG2Switch = 0, tablesVersionMTG2Switch = 0;
 
-    err = grib_get_long(h, MTG2Switch_, &MTG2Switch);
+    err = grib_get_long_internal(h, MTG2Switch_, &MTG2Switch);
     if (err) return err;
-    err = grib_get_long(h, tablesVersionMTG2Switch_, &tablesVersionMTG2Switch);
+    err = grib_get_long_internal(h, tablesVersionMTG2Switch_, &tablesVersionMTG2Switch);
     if (err) return err;
 
     const size_t dsize = string_length() - 1; // size for destination string "v"

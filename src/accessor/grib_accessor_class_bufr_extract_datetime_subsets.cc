@@ -336,8 +336,6 @@ cleanup:
 
 int grib_accessor_bufr_extract_datetime_subsets_t::pack_long(const long* val, size_t* len)
 {
-    /*grib_accessor_bufr_extract_datetime_subsets_t *self =(grib_accessor_bufr_extract_datetime_subsets_t*)a;*/
-
     if (*len == 0)
         return GRIB_SUCCESS;
     return select_datetime();

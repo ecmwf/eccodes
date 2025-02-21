@@ -22,7 +22,7 @@ public:
     void print(grib_context*, grib_handle*, FILE*) const override;
     void add_dependency(grib_accessor*) override;
     int native_type(grib_handle*) const override;
-    string evaluate_string(grib_handle*, char*, size_t*, int*) const override;
+    const char* evaluate_string(grib_handle*, char*, size_t*, int*) const override;
 
     const char* class_name() const override { return "sub_string"; };
 
