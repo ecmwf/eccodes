@@ -17,13 +17,14 @@ void grib_accessor_data_apply_bitmap_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_gen_t::init(v, args);
     int n = 0;
+    grib_handle* hand = grib_handle_of_accessor(this);
 
-    coded_values_          = args->get_name(grib_handle_of_accessor(this), n++);
-    bitmap_                = args->get_name(grib_handle_of_accessor(this), n++);
-    missing_value_         = args->get_name(grib_handle_of_accessor(this), n++);
-    binary_scale_factor_   = args->get_name(grib_handle_of_accessor(this), n++);
-    number_of_data_points_ = args->get_name(grib_handle_of_accessor(this), n++);
-    number_of_values_      = args->get_name(grib_handle_of_accessor(this), n++);
+    coded_values_          = args->get_name(hand, n++);
+    bitmap_                = args->get_name(hand, n++);
+    missing_value_         = args->get_name(hand, n++);
+    binary_scale_factor_   = args->get_name(hand, n++);
+    number_of_data_points_ = args->get_name(hand, n++);
+    number_of_values_      = args->get_name(hand, n++);
 
     length_ = 0;
 }
@@ -35,12 +36,13 @@ void grib_accessor_data_apply_bitmap_t::dump(eccodes::Dumper* dumper)
 int grib_accessor_data_apply_bitmap_t::value_count(long* count)
 {
     size_t len = 0;
-    int ret    = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
+    grib_handle* hand = grib_handle_of_accessor(this);
 
-    if (grib_find_accessor(grib_handle_of_accessor(this), bitmap_))
-        ret = grib_get_size(grib_handle_of_accessor(this), bitmap_, &len);
+    if (grib_find_accessor(hand, bitmap_))
+        ret = grib_get_size(hand, bitmap_, &len);
     else
-        ret = grib_get_size(grib_handle_of_accessor(this), coded_values_, &len);
+        ret = grib_get_size(hand, coded_values_, &len);
 
     *count = len;
 
@@ -243,19 +245,20 @@ int grib_accessor_data_apply_bitmap_t::unpack(T* val, size_t* len)
     size_t coded_n_vals  = 0;
     T* coded_vals        = NULL;
     double missing_value = 0;
+    grib_handle* hand    = grib_handle_of_accessor(this);
 
     int err = value_count(&nn);
     n_vals  = nn;
     if (err)
         return err;
 
-    if (!grib_find_accessor(grib_handle_of_accessor(this), bitmap_))
-        return grib_get_array<T>(grib_handle_of_accessor(this), coded_values_, val, len);
+    if (!grib_find_accessor(hand, bitmap_))
+        return grib_get_array<T>(hand, coded_values_, val, len);
 
-    if ((err = grib_get_size(grib_handle_of_accessor(this), coded_values_, &coded_n_vals)) != GRIB_SUCCESS)
+    if ((err = grib_get_size(hand, coded_values_, &coded_n_vals)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_double_internal(grib_handle_of_accessor(this), missing_value_, &missing_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(hand, missing_value_, &missing_value)) != GRIB_SUCCESS)
         return err;
 
     if (*len < n_vals) {
@@ -271,14 +274,14 @@ int grib_accessor_data_apply_bitmap_t::unpack(T* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    if ((err = grib_get_array_internal<T>(grib_handle_of_accessor(this), bitmap_, val, &n_vals)) != GRIB_SUCCESS)
+    if ((err = grib_get_array_internal<T>(hand, bitmap_, val, &n_vals)) != GRIB_SUCCESS)
         return err;
 
     coded_vals = (T*)grib_context_malloc(context_, coded_n_vals * sizeof(T));
     if (coded_vals == NULL)
         return GRIB_OUT_OF_MEMORY;
 
-    if ((err = grib_get_array<T>(grib_handle_of_accessor(this), coded_values_, coded_vals, &coded_n_vals)) != GRIB_SUCCESS) {
+    if ((err = grib_get_array<T>(hand, coded_values_, coded_vals, &coded_n_vals)) != GRIB_SUCCESS) {
         grib_context_free(context_, coded_vals);
         return err;
     }
