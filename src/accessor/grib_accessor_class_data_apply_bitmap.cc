@@ -23,8 +23,8 @@ void grib_accessor_data_apply_bitmap_t::init(const long v, grib_arguments* args)
     bitmap_                = args->get_name(hand, n++);
     missing_value_         = args->get_name(hand, n++);
     binary_scale_factor_   = args->get_name(hand, n++);
-    number_of_data_points_ = args->get_name(hand, n++);
-    number_of_values_      = args->get_name(hand, n++);
+    number_of_data_points_ = args->get_name(hand, n++); // can be NULL
+    number_of_values_      = args->get_name(hand, n++); // can be NULL
 
     length_ = 0;
 }
@@ -252,9 +252,12 @@ int grib_accessor_data_apply_bitmap_t::unpack(T* val, size_t* len)
     if (err)
         return err;
 
-    if (!grib_find_accessor(hand, bitmap_))
+    if (!grib_find_accessor(hand, bitmap_)) {
+        // No bitmap
         return grib_get_array<T>(hand, coded_values_, val, len);
+    }
 
+    // There is a bitmap
     if ((err = grib_get_size(hand, coded_values_, &coded_n_vals)) != GRIB_SUCCESS)
         return err;
 
@@ -276,6 +279,19 @@ int grib_accessor_data_apply_bitmap_t::unpack(T* val, size_t* len)
 
     if ((err = grib_get_array_internal<T>(hand, bitmap_, val, &n_vals)) != GRIB_SUCCESS)
         return err;
+
+    // ECC-2033
+    if (coded_n_vals == n_vals && number_of_data_points_) {
+        long n_data_points = 0;
+        err = grib_get_long(hand, number_of_data_points_, &n_data_points);
+        if (!err && n_data_points == coded_n_vals) {
+            long n_missing = 0;
+            if (grib_get_long(hand, "numberOfMissing", &n_missing) == GRIB_SUCCESS && n_missing > 0) {
+                grib_context_log(context_, GRIB_LOG_ERROR, "Bitmap info inconsistent: %s=%ld numberOfCodedValues=%ld numberOfMissing=%ld",
+                                 number_of_data_points_, n_data_points, coded_n_vals, n_missing);
+            }
+        }
+    }
 
     coded_vals = (T*)grib_context_malloc(context_, coded_n_vals * sizeof(T));
     if (coded_vals == NULL)
