@@ -52,15 +52,12 @@ concept datasetForLocal(unknown) {
   "unknown"     = { dummy=1; }
 }
 
-# Set MTG2Switch default
-# By default centres will use post MTG2 parameter concepts (= 1) to
-# retain the status quo.
+# MTG2Switch logic defined here.
 # 0 = pre-MTG2 encoding used
 # 1 = post-MTG2 encoding used
 # 2 = post-MTG2 encoding with paramId + chemId used
 
-constant MTG2SwitchDefault = 1: hidden;
-
+# By default centres will use post MTG2 parameter concepts (= 1) to retain the status quo.
 # The default can then modified based on the below tablesVersion, according to the
 # conditions defined in the MTG2SwitchViaTablesVersion concept
 # Currently this is ECMWF and pseudocentres CERISE, S2S, TIGGE and UERRA

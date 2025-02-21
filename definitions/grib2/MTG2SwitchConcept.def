@@ -1,4 +1,2 @@
+# Concept defining the MTG2Switch at the top level
 -1 = {dummy=0;}
-# Can also include a centre in here to have them permanently pre MTG2.
-# By default all centres are post MTG2.
-0 = {centre=400;}
