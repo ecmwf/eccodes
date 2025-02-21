@@ -1,2 +1,2 @@
 # This pseudocentre should remain permanently on pre-MTG2 definitions
-0 = {edition=2;}
+0 = {true=1;}

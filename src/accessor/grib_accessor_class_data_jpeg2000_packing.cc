@@ -339,7 +339,7 @@ int grib_accessor_data_jpeg2000_packing_t::pack_double(const double* cval, size_
             if (target_compression_ratio != 255) {
                 grib_context_log(context_, GRIB_LOG_ERROR,
                                  "%s %s: When %s=0 (Lossless), %s must be set to 255",
-                                 class_name_, __func__, type_of_compression_used, target_compression_ratio_);
+                                 class_name_, __func__, type_of_compression_used_, target_compression_ratio_);
                 return GRIB_ENCODING_ERROR;
             }
             helper.compression = 0;
@@ -349,7 +349,7 @@ int grib_accessor_data_jpeg2000_packing_t::pack_double(const double* cval, size_
             if (target_compression_ratio == 255 || target_compression_ratio == 0) {
                 grib_context_log(context_, GRIB_LOG_ERROR,
                                  "%s %s: When %s=1 (Lossy), %s must be specified",
-                                 class_name_, __func__, type_of_compression_used, target_compression_ratio_);
+                                 class_name_, __func__, type_of_compression_used_, target_compression_ratio_);
                 return GRIB_ENCODING_ERROR;
             }
             helper.compression = target_compression_ratio;
