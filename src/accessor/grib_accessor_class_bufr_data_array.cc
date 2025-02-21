@@ -2258,33 +2258,19 @@ int grib_accessor_bufr_data_array_t::create_keys(long onlySubset, long startSubs
     int idx;
     grib_context* c    = context_;
     int qualityPresent = 0;
-    bitmap_s bitmap    = {
-        0,
-    };
+    bitmap_s bitmap    = {0,};
     int extraElement         = 0;
     int add_extra_attributes = 1;
 
     grib_accessor* gaGroup   = 0;
     grib_action creatorGroup;
-    grib_accessor* significanceQualifierGroup[NUMBER_OF_QUALIFIERS_PER_CATEGORY * NUMBER_OF_QUALIFIERS_CATEGORIES] = {
-        0,
-    };
-    int significanceQualifierDepth[NUMBER_OF_QUALIFIERS_PER_CATEGORY * NUMBER_OF_QUALIFIERS_CATEGORIES] = {
-        0,
-    };
+    grib_accessor* significanceQualifierGroup[NUMBER_OF_QUALIFIERS_PER_CATEGORY * NUMBER_OF_QUALIFIERS_CATEGORIES] = {0,};
+    int significanceQualifierDepth[NUMBER_OF_QUALIFIERS_PER_CATEGORY * NUMBER_OF_QUALIFIERS_CATEGORIES] = {0,};
 
-    grib_accessor* bitmapGroup[MAX_NUMBER_OF_BITMAPS] = {
-        0,
-    };
-    int bitmapDepth[MAX_NUMBER_OF_BITMAPS] = {
-        0,
-    };
-    int bitmapSize[MAX_NUMBER_OF_BITMAPS] = {
-        0,
-    };
-    grib_accessors_list* bitmapStart[MAX_NUMBER_OF_BITMAPS] = {
-        0,
-    };
+    grib_accessor* bitmapGroup[MAX_NUMBER_OF_BITMAPS] = {0,};
+    int bitmapDepth[MAX_NUMBER_OF_BITMAPS] = {0,};
+    int bitmapSize[MAX_NUMBER_OF_BITMAPS] = {0,};
+    grib_accessors_list* bitmapStart[MAX_NUMBER_OF_BITMAPS] = {0,};
     grib_accessors_list* lastAccessorInList = NULL;
     int bitmapIndex                         = -1;
     int incrementBitmapIndex                = 1;

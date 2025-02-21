@@ -10,7 +10,7 @@
 
 . ./include.ctest.sh
 
-label='grib_set_large_message_fail_test'
+label="grib_set_large_message_fail_test"
 temp=temp.$label.txt
 
 $EXEC ${test_dir}/grib_set_large_message_fail > $temp 2>&1

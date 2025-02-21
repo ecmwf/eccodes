@@ -16,7 +16,7 @@ String::String(grib_context* c, const char* value) {
     value_ = grib_context_strdup_persistent(c, value);
 }
 
-Expression::string String::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
+const char* String::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
 {
     *err = 0;
     return value_;
