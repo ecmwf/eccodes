@@ -14,23 +14,21 @@ grib_accessor_longitudes_t _grib_accessor_longitudes{};
 grib_accessor* grib_accessor_longitudes = &_grib_accessor_longitudes;
 
 static int get_distinct(grib_accessor* a, double** val, long* len);
-void grib_accessor_longitudes_t::init(const long l, grib_arguments* c)
+void grib_accessor_longitudes_t::init(const long l, grib_arguments* args)
 {
-    grib_accessor_double_t::init(l, c);
+    grib_accessor_double_t::init(l, args);
     int n = 0;
 
-    values_   = c->get_name(grib_handle_of_accessor(this), n++);
-    distinct_ = c->get_long(grib_handle_of_accessor(this), n++);
+    values_   = args->get_name(grib_handle_of_accessor(this), n++);
+    distinct_ = args->get_long(grib_handle_of_accessor(this), n++);
     save_     = 0;
     lons_     = 0;
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-
 int grib_accessor_longitudes_t::unpack_double(double* val, size_t* len)
 {
-    grib_context* c     = context_;
     int ret             = 0;
     double* v           = val;
     double dummyLat     = 0;
@@ -46,7 +44,7 @@ int grib_accessor_longitudes_t::unpack_double(double* val, size_t* len)
     if (*len < size) {
         /* lons_ are computed in value_count*/
         if (lons_) {
-            grib_context_free(c, lons_);
+            grib_context_free(context_, lons_);
             lons_ = NULL;
         }
         return GRIB_ARRAY_TOO_SMALL;
@@ -59,7 +57,7 @@ int grib_accessor_longitudes_t::unpack_double(double* val, size_t* len)
         *len = size_;
         for (i = 0; i < size; i++)
             val[i] = lons_[i];
-        grib_context_free(c, lons_);
+        grib_context_free(context_, lons_);
         lons_ = NULL;
         size_ = 0;
         return GRIB_SUCCESS;
@@ -69,7 +67,7 @@ int grib_accessor_longitudes_t::unpack_double(double* val, size_t* len)
     iter = grib_iterator_new(grib_handle_of_accessor(this), GRIB_GEOITERATOR_NO_VALUES, &ret);
     if (ret != GRIB_SUCCESS) {
         grib_iterator_delete(iter);
-        grib_context_log(c, GRIB_LOG_ERROR, "longitudes: Unable to create iterator");
+        grib_context_log(context_, GRIB_LOG_ERROR, "longitudes: Unable to create iterator");
         return ret;
     }
 
@@ -84,10 +82,9 @@ int grib_accessor_longitudes_t::unpack_double(double* val, size_t* len)
 int grib_accessor_longitudes_t::value_count(long* len)
 {
     grib_handle* h  = grib_handle_of_accessor(this);
-    grib_context* c = context_;
-    double* val     = NULL;
-    int ret;
-    size_t size;
+    double* val = NULL;
+    int ret = 0;
+    size_t size = 0;
     *len = 0;
     if ((ret = grib_get_size(h, values_, &size)) != GRIB_SUCCESS) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "longitudes: Unable to get size of %s", values_);
@@ -111,7 +108,7 @@ int grib_accessor_longitudes_t::value_count(long* len)
             size_ = *len;
         }
         else {
-            grib_context_free(c, val);
+            grib_context_free(context_, val);
         }
     }
 
@@ -132,8 +129,6 @@ static int compare_doubles_ascending(const void* a, const void* b)
 
 static int get_distinct(grib_accessor* a, double** val, long* len)
 {
-    long count = 0;
-    double prev;
     double* v       = NULL;
     double* v1      = NULL;
     double dummyLat = 0;
@@ -167,9 +162,9 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
         return GRIB_OUT_OF_MEMORY;
     }
 
-    prev  = v[0];
+    double prev  = v[0];
     v1[0] = prev;
-    count = 1;
+    long count = 1;
     for (long i = 1; i < *len; i++) {
         if (v[i] != prev) {
             prev      = v[i];

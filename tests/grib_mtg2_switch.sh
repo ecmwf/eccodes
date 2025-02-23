@@ -12,7 +12,7 @@
 
 REDIRECT=/dev/null
 
-label="prod_gribmtg2_test"  # Change prod to bufr or grib etc
+label="grib_mtg2_test"
 tempGrib=temp.$label.grib
 tempBufr=temp.$label.bufr
 tempFilt=temp.$label.filt
