@@ -159,5 +159,15 @@ grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "numberOfCodedValues + numberOfMissing != numberOfDataPoints" $tempText
 
 
+# Check date/time
+# -----------------------------------
+${tools_dir}/grib_set -s month=13 $data_dir/sample.grib2 $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "Invalid date/time" $tempText
+${tools_dir}/grib_set -s date=20250229 $data_dir/sample.grib2 $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "Invalid date/time" $tempText
+
+
 # Clean up
 rm -f $tempGrib $tempText $tempFilt
