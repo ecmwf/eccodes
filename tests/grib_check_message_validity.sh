@@ -18,6 +18,7 @@ grib_check_key_equals $ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl isMessag
 grib_check_key_equals $ECCODES_SAMPLES_PATH/GRIB2.tmpl                  isMessageValid 1
 grib_check_key_equals $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib1.tmpl   isMessageValid 1
 grib_check_key_equals $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib2.tmpl   isMessageValid 1
+grib_check_key_equals $ECCODES_SAMPLES_PATH/lambert_bf_grib2.tmpl       isMessageValid 1
 grib_check_key_equals $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl            isMessageValid 1
 
 IFS_SAMPLES_ROOT=${proj_dir}/ifs_samples
