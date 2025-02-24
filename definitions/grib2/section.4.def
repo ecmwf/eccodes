@@ -145,7 +145,7 @@ else {
    }
 }
 
-concept_nofail baseTimeWindow(unknown, "baseTimeWindowConcept.def", conceptsDir2, conceptsDir1): no_copy, read_only, dump;
-alias mars.baseTimeWindow = baseTimeWindow;
+concept_nofail statisticalWindow(unknown, "statisticalWindowConcept.def", conceptsDir2, conceptsDir1): no_copy, read_only, dump;
+alias mars.statisticalWindow = statisticalWindow;
 
 meta md5Section4 md5(offsetSection4,section4Length);
