@@ -52,7 +52,9 @@ cat > $tempFilt <<EOF
     write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample2
-${tools_dir}/grib_get_data $tempGrib
+if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+    ${tools_dir}/grib_get_data $tempGrib
+fi
 ${tools_dir}/grib_dump $tempGrib
 grib_check_key_equals $tempGrib packingType spectral_complex
 grib_check_key_equals $tempGrib gridType sh

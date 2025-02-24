@@ -32,7 +32,7 @@ void grib_accessor_md5_t::init(const long len, grib_arguments* arg)
             current           = blocklist_;
         }
         else {
-            Assert(current);
+            ECCODES_ASSERT(current);
             if (current) {
                 current->next        = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
                 current->next->value = grib_context_strdup(context, b);

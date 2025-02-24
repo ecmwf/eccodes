@@ -28,7 +28,7 @@ int main(int argc, char** argv)
     grib_context* c         = NULL;
     long paramId            = 0;
 
-    Assert(argc == 3);
+    ECCODES_ASSERT(argc == 3);
 
     sample_name = argv[1];
     new_dir     = argv[2]; /* The directory containing the given sample */
@@ -38,7 +38,7 @@ int main(int argc, char** argv)
 
     /* Should fail - default samples path does not include ifs_samples dirs */
     h = grib_handle_new_from_samples(c, sample_name);
-    Assert(!h);
+    ECCODES_ASSERT(!h);
 
     snprintf(full_path, 2048, "%s%c%s", new_dir, ECC_PATH_DELIMITER_CHAR, grib_samples_path(c));
     printf("Change samples_path to: %s\n", full_path);
@@ -47,9 +47,9 @@ int main(int argc, char** argv)
     codes_context_set_debug(c, 0);
 
     h = grib_handle_new_from_samples(c, sample_name);
-    Assert(h);
+    ECCODES_ASSERT(h);
     GRIB_CHECK(grib_get_long(h, "paramId", &paramId), NULL);
-    Assert(paramId == 130);
+    ECCODES_ASSERT(paramId == 130);
     grib_handle_delete(h);
     printf("Success\n");
 

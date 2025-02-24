@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -24,17 +23,17 @@ void grib_accessor_signed_t::init(const long len, grib_arguments* arg)
     value_count(&count);
     length_ = len * count;
     nbytes_ = len;
-    Assert(length_ >= 0);
+    ECCODES_ASSERT(length_ >= 0);
 }
 
-void grib_accessor_signed_t::dump(grib_dumper* dumper)
+void grib_accessor_signed_t::dump(eccodes::Dumper* dumper)
 {
     long rlen = 0;
     value_count(&rlen);
     if (rlen == 1)
-        grib_dump_long(dumper, this, NULL);
+        dumper->dump_long(this, NULL);
     else
-        grib_dump_values(dumper, this);
+        dumper->dump_values(this);
 }
 
 static const long ones[] = {
@@ -67,7 +66,7 @@ int grib_accessor_signed_t::unpack_long(long* val, size_t* len)
     }
 
     if (flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) {
-        Assert(nbytes_ <= 4);
+        ECCODES_ASSERT(nbytes_ <= 4);
         missing = ones[nbytes_];
     }
 
@@ -106,7 +105,7 @@ int grib_accessor_signed_t::pack_long(const long* val, size_t* len)
     }
 
     if (flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) {
-        Assert(nbytes_ <= 4);
+        ECCODES_ASSERT(nbytes_ <= 4);
         missing = ones[nbytes_];
     }
 
@@ -184,7 +183,7 @@ long grib_accessor_signed_t::byte_offset()
 void grib_accessor_signed_t::update_size(size_t s)
 {
     length_ = s;
-    Assert(length_ >= 0);
+    ECCODES_ASSERT(length_ >= 0);
 }
 
 long grib_accessor_signed_t::next_offset()
@@ -199,7 +198,7 @@ int grib_accessor_signed_t::is_missing()
     const grib_handle* hand    = grib_handle_of_accessor(this);
 
     if (length_ == 0) {
-        Assert(vvalue_ != NULL);
+        ECCODES_ASSERT(vvalue_ != NULL);
         return vvalue_->missing;
     }
 

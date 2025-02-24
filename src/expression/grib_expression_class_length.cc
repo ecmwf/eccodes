@@ -12,7 +12,7 @@
 
 namespace eccodes::expression {
 
-Expression::string Length::get_name() const
+const char* Length::get_name() const
 {
     return name_;
 }
@@ -41,10 +41,10 @@ int Length::evaluate_double(grib_handle* h, double* result) const
     return err;
 }
 
-Expression::string Length::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
+const char* Length::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
 {
     char mybuf[1024] = {0,};
-    Assert(buf);
+    ECCODES_ASSERT(buf);
     if ((*err = grib_get_string_internal(h, name_, mybuf, size)) != GRIB_SUCCESS)
         return NULL;
 
@@ -75,7 +75,7 @@ void Length::add_dependency(grib_accessor* observer)
     if (!observed) {
         /* grib_context_log(observer->context, GRIB_LOG_ERROR, */
         /* "Error in accessor_add_dependency: cannot find [%s]", name_); */
-        /* Assert(observed); */
+        /* ECCODES_ASSERT(observed); */
         return;
     }
 

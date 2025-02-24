@@ -205,7 +205,7 @@ static void default_log(const grib_context* c, int level, const char* mess)
         c = grib_context_get_default();
     if (level == GRIB_LOG_ERROR) {
         fprintf(c->log_stream, "ECCODES ERROR   :  %s\n", mess);
-        /*Assert(1==0);*/
+        /*ECCODES_ASSERT(1==0);*/
     }
     if (level == GRIB_LOG_FATAL)
         fprintf(c->log_stream, "ECCODES ERROR   :  %s\n", mess);
@@ -217,15 +217,15 @@ static void default_log(const grib_context* c, int level, const char* mess)
         fprintf(c->log_stream, "ECCODES INFO    :  %s\n", mess);
 
     if (level == GRIB_LOG_FATAL) {
-        Assert(0);
+        ECCODES_ASSERT(0);
     }
 
     if (getenv("ECCODES_FAIL_IF_LOG_MESSAGE")) {
         long n = atol(getenv("ECCODES_FAIL_IF_LOG_MESSAGE"));
         if (n >= 1 && level == GRIB_LOG_ERROR)
-            Assert(0);
+            ECCODES_ASSERT(0);
         if (n >= 2 && level == GRIB_LOG_WARNING)
-            Assert(0);
+            ECCODES_ASSERT(0);
     }
 }
 
@@ -247,7 +247,7 @@ void grib_context_set_data_quality_checks(grib_context* c, int val)
     // If val == 0, disable data quality checks
     // If val == 1, failure results in an error
     // If val == 2, failure results in a warning
-    Assert(val == 0 || val == 1 || val == 2);
+    ECCODES_ASSERT(val == 0 || val == 1 || val == 2);
 
     c->grib_data_quality_checks = val;
 }
@@ -369,6 +369,8 @@ static grib_context default_grib_context = {
     0,              /* bufr_multi_element_constant_arrays */
     0,              /* grib_data_quality_checks   */
     0,              /* single_precision           */
+    0,              /* enable_warnings            */
+    0,              /* eckit_geo                  */
     0,              /* log_stream                 */
     0,              /* classes                    */
     0,              /* lists                      */
@@ -406,18 +408,24 @@ grib_context* grib_context_get_default()
         const char* bufr_multi_element_constant_arrays  = NULL;
         const char* grib_data_quality_checks            = NULL;
         const char* single_precision                    = NULL;
+        const char* enable_warnings                     = NULL;
+        const char* eckit_geo                           = NULL;
         const char* file_pool_max_opened_files          = NULL;
 
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
         feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
 #endif
 
-        write_on_fail                       = codes_getenv("ECCODES_GRIB_WRITE_ON_FAIL");
         bufrdc_mode                         = getenv("ECCODES_BUFRDC_MODE_ON");
         bufr_set_to_missing_if_out_of_range = getenv("ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE");
         bufr_multi_element_constant_arrays  = getenv("ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS");
         grib_data_quality_checks            = getenv("ECCODES_GRIB_DATA_QUALITY_CHECKS");
         single_precision                    = getenv("ECCODES_SINGLE_PRECISION");
+        enable_warnings                     = getenv("ECCODES_ENABLE_WARNINGS");
+        file_pool_max_opened_files          = getenv("ECCODES_FILE_POOL_MAX_OPENED_FILES");
+        eckit_geo                           = getenv("ECCODES_ECKIT_GEO");
+        // The following had an equivalent env. var in grib_api
+        write_on_fail                       = codes_getenv("ECCODES_GRIB_WRITE_ON_FAIL");
         large_constant_fields               = codes_getenv("ECCODES_GRIB_LARGE_CONSTANT_FIELDS");
         no_abort                            = codes_getenv("ECCODES_NO_ABORT");
         debug                               = codes_getenv("ECCODES_DEBUG");
@@ -429,7 +437,6 @@ grib_context* grib_context_get_default()
         no_spd                              = codes_getenv("ECCODES_GRIB_NO_SPD");
         keep_matrix                         = codes_getenv("ECCODES_GRIB_KEEP_MATRIX");
         show_hour_stepunit                  = codes_getenv("ECCODES_GRIB_HOURLY_STEPS_WITH_UNITS");
-        file_pool_max_opened_files          = getenv("ECCODES_FILE_POOL_MAX_OPENED_FILES");
 
         /* On UNIX, when we read from a file we get exactly what is in the file on disk.
          * But on Windows a file can be opened in binary or text mode. In binary mode the system behaves exactly as in UNIX.
@@ -564,6 +571,8 @@ grib_context* grib_context_get_default()
         default_grib_context.bufr_multi_element_constant_arrays = bufr_multi_element_constant_arrays ? atoi(bufr_multi_element_constant_arrays) : 0;
         default_grib_context.grib_data_quality_checks = grib_data_quality_checks ? atoi(grib_data_quality_checks) : 0;
         default_grib_context.single_precision = single_precision ? atoi(single_precision) : 0;
+        default_grib_context.enable_warnings = enable_warnings ? atoi(enable_warnings) : 0;
+        default_grib_context.eckit_geo = eckit_geo ? atoi(eckit_geo) : 0;
         default_grib_context.file_pool_max_opened_files = file_pool_max_opened_files ? atoi(file_pool_max_opened_files) : DEFAULT_FILE_POOL_MAX_OPENED_FILES;
     }
 
@@ -731,7 +740,7 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
             snprintf(full, sizeof(full), "%s/%s", dir->value, basename);
             if (codes_access(full, F_OK) == 0) { /* 0 means file exists */
                 fullpath = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
-                Assert(fullpath);
+                ECCODES_ASSERT(fullpath);
                 fullpath->value = grib_context_strdup(c, full);
                 GRIB_MUTEX_LOCK(&mutex_c);
                 grib_trie_insert(c->def_files, basename, fullpath);
@@ -800,8 +809,8 @@ void grib_context_reset(grib_context* c)
 
             a = fr->root;
             while (a) {
-                grib_action* na = a->next;
-                grib_action_delete(c, a);
+                grib_action* na = a->next_;
+                delete a;
                 a = na;
             }
             grib_context_free_persistent(c, fr->filename);
@@ -1038,7 +1047,7 @@ void grib_context_log(const grib_context* c, int level, const char* fmt, ...)
 {
     /* Save some CPU */
     if ((level == GRIB_LOG_DEBUG && c->debug < 1) ||
-        (level == GRIB_LOG_WARNING && c->debug < 2)) {
+        (level == GRIB_LOG_WARNING && !c->enable_warnings)) {
         return;
     }
     else {

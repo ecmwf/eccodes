@@ -53,7 +53,7 @@ struct CodecFijNest
 
     // static std::tuple<int, int, int> nest_to_fij(int n, int k)
     // {
-    //     Assert(0 <= n);
+    //     ECCODES_ASSERT(0 <= n);
     //     auto f = n >> (2 * k);    // f = n / (Nside * Nside)
     //     n &= (1 << (2 * k)) - 1;  // n = n % (Nside * Nside)
     //     auto i = nest_decode_bits(n);
@@ -93,9 +93,9 @@ inline int pll(int f)
 
 size_t HEALPix_nj(size_t N, size_t i)
 {
-    Assert(0 < N);
+    ECCODES_ASSERT(0 < N);
     size_t ni = 4 * N - 1;
-    Assert(i < ni);
+    ECCODES_ASSERT(i < ni);
     return i < N ? 4 * (i + 1) : i < 3 * N ? 4 * N
                                            : HEALPix_nj(N, ni - 1 - i);
 }
@@ -197,7 +197,7 @@ int Healpix::iterate_healpix(long N)
             int i = std::max(0, (r + p)) >> 1;
             int j = std::max(0, (r - p)) >> 1;
 
-            Assert(f < 12 && i < Nside && j < Nside);
+            ECCODES_ASSERT(f < 12 && i < Nside && j < Nside);
             return CodecFijNest::fij_to_nest(f, i, j, k);
         };
 
@@ -241,7 +241,7 @@ int Healpix::iterate_healpix(long N)
         for (size_t i = 0, j = 0; i < Ny; i++) {
             // Compute the longitudes at a given latitude
             for (double longitude : HEALPix_longitudes(N, i)) {
-                Assert(ring_to_nest.at(j) < Npix);
+                ECCODES_ASSERT(ring_to_nest.at(j) < Npix);
                 lons_[ring_to_nest.at(j)] = longitude;
                 lats_[ring_to_nest.at(j)] = latitudes[i];
                 ++j;
@@ -288,7 +288,7 @@ int Healpix::init(grib_handle* h, grib_arguments* args)
 
     nested_ = STR_EQUAL(ordering, "nested");
     if (!STR_EQUAL(ordering, "ring") && !nested_) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only orderingConvention=(ring|nested) are supported", ITER);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only ordering=(ring|nested) are supported", ITER);
         return GRIB_GEOCALCULUS_PROBLEM;
     }
     // if (nested && N == 1) {

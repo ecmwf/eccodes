@@ -21,9 +21,9 @@ void grib_accessor_transient_darray_t::init(const long length, grib_arguments* a
     length_ = 0;
 }
 
-void grib_accessor_transient_darray_t::dump(grib_dumper* dumper)
+void grib_accessor_transient_darray_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_double(dumper, this, NULL);
+    dumper->dump_double(this, NULL);
 }
 
 int grib_accessor_transient_darray_t::pack_double(const double* val, size_t* len)

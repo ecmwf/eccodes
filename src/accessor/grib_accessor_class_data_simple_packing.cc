@@ -17,6 +17,7 @@
 grib_accessor_data_simple_packing_t _grib_accessor_data_simple_packing{};
 grib_accessor* grib_accessor_data_simple_packing = &_grib_accessor_data_simple_packing;
 
+
 void grib_accessor_data_simple_packing_t::init(const long v, grib_arguments* args)
 {
     grib_accessor_values_t::init(v, args);
@@ -104,7 +105,7 @@ int grib_accessor_data_simple_packing_t::unpack_double_element(size_t idx, doubl
         return GRIB_SUCCESS;
     }
 
-    Assert(idx < n_vals);
+    ECCODES_ASSERT(idx < n_vals);
     s = codes_power<double>(binary_scale_factor, 2);
     d = codes_power<double>(-decimal_scale_factor, 10);
 
@@ -113,7 +114,7 @@ int grib_accessor_data_simple_packing_t::unpack_double_element(size_t idx, doubl
                      class_name_, __func__, name_, n_vals, idx);
 
     buf += byte_offset();
-    /*Assert(((bits_per_value*n_vals)/8) < (1<<29));*/ /* See GRIB-787 */
+    /*ECCODES_ASSERT(((bits_per_value*n_vals)/8) < (1<<29));*/ /* See GRIB-787 */
 
     if (bits_per_value % 8) {
         grib_context_log(context_, GRIB_LOG_DEBUG,
@@ -244,7 +245,7 @@ int grib_accessor_data_simple_packing_t::unpack(T* val, size_t* len)
     offsetBeforeData = byte_offset();
     buf += offsetBeforeData;
 
-    /*Assert(((bits_per_value*n_vals)/8) < (1<<29));*/ /* See GRIB-787 */
+    /*ECCODES_ASSERT(((bits_per_value*n_vals)/8) < (1<<29));*/ /* See GRIB-787 */
 
     /* ECC-941 */
     if (!context_->ieee_packing) {
@@ -385,7 +386,7 @@ int grib_accessor_data_simple_packing_t::_unpack_double(double* val, size_t* len
     offsetBeforeData = byte_offset();
     buf += offsetBeforeData;
 
-    /*Assert(((bits_per_value*n_vals)/8) < (1<<29));*/ /* See GRIB-787 */
+    /*ECCODES_ASSERT(((bits_per_value*n_vals)/8) < (1<<29));*/ /* See GRIB-787 */
 
     /* ECC-941 */
     if (!context_->ieee_packing) {
@@ -473,7 +474,7 @@ int grib_accessor_data_simple_packing_t::pack_double(const double* val, size_t* 
     double range                  = 0;
     double minrange = 0, maxrange = 0;
     long changing_precision = 0;
-    grib_context* c         = context_;
+    const grib_context* c   = context_;
 
     decimal_scale_factor = 0;
 
@@ -549,6 +550,10 @@ int grib_accessor_data_simple_packing_t::pack_double(const double* val, size_t* 
             return GRIB_SUCCESS;
         }
         else {
+            // ECC-2012
+            if ((err = grib_set_long_internal(gh, binary_scale_factor_, 0)) != GRIB_SUCCESS)
+                return err;
+
             bits_per_value = 0;
             if ((err = grib_set_long_internal(gh, bits_per_value_, bits_per_value)) != GRIB_SUCCESS)
                 return err;

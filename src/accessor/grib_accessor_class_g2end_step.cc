@@ -45,9 +45,9 @@ void grib_accessor_g2end_step_t::init(const long l, grib_arguments* c)
     numberOfTimeRanges_  = c->get_name(h, n++);
 }
 
-void grib_accessor_g2end_step_t::dump(grib_dumper* dumper)
+void grib_accessor_g2end_step_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_double(dumper, this, NULL);
+    dumper->dump_double(this, NULL);
 }
 
 // See GRIB-488
@@ -76,7 +76,7 @@ static int convert_time_range_long_(
     long* lengthOfTimeRange           /* time_range_value */
 )
 {
-    Assert(lengthOfTimeRange != NULL);
+    ECCODES_ASSERT(lengthOfTimeRange != NULL);
 
     if (indicatorOfUnitForTimeRange != stepUnits) {
         eccodes::Step time_range{ *lengthOfTimeRange, indicatorOfUnitForTimeRange };
@@ -196,16 +196,10 @@ int grib_accessor_g2end_step_t::unpack_multiple_time_ranges_long_(long* val, siz
     grib_handle* h          = grib_handle_of_accessor(this);
     long numberOfTimeRanges = 0, step_units = 0, start_step_value = 0;
 
-    size_t count                                      = 0;
-    long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {
-        0,
-    };
-    long arr_coded_unit[MAX_NUM_TIME_RANGES] = {
-        0,
-    };
-    long arr_coded_time_range[MAX_NUM_TIME_RANGES] = {
-        0,
-    };
+    size_t count = 0;
+    long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {0,};
+    long arr_coded_unit[MAX_NUM_TIME_RANGES] = {0,};
+    long arr_coded_time_range[MAX_NUM_TIME_RANGES] = {0,};
 
     if ((err = grib_get_long_internal(h, start_step_value_, &start_step_value)))
         return err;
@@ -257,16 +251,10 @@ int grib_accessor_g2end_step_t::unpack_multiple_time_ranges_double_(double* val,
     long start_step_value   = 0;
     long start_step_unit    = 0;
 
-    size_t count                                      = 0;
-    long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {
-        0,
-    };
-    long arr_coded_unit[MAX_NUM_TIME_RANGES] = {
-        0,
-    };
-    long arr_coded_time_range[MAX_NUM_TIME_RANGES] = {
-        0,
-    };
+    size_t count = 0;
+    long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {0,};
+    long arr_coded_unit[MAX_NUM_TIME_RANGES] = {0,};
+    long arr_coded_time_range[MAX_NUM_TIME_RANGES] = {0,};
 
     if ((err = grib_get_long_internal(h, start_step_value_, &start_step_value)))
         return err;
@@ -337,10 +325,10 @@ int grib_accessor_g2end_step_t::unpack_long(long* val, size_t* len)
         return 0;
     }
 
-    Assert(numberOfTimeRanges_);
+    ECCODES_ASSERT(numberOfTimeRanges_);
     if ((ret = grib_get_long_internal(h, numberOfTimeRanges_, &numberOfTimeRanges)))
         return ret;
-    Assert(numberOfTimeRanges == 1 || numberOfTimeRanges == 2);
+    ECCODES_ASSERT(numberOfTimeRanges == 1 || numberOfTimeRanges == 2);
 
     try {
         if (numberOfTimeRanges == 1) {
@@ -379,10 +367,10 @@ int grib_accessor_g2end_step_t::unpack_double(double* val, size_t* len)
         return 0;
     }
 
-    Assert(numberOfTimeRanges_);
+    ECCODES_ASSERT(numberOfTimeRanges_);
     if ((ret = grib_get_long_internal(h, numberOfTimeRanges_, &numberOfTimeRanges)))
         return ret;
-    Assert(numberOfTimeRanges == 1 || numberOfTimeRanges == 2);
+    ECCODES_ASSERT(numberOfTimeRanges == 1 || numberOfTimeRanges == 2);
 
     try {
         if (numberOfTimeRanges == 1) {

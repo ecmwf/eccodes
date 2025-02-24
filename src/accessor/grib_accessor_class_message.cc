@@ -42,7 +42,7 @@ void grib_accessor_message_t::resize(size_t new_size)
     // grib_context_free(context_ , zero);
     // grib_context_log(context_ , GRIB_LOG_DEBUG, "resize: grib_accessor_message %ld %ld %s %s",
     //                 (long)new_size, (long)a->length, a->cclass->name, name_ );
-    // Assert(new_size == length_ );
+    // ECCODES_ASSERT(new_size == length_ );
 }
 
 int grib_accessor_message_t::value_count(long* count)

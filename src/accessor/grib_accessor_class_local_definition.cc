@@ -17,7 +17,7 @@ void grib_accessor_local_definition_t::init(const long l, grib_arguments* c)
 {
     grib_accessor_unsigned_t::init(l, c);
     grib_handle* hand = grib_handle_of_accessor(this);
-    int n             = 0;
+    int n = 0;
 
     grib2LocalSectionNumber_                 = c->get_name(hand, n++);
     productDefinitionTemplateNumber_         = c->get_name(hand, n++);
@@ -57,7 +57,7 @@ int grib_accessor_local_definition_t::pack_long(const long* val, size_t* len)
     long editionNumber        = 0;
 
     if (grib_get_long(hand, "editionNumber", &editionNumber) == GRIB_SUCCESS) {
-        Assert(editionNumber != 1);
+        ECCODES_ASSERT(editionNumber != 1);
     }
 
     if (grib_get_long(hand, productDefinitionTemplateNumber_, &productDefinitionTemplateNumber) != GRIB_SUCCESS)

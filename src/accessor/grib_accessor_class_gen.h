@@ -12,6 +12,7 @@
 
 #include "grib_api_internal.h"
 #include "grib_accessor.h"
+#include "grib_value.h"
 #include <bitset>
 
 
@@ -20,7 +21,7 @@ class grib_accessor_gen_t : public grib_accessor
 public:
     grib_accessor_gen_t() :
         grib_accessor{} { class_name_ = "gen"; }
-    ~grib_accessor_gen_t();
+    ~grib_accessor_gen_t() override;
 
     void init_accessor(const long, grib_arguments*) override;  // TODO: Implement
     grib_accessor* create_empty_accessor() override { return new grib_accessor_gen_t{}; }
@@ -49,7 +50,7 @@ public:
     long next_offset() override;
     int value_count(long*) override;
     void destroy(grib_context*) override;
-    void dump(grib_dumper*) override;
+    void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
     void post_init() override;
     int notify_change(grib_accessor* changed) override;

@@ -166,13 +166,13 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
     #define ftello ftell
 #endif
 
-#define Assert(a)                                                 \
+#define ECCODES_ASSERT(a)                                                 \
     do {                                                          \
         if (!(a)) codes_assertion_failed(#a, __FILE__, __LINE__); \
     } while (0)
 
 #ifdef DEBUG
-    #define DEBUG_ASSERT(a) Assert(a)
+    #define DEBUG_ASSERT(a) ECCODES_ASSERT(a)
     #define DEBUG_ASSERT_ACCESS(array, index, size)                                                                           \
         do {                                                                                                                  \
             if (!((index) >= 0 && (index) < (size))) {                                                                        \
@@ -238,17 +238,17 @@ extern const int max_nbits;
 namespace eccodes {
 class Expression;
 class Arguments;
+class Action;
 }  // namespace eccodes
 using grib_expression = eccodes::Expression;
 using grib_arguments  = eccodes::Arguments;
+using grib_action = eccodes::Action;
 
 typedef struct grib_action_file grib_action_file;
 typedef struct grib_action_file_list grib_action_file_list;
 typedef struct grib_block_of_accessors grib_block_of_accessors;
 typedef struct grib_buffer grib_buffer;
 class grib_accessor_class;
-typedef struct grib_action grib_action;
-typedef struct grib_action_class grib_action_class;
 typedef struct grib_section grib_section;
 typedef struct grib_codetable grib_codetable;
 typedef struct grib_smart_table grib_smart_table;
@@ -263,8 +263,6 @@ typedef struct grib_iterator
     eccodes::geo_iterator::Iterator* iterator;
 } grib_iterator;
 
-typedef struct grib_dumper grib_dumper;
-typedef struct grib_dumper_class grib_dumper_class;
 typedef struct grib_dependency grib_dependency;
 
 typedef struct codes_condition codes_condition;
@@ -322,66 +320,7 @@ struct grib_loader
     int changing_edition;
 };
 
-/**
- *  An action
- *  Structure supporting the creation of accessor, resulting of a statement during a definition file parsing
- *
- *  @see  grib_action_class
- */
-struct grib_action
-{
-    char* name;                /**  name of the definition statement */
-    char* op;                  /**  operator of the definition statement */
-    char* name_space;          /**  namespace of the definition statement */
-    grib_action* next;         /**  next action in the list */
-    grib_action_class* cclass; /**  link to the structure containing a specific behaviour */
-    grib_context* context;     /**  Context */
-    unsigned long flags;
-    char* defaultkey;              /** name of the key used as default if not found */
-    grib_arguments* default_value; /** default expression as in .def file */
-    char* set;
-    char* debug_info; /** purely for debugging and tracing */
-};
-
 class grib_accessors_list;
-
-typedef int (*action_create_accessors_handle_proc)(grib_section* p, grib_action* a, grib_loader* h);
-typedef int (*action_notify_change_proc)(grib_action* a, grib_accessor* observer, grib_accessor* observed);
-
-typedef void (*grib_dump_proc)(grib_action*, FILE*, int);
-typedef void (*grib_xref_proc)(grib_action*, FILE*, const char*);
-typedef void (*action_init_class_proc)(grib_action_class* a);
-typedef void (*action_init_proc)(grib_action* a);
-typedef void (*action_destroy_proc)(grib_context* context, grib_action* a);
-typedef grib_action* (*action_reparse_proc)(grib_action* a, grib_accessor*, int*);
-typedef int (*action_execute_proc)(grib_action* a, grib_handle*);
-
-/**
- *  An action_class
- *  Structure supporting the specific behaviour of an action
- *
- *  @see  grib_action
- */
-struct grib_action_class
-{
-    grib_action_class** super; /** < link to a more general behaviour */
-    const char* name;          /** < name of the behaviour class */
-    size_t size;               /** < size in bytes of the structure */
-
-    int inited;
-    action_init_class_proc init_class;
-
-    action_init_proc init;
-    action_destroy_proc destroy; /** < destructor method to release the memory */
-
-    grib_dump_proc dump;                                 /** < dump method of the action  */
-    grib_xref_proc xref;                                 /** < dump method of the action  */
-    action_create_accessors_handle_proc create_accessor; /** < method to create the corresponding accessor from a handle*/
-    action_notify_change_proc notify_change;             /** < method to create the corresponding accessor from a handle*/
-
-    action_reparse_proc reparse;
-    action_execute_proc execute;
-};
 
 /**
  *  A buffer
@@ -437,6 +376,7 @@ struct grib_virtual_value
 #define GRIB_ACCESSOR_FLAG_LOWERCASE                (1 << 17)
 #define GRIB_ACCESSOR_FLAG_BUFR_COORD               (1 << 18)
 #define GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION (1 << 19)
+#define GRIB_ACCESSOR_FLAG_COPY_AS_INT              (1 << 20)
 
 /**
  *  A section accessor
@@ -464,47 +404,6 @@ typedef struct grib_nearest
 } grib_nearest;
 
 /* --------------- */
-typedef int (*dumper_init_proc)(grib_dumper*);
-typedef void (*dumper_dump_proc)(grib_dumper*, grib_accessor*, const char* comment);
-typedef void (*dumper_dump_section_proc)(grib_dumper*, grib_accessor*, grib_block_of_accessors* block);
-typedef void (*dumper_dump_values_proc)(grib_dumper*, grib_accessor*);
-typedef int (*dumper_destroy_proc)(grib_dumper*);
-typedef void (*dumper_header_proc)(grib_dumper*, grib_handle*);
-typedef void (*dumper_footer_proc)(grib_dumper*, grib_handle*);
-typedef void (*dumper_init_class_proc)(grib_dumper_class*);
-
-struct grib_dumper
-{
-    FILE* out;
-    unsigned long option_flags;
-    void* arg;
-    int depth;
-    long count;
-    grib_context* context;
-    grib_dumper_class* cclass;
-};
-
-struct grib_dumper_class
-{
-    grib_dumper_class** super;
-    const char* name;
-    size_t size;
-    int inited;
-    dumper_init_class_proc init_class;
-    dumper_init_proc init;
-    dumper_destroy_proc destroy;
-    dumper_dump_proc dump_long;
-    dumper_dump_proc dump_double;
-    dumper_dump_proc dump_string;
-    dumper_dump_proc dump_string_array;
-    dumper_dump_proc dump_label;
-    dumper_dump_proc dump_bytes;
-    dumper_dump_proc dump_bits;
-    dumper_dump_section_proc dump_section;
-    dumper_dump_values_proc dump_values;
-    dumper_header_proc header;
-    dumper_footer_proc footer;
-};
 
 struct grib_dependency
 {
@@ -820,6 +719,8 @@ struct grib_context
     int bufr_multi_element_constant_arrays;
     int grib_data_quality_checks;
     int single_precision;
+    int enable_warnings;
+    int eckit_geo;
     FILE* log_stream;
     grib_trie* classes;
     grib_trie* lists;
@@ -903,6 +804,8 @@ struct grib_file
     char* buffer;
     long refcount;
     grib_file* next;
+    grib_file* pool_file;
+    long pool_file_refcount;
     short id;
 };
 
@@ -1232,6 +1135,7 @@ typedef struct j2k_encode_helper
 #include "eccodes_prototypes.h"
 #ifdef __cplusplus
 }
+    #include "action/action.h"
     #include "accessor/grib_accessor.h"
     #include "accessor/grib_accessors_list.h"
     #include "geo/iterator/grib_iterator.h"

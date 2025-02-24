@@ -168,7 +168,7 @@ int grib_accessor_data_ccsds_packing_t::pack_double(const double* val, size_t* l
     if (is_constant_field) {
     #ifdef DEBUG
         for (i = 1; i < n_vals; i++) {
-            Assert(val[i] == val[0]);
+            ECCODES_ASSERT(val[i] == val[0]);
         }
     #endif
         if (grib_get_nearest_smaller_value(hand, reference_value_, val[0], &reference_value) != GRIB_SUCCESS) {
@@ -181,6 +181,11 @@ int grib_accessor_data_ccsds_packing_t::pack_double(const double* val, size_t* l
 
         if ((err = grib_set_long_internal(hand, number_of_values_, n_vals)) != GRIB_SUCCESS)
             return err;
+
+        // ECC-2012
+        if ((err = grib_set_long_internal(hand, binary_scale_factor_, 0)) != GRIB_SUCCESS)
+            return err;
+
         bits_per_value = 0;  // ECC-1387
         if ((err = grib_set_long_internal(hand, bits_per_value_, bits_per_value)) != GRIB_SUCCESS)
             return err;
@@ -302,7 +307,7 @@ int grib_accessor_data_ccsds_packing_t::pack_double(const double* val, size_t* l
             }
             break;
         default:
-            grib_context_log(context_, GRIB_LOG_ERROR, "%s pack_double: packing %s, bitsPerValue=%ld (max %ld)",
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s pack_double: packing %s, bitsPerValue=%ld (max %d)",
                              class_name_, name_, bits_per_value, MAX_BITS_PER_VALUE);
             err = GRIB_INVALID_BPV;
             goto cleanup;
@@ -499,7 +504,7 @@ int grib_accessor_data_ccsds_packing_t::unpack(T* val, size_t* len)
             }
             break;
         default:
-            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: unpacking %s, bitsPerValue=%ld (max %ld)",
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: unpacking %s, bitsPerValue=%ld (max %d)",
                              class_name_, __func__, name_, bits_per_value, MAX_BITS_PER_VALUE);
             err = GRIB_INVALID_BPV;
             goto cleanup;

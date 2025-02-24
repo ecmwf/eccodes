@@ -128,14 +128,14 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     grib_accessor* a       = NULL;
     size_t size            = 0;
 
-    grib_accessor* builder = *((grib_accessor_hash(creator->op, strlen(creator->op)))->cclass);
+    grib_accessor* builder = *((grib_accessor_hash(creator->op_, strlen(creator->op_)))->cclass);
     a = builder->create_empty_accessor();
 
-    a->name_       = creator->name;
-    a->name_space_ = creator->name_space;
+    a->name_       = creator->name_;
+    a->name_space_ = creator->name_space_;
 
-    a->all_names_[0]       = creator->name;
-    a->all_name_spaces_[0] = creator->name_space;
+    a->all_names_[0]       = creator->name_;
+    a->all_name_spaces_[0] = creator->name_space_;
 
     a->creator_  = creator;
     a->context_  = p->h->context;
@@ -145,8 +145,8 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     a->parent_   = p;
     a->length_   = 0;
     a->offset_   = 0;
-    a->flags_    = creator->flags;
-    a->set_      = creator->set;
+    a->flags_    = creator->flags_;
+    a->set_      = creator->set_;
 
     if (p->block->last) {
         a->offset_ = p->block->last->get_next_position_offset();
@@ -173,11 +173,13 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
                 grib_context_log(p->h->context, GRIB_LOG_ERROR,
                                  "Creating (%s)%s of %s at offset %ld-%ld over message boundary (%lu)",
                                  p->owner ? p->owner->name_ : "", a->name_,
-                                 creator->op, a->offset_,
+                                 creator->op_, a->offset_,
                                  a->offset_ + a->length_,
                                  p->h->buffer->ulength);
 
             a->destroy(p->h->context);
+            delete a;
+            a = nullptr;
             return NULL;
         }
         else {
@@ -194,11 +196,11 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
         if (p->owner)
             grib_context_log(p->h->context, GRIB_LOG_DEBUG,
                              "Creating (%s)%s of %s at offset %d [len=%d]",
-                             p->owner->name_, a->name_, creator->op, a->offset_, len, p->block);
+                             p->owner->name_, a->name_, creator->op_, a->offset_, len, p->block);
         else
             grib_context_log(p->h->context, GRIB_LOG_DEBUG,
                              "Creating root %s of %s at offset %d [len=%d]",
-                             a->name_, creator->op, a->offset_, len, p->block);
+                             a->name_, creator->op_, a->offset_, len, p->block);
     }
 
     return a;
@@ -247,7 +249,7 @@ void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
 
             if (a->same_ && (a->same_ == a)) {
                 fprintf(stderr, "---> %s\n", a->name_);
-                Assert(a->same_ != a);
+                ECCODES_ASSERT(a->same_ != a);
             }
         }
     }
@@ -304,7 +306,7 @@ int grib_section_adjust_sizes(grib_section* s, int update, int depth)
             size_t len = 1;
             long plen  = 0;
             int lret   = s->aclength->unpack_long(&plen, &len);
-            Assert(lret == GRIB_SUCCESS);
+            ECCODES_ASSERT(lret == GRIB_SUCCESS);
             /* This happens when there is some padding */
             if ((plen != length) || force_update) {
                 if (update) {
@@ -373,7 +375,7 @@ int grib_get_block_length(grib_section* s, size_t* l)
 //         if(s->h->context->debug)
 //             printf("SECTION updating length %ld %s\n",plen,s->owner->name);
 //     }
-//     // if(s->aclength) Assert(*l == plen);
+//     // if(s->aclength) ECCODES_ASSERT(*l == plen);
 //     return GRIB_SUCCESS;
 }
 
@@ -403,7 +405,7 @@ void grib_update_paddings(grib_section* s)
 
     /* while((changed = find_paddings(s)) != NULL) */
     while ((changed = find_paddings(s->h->root)) != NULL) {
-        Assert(changed != last);
+        ECCODES_ASSERT(changed != last);
         changed->resize(changed->preferred_size(0));
         last = changed;
     }

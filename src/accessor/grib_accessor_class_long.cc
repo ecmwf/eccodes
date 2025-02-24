@@ -23,9 +23,9 @@ long grib_accessor_long_t::get_native_type()
     return GRIB_TYPE_LONG;
 }
 
-void grib_accessor_long_t::dump(grib_dumper* dumper)
+void grib_accessor_long_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_long(dumper, this, NULL);
+    dumper->dump_long(this, NULL);
 }
 
 int grib_accessor_long_t::unpack_string(char* v, size_t* len)

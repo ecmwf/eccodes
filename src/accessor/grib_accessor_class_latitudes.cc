@@ -14,9 +14,8 @@ grib_accessor_latitudes_t _grib_accessor_latitudes{};
 grib_accessor* grib_accessor_latitudes = &_grib_accessor_latitudes;
 
 static int get_distinct(grib_accessor* a, double** val, long* len);
-static int compare_doubles(const void* a, const void* b, int ascending)
+static int compare_doubles(const void* a, const void* b, bool ascending)
 {
-    // ascending is a boolean: 0 or 1
     const double* arg1 = (double*)a;
     const double* arg2 = (double*)b;
     if (ascending) {
@@ -35,21 +34,21 @@ static int compare_doubles(const void* a, const void* b, int ascending)
 
 static int compare_doubles_ascending(const void* a, const void* b)
 {
-    return compare_doubles(a, b, 1);
+    return compare_doubles(a, b, true);
 }
 
 static int compare_doubles_descending(const void* a, const void* b)
 {
-    return compare_doubles(a, b, 0);
+    return compare_doubles(a, b, false);
 }
 
-void grib_accessor_latitudes_t::init(const long l, grib_arguments* c)
+void grib_accessor_latitudes_t::init(const long l, grib_arguments* args)
 {
-    grib_accessor_double_t::init(l, c);
+    grib_accessor_double_t::init(l, args);
     int n = 0;
 
-    values_   = c->get_name(grib_handle_of_accessor(this), n++);
-    distinct_ = c->get_long(grib_handle_of_accessor(this), n++);
+    values_   = args->get_name(grib_handle_of_accessor(this), n++);
+    distinct_ = args->get_long(grib_handle_of_accessor(this), n++);
     save_     = 0;
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -57,7 +56,6 @@ void grib_accessor_latitudes_t::init(const long l, grib_arguments* c)
 
 int grib_accessor_latitudes_t::unpack_double(double* val, size_t* len)
 {
-    grib_context* c     = context_;
     int ret             = 0;
     double* v           = val;
     double dummyLon     = 0;
@@ -72,7 +70,7 @@ int grib_accessor_latitudes_t::unpack_double(double* val, size_t* len)
     if (*len < size) {
         // lats_ are computed in value_count so must free
         if (lats_) {
-            grib_context_free(c, lats_);
+            grib_context_free(context_, lats_);
             lats_ = NULL;
         }
         return GRIB_ARRAY_TOO_SMALL;
@@ -85,7 +83,7 @@ int grib_accessor_latitudes_t::unpack_double(double* val, size_t* len)
         *len = size_;
         for (i = 0; i < size; i++)
             val[i] = lats_[i];
-        grib_context_free(c, lats_);
+        grib_context_free(context_, lats_);
         lats_ = NULL;
         size_ = 0;
         return GRIB_SUCCESS;
@@ -95,7 +93,7 @@ int grib_accessor_latitudes_t::unpack_double(double* val, size_t* len)
     iter = grib_iterator_new(grib_handle_of_accessor(this), GRIB_GEOITERATOR_NO_VALUES, &ret);
     if (ret != GRIB_SUCCESS) {
         grib_iterator_delete(iter);
-        grib_context_log(c, GRIB_LOG_ERROR, "latitudes: Unable to create iterator");
+        grib_context_log(context_, GRIB_LOG_ERROR, "latitudes: Unable to create iterator");
         return ret;
     }
 
@@ -110,7 +108,6 @@ int grib_accessor_latitudes_t::unpack_double(double* val, size_t* len)
 int grib_accessor_latitudes_t::value_count(long* len)
 {
     grib_handle* h  = grib_handle_of_accessor(this);
-    grib_context* c = context_;
     double* val     = NULL;
     int ret;
     size_t size;
@@ -138,7 +135,7 @@ int grib_accessor_latitudes_t::value_count(long* len)
             size_ = *len;
         }
         else {
-            grib_context_free(c, val);
+            grib_context_free(context_, val);
         }
     }
 
@@ -147,16 +144,13 @@ int grib_accessor_latitudes_t::value_count(long* len)
 
 static int get_distinct(grib_accessor* a, double** val, long* len)
 {
-    long count = 0;
-    double prev;
-    double* v       = NULL;
-    double* v1      = NULL;
+    double* v   = NULL;
+    double* v1  = NULL;
     double dummyLon = 0;
-    int ret         = GRIB_SUCCESS;
-    int i;
+    int ret = GRIB_SUCCESS;
     long jScansPositively = 0;  // default: north to south
-    size_t size           = *len;
-    grib_context* c       = a->context_;
+    size_t size = *len;
+    grib_context* c = a->context_;
 
     // Performance: We do not need the values to be decoded
     grib_iterator* iter = grib_iterator_new(grib_handle_of_accessor(a), GRIB_GEOITERATOR_NO_VALUES, &ret);
@@ -197,10 +191,10 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     }
 
     // Construct a unique set of lats by filtering out duplicates
-    prev  = v[0];
+    double prev  = v[0];
     v1[0] = prev;
-    count = 1;
-    for (i = 1; i < *len; i++) {
+    long count = 1;
+    for (long i = 1; i < *len; i++) {
         if (v[i] != prev) {
             prev      = v[i];
             v1[count] = prev;  // Value different from previous so store it

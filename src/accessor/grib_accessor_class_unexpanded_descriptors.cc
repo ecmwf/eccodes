@@ -97,7 +97,7 @@ int grib_accessor_unexpanded_descriptors_t::pack_long(const long* val, size_t* l
         return ret;
 
     expanded = dynamic_cast<grib_accessor_expanded_descriptors_t*>(grib_find_accessor(hand, "expandedCodes"));
-    Assert(expanded != NULL);
+    ECCODES_ASSERT(expanded != NULL);
     ret = expanded->grib_accessor_expanded_descriptors_set_do_expand(1);
     if (ret != GRIB_SUCCESS)
         return ret;

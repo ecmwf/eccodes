@@ -20,7 +20,7 @@ public:
     // grib_accessor* create_empty_accessor() override { return new grib_accessor_data_shsimple_packing_t{}; }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
-    void dump(grib_dumper*) override;
+    void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
 
 protected:

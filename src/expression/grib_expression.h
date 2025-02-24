@@ -18,8 +18,6 @@ namespace eccodes {
 class Expression
 {
 public:
-    using string = const char*;
-
     using PackProc        = std::function<int(grib_handle*, const double*, size_t, void*, size_t*)>;
     using UnpackProc      = std::function<int(grib_handle*, const void*, size_t, double*, size_t*)>;
     using BinopLongProc   = std::function<long(long, long)>;
@@ -32,11 +30,11 @@ public:
     virtual void destroy(grib_context*) {};
     virtual void print(grib_context*, grib_handle*, FILE*) const;
     virtual void add_dependency(grib_accessor*);
-    virtual string get_name() const;
+    virtual const char* get_name() const;
     virtual int native_type(grib_handle*) const;
     virtual int evaluate_long(grib_handle*, long*) const;
     virtual int evaluate_double(grib_handle*, double*) const;
-    virtual string evaluate_string(grib_handle*, char*, size_t*, int*) const;
+    virtual const char* evaluate_string(grib_handle*, char*, size_t*, int*) const;
 
     virtual const char* class_name() const = 0;
 };
@@ -44,7 +42,3 @@ public:
 }  // namespace eccodes
 
 using grib_expression = eccodes::Expression;
-
-// Defined in grib_expression_class_accessor.cc
-// grib_expression* new_accessor_expression(grib_context*, const char*, long, size_t);
-void grib_expression_free(grib_context*, grib_expression*);

@@ -101,7 +101,7 @@ static void binary_search_gaussian_latitudes(const double array[], const unsigne
     unsigned long high = n;
     unsigned long mid;
     const int descending = (array[n] < array[0]);
-    Assert(descending); /* Gaussian latitudes should be in descending order */
+    ECCODES_ASSERT(descending); /* Gaussian latitudes should be in descending order */
     while (low <= high) {
         mid = (high + low) / 2;
 

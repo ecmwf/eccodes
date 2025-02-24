@@ -98,7 +98,7 @@ int grib_accessor_octahedral_gaussian_t::unpack_long(long* val, size_t* len)
 
     if ((ret = grib_get_size(hand, pl_, &plsize)) != GRIB_SUCCESS)
         return ret;
-    Assert(plsize); /* pl array must have at least one element */
+    ECCODES_ASSERT(plsize); /* pl array must have at least one element */
 
     pl = (long*)grib_context_malloc_clear(c, sizeof(long) * plsize);
     if (!pl) {

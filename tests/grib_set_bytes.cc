@@ -48,22 +48,22 @@ int main(int argc, char** argv)
     size_t uuid_long_len = sizeof (uuid_long);
 
     in = fopen(infile, "rb");
-    Assert(in);
+    ECCODES_ASSERT(in);
     out = fopen(outfile, "wb");
-    Assert(out);
+    ECCODES_ASSERT(out);
 
     h = grib_handle_new_from_file(0, in, &err);
-    Assert(h);
+    ECCODES_ASSERT(h);
 
     /* The uuidOfVGrid key is 16 bytes long */
     err = grib_set_bytes(h, "uuidOfVGrid", uuid_short, &uuid_short_len);
-    Assert(err == GRIB_BUFFER_TOO_SMALL);
+    ECCODES_ASSERT(err == GRIB_BUFFER_TOO_SMALL);
     err = grib_set_bytes(h, "uuidOfVGrid", uuid_long, &uuid_long_len);
-    Assert(err == GRIB_BUFFER_TOO_SMALL);
+    ECCODES_ASSERT(err == GRIB_BUFFER_TOO_SMALL);
 
     /* This one should work */
     err = grib_set_bytes(h, "uuidOfVGrid", uuid_good, &uuid_good_len);
-    Assert(err == 0);
+    ECCODES_ASSERT(err == 0);
 
     GRIB_CHECK(grib_get_message(h, &buffer, &size), 0);
     if (fwrite(buffer, 1, size, out) != size) {

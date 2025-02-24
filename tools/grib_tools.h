@@ -34,7 +34,7 @@
 #endif
 
 #define MAX_KEYS       256
-#define MAX_STRING_LEN 512
+#define MAX_STRING_LEN 1024
 #define MAX_FAILED     1024
 #define LATLON_SIZE    4 /* nearest */
 

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -36,7 +35,7 @@ int grib_accessor_scale_t::unpack_double(double* val, size_t* len)
         ret = GRIB_ARRAY_TOO_SMALL;
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "Accessor %s cannot gather value for %s and/or %s",
-                         name_, multiplier, divisor_);
+                         name_, multiplier_, divisor_);
         return ret;
     }
 

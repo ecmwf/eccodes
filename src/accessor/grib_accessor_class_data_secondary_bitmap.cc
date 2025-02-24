@@ -24,9 +24,9 @@ void grib_accessor_data_secondary_bitmap_t::init(const long v, grib_arguments* a
     length_ = 0;
 }
 
-void grib_accessor_data_secondary_bitmap_t::dump(grib_dumper* dumper)
+void grib_accessor_data_secondary_bitmap_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_values(dumper, this);
+    dumper->dump_values(this);
 }
 
 int grib_accessor_data_secondary_bitmap_t::unpack_double(double* val, size_t* len)
@@ -98,8 +98,8 @@ int grib_accessor_data_secondary_bitmap_t::unpack_double(double* val, size_t* le
         }
     }
 
-    Assert(k <= *len);
-    Assert(m <= secondary_len);
+    ECCODES_ASSERT(k <= *len);
+    ECCODES_ASSERT(m <= secondary_len);
 
     /*printf("FOOBAR %d %d %ld %d\n",f,primary_len,expand_by,n_vals);*/
 

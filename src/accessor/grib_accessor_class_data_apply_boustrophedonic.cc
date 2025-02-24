@@ -26,9 +26,9 @@ void grib_accessor_data_apply_boustrophedonic_t::init(const long v, grib_argumen
 
     length_ = 0;
 }
-void grib_accessor_data_apply_boustrophedonic_t::dump(grib_dumper* dumper)
+void grib_accessor_data_apply_boustrophedonic_t::dump(eccodes::Dumper* dumper)
 {
-    grib_dump_values(dumper, this);
+    dumper->dump_values(this);
 }
 
 int grib_accessor_data_apply_boustrophedonic_t::value_count(long* numberOfPoints)
@@ -69,7 +69,7 @@ int grib_accessor_data_apply_boustrophedonic_t::unpack(T* val, size_t* len)
 
     if (valuesSize != numberOfPoints) {
         grib_context_log(context_, GRIB_LOG_ERROR, "boustrophedonic ordering error: ( %s=%ld ) != (sizeOf(%s)=%ld)",
-                         numberOfPoints, numberOfPoints, values_, (long)valuesSize);
+                         numberOfPoints_, numberOfPoints, values_, (long)valuesSize);
         return GRIB_DECODING_ERROR;
     }
 
@@ -90,7 +90,7 @@ int grib_accessor_data_apply_boustrophedonic_t::unpack(T* val, size_t* len)
         return ret;
 
     if (grib_get_size(grib_handle_of_accessor(this), pl_, &plSize) == GRIB_SUCCESS) {
-        Assert(plSize == numberOfRows);
+        ECCODES_ASSERT(plSize == numberOfRows);
         pl  = (long*)grib_context_malloc_clear(context_, sizeof(long) * plSize);
         ret = grib_get_long_array_internal(grib_handle_of_accessor(this), pl_, pl, &plSize);
         if (ret)
@@ -228,7 +228,7 @@ int grib_accessor_data_apply_boustrophedonic_t::pack_double(const double* val, s
         return ret;
 
     if (grib_get_size(grib_handle_of_accessor(this), pl_, &plSize) == GRIB_SUCCESS) {
-        Assert(plSize == numberOfRows);
+        ECCODES_ASSERT(plSize == numberOfRows);
         pl  = (long*)grib_context_malloc_clear(context_, sizeof(long) * plSize);
         ret = grib_get_long_array_internal(grib_handle_of_accessor(this), pl_, pl, &plSize);
         if (ret)

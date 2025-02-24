@@ -18,7 +18,7 @@ public:
     grib_accessor_padto_t() :
         grib_accessor_padding_t() { class_name_ = "padto"; }
     grib_accessor* create_empty_accessor() override { return new grib_accessor_padto_t{}; }
-    void dump(grib_dumper*) override;
+    void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
     size_t preferred_size(int) override;
 

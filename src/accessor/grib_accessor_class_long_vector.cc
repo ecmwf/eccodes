@@ -28,7 +28,7 @@ void grib_accessor_long_vector_t::init(const long l, grib_arguments* c)
     index_ = c->get_long(grib_handle_of_accessor(this), n++);
 
     /* check index_ on init and never change it */
-    Assert(index_ < v->number_of_elements_ && index_ >= 0);
+    ECCODES_ASSERT(index_ < v->number_of_elements_ && index_ >= 0);
 
     length_ = 0;
 }

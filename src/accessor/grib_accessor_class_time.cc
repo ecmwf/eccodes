@@ -67,16 +67,16 @@ int grib_accessor_time_t::pack_long(const long* val, size_t* len)
     if (*len != 1)
         return GRIB_WRONG_ARRAY_SIZE;
 
+    hour   = v / 100;
+    minute = v % 100;
+    second = 0; /* We ignore the 'seconds' in our time calculation! */
+
     if (!is_time_valid(v)) {
         // ECC-1777: For now just a warning. Will later change to an error
         fprintf(stderr, "ECCODES WARNING :  %s:%s: Time is not valid! hour=%ld min=%ld sec=%ld\n",
                 class_name_, __func__, hour, minute, second);
         // return GRIB_ENCODING_ERROR;
     }
-
-    hour   = v / 100;
-    minute = v % 100;
-    second = 0; /* We ignore the 'seconds' in our time calculation! */
 
     if ((ret = grib_set_long_internal(hand, hour_, hour)) != GRIB_SUCCESS)
         return ret;

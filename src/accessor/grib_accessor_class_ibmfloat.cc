@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -22,7 +21,7 @@ void grib_accessor_ibmfloat_t::init(const long len, grib_arguments* arg)
     arg_ = arg;
     value_count(&count);
     length_ = 4 * count;
-    Assert(length_ >= 0);
+    ECCODES_ASSERT(length_ >= 0);
 }
 
 template <typename T>
@@ -139,7 +138,7 @@ long grib_accessor_ibmfloat_t::byte_offset()
 void grib_accessor_ibmfloat_t::update_size(size_t s)
 {
     length_ = (long)s;
-    Assert(length_ >= 0);
+    ECCODES_ASSERT(length_ >= 0);
 }
 
 long grib_accessor_ibmfloat_t::next_offset()

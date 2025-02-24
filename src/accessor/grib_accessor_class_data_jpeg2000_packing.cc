@@ -62,7 +62,7 @@ void grib_accessor_data_jpeg2000_packing_t::init(const long v, grib_arguments* a
                 fprintf(stderr, "ECCODES DEBUG jpeg2000_packing: using OPENJPEG_LIB\n");
                 break;
             default:
-                Assert(0);
+                ECCODES_ASSERT(0);
                 break;
         }
     }
@@ -339,7 +339,7 @@ int grib_accessor_data_jpeg2000_packing_t::pack_double(const double* cval, size_
             if (target_compression_ratio != 255) {
                 grib_context_log(context_, GRIB_LOG_ERROR,
                                  "%s %s: When %s=0 (Lossless), %s must be set to 255",
-                                 class_name_, __func__, type_of_compression_used, target_compression_ratio_);
+                                 class_name_, __func__, type_of_compression_used_, target_compression_ratio_);
                 return GRIB_ENCODING_ERROR;
             }
             helper.compression = 0;
@@ -349,11 +349,9 @@ int grib_accessor_data_jpeg2000_packing_t::pack_double(const double* cval, size_
             if (target_compression_ratio == 255 || target_compression_ratio == 0) {
                 grib_context_log(context_, GRIB_LOG_ERROR,
                                  "%s %s: When %s=1 (Lossy), %s must be specified",
-                                 class_name_, __func__, type_of_compression_used, target_compression_ratio_);
+                                 class_name_, __func__, type_of_compression_used_, target_compression_ratio_);
                 return GRIB_ENCODING_ERROR;
             }
-            Assert(target_compression_ratio != 255);
-            Assert(target_compression_ratio != 0);
             helper.compression = target_compression_ratio;
             break;
 
@@ -401,7 +399,7 @@ int grib_accessor_data_jpeg2000_packing_t::pack_double(const double* cval, size_
                          class_name_, jpeg_lib_ == OPENJPEG_LIB ? "openjpeg" : "jasper",
                          helper.jpeg_length, simple_packing_size);
 
-    Assert(helper.jpeg_length <= helper.buffer_size);
+    ECCODES_ASSERT(helper.jpeg_length <= helper.buffer_size);
 
     if (dump_jpg_) {
         FILE* f = fopen(dump_jpg_, "w");

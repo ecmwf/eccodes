@@ -34,11 +34,11 @@ int grib_accessor_vector_t::unpack_double(double* val, size_t* len)
     grib_accessor* va                  = (grib_accessor*)grib_find_accessor(grib_handle_of_accessor(this), vector_);
     grib_accessor_abstract_vector_t* v = (grib_accessor_abstract_vector_t*)va;
 
-    Assert(index_ >= 0);
+    ECCODES_ASSERT(index_ >= 0);
 
     if (index_ >= v->number_of_elements_) {
         grib_context_log(context_, GRIB_LOG_FATAL, "index=%d number_of_elements=%d for %s", index_, v->number_of_elements_, name_);
-        Assert(index_ < v->number_of_elements_);
+        ECCODES_ASSERT(index_ < v->number_of_elements_);
     }
 
     if (va->dirty_) {

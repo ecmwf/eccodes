@@ -22,5 +22,22 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
+    int check_date();
+    int check_grid_and_packing_type();
+    int check_field_values();
+    int check_grid_pl_array();
+    int check_geoiterator();
+    int check_7777();
+    int check_surface_keys();
+    int check_steps();
+    int check_section_numbers(const int* sec_nums, size_t N);
+    int check_namespace_keys();
+    int check_sections();
+    int check_parameter();
+    int check_number_of_missing();
+
+private:
     const char* product_ = nullptr;
+    grib_handle* handle_ = nullptr;
+    long edition_ = 0;
 };
