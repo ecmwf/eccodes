@@ -1,45 +1,55 @@
- # either instantaneous data or processing is specified by mars stream
- "point-in-time"    = {stepType="instant";}
- "point-in-time"    = {stream="mnth"; numberOfTimeRange=1;}
- "point-in-time"    = {stream="mmsa"; numberOfTimeRange=1;}
- "point-in-time"    = {stream="msmm"; numberOfTimeRange=1;}
+## Statistical window overall concept based on official low-level GRIB2 keys only
  #
+ ## Instananeous
+ 'unknown'          = {dummy=0;}
+ 'instant'    = {stepType='instant';}
+ 'instant'    = {productDefinitionTemplateNumber=8; lengthOfTimeRange=0;}
+ 'instant'    = {productDefinitionTemplateNumber=11; lengthOfTimeRange=0;}
+ 'instant'    = {typeOfStatisticalProcessing=10; lengthOfTimeRange=0;}
+ # End instantaneous
+ ##
  ### Accumulations ###
  # we need to do this dataset dependent, in some datasets we might have
- # hourly rolling accumulations and we do not want to have the first in a different bucket
+ # hourly rolling accumulations and we don't want to have the first in a different bucket
  ## since start accumulation must have forecastTime=0
+ # specific rules are in the centre's own definitions
  # hourly
- "since-start"    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitOfTimeRange=1;}
+ 'since-start'    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1;}
+ # minutes
+ 'since-start'    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=0;}
  # 24 hourly time unit
- "since-start"    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitOfTimeRange=2;}
- ## 1h rolling accumulation
- "1h"    = {typeOfStatisticalProcessing=1; indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 1; class=d1;}
- ## 24h rolling accumulation
- "24h"    = {typeOfStatisticalProcessing=1; indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 24; class=d1;}
- "24h"    = {typeOfStatisticalProcessing=1; indicatorOfUnitOfTimeRange=2; lengthOfTimeRange = 1; class=d1;}
+ 'since-start'    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=2;}
  ### end Accumulations ###
  #
  ### mean/min/max/stdev ###
- "1h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 1;}
- "3h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 3;}
- "3h"   = {indicatorOfUnitOfTimeRange=10; lengthOfTimeRange = 1;}
- "6h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 6;}
- "6h"   = {indicatorOfUnitOfTimeRange=11; lengthOfTimeRange = 1;}
- "12h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 12;}
- "12h"   = {indicatorOfUnitOfTimeRange=12; lengthOfTimeRange = 1;}
- "18h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 18;}
- "24h"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 24;}
- "24h"   = {indicatorOfUnitOfTimeRange=2; lengthOfTimeRange = 1;}
- "7 days"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 168;}
+ '30m'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 30;}
+ '1h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 1;}
+ '3h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 3;}
+ '3h'   = {indicatorOfUnitForTimeRange=10; lengthOfTimeRange = 1;}
+ '6h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 6;}
+ '6h'   = {indicatorOfUnitForTimeRange=11; lengthOfTimeRange = 1;}
+ '12h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 12;}
+ '12h'   = {indicatorOfUnitForTimeRange=12; lengthOfTimeRange = 1;}
+ '18h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 18;}
+ '24h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 24;}
+ '24h'   = {indicatorOfUnitForTimeRange=2; lengthOfTimeRange = 1;}
+ '48h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 48;}
+ '72h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 72;}
+ '120h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 120;}
+ '168h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168;}
+ '240h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 240;}
+ '360h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 360;}
+ '7 days'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168;}
+ ## 7 days rolling accumulation
+ '7 days'    = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168; type='cd';}
  # 28 days
- "month"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 672;}
+ 'month'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 672;}
  # 29 days
- "month"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 696;}
+ 'month'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 696;}
  # 30 days
- "month"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 720;}
+ 'month'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 720;}
  # 31 days
- "month"   = {indicatorOfUnitOfTimeRange=1; lengthOfTimeRange = 744;}
+ 'month'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 744;}
  # time unit month
- "month"   = {indicatorOfUnitOfTimeRange=3; lengthOfTimeRange = 1;}
+ 'month'   = {indicatorOfUnitForTimeRange=3; lengthOfTimeRange = 1;}
  ### end mean/min/max/stdev ###
-}

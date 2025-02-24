@@ -1,0 +1,5 @@
+ ## 1h rolling accumulation
+ '1h'    = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 1; class='d1';}
+ ## 24h rolling accumulation
+ '24h'    = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 24; class='d1';}
+ '24h'    = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=2; lengthOfTimeRange = 1; class='d1';}
