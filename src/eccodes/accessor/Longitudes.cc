@@ -19,7 +19,7 @@ namespace eccodes::accessor
 static int get_distinct(grib_accessor* a, double** val, long* len);
 void Longitudes::init(const long l, grib_arguments* args)
 {
-    Double::init(l, c);
+    Double::init(l, args);
     int n = 0;
 
     values_   = args->get_name(grib_handle_of_accessor(this), n++);
