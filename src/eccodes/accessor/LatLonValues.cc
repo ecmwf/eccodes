@@ -28,7 +28,6 @@ void LatLonvalues::init(const long l, grib_arguments* c)
 
 int LatLonvalues::unpack_double(double* val, size_t* len)
 {
-    grib_context* c = context_;
     int err         = 0;
     double* v       = val;
     double lat, lon, value;
@@ -37,7 +36,7 @@ int LatLonvalues::unpack_double(double* val, size_t* len)
     grib_iterator* iter = grib_iterator_new(grib_handle_of_accessor(this), 0, &err);
     if (err) {
         grib_iterator_delete(iter);
-        grib_context_log(c, GRIB_LOG_ERROR, "latlonvalues: Unable to create iterator");
+        grib_context_log(context_, GRIB_LOG_ERROR, "latlonvalues: Unable to create iterator");
         return err;
     }
 
@@ -66,8 +65,8 @@ int LatLonvalues::unpack_double(double* val, size_t* len)
 int LatLonvalues::value_count(long* count)
 {
     grib_handle* h = grib_handle_of_accessor(this);
-    int ret        = GRIB_SUCCESS;
-    size_t size;
+    int ret = GRIB_SUCCESS;
+    size_t size = 0;
     if ((ret = grib_get_size(h, values_, &size)) != GRIB_SUCCESS) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "latlonvalues: Unable to get size of %s", values_);
         return ret;

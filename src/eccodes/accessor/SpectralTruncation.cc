@@ -66,7 +66,7 @@ int SpectralTruncation::unpack_long(long* val, size_t* len)
         if (Tc == -1)
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "%s. Spectral Truncation Type Unknown: %s=%ld %s=%ld %s=%ld",
-                             name_, J, J, K, K, M_, M);
+                             name_, J_, J, K_, K, M_, M);
         Tc = 0;
         grib_set_long(grib_handle_of_accessor(this), T_, Tc);
     }

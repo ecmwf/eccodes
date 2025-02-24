@@ -310,7 +310,7 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
             }
             break;
         default:
-            grib_context_log(context_, GRIB_LOG_ERROR, "%s pack_double: packing %s, bitsPerValue=%ld (max %ld)",
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s pack_double: packing %s, bitsPerValue=%ld (max %d)",
                              class_name_, name_, bits_per_value, MAX_BITS_PER_VALUE);
             err = GRIB_INVALID_BPV;
             goto cleanup;
@@ -507,7 +507,7 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
             }
             break;
         default:
-            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: unpacking %s, bitsPerValue=%ld (max %ld)",
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: unpacking %s, bitsPerValue=%ld (max %d)",
                              class_name_, __func__, name_, bits_per_value, MAX_BITS_PER_VALUE);
             err = GRIB_INVALID_BPV;
             goto cleanup;
