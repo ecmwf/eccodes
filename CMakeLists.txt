@@ -473,7 +473,7 @@ add_subdirectory( ifs_samples ) # must come after samples
 ecbuild_dont_pack( FILES .cproject .project )
 ecbuild_dont_pack( DIRS
     experimental deprecated doxygen confluence tests/deprecated tests/tests.ecmwf
-    src/deprecated tools/deprecated ifs_samples/grib1_mlgrib2_ieee32
+    src/eccodes/deprecated tools/deprecated ifs_samples/grib1_mlgrib2_ieee32
     examples/examples.dev examples/extra examples/deprecated bamboo
     fortran/fortranCtypes share/eccodes  .settings )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
