@@ -77,10 +77,13 @@ int MessageIsValid::check_grid_and_packing_type()
     const bool is_spectral_grid = (STR_EQUAL(gridType, "sh") ||
                                    STR_EQUAL(gridType, "rotated_sh") ||
                                    STR_EQUAL(gridType, "stretched_sh") ||
+                                   STR_EQUAL(gridType, "stretched_rotated_sh") ||
                                    STR_EQUAL(gridType, "lambert_bf") ||
-                                   STR_EQUAL(gridType, "stretched_rotated_sh"));
+                                   STR_EQUAL(gridType, "polar_stereographic_bf") ||
+                                   STR_EQUAL(gridType, "mercator_bf"));
     const bool is_spectral_packing = (STR_EQUAL(packing_type, "spectral_complex") ||
                                       STR_EQUAL(packing_type, "spectral_simple") ||
+                                      STR_EQUAL(packing_type, "spectral_ieee") ||
                                       STR_EQUAL(packing_type, "bifourier_complex"));
 
     if ( (is_spectral_grid && !is_spectral_packing) ||

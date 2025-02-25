@@ -12,6 +12,7 @@
 #include "BufrDataArray.h"
 #include "ExpandedDescriptors.h"
 #include "BufrDataElement.h"
+#include "BufrElementsTable.h"
 #include "Variable.h"
 #include "ecc_numeric_limits.h"
 

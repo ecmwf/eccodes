@@ -15,21 +15,6 @@
 static pthread_once_t once    = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 
-int bufr_descriptor_is_marker(bufr_descriptor* d)
-{
-    int isMarker = 0;
-    switch (d->code) {
-        case 223255:
-        case 224255:
-        case 225255:
-        case 232255:
-            return 1;
-    }
-    if (d->F == 2 && d->X == 5)
-        isMarker = 1;
-    return isMarker;
-}
-
 static void init_mutex()
 {
     pthread_mutexattr_t attr;
@@ -53,6 +38,21 @@ static void init_mutex()
     }
 }
 #endif
+
+int bufr_descriptor_is_marker(bufr_descriptor* d)
+{
+    int isMarker = 0;
+    switch (d->code) {
+        case 223255:
+        case 224255:
+        case 225255:
+        case 232255:
+            return 1;
+    }
+    if (d->F == 2 && d->X == 5)
+        isMarker = 1;
+    return isMarker;
+}
 
 eccodes::accessor::BufrElementsTable _grib_accessor_bufr_elements_table;
 eccodes::Accessor* grib_accessor_bufr_elements_table = &_grib_accessor_bufr_elements_table;

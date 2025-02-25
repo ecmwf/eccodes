@@ -9,14 +9,6 @@
 # nor does it submit to any jurisdiction.
 #
 
-include_directories(
-    "${CMAKE_CURRENT_SOURCE_DIR}/action"
-    "${CMAKE_CURRENT_SOURCE_DIR}/dumper"
-    "${CMAKE_CURRENT_SOURCE_DIR}/accessor"
-    "${CMAKE_CURRENT_SOURCE_DIR}/geo/iterator"
-    "${CMAKE_CURRENT_SOURCE_DIR}/geo/nearest"
-    )
-
 list( APPEND eccodes_src_files
     step_unit.cc
     step.cc

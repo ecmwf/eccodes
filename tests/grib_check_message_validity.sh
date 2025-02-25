@@ -20,6 +20,11 @@ grib_check_key_equals $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib1.tmpl   isMessag
 grib_check_key_equals $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib2.tmpl   isMessageValid 1
 grib_check_key_equals $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl            isMessageValid 1
 
+if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
+   grib_check_key_equals $ECCODES_SAMPLES_PATH/lambert_bf_grib2.tmpl    isMessageValid 1
+fi
+
+
 IFS_SAMPLES_ROOT=${proj_dir}/ifs_samples
 grib_check_key_equals $IFS_SAMPLES_ROOT/grib1_mlgrib2_ccsds/gg_ml.tmpl        isMessageValid 1
 grib_check_key_equals $IFS_SAMPLES_ROOT/grib1_mlgrib2_ccsds/gg_sfc_grib2.tmpl isMessageValid 1
