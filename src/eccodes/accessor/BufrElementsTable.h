@@ -39,6 +39,6 @@ private:
     int bufr_get_from_table(bufr_descriptor* v);
 };
 
-int bufr_descriptor_is_marker(bufr_descriptor* d);
-
 }  // namespace eccodes::accessor
+
+int bufr_descriptor_is_marker(bufr_descriptor* d);
