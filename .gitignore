@@ -4,13 +4,13 @@ Makefile.in
 config.h.in
 lex.yy.c
 stamp-h1
-src/config.h
-src/grib_api.h.new
-src/grib_api_constants.h.new
-src/eccodes_constants.h.new
-src/grib_errors.c.new
-src/grib_errors.h.new
-src/errors.py.new
+src/eccodes/config.h
+src/eccodes/grib_api.h.new
+src/eccodes/grib_api_constants.h.new
+src/eccodes/eccodes_constants.h.new
+src/eccodes/grib_errors.c.new
+src/eccodes/grib_errors.h.new
+src/eccodes/errors.py.new
 configure
 grib_api.spec
 grib_api.pc
@@ -18,7 +18,7 @@ grib_api_f90.pc
 *.analyzerinfo
 *.snalyzerinfo
 tags
-src/convert_*.sh
+src/eccodes/convert_*.sh
 
 # compiled source #
 ###################
@@ -55,7 +55,7 @@ ehthumbs.db
 Thumbs.db
 .directory
 
-src/tags
+src/eccodes/tags
 
 data/exp/
 

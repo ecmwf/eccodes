@@ -6,7 +6,7 @@ cd ../tests
 echo "List all keys..."
 ./list_all_keys.sh
 
-cd ../src
+cd ../eccodes
 
 # Editing keys grib_hash_keys.cc
 # -l  Compare key lengths before trying a string comparison
