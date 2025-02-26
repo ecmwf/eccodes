@@ -95,32 +95,29 @@ int grib_accessor_message_is_valid_t::check_grid_and_packing_type()
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_message_is_valid_t::check_field_values()
-{
-    if (handle_->context->debug)
-        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
-
-    int err = GRIB_SUCCESS;
-    double* values = NULL;
-    size_t size = 0;
-    grib_context* c = handle_->context;
-
-    if ((err = grib_get_size(handle_, "values", &size)) != GRIB_SUCCESS)
-        return err;
-    values = (double*)grib_context_malloc_clear(c, size * sizeof(double));
-    if (!values)
-        return GRIB_OUT_OF_MEMORY;
-
-    if ((err = grib_get_double_array(handle_, "values", values, &size)) != GRIB_SUCCESS) {
-        if (err == GRIB_FUNCTIONALITY_NOT_ENABLED) {
-            err = GRIB_SUCCESS;
-        }
-        grib_context_free(c, values);
-        return err;
-    }
-    grib_context_free(c, values);
-    return GRIB_SUCCESS;
-}
+// int grib_accessor_message_is_valid_t::check_field_values()
+// {
+//     if (handle_->context->debug)
+//         fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+//     int err = GRIB_SUCCESS;
+//     double* values = NULL;
+//     size_t size = 0;
+//     grib_context* c = handle_->context;
+//     if ((err = grib_get_size(handle_, "values", &size)) != GRIB_SUCCESS)
+//         return err;
+//     values = (double*)grib_context_malloc(c, size * sizeof(double));
+//     if (!values)
+//         return GRIB_OUT_OF_MEMORY;
+//     if ((err = grib_get_double_array(handle_, "values", values, &size)) != GRIB_SUCCESS) {
+//         if (err == GRIB_FUNCTIONALITY_NOT_ENABLED) {
+//             err = GRIB_SUCCESS;
+//         }
+//         grib_context_free(c, values);
+//         return err;
+//     }
+//     grib_context_free(c, values);
+//     return GRIB_SUCCESS;
+// }
 
 int grib_accessor_message_is_valid_t::check_number_of_missing()
 {
@@ -473,7 +470,7 @@ int grib_accessor_message_is_valid_t::unpack_long(long* val, size_t* len)
     static check_func check_functions[] = {
         &grib_accessor_message_is_valid_t::check_date,
         &grib_accessor_message_is_valid_t::check_grid_and_packing_type,
-        &grib_accessor_message_is_valid_t::check_field_values,
+        // &grib_accessor_message_is_valid_t::check_field_values,
         &grib_accessor_message_is_valid_t::check_number_of_missing,
         &grib_accessor_message_is_valid_t::check_grid_pl_array,
         &grib_accessor_message_is_valid_t::check_geoiterator,

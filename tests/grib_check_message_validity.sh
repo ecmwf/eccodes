@@ -153,9 +153,11 @@ grib_check_key_equals $tempGrib isMessageValid 0
 
 # Check data values
 # ------------------------------
-${tools_dir}/grib_set -s bitsPerValue=25 $data_dir/sample.grib2 $tempGrib
-grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
-grep -q "Data section size mismatch" $tempText
+# Note: This is actually quite an expensive check .... for now disabled
+#
+# ${tools_dir}/grib_set -s bitsPerValue=25 $data_dir/sample.grib2 $tempGrib
+# grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+# grep -q "Data section size mismatch" $tempText
 
 
 # Check number of values, missing etc
