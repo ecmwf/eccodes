@@ -10,7 +10,7 @@
 . ./include.ctest.sh
 
 #Define a common label for all the tmp files
-label="bufr_copy_data_f"
+label="examples_f_bufr_copy_data"
 
 TEMP=$label.out.bufr
 REF=$label.compare.log.ref
@@ -39,7 +39,7 @@ cat > ${REF} <<EOF
 EOF
 
 INPUT=metar_with_2_bias.bufr
-${examples_dir}/eccodes_f_bufr_copy_data ${INPUT} ${TEMP}
+${examples_dir}/f_bufr_copy_data ${INPUT} ${TEMP}
 # The input and output BUFR messages should be different
 set +e
 ${tools_dir}/bufr_compare ${TEMP} ${INPUT} > ${MYLOG}

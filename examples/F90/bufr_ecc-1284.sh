@@ -11,14 +11,14 @@
 . ./include.ctest.sh
 set -u
 
-label="bufr_ecc-1284_test_f"
+label="examples_f_bufr_ecc-1284"
 TEMP_DUMP=temp.$label.dump
 TEMP_TEXT=temp.$label.txt
 TEMP_REF=temp.$label.ref
 TEMP_BUFR=temp.$label.bufr
 
 # Create a BUFR which has some missing entries in the string array stationOrSiteName
-${examples_dir}/eccodes_f_bufr_ecc-1284 $TEMP_BUFR
+${examples_dir}/f_bufr_ecc-1284 $TEMP_BUFR
 
 # --------------
 # Plain dump

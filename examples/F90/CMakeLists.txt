@@ -122,7 +122,7 @@ else()
 endif()
 
 foreach( atest ${tests_sanity} )
-    ecbuild_add_test( TARGET          eccodes_f_${atest}
+    ecbuild_add_test( TARGET          f_${atest}
                       SOURCES         ${atest}.f90
                       LINKER_LANGUAGE Fortran
                       LIBS            eccodes_f90 eccodes
@@ -138,7 +138,7 @@ if( HAVE_BUILD_TOOLS AND NOT CMAKE_CXX_COMPILER_ID MATCHES NVHPC )
 endif()
 
 foreach( atest ${tests_extra} )
-    ecbuild_add_test( TARGET          eccodes_f_${atest}
+    ecbuild_add_test( TARGET          f_${atest}
                       SOURCES         ${atest}.f90
                       LINKER_LANGUAGE Fortran
                       LIBS            eccodes_f90 eccodes
@@ -149,7 +149,7 @@ foreach( atest ${tests_extra} )
 endforeach()
 
 # Test for CCSDS (AEC) packing
-ecbuild_add_test( TARGET          eccodes_f_grib_set_packing
+ecbuild_add_test( TARGET          f_grib_set_packing
                   SOURCES         grib_set_packing.f90
                   LINKER_LANGUAGE Fortran
                   LIBS            eccodes_f90 eccodes
@@ -157,19 +157,19 @@ ecbuild_add_test( TARGET          eccodes_f_grib_set_packing
                   COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/grib_set_packing.sh )
 
 # Executables without a shell script
-#ecbuild_add_executable( TARGET    eccodes_f_new_from_file
+#ecbuild_add_executable( TARGET    f_new_from_file
 #                        NOINSTALL
 #                        SOURCES   new_from_file.f90
 #                        CONDITION HAVE_FORTRAN
 #                        LINKER_LANGUAGE Fortran
 #                        LIBS      eccodes_f90 eccodes )
-ecbuild_add_executable( TARGET    eccodes_f_grib_set_gvc
+ecbuild_add_executable( TARGET    f_grib_set_gvc
                         NOINSTALL
                         SOURCES   grib_set_gvc.f90
                         CONDITION HAVE_FORTRAN
                         LINKER_LANGUAGE Fortran
                         LIBS      eccodes_f90 eccodes )
-ecbuild_add_executable( TARGET    eccodes_f_grib_print_data_static
+ecbuild_add_executable( TARGET    f_grib_print_data_static
                         NOINSTALL
                         SOURCES   grib_print_data_static.f90
                         CONDITION HAVE_FORTRAN
