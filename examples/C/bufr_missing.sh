@@ -12,7 +12,7 @@
 
 
 #Define a common label for all the tmp files
-label="bufr_missing_test_c"
+label="examples_c_bufr_missing"
 
 #Define tmp file
 fTmp=${label}.tmp.txt

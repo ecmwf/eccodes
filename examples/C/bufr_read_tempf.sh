@@ -10,9 +10,8 @@
 
 . ./include.ctest.sh
 
-
 #Define a common label for all the tmp files
-label="bufr_read_tempf_c"
+label="examples_c_bufr_read_tempf"
 tempOut=temp.${label}.txt
 tempRef=temp.${label}.ref
 rm -f $tempRef $tempOut
