@@ -28,6 +28,34 @@ void grib_accessor_message_is_valid_t::init(const long l, grib_arguments* arg)
     length_ = 0;
 }
 
+int grib_accessor_message_is_valid_t::check_date()
+{
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
+    long year, month, day, hour, min, sec;
+    int err = grib_get_long_internal(handle_, "year", &year);
+    if (err) return err;
+    err = grib_get_long_internal(handle_, "month", &month);
+    if (err) return err;
+    err = grib_get_long_internal(handle_, "day", &day);
+    if (err) return err;
+    err = grib_get_long_internal(handle_, "hour", &hour);
+    if (err) return err;
+    err = grib_get_long_internal(handle_, "minute", &min);
+    if (err) return err;
+    err = grib_get_long_internal(handle_, "second", &sec);
+    if (err) return err;
+
+    if (!is_date_valid(year, month, day, hour, min, sec)) {
+        grib_context_log(context_, GRIB_LOG_ERROR,
+                         "%s: Invalid date/time: %ld-%ld-%ld %ld:%ld:%ld",
+                         TITLE, year, month, day, hour, min, sec);
+        return GRIB_INVALID_MESSAGE ;
+    }
+    return GRIB_SUCCESS;
+}
+
 int grib_accessor_message_is_valid_t::check_grid_and_packing_type()
 {
     if (handle_->context->debug)
@@ -46,9 +74,13 @@ int grib_accessor_message_is_valid_t::check_grid_and_packing_type()
     const bool is_spectral_grid = (STR_EQUAL(gridType, "sh") ||
                                    STR_EQUAL(gridType, "rotated_sh") ||
                                    STR_EQUAL(gridType, "stretched_sh") ||
-                                   STR_EQUAL(gridType, "stretched_rotated_sh"));
+                                   STR_EQUAL(gridType, "stretched_rotated_sh") ||
+                                   STR_EQUAL(gridType, "lambert_bf") ||
+                                   STR_EQUAL(gridType, "polar_stereographic_bf") ||
+                                   STR_EQUAL(gridType, "mercator_bf"));
     const bool is_spectral_packing = (STR_EQUAL(packing_type, "spectral_complex") ||
                                       STR_EQUAL(packing_type, "spectral_simple") ||
+                                      STR_EQUAL(packing_type, "spectral_ieee") ||
                                       STR_EQUAL(packing_type, "bifourier_complex"));
 
     if ( (is_spectral_grid && !is_spectral_packing) ||
@@ -439,6 +471,7 @@ int grib_accessor_message_is_valid_t::unpack_long(long* val, size_t* len)
 {
     typedef int (grib_accessor_message_is_valid_t::*check_func)();
     static check_func check_functions[] = {
+        &grib_accessor_message_is_valid_t::check_date,
         &grib_accessor_message_is_valid_t::check_grid_and_packing_type,
         &grib_accessor_message_is_valid_t::check_field_values,
         &grib_accessor_message_is_valid_t::check_number_of_missing,

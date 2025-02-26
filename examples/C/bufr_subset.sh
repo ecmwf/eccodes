@@ -11,7 +11,7 @@
 . ./include.ctest.sh
 
 #Define a common label for all the tmp files
-label="bufr_subset_test_c"
+label="examples_c_bufr_subset"
 
 #Prepare tmp file
 fTmp=${label}.tmp.txt

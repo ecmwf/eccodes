@@ -13,4 +13,4 @@
 # Check program completed successfully. We have to resort to testing
 # the output as there is no way in Fortran to set the exit code
 #
-${examples_dir}/eccodes_f_grib_read_from_file | grep 'Passed'
+${examples_dir}/f_grib_read_from_file | grep 'Passed'
