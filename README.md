@@ -1,6 +1,17 @@
 ecCodes
 =======
 
+
+<div align="left">
+<a href="https://github.com/ecmwf/codex/raw/refs/heads/main/ESEE"><img src="https://github.com/ecmwf/codex/raw/refs/heads/main/ESEE/foundation_badge.svg" alt="Static Badge"></a>
+<a href="https://github.com/ecmwf/codex/raw/refs/heads/main/Project%20Maturity"><img src="https://github.com/ecmwf/codex/raw/refs/heads/main/Project%20Maturity/graduated_badge.svg" alt="Static Badge"></a>
+</div>
+
+> [!IMPORTANT]
+> This software is **Graduated** and subject to ECMWF's guidelines on [Software Maturity](https://github.com/ecmwf/codex/raw/refs/heads/main/Project%20Maturity).
+
+
+
 [![Linux & macOS: master](https://img.shields.io/github/actions/workflow/status/ecmwf/eccodes/ci.yml?branch=master&label=Linux%20%26%20MacOS%3A%20master)](https://github.com/ecmwf/eccodes/actions/workflows/ci.yml?query=branch%3Amaster)
 [![Linux & macOS: develop](https://img.shields.io/github/actions/workflow/status/ecmwf/eccodes/ci.yml?branch=develop&label=Linux%20%26%20MacOS%3A%20develop)](https://github.com/ecmwf/eccodes/actions/workflows/ci.yml?query=branch%3Adevelop)
 
