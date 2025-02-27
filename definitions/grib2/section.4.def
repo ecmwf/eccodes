@@ -151,5 +151,12 @@ if (defined(MTG2Switch) and MTG2Switch > 0 ) {
     }
 }
 
+if (defined(MTG2Switch)){
+ if ( MTG2Switch == 0 ){
+  if(defined(paramtype)){
+   remove paramtype;
+  }
+ }
+}
 
 meta md5Section4 md5(offsetSection4,section4Length);
