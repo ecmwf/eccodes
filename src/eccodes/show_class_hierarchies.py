@@ -75,18 +75,12 @@ class Hierarchy:
 
 if __name__ == "__main__":
     dirs = [
-        "src/accessor/*.h",
-        "src/action/*.h",
-        "src/expression/*.h",
-        "src/dumper/*.h",
-        "src/geo/iterator/*.h",
-        "src/geo/nearest/*.h",
-        "src/eccodes/accessor/*.h",
-        "src/eccodes/action/*.h",
-        "src/eccodes/expression/*.h",
-        "src/eccodes/dumper/*.h",
-        "src/eccodes/geo/iterator/*.h",
-        "src/eccodes/geo/nearest/*.h",
+        "accessor/*.h",
+        "action/*.h",
+        "expression/*.h",
+        "dumper/*.h",
+        "geo/iterator/*.h",
+        "geo/nearest/*.h",
     ]
 
     for dir in dirs:
