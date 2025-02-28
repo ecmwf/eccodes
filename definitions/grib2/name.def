@@ -8964,7 +8964,7 @@
 'Time-mean reciprocal Obukhov length' = {
         discipline = 0 ;
         parameterCategory = 7 ;
-        parameterNumber = 21 ;
+        parameterNumber = 22 ;
         typeOfStatisticalProcessing = 0 ;
         }
 #Time-integrated land surface heat net flux
@@ -10854,7 +10854,7 @@
 'Time-maximum reciprocal Obukhov length' = {
         discipline = 0 ;
         parameterCategory = 7 ;
-        parameterNumber = 21 ;
+        parameterNumber = 22 ;
         typeOfStatisticalProcessing = 2 ;
         }
 #Time-minimum temperature tendency due to short-wave radiation
@@ -12756,7 +12756,7 @@
 'Time-minimum reciprocal Obukhov length' = {
         discipline = 0 ;
         parameterCategory = 7 ;
-        parameterNumber = 21 ;
+        parameterNumber = 22 ;
         typeOfStatisticalProcessing = 3 ;
         }
 #Time-standard-deviation temperature tendency due to short-wave radiation
@@ -14659,7 +14659,7 @@
 'Time-standard-deviation reciprocal Obukhov length' = {
         discipline = 0 ;
         parameterCategory = 7 ;
-        parameterNumber = 21 ;
+        parameterNumber = 22 ;
         typeOfStatisticalProcessing = 6 ;
         }
 #Cross sectional area of flow in channel
@@ -16963,7 +16963,7 @@
 'Reciprocal Obukhov length' = {
         discipline = 0 ;
         parameterCategory = 7 ;
-        parameterNumber = 21 ;
+        parameterNumber = 22 ;
         }
 #Universal thermal climate index
 'Universal thermal climate index' = {
