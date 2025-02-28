@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "md5.h"
+#include "md5_core.h"
 #include "grib_api_internal.h"
 
 #include <stdio.h>
