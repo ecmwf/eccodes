@@ -8960,6 +8960,13 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean reciprocal Obukhov length
+'Time-mean reciprocal Obukhov length' = {
+        discipline = 0 ;
+        parameterCategory = 7 ;
+        parameterNumber = 21 ;
+        typeOfStatisticalProcessing = 0 ;
+        }
 #Time-integrated land surface heat net flux
 'Time-integrated land surface heat net flux' = {
 	 discipline = 2 ;
@@ -10843,6 +10850,13 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum reciprocal Obukhov length
+'Time-maximum reciprocal Obukhov length' = {
+        discipline = 0 ;
+        parameterCategory = 7 ;
+        parameterNumber = 21 ;
+        typeOfStatisticalProcessing = 2 ;
+        }
 #Time-minimum temperature tendency due to short-wave radiation
 'Time-minimum temperature tendency due to short-wave radiation' = {
 	 discipline = 0 ;
@@ -12738,6 +12752,13 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum reciprocal Obukhov length
+'Time-minimum reciprocal Obukhov length' = {
+        discipline = 0 ;
+        parameterCategory = 7 ;
+        parameterNumber = 21 ;
+        typeOfStatisticalProcessing = 3 ;
+        }
 #Time-standard-deviation temperature tendency due to short-wave radiation
 'Time-standard-deviation temperature tendency due to short-wave radiation' = {
 	 discipline = 0 ;
@@ -14634,6 +14655,13 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
+#Time-standard-deviation reciprocal Obukhov length
+'Time-standard-deviation reciprocal Obukhov length' = {
+        discipline = 0 ;
+        parameterCategory = 7 ;
+        parameterNumber = 21 ;
+        typeOfStatisticalProcessing = 6 ;
+        }
 #Cross sectional area of flow in channel
 'Cross sectional area of flow in channel' = {
 	 discipline = 1 ;
@@ -16931,6 +16959,12 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
+#Reciprocal Obukhov length
+'Reciprocal Obukhov length' = {
+        discipline = 0 ;
+        parameterCategory = 7 ;
+        parameterNumber = 21 ;
+        }
 #Universal thermal climate index
 'Universal thermal climate index' = {
 	 discipline = 20 ;
