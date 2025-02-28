@@ -384,8 +384,8 @@ list( APPEND eccodes_src_files
     grib_iterator_factory.cc
     grib_nearest_factory.cc
     grib_yacc.h
-    md5.h
-    md5.cc
+    md5_core.h
+    md5_core.cc
     grib_optimize_decimal_factor.cc
     eccodes_windef.h
     # We ship our own generated lex/yacc C files
