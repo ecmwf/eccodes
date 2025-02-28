@@ -76,7 +76,6 @@ class Hierarchy:
 
 if __name__ == "__main__":
     cwd = sys.path[0]
-    print(cwd)
     dirs = [
         f"{cwd}/accessor/*.h",
         f"{cwd}/action/*.h",
