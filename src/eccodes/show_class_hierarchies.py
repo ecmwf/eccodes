@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import sys
 import re
 import glob
 from collections import defaultdict
@@ -74,13 +75,15 @@ class Hierarchy:
 
 
 if __name__ == "__main__":
+    cwd = sys.path[0]
+    print(cwd)
     dirs = [
-        "accessor/*.h",
-        "action/*.h",
-        "expression/*.h",
-        "dumper/*.h",
-        "geo/iterator/*.h",
-        "geo/nearest/*.h",
+        f"{cwd}/accessor/*.h",
+        f"{cwd}/action/*.h",
+        f"{cwd}/expression/*.h",
+        f"{cwd}/dumper/*.h",
+        f"{cwd}/geo/iterator/*.h",
+        f"{cwd}/geo/nearest/*.h",
     ]
 
     for dir in dirs:
