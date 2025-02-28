@@ -10,19 +10,11 @@
 
 . ./include.ctest.sh
 
-# Define a common label for all the tmp files
-label="examples_f_bufr_keys_iterator"
+# ---------------------------------------------------------
+# This is the test for the JIRA issue ECC-2034
+# GRIB encoding: Data quality checks via the API
+# ---------------------------------------------------------
 
-fTmp=${label}".tmp.txt"
-rm -f $fTmp
+label="grib_ecc-2034_test"
 
-f=${data_dir}/bufr/syno_1.bufr
-
-# The input ($f) is hard coded in the example
-${examples_dir}/f_bufr_keys_iterator > $fTmp
-
-# Check the output
-grep -q '#49#dataPresentIndicator' $fTmp
-grep -q '#1#generatingApplication' $fTmp
-
-rm -f $fTmp
+$EXEC $test_dir/grib_ecc-2034

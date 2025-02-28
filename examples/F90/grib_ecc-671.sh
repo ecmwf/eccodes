@@ -10,4 +10,4 @@
 
 . ./include.ctest.sh
 
-exec ${examples_dir}/eccodes_f_grib_ecc-671
+exec ${examples_dir}/f_grib_ecc-671

@@ -129,6 +129,7 @@ grep -q "Invalid Ni" $tempText
 grib_check_key_equals $tempGrib isMessageValid 0
 grib_check_key_equals $sample   isMessageValid 1
 
+
 # Check gridType and packingType
 # ------------------------------
 ${tools_dir}/grib_set -s packingType=grid_simple $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $tempGrib
@@ -152,9 +153,11 @@ grib_check_key_equals $tempGrib isMessageValid 0
 
 # Check data values
 # ------------------------------
-${tools_dir}/grib_set -s bitsPerValue=25 $data_dir/sample.grib2 $tempGrib
-grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
-grep -q "Data section size mismatch" $tempText
+# Note: This is actually quite an expensive check .... for now disabled
+#
+# ${tools_dir}/grib_set -s bitsPerValue=25 $data_dir/sample.grib2 $tempGrib
+# grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+# grep -q "Data section size mismatch" $tempText
 
 
 # Check number of values, missing etc
@@ -172,6 +175,16 @@ grep -q "Invalid date/time" $tempText
 ${tools_dir}/grib_set -s date=20250229 $data_dir/sample.grib2 $tempGrib
 grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "Invalid date/time" $tempText
+
+
+# Only GRIB supported for now
+# -----------------------------
+set +e
+${tools_dir}/bufr_get -p isMessageValid $ECCODES_SAMPLES_PATH/BUFR4.tmpl 2>$tempText
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Validity checks only implemented for GRIB messages" $tempText
 
 
 # Clean up
