@@ -2,25 +2,21 @@ ecCodes
 =======
 
 
-<div align="left">
-<a href="https://github.com/ecmwf/codex/raw/refs/heads/main/ESEE"><img src="https://github.com/ecmwf/codex/raw/refs/heads/main/ESEE/foundation_badge.svg" alt="Static Badge"></a>
-<a href="https://github.com/ecmwf/codex/raw/refs/heads/main/Project%20Maturity"><img src="https://github.com/ecmwf/codex/raw/refs/heads/main/Project%20Maturity/graduated_badge.svg" alt="Static Badge"></a>
-</div>
+<h3 align="center">
+  <a href="https://github.com/ecmwf/codex/raw/refs/heads/main/ESEE"><img src="https://github.com/ecmwf/codex/raw/refs/heads/main/ESEE/foundation_badge.svg" alt="Static Badge"></a>
+  <a href="https://github.com/ecmwf/codex/raw/refs/heads/main/Project%20Maturity"><img src="https://github.com/ecmwf/codex/raw/refs/heads/main/Project%20Maturity/graduated_badge.svg" alt="Static Badge"></a>
+  <a href="https://codecov.io/gh/ecmwf/eccodes"><img src="https://codecov.io/gh/ecmwf/eccodes/branch/develop/graph/badge.svg" alt="codecov"></a>
+  <a href="https://anaconda.org/conda-forge/eccodes"><img src="https://img.shields.io/conda/vn/conda-forge/eccodes?label=Anaconda.org"></a>
+  <br>
+  <a href="https://github.com/ecmwf/eccodes/actions/workflows/ci.yml?query=branch%3Amaster"><img src="https://img.shields.io/github/actions/workflow/status/ecmwf/eccodes/ci.yml?branch=master&label=Linux%20%26%20MacOS%3A%20master" alt="Linux & macOS: master"></a>
+  <a href="https://github.com/ecmwf/eccodes/actions/workflows/ci.yml?query=branch%3Adevelop"><img src="https://img.shields.io/github/actions/workflow/status/ecmwf/eccodes/ci.yml?branch=develop&label=Linux%20%26%20MacOS%3A%20develop" alt="Linux & macOS: develop"></a>
+  <a href="https://ci.appveyor.com/project/ecmwf/eccodes/branch/master"><img src="https://img.shields.io/appveyor/ci/ecmwf/eccodes/master.svg?label=Windows%3A%20master" alt="Windows: master"></a>
+  <a href="https://ci.appveyor.com/project/ecmwf/eccodes/branch/develop"><img src="https://img.shields.io/appveyor/ci/ecmwf/eccodes/develop.svg?label=Windows%3A%20develop" alt="Windows: develop"></a>
+</h3>
+
 
 > [!IMPORTANT]
 > This software is **Graduated** and subject to ECMWF's guidelines on [Software Maturity](https://github.com/ecmwf/codex/raw/refs/heads/main/Project%20Maturity).
-
-
-
-[![Linux & macOS: master](https://img.shields.io/github/actions/workflow/status/ecmwf/eccodes/ci.yml?branch=master&label=Linux%20%26%20MacOS%3A%20master)](https://github.com/ecmwf/eccodes/actions/workflows/ci.yml?query=branch%3Amaster)
-[![Linux & macOS: develop](https://img.shields.io/github/actions/workflow/status/ecmwf/eccodes/ci.yml?branch=develop&label=Linux%20%26%20MacOS%3A%20develop)](https://github.com/ecmwf/eccodes/actions/workflows/ci.yml?query=branch%3Adevelop)
-
-[![Windows: master](https://img.shields.io/appveyor/ci/ecmwf/eccodes/master.svg?label=Windows%3A%20master)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/master)
-[![Windows: develop](https://img.shields.io/appveyor/ci/ecmwf/eccodes/develop.svg?label=Windows%3A%20develop)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/develop)
-
-[![codecov](https://codecov.io/gh/ecmwf/eccodes/branch/develop/graph/badge.svg)](https://codecov.io/gh/ecmwf/eccodes)
-
-[![Anaconda-Server Badge](https://anaconda.org/conda-forge/eccodes/badges/version.svg)](https://anaconda.org/conda-forge/eccodes)
 
 ecCodes is a package developed by ECMWF which provides an application programming interface
 and a set of tools for decoding and encoding messages in the following formats:
