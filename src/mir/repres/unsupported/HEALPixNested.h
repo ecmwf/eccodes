@@ -72,11 +72,11 @@ private:
         return (o != nullptr) && ring_.Nside() == o->ring_.Nside();
     }
 
-    void makeName(std::ostream& out) const override;
+    void makeName(std::ostream&) const override;
 
-    void fillGrib(grib_info& info) const override;
+    void fillGrib(grib_info&) const override;
     void fillMeshGen(util::MeshGeneratorParameters& param) const override { ring().fillMeshGen(param); }
-    void fillJob(api::MIRJob& job) const override { ring().fillJob(job); }
+    void fillJob(api::MIRJob&) const override;
 
     void json(eckit::JSON&) const override;
     void print(std::ostream&) const override;

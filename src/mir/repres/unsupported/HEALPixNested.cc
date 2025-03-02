@@ -16,6 +16,7 @@
 
 #include "eckit/log/JSON.h"
 
+#include "mir/api/MIRJob.h"
 #include "mir/iterator/UnstructuredIterator.h"
 #include "mir/reorder/HEALPix.h"
 #include "mir/util/Exceptions.h"
@@ -39,6 +40,10 @@ void HEALPixNested::fillGrib(grib_info& info) const {
     info.grid.longitudeOfFirstGridPointInDegrees = 45.;  // Not sure what this should be
 
     info.extra_set("orderingConvention", "nested");
+}
+
+void HEALPixNested::fillJob(api::MIRJob& job) const {
+    job.set("grid", ring_.uniqueName() + "_nested");
 }
 
 
