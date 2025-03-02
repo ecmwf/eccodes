@@ -494,7 +494,7 @@ static void postprocess_packingType_change(grib_handle* h, const char* keyname, 
 
 int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* length)
 {
-    int ret          = 0;
+    int ret = GRIB_SUCCESS;
     grib_accessor* a = NULL;
 
     int processed = preprocess_packingType_change(h, name, val);
@@ -531,7 +531,7 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* l
 
 int grib_set_string_array(grib_handle* h, const char* name, const char** val, size_t length)
 {
-    int ret = 0;
+    int ret = GRIB_SUCCESS;
     grib_accessor* a;
 
     a = grib_find_accessor(h, name);
@@ -573,7 +573,7 @@ int grib_set_string_array(grib_handle* h, const char* name, const char** val, si
 
 int grib_set_bytes(grib_handle* h, const char* name, const unsigned char* val, size_t* length)
 {
-    int ret          = 0;
+    int ret = GRIB_SUCCESS;
     grib_accessor* a = grib_find_accessor(h, name);
 
     if (a) {
@@ -608,7 +608,7 @@ int grib_set_bytes(grib_handle* h, const char* name, const unsigned char* val, s
 
 int grib_set_missing(grib_handle* h, const char* name)
 {
-    int ret          = 0;
+    int ret = GRIB_SUCCESS;
     grib_accessor* a = NULL;
 
     a = grib_find_accessor(h, name);
@@ -786,7 +786,7 @@ static int _grib_set_double_array(grib_handle* h, const char* name,
 
 int grib_set_double_array_internal(grib_handle* h, const char* name, const double* val, size_t length)
 {
-    int ret = 0;
+    int ret = GRIB_SUCCESS;
 
     if (h->context->debug) {
         print_debug_info__set_array(h, __func__, name, val, length);
@@ -794,7 +794,7 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
 
     if (length == 0) {
         grib_accessor* a = grib_find_accessor(h, name);
-        ret              = a->pack_double(val, &length);
+        ret = a->pack_double(val, &length);
     }
     else {
         ret = _grib_set_double_array(h, name, val, length, 0);
@@ -831,7 +831,7 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
      */
     if (!strcmp(name, "values") || !strcmp(name, "codedValues")) {
         double missingValue;
-        int ret      = 0;
+        int ret = GRIB_SUCCESS;
         int constant = 0;
 
         ret = grib_get_double(h, "missingValue", &missingValue);
@@ -1023,7 +1023,7 @@ int grib_get_long(const grib_handle* h, const char* name, long* val)
     size_t length           = 1;
     grib_accessor* a        = NULL;
     grib_accessors_list* al = NULL;
-    int ret                 = 0;
+    int ret = GRIB_SUCCESS;
 
     if (name[0] == '/') {
         al = grib_find_accessors_list(h, name);
@@ -1058,7 +1058,7 @@ int grib_get_double(const grib_handle* h, const char* name, double* val)
     size_t length           = 1;
     grib_accessor* a        = NULL;
     grib_accessors_list* al = NULL;
-    int ret                 = 0;
+    int ret = GRIB_SUCCESS;
 
     if (name[0] == '/') {
         al = grib_find_accessors_list(h, name);
@@ -1081,7 +1081,7 @@ int grib_get_float(const grib_handle* h, const char* name, float* val)
     size_t length           = 1;
     grib_accessor* a        = NULL;
     grib_accessors_list* al = NULL;
-    int ret                 = 0;
+    int ret = GRIB_SUCCESS;
 
     if (name[0] == '/') {
         al = grib_find_accessors_list(h, name);
@@ -1240,7 +1240,7 @@ int grib_get_string(const grib_handle* h, const char* name, char* val, size_t* l
 {
     grib_accessor* a        = NULL;
     grib_accessors_list* al = NULL;
-    int ret                 = 0;
+    int ret = GRIB_SUCCESS;
 
     if (name[0] == '/') {
         al = grib_find_accessors_list(h, name);
@@ -1270,9 +1270,9 @@ int grib_get_string(const grib_handle* h, const char* name, char* val, size_t* l
 
 int grib_get_bytes(const grib_handle* h, const char* name, unsigned char* val, size_t* length)
 {
-    int err            = 0;
+    int err = 0;
     grib_accessor* act = grib_find_accessor(h, name);
-    err                = act ? act->unpack_bytes(val, length) : GRIB_NOT_FOUND;
+    err = act ? act->unpack_bytes(val, length) : GRIB_NOT_FOUND;
     if (err)
         grib_context_log(h->context, GRIB_LOG_ERROR,
                          "grib_get_bytes %s failed %s", name, grib_get_error_message(err));
@@ -1350,7 +1350,7 @@ int grib_get_double_array(const grib_handle* h, const char* name, double* val, s
     size_t len              = *length;
     grib_accessor* a        = NULL;
     grib_accessors_list* al = NULL;
-    int ret                 = 0;
+    int ret = GRIB_SUCCESS;
 
     if (name[0] == '/') {
         al = grib_find_accessors_list(h, name);
@@ -1423,7 +1423,7 @@ int grib_get_string_length(const grib_handle* h, const char* name, size_t* size)
 {
     grib_accessor* a        = NULL;
     grib_accessors_list* al = NULL;
-    int ret                 = 0;
+    int ret = GRIB_SUCCESS;
 
     if (name[0] == '/') {
         al = grib_find_accessors_list(h, name);
@@ -1467,8 +1467,8 @@ int grib_get_size(const grib_handle* ch, const char* name, size_t* size)
     grib_handle* h          = (grib_handle*)ch;
     grib_accessor* a        = NULL;
     grib_accessors_list* al = NULL;
-    int ret                 = 0;
-    *size                   = 0;
+    int ret = GRIB_SUCCESS;
+    *size = 0;
 
     if (name[0] == '/') {
         al = grib_find_accessors_list(h, name);
@@ -1545,7 +1545,7 @@ int grib_get_string_array(const grib_handle* h, const char* name, char** val, si
     size_t len              = *length;
     grib_accessor* a        = NULL;
     grib_accessors_list* al = NULL;
-    int ret                 = 0;
+    int ret = GRIB_SUCCESS;
 
     if (name[0] == '/') {
         al = grib_find_accessors_list(h, name);
@@ -1604,7 +1604,7 @@ int grib_get_long_array(const grib_handle* h, const char* name, long* val, size_
     size_t len              = *length;
     grib_accessor* a        = NULL;
     grib_accessors_list* al = NULL;
-    int ret                 = 0;
+    int ret = GRIB_SUCCESS;
 
     if (name[0] == '/') {
         al = grib_find_accessors_list(h, name);
