@@ -9,8 +9,9 @@ ecCodes
   <a href="https://anaconda.org/conda-forge/eccodes"><img src="https://img.shields.io/conda/vn/conda-forge/eccodes?label=Anaconda.org"></a>
   <br>
   <a href="https://github.com/ecmwf/eccodes/actions/workflows/ci.yml?query=branch%3Amaster"><img src="https://img.shields.io/github/actions/workflow/status/ecmwf/eccodes/ci.yml?branch=master&label=Linux%20%26%20MacOS%3A%20master" alt="Linux & macOS: master"></a>
-  <a href="https://github.com/ecmwf/eccodes/actions/workflows/ci.yml?query=branch%3Adevelop"><img src="https://img.shields.io/github/actions/workflow/status/ecmwf/eccodes/ci.yml?branch=develop&label=Linux%20%26%20MacOS%3A%20develop" alt="Linux & macOS: develop"></a>
   <a href="https://ci.appveyor.com/project/ecmwf/eccodes/branch/master"><img src="https://img.shields.io/appveyor/ci/ecmwf/eccodes/master.svg?label=Windows%3A%20master" alt="Windows: master"></a>
+
+  <a href="https://github.com/ecmwf/eccodes/actions/workflows/ci.yml?query=branch%3Adevelop"><img src="https://img.shields.io/github/actions/workflow/status/ecmwf/eccodes/ci.yml?branch=develop&label=Linux%20%26%20MacOS%3A%20develop" alt="Linux & macOS: develop"></a>
   <a href="https://ci.appveyor.com/project/ecmwf/eccodes/branch/develop"><img src="https://img.shields.io/appveyor/ci/ecmwf/eccodes/develop.svg?label=Windows%3A%20develop" alt="Windows: develop"></a>
 </h3>
 
