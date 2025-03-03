@@ -9,7 +9,7 @@
  */
 
 #include "eccodes.h"
-#include "action/action_class_concept.h"
+#include "action/Concept.h"
 
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 
