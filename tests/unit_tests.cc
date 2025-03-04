@@ -897,11 +897,21 @@ static void test_expressions()
 {
     printf("Running %s ...\n", __func__);
     grib_context* c = grib_context_get_default();
+    int err = 0;
+    double dVal = -1;
+    char buf[32];
+    size_t size = 0;
+
+    grib_handle* h = grib_handle_new_from_samples(c, "GRIB2");
+    if (!h) return;
 
     grib_expression* eTrue = new_true_expression(c);
     ECCODES_ASSERT(eTrue);
     const char* cname = eTrue->class_name();
     ECCODES_ASSERT( cname && strlen(cname) > 0 );
+    err = eTrue->evaluate_double(h, &dVal);
+    ECCODES_ASSERT(!err && dVal > 0);
+    eTrue->print(c, h, stderr);
 
     grib_expression* eUnOp = new_unop_expression(c, 0, 0, 0);
     ECCODES_ASSERT(eUnOp);
@@ -923,10 +933,15 @@ static void test_expressions()
     cname = eLen->class_name();
     ECCODES_ASSERT( cname && strlen(cname) > 0 );
 
-    grib_expression* eIsInt = new_is_integer_expression(c, "42", 0, 1);
+    grib_expression* eIsInt = new_is_integer_expression(c, "edition", 0, 1);
     ECCODES_ASSERT(eIsInt);
     cname = eIsInt->class_name();
     ECCODES_ASSERT( cname && strlen(cname) > 0 );
+    dVal = -1;
+    err = eIsInt->evaluate_double(h, &dVal);
+    ECCODES_ASSERT(!err && dVal > 0);
+    const char* result = eIsInt->evaluate_string(h, buf, &size, &err);
+    ECCODES_ASSERT( STR_EQUAL(result, "1") );
 
     grib_expression* eStrCmp = new_string_compare_expression(c, 0, 0, 0);
     ECCODES_ASSERT(eStrCmp);
@@ -947,6 +962,8 @@ static void test_expressions()
     ECCODES_ASSERT(eIsInDict);
     cname = eIsInDict->class_name();
     ECCODES_ASSERT( cname && strlen(cname) > 0 );
+    eIsInDict->evaluate_double(h, &dVal);
+    eIsInt->evaluate_string(h, buf, &size, &err);
 
     grib_expression* eIsInList = new_is_in_list_expression(c, "b", "list");
     ECCODES_ASSERT(eIsInList);
