@@ -15,7 +15,7 @@
 
 #include "eckit/geo/Grid.h"
 
-#include "geo/iterator/grib_iterator.h"
+#include "eccodes/geo/iterator/Iterator.h"
 
 
 namespace eccodes::geo_iterator
