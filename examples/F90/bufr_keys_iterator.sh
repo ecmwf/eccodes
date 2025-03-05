@@ -11,7 +11,7 @@
 . ./include.ctest.sh
 
 # Define a common label for all the tmp files
-label="bufr_keys_iterator_test_f"
+label="examples_f_bufr_keys_iterator"
 
 fTmp=${label}".tmp.txt"
 rm -f $fTmp
@@ -19,7 +19,7 @@ rm -f $fTmp
 f=${data_dir}/bufr/syno_1.bufr
 
 # The input ($f) is hard coded in the example
-${examples_dir}/eccodes_f_bufr_keys_iterator > $fTmp
+${examples_dir}/f_bufr_keys_iterator > $fTmp
 
 # Check the output
 grep -q '#49#dataPresentIndicator' $fTmp

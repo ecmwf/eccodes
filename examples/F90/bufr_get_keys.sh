@@ -12,7 +12,7 @@
 
 
 #Define a common label for all the tmp files
-label="bufr_get_keys_test_f"
+label="examples_f_bufr_get_keys"
 
 #Define tmp file
 fTmp=${label}.tmp.txt
@@ -24,7 +24,7 @@ rm -f ${fTmp}
 REDIRECT=/dev/null
 
 #Write the values into a file and compare with reference
-${examples_dir}/eccodes_f_bufr_get_keys 2> $REDIRECT > $fTmp
+${examples_dir}/f_bufr_get_keys 2> $REDIRECT > $fTmp
 
 #TODO: check the results
 

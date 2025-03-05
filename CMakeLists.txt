@@ -415,7 +415,11 @@ endif()
 
 ### export package to other ecbuild packages
 
-set( ECCODES_INCLUDE_DIRS    ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src )
+set( ECCODES_INCLUDE_DIRS
+  ${CMAKE_CURRENT_BINARY_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/eccodes
+  ${CMAKE_CURRENT_BINARY_DIR}/src/eccodes
+)
 set( ECCODES_LIBRARIES       eccodes )
 
 get_directory_property( COMPILE_DEFINITIONS ECCODES_DEFINITIONS )
@@ -469,7 +473,7 @@ add_subdirectory( ifs_samples ) # must come after samples
 ecbuild_dont_pack( FILES .cproject .project )
 ecbuild_dont_pack( DIRS
     experimental deprecated doxygen confluence tests/deprecated tests/tests.ecmwf
-    src/deprecated tools/deprecated ifs_samples/grib1_mlgrib2_ieee32
+    src/eccodes/deprecated tools/deprecated ifs_samples/grib1_mlgrib2_ieee32
     examples/examples.dev examples/extra examples/deprecated bamboo
     fortran/fortranCtypes share/eccodes  .settings )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )

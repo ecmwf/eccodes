@@ -10,7 +10,7 @@
 . ./include.ctest.sh
 
 #Define a common label for all the tmp files
-label="grib_copy_namespace_test_f"
+label="examples_f_grib_copy_namespace"
 
 INPUT=../../data/regular_latlon_surface.grib1
 res=`${tools_dir}/grib_get -p Ni,Nj $INPUT`
@@ -20,7 +20,7 @@ res=`${tools_dir}/grib_get -p Ni,Nj $INPUT`
 # The output is a clone of the regular lat/lon but then
 # we copy the reduced lat/lon geography namespace to the output
 OUTPUT=temp.$label.grib
-${examples_dir}/eccodes_f_grib_copy_namespace
+${examples_dir}/f_grib_copy_namespace
 
 res=`${tools_dir}/grib_get -p Ni,Nj $OUTPUT`
 [ "$res" = "MISSING 501" ]

@@ -5283,11 +5283,11 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical = 1 ;
 	}
-#-10 degrees C isothermal level (atm)
+#Geometric height of -10 degrees C atmospheric isothermal level above ground
 'm' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 26315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
@@ -5315,11 +5315,11 @@
 	 parameterNumber = 11 ;
 	 typeOfFirstFixedSurface = 2 ;
 	}
-#0 degrees C isothermal level (atm)
+#Geometric height of 0 degrees C atmospheric isothermal level above ground
 'm' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 27315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
@@ -8113,11 +8113,11 @@
 	 parameterNumber = 43 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean -10 degrees C isothermal level (atm)
+#Time-mean geometric height of -10 degrees C atmospheric isothermal level above ground
 'm' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 26315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
@@ -8131,11 +8131,11 @@
 	 typeOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean 0 degrees C isothermal level (atm)
+#Time-mean geometric height of 0 degrees C atmospheric isothermal level above ground
 'm' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 27315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
@@ -10051,11 +10051,11 @@
 	 parameterNumber = 43 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
-#Time-maximum -10 degrees C isothermal level (atm)
+#Time-maximum geometric height of -10 degrees C atmospheric isothermal level above ground
 'm' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 26315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
@@ -10069,11 +10069,11 @@
 	 typeOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
-#Time-maximum 0 degrees C isothermal level (atm)
+#Time-maximum geometric height of 0 degrees C atmospheric isothermal level above ground
 'm' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 27315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
@@ -11984,11 +11984,11 @@
 	 parameterNumber = 43 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
-#Time-minimum -10 degrees C isothermal level (atm)
+#Time-minimum geometric height of -10 degrees C atmospheric isothermal level above ground
 'm' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 26315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
@@ -12002,11 +12002,11 @@
 	 typeOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
-#Time-minimum 0 degrees C isothermal level (atm)
+#Time-minimum geometric height of 0 degrees C atmospheric isothermal level above ground
 'm' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 27315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
@@ -13887,11 +13887,11 @@
 	 parameterNumber = 43 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
-#Time-standard-deviation -10 degrees C isothermal level (atm)
+#Time-standard-deviation geometric height of -10 degrees C atmospheric isothermal level above ground
 'm' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 26315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
@@ -13905,11 +13905,11 @@
 	 typeOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
-#Time-standard-deviation 0 degrees C isothermal level (atm)
+#Time-standard-deviation geometric height of 0 degrees C atmospheric isothermal level above ground
 'm' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 27315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
@@ -19553,7 +19553,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Accumulated net ecosystem exchange flux
-'kg m**-2 s**-1' = {
+'kg m**-2' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 59 ;
@@ -19573,7 +19573,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Accumulated gross primary production flux
-'kg m**-2 s**-1' = {
+'kg m**-2' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 60 ;
@@ -19593,7 +19593,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Accumulated ecosystem respiration flux
-'kg m**-2 s**-1' = {
+'kg m**-2' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 61 ;
@@ -19800,11 +19800,11 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 3 ;
 	}
-#Geometrical height
+#Geometrical height above ground
 'm' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	}
 #Standard deviation of height
 'm' = {
