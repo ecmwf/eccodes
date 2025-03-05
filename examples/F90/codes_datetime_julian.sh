@@ -10,6 +10,6 @@
 
 . ./include.ctest.sh
 
-label="codes_datetime_julian_test_f"
+label="examples_f_codes_datetime_julian"
 
-${examples_dir}/eccodes_f_codes_datetime_julian
+${examples_dir}/f_codes_datetime_julian
