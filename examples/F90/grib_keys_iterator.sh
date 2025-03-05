@@ -9,4 +9,4 @@
 
 . ./include.ctest.sh
 
-${examples_dir}/eccodes_f_grib_keys_iterator > /dev/null
+${examples_dir}/f_grib_keys_iterator > /dev/null

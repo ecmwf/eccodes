@@ -12,7 +12,7 @@
 
 
 #Define a common label for all the tmp files
-label="bufr_read_tropical_cyclone_f"
+label="examples_f_bufr_read_tropical_cyclone"
 
 #Define tmp file
 fTmp=${label}".tmp.txt"
@@ -23,7 +23,7 @@ rm -f $fTmp
 REDIRECT=/dev/null
 
 #Write the values into a file and compare with reference
-${examples_dir}/eccodes_f_bufr_read_tropical_cyclone 2> $REDIRECT > $fTmp
+${examples_dir}/f_bufr_read_tropical_cyclone 2> $REDIRECT > $fTmp
 
 # Check the output
 grep -q "Date and time: 18.11.2015  0:0" $fTmp

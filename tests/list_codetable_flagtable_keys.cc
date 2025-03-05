@@ -8,9 +8,9 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "action/action_class_list.h"
-#include "action/action_class_if.h"
-#include "action/action_class_gen.h"
+#include "action/List.h"
+#include "action/If.h"
+#include "action/Gen.h"
 
 static void print_names(eccodes::Action* a)
 {

@@ -9869,7 +9869,7 @@
 	 table2Version = 221 ;
 	 indicatorOfParameter = 56 ;
 	}
-#-10 degrees C isothermal level (atm)
+#Geometric height of -10 degrees C atmospheric isothermal level above ground
 'm' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 20 ;
@@ -9889,7 +9889,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 23 ;
 	}
-#0 degrees C isothermal level (atm)
+#Geometric height of 0 degrees C atmospheric isothermal level above ground
 'm' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 24 ;

@@ -23,12 +23,12 @@ cd ${examples_dir}
 
 if [ -z "${GRIB_API_INCLUDE}" ]
 then 
-  GRIB_API_INCLUDE=`pwd`/src
+  GRIB_API_INCLUDE=`pwd`/src/eccodes
 fi
 
 if [ -z "${GRIB_API_LIB}" ]
 then 
-  GRIB_API_LIB=`pwd`/src
+  GRIB_API_LIB=`pwd`/src/eccodes
 fi
 
 set -u

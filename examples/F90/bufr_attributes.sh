@@ -12,14 +12,14 @@
 
 
 # Define a common label for all the tmp files
-label="bufr_attributes_test_f"
+label="examples_f_bufr_attributes"
 
 # Define tmp file
 fTmp=${label}.tmp.txt
 rm -f ${fTmp}
 
 # We check "syno_multi.bufr". The path is hard coded in the example
-${examples_dir}/eccodes_f_bufr_attributes > $fTmp
+${examples_dir}/f_bufr_attributes > $fTmp
 
 # Check the results
 grep -q 'airTemperatureAt2M->percentConfidence->code: *33007' $fTmp

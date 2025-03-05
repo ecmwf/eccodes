@@ -17,7 +17,7 @@ jobs:
   #   It will correctly handle addition of any new and removal of existing Git objects.
   sync:
     name: sync
-    uses: ecmwf-actions/reusable-workflows/.github/workflows/sync.yml@v2
+    uses: ecmwf/reusable-workflows/.github/workflows/sync.yml@v2
     secrets:
       target_repository: eccodes/eccodes
       target_username: ClonedDuck

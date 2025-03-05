@@ -10,7 +10,7 @@
 . ./include.ctest.sh
 
 # Define a common label for all the tmp files
-label="bufr_get_string_array_test_f"
+label="examples_f_bufr_get_string_array"
 
 # Prepare tmp file
 fTmp=${label}.tmp.txt
@@ -22,7 +22,7 @@ rm -f $fTmp
 fRef=${data_dir}/bufr/get_string_array.ref
 
 # Write the values into a file and compare with reference
-${examples_dir}/eccodes_f_bufr_get_string_array > $fTmp
+${examples_dir}/f_bufr_get_string_array > $fTmp
 
 # Compare output to the reference by ignoring the whitespaces
 diff -w $fRef $fTmp

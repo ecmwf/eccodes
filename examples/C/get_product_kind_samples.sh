@@ -10,7 +10,7 @@
 
 . ./include.ctest.sh
 
-label="get_product_kind_samples_c"
+label="examples_c_get_product_kind_samples"
 fTmp=${label}.tmp
 
 sample_grib1=${ECCODES_SAMPLES_PATH}/GRIB1.tmpl

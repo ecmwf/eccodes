@@ -20,14 +20,9 @@ unsigned[1] masterTablesVersionNumber : dump;
 unsigned[1] localTablesVersionNumber : dump;
 
 unsigned[2] typicalYear : dump;
-transient typicalYear2 = typicalYear : hidden, no_copy;
-if (typicalYear<100) {
-  # ECC-556: invalid year corrected. Assume 21st century!
-  transient typicalYear2 = (2000 + typicalYear) : hidden, no_copy;
-}
 
-transient typicalYearOfCentury = typicalYear2 % 100;
-transient typicalCentury =  ( typicalYear2 - typicalYearOfCentury ) / 100 + 1 ;
+transient typicalYearOfCentury = typicalYear % 100;
+#transient typicalCentury =  ( typicalYear2 - typicalYearOfCentury ) / 100 + 1 ;
 
 unsigned[1] typicalMonth : dump;
 unsigned[1] typicalDay : dump;
@@ -35,10 +30,17 @@ unsigned[1] typicalHour : dump;
 unsigned[1] typicalMinute : dump;
 unsigned[1] typicalSecond : dump;
 
-meta ls.typicalDate sprintf("%.4d%.2d%.2d",typicalYear2,typicalMonth,typicalDay) : dump,no_copy;
+if (typicalYear < 100) {
+  # ECC-556: invalid year corrected. Assume 21st century!
+  # Also see ECC-2037
+  transient typicalYear2 = (2000 + typicalYear) : hidden;
+  meta ls.typicalDate sprintf("%.4d%.2d%.2d",typicalYear2,typicalMonth,typicalDay) : dump,no_copy;
+  meta typicalDateTime julian_date(typicalYear2,typicalMonth,typicalDay,typicalHour,typicalMinute,typicalSecond) : no_copy;
+} else {
+  meta ls.typicalDate sprintf("%.4d%.2d%.2d",typicalYear,typicalMonth,typicalDay) : dump,no_copy;
+  meta typicalDateTime julian_date(typicalYear,typicalMonth,typicalDay,typicalHour,typicalMinute,typicalSecond) : no_copy;
+}
 meta ls.typicalTime sprintf("%.2d%.2d%.2d",typicalHour,typicalMinute,typicalSecond) :dump,no_copy;
-
-meta typicalDateTime julian_date(typicalYear2,typicalMonth,typicalDay,typicalHour,typicalMinute,typicalSecond) ;
 
 alias ls.masterTablesVersionNumber=masterTablesVersionNumber;
 alias ls.localTablesVersionNumber=localTablesVersionNumber;

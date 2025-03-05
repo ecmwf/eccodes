@@ -12,13 +12,13 @@
 
 
 # Define a common label for all the tmp files
-label="bufr_read_synop_test_f"
+label="examples_f_bufr_read_synop_test"
 
 fTmp=${label}".tmp.txt"
 rm -f $fTmp
 
 # We check "syno_multi.bufr". The path is hard coded in the example
-${examples_dir}/eccodes_f_bufr_read_synop > $fTmp
+${examples_dir}/f_bufr_read_synop > $fTmp
 
 # Check the output
 grep -q 'cloudType .low.:' $fTmp

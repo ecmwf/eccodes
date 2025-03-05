@@ -10,7 +10,7 @@
 
 . ./include.ctest.sh
 
-label="grib_mars_param_c"
+label="examples_c_grib_mars_param"
 fTmp=${label}.tmp
 fOut=${label}.tmp.out
 fRef=${label}.tmp.ref

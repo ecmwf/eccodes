@@ -11,7 +11,7 @@
 . ./include.ctest.sh
 
 # Define a common label for all the tmp files
-label="bufr_set_keys_test_c"
+label="examples_c_bufr_set_keys"
 REDIRECT=/dev/null
 fBufrTmp=${label}.tmp.bufr
 rm -f $fBufrTmp

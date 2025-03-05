@@ -10,6 +10,6 @@
 
 . ./include.ctest.sh
 
-label="get_native_type_f"
+label="examples_f_get_native_type"
 
-${examples_dir}/eccodes_f_get_native_type
+${examples_dir}/f_get_native_type

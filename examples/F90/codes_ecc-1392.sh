@@ -11,20 +11,20 @@
 . ./include.ctest.sh
 set -u
 
-label="codes_ecc-1392_test_f"
+label="examples_f_codes_ecc-1392"
 TEMP_ERR=temp.$label.err
 
 # Create files with spaces in various places
 # -------------------------------------------
 TEMP_INPUT="temp.$label.space in middle"
 touch "$TEMP_INPUT"
-${examples_dir}/eccodes_f_codes_ecc-1392 "$TEMP_INPUT"
+${examples_dir}/f_codes_ecc-1392 "$TEMP_INPUT"
 rm -f "$TEMP_INPUT"
 
 
 TEMP_INPUT=" temp.$label.space in beg"
 touch "$TEMP_INPUT"
-${examples_dir}/eccodes_f_codes_ecc-1392 "$TEMP_INPUT"
+${examples_dir}/f_codes_ecc-1392 "$TEMP_INPUT"
 rm -f "$TEMP_INPUT"
 
 
@@ -32,7 +32,7 @@ rm -f "$TEMP_INPUT"
 # ----------------------------
 TEMP_INPUT="temp.nonexistent.file"
 set +e
-${examples_dir}/eccodes_f_codes_ecc-1392 "$TEMP_INPUT" 2>$TEMP_ERR
+${examples_dir}/f_codes_ecc-1392 "$TEMP_INPUT" 2>$TEMP_ERR
 status=$?
 set -e
 [ $status -ne 0 ]
@@ -41,7 +41,7 @@ fgrep -q "open_file: (temp.nonexistent.file) Input output problem" $TEMP_ERR
 
 TEMP_INPUT="temp nonexistent file"
 set +e
-${examples_dir}/eccodes_f_codes_ecc-1392 "$TEMP_INPUT" 2>$TEMP_ERR
+${examples_dir}/f_codes_ecc-1392 "$TEMP_INPUT" 2>$TEMP_ERR
 status=$?
 set -e
 [ $status -ne 0 ]

@@ -1,0 +1,30 @@
+Action Class Hierarchy
+
+   |action
+   |-action_class_alias
+   |-action_class_assert
+   |-action_class_close
+   |-action_class_gen
+   |---action_class_concept
+   |---action_class_hash_array
+   |---action_class_meta
+   |---action_class_transient_darray
+   |---action_class_variable
+   |-action_class_modify
+   |-action_class_noop
+   |-action_class_print
+   |-action_class_put
+   |-action_class_remove
+   |-action_class_rename
+   |-action_class_section
+   |---action_class_if
+   |---action_class_list
+   |---action_class_switch
+   |---action_class_template
+   |-action_class_set
+   |-action_class_set_darray
+   |-action_class_set_missing
+   |-action_class_set_sarray
+   |-action_class_when
+   |-action_class_write
+

@@ -16,7 +16,7 @@ program bufr_copy_keys
 
    call codes_open_file(file1, '../../data/bufr/PraticaTemp.bufr', 'r')
    call codes_open_file(file2, '../../data/bufr/aaen_55.bufr', 'r')
-   call codes_open_file(file3, 'out.bufr_copy_keys_test_f.bufr', 'w')
+   call codes_open_file(file3, 'out.examples_f_bufr_copy_keys.bufr', 'w')
 
    call codes_bufr_new_from_file(file1, ibufr1)
    call codes_bufr_new_from_file(file2, ibufr2)

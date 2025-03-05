@@ -8,12 +8,11 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-set -x
 . ./include.ctest.sh
 
 
 # Define a common label for all the tmp files
-label="bufr_keys_iterator_test_c"
+label="examples_c_bufr_keys_iterator"
 
 # Define tmp file
 fTmp=${label}".tmp.txt"

@@ -10,7 +10,7 @@
 . ./include.ctest.sh
 
 # Define a common label for all the tmp files
-label="bufr_clone_test_f"
+label="examples_f_bufr_clone"
 
 fBufrTmp=${label}.clone.bufr
 rm -f $fBufrTmp
@@ -21,7 +21,7 @@ f=${data_dir}/bufr/syno_multi.bufr
 REDIRECT=/dev/null
 
 # The input ($f) and output ($fBufrTmp) are hardcoded in the f90 example
-${examples_dir}/eccodes_f_bufr_clone >$REDIRECT 2> $REDIRECT
+${examples_dir}/f_bufr_clone >$REDIRECT 2> $REDIRECT
 
 # Compare clone to the original. Should be different
 set +e

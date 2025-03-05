@@ -10,7 +10,7 @@
 . ./include.ctest.sh
 
 #Define a common label for all the tmp files
-label="bufr_set_keys_test_f"
+label="examples_f_bufr_set_keys"
 
 #Prepare tmp file
 fBufrTmp=${label}.tmp.bufr
@@ -22,7 +22,7 @@ f=${data_dir}/bufr/syno_multi.bufr
 REDIRECT=/dev/null
 
 #The input ($f) and output ($fBufrTmp) are hardcoded in the f90 example!!!
-${examples_dir}/eccodes_f_bufr_set_keys >$REDIRECT
+${examples_dir}/f_bufr_set_keys >$REDIRECT
 
 #Compare modified file to the original
 set +e
