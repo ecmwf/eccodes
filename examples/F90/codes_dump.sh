@@ -10,5 +10,5 @@
 . ./include.ctest.sh
 
 cd $data_dir
-${examples_dir}/eccodes_f_codes_dump grib sample.grib2
-${examples_dir}/eccodes_f_codes_dump bufr bufr/airs_57.bufr
+${examples_dir}/f_codes_dump grib sample.grib2
+${examples_dir}/f_codes_dump bufr bufr/airs_57.bufr

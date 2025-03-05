@@ -9,7 +9,7 @@
 
 . ./include.ctest.sh
 
-label="grib_index_c"
+label="examples_c_grib_index"
 tempIndex=temp.$label.idx
 tempText=temp.$label.txt
 

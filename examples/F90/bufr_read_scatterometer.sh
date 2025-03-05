@@ -11,7 +11,7 @@
 . ./include.ctest.sh
 
 # Define a common label for all the tmp files
-label="bufr_read_scatterometer_f"
+label="examples_f_bufr_read_scatterometer"
 
 # Define tmp file
 fTmp=${label}.tmp.txt
@@ -19,7 +19,7 @@ rm -f $fTmp
 
 # We check "asca_139.bufr". The path is hardcoded in the example
 # Write the key values into a file
-${examples_dir}/eccodes_f_bufr_read_scatterometer > $fTmp
+${examples_dir}/f_bufr_read_scatterometer > $fTmp
 
 # Check the results
 REFERENCE_FILE=bufr_read_scatterometer_f.ref

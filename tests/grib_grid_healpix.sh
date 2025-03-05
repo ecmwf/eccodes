@@ -146,7 +146,7 @@ ${tools_dir}/grib_get_data $tempGrib > $tempLog 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "Only ordering.*are supported" $tempLog
+grep -q "ordering.*ring.*nested" $tempLog
 
 # N = 0
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
@@ -157,7 +157,6 @@ ${tools_dir}/grib_get_data $tempGrib > $tempLog 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
-cat $tempLog
 grep -q "Nside must be greater than zero" $tempLog
 
 

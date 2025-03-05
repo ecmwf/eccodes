@@ -11,6 +11,6 @@
 
 OUT=temp.f_grib_set_data_force.out.grib
 
-${examples_dir}/eccodes_f_grib_set_data_force $OUT
+${examples_dir}/f_grib_set_data_force $OUT
 
 rm -f $OUT
