@@ -158,6 +158,21 @@ if (MTG2Switch > 0 ) {
        constant paramTypeBase = "base";
        alias paramtype = paramTypeBase;
   }
+  # for MTG2Switch == 1 => paramtype = base for chemical parameters
+  if (defined(paramtypeTmp)){
+   if (paramtypeTmp is "chemical" and MTG2Switch == 1){
+       # if paramtype not defined anywhere else set it to base
+       constant paramTypeBase = "base";
+       alias paramtype = paramTypeBase;
+   }
+  }
+  if (defined(paramtypeTmp)){
+   if (paramtypeTmp is "chemical_optical" and MTG2Switch == 1){
+       # if paramtype not defined anywhere else set it to base
+       constant paramTypeOptical1 = "optical";
+       alias paramtype = paramTypeOptical1;
+   }
+  }
 
   concept statwindow (unknown,"statwindowConcept.def",conceptsDir2,conceptsDir1) : read_only ;
   # paramtype instant should not appear in mars namespace for backward compatibility
