@@ -1,0 +1,26 @@
+## Statistical window concept for ECMWF
+ # either instantaneous data or processing is specified by mars stream
+ 'unknown'          = {dummy=0;}
+ # this is for one loop grib2 data
+ 'none'    = {stream='swmm'; numberOfTimeRange=1;}
+ 'none'    = {stream='mnth'; numberOfTimeRange=1;}
+ 'none'    = {stream='mmsa'; numberOfTimeRange=1;}
+ 'none'    = {stream='msmm'; numberOfTimeRange=1;}
+ # special rules for weekly extended-range (sub-seasonal) products
+ 'none'    = {marsStream='eefo'; type='fcmax'; numberOfTimeRange=1;}
+ 'none'    = {marsStream='eefo'; type='fcmin'; numberOfTimeRange=1;}
+ 'none'    = {marsStream='eefo'; type='fcmean'; numberOfTimeRange=1;}
+ 'none'    = {marsStream='eefo'; type='fcstdev'; numberOfTimeRange=1;}
+ 'none'    = {marsStream='eefo'; type='taem'; numberOfTimeRange=1;}
+ 'none'    = {marsStream='eefo'; type='taes'; numberOfTimeRange=1;}
+ ## accumulations
+ # 24 hourly time unit
+ '24h'    = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 24; class='od'; stream='enfo'; type='ep';}
+ # special rule for accumulations in streams efhs / eehs, type cd
+ '24h'   = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 24; class='od'; stream='efhs'; type='cd';}
+ '72h'   = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 72; class='od'; stream='efhs'; type='cd';}
+ '120h'   = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 120; class='od'; stream='efhs'; type='cd';}
+ '168h'   = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168; class='od'; stream='efhs'; type='cd';}
+ '168h'   = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168; class='od'; stream='eehs'; type='cd';}
+ '240h'   = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 240; class='od'; stream='efhs'; type='cd';}
+ '360h'   = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 360; class='od'; stream='efhs'; type='cd';}
