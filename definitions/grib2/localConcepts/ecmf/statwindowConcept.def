@@ -2,17 +2,17 @@
  # either instantaneous data or processing is specified by mars stream
  'unknown'          = {dummy=0;}
  # this is for one loop grib2 data
- 'instant'    = {stream='swmm'; numberOfTimeRange=1;}
- 'instant'    = {stream='mnth'; numberOfTimeRange=1;}
- 'instant'    = {stream='mmsa'; numberOfTimeRange=1;}
- 'instant'    = {stream='msmm'; numberOfTimeRange=1;}
+ 'none'    = {stream='swmm'; numberOfTimeRange=1;}
+ 'none'    = {stream='mnth'; numberOfTimeRange=1;}
+ 'none'    = {stream='mmsa'; numberOfTimeRange=1;}
+ 'none'    = {stream='msmm'; numberOfTimeRange=1;}
  # special rules for weekly extended-range (sub-seasonal) products
- 'instant'    = {marsStream='eefo'; type='fcmax'; numberOfTimeRange=1;}
- 'instant'    = {marsStream='eefo'; type='fcmin'; numberOfTimeRange=1;}
- 'instant'    = {marsStream='eefo'; type='fcmean'; numberOfTimeRange=1;}
- 'instant'    = {marsStream='eefo'; type='fcstdev'; numberOfTimeRange=1;}
- 'instant'    = {marsStream='eefo'; type='taem'; numberOfTimeRange=1;}
- 'instant'    = {marsStream='eefo'; type='taes'; numberOfTimeRange=1;}
+ 'none'    = {marsStream='eefo'; type='fcmax'; numberOfTimeRange=1;}
+ 'none'    = {marsStream='eefo'; type='fcmin'; numberOfTimeRange=1;}
+ 'none'    = {marsStream='eefo'; type='fcmean'; numberOfTimeRange=1;}
+ 'none'    = {marsStream='eefo'; type='fcstdev'; numberOfTimeRange=1;}
+ 'none'    = {marsStream='eefo'; type='taem'; numberOfTimeRange=1;}
+ 'none'    = {marsStream='eefo'; type='taes'; numberOfTimeRange=1;}
  ## accumulations
  # 24 hourly time unit
  '24h'    = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 24; class='od'; stream='enfo'; type='ep';}

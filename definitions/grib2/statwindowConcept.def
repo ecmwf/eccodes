@@ -2,10 +2,10 @@
  #
  ## Instananeous
  'unknown'          = {dummy=0;}
- 'instant'    = {stepType='instant';}
- 'instant'    = {productDefinitionTemplateNumber=8; lengthOfTimeRange=0;}
- 'instant'    = {productDefinitionTemplateNumber=11; lengthOfTimeRange=0;}
- 'instant'    = {typeOfStatisticalProcessing=10; lengthOfTimeRange=0;}
+ 'none'    = {stepType='instant';}
+ 'none'    = {productDefinitionTemplateNumber=8; lengthOfTimeRange=0;}
+ 'none'    = {productDefinitionTemplateNumber=11; lengthOfTimeRange=0;}
+ 'none'    = {typeOfStatisticalProcessing=10; lengthOfTimeRange=0;}
  # End instantaneous
  ##
  ### Accumulations ###
