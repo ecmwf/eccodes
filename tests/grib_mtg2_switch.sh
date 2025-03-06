@@ -14,14 +14,17 @@ REDIRECT=/dev/null
 
 label="grib_mtg2_test"
 tempGrib=temp.$label.grib
-tempBufr=temp.$label.bufr
 tempFilt=temp.$label.filt
 tempLog=temp.$label.log
 tempOut=temp.$label.txt
 tempRef=temp.$label.ref
 
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-sample_bufr4=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
+
+# Sample has tablesVersion < 33
+grib_check_key_equals $sample_grib2 tablesVersion     4
+grib_check_key_equals $sample_grib2 paramIdFilename   "paramId.lte33.def"
+grib_check_key_equals $sample_grib2 shortNameFilename "shortName.lte33.def"
 
 #...
 #infile=${data_dir}/SOME_FILE
@@ -29,12 +32,10 @@ sample_bufr4=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
 #EOF
 #${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
 #${tools_dir}/grib_get
-#${tools_dir}/grib_set
-#grib_check_key_equals $temp k1,k2 "v1 v2"
+${tools_dir}/grib_set -s tablesVersion=34 $sample_grib2 $tempGrib
+grib_check_key_equals $tempGrib paramIdFilename   "paramId.def"
+grib_check_key_equals $tempGrib shortNameFilename "shortName.def"
 
-#${tools_dir}/bufr_get
-#${tools_dir}/bufr_set
-#...
 
 # Clean up
-rm -f $tempGrib $tempBufr $tempFilt $tempLog $tempOut $tempRef
+rm -f $tempGrib $tempFilt $tempLog $tempOut $tempRef
