@@ -46,6 +46,7 @@ list(APPEND test_c_bins
     grib_ecc-1431
     grib_ecc-1433
     grib_ecc-1764
+    grib_ecc-2005
     grib_ecc-2019
     grib_ecc-2034
     bufr_ecc-517
@@ -296,6 +297,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1941
         grib_ecc-1942
         grib_ecc-2002
+        grib_ecc-2005
         grib_ecc-2006
         grib_ecc-2019
         grib_ecc-2034
