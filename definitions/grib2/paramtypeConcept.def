@@ -114,9 +114,11 @@
 'wave_spectra' = {productDefinitionTemplateNumber=102; MTG2Switch=2;}
 'wave' = {productDefinitionTemplateNumber=103; MTG2Switch=1;}
 'wave' = {productDefinitionTemplateNumber=104; MTG2Switch=1;}
-'base' = {productDefinitionTemplateNumber=105; MTG2Switch=1;}
-'base' = {productDefinitionTemplateNumber=106; MTG2Switch=1;}
-'base' = {productDefinitionTemplateNumber=107; MTG2Switch=1;}
+'wave' = {productDefinitionTemplateNumber=103; MTG2Switch=2;}
+'wave' = {productDefinitionTemplateNumber=104; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=105;}
+'base' = {productDefinitionTemplateNumber=106;}
+'base' = {productDefinitionTemplateNumber=107;}
 'optical' = {productDefinitionTemplateNumber=108;}
 'optical' = {productDefinitionTemplateNumber=109;}
 'optical' = {productDefinitionTemplateNumber=110;}
