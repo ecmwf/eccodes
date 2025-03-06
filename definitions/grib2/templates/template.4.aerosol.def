@@ -7,3 +7,6 @@ meta constituentTypeName codetable_title(constituentType);
 
 alias aerosolType = constituentType;
 alias aerosolTypeName = constituentTypeName;
+
+constant paramTypeChemical = "chemical" ;
+alias paramtypeTmp = paramTypeChemical ;
