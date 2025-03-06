@@ -176,7 +176,7 @@ if (MTG2Switch > 0 ) {
 
   concept statwindow (unknown,"statwindowConcept.def",conceptsDir2,conceptsDir1) : read_only ;
   # paramtype instant should not appear in mars namespace for backward compatibility
-  if (! statwindow is "instant"){
+  if (! statwindow is "none"){
     alias mars.statwindow = statwindow ;
   }
  ## discipline = 10, parameterCategory = 0 are WMO wave parameters ! Some parameters for the wave model use currently a different discipline
