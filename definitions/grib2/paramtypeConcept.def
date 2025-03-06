@@ -1,15 +1,9 @@
 # Concept paramtype
 'wave' = {discipline=10; parameterCategory=0;}
-'wave' = {paramId=140101; MTG2Switch=1;}
-'wave' = {paramId=141101; MTG2Switch=1;}
-'wave' = {paramId=143101; MTG2Switch=1;}
-'wave' = {paramId=144101; MTG2Switch=1;}
-'wave' = {paramId=145101; MTG2Switch=1;}
-'wave' = {paramId=140101; MTG2Switch=2;}
-'wave' = {paramId=141101; MTG2Switch=2;}
-'wave' = {paramId=143101; MTG2Switch=2;}
-'wave' = {paramId=144101; MTG2Switch=2;}
-'wave' = {paramId=145101; MTG2Switch=2;}
+'wave' = {
+          true = is_one_of(paramId,140101,141101,143101,144101,145101,140102,141102,143102,144102,145102);
+          true = is_one_of(MTG2Switch,1,2);
+         }
 'base' = {productDefinitionTemplateNumber=0;}
 'base' = {productDefinitionTemplateNumber=1;}
 'base' = {productDefinitionTemplateNumber=2;}
