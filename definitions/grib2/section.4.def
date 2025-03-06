@@ -153,7 +153,7 @@ else {
   concept paramtype(unknown, "paramtypeConcept.def", conceptsDir2, conceptsDir1): hidden, read_only;
   # statwindow
   concept statwindow (unknown,"statwindowConcept.def",conceptsDir2,conceptsDir1) : read_only ;
-  # paramtype instant should not appear in mars namespace for backward compatibility
+  # statwindow instant should not appear in mars namespace for backward compatibility
   if (! statwindow is "none"){
     alias mars.statwindow = statwindow ;
   }
