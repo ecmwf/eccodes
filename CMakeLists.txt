@@ -219,7 +219,7 @@ ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
 
 ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "Enable memory management" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "Enable memory alignment"  DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE TIMER               DESCRIPTION "Enable timer" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE TIMER               DESCRIPTION "Enable timer (deprecated)" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "Enable thread-safety using POSIX threads" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "Enable thread-safety using OpenMP threads" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE EXTRA_TESTS         DESCRIPTION "Enable extended regression testing" DEFAULT OFF ADVANCED )
@@ -277,12 +277,6 @@ endif()
 
 ###############################################################################
 # other options
-
-if( HAVE_TIMER )
-    set( ECCODES_TIMER 1 )
-else()
-    set( ECCODES_TIMER 0 )
-endif()
 
 set( IS_BIG_ENDIAN 0 )
 if( ECCODES_BIG_ENDIAN )
@@ -541,3 +535,10 @@ ecbuild_info(" For Python3 support, you must install the Python bindings.")
 ecbuild_info(" See:")
 ecbuild_info("  https://confluence.ecmwf.int/display/ECC/ecCodes+installation")
 ecbuild_info("")
+
+if( HAVE_TIMER )
+    ecbuild_deprecate( "Option ENABLE_TIMER is ignored and will be removed in a future release." )
+    set( ECCODES_TIMER 1 )
+else()
+    set( ECCODES_TIMER 0 )
+endif()

@@ -1087,33 +1087,6 @@ struct grib_smart_table
     grib_smart_table_entry* entries;
 };
 
-
-#if ECCODES_TIMER
-typedef struct grib_timer
-{
-    struct timeval start_;
-    double timer_;
-    int active_;
-    char* name_;
-    int count_;
-    long total_;
-
-    int elapsed_;
-    double cpu_;
-    double total_cpu_;
-
-    char* statname_;
-    grib_context* context;
-
-    struct grib_timer* next_;
-} grib_timer;
-#else
-typedef struct grib_timer
-{
-    char nothing;
-} grib_timer;
-#endif
-
 typedef struct j2k_encode_helper
 {
     size_t buffer_size;

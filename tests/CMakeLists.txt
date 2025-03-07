@@ -557,7 +557,7 @@ if( HAVE_BUILD_TOOLS )
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/codes_export_resource.sh )
 
 
-    # Performance test. Must have -DENABLE_TIMER=ON
+    # Performance test
     ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
                       TYPE SCRIPT
                       CONDITION ENABLE_EXTRA_TESTS
