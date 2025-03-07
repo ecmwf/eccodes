@@ -47,7 +47,7 @@ echo "Test: comparing two completely different files" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}/bufr_compare -v $f1 $f2 >> $fLog
 if [ $? -eq 0 ]; then
-   echo "bufr_compare should have failed if files are completely different" >&2
+   echo "ERROR: bufr_compare should have failed if files are completely different" >&2
    exit 1
 fi
 set -e
@@ -76,7 +76,7 @@ ${tools_dir}/bufr_set -s dataCategory=2 $f ${fBufrTmp} >> $fLog
 set +e
 ${tools_dir}/bufr_compare $f ${fBufrTmp}>> $fLog
 if [ $? -eq 0 ]; then
-   echo "bufr_compare should have failed if files are different" >&2
+   echo "ERROR: bufr_compare should have failed if files are different" >&2
    exit 1
 fi
 set -e
@@ -94,7 +94,7 @@ ${tools_dir}/bufr_compare -b dataCategory $f ${fBufrTmp}>> $fLog
 #set +e
 #${tools_dir}/bufr_compare ${fBufrInput1} ${fBufrInput2} >> $fLog
 #if [ $? -eq 0 ]; then
-#   echo "bufr_compare should have failed if the message order in the files is different" >&2
+#   echo "ERROR: bufr_compare should have failed if the message order in the files is different" >&2
 #   exit 1
 #fi
 #set -e

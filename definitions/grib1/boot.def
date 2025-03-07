@@ -83,3 +83,5 @@ if (!headersOnly) {
 
   template     section_5 "grib1/section.5.def";
 }
+
+meta gridSpec grid_spec(): hidden, no_copy;
