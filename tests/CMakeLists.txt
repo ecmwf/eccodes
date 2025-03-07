@@ -174,6 +174,7 @@ if( HAVE_BUILD_TOOLS )
         grib_paramtypeConcept
         grib_cmp_paramtype
         grib_statwindowConcept
+        grib_cmp_statwindow
     )
 
     # These tests require data downloads
