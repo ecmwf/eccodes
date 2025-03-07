@@ -542,9 +542,9 @@ ${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=0
-# MTG2SwitchDefault=0
+# MTG2SwitchDefault=1
 # MTG2Switch=0
-expected+=("0 0 0")
+expected+=("0 1 0")
 
 ## CASE 20: ERA5 tv37 pre-mtg2 ##
 # tablesVersion=37
@@ -584,9 +584,9 @@ ${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=0
-# MTG2SwitchDefault=0
+# MTG2SwitchDefault=1
 # MTG2Switch=0
-expected+=("0 0 0")
+expected+=("0 1 0")
 
 ## CASE 22: HYDRO tv37 pre-mtg2 ##
 # tablesVersion=37
@@ -625,10 +625,10 @@ EOF
 ${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
 
 # Expected result
-# MTG2SwitchViaTablesVersion=0
+# MTG2SwitchViaTablesVersion=1
 # MTG2SwitchDefault=0
 # MTG2Switch=0
-expected+=("0 0 0")
+expected+=("1 0 0")
 
 ## CASE 24: CERISE ECMWF post-mtg2 ##
 # tablesVersion=37
@@ -655,13 +655,15 @@ expected+=("1 1 1")
 # tablesVersion=32
 # class=ci
 # centre=cnmc
+# subCentre=98
 cases+=(temp.$label.case25.grib2)
 
 cat >$tempFilt<<EOF
+    set centre="cnmc";
+    set subCentre=98;
     set setLocalDefinition=1;
     set grib2LocalSectionNumber=1;
     set class="ci";
-    set centre="cnmc";
     set tablesVersion=32;
     write;
 EOF
@@ -669,22 +671,24 @@ EOF
 ${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
 
 # Expected result
-# MTG2SwitchViaTablesVersion=0
+# MTG2SwitchViaTablesVersion=1
 # MTG2SwitchDefault=0
 # MTG2Switch=0
-expected+=("0 0 0")
+expected+=("1 0 0")
 
 ## CASE 26: CERISE CNMC post-mtg2 ##
 # tablesVersion=37
 # class=ci
 # centre=cnmc
+# subCentre=98
 cases+=(temp.$label.case26.grib2)
 
 cat >$tempFilt<<EOF
+    set centre="cnmc";
+    set subCentre=98;
     set setLocalDefinition=1;
     set grib2LocalSectionNumber=1;
     set class="ci";
-    set centre="cnmc";
     set tablesVersion=37;
     write;
 EOF
@@ -711,10 +715,10 @@ EOF
 ${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
 
 # Expected result
-# MTG2SwitchViaTablesVersion=0
+# MTG2SwitchViaTablesVersion=1
 # MTG2SwitchDefault=0
 # MTG2Switch=0
-expected+=("0 0 0")
+expected+=("1 0 0")
 
 ## CASE 28: TIGGE ECMWF post-mtg2 ##
 # tablesVersion=37
@@ -749,10 +753,10 @@ EOF
 ${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
 
 # Expected result
-# MTG2SwitchViaTablesVersion=0
+# MTG2SwitchViaTablesVersion=1
 # MTG2SwitchDefault=0
 # MTG2Switch=0
-expected+=("0 0 0")
+expected+=("1 0 0")
 
 ## CASE 30: S2S ECMWF post-mtg2 ##
 # tablesVersion=37
@@ -787,10 +791,10 @@ EOF
 ${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
 
 # Expected result
-# MTG2SwitchViaTablesVersion=0
+# MTG2SwitchViaTablesVersion=1
 # MTG2SwitchDefault=0
 # MTG2Switch=0
-expected+=("0 0 0")
+expected+=("1 0 0")
 
 ## CASE 32: UERRA ECMWF post-mtg2 ##
 # tablesVersion=37
@@ -825,10 +829,10 @@ EOF
 ${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
 
 # Expected result
-# MTG2SwitchViaTablesVersion=0
+# MTG2SwitchViaTablesVersion=1
 # MTG2SwitchDefault=0
 # MTG2Switch=0
-expected+=("0 0 0")
+expected+=("1 0 0")
 
 ## CASE 34: CARRA/CERRA ECMWF post-mtg2 ##
 # tablesVersion=37
@@ -892,7 +896,9 @@ ${tools_dir}/grib_filter -o $tempGrib $tempFilt $base_grib2
 
 cat >$tempFilt<<EOF
     set tablesVersion=37;
-    set class=mc;
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=1;
+    set class="mc";
     assert (MTG2Switch == 2);
     assert (paramId == 237287);
     write;
