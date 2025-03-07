@@ -19,6 +19,8 @@
  'since-start'    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=0;}
  # 24 hourly time unit
  'since-start'    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=2;}
+ ## 7 days rolling accumulation
+ '7 days'    = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168; type='cd';}
  ### end Accumulations ###
  #
  ### mean/min/max/stdev ###
@@ -40,8 +42,6 @@
  '240h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 240;}
  '360h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 360;}
  '7 days'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168;}
- ## 7 days rolling accumulation
- '7 days'    = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168; type='cd';}
  # 28 days
  'month'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 672;}
  # 29 days
