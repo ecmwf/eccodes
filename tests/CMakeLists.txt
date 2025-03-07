@@ -171,6 +171,7 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_polar_stereographic
         grib_grid_healpix
         grib_g1day_of_the_year_date
+        grib_paramtypeConcept
     )
 
     # These tests require data downloads
