@@ -1,8 +1,74 @@
 ## Statistical window overall concept based on official low-level GRIB2 keys only
  #
- ## Instananeous
  'unknown'          = {dummy=0;}
- 'none'    = {stepType='instant';}
+ ## Instananeous
+ #'none'    = {stepType='instant';}
+ # all instantaeous templates
+ 'none' = {productDefinitionTemplateNumber=0;}
+ 'none' = {productDefinitionTemplateNumber=1;}
+ 'none' = {productDefinitionTemplateNumber=2;}
+ 'none' = {productDefinitionTemplateNumber=3;}
+ 'none' = {productDefinitionTemplateNumber=4;}
+ 'none' = {productDefinitionTemplateNumber=5;}
+ 'none' = {productDefinitionTemplateNumber=6;}
+ 'none' = {productDefinitionTemplateNumber=15;}
+ 'none' = {productDefinitionTemplateNumber=20;}
+ 'none' = {productDefinitionTemplateNumber=31;}
+ 'none' = {productDefinitionTemplateNumber=32;}
+ 'none' = {productDefinitionTemplateNumber=33;}
+ 'none' = {productDefinitionTemplateNumber=35;}
+ 'none' = {productDefinitionTemplateNumber=40;}
+ 'none' = {productDefinitionTemplateNumber=41;}
+ 'none' = {productDefinitionTemplateNumber=44;}
+ 'none' = {productDefinitionTemplateNumber=45;}
+ 'none' = {productDefinitionTemplateNumber=48;}
+ 'none' = {productDefinitionTemplateNumber=49;}
+ 'none' = {productDefinitionTemplateNumber=51;}
+ 'none' = {productDefinitionTemplateNumber=53;}
+ 'none' = {productDefinitionTemplateNumber=54;}
+ 'none' = {productDefinitionTemplateNumber=55;}
+ 'none' = {productDefinitionTemplateNumber=57;}
+ 'none' = {productDefinitionTemplateNumber=58;}
+ 'none' = {productDefinitionTemplateNumber=59;}
+ 'none' = {productDefinitionTemplateNumber=60;}
+ 'none' = {productDefinitionTemplateNumber=70;}
+ 'none' = {productDefinitionTemplateNumber=71;}
+ 'none' = {productDefinitionTemplateNumber=76;}
+ 'none' = {productDefinitionTemplateNumber=77;}
+ 'none' = {productDefinitionTemplateNumber=80;}
+ 'none' = {productDefinitionTemplateNumber=81;}
+ 'none' = {productDefinitionTemplateNumber=86;}
+ 'none' = {productDefinitionTemplateNumber=88;}
+ 'none' = {productDefinitionTemplateNumber=89;}
+ 'none' = {productDefinitionTemplateNumber=92;}
+ 'none' = {productDefinitionTemplateNumber=93;}
+ 'none' = {productDefinitionTemplateNumber=94;}
+ 'none' = {productDefinitionTemplateNumber=99;}
+ 'none' = {productDefinitionTemplateNumber=100;}
+ 'none' = {productDefinitionTemplateNumber=101;}
+ 'none' = {productDefinitionTemplateNumber=102;}
+ 'none' = {productDefinitionTemplateNumber=103;}
+ 'none' = {productDefinitionTemplateNumber=104;}
+ 'none' = {productDefinitionTemplateNumber=108;}
+ 'none' = {productDefinitionTemplateNumber=109;}
+ 'none' = {productDefinitionTemplateNumber=113;}
+ 'none' = {productDefinitionTemplateNumber=115;}
+ 'none' = {productDefinitionTemplateNumber=117;}
+ 'none' = {productDefinitionTemplateNumber=119;}
+ 'none' = {productDefinitionTemplateNumber=121;}
+ 'none' = {productDefinitionTemplateNumber=124;}
+ 'none' = {productDefinitionTemplateNumber=125;}
+ 'none' = {productDefinitionTemplateNumber=128;}
+ 'none' = {productDefinitionTemplateNumber=129;}
+ 'none' = {productDefinitionTemplateNumber=130;}
+ 'none' = {productDefinitionTemplateNumber=131;}
+ 'none' = {productDefinitionTemplateNumber=132;}
+ 'none' = {productDefinitionTemplateNumber=133;}
+ 'none' = {productDefinitionTemplateNumber=136;}
+ 'none' = {productDefinitionTemplateNumber=254;}
+ 'none' = {productDefinitionTemplateNumber=1000;}
+ 'none' = {productDefinitionTemplateNumber=1100;}
+ # some exceptions for non point-in-time templates
  'none'    = {productDefinitionTemplateNumber=8; lengthOfTimeRange=0;}
  'none'    = {productDefinitionTemplateNumber=11; lengthOfTimeRange=0;}
  'none'    = {typeOfStatisticalProcessing=10; lengthOfTimeRange=0;}
