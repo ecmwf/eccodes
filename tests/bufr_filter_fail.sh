@@ -32,7 +32,7 @@ set +e
 f="syno_1.bufr"
 ${tools_dir}/codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 if [ $? -eq 0 ]; then
-   echo "bufr_filter should have failed if key not found" >&2
+   echo "ERROR: bufr_filter should have failed if key not found" >&2
    exit 1
 fi
 set -e
@@ -52,7 +52,7 @@ set +e
 f="syno_1.bufr"
 ${tools_dir}/codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 if [ $? -eq 0 ]; then
-   echo "bufr_filter should have failed if key value is not allowed" >&2
+   echo "ERROR: bufr_filter should have failed if key value is not allowed" >&2
    exit 1
 fi
 set -e
@@ -75,7 +75,7 @@ set +e
 f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
 ${tools_dir}/codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
 if [ $? -eq 0 ]; then
-   echo "bufr_filter should have failed if string key is invalid" >&2
+   echo "ERROR: bufr_filter should have failed if string key is invalid" >&2
    exit 1
 fi
 set -e

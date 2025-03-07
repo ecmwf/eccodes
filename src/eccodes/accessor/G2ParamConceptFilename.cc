@@ -58,7 +58,7 @@ int G2ParamConceptFilename::unpack_string(char* v, size_t* len)
 
     const size_t dsize = string_length() - 1; // size for destination string "v"
     if ( MTG2Switch == 0 ) {
-        snprintf(v, dsize, "%s.%ld.def", basename_, tablesVersionMTG2Switch);
+        snprintf(v, dsize, "%s.lte%ld.def", basename_, tablesVersionMTG2Switch);
     } else {
         // All other cases other than pre-MTG2 fall into default parameter files
         snprintf(v, dsize, "%s.def", basename_);

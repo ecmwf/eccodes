@@ -37,7 +37,7 @@ for f in `echo $files`; do
     # Check contents (basic)
     case $ps in
       *+proj=*) echo OK;;
-      *)        echo "File: $file. Invalid proj string: |$ps|"; exit 1;;
+      *)        echo "ERROR: File: $file. Invalid proj string: |$ps|"; exit 1;;
     esac
     if test "x$PROJ_TOOL" != "x"; then
         ${tools_dir}/grib_get -p longitudeOfFirstGridPointInDegrees,latitudeOfFirstGridPointInDegrees $file |\
