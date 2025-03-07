@@ -349,6 +349,7 @@ if( HAVE_BUILD_TOOLS )
         grib_nearest_test
         pseudo_budg
         grib_gridType
+        grib_gridSpec
         grib_fieldset
         grib_octahedral
         grib_grid_mercator
