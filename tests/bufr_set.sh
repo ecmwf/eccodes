@@ -113,7 +113,7 @@ echo "Test: nonexistent keys" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}/bufr_set -s center=98 $f $fBufrTmp 2>> $fLog 1>> $fLog
 if [ $? -eq 0 ]; then
-   echo "bufr_set should have failed if key not found" >&2
+   echo "ERROR: bufr_set should have failed if key not found" >&2
    exit 1
 fi
 set -e
@@ -134,7 +134,7 @@ echo "Test: nonexistent keys" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}/bufr_set -s bufrHeaderCentre=1024 $f $fBufrTmp 2>> $fLog 1>> $fLog
 if [ $? -eq 0 ]; then
-   echo "bufr_set should have failed if key not found" >&2
+   echo "ERROR: bufr_set should have failed if key not found" >&2
    exit 1
 fi
 set -e
@@ -154,12 +154,12 @@ ${tools_dir}/bufr_set -s correction1=63 $f $fBufrTmp 2>>$fLog 1>>$fLog
 set +e
 ${tools_dir}/bufr_set -s correction1=65 $f $fBufrTmp 2>>$fLog 1>>$fLog
 if [ $? -eq 0 ]; then
-   echo "bufr_set should have failed if value too large" >&2
+   echo "ERROR: bufr_set should have failed if value too large" >&2
    exit 1
 fi
 ${tools_dir}/bufr_set -s correction1=-1 $f $fBufrTmp 2>>$fLog 1>>$fLog
 if [ $? -eq 0 ]; then
-   echo "bufr_set should have failed if value negative" >&2
+   echo "ERROR: bufr_set should have failed if value negative" >&2
    exit 1
 fi
 set -e
@@ -198,7 +198,7 @@ ${tools_dir}/bufr_set -s masterTablesVersionNumber=255 $sample $fBufrTmp
 set +e
 ${tools_dir}/bufr_dump -p $fBufrTmp 2>>$fLog 1>>$fLog
 if [ $? -eq 0 ]; then
-   echo "bufr_dump should have failed" >&2
+   echo "ERROR: bufr_dump should have failed" >&2
    exit 1
 fi
 set -e
