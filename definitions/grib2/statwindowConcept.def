@@ -112,7 +112,7 @@
  '168h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168;}
  '240h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 240;}
  '360h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 360;}
- '7 days'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168;}
+ #'7 days'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168;}
  # 28 days
  'month'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 672;}
  # 29 days
