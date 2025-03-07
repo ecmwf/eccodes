@@ -195,17 +195,17 @@ long grib_decode_signed_longb(const unsigned char* p, long* bitp, long nbits);
 int grib_encode_signed_longb(unsigned char* p, long val, long* bitp, long nb);
 
 /* grib_timer.cc */
-double proc_cpu(void);
-char* timename(double t);
-grib_timer* grib_get_timer(grib_context* c, const char* name, const char* statname, int elapsed);
-int grib_timer_start(grib_timer* t);
-int grib_timer_stop(grib_timer* t, long total);
-double grib_timer_value(grib_timer* t);
-const char* bytename(double bytes);
-void grib_timer_print(grib_timer* t);
-void grib_timer_partial_rate(grib_timer* t, double start, long total);
-void grib_print_all_timers(void);
-void grib_reset_all_timers(void);
+// double proc_cpu(void);
+// char* timename(double t);
+// grib_timer* grib_get_timer(grib_context* c, const char* name, const char* statname, int elapsed);
+// int grib_timer_start(grib_timer* t);
+// int grib_timer_stop(grib_timer* t, long total);
+// double grib_timer_value(grib_timer* t);
+// const char* bytename(double bytes);
+// void grib_timer_print(grib_timer* t);
+// void grib_timer_partial_rate(grib_timer* t, double start, long total);
+// void grib_print_all_timers(void);
+// void grib_reset_all_timers(void);
 
 /* grib_ibmfloat.cc */
 unsigned long grib_ibm_to_long(double x);
