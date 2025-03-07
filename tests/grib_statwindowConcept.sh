@@ -17,10 +17,11 @@
 
 REDIRECT=/dev/null
 
-label="grib_paramtypeconcept_all_pdtn"  # Change prod to bufr or grib etc
+label="grib_statwindow_concept_all_pdtn"  # Change prod to bufr or grib etc
 tempGrib=temp.$label.grib
 tempText=temp.$label.txt
-rm -f $tempGrib $tempText
+tempFilt=temp.$label.filt
+rm -f $tempGrib $tempText $tempFilt
 
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 latestOfficial=$( ${tools_dir}/grib_get -p tablesVersionLatestOfficial $sample_grib2 )
@@ -29,11 +30,21 @@ if [ -f "$latest_codetable_file" ]; then
   pdtns=$( awk '$1 !~ /#/ && $1 < 65000 {print $1}' $latest_codetable_file )
   for pdtn in $pdtns; do
     # echo "Doing $pdtn "
-    ${tools_dir}/grib_set -s tablesVersion=$latestOfficial,productDefinitionTemplateNumber=$pdtn $sample_grib2 $tempGrib
-    ${tools_dir}/grib_get -p paramtype $tempGrib
-    paramtype=$( ${tools_dir}/grib_get -p paramtype $tempGrib )
-    if [[ $paramtype  == 'unknown' ]]; then
-      echo "productDefinitionTemplateNumber=$pdtn: paramtype not defined"
+cat >$tempFilt<<EOF
+set setLocalDefinition=1;
+set class='e6';
+set tablesVersion=34;
+set productDefinitionTemplateNumber=$pdtn;
+if (defined(lengthOfTimeRange)){
+ set lengthOfTimeRange=1;
+}
+write;
+EOF
+    ${tools_dir}/grib_filter $tempFilt $sample_grib2 -o $tempGrib
+    ${tools_dir}/grib_get -p statwindow $tempGrib
+    statwindow=$( ${tools_dir}/grib_get -p statwindow $tempGrib )
+    if [[ $statwindow  == 'unknown' ]]; then
+      echo "productDefinitionTemplateNumber=$pdtn: statwindow not defined"
       exit 1
     fi
   done

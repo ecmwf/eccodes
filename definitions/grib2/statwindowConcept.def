@@ -11,8 +11,10 @@
  'none' = {productDefinitionTemplateNumber=4;}
  'none' = {productDefinitionTemplateNumber=5;}
  'none' = {productDefinitionTemplateNumber=6;}
+ 'none' = {productDefinitionTemplateNumber=7;}
  'none' = {productDefinitionTemplateNumber=15;}
  'none' = {productDefinitionTemplateNumber=20;}
+ 'none' = {productDefinitionTemplateNumber=30;}
  'none' = {productDefinitionTemplateNumber=31;}
  'none' = {productDefinitionTemplateNumber=32;}
  'none' = {productDefinitionTemplateNumber=33;}
@@ -23,10 +25,12 @@
  'none' = {productDefinitionTemplateNumber=45;}
  'none' = {productDefinitionTemplateNumber=48;}
  'none' = {productDefinitionTemplateNumber=49;}
+ 'none' = {productDefinitionTemplateNumber=50;}
  'none' = {productDefinitionTemplateNumber=51;}
  'none' = {productDefinitionTemplateNumber=53;}
  'none' = {productDefinitionTemplateNumber=54;}
  'none' = {productDefinitionTemplateNumber=55;}
+ 'none' = {productDefinitionTemplateNumber=56;}
  'none' = {productDefinitionTemplateNumber=57;}
  'none' = {productDefinitionTemplateNumber=58;}
  'none' = {productDefinitionTemplateNumber=59;}
@@ -67,6 +71,7 @@
  'none' = {productDefinitionTemplateNumber=136;}
  'none' = {productDefinitionTemplateNumber=254;}
  'none' = {productDefinitionTemplateNumber=1000;}
+ 'none' = {productDefinitionTemplateNumber=1002;}
  'none' = {productDefinitionTemplateNumber=1100;}
  # some exceptions for non point-in-time templates
  'none'    = {productDefinitionTemplateNumber=8; lengthOfTimeRange=0;}
