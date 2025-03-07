@@ -68,6 +68,10 @@ int MessageIsValid::check_grid_and_packing_type()
     size_t len = sizeof(gridType);
     int err = grib_get_string_internal(handle_, "gridType", gridType, &len);
     if (err) return err;
+    if (STR_EQUAL(gridType, "unknown") || STR_EQUAL(gridType, "unknown_PLPresent")) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: Key gridType=%s", TITLE, gridType);
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
 
     char packing_type[128] = {0,};
     len = sizeof(packing_type);

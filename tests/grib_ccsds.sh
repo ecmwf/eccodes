@@ -81,7 +81,7 @@ ${tools_dir}/grib_compare -b $BLACKLIST $outfile1 $outfile2 > $REDIRECT
 
 templateNumber=`${tools_dir}/grib_get -p dataRepresentationTemplateNumber $outfile2`
 if [ $templateNumber -ne 42 ]; then
-  echo "dataRepresentationTemplateNumber=$templateNumber. Should be 42!"
+  echo "ERROR: dataRepresentationTemplateNumber=$templateNumber. Should be 42!"
   exit 1
 fi
 

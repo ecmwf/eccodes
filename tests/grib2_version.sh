@@ -29,7 +29,7 @@ cd $tables_dir
 highest_num=`ls -1d [0-9]* | sort -rn | sed 1q`
 latest=`${tools_dir}/grib_get -p tablesVersionLatest $sample2`
 if [ "$latest" != "$highest_num" ]; then
-    echo "The GRIB2 key tablesVersionLatest = $latest but the highest number in $tables_dir is $highest_num"
+    echo "ERROR: The GRIB2 key tablesVersionLatest = $latest but the highest number in $tables_dir is $highest_num"
     exit 1
 fi
 
@@ -47,7 +47,7 @@ ${tools_dir}/grib_set -s edition=2 $sample1 $temp
 tablesVersion=`${tools_dir}/grib_get -p tablesVersion $temp`
 latestOfficial=`${tools_dir}/grib_get -p tablesVersionLatestOfficial $temp`
 if [ "$tablesVersion" != "$latestOfficial" ]; then
-    echo "After conversion to GRIB2, tablesVersion=$tablesVersion. Should be $latestOfficial"
+    echo "ERROR: After conversion to GRIB2, tablesVersion=$tablesVersion. Should be $latestOfficial"
     exit 1
 fi
 

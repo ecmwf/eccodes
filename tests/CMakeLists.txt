@@ -46,6 +46,7 @@ list(APPEND test_c_bins
     grib_ecc-1431
     grib_ecc-1433
     grib_ecc-1764
+    grib_ecc-2005
     grib_ecc-2019
     grib_ecc-2034
     bufr_ecc-517
@@ -112,6 +113,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecpoint
         grib_s2s
         grib_fire
+        grib_mtg2_switch
         grib_generalised_tiles
         # grib_true_imagery
         grib2_wave_spectra
@@ -295,6 +297,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1941
         grib_ecc-1942
         grib_ecc-2002
+        grib_ecc-2005
         grib_ecc-2006
         grib_ecc-2019
         grib_ecc-2034
@@ -346,6 +349,7 @@ if( HAVE_BUILD_TOOLS )
         grib_nearest_test
         pseudo_budg
         grib_gridType
+        grib_gridSpec
         grib_fieldset
         grib_octahedral
         grib_grid_mercator

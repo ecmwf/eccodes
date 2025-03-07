@@ -30,7 +30,7 @@ EOF
 set +e
 ${tools_dir}/grib_filter ${data_dir}/nonexkey.rules ${data_dir}/tigge_pf_ecmwf.grib2 2> $REDIRECT > $REDIRECT
 if [ $? -eq 0 ]; then
-   echo "grib_filter should have failed if key not found" >&2
+   echo "ERROR: grib_filter should have failed if key not found" >&2
    exit 1
 fi
 set -e

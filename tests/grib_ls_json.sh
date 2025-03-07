@@ -42,7 +42,7 @@ grep -q 'not_found' $tempLog
 # so there should not be any instances of 'not_found'
 ${tools_dir}/grib_ls -j $input > $tempLog
 if grep -q 'not_found' $tempLog; then
-  echo "grib_ls: JSON output should not have contained 'not_found'"
+  echo "ERROR: grib_ls: JSON output should not have contained 'not_found'"
   exit 1
 fi
 

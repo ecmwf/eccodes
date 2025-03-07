@@ -36,7 +36,7 @@ test_packing() {
     grib=$1
 
     if [ ! -f $grib ]; then
-        echo "Input data missing"
+        echo "ERROR: Input data missing"
         exit 1
     fi
 
@@ -48,7 +48,7 @@ test_packing() {
         result=`${tools_dir}/grib_get -p packingType $temp`
 
         if [ "$result" != "$packing" ]; then
-            echo "Setting packing did not go right"
+            echo "ERROR: Setting packing did not go right"
             exit 1
         fi
 
