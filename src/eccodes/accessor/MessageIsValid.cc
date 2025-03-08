@@ -239,12 +239,16 @@ int MessageIsValid::check_grid_pl_array()
             return GRIB_WRONG_GRID;
         }
         // Must be symmetric i.e., northern and southern hemispheres must be the same
-        for (size_t i = 0; i < plsize / 2; ++i) {
-            const long pl_start = pl[i];
-            const long pl_end   = pl[plsize - 1 - i];
-            if (pl_start != pl_end) {
-                grib_context_log(c, GRIB_LOG_ERROR, "%s: PL array is not symmetric: pl[%zu]=%ld, pl[%zu]=%ld (gridType=%s)\n",
-                                 TITLE, i, pl_start, plsize - 1 - i, pl_end, gridType);
+        long global = 0;
+        err = grib_get_long(handle_, "global", &global);
+        if (!err && global) {
+            for (size_t i = 0; i < plsize / 2; ++i) {
+                const long pl_start = pl[i];
+                const long pl_end   = pl[plsize - 1 - i];
+                if (pl_start != pl_end) {
+                    grib_context_log(c, GRIB_LOG_ERROR, "%s: PL array is not symmetric: pl[%zu]=%ld, pl[%zu]=%ld (gridType=%s)\n",
+                                    TITLE, i, pl_start, plsize - 1 - i, pl_end, gridType);
+                }
             }
         }
     }
