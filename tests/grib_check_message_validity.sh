@@ -151,6 +151,18 @@ grep -q "Invalid PL array" $tempText
 grib_check_key_equals $tempGrib isMessageValid 0
 
 
+sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+cat >$tempFilt<<EOF
+   meta pl_elem0 element(pl, 0);
+   set pl_elem0 = 21; # Not symmetric, should be 20
+   assert ( isMessageValid == 0 );
+   write;
+EOF
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample 2>$tempText
+grep -q "PL array is not symmetric" $tempText
+grib_check_key_equals $tempGrib isMessageValid 0
+
+
 # Check data values
 # ------------------------------
 # Note: This is actually quite an expensive check .... for now disabled
