@@ -27,6 +27,8 @@
 'base' = {productDefinitionTemplateNumber=33;}
 'base' = {productDefinitionTemplateNumber=34;}
 'base' = {productDefinitionTemplateNumber=35;}
+# chemical templates should appear in gribMix as paramtype base
+# gribMix data won't have the chem mars key !
 'base' = {productDefinitionTemplateNumber=40; MTG2Switch=1;}
 'base' = {productDefinitionTemplateNumber=41; MTG2Switch=1;}
 'base' = {productDefinitionTemplateNumber=42; MTG2Switch=1;}
@@ -43,10 +45,14 @@
 'chemical' = {productDefinitionTemplateNumber=45; MTG2Switch=2;}
 'chemical' = {productDefinitionTemplateNumber=46; MTG2Switch=2;}
 'chemical' = {productDefinitionTemplateNumber=47; MTG2Switch=2;}
-'optical' = {productDefinitionTemplateNumber=48; MTG2Switch=1;}
-'optical' = {productDefinitionTemplateNumber=49; MTG2Switch=1;}
+# chemical optical parameters in gribMix have neither chem nor wavelength
+# therefore they have paramtype base
+'base' = {productDefinitionTemplateNumber=48; MTG2Switch=1;}
+'base' = {productDefinitionTemplateNumber=49; MTG2Switch=1;}
 'chemical_optical' = {productDefinitionTemplateNumber=48; MTG2Switch=2;}
 'chemical_optical' = {productDefinitionTemplateNumber=49; MTG2Switch=2;}
+# chemical templates should appear in gribMix as paramtype base
+# gribMix data won't have the chem mars key !
 'base' = {productDefinitionTemplateNumber=50; MTG2Switch=1;}
 'chemical' = {productDefinitionTemplateNumber=50; MTG2Switch=2;}
 'base' = {productDefinitionTemplateNumber=51;}
@@ -54,6 +60,8 @@
 'base' = {productDefinitionTemplateNumber=54;}
 'base' = {productDefinitionTemplateNumber=55;}
 'base' = {productDefinitionTemplateNumber=56;}
+# chemical templates should appear in gribMix as paramtype base
+# gribMix data won't have the chem mars key !
 'base' = {productDefinitionTemplateNumber=57; MTG2Switch=1;}
 'base' = {productDefinitionTemplateNumber=58; MTG2Switch=1;}
 'chemical' = {productDefinitionTemplateNumber=57; MTG2Switch=2;}
@@ -63,6 +71,8 @@
 'base' = {productDefinitionTemplateNumber=61;}
 'base' = {productDefinitionTemplateNumber=62;}
 'base' = {productDefinitionTemplateNumber=63;}
+# chemical templates should appear in gribMix as paramtype base
+# gribMix data won't have the chem mars key !
 'base' = {productDefinitionTemplateNumber=67; MTG2Switch=1;}
 'base' = {productDefinitionTemplateNumber=68; MTG2Switch=1;}
 'chemical' = {productDefinitionTemplateNumber=67; MTG2Switch=2;}
@@ -71,6 +81,8 @@
 'base' = {productDefinitionTemplateNumber=71;}
 'base' = {productDefinitionTemplateNumber=72;}
 'base' = {productDefinitionTemplateNumber=73;}
+# chemical templates should appear in gribMix as paramtype base
+# gribMix data won't have the chem mars key !
 'base' = {productDefinitionTemplateNumber=76; MTG2Switch=1;}
 'base' = {productDefinitionTemplateNumber=77; MTG2Switch=1;}
 'base' = {productDefinitionTemplateNumber=78; MTG2Switch=1;}
@@ -79,10 +91,14 @@
 'chemical' = {productDefinitionTemplateNumber=77; MTG2Switch=2;}
 'chemical' = {productDefinitionTemplateNumber=78; MTG2Switch=2;}
 'chemical' = {productDefinitionTemplateNumber=79; MTG2Switch=2;}
-'optical' = {productDefinitionTemplateNumber=80; MTG2Switch=1;}
-'optical' = {productDefinitionTemplateNumber=81; MTG2Switch=1;}
+# chemical optical parameters in gribMix have neither chem nor wavelength
+# therefore they have paramtype base
+'base' = {productDefinitionTemplateNumber=80; MTG2Switch=1;}
+'base' = {productDefinitionTemplateNumber=81; MTG2Switch=1;}
 'chemical_optical' = {productDefinitionTemplateNumber=80; MTG2Switch=2;}
 'chemical_optical' = {productDefinitionTemplateNumber=81; MTG2Switch=2;}
+# chemical templates should appear in gribMix as paramtype base
+# gribMix data won't have the chem mars key !
 'base' = {productDefinitionTemplateNumber=82; MTG2Switch=1;}
 'base' = {productDefinitionTemplateNumber=83; MTG2Switch=1;}
 'base' = {productDefinitionTemplateNumber=84; MTG2Switch=1;}
@@ -119,10 +135,16 @@
 'base' = {productDefinitionTemplateNumber=105;}
 'base' = {productDefinitionTemplateNumber=106;}
 'base' = {productDefinitionTemplateNumber=107;}
-'optical' = {productDefinitionTemplateNumber=108;}
-'optical' = {productDefinitionTemplateNumber=109;}
-'optical' = {productDefinitionTemplateNumber=110;}
-'optical' = {productDefinitionTemplateNumber=111;}
+# optical parameters in gribMix have no wavelength mars key
+# therefore paramtype base
+'base' = {productDefinitionTemplateNumber=108; MTG2Switch=1;}
+'base' = {productDefinitionTemplateNumber=109; MTG2Switch=1;}
+'base' = {productDefinitionTemplateNumber=110; MTG2Switch=1;}
+'base' = {productDefinitionTemplateNumber=111; MTG2Switch=1;}
+'optical' = {productDefinitionTemplateNumber=108; MTG2Switch=2;}
+'optical' = {productDefinitionTemplateNumber=109; MTG2Switch=2;}
+'optical' = {productDefinitionTemplateNumber=110; MTG2Switch=2;}
+'optical' = {productDefinitionTemplateNumber=111; MTG2Switch=2;}
 'base' = {productDefinitionTemplateNumber=112;}
 'base' = {productDefinitionTemplateNumber=113;}
 'base' = {productDefinitionTemplateNumber=114;}
@@ -135,6 +157,8 @@
 'base' = {productDefinitionTemplateNumber=121;}
 'base' = {productDefinitionTemplateNumber=122;}
 'base' = {productDefinitionTemplateNumber=123;}
+# chemical templates should appear in gribMix as paramtype base
+# gribMix data won't have the chem mars key !
 'base' = {productDefinitionTemplateNumber=124; MTG2Switch=1;}
 'base' = {productDefinitionTemplateNumber=125; MTG2Switch=1;}
 'base' = {productDefinitionTemplateNumber=126; MTG2Switch=1;}
