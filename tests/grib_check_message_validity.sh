@@ -163,6 +163,15 @@ grep -q "PL array is not symmetric" $tempText
 grib_check_key_equals $tempGrib isMessageValid 0
 
 
+# Check reduced Gaussian grid
+# interpretationOfNumberOfPoints
+# ------------------------------
+sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+${tools_dir}/grib_set -s interpretationOfNumberOfPoints=0 $sample $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "interpretationOfNumberOfPoints should be 1" $tempText
+
+
 # Check data values
 # ------------------------------
 # Note: This is actually quite an expensive check .... for now disabled

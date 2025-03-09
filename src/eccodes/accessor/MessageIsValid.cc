@@ -202,6 +202,14 @@ int MessageIsValid::check_grid_pl_array()
         return GRIB_WRONG_GRID;
     }
 
+    long interpretationOfNumberOfPoints = 0;
+    err = grib_get_long_internal(handle_, "interpretationOfNumberOfPoints", &interpretationOfNumberOfPoints);
+    if (interpretationOfNumberOfPoints != 1) {
+        grib_context_log(c, GRIB_LOG_ERROR,
+            "%s: For a reduced grid, interpretationOfNumberOfPoints should be 1 (See Code Table 3.11)", TITLE);
+        return GRIB_WRONG_GRID;
+    }
+
     pl = (long*)grib_context_malloc_clear(c, sizeof(long) * plsize);
     if (!pl) return GRIB_OUT_OF_MEMORY;
     if ((err = grib_get_long_array_internal(handle_, "pl", pl, &plsize)) != GRIB_SUCCESS)
