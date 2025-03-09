@@ -45,10 +45,10 @@
 'chemical' = {productDefinitionTemplateNumber=45; MTG2Switch=2;}
 'chemical' = {productDefinitionTemplateNumber=46; MTG2Switch=2;}
 'chemical' = {productDefinitionTemplateNumber=47; MTG2Switch=2;}
-# chemical optical parameters in gribMix have neither chem nor wavelength
-# therefore they have paramtype base
-'base' = {productDefinitionTemplateNumber=48; MTG2Switch=1;}
-'base' = {productDefinitionTemplateNumber=49; MTG2Switch=1;}
+# chemical optical parameters in gribMix have no chem 
+# therefore they have paramtype optical
+'optical' = {productDefinitionTemplateNumber=48; MTG2Switch=1;}
+'optical' = {productDefinitionTemplateNumber=49; MTG2Switch=1;}
 'chemical_optical' = {productDefinitionTemplateNumber=48; MTG2Switch=2;}
 'chemical_optical' = {productDefinitionTemplateNumber=49; MTG2Switch=2;}
 # chemical templates should appear in gribMix as paramtype base
@@ -91,10 +91,10 @@
 'chemical' = {productDefinitionTemplateNumber=77; MTG2Switch=2;}
 'chemical' = {productDefinitionTemplateNumber=78; MTG2Switch=2;}
 'chemical' = {productDefinitionTemplateNumber=79; MTG2Switch=2;}
-# chemical optical parameters in gribMix have neither chem nor wavelength
-# therefore they have paramtype base
-'base' = {productDefinitionTemplateNumber=80; MTG2Switch=1;}
-'base' = {productDefinitionTemplateNumber=81; MTG2Switch=1;}
+# chemical optical parameters in gribMix have no chem
+# therefore they have paramtype optical
+'optical' = {productDefinitionTemplateNumber=80; MTG2Switch=1;}
+'optical' = {productDefinitionTemplateNumber=81; MTG2Switch=1;}
 'chemical_optical' = {productDefinitionTemplateNumber=80; MTG2Switch=2;}
 'chemical_optical' = {productDefinitionTemplateNumber=81; MTG2Switch=2;}
 # chemical templates should appear in gribMix as paramtype base
@@ -135,16 +135,10 @@
 'base' = {productDefinitionTemplateNumber=105;}
 'base' = {productDefinitionTemplateNumber=106;}
 'base' = {productDefinitionTemplateNumber=107;}
-# optical parameters in gribMix have no wavelength mars key
-# therefore paramtype base
-'base' = {productDefinitionTemplateNumber=108; MTG2Switch=1;}
-'base' = {productDefinitionTemplateNumber=109; MTG2Switch=1;}
-'base' = {productDefinitionTemplateNumber=110; MTG2Switch=1;}
-'base' = {productDefinitionTemplateNumber=111; MTG2Switch=1;}
-'optical' = {productDefinitionTemplateNumber=108; MTG2Switch=2;}
-'optical' = {productDefinitionTemplateNumber=109; MTG2Switch=2;}
-'optical' = {productDefinitionTemplateNumber=110; MTG2Switch=2;}
-'optical' = {productDefinitionTemplateNumber=111; MTG2Switch=2;}
+'optical' = {productDefinitionTemplateNumber=108;}
+'optical' = {productDefinitionTemplateNumber=109;}
+'optical' = {productDefinitionTemplateNumber=110;}
+'optical' = {productDefinitionTemplateNumber=111;}
 'base' = {productDefinitionTemplateNumber=112;}
 'base' = {productDefinitionTemplateNumber=113;}
 'base' = {productDefinitionTemplateNumber=114;}
