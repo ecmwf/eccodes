@@ -198,6 +198,17 @@ grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "Invalid date/time" $tempText
 
 
+# Check spectral data
+# ------------------------------
+${tools_dir}/grib_set -s bitsPerValue=0 $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "Spectral fields cannot have bitsPerValue=0" $tempText
+
+${tools_dir}/grib_set -s bitmapPresent=1 $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "Spectral fields cannot have a bitmap" $tempText
+
+
 # Only GRIB supported for now
 # -----------------------------
 set +e
