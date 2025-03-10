@@ -299,6 +299,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2002
         grib_ecc-2005
         grib_ecc-2006
+        grib_ecc-2013
         grib_ecc-2019
         grib_ecc-2034
         grib_modelName
