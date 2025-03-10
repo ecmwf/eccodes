@@ -1,5 +1,9 @@
 # Concept paramtype
+#
+# parameters in the wave part of table 4.2
 'wave' = {discipline=10; parameterCategory=0;}
+# some specific wave parameters outside the wave table
+# to be replaced if entries in wave part of 4.2 available
 'wave' = {
           true = is_one_of(paramId,140101,141101,143101,144101,145101,140102,141102,143102,144102,145102);
           true = is_one_of(MTG2Switch,1,2);
@@ -170,6 +174,21 @@
 'base' = {productDefinitionTemplateNumber=134;}
 'base' = {productDefinitionTemplateNumber=135;}
 'base' = {productDefinitionTemplateNumber=136;}
+'base' = {productDefinitionTemplateNumber=137;}
+'base' = {productDefinitionTemplateNumber=138;}
+'wave' = {productDefinitionTemplateNumber=139;}
+'wave' = {productDefinitionTemplateNumber=140;}
+'wave_spectra' = {productDefinitionTemplateNumber=141;}
+'wave_spectra' = {productDefinitionTemplateNumber=142;}
+'base' = {productDefinitionTemplateNumber=143;}
+'wave' = {productDefinitionTemplateNumber=144;}
+'wave' = {productDefinitionTemplateNumber=145;}
+'base' = {productDefinitionTemplateNumber=146;}
+'base' = {productDefinitionTemplateNumber=147;}
+'base' = {productDefinitionTemplateNumber=148;}
+'base' = {productDefinitionTemplateNumber=149;}
+'base' = {productDefinitionTemplateNumber=150;}
+'base' = {productDefinitionTemplateNumber=151;}
 'base' = {productDefinitionTemplateNumber=254;}
 'base' = {productDefinitionTemplateNumber=311;}
 'base' = {productDefinitionTemplateNumber=1000;}
