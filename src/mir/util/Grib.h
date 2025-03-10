@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "eccodes/eccodes.h"
+#include <eccodes.h>
 
 #include <sstream>
 #include <string>
