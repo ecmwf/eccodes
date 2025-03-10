@@ -21,7 +21,9 @@ integer, external :: grib_f_keys_iterator_get_name, &
                      grib_f_keys_iterator_rewind
 integer, external :: grib_f_new_from_message, &
                      grib_f_new_from_message_int, &
-                     grib_f_new_from_samples, &
+		     grib_f_new_from_message_no_copy, &
+                     grib_f_new_from_message_no_copy_int, &
+		     grib_f_new_from_samples, &
                      codes_bufr_f_new_from_samples, &
                      grib_f_read_any_from_file, &
                      any_f_new_from_file, &
@@ -77,7 +79,7 @@ integer, external :: grib_f_set_int, grib_f_set_int_array, &
                      grib_f_gribex_mode_on,grib_f_gribex_mode_off, &
                      codes_f_bufr_multi_element_constant_arrays_on,codes_f_bufr_multi_element_constant_arrays_off, &
                      grib_f_find_nearest_single,grib_f_find_nearest_four_single,grib_f_find_nearest_multiple
-integer, external :: grib_f_get_message_size, grib_f_copy_message, grib_f_count_in_file
+integer, external :: grib_f_get_message_size, grib_f_copy_message, grib_f_get_message, grib_f_count_in_file
 integer, external :: grib_f_write, grib_f_multi_write, grib_f_multi_append
 integer, external :: grib_f_clone, grib_f_copy_namespace
 external :: grib_f_check , grib_f_set_debug, grib_f_set_data_quality_checks
