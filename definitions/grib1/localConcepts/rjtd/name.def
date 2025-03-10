@@ -525,8 +525,8 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 5 ;
 	}
-#Geometrical height
-'Geometrical height' = {
+#Geometrical height above ground
+'Geometrical height above ground' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 8 ;
 	}

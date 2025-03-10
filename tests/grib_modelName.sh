@@ -60,6 +60,14 @@ ${tools_dir}/grib_set -s class=ai,type=pf,stream=enfo,modelName='aifs-ens-crps' 
 grib_check_key_equals $tempGrib mars.model 'aifs-ens-crps'
 grib_check_key_equals $tempGrib backgroundGeneratingProcessIdentifier 4
 
+# ECC-2039
+# Should be able to add section 2 and set modelName
+grib_check_key_equals $sample localUsePresent 0
+${tools_dir}/grib_set -s setLocalDefinition=1,marsClass=ai,model=aifs-ens $sample $tempGrib
+grib_check_key_equals $tempGrib backgroundProcess 2
+
+
+# modelVersion should be read-only
 set +e
 ${tools_dir}/grib_set -s modelVersion=cy48r1 $sample $tempGrib 2>$tempLog
 status=$?

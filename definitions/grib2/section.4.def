@@ -98,7 +98,7 @@ if (productDefinitionTemplateNumber >= 32768) {
    template productDefinition "grib2/templates/template.4.[productDefinitionTemplateNumber:l].def";
 }
 
-if (defined(marsStream) && defined(marsType)) {
+if ( setLocalDefinition || (defined(marsStream) && defined(marsType)) ) {
    template_nofail marsKeywords1 "mars/grib.[marsStream:s].[marsType:s].def";
 }
 

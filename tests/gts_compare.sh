@@ -52,7 +52,7 @@ ${tools_dir}/gts_compare -v -d -f $gts_file $fGtsTmp
 status=$?
 set -e
 if [ $status -eq 0 ]; then
-   echo "gts_compare should have failed if files are different" >&2
+   echo "ERROR: gts_compare should have failed if files are different" >&2
    exit 1
 fi
 # The -d option should have created these two files

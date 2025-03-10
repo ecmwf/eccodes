@@ -151,11 +151,34 @@ grep -q "Invalid PL array" $tempText
 grib_check_key_equals $tempGrib isMessageValid 0
 
 
+sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+cat >$tempFilt<<EOF
+   meta pl_elem0 element(pl, 0);
+   set pl_elem0 = 21; # Not symmetric, should be 20
+   assert ( isMessageValid == 0 );
+   write;
+EOF
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample 2>$tempText
+grep -q "PL array is not symmetric" $tempText
+grib_check_key_equals $tempGrib isMessageValid 0
+
+
+# Check reduced Gaussian grid
+# interpretationOfNumberOfPoints
+# ------------------------------
+sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+${tools_dir}/grib_set -s interpretationOfNumberOfPoints=0 $sample $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "interpretationOfNumberOfPoints should be 1" $tempText
+
+
 # Check data values
 # ------------------------------
-${tools_dir}/grib_set -s bitsPerValue=25 $data_dir/sample.grib2 $tempGrib
-grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
-grep -q "Data section size mismatch" $tempText
+# Note: This is actually quite an expensive check .... for now disabled
+#
+# ${tools_dir}/grib_set -s bitsPerValue=25 $data_dir/sample.grib2 $tempGrib
+# grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+# grep -q "Data section size mismatch" $tempText
 
 
 # Check number of values, missing etc
@@ -173,6 +196,17 @@ grep -q "Invalid date/time" $tempText
 ${tools_dir}/grib_set -s date=20250229 $data_dir/sample.grib2 $tempGrib
 grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "Invalid date/time" $tempText
+
+
+# Check spectral data
+# ------------------------------
+${tools_dir}/grib_set -s bitsPerValue=0 $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "Spectral fields cannot have bitsPerValue=0" $tempText
+
+${tools_dir}/grib_set -s bitmapPresent=1 $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "Spectral fields cannot have a bitmap" $tempText
 
 
 # Only GRIB supported for now
