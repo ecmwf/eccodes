@@ -2241,9 +2241,11 @@ int grib_f_is_defined_(int* gid, char* key,int* isDefined,int len)
 {
     grib_handle *h = get_handle(*gid);
     char buf[1024];
-    if(!h)  return GRIB_INVALID_GRIB;
+    if(!h) return GRIB_INVALID_GRIB;
+    const char* theKey = cast_char(buf, key, len);
+    if (!theKey) return GRIB_INVALID_ARGUMENT;
 
-    *isDefined=grib_is_defined(h, cast_char(buf,key,len));
+    *isDefined = grib_is_defined(h, theKey);
     return GRIB_SUCCESS;
 }
 
