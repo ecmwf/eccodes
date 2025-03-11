@@ -17,7 +17,12 @@
 'heightAboveSea' = {indicatorOfTypeOfLevel=103;}
 'heightAboveSeaLayer' = {indicatorOfTypeOfLevel=104;}
 'heightAboveGroundHighPrecision' = {indicatorOfTypeOfLevel=125;}
+
 'heightAboveGround' = {indicatorOfTypeOfLevel=105;}
+'heightAboveGroundAt0metres' = {indicatorOfTypeOfLevel=105;level=0;}
+'heightAboveGroundAt2metres' = {indicatorOfTypeOfLevel=105;level=2;}
+'heightAboveGroundAt10metres' = {indicatorOfTypeOfLevel=105;level=10;}
+
 'heightAboveGroundLayer' = {indicatorOfTypeOfLevel=106;}
 'sigma' = {indicatorOfTypeOfLevel=107;}
 'sigmaLayer' = {indicatorOfTypeOfLevel=108;}

@@ -46,6 +46,14 @@ concept vertical.typeOfLevel (unknown) {
   'heightAboveSea' = {typeOfFirstFixedSurface=102; typeOfSecondFixedSurface=255;}
   'heightAboveSeaLayer' = {typeOfFirstFixedSurface=102; typeOfSecondFixedSurface=102;}
   'heightAboveGround' = {typeOfFirstFixedSurface=103; typeOfSecondFixedSurface=255;}
+
+  'heightAboveGroundAt0metres'   = {typeOfFirstFixedSurface=103; scaleFactorOfFirstFixedSurface=0;
+                                  scaledValueOfFirstFixedSurface=0;typeOfSecondFixedSurface=255;}
+  'heightAboveGroundAt2metres'   = {typeOfFirstFixedSurface=103; scaleFactorOfFirstFixedSurface=0;
+                                  scaledValueOfFirstFixedSurface=2; typeOfSecondFixedSurface=255;}
+  'heightAboveGroundAt10metres'  = {typeOfFirstFixedSurface=103; scaleFactorOfFirstFixedSurface=0;
+                                  scaledValueOfFirstFixedSurface=10; typeOfSecondFixedSurface=255;}
+
   'heightAboveGroundLayer' = {typeOfFirstFixedSurface=103;typeOfSecondFixedSurface=103;}
   'sigma' = {typeOfFirstFixedSurface=104; typeOfSecondFixedSurface=255;}
   'sigmaLayer' = {typeOfFirstFixedSurface=104; typeOfSecondFixedSurface=104;}
