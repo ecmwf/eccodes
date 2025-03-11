@@ -144,10 +144,10 @@
 'optical' = {productDefinitionTemplateNumber=110;}
 'optical' = {productDefinitionTemplateNumber=111;}
 'base' = {productDefinitionTemplateNumber=112;}
-'base' = {productDefinitionTemplateNumber=113;}
-'base' = {productDefinitionTemplateNumber=114;}
-'base' = {productDefinitionTemplateNumber=115;}
-'base' = {productDefinitionTemplateNumber=116;}
+'tile' = {productDefinitionTemplateNumber=113;}
+'tile' = {productDefinitionTemplateNumber=114;}
+'tile' = {productDefinitionTemplateNumber=115;}
+'tile' = {productDefinitionTemplateNumber=116;}
 'base' = {productDefinitionTemplateNumber=117;}
 'base' = {productDefinitionTemplateNumber=118;}
 'base' = {productDefinitionTemplateNumber=119;}
