@@ -62,7 +62,7 @@
 'base' = {productDefinitionTemplateNumber=51;}
 'base' = {productDefinitionTemplateNumber=53;}
 'base' = {productDefinitionTemplateNumber=54;}
-'base' = {productDefinitionTemplateNumber=55;}
+'tile' = {productDefinitionTemplateNumber=55;}
 'base' = {productDefinitionTemplateNumber=56;}
 # chemical templates should appear in gribMix as paramtype base
 # gribMix data won't have the chem mars key !
@@ -70,11 +70,11 @@
 'base' = {productDefinitionTemplateNumber=58; MTG2Switch=1;}
 'chemical' = {productDefinitionTemplateNumber=57; MTG2Switch=2;}
 'chemical' = {productDefinitionTemplateNumber=58; MTG2Switch=2;}
-'base' = {productDefinitionTemplateNumber=59;}
+'tile' = {productDefinitionTemplateNumber=59;}
 'base' = {productDefinitionTemplateNumber=60;}
 'base' = {productDefinitionTemplateNumber=61;}
-'base' = {productDefinitionTemplateNumber=62;}
-'base' = {productDefinitionTemplateNumber=63;}
+'tile' = {productDefinitionTemplateNumber=62;}
+'tile' = {productDefinitionTemplateNumber=63;}
 # chemical templates should appear in gribMix as paramtype base
 # gribMix data won't have the chem mars key !
 'base' = {productDefinitionTemplateNumber=67; MTG2Switch=1;}
