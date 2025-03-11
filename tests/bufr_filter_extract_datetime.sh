@@ -200,7 +200,7 @@ ${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr
 status=$?
 set -e
 if [ $status -eq 0 ]; then
-   echo "Bad start date: bufr_filter should have failed!"
+   echo "ERROR: Bad start date: bufr_filter should have failed!"
    exit 1
 fi
 
@@ -235,7 +235,7 @@ ${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr
 status=$?
 set -e
 if [ $status -eq 0 ]; then
-   echo "End date before start date: bufr_filter should have failed!"
+   echo "ERROR: End date before start date: bufr_filter should have failed!"
    exit 1
 fi
 
@@ -300,6 +300,17 @@ generate_filter 20121031000000 20121031000001 60
 ${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $temp 2>$errlog
 grep -q "WARNING.*Key '#1#second' is missing" $errlog
 rm -f $temp $errlog
+
+
+#-----------------------------------------------------------
+echo "Test ECC-2017 ..."
+# DateTime extraction doesn't work for singleton intervals
+#-----------------------------------------------------------
+inputBufr="b003_56.bufr"
+generate_filter 20121031001417 20121031001417 1
+${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr
+
+
 
 # Clean up
 rm -f $outputRef $outputFilt $outputBufr $fLog $fRules

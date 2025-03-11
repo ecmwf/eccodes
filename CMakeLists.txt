@@ -219,7 +219,7 @@ ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
 
 ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "Enable memory management" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "Enable memory alignment"  DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE TIMER               DESCRIPTION "Enable timer" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE TIMER               DESCRIPTION "Enable timer (deprecated)" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "Enable thread-safety using POSIX threads" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "Enable thread-safety using OpenMP threads" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE EXTRA_TESTS         DESCRIPTION "Enable extended regression testing" DEFAULT OFF ADVANCED )
@@ -277,12 +277,6 @@ endif()
 
 ###############################################################################
 # other options
-
-if( HAVE_TIMER )
-    set( ECCODES_TIMER 1 )
-else()
-    set( ECCODES_TIMER 0 )
-endif()
 
 set( IS_BIG_ENDIAN 0 )
 if( ECCODES_BIG_ENDIAN )
@@ -415,7 +409,11 @@ endif()
 
 ### export package to other ecbuild packages
 
-set( ECCODES_INCLUDE_DIRS    ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src )
+set( ECCODES_INCLUDE_DIRS
+  ${CMAKE_CURRENT_BINARY_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/eccodes
+  ${CMAKE_CURRENT_BINARY_DIR}/src/eccodes
+)
 set( ECCODES_LIBRARIES       eccodes )
 
 get_directory_property( COMPILE_DEFINITIONS ECCODES_DEFINITIONS )
@@ -469,7 +467,7 @@ add_subdirectory( ifs_samples ) # must come after samples
 ecbuild_dont_pack( FILES .cproject .project )
 ecbuild_dont_pack( DIRS
     experimental deprecated doxygen confluence tests/deprecated tests/tests.ecmwf
-    src/deprecated tools/deprecated ifs_samples/grib1_mlgrib2_ieee32
+    src/eccodes/deprecated tools/deprecated ifs_samples/grib1_mlgrib2_ieee32
     examples/examples.dev examples/extra examples/deprecated bamboo
     fortran/fortranCtypes share/eccodes  .settings )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
@@ -537,3 +535,10 @@ ecbuild_info(" For Python3 support, you must install the Python bindings.")
 ecbuild_info(" See:")
 ecbuild_info("  https://confluence.ecmwf.int/display/ECC/ecCodes+installation")
 ecbuild_info("")
+
+if( HAVE_TIMER )
+    ecbuild_deprecate( "Option ENABLE_TIMER is ignored and will be removed in a future release." )
+    set( ECCODES_TIMER 1 )
+else()
+    set( ECCODES_TIMER 0 )
+endif()

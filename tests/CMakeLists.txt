@@ -46,7 +46,9 @@ list(APPEND test_c_bins
     grib_ecc-1431
     grib_ecc-1433
     grib_ecc-1764
+    grib_ecc-2005
     grib_ecc-2019
+    grib_ecc-2034
     bufr_ecc-517
     bufr_ecc-1288
     bufr_ecc-2011
@@ -111,6 +113,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecpoint
         grib_s2s
         grib_fire
+        grib_mtg2_switch
         grib_generalised_tiles
         # grib_true_imagery
         grib2_wave_spectra
@@ -176,6 +179,7 @@ if( HAVE_BUILD_TOOLS )
     # These tests require data downloads
     # and/or take much longer
     list(APPEND tests_extra
+        grib_isGridded_isSpectral
         grib_data_quality_checks
         grib_check_message_validity
         grib_update_sections_lengths
@@ -200,6 +204,7 @@ if( HAVE_BUILD_TOOLS )
         grib2_paramType
         grib2_datasetForLocal
         grib_ifsParam
+        filter_dump_content
         wmo_read_bufr_from_file
         wmo_read_gts_from_file
         wmo_read_any_from_file
@@ -220,6 +225,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_get
         bufr_operators
         bufr_filter_misc
+        bufr_filter_datetime
         bufr_filter_fail
         bufr_filter_extract_subsets
         bufr_filter_extract_datetime
@@ -268,6 +274,8 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-1785
         bufr_ecc-1958
         bufr_ecc-1938
+        bufr_ecc-2030
+        bufr_ecc-2037
         grib_488
         grib_ecc-490
         grib_ecc-756
@@ -292,8 +300,11 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1941
         grib_ecc-1942
         grib_ecc-2002
+        grib_ecc-2005
         grib_ecc-2006
+        grib_ecc-2013
         grib_ecc-2019
+        grib_ecc-2034
         grib_modelName
         grib_sub_hourly
         grib_set_bytes
@@ -342,6 +353,7 @@ if( HAVE_BUILD_TOOLS )
         grib_nearest_test
         pseudo_budg
         grib_gridType
+        grib_gridSpec
         grib_fieldset
         grib_octahedral
         grib_grid_mercator
@@ -549,7 +561,7 @@ if( HAVE_BUILD_TOOLS )
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/codes_export_resource.sh )
 
 
-    # Performance test. Must have -DENABLE_TIMER=ON
+    # Performance test
     ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
                       TYPE SCRIPT
                       CONDITION ENABLE_EXTRA_TESTS

@@ -665,8 +665,8 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 23 ;
 	}
-#0 degrees C isothermal level (atm)
-'0 degrees C isothermal level (atm)' = {
+#Geometric height of 0 degrees C atmospheric isothermal level above ground
+'Geometric height of 0 degrees C atmospheric isothermal level above ground' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 24 ;

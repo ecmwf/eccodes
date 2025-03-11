@@ -728,17 +728,17 @@
 	 table2Version = 1 ;
 	 indicatorOfParameter = 5 ;
 	}
-#Geometrical height
+#Geometrical height above ground
 '3008' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 8 ;
 	}
-#Geometrical height
+#Geometrical height above ground
 '3008' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 8 ;
 	}
-#Geometrical height
+#Geometrical height above ground
 '3008' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 8 ;

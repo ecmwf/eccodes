@@ -15,10 +15,23 @@ tempText=temp.$label.txt
 tempFilt=temp.$label.filt
 
 grib_check_key_equals $ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl isMessageValid 1
-grib_check_key_equals $ECCODES_SAMPLES_PATH/GRIB2.tmpl isMessageValid 1
-grib_check_key_equals $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib1.tmpl isMessageValid 1
-grib_check_key_equals $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib2.tmpl isMessageValid 1
-grib_check_key_equals $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl isMessageValid 1
+grib_check_key_equals $ECCODES_SAMPLES_PATH/GRIB2.tmpl                  isMessageValid 1
+grib_check_key_equals $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib1.tmpl   isMessageValid 1
+grib_check_key_equals $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib2.tmpl   isMessageValid 1
+grib_check_key_equals $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl            isMessageValid 1
+
+if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
+   grib_check_key_equals $ECCODES_SAMPLES_PATH/lambert_bf_grib2.tmpl    isMessageValid 1
+fi
+
+
+IFS_SAMPLES_ROOT=${proj_dir}/ifs_samples
+grib_check_key_equals $IFS_SAMPLES_ROOT/grib1_mlgrib2_ccsds/gg_ml.tmpl        isMessageValid 1
+grib_check_key_equals $IFS_SAMPLES_ROOT/grib1_mlgrib2_ccsds/gg_sfc_grib2.tmpl isMessageValid 1
+grib_check_key_equals $IFS_SAMPLES_ROOT/grib1_mlgrib2_ccsds/sh_ml.tmpl        isMessageValid 1
+
+# Do it with debug enabled
+ECCODES_DEBUG=-1  ${tools_dir}/grib_get -p isMessageValid $ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 
 # Bad sections
@@ -117,6 +130,13 @@ grib_check_key_equals $tempGrib isMessageValid 0
 grib_check_key_equals $sample   isMessageValid 1
 
 
+# Check gridType and packingType
+# ------------------------------
+${tools_dir}/grib_set -s packingType=grid_simple $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "Mismatch between gridType .* and packingType" $tempText
+
+
 # Check reduced Gaussian grid pl
 # ------------------------------
 sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
@@ -131,11 +151,72 @@ grep -q "Invalid PL array" $tempText
 grib_check_key_equals $tempGrib isMessageValid 0
 
 
+sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+cat >$tempFilt<<EOF
+   meta pl_elem0 element(pl, 0);
+   set pl_elem0 = 21; # Not symmetric, should be 20
+   assert ( isMessageValid == 0 );
+   write;
+EOF
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample 2>$tempText
+grep -q "PL array is not symmetric" $tempText
+grib_check_key_equals $tempGrib isMessageValid 0
+
+
+# Check reduced Gaussian grid
+# interpretationOfNumberOfPoints
+# ------------------------------
+sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+${tools_dir}/grib_set -s interpretationOfNumberOfPoints=0 $sample $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "interpretationOfNumberOfPoints should be 1" $tempText
+
+
 # Check data values
 # ------------------------------
-${tools_dir}/grib_set -s bitsPerValue=25 $data_dir/sample.grib2 $tempGrib
+# Note: This is actually quite an expensive check .... for now disabled
+#
+# ${tools_dir}/grib_set -s bitsPerValue=25 $data_dir/sample.grib2 $tempGrib
+# grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+# grep -q "Data section size mismatch" $tempText
+
+
+# Check number of values, missing etc
+# -----------------------------------
+${tools_dir}/grib_set -s values=5,numberOfDataPoints=55 $data_dir/sample.grib2 $tempGrib
 grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
-grep -q "Data section size mismatch" $tempText
+grep -q "numberOfCodedValues + numberOfMissing != numberOfDataPoints" $tempText
+
+
+# Check date/time
+# -----------------------------------
+${tools_dir}/grib_set -s month=13 $data_dir/sample.grib2 $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "Invalid date/time" $tempText
+${tools_dir}/grib_set -s date=20250229 $data_dir/sample.grib2 $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "Invalid date/time" $tempText
+
+
+# Check spectral data
+# ------------------------------
+${tools_dir}/grib_set -s bitsPerValue=0 $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "Spectral fields cannot have bitsPerValue=0" $tempText
+
+${tools_dir}/grib_set -s bitmapPresent=1 $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "Spectral fields cannot have a bitmap" $tempText
+
+
+# Only GRIB supported for now
+# -----------------------------
+set +e
+${tools_dir}/bufr_get -p isMessageValid $ECCODES_SAMPLES_PATH/BUFR4.tmpl 2>$tempText
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Validity checks only implemented for GRIB messages" $tempText
 
 
 # Clean up

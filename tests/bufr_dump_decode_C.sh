@@ -71,8 +71,8 @@ do
   if [ $COMPILE_AND_RUN -eq 1 ]; then
     # TODO: eccodes.h and the generated eccodes_version.h need to be pointed to
     #       Should be copied over to the build/include dir
-    INCL_DIR1=${proj_dir}/src
-    INCL_DIR2=${data_dir}/../src
+    INCL_DIR1=${proj_dir}/src/eccodes
+    INCL_DIR2=${data_dir}/../src/eccodes
 
     $COMPILER -o $tempExe $tempSrc -I${INCL_DIR1} -I${INCL_DIR2} $FLAGS_COMPILER $FLAGS_LINKER
 

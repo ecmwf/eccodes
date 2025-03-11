@@ -36,6 +36,11 @@ cat <<EOF
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------
+# This is the test for the JIRA issue ECC-XXXX
+# < Add issue summary here >
+# ---------------------------------------------------------
+
 REDIRECT=/dev/null
 
 label="prod_${TEST_TITLE}_test"  # Change prod to bufr or grib etc
