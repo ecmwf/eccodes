@@ -6221,12 +6221,14 @@
 	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 16 ;
 	}
-#Geometric height of atmospheric isothermal level above ground
-'Geometric height of atmospheric isothermal level above ground' = {
+#Geometric height of 3 degrees C atmospheric isothermal level above ground
+'Geometric height of 3 degrees C atmospheric isothermal level above ground' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27615 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
 #Roof temperature
 'Roof temperature' = {
@@ -8925,6 +8927,16 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean geometric height of 3 degrees C atmospheric isothermal level above ground
+'Time-mean geometric height of 3 degrees C atmospheric isothermal level above ground' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27615 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-integrated land surface heat net flux
 'Time-integrated land surface heat net flux' = {
 	 discipline = 2 ;
@@ -10806,6 +10818,16 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 47 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum geometric height of 3 degrees C atmospheric isothermal level above ground
+'Time-maximum geometric height of 3 degrees C atmospheric isothermal level above ground' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27615 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-minimum temperature tendency due to short-wave radiation
@@ -12703,6 +12725,16 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum geometric height of 3 degrees C atmospheric isothermal level above ground
+'Time-minimum geometric height of 3 degrees C atmospheric isothermal level above ground' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27615 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-standard-deviation temperature tendency due to short-wave radiation
 'Time-standard-deviation temperature tendency due to short-wave radiation' = {
 	 discipline = 0 ;
@@ -14597,6 +14629,16 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 47 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation geometric height of 3 degrees C atmospheric isothermal level above ground
+'Time-standard-deviation geometric height of 3 degrees C atmospheric isothermal level above ground' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27615 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Cross sectional area of flow in channel
