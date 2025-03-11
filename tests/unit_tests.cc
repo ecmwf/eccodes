@@ -811,7 +811,7 @@ void test_codes_context_set_debug()
     printf("\tEnable debugging...\n");
     grib_context_set_debug(context, -1);
 
-    grib_handle* h = grib_handle_new_from_samples(context, "GRIB2");
+    grib_handle* h = grib_handle_new_from_samples(context, "GRIB1");
     if (!h) return;
     err = grib_set_long(h, "paramId", 167);
     ECCODES_ASSERT(!err);
@@ -819,7 +819,7 @@ void test_codes_context_set_debug()
     printf("\tDisable debugging...\n");
     grib_context_set_debug(context, 0);
 
-    err = grib_set_long(h, "edition", 1);
+    err = grib_set_long(h, "edition", 2);
     ECCODES_ASSERT(!err);
     printf("\tEnable debugging again (verbose)...\n");
     grib_context_set_debug(context, 1);
