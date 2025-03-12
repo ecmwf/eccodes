@@ -1138,6 +1138,8 @@ grib_handle* grib_util_set_spec(grib_handle* h,
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
 
+            // A -ve longitude passed in (could be from GRIB1). Polar stereo longitude in GRIB2 must be +ve
+            nonConstSpec->longitudeOfFirstGridPointInDegrees = normalise_longitude_in_degrees(spec->longitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
             COPY_SPEC_LONG(Ni);

@@ -13,8 +13,7 @@
 
 static void dump_it(grib_handle* h)
 {
-    int dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
-    grib_dump_content(h, stderr, "wmo", dump_flags, nullptr);
+    grib_dump_content(h, stderr, "wmo", 0, nullptr);
 }
 
 // Lambert conformal conic (edition=1)
@@ -63,6 +62,8 @@ static grib_handle* test1()
     spec.Ni        = 2;
     spec.Nj        = 2;
 
+    // Note: For Lambert: In GRIB1 the longitude can be -ve but not in GRIB2.
+    // So codes_grib_util_set_spec should cater for this case
     spec.longitudeOfFirstGridPointInDegrees = -1.;
 
     // packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE;
@@ -168,6 +169,7 @@ static grib_handle* test5()
     // grib_set_long(handle, "tablesVersion", 32);
     spec.grid_type = GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC;
     outlen         = 4;
+    spec.longitudeOfFirstGridPointInDegrees = -1.;
 
     packing_spec.extra_settings_count         = 1;
     packing_spec.extra_settings[0].type       = GRIB_TYPE_LONG;
@@ -250,8 +252,7 @@ static grib_handle* test8()
 
 int main()
 {
-    using test_func = grib_handle* (*)();
-
+    //using test_func = grib_handle* (*)();
     for (auto func : { test0, test1, test2, test3, test4, test5, test6, test7, test8 }) {
         auto* result = func();
         ECCODES_ASSERT(result != nullptr);
