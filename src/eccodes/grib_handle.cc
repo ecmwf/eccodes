@@ -338,6 +338,11 @@ static bool can_create_clone_headers_only(const grib_handle* h)
     int err = grib_get_long(h, "isGridded", &isGridded);
     if (err || !isGridded) return false;
 
+    // ECC-2045: Input is already headers_only
+    long bitsPerValue = 0;
+    err = grib_get_long(h, "bitsPerValue", &bitsPerValue);
+    if (err || bitsPerValue == 0) return false;
+
     return true;
 }
 
