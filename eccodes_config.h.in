@@ -38,8 +38,6 @@
 
 #define ECCODES_SAMPLES_PATH    "@ECCODES_SAMPLES_PATH@"
 
-#define ECCODES_TIMER @ECCODES_TIMER@
-
 /* headers */
 
 #cmakedefine ECCODES_HAVE_ASSERT_H
@@ -114,6 +112,7 @@
 #cmakedefine HAVE_NETCDF
 
 #cmakedefine HAVE_GEOGRAPHY
+#cmakedefine HAVE_ECKIT_GEO
 #cmakedefine HAVE_MEMFS
 #cmakedefine HAVE_FORTRAN
 

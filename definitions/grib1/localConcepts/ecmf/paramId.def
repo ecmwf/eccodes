@@ -3799,12 +3799,12 @@
 	 table2Version = 171 ;
 	 indicatorOfParameter = 122 ;
 	}
-#Mean surface runoff rate
+#Time-mean surface runoff rate
 '172008' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 8 ;
 	}
-#Mean sub-surface runoff rate
+#Time-mean sub-surface runoff rate
 '172009' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 9 ;
@@ -6614,12 +6614,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 25 ;
 	}
-#Source/gain of dust aerosol (0.55 - 9 um)
+#Source/gain of dust aerosol (0.55 - 0.9 um)
 '215026' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 26 ;
 	}
-#Source/gain of dust aerosol (9 - 20 um)
+#Source/gain of dust aerosol (0.9 - 20 um)
 '215027' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 27 ;
@@ -6629,12 +6629,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 28 ;
 	}
-#Dry deposition of dust aerosol (0.55 - 9 um)
+#Dry deposition of dust aerosol (0.55 - 0.9 um)
 '215029' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 29 ;
 	}
-#Dry deposition of dust aerosol (9 - 20 um)
+#Dry deposition of dust aerosol (0.9 - 20 um)
 '215030' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 30 ;
@@ -6644,12 +6644,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 31 ;
 	}
-#Sedimentation of dust aerosol (0.55 - 9 um)
+#Sedimentation of dust aerosol (0.55 - 0.9 um)
 '215032' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 32 ;
 	}
-#Sedimentation of dust aerosol (9 - 20 um)
+#Sedimentation of dust aerosol (0.9 - 20 um)
 '215033' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 33 ;
@@ -6659,12 +6659,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 34 ;
 	}
-#Wet deposition of dust aerosol (0.55 - 9 um) by large-scale precipitation
+#Wet deposition of dust aerosol (0.55 - 0.9 um) by large-scale precipitation
 '215035' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 35 ;
 	}
-#Wet deposition of dust aerosol (9 - 20 um) by large-scale precipitation
+#Wet deposition of dust aerosol (0.9 - 20 um) by large-scale precipitation
 '215036' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 36 ;
@@ -6674,12 +6674,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 37 ;
 	}
-#Wet deposition of dust aerosol (0.55 - 9 um) by convective precipitation
+#Wet deposition of dust aerosol (0.55 - 0.9 um) by convective precipitation
 '215038' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 38 ;
 	}
-#Wet deposition of dust aerosol (9 - 20 um) by convective precipitation
+#Wet deposition of dust aerosol (0.9 - 20 um) by convective precipitation
 '215039' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 39 ;
@@ -6689,12 +6689,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 40 ;
 	}
-#Negative fixer of dust aerosol (0.55 - 9 um)
+#Negative fixer of dust aerosol (0.55 - 0.9 um)
 '215041' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 41 ;
 	}
-#Negative fixer of dust aerosol (9 - 20 um)
+#Negative fixer of dust aerosol (0.9 - 20 um)
 '215042' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 42 ;
@@ -6704,12 +6704,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 43 ;
 	}
-#Vertically integrated mass of dust aerosol (0.55 - 9 um)
+#Vertically integrated mass of dust aerosol (0.55 - 0.9 um)
 '215044' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 44 ;
 	}
-#Vertically integrated mass of dust aerosol (9 - 20 um)
+#Vertically integrated mass of dust aerosol (0.9 - 20 um)
 '215045' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 45 ;
@@ -6719,12 +6719,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 46 ;
 	}
-#Dust aerosol (0.55 - 9 um) optical depth
+#Dust aerosol (0.55 - 0.9 um) optical depth
 '215047' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 47 ;
 	}
-#Dust aerosol (9 - 20 um) optical depth
+#Dust aerosol (0.9 - 20 um) optical depth
 '215048' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 48 ;
@@ -9869,7 +9869,7 @@
 	 table2Version = 221 ;
 	 indicatorOfParameter = 56 ;
 	}
-#-10 degrees C isothermal level (atm)
+#Geometric height of -10 degrees C atmospheric isothermal level above ground
 '228020' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 20 ;
@@ -9889,7 +9889,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 23 ;
 	}
-#0 degrees C isothermal level (atm)
+#Geometric height of 0 degrees C atmospheric isothermal level above ground
 '228024' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 24 ;
@@ -14919,17 +14919,17 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 50 ;
 	}
-#Mean large-scale precipitation rate
+#Time-mean large-scale precipitation rate
 '172142' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 142 ;
 	}
-#Mean convective precipitation rate
+#Time-mean convective precipitation rate
 '172143' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 143 ;
 	}
-#Mean total snowfall rate
+#Time-mean total snowfall rate
 '172144' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 144 ;
@@ -14939,67 +14939,67 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 145 ;
 	}
-#Mean surface sensible heat flux
+#Time-mean surface sensible heat flux
 '172146' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Mean surface latent heat flux
+#Time-mean surface latent heat flux
 '172147' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Mean short-wave heating rate
+#Time-mean short-wave (solar) heating rate
 '172153' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 153 ;
 	}
-#Mean long-wave heating rate
+#Time-mean long-wave (thermal) heating rate
 '172154' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 154 ;
 	}
-#Mean surface downward solar radiation flux
+#Time-mean surface downward short-wave (solar) radiation flux
 '172169' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 169 ;
 	}
-#Mean surface downward thermal radiation flux
+#Time-mean surface downward long-wave (thermal) radiation flux
 '172175' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 175 ;
 	}
-#Mean surface net solar radiation flux
+#Time-mean surface net short-wave (solar) radiation flux
 '172176' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 176 ;
 	}
-#Mean surface net thermal radiation flux
+#Time-mean surface net long-wave (thermal) radiation flux
 '172177' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 177 ;
 	}
-#Mean top net solar radiation flux
+#Time-mean top net short-wave (solar) radiation flux
 '172178' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 178 ;
 	}
-#Mean top net thermal radiation flux
+#Time-mean top net long-wave (thermal) radiation flux
 '172179' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 179 ;
 	}
-#East-West surface stress rate of accumulation
+#Time-mean eastward turbulent surface stress
 '172180' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 180 ;
 	}
-#North-South surface stress rate of accumulation
+#Time-mean northward turbulent surface stress
 '172181' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 181 ;
 	}
-#Evaporation
+#Time-mean evaporation rate
 '172182' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 182 ;
@@ -15024,47 +15024,47 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 197 ;
 	}
-#Mean runoff rate
+#Time-mean runoff rate
 '172205' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 205 ;
 	}
-#Top net solar radiation, clear sky
+#Time-mean top net short-wave (solar) radiation flux, clear sky
 '172208' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 208 ;
 	}
-#Top net thermal radiation, clear sky
+#Time-mean top net long-wave (thermal) radiation flux, clear sky
 '172209' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 209 ;
 	}
-#Surface net solar radiation, clear sky
+#Time-mean surface net short-wave (solar) radiation flux, clear sky
 '172210' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 210 ;
 	}
-#Surface net thermal radiation, clear sky
+#Time-mean surface net long-wave (thermal) radiation flux, clear sky
 '172211' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 211 ;
 	}
-#Solar insolation rate of accumulation
+#Time-mean short-wave (solar) insolation rate
 '172212' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 212 ;
 	}
-#Mean total precipitation rate
+#Time-mean total precipitation rate
 '172228' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 228 ;
 	}
-#Convective snowfall
+#Time-mean convective snowfall rate
 '172239' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 239 ;
 	}
-#Large scale snowfall
+#Time-mean large-scale snowfall rate
 '172240' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 240 ;

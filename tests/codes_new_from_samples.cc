@@ -47,11 +47,11 @@ int main(int argc, char** argv)
 
         printf("Testing codes_handle_new_from_samples on %s\n", name);
         h = codes_handle_new_from_samples(0, name);
-        Assert(h);
-        Assert(samples[i].expected_kind == h->product_kind);
+        ECCODES_ASSERT(h);
+        ECCODES_ASSERT(samples[i].expected_kind == h->product_kind);
 
         GRIB_CHECK(grib_get_string(h, "identifier", identifier, &len), 0);
-        Assert( strcmp(samples[i].expected_ID, identifier) == 0 );
+        ECCODES_ASSERT( strcmp(samples[i].expected_ID, identifier) == 0 );
         grib_handle_delete(h);
     }
 

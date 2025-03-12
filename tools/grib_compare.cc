@@ -195,7 +195,7 @@ static int blocklisted(const char* name)
 {
     grib_string_list* b = blocklist;
     while (b) {
-        Assert(b->value);
+        ECCODES_ASSERT(b->value);
         if (!strcmp(name, b->value))
             return 1;
         b = b->next;
@@ -312,7 +312,7 @@ int grib_tool_init(grib_runtime_options* options)
         options->idx     = grib_fieldset_new_from_files(context, filename,
                                                     nfiles, 0, 0, 0, orderby, &ret);
         if (ret) {
-            fprintf(stderr, "%s: Unable to create index for input file %s (%s)",
+            fprintf(stderr, "%s: Unable to create index for input file '%s' (%s)\n",
                     tool_name, options->infile_extra->name, grib_get_error_message(ret));
             exit(ret);
         }
@@ -438,7 +438,7 @@ static void printInfo(grib_handle* h)
 
 static void print_index_key_values(grib_index* index, int counter)
 {
-    grib_index_key* keys = index->keys;
+    const grib_index_key* keys = index->keys;
     printf("== %d == ", counter);
     while (keys) {
         printf("%s=%s ", keys->name, keys->value);
@@ -469,7 +469,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* hand
         handle1 = grib_handle_new_from_index(idx1, &err);
         if (options->verbose) {
             off_t offset   = 0;
-            char* filename = grib_get_field_file(options->index2, &offset);
+            const char* filename = grib_get_field_file(options->index2, &offset);
             printf("file1=\"%s\" ", filename);
             filename = grib_get_field_file(options->index1, &offset);
             printf("file2=\"%s\" \n", filename);

@@ -373,7 +373,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         if (!first_handle && options->handle_count > 1) {
             fprintf(stdout, ",\n");
         }
-        if (options->json_output && first_handle) {
+        if (first_handle) {
             fprintf(stdout, "{ \"messages\" : [ \n");
             first_handle = 0;
         }

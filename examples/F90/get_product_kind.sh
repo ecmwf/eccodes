@@ -10,14 +10,14 @@
 
 . ./include.ctest.sh
 
-label="get_product_kind_f"
+label="examples_f_get_product_kind"
 fTmp=${label}.tmp
 fOut=${label}.out
 
 # Create a file containing both GRIB and BUFR messages
 cat ${data_dir}/sample.grib2 ${data_dir}/bufr/syno_multi.bufr >$fTmp
 
-${examples_dir}/eccodes_f_get_product_kind $fTmp > $fOut
+${examples_dir}/f_get_product_kind $fTmp > $fOut
 cat $fOut
 grep -q "product: BUFR" $fOut
 grep -q "product: GRIB" $fOut

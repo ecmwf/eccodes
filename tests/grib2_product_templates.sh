@@ -62,6 +62,18 @@ grib_check_key_equals $tempGribA productDefinitionTemplateNumber 8
 grib_check_key_equals $tempGribA typeOfStatisticalProcessing,stepType '1 accum'
 grib_check_key_equals $tempGribA shortName,name 'tp Total precipitation'
 
+# ensemble
+$tools_dir/grib_set -s eps=1 $sample_g2 $tempGribA
+grib_check_key_equals $tempGribA productDefinitionTemplateNumber 1
+$tools_dir/grib_set -s stepType=avg,eps=1 $sample_g2 $tempGribA
+grib_check_key_equals $tempGribA productDefinitionTemplateNumber 11
+$tools_dir/grib_set -s eps=1,stepType=avg $sample_g2 $tempGribA
+grib_check_key_equals $tempGribA productDefinitionTemplateNumber 11
+
+$tools_dir/grib_set -s stepType=avg,eps=0 $sample_g2 $tempGribA
+grib_check_key_equals $tempGribA productDefinitionTemplateNumber 8
+
+
 $tools_dir/grib_set -s productDefinitionTemplateNumber=1,shortName=tp,perturbationNumber=32 $sample_g2 $tempGribA
 grib_check_key_equals $tempGribA productDefinitionTemplateNumber 11
 grib_check_key_equals $tempGribA number 32

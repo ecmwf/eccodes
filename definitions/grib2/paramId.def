@@ -950,6 +950,18 @@
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
 	}
+#10 metre convective gust of at least 25 m/s
+'131256' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 68 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfLowerLimit = 25 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
 #Probability of temperature standardized anomaly greater than 1 standard deviation
 '133093' = {
 	 discipline = 0 ;
@@ -4043,6 +4055,13 @@
 	 typeOfGeneratingProcess = 20 ;
 	 is_aerosol = 1 ;
 	}
+#Cosine of solar zenith angle
+'214001' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
 #Dry deposition of ammonium aerosol
 '215206' = {
 	 discipline = 0 ;
@@ -5283,11 +5302,11 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical = 1 ;
 	}
-#-10 degrees C isothermal level (atm)
+#Geometric height of -10 degrees C atmospheric isothermal level above ground
 '228020' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 26315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
@@ -5315,11 +5334,11 @@
 	 parameterNumber = 11 ;
 	 typeOfFirstFixedSurface = 2 ;
 	}
-#0 degrees C isothermal level (atm)
+#Geometric height of 0 degrees C atmospheric isothermal level above ground
 '228024' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 27315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
@@ -6174,13 +6193,6 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Geometric height of theta level above ground
-'231044' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 34 ;
-	 typeOfFirstFixedSurface = 107 ;
-	}
 #Pressure at cloud base
 '231045' = {
 	 discipline = 0 ;
@@ -6209,12 +6221,14 @@
 	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 16 ;
 	}
-#Geometric height of atmospheric isothermal level above ground
+#Geometric height of 3 degrees C atmospheric isothermal level above ground
 '231049' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27615 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
 #Roof temperature
 '231050' = {
@@ -6339,6 +6353,33 @@
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 51 ;
+	}
+#Geometric height of 0 degrees C theta level above ground
+'231069' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 107 ;
+	 scaledValueOfFirstFixedSurface = 27315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	}
+#Geometric height of 1 degree C theta level above ground
+'231070' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 107 ;
+	 scaledValueOfFirstFixedSurface = 27415 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	}
+#Geometric height of 1.5 degrees C theta level above ground
+'231071' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 107 ;
+	 scaledValueOfFirstFixedSurface = 27465 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
 #Burned area
 '232000' = {
@@ -8200,11 +8241,11 @@
 	 parameterNumber = 43 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean -10 degrees C isothermal level (atm)
+#Time-mean geometric height of -10 degrees C atmospheric isothermal level above ground
 '235315' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 26315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
@@ -8218,11 +8259,11 @@
 	 typeOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean 0 degrees C isothermal level (atm)
+#Time-mean geometric height of 0 degrees C atmospheric isothermal level above ground
 '235317' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 27315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
@@ -8412,6 +8453,14 @@
 	 parameterNumber = 54 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean cosine of solar zenith angle
+'235340' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean freezing rain precipitation rate
@@ -8788,6 +8837,121 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 51 ;
 	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean land surface heat net flux
+'235386' = {
+	 discipline = 2 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean surface direct normal short-wave radiation flux, clear sky
+'235387' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 62 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean 10 metre convective gust
+'235388' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 68 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean 10 metre turbulent gust
+'235389' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 69 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean geometric height of 0 degrees C theta level above ground
+'235390' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 107 ;
+	 scaledValueOfFirstFixedSurface = 27315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean geometric height of 1 degree C theta level above ground
+'235391' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 107 ;
+	 scaledValueOfFirstFixedSurface = 27415 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean geometric height of 1.5 degrees C theta level above ground
+'235392' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 107 ;
+	 scaledValueOfFirstFixedSurface = 27465 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean vegetation
+'235393' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean leaf area index
+'235394' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 28 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean surface roughness for heat
+'235395' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 47 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean geometric height of 3 degrees C atmospheric isothermal level above ground
+'235397' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27615 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-integrated land surface heat net flux
+'236386' = {
+	 discipline = 2 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated surface direct normal short-wave radiation flux, clear sky
+'236387' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 62 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Time-maximum temperature tendency due to short-wave radiation
 '237001' = {
@@ -9980,11 +10144,11 @@
 	 parameterNumber = 43 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
-#Time-maximum -10 degrees C isothermal level (atm)
+#Time-maximum geometric height of -10 degrees C atmospheric isothermal level above ground
 '237315' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 26315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
@@ -9998,11 +10162,11 @@
 	 typeOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
-#Time-maximum 0 degrees C isothermal level (atm)
+#Time-maximum geometric height of 0 degrees C atmospheric isothermal level above ground
 '237317' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 27315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
@@ -10182,6 +10346,14 @@
 	 parameterNumber = 54 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum cosine of solar zenith angle
+'237340' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum freezing rain precipitation rate
@@ -10557,6 +10729,105 @@
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 51 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum land surface heat net flux
+'237386' = {
+	 discipline = 2 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum surface direct normal short-wave radiation flux, clear sky
+'237387' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 62 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum 10 metre convective gust
+'237388' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 68 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum 10 metre turbulent gust
+'237389' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 69 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum geometric height of 0 degrees C theta level above ground
+'237390' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 107 ;
+	 scaledValueOfFirstFixedSurface = 27315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum geometric height of 1 degree C theta level above ground
+'237391' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 107 ;
+	 scaledValueOfFirstFixedSurface = 27415 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum geometric height of 1.5 degrees C theta level above ground
+'237392' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 107 ;
+	 scaledValueOfFirstFixedSurface = 27465 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum vegetation
+'237393' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum leaf area index
+'237394' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 28 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum surface roughness for heat
+'237395' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 47 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum geometric height of 3 degrees C atmospheric isothermal level above ground
+'237397' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27615 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-minimum temperature tendency due to short-wave radiation
@@ -11759,11 +12030,11 @@
 	 parameterNumber = 43 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
-#Time-minimum -10 degrees C isothermal level (atm)
+#Time-minimum geometric height of -10 degrees C atmospheric isothermal level above ground
 '238315' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 26315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
@@ -11777,11 +12048,11 @@
 	 typeOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
-#Time-minimum 0 degrees C isothermal level (atm)
+#Time-minimum geometric height of 0 degrees C atmospheric isothermal level above ground
 '238317' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 27315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
@@ -11980,6 +12251,14 @@
 	 parameterNumber = 54 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum cosine of solar zenith angle
+'238340' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum freezing rain rate water equivalent
@@ -12355,6 +12634,105 @@
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 51 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum land surface heat net flux
+'238386' = {
+	 discipline = 2 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum surface direct normal short-wave radiation flux, clear sky
+'238387' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 62 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum 10 metre convective gust
+'238388' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 68 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum 10 metre turbulent gust
+'238389' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 69 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum geometric height of 0 degrees C theta level above ground
+'238390' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 107 ;
+	 scaledValueOfFirstFixedSurface = 27315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum geometric height of 1 degree C theta level above ground
+'238391' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 107 ;
+	 scaledValueOfFirstFixedSurface = 27415 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum geometric height of 1.5 degrees C theta level above ground
+'238392' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 107 ;
+	 scaledValueOfFirstFixedSurface = 27465 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum vegetation
+'238393' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum leaf area index
+'238394' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 28 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum surface roughness for heat
+'238395' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 47 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum geometric height of 3 degrees C atmospheric isothermal level above ground
+'238397' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27615 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-standard-deviation temperature tendency due to short-wave radiation
@@ -13565,11 +13943,11 @@
 	 parameterNumber = 43 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
-#Time-standard-deviation -10 degrees C isothermal level (atm)
+#Time-standard-deviation geometric height of -10 degrees C atmospheric isothermal level above ground
 '239315' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 26315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
@@ -13583,11 +13961,11 @@
 	 typeOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
-#Time-standard-deviation 0 degrees C isothermal level (atm)
+#Time-standard-deviation geometric height of 0 degrees C atmospheric isothermal level above ground
 '239317' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 27315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
@@ -13786,6 +14164,14 @@
 	 parameterNumber = 54 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation cosine of solar zenith angle
+'239340' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation freezing rain rate water equivalent
@@ -14154,6 +14540,105 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 67 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation land surface heat net flux
+'239386' = {
+	 discipline = 2 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface direct normal short-wave radiation flux, clear sky
+'239387' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 62 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 10 metre convective gust
+'239388' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 68 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 10 metre turbulent gust
+'239389' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 69 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation geometric height of 0 degrees C theta level above ground
+'239390' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 107 ;
+	 scaledValueOfFirstFixedSurface = 27315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation geometric height of 1 degree C theta level above ground
+'239391' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 107 ;
+	 scaledValueOfFirstFixedSurface = 27415 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation geometric height of 1.5 degrees C theta level above ground
+'239392' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 107 ;
+	 scaledValueOfFirstFixedSurface = 27465 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation vegetation
+'239393' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation leaf area index
+'239394' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 28 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface roughness for heat
+'239395' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 47 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation geometric height of 3 degrees C atmospheric isothermal level above ground
+'239397' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27615 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Cross sectional area of flow in channel
@@ -16421,6 +16906,38 @@
 	 parameterNumber = 67 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
+#Land surface heat net flux
+'260684' = {
+	 discipline = 2 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Surface direct normal short-wave radiation flux, clear sky
+'260685' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 62 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#10 metre convective gust
+'260686' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 68 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#10 metre turbulent gust
+'260687' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 69 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
 #Universal thermal climate index
 '261001' = {
 	 discipline = 20 ;
@@ -17508,6 +18025,14 @@
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 47 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Sea water depth
+'262519' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	}
@@ -18674,6 +19199,15 @@
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean sea water depth
+'263519' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean net short wave radiation rate at sea surface
 '263900' = {
 	 discipline = 0 ;
@@ -18850,6 +19384,15 @@
 	 parameterNumber = 8 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum sea water depth
+'265519' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-minimum sea ice temperature
 '266024' = {
 	 discipline = 10 ;
@@ -18857,11 +19400,29 @@
 	 parameterNumber = 8 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum sea water depth
+'266519' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-standard-deviation sea ice temperature
 '267024' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation sea water depth
+'267519' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Virtual temperature
@@ -18927,6 +19488,12 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 52 ;
 	}
+#Volume-mean total column mixing ratio
+'409000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 84 ;
+	}
 #Wet deposition mass flux by large-scale precipitation
 '410000' = {
 	 discipline = 0 ;
@@ -18938,6 +19505,13 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 10 ;
+	}
+#Emission mass flux from vegetation
+'412000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 34 ;
 	}
 #Emission mass flux from natural sources
 '413000' = {
@@ -18966,6 +19540,13 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 13 ;
+	}
+#Emission mass flux from biomass burning
+'417000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 35 ;
 	}
 #Emission from aviation
 '418000' = {
@@ -19064,6 +19645,13 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 20 ;
+	}
+#Emission mass flux from settlements
+'432000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 36 ;
 	}
 #Emission mass flux from volcanoes
 '433000' = {
@@ -19167,6 +19755,20 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 11 ;
 	}
+#Emission mass flux from soil
+'442000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 37 ;
+	}
+#Emission mass flux from wild animals
+'443000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 38 ;
+	}
 #Accumulated wet deposition mass flux
 '444000' = {
 	 discipline = 0 ;
@@ -19233,20 +19835,86 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 107 ;
-	 typeOfFirstFixedSurface = 8 ;
 	}
 #Aerosol backscatter from ground
 '461000' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 108 ;
-	 typeOfFirstFixedSurface = 1 ;
 	}
 #Aerosol extinction coefficient
 '462000' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 105 ;
+	}
+#Emission mass flux from commercial buildings heating
+'463000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 30 ;
+	}
+#Emission mass flux from residential heating
+'464000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 31 ;
+	}
+#Emission mass flux from oil refineries and transformation industry
+'465000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 32 ;
+	}
+#Emission mass flux from gas production
+'466000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 33 ;
+	}
+#Mass mixing ratio difference
+'467000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
+#Mass mixing ratio from volcanoes difference
+'468000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfGeneratingProcess = 20 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Emission mass flux from wild fires
+'469000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 5 ;
+	}
+#Sink mass flux
+'470000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 82 ;
+	}
+#Source mass flux
+'471000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 83 ;
+	}
+#Absorption aerosol optical thickness
+'472000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 112 ;
 	}
 #Pressure tendency
 '3003' = {
@@ -19260,11 +19928,11 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 3 ;
 	}
-#Geometrical height
+#Geometrical height above ground
 '3008' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
+	 parameterNumber = 34 ;
 	}
 #Standard deviation of height
 '3009' = {

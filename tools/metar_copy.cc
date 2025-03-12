@@ -72,7 +72,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
-    Assert(options->set_values_count==0); // Cannot set keys in this tool
+    ECCODES_ASSERT(options->set_values_count==0); // Cannot set keys in this tool
 
     // int err = 0;
     // if (!options->skip) {

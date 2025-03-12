@@ -12,7 +12,7 @@
 
 REDIRECT=/dev/null
 
-label=grib_step_test
+label="grib_step_test"
 tempGrb=${data_dir}/temp.$label.out.grib
 tempLog=${data_dir}/temp.$label.log
 tempFilt=${data_dir}/temp.$label.filt
@@ -118,6 +118,12 @@ grib_check_key_equals $temp productDefinitionTemplateNumber,typeOfStatisticalPro
 ${tools_dir}/grib_set -s stepType=mode,paramId=260320     $grib2_sample $temp
 grib_check_key_equals $temp productDefinitionTemplateNumber,typeOfStatisticalProcessing '8 101'
 
+# ECC-1991: stepType for index processing
+# -----------------------------------------
+${tools_dir}/grib_set -s stepType=index $grib2_sample $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber,typeOfStatisticalProcessing '8 102'
+
+
 # ECC-1577: stepType when typeOfTimeIncrement=255
 # -----------------------------------------------
 ${tools_dir}/grib_set -s stepType=accum,typeOfTimeIncrement=255 $grib2_sample $temp
@@ -147,7 +153,7 @@ grib_check_key_equals $temp "stepRange,startStep,endStep" "14 14 14"
 input=${data_dir}/constant_field.grib2
 grib_check_key_equals $input "dataDate,dataTime,step" "20061205 1200 6"
 grib_check_key_equals $input "validityDate,validityTime" "20061205 1800"
-grib_check_key_equals $input "validityDateTime:s" "20061205 001800"
+grib_check_key_equals $input "validityDateTime:s" "20061205 180000"
 
 # ECC-1704: Key validityTime as string
 # -------------------------------------
@@ -277,6 +283,12 @@ set -e
 [ $status -ne 0 ]
 grep -q "Date/Time is not valid" $tempLog
 rm -f $tempGrbA $tempGrbB
+
+# Warning re startStep > endStep
+${tools_dir}/grib_set -s stepType=accum,startStep=12,endStep=6  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrbA
+${tools_dir}/grib_get -p step $tempGrbA 2>$tempLog
+grep -q "ECCODES WARNING :  endStep < startStep" $tempLog
+
 
 # Clean up
 rm -f $temp $tempLog $tempFilt

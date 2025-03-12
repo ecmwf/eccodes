@@ -10,9 +10,8 @@
 
 . ./include.ctest.sh
 
-
 #Define a common label for all the tmp files
-label="bufr_read_synop_test_c"
+label="examples_c_bufr_read_synop_test"
 
 #Define tmp file
 fTmp=${label}".tmp.txt"

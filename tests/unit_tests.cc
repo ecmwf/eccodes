@@ -8,8 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "eccodes.h"
+#include "action/Concept.h"
 
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 
@@ -24,7 +24,7 @@ typedef enum
 
 static void compare_doubles(const double d1, const double d2, const double epsilon)
 {
-    Assert(fabs(d1 - d2) < epsilon);
+    ECCODES_ASSERT(fabs(d1 - d2) < epsilon);
 }
 
 static void check_float_representation(const double val, const double expected, const FloatRep rep)
@@ -32,9 +32,9 @@ static void check_float_representation(const double val, const double expected, 
     double out             = 0;
     const double tolerance = 1e-9;
     if (rep == IBM_FLOAT)
-        Assert(grib_nearest_smaller_ibm_float(val, &out) == GRIB_SUCCESS);
+        ECCODES_ASSERT(grib_nearest_smaller_ibm_float(val, &out) == GRIB_SUCCESS);
     else
-        Assert(grib_nearest_smaller_ieee_float(val, &out) == GRIB_SUCCESS);
+        ECCODES_ASSERT(grib_nearest_smaller_ieee_float(val, &out) == GRIB_SUCCESS);
 
     /*printf("%s: d1=%10.20f, out=%10.20f\n", (rep==IBM_FLOAT)?"ibm":"ieee", val, out);*/
 
@@ -46,8 +46,8 @@ static void test_get_package_name()
     printf("Running %s ...\n", __func__);
 
     const char* pn = codes_get_package_name();
-    Assert(pn != NULL);
-    Assert(strlen(pn) > 1);
+    ECCODES_ASSERT(pn != NULL);
+    ECCODES_ASSERT(strlen(pn) > 1);
     printf("Package name = %s\n", pn);
 }
 
@@ -56,7 +56,7 @@ static void test_get_git_sha1()
     printf("Running %s ...\n", __func__);
 
     const char* sha1 = codes_get_git_sha1();
-    Assert(sha1 != NULL);
+    ECCODES_ASSERT(sha1 != NULL);
     printf("Git SHA1 = %s\n", sha1);
 }
 
@@ -65,9 +65,9 @@ static void test_get_build_date()
     printf("Running %s ...\n", __func__);
 
     const char* bdate = codes_get_build_date();
-    Assert(bdate != NULL);
+    ECCODES_ASSERT(bdate != NULL);
     /* Should be of the format YYYY.MM.DD or empty (not implemented) */
-    Assert( strlen(bdate) == 0 || isdigit(bdate[0]) );
+    ECCODES_ASSERT( strlen(bdate) == 0 || isdigit(bdate[0]) );
 }
 
 static void test_grib_nearest_smaller_ibmfloat()
@@ -104,7 +104,7 @@ static void test_gaussian_latitudes(int order)
     double* lats = (double*)malloc(sizeof(double) * num);
 
     ret = codes_get_gaussian_latitudes(order, lats);
-    Assert(ret == GRIB_SUCCESS);
+    ECCODES_ASSERT(ret == GRIB_SUCCESS);
 
     lat1 = lats[0];
     lat2 = lats[num - 1];
@@ -113,6 +113,22 @@ static void test_gaussian_latitudes(int order)
 
     free(lats);
 }
+
+static void test_grib_get_reduced_row_legacy()
+{
+    printf("Running %s ...\n", __func__);
+    long npoints=0, ilon_first=0, ilon_last=0;
+
+    grib_get_reduced_row_legacy(25, 0.0, 100.0, &npoints, &ilon_first, &ilon_last);
+    // printf("Result: npoints=%ld, ilon_first=%ld, ilon_last=%ld\n", npoints, ilon_first, ilon_last);
+
+    grib_get_reduced_row_legacy(25, 90.0, 100.0, &npoints, &ilon_first, &ilon_last);
+    grib_get_reduced_row_legacy(25, 295.0, 300.0, &npoints, &ilon_first, &ilon_last);
+    grib_get_reduced_row_legacy(25, -20.0, 30.0, &npoints, &ilon_first, &ilon_last);
+    grib_get_reduced_row_legacy(25, 301, 300.0, &npoints, &ilon_first, &ilon_last);
+    grib_get_reduced_row_legacy(200, 0.0, 359.0, &npoints, &ilon_first, &ilon_last);
+}
+
 
 static void test_gaussian_latitude_640()
 {
@@ -125,7 +141,7 @@ static void test_gaussian_latitude_640()
     const double tolerance = 1e-6;
     double* lats           = (double*)malloc(sizeof(double) * num);
     ret                    = codes_get_gaussian_latitudes(order, lats);
-    Assert(ret == GRIB_SUCCESS);
+    ECCODES_ASSERT(ret == GRIB_SUCCESS);
 
     compare_doubles(lats[0], 89.892396, tolerance);
     compare_doubles(lats[1], 89.753005, tolerance);
@@ -175,35 +191,35 @@ static void test_string_splitting()
     char** list    = 0;
 
     list           = string_split(input, "|");
-    if (!list) { Assert(!"List is NULL"); return; }
+    if (!list) { ECCODES_ASSERT(!"List is NULL"); return; }
     for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
-    Assert(i == 4);
-    if (!list[0] || !STR_EQUAL(list[0], "Born")) Assert(0);
-    if (!list[1] || !STR_EQUAL(list[1], "To"))   Assert(0);
-    if (!list[2] || !STR_EQUAL(list[2], "Be"))   Assert(0);
-    if (!list[3] || !STR_EQUAL(list[3], "Wild")) Assert(0);
-    Assert(list[4] == NULL);
+    ECCODES_ASSERT(i == 4);
+    if (!list[0] || !STR_EQUAL(list[0], "Born")) ECCODES_ASSERT(0);
+    if (!list[1] || !STR_EQUAL(list[1], "To"))   ECCODES_ASSERT(0);
+    if (!list[2] || !STR_EQUAL(list[2], "Be"))   ECCODES_ASSERT(0);
+    if (!list[3] || !STR_EQUAL(list[3], "Wild")) ECCODES_ASSERT(0);
+    ECCODES_ASSERT(list[4] == NULL);
     for (i = 0; list[i] != NULL; ++i) free(list[i]);
     free(list);
 
     strcpy(input, "12345|a gap|");
     list = string_split(input, "|");
-    if (!list) { Assert(0); return; }
+    if (!list) { ECCODES_ASSERT(0); return; }
     for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
-    Assert(i == 2);
-    if (!list[0] || !STR_EQUAL(list[0], "12345")) Assert(0);
-    if (!list[1] || !STR_EQUAL(list[1], "a gap")) Assert(0);
-    Assert(list[2] == NULL);
+    ECCODES_ASSERT(i == 2);
+    if (!list[0] || !STR_EQUAL(list[0], "12345")) ECCODES_ASSERT(0);
+    if (!list[1] || !STR_EQUAL(list[1], "a gap")) ECCODES_ASSERT(0);
+    ECCODES_ASSERT(list[2] == NULL);
     for (i = 0; list[i] != NULL; ++i) free(list[i]);
     free(list);
 
     strcpy(input, "Steppenwolf");
     list = string_split(input, ",");
-    if (!list) { Assert(0); return; }
+    if (!list) { ECCODES_ASSERT(0); return; }
     for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
-    Assert(i == 1);
-    if (!list[0] || !STR_EQUAL(list[0], "Steppenwolf")) Assert(0);
-    Assert(list[1] == NULL);
+    ECCODES_ASSERT(i == 1);
+    if (!list[0] || !STR_EQUAL(list[0], "Steppenwolf")) ECCODES_ASSERT(0);
+    ECCODES_ASSERT(list[1] == NULL);
     for (i = 0; list[i] != NULL; ++i) free(list[i]);
     free(list);
 
@@ -225,14 +241,14 @@ static void test_assertion_catching()
 
     char empty[] = "";
     char** list  = NULL;
-    Assert(assertion_caught == 0);
+    ECCODES_ASSERT(assertion_caught == 0);
     codes_set_codes_assertion_failed_proc(&my_assertion_proc);
 
     /* Do something illegal */
     list = string_split(empty, " ");
 
-    Assert(assertion_caught == 1);
-    Assert( list == NULL );
+    ECCODES_ASSERT(assertion_caught == 1);
+    ECCODES_ASSERT(list == NULL);
 
     /* Restore everything */
     codes_set_codes_assertion_failed_proc(NULL);
@@ -250,18 +266,18 @@ static void my_logging_proc(const grib_context* c, int level, const char* mesg)
 static void test_logging_proc()
 {
     grib_context* context = grib_context_get_default();
-    Assert(logging_caught == 0);
+    ECCODES_ASSERT(logging_caught == 0);
 
     /* Override default behaviour */
     grib_context_set_logging_proc(context, my_logging_proc);
     grib_context_log(context, GRIB_LOG_ERROR, "test_logging_proc: This error will be handled by me");
-    Assert(logging_caught == 1);
+    ECCODES_ASSERT(logging_caught == 1);
 
     /* Restore the logging proc */
     logging_caught = 0;
     grib_context_set_logging_proc(context, NULL);
     grib_context_log(context, GRIB_LOG_ERROR, "test_logging_proc: This error will come out as normal");
-    Assert(logging_caught == 0);
+    ECCODES_ASSERT(logging_caught == 0);
 }
 
 static void my_print_proc(const grib_context* c, void* descriptor, const char* mesg)
@@ -284,21 +300,17 @@ static void test_concept_condition_strings()
     grib_handle* h = grib_handle_new_from_samples(context, "GRIB2");
     if (!h) return;
 
-    err = get_concept_condition_string(h, "typeOfLevel", NULL, result);
-    Assert(!err);
-    Assert(strcmp(result, "typeOfFirstFixedSurface=1,typeOfSecondFixedSurface=255") == 0);
-
     err = get_concept_condition_string(h, "paramId", NULL, result);
-    Assert(!err);
-    Assert(strcmp(result, "discipline=0,parameterCategory=0,parameterNumber=0") == 0);
+    ECCODES_ASSERT(!err);
+    ECCODES_ASSERT(strcmp(result, "discipline=0,parameterCategory=0,parameterNumber=0") == 0);
 
     err = get_concept_condition_string(h, "gridType", NULL, result);
-    Assert(!err);
-    Assert(strcmp(result, "gridDefinitionTemplateNumber=0,PLPresent=0") == 0);
+    ECCODES_ASSERT(!err);
+    ECCODES_ASSERT(strcmp(result, "gridDefinitionTemplateNumber=0,PLPresent=0") == 0);
 
     err = get_concept_condition_string(h, "stepType", NULL, result);
-    Assert(!err);
-    Assert(strcmp(result, "selectStepTemplateInstant=1,stepTypeInternal=instant") == 0);
+    ECCODES_ASSERT(!err);
+    ECCODES_ASSERT(strcmp(result, "selectStepTemplateInstant=1,stepTypeInternal=instant") == 0);
 
     grib_handle_delete(h);
 }
@@ -319,35 +331,35 @@ static void test_string_trimming()
     char* pE = e;
 
     string_lrtrim(&pA, 0, 1); /*right only*/
-    Assert( strcmp(pA, " Standing")==0 );
+    ECCODES_ASSERT( strcmp(pA, " Standing")==0 );
 
     string_lrtrim(&pB, 1, 0); /*left only*/
-    Assert( strcmp(pB, "Weeping ")==0 );
+    ECCODES_ASSERT( strcmp(pB, "Weeping ")==0 );
 
     string_lrtrim(&pC, 1, 1); /*both ends*/
-    Assert( strcmp(pC, "Silhouette")==0 );
+    ECCODES_ASSERT( strcmp(pC, "Silhouette")==0 );
 
     string_lrtrim(&pD, 1, 1); /*make sure other spaces are not removed*/
-    Assert( strcmp(pD, "The Forest Of October")==0 );
+    ECCODES_ASSERT( strcmp(pD, "The Forest Of October")==0 );
 
     string_lrtrim(&pE, 1, 1); /* Other chars */
-    Assert( strcmp(pE, "Apostle In Triumph")==0 );
+    ECCODES_ASSERT( strcmp(pE, "Apostle In Triumph")==0 );
 }
 
 static void test_string_ends_with()
 {
     printf("Running %s ...\n", __func__);
 
-    Assert( string_ends_with("GRIB2.tmpl", "tmpl") == 1 );
-    Assert( string_ends_with("GRIB2.tmpl", ".tmpl") == 1 );
-    Assert( string_ends_with("", "") == 1 );
-    Assert( string_ends_with(".", ".") == 1 );
-    Assert( string_ends_with("Bam", "") == 1 );
+    ECCODES_ASSERT( string_ends_with("GRIB2.tmpl", "tmpl") == 1 );
+    ECCODES_ASSERT( string_ends_with("GRIB2.tmpl", ".tmpl") == 1 );
+    ECCODES_ASSERT( string_ends_with("", "") == 1 );
+    ECCODES_ASSERT( string_ends_with(".", ".") == 1 );
+    ECCODES_ASSERT( string_ends_with("Bam", "") == 1 );
 
-    Assert( string_ends_with("GRIB2.tmpl", "tmp") == 0 );
-    Assert( string_ends_with("GRIB2.tmpl", "tmpl0") == 0 );
-    Assert( string_ends_with("GRIB2.tmpl", "1.tmpl") == 0 );
-    Assert( string_ends_with("GRIB2.tmpl", " ") == 0 );
+    ECCODES_ASSERT( string_ends_with("GRIB2.tmpl", "tmp") == 0 );
+    ECCODES_ASSERT( string_ends_with("GRIB2.tmpl", "tmpl0") == 0 );
+    ECCODES_ASSERT( string_ends_with("GRIB2.tmpl", "1.tmpl") == 0 );
+    ECCODES_ASSERT( string_ends_with("GRIB2.tmpl", " ") == 0 );
 }
 
 static void test_string_to_long()
@@ -355,25 +367,25 @@ static void test_string_to_long()
     printf("Running %s ...\n", __func__);
 
     long lVal = 0;
-    Assert( string_to_long("0", &lVal, 1) == GRIB_SUCCESS);
-    Assert( lVal == 0 );
+    ECCODES_ASSERT( string_to_long("0", &lVal, 1) == GRIB_SUCCESS);
+    ECCODES_ASSERT( lVal == 0 );
 
-    Assert( string_to_long("42", &lVal, 1) == GRIB_SUCCESS);
-    Assert( lVal == 42 );
+    ECCODES_ASSERT( string_to_long("42", &lVal, 1) == GRIB_SUCCESS);
+    ECCODES_ASSERT( lVal == 42 );
 
-    Assert( string_to_long("-1", &lVal, 1) == GRIB_SUCCESS);
-    Assert( lVal == -1 );
-    Assert( string_to_long("+999", &lVal, 1) == GRIB_SUCCESS);
-    Assert( lVal == 999 );
+    ECCODES_ASSERT( string_to_long("-1", &lVal, 1) == GRIB_SUCCESS);
+    ECCODES_ASSERT( lVal == -1 );
+    ECCODES_ASSERT( string_to_long("+999", &lVal, 1) == GRIB_SUCCESS);
+    ECCODES_ASSERT( lVal == 999 );
 
-    Assert( string_to_long("15MB", &lVal, 0) == GRIB_SUCCESS);
-    Assert( lVal == 15 );
+    ECCODES_ASSERT( string_to_long("15MB", &lVal, 0) == GRIB_SUCCESS);
+    ECCODES_ASSERT( lVal == 15 );
 
     // illegal cases
-    Assert( string_to_long("4000000000000000000000", &lVal, 1) == GRIB_INVALID_ARGUMENT);
-    Assert( string_to_long("XY", &lVal, 1) == GRIB_INVALID_ARGUMENT);
-    Assert( string_to_long("A6", &lVal, 1) == GRIB_INVALID_ARGUMENT);
-    Assert( string_to_long("5K", &lVal, 1) == GRIB_INVALID_ARGUMENT);
+    ECCODES_ASSERT( string_to_long("4000000000000000000000", &lVal, 1) == GRIB_INVALID_ARGUMENT);
+    ECCODES_ASSERT( string_to_long("XY", &lVal, 1) == GRIB_INVALID_ARGUMENT);
+    ECCODES_ASSERT( string_to_long("A6", &lVal, 1) == GRIB_INVALID_ARGUMENT);
+    ECCODES_ASSERT( string_to_long("5K", &lVal, 1) == GRIB_INVALID_ARGUMENT);
 }
 
 static void test_string_replace_char()
@@ -383,7 +395,7 @@ static void test_string_replace_char()
     char input[32] = {0,};
     strncpy(input, "Mask Of Zoro", sizeof(input));
     string_replace_char(input, ' ', '-');
-    Assert(STR_EQUAL(input, "Mask-Of-Zoro"));
+    ECCODES_ASSERT(STR_EQUAL(input, "Mask-Of-Zoro"));
 }
 
 static void test_string_remove_char()
@@ -391,7 +403,7 @@ static void test_string_remove_char()
     printf("Running %s ...\n", __func__);
     char input[64] = "a:b:c";
     string_remove_char(input, ':');
-    Assert(STR_EQUAL(input, "abc"));
+    ECCODES_ASSERT(STR_EQUAL(input, "abc"));
 }
 
 static void test_gribex_mode()
@@ -399,14 +411,14 @@ static void test_gribex_mode()
     grib_context* c = grib_context_get_default();
     printf("Running %s ...\n", __func__);
 
-    Assert( grib_get_gribex_mode(c) == 0 ); /* default is OFF */
+    ECCODES_ASSERT( grib_get_gribex_mode(c) == 0 ); /* default is OFF */
     grib_gribex_mode_on(c);
     codes_gribex_mode_on(c);
-    Assert( grib_get_gribex_mode(c) == 1 );
+    ECCODES_ASSERT( grib_get_gribex_mode(c) == 1 );
     grib_gribex_mode_off(c);
     codes_gribex_mode_off(c);
-    Assert( grib_get_gribex_mode(c) == 0 );
-    Assert( codes_get_gribex_mode(c) == 0 );
+    ECCODES_ASSERT( grib_get_gribex_mode(c) == 0 );
+    ECCODES_ASSERT( codes_get_gribex_mode(c) == 0 );
 }
 
 static void test_gts_header_mode()
@@ -416,10 +428,10 @@ static void test_gts_header_mode()
 
     grib_gts_header_on(c);
     codes_gts_header_on(c);
-    Assert(c->gts_header_on == 1);
+    ECCODES_ASSERT(c->gts_header_on == 1);
     grib_gts_header_off(c);
     codes_gts_header_off(c);
-    Assert(c->gts_header_on == 0);
+    ECCODES_ASSERT(c->gts_header_on == 0);
 }
 
 static void test_data_quality_checks()
@@ -452,18 +464,18 @@ static void test_grib_binary_search()
     size_t idx_upper=0, idx_lower = 0;
 
     grib_binary_search(array_asc, idx_asc_max, 56.0, &idx_upper, &idx_lower);
-    Assert(idx_lower == 1 && idx_upper == 2);
+    ECCODES_ASSERT(idx_lower == 1 && idx_upper == 2);
     grib_binary_search(array_asc, idx_asc_max, 56.1, &idx_upper, &idx_lower);
-    Assert(idx_lower == 2 && idx_upper == 3);
+    ECCODES_ASSERT(idx_lower == 2 && idx_upper == 3);
     grib_binary_search(array_asc, idx_asc_max, -0.1, &idx_upper, &idx_lower);
-    Assert(idx_lower == 0 && idx_upper == 1);
+    ECCODES_ASSERT(idx_lower == 0 && idx_upper == 1);
 
     grib_binary_search(array_desc, idx_desc_max, 88, &idx_upper, &idx_lower);
-    Assert(idx_lower == 0 && idx_upper == 1);
+    ECCODES_ASSERT(idx_lower == 0 && idx_upper == 1);
     grib_binary_search(array_desc, idx_desc_max, -88, &idx_upper, &idx_lower);
-    Assert(idx_lower == 2 && idx_upper == 3);
+    ECCODES_ASSERT(idx_lower == 2 && idx_upper == 3);
     grib_binary_search(array_desc, idx_desc_max, 1, &idx_upper, &idx_lower);
-    Assert(idx_lower == 1 && idx_upper == 2);
+    ECCODES_ASSERT(idx_lower == 1 && idx_upper == 2);
 }
 
 static void test_parse_keyval_string()
@@ -484,18 +496,18 @@ static void test_parse_keyval_string()
     count = max_count;
     err = parse_keyval_string(NULL, input1,
                               values_required, GRIB_TYPE_UNDEFINED, values1, &count);
-    Assert( !err );
-    Assert( count == 2 );
+    ECCODES_ASSERT( !err );
+    ECCODES_ASSERT( count == 2 );
     grib_print_values("print values test: values1", values1, stdout, count);
 
-    Assert( strcmp(values1[0].name, "key1")==0 );
-    Assert( strcmp(values1[0].string_value, "value1")==0 );
-    Assert( values1[0].equal == 1 );
-    Assert( strcmp(values1[1].name, "key2")==0 );
-    Assert( strcmp(values1[1].string_value, "value2")==0 );
-    Assert( values1[1].equal == 0 );
+    ECCODES_ASSERT( strcmp(values1[0].name, "key1")==0 );
+    ECCODES_ASSERT( strcmp(values1[0].string_value, "value1")==0 );
+    ECCODES_ASSERT( values1[0].equal == 1 );
+    ECCODES_ASSERT( strcmp(values1[1].name, "key2")==0 );
+    ECCODES_ASSERT( strcmp(values1[1].string_value, "value2")==0 );
+    ECCODES_ASSERT( values1[1].equal == 0 );
     /* Note how the input is modified by the tokenizer (thanks to strtok_r) */
-    Assert( strcmp(input1, "key1=value1")==0 );
+    ECCODES_ASSERT( strcmp(input1, "key1=value1")==0 );
     free( (void*)values1[0].name );
     free( (void*)values1[1].name );
     free( (void*)values1[0].string_value );
@@ -504,21 +516,21 @@ static void test_parse_keyval_string()
     count = max_count;
     err = parse_keyval_string(NULL, input2,
                               values_required, GRIB_TYPE_LONG, values2, &count);
-    Assert( !err );
-    Assert( count == 1 );
+    ECCODES_ASSERT( !err );
+    ECCODES_ASSERT( count == 1 );
     grib_print_values("print values test: values2", values2, stdout, count);
-    Assert( strcmp(values2[0].name, "x")==0 );
-    Assert( values2[0].long_value == 14 );
-    Assert( values2[0].equal == 1 );
+    ECCODES_ASSERT( strcmp(values2[0].name, "x")==0 );
+    ECCODES_ASSERT( values2[0].long_value == 14 );
+    ECCODES_ASSERT( values2[0].equal == 1 );
     free( (void*)values2[0].name );
 
     count = max_count;
     err = parse_keyval_string(NULL, input3,
                               values_required, GRIB_TYPE_DOUBLE, values3, &count);
-    Assert( !err );
-    Assert( count == 1 );
+    ECCODES_ASSERT( !err );
+    ECCODES_ASSERT( count == 1 );
     grib_print_values("print values test: values3", values3, stdout, count);
-    Assert( strcmp(values3[0].name, "mars.level")==0 );
+    ECCODES_ASSERT( strcmp(values3[0].name, "mars.level")==0 );
     free( (void*)values3[0].name );
 }
 
@@ -526,41 +538,41 @@ static void test_time_conversions()
 {
     printf("Running %s ...\n", __func__);
     long result = convert_to_minutes(120, 13); // 120s = 2mins
-    Assert(result == 2);
+    ECCODES_ASSERT(result == 2);
 }
 
 static void test_dates()
 {
     printf("Running %s ...\n", __func__);
 
-    Assert( is_date_valid(1979,12, 1, 0,0,0) );
-    Assert( is_date_valid(1900, 1, 1, 0,0,0) );
-    Assert( is_date_valid(1964, 4, 6, 0,0,0) );
-    Assert( is_date_valid(2023, 3, 4, 0,0,0) );
-    Assert( is_date_valid(2023, 3, 4, 12,0,0) );
-    Assert( is_date_valid(2023, 3, 4, 0,10,0) );
-    Assert( is_date_valid(2023, 3, 4, 0,0,59) );
-    Assert( is_date_valid(0000, 3, 4, 0,0,0) );
-    Assert( is_date_valid(2020, 2, 29, 0,0,0) );//leap year
+    ECCODES_ASSERT( is_date_valid(1979,12, 1, 0,0,0) );
+    ECCODES_ASSERT( is_date_valid(1900, 1, 1, 0,0,0) );
+    ECCODES_ASSERT( is_date_valid(1964, 4, 6, 0,0,0) );
+    ECCODES_ASSERT( is_date_valid(2023, 3, 4, 0,0,0) );
+    ECCODES_ASSERT( is_date_valid(2023, 3, 4, 12,0,0) );
+    ECCODES_ASSERT( is_date_valid(2023, 3, 4, 0,10,0) );
+    ECCODES_ASSERT( is_date_valid(2023, 3, 4, 0,0,59) );
+    ECCODES_ASSERT( is_date_valid(0000, 3, 4, 0,0,0) );
+    ECCODES_ASSERT( is_date_valid(2020, 2, 29, 0,0,0) );//leap year
 
-    Assert( !is_date_valid(  10, -1, 1, 0,0,0) );// bad months
-    Assert( !is_date_valid(1900, 0,  1, 0,0,0) );
-    Assert( !is_date_valid(1900, 13, 1, 0,0,0) );
+    ECCODES_ASSERT( !is_date_valid(  10, -1, 1, 0,0,0) );// bad months
+    ECCODES_ASSERT( !is_date_valid(1900, 0,  1, 0,0,0) );
+    ECCODES_ASSERT( !is_date_valid(1900, 13, 1, 0,0,0) );
 
-    Assert( !is_date_valid(1900, 5,  0, 0,0,0) ); // bad days
-    Assert( !is_date_valid(2000, 5, 32, 0,0,0) );
-    Assert( !is_date_valid(2000, 5, -7, 0,0,0) );
+    ECCODES_ASSERT( !is_date_valid(1900, 5,  0, 0,0,0) ); // bad days
+    ECCODES_ASSERT( !is_date_valid(2000, 5, 32, 0,0,0) );
+    ECCODES_ASSERT( !is_date_valid(2000, 5, -7, 0,0,0) );
 
-    Assert( !is_date_valid(2000, 5, 8, 99,0,0) );//bad hours
-    Assert( !is_date_valid(2000, 5, 9, -1,0,0) );
+    ECCODES_ASSERT( !is_date_valid(2000, 5, 8, 99,0,0) );//bad hours
+    ECCODES_ASSERT( !is_date_valid(2000, 5, 9, -1,0,0) );
 
-    Assert( !is_date_valid(2000, 5, 8, 0, 61,0) );//bad mins
-    Assert( !is_date_valid(2000, 5, 9, 0,-1, 0) );
+    ECCODES_ASSERT( !is_date_valid(2000, 5, 8, 0, 61,0) );//bad mins
+    ECCODES_ASSERT( !is_date_valid(2000, 5, 9, 0,-1, 0) );
 
-    Assert( !is_date_valid(2000, 5, 8, 0, 1, -1) );//bad secs
-    Assert( !is_date_valid(2000, 5, 9, 0, 1, 60) );
+    ECCODES_ASSERT( !is_date_valid(2000, 5, 8, 0, 1, -1) );//bad secs
+    ECCODES_ASSERT( !is_date_valid(2000, 5, 9, 0, 1, 60) );
 
-    Assert( !is_date_valid(2023, 2, 29, 0,0,0) );//Feb
+    ECCODES_ASSERT( !is_date_valid(2023, 2, 29, 0,0,0) );//Feb
 }
 
 void test_scale_factor_scaled_values()
@@ -573,39 +585,39 @@ void test_scale_factor_scaled_values()
     const int64_t scale_factor_max = 255; // usually 1 octet
 
     err = compute_scaled_value_and_scale_factor(0, scaled_value_max, scale_factor_max, &value, &factor);
-    Assert(!err);
-    Assert(value == 0);
-    Assert(factor == 0);
+    ECCODES_ASSERT(!err);
+    ECCODES_ASSERT(value == 0);
+    ECCODES_ASSERT(factor == 0);
 
     err = compute_scaled_value_and_scale_factor(1, scaled_value_max, scale_factor_max, &value, &factor);
-    Assert(!err);
-    Assert(value == 1);
-    Assert(factor == 0);
+    ECCODES_ASSERT(!err);
+    ECCODES_ASSERT(value == 1);
+    ECCODES_ASSERT(factor == 0);
 
     err = compute_scaled_value_and_scale_factor(1.5, scaled_value_max, scale_factor_max, &value, &factor);
-    Assert(!err);
-    Assert(value == 15);
-    Assert(factor == 1);
+    ECCODES_ASSERT(!err);
+    ECCODES_ASSERT(value == 15);
+    ECCODES_ASSERT(factor == 1);
 
     err = compute_scaled_value_and_scale_factor(4.56, scaled_value_max, scale_factor_max, &value, &factor);
-    Assert(!err);
-    Assert(value == 456);
-    Assert(factor == 2);
+    ECCODES_ASSERT(!err);
+    ECCODES_ASSERT(value == 456);
+    ECCODES_ASSERT(factor == 2);
 
     err = compute_scaled_value_and_scale_factor(-0.003, scaled_value_max, scale_factor_max, &value, &factor);
-    Assert(!err);
-    Assert(value == -3);
-    Assert(factor == 3);
+    ECCODES_ASSERT(!err);
+    ECCODES_ASSERT(value == -3);
+    ECCODES_ASSERT(factor == 3);
 
     err = compute_scaled_value_and_scale_factor(145.889, scaled_value_max, scale_factor_max, &value, &factor);
-    Assert(!err);
-    Assert(value == 145889);
-    Assert(factor == 3);
+    ECCODES_ASSERT(!err);
+    ECCODES_ASSERT(value == 145889);
+    ECCODES_ASSERT(factor == 3);
 
     err = compute_scaled_value_and_scale_factor(1111.00009, scaled_value_max, scale_factor_max, &value, &factor);
-    Assert(!err);
-    Assert(value == 111100009);
-    Assert(factor == 5);
+    ECCODES_ASSERT(!err);
+    ECCODES_ASSERT(value == 111100009);
+    ECCODES_ASSERT(factor == 5);
 }
 
 void test_iarray()
@@ -679,23 +691,43 @@ void test_sarray()
 void test_codes_get_product_name()
 {
     printf("Running %s ...\n", __func__);
-    Assert( STR_EQUAL("ANY",   codes_get_product_name(PRODUCT_ANY)) );
-    Assert( STR_EQUAL("GRIB",  codes_get_product_name(PRODUCT_GRIB)) );
-    Assert( STR_EQUAL("BUFR",  codes_get_product_name(PRODUCT_BUFR)) );
-    Assert( STR_EQUAL("GTS",   codes_get_product_name(PRODUCT_GTS)) );
-    Assert( STR_EQUAL("METAR", codes_get_product_name(PRODUCT_METAR)) );
-    Assert( STR_EQUAL("TAF",   codes_get_product_name(PRODUCT_TAF)) );
+    ECCODES_ASSERT( STR_EQUAL("ANY",   codes_get_product_name(PRODUCT_ANY)) );
+    ECCODES_ASSERT( STR_EQUAL("GRIB",  codes_get_product_name(PRODUCT_GRIB)) );
+    ECCODES_ASSERT( STR_EQUAL("BUFR",  codes_get_product_name(PRODUCT_BUFR)) );
+    ECCODES_ASSERT( STR_EQUAL("GTS",   codes_get_product_name(PRODUCT_GTS)) );
+    ECCODES_ASSERT( STR_EQUAL("METAR", codes_get_product_name(PRODUCT_METAR)) );
+    ECCODES_ASSERT( STR_EQUAL("TAF",   codes_get_product_name(PRODUCT_TAF)) );
 }
 
 void test_codes_get_type_name()
 {
     printf("Running %s ...\n", __func__);
-    Assert( STR_EQUAL("long",    codes_get_type_name(GRIB_TYPE_LONG)) );
-    Assert( STR_EQUAL("string",  grib_get_type_name(GRIB_TYPE_STRING)) );
-    Assert( STR_EQUAL("double",  grib_get_type_name(GRIB_TYPE_DOUBLE)) );
-    Assert( STR_EQUAL("bytes",   grib_get_type_name(GRIB_TYPE_BYTES)) );
-    Assert( STR_EQUAL("label",   grib_get_type_name(GRIB_TYPE_LABEL)) );
-    Assert( STR_EQUAL("section", grib_get_type_name(GRIB_TYPE_SECTION)) );
+    ECCODES_ASSERT( STR_EQUAL("long",    codes_get_type_name(GRIB_TYPE_LONG)) );
+    ECCODES_ASSERT( STR_EQUAL("string",  grib_get_type_name(GRIB_TYPE_STRING)) );
+    ECCODES_ASSERT( STR_EQUAL("double",  grib_get_type_name(GRIB_TYPE_DOUBLE)) );
+    ECCODES_ASSERT( STR_EQUAL("bytes",   grib_get_type_name(GRIB_TYPE_BYTES)) );
+    ECCODES_ASSERT( STR_EQUAL("label",   grib_get_type_name(GRIB_TYPE_LABEL)) );
+    ECCODES_ASSERT( STR_EQUAL("section", grib_get_type_name(GRIB_TYPE_SECTION)) );
+}
+
+void test_grib_surface_type_requires_value()
+{
+    printf("Running %s ...\n", __func__);
+    int err = 0;
+    int edition = 2;
+    ECCODES_ASSERT( codes_grib_surface_type_requires_value(edition, 103, &err) == 1 && !err );
+    ECCODES_ASSERT( codes_grib_surface_type_requires_value(edition, 160, &err) == 1 && !err );
+    ECCODES_ASSERT( codes_grib_surface_type_requires_value(edition, 10,  &err) == 0 && !err );
+
+    ECCODES_ASSERT( codes_grib_surface_type_requires_value(edition, -1, &err) == 0 );
+    ECCODES_ASSERT( err == GRIB_INVALID_ARGUMENT);
+    ECCODES_ASSERT( codes_grib_surface_type_requires_value(edition, 300, &err) == 0 );
+    ECCODES_ASSERT( err == GRIB_INVALID_ARGUMENT);
+
+    // not implemented for edition 1
+    edition = 1;
+    ECCODES_ASSERT( codes_grib_surface_type_requires_value(edition, 1, &err) == 0 );
+    ECCODES_ASSERT( err == GRIB_NOT_IMPLEMENTED );
 }
 
 void test_grib2_choose_PDTN()
@@ -704,10 +736,10 @@ void test_grib2_choose_PDTN()
     int det = true;
     int instant = true;
 
-    Assert( 0  == grib2_choose_PDTN(0,  det,  instant) );
-    Assert( 8  == grib2_choose_PDTN(0,  det, !instant) );
-    Assert( 1  == grib2_choose_PDTN(0, !det,  instant) );
-    Assert( 11 == grib2_choose_PDTN(0, !det, !instant) );
+    ECCODES_ASSERT( 0  == grib2_choose_PDTN(0,  det,  instant) );
+    ECCODES_ASSERT( 8  == grib2_choose_PDTN(0,  det, !instant) );
+    ECCODES_ASSERT( 1  == grib2_choose_PDTN(0, !det,  instant) );
+    ECCODES_ASSERT( 11 == grib2_choose_PDTN(0, !det, !instant) );
 }
 
 void test_grib2_select_PDTN()
@@ -724,50 +756,50 @@ void test_grib2_select_PDTN()
     // arguments = eps instant chemical chemical_srcsink chemical_distfn aerosol aerosol_optical
 
     // Chemicals
-    Assert( 40 == grib2_select_PDTN(!eps, instant,  chemical, 0, 0, 0, 0) );
-    Assert( 41 == grib2_select_PDTN(eps,  instant,  chemical, 0, 0, 0, 0) );
-    Assert( 42 == grib2_select_PDTN(!eps, !instant, chemical, 0, 0, 0, 0) );
-    Assert( 43 == grib2_select_PDTN(eps,  !instant, chemical, 0, 0, 0, 0) );
+    ECCODES_ASSERT( 40 == grib2_select_PDTN(!eps, instant,  chemical, 0, 0, 0, 0) );
+    ECCODES_ASSERT( 41 == grib2_select_PDTN(eps,  instant,  chemical, 0, 0, 0, 0) );
+    ECCODES_ASSERT( 42 == grib2_select_PDTN(!eps, !instant, chemical, 0, 0, 0, 0) );
+    ECCODES_ASSERT( 43 == grib2_select_PDTN(eps,  !instant, chemical, 0, 0, 0, 0) );
 
     // Chemical source/sink
-    Assert( 76 == grib2_select_PDTN(!eps, instant,  !chemical, chemical_srcsink, 0,0,0) );
-    Assert( 77 == grib2_select_PDTN(eps,  instant,  !chemical, chemical_srcsink, 0,0,0) );
-    Assert( 78 == grib2_select_PDTN(!eps, !instant, !chemical, chemical_srcsink, 0,0,0) );
-    Assert( 79 == grib2_select_PDTN(eps,  !instant, !chemical, chemical_srcsink, 0,0,0) );
+    ECCODES_ASSERT( 76 == grib2_select_PDTN(!eps, instant,  !chemical, chemical_srcsink, 0,0,0) );
+    ECCODES_ASSERT( 77 == grib2_select_PDTN(eps,  instant,  !chemical, chemical_srcsink, 0,0,0) );
+    ECCODES_ASSERT( 78 == grib2_select_PDTN(!eps, !instant, !chemical, chemical_srcsink, 0,0,0) );
+    ECCODES_ASSERT( 79 == grib2_select_PDTN(eps,  !instant, !chemical, chemical_srcsink, 0,0,0) );
 
     // Chemical distrib. function
-    Assert( 58 == grib2_select_PDTN(eps, instant,  0, 0, chemical_distfn, 0, 0) );
-    Assert( 68 == grib2_select_PDTN(eps, !instant,  0, 0, chemical_distfn, 0, 0) );
-    Assert( 57 == grib2_select_PDTN(!eps, instant,  0, 0, chemical_distfn, 0, 0) );
-    Assert( 67 == grib2_select_PDTN(!eps, !instant,  0, 0, chemical_distfn, 0, 0) );
+    ECCODES_ASSERT( 58 == grib2_select_PDTN(eps, instant,  0, 0, chemical_distfn, 0, 0) );
+    ECCODES_ASSERT( 68 == grib2_select_PDTN(eps, !instant,  0, 0, chemical_distfn, 0, 0) );
+    ECCODES_ASSERT( 57 == grib2_select_PDTN(!eps, instant,  0, 0, chemical_distfn, 0, 0) );
+    ECCODES_ASSERT( 67 == grib2_select_PDTN(!eps, !instant,  0, 0, chemical_distfn, 0, 0) );
 
     // Aerosols
-    Assert( 50 == grib2_select_PDTN(!eps, instant,  0, 0, 0, aerosol, 0) );
-    Assert( 46 == grib2_select_PDTN(!eps, !instant, 0, 0, 0, aerosol, 0) );
-    Assert( 45 == grib2_select_PDTN(eps, instant,   0, 0, 0, aerosol, 0) );
-    Assert( 85 == grib2_select_PDTN(eps, !instant,  0, 0, 0, aerosol, 0) );
+    ECCODES_ASSERT( 50 == grib2_select_PDTN(!eps, instant,  0, 0, 0, aerosol, 0) );
+    ECCODES_ASSERT( 46 == grib2_select_PDTN(!eps, !instant, 0, 0, 0, aerosol, 0) );
+    ECCODES_ASSERT( 45 == grib2_select_PDTN(eps, instant,   0, 0, 0, aerosol, 0) );
+    ECCODES_ASSERT( 85 == grib2_select_PDTN(eps, !instant,  0, 0, 0, aerosol, 0) );
 
     // Aerosol optical
-    Assert( 49 == grib2_select_PDTN(eps, instant,  0, 0, 0, 0, aerosol_optical) );
-    Assert( 48 == grib2_select_PDTN(!eps, instant, 0, 0, 0, 0, aerosol_optical) );
+    ECCODES_ASSERT( 49 == grib2_select_PDTN(eps, instant,  0, 0, 0, 0, aerosol_optical) );
+    ECCODES_ASSERT( 48 == grib2_select_PDTN(!eps, instant, 0, 0, 0, 0, aerosol_optical) );
 
     // Plain vanilla
-    Assert(  0 == grib2_select_PDTN(!eps, instant,  !chemical, !chemical_srcsink, !chemical_distfn, !aerosol, 0) );
-    Assert(  1 == grib2_select_PDTN(1,1,0,0,0, !aerosol,0) );
-    Assert(  8 == grib2_select_PDTN(0,0,0,0,0, !aerosol,0) );
-    Assert( 11 == grib2_select_PDTN(1,0,0,0,0, !aerosol,0) );
+    ECCODES_ASSERT(  0 == grib2_select_PDTN(!eps, instant,  !chemical, !chemical_srcsink, !chemical_distfn, !aerosol, 0) );
+    ECCODES_ASSERT(  1 == grib2_select_PDTN(1,1,0,0,0, !aerosol,0) );
+    ECCODES_ASSERT(  8 == grib2_select_PDTN(0,0,0,0,0, !aerosol,0) );
+    ECCODES_ASSERT( 11 == grib2_select_PDTN(1,0,0,0,0, !aerosol,0) );
 
     //printf("%d\n", grib2_select_PDTN(!eps, instant,  !chemical, !chemical_srcsink, !chemical_distfn, aerosol, 0) );
-    Assert( 1 == grib2_is_PDTN_EPS(1) );
-    Assert( 1 == grib2_is_PDTN_EPS(11) );
-    Assert( 0 == grib2_is_PDTN_EPS(0) );
+    ECCODES_ASSERT( 1 == grib2_is_PDTN_EPS(1) );
+    ECCODES_ASSERT( 1 == grib2_is_PDTN_EPS(11) );
+    ECCODES_ASSERT( 0 == grib2_is_PDTN_EPS(0) );
 }
 
 void test_codes_get_error_message()
 {
     printf("Running %s ...\n", __func__);
     const char* errmsg = grib_get_error_message(6666);
-    Assert( STR_EQUAL(errmsg, "Unknown error -6666"));
+    ECCODES_ASSERT( STR_EQUAL(errmsg, "Unknown error -6666"));
 }
 
 void test_codes_context_set_debug()
@@ -779,16 +811,16 @@ void test_codes_context_set_debug()
     printf("\tEnable debugging...\n");
     grib_context_set_debug(context, -1);
 
-    grib_handle* h = grib_handle_new_from_samples(context, "GRIB2");
+    grib_handle* h = grib_handle_new_from_samples(context, "GRIB1");
     if (!h) return;
     err = grib_set_long(h, "paramId", 167);
-    Assert(!err);
+    ECCODES_ASSERT(!err);
 
     printf("\tDisable debugging...\n");
     grib_context_set_debug(context, 0);
 
-    err = grib_set_long(h, "edition", 1);
-    Assert(!err);
+    err = grib_set_long(h, "edition", 2);
+    ECCODES_ASSERT(!err);
     printf("\tEnable debugging again (verbose)...\n");
     grib_context_set_debug(context, 1);
     grib_handle_delete(h);
@@ -814,7 +846,7 @@ void test_codes_is_feature_enabled()
         const char* f = features[i];
         printf("\tFeature %s enabled?\t%d\n", f, codes_is_feature_enabled(f));
     }
-    Assert( 0 == codes_is_feature_enabled("total rubbish") );
+    ECCODES_ASSERT( 0 == codes_is_feature_enabled("total rubbish") );
 }
 
 void test_codes_get_features()
@@ -824,7 +856,7 @@ void test_codes_get_features()
     size_t len = 512;
     char* features = (char*)calloc(len, sizeof(char));
     int err = codes_get_features(features, &len, CODES_FEATURES_ALL);
-    Assert(!err);
+    ECCODES_ASSERT(!err);
     printf("\tFeatures are: '%s'\n", features);
 
     len = 512;
@@ -843,16 +875,16 @@ static void test_grib_get_binary_scale_fact()
     printf("Running %s ...\n", __func__);
     int err = 0;
     long result = grib_get_binary_scale_fact(INFINITY, 0, 0, &err);
-    Assert( err == GRIB_OUT_OF_RANGE);
-    Assert( result == 0 );
+    ECCODES_ASSERT(err == GRIB_OUT_OF_RANGE);
+    ECCODES_ASSERT(result == 0);
 
     result = grib_get_binary_scale_fact(100, 0, 65, &err); // bpv too big
-    Assert( err == GRIB_OUT_OF_RANGE);
-    Assert( result == 0 );
+    ECCODES_ASSERT(err == GRIB_OUT_OF_RANGE);
+    ECCODES_ASSERT(result == 0);
 
     result = grib_get_binary_scale_fact(100, 0, 0, &err); // bpv 0
-    Assert( err == GRIB_ENCODING_ERROR);
-    Assert( result == 0 );
+    ECCODES_ASSERT(err == GRIB_ENCODING_ERROR);
+    ECCODES_ASSERT(result == 0);
 }
 
 static void test_filepool()
@@ -861,12 +893,93 @@ static void test_filepool()
     grib_file_pool_print("file_pool contents", stdout);
 }
 
+static void test_expressions()
+{
+    printf("Running %s ...\n", __func__);
+    grib_context* c = grib_context_get_default();
+    int err = 0;
+    double dVal = -1;
+    char buf[32];
+    size_t size = 0;
+
+    grib_handle* h = grib_handle_new_from_samples(c, "GRIB2");
+    if (!h) return;
+
+    grib_expression* eTrue = new_true_expression(c);
+    ECCODES_ASSERT(eTrue);
+    const char* cname = eTrue->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+    err = eTrue->evaluate_double(h, &dVal);
+    ECCODES_ASSERT(!err && dVal > 0);
+    eTrue->print(c, h, stderr);
+
+    grib_expression* eUnOp = new_unop_expression(c, 0, 0, 0);
+    ECCODES_ASSERT(eUnOp);
+    cname = eUnOp->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eBinop = new_binop_expression(c, 0, 0, 0, 0);
+    ECCODES_ASSERT(eBinop);
+    cname = eBinop->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eSubStr = new_sub_string_expression(c, "atest", 0, 1);
+    ECCODES_ASSERT(eSubStr);
+    cname = eSubStr->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eLen = new_length_expression(c, "abc");
+    ECCODES_ASSERT(eLen);
+    cname = eLen->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eIsInt = new_is_integer_expression(c, "edition", 0, 1);
+    ECCODES_ASSERT(eIsInt);
+    cname = eIsInt->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+    dVal = -1;
+    err = eIsInt->evaluate_double(h, &dVal);
+    ECCODES_ASSERT(!err && dVal > 0);
+    const char* result = eIsInt->evaluate_string(h, buf, &size, &err);
+    ECCODES_ASSERT( STR_EQUAL(result, "1") );
+
+    grib_expression* eStrCmp = new_string_compare_expression(c, 0, 0, 0);
+    ECCODES_ASSERT(eStrCmp);
+    cname = eStrCmp->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eLogAnd = new_logical_and_expression(c, 0, 0);
+    ECCODES_ASSERT(eLogAnd);
+    cname = eLogAnd->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eLogOr = new_logical_or_expression(c, 0 ,0);
+    ECCODES_ASSERT(eLogOr);
+    cname = eLogOr->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eIsInDict = new_is_in_dict_expression(c, "a", "list");
+    ECCODES_ASSERT(eIsInDict);
+    cname = eIsInDict->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+    eIsInDict->evaluate_double(h, &dVal);
+    eIsInt->evaluate_string(h, buf, &size, &err);
+
+    grib_expression* eIsInList = new_is_in_list_expression(c, "b", "list");
+    ECCODES_ASSERT(eIsInList);
+    cname = eIsInList->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+}
+
 int main(int argc, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
     printf("codes_print_api_version gives: ");
     codes_print_api_version(stdout);
     printf("\n");
+
+    test_grib_get_reduced_row_legacy();
 
     test_codes_context_set_debug();
     test_codes_get_error_message();
@@ -926,11 +1039,14 @@ int main(int argc, char** argv)
     test_string_replace_char();
     test_string_remove_char();
 
+    test_grib_surface_type_requires_value();
     test_grib2_select_PDTN();
     test_grib2_choose_PDTN();
     test_codes_is_feature_enabled();
     test_codes_get_features();
     test_filepool();
+    test_expressions();
 
+    printf("\n\nProgram %s finished\n", argv[0]);
     return 0;
 }
