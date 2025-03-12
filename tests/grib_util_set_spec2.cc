@@ -14,10 +14,10 @@
 static void dump_it(grib_handle* h)
 {
     int dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
-    grib_dump_content(h, stderr, "wmo", dump_flags, NULL);
+    grib_dump_content(h, stderr, "wmo", dump_flags, nullptr);
 }
 
-// Lambert conformal
+// Lambert conformal conic (edition=1)
 static grib_handle* test0()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
@@ -32,6 +32,7 @@ static grib_handle* test0()
     int set_spec_flags = 0;
     size_t outlen      = 4;
 
+    auto* handle   = grib_handle_new_from_samples(nullptr, "GRIB1");
     grib_handle* handle = grib_handle_new_from_samples(0, "GRIB1");
     spec.grid_type      = GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL;
     spec.Ni             = 2;
@@ -49,7 +50,7 @@ static grib_handle* test0()
     return finalh;
 }
 
-// Lambert azimuthal
+// Lambert azimuthal equal area
 static grib_handle* test1()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
@@ -64,7 +65,7 @@ static grib_handle* test1()
     int set_spec_flags = 0;
     size_t outlen      = 4;
 
-    grib_handle* handle = grib_handle_new_from_samples(0, "GRIB2");
+    grib_handle* handle = grib_handle_new_from_samples(nullptr, "GRIB2");
     grib_set_long(handle, "tablesVersion", 32);
     spec.grid_type = GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA;
 
@@ -90,7 +91,7 @@ static grib_handle* test2()
     int set_spec_flags = 0;
     size_t outlen      = 4;
 
-    grib_handle* handle = grib_handle_new_from_samples(0, "GRIB1");
+    auto* handle        = grib_handle_new_from_samples(nullptr, "GRIB1");
     spec.grid_type      = GRIB_UTIL_GRID_SPEC_HEALPIX;
     spec.N              = 2;
 
@@ -120,7 +121,7 @@ static grib_handle* test3()
     int set_spec_flags = 0;
     size_t outlen      = 0;
 
-    grib_handle* handle = grib_handle_new_from_samples(0, "sh_pl_grib2");
+    auto* handle        = grib_handle_new_from_samples(nullptr, "sh_pl_grib2");
     spec.grid_type      = GRIB_UTIL_GRID_SPEC_SH;
     spec.truncation     = 20;
     outlen              = 2;
@@ -152,7 +153,7 @@ static grib_handle* test4()
     int set_spec_flags = 0;
     size_t outlen      = 0;
 
-    grib_handle* handle = grib_handle_new_from_samples(0, "GRIB2");
+    auto* handle = grib_handle_new_from_samples(nullptr, "GRIB2");
     // grib_set_long(handle, "tablesVersion", 32);
     spec.grid_type = GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC;
     outlen         = 4;
@@ -184,7 +185,7 @@ static grib_handle* test5()
     int set_spec_flags = 0;
     size_t outlen      = 0;
 
-    grib_handle* handle = grib_handle_new_from_samples(0, "GRIB2");
+    auto* handle        = grib_handle_new_from_samples(nullptr, "GRIB2");
     spec.grid_type      = GRIB_UTIL_GRID_SPEC_REGULAR_GG;
     spec.Ni = spec.Nj = 2;
     outlen            = 4;
@@ -211,7 +212,7 @@ static grib_handle* test6()
     int set_spec_flags = 0;
     size_t outlen      = 0;
 
-    grib_handle* handle = grib_handle_new_from_samples(0, "GRIB2");
+    auto* handle        = grib_handle_new_from_samples(nullptr, "GRIB2");
     spec.grid_type      = GRIB_UTIL_GRID_SPEC_REDUCED_LL;
     spec.Nj             = 2;
     outlen              = 4;
@@ -238,7 +239,7 @@ static grib_handle* test7()
     int set_spec_flags = 0;
     size_t outlen      = 4;
 
-    grib_handle* handle = grib_handle_new_from_samples(0, "GRIB2");
+    auto* handle        = grib_handle_new_from_samples(nullptr, "GRIB2");
     spec.grid_type      = GRIB_UTIL_GRID_SPEC_UNSTRUCTURED;
 
     grib_handle* finalh = grib_util_set_spec(
@@ -250,16 +251,13 @@ static grib_handle* test7()
 
 int main()
 {
-    typedef grib_handle* (*test_func)(void);
-    test_func funcs[] = { test0, test1, test2, test3, test4, test5, test6, test7 };
+    using test_func = grib_handle* (*)();
 
-    // grib_handle* (*p[8]) (void) = {test0, test1, test2, test3, test4, test5, test6, test7};
-
-    const size_t num_tests = sizeof(funcs) / sizeof(funcs[0]);
-    for (size_t i = 0; i < num_tests; i++) {
-        grib_handle* result = funcs[i]();
-        ECCODES_ASSERT(result);
+    for (auto func : { test0, test1, test2, test3, test4, test5, test6, test7 }) {
+        auto* result = func();
+        ECCODES_ASSERT(result != nullptr);
         dump_it(result);
     }
+
     return 0;
 }
