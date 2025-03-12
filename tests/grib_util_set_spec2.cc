@@ -33,10 +33,11 @@ static grib_handle* test0()
     size_t outlen      = 4;
 
     auto* handle   = grib_handle_new_from_samples(nullptr, "GRIB1");
-    grib_handle* handle = grib_handle_new_from_samples(0, "GRIB1");
-    spec.grid_type      = GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL;
-    spec.Ni             = 2;
-    spec.Nj             = 2;
+    spec.grid_type = GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL;
+    spec.Ni        = 2;
+    spec.Nj        = 2;
+
+    spec.longitudeOfFirstGridPointInDegrees = -1.;
 
     // packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE;
     // packing_spec.bitsPerValue = 16;
@@ -50,7 +51,7 @@ static grib_handle* test0()
     return finalh;
 }
 
-// Lambert azimuthal equal area
+// Lambert conformal conic (edition=2)
 static grib_handle* test1()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
@@ -65,18 +66,26 @@ static grib_handle* test1()
     int set_spec_flags = 0;
     size_t outlen      = 4;
 
-    grib_handle* handle = grib_handle_new_from_samples(nullptr, "GRIB2");
-    grib_set_long(handle, "tablesVersion", 32);
-    spec.grid_type = GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA;
+    auto* handle   = grib_handle_new_from_samples(nullptr, "GRIB2");
+    spec.grid_type = GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL;
+    spec.Ni        = 2;
+    spec.Nj        = 2;
 
-    grib_handle* finalh = grib_util_set_spec(
+    spec.longitudeOfFirstGridPointInDegrees = -1.;
+
+    // packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE;
+    // packing_spec.bitsPerValue = 16;
+    // packing_spec.accuracy = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
+    // packing_spec.packing  = GRIB_UTIL_PACKING_USE_PROVIDED;
+
+    grib_handle* finalh = codes_grib_util_set_spec(
         handle, &spec, &packing_spec, set_spec_flags,
         values, outlen, &err);
     ECCODES_ASSERT(err == 0);
     return finalh;
 }
 
-// HEALPix
+// Lambert azimuthal equal area
 static grib_handle* test2()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
@@ -91,9 +100,35 @@ static grib_handle* test2()
     int set_spec_flags = 0;
     size_t outlen      = 4;
 
-    auto* handle        = grib_handle_new_from_samples(nullptr, "GRIB1");
-    spec.grid_type      = GRIB_UTIL_GRID_SPEC_HEALPIX;
-    spec.N              = 2;
+    auto* handle = grib_handle_new_from_samples(nullptr, "GRIB2");
+    grib_set_long(handle, "tablesVersion", 32);
+    spec.grid_type = GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA;
+
+    grib_handle* finalh = grib_util_set_spec(
+        handle, &spec, &packing_spec, set_spec_flags,
+        values, outlen, &err);
+    ECCODES_ASSERT(err == 0);
+    return finalh;
+}
+
+// HEALPix
+static grib_handle* test3()
+{
+    fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
+    int err                  = 0;
+    grib_util_grid_spec spec = {
+        0,
+    };
+    grib_util_packing_spec packing_spec = {
+        0,
+    };
+    double values[4]   = { 1.1, 2.2, 3.3, 0.4 };
+    int set_spec_flags = 0;
+    size_t outlen      = 4;
+
+    auto* handle   = grib_handle_new_from_samples(nullptr, "GRIB1");
+    spec.grid_type = GRIB_UTIL_GRID_SPEC_HEALPIX;
+    spec.N         = 2;
 
     packing_spec.packing_type  = GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER;
     packing_spec.packing       = GRIB_UTIL_PACKING_USE_PROVIDED;
@@ -107,7 +142,7 @@ static grib_handle* test2()
 }
 
 // Spherical harmonics
-static grib_handle* test3()
+static grib_handle* test4()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err                  = 0;
@@ -121,10 +156,10 @@ static grib_handle* test3()
     int set_spec_flags = 0;
     size_t outlen      = 0;
 
-    auto* handle        = grib_handle_new_from_samples(nullptr, "sh_pl_grib2");
-    spec.grid_type      = GRIB_UTIL_GRID_SPEC_SH;
-    spec.truncation     = 20;
-    outlen              = 2;
+    auto* handle    = grib_handle_new_from_samples(nullptr, "sh_pl_grib2");
+    spec.grid_type  = GRIB_UTIL_GRID_SPEC_SH;
+    spec.truncation = 20;
+    outlen          = 2;
 
     packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE;
     packing_spec.bitsPerValue = 16;
@@ -139,7 +174,7 @@ static grib_handle* test3()
 }
 
 // Polar stereo
-static grib_handle* test4()
+static grib_handle* test5()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err                  = 0;
@@ -171,33 +206,6 @@ static grib_handle* test4()
 }
 
 // Regular Gaussian
-static grib_handle* test5()
-{
-    fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
-    int err                  = 0;
-    grib_util_grid_spec spec = {
-        0,
-    };
-    grib_util_packing_spec packing_spec = {
-        0,
-    };
-    double values[4]   = { 1.1, 2.2, 3.3, 0.4 };
-    int set_spec_flags = 0;
-    size_t outlen      = 0;
-
-    auto* handle        = grib_handle_new_from_samples(nullptr, "GRIB2");
-    spec.grid_type      = GRIB_UTIL_GRID_SPEC_REGULAR_GG;
-    spec.Ni = spec.Nj = 2;
-    outlen            = 4;
-
-    grib_handle* finalh = grib_util_set_spec(
-        handle, &spec, &packing_spec, set_spec_flags,
-        values, outlen, &err);
-    ECCODES_ASSERT(err == 0);
-    return finalh;
-}
-
-// Reduced LL
 static grib_handle* test6()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
@@ -212,10 +220,37 @@ static grib_handle* test6()
     int set_spec_flags = 0;
     size_t outlen      = 0;
 
-    auto* handle        = grib_handle_new_from_samples(nullptr, "GRIB2");
-    spec.grid_type      = GRIB_UTIL_GRID_SPEC_REDUCED_LL;
-    spec.Nj             = 2;
-    outlen              = 4;
+    auto* handle   = grib_handle_new_from_samples(nullptr, "GRIB2");
+    spec.grid_type = GRIB_UTIL_GRID_SPEC_REGULAR_GG;
+    spec.Ni = spec.Nj = 2;
+    outlen            = 4;
+
+    grib_handle* finalh = grib_util_set_spec(
+        handle, &spec, &packing_spec, set_spec_flags,
+        values, outlen, &err);
+    ECCODES_ASSERT(err == 0);
+    return finalh;
+}
+
+// Reduced LL
+static grib_handle* test7()
+{
+    fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
+    int err                  = 0;
+    grib_util_grid_spec spec = {
+        0,
+    };
+    grib_util_packing_spec packing_spec = {
+        0,
+    };
+    double values[4]   = { 1.1, 2.2, 3.3, 0.4 };
+    int set_spec_flags = 0;
+    size_t outlen      = 0;
+
+    auto* handle   = grib_handle_new_from_samples(nullptr, "GRIB2");
+    spec.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_LL;
+    spec.Nj        = 2;
+    outlen         = 4;
 
     grib_handle* finalh = grib_util_set_spec(
         handle, &spec, &packing_spec, set_spec_flags,
@@ -225,7 +260,7 @@ static grib_handle* test6()
 }
 
 // Unstructured
-static grib_handle* test7()
+static grib_handle* test8()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err                  = 0;
@@ -239,8 +274,8 @@ static grib_handle* test7()
     int set_spec_flags = 0;
     size_t outlen      = 4;
 
-    auto* handle        = grib_handle_new_from_samples(nullptr, "GRIB2");
-    spec.grid_type      = GRIB_UTIL_GRID_SPEC_UNSTRUCTURED;
+    auto* handle   = grib_handle_new_from_samples(nullptr, "GRIB2");
+    spec.grid_type = GRIB_UTIL_GRID_SPEC_UNSTRUCTURED;
 
     grib_handle* finalh = grib_util_set_spec(
         handle, &spec, &packing_spec, set_spec_flags,
@@ -253,7 +288,7 @@ int main()
 {
     using test_func = grib_handle* (*)();
 
-    for (auto func : { test0, test1, test2, test3, test4, test5, test6, test7 }) {
+    for (auto func : { test0, test1, test2, test3, test4, test5, test6, test7, test8 }) {
         auto* result = func();
         ECCODES_ASSERT(result != nullptr);
         dump_it(result);
