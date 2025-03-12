@@ -1,10 +1,10 @@
 # Random patterns - SKEB / SPPT / SPP
-
-unsigned[2] randomFieldNumber : dump;
-unsigned[2] totalNumberOfRandomFields : dump;
-unsigned[2] spatioTemporalScaleNumber : dump;
-unsigned[2] totalNumberOfSpatioTemporalScales : dump;
-unsigned[4] scaledValueOfSpatialScale : dump;
-unsigned[1] scaleFactorOfSpatialScale : dump;
-unsigned[4] scaledValueOfTemporalScale : dump;
-unsigned[1] scaleFactorOfTemporalScale : dump;
+ 
+unsigned[2] randomFieldNumber : dump,edition_specific;
+unsigned[2] totalNumberOfRandomFields : dump,edition_specific;
+unsigned[2] spatioTemporalScaleNumber = missing() : can_be_missing,dump,edition_specific;
+unsigned[2] totalNumberOfSpatioTemporalScales  = missing() : can_be_missing,dump,edition_specific;
+unsigned[4] scaledValueOfSpatialScale  = missing() : can_be_missing,dump,edition_specific;
+unsigned[1] scaleFactorOfSpatialScale  = missing() : can_be_missing,dump,edition_specific;
+unsigned[4] scaledValueOfTemporalScale = missing() : can_be_missing,dump,edition_specific;
+unsigned[1] scaleFactorOfTemporalScale  = missing() : can_be_missing,dump,edition_specific;
