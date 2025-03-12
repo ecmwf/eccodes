@@ -21,13 +21,9 @@ static void dump_it(grib_handle* h)
 static grib_handle* test0()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
-    int err                  = 0;
-    grib_util_grid_spec spec = {
-        0,
-    };
-    grib_util_packing_spec packing_spec = {
-        0,
-    };
+    int err = 0;
+    grib_util_grid_spec spec = {0,};
+    grib_util_packing_spec packing_spec = {0,};
     double values[4]   = { 1.1, 2.2, 3.3, 0.4 };
     int set_spec_flags = 0;
     size_t outlen      = 4;
@@ -55,13 +51,9 @@ static grib_handle* test0()
 static grib_handle* test1()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
-    int err                  = 0;
-    grib_util_grid_spec spec = {
-        0,
-    };
-    grib_util_packing_spec packing_spec = {
-        0,
-    };
+    int err = 0;
+    grib_util_grid_spec spec = {0,};
+    grib_util_packing_spec packing_spec = {0,};
     double values[4]   = { 1.1, 2.2, 3.3, 0.4 };
     int set_spec_flags = 0;
     size_t outlen      = 4;
@@ -89,13 +81,9 @@ static grib_handle* test1()
 static grib_handle* test2()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
-    int err                  = 0;
-    grib_util_grid_spec spec = {
-        0,
-    };
-    grib_util_packing_spec packing_spec = {
-        0,
-    };
+    int err = 0;
+    grib_util_grid_spec spec = {0,};
+    grib_util_packing_spec packing_spec = {0,};
     double values[4]   = { 1.1, 2.2, 3.3, 0.4 };
     int set_spec_flags = 0;
     size_t outlen      = 4;
@@ -115,13 +103,9 @@ static grib_handle* test2()
 static grib_handle* test3()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
-    int err                  = 0;
-    grib_util_grid_spec spec = {
-        0,
-    };
-    grib_util_packing_spec packing_spec = {
-        0,
-    };
+    int err = 0;
+    grib_util_grid_spec spec = {0,};
+    grib_util_packing_spec packing_spec = {0,};
     double values[4]   = { 1.1, 2.2, 3.3, 0.4 };
     int set_spec_flags = 0;
     size_t outlen      = 4;
@@ -145,13 +129,9 @@ static grib_handle* test3()
 static grib_handle* test4()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
-    int err                  = 0;
-    grib_util_grid_spec spec = {
-        0,
-    };
-    grib_util_packing_spec packing_spec = {
-        0,
-    };
+    int err = 0;
+    grib_util_grid_spec spec = {0,};
+    grib_util_packing_spec packing_spec = {0,};
     double values[4]   = { 1.1, 2.2 };
     int set_spec_flags = 0;
     size_t outlen      = 0;
@@ -177,13 +157,9 @@ static grib_handle* test4()
 static grib_handle* test5()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
-    int err                  = 0;
-    grib_util_grid_spec spec = {
-        0,
-    };
-    grib_util_packing_spec packing_spec = {
-        0,
-    };
+    int err = 0;
+    grib_util_grid_spec spec = {0,};
+    grib_util_packing_spec packing_spec = {0,};
     double values[4]   = { 1.1, 2.2, 3.3, 0.4 };
     int set_spec_flags = 0;
     size_t outlen      = 0;
@@ -209,13 +185,9 @@ static grib_handle* test5()
 static grib_handle* test6()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
-    int err                  = 0;
-    grib_util_grid_spec spec = {
-        0,
-    };
-    grib_util_packing_spec packing_spec = {
-        0,
-    };
+    int err = 0;
+    grib_util_grid_spec spec = {0,};
+    grib_util_packing_spec packing_spec = {0,};
     double values[4]   = { 1.1, 2.2, 3.3, 0.4 };
     int set_spec_flags = 0;
     size_t outlen      = 0;
@@ -236,13 +208,9 @@ static grib_handle* test6()
 static grib_handle* test7()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
-    int err                  = 0;
-    grib_util_grid_spec spec = {
-        0,
-    };
-    grib_util_packing_spec packing_spec = {
-        0,
-    };
+    int err = 0;
+    grib_util_grid_spec spec = {0,};
+    grib_util_packing_spec packing_spec = {0,};
     double values[4]   = { 1.1, 2.2, 3.3, 0.4 };
     int set_spec_flags = 0;
     size_t outlen      = 0;
@@ -263,13 +231,9 @@ static grib_handle* test7()
 static grib_handle* test8()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
-    int err                  = 0;
-    grib_util_grid_spec spec = {
-        0,
-    };
-    grib_util_packing_spec packing_spec = {
-        0,
-    };
+    int err = 0;
+    grib_util_grid_spec spec = {0,};
+    grib_util_packing_spec packing_spec = {0,};
     double values[4]   = { 1.1, 2.2, 3.3, 0.4 };
     int set_spec_flags = 0;
     size_t outlen      = 4;
