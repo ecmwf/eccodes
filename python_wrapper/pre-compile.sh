@@ -20,18 +20,12 @@ mkdir -p /tmp/eccodes/target/eccodes/lib64/
 if [ "$(uname)" != "Darwin" ] ; then
     echo "installing deps for platform $(uname)"
 
-    ## yum-available prereqs
+    ## yum-available prereqs -- assumed to be installed in the base due to privileges here
     for p in libaec-devel libpng-devel gobject-introspection-devel
     do
-        yum install -y $p
-        # TODO improve
-        yum install $p 2>&1 > tmp
-        cat tmp
-        v=$(grep 'already installed' < tmp | awk '{print $2;}' | sed 's/\\d://')
-        echo "yum $p $v" >> python_wrapper/src/versions.txt
+        v=$(dnf list --installed libaec-devel | grep libaec-devel | sed 's/ \+/;/g')
+        echo "yum $v" >> python_wrapper/src/versions.txt
     done
-    rm tmp
-
 
     ## buildable prereqs
     GIT_OPENJPEG=https://github.com/uclouvain/openjpeg
