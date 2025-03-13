@@ -19438,7 +19438,7 @@
 	 parameterNumber = 0 ;
 	}
 #Total column vertically-integrated mass density
-'tc_mdens' = {
+'tcvimd' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
@@ -19915,6 +19915,22 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 112 ;
+	}
+#Tropospheric column vertically-integrated mass density
+'tropvimd' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 7 ;
+	}
+#Stratospheric column vertically-integrated mass density
+'stratvimd' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfSecondFixedSurface = 36 ;
 	}
 #Pressure tendency
 'ptend' = {
