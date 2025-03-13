@@ -10,8 +10,10 @@
 }
 'surface' = {typeOfFirstFixedSurface=1; typeOfSecondFixedSurface=255;}
 
-'troposphere' = {typeOfFirstFixedSurface=1; scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
-    typeOfSecondFixedSurface=7; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();}
+'troposphere' = {
+    typeOfFirstFixedSurface=1;  scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=7; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
 
 'entireAtmosphere' = {
     typeOfFirstFixedSurface=1;  scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
@@ -44,8 +46,10 @@
 }
 'tropopause' = {typeOfFirstFixedSurface=7;   typeOfSecondFixedSurface=255;}
 
-'stratosphere' = {typeOfFirstFixedSurface=7; scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
-    typeOfSecondFixedSurface=36; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();}
+'stratosphere' = {
+    typeOfFirstFixedSurface=7;   scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=36; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
 
 'nominalTop' = {
     typeOfFirstFixedSurface=8;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
