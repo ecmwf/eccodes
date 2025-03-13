@@ -237,11 +237,12 @@ static int rectify_concept_apply(grib_handle* h, const char* key)
     //
     int ret = GRIB_NOT_FOUND;
     static const std::map<std::string_view, std::pair<std::string_view, long>> keyMap = {
-        { "typeOfStatisticalProcessing", { "selectStepTemplateInterval", 1 } },
-        { "typeOfWavePeriodInterval", { "productDefinitionTemplateNumber", 103 } },
-        { "sourceSinkChemicalPhysicalProcess", { "is_chemical_srcsink", 1 } },
+        { "typeOfStatisticalProcessing",       { "selectStepTemplateInterval", 1 }        },
+        { "typeOfWavePeriodInterval",          { "productDefinitionTemplateNumber", 103 } },
+        { "sourceSinkChemicalPhysicalProcess", { "is_chemical_srcsink", 1 }               },
+        { "randomFieldNumber",                 { "productDefinitionTemplateNumber", 143 } },
         // TODO(masn): Add a new key e.g. is_probability_forecast
-        { "probabilityType", { "productDefinitionTemplateNumber", 5 } }
+        { "probabilityType",                   { "productDefinitionTemplateNumber", 5 }   }
     };
     const auto mapIter = keyMap.find(key);
     if (mapIter != keyMap.end()) {
