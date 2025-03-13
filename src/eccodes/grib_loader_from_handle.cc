@@ -168,7 +168,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
     // ECC-2013: Unfortunately we mapped some keys to be "string_type" in the definitions,
     // e.g., the grib2 key typeOfFirstFixedSurface. Its code table 4.5 has multiple
     // abbreviations of "sfc" etc which clash! So we mark it with this flag to revert to integers which are unique
-    if ( ga->flags_ & GRIB_ACCESSOR_FLAG_COPY_AS_INT ) {
+    if ( ga->flags_ & GRIB_ACCESSOR_FLAG_COPY_AS_LONG ) {
         ga_type = GRIB_TYPE_LONG;
     }
 
