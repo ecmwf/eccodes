@@ -170,7 +170,7 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
 %token MISSING
 %token CONSTRAINT
 %token COPY_OK
-%token COPY_AS_INT
+%token COPY_AS_LONG
 %token COPY_IF_CHANGING_EDITION
 
 %token WHEN
@@ -718,7 +718,7 @@ flag: READ_ONLY          { $$ = GRIB_ACCESSOR_FLAG_READ_ONLY; }
     | CAN_BE_MISSING     { $$ = GRIB_ACCESSOR_FLAG_CAN_BE_MISSING; }
     | CONSTRAINT         { $$ = GRIB_ACCESSOR_FLAG_CONSTRAINT; }
     | COPY_OK            { $$ = GRIB_ACCESSOR_FLAG_COPY_OK; }
-    | COPY_AS_INT        { $$ = GRIB_ACCESSOR_FLAG_COPY_AS_INT; }
+    | COPY_AS_LONG       { $$ = GRIB_ACCESSOR_FLAG_COPY_AS_LONG; }
     | COPY_IF_CHANGING_EDITION { $$ = GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION; }
     | TRANS              { $$ = GRIB_ACCESSOR_FLAG_TRANSIENT; }
     | STRING_TYPE        { $$ = GRIB_ACCESSOR_FLAG_STRING_TYPE; }

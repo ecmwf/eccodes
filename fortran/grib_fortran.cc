@@ -2213,9 +2213,12 @@ int grib_f_set_missing_(int* gid, char* key,int len)
 
     grib_handle *h = get_handle(*gid);
     char buf[1024];
-    if(!h)  return GRIB_INVALID_GRIB;
+    if (!h) return GRIB_INVALID_GRIB;
 
-    return grib_set_missing(h, cast_char(buf,key,len));
+    const char* theKey = cast_char(buf, key, len);
+    if (!theKey) return GRIB_INVALID_ARGUMENT;
+
+    return grib_set_missing(h, theKey);
 }
 
 int grib_f_is_missing_(int* gid, char* key, int* isMissing,int len)
@@ -2225,7 +2228,10 @@ int grib_f_is_missing_(int* gid, char* key, int* isMissing,int len)
     char buf[1024];
     if (!h) return GRIB_INVALID_GRIB;
 
-    *isMissing=grib_is_missing(h, cast_char(buf,key,len),&err);
+    const char* theKey = cast_char(buf, key, len);
+    if (!theKey) return GRIB_INVALID_ARGUMENT;
+
+    *isMissing=grib_is_missing(h, theKey, &err);
     return err;
 }
 
@@ -2241,7 +2247,7 @@ int grib_f_is_defined_(int* gid, char* key,int* isDefined,int len)
 {
     grib_handle *h = get_handle(*gid);
     char buf[1024];
-    if(!h) return GRIB_INVALID_GRIB;
+    if (!h) return GRIB_INVALID_GRIB;
     const char* theKey = cast_char(buf, key, len);
     if (!theKey) return GRIB_INVALID_ARGUMENT;
 

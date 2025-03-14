@@ -79,6 +79,9 @@
 'sol' = {typeOfFirstFixedSurface=187; typeOfSecondFixedSurface=187;}
 'sfc' = {typeOfFirstFixedSurface=187; typeOfSecondFixedSurface=185;}
 
+'sfc' = {typeOfFirstFixedSurface=1; typeOfSecondFixedSurface=7;}
+'sfc' = {typeOfFirstFixedSurface=7; typeOfSecondFixedSurface=36;}
+
 'sfc' = {typeOfFirstFixedSurface=107; scaleFactorOfFirstFixedSurface=2; scaledValueOfFirstFixedSurface=27315;}
 'sfc' = {typeOfFirstFixedSurface=107; scaleFactorOfFirstFixedSurface=2; scaledValueOfFirstFixedSurface=27415;}
 'sfc' = {typeOfFirstFixedSurface=107; scaleFactorOfFirstFixedSurface=2; scaledValueOfFirstFixedSurface=27465;}

@@ -1,11 +1,11 @@
 # (C) Copyright 2005- ECMWF.
 
-# TEMPLATE 4.143, Random fields used in an ensemble forecast, at a horizontal level or in a horizontal layer at a point in time
+# TEMPLATE 4.150, Verification scores for derived forecast based on all ensemble members at a horizontal level or in a horizontal layer at a point in time
 
 include "grib2/templates/template.4.parameter.def"
 include "grib2/templates/template.4.generating_process.def"
 include "grib2/templates/template.4.forecast_time.def"
 include "grib2/templates/template.4.point_in_time.def"
-include "grib2/templates/template.4.random_patterns.def"
 include "grib2/templates/template.4.horizontal.def"
-include "grib2/templates/template.4.leps.def"
+include "grib2/templates/template.4.lderived.def"
+include "grib2/templates/template.4.verification_scores.def"

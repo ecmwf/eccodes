@@ -939,7 +939,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 {
 #define SET_LONG_VALUE(n, v)                       \
     do {                                           \
-        ECCODES_ASSERT(count < 1024);                      \
+        ECCODES_ASSERT(count < 1024);              \
         values[count].name       = n;              \
         values[count].type       = GRIB_TYPE_LONG; \
         values[count].long_value = v;              \
@@ -947,7 +947,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     } while (0)
 #define SET_DOUBLE_VALUE(n, v)                         \
     do {                                               \
-        ECCODES_ASSERT(count < 1024);                          \
+        ECCODES_ASSERT(count < 1024);                  \
         values[count].name         = n;                \
         values[count].type         = GRIB_TYPE_DOUBLE; \
         values[count].double_value = v;                \
@@ -955,7 +955,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     } while (0)
 #define SET_STRING_VALUE(n, v)                         \
     do {                                               \
-        ECCODES_ASSERT(count < 1024);                          \
+        ECCODES_ASSERT(count < 1024);                  \
         values[count].name         = n;                \
         values[count].type         = GRIB_TYPE_STRING; \
         values[count].string_value = v;                \
@@ -964,7 +964,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 
 #define COPY_SPEC_LONG(x)                          \
     do {                                           \
-        ECCODES_ASSERT(count < 1024);                      \
+        ECCODES_ASSERT(count < 1024);              \
         values[count].name       = #x;             \
         values[count].type       = GRIB_TYPE_LONG; \
         values[count].long_value = spec->x;        \
@@ -972,7 +972,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     } while (0)
 #define COPY_SPEC_DOUBLE(x)                            \
     do {                                               \
-        ECCODES_ASSERT(count < 1024);                          \
+        ECCODES_ASSERT(count < 1024);                  \
         values[count].name         = #x;               \
         values[count].type         = GRIB_TYPE_DOUBLE; \
         values[count].double_value = spec->x;          \
@@ -995,6 +995,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     bool grib1_high_resolution_fix = false; // See GRIB-863
     bool global_grid               = false;
     int expandBoundingBox         = 0;
+    grib_util_grid_spec* nonConstSpec = const_cast<grib_util_grid_spec*>(spec);
 
     ECCODES_ASSERT(h);
 
@@ -1137,6 +1138,10 @@ grib_handle* grib_util_set_spec(grib_handle* h,
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
 
+            if (editionNumber == 2) {
+                // A -ve longitude passed in (could be from GRIB1). Polar stereo longitude in GRIB2 must be +ve
+                nonConstSpec->longitudeOfFirstGridPointInDegrees = normalise_longitude_in_degrees(spec->longitudeOfFirstGridPointInDegrees);
+            }
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
             COPY_SPEC_LONG(Ni);
@@ -1178,6 +1183,11 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+
+            if (editionNumber == 2) {
+                // A -ve longitude passed in (could be from GRIB1). Lambert longitude in GRIB2 must be +ve
+                nonConstSpec->longitudeOfFirstGridPointInDegrees = normalise_longitude_in_degrees(spec->longitudeOfFirstGridPointInDegrees);
+            }
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
             COPY_SPEC_LONG(Ni); // same as Nx

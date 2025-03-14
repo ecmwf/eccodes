@@ -24,6 +24,7 @@ static void print_hexadecimal(FILE* out, unsigned long flags, grib_accessor* a);
 int Wmo::init()
 {
     section_offset_ = 0;
+    this->option_flags_ |= (GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_READ_ONLY);
 
     return GRIB_SUCCESS;
 }
