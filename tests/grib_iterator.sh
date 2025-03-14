@@ -57,6 +57,25 @@ ECCODES_DEBUG=-1 ${tools_dir}/grib_get_data ${data_dir}/reduced_gaussian_sub_are
 grep -q "sub-area num points=53564" $tempText
 
 
+# Badly encoded Gaussian sub area
+# --------------------------------
+tempFilt=temp.${label}.filt
+cat > $tempFilt <<EOF
+    meta pl1 element(pl, 1);
+    set pl1 = 0;
+    write;
+EOF
+input=$data_dir/reduced_gaussian_sub_area.grib2
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $input
+set +e
+${tools_dir}/grib_get_data $tempGrib > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid pl array" $tempText
+rm -f $tempFilt
+
+
 # ECC-1642: badly encoded regular grids
 # -------------------------------------
 ${tools_dir}/grib_set -s Ni=33 $samp_dir/GRIB2.tmpl $tempGrib
