@@ -27,11 +27,18 @@ sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 # --------------------------------------------
 def_file="$ECCODES_DEFINITION_PATH/grib2/typeOfLevelConcept.def"
 
-rm -f $tempText
+# Check each entry in the typeOfLevelConcept.def and ensure the equivalent
+# mars.levtype exists (not unknown)
+types_of_level=$(grep "^'" $def_file | awk -F= '{print $1}' | tr -d "' " | sort -u)
+for tol in $types_of_level; do
+    # echo "Doing $tol.... levtype="
+    ${tools_dir}/grib_set -s typeOfLevel=$tol $sample_g2 $tempGribA
+    ${tools_dir}/grib_get -p levtype $tempGribA
+done
 
+rm -f $tempText
 # uniq -d outputs a single copy of each line that is repeated in the input
 # grep "^'" $def_file | awk -F= '{print $1}' | tr -d "' " | sort | uniq -d > $tempText
-
 # if [ -s "$tempText" ]; then
 #     # File exists and has a size greater than zero
 #     echo "ERROR: Duplicates found in $def_file" >&2
