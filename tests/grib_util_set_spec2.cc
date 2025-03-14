@@ -17,7 +17,7 @@ static void dump_it(grib_handle* h)
 }
 
 // Lambert conformal conic (edition=1)
-static grib_handle* test0()
+static grib_handle* lamb_conf_grib1()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err = 0;
@@ -47,7 +47,7 @@ static grib_handle* test0()
 }
 
 // Lambert conformal conic (edition=2)
-static grib_handle* test1()
+static grib_handle* lamb_conf_grib2()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err = 0;
@@ -79,7 +79,7 @@ static grib_handle* test1()
 }
 
 // Lambert azimuthal equal area
-static grib_handle* test2()
+static grib_handle* lamb_az()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err = 0;
@@ -101,7 +101,7 @@ static grib_handle* test2()
 }
 
 // HEALPix
-static grib_handle* test3()
+static grib_handle* healpix()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err = 0;
@@ -127,7 +127,7 @@ static grib_handle* test3()
 }
 
 // Spherical harmonics
-static grib_handle* test4()
+static grib_handle* spectral()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err = 0;
@@ -155,7 +155,7 @@ static grib_handle* test4()
 }
 
 // Polar stereo
-static grib_handle* test5()
+static grib_handle* polar_stereo()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err = 0;
@@ -184,7 +184,7 @@ static grib_handle* test5()
 }
 
 // Regular Gaussian
-static grib_handle* test6()
+static grib_handle* regular_gg()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err = 0;
@@ -207,7 +207,7 @@ static grib_handle* test6()
 }
 
 // Reduced LL
-static grib_handle* test7()
+static grib_handle* reduced_ll()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err = 0;
@@ -230,7 +230,7 @@ static grib_handle* test7()
 }
 
 // Unstructured
-static grib_handle* test8()
+static grib_handle* unstruct()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err = 0;
@@ -252,8 +252,8 @@ static grib_handle* test8()
 
 int main()
 {
-    //using test_func = grib_handle* (*)();
-    for (auto func : { test0, test1, test2, test3, test4, test5, test6, test7, test8 }) {
+    // using test_func = grib_handle* (*)();
+    for (auto func : { lamb_conf_grib1, lamb_conf_grib2, lamb_az, healpix, spectral, polar_stereo, regular_gg, reduced_ll, unstruct }) {
         auto* result = func();
         ECCODES_ASSERT(result != nullptr);
         dump_it(result);
