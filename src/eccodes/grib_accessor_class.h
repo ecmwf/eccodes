@@ -182,6 +182,7 @@ extern grib_accessor* grib_accessor_spectral_truncation;
 extern grib_accessor* grib_accessor_sprintf;
 extern grib_accessor* grib_accessor_statistics;
 extern grib_accessor* grib_accessor_statistics_spectral;
+extern grib_accessor* grib_accessor_stat_window;
 extern grib_accessor* grib_accessor_step_human_readable;
 extern grib_accessor* grib_accessor_step_in_units;
 extern grib_accessor* grib_accessor_sum;

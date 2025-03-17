@@ -273,6 +273,7 @@ list( APPEND eccodes_src_files
     accessor/DataRunLengthPacking.cc
     accessor/GridSpec.cc
     accessor/G2ParamConceptFilename.cc
+    accessor/StatWindow.cc
 
     grib_jasper_encoding.cc
     grib_openjpeg_encoding.cc

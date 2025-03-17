@@ -180,6 +180,7 @@
 { "sprintf", &grib_accessor_sprintf, },
 { "statistics", &grib_accessor_statistics, },
 { "statistics_spectral", &grib_accessor_statistics_spectral, },
+{ "statwindow", &grib_accessor_stat_window, },
 { "step_human_readable", &grib_accessor_step_human_readable, },
 { "step_in_units", &grib_accessor_step_in_units, },
 { "sum", &grib_accessor_sum, },
