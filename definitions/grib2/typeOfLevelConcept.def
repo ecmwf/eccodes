@@ -1,15 +1,62 @@
 # Concept typeOfLevel
-'surface'                      = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=255;}
-'entireAtmosphere'             = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=8;}
-'entireOcean'                  = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=9;}
-'entireLake'                   = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=162;}
-'cloudBase'                    = {typeOfFirstFixedSurface=2;   typeOfSecondFixedSurface=255;}
+# In case of a repeated entry:
+#  set uses the FIRST one
+#  get returns the LAST match
+
+# See ECC-2013 re why we need two definitions
+'surface' = {
+    typeOfFirstFixedSurface=1;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+'surface' = {typeOfFirstFixedSurface=1; typeOfSecondFixedSurface=255;}
+
+'troposphere' = {
+    typeOfFirstFixedSurface=1;  scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=7; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+
+'entireAtmosphere' = {
+    typeOfFirstFixedSurface=1;  scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=8; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+'entireAtmosphere' = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=8;}
+
+'entireOcean' = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=9;}
+
+'entireLake' = {
+    typeOfFirstFixedSurface=1;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=162; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+'entireLake' = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=162;}
+
+'cloudBase' = {
+    typeOfFirstFixedSurface=2;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+'cloudBase' = {typeOfFirstFixedSurface=2;   typeOfSecondFixedSurface=255;}
+
 'cloudTop'                     = {typeOfFirstFixedSurface=3;   typeOfSecondFixedSurface=255;}
 'isothermZero'                 = {typeOfFirstFixedSurface=4;   typeOfSecondFixedSurface=255;}
 'adiabaticCondensation'        = {typeOfFirstFixedSurface=5;   typeOfSecondFixedSurface=255;}
 'maxWind'                      = {typeOfFirstFixedSurface=6;   typeOfSecondFixedSurface=255;}
-'tropopause'                   = {typeOfFirstFixedSurface=7;   typeOfSecondFixedSurface=255;}
-'nominalTop'                   = {typeOfFirstFixedSurface=8;   typeOfSecondFixedSurface=255;}
+
+'tropopause' = {
+    typeOfFirstFixedSurface=7;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+'tropopause' = {typeOfFirstFixedSurface=7;   typeOfSecondFixedSurface=255;}
+
+'stratosphere' = {
+    typeOfFirstFixedSurface=7;   scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=36; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+
+'nominalTop' = {
+    typeOfFirstFixedSurface=8;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+'nominalTop' = {typeOfFirstFixedSurface=8;   typeOfSecondFixedSurface=255;}
+
 'seaBottom'                    = {typeOfFirstFixedSurface=9;   typeOfSecondFixedSurface=255;}
 # Note: We already had 'entireAtmosphere' mapped before adding this one so had to choose another name
 'atmosphere'                   = {typeOfFirstFixedSurface=10;  typeOfSecondFixedSurface=255;}
@@ -18,8 +65,19 @@
 'freeConvection'               = {typeOfFirstFixedSurface=14;  typeOfSecondFixedSurface=255;}
 'convectiveCondensation'       = {typeOfFirstFixedSurface=15;  typeOfSecondFixedSurface=255;}
 'neutralBuoyancy'              = {typeOfFirstFixedSurface=16;  typeOfSecondFixedSurface=255;}
-'mostUnstableParcel'           = {typeOfFirstFixedSurface=17;  typeOfSecondFixedSurface=255;}
-'mixedLayerParcel'             = {typeOfFirstFixedSurface=18;  typeOfSecondFixedSurface=255;}
+
+'mostUnstableParcel' = {
+    typeOfFirstFixedSurface=17;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+'mostUnstableParcel' = {typeOfFirstFixedSurface=17;  typeOfSecondFixedSurface=255;}
+
+'mixedLayerParcel' = {
+    typeOfFirstFixedSurface=18;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+'mixedLayerParcel' = {typeOfFirstFixedSurface=18;  typeOfSecondFixedSurface=255;}
+
 'lowestLevelOfCloudCoverExceedance' = {typeOfFirstFixedSurface=19; typeOfSecondFixedSurface=255;}
 'isothermal'                   = {typeOfFirstFixedSurface=20;  typeOfSecondFixedSurface=255;}
 'isobaricInPa'                 = {typeOfFirstFixedSurface=100; typeOfSecondFixedSurface=255; pressureUnits='Pa';}
@@ -31,7 +89,13 @@
                                   typeOfSecondFixedSurface=100; scaleFactorOfSecondFixedSurface=0; scaledValueOfSecondFixedSurface=45000;}
 'highCloudLayer'               = {typeOfFirstFixedSurface=100; scaleFactorOfFirstFixedSurface=0;
                                   scaledValueOfFirstFixedSurface=45000; typeOfSecondFixedSurface=8;}
-'meanSea'                      = {typeOfFirstFixedSurface=101; typeOfSecondFixedSurface=255;}
+
+'meanSea' = {
+    typeOfFirstFixedSurface=101;  scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+'meanSea' = {typeOfFirstFixedSurface=101; typeOfSecondFixedSurface=255;}
+
 'heightAboveSea'               = {typeOfFirstFixedSurface=102; typeOfSecondFixedSurface=255;}
 'heightAboveSeaLayer'          = {typeOfFirstFixedSurface=102; typeOfSecondFixedSurface=102;}
 'heightAboveGround'            = {typeOfFirstFixedSurface=103; typeOfSecondFixedSurface=255;}
@@ -65,8 +129,19 @@
                                   scaledValueOfFirstFixedSurface=0; typeOfSecondFixedSurface=255;}
 'depthBelowSeaLayer'           = {typeOfFirstFixedSurface=160; typeOfSecondFixedSurface=160;}
 'oceanSurfaceToBottom'         = {typeOfFirstFixedSurface=160; typeOfSecondFixedSurface=9;}
-'lakeBottom'                   = {typeOfFirstFixedSurface=162; typeOfSecondFixedSurface=255;}
-'mixingLayer'                  = {typeOfFirstFixedSurface=166; typeOfSecondFixedSurface=255;}
+
+'lakeBottom' = {
+    typeOfFirstFixedSurface=162;  scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+'lakeBottom' = {typeOfFirstFixedSurface=162; typeOfSecondFixedSurface=255;}
+
+'mixingLayer' = {
+    typeOfFirstFixedSurface=166;  scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+'mixingLayer' = {typeOfFirstFixedSurface=166; typeOfSecondFixedSurface=255;}
+
 'oceanModel'                   = {typeOfFirstFixedSurface=168; typeOfSecondFixedSurface=255;}
 'oceanModelLayer'              = {typeOfFirstFixedSurface=168; typeOfSecondFixedSurface=168;}
 'mixedLayerDepthByDensity'     = {typeOfFirstFixedSurface=169; typeOfSecondFixedSurface=255;}
@@ -74,8 +149,19 @@
 'mixedLayerDepthByDiffusivity' = {typeOfFirstFixedSurface=171; typeOfSecondFixedSurface=255;}
 'snowTopOverIceOnWater'        = {typeOfFirstFixedSurface=173; typeOfSecondFixedSurface=255;}
 'snowLayerOverIceOnWater'      = {typeOfFirstFixedSurface=173; typeOfSecondFixedSurface=175;}
-'iceTopOnWater'                = {typeOfFirstFixedSurface=174; typeOfSecondFixedSurface=255;}
-'iceLayerOnWater'              = {typeOfFirstFixedSurface=174; typeOfSecondFixedSurface=176;}
+
+'iceTopOnWater' = {
+    typeOfFirstFixedSurface=174;  scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+'iceTopOnWater' = {typeOfFirstFixedSurface=174; typeOfSecondFixedSurface=255;}
+
+'iceLayerOnWater' = {
+    typeOfFirstFixedSurface=174;  scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=176; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+}
+'iceLayerOnWater' = {typeOfFirstFixedSurface=174; typeOfSecondFixedSurface=176;}
+
 'iceTopUnderSnowOnWater'       = {typeOfFirstFixedSurface=175; typeOfSecondFixedSurface=255;}
 'iceLayerUnderSnowOnWater'     = {typeOfFirstFixedSurface=175; typeOfSecondFixedSurface=176;}
 'iceBottomOnWater'             = {typeOfFirstFixedSurface=176; typeOfSecondFixedSurface=255;}

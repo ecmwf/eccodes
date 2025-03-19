@@ -12,6 +12,7 @@
  * Description: Reads a GRIB message from file, measures time taken
  */
 
+
 #include "grib_api_internal.h"
 
 #include <chrono>
@@ -24,7 +25,11 @@ int main(int argc, char** argv)
     int err = 0;
     size_t values_len = 0;
     double* values = NULL;
+    #ifdef DEBUG
+    const auto duration_max = std::chrono::milliseconds(1500);
+    #else
     const auto duration_max = std::chrono::milliseconds(500);
+    #endif
     const int num_repetitions = 100;
 
     if (argc < 2) return 1;
@@ -55,7 +60,8 @@ int main(int argc, char** argv)
                 " ms, expected " << duration_max.count() << " ms" << endl;
         return 1;
     }
-    cout << "Test passed. Actual decode time=" << duration_actual.count() << " ms" <<endl;
+    cout << "Test passed. Actual decode time  = " << duration_actual.count() << " ms" <<endl;
+    cout << "Test passed. Maximum decode time = " << duration_max.count() << " ms" <<endl;
     free(values);
     grib_handle_delete(h);
     fclose(in);

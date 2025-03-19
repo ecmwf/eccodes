@@ -117,6 +117,14 @@ grep -q "is a directory" $tempText
 ${tools_dir}/grib_check_gaussian_grid -v $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempText
 grep -q "ignoring" $tempText
 
+# Bad input
+set +e
+${tools_dir}/grib_check_gaussian_grid $data_dir/bad.grib > $tempText 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "Wrong message length" $tempText
+
 
 # Clean up
 rm -f $tempGrib $tempText

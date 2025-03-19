@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1319
+# GRIB2: Add missing snow layer definition in marsLevtype concept
+# ---------------------------------------------------------------------
+
 label="grib_ecc-1319_test"
 
 temp=temp.$label.grib
