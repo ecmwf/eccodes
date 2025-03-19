@@ -146,6 +146,13 @@ int Section::notify_change(grib_accessor* notified,
     ECCODES_ASSERT(tmp_handle->dependencies == NULL);
     /* printf("grib_handle_delete %p\n",(void*)tmp_handle); */
 
+    // ECC-2049
+    // After converting editions, make sections_count is updated
+    // (e.g. grib1 sections_count=5, for grib2 it's 8)
+    // In case grib_util_sections_copy is called
+    if (h->sections_count < tmp_handle->sections_count) {
+        h->sections_count = tmp_handle->sections_count;
+    }
     grib_handle_delete(tmp_handle);
 
     h->use_trie     = 1;

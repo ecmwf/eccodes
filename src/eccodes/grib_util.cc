@@ -67,6 +67,15 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom, grib_handle*
     if (*err)
         return NULL;
 
+#ifdef DEBUG
+    if (edition==1) {
+        ECCODES_ASSERT( hfrom->sections_count == 5 );
+    }
+    if (edition==2) {
+        ECCODES_ASSERT( hfrom->sections_count == 8 );
+    }
+#endif
+
     for (i = 0; i <= hfrom->sections_count; i++) {
         if (sections[i]) {
             h = hfrom;
