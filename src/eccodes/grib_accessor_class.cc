@@ -10,7 +10,7 @@
 
 
 #include "grib_api_internal.h"
-#include "grib_accessor_classes_hash.cc"
+#include "grib_accessor_classes_hash.h"
 //#include <iostream>
 #include "accessor/Accessor.h"
 
@@ -128,7 +128,7 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     grib_accessor* a       = NULL;
     size_t size            = 0;
 
-    grib_accessor* builder = *((grib_accessor_hash(creator->op_, strlen(creator->op_)))->cclass);
+    grib_accessor* builder = *((AccessorHash::get_builder(creator->op_, strlen(creator->op_)))->cclass);
     a = builder->create_empty_accessor();
 
     a->name_       = creator->name_;

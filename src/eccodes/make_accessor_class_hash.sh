@@ -17,7 +17,6 @@ cat grib_accessor_factory_hash_list | sed 's/\/\*/#/g' >> accessor_class_list.gp
 gperf --version
 echo
 
-gperf -C -W classes -t -G -H grib_accessor_classes_get_id -N grib_accessor_hash -m 1 -j 1 accessor_class_list.gperf |\
-    sed s/__inline//g | sed s/inline//g | sed 's/register //g' > grib_accessor_classes_hash.cc
+gperf -L C++ -C -W classes -t -G -H get_id -Z AccessorHash -N get_builder -m 1 -j 1 accessor_class_list.gperf > grib_accessor_classes_hash.h
 
 rm -f accessor_class_list.gperf

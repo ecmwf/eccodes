@@ -1,5 +1,5 @@
-/* ANSI-C code produced by gperf version 3.1 */
-/* Command-line: gperf -C -W classes -t -G -H grib_accessor_classes_get_id -N grib_accessor_hash -m 1 -j 1 accessor_class_list.gperf  */
+/* C++ code produced by gperf version 3.1 */
+/* Command-line: gperf -L C++ -C -W classes -t -G -H get_id -Z AccessorHash -N get_builder -m 1 -j 1 accessor_class_list.gperf  */
 /* Computed positions: -k'1-2,5,7,11' */
 
 #if !((' ' == 32) && ('!' == 33) && ('"' == 34) && ('#' == 35) \
@@ -44,15 +44,16 @@ struct accessor_class_hash { const char *name; grib_accessor **cclass;};
 #define MAX_HASH_VALUE 684
 /* maximum key range = 684, duplicates = 0 */
 
-#ifdef __GNUC__
+class AccessorHash
+{
+private:
+  static inline unsigned int get_id (const char *str, size_t len);
+public:
+  static const struct accessor_class_hash *get_builder (const char *str, size_t len);
+};
 
-#else
-#ifdef __cplusplus
-
-#endif
-#endif
-static unsigned int
-grib_accessor_classes_get_id (const char *str, size_t len)
+inline unsigned int
+AccessorHash::get_id (const char *str, size_t len)
 {
   static const unsigned short asso_values[] =
     {
@@ -88,25 +89,25 @@ grib_accessor_classes_get_id (const char *str, size_t len)
   switch (hval)
     {
       default:
-        hval += asso_values[(unsigned char)str[10]];
+        hval += asso_values[static_cast<unsigned char>(str[10])];
       /*FALLTHROUGH*/
       case 10:
       case 9:
       case 8:
       case 7:
-        hval += asso_values[(unsigned char)str[6]];
+        hval += asso_values[static_cast<unsigned char>(str[6])];
       /*FALLTHROUGH*/
       case 6:
       case 5:
-        hval += asso_values[(unsigned char)str[4]];
+        hval += asso_values[static_cast<unsigned char>(str[4])];
       /*FALLTHROUGH*/
       case 4:
       case 3:
       case 2:
-        hval += asso_values[(unsigned char)str[1]];
+        hval += asso_values[static_cast<unsigned char>(str[1])];
       /*FALLTHROUGH*/
       case 1:
-        hval += asso_values[(unsigned char)str[0]];
+        hval += asso_values[static_cast<unsigned char>(str[0])];
         break;
     }
   return hval;
@@ -668,18 +669,16 @@ static const struct accessor_class_hash classes[] =
     {"g1forecastmonth", &grib_accessor_g1forecastmonth}
   };
 
-static const struct accessor_class_hash* grib_accessor_hash(const char* str, size_t len)
+const struct accessor_class_hash *
+AccessorHash::get_builder (const char *str, size_t len)
 {
-    unsigned int key = grib_accessor_classes_get_id(str, len);
-
+  unsigned int key = get_id (str, len);
 #ifdef DEBUG
-    {
-        ECCODES_ASSERT(len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH);
-        ECCODES_ASSERT(key <= MAX_HASH_VALUE);
-        const char* s = classes[key].name;
-        ECCODES_ASSERT(*str == *s && strcmp(str + 1, s + 1) == 0);
-    }
+  printf("accessor_hash %d\n", accessor_count++);
+  ECCODES_ASSERT(len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH);
+  ECCODES_ASSERT(key <= MAX_HASH_VALUE);
+  const char *s = classes[key].name;
+  ECCODES_ASSERT((*str == *s) && !strcmp (str + 1, s + 1));
 #endif
-
-    return &classes[key];
+  return &classes[key];
 }

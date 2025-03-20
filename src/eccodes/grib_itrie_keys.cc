@@ -8,6 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include "grib_hash_keys.h"
+
 static const int mapping[] = {
     0,  /* 00 */
     0,  /* 01 */
@@ -380,7 +382,7 @@ static int grib_hash_keys_insert(grib_itrie* t, const char* key)
 
 int grib_hash_keys_get_id(grib_itrie* t, const char* key)
 {
-    const struct grib_keys_hash* hash = grib_keys_hash_get(key, strlen(key));
+    const struct grib_keys_hash* hash = KeysHash::get(key, strlen(key));
 
     if (hash) {
         /* printf("%s found %s (%d)\n",key,hash->name,hash->id); */
