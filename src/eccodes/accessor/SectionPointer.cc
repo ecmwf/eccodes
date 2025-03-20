@@ -19,22 +19,23 @@ namespace eccodes::accessor
 void SectionPointer::init(const long len, grib_arguments* arg)
 {
     Gen::init(len, arg);
+    grib_handle* hand = grib_handle_of_accessor(this);
 
-    int n          = 0;
-    sectionOffset_ = arg->get_name(grib_handle_of_accessor(this), n++);
-    sectionLength_ = arg->get_name(grib_handle_of_accessor(this), n++);
-    sectionNumber_ = arg->get_long(grib_handle_of_accessor(this), n++);
+    int n = 0;
+    sectionOffset_ = arg->get_name(hand, n++);
+    sectionLength_ = arg->get_name(hand, n++);
+    sectionNumber_ = arg->get_long(hand, n++);
 
     ECCODES_ASSERT(sectionNumber_ < MAX_NUM_SECTIONS);
 
-    grib_handle_of_accessor(this)->section_offset[sectionNumber_] = (char*)sectionOffset_;
-    grib_handle_of_accessor(this)->section_length[sectionNumber_] = (char*)sectionLength_;
+    hand->section_offset[sectionNumber_] = (char*)sectionOffset_;
+    hand->section_length[sectionNumber_] = (char*)sectionLength_;
 
     /* printf("++++++++++++++ GRIB_API:  creating section_pointer%d %s %s\n", */
     /* sectionNumber,sectionLength,sectionLength_ ); */
 
-    if (grib_handle_of_accessor(this)->sections_count < sectionNumber_)
-        grib_handle_of_accessor(this)->sections_count = sectionNumber_;
+    if (hand->sections_count < sectionNumber_)
+        hand->sections_count = sectionNumber_;
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;

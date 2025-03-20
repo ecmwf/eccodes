@@ -32,6 +32,7 @@ int main(int argc, char* argv[])
 
     printf("\nSetting edition=2...\n");
     GRIB_CHECK( grib_set_long(c, "edition", 2), 0);
+    ECCODES_ASSERT( c->sections_count == 8 );
     printf("1. /////// dump the 1st clone (grib2 headers_only)\n");
     grib_dump_content(c, stdout, "wmo", 0, 0);
     lVal=-1; GRIB_CHECK( grib_get_long(c, "isMessageValid", &lVal), 0); printf("1. isMessageValid=%ld\n", lVal);

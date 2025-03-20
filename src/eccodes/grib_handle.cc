@@ -375,6 +375,15 @@ grib_handle* grib_handle_clone_headers_only(const grib_handle* h)
     if (!err) {
         grib_set_string(h_sample, "packingType", input_packing_type, &len);
     }
+    if (edition == 2) {
+        // Make sure for GRIB2 section 5 has the correct number of values
+        // so it is in sync with the grid section
+        long numberOfValues = 0;
+        err = grib_get_long(h, "numberOfValues", &numberOfValues);
+        if (!err) {
+            grib_set_long(h_sample, "numberOfValues", numberOfValues);
+        }
+    }
 
     // Copy all sections except Bitmap and Data from h to h_sample
     const int sections_to_copy = GRIB_SECTION_PRODUCT | GRIB_SECTION_LOCAL | GRIB_SECTION_GRID;
