@@ -20,7 +20,7 @@ transient productionStatusOfProcessedData=0;
 position offsetSection1;
 section_length[3] section1Length;
 meta section1Pointer section_pointer(offsetSection1,section1Length,1);
-constant wrongPadding=0;
+constant wrongPadding=0 : hidden;
 
 # GRIB tables Version No.
 # (currently 3 for international exchange)

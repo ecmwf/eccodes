@@ -77,7 +77,7 @@ meta MTG2SwitchDefault mtg2_switch_default(tablesVersion, tablesVersionMTG2Switc
 # This sets the default for the MTG2Switch concept which we then define below
 # Default is 1 unless changed by the above concept, or by adding an entry to the concept below in a given centre/pseudocentre.
 
-concept MTG2Switch(MTG2SwitchDefault, "MTG2SwitchConcept.def", conceptsDir2,conceptsDir1): read_only, long_type;
+concept MTG2Switch(MTG2SwitchDefault, "MTG2SwitchConcept.def", conceptsDir2,conceptsDir1): hidden, read_only, long_type;
 
 # ECC-2002
 # if datasetForLocal is not "unknown", we remap conceptsDir1 and conceptsDir2
