@@ -107,6 +107,7 @@ int G2MarsLabeling::extra_set(long val)
 
     const int is_wave        = grib_is_defined(hand, "waveDirectionNumber");
     const int is_wave_prange = grib_is_defined(hand, "typeOfWavePeriodInterval");
+    const int is_random_field = grib_is_defined(hand, "randomFieldNumber");
 
     switch (index_) {
         case 0:
@@ -287,7 +288,7 @@ int G2MarsLabeling::extra_set(long val)
             return GRIB_INTERNAL_ERROR;
     }
 
-    if (is_wave || is_wave_prange) {
+    if (is_wave || is_wave_prange || is_random_field) {
         // ECC-1867
         productDefinitionTemplateNumberNew = -1;  // disable PDT selection
     }
