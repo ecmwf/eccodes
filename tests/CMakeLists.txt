@@ -368,6 +368,7 @@ if( HAVE_BUILD_TOOLS )
         grib_set
         grib_set_fail
         grib_iterator
+        grib_iterator_fail
         grib_proj_string
         grib_compare
         grib_copy
