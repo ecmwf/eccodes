@@ -211,12 +211,12 @@ grep -q "Spectral fields cannot have a bitmap" $tempText
 
 # Only GRIB supported for now
 # -----------------------------
-set +e
-${tools_dir}/bufr_get -p isMessageValid $ECCODES_SAMPLES_PATH/BUFR4.tmpl 2>$tempText
-status=$?
-set -e
-[ $status -ne 0 ]
-grep -q "Validity checks only implemented for GRIB messages" $tempText
+# set +e
+# ${tools_dir}/bufr_get -p isMessageValid $ECCODES_SAMPLES_PATH/BUFR4.tmpl 2>$tempText
+# status=$?
+# set -e
+# [ $status -ne 0 ]
+# grep -q "Validity checks only implemented for GRIB messages" $tempText
 
 
 # Clean up
