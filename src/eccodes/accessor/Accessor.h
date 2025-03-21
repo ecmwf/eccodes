@@ -13,6 +13,7 @@
 
 #include "grib_api_internal.h"
 #include "dumper/Dumper.h"
+#include "AccessorFactory.h"
 
 namespace eccodes {
 class Dumper;
@@ -147,4 +148,9 @@ public:
   grib_accessor *parent_as_attribute_ = nullptr;
 };
 
-}  // namespace eccodes::accessor
+using AccessorFactory = Factory<Accessor>;
+using AccessorType = AccessorFactory::Type;
+
+}  // namespace eccodes
+
+

@@ -125,11 +125,13 @@ static GRIB_INLINE grib_accessor_class* get_class(grib_context* c, char* type)
 grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
                                      const long len, grib_arguments* params)
 {
-    grib_accessor* a       = NULL;
     size_t size            = 0;
 
-    grib_accessor* builder = *((grib_accessor_hash(creator->op_, strlen(creator->op_)))->cclass);
-    a = builder->create_empty_accessor();
+    /* grib_accessor* a       = NULL; */
+    /* grib_accessor* builder = *((grib_accessor_hash(creator->op_, strlen(creator->op_)))->cclass); */
+    /* a = builder->create_empty_accessor(); */
+
+    grib_accessor* a = eccodes::AccessorFactory::instance().build(eccodes::AccessorType(creator->op_));
 
     a->name_       = creator->name_;
     a->name_space_ = creator->name_space_;
