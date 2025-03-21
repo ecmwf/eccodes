@@ -20,7 +20,6 @@ class ValidityDate : public Long
 public:
     ValidityDate() :
         Long() { class_name_ = "validity_date"; }
-    grib_accessor* create_empty_accessor() override { return new ValidityDate{}; }
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 

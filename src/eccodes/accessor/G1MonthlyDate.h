@@ -20,7 +20,6 @@ class G1MonthlyDate : public Long
 public:
     G1MonthlyDate() :
         Long() { class_name_ = "g1monthlydate"; }
-    grib_accessor* create_empty_accessor() override { return new G1MonthlyDate{}; }
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 

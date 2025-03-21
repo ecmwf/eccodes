@@ -20,7 +20,6 @@ class StatisticsSpectral : public AbstractVector
 public:
     StatisticsSpectral() :
         AbstractVector() { class_name_ = "statistics_spectral"; }
-    grib_accessor* create_empty_accessor() override { return new StatisticsSpectral{}; }
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
     void destroy(grib_context*) override;

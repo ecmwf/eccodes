@@ -20,7 +20,6 @@ class AbstractVector : public Double
 public:
     AbstractVector() :
         Double() { class_name_ = "abstract_vector"; }
-    // grib_accessor* create_empty_accessor() override { return new AbstractVector{}; }
 
 public:
     // TODO(maee): make private

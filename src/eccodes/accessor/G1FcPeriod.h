@@ -20,7 +20,6 @@ class G1FcPeriod : public G1StepRange
 public:
     G1FcPeriod() :
         G1StepRange() { class_name_ = "g1fcperiod"; }
-    grib_accessor* create_empty_accessor() override { return new G1FcPeriod{}; }
     int unpack_string(char*, size_t* len) override;
 };
 

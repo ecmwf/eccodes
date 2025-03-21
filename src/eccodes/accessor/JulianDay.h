@@ -20,7 +20,6 @@ class JulianDay : public Double
 public:
     JulianDay() :
         Double() { class_name_ = "julian_day"; }
-    grib_accessor* create_empty_accessor() override { return new JulianDay{}; }
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;

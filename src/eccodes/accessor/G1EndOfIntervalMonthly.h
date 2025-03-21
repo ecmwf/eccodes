@@ -20,7 +20,6 @@ class G1EndOfIntervalMonthly : public AbstractVector
 public:
     G1EndOfIntervalMonthly() :
         AbstractVector() { class_name_ = "g1end_of_interval_monthly"; }
-    grib_accessor* create_empty_accessor() override { return new G1EndOfIntervalMonthly{}; }
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
     void destroy(grib_context*) override;

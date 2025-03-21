@@ -21,7 +21,6 @@ class UnpackBufrValues : public Gen
 public:
     UnpackBufrValues() :
         Gen() { class_name_ = "unpack_bufr_values"; }
-    grib_accessor* create_empty_accessor() override { return new UnpackBufrValues{}; }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;

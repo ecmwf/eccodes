@@ -20,7 +20,6 @@ class SectionPointer : public Gen
 public:
     SectionPointer() :
         Gen() { class_name_ = "section_pointer"; }
-    grib_accessor* create_empty_accessor() override { return new SectionPointer{}; }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     long byte_count() override;

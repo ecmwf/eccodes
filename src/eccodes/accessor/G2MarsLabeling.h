@@ -20,7 +20,6 @@ class G2MarsLabeling : public Gen
 public:
     G2MarsLabeling() :
         Gen() { class_name_ = "g2_mars_labeling"; }
-    grib_accessor* create_empty_accessor() override { return new G2MarsLabeling{}; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int pack_string(const char*, size_t* len) override;

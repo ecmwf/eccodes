@@ -20,7 +20,6 @@ class Lookup : public Long
 public:
     Lookup() :
         Long() { class_name_ = "lookup"; }
-    grib_accessor* create_empty_accessor() override { return new Lookup{}; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     int unpack_string(char*, size_t* len) override;

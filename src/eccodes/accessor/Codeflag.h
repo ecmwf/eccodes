@@ -20,7 +20,6 @@ class Codeflag : public Unsigned
 public:
     Codeflag() :
         Unsigned() { class_name_ = "codeflag"; }
-    grib_accessor* create_empty_accessor() override { return new Codeflag{}; }
     int value_count(long*) override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;

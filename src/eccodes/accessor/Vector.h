@@ -20,7 +20,6 @@ class Vector : public AbstractVector
 public:
     Vector() :
         AbstractVector() { class_name_ = "vector"; }
-    grib_accessor* create_empty_accessor() override { return new Vector{}; }
     int unpack_double(double* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 

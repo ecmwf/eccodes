@@ -31,7 +31,6 @@ class BufrDataArray : public Gen
 public:
     BufrDataArray() :
         Gen() { class_name_ = "bufr_data_array"; }
-    grib_accessor* create_empty_accessor() override { return new BufrDataArray{}; }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;

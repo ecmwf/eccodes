@@ -20,7 +20,6 @@ class CountMissing : public Long
 public:
     CountMissing() :
         Long() { class_name_ = "count_missing"; }
-    grib_accessor* create_empty_accessor() override { return new CountMissing{}; }
     int unpack_long(long* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;

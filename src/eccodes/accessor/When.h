@@ -20,7 +20,6 @@ class When : public Gen
 public:
     When() :
         Gen() { class_name_ = "when"; }
-    grib_accessor* create_empty_accessor() override { return new When{}; }
     long get_native_type() override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;

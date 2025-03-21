@@ -20,7 +20,6 @@ class IfsParam : public Gen
 public:
     IfsParam() :
         Gen() { class_name_ = "ifs_param"; }
-    grib_accessor* create_empty_accessor() override { return new IfsParam{}; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;

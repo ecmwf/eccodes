@@ -20,7 +20,6 @@ class ChangeScanningDirection : public Gen
 public:
     ChangeScanningDirection() :
         Gen() { class_name_ = "change_scanning_direction"; }
-    grib_accessor* create_empty_accessor() override { return new ChangeScanningDirection{}; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;

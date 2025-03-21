@@ -20,7 +20,6 @@ class Ascii : public Gen
 public:
     Ascii() :
         Gen() { class_name_ = "ascii"; }
-    grib_accessor* create_empty_accessor() override { return new Ascii{}; }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;

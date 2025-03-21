@@ -20,7 +20,6 @@ class Pad : public Padding
 public:
     Pad() :
         Padding() { class_name_ = "pad"; }
-    grib_accessor* create_empty_accessor() override { return new Pad{}; }
     void init(const long, grib_arguments*) override;
     size_t preferred_size(int) override;
 

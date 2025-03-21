@@ -20,7 +20,6 @@ class LibraryVersion : public Ascii
 public:
     LibraryVersion() :
         Ascii() { class_name_ = "library_version"; }
-    grib_accessor* create_empty_accessor() override { return new LibraryVersion{}; }
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
     int value_count(long*) override;

@@ -20,7 +20,6 @@ class Blob : public Gen
 public:
     Blob() :
         Gen() { class_name_ = "blob"; }
-    grib_accessor* create_empty_accessor() override { return new Blob{}; }
     long get_native_type() override;
     int unpack_bytes(unsigned char*, size_t* len) override;
     void dump(eccodes::Dumper*) override;

@@ -20,7 +20,6 @@ class DataApplyBoustrophedonic : public Gen
 public:
     DataApplyBoustrophedonic() :
         Gen() { class_name_ = "data_apply_boustrophedonic"; }
-    grib_accessor* create_empty_accessor() override { return new DataApplyBoustrophedonic{}; }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;

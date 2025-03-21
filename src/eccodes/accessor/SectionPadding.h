@@ -20,7 +20,6 @@ class SectionPadding : public Padding
 public:
     SectionPadding() :
         Padding() { class_name_ = "section_padding"; }
-    grib_accessor* create_empty_accessor() override { return new SectionPadding{}; }
     void init(const long, grib_arguments*) override;
     size_t preferred_size(int) override;
 

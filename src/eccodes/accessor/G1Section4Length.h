@@ -20,7 +20,6 @@ class G1Section4Length : public SectionLength
 public:
     G1Section4Length() :
         SectionLength() { class_name_ = "g1_section4_length"; }
-    grib_accessor* create_empty_accessor() override { return new G1Section4Length{}; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

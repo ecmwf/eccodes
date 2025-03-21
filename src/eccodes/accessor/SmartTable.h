@@ -21,7 +21,6 @@ class SmartTable : public Unsigned
 public:
     SmartTable() :
         Unsigned() { class_name_ = "smart_table"; }
-    grib_accessor* create_empty_accessor() override { return new SmartTable{}; }
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
     int unpack_string(char*, size_t* len) override;

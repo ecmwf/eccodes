@@ -25,7 +25,6 @@ class DataComplexPacking : public DataSimplePacking
 public:
     DataComplexPacking() :
         DataSimplePacking() { class_name_ = "data_complex_packing"; }
-    // grib_accessor* create_empty_accessor() override { return new DataComplexPacking{}; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_float(float* val, size_t* len) override;

@@ -20,7 +20,6 @@ class G1HalfByteCodeflag : public Gen
 public:
     G1HalfByteCodeflag() :
         Gen() { class_name_ = "g1_half_byte_codeflag"; }
-    grib_accessor* create_empty_accessor() override { return new G1HalfByteCodeflag{}; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;

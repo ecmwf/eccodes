@@ -20,7 +20,6 @@ class MarsStep : public Ascii
 public:
     MarsStep() :
         Ascii() { class_name_ = "mars_step"; }
-    grib_accessor* create_empty_accessor() override { return new MarsStep{}; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int pack_string(const char*, size_t* len) override;

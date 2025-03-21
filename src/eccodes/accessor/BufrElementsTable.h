@@ -20,7 +20,6 @@ class BufrElementsTable : public Gen
 public:
     BufrElementsTable() :
         Gen() { class_name_ = "bufr_elements_table"; }
-    grib_accessor* create_empty_accessor() override { return new BufrElementsTable{}; }
     long get_native_type() override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;

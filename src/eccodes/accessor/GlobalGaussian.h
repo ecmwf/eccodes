@@ -20,7 +20,6 @@ class GlobalGaussian : public Long
 public:
     GlobalGaussian() :
         Long() { class_name_ = "global_gaussian"; }
-    grib_accessor* create_empty_accessor() override { return new GlobalGaussian{}; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

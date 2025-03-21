@@ -20,7 +20,6 @@ class Getenv : public Ascii
 public:
     Getenv() :
         Ascii() { class_name_ = "getenv"; }
-    grib_accessor* create_empty_accessor() override { return new Getenv{}; }
     int pack_string(const char*, size_t* len) override;
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;

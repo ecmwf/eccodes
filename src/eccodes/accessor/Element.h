@@ -20,7 +20,6 @@ class Element : public Long
 public:
     Element() :
         Long() { class_name_ = "element"; }
-    grib_accessor* create_empty_accessor() override { return new Element{}; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;

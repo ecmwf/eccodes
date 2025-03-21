@@ -113,7 +113,6 @@ public:
   virtual void init(const long, grib_arguments *) = 0;
   virtual void post_init() = 0;
   virtual grib_section *sub_section() = 0;
-  virtual Accessor *create_empty_accessor() = 0;
   virtual int is_missing() = 0;
   virtual long next_offset() = 0;
   virtual Accessor *next(Accessor *, int) = 0;

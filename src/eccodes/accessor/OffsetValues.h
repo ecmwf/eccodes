@@ -20,7 +20,6 @@ class OffsetValues : public Double
 public:
     OffsetValues() :
         Double() { class_name_ = "offset_values"; }
-    grib_accessor* create_empty_accessor() override { return new OffsetValues{}; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

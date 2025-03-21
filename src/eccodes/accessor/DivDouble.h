@@ -20,7 +20,6 @@ class DivDouble : public Double
 public:
     DivDouble() :
         Double() { class_name_ = "divdouble"; }
-    grib_accessor* create_empty_accessor() override { return new DivDouble{}; }
     int unpack_double(double* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 

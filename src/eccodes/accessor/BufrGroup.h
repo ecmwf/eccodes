@@ -20,7 +20,6 @@ class BufrGroup : public Variable
 public:
     BufrGroup() :
         Variable() { class_name_ = "bufr_group"; }
-    grib_accessor* create_empty_accessor() override { return new BufrGroup{}; }
     void dump(eccodes::Dumper*) override;
     grib_accessor* next(grib_accessor*, int explore) override;
 };

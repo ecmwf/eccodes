@@ -20,7 +20,6 @@ class NumberOfValuesDataRawPacking : public Gen
 public:
     NumberOfValuesDataRawPacking() :
         Gen() { class_name_ = "number_of_values_data_raw_packing"; }
-    grib_accessor* create_empty_accessor() override { return new NumberOfValuesDataRawPacking{}; }
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

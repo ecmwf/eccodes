@@ -20,7 +20,6 @@ class Group : public Gen
 public:
     Group() :
         Gen() { class_name_ = "group"; }
-    grib_accessor* create_empty_accessor() override { return new Group{}; }
     long get_native_type() override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;

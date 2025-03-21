@@ -20,7 +20,6 @@ class StepHumanReadable : public Gen
 public:
     StepHumanReadable() :
         Gen() { class_name_ = "step_human_readable"; }
-    grib_accessor* create_empty_accessor() override { return new StepHumanReadable{}; }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     void init(const long, grib_arguments*) override;

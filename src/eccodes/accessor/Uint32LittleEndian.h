@@ -20,7 +20,6 @@ class Uint32LittleEndian : public Gen
 public:
     Uint32LittleEndian() :
         Gen() { class_name_ = "uint32_little_endian"; }
-    grib_accessor* create_empty_accessor() override { return new Uint32LittleEndian{}; }
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
 };

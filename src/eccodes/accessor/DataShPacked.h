@@ -20,7 +20,6 @@ class DataShPacked : public DataSimplePacking
 public:
     DataShPacked() :
         DataSimplePacking() { class_name_ = "data_sh_packed"; }
-    grib_accessor* create_empty_accessor() override { return new DataShPacked{}; }
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;

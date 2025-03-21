@@ -20,7 +20,6 @@ class SelectStepTemplate : public Unsigned
 public:
     SelectStepTemplate() :
         Unsigned() { class_name_ = "select_step_template"; }
-    grib_accessor* create_empty_accessor() override { return new SelectStepTemplate{}; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     int value_count(long*) override;

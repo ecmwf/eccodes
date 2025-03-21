@@ -20,7 +20,6 @@ class UnsignedBits : public Long
 public:
     UnsignedBits() :
         Long() { class_name_ = "unsigned_bits"; }
-    grib_accessor* create_empty_accessor() override { return new UnsignedBits{}; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     long byte_count() override;

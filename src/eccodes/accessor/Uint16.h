@@ -20,7 +20,6 @@ class Uint16 : public Gen
 public:
     Uint16() :
         Gen() { class_name_ = "uint16"; }
-    grib_accessor* create_empty_accessor() override { return new Uint16{}; }
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
 };

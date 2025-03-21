@@ -20,7 +20,6 @@ class Label : public Gen
 public:
     Label() :
         Gen() { class_name_ = "label"; }
-    grib_accessor* create_empty_accessor() override { return new Label{}; }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     void dump(eccodes::Dumper*) override;

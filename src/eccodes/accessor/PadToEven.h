@@ -20,7 +20,6 @@ class PadToEven : public Padding
 public:
     PadToEven() :
         Padding() { class_name_ = "padtoeven"; }
-    grib_accessor* create_empty_accessor() override { return new PadToEven{}; }
     void init(const long, grib_arguments*) override;
     size_t preferred_size(int) override;
 

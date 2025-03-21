@@ -20,7 +20,6 @@ class Signed : public Long
 public:
     Signed() :
         Long() { class_name_ = "signed"; }
-    grib_accessor* create_empty_accessor() override { return new Signed{}; }
     int is_missing() override;
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;

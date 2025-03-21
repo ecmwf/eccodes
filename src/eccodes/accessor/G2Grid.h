@@ -20,7 +20,6 @@ class G2Grid : public Double
 public:
     G2Grid() :
         Double() { class_name_ = "g2grid"; }
-    grib_accessor* create_empty_accessor() override { return new G2Grid{}; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;

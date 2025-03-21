@@ -20,7 +20,6 @@ class BufrDataElement : public Gen
 public:
     BufrDataElement() :
         Gen() { class_name_ = "bufr_data_element"; }
-    grib_accessor* create_empty_accessor() override { return new BufrDataElement{}; }
     long get_native_type() override;
     int pack_missing() override;
     int is_missing() override;

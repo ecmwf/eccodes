@@ -20,7 +20,6 @@ class CfVarName : public Ascii
 public:
     CfVarName() :
         Ascii() { class_name_ = "cf_var_name"; }
-    grib_accessor* create_empty_accessor() override { return new CfVarName{}; }
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
     void init(const long, grib_arguments*) override;

@@ -21,7 +21,6 @@ class Nearest : public Gen
 public:
     Nearest() :
         Gen() { class_name_ = "nearest"; }
-    grib_accessor* create_empty_accessor() override { return new Nearest{}; }
     void init(const long l, grib_arguments* args) override;
     void dump(eccodes::Dumper* dumper) override;
 

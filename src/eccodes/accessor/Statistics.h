@@ -20,7 +20,6 @@ class Statistics : public AbstractVector
 public:
     Statistics() :
         AbstractVector() { class_name_ = "statistics"; }
-    grib_accessor* create_empty_accessor() override { return new Statistics{}; }
     int unpack_double(double* val, size_t* len) override;
     int unpack_string(char*, size_t* len) override;
     int value_count(long*) override;

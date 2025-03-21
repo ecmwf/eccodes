@@ -20,7 +20,6 @@ class Suppressed : public Long
 public:
     Suppressed() :
         Long() { class_name_ = "suppressed"; }
-    grib_accessor* create_empty_accessor() override { return new Suppressed{}; }
     long get_native_type() override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;

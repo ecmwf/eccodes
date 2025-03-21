@@ -20,7 +20,6 @@ class LatLonvalues : public Double
 public:
     LatLonvalues() :
         Double() { class_name_ = "latlonvalues"; }
-    grib_accessor* create_empty_accessor() override { return new LatLonvalues{}; }
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;

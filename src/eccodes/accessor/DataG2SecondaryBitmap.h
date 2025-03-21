@@ -20,7 +20,6 @@ class DataG2SecondaryBitmap : public DataSecondaryBitmap
 public:
     DataG2SecondaryBitmap() :
         DataSecondaryBitmap() { class_name_ = "data_g2secondary_bitmap"; }
-    grib_accessor* create_empty_accessor() override { return new DataG2SecondaryBitmap{}; }
     int pack_double(const double* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;

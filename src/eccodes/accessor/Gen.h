@@ -25,7 +25,6 @@ public:
     ~Gen();
 
     void init_accessor(const long, grib_arguments*) override;  // TODO: Implement
-    grib_accessor* create_empty_accessor() override { return new Gen{}; }
     grib_section* sub_section() override;
     long get_native_type() override;
     int pack_missing() override;

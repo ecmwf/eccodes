@@ -20,7 +20,6 @@ class DataApplyBoustrophedonicBitmap : public Gen
 public:
     DataApplyBoustrophedonicBitmap() :
         Gen() { class_name_ = "data_apply_boustrophedonic_bitmap"; }
-    grib_accessor* create_empty_accessor() override { return new DataApplyBoustrophedonicBitmap{}; }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;

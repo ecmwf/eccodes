@@ -21,7 +21,6 @@ class Iterator : public Gen
 public:
     Iterator() :
         Gen() { class_name_ = "iterator"; }
-    grib_accessor* create_empty_accessor() override { return new Iterator{}; }
     void init(const long l, grib_arguments* args) override;
     void dump(eccodes::Dumper* dumper) override;
 

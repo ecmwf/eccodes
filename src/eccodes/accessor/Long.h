@@ -20,7 +20,6 @@ class Long : public Gen
 public:
     Long() :
         Gen() { class_name_ = "long"; }
-    // grib_accessor* create_empty_accessor() override { return new Long{}; }
     void init(const long len, grib_arguments* arg) override;
     long get_native_type() override;
     int pack_missing() override;

@@ -20,7 +20,6 @@ class Bitmap : public Bytes
 public:
     Bitmap() :
         Bytes() { class_name_ = "bitmap"; }
-    // grib_accessor* create_empty_accessor() override { return new Bitmap{}; }
     int unpack_double(double* val, size_t* len) override;
     int unpack_float(float* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;

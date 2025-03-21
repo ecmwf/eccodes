@@ -20,7 +20,6 @@ class Round : public Evaluate
 public:
     Round() :
         Evaluate() { class_name_ = "round"; }
-    grib_accessor* create_empty_accessor() override { return new Round{}; }
     int unpack_double(double* val, size_t* len) override;
     int unpack_string(char*, size_t* len) override;
     void init(const long, grib_arguments*) override;

@@ -21,7 +21,6 @@ class DataCcsdsPacking : public Values
 public:
     DataCcsdsPacking() :
         Values() { class_name_ = "data_ccsds_packing"; }
-    grib_accessor* create_empty_accessor() override { return new DataCcsdsPacking{}; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_float(float* val, size_t* len) override;

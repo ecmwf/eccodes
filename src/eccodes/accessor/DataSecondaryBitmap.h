@@ -20,7 +20,6 @@ class DataSecondaryBitmap : public Gen
 public:
     DataSecondaryBitmap() :
         Gen() { class_name_ = "data_secondary_bitmap"; }
-    // grib_accessor* create_empty_accessor() override { return new DataSecondaryBitmap{}; }
     long get_native_type() override;
     int unpack_double(double* val, size_t* len) override;
     void dump(eccodes::Dumper*) override;

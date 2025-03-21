@@ -20,7 +20,6 @@ class Unsigned : public Long
 public:
     Unsigned() :
         Long() { class_name_ = "None"; }
-    grib_accessor* create_empty_accessor() override { return new Unsigned{}; }
     void init(const long len, grib_arguments* arg) override;
     void dump(eccodes::Dumper* dumper) override;
     int unpack_long(long* val, size_t* len) override;

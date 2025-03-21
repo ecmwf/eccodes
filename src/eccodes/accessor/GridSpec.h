@@ -19,7 +19,6 @@ class GridSpec : public Gen
 {
 public:
     GridSpec() : Gen() { class_name_ = "grid_spec"; }
-    grib_accessor* create_empty_accessor() override { return new GridSpec{}; }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     int pack_string(const char*, size_t* len) override;

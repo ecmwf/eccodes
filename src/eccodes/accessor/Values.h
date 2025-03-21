@@ -20,7 +20,6 @@ class Values : public Gen
 public:
     Values() :
         Gen() { class_name_ = "values"; }
-    // grib_accessor* create_empty_accessor() override { return new Values{}; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     long byte_count() override;

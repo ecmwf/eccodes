@@ -20,7 +20,6 @@ class Scale : public Double
 public:
     Scale() :
         Double() { class_name_ = "scale"; }
-    grib_accessor* create_empty_accessor() override { return new Scale{}; }
     int is_missing() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;

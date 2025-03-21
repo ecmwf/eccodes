@@ -20,7 +20,6 @@ class G2EndStep : public Long
 public:
     G2EndStep() :
         Long() { class_name_ = "g2end_step"; }
-    grib_accessor* create_empty_accessor() override { return new G2EndStep{}; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int pack_string(const char*, size_t* len) override;

@@ -20,7 +20,6 @@ class BufrSimpleThinning : public Gen
 public:
     BufrSimpleThinning() :
         Gen() { class_name_ = "bufr_simple_thinning"; }
-    grib_accessor* create_empty_accessor() override { return new BufrSimpleThinning{}; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

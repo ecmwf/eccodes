@@ -20,7 +20,6 @@ class ReferenceValueError : public Double
 public:
     ReferenceValueError() :
         Double() { class_name_ = "reference_value_error"; }
-    grib_accessor* create_empty_accessor() override { return new ReferenceValueError{}; }
     int unpack_double(double* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 

@@ -20,7 +20,6 @@ class LocalDefinition : public Unsigned
 public:
     LocalDefinition() :
         Unsigned() { class_name_ = "local_definition"; }
-    grib_accessor* create_empty_accessor() override { return new LocalDefinition{}; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     int value_count(long*) override;

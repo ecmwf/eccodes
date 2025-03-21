@@ -20,7 +20,6 @@ class SectionLength : public Unsigned
 public:
     SectionLength() :
         Unsigned() { class_name_ = "section_length"; }
-    grib_accessor* create_empty_accessor() override { return new SectionLength{}; }
     int value_count(long*) override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;

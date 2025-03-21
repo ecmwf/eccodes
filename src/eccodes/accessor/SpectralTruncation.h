@@ -20,7 +20,6 @@ class SpectralTruncation : public Long
 public:
     SpectralTruncation() :
         Long() { class_name_ = "spectral_truncation"; }
-    grib_accessor* create_empty_accessor() override { return new SpectralTruncation{}; }
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 

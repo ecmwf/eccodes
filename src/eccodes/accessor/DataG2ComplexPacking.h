@@ -20,7 +20,6 @@ class DataG2ComplexPacking : public DataComplexPacking
 public:
     DataG2ComplexPacking() :
         DataComplexPacking() { class_name_ = "data_g2complex_packing"; }
-    grib_accessor* create_empty_accessor() override { return new DataG2ComplexPacking{}; }
     int pack_double(const double* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;

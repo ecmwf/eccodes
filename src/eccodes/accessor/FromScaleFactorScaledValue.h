@@ -20,7 +20,6 @@ class FromScaleFactorScaledValue : public Double
 public:
     FromScaleFactorScaledValue() :
         Double() { class_name_ = "from_scale_factor_scaled_value"; }
-    grib_accessor* create_empty_accessor() override { return new FromScaleFactorScaledValue{}; }
     int is_missing() override;
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;

@@ -20,7 +20,6 @@ class Dirty : public Long
 public:
     Dirty() :
         Long() { class_name_ = "dirty"; }
-    grib_accessor* create_empty_accessor() override { return new Dirty{}; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

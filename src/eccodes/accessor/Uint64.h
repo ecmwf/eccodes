@@ -20,7 +20,6 @@ class Uint64 : public Gen
 public:
     Uint64() :
         Gen() { class_name_ = "uint64"; }
-    grib_accessor* create_empty_accessor() override { return new Uint64{}; }
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
 };

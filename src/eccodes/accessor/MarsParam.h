@@ -20,7 +20,6 @@ class MarsParam : public Ascii
 public:
     MarsParam() :
         Ascii() { class_name_ = "mars_param"; }
-    grib_accessor* create_empty_accessor() override { return new MarsParam{}; }
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
     void init(const long, grib_arguments*) override;

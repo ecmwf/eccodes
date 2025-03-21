@@ -20,7 +20,6 @@ class SignedBits : public Long
 public:
     SignedBits() :
         Long() { class_name_ = "signed_bits"; }
-    grib_accessor* create_empty_accessor() override { return new SignedBits{}; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     long byte_count() override;

@@ -20,7 +20,6 @@ class Dictionary : public Gen
 public:
     Dictionary() :
         Gen() { class_name_ = "dictionary"; }
-    grib_accessor* create_empty_accessor() override { return new Dictionary{}; }
     long get_native_type() override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;

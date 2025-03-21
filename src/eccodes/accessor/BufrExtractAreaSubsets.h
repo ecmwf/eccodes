@@ -20,7 +20,6 @@ class BufrExtractAreaSubsets : public Gen
 public:
     BufrExtractAreaSubsets() :
         Gen() { class_name_ = "bufr_extract_area_subsets"; }
-    grib_accessor* create_empty_accessor() override { return new BufrExtractAreaSubsets{}; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

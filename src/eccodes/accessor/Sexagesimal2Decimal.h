@@ -20,7 +20,6 @@ class Sexagesimal2decimal : public ToDouble
 public:
     Sexagesimal2decimal() :
         ToDouble() { class_name_ = "sexagesimal2decimal"; }
-    grib_accessor* create_empty_accessor() override { return new Sexagesimal2decimal{}; }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     void dump(eccodes::Dumper*) override;

@@ -20,7 +20,6 @@ class DataG1SecondOrderConstantWidthPacking : public DataSimplePacking
 public:
     DataG1SecondOrderConstantWidthPacking() :
         DataSimplePacking() { class_name_ = "data_g1second_order_constant_width_packing"; }
-    grib_accessor* create_empty_accessor() override { return new DataG1SecondOrderConstantWidthPacking{}; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_float(float* val, size_t* len) override;

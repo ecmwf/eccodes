@@ -20,7 +20,6 @@ class Section : public Gen
 public:
     Section() :
         Gen() { class_name_ = "section"; }
-    grib_accessor* create_empty_accessor() override { return new Section{}; }
     long get_native_type() override;
     long byte_count() override;
     long next_offset() override;

@@ -20,7 +20,6 @@ class PackingType : public Gen
 public:
     PackingType() :
         Gen() { class_name_ = "packing_type"; }
-    grib_accessor* create_empty_accessor() override { return new PackingType{}; }
     long get_native_type() override;
     int pack_string(const char*, size_t* len) override;
     int unpack_string(char*, size_t* len) override;

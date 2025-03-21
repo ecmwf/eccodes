@@ -20,7 +20,6 @@ class AbstractLongVector : public Gen
 public:
     AbstractLongVector() :
         Gen() { class_name_ = "abstract_long_vector"; }
-    // grib_accessor* create_empty_accessor() override { return new AbstractLongVector{}; }
 
 public:
     // TODO(maee): make private

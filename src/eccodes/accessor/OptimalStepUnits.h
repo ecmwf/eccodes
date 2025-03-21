@@ -20,7 +20,6 @@ class OptimalStepUnits : public Gen
 public:
     OptimalStepUnits() :
         Gen() { class_name_ = "optimal_step_units"; }
-    grib_accessor* create_empty_accessor() override { return new OptimalStepUnits{}; }
     long get_native_type() override;
     int is_missing() override;
     int pack_long(const long* val, size_t* len) override;

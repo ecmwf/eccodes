@@ -20,7 +20,6 @@ class MessageCopy : public Gen
 public:
     MessageCopy() :
         Gen() { class_name_ = "message_copy"; }
-    grib_accessor* create_empty_accessor() override { return new MessageCopy{}; }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;

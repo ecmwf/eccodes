@@ -20,7 +20,6 @@ class Variable : public Gen
 public:
     Variable() :
         Gen() { class_name_ = "variable"; }
-    grib_accessor* create_empty_accessor() override { return new Variable{}; }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_float(const float* val, size_t* len) override;

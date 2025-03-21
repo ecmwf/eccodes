@@ -20,7 +20,6 @@ class Sum : public Double
 public:
     Sum() :
         Double() { class_name_ = "sum"; }
-    grib_accessor* create_empty_accessor() override { return new Sum{}; }
     int unpack_double(double* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     int value_count(long*) override;

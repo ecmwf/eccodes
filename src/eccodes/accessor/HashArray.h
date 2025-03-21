@@ -20,7 +20,6 @@ class HashArray : public Gen
 public:
     HashArray() :
         Gen() { class_name_ = "hash_array"; }
-    grib_accessor* create_empty_accessor() override { return new HashArray{}; }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;

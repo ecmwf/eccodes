@@ -20,7 +20,6 @@ class Mtg2SwitchDefault : public Long
 public:
     Mtg2SwitchDefault() :
         Long() { class_name_ = "mtg2_switch_default"; }
-    grib_accessor* create_empty_accessor() override { return new Mtg2SwitchDefault{}; }
 
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

@@ -19,7 +19,6 @@ namespace eccodes::accessor
 class Codetable : public Unsigned
 {
 public:
-    grib_accessor* create_empty_accessor() override { return new Codetable{}; }
     Codetable() :
         Unsigned() { class_name_ = "codetable"; }
     long get_native_type() override;

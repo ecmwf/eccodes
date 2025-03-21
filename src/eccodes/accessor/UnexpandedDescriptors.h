@@ -20,7 +20,6 @@ class UnexpandedDescriptors : public Long
 public:
     UnexpandedDescriptors() :
         Long() { class_name_ = "unexpanded_descriptors"; }
-    grib_accessor* create_empty_accessor() override { return new UnexpandedDescriptors{}; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     long byte_offset() override;

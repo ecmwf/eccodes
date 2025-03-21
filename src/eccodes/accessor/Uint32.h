@@ -20,7 +20,6 @@ class Uint32 : public Gen
 public:
     Uint32() :
         Gen() { class_name_ = "uint32"; }
-    grib_accessor* create_empty_accessor() override { return new Uint32{}; }
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
 };

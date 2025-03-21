@@ -20,7 +20,6 @@ class Bytes : public Gen
 public:
     Bytes() :
         Gen() { class_name_ = "bytes"; }
-    grib_accessor* create_empty_accessor() override { return new Bytes{}; }
     long get_native_type() override;
     int pack_string(const char*, size_t* len) override;
     int unpack_string(char*, size_t* len) override;

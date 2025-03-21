@@ -20,7 +20,6 @@ class GaussianGridName : public Gen
 public:
     GaussianGridName() :
         Gen() { class_name_ = "gaussian_grid_name"; }
-    grib_accessor* create_empty_accessor() override { return new GaussianGridName{}; }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;

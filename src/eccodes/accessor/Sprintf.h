@@ -20,7 +20,6 @@ class Sprintf : public Ascii
 public:
     Sprintf() :
         Ascii() { class_name_ = "sprintf"; }
-    grib_accessor* create_empty_accessor() override { return new Sprintf{}; }
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
     int value_count(long*) override;

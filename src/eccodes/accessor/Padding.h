@@ -20,7 +20,6 @@ class Padding : public Bytes
 public:
     Padding() :
         Bytes() { class_name_ = "padding"; }
-    //grib_accessor* create_empty_accessor() override { return new Padding{}; }
     size_t string_length() override;
     long byte_count() override;
     int value_count(long*) override;

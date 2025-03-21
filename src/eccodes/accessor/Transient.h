@@ -21,7 +21,6 @@ public:
     void init(const long l, grib_arguments* args) override;
     Transient() :
         Variable() { class_name_ = "transient"; }
-    grib_accessor* create_empty_accessor() override { return new Transient{}; }
 };
 
 }  // namespace eccodes::accessor

@@ -20,7 +20,6 @@ class ClosestDate : public Double
 public:
     ClosestDate() :
         Double() { class_name_ = "closest_date"; }
-    grib_accessor* create_empty_accessor() override { return new ClosestDate{}; }
     int unpack_double(double* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void dump(eccodes::Dumper*) override;

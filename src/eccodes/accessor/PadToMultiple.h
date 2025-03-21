@@ -20,7 +20,6 @@ class PadToMultiple : public Padding
 public:
     PadToMultiple() :
         Padding() { class_name_ = "padtomultiple"; }
-    grib_accessor* create_empty_accessor() override { return new PadToMultiple{}; }
     void init(const long, grib_arguments*) override;
     size_t preferred_size(int) override;
 

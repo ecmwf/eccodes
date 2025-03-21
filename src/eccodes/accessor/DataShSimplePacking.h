@@ -20,7 +20,6 @@ class DataShSimplePacking : public Gen
 public:
     DataShSimplePacking() :
         Gen() { class_name_ = "data_shsimple_packing"; }
-    // grib_accessor* create_empty_accessor() override { return new DataShsimplePacking{}; }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     void dump(eccodes::Dumper*) override;
