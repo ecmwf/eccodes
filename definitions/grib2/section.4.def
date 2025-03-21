@@ -151,13 +151,18 @@ else {
  if (MTG2Switch > 0 ) {
   # paramtype
   concept paramtype(unknown, "paramtypeConcept.def", conceptsDir2, conceptsDir1): hidden, read_only;
-  # timespan
-  concept timespan (unknown,"timespanConcept.def",conceptsDir2,conceptsDir1) : read_only ;
-  # timespan instant should not appear in mars namespace for backward compatibility
-  if (! timespan is "none"){
-    alias mars.timespan = timespan ;
+  # timeSpan
+  concept timeSpan (unknown,"timespanConcept.def",conceptsDir2,conceptsDir1) : read_only ;
+  # timespan instant/none should not appear in mars namespace for backward compatibility
+  if (! timeSpan is "none"){
+    alias mars.timespan = timeSpan ;
+  }
+  # we use an abbreviation for fromstart -> fs
+  if ( timeSpan is "fromstart"){
+    unalias mars.timespan;
+    constant timespan = "fs": read_only;
+    alias mars.timespan = timespan;
   }
  }
-#}
 
 meta md5Section4 md5(offsetSection4,section4Length);

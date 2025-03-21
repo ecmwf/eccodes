@@ -94,11 +94,11 @@
  ## since start accumulation must have forecastTime=0
  # specific rules are in the centre's own definitions
  # hourly
- 'fs'    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1;}
+ 'fromstart'    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1;}
  # minutes
- 'fs'    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=0;}
+ 'fromstart'    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=0;}
  # 24 hourly time unit
- 'fs'    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=2;}
+ 'fromstart'    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=2;}
  ## 7 days rolling accumulation
  '7 days'    = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168; type='cd';}
  ### end Accumulations ###
