@@ -149,6 +149,7 @@ public:
 
 using AccessorFactory = Factory<Accessor>;
 using AccessorType = AccessorFactory::Type;
+template<class T> using AccessorBuilder = Builder<grib_accessor, T>;
 
 }  // namespace eccodes
 
