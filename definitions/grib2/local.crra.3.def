@@ -1,12 +1,12 @@
-# CARRA/CERRA local
-
+ CARRA/CERRA local
+  
 codetable[2] suiteName "grib2/crra_suiteName.table" : dump;
 alias crraSuiteID = suiteName;
 
-codetable[2] marsCLass = 'rr' : dump ;
+codetable[2] marsKlass   "mars/class.table" = "rr" : dump,string_type,lowercase;
 unalias mars.class;
-alias mars.class = marsClass ;
+alias mars.class = marsKlass;
 
 ksec1expver[4] experimentVersionNumber = "0002" : dump;
-alias marsExpver = experimentVersionNumber ;
+alias marsExpver = experimentVersionNumber;
 
