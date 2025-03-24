@@ -647,7 +647,7 @@ static int test_bit(long a, long b)
 /* If the accessor represents a codeflag key, then return its binary rep in 'result' */
 static int codeflag_to_bitstr(grib_accessor* a, long val, char* result)
 {
-    if (a && grib_inline_strcmp(a->class_name_, "codeflag") == 0) {
+    if (a && grib_inline_strcmp(a->accessor_type().get().c_str(), "codeflag") == 0) {
         long i;
         const long bytelen = a->length_ * 8;
         for (i = 0; i < bytelen; i++) {

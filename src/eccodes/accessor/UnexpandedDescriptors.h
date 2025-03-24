@@ -19,7 +19,8 @@ class UnexpandedDescriptors : public Long
 {
 public:
     UnexpandedDescriptors() :
-        Long() { class_name_ = "unexpanded_descriptors"; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     long byte_offset() override;
@@ -31,6 +32,7 @@ public:
 private:
     grib_accessor* unexpandedDescriptorsEncoded_ = nullptr;
     const char* createNewData_ = nullptr;
+    static inline const AccessorType accessor_type_{"unexpanded_descriptors"};
 };
 
 }  // namespace eccodes::accessor

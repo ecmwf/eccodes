@@ -19,13 +19,15 @@ class G1Section4Length : public SectionLength
 {
 public:
     G1Section4Length() :
-        SectionLength() { class_name_ = "g1_section4_length"; }
+        SectionLength() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
 private:
     const char* total_length_ = nullptr;
+    static inline const AccessorType accessor_type_{"g1_section4_length"};
 };
 
 }  // namespace eccodes::accessor

@@ -19,12 +19,14 @@ class Pad : public Padding
 {
 public:
     Pad() :
-        Padding() { class_name_ = "pad"; }
+        Padding() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     void init(const long, grib_arguments*) override;
     size_t preferred_size(int) override;
 
 private:
     grib_expression* expression_ = nullptr;
+    static inline const AccessorType accessor_type_{"pad"};
 };
 
 }  // namespace eccodes::accessor

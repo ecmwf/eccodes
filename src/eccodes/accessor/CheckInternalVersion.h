@@ -19,10 +19,13 @@ class CheckInternalVersion : public Ascii
 {
 public:
     CheckInternalVersion() :
-        Ascii() { class_name_ = "check_internal_version"; }
+        Ascii() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     size_t string_length() override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
+private:
+    static inline const AccessorType accessor_type_{"check_internal_version"};
 };
 
 }  // namespace eccodes::accessor

@@ -19,7 +19,8 @@ class Bit : public Long
 {
 public:
     Bit() :
-        Long() { class_name_ = "bit"; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
@@ -27,6 +28,7 @@ public:
 private:
     const char* owner_ = nullptr;
     int bit_index_ = 0;
+    static inline const AccessorType accessor_type_{"bit"};
 };
 
 }  // namespace eccodes::accessor

@@ -19,7 +19,8 @@ class DataRawPacking : public Values
 {
 public:
     DataRawPacking() :
-        Values() { class_name_ = "data_raw_packing"; }
+        Values() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
@@ -30,6 +31,7 @@ public:
 private:
     const char* number_of_values_ = nullptr;
     const char* precision_ = nullptr;
+    static inline const AccessorType accessor_type_{"data_raw_packing"};
 };
 
 }  // namespace eccodes::accessor

@@ -19,7 +19,8 @@ class IfsParam : public Gen
 {
 public:
     IfsParam() :
-        Gen() { class_name_ = "ifs_param"; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
@@ -28,6 +29,7 @@ public:
 private:
     const char* paramId_ = nullptr;
     const char* type_ = nullptr;
+    static inline const AccessorType accessor_type_{"ifs_param"};
 };
 
 }  // namespace eccodes::accessor

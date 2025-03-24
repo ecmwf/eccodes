@@ -22,12 +22,15 @@ class Dumper;
 namespace eccodes
 {
 
+using AccessorFactory = Factory<Accessor>;
+using AccessorType = AccessorFactory::Type;
+template<class T> using AccessorBuilder = Builder<grib_accessor, T>;
+
 class Accessor {
 public:
   Accessor()
       : context_(nullptr),
         name_(nullptr),
-        class_name_(nullptr),
         name_space_(nullptr),
         h_(nullptr),
         creator_(nullptr),
@@ -48,7 +51,6 @@ public:
   Accessor(const char *name)
       : context_(nullptr),
         name_(name),
-        class_name_(nullptr),
         name_space_(nullptr),
         h_(nullptr),
         creator_(nullptr),
@@ -118,12 +120,12 @@ public:
   virtual Accessor *next(Accessor *, int) = 0;
   virtual int clear() = 0;
   virtual Accessor *make_clone(grib_section *, int *) = 0;
+  virtual const AccessorType& accessor_type() const = 0;
 
 public:
   // TODO(maee): make private
   grib_context *context_     = nullptr;
   const char *name_          = nullptr; // name of the accessor
-  const char *class_name_    = nullptr; // name of the class (Artifact from C version of ecCodes)
   const char *name_space_    = nullptr; // namespace to which the accessor belongs
   grib_handle *h_            = nullptr;
   grib_action *creator_      = nullptr; // action that created the accessor
@@ -146,10 +148,6 @@ public:
   grib_accessor *attributes_[MAX_ACCESSOR_ATTRIBUTES] = {0,}; // attributes are accessors
   grib_accessor *parent_as_attribute_ = nullptr;
 };
-
-using AccessorFactory = Factory<Accessor>;
-using AccessorType = AccessorFactory::Type;
-template<class T> using AccessorBuilder = Builder<grib_accessor, T>;
 
 }  // namespace eccodes
 

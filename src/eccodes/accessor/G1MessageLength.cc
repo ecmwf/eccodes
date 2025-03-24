@@ -113,7 +113,7 @@ int G1MessageLength::pack_long(const long* val, size_t* len)
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "%s %s: Failed to set GRIB1 message length to %ld"
                              " (actual length=%ld)",
-                             class_name_, __func__, *val, total_length);
+                             accessor_type().get().c_str(), __func__, *val, total_length);
             grib_context_log(context_, GRIB_LOG_ERROR, "Hint: Try encoding as GRIB2\n");
             return GRIB_ENCODING_ERROR;
         }

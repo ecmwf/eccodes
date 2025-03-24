@@ -19,7 +19,8 @@ class Trim : public Ascii
 {
 public:
     Trim() :
-        Ascii() { class_name_ = "trim"; }
+        Ascii() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_string(const char*, size_t* len) override;
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
@@ -29,6 +30,7 @@ private:
     const char* input_ = nullptr;
     int trim_left_ = 0;
     int trim_right_ = 0;
+    static inline const AccessorType accessor_type_{"trim"};
 };
 
 }  // namespace eccodes::accessor

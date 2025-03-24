@@ -19,7 +19,8 @@ class NumberOfValuesDataRawPacking : public Gen
 {
 public:
     NumberOfValuesDataRawPacking() :
-        Gen() { class_name_ = "number_of_values_data_raw_packing"; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
@@ -27,6 +28,7 @@ public:
 private:
     const char* values_ = nullptr;
     const char* precision_ = nullptr;
+    static inline const AccessorType accessor_type_{"number_of_values_data_raw_packing"};
 };
 
 }  // namespace eccodes::accessor

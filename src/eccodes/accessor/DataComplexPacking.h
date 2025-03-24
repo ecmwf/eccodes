@@ -24,7 +24,8 @@ class DataComplexPacking : public DataSimplePacking
 {
 public:
     DataComplexPacking() :
-        DataSimplePacking() { class_name_ = "data_complex_packing"; }
+        DataSimplePacking() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_float(float* val, size_t* len) override;
@@ -46,6 +47,7 @@ private:
     const char* pen_m_ = nullptr;
 
     template <typename T> int unpack_real(T* val, size_t* len);
+    static inline const AccessorType accessor_type_{"data_complex_packing"};
 };
 
 }  // namespace eccodes::accessor

@@ -19,7 +19,8 @@ class SecondOrderBitsPerValue : public Long
 {
 public:
     SecondOrderBitsPerValue() :
-        Long() { class_name_ = "second_order_bits_per_value"; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
@@ -29,6 +30,7 @@ private:
     const char* binaryScaleFactor_ = nullptr;
     const char* decimalScaleFactor_ = nullptr;
     long bitsPerValue_ = 0;
+    static inline const AccessorType accessor_type_{"second_order_bits_per_value"};
 };
 
 }  // namespace eccodes::accessor

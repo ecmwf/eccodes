@@ -19,7 +19,8 @@ class Ascii : public Gen
 {
 public:
     Ascii() :
-        Gen() { class_name_ = "ascii"; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;
@@ -32,6 +33,8 @@ public:
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
     int compare(grib_accessor*) override;
+private:
+    static inline const AccessorType accessor_type_{"ascii"};
 };
 
 }  // namespace eccodes::accessor

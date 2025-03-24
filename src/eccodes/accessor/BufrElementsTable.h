@@ -19,7 +19,8 @@ class BufrElementsTable : public Gen
 {
 public:
     BufrElementsTable() :
-        Gen() { class_name_ = "bufr_elements_table"; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
@@ -36,6 +37,7 @@ private:
 
     grib_trie* load_bufr_elements_table(int* err);
     int bufr_get_from_table(bufr_descriptor* v);
+    static inline const AccessorType accessor_type_{"bufr_elements_table"};
 };
 
 }  // namespace eccodes::accessor

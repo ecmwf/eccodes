@@ -19,7 +19,8 @@ class ProjString : public Gen
 {
 public:
     ProjString() :
-        Gen() { class_name_ = "proj_string"; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     void init(const long, grib_arguments*) override;
@@ -27,6 +28,7 @@ public:
 private:
     const char* grid_type_ = nullptr;
     int endpoint_ = 0;
+    static inline const AccessorType accessor_type_{"proj_string"};
 };
 
 }  // namespace eccodes::accessor

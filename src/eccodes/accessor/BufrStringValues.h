@@ -19,7 +19,8 @@ class BufrStringValues : public Ascii
 {
 public:
     BufrStringValues() :
-        Ascii() { class_name_ = "bufr_string_values"; }
+        Ascii() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_string(char*, size_t* len) override;
     int unpack_string_array(char**, size_t* len) override;
     int value_count(long*) override;
@@ -32,6 +33,7 @@ private:
     grib_accessor* dataAccessor_ = nullptr;
 
     grib_accessor* get_accessor();
+    static inline const AccessorType accessor_type_{"bufr_string_values"};
 };
 
 }  // namespace eccodes::accessor

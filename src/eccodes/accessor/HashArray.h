@@ -19,7 +19,8 @@ class HashArray : public Gen
 {
 public:
     HashArray() :
-        Gen() { class_name_ = "hash_array"; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;
@@ -39,6 +40,7 @@ private:
     grib_hash_array_value* ha_ = nullptr;
 
     grib_hash_array_value* find_hash_value(int* err);
+    static inline const AccessorType accessor_type_{"hash_array"};
 };
 
 }  // namespace eccodes::accessor

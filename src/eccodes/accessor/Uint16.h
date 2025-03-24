@@ -19,9 +19,12 @@ class Uint16 : public Gen
 {
 public:
     Uint16() :
-        Gen() { class_name_ = "uint16"; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
+private:
+    static inline const AccessorType accessor_type_{"uint16"};
 };
 
 }  // namespace eccodes::accessor

@@ -19,7 +19,8 @@ class Md5 : public Gen
 {
 public:
     Md5() :
-        Gen() { class_name_ = "md5"; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     int value_count(long*) override;
@@ -31,6 +32,7 @@ private:
     const char* offset_key_ = nullptr;
     grib_expression* length_key_ = nullptr;
     grib_string_list* blocklist_ = nullptr;
+    static inline const AccessorType accessor_type_{"md5"};
 };
 
 }  // namespace eccodes::accessor

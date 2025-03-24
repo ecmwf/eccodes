@@ -84,7 +84,7 @@ int DataRunLengthPacking::unpack_double(double* val, size_t* len)
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: parameters are invalid: max_level_value=%ld(>0, <=number_of_level_values), "
                          "number_of_level_values=%ld(>0, >=max_level_value), range=%ld(>0)",
-                         class_name_, max_level_value, number_of_level_values, range);
+                         accessor_type().get().c_str(), max_level_value, number_of_level_values, range);
         return GRIB_DECODING_ERROR;
     }
     if (decimal_scale_factor > 127) {
@@ -109,7 +109,7 @@ int DataRunLengthPacking::unpack_double(double* val, size_t* len)
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "%s: numberOfValues mismatch: i=%ld, "
                              "compressed_values[i]=%ld, max_level_value=%ld",
-                             class_name_, i, compressed_values[i], max_level_value);
+                             accessor_type().get().c_str(), i, compressed_values[i], max_level_value);
             break;
         }
         v      = compressed_values[i++];
@@ -122,7 +122,7 @@ int DataRunLengthPacking::unpack_double(double* val, size_t* len)
         }
         if (n > number_of_values) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s: numberOfValues mismatch: n=%ld, number_of_values=%ld",
-                             class_name_, n, number_of_values);
+                             accessor_type().get().c_str(), n, number_of_values);
             break;
         }
         for (k = 0; k < n; k++) {
@@ -134,7 +134,7 @@ int DataRunLengthPacking::unpack_double(double* val, size_t* len)
     grib_context_free(context_, compressed_values);
     if (j != number_of_values) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s: numberOfValues mismatch: j=%ld, number_of_values=%ld",
-                         class_name_, j, number_of_values);
+                         accessor_type().get().c_str(), j, number_of_values);
         return GRIB_DECODING_ERROR;
     }
     return err;
@@ -168,7 +168,7 @@ int DataRunLengthPacking::pack_double(const double* val, size_t* len)
 
     if (n_vals != number_of_values) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s: Parameters are invalid: n_vals=%ld(==number_of_values), number_of_values=%ld(==n_vals)",
-                         class_name_, n_vals, number_of_values);
+                         accessor_type().get().c_str(), n_vals, number_of_values);
         return GRIB_ENCODING_ERROR;
     }
 
@@ -189,7 +189,7 @@ int DataRunLengthPacking::pack_double(const double* val, size_t* len)
     for (i = 0; i < number_of_level_values; i++) {
         if (missingValueLong == level_values[i]) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s: Parameters are invalid: level_values[%ld]=%ld, missingValueLong=%ld",
-                             class_name_, i, level_values[i], missingValueLong);
+                             accessor_type().get().c_str(), i, level_values[i], missingValueLong);
             return GRIB_ENCODING_ERROR;
         }
     }
@@ -198,7 +198,7 @@ int DataRunLengthPacking::pack_double(const double* val, size_t* len)
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Parameters are invalid: max_level_value=%ld(>0, <=number_of_level_values), "
                          "number_of_level_values=%ld(>0, >=max_level_value), range=%ld(>0)",
-                         class_name_, max_level_value, number_of_level_values, range);
+                         accessor_type().get().c_str(), max_level_value, number_of_level_values, range);
         return GRIB_ENCODING_ERROR;
     }
     buf = (unsigned char*)grib_context_malloc(context_, 2 * number_of_values);
@@ -221,7 +221,7 @@ int DataRunLengthPacking::pack_double(const double* val, size_t* len)
         if (err != GRIB_SUCCESS) {
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "%s: Values and/or parameters are invalid: val[%ld]=%lf, level_value=%ld, max_level_value=%ld",
-                             class_name_, i, val[i], k, max_level_value);
+                             accessor_type().get().c_str(), i, val[i], k, max_level_value);
             return GRIB_ENCODING_ERROR;
         }
         if (i == 0) {

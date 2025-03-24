@@ -19,7 +19,8 @@ class BufrSimpleThinning : public Gen
 {
 public:
     BufrSimpleThinning() :
-        Gen() { class_name_ = "bufr_simple_thinning"; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
@@ -33,6 +34,7 @@ private:
     const char* simpleThinningSkip_ = nullptr;
 
     int apply_thinning();
+    static inline const AccessorType accessor_type_{"bufr_simple_thinning"};
 };
 
 }  // namespace eccodes::accessor

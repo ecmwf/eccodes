@@ -19,7 +19,8 @@ class G2Grid : public Double
 {
 public:
     G2Grid() :
-        Double() { class_name_ = "g2grid"; }
+        Double() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
@@ -34,6 +35,7 @@ private:
     const char* j_increment_ = nullptr;
     const char* basic_angle_ = nullptr;
     const char* sub_division_ = nullptr;
+    static inline const AccessorType accessor_type_{"g2grid"};
 };
 
 }  // namespace eccodes::accessor

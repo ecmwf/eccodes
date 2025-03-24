@@ -19,7 +19,8 @@ class GdsIsPresent : public Long
 {
 public:
     GdsIsPresent() :
-        Long() { class_name_ = "gds_is_present"; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
@@ -29,6 +30,7 @@ private:
     const char* grid_definition_ = nullptr;
     const char* bitmap_present_ = nullptr;
     const char* values_ = nullptr;
+    static inline const AccessorType accessor_type_{"gds_is_present"};
 };
 
 }  // namespace eccodes::accessor

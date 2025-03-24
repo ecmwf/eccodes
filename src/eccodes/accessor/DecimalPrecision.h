@@ -19,7 +19,8 @@ class DecimalPrecision : public Long
 {
 public:
     DecimalPrecision() :
-        Long() { class_name_ = "decimal_precision"; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
@@ -29,6 +30,7 @@ private:
     const char* bits_per_value_ = nullptr;
     const char* changing_precision_ = nullptr;
     const char* decimal_scale_factor_ = nullptr;
+    static inline const AccessorType accessor_type_{"decimal_precision"};
 };
 
 }  // namespace eccodes::accessor

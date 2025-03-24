@@ -19,7 +19,8 @@ class Longitudes : public Double
 {
 public:
     Longitudes() :
-        Double() { class_name_ = "longitudes"; }
+        Double() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
@@ -30,6 +31,7 @@ private:
     double* lons_ = nullptr;
     long size_ = 0;
     int save_ = 0;
+    static inline const AccessorType accessor_type_{"longitudes"};
 };
 
 }  // namespace eccodes::accessor

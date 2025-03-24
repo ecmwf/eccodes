@@ -261,7 +261,7 @@ int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
         case GRIB_SUCCESS:
             break;
         default:
-            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: Unable to compute packing parameters", class_name_, __func__);
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: Unable to compute packing parameters", accessor_type().get().c_str(), __func__);
             return ret;
     }
 
@@ -327,7 +327,7 @@ int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
     if (width * height != *len) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s %s: width=%ld height=%ld len=%zu. width*height should equal len!",
-                         class_name_, __func__, width, height, *len);
+                         accessor_type().get().c_str(), __func__, width, height, *len);
         /* ECC-802: We cannot bomb out here as the user might have changed Ni/Nj and the packingType
          * but has not yet submitted the new data values. So len will be out of sync!
          * So issue a warning but proceed.
@@ -342,7 +342,7 @@ int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
             if (target_compression_ratio != 255) {
                 grib_context_log(context_, GRIB_LOG_ERROR,
                                  "%s %s: When %s=0 (Lossless), %s must be set to 255",
-                                 class_name_, __func__, type_of_compression_used_, target_compression_ratio_);
+                                 accessor_type().get().c_str(), __func__, type_of_compression_used_, target_compression_ratio_);
                 return GRIB_ENCODING_ERROR;
             }
             helper.compression = 0;
@@ -352,7 +352,7 @@ int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
             if (target_compression_ratio == 255 || target_compression_ratio == 0) {
                 grib_context_log(context_, GRIB_LOG_ERROR,
                                  "%s %s: When %s=1 (Lossy), %s must be specified",
-                                 class_name_, __func__, type_of_compression_used_, target_compression_ratio_);
+                                 accessor_type().get().c_str(), __func__, type_of_compression_used_, target_compression_ratio_);
                 return GRIB_ENCODING_ERROR;
             }
             helper.compression = target_compression_ratio;
@@ -372,7 +372,7 @@ int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
         const long bits_per_value_adjusted = 1;
         grib_context_log(context_, GRIB_LOG_DEBUG,
                          "%s (%s) : bits per value was zero, changed to %ld",
-                         class_name_, jpeg_lib_ == OPENJPEG_LIB ? "openjpeg" : "jasper", bits_per_value_adjusted);
+                         accessor_type().get().c_str(), jpeg_lib_ == OPENJPEG_LIB ? "openjpeg" : "jasper", bits_per_value_adjusted);
         bits_per_value = bits_per_value_adjusted;
     }
     helper.bits_per_value = bits_per_value;
@@ -399,7 +399,7 @@ int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
     if (helper.jpeg_length > simple_packing_size)
         grib_context_log(context_, GRIB_LOG_WARNING,
                          "%s (%s) : jpeg data (%ld) larger than input data (%ld)",
-                         class_name_, jpeg_lib_ == OPENJPEG_LIB ? "openjpeg" : "jasper",
+                         accessor_type().get().c_str(), jpeg_lib_ == OPENJPEG_LIB ? "openjpeg" : "jasper",
                          helper.jpeg_length, simple_packing_size);
 
     ECCODES_ASSERT(helper.jpeg_length <= helper.buffer_size);

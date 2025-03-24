@@ -19,13 +19,15 @@ class Vector : public AbstractVector
 {
 public:
     Vector() :
-        AbstractVector() { class_name_ = "vector"; }
+        AbstractVector() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_double(double* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
 private:
     const char* vector_ = nullptr;
     int index_ = 0;
+    static inline const AccessorType accessor_type_{"vector"};
 };
 
 }  // namespace eccodes::accessor

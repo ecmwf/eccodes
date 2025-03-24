@@ -19,7 +19,8 @@ class OptimalStepUnits : public Gen
 {
 public:
     OptimalStepUnits() :
-        Gen() { class_name_ = "optimal_step_units"; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int is_missing() override;
     int pack_long(const long* val, size_t* len) override;
@@ -37,6 +38,7 @@ private:
     const char* time_range_value_ = nullptr;
     const char* time_range_unit_ = nullptr;
     long overwriteStepUnits_ = 0;
+    static inline const AccessorType accessor_type_{"optimal_step_units"};
 };
 
 }  // namespace eccodes::accessor

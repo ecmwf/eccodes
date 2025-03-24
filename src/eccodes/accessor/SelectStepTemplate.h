@@ -19,7 +19,8 @@ class SelectStepTemplate : public Unsigned
 {
 public:
     SelectStepTemplate() :
-        Unsigned() { class_name_ = "select_step_template"; }
+        Unsigned() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     int value_count(long*) override;
@@ -28,6 +29,7 @@ public:
 private:
     const char* productDefinitionTemplateNumber_ = nullptr;
     int instant_ = 0;
+    static inline const AccessorType accessor_type_{"select_step_template"};
 };
 
 }  // namespace eccodes::accessor

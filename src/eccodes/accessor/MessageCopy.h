@@ -19,13 +19,16 @@ class MessageCopy : public Gen
 {
 public:
     MessageCopy() :
-        Gen() { class_name_ = "message_copy"; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
     long byte_count() override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
+private:
+    static inline const AccessorType accessor_type_{"message_copy"};
 };
 
 }  // namespace eccodes::accessor

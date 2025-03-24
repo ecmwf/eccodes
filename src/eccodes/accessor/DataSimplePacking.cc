@@ -113,7 +113,7 @@ int DataSimplePacking::unpack_double_element(size_t idx, double* val)
 
     grib_context_log(context_, GRIB_LOG_DEBUG,
                      "%s: %s: creating %s, %ld values (idx=%zu)",
-                     class_name_, __func__, name_, n_vals, idx);
+                     accessor_type().get().c_str(), __func__, name_, n_vals, idx);
 
     buf += byte_offset();
     /*ECCODES_ASSERT(((bits_per_value*n_vals)/8) < (1<<29));*/ /* See GRIB-787 */
@@ -121,7 +121,7 @@ int DataSimplePacking::unpack_double_element(size_t idx, double* val)
     if (bits_per_value % 8) {
         grib_context_log(context_, GRIB_LOG_DEBUG,
                          "%s: calling outline function : bpv %ld, rv: %g, bsf: %ld, dsf: %ld ",
-                         class_name_, bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
+                         accessor_type().get().c_str(), bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
         pos  = idx * bits_per_value;
         *val = (double)(((grib_decode_unsigned_long(buf, &pos, bits_per_value) * s) + reference_value) * d);
         /* val[i] = grib_decode_unsigned_long(buf, &pos, bits_per_value); */
@@ -242,7 +242,7 @@ int DataSimplePacking::unpack(T* val, size_t* len)
     d = codes_power<T>(-decimal_scale_factor, 10);
 
     grib_context_log(context_, GRIB_LOG_DEBUG,
-                     "%s %s: Creating %s, %zu values", class_name_, __func__, name_, n_vals);
+                     "%s %s: Creating %s, %zu values", accessor_type().get().c_str(), __func__, name_, n_vals);
 
     offsetBeforeData = byte_offset();
     buf += offsetBeforeData;
@@ -260,7 +260,7 @@ int DataSimplePacking::unpack(T* val, size_t* len)
                 grib_context_log(context_, GRIB_LOG_ERROR,
                                  "%s: Data section size mismatch: "
                                  "offset before data=%ld, offset after data=%ld (num values=%zu, bits per value=%ld)",
-                                 class_name_, offsetBeforeData, offsetAfterData, n_vals, bits_per_value);
+                                 accessor_type().get().c_str(), offsetBeforeData, offsetAfterData, n_vals, bits_per_value);
                 return GRIB_DECODING_ERROR;
             }
         }
@@ -275,7 +275,7 @@ int DataSimplePacking::unpack(T* val, size_t* len)
 
     grib_context_log(context_, GRIB_LOG_DEBUG,
                      "%s %s: calling outline function: bpv: %ld, rv: %g, bsf: %ld, dsf: %ld",
-                     class_name_, __func__, bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
+                     accessor_type().get().c_str(), __func__, bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
     grib_decode_array<T>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, val);
 
     *len = (long)n_vals;
@@ -383,7 +383,7 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
     d = codes_power<double>(-decimal_scale_factor, 10);
 
     grib_context_log(context_, GRIB_LOG_DEBUG,
-                     "%s %s: Creating %s, %zu values", class_name_, __func__, name_, n_vals);
+                     "%s %s: Creating %s, %zu values", accessor_type().get().c_str(), __func__, name_, n_vals);
 
     offsetBeforeData = byte_offset();
     buf += offsetBeforeData;
@@ -531,7 +531,7 @@ int DataSimplePacking::pack_double(const double* val, size_t* len)
             grib_get_double_internal(gh, reference_value_, &ref);
             if (ref != reference_value) {
                 grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
-                                 class_name_, __func__, reference_value_, ref, reference_value);
+                                 accessor_type().get().c_str(), __func__, reference_value_, ref, reference_value);
                 return GRIB_INTERNAL_ERROR;
             }
         }
@@ -597,7 +597,7 @@ int DataSimplePacking::pack_double(const double* val, size_t* len)
         if (err) {
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "%s %s: Range of values too large. Try a smaller value for decimal precision (less than %ld)",
-                             class_name_, __func__, decimal_scale_factor);
+                             accessor_type().get().c_str(), __func__, decimal_scale_factor);
             return err;
         }
 

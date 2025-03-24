@@ -19,7 +19,8 @@ class GlobalGaussian : public Long
 {
 public:
     GlobalGaussian() :
-        Long() { class_name_ = "global_gaussian"; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
@@ -36,6 +37,7 @@ private:
     const char* pl_ = nullptr;
     const char* basic_angle_ = nullptr;
     const char* subdivision_ = nullptr;
+    static inline const AccessorType accessor_type_{"global_gaussian"};
 };
 
 }  // namespace eccodes::accessor

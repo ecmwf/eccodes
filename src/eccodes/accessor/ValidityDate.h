@@ -19,7 +19,8 @@ class ValidityDate : public Long
 {
 public:
     ValidityDate() :
-        Long() { class_name_ = "validity_date"; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
@@ -31,6 +32,7 @@ private:
     const char* year_ = nullptr;
     const char* month_ = nullptr;
     const char* day_ = nullptr;
+    static inline const AccessorType accessor_type_{"validity_date"};
 };
 
 }  // namespace eccodes::accessor

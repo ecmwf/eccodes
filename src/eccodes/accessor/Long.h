@@ -19,7 +19,8 @@ class Long : public Gen
 {
 public:
     Long() :
-        Gen() { class_name_ = "long"; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     void init(const long len, grib_arguments* arg) override;
     long get_native_type() override;
     int pack_missing() override;
@@ -28,6 +29,8 @@ public:
     int unpack_string(char*, size_t* len) override;
     void dump(eccodes::Dumper*) override;
     int compare(grib_accessor*) override;
+private:
+    static inline const AccessorType accessor_type_{"long"};
 };
 
 }  // namespace eccodes::accessor

@@ -29,7 +29,8 @@ class ExpandedDescriptors : public Long
 {
 public:
     ExpandedDescriptors() :
-        Long() { class_name_ = "expanded_descriptors"; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
@@ -56,6 +57,7 @@ private:
     int expand();
     void __expand(bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded, change_coding_params* ccp, int* err);
     bufr_descriptors_array* do_expand(bufr_descriptors_array* unexpanded, change_coding_params* ccp, int* err);
+    static inline const AccessorType accessor_type_{"expanded_descriptors"};
 };
 
 }  // namespace eccodes::accessor

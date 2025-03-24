@@ -19,11 +19,14 @@ class Ksec1Expver : public Ascii
 {
 public:
     Ksec1Expver() :
-        Ascii() { class_name_ = "ksec1expver"; }
+        Ascii() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_long(const long* val, size_t* len) override;
     int pack_string(const char*, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
+private:
+    static inline const AccessorType accessor_type_{"ksec1expver"};
 };
 
 }  // namespace eccodes::accessor

@@ -77,7 +77,7 @@ int Time::pack_long(const long* val, size_t* len)
     if (!is_time_valid(v)) {
         // ECC-1777: For now just a warning. Will later change to an error
         fprintf(stderr, "ECCODES WARNING :  %s:%s: Time is not valid! hour=%ld min=%ld sec=%ld\n",
-                class_name_, __func__, hour, minute, second);
+                accessor_type().get().c_str(), __func__, hour, minute, second);
         // return GRIB_ENCODING_ERROR;
     }
 
@@ -101,7 +101,7 @@ int Time::unpack_string(char* val, size_t* len)
     if (*len < lmin) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         class_name_, name_, lmin, *len);
+                         accessor_type().get().c_str(), name_, lmin, *len);
         *len = lmin;
         return GRIB_BUFFER_TOO_SMALL;
     }

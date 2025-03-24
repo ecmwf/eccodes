@@ -19,11 +19,14 @@ class Sexagesimal2decimal : public ToDouble
 {
 public:
     Sexagesimal2decimal() :
-        ToDouble() { class_name_ = "sexagesimal2decimal"; }
+        ToDouble() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
+private:
+    static inline const AccessorType accessor_type_{"sexagesimal2decimal"};
 };
 
 }  // namespace eccodes::accessor

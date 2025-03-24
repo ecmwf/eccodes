@@ -19,7 +19,8 @@ class DataRunLengthPacking : public Values
 {
 public:
     DataRunLengthPacking() :
-        Values() { class_name_ = "data_run_length_packing"; }
+        Values() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
@@ -32,6 +33,7 @@ private:
     const char* number_of_level_values_ = nullptr;
     const char* decimal_scale_factor_ = nullptr;
     const char* level_values_ = nullptr;
+    static inline const AccessorType accessor_type_{"data_run_length_packing"};
 };
 
 }  // namespace eccodes::accessor

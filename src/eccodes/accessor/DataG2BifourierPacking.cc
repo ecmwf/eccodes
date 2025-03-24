@@ -716,7 +716,7 @@ int DataG2BifourierPacking::pack_double(const double* val, size_t* len)
         grib_get_double_internal(gh, reference_value_, &ref);
         if (ref != bt->reference_value) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
-                             class_name_, __func__, reference_value_, ref, bt->reference_value);
+                             accessor_type().get().c_str(), __func__, reference_value_, ref, bt->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
     }

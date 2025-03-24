@@ -19,7 +19,8 @@ class IeeeFloat : public Double
 {
 public:
     IeeeFloat() :
-        Double() { class_name_ = "ieeefloat"; }
+        Double() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_float(float* val, size_t* len) override;
@@ -30,6 +31,7 @@ public:
 
 private:
     grib_arguments* arg_ = nullptr;
+    static inline const AccessorType accessor_type_{"ieeefloat"};
 };
 
 }  // namespace eccodes::accessor

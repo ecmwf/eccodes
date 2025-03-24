@@ -176,7 +176,7 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
     #endif
         if (grib_get_nearest_smaller_value(hand, reference_value_, val[0], &reference_value) != GRIB_SUCCESS) {
             grib_context_log(context_, GRIB_LOG_ERROR,
-                             "%s %s: Unable to find nearest_smaller_value of %g for %s", class_name_, __func__, min, reference_value_);
+                             "%s %s: Unable to find nearest_smaller_value of %g for %s", accessor_type().get().c_str(), __func__, min, reference_value_);
             return GRIB_INTERNAL_ERROR;
         }
         if ((err = grib_set_double_internal(hand, reference_value_, reference_value)) != GRIB_SUCCESS)
@@ -208,13 +208,13 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
 
         if (grib_get_nearest_smaller_value(hand, reference_value_, min, &reference_value) != GRIB_SUCCESS) {
             grib_context_log(context_, GRIB_LOG_ERROR,
-                             "%s %s: Unable to find nearest_smaller_value of %g for %s", class_name_, __func__, min, reference_value_);
+                             "%s %s: Unable to find nearest_smaller_value of %g for %s", accessor_type().get().c_str(), __func__, min, reference_value_);
             return GRIB_INTERNAL_ERROR;
         }
 
         if (reference_value > min) {
             grib_context_log(context_, GRIB_LOG_ERROR,
-                             "%s %s: reference_value=%g min_value=%g diff=%g", class_name_, __func__, reference_value, min, reference_value - min);
+                             "%s %s: reference_value=%g min_value=%g diff=%g", accessor_type().get().c_str(), __func__, reference_value, min, reference_value - min);
             DEBUG_ASSERT(reference_value <= min);
             return GRIB_INTERNAL_ERROR;
         }
@@ -253,7 +253,7 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
 
         if (grib_get_nearest_smaller_value(hand, reference_value_, min, &reference_value) != GRIB_SUCCESS) {
             grib_context_log(context_, GRIB_LOG_ERROR,
-                             "%s %s: Unable to find nearest_smaller_value of %g for %s", class_name_, __func__, min, reference_value_);
+                             "%s %s: Unable to find nearest_smaller_value of %g for %s", accessor_type().get().c_str(), __func__, min, reference_value_);
             return GRIB_INTERNAL_ERROR;
         }
         d = codes_power<double>(decimal_scale_factor, 10);
@@ -311,12 +311,12 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
             break;
         default:
             grib_context_log(context_, GRIB_LOG_ERROR, "%s pack_double: packing %s, bitsPerValue=%ld (max %d)",
-                             class_name_, name_, bits_per_value, MAX_BITS_PER_VALUE);
+                             accessor_type().get().c_str(), name_, bits_per_value, MAX_BITS_PER_VALUE);
             err = GRIB_INVALID_BPV;
             goto cleanup;
     }
 
-    grib_context_log(context_, GRIB_LOG_DEBUG, "%s pack_double: packing %s, %zu values", class_name_, name_, n_vals);
+    grib_context_log(context_, GRIB_LOG_DEBUG, "%s pack_double: packing %s, %zu values", accessor_type().get().c_str(), name_, n_vals);
 
     // ECC-1431: GRIB2: CCSDS encoding failure AEC_STREAM_ERROR
     buflen = (nbytes * n_vals) * 67 / 64 + 256;
@@ -335,7 +335,7 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
         grib_get_double_internal(hand, reference_value_, &ref);
         if (ref != reference_value) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
-                             class_name_, __func__, reference_value_, ref, reference_value);
+                             accessor_type().get().c_str(), __func__, reference_value_, ref, reference_value);
             return GRIB_INTERNAL_ERROR;
         }
     }
@@ -363,7 +363,7 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
 
     if ((err = aec_buffer_encode(&strm)) != AEC_OK) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: aec_buffer_encode error %d (%s)",
-                         class_name_, __func__, err, aec_get_error_message(err));
+                         accessor_type().get().c_str(), __func__, err, aec_get_error_message(err));
         err = GRIB_ENCODING_ERROR;
         goto cleanup;
     }
@@ -481,7 +481,7 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
 
     if ((err = aec_buffer_decode(&strm)) != AEC_OK) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: aec_buffer_decode error %d (%s)",
-                         class_name_, __func__, err, aec_get_error_message(err));
+                         accessor_type().get().c_str(), __func__, err, aec_get_error_message(err));
         err = GRIB_DECODING_ERROR;
         goto cleanup;
     }
@@ -508,7 +508,7 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
             break;
         default:
             grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: unpacking %s, bitsPerValue=%ld (max %d)",
-                             class_name_, __func__, name_, bits_per_value, MAX_BITS_PER_VALUE);
+                             accessor_type().get().c_str(), __func__, name_, bits_per_value, MAX_BITS_PER_VALUE);
             err = GRIB_INVALID_BPV;
             goto cleanup;
     }

@@ -173,7 +173,7 @@ int Bitmap::unpack_string(char* val, size_t* len)
     if (*len < l) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         class_name_, name_, l, *len);
+                         accessor_type().get().c_str(), name_, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }

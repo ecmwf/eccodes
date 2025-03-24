@@ -19,7 +19,8 @@ class G1VerificationDate : public Long
 {
 public:
     G1VerificationDate() :
-        Long() { class_name_ = "g1verificationdate"; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
@@ -27,6 +28,7 @@ private:
     const char* date_ = nullptr;
     const char* time_ = nullptr;
     const char* step_ = nullptr;
+    static inline const AccessorType accessor_type_{"g1verificationdate"};
 };
 
 }  // namespace eccodes::accessor

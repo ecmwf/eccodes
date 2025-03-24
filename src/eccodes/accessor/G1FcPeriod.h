@@ -19,8 +19,11 @@ class G1FcPeriod : public G1StepRange
 {
 public:
     G1FcPeriod() :
-        G1StepRange() { class_name_ = "g1fcperiod"; }
+        G1StepRange() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_string(char*, size_t* len) override;
+private:
+    static inline const AccessorType accessor_type_{"g1fcperiod"};
 };
 
 }  // namespace eccodes::accessor

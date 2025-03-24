@@ -19,12 +19,14 @@ class SectionPadding : public Padding
 {
 public:
     SectionPadding() :
-        Padding() { class_name_ = "section_padding"; }
+        Padding() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     void init(const long, grib_arguments*) override;
     size_t preferred_size(int) override;
 
 private:
     int preserve_ = 0;
+    static inline const AccessorType accessor_type_{"section_padding"};
 };
 
 }  // namespace eccodes::accessor

@@ -19,9 +19,12 @@ class Uint8 : public Gen
 {
 public:
     Uint8() :
-        Gen() { class_name_ = "uint8"; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
+private:
+    static inline const AccessorType accessor_type_{"uint8"};
 };
 
 }  // namespace eccodes::accessor

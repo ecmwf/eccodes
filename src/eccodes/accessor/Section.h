@@ -19,7 +19,8 @@ class Section : public Gen
 {
 public:
     Section() :
-        Gen() { class_name_ = "section"; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     long byte_count() override;
     long next_offset() override;
@@ -29,6 +30,8 @@ public:
     void update_size(size_t) override;
     grib_section* sub_section() override;
     grib_accessor* next(grib_accessor*, int) override;
+private:
+    static inline const AccessorType accessor_type_{"section"};
 };
 
 }  // namespace eccodes::accessor

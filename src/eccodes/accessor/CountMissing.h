@@ -19,7 +19,8 @@ class CountMissing : public Long
 {
 public:
     CountMissing() :
-        Long() { class_name_ = "count_missing"; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_long(long* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
@@ -29,6 +30,7 @@ private:
     const char* unusedBitsInBitmap_ = nullptr;
     const char* numberOfDataPoints_ = nullptr;
     const char* missingValueManagementUsed_ = nullptr;
+    static inline const AccessorType accessor_type_{"count_missing"};
 };
 
 }  // namespace eccodes::accessor

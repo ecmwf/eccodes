@@ -19,12 +19,15 @@ class Evaluate : public Long
 {
 public:
     Evaluate() :
-        Long() { class_name_ = "evaluate"; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
 protected:
     grib_arguments* arg_ = nullptr; // expression to be evaluated
+private:
+    static inline const AccessorType accessor_type_{"evaluate"};
 };
 
 }  // namespace eccodes::accessor

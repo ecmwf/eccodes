@@ -19,7 +19,8 @@ class BitsPerValue : public Long
 {
 public:
     BitsPerValue() :
-        Long() { class_name_ = "bits_per_value"; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
@@ -27,6 +28,7 @@ public:
 private:
     const char* values_ = nullptr;
     const char* bits_per_value_ = nullptr;
+    static inline const AccessorType accessor_type_{"bits_per_value"};
 };
 
 }  // namespace eccodes::accessor

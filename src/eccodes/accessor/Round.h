@@ -19,12 +19,15 @@ class Round : public Evaluate
 {
 public:
     Round() :
-        Evaluate() { class_name_ = "round"; }
+        Evaluate() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_double(double* val, size_t* len) override;
     int unpack_string(char*, size_t* len) override;
     void init(const long, grib_arguments*) override;
     void destroy(grib_context*) override;
     void dump(eccodes::Dumper*) override;
+private:
+    static inline const AccessorType accessor_type_{"round"};
 };
 
 }  // namespace eccodes::accessor

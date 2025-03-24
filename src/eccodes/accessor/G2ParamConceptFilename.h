@@ -19,7 +19,9 @@ class G2ParamConceptFilename : public Gen
 
 {
 public:
-    G2ParamConceptFilename() : Gen() { class_name_ = "g2_param_concept_filename"; }
+    G2ParamConceptFilename() :
+      Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     void init(const long, grib_arguments*) override;
@@ -28,6 +30,7 @@ private:
     const char* basename_                = nullptr;  // str: paramId, shortName, units, name
     const char* MTG2Switch_              = nullptr;  // int: 0 or 1
     const char* tablesVersionMTG2Switch_ = nullptr;  // int: e.g. 33
+    static inline const AccessorType accessor_type_{"g2_param_concept_filename"};
 };
 
 }  // namespace eccodes::accessor

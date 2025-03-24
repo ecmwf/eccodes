@@ -19,7 +19,8 @@ class Sum : public Double
 {
 public:
     Sum() :
-        Double() { class_name_ = "sum"; }
+        Double() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_double(double* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     int value_count(long*) override;
@@ -27,6 +28,7 @@ public:
 
 private:
     const char* values_ = nullptr;
+    static inline const AccessorType accessor_type_{"sum"};
 };
 
 }  // namespace eccodes::accessor

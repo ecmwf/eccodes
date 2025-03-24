@@ -19,12 +19,15 @@ class Bytes : public Gen
 {
 public:
     Bytes() :
-        Gen() { class_name_ = "bytes"; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int pack_string(const char*, size_t* len) override;
     int unpack_string(char*, size_t* len) override;
     void init(const long, grib_arguments*) override;
     int compare(grib_accessor*) override;
+private:
+    static inline const AccessorType accessor_type_{"bytes"};
 };
 
 }  // namespace eccodes::accessor

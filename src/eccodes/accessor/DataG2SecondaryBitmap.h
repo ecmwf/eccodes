@@ -19,13 +19,15 @@ class DataG2SecondaryBitmap : public DataSecondaryBitmap
 {
 public:
     DataG2SecondaryBitmap() :
-        DataSecondaryBitmap() { class_name_ = "data_g2secondary_bitmap"; }
+        DataSecondaryBitmap() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_double(const double* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
 
 private:
     const char* number_of_values_ = nullptr;
+    static inline const AccessorType accessor_type_{"data_g2secondary_bitmap"};
 };
 
 }  // namespace eccodes::accessor

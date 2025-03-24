@@ -19,7 +19,8 @@ class SignedBits : public Long
 {
 public:
     SignedBits() :
-        Long() { class_name_ = "signed_bits"; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     long byte_count() override;
@@ -34,6 +35,7 @@ private:
     const char* numberOfElements_ = nullptr;
 
     long compute_byte_count();
+    static inline const AccessorType accessor_type_{"signed_bits"};
 };
 
 }  // namespace eccodes::accessor

@@ -19,7 +19,8 @@ class MessageIsValid : public Long
 {
 public:
     MessageIsValid() :
-        Long() { class_name_ = "message_is_valid"; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
@@ -43,6 +44,7 @@ private:
     const char* product_ = nullptr;
     grib_handle* handle_ = nullptr;
     long edition_ = 0;
+    static inline const AccessorType accessor_type_{"message_is_valid"};
 };
 
 }  // namespace eccodes::accessor

@@ -30,7 +30,8 @@ class BufrDataArray : public Gen
 {
 public:
     BufrDataArray() :
-        Gen() { class_name_ = "bufr_data_array"; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;
@@ -138,6 +139,7 @@ private:
     friend int encode_new_replication(grib_context*, BufrDataArray*, int, grib_buffer*, unsigned char*, long*, int, long, grib_darray*, long*);
     friend int encode_element(grib_context*, BufrDataArray*, int, grib_buffer*, unsigned char*, long*, int, bufr_descriptor*, long, grib_darray*, grib_sarray*);
     friend int encode_replication(grib_context*, BufrDataArray*, int, grib_buffer*, unsigned char*, long*, int, long, grib_darray*, long*);
+    static inline const AccessorType accessor_type_{"bufr_data_array"};
 };
 
 }  // namespace eccodes::accessor

@@ -19,7 +19,8 @@ class Element : public Long
 {
 public:
     Element() :
-        Long() { class_name_ = "element"; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_long(const long* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
@@ -29,6 +30,7 @@ public:
 private:
     const char* array_ = nullptr;
     long element_ = 0;
+    static inline const AccessorType accessor_type_{"element"};
 };
 
 }  // namespace eccodes::accessor

@@ -19,7 +19,8 @@ class G1Bitmap : public Bitmap
 {
 public:
     G1Bitmap() :
-        Bitmap() { class_name_ = "g1bitmap"; }
+        Bitmap() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_double(const double* val, size_t* len) override;
     int unpack_bytes(unsigned char*, size_t* len) override;
     int value_count(long*) override;
@@ -27,6 +28,7 @@ public:
 
 private:
     const char* unusedBits_ = nullptr;
+    static inline const AccessorType accessor_type_{"g1bitmap"};
 };
 
 }  // namespace eccodes::accessor

@@ -19,13 +19,15 @@ class Dirty : public Long
 {
 public:
     Dirty() :
-        Long() { class_name_ = "dirty"; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
 private:
     const char* accessor_ = nullptr;
+    static inline const AccessorType accessor_type_{"dirty"};
 };
 
 }  // namespace eccodes::accessor

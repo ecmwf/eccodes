@@ -19,7 +19,8 @@ class G1Date : public Long
 {
 public:
     G1Date() :
-        Long() { class_name_ = "g1date"; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     int unpack_string(char*, size_t* len) override;
@@ -31,6 +32,8 @@ protected:
     const char* year_ = nullptr;
     const char* month_ = nullptr;
     const char* day_ = nullptr;
+private:
+    static inline const AccessorType accessor_type_{"g1date"};
 };
 
 }  // namespace eccodes::accessor

@@ -19,7 +19,8 @@ class NumberOfValues : public Long
 {
 public:
     NumberOfValues() :
-        Long() { class_name_ = "number_of_values"; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
@@ -30,6 +31,7 @@ private:
     const char* bitmapPresent_ = nullptr;
     const char* bitmap_ = nullptr;
     const char* numberOfCodedValues_ = nullptr;
+    static inline const AccessorType accessor_type_{"number_of_values"};
 };
 
 }  // namespace eccodes::accessor

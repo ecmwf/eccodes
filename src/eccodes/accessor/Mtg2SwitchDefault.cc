@@ -27,7 +27,7 @@ void Mtg2SwitchDefault::init(const long len, grib_arguments* arg)
         const int numExpectedArgs = 4;
         if (numActualArgs != numExpectedArgs) {
             grib_context_log(context_, GRIB_LOG_FATAL, "Accessor %s (key %s): %d arguments provided but expected %d",
-                             class_name_, name_, numActualArgs, numExpectedArgs);
+                             accessor_type().get().c_str(), name_, numActualArgs, numExpectedArgs);
         }
     }
 

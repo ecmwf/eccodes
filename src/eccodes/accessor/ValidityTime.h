@@ -19,7 +19,8 @@ class ValidityTime : public Long
 {
 public:
     ValidityTime() :
-        Long() { class_name_ = "validity_time"; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_long(long* val, size_t* len) override;
     int unpack_string(char*, size_t* len) override;
     void init(const long, grib_arguments*) override;
@@ -31,6 +32,7 @@ private:
     const char* stepUnits_ = nullptr;
     const char* hours_ = nullptr;
     const char* minutes_ = nullptr;
+    static inline const AccessorType accessor_type_{"validity_time"};
 };
 
 }  // namespace eccodes::accessor

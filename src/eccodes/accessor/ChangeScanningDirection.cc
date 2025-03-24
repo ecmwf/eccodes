@@ -54,11 +54,11 @@ int ChangeScanningDirection::pack_long(const long* val, size_t* len)
 
     /* Make sure Ni / Nj are not missing */
     if (grib_is_missing(h, Ni_, &err) && !err) {
-        grib_context_log(c, GRIB_LOG_ERROR, "%s: Key %s cannot be 'missing'!", class_name_, Ni_);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Key %s cannot be 'missing'!", accessor_type().get().c_str(), Ni_);
         return GRIB_WRONG_GRID;
     }
     if (grib_is_missing(h, Nj_, &err) && !err) {
-        grib_context_log(c, GRIB_LOG_ERROR, "%s: Key %s cannot be 'missing'!", class_name_, Nj_);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Key %s cannot be 'missing'!", accessor_type().get().c_str(), Nj_);
         return GRIB_WRONG_GRID;
     }
 
@@ -81,7 +81,7 @@ int ChangeScanningDirection::pack_long(const long* val, size_t* len)
         return err;
 
     if (size > Ni * Nj) {
-        grib_context_log(c, GRIB_LOG_ERROR, "%s: Wrong values size!=Ni*Nj (%ld!=%ld*%ld)", class_name_, size, Ni, Nj);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Wrong values size!=Ni*Nj (%ld!=%ld*%ld)", accessor_type().get().c_str(), size, Ni, Nj);
         return GRIB_WRONG_ARRAY_SIZE;
     }
 

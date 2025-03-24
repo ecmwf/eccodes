@@ -19,7 +19,8 @@ class Variable : public Gen
 {
 public:
     Variable() :
-        Gen() { class_name_ = "variable"; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_float(const float* val, size_t* len) override;
@@ -45,6 +46,7 @@ private:
     char* cval_ = nullptr;
     char* cname_ = nullptr;
     int type_ = 0;
+    static inline const AccessorType accessor_type_{"variable"};
 };
 
 }  // namespace eccodes::accessor

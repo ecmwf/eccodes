@@ -19,7 +19,8 @@ class Codeflag : public Unsigned
 {
 public:
     Codeflag() :
-        Unsigned() { class_name_ = "codeflag"; }
+        Unsigned() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int value_count(long*) override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
@@ -28,6 +29,7 @@ private:
     const char* tablename_ = nullptr;
 
     int grib_get_codeflag(long code, char* codename);
+    static inline const AccessorType accessor_type_{"codeflag"};
 };
 
 }  // namespace eccodes::accessor

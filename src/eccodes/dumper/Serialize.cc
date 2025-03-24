@@ -41,7 +41,7 @@ void Serialize::dump_long(grib_accessor* a, const char* comment)
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0 &&
         (option_flags_ & GRIB_DUMP_FLAG_READ_ONLY) == 0 &&
-        (strcmp(a->class_name_, "lookup") != 0))
+        (strcmp(a->accessor_type().get().c_str(), "lookup") != 0))
         return;
 
     if (((a->flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && (value == GRIB_MISSING_LONG))
@@ -50,7 +50,7 @@ void Serialize::dump_long(grib_accessor* a, const char* comment)
         fprintf(out_, "%s = %ld", a->name_, value);
 
     if (((a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0) &&
-        (strcmp(a->class_name_, "lookup") != 0))
+        (strcmp(a->accessor_type().get().c_str(), "lookup") != 0))
         fprintf(out_, " (read_only)");
 
     // if(comment) fprintf(out_," [%s]",comment);

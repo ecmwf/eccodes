@@ -69,7 +69,7 @@ int FromScaleFactorScaledValue::pack_double(const double* val, size_t* len)
     factor_accessor_num_bits = factor_accessor->length_ * 8;
     maxval_value             = NumericLimits<int64_t>::max(value_accessor_num_bits);  // exclude missing
     maxval_factor            = NumericLimits<int64_t>::max(factor_accessor_num_bits);  // exclude missing
-    if (strcmp(factor_accessor->class_name_, "signed") == 0) {
+    if (strcmp(factor_accessor->accessor_type().get().c_str(), "signed") == 0) {
         maxval_factor = (1UL << (factor_accessor_num_bits - 1)) - 1;
     }
 

@@ -68,7 +68,7 @@ int G2Date::pack_long(const long* val, size_t* len)
     if (!is_date_valid(year, month, day, 0, 0, 0)) {
         // ECC-1777: For now just a warning. Will later change to an error
         fprintf(stderr, "ECCODES WARNING :  %s:%s: Date is not valid! year=%ld month=%ld day=%ld\n",
-                class_name_, __func__, year, month, day);
+                accessor_type().get().c_str(), __func__, year, month, day);
     }
 
     if ((ret = grib_set_long_internal(grib_handle_of_accessor(this), day_, day)) != GRIB_SUCCESS)

@@ -19,7 +19,8 @@ class SmartTableColumn : public Gen
 {
 public:
     SmartTableColumn() :
-        Gen() { class_name_ = "smart_table_column"; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
     int unpack_string_array(char**, size_t* len) override;
@@ -31,6 +32,7 @@ public:
 private:
     const char* smartTable_ = nullptr;
     int index_ = 0;
+    static inline const AccessorType accessor_type_{"smart_table_column"};
 };
 
 }  // namespace eccodes::accessor

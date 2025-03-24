@@ -19,13 +19,15 @@ class G2Bitmap : public Bitmap
 {
 public:
     G2Bitmap() :
-        Bitmap() { class_name_ = "g2bitmap"; }
+        Bitmap() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_double(const double* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
 
 private:
     const char* numberOfValues_ = nullptr;
+    static inline const AccessorType accessor_type_{"g2bitmap"};
 };
 
 }  // namespace eccodes::accessor
