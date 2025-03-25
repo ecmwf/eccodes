@@ -429,8 +429,9 @@ if( HAVE_BUILD_TOOLS )
     endforeach()
     ecbuild_add_test( TARGET eccodes_t_grib_check_gaussian_grids
                       TYPE SCRIPT
-                      CONDITION ECCODES_INSTALL_EXTRA_TOOLS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_gaussian_grids.sh )
+                      CONDITION ECCODES_INSTALL_EXTRA_TOOLS AND ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_gaussian_grids.sh
+                      TEST_DEPENDS eccodes_download_gribs )
     ecbuild_add_test( TARGET eccodes_t_grib_repair
                       TYPE SCRIPT
                       CONDITION ECCODES_INSTALL_EXTRA_TOOLS AND ENABLE_EXTRA_TESTS
