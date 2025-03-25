@@ -11,8 +11,7 @@
 #include "DataShPacked.h"
 #include "grib_scaling.h"
 
-eccodes::accessor::DataShPacked _grib_accessor_data_sh_packed;
-eccodes::Accessor* grib_accessor_data_sh_packed = &_grib_accessor_data_sh_packed;
+eccodes::AccessorBuilder<eccodes::accessor::DataShPacked> _grib_accessor_data_sh_packed_builder{};
 
 namespace eccodes::accessor
 {

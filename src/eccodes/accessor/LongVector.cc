@@ -11,8 +11,7 @@
 #include "LongVector.h"
 #include "AbstractLongVector.h"
 
-eccodes::accessor::LongVector _grib_accessor_long_vector;
-eccodes::Accessor* grib_accessor_long_vector = &_grib_accessor_long_vector;
+eccodes::AccessorBuilder<eccodes::accessor::LongVector> _grib_accessor_long_vector_builder{};
 
 namespace eccodes::accessor
 {

@@ -10,8 +10,7 @@
 
 #include "Lookup.h"
 
-eccodes::accessor::Lookup _grib_accessor_lookup;
-eccodes::Accessor* grib_accessor_lookup = &_grib_accessor_lookup;
+eccodes::AccessorBuilder<eccodes::accessor::Lookup> _grib_accessor_lookup_builder{};
 
 namespace eccodes::accessor
 {

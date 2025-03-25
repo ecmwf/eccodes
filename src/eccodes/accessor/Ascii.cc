@@ -10,8 +10,7 @@
 
 #include "Ascii.h"
 
-eccodes::accessor::Ascii _grib_accessor_ascii;
-eccodes::Accessor* grib_accessor_ascii = &_grib_accessor_ascii;
+eccodes::AccessorBuilder<eccodes::accessor::Ascii> _grib_accessor_ascii_builder{};
 
 namespace eccodes::accessor
 {

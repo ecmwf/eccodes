@@ -11,8 +11,7 @@
 #include "Variable.h"
 #include <limits.h>
 
-eccodes::accessor::Variable _grib_accessor_variable;
-eccodes::Accessor* grib_accessor_variable = &_grib_accessor_variable;
+eccodes::AccessorBuilder<eccodes::accessor::Variable> _grib_accessor_variable_builder{};
 
 namespace eccodes::accessor
 {

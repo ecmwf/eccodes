@@ -10,8 +10,7 @@
 
 #include "Longitudes.h"
 
-eccodes::accessor::Longitudes _grib_accessor_longitudes;
-eccodes::Accessor* grib_accessor_longitudes = &_grib_accessor_longitudes;
+eccodes::AccessorBuilder<eccodes::accessor::Longitudes> _grib_accessor_longitudes_builder{};
 
 namespace eccodes::accessor
 {

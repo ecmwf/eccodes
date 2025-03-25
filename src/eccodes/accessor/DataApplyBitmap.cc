@@ -10,8 +10,7 @@
 
 #include "DataApplyBitmap.h"
 
-eccodes::accessor::DataApplyBitmap _grib_accessor_data_apply_bitmap;
-eccodes::Accessor* grib_accessor_data_apply_bitmap = &_grib_accessor_data_apply_bitmap;
+eccodes::AccessorBuilder<eccodes::accessor::DataApplyBitmap> _grib_accessor_data_apply_bitmap_builder{};
 
 namespace eccodes::accessor
 {

@@ -10,8 +10,7 @@
 
 #include "GaussianGridName.h"
 
-eccodes::accessor::GaussianGridName _grib_accessor_gaussian_grid_name;
-eccodes::Accessor* grib_accessor_gaussian_grid_name = &_grib_accessor_gaussian_grid_name;
+eccodes::AccessorBuilder<eccodes::accessor::GaussianGridName> _grib_accessor_gaussian_grid_name_builder{};
 
 namespace eccodes::accessor
 {

@@ -25,8 +25,7 @@
 #endif
 
 
-eccodes::accessor::GridSpec _grib_accessor_grid_spec;
-eccodes::Accessor* grib_accessor_grid_spec = &_grib_accessor_grid_spec;
+eccodes::AccessorBuilder<eccodes::accessor::GridSpec> _grib_accessor_grid_spec_builder{};
 
 namespace eccodes::accessor
 {

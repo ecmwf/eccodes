@@ -10,8 +10,7 @@
 
 #include "ProjString.h"
 
-eccodes::accessor::ProjString _grib_accessor_proj_string;
-eccodes::Accessor* grib_accessor_proj_string = &_grib_accessor_proj_string;
+eccodes::AccessorBuilder<eccodes::accessor::ProjString> _grib_accessor_proj_string_builder{};
 
 namespace eccodes::accessor
 {

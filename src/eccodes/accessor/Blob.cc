@@ -10,8 +10,7 @@
 
 #include "Blob.h"
 
-eccodes::accessor::Blob _grib_accessor_blob;
-eccodes::Accessor* grib_accessor_blob = &_grib_accessor_blob;
+eccodes::AccessorBuilder<eccodes::accessor::Blob> _grib_accessor_blob_builder{};
 
 namespace eccodes::accessor
 {

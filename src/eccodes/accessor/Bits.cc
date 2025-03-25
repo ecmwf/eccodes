@@ -12,8 +12,7 @@
 #include "ecc_numeric_limits.h"
 
 
-eccodes::accessor::Bits _grib_accessor_bits;
-eccodes::Accessor* grib_accessor_bits = &_grib_accessor_bits;
+eccodes::AccessorBuilder<eccodes::accessor::Bits> _grib_accessor_bits_builder{};
 
 namespace eccodes::accessor
 {

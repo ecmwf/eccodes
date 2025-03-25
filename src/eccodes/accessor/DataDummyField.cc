@@ -10,8 +10,7 @@
 
 #include "DataDummyField.h"
 
-eccodes::accessor::DataDummyField _grib_accessor_data_dummy_field;
-eccodes::Accessor* grib_accessor_data_dummy_field = &_grib_accessor_data_dummy_field;
+eccodes::AccessorBuilder<eccodes::accessor::DataDummyField> _grib_accessor_data_dummy_field_builder{};
 
 namespace eccodes::accessor
 {

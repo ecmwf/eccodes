@@ -10,8 +10,7 @@
 
 #include "ValidityTime.h"
 
-eccodes::accessor::ValidityTime _grib_accessor_validity_time;
-eccodes::Accessor* grib_accessor_validity_time = &_grib_accessor_validity_time;
+eccodes::AccessorBuilder<eccodes::accessor::ValidityTime> _grib_accessor_validity_time_builder{};
 
 namespace eccodes::accessor
 {

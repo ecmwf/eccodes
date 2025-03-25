@@ -10,8 +10,7 @@
 
 #include "ToString.h"
 
-eccodes::accessor::ToString _grib_accessor_to_string;
-eccodes::Accessor* grib_accessor_to_string = &_grib_accessor_to_string;
+eccodes::AccessorBuilder<eccodes::accessor::ToString> _grib_accessor_to_string_builder{};
 
 namespace eccodes::accessor
 {

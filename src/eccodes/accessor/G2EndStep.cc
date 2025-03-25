@@ -13,8 +13,7 @@
 #include "step_utilities.h"
 #include <stdexcept>
 
-eccodes::accessor::G2EndStep _grib_accessor_g2end_step;
-eccodes::Accessor* grib_accessor_g2end_step = &_grib_accessor_g2end_step;
+eccodes::AccessorBuilder<eccodes::accessor::G2EndStep> _grib_accessor_g2end_step_builder{};
 
 namespace eccodes::accessor
 {

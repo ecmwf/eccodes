@@ -10,8 +10,7 @@
 
 #include "Uint64.h"
 
-eccodes::accessor::Uint64 _grib_accessor_uint64;
-eccodes::Accessor* grib_accessor_uint64 = &_grib_accessor_uint64;
+eccodes::AccessorBuilder<eccodes::accessor::Uint64> _grib_accessor_uint64_builder{};
 
 namespace eccodes::accessor
 {

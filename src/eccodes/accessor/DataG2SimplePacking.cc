@@ -11,8 +11,7 @@
 #include "DataG2SimplePacking.h"
 #include "grib_scaling.h"
 
-eccodes::accessor::DataG2SimplePacking _grib_accessor_data_g2simple_packing;
-eccodes::Accessor* grib_accessor_data_g2simple_packing = &_grib_accessor_data_g2simple_packing;
+eccodes::AccessorBuilder<eccodes::accessor::DataG2SimplePacking> _grib_accessor_data_g2simple_packing_builder{};
 
 namespace eccodes::accessor
 {

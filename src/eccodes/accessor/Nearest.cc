@@ -10,8 +10,7 @@
 
 #include "Nearest.h"
 
-eccodes::accessor::Nearest _grib_accessor_nearest;
-eccodes::Accessor* grib_accessor_nearest = &_grib_accessor_nearest;
+eccodes::AccessorBuilder<eccodes::accessor::Nearest> _grib_accessor_nearest_builder{};
 
 namespace eccodes::accessor
 {

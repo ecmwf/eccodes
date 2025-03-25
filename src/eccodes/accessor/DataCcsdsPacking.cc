@@ -17,8 +17,7 @@
     #endif
 #endif
 
-eccodes::accessor::DataCcsdsPacking _grib_accessor_data_ccsds_packing;
-eccodes::Accessor* grib_accessor_data_ccsds_packing = &_grib_accessor_data_ccsds_packing;
+eccodes::AccessorBuilder<eccodes::accessor::DataCcsdsPacking> _grib_accessor_data_ccsds_packing_builder{};
 
 namespace eccodes::accessor
 {

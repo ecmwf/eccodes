@@ -10,8 +10,7 @@
 
 #include "G1ForecastMonth.h"
 
-eccodes::accessor::G1ForecastMonth _grib_accessor_g1forecastmonth;
-eccodes::Accessor* grib_accessor_g1forecastmonth = &_grib_accessor_g1forecastmonth;
+eccodes::AccessorBuilder<eccodes::accessor::G1ForecastMonth> _grib_accessor_g1forecastmonth_builder{};
 
 namespace eccodes::accessor
 {

@@ -10,8 +10,7 @@
 
 #include "DataJpeg2000Packing.h"
 
-eccodes::accessor::DataJpeg2000Packing _grib_accessor_data_jpeg2000_packing;
-eccodes::Accessor* grib_accessor_data_jpeg2000_packing = &_grib_accessor_data_jpeg2000_packing;
+eccodes::AccessorBuilder<eccodes::accessor::DataJpeg2000Packing> _grib_accessor_data_jpeg2000_packing_builder{};
 
 namespace eccodes::accessor
 {

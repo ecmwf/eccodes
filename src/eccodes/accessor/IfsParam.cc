@@ -10,8 +10,7 @@
 
 #include "IfsParam.h"
 
-eccodes::accessor::IfsParam _grib_accessor_ifs_param;
-eccodes::Accessor* grib_accessor_ifs_param = &_grib_accessor_ifs_param;
+eccodes::AccessorBuilder<eccodes::accessor::IfsParam> _grib_accessor_ifs_param_builder{};
 
 namespace eccodes::accessor
 {

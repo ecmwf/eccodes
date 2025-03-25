@@ -10,8 +10,7 @@
 
 #include "Message.h"
 
-eccodes::accessor::Message _grib_accessor_message;
-eccodes::Accessor* grib_accessor_message = &_grib_accessor_message;
+eccodes::AccessorBuilder<eccodes::accessor::Message> _grib_accessor_message_builder{};
 
 namespace eccodes::accessor
 {

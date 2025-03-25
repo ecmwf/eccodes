@@ -10,8 +10,7 @@
 
 #include "DataG22OrderPacking.h"
 
-eccodes::accessor::DataG22OrderPacking _grib_accessor_data_g22order_packing;
-eccodes::Accessor* grib_accessor_data_g22order_packing = &_grib_accessor_data_g22order_packing;
+eccodes::AccessorBuilder<eccodes::accessor::DataG22OrderPacking> _grib_accessor_data_g22order_packing_builder{};
 
 namespace eccodes::accessor
 {

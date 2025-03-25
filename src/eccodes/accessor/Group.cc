@@ -10,8 +10,7 @@
 
 #include "Group.h"
 
-eccodes::accessor::Group _grib_accessor_group;
-eccodes::Accessor* grib_accessor_group = &_grib_accessor_group;
+eccodes::AccessorBuilder<eccodes::accessor::Group> _grib_accessor_group_builder{};
 
 namespace eccodes::accessor
 {

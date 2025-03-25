@@ -11,8 +11,7 @@
 #include "ClosestDate.h"
 #include <float.h>
 
-eccodes::accessor::ClosestDate _grib_accessor_closest_date;
-eccodes::Accessor* grib_accessor_closest_date = &_grib_accessor_closest_date;
+eccodes::AccessorBuilder<eccodes::accessor::ClosestDate> _grib_accessor_closest_date_builder{};
 
 namespace eccodes::accessor
 {

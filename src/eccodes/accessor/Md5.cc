@@ -11,8 +11,7 @@
 #include "Md5.h"
 #include "md5_core.h"
 
-eccodes::accessor::Md5 _grib_accessor_md5;
-eccodes::Accessor* grib_accessor_md5 = &_grib_accessor_md5;
+eccodes::AccessorBuilder<eccodes::accessor::Md5> _grib_accessor_md5_builder{};
 
 namespace eccodes::accessor
 {

@@ -10,8 +10,7 @@
 
 #include "G2Aerosol.h"
 
-eccodes::accessor::G2Aerosol _grib_accessor_g2_aerosol;
-eccodes::Accessor* grib_accessor_g2_aerosol = &_grib_accessor_g2_aerosol;
+eccodes::AccessorBuilder<eccodes::accessor::G2Aerosol> _grib_accessor_g2_aerosol_builder{};
 
 namespace eccodes::accessor
 {

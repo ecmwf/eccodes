@@ -10,8 +10,7 @@
 
 #include "Spd.h"
 
-eccodes::accessor::Spd _grib_accessor_spd;
-eccodes::Accessor* grib_accessor_spd = &_grib_accessor_spd;
+eccodes::AccessorBuilder<eccodes::accessor::Spd> _grib_accessor_spd_builder{};
 
 namespace eccodes::accessor
 {

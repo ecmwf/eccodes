@@ -10,8 +10,7 @@
 
 #include "MarsParam.h"
 
-eccodes::accessor::MarsParam _grib_accessor_mars_param;
-eccodes::Accessor* grib_accessor_mars_param = &_grib_accessor_mars_param;
+eccodes::AccessorBuilder<eccodes::accessor::MarsParam> _grib_accessor_mars_param_builder{};
 
 namespace eccodes::accessor
 {

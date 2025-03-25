@@ -11,8 +11,7 @@
 #include "DataG1SecondOrderConstantWidthPacking.h"
 #include "grib_scaling.h"
 
-eccodes::accessor::DataG1SecondOrderConstantWidthPacking _grib_accessor_data_g1second_order_constant_width_packing;
-eccodes::Accessor* grib_accessor_data_g1second_order_constant_width_packing = &_grib_accessor_data_g1second_order_constant_width_packing;
+eccodes::AccessorBuilder<eccodes::accessor::DataG1SecondOrderConstantWidthPacking> _grib_accessor_data_g1second_order_constant_width_packing_builder{};
 
 namespace eccodes::accessor
 {

@@ -13,8 +13,7 @@
 #include "step_utilities.h"
 #include <iostream>
 
-eccodes::accessor::G2StepRange _grib_accessor_g2step_range;
-eccodes::Accessor* grib_accessor_g2step_range = &_grib_accessor_g2step_range;
+eccodes::AccessorBuilder<eccodes::accessor::G2StepRange> _grib_accessor_g2step_range_builder{};
 
 namespace eccodes::accessor
 {

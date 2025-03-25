@@ -11,8 +11,7 @@
 #include "CodetableTitle.h"
 #include "Codetable.h"
 
-eccodes::accessor::CodetableTitle _grib_accessor_codetable_title;
-eccodes::Accessor* grib_accessor_codetable_title = &_grib_accessor_codetable_title;
+eccodes::AccessorBuilder<eccodes::accessor::CodetableTitle> _grib_accessor_codetable_title_builder{};
 
 namespace eccodes::accessor
 {

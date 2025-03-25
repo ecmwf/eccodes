@@ -10,8 +10,7 @@
 
 #include "Position.h"
 
-eccodes::accessor::Position _grib_accessor_position;
-eccodes::Accessor* grib_accessor_position = &_grib_accessor_position;
+eccodes::AccessorBuilder<eccodes::accessor::Position> _grib_accessor_position_builder{};
 
 namespace eccodes::accessor
 {

@@ -10,8 +10,7 @@
 
 #include "JulianDay.h"
 
-eccodes::accessor::JulianDay _grib_accessor_julian_day;
-eccodes::Accessor* grib_accessor_julian_day = &_grib_accessor_julian_day;
+eccodes::AccessorBuilder<eccodes::accessor::JulianDay> _grib_accessor_julian_day_builder{};
 
 namespace eccodes::accessor
 {

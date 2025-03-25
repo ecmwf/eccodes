@@ -11,8 +11,7 @@
 #include "SmartTable.h"
 #include <cctype>
 
-eccodes::accessor::SmartTable _grib_accessor_smart_table;
-eccodes::Accessor* grib_accessor_smart_table = &_grib_accessor_smart_table;
+eccodes::AccessorBuilder<eccodes::accessor::SmartTable> _grib_accessor_smart_table_builder{};
 
 void grib_smart_table_delete(grib_context* c)
 {

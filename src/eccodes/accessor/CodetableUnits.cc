@@ -11,8 +11,7 @@
 #include "CodetableUnits.h"
 #include "Codetable.h"
 
-eccodes::accessor::CodetableUnits _grib_accessor_codetable_units;
-eccodes::Accessor* grib_accessor_codetable_units = &_grib_accessor_codetable_units;
+eccodes::AccessorBuilder<eccodes::accessor::CodetableUnits> _grib_accessor_codetable_units_builder{};
 
 namespace eccodes::accessor
 {

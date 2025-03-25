@@ -10,8 +10,7 @@
 
 #include "BufrDataElement.h"
 
-eccodes::accessor::BufrDataElement _grib_accessor_bufr_data_element;
-eccodes::Accessor* grib_accessor_bufr_data_element = &_grib_accessor_bufr_data_element;
+eccodes::AccessorBuilder<eccodes::accessor::BufrDataElement> _grib_accessor_bufr_data_element_builder{};
 
 namespace eccodes::accessor
 {

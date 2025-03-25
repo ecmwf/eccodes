@@ -10,8 +10,7 @@
 
 #include "BufrExtractAreaSubsets.h"
 
-eccodes::accessor::BufrExtractAreaSubsets _grib_accessor_bufr_extract_area_subsets;
-eccodes::Accessor* grib_accessor_bufr_extract_area_subsets = &_grib_accessor_bufr_extract_area_subsets;
+eccodes::AccessorBuilder<eccodes::accessor::BufrExtractAreaSubsets> _grib_accessor_bufr_extract_area_subsets_builder{};
 
 /* Copy first element of array into all others */
 static void fill_in(double a[], long length)

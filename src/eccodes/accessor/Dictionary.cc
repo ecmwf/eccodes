@@ -10,8 +10,7 @@
 
 #include "Dictionary.h"
 
-eccodes::accessor::Dictionary _grib_accessor_dictionary;
-eccodes::Accessor* grib_accessor_dictionary = &_grib_accessor_dictionary;
+eccodes::AccessorBuilder<eccodes::accessor::Dictionary> _grib_accessor_dictionary_builder{};
 
 namespace eccodes::accessor
 {

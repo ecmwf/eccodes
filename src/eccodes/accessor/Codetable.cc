@@ -11,8 +11,7 @@
 #include "Codetable.h"
 #include <cctype>
 
-eccodes::accessor::Codetable _grib_accessor_codetable;
-eccodes::Accessor* grib_accessor_codetable = &_grib_accessor_codetable;
+eccodes::AccessorBuilder<eccodes::accessor::Codetable> _grib_accessor_codetable_builder{};
 
 int codes_codetable_get_contents_malloc(const grib_handle* h, const char* key, code_table_entry** entries, size_t* num_entries)
 {

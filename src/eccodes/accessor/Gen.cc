@@ -13,8 +13,7 @@
 #include "grib_accessor_class.h"
 #include <stdexcept>
 
-eccodes::accessor::Gen _grib_accessor_gen;
-eccodes::Accessor* grib_accessor_gen = &_grib_accessor_gen;
+eccodes::AccessorBuilder<eccodes::accessor::Gen> _grib_accessor_gen_builder{};
 
 namespace eccodes::accessor
 {

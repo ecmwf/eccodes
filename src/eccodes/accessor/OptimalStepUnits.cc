@@ -12,8 +12,7 @@
 #include "step.h"
 #include "step_utilities.h"
 
-eccodes::accessor::OptimalStepUnits _grib_accessor_optimal_step_units;
-eccodes::Accessor* grib_accessor_optimal_step_units = &_grib_accessor_optimal_step_units;
+eccodes::AccessorBuilder<eccodes::accessor::OptimalStepUnits> _grib_accessor_optimal_step_units_builder{};
 
 namespace eccodes::accessor
 {

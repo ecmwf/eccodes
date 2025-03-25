@@ -10,8 +10,7 @@
 
 #include "OffsetFile.h"
 
-eccodes::accessor::OffsetFile _grib_accessor_offset_file;
-eccodes::Accessor* grib_accessor_offset_file = &_grib_accessor_offset_file;
+eccodes::AccessorBuilder<eccodes::accessor::OffsetFile> _grib_accessor_offset_file_builder{};
 
 namespace eccodes::accessor
 {
