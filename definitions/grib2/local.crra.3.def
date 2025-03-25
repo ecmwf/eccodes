@@ -1,5 +1,5 @@
- CARRA/CERRA local
-  
+# CARRA/CERRA local
+
 codetable[2] suiteName "grib2/crra_suiteName.table" : dump;
 alias crraSuiteID = suiteName;
 
@@ -9,4 +9,3 @@ alias mars.class = marsKlass;
 
 ksec1expver[4] experimentVersionNumber = "0002" : dump;
 alias marsExpver = experimentVersionNumber;
-
