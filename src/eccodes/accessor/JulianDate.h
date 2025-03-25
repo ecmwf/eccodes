@@ -41,6 +41,8 @@ private:
     const char* ymd_    = nullptr;
     const char* hms_    = nullptr;
     char sep_[5]        = {0,};
+
+public:
     static inline const AccessorType accessor_type_{"julian_date"};
 };
 

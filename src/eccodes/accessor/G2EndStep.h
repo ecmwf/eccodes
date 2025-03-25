@@ -55,6 +55,8 @@ private:
     int unpack_multiple_time_ranges_long_(long* val, size_t* len);
     int unpack_multiple_time_ranges_double_(double* val, size_t* len);
     int pack_long_(const long end_step_value, const long end_step_unit);
+
+public:
     static inline const AccessorType accessor_type_{"g2end_step"};
 };
 

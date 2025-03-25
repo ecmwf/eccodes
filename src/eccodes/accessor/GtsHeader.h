@@ -29,6 +29,8 @@ public:
 private:
     int gts_offset_ = 0;
     int gts_length_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"gts_header"};
 };
 

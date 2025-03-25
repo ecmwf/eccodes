@@ -28,6 +28,8 @@ public:
 private:
     const char* values_ = nullptr;
     const char* missingValue_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"scale_values"};
 };
 

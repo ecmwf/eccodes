@@ -30,6 +30,8 @@ private:
     const char* bits_per_value_ = nullptr;
     const char* changing_precision_ = nullptr;
     const char* decimal_scale_factor_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"decimal_precision"};
 };
 

@@ -38,6 +38,8 @@ private:
 
     int unpack_long_new(long* val, size_t* len);
     int unpack_long_with_legacy_support(long* val, size_t* len);
+
+public:
     static inline const AccessorType accessor_type_{"number_of_points_gaussian"};
 };
 

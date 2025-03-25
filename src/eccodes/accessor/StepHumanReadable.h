@@ -28,6 +28,8 @@ public:
 private:
     const char* stepUnits_ = nullptr;
     const char* step_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"step_human_readable"};
 };
 

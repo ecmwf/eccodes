@@ -33,6 +33,8 @@ private:
     const char* hour_ = nullptr;
     const char* minute_ = nullptr;
     const char* second_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"julian_day"};
 };
 

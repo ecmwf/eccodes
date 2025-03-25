@@ -35,6 +35,8 @@ private:
     const char* j_increment_ = nullptr;
     const char* basic_angle_ = nullptr;
     const char* sub_division_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"g2grid"};
 };
 

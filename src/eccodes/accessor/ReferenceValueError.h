@@ -27,6 +27,8 @@ public:
 private:
     const char* referenceValue_ = nullptr;
     const char* floatType_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"reference_value_error"};
 };
 

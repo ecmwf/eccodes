@@ -30,6 +30,8 @@ public:
 private:
     const char* vector_ = nullptr;
     int index_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"long_vector"};
 };
 

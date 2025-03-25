@@ -37,6 +37,8 @@ private:
     const char* localDir_ = nullptr;
 
     grib_trie* load_dictionary(int* err);
+
+public:
     static inline const AccessorType accessor_type_{"dictionary"};
 };
 

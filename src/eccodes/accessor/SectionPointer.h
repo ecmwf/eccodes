@@ -31,6 +31,8 @@ private:
     const char* sectionOffset_ = nullptr;
     const char* sectionLength_ = nullptr;
     long sectionNumber_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"section_pointer"};
 };
 

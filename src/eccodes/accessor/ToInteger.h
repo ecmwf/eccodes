@@ -38,6 +38,8 @@ private:
     const char* key_ = nullptr;
     long start_ = 0;
     size_t str_length_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"to_integer"};
 };
 

@@ -28,6 +28,8 @@ private:
     const char* date_ = nullptr;
     const char* time_ = nullptr;
     const char* step_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"g1verificationdate"};
 };
 

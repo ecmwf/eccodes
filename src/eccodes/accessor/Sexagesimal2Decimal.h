@@ -15,10 +15,10 @@
 namespace eccodes::accessor
 {
 
-class Sexagesimal2decimal : public ToDouble
+class Sexagesimal2Decimal : public ToDouble
 {
 public:
-    Sexagesimal2decimal() :
+    Sexagesimal2Decimal() :
         ToDouble() { }
     const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
@@ -26,6 +26,8 @@ public:
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
 private:
+
+public:
     static inline const AccessorType accessor_type_{"sexagesimal2decimal"};
 };
 

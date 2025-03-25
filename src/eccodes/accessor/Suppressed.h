@@ -32,6 +32,8 @@ private:
     grib_arguments* args_ = nullptr;
 
     void log_message();
+
+public:
     static inline const AccessorType accessor_type_{"suppressed"};
 };
 

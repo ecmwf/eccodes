@@ -46,6 +46,8 @@ private:
     const char* jPointsAreConsecutive_ = nullptr;
     const char* bitmap_ = nullptr;
     const char* groupWidth_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"data_g1second_order_constant_width_packing"};
 };
 

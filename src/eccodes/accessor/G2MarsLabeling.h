@@ -42,6 +42,8 @@ private:
     const char* typeOfGeneratingProcess_ = nullptr;
 
     int extra_set(long val);
+
+public:
     static inline const AccessorType accessor_type_{"g2_mars_labeling"};
 };
 

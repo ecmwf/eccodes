@@ -32,6 +32,8 @@ private:
     const char* offset_key_ = nullptr;
     grib_expression* length_key_ = nullptr;
     grib_string_list* blocklist_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"md5"};
 };
 

@@ -35,6 +35,8 @@ private:
     long llength_ = 0;
     long loffset_ = 0;
     grib_expression* real_name_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"lookup"};
 };
 

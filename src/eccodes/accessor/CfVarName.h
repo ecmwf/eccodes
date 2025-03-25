@@ -27,6 +27,8 @@ public:
 
 private:
     const char* defaultKey_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"cf_var_name"};
 };
 

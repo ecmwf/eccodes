@@ -43,6 +43,8 @@ private:
     const char* ccsds_rsi_ = nullptr;
 
     template <typename T> int unpack(T* val, size_t* len);
+
+public:
     static inline const AccessorType accessor_type_{"data_ccsds_packing"};
 };
 

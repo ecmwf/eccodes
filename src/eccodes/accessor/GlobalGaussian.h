@@ -37,6 +37,8 @@ private:
     const char* pl_ = nullptr;
     const char* basic_angle_ = nullptr;
     const char* subdivision_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"global_gaussian"};
 };
 

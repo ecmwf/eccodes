@@ -29,6 +29,8 @@ public:
 private:
     const char* paramId_ = nullptr;
     const char* type_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"ifs_param"};
 };
 

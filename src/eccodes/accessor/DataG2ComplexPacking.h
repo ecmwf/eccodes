@@ -27,6 +27,8 @@ public:
 
 private:
     const char* numberOfValues_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"data_g2complex_packing"};
 };
 

@@ -30,6 +30,8 @@ private:
     const char* grid_definition_ = nullptr;
     const char* bitmap_present_ = nullptr;
     const char* values_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"gds_is_present"};
 };
 

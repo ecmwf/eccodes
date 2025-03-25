@@ -31,6 +31,8 @@ private:
     const char* Ni_ = nullptr;
     const char* Nj_ = nullptr;
     const char* alternativeRowScanning_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"change_alternative_row_scanning"};
 };
 

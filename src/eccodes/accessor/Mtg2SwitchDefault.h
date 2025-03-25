@@ -30,6 +30,8 @@ private:
     const char* tablesVersionMTG2Switch_ = nullptr;  // int
     const char* marsClass_               = nullptr;  // str
     const char* MTG2SwitchViaTablesVersion_  = nullptr;  //int
+
+public:
     static inline const AccessorType accessor_type_{"mtg2_switch_default"};
 };
 

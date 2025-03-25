@@ -32,6 +32,8 @@ private:
     const char* year_ = nullptr;
     const char* month_ = nullptr;
     const char* day_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"validity_date"};
 };
 

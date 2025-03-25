@@ -31,6 +31,8 @@ private:
     const char* bitmapPresent_ = nullptr;
     const char* bitmap_ = nullptr;
     const char* numberOfCodedValues_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"number_of_values"};
 };
 

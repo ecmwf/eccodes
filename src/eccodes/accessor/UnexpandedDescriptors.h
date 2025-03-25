@@ -32,6 +32,8 @@ public:
 private:
     grib_accessor* unexpandedDescriptorsEncoded_ = nullptr;
     const char* createNewData_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"unexpanded_descriptors"};
 };
 

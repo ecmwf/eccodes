@@ -35,6 +35,8 @@ private:
     const char* numberOfElements_ = nullptr;
 
     long compute_byte_count();
+
+public:
     static inline const AccessorType accessor_type_{"unsigned_bits"};
 };
 

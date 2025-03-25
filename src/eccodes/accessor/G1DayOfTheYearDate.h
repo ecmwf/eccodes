@@ -25,6 +25,8 @@ public:
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
 private:
+
+public:
     static inline const AccessorType accessor_type_{"g1day_of_the_year_date"};
 };
 

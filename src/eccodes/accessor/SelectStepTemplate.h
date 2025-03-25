@@ -29,6 +29,8 @@ public:
 private:
     const char* productDefinitionTemplateNumber_ = nullptr;
     int instant_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"select_step_template"};
 };
 

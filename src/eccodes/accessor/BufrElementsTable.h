@@ -37,6 +37,8 @@ private:
 
     grib_trie* load_bufr_elements_table(int* err);
     int bufr_get_from_table(bufr_descriptor* v);
+
+public:
     static inline const AccessorType accessor_type_{"bufr_elements_table"};
 };
 

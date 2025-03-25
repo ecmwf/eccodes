@@ -71,6 +71,8 @@ private:
     //const char* numberOfValues_ = nullptr;
 
     bif_trunc_t* new_bif_trunc();
+
+public:
     static inline const AccessorType accessor_type_{"data_g2bifourier_packing"};
 };
 

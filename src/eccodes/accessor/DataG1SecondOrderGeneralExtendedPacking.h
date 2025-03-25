@@ -61,6 +61,8 @@ private:
     int double_dirty_ = 0;
     int float_dirty_ = 0;
     size_t size_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"data_g1second_order_general_extended_packing"};
 };
 

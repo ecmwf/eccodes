@@ -30,6 +30,8 @@ private:
     const char* basename_                = nullptr;  // str: paramId, shortName, units, name
     const char* MTG2Switch_              = nullptr;  // int: 0 or 1
     const char* tablesVersionMTG2Switch_ = nullptr;  // int: e.g. 33
+
+public:
     static inline const AccessorType accessor_type_{"g2_param_concept_filename"};
 };
 

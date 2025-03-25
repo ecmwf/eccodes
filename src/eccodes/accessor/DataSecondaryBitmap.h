@@ -32,6 +32,8 @@ protected:
     const char* missing_value_ = nullptr;
     const char* expand_by_ = nullptr;
 private:
+
+public:
     static inline const AccessorType accessor_type_{"data_secondary_bitmap"};
 };
 

@@ -28,6 +28,8 @@ public:
 private:
     const char* left_ = nullptr;
     long right_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"octet_number"};
 };
 

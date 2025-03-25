@@ -30,6 +30,8 @@ private:
     const char* productDefinitionTemplateNumber_ = nullptr;
     const char* stepType_ = nullptr;
     int chemical_type_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"g2_chemical"};
 };
 

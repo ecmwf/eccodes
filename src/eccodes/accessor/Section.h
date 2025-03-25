@@ -31,6 +31,8 @@ public:
     grib_section* sub_section() override;
     grib_accessor* next(grib_accessor*, int) override;
 private:
+
+public:
     static inline const AccessorType accessor_type_{"section"};
 };
 

@@ -41,7 +41,9 @@ protected:
 private:
     grib_arguments* arg_ = nullptr;
 
-    static inline const AccessorType accessor_type_{"None"};
+
+public:
+    static inline const AccessorType accessor_type_{"unsigned"};
 };
 
 }  // namespace eccodes::accessor

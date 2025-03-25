@@ -31,6 +31,8 @@ private:
     double* lats_ = nullptr;
     long size_ = 0;
     int save_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"latitudes"};
 };
 

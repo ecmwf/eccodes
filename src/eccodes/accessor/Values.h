@@ -40,6 +40,8 @@ protected:
 
 private:
     long init_length();
+
+public:
     static inline const AccessorType accessor_type_{"values"};
 };
 

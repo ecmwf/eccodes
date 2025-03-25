@@ -29,6 +29,8 @@ private:
     const char* K_ = nullptr;
     const char* M_ = nullptr;
     const char* T_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"spectral_truncation"};
 };
 

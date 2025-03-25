@@ -39,6 +39,8 @@ private:
     const char* list_defining_points_ = nullptr;
     const char* number_of_data_points_ = nullptr;
     const char* scanning_mode_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"data_png_packing"};
 };
 

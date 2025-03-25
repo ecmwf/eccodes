@@ -33,6 +33,8 @@ private:
     const char* K_ = nullptr;
     const char* M_ = nullptr;
     const char* JS_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"statistics_spectral"};
 };
 

@@ -39,6 +39,8 @@ private:
     const char* scanning_mode_ = nullptr;
     int jpeg_lib_ = 0;
     const char* dump_jpg_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"data_jpeg2000_packing"};
 };
 

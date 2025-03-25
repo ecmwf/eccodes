@@ -46,6 +46,8 @@ protected:
 private:
     template <typename T> int unpack(T* val, size_t* len);
     int _unpack_double(double* val, size_t* len, unsigned char* buf, long pos, size_t n_vals);
+
+public:
     static inline const AccessorType accessor_type_{"data_simple_packing"};
 };
 

@@ -30,6 +30,8 @@ public:
 private:
     const char* values_ = nullptr;
     const char* packing_type_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"packing_type"};
 };
 

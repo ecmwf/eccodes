@@ -29,6 +29,8 @@ private:
     const char* paramId_ = nullptr;
     const char* table_ = nullptr;
     const char* param_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"mars_param"};
 };
 

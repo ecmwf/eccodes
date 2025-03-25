@@ -31,6 +31,8 @@ private:
     const char* localDir_        = nullptr;
     const char* datasetForLocal_ = nullptr;
     int mode_                    = 0;  // 1=conceptsDir1 or 2=conceptsDir2
+
+public:
     static inline const AccessorType accessor_type_{"g2_concept_dir"};
 };
 

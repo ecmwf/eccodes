@@ -38,6 +38,8 @@ private:
     double referenceValue_ = 0.;
     double referenceValuePresent_ = 0.;
     double scale_ = 0.;
+
+public:
     static inline const AccessorType accessor_type_{"bits"};
 };
 

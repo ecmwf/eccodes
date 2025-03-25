@@ -44,6 +44,8 @@ private:
     const char* stepType_ = nullptr;
     const char* patch_fp_precip_ = nullptr;
     int error_on_units_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"g1step_range"};
 };
 

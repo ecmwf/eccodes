@@ -30,6 +30,8 @@ public:
 private:
     const char* array_ = nullptr;
     long element_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"element"};
 };
 

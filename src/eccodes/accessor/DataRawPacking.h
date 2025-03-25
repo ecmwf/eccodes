@@ -31,6 +31,8 @@ public:
 private:
     const char* number_of_values_ = nullptr;
     const char* precision_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"data_raw_packing"};
 };
 

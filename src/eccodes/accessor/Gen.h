@@ -22,7 +22,7 @@ class Gen : public Accessor
 {
 public:
     Gen() { }
-    const AccessorType& accessor_type() const override {{ return TYPE; }}
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     ~Gen();
 
     void init_accessor(const long, grib_arguments*) override;  // TODO: Implement
@@ -87,7 +87,9 @@ private:
 
     template <typename T>
     int unpack_helper(grib_accessor* a, T* v, size_t* len);
-    static inline const AccessorType TYPE{"gen"};
+
+public:
+    static inline const AccessorType accessor_type_{"gen"};
 };
 
 

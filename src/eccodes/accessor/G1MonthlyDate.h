@@ -26,6 +26,8 @@ public:
 
 private:
     const char* date_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"g1monthlydate"};
 };
 

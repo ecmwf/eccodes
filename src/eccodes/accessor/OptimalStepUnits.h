@@ -38,6 +38,8 @@ private:
     const char* time_range_value_ = nullptr;
     const char* time_range_unit_ = nullptr;
     long overwriteStepUnits_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"optimal_step_units"};
 };
 

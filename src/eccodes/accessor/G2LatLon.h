@@ -31,6 +31,8 @@ private:
     const char* grid_ = nullptr;
     int index_ = 0;
     const char* given_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"g2latlon"};
 };
 

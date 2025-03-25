@@ -15,23 +15,23 @@ eccodes::AccessorBuilder<eccodes::accessor::Sexagesimal2Decimal> _grib_accessor_
 namespace eccodes::accessor
 {
 
-void Sexagesimal2decimal::init(const long len, grib_arguments* arg)
+void Sexagesimal2Decimal::init(const long len, grib_arguments* arg)
 {
     ToDouble::init(len, arg);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-void Sexagesimal2decimal::dump(eccodes::Dumper* dumper)
+void Sexagesimal2Decimal::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_double(this, NULL);
 }
 
-long Sexagesimal2decimal::get_native_type()
+long Sexagesimal2Decimal::get_native_type()
 {
     return GRIB_TYPE_DOUBLE;
 }
 
-int Sexagesimal2decimal::unpack_string(char* val, size_t* len)
+int Sexagesimal2Decimal::unpack_string(char* val, size_t* len)
 {
     int err        = 0;
     char buff[512] = {0,};

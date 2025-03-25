@@ -31,6 +31,8 @@ private:
     const char* extractSubsetList_ = nullptr;
 
     int select_datetime();
+
+public:
     static inline const AccessorType accessor_type_{"bufr_extract_datetime_subsets"};
 };
 

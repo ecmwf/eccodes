@@ -34,6 +34,8 @@ public:
 
 private:
     char endCharacter_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"group"};
 };
 

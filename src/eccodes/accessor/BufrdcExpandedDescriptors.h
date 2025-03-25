@@ -32,6 +32,8 @@ private:
     grib_accessor* expandedDescriptorsAccessor_ = nullptr;
 
     grib_accessor* get_accessor();
+
+public:
     static inline const AccessorType accessor_type_{"bufrdc_expanded_descriptors"};
 };
 

@@ -30,6 +30,8 @@ public:
 private:
     const char* scaleFactor_ = nullptr;
     const char* scaledValue_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"from_scale_factor_scaled_value"};
 };
 

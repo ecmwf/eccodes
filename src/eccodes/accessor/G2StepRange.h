@@ -34,6 +34,8 @@ public:
 private:
     const char* start_step_ = nullptr;
     const char* end_step_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"g2step_range"};
 };
 

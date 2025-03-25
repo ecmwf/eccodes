@@ -46,6 +46,8 @@ private:
     char* cval_ = nullptr;
     char* cname_ = nullptr;
     int type_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"variable"};
 };
 

@@ -27,6 +27,8 @@ public:
 private:
     const char* val_ = nullptr;
     double divisor_ = 0.;
+
+public:
     static inline const AccessorType accessor_type_{"divdouble"};
 };
 

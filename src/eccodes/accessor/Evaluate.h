@@ -27,6 +27,8 @@ public:
 protected:
     grib_arguments* arg_ = nullptr; // expression to be evaluated
 private:
+
+public:
     static inline const AccessorType accessor_type_{"evaluate"};
 };
 

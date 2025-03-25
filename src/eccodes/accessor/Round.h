@@ -27,6 +27,8 @@ public:
     void destroy(grib_context*) override;
     void dump(eccodes::Dumper*) override;
 private:
+
+public:
     static inline const AccessorType accessor_type_{"round"};
 };
 

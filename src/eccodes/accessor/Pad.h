@@ -26,6 +26,8 @@ public:
 
 private:
     grib_expression* expression_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"pad"};
 };
 

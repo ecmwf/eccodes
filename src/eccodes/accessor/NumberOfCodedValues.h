@@ -30,6 +30,8 @@ private:
     const char* offsetBeforeData_ = nullptr;
     const char* offsetAfterData_ = nullptr;
     const char* unusedBits_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"number_of_coded_values"};
 };
 

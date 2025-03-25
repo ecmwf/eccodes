@@ -28,6 +28,8 @@ public:
 
 private:
     grib_arguments* args_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"sprintf"};
 };
 

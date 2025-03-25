@@ -27,6 +27,8 @@ public:
 private:
     const char* section_offset_ = nullptr;
     const char* section_length_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"padtoeven"};
 };
 

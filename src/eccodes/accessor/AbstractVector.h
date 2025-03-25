@@ -27,6 +27,8 @@ public:
     double* v_ = nullptr;
     int number_of_elements_ = 0;
 private:
+
+public:
     static inline const AccessorType accessor_type_{"abstract_vector"};
 };
 

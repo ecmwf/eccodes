@@ -28,6 +28,8 @@ public:
     long pack_index_ = 0;
     int number_of_elements_ = 0;
 private:
+
+public:
     static inline const AccessorType accessor_type_{"abstract_long_vector"};
 };
 

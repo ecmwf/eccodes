@@ -36,6 +36,8 @@ private:
     const char* angleMultiplier_ = nullptr;
     const char* angleDivisor_ = nullptr;
     long isLongitude_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"latlon_increment"};
 };
 

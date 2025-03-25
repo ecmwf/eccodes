@@ -35,6 +35,8 @@ private:
     const char* first_ = nullptr;
     const char* last_ = nullptr;
     const char* axis_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"change_scanning_direction"};
 };
 

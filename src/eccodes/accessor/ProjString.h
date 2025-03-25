@@ -28,6 +28,8 @@ public:
 private:
     const char* grid_type_ = nullptr;
     int endpoint_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"proj_string"};
 };
 

@@ -33,6 +33,8 @@ private:
     const char* scale_first_ = nullptr;
     const char* value_first_ = nullptr;
     const char* pressure_units_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"g2level"};
 };
 

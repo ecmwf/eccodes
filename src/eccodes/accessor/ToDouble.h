@@ -38,6 +38,8 @@ protected:
 
 private:
     long scale_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"to_double"};
 };
 

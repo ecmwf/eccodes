@@ -28,6 +28,8 @@ public:
 private:
     const char* values_ = nullptr;
     const char* bits_per_value_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"bits_per_value"};
 };
 

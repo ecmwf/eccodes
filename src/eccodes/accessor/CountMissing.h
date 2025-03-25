@@ -30,6 +30,8 @@ private:
     const char* unusedBitsInBitmap_ = nullptr;
     const char* numberOfDataPoints_ = nullptr;
     const char* missingValueManagementUsed_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"count_missing"};
 };
 

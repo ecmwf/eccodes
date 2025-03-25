@@ -23,6 +23,8 @@ public:
         Variable() { }
     const AccessorType& accessor_type() const override {{ return accessor_type_; }}
 private:
+
+public:
     static inline const AccessorType accessor_type_{"transient"};
 };
 

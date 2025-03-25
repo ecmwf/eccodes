@@ -26,6 +26,8 @@ public:
     void init(const long, grib_arguments*) override;
     int notify_change(grib_accessor* changed) override;
 private:
+
+public:
     static inline const AccessorType accessor_type_{"when"};
 };
 

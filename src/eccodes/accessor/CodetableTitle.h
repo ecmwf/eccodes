@@ -27,6 +27,8 @@ public:
 
 private:
     const char* codetable_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"codetable_title"};
 };
 

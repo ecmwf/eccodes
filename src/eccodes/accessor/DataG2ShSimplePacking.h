@@ -29,6 +29,8 @@ public:
 private:
     const char* numberOfValues_ = nullptr;
     const char* numberOfDataPoints_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"data_g2shsimple_packing"};
 };
 

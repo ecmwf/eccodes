@@ -46,6 +46,8 @@ private:
 
     grib_smart_table* load_table();
     int get_table_codes();
+
+public:
     static inline const AccessorType accessor_type_{"smart_table"};
 };
 

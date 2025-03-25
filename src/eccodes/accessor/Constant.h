@@ -22,6 +22,8 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
+
+public:
     static inline const AccessorType accessor_type_{"constant"};
 };
 

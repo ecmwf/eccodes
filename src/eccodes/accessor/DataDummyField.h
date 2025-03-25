@@ -30,6 +30,8 @@ private:
     const char* missing_value_ = nullptr;
     const char* numberOfPoints_ = nullptr;
     const char* bitmap_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"data_dummy_field"};
 };
 

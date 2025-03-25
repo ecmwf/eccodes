@@ -24,6 +24,8 @@ public:
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
 private:
+
+public:
     static inline const AccessorType accessor_type_{"data_g1shsimple_packing"};
 };
 

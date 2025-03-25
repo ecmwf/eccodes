@@ -33,6 +33,8 @@ private:
     const char* number_of_level_values_ = nullptr;
     const char* decimal_scale_factor_ = nullptr;
     const char* level_values_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"data_run_length_packing"};
 };
 

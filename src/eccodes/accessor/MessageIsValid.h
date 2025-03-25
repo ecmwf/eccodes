@@ -44,6 +44,8 @@ private:
     const char* product_ = nullptr;
     grib_handle* handle_ = nullptr;
     long edition_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"message_is_valid"};
 };
 

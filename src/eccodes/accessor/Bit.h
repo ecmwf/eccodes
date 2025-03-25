@@ -28,6 +28,8 @@ public:
 private:
     const char* owner_ = nullptr;
     int bit_index_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"bit"};
 };
 

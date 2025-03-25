@@ -32,6 +32,8 @@ public:
 private:
     const char* smartTable_ = nullptr;
     int index_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"smart_table_column"};
 };
 

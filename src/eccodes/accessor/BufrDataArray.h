@@ -139,6 +139,8 @@ private:
     friend int encode_new_replication(grib_context*, BufrDataArray*, int, grib_buffer*, unsigned char*, long*, int, long, grib_darray*, long*);
     friend int encode_element(grib_context*, BufrDataArray*, int, grib_buffer*, unsigned char*, long*, int, bufr_descriptor*, long, grib_darray*, grib_sarray*);
     friend int encode_replication(grib_context*, BufrDataArray*, int, grib_buffer*, unsigned char*, long*, int, long, grib_darray*, long*);
+
+public:
     static inline const AccessorType accessor_type_{"bufr_data_array"};
 };
 

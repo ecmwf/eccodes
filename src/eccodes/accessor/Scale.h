@@ -32,6 +32,8 @@ private:
     const char* multiplier_ = nullptr;
     const char* divisor_ = nullptr;
     const char* truncating_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"scale"};
 };
 

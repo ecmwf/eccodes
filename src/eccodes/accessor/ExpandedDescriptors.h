@@ -57,6 +57,8 @@ private:
     int expand();
     void __expand(bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded, change_coding_params* ccp, int* err);
     bufr_descriptors_array* do_expand(bufr_descriptors_array* unexpanded, change_coding_params* ccp, int* err);
+
+public:
     static inline const AccessorType accessor_type_{"expanded_descriptors"};
 };
 

@@ -28,6 +28,8 @@ public:
     void update_size(size_t) override;
     void resize(size_t) override;
 private:
+
+public:
     static inline const AccessorType accessor_type_{"message"};
 };
 

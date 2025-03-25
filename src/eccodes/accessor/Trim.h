@@ -30,6 +30,8 @@ private:
     const char* input_ = nullptr;
     int trim_left_ = 0;
     int trim_right_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"trim"};
 };
 

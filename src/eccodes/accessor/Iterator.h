@@ -28,6 +28,8 @@ public:
 private:
     grib_arguments* args_ = nullptr;
     friend eccodes::geo_iterator::Iterator* eccodes::geo_iterator::gribIteratorNew(const grib_handle*, unsigned long, int*);
+
+public:
     static inline const AccessorType accessor_type_{"iterator"};
 };
 

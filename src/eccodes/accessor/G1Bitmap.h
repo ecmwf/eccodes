@@ -28,6 +28,8 @@ public:
 
 private:
     const char* unusedBits_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"g1bitmap"};
 };
 

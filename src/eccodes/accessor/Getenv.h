@@ -31,6 +31,8 @@ private:
     const char* envvar_ = nullptr;
     char* value_ = nullptr;
     const char* default_value_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"getenv"};
 };
 

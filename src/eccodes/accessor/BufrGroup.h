@@ -24,6 +24,8 @@ public:
     void dump(eccodes::Dumper*) override;
     grib_accessor* next(grib_accessor*, int explore) override;
 private:
+
+public:
     static inline const AccessorType accessor_type_{"bufr_group"};
 };
 

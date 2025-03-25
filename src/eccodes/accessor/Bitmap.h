@@ -42,6 +42,8 @@ private:
     const char* sLength_ = nullptr;
 
     void compute_size();
+
+public:
     static inline const AccessorType accessor_type_{"bitmap"};
 };
 

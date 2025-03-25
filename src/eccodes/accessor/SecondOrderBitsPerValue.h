@@ -30,6 +30,8 @@ private:
     const char* binaryScaleFactor_ = nullptr;
     const char* decimalScaleFactor_ = nullptr;
     long bitsPerValue_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"second_order_bits_per_value"};
 };
 

@@ -34,6 +34,8 @@ public:
 private:
     grib_darray* arr_ = nullptr;
     int type_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"transient_darray"};
 };
 

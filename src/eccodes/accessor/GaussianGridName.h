@@ -30,6 +30,8 @@ private:
     const char* N_ = nullptr;
     const char* Ni_ = nullptr;
     const char* isOctahedral_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"gaussian_grid_name"};
 };
 

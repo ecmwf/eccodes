@@ -30,6 +30,8 @@ private:
     const char* Ni_ = nullptr;
     const char* plpresent_ = nullptr;
     const char* pl_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"octahedral_gaussian"};
 };
 

@@ -35,6 +35,8 @@ public:
 private:
     grib_arguments* arg_ = nullptr;
     int nbytes_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"signed"};
 };
 

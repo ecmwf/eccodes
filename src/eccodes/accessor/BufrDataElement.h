@@ -60,6 +60,8 @@ private:
     grib_vsarray* stringValues_ = nullptr;
     grib_viarray* elementsDescriptorsIndex_ = nullptr;
     char* cname_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"bufr_data_element"};
 };
 

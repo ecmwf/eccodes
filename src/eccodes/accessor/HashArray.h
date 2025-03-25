@@ -40,6 +40,8 @@ private:
     grib_hash_array_value* ha_ = nullptr;
 
     grib_hash_array_value* find_hash_value(int* err);
+
+public:
     static inline const AccessorType accessor_type_{"hash_array"};
 };
 

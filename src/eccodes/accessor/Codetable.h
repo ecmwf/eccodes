@@ -43,6 +43,8 @@ private:
     int table_loaded_ = 0;
 
     grib_codetable* load_table();
+
+public:
     static inline const AccessorType accessor_type_{"codetable"};
 };
 

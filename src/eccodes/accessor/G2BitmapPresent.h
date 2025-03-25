@@ -27,6 +27,8 @@ public:
 
 private:
     const char* bitmapIndicator_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"g2bitmap_present"};
 };
 

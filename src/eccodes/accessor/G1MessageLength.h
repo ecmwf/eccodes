@@ -27,6 +27,8 @@ public:
 
 private:
     const char* sec4_length_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"g1_message_length"};
 };
 

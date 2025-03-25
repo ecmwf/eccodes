@@ -31,6 +31,8 @@ private:
     const char* typicalDay_ = nullptr;
     const char* rdbDay_ = nullptr;
     long yearOrMonth_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"rdbtime_guess_date"};
 };
 

@@ -27,6 +27,8 @@ public:
 
 private:
     const char* longitude_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"g2lon"};
 };
 

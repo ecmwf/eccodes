@@ -25,6 +25,8 @@ public:
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
 private:
+
+public:
     static inline const AccessorType accessor_type_{"check_internal_version"};
 };
 

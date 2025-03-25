@@ -25,6 +25,8 @@ public:
     size_t string_length() override;
     int value_count(long*) override;
 private:
+
+public:
     static inline const AccessorType accessor_type_{"library_version"};
 };
 

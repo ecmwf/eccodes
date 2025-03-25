@@ -36,6 +36,8 @@ private:
     const char* eps_ = nullptr;
     const char* stepType_ = nullptr;
     const char* derivedForecast_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"local_definition"};
 };
 

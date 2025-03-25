@@ -27,6 +27,8 @@ public:
 private:
     grib_expression* begin_ = nullptr;
     grib_expression* multiple_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"padtomultiple"};
 };
 

@@ -36,6 +36,8 @@ private:
     const char* pen_j_ = nullptr;
     const char* pen_k_ = nullptr;
     const char* pen_m_ = nullptr;
+
+public:
     static inline const AccessorType accessor_type_{"data_sh_packed"};
 };
 

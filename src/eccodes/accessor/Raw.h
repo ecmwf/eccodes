@@ -34,6 +34,8 @@ private:
     const char* totalLength_ = nullptr;
     const char* sectionLength_ = nullptr;
     long relativeOffset_ = 0;
+
+public:
     static inline const AccessorType accessor_type_{"raw"};
 };
 

@@ -32,6 +32,8 @@ private:
     grib_accessor* packAccessor_          = nullptr;
 
     void get_accessors();
+
+public:
     static inline const AccessorType accessor_type_{"bufr_extract_subsets"};
 };
 

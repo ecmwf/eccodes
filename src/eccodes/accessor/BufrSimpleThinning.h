@@ -34,6 +34,8 @@ private:
     const char* simpleThinningSkip_ = nullptr;
 
     int apply_thinning();
+
+public:
     static inline const AccessorType accessor_type_{"bufr_simple_thinning"};
 };
 

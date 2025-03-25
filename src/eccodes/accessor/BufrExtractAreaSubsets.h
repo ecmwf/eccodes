@@ -38,6 +38,8 @@ private:
     const char* extractedAreaNumberOfSubsets_ = nullptr;
 
     int select_area();
+
+public:
     static inline const AccessorType accessor_type_{"bufr_extract_area_subsets"};
 };
 
