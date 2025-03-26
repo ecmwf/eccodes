@@ -434,7 +434,7 @@ int MessageIsValid::check_steps()
         // Accumulations, average etc
         // TODO(masn): Generalise this rule. Beware of index and stdanom where start == end!
         if ( STR_EQUAL(stepType, "accum") || STR_EQUAL(stepType, "avg") || STR_EQUAL(stepType, "min") || STR_EQUAL(stepType, "max") ) {
-            if (startStep == endStep) {
+            if (startStep == endStep && startStep != 0) {
                 grib_context_log(handle_->context, GRIB_LOG_ERROR,
                     "%s: Invalid steps: stepType=%s but startStep=endStep", TITLE, stepType);
                 return GRIB_WRONG_STEP;
