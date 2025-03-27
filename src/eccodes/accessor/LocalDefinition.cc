@@ -73,6 +73,8 @@ int LocalDefinition::pack_long(const long* val, size_t* len)
     grib_get_string(hand, stepType_, stepType, &slen);
     if (!strcmp(stepType, "instant"))
         isInstant = 1;
+    if (grib_is_defined(hand, "typeOfStatisticalProcessing"))
+        isInstant = 0;
     grib_get_long(hand, grib2LocalSectionNumber_, &grib2LocalSectionNumber);
     grib_get_long(hand, "is_chemical", &chemical);
     grib_get_long(hand, "is_aerosol", &aerosol);
