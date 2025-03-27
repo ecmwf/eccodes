@@ -100,8 +100,14 @@ grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "Invalid step: startStep > endStep" $tempText
 
 # Wrong order of keys
-${tools_dir}/grib_set -s startStep=0,endStep=0,stepType=accum  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrib
+${tools_dir}/grib_set -s endStep=1,startStep=1,stepType=accum  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrib
 grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+cat $tempText
+grep -q "Invalid step" $tempText
+
+${tools_dir}/grib_set -s stepType=accum,endStep=6,startStep=6  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+cat $tempText
 grep -q "Invalid steps: stepType=accum but startStep=endStep" $tempText
 
 
