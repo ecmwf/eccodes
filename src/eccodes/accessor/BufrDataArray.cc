@@ -15,6 +15,7 @@
 #include "BufrElementsTable.h"
 #include "Variable.h"
 #include "ecc_numeric_limits.h"
+#include "grib_accessor_factory.h"
 
 eccodes::AccessorBuilder<eccodes::accessor::BufrDataArray> _grib_accessor_bufr_data_array_builder{};
 

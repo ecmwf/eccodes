@@ -94,7 +94,7 @@ void grib_viarray_delete_content(grib_viarray* v);
 
 /* grib_accessor_class.cc */
 grib_section* grib_create_root_section(const grib_context* context, grib_handle* h);
-grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator, const long len, grib_arguments* params);
+/* grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator, const long len, grib_arguments* params); */
 void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l);
 void grib_section_post_init(grib_section* s);
 int grib_section_adjust_sizes(grib_section* s, int update, int depth);
@@ -648,9 +648,6 @@ grib_expression* new_sub_string_expression(grib_context* c, const char* value, s
 
 /* grib_iterator.cc */
 int grib_get_data(const grib_handle* h, double* lats, double* lons, double* values);
-
-/* grib_iterator_class.cc */
-eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* error);
 
 /* grib_iterator_class_gen.cc */
 int transform_iterator_data(grib_context* c, double* data, long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning, size_t numPoints, long nx, long ny);

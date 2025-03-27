@@ -61,7 +61,6 @@ list( APPEND eccodes_src_files
     codes_memfs.cc
 
     accessor/grib_accessors_list.cc
-    grib_accessor_class.cc
 
     accessor/Accessor.cc
     accessor/G1FcPeriod.cc
@@ -375,10 +374,9 @@ list( APPEND eccodes_src_files
     bufr_util.cc
     string_util.cc
     functions.cc
-    grib_accessor_class.h
-    grib_accessor_factory.h
     grib_api_internal.h
     eccodes_prototypes.h
+    grib_accessor_factory.cc
     grib_dumper_factory.cc
     grib_iterator_factory.cc
     grib_nearest_factory.cc

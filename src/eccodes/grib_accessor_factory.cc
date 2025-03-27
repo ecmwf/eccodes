@@ -9,10 +9,8 @@
  */
 
 
-#include "grib_api_internal.h"
-#include "grib_accessor_classes_hash.cc"
-//#include <iostream>
 #include "accessor/Accessor.h"
+#include "grib_api_internal.h"
 
 #if GRIB_PTHREADS
 static pthread_once_t once    = PTHREAD_ONCE_INIT;
@@ -126,10 +124,6 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
                                      const long len, grib_arguments* params)
 {
     size_t size            = 0;
-
-    /* grib_accessor* a       = NULL; */
-    /* grib_accessor* builder = *((grib_accessor_hash(creator->op_, strlen(creator->op_)))->cclass); */
-    /* a = builder->create_empty_accessor(); */
 
     grib_accessor* a = eccodes::AccessorFactory::instance().build(eccodes::AccessorType(creator->op_));
 

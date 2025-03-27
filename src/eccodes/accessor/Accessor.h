@@ -13,7 +13,7 @@
 
 #include "grib_api_internal.h"
 #include "dumper/Dumper.h"
-#include "AccessorFactory.h"
+#include "Factory.h"
 
 namespace eccodes {
 class Dumper;

@@ -9,6 +9,7 @@
  */
 
 #include "If.h"
+#include "grib_accessor_factory.h"
 
 
 grib_action* grib_action_create_if(grib_context* context,
