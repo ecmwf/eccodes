@@ -62,6 +62,7 @@ EOF
     grib_check_key_equals $tempGrib scaledValueOfSecondFixedSurface MISSING
 }
 
+# Args: typeOfFirstFixedSurface typeOfSecondFixedSurface expectedValue
 do_test 1 255 surface
 do_test 1 8   entireAtmosphere
 do_test 1 162 entireLake
