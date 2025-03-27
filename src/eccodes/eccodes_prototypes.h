@@ -16,7 +16,7 @@ grib_hash_array_value* grib_integer_hash_array_value_new(const char* name, grib_
 /* grib_bufr_descriptor.cc */
 bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor, int code, int silent, int* err);
 bufr_descriptor* grib_bufr_descriptor_clone(bufr_descriptor* d);
-int grib_bufr_descriptor_set_code(bufr_descriptor* v, int code);
+// int grib_bufr_descriptor_set_code(bufr_descriptor* v, int code);
 void grib_bufr_descriptor_set_scale(bufr_descriptor* v, long scale);
 int grib_bufr_descriptor_can_be_missing(const bufr_descriptor* v);
 void grib_bufr_descriptor_delete(bufr_descriptor* v);

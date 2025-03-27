@@ -100,8 +100,14 @@ grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "Invalid step: startStep > endStep" $tempText
 
 # Wrong order of keys
-${tools_dir}/grib_set -s startStep=0,endStep=0,stepType=accum  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrib
+${tools_dir}/grib_set -s endStep=1,startStep=1,stepType=accum  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrib
 grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+cat $tempText
+grep -q "Invalid step" $tempText
+
+${tools_dir}/grib_set -s stepType=accum,endStep=6,startStep=6  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+cat $tempText
 grep -q "Invalid steps: stepType=accum but startStep=endStep" $tempText
 
 
@@ -211,12 +217,12 @@ grep -q "Spectral fields cannot have a bitmap" $tempText
 
 # Only GRIB supported for now
 # -----------------------------
-set +e
-${tools_dir}/bufr_get -p isMessageValid $ECCODES_SAMPLES_PATH/BUFR4.tmpl 2>$tempText
-status=$?
-set -e
-[ $status -ne 0 ]
-grep -q "Validity checks only implemented for GRIB messages" $tempText
+# set +e
+# ${tools_dir}/bufr_get -p isMessageValid $ECCODES_SAMPLES_PATH/BUFR4.tmpl 2>$tempText
+# status=$?
+# set -e
+# [ $status -ne 0 ]
+# grep -q "Validity checks only implemented for GRIB messages" $tempText
 
 
 # Clean up

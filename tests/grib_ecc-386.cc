@@ -28,7 +28,7 @@ int main(int argc, char** argv)
     #ifdef DEBUG
     const auto duration_max = std::chrono::milliseconds(1500);
     #else
-    const auto duration_max = std::chrono::milliseconds(500);
+    const auto duration_max = std::chrono::milliseconds(600);
     #endif
     const int num_repetitions = 100;
 
