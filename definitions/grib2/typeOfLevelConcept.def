@@ -83,10 +83,14 @@
 'isobaricInPa'                 = {typeOfFirstFixedSurface=100; typeOfSecondFixedSurface=255; pressureUnits='Pa';}
 'isobaricInhPa'                = {typeOfFirstFixedSurface=100; pressureUnits='hPa'; typeOfSecondFixedSurface=255;}
 'isobaricLayer'                = {typeOfFirstFixedSurface=100; typeOfSecondFixedSurface=100;}
+'lowCloudLayer'                = {typeOfFirstFixedSurface=1; scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+                                  typeOfSecondFixedSurface=100;scaleFactorOfSecondFixedSurface=0; scaledValueOfSecondFixedSurface=80000;}
 'lowCloudLayer'                = {typeOfFirstFixedSurface=1; typeOfSecondFixedSurface=100;
                                   scaleFactorOfSecondFixedSurface=0; scaledValueOfSecondFixedSurface=80000;}
 'mediumCloudLayer'             = {typeOfFirstFixedSurface=100; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=80000;
                                   typeOfSecondFixedSurface=100; scaleFactorOfSecondFixedSurface=0; scaledValueOfSecondFixedSurface=45000;}
+'highCloudLayer'               = {typeOfFirstFixedSurface=100; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=45000; 
+                                  typeOfSecondFixedSurface=8; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();}
 'highCloudLayer'               = {typeOfFirstFixedSurface=100; scaleFactorOfFirstFixedSurface=0;
                                   scaledValueOfFirstFixedSurface=45000; typeOfSecondFixedSurface=8;}
 
