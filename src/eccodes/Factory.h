@@ -98,9 +98,11 @@ template <class T>
 void Factory<T>::add(Type const& type, BuilderBase<T>* builder)
 {
     std::lock_guard<std::recursive_mutex> guard(mutex_);
+#if ECCODED_DEBUG
     if (has(type)) {
         throw Exception("Factory::add - duplicate entry: " + type.get());
     }
+#endif
     builders_[type] = builder;
 }
 

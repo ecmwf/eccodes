@@ -123,9 +123,16 @@ static GRIB_INLINE grib_accessor_class* get_class(grib_context* c, char* type)
 grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
                                      const long len, grib_arguments* params)
 {
-    size_t size            = 0;
+    size_t size      = 0;
+    grib_accessor* a = nullptr;
 
-    grib_accessor* a = eccodes::AccessorFactory::instance().build(eccodes::AccessorType(creator->op_));
+    try {
+      a = eccodes::AccessorFactory::instance().build(eccodes::AccessorType(creator->op_));
+    }
+    catch (eccodes::Exception& e) {
+        grib_context_log(p->h->context, GRIB_LOG_ERROR, "Factory failed to create accessor for %s : %s", creator->op_, e.what());
+        return NULL;
+    }
 
     a->name_       = creator->name_;
     a->name_space_ = creator->name_space_;
