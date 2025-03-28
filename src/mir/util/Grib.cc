@@ -17,6 +17,8 @@
 #include <ios>
 #include <utility>
 
+#include "eckit/config/Resource.h"
+
 #include "mir/util/Exceptions.h"
 #include "mir/util/Log.h"
 
@@ -178,4 +180,10 @@ void grib_info::extra_set(const char* key, const char* value) {
 
 HandleDeleter::HandleDeleter(grib_handle* h) : h_(h) {
     ASSERT(h);
+}
+
+
+bool grib_check_is_message_valid() {
+    static bool check = eckit::Resource<bool>("$MIR_GRIB_CHECK_IS_MESSAGE_VALID", false);
+    return check;
 }

@@ -12,6 +12,7 @@
 
 #include "mir/output/GribOutput.h"
 
+#include <memory>
 #include <ostream>
 #include <sstream>
 
@@ -81,6 +82,15 @@ size_t GribOutput::copy(const param::MIRParametrisation& /*unused*/, context::Co
     for (size_t i = 0; i < input.dimensions(); i++) {
         auto* h = input.gribHandle(i);  // Base class throws if input cannot provide handle
         ASSERT(h);
+
+        if (grib_check_is_message_valid()) {
+            long valid = 1;
+            ASSERT(codes_get_long(h, "isMessageValid", &valid) == CODES_SUCCESS);
+
+            if (valid != 1) {
+                throw exception::WriteError("GribOutput: invalid GRIB message");
+            }
+        }
 
         const void* message = nullptr;
         size_t size         = 0;
@@ -222,13 +232,22 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
 
             long n;
             GRIB_CALL(codes_get_long(h, "numberOfDataPoints", &n));
-            if (size_t(n) != field.values(i).size()) {
+            if (static_cast<size_t>(n) != field.values(i).size()) {
                 throw exception::UserError("Using 'filter' requires preserving the number of points from input");
             }
 
             GRIB_CALL(codes_set_double(h, "missingValue", field.missingValue()));
             GRIB_CALL(codes_set_long(h, "bitmapPresent", field.hasMissing()));
             GRIB_CALL(codes_set_double_array(h, "values", field.values(i).data(), field.values(i).size()));
+
+            if (grib_check_is_message_valid()) {
+                long valid = 1;
+                ASSERT(codes_get_long(h, "isMessageValid", &valid) == CODES_SUCCESS);
+
+                if (valid != 1) {
+                    throw exception::WriteError("GribOutput: invalid GRIB message");
+                }
+            }
 
             const void* message = nullptr;
             size_t size         = 0;
@@ -426,6 +445,15 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
                                 // << " grib=" << after
                                 << std::endl;
                 }
+            }
+        }
+
+        if (grib_check_is_message_valid()) {
+            long valid = 1;
+            ASSERT(codes_get_long(h, "isMessageValid", &valid) == CODES_SUCCESS);
+
+            if (valid != 1) {
+                throw exception::WriteError("GribOutput: invalid GRIB message");
             }
         }
     }

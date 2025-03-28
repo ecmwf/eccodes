@@ -102,3 +102,6 @@ void grib_reorder(std::vector<double>& values, long scanningMode, size_t Ni, siz
 
 
 void grib_get_unique_missing_value(const std::vector<double>& values, double& missingValue);
+
+
+bool grib_check_is_message_valid();
