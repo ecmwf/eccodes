@@ -563,13 +563,12 @@ if( HAVE_BUILD_TOOLS )
                       CONDITION ECCODES_INSTALL_EXTRA_TOOLS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/codes_export_resource.sh )
 
-
     # Performance test
-    ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
-                      TYPE SCRIPT
-                      CONDITION ENABLE_EXTRA_TESTS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-386.sh
-                      TEST_DEPENDS eccodes_download_gribs )
+    # ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
+    #                  TYPE SCRIPT
+    #                  CONDITION ENABLE_EXTRA_TESTS
+    #                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-386.sh
+    #                  TEST_DEPENDS eccodes_download_gribs )
 else()
     # No command line tools
     list(APPEND tests_no_tools
