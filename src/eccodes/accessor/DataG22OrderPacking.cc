@@ -1038,7 +1038,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         // delta_delta(v, nndata, &vmn, &vmx, &extra_0, &extra_1);
         // single core version
         {
-            int last, last0, penultimate = 0;
+            int last=0, last0=0, penultimate = 0;
             for (i = 0; i < nndata; i++) {
                 if (v[i] != INT_MAX) {
                     extra_0 = penultimate = v[i];
@@ -1070,7 +1070,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         // delta(v, nndata, &vmn, &vmx, &extra_0);
         // single core version
         {
-            int last, last0;
+            int last =0, last0=0;
 
             for (i = 0; i < nndata; i++) {
                 if (v[i] != INT_MAX) {
