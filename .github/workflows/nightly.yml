@@ -61,7 +61,7 @@ jobs:
 
   deploy:
     needs: [test-hpc, test-macos]
-    uses: ecmwf/reusable-workflows/.github/workflows/create-package.yml@v2
+    uses: ecmwf/reusable-workflows/.github/workflows/create-package.yml@skip-not-provided-tokens
     with:
       skip_checks: true
       cpack_options_rpm: -D CPACK_PACKAGE_FILE_NAME=eccodes-nightly-Linux-x86_64
