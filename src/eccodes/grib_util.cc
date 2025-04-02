@@ -869,6 +869,7 @@ static bool is_constant_field(const double missingValue, const double* data_valu
 static int write_out_error_data_file(const double* data_values, size_t data_values_count)
 {
     FILE* ferror = fopen("error.data", "w");
+    if (!ferror) return GRIB_IO_PROBLEM;
     size_t lcount = 0;
     fprintf(ferror, "# data_values_count=%zu\n", data_values_count);
     fprintf(ferror, "set values={ ");
