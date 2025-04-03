@@ -9774,6 +9774,13 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean Reciprocal Obukhov length
+'avg_rol' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean geometric height of 3 degrees C atmospheric isothermal level above ground
 'avg_deg3l' = {
 	 discipline = 0 ;
@@ -11665,6 +11672,13 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 47 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum Reciprocal Obukhov length
+'max_rol' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 22 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum geometric height of 3 degrees C atmospheric isothermal level above ground
@@ -13572,6 +13586,13 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum Reciprocal Obukhov length
+'min_rol' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-minimum geometric height of 3 degrees C atmospheric isothermal level above ground
 'min_deg3l' = {
 	 discipline = 0 ;
@@ -15476,6 +15497,13 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 47 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation Reciprocal Obukhov length
+'std_rol' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 22 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation geometric height of 3 degrees C atmospheric isothermal level above ground
@@ -17784,6 +17812,12 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Reciprocal Obukhov length
+'rol' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 22 ;
 	}
 #Universal thermal climate index
 'utci' = {
