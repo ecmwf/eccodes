@@ -28,12 +28,13 @@ concept packingType (unknown) {
   "grid_simple_matrix"                   = { dataRepresentationTemplateNumber = 1; }
   "grid_complex"                         = { dataRepresentationTemplateNumber = 2; }
   "grid_complex_spatial_differencing"    = { dataRepresentationTemplateNumber = 3; }
-  "grid_jpeg"                            = { dataRepresentationTemplateNumber = 40000; }
+  "grid_jpeg"                            = { dataRepresentationTemplateNumber = 40000; } # experimental
   "grid_jpeg"                            = { dataRepresentationTemplateNumber = 40; }
-  "grid_png"                             = { dataRepresentationTemplateNumber = 40010; }
+  "grid_png"                             = { dataRepresentationTemplateNumber = 40010; } # experimental
   "grid_png"                             = { dataRepresentationTemplateNumber = 41; }
   "grid_ccsds"                           = { dataRepresentationTemplateNumber = 42; }
   "grid_ieee"                            = { dataRepresentationTemplateNumber = 4; }
+  # These second order packing types are local (ECMWF)
   "grid_second_order"                    = { dataRepresentationTemplateNumber = 50001; }
   "grid_second_order"                    = { dataRepresentationTemplateNumber = 50002; }
   "grid_second_order_boustrophedonic"    = { dataRepresentationTemplateNumber = 50002; }
