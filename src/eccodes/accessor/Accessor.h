@@ -119,6 +119,16 @@ public:
   virtual int clear() = 0;
   virtual Accessor *make_clone(grib_section *, int *) = 0;
 
+  grib_handle* get_enclosing_handle() const
+  {
+      if (parent_ == NULL) {
+          return h_; // For BUFR
+      }
+      else {
+          return parent_->h;
+      }
+  }
+
 public:
   // TODO(maee): make private
   grib_context *context_     = nullptr;

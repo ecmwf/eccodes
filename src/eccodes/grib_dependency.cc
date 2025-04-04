@@ -16,6 +16,7 @@
 grib_handle* grib_handle_of_accessor(const grib_accessor* a)
 {
     if (a->parent_ == NULL) {
+        // For BUFR
         return a->h_;
     }
     else {

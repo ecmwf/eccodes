@@ -133,7 +133,7 @@ grib_action* Template::reparse(grib_accessor* acc, int* doit)
 
     if (arg_) {
         char fname[1024];
-        grib_recompose_name(grib_handle_of_accessor(acc), NULL, arg_, fname, 1);
+        grib_recompose_name(acc->get_enclosing_handle(), NULL, arg_, fname, 1);
 
         if ((fpath = grib_context_full_defs_path(acc->context_, fname)) == NULL) {
             if (!nofail_) {

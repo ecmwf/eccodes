@@ -77,15 +77,15 @@ static void rebuild_hash_keys(grib_handle* h, grib_section* s)
         int i             = 0;
         int id            = -1;
         const char* p;
-        DEBUG_ASSERT(h == grib_handle_of_accessor(a));
+        DEBUG_ASSERT(h == a->get_enclosing_handle());
 
         while (i < MAX_ACCESSOR_NAMES && ((p = a->all_names_[i]) != NULL)) {
             if (*p != '_') {
                 id = grib_hash_keys_get_id(a->context_->keys, p);
 
                 if (a->same_ != a && i == 0) {
-                    grib_handle* hand   = grib_handle_of_accessor(a);
-                    a->same_             = hand->accessors[id];
+                    grib_handle* hand   = a->get_enclosing_handle();
+                    a->same_            = hand->accessors[id];
                     hand->accessors[id] = a;
                     DEBUG_ASSERT(a->same_ != a);
                 }

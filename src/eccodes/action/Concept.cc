@@ -41,7 +41,7 @@ static void init_mutex()
 
 grib_concept_value* action_concept_get_concept(grib_accessor* a)
 {
-    return static_cast<eccodes::action::Concept*>(a->creator_)->get_concept(grib_handle_of_accessor(a));
+    return static_cast<eccodes::action::Concept*>(a->creator_)->get_concept(a->get_enclosing_handle());
 }
 
 int action_concept_get_nofail(grib_accessor* a)

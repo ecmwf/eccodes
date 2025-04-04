@@ -162,7 +162,7 @@ static const char* concept_evaluate(grib_accessor* a)
     const char* best = 0;
     //const char* prev = 0;
     grib_concept_value* c = action_concept_get_concept(a);
-    grib_handle* h        = grib_handle_of_accessor(a);
+    grib_handle* h = a->get_enclosing_handle();
 
     std::unordered_map<std::string_view, long> memo; // See ECC-1905
 
@@ -398,7 +398,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
     grib_sarray* sa       = NULL;
     grib_concept_value* c = NULL;
     grib_concept_value* concepts = action_concept_get_concept(a);
-    grib_handle* h   = grib_handle_of_accessor(a);
+    grib_handle* h   = a->get_enclosing_handle();
     grib_action* act = a->creator_;
     const int nofail = action_concept_get_nofail(a);
 
@@ -477,7 +477,7 @@ int Concept::pack_long(const long* val, size_t* len)
 
     // ECC-1806: GRIB: Change of paramId in conversion from GRIB1 to GRIB2
     if (STR_EQUAL(name_, "paramId")) {
-        grib_handle* h = grib_handle_of_accessor(this);
+        grib_handle* h = get_enclosing_handle();
         long edition   = 0;
         if (grib_get_long(h, "edition", &edition) == GRIB_SUCCESS && edition == 2) {
             long newParamId = 0;
@@ -514,7 +514,7 @@ int Concept::unpack_double(double* val, size_t* len)
         const char* p = concept_evaluate(this);
 
         if (!p) {
-            grib_handle* h = grib_handle_of_accessor(this);
+            grib_handle* h = get_enclosing_handle();
             if (creator_->defaultkey_)
                 return grib_get_double_internal(h, creator_->defaultkey_, val);
 
@@ -531,7 +531,7 @@ int Concept::unpack_long(long* val, size_t* len)
     const char* p = concept_evaluate(this);
 
     if (!p) {
-        grib_handle* h = grib_handle_of_accessor(this);
+        grib_handle* h = get_enclosing_handle();
         if (creator_->defaultkey_)
             return grib_get_long_internal(h, creator_->defaultkey_, val);
 
@@ -552,7 +552,7 @@ int Concept::unpack_long(long* val, size_t* len)
             /* Failed to convert string into integer */
             int type = GRIB_TYPE_UNDEFINED;
             grib_context_log(context_, GRIB_LOG_ERROR, "Cannot unpack %s as long", name_);
-            if (grib_get_native_type(grib_handle_of_accessor(this), name_, &type) == GRIB_SUCCESS) {
+            if (grib_get_native_type(get_enclosing_handle(), name_, &type) == GRIB_SUCCESS) {
                 grib_context_log(context_, GRIB_LOG_ERROR, "Hint: Try unpacking as %s", grib_get_type_name(type));
             }
             return GRIB_DECODING_ERROR;
@@ -584,7 +584,7 @@ int Concept::unpack_string(char* val, size_t* len)
     const char* p = concept_evaluate(this);
 
     if (!p) {
-        grib_handle* h = grib_handle_of_accessor(this);
+        grib_handle* h = get_enclosing_handle();
         if (creator_->defaultkey_)
             return grib_get_string_internal(h, creator_->defaultkey_, val, len);
 
@@ -605,7 +605,7 @@ int Concept::unpack_string(char* val, size_t* len)
     //     if (context_ ->debug==1) {
     //         int err = 0;
     //         char result[1024] = {0,};
-    //         err = get_concept_condition_string(grib_handle_of_accessor(this), name_ , val, result);
+    //         err = get_concept_condition_string(get_enclosing_handle(), name_ , val, result);
     //         if (!err) fprintf(stderr, "ECCODES DEBUG concept name=%s, value=%s, conditions=%s\n", name_ , val, result);
     //     }
 
