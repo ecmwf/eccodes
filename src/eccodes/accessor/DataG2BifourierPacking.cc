@@ -493,7 +493,7 @@ int DataG2BifourierPacking::unpack_double(double* val, size_t* len)
 
     dirty_ = 0;
 
-    buf = (unsigned char*)gh->buffer->data;
+    buf = gh->buffer->data;
     buf += byte_offset();
     s = codes_power<double>(bt->binary_scale_factor, 2);
     d = codes_power<double>(-bt->decimal_scale_factor, 10);

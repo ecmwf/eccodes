@@ -175,7 +175,7 @@ int DataShPacked::unpack_double(double* val, size_t* len)
     ECCODES_ASSERT(pen_j == pen_k);
     ECCODES_ASSERT(pen_j == pen_m);
 
-    buf = (unsigned char*)grib_handle_of_accessor(this)->buffer->data;
+    buf = grib_handle_of_accessor(this)->buffer->data;
 
     maxv = pen_j + 1;
 

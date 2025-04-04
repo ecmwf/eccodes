@@ -78,7 +78,7 @@ int DataSimplePacking::unpack_double_element(size_t idx, double* val)
     long binary_scale_factor;
     long bits_per_value;
     long decimal_scale_factor;
-    unsigned char* buf = (unsigned char*)gh->buffer->data;
+    unsigned char* buf = gh->buffer->data;
     double s           = 0;
     double d           = 0;
     long pos           = 0;
@@ -163,8 +163,8 @@ int DataSimplePacking::unpack(T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
 
-    grib_handle* gh         = get_enclosing_handle();
-    unsigned char* buf      = (unsigned char*)(gh->buffer->data);
+    grib_handle* gh = get_enclosing_handle();
+    unsigned char* buf = gh->buffer->data;
 
     size_t i      = 0;
     int err       = 0;
@@ -438,7 +438,7 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
 
 int DataSimplePacking::unpack_double_subarray(double* val, size_t start, size_t len)
 {
-    unsigned char* buf  = (unsigned char*)grib_handle_of_accessor(this)->buffer->data;
+    unsigned char* buf  = get_enclosing_handle()->buffer->data;
     size_t nvals        = len;
     size_t* plen        = &len;
     long bits_per_value = 0;

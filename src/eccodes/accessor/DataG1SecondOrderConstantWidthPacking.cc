@@ -68,7 +68,7 @@ int DataG1SecondOrderConstantWidthPacking::unpack_double(double* values, size_t*
     long pos                     = 0;
     long widthOfFirstOrderValues = 0;
     long jPointsAreConsecutive;
-    unsigned char* buf = (unsigned char*)grib_handle_of_accessor(this)->buffer->data;
+    unsigned char* buf = grib_handle_of_accessor(this)->buffer->data;
     long i, n;
     double reference_value;
     long binary_scale_factor;

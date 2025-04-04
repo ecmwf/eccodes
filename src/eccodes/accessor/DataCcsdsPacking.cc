@@ -454,7 +454,7 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
     dscale = codes_power<T>(-decimal_scale_factor, 10);
 
     buflen = byte_count();
-    buf    = (unsigned char*)hand->buffer->data;
+    buf    = hand->buffer->data;
     buf += byte_offset();
     strm.flags           = ccsds_flags;
     strm.bits_per_sample = bits_per_value;

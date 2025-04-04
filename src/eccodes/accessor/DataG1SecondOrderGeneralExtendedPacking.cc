@@ -188,7 +188,7 @@ int DataG1SecondOrderGeneralExtendedPacking::unpack(double* dvalues, float* fval
     long* X                = 0;
     long pos               = 0;
     grib_handle* handle    = grib_handle_of_accessor(this);
-    unsigned char* buf     = (unsigned char*)handle->buffer->data;
+    unsigned char* buf     = handle->buffer->data;
     long i, n;
     double reference_value;
     long binary_scale_factor;

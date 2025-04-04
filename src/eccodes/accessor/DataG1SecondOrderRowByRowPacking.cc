@@ -129,7 +129,7 @@ int DataG1SecondOrderRowByRowPacking::unpack_real(T* values, size_t* len)
     long pos                     = 0;
     long widthOfFirstOrderValues = 0;
     long jPointsAreConsecutive;
-    unsigned char* buf = (unsigned char*)gh->buffer->data;
+    unsigned char* buf = gh->buffer->data;
     long k, i, j, n, Ni, Nj;
     double reference_value;
     long binary_scale_factor;
