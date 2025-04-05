@@ -121,6 +121,7 @@ public:
 
     grib_handle* get_enclosing_handle() const
     {
+        // Note: For many BUFR accessors, parent_ is NULL
         return parent_ ? parent_->h : h_;
     }
 

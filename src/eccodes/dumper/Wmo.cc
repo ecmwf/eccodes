@@ -503,7 +503,7 @@ static void print_hexadecimal(FILE* out, unsigned long flags, grib_accessor* a)
 {
     int i                = 0;
     unsigned long offset = 0;
-    grib_handle* h       = grib_handle_of_accessor(a);
+    grib_handle* h       = a->get_enclosing_handle();
     if ((flags & GRIB_DUMP_FLAG_HEXADECIMAL) != 0 && a->length_ != 0) {
         fprintf(out, " (");
         offset = a->offset_;

@@ -515,7 +515,6 @@ grib_handle* codes_external_sample(grib_context* c, ProductKind product_kind, co
 char* get_external_sample_path(grib_context* c, const char* name);
 
 /* grib_dependency.cc */
-grib_handle* grib_handle_of_accessor(const grib_accessor* a);
 void grib_dependency_add(grib_accessor* observer, grib_accessor* observed);
 void grib_dependency_remove_observed(grib_accessor* observed);
 int grib_dependency_notify_change_h(grib_handle* h, grib_accessor* observed);

@@ -818,11 +818,10 @@ int Codetable::unpack_long(long* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    /* ECC-480 Performance: inline the grib_handle_of_accessor here to reduce func call overhead */
-    if (parent_ == NULL)
-        hand = h_;
-    else
-        hand = parent_->h;
+    // ECC-480 Performance: inline here to reduce func call overhead
+    // No longer needed... use get_enclosing_handle
+    if (parent_ == NULL) hand = h_;
+    else hand = parent_->h;
 
     for (i = 0; i < rlen; i++) {
         val[i] = (long)grib_decode_unsigned_long(hand->buffer->data, &pos, nbytes_ * 8);

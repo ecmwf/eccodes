@@ -13,16 +13,16 @@
  ***************************************************************************/
 #include "grib_api_internal.h"
 
-grib_handle* grib_handle_of_accessor(const grib_accessor* a)
-{
-    if (a->parent_ == NULL) {
-        // For BUFR
-        return a->h_;
-    }
-    else {
-        return a->parent_->h;
-    }
-}
+// grib_handle* grib_handle_of_accessor(const grib_accessor* a)
+// {
+//     if (a->parent_ == NULL) {
+//         // For BUFR
+//         return a->h_;
+//     }
+//     else {
+//         return a->parent_->h;
+//     }
+// }
 
 static grib_handle* handle_of(grib_accessor* observed)
 {
