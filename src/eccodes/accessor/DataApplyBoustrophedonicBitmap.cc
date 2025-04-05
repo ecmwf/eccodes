@@ -20,7 +20,7 @@ void DataApplyBoustrophedonicBitmap::init(const long v, grib_arguments* args)
 {
     Gen::init(v, args);
     int n           = 0;
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
 
     coded_values_        = args->get_name(gh, n++);
     bitmap_              = args->get_name(gh, n++);
@@ -41,7 +41,7 @@ void DataApplyBoustrophedonicBitmap::dump(eccodes::Dumper* dumper)
 
 int DataApplyBoustrophedonicBitmap::value_count(long* count)
 {
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
     size_t len      = 0;
     int ret         = 0;
 
@@ -55,7 +55,7 @@ int DataApplyBoustrophedonicBitmap::value_count(long* count)
 
 int DataApplyBoustrophedonicBitmap::unpack_double(double* val, size_t* len)
 {
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
 
     size_t i = 0, j = 0, n_vals = 0, irow = 0;
     long nn              = 0;
@@ -164,7 +164,7 @@ int DataApplyBoustrophedonicBitmap::unpack_double(double* val, size_t* len)
 
 int DataApplyBoustrophedonicBitmap::unpack_double_element(size_t idx, double* val)
 {
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
     int err = 0, i = 0;
     size_t cidx          = 0;
     double missing_value = 0;
@@ -210,7 +210,7 @@ int DataApplyBoustrophedonicBitmap::unpack_double_element(size_t idx, double* va
 
 int DataApplyBoustrophedonicBitmap::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
     int err = 0, all_missing = 1;
     size_t cidx          = 0;    /* index into the coded_values array */
     size_t* cidx_array   = NULL; /* array of indexes into the coded_values */
@@ -290,7 +290,7 @@ int DataApplyBoustrophedonicBitmap::unpack_double_element_set(const size_t* inde
 
 int DataApplyBoustrophedonicBitmap::pack_double(const double* val, size_t* len)
 {
-    grib_handle* gh    = grib_handle_of_accessor(this);
+    grib_handle* gh    = get_enclosing_handle();
     int err            = 0;
     size_t bmaplen     = *len;
     size_t irow        = 0;

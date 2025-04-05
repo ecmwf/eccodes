@@ -20,7 +20,7 @@ void Sum::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
     int n   = 0;
-    values_ = c->get_name(grib_handle_of_accessor(this), n++);
+    values_ = c->get_name(get_enclosing_handle(), n++);
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
@@ -97,7 +97,7 @@ int Sum::value_count(long* count)
     size_t n = 0;
     int ret  = GRIB_SUCCESS;
 
-    ret    = grib_get_size(grib_handle_of_accessor(this), values_, &n);
+    ret    = grib_get_size(get_enclosing_handle(), values_, &n);
     *count = n;
 
     if (ret)

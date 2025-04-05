@@ -20,7 +20,7 @@ void PackBufrValues::init(const long len, grib_arguments* params)
 {
     Gen::init(len, params);
     char* key;
-    key            = (char*)params->get_name(grib_handle_of_accessor(this), 0);
+    key            = (char*)params->get_name(get_enclosing_handle(), 0);
     data_accessor_ = grib_find_accessor(grib_handle_of_accessor(this), key);
 
     length_ = 0;

@@ -23,7 +23,7 @@ void G2EndStep::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n          = 0;
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     start_step_value_ = c->get_name(h, n++);
     step_units_       = c->get_name(h, n++);
@@ -102,7 +102,7 @@ int G2EndStep::unpack_one_time_range_long_(long* val, size_t* len)
     long time_range_value, typeOfTimeIncrement;
     int add_time_range = 1; /* whether we add lengthOfTimeRange */
 
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     if ((err = grib_get_long_internal(h, start_step_value_, &start_step_value)))
         return err;
@@ -152,7 +152,7 @@ int G2EndStep::unpack_one_time_range_double_(double* val, size_t* len)
     long typeOfTimeIncrement;
     int add_time_range = 1; /* whether we add lengthOfTimeRange */
 
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     if ((err = grib_get_double_internal(h, start_step_value_, &start_step_value)))
         return err;
@@ -196,7 +196,7 @@ int G2EndStep::unpack_one_time_range_double_(double* val, size_t* len)
 int G2EndStep::unpack_multiple_time_ranges_long_(long* val, size_t* len)
 {
     int i = 0, err = 0;
-    grib_handle* h          = grib_handle_of_accessor(this);
+    grib_handle* h          = get_enclosing_handle();
     long numberOfTimeRanges = 0, step_units = 0, start_step_value = 0;
 
     size_t count = 0;
@@ -248,7 +248,7 @@ int G2EndStep::unpack_multiple_time_ranges_long_(long* val, size_t* len)
 int G2EndStep::unpack_multiple_time_ranges_double_(double* val, size_t* len)
 {
     int i = 0, err = 0;
-    grib_handle* h          = grib_handle_of_accessor(this);
+    grib_handle* h          = get_enclosing_handle();
     long numberOfTimeRanges = 0;
     long step_units         = 0;
     long start_step_value   = 0;
@@ -309,7 +309,7 @@ int G2EndStep::unpack_multiple_time_ranges_double_(double* val, size_t* len)
 //
 int G2EndStep::unpack_long(long* val, size_t* len)
 {
-    grib_handle* h          = grib_handle_of_accessor(this);
+    grib_handle* h          = get_enclosing_handle();
     int ret                 = 0;
     long start_step_value   = 0;
     long start_step_unit    = 0;
@@ -351,7 +351,7 @@ int G2EndStep::unpack_long(long* val, size_t* len)
 
 int G2EndStep::unpack_double(double* val, size_t* len)
 {
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     int ret        = 0;
     long start_step_value;
     long start_step_unit;
@@ -393,7 +393,7 @@ int G2EndStep::unpack_double(double* val, size_t* len)
 
 int G2EndStep::pack_long_(const long end_step_value, const long end_step_unit)
 {
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     int err = 0;
 
     long year;
@@ -531,7 +531,7 @@ int G2EndStep::pack_long_(const long end_step_value, const long end_step_unit)
 
 int G2EndStep::unpack_string(char* val, size_t* len)
 {
-    grib_handle* h       = grib_handle_of_accessor(this);
+    grib_handle* h       = get_enclosing_handle();
     int ret              = 0;
     char fp_format[128]  = "%g";
     size_t fp_format_len = sizeof(fp_format);
@@ -574,7 +574,7 @@ int G2EndStep::unpack_string(char* val, size_t* len)
 
 int G2EndStep::pack_long(const long* val, size_t* len)
 {
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     int ret;
 
     long force_step_units;
@@ -604,7 +604,7 @@ int G2EndStep::pack_long(const long* val, size_t* len)
 
 int G2EndStep::pack_string(const char* val, size_t* len)
 {
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     int ret        = 0;
     long force_step_units;
     if ((ret = grib_get_long_internal(h, "forceStepUnits", &force_step_units)) != GRIB_SUCCESS)
@@ -629,7 +629,7 @@ int G2EndStep::pack_string(const char* val, size_t* len)
 
 long G2EndStep::get_native_type()
 {
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     const int show_units_for_hours = context_->grib_hourly_steps_with_units;
 
     if (!show_units_for_hours) {

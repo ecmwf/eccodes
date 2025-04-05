@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void ChangeScanningDirection::init(const long len, grib_arguments* args)
 {
     Gen::init(len, args);
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     int n          = 0;
 
     values_             = args->get_name(h, n++);
@@ -47,7 +47,7 @@ int ChangeScanningDirection::pack_long(const long* val, size_t* len)
     size_t size             = 0;
     double* values          = NULL;
     const grib_context* c   = context_;
-    grib_handle* h          = grib_handle_of_accessor(this);
+    grib_handle* h          = get_enclosing_handle();
 
     if (*val == 0)
         return GRIB_SUCCESS;

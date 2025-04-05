@@ -21,8 +21,8 @@ void Getenv::init(const long l, grib_arguments* args)
     Ascii::init(l, args);
     static char undefined[] = "undefined";
 
-    envvar_          = args->get_string(grib_handle_of_accessor(this), 0);
-    default_value_ = args->get_string(grib_handle_of_accessor(this), 1);
+    envvar_          = args->get_string(get_enclosing_handle(), 0);
+    default_value_ = args->get_string(get_enclosing_handle(), 1);
     if (!default_value_)
         default_value_ = undefined;
     value_ = 0;

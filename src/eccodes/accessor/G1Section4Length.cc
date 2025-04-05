@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void G1Section4Length::init(const long len, grib_arguments* args)
 {
     SectionLength::init(len, args);
-    total_length_ = args->get_name(grib_handle_of_accessor(this), 0);
+    total_length_ = args->get_name(get_enclosing_handle(), 0);
 }
 
 int G1Section4Length::pack_long(const long* val, size_t* len)

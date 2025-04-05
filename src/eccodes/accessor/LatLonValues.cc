@@ -21,7 +21,7 @@ void LatLonvalues::init(const long l, grib_arguments* c)
     Double::init(l, c);
     int n = 0;
 
-    values_ = c->get_name(grib_handle_of_accessor(this), n++);
+    values_ = c->get_name(get_enclosing_handle(), n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
@@ -64,7 +64,7 @@ int LatLonvalues::unpack_double(double* val, size_t* len)
 
 int LatLonvalues::value_count(long* count)
 {
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     int ret = GRIB_SUCCESS;
     size_t size = 0;
     if ((ret = grib_get_size(h, values_, &size)) != GRIB_SUCCESS) {

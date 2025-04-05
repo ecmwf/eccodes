@@ -21,7 +21,7 @@ size_t PadTo::preferred_size(int from_handle)
     long length = 0;
     long theEnd;
 
-    expression_->evaluate_long(grib_handle_of_accessor(this), &theEnd);
+    expression_->evaluate_long(get_enclosing_handle(), &theEnd);
 
     length = theEnd - offset_;
 

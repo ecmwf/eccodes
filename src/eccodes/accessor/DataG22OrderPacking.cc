@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void DataG22OrderPacking::init(const long v, grib_arguments* args)
 {
     Values::init(v, args);
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
 
     numberOfValues_        = args->get_name(gh, carg_++);
     bits_per_value_        = args->get_name(gh, carg_++);
@@ -777,7 +777,7 @@ static void merge_j(struct section* h, int ref_bits, int width_bits, int has_und
 
 int DataG22OrderPacking::pack_double(const double* val, size_t* len)
 {
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
 
     int err = 0;
 
@@ -1473,7 +1473,7 @@ template <typename T>
 int DataG22OrderPacking::unpack(T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
 
     size_t i                  = 0;
     size_t j                  = 0;
@@ -1740,7 +1740,7 @@ int DataG22OrderPacking::unpack_double_element(size_t idx, double* val)
 {
     size_t size    = 0;
     double* values = NULL;
-    int err        = grib_get_size(grib_handle_of_accessor(this), "codedValues", &size);
+    int err        = grib_get_size(get_enclosing_handle(), "codedValues", &size);
     if (err)
         return err;
     if (idx > size)
@@ -1764,7 +1764,7 @@ int DataG22OrderPacking::unpack_double_element_set(const size_t* index_array, si
     int err = 0;
 
     // GRIB-564: The indexes in index_array relate to codedValues NOT values!
-    err = grib_get_size(grib_handle_of_accessor(this), "codedValues", &size);
+    err = grib_get_size(get_enclosing_handle(), "codedValues", &size);
     if (err)
         return err;
 
@@ -1788,7 +1788,7 @@ int DataG22OrderPacking::unpack_double_element_set(const size_t* index_array, si
 int DataG22OrderPacking::value_count(long* count)
 {
     *count = 0;
-    return grib_get_long_internal(grib_handle_of_accessor(this), numberOfValues_, count);
+    return grib_get_long_internal(get_enclosing_handle(), numberOfValues_, count);
 }
 
 }  // namespace eccodes::accessor

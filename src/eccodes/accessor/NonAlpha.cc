@@ -54,7 +54,7 @@ long NonAlpha::get_native_type()
 
 int NonAlpha::unpack_string(char* val, size_t* len)
 {
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     long i            = 0;
 
     if (*len < (length_ + 1)) {

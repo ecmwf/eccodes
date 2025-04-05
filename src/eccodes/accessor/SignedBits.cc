@@ -27,14 +27,14 @@ long SignedBits::compute_byte_count()
     long numberOfElements;
     int ret = 0;
 
-    ret = grib_get_long(grib_handle_of_accessor(this), numberOfBits_, &numberOfBits);
+    ret = grib_get_long(get_enclosing_handle(), numberOfBits_, &numberOfBits);
     if (ret) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s unable to get %s to compute size", name_, numberOfBits_);
         return 0;
     }
 
-    ret = grib_get_long(grib_handle_of_accessor(this), numberOfElements_, &numberOfElements);
+    ret = grib_get_long(get_enclosing_handle(), numberOfElements_, &numberOfElements);
     if (ret) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s unable to get %s to compute size", name_, numberOfElements_);
@@ -48,8 +48,8 @@ void SignedBits::init(const long len, grib_arguments* args)
 {
     Long::init(len, args);
     int n             = 0;
-    numberOfBits_     = args->get_name(grib_handle_of_accessor(this), n++);
-    numberOfElements_ = args->get_name(grib_handle_of_accessor(this), n++);
+    numberOfBits_     = args->get_name(get_enclosing_handle(), n++);
+    numberOfElements_ = args->get_name(get_enclosing_handle(), n++);
     length_           = compute_byte_count();
 }
 
@@ -74,7 +74,7 @@ int SignedBits::unpack_long(long* val, size_t* len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    ret = grib_get_long(grib_handle_of_accessor(this), numberOfBits_ , &numberOfBits);
+    ret = grib_get_long(get_enclosing_handle(), numberOfBits_ , &numberOfBits);
     if (ret)
         return ret;
 
@@ -111,12 +111,12 @@ int SignedBits::pack_long(const long* val, size_t* len)
         return ret;
     rlen = count;
     if (*len != rlen) {
-        ret = grib_set_long(grib_handle_of_accessor(this), numberOfElements_ , rlen);
+        ret = grib_set_long(get_enclosing_handle(), numberOfElements_ , rlen);
         if (ret)
             return ret;
     }
 
-    ret = grib_get_long(grib_handle_of_accessor(this), numberOfBits_ , &numberOfBits);
+    ret = grib_get_long(get_enclosing_handle(), numberOfBits_ , &numberOfBits);
     if (ret)
         return ret;
 
@@ -138,7 +138,7 @@ int SignedBits::value_count(long* numberOfElements)
 {
     *numberOfElements = 0;
 
-    return grib_get_long(grib_handle_of_accessor(this), numberOfElements_, numberOfElements);
+    return grib_get_long(get_enclosing_handle(), numberOfElements_, numberOfElements);
 }
 
 long SignedBits::byte_offset()

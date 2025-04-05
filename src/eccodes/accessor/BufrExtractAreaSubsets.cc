@@ -27,7 +27,7 @@ namespace eccodes::accessor
 void BufrExtractAreaSubsets::init(const long len, grib_arguments* arg)
 {
     Gen::init(len, arg);
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     int n = 0;
 
     length_                       = 0;
@@ -54,7 +54,7 @@ int BufrExtractAreaSubsets::select_area()
 {
     int ret         = 0;
     long compressed = 0;
-    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_handle* h  = get_enclosing_handle();
     grib_context* c = h->context;
 
     double* lat = NULL;

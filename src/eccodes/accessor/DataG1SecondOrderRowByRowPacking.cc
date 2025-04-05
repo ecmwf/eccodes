@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void DataG1SecondOrderRowByRowPacking::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
 
     half_byte_                       = args->get_name(gh, carg_++);
     packingType_                     = args->get_name(gh, carg_++);
@@ -43,7 +43,7 @@ void DataG1SecondOrderRowByRowPacking::init(const long v, grib_arguments* args)
 
 int DataG1SecondOrderRowByRowPacking::value_count(long* count)
 {
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
     long n = 0, i = 0;
     long numberOfRows          = 0;
     long jPointsAreConsecutive = 0;
@@ -118,8 +118,8 @@ int DataG1SecondOrderRowByRowPacking::value_count(long* count)
 template <typename T>
 int DataG1SecondOrderRowByRowPacking::unpack_real(T* values, size_t* len)
 {
-    grib_handle* gh                                              = grib_handle_of_accessor(this);
-    int ret                                                      = 0;
+    grib_handle* gh = get_enclosing_handle();
+    int ret = GRIB_SUCCESS;
     long numberOfGroups, numberOfSecondOrderPackedValues;
     long* groupWidths      = 0;
     long* firstOrderValues = 0;
@@ -294,7 +294,7 @@ int DataG1SecondOrderRowByRowPacking::unpack_double(double* values, size_t* len)
 int DataG1SecondOrderRowByRowPacking::pack_double(const double* cval, size_t* len)
 {
     int err         = 0;
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
     char type[]     = "grid_second_order";
     size_t size     = strlen(type);
 

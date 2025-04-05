@@ -58,7 +58,7 @@ namespace eccodes::accessor
 void G1MessageLength::init(const long len, grib_arguments* args)
 {
     SectionLength::init(len, args);
-    sec4_length_ = args->get_name(grib_handle_of_accessor(this), 0);
+    sec4_length_ = args->get_name(get_enclosing_handle(), 0);
 }
 
 int G1MessageLength::pack_long(const long* val, size_t* len)

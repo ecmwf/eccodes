@@ -22,7 +22,7 @@ void CodetableUnits::init(const long len, grib_arguments* params)
     Gen::init(len, params);
 
     int n      = 0;
-    codetable_ = params->get_name(grib_handle_of_accessor(this), n++);
+    codetable_ = params->get_name(get_enclosing_handle(), n++);
     length_    = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }

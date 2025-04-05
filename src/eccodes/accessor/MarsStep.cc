@@ -20,8 +20,8 @@ void MarsStep::init(const long l, grib_arguments* c)
 {
     Ascii::init(l, c);
     int n      = 0;
-    stepRange_ = c->get_name(grib_handle_of_accessor(this), n++);
-    stepType_  = c->get_name(grib_handle_of_accessor(this), n++);
+    stepRange_ = c->get_name(get_enclosing_handle(), n++);
+    stepType_  = c->get_name(get_enclosing_handle(), n++);
 }
 
 int MarsStep::pack_string(const char* val, size_t* len)
@@ -37,7 +37,7 @@ int MarsStep::pack_string(const char* val, size_t* len)
         return GRIB_NOT_FOUND;
     }
 
-    if ((ret = grib_get_string(grib_handle_of_accessor(this), stepType_, stepType, &stepTypeLen)) != GRIB_SUCCESS)
+    if ((ret = grib_get_string(get_enclosing_handle(), stepType_, stepType, &stepTypeLen)) != GRIB_SUCCESS)
         return ret;
 
     if (!strcmp(stepType, "instant"))

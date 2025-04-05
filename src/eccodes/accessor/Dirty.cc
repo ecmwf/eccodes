@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void Dirty::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    accessor_ = c->get_name(grib_handle_of_accessor(this), 0);
+    accessor_ = c->get_name(get_enclosing_handle(), 0);
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;
     length_ = 0;

@@ -19,10 +19,10 @@ namespace eccodes::accessor
 void DataSecondaryBitmap::init(const long v, grib_arguments* args)
 {
     Gen::init(v, args);
-    primary_bitmap_   = args->get_name(grib_handle_of_accessor(this), 0);
-    secondary_bitmap_ = args->get_name(grib_handle_of_accessor(this), 1);
-    missing_value_    = args->get_name(grib_handle_of_accessor(this), 2);
-    expand_by_        = args->get_name(grib_handle_of_accessor(this), 3);
+    primary_bitmap_   = args->get_name(get_enclosing_handle(), 0);
+    secondary_bitmap_ = args->get_name(get_enclosing_handle(), 1);
+    missing_value_    = args->get_name(get_enclosing_handle(), 2);
+    expand_by_        = args->get_name(get_enclosing_handle(), 3);
 
     length_ = 0;
 }
@@ -56,13 +56,13 @@ int DataSecondaryBitmap::unpack_double(double* val, size_t* len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    if ((err = grib_get_long(grib_handle_of_accessor(this), expand_by_, &expand_by)) != GRIB_SUCCESS)
+    if ((err = grib_get_long(get_enclosing_handle(), expand_by_, &expand_by)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_size(grib_handle_of_accessor(this), primary_bitmap_, &primary_len)) != GRIB_SUCCESS)
+    if ((err = grib_get_size(get_enclosing_handle(), primary_bitmap_, &primary_len)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_size(grib_handle_of_accessor(this), secondary_bitmap_, &secondary_len)) != GRIB_SUCCESS)
+    if ((err = grib_get_size(get_enclosing_handle(), secondary_bitmap_, &secondary_len)) != GRIB_SUCCESS)
         return err;
 
     primary_vals = (double*)grib_context_malloc(context_, primary_len * sizeof(double));
@@ -75,13 +75,13 @@ int DataSecondaryBitmap::unpack_double(double* val, size_t* len)
         return GRIB_OUT_OF_MEMORY;
     }
 
-    if ((err = grib_get_double_array_internal(grib_handle_of_accessor(this), primary_bitmap_, primary_vals, &primary_len)) != GRIB_SUCCESS) {
+    if ((err = grib_get_double_array_internal(get_enclosing_handle(), primary_bitmap_, primary_vals, &primary_len)) != GRIB_SUCCESS) {
         grib_context_free(context_, secondary_vals);
         grib_context_free(context_, primary_vals);
         return err;
     }
 
-    if ((err = grib_get_double_array_internal(grib_handle_of_accessor(this), secondary_bitmap_, secondary_vals, &secondary_len)) != GRIB_SUCCESS) {
+    if ((err = grib_get_double_array_internal(get_enclosing_handle(), secondary_bitmap_, secondary_vals, &secondary_len)) != GRIB_SUCCESS) {
         grib_context_free(context_, secondary_vals);
         grib_context_free(context_, primary_vals);
         return err;

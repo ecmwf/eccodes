@@ -21,7 +21,7 @@ void DivDouble::init(const long l, grib_arguments* c)
     Double::init(l, c);
     int n = 0;
 
-    val_     = c->get_name(grib_handle_of_accessor(this), n++);
+    val_     = c->get_name(get_enclosing_handle(), n++);
     divisor_ = c->get_double(grib_handle_of_accessor(this), n++);
 }
 
@@ -30,7 +30,7 @@ int DivDouble::unpack_double(double* val, size_t* len)
     int ret      = GRIB_SUCCESS;
     double value = 0;
 
-    ret = grib_get_double_internal(grib_handle_of_accessor(this), val_, &value);
+    ret = grib_get_double_internal(get_enclosing_handle(), val_, &value);
     if (ret != GRIB_SUCCESS)
         return ret;
 

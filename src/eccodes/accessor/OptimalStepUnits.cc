@@ -21,7 +21,7 @@ namespace eccodes::accessor
 void OptimalStepUnits::init(const long l, grib_arguments* c)
 {
     Gen::init(l, c);
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     int n = 0;
 
     forecast_time_value_ = c->get_name(hand, n++);
@@ -48,7 +48,7 @@ int OptimalStepUnits::pack_expression(grib_expression* e)
     int ret           = 0;
     long lval         = 0;
     size_t len        = 1;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     if (strcmp(e->class_name(), "long") == 0) {
         e->evaluate_long(hand, &lval); /* TODO: check return value */
@@ -74,7 +74,7 @@ int OptimalStepUnits::pack_expression(grib_expression* e)
 
 int OptimalStepUnits::pack_long(const long* val, size_t* len)
 {
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     long start_step      = 0;
     long start_step_unit = 0;
@@ -145,7 +145,7 @@ int OptimalStepUnits::pack_long(const long* val, size_t* len)
 
 int OptimalStepUnits::unpack_long(long* val, size_t* len)
 {
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     try {
         if (eccodes::Unit{ overwriteStepUnits_ } != eccodes::Unit{ eccodes::Unit::Value::MISSING }) {

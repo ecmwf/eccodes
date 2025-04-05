@@ -24,11 +24,11 @@ void LongVector::init(const long l, grib_arguments* c)
     AbstractLongVector* v = NULL;
     int n                                   = 0;
 
-    vector_ = c->get_name(grib_handle_of_accessor(this), n++);
+    vector_ = c->get_name(get_enclosing_handle(), n++);
     va      = (grib_accessor*)grib_find_accessor(grib_handle_of_accessor(this), vector_);
     v       = (AbstractLongVector*)va;
 
-    index_ = c->get_long(grib_handle_of_accessor(this), n++);
+    index_ = c->get_long(get_enclosing_handle(), n++);
 
     /* check index_ on init and never change it */
     ECCODES_ASSERT(index_ < v->number_of_elements_ && index_ >= 0);
@@ -48,7 +48,7 @@ int LongVector::unpack_long(long* val, size_t* len)
     v  = (AbstractLongVector*)va;
 
     /*TODO implement the dirty mechanism to avoid to unpack every time */
-    err = grib_get_size(grib_handle_of_accessor(this), vector_, &size);
+    err = grib_get_size(get_enclosing_handle(), vector_, &size);
     if (err) return err;
     DEBUG_ASSERT(size > 0);
     vector = (long*)grib_context_malloc(context_, sizeof(long) * size);

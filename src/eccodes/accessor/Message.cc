@@ -58,7 +58,7 @@ int Message::unpack_string(char* val, size_t* len)
 {
     long i         = 0;
     size_t l       = string_length() + 1;
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     if (*len < l) {
         grib_context_log(context_, GRIB_LOG_ERROR,

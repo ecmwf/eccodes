@@ -28,7 +28,7 @@ size_t Pad::preferred_size(int from_handle)
 {
     long length = 0;
 
-    expression_->evaluate_long(grib_handle_of_accessor(this), &length);
+    expression_->evaluate_long(get_enclosing_handle(), &length);
 
     return length > 0 ? length : 0;
 }

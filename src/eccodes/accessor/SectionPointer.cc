@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void SectionPointer::init(const long len, grib_arguments* arg)
 {
     Gen::init(len, arg);
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     int n = 0;
     sectionOffset_ = arg->get_name(hand, n++);
@@ -72,7 +72,7 @@ long SectionPointer::byte_count()
 {
     long sectionLength = 0;
 
-    int ret = grib_get_long(grib_handle_of_accessor(this), sectionLength_, &sectionLength);
+    int ret = grib_get_long(get_enclosing_handle(), sectionLength_, &sectionLength);
     if (ret) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "Unable to get %s %s",
@@ -87,7 +87,7 @@ long SectionPointer::byte_offset()
 {
     long sectionOffset = 0;
 
-    int ret = grib_get_long(grib_handle_of_accessor(this), sectionOffset_, &sectionOffset);
+    int ret = grib_get_long(get_enclosing_handle(), sectionOffset_, &sectionOffset);
     if (ret) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "Unable to get %s %s",

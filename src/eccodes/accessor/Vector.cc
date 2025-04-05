@@ -22,8 +22,8 @@ void Vector::init(const long l, grib_arguments* c)
     AbstractVector::init(l, c);
     int n = 0;
 
-    vector_ = c->get_name(grib_handle_of_accessor(this), n++);
-    index_  = c->get_long(grib_handle_of_accessor(this), n++);
+    vector_ = c->get_name(get_enclosing_handle(), n++);
+    index_  = c->get_long(get_enclosing_handle(), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
@@ -46,7 +46,7 @@ int Vector::unpack_double(double* val, size_t* len)
 
     if (va->dirty_) {
         // printf("\nClassVector::unpack_double  accessor=%s is DIRTY\n", name_);
-        grib_get_size(grib_handle_of_accessor(this), vector_, &size);
+        grib_get_size(get_enclosing_handle(), vector_, &size);
         stat = (double*)grib_context_malloc_clear(context_, sizeof(double) * size);
         err  = va->unpack_double(stat, &size);
         grib_context_free(context_, stat);

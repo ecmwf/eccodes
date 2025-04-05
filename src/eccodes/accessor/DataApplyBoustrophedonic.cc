@@ -21,11 +21,11 @@ void DataApplyBoustrophedonic::init(const long v, grib_arguments* args)
     Gen::init(v, args);
 
     int n            = 0;
-    values_          = args->get_name(grib_handle_of_accessor(this), n++);
-    numberOfRows_    = args->get_name(grib_handle_of_accessor(this), n++);
-    numberOfColumns_ = args->get_name(grib_handle_of_accessor(this), n++);
-    numberOfPoints_  = args->get_name(grib_handle_of_accessor(this), n++);
-    pl_              = args->get_name(grib_handle_of_accessor(this), n++);
+    values_          = args->get_name(get_enclosing_handle(), n++);
+    numberOfRows_    = args->get_name(get_enclosing_handle(), n++);
+    numberOfColumns_ = args->get_name(get_enclosing_handle(), n++);
+    numberOfPoints_  = args->get_name(get_enclosing_handle(), n++);
+    pl_              = args->get_name(get_enclosing_handle(), n++);
 
     length_ = 0;
 }
@@ -37,7 +37,7 @@ void DataApplyBoustrophedonic::dump(eccodes::Dumper* dumper)
 int DataApplyBoustrophedonic::value_count(long* numberOfPoints)
 {
     *numberOfPoints = 0;
-    return grib_get_long_internal(grib_handle_of_accessor(this), numberOfPoints_, numberOfPoints);
+    return grib_get_long_internal(get_enclosing_handle(), numberOfPoints_, numberOfPoints);
 }
 
 template <typename T>
@@ -53,7 +53,7 @@ int DataApplyBoustrophedonic::unpack(T* val, size_t* len)
     int ret;
     long numberOfPoints, numberOfRows, numberOfColumns;
 
-    ret = grib_get_long_internal(grib_handle_of_accessor(this), numberOfPoints_, &numberOfPoints);
+    ret = grib_get_long_internal(get_enclosing_handle(), numberOfPoints_, &numberOfPoints);
     if (ret)
         return ret;
 
@@ -62,7 +62,7 @@ int DataApplyBoustrophedonic::unpack(T* val, size_t* len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    ret = grib_get_size(grib_handle_of_accessor(this), values_, &valuesSize);
+    ret = grib_get_size(get_enclosing_handle(), values_, &valuesSize);
     if (ret)
         return ret;
 
@@ -77,22 +77,22 @@ int DataApplyBoustrophedonic::unpack(T* val, size_t* len)
     }
 
     values = (double*)grib_context_malloc_clear(context_, sizeof(double) * numberOfPoints);
-    ret    = grib_get_double_array_internal(grib_handle_of_accessor(this), values_, values, &valuesSize);
+    ret    = grib_get_double_array_internal(get_enclosing_handle(), values_, values, &valuesSize);
     if (ret)
         return ret;
 
     pvalues = values;
     pval    = val;
 
-    ret = grib_get_long_internal(grib_handle_of_accessor(this), numberOfRows_, &numberOfRows);
+    ret = grib_get_long_internal(get_enclosing_handle(), numberOfRows_, &numberOfRows);
     if (ret)
         return ret;
 
-    ret = grib_get_long_internal(grib_handle_of_accessor(this), numberOfColumns_, &numberOfColumns);
+    ret = grib_get_long_internal(get_enclosing_handle(), numberOfColumns_, &numberOfColumns);
     if (ret)
         return ret;
 
-    if (grib_get_size(grib_handle_of_accessor(this), pl_, &plSize) == GRIB_SUCCESS) {
+    if (grib_get_size(get_enclosing_handle(), pl_, &plSize) == GRIB_SUCCESS) {
         ECCODES_ASSERT(plSize == numberOfRows);
         pl  = (long*)grib_context_malloc_clear(context_, sizeof(long) * plSize);
         ret = grib_get_long_array_internal(grib_handle_of_accessor(this), pl_, pl, &plSize);
@@ -174,7 +174,7 @@ int DataApplyBoustrophedonic::unpack_double_element_set(const size_t* index_arra
     int err = 0;
 
     /* GRIB-564: The indexes in index_array relate to codedValues NOT values! */
-    err = grib_get_size(grib_handle_of_accessor(this), "codedValues", &size);
+    err = grib_get_size(get_enclosing_handle(), "codedValues", &size);
     if (err)
         return err;
 
@@ -206,7 +206,7 @@ int DataApplyBoustrophedonic::pack_double(const double* val, size_t* len)
     long i, j;
     long numberOfPoints, numberOfRows, numberOfColumns;
 
-    int ret = grib_get_long_internal(grib_handle_of_accessor(this), numberOfPoints_, &numberOfPoints);
+    int ret = grib_get_long_internal(get_enclosing_handle(), numberOfPoints_, &numberOfPoints);
     if (ret)
         return ret;
 
@@ -222,15 +222,15 @@ int DataApplyBoustrophedonic::pack_double(const double* val, size_t* len)
     pvalues = values;
     pval    = (double*)val;
 
-    ret = grib_get_long_internal(grib_handle_of_accessor(this), numberOfRows_, &numberOfRows);
+    ret = grib_get_long_internal(get_enclosing_handle(), numberOfRows_, &numberOfRows);
     if (ret)
         return ret;
 
-    ret = grib_get_long_internal(grib_handle_of_accessor(this), numberOfColumns_, &numberOfColumns);
+    ret = grib_get_long_internal(get_enclosing_handle(), numberOfColumns_, &numberOfColumns);
     if (ret)
         return ret;
 
-    if (grib_get_size(grib_handle_of_accessor(this), pl_, &plSize) == GRIB_SUCCESS) {
+    if (grib_get_size(get_enclosing_handle(), pl_, &plSize) == GRIB_SUCCESS) {
         ECCODES_ASSERT(plSize == numberOfRows);
         pl  = (long*)grib_context_malloc_clear(context_, sizeof(long) * plSize);
         ret = grib_get_long_array_internal(grib_handle_of_accessor(this), pl_, pl, &plSize);

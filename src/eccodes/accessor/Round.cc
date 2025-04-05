@@ -41,12 +41,12 @@ int Round::unpack_double(double* val, size_t* len)
     double toround            = 0;
 
     const char* oval = NULL;
-    oval             = arg_->get_name(grib_handle_of_accessor(this), 0);
+    oval             = arg_->get_name(get_enclosing_handle(), 0);
 
-    if ((ret = grib_get_double_internal(grib_handle_of_accessor(this), oval, &toround)) != 0)
+    if ((ret = grib_get_double_internal(get_enclosing_handle(), oval, &toround)) != 0)
         return ret;
 
-    rounding_precision = arg_->get_long(grib_handle_of_accessor(this), 1);
+    rounding_precision = arg_->get_long(get_enclosing_handle(), 1);
 
     rounded = floor(rounding_precision * toround + 0.5) / rounding_precision;
 

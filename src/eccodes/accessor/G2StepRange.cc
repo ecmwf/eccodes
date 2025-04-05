@@ -25,8 +25,8 @@ void G2StepRange::init(const long l, grib_arguments* c)
 
     int n = 0;
 
-    start_step_ = c->get_name(grib_handle_of_accessor(this), n++);
-    end_step_   = c->get_name(grib_handle_of_accessor(this), n++);
+    start_step_ = c->get_name(get_enclosing_handle(), n++);
+    end_step_   = c->get_name(get_enclosing_handle(), n++);
 
     length_ = 0;
 }
@@ -38,7 +38,7 @@ void G2StepRange::init(const long l, grib_arguments* c)
 
 int G2StepRange::unpack_string(char* val, size_t* len)
 {
-    grib_handle* h          = grib_handle_of_accessor(this);
+    grib_handle* h          = get_enclosing_handle();
     int ret                 = 0;
     size_t size             = 0;
     double start_step_value = 0;
@@ -104,7 +104,7 @@ int G2StepRange::unpack_string(char* val, size_t* len)
 // stepRange="X" in accumulated field is equivalent to startStep=X, endStep=startStep
 int G2StepRange::pack_string(const char* val, size_t* len)
 {
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     int ret        = 0;
 
     long force_step_units;
@@ -192,7 +192,7 @@ int G2StepRange::pack_long(const long* val, size_t* len)
 
 int G2StepRange::unpack_long(long* val, size_t* len)
 {
-    grib_handle* h       = grib_handle_of_accessor(this);
+    grib_handle* h       = get_enclosing_handle();
     int ret              = 0;
     long end_start_value = 0;
     long end_step_value  = 0;
@@ -229,7 +229,7 @@ int G2StepRange::unpack_long(long* val, size_t* len)
 
 int G2StepRange::unpack_double(double* val, size_t* len)
 {
-    grib_handle* h         = grib_handle_of_accessor(this);
+    grib_handle* h         = get_enclosing_handle();
     int ret                = 0;
     double end_start_value = 0;
     double end_step_value  = 0;

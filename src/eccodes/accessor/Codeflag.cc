@@ -26,7 +26,7 @@ void Codeflag::init(const long len, grib_arguments* param)
 {
     Unsigned::init(len, param);
     length_    = len;
-    tablename_ = param->get_string(grib_handle_of_accessor(this), 0);
+    tablename_ = param->get_string(get_enclosing_handle(), 0);
     ECCODES_ASSERT(length_ >= 0);
 }
 

@@ -25,10 +25,10 @@ void Md5::init(const long len, grib_arguments* arg)
     grib_string_list* current = 0;
     grib_context* context     = context_;
 
-    offset_key_    = arg->get_name(grib_handle_of_accessor(this), n++);
+    offset_key_    = arg->get_name(get_enclosing_handle(), n++);
     length_key_    = arg->get_expression(grib_handle_of_accessor(this), n++);
     blocklist_ = NULL;
-    while ((b = (char*)arg->get_name(grib_handle_of_accessor(this), n++)) != NULL) {
+    while ((b = (char*)arg->get_name(get_enclosing_handle(), n++)) != NULL) {
         if (!blocklist_) {
             blocklist_        = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
             blocklist_->value = grib_context_strdup(context, b);
@@ -98,9 +98,9 @@ int Md5::unpack_string(char* v, size_t* len)
         return GRIB_BUFFER_TOO_SMALL;
     }
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), offset_key_, &offset)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), offset_key_, &offset)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = length_key_->evaluate_long(grib_handle_of_accessor(this), &length)) != GRIB_SUCCESS)
+    if ((ret = length_key_->evaluate_long(get_enclosing_handle(), &length)) != GRIB_SUCCESS)
         return ret;
     mess = (unsigned char*)grib_context_malloc(context_, length);
     memcpy(mess, grib_handle_of_accessor(this)->buffer->data + offset, length);

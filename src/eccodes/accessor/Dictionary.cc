@@ -21,11 +21,11 @@ void Dictionary::init(const long len, grib_arguments* params)
     Gen::init(len, params);
     int n = 0;
 
-    dictionary_ = params->get_string(grib_handle_of_accessor(this), n++);
-    key_        = params->get_name(grib_handle_of_accessor(this), n++);
-    column_     = params->get_long(grib_handle_of_accessor(this), n++);
-    masterDir_  = params->get_name(grib_handle_of_accessor(this), n++);
-    localDir_   = params->get_name(grib_handle_of_accessor(this), n++);
+    dictionary_ = params->get_string(get_enclosing_handle(), n++);
+    key_        = params->get_name(get_enclosing_handle(), n++);
+    column_     = params->get_long(get_enclosing_handle(), n++);
+    masterDir_  = params->get_name(get_enclosing_handle(), n++);
+    localDir_   = params->get_name(get_enclosing_handle(), n++);
 
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -45,7 +45,7 @@ grib_trie* Dictionary::load_dictionary(int* err)
     grib_trie* dictionary = NULL;
     FILE* f               = NULL;
     int i                 = 0;
-    grib_handle* h        = grib_handle_of_accessor(this);
+    grib_handle* h        = get_enclosing_handle();
     grib_context* c       = context_;
 
     *err = GRIB_SUCCESS;

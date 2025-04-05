@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void Element::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     int n    = 0;
     array_   = c->get_name(hand, n++);
@@ -43,7 +43,7 @@ int Element::unpack_long(long* val, size_t* len)
     size_t size           = 0;
     long* ar              = NULL;
     const grib_context* c = context_;
-    grib_handle* hand     = grib_handle_of_accessor(this);
+    grib_handle* hand     = get_enclosing_handle();
     long index            = element_;
 
     if (*len < 1) {
@@ -85,7 +85,7 @@ int Element::pack_long(const long* val, size_t* len)
     size_t size           = 0;
     long* ar              = NULL;
     const grib_context* c = context_;
-    grib_handle* hand     = grib_handle_of_accessor(this);
+    grib_handle* hand     = get_enclosing_handle();
     long index            = element_;
 
     if (*len < 1) {
@@ -138,7 +138,7 @@ int Element::pack_double(const double* v, size_t* len)
     size_t size           = 0;
     double* ar            = NULL;
     const grib_context* c = context_;
-    grib_handle* hand     = grib_handle_of_accessor(this);
+    grib_handle* hand     = get_enclosing_handle();
     long index            = element_;
 
     if (*len < 1) {
@@ -185,7 +185,7 @@ int Element::unpack_double(double* val, size_t* len)
     size_t size             = 0;
     double* ar              = NULL;
     const grib_context* c   = context_;
-    const grib_handle* hand = grib_handle_of_accessor(this);
+    const grib_handle* hand = get_enclosing_handle();
     long index              = element_;
 
     if (*len < 1) {

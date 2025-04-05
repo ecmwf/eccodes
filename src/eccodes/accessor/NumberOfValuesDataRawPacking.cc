@@ -21,8 +21,8 @@ void NumberOfValuesDataRawPacking::init(const long v, grib_arguments* args)
     Gen::init(v, args);
     int n = 0;
 
-    values_    = args->get_name(grib_handle_of_accessor(this), n++);
-    precision_ = args->get_name(grib_handle_of_accessor(this), n++);
+    values_    = args->get_name(get_enclosing_handle(), n++);
+    precision_ = args->get_name(get_enclosing_handle(), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     length_ = 0;
 }
@@ -38,7 +38,7 @@ int NumberOfValuesDataRawPacking::unpack_long(long* val, size_t* len)
     adata = grib_find_accessor(grib_handle_of_accessor(this), values_);
     ECCODES_ASSERT(adata != NULL);
     byte_count = adata->byte_count();
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), precision_, &precision)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), precision_, &precision)) != GRIB_SUCCESS)
         return err;
 
     switch (precision) {

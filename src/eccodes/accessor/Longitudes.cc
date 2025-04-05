@@ -22,8 +22,8 @@ void Longitudes::init(const long l, grib_arguments* args)
     Double::init(l, args);
     int n = 0;
 
-    values_   = args->get_name(grib_handle_of_accessor(this), n++);
-    distinct_ = args->get_long(grib_handle_of_accessor(this), n++);
+    values_   = args->get_name(get_enclosing_handle(), n++);
+    distinct_ = args->get_long(get_enclosing_handle(), n++);
     save_     = 0;
     lons_     = 0;
 
@@ -84,7 +84,7 @@ int Longitudes::unpack_double(double* val, size_t* len)
 
 int Longitudes::value_count(long* len)
 {
-    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_handle* h  = get_enclosing_handle();
     double* val = NULL;
     int ret = 0;
     size_t size = 0;
