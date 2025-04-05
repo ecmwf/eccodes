@@ -418,7 +418,7 @@ int G1StepRange::pack_string(const char* val, size_t* len)
             return ret;
         }
 
-        p1_accessor = grib_find_accessor(grib_handle_of_accessor(this), p1_);
+        p1_accessor = grib_find_accessor(get_enclosing_handle(), p1_);
         if (p1_accessor == NULL) {
             grib_context_log(h->context, GRIB_LOG_ERROR, "unable to find accessor %s", p1_);
             return GRIB_NOT_FOUND;
@@ -426,7 +426,7 @@ int G1StepRange::pack_string(const char* val, size_t* len)
         off = p1_accessor->offset_ * 8;
         /* Note: here we assume the key P2 is one octet and immediately follows P1. Hence 16 bits */
 
-        ret = grib_encode_unsigned_long(grib_handle_of_accessor(this)->buffer->data, P1, &off, 16);
+        ret = grib_encode_unsigned_long(get_enclosing_handle()->buffer->data, P1, &off, 16);
         if (ret != 0)
             return ret;
 
@@ -466,7 +466,7 @@ int G1StepRange::pack_string(const char* val, size_t* len)
                 return ret;
             }
 
-            p1_accessor = grib_find_accessor(grib_handle_of_accessor(this), p1_);
+            p1_accessor = grib_find_accessor(get_enclosing_handle(), p1_);
             if (p1_accessor == NULL) {
                 grib_context_log(h->context, GRIB_LOG_ERROR, "unable to find accessor %s", p1_);
                 return GRIB_NOT_FOUND;
@@ -475,7 +475,7 @@ int G1StepRange::pack_string(const char* val, size_t* len)
             /* Note:  case for timeRangeIndicator of 10
              * We assume the key P2 is one octet and immediately follows P1. Hence 16 bits
              */
-            ret = grib_encode_unsigned_long(grib_handle_of_accessor(this)->buffer->data, P1, &off, 16);
+            ret = grib_encode_unsigned_long(get_enclosing_handle()->buffer->data, P1, &off, 16);
             if (ret != 0)
                 return ret;
 
@@ -537,7 +537,7 @@ int G1StepRange::pack_long(const long* val, size_t* len)
     int err            = 0;
 
     if (stepType_) {
-        err = grib_get_string_internal(grib_handle_of_accessor(this), stepType_, stepType, &stepTypeLen);
+        err = grib_get_string_internal(get_enclosing_handle(), stepType_, stepType, &stepTypeLen);
         if (err)
             return err;
     }

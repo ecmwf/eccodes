@@ -160,7 +160,7 @@ int DataG2SimplePackingWithPreprocessing::pack_double(const double* val, size_t*
     if (err != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_set_double_internal(grib_handle_of_accessor(this), pre_processing_parameter_, pre_processing_parameter)) != GRIB_SUCCESS)
+    if ((err = grib_set_double_internal(get_enclosing_handle(), pre_processing_parameter_, pre_processing_parameter)) != GRIB_SUCCESS)
         return err;
 
     if ((err = grib_set_long_internal(get_enclosing_handle(), number_of_values_, n_vals)) != GRIB_SUCCESS)

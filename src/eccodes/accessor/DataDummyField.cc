@@ -46,8 +46,8 @@ int DataDummyField::unpack_double(double* val, size_t* len)
     for (i = 0; i < n_vals; i++)
         val[i] = missing_value;
 
-    if (grib_find_accessor(grib_handle_of_accessor(this), bitmap_)) {
-        if ((err = grib_set_double_array_internal(grib_handle_of_accessor(this), bitmap_, val, n_vals)) != GRIB_SUCCESS)
+    if (grib_find_accessor(get_enclosing_handle(), bitmap_)) {
+        if ((err = grib_set_double_array_internal(get_enclosing_handle(), bitmap_, val, n_vals)) != GRIB_SUCCESS)
             return err;
     }
 

@@ -64,12 +64,12 @@ int DataG2SimplePacking::pack_double(const double* cval, size_t* len)
 
     if (units_factor_ &&
         (grib_get_double_internal(get_enclosing_handle(), units_factor_, &units_factor) == GRIB_SUCCESS)) {
-        grib_set_double_internal(grib_handle_of_accessor(this), units_factor_, 1.0);
+        grib_set_double_internal(get_enclosing_handle(), units_factor_, 1.0);
     }
 
     if (units_bias_ &&
         (grib_get_double_internal(get_enclosing_handle(), units_bias_, &units_bias) == GRIB_SUCCESS)) {
-        grib_set_double_internal(grib_handle_of_accessor(this), units_bias_, 0.0);
+        grib_set_double_internal(get_enclosing_handle(), units_bias_, 0.0);
     }
 
     if (units_factor != 1.0) {

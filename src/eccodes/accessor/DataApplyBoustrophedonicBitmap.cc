@@ -390,7 +390,7 @@ int DataApplyBoustrophedonicBitmap::pack_double(const double* val, size_t* len)
 long DataApplyBoustrophedonicBitmap::get_native_type()
 {
     // grib_accessor_data_apply_boustrophedonic_bitmap_t* self =  (DataApplyBoustrophedonicBitmap*)a;
-    // return GetNativeype(grib_find_accessor(grib_handle_of_accessor(this),coded_values_ ));
+    // return GetNativeype(grib_find_accessor(get_enclosing_handle(),coded_values_ ));
 
     return GRIB_TYPE_DOUBLE;
 }

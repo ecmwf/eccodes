@@ -74,12 +74,12 @@ int DataG2ShSimplePacking::pack_double(const double* val, size_t* len)
 
     dirty_ = 1;
 
-    if ((err = grib_set_double_internal(grib_handle_of_accessor(this), real_part_, *val)) != GRIB_SUCCESS)
+    if ((err = grib_set_double_internal(get_enclosing_handle(), real_part_, *val)) != GRIB_SUCCESS)
         return err;
 
     val++;
 
-    if ((err = grib_set_double_array_internal(grib_handle_of_accessor(this), coded_values_, val, coded_n_vals)) != GRIB_SUCCESS)
+    if ((err = grib_set_double_array_internal(get_enclosing_handle(), coded_values_, val, coded_n_vals)) != GRIB_SUCCESS)
         return err;
 
     *len = n_vals;

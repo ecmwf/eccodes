@@ -346,7 +346,7 @@ int DataApplyBitmap::unpack_float(float* val, size_t* len)
 long DataApplyBitmap::get_native_type()
 {
     // grib_accessor_data_apply_bitmap_t* self =  (DataApplyBitmap*)a;
-    // return GetNativeype(grib_find_accessor(grib_handle_of_accessor(this),coded_values_ ));
+    // return GetNativeype(grib_find_accessor(get_enclosing_handle(),coded_values_ ));
     return GRIB_TYPE_DOUBLE;
 }
 

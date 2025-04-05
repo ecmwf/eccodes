@@ -33,7 +33,7 @@ int LatLonvalues::unpack_double(double* val, size_t* len)
     double lat, lon, value;
     size_t size         = 0;
     long count          = 0;
-    grib_iterator* iter = grib_iterator_new(grib_handle_of_accessor(this), 0, &err);
+    grib_iterator* iter = grib_iterator_new(get_enclosing_handle(), 0, &err);
     if (err) {
         grib_iterator_delete(iter);
         grib_context_log(context_, GRIB_LOG_ERROR, "latlonvalues: Unable to create iterator");

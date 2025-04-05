@@ -41,8 +41,8 @@ int G1Section4Length::unpack_long(long* val, size_t* len)
     int ret           = 0;
     long total_length = 0, sec4_length = 0;
 
-    if ((ret = grib_get_g1_message_size(grib_handle_of_accessor(this),
-                                        grib_find_accessor(grib_handle_of_accessor(this), total_length_),
+    if ((ret = grib_get_g1_message_size(get_enclosing_handle(),
+                                        grib_find_accessor(get_enclosing_handle(), total_length_),
                                         this,
                                         &total_length,
                                         &sec4_length)) != GRIB_SUCCESS) {

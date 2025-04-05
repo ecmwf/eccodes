@@ -93,7 +93,7 @@ int Sprintf::unpack_string(char* val, size_t* len)
 
                 case 's':
                     tempname = args_->get_name(get_enclosing_handle(), carg++);
-                    if ((ret = grib_get_string_internal(grib_handle_of_accessor(this), tempname, sres, &replen)) != GRIB_SUCCESS)
+                    if ((ret = grib_get_string_internal(get_enclosing_handle(), tempname, sres, &replen)) != GRIB_SUCCESS)
                         return ret;
                     snprintf(tempBuffer, sizeof(tempBuffer), "%s%s", result, sres);
                     strcpy(result, tempBuffer);

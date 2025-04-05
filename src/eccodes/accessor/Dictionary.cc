@@ -176,7 +176,7 @@ int Dictionary::unpack_string(char* buffer, size_t* len)
     if (err)
         return err;
 
-    if ((err = grib_get_string_internal(grib_handle_of_accessor(this), key_, key, &size)) != GRIB_SUCCESS) {
+    if ((err = grib_get_string_internal(get_enclosing_handle(), key_, key, &size)) != GRIB_SUCCESS) {
         /* grib_trie_delete(dictionary); */
         return err;
     }

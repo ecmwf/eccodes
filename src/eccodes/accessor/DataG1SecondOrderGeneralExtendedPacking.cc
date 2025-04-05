@@ -112,7 +112,7 @@ int DataG1SecondOrderGeneralExtendedPacking::value_count(long* count)
 
     groupLengths = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfGroups);
     ngroups      = numberOfGroups;
-    err          = grib_get_long_array(grib_handle_of_accessor(this), groupLengths_, groupLengths, &ngroups);
+    err          = grib_get_long_array(get_enclosing_handle(), groupLengths_, groupLengths, &ngroups);
     if (err)
         return err;
 
@@ -142,7 +142,7 @@ int DataG1SecondOrderGeneralExtendedPacking::unpack_double_element(size_t idx, d
         return GRIB_INVALID_ARGUMENT;
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
-    err    = grib_get_double_array(grib_handle_of_accessor(this), "codedValues", values, &size);
+    err    = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
     if (err) {
         grib_context_free(context_, values);
         return err;
@@ -168,7 +168,7 @@ int DataG1SecondOrderGeneralExtendedPacking::unpack_double_element_set(const siz
     }
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
-    err    = grib_get_double_array(grib_handle_of_accessor(this), "codedValues", values, &size);
+    err    = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
     if (err) {
         grib_context_free(context_, values);
         return err;

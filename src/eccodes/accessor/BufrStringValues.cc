@@ -35,7 +35,7 @@ void BufrStringValues::dump(Dumper* dumper)
 grib_accessor* BufrStringValues::get_accessor()
 {
     if (!dataAccessor_) {
-        dataAccessor_ = grib_find_accessor(grib_handle_of_accessor(this), dataAccessorName_);
+        dataAccessor_ = grib_find_accessor(get_enclosing_handle(), dataAccessorName_);
     }
     return dataAccessor_;
 }

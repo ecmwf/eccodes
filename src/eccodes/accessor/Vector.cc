@@ -34,7 +34,7 @@ int Vector::unpack_double(double* val, size_t* len)
     int err     = 0;
     size_t size = 0;
     double* stat;
-    grib_accessor* va                  = (grib_accessor*)grib_find_accessor(grib_handle_of_accessor(this), vector_);
+    grib_accessor* va                  = (grib_accessor*)grib_find_accessor(get_enclosing_handle(), vector_);
     accessor::AbstractVector* v = (accessor::AbstractVector*)va;
 
     ECCODES_ASSERT(index_ >= 0);

@@ -333,7 +333,7 @@ int G2MarsLabeling::pack_string(const char* val, size_t* len)
             return GRIB_INTERNAL_ERROR;
     }
 
-    ret = grib_set_string(grib_handle_of_accessor(this), key, val, len);
+    ret = grib_set_string(get_enclosing_handle(), key, val, len);
     if (ret)
         return ret; /* failed */
 

@@ -30,7 +30,7 @@ int MarsStep::pack_string(const char* val, size_t* len)
     size_t stepTypeLen = 100;
     char buf[100]      = {0,};
     int ret;
-    grib_accessor* stepRangeAcc = grib_find_accessor(grib_handle_of_accessor(this), stepRange_);
+    grib_accessor* stepRangeAcc = grib_find_accessor(get_enclosing_handle(), stepRange_);
 
     if (!stepRangeAcc) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s not found", stepRange_);
@@ -55,7 +55,7 @@ int MarsStep::unpack_string(char* val, size_t* len)
     char* p       = NULL;
     size_t buflen = 100;
     long step;
-    grib_accessor* stepRangeAcc = grib_find_accessor(grib_handle_of_accessor(this), stepRange_);
+    grib_accessor* stepRangeAcc = grib_find_accessor(get_enclosing_handle(), stepRange_);
 
     if (!stepRangeAcc) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s not found", class_name_, stepRange_);
@@ -96,7 +96,7 @@ int MarsStep::pack_long(const long* val, size_t* len)
 
 int MarsStep::unpack_long(long* val, size_t* len)
 {
-    grib_accessor* stepRangeAcc = grib_find_accessor(grib_handle_of_accessor(this), stepRange_);
+    grib_accessor* stepRangeAcc = grib_find_accessor(get_enclosing_handle(), stepRange_);
 
     if (!stepRangeAcc)
         return GRIB_NOT_FOUND;

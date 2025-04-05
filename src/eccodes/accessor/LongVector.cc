@@ -25,7 +25,7 @@ void LongVector::init(const long l, grib_arguments* c)
     int n                                   = 0;
 
     vector_ = c->get_name(get_enclosing_handle(), n++);
-    va      = (grib_accessor*)grib_find_accessor(grib_handle_of_accessor(this), vector_);
+    va      = (grib_accessor*)grib_find_accessor(get_enclosing_handle(), vector_);
     v       = (AbstractLongVector*)va;
 
     index_ = c->get_long(get_enclosing_handle(), n++);
@@ -44,7 +44,7 @@ int LongVector::unpack_long(long* val, size_t* len)
     grib_accessor* va                       = NULL;
     AbstractLongVector* v = NULL;
 
-    va = (grib_accessor*)grib_find_accessor(grib_handle_of_accessor(this), vector_);
+    va = (grib_accessor*)grib_find_accessor(get_enclosing_handle(), vector_);
     v  = (AbstractLongVector*)va;
 
     /*TODO implement the dirty mechanism to avoid to unpack every time */
@@ -67,7 +67,7 @@ int LongVector::unpack_double(double* val, size_t* len)
     int err                                 = 0;
     grib_accessor* va                       = NULL;
     AbstractLongVector* v = NULL;
-    va                                      = (grib_accessor*)grib_find_accessor(grib_handle_of_accessor(this), vector_);
+    va                                      = (grib_accessor*)grib_find_accessor(get_enclosing_handle(), vector_);
     v                                       = (AbstractLongVector*)va;
 
     err = unpack_long(&lval, len);
@@ -83,7 +83,7 @@ int LongVector::pack_long(const long* val, size_t* len)
     grib_accessor* va                       = NULL;
     AbstractLongVector* v = NULL;
 
-    va = (grib_accessor*)grib_find_accessor(grib_handle_of_accessor(this), vector_);
+    va = (grib_accessor*)grib_find_accessor(get_enclosing_handle(), vector_);
     v  = (AbstractLongVector*)va;
 
     v->pack_index_ = index_;

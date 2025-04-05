@@ -35,7 +35,7 @@ int NumberOfValuesDataRawPacking::unpack_long(long* val, size_t* len)
     int bytes            = 0;
     long byte_count      = 0;
 
-    adata = grib_find_accessor(grib_handle_of_accessor(this), values_);
+    adata = grib_find_accessor(get_enclosing_handle(), values_);
     ECCODES_ASSERT(adata != NULL);
     byte_count = adata->byte_count();
     if ((err = grib_get_long_internal(get_enclosing_handle(), precision_, &precision)) != GRIB_SUCCESS)

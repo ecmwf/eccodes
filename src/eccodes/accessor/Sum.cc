@@ -46,7 +46,7 @@ int Sum::unpack_long(long* val, size_t* len)
     if (!values)
         return GRIB_OUT_OF_MEMORY;
 
-    grib_get_long_array(grib_handle_of_accessor(this), values_, values, &size);
+    grib_get_long_array(get_enclosing_handle(), values_, values, &size);
 
     *val = 0;
     for (i = 0; i < size; i++)
@@ -78,7 +78,7 @@ int Sum::unpack_double(double* val, size_t* len)
     if (!values)
         return GRIB_OUT_OF_MEMORY;
 
-    ret = grib_get_double_array(grib_handle_of_accessor(this), values_, values, &size);
+    ret = grib_get_double_array(get_enclosing_handle(), values_, values, &size);
     if (ret) {
         grib_context_free(context_, values);
         return ret;

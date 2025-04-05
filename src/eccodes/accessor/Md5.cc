@@ -26,7 +26,7 @@ void Md5::init(const long len, grib_arguments* arg)
     grib_context* context     = context_;
 
     offset_key_    = arg->get_name(get_enclosing_handle(), n++);
-    length_key_    = arg->get_expression(grib_handle_of_accessor(this), n++);
+    length_key_    = arg->get_expression(get_enclosing_handle(), n++);
     blocklist_ = NULL;
     while ((b = (char*)arg->get_name(get_enclosing_handle(), n++)) != NULL) {
         if (!blocklist_) {
@@ -103,7 +103,7 @@ int Md5::unpack_string(char* v, size_t* len)
     if ((ret = length_key_->evaluate_long(get_enclosing_handle(), &length)) != GRIB_SUCCESS)
         return ret;
     mess = (unsigned char*)grib_context_malloc(context_, length);
-    memcpy(mess, grib_handle_of_accessor(this)->buffer->data + offset, length);
+    memcpy(mess, get_enclosing_handle()->buffer->data + offset, length);
     mess_len = length;
     const unsigned char* pEnd = mess + length - 1;
 
@@ -114,7 +114,7 @@ int Md5::unpack_string(char* v, size_t* len)
     if (blocklist_)
         blocklist = blocklist_;
     while (blocklist && blocklist->value) {
-        const grib_accessor* b = grib_find_accessor(grib_handle_of_accessor(this), blocklist->value);
+        const grib_accessor* b = grib_find_accessor(get_enclosing_handle(), blocklist->value);
         if (!b) {
             grib_context_free(context_, mess);
             return GRIB_NOT_FOUND;

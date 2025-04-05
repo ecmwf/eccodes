@@ -29,7 +29,7 @@ void BufrdcExpandedDescriptors::init(const long len, grib_arguments* args)
 grib_accessor* BufrdcExpandedDescriptors::get_accessor()
 {
     if (!expandedDescriptorsAccessor_) {
-        expandedDescriptorsAccessor_ = grib_find_accessor(grib_handle_of_accessor(this), expandedDescriptors_);
+        expandedDescriptorsAccessor_ = grib_find_accessor(get_enclosing_handle(), expandedDescriptors_);
     }
     return expandedDescriptorsAccessor_;
 }

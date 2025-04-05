@@ -95,7 +95,7 @@ int DataApplyBoustrophedonic::unpack(T* val, size_t* len)
     if (grib_get_size(get_enclosing_handle(), pl_, &plSize) == GRIB_SUCCESS) {
         ECCODES_ASSERT(plSize == numberOfRows);
         pl  = (long*)grib_context_malloc_clear(context_, sizeof(long) * plSize);
-        ret = grib_get_long_array_internal(grib_handle_of_accessor(this), pl_, pl, &plSize);
+        ret = grib_get_long_array_internal(get_enclosing_handle(), pl_, pl, &plSize);
         if (ret)
             return ret;
 
@@ -183,7 +183,7 @@ int DataApplyBoustrophedonic::unpack_double_element_set(const size_t* index_arra
     }
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
-    err    = grib_get_double_array(grib_handle_of_accessor(this), "codedValues", values, &size);
+    err    = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
     if (err) {
         grib_context_free(context_, values);
         return err;
@@ -233,7 +233,7 @@ int DataApplyBoustrophedonic::pack_double(const double* val, size_t* len)
     if (grib_get_size(get_enclosing_handle(), pl_, &plSize) == GRIB_SUCCESS) {
         ECCODES_ASSERT(plSize == numberOfRows);
         pl  = (long*)grib_context_malloc_clear(context_, sizeof(long) * plSize);
-        ret = grib_get_long_array_internal(grib_handle_of_accessor(this), pl_, pl, &plSize);
+        ret = grib_get_long_array_internal(get_enclosing_handle(), pl_, pl, &plSize);
         if (ret)
             return ret;
 
@@ -267,7 +267,7 @@ int DataApplyBoustrophedonic::pack_double(const double* val, size_t* len)
             }
         }
     }
-    ret = grib_set_double_array_internal(grib_handle_of_accessor(this), values_, values, valuesSize);
+    ret = grib_set_double_array_internal(get_enclosing_handle(), values_, values, valuesSize);
     if (ret)
         return ret;
 

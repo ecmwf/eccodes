@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void Group::init(const long len, grib_arguments* arg)
 {
     Gen::init(len, arg);
-    const grib_buffer* buffer = grib_handle_of_accessor(this)->buffer;
+    const grib_buffer* buffer = get_enclosing_handle()->buffer;
 
     size_t i = 0;
     unsigned char* v;

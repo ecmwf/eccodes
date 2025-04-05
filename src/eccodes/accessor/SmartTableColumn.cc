@@ -54,7 +54,7 @@ int SmartTableColumn::unpack_string_array(char** buffer, size_t* len)
     char tmp[1024] = {0,};
     int i = 0;
 
-    tableAccessor = (SmartTable*)grib_find_accessor(grib_handle_of_accessor(this), smartTable_);
+    tableAccessor = (SmartTable*)grib_find_accessor(get_enclosing_handle(), smartTable_);
     if (!tableAccessor) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "Unable to find accessor %s", smartTable_);
@@ -110,7 +110,7 @@ int SmartTableColumn::unpack_long(long* val, size_t* len)
     for (i = 0; i < *len; i++)
         val[i] = GRIB_MISSING_LONG;
 
-    tableAccessor = (SmartTable*)grib_find_accessor(grib_handle_of_accessor(this), smartTable_);
+    tableAccessor = (SmartTable*)grib_find_accessor(get_enclosing_handle(), smartTable_);
     if (!tableAccessor) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "Unable to find accessor %s", smartTable_);

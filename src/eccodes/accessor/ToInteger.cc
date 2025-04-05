@@ -46,7 +46,7 @@ size_t ToInteger::string_length()
     if (str_length_)
         return str_length_;
 
-    grib_get_string_length(grib_handle_of_accessor(this), key_, &size);
+    grib_get_string_length(get_enclosing_handle(), key_, &size);
     return size;
 }
 

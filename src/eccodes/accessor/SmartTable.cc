@@ -351,7 +351,7 @@ int SmartTable::get_table_codes()
 
     v = (long*)grib_context_malloc_clear(context_, size * sizeof(long));
 
-    grib_get_long_array(grib_handle_of_accessor(this), values_, v, &size);
+    grib_get_long_array(get_enclosing_handle(), values_, v, &size);
 
     count = 0;
     for (i = 0; i < size; i++) {

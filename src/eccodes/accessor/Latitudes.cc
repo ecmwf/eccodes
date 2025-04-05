@@ -93,7 +93,7 @@ int Latitudes::unpack_double(double* val, size_t* len)
     }
 
     // ECC-1525 Performance: We do not need the values to be decoded
-    iter = grib_iterator_new(grib_handle_of_accessor(this), GRIB_GEOITERATOR_NO_VALUES, &ret);
+    iter = grib_iterator_new(get_enclosing_handle(), GRIB_GEOITERATOR_NO_VALUES, &ret);
     if (ret != GRIB_SUCCESS) {
         grib_iterator_delete(iter);
         grib_context_log(context_, GRIB_LOG_ERROR, "latitudes: Unable to create iterator");

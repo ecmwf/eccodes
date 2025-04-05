@@ -113,9 +113,9 @@ int DataG1SecondaryBitmap::pack_double(const double* val, size_t* len)
     /*printf("QQQQQQQ %ld %ld second=%ld\n",primary_len,on,m);*/
     ECCODES_ASSERT(k == primary_len);
 
-    err = grib_set_double_array_internal(grib_handle_of_accessor(this), primary_bitmap_, primary_bitmap, k);
+    err = grib_set_double_array_internal(get_enclosing_handle(), primary_bitmap_, primary_bitmap, k);
     if (err == GRIB_SUCCESS)
-        err = grib_set_double_array_internal(grib_handle_of_accessor(this), secondary_bitmap_, secondary_bitmap, m);
+        err = grib_set_double_array_internal(get_enclosing_handle(), secondary_bitmap_, secondary_bitmap, m);
 
     grib_context_free(context_, primary_bitmap);
     grib_context_free(context_, secondary_bitmap);

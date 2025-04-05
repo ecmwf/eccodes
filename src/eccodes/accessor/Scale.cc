@@ -119,7 +119,7 @@ int Scale::pack_double(const double* val, size_t* len)
 
 int Scale::is_missing()
 {
-    grib_accessor* av = grib_find_accessor(grib_handle_of_accessor(this), value_);
+    grib_accessor* av = grib_find_accessor(get_enclosing_handle(), value_);
 
     if (!av)
         return GRIB_NOT_FOUND;
