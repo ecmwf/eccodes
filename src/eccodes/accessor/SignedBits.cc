@@ -85,7 +85,7 @@ int SignedBits::unpack_long(long* val, size_t* len)
     }
 
     for (i = 0; i < rlen; i++)
-        val[i] = grib_decode_signed_longb(grib_handle_of_accessor(this)->buffer->data, &pos, numberOfBits);
+        val[i] = grib_decode_signed_longb(get_enclosing_handle()->buffer->data, &pos, numberOfBits);
 
     *len = rlen;
 

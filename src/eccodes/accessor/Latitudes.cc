@@ -156,7 +156,7 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     grib_context* c = a->context_;
 
     // Performance: We do not need the values to be decoded
-    grib_iterator* iter = grib_iterator_new(grib_handle_of_accessor(a), GRIB_GEOITERATOR_NO_VALUES, &ret);
+    grib_iterator* iter = grib_iterator_new(a->get_enclosing_handle(), GRIB_GEOITERATOR_NO_VALUES, &ret);
     if (ret != GRIB_SUCCESS) {
         grib_iterator_delete(iter);
         grib_context_log(c, GRIB_LOG_ERROR, "latitudes: Unable to create iterator");
@@ -174,7 +174,7 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     v = *val;
 
     // See which direction the latitudes are to be scanned
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), "jScansPositively", &jScansPositively)))
+    if ((ret = grib_get_long_internal(a->get_enclosing_handle(), "jScansPositively", &jScansPositively)))
         return ret;
     if (jScansPositively) {
         if (!is_sorted_ascending(v, size)) {

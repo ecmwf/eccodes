@@ -89,7 +89,7 @@ int Raw::unpack_bytes(unsigned char* buffer, size_t* len)
     }
     *len = length_;
 
-    memcpy(buffer, grib_handle_of_accessor(this)->buffer->data + offset_, *len);
+    memcpy(buffer, get_enclosing_handle()->buffer->data + offset_, *len);
 
     return GRIB_SUCCESS;
 }

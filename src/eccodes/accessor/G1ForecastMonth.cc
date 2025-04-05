@@ -63,8 +63,8 @@ static int calculate_fcmonth(grib_accessor* a, long verification_yearmonth, long
 
 static int unpack_long_edition2(grib_accessor* a, long* val, size_t* len)
 {
-    int err                               = 0;
-    grib_handle* h                        = grib_handle_of_accessor(a);
+    int err = 0;
+    grib_handle* h = a->get_enclosing_handle();
     long dataDate, verification_yearmonth;
     long year, month, day, hour, minute, second;
     long year2, month2, day2, hour2, minute2, second2;

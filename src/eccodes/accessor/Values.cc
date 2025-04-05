@@ -40,7 +40,7 @@ long Values::init_length()
     /* When reparsing */
     if (offsetdata < offsetsection) {
         /* printf("init_length offsetdata < offsetsection=0\n"); */
-        ECCODES_ASSERT(grib_handle_of_accessor(this)->loader);
+        ECCODES_ASSERT(this->get_enclosing_handle()->loader);
         return 0;
     }
 

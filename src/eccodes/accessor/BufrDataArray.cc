@@ -2033,7 +2033,7 @@ static grib_accessor* get_element_from_bitmap(bitmap_s* bitmap)
 static void grib_convert_to_attribute(grib_accessor* a)
 {
     if (a->h_ == NULL && a->parent_ != NULL) {
-        a->h_      = grib_handle_of_accessor(a);
+        a->h_      = a->get_enclosing_handle();
         a->parent_ = NULL;
     }
 }
@@ -3198,7 +3198,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
     }
     else {
         bitsToEndData_ = buffer->ulength * 8;
-        grib_set_bytes(grib_handle_of_accessor(this), bufrDataEncodedName_, buffer->data, &(buffer->ulength));
+        grib_set_bytes(get_enclosing_handle(), bufrDataEncodedName_, buffer->data, &(buffer->ulength));
         grib_buffer_delete(c, buffer);
         if (numberOfSubsets_ != grib_iarray_used_size(iss_list_)) {
             err = grib_set_long(h, numberOfSubsetsName_, grib_iarray_used_size(iss_list_));

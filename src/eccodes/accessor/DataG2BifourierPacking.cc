@@ -316,7 +316,7 @@ static double laplam(bif_trunc_t* bt, const double val[])
 
 static void free_bif_trunc(bif_trunc_t* bt, grib_accessor* a)
 {
-    grib_handle* gh = grib_handle_of_accessor(a);
+    grib_handle* gh = a->get_enclosing_handle();
     if (bt == NULL)
         return;
     if (bt->itruncation_bif != NULL)

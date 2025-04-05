@@ -22,7 +22,7 @@ void DivDouble::init(const long l, grib_arguments* c)
     int n = 0;
 
     val_     = c->get_name(get_enclosing_handle(), n++);
-    divisor_ = c->get_double(grib_handle_of_accessor(this), n++);
+    divisor_ = c->get_double(get_enclosing_handle(), n++);
 }
 
 int DivDouble::unpack_double(double* val, size_t* len)

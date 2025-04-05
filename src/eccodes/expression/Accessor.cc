@@ -88,7 +88,7 @@ void Accessor::destroy(grib_context* c)
 
 void Accessor::add_dependency(grib_accessor* observer)
 {
-    grib_accessor* observed = grib_find_accessor(grib_handle_of_accessor(observer), name_);
+    grib_accessor* observed = grib_find_accessor(observer->get_enclosing_handle(), name_);
 
     if (!observed) {
         /* grib_context_log(observer->context, GRIB_LOG_ERROR, */

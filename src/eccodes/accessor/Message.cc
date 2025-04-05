@@ -21,7 +21,7 @@ void Message::init(const long len, grib_arguments* arg)
     Bytes::init(len, arg);
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    length_ = grib_handle_of_accessor(this)->buffer->ulength - len - offset_;
+    length_ = this->get_enclosing_handle()->buffer->ulength - len - offset_;
 }
 
 // static int compare(grib_accessor* a, grib_accessor* b)

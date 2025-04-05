@@ -62,7 +62,7 @@ int Sprintf::unpack_string(char* val, size_t* len)
                     if ((ret = grib_get_long_internal(get_enclosing_handle(), tempname, &ires)) != GRIB_SUCCESS)
                         return ret;
                     /* Bug GRIB-56: Check to see if the key is missing */
-                    is_missing = grib_is_missing(grib_handle_of_accessor(this), tempname, &ret);
+                    is_missing = grib_is_missing(get_enclosing_handle(), tempname, &ret);
                     if (ret != GRIB_SUCCESS)
                         return ret;
                     if (is_missing) {

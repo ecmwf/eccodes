@@ -400,7 +400,7 @@ long G2MarsLabeling::get_native_type()
             return GRIB_INTERNAL_ERROR;
     }
 
-    ret = grib_get_native_type(grib_handle_of_accessor(this), key, &type);
+    ret = grib_get_native_type(get_enclosing_handle(), key, &type);
     if (ret)
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "unable to get native type for %s", key);

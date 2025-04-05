@@ -76,7 +76,7 @@ int UnsignedBits::unpack_long(long* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    grib_decode_long_array(grib_handle_of_accessor(this)->buffer->data, &pos, numberOfBits, rlen, val);
+    grib_decode_long_array(this->get_enclosing_handle()->buffer->data, &pos, numberOfBits, rlen, val);
 
     *len = rlen;
 

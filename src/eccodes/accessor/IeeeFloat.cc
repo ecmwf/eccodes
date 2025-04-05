@@ -91,7 +91,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     int err           = 0;
     long i            = 0;
     long bitp         = a->offset_ * 8;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_handle* hand = a->get_enclosing_handle();
 
     err = a->value_count(&rlen);
     if (err)

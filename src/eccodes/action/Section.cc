@@ -18,7 +18,7 @@ namespace eccodes::action
 //     if(s) ECCODES_ASSERT(s->h == h);
 //     while(a)
 //     {
-//       ECCODES_ASSERT(grib_handle_of_accessor(a) == h);
+//       ECCODES_ASSERT(a->get_enclosing_handle() == h);
 //       check_sections(a->sub_section_,h);
 //       a = a->next;
 //     }
@@ -30,7 +30,7 @@ int Section::notify_change(grib_accessor* notified,
     grib_loader loader = { 0, 0, 0, 0, 0 };
 
     grib_section* old_section = NULL;
-    grib_handle* h            = grib_handle_of_accessor(notified);
+    grib_handle* h            = notified->get_enclosing_handle();
     size_t len                = 0;
     size_t size               = 0;
     int err                   = 0;
