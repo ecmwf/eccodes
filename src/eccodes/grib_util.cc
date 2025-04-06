@@ -294,6 +294,8 @@ static grib_trie* mars_param_list = NULL;
 
 grib_string_list* grib_util_get_param_id(const char* mars_param)
 {
+    fprintf(stderr, "ECCODES WARNING :  The %s function is deprecated and will be removed in a future release.\n", __func__);
+
     if (!mars_param_list && (mars_param_list = init_list("mars_param.table")) == NULL)
         return NULL;
     return (grib_string_list*)grib_trie_get(mars_param_list, mars_param);
@@ -301,6 +303,8 @@ grib_string_list* grib_util_get_param_id(const char* mars_param)
 
 grib_string_list* grib_util_get_mars_param(const char* param_id)
 {
+    fprintf(stderr, "ECCODES WARNING :  The %s function is deprecated and will be removed in a future release.\n", __func__);
+
     if (!param_id_list && (param_id_list = init_list("param_id.table")) == NULL)
         return NULL;
     return (grib_string_list*)grib_trie_get(param_id_list, param_id);
