@@ -16687,11 +16687,12 @@
 	 parameterCategory = 15 ;
 	 parameterNumber = 4 ;
 	}
-#Precipitation
-'Precipitation' = {
+#Precipitation from radar
+'Precipitation from radar' = {
 	 discipline = 0 ;
 	 parameterCategory = 15 ;
-	 parameterNumber = 5 ;
+	 parameterNumber = 17 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Air concentration of Caesium 137
 'Air concentration of Caesium 137' = {
@@ -18002,6 +18003,37 @@
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 22 ;
+	}
+#Precipitation rate from radar
+'Precipitation rate from radar' = {
+	 discipline = 0 ;
+	 parameterCategory = 15 ;
+	 parameterNumber = 17 ;
+	}
+#Radar data quality index
+'Radar data quality index' = {
+	 discipline = 0 ;
+	 parameterCategory = 15 ;
+	 parameterNumber = 18 ;
+	}
+#Radar data quality flag
+'Radar data quality flag' = {
+	 discipline = 0 ;
+	 parameterCategory = 15 ;
+	 parameterNumber = 19 ;
+	}
+#Precipitation rate from forecasted radar imagery
+'Precipitation rate from forecasted radar imagery' = {
+	 discipline = 0 ;
+	 parameterCategory = 16 ;
+	 parameterNumber = 6 ;
+	}
+#Precipitation from forecasted radar imagery
+'Precipitation from forecasted radar imagery' = {
+	 discipline = 0 ;
+	 parameterCategory = 16 ;
+	 parameterNumber = 6 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Universal thermal climate index
 'Universal thermal climate index' = {

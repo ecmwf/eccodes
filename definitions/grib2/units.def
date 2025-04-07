@@ -16687,11 +16687,12 @@
 	 parameterCategory = 15 ;
 	 parameterNumber = 4 ;
 	}
-#Precipitation
+#Precipitation from radar
 'kg m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 15 ;
-	 parameterNumber = 5 ;
+	 parameterNumber = 17 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Air concentration of Caesium 137
 'Bq m**-3' = {
@@ -18002,6 +18003,37 @@
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 22 ;
+	}
+#Precipitation rate from radar
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 15 ;
+	 parameterNumber = 17 ;
+	}
+#Radar data quality index
+'Proportion' = {
+	 discipline = 0 ;
+	 parameterCategory = 15 ;
+	 parameterNumber = 18 ;
+	}
+#Radar data quality flag
+'(Code table 4.106)' = {
+	 discipline = 0 ;
+	 parameterCategory = 15 ;
+	 parameterNumber = 19 ;
+	}
+#Precipitation rate from forecasted radar imagery
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 16 ;
+	 parameterNumber = 6 ;
+	}
+#Precipitation from forecasted radar imagery
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 16 ;
+	 parameterNumber = 6 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Universal thermal climate index
 'K' = {
