@@ -19033,6 +19033,12 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
+#Sea surface downward short-wave radiation flux
+'rsdos' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 22 ;
+	}
 #Sea water practical salinity
 'so' = {
 	 discipline = 10 ;
@@ -19192,6 +19198,30 @@
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Sea water upward mass transport
+'mtup' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 56 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Sea water age since surface contact
+'agessc' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 57 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Sea water downward short-wave radiation flux
+'rsdo' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 58 ;
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	}
@@ -20192,6 +20222,13 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean sea surface downward short-wave radiation flux
+'avg_rsdos' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean sea water practical salinity
 'avg_so' = {
 	 discipline = 10 ;
@@ -20370,6 +20407,33 @@
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea water upward mass transport
+'avg_mtup' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 56 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea water age since surface contact
+'avg_agessc' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 57 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea water downward short-wave radiation flux
+'avg_rsdo' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 58 ;
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfStatisticalProcessing = 0 ;
