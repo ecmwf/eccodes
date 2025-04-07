@@ -3852,6 +3852,12 @@
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
+#Injection height (from IS4FIRES)
+'210060' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 40 ;
+	}
 #Particulate matter d <= 1 um
 '210072' = {
 	 discipline = 0 ;
@@ -3890,6 +3896,18 @@
 	 aerosolType = 62026 ;
 	 scaledValueOfSecondSize = missing() ;
 	 is_aerosol = 1 ;
+	}
+#Mean height of maximum injection
+'210119' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 39 ;
+	}
+#Plume top height above surface
+'210120' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 42 ;
 	}
 #Volcanic sulfur dioxide mass mixing ratio
 '210170' = {
@@ -3934,6 +3952,12 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 59 ;
 	 typeOfGeneratingProcess = 9 ;
+	}
+#Plume bottom height above surface
+'210242' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 41 ;
 	}
 #Ammonium aerosol mass mixing ratio
 '210249' = {
@@ -4908,6 +4932,18 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 24 ;
 	 typeOfFirstFixedSurface = 1 ;
+	}
+#UV biologically effective dose
+'214002' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 9 ;
+	}
+#UV biologically effective dose clear-sky
+'214003' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 10 ;
 	}
 #Dry deposition of ammonium aerosol
 '215206' = {
@@ -7323,6 +7359,18 @@
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 35 ;
+	}
+#Live fuel moisture content in low vegetation
+'232016' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 37 ;
+	}
+#Live fuel moisture content in high vegetation
+'232017' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 38 ;
 	}
 #Time-integrated total column vertically-integrated eastward geopotential flux
 '233000' = {
@@ -17957,6 +18005,18 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 27 ;
 	}
+#Excess heat factor
+'261024' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 11 ;
+	}
+#Excess cold factor
+'261025' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 12 ;
+	}
 #Sea ice thickness
 '262000' = {
 	 discipline = 10 ;
@@ -20711,13 +20771,13 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 104 ;
 	}
-#Aerosol backscatter from top of atmosphere
+#Attenuated aerosol backscatter from top of atmosphere
 '460000' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 107 ;
 	}
-#Aerosol backscatter from ground
+#Attenuated aerosol backscatter from ground
 '461000' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -20812,6 +20872,12 @@
 	 parameterNumber = 1 ;
 	 typeOfFirstFixedSurface = 7 ;
 	 typeOfSecondFixedSurface = 36 ;
+	}
+#Aerosol unattenuated backscatter coefficient
+'475000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 113 ;
 	}
 #Pressure tendency
 '3003' = {
