@@ -9975,6 +9975,50 @@
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean river storage of water
+'avg_rivsto' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 11 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean floodplain storage of water
+'avg_fldsto' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 12 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean river depth
+'avg_rivdph' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 16 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 162 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean river outflow of water
+'avg_rivout' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 17 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean floodplain outflow of water
+'avg_fldout' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 18 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean floodpath outflow of water
+'avg_pthflw' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 19 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-integrated land surface heat net flux
 'acc_lshnf' = {
 	 discipline = 2 ;

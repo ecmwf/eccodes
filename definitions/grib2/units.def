@@ -9975,6 +9975,50 @@
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean river storage of water
+'m**3' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 11 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean floodplain storage of water
+'m**3' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 12 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean river depth
+'m' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 16 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 162 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean river outflow of water
+'m**3 s**-1' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 17 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean floodplain outflow of water
+'m**3 s**-1' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 18 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean floodpath outflow of water
+'m**3 s**-1' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 19 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-integrated land surface heat net flux
 'J m**-2' = {
 	 discipline = 2 ;
