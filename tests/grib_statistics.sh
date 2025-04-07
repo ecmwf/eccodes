@@ -79,8 +79,9 @@ stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $input`
 # grid_complex_spatial_differencing with bpv=0
 # Create a data section similar to the attached file dswrf-1.grib2
 cat >$tempFilt<<EOF
-    set packingType='grid_complex_spatial_differencing_2';
+    set packingType='grid_complex_spatial_differencing';
     set numberOfGroupsOfDataValues=0;
+    set orderOfSpatialDifferencing=2;
     set primaryMissingValueSubstitute=0;
     set referenceForGroupWidths = 64;
     set numberOfBitsUsedForTheGroupWidths = 4;
@@ -92,7 +93,7 @@ cat >$tempFilt<<EOF
 EOF
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_filter -o $temp1 $tempFilt $input
-grib_check_key_equals $temp1 packingType,isConstant 'grid_complex_spatial_differencing_2 1'
+grib_check_key_equals $temp1 packingType,isConstant 'grid_complex_spatial_differencing 1'
 stats1=`${tools_dir}/grib_get -M -F%.0f -n statistics $input`
 stats2=`${tools_dir}/grib_get -M -F%.0f -n statistics $temp1`
 [ "$stats1" = "$stats2" ]

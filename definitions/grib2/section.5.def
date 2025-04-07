@@ -27,8 +27,7 @@ concept packingType (unknown) {
   "spectral_simple"                      = { dataRepresentationTemplateNumber = 50; spectralType=1; spectralMode=1; }
   "grid_simple_matrix"                   = { dataRepresentationTemplateNumber = 1; }
   "grid_complex"                         = { dataRepresentationTemplateNumber = 2; }
-  "grid_complex_spatial_differencing"    = { dataRepresentationTemplateNumber = 3; orderOfSpatialDifferencing = 1; }
-  "grid_complex_spatial_differencing_2"  = { dataRepresentationTemplateNumber = 3; orderOfSpatialDifferencing = 2; }
+  "grid_complex_spatial_differencing"    = { dataRepresentationTemplateNumber = 3; }
   "grid_jpeg"                            = { dataRepresentationTemplateNumber = 40000; } # experimental
   "grid_jpeg"                            = { dataRepresentationTemplateNumber = 40; }
   "grid_png"                             = { dataRepresentationTemplateNumber = 40010; } # experimental
