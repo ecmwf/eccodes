@@ -1,6 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-# TEMPLATE 4.153, Individual ensemble reforecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for atmospheric chemical constituents
+# TEMPLATE 4.153, Individual large ensemble reforecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for atmospheric chemical constituents
 
 include "grib2/templates/template.4.parameter.def"
 include "grib2/templates/template.4.chemical.def"
