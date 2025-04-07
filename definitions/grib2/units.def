@@ -1353,6 +1353,30 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 73 ;
 	}
+#Benjamin-Feir index 2D
+'Numeric' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 99 ;
+	}
+#Crest-trough correlation
+'Numeric' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 100 ;
+	}
+#X component of the wave radiative stress to sea ice
+'N m**-2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 101 ;
+	}
+#Y component of the wave radiative stress to sea ice
+'N m**-2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 102 ;
+	}
 #Wave Spectral Skewness
 'Numeric' = {
 	 discipline = 10 ;
@@ -1678,6 +1702,34 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 73 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean Benjamin-Feir index 2D
+'Numeric' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 99 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean crest-trough correlation
+'Numeric' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 100 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean X component of the wave radiative stress to sea ice
+'N m**-2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 101 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean Y component of the wave radiative stress to sea ice
+'N m**-2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 102 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean wave Spectral Skewness
@@ -2229,6 +2281,34 @@
 	 parameterNumber = 73 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum Benjamin-Feir index 2D
+'Numeric' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 99 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum crest-trough correlation
+'Numeric' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 100 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum X component of the wave radiative stress to sea ice
+'N m**-2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 101 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum Y component of the wave radiative stress to sea ice
+'N m**-2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 102 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-maximum wave Spectral Skewness
 'Numeric' = {
 	 discipline = 10 ;
@@ -2778,6 +2858,34 @@
 	 parameterNumber = 73 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum Benjamin-Feir index 2D
+'Numeric' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 99 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum crest-trough correlation
+'Numeric' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 100 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum X component of the wave radiative stress to sea ice
+'N m**-2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 101 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum Y component of the wave radiative stress to sea ice
+'N m**-2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 102 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-minimum wave Spectral Skewness
 'Numeric' = {
 	 discipline = 10 ;
@@ -3325,6 +3433,34 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 73 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation Benjamin-Feir index 2D
+'Numeric' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 99 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation crest-trough correlation
+'Numeric' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 100 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation X component of the wave radiative stress to sea ice
+'N m**-2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 101 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation Y component of the wave radiative stress to sea ice
+'N m**-2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 102 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation wave Spectral Skewness
@@ -18281,6 +18417,12 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 8 ;
 	}
+#Sea ice breakup memory
+'Numeric' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 30 ;
+	}
 #Sea surface practical salinity
 'g kg**-1' = {
 	 discipline = 10 ;
@@ -19382,6 +19524,13 @@
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea ice breakup memory
+'Numeric' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 30 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean sea surface practical salinity
