@@ -10019,6 +10019,14 @@
 	 parameterNumber = 19 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean surface diffuse short-wave radiation flux, clear sky
+'235404' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 63 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-integrated land surface heat net flux
 '236386' = {
 	 discipline = 2 ;
@@ -11917,6 +11925,14 @@
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 27615 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-mean surface diffuse short-wave radiation flux, clear sky
+'237404' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 63 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-minimum temperature tendency due to short-wave radiation
@@ -13831,6 +13847,14 @@
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-mean surface diffuse short-wave radiation flux, clear sky
+'238404' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 63 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-standard-deviation temperature tendency due to short-wave radiation
 '239001' = {
 	 discipline = 0 ;
@@ -15742,6 +15766,14 @@
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 27615 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-mean surface diffuse short-wave radiation flux, clear sky
+'239404' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 63 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Cross sectional area of flow in channel
@@ -18078,6 +18110,13 @@
 	 parameterCategory = 16 ;
 	 parameterNumber = 6 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#Surface diffuse short-wave radiation flux, clear sky
+'260694' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 63 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Universal thermal climate index
 '261001' = {
