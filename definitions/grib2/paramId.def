@@ -7400,6 +7400,60 @@
 	 scaledValueOfFirstFixedSurface = 27465 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
+#Thunderstorm hazard index
+'231500' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 3 ;
+	}
+#Surface water flooding hazard index
+'231501' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 12 ;
+	}
+#Polluted air hazard index
+'231502' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 18 ;
+	}
+#Storm surge hazard index
+'231503' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 27 ;
+	}
+#Cold wave hazard index
+'231504' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 40 ;
+	}
+#Frost (hoar frost) hazard index
+'231505' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 43 ;
+	}
+#Heatwave hazard index
+'231506' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 47 ;
+	}
+#Wind hazard index
+'231507' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 60 ;
+	}
+#Wildfires hazard index
+'231508' = {
+	 discipline = 20 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 13 ;
+	}
 #Burned area
 '232000' = {
 	 discipline = 2 ;
