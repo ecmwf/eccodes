@@ -6,8 +6,8 @@ grib_errors.cc : grib_errors.txt errors.pl
 	cmp -s grib_errors.cc grib_errors.cc.new || (cp grib_errors.cc.new grib_errors.cc)
 	cmp -s grib_api.h grib_api.h.new       || (cp grib_api.h.new grib_api.h)
 	cmp -s eccodes.h eccodes.h.new         || (mv eccodes.h.new eccodes.h)
-	cmp -s ../fortran/grib_api_constants.h grib_api_constants.h.new || (mv grib_api_constants.h.new ../fortran/grib_api_constants.h)
-	cmp -s ../fortran/eccodes_constants.h  eccodes_constants.h.new  || (mv eccodes_constants.h.new  ../fortran/eccodes_constants.h)
+	cmp -s ../../fortran/grib_api_constants.h grib_api_constants.h.new || (mv grib_api_constants.h.new ../../fortran/grib_api_constants.h)
+	cmp -s ../../fortran/eccodes_constants.h  eccodes_constants.h.new  || (mv eccodes_constants.h.new  ../../fortran/eccodes_constants.h)
 
 
 proto:;-chmod +w eccodes_prototypes.h; mkptypes -A $(libeccodes_la_prototypes) $(libeccodes_extra_prototypes) > temp && mv temp eccodes_prototypes.h;rm -f temp
