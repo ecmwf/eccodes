@@ -1,49 +1,49 @@
-'g'={gridName="N16";}
-'g'={gridName="N24";}
-'g'={gridName="N32";}
-'g'={gridName="N48";}
-'g'={gridName="N64";}
-'g'={gridName="N80";}
-'g'={gridName="N96";}
-'g'={gridName="N128";}
-'g'={gridName="N160";}
-'g'={gridName="N200";}
-'g'={gridName="N256";}
-'g'={gridName="N320";}
-'g'={gridName="N400";}
-'g'={gridName="N512";}
-'g'={gridName="N576";}
-'g'={gridName="N640";}
-'g'={gridName="N800";}
-'g'={gridName="N1024";}
-'g'={gridName="N1280";}
-'g'={gridName="N1600";}
-'g'={gridName="N2000";}
-'g'={gridName="N4000";}
-'g'={gridName="N8000";}
-'g'={gridName="O16";}
-'g'={gridName="O24";}
-'g'={gridName="O32";}
-'g'={gridName="O48";}
-'g'={gridName="O64";}
-'g'={gridName="O80";}
-'g'={gridName="O96";}
-'g'={gridName="O128";}
-'g'={gridName="O160";}
-'g'={gridName="O200";}
-'g'={gridName="O256";}
-'g'={gridName="O320";}
-'g'={gridName="O400";}
-'g'={gridName="O512";}
-'g'={gridName="O576";}
-'g'={gridName="O640";}
-'g'={gridName="O800";}
-'g'={gridName="O1024";}
-'g'={gridName="O1280";}
-'g'={gridName="O1600";}
-'g'={gridName="O2000";}
-'g'={gridName="O4000";}
-'g'={gridName="O8000";}
+'g'={gridName="N16"; global=1;}
+'g'={gridName="N24"; global=1;}
+'g'={gridName="N32"; global=1;}
+'g'={gridName="N48"; global=1;}
+'g'={gridName="N64"; global=1;}
+'g'={gridName="N80"; global=1;}
+'g'={gridName="N96"; global=1;}
+'g'={gridName="N128"; global=1;}
+'g'={gridName="N160"; global=1;}
+'g'={gridName="N200"; global=1;}
+'g'={gridName="N256"; global=1;}
+'g'={gridName="N320"; global=1;}
+'g'={gridName="N400"; global=1;}
+'g'={gridName="N512"; global=1;}
+'g'={gridName="N576"; global=1;}
+'g'={gridName="N640"; global=1;}
+'g'={gridName="N800"; global=1;}
+'g'={gridName="N1024"; global=1;}
+'g'={gridName="N1280"; global=1;}
+'g'={gridName="N1600"; global=1;}
+'g'={gridName="N2000"; global=1;}
+'g'={gridName="N4000"; global=1;}
+'g'={gridName="N8000"; global=1;}
+'g'={gridName="O16"; global=1;}
+'g'={gridName="O24"; global=1;}
+'g'={gridName="O32"; global=1;}
+'g'={gridName="O48"; global=1;}
+'g'={gridName="O64"; global=1;}
+'g'={gridName="O80"; global=1;}
+'g'={gridName="O96"; global=1;}
+'g'={gridName="O128"; global=1;}
+'g'={gridName="O160"; global=1;}
+'g'={gridName="O200"; global=1;}
+'g'={gridName="O256"; global=1;}
+'g'={gridName="O320"; global=1;}
+'g'={gridName="O400"; global=1;}
+'g'={gridName="O512"; global=1;}
+'g'={gridName="O576"; global=1;}
+'g'={gridName="O640"; global=1;}
+'g'={gridName="O800"; global=1;}
+'g'={gridName="O1024"; global=1;}
+'g'={gridName="O1280"; global=1;}
+'g'={gridName="O1600"; global=1;}
+'g'={gridName="O2000"; global=1;}
+'g'={gridName="O4000"; global=1;}
+'g'={gridName="O8000"; global=1;}
 'g'={latitudeOfFirstGridPoint=81000;longitudeOfFirstGridPoint=0;latitudeOfLastGridPoint=-81000;longitudeOfLastGridPoint=358500;}
 'g'={latitudeOfFirstGridPoint=90000;longitudeOfFirstGridPoint=0;latitudeOfLastGridPoint=-81000;longitudeOfLastGridPoint=358500;}
 'g'={latitudeOfFirstGridPoint=90000;longitudeOfFirstGridPoint=0;latitudeOfLastGridPoint=-90000;longitudeOfLastGridPoint=358500;}
