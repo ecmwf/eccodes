@@ -181,6 +181,7 @@ static char* get_condition(const char* name, codes_condition* condition)
         return NULL;
 
     str = (char*)grib_context_malloc_clear(c, strlen(name));
+    DEBUG_ASSERT(str);
     memcpy(str, equal + 1, endCondition - equal - 1);
 
     end  = NULL;
@@ -201,6 +202,7 @@ static char* get_condition(const char* name, codes_condition* condition)
     if (condition->rightType != GRIB_TYPE_UNDEFINED) {
         strcpy(str, endCondition + 1);
         condition->left = (char*)grib_context_malloc_clear(c, equal - name);
+        DEBUG_ASSERT( condition->left );
         memcpy(condition->left, name + 1, equal - name - 1);
     }
     else {
@@ -213,6 +215,7 @@ static char* get_condition(const char* name, codes_condition* condition)
 static grib_accessor* _search_by_rank(grib_accessor* a, const char* name, int rank)
 {
     eccodes::accessor::BufrDataArray* data_accessor = dynamic_cast<eccodes::accessor::BufrDataArray*>(a);
+    DEBUG_ASSERT(data_accessor);
     grib_trie_with_rank* t = data_accessor->accessor_bufr_data_array_get_dataAccessorsTrie();
     grib_accessor* ret = (grib_accessor*)grib_trie_with_rank_get(t, name, rank);
     return ret;
@@ -263,6 +266,7 @@ static int get_single_long_val(grib_accessor* a, long* result)
             long val0       = 0;
             int is_constant = 1;
             long* values    = (long*)grib_context_malloc_clear(c, sizeof(long) * count);
+            DEBUG_ASSERT(values);
             size            = count;
             err             = a->unpack_long(values, &size);
             val0            = values[0];
@@ -302,6 +306,7 @@ static int get_single_double_val(grib_accessor* a, double* result)
             double val0     = 0;
             int is_constant = 1;
             double* values  = (double*)grib_context_malloc_clear(c, sizeof(double) * count);
+            DEBUG_ASSERT(values);
             size            = count;
             err             = a->unpack_double(values, &size);
             val0            = values[0];
@@ -467,6 +472,7 @@ grib_accessors_list* grib_find_accessors_list(const grib_handle* ch, const char*
 
     if (name[0] == '/') {
         condition = (codes_condition*)grib_context_malloc_clear(h->context, sizeof(codes_condition));
+        DEBUG_ASSERT(condition);
         str       = get_condition(name, condition);
         if (str) {
             al = search_by_condition(h, str, condition);

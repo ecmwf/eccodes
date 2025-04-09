@@ -85,3 +85,6 @@
 'sfc' = {typeOfFirstFixedSurface=107; scaleFactorOfFirstFixedSurface=2; scaledValueOfFirstFixedSurface=27315;}
 'sfc' = {typeOfFirstFixedSurface=107; scaleFactorOfFirstFixedSurface=2; scaledValueOfFirstFixedSurface=27415;}
 'sfc' = {typeOfFirstFixedSurface=107; scaleFactorOfFirstFixedSurface=2; scaledValueOfFirstFixedSurface=27465;}
+
+'al'  = {typeOfFirstFixedSurface=191; scaleFactorOfFirstFixedSurface=missing(); scaledValueOfFirstFixedSurface=missing(); }
+'al'  = {typeOfFirstFixedSurface=191;}
