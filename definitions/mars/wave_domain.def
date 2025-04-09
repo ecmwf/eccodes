@@ -1,3 +1,5 @@
+'g'={latitudeOfFirstGridPoint=89785;longitudeOfFirstGridPoint=0;latitudeOfLastGridPoint = -89785;longitudeOfLastGridPoint = 359719;}
+'g'={latitudeOfFirstGridPoint = 89784877;longitudeOfFirstGridPoint = 0;latitudeOfLastGridPoint = -89784877;longitudeOfLastGridPoint = 359718750;}
 'g'={latitudeOfFirstGridPoint=81000;longitudeOfFirstGridPoint=0;latitudeOfLastGridPoint=-81000;longitudeOfLastGridPoint=358500;}
 'g'={latitudeOfFirstGridPoint=90000;longitudeOfFirstGridPoint=0;latitudeOfLastGridPoint=-81000;longitudeOfLastGridPoint=358500;}
 'g'={latitudeOfFirstGridPoint=90000;longitudeOfFirstGridPoint=0;latitudeOfLastGridPoint=-90000;longitudeOfLastGridPoint=358500;}
