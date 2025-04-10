@@ -132,7 +132,7 @@ int Unsigned::pack_long_unsigned_helper(const long* val, size_t* len, int check)
         }
 
         off = offset_ * 8;
-        ret = grib_encode_unsigned_long(grib_handle_of_accessor(this)->buffer->data, v, &off, nbytes_ * 8);
+        ret = grib_encode_unsigned_long(get_enclosing_handle()->buffer->data, v, &off, nbytes_ * 8);
         if (ret == GRIB_SUCCESS)
             len[0] = 1;
         if (*len > 1)
@@ -149,7 +149,7 @@ int Unsigned::pack_long_unsigned_helper(const long* val, size_t* len, int check)
     for (i = 0; i < *len; i++)
         grib_encode_unsigned_long(buf, val[i], &off, nbytes_ * 8);
 
-    ret = grib_set_long_internal(grib_handle_of_accessor(this), arg_->get_name(parent_->h, 0), *len);
+    ret = grib_set_long_internal(get_enclosing_handle(), arg_->get_name(parent_->h, 0), *len);
 
     if (ret == GRIB_SUCCESS)
         grib_buffer_replace(this, buf, buflen, 1, 1);
@@ -168,7 +168,7 @@ int Unsigned::unpack_long(long* val, size_t* len)
     long count            = 0;
     int err               = 0;
     long pos              = offset_ * 8;
-    grib_handle* hand     = grib_handle_of_accessor(this);
+    grib_handle* hand     = get_enclosing_handle();
 
     err = value_count(&count);
     if (err)
@@ -220,7 +220,7 @@ int Unsigned::value_count(long* len)
         *len = 1;
         return 0;
     }
-    return grib_get_long_internal(grib_handle_of_accessor(this), arg_->get_name(parent_->h, 0), len);
+    return grib_get_long_internal(get_enclosing_handle(), arg_->get_name(parent_->h, 0), len);
 }
 
 long Unsigned::byte_offset()
@@ -242,7 +242,7 @@ int Unsigned::is_missing()
 {
     const unsigned char ff  = 0xff;
     unsigned long offset    = offset_;
-    const grib_handle* hand = grib_handle_of_accessor(this);
+    const grib_handle* hand = get_enclosing_handle();
 
     if (length_ == 0) {
         ECCODES_ASSERT(vvalue_ != NULL);

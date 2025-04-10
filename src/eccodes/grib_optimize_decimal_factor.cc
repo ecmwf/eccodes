@@ -64,7 +64,7 @@ int grib_optimize_decimal_factor(grib_accessor* a, const char* reference_value,
                                  const int compat_gribex, const int compat_32bit,
                                  long* kdec, long* kbin, double* ref)
 {
-    grib_handle* gh = grib_handle_of_accessor(a);
+    grib_handle* gh = a->get_enclosing_handle();
     int idecmin     = -15;
     int idecmax     = 5;
     long inbint;

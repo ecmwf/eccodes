@@ -51,6 +51,8 @@ template core "grib2/sections.def";
 #  }
 #}
 
+meta isMessageValid message_is_valid(kindOfProduct);
+
 template section_8 "grib2/section.8.def";
 
 # ECC-1779: Add keys to identify experimental and deprecated templates
@@ -66,4 +68,6 @@ concept isTemplateExperimental(false) {
 # ECC-1806
 transient paramIdForConversion = 0;
 
-meta gridSpec grid_spec(): hidden, no_copy;
+if (isGridded) {
+    meta gridSpec grid_spec(): hidden, no_copy;
+}

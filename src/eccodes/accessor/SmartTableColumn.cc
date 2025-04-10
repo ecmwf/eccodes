@@ -22,8 +22,8 @@ void SmartTableColumn::init(const long len, grib_arguments* params)
     Gen::init(len, params);
     int n = 0;
 
-    smartTable_ = params->get_name(grib_handle_of_accessor(this), n++);
-    index_      = params->get_long(grib_handle_of_accessor(this), n++);
+    smartTable_ = params->get_name(get_enclosing_handle(), n++);
+    index_      = params->get_long(get_enclosing_handle(), n++);
 
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -54,14 +54,14 @@ int SmartTableColumn::unpack_string_array(char** buffer, size_t* len)
     char tmp[1024] = {0,};
     int i = 0;
 
-    tableAccessor = (SmartTable*)grib_find_accessor(grib_handle_of_accessor(this), smartTable_);
+    tableAccessor = (SmartTable*)grib_find_accessor(get_enclosing_handle(), smartTable_);
     if (!tableAccessor) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "Unable to find accessor %s", smartTable_);
         return GRIB_NOT_FOUND;
     }
 
-    err = grib_get_size_acc(grib_handle_of_accessor(this), (grib_accessor*)tableAccessor, &size);
+    err = grib_get_size_acc(get_enclosing_handle(), (grib_accessor*)tableAccessor, &size);
     if (err)
         return err;
     if (*len < size) {
@@ -110,14 +110,14 @@ int SmartTableColumn::unpack_long(long* val, size_t* len)
     for (i = 0; i < *len; i++)
         val[i] = GRIB_MISSING_LONG;
 
-    tableAccessor = (SmartTable*)grib_find_accessor(grib_handle_of_accessor(this), smartTable_);
+    tableAccessor = (SmartTable*)grib_find_accessor(get_enclosing_handle(), smartTable_);
     if (!tableAccessor) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "Unable to find accessor %s", smartTable_);
         return GRIB_NOT_FOUND;
     }
 
-    err = grib_get_size_acc(grib_handle_of_accessor(this), (grib_accessor*)tableAccessor, &size);
+    err = grib_get_size_acc(get_enclosing_handle(), (grib_accessor*)tableAccessor, &size);
     if (err)
         return err;
     if (*len < size) {
@@ -156,7 +156,7 @@ int SmartTableColumn::value_count(long* count)
     if (!smartTable_)
         return 0;
 
-    err = grib_get_size(grib_handle_of_accessor(this), smartTable_, &size);
+    err = grib_get_size(get_enclosing_handle(), smartTable_, &size);
     *count = size;
     return err;
 }

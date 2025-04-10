@@ -59,7 +59,7 @@ int GridSpec::unpack_string(char* v, size_t* len)
     ECCODES_ASSERT(0 < *len);
     ECCODES_ASSERT(v != nullptr);
 
-    auto* h = grib_handle_of_accessor(this);
+    auto* h = get_enclosing_handle();
     ECCODES_ASSERT(h != nullptr);
 
     std::string spec_str;

@@ -37,7 +37,7 @@ int Long::unpack_string(char* v, size_t* len)
     size_t l = 1;
     char repres[1024];
     char format[32] = "%ld";
-    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_handle* h  = get_enclosing_handle();
 
     unpack_long(&val, &l);
     /* TODO: We should catch all errors but in this case the test ERA_Gen.sh will fail

@@ -22,7 +22,7 @@ void NumberOfPointsGaussian::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n          = 0;
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     ni_             = c->get_name(h, n++);
     nj_             = c->get_name(h, n++);
@@ -116,7 +116,7 @@ int NumberOfPointsGaussian::unpack_long(long* val, size_t* len)
 {
     int err             = GRIB_SUCCESS;
     long support_legacy = 1;
-    grib_handle* h      = grib_handle_of_accessor(this);
+    grib_handle* h      = get_enclosing_handle();
 
     if ((err = grib_get_long_internal(h, support_legacy_, &support_legacy)) != GRIB_SUCCESS)
         return err;
@@ -141,7 +141,7 @@ int NumberOfPointsGaussian::unpack_long_new(long* val, size_t* len)
     long ilon_first = 0, ilon_last = 0;
     double angular_precision = 1.0 / 1000000.0;
     long angleSubdivisions   = 0;
-    grib_handle* h           = grib_handle_of_accessor(this);
+    grib_handle* h           = get_enclosing_handle();
 
     grib_context* c = context_;
 
@@ -249,7 +249,7 @@ int NumberOfPointsGaussian::unpack_long_with_legacy_support(long* val, size_t* l
     long ilon_first = 0, ilon_last = 0;
     double angular_precision = 1.0 / 1000000.0;
     long angleSubdivisions   = 0;
-    grib_handle* h           = grib_handle_of_accessor(this);
+    grib_handle* h           = get_enclosing_handle();
     size_t numDataValues     = 0;
 
     grib_context* c = context_;

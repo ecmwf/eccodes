@@ -188,6 +188,8 @@
 'road'           = {typeOfFirstFixedSurface=187; typeOfSecondFixedSurface=255;}
 'roadLayer'      = {typeOfFirstFixedSurface=187; typeOfSecondFixedSurface=187;}
 'urbanCanyon'    = {typeOfFirstFixedSurface=187; typeOfSecondFixedSurface=185;}
+
 'abstractSingleLevel' = {typeOfFirstFixedSurface=191; scaleFactorOfFirstFixedSurface=missing(); scaledValueOfFirstFixedSurface=missing(); }
 'abstractMultipleLevels' = {typeOfFirstFixedSurface=191;}
+
 'unknown'        = {dummyc=1;}

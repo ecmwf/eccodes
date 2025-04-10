@@ -64,7 +64,7 @@ int BufrDataArray::is_bitmap_start_defined()
 size_t BufrDataArray::get_length()
 {
     size_t len           = 0;
-    const grib_handle* h = grib_handle_of_accessor(this);
+    const grib_handle* h = get_enclosing_handle();
 
     grib_get_size(h, bufrDataEncodedName_, &len);
 
@@ -199,15 +199,15 @@ void BufrDataArray::init(const long v, grib_arguments* params)
     tempStrings_                           = NULL;
 
 
-    bufrDataEncodedName_          = params->get_name(grib_handle_of_accessor(this), n++);
-    numberOfSubsetsName_          = params->get_name(grib_handle_of_accessor(this), n++);
-    expandedDescriptorsName_      = params->get_name(grib_handle_of_accessor(this), n++);
-    flagsName_                    = params->get_name(grib_handle_of_accessor(this), n++);
-    elementsDescriptorsIndexName_ = params->get_name(grib_handle_of_accessor(this), n++);
-    compressedDataName_           = params->get_name(grib_handle_of_accessor(this), n++);
-    dataKeysName                  = params->get_name(grib_handle_of_accessor(this), n++);
+    bufrDataEncodedName_          = params->get_name(get_enclosing_handle(), n++);
+    numberOfSubsetsName_          = params->get_name(get_enclosing_handle(), n++);
+    expandedDescriptorsName_      = params->get_name(get_enclosing_handle(), n++);
+    flagsName_                    = params->get_name(get_enclosing_handle(), n++);
+    elementsDescriptorsIndexName_ = params->get_name(get_enclosing_handle(), n++);
+    compressedDataName_           = params->get_name(get_enclosing_handle(), n++);
+    dataKeysName                  = params->get_name(get_enclosing_handle(), n++);
 
-    dataKeysAcc               = grib_find_accessor(grib_handle_of_accessor(this), dataKeysName);
+    dataKeysAcc               = grib_find_accessor(get_enclosing_handle(), dataKeysName);
     dataKeys_                 = dataKeysAcc->parent_;
     do_decode_                = 1;
     elementsDescriptorsIndex_ = 0;
@@ -344,11 +344,11 @@ void BufrDataArray::accessor_bufr_data_array_set_unpackMode(int unpackMode)
 int BufrDataArray::get_descriptors()
 {
     int ret         = 0, i, numberOfDescriptors;
-    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_handle* h  = get_enclosing_handle();
     grib_context* c = context_;
 
     if (!expandedAccessor_)
-        expandedAccessor_ = dynamic_cast<ExpandedDescriptors*>(grib_find_accessor(grib_handle_of_accessor(this), expandedDescriptorsName_));
+        expandedAccessor_ = dynamic_cast<ExpandedDescriptors*>(grib_find_accessor(get_enclosing_handle(), expandedDescriptorsName_));
     expanded_ = expandedAccessor_->grib_accessor_expanded_descriptors_get_expanded(&ret);
     if (ret != GRIB_SUCCESS)
         return ret;
@@ -2033,7 +2033,7 @@ static grib_accessor* get_element_from_bitmap(bitmap_s* bitmap)
 static void grib_convert_to_attribute(grib_accessor* a)
 {
     if (a->h_ == NULL && a->parent_ != NULL) {
-        a->h_      = grib_handle_of_accessor(a);
+        a->h_      = a->get_enclosing_handle();
         a->parent_ = NULL;
     }
 }
@@ -2279,7 +2279,7 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
     int bitmapIndex                         = -1;
     int incrementBitmapIndex                = 1;
     grib_accessor* elementFromBitmap        = NULL;
-    grib_handle* hand                       = grib_handle_of_accessor(this);
+    grib_handle* hand                       = get_enclosing_handle();
     /*int reuseBitmap=0;*/
     int add_dump_flag = 1, add_coord_flag = 0, count = 0;
     /*int forceGroupClosure=0;*/
@@ -2662,6 +2662,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
     unsigned char* data            = 0;
     size_t subsetListSize          = 0;
     long* subsetList               = 0;
+    long satelliteID               = -1;// this may be undefined
     int i;
     grib_iarray* elementsDescriptorsIndex = 0;
 
@@ -2681,7 +2682,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
     grib_darray* dval = NULL;
     grib_sarray* sval = NULL;
 
-    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_handle* h  = get_enclosing_handle();
     grib_context* c = h->context;
 
     totalSize = bitsToEndData_;
@@ -2694,7 +2695,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
             buffer       = h->buffer;
             decoding     = 1;
             do_clean     = 1;
-            dataAccessor = grib_find_accessor(grib_handle_of_accessor(this), bufrDataEncodedName_);
+            dataAccessor = grib_find_accessor(get_enclosing_handle(), bufrDataEncodedName_);
             DEBUG_ASSERT(dataAccessor);
             dataOffset        = accessor_raw_get_offset(dataAccessor);
             pos               = dataOffset * 8;
@@ -2723,17 +2724,20 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
             set_to_missing_if_out_of_range_ = set_to_missing_if_out_of_range(h);
             pos                             = 0;
             codec_element                   = &encode_element;
-            grib_get_long(grib_handle_of_accessor(this), "extractSubset", &onlySubset);
-            grib_get_long(grib_handle_of_accessor(this), "extractSubsetIntervalStart", &startSubset);
-            grib_get_long(grib_handle_of_accessor(this), "extractSubsetIntervalEnd", &endSubset);
-            err = grib_get_size(grib_handle_of_accessor(this), "extractSubsetList", &subsetListSize);
+            grib_get_long(get_enclosing_handle(), "extractSubset", &onlySubset);
+            grib_get_long(get_enclosing_handle(), "extractSubsetIntervalStart", &startSubset);
+            grib_get_long(get_enclosing_handle(), "extractSubsetIntervalEnd", &endSubset);
+            // satelliteID can be undefined. So do not check for errors
+            grib_get_long(get_enclosing_handle(), "satelliteID", &satelliteID);
+
+            err = grib_get_size(get_enclosing_handle(), "extractSubsetList", &subsetListSize);
             if (err)
                 return err;
             if (subsetList)
                 grib_context_free(c, subsetList);
             if (subsetListSize) {
                 subsetList = (long*)grib_context_malloc_clear(c, subsetListSize * sizeof(long));
-                err        = grib_get_long_array(grib_handle_of_accessor(this), "extractSubsetList", subsetList, &subsetListSize);
+                err        = grib_get_long_array(get_enclosing_handle(), "extractSubsetList", subsetList, &subsetListSize);
                 if (err) return err;
             }
             codec_replication = &encode_replication;
@@ -2782,7 +2786,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
             grib_context_free(c, refValList_);
         if (refValListSize_ > 0) {
             refValList_ = (long*)grib_context_malloc_clear(c, refValListSize_ * sizeof(long));
-            err         = grib_get_long_array(grib_handle_of_accessor(this), OVERRIDDEN_REFERENCE_VALUES_KEY, refValList_, &refValListSize_);
+            err         = grib_get_long_array(get_enclosing_handle(), OVERRIDDEN_REFERENCE_VALUES_KEY, refValList_, &refValListSize_);
             if (err) return err;
         }
     }
@@ -3194,10 +3198,19 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
     }
     else {
         bitsToEndData_ = buffer->ulength * 8;
-        grib_set_bytes(grib_handle_of_accessor(this), bufrDataEncodedName_, buffer->data, &(buffer->ulength));
+        grib_set_bytes(get_enclosing_handle(), bufrDataEncodedName_, buffer->data, &(buffer->ulength));
         grib_buffer_delete(c, buffer);
         if (numberOfSubsets_ != grib_iarray_used_size(iss_list_)) {
-            grib_set_long(h, numberOfSubsetsName_, grib_iarray_used_size(iss_list_));
+            err = grib_set_long(h, numberOfSubsetsName_, grib_iarray_used_size(iss_list_));
+            if (!err) {
+                // ECC-2055
+                if (grib_is_defined(h, "localNumberOfObservations")) {
+                    grib_set_long(h, "localNumberOfObservations", grib_iarray_used_size(iss_list_));
+                }
+                if (satelliteID != -1) {
+                    grib_set_long(h, "satelliteID", satelliteID);
+                }
+            }
         }
     }
 
@@ -3259,7 +3272,7 @@ int BufrDataArray::unpack_double(double* val, size_t* len)
      */
 
     l   = grib_vdarray_used_size(numericValues_);
-    err = grib_get_long(grib_handle_of_accessor(this), numberOfSubsetsName_, &numberOfSubsets);
+    err = grib_get_long(get_enclosing_handle(), numberOfSubsetsName_, &numberOfSubsets);
     if (err)
         return err;
 

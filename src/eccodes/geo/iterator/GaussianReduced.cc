@@ -188,6 +188,10 @@ int GaussianReduced::iterate_reduced_gaussian_subarea(grib_handle* h,
 
     e_ = 0;
     for (j = 0; j < plsize; j++) {
+        if (pl[j] <= 0) {
+            grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Invalid pl array: entry at index=%zu", ITER, j);
+            return GRIB_WRONG_GRID;
+        }
         const double delta = 360.0 / pl[j];
         row_count          = 0;
         grib_get_reduced_row_p(pl[j], lon_first, lon_last, &row_count, &olon_first, &olon_last);

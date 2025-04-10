@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1212
+# MARS key mapping for local time templates
+# ---------------------------------------------------------------------
+
 label="grib_ecc-1212_test"
 tempGrib=temp.$label.grib
 tempFilt=temp.$label.filt

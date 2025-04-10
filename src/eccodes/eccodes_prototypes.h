@@ -16,7 +16,7 @@ grib_hash_array_value* grib_integer_hash_array_value_new(const char* name, grib_
 /* grib_bufr_descriptor.cc */
 bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor, int code, int silent, int* err);
 bufr_descriptor* grib_bufr_descriptor_clone(bufr_descriptor* d);
-int grib_bufr_descriptor_set_code(bufr_descriptor* v, int code);
+// int grib_bufr_descriptor_set_code(bufr_descriptor* v, int code);
 void grib_bufr_descriptor_set_scale(bufr_descriptor* v, long scale);
 int grib_bufr_descriptor_can_be_missing(const bufr_descriptor* v);
 void grib_bufr_descriptor_delete(bufr_descriptor* v);
@@ -515,7 +515,6 @@ grib_handle* codes_external_sample(grib_context* c, ProductKind product_kind, co
 char* get_external_sample_path(grib_context* c, const char* name);
 
 /* grib_dependency.cc */
-grib_handle* grib_handle_of_accessor(const grib_accessor* a);
 void grib_dependency_add(grib_accessor* observer, grib_accessor* observed);
 void grib_dependency_remove_observed(grib_accessor* observed);
 int grib_dependency_notify_change_h(grib_handle* h, grib_accessor* observed);

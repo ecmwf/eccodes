@@ -448,6 +448,8 @@ struct grib_string_list
 };
 
 grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err);
+
+/* These 2 functions are deprecated and will later be removed */
 grib_string_list* grib_util_get_param_id(const char* mars_param);
 grib_string_list* grib_util_get_mars_param(const char* param_id);
 

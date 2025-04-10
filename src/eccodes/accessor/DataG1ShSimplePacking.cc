@@ -21,7 +21,7 @@ int DataG1ShSimplePacking::value_count(long* count)
     size_t len = 0;
     int err    = 0;
 
-    err = grib_get_size(grib_handle_of_accessor(this), coded_values_, &len);
+    err = grib_get_size(get_enclosing_handle(), coded_values_, &len);
     len += 1;
 
     *count = len;
@@ -35,7 +35,7 @@ int DataG1ShSimplePacking::unpack_double(double* val, size_t* len)
     size_t coded_n_vals = 0;
     size_t n_vals       = 0;
 
-    if ((err = grib_get_size(grib_handle_of_accessor(this), coded_values_, &coded_n_vals)) != GRIB_SUCCESS)
+    if ((err = grib_get_size(get_enclosing_handle(), coded_values_, &coded_n_vals)) != GRIB_SUCCESS)
         return err;
 
     n_vals = coded_n_vals + 1;
@@ -45,12 +45,12 @@ int DataG1ShSimplePacking::unpack_double(double* val, size_t* len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    if ((err = grib_get_double_internal(grib_handle_of_accessor(this), real_part_, val)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(get_enclosing_handle(), real_part_, val)) != GRIB_SUCCESS)
         return err;
 
     val++;
 
-    if ((err = grib_get_double_array_internal(grib_handle_of_accessor(this), coded_values_, val, &coded_n_vals)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_array_internal(get_enclosing_handle(), coded_values_, val, &coded_n_vals)) != GRIB_SUCCESS)
         return err;
 
     grib_context_log(context_, GRIB_LOG_DEBUG,

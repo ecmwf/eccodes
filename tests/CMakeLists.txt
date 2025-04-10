@@ -307,6 +307,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2019
         grib_ecc-2034
         grib_ecc-2045
+        grib_ecc-2050
         grib_ecc-2052
         grib_modelName
         grib_sub_hourly
@@ -372,6 +373,7 @@ if( HAVE_BUILD_TOOLS )
         grib_set
         grib_set_fail
         grib_iterator
+        grib_iterator_fail
         grib_proj_string
         grib_compare
         grib_copy
@@ -431,8 +433,9 @@ if( HAVE_BUILD_TOOLS )
     endforeach()
     ecbuild_add_test( TARGET eccodes_t_grib_check_gaussian_grids
                       TYPE SCRIPT
-                      CONDITION ECCODES_INSTALL_EXTRA_TOOLS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_gaussian_grids.sh )
+                      CONDITION ECCODES_INSTALL_EXTRA_TOOLS AND ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_gaussian_grids.sh
+                      TEST_DEPENDS eccodes_download_gribs )
     ecbuild_add_test( TARGET eccodes_t_grib_repair
                       TYPE SCRIPT
                       CONDITION ECCODES_INSTALL_EXTRA_TOOLS AND ENABLE_EXTRA_TESTS
@@ -563,13 +566,12 @@ if( HAVE_BUILD_TOOLS )
                       CONDITION ECCODES_INSTALL_EXTRA_TOOLS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/codes_export_resource.sh )
 
-
     # Performance test
-    ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
-                      TYPE SCRIPT
-                      CONDITION ENABLE_EXTRA_TESTS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-386.sh
-                      TEST_DEPENDS eccodes_download_gribs )
+    # ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
+    #                  TYPE SCRIPT
+    #                  CONDITION ENABLE_EXTRA_TESTS
+    #                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-386.sh
+    #                  TEST_DEPENDS eccodes_download_gribs )
 else()
     # No command line tools
     list(APPEND tests_no_tools

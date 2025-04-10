@@ -82,7 +82,7 @@ static int grib_load_smart_table(grib_context* c, const char* filename, const ch
 void SmartTable::init(const long len, grib_arguments* params)
 {
     int n = 0;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     values_      = params->get_name(hand, n++);
     tablename_   = params->get_string(hand, n++);
@@ -342,7 +342,7 @@ int SmartTable::get_table_codes()
     if (!table_)
         table_ = load_table();
 
-    err = grib_get_size(grib_handle_of_accessor(this), values_, &size);
+    err = grib_get_size(get_enclosing_handle(), values_, &size);
     if (err) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "unable to get size of %s", name_);
@@ -351,7 +351,7 @@ int SmartTable::get_table_codes()
 
     v = (long*)grib_context_malloc_clear(context_, size * sizeof(long));
 
-    grib_get_long_array(grib_handle_of_accessor(this), values_, v, &size);
+    grib_get_long_array(get_enclosing_handle(), values_, v, &size);
 
     count = 0;
     for (i = 0; i < size; i++) {

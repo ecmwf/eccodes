@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void Size::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    accessor_ = c->get_name(grib_handle_of_accessor(this), 0);
+    accessor_ = c->get_name(get_enclosing_handle(), 0);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
@@ -28,7 +28,7 @@ void Size::init(const long l, grib_arguments* c)
 int Size::unpack_long(long* val, size_t* len)
 {
     size_t size = 0;
-    int ret     = grib_get_size(grib_handle_of_accessor(this), accessor_, &size);
+    int ret     = grib_get_size(get_enclosing_handle(), accessor_, &size);
     *val        = (long)size;
     *len        = 1;
     return ret;

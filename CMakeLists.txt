@@ -388,6 +388,12 @@ add_definitions( -DHAVE_ECCODES_CONFIG_H )
 if( CMAKE_COMPILER_IS_GNUCC )
     ecbuild_add_c_flags("-pedantic")
 endif()
+if( CMAKE_CXX_COMPILER_ID MATCHES IntelLLVM )
+  # Turn off -ffinite-math-only which gets included by some optimisation levels which assume values can never be NaN.
+  # This results in std::isnan(value) always returning false.
+  ecbuild_add_cxx_flags("-fno-finite-math-only")
+endif()
+
 
 # gfortran 10 has become stricter with argument matching
 if( HAVE_FORTRAN AND CMAKE_Fortran_COMPILER_ID MATCHES "GNU" AND NOT CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 10 )

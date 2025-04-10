@@ -10,7 +10,10 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1958
+# BUFR encoding: Delayed replication: Too many elements
+# ---------------------------------------------------------------------
 
 label="bufr_ecc-1958_test"
 tempBufr=temp.$label.bufr

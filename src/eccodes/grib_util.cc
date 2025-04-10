@@ -67,6 +67,15 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom, grib_handle*
     if (*err)
         return NULL;
 
+#ifdef DEBUG
+    if (edition==1) {
+        ECCODES_ASSERT( hfrom->sections_count == 5 );
+    }
+    if (edition==2) {
+        ECCODES_ASSERT( hfrom->sections_count == 8 );
+    }
+#endif
+
     for (i = 0; i <= hfrom->sections_count; i++) {
         if (sections[i]) {
             h = hfrom;
@@ -285,6 +294,8 @@ static grib_trie* mars_param_list = NULL;
 
 grib_string_list* grib_util_get_param_id(const char* mars_param)
 {
+    fprintf(stderr, "ECCODES WARNING :  The %s function is deprecated and will be removed in a future release.\n", __func__);
+
     if (!mars_param_list && (mars_param_list = init_list("mars_param.table")) == NULL)
         return NULL;
     return (grib_string_list*)grib_trie_get(mars_param_list, mars_param);
@@ -292,6 +303,8 @@ grib_string_list* grib_util_get_param_id(const char* mars_param)
 
 grib_string_list* grib_util_get_mars_param(const char* param_id)
 {
+    fprintf(stderr, "ECCODES WARNING :  The %s function is deprecated and will be removed in a future release.\n", __func__);
+
     if (!param_id_list && (param_id_list = init_list("param_id.table")) == NULL)
         return NULL;
     return (grib_string_list*)grib_trie_get(param_id_list, param_id);
@@ -860,6 +873,7 @@ static bool is_constant_field(const double missingValue, const double* data_valu
 static int write_out_error_data_file(const double* data_values, size_t data_values_count)
 {
     FILE* ferror = fopen("error.data", "w");
+    if (!ferror) return GRIB_IO_PROBLEM;
     size_t lcount = 0;
     fprintf(ferror, "# data_values_count=%zu\n", data_values_count);
     fprintf(ferror, "set values={ ");

@@ -39,7 +39,7 @@ int Ksec1Expver::unpack_long(long* val, size_t* len)
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
-    value = grib_decode_unsigned_long(grib_handle_of_accessor(this)->buffer->data, &pos, length_ * 8);
+    value = grib_decode_unsigned_long(get_enclosing_handle()->buffer->data, &pos, length_ * 8);
 
     unpack_string(refexpver, &llen);
     /* test for endian */
@@ -86,7 +86,7 @@ int Ksec1Expver::pack_string(const char* val, size_t* len)
     }
 
     for (i = 0; i < length_; i++)
-        grib_handle_of_accessor(this)->buffer->data[offset_ + i] = val[i];
+        get_enclosing_handle()->buffer->data[offset_ + i] = val[i];
 
     return GRIB_SUCCESS;
 }

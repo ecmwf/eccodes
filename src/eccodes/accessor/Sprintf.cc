@@ -39,7 +39,7 @@ int Sprintf::unpack_string(char* val, size_t* len)
     const char* tempname = NULL;
     size_t uname_len     = 0;
 
-    uname = args_->get_string(grib_handle_of_accessor(this), carg++);
+    uname = args_->get_string(get_enclosing_handle(), carg++);
     snprintf(result, sizeof(result), "%s", "");
     uname_len = strlen(uname);
 
@@ -57,12 +57,12 @@ int Sprintf::unpack_string(char* val, size_t* len)
             }
             switch (uname[i]) {
                 case 'd':
-                    tempname = args_->get_name(grib_handle_of_accessor(this), carg++);
+                    tempname = args_->get_name(get_enclosing_handle(), carg++);
 
-                    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), tempname, &ires)) != GRIB_SUCCESS)
+                    if ((ret = grib_get_long_internal(get_enclosing_handle(), tempname, &ires)) != GRIB_SUCCESS)
                         return ret;
                     /* Bug GRIB-56: Check to see if the key is missing */
-                    is_missing = grib_is_missing(grib_handle_of_accessor(this), tempname, &ret);
+                    is_missing = grib_is_missing(get_enclosing_handle(), tempname, &ret);
                     if (ret != GRIB_SUCCESS)
                         return ret;
                     if (is_missing) {
@@ -83,8 +83,8 @@ int Sprintf::unpack_string(char* val, size_t* len)
                     break;
 
                 case 'g':
-                    tempname = args_->get_name(grib_handle_of_accessor(this), carg++);
-                    if ((ret = grib_get_double_internal(grib_handle_of_accessor(this), tempname, &dres)) != GRIB_SUCCESS)
+                    tempname = args_->get_name(get_enclosing_handle(), carg++);
+                    if ((ret = grib_get_double_internal(get_enclosing_handle(), tempname, &dres)) != GRIB_SUCCESS)
                         return ret;
                     snprintf(tempBuffer, sizeof(tempBuffer), "%s%g", result, dres);
                     strcpy(result, tempBuffer);
@@ -92,8 +92,8 @@ int Sprintf::unpack_string(char* val, size_t* len)
                     break;
 
                 case 's':
-                    tempname = args_->get_name(grib_handle_of_accessor(this), carg++);
-                    if ((ret = grib_get_string_internal(grib_handle_of_accessor(this), tempname, sres, &replen)) != GRIB_SUCCESS)
+                    tempname = args_->get_name(get_enclosing_handle(), carg++);
+                    if ((ret = grib_get_string_internal(get_enclosing_handle(), tempname, sres, &replen)) != GRIB_SUCCESS)
                         return ret;
                     snprintf(tempBuffer, sizeof(tempBuffer), "%s%s", result, sres);
                     strcpy(result, tempBuffer);

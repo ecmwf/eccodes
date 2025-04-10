@@ -9,7 +9,12 @@
 #
 
 . ./include.ctest.sh
-set -u
+
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1028
+# Segmentation fault: bufr_dump -d on message with incorrect replication
+# ---------------------------------------------------------------------
+
 label="bufr_ecc-1028_test"
 tempFilt=temp.$label.filt
 tempError=temp.$label.err

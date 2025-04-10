@@ -2599,12 +2599,6 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 59 ;
 	}
-#Injection height (from IS4FIRES)
-'m' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 60 ;
-	}
 #Wildfire viewing angle of observation
 'deg' = {
 	 discipline = 192 ;
@@ -2616,18 +2610,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 118 ;
-	}
-#Mean height of maximum injection
-'m' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 119 ;
-	}
-#Plume top height above surface
-'m' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 120 ;
 	}
 #Wildfire day-time radiative power
 'W m**-2' = {
@@ -2850,12 +2832,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 241 ;
-	}
-#Plume bottom height above surface
-'m' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 242 ;
 	}
 #Volcanic sulphate aerosol optical depth at 550 nm
 '~' = {
@@ -4566,18 +4542,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 213 ;
 	 parameterNumber = 5 ;
-	}
-#UV biologically effective dose
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 214 ;
-	 parameterNumber = 2 ;
-	}
-#UV biologically effective dose clear-sky
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 214 ;
-	 parameterNumber = 3 ;
 	}
 #Total surface UV spectral flux (280-285 nm)
 'W m**-2' = {

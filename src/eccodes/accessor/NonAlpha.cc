@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void NonAlpha::init(const long len, grib_arguments* arg)
 {
     Gen::init(len, arg);
-    const grib_buffer* buffer = grib_handle_of_accessor(this)->buffer;
+    const grib_buffer* buffer = this->get_enclosing_handle()->buffer;
     unsigned char* v = buffer->data + offset_;
     size_t i            = 0;
     while ((*v < 33 || *v > 126) && i <= buffer->ulength) {
@@ -54,7 +54,7 @@ long NonAlpha::get_native_type()
 
 int NonAlpha::unpack_string(char* val, size_t* len)
 {
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     long i            = 0;
 
     if (*len < (length_ + 1)) {

@@ -21,7 +21,7 @@ void CodetableTitle::init(const long len, grib_arguments* params)
 {
     Gen::init(len, params);
     int n      = 0;
-    codetable_ = params->get_name(grib_handle_of_accessor(this), n++);
+    codetable_ = params->get_name(get_enclosing_handle(), n++);
     length_    = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
@@ -40,7 +40,7 @@ int CodetableTitle::unpack_string(char* buffer, size_t* len)
     int err = GRIB_SUCCESS;
     char tmp[1024];
     size_t l = 1024;
-    accessor::Codetable* ca = (accessor::Codetable*)grib_find_accessor(grib_handle_of_accessor(this), codetable_);
+    accessor::Codetable* ca = (accessor::Codetable*)grib_find_accessor(get_enclosing_handle(), codetable_);
 
     if ((err = ((grib_accessor*)ca)->unpack_long(&value, &size)) != GRIB_SUCCESS)
         return err;
