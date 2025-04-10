@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1929
+# Definitions: Ability to use the print statement
+# ---------------------------------------------------------------------
+
 label="codes_ecc-1929_test"
 
 # Due to problems at DWD (See SD-103761) we have disabled this test

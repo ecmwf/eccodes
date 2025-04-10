@@ -13,7 +13,7 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.GH_REPO_READ_TOKEN }}
     steps:
-      - uses: ecmwf-actions/reusable-workflows/ci-hpc@v2
+      - uses: ecmwf/reusable-workflows/ci-hpc@v2
         with:
           github_user: ${{ secrets.BUILD_PACKAGE_HPC_GITHUB_USER }}
           github_token: ${{ secrets.GH_REPO_READ_TOKEN }}
@@ -54,14 +54,14 @@ jobs:
             - libaec
             - ecbuild
     steps:
-      - uses: ecmwf-actions/reusable-workflows/build-package-with-config@v2
+      - uses: ecmwf/reusable-workflows/build-package-with-config@v2
         with:
           repository: ecmwf/eccodes@${{ github.sha }}
           build_config: .github/ci-config.yml
 
   deploy:
     needs: [test-hpc, test-macos]
-    uses: ecmwf-actions/reusable-workflows/.github/workflows/create-package.yml@v2
+    uses: ecmwf/reusable-workflows/.github/workflows/create-package.yml@v2
     with:
       skip_checks: true
       cpack_options_rpm: -D CPACK_PACKAGE_FILE_NAME=eccodes-nightly-Linux-x86_64
@@ -71,8 +71,6 @@ jobs:
       token_debian_11: ${{ secrets.NEXUS_TEST_REPO_UPLOAD_TOKEN }}
       url_debian_12: ${{ secrets.NEXUS_TEST_REPO_URL_DEBIAN_12 }}
       token_debian_12: ${{ secrets.NEXUS_TEST_REPO_UPLOAD_TOKEN }}
-      url_centos_7: ${{ secrets.NEXUS_TEST_REPO_NIGHTLY_URL_CENTOS_7 }}
-      token_centos_7: ${{ secrets.NEXUS_TEST_REPO_UPLOAD_TOKEN }}
       url_rocky_8: ${{ secrets.NEXUS_TEST_REPO_NIGHTLY_URL_ROCKY_8 }}
       token_rocky_8: ${{ secrets.NEXUS_TEST_REPO_UPLOAD_TOKEN }}
 
@@ -85,7 +83,7 @@ jobs:
     if: always()
     steps:
       - name: Trigger Teams notification
-        uses: ecmwf-actions/notify-teams@v1
+        uses: ecmwf/notify-teams@v1
         with:
           incoming_webhook: ${{ secrets.MS_TEAMS_INCOMING_WEBHOOK }}
           needs_context: ${{ toJSON(needs) }}

@@ -10,5 +10,10 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-386
+# GRIB decoding: Slow-down of read routine
+# ---------------------------------------------------------------------
+
 input=${data_dir}/test_file.grib2
 $EXEC ${test_dir}/grib_ecc-386 $input

@@ -11,6 +11,6 @@
 
 temp='temp.eccodes_f_grib_multi.txt'
 
-${examples_dir}/eccodes_f_grib_multi > $temp
+${examples_dir}/f_grib_multi > $temp
 diff $temp ${data_dir}/multi.ok
 rm -f $temp

@@ -21,22 +21,10 @@ label="grib_ecc-2045_test"
 tempGrib=temp.$label.grib
 tempLog=temp.$label.log
 
-infiles="GRIB1.tmpl GRIB2.tmpl sh_ml_grib1.tmpl sh_ml_grib2.tmpl"
+infiles="GRIB1.tmpl GRIB2.tmpl sh_ml_grib1.tmpl sh_ml_grib2.tmpl gg_sfc_grib1.tmpl"
 for f in $infiles; do
     $EXEC $test_dir/grib_ecc-2045 $ECCODES_SAMPLES_PATH/$f
 done
-
-# infile=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
-# $EXEC $test_dir/grib_ecc-2045 $infile
-
-# infile=$ECCODES_SAMPLES_PATH/sh_ml_grib1.tmpl
-# $EXEC $test_dir/grib_ecc-2045 $infile
-
-# infile=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-# $EXEC $test_dir/grib_ecc-2045 $infile
-
-# infile=$ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl
-# $EXEC $test_dir/grib_ecc-2045 $infile
 
 
 # Clean up

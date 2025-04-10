@@ -19,4 +19,7 @@
 200 200 Run length packing with level values
 # 201-49151 Reserved
 # 49152-65534 Reserved for local use
+50000 50000 Spherical harmonics IEEE packing
+50001 50001 Second order packing
+50002 50002 Second order packing
 65535 65535 Missing

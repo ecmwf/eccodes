@@ -100,6 +100,7 @@ cat > $fRules <<EOF
  }
  print "extracted [extractedDateTimeNumberOfSubsets] of [originalNumberOfSubsets] subsets";
  assert(numberOfSubsets == extractedDateTimeNumberOfSubsets);
+ assert(localNumberOfObservations == numberOfSubsets);
 EOF
 
 inputBufr="amsa_55.bufr"
@@ -200,7 +201,7 @@ ${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr
 status=$?
 set -e
 if [ $status -eq 0 ]; then
-   echo "Bad start date: bufr_filter should have failed!"
+   echo "ERROR: Bad start date: bufr_filter should have failed!"
    exit 1
 fi
 
@@ -235,7 +236,7 @@ ${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr
 status=$?
 set -e
 if [ $status -eq 0 ]; then
-   echo "End date before start date: bufr_filter should have failed!"
+   echo "ERROR: End date before start date: bufr_filter should have failed!"
    exit 1
 fi
 

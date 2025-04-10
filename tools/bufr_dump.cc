@@ -10,7 +10,7 @@
 
 #include "grib_tools.h"
 #include "grib_dumper_factory.h"
-#include "accessor/grib_accessor_class_bufr_data_array.h"
+#include "accessor/BufrDataArray.h"
 
 grib_option grib_options[] = {
     /*  {id, args, help}, on, command_line, value*/
@@ -399,7 +399,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     long length = 0;
     int i, err = 0;
     grib_handle* hclone                   = NULL;
-    grib_accessor_bufr_data_array_t* data = NULL;
+    eccodes::accessor::BufrDataArray* data = NULL;
     grib_accessors_list* al               = NULL;
     if (grib_get_long(h, "totalLength", &length) != GRIB_SUCCESS)
         length = -9999;
@@ -416,8 +416,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     if (grib_options_on("S:")) {
         long numberOfSubsets = 0, subsetNumber = 0;
-        char* str = grib_options_get_option("S:");
-        err       = grib_get_long(h, "numberOfSubsets", &numberOfSubsets);
+        const char* str = grib_options_get_option("S:");
+        err = grib_get_long(h, "numberOfSubsets", &numberOfSubsets);
         if (err) {
             fprintf(stderr, "%s: Failed to get numberOfSubsets.\n", tool_name);
             exit(1);
@@ -476,7 +476,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                         /*return err; See ECC-723*/
                     }
                 }
-                data                = dynamic_cast<grib_accessor_bufr_data_array_t*>(grib_find_accessor(h, "numericValues"));
+                data                = dynamic_cast<eccodes::accessor::BufrDataArray*>(grib_find_accessor(h, "numericValues"));
                 al                  = data->accessor_bufr_data_array_get_dataAccessors();
                 options->dump_flags = GRIB_DUMP_FLAG_ALL_ATTRIBUTES;
                 codes_dump_bufr_flat(al, h, stdout, options->dump_mode, options->dump_flags, 0);

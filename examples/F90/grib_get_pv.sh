@@ -9,4 +9,4 @@
 
 . ./include.ctest.sh
 
-${examples_dir}/eccodes_f_grib_get_pv
+${examples_dir}/f_grib_get_pv
