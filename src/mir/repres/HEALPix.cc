@@ -98,7 +98,7 @@ private:
 
 
 const HEALPixPattern HEALPIX_N("^[hH]([nN][1-9][0-9]*|[1-9][0-9]*([nN]|_[nN][eE][sS][tT][eE][dD]))$", true);
-const HEALPixPattern HEALPIX_R("^[hH]([rR][1-9][0-9]*|[1-9][0-9]*([rR]|_[rR][iI][nN][gG])|[1-9][0-9]*)$", false);
+const HEALPixPattern HEALPIX_R("^[hH]([rR][1-9][0-9]*|[1-9][0-9]*([rR]|_[rR][iI][nN][gG])?)$", false);
 
 
 const RepresentationBuilder<HEALPix> HEALPIX("healpix");
@@ -107,9 +107,8 @@ const RepresentationBuilder<HEALPix> HEALPIX("healpix");
 }  // namespace
 
 
-HEALPix::HEALPix(size_t Nside, const std::string& order) : Nside_(Nside), order_(order) {
-    ASSERT(Nside_ > 0);
-    ASSERT(order_ == "ring" || order_ == "nested");
+HEALPix::HEALPix(size_t Nside, const std::string& order) : grid_(new eckit::geo::grid::HEALPix(Nside, order)) {
+    ASSERT(grid_);
 }
 
 
@@ -132,16 +131,13 @@ HEALPix::HEALPix(const param::MIRParametrisation& param) :
 
 
 std::string HEALPix::name() const {
-    return "H" + std::to_string(Nside_) + (order_ == "nested" ? "n" : "");
+    return "H" + std::to_string(grid_->Nside()) + (grid_->order() == "nested" ? "n" : "");
 }
 
 
-eckit::geo::Grid& HEALPix::grid() const {
-    if (!grid_) {
-        ASSERT(grid_ = std::make_unique<eckit::geo::grid::HEALPix>(Nside_, order_));
-    }
-
-    return *grid_;
+bool HEALPix::sameAs(const Representation& other) const {
+    const auto* o = dynamic_cast<const HEALPix*>(&other);
+    return (o != nullptr) && *grid_ == *(o->grid_);
 }
 
 
@@ -149,7 +145,7 @@ std::pair<std::vector<double>, std::vector<double>>& HEALPix::to_latlons() const
     if (points_.first.empty() || points_.second.empty()) {
         ASSERT(points_.first.empty() && points_.second.empty());
 
-        points_ = eckit::geo::grid::HEALPix(Nside_, order_).to_latlons();
+        points_ = grid_->to_latlons();
         ASSERT(points_.first.size() == points_.second.size());
         ASSERT(points_.first.size() == numberOfPoints());
     }
@@ -159,7 +155,7 @@ std::pair<std::vector<double>, std::vector<double>>& HEALPix::to_latlons() const
 
 
 size_t HEALPix::numberOfPoints() const {
-    return 12 * Nside_ * Nside_;
+    return grid_->size();
 }
 
 
@@ -170,16 +166,16 @@ void HEALPix::makeName(std::ostream& out) const {
 
 void HEALPix::fillGrib(grib_info& info) const {
     info.grid.grid_type                          = GRIB_UTIL_GRID_SPEC_HEALPIX;
-    info.grid.N                                  = static_cast<long>(Nside_);
+    info.grid.N                                  = static_cast<long>(grid_->Nside());
     info.grid.longitudeOfFirstGridPointInDegrees = 45.;
 
-    info.extra_set("orderingConvention", order_.c_str());
+    info.extra_set("orderingConvention", grid_->order().c_str());
 }
 
 
 void HEALPix::fillMeshGen(util::MeshGeneratorParameters& params) const {
     if (params.meshGenerator_.empty()) {
-        params.meshGenerator_ = order_ == "nested" ? "delaunay" : "structured";
+        params.meshGenerator_ = grid_->order() == "nested" ? "delaunay" : "structured";
     }
 }
 
@@ -190,17 +186,12 @@ void HEALPix::fillJob(api::MIRJob& job) const {
 
 
 void HEALPix::json(eckit::JSON& j) const {
-    j.startObject();
-    j << "grid" << ("H" + std::to_string(Nside_));
-    j << "type"
-      << "healpix";
-    j << "order" << order_;
-    j.endObject();
+    static_cast<eckit::geo::Grid&>(*grid_).spec().json(j);
 }
 
 
 void HEALPix::print(std::ostream& out) const {
-    out << "HEALPix[name=" << name() << ",order=" << order_ << "]";
+    out << "HEALPix[name=" << name() << "]";
 }
 
 
@@ -216,14 +207,18 @@ Iterator* HEALPix::iterator() const {
 
 
 std::vector<util::GridBox> HEALPix::gridBoxes() const {
-    // forcing order=ring
-    atlas::HealpixGrid grid_r(static_cast<int>(Nside_), "ring");
+    const auto Nside  = grid_->Nside();
+    const auto& order = grid_->order();
+
+
+    // forcing order=ring, reordering later
+    atlas::HealpixGrid grid_r(static_cast<int>(Nside), "ring");
 
     ::atlas::interpolation::method::GridBoxes boxes_a(grid_r, false);
     ASSERT(boxes_a.size() == numberOfPoints());
 
     auto ren = std::unique_ptr<util::Reorder>(
-                   util::Reorder::build(order_ == "nested" ? "healpix-ring-to-nested" : "identity", numberOfPoints()))
+                   util::Reorder::build(order == "nested" ? "healpix-ring-to-nested" : "identity", numberOfPoints()))
                    ->reorder();
     ASSERT(ren.size() == numberOfPoints());
 
@@ -237,7 +232,7 @@ std::vector<util::GridBox> HEALPix::gridBoxes() const {
 
 
 atlas::Grid HEALPix::atlasGrid() const {
-    if (order_ == "nested") {
+    if (grid_->order() == "nested") {
         const auto& [lats, lons] = to_latlons();
 
         auto* points = new std::vector<::atlas::PointXY>;
@@ -251,7 +246,7 @@ atlas::Grid HEALPix::atlasGrid() const {
         return ::atlas::UnstructuredGrid(points);  // takes ownership
     }
 
-    return atlas::HealpixGrid(static_cast<int>(Nside_), order_);
+    return atlas::HealpixGrid(static_cast<int>(grid_->Nside()), grid_->order());
 }
 
 
