@@ -99,7 +99,7 @@ stats2=`${tools_dir}/grib_get -M -F%.0f -n statistics $temp1`
 [ "$stats1" = "$stats2" ]
 ${tools_dir}/grib_set -rs packingType=grid_simple $temp1 $temp2
 grib_check_key_equals $temp2 packingType,isConstant 'grid_simple 1'
-${tools_dir}/grib_compare -b totalLength,section5Length,dataRepresentationTemplateNumber $temp2 $temp1
+${tools_dir}/grib_compare -b totalLength,section5Length,section7Length,dataRepresentationTemplateNumber $temp2 $temp1
 
 
 # Decode as string - Null op
