@@ -164,7 +164,6 @@ int NumberOfPointsGaussian::unpack_long_new(long* val, size_t* len)
 
     if (plpresent) {
         long max_pl = 0;
-        int j       = 0;
         // double lon_first_row = 0, lon_last_row = 0;
 
         /*reduced*/
@@ -194,7 +193,7 @@ int NumberOfPointsGaussian::unpack_long_new(long* val, size_t* len)
         /* Find the maximum element of "pl" array, do not assume it's 4*N! */
         /* This could be an Octahedral Gaussian Grid */
         max_pl = pl[0];
-        for (j = 1; j < plsize; j++) {
+        for (size_t j = 1; j < plsize; j++) {
             if (pl[j] > max_pl)
                 max_pl = pl[j];
         }
@@ -206,7 +205,7 @@ int NumberOfPointsGaussian::unpack_long_new(long* val, size_t* len)
         if (!is_global) {
             /*sub area*/
             *val = 0;
-            for (j = 0; j < nj; j++) {
+            for (long j = 0; j < nj; j++) {
                 row_count = 0;
                 if (pl[j] == 0) {
                     grib_context_log(h->context, GRIB_LOG_ERROR, "Invalid pl array: entry at index=%d is zero", j);
@@ -219,9 +218,8 @@ int NumberOfPointsGaussian::unpack_long_new(long* val, size_t* len)
             }
         }
         else {
-            int i = 0;
             *val  = 0;
-            for (i = 0; i < plsize; i++)
+            for (size_t i = 0; i < plsize; i++)
                 *val += pl[i];
         }
     }
@@ -238,8 +236,8 @@ int NumberOfPointsGaussian::unpack_long_new(long* val, size_t* len)
 /* With Legacy support */
 int NumberOfPointsGaussian::unpack_long_with_legacy_support(long* val, size_t* len)
 {
-    int err                                         = GRIB_SUCCESS;
-    int is_global                                   = 0;
+    int err = GRIB_SUCCESS;
+    int is_global = 0;
     long ni = 0, nj = 0, plpresent = 0, order = 0;
     size_t plsize = 0;
     double lat_first, lat_last, lon_first, lon_last;
@@ -273,7 +271,6 @@ int NumberOfPointsGaussian::unpack_long_with_legacy_support(long* val, size_t* l
 
     if (plpresent) {
         long max_pl = 0;
-        int j       = 0;
         // double lon_first_row = 0, lon_last_row = 0;
 
         /*reduced*/
@@ -303,7 +300,7 @@ int NumberOfPointsGaussian::unpack_long_with_legacy_support(long* val, size_t* l
         /* Find the maximum element of "pl" array, do not assume it's 4*N! */
         /* This could be an Octahedral Gaussian Grid */
         max_pl = pl[0];
-        for (j = 1; j < plsize; j++) {
+        for (size_t j = 1; j < plsize; j++) {
             if (pl[j] > max_pl)
                 max_pl = pl[j];
         }
@@ -324,7 +321,7 @@ int NumberOfPointsGaussian::unpack_long_with_legacy_support(long* val, size_t* l
                    lon_first, fabs(lon_last - (360.0 - 90.0 / order)), 90.0 / order);
 #endif
             *val = 0;
-            for (j = 0; j < nj; j++) {
+            for (long j = 0; j < nj; j++) {
                 row_count = 0;
 #if EFDEBUG
                 printf("--  %d ", j);
@@ -348,9 +345,8 @@ int NumberOfPointsGaussian::unpack_long_with_legacy_support(long* val, size_t* l
             }
         }
         else {
-            int i = 0;
             *val  = 0;
-            for (i = 0; i < plsize; i++)
+            for (size_t i = 0; i < plsize; i++)
                 *val += pl[i];
         }
     }
@@ -370,7 +366,7 @@ int NumberOfPointsGaussian::unpack_long_with_legacy_support(long* val, size_t* l
     /* ECC-756: Now decide whether this is legacy GRIB1 message. */
     /* Query data values to see if there is a mismatch */
     if (get_number_of_data_values(h, &numDataValues) == GRIB_SUCCESS) {
-        if (*val != numDataValues) {
+        if ( (size_t)*val != numDataValues) {
             if (h->context->debug)
                 fprintf(stderr,
                         "ECCODES DEBUG number_of_points_gaussian: LEGACY MODE activated. "

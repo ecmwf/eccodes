@@ -41,7 +41,7 @@ int ScaleValues::pack_double(const double* val, size_t* len)
     double missingValue       = 0;
     long missingValuesPresent = 0;
     size_t size               = 0;
-    int ret = 0, i = 0;
+    int ret = 0;
     const grib_context* c = context_;
     grib_handle* h        = get_enclosing_handle();
 
@@ -67,7 +67,7 @@ int ScaleValues::pack_double(const double* val, size_t* len)
         return ret;
     }
 
-    for (i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++) {
         if (missingValuesPresent) {
             if (values[i] != missingValue)
                 values[i] *= *val;

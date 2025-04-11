@@ -195,7 +195,7 @@ int G2EndStep::unpack_one_time_range_double_(double* val, size_t* len)
 #define MAX_NUM_TIME_RANGES 16 /* maximum number of time range specifications */
 int G2EndStep::unpack_multiple_time_ranges_long_(long* val, size_t* len)
 {
-    int i = 0, err = 0;
+    int err = 0;
     grib_handle* h          = get_enclosing_handle();
     long numberOfTimeRanges = 0, step_units = 0, start_step_value = 0;
 
@@ -225,7 +225,7 @@ int G2EndStep::unpack_multiple_time_ranges_long_(long* val, size_t* len)
         return err;
 
     /* Look in the array of typeOfTimeIncrements for first entry whose typeOfTimeIncrement == 2 */
-    for (i = 0; i < count; i++) {
+    for (size_t i = 0; i < count; i++) {
         if (arr_typeOfTimeIncrement[i] == 2) {
             /* Found the required time range. Get the other two keys from it */
             long the_coded_unit       = arr_coded_unit[i];
@@ -247,7 +247,7 @@ int G2EndStep::unpack_multiple_time_ranges_long_(long* val, size_t* len)
 
 int G2EndStep::unpack_multiple_time_ranges_double_(double* val, size_t* len)
 {
-    int i = 0, err = 0;
+    int err = 0;
     grib_handle* h          = get_enclosing_handle();
     long numberOfTimeRanges = 0;
     long step_units         = 0;
@@ -286,7 +286,7 @@ int G2EndStep::unpack_multiple_time_ranges_double_(double* val, size_t* len)
         return err;
 
     /* Look in the array of typeOfTimeIncrements for first entry whose typeOfTimeIncrement == 2 */
-    for (i = 0; i < count; i++) {
+    for (size_t i = 0; i < count; i++) {
         if (arr_typeOfTimeIncrement[i] == 2) {
             /* Found the required time range. Get the other two keys from it */
             long the_coded_unit       = arr_coded_unit[i];

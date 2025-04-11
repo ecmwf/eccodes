@@ -82,9 +82,8 @@ int Latitudes::unpack_double(double* val, size_t* len)
 
     // lats_ are computed in value_count
     if (lats_) {
-        int i;
         *len = size_;
-        for (i = 0; i < size; i++)
+        for (size_t i = 0; i < size; i++)
             val[i] = lats_[i];
         grib_context_free(context_, lats_);
         lats_ = NULL;
