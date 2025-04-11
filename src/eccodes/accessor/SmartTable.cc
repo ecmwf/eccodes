@@ -19,10 +19,9 @@ void grib_smart_table_delete(grib_context* c)
     grib_smart_table* t = c->smart_table;
     while (t) {
         grib_smart_table* s = t->next;
-        int i;
         int k;
 
-        for (i = 0; i < t->numberOfEntries; i++) {
+        for (size_t i = 0; i < t->numberOfEntries; i++) {
             if (t->entries[i].abbreviation)
                 grib_context_free_persistent(c, t->entries[i].abbreviation);
             for (k = 0; k < MAX_SMART_TABLE_COLUMNS; k++) {
