@@ -417,10 +417,6 @@ int codes_write_message(const codes_handle* h, const char* file, const char* mod
 
 codes_handle* codes_grib_util_sections_copy(codes_handle* hfrom, codes_handle* hto, int what, int* err);
 
-/* These 2 functions are deprecated and will later be removed */
-codes_string_list* codes_grib_util_get_param_id(const char* mars_param) ECCODES_DEPRECATED;
-codes_string_list* codes_grib_util_get_mars_param(const char* param_id) ECCODES_DEPRECATED;
-
 /**
  *  Create a handle from a user message in memory. The message will not be freed at the end.
  *  The message will be copied as soon as a modification is needed.
