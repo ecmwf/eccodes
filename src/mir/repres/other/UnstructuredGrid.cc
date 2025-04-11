@@ -22,7 +22,6 @@
 #include "eckit/utils/MD5.h"
 
 #include "mir/api/MIRJob.h"
-#include "mir/api/mir_config.h"
 #include "mir/input/GriddefInput.h"
 #include "mir/iterator/UnstructuredIterator.h"
 #include "mir/output/GriddefOutput.h"
@@ -34,10 +33,7 @@
 #include "mir/util/Log.h"
 #include "mir/util/MeshGeneratorParameters.h"
 
-#if mir_HAVE_ATLAS
-#include "mir/key/grid/ORCAPattern.h"
-#include "mir/repres/proxy/ORCA.h"
-#endif
+#include "mir/repres/ORCA.h"
 
 
 namespace mir::repres {
@@ -45,15 +41,13 @@ namespace mir::repres {
 
 template <>
 Representation* RepresentationBuilder<other::UnstructuredGrid>::make(const param::MIRParametrisation& param) {
-#if mir_HAVE_ATLAS
     // specially-named unstructured grids
     std::string grid;
     if (param.get("grid", grid)) {
-        if (!key::grid::ORCAPattern::match(grid, param).empty()) {
-            return new proxy::ORCA(param);
+        if (!ORCA::match(grid, param).empty()) {
+            return new ORCA(param);
         }
     }
-#endif
 
     return new other::UnstructuredGrid(param);
 }
