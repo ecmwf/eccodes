@@ -390,7 +390,7 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     grib_handle* hand = get_enclosing_handle();
 
-    int err = GRIB_SUCCESS, i = 0;
+    int err = GRIB_SUCCESS;
     size_t buflen = 0;
     struct aec_stream strm;
     double bscale          = 0;
@@ -444,7 +444,7 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
 
     // Special case
     if (bits_per_value == 0) {
-        for (i = 0; i < n_vals; i++)
+        for (size_t i = 0; i < n_vals; i++)
             val[i] = reference_value;
         *len = n_vals;
         return GRIB_SUCCESS;
@@ -492,17 +492,17 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
     // ECC-1602: Performance improvement
     switch (nbytes) {
         case 1:
-            for (i = 0; i < n_vals; i++) {
+            for (size_t i = 0; i < n_vals; i++) {
                 val[i] = (reinterpret_cast<uint8_t*>(decoded)[i] * bscale + reference_value) * dscale;
             }
             break;
         case 2:
-            for (i = 0; i < n_vals; i++) {
+            for (size_t i = 0; i < n_vals; i++) {
                 val[i] = (reinterpret_cast<uint16_t*>(decoded)[i] * bscale + reference_value) * dscale;
             }
             break;
         case 4:
-            for (i = 0; i < n_vals; i++) {
+            for (size_t i = 0; i < n_vals; i++) {
                 val[i] = (reinterpret_cast<uint32_t*>(decoded)[i] * bscale + reference_value) * dscale;
             }
             break;
