@@ -1432,7 +1432,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 
     if ((*err = grib_set_values(h_out, values, count)) != 0) {
         fprintf(stderr, "%s: Cannot set key values: %s\n", __func__, grib_get_error_message(*err));
-        for (i = 0; i < count; i++)
+        for (size_t i = 0; i < count; i++)
             if (values[i].error) fprintf(stderr, " %s %s\n", values[i].name, grib_get_error_message(values[i].error));
         goto cleanup;
     }
@@ -2128,8 +2128,8 @@ int codes_grib_surface_type_requires_value(int edition, int type_of_surface_code
 
 size_t sum_of_pl_array(const long* pl, size_t plsize)
 {
-    long i, count = 0;
-    for (i = 0; i < plsize; i++) {
+    long count = 0;
+    for (size_t i = 0; i < plsize; i++) {
         count += pl[i];
     }
     return count;
