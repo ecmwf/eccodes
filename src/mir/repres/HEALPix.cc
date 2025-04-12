@@ -19,8 +19,6 @@
 #include "eckit/log/JSON.h"
 #include "eckit/types/FloatCompare.h"
 
-#include "atlas/interpolation/method/knn/GridBox.h"
-
 #include "mir/api/MIRJob.h"
 #include "mir/iterator/UnstructuredIterator.h"
 #include "mir/key/grid/GridPattern.h"
@@ -32,6 +30,10 @@
 #include "mir/util/GridBox.h"
 #include "mir/util/MeshGeneratorParameters.h"
 #include "mir/util/Reorder.h"
+
+#if mir_HAVE_ATLAS
+#include "atlas/interpolation/method/knn/GridBox.h"
+#endif
 
 
 namespace mir::repres {
@@ -207,6 +209,7 @@ Iterator* HEALPix::iterator() const {
 
 
 std::vector<util::GridBox> HEALPix::gridBoxes() const {
+#if mir_HAVE_ATLAS
     const auto Nside  = grid_->Nside();
     const auto& order = grid_->order();
 
@@ -228,10 +231,14 @@ std::vector<util::GridBox> HEALPix::gridBoxes() const {
     }
 
     return boxes;
+#else
+    NOTIMP;
+#endif
 }
 
 
 atlas::Grid HEALPix::atlasGrid() const {
+#if mir_HAVE_ATLAS
     if (grid_->order() == "nested") {
         const auto& [lats, lons] = to_latlons();
 
@@ -247,6 +254,9 @@ atlas::Grid HEALPix::atlasGrid() const {
     }
 
     return atlas::HealpixGrid(static_cast<int>(grid_->Nside()), grid_->order());
+#else
+    NOTIMP;
+#endif
 }
 
 

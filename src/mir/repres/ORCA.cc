@@ -17,9 +17,9 @@
 #include <vector>
 
 #include "eckit/geo/grid/ORCA.h"
-#include "eckit/geo/spec/Custom.h"
 
 #include "mir/api/MIRJob.h"
+#include "mir/api/mir_config.h"
 #include "mir/iterator/UnstructuredIterator.h"
 #include "mir/key/grid/GridPattern.h"
 #include "mir/key/grid/NamedGrid.h"
@@ -213,7 +213,11 @@ size_t ORCA::numberOfPoints() const {
 
 
 atlas::Grid ORCA::atlasGrid() const {
+#if mir_HAVE_ATLAS
     return {atlas::grid::SpecRegistry::get(grid_->uid())};
+#else
+    NOTIMP;
+#endif
 }
 
 
