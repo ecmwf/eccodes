@@ -1207,7 +1207,7 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
         h11 = grib_handle_new_from_partial_message(h1->context, msg1, size1);
         h22 = grib_handle_new_from_partial_message(h1->context, msg2, size2);
 
-        iter = grib_keys_iterator_new(h11, GRIB_KEYS_ITERATOR_SKIP_COMPUTED, NULL);
+        iter = grib_keys_iterator_new(h11, GRIB_KEYS_ITERATOR_SKIP_COMPUTED | GRIB_KEYS_ITERATOR_SKIP_DUPLICATES, NULL);
         if (!iter) {
             grib_context_log(context, GRIB_LOG_ERROR, "unable to create the GRIB keys iterator");
             exit(1);
@@ -1271,7 +1271,7 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
             return 0;
         }
 
-        iter = grib_keys_iterator_new(h1, GRIB_KEYS_ITERATOR_SKIP_COMPUTED, NULL);
+        iter = grib_keys_iterator_new(h1, GRIB_KEYS_ITERATOR_SKIP_COMPUTED | GRIB_KEYS_ITERATOR_SKIP_DUPLICATES, NULL);
         if (!iter) {
             grib_context_log(context, GRIB_LOG_ERROR, "unable to create the GRIB keys iterator");
             exit(1);
