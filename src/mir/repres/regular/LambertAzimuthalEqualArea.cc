@@ -79,30 +79,4 @@ void LambertAzimuthalEqualArea::fillGrib(grib_info& info) const {
 }
 
 
-const Representation* LambertAzimuthalEqualArea::croppedRepresentation(const util::BoundingBox& bbox) const {
-    auto mm = minmax_ij(bbox);
-    auto Ni = x().size();
-
-    auto projection = grid().projection();
-    ASSERT(projection);
-
-    auto first = [this, projection, Ni](size_t firsti, size_t firstj) -> Point2 {
-        for (std::unique_ptr<Iterator> it(iterator()); it->next();) {
-            auto i = it->index() % Ni;
-            auto j = it->index() / Ni;
-            if (i == firsti && j == firstj) {
-                const auto& latlon = *(*it);
-                return projection.xy(PointLonLat{latlon[1], latlon[0]});
-            }
-        }
-        throw exception::UserError("LambertAzimuthalEqualArea::croppedRepresentation: cannot find first point");
-    }(mm.first.i, mm.first.j);
-
-    auto spacex = linspace(first.x(), std::abs(x().step()), static_cast<long>(mm.second.i - mm.first.i + 1), xPlus());
-    auto spacey = linspace(first.y(), std::abs(y().step()), static_cast<long>(mm.second.j - mm.first.j + 1), yPlus());
-
-    return new LambertAzimuthalEqualArea(projection, bbox, spacex, spacey, shape());
-}
-
-
 }  // namespace mir::repres::regular
