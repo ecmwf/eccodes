@@ -17,6 +17,7 @@
 
 #include "mir/api/mir_config.h"
 #include "mir/api/MIRJob.h"
+#include "mir/api/mir_config.h"
 #include "mir/util/Atlas.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Exceptions.h"

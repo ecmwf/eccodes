@@ -64,7 +64,7 @@ void RotatedClassic::fillJob(api::MIRJob& job) const {
 
 
 atlas::Grid RotatedClassic::atlasGrid() const {
-    return rotation_.rotate(Classic::atlasGrid());
+    return rotate_atlas_grid(rotation_.rotation(), Classic::atlasGrid());
 }
 
 

@@ -18,6 +18,7 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Atlas.h"
 #include "mir/util/Domain.h"
+#include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
 
 
@@ -73,8 +74,8 @@ atlas::Grid RotatedLL::atlasGrid() const {
     atlas::StructuredGrid::YSpace yspace(
         atlas::grid::LinearSpacing(bbox_.north().value(), bbox_.south().value(), long(nj_)));
 
-    atlas::StructuredGrid unrotatedGrid(xspace, yspace, {}, dom);
-    return rotation_.rotate(unrotatedGrid);
+    atlas::StructuredGrid grid(xspace, yspace, {}, dom);
+    return rotate_atlas_grid(rotation_.rotation(), grid);
 #else
     NOTIMP;
 #endif
