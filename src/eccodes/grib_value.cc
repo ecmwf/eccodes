@@ -496,10 +496,19 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* l
 {
     int ret = GRIB_SUCCESS;
     grib_accessor* a = NULL;
+    bool add_bitmap = false;
 
     int processed = preprocess_packingType_change(h, name, val);
     if (processed)
         return GRIB_SUCCESS;  // Dealt with - no further action needed
+
+    // ECC-536: Embedded bitmap?
+    if (grib_inline_strcmp(name, "packingType") == 0) {
+        long missingValsEmbedded = 0;
+        if (grib_get_long(h, "missingValueManagementUsed", &missingValsEmbedded) == GRIB_SUCCESS && missingValsEmbedded != 0) {
+            add_bitmap = true;
+        }
+    }
 
     a = grib_find_accessor(h, name);
 
@@ -517,6 +526,9 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* l
         ret = a->pack_string(val, length);
         if (ret == GRIB_SUCCESS) {
             postprocess_packingType_change(h, name, val);
+            if (add_bitmap) {
+                grib_set_long(h, "bitmapPresent", 1);
+            }
             return grib_dependency_notify_change(a);
         }
         return ret;
