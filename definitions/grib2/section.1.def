@@ -111,19 +111,17 @@ concept stepType {
     "index"   = {selectStepTemplateInterval=1; stepTypeInternal="index";}
 }
 
-if (chem_param_split == 0) {
-  # 0=atmospheric chemical constituents
-  # 1=atmospheric chemical constituents based on a distribution function
-  # 2=atmospheric chemical constituents with source or sink
-  meta is_chemical         g2_chemical(productDefinitionTemplateNumber, stepType, 0);
-  meta is_chemical_distfn  g2_chemical(productDefinitionTemplateNumber, stepType, 1);
-  meta is_chemical_srcsink g2_chemical(productDefinitionTemplateNumber, stepType, 2);
+# 0=atmospheric chemical constituents
+# 1=atmospheric chemical constituents based on a distribution function
+# 2=atmospheric chemical constituents with source or sink
+meta is_chemical         g2_chemical(productDefinitionTemplateNumber, stepType, 0);
+meta is_chemical_distfn  g2_chemical(productDefinitionTemplateNumber, stepType, 1);
+meta is_chemical_srcsink g2_chemical(productDefinitionTemplateNumber, stepType, 2);
 
-  # 0=aerosol
-  # 1=optical properties of aerosol
-  meta is_aerosol          g2_aerosol(productDefinitionTemplateNumber, stepType, 0);
-  meta is_aerosol_optical  g2_aerosol(productDefinitionTemplateNumber, stepType, 1);
-}
+# 0=aerosol
+# 1=optical properties of aerosol
+meta is_aerosol          g2_aerosol(productDefinitionTemplateNumber, stepType, 0);
+meta is_aerosol_optical  g2_aerosol(productDefinitionTemplateNumber, stepType, 1);
 
 transient setCalendarId = 0 ;
 transient deleteCalendarId = 0 ;
