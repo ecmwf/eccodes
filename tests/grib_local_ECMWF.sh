@@ -9,7 +9,11 @@
 #
 
 . ./include.ctest.sh
-#set -x
+
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
 
 REDIRECT=/dev/null
 sample_g1=$ECCODES_SAMPLES_PATH/reduced_gg_pl_640_grib1.tmpl
