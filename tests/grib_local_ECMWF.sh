@@ -231,5 +231,10 @@ grib_check_key_equals $temp productDefinitionTemplateNumber 50
 ${tools_dir}/grib_set -s paramId=210251,setLocalDefinition=1,localDefinitionNumber=36 $sample_g2 $temp
 
 
+# ECC-2068: GRIB1: Setting local definition 11 issues error messages
+${tools_dir}/grib_set -s localDefinitionNumber=11 $sample_g1 $temp
+grib_check_key_equals $temp "classOfAnalysis,typeOfAnalysis,streamOfAnalysis,originatingCentreOfAnalysis" "1 2 1025 98"
+
+
 # Clean up
 rm -f $temp $temp.1 $temp.2 $temp.3
