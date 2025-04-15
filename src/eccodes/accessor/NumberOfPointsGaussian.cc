@@ -208,7 +208,7 @@ int NumberOfPointsGaussian::unpack_long_new(long* val, size_t* len)
             for (long j = 0; j < nj; j++) {
                 row_count = 0;
                 if (pl[j] == 0) {
-                    grib_context_log(h->context, GRIB_LOG_ERROR, "Invalid pl array: entry at index=%d is zero", j);
+                    grib_context_log(h->context, GRIB_LOG_ERROR, "Invalid pl array: entry at index=%ld is zero", j);
                     return GRIB_GEOCALCULUS_PROBLEM;
                 }
                 grib_get_reduced_row_wrapper(h, pl[j], lon_first, lon_last, &row_count, &ilon_first, &ilon_last);
@@ -327,7 +327,7 @@ int NumberOfPointsGaussian::unpack_long_with_legacy_support(long* val, size_t* l
                 printf("--  %d ", j);
 #endif
                 if (pl[j] == 0) {
-                    grib_context_log(h->context, GRIB_LOG_ERROR, "Invalid pl array: entry at index=%d is zero", j);
+                    grib_context_log(h->context, GRIB_LOG_ERROR, "Invalid pl array: entry at index=%ld is zero", j);
                     return GRIB_GEOCALCULUS_PROBLEM;
                 }
                 grib_get_reduced_row_wrapper(h, pl[j], lon_first, lon_last, &row_count, &ilon_first, &ilon_last);
