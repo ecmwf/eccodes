@@ -43,6 +43,7 @@ void DataG22OrderPacking::init(const long v, grib_arguments* args)
 
     orderOfSpatialDifferencing_     = args->get_name(gh, carg_++);
     numberOfOctetsExtraDescriptors_ = args->get_name(gh, carg_++);
+    dataRepresentationTemplateNumber_ = args->get_name(gh, carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
@@ -788,7 +789,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
     long binary_scale_factor, decimal_scale_factor, typeOfOriginalFieldValues, optimize_scale_factor;
     // long groupSplittingMethodUsed, numberOfGroupsOfDataValues, referenceForGroupWidths;
     long missingValueManagementUsed, primaryMissingValueSubstitute, secondaryMissingValueSubstitute;
-    long numberOfBitsUsedForTheGroupWidths, numberOfBitsUsedForTheScaledGroupLengths, orderOfSpatialDifferencing;
+    long numberOfBitsUsedForTheGroupWidths, numberOfBitsUsedForTheScaledGroupLengths, orderOfSpatialDifferencing, dataRepresentationTemplateNumber;
     long numberOfOctetsExtraDescriptors, bits_per_value = 0, bitmap_present = 0;
 
     int dec_scale, bin_scale, wanted_bits, max_bits, use_bitmap,
@@ -840,6 +841,8 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         return err;
     if ((err = grib_get_long_internal(gh, numberOfBitsUsedForTheScaledGroupLengths_, &numberOfBitsUsedForTheScaledGroupLengths)) != GRIB_SUCCESS)
         return err;
+    if ((err = grib_get_long_internal(gh, dataRepresentationTemplateNumber_, &dataRepresentationTemplateNumber)) != GRIB_SUCCESS)
+        return err;
     if ((err = grib_get_long_internal(gh, orderOfSpatialDifferencing_, &orderOfSpatialDifferencing)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_long_internal(gh, numberOfOctetsExtraDescriptors_, &numberOfOctetsExtraDescriptors)) != GRIB_SUCCESS)
@@ -849,10 +852,26 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
 
     max_bits = bits_per_value;  // TODO(masn)
 
-    // Note:
-    // orderOfSpatialDifferencing = 0 means "grid_complex"
-    // orderOfSpatialDifferencing = 1 means "grid_complex_spatial_differencing" with orderOfSpatialDifferencing=1
-    // orderOfSpatialDifferencing = 2 means "grid_complex_spatial_differencing" with orderOfSpatialDifferencing=2
+    int packing_mode = 0;
+    if (dataRepresentationTemplateNumber == 2) {
+      // ecCodes: "grid_complex"
+      // wgrib2: "complex1"
+      packing_mode = 1;
+    }
+    else if (dataRepresentationTemplateNumber == 3 && orderOfSpatialDifferencing == 1) {
+      // ecCodes: "grid_complex_spatial_differencing"
+      // wgrib2: "complex2"
+      packing_mode = 2;
+    }
+    else if (dataRepresentationTemplateNumber == 3 && orderOfSpatialDifferencing == 2) { //
+      // ecCodes: "grid_complex_spatial_differencing"
+      // wgrib2: "complex3"
+      packing_mode = 3;
+    }
+    else {
+      grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: unsupported dataRepresentationTemplateNumber=%ld or orderOfSpatialDifferencing=%ld", class_name_, dataRepresentationTemplateNumber, orderOfSpatialDifferencing);
+      return GRIB_INVALID_ARGUMENT;
+    }
 
     use_bitmap  = bitmap_present;
     wanted_bits = bits_per_value;
@@ -1034,7 +1053,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
     vmx = vmn = 0;
     extra_0 = extra_1 = 0;  // turn off warnings
 
-    if (orderOfSpatialDifferencing == 2) {
+    if (packing_mode == 3) {
         // delta_delta(v, nndata, &vmn, &vmx, &extra_0, &extra_1);
         // single core version
         {
@@ -1066,7 +1085,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
             }
         }
     }
-    else if (orderOfSpatialDifferencing == 1) {
+    else if (packing_mode == 2) {
         // delta(v, nndata, &vmn, &vmx, &extra_0);
         // single core version
         {
@@ -1090,7 +1109,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
             }
         }
     }
-    else if (orderOfSpatialDifferencing == 0) {
+    else if (packing_mode == 1) {
         // find min/max
         int_min_max_array(v, nndata, &vmn, &vmx);
     }
@@ -1223,13 +1242,13 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
     // finished making segments
     // find out number of bytes for extra info (orderOfSpatialDifferencing 2/3)
 
-    if (orderOfSpatialDifferencing != 0) {  // packing modes 2/3
+    if (packing_mode != 1) {  // packing modes 2/3
         k = vmn >= 0 ? find_nbits(vmn) + 1 : find_nbits(-vmn) + 1;
         // + 1 work around for NCEP bug
         j = find_nbits(extra_0) + 1;
         if (j > k) k = j;
 
-        if (orderOfSpatialDifferencing == 2) {
+        if (packing_mode == 3) {
             // + 1 work around for NCEP bug
             j = find_nbits(extra_1) + 1;
             if (j > k) k = j;
@@ -1352,13 +1371,13 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
 
     size_sec7 = 5;
 
-    if (orderOfSpatialDifferencing == 1) {
+    if (packing_mode == 2) {
         size_sec7 += 2 * numberOfOctetsExtraDescriptors;
     }
-    else if (orderOfSpatialDifferencing == 2) {
+    else if (packing_mode == 3) {
         size_sec7 += 3 * numberOfOctetsExtraDescriptors;
     }
-    if (orderOfSpatialDifferencing > 0) {
+    if (packing_mode > 1) {
         if ((err = grib_set_long_internal(gh, orderOfSpatialDifferencing_, orderOfSpatialDifferencing)) != GRIB_SUCCESS)
             return err;
         if ((err = grib_set_long_internal(gh, numberOfOctetsExtraDescriptors_, numberOfOctetsExtraDescriptors)) != GRIB_SUCCESS)
@@ -1404,9 +1423,9 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
     add_bitstream(&ctx, this, 7, 8);
 
     // write extra octets
-    if (orderOfSpatialDifferencing == 1 || orderOfSpatialDifferencing == 2) {
+    if (packing_mode == 2 || packing_mode == 3) {
         add_bitstream(&ctx, this, extra_0, 8 * numberOfOctetsExtraDescriptors);
-        if (orderOfSpatialDifferencing == 2) add_bitstream(&ctx, this, extra_1, 8 * numberOfOctetsExtraDescriptors);
+        if (packing_mode == 3) add_bitstream(&ctx, this, extra_1, 8 * numberOfOctetsExtraDescriptors);
         k = vmn;
         if (k < 0) {
             k = -vmn | (1 << (8 * numberOfOctetsExtraDescriptors - 1));

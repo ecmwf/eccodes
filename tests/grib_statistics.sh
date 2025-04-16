@@ -99,8 +99,38 @@ stats2=`${tools_dir}/grib_get -M -F%.0f -n statistics $temp1`
 [ "$stats1" = "$stats2" ]
 ${tools_dir}/grib_set -rs packingType=grid_simple $temp1 $temp2
 grib_check_key_equals $temp2 packingType,isConstant 'grid_simple 1'
-${tools_dir}/grib_compare -b totalLength,section5Length,dataRepresentationTemplateNumber $temp2 $temp1
+${tools_dir}/grib_compare -b totalLength,section5Length,section7Length,dataRepresentationTemplateNumber $temp2 $temp1
 
+# grib_complex_spatial_differencing with and without bitmap
+check_complex_packing() {
+  input="$1"
+  alg="$2"
+  order="$3"
+
+  args="packingType=$alg"
+  if [ "$order" -ne 0 ]; then
+    args="$args,orderOfSpatialDifferencing=$order"
+  fi
+  ${tools_dir}/grib_set -s $args $input $temp1 
+
+  grib_check_key_equals $temp1 packingType "$alg"
+  stats1=`${tools_dir}/grib_get -M -F%.0f -n statistics $input`
+  stats2=`${tools_dir}/grib_get -M -F%.0f -n statistics $temp1`
+  [ "$stats1" = "$stats2" ]
+  ${tools_dir}/grib_set -rs packingType=grid_simple $temp1 $temp2
+  grib_check_key_equals $temp2 packingType "grid_simple"
+  ${tools_dir}/grib_compare -R codedValues=0.00001 -b binaryScaleFactor,totalLength,section5Length,section7Length,dataRepresentationTemplateNumber $temp2 $temp1
+}
+
+# no bitmap
+check_complex_packing ${data_dir}/regular_latlon_surface.grib2 grid_complex_spatial_differencing 2
+check_complex_packing ${data_dir}/regular_latlon_surface.grib2 grid_complex_spatial_differencing 1
+check_complex_packing ${data_dir}/regular_latlon_surface.grib2 grid_complex 0
+
+# with bitmap
+check_complex_packing ${data_dir}/reduced_latlon_surface.grib2 grid_complex_spatial_differencing 2
+check_complex_packing ${data_dir}/reduced_latlon_surface.grib2 grid_complex_spatial_differencing 1
+check_complex_packing ${data_dir}/reduced_latlon_surface.grib2 grid_complex 0
 
 # Decode as string - Null op
 cat >$tempFilt<<EOF
