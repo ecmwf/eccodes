@@ -34,6 +34,22 @@ done
 infile=${data_dir}/gfs.complex.mvmu.grib2
 grib_check_key_equals $infile 'missingValueManagementUsed,bitmapPresent' '1 0'
 grib_check_key_equals $infile 'numberOfMissing,numberOfMissingValues' '556901 556901'
+
+# ECC-536
+if [ $HAVE_AEC -eq 1 ]; then
+  for pt in grid_simple grid_ccsds; do
+    ${tools_dir}/grib_set -r -s packingType=$pt $infile $temp
+    stats1=`${tools_dir}/grib_get -M -F%.1f -n statistics $infile`
+    stats2=`${tools_dir}/grib_get -M -F%.1f -n statistics $temp`
+    [ "$stats1" = "$stats2" ]
+    grib_check_key_equals $temp bitmapPresent,packingType "1 $pt"
+    rm -f $temp
+  done
+fi
+
 infile=${data_dir}/gfs.c255.grib2
 grib_check_key_equals $infile 'missingValueManagementUsed,bitmapPresent' '0 1'
 grib_check_key_equals $infile 'numberOfMissing,numberOfMissingValues' '7665 7665'
+
+# Clean up
+rm -f $temp $temp1 $temp2

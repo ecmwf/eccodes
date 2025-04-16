@@ -59,7 +59,7 @@ int BufrExtractAreaSubsets::select_area()
 
     double* lat = NULL;
     double* lon = NULL;
-    size_t n;
+    size_t n = 0;
     double lonWest, lonEast, latNorth, latSouth;
     long numberOfSubsets, i, latRank, lonRank;
     grib_iarray* subsets = NULL;
@@ -93,7 +93,7 @@ int BufrExtractAreaSubsets::select_area()
     if (compressed) {
         ret = grib_get_double_array(h, latstr, lat, &n);
         if (ret) return ret;
-        if (!(n == 1 || n == numberOfSubsets)) {
+        if (!(n == 1 || n == (size_t)numberOfSubsets)) {
             /* n can be 1 if all latitudes are the same */
             return GRIB_INTERNAL_ERROR;
         }
@@ -119,7 +119,7 @@ int BufrExtractAreaSubsets::select_area()
     if (compressed) {
         ret = grib_get_double_array(h, lonstr, lon, &n);
         if (ret) return ret;
-        if (!(n == 1 || n == numberOfSubsets)) {
+        if (!(n == 1 || n == (size_t)numberOfSubsets)) {
             /* n can be 1 if all longitudes are the same */
             return GRIB_INTERNAL_ERROR;
         }

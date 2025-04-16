@@ -64,9 +64,8 @@ void grib_codetable_delete(grib_context* c)
 
     while (t) {
         grib_codetable* s = t->next;
-        int i;
 
-        for (i = 0; i < t->size; i++) {
+        for (size_t i = 0; i < t->size; i++) {
             grib_context_free_persistent(c, t->entries[i].abbreviation);
             grib_context_free_persistent(c, t->entries[i].title);
             grib_context_free_persistent(c, t->entries[i].units);

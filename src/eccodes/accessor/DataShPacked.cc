@@ -113,7 +113,7 @@ int DataShPacked::unpack_double(double* val, size_t* len)
     if (err)
         return err;
 
-    if (*len < n_vals) {
+    if (*len < (size_t)n_vals) {
         *len = n_vals;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -194,7 +194,7 @@ int DataShPacked::unpack_double(double* val, size_t* len)
     if (!scals) return GRIB_OUT_OF_MEMORY;
 
     scals[0] = 0;
-    for (i = 1; i < maxv; i++) {
+    for (i = 1; i < (size_t)maxv; i++) {
         operat = pow(i * (i + 1), laplacianOperator);
         if (operat != 0)
             scals[i] = (1.0 / operat);

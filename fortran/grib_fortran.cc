@@ -1520,7 +1520,7 @@ int any_f_new_from_scanned_file_(int* fid, int* msgid, int* gid)
     if (info_messages == NULL) {
         return GRIB_INVALID_ARGUMENT;
     }
-    if (*msgid < 1 || *msgid > info_messages->n) {
+    if (*msgid < 1 || (size_t)*msgid > info_messages->n) {
         return GRIB_INVALID_ARGUMENT;
     }
 
@@ -1875,7 +1875,7 @@ int grib_f_get_error_string_(int* err, char* buf, int len)
 {
     const char* err_msg = grib_get_error_message(*err);
     const size_t erlen = strlen(err_msg);
-    if( len <  erlen) return GRIB_ARRAY_TOO_SMALL;
+    if ( (size_t)len <  erlen) return GRIB_ARRAY_TOO_SMALL;
     strncpy(buf, err_msg, (size_t)erlen); /* ECC-1488 */
     return GRIB_SUCCESS;
 }
@@ -1990,24 +1990,27 @@ int grib_f_get_int_array_(int* gid, char* key, int *val, int* size, int len)
     char buf[1024];
     size_t lsize = *size;
 
-    if(!h)  return GRIB_INVALID_GRIB;
+    if (!h)  return GRIB_INVALID_GRIB;
 
-    if(sizeof(long) == sizeof(int)){
+    if (sizeof(long) == sizeof(int)){
         long_val = (long*)val;
         err = grib_get_long_array(h, cast_char(buf,key,len), long_val, &lsize);
         *size = lsize;
         return  err;
     }
-    if(*size)
+    if (*size)
         long_val = (long*)grib_context_malloc(h->context,(*size)*(sizeof(long)));
     else
         long_val = (long*)grib_context_malloc(h->context,(sizeof(long)));
 
-    if(!long_val) return GRIB_OUT_OF_MEMORY;
+    if (!long_val) return GRIB_OUT_OF_MEMORY;
+
     err = grib_get_long_array(h, cast_char(buf,key,len), long_val, &lsize);
 
-    for(*size=0;*size<lsize;(*size)++)
-        val[*size] = long_val[*size];
+    for (size_t i=0; i<lsize; ++i) {
+        val[i] = long_val[i];
+    }
+    *size = lsize;
 
     grib_context_free(h->context,long_val);
     return  err;
@@ -2146,14 +2149,15 @@ int grib_f_set_int_array_(int* gid, char* key, int* val, int* size, int len)
         return  grib_set_long_array(h, cast_char(buf,key,len), long_val, lsize);
     }
 
-    if(lsize)
+    if (lsize)
         long_val = (long*)grib_context_malloc(h->context,(lsize)*(sizeof(long)));
     else
         long_val = (long*)grib_context_malloc(h->context,(sizeof(long)));
 
-    if(!long_val) return GRIB_OUT_OF_MEMORY;
+    if (!long_val) return GRIB_OUT_OF_MEMORY;
 
-    for(lsize=0;lsize<(*size);lsize++)
+    const size_t u_size = *size;
+    for (lsize = 0; lsize < u_size; lsize++)
         long_val[lsize] = val[lsize];
 
     err = grib_set_long_array(h, cast_char(buf,key,len), long_val, lsize);
@@ -2643,7 +2647,8 @@ int grib_f_get_string_array_(int* gid, char* key, char* val,int* nvals,int* slen
     err = grib_get_string_array(h, cast_char(buf,key,len), cval, &lsize);
     if (err) return err;
 
-    if (strlen(cval[0])>*slen) err=GRIB_ARRAY_TOO_SMALL;
+    const size_t u_slen = *slen;
+    if (strlen(cval[0]) > u_slen) err = GRIB_ARRAY_TOO_SMALL;
 
     for (i=0;i<lsize;i++) {
         strcpy(p,cval[i]);

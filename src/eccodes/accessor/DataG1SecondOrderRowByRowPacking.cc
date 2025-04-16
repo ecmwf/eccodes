@@ -94,7 +94,7 @@ int DataG1SecondOrderRowByRowPacking::value_count(long* count)
         bitmap  = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfPoints);
         pbitmap = bitmap;
         grib_get_long_array(gh, bitmap_, bitmap, &numberOfPoints);
-        for (i = 0; i < numberOfPoints; i++)
+        for (size_t ii = 0; ii < numberOfPoints; ii++)
             n += *(bitmap++);
 
         grib_context_free(context_, pbitmap);

@@ -52,7 +52,6 @@ int SmartTableColumn::unpack_string_array(char** buffer, size_t* len)
     long* code;
     int err = GRIB_SUCCESS;
     char tmp[1024] = {0,};
-    int i = 0;
 
     tableAccessor = (SmartTable*)grib_find_accessor(get_enclosing_handle(), smartTable_);
     if (!tableAccessor) {
@@ -79,7 +78,7 @@ int SmartTableColumn::unpack_string_array(char** buffer, size_t* len)
 
     table = tableAccessor->smarttable();
 
-    for (i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++) {
         if (table && (code[i] >= 0) &&
             (code[i] < table->numberOfEntries) &&
             table->entries[code[i]].column[index_]) {
@@ -105,7 +104,7 @@ int SmartTableColumn::unpack_long(long* val, size_t* len)
     size_t size = 1;
     long* code;
     int err = GRIB_SUCCESS;
-    int i = 0;
+    size_t i = 0;
 
     for (i = 0; i < *len; i++)
         val[i] = GRIB_MISSING_LONG;

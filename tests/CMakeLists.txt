@@ -280,6 +280,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-806
         grib_ecc-873
         grib_ecc-600
+        grib_ecc-813
         grib_ecc-923
         grib_ecc-979
         grib_ecc-984

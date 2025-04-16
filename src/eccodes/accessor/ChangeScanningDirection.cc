@@ -80,8 +80,8 @@ int ChangeScanningDirection::pack_long(const long* val, size_t* len)
     if ((err = grib_get_size(h, values_, &size)) != GRIB_SUCCESS)
         return err;
 
-    if (size > Ni * Nj) {
-        grib_context_log(c, GRIB_LOG_ERROR, "%s: Wrong values size!=Ni*Nj (%ld!=%ld*%ld)", class_name_, size, Ni, Nj);
+    if (size > (size_t)(Ni * Nj)) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Wrong values size!=Ni*Nj (%zu!=%ld*%ld)", class_name_, size, Ni, Nj);
         return GRIB_WRONG_ARRAY_SIZE;
     }
 
