@@ -102,7 +102,7 @@ grib_check_key_equals $temp2 packingType,isConstant 'grid_simple 1'
 ${tools_dir}/grib_compare -b totalLength,section5Length,section7Length,dataRepresentationTemplateNumber $temp2 $temp1
 
 # grib_complex_spatial_differencing with and without bitmap
-function check_complex_packing() {
+check_complex_packing() {
   input="$1"
   alg="$2"
   order="$3"
