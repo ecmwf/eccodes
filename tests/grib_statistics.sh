@@ -107,7 +107,6 @@ function check_complex_packing() {
   alg="$2"
   order="$3"
 
-  echo "Checking $input with packingType=$alg orderOfSpatialDifferencing=$order"
   args="packingType=$alg"
   if [ "$order" -ne 0 ]; then
     args="$args,orderOfSpatialDifferencing=$order"
