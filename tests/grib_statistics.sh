@@ -77,30 +77,19 @@ stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $input`
 
 # ECC-1926
 # grid_complex_spatial_differencing with bpv=0
-# Create a data section similar to the attached file dswrf-1.grib2
-cat >$tempFilt<<EOF
-    set packingType='grid_complex_spatial_differencing';
-    set numberOfGroupsOfDataValues=0;
-    set orderOfSpatialDifferencing=2;
-    set primaryMissingValueSubstitute=0;
-    set referenceForGroupWidths = 64;
-    set numberOfBitsUsedForTheGroupWidths = 4;
-    set referenceForGroupLengths = 203736800;
-    set trueLengthOfLastGroup = 8;
-    set numberOfBitsForScaledGroupLengths = 7;
-    set numberOfOctetsExtraDescriptors = 1;
-    write;
-EOF
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-${tools_dir}/grib_filter -o $temp1 $tempFilt $input
+${tools_dir}/grib_set -rs packingType=grid_complex_spatial_differencing $input $temp1
 grib_check_key_equals $temp1 packingType,isConstant 'grid_complex_spatial_differencing 1'
 stats1=`${tools_dir}/grib_get -M -F%.0f -n statistics $input`
 stats2=`${tools_dir}/grib_get -M -F%.0f -n statistics $temp1`
 [ "$stats1" = "$stats2" ]
+# From constant grid_complex_spatial_differencing to grib_simple
 ${tools_dir}/grib_set -rs packingType=grid_simple $temp1 $temp2
 grib_check_key_equals $temp2 packingType,isConstant 'grid_simple 1'
 ${tools_dir}/grib_compare -b totalLength,section5Length,section7Length,dataRepresentationTemplateNumber $temp2 $temp1
 
+
+# ECC-2060
 # grib_complex_spatial_differencing with and without bitmap
 check_complex_packing() {
   input="$1"
@@ -119,7 +108,8 @@ check_complex_packing() {
   [ "$stats1" = "$stats2" ]
   ${tools_dir}/grib_set -rs packingType=grid_simple $temp1 $temp2
   grib_check_key_equals $temp2 packingType "grid_simple"
-  ${tools_dir}/grib_compare -R codedValues=0.00001 -b binaryScaleFactor,totalLength,section5Length,section7Length,dataRepresentationTemplateNumber $temp2 $temp1
+  ${tools_dir}/grib_compare -R codedValues=0.00001 \
+    -b binaryScaleFactor,totalLength,section5Length,section7Length,dataRepresentationTemplateNumber $temp2 $temp1
 }
 
 # no bitmap
