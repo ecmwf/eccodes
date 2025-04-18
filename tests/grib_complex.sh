@@ -30,12 +30,8 @@ for file in $files; do
   rm -f $temp $temp1 $temp2
 done
 
-# ECC-523
-infile=${data_dir}/gfs.complex.mvmu.grib2
-grib_check_key_equals $infile 'missingValueManagementUsed,bitmapPresent' '1 0'
-grib_check_key_equals $infile 'numberOfMissing,numberOfMissingValues' '556901 556901'
-
 # ECC-536
+infile=${data_dir}/gfs.complex.mvmu.grib2
 if [ $HAVE_AEC -eq 1 ]; then
   for pt in grid_simple grid_ccsds; do
     ${tools_dir}/grib_set -r -s packingType=$pt $infile $temp

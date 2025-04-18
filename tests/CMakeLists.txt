@@ -192,6 +192,7 @@ if( HAVE_BUILD_TOOLS )
         grib_double_cmp
         grib_element
         grib_change_packing
+        grib_complex_spatial_differencing
         grib_run_length_packing
         grib_grid_space_view
         grib_partial_message
