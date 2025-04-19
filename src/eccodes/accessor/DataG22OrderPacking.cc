@@ -869,7 +869,8 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
       packing_mode = 3;
     }
     else {
-      grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: unsupported dataRepresentationTemplateNumber=%ld or orderOfSpatialDifferencing=%ld", class_name_, dataRepresentationTemplateNumber, orderOfSpatialDifferencing);
+      grib_context_log(context_, GRIB_LOG_ERROR, "%s: unsupported dataRepresentationTemplateNumber=%ld or orderOfSpatialDifferencing=%ld",
+                        class_name_, dataRepresentationTemplateNumber, orderOfSpatialDifferencing);
       return GRIB_INVALID_ARGUMENT;
     }
 
@@ -886,7 +887,8 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         // Section 5
         const char* packing_type = "grid_complex";
         size_t packing_type_len  = strlen(packing_type);
-        grib_set_string_internal(gh, "packingType", packing_type, &packing_type_len);
+        err = grib_set_string_internal(gh, "packingType", packing_type, &packing_type_len);
+        if (err) return err;
 
         if ((err = grib_set_double_internal(gh, reference_value_, grib_ieee_to_long(0.0))) != GRIB_SUCCESS)
             return err;
@@ -925,7 +927,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         if ((err = grib_set_long_internal(gh, "bitmapPresent", 0)) != GRIB_SUCCESS) return err;
 
         // Section 7
-        constexpr size_t sec7_size          = 3;
+        constexpr size_t sec7_size = 3;
         unsigned char empty_sec7[sec7_size] = { 255, 0, 0 };  // group reference, group width, group length
         grib_buffer_replace(this, empty_sec7, sec7_size, 1, 1);
         return GRIB_SUCCESS;
@@ -981,7 +983,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         }
         else {
             binary_scale = nbits = 0;
-            scale                = 1;
+            scale = 1;
         }
     }
     else {
@@ -1061,14 +1063,14 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
             for (i = 0; i < nndata; i++) {
                 if (v[i] != INT_MAX) {
                     extra_0 = penultimate = v[i];
-                    v[i++]                = 0;
+                    v[i++]  = 0;
                     break;
                 }
             }
             for (; i < nndata; i++) {
                 if (v[i] != INT_MAX) {
                     extra_1 = last = v[i];
-                    v[i++]         = 0;
+                    v[i++]  = 0;
                     break;
                 }
             }
@@ -1311,7 +1313,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
             grefmx_thread;
         glenmn_thread = glenmx_thread = lens[0];
         gwidmn_thread = gwidmx_thread = widths[0];
-        grefmx_thread                 = refs[0] != INT_MAX ? refs[0] : 0;
+        grefmx_thread = refs[0] != INT_MAX ? refs[0] : 0;
 
         for (i = 1; i < ngroups; i++) {
             glenmx_thread = glenmx_thread >= lens[i] ? glenmx_thread : lens[i];
@@ -1332,7 +1334,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         }
     }
 
-    bits_per_value                    = find_nbits(grefmx + has_undef);
+    bits_per_value = find_nbits(grefmx + has_undef);
     numberOfBitsUsedForTheGroupWidths = find_nbits(gwidmx - gwidmn + has_undef);
 
     if ((err = grib_set_long_internal(gh, bits_per_value_, bits_per_value)) != GRIB_SUCCESS)
@@ -1535,7 +1537,7 @@ int DataG22OrderPacking::unpack(T* val, size_t* len)
     long numberOfBitsUsedForTheScaledGroupLengths;
     long orderOfSpatialDifferencing     = 0;
     long numberOfOctetsExtraDescriptors = 0;
-    double missingValue                 = 0;
+    double missingValue = 0;
 
     err = value_count(&n_vals);
     if (err)
@@ -1705,7 +1707,7 @@ int DataG22OrderPacking::unpack(T* val, size_t* len)
     }
 
     if (orderOfSpatialDifferencing) {
-        long bias               = 0;
+        long bias = 0;
         unsigned long extras[2] = {
             0,
         };

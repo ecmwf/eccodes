@@ -14,8 +14,12 @@ label="grib_complex_spatial_differencing_test"
 temp=${label}".grib.tmp"
 temp1=${label}".1.tmp"
 temp2=${label}".2.tmp"
+tempLog=${label}.log
 
-files="sample.grib2"
+
+# Test meta-data
+res=`${tools_dir}/grib_get -p decimalScaleFactor,bitsPerValue ${data_dir}/gfs.c255.grib2`
+[ "$res" = "1 20" ]
 
 # ECC-523
 # ---------
@@ -48,6 +52,7 @@ ${tools_dir}/grib_compare -b totalLength,section5Length,section7Length,dataRepre
 
 
 # ECC-2060
+# ------------
 # grib_complex_spatial_differencing with and without bitmap
 check_complex_packing() {
   input="$1"
@@ -81,5 +86,16 @@ check_complex_packing ${data_dir}/reduced_latlon_surface.grib2 grid_complex_spat
 check_complex_packing ${data_dir}/reduced_latlon_surface.grib2 grid_complex 0
 
 
+# Error conditions
+# -----------------
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+set +e
+${tools_dir}/grib_set -s orderOfSpatialDifferencing=4,packingType=grid_complex_spatial_differencing $input $temp 2>$tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "unsupported .* orderOfSpatialDifferencing" $tempLog
+
+
 # Clean up
-rm -f $temp $temp1 $temp2
+rm -f $temp $temp1 $temp2 $tempLog
