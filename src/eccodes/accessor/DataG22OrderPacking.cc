@@ -870,7 +870,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         packing_mode = 3;
     }
     else {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s: unsupported orderOfSpatialDifferencing=%ld (dataRepresentationTemplateNumber=%ld)",
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: Unsupported orderOfSpatialDifferencing=%ld (dataRepresentationTemplateNumber=%ld)",
                          class_name_, orderOfSpatialDifferencing, dataRepresentationTemplateNumber);
         return GRIB_INVALID_ARGUMENT;
     }
@@ -1600,6 +1600,16 @@ int DataG22OrderPacking::unpack(T* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
+    if (orderOfSpatialDifferencing) {
+        // For Complex packing, order == 0
+        // For Complex packing and spatial differencing, order == 1 or 2 (code table 5.6)
+        if (orderOfSpatialDifferencing != 1 && orderOfSpatialDifferencing != 2) {
+            grib_context_log(context_, GRIB_LOG_ERROR,
+                             "%s: Unsupported orderOfSpatialDifferencing=%ld", class_name_, orderOfSpatialDifferencing);
+            return GRIB_INVALID_ARGUMENT;
+        }
+    }
+
     sec_val = (long*)grib_context_malloc(context_, (n_vals) * sizeof(long));
     if (!sec_val) return GRIB_OUT_OF_MEMORY;
     memset(sec_val, 0, (n_vals) * sizeof(long));  // See SUP-718
@@ -1709,18 +1719,12 @@ int DataG22OrderPacking::unpack(T* val, size_t* len)
 
     if (orderOfSpatialDifferencing) {
         long bias = 0;
-        unsigned long extras[2] = {
-            0,
-        };
+        unsigned long extras[2] = {0,};
         ref_p = 0;
 
         // For Complex packing, order == 0
         // For Complex packing and spatial differencing, order == 1 or 2 (code table 5.6)
-        if (orderOfSpatialDifferencing != 1 && orderOfSpatialDifferencing != 2) {
-            grib_context_log(context_, GRIB_LOG_ERROR,
-                             "%s unpacking: Unsupported order of spatial differencing %ld", class_name_, orderOfSpatialDifferencing);
-            return GRIB_INTERNAL_ERROR;
-        }
+        ECCODES_ASSERT(orderOfSpatialDifferencing == 1 || orderOfSpatialDifferencing == 2);
 
         for (i = 0; i < orderOfSpatialDifferencing; i++) {
             extras[i] = grib_decode_unsigned_long(buf_ref, &ref_p, numberOfOctetsExtraDescriptors * 8);

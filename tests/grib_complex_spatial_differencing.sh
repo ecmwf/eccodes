@@ -94,7 +94,17 @@ ${tools_dir}/grib_set -s orderOfSpatialDifferencing=4,packingType=grid_complex_s
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "unsupported orderOfSpatialDifferencing" $tempLog
+grep -q "Unsupported orderOfSpatialDifferencing" $tempLog
+rm -f $tempLog
+
+${tools_dir}/grib_set -s orderOfSpatialDifferencing=3 $data_dir/gfs.complex.mvmu.grib2 $temp
+set +e
+${tools_dir}/grib_get -p max $temp 2>$tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Unsupported orderOfSpatialDifferencing" $tempLog
+
 
 
 # Clean up
