@@ -853,25 +853,26 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
     max_bits = bits_per_value;  // TODO(masn)
 
     int packing_mode = 0;
+    DEBUG_ASSERT(dataRepresentationTemplateNumber == 2 || dataRepresentationTemplateNumber == 3);
     if (dataRepresentationTemplateNumber == 2) {
-      // ecCodes: "grid_complex"
-      // wgrib2: "complex1"
-      packing_mode = 1;
+        // ecCodes: "grid_complex"
+        // wgrib2: "complex1"
+        packing_mode = 1;
     }
     else if (dataRepresentationTemplateNumber == 3 && orderOfSpatialDifferencing == 1) {
-      // ecCodes: "grid_complex_spatial_differencing"
-      // wgrib2: "complex2"
-      packing_mode = 2;
+        // ecCodes: "grid_complex_spatial_differencing"
+        // wgrib2: "complex2"
+        packing_mode = 2;
     }
-    else if (dataRepresentationTemplateNumber == 3 && orderOfSpatialDifferencing == 2) { //
-      // ecCodes: "grid_complex_spatial_differencing"
-      // wgrib2: "complex3"
-      packing_mode = 3;
+    else if (dataRepresentationTemplateNumber == 3 && orderOfSpatialDifferencing == 2) {
+        // ecCodes: "grid_complex_spatial_differencing"
+        // wgrib2: "complex3"
+        packing_mode = 3;
     }
     else {
-      grib_context_log(context_, GRIB_LOG_ERROR, "%s: unsupported dataRepresentationTemplateNumber=%ld or orderOfSpatialDifferencing=%ld",
-                        class_name_, dataRepresentationTemplateNumber, orderOfSpatialDifferencing);
-      return GRIB_INVALID_ARGUMENT;
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: unsupported orderOfSpatialDifferencing=%ld (dataRepresentationTemplateNumber=%ld)",
+                         class_name_, orderOfSpatialDifferencing, dataRepresentationTemplateNumber);
+        return GRIB_INVALID_ARGUMENT;
     }
 
     use_bitmap  = bitmap_present;

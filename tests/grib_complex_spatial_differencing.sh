@@ -94,7 +94,7 @@ ${tools_dir}/grib_set -s orderOfSpatialDifferencing=4,packingType=grid_complex_s
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "unsupported .* orderOfSpatialDifferencing" $tempLog
+grep -q "unsupported orderOfSpatialDifferencing" $tempLog
 
 
 # Clean up
