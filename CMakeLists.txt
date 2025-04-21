@@ -469,7 +469,7 @@ add_subdirectory( samples )
 add_subdirectory( ifs_samples ) # must come after samples
 
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
-ecbuild_dont_pack( FILES .cproject .project )
+ecbuild_dont_pack( FILES .cproject .project eccodes.code-workspace )
 ecbuild_dont_pack( DIRS
     experimental deprecated doxygen confluence tests/deprecated tests/tests.ecmwf
     src/eccodes/deprecated tools/deprecated ifs_samples/grib1_mlgrib2_ieee32
@@ -517,11 +517,11 @@ if( HAVE_FORTRAN )
 endif()
 
 ###############################################################################
-# Debugging aid. Print all known CMake variables
-#get_cmake_property(_variableNames VARIABLES)
-#foreach( _variableName ${_variableNames} )
+# Debugging aid. Print all known CMake variables:
+# get_cmake_property(_variableNames VARIABLES)
+# foreach( _variableName ${_variableNames} )
 #   ecbuild_info("  ${_variableName}=${${_variableName}}")
-#endforeach()
+# endforeach()
 ###############################################################################
 # finalize
 
@@ -535,8 +535,6 @@ ecbuild_info("   |  ecCodes version ${eccodes_VERSION}  |")
 ecbuild_info("   +--------------------------+")
 ecbuild_info("")
 
-ecbuild_info("Please note:")
-ecbuild_info(" For Python3 support, you must install the Python bindings.")
-ecbuild_info(" See:")
+ecbuild_info("For further installation instructions, please see:")
 ecbuild_info("  https://confluence.ecmwf.int/display/ECC/ecCodes+installation")
 ecbuild_info("")
