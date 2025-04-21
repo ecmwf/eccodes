@@ -2262,7 +2262,7 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
     int idx;
     grib_context* c    = context_;
     int qualityPresent = 0;
-    bitmap_s bitmap    = {0,};
+    bitmap_s bitmap    = {0,0,0};
     int extraElement         = 0;
     int add_extra_attributes = 1;
 
