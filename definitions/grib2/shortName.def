@@ -16980,7 +16980,7 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 22 ;
 	}
-#Supercooled large droplet probability (see Note 4)
+#Supercooled large droplet probability
 '~' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
@@ -16998,7 +16998,7 @@
 	 parameterCategory = 191 ;
 	 parameterNumber = 0 ;
 	}
-#Flash flood guidance (Encoded as an accumulation over a floating subinterval of time between the ref
+#Flash flood guidance
 'ffldg' = {
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
@@ -17046,7 +17046,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 0 ;
 	}
-#Percent precipitation in a sub-period of an overall period (Encoded as per cent accumulation over th
+#Percent precipitation in a sub-period of an overall period
 'pposp' = {
 	 discipline = 1 ;
 	 parameterCategory = 1 ;
