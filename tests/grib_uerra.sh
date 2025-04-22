@@ -107,6 +107,13 @@ grib_check_key_equals $temp2 'mars.class,marsClass,mars.expver' 'ci ci at99'
 ${tools_dir}/grib_ls -jm $temp2 > $tempLog
 grep -q "class.*ci" $tempLog
 
+# ECC-2066
+${tools_dir}/grib_set -s centre=255,productionStatusOfProcessedData=10,grib2LocalSectionPresent=1,crraLocalVersion=3,suiteName=8 \
+   $grib2_sample $temp1
+${tools_dir}/grib_dump -O -p section_2 $temp1 > $tempLog
+grep -q "HARMONIE-AROME reanalysis by SMHI on EURO-CORDEX domain" $tempLog
+grib_check_key_equals $temp1 "suiteName:s" "se-ar-ec"
+
 # Stream 'dame'
 ${tools_dir}/grib_set -s productionStatusOfProcessedData=10 $grib2_sample $temp1
 grib_check_key_equals $temp1 'mars.time,mars.step' '1200 0'
