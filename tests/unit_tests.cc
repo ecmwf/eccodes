@@ -979,10 +979,13 @@ static void test_step_units()
     printf("Running %s ...\n", __func__);
     const auto supported_units = eccodes::Unit::list_supported_units();
     std::cout << "\tSupported units are: ";
+    int count = 0;
     for (auto& u : supported_units) {
         std::cout << eccodes::Unit{ u }.value<std::string>() + ",";
+        ++count;
     }
     std::cout << std::endl;
+    ECCODES_ASSERT(count == 14);
 }
 
 
