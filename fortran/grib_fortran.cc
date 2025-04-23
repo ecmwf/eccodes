@@ -896,9 +896,9 @@ int grib_f_write_file_(int* fid, void* buffer, size_t* nbytes)
     }
 }
 /*****************************************************************************/
-int grib_f_get_message_(int* gid, const void** mess, size_t* mess_len)
+int grib_f_get_message_(int* gid, void** mess, size_t* mess_len)
 {
-    void *message = NULL;
+    const void *message = NULL;
     int iret = 0;
     grib_handle *h = get_handle(*gid);
     if (!h) return GRIB_INVALID_GRIB;
@@ -906,7 +906,7 @@ int grib_f_get_message_(int* gid, const void** mess, size_t* mess_len)
     if(iret != 0){
     	return iret;
     }
-    *mess = message;
+    *mess = (void*) message;
     return GRIB_SUCCESS;
 }
 
