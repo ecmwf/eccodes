@@ -976,6 +976,7 @@ static void test_expressions()
 
 static void test_step_units()
 {
+#ifndef ECCODES_ON_WINDOWS
     printf("Running %s ...\n", __func__);
     const auto supported_units = eccodes::Unit::list_supported_units();
     std::cout << "\tSupported units are: ";
@@ -986,6 +987,7 @@ static void test_step_units()
     }
     std::cout << std::endl;
     ECCODES_ASSERT(count == 14);
+#endif
 }
 
 
