@@ -2525,8 +2525,8 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 122 ;
 	}
-#Mean surface runoff rate
-'Mean surface runoff rate' = {
+#Time-mean surface runoff rate
+'Time-mean surface runoff rate' = {
 	 localTablesVersion = 1 ;
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
@@ -2534,8 +2534,8 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean sub-surface runoff rate
-'Mean sub-surface runoff rate' = {
+#Time-mean sub-surface runoff rate
+'Time-mean sub-surface runoff rate' = {
 	 localTablesVersion = 1 ;
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
@@ -2627,12 +2627,6 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 59 ;
 	}
-#Injection height (from IS4FIRES)
-'Injection height (from IS4FIRES)' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 60 ;
-	}
 #Wildfire viewing angle of observation
 'Wildfire viewing angle of observation' = {
 	 discipline = 192 ;
@@ -2644,18 +2638,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 118 ;
-	}
-#Mean height of maximum injection
-'Mean height of maximum injection' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 119 ;
-	}
-#Plume top height above surface
-'Plume top height above surface' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 120 ;
 	}
 #Wildfire day-time radiative power
 'Wildfire day-time radiative power' = {
@@ -2878,12 +2860,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 241 ;
-	}
-#Plume bottom height above surface
-'Plume bottom height above surface' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 242 ;
 	}
 #Volcanic sulphate aerosol optical depth at 550 nm
 'Volcanic sulphate aerosol optical depth at 550 nm' = {
@@ -4595,750 +4571,6 @@
 	 parameterCategory = 213 ;
 	 parameterNumber = 5 ;
 	}
-#Random pattern 1 for SPP scheme
-'Random pattern 1 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 101 ;
-	}
-#Random pattern 2 for SPP scheme
-'Random pattern 2 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 102 ;
-	}
-#Random pattern 3 for SPP scheme
-'Random pattern 3 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 103 ;
-	}
-#Random pattern 4 for SPP scheme
-'Random pattern 4 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 104 ;
-	}
-#Random pattern 5 for SPP scheme
-'Random pattern 5 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 105 ;
-	}
-#Random pattern 6 for SPP scheme
-'Random pattern 6 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 106 ;
-	}
-#Random pattern 7 for SPP scheme
-'Random pattern 7 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 107 ;
-	}
-#Random pattern 8 for SPP scheme
-'Random pattern 8 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 108 ;
-	}
-#Random pattern 9 for SPP scheme
-'Random pattern 9 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 109 ;
-	}
-#Random pattern 10 for SPP scheme
-'Random pattern 10 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 110 ;
-	}
-#Random pattern 11 for SPP scheme
-'Random pattern 11 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 111 ;
-	}
-#Random pattern 12 for SPP scheme
-'Random pattern 12 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 112 ;
-	}
-#Random pattern 13 for SPP scheme
-'Random pattern 13 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 113 ;
-	}
-#Random pattern 14 for SPP scheme
-'Random pattern 14 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 114 ;
-	}
-#Random pattern 15 for SPP scheme
-'Random pattern 15 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 115 ;
-	}
-#Random pattern 16 for SPP scheme
-'Random pattern 16 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 116 ;
-	}
-#Random pattern 17 for SPP scheme
-'Random pattern 17 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 117 ;
-	}
-#Random pattern 18 for SPP scheme
-'Random pattern 18 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 118 ;
-	}
-#Random pattern 19 for SPP scheme
-'Random pattern 19 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 119 ;
-	}
-#Random pattern 20 for SPP scheme
-'Random pattern 20 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 120 ;
-	}
-#Random pattern 21 for SPP scheme
-'Random pattern 21 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 121 ;
-	}
-#Random pattern 22 for SPP scheme
-'Random pattern 22 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 122 ;
-	}
-#Random pattern 23 for SPP scheme
-'Random pattern 23 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 123 ;
-	}
-#Random pattern 24 for SPP scheme
-'Random pattern 24 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 124 ;
-	}
-#Random pattern 25 for SPP scheme
-'Random pattern 25 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 125 ;
-	}
-#Random pattern 26 for SPP scheme
-'Random pattern 26 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 126 ;
-	}
-#Random pattern 27 for SPP scheme
-'Random pattern 27 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 127 ;
-	}
-#Random pattern 28 for SPP scheme
-'Random pattern 28 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 128 ;
-	}
-#Random pattern 29 for SPP scheme
-'Random pattern 29 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 129 ;
-	}
-#Random pattern 30 for SPP scheme
-'Random pattern 30 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 130 ;
-	}
-#Random pattern 31 for SPP scheme
-'Random pattern 31 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 131 ;
-	}
-#Random pattern 32 for SPP scheme
-'Random pattern 32 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 132 ;
-	}
-#Random pattern 33 for SPP scheme
-'Random pattern 33 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 133 ;
-	}
-#Random pattern 34 for SPP scheme
-'Random pattern 34 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 134 ;
-	}
-#Random pattern 35 for SPP scheme
-'Random pattern 35 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 135 ;
-	}
-#Random pattern 36 for SPP scheme
-'Random pattern 36 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 136 ;
-	}
-#Random pattern 37 for SPP scheme
-'Random pattern 37 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 137 ;
-	}
-#Random pattern 38 for SPP scheme
-'Random pattern 38 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 138 ;
-	}
-#Random pattern 39 for SPP scheme
-'Random pattern 39 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 139 ;
-	}
-#Random pattern 40 for SPP scheme
-'Random pattern 40 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 140 ;
-	}
-#Random pattern 41 for SPP scheme
-'Random pattern 41 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 141 ;
-	}
-#Random pattern 42 for SPP scheme
-'Random pattern 42 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 142 ;
-	}
-#Random pattern 43 for SPP scheme
-'Random pattern 43 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 143 ;
-	}
-#Random pattern 44 for SPP scheme
-'Random pattern 44 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 144 ;
-	}
-#Random pattern 45 for SPP scheme
-'Random pattern 45 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 145 ;
-	}
-#Random pattern 46 for SPP scheme
-'Random pattern 46 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 146 ;
-	}
-#Random pattern 47 for SPP scheme
-'Random pattern 47 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 147 ;
-	}
-#Random pattern 48 for SPP scheme
-'Random pattern 48 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 148 ;
-	}
-#Random pattern 49 for SPP scheme
-'Random pattern 49 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 149 ;
-	}
-#Random pattern 50 for SPP scheme
-'Random pattern 50 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 150 ;
-	}
-#Random pattern 51 for SPP scheme
-'Random pattern 51 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 151 ;
-	}
-#Random pattern 52 for SPP scheme
-'Random pattern 52 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 152 ;
-	}
-#Random pattern 53 for SPP scheme
-'Random pattern 53 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 153 ;
-	}
-#Random pattern 54 for SPP scheme
-'Random pattern 54 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 154 ;
-	}
-#Random pattern 55 for SPP scheme
-'Random pattern 55 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 155 ;
-	}
-#Random pattern 56 for SPP scheme
-'Random pattern 56 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 156 ;
-	}
-#Random pattern 57 for SPP scheme
-'Random pattern 57 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 157 ;
-	}
-#Random pattern 58 for SPP scheme
-'Random pattern 58 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 158 ;
-	}
-#Random pattern 59 for SPP scheme
-'Random pattern 59 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 159 ;
-	}
-#Random pattern 60 for SPP scheme
-'Random pattern 60 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 160 ;
-	}
-#Random pattern 61 for SPP scheme
-'Random pattern 61 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 161 ;
-	}
-#Random pattern 62 for SPP scheme
-'Random pattern 62 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 162 ;
-	}
-#Random pattern 63 for SPP scheme
-'Random pattern 63 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 163 ;
-	}
-#Random pattern 64 for SPP scheme
-'Random pattern 64 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 164 ;
-	}
-#Random pattern 65 for SPP scheme
-'Random pattern 65 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 165 ;
-	}
-#Random pattern 66 for SPP scheme
-'Random pattern 66 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 166 ;
-	}
-#Random pattern 67 for SPP scheme
-'Random pattern 67 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 167 ;
-	}
-#Random pattern 68 for SPP scheme
-'Random pattern 68 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 168 ;
-	}
-#Random pattern 69 for SPP scheme
-'Random pattern 69 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 169 ;
-	}
-#Random pattern 70 for SPP scheme
-'Random pattern 70 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 170 ;
-	}
-#Random pattern 71 for SPP scheme
-'Random pattern 71 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 171 ;
-	}
-#Random pattern 72 for SPP scheme
-'Random pattern 72 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 172 ;
-	}
-#Random pattern 73 for SPP scheme
-'Random pattern 73 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 173 ;
-	}
-#Random pattern 74 for SPP scheme
-'Random pattern 74 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 174 ;
-	}
-#Random pattern 75 for SPP scheme
-'Random pattern 75 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 175 ;
-	}
-#Random pattern 76 for SPP scheme
-'Random pattern 76 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 176 ;
-	}
-#Random pattern 77 for SPP scheme
-'Random pattern 77 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 177 ;
-	}
-#Random pattern 78 for SPP scheme
-'Random pattern 78 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 178 ;
-	}
-#Random pattern 79 for SPP scheme
-'Random pattern 79 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 179 ;
-	}
-#Random pattern 80 for SPP scheme
-'Random pattern 80 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 180 ;
-	}
-#Random pattern 81 for SPP scheme
-'Random pattern 81 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 181 ;
-	}
-#Random pattern 82 for SPP scheme
-'Random pattern 82 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 182 ;
-	}
-#Random pattern 83 for SPP scheme
-'Random pattern 83 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 183 ;
-	}
-#Random pattern 84 for SPP scheme
-'Random pattern 84 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 184 ;
-	}
-#Random pattern 85 for SPP scheme
-'Random pattern 85 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 185 ;
-	}
-#Random pattern 86 for SPP scheme
-'Random pattern 86 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 186 ;
-	}
-#Random pattern 87 for SPP scheme
-'Random pattern 87 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 187 ;
-	}
-#Random pattern 88 for SPP scheme
-'Random pattern 88 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 188 ;
-	}
-#Random pattern 89 for SPP scheme
-'Random pattern 89 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 189 ;
-	}
-#Random pattern 90 for SPP scheme
-'Random pattern 90 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 190 ;
-	}
-#Random pattern 91 for SPP scheme
-'Random pattern 91 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 191 ;
-	}
-#Random pattern 92 for SPP scheme
-'Random pattern 92 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 192 ;
-	}
-#Random pattern 93 for SPP scheme
-'Random pattern 93 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 193 ;
-	}
-#Random pattern 94 for SPP scheme
-'Random pattern 94 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 194 ;
-	}
-#Random pattern 95 for SPP scheme
-'Random pattern 95 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 195 ;
-	}
-#Random pattern 96 for SPP scheme
-'Random pattern 96 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 196 ;
-	}
-#Random pattern 97 for SPP scheme
-'Random pattern 97 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 197 ;
-	}
-#Random pattern 98 for SPP scheme
-'Random pattern 98 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 198 ;
-	}
-#Random pattern 99 for SPP scheme
-'Random pattern 99 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 199 ;
-	}
-#Random pattern 100 for SPP scheme
-'Random pattern 100 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 200 ;
-	}
-#Random pattern 101 for SPP scheme
-'Random pattern 101 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 201 ;
-	}
-#Random pattern 102 for SPP scheme
-'Random pattern 102 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 202 ;
-	}
-#Random pattern 103 for SPP scheme
-'Random pattern 103 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 203 ;
-	}
-#Random pattern 104 for SPP scheme
-'Random pattern 104 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 204 ;
-	}
-#Random pattern 105 for SPP scheme
-'Random pattern 105 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 205 ;
-	}
-#Random pattern 106 for SPP scheme
-'Random pattern 106 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 206 ;
-	}
-#Random pattern 107 for SPP scheme
-'Random pattern 107 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 207 ;
-	}
-#Random pattern 108 for SPP scheme
-'Random pattern 108 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 208 ;
-	}
-#Random pattern 109 for SPP scheme
-'Random pattern 109 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 209 ;
-	}
-#Random pattern 110 for SPP scheme
-'Random pattern 110 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 210 ;
-	}
-#Random pattern 111 for SPP scheme
-'Random pattern 111 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 211 ;
-	}
-#Random pattern 112 for SPP scheme
-'Random pattern 112 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 212 ;
-	}
-#Random pattern 113 for SPP scheme
-'Random pattern 113 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 213 ;
-	}
-#Random pattern 114 for SPP scheme
-'Random pattern 114 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 214 ;
-	}
-#Random pattern 115 for SPP scheme
-'Random pattern 115 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 215 ;
-	}
-#Random pattern 116 for SPP scheme
-'Random pattern 116 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 216 ;
-	}
-#Random pattern 117 for SPP scheme
-'Random pattern 117 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 217 ;
-	}
-#Random pattern 118 for SPP scheme
-'Random pattern 118 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 218 ;
-	}
-#Random pattern 119 for SPP scheme
-'Random pattern 119 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 219 ;
-	}
-#Random pattern 120 for SPP scheme
-'Random pattern 120 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 220 ;
-	}
-#Random pattern 121 for SPP scheme
-'Random pattern 121 for SPP scheme' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 221 ;
-	}
-#Cosine of solar zenith angle
-'Cosine of solar zenith angle' = {
-	 discipline = 192 ;
-	 parameterCategory = 214 ;
-	 parameterNumber = 1 ;
-	}
-#UV biologically effective dose
-'UV biologically effective dose' = {
-	 discipline = 192 ;
-	 parameterCategory = 214 ;
-	 parameterNumber = 2 ;
-	}
-#UV biologically effective dose clear-sky
-'UV biologically effective dose clear-sky' = {
-	 discipline = 192 ;
-	 parameterCategory = 214 ;
-	 parameterNumber = 3 ;
-	}
 #Total surface UV spectral flux (280-285 nm)
 'Total surface UV spectral flux (280-285 nm)' = {
 	 discipline = 192 ;
@@ -5783,14 +5015,14 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 25 ;
 	}
-#Source/gain of dust aerosol (0.55 - 9 um)
-'Source/gain of dust aerosol (0.55 - 9 um)' = {
+#Source/gain of dust aerosol (0.55 - 0.9 um)
+'Source/gain of dust aerosol (0.55 - 0.9 um)' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 26 ;
 	}
-#Source/gain of dust aerosol (9 - 20 um)
-'Source/gain of dust aerosol (9 - 20 um)' = {
+#Source/gain of dust aerosol (0.9 - 20 um)
+'Source/gain of dust aerosol (0.9 - 20 um)' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 27 ;
@@ -5801,14 +5033,14 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 28 ;
 	}
-#Dry deposition of dust aerosol (0.55 - 9 um)
-'Dry deposition of dust aerosol (0.55 - 9 um)' = {
+#Dry deposition of dust aerosol (0.55 - 0.9 um)
+'Dry deposition of dust aerosol (0.55 - 0.9 um)' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 29 ;
 	}
-#Dry deposition of dust aerosol (9 - 20 um)
-'Dry deposition of dust aerosol (9 - 20 um)' = {
+#Dry deposition of dust aerosol (0.9 - 20 um)
+'Dry deposition of dust aerosol (0.9 - 20 um)' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 30 ;
@@ -5819,14 +5051,14 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 31 ;
 	}
-#Sedimentation of dust aerosol (0.55 - 9 um)
-'Sedimentation of dust aerosol (0.55 - 9 um)' = {
+#Sedimentation of dust aerosol (0.55 - 0.9 um)
+'Sedimentation of dust aerosol (0.55 - 0.9 um)' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 32 ;
 	}
-#Sedimentation of dust aerosol (9 - 20 um)
-'Sedimentation of dust aerosol (9 - 20 um)' = {
+#Sedimentation of dust aerosol (0.9 - 20 um)
+'Sedimentation of dust aerosol (0.9 - 20 um)' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 33 ;
@@ -5837,14 +5069,14 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 34 ;
 	}
-#Wet deposition of dust aerosol (0.55 - 9 um) by large-scale precipitation
-'Wet deposition of dust aerosol (0.55 - 9 um) by large-scale precipitation' = {
+#Wet deposition of dust aerosol (0.55 - 0.9 um) by large-scale precipitation
+'Wet deposition of dust aerosol (0.55 - 0.9 um) by large-scale precipitation' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 35 ;
 	}
-#Wet deposition of dust aerosol (9 - 20 um) by large-scale precipitation
-'Wet deposition of dust aerosol (9 - 20 um) by large-scale precipitation' = {
+#Wet deposition of dust aerosol (0.9 - 20 um) by large-scale precipitation
+'Wet deposition of dust aerosol (0.9 - 20 um) by large-scale precipitation' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 36 ;
@@ -5855,14 +5087,14 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 37 ;
 	}
-#Wet deposition of dust aerosol (0.55 - 9 um) by convective precipitation
-'Wet deposition of dust aerosol (0.55 - 9 um) by convective precipitation' = {
+#Wet deposition of dust aerosol (0.55 - 0.9 um) by convective precipitation
+'Wet deposition of dust aerosol (0.55 - 0.9 um) by convective precipitation' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 38 ;
 	}
-#Wet deposition of dust aerosol (9 - 20 um) by convective precipitation
-'Wet deposition of dust aerosol (9 - 20 um) by convective precipitation' = {
+#Wet deposition of dust aerosol (0.9 - 20 um) by convective precipitation
+'Wet deposition of dust aerosol (0.9 - 20 um) by convective precipitation' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 39 ;
@@ -5873,14 +5105,14 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 40 ;
 	}
-#Negative fixer of dust aerosol (0.55 - 9 um)
-'Negative fixer of dust aerosol (0.55 - 9 um)' = {
+#Negative fixer of dust aerosol (0.55 - 0.9 um)
+'Negative fixer of dust aerosol (0.55 - 0.9 um)' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 41 ;
 	}
-#Negative fixer of dust aerosol (9 - 20 um)
-'Negative fixer of dust aerosol (9 - 20 um)' = {
+#Negative fixer of dust aerosol (0.9 - 20 um)
+'Negative fixer of dust aerosol (0.9 - 20 um)' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 42 ;
@@ -5891,14 +5123,14 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 43 ;
 	}
-#Vertically integrated mass of dust aerosol (0.55 - 9 um)
-'Vertically integrated mass of dust aerosol (0.55 - 9 um)' = {
+#Vertically integrated mass of dust aerosol (0.55 - 0.9 um)
+'Vertically integrated mass of dust aerosol (0.55 - 0.9 um)' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 44 ;
 	}
-#Vertically integrated mass of dust aerosol (9 - 20 um)
-'Vertically integrated mass of dust aerosol (9 - 20 um)' = {
+#Vertically integrated mass of dust aerosol (0.9 - 20 um)
+'Vertically integrated mass of dust aerosol (0.9 - 20 um)' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 45 ;
@@ -5909,14 +5141,14 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 46 ;
 	}
-#Dust aerosol (0.55 - 9 um) optical depth
-'Dust aerosol (0.55 - 9 um) optical depth' = {
+#Dust aerosol (0.55 - 0.9 um) optical depth
+'Dust aerosol (0.55 - 0.9 um) optical depth' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 47 ;
 	}
-#Dust aerosol (9 - 20 um) optical depth
-'Dust aerosol (9 - 20 um) optical depth' = {
+#Dust aerosol (0.9 - 20 um) optical depth
+'Dust aerosol (0.9 - 20 um) optical depth' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 48 ;
@@ -14076,53 +13308,6 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Volume-mean total column mixing ratio
-'Volume-mean total column mixing ratio' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 195 ;
-	}
-#Emission mass flux from vegetation
-'Emission mass flux from vegetation' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 192 ;
-	}
-#Emission mass flux from biomass burning
-'Emission mass flux from biomass burning' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 193 ;
-	}
-#Emission mass flux from settlements
-'Emission mass flux from settlements' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 194 ;
-	}
-#Emission mass flux from soil
-'Emission mass flux from soil' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 195 ;
-	}
-#Emission mass flux from wild animals
-'Emission mass flux from wild animals' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 196 ;
-	}
 #Aerosol negative fixer mass flux
 'Aerosol negative fixer mass flux' = {
 	 localTablesVersion = 1 ;
@@ -14143,38 +13328,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 192 ;
-	}
-#Emission mass flux from commercial buildings heating
-'Emission mass flux from commercial buildings heating' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 197 ;
-	}
-#Emission mass flux from residential heating
-'Emission mass flux from residential heating' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 198 ;
-	}
-#Emission mass flux from oil refineries and transformation industry
-'Emission mass flux from oil refineries and transformation industry' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 199 ;
-	}
-#Emission mass flux from gas production
-'Emission mass flux from gas production' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 sourceSinkChemicalPhysicalProcess = 200 ;
 	}
 #Stream function gradient
 'Stream function gradient' = {
@@ -18662,8 +17815,8 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 45 ;
 	}
-#Mean large-scale precipitation rate
-'Mean large-scale precipitation rate' = {
+#Time-mean large-scale precipitation rate
+'Time-mean large-scale precipitation rate' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -18671,8 +17824,8 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean convective precipitation rate
-'Mean convective precipitation rate' = {
+#Time-mean convective precipitation rate
+'Time-mean convective precipitation rate' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -18680,8 +17833,8 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean total snowfall rate
-'Mean total snowfall rate' = {
+#Time-mean total snowfall rate
+'Time-mean total snowfall rate' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -18689,20 +17842,20 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean short-wave heating rate
-'Mean short-wave heating rate' = {
+#Time-mean short-wave (solar) heating rate
+'Time-mean short-wave (solar) heating rate' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 153 ;
 	}
-#Mean long-wave heating rate
-'Mean long-wave heating rate' = {
+#Time-mean long-wave (thermal) heating rate
+'Time-mean long-wave (thermal) heating rate' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 154 ;
 	}
-#Evaporation
-'Evaporation' = {
+#Time-mean evaporation rate
+'Time-mean evaporation rate' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -18710,8 +17863,8 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean runoff rate
-'Mean runoff rate' = {
+#Time-mean runoff rate
+'Time-mean runoff rate' = {
 	 localTablesVersion = 1 ;
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
@@ -18719,8 +17872,8 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean total precipitation rate
-'Mean total precipitation rate' = {
+#Time-mean total precipitation rate
+'Time-mean total precipitation rate' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -18728,14 +17881,14 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Convective snowfall
-'Convective snowfall' = {
+#Time-mean convective snowfall rate
+'Time-mean convective snowfall rate' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 239 ;
 	}
-#Large scale snowfall
-'Large scale snowfall' = {
+#Time-mean large-scale snowfall rate
+'Time-mean large-scale snowfall rate' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 240 ;

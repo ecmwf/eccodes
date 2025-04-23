@@ -9,8 +9,13 @@
  */
 
 #include "grib_tools.h"
+
 #include <stdlib.h>
 #include <string>
+
+#ifdef HAVE_ECKIT_GEO
+    #include "eckit/runtime/Main.h"
+#endif
 
 #if HAVE_LIBJASPER
 /* Remove compiler warnings re macros being redefined */
@@ -135,12 +140,16 @@ static grib_handle* grib_handle_new_from_file_x(grib_context* c, FILE* f, int mo
     if (mode == MODE_TAF)
         return taf_new_from_file(c, f, err);
 
-    Assert(!"grib_handle_new_from_file_x: unknown mode");
+    ECCODES_ASSERT(!"grib_handle_new_from_file_x: unknown mode");
     return NULL;
 }
 
 int grib_tool(int argc, char** argv)
 {
+#ifdef HAVE_ECKIT_GEO
+    eckit::Main::initialise(argc, argv);
+#endif
+
     int ret                = 0;
     int i = 0;
     grib_context* c        = grib_context_get_default();
@@ -169,7 +178,7 @@ int grib_tool(int argc, char** argv)
 
     grib_tool_init(&global_options);
 
-    Assert(global_options.dump_filename == NULL);
+    ECCODES_ASSERT(global_options.dump_filename == NULL);
     dump_file = stdout;
     // if (global_options.dump_filename) {
     //     dump_file = fopen(global_options.dump_filename, "w");
@@ -512,7 +521,7 @@ static int grib_tool_index(grib_runtime_options* options)
     int err  = 0;
     char* f1 = options->infile->name;
     char* f2 = options->infile_extra->name;
-    grib_index_key *k1, *k2;
+    grib_index_key *k1=0, *k2=0;
     int found = 0;
 
     grib_context* c = grib_context_get_default();
@@ -603,7 +612,7 @@ static int grib_tool_index(grib_runtime_options* options)
 #ifndef ECCODES_ON_WINDOWS
 static int scan(grib_context* c, grib_runtime_options* options, const char* dir)
 {
-    struct dirent* s;
+    const struct dirent* s = 0;
     DIR* d;
     int err = 0;
 
@@ -833,7 +842,7 @@ static int to_skip(grib_runtime_options* options, grib_handle* h, grib_values* v
     size_t len = MAX_STRING_LEN;
     *err       = 0;
 
-    Assert(options->constraints_count > 0);
+    ECCODES_ASSERT(options->constraints_count > 0);
 
     if (strcmp(v->name, "count")==0 && v->long_value < 1) {
         fprintf(dump_file, "ERROR: Invalid value for key '%s' (must be an integer greater than 0)\n", v->name);
@@ -970,7 +979,7 @@ static int get_initial_element_of_array(grib_handle* h, const char* keyName, siz
     double* dval        = NULL;
     grib_context* c     = h->context;
 
-    Assert(num_vals > 1); /* This is for array keys */
+    ECCODES_ASSERT(num_vals > 1); /* This is for array keys */
     if ((err = grib_get_native_type(h, keyName, &type)) != GRIB_SUCCESS)
         return err;
     switch (type) {
@@ -1327,8 +1336,8 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
 
 void grib_print_file_statistics(grib_runtime_options* options, grib_tools_file* file)
 {
-    grib_failed* failed = NULL;
-    Assert(file);
+    const grib_failed* failed = NULL;
+    ECCODES_ASSERT(file);
     if (options->json_output && !options->latlon)
         return;
 
@@ -1382,7 +1391,7 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     grib_file* of       = NULL;
     int err             = 0;
     char filename[1024] = {0,};
-    Assert(options->outfile != NULL && options->outfile->name != NULL);
+    ECCODES_ASSERT(options->outfile != NULL && options->outfile->name != NULL);
 
     /* See ECC-1086
      * if (options->error == GRIB_WRONG_LENGTH)

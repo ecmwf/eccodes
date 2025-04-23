@@ -10,7 +10,10 @@
 
 . ./include.ctest.sh
 
-set -u
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1347
+# BUFR crash: malloc failure during encoding
+# ---------------------------------------------------------------------
 
 label="bufr_ecc-1347_test"
 tempBufr=temp.$label.bufr

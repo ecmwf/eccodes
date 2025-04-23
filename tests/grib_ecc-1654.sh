@@ -10,9 +10,10 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
-
-# ECC-1654: Error setting key of type 'codetable' as a string
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1654
+# Error setting key of type 'codetable' as a string
+# ---------------------------------------------------------------------
 
 label="grib_ecc-1654_test"
 tempGribA=temp.$label.A.grib

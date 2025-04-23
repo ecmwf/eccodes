@@ -9,9 +9,9 @@
 
 # This gets updated twice a year by WMO.
 # See https://community.wmo.int/en/wis/latest-version
-constant tablesVersionLatestOfficial = 33 : edition_specific;
+constant tablesVersionLatestOfficial = 34 : edition_specific;
 # If this is different from the official version, then it is the pre-operational version
-constant tablesVersionLatest = 33 : edition_specific;
+constant tablesVersionLatest = 34 : edition_specific;
 
 constant false = 0 : hidden;
 constant true = 1 : hidden;
@@ -42,6 +42,8 @@ template core "grib2/sections.def";
 #  }
 #}
 
+meta isMessageValid message_is_valid(kindOfProduct);
+
 template section_8 "grib2/section.8.def";
 
 # ECC-1779: Add keys to identify experimental and deprecated templates
@@ -56,3 +58,7 @@ concept isTemplateExperimental(false) {
 
 # ECC-1806
 transient paramIdForConversion = 0;
+
+if (isGridded) {
+    meta gridSpec grid_spec(): hidden, no_copy;
+}

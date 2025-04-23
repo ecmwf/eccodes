@@ -9,7 +9,12 @@
 #
 
 . ./include.ctest.sh
-set -u
+
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1028
+# Segmentation fault: bufr_dump -d on message with incorrect replication
+# ---------------------------------------------------------------------
+
 label="bufr_ecc-1028_test"
 tempFilt=temp.$label.filt
 tempError=temp.$label.err
@@ -24,7 +29,7 @@ status=$?
 set -e
 [ $status -ne 0 ]
 # Check error message
-grep -q "Delayed replication: 101000: expected 1 but only found 0 elements" $tempError
+grep -q "Delayed replication: 101000: expected 1 but only found 0 element(s)" $tempError
 
 
 rm -f $tempFilt $tempError

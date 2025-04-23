@@ -85,6 +85,10 @@ static int process_file(const char* filename)
         printf("Checking file %s\n", filename);
 
     while ((h = grib_handle_new_from_file(0, in, &err)) != NULL) {
+        // if (err) {
+        //     fprintf(stderr, "ERROR: %s\n", grib_get_error_message(err));
+        //     exit(err);
+        // }
         int is_reduced_gaussian = 0, is_regular_gaussian = 0, grid_ok = 0;
         long edition = 0, N = 0, Nj = 0, numberOfDataPoints, angleSubdivisions;
         size_t numberOfValues = 0;
@@ -125,7 +129,7 @@ static int process_file(const char* filename)
         GRIB_CHECK(grib_get_double(h, "longitudeOfLastGridPointInDegrees", &lon2), 0);
 
         GRIB_CHECK(grib_get_long(h, "angleSubdivisions", &angleSubdivisions), 0);
-        Assert(angleSubdivisions > 0);
+        ECCODES_ASSERT(angleSubdivisions > 0);
         angular_tolerance = 1.0/angleSubdivisions;
 
         if (N <= 0) {
@@ -166,9 +170,9 @@ static int process_file(const char* filename)
             long iDirectionIncrementGiven = 0;
 
             is_missing_Ni      = grib_is_missing(h, "Ni", &err);
-            Assert(err == GRIB_SUCCESS);
+            ECCODES_ASSERT(err == GRIB_SUCCESS);
             is_missing_Di = grib_is_missing(h, "iDirectionIncrement", &err);
-            Assert(err == GRIB_SUCCESS);
+            ECCODES_ASSERT(err == GRIB_SUCCESS);
             GRIB_CHECK(grib_get_long(h, "iDirectionIncrementGiven", &iDirectionIncrementGiven), 0);
             if (iDirectionIncrementGiven) {
                 error(filename, msg_num, "For a reduced grid, iDirectionIncrementGiven should be 0\n");
@@ -181,12 +185,12 @@ static int process_file(const char* filename)
             }
 
             GRIB_CHECK(grib_get_size(h, "pl", &pl_len), 0);
-            Assert(pl_len > 0);
+            ECCODES_ASSERT(pl_len > 0);
             if (pl_len != (size_t)(2 * N)) {
                 error(filename, msg_num, "Length of pl array is %ld but should be 2*N (%ld)\n", pl_len, 2 * N);
             }
             pl = (long*)malloc(pl_len * sizeof(long));
-            Assert(pl);
+            ECCODES_ASSERT(pl);
             GRIB_CHECK(grib_get_long_array(h, "pl", pl, &pl_len), 0);
             max_pl = pl[0];
 
@@ -241,6 +245,12 @@ static int process_file(const char* filename)
         free(lats);
         grib_handle_delete(h);
     }
+
+    if (err) {
+        error(filename, msg_num, "%s\n", grib_get_error_message(err));
+        exit(err);
+    }
+
     fclose(in);
     if (verbose)
         printf("\n");

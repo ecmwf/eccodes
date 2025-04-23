@@ -10,7 +10,18 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1929
+# Definitions: Ability to use the print statement
+# ---------------------------------------------------------------------
+
 label="codes_ecc-1929_test"
+
+# Due to problems at DWD (See SD-103761) we have disabled this test
+# To be revived later
+echo "$0: This test is currently disabled"
+exit 0
+
 
 tempOut=temp.$label.txt
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
@@ -23,7 +34,7 @@ cat $def_dir/grib2/boot.def > $bootfile
 echo 'print "DEBUG: [gridType=] [typeOfLevel=]";' >> $bootfile
 echo >> $bootfile
 
-export ECCODES_DEFINITION_PATH=$PWD/$tempDir/definitions
+export ECCODES_DEFINITION_PATH=$PWD/$tempDir/definitions:$ECCODES_DEFINITION_PATH
 # This will activate the print statement above
 ${tools_dir}/grib_get -p edition $sample_grib2 > $tempOut
 grep -q "DEBUG: gridType=regular_ll typeOfLevel=surface" $tempOut

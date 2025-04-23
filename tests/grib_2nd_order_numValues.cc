@@ -25,12 +25,11 @@ int main(int argc, char* argv[])
     grib_handle* h = NULL;
     const char* packingType[] = { "grid_second_order", "grid_complex_spatial_differencing", "grid_complex" };
     const size_t numTypes = sizeof(packingType)/sizeof(packingType[0]);
-    int ipackingType = 0;
     const double zmiss = 9999999999.;
     long numberOfValues, numberOfDataPoints;
     int i, numberOfMissing;
 
-    for (ipackingType = 0; ipackingType < numTypes; ipackingType++) {
+    for (size_t ipackingType = 0; ipackingType < numTypes; ipackingType++) {
         GRIB_CHECK(((h = grib_handle_new_from_samples(NULL, "regular_ll_pl_grib2")) == NULL), 0);
         GRIB_CHECK(grib_set_long(h, "Ni", NLON), 0);
         GRIB_CHECK(grib_set_long(h, "Nj", NLAT), 0);

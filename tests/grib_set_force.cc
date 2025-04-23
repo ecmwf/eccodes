@@ -153,16 +153,16 @@ int main(int argc, char** argv)
     const void* buffer  = NULL;
     const char* mode    = NULL;
 
-    Assert(argc == 4);
+    ECCODES_ASSERT(argc == 4);
 
     mode    = argv[1]; /*all_values or coded_values*/
     infile  = argv[2];
     outfile = argv[3];
 
     in = fopen(infile, "rb");
-    Assert(in);
+    ECCODES_ASSERT(in);
     out = fopen(outfile, "wb");
-    Assert(out);
+    ECCODES_ASSERT(out);
 
     while ((h = grib_handle_new_from_file(NULL, in, &err)) != NULL || err != GRIB_SUCCESS) {
         long numberOfDataPoints = 0;
@@ -172,7 +172,7 @@ int main(int argc, char** argv)
             double missing            = 9999;
             const size_t num_all_vals = sizeof(values) / sizeof(values[0]);
 
-            Assert(num_all_vals == numberOfDataPoints); /*Sanity check*/
+            ECCODES_ASSERT(num_all_vals == numberOfDataPoints); /*Sanity check*/
             GRIB_CHECK(grib_set_long(h, "bitmapPresent", 1), 0);
             GRIB_CHECK(grib_set_double(h, "missingValue", missing), 0);
             printf("Fully specified: %zu values\n", num_all_vals);
@@ -180,8 +180,8 @@ int main(int argc, char** argv)
         }
         else {
             const size_t num_coded_vals = sizeof(codedValues) / sizeof(codedValues[0]);
-            Assert(strcmp(mode, "coded_values") == 0);
-            Assert(num_coded_vals < numberOfDataPoints); /*Sanity check*/
+            ECCODES_ASSERT(strcmp(mode, "coded_values") == 0);
+            ECCODES_ASSERT(num_coded_vals < (size_t)numberOfDataPoints); /*Sanity check*/
             printf("Partially specified: %zu values\n", num_coded_vals);
             GRIB_CHECK(grib_set_force_double_array(h, "codedValues", codedValues, num_coded_vals), 0);
         }

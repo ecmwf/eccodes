@@ -12,7 +12,7 @@
 
 REDIRECT=/dev/null
 
-label=grib_step_test
+label="grib_step_test"
 tempGrb=${data_dir}/temp.$label.out.grib
 tempLog=${data_dir}/temp.$label.log
 tempFilt=${data_dir}/temp.$label.filt
@@ -118,6 +118,12 @@ grib_check_key_equals $temp productDefinitionTemplateNumber,typeOfStatisticalPro
 ${tools_dir}/grib_set -s stepType=mode,paramId=260320     $grib2_sample $temp
 grib_check_key_equals $temp productDefinitionTemplateNumber,typeOfStatisticalProcessing '8 101'
 
+# ECC-1991: stepType for index processing
+# -----------------------------------------
+${tools_dir}/grib_set -s stepType=index $grib2_sample $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber,typeOfStatisticalProcessing '8 102'
+
+
 # ECC-1577: stepType when typeOfTimeIncrement=255
 # -----------------------------------------------
 ${tools_dir}/grib_set -s stepType=accum,typeOfTimeIncrement=255 $grib2_sample $temp
@@ -147,7 +153,7 @@ grib_check_key_equals $temp "stepRange,startStep,endStep" "14 14 14"
 input=${data_dir}/constant_field.grib2
 grib_check_key_equals $input "dataDate,dataTime,step" "20061205 1200 6"
 grib_check_key_equals $input "validityDate,validityTime" "20061205 1800"
-grib_check_key_equals $input "validityDateTime:s" "20061205 001800"
+grib_check_key_equals $input "validityDateTime:s" "20061205 180000"
 
 # ECC-1704: Key validityTime as string
 # -------------------------------------
@@ -258,6 +264,42 @@ EOF
 ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempLog
 grep -q "255 8 7" $tempLog
 
+# Two time ranges
+# See ECC-813
+# -----------------
+cat >$tempFilt <<EOF
+  set tablesVersion = 5;
+  set setLocalDefinition = 1;
+  set marsClass = 22;
+  set marsType = 9;
+  set marsStream = 1071;
+
+  set productDefinitionTemplateNumber = 8;
+  set year = 1899;
+  set month = 1;
+  set day = 31;
+  set hour = 6;
+
+  set yearOfEndOfOverallTimeInterval = 1899;
+  set monthOfEndOfOverallTimeInterval = 3;
+  set dayOfEndOfOverallTimeInterval = 1;
+  set hourOfEndOfOverallTimeInterval = 0;
+  set minuteOfEndOfOverallTimeInterval = 0;
+  set secondOfEndOfOverallTimeInterval = 0;
+
+  set numberOfTimeRanges = 2;
+  set indicatorOfUnitForTimeIncrement = {1, 1};
+  set typeOfStatisticalProcessing = {0, 1};
+  set typeOfTimeIncrement = {1, 2};
+  set lengthOfTimeRange = { 648,24 };
+  set timeIncrement = {24, 0};
+  write;
+EOF
+${tools_dir}/grib_filter -o $tempGrb $tempFilt $grib2_sample
+${tools_dir}/grib_ls -jntime $tempGrb
+grib_check_key_equals $tempGrb stepRange '0-24'
+rm -f $tempGrb $tempFilt
+
 # ECC-1866: Setting step on interval-based message with dataDate=0000
 # -------------------------------------------------------------------
 tempGrbA=${data_dir}/temp.$label.A.grib
@@ -278,6 +320,12 @@ set -e
 grep -q "Date/Time is not valid" $tempLog
 rm -f $tempGrbA $tempGrbB
 
+# Warning re startStep > endStep
+${tools_dir}/grib_set -s stepType=accum,startStep=12,endStep=6  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrbA
+${tools_dir}/grib_get -p step $tempGrbA 2>$tempLog
+grep -q "ECCODES WARNING :  endStep < startStep" $tempLog
+
+
 # Clean up
-rm -f $temp $tempLog $tempFilt
+rm -f $temp $tempLog $tempFilt $tempGrb
 rm -f $grib2File.p8tmp ${grib2File}.tmp x.grib

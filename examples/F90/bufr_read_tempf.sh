@@ -11,13 +11,13 @@
 . ./include.ctest.sh
 
 # Define a common label for all the tmp files
-label="bufr_read_tempf_f"
+label="examples_f_bufr_read_tempf"
 tempOut=temp.${label}.txt
 tempRef=temp.${label}.ref
 rm -f $tempRef $tempOut
 
 # The path to the BUFR file is hard coded in the example
-${examples_dir}/eccodes_f_bufr_read_tempf > $tempOut
+${examples_dir}/f_bufr_read_tempf > $tempOut
 
 NUMDIFF_CMD="numdiff"
 CHECKER=""

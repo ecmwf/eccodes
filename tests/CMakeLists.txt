@@ -46,8 +46,13 @@ list(APPEND test_c_bins
     grib_ecc-1431
     grib_ecc-1433
     grib_ecc-1764
+    grib_ecc-2005
+    grib_ecc-2019
+    grib_ecc-2034
+    grib_ecc-2045
     bufr_ecc-517
     bufr_ecc-1288
+    bufr_ecc-2011
     bufr_get_element
     bufr_extract_headers
     bufr_check_descriptors
@@ -109,10 +114,11 @@ if( HAVE_BUILD_TOOLS )
         grib_ecpoint
         grib_s2s
         grib_fire
+        grib_mtg2_switch
         grib_generalised_tiles
         # grib_true_imagery
         grib2_wave_spectra
-        grib_element
+        grib2_probability
         grib_suppressed
         grib_destine_mars_keys
         grib_2nd_order_numValues
@@ -156,6 +162,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
+        bufr_ecc-2011
         grib_efas
         grib_sh_imag
         grib_spectral
@@ -172,7 +179,9 @@ if( HAVE_BUILD_TOOLS )
     # These tests require data downloads
     # and/or take much longer
     list(APPEND tests_extra
+        grib_isGridded_isSpectral
         grib_data_quality_checks
+        grib_check_message_validity
         grib_update_sections_lengths
         grib_units_bias_factor
         grib_set_large_message_fail
@@ -181,7 +190,9 @@ if( HAVE_BUILD_TOOLS )
         grib_bpv_limit
         grib_complex
         grib_double_cmp
+        grib_element
         grib_change_packing
+        grib_complex_spatial_differencing
         grib_run_length_packing
         grib_grid_space_view
         grib_partial_message
@@ -192,6 +203,7 @@ if( HAVE_BUILD_TOOLS )
         grib_count
         grib_clone_headers_only
         grib_ifsParam
+        filter_dump_content
         wmo_read_bufr_from_file
         wmo_read_gts_from_file
         wmo_read_any_from_file
@@ -212,6 +224,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_get
         bufr_operators
         bufr_filter_misc
+        bufr_filter_datetime
         bufr_filter_fail
         bufr_filter_extract_subsets
         bufr_filter_extract_datetime
@@ -258,11 +271,17 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-1476
         bufr_ecc-1623
         bufr_ecc-1785
+        bufr_ecc-1958
+        bufr_ecc-1938
+        bufr_ecc-2030
+        bufr_ecc-2037
+        grib_488
         grib_ecc-490
         grib_ecc-756
         grib_ecc-806
         grib_ecc-873
         grib_ecc-600
+        grib_ecc-813
         grib_ecc-923
         grib_ecc-979
         grib_ecc-984
@@ -280,6 +299,15 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1907
         grib_ecc-1941
         grib_ecc-1942
+        grib_ecc-2002
+        grib_ecc-2005
+        grib_ecc-2006
+        grib_ecc-2013
+        grib_ecc-2019
+        grib_ecc-2034
+        grib_ecc-2045
+        grib_ecc-2050
+        grib_ecc-2052
         grib_modelName
         grib_sub_hourly
         grib_set_bytes
@@ -328,6 +356,7 @@ if( HAVE_BUILD_TOOLS )
         grib_nearest_test
         pseudo_budg
         grib_gridType
+        grib_gridSpec
         grib_fieldset
         grib_octahedral
         grib_grid_mercator
@@ -343,6 +372,7 @@ if( HAVE_BUILD_TOOLS )
         grib_set
         grib_set_fail
         grib_iterator
+        grib_iterator_fail
         grib_proj_string
         grib_compare
         grib_copy
@@ -402,8 +432,9 @@ if( HAVE_BUILD_TOOLS )
     endforeach()
     ecbuild_add_test( TARGET eccodes_t_grib_check_gaussian_grids
                       TYPE SCRIPT
-                      CONDITION ECCODES_INSTALL_EXTRA_TOOLS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_gaussian_grids.sh )
+                      CONDITION ECCODES_INSTALL_EXTRA_TOOLS AND ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_gaussian_grids.sh
+                      TEST_DEPENDS eccodes_download_gribs )
     ecbuild_add_test( TARGET eccodes_t_grib_repair
                       TYPE SCRIPT
                       CONDITION ECCODES_INSTALL_EXTRA_TOOLS AND ENABLE_EXTRA_TESTS
@@ -534,13 +565,12 @@ if( HAVE_BUILD_TOOLS )
                       CONDITION ECCODES_INSTALL_EXTRA_TOOLS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/codes_export_resource.sh )
 
-
-    # Performance test. Must have -DENABLE_TIMER=ON
-    ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
-                      TYPE SCRIPT
-                      CONDITION ENABLE_EXTRA_TESTS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-386.sh
-                      TEST_DEPENDS eccodes_download_gribs )
+    # Performance test
+    # ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
+    #                  TYPE SCRIPT
+    #                  CONDITION ENABLE_EXTRA_TESTS
+    #                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-386.sh
+    #                  TEST_DEPENDS eccodes_download_gribs )
 else()
     # No command line tools
     list(APPEND tests_no_tools

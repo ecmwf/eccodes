@@ -1,0 +1,24 @@
+# (C) Copyright 2024- ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+# In applying this licence, ECMWF does not waive the privileges and immunities
+# granted to it by virtue of its status as an intergovernmental organisation
+# nor does it submit to any jurisdiction.
+
+# to be source'd by wheelmaker's compile.sh *and* wheel-linux.sh
+# NOTE replace the whole thing with pyproject.toml? Less powerful, and quaint to use for sourcing ecbuild invocation
+# TODO we duplicate information -- pyproject.toml's `name` and `packages` are derivable from $NAME and must stay consistent
+
+NAME="eccodes"
+
+CMAKE_PARAMS1="-DENABLE_PNG=1 -DENABLE_JPG=1 -DENABLE_AEC=1 -DENABLE_JPG_LIBJASPER=0 -DENABLE_JPG_LIBOPENJPEG=1 -DOPENJPEG_DIR=/tmp/openjpeg/target"
+CMAKE_PARAMS2="-DENABLE_NETCDF=0 -DENABLE_FORTRAN=0"
+# NOTE build tools is enabled because it currently seems required by fdb compilation. Consider removal in the future
+CMAKE_PARAMS3="-DENABLE_EXAMPLES=0 -DENABLE_PYTHON=0 -DENABLE_BUILD_TOOLS=1 -DENABLE_INSTALL_ECCODES_DEFINITIONS=0 -DENABLE_INSTALL_ECCODES_SAMPLES=0"
+CMAKE_PARAMS4="-DENABLE_ECCODES_THREADS=1 -DENABLE_MEMFS=1"
+CMAKE_PARAMS="$CMAKE_PARAMS1 $CMAKE_PARAMS2 $CMAKE_PARAMS3 $CMAKE_PARAMS4"
+
+PYPROJECT_DIR="python_wrapper"
+# TODO add eckit once the dependency is in place
+DEPENDENCIES='[]'

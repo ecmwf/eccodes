@@ -112,6 +112,18 @@ ecbuild_add_option( FEATURE GEOGRAPHY
     DESCRIPTION "Support for Geoiterator and nearest neighbour"
     DEFAULT ON )
 
+ecbuild_add_option( FEATURE ECKIT_GEO
+    DESCRIPTION "Support for Geoiterator and nearest neighbour (additional backend)"
+    CONDITION ENABLE_GEOGRAPHY
+    DEFAULT OFF )
+
+if( eccodes_HAVE_ECKIT_GEO AND NOT TARGET eckit_geo )
+    ecbuild_find_package(NAME eckit VERSION 1.27 REQUIRED)
+    if( NOT TARGET eckit_geo )
+        ecbuild_critical("eckit has not been built with ECKIT_GEO enabled")
+    endif()
+endif()
+
 ecbuild_add_option( FEATURE JPG
     DESCRIPTION "Support for JPG decoding/encoding"
     DEFAULT ON )
@@ -207,7 +219,6 @@ ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
 
 ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "Enable memory management" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "Enable memory alignment"  DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE TIMER               DESCRIPTION "Enable timer" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "Enable thread-safety using POSIX threads" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "Enable thread-safety using OpenMP threads" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE EXTRA_TESTS         DESCRIPTION "Enable extended regression testing" DEFAULT OFF ADVANCED )
@@ -265,12 +276,6 @@ endif()
 
 ###############################################################################
 # other options
-
-if( HAVE_TIMER )
-    set( ECCODES_TIMER 1 )
-else()
-    set( ECCODES_TIMER 0 )
-endif()
 
 set( IS_BIG_ENDIAN 0 )
 if( ECCODES_BIG_ENDIAN )
@@ -382,6 +387,12 @@ add_definitions( -DHAVE_ECCODES_CONFIG_H )
 if( CMAKE_COMPILER_IS_GNUCC )
     ecbuild_add_c_flags("-pedantic")
 endif()
+if( CMAKE_CXX_COMPILER_ID MATCHES IntelLLVM )
+  # Turn off -ffinite-math-only which gets included by some optimisation levels which assume values can never be NaN.
+  # This results in std::isnan(value) always returning false.
+  ecbuild_add_cxx_flags("-fno-finite-math-only")
+endif()
+
 
 # gfortran 10 has become stricter with argument matching
 if( HAVE_FORTRAN AND CMAKE_Fortran_COMPILER_ID MATCHES "GNU" AND NOT CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 10 )
@@ -403,7 +414,11 @@ endif()
 
 ### export package to other ecbuild packages
 
-set( ECCODES_INCLUDE_DIRS    ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src )
+set( ECCODES_INCLUDE_DIRS
+  ${CMAKE_CURRENT_BINARY_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/eccodes
+  ${CMAKE_CURRENT_BINARY_DIR}/src/eccodes
+)
 set( ECCODES_LIBRARIES       eccodes )
 
 get_directory_property( COMPILE_DEFINITIONS ECCODES_DEFINITIONS )
@@ -454,10 +469,10 @@ add_subdirectory( samples )
 add_subdirectory( ifs_samples ) # must come after samples
 
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
-ecbuild_dont_pack( FILES .cproject .project )
+ecbuild_dont_pack( FILES .cproject .project eccodes.code-workspace )
 ecbuild_dont_pack( DIRS
     experimental deprecated doxygen confluence tests/deprecated tests/tests.ecmwf
-    src/deprecated tools/deprecated ifs_samples/grib1_mlgrib2_ieee32
+    src/eccodes/deprecated tools/deprecated ifs_samples/grib1_mlgrib2_ieee32
     examples/examples.dev examples/extra examples/deprecated bamboo
     fortran/fortranCtypes share/eccodes  .settings )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
@@ -485,7 +500,7 @@ ecbuild_pkgconfig(
   IGNORE_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
   VARIABLES      HAVE_MEMFS HAVE_GEOGRAPHY HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                  HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
-                 HAVE_NETCDF HAVE_FORTRAN HAVE_PNG HAVE_AEC
+                 HAVE_NETCDF HAVE_FORTRAN HAVE_PNG HAVE_AEC HAVE_ECKIT_GEO
 )
 if( HAVE_FORTRAN )
   ecbuild_pkgconfig(
@@ -497,16 +512,16 @@ if( HAVE_FORTRAN )
                         ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
     VARIABLES           HAVE_MEMFS HAVE_GEOGRAPHY HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                         HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
-                        HAVE_NETCDF HAVE_PNG HAVE_AEC
+                        HAVE_NETCDF HAVE_PNG HAVE_AEC HAVE_ECKIT_GEO
   )
 endif()
 
 ###############################################################################
-# Debugging aid. Print all known CMake variables
-#get_cmake_property(_variableNames VARIABLES)
-#foreach( _variableName ${_variableNames} )
+# Debugging aid. Print all known CMake variables:
+# get_cmake_property(_variableNames VARIABLES)
+# foreach( _variableName ${_variableNames} )
 #   ecbuild_info("  ${_variableName}=${${_variableName}}")
-#endforeach()
+# endforeach()
 ###############################################################################
 # finalize
 
@@ -520,8 +535,6 @@ ecbuild_info("   |  ecCodes version ${eccodes_VERSION}  |")
 ecbuild_info("   +--------------------------+")
 ecbuild_info("")
 
-ecbuild_info("Please note:")
-ecbuild_info(" For Python3 support, you must install the Python bindings.")
-ecbuild_info(" See:")
+ecbuild_info("For further installation instructions, please see:")
 ecbuild_info("  https://confluence.ecmwf.int/display/ECC/ecCodes+installation")
 ecbuild_info("")

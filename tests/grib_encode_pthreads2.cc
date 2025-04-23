@@ -34,10 +34,10 @@ static int encode_file(const char* template_file, const char* output_file)
     double* values;
 
     in = fopen(template_file, "rb");
-    Assert(in);
+    ECCODES_ASSERT(in);
     if (opt_write && output_file) {
         out = fopen(output_file, "wb");
-        Assert(out);
+        ECCODES_ASSERT(out);
     }
 
     /* loop over the messages in the source GRIB and clone them */
@@ -49,7 +49,7 @@ static int encode_file(const char* template_file, const char* output_file)
 
         if (opt_clone) {
             h = grib_handle_clone(source_handle);
-            Assert(h);
+            ECCODES_ASSERT(h);
         }
 
         GRIB_CHECK(grib_get_size(h, "values", &values_len), 0);

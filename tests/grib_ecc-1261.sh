@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1261
+# Local definition 12: MARS 'time' key should be HHMM not single digit
+# ---------------------------------------------------------------------
+
 label="grib_ecc-1261_test"
 
 tempFilt="temp.${label}.filt"
