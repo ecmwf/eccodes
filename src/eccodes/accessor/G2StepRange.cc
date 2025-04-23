@@ -9,7 +9,6 @@
  */
 
 #include "G2StepRange.h"
-#include "step.h"
 #include "step_utilities.h"
 #include <iostream>
 

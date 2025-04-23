@@ -9,7 +9,6 @@
  */
 
 #include "G2EndStep.h"
-#include "step.h"
 #include "step_utilities.h"
 #include <stdexcept>
 
