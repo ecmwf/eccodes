@@ -10,6 +10,9 @@
 
 #include "eccodes.h"
 #include "action/Concept.h"
+#include "step.h"
+
+#include <iostream>
 
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 
@@ -969,8 +972,19 @@ static void test_expressions()
     ECCODES_ASSERT(eIsInList);
     cname = eIsInList->class_name();
     ECCODES_ASSERT( cname && strlen(cname) > 0 );
-
 }
+
+static void test_step_units()
+{
+    printf("Running %s ...\n", __func__);
+    const auto supported_units = eccodes::Unit::list_supported_units();
+    std::cout << "\tSupported units are: ";
+    for (auto& u : supported_units) {
+        std::cout << eccodes::Unit{ u }.value<std::string>() + ",";
+    }
+    std::cout << std::endl;
+}
+
 
 int main(int argc, char** argv)
 {
@@ -979,6 +993,7 @@ int main(int argc, char** argv)
     codes_print_api_version(stdout);
     printf("\n");
 
+    test_step_units();
     test_grib_get_reduced_row_legacy();
 
     test_codes_context_set_debug();
