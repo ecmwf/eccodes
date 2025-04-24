@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-517
+# Setting inputExtendedDelayedDescriptorReplicationFactor > 486
+# ---------------------------------------------------------------------
+
 label="bufr_ecc-517_test"
 tempBufr=temp.$label.bufr
 tempText=temp.$label.txt

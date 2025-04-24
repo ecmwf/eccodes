@@ -10,7 +10,10 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-2002
+# GRIB: Setting paramId=228080 for ERA6 fails
+# ---------------------------------------------------------------------
 
 label="grib_ecc-2002_test"
 tempGrib=temp.$label.grib

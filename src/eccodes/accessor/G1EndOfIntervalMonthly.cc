@@ -21,7 +21,7 @@ void G1EndOfIntervalMonthly::init(const long l, grib_arguments* c)
     AbstractVector::init(l, c);
     int n = 0;
 
-    verifyingMonth_ = c->get_name(grib_handle_of_accessor(this), n++);
+    verifyingMonth_ = c->get_name(get_enclosing_handle(), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;
@@ -48,7 +48,7 @@ int G1EndOfIntervalMonthly::unpack_double(double* val, size_t* len)
     if (*len != (size_t)number_of_elements_)
         return GRIB_ARRAY_TOO_SMALL;
 
-    if ((ret = grib_get_string(grib_handle_of_accessor(this), verifyingMonth_, verifyingMonth, &slen)) != GRIB_SUCCESS)
+    if ((ret = grib_get_string(get_enclosing_handle(), verifyingMonth_, verifyingMonth, &slen)) != GRIB_SUCCESS)
         return ret;
 
     date = atoi(verifyingMonth);

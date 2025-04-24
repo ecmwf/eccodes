@@ -94,7 +94,7 @@ int Regular::init(grib_handle* h, grib_arguments* args)
         return GRIB_WRONG_GRID;
     }
 
-    if (Ni * Nj != nv_) {
+    if ( (size_t)(Ni * Nj) != nv_ ) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Ni*Nj!=numberOfDataPoints (%ld*%ld!=%zu)", ITER, Ni, Nj, nv_);
         return GRIB_WRONG_GRID;
     }

@@ -16,7 +16,7 @@ TEST_TITLE="$1"
 TEST_TITLE=$(echo $TEST_TITLE | tr '[A-Z]' '[a-z]')
 
 # Check label is unique
-grep -i -q "label=\"$TEST_TITLE\"" $TEST_DIR/*.sh
+grep -i -q "label=.*${TEST_TITLE}_test\"" $TEST_DIR/*.sh
 if [ $? -eq 0 ]; then
   echo "ERROR: Test label \"$TEST_TITLE\" seems to already exist!"
   grep -l "label=\"$TEST_TITLE\"" $TEST_DIR/*.sh # Show results
@@ -37,7 +37,7 @@ cat <<EOF
 . ./include.ctest.sh
 
 # ---------------------------------------------------------
-# This is the test for the JIRA issue ECC-XXXX
+# This is the test for JIRA issue ECC-XXXX
 # < Add issue summary here >
 # ---------------------------------------------------------
 

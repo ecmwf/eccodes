@@ -26,7 +26,7 @@ void HeadersOnly::init(const long l, grib_arguments* c)
 
 int HeadersOnly::unpack_long(long* val, size_t* len)
 {
-    *val = grib_handle_of_accessor(this)->partial;
+    *val = this->get_enclosing_handle()->partial;
     *len = 1;
     return 0;
 }

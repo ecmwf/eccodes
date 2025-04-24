@@ -25,7 +25,7 @@ void OffsetFile::init(const long l, grib_arguments* c)
 
 int OffsetFile::unpack_double(double* val, size_t* len)
 {
-    *val = (double)grib_handle_of_accessor(this)->offset;
+    *val = (double)(get_enclosing_handle()->offset);
     *len = 1;
     return GRIB_SUCCESS;
 }

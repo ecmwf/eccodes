@@ -67,7 +67,7 @@ if (complexPacking && sphericalHarmonics==0) {
     transient orderOfSPD=2;
     transient boustrophedonic=0;
 }
-transient hideThis=0;
+transient hideThis=0 : hidden;
 
 concept packingType {
 #set uses the last one

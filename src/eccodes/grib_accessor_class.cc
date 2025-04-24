@@ -11,7 +11,6 @@
 
 #include "grib_api_internal.h"
 #include "grib_accessor_classes_hash.cc"
-//#include <iostream>
 #include "accessor/Accessor.h"
 
 #if GRIB_PTHREADS
@@ -226,7 +225,7 @@ static void link_same_attributes(grib_accessor* a, grib_accessor* b)
 void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
 {
     int id;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_handle* hand = a->get_enclosing_handle();
     if (!l->first)
         l->first = l->last = a;
     else {

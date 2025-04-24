@@ -18,9 +18,9 @@ namespace eccodes::accessor
 
 void Bitmap::compute_size()
 {
-    long slen                    = 0;
-    long off                     = 0;
-    grib_handle* hand            = grib_handle_of_accessor(this);
+    long slen = 0;
+    long off = 0;
+    grib_handle* hand = get_enclosing_handle();
 
     grib_get_long_internal(hand, offsetbsec_, &off);
     grib_get_long_internal(hand, sLength_, &slen);
@@ -54,7 +54,7 @@ void Bitmap::compute_size()
 void Bitmap::init(const long len, grib_arguments* arg)
 {
     Bytes::init(len, arg);
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     int n             = 0;
 
     tableReference_ = arg->get_name(hand, n++);
@@ -84,7 +84,7 @@ int Bitmap::unpack_long(long* val, size_t* len)
 {
     long pos                = offset_ * 8;
     long tlen               = 0;
-    const grib_handle* hand = grib_handle_of_accessor(this);
+    const grib_handle* hand = get_enclosing_handle();
 
     int err = value_count(&tlen);
     if (err)
@@ -109,7 +109,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
     long pos = a->offset_ * 8;
     long tlen;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_handle* hand = a->get_enclosing_handle();
 
     int err = a->value_count(&tlen);
     if (err)
@@ -143,7 +143,7 @@ int Bitmap::unpack_double_element(size_t idx, double* val)
     long pos = offset_ * 8;
 
     pos += idx;
-    *val = (double)grib_decode_unsigned_long(grib_handle_of_accessor(this)->buffer->data, &pos, 1);
+    *val = (double)grib_decode_unsigned_long(this->get_enclosing_handle()->buffer->data, &pos, 1);
 
     return GRIB_SUCCESS;
 }
@@ -167,8 +167,8 @@ size_t Bitmap::string_length()
 
 int Bitmap::unpack_string(char* val, size_t* len)
 {
-    grib_handle* hand = grib_handle_of_accessor(this);
-    const size_t l    = length_;
+    grib_handle* hand = this->get_enclosing_handle();
+    const size_t l = length_;
 
     if (*len < l) {
         grib_context_log(context_, GRIB_LOG_ERROR,

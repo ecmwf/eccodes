@@ -50,6 +50,16 @@ done
 rm -f $tempText
 
 
+# Also go thru all template.4.x files in the source area and check those
+# ----------------------------------------------------------------------
+for t4 in $ECCODES_DEFINITION_PATH/grib2/templates/template.4.[0-9]*; do
+    p=$(basename $t4)
+    p=$(echo $p | awk -F. '{print $3}')
+    $tools_dir/grib_set -s tablesVersion=$latestOfficial,productDefinitionTemplateNumber=$p $sample2 $temp1
+    # $tools_dir/grib_dump -O -p section_4 $temp1 > /dev/null
+done
+
+
 # ECC-1746
 # -------------
 $tools_dir/grib_set -s tablesVersion=31,productDefinitionTemplateNumber=34 $sample2 $temp

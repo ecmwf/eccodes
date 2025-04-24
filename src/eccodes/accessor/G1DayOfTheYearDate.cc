@@ -30,7 +30,7 @@ void G1DayOfTheYearDate::dump(eccodes::Dumper* dumper)
 int G1DayOfTheYearDate::unpack_string(char* val, size_t* len)
 {
     /* special clim case where each mont have 30 days.. to comply with mars*/
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     char tmp[1024];
 
     long year             = 0;

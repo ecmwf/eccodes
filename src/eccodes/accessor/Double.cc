@@ -27,7 +27,7 @@ int Double::unpack_string(char* v, size_t* len)
     size_t l   = 1;
     char repres[1024];
     char format[32]         = "%g";
-    grib_handle* h          = grib_handle_of_accessor(this);
+    grib_handle* h          = get_enclosing_handle();
 
     unpack_double(&val, &l);
     if ((val == GRIB_MISSING_DOUBLE) && ((flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0)) {

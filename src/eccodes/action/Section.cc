@@ -18,7 +18,7 @@ namespace eccodes::action
 //     if(s) ECCODES_ASSERT(s->h == h);
 //     while(a)
 //     {
-//       ECCODES_ASSERT(grib_handle_of_accessor(a) == h);
+//       ECCODES_ASSERT(a->get_enclosing_handle() == h);
 //       check_sections(a->sub_section_,h);
 //       a = a->next;
 //     }
@@ -30,7 +30,7 @@ int Section::notify_change(grib_accessor* notified,
     grib_loader loader = { 0, 0, 0, 0, 0 };
 
     grib_section* old_section = NULL;
-    grib_handle* h            = grib_handle_of_accessor(notified);
+    grib_handle* h            = notified->get_enclosing_handle();
     size_t len                = 0;
     size_t size               = 0;
     int err                   = 0;
@@ -39,12 +39,14 @@ int Section::notify_change(grib_accessor* notified,
 
     grib_action* la = NULL;
 
-    if (h->context->debug > 0) {
+    DEBUG_ASSERT(context_);
+
+    if (context_->debug > 0) {
         char debug_str[1024] = {0, };
         if (debug_info_) {
             snprintf(debug_str, 1024, " (%s)", debug_info_);
         }
-        grib_context_log(h->context,
+        grib_context_log(context_,
                          GRIB_LOG_DEBUG, "------------- SECTION action %s (%s) is triggered by [%s]%s",
                          name_, notified->name_, changed->name_, debug_str);
     }
@@ -58,7 +60,7 @@ int Section::notify_change(grib_accessor* notified,
     /* printf("old = %p\n",(void*)old_section->branch); */
     /* printf("new = %p\n",(void*)la); */
 
-    grib_context_log(h->context,
+    grib_context_log(context_,
                      GRIB_LOG_DEBUG, "------------- DOIT %ld OLD %p NEW %p",
                      doit, old_section->branch, la);
 
@@ -66,7 +68,7 @@ int Section::notify_change(grib_accessor* notified,
     if (!doit) {
         if (la != NULL || old_section->branch != NULL)
             if (la == old_section->branch) {
-                grib_context_log(h->context, GRIB_LOG_DEBUG, "IGNORING TRIGGER action %s (%s) is triggered %p", name_, notified->name_, (void*)la);
+                grib_context_log(context_, GRIB_LOG_DEBUG, "IGNORING TRIGGER action %s (%s) is triggered %p", name_, notified->name_, (void*)la);
                 return GRIB_SUCCESS;
             }
     }
@@ -80,11 +82,11 @@ int Section::notify_change(grib_accessor* notified,
 
     old_section->branch = la;
 
-    tmp_handle = grib_new_handle(h->context);
+    tmp_handle = grib_new_handle(context_);
     if (!tmp_handle)
         return GRIB_OUT_OF_MEMORY;
 
-    tmp_handle->buffer = grib_create_growable_buffer(h->context);
+    tmp_handle->buffer = grib_create_growable_buffer(context_);
     ECCODES_ASSERT(tmp_handle->buffer); /* FIXME */
 
     loader.data          = h;
@@ -102,7 +104,7 @@ int Section::notify_change(grib_accessor* notified,
     h->kid             = tmp_handle;
     /* printf("tmp_handle- main %p %p\n",(void*)tmp_handle,(void*)h); */
 
-    grib_context_log(h->context, GRIB_LOG_DEBUG, "------------- CREATE TMP BLOCK act=%s notified=%s", name_, notified->name_);
+    grib_context_log(context_, GRIB_LOG_DEBUG, "------------- CREATE TMP BLOCK act=%s notified=%s", name_, notified->name_);
     tmp_handle->root = grib_section_create(tmp_handle, NULL);
 
     tmp_handle->use_trie = 1;
@@ -129,7 +131,7 @@ int Section::notify_change(grib_accessor* notified,
 
     /* grib_recompute_sections_lengths(tmp_handle->root); */
     grib_get_block_length(tmp_handle->root, &len);
-    grib_context_log(h->context, GRIB_LOG_DEBUG, "-------------  TMP BLOCK IS sectlen=%d buffer=%d", len, tmp_handle->buffer->ulength);
+    grib_context_log(context_, GRIB_LOG_DEBUG, "-------------  TMP BLOCK IS sectlen=%d buffer=%d", len, tmp_handle->buffer->ulength);
 
     // if(h->context->debug > 10)
     //     grib_dump_content(tmp_handle,stdout,NULL,0,NULL);
@@ -146,6 +148,13 @@ int Section::notify_change(grib_accessor* notified,
     ECCODES_ASSERT(tmp_handle->dependencies == NULL);
     /* printf("grib_handle_delete %p\n",(void*)tmp_handle); */
 
+    // ECC-2049
+    // After converting editions, make sections_count is updated
+    // (e.g. grib1 sections_count=5, for grib2 it's 8)
+    // In case grib_util_sections_copy is called
+    if (h->sections_count < tmp_handle->sections_count) {
+        h->sections_count = tmp_handle->sections_count;
+    }
     grib_handle_delete(tmp_handle);
 
     h->use_trie     = 1;
@@ -160,8 +169,8 @@ int Section::notify_change(grib_accessor* notified,
 
     grib_get_block_length(old_section, &size);
 
-    grib_context_log(h->context, GRIB_LOG_DEBUG, "-------------   BLOCK SIZE %ld, buffer len=%ld", size, len);
-    if (h->context->debug > 10)
+    grib_context_log(context_, GRIB_LOG_DEBUG, "-------------   BLOCK SIZE %ld, buffer len=%ld", size, len);
+    if (context_->debug > 10)
         grib_dump_content(h, stdout, "debug", ~0, NULL);
 
     ECCODES_ASSERT(size == len);

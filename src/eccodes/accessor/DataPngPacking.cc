@@ -22,7 +22,7 @@ namespace eccodes::accessor
 void DataPngPacking::init(const long v, grib_arguments* args)
 {
     Values::init(v, args);
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     number_of_values_      = args->get_name(h, carg_++);
     reference_value_       = args->get_name(h, carg_++);
@@ -40,7 +40,7 @@ void DataPngPacking::init(const long v, grib_arguments* args)
 int DataPngPacking::value_count(long* n_vals)
 {
     *n_vals = 0;
-    return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, n_vals);
+    return grib_get_long_internal(get_enclosing_handle(), number_of_values_, n_vals);
 }
 
 #if HAVE_LIBPNG
@@ -113,13 +113,13 @@ int DataPngPacking::unpack_double(double* val, size_t* len)
     n_vals = nn;
     if (err) return err;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_double_internal(grib_handle_of_accessor(this), reference_value_, &reference_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(get_enclosing_handle(), reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
     bscale = codes_power<double>(binary_scale_factor, 2);
@@ -138,7 +138,7 @@ int DataPngPacking::unpack_double(double* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    buf = (unsigned char*)grib_handle_of_accessor(this)->buffer->data;
+    buf = get_enclosing_handle()->buffer->data;
     buf += byte_offset();
 
     if (png_sig_cmp(buf, 0, 8) != 0)
@@ -275,13 +275,13 @@ int DataPngPacking::pack_double(const double* val, size_t* len)
 
     n_vals = *len;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_double_internal(grib_handle_of_accessor(this), reference_value_, &reference_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(get_enclosing_handle(), reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
     /* Special case */
@@ -302,13 +302,13 @@ int DataPngPacking::pack_double(const double* val, size_t* len)
             ECCODES_ASSERT(val[i] == val[0]);
         }
     #endif
-        if ((err = grib_set_double_internal(grib_handle_of_accessor(this), reference_value_, val[0])) != GRIB_SUCCESS)
+        if ((err = grib_set_double_internal(get_enclosing_handle(), reference_value_, val[0])) != GRIB_SUCCESS)
             return err;
 
         {
             // Make sure we can decode it again
             double ref = 1e-100;
-            grib_get_double_internal(grib_handle_of_accessor(this), reference_value_, &ref);
+            grib_get_double_internal(get_enclosing_handle(), reference_value_, &ref);
             if (ref != reference_value) {
                 grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
                                  class_name_, __func__, reference_value_, ref, reference_value);
@@ -316,7 +316,7 @@ int DataPngPacking::pack_double(const double* val, size_t* len)
             }
         }
 
-        if ((err = grib_set_long_internal(grib_handle_of_accessor(this), number_of_values_, n_vals)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(get_enclosing_handle(), number_of_values_, n_vals)) != GRIB_SUCCESS)
             return err;
 
         grib_buffer_replace(this, NULL, 0, 1, 1);
@@ -324,19 +324,19 @@ int DataPngPacking::pack_double(const double* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), ni_, &ni)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), ni_, &ni)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), nj_, &nj)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), nj_, &nj)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), scanning_mode_, &scanning_mode)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), scanning_mode_, &scanning_mode)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), list_defining_points_, &list_defining_points)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), list_defining_points_, &list_defining_points)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), number_of_data_points_, &number_of_data_points)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), number_of_data_points_, &number_of_data_points)) != GRIB_SUCCESS)
         return err;
 
     width  = ni;
@@ -385,7 +385,7 @@ int DataPngPacking::pack_double(const double* val, size_t* len)
     min *= d;
     max *= d;
 
-    if (grib_get_nearest_smaller_value(grib_handle_of_accessor(this), reference_value_, min, &reference_value) != GRIB_SUCCESS) {
+    if (grib_get_nearest_smaller_value(get_enclosing_handle(), reference_value_, min, &reference_value) != GRIB_SUCCESS) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "Unable to find nearest_smaller_value of %g for %s", min, reference_value_);
         return GRIB_INTERNAL_ERROR;
@@ -433,13 +433,13 @@ int DataPngPacking::pack_double(const double* val, size_t* len)
         goto cleanup;
     }
 
-    if ((err = grib_set_double_internal(grib_handle_of_accessor(this), reference_value_, reference_value)) != GRIB_SUCCESS)
+    if ((err = grib_set_double_internal(get_enclosing_handle(), reference_value_, reference_value)) != GRIB_SUCCESS)
         return err;
 
     {
         // Make sure we can decode it again
         double ref = 1e-100;
-        grib_get_double_internal(grib_handle_of_accessor(this), reference_value_, &ref);
+        grib_get_double_internal(get_enclosing_handle(), reference_value_, &ref);
         if (ref != reference_value) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
                              class_name_, __func__, reference_value_, ref, reference_value);
@@ -447,15 +447,15 @@ int DataPngPacking::pack_double(const double* val, size_t* len)
         }
     }
 
-    if ((err = grib_set_long_internal(grib_handle_of_accessor(this), binary_scale_factor_, binary_scale_factor)) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(get_enclosing_handle(), binary_scale_factor_, binary_scale_factor)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_set_long_internal(grib_handle_of_accessor(this), decimal_scale_factor_, decimal_scale_factor)) != GRIB_SUCCESS)
-        return err;
-
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), ni_, &ni)) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(get_enclosing_handle(), decimal_scale_factor_, decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), nj_, &nj)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), ni_, &ni)) != GRIB_SUCCESS)
+        return err;
+
+    if ((err = grib_get_long_internal(get_enclosing_handle(), nj_, &nj)) != GRIB_SUCCESS)
         return err;
 
     png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
@@ -527,7 +527,7 @@ cleanup:
     grib_context_buffer_free(context_, rows);
 
     if (err == GRIB_SUCCESS)
-        err = grib_set_long_internal(grib_handle_of_accessor(this), number_of_values_, *len);
+        err = grib_set_long_internal(get_enclosing_handle(), number_of_values_, *len);
 
     return err;
 }
@@ -535,7 +535,7 @@ cleanup:
 int DataPngPacking::unpack_double_element(size_t idx, double* val)
 {
     /* The index idx relates to codedValues NOT values! */
-    grib_handle* hand      = grib_handle_of_accessor(this);
+    grib_handle* hand      = get_enclosing_handle();
     int err                = 0;
     size_t size            = 0;
     double reference_value = 0;
@@ -570,7 +570,7 @@ int DataPngPacking::unpack_double_element(size_t idx, double* val)
 int DataPngPacking::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
     /* The index idx relates to codedValues NOT values! */
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     int err           = 0;
     size_t size = 0, i = 0;
     double reference_value = 0;
@@ -590,7 +590,7 @@ int DataPngPacking::unpack_double_element_set(const size_t* index_array, size_t 
         return GRIB_SUCCESS;
     }
 
-    err = grib_get_size(grib_handle_of_accessor(this), "codedValues", &size);
+    err = grib_get_size(get_enclosing_handle(), "codedValues", &size);
     if (err)
         return err;
 
@@ -599,7 +599,7 @@ int DataPngPacking::unpack_double_element_set(const size_t* index_array, size_t 
     }
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
-    err    = grib_get_double_array(grib_handle_of_accessor(this), "codedValues", values, &size);
+    err    = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
     if (err) {
         grib_context_free(context_, values);
         return err;

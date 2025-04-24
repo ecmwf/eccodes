@@ -39,7 +39,7 @@ int Ksec1Expver::unpack_long(long* val, size_t* len)
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
-    value = grib_decode_unsigned_long(grib_handle_of_accessor(this)->buffer->data, &pos, length_ * 8);
+    value = grib_decode_unsigned_long(get_enclosing_handle()->buffer->data, &pos, length_ * 8);
 
     unpack_string(refexpver, &llen);
     /* test for endian */
@@ -73,20 +73,20 @@ int Ksec1Expver::unpack_long(long* val, size_t* len)
 
 int Ksec1Expver::pack_string(const char* val, size_t* len)
 {
-    int i = 0;
     if (len[0] != 4) {
         grib_context_log(context_, GRIB_LOG_ERROR, "Wrong length for %s. It has to be 4", name_);
         return GRIB_INVALID_KEY_VALUE;
     }
-    if (len[0] > (length_) + 1) {
+    const size_t u_length = length_;
+    if (len[0] > u_length + 1) {
         grib_context_log(context_, GRIB_LOG_ERROR, "pack_string: Wrong size (%lu) for %s, it contains %ld values",
                          len[0], name_, length_ + 1);
         len[0] = 0;
         return GRIB_BUFFER_TOO_SMALL;
     }
 
-    for (i = 0; i < length_; i++)
-        grib_handle_of_accessor(this)->buffer->data[offset_ + i] = val[i];
+    for (long i = 0; i < length_; i++)
+        get_enclosing_handle()->buffer->data[offset_ + i] = val[i];
 
     return GRIB_SUCCESS;
 }

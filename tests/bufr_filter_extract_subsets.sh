@@ -220,5 +220,19 @@ latitude=0
 EOF
 diff ${f}.log.ref ${f}.log 
 
+
+# ECC-2055: Splitting subsets with bufr_filter produces incorrect header values
+cat > $fRules <<EOF
+ transient saved_satID = satelliteID;
+ set unpack=1;
+ set extractSubset=4;
+ set doExtractSubsets=1;
+ assert ( numberOfSubsets == localNumberOfObservations );
+ assert ( satelliteID == saved_satID );
+EOF
+${tools_dir}/codes_bufr_filter $fRules mhen_55.bufr
+
+
+
 # Clean up
 rm -f ${f}.log ${f}.log.ref $fBufrTmp1 $fBufrTmp2 $fLog $fRules

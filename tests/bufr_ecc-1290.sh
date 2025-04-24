@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1290
+# BUFR: Key spectralWaveDensity decoded incorrectly
+# ---------------------------------------------------------------------
+
 label="bufr_ecc-1290_test"
 temp=temp.$label
 tempRules=temp.${label}.filter

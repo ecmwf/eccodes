@@ -264,6 +264,42 @@ EOF
 ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempLog
 grep -q "255 8 7" $tempLog
 
+# Two time ranges
+# See ECC-813
+# -----------------
+cat >$tempFilt <<EOF
+  set tablesVersion = 5;
+  set setLocalDefinition = 1;
+  set marsClass = 22;
+  set marsType = 9;
+  set marsStream = 1071;
+
+  set productDefinitionTemplateNumber = 8;
+  set year = 1899;
+  set month = 1;
+  set day = 31;
+  set hour = 6;
+
+  set yearOfEndOfOverallTimeInterval = 1899;
+  set monthOfEndOfOverallTimeInterval = 3;
+  set dayOfEndOfOverallTimeInterval = 1;
+  set hourOfEndOfOverallTimeInterval = 0;
+  set minuteOfEndOfOverallTimeInterval = 0;
+  set secondOfEndOfOverallTimeInterval = 0;
+
+  set numberOfTimeRanges = 2;
+  set indicatorOfUnitForTimeIncrement = {1, 1};
+  set typeOfStatisticalProcessing = {0, 1};
+  set typeOfTimeIncrement = {1, 2};
+  set lengthOfTimeRange = { 648,24 };
+  set timeIncrement = {24, 0};
+  write;
+EOF
+${tools_dir}/grib_filter -o $tempGrb $tempFilt $grib2_sample
+${tools_dir}/grib_ls -jntime $tempGrb
+grib_check_key_equals $tempGrb stepRange '0-24'
+rm -f $tempGrb $tempFilt
+
 # ECC-1866: Setting step on interval-based message with dataDate=0000
 # -------------------------------------------------------------------
 tempGrbA=${data_dir}/temp.$label.A.grib
@@ -291,5 +327,5 @@ grep -q "ECCODES WARNING :  endStep < startStep" $tempLog
 
 
 # Clean up
-rm -f $temp $tempLog $tempFilt
+rm -f $temp $tempLog $tempFilt $tempGrb
 rm -f $grib2File.p8tmp ${grib2File}.tmp x.grib

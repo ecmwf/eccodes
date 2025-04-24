@@ -21,18 +21,18 @@ void RdbTimeGuessDate::init(const long l, grib_arguments* c)
     Long::init(l, c);
     int n = 0;
 
-    typicalYear_  = c->get_name(grib_handle_of_accessor(this), n++);
-    typicalMonth_ = c->get_name(grib_handle_of_accessor(this), n++);
-    typicalDay_   = c->get_name(grib_handle_of_accessor(this), n++);
-    rdbDay_       = c->get_name(grib_handle_of_accessor(this), n++);
-    yearOrMonth_  = c->get_long(grib_handle_of_accessor(this), n++);
+    typicalYear_  = c->get_name(get_enclosing_handle(), n++);
+    typicalMonth_ = c->get_name(get_enclosing_handle(), n++);
+    typicalDay_   = c->get_name(get_enclosing_handle(), n++);
+    rdbDay_       = c->get_name(get_enclosing_handle(), n++);
+    yearOrMonth_  = c->get_long(get_enclosing_handle(), n++);
 
     /* flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY; */
 }
 
 int RdbTimeGuessDate::unpack_long(long* val, size_t* len)
 {
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     long typicalYear, typicalMonth, typicalDay, rdbDay;
     long rdbYear, rdbMonth;
 

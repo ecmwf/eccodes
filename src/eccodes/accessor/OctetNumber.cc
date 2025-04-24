@@ -21,8 +21,8 @@ void OctetNumber::init(const long l, grib_arguments* c)
     Long::init(l, c);
 
     int n  = 0;
-    left_  = c->get_name(grib_handle_of_accessor(this), n++);
-    right_ = c->get_long(grib_handle_of_accessor(this), n++);
+    left_  = c->get_name(get_enclosing_handle(), n++);
+    right_ = c->get_long(get_enclosing_handle(), n++);
 
     length_ = 0;
 }
@@ -34,7 +34,7 @@ int OctetNumber::unpack_long(long* val, size_t* len)
 
     offset = offset_ + right_;
 
-    if ((ret = grib_set_long_internal(grib_handle_of_accessor(this), left_, offset)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(get_enclosing_handle(), left_, offset)) != GRIB_SUCCESS)
         return ret;
 
     *val = offset;

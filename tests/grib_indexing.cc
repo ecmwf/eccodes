@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
     char* infile      = NULL;
     long *steps, *levels, *numbers; /* arrays */
     char** shortNames = NULL;
-    int i, j, k, l;
+    size_t i, j, k, l;
     size_t stepSize, levelSize, shortNameSize, numberSize;
     long oStep, oLevel, oNumber;
     char oShortName[200];

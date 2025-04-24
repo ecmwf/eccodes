@@ -36,7 +36,7 @@ void ExpandedDescriptors::init(const long len, grib_arguments* args)
 {
     Long::init(len, args);
     int n               = 0;
-    grib_handle* hand   = grib_handle_of_accessor(this);
+    grib_handle* hand   = get_enclosing_handle();
     tablesAccessorName_ = args->get_name(hand, n++);
     expandedName_       = args->get_name(hand, n++);
     rank_               = args->get_long(hand, n++);
@@ -105,7 +105,7 @@ void ExpandedDescriptors::__expand(bufr_descriptors_array* unexpanded, bufr_desc
     bufr_descriptor* us                      = NULL;
     bufr_descriptors_array* inner_expanded   = NULL;
     bufr_descriptors_array* inner_unexpanded = NULL;
-    grib_handle* hand                        = grib_handle_of_accessor(this);
+    grib_handle* hand                        = get_enclosing_handle();
 #if MYDEBUG
     int idepth;
 #endif
@@ -483,7 +483,7 @@ int ExpandedDescriptors::expand()
     bufr_descriptors_array* unexpanded_copy = NULL;
     bufr_descriptors_array* expanded        = NULL;
     grib_context* c                         = context_;
-    const grib_handle* h                    = grib_handle_of_accessor(this);
+    const grib_handle* h                    = get_enclosing_handle();
     int operator206yyy_width                = 0; /* width specified by operator 206YYY */
 
     if (!do_expand_) {

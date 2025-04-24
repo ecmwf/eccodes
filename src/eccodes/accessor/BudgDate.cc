@@ -21,9 +21,9 @@ void BudgDate::init(const long l, grib_arguments* c)
     Long::init(l, c);
     int n = 0;
 
-    year_  = c->get_name(grib_handle_of_accessor(this), n++);
-    month_ = c->get_name(grib_handle_of_accessor(this), n++);
-    day_   = c->get_name(grib_handle_of_accessor(this), n++);
+    year_  = c->get_name(get_enclosing_handle(), n++);
+    month_ = c->get_name(get_enclosing_handle(), n++);
+    day_   = c->get_name(get_enclosing_handle(), n++);
 }
 
 int BudgDate::unpack_long(long* val, size_t* len)
@@ -34,11 +34,11 @@ int BudgDate::unpack_long(long* val, size_t* len)
     long month = 0;
     long day   = 0;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), day_, &day)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), day_, &day)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), month_, &month)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), month_, &month)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), year_, &year)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), year_, &year)) != GRIB_SUCCESS)
         return ret;
 
     if (*len < 1)
@@ -72,11 +72,11 @@ int BudgDate::pack_long(const long* val, size_t* len)
 
     ECCODES_ASSERT(year < 255);
 
-    if ((ret = grib_set_long_internal(grib_handle_of_accessor(this), day_, day)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(get_enclosing_handle(), day_, day)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_set_long_internal(grib_handle_of_accessor(this), month_, month)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(get_enclosing_handle(), month_, month)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_set_long_internal(grib_handle_of_accessor(this), year_, year)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(get_enclosing_handle(), year_, year)) != GRIB_SUCCESS)
         return ret;
 
     return ret;

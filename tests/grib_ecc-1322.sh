@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------
+# This is the test for the JIRA issue ECC-1322
+# grib_compare: Option '-e' generates dubious error message
+# ---------------------------------------------------------
+
 label="grib_ecc-1322_test"
 
 tempGrb=temp.$label.grib

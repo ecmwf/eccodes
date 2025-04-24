@@ -55,9 +55,9 @@ void SecondOrderBitsPerValue::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n               = 0;
-    values_             = c->get_name(grib_handle_of_accessor(this), n++);
-    binaryScaleFactor_  = c->get_name(grib_handle_of_accessor(this), n++);
-    decimalScaleFactor_ = c->get_name(grib_handle_of_accessor(this), n++);
+    values_             = c->get_name(get_enclosing_handle(), n++);
+    binaryScaleFactor_  = c->get_name(get_enclosing_handle(), n++);
+    decimalScaleFactor_ = c->get_name(get_enclosing_handle(), n++);
     bitsPerValue_       = 0;
 
     length_ = 0;
@@ -85,15 +85,15 @@ int SecondOrderBitsPerValue::unpack_long(long* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    if ((ret = grib_get_size(grib_handle_of_accessor(this), values_, &size)) != GRIB_SUCCESS) {
+    if ((ret = grib_get_size(get_enclosing_handle(), values_, &size)) != GRIB_SUCCESS) {
         *val = bitsPerValue_;
         return GRIB_SUCCESS;
     }
 
-    if ((ret = grib_get_long(grib_handle_of_accessor(this), binaryScaleFactor_, &binaryScaleFactor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long(get_enclosing_handle(), binaryScaleFactor_, &binaryScaleFactor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), decimalScaleFactor_, &decimalScaleFactor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), decimalScaleFactor_, &decimalScaleFactor)) != GRIB_SUCCESS)
         return ret;
 
     values = (double*)grib_context_malloc_clear(context_, sizeof(double) * size);
@@ -101,7 +101,7 @@ int SecondOrderBitsPerValue::unpack_long(long* val, size_t* len)
         grib_context_log(context_, GRIB_LOG_ERROR, "%s: Memory allocation error: %zu bytes", name_, size);
         return GRIB_OUT_OF_MEMORY;
     }
-    if ((ret = grib_get_double_array_internal(grib_handle_of_accessor(this), values_, values, &size)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_array_internal(get_enclosing_handle(), values_, values, &size)) != GRIB_SUCCESS)
         return ret;
 
     max = values[0];

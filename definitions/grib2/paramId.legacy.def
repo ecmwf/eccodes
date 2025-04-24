@@ -147,6 +147,12 @@
 	 parameterCategory = 5 ;
 	 parameterNumber = 1 ;
 	}
+#Precipitation from radar
+'260138' = {
+	 discipline = 0 ;
+	 parameterCategory = 15 ;
+	 parameterNumber = 5 ;
+	}
 #Maximum snow albedo
 '260161' = {
 	 discipline = 0 ;

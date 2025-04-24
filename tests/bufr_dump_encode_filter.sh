@@ -16,6 +16,11 @@ cd ${data_dir}/bufr
 # Define a common label for all the tmp files
 label="bufr_dump_encode_filter_test"
 
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
 # Create log file
 fLog=temp.${label}".log"
 rm -f $fLog

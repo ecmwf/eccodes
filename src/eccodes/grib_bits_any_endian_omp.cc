@@ -139,6 +139,7 @@ int grib_decode_double_array_complex(const unsigned char* p, long* bitp, long nb
     return GRIB_NOT_IMPLEMENTED;
 }
 
+#if 0
 int grib_encode_long_array(size_t n_vals, const long* val, long bits_per_value, unsigned char* p, long* off)
 {
     size_t i                   = 0;
@@ -165,6 +166,7 @@ int grib_encode_long_array(size_t n_vals, const long* val, long bits_per_value, 
     }
     return GRIB_SUCCESS;
 }
+#endif
 
 int grib_encode_double_array(size_t n_vals, const double* val, long bits_per_value, double reference_value, double d, double divisor, unsigned char* p, long* off)
 {

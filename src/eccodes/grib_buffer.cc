@@ -202,7 +202,7 @@ int grib_buffer_replace(grib_accessor* a, const unsigned char* data,
     long oldsize  = a->get_next_position_offset() - offset;
     long increase = (long)newsize - (long)oldsize;
 
-    grib_buffer* buffer   = grib_handle_of_accessor(a)->buffer;
+    grib_buffer* buffer   = a->get_enclosing_handle()->buffer;
     size_t message_length = buffer->ulength;
 
     grib_context_log(a->context_, GRIB_LOG_DEBUG,
@@ -232,10 +232,10 @@ int grib_buffer_replace(grib_accessor* a, const unsigned char* data,
         update_offsets_after(a, increase);
         if (update_lengths) {
             a->update_size(newsize);
-            int err = grib_section_adjust_sizes(grib_handle_of_accessor(a)->root, 1, 0);
+            int err = grib_section_adjust_sizes(a->get_enclosing_handle()->root, 1, 0);
             if (err) return err;
             if (update_paddings)
-                grib_update_paddings(grib_handle_of_accessor(a)->root);
+                grib_update_paddings(a->get_enclosing_handle()->root);
         }
     }
     return GRIB_SUCCESS;

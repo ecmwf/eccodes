@@ -43,7 +43,7 @@ int Sexagesimal2decimal::unpack_string(char* val, size_t* len)
     double dd, mm = 0, ss = 0;
     int dd_sign = 1;
 
-    err = grib_get_string(grib_handle_of_accessor(this), key_, buff, &size);
+    err = grib_get_string(get_enclosing_handle(), key_, buff, &size);
     if (err)
         return err;
     q = buff + start_;

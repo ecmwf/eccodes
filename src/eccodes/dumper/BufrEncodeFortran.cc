@@ -124,7 +124,7 @@ void BufrEncodeFortran::dump_values(grib_accessor* a)
     long count = 0;
     char* sval;
     grib_context* c = a->context_;
-    grib_handle* h  = grib_handle_of_accessor(a);
+    grib_handle* h  = a->get_enclosing_handle();
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
@@ -303,7 +303,7 @@ void BufrEncodeFortran::dump_long(grib_accessor* a, const char* comment)
     long count                      = 0;
     char* sval                      = NULL;
     grib_context* c                 = a->context_;
-    grib_handle* h                  = grib_handle_of_accessor(a);
+    grib_handle* h                  = a->get_enclosing_handle();
     int doing_unexpandedDescriptors = 0;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0) { /* key does not have the dump attribute */
@@ -518,7 +518,7 @@ void BufrEncodeFortran::dump_double(grib_accessor* a, const char* comment)
     size_t size  = 1;
     int r;
     char* sval;
-    grib_handle* h  = grib_handle_of_accessor(a);
+    grib_handle* h  = a->get_enclosing_handle();
     grib_context* c = h->context;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -563,7 +563,7 @@ void BufrEncodeFortran::dump_string_array(grib_accessor* a, const char* comment)
     int err         = 0;
     long count      = 0;
     int r           = 0;
-    grib_handle* h  = grib_handle_of_accessor(a);
+    grib_handle* h  = a->get_enclosing_handle();
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
@@ -631,7 +631,7 @@ void BufrEncodeFortran::dump_string(grib_accessor* a, const char* comment)
     grib_context* c = a->context_;
     int r;
     int err              = 0;
-    grib_handle* h       = grib_handle_of_accessor(a);
+    grib_handle* h       = a->get_enclosing_handle();
     const char* acc_name = a->name_;
 
     grib_get_string_length_acc(a, &size);
@@ -742,7 +742,7 @@ void BufrEncodeFortran::dump_section(grib_accessor* a, grib_block_of_accessors* 
     if (strcmp(a->name_, "BUFR") == 0 ||
         strcmp(a->name_, "GRIB") == 0 ||
         strcmp(a->name_, "META") == 0) {
-        grib_handle* h = grib_handle_of_accessor(a);
+        grib_handle* h = a->get_enclosing_handle();
         depth_         = 2;
         empty_         = 1;
         depth_ += 2;

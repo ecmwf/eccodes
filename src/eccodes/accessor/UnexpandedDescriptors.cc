@@ -22,7 +22,7 @@ void UnexpandedDescriptors::init(const long len, grib_arguments* args)
     Long::init(len, args);
 
     int n                         = 0;
-    grib_handle* hand             = grib_handle_of_accessor(this);
+    grib_handle* hand             = get_enclosing_handle();
     unexpandedDescriptorsEncoded_ = grib_find_accessor(hand, args->get_name(hand, n++));
     createNewData_                = args->get_name(hand, n++);
     length_                       = 0;
@@ -36,7 +36,7 @@ int UnexpandedDescriptors::unpack_long(long* val, size_t* len)
     long f, x, y;
     long* v = val;
     long i;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     pos = accessor_raw_get_offset(unexpandedDescriptorsEncoded_) * 8;
 
@@ -77,7 +77,7 @@ int UnexpandedDescriptors::pack_long(const long* val, size_t* len)
     size_t buflen           = *len * 2;
     size_t i = 0, length = *len;
     long createNewData = 1;
-    grib_handle* hand  = grib_handle_of_accessor(this);
+    grib_handle* hand  = get_enclosing_handle();
 
     grib_get_long(hand, createNewData_, &createNewData);
 

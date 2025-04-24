@@ -20,8 +20,8 @@ void PackingType::init(const long l, grib_arguments* args)
 {
     Gen::init(l, args);
     int n         = 0;
-    values_       = args->get_name(grib_handle_of_accessor(this), n++);
-    packing_type_ = args->get_name(grib_handle_of_accessor(this), n++);
+    values_       = args->get_name(get_enclosing_handle(), n++);
+    packing_type_ = args->get_name(get_enclosing_handle(), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
 }
@@ -38,7 +38,7 @@ long PackingType::get_native_type()
 
 int PackingType::pack_string(const char* sval, size_t* len)
 {
-    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_handle* h  = get_enclosing_handle();
     double* values  = NULL;
     grib_context* c = context_;
     size_t size     = 0;
@@ -71,7 +71,7 @@ int PackingType::pack_string(const char* sval, size_t* len)
 
 int PackingType::unpack_string(char* val, size_t* len)
 {
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     return grib_get_string(h, packing_type_, val, len);
 }

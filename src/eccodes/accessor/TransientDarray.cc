@@ -56,11 +56,10 @@ int TransientDarray::pack_long(const long* val, size_t* len)
 int TransientDarray::unpack_double(double* val, size_t* len)
 {
     long count = 0;
-
     value_count(&count);
 
-    if (*len < count) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "Wrong size for %s (setting %ld, required %ld) ", name_, *len, count);
+    if (*len < (size_t)count) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "Wrong size for %s (setting %zu, required %ld) ", name_, *len, count);
         return GRIB_ARRAY_TOO_SMALL;
     }
 
@@ -74,10 +73,9 @@ int TransientDarray::unpack_double(double* val, size_t* len)
 int TransientDarray::unpack_long(long* val, size_t* len)
 {
     long count = 0;
-
     value_count(&count);
 
-    if (*len < count) {
+    if (*len < (size_t)count) {
         grib_context_log(context_, GRIB_LOG_ERROR, "Wrong size for %s (setting %ld, required %ld) ", name_, *len, count);
         return GRIB_ARRAY_TOO_SMALL;
     }

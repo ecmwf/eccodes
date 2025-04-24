@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1560
+# Changing from PDTN=8 to 11 changes the level from 1.5 to 2
+# ---------------------------------------------------------------------
+
 label="grib_ecc-1560_test"
 temp_PDTN00_Grib=temp.$label.PDTN00.grib
 temp_PDTN08_Grib=temp.$label.PDTN08.grib

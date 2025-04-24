@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void Dirty::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    accessor_ = c->get_name(grib_handle_of_accessor(this), 0);
+    accessor_ = c->get_name(get_enclosing_handle(), 0);
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;
     length_ = 0;
@@ -27,7 +27,7 @@ void Dirty::init(const long l, grib_arguments* c)
 
 int Dirty::pack_long(const long* val, size_t* len)
 {
-    grib_accessor* x = grib_find_accessor(grib_handle_of_accessor(this), accessor_);
+    grib_accessor* x = grib_find_accessor(get_enclosing_handle(), accessor_);
 
     if (x)
         x->dirty_ = *val;
@@ -37,7 +37,7 @@ int Dirty::pack_long(const long* val, size_t* len)
 
 int Dirty::unpack_long(long* val, size_t* len)
 {
-    grib_accessor* x = grib_find_accessor(grib_handle_of_accessor(this), accessor_);
+    grib_accessor* x = grib_find_accessor(get_enclosing_handle(), accessor_);
 
     if (x) {
         // printf("\nClassDirty::unpack_long: Getting dirty for %s\n", x->name);

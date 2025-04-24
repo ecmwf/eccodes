@@ -21,7 +21,7 @@ void G1MonthlyDate::init(const long l, grib_arguments* c)
     Long::init(l, c);
     int n = 0;
 
-    date_ = c->get_name(grib_handle_of_accessor(this), n++);
+    date_ = c->get_name(get_enclosing_handle(), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
@@ -29,7 +29,7 @@ int G1MonthlyDate::unpack_long(long* val, size_t* len)
 {
     long date = 0;
 
-    grib_get_long_internal(grib_handle_of_accessor(this), date_, &date);
+    grib_get_long_internal(get_enclosing_handle(), date_, &date);
 
     date /= 100;
     date *= 100;

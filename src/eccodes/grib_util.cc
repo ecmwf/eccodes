@@ -67,6 +67,15 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom, grib_handle*
     if (*err)
         return NULL;
 
+#ifdef DEBUG
+    if (edition==1) {
+        ECCODES_ASSERT( hfrom->sections_count == 5 );
+    }
+    if (edition==2) {
+        ECCODES_ASSERT( hfrom->sections_count == 8 );
+    }
+#endif
+
     for (i = 0; i <= hfrom->sections_count; i++) {
         if (sections[i]) {
             h = hfrom;
@@ -277,76 +286,6 @@ grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int w
     }
 
     return grib_sections_copy_internal(hfrom, hto, sections_to_copy, err);
-}
-
-static grib_trie* init_list(const char* name);
-static grib_trie* param_id_list   = NULL;
-static grib_trie* mars_param_list = NULL;
-
-grib_string_list* grib_util_get_param_id(const char* mars_param)
-{
-    if (!mars_param_list && (mars_param_list = init_list("mars_param.table")) == NULL)
-        return NULL;
-    return (grib_string_list*)grib_trie_get(mars_param_list, mars_param);
-}
-
-grib_string_list* grib_util_get_mars_param(const char* param_id)
-{
-    if (!param_id_list && (param_id_list = init_list("param_id.table")) == NULL)
-        return NULL;
-    return (grib_string_list*)grib_trie_get(param_id_list, param_id);
-}
-
-static grib_trie* init_list(const char* name)
-{
-    char* full_path = 0;
-    FILE* fh;
-    char s[101];
-    char param[101];
-    grib_string_list* list = 0;
-    grib_string_list* next = 0;
-    grib_trie* trie_list;
-    grib_context* c = grib_context_get_default();
-    full_path       = grib_context_full_defs_path(c, name);
-
-    fh = codes_fopen(full_path, "r");
-    if (!fh) {
-        grib_context_log(c, GRIB_LOG_PERROR, "unable to read %s", full_path);
-        return NULL;
-    }
-
-    list      = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
-    trie_list = grib_trie_new(c);
-    if (fscanf(fh, "%100s", param) == EOF) {
-        fclose(fh);
-        return NULL;
-    }
-    while (fscanf(fh, "%100s", s) != EOF) {
-        if (!strcmp(s, "|")) {
-            grib_trie_insert(trie_list, param, list);
-            if (fscanf(fh, "%100s", param) == EOF) {
-                fclose(fh);
-                return trie_list;
-            }
-            list = NULL;
-        }
-        else {
-            if (!list) {
-                list        = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
-                list->value = grib_context_strdup(c, s);
-            }
-            else {
-                next = list;
-                while (next->next)
-                    next = next->next;
-                next->next        = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
-                next->next->value = grib_context_strdup(c, s);
-            }
-        }
-    }
-
-    fclose(fh);
-    return 0;
 }
 
 static const char* get_packing_spec_packing_name(long packing_spec_packing)
@@ -860,6 +799,7 @@ static bool is_constant_field(const double missingValue, const double* data_valu
 static int write_out_error_data_file(const double* data_values, size_t data_values_count)
 {
     FILE* ferror = fopen("error.data", "w");
+    if (!ferror) return GRIB_IO_PROBLEM;
     size_t lcount = 0;
     fprintf(ferror, "# data_values_count=%zu\n", data_values_count);
     fprintf(ferror, "set values={ ");
@@ -939,7 +879,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 {
 #define SET_LONG_VALUE(n, v)                       \
     do {                                           \
-        ECCODES_ASSERT(count < 1024);                      \
+        ECCODES_ASSERT(count < 1024);              \
         values[count].name       = n;              \
         values[count].type       = GRIB_TYPE_LONG; \
         values[count].long_value = v;              \
@@ -947,7 +887,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     } while (0)
 #define SET_DOUBLE_VALUE(n, v)                         \
     do {                                               \
-        ECCODES_ASSERT(count < 1024);                          \
+        ECCODES_ASSERT(count < 1024);                  \
         values[count].name         = n;                \
         values[count].type         = GRIB_TYPE_DOUBLE; \
         values[count].double_value = v;                \
@@ -955,7 +895,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     } while (0)
 #define SET_STRING_VALUE(n, v)                         \
     do {                                               \
-        ECCODES_ASSERT(count < 1024);                          \
+        ECCODES_ASSERT(count < 1024);                  \
         values[count].name         = n;                \
         values[count].type         = GRIB_TYPE_STRING; \
         values[count].string_value = v;                \
@@ -964,7 +904,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 
 #define COPY_SPEC_LONG(x)                          \
     do {                                           \
-        ECCODES_ASSERT(count < 1024);                      \
+        ECCODES_ASSERT(count < 1024);              \
         values[count].name       = #x;             \
         values[count].type       = GRIB_TYPE_LONG; \
         values[count].long_value = spec->x;        \
@@ -972,7 +912,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     } while (0)
 #define COPY_SPEC_DOUBLE(x)                            \
     do {                                               \
-        ECCODES_ASSERT(count < 1024);                          \
+        ECCODES_ASSERT(count < 1024);                  \
         values[count].name         = #x;               \
         values[count].type         = GRIB_TYPE_DOUBLE; \
         values[count].double_value = spec->x;          \
@@ -995,6 +935,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     bool grib1_high_resolution_fix = false; // See GRIB-863
     bool global_grid               = false;
     int expandBoundingBox         = 0;
+    grib_util_grid_spec* nonConstSpec = const_cast<grib_util_grid_spec*>(spec);
 
     ECCODES_ASSERT(h);
 
@@ -1137,6 +1078,10 @@ grib_handle* grib_util_set_spec(grib_handle* h,
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
 
+            if (editionNumber == 2) {
+                // A -ve longitude passed in (could be from GRIB1). Polar stereo longitude in GRIB2 must be +ve
+                nonConstSpec->longitudeOfFirstGridPointInDegrees = normalise_longitude_in_degrees(spec->longitudeOfFirstGridPointInDegrees);
+            }
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
             COPY_SPEC_LONG(Ni);
@@ -1178,6 +1123,11 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+
+            if (editionNumber == 2) {
+                // A -ve longitude passed in (could be from GRIB1). Lambert longitude in GRIB2 must be +ve
+                nonConstSpec->longitudeOfFirstGridPointInDegrees = normalise_longitude_in_degrees(spec->longitudeOfFirstGridPointInDegrees);
+            }
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
             COPY_SPEC_LONG(Ni); // same as Nx
@@ -1482,7 +1432,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 
     if ((*err = grib_set_values(h_out, values, count)) != 0) {
         fprintf(stderr, "%s: Cannot set key values: %s\n", __func__, grib_get_error_message(*err));
-        for (i = 0; i < count; i++)
+        for (size_t i = 0; i < count; i++)
             if (values[i].error) fprintf(stderr, " %s %s\n", values[i].name, grib_get_error_message(values[i].error));
         goto cleanup;
     }
@@ -2178,8 +2128,8 @@ int codes_grib_surface_type_requires_value(int edition, int type_of_surface_code
 
 size_t sum_of_pl_array(const long* pl, size_t plsize)
 {
-    long i, count = 0;
-    for (i = 0; i < plsize; i++) {
+    long count = 0;
+    for (size_t i = 0; i < plsize; i++) {
         count += pl[i];
     }
     return count;

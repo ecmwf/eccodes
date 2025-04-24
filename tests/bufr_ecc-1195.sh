@@ -9,7 +9,11 @@
 #
 
 . ./include.ctest.sh
-set -u
+
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1195
+# Accessor 'sprintf' should by default be read-only
+# ---------------------------------------------------------------------
 
 label="bufr_ecc-1195_test"
 temp1=temp.$label.bufr

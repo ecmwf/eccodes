@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void SelectStepTemplate::init(const long l, grib_arguments* c)
 {
     Unsigned::init(l, c);
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     int n = 0;
 
     productDefinitionTemplateNumber_ = c->get_name(hand, n++);
@@ -34,7 +34,7 @@ int SelectStepTemplate::unpack_long(long* val, size_t* len)
 
 int SelectStepTemplate::pack_long(const long* val, size_t* len)
 {
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     long productDefinitionTemplateNumber    = 0;
     long productDefinitionTemplateNumberNew = 0;
 

@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1623
+# Assigning a single-element array to a string key fails with FunctionNotImplementedError
+# ---------------------------------------------------------------------
+
 label="bufr_ecc-1623_test"
 tempBufrA=temp.$label.A.bufr
 tempBufrB=temp.$label.B.bufr

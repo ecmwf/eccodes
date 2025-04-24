@@ -582,7 +582,7 @@ void Default::print_offset(FILE* out, grib_accessor* a)
     long offset;
     long theBegin = 0, theEnd = 0;
     size_t size = 0, more = 0;
-    grib_handle* h = grib_handle_of_accessor(a);
+    grib_handle* h = a->get_enclosing_handle();
 
     theBegin = a->offset_ - section_offset_ + 1;
     theEnd   = a->get_next_position_offset() - section_offset_;

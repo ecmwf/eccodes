@@ -245,14 +245,14 @@ double grib_long_to_ieee64(unsigned long x)
 template <>
 int grib_ieee_decode_array<double> (grib_context* c, unsigned char* buf, size_t nvals, int bytes, double* val)
 {
-    int err = 0, i = 0, j = 0;
+    int err = 0, j = 0;
     unsigned char s[8] = {0,};
     float fval;
     double* pval = val;
 
     switch (bytes) {
         case 4:
-            for (i = 0; i < nvals; i++) {
+            for (size_t i = 0; i < nvals; i++) {
 #if IEEE_LE
                 for (j = 3; j >= 0; j--)
                     s[j] = *(buf++);
@@ -266,7 +266,7 @@ int grib_ieee_decode_array<double> (grib_context* c, unsigned char* buf, size_t 
             }
             break;
         case 8:
-            for (i = 0; i < nvals; i++) {
+            for (size_t i = 0; i < nvals; i++) {
 #if IEEE_LE
                 for (j = 7; j >= 0; j--)
                     s[j] = *(buf++);
@@ -289,12 +289,12 @@ int grib_ieee_decode_array<double> (grib_context* c, unsigned char* buf, size_t 
 template <>
 int grib_ieee_decode_array<float>(grib_context* c, unsigned char* buf, size_t nvals, int bytes, float* val)
 {
-    int err = 0, i = 0, j = 0;
+    int err = 0, j = 0;
     unsigned char s[4] = {0,};
 
     switch (bytes) {
         case 4:
-            for (i = 0; i < nvals; i++) {
+            for (size_t i = 0; i < nvals; i++) {
 #if IEEE_LE
                 for (j = 3; j >= 0; j--)
                     s[j] = *(buf++);
@@ -345,7 +345,7 @@ int grib_ieee_decode_array_float(grib_context* c, unsigned char* buf, size_t nva
 int grib_ieee_encode_array(grib_context* c, double* val, size_t nvals, int bytes,
                            unsigned char* buf)
 {
-    int err = 0, i = 0, j = 0;
+    int err = 0, j = 0;
 #if IEEE_LE
     unsigned char s4[4];
     unsigned char s8[8];
@@ -355,7 +355,7 @@ int grib_ieee_encode_array(grib_context* c, double* val, size_t nvals, int bytes
 
     switch (bytes) {
         case 4:
-            for (i = 0; i < nvals; i++) {
+            for (size_t i = 0; i < nvals; i++) {
                 fval = (float)val[i];
 
 #if IEEE_LE
@@ -369,7 +369,7 @@ int grib_ieee_encode_array(grib_context* c, double* val, size_t nvals, int bytes
             }
             break;
         case 8:
-            for (i = 0; i < nvals; i++) {
+            for (size_t i = 0; i < nvals; i++) {
 #if IEEE_LE
                 memcpy(s8, pval++, 8);
                 for (j = 7; j >= 0; j--)

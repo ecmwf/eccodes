@@ -21,7 +21,7 @@ void FromScaleFactorScaledValue::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
     int n             = 0;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     scaleFactor_ = c->get_name(hand, n++);
     scaledValue_ = c->get_name(hand, n++);  // Can be scalar or array
@@ -34,7 +34,7 @@ int FromScaleFactorScaledValue::pack_double(const double* val, size_t* len)
 {
     // See ECC-979 and ECC-1416
     // Evaluate scaleFactor and scaledValue_ from input double '*val'
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     int err           = 0;
     int64_t factor    = 0;
     int64_t value     = 0;
@@ -91,7 +91,7 @@ int FromScaleFactorScaledValue::unpack_double(double* val, size_t* len)
 {
     int err          = 0;
     long scaleFactor = 0, scaledValue = 0;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     grib_context* c   = context_;
     size_t vsize      = 0;
 
@@ -166,7 +166,7 @@ int FromScaleFactorScaledValue::unpack_double(double* val, size_t* len)
 
 int FromScaleFactorScaledValue::is_missing()
 {
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     int err           = 0;
     long scaleFactor = 0, scaledValue = 0;
 
@@ -182,7 +182,7 @@ int FromScaleFactorScaledValue::is_missing()
 int FromScaleFactorScaledValue::value_count(long* len)
 {
     int err           = 0;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     size_t vsize;
 
     if ((err = grib_get_size(hand, scaledValue_, &vsize)) != GRIB_SUCCESS)

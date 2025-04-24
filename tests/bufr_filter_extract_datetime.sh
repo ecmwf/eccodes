@@ -100,6 +100,7 @@ cat > $fRules <<EOF
  }
  print "extracted [extractedDateTimeNumberOfSubsets] of [originalNumberOfSubsets] subsets";
  assert(numberOfSubsets == extractedDateTimeNumberOfSubsets);
+ assert(localNumberOfObservations == numberOfSubsets);
 EOF
 
 inputBufr="amsa_55.bufr"

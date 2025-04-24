@@ -20,7 +20,7 @@ void GdsNotPresentBitmap::init(const long v, grib_arguments* args)
 {
     Gen::init(v, args);
     int n             = 0;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     missing_value_           = args->get_name(hand, n++);
     number_of_values_        = args->get_name(hand, n++);
@@ -33,12 +33,12 @@ void GdsNotPresentBitmap::init(const long v, grib_arguments* args)
 int GdsNotPresentBitmap::value_count(long* number_of_points)
 {
     *number_of_points = 0;
-    return grib_get_long_internal(grib_handle_of_accessor(this), number_of_points_, number_of_points);
+    return grib_get_long_internal(get_enclosing_handle(), number_of_points_, number_of_points);
 }
 
 int GdsNotPresentBitmap::unpack_double(double* val, size_t* len)
 {
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     long number_of_points = 0, number_of_values = 0, ni = 0;
     long latitude_of_first_point = 0;

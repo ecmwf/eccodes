@@ -85,6 +85,10 @@ static int process_file(const char* filename)
         printf("Checking file %s\n", filename);
 
     while ((h = grib_handle_new_from_file(0, in, &err)) != NULL) {
+        // if (err) {
+        //     fprintf(stderr, "ERROR: %s\n", grib_get_error_message(err));
+        //     exit(err);
+        // }
         int is_reduced_gaussian = 0, is_regular_gaussian = 0, grid_ok = 0;
         long edition = 0, N = 0, Nj = 0, numberOfDataPoints, angleSubdivisions;
         size_t numberOfValues = 0;
@@ -241,6 +245,12 @@ static int process_file(const char* filename)
         free(lats);
         grib_handle_delete(h);
     }
+
+    if (err) {
+        error(filename, msg_num, "%s\n", grib_get_error_message(err));
+        exit(err);
+    }
+
     fclose(in);
     if (verbose)
         printf("\n");

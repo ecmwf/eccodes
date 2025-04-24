@@ -20,7 +20,7 @@ void GlobalGaussian::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n          = 0;
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     N_           = c->get_name(h, n++);
     Ni_          = c->get_name(h, n++);
@@ -45,7 +45,7 @@ int GlobalGaussian::unpack_long(long* val, size_t* len)
     long factor = 1000, plpresent = 0;
     long max_pl     = 0; /* max. element of pl array */
     grib_context* c = context_;
-    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_handle* h  = get_enclosing_handle();
 
     if (basic_angle_ && subdivision_) {
         factor = 1000000;
@@ -151,7 +151,7 @@ int GlobalGaussian::pack_long(const long* val, size_t* len)
     double dfactor, dNi;
     long plpresent  = 0;
     grib_context* c = context_;
-    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_handle* h  = get_enclosing_handle();
 
     if (*val == 0)
         return ret;

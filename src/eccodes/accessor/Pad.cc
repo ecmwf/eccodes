@@ -20,7 +20,7 @@ void Pad::init(const long len, grib_arguments* arg)
 {
     Padding::init(len, arg);
 
-    expression_ = arg->get_expression(grib_handle_of_accessor(this), 0);
+    expression_ = arg->get_expression(get_enclosing_handle(), 0);
     length_     = preferred_size(1);
 }
 
@@ -28,7 +28,7 @@ size_t Pad::preferred_size(int from_handle)
 {
     long length = 0;
 
-    expression_->evaluate_long(grib_handle_of_accessor(this), &length);
+    expression_->evaluate_long(get_enclosing_handle(), &length);
 
     return length > 0 ? length : 0;
 }

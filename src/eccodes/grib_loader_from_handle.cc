@@ -16,11 +16,10 @@
 
 static int copy_values(grib_handle* h, grib_accessor* ga)
 {
-    int i, j, k;
     /* printf("copy_values stack is %ld\n",(long)h->values_stack);*/
-    for (j = 0; j < h->values_stack; j++) {
-        for (i = 0; i < h->values_count[j]; i++) {
-            for (k = 0; (k < MAX_ACCESSOR_NAMES) && (ga->all_names_[k] != NULL); k++) {
+    for (int j = 0; j < h->values_stack; j++) {
+        for (size_t i = 0; i < h->values_count[j]; i++) {
+            for (int k = 0; (k < MAX_ACCESSOR_NAMES) && (ga->all_names_[k] != NULL); k++) {
                 /*printf("copy_values: %s %s\n",h->values[j][i].name,ga->all_names[k]);*/
                 if (strcmp(h->values[j][i].name, ga->all_names_[k]) == 0) {
                     size_t len = 1;
@@ -168,7 +167,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
     // ECC-2013: Unfortunately we mapped some keys to be "string_type" in the definitions,
     // e.g., the grib2 key typeOfFirstFixedSurface. Its code table 4.5 has multiple
     // abbreviations of "sfc" etc which clash! So we mark it with this flag to revert to integers which are unique
-    if ( ga->flags_ & GRIB_ACCESSOR_FLAG_COPY_AS_INT ) {
+    if ( ga->flags_ & GRIB_ACCESSOR_FLAG_COPY_AS_LONG ) {
         ga_type = GRIB_TYPE_LONG;
     }
 
@@ -192,7 +191,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
             if (ret == GRIB_SUCCESS) {
                 grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying %d long(s) %d to %s", len, lval[0], name);
                 if (ga->same_) {
-                    ret = grib_set_long_array(grib_handle_of_accessor(ga), ga->name_, lval, len);
+                    ret = grib_set_long_array(ga->get_enclosing_handle(), ga->name_, lval, len);
 
                     /* Allow for lists to be resized */
                     if ((ret == GRIB_WRONG_ARRAY_SIZE || ret == GRIB_ARRAY_TOO_SMALL) && loader->list_is_resized)
@@ -224,7 +223,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
             if (ret == GRIB_SUCCESS) {
                 grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying %d double(s) %g to %s", len, dval[0], name);
                 if (ga->same_) {
-                    ret = grib_set_double_array(grib_handle_of_accessor(ga), ga->name_, dval, len);
+                    ret = grib_set_double_array(ga->get_enclosing_handle(), ga->name_, dval, len);
 
                     /* Allow for lists to be resized */
                     if ((ret == GRIB_WRONG_ARRAY_SIZE || ret == GRIB_ARRAY_TOO_SMALL) && loader->list_is_resized)

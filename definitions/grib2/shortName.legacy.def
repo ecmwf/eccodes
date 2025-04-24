@@ -147,6 +147,12 @@
 	 parameterCategory = 5 ;
 	 parameterNumber = 1 ;
 	}
+#Precipitation from radar
+'rdp' = {
+	 discipline = 0 ;
+	 parameterCategory = 15 ;
+	 parameterNumber = 5 ;
+	}
 #Maximum snow albedo
 'mxsalb' = {
 	 discipline = 0 ;

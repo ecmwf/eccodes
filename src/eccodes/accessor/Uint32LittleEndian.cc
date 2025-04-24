@@ -20,7 +20,7 @@ int Uint32LittleEndian::unpack_long(long* val, size_t* len)
 {
     long value = 0;
     /* long pos = offset_ ; */
-    /* unsigned char* data = grib_handle_of_accessor(this)->buffer->data; */
+    /* unsigned char* data = get_enclosing_handle()->buffer->data; */
 
     if (*len < 1) {
         return GRIB_ARRAY_TOO_SMALL;

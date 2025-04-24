@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1840
+# BUFR: Problem with edition 3 typicalYear and typicalDate
+# ---------------------------------------------------------------------
+
 REDIRECT=/dev/null
 
 label="bufr_ecc-1840_test"

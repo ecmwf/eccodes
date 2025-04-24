@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1671
+# Issue in reading glofas data
+# ---------------------------------------------------------------------
+
 label="grib_ecc-1671_test"
 
 if [ $HAVE_GEOGRAPHY -eq 0 ]; then

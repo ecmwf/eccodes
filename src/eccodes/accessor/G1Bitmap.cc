@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void G1Bitmap::init(const long len, grib_arguments* arg)
 {
     Bitmap::init(len, arg);
-    unusedBits_ = arg->get_name(grib_handle_of_accessor(this), 4);
+    unusedBits_ = arg->get_name(get_enclosing_handle(), 4);
 }
 
 int G1Bitmap::pack_double(const double* val, size_t* len)
@@ -35,7 +35,7 @@ int G1Bitmap::pack_double(const double* val, size_t* len)
     double miss_values    = 0;
     tlen                  = ((*len + bit_padding - 1) / bit_padding * bit_padding) / 8;
 
-    if ((err = grib_get_double_internal(grib_handle_of_accessor(this), missing_value_, &miss_values)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(get_enclosing_handle(), missing_value_, &miss_values)) != GRIB_SUCCESS)
         return err;
 
     buf = (unsigned char*)grib_context_malloc_clear(context_, tlen);
@@ -51,7 +51,7 @@ int G1Bitmap::pack_double(const double* val, size_t* len)
         }
     }
 
-    if ((err = grib_set_long_internal(grib_handle_of_accessor(this), unusedBits_, tlen * 8 - *len)) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(get_enclosing_handle(), unusedBits_, tlen * 8 - *len)) != GRIB_SUCCESS)
         return err;
 
     err = grib_buffer_replace(this, buf, tlen, 1, 1);
@@ -67,7 +67,7 @@ int G1Bitmap::value_count(long* count)
     long tlen;
     int err;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), unusedBits_, &tlen)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), unusedBits_, &tlen)) != GRIB_SUCCESS)
         grib_context_log(context_, GRIB_LOG_ERROR, "grib_accessor_bitmap.value_count : cannot get %s err=%d", unusedBits_, err);
 
     *count = (length_ * 8) - tlen;
@@ -76,7 +76,7 @@ int G1Bitmap::value_count(long* count)
 
 int G1Bitmap::unpack_bytes(unsigned char* val, size_t* len)
 {
-    unsigned char* buf = grib_handle_of_accessor(this)->buffer->data;
+    unsigned char* buf = get_enclosing_handle()->buffer->data;
     long tlen;
     int err;
     long length = byte_count();
@@ -87,7 +87,7 @@ int G1Bitmap::unpack_bytes(unsigned char* val, size_t* len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), unusedBits_, &tlen)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), unusedBits_, &tlen)) != GRIB_SUCCESS)
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "grib_accessor_bitmap.unpack_bytes : cannot get %s err=%d", unusedBits_, err);
 

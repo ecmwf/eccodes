@@ -10,7 +10,11 @@
 
 . ./include.ctest.sh
 
-# Define a common label for all the tmp files
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-147
+# keys_iterator does not iterate on BUFR data keys
+# ---------------------------------------------------------------------
+
 label="bufr_ecc-147_test"
 
 tempBufr=temp.$label.bufr

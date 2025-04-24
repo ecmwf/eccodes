@@ -32,7 +32,8 @@ meta codedValues data_g22order_packing(
      trueLengthOfLastGroup,
      numberOfBitsForScaledGroupLengths,
      orderOfSpatialDifferencing,
-     numberOfOctetsExtraDescriptors
+     numberOfOctetsExtraDescriptors,
+     dataRepresentationTemplateNumber
 ): read_only;
 
 meta values data_apply_bitmap(

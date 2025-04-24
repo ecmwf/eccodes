@@ -14,7 +14,10 @@ if [ $HAVE_GEOGRAPHY -eq 0 ]; then
     exit 0
 fi
 
-REDIRECT=/dev/null
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1792
+# headers_only cloning does not work as expected after changing geography
+# ---------------------------------------------------------------------
 
 label="grib_ecc-1792_test"
 tempGrib=temp.$label.grib

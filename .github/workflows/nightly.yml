@@ -71,8 +71,6 @@ jobs:
       token_debian_11: ${{ secrets.NEXUS_TEST_REPO_UPLOAD_TOKEN }}
       url_debian_12: ${{ secrets.NEXUS_TEST_REPO_URL_DEBIAN_12 }}
       token_debian_12: ${{ secrets.NEXUS_TEST_REPO_UPLOAD_TOKEN }}
-      url_centos_7: ${{ secrets.NEXUS_TEST_REPO_NIGHTLY_URL_CENTOS_7 }}
-      token_centos_7: ${{ secrets.NEXUS_TEST_REPO_UPLOAD_TOKEN }}
       url_rocky_8: ${{ secrets.NEXUS_TEST_REPO_NIGHTLY_URL_ROCKY_8 }}
       token_rocky_8: ${{ secrets.NEXUS_TEST_REPO_UPLOAD_TOKEN }}
 

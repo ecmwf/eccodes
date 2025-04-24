@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1364
+# Geoiterator for Lambert Conformal in the southern hemisphere
+# ---------------------------------------------------------------------
+
 if [ $HAVE_GEOGRAPHY -eq 0 ]; then
     exit 0
 fi

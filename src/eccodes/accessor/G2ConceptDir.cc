@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void G2ConceptDir::init(const long len, grib_arguments* arg)
 {
     Gen::init(len, arg);
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     this->preferLocal_ = arg->get_name(h, 0);
     this->masterDir_   = arg->get_name(h, 1);
@@ -39,7 +39,7 @@ long G2ConceptDir::get_native_type()
 
 int G2ConceptDir::unpack_string(char* v, size_t* len)
 {
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     int err = 0;
     long preferLocal = 0;
     char masterDir[128] = {0,};

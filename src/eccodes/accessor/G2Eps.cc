@@ -21,18 +21,18 @@ void G2Eps::init(const long l, grib_arguments* c)
     Unsigned::init(l, c);
     int n = 0;
 
-    productDefinitionTemplateNumber_ = c->get_name(grib_handle_of_accessor(this), n++);
-    type_                            = c->get_name(grib_handle_of_accessor(this), n++);
-    stream_                          = c->get_name(grib_handle_of_accessor(this), n++);
-    stepType_                        = c->get_name(grib_handle_of_accessor(this), n++);
-    derivedForecast_                 = c->get_name(grib_handle_of_accessor(this), n++);
+    productDefinitionTemplateNumber_ = c->get_name(get_enclosing_handle(), n++);
+    type_                            = c->get_name(get_enclosing_handle(), n++);
+    stream_                          = c->get_name(get_enclosing_handle(), n++);
+    stepType_                        = c->get_name(get_enclosing_handle(), n++);
+    derivedForecast_                 = c->get_name(get_enclosing_handle(), n++);
 }
 
 int G2Eps::unpack_long(long* val, size_t* len)
 {
     long productDefinitionTemplateNumber = 0;
     int err                              = 0;
-    grib_handle* hand                    = grib_handle_of_accessor(this);
+    grib_handle* hand                    = get_enclosing_handle();
 
     err = grib_get_long(hand, productDefinitionTemplateNumber_, &productDefinitionTemplateNumber);
     if (err) return err;
@@ -49,7 +49,7 @@ int G2Eps::unpack_long(long* val, size_t* len)
 
 int G2Eps::pack_long(const long* val, size_t* len)
 {
-    grib_handle* hand                       = grib_handle_of_accessor(this);
+    grib_handle* hand                       = get_enclosing_handle();
     long productDefinitionTemplateNumber    = -1;
     long productDefinitionTemplateNumberNew = -1;
     long type                               = -1;

@@ -149,6 +149,7 @@ int grib_decode_double_array_complex(const unsigned char* p, long* bitp, long nb
     return GRIB_SUCCESS;
 }
 
+#if 0
 int grib_encode_long_array(size_t n_vals, const long* val, long bits_per_value, unsigned char* p, long* off)
 {
     size_t i                   = 0;
@@ -175,6 +176,7 @@ int grib_encode_long_array(size_t n_vals, const long* val, long bits_per_value, 
     }
     return GRIB_SUCCESS;
 }
+#endif
 
 #define U_BYTEORDER                    \
     static union                       \

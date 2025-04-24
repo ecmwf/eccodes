@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void Section::init(const long len, grib_arguments* arg)
 {
     Gen::init(len, arg);
-    sub_section_ = grib_section_create(grib_handle_of_accessor(this), this);
+    sub_section_ = grib_section_create(get_enclosing_handle(), this);
     length_      = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
@@ -31,12 +31,12 @@ void Section::dump(eccodes::Dumper* dumper)
 
 long Section::byte_count()
 {
-    if (!length_ || grib_handle_of_accessor(this)->loader) {
+    if (!length_ || get_enclosing_handle()->loader) {
         if (name_[1] == '_')
             return 0;
 
         /* printf("adjusting sizes SECTION %s is %ld %ld\n",a->name,(long)a->offset,(long)length_ ); */
-        grib_section_adjust_sizes(sub_section_, grib_handle_of_accessor(this)->loader != NULL, 0);
+        grib_section_adjust_sizes(sub_section_, get_enclosing_handle()->loader != NULL, 0);
         /* printf("                SECTION %s is %ld %ld\n",a->name,(long)a->offset,(long)length_ );  */
     }
 

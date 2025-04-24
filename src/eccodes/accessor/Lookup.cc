@@ -21,9 +21,9 @@ void Lookup::init(const long len, grib_arguments* arg)
     Long::init(len, arg);
     length_  = 0;
     llength_ = len;
-    loffset_ = arg->get_long(grib_handle_of_accessor(this), 0);
+    loffset_ = arg->get_long(get_enclosing_handle(), 0);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    real_name_ = arg->get_expression(grib_handle_of_accessor(this), 1);
+    real_name_ = arg->get_expression(get_enclosing_handle(), 1);
 }
 
 void Lookup::post_init()
@@ -88,7 +88,7 @@ int Lookup::unpack_string(char* v, size_t* len)
 
 int Lookup::unpack_long(long* val, size_t* len)
 {
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     long pos = (offset_ + loffset_) * 8;
 

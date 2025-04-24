@@ -101,7 +101,7 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
     if ((ret = grib_get_long_internal(h, s_ny, &ny)) != GRIB_SUCCESS)
         return ret;
 
-    if (nv_ != nx * ny) {
+    if ( nv_ != (size_t)(nx * ny) ) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, nv_, nx, ny);
         return GRIB_WRONG_GRID;
     }

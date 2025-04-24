@@ -190,7 +190,7 @@ int grib_recompose_name(grib_handle* h, grib_accessor* observer, const char* una
 //     char double_format[]     = "%.12g"; /* default format for printing double keys */
 //     char long_format[]       = "%ld";   /* default format for printing integer keys */
 //     char default_separator[] = " ";
-//     grib_handle* h           = grib_handle_of_accessor(a);
+//     grib_handle* h           = a->get_enclosing_handle();
 
 //     if (type == -1)
 //         type = a->get_native_type();

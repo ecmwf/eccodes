@@ -44,9 +44,9 @@ static void remove_accessor(grib_accessor* a)
         return;
     s = a->parent_;
 
-    if (grib_handle_of_accessor(a)->use_trie && *(a->all_names_[0]) != '_') {
-        id                                        = grib_hash_keys_get_id(a->context_->keys, a->all_names_[0]);
-        grib_handle_of_accessor(a)->accessors[id] = NULL;
+    if (a->get_enclosing_handle()->use_trie && *(a->all_names_[0]) != '_') {
+        id = grib_hash_keys_get_id(a->context_->keys, a->all_names_[0]);
+        a->get_enclosing_handle()->accessors[id] = NULL;
     }
 
     if (a->next_)

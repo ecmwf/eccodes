@@ -44,7 +44,7 @@ unsigned[1] numberOfBitsForScaledGroupLengths ;
 alias numberOfBitsUsedForTheScaledGroupLengths=numberOfBitsForScaledGroupLengths;
 
 # Order of spatial differencing
-codetable[1] orderOfSpatialDifferencing ('5.6.table',masterDir,localDir);
+codetable[1] orderOfSpatialDifferencing ('5.6.table',masterDir,localDir) = 1;
 
 # Number of octets required in the Data Section to specify extra descriptors needed for spatial differencing
 # (octets 6-ww in Data Template 7.3)

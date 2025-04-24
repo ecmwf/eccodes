@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1395
+# Encoding should fail if attempting to encode message with an undefined element descriptor
+# ---------------------------------------------------------------------
+
 label="bufr_ecc-1395_test"
 
 tempBufr=temp.$label.bufr

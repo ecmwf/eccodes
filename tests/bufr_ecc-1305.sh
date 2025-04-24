@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1305
+# BUFR: Invalid code in definitions/bufr/tables/operators.table
+# ---------------------------------------------------------------------
+
 label="bufr_ecc-1305_test"
 temp=temp.$label
 

@@ -244,7 +244,7 @@ extern int grib_yydebug;
     MISSING = 331,                 /* MISSING  */
     CONSTRAINT = 332,              /* CONSTRAINT  */
     COPY_OK = 333,                 /* COPY_OK  */
-    COPY_AS_INT = 334,             /* COPY_AS_INT  */
+    COPY_AS_LONG = 334,            /* COPY_AS_LONG  */
     COPY_IF_CHANGING_EDITION = 335, /* COPY_IF_CHANGING_EDITION  */
     WHEN = 336,                    /* WHEN  */
     SET = 337,                     /* SET  */
@@ -379,7 +379,7 @@ extern int grib_yydebug;
 #define MISSING 331
 #define CONSTRAINT 332
 #define COPY_OK 333
-#define COPY_AS_INT 334
+#define COPY_AS_LONG 334
 #define COPY_IF_CHANGING_EDITION 335
 #define WHEN 336
 #define SET 337
@@ -552,7 +552,7 @@ enum grib_yysymbol_kind_t
   YYSYMBOL_MISSING = 76,                   /* MISSING  */
   YYSYMBOL_CONSTRAINT = 77,                /* CONSTRAINT  */
   YYSYMBOL_COPY_OK = 78,                   /* COPY_OK  */
-  YYSYMBOL_COPY_AS_INT = 79,               /* COPY_AS_INT  */
+  YYSYMBOL_COPY_AS_LONG = 79,              /* COPY_AS_LONG  */
   YYSYMBOL_COPY_IF_CHANGING_EDITION = 80,  /* COPY_IF_CHANGING_EDITION  */
   YYSYMBOL_WHEN = 81,                      /* WHEN  */
   YYSYMBOL_SET = 82,                       /* SET  */
@@ -1125,7 +1125,7 @@ static const char *const grib_yytname[] =
   "CONCEPT_NOFAIL", "NIL", "DUMMY", "MODIFY", "READ_ONLY", "STRING_TYPE",
   "LONG_TYPE", "DOUBLE_TYPE", "NO_COPY", "DUMP", "JSON", "XML", "NO_FAIL",
   "EDITION_SPECIFIC", "OVERRIDE", "HIDDEN", "CAN_BE_MISSING", "MISSING",
-  "CONSTRAINT", "COPY_OK", "COPY_AS_INT", "COPY_IF_CHANGING_EDITION",
+  "CONSTRAINT", "COPY_OK", "COPY_AS_LONG", "COPY_IF_CHANGING_EDITION",
   "WHEN", "SET", "SET_NOFAIL", "WRITE", "APPEND", "PRINT", "EXPORT",
   "REMOVE", "RENAME", "SKIP", "PAD", "SECTION_PADDING", "MESSAGE",
   "MESSAGE_COPY", "PADTO", "PADTOEVEN", "PADTOMULTIPLE", "G1_HALF_BYTE",
@@ -3328,9 +3328,9 @@ grib_yyreduce:
 #line 3329 "y.tab.c"
     break;
 
-  case 168: /* flag: COPY_AS_INT  */
+  case 168: /* flag: COPY_AS_LONG  */
 #line 721 "griby.y"
-                         { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_COPY_AS_INT; }
+                         { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_COPY_AS_LONG; }
 #line 3335 "y.tab.c"
     break;
 

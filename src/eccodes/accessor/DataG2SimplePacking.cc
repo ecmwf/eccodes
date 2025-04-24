@@ -27,7 +27,7 @@ void DataG2SimplePacking::init(const long v, grib_arguments* args)
 int DataG2SimplePacking::value_count(long* n_vals)
 {
     *n_vals = 0;
-    return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, n_vals);
+    return grib_get_long_internal(get_enclosing_handle(), number_of_values_, n_vals);
 }
 
 int DataG2SimplePacking::pack_double(const double* cval, size_t* len)
@@ -57,19 +57,19 @@ int DataG2SimplePacking::pack_double(const double* cval, size_t* len)
     }
 
     if (ret == GRIB_SUCCESS)
-        ret = grib_set_long_internal(grib_handle_of_accessor(this), number_of_values_, *len);
+        ret = grib_set_long_internal(get_enclosing_handle(), number_of_values_, *len);
 
     if (ret != GRIB_SUCCESS)
         return ret;
 
     if (units_factor_ &&
-        (grib_get_double_internal(grib_handle_of_accessor(this), units_factor_, &units_factor) == GRIB_SUCCESS)) {
-        grib_set_double_internal(grib_handle_of_accessor(this), units_factor_, 1.0);
+        (grib_get_double_internal(get_enclosing_handle(), units_factor_, &units_factor) == GRIB_SUCCESS)) {
+        grib_set_double_internal(get_enclosing_handle(), units_factor_, 1.0);
     }
 
     if (units_bias_ &&
-        (grib_get_double_internal(grib_handle_of_accessor(this), units_bias_, &units_bias) == GRIB_SUCCESS)) {
-        grib_set_double_internal(grib_handle_of_accessor(this), units_bias_, 0.0);
+        (grib_get_double_internal(get_enclosing_handle(), units_bias_, &units_bias) == GRIB_SUCCESS)) {
+        grib_set_double_internal(get_enclosing_handle(), units_bias_, 0.0);
     }
 
     if (units_factor != 1.0) {
@@ -92,7 +92,7 @@ int DataG2SimplePacking::pack_double(const double* cval, size_t* len)
 
     /* IEEE packing */
     if (c->ieee_packing) {
-        grib_handle* h = grib_handle_of_accessor(this);
+        grib_handle* h = get_enclosing_handle();
         long precision = 0; /* Either 1(=32 bits) or 2(=64 bits) */
         size_t lenstr  = 10;
         if ((ret = codes_check_grib_ieee_packing_value(c->ieee_packing)) != GRIB_SUCCESS)
@@ -118,16 +118,16 @@ int DataG2SimplePacking::pack_double(const double* cval, size_t* len)
             return ret;
     }
 
-    if ((ret = grib_get_double_internal(grib_handle_of_accessor(this), reference_value_, &reference_value)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(get_enclosing_handle(), reference_value_, &reference_value)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
     decimal = codes_power<double>(decimal_scale_factor, 10);

@@ -49,7 +49,7 @@ void Json::dump_values(grib_accessor* a)
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
-    h = grib_handle_of_accessor(a);
+    h = a->get_enclosing_handle();
     a->value_count(&count);
     size = size2 = count;
 

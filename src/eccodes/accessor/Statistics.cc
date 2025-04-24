@@ -21,8 +21,8 @@ void Statistics::init(const long l, grib_arguments* c)
     AbstractVector::init(l, c);
     int n = 0;
 
-    missing_value_ = c->get_name(grib_handle_of_accessor(this), n++);
-    values_        = c->get_name(grib_handle_of_accessor(this), n++);
+    missing_value_ = c->get_name(get_enclosing_handle(), n++);
+    values_        = c->get_name(get_enclosing_handle(), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;
@@ -45,7 +45,7 @@ int Statistics::unpack_double(double* val, size_t* len)
     long missingValuesPresent = 0;
     size_t number_of_missing  = 0;
     grib_context* c           = context_;
-    grib_handle* h            = grib_handle_of_accessor(this);
+    grib_handle* h            = get_enclosing_handle();
 
     if (!dirty_)
         return GRIB_SUCCESS;

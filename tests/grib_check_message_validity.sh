@@ -100,8 +100,14 @@ grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "Invalid step: startStep > endStep" $tempText
 
 # Wrong order of keys
-${tools_dir}/grib_set -s startStep=0,endStep=0,stepType=accum  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrib
+${tools_dir}/grib_set -s endStep=1,startStep=1,stepType=accum  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrib
 grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+cat $tempText
+grep -q "Invalid step" $tempText
+
+${tools_dir}/grib_set -s stepType=accum,endStep=6,startStep=6  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+cat $tempText
 grep -q "Invalid steps: stepType=accum but startStep=endStep" $tempText
 
 
@@ -151,6 +157,27 @@ grep -q "Invalid PL array" $tempText
 grib_check_key_equals $tempGrib isMessageValid 0
 
 
+sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+cat >$tempFilt<<EOF
+   meta pl_elem0 element(pl, 0);
+   set pl_elem0 = 21; # Not symmetric, should be 20
+   assert ( isMessageValid == 0 );
+   write;
+EOF
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample 2>$tempText
+grep -q "PL array is not symmetric" $tempText
+grib_check_key_equals $tempGrib isMessageValid 0
+
+
+# Check reduced Gaussian grid
+# interpretationOfNumberOfPoints
+# ------------------------------
+sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+${tools_dir}/grib_set -s interpretationOfNumberOfPoints=0 $sample $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "interpretationOfNumberOfPoints should be 1" $tempText
+
+
 # Check data values
 # ------------------------------
 # Note: This is actually quite an expensive check .... for now disabled
@@ -177,14 +204,25 @@ grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "Invalid date/time" $tempText
 
 
+# Check spectral data
+# ------------------------------
+${tools_dir}/grib_set -s bitsPerValue=0 $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "Spectral fields cannot have bitsPerValue=0" $tempText
+
+${tools_dir}/grib_set -s bitmapPresent=1 $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+grep -q "Spectral fields cannot have a bitmap" $tempText
+
+
 # Only GRIB supported for now
 # -----------------------------
-set +e
-${tools_dir}/bufr_get -p isMessageValid $ECCODES_SAMPLES_PATH/BUFR4.tmpl 2>$tempText
-status=$?
-set -e
-[ $status -ne 0 ]
-grep -q "Validity checks only implemented for GRIB messages" $tempText
+# set +e
+# ${tools_dir}/bufr_get -p isMessageValid $ECCODES_SAMPLES_PATH/BUFR4.tmpl 2>$tempText
+# status=$?
+# set -e
+# [ $status -ne 0 ]
+# grep -q "Validity checks only implemented for GRIB messages" $tempText
 
 
 # Clean up

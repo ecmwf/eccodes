@@ -21,7 +21,7 @@ namespace eccodes::accessor
 void Bits::init(const long l, grib_arguments* c)
 {
     Gen::init(l, c);
-    grib_handle* hand  = grib_handle_of_accessor(this);
+    grib_handle* hand  = get_enclosing_handle();
     grib_expression* e = NULL;
     int n              = 0;
     referenceValue_    = 0;
@@ -51,7 +51,7 @@ int Bits::unpack_long(long* val, size_t* len)
 {
     grib_accessor* x = NULL;
     unsigned char* p = NULL;
-    grib_handle* h   = grib_handle_of_accessor(this);
+    grib_handle* h   = get_enclosing_handle();
     long start, length;
     int ret = 0;
 
@@ -61,7 +61,7 @@ int Bits::unpack_long(long* val, size_t* len)
     start  = start_;
     length = len_;
 
-    x = grib_find_accessor(grib_handle_of_accessor(this), argument_);
+    x = grib_find_accessor(get_enclosing_handle(), argument_);
     if (!x)
         return GRIB_NOT_FOUND;
 
@@ -77,7 +77,7 @@ int Bits::unpack_double(double* val, size_t* len)
 {
     grib_accessor* x = NULL;
     unsigned char* p = NULL;
-    grib_handle* h   = grib_handle_of_accessor(this);
+    grib_handle* h   = get_enclosing_handle();
     long start, length;
     int ret = 0;
 
@@ -87,7 +87,7 @@ int Bits::unpack_double(double* val, size_t* len)
     start  = start_;
     length = len_;
 
-    x = grib_find_accessor(grib_handle_of_accessor(this), argument_);
+    x = grib_find_accessor(get_enclosing_handle(), argument_);
     if (!x)
         return GRIB_NOT_FOUND;
 
@@ -104,7 +104,7 @@ int Bits::unpack_double(double* val, size_t* len)
 int Bits::pack_double(const double* val, size_t* len)
 {
     grib_accessor* x = NULL;
-    grib_handle* h   = grib_handle_of_accessor(this);
+    grib_handle* h   = get_enclosing_handle();
     unsigned char* p = NULL;
     long start, length, lval;
 
@@ -114,7 +114,7 @@ int Bits::pack_double(const double* val, size_t* len)
     start  = start_;
     length = len_;
 
-    x = grib_find_accessor(grib_handle_of_accessor(this), argument_);
+    x = grib_find_accessor(get_enclosing_handle(), argument_);
     if (!x)
         return GRIB_NOT_FOUND;
 
@@ -126,7 +126,7 @@ int Bits::pack_double(const double* val, size_t* len)
 int Bits::pack_long(const long* val, size_t* len)
 {
     grib_accessor* x = NULL;
-    grib_handle* h   = grib_handle_of_accessor(this);
+    grib_handle* h   = get_enclosing_handle();
     unsigned char* p = NULL;
     long start, length, maxval;
 
@@ -142,7 +142,7 @@ int Bits::pack_long(const long* val, size_t* len)
     start  = start_;
     length = len_;
 
-    x = grib_find_accessor(grib_handle_of_accessor(this), argument_);
+    x = grib_find_accessor(get_enclosing_handle(), argument_);
     if (!x)
         return GRIB_NOT_FOUND;
 
@@ -233,7 +233,7 @@ int Bits::unpack_bytes(unsigned char* buffer, size_t* len)
     }
     *len = length_;
 
-    memcpy(buffer, grib_handle_of_accessor(this)->buffer->data + offset_, *len);
+    memcpy(buffer, get_enclosing_handle()->buffer->data + offset_, *len);
 
     return GRIB_SUCCESS;
 }

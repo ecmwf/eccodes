@@ -27,7 +27,7 @@ void DataCcsdsPacking::init(const long v, grib_arguments* args)
 {
     Values::init(v, args);
 
-    grib_handle* h           = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     number_of_values_        = args->get_name(h, carg_++);
     reference_value_         = args->get_name(h, carg_++);
     binary_scale_factor_     = args->get_name(h, carg_++);
@@ -45,7 +45,7 @@ void DataCcsdsPacking::init(const long v, grib_arguments* args)
 int DataCcsdsPacking::value_count(long* count)
 {
     *count = 0;
-    return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, count);
+    return grib_get_long_internal(get_enclosing_handle(), number_of_values_, count);
 }
 
 #if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
@@ -90,7 +90,7 @@ static void print_aec_stream_info(struct aec_stream* strm, const char* func)
 #define MAX_BITS_PER_VALUE 32
 int DataCcsdsPacking::pack_double(const double* val, size_t* len)
 {
-    grib_handle* hand       = grib_handle_of_accessor(this);
+    grib_handle* hand       = get_enclosing_handle();
     int err                 = GRIB_SUCCESS;
     size_t buflen = 0, i = 0;
     bool is_constant_field = false;
@@ -388,9 +388,9 @@ template <typename T>
 int DataCcsdsPacking::unpack(T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
-    grib_handle* hand       = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
-    int err = GRIB_SUCCESS, i = 0;
+    int err = GRIB_SUCCESS;
     size_t buflen = 0;
     struct aec_stream strm;
     double bscale          = 0;
@@ -444,7 +444,7 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
 
     // Special case
     if (bits_per_value == 0) {
-        for (i = 0; i < n_vals; i++)
+        for (size_t i = 0; i < n_vals; i++)
             val[i] = reference_value;
         *len = n_vals;
         return GRIB_SUCCESS;
@@ -454,7 +454,7 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
     dscale = codes_power<T>(-decimal_scale_factor, 10);
 
     buflen = byte_count();
-    buf    = (unsigned char*)hand->buffer->data;
+    buf    = hand->buffer->data;
     buf += byte_offset();
     strm.flags           = ccsds_flags;
     strm.bits_per_sample = bits_per_value;
@@ -492,17 +492,17 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
     // ECC-1602: Performance improvement
     switch (nbytes) {
         case 1:
-            for (i = 0; i < n_vals; i++) {
+            for (size_t i = 0; i < n_vals; i++) {
                 val[i] = (reinterpret_cast<uint8_t*>(decoded)[i] * bscale + reference_value) * dscale;
             }
             break;
         case 2:
-            for (i = 0; i < n_vals; i++) {
+            for (size_t i = 0; i < n_vals; i++) {
                 val[i] = (reinterpret_cast<uint16_t*>(decoded)[i] * bscale + reference_value) * dscale;
             }
             break;
         case 4:
-            for (i = 0; i < n_vals; i++) {
+            for (size_t i = 0; i < n_vals; i++) {
                 val[i] = (reinterpret_cast<uint32_t*>(decoded)[i] * bscale + reference_value) * dscale;
             }
             break;
@@ -533,7 +533,7 @@ int DataCcsdsPacking::unpack_float(float* val, size_t* len)
 int DataCcsdsPacking::unpack_double_element(size_t idx, double* val)
 {
     // The index idx relates to codedValues NOT values!
-    grib_handle* hand      = grib_handle_of_accessor(this);
+    grib_handle* hand      = get_enclosing_handle();
     int err                = 0;
     size_t size            = 0;
     long bits_per_value    = 0;
@@ -568,7 +568,7 @@ int DataCcsdsPacking::unpack_double_element(size_t idx, double* val)
 
 int DataCcsdsPacking::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     size_t size = 0, i = 0;
     double* values         = NULL;
     int err                = 0;
@@ -589,7 +589,7 @@ int DataCcsdsPacking::unpack_double_element_set(const size_t* index_array, size_
     }
 
     // GRIB-564: The indexes in index_array relate to codedValues NOT values!
-    err = grib_get_size(grib_handle_of_accessor(this), "codedValues", &size);
+    err = grib_get_size(get_enclosing_handle(), "codedValues", &size);
     if (err)
         return err;
 
@@ -598,7 +598,7 @@ int DataCcsdsPacking::unpack_double_element_set(const size_t* index_array, size_
     }
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
-    err    = grib_get_double_array(grib_handle_of_accessor(this), "codedValues", values, &size);
+    err    = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
     if (err) {
         grib_context_free(context_, values);
         return err;

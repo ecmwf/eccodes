@@ -20,7 +20,7 @@ void LatLonIncrement::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
     int n             = 0;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     directionIncrementGiven_ = c->get_name(hand, n++);
     directionIncrement_      = c->get_name(hand, n++);
@@ -36,7 +36,7 @@ void LatLonIncrement::init(const long l, grib_arguments* c)
 int LatLonIncrement::unpack_double(double* val, size_t* len)
 {
     int ret           = 0;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     long directionIncrementGiven = 0;
     long directionIncrement      = 0;
@@ -123,7 +123,7 @@ int LatLonIncrement::pack_double(const double* val, size_t* len)
 {
     int ret                  = 0;
     long codedNumberOfPoints = 0;
-    grib_handle* hand        = grib_handle_of_accessor(this);
+    grib_handle* hand        = get_enclosing_handle();
 
     long directionIncrementGiven = 0;
     long directionIncrement      = 0;

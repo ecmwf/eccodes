@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void DataG2ComplexPacking::init(const long v, grib_arguments* args)
 {
     DataComplexPacking::init(v, args);
-    numberOfValues_ = args->get_name(grib_handle_of_accessor(this), carg_++);
+    numberOfValues_ = args->get_name(get_enclosing_handle(), carg_++);
     edition_        = 2;
 
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
@@ -29,7 +29,7 @@ int DataG2ComplexPacking::value_count(long* numberOfValues)
 {
     *numberOfValues = 0;
 
-    return grib_get_long(grib_handle_of_accessor(this), numberOfValues_, numberOfValues);
+    return grib_get_long(get_enclosing_handle(), numberOfValues_, numberOfValues);
 }
 
 int DataG2ComplexPacking::pack_double(const double* val, size_t* len)
@@ -42,7 +42,7 @@ int DataG2ComplexPacking::pack_double(const double* val, size_t* len)
     ret = DataComplexPacking::pack_double(val, len);
 
     if (ret == GRIB_SUCCESS)
-        ret = grib_set_long_internal(grib_handle_of_accessor(this), numberOfValues_, *len);
+        ret = grib_set_long_internal(get_enclosing_handle(), numberOfValues_, *len);
 
     return ret;
 }

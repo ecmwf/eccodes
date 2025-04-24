@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1433
+# CCSDS: Very small values are not encoded correctly
+# ---------------------------------------------------------------------
+
 label="grib_ecc-1433_test"
 temp=temp.$label
 

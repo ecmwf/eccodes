@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void JulianDate::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     const int arg_count = c->get_count();
     ECCODES_ASSERT( arg_count == 2 || arg_count == 6);
 
@@ -63,7 +63,7 @@ int JulianDate::unpack_double(double* val, size_t* len)
     int ret = 0;
     long hour, minute, second;
     long year, month, day, ymd, hms;
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     if (ymd_ == NULL) {
         ret = grib_get_long(h, year_, &year);
@@ -119,7 +119,7 @@ int JulianDate::pack_double(const double* val, size_t* len)
     long second = 0;
     long ymd = 0, hms = 0;
     long year, month, day;
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     ret = grib_julian_to_datetime(*val, &year, &month, &day, &hour, &minute, &second);
     if (ret != 0)
@@ -166,7 +166,7 @@ int JulianDate::unpack_string(char* val, size_t* len)
     long hour, minute, second;
     long year, month, day, ymd, hms;
     const char* sep = sep_;
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     if (*len < 15)
         return GRIB_BUFFER_TOO_SMALL;
@@ -239,7 +239,7 @@ int JulianDate::pack_string(const char* val, size_t* len)
     long hour, minute, second;
     long year, month, day, ymd, hms;
     char* sep = sep_;
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     ret = sscanf(val, "%04ld%c%02ld%c%02ld%c%02ld%c%02ld%c%02ld",
                  &year, &sep[0], &month, &sep[1], &day, &sep[2], &hour, &sep[3], &minute, &sep[4], &second);
@@ -322,7 +322,7 @@ int JulianDate::pack_expression(grib_expression* e)
     double dval       = 0;
     const char* cval  = NULL;
     int ret           = 0;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     switch (e->native_type(hand)) {
         case GRIB_TYPE_LONG: {
