@@ -1370,6 +1370,67 @@
 
   end subroutine grib_new_from_message_char
 
+  
+  !> Create a message pointing to an character array containting the coded message.
+  !>
+  !> The message can be accessed through its gribid and it will be available\n
+  !> until @ref grib_release is called or (attention) the character array is deallocated!
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param gribid      id of the grib loaded in memory
+  !> @param message     array containing the coded message
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+
+  subroutine grib_new_from_message_no_copy_char(gribid, message, status)
+    integer(kind=kindOfInt), intent(out)              :: gribid
+    character(len=1), dimension(:), intent(in)        :: message
+    integer(kind=kindOfInt), optional, intent(out)    :: status
+    integer(kind=kindOfSize_t)                        :: size_bytes
+    integer(kind=kindOfInt)                           :: iret
+
+    size_bytes = size(message, dim=1)
+    iret = grib_f_new_from_message_no_copy(gribid, message, size_bytes)
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'new_from_message_no_copy_char', '')
+    end if
+
+  end subroutine grib_new_from_message_no_copy_char
+  
+  !> Create a message pointing to an integer4 array containting the coded message.
+  !>
+  !> The message can be accessed through its gribid and it will be available\n
+  !> until @ref grib_release is called or (attention) the character array is deallocated!
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param gribid      id of the grib loaded in memory
+  !> @param message     array containing the coded message
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+
+  subroutine grib_new_from_message_no_copy_int4(gribid, message, status)
+    integer(kind=kindOfInt), intent(out)              :: gribid
+    integer(kind=4), dimension(:), intent(in)         :: message
+    integer(kind=kindOfInt), optional, intent(out)    :: status
+    integer(kind=kindOfSize_t)                        :: size_bytes
+    integer(kind=kindOfInt)                           :: iret
+
+    size_bytes = size(message, dim=1)*sizeOfInteger4
+    iret = grib_f_new_from_message_no_copy_int(gribid, message, size_bytes)
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'new_from_message_no_copy_int', '')
+    end if
+
+  end subroutine grib_new_from_message_no_copy_int4
+  
   !> Create a new message in memory from an integer array containting the coded message.
   !>
   !> The message can be accessed through its gribid and it will be available\n
@@ -2797,6 +2858,68 @@
     end if
   end subroutine grib_copy_message
 
+  !> Get pointer to message and message length from the grib_handle.
+  !> Be careful, user has to manage deallocation via pointer or handle!
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param gribid      ID of the message loaded in memory
+  !> @param message     array containing the coded message
+  !> @param mess_len    length of the message
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+ subroutine grib_get_message_size_t(gribid, message, mess_len, status)
+    USE, INTRINSIC :: ISO_C_BINDING, ONLY: C_PTR, C_F_POINTER
+    implicit none
+    integer(kind=kindOfInt), intent(in)            :: gribid
+    integer(kind=kindOfInt), optional, intent(out) :: status
+    integer(kind=kindOfInt)                        :: iret
+    character(len=1), pointer, intent(out)         :: message(:) 
+    type(C_PTR)                                    :: mess_ptr
+    integer(kind=kindOfSize_t), intent(out)        :: mess_len
+
+    iret = grib_f_get_message(gribid, mess_ptr, mess_len)
+    call C_F_POINTER(mess_ptr, message,(/mess_len/))
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'get_message', '')
+    end if
+  end subroutine grib_get_message_size_t
+
+!> Get pointer to message and message length from the grib_handle.
+  !> Be careful, user has to manage deallocation via pointer or handle!
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param gribid      ID of the message loaded in memory
+  !> @param message     array containing the coded message
+  !> @param mess_len    length of the message
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+ subroutine grib_get_message_int(gribid, message, mess_len, status)
+    USE, INTRINSIC :: ISO_C_BINDING, ONLY: C_PTR, C_F_POINTER
+    implicit none
+    integer(kind=kindOfInt), intent(in)            :: gribid
+    integer(kind=kindOfInt), optional, intent(out) :: status
+    integer(kind=kindOfInt)                        :: iret
+    character(len=1), pointer, intent(out)         :: message(:)
+    type(C_PTR)                                    :: mess_ptr
+    integer(kind=kindOfInt), intent(out)           :: mess_len
+    integer(kind=kindOfSize_t)                     :: ibytes
+
+    iret = grib_f_get_message(gribid, mess_ptr, ibytes)
+    call C_F_POINTER(mess_ptr, message,(/ibytes/))
+    if (iret == GRIB_SUCCESS .and. ibytes > huge(mess_len)) then
+      iret = GRIB_MESSAGE_TOO_LARGE
+    end if
+    mess_len = INT(ibytes, kind=kindOfInt)
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'get_message', '')
+    end if
+  end subroutine grib_get_message_int
   !> Write the coded message to a file.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
