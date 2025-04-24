@@ -1,7 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
 # Type of first fixed surface
-codetable[1] typeOfFirstFixedSurface ('4.5.table',masterDir,localDir) : dump,edition_specific,string_type;
+codetable[1] typeOfFirstFixedSurface ('4.5.table',masterDir,localDir) : dump,edition_specific,string_type,copy_as_long;
 meta unitsOfFirstFixedSurface codetable_units(typeOfFirstFixedSurface) : dump;
 meta nameOfFirstFixedSurface codetable_title(typeOfFirstFixedSurface) : dump;
 
@@ -24,7 +24,7 @@ unsigned[4] scaledValueOfSecondFixedSurface = missing() : can_be_missing,dump,ed
 
 transient pressureUnits="hPa";
 
-concept vertical.typeOfLevel (unknown,"typeOfLevelConcept.def",conceptsDir2,conceptsDir1);
+concept vertical.typeOfLevel (unknown,"typeOfLevelConcept.def",conceptsDir2,conceptsDir1) : copy_if_changing_edition;
 
 alias levelType=typeOfFirstFixedSurface;
 

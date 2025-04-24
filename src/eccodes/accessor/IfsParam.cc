@@ -21,8 +21,8 @@ void IfsParam::init(const long l, grib_arguments* c)
     Gen::init(l, c);
     int n = 0;
 
-    paramId_ = c->get_name(grib_handle_of_accessor(this), n++);
-    type_    = c->get_name(grib_handle_of_accessor(this), n++);
+    paramId_ = c->get_name(get_enclosing_handle(), n++);
+    type_    = c->get_name(get_enclosing_handle(), n++);
 }
 
 int IfsParam::unpack_long(long* val, size_t* len)
@@ -30,7 +30,7 @@ int IfsParam::unpack_long(long* val, size_t* len)
     int ret      = 0;
     long paramId = 0;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), paramId_, &paramId)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), paramId_, &paramId)) != GRIB_SUCCESS)
         return ret;
 
     if (paramId > 129000 && paramId < 129999)
@@ -52,7 +52,7 @@ int IfsParam::pack_long(const long* val, size_t* len)
     long paramId = *val;
     long param;
 
-    grib_get_long(grib_handle_of_accessor(this), type_, &type);
+    grib_get_long(get_enclosing_handle(), type_, &type);
 
     if (type == 33 || type == 35) {
         if (paramId > 1000) {
@@ -86,7 +86,7 @@ int IfsParam::pack_long(const long* val, size_t* len)
         }
     }
 
-    return grib_set_long_internal(grib_handle_of_accessor(this), paramId_, paramId);
+    return grib_set_long_internal(get_enclosing_handle(), paramId_, paramId);
 }
 
 long IfsParam::get_native_type()

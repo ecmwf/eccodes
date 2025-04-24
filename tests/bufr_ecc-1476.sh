@@ -9,6 +9,12 @@
 #
 
 . ./include.ctest.sh
+
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1476
+# BUFR: Memory leaked during encoding of test data files
+# ---------------------------------------------------------------------
+
 label="bufr_ecc-1476_test"
 tempFilt=temp.$label.filt
 tempLog=temp.$label.log

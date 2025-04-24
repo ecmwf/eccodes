@@ -21,7 +21,7 @@ namespace eccodes::accessor
 void DataG2BifourierPacking::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
 
     ieee_floats_                         = args->get_name(gh, carg_++);
     laplacianOperatorIsSet_              = args->get_name(gh, carg_++);
@@ -43,7 +43,7 @@ void DataG2BifourierPacking::init(const long v, grib_arguments* args)
 
 int DataG2BifourierPacking::value_count(long* numberOfValues)
 {
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
     *numberOfValues = 0;
 
     return grib_get_long_internal(gh, number_of_values_, numberOfValues);
@@ -316,7 +316,7 @@ static double laplam(bif_trunc_t* bt, const double val[])
 
 static void free_bif_trunc(bif_trunc_t* bt, grib_accessor* a)
 {
-    grib_handle* gh = grib_handle_of_accessor(a);
+    grib_handle* gh = a->get_enclosing_handle();
     if (bt == NULL)
         return;
     if (bt->itruncation_bif != NULL)
@@ -335,7 +335,7 @@ bif_trunc_t* DataG2BifourierPacking::new_bif_trunc()
 {
     int ret;
 
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
     bif_trunc_t* bt = (bif_trunc_t*)grib_context_malloc(gh->context, sizeof(bif_trunc_t));
 
     memset(bt, 0, sizeof(bif_trunc_t));
@@ -445,7 +445,7 @@ cleanup:
 
 int DataG2BifourierPacking::unpack_double(double* val, size_t* len)
 {
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
 
     unsigned char* buf  = NULL;
     unsigned char* hres = NULL;
@@ -493,7 +493,7 @@ int DataG2BifourierPacking::unpack_double(double* val, size_t* len)
 
     dirty_ = 0;
 
-    buf = (unsigned char*)gh->buffer->data;
+    buf = gh->buffer->data;
     buf += byte_offset();
     s = codes_power<double>(bt->binary_scale_factor, 2);
     d = codes_power<double>(-bt->decimal_scale_factor, 10);
@@ -542,7 +542,7 @@ cleanup:
 
 int DataG2BifourierPacking::pack_double(const double* val, size_t* len)
 {
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
 
     size_t buflen       = 0;
     size_t hsize        = 0;

@@ -10,7 +10,10 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1440
+# ECMWF local definition 300 should be for decoding only (no encoding)
+# ---------------------------------------------------------------------
 
 label="grib_ecc-1440_test"
 tempGrib=temp.$label.grib

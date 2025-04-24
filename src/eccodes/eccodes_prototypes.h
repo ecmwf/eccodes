@@ -16,7 +16,7 @@ grib_hash_array_value* grib_integer_hash_array_value_new(const char* name, grib_
 /* grib_bufr_descriptor.cc */
 bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor, int code, int silent, int* err);
 bufr_descriptor* grib_bufr_descriptor_clone(bufr_descriptor* d);
-int grib_bufr_descriptor_set_code(bufr_descriptor* v, int code);
+// int grib_bufr_descriptor_set_code(bufr_descriptor* v, int code);
 void grib_bufr_descriptor_set_scale(bufr_descriptor* v, long scale);
 int grib_bufr_descriptor_can_be_missing(const bufr_descriptor* v);
 void grib_bufr_descriptor_delete(bufr_descriptor* v);
@@ -57,8 +57,8 @@ void* grib_oarray_get(grib_oarray* v, int i);
 /* grib_iarray.cc */
 void grib_iarray_print(const char* title, const grib_iarray* iarray);
 grib_iarray* grib_iarray_new(size_t size, size_t incsize);
-long grib_iarray_pop(grib_iarray* a);
-long grib_iarray_pop_front(grib_iarray* a);
+// long grib_iarray_pop(grib_iarray* a);
+// long grib_iarray_pop_front(grib_iarray* a);
 grib_iarray* grib_iarray_push(grib_iarray* v, long val);
 void grib_iarray_delete(grib_iarray* v);
 void grib_iarray_delete_array(grib_iarray* v);
@@ -195,17 +195,17 @@ long grib_decode_signed_longb(const unsigned char* p, long* bitp, long nbits);
 int grib_encode_signed_longb(unsigned char* p, long val, long* bitp, long nb);
 
 /* grib_timer.cc */
-double proc_cpu(void);
-char* timename(double t);
-grib_timer* grib_get_timer(grib_context* c, const char* name, const char* statname, int elapsed);
-int grib_timer_start(grib_timer* t);
-int grib_timer_stop(grib_timer* t, long total);
-double grib_timer_value(grib_timer* t);
-const char* bytename(double bytes);
-void grib_timer_print(grib_timer* t);
-void grib_timer_partial_rate(grib_timer* t, double start, long total);
-void grib_print_all_timers(void);
-void grib_reset_all_timers(void);
+// double proc_cpu(void);
+// char* timename(double t);
+// grib_timer* grib_get_timer(grib_context* c, const char* name, const char* statname, int elapsed);
+// int grib_timer_start(grib_timer* t);
+// int grib_timer_stop(grib_timer* t, long total);
+// double grib_timer_value(grib_timer* t);
+// const char* bytename(double bytes);
+// void grib_timer_print(grib_timer* t);
+// void grib_timer_partial_rate(grib_timer* t, double start, long total);
+// void grib_print_all_timers(void);
+// void grib_reset_all_timers(void);
 
 /* grib_ibmfloat.cc */
 unsigned long grib_ibm_to_long(double x);
@@ -515,7 +515,6 @@ grib_handle* codes_external_sample(grib_context* c, ProductKind product_kind, co
 char* get_external_sample_path(grib_context* c, const char* name);
 
 /* grib_dependency.cc */
-grib_handle* grib_handle_of_accessor(const grib_accessor* a);
 void grib_dependency_add(grib_accessor* observer, grib_accessor* observed);
 void grib_dependency_remove_observed(grib_accessor* observed);
 int grib_dependency_notify_change_h(grib_handle* h, grib_accessor* observed);
@@ -676,8 +675,6 @@ int codes_key_is_computed(const grib_handle* h, const char* key, int* err);
 
 /* grib_util.cc */
 grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err);
-grib_string_list* grib_util_get_param_id(const char* mars_param);
-grib_string_list* grib_util_get_mars_param(const char* param_id);
 grib_handle* grib_util_set_spec(grib_handle* h, const grib_util_grid_spec* spec, const grib_util_packing_spec* packing_spec, int flags, const double* data_values, size_t data_values_count, int* err);
 int parse_keyval_string(const char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count);
 int grib2_is_PDTN_Plain(long productDefinitionTemplateNumber);

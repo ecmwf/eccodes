@@ -203,7 +203,7 @@ int Mercator::init(grib_handle* h, grib_arguments* args)
         earthMinorAxisInMetres = earthMajorAxisInMetres = radius;
     }
 
-    if (nv_ != ni * nj) {
+    if ( nv_ != (size_t) (ni * nj) ) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, nv_, ni, nj);
         return GRIB_WRONG_GRID;
     }

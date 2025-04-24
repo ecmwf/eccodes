@@ -10,7 +10,11 @@
 
 . ./include.ctest.sh
 
-# Define a common label for all the tmp files
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-389
+# BUFR encoding 2 values as different should be one value
+# ---------------------------------------------------------------------
+
 label="bufr_ecc-389_test"
 
 fLog=${label}".log"

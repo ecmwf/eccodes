@@ -5,9 +5,13 @@ constant GRIBEXSection1Problem = 72 - section1Length ;
 
 template mars_labeling "grib1/mars_labeling.def";
 
-unsigned[1] classOfAnalysis = marsClass : dump;
-unsigned[1] typeOfAnalysis  = marsType : dump;
-unsigned[2] streamOfAnalysis = marsStream : dump;
+meta marsClassAsInt evaluate(marsClass) : hidden;
+meta marsTypeAsInt evaluate(marsType) : hidden;
+meta marsStreamAsInt evaluate(marsStream) : hidden;
+
+unsigned[1] classOfAnalysis  = marsClassAsInt : dump;
+unsigned[1] typeOfAnalysis   = marsTypeAsInt : dump;
+unsigned[2] streamOfAnalysis = marsStreamAsInt : dump;
 ksec1expver[4] experimentVersionNumberOfAnalysis = expver : dump;
 
 unsigned[1] yearOfAnalysis  = yearOfCentury : dump;
@@ -20,7 +24,8 @@ unsigned[1] minuteOfAnalysis = minute : dump;
 
 unsigned[1] centuryOfAnalysis = centuryOfReferenceTimeOfData : dump;
 
-unsigned[1] originatingCentreOfAnalysis = originatingCentre : dump;
+meta originatingCentreAsInt evaluate(originatingCentre) : hidden;
+unsigned[1] originatingCentreOfAnalysis = originatingCentreAsInt : dump;
 
 unsigned[1] subcentreOfAnalysis = subCentre : dump;
 

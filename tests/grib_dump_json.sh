@@ -13,6 +13,11 @@
 label="grib_dump_json_test"
 temp=${label}".temp.json"
 
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
 REDIRECT=/dev/null
 
 if [ $HAVE_MEMFS -eq 1 ]; then

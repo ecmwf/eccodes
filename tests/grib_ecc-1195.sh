@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1195
+# Accessor 'sprintf' should by default be read-only
+# ---------------------------------------------------------------------
+
 label="grib_ecc-1195_test"
 temp1=temp.$label.grib
 temp2=temp.$label.txt

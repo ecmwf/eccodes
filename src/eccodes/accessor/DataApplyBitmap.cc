@@ -20,7 +20,7 @@ void DataApplyBitmap::init(const long v, grib_arguments* args)
 {
     Gen::init(v, args);
     int n = 0;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     coded_values_          = args->get_name(hand, n++);
     bitmap_                = args->get_name(hand, n++);
@@ -40,7 +40,7 @@ int DataApplyBitmap::value_count(long* count)
 {
     size_t len = 0;
     int ret = GRIB_SUCCESS;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     if (grib_find_accessor(hand, bitmap_))
         ret = grib_get_size(hand, bitmap_, &len);
@@ -54,7 +54,7 @@ int DataApplyBitmap::value_count(long* count)
 
 int DataApplyBitmap::unpack_double_element(size_t idx, double* val)
 {
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
     size_t i = 0, cidx = 0;
     double missing_value = 0;
     double* bvals        = NULL;
@@ -99,7 +99,7 @@ int DataApplyBitmap::unpack_double_element(size_t idx, double* val)
 
 int DataApplyBitmap::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
     int err = 0, all_missing = 1;
     size_t cidx          = 0;    /* index into the coded_values array */
     size_t* cidx_array   = NULL; /* array of indexes into the coded_values */
@@ -183,10 +183,9 @@ int DataApplyBitmap::pack_double(const double* val, size_t* len)
     size_t bmaplen       = *len;
     long coded_n_vals    = 0;
     double* coded_vals   = NULL;
-    long i               = 0;
     long j               = 0;
     double missing_value = 0;
-    grib_handle* hand    = grib_handle_of_accessor(this);
+    grib_handle* hand    = get_enclosing_handle();
     grib_context* ctxt   = context_;
 
     if (*len == 0)
@@ -218,7 +217,7 @@ int DataApplyBitmap::pack_double(const double* val, size_t* len)
     if (!coded_vals)
         return GRIB_OUT_OF_MEMORY;
 
-    for (i = 0; i < *len; i++) {
+    for (size_t i = 0; i < *len; i++) {
         if (val[i] != missing_value) {
             coded_vals[j++] = val[i];
         }
@@ -248,7 +247,7 @@ int DataApplyBitmap::unpack(T* val, size_t* len)
     size_t coded_n_vals  = 0;
     T* coded_vals        = NULL;
     double missing_value = 0;
-    grib_handle* hand    = grib_handle_of_accessor(this);
+    grib_handle* hand    = get_enclosing_handle();
 
     int err = value_count(&nn);
     n_vals  = nn;
@@ -346,7 +345,7 @@ int DataApplyBitmap::unpack_float(float* val, size_t* len)
 long DataApplyBitmap::get_native_type()
 {
     // grib_accessor_data_apply_bitmap_t* self =  (DataApplyBitmap*)a;
-    // return GetNativeype(grib_find_accessor(grib_handle_of_accessor(this),coded_values_ ));
+    // return GetNativeype(grib_find_accessor(get_enclosing_handle(),coded_values_ ));
     return GRIB_TYPE_DOUBLE;
 }
 

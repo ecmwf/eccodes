@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1898
+# Key 'levelist' persists despite being taken out of the mars namespace
+# ---------------------------------------------------------------------
+
 label="grib_ecc-1898_test"
 
 tempGrib=temp.$label.grib

@@ -87,13 +87,8 @@ grib_check_key_equals $tempGribA typeOfStatisticalProcessing,stepType '2 max'
 grib_check_key_equals $tempGribA shortName,name 'max_visp Time-maximum visibility through precipitation'
 
 # Test an expected failure, e.g., paramId=239375 has constituentType
-set +e
 $tools_dir/grib_set -s paramId=239375 $sample_g2 $tempGribA 2>$tempText
-status=$?
-set -e
-[ $status -ne 0 ]
-grep -q "constituentType .* failed: Key/value not found" $tempText
-
+grib_check_key_equals $tempGribA shortName 'std_viozn'
 
 # Clean up
 rm -f $tempText $tempGribA $tempGribB

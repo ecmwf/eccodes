@@ -10,7 +10,10 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1766
+# EERIE (European Eddy RIch Earth System Models) metadata support
+# ---------------------------------------------------------------------
 
 # ECC-1766: EERIE project metadata support
 
