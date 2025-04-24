@@ -17,14 +17,16 @@ int main(int argc, char* argv[])
     FILE* in                    = NULL;
     FILE* out                   = NULL;
     codes_handle* source_handle = NULL;
-    const void* buffer          = NULL;
-    int err                     = 0;
+    const void* buffer = NULL;
+    int err = 0;
+    int count = 0;
 
     long totalLength_src = 0, totalLength_dst = 0;
     long edition = 0, isGridded_src = 0, bitmapPresent = 0;
     long isConstant_src = 0, isConstant_dst = 0;
     long dataSectionLength_src = 0, dataSectionLength_dst = 0;
     size_t messageLength_src = 0, messageLength_dst = 0;
+    long lVal = -1;
 
     if (argc != 3) {
         // Usage: prog input_file ouput_file
@@ -39,6 +41,18 @@ int main(int argc, char* argv[])
     while ((source_handle = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err)) != NULL) {
         codes_handle* clone_handle = codes_handle_clone_headers_only(source_handle);
         assert(clone_handle);
+
+        printf("Processing message %d\n", ++count);
+
+        lVal=-1;
+        GRIB_CHECK( grib_get_long(source_handle, "isMessageValid", &lVal), 0);
+        //fprintf(stderr, "source_handle: isMessageValid=%ld\n", lVal);
+        assert( lVal == 1 );
+
+        lVal=-1;
+        GRIB_CHECK( grib_get_long(clone_handle, "isMessageValid", &lVal), 0);
+        //fprintf(stderr, "clone_handle:  isMessageValid=%ld\n", lVal);
+        assert( lVal == 1 );
 
         codes_get_long(source_handle, "isConstant", &isConstant_src);
         codes_get_long(source_handle, "isGridded", &isGridded_src);

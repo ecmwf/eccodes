@@ -10,4 +10,4 @@
 . ./include.ctest.sh
 
 export ECCODES_DEBUG=1
-${examples_dir}/eccodes_f_codes_set_paths
+${examples_dir}/f_codes_set_paths

@@ -39,6 +39,10 @@ set -e
 ${tools_dir}/grib_set -s typeOfFirstFixedSurface=1   $sample2 $temp1
 ${tools_dir}/grib_set -s typeOfFirstFixedSurface=103 $sample2 $temp2
 
+# Native type of typeOfFirstFixedSurface is string
+grib_check_key_equals $temp1 'typeOfFirstFixedSurface,typeOfFirstFixedSurface:s' 'sfc sfc'
+grib_check_key_equals $temp2 'typeOfFirstFixedSurface,typeOfFirstFixedSurface:s' 'sfc sfc'
+
 # This should fail
 set +e
 ${tools_dir}/grib_compare $temp1 $temp2

@@ -10,7 +10,7 @@
 
 . ./include.ctest.sh
 
-label="f_key_is_computed"
+label="examples_f_key_is_computed"
 
-${examples_dir}/eccodes_f_key_is_computed
+${examples_dir}/f_key_is_computed
 

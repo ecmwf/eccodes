@@ -32,32 +32,32 @@ typedef struct grib_action_list
 static void print_names(grib_action* a)
 {
     while (a) {
-        if (a->op && !strcmp(a->op, "label")) {
-            a = a->next;
+        if (a->op_ && !strcmp(a->op_, "label")) {
+            a = a->next_;
             continue;
         }
-        if (!strcmp(a->cclass->name, "action_class_noop") ||
-            !strcmp(a->cclass->name, "action_class_when")) {
-            a = a->next;
+        if (!strcmp(a->class_name_, "action_class_noop") ||
+            !strcmp(a->class_name_, "action_class_when")) {
+            a = a->next_;
             continue;
         }
 
-        if (!strcmp(a->cclass->name, "action_class_list")) {
+        if (!strcmp(a->class_name_, "action_class_list")) {
             grib_action_list* al = (grib_action_list*)a;
-            printf("%s\n", a->name);
+            printf("%s\n", a->name_);
             print_names(al->block_list);
         }
-        else if (!strcmp(a->cclass->name, "action_class_if")) {
+        else if (!strcmp(a->class_name_, "action_class_if")) {
             grib_action_if* ai = (grib_action_if*)a;
             print_names(ai->block_false);
             print_names(ai->block_true);
         }
         else {
             /* printf("%s (%s %s)\n",a->name,a->op,a->cclass->name); */
-            printf("%s\n", a->name);
+            printf("%s\n", a->name_);
         }
 
-        a = a->next;
+        a = a->next_;
     }
 }
 

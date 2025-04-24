@@ -10,7 +10,7 @@
 
 . ./include.ctest.sh
 
-label="get_product_kind_c"
+label="examples_c_get_product_kind"
 fTmp=${label}.tmp
 fOut=${label}.tmp.out
 fRef=${label}.tmp.ref

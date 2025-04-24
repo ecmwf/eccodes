@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1406
+# grib_ls -l reports last grid point is out of area
+# ---------------------------------------------------------------------
+
 label="grib_ecc-1406_test"
 
 if [ $HAVE_GEOGRAPHY -eq 0 ]; then

@@ -10,7 +10,7 @@
 . ./include.ctest.sh
 
 #Define a common label for all the tmp files
-label="bufr_expanded_test_c"
+label="examples_c_bufr_expanded"
 
 #Prepare tmp file
 fTmp=${label}.tmp.txt

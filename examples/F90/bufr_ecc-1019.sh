@@ -11,13 +11,13 @@
 . ./include.ctest.sh
 set -u
 
-label="bufr_ecc-1019_test_f"
+label="examples_f_bufr_ecc-1019"
 TEMP_DUMP=temp.$label.dump
 TEMP_TEXT=temp.$label.txt
 TEMP_REF=temp.$label.ref
 TEMP_BUFR=temp.$label.bufr
 
-${examples_dir}/eccodes_f_bufr_ecc-1019 $TEMP_BUFR
+${examples_dir}/f_bufr_ecc-1019 $TEMP_BUFR
 
 ${tools_dir}/codes_bufr_filter - $TEMP_BUFR > $TEMP_TEXT << EOF
   set unpack = 1;

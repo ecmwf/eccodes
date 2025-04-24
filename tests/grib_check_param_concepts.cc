@@ -12,9 +12,9 @@
  * Check GRIB2 parameter concept file e.g. shortName.def, paramId.def
  */
 
-#include "expression/grib_expression_class_long.h"
-#include "expression/grib_expression_class_functor.h"
-#include "expression/grib_expression_class_string.h"
+#include "expression/Long.h"
+#include "expression/Functor.h"
+#include "expression/String.h"
 #include "grib_api_internal.h"
 
 static int type_of_surface_missing(const char* name, const char* value)
@@ -143,8 +143,8 @@ static int grib_check_param_concepts(const char* key, const char* filename)
             concept_condition = concept_condition->next;
         }
         /* Now check the scale factor/value pairs */
-        if (type1Missing == 1 && scaleFactor1Missing == 0 && scaledValue1Missing == 0) err = 1;
-        if (type2Missing == 1 && scaleFactor2Missing == 0 && scaledValue2Missing == 0) err = 1;
+        if (type1Missing == 1 && (scaleFactor1Missing == 0 || scaledValue1Missing == 0)) err = 1;
+        if (type2Missing == 1 && (scaleFactor2Missing == 0 || scaledValue2Missing == 0)) err = 1;
         if (scaleFactor1Missing == 1 && scaledValue1Missing == 0) err = 1;
         if (scaleFactor1Missing == 0 && scaledValue1Missing == 1) err = 1;
         if (scaleFactor2Missing == 1 && scaledValue2Missing == 0) err = 1;

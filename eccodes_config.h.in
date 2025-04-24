@@ -38,8 +38,6 @@
 
 #define ECCODES_SAMPLES_PATH    "@ECCODES_SAMPLES_PATH@"
 
-#define ECCODES_TIMER @ECCODES_TIMER@
-
 /* headers */
 
 #cmakedefine ECCODES_HAVE_ASSERT_H

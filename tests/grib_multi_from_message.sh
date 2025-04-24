@@ -11,7 +11,7 @@
 
 . ./include.ctest.sh
 
-label='grib_multi_from_message'
+label="grib_multi_from_message"
 out1=${data_dir}/temp.$label.1.out
 out2=${data_dir}/temp.$label.2.out
 

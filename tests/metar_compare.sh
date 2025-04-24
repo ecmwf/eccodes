@@ -48,7 +48,7 @@ ${tools_dir}/metar_compare -v -d -f $metar_file $fMetarTmp
 status=$?
 set -e
 if [ $status -eq 0 ]; then
-   echo "metar_compare should have failed if files are different" >&2
+   echo "ERROR: metar_compare should have failed if files are different" >&2
    exit 1
 fi
 

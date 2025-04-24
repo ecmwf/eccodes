@@ -521,7 +521,7 @@ static int grib_tool_index(grib_runtime_options* options)
     int err  = 0;
     char* f1 = options->infile->name;
     char* f2 = options->infile_extra->name;
-    grib_index_key *k1, *k2;
+    grib_index_key *k1=0, *k2=0;
     int found = 0;
 
     grib_context* c = grib_context_get_default();
@@ -612,7 +612,7 @@ static int grib_tool_index(grib_runtime_options* options)
 #ifndef ECCODES_ON_WINDOWS
 static int scan(grib_context* c, grib_runtime_options* options, const char* dir)
 {
-    struct dirent* s;
+    const struct dirent* s = 0;
     DIR* d;
     int err = 0;
 
@@ -1336,7 +1336,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
 
 void grib_print_file_statistics(grib_runtime_options* options, grib_tools_file* file)
 {
-    grib_failed* failed = NULL;
+    const grib_failed* failed = NULL;
     ECCODES_ASSERT(file);
     if (options->json_output && !options->latlon)
         return;

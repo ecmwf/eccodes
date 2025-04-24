@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
     grib_handle* h    = NULL;
     long *steps, *levels, *numbers;
     char** shortNames = NULL;
-    int i, j, k, l;
+    size_t i, j, k, l;
     size_t stepSize, levelSize, shortNameSize, numberSize;
     long ostep, olevel, onumber;
     char oshortName[200];

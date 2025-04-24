@@ -80,8 +80,6 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     GRIB_CHECK(grib_get_size(h, "values", &size), 0);
 
     if (size > last_size) {
-        if (values)
-            free(values);
         values = (double*)malloc(size * sizeof(double));
         /*last_size = size;*/
         if (!values) {
@@ -157,6 +155,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     for (j = 0; j < count; j++)
         printf(" %ld", intervals[j]);
     printf("\n");
+
+    if (values)
+        free(values);
 
     return 0;
 }

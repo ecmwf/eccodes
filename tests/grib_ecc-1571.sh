@@ -10,7 +10,12 @@
 
 . ./include.ctest.sh
 
-label="grib_ecc-1571"
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1571
+# Allow new expver=0002 for class=ur and origin=lfpw
+# ---------------------------------------------------------------------
+
+label="grib_ecc-1571_test"
 tempGribA=temp1.$label.grib2
 tempGribB=temp2.$label.grib2
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl

@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1259
+# BUFR encoding: Crash if compressedData set after unexpandedDescriptors
+# ---------------------------------------------------------------------
+
 label="bufr_ecc-1259_test"
 tempBufr=temp.$label.bufr
 tempFilt=temp.$label.filt

@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1907
+# Wave fields: Conversion to GRIB2 loses direction and frequency data
+# ---------------------------------------------------------------------
+
 label="grib_ecc-1907_test"
 tempGrib1=temp.$label.grib1
 tempGrib2=temp.$label.grib2

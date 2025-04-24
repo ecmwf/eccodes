@@ -10,7 +10,7 @@
 . ./include.ctest.sh
 
 # Define a common label for all the tmp files
-label="bufr_clone_test_c"
+label="examples_c_bufr_clone"
 
 fBufrTmp1=${label}.cloned1.bufr
 fBufrTmp2=${label}.cloned2.bufr

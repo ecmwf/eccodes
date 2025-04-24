@@ -10,7 +10,10 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1766
+# EERIE (European Eddy RIch Earth System Models) metadata support
+# ---------------------------------------------------------------------
 
 # ECC-1766: EERIE project metadata support
 
@@ -41,7 +44,7 @@ ${tools_dir}/grib_set -s activity=1,experiment=1,realization=1 $eerie_sample $te
 grib_check_key_equals $temp_grib "activity,experiment,realization" "1 1 1"
 grib_check_key_equals $temp_grib "activity:s,experiment:s" "CMIP6 hist"
 
-# ECC-1850: Additional keys added
+# ECC-1850: Additional keys added
 # Check additional keys are present and correct
 grib_check_key_exists $eerie_sample generation,model,resolution
 grib_check_key_equals $eerie_sample "generation,model,resolution" "255 0 0"

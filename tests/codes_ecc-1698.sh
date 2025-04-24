@@ -10,7 +10,10 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1698
+# Format specifier keys for converting a number (float or int) into a string
+# ---------------------------------------------------------------------
 
 label="codes_ecc-1698_test"
 tempGrib=temp.$label.grib

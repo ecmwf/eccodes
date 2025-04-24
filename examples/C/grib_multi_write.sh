@@ -9,7 +9,7 @@
 
 . ./include.ctest.sh
 
-label="grib_multi_write_c"
+label="examples_c_grib_multi_write"
 tempGrib=temp.$label.grib
 tempText=temp.$label.txt
 

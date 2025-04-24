@@ -157,3 +157,10 @@ meta lengthOfMessage evaluate( endOfMessage-startOfMessage);
 meta md5Headers md5(startOfMessage,lengthOfMessage);
 
 alias ls.totalLength=totalLength;
+
+# Added here for testing
+_debug = getenv("ECCODES_DEBUG","0") : hidden;
+if (_debug) {
+  print "Testing: [identifier=]";
+  assert( totalLength > 0 );
+}

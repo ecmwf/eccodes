@@ -9,4 +9,4 @@
 
 . ./include.ctest.sh
 
-${examples_dir}/eccodes_f_grib_read_bytes
+${examples_dir}/f_grib_read_bytes

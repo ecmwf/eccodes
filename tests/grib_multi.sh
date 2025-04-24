@@ -16,7 +16,7 @@ rm -f $tmpdata
 
 parameterNumber=`${tools_dir}/grib_get -p parameterNumber -w parameterCategory=2,parameterNumber=3 ${data_dir}/multi.grib2`
 if [ -z "$parameterNumber"  ]; then
-  echo '---------- grib_get failure'
+  echo 'ERROR: grib_get parameterNumber failed'
   exit 1
 fi
 
@@ -31,7 +31,7 @@ EOF
 
 parameterNumber=`${tools_dir}/grib_filter $tmpdata.rules ${data_dir}/multi.grib2`
 if [ -z "$parameterNumber"  ]; then
-  echo '---------- grib_filter failure'
+  echo 'ERROR: grib_filter failed'
   exit 1
 fi
 

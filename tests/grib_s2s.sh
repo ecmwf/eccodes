@@ -11,7 +11,7 @@
 . ./include.ctest.sh
 
 grib2_sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-label=grib_s2s_test
+label="grib_s2s_test"
 tempSample=tempSample.${label}.grib2
 temp1=temp1.${label}.grib2
 temp2=temp2.${label}.grib2

@@ -10,7 +10,7 @@
 
 . ./include.ctest.sh
 
-label=julian_test
+label="julian_test"
 temp=temp.$label.txt
 
 $EXEC ${test_dir}/julian > $temp

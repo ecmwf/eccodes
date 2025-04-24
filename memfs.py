@@ -185,7 +185,7 @@ opath = output_file_base + "_final.c"
 print("MEMFS: Generating output:", opath)
 g = open(opath, "w")
 
-f = open(os.path.join(os.path.dirname(__file__), "src", "memfs.c"))
+f = open(os.path.join(os.path.dirname(__file__), "src", "eccodes", "memfs.c"))
 for line in f.readlines():
     line = line.rstrip()
     if "<MARKER>" in line:

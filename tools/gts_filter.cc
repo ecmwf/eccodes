@@ -57,7 +57,7 @@ int grib_tool_init(grib_runtime_options* options)
     }
 
     if (options->outfile && options->outfile->name)
-        options->action->context->outfilename = options->outfile->name;
+        options->action->context_->outfilename = options->outfile->name;
 
     return 0;
 }

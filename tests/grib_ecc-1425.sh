@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1425
+# Add mars keyword FCMonth for C3S seasonal
+# ---------------------------------------------------------------------
+
 label="grib_ecc-1425_test"
 
 tempGrib=temp.$label.grib

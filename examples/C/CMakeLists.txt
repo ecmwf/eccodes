@@ -44,7 +44,6 @@ list( APPEND test_bins
       bufr_read_tempf
       bufr_set_keys
       bufr_subset
-      mars_param
       grib_values_check
       multi2
       large_grib1
@@ -83,7 +82,6 @@ if( HAVE_BUILD_TOOLS )
        grib_set_bitmap
        grib_list
        grib_get_data
-       grib_mars_param
        grib_nearest
        grib_nearest_multiple
        grib_multi

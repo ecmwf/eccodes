@@ -1710,7 +1710,8 @@
     call grib_is_defined(msgid, key, is_defined, status)
   end subroutine codes_is_defined
 
-!!!
+
+
   !> Check if a key is computed(virtual) or coded
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
@@ -1738,7 +1739,7 @@
       call grib_check(iret, 'key_is_computed', key)
     end if
   end subroutine codes_key_is_computed
-!!!
+
 
   !> Get the real(4) value of a key from a message.
   !>
@@ -2931,5 +2932,22 @@
     end if
 
   end subroutine codes_bufr_multi_element_constant_arrays_off
+
+
+  subroutine codes_grib_surface_type_requires_value(edition, type_of_surface_code, requires_value, status)
+    integer(kind=kindOfInt), intent(in)            :: edition
+    integer(kind=kindOfInt), intent(in)            :: type_of_surface_code
+    integer(kind=kindOfInt), intent(out)           :: requires_value
+    integer(kind=kindOfInt), optional, intent(out) :: status
+    integer(kind=kindOfInt)                        :: iret
+
+    iret = grib_f_grib_surface_type_requires_value(edition, type_of_surface_code, requires_value)
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'codes_grib_surface_type_requires_value', '')
+    end if
+end subroutine codes_grib_surface_type_requires_value
+
 
 end module eccodes

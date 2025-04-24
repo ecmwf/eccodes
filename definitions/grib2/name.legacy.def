@@ -13,6 +13,104 @@
 	 parameterNumber = 37 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
+#Geometric height of -10 degrees C atmospheric isothermal level above ground
+'Geometric height of -10 degrees C atmospheric isothermal level above ground' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 26315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	}
+#Geometric height of 0 degrees C atmospheric isothermal level above ground
+'Geometric height of 0 degrees C atmospheric isothermal level above ground' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	}
+#Time-mean geometric height of -10 degrees C atmospheric isothermal level above ground
+'Time-mean geometric height of -10 degrees C atmospheric isothermal level above ground' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 26315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean geometric height of 0 degrees C atmospheric isothermal level above ground
+'Time-mean geometric height of 0 degrees C atmospheric isothermal level above ground' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum geometric height of -10 degrees C atmospheric isothermal level above ground
+'Time-maximum geometric height of -10 degrees C atmospheric isothermal level above ground' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 26315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum geometric height of 0 degrees C atmospheric isothermal level above ground
+'Time-maximum geometric height of 0 degrees C atmospheric isothermal level above ground' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum geometric height of -10 degrees C atmospheric isothermal level above ground
+'Time-minimum geometric height of -10 degrees C atmospheric isothermal level above ground' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 26315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum geometric height of 0 degrees C atmospheric isothermal level above ground
+'Time-minimum geometric height of 0 degrees C atmospheric isothermal level above ground' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation geometric height of -10 degrees C atmospheric isothermal level above ground
+'Time-standard-deviation geometric height of -10 degrees C atmospheric isothermal level above ground' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 26315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation geometric height of 0 degrees C atmospheric isothermal level above ground
+'Time-standard-deviation geometric height of 0 degrees C atmospheric isothermal level above ground' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Minimum dew point depression
 'Minimum dew point depression' = {
 	 discipline = 0 ;
@@ -48,6 +146,12 @@
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 1 ;
+	}
+#Precipitation from radar
+'Precipitation from radar' = {
+	 discipline = 0 ;
+	 parameterCategory = 15 ;
+	 parameterNumber = 5 ;
 	}
 #Maximum snow albedo
 'Maximum snow albedo' = {
@@ -216,6 +320,12 @@
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfStatisticalProcessing = 0 ;
+	}
+#Geometrical height above ground
+'Geometrical height above ground' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 6 ;
 	}
 #Maximum temperature
 'Maximum temperature' = {

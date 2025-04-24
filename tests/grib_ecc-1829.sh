@@ -10,7 +10,11 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1829
+# MARS support for stream/type combinations required for AIFS ensemble
+# ---------------------------------------------------------------------
+
 
 # ECC-1829: Add MARS support for stream & type combinations required for AIFS ensemble
 

@@ -70,6 +70,8 @@ position   endOfHeadersMarker;
 meta lengthOfHeaders evaluate( endOfHeadersMarker-startOfHeaders);
 meta md5Headers md5(startOfHeaders,lengthOfHeaders);
 
+meta isMessageValid message_is_valid(kindOfProduct);
+
 if (!headersOnly) {
   transient  missingValue   = 9999 : dump;
 
@@ -82,4 +84,8 @@ if (!headersOnly) {
   template     section_4 "grib1/section.4.def";
 
   template     section_5 "grib1/section.5.def";
+}
+
+if (isGridded) {
+    meta gridSpec grid_spec(): hidden, no_copy;
 }

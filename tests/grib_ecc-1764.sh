@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1764
+# Debugging issue on GNU 11 compiled ecCodes library to read GFS data
+# ---------------------------------------------------------------------
+
 label="grib_ecc-1764_test"
 temp=temp.$label.txt
 

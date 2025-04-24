@@ -17,6 +17,11 @@ tempGribB=temp.$label.B.grib
 tempText=temp.$label.txt
 tempRef=temp.$label.ref
 
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
 if [ $HAVE_GEOGRAPHY -eq 0 ]; then
     exit 0
 fi

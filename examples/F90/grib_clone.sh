@@ -9,5 +9,5 @@
 
 . ./include.ctest.sh
 
-${examples_dir}/eccodes_f_grib_clone > /dev/null
+${examples_dir}/f_grib_clone > /dev/null
 rm -f out.clone.grib1

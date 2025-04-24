@@ -66,4 +66,4 @@
 'o2d' = {typeOfFirstFixedSurface=175; typeOfSecondFixedSurface=176;}
 'sfc' = {typeOfFirstFixedSurface=177; typeOfSecondFixedSurface=255;}
 'o2d' = {typeOfFirstFixedSurface=188; typeOfSecondFixedSurface=189;}
-
+'sfc' = {typeOfFirstFixedSurface=254;}

@@ -10,7 +10,7 @@
 . ./include.ctest.sh
 
 #Define a common label for all the tmp files
-label="bufr_copy_keys_test_f"
+label="examples_f_bufr_copy_keys"
 
 TEMP=$label.out.bufr
 
@@ -18,7 +18,7 @@ cd ${data_dir}/bufr
 
 #The input and output BUFR files are hardcoded in the f90 example!!!
 OUTPUT=out.$label.bufr
-${examples_dir}/eccodes_f_bufr_copy_keys
+${examples_dir}/f_bufr_copy_keys
 res=`${tools_dir}/bufr_get -p bufrHeaderCentre $OUTPUT`
 [ "$res" = "80" ]
 

@@ -52,9 +52,33 @@ cat > $tempFilt <<EOF
     write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample2
-${tools_dir}/grib_get_data $tempGrib
+if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+    ${tools_dir}/grib_get_data $tempGrib
+fi
 ${tools_dir}/grib_dump $tempGrib
 grib_check_key_equals $tempGrib packingType spectral_complex
 grib_check_key_equals $tempGrib gridType sh
 
+
+# Minimal spectral
+sample2=$ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl
+cat > $tempFilt <<EOF
+    set J=1;
+    set K=1;
+    set M=1;
+    set JS=1;
+    set KS=1;
+    set MS=1;
+    set values = {0, 1, 0, 2, 0, 9}; # Any old set of 6 values
+    assert( numberOfDataPoints == 6 );
+    assert( numberOfValues == 6 );
+    write;
+EOF
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample2
+${tools_dir}/grib_ls -jn statistics $tempGrib
+avg=$( ${tools_dir}/grib_get -p avg:i $tempGrib )
+[ $avg -eq 0 ]
+
+
+# Clean up
 rm -f $tempSimple $tempFilt $tempGrib

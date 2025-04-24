@@ -4069,7 +4069,7 @@ int grib_tool_init(grib_runtime_options* options)
 
     if (grib_options_on("k:")) {
         struct KindValue* kvalue = NULL;
-        char* kind_name          = grib_options_get_option("k:");
+        const char* kind_name = grib_options_get_option("k:");
         for (kvalue = legalkinds; kvalue->name; kvalue++) {
             if (strcmp(kind_name, kvalue->name) == 0) {
                 option_kind = kvalue->kind; /* Found the right kind */
@@ -4089,7 +4089,7 @@ int grib_tool_init(grib_runtime_options* options)
 
     if (grib_options_on("d:")) {
         if (option_kind == 3 || option_kind == 4) { /* netCDF-4 */
-            char* theArg = grib_options_get_option("d:");
+            const char* theArg = grib_options_get_option("d:");
             if (!is_number(theArg) || atol(theArg) < 0 || atol(theArg) > 9) {
                 fprintf(stderr, "Invalid deflate option: %s (must be 0 to 9)\n", theArg);
                 usage_and_exit();
@@ -4118,7 +4118,7 @@ int grib_tool_init(grib_runtime_options* options)
         set_value(user_r, "shuffle", "false");
 
     if (grib_options_on("R:")) {
-        char* theArg = grib_options_get_option("R:");
+        const char* theArg = grib_options_get_option("R:");
         if (!is_number(theArg)) {
             fprintf(stderr, "Invalid reference date: %s\n", theArg);
             usage_and_exit();
@@ -4130,7 +4130,7 @@ int grib_tool_init(grib_runtime_options* options)
     }
 
     if (grib_options_on("u:")) {
-        char* theDimension = grib_options_get_option("u:");
+        const char* theDimension = grib_options_get_option("u:");
         if (!check_dimension_name(theDimension)) {
             fprintf(stderr, "Invalid dimension: \"%s\"\n", theDimension);
             exit(1);

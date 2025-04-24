@@ -13,9 +13,9 @@ tempSimple=temp.f_grib_set_packing.simple.grib
 tempSecond=temp.f_grib_set_packing.second.grib
 tempCCSDS=temp.f_grib_set_packing.ccsds.grib
 
-${examples_dir}/eccodes_f_grib_set_packing grid_simple       $tempSimple
-${examples_dir}/eccodes_f_grib_set_packing grid_second_order $tempSecond
-${examples_dir}/eccodes_f_grib_set_packing grid_ccsds        $tempCCSDS
+${examples_dir}/f_grib_set_packing grid_simple       $tempSimple
+${examples_dir}/f_grib_set_packing grid_second_order $tempSecond
+${examples_dir}/f_grib_set_packing grid_ccsds        $tempCCSDS
 
 ${tools_dir}/grib_ls -P packingType -n statistics $tempSimple $tempCCSDS $tempSecond
 

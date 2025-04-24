@@ -15,7 +15,6 @@ temp=temp.$label.grib
 
 inputs="
   sst_globus0083.grib
-  sample.grib2
   mixed.grib
 "
 

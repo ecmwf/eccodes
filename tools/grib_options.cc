@@ -218,7 +218,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
         options->headers_only = 0;
 
     if (grib_options_on("T:")) {
-        char* x = grib_options_get_option("T:");
+        const char* x = grib_options_get_option("T:");
         if (*x == 'T')
             options->mode = MODE_GTS;
         else if (*x == 'B')
@@ -426,7 +426,7 @@ const char* grib_options_get_help(const char* id)
 const char* grib_options_get_args(const char* id)
 {
     int i        = 0;
-    char empty[] = "";
+    const char empty[] = "";
     char msg[]   = "ERROR: help not found for option -";
     const size_t msize = sizeof(msg) + 3;
     char* err    = NULL;

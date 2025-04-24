@@ -22,7 +22,7 @@ for encoding in grid_simple grid_second_order; do
       set +e
     fi
 
-    ${examples_dir}/eccodes_f_grib_infinity_grid_second_order $encoding $infinity
+    ${examples_dir}/f_grib_infinity_grid_second_order $encoding $infinity
     c=$?
 
     if [ $infinity -eq 1 ]; then

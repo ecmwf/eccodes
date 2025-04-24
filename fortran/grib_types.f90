@@ -133,7 +133,7 @@ integer function kind_of_double()
 end function kind_of_double
 
 program kind_h
-  integer :: size
+  integer :: size = 0
   integer, dimension(2) :: i
   integer(kind=2), dimension(2) :: i2
   integer(kind=4), dimension(2) :: i4

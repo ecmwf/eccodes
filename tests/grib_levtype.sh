@@ -19,8 +19,18 @@ fi
 
 sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 tempGrib=temp.${label}.grib
+tempText=temp.${label}.txt
 latestAvailable=`${tools_dir}/grib_get -p tablesVersionLatest $sample2`
 latestOfficial=`${tools_dir}/grib_get -p tablesVersionLatestOfficial $sample2`
+
+# ECC-1333: levtype should be read-only in GRIB2
+set +e
+${tools_dir}/grib_set -s mars.levtype=o2d $sample2 $tempGrib 2>$tempText
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Value is read only" $tempText
+
 
 # These level types are S2S ocean parameters and are dealt with differently (See products_s2s.def)
 exclude="20 160 169"
@@ -60,3 +70,4 @@ done
 
 
 rm -f $tempGrib
+rm -f $tempText

@@ -37,19 +37,19 @@ process()
     # Test 01: Clone + output
     # ------------------------
     rm -fr $OUTPUT;   mkdir -p $OUTPUT
-    time $PROG -c -w par $input $NUM_THREADS $NUM_ITER
+    $PROG -c -w par $input $NUM_THREADS $NUM_ITER
     validate
 
     # Test 02: No clone + output
     # --------------------------
     rm -fr $OUTPUT;   mkdir -p $OUTPUT
-    time $PROG -w par $input $NUM_THREADS $NUM_ITER
+    $PROG -w par $input $NUM_THREADS $NUM_ITER
     validate
 
     # Test 03: Clone + no output
     # ---------------------------
     rm -fr $OUTPUT
-    time $PROG -c par $input $NUM_THREADS $NUM_ITER
+    $PROG -c par $input $NUM_THREADS $NUM_ITER
     # Nothing to validate as there is no output
 }
 ###################################################

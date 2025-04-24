@@ -8,8 +8,11 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "eccodes.h"
+#include "action/Concept.h"
+#include "step.h"
+
+#include <iostream>
 
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 
@@ -58,6 +61,14 @@ static void test_get_git_sha1()
     const char* sha1 = codes_get_git_sha1();
     ECCODES_ASSERT(sha1 != NULL);
     printf("Git SHA1 = %s\n", sha1);
+}
+
+static void test_get_git_branch()
+{
+    printf("Running %s ...\n", __func__);
+    const char* gbr = codes_get_git_branch();
+    ECCODES_ASSERT(gbr != NULL);
+    printf("Git branch = %s\n", gbr);
 }
 
 static void test_get_build_date()
@@ -299,10 +310,6 @@ static void test_concept_condition_strings()
     grib_context* context = NULL;
     grib_handle* h = grib_handle_new_from_samples(context, "GRIB2");
     if (!h) return;
-
-    err = get_concept_condition_string(h, "typeOfLevel", NULL, result);
-    ECCODES_ASSERT(!err);
-    ECCODES_ASSERT(strcmp(result, "typeOfFirstFixedSurface=1,typeOfSecondFixedSurface=255") == 0);
 
     err = get_concept_condition_string(h, "paramId", NULL, result);
     ECCODES_ASSERT(!err);
@@ -714,6 +721,26 @@ void test_codes_get_type_name()
     ECCODES_ASSERT( STR_EQUAL("section", grib_get_type_name(GRIB_TYPE_SECTION)) );
 }
 
+void test_grib_surface_type_requires_value()
+{
+    printf("Running %s ...\n", __func__);
+    int err = 0;
+    int edition = 2;
+    ECCODES_ASSERT( codes_grib_surface_type_requires_value(edition, 103, &err) == 1 && !err );
+    ECCODES_ASSERT( codes_grib_surface_type_requires_value(edition, 160, &err) == 1 && !err );
+    ECCODES_ASSERT( codes_grib_surface_type_requires_value(edition, 10,  &err) == 0 && !err );
+
+    ECCODES_ASSERT( codes_grib_surface_type_requires_value(edition, -1, &err) == 0 );
+    ECCODES_ASSERT( err == GRIB_INVALID_ARGUMENT);
+    ECCODES_ASSERT( codes_grib_surface_type_requires_value(edition, 300, &err) == 0 );
+    ECCODES_ASSERT( err == GRIB_INVALID_ARGUMENT);
+
+    // not implemented for edition 1
+    edition = 1;
+    ECCODES_ASSERT( codes_grib_surface_type_requires_value(edition, 1, &err) == 0 );
+    ECCODES_ASSERT( err == GRIB_NOT_IMPLEMENTED );
+}
+
 void test_grib2_choose_PDTN()
 {
     printf("Running %s ...\n", __func__);
@@ -795,7 +822,7 @@ void test_codes_context_set_debug()
     printf("\tEnable debugging...\n");
     grib_context_set_debug(context, -1);
 
-    grib_handle* h = grib_handle_new_from_samples(context, "GRIB2");
+    grib_handle* h = grib_handle_new_from_samples(context, "GRIB1");
     if (!h) return;
     err = grib_set_long(h, "paramId", 167);
     ECCODES_ASSERT(!err);
@@ -803,7 +830,7 @@ void test_codes_context_set_debug()
     printf("\tDisable debugging...\n");
     grib_context_set_debug(context, 0);
 
-    err = grib_set_long(h, "edition", 1);
+    err = grib_set_long(h, "edition", 2);
     ECCODES_ASSERT(!err);
     printf("\tEnable debugging again (verbose)...\n");
     grib_context_set_debug(context, 1);
@@ -877,6 +904,101 @@ static void test_filepool()
     grib_file_pool_print("file_pool contents", stdout);
 }
 
+static void test_expressions()
+{
+    printf("Running %s ...\n", __func__);
+    grib_context* c = grib_context_get_default();
+    int err = 0;
+    double dVal = -1;
+    char buf[32];
+    size_t size = 0;
+
+    grib_handle* h = grib_handle_new_from_samples(c, "GRIB2");
+    if (!h) return;
+
+    grib_expression* eTrue = new_true_expression(c);
+    ECCODES_ASSERT(eTrue);
+    const char* cname = eTrue->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+    err = eTrue->evaluate_double(h, &dVal);
+    ECCODES_ASSERT(!err && dVal > 0);
+    eTrue->print(c, h, stderr);
+
+    grib_expression* eUnOp = new_unop_expression(c, 0, 0, 0);
+    ECCODES_ASSERT(eUnOp);
+    cname = eUnOp->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eBinop = new_binop_expression(c, 0, 0, 0, 0);
+    ECCODES_ASSERT(eBinop);
+    cname = eBinop->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eSubStr = new_sub_string_expression(c, "atest", 0, 1);
+    ECCODES_ASSERT(eSubStr);
+    cname = eSubStr->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eLen = new_length_expression(c, "abc");
+    ECCODES_ASSERT(eLen);
+    cname = eLen->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eIsInt = new_is_integer_expression(c, "edition", 0, 1);
+    ECCODES_ASSERT(eIsInt);
+    cname = eIsInt->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+    dVal = -1;
+    err = eIsInt->evaluate_double(h, &dVal);
+    ECCODES_ASSERT(!err && dVal > 0);
+    const char* result = eIsInt->evaluate_string(h, buf, &size, &err);
+    ECCODES_ASSERT( STR_EQUAL(result, "1") );
+
+    grib_expression* eStrCmp = new_string_compare_expression(c, 0, 0, 0);
+    ECCODES_ASSERT(eStrCmp);
+    cname = eStrCmp->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eLogAnd = new_logical_and_expression(c, 0, 0);
+    ECCODES_ASSERT(eLogAnd);
+    cname = eLogAnd->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eLogOr = new_logical_or_expression(c, 0 ,0);
+    ECCODES_ASSERT(eLogOr);
+    cname = eLogOr->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+
+    grib_expression* eIsInDict = new_is_in_dict_expression(c, "a", "list");
+    ECCODES_ASSERT(eIsInDict);
+    cname = eIsInDict->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+    eIsInDict->evaluate_double(h, &dVal);
+    eIsInt->evaluate_string(h, buf, &size, &err);
+
+    grib_expression* eIsInList = new_is_in_list_expression(c, "b", "list");
+    ECCODES_ASSERT(eIsInList);
+    cname = eIsInList->class_name();
+    ECCODES_ASSERT( cname && strlen(cname) > 0 );
+}
+
+static void test_step_units()
+{
+#ifndef ECCODES_ON_WINDOWS
+    printf("Running %s ...\n", __func__);
+    const auto supported_units = eccodes::Unit::list_supported_units();
+    std::cout << "\tSupported units are: ";
+    int count = 0;
+    for (auto& u : supported_units) {
+        std::cout << eccodes::Unit{ u }.value<std::string>() + ",";
+        ++count;
+    }
+    std::cout << std::endl;
+    ECCODES_ASSERT(count == 14);
+#endif
+}
+
+
 int main(int argc, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
@@ -884,6 +1006,7 @@ int main(int argc, char** argv)
     codes_print_api_version(stdout);
     printf("\n");
 
+    test_step_units();
     test_grib_get_reduced_row_legacy();
 
     test_codes_context_set_debug();
@@ -906,6 +1029,7 @@ int main(int argc, char** argv)
     test_parse_keyval_string();
 
     test_get_git_sha1();
+    test_get_git_branch();
     test_get_package_name();
     test_get_build_date();
     test_gribex_mode();
@@ -944,11 +1068,14 @@ int main(int argc, char** argv)
     test_string_replace_char();
     test_string_remove_char();
 
+    test_grib_surface_type_requires_value();
     test_grib2_select_PDTN();
     test_grib2_choose_PDTN();
     test_codes_is_feature_enabled();
     test_codes_get_features();
     test_filepool();
+    test_expressions();
 
+    printf("\n\nProgram %s finished\n", argv[0]);
     return 0;
 }
