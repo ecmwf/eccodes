@@ -9,12 +9,13 @@
 
 . ./include.ctest.sh
 
-INPUT="../../data/constant_field.grib1"
-OUTPUT1=out.get1.grib1
-OUTPUT2=out.get2.grib1
+label="examples_f_grib_get_message"
 
-${examples_dir}/f_grib_get_message > /dev/null
+INPUT="../../data/constant_field.grib1"
+OUTPUT1=temp.$label.1.grib1
+OUTPUT2=temp.$label.2.grib1
+
+${examples_dir}/f_grib_get_message
 ${tools_dir}/grib_compare $OUTPUT1 $OUTPUT2
 
-rm -f $OUTPUT1
-rm -f $OUTPUT2
+rm -f $OUTPUT1 $OUTPUT2

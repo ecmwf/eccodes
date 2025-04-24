@@ -7,10 +7,10 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!  Description: How to copy a GRIB message in memory
+!  Description: How to get a GRIB message in memory
 !
 !
-program get
+program get_message
    use eccodes
    implicit none
    integer                            :: err, centre
@@ -27,8 +27,8 @@ program get
    character(len=32)                  :: product_kind2
 
    call codes_open_file(infile, '../../data/constant_field.grib1', 'r')
-   call codes_open_file(outfile1, 'out.get1.grib1', 'W')
-   call codes_open_file(outfile2, 'out.get2.grib1', 'W')
+   call codes_open_file(outfile1, 'temp.examples_f_grib_get_message.1.grib1', 'W')
+   call codes_open_file(outfile2, 'temp.examples_f_grib_get_message.2.grib1', 'W')
 
    ! A new GRIB message is loaded from file
    ! igrib_in is the GRIB id to be used in subsequent calls
@@ -96,4 +96,4 @@ program get
    call codes_close_file(outfile2) 
    deallocate (message)
 
-end program get 
+end program get_message
