@@ -63,6 +63,14 @@ static void test_get_git_sha1()
     printf("Git SHA1 = %s\n", sha1);
 }
 
+static void test_get_git_branch()
+{
+    printf("Running %s ...\n", __func__);
+    const char* gbr = codes_get_git_branch();
+    ECCODES_ASSERT(gbr != NULL);
+    printf("Git branch = %s\n", gbr);
+}
+
 static void test_get_build_date()
 {
     printf("Running %s ...\n", __func__);
@@ -1021,6 +1029,7 @@ int main(int argc, char** argv)
     test_parse_keyval_string();
 
     test_get_git_sha1();
+    test_get_git_branch();
     test_get_package_name();
     test_get_build_date();
     test_gribex_mode();
