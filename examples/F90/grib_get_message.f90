@@ -41,6 +41,7 @@ program get
            write(*,*) "Get message test 1 passed, message SIZES are the same!"
    else
            write(*,*) "Get message test 1 failed, message SIZES are NOT the same!"
+           call abort
    endif
 
    allocate (message(byte_size), stat=err)
@@ -50,6 +51,7 @@ program get
            write(*,*) "Get message test 2 passed, message CONTENT is the same!"
    else
            write(*,*) "Get message test 2 failed, message CONTENT is NOT the same!"
+           call abort     
    endif   
 
    call codes_new_from_message(igrib_out, message)
@@ -63,6 +65,7 @@ program get
            write(*,*) "New from message (no copy) test 1 passed, GRIB_GET worked!"
    else
            write(*,*) "New from message (no copy) test 1 failed, GRIB_GET did NOT work!"
+           call abort
    endif
    
    centre = 75
@@ -78,6 +81,7 @@ program get
            write(*,*) "New from message (no copy) test 2 passed, GRIB_SET worked!"
    else
            write(*,*) "New from message (no copy) test 2 failed, GRIB_SET did NOT work!"
+           call abort
    endif
    
    ! Write message to a file
