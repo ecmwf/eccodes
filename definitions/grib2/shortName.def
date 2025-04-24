@@ -1353,6 +1353,30 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 73 ;
 	}
+#Benjamin-Feir index 2D
+'bfi2d' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 99 ;
+	}
+#Crest-trough correlation
+'ctc' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 100 ;
+	}
+#X component of the wave radiative stress to sea ice
+'xwrs' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 101 ;
+	}
+#Y component of the wave radiative stress to sea ice
+'ywrs' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 102 ;
+	}
 #Wave Spectral Skewness
 'wss' = {
 	 discipline = 10 ;
@@ -1678,6 +1702,34 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 73 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean Benjamin-Feir index 2D
+'avg_bfi2d' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 99 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean crest-trough correlation
+'avg_ctc' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 100 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean X component of the wave radiative stress to sea ice
+'avg_xwrs' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 101 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean Y component of the wave radiative stress to sea ice
+'avg_ywrs' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 102 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean wave Spectral Skewness
@@ -2229,6 +2281,34 @@
 	 parameterNumber = 73 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum Benjamin-Feir index 2D
+'max_bfi2d' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 99 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum crest-trough correlation
+'max_ctc' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 100 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum X component of the wave radiative stress to sea ice
+'max_xwrs' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 101 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum Y component of the wave radiative stress to sea ice
+'max_ywrs' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 102 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-maximum wave Spectral Skewness
 'max_wss' = {
 	 discipline = 10 ;
@@ -2776,6 +2856,34 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 73 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum Benjamin-Feir index 2D
+'min_bfi2d' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 99 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum crest-trough correlation
+'min_ctc' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 100 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum X component of the wave radiative stress to sea ice
+'min_xwrs' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 101 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum Y component of the wave radiative stress to sea ice
+'min_ywrs' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 102 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum wave Spectral Skewness
@@ -3327,6 +3435,34 @@
 	 parameterNumber = 73 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
+#Time-standard-deviation Benjamin-Feir index 2D
+'std_bfi2d' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 99 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation crest-trough correlation
+'std_ctc' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 100 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation X component of the wave radiative stress to sea ice
+'std_xwrs' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 101 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation Y component of the wave radiative stress to sea ice
+'std_ywrs' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 102 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Time-standard-deviation wave Spectral Skewness
 'std_wss' = {
 	 discipline = 10 ;
@@ -3852,6 +3988,12 @@
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
+#Injection height (from IS4FIRES)
+'injh' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 40 ;
+	}
 #Particulate matter d <= 1 um
 'pm1' = {
 	 discipline = 0 ;
@@ -3890,6 +4032,18 @@
 	 aerosolType = 62026 ;
 	 scaledValueOfSecondSize = missing() ;
 	 is_aerosol = 1 ;
+	}
+#Mean height of maximum injection
+'mami' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 39 ;
+	}
+#Plume top height above surface
+'apt' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 42 ;
 	}
 #Volcanic sulfur dioxide mass mixing ratio
 'VSO2' = {
@@ -3934,6 +4088,12 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 59 ;
 	 typeOfGeneratingProcess = 9 ;
+	}
+#Plume bottom height above surface
+'apb' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 41 ;
 	}
 #Ammonium aerosol mass mixing ratio
 'aermr18' = {
@@ -4055,12 +4215,871 @@
 	 typeOfGeneratingProcess = 20 ;
 	 is_aerosol = 1 ;
 	}
+#Random pattern 1 for SPP scheme
+'spp1' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 1 ;
+	}
+#Random pattern 2 for SPP scheme
+'spp2' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 2 ;
+	}
+#Random pattern 3 for SPP scheme
+'spp3' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 3 ;
+	}
+#Random pattern 4 for SPP scheme
+'spp4' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 4 ;
+	}
+#Random pattern 5 for SPP scheme
+'spp5' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 5 ;
+	}
+#Random pattern 6 for SPP scheme
+'spp6' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 6 ;
+	}
+#Random pattern 7 for SPP scheme
+'spp7' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 7 ;
+	}
+#Random pattern 8 for SPP scheme
+'spp8' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 8 ;
+	}
+#Random pattern 9 for SPP scheme
+'spp9' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 9 ;
+	}
+#Random pattern 10 for SPP scheme
+'spp10' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 10 ;
+	}
+#Random pattern 11 for SPP scheme
+'spp11' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 11 ;
+	}
+#Random pattern 12 for SPP scheme
+'spp12' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 12 ;
+	}
+#Random pattern 13 for SPP scheme
+'spp13' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 13 ;
+	}
+#Random pattern 14 for SPP scheme
+'spp14' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 14 ;
+	}
+#Random pattern 15 for SPP scheme
+'spp15' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 15 ;
+	}
+#Random pattern 16 for SPP scheme
+'spp16' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 16 ;
+	}
+#Random pattern 17 for SPP scheme
+'spp17' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 17 ;
+	}
+#Random pattern 18 for SPP scheme
+'spp18' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 18 ;
+	}
+#Random pattern 19 for SPP scheme
+'spp19' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 19 ;
+	}
+#Random pattern 20 for SPP scheme
+'spp20' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 20 ;
+	}
+#Random pattern 21 for SPP scheme
+'spp21' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 21 ;
+	}
+#Random pattern 22 for SPP scheme
+'spp22' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 22 ;
+	}
+#Random pattern 23 for SPP scheme
+'spp23' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 23 ;
+	}
+#Random pattern 24 for SPP scheme
+'spp24' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 24 ;
+	}
+#Random pattern 25 for SPP scheme
+'spp25' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 25 ;
+	}
+#Random pattern 26 for SPP scheme
+'spp26' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 26 ;
+	}
+#Random pattern 27 for SPP scheme
+'spp27' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 27 ;
+	}
+#Random pattern 28 for SPP scheme
+'spp28' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 28 ;
+	}
+#Random pattern 29 for SPP scheme
+'spp29' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 29 ;
+	}
+#Random pattern 30 for SPP scheme
+'spp30' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 30 ;
+	}
+#Random pattern 31 for SPP scheme
+'spp31' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 31 ;
+	}
+#Random pattern 32 for SPP scheme
+'spp32' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 32 ;
+	}
+#Random pattern 33 for SPP scheme
+'spp33' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 33 ;
+	}
+#Random pattern 34 for SPP scheme
+'spp34' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 34 ;
+	}
+#Random pattern 35 for SPP scheme
+'spp35' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 35 ;
+	}
+#Random pattern 36 for SPP scheme
+'spp36' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 36 ;
+	}
+#Random pattern 37 for SPP scheme
+'spp37' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 37 ;
+	}
+#Random pattern 38 for SPP scheme
+'spp38' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 38 ;
+	}
+#Random pattern 39 for SPP scheme
+'spp39' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 39 ;
+	}
+#Random pattern 40 for SPP scheme
+'spp40' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 40 ;
+	}
+#Random pattern 41 for SPP scheme
+'spp41' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 41 ;
+	}
+#Random pattern 42 for SPP scheme
+'spp42' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 42 ;
+	}
+#Random pattern 43 for SPP scheme
+'spp43' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 43 ;
+	}
+#Random pattern 44 for SPP scheme
+'spp44' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 44 ;
+	}
+#Random pattern 45 for SPP scheme
+'spp45' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 45 ;
+	}
+#Random pattern 46 for SPP scheme
+'spp46' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 46 ;
+	}
+#Random pattern 47 for SPP scheme
+'spp47' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 47 ;
+	}
+#Random pattern 48 for SPP scheme
+'spp48' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 48 ;
+	}
+#Random pattern 49 for SPP scheme
+'spp49' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 49 ;
+	}
+#Random pattern 50 for SPP scheme
+'spp50' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 50 ;
+	}
+#Random pattern 51 for SPP scheme
+'spp51' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 51 ;
+	}
+#Random pattern 52 for SPP scheme
+'spp52' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 52 ;
+	}
+#Random pattern 53 for SPP scheme
+'spp53' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 53 ;
+	}
+#Random pattern 54 for SPP scheme
+'spp54' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 54 ;
+	}
+#Random pattern 55 for SPP scheme
+'spp55' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 55 ;
+	}
+#Random pattern 56 for SPP scheme
+'spp56' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 56 ;
+	}
+#Random pattern 57 for SPP scheme
+'spp57' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 57 ;
+	}
+#Random pattern 58 for SPP scheme
+'spp58' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 58 ;
+	}
+#Random pattern 59 for SPP scheme
+'spp59' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 59 ;
+	}
+#Random pattern 60 for SPP scheme
+'spp60' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 60 ;
+	}
+#Random pattern 61 for SPP scheme
+'spp61' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 61 ;
+	}
+#Random pattern 62 for SPP scheme
+'spp62' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 62 ;
+	}
+#Random pattern 63 for SPP scheme
+'spp63' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 63 ;
+	}
+#Random pattern 64 for SPP scheme
+'spp64' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 64 ;
+	}
+#Random pattern 65 for SPP scheme
+'spp65' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 65 ;
+	}
+#Random pattern 66 for SPP scheme
+'spp66' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 66 ;
+	}
+#Random pattern 67 for SPP scheme
+'spp67' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 67 ;
+	}
+#Random pattern 68 for SPP scheme
+'spp68' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 68 ;
+	}
+#Random pattern 69 for SPP scheme
+'spp69' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 69 ;
+	}
+#Random pattern 70 for SPP scheme
+'spp70' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 70 ;
+	}
+#Random pattern 71 for SPP scheme
+'spp71' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 71 ;
+	}
+#Random pattern 72 for SPP scheme
+'spp72' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 72 ;
+	}
+#Random pattern 73 for SPP scheme
+'spp73' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 73 ;
+	}
+#Random pattern 74 for SPP scheme
+'spp74' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 74 ;
+	}
+#Random pattern 75 for SPP scheme
+'spp75' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 75 ;
+	}
+#Random pattern 76 for SPP scheme
+'spp76' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 76 ;
+	}
+#Random pattern 77 for SPP scheme
+'spp77' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 77 ;
+	}
+#Random pattern 78 for SPP scheme
+'spp78' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 78 ;
+	}
+#Random pattern 79 for SPP scheme
+'spp79' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 79 ;
+	}
+#Random pattern 80 for SPP scheme
+'spp80' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 80 ;
+	}
+#Random pattern 81 for SPP scheme
+'spp81' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 81 ;
+	}
+#Random pattern 82 for SPP scheme
+'spp82' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 82 ;
+	}
+#Random pattern 83 for SPP scheme
+'spp83' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 83 ;
+	}
+#Random pattern 84 for SPP scheme
+'spp84' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 84 ;
+	}
+#Random pattern 85 for SPP scheme
+'spp85' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 85 ;
+	}
+#Random pattern 86 for SPP scheme
+'spp86' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 86 ;
+	}
+#Random pattern 87 for SPP scheme
+'spp87' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 87 ;
+	}
+#Random pattern 88 for SPP scheme
+'spp88' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 88 ;
+	}
+#Random pattern 89 for SPP scheme
+'spp89' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 89 ;
+	}
+#Random pattern 90 for SPP scheme
+'spp90' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 90 ;
+	}
+#Random pattern 91 for SPP scheme
+'spp91' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 91 ;
+	}
+#Random pattern 92 for SPP scheme
+'spp92' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 92 ;
+	}
+#Random pattern 93 for SPP scheme
+'spp93' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 93 ;
+	}
+#Random pattern 94 for SPP scheme
+'spp94' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 94 ;
+	}
+#Random pattern 95 for SPP scheme
+'spp95' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 95 ;
+	}
+#Random pattern 96 for SPP scheme
+'spp96' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 96 ;
+	}
+#Random pattern 97 for SPP scheme
+'spp97' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 97 ;
+	}
+#Random pattern 98 for SPP scheme
+'spp98' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 98 ;
+	}
+#Random pattern 99 for SPP scheme
+'spp99' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 99 ;
+	}
+#Random pattern 100 for SPP scheme
+'spp100' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 100 ;
+	}
+#Random pattern 101 for SPP scheme
+'spp101' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 101 ;
+	}
+#Random pattern 102 for SPP scheme
+'spp102' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 102 ;
+	}
+#Random pattern 103 for SPP scheme
+'spp103' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 103 ;
+	}
+#Random pattern 104 for SPP scheme
+'spp104' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 104 ;
+	}
+#Random pattern 105 for SPP scheme
+'spp105' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 105 ;
+	}
+#Random pattern 106 for SPP scheme
+'spp106' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 106 ;
+	}
+#Random pattern 107 for SPP scheme
+'spp107' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 107 ;
+	}
+#Random pattern 108 for SPP scheme
+'spp108' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 108 ;
+	}
+#Random pattern 109 for SPP scheme
+'spp109' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 109 ;
+	}
+#Random pattern 110 for SPP scheme
+'spp110' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 110 ;
+	}
+#Random pattern 111 for SPP scheme
+'spp111' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 111 ;
+	}
+#Random pattern 112 for SPP scheme
+'spp112' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 112 ;
+	}
+#Random pattern 113 for SPP scheme
+'spp113' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 113 ;
+	}
+#Random pattern 114 for SPP scheme
+'spp114' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 114 ;
+	}
+#Random pattern 115 for SPP scheme
+'spp115' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 115 ;
+	}
+#Random pattern 116 for SPP scheme
+'spp116' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 116 ;
+	}
+#Random pattern 117 for SPP scheme
+'spp117' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 117 ;
+	}
+#Random pattern 118 for SPP scheme
+'spp118' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 118 ;
+	}
+#Random pattern 119 for SPP scheme
+'spp119' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 119 ;
+	}
+#Random pattern 120 for SPP scheme
+'spp120' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 120 ;
+	}
+#Random pattern 121 for SPP scheme
+'spp121' = {
+	 discipline = 191 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 randomFieldNumber = 121 ;
+	}
 #Cosine of solar zenith angle
 'cossza' = {
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 24 ;
 	 typeOfFirstFixedSurface = 1 ;
+	}
+#UV biologically effective dose
+'uvbed' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 9 ;
+	}
+#UV biologically effective dose clear-sky
+'uvbedcs' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 10 ;
 	}
 #Dry deposition of ammonium aerosol
 'aerddpam' = {
@@ -6221,12 +7240,14 @@
 	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 16 ;
 	}
-#Geometric height of atmospheric isothermal level above ground
-'haig' = {
+#Geometric height of 3 degrees C atmospheric isothermal level above ground
+'deg3l' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27615 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
 #Roof temperature
 'rft' = {
@@ -6379,6 +7400,60 @@
 	 scaledValueOfFirstFixedSurface = 27465 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
+#Thunderstorm hazard index
+'hits' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 3 ;
+	}
+#Surface water flooding hazard index
+'hiswf' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 12 ;
+	}
+#Polluted air hazard index
+'hipa' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 18 ;
+	}
+#Storm surge hazard index
+'hiss' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 27 ;
+	}
+#Cold wave hazard index
+'hicw' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 40 ;
+	}
+#Frost (hoar frost) hazard index
+'hihf' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 43 ;
+	}
+#Heatwave hazard index
+'hihw' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 47 ;
+	}
+#Wind hazard index
+'hiw' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 60 ;
+	}
+#Wildfires hazard index
+'hiwf' = {
+	 discipline = 20 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 13 ;
+	}
 #Burned area
 'fba' = {
 	 discipline = 2 ;
@@ -6474,6 +7549,18 @@
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 35 ;
+	}
+#Live fuel moisture content in low vegetation
+'lfmclv' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 37 ;
+	}
+#Live fuel moisture content in high vegetation
+'lfmchv' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 38 ;
 	}
 #Time-integrated total column vertically-integrated eastward geopotential flux
 'tvige' = {
@@ -8925,6 +10012,75 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean Reciprocal Obukhov length
+'avg_rol' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean geometric height of 3 degrees C atmospheric isothermal level above ground
+'avg_deg3l' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27615 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean river storage of water
+'avg_rivsto' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 11 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean floodplain storage of water
+'avg_fldsto' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 12 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean river depth
+'avg_rivdph' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 16 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 162 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean river outflow of water
+'avg_rivout' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 17 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean floodplain outflow of water
+'avg_fldout' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 18 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean floodpath outflow of water
+'avg_pthflw' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 19 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean surface diffuse short-wave radiation flux, clear sky
+'avg_sdifswrfcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 63 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-integrated land surface heat net flux
 'acc_lshnf' = {
 	 discipline = 2 ;
@@ -10805,6 +11961,31 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 47 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum Reciprocal Obukhov length
+'max_rol' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum geometric height of 3 degrees C atmospheric isothermal level above ground
+'max_deg3l' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27615 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-mean surface diffuse short-wave radiation flux, clear sky
+'max_sdifswrfcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 63 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
@@ -12700,6 +13881,31 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 47 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum Reciprocal Obukhov length
+'min_rol' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum geometric height of 3 degrees C atmospheric isothermal level above ground
+'min_deg3l' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27615 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-mean surface diffuse short-wave radiation flux, clear sky
+'min_sdifswrfcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 63 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
@@ -14599,6 +15805,31 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
+#Time-standard-deviation Reciprocal Obukhov length
+'std_rol' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation geometric height of 3 degrees C atmospheric isothermal level above ground
+'std_deg3l' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27615 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-mean surface diffuse short-wave radiation flux, clear sky
+'std_sdifswrfcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 63 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Cross sectional area of flow in channel
 'chcross' = {
 	 discipline = 1 ;
@@ -15586,11 +16817,12 @@
 	 parameterCategory = 15 ;
 	 parameterNumber = 4 ;
 	}
-#Precipitation
-'prec' = {
+#Precipitation from radar
+'rdp' = {
 	 discipline = 0 ;
 	 parameterCategory = 15 ;
-	 parameterNumber = 5 ;
+	 parameterNumber = 17 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Air concentration of Caesium 137
 'acces' = {
@@ -15748,7 +16980,7 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 22 ;
 	}
-#Supercooled large droplet probability (see Note 4)
+#Supercooled large droplet probability
 '~' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
@@ -15766,7 +16998,7 @@
 	 parameterCategory = 191 ;
 	 parameterNumber = 0 ;
 	}
-#Flash flood guidance (Encoded as an accumulation over a floating subinterval of time between the ref
+#Flash flood guidance
 'ffldg' = {
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
@@ -15814,7 +17046,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 0 ;
 	}
-#Percent precipitation in a sub-period of an overall period (Encoded as per cent accumulation over th
+#Percent precipitation in a sub-period of an overall period
 'pposp' = {
 	 discipline = 1 ;
 	 parameterCategory = 1 ;
@@ -16896,6 +18128,50 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
+#Reciprocal Obukhov length
+'rol' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 22 ;
+	}
+#Precipitation rate from radar
+'rdpr' = {
+	 discipline = 0 ;
+	 parameterCategory = 15 ;
+	 parameterNumber = 17 ;
+	}
+#Radar data quality index
+'rdqi' = {
+	 discipline = 0 ;
+	 parameterCategory = 15 ;
+	 parameterNumber = 18 ;
+	}
+#Radar data quality flag
+'rdqf' = {
+	 discipline = 0 ;
+	 parameterCategory = 15 ;
+	 parameterNumber = 19 ;
+	}
+#Precipitation rate from forecasted radar imagery
+'frdpr' = {
+	 discipline = 0 ;
+	 parameterCategory = 16 ;
+	 parameterNumber = 6 ;
+	}
+#Precipitation from forecasted radar imagery
+'frdp' = {
+	 discipline = 0 ;
+	 parameterCategory = 16 ;
+	 parameterNumber = 6 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Surface diffuse short-wave radiation flux, clear sky
+'sdifswrfcs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 63 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
 #Universal thermal climate index
 'utci' = {
 	 discipline = 20 ;
@@ -17033,6 +18309,18 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 27 ;
+	}
+#Excess heat factor
+'exhf' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 11 ;
+	}
+#Excess cold factor
+'excf' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 12 ;
 	}
 #Sea ice thickness
 'sithick' = {
@@ -17297,6 +18585,12 @@
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 8 ;
+	}
+#Sea ice breakup memory
+'sibm' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 30 ;
 	}
 #Sea surface practical salinity
 'sos' = {
@@ -17832,6 +19126,12 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
+#Sea surface downward short-wave radiation flux
+'rsdos' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 22 ;
+	}
 #Sea water practical salinity
 'so' = {
 	 discipline = 10 ;
@@ -17991,6 +19291,30 @@
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Sea water upward mass transport
+'mtup' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 56 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Sea water age since surface contact
+'agessc' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 57 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Sea water downward short-wave radiation flux
+'rsdo' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 58 ;
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	}
@@ -18399,6 +19723,13 @@
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea ice breakup memory
+'avg_sibm' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 30 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean sea surface practical salinity
@@ -18984,6 +20315,13 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean sea surface downward short-wave radiation flux
+'avg_rsdos' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean sea water practical salinity
 'avg_so' = {
 	 discipline = 10 ;
@@ -19162,6 +20500,33 @@
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea water upward mass transport
+'avg_mtup' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 56 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea water age since surface contact
+'avg_agessc' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 57 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea water downward short-wave radiation flux
+'avg_rsdo' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 58 ;
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfStatisticalProcessing = 0 ;
@@ -19396,7 +20761,7 @@
 	 parameterNumber = 0 ;
 	}
 #Total column vertically-integrated mass density
-'tc_mdens' = {
+'tcvimd' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
@@ -19788,13 +21153,13 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 104 ;
 	}
-#Aerosol backscatter from top of atmosphere
+#Attenuated aerosol backscatter from top of atmosphere
 'aerbscattoa' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 107 ;
 	}
-#Aerosol backscatter from ground
+#Attenuated aerosol backscatter from ground
 'aerbscatgnd' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -19873,6 +21238,28 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 112 ;
+	}
+#Tropospheric column vertically-integrated mass density
+'tropvimd' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 7 ;
+	}
+#Stratospheric column vertically-integrated mass density
+'stratvimd' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfSecondFixedSurface = 36 ;
+	}
+#Aerosol unattenuated backscatter coefficient
+'aerbscat' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 113 ;
 	}
 #Pressure tendency
 'ptend' = {

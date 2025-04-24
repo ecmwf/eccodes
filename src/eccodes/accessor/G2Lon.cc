@@ -21,7 +21,7 @@ void G2Lon::init(const long l, grib_arguments* c)
     Double::init(l, c);
     int n = 0;
 
-    longitude_ = c->get_name(grib_handle_of_accessor(this), n++);
+    longitude_ = c->get_name(get_enclosing_handle(), n++);
 }
 
 int G2Lon::unpack_double(double* val, size_t* len)
@@ -29,7 +29,7 @@ int G2Lon::unpack_double(double* val, size_t* len)
     int ret = 0;
     long longitude;
 
-    if ((ret = grib_get_long(grib_handle_of_accessor(this), longitude_, &longitude)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long(get_enclosing_handle(), longitude_, &longitude)) != GRIB_SUCCESS)
         return ret;
 
     if (longitude == GRIB_MISSING_LONG) {
@@ -55,7 +55,7 @@ int G2Lon::pack_double(const double* val, size_t* len)
             value += 360;
         longitude = (long)(value * 1000000);
     }
-    return grib_set_long(grib_handle_of_accessor(this), longitude_, longitude);
+    return grib_set_long(get_enclosing_handle(), longitude_, longitude);
 }
 
 }  // namespace eccodes::accessor

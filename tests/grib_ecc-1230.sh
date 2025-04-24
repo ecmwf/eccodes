@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1230
+# Conversion of param=tp to edition=2 loses ensemble number
+# ---------------------------------------------------------------------
+
 label="grib_ecc-1230_test"
 temp1=temp1.$label
 temp2=temp2.$label

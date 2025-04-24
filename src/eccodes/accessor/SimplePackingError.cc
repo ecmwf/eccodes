@@ -21,7 +21,7 @@ void SimplePackingError::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
     int n          = 0;
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     bitsPerValue_       = c->get_name(h, n++);
     binaryScaleFactor_  = c->get_name(h, n++);
@@ -40,7 +40,7 @@ int SimplePackingError::unpack_double(double* val, size_t* len)
     long bitsPerValue       = 0;
     long decimalScaleFactor = 0;
     double referenceValue   = 0;
-    grib_handle* h          = grib_handle_of_accessor(this);
+    grib_handle* h          = get_enclosing_handle();
 
     if ((ret = grib_get_long_internal(h, binaryScaleFactor_, &binaryScaleFactor)) != GRIB_SUCCESS)
         return ret;

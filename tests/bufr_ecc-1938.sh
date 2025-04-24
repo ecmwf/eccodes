@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1938
+# BUFR: Dealing with corrupted messages
+# ---------------------------------------------------------------------
+
 label="bufr_ecc-1938_test"
 
 tempBufr=temp.$label.bufr

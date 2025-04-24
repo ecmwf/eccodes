@@ -23,7 +23,7 @@ long Values::init_length()
     long offsetsection = 0;
     long offsetdata    = 0;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), seclen_, &seclen)))
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), seclen_, &seclen)))
         return ret;
 
     if (seclen == 0) {
@@ -31,16 +31,16 @@ long Values::init_length()
         return 0;
     }
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), offsetsection_, &offsetsection)))
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), offsetsection_, &offsetsection)))
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), offsetdata_, &offsetdata)))
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), offsetdata_, &offsetdata)))
         return ret;
 
     /* When reparsing */
     if (offsetdata < offsetsection) {
         /* printf("init_length offsetdata < offsetsection=0\n"); */
-        ECCODES_ASSERT(grib_handle_of_accessor(this)->loader);
+        ECCODES_ASSERT(this->get_enclosing_handle()->loader);
         return 0;
     }
 
@@ -52,9 +52,9 @@ void Values::init(const long v, grib_arguments* params)
     Gen::init(v, params);
     carg_ = 0;
 
-    seclen_        = params->get_name(grib_handle_of_accessor(this), carg_++);
-    offsetdata_    = params->get_name(grib_handle_of_accessor(this), carg_++);
-    offsetsection_ = params->get_name(grib_handle_of_accessor(this), carg_++);
+    seclen_        = params->get_name(get_enclosing_handle(), carg_++);
+    offsetdata_    = params->get_name(get_enclosing_handle(), carg_++);
+    offsetsection_ = params->get_name(get_enclosing_handle(), carg_++);
     values_dirty_  = 1;
 
     length_ = init_length();

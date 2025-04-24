@@ -99,7 +99,7 @@ int Gen::create_accessor(grib_section* p, grib_loader* loader)
 int Gen::notify_change(grib_accessor* notified, grib_accessor* changed)
 {
     if (default_value_)
-        return notified->pack_expression(default_value_->get_expression(grib_handle_of_accessor(notified), 0));
+        return notified->pack_expression(default_value_->get_expression(notified->get_enclosing_handle(), 0));
     return GRIB_SUCCESS;
 }
 

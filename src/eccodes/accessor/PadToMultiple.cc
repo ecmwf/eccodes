@@ -22,8 +22,8 @@ size_t PadToMultiple::preferred_size(int from_handle)
     long begin    = 0;
     long multiple = 0;
 
-    begin_->evaluate_long(grib_handle_of_accessor(this), &begin);
-    multiple_->evaluate_long(grib_handle_of_accessor(this), &multiple);
+    begin_->evaluate_long(get_enclosing_handle(), &begin);
+    multiple_->evaluate_long(get_enclosing_handle(), &multiple);
 
     padding = offset_ - begin;
     padding = ((padding + multiple - 1) / multiple) * multiple - padding;
@@ -35,8 +35,8 @@ void PadToMultiple::init(const long len, grib_arguments* arg)
 {
     Padding::init(len, arg);
 
-    begin_    = arg->get_expression(grib_handle_of_accessor(this), 0);
-    multiple_ = arg->get_expression(grib_handle_of_accessor(this), 1);
+    begin_    = arg->get_expression(get_enclosing_handle(), 0);
+    multiple_ = arg->get_expression(get_enclosing_handle(), 1);
     length_   = preferred_size(1);
 }
 

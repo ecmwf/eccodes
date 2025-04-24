@@ -40,24 +40,24 @@ void Gen::init(const long len, grib_arguments* param)
             int ret = 0;
             double d;
             char tmp[1024];
-            grib_expression* expression = act->default_value_->get_expression(grib_handle_of_accessor(this), 0);
-            int type                    = expression->native_type(grib_handle_of_accessor(this));
+            grib_expression* expression = act->default_value_->get_expression(get_enclosing_handle(), 0);
+            int type                    = expression->native_type(get_enclosing_handle());
             switch (type) {
                     // TODO(maee): add single-precision case
 
                 case GRIB_TYPE_DOUBLE:
-                    expression->evaluate_double(grib_handle_of_accessor(this), &d);
+                    expression->evaluate_double(get_enclosing_handle(), &d);
                     pack_double(&d, &s_len);
                     break;
 
                 case GRIB_TYPE_LONG:
-                    expression->evaluate_long(grib_handle_of_accessor(this), &l);
+                    expression->evaluate_long(get_enclosing_handle(), &l);
                     pack_long(&l, &s_len);
                     break;
 
                 default:
                     s_len = sizeof(tmp);
-                    p     = expression->evaluate_string(grib_handle_of_accessor(this), tmp, &s_len, &ret);
+                    p     = expression->evaluate_string(get_enclosing_handle(), tmp, &s_len, &ret);
                     if (ret != GRIB_SUCCESS) {
                         grib_context_log(context_, GRIB_LOG_ERROR, "Unable to evaluate %s as string", name_);
                         ECCODES_ASSERT(0);
@@ -129,7 +129,7 @@ long Gen::byte_offset()
 
 int Gen::unpack_bytes(unsigned char* val, size_t* len)
 {
-    const unsigned char* buf = grib_handle_of_accessor(this)->buffer->data;
+    const unsigned char* buf = get_enclosing_handle()->buffer->data;
     const long length        = byte_count();
     const long offset        = byte_offset();
 
@@ -151,7 +151,7 @@ int Gen::unpack_bytes(unsigned char* val, size_t* len)
 
 int Gen::clear()
 {
-    unsigned char* buf = grib_handle_of_accessor(this)->buffer->data;
+    unsigned char* buf = get_enclosing_handle()->buffer->data;
     const long length  = byte_count();
     const long offset  = byte_offset();
 
@@ -198,7 +198,7 @@ int Gen::unpack_long(long* v, size_t* len)
 
     grib_context_log(
         context_, GRIB_LOG_ERROR, "Cannot unpack key '%s' as long", name_);
-    if (grib_get_native_type(grib_handle_of_accessor(this), name_, &type) ==
+    if (grib_get_native_type(get_enclosing_handle(), name_, &type) ==
         GRIB_SUCCESS) {
         grib_context_log(context_,
                          GRIB_LOG_ERROR,
@@ -277,8 +277,7 @@ int Gen::pack_expression(grib_expression* e)
     double dval       = 0;
     const char* cval  = NULL;
     int ret           = 0;
-    grib_handle* hand = grib_handle_of_accessor(this);
-
+    grib_handle* hand = get_enclosing_handle();
 
     // Use the native type of the expression not the accessor
     switch (e->native_type(hand)) {
@@ -551,7 +550,7 @@ int Gen::is_missing()
     }
     ECCODES_ASSERT(length_ >= 0);
 
-    v = grib_handle_of_accessor(this)->buffer->data + offset_;
+    v = get_enclosing_handle()->buffer->data + offset_;
 
     for (i = 0; i < length_; i++) {
         if (*v != ones) {

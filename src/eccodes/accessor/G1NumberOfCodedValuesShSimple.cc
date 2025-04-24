@@ -20,11 +20,11 @@ void G1NumberOfCodedValuesShSimple::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n             = 0;
-    bitsPerValue_     = c->get_name(grib_handle_of_accessor(this), n++);
-    offsetBeforeData_ = c->get_name(grib_handle_of_accessor(this), n++);
-    offsetAfterData_  = c->get_name(grib_handle_of_accessor(this), n++);
-    unusedBits_       = c->get_name(grib_handle_of_accessor(this), n++);
-    numberOfValues_   = c->get_name(grib_handle_of_accessor(this), n++);
+    bitsPerValue_     = c->get_name(get_enclosing_handle(), n++);
+    offsetBeforeData_ = c->get_name(get_enclosing_handle(), n++);
+    offsetAfterData_  = c->get_name(get_enclosing_handle(), n++);
+    unusedBits_       = c->get_name(get_enclosing_handle(), n++);
+    numberOfValues_   = c->get_name(get_enclosing_handle(), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
@@ -36,16 +36,16 @@ int G1NumberOfCodedValuesShSimple::unpack_long(long* val, size_t* len)
     long bpv              = 0;
     long offsetBeforeData = 0, offsetAfterData = 0, unusedBits = 0, numberOfValues;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), bitsPerValue_, &bpv)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), bitsPerValue_, &bpv)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), offsetBeforeData_, &offsetBeforeData)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), offsetBeforeData_, &offsetBeforeData)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), offsetAfterData_, &offsetAfterData)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), offsetAfterData_, &offsetAfterData)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), unusedBits_, &unusedBits)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), unusedBits_, &unusedBits)) != GRIB_SUCCESS)
         return ret;
 
     if (bpv != 0) {
@@ -53,7 +53,7 @@ int G1NumberOfCodedValuesShSimple::unpack_long(long* val, size_t* len)
         *val = ((offsetAfterData - offsetBeforeData) * 8 - unusedBits) / bpv;
     }
     else {
-        if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), numberOfValues_, &numberOfValues)) != GRIB_SUCCESS)
+        if ((ret = grib_get_long_internal(get_enclosing_handle(), numberOfValues_, &numberOfValues)) != GRIB_SUCCESS)
             return ret;
 
         *val = numberOfValues;

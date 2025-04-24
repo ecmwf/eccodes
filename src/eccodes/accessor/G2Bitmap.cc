@@ -20,7 +20,7 @@ void G2Bitmap::init(const long len, grib_arguments* arg)
 {
     Bitmap::init(len, arg);
 
-    numberOfValues_ = arg->get_name(grib_handle_of_accessor(this), 4);
+    numberOfValues_ = arg->get_name(get_enclosing_handle(), 4);
 }
 
 // For speed use a local static function
@@ -41,7 +41,7 @@ int G2Bitmap::pack_double(const double* val, size_t* len)
     double miss_values = 0;
     size_t tlen        = (*len + 7) / 8;
 
-    if ((err = grib_get_double_internal(grib_handle_of_accessor(this), missing_value_, &miss_values)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(get_enclosing_handle(), missing_value_, &miss_values)) != GRIB_SUCCESS)
         return err;
 
     buf = (unsigned char*)grib_context_malloc_clear(context_, tlen);
@@ -57,7 +57,7 @@ int G2Bitmap::pack_double(const double* val, size_t* len)
         }
     }
 
-    if ((err = grib_set_long_internal(grib_handle_of_accessor(this), numberOfValues_, *len)) != GRIB_SUCCESS) {
+    if ((err = grib_set_long_internal(get_enclosing_handle(), numberOfValues_, *len)) != GRIB_SUCCESS) {
         grib_context_free(context_, buf);
         return err;
     }
@@ -74,7 +74,7 @@ int G2Bitmap::value_count(long* tlen)
     int err;
     *tlen = 0;
 
-    err = grib_get_long_internal(grib_handle_of_accessor(this), numberOfValues_, tlen);
+    err = grib_get_long_internal(get_enclosing_handle(), numberOfValues_, tlen);
     return err;
 }
 

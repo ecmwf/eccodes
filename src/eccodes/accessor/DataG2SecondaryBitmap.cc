@@ -19,13 +19,13 @@ namespace eccodes::accessor
 void DataG2SecondaryBitmap::init(const long v, grib_arguments* args)
 {
     DataSecondaryBitmap::init(v, args);
-    number_of_values_ = args->get_name(grib_handle_of_accessor(this), 4);
+    number_of_values_ = args->get_name(get_enclosing_handle(), 4);
 }
 
 int DataG2SecondaryBitmap::value_count(long* len)
 {
     *len = 0;
-    return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, len);
+    return grib_get_long_internal(get_enclosing_handle(), number_of_values_, len);
 }
 
 int DataG2SecondaryBitmap::pack_double(const double* val, size_t* len)
@@ -42,12 +42,12 @@ int DataG2SecondaryBitmap::pack_double(const double* val, size_t* len)
     if (*len == 0)
         return GRIB_NO_VALUES;
 
-    if ((err = grib_get_long(grib_handle_of_accessor(this), expand_by_, &expand_by)) != GRIB_SUCCESS)
+    if ((err = grib_get_long(get_enclosing_handle(), expand_by_, &expand_by)) != GRIB_SUCCESS)
         return err;
     if (expand_by <= 0)
         return GRIB_ENCODING_ERROR;
 
-    if ((err = grib_get_double_internal(grib_handle_of_accessor(this), missing_value_, &missing_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(get_enclosing_handle(), missing_value_, &missing_value)) != GRIB_SUCCESS)
         return err;
 
     if (*len % expand_by) {
@@ -94,15 +94,15 @@ int DataG2SecondaryBitmap::pack_double(const double* val, size_t* len)
 
     ECCODES_ASSERT(k == primary_len);
 
-    err = grib_set_double_array_internal(grib_handle_of_accessor(this), primary_bitmap_, primary_bitmap, k);
+    err = grib_set_double_array_internal(get_enclosing_handle(), primary_bitmap_, primary_bitmap, k);
     if (err == GRIB_SUCCESS)
-        err = grib_set_double_array_internal(grib_handle_of_accessor(this), secondary_bitmap_, secondary_bitmap, m);
+        err = grib_set_double_array_internal(get_enclosing_handle(), secondary_bitmap_, secondary_bitmap, m);
 
     grib_context_free(context_, primary_bitmap);
     grib_context_free(context_, secondary_bitmap);
 
     if (err == GRIB_SUCCESS)
-        err = grib_set_long_internal(grib_handle_of_accessor(this), number_of_values_, *len * expand_by);
+        err = grib_set_long_internal(get_enclosing_handle(), number_of_values_, *len * expand_by);
 
     return err;
 }

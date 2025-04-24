@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void Time::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     int n             = 0;
 
     hour_   = c->get_name(hand, n++);
@@ -31,7 +31,7 @@ int Time::unpack_long(long* val, size_t* len)
 {
     int ret   = 0;
     long hour = 0, minute = 0, second = 0;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     if ((ret = grib_get_long_internal(hand, hour_, &hour)) != GRIB_SUCCESS)
         return ret;
@@ -64,7 +64,7 @@ int Time::pack_long(const long* val, size_t* len)
 {
     int ret           = 0;
     long v            = val[0];
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     long hour = 0, minute = 0, second = 0;
 
     if (*len != 1)

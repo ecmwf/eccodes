@@ -23,7 +23,7 @@ typedef double (*decode_float_proc)(unsigned long);
 void DataShPacked::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     GRIBEX_sh_bug_present_  = args->get_name(hand, carg_++);
     ieee_floats_            = args->get_name(hand, carg_++);
@@ -42,7 +42,7 @@ void DataShPacked::init(const long v, grib_arguments* args)
 
 int DataShPacked::value_count(long* count)
 {
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     int ret = 0;
 
     long sub_j = 0;
@@ -113,42 +113,42 @@ int DataShPacked::unpack_double(double* val, size_t* len)
     if (err)
         return err;
 
-    if (*len < n_vals) {
+    if (*len < (size_t)n_vals) {
         *len = n_vals;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), offsetdata_, &offsetdata)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), offsetdata_, &offsetdata)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_double_internal(grib_handle_of_accessor(this), reference_value_, &reference_value)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(get_enclosing_handle(), reference_value_, &reference_value)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
-        return ret;
-
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), GRIBEX_sh_bug_present_, &GRIBEX_sh_bug_present)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), ieee_floats_, &ieee_floats)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), GRIBEX_sh_bug_present_, &GRIBEX_sh_bug_present)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_double_internal(grib_handle_of_accessor(this), laplacianOperator_, &laplacianOperator)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), ieee_floats_, &ieee_floats)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), sub_j_, &sub_j)) != GRIB_SUCCESS)
+
+    if ((ret = grib_get_double_internal(get_enclosing_handle(), laplacianOperator_, &laplacianOperator)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), sub_k_, &sub_k)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), sub_j_, &sub_j)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), sub_m_, &sub_m)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), sub_k_, &sub_k)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), pen_j_, &pen_j)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), sub_m_, &sub_m)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), pen_k_, &pen_k)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), pen_j_, &pen_j)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), pen_m_, &pen_m)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), pen_k_, &pen_k)) != GRIB_SUCCESS)
+        return ret;
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), pen_m_, &pen_m)) != GRIB_SUCCESS)
         return ret;
 
     dirty_ = 0;
@@ -175,7 +175,7 @@ int DataShPacked::unpack_double(double* val, size_t* len)
     ECCODES_ASSERT(pen_j == pen_k);
     ECCODES_ASSERT(pen_j == pen_m);
 
-    buf = (unsigned char*)grib_handle_of_accessor(this)->buffer->data;
+    buf = get_enclosing_handle()->buffer->data;
 
     maxv = pen_j + 1;
 
@@ -194,7 +194,7 @@ int DataShPacked::unpack_double(double* val, size_t* len)
     if (!scals) return GRIB_OUT_OF_MEMORY;
 
     scals[0] = 0;
-    for (i = 1; i < maxv; i++) {
+    for (i = 1; i < (size_t)maxv; i++) {
         operat = pow(i * (i + 1), laplacianOperator);
         if (operat != 0)
             scals[i] = (1.0 / operat);
