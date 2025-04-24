@@ -35,19 +35,19 @@ long MessageCopy::get_native_type()
 
 int MessageCopy::unpack_string(char* val, size_t* len)
 {
-    size_t slen = grib_handle_of_accessor(this)->buffer->ulength;
+    size_t slen = get_enclosing_handle()->buffer->ulength;
     size_t i;
     unsigned char* v = 0;
 
     if (*len < slen) {
         return GRIB_ARRAY_TOO_SMALL;
     }
-    v = grib_handle_of_accessor(this)->buffer->data;
+    v = get_enclosing_handle()->buffer->data;
     /* replace unprintable characters with space */
     for (i = 0; i < slen; i++)
         if (v[i] > 126)
             v[i] = 32;
-    memcpy(val, grib_handle_of_accessor(this)->buffer->data, slen);
+    memcpy(val, get_enclosing_handle()->buffer->data, slen);
     val[i] = 0;
 
     *len = slen;
@@ -57,7 +57,7 @@ int MessageCopy::unpack_string(char* val, size_t* len)
 
 size_t MessageCopy::string_length()
 {
-    return grib_handle_of_accessor(this)->buffer->ulength;
+    return get_enclosing_handle()->buffer->ulength;
 }
 
 long MessageCopy::byte_count()

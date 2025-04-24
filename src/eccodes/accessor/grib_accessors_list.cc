@@ -31,8 +31,8 @@ void grib_accessors_list_delete(grib_context* c, AccessorsList* al)
 
 int AccessorsList::value_count(size_t* count)
 {
-    long lcount             = 0;
-    *count                  = 0;
+    long lcount = 0;
+    *count      = 0;
     AccessorsList* al = this;
     while (al) {
         al->accessor->value_count(&lcount);
@@ -82,74 +82,74 @@ AccessorsList::~AccessorsList()
 
 int AccessorsList::unpack_long(long* val, size_t* buffer_len)
 {
-    int err             = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     size_t unpacked_len = 0;
-    size_t len          = 0;
+    size_t len = 0;
 
     AccessorsList* al = this;
-    while (al && err == GRIB_SUCCESS) {
+    while (al && ret == GRIB_SUCCESS) {
         len = *buffer_len - unpacked_len;
-        err = al->accessor->unpack_long(val + unpacked_len, &len);
+        ret = al->accessor->unpack_long(val + unpacked_len, &len);
         unpacked_len += len;
         al = al->next_;
     }
 
     *buffer_len = unpacked_len;
-    return err;
+    return ret;
 }
 
 int AccessorsList::unpack_double(double* val, size_t* buffer_len)
 {
-    int err             = GRIB_SUCCESS;
+    int ret             = GRIB_SUCCESS;
     size_t unpacked_len = 0;
     size_t len          = 0;
 
     AccessorsList* al = this;
-    while (al && err == GRIB_SUCCESS) {
+    while (al && ret == GRIB_SUCCESS) {
         len = *buffer_len - unpacked_len;
-        err = al->accessor->unpack_double(val + unpacked_len, &len);
+        ret = al->accessor->unpack_double(val + unpacked_len, &len);
         unpacked_len += len;
         al = al->next_;
     }
 
     *buffer_len = unpacked_len;
-    return err;
+    return ret;
 }
 
 int AccessorsList::unpack_float(float* val, size_t* buffer_len)
 {
-    int err             = GRIB_SUCCESS;
+    int ret             = GRIB_SUCCESS;
     size_t unpacked_len = 0;
     size_t len          = 0;
 
     AccessorsList* al = this;
-    while (al && err == GRIB_SUCCESS) {
+    while (al && ret == GRIB_SUCCESS) {
         len = *buffer_len - unpacked_len;
-        err = al->accessor->unpack_float(val + unpacked_len, &len);
+        ret = al->accessor->unpack_float(val + unpacked_len, &len);
         unpacked_len += len;
         al = al->next_;
     }
 
     *buffer_len = unpacked_len;
-    return err;
+    return ret;
 }
 
 int AccessorsList::unpack_string(char** val, size_t* buffer_len)
 {
-    int err             = GRIB_SUCCESS;
+    int ret             = GRIB_SUCCESS;
     size_t unpacked_len = 0;
     size_t len          = 0;
 
     AccessorsList* al = this;
-    while (al && err == GRIB_SUCCESS) {
+    while (al && ret == GRIB_SUCCESS) {
         len = *buffer_len - unpacked_len;
-        err = al->accessor->unpack_string_array(val + unpacked_len, &len);
+        ret = al->accessor->unpack_string_array(val + unpacked_len, &len);
         unpacked_len += len;
         al = al->next_;
     }
 
     *buffer_len = unpacked_len;
-    return err;
+    return ret;
 }
 
 }  // namespace eccodes

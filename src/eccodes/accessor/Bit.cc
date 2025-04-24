@@ -20,8 +20,8 @@ void Bit::init(const long len, grib_arguments* arg)
 {
     Long::init(len, arg);
     length_    = 0;
-    owner_     = arg->get_name(grib_handle_of_accessor(this), 0);
-    bit_index_ = arg->get_long(grib_handle_of_accessor(this), 1);
+    owner_     = arg->get_name(get_enclosing_handle(), 0);
+    bit_index_ = arg->get_long(get_enclosing_handle(), 1);
 }
 
 int Bit::unpack_long(long* val, size_t* len)
@@ -35,7 +35,7 @@ int Bit::unpack_long(long* val, size_t* len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), owner_, &data)) != GRIB_SUCCESS) {
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), owner_, &data)) != GRIB_SUCCESS) {
         *len = 0;
         return ret;
     }
@@ -57,7 +57,7 @@ int Bit::pack_long(const long* val, size_t* len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    grib_accessor* owner = grib_find_accessor(grib_handle_of_accessor(this), owner_);
+    grib_accessor* owner = grib_find_accessor(get_enclosing_handle(), owner_);
     if (!owner) {
         grib_context_log(context_, GRIB_LOG_ERROR, "Bit: Cannot get the owner %s for computing the bit value of %s",
                          owner_, name_);
@@ -65,7 +65,7 @@ int Bit::pack_long(const long* val, size_t* len)
         return GRIB_NOT_FOUND;
     }
 
-    unsigned char* mdata = grib_handle_of_accessor(this)->buffer->data;
+    unsigned char* mdata = get_enclosing_handle()->buffer->data;
     mdata += owner->byte_offset();
     /* Note: In the definitions, flagbit numbers go from 7 to 0 (the bit_index), while WMO convention is from 1 to 8 */
     if (context_->debug) {

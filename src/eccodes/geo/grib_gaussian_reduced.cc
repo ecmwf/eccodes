@@ -276,6 +276,7 @@ static void gaussian_reduced_row(
 {
     Fraction_value_type Nw, Ne;
     Fraction_type inc, Nw_inc, Ne_inc;
+    ECCODES_ASSERT(Ni_globe > 0);
     inc = fraction_construct(360ll, Ni_globe);
 
     /* auto Nw = (w / inc).integralPart(); */

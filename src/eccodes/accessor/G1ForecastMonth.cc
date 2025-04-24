@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void G1ForecastMonth::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_handle* h  = get_enclosing_handle();
     int n           = 0;
     const int count = c->get_count();
     if (count == 6) { /* GRIB1 case -- this needs to be refactored */
@@ -63,8 +63,8 @@ static int calculate_fcmonth(grib_accessor* a, long verification_yearmonth, long
 
 static int unpack_long_edition2(grib_accessor* a, long* val, size_t* len)
 {
-    int err                               = 0;
-    grib_handle* h                        = grib_handle_of_accessor(a);
+    int err = 0;
+    grib_handle* h = a->get_enclosing_handle();
     long dataDate, verification_yearmonth;
     long year, month, day, hour, minute, second;
     long year2, month2, day2, hour2, minute2, second2;
@@ -118,18 +118,18 @@ int G1ForecastMonth::unpack_long_edition1(long* val, size_t* len)
     long check                  = 0;
     long fcmonth                = 0;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this),
+    if ((err = grib_get_long_internal(get_enclosing_handle(),
                                       verification_yearmonth_, &verification_yearmonth)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), base_date_, &base_date)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), base_date_, &base_date)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), day_, &day)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), day_, &day)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), hour_, &hour)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), hour_, &hour)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), fcmonth_, &gribForecastMonth)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), fcmonth_, &gribForecastMonth)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), check_, &check)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), check_, &check)) != GRIB_SUCCESS)
         return err;
 
     if ((err = calculate_fcmonth(this, verification_yearmonth, base_date, day, hour, val)) != GRIB_SUCCESS)
@@ -155,7 +155,7 @@ int G1ForecastMonth::unpack_long_edition1(long* val, size_t* len)
 int G1ForecastMonth::unpack_long(long* val, size_t* len)
 {
     int err           = 0;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     long edition      = 0;
 
     if ((err = grib_get_long(hand, "edition", &edition)) != GRIB_SUCCESS)
@@ -172,7 +172,7 @@ int G1ForecastMonth::unpack_long(long* val, size_t* len)
 /* TODO: Check for a valid date */
 int G1ForecastMonth::pack_long(const long* val, size_t* len)
 {
-    return grib_set_long_internal(grib_handle_of_accessor(this), fcmonth_, *val);
+    return grib_set_long_internal(get_enclosing_handle(), fcmonth_, *val);
 }
 
 }  // namespace eccodes::accessor

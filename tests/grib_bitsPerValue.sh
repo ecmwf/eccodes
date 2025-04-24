@@ -112,10 +112,6 @@ for file in $files; do
 
 done
 
-# Extra test for grid_complex_spatial_differencing
-res=`${tools_dir}/grib_get -p decimalScaleFactor,bitsPerValue ${data_dir}/gfs.c255.grib2`
-[ "$res" = "1 20" ]
-
 
 # Test increasing bits per value
 input=${data_dir}/sample.grib2

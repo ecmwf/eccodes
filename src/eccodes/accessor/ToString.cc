@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void ToString::init(const long len, grib_arguments* arg)
 {
     Gen::init(len, arg);
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     key_        = arg->get_name(hand, 0);
     start_      = arg->get_long(hand, 1);
@@ -33,7 +33,7 @@ int ToString::value_count(long* count)
 {
     size_t size = 0;
 
-    int err = grib_get_size(grib_handle_of_accessor(this), key_, &size);
+    int err = grib_get_size(get_enclosing_handle(), key_, &size);
     *count  = size;
 
     return err;
@@ -45,7 +45,7 @@ size_t ToString::string_length()
         return str_length_;
 
     size_t size = 0;
-    grib_get_string_length(grib_handle_of_accessor(this), key_, &size);
+    grib_get_string_length(get_enclosing_handle(), key_, &size);
     return size;
 }
 
@@ -74,7 +74,7 @@ int ToString::unpack_string(char* val, size_t* len)
     }
 
     size_t size = sizeof(buff);
-    err         = grib_get_string(grib_handle_of_accessor(this), key_, buff, &size);
+    err         = grib_get_string(get_enclosing_handle(), key_, buff, &size);
     if (err)
         return err;
     if (length > size) {
