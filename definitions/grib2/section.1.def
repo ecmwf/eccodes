@@ -110,7 +110,7 @@ concept stepType {
     "mode"    = {selectStepTemplateInterval=1; stepTypeInternal="mode";}
     "index"   = {selectStepTemplateInterval=1; stepTypeInternal="index";}
 }
-
+if (chem_param_split == 0) {
 # 0=atmospheric chemical constituents
 # 1=atmospheric chemical constituents based on a distribution function
 # 2=atmospheric chemical constituents with source or sink
@@ -122,6 +122,7 @@ meta is_chemical_srcsink g2_chemical(productDefinitionTemplateNumber, stepType, 
 # 1=optical properties of aerosol
 meta is_aerosol          g2_aerosol(productDefinitionTemplateNumber, stepType, 0);
 meta is_aerosol_optical  g2_aerosol(productDefinitionTemplateNumber, stepType, 1);
+}
 
 transient setCalendarId = 0 ;
 transient deleteCalendarId = 0 ;
