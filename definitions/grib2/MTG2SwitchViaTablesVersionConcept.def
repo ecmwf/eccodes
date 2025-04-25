@@ -1,3 +1,4 @@
 # Concept by which we define which conditions will imply using the tablesVersion
 # to switch between pre and post MTG2
-0 = {dummy=0;}
+# This allows all non-ECMWF data that uses the MARS namespace to have the same migration pathway as ECMWF
+1 = {subCentre = 98;}
