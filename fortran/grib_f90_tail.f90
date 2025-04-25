@@ -1338,7 +1338,7 @@
     end if
   end subroutine any_new_from_file
 
-  !> Create a new message in memory from a character array containting the coded message.
+  !> Create a new message in memory from a character array containing the coded message.
   !>
   !> The message can be accessed through its gribid and it will be available\n
   !> until @ref grib_release is called. A reference to the original coded\n
@@ -1371,7 +1371,7 @@
   end subroutine grib_new_from_message_char
 
   
-  !> Create a message pointing to an character array containting the coded message.
+  !> Create a message pointing to an character array containing the coded message.
   !>
   !> The message can be accessed through its gribid and it will be available\n
   !> until @ref grib_release is called or (attention) the character array is deallocated!
@@ -1401,7 +1401,7 @@
 
   end subroutine grib_new_from_message_no_copy_char
   
-  !> Create a message pointing to an integer4 array containting the coded message.
+  !> Create a message pointing to an integer4 array containing the coded message.
   !>
   !> The message can be accessed through its gribid and it will be available\n
   !> until @ref grib_release is called or (attention) the character array is deallocated!
@@ -1431,7 +1431,7 @@
 
   end subroutine grib_new_from_message_no_copy_int4
   
-  !> Create a new message in memory from an integer array containting the coded message.
+  !> Create a new message in memory from an integer array containing the coded message.
   !>
   !> The message can be accessed through its gribid and it will be available\n
   !> until @ref grib_release is called. A reference to the original coded\n
@@ -1605,7 +1605,7 @@
   !> and prints the error message.\n
   !>
   !> @param status      the status to be checked
-  !> @param caller      name of the caller soubroutine
+  !> @param caller      name of the caller subroutine
   !> @param string      a string variable from the caller routine (e.g. key,filename)
   subroutine grib_check(status, caller, string)
     integer(kind=kindOfInt), intent(in)  :: status
@@ -2967,7 +2967,7 @@
   end subroutine grib_multi_write
 
   !> Append a single field grib message to a multi field grib message.
-  !> Only the sections with section number greather or equal "startsection" are copied from the input single message to the multi field output grib.
+  !> Only the sections with section number greater or equal "startsection" are copied from the input single message to the multi field output grib.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be

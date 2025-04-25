@@ -21,7 +21,7 @@ module grib_api
   real(8), parameter, public :: GRIB_MISSING_DOUBLE = -1.D+100
   integer(4), parameter, public :: GRIB_MISSING_LONG = 2147483647
 
-  !> Create a new message in memory from an integer or character array containting the coded message.
+  !> Create a new message in memory from an integer or character array containing the coded message.
   !>
   !> The message can be accessed through its gribid and it will be available\n
   !> until @ref grib_release is called. A reference to the original coded\n
@@ -43,7 +43,7 @@ module grib_api
   end interface grib_new_from_message
   
 
-  !> Create a message pointing to an character array containting the coded message.
+  !> Create a message pointing to an character array containing the coded message.
   !>
   !> The message can be accessed through its gribid and it will be available\n
   !> until @ref grib_release is called or (attention) the character array is deallocated!
@@ -66,7 +66,7 @@ module grib_api
   !> Given a gribid and key name as input a value corresponding to the given index
   !> is returned. The index is zero based i.e. the first element has
   !> zero index, the second element index one and so on.
-  !> If the parameter index is an array all the values correspondig to the indexes
+  !> If the parameter index is an array all the values corresponding to the indexes
   !> list is returned.
   !> The gribid references to a grib message loaded in memory.
   !>
