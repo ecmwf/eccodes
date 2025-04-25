@@ -21,6 +21,7 @@
 #include "eckit/filesystem/PathName.h"
 #include "eckit/utils/MD5.h"
 
+#include "mir/api/mir_config.h"
 #include "mir/api/MIRJob.h"
 #include "mir/input/GriddefInput.h"
 #include "mir/iterator/UnstructuredIterator.h"
@@ -161,6 +162,7 @@ util::Domain UnstructuredGrid::domain() const {
 
 
 atlas::Grid UnstructuredGrid::atlasGrid() const {
+#if mir_HAVE_ATLAS
     ASSERT(numberOfPoints());
 
     std::vector<atlas::PointXY> pts;
@@ -171,6 +173,9 @@ atlas::Grid UnstructuredGrid::atlasGrid() const {
     }
 
     return atlas::UnstructuredGrid(std::move(pts));
+#else
+    NOTIMP;
+#endif
 }
 
 

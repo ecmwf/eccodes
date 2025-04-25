@@ -14,6 +14,7 @@
 
 #include <ostream>
 
+#include "mir/api/mir_config.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Atlas.h"
 #include "mir/util/Domain.h"
@@ -61,6 +62,7 @@ void RotatedLL::print(std::ostream& out) const {
 }
 
 atlas::Grid RotatedLL::atlasGrid() const {
+#if mir_HAVE_ATLAS
     // NOTE: yspace uses bounding box and not the domain
     // (this works together with the Atlas RectangularDomain cropping)
     const util::Domain dom = domain();
@@ -73,6 +75,9 @@ atlas::Grid RotatedLL::atlasGrid() const {
 
     atlas::StructuredGrid unrotatedGrid(xspace, yspace, {}, dom);
     return rotation_.rotate(unrotatedGrid);
+#else
+    NOTIMP;
+#endif
 }
 
 void RotatedLL::fillGrib(grib_info& info) const {

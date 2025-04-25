@@ -12,6 +12,7 @@
 
 #include "mir/repres/gauss/reduced/Classic.h"
 
+#include "mir/api/mir_config.h"
 #include "mir/api/MIRJob.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Log.h"
@@ -66,7 +67,11 @@ bool Classic::sameAs(const Representation& other) const {
 
 
 atlas::Grid Classic::atlasGrid() const {
+#if mir_HAVE_ATLAS
     return atlas::ReducedGaussianGrid("N" + std::to_string(N_), domain());
+#else
+    NOTIMP;
+#endif
 }
 
 
