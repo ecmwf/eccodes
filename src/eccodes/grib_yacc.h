@@ -130,7 +130,7 @@ extern int grib_yydebug;
     MISSING = 331,                 /* MISSING  */
     CONSTRAINT = 332,              /* CONSTRAINT  */
     COPY_OK = 333,                 /* COPY_OK  */
-    COPY_AS_INT = 334,             /* COPY_AS_INT  */
+    COPY_AS_LONG = 334,            /* COPY_AS_LONG  */
     COPY_IF_CHANGING_EDITION = 335, /* COPY_IF_CHANGING_EDITION  */
     WHEN = 336,                    /* WHEN  */
     SET = 337,                     /* SET  */
@@ -265,7 +265,7 @@ extern int grib_yydebug;
 #define MISSING 331
 #define CONSTRAINT 332
 #define COPY_OK 333
-#define COPY_AS_INT 334
+#define COPY_AS_LONG 334
 #define COPY_IF_CHANGING_EDITION 335
 #define WHEN 336
 #define SET 337

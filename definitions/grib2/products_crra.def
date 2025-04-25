@@ -1,7 +1,9 @@
 # (C) Copyright 2005- ECMWF.
 
 # Copernicus regional reanalysis (CARRA/CERRA)
-constant marsClass = 'rr';
+if (!defined(class)) {
+  constant marsClass = 'rr';
+}
 
 alias tigge_short_name=shortName;
 alias short_name=shortName;

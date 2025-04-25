@@ -23,7 +23,7 @@ void MessageIsValid::init(const long l, grib_arguments* arg)
 {
     Long::init(l, arg);
 
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     product_ = arg->get_name(h, 0);
     edition_ = 0;
 
@@ -59,6 +59,55 @@ int MessageIsValid::check_date()
     return GRIB_SUCCESS;
 }
 
+static bool gridType_is_spectral(const char* gridType)
+{
+    return (STR_EQUAL(gridType, "sh") ||
+            STR_EQUAL(gridType, "rotated_sh") ||
+            STR_EQUAL(gridType, "stretched_sh") ||
+            STR_EQUAL(gridType, "stretched_rotated_sh") ||
+            STR_EQUAL(gridType, "lambert_bf") ||
+            STR_EQUAL(gridType, "polar_stereographic_bf") ||
+            STR_EQUAL(gridType, "mercator_bf"));
+}
+
+static bool packingType_is_spectral(const char* packingType)
+{
+    return (STR_EQUAL(packingType, "spectral_complex") ||
+            STR_EQUAL(packingType, "spectral_simple") ||
+            STR_EQUAL(packingType, "spectral_ieee") ||
+            STR_EQUAL(packingType, "bifourier_complex"));
+}
+
+int MessageIsValid::check_spectral()
+{
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
+    char gridType[128] = {0,};
+    size_t len = sizeof(gridType);
+    int err = grib_get_string_internal(handle_, "gridType", gridType, &len);
+    if (err) return err;
+    if (gridType_is_spectral(gridType)) {
+        // BPV cannot be 0. Spectral fields cannot be constant
+        long bitsPerValue = 0;
+        if ((err = grib_get_long_internal(handle_, "bitsPerValue", &bitsPerValue)) != GRIB_SUCCESS)
+            return err;
+        if (bitsPerValue == 0) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s: Spectral fields cannot have bitsPerValue=0 (gridType=%s)", TITLE, gridType);
+            return GRIB_INVALID_MESSAGE;
+        }
+        // A bitmap does not apply. No missing field values possible
+        long bitmapPresent = 0;
+        err = grib_get_long(handle_, "bitmapPresent", &bitmapPresent);
+        if (!err && bitmapPresent) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s: Spectral fields cannot have a bitmap (gridType=%s)", TITLE, gridType);
+            return GRIB_INVALID_MESSAGE;
+        }
+    }
+
+    return GRIB_SUCCESS;
+}
+
 int MessageIsValid::check_grid_and_packing_type()
 {
     if (handle_->context->debug)
@@ -68,30 +117,25 @@ int MessageIsValid::check_grid_and_packing_type()
     size_t len = sizeof(gridType);
     int err = grib_get_string_internal(handle_, "gridType", gridType, &len);
     if (err) return err;
+    if (STR_EQUAL(gridType, "unknown") || STR_EQUAL(gridType, "unknown_PLPresent")) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: Key gridType=%s", TITLE, gridType);
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
 
-    char packing_type[128] = {0,};
-    len = sizeof(packing_type);
-    err = grib_get_string_internal(handle_, "packingType", packing_type, &len);
+    char packingType[128] = {0,};
+    len = sizeof(packingType);
+    err = grib_get_string_internal(handle_, "packingType", packingType, &len);
     if (err) return err;
 
-    const bool is_spectral_grid = (STR_EQUAL(gridType, "sh") ||
-                                   STR_EQUAL(gridType, "rotated_sh") ||
-                                   STR_EQUAL(gridType, "stretched_sh") ||
-                                   STR_EQUAL(gridType, "stretched_rotated_sh") ||
-                                   STR_EQUAL(gridType, "lambert_bf") ||
-                                   STR_EQUAL(gridType, "polar_stereographic_bf") ||
-                                   STR_EQUAL(gridType, "mercator_bf"));
-    const bool is_spectral_packing = (STR_EQUAL(packing_type, "spectral_complex") ||
-                                      STR_EQUAL(packing_type, "spectral_simple") ||
-                                      STR_EQUAL(packing_type, "spectral_ieee") ||
-                                      STR_EQUAL(packing_type, "bifourier_complex"));
+    const bool is_spectral_grid = gridType_is_spectral(gridType);
+    const bool is_spectral_packing = packingType_is_spectral(packingType);
 
     if ( (is_spectral_grid && !is_spectral_packing) ||
          (!is_spectral_grid && is_spectral_packing) )
     {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Mismatch between gridType (=%s) and packingType (=%s)",
-                         TITLE, gridType, packing_type);
+                         TITLE, gridType, packingType);
         return GRIB_INVALID_MESSAGE;
     }
 
@@ -139,10 +183,10 @@ int MessageIsValid::check_number_of_missing()
     if (!err && missingValueManagementUsed == 1)
         return GRIB_SUCCESS;
 
-    char packing_type[100] = {0,};
-    size_t len = sizeof(packing_type);
-    err = grib_get_string(handle_, "packingType", packing_type, &len);
-    if (!err && STR_EQUAL(packing_type, "grid_run_length"))
+    char packingType[100] = {0,};
+    size_t len = sizeof(packingType);
+    err = grib_get_string(handle_, "packingType", packingType, &len);
+    if (!err && STR_EQUAL(packingType, "grid_run_length"))
         return GRIB_SUCCESS;
 
     long numberOfDataPoints = 0;
@@ -198,6 +242,14 @@ int MessageIsValid::check_grid_pl_array()
         return GRIB_WRONG_GRID;
     }
 
+    long interpretationOfNumberOfPoints = 0;
+    err = grib_get_long_internal(handle_, "interpretationOfNumberOfPoints", &interpretationOfNumberOfPoints);
+    if (interpretationOfNumberOfPoints != 1) {
+        grib_context_log(c, GRIB_LOG_ERROR,
+            "%s: For a reduced grid, interpretationOfNumberOfPoints should be 1 (See Code Table 3.11)", TITLE);
+        return GRIB_WRONG_GRID;
+    }
+
     pl = (long*)grib_context_malloc_clear(c, sizeof(long) * plsize);
     if (!pl) return GRIB_OUT_OF_MEMORY;
     if ((err = grib_get_long_array_internal(handle_, "pl", pl, &plsize)) != GRIB_SUCCESS)
@@ -233,6 +285,19 @@ int MessageIsValid::check_grid_pl_array()
                     TITLE, sum_pl, numberOfDataPoints);
             grib_context_free(c, pl);
             return GRIB_WRONG_GRID;
+        }
+        // Must be symmetric i.e., northern and southern hemispheres must be the same
+        long global = 0;
+        err = grib_get_long(handle_, "global", &global);
+        if (!err && global) {
+            for (size_t i = 0; i < plsize / 2; ++i) {
+                const long pl_start = pl[i];
+                const long pl_end   = pl[plsize - 1 - i];
+                if (pl_start != pl_end) {
+                    grib_context_log(c, GRIB_LOG_ERROR, "%s: PL array is not symmetric: pl[%zu]=%ld, pl[%zu]=%ld (gridType=%s)\n",
+                                    TITLE, i, pl_start, plsize - 1 - i, pl_end, gridType);
+                }
+            }
         }
     }
 
@@ -369,7 +434,7 @@ int MessageIsValid::check_steps()
         // Accumulations, average etc
         // TODO(masn): Generalise this rule. Beware of index and stdanom where start == end!
         if ( STR_EQUAL(stepType, "accum") || STR_EQUAL(stepType, "avg") || STR_EQUAL(stepType, "min") || STR_EQUAL(stepType, "max") ) {
-            if (startStep == endStep) {
+            if (startStep == endStep && startStep != 0) {
                 grib_context_log(handle_->context, GRIB_LOG_ERROR,
                     "%s: Invalid steps: stepType=%s but startStep=endStep", TITLE, stepType);
                 return GRIB_WRONG_STEP;
@@ -381,9 +446,6 @@ int MessageIsValid::check_steps()
 
 int MessageIsValid::check_section_numbers(const int* sec_nums, size_t N)
 {
-    if (handle_->context->debug)
-        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
-
     for (size_t i = 0; i < N; ++i) {
         char sname[16] = {0,};
         const int sec_num = sec_nums[i];
@@ -471,22 +533,23 @@ int MessageIsValid::unpack_long(long* val, size_t* len)
 {
     typedef int (MessageIsValid::*check_func)();
     static check_func check_functions[] = {
+        &MessageIsValid::check_7777,
+        &MessageIsValid::check_sections,
         &MessageIsValid::check_date,
+        &MessageIsValid::check_spectral,
         &MessageIsValid::check_grid_and_packing_type,
         // &MessageIsValid::check_field_values,
         &MessageIsValid::check_number_of_missing,
         &MessageIsValid::check_grid_pl_array,
         &MessageIsValid::check_geoiterator,
-        &MessageIsValid::check_7777,
         &MessageIsValid::check_surface_keys,
         &MessageIsValid::check_steps,
         &MessageIsValid::check_namespace_keys,
-        &MessageIsValid::check_sections,
         &MessageIsValid::check_parameter,
     };
 
     int err = 0;
-    handle_ = grib_handle_of_accessor(this);
+    handle_ = get_enclosing_handle();
 
     *len = 1;
     *val = 1; // Assume message is valid

@@ -21,8 +21,7 @@ ${tools_dir}/grib_set -s gridType=regular_gg ${data_dir}/reduced_latlon_surface.
 
 gridType=`${tools_dir}/grib_get -p gridType $tempGrib`
 if [ $gridType != "regular_gg" ]; then
-    echo "Unable to change from reduced_latlon to regular_gg"
-    echo $gridType
+    echo "ERROR: Unable to change from reduced_latlon to regular_gg: gridType=$gridType"
     exit 1
 fi
 
@@ -32,8 +31,7 @@ ${tools_dir}/grib_set -s gridType=reduced_gg ${data_dir}/regular_gaussian_pressu
 
 gridType=`${tools_dir}/grib_get -p gridType $tempGrib`
 if [ $gridType != "reduced_gg" ]; then
-    echo "Unable to change from regular_gg to reduced_gg"
-    echo $gridType
+    echo "ERROR: Unable to change from regular_gg to reduced_gg: gridType=$gridType"
     exit 1
 fi
 

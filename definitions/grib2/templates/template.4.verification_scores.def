@@ -1,0 +1,64 @@
+### Specifies the verification score
+codetable[2] verificationScore ('4.120.table',masterDir,localDir)=65535 ;
+
+codetable[1] typeOfReferenceDataSetForVerification ('4.121.table',masterDir,localDir)=0 ;
+# 0 Analysis interpolated on forecast grid
+# 1 Analysis with forecast interpolated on analysis grid
+# 2 Analysis interpolated on a common grid with the forecast but different to original grid
+# 3 Gridded observation on forecast grid
+# 4 Gridded observation with forecast interpolated on observation grid
+
+### Vertical Processing, verification against mean or accumulation over a vertical level ?
+codetable[1] typeOfStatisticalProcessingOverVerticalForVerification ('4.10.table',masterDir,localDir)=255 : edition_specific;
+
+# type of operator used for threshold
+codetable[1] typeOfThresholdOperatorForVerificationScore ('4.91.table',masterDir,localDir)=255 ;
+
+# kind of additional arguments for verification score (1 Fixed threshold value, 2 Threshold specified by a quantile of the climatology, 3 Threshold specified as standard deviation of the climatology)
+codetable[1] kindOfAdditionalArgumentsForVerificationScore ('4.122.table',masterDir,localDir)=255 ;
+
+unsigned[1] numberOfAdditionalArgumentsForVerification=0;
+## list with the limits for previous octet
+# 1 - n=1 with scaleFactor/scaledValue of fixed value if typeOfLimitForVerificationScore includes only one value otherwise 2 for lower / upper limit
+# 2 - n=2 1st tuple totalNumberOfQuantiles / 2nd tuple quantileValue if typeOfLimitForVerificationScore includes only one value otherwise 4 for lower quantile / upper quantile
+# 3 - n=1 with scaleFactor/scaledValue specifying the factor of std of climatology if typeOfLimitForVerificationScore includes only one value otherwise 2 for lower / upper limit
+verificationLimitList list(numberOfAdditionalArgumentsForVerification)
+{
+  signed[1] scaleFactorOfAdditionalArgumentForVerification;
+  signed[4] scaledValueOfAdditionalArgumentForVerification;
+}
+
+## Start of verification period
+unsigned[2] yearOfStartOfVerificationPeriod = missing() : edition_specific,can_be_missing;
+unsigned[1] monthOfStartOfVerificationPeriod = missing() : edition_specific,can_be_missing;
+unsigned[1] dayOfStartOfVerificationPeriod = missing() : edition_specific,can_be_missing;
+unsigned[1] hourOfStartOfVerificationPeriod = missing() : edition_specific,can_be_missing;
+unsigned[1] minuteOfStartOfVerificationPeriod = missing() : edition_specific,can_be_missing;
+unsigned[1] secondOfStartOfVerificationPeriod = missing() : edition_specific,can_be_missing;
+meta startDateOfVerificationPeriod g2date(yearOfStartOfVerificationPeriod,monthOfStartOfVerificationPeriod,dayOfStartOfVerificationPeriod);
+
+#  n - number of time range specifications describing the time intervals used to calculate the statistically-processed field
+##### SET n to zero for instantaneous score fields #####
+unsigned[1]  numberOfVerificationPeriodTimeRanges = 1 : edition_specific;
+
+### This says if you have yearly, monthly, weekly data
+### Specify in inner loops statistical processing of data like daily means or accumulations
+verificationPeriodList list(numberOfVerificationPeriodTimeRanges)
+{
+  # Type of statistical processing of verification period
+  codetable[1] typeOfStatisticalProcessingForTimeRangeForVerificationPeriod ('4.102.table',masterDir,localDir) = 255 : dump,edition_specific;
+
+  # Indicator of unit of time for the increment between the successive fields used
+  codetable[1]  indicatorOfUnitForTimeRangeForVerificationPeriod ('4.4.table',masterDir,localDir)=255 ;
+
+  # Length of verification period, in units defined by the previous octet [verificationPeriodIndicatorOfUnitForTimeIncrement]
+  unsigned[4] lengthOfTimeRangeForVerificationPeriod=0 ;
+
+  # Indicator of unit of time for the increment between the successive fields used
+  codetable[1]  indicatorOfUnitForTimeIncrementForVerificationPeriod ('4.4.table',masterDir,localDir)=255 ;
+
+  # Time increment between successive fields, in units defined by the previous octet
+  unsigned[4] timeIncrementForVerificationPeriod=0 ;
+  alias timeIncrementBetweenSuccessiveFields=timeIncrement;
+}
+unsigned[2] numberOfForecastsInVerification=1;

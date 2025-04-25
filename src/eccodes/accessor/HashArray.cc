@@ -71,7 +71,7 @@ grib_hash_array_value* HashArray::find_hash_value(int* err)
 
     eccodes::action::HashArray* hash_array = dynamic_cast<eccodes::action::HashArray*>(creator_);
 
-    ha = hash_array->get_hash_array(grib_handle_of_accessor(this));
+    ha = hash_array->get_hash_array(get_enclosing_handle());
     if (!ha) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "unable to get hash value for %s", creator_->name_);

@@ -130,15 +130,20 @@ if [ -f "$latest_codetable_file" ]; then
   for gt in $gtypes; do
     # echo "Doing $gt "
     ${tools_dir}/grib_set -s tablesVersion=$latestOfficial,gridDefinitionTemplateNumber=$gt $sample2 $tempGrib
+    gtype=$( ${tools_dir}/grib_get -p gridType $tempGrib )
+    if [ "$gtype" = "unknown" -o "$gtype" = "unknown_PLPresent" ]; then
+      echo "ERROR: gridType is unknown for entry $gt in Code Table $latest_codetable_file"
+      exit 1
+    fi
     ${tools_dir}/grib_get -p isGridded,isSpectral,gridDefinitionDescription $tempGrib
     is_gridded=$( ${tools_dir}/grib_get -p isGridded $tempGrib )
     is_spectre=$( ${tools_dir}/grib_get -p isSpectral $tempGrib )
     if [ $is_gridded = 1 -a $is_spectre = 1 ]; then
-      echo "gridType=$gt: Cannot be both gridded and spectral"
+      echo "ERROR: gridType=$gt: Cannot be both gridded and spectral"
       exit 1
     fi
     if [ $is_gridded = 0 -a $is_spectre = 0 ]; then
-      echo "gridType=$gt: Has to be either gridded or spectral"
+      echo "ERROR: gridType=$gt: Has to be either gridded or spectral"
       exit 1
     fi
   done

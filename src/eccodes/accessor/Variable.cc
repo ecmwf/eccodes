@@ -29,7 +29,7 @@ void Variable::init(const long length, grib_arguments* args)
 {
     Gen::init(length, args);
 
-    grib_handle* hand           = grib_handle_of_accessor(this);
+    grib_handle* hand           = get_enclosing_handle();
     grib_expression* expression = nullptr;
     if (args) expression = args->get_expression(hand, 0);
 

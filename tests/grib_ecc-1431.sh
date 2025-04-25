@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1431
+# CCSDS encoding failure AEC_STREAM_ERROR
+# ---------------------------------------------------------------------
+
 label="grib_ecc-1431_test"
 temp=temp.$label
 

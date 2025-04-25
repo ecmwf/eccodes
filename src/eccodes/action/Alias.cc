@@ -132,7 +132,7 @@ int Alias::create_accessor(grib_section* p, grib_loader* h)
 
                 // TODO(maee): Implement a new hash function, which uses the name and the name_space as well
 
-                // grib_handle* hand = grib_handle_of_accessor(y);
+                // grib_handle* hand = y->get_enclosing_handle();
                 // if (hand->use_trie && y->all_name_spaces_[i] != NULL && strcmp(y->name_, name_) != 0) {
                 //     int id = grib_hash_keys_get_id(hand->context->keys, name_);
                 //     hand->accessors[id] = NULL;
@@ -168,7 +168,7 @@ int Alias::create_accessor(grib_section* p, grib_loader* h)
         return GRIB_SUCCESS;
     }
 
-    hand = grib_handle_of_accessor(x);
+    hand = x->get_enclosing_handle();
     if (hand->use_trie) {
         id                  = grib_hash_keys_get_id(x->context_->keys, name_);
         hand->accessors[id] = x;

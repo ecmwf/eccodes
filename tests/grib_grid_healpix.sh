@@ -39,7 +39,7 @@ cat $tempFilt
 # Use filter on input to create a new HEALPix GRIB
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $input
 if [ ! -f "$tempGrib" ]; then
-   echo 'Failed to create output GRIB from filter' >&2
+   echo 'ERROR: Failed to create output GRIB from filter' >&2
    exit 1
 fi
 grib_check_key_equals $tempGrib gridType,orderingConvention,N,Nside 'healpix ring 32 32'

@@ -137,9 +137,9 @@ int When::notify_change(grib_accessor* observer, grib_accessor* observed)
 
     /* ECC-974: observed->parent will change as a result of the execute
      * so must store the handle once here (in 'hand') rather than call
-     * grib_handle_of_accessor(observed) later
+     * observed->get_enclosing_handle() later
      */
-    grib_handle* hand = grib_handle_of_accessor(observed);
+    grib_handle* hand = observed->get_enclosing_handle();
 
     if ((ret = expression_->evaluate_long(hand, &lres)) != GRIB_SUCCESS)
         return ret;

@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void NumberOfCodedValues::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_handle* h  = get_enclosing_handle();
 
     int n             = 0;
     bitsPerValue_     = c->get_name(h, n++);
@@ -36,7 +36,7 @@ int NumberOfCodedValues::unpack_long(long* val, size_t* len)
 {
     int ret  = GRIB_SUCCESS;
     long bpv = 0, offsetBeforeData = 0, offsetAfterData = 0, unusedBits = 0, numberOfValues;
-    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_handle* h  = get_enclosing_handle();
 
     if ((ret = grib_get_long_internal(h, bitsPerValue_, &bpv)) != GRIB_SUCCESS)
         return ret;

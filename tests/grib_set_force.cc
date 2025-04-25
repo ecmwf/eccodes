@@ -181,7 +181,7 @@ int main(int argc, char** argv)
         else {
             const size_t num_coded_vals = sizeof(codedValues) / sizeof(codedValues[0]);
             ECCODES_ASSERT(strcmp(mode, "coded_values") == 0);
-            ECCODES_ASSERT(num_coded_vals < numberOfDataPoints); /*Sanity check*/
+            ECCODES_ASSERT(num_coded_vals < (size_t)numberOfDataPoints); /*Sanity check*/
             printf("Partially specified: %zu values\n", num_coded_vals);
             GRIB_CHECK(grib_set_force_double_array(h, "codedValues", codedValues, num_coded_vals), 0);
         }
