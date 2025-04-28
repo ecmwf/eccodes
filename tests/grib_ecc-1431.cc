@@ -103,10 +103,10 @@ int main(int argc, char** argv)
             packing_type = "grid_ccsds";
             size         = packing_type.size();
             CODES_CHECK(codes_set_string(handle, "packingType", packing_type.c_str(), &size), 0);
-            if ((err = codes_set_double_array(handle, "values", grid_simple_values, grid_simple_values_len)) != 0) {
+            if (codes_set_double_array(handle, "values", grid_simple_values, grid_simple_values_len) != GRIB_SUCCESS) {
                 ECCODES_ASSERT(!"CCSDS encoding failed");
             }
-            if ((err = codes_get_double_array(handle, "values", grid_ccsds_values, &grid_ccsds_values_len)) != 0) {
+            if (codes_get_double_array(handle, "values", grid_ccsds_values, &grid_ccsds_values_len) != GRIB_SUCCESS) {
                 ECCODES_ASSERT(!"CCSDS decoding failed");
             }
             ECCODES_ASSERT(grid_ccsds_values_len == grid_simple_values_len);

@@ -33,6 +33,7 @@ list( APPEND test_bins
     get_native_type
     get_product_kind
     grib_clone
+    grib_get_message
     grib_copy_message
     grib_copy_namespace
     grib_count_messages
@@ -99,6 +100,7 @@ if( HAVE_BUILD_TOOLS )
           codes_dump
           codes_scan_file
           codes_load_file
+	  grib_get_message
           grib_copy_message
           grib_sections_copy
           bufr_copy_message

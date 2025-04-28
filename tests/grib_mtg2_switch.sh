@@ -853,6 +853,60 @@ ${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
 # MTG2Switch=1
 expected+=("1 1 1")
 
+## CASE 35: Contributing centres (e.g. kwbc) pre-mtg2 ##
+# tablesVersion=2
+# class=od
+# stream=kwbc
+# centre=kwbc
+# subCentre=98
+cases+=(temp.$label.case35.grib2)
+
+cat >$tempFilt<<EOF
+    set centre="kwbc";
+    set subCentre=98;
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=1;
+    set class="od";
+    set stream="kwbc";
+    set tablesVersion=2;
+    write;
+EOF
+
+${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+
+# Expected result
+# MTG2SwitchViaTablesVersion=1
+# MTG2SwitchDefault=0
+# MTG2Switch=0
+expected+=("1 0 0")
+
+## CASE 36: Contributing centres (e.g. kwbc) post-mtg2 ##
+# tablesVersion=37
+# class=od
+# stream=kwbc
+# centre=kwbc
+# subCentre=98
+cases+=(temp.$label.case36.grib2)
+
+cat >$tempFilt<<EOF
+    set centre="kwbc";
+    set subCentre=98;
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=1;
+    set class="od";
+    set stream="kwbc";
+    set tablesVersion=37;
+    write;
+EOF
+
+${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+
+# Expected result
+# MTG2SwitchViaTablesVersion=1
+# MTG2SwitchDefault=1
+# MTG2Switch=1
+expected+=("1 1 1")
+
 # Test different cases
 
 for i in "${!cases[@]}"; do

@@ -1096,7 +1096,7 @@
     call bufr_new_from_file(ifile, bufrid, status)
   end subroutine codes_bufr_new_from_file
 
-  !> Create a new message in memory from a character array containting the coded message.
+  !> Create a new message in memory from a character array containing the coded message.
   !>
   !> The message can be accessed through its msgid and it will be available\n
   !> until @ref codes_release is called. A reference to the original coded\n
@@ -1119,7 +1119,7 @@
     call grib_new_from_message_char(msgid, message, status)
   end subroutine codes_new_from_message_char
 
-  !> Create a new message in memory from an integer array containting the coded message.
+  !> Create a new message in memory from an integer array containing the coded message.
   !>
   !> The message can be accessed through its msgid and it will be available\n
   !> until @ref codes_release is called. A reference to the original coded\n
@@ -1268,7 +1268,7 @@
   !> and prints the error message.\n
   !>
   !> @param status      the status to be checked
-  !> @param caller      name of the caller soubroutine
+  !> @param caller      name of the caller subroutine
   !> @param string      a string variable from the caller routine (e.g. key,filename)
   subroutine codes_check(status, caller, string)
     integer(kind=kindOfInt), intent(in)  :: status
@@ -2548,7 +2548,7 @@
   end subroutine codes_grib_multi_write
 
   !> Append a single field grib message to a multi field grib message.
-  !> Only the sections with section number greather or equal "startsection" are copied from the input single message to the multi field output grib.
+  !> Only the sections with section number greater or equal "startsection" are copied from the input single message to the multi field output grib.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
