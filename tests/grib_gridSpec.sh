@@ -30,6 +30,14 @@ if [ $HAVE_ECKIT_GEO -ne 1 ]; then
     exit 0
 fi
 
+# Check env. variable too
+set +u
+if test "x$ECCODES_ECKIT_GEO" = "x"; then
+    echo "$0: This test is disabled (env. variable ECCODES_ECKIT_GEO is not set)"
+    exit 0
+fi
+set -u
+
 # Gridded data
 infile=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_get -p gridSpec $infile

@@ -72,7 +72,7 @@ const char* Arguments::get_name(grib_handle* h, int n) const
 const char* Arguments::get_string(grib_handle* h, int n) const
 {
     const Arguments* args = this;
-    int ret               = 0;
+    int ret = 0;
     while (args && n-- > 0) {
         args = args->next_;
     }
@@ -86,8 +86,7 @@ const char* Arguments::get_string(grib_handle* h, int n) const
 
 long Arguments::get_long(grib_handle* h, int n) const
 {
-    int ret               = 0;
-    long lres             = 0;
+    long lres = 0;
     const Arguments* args = this;
     while (args && n-- > 0) {
         args = args->next_;
@@ -97,14 +96,12 @@ long Arguments::get_long(grib_handle* h, int n) const
         return 0;
 
     const grib_expression* e = args->expression_;
-    ret = e->evaluate_long(h, &lres);
-    (void)ret;
+    e->evaluate_long(h, &lres);
     return lres;
 }
 
 double Arguments::get_double(grib_handle* h, int n) const
 {
-    int ret     = 0;
     double dres = 0.0;
 
     const Arguments* args = this;
@@ -116,8 +113,7 @@ double Arguments::get_double(grib_handle* h, int n) const
         return 0;
 
     const Expression* e = args->expression_;
-    ret = e->evaluate_double(h, &dres);
-    (void)ret;
+    e->evaluate_double(h, &dres);
     return dres;
 }
 
@@ -137,7 +133,7 @@ grib_expression* Arguments::get_expression(grib_handle* h, int n) const
 int Arguments::get_count() const
 {
     const Arguments* args = this;
-    int n                 = 0;
+    int n = 0;
     while (args) {
         args = args->next_;
         n++;

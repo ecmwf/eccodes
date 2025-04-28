@@ -70,3 +70,17 @@
   interface grib_get_message_size
     module procedure grib_get_message_size_int
   end interface grib_get_message_size
+
+  !> Get the pointer and size of a coded message.
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param gribid      id of the grib loaded in memory
+  !> @param message     pointer to the message
+  !> @param nbytes      size in bytes of the message
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  interface grib_get_message
+    module procedure grib_get_message_int
+  end interface grib_get_message

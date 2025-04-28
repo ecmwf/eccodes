@@ -114,6 +114,7 @@ ${tools_dir}/grib_set -s paramId=$pid,values=1 $sample_g2 $tempGrib2
 ${tools_dir}/grib_set -s scaleValuesBy=3 $tempGrib2 $tempOut # OK
 set +e
 ${tools_dir}/grib_set -s scaleValuesBy=3.6 $tempGrib2 $tempOut
+status=$?
 set -e
 [ $status -ne 0 ]
 
@@ -127,6 +128,7 @@ ${tools_dir}/grib_set -s step=0,paramId=121,scaleValuesBy=1.1 $input1 $tempOut
 # But it must fail when step > 0
 set +e
 ${tools_dir}/grib_set -s step=6,paramId=121,scaleValuesBy=1.1 $input1 $tempOut
+status=$?
 set -e
 [ $status -ne 0 ]
 
