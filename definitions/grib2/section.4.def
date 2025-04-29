@@ -153,10 +153,10 @@ else {
   concept paramtype(unknown, "paramtypeConcept.def", conceptsDir2, conceptsDir1): hidden, read_only;
   # timeSpan
   concept timeSpan (unknown,"timespanConcept.def",conceptsDir2,conceptsDir1) : read_only ;
-  # timespan instant/none should not appear in mars namespace for backward compatibility
-  if (! timeSpan is "none"){
+  ### timespan instant/none should not appear in mars namespace for backward compatibility
+  #if (! timeSpan is "none"){
     alias mars.timespan = timeSpan ;
-  }
+  #}
   # we use an abbreviation for fromstart -> fs
   if ( timeSpan is "fromstart"){
     unalias mars.timespan;
