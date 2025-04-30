@@ -30,6 +30,8 @@ cat >$tempFilt<<EOF
 EOF
 infile=${data_dir}/gfs.complex.mvmu.grib2
 ${tools_dir}/grib_filter -o $temp $tempFilt $infile
+grib_check_key_equals $temp dataRepresentationTemplateNumber 2
+grib_check_key_equals $temp bitsPerValue 0
 rm -f $temp
 
 
