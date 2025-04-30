@@ -53,7 +53,6 @@ int main(int argc, char** argv)
         100000,
     };
 
-    int err;
 
     std::default_random_engine re;
     size_t in_values_ecc_1612_workaround_len = 0;
