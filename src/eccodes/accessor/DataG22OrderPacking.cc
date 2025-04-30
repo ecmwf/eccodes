@@ -1582,7 +1582,7 @@ int DataG22OrderPacking::unpack(T* val, size_t* len)
         return err;
     if ((err = grib_get_long_internal(gh, numberOfBitsUsedForTheScaledGroupLengths_, &numberOfBitsUsedForTheScaledGroupLengths)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(gh, orderOfSpatialDifferencing_, &orderOfSpatialDifferencing)) != GRIB_SUCCESS)
+    if ((err = grib_get_long(gh, orderOfSpatialDifferencing_, &orderOfSpatialDifferencing)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_long_internal(gh, numberOfOctetsExtraDescriptors_, &numberOfOctetsExtraDescriptors)) != GRIB_SUCCESS)
         return err;
