@@ -885,11 +885,6 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
     }
 
     if (ndef == 0) {  // Special case: All undefined values
-        // Section 5
-        const char* packing_type = "grid_complex";
-        size_t packing_type_len  = strlen(packing_type);
-        err = grib_set_string_internal(gh, "packingType", packing_type, &packing_type_len);
-        if (err) return err;
 
         if ((err = grib_set_double_internal(gh, reference_value_, grib_ieee_to_long(0.0))) != GRIB_SUCCESS)
             return err;
@@ -897,7 +892,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
             return err;
         if ((err = grib_set_long_internal(gh, decimal_scale_factor_, 0)) != GRIB_SUCCESS)
             return err;
-        if ((err = grib_set_long_internal(gh, bits_per_value_, 8)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(gh, bits_per_value_, 0)) != GRIB_SUCCESS)
             return err;
         if ((err = grib_set_long_internal(gh, typeOfOriginalFieldValues_, 0)) != GRIB_SUCCESS)
             return err;
@@ -927,10 +922,14 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         // Section 6
         if ((err = grib_set_long_internal(gh, "bitmapPresent", 0)) != GRIB_SUCCESS) return err;
 
+        // Switch to grid_complex
+        err = grib_set_long_internal(gh, "dataRepresentationTemplateNumber", 2);
+        if (err) return err;
+
         // Section 7
-        constexpr size_t sec7_size = 3;
-        unsigned char empty_sec7[sec7_size] = { 255, 0, 0 };  // group reference, group width, group length
-        grib_buffer_replace(this, empty_sec7, sec7_size, 1, 1);
+        //constexpr size_t sec7_size = 3;
+        //unsigned char empty_sec7[sec7_size] = { 255, 0, 0 };  // group reference, group width, group length
+        //grib_buffer_replace(this, empty_sec7, sec7_size, 1, 1);
         return GRIB_SUCCESS;
     }
 
