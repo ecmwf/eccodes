@@ -25,7 +25,7 @@ void Codeflag::init(const long len, grib_arguments* param)
 {
     Unsigned::init(len, param);
     length_    = len;
-    tablename_ = param->get_string(grib_handle_of_accessor(this), 0);
+    tablename_ = param->get_string(get_enclosing_handle(), 0);
     ECCODES_ASSERT(length_ >= 0);
 }
 
@@ -41,7 +41,7 @@ int Codeflag::grib_get_codeflag(long code, char* codename)
     int j    = 0;
     int err  = 0;
 
-    err = grib_recompose_name(grib_handle_of_accessor(this), NULL, tablename_, fname, 1);
+    err = grib_recompose_name(get_enclosing_handle(), NULL, tablename_, fname, 1);
     if (err) {
         strncpy(fname, tablename_, sizeof(fname) - 1);
         fname[sizeof(fname) - 1] = '\0';
@@ -111,7 +111,7 @@ void Codeflag::dump(eccodes::Dumper* dumper)
 
     size_t llen = 1;
 
-    grib_recompose_name(grib_handle_of_accessor(this), NULL, tablename_, fname, 1);
+    grib_recompose_name(get_enclosing_handle(), NULL, tablename_, fname, 1);
     unpack_long(&v, &llen);
     grib_get_codeflag(v, flagname);
 

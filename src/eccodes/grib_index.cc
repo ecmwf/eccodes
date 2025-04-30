@@ -53,10 +53,11 @@
 // }
 
 static const char* mars_keys =
-    "mars.date,mars.time,mars.expver,mars.stream,mars.class,mars.type,"
+    "mars.date,mars.time,mars.expver,mars.stream,mars.class,mars.type,mars.channel,mars.generation,"
     "mars.step,mars.param,mars.levtype,mars.levelist,mars.number,mars.iteration,"
     "mars.domain,mars.fcmonth,mars.fcperiod,mars.hdate,mars.method,"
-    "mars.model,mars.origin,mars.quantile,mars.range,mars.refdate,mars.direction,mars.frequency";
+    "mars.model,mars.origin,mars.quantile,mars.range,mars.refdate,mars.reftime,"
+    "mars.direction,mars.frequency,mars.offdate,mars.offtime,mars.activity,mars.dataset,mars.tile,mars.tileattribute";
 
 
 /* See GRIB-32: start off ID with -1 as it is incremented before being used */

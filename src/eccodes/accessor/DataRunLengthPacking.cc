@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void DataRunLengthPacking::init(const long v, grib_arguments* args)
 {
     Values::init(v, args);
-    grib_handle* gh         = grib_handle_of_accessor(this);
+    grib_handle* gh         = get_enclosing_handle();
     number_of_values_       = args->get_name(gh, carg_++);
     bits_per_value_         = args->get_name(gh, carg_++);
     max_level_value_        = args->get_name(gh, carg_++);
@@ -32,12 +32,12 @@ void DataRunLengthPacking::init(const long v, grib_arguments* args)
 int DataRunLengthPacking::value_count(long* number_of_values)
 {
     *number_of_values = 0;
-    return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, number_of_values);
+    return grib_get_long_internal(get_enclosing_handle(), number_of_values_, number_of_values);
 }
 
 int DataRunLengthPacking::unpack_double(double* val, size_t* len)
 {
-    grib_handle* gh         = grib_handle_of_accessor(this);
+    grib_handle* gh         = get_enclosing_handle();
     int err                 = GRIB_SUCCESS;
     long seclen, number_of_values, bits_per_value, max_level_value, number_of_level_values, decimal_scale_factor;
     long* level_values       = NULL;
@@ -96,7 +96,7 @@ int DataRunLengthPacking::unpack_double(double* val, size_t* len)
         levels[i + 1] = level_values[i] * level_scale_factor;
     }
     compressed_values = (long*)grib_context_malloc_clear(context_, sizeof(long) * number_of_compressed_values);
-    buf               = (unsigned char*)grib_handle_of_accessor(this)->buffer->data;
+    buf               = get_enclosing_handle()->buffer->data;
     offsetBeforeData  = byte_offset();
     buf += offsetBeforeData;
     pos = 0;
@@ -141,7 +141,7 @@ int DataRunLengthPacking::unpack_double(double* val, size_t* len)
 
 int DataRunLengthPacking::pack_double(const double* val, size_t* len)
 {
-    grib_handle* gh         = grib_handle_of_accessor(this);
+    grib_handle* gh         = get_enclosing_handle();
     int err                 = GRIB_SUCCESS;
     long number_of_values, bits_per_value, max_level_value, number_of_level_values, decimal_scale_factor;
     long* level_values       = NULL;

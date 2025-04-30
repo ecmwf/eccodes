@@ -22,7 +22,7 @@ namespace eccodes::accessor
 void DataSimplePacking::init(const long v, grib_arguments* args)
 {
     Values::init(v, args);
-    grib_handle* gh          = grib_handle_of_accessor(this);
+    grib_handle* gh          = get_enclosing_handle();
     units_factor_            = args->get_name(gh, carg_++);
     units_bias_              = args->get_name(gh, carg_++);
     changing_precision_      = args->get_name(gh, carg_++);
@@ -64,20 +64,20 @@ int DataSimplePacking::value_count(long* number_of_values)
 {
     *number_of_values = 0;
 
-    return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, number_of_values);
+    return grib_get_long_internal(get_enclosing_handle(), number_of_values_, number_of_values);
 }
 
 int DataSimplePacking::unpack_double_element(size_t idx, double* val)
 {
     long n_vals     = 0;
     int err         = 0;
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
 
     double reference_value;
     long binary_scale_factor;
     long bits_per_value;
     long decimal_scale_factor;
-    unsigned char* buf = (unsigned char*)gh->buffer->data;
+    unsigned char* buf = gh->buffer->data;
     double s           = 0;
     double d           = 0;
     long pos           = 0;
@@ -162,8 +162,8 @@ int DataSimplePacking::unpack(T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
 
-    grib_handle* gh         = grib_handle_of_accessor(this);
-    unsigned char* buf      = (unsigned char*)grib_handle_of_accessor(this)->buffer->data;
+    grib_handle* gh = get_enclosing_handle();
+    unsigned char* buf = gh->buffer->data;
 
     size_t i      = 0;
     int err       = 0;
@@ -312,7 +312,7 @@ int DataSimplePacking::unpack_float(float* val, size_t* len)
 int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* buf, long pos, size_t n_vals)
 {
     accessor::DataSimplePacking* self = (accessor::DataSimplePacking*)this;
-    grib_handle* gh                           = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
 
     size_t i = 0;
     int err  = 0;
@@ -437,14 +437,14 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
 
 int DataSimplePacking::unpack_double_subarray(double* val, size_t start, size_t len)
 {
-    unsigned char* buf  = (unsigned char*)grib_handle_of_accessor(this)->buffer->data;
+    unsigned char* buf  = get_enclosing_handle()->buffer->data;
     size_t nvals        = len;
     size_t* plen        = &len;
     long bits_per_value = 0;
     long pos            = 0;
     int err             = GRIB_SUCCESS;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), bits_per_value_, &bits_per_value)) !=
+    if ((err = grib_get_long_internal(get_enclosing_handle(), bits_per_value_, &bits_per_value)) !=
         GRIB_SUCCESS)
         return err;
 
@@ -455,7 +455,7 @@ int DataSimplePacking::unpack_double_subarray(double* val, size_t start, size_t 
 
 int DataSimplePacking::pack_double(const double* val, size_t* len)
 {
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
 
     size_t i                      = 0;
     size_t n_vals                 = *len;

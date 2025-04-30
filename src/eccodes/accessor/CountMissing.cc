@@ -38,7 +38,7 @@ void CountMissing::init(const long len, grib_arguments* arg)
 {
     Long::init(len, arg);
     int n          = 0;
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     length_        = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     bitmap_                     = arg->get_name(h, n++);
@@ -81,7 +81,7 @@ int CountMissing::unpack_long(long* val, size_t* len)
     long offset             = 0;
     long unusedBitsInBitmap = 0;
     long numberOfDataPoints = 0;
-    grib_handle* h          = grib_handle_of_accessor(this);
+    grib_handle* h          = get_enclosing_handle();
     grib_accessor* bitmap   = grib_find_accessor(h, bitmap_);
 
     *val = 0; /* By default assume none are missing */

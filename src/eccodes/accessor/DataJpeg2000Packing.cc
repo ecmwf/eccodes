@@ -24,7 +24,7 @@ void DataJpeg2000Packing::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
     const char* user_lib = NULL;
-    grib_handle* hand    = grib_handle_of_accessor(this);
+    grib_handle* hand    = get_enclosing_handle();
 
     jpeg_lib_                 = 0;
     type_of_compression_used_ = args->get_name(hand, carg_++);
@@ -82,7 +82,7 @@ int DataJpeg2000Packing::value_count(long* n_vals)
 {
     *n_vals = 0;
 
-    return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, n_vals);
+    return grib_get_long_internal(get_enclosing_handle(), number_of_values_, n_vals);
 }
 
 #define EXTRA_BUFFER_SIZE 10240
@@ -95,8 +95,8 @@ int DataJpeg2000Packing::unpack_float(float* val, size_t* len)
 
 int DataJpeg2000Packing::unpack_double(double* val, size_t* len)
 {
-    int err            = GRIB_SUCCESS;
-    grib_handle* hand  = grib_handle_of_accessor(this);
+    int err = GRIB_SUCCESS;
+    grib_handle* hand  = get_enclosing_handle();
 
     size_t i           = 0;
     size_t buflen      = byte_count();
@@ -152,7 +152,7 @@ int DataJpeg2000Packing::unpack_double(double* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    buf = (unsigned char*)grib_handle_of_accessor(this)->buffer->data;
+    buf = get_enclosing_handle()->buffer->data;
     buf += byte_offset();
     switch (jpeg_lib_) {
         case OPENJPEG_LIB:
@@ -229,13 +229,13 @@ int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
     }
 
     if (units_factor_ &&
-        (grib_get_double_internal(grib_handle_of_accessor(this), units_factor_, &units_factor) == GRIB_SUCCESS)) {
-        grib_set_double_internal(grib_handle_of_accessor(this), units_factor_, 1.0);
+        (grib_get_double_internal(get_enclosing_handle(), units_factor_, &units_factor) == GRIB_SUCCESS)) {
+        grib_set_double_internal(get_enclosing_handle(), units_factor_, 1.0);
     }
 
     if (units_bias_ &&
-        (grib_get_double_internal(grib_handle_of_accessor(this), units_bias_, &units_bias) == GRIB_SUCCESS)) {
-        grib_set_double_internal(grib_handle_of_accessor(this), units_bias_, 0.0);
+        (grib_get_double_internal(get_enclosing_handle(), units_bias_, &units_bias) == GRIB_SUCCESS)) {
+        grib_set_double_internal(get_enclosing_handle(), units_bias_, 0.0);
     }
 
     if (units_factor != 1.0) {
@@ -255,7 +255,7 @@ int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
     switch (ret) {
         case GRIB_CONSTANT_FIELD:
             grib_buffer_replace(this, NULL, 0, 1, 1);
-            err = grib_set_long_internal(grib_handle_of_accessor(this), number_of_values_, *len);
+            err = grib_set_long_internal(get_enclosing_handle(), number_of_values_, *len);
             return err;
         case GRIB_SUCCESS:
             break;
@@ -264,17 +264,17 @@ int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
             return ret;
     }
 
-    if ((ret = grib_get_double_internal(grib_handle_of_accessor(this), reference_value_, &reference_value)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(get_enclosing_handle(), reference_value_, &reference_value)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), bits_per_value_, &bits_per_value)) !=
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), bits_per_value_, &bits_per_value)) !=
         GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
     decimal = codes_power<double>(decimal_scale_factor, 10);
@@ -287,19 +287,19 @@ int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
         goto cleanup;
     }
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), ni_, &ni)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), ni_, &ni)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), nj_, &nj)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), nj_, &nj)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), type_of_compression_used_, &type_of_compression_used)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), type_of_compression_used_, &type_of_compression_used)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), target_compression_ratio_, &target_compression_ratio)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), target_compression_ratio_, &target_compression_ratio)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), scanning_mode_, &scanning_mode)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), scanning_mode_, &scanning_mode)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), list_defining_points_, &list_defining_points)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), list_defining_points_, &list_defining_points)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), number_of_data_points_, &number_of_data_points)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), number_of_data_points_, &number_of_data_points)) != GRIB_SUCCESS)
         return err;
 
     width  = ni;
@@ -422,7 +422,7 @@ cleanup:
     grib_context_free(context_, buf);
 
     if (err == GRIB_SUCCESS)
-        err = grib_set_long_internal(grib_handle_of_accessor(this), number_of_values_, *len);
+        err = grib_set_long_internal(get_enclosing_handle(), number_of_values_, *len);
     return err;
 }
 #else
@@ -453,7 +453,7 @@ int DataJpeg2000Packing::pack_double(const double* val, size_t* len)
 
 int DataJpeg2000Packing::unpack_double_element(size_t idx, double* val)
 {
-    grib_handle* hand      = grib_handle_of_accessor(this);
+    grib_handle* hand      = get_enclosing_handle();
     size_t size            = 0;
     double* values         = NULL;
     int err                = 0;
@@ -491,7 +491,7 @@ int DataJpeg2000Packing::unpack_double_element(size_t idx, double* val)
 
 int DataJpeg2000Packing::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     size_t size = 0, i = 0;
     double* values         = NULL;
     int err                = 0;

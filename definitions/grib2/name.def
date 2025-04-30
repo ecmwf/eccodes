@@ -1353,6 +1353,30 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 73 ;
 	}
+#Benjamin-Feir index 2D
+'Benjamin-Feir index 2D' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 99 ;
+	}
+#Crest-trough correlation
+'Crest-trough correlation' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 100 ;
+	}
+#X component of the wave radiative stress to sea ice
+'X component of the wave radiative stress to sea ice' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 101 ;
+	}
+#Y component of the wave radiative stress to sea ice
+'Y component of the wave radiative stress to sea ice' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 102 ;
+	}
 #Wave Spectral Skewness
 'Wave Spectral Skewness' = {
 	 discipline = 10 ;
@@ -1678,6 +1702,34 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 73 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean Benjamin-Feir index 2D
+'Time-mean Benjamin-Feir index 2D' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 99 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean crest-trough correlation
+'Time-mean crest-trough correlation' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 100 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean X component of the wave radiative stress to sea ice
+'Time-mean X component of the wave radiative stress to sea ice' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 101 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean Y component of the wave radiative stress to sea ice
+'Time-mean Y component of the wave radiative stress to sea ice' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 102 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean wave Spectral Skewness
@@ -2229,6 +2281,34 @@
 	 parameterNumber = 73 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum Benjamin-Feir index 2D
+'Time-maximum Benjamin-Feir index 2D' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 99 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum crest-trough correlation
+'Time-maximum crest-trough correlation' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 100 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum X component of the wave radiative stress to sea ice
+'Time-maximum X component of the wave radiative stress to sea ice' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 101 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum Y component of the wave radiative stress to sea ice
+'Time-maximum Y component of the wave radiative stress to sea ice' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 102 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-maximum wave Spectral Skewness
 'Time-maximum wave Spectral Skewness' = {
 	 discipline = 10 ;
@@ -2776,6 +2856,34 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 73 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum Benjamin-Feir index 2D
+'Time-minimum Benjamin-Feir index 2D' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 99 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum crest-trough correlation
+'Time-minimum crest-trough correlation' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 100 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum X component of the wave radiative stress to sea ice
+'Time-minimum X component of the wave radiative stress to sea ice' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 101 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum Y component of the wave radiative stress to sea ice
+'Time-minimum Y component of the wave radiative stress to sea ice' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 102 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum wave Spectral Skewness
@@ -3327,6 +3435,34 @@
 	 parameterNumber = 73 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
+#Time-standard-deviation Benjamin-Feir index 2D
+'Time-standard-deviation Benjamin-Feir index 2D' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 99 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation crest-trough correlation
+'Time-standard-deviation crest-trough correlation' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 100 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation X component of the wave radiative stress to sea ice
+'Time-standard-deviation X component of the wave radiative stress to sea ice' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 101 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation Y component of the wave radiative stress to sea ice
+'Time-standard-deviation Y component of the wave radiative stress to sea ice' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 102 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Time-standard-deviation wave Spectral Skewness
 'Time-standard-deviation wave Spectral Skewness' = {
 	 discipline = 10 ;
@@ -3852,6 +3988,12 @@
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
+#Injection height (from IS4FIRES)
+'Injection height (from IS4FIRES)' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 40 ;
+	}
 #Particulate matter d <= 1 um
 'Particulate matter d <= 1 um' = {
 	 discipline = 0 ;
@@ -3890,6 +4032,18 @@
 	 aerosolType = 62026 ;
 	 scaledValueOfSecondSize = missing() ;
 	 is_aerosol = 1 ;
+	}
+#Mean height of maximum injection
+'Mean height of maximum injection' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 39 ;
+	}
+#Plume top height above surface
+'Plume top height above surface' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 42 ;
 	}
 #Volcanic sulfur dioxide mass mixing ratio
 'Volcanic sulfur dioxide mass mixing ratio' = {
@@ -3934,6 +4088,12 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 59 ;
 	 typeOfGeneratingProcess = 9 ;
+	}
+#Plume bottom height above surface
+'Plume bottom height above surface' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 41 ;
 	}
 #Ammonium aerosol mass mixing ratio
 'Ammonium aerosol mass mixing ratio' = {
@@ -4908,6 +5068,18 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 24 ;
 	 typeOfFirstFixedSurface = 1 ;
+	}
+#UV biologically effective dose
+'UV biologically effective dose' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 9 ;
+	}
+#UV biologically effective dose clear-sky
+'UV biologically effective dose clear-sky' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 10 ;
 	}
 #Dry deposition of ammonium aerosol
 'Dry deposition of ammonium aerosol' = {
@@ -7228,6 +7400,60 @@
 	 scaledValueOfFirstFixedSurface = 27465 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
+#Thunderstorm hazard index
+'Thunderstorm hazard index' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 3 ;
+	}
+#Surface water flooding hazard index
+'Surface water flooding hazard index' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 12 ;
+	}
+#Polluted air hazard index
+'Polluted air hazard index' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 18 ;
+	}
+#Storm surge hazard index
+'Storm surge hazard index' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 27 ;
+	}
+#Cold wave hazard index
+'Cold wave hazard index' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 40 ;
+	}
+#Frost (hoar frost) hazard index
+'Frost (hoar frost) hazard index' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 43 ;
+	}
+#Heatwave hazard index
+'Heatwave hazard index' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 47 ;
+	}
+#Wind hazard index
+'Wind hazard index' = {
+	 discipline = 20 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 60 ;
+	}
+#Wildfires hazard index
+'Wildfires hazard index' = {
+	 discipline = 20 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 13 ;
+	}
 #Burned area
 'Burned area' = {
 	 discipline = 2 ;
@@ -7323,6 +7549,18 @@
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 35 ;
+	}
+#Live fuel moisture content in low vegetation
+'Live fuel moisture content in low vegetation' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 37 ;
+	}
+#Live fuel moisture content in high vegetation
+'Live fuel moisture content in high vegetation' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 38 ;
 	}
 #Time-integrated total column vertically-integrated eastward geopotential flux
 'Time-integrated total column vertically-integrated eastward geopotential flux' = {
@@ -9774,6 +10012,13 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean Reciprocal Obukhov length
+'Time-mean Reciprocal Obukhov length' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean geometric height of 3 degrees C atmospheric isothermal level above ground
 'Time-mean geometric height of 3 degrees C atmospheric isothermal level above ground' = {
 	 discipline = 0 ;
@@ -9782,6 +10027,58 @@
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 27615 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean river storage of water
+'Time-mean river storage of water' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 11 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean floodplain storage of water
+'Time-mean floodplain storage of water' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 12 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean river depth
+'Time-mean river depth' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 16 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 162 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean river outflow of water
+'Time-mean river outflow of water' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 17 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean floodplain outflow of water
+'Time-mean floodplain outflow of water' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 18 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean floodpath outflow of water
+'Time-mean floodpath outflow of water' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 19 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean surface diffuse short-wave radiation flux, clear sky
+'Time-mean surface diffuse short-wave radiation flux, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 63 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-integrated land surface heat net flux
@@ -11667,6 +11964,13 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum Reciprocal Obukhov length
+'Time-maximum Reciprocal Obukhov length' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-maximum geometric height of 3 degrees C atmospheric isothermal level above ground
 'Time-maximum geometric height of 3 degrees C atmospheric isothermal level above ground' = {
 	 discipline = 0 ;
@@ -11675,6 +11979,14 @@
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 27615 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-mean surface diffuse short-wave radiation flux, clear sky
+'Time-mean surface diffuse short-wave radiation flux, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 63 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-minimum temperature tendency due to short-wave radiation
@@ -13572,6 +13884,13 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum Reciprocal Obukhov length
+'Time-minimum Reciprocal Obukhov length' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-minimum geometric height of 3 degrees C atmospheric isothermal level above ground
 'Time-minimum geometric height of 3 degrees C atmospheric isothermal level above ground' = {
 	 discipline = 0 ;
@@ -13580,6 +13899,14 @@
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 27615 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-mean surface diffuse short-wave radiation flux, clear sky
+'Time-mean surface diffuse short-wave radiation flux, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 63 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-standard-deviation temperature tendency due to short-wave radiation
@@ -15478,6 +15805,13 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
+#Time-standard-deviation Reciprocal Obukhov length
+'Time-standard-deviation Reciprocal Obukhov length' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Time-standard-deviation geometric height of 3 degrees C atmospheric isothermal level above ground
 'Time-standard-deviation geometric height of 3 degrees C atmospheric isothermal level above ground' = {
 	 discipline = 0 ;
@@ -15486,6 +15820,14 @@
 	 typeOfFirstFixedSurface = 20 ;
 	 scaledValueOfFirstFixedSurface = 27615 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-mean surface diffuse short-wave radiation flux, clear sky
+'Time-mean surface diffuse short-wave radiation flux, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 63 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Cross sectional area of flow in channel
@@ -16475,11 +16817,12 @@
 	 parameterCategory = 15 ;
 	 parameterNumber = 4 ;
 	}
-#Precipitation
-'Precipitation' = {
+#Precipitation from radar
+'Precipitation from radar' = {
 	 discipline = 0 ;
 	 parameterCategory = 15 ;
-	 parameterNumber = 5 ;
+	 parameterNumber = 17 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Air concentration of Caesium 137
 'Air concentration of Caesium 137' = {
@@ -16637,8 +16980,8 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 22 ;
 	}
-#Supercooled large droplet probability (see Note 4)
-'Supercooled large droplet probability (see Note 4)' = {
+#Supercooled large droplet probability
+'Supercooled large droplet probability' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 23 ;
@@ -16655,8 +16998,8 @@
 	 parameterCategory = 191 ;
 	 parameterNumber = 0 ;
 	}
-#Flash flood guidance (Encoded as an accumulation over a floating subinterval of time between the ref
-'Flash flood guidance (Encoded as an accumulation over a floating subinterval of time between the ref' = {
+#Flash flood guidance
+'Flash flood guidance' = {
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
@@ -16703,8 +17046,8 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 0 ;
 	}
-#Percent precipitation in a sub-period of an overall period (Encoded as per cent accumulation over th
-'Percent precipitation in a sub-period of an overall period (Encoded as per cent accumulation over th' = {
+#Percent precipitation in a sub-period of an overall period
+'Percent precipitation in a sub-period of an overall period' = {
 	 discipline = 1 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 1 ;
@@ -17785,6 +18128,50 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
+#Reciprocal Obukhov length
+'Reciprocal Obukhov length' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 22 ;
+	}
+#Precipitation rate from radar
+'Precipitation rate from radar' = {
+	 discipline = 0 ;
+	 parameterCategory = 15 ;
+	 parameterNumber = 17 ;
+	}
+#Radar data quality index
+'Radar data quality index' = {
+	 discipline = 0 ;
+	 parameterCategory = 15 ;
+	 parameterNumber = 18 ;
+	}
+#Radar data quality flag
+'Radar data quality flag' = {
+	 discipline = 0 ;
+	 parameterCategory = 15 ;
+	 parameterNumber = 19 ;
+	}
+#Precipitation rate from forecasted radar imagery
+'Precipitation rate from forecasted radar imagery' = {
+	 discipline = 0 ;
+	 parameterCategory = 16 ;
+	 parameterNumber = 6 ;
+	}
+#Precipitation from forecasted radar imagery
+'Precipitation from forecasted radar imagery' = {
+	 discipline = 0 ;
+	 parameterCategory = 16 ;
+	 parameterNumber = 6 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Surface diffuse short-wave radiation flux, clear sky
+'Surface diffuse short-wave radiation flux, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 63 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
 #Universal thermal climate index
 'Universal thermal climate index' = {
 	 discipline = 20 ;
@@ -17922,6 +18309,18 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 27 ;
+	}
+#Excess heat factor
+'Excess heat factor' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 11 ;
+	}
+#Excess cold factor
+'Excess cold factor' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 12 ;
 	}
 #Sea ice thickness
 'Sea ice thickness' = {
@@ -18186,6 +18585,12 @@
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 8 ;
+	}
+#Sea ice breakup memory
+'Sea ice breakup memory' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 30 ;
 	}
 #Sea surface practical salinity
 'Sea surface practical salinity' = {
@@ -18721,6 +19126,12 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
+#Sea surface downward short-wave radiation flux
+'Sea surface downward short-wave radiation flux' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 22 ;
+	}
 #Sea water practical salinity
 'Sea water practical salinity' = {
 	 discipline = 10 ;
@@ -18880,6 +19291,30 @@
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Sea water upward mass transport
+'Sea water upward mass transport' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 56 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Sea water age since surface contact
+'Sea water age since surface contact' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 57 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Sea water downward short-wave radiation flux
+'Sea water downward short-wave radiation flux' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 58 ;
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	}
@@ -19288,6 +19723,13 @@
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea ice breakup memory
+'Time-mean sea ice breakup memory' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 30 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean sea surface practical salinity
@@ -19873,6 +20315,13 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean sea surface downward short-wave radiation flux
+'Time-mean sea surface downward short-wave radiation flux' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean sea water practical salinity
 'Time-mean sea water practical salinity' = {
 	 discipline = 10 ;
@@ -20051,6 +20500,33 @@
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea water upward mass transport
+'Time-mean sea water upward mass transport' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 56 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea water age since surface contact
+'Time-mean sea water age since surface contact' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 57 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea water downward short-wave radiation flux
+'Time-mean sea water downward short-wave radiation flux' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 58 ;
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfStatisticalProcessing = 0 ;
@@ -20677,14 +21153,14 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 104 ;
 	}
-#Aerosol backscatter from top of atmosphere
-'Aerosol backscatter from top of atmosphere' = {
+#Attenuated aerosol backscatter from top of atmosphere
+'Attenuated aerosol backscatter from top of atmosphere' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 107 ;
 	}
-#Aerosol backscatter from ground
-'Aerosol backscatter from ground' = {
+#Attenuated aerosol backscatter from ground
+'Attenuated aerosol backscatter from ground' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 108 ;
@@ -20778,6 +21254,12 @@
 	 parameterNumber = 1 ;
 	 typeOfFirstFixedSurface = 7 ;
 	 typeOfSecondFixedSurface = 36 ;
+	}
+#Aerosol unattenuated backscatter coefficient
+'Aerosol unattenuated backscatter coefficient' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 113 ;
 	}
 #Pressure tendency
 'Pressure tendency' = {

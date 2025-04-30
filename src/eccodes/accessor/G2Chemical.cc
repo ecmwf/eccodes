@@ -27,7 +27,7 @@ namespace eccodes::accessor
 void G2Chemical::init(const long l, grib_arguments* c)
 {
     Unsigned::init(l, c);
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     int n             = 0;
 
     productDefinitionTemplateNumber_ = c->get_name(hand, n++);
@@ -38,7 +38,7 @@ void G2Chemical::init(const long l, grib_arguments* c)
 int G2Chemical::unpack_long(long* val, size_t* len)
 {
     long productDefinitionTemplateNumber = 0;
-    grib_get_long(grib_handle_of_accessor(this), productDefinitionTemplateNumber_, &productDefinitionTemplateNumber);
+    grib_get_long(get_enclosing_handle(), productDefinitionTemplateNumber_, &productDefinitionTemplateNumber);
 
     ECCODES_ASSERT(chemical_type_ == CHEM_PLAIN || chemical_type_ == CHEM_DISTRIB || chemical_type_ == CHEM_SRCSINK);
     if (chemical_type_ == CHEM_DISTRIB)
@@ -53,7 +53,7 @@ int G2Chemical::unpack_long(long* val, size_t* len)
 
 int G2Chemical::pack_long(const long* val, size_t* len)
 {
-    grib_handle* hand                       = grib_handle_of_accessor(this);
+    grib_handle* hand                       = get_enclosing_handle();
     long productDefinitionTemplateNumber    = -1;
     long productDefinitionTemplateNumberNew = -1;
     // long type=-1;

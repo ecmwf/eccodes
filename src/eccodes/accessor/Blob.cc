@@ -18,7 +18,7 @@ namespace eccodes::accessor
 void Blob::init(const long len, grib_arguments* arg)
 {
     Gen::init(len, arg);
-    grib_get_long_internal(grib_handle_of_accessor(this),
+    grib_get_long_internal(get_enclosing_handle(),
                            arg->get_name(parent_->h, 0), &length_);
     ECCODES_ASSERT(length_ >= 0);
 }
@@ -36,7 +36,7 @@ int Blob::unpack_bytes(unsigned char* buffer, size_t* len)
     }
     *len = length_;
 
-    memcpy(buffer, grib_handle_of_accessor(this)->buffer->data + offset_, *len);
+    memcpy(buffer, get_enclosing_handle()->buffer->data + offset_, *len);
 
     return GRIB_SUCCESS;
 }

@@ -19,7 +19,7 @@ void StatisticsSpectral::init(const long l, grib_arguments* c)
 {
     AbstractVector::init(l, c);
     int n = 0;
-    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_handle* h  = get_enclosing_handle();
 
     values_ = c->get_name(h, n++);
     J_      = c->get_name(h, n++);
@@ -45,7 +45,7 @@ int StatisticsSpectral::unpack_double(double* val, size_t* len)
     long J, K, M, N;
     double avg, enorm, sd;
     grib_context* c = context_;
-    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_handle* h  = get_enclosing_handle();
 
     if (!dirty_)
         return GRIB_SUCCESS;

@@ -539,6 +539,12 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 149 ;
 	}
+#Injection height (from IS4FIRES)
+'m' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 60 ;
+	}
 #Particulate matter d <= 1 um
 'kg m**-3' = {
 	 discipline = 192 ;
@@ -556,6 +562,18 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 74 ;
+	}
+#Mean height of maximum injection
+'m' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 119 ;
+	}
+#Plume top height above surface
+'m' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 120 ;
 	}
 #UV visible albedo for direct radiation, isotropic component (climatological)
 '(0 - 1)' = {
@@ -628,6 +646,12 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 197 ;
+	}
+#Plume bottom height above surface
+'m' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 242 ;
 	}
 #Random pattern 1 for SPP scheme
 'dimensionless' = {
@@ -1360,6 +1384,18 @@
 	 discipline = 192 ;
 	 parameterCategory = 214 ;
 	 parameterNumber = 1 ;
+	}
+#UV biologically effective dose
+'~' = {
+	 discipline = 192 ;
+	 parameterCategory = 214 ;
+	 parameterNumber = 2 ;
+	}
+#UV biologically effective dose clear-sky
+'~' = {
+	 discipline = 192 ;
+	 parameterCategory = 214 ;
+	 parameterNumber = 3 ;
 	}
 #Ammonia mass mixing ratio
 'kg kg**-1' = {

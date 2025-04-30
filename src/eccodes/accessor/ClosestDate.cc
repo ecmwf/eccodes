@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void ClosestDate::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     int n          = 0;
 
     dateLocal_    = c->get_name(h, n++);
@@ -66,7 +66,7 @@ int ClosestDate::unpack_double(double* val, size_t* len)
     /* These relate to the forecast dates and times in Section 4 */
     long *yearArray, *monthArray, *dayArray, *hourArray, *minuteArray, *secondArray;
 
-    grib_handle* h        = grib_handle_of_accessor(this);
+    grib_handle* h        = get_enclosing_handle();
     const grib_context* c = context_;
     *val                  = -1; /* initialise to an invalid index */
 

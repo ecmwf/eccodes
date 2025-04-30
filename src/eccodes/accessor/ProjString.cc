@@ -18,7 +18,7 @@ namespace eccodes::accessor
 void ProjString::init(const long len, grib_arguments* arg)
 {
     Gen::init(len, arg);
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     grid_type_ = arg->get_name(h, 0);
     endpoint_  = arg->get_long(h, 1);
@@ -212,7 +212,7 @@ int ProjString::unpack_string(char* v, size_t* len)
     int err = 0, found = 0;
     size_t i           = 0;
     char grid_type[64] = {0,};
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     size_t size    = sizeof(grid_type) / sizeof(*grid_type);
 
     ECCODES_ASSERT(endpoint_ == ENDPOINT_SOURCE || endpoint_ == ENDPOINT_TARGET);

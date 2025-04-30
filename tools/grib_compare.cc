@@ -878,7 +878,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
             }
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 == len2) {
                 countdiff = 0;
-                for (i = 0; i < len1; i++)
+                for (size_t i = 0; i < len1; i++)
                     if (lval1[i] != lval2[i])
                         countdiff++;
 
@@ -1033,7 +1033,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                         printf("using compare_double_relative");
                     printf("\n");
                 }
-                for (i = 0; i < len1; i++) {
+                for (size_t i = 0; i < len1; i++) {
                     if ((diff = compare_double(pv1++, pv2++, value_tolerance)) != 0) {
                         countdiff++;
                         if (maxdiff < diff) {
@@ -1117,7 +1117,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS) {
                 const size_t len_min = MINIMUM(len1, len2);
                 if (memcmp(uval1, uval2, len_min) != 0) {
-                    for (i = 0; i < len_min; i++) {
+                    for (size_t i = 0; i < len_min; i++) {
                         if (uval1[i] != uval2[i]) {
                             printInfo(h1);
                             save_error(c, name);
@@ -1125,8 +1125,8 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                                 printf("[%s] byte values are different: [%02x] and [%02x]\n",
                                        name, uval1[i], uval2[i]);
                             else
-                                printf("[%s] byte value %d of %ld is different: [%02x] and [%02x]\n",
-                                       name, i, (long)len_min, uval1[i], uval2[i]);
+                                printf("[%s] byte value %zu of %zu is different: [%02x] and [%02x]\n",
+                                       name, i, len_min, uval1[i], uval2[i]);
 
                             err1 = GRIB_VALUE_MISMATCH;
                             break;
@@ -1207,7 +1207,7 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
         h11 = grib_handle_new_from_partial_message(h1->context, msg1, size1);
         h22 = grib_handle_new_from_partial_message(h1->context, msg2, size2);
 
-        iter = grib_keys_iterator_new(h11, GRIB_KEYS_ITERATOR_SKIP_COMPUTED, NULL);
+        iter = grib_keys_iterator_new(h11, GRIB_KEYS_ITERATOR_SKIP_COMPUTED | GRIB_KEYS_ITERATOR_SKIP_DUPLICATES, NULL);
         if (!iter) {
             grib_context_log(context, GRIB_LOG_ERROR, "unable to create the GRIB keys iterator");
             exit(1);
@@ -1271,7 +1271,7 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
             return 0;
         }
 
-        iter = grib_keys_iterator_new(h1, GRIB_KEYS_ITERATOR_SKIP_COMPUTED, NULL);
+        iter = grib_keys_iterator_new(h1, GRIB_KEYS_ITERATOR_SKIP_COMPUTED | GRIB_KEYS_ITERATOR_SKIP_DUPLICATES, NULL);
         if (!iter) {
             grib_context_log(context, GRIB_LOG_ERROR, "unable to create the GRIB keys iterator");
             exit(1);

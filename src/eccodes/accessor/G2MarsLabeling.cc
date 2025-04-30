@@ -19,7 +19,7 @@ void G2MarsLabeling::init(const long l, grib_arguments* c)
 {
     Gen::init(l, c);
     int n             = 0;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     index_                           = c->get_long(hand, n++);
     the_class_                       = c->get_name(hand, n++);
@@ -53,7 +53,7 @@ int G2MarsLabeling::unpack_long(long* val, size_t* len)
             return GRIB_INTERNAL_ERROR;
     }
 
-    return grib_get_long(grib_handle_of_accessor(this), key, val);
+    return grib_get_long(get_enclosing_handle(), key, val);
 }
 
 int G2MarsLabeling::unpack_string(char* val, size_t* len)
@@ -76,13 +76,13 @@ int G2MarsLabeling::unpack_string(char* val, size_t* len)
             return GRIB_INTERNAL_ERROR;
     }
 
-    return grib_get_string(grib_handle_of_accessor(this), key, val, len);
+    return grib_get_string(get_enclosing_handle(), key, val, len);
 }
 
 int G2MarsLabeling::extra_set(long val)
 {
     int ret                                = 0;
-    grib_handle* hand                      = grib_handle_of_accessor(this);
+    grib_handle* hand                      = get_enclosing_handle();
     char stepType[30]                      = {0,};
     size_t stepTypelen                      = 30;
     long derivedForecast                    = -1;
@@ -332,11 +332,11 @@ int G2MarsLabeling::pack_string(const char* val, size_t* len)
             return GRIB_INTERNAL_ERROR;
     }
 
-    ret = grib_set_string(grib_handle_of_accessor(this), key, val, len);
+    ret = grib_set_string(get_enclosing_handle(), key, val, len);
     if (ret)
         return ret; /* failed */
 
-    ret = grib_get_long(grib_handle_of_accessor(this), key, &lval);
+    ret = grib_get_long(get_enclosing_handle(), key, &lval);
     if (ret)
         return ret; /* failed */
 
@@ -364,7 +364,7 @@ int G2MarsLabeling::pack_long(const long* val, size_t* len)
             return GRIB_INTERNAL_ERROR;
     }
 
-    ret = grib_set_long(grib_handle_of_accessor(this), key, *val);
+    ret = grib_set_long(get_enclosing_handle(), key, *val);
     if (ret)
         return ret; /* failed */
 
@@ -399,7 +399,7 @@ long G2MarsLabeling::get_native_type()
             return GRIB_INTERNAL_ERROR;
     }
 
-    ret = grib_get_native_type(grib_handle_of_accessor(this), key, &type);
+    ret = grib_get_native_type(get_enclosing_handle(), key, &type);
     if (ret)
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "unable to get native type for %s", key);

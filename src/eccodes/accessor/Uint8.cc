@@ -17,9 +17,9 @@ namespace eccodes::accessor
 
 int Uint8::unpack_long(long* val, size_t* len)
 {
-    long value                = 0;
-    long pos                  = offset_;
-    const unsigned char* data = grib_handle_of_accessor(this)->buffer->data;
+    long value = 0;
+    long pos = offset_;
+    const unsigned char* data = get_enclosing_handle()->buffer->data;
 
     if (*len < 1) {
         return GRIB_ARRAY_TOO_SMALL;

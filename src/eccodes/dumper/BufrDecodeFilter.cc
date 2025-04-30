@@ -50,7 +50,7 @@ void BufrDecodeFilter::dump_values(grib_accessor* a)
     int r;
     long count      = 0;
     grib_context* c = a->context_;
-    grib_handle* h  = grib_handle_of_accessor(a);
+    grib_handle* h  = a->get_enclosing_handle();
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
@@ -152,7 +152,7 @@ void BufrDecodeFilter::dump_long(grib_accessor* a, const char* comment)
     int r           = 0;
     long count      = 0;
     grib_context* c = a->context_;
-    grib_handle* h  = grib_handle_of_accessor(a);
+    grib_handle* h  = a->get_enclosing_handle();
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
@@ -256,7 +256,7 @@ void BufrDecodeFilter::dump_double(grib_accessor* a, const char* comment)
     double value = 0;
     size_t size  = 1;
     int r;
-    grib_handle* h  = grib_handle_of_accessor(a);
+    grib_handle* h  = a->get_enclosing_handle();
     grib_context* c = h->context;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -301,7 +301,7 @@ void BufrDecodeFilter::dump_string_array(grib_accessor* a,
     int err         = 0;
     long count      = 0;
     int r           = 0;
-    grib_handle* h  = grib_handle_of_accessor(a);
+    grib_handle* h  = a->get_enclosing_handle();
 
     c = a->context_;
 
@@ -356,7 +356,7 @@ void BufrDecodeFilter::dump_string(grib_accessor* a, const char* comment)
     char* p         = NULL;
     grib_context* c = a->context_;
     int r = 0, err = 0;
-    grib_handle* h = grib_handle_of_accessor(a);
+    grib_handle* h = a->get_enclosing_handle();
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
@@ -426,7 +426,7 @@ void BufrDecodeFilter::dump_section(grib_accessor* a, grib_block_of_accessors* b
 {
     if (strcmp(a->name_, "BUFR") == 0 || strcmp(a->name_, "GRIB") == 0 ||
         strcmp(a->name_, "META") == 0) {
-        grib_handle* h = grib_handle_of_accessor(a);
+        grib_handle* h = a->get_enclosing_handle();
         depth_         = 2;
         begin_         = 1;
         empty_         = 1;

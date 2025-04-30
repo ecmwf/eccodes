@@ -41,8 +41,14 @@ long GridSpec::get_native_type()
     return GRIB_TYPE_STRING;
 }
 
+static void print_warning_feature_not_implemented()
+{
+    fprintf(stderr, "ECCODES WARNING :  Key gridSpec is not yet implemented. Work in progress...\n");
+}
+
 int GridSpec::pack_string(const char* sval, size_t* len)
 {
+    print_warning_feature_not_implemented();
     return GRIB_NOT_IMPLEMENTED;
 
 #if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
@@ -55,10 +61,13 @@ int GridSpec::pack_string(const char* sval, size_t* len)
 int GridSpec::unpack_string(char* v, size_t* len)
 {
 #if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
+    if (context_->eckit_geo == 0) { // check env. variable too
+        return GRIB_NOT_IMPLEMENTED;
+    }
     ECCODES_ASSERT(0 < *len);
     ECCODES_ASSERT(v != nullptr);
 
-    auto* h = grib_handle_of_accessor(this);
+    auto* h = get_enclosing_handle();
     ECCODES_ASSERT(h != nullptr);
 
     std::string spec_str;
@@ -96,6 +105,7 @@ int GridSpec::unpack_string(char* v, size_t* len)
 
     return GRIB_SUCCESS;
 #else
+    print_warning_feature_not_implemented();
     return GRIB_NOT_IMPLEMENTED;
 #endif
 }

@@ -80,4 +80,4 @@ do_test 174 176 iceLayerOnWater
 
 
 # Clean up
-rm -f $tempGrib $tempFilt $tempLog $tempOut $tempRef
+rm -f $tempGrib $tempFilt $tempLog $tempOut $tempRef $tempSample

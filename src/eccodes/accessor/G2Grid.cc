@@ -18,7 +18,7 @@ namespace eccodes::accessor
 void G2Grid::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     int n             = 0;
 
     latitude_first_  = c->get_name(hand, n++);
@@ -44,7 +44,7 @@ int G2Grid::value_count(long* count)
 
 int G2Grid::unpack_double(double* val, size_t* len)
 {
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     int ret           = 0;
 
     long basic_angle  = 0;
@@ -175,7 +175,7 @@ static int trial(const double* val, long v[6], long* basic_angle, long* sub_divi
 
 int G2Grid::pack_double(const double* val, size_t* len)
 {
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     int ret;
     long v[6];
     int n;

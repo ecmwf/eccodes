@@ -156,7 +156,7 @@ int IsInDict::native_type(grib_handle* h) const
 
 void IsInDict::add_dependency(grib_accessor* observer)
 {
-    grib_accessor* observed = grib_find_accessor(grib_handle_of_accessor(observer), key_);
+    grib_accessor* observed = grib_find_accessor(observer->get_enclosing_handle(), key_);
 
     if (!observed) {
         /* grib_context_log(observer->context, GRIB_LOG_ERROR, */

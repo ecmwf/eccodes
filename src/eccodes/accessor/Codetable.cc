@@ -63,9 +63,8 @@ void grib_codetable_delete(grib_context* c)
 
     while (t) {
         grib_codetable* s = t->next;
-        int i;
 
-        for (i = 0; i < t->size; i++) {
+        for (size_t i = 0; i < t->size; i++) {
             grib_context_free_persistent(c, t->entries[i].abbreviation);
             grib_context_free_persistent(c, t->entries[i].title);
             grib_context_free_persistent(c, t->entries[i].units);
@@ -165,7 +164,7 @@ void Codetable::init(const long len, grib_arguments* params)
 
     int n             = 0;
     long new_len      = len;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     grib_action* act  = (grib_action*)(creator_);
     DEBUG_ASSERT(len == nbytes_);
     table_        = NULL;
@@ -221,13 +220,13 @@ void Codetable::init(const long len, grib_arguments* params)
                     break;
 
                 case GRIB_TYPE_LONG:
-                    expression->evaluate_long(grib_handle_of_accessor(this), &l);
+                    expression->evaluate_long(get_enclosing_handle(), &l);
                     pack_long(&l, &s_len);
                     break;
 
                 default:
                     s_len = sizeof(tmp);
-                    p     = expression->evaluate_string(grib_handle_of_accessor(this), tmp, &s_len, &ret);
+                    p     = expression->evaluate_string(get_enclosing_handle(), tmp, &s_len, &ret);
                     if (ret != GRIB_SUCCESS) {
                         grib_context_log(context_, GRIB_LOG_FATAL,
                                          "Unable to evaluate %s as string", name_);
@@ -663,7 +662,7 @@ int Codetable::pack_string(const char* buffer, size_t* len)
         return GRIB_ENCODING_ERROR;
 
     if (set_) {
-        int err = grib_set_string(grib_handle_of_accessor(this), set_, buffer, len);
+        int err = grib_set_string(get_enclosing_handle(), set_, buffer, len);
         if (err != 0)
             return err;
     }
@@ -690,22 +689,22 @@ int Codetable::pack_string(const char* buffer, size_t* len)
             int ret        = 0;
             double d       = 0;
             char tmp[1024] = {0,};
-            grib_expression* expression = act->default_value_->get_expression(grib_handle_of_accessor(this), 0);
-            int type                    = expression->native_type(grib_handle_of_accessor(this));
+            grib_expression* expression = act->default_value_->get_expression(get_enclosing_handle(), 0);
+            int type                    = expression->native_type(get_enclosing_handle());
             switch (type) {
                 case GRIB_TYPE_DOUBLE:
-                    expression->evaluate_double(grib_handle_of_accessor(this), &d);
+                    expression->evaluate_double(get_enclosing_handle(), &d);
                     pack_double(&d, &s_len);
                     break;
 
                 case GRIB_TYPE_LONG:
-                    expression->evaluate_long(grib_handle_of_accessor(this), &l);
+                    expression->evaluate_long(get_enclosing_handle(), &l);
                     pack_long(&l, &s_len);
                     break;
 
                 default:
                     s_len = sizeof(tmp);
-                    p     = expression->evaluate_string(grib_handle_of_accessor(this), tmp, &s_len, &ret);
+                    p     = expression->evaluate_string(get_enclosing_handle(), tmp, &s_len, &ret);
                     if (ret != GRIB_SUCCESS) {
                         grib_context_log(context_, GRIB_LOG_ERROR,
                                          "%s: Unable to evaluate default value of %s as string expression", __func__, name_);
@@ -740,7 +739,7 @@ int Codetable::pack_expression(grib_expression* e)
     int ret           = 0;
     long lval         = 0;
     size_t len        = 1;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     if (strcmp(e->class_name(), "long") == 0) {
         e->evaluate_long(hand, &lval); /* TODO: check return value */
@@ -817,11 +816,10 @@ int Codetable::unpack_long(long* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    /* ECC-480 Performance: inline the grib_handle_of_accessor here to reduce func call overhead */
-    if (parent_ == NULL)
-        hand = h_;
-    else
-        hand = parent_->h;
+    // ECC-480 Performance: inline here to reduce func call overhead
+    // No longer needed... use get_enclosing_handle
+    if (parent_ == NULL) hand = h_;
+    else hand = parent_->h;
 
     for (i = 0; i < rlen; i++) {
         val[i] = (long)grib_decode_unsigned_long(hand->buffer->data, &pos, nbytes_ * 8);
@@ -836,7 +834,7 @@ int Codetable::pack_missing()
     // Many of the code tables do have a 'Missing' entry (all bits = 1)
     // So it is more user-friendly to allow setting codetable keys to
     // missing. For tables that do not have such an entry, an error is issued
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     const long nbytes = length_;
     const long nbits  = nbytes * 8;

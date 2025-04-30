@@ -19,7 +19,7 @@ void Trim::init(const long l, grib_arguments* arg)
 {
     Ascii::init(l, arg);
     int n          = 0;
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     input_      = arg->get_name(h, n++);
     trim_left_  = arg->get_long(h, n++);
@@ -31,7 +31,7 @@ void Trim::init(const long l, grib_arguments* arg)
 int Trim::unpack_string(char* val, size_t* len)
 {
     int err         = 0;
-    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_handle* h  = get_enclosing_handle();
     char input[256] = {0,};
     size_t size  = sizeof(input) / sizeof(*input);
     char* pInput = input;
@@ -54,7 +54,7 @@ int Trim::pack_string(const char* val, size_t* len)
     char buf[256]   = {0,};
     char* pBuf = NULL;
     int err;
-    grib_handle* h                = grib_handle_of_accessor(this);
+    grib_handle* h                = get_enclosing_handle();
     grib_accessor* inputAccesstor = grib_find_accessor(h, input_);
     if (!inputAccesstor) {
         grib_context_log(context_, GRIB_LOG_ERROR, "Accessor for %s not found", input_);

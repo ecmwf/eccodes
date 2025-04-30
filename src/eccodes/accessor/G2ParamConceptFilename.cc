@@ -18,7 +18,7 @@ namespace eccodes::accessor
 
 void G2ParamConceptFilename::init(const long len, grib_arguments* arg)
 {
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     if (context_->debug) {
         const int numActualArgs   = arg->get_count();
@@ -47,7 +47,7 @@ long G2ParamConceptFilename::get_native_type()
 // Otherwise look at new definitions.
 int G2ParamConceptFilename::unpack_string(char* v, size_t* len)
 {
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     int err = 0;
     long MTG2Switch = 0, tablesVersionMTG2Switch = 0;
 

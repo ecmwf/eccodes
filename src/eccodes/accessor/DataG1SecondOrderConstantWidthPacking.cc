@@ -19,7 +19,7 @@ namespace eccodes::accessor
 void DataG1SecondOrderConstantWidthPacking::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     half_byte_                       = args->get_name(hand, carg_++);
     packingType_                     = args->get_name(hand, carg_++);
@@ -46,7 +46,7 @@ int DataG1SecondOrderConstantWidthPacking::value_count(long* numberOfSecondOrder
     int err                          = 0;
     *numberOfSecondOrderPackedValues = 0;
 
-    err = grib_get_long_internal(grib_handle_of_accessor(this), numberOfSecondOrderPackedValues_, numberOfSecondOrderPackedValues);
+    err = grib_get_long_internal(get_enclosing_handle(), numberOfSecondOrderPackedValues_, numberOfSecondOrderPackedValues);
 
     return err;
 }
@@ -67,14 +67,14 @@ int DataG1SecondOrderConstantWidthPacking::unpack_double(double* values, size_t*
     long pos                     = 0;
     long widthOfFirstOrderValues = 0;
     long jPointsAreConsecutive;
-    unsigned char* buf = (unsigned char*)grib_handle_of_accessor(this)->buffer->data;
+    unsigned char* buf = this->get_enclosing_handle()->buffer->data;
     long i, n;
     double reference_value;
     long binary_scale_factor;
     long decimal_scale_factor;
     double s, d;
     long* secondaryBitmap;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     buf += byte_offset();
     if ((ret = grib_get_long_internal(hand, numberOfGroups_, &numberOfGroups)) != GRIB_SUCCESS)
@@ -186,7 +186,7 @@ int DataG1SecondOrderConstantWidthPacking::pack_double(const double* cval, size_
 
 int DataG1SecondOrderConstantWidthPacking::unpack_double_element(size_t idx, double* val)
 {
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     size_t size       = 0;
     double* values    = NULL;
     int err           = 0;
@@ -212,7 +212,7 @@ int DataG1SecondOrderConstantWidthPacking::unpack_double_element(size_t idx, dou
 
 int DataG1SecondOrderConstantWidthPacking::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     size_t size = 0, i = 0;
     double* values = NULL;
     int err        = 0;

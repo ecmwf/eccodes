@@ -57,7 +57,7 @@ namespace eccodes::accessor
 void G1MessageLength::init(const long len, grib_arguments* args)
 {
     SectionLength::init(len, args);
-    sec4_length_ = args->get_name(grib_handle_of_accessor(this), 0);
+    sec4_length_ = args->get_name(get_enclosing_handle(), 0);
 }
 
 int G1MessageLength::pack_long(const long* val, size_t* len)
@@ -67,7 +67,7 @@ int G1MessageLength::pack_long(const long* val, size_t* len)
     /* Here we assume that the totalLength will be coded AFTER the section4 length, and
        the section4 length will be overwritten by the totalLength accessor for large GRIBs */
 
-    grib_accessor* s4 = grib_find_accessor(grib_handle_of_accessor(this), sec4_length_);
+    grib_accessor* s4 = grib_find_accessor(get_enclosing_handle(), sec4_length_);
     long tlen, slen;
     long t120;
     int ret;
@@ -105,8 +105,8 @@ int G1MessageLength::pack_long(const long* val, size_t* len)
 
     {
         long total_length = -1, sec4_length = -1;
-        grib_get_g1_message_size(grib_handle_of_accessor(this), this,
-                                 grib_find_accessor(grib_handle_of_accessor(this), sec4_length_),
+        grib_get_g1_message_size(get_enclosing_handle(), this,
+                                 grib_find_accessor(get_enclosing_handle(), sec4_length_),
                                  &total_length, &sec4_length);
         if (total_length != *val) {
             grib_context_log(context_, GRIB_LOG_ERROR,
@@ -126,8 +126,8 @@ int G1MessageLength::unpack_long(long* val, size_t* len)
     int ret;
     long total_length, sec4_length;
 
-    if ((ret = grib_get_g1_message_size(grib_handle_of_accessor(this), this,
-                                        grib_find_accessor(grib_handle_of_accessor(this), sec4_length_),
+    if ((ret = grib_get_g1_message_size(get_enclosing_handle(), this,
+                                        grib_find_accessor(get_enclosing_handle(), sec4_length_),
                                         &total_length, &sec4_length)) != GRIB_SUCCESS) {
         return ret;
     }

@@ -18,14 +18,14 @@ namespace eccodes::accessor
 void GtsHeader::init(const long l, grib_arguments* c)
 {
     Ascii::init(l, c);
-    gts_offset_ = c ? c->get_long(grib_handle_of_accessor(this), 0) : 0;
-    gts_length_ = c ? c->get_long(grib_handle_of_accessor(this), 1) : 0;
+    gts_offset_ = c ? c->get_long(get_enclosing_handle(), 0) : 0;
+    gts_length_ = c ? c->get_long(get_enclosing_handle(), 1) : 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
 int GtsHeader::unpack_string(char* val, size_t* len)
 {
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     int offset     = 0;
     size_t length  = 0;
 
@@ -56,7 +56,7 @@ int GtsHeader::value_count(long* count)
 
 size_t GtsHeader::string_length()
 {
-    const grib_handle* h = grib_handle_of_accessor(this);
+    const grib_handle* h = get_enclosing_handle();
     return h->gts_header_len;
 }
 

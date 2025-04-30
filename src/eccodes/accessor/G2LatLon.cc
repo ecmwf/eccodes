@@ -20,9 +20,9 @@ void G2LatLon::init(const long l, grib_arguments* c)
     Double::init(l, c);
     int n = 0;
 
-    grid_  = c->get_name(grib_handle_of_accessor(this), n++);
-    index_ = c->get_long(grib_handle_of_accessor(this), n++);
-    given_ = c->get_name(grib_handle_of_accessor(this), n++);
+    grid_  = c->get_name(get_enclosing_handle(), n++);
+    index_ = c->get_long(get_enclosing_handle(), n++);
+    given_ = c->get_name(get_enclosing_handle(), n++);
 }
 
 int G2LatLon::unpack_double(double* val, size_t* len)
@@ -39,7 +39,7 @@ int G2LatLon::unpack_double(double* val, size_t* len)
     }
 
     if (given_)
-        if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), given_, &given)) != GRIB_SUCCESS)
+        if ((ret = grib_get_long_internal(get_enclosing_handle(), given_, &given)) != GRIB_SUCCESS)
             return ret;
 
     if (!given) {
@@ -47,7 +47,7 @@ int G2LatLon::unpack_double(double* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    if ((ret = grib_get_double_array_internal(grib_handle_of_accessor(this), grid_, grid, &size)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_array_internal(get_enclosing_handle(), grid_, grid, &size)) != GRIB_SUCCESS)
         return ret;
 
     *val = grid[index_];
@@ -61,7 +61,7 @@ int G2LatLon::pack_double(const double* val, size_t* len)
     double grid[6];
     size_t size       = 6;
     double new_val    = *val;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;
@@ -109,7 +109,7 @@ int G2LatLon::is_missing()
     long given = 1;
 
     if (given_)
-        grib_get_long_internal(grib_handle_of_accessor(this), given_, &given);
+        grib_get_long_internal(get_enclosing_handle(), given_, &given);
 
     return !given;
 }

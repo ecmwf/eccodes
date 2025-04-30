@@ -33,7 +33,7 @@ int IeeeFloat::value_count(long* len)
         *len = 1;
         return 0;
     }
-    return grib_get_long_internal(grib_handle_of_accessor(this), arg_->get_name(parent_->h, 0), len);
+    return grib_get_long_internal(get_enclosing_handle(), arg_->get_name(parent_->h, 0), len);
 }
 
 int IeeeFloat::pack_double(const double* val, size_t* len)
@@ -53,7 +53,7 @@ int IeeeFloat::pack_double(const double* val, size_t* len)
 
     if (rlen == 1) {
         off = offset_ * 8;
-        ret = grib_encode_unsigned_long(grib_handle_of_accessor(this)->buffer->data, grib_ieee_to_long(val[0]), &off, 32);
+        ret = grib_encode_unsigned_long(get_enclosing_handle()->buffer->data, grib_ieee_to_long(val[0]), &off, 32);
         if (*len > 1)
             grib_context_log(context_, GRIB_LOG_WARNING, "ieeefloat: Trying to pack %zu values in a scalar %s, packing first value",
                              *len, name_);
@@ -69,7 +69,7 @@ int IeeeFloat::pack_double(const double* val, size_t* len)
     for (i = 0; i < rlen; i++) {
         grib_encode_unsigned_longb(buf, grib_ieee_to_long(val[i]), &off, 32);
     }
-    ret = grib_set_long_internal(grib_handle_of_accessor(this), arg_->get_name(parent_->h, 0), rlen);
+    ret = grib_set_long_internal(get_enclosing_handle(), arg_->get_name(parent_->h, 0), rlen);
 
     if (ret == GRIB_SUCCESS)
         grib_buffer_replace(this, buf, buflen, 1, 1);
@@ -90,7 +90,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     int err           = 0;
     long i            = 0;
     long bitp         = a->offset_ * 8;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_handle* hand = a->get_enclosing_handle();
 
     err = a->value_count(&rlen);
     if (err)

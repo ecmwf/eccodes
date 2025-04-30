@@ -20,10 +20,10 @@ void DecimalPrecision::init(const long l, grib_arguments* args)
     Long::init(l, args);
     int n = 0;
 
-    bits_per_value_       = args->get_name(grib_handle_of_accessor(this), n++);
-    decimal_scale_factor_ = args->get_name(grib_handle_of_accessor(this), n++);
-    changing_precision_   = args->get_name(grib_handle_of_accessor(this), n++);
-    values_               = args->get_name(grib_handle_of_accessor(this), n++);
+    bits_per_value_       = args->get_name(get_enclosing_handle(), n++);
+    decimal_scale_factor_ = args->get_name(get_enclosing_handle(), n++);
+    changing_precision_   = args->get_name(get_enclosing_handle(), n++);
+    values_               = args->get_name(get_enclosing_handle(), n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
@@ -32,7 +32,7 @@ void DecimalPrecision::init(const long l, grib_arguments* args)
 int DecimalPrecision::unpack_long(long* val, size_t* len)
 {
     int ret        = 0;
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     if ((ret = grib_get_long_internal(h, decimal_scale_factor_, val)) != GRIB_SUCCESS)
         return ret;
@@ -48,7 +48,7 @@ int DecimalPrecision::pack_long(const long* val, size_t* len)
     size_t size       = 0;
     int ret           = 0;
     grib_context* c   = context_;
-    grib_handle* h    = grib_handle_of_accessor(this);
+    grib_handle* h    = get_enclosing_handle();
 
     if (!values_) {
         if ((ret = grib_set_long_internal(h, bits_per_value_, 0)) != GRIB_SUCCESS)

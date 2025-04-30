@@ -19,7 +19,7 @@ void G2BitmapPresent::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n            = 0;
-    bitmapIndicator_ = c->get_name(grib_handle_of_accessor(this), n++);
+    bitmapIndicator_ = c->get_name(get_enclosing_handle(), n++);
 
     length_ = 0;
 }
@@ -29,7 +29,7 @@ int G2BitmapPresent::unpack_long(long* val, size_t* len)
     int ret              = GRIB_SUCCESS;
     long bitmapIndicator = 0;
 
-    ret = grib_get_long_internal(grib_handle_of_accessor(this), bitmapIndicator_, &bitmapIndicator);
+    ret = grib_get_long_internal(get_enclosing_handle(), bitmapIndicator_, &bitmapIndicator);
     if (ret) {
         if (ret == GRIB_NOT_FOUND) {
             *val = 0;
@@ -54,7 +54,7 @@ int G2BitmapPresent::pack_long(const long* val, size_t* len)
     if (*val == 0)
         bitmapIndicator = 255;
 
-    return grib_set_long(grib_handle_of_accessor(this), bitmapIndicator_, bitmapIndicator);
+    return grib_set_long(get_enclosing_handle(), bitmapIndicator_, bitmapIndicator);
 }
 
 }  // namespace eccodes::accessor

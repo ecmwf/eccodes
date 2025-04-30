@@ -9,6 +9,11 @@
  */
 
 
+// <<<<<<< HEAD:src/eccodes/grib_accessor_factory.cc
+// =======
+// #include "grib_api_internal.h"
+// #include "grib_accessor_classes_hash.cc"
+// >>>>>>> develop:src/eccodes/grib_accessor_class.cc
 #include "accessor/Accessor.h"
 #include "grib_api_internal.h"
 
@@ -229,7 +234,7 @@ static void link_same_attributes(grib_accessor* a, grib_accessor* b)
 void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
 {
     int id;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_handle* hand = a->get_enclosing_handle();
     if (!l->first)
         l->first = l->last = a;
     else {

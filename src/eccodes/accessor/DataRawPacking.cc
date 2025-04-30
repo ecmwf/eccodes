@@ -20,15 +20,15 @@ void DataRawPacking::init(const long v, grib_arguments* args)
 {
     Values::init(v, args);
 
-    number_of_values_ = args->get_name(grib_handle_of_accessor(this), carg_++);
-    precision_        = args->get_name(grib_handle_of_accessor(this), carg_++);
+    number_of_values_ = args->get_name(get_enclosing_handle(), carg_++);
+    precision_        = args->get_name(get_enclosing_handle(), carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
 int DataRawPacking::value_count(long* n_vals)
 {
     *n_vals = 0;
-    return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, n_vals);
+    return grib_get_long_internal(get_enclosing_handle(), number_of_values_, n_vals);
 }
 
 int DataRawPacking::unpack_double(double* val, size_t* len)
@@ -41,12 +41,12 @@ int DataRawPacking::unpack_double(double* val, size_t* len)
 
     int code = GRIB_SUCCESS;
 
-    if ((code = grib_get_long(grib_handle_of_accessor(this), precision_, &precision)) != GRIB_SUCCESS)
+    if ((code = grib_get_long(get_enclosing_handle(), precision_, &precision)) != GRIB_SUCCESS)
         return code;
 
     dirty_ = 0;
 
-    buf = (unsigned char*)grib_handle_of_accessor(this)->buffer->data;
+    buf = get_enclosing_handle()->buffer->data;
     buf += byte_offset();
     switch (precision) {
         case 1:
@@ -91,7 +91,7 @@ int DataRawPacking::pack_double(const double* val, size_t* len)
     if (*len == 0)
         return GRIB_NO_VALUES;
 
-    if ((code = grib_get_long_internal(grib_handle_of_accessor(this), precision_, &precision)) != GRIB_SUCCESS)
+    if ((code = grib_get_long_internal(get_enclosing_handle(), precision_, &precision)) != GRIB_SUCCESS)
         return code;
 
     dirty_ = 1;
@@ -133,7 +133,7 @@ clean_up:
     grib_context_buffer_free(context_, buffer);
 
     if (code == GRIB_SUCCESS) {
-        code = grib_set_long(grib_handle_of_accessor(this), number_of_values_, inlen);
+        code = grib_set_long(get_enclosing_handle(), number_of_values_, inlen);
         if (code == GRIB_READ_ONLY)
             code = 0;
     }
@@ -151,12 +151,12 @@ int DataRawPacking::unpack_double_element(size_t idx, double* val)
     long pos           = 0;
     long precision     = 0;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), precision_, &precision)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), precision_, &precision)) != GRIB_SUCCESS)
         return ret;
 
     dirty_ = 0;
 
-    buf = (unsigned char*)grib_handle_of_accessor(this)->buffer->data;
+    buf = get_enclosing_handle()->buffer->data;
     buf += byte_offset();
     switch (precision) {
         case 1:

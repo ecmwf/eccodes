@@ -133,7 +133,7 @@ int Gen::unpack_helper(grib_accessor* a, T* v, size_t* len)
     }
 
     grib_context_log(a->context_, GRIB_LOG_ERROR, "Cannot unpack key '%s' as %s", a->name_, Tname);
-    if (grib_get_native_type(grib_handle_of_accessor(a), a->name_, &type) == GRIB_SUCCESS) {
+    if (grib_get_native_type(a->get_enclosing_handle(), a->name_, &type) == GRIB_SUCCESS) {
         grib_context_log(a->context_, GRIB_LOG_ERROR, "Hint: Try unpacking as %s", grib_get_type_name(type));
     }
 

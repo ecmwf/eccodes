@@ -10,6 +10,9 @@
 
 #include "eccodes.h"
 #include "action/Concept.h"
+#include "step.h"
+
+#include <iostream>
 
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 
@@ -58,6 +61,14 @@ static void test_get_git_sha1()
     const char* sha1 = codes_get_git_sha1();
     ECCODES_ASSERT(sha1 != NULL);
     printf("Git SHA1 = %s\n", sha1);
+}
+
+static void test_get_git_branch()
+{
+    printf("Running %s ...\n", __func__);
+    const char* gbr = codes_get_git_branch();
+    ECCODES_ASSERT(gbr != NULL);
+    printf("Git branch = %s\n", gbr);
 }
 
 static void test_get_build_date()
@@ -969,8 +980,24 @@ static void test_expressions()
     ECCODES_ASSERT(eIsInList);
     cname = eIsInList->class_name();
     ECCODES_ASSERT( cname && strlen(cname) > 0 );
-
 }
+
+static void test_step_units()
+{
+#ifndef ECCODES_ON_WINDOWS
+    printf("Running %s ...\n", __func__);
+    const auto supported_units = eccodes::Unit::list_supported_units();
+    std::cout << "\tSupported units are: ";
+    int count = 0;
+    for (auto& u : supported_units) {
+        std::cout << eccodes::Unit{ u }.value<std::string>() + ",";
+        ++count;
+    }
+    std::cout << std::endl;
+    ECCODES_ASSERT(count == 14);
+#endif
+}
+
 
 int main(int argc, char** argv)
 {
@@ -979,6 +1006,7 @@ int main(int argc, char** argv)
     codes_print_api_version(stdout);
     printf("\n");
 
+    test_step_units();
     test_grib_get_reduced_row_legacy();
 
     test_codes_context_set_debug();
@@ -1001,6 +1029,7 @@ int main(int argc, char** argv)
     test_parse_keyval_string();
 
     test_get_git_sha1();
+    test_get_git_branch();
     test_get_package_name();
     test_get_build_date();
     test_gribex_mode();

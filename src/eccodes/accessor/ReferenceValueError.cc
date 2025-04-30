@@ -20,8 +20,8 @@ void ReferenceValueError::init(const long l, grib_arguments* c)
     Double::init(l, c);
     int n = 0;
 
-    referenceValue_ = c->get_name(grib_handle_of_accessor(this), n++);
-    floatType_      = c->get_name(grib_handle_of_accessor(this), n++);
+    referenceValue_ = c->get_name(get_enclosing_handle(), n++);
+    floatType_      = c->get_name(get_enclosing_handle(), n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     length_ = 0;
@@ -32,7 +32,7 @@ int ReferenceValueError::unpack_double(double* val, size_t* len)
     int ret               = GRIB_SUCCESS;
     double referenceValue = 0;
 
-    if ((ret = grib_get_double_internal(grib_handle_of_accessor(this),
+    if ((ret = grib_get_double_internal(get_enclosing_handle(),
                                         referenceValue_, &referenceValue)) != GRIB_SUCCESS)
         return ret;
 

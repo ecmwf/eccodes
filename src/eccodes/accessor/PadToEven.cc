@@ -21,8 +21,8 @@ size_t PadToEven::preferred_size(int from_handle)
     long length = 0;
     long seclen;
 
-    grib_get_long_internal(grib_handle_of_accessor(this), section_offset_, &offset);
-    grib_get_long_internal(grib_handle_of_accessor(this), section_length_, &length);
+    grib_get_long_internal(get_enclosing_handle(), section_offset_, &offset);
+    grib_get_long_internal(get_enclosing_handle(), section_length_, &length);
 
     if ((length % 2) && from_handle) {
         //  grib_context_log(context_ ,
@@ -41,8 +41,8 @@ void PadToEven::init(const long len, grib_arguments* args)
 {
     Padding::init(len, args);
 
-    section_offset_ = args->get_name(grib_handle_of_accessor(this), 0);
-    section_length_ = args->get_name(grib_handle_of_accessor(this), 1);
+    section_offset_ = args->get_name(get_enclosing_handle(), 0);
+    section_length_ = args->get_name(get_enclosing_handle(), 1);
 
     length_ = preferred_size(1);
 }

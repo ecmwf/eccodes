@@ -18,7 +18,7 @@ namespace eccodes::accessor
 void Element::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     int n    = 0;
     array_   = c->get_name(hand, n++);
@@ -28,7 +28,7 @@ void Element::init(const long l, grib_arguments* c)
 static int check_element_index(const char* func, const char* array_name, long index, size_t size)
 {
     const grib_context* c = grib_context_get_default();
-    if (index < 0 || index >= size) {
+    if (index < 0 || (size_t)index >= size) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Invalid element index %ld for array '%s'. Value must be between 0 and %zu",
                          func, index, array_name, size - 1);
         return GRIB_INVALID_ARGUMENT;
@@ -42,7 +42,7 @@ int Element::unpack_long(long* val, size_t* len)
     size_t size           = 0;
     long* ar              = NULL;
     const grib_context* c = context_;
-    grib_handle* hand     = grib_handle_of_accessor(this);
+    grib_handle* hand     = get_enclosing_handle();
     long index            = element_;
 
     if (*len < 1) {
@@ -84,7 +84,7 @@ int Element::pack_long(const long* val, size_t* len)
     size_t size           = 0;
     long* ar              = NULL;
     const grib_context* c = context_;
-    grib_handle* hand     = grib_handle_of_accessor(this);
+    grib_handle* hand     = get_enclosing_handle();
     long index            = element_;
 
     if (*len < 1) {
@@ -120,7 +120,7 @@ int Element::pack_long(const long* val, size_t* len)
     }
 
     ECCODES_ASSERT(index >= 0);
-    ECCODES_ASSERT(index < size);
+    ECCODES_ASSERT( (size_t)index < size);
     ar[index] = *val;
 
     if ((ret = grib_set_long_array_internal(hand, array_, ar, size)) != GRIB_SUCCESS)
@@ -137,7 +137,7 @@ int Element::pack_double(const double* v, size_t* len)
     size_t size           = 0;
     double* ar            = NULL;
     const grib_context* c = context_;
-    grib_handle* hand     = grib_handle_of_accessor(this);
+    grib_handle* hand     = get_enclosing_handle();
     long index            = element_;
 
     if (*len < 1) {
@@ -167,7 +167,7 @@ int Element::pack_double(const double* v, size_t* len)
     }
 
     ECCODES_ASSERT(index >= 0);
-    ECCODES_ASSERT(index < size);
+    ECCODES_ASSERT( (size_t)index < size);
     ar[index] = *v;
 
     if ((ret = grib_set_double_array_internal(hand, array_, ar, size)) != GRIB_SUCCESS)
@@ -184,7 +184,7 @@ int Element::unpack_double(double* val, size_t* len)
     size_t size             = 0;
     double* ar              = NULL;
     const grib_context* c   = context_;
-    const grib_handle* hand = grib_handle_of_accessor(this);
+    const grib_handle* hand = get_enclosing_handle();
     long index              = element_;
 
     if (*len < 1) {

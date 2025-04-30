@@ -104,7 +104,7 @@ grib_action* List::reparse(grib_accessor* acc, int* doit)
 {
     long val = 0;
 
-    int ret = expression_->evaluate_long(grib_handle_of_accessor(acc), &val);
+    int ret = expression_->evaluate_long(acc->get_enclosing_handle(), &val);
     if (ret != GRIB_SUCCESS) {
         grib_context_log(acc->context_, GRIB_LOG_ERROR,
                          "List %s creating %ld values: Unable to evaluate long", acc->name_, val);

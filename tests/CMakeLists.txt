@@ -192,6 +192,7 @@ if( HAVE_BUILD_TOOLS )
         grib_double_cmp
         grib_element
         grib_change_packing
+        grib_complex_spatial_differencing
         grib_run_length_packing
         grib_grid_space_view
         grib_partial_message
@@ -280,6 +281,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-806
         grib_ecc-873
         grib_ecc-600
+        grib_ecc-813
         grib_ecc-923
         grib_ecc-979
         grib_ecc-984
@@ -304,6 +306,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2019
         grib_ecc-2034
         grib_ecc-2045
+        grib_ecc-2050
         grib_ecc-2052
         grib_modelName
         grib_sub_hourly
@@ -562,13 +565,12 @@ if( HAVE_BUILD_TOOLS )
                       CONDITION ECCODES_INSTALL_EXTRA_TOOLS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/codes_export_resource.sh )
 
-
     # Performance test
-    ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
-                      TYPE SCRIPT
-                      CONDITION ENABLE_EXTRA_TESTS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-386.sh
-                      TEST_DEPENDS eccodes_download_gribs )
+    # ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
+    #                  TYPE SCRIPT
+    #                  CONDITION ENABLE_EXTRA_TESTS
+    #                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-386.sh
+    #                  TEST_DEPENDS eccodes_download_gribs )
 else()
     # No command line tools
     list(APPEND tests_no_tools

@@ -35,7 +35,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     int err            = 0;
     unsigned long i    = 0;
     long bitp          = a->offset_ * 8;
-    grib_handle* hand  = grib_handle_of_accessor(a);
+    grib_handle* hand  = a->get_enclosing_handle();
 
     err = a->value_count(&count);
     if (err)
@@ -87,7 +87,7 @@ int IbmFloat::pack_double(const double* val, size_t* len)
         // printf("IBMFLOAT val=%.20f nearest_smaller_ibm_float=%.20f long_to_ibm=%.20f\n",val[0],x ,y);
 
         off = byte_offset() * 8;
-        ret = grib_encode_unsigned_long(grib_handle_of_accessor(this)->buffer->data, grib_ibm_to_long(val[0]), &off, 32);
+        ret = grib_encode_unsigned_long(get_enclosing_handle()->buffer->data, grib_ibm_to_long(val[0]), &off, 32);
         if (*len > 1)
             grib_context_log(context_, GRIB_LOG_WARNING, "ibmfloat: Trying to pack %zu values in a scalar %s, packing first value",
                              *len, name_);
@@ -103,7 +103,7 @@ int IbmFloat::pack_double(const double* val, size_t* len)
     for (i = 0; i < rlen; i++) {
         grib_encode_unsigned_longb(buf, grib_ibm_to_long(val[i]), &off, 32);
     }
-    ret = grib_set_long_internal(grib_handle_of_accessor(this), arg_->get_name(parent_->h, 0), rlen);
+    ret = grib_set_long_internal(get_enclosing_handle(), arg_->get_name(parent_->h, 0), rlen);
 
     if (ret == GRIB_SUCCESS)
         grib_buffer_replace(this, buf, buflen, 1, 1);
@@ -129,7 +129,7 @@ int IbmFloat::value_count(long* len)
         *len = 1;
         return 0;
     }
-    return grib_get_long_internal(grib_handle_of_accessor(this), arg_->get_name(parent_->h, 0), len);
+    return grib_get_long_internal(get_enclosing_handle(), arg_->get_name(parent_->h, 0), len);
 }
 
 long IbmFloat::byte_offset()
@@ -153,7 +153,7 @@ int IbmFloat::nearest_smaller_value(double val, double* nearest)
     int ret = 0;
     if (grib_nearest_smaller_ibm_float(val, nearest) == GRIB_INTERNAL_ERROR) {
         grib_context_log(context_, GRIB_LOG_ERROR, "ibm_float:nearest_smaller_value overflow value=%g", val);
-        grib_dump_content(grib_handle_of_accessor(this), stderr, "wmo", GRIB_DUMP_FLAG_HEXADECIMAL, 0);
+        grib_dump_content(get_enclosing_handle(), stderr, "wmo", GRIB_DUMP_FLAG_HEXADECIMAL, 0);
         ret = GRIB_INTERNAL_ERROR;
     }
     return ret;

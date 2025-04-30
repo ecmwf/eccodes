@@ -19,7 +19,7 @@ void Sum::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
     int n   = 0;
-    values_ = c->get_name(grib_handle_of_accessor(this), n++);
+    values_ = c->get_name(get_enclosing_handle(), n++);
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
@@ -45,7 +45,7 @@ int Sum::unpack_long(long* val, size_t* len)
     if (!values)
         return GRIB_OUT_OF_MEMORY;
 
-    grib_get_long_array(grib_handle_of_accessor(this), values_, values, &size);
+    grib_get_long_array(get_enclosing_handle(), values_, values, &size);
 
     *val = 0;
     for (i = 0; i < size; i++)
@@ -77,7 +77,7 @@ int Sum::unpack_double(double* val, size_t* len)
     if (!values)
         return GRIB_OUT_OF_MEMORY;
 
-    ret = grib_get_double_array(grib_handle_of_accessor(this), values_, values, &size);
+    ret = grib_get_double_array(get_enclosing_handle(), values_, values, &size);
     if (ret) {
         grib_context_free(context_, values);
         return ret;
@@ -96,7 +96,7 @@ int Sum::value_count(long* count)
     size_t n = 0;
     int ret  = GRIB_SUCCESS;
 
-    ret    = grib_get_size(grib_handle_of_accessor(this), values_, &n);
+    ret    = grib_get_size(get_enclosing_handle(), values_, &n);
     *count = n;
 
     if (ret)

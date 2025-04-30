@@ -53,7 +53,7 @@ int Bytes::unpack_string(char* v, size_t* len)
         return GRIB_BUFFER_TOO_SMALL;
     }
 
-    p = grib_handle_of_accessor(this)->buffer->data + byte_offset();
+    p = get_enclosing_handle()->buffer->data + byte_offset();
     for (i = 0; i < length; i++) {
         snprintf(s, INT_MAX, "%02x", *(p++));
         s += 2;

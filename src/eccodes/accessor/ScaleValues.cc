@@ -19,8 +19,8 @@ void ScaleValues::init(const long l, grib_arguments* args)
 {
     Double::init(l, args);
     int n         = 0;
-    values_       = args->get_name(grib_handle_of_accessor(this), n++);
-    missingValue_ = args->get_name(grib_handle_of_accessor(this), n++);
+    values_       = args->get_name(get_enclosing_handle(), n++);
+    missingValue_ = args->get_name(get_enclosing_handle(), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
 }
@@ -40,9 +40,9 @@ int ScaleValues::pack_double(const double* val, size_t* len)
     double missingValue       = 0;
     long missingValuesPresent = 0;
     size_t size               = 0;
-    int ret = 0, i = 0;
+    int ret = 0;
     const grib_context* c = context_;
-    grib_handle* h        = grib_handle_of_accessor(this);
+    grib_handle* h        = get_enclosing_handle();
 
     if (*val == 1)
         return GRIB_SUCCESS;
@@ -66,7 +66,7 @@ int ScaleValues::pack_double(const double* val, size_t* len)
         return ret;
     }
 
-    for (i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++) {
         if (missingValuesPresent) {
             if (values[i] != missingValue)
                 values[i] *= *val;

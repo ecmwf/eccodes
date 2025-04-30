@@ -54,7 +54,7 @@ static int build_long_array(grib_context* c, grib_handle* h, int compressed,
         }
         if (err)
             return err;
-        if (n != numberOfSubsets) {
+        if (n != (size_t)numberOfSubsets) {
             if (n == 1) {
                 for (i = 1; i < numberOfSubsets; i++)
                     (*array)[i] = (*array)[0];
@@ -94,9 +94,9 @@ void BufrExtractDatetimeSubsets::init(const long len, grib_arguments* arg)
     int n = 0;
 
     length_            = 0;
-    doExtractSubsets_  = arg->get_name(grib_handle_of_accessor(this), n++);
-    numberOfSubsets_   = arg->get_name(grib_handle_of_accessor(this), n++);
-    extractSubsetList_ = arg->get_name(grib_handle_of_accessor(this), n++);
+    doExtractSubsets_  = arg->get_name(get_enclosing_handle(), n++);
+    numberOfSubsets_   = arg->get_name(get_enclosing_handle(), n++);
+    extractSubsetList_ = arg->get_name(get_enclosing_handle(), n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }
@@ -110,7 +110,7 @@ int BufrExtractDatetimeSubsets::select_datetime()
 {
     int ret         = 0;
     long compressed = 0;
-    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_handle* h  = get_enclosing_handle();
     grib_context* c = h->context;
 
     double julianStart = 0, julianEnd = 0, julianDT = 0;
@@ -200,7 +200,7 @@ int BufrExtractDatetimeSubsets::select_datetime()
             n         = 1;
             (void)ret;
         }
-        if (n != numberOfSubsets) {
+        if (n != (size_t)numberOfSubsets) {
             if (n == 1) {
                 for (i = 1; i < numberOfSubsets; i++)
                     second[i] = second[0];

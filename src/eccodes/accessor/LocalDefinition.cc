@@ -18,7 +18,7 @@ namespace eccodes::accessor
 void LocalDefinition::init(const long l, grib_arguments* c)
 {
     Unsigned::init(l, c);
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     int n = 0;
 
     grib2LocalSectionNumber_                 = c->get_name(hand, n++);
@@ -34,12 +34,12 @@ void LocalDefinition::init(const long l, grib_arguments* c)
 
 int LocalDefinition::unpack_long(long* val, size_t* len)
 {
-    return grib_get_long(grib_handle_of_accessor(this), grib2LocalSectionNumber_, val);
+    return grib_get_long(get_enclosing_handle(), grib2LocalSectionNumber_, val);
 }
 
 int LocalDefinition::pack_long(const long* val, size_t* len)
 {
-    grib_handle* hand                            = grib_handle_of_accessor(this);
+    grib_handle* hand                            = get_enclosing_handle();
     long productDefinitionTemplateNumber         = -1;
     long productDefinitionTemplateNumberInternal = -1;
     long productDefinitionTemplateNumberNew      = -1;
@@ -72,6 +72,8 @@ int LocalDefinition::pack_long(const long* val, size_t* len)
     grib_get_string(hand, stepType_, stepType, &slen);
     if (!strcmp(stepType, "instant"))
         isInstant = 1;
+    if (grib_is_defined(hand, "typeOfStatisticalProcessing"))
+        isInstant = 0;
     grib_get_long(hand, grib2LocalSectionNumber_, &grib2LocalSectionNumber);
     grib_get_long(hand, "is_chemical", &chemical);
     grib_get_long(hand, "is_aerosol", &aerosol);

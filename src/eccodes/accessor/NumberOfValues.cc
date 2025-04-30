@@ -19,7 +19,7 @@ void NumberOfValues::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n             = 0;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     values_              = c->get_name(hand, n++);
     bitsPerValue_        = c->get_name(hand, n++);
@@ -38,17 +38,17 @@ int NumberOfValues::unpack_long(long* val, size_t* len)
     long npoints = 0, bitmap_present = 0;
     size_t size = 0;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), numberOfPoints_, &npoints)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), numberOfPoints_, &npoints)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), bitmapPresent_, &bitmap_present)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), bitmapPresent_, &bitmap_present)) != GRIB_SUCCESS)
         return ret;
 
     if (bitmap_present) {
         double* bitmap;
         size   = npoints;
         bitmap = (double*)grib_context_malloc(context_, sizeof(double) * size);
-        if ((ret = grib_get_double_array_internal(grib_handle_of_accessor(this), bitmap_, bitmap, &size)) != GRIB_SUCCESS) {
+        if ((ret = grib_get_double_array_internal(get_enclosing_handle(), bitmap_, bitmap, &size)) != GRIB_SUCCESS) {
             grib_context_free(context_, bitmap);
             return ret;
         }

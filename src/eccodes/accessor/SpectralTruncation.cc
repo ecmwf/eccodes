@@ -20,10 +20,10 @@ void SpectralTruncation::init(const long l, grib_arguments* c)
     Long::init(l, c);
     int n = 0;
 
-    J_ = c->get_name(grib_handle_of_accessor(this), n++);
-    K_ = c->get_name(grib_handle_of_accessor(this), n++);
-    M_ = c->get_name(grib_handle_of_accessor(this), n++);
-    T_ = c->get_name(grib_handle_of_accessor(this), n++);
+    J_ = c->get_name(get_enclosing_handle(), n++);
+    K_ = c->get_name(get_enclosing_handle(), n++);
+    M_ = c->get_name(get_enclosing_handle(), n++);
+    T_ = c->get_name(get_enclosing_handle(), n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
@@ -37,13 +37,13 @@ int SpectralTruncation::unpack_long(long* val, size_t* len)
     if (*len < 1)
         return GRIB_ARRAY_TOO_SMALL;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), J_, &J)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), J_, &J)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), K_, &K)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), K_, &K)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), M_, &M)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), M_, &M)) != GRIB_SUCCESS)
         return ret;
 
     Tc = -1;
@@ -61,17 +61,17 @@ int SpectralTruncation::unpack_long(long* val, size_t* len)
     }
     *val = Tc;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), T_, &T)) != GRIB_SUCCESS) {
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), T_, &T)) != GRIB_SUCCESS) {
         if (Tc == -1)
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "%s. Spectral Truncation Type Unknown: %s=%ld %s=%ld %s=%ld",
                              name_, J_, J, K_, K, M_, M);
         Tc = 0;
-        grib_set_long(grib_handle_of_accessor(this), T_, Tc);
+        grib_set_long(get_enclosing_handle(), T_, Tc);
     }
     else {
         if (Tc != -1 && Tc != T)
-            grib_set_long(grib_handle_of_accessor(this), T_, Tc);
+            grib_set_long(get_enclosing_handle(), T_, Tc);
     }
 
     if (ret == GRIB_SUCCESS)

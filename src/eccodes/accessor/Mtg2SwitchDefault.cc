@@ -19,7 +19,7 @@ void Mtg2SwitchDefault::init(const long len, grib_arguments* arg)
 {
     Long::init(len, arg);
 
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     if (context_->debug) {
         const int numActualArgs   = arg->get_count();
@@ -47,7 +47,7 @@ void Mtg2SwitchDefault::init(const long len, grib_arguments* arg)
 //  2 = post-MTG2 encoding with paramId + chemId used
 int Mtg2SwitchDefault::unpack_long(long* val, size_t* len)
 {
-    grib_handle* h     = grib_handle_of_accessor(this);
+    grib_handle* h     = get_enclosing_handle();
     int err            = 0;
     long tablesVersion = 0, tablesVersionMTG2Switch = 0;
     char marsClass[32] = {0,};

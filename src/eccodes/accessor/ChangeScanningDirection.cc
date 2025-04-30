@@ -18,7 +18,7 @@ namespace eccodes::accessor
 void ChangeScanningDirection::init(const long len, grib_arguments* args)
 {
     Gen::init(len, args);
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     int n          = 0;
 
     values_             = args->get_name(h, n++);
@@ -46,7 +46,7 @@ int ChangeScanningDirection::pack_long(const long* val, size_t* len)
     size_t size             = 0;
     double* values          = NULL;
     const grib_context* c   = context_;
-    grib_handle* h          = grib_handle_of_accessor(this);
+    grib_handle* h          = get_enclosing_handle();
 
     if (*val == 0)
         return GRIB_SUCCESS;
@@ -79,7 +79,7 @@ int ChangeScanningDirection::pack_long(const long* val, size_t* len)
     if ((err = grib_get_size(h, values_, &size)) != GRIB_SUCCESS)
         return err;
 
-    if (size > Ni * Nj) {
+    if (size > (size_t)Ni * Nj) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Wrong values size!=Ni*Nj (%ld!=%ld*%ld)", accessor_type().get().c_str(), size, Ni, Nj);
         return GRIB_WRONG_ARRAY_SIZE;
     }

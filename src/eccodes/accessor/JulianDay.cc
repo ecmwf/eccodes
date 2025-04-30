@@ -19,7 +19,7 @@ void JulianDay::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
     int n = 0;
-    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_handle* h  = get_enclosing_handle();
 
     date_   = c->get_name(h, n++);
     hour_   = c->get_name(h, n++);
@@ -45,7 +45,7 @@ int JulianDay::pack_double(const double* val, size_t* len)
     int ret = GRIB_SUCCESS;
     long hour = 0, minute = 0, second = 0;
     long year = 0, month = 0, day = 0;
-    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_handle* h  = get_enclosing_handle();
 
     ret = grib_julian_to_datetime(*val, &year, &month, &day, &hour, &minute, &second);
     if (ret != 0)
@@ -83,7 +83,7 @@ int JulianDay::unpack_double(double* val, size_t* len)
     int ret = 0;
     long date, hour, minute, second;
     long year, month, day;
-    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_handle* h  = get_enclosing_handle();
 
     ret = grib_get_long_internal(h, date_, &date);
     if (ret != GRIB_SUCCESS)

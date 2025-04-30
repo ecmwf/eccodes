@@ -58,7 +58,7 @@ long number_of_bits(grib_handle* h, unsigned long x)
 void DataG1SecondOrderGeneralExtendedPacking::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
-    grib_handle* handle = grib_handle_of_accessor(this);
+    grib_handle* handle = get_enclosing_handle();
 
     half_byte_                       = args->get_name(handle, carg_++);
     packingType_                     = args->get_name(handle, carg_++);
@@ -103,7 +103,7 @@ int DataG1SecondOrderGeneralExtendedPacking::value_count(long* count)
 
     *count = 0;
 
-    err = grib_get_long(grib_handle_of_accessor(this), numberOfGroups_, &numberOfGroups);
+    err = grib_get_long(get_enclosing_handle(), numberOfGroups_, &numberOfGroups);
     if (err)
         return err;
     if (numberOfGroups == 0)
@@ -111,7 +111,7 @@ int DataG1SecondOrderGeneralExtendedPacking::value_count(long* count)
 
     groupLengths = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfGroups);
     ngroups      = numberOfGroups;
-    err          = grib_get_long_array(grib_handle_of_accessor(this), groupLengths_, groupLengths, &ngroups);
+    err          = grib_get_long_array(get_enclosing_handle(), groupLengths_, groupLengths, &ngroups);
     if (err)
         return err;
 
@@ -120,7 +120,7 @@ int DataG1SecondOrderGeneralExtendedPacking::value_count(long* count)
 
     grib_context_free(context_, groupLengths);
 
-    err = grib_get_long(grib_handle_of_accessor(this), orderOfSPD_, &orderOfSPD);
+    err = grib_get_long(get_enclosing_handle(), orderOfSPD_, &orderOfSPD);
 
     *count = numberOfCodedValues + orderOfSPD;
 
@@ -134,14 +134,14 @@ int DataG1SecondOrderGeneralExtendedPacking::unpack_double_element(size_t idx, d
     int err = 0;
 
     /* GRIB-564: The index idx relates to codedValues NOT values! */
-    err = grib_get_size(grib_handle_of_accessor(this), "codedValues", &size);
+    err = grib_get_size(get_enclosing_handle(), "codedValues", &size);
     if (err)
         return err;
     if (idx >= size)
         return GRIB_INVALID_ARGUMENT;
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
-    err    = grib_get_double_array(grib_handle_of_accessor(this), "codedValues", values, &size);
+    err    = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
     if (err) {
         grib_context_free(context_, values);
         return err;
@@ -158,7 +158,7 @@ int DataG1SecondOrderGeneralExtendedPacking::unpack_double_element_set(const siz
     int err = 0;
 
     /* GRIB-564: The indexes in index_array relate to codedValues NOT values! */
-    err = grib_get_size(grib_handle_of_accessor(this), "codedValues", &size);
+    err = grib_get_size(get_enclosing_handle(), "codedValues", &size);
     if (err)
         return err;
 
@@ -167,7 +167,7 @@ int DataG1SecondOrderGeneralExtendedPacking::unpack_double_element_set(const siz
     }
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
-    err    = grib_get_double_array(grib_handle_of_accessor(this), "codedValues", values, &size);
+    err    = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
     if (err) {
         grib_context_free(context_, values);
         return err;
@@ -186,8 +186,8 @@ int DataG1SecondOrderGeneralExtendedPacking::unpack(double* dvalues, float* fval
     long* firstOrderValues = 0;
     long* X                = 0;
     long pos               = 0;
-    grib_handle* handle    = grib_handle_of_accessor(this);
-    unsigned char* buf     = (unsigned char*)handle->buffer->data;
+    grib_handle* handle    = get_enclosing_handle();
+    unsigned char* buf     = handle->buffer->data;
     long i, n;
     double reference_value;
     long binary_scale_factor;
@@ -583,7 +583,7 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
     int computeGroupA = 1;
     long dataHeadersLength, widthsLength, lengthsLength, firstOrderValuesLength;
     long decimal_scale_factor;
-    grib_handle* handle          = grib_handle_of_accessor(this);
+    grib_handle* handle          = get_enclosing_handle();
     long optimize_scaling_factor = 0;
 
     numberOfValues = *len;

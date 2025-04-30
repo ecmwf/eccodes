@@ -18,11 +18,11 @@ namespace eccodes::accessor
 void Group::init(const long len, grib_arguments* arg)
 {
     Gen::init(len, arg);
-    const grib_buffer* buffer = grib_handle_of_accessor(this)->buffer;
+    const grib_buffer* buffer = get_enclosing_handle()->buffer;
 
     size_t i = 0;
     unsigned char* v;
-    const char* s = arg ? arg->get_string(grib_handle_of_accessor(this), 0) : nullptr;
+    const char* s = arg ? arg->get_string(get_enclosing_handle(), 0) : nullptr;
 
     if (s && strlen(s) > 1) {
         grib_context_log(context_, GRIB_LOG_WARNING,
@@ -77,7 +77,7 @@ int Group::unpack_string(char* val, size_t* len)
 {
     long i         = 0;
     size_t l       = length_ + 1;
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     if (*len < l) {
         grib_context_log(context_, GRIB_LOG_ERROR,

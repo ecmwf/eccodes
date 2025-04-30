@@ -36,7 +36,7 @@ int G1HalfByteCodeflag::unpack_long(long* val, size_t* len)
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
-    dat = grib_handle_of_accessor(this)->buffer->data[offset_] & 0x0f;
+    dat = get_enclosing_handle()->buffer->data[offset_] & 0x0f;
 
     *val = dat;
     *len = 1;
@@ -51,9 +51,9 @@ int G1HalfByteCodeflag::pack_long(const long* val, size_t* len)
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
-    /*  printf("HALF BYTE pack long %ld %02x\n",*val,grib_handle_of_accessor(this)->buffer->data[offset_ ]);*/
-    grib_handle_of_accessor(this)->buffer->data[offset_] = (parent_->h->buffer->data[offset_] & 0xf0) | (*val & 0x0f);
-    /*  printf("HALF BYTE pack long %ld %02x\n",*val,grib_handle_of_accessor(this)->buffer->data[offset_ ]);*/
+    /*  printf("HALF BYTE pack long %ld %02x\n",*val,get_enclosing_handle()->buffer->data[offset_ ]);*/
+    get_enclosing_handle()->buffer->data[offset_] = (parent_->h->buffer->data[offset_] & 0xf0) | (*val & 0x0f);
+    /*  printf("HALF BYTE pack long %ld %02x\n",*val,get_enclosing_handle()->buffer->data[offset_ ]);*/
 
     *len = 1;
     return ret;

@@ -217,7 +217,7 @@ grib_action* If::reparse(grib_accessor* acc, int* doit)
 
     /* printf("reparse %s %s\n",name_,acc->name); */
 
-    if ((ret = expression_->evaluate_long(grib_handle_of_accessor(acc), &lres)) != GRIB_SUCCESS)
+    if ((ret = expression_->evaluate_long(acc->get_enclosing_handle(), &lres)) != GRIB_SUCCESS)
         grib_context_log(acc->context_,
                          GRIB_LOG_ERROR, "action_class_if::reparse: grib_expression_evaluate_long failed: %s",
                          grib_get_error_message(ret));

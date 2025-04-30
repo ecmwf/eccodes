@@ -18,7 +18,7 @@ namespace eccodes::accessor
 void BufrSimpleThinning::init(const long len, grib_arguments* arg)
 {
     Gen::init(len, arg);
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     int n          = 0;
 
     length_                      = 0;
@@ -40,7 +40,7 @@ long BufrSimpleThinning::get_native_type()
 int BufrSimpleThinning::apply_thinning()
 {
     long skip;
-    grib_handle* h  = grib_handle_of_accessor(this);
+    grib_handle* h  = get_enclosing_handle();
     grib_context* c = h->context;
     long compressed = 0, nsubsets;
     grib_iarray* subsets;

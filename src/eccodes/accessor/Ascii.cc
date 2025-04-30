@@ -45,7 +45,7 @@ long Ascii::get_native_type()
 
 int Ascii::unpack_string(char* val, size_t* len)
 {
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     const size_t alen = length_;
 
     if (*len < (alen + 1)) {
@@ -66,7 +66,7 @@ int Ascii::unpack_string(char* val, size_t* len)
 
 int Ascii::pack_string(const char* val, size_t* len)
 {
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     const size_t alen = length_;
     if (*len > (alen + 1)) {
         grib_context_log(context_, GRIB_LOG_ERROR,

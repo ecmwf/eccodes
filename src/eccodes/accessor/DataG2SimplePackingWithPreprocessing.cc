@@ -20,8 +20,8 @@ namespace eccodes::accessor
 void DataG2SimplePackingWithPreprocessing::init(const long v, grib_arguments* args)
 {
     DataG2SimplePacking::init(v, args);
-    pre_processing_           = args->get_name(grib_handle_of_accessor(this), carg_++);
-    pre_processing_parameter_ = args->get_name(grib_handle_of_accessor(this), carg_++);
+    pre_processing_           = args->get_name(get_enclosing_handle(), carg_++);
+    pre_processing_parameter_ = args->get_name(get_enclosing_handle(), carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
@@ -29,7 +29,7 @@ int DataG2SimplePackingWithPreprocessing::value_count(long* n_vals)
 {
     *n_vals = 0;
 
-    return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, n_vals);
+    return grib_get_long_internal(get_enclosing_handle(), number_of_values_, n_vals);
 }
 
 static int pre_processing_func(double* values, long length, long pre_processing,
@@ -117,11 +117,11 @@ int DataG2SimplePackingWithPreprocessing::unpack_double(double* val, size_t* len
 
     dirty_ = 0;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), pre_processing_, &pre_processing)) != GRIB_SUCCESS) {
+    if ((err = grib_get_long_internal(get_enclosing_handle(), pre_processing_, &pre_processing)) != GRIB_SUCCESS) {
         return err;
     }
 
-    if ((err = grib_get_double_internal(grib_handle_of_accessor(this), pre_processing_parameter_, &pre_processing_parameter)) != GRIB_SUCCESS) {
+    if ((err = grib_get_double_internal(get_enclosing_handle(), pre_processing_parameter_, &pre_processing_parameter)) != GRIB_SUCCESS) {
         return err;
     }
 
@@ -148,7 +148,7 @@ int DataG2SimplePackingWithPreprocessing::pack_double(const double* val, size_t*
 
     dirty_ = 1;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(this), pre_processing_, &pre_processing)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(get_enclosing_handle(), pre_processing_, &pre_processing)) != GRIB_SUCCESS)
         return err;
 
     err = pre_processing_func((double*)val, n_vals, pre_processing, &pre_processing_parameter, DIRECT);
@@ -159,10 +159,10 @@ int DataG2SimplePackingWithPreprocessing::pack_double(const double* val, size_t*
     if (err != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_set_double_internal(grib_handle_of_accessor(this), pre_processing_parameter_, pre_processing_parameter)) != GRIB_SUCCESS)
+    if ((err = grib_set_double_internal(get_enclosing_handle(), pre_processing_parameter_, pre_processing_parameter)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_set_long_internal(grib_handle_of_accessor(this), number_of_values_, n_vals)) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(get_enclosing_handle(), number_of_values_, n_vals)) != GRIB_SUCCESS)
         return err;
 
     return GRIB_SUCCESS;

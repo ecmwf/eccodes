@@ -22,7 +22,7 @@ void MessageIsValid::init(const long l, grib_arguments* arg)
 {
     Long::init(l, arg);
 
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     product_ = arg->get_name(h, 0);
     edition_ = 0;
 
@@ -548,7 +548,7 @@ int MessageIsValid::unpack_long(long* val, size_t* len)
     };
 
     int err = 0;
-    handle_ = grib_handle_of_accessor(this);
+    handle_ = get_enclosing_handle();
 
     *len = 1;
     *val = 1; // Assume message is valid

@@ -51,6 +51,7 @@ private:
     const char* numberOfBitsUsedForTheScaledGroupLengths_ = nullptr;
     const char* orderOfSpatialDifferencing_ = nullptr;
     const char* numberOfOctetsExtraDescriptors_ = nullptr;
+    const char* dataRepresentationTemplateNumber_ = nullptr;
 
     template <typename T> int unpack(T* val, size_t* len);
 

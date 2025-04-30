@@ -19,7 +19,7 @@ void StepHumanReadable::init(const long len, grib_arguments* params)
 {
     Gen::init(len, params);
     int n          = 0;
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
 
     stepUnits_ = params->get_name(h, n++);
     step_      = params->get_name(h, n++);
@@ -67,7 +67,7 @@ static int get_step_human_readable(grib_handle* h, char* result, size_t* length)
 
 int StepHumanReadable::unpack_string(char* buffer, size_t* len)
 {
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     long stepUnits = 0;
     int err        = 0;
 

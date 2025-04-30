@@ -20,10 +20,10 @@ void DataG1SimplePacking::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
 
-    half_byte_    = args->get_name(grib_handle_of_accessor(this), carg_++);
-    packingType_  = args->get_name(grib_handle_of_accessor(this), carg_++);
-    ieee_packing_ = args->get_name(grib_handle_of_accessor(this), carg_++);
-    precision_    = args->get_name(grib_handle_of_accessor(this), carg_++);
+    half_byte_    = args->get_name(get_enclosing_handle(), carg_++);
+    packingType_  = args->get_name(get_enclosing_handle(), carg_++);
+    ieee_packing_ = args->get_name(get_enclosing_handle(), carg_++);
+    precision_    = args->get_name(get_enclosing_handle(), carg_++);
     edition_      = 1;
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
@@ -36,7 +36,7 @@ int DataG1SimplePacking::value_count(long* number_of_values)
     /*if(length_ == 0)
     return 0;*/
 
-    return grib_get_long_internal(grib_handle_of_accessor(this), number_of_values_, number_of_values);
+    return grib_get_long_internal(get_enclosing_handle(), number_of_values_, number_of_values);
 }
 
 int DataG1SimplePacking::pack_double(const double* cval, size_t* len)
@@ -58,7 +58,7 @@ int DataG1SimplePacking::pack_double(const double* cval, size_t* len)
     int i;
     long off                   = 0;
     grib_context* c            = context_;
-    grib_handle* h             = grib_handle_of_accessor(this);
+    grib_handle* h             = get_enclosing_handle();
     char* ieee_packing_s       = NULL;
     char* packingType_s        = NULL;
     char* precision_s          = NULL;
@@ -71,13 +71,13 @@ int DataG1SimplePacking::pack_double(const double* cval, size_t* len)
 
     if (*len != 0) {
         if (units_factor_ &&
-            (grib_get_double_internal(grib_handle_of_accessor(this), units_factor_, &units_factor) == GRIB_SUCCESS)) {
-            grib_set_double_internal(grib_handle_of_accessor(this), units_factor_, 1.0);
+            (grib_get_double_internal(get_enclosing_handle(), units_factor_, &units_factor) == GRIB_SUCCESS)) {
+            grib_set_double_internal(get_enclosing_handle(), units_factor_, 1.0);
         }
 
         if (units_bias_ &&
-            (grib_get_double_internal(grib_handle_of_accessor(this), units_bias_, &units_bias) == GRIB_SUCCESS)) {
-            grib_set_double_internal(grib_handle_of_accessor(this), units_bias_, 0.0);
+            (grib_get_double_internal(get_enclosing_handle(), units_bias_, &units_bias) == GRIB_SUCCESS)) {
+            grib_set_double_internal(get_enclosing_handle(), units_bias_, 0.0);
         }
 
         if (units_factor != 1.0) {
@@ -124,27 +124,27 @@ int DataG1SimplePacking::pack_double(const double* cval, size_t* len)
     ret = DataSimplePacking::pack_double(val, len);
     switch (ret) {
         case GRIB_CONSTANT_FIELD:
-            ret = grib_get_long(grib_handle_of_accessor(this), "constantFieldHalfByte", &constantFieldHalfByte);
+            ret = grib_get_long(get_enclosing_handle(), "constantFieldHalfByte", &constantFieldHalfByte);
             if (ret)
                 constantFieldHalfByte = 0;
-            if ((ret = grib_set_long_internal(grib_handle_of_accessor(this), half_byte_, constantFieldHalfByte)) != GRIB_SUCCESS)
+            if ((ret = grib_set_long_internal(get_enclosing_handle(), half_byte_, constantFieldHalfByte)) != GRIB_SUCCESS)
                 return ret;
             ret = grib_buffer_replace(this, NULL, 0, 1, 1);
             if (ret != GRIB_SUCCESS) return ret;
             return GRIB_SUCCESS;
 
         case GRIB_NO_VALUES:
-            ret = grib_get_long(grib_handle_of_accessor(this), "constantFieldHalfByte", &constantFieldHalfByte);
+            ret = grib_get_long(get_enclosing_handle(), "constantFieldHalfByte", &constantFieldHalfByte);
             if (ret)
                 constantFieldHalfByte = 0;
             /* TODO move to def file */
-            grib_get_double(grib_handle_of_accessor(this), "missingValue", &missingValue);
-            if ((err = grib_set_double_internal(grib_handle_of_accessor(this), reference_value_, missingValue)) !=
+            grib_get_double(get_enclosing_handle(), "missingValue", &missingValue);
+            if ((err = grib_set_double_internal(get_enclosing_handle(), reference_value_, missingValue)) !=
                 GRIB_SUCCESS)
                 return err;
-            if ((ret = grib_set_long_internal(grib_handle_of_accessor(this), binary_scale_factor_, binary_scale_factor)) != GRIB_SUCCESS)
+            if ((ret = grib_set_long_internal(get_enclosing_handle(), binary_scale_factor_, binary_scale_factor)) != GRIB_SUCCESS)
                 return ret;
-            if ((ret = grib_set_long_internal(grib_handle_of_accessor(this), half_byte_, constantFieldHalfByte)) != GRIB_SUCCESS)
+            if ((ret = grib_set_long_internal(get_enclosing_handle(), half_byte_, constantFieldHalfByte)) != GRIB_SUCCESS)
                 return ret;
             ret = grib_buffer_replace(this, NULL, 0, 1, 1);
             if (ret != GRIB_SUCCESS) return ret;
@@ -160,23 +160,23 @@ int DataG1SimplePacking::pack_double(const double* cval, size_t* len)
             return ret;
     }
 
-    if ((ret = grib_get_double_internal(grib_handle_of_accessor(this), reference_value_, &reference_value)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(get_enclosing_handle(), reference_value_, &reference_value)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), bits_per_value_, &bits_per_value)) !=
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), bits_per_value_, &bits_per_value)) !=
         GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), offsetdata_, &offsetdata)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), offsetdata_, &offsetdata)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), offsetsection_, &offsetsection)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), offsetsection_, &offsetsection)) != GRIB_SUCCESS)
         return ret;
 
     decimal = codes_power<double>(decimal_scale_factor, 10);
@@ -187,7 +187,7 @@ int DataG1SimplePacking::pack_double(const double* cval, size_t* len)
         buflen++;
         /*
     length_ ++;
-    grib_handle_of_accessor(this)->buffer->ulength++;
+    get_enclosing_handle()->buffer->ulength++;
          */
     }
     half_byte = (buflen * 8) - ((*len) * bits_per_value);
@@ -197,7 +197,7 @@ int DataG1SimplePacking::pack_double(const double* cval, size_t* len)
 
     ECCODES_ASSERT(half_byte <= 0x0f);
 
-    if ((ret = grib_set_long_internal(grib_handle_of_accessor(this), half_byte_, half_byte)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(get_enclosing_handle(), half_byte_, half_byte)) != GRIB_SUCCESS)
         return ret;
 
     buf     = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);

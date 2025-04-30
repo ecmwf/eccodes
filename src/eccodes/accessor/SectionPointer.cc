@@ -18,7 +18,7 @@ namespace eccodes::accessor
 void SectionPointer::init(const long len, grib_arguments* arg)
 {
     Gen::init(len, arg);
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     int n = 0;
     sectionOffset_ = arg->get_name(hand, n++);
@@ -56,7 +56,7 @@ int SectionPointer::unpack_string(char* v, size_t* len)
     //   long length=byte_count();
     //   if (*len < length) return GRIB_ARRAY_TOO_SMALL;
     //
-    //   p  = grib_handle_of_accessor(this)->buffer->data + byte_offset();
+    //   p = get_enclosing_handle()->buffer->data + byte_offset();
     //   for (i = 0; i < length; i++)  {
     //     snprintf (s,64,"%02x", *(p++));
     //     s+=2;
@@ -71,7 +71,7 @@ long SectionPointer::byte_count()
 {
     long sectionLength = 0;
 
-    int ret = grib_get_long(grib_handle_of_accessor(this), sectionLength_, &sectionLength);
+    int ret = grib_get_long(get_enclosing_handle(), sectionLength_, &sectionLength);
     if (ret) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "Unable to get %s %s",
@@ -86,7 +86,7 @@ long SectionPointer::byte_offset()
 {
     long sectionOffset = 0;
 
-    int ret = grib_get_long(grib_handle_of_accessor(this), sectionOffset_, &sectionOffset);
+    int ret = grib_get_long(get_enclosing_handle(), sectionOffset_, &sectionOffset);
     if (ret) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "Unable to get %s %s",

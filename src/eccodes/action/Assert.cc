@@ -87,7 +87,7 @@ int Assert::notify_change(grib_accessor* observer, grib_accessor* observed)
     int ret = GRIB_SUCCESS;
     long lres;
 
-    if ((ret = expression_->evaluate_long(grib_handle_of_accessor(observed), &lres)) != GRIB_SUCCESS)
+    if ((ret = expression_->evaluate_long(observed->get_enclosing_handle(), &lres)) != GRIB_SUCCESS)
         return ret;
 
     if (lres != 0)

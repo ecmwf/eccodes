@@ -18,7 +18,7 @@ namespace eccodes::accessor
 void DataG1SecondOrderGeneralPacking::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     half_byte_                       = args->get_name(hand, carg_++);
     packingType_                     = args->get_name(hand, carg_++);
@@ -44,7 +44,7 @@ int DataG1SecondOrderGeneralPacking::value_count(long* numberOfSecondOrderPacked
 {
     *numberOfSecondOrderPackedValues = 0;
 
-    int err = grib_get_long_internal(grib_handle_of_accessor(this), numberOfSecondOrderPackedValues_, numberOfSecondOrderPackedValues);
+    int err = grib_get_long_internal(get_enclosing_handle(), numberOfSecondOrderPackedValues_, numberOfSecondOrderPackedValues);
 
     return err;
 }
@@ -60,7 +60,7 @@ int DataG1SecondOrderGeneralPacking::unpack_real(T* values, size_t* len)
     long* X                      = 0;
     long pos                     = 0;
     long widthOfFirstOrderValues = 0;
-    unsigned char* buf           = (unsigned char*)grib_handle_of_accessor(this)->buffer->data;
+    unsigned char* buf           = get_enclosing_handle()->buffer->data;
     long i, n;
     double reference_value;
     long binary_scale_factor;
@@ -71,22 +71,22 @@ int DataG1SecondOrderGeneralPacking::unpack_real(T* values, size_t* len)
     size_t groupWidthsSize;
 
     buf += byte_offset();
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), numberOfGroups_, &numberOfGroups)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), numberOfGroups_, &numberOfGroups)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), widthOfFirstOrderValues_, &widthOfFirstOrderValues)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), widthOfFirstOrderValues_, &widthOfFirstOrderValues)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_double_internal(grib_handle_of_accessor(this), reference_value_, &reference_value)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(get_enclosing_handle(), reference_value_, &reference_value)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), numberOfSecondOrderPackedValues_,
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), numberOfSecondOrderPackedValues_,
                                       &numberOfSecondOrderPackedValues)) != GRIB_SUCCESS)
         return ret;
 
@@ -95,7 +95,7 @@ int DataG1SecondOrderGeneralPacking::unpack_real(T* values, size_t* len)
 
     groupWidths     = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfGroups);
     groupWidthsSize = numberOfGroups;
-    if ((ret = grib_get_long_array_internal(grib_handle_of_accessor(this), groupWidths_, groupWidths, &groupWidthsSize)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_array_internal(get_enclosing_handle(), groupWidths_, groupWidths, &groupWidthsSize)) != GRIB_SUCCESS)
         return ret;
 
     secondaryBitmap                                  = (long*)grib_context_malloc_clear(context_, sizeof(long) * (numberOfSecondOrderPackedValues + 1));
@@ -167,7 +167,7 @@ int DataG1SecondOrderGeneralPacking::pack_double(const double* cval, size_t* len
     /* return GRIB_NOT_IMPLEMENTED; */
     char type[]       = "grid_second_order";
     size_t size       = strlen(type);
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     int err = grib_set_string(hand, "packingType", type, &size);
     if (err)

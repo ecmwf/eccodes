@@ -18,11 +18,11 @@ namespace eccodes::accessor
 void DataG1ComplexPacking::init(const long v, grib_arguments* args)
 {
     DataComplexPacking::init(v, args);
-    half_byte_    = args->get_name(grib_handle_of_accessor(this), carg_++);
-    N_            = args->get_name(grib_handle_of_accessor(this), carg_++);
-    packingType_  = args->get_name(grib_handle_of_accessor(this), carg_++);
-    ieee_packing_ = args->get_name(grib_handle_of_accessor(this), carg_++);
-    precision_    = args->get_name(grib_handle_of_accessor(this), carg_++);
+    half_byte_    = args->get_name(get_enclosing_handle(), carg_++);
+    N_            = args->get_name(get_enclosing_handle(), carg_++);
+    packingType_  = args->get_name(get_enclosing_handle(), carg_++);
+    ieee_packing_ = args->get_name(get_enclosing_handle(), carg_++);
+    precision_    = args->get_name(get_enclosing_handle(), carg_++);
     edition_      = 1;
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
@@ -44,7 +44,7 @@ int DataG1ComplexPacking::pack_double(const double* val, size_t* len)
 
     //     /* TODO: spectral_ieee does not work */
     //     if (c->ieee_packing && ieee_packing_ ) {
-    //         grib_handle* h       = grib_handle_of_accessor(this);
+    //         grib_handle* h       = get_enclosing_handle();
     //         grib_context* c      = context_ ;
     //         char* packingType_s  = NULL;
     //         char* ieee_packing_s = NULL;
@@ -64,11 +64,11 @@ int DataG1ComplexPacking::pack_double(const double* val, size_t* len)
     //         return grib_set_double_array(h, "values", val, *len);
     //     }
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), sub_j_, &sub_j)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), sub_j_, &sub_j)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), sub_k_, &sub_k)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), sub_k_, &sub_k)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), sub_m_, &sub_m)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), sub_m_, &sub_m)) != GRIB_SUCCESS)
         return ret;
 
     dirty_ = 1;
@@ -81,20 +81,20 @@ int DataG1ComplexPacking::pack_double(const double* val, size_t* len)
         n = offset_ + 4 * ((sub_k + 1) * (sub_k + 2));
 
         /*     Octet number starts from beginning of message but shouldn't     */
-        if ((ret = grib_set_long_internal(grib_handle_of_accessor(this), N_, n)) != GRIB_SUCCESS)
+        if ((ret = grib_set_long_internal(get_enclosing_handle(), N_, n)) != GRIB_SUCCESS)
             return ret;
 
-        // ret = grib_get_long_internal(grib_handle_of_accessor(this), offsetsection_ , &offsetsection);
+        // ret = grib_get_long_internal(get_enclosing_handle(), offsetsection_ , &offsetsection);
         // if (ret != GRIB_SUCCESS)
         //     return ret;
-        // if ((ret = grib_set_long_internal(grib_handle_of_accessor(this), N_ , n - offsetsection)) != GRIB_SUCCESS)
+        // if ((ret = grib_set_long_internal(get_enclosing_handle(), N_ , n - offsetsection)) != GRIB_SUCCESS)
         //     return ret;
 
-        ret = grib_get_long_internal(grib_handle_of_accessor(this), bits_per_value_, &bits_per_value);
+        ret = grib_get_long_internal(get_enclosing_handle(), bits_per_value_, &bits_per_value);
         if (ret != GRIB_SUCCESS)
             return ret;
 
-        ret = grib_get_long_internal(grib_handle_of_accessor(this), seclen_, &seclen);
+        ret = grib_get_long_internal(get_enclosing_handle(), seclen_, &seclen);
         if (ret != GRIB_SUCCESS)
             return ret;
 
@@ -104,7 +104,7 @@ int DataG1ComplexPacking::pack_double(const double* val, size_t* len)
             fprintf(stderr, "ECCODES DEBUG: half_byte=%ld\n", half_byte);
         }
 
-        ret = grib_set_long_internal(grib_handle_of_accessor(this), half_byte_, half_byte);
+        ret = grib_set_long_internal(get_enclosing_handle(), half_byte_, half_byte);
         if (ret != GRIB_SUCCESS)
             return ret;
     }

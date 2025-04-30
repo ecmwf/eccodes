@@ -20,9 +20,9 @@ void G1VerificationDate::init(const long l, grib_arguments* c)
     Long::init(l, c);
     int n = 0;
 
-    date_ = c->get_name(grib_handle_of_accessor(this), n++);
-    time_ = c->get_name(grib_handle_of_accessor(this), n++);
-    step_ = c->get_name(grib_handle_of_accessor(this), n++);
+    date_ = c->get_name(get_enclosing_handle(), n++);
+    time_ = c->get_name(get_enclosing_handle(), n++);
+    step_ = c->get_name(get_enclosing_handle(), n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
@@ -38,11 +38,11 @@ int G1VerificationDate::unpack_long(long* val, size_t* len)
     long vdate = 0;
     long vd    = 0;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), date_, &date)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), date_, &date)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), time_, &time)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), time_, &time)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), step_, &step)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), step_, &step)) != GRIB_SUCCESS)
         return ret;
 
     time /= 100;

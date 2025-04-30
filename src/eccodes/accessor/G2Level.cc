@@ -18,7 +18,7 @@ namespace eccodes::accessor
 void G2Level::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     int n             = 0;
 
     type_first_     = c->get_name(hand, n++);
@@ -41,7 +41,7 @@ static bool is_tigge(grib_handle* h)
 int G2Level::unpack_double(double* val, size_t* len)
 {
     int ret = 0;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     long type_first  = 0;
     long scale_first = 0;
@@ -128,7 +128,7 @@ int G2Level::unpack_long(long* val, size_t* len)
 
 int G2Level::pack_double(const double* val, size_t* len)
 {
-    grib_handle* hand  = grib_handle_of_accessor(this);
+    grib_handle* hand  = get_enclosing_handle();
     int ret            = 0;
     double value_first = *val;
     // long scale_first           = 0;
@@ -197,7 +197,7 @@ int G2Level::pack_long(const long* val, size_t* len)
     char pressure_units[10] = {0,};
     size_t pressure_units_len = 10;
 
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     int change_scale_and_value = 1;
     bool tigge = is_tigge(hand);
 
@@ -265,7 +265,7 @@ int G2Level::pack_long(const long* val, size_t* len)
 
 int G2Level::is_missing()
 {
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     int err           = 0;
 
     int ret = grib_is_missing(hand, scale_first_, &err) +

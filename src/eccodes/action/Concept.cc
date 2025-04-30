@@ -41,7 +41,7 @@ static void init_mutex()
 
 grib_concept_value* action_concept_get_concept(grib_accessor* a)
 {
-    return static_cast<eccodes::action::Concept*>(a->creator_)->get_concept(grib_handle_of_accessor(a));
+    return static_cast<eccodes::action::Concept*>(a->creator_)->get_concept(a->get_enclosing_handle());
 }
 
 int action_concept_get_nofail(grib_accessor* a)
@@ -184,7 +184,8 @@ grib_concept_value* Concept::get_concept_impl(grib_handle* h)
         c = grib_parse_concept_file(context, full);
     }
     else {
-        grib_context_log(context, GRIB_LOG_FATAL,
+        // ECC-2073: Do not fail if top-level concept file is not there
+        grib_context_log(context, GRIB_LOG_DEBUG,
                          "unable to find definition file %s in %s:%s\nDefinition files path=\"%s\"",
                          basename, master, local, context->grib_definition_files_path);
         return NULL;

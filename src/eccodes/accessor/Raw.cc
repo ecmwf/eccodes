@@ -32,7 +32,7 @@ void Raw::init(const long len, grib_arguments* arg)
     int err = 0;
     long sectionLength;
     grib_expression* e;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     length_        = 0;
     totalLength_   = arg->get_name(hand, n++);
@@ -88,7 +88,7 @@ int Raw::unpack_bytes(unsigned char* buffer, size_t* len)
     }
     *len = length_;
 
-    memcpy(buffer, grib_handle_of_accessor(this)->buffer->data + offset_, *len);
+    memcpy(buffer, get_enclosing_handle()->buffer->data + offset_, *len);
 
     return GRIB_SUCCESS;
 }
@@ -105,7 +105,7 @@ int Raw::pack_bytes(const unsigned char* val, size_t* len)
     size_t length = *len;
     long totalLength;
     long sectionLength;
-    grib_handle* h = grib_handle_of_accessor(this);
+    grib_handle* h = get_enclosing_handle();
     long dlen      = length - length_;
 
     grib_get_long(h, totalLength_, &totalLength);

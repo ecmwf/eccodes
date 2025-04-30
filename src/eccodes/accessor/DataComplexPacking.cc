@@ -18,7 +18,7 @@ namespace eccodes::accessor
 void DataComplexPacking::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
 
     GRIBEX_sh_bug_present_  = args->get_name(gh, carg_++);
     ieee_floats_            = args->get_name(gh, carg_++);
@@ -37,7 +37,7 @@ void DataComplexPacking::init(const long v, grib_arguments* args)
 int DataComplexPacking::value_count(long* count)
 {
     int ret         = GRIB_SUCCESS;
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
     long pen_j      = 0;
     long pen_k      = 0;
     long pen_m      = 0;
@@ -169,7 +169,7 @@ double calculate_pfactor(const grib_context* ctx, const double* spectralField, l
 
 int DataComplexPacking::pack_double(const double* val, size_t* len)
 {
-    grib_handle* gh = grib_handle_of_accessor(this);
+    grib_handle* gh = get_enclosing_handle();
 
     size_t i      = 0;
     int ret       = GRIB_SUCCESS;
@@ -537,7 +537,7 @@ template <typename T>
 int DataComplexPacking::unpack_real(T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
-    grib_handle* gh         = grib_handle_of_accessor(this);
+    grib_handle* gh         = get_enclosing_handle();
 
     size_t i    = 0;
     int ret     = GRIB_SUCCESS;
@@ -653,7 +653,7 @@ int DataComplexPacking::unpack_real(T* val, size_t* len)
         return GRIB_DECODING_ERROR;
     }
 
-    buf = (unsigned char*)gh->buffer->data;
+    buf = gh->buffer->data;
 
     maxv = pen_j + 1;
 

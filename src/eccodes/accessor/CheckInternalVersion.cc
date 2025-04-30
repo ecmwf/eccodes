@@ -26,7 +26,7 @@ void CheckInternalVersion::init(const long l, grib_arguments* args)
     /* Check version of definition files is compatible with the engine */
     int err                    = 0;
     long defs_file_version     = 0;
-    grib_handle* h             = grib_handle_of_accessor(this);
+    grib_handle* h             = get_enclosing_handle();
     const char* s_defn_version = args->get_name(h, 0);
     ECCODES_ASSERT(s_defn_version);
 

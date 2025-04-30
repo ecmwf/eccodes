@@ -18,7 +18,7 @@ namespace eccodes::accessor
 void G1Date::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     int n             = 0;
 
     century_ = c->get_name(hand, n++);
@@ -29,7 +29,7 @@ void G1Date::init(const long l, grib_arguments* c)
 
 int G1Date::unpack_long(long* val, size_t* len)
 {
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     int ret   = 0;
     long year = 0, century = 0, month = 0, day = 0;
@@ -61,7 +61,7 @@ int G1Date::unpack_long(long* val, size_t* len)
 
 int G1Date::pack_long(const long* val, size_t* len)
 {
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     int ret   = 0;
     long v    = val[0];
@@ -118,7 +118,7 @@ static const char* months[] = {
 
 int G1Date::unpack_string(char* val, size_t* len)
 {
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     int ret = 0;
     char tmp[1024];

@@ -19,7 +19,7 @@ void OctahedralGaussian::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n             = 0;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     N_         = c->get_name(hand, n++);
     Ni_        = c->get_name(hand, n++);
@@ -38,9 +38,8 @@ void OctahedralGaussian::init(const long l, grib_arguments* c)
  */
 static int is_pl_octahedral(const long pl[], size_t size)
 {
-    long i;
     long prev_diff = -1;
-    for (i = 1; i < size; ++i) {
+    for (size_t i = 1; i < size; ++i) {
         const long diff = pl[i] - pl[i - 1];
         if (diff == 0) {
             /* prev must be +4 or undef */
@@ -77,7 +76,7 @@ int OctahedralGaussian::unpack_long(long* val, size_t* len)
     long plpresent    = 0;
     long* pl          = NULL; /* pl array */
     size_t plsize     = 0;
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
 
     grib_context* c = context_;
 

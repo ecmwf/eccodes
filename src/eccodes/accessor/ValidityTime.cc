@@ -18,7 +18,7 @@ namespace eccodes::accessor
 void ValidityTime::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     int n             = 0;
 
     date_      = c->get_name(hand, n++);
@@ -33,7 +33,7 @@ void ValidityTime::init(const long l, grib_arguments* c)
 
 int ValidityTime::unpack_long(long* val, size_t* len)
 {
-    grib_handle* hand = grib_handle_of_accessor(this);
+    grib_handle* hand = get_enclosing_handle();
     int ret           = 0;
     long date         = 0;
     long time         = 0;

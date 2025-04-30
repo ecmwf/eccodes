@@ -19,14 +19,14 @@ void G1NumberOfCodedValuesShComplex::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n             = 0;
-    bitsPerValue_     = c->get_name(grib_handle_of_accessor(this), n++);
-    offsetBeforeData_ = c->get_name(grib_handle_of_accessor(this), n++);
-    offsetAfterData_  = c->get_name(grib_handle_of_accessor(this), n++);
-    unusedBits_       = c->get_name(grib_handle_of_accessor(this), n++);
-    numberOfValues_   = c->get_name(grib_handle_of_accessor(this), n++);
-    JS_               = c->get_name(grib_handle_of_accessor(this), n++);
-    KS_               = c->get_name(grib_handle_of_accessor(this), n++);
-    MS_               = c->get_name(grib_handle_of_accessor(this), n++);
+    bitsPerValue_     = c->get_name(get_enclosing_handle(), n++);
+    offsetBeforeData_ = c->get_name(get_enclosing_handle(), n++);
+    offsetAfterData_  = c->get_name(get_enclosing_handle(), n++);
+    unusedBits_       = c->get_name(get_enclosing_handle(), n++);
+    numberOfValues_   = c->get_name(get_enclosing_handle(), n++);
+    JS_               = c->get_name(get_enclosing_handle(), n++);
+    KS_               = c->get_name(get_enclosing_handle(), n++);
+    MS_               = c->get_name(get_enclosing_handle(), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
@@ -39,25 +39,25 @@ int G1NumberOfCodedValuesShComplex::unpack_long(long* val, size_t* len)
     long offsetBeforeData = 0, offsetAfterData = 0, unusedBits = 0, numberOfValues;
     long JS = 0, KS = 0, MS = 0, NS = 0;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), bitsPerValue_, &bpv)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), bitsPerValue_, &bpv)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), offsetBeforeData_, &offsetBeforeData)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), offsetBeforeData_, &offsetBeforeData)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), offsetAfterData_, &offsetAfterData)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), offsetAfterData_, &offsetAfterData)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), unusedBits_, &unusedBits)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), unusedBits_, &unusedBits)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), JS_, &JS)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), JS_, &JS)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), KS_, &KS)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), KS_, &KS)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), MS_, &MS)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(get_enclosing_handle(), MS_, &MS)) != GRIB_SUCCESS)
         return ret;
 
     if (JS != KS || KS != MS)
@@ -70,7 +70,7 @@ int G1NumberOfCodedValuesShComplex::unpack_long(long* val, size_t* len)
         *val = ((offsetAfterData - offsetBeforeData) * 8 - unusedBits + NS * (bpv - 32)) / bpv;
     }
     else {
-        if ((ret = grib_get_long_internal(grib_handle_of_accessor(this), numberOfValues_, &numberOfValues)) != GRIB_SUCCESS)
+        if ((ret = grib_get_long_internal(get_enclosing_handle(), numberOfValues_, &numberOfValues)) != GRIB_SUCCESS)
             return ret;
 
         *val = numberOfValues;
