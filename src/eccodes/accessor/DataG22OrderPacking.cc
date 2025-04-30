@@ -902,7 +902,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
             return err;
         if ((err = grib_set_long_internal(gh, primaryMissingValueSubstitute_, grib_ieee_to_long(static_cast<float>(9.999e20)))) != GRIB_SUCCESS)
             return err;
-        if ((err = grib_set_long_internal(gh, secondaryMissingValueSubstitute_, 0xFFFFFFFF)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(gh, secondaryMissingValueSubstitute_, 0xFFFF)) != GRIB_SUCCESS)
             return err;
         if ((err = grib_set_long_internal(gh, numberOfGroupsOfDataValues_, 1)) != GRIB_SUCCESS)
             return err;
