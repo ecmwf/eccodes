@@ -4005,7 +4005,6 @@
 	 typeOfSizeInterval = 5 ;
 	 aerosolType = 62026 ;
 	 scaledValueOfSecondSize = missing() ;
-	 is_aerosol = 1 ;
 	}
 #Particulate matter d <= 2.5 um
 'pm2p5' = {
@@ -4018,7 +4017,6 @@
 	 typeOfSizeInterval = 5 ;
 	 aerosolType = 62026 ;
 	 scaledValueOfSecondSize = missing() ;
-	 is_aerosol = 1 ;
 	}
 #Particulate matter d <= 10 um
 'pm10' = {
@@ -4031,7 +4029,6 @@
 	 typeOfSizeInterval = 5 ;
 	 aerosolType = 62026 ;
 	 scaledValueOfSecondSize = missing() ;
-	 is_aerosol = 1 ;
 	}
 #Mean height of maximum injection
 'mami' = {
@@ -4051,7 +4048,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 8 ;
-	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
 #UV visible albedo for diffuse radiation (climatological)
@@ -4101,7 +4097,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 aerosolType = 62003 ;
-	 is_aerosol = 1 ;
 	}
 #Nitrate aerosol optical depth at 550 nm
 'niaod550' = {
@@ -4133,7 +4128,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 aerosolType = 62032 ;
-	 is_aerosol = 1 ;
 	}
 #Anthropogenic secondary organic aerosol mass mixing ratio
 'aermr20' = {
@@ -4141,7 +4135,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 aerosolType = 62033 ;
-	 is_aerosol = 1 ;
 	}
 #Near IR albedo for diffuse radiation (climatological)
 'alnid_p' = {
@@ -4185,7 +4178,6 @@
 	 parameterNumber = 2 ;
 	 constituentType = 8 ;
 	 typeOfGeneratingProcess = 20 ;
-	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
 #Ammonium aerosol mass mixing ratio
@@ -4195,7 +4187,6 @@
 	 parameterNumber = 2 ;
 	 aerosolType = 62003 ;
 	 typeOfGeneratingProcess = 20 ;
-	 is_aerosol = 1 ;
 	}
 #Biogenic secondary organic aerosol mass mixing ratio increment
 'aermr19diff' = {
@@ -4204,7 +4195,6 @@
 	 parameterNumber = 2 ;
 	 aerosolType = 62032 ;
 	 typeOfGeneratingProcess = 20 ;
-	 is_aerosol = 1 ;
 	}
 #Anthropogenic secondary organic aerosol mass mixing ratio increment
 'aermr20diff' = {
@@ -4213,7 +4203,6 @@
 	 parameterNumber = 2 ;
 	 aerosolType = 62033 ;
 	 typeOfGeneratingProcess = 20 ;
-	 is_aerosol = 1 ;
 	}
 #Random pattern 1 for SPP scheme
 'spp1' = {
@@ -5087,7 +5076,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 6 ;
 	 aerosolType = 62003 ;
-	 is_aerosol = 1 ;
 	}
 #Sedimentation of ammonium aerosol
 'aersdmam' = {
@@ -5095,7 +5083,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 11 ;
 	 aerosolType = 62003 ;
-	 is_aerosol = 1 ;
 	}
 #Wet deposition of ammonium aerosol by large-scale precipitation
 'aerwdlam' = {
@@ -5103,7 +5090,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 9 ;
 	 aerosolType = 62003 ;
-	 is_aerosol = 1 ;
 	}
 #Wet deposition of ammonium aerosol by convective precipitation
 'aerwdcam' = {
@@ -5111,7 +5097,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 10 ;
 	 aerosolType = 62003 ;
-	 is_aerosol = 1 ;
 	}
 #Vertically integrated mass of ammonium aerosol
 'aermssam' = {
@@ -5121,7 +5106,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 aerosolType = 62003 ;
-	 is_aerosol = 1 ;
 	}
 #Dry deposition of biogenic secondary organic aerosol
 'aerddpsoab' = {
@@ -5129,7 +5113,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 12 ;
 	 aerosolType = 62032 ;
-	 is_aerosol = 1 ;
 	}
 #Sedimentation of biogenic secondary organic aerosol
 'aersdmsoab' = {
@@ -5137,7 +5120,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 11 ;
 	 aerosolType = 62032 ;
-	 is_aerosol = 1 ;
 	}
 #Wet deposition of biogenic secondary organic aerosol by large-scale precipitation
 'aerwdlsoab' = {
@@ -5145,7 +5127,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 9 ;
 	 aerosolType = 62032 ;
-	 is_aerosol = 1 ;
 	}
 #Wet deposition of biogenic secondary organic aerosol by convective precipitation
 'aerwdcsoab' = {
@@ -5153,7 +5134,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 10 ;
 	 aerosolType = 62032 ;
-	 is_aerosol = 1 ;
 	}
 #Vertically integrated mass of biogenic secondary organic aerosol
 'aermsssoab' = {
@@ -5161,7 +5141,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
 	 aerosolType = 62032 ;
-	 is_aerosol = 1 ;
 	}
 #Dry deposition of anthropogenic secondary organic aerosol
 'aerddpsoaa' = {
@@ -5169,7 +5148,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 12 ;
 	 aerosolType = 62033 ;
-	 is_aerosol = 1 ;
 	}
 #Sedimentation of anthropogenic secondary organic aerosol
 'aersdmsoaa' = {
@@ -5177,7 +5155,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 11 ;
 	 aerosolType = 62033 ;
-	 is_aerosol = 1 ;
 	}
 #Wet deposition of anthropogenic secondary organic aerosol by large-scale precipitation
 'aerwdlsoaa' = {
@@ -5185,7 +5162,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 9 ;
 	 aerosolType = 62033 ;
-	 is_aerosol = 1 ;
 	}
 #Wet deposition of anthropogenic secondary organic aerosol by convective precipitation
 'aerwdcsoaa' = {
@@ -5193,7 +5169,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 10 ;
 	 aerosolType = 62033 ;
-	 is_aerosol = 1 ;
 	}
 #Vertically integrated mass of anthropogenic secondary organic aerosol
 'aermsssoaa' = {
@@ -5201,7 +5176,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
 	 aerosolType = 62033 ;
-	 is_aerosol = 1 ;
 	}
 #Secondary organic aerosol optical depth at 550 nm
 'soaod550' = {
@@ -5222,7 +5196,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 9 ;
-	 is_chemical = 1 ;
 	}
 #Nitrogen monoxide mass mixing ratio
 'no' = {
@@ -5230,7 +5203,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 11 ;
-	 is_chemical = 1 ;
 	}
 #Aromatic peroxy radical mass mixing ratio
 'AROO2' = {
@@ -5238,7 +5210,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 60029 ;
-	 is_chemical = 1 ;
 	}
 #Ethyne mass mixing ratio
 'C2H2' = {
@@ -5246,7 +5217,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 10010 ;
-	 is_chemical = 1 ;
 	}
 #Acetonitrile mass mixing ratio
 'CH3CN' = {
@@ -5254,7 +5224,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 10007 ;
-	 is_chemical = 1 ;
 	}
 #Methyl peroxy nitrate mass mixing ratio
 'CH3O2NO2' = {
@@ -5262,7 +5231,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 10055 ;
-	 is_chemical = 1 ;
 	}
 #Hydrogen cyanide mass mixing ratio
 'HCN' = {
@@ -5270,7 +5238,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 10006 ;
-	 is_chemical = 1 ;
 	}
 #Hydroperoxy aldehydes type 1 mass mixing ratio
 'HPALD1' = {
@@ -5278,7 +5245,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 60058 ;
-	 is_chemical = 1 ;
 	}
 #Hydroperoxy aldehydes type 2 mass mixing ratio
 'HPALD' = {
@@ -5286,7 +5252,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 60059 ;
-	 is_chemical = 1 ;
 	}
 #Isoprene peroxy type B mass mixing ratio
 'ISOPBO2' = {
@@ -5294,7 +5259,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 60056 ;
-	 is_chemical = 1 ;
 	}
 #Isoprene peroxy type D mass mixing ratio
 'ISOPDO2' = {
@@ -5302,7 +5266,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 60057 ;
-	 is_chemical = 1 ;
 	}
 #Column integrated mass density of Volcanic sulfur dioxide
 'tc_VSO2' = {
@@ -5310,7 +5273,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
 	 constituentType = 8 ;
-	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
 #Column integrated mass density of Aromatic peroxy radical
@@ -5319,7 +5281,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
 	 constituentType = 60029 ;
-	 is_chemical = 1 ;
 	}
 #Column integrated mass density of Ethyne
 'tc_C2H2' = {
@@ -5327,7 +5288,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
 	 constituentType = 10010 ;
-	 is_chemical = 1 ;
 	}
 #Column integrated mass density of Acetonitrile
 'tc_CH3CN' = {
@@ -5335,7 +5295,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
 	 constituentType = 10007 ;
-	 is_chemical = 1 ;
 	}
 #Column integrated mass density of Methyl peroxy nitrate
 'tc_CH3O2NO2' = {
@@ -5343,7 +5302,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
 	 constituentType = 10055 ;
-	 is_chemical = 1 ;
 	}
 #Column integrated mass density of Hydrogen cyanide
 'tc_HCN' = {
@@ -5351,7 +5309,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
 	 constituentType = 10006 ;
-	 is_chemical = 1 ;
 	}
 #Column integrated mass density of Hydroperoxy aldehydes type 1
 'tc_HPALD1' = {
@@ -5359,7 +5316,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
 	 constituentType = 60058 ;
-	 is_chemical = 1 ;
 	}
 #Column integrated mass density of Hydroperoxy aldehydes type 2
 'tc_HPALD2' = {
@@ -5367,7 +5323,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
 	 constituentType = 60059 ;
-	 is_chemical = 1 ;
 	}
 #Column integrated mass density of Isoprene peroxy type B
 'tc_ISOPBO2' = {
@@ -5375,7 +5330,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
 	 constituentType = 60056 ;
-	 is_chemical = 1 ;
 	}
 #Column integrated mass density of Isoprene peroxy type D
 'tc_ISOPDO2' = {
@@ -5383,7 +5337,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
 	 constituentType = 60057 ;
-	 is_chemical = 1 ;
 	}
 #Atmosphere emission mass flux of Volcanic sulfur dioxide
 'e_VSO2' = {
@@ -5391,7 +5344,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 3 ;
 	 constituentType = 8 ;
-	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
 #Atmosphere emission mass flux of Aromatic peroxy radical
@@ -5400,7 +5352,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 3 ;
 	 constituentType = 60029 ;
-	 is_chemical = 1 ;
 	}
 #Atmosphere emission mass flux of Ethyne
 'e_C2H2' = {
@@ -5408,7 +5359,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 3 ;
 	 constituentType = 10010 ;
-	 is_chemical = 1 ;
 	}
 #Atmosphere emission mass flux of Acetonitrile
 'e_CH3CN' = {
@@ -5416,7 +5366,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 3 ;
 	 constituentType = 10007 ;
-	 is_chemical = 1 ;
 	}
 #Atmosphere emission mass flux of Methyl peroxy nitrate
 'e_CH3O2NO2' = {
@@ -5424,7 +5373,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 3 ;
 	 constituentType = 10055 ;
-	 is_chemical = 1 ;
 	}
 #Atmosphere emission mass flux of Hydrogen cyanide
 'e_HCN' = {
@@ -5432,7 +5380,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 3 ;
 	 constituentType = 10006 ;
-	 is_chemical = 1 ;
 	}
 #Atmosphere emission mass flux of Hydroperoxy aldehydes type 1
 'e_HPALD1' = {
@@ -5440,7 +5387,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 3 ;
 	 constituentType = 60058 ;
-	 is_chemical = 1 ;
 	}
 #Atmosphere emission mass flux of Hydroperoxy aldehydes type 2
 'e_HPALD2' = {
@@ -5448,7 +5394,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 3 ;
 	 constituentType = 60059 ;
-	 is_chemical = 1 ;
 	}
 #Atmosphere emission mass flux of Isoprene peroxy type B
 'e_ISOPBO2' = {
@@ -5456,7 +5401,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 3 ;
 	 constituentType = 60056 ;
-	 is_chemical = 1 ;
 	}
 #Atmosphere emission mass flux of Isoprene peroxy type D
 'e_ISOPDO2' = {
@@ -5464,7 +5408,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 3 ;
 	 constituentType = 60057 ;
-	 is_chemical = 1 ;
 	}
 #Dry deposition velocity of Volcanic sulfur dioxide
 'dv_VSO2' = {
@@ -5472,7 +5415,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 15 ;
 	 constituentType = 8 ;
-	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
 #Dry deposition velocity of Aromatic peroxy radical
@@ -5481,7 +5423,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 15 ;
 	 constituentType = 60029 ;
-	 is_chemical = 1 ;
 	}
 #Dry deposition velocity of Ethyne
 'dv_C2H2' = {
@@ -5489,7 +5430,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 15 ;
 	 constituentType = 10010 ;
-	 is_chemical = 1 ;
 	}
 #Dry deposition velocity of Acetonitrile
 'dv_CH3CN' = {
@@ -5497,7 +5437,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 15 ;
 	 constituentType = 10007 ;
-	 is_chemical = 1 ;
 	}
 #Dry deposition velocity of Methyl peroxy nitrate
 'dv_CH3O2NO2' = {
@@ -5505,7 +5444,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 15 ;
 	 constituentType = 10055 ;
-	 is_chemical = 1 ;
 	}
 #Dry deposition velocity of Hydrogen cyanide
 'dv_HCN' = {
@@ -5513,7 +5451,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 15 ;
 	 constituentType = 10006 ;
-	 is_chemical = 1 ;
 	}
 #Dry deposition velocity of Hydroperoxy aldehydes type 1
 'dv_HPALD1' = {
@@ -5521,7 +5458,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 15 ;
 	 constituentType = 60058 ;
-	 is_chemical = 1 ;
 	}
 #Dry deposition velocity of Hydroperoxy aldehydes type 2
 'dv_HPALD2' = {
@@ -5529,7 +5465,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 15 ;
 	 constituentType = 60059 ;
-	 is_chemical = 1 ;
 	}
 #Dry deposition velocity of Isoprene peroxy type B
 'dv_ISOPBO2' = {
@@ -5537,7 +5472,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 15 ;
 	 constituentType = 60056 ;
-	 is_chemical = 1 ;
 	}
 #Dry deposition velocity of Isoprene peroxy type D
 'dv_ISOPDO2' = {
@@ -5545,7 +5479,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 15 ;
 	 constituentType = 60057 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Ozone
 'acc_dry_depm_O3' = {
@@ -5554,7 +5487,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 0 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Hydrogen peroxide
 'acc_dry_depm_H2O2' = {
@@ -5563,7 +5495,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 19 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Carbon monoxide
 'acc_dry_depm_CO' = {
@@ -5572,7 +5503,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 4 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Nitric acid
 'acc_dry_depm_HNO3' = {
@@ -5581,7 +5511,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 17 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Methyl peroxide
 'acc_dry_depm_CH3OOH' = {
@@ -5590,7 +5519,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 10002 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Formaldehyde
 'acc_dry_depm_HCHO' = {
@@ -5599,7 +5527,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 7 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Aldehydes
 'acc_dry_depm_ALD2' = {
@@ -5608,7 +5535,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 60018 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Peroxyacetyl nitrate
 'acc_dry_depm_PAN' = {
@@ -5617,7 +5543,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 10013 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Peroxides
 'acc_dry_depm_ROOH' = {
@@ -5626,7 +5551,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 60019 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Organic nitrates
 'acc_dry_depm_ONIT' = {
@@ -5635,7 +5559,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 60020 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Isoprene
 'acc_dry_depm_C5H8' = {
@@ -5644,7 +5567,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 10017 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Sulphur dioxide
 'acc_dry_depm_SO2' = {
@@ -5653,7 +5575,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Ammonia
 'acc_dry_depm_NH3' = {
@@ -5662,7 +5583,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 9 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Sulfate
 'acc_dry_depm_SO4' = {
@@ -5671,7 +5591,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 22 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Ammonium
 'acc_dry_depm_NH4' = {
@@ -5680,7 +5599,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 10 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Methyl glyoxal
 'acc_dry_depm_CH3COCHO' = {
@@ -5689,7 +5607,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 10025 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Nitrogen monoxide
 'acc_dry_depm_NO' = {
@@ -5698,7 +5615,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 11 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Hydroperoxy radical
 'acc_dry_depm_HO2' = {
@@ -5707,7 +5623,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 14 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Methylperoxy radical
 'acc_dry_depm_CH3O2' = {
@@ -5716,7 +5631,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 10001 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Nitrogen dioxide
 'acc_dry_depm_NO2' = {
@@ -5725,7 +5639,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 5 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Nitrate radical
 'acc_dry_depm_NO3' = {
@@ -5734,7 +5647,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 13 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Dinitrogen pentoxide
 'acc_dry_depm_N2O5' = {
@@ -5743,7 +5655,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 15 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Pernitric acid
 'acc_dry_depm_HO2NO2' = {
@@ -5752,7 +5663,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 18 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Methanol
 'acc_dry_depm_CH3OH' = {
@@ -5761,7 +5671,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 10004 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Formic acid
 'acc_dry_depm_HCOOH' = {
@@ -5770,7 +5679,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 10005 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Methacrylic acid
 'acc_dry_depm_MCOOH' = {
@@ -5779,7 +5687,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 10027 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Ethane
 'acc_dry_depm_C2H6' = {
@@ -5788,7 +5695,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 10008 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Ethanol
 'acc_dry_depm_C2H5OH' = {
@@ -5797,7 +5703,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 10011 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Methacrolein
 'acc_dry_depm_ISPD' = {
@@ -5806,7 +5711,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 10028 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Acetone
 'acc_dry_depm_CH3COCH3' = {
@@ -5815,7 +5719,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 10029 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Nitrous acid
 'acc_dry_depm_HONO' = {
@@ -5824,7 +5727,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 16 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Glycolaldehyde
 'acc_dry_depm_GLYALD' = {
@@ -5833,7 +5735,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 10033 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Glyoxal
 'acc_dry_depm_GLY' = {
@@ -5842,7 +5743,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 10038 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Hydroxyacetone
 'acc_dry_depm_HYAC' = {
@@ -5851,7 +5751,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 10041 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of all hydroxy-peroxides products of the reaction of hydroxy-isoprene adducts with O2
 'acc_dry_depm_ISOPOOH' = {
@@ -5860,7 +5759,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 60032 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Acetonitrile
 'acc_dry_depm_CH3CN' = {
@@ -5869,7 +5767,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 10007 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Hydrogen cyanide
 'acc_dry_depm_HCN' = {
@@ -5878,7 +5775,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 10006 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Ozone
 'acc_wet_depm_O3' = {
@@ -5887,7 +5783,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 0 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Hydrogen peroxide
 'acc_wet_depm_H2O2' = {
@@ -5896,7 +5791,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 19 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Nitric acid
 'acc_wet_depm_HNO3' = {
@@ -5905,7 +5799,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 17 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Methyl peroxide
 'acc_wet_depm_CH3OOH' = {
@@ -5914,7 +5807,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10002 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Formaldehyde
 'acc_wet_depm_HCHO' = {
@@ -5923,7 +5815,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 7 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Aldehydes
 'acc_wet_depm_ALD2' = {
@@ -5932,7 +5823,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 60018 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Peroxyacetyl nitrate
 'acc_wet_depm_PAN' = {
@@ -5941,7 +5831,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10013 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Peroxides
 'acc_wet_depm_ROOH' = {
@@ -5950,7 +5839,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 60019 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Organic nitrates
 'acc_wet_depm_ONIT' = {
@@ -5959,7 +5847,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 60020 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Isoprene
 'acc_wet_depm_C5H8' = {
@@ -5968,7 +5855,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10017 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Sulphur dioxide
 'acc_wet_depm_SO2' = {
@@ -5977,7 +5863,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Ammonia
 'acc_wet_depm_NH3' = {
@@ -5986,7 +5871,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 9 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Sulfate
 'acc_wet_depm_SO4' = {
@@ -5995,7 +5879,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 22 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Ammonium
 'acc_wet_depm_NH4' = {
@@ -6004,7 +5887,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Methane sulfonic acid
 'acc_wet_depm_MSA' = {
@@ -6013,7 +5895,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10024 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Methyl glyoxal
 'acc_wet_depm_CH3COCHO' = {
@@ -6022,7 +5903,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10025 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Carbon monoxide
 'acc_wet_depm_CO' = {
@@ -6031,7 +5911,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 4 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Lead
 'acc_wet_depm_Pb' = {
@@ -6040,7 +5919,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 30296 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Nitrogen monoxide
 'acc_wet_depm_NO' = {
@@ -6049,7 +5927,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 11 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Hydroperoxy radical
 'acc_wet_depm_HO2' = {
@@ -6058,7 +5935,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 14 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Methylperoxy radical
 'acc_wet_depm_CH3O2' = {
@@ -6067,7 +5943,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10001 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Nitrogen dioxide
 'acc_wet_depm_NO2' = {
@@ -6076,7 +5951,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 5 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Nitrate radical
 'acc_wet_depm_NO3' = {
@@ -6085,7 +5959,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 13 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Dinitrogen pentoxide
 'acc_wet_depm_N2O5' = {
@@ -6094,7 +5967,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 15 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Pernitric acid
 'acc_wet_depm_HO2NO2' = {
@@ -6103,7 +5975,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 18 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Methanol
 'acc_wet_depm_CH3OH' = {
@@ -6112,7 +5983,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10004 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Formic acid
 'acc_wet_depm_HCOOH' = {
@@ -6121,7 +5991,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10005 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Methacrylic acid
 'acc_wet_depm_MCOOH' = {
@@ -6130,7 +5999,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10027 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Ethane
 'acc_wet_depm_C2H6' = {
@@ -6139,7 +6007,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10008 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Ethanol
 'acc_wet_depm_C2H5OH' = {
@@ -6148,7 +6015,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10011 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Methacrolein
 'acc_wet_depm_ISPD' = {
@@ -6157,7 +6023,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10028 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Acetone
 'acc_wet_depm_CH3COCH3' = {
@@ -6166,7 +6031,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10029 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Chlorine nitrate
 'acc_wet_depm_CLONO2' = {
@@ -6175,7 +6039,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 30 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Hypochlorous acid
 'acc_wet_depm_HOCL' = {
@@ -6184,7 +6047,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 29 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Hydrogen bromide
 'acc_wet_depm_HBR' = {
@@ -6193,7 +6055,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 35 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Hypobromous acid
 'acc_wet_depm_HOBR' = {
@@ -6202,7 +6063,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 36 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Nitrous acid
 'acc_wet_depm_HONO' = {
@@ -6211,7 +6071,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 16 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Toluene and less reactive aromatics
 'acc_wet_depm_TOL' = {
@@ -6220,7 +6079,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10022 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Xylene and more reactive aromatics
 'acc_wet_depm_XYL' = {
@@ -6229,7 +6087,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10023 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Glycolaldehyde
 'acc_wet_depm_GLYALD' = {
@@ -6238,7 +6095,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10033 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Glyoxal
 'acc_wet_depm_GLY' = {
@@ -6247,7 +6103,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10038 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Hydroxyacetone
 'acc_wet_depm_HYAC' = {
@@ -6256,7 +6111,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10041 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of all hydroxy-peroxides products of the reaction of hydroxy-isoprene adducts with O2
 'acc_wet_depm_ISOPOOH' = {
@@ -6265,7 +6119,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 60032 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Bromine nitrate
 'acc_wet_depm_BRONO2' = {
@@ -6274,7 +6127,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 37 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Hydrogen chloride
 'acc_wet_depm_HCL' = {
@@ -6283,7 +6135,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 20001 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Acetonitrile
 'acc_wet_depm_CH3CN' = {
@@ -6292,7 +6143,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10007 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Hydrogen cyanide
 'acc_wet_depm_HCN' = {
@@ -6301,7 +6151,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10006 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Hydroperoxy aldehydes type 1
 'acc_wet_depm_HPALD1' = {
@@ -6310,7 +6159,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10058 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Hydroperoxy aldehydes type 2
 'acc_wet_depm_HPALD2' = {
@@ -6319,7 +6167,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 10059 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Geometric height of -10 degrees C atmospheric isothermal level above ground
 'degm10l' = {
@@ -6662,7 +6509,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 3 ;
 	 constituentType = 2 ;
-	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 10 ;
 	}
 #Accumulated mass emission of methane from Wetlands
@@ -6672,7 +6518,6 @@
 	 parameterNumber = 3 ;
 	 constituentType = 2 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 10 ;
 	}
 #Surface short-wave (solar) radiation downward clear-sky
@@ -22110,7 +21955,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 5 ;
-	 is_chemical = 1 ;
 	}
 #Sulphur dioxide mass mixing ratio
 'so2' = {
@@ -22118,7 +21962,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 8 ;
-	 is_chemical = 1 ;
 	}
 #Carbon monoxide mass mixing ratio
 'co' = {
@@ -22126,7 +21969,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 4 ;
-	 is_chemical = 1 ;
 	}
 #Ozone mass mixing ratio (full chemistry scheme)
 'go3' = {
@@ -22134,7 +21976,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 0 ;
-	 is_chemical = 1 ;
 	}
 #Nitrogen dioxide mass mixing ratio difference
 'no2diff' = {
@@ -22143,7 +21984,6 @@
 	 parameterNumber = 2 ;
 	 constituentType = 5 ;
 	 typeOfGeneratingProcess = 20 ;
-	 is_chemical = 1 ;
 	}
 #Sulphur dioxide mass mixing ratio difference
 'so2diff' = {
@@ -22152,7 +21992,6 @@
 	 parameterNumber = 2 ;
 	 constituentType = 8 ;
 	 typeOfGeneratingProcess = 20 ;
-	 is_chemical = 1 ;
 	}
 #Carbon monoxide mass mixing ratio difference
 'codiff' = {
@@ -22161,7 +22000,6 @@
 	 parameterNumber = 2 ;
 	 constituentType = 4 ;
 	 typeOfGeneratingProcess = 20 ;
-	 is_chemical = 1 ;
 	}
 #Ozone mass mixing ratio difference (full chemistry scheme)
 'go3diff' = {
@@ -22170,7 +22008,6 @@
 	 parameterNumber = 2 ;
 	 constituentType = 0 ;
 	 typeOfGeneratingProcess = 20 ;
-	 is_chemical = 1 ;
 	}
 #Convective inhibition
 'cin' = {
