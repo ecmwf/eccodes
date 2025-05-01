@@ -184,7 +184,8 @@ grib_concept_value* Concept::get_concept_impl(grib_handle* h)
         c = grib_parse_concept_file(context, full);
     }
     else {
-        grib_context_log(context, GRIB_LOG_FATAL,
+        // ECC-2073: Do not fail if top-level concept file is not there
+        grib_context_log(context, GRIB_LOG_DEBUG,
                          "unable to find definition file %s in %s:%s\nDefinition files path=\"%s\"",
                          basename, master, local, context->grib_definition_files_path);
         return NULL;
