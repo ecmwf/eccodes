@@ -2892,7 +2892,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 aerosolType = 65534 ;
-	 is_aerosol = 1 ;
 	}
 #Nitrate coarse mode aerosol mass mixing ratio
 'kg kg**-1' = {
@@ -2901,7 +2900,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 aerosolType = 65533 ;
-	 is_aerosol = 1 ;
 	}
 #Aerosol type 13 mass mixing ratio
 'kg kg**-1' = {
@@ -2977,7 +2975,6 @@
 	 parameterNumber = 2 ;
 	 constituentType = 1 ;
 	 typeOfGeneratingProcess = 20 ;
-	 is_chemical = 1 ;
 	}
 #Altitude of emitter
 'm' = {
@@ -2999,7 +2996,6 @@
 	 parameterNumber = 2 ;
 	 aerosolType = 65534 ;
 	 typeOfGeneratingProcess = 20 ;
-	 is_aerosol = 1 ;
 	}
 #Nitrate coarse mode aerosol mass mixing ratio
 'kg kg**-1' = {
@@ -3009,7 +3005,6 @@
 	 parameterNumber = 2 ;
 	 aerosolType = 65533 ;
 	 typeOfGeneratingProcess = 20 ;
-	 is_aerosol = 1 ;
 	}
 #Experimental product
 '~' = {
@@ -6000,7 +5995,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 192 ;
 	 aerosolType = 65534 ;
-	 is_aerosol = 1 ;
 	}
 #Source/gain of coarse-mode nitrate aerosol
 'kg m**-2 s**-1' = {
@@ -6009,7 +6003,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 192 ;
 	 aerosolType = 65533 ;
-	 is_aerosol = 1 ;
 	}
 #Dry deposition of fine-mode nitrate aerosol
 'kg m**-2 s**-1' = {
@@ -6018,7 +6011,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 6 ;
 	 aerosolType = 65534 ;
-	 is_aerosol = 1 ;
 	}
 #Dry deposition of coarse-mode nitrate aerosol
 'kg m**-2 s**-1' = {
@@ -6027,7 +6019,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 6 ;
 	 aerosolType = 65533 ;
-	 is_aerosol = 1 ;
 	}
 #Sedimentation of fine-mode nitrate aerosol
 'kg m**-2 s**-1' = {
@@ -6036,7 +6027,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 11 ;
 	 aerosolType = 65534 ;
-	 is_aerosol = 1 ;
 	}
 #Sedimentation of coarse-mode nitrate aerosol
 'kg m**-2 s**-1' = {
@@ -6045,7 +6035,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 11 ;
 	 aerosolType = 65533 ;
-	 is_aerosol = 1 ;
 	}
 #Wet deposition of fine-mode nitrate aerosol by large-scale precipitation
 'kg m**-2 s**-1' = {
@@ -6054,7 +6043,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 9 ;
 	 aerosolType = 65534 ;
-	 is_aerosol = 1 ;
 	}
 #Wet deposition of coarse-mode nitrate aerosol by large-scale precipitation
 'kg m**-2 s**-1' = {
@@ -6063,7 +6051,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 9 ;
 	 aerosolType = 65533 ;
-	 is_aerosol = 1 ;
 	}
 #Wet deposition of fine-mode nitrate aerosol by convective precipitation
 'kg m**-2 s**-1' = {
@@ -6072,7 +6059,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 10 ;
 	 aerosolType = 65534 ;
-	 is_aerosol = 1 ;
 	}
 #Wet deposition of coarse-mode nitrate aerosol by convective precipitation
 'kg m**-2 s**-1' = {
@@ -6081,7 +6067,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 10 ;
 	 aerosolType = 65533 ;
-	 is_aerosol = 1 ;
 	}
 #Negative fixer of fine-mode nitrate aerosol
 'kg m**-2 s**-1' = {
@@ -6090,7 +6075,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 193 ;
 	 aerosolType = 65534 ;
-	 is_aerosol = 1 ;
 	}
 #Negative fixer of coarse-mode nitrate aerosol
 'kg m**-2 s**-1' = {
@@ -6099,7 +6083,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 193 ;
 	 aerosolType = 65533 ;
-	 is_aerosol = 1 ;
 	}
 #Vertically integrated mass of fine-mode nitrate aerosol
 'kg m**-2' = {
@@ -6110,7 +6093,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 aerosolType = 65534 ;
-	 is_aerosol = 1 ;
 	}
 #Vertically integrated mass of coarse-mode nitrate aerosol
 'kg m**-2' = {
@@ -6121,7 +6103,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 aerosolType = 65533 ;
-	 is_aerosol = 1 ;
 	}
 #Fine-mode nitrate aerosol optical depth at 550 nm
 'dimensionless' = {
@@ -6156,7 +6137,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 192 ;
 	 aerosolType = 62003 ;
-	 is_aerosol = 1 ;
 	}
 #Negative fixer of ammonium aerosol
 'kg m**-2 s**-1' = {
@@ -6165,7 +6145,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 193 ;
 	 aerosolType = 62003 ;
-	 is_aerosol = 1 ;
 	}
 #Source/gain of biogenic secondary organic aerosol
 'kg m**-2 s**-1' = {
@@ -6174,7 +6153,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 192 ;
 	 aerosolType = 62032 ;
-	 is_aerosol = 1 ;
 	}
 #Negative fixer of biogenic secondary organic aerosol
 'kg m**-2 s**-1' = {
@@ -6183,7 +6161,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 193 ;
 	 aerosolType = 62032 ;
-	 is_aerosol = 1 ;
 	}
 #Source/gain of anthropogenic secondary organic aerosol
 'kg m**-2 s**-1' = {
@@ -6192,7 +6169,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 192 ;
 	 aerosolType = 62033 ;
-	 is_aerosol = 1 ;
 	}
 #Negative fixer of anthropogenic secondary organic aerosol
 'kg m**-2 s**-1' = {
@@ -6201,7 +6177,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 193 ;
 	 aerosolType = 62033 ;
-	 is_aerosol = 1 ;
 	}
 #Experimental product
 '~' = {
@@ -8922,7 +8897,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 65532 ;
-	 is_chemical = 1 ;
 	}
 #Biomass burning volatile organic compounds mass mixing ratio
 'kg kg**-1' = {
@@ -8931,7 +8905,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 65531 ;
-	 is_chemical = 1 ;
 	}
 #Total column hydrogen peroxide
 'kg m**-2' = {
@@ -10134,7 +10107,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
 	 constituentType = 65532 ;
-	 is_chemical = 1 ;
 	}
 #Column integrated mass density of Biomass burning volatile organic compounds
 'kg m**-2' = {
@@ -10143,7 +10115,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
 	 constituentType = 65531 ;
-	 is_chemical = 1 ;
 	}
 #Ozone emissions
 'kg m**-2 s**-1' = {
@@ -11472,7 +11443,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 3 ;
 	 constituentType = 65532 ;
-	 is_chemical = 1 ;
 	}
 #Atmosphere emission mass flux of Biomass burning volatile organic compounds
 'kg m**-2 s**-1' = {
@@ -11481,7 +11451,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 3 ;
 	 constituentType = 65531 ;
-	 is_chemical = 1 ;
 	}
 #Ozone deposition velocity
 'm s**-1' = {
@@ -12726,7 +12695,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 15 ;
 	 constituentType = 65532 ;
-	 is_chemical = 1 ;
 	}
 #Dry deposition velocity of Biomass burning volatile organic compounds
 'm s**-1' = {
@@ -12735,7 +12703,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 15 ;
 	 constituentType = 65531 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Ozone (stratospheric)
 'kg m**-2' = {
@@ -12745,7 +12712,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 65524 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Nitrate
 'kg m**-2' = {
@@ -12755,7 +12721,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 65525 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Toluene and less reactive aromatics
 'kg m**-2' = {
@@ -12765,7 +12730,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 65529 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated dry deposition mass flux of Xylene and more reactive aromatics
 'kg m**-2' = {
@@ -12775,7 +12739,6 @@
 	 parameterNumber = 6 ;
 	 constituentType = 65530 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Nitrate
 'kg m**-2' = {
@@ -12785,7 +12748,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 65525 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Condensable gas type 1
 'kg m**-2' = {
@@ -12795,7 +12757,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 65526 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Condensable gas type 2a
 'kg m**-2' = {
@@ -12805,7 +12766,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 65527 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Time-integrated wet deposition mass flux of Condensable gas type 2b
 'kg m**-2' = {
@@ -12815,7 +12775,6 @@
 	 parameterNumber = 7 ;
 	 constituentType = 65528 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
 	}
 #Horizontal visibility
 'm' = {
