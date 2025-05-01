@@ -16957,7 +16957,7 @@
 	 parameterNumber = 22 ;
 	}
 #Supercooled large droplet probability
-'~' = {
+'sldp' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 23 ;

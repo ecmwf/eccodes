@@ -31,5 +31,6 @@ int main(int argc, char* argv[])
             printf("OK\n");
         }
     }
+    (void)a;
     return fail;
 }
