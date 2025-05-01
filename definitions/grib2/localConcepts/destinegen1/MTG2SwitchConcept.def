@@ -1,2 +1,2 @@
-# This pseudocentre can be permanently on post-MTG2 definitions
-1 = {true=1;}
+# This pseudocentre can be permanently on pre-MTG2 definitions
+0 = {true=1;}

@@ -34,7 +34,7 @@ module eccodes
   integer, parameter, public :: CODES_TYPE_LABEL     = 6
   integer, parameter, public :: CODES_TYPE_MISSING   = 7
 
-  !> Create a new message in memory from an integer or character array containting the coded message.
+  !> Create a new message in memory from an integer or character array containing the coded message.
   !>
   !> The message can be accessed through its ID and it will be available\n
   !> until @ref codes_release is called. A reference to the original coded\n
@@ -60,7 +60,7 @@ module eccodes
   !> Given an ID and key name as input a value corresponding to the given index
   !> is returned. The index is zero based i.e. the first element has
   !> zero index, the second element index one and so on.
-  !> If the parameter index is an array all the values correspondig to the indexes
+  !> If the parameter index is an array all the values corresponding to the indexes
   !> list is returned.
   !> The ID references to a message loaded in memory.
   !>

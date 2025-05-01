@@ -240,6 +240,7 @@ static int rectify_concept_apply(grib_handle* h, const char* key)
         { "typeOfStatisticalProcessing",       { "selectStepTemplateInterval", 1 }        },
         { "typeOfWavePeriodInterval",          { "productDefinitionTemplateNumber", 103 } },
         { "constituentType",                   { "is_chemical", 1 }                       },
+        { "aerosolType",                       { "is_aerosol", 1 }                        },
         { "sourceSinkChemicalPhysicalProcess", { "is_chemical_srcsink", 1 }               },
         { "randomFieldNumber",                 { "productDefinitionTemplateNumber", 143 } },
         // TODO(masn): Add a new key e.g. is_probability_forecast

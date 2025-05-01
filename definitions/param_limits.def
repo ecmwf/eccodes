@@ -13,11 +13,11 @@ concept param_value_min(default_min_val) {
     0 = { paramId=59; }
     -1 = { paramId=60; }
     160 = {
-        one=(step > 0);
+        true=(defined(step) && step > 0);
         paramId=121;
     }
     150 = {
-        one=(step > 0);
+        true=(defined(step) && step > 0);
         paramId=122;
     }
     -13000 = { paramId=129; }

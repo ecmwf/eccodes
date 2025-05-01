@@ -15,11 +15,25 @@ temp=${label}".grib.tmp"
 temp1=${label}".1.tmp"
 temp2=${label}".2.tmp"
 tempLog=${label}.log
+tempFilt=${label}.filt
 
 
 # Test meta-data
 res=`${tools_dir}/grib_get -p decimalScaleFactor,bitsPerValue ${data_dir}/gfs.c255.grib2`
 [ "$res" = "1 20" ]
+
+
+# All undefined values
+cat >$tempFilt<<EOF
+    set values={9999,9999,9999,9999};
+    write;
+EOF
+infile=${data_dir}/gfs.complex.mvmu.grib2
+${tools_dir}/grib_filter -o $temp $tempFilt $infile
+grib_check_key_equals $temp dataRepresentationTemplateNumber 2
+grib_check_key_equals $temp bitsPerValue 0
+rm -f $temp
+
 
 # ECC-523
 # ---------
@@ -108,4 +122,4 @@ grep -q "Unsupported orderOfSpatialDifferencing" $tempLog
 
 
 # Clean up
-rm -f $temp $temp1 $temp2 $tempLog
+rm -f $temp $temp1 $temp2 $tempLog $tempFilt

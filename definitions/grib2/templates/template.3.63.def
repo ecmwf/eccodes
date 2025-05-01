@@ -42,16 +42,16 @@ alias firstLatitude=Latin1;
 meta  geography.Latin1InDegrees scale(Latin1,one,grib2divider,truncateDegrees) : dump;
 
 #  Latin 2 - second latitude from the pole at which the secant cone cuts the sphere
-signed[4] Latin2 : dump;
+signed[4] Latin2 : edition_specific;
 alias secondLatitude=Latin2;
 meta  geography.Latin2InDegrees scale(Latin2,one,grib2divider,truncateDegrees) : dump;
 
 #  Latitude of the southern pole of projection
 signed[4] latitudeOfSouthernPole : edition_specific;
 alias latitudeOfTheSouthernPoleOfProjection=latitudeOfSouthernPole;
-meta  geography.latitudeOfSouthernPoleInDegrees   scale(latitudeOfSouthernPole          ,one,grib2divider,truncateDegrees) : dump;
+meta  geography.latitudeOfSouthernPoleInDegrees  scale(latitudeOfSouthernPole,one,grib2divider,truncateDegrees) : dump;
 
 #  Longitude of the southern pole of projection
 unsigned[4] longitudeOfSouthernPole : edition_specific;
 alias longitudeOfTheSouthernPoleOfProjection=longitudeOfSouthernPole;
-meta  geography.longitudeOfSouthernPoleInDegrees   scale(longitudeOfSouthernPole,oneConstant,grib2divider,truncateDegrees) : dump;
+meta  geography.longitudeOfSouthernPoleInDegrees  scale(longitudeOfSouthernPole,oneConstant,grib2divider,truncateDegrees) : dump;

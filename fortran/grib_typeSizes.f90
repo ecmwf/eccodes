@@ -17,7 +17,7 @@
 ! References and Credits:
 !   Written by
 !    Robert Pincus
-!    Cooperative Institue for Meteorological Satellite Studies
+!    Cooperative Institute for Meteorological Satellite Studies
 !    University of Wisconsin - Madison
 !    1225 W. Dayton St.
 !    Madison, Wisconsin 53706

@@ -62,6 +62,9 @@ int GridSpec::pack_string(const char* sval, size_t* len)
 int GridSpec::unpack_string(char* v, size_t* len)
 {
 #if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
+    if (context_->eckit_geo == 0) { // check env. variable too
+        return GRIB_NOT_IMPLEMENTED;
+    }
     ECCODES_ASSERT(0 < *len);
     ECCODES_ASSERT(v != nullptr);
 

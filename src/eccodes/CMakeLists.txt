@@ -285,7 +285,6 @@ list( APPEND eccodes_src_files
     grib_memory.cc
     grib_buffer.cc
 
-    dumper/Serialize.cc
     dumper/Debug.cc
     dumper/Default.cc
     dumper/BufrEncodeC.cc

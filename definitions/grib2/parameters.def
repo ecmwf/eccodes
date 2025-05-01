@@ -5,6 +5,7 @@ transient dummyc=0: hidden;
 # With value of the switch defined in section.4.def, we read the corresponding def files. This works as follows:
 #      Pre-MTG2 ( MTG2Switch=0 ): static def files [concept].lte[tablesVersionMTG2Switch].def
 #      Else ( MTG2Switch!=0 ): default def files [concept].def. Ensures continuity of "status quo".
+# See the G2ParamConceptFilename accessor
 
 meta paramIdFilename   g2_param_concept_filename("paramId",   MTG2Switch, tablesVersionMTG2Switch): hidden;
 meta shortNameFilename g2_param_concept_filename("shortName", MTG2Switch, tablesVersionMTG2Switch): hidden;

@@ -48,7 +48,7 @@ static void* process_grib(void* threadID)
     const double tol      = 1e-6;
     double pv[4]          = { 1, 2, 3, 4 };
     const size_t pvsize   = 4;
-    ProductKind prod_kind = 0;
+    ProductKind prod_kind = PRODUCT_ANY;
 
     codes_handle* h = codes_grib_handle_new_from_samples(0, "regular_ll_pl_grib2");
     Assert(h != NULL);

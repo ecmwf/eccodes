@@ -1058,7 +1058,6 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
 
         case GRIB_TYPE_BYTES:
             return 0; // Not in BUFR
-            break;
 
         case GRIB_TYPE_LABEL:
             break;
