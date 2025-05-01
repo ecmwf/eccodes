@@ -227,6 +227,7 @@
 	 typeOfSizeInterval = 5 ;
 	 aerosolType = 62026 ;
 	 scaledValueOfSecondSize = missing() ;
+	 is_aerosol = 1 ;
 	}
 #Particulate matter d <= 2.5 um
 'mass_concentration_of_pm2p5_ambient_aerosol_particles_in_air' = {
@@ -239,6 +240,7 @@
 	 typeOfSizeInterval = 5 ;
 	 aerosolType = 62026 ;
 	 scaledValueOfSecondSize = missing() ;
+	 is_aerosol = 1 ;
 	}
 #Particulate matter d <= 10 um
 'mass_concentration_of_pm10_ambient_aerosol_particles_in_air' = {
@@ -251,6 +253,7 @@
 	 typeOfSizeInterval = 5 ;
 	 aerosolType = 62026 ;
 	 scaledValueOfSecondSize = missing() ;
+	 is_aerosol = 1 ;
 	}
 #Ammonia mass mixing ratio
 'mass_fraction_of_ammonia_in_air' = {
@@ -258,6 +261,7 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 9 ;
+	 is_chemical = 1 ;
 	}
 #Nitrogen monoxide mass mixing ratio
 'mass_fraction_of_nitrogen_monoxide_in_air' = {
@@ -265,6 +269,7 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 11 ;
+	 is_chemical = 1 ;
 	}
 #Forecast albedo
 'surface_albedo' = {
@@ -332,6 +337,7 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 5 ;
+	 is_chemical = 1 ;
 	}
 #Sulphur dioxide mass mixing ratio
 'mass_fraction_of_sulfur_dioxide_in_air' = {
@@ -339,6 +345,7 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 8 ;
+	 is_chemical = 1 ;
 	}
 #Carbon monoxide mass mixing ratio
 'mass_fraction_of_carbon_monoxide_in_air' = {
@@ -346,6 +353,7 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 4 ;
+	 is_chemical = 1 ;
 	}
 #Ozone mass mixing ratio (full chemistry scheme)
 'mass_fraction_of_ozone_in_air' = {
@@ -353,4 +361,5 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 0 ;
+	 is_chemical = 1 ;
 }

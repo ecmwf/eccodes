@@ -41,4 +41,5 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 constituentType = 3 ;
+	 is_chemical = 1 ;
 }
