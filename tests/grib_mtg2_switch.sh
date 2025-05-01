@@ -907,6 +907,276 @@ ${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
 # MTG2Switch=1
 expected+=("1 1 1")
 
+## CASE 37: ECMWF A5 CY49R2 post-mtg2 ##
+# tablesVersion=34
+# class=a5
+# productDefinitionTemplateNumber=42
+# productionStatusOfProcessedData=3
+# backgroundProcess=255
+# generatingProcessIdentifier=159
+cases+=(temp.$label.case37.grib2)
+
+cat >$tempFilt<<EOF
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=1;
+    set productDefinitionTemplateNumber=42;
+    set class="a5";
+    set tablesVersion=34;
+    set productionStatusOfProcessedData=3;
+    set backgroundProcess=255;
+    set generatingProcessIdentifier=159;
+    write;
+EOF
+
+${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+
+# Expected result
+# MTG2SwitchViaTablesVersion=1
+# MTG2SwitchDefault=2
+# MTG2Switch=2
+expected+=("1 2 2")
+
+## CASE 38: DestinE ClimateDT generation 1 pre-mtg2 ##
+# tablesVersion=31
+# class=d1
+# productionStatusOfProcessedData=12
+# dataset=climate-dt
+# generation=1
+cases+=(temp.$label.case38.grib2)
+
+cat >$tempFilt<<EOF
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=1;
+    set class="d1";
+    set tablesVersion=31;
+    set productionStatusOfProcessedData=12;
+    set dataset="climate-dt";
+    set generation=1;
+    write;
+EOF
+
+${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+
+# Expected result
+# MTG2SwitchViaTablesVersion=0
+# MTG2SwitchDefault=1
+# MTG2Switch=0
+expected+=("0 1 0")
+
+## CASE 39: DestinE ClimateDT generation 1 tv37 pre-mtg2 ##
+# tablesVersion=37
+# class=d1
+# productionStatusOfProcessedData=12
+# dataset=climate-dt
+# generation=1
+cases+=(temp.$label.case39.grib2)
+
+cat >$tempFilt<<EOF
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=1;
+    set class="d1";
+    set tablesVersion=37;
+    set productionStatusOfProcessedData=12;
+    set dataset="climate-dt";
+    set generation=1;
+    write;
+EOF
+
+${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+
+# Expected result
+# MTG2SwitchViaTablesVersion=0
+# MTG2SwitchDefault=1
+# MTG2Switch=0
+expected+=("0 1 0")
+
+## CASE 40: DestinE ClimateDT generation 2 pre-mtg2 ##
+# tablesVersion=31
+# class=d1
+# productionStatusOfProcessedData=12
+# dataset=climate-dt
+# generation=2
+cases+=(temp.$label.case40.grib2)
+
+cat >$tempFilt<<EOF
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=1;
+    set class="d1";
+    set tablesVersion=31;
+    set productionStatusOfProcessedData=12;
+    set dataset="climate-dt";
+    set generation=2;
+    write;
+EOF
+
+${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+
+# Expected result
+# MTG2SwitchViaTablesVersion=1
+# MTG2SwitchDefault=0
+# MTG2Switch=0
+expected+=("1 0 0")
+
+## CASE 41: DestinE ClimateDT generation 2 post-mtg2 ##
+# tablesVersion=34
+# class=d1
+# productionStatusOfProcessedData=12
+# dataset=climate-dt
+# generation=2
+cases+=(temp.$label.case41.grib2)
+
+cat >$tempFilt<<EOF
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=1;
+    set class="d1";
+    set tablesVersion=34;
+    set productionStatusOfProcessedData=12;
+    set dataset="climate-dt";
+    set generation=2;
+    write;
+EOF
+
+${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+
+# Expected result
+# MTG2SwitchViaTablesVersion=1
+# MTG2SwitchDefault=1
+# MTG2Switch=1
+expected+=("1 1 1")
+
+## CASE 42: DestinE ExtremesDT pre-mtg2 ##
+# tablesVersion=31
+# class=d1
+# productionStatusOfProcessedData=12
+# dataset=extremes-dt
+cases+=(temp.$label.case42.grib2)
+
+cat >$tempFilt<<EOF
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=1;
+    set class="d1";
+    set tablesVersion=31;
+    set productionStatusOfProcessedData=12;
+    set dataset="extremes-dt";
+    write;
+EOF
+
+${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+
+# Expected result
+# MTG2SwitchViaTablesVersion=1
+# MTG2SwitchDefault=0
+# MTG2Switch=0
+expected+=("1 0 0")
+
+## CASE 43: DestinE ExtremesDT post-mtg2 ##
+# tablesVersion=34
+# class=d1
+# productionStatusOfProcessedData=12
+# dataset=extremes-dt
+cases+=(temp.$label.case43.grib2)
+
+cat >$tempFilt<<EOF
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=1;
+    set class="d1";
+    set tablesVersion=34;
+    set productionStatusOfProcessedData=12;
+    set dataset="extremes-dt";
+    write;
+EOF
+
+${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+
+# Expected result
+# MTG2SwitchViaTablesVersion=1
+# MTG2SwitchDefault=1
+# MTG2Switch=1
+expected+=("1 1 1")
+
+## CASE 44: EERIE pre-mtg2 ##
+# tablesVersion=32
+# class=ed
+cases+=(temp.$label.case44.grib2)
+
+cat >$tempFilt<<EOF
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=1;
+    set class="ed";
+    set tablesVersion=32;
+    write;
+EOF
+
+${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+# Expected result
+# MTG2SwitchViaTablesVersion=1
+# MTG2SwitchDefault=0
+# MTG2Switch=0
+expected+=("1 0 0")
+
+## CASE 45: EERIE post-mtg2 ##
+# tablesVersion=37
+# class=ed
+cases+=(temp.$label.case45.grib2)
+
+cat >$tempFilt<<EOF
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=1;
+    set class="ed";
+    set tablesVersion=37;
+    write;
+EOF
+
+${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+
+# Expected result
+# MTG2SwitchViaTablesVersion=1
+# MTG2SwitchDefault=1
+# MTG2Switch=1
+expected+=("1 1 1")
+
+## CASE 46: NextGEMS pre-mtg2 ##
+# tablesVersion=31
+# class=ng
+cases+=(temp.$label.case46.grib2)
+
+cat >$tempFilt<<EOF
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=1;
+    set class="ng";
+    set tablesVersion=31;
+    write;
+EOF
+
+${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+
+# Expected result
+# MTG2SwitchViaTablesVersion=1
+# MTG2SwitchDefault=0
+# MTG2Switch=0
+expected+=("1 0 0")
+
+## CASE 47: NextGEMS post-mtg2 ##
+# tablesVersion=37
+# class=ng
+cases+=(temp.$label.case47.grib2)
+
+cat >$tempFilt<<EOF
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=1;
+    set class="ng";
+    set tablesVersion=37;
+    write;
+EOF
+
+${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+
+# Expected result
+# MTG2SwitchViaTablesVersion=1
+# MTG2SwitchDefault=1
+# MTG2Switch=1
+expected+=("1 1 1")
+
 # Test different cases
 
 for i in "${!cases[@]}"; do
