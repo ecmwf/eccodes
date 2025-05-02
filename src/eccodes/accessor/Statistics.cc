@@ -59,7 +59,7 @@ int Statistics::unpack_double(double* val, size_t* len)
         grib_context_log(context_, GRIB_LOG_ERROR, "Statistics: Cannot compute statistics for field with no values");
         return GRIB_DECODING_ERROR;
     }
-    grib_context_log(context_, GRIB_LOG_DEBUG, "Statistics: computing statistics for %d values", size);
+    grib_context_log(context_, GRIB_LOG_DEBUG, "Statistics: computing statistics for %zu values", size);
 
     if ((ret = grib_get_double(h, missing_value_, &missing)) != GRIB_SUCCESS)
         return ret;
