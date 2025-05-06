@@ -10,7 +10,7 @@
  */
 
 
-#include "geo/GribSpec.h"
+#include "geo/GribToSpec.h"
 
 #include <algorithm>
 #include <cstring>
@@ -671,14 +671,14 @@ class lock_type
 }  // namespace
 
 
-GribSpec::GribSpec(codes_handle* h) :
+GribToSpec::GribToSpec(codes_handle* h) :
     handle_(h)
 {
     ASSERT(handle_ != nullptr);
 }
 
 
-bool GribSpec::has(const std::string& name) const
+bool GribToSpec::has(const std::string& name) const
 {
     lock_type lock;
 
@@ -697,7 +697,7 @@ bool GribSpec::has(const std::string& name) const
 }
 
 
-bool GribSpec::get(const std::string& name, std::string& value) const
+bool GribToSpec::get(const std::string& name, std::string& value) const
 {
     lock_type lock;
 
@@ -737,7 +737,7 @@ bool GribSpec::get(const std::string& name, std::string& value) const
 }
 
 
-bool GribSpec::get(const std::string& name, bool& value) const
+bool GribToSpec::get(const std::string& name, bool& value) const
 {
     lock_type lock;
 
@@ -762,7 +762,7 @@ bool GribSpec::get(const std::string& name, bool& value) const
 }
 
 
-bool GribSpec::get(const std::string& name, int& value) const
+bool GribToSpec::get(const std::string& name, int& value) const
 {
     if (long v = 0; get(name, v)) {
         ASSERT(static_cast<long>(static_cast<int>(v)) == v);
@@ -774,7 +774,7 @@ bool GribSpec::get(const std::string& name, int& value) const
 }
 
 
-bool GribSpec::get(const std::string& name, long& value) const
+bool GribToSpec::get(const std::string& name, long& value) const
 {
     lock_type lock;
 
@@ -800,19 +800,19 @@ bool GribSpec::get(const std::string& name, long& value) const
 }
 
 
-bool GribSpec::get(const std::string& /*name*/, long long& /*value*/) const
+bool GribToSpec::get(const std::string& /*name*/, long long& /*value*/) const
 {
     return false;
 }
 
 
-bool GribSpec::get(const std::string& /*name*/, std::size_t& /*value*/) const
+bool GribToSpec::get(const std::string& /*name*/, std::size_t& /*value*/) const
 {
     return false;
 }
 
 
-bool GribSpec::get(const std::string& name, float& value) const
+bool GribToSpec::get(const std::string& name, float& value) const
 {
     if (cache_.get(name, value)) {
         return true;
@@ -827,7 +827,7 @@ bool GribSpec::get(const std::string& name, float& value) const
 }
 
 
-bool GribSpec::get(const std::string& name, double& value) const
+bool GribToSpec::get(const std::string& name, double& value) const
 {
     lock_type lock;
 
@@ -874,13 +874,13 @@ bool GribSpec::get(const std::string& name, double& value) const
 }
 
 
-bool GribSpec::get(const std::string& /*name*/, std::vector<int>& /*value*/) const
+bool GribToSpec::get(const std::string& /*name*/, std::vector<int>& /*value*/) const
 {
     return false;
 }
 
 
-bool GribSpec::get(const std::string& name, std::vector<long>& value) const
+bool GribToSpec::get(const std::string& name, std::vector<long>& value) const
 {
     lock_type lock;
 
@@ -919,19 +919,19 @@ bool GribSpec::get(const std::string& name, std::vector<long>& value) const
 }
 
 
-bool GribSpec::get(const std::string& /*name*/, std::vector<long long>& /*value*/) const
+bool GribToSpec::get(const std::string& /*name*/, std::vector<long long>& /*value*/) const
 {
     return false;
 }
 
 
-bool GribSpec::get(const std::string& /*name*/, std::vector<std::size_t>& /*value*/) const
+bool GribToSpec::get(const std::string& /*name*/, std::vector<std::size_t>& /*value*/) const
 {
     return false;
 }
 
 
-bool GribSpec::get(const std::string& name, std::vector<float>& value) const
+bool GribToSpec::get(const std::string& name, std::vector<float>& value) const
 {
     if (cache_.get(name, value)) {
         return true;
@@ -952,7 +952,7 @@ bool GribSpec::get(const std::string& name, std::vector<float>& value) const
 }
 
 
-bool GribSpec::get(const std::string& name, std::vector<double>& value) const
+bool GribToSpec::get(const std::string& name, std::vector<double>& value) const
 {
     lock_type lock;
 
@@ -1011,13 +1011,13 @@ bool GribSpec::get(const std::string& name, std::vector<double>& value) const
 }
 
 
-bool GribSpec::get(const std::string& /*name*/, std::vector<std::string>& /*value*/) const
+bool GribToSpec::get(const std::string& /*name*/, std::vector<std::string>& /*value*/) const
 {
     return false;
 }
 
 
-void GribSpec::json(eckit::JSON& j) const
+void GribToSpec::json(eckit::JSON& j) const
 {
     j.startObject();
 
