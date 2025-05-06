@@ -9,3 +9,6 @@ jobs:
   deploy:
     uses: ecmwf/reusable-workflows/.github/workflows/create-package.yml@v2
     secrets: inherit
+  wheel:
+    uses: ./.github/workflows/build-wheel-wrapper.yml
+    secrets: inherit    
