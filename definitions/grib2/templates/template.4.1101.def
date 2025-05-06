@@ -14,7 +14,7 @@ include "grib2/templates/template.4.horizontal.def"
 unsigned[4] numberOfMissingInStatisticalProcess = 0  : edition_specific;
 alias totalNumberOfDataValuesMissingInStatisticalProcess=numberOfMissingInStatisticalProcess;
 
-codetable[1] typeOfStatisticalProcessing ('4.10.table',masterDir,localDir) : edition_specific;
+codetable[1] typeOfStatisticalProcessing ('4.10.table',masterDir,localDir) = 255 : edition_specific;
 
 codetable[1] typeOfTimeIncrement ('4.11.table',masterDir,localDir) = 2 : edition_specific;
 alias typeOfTimeIncrementBetweenSuccessiveFieldsUsedInTheStatisticalProcessing=typeOfTimeIncrement;
