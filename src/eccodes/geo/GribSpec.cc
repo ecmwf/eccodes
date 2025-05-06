@@ -290,6 +290,24 @@ const char* get_key(const std::string& name, codes_handle* h)
         { "proj", "projTargetString" },
         { "projSource", "projSourceString" },
 
+        { "first_lat",
+          "latitudeOfFirstGridPointInDegrees" },
+        { "first_lon",
+          "longitudeOfFirstGridPointInDegrees" },
+
+        { "lat_0",
+          "LaDInDegrees",
+          _or(is("gridType", "lambert"), is("gridType", "lambert_lam")) },
+        { "lon_0",
+          "LoVInDegrees",
+          _or(is("gridType", "lambert"), is("gridType", "lambert_lam")) },
+        { "lat_1",
+          "Latin1InDegrees",
+          _or(is("gridType", "albers"), _or(is("gridType", "lambert"), is("gridType", "lambert_lam"))) },
+        { "lat_2",
+          "Latin2InDegrees",
+          _or(is("gridType", "albers"), _or(is("gridType", "lambert"), is("gridType", "lambert_lam"))) },
+
         // This will be just called for has()
         {
             "gridded",
