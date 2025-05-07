@@ -1,3 +1,0 @@
-# Concept by which we define which conditions will imply using the tablesVersion
-# to switch between pre and post MTG2
-1 = {true=1;}
