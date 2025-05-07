@@ -25,14 +25,6 @@ extern "C" {
     #include "eccodes_config.h"
 #endif
 
-/* autoconf config header */
-#ifdef HAVE_CONFIG_H
-    #include "config.h"
-    #ifdef _LARGE_FILES
-        #undef _LARGE_FILE_API
-    #endif
-#endif
-
 #ifndef GRIB_INLINE
     #define GRIB_INLINE
 #endif

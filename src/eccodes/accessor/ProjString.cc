@@ -91,8 +91,25 @@ static int proj_space_view(grib_handle* h, char* result)
 
 static int proj_albers(grib_handle* h, char* result)
 {
-    return GRIB_NOT_IMPLEMENTED;
+    int err = 0;
+    char shape[128] = {0,};
+    double LoVInDegrees = 0, LaDInDegrees = 0, Latin1InDegrees = 0, Latin2InDegrees = 0;
+
+    if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(h, "Latin1InDegrees", &Latin1InDegrees)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(h, "Latin2InDegrees", &Latin2InDegrees)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(h, "LoVInDegrees", &LoVInDegrees)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(h, "LaDInDegrees", &LaDInDegrees)) != GRIB_SUCCESS)
+        return err;
+    snprintf(result, 1024, "+proj=aea +lon_0=%lf +lat_0=%lf +lat_1=%lf +lat_2=%lf %s",
+             LoVInDegrees, LaDInDegrees, Latin1InDegrees, Latin2InDegrees, shape);
+    return err;
 }
+
 static int proj_transverse_mercator(grib_handle* h, char* result)
 {
     return GRIB_NOT_IMPLEMENTED;
