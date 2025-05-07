@@ -97,8 +97,12 @@ set -e
 grep -q "ERROR.*Cannot unpack.*projTargetString.* as double" $tempText
 grep -q "Hint: Try unpacking as string" $tempText
 
+# Albers
+${tools_dir}/grib_set -s gridType=albers $grib2_sample $tempGrib
+${tools_dir}/grib_get -p projString $tempGrib
+
 # Unsupported grids
-unsupported_grids="albers space_view equatorial_azimuthal_equidistant transverse_mercator"
+unsupported_grids="space_view equatorial_azimuthal_equidistant transverse_mercator"
 for ug in $unsupported_grids; do
   ${tools_dir}/grib_set -s gridType=$ug $grib2_sample $tempGrib
   set +e
