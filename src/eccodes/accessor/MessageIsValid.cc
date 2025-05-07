@@ -296,6 +296,7 @@ int MessageIsValid::check_grid_pl_array()
                 if (pl_start != pl_end) {
                     grib_context_log(c, GRIB_LOG_ERROR, "%s: PL array is not symmetric: pl[%zu]=%ld, pl[%zu]=%ld (gridType=%s)\n",
                                     TITLE, i, pl_start, plsize - 1 - i, pl_end, gridType);
+                    return GRIB_WRONG_GRID;
                 }
             }
         }
