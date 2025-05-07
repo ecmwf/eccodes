@@ -90,5 +90,12 @@ grib_check_key_equals $tempGribA shortName,name 'max_visp Time-maximum visibilit
 $tools_dir/grib_set -s paramId=239375 $sample_g2 $tempGribA 2>$tempText
 grib_check_key_equals $tempGribA shortName 'std_viozn'
 
+# ECC-2077: GRIB2: Default value of typeOfStatisticalProcessing should be 255
+for pdtn in 95 96 97 98 1001 1101; do
+    $tools_dir/grib_set -s productDefinitionTemplateNumber=$pdtn $sample_g2 $tempGribA
+    grib_check_key_equals $tempGribA typeOfStatisticalProcessing 255
+done
+
+
 # Clean up
 rm -f $tempText $tempGribA $tempGribB

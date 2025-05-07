@@ -77,5 +77,16 @@ input=$data_dir/sample.grib2
 ${tools_dir}/grib_filter $tempFilt $input
 
 
+# Error condition: Empty field
+grib1_sample=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+$tools_dir/grib_set -s packingType=grid_second_order_row_by_row,bitmapPresent=1 $grib1_sample $temp1
+set +e
+$tools_dir/grib_get -p min,max $temp1 2>$tempText
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Cannot compute statistics for field with no values" $tempText
+
+
 # Clean up
 rm -f $temp1 $temp2 $tempFilt $tempText

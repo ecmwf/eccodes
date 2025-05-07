@@ -28,9 +28,12 @@ include "grib2/templates/template.3.resolution_flags.def"
 # LaD - Latitude where Dx and Dy are specified
 signed[4] LaD  : dump;
 alias latitudeWhereDxAndDyAreSpecified=LaD ;
+meta geography.LaDInDegrees scale(LaD,one,grib2divider,truncateDegrees) : dump;
+
 
 # LoV - Longitude of meridian parallel to Y-axis along which latitude increases as the Y-coordinate increases
 unsigned[4] LoV  : dump;
+meta geography.LoVInDegrees scale(LoV,one,grib2divider,truncateDegrees) : dump;
 
 # Dx - X-direction grid length
 unsigned[4] xDirectionGridLength  : dump;

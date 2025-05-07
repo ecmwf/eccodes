@@ -12,7 +12,7 @@ codetable[1] horizontalDimensionProcessed ('4.220.table',masterDir,localDir) : d
 codetable[1] treatmentOfMissingData ('4.221.table',masterDir,localDir) : dump;
 
 # Type of statistical processing
-codetable[1] typeOfStatisticalProcessing ('4.10.table',masterDir,localDir) : dump;
+codetable[1] typeOfStatisticalProcessing ('4.10.table',masterDir,localDir) = 255 : dump;
 #alias typeOfStatisticalProcessing=stepType;
 
 unsigned[4] startOfRange  : dump;

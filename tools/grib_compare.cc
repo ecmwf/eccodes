@@ -933,7 +933,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                     compareAbsolute = 1;
                 }
             }
-            else if (!grib_inline_strcmp(name, "unpackedValues")) {
+            else if (grib_inline_strcmp(name, "unpackedValues")==0) {
                 packingError1 = 0;
                 packingError2 = 0;
                 err1          = grib_get_double(h1, "unpackedError", &packingError1);
@@ -946,14 +946,14 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                     compareAbsolute = 1;
                 }
             }
-            else if (!grib_inline_rstrcmp(name, "InDegrees")) {
+            else if (grib_inline_rstrcmp(name, "InDegrees")==0) {
                 packingError1   = 0.0005;
                 packingError2   = 0.0005;
                 isangle         = 1;
                 /* value_tolerance = packingError1 > packingError2 ? packingError1 : packingError2; */
                 value_tolerance = packingError1;
             }
-            else if (!grib_inline_strcmp(name, "referenceValue")) {
+            else if (grib_inline_strcmp(name, "referenceValue")==0) {
                 packingError1   = 0;
                 packingError2   = 0;
                 err1            = grib_get_double(h1, "referenceValueError", &packingError1);
@@ -1019,9 +1019,9 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                         dnew1 += 360.0;
                     if (*dval2 < 0)
                         dnew2 += 360.0;
-                    if (*dval1 > 360)
+                    if (*dval1 >= 360)
                         dnew1 -= 360.0;
-                    if (*dval2 > 360)
+                    if (*dval2 >= 360)
                         dnew2 -= 360.0;
                 }
                 value_tolerance *= tolerance_factor;

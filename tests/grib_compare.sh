@@ -321,6 +321,21 @@ ${tools_dir}/grib_compare -c unpackedValues -A 1.86 $ECCODES_SAMPLES_PATH/sh_ml_
 
 
 # -----------------
+# Angle comparison
+# -----------------
+$tools_dir/grib_set -s longitudeOfFirstGridPoint=360000 $ECCODES_SAMPLES_PATH/GRIB1.tmpl $temp1
+$tools_dir/grib_set -s longitudeOfFirstGridPoint=0      $ECCODES_SAMPLES_PATH/GRIB1.tmpl $temp2
+# Comparing low-level keys of type integer
+set +e
+${tools_dir}/grib_compare $temp1 $temp2
+status=$?
+set -e
+[ $status -ne 0 ]
+# Comparing computed keys of type double (longitudeOfFirstGridPointInDegrees)
+$tools_dir/grib_compare -c geography:n $temp1 $temp2
+
+
+# -----------------
 # Failing cases
 # -----------------
 set +e
