@@ -384,8 +384,9 @@ configure_file( eccodes_config.h.in eccodes_config.h )
 
 add_definitions( -DHAVE_ECCODES_CONFIG_H )
 
-if( CMAKE_COMPILER_IS_GNUCC )
+if( CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang" )
     ecbuild_add_c_flags("-pedantic")
+    ecbuild_add_cxx_flags("-pedantic")
 endif()
 if( CMAKE_CXX_COMPILER_ID MATCHES IntelLLVM )
   # Turn off -ffinite-math-only which gets included by some optimisation levels which assume values can never be NaN.
