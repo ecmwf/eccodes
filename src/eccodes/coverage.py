@@ -17,10 +17,10 @@ def print_coverage_branch(headers, endpoint):
         return
 
     coverage = response.json()['results'][0]['totals']['coverage']
-    print(coverage)
+    print(f"Coverage for branch {args.branch}: {coverage:.2f}%")
 
 
-def print_coverage_files(headers, endpoint):
+def print_coverage_files(headers, endpoint, add_link=True):
     ep = endpoint.format(f"?branch={args.branch}")
     response = requests.get(ep, headers=headers)
     if response.status_code != 200:
@@ -40,8 +40,15 @@ def print_coverage_files(headers, endpoint):
         return
     content = json.loads(response.content)
 
+    # https://app.codecov.io/gh/ecmwf/eccodes/blob/develop/src%2Feccodes%2Faccessor%2FBits.h
+
+    link_to_codecov = lambda filename, branch: f"https://codecov.io/gh/ecmwf/eccodes/blob/{branch}/{filename}"
+
     for file in content['report']['files']:
-        print(file['totals']['coverage'], file['name'])
+        output = "{:6.2f} {}".format(file['totals']['coverage'], file['name'])
+        if add_link:
+            output += " - " + link_to_codecov(file['name'], args.branch)
+        print(output)
 
 
 def parse_args():
@@ -52,6 +59,7 @@ def parse_args():
     parser.add_argument("branch", nargs="?", type=str, help="Branch to get coverage data from", default="develop")
     parser.add_argument("--token", type=str, help="Codecov token for authentication. Alternatively, set the CODECOV_TOKEN environment variable.", default=os.environ.get("CODECOV_TOKEN"),)
     parser.add_argument("--total", action="store_true", help="Get total coverage data")
+    parser.add_argument("--link", action="store_true", help="Add link to Codecov in the output")
     return parser.parse_args()
 
 
@@ -66,7 +74,7 @@ if __name__ == "__main__":
     if args.total:
         print_coverage_branch(headers, endpoint)
     else:
-        print_coverage_files(headers, endpoint)
+        print_coverage_files(headers, endpoint, args.link)
 
 
 
