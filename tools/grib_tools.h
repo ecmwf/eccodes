@@ -45,10 +45,6 @@
 #define MODE_TAF 5
 #define MODE_ANY 6
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef union grib_typed_value
 {
     long* long_value;
@@ -211,8 +207,5 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
 int grib_no_handle_action(grib_runtime_options* options, int err);
 int exit_if_input_is_directory(const char* toolname, const char* filename);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* GRIB_TOOLS_H */
