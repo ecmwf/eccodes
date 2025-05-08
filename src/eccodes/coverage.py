@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 
+# This script fetches coverage data from Codecov for a specified branch of the ecCodes repository.
+# It can be used to get total coverage data or detailed coverage data for individual files.
+# It requires a Codecov token for authentication, which can be passed as an argument or set as an environment variable.
+
+# Endpoint reference: https://docs.codecov.com/reference/repos_commits_list
+
 import argparse
 import requests
 import json
