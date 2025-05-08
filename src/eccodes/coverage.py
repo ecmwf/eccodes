@@ -5,15 +5,23 @@ import requests
 import json
 import os
 
+def print_error(endpoint, response, message):
+    print(f"Endpoint: {endpoint}")
+    print(f"Response status code: {response.status_code}")
+    print(f"Response content: {response.content}")
+    print(f"Error: {message}")
+    return
+
+
 def print_coverage_branch(headers, endpoint):
     ep = endpoint.format(f"?branch={args.branch}")
     response = requests.get(ep, headers=headers)
     if response.status_code != 200:
-        print("Error: Unable to fetch data from Codecov API")
+        print_error(ep, response, "Unable to fetch data from Codecov API")
         return
 
     if response.json()['count'] == 0:
-        print(f"No coverage data found for the specified branch: {args.branch}")
+        print_error(ep, response, f"No coverage data found for the specified branch: {args.branch}")
         return
 
     coverage = response.json()['results'][0]['totals']['coverage']
@@ -24,11 +32,11 @@ def print_coverage_files(headers, endpoint, add_link=True):
     ep = endpoint.format(f"?branch={args.branch}")
     response = requests.get(ep, headers=headers)
     if response.status_code != 200:
-        print("Error: Unable to fetch data from Codecov API")
+        print_error(ep, response, "Unable to fetch data from Codecov API")
         return
 
     if response.json()['count'] == 0:
-        print(f"No coverage data found for the specified branch: {args.branch}")
+        print_error(ep, response, f"No coverage data found for the specified branch: {args.branch}")
         return
 
     commit_sha = response.json()['results'][0]['commitid']
@@ -36,11 +44,9 @@ def print_coverage_files(headers, endpoint, add_link=True):
     ep = endpoint.format(commit_sha)
     response = requests.get(ep, headers=headers)
     if response.status_code != 200:
-        print("Error: Unable to fetch data from Codecov API")
+        print_error(ep, response, "Unable to fetch data from Codecov API")
         return
     content = json.loads(response.content)
-
-    # https://app.codecov.io/gh/ecmwf/eccodes/blob/develop/src%2Feccodes%2Faccessor%2FBits.h
 
     link_to_codecov = lambda filename, branch: f"https://codecov.io/gh/ecmwf/eccodes/blob/{branch}/{filename}"
 
