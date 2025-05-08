@@ -163,7 +163,7 @@ if(NOT DEFINED ENABLE_AEC AND NOT AEC_FOUND)
                    "\nTo force the build without it, use -DENABLE_AEC=OFF")
 endif()
 ecbuild_add_option( FEATURE AEC
-    DESCRIPTION "Support for Adaptive Entropy Coding"
+    DESCRIPTION "Support for Adaptive Entropy Coding (WMO GRIB CCSDS)"
     DEFAULT ON
     CONDITION AEC_FOUND )
 
