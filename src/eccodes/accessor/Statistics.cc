@@ -28,8 +28,7 @@ void Statistics::init(const long l, grib_arguments* c)
     flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;
 
     number_of_elements_ = 8;
-    v_                  = (double*)grib_context_malloc(context_,
-                                                       sizeof(double) * number_of_elements_);
+    v_ = (double*)grib_context_malloc(context_, sizeof(double) * number_of_elements_);
 
     length_ = 0;
     dirty_  = 1;
@@ -37,7 +36,7 @@ void Statistics::init(const long l, grib_arguments* c)
 
 int Statistics::unpack_double(double* val, size_t* len)
 {
-    int ret        = 0;
+    int ret = GRIB_SUCCESS;
     double* values = NULL;
     size_t i = 0, size = 0, real_size = 0;
     double max, min, avg, sd, value, skew, kurt, m2 = 0, m3 = 0, m4 = 0;
@@ -56,8 +55,11 @@ int Statistics::unpack_double(double* val, size_t* len)
     if ((ret = grib_get_size(h, values_, &size)) != GRIB_SUCCESS)
         return ret;
 
-    grib_context_log(context_, GRIB_LOG_DEBUG,
-                     "Statistics: computing statistics for %d values", size);
+    if (size == 0) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "Statistics: Cannot compute statistics for field with no values");
+        return GRIB_DECODING_ERROR;
+    }
+    grib_context_log(context_, GRIB_LOG_DEBUG, "Statistics: computing statistics for %zu values", size);
 
     if ((ret = grib_get_double(h, missing_value_, &missing)) != GRIB_SUCCESS)
         return ret;
