@@ -45,13 +45,6 @@
 #define MODE_TAF 5
 #define MODE_ANY 6
 
-typedef union grib_typed_value
-{
-    long* long_value;
-    double* double_value;
-    const char* string_value;
-} grib_typed_value;
-
 /*
 #define MAX_CONSTRAINT_VALUES 500
 typedef struct grib_constraints {
