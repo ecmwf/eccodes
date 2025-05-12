@@ -11,7 +11,7 @@
 #pragma once
 
 // #include "AccessorDefs.h"
-#include "grib_api_internal.h"
+// #include "grib_api_internal.h"
 #include "AccessorUtils/NamedType.h"
 #include "grib_value.h"
 #include "AccessorUtils/AccessorException.h"
