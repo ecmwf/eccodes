@@ -170,34 +170,34 @@ static int check_overridden_reference_values(const grib_context* c, long* refVal
 void BufrDataArray::init(const long v, grib_arguments* params)
 {
     Gen::init(v, params);
-    int n                      = 0;
+    int n = 0;
     const char* dataKeysName   = NULL;
     grib_accessor* dataKeysAcc = NULL;
 
-    unitsName_                             = NULL;
-    canBeMissing_                          = NULL;
-    numberOfSubsets_                       = 0;
-    compressedData_                        = 0;
     bitmapStartElementsDescriptorsIndex_   = 0;
     bitmapCurrentElementsDescriptorsIndex_ = 0;
-    bitmapSize_                            = 0;
-    bitmapStart_                           = 0;
-    bitmapCurrent_                         = 0;
-    dataAccessors_                         = NULL;
-    nInputBitmap_                          = 0;
-    iInputBitmap_                          = 0;
-    inputReplications_                     = NULL;
-    nInputReplications_                    = 0;
-    iInputReplications_                    = 0;
-    inputExtendedReplications_             = NULL;
-    nInputExtendedReplications_            = 0;
-    iInputExtendedReplications_            = 0;
-    inputShortReplications_                = NULL;
-    nInputShortReplications_               = 0;
-    iInputShortReplications_               = 0;
-    iss_list_                              = NULL;
-    tempStrings_                           = NULL;
 
+    unitsName_                  = NULL;
+    canBeMissing_               = NULL;
+    numberOfSubsets_            = 0;
+    compressedData_             = 0;
+    bitmapSize_                 = 0;
+    bitmapStart_                = 0;
+    bitmapCurrent_              = 0;
+    dataAccessors_              = NULL;
+    nInputBitmap_               = 0;
+    iInputBitmap_               = 0;
+    inputReplications_          = NULL;
+    nInputReplications_         = 0;
+    iInputReplications_         = 0;
+    inputExtendedReplications_  = NULL;
+    nInputExtendedReplications_ = 0;
+    iInputExtendedReplications_ = 0;
+    inputShortReplications_     = NULL;
+    nInputShortReplications_    = 0;
+    iInputShortReplications_    = 0;
+    iss_list_                   = NULL;
+    tempStrings_                = NULL;
 
     bufrDataEncodedName_          = params->get_name(get_enclosing_handle(), n++);
     numberOfSubsetsName_          = params->get_name(get_enclosing_handle(), n++);
@@ -229,7 +229,6 @@ void BufrDataArray::init(const long v, grib_arguments* params)
     bitsToEndData_ = get_length() * 8;
     unpackMode_    = CODES_BUFR_UNPACK_STRUCTURE;
     inputBitmap_   = NULL;
-    /* ECCODES_ASSERT(length_ >=0); */
 }
 
 // void clean_string(char* s,int len)
@@ -426,8 +425,7 @@ int BufrDataArray::decode_string_array(grib_context* c, unsigned char* data, lon
 }
 
 grib_darray* BufrDataArray::decode_double_array(grib_context* c, unsigned char* data, long* pos,
-                                                                  bufr_descriptor* bd, int canBeMissing,
-                                                                  int* err)
+                                                bufr_descriptor* bd, int canBeMissing, int* err)
 {
     grib_darray* ret = NULL;
     int j;
@@ -591,7 +589,7 @@ static int descriptor_get_min_max(bufr_descriptor* bd, long width, long referenc
 }
 
 int BufrDataArray::encode_double_array(grib_context* c, grib_buffer* buff, long* pos, bufr_descriptor* bd,
-                                                         grib_darray* dvalues)
+                                       grib_darray* dvalues)
 {
     int err = 0;
     int j, i;
@@ -808,8 +806,7 @@ int BufrDataArray::encode_double_array(grib_context* c, grib_buffer* buff, long*
     return err;
 }
 
-int BufrDataArray::encode_double_value(grib_context* c, grib_buffer* buff, long* pos, bufr_descriptor* bd,
-                                                         double value)
+int BufrDataArray::encode_double_value(grib_context* c, grib_buffer* buff, long* pos, bufr_descriptor* bd, double value)
 {
     size_t lval;
     double maxAllowed, minAllowed;
@@ -870,15 +867,12 @@ static int encode_string_value(grib_context* c, grib_buffer* buff, long* pos, bu
     return err;
 }
 
-char* BufrDataArray::decode_string_value(grib_context* c, unsigned char* data, long* pos, bufr_descriptor* bd,
-                                                           int* err)
+char* BufrDataArray::decode_string_value(grib_context* c, unsigned char* data, long* pos, bufr_descriptor* bd, int* err)
 {
     char* sval = 0;
-    int len;
-
     *err = 0;
 
-    len = bd->width / 8;
+    long len = bd->width / 8;
 
     CHECK_END_DATA_RETURN(c, bd, this, bd->width, NULL);
     sval = (char*)grib_context_malloc_clear(c, len + 1);

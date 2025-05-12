@@ -80,9 +80,9 @@ int Mtg2SwitchDefault::unpack_long(long* val, size_t* len)
             *val = 0;  // Pre-MTG2
         }
         else {
-            // For class mc and cr post MTG2 we always want the param + chem split (value 2)
+            // For certain classes post MTG2 we always want the param + chem split (value 2)
             // For TIGGE, marsClass is not defined in the empty local Section 2, but is defined later on.
-            if (marsClassExists && (STR_EQUAL(marsClass, "mc") || STR_EQUAL(marsClass, "cr"))) {
+            if ( marsClassExists && (STR_EQUAL(marsClass, "mc") || STR_EQUAL(marsClass, "cr") || STR_EQUAL(marsClass, "a5")) ) {
                 *val = 2;
             }
             else {

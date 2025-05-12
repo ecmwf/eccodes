@@ -366,7 +366,6 @@ list( APPEND eccodes_src_files
     geo/iterator/PolarStereographic.cc
     geo/iterator/Regular.cc
     geo/iterator/SpaceView.cc
-    geo/iterator/Unstructured.cc
 
     codes_util.cc
     grib_util.cc
