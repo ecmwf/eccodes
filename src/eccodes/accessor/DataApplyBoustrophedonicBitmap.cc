@@ -165,15 +165,12 @@ int DataApplyBoustrophedonicBitmap::unpack_double(double* val, size_t* len)
 int DataApplyBoustrophedonicBitmap::unpack_double_element(size_t idx, double* val)
 {
     grib_handle* gh = get_enclosing_handle();
-    int err = 0, i = 0;
-    size_t cidx          = 0;
+    int err = 0;
     double missing_value = 0;
-    double* bvals        = NULL;
-    size_t n_vals        = 0;
-    long nn              = 0;
+    long nn = 0;
 
-    err    = value_count(&nn);
-    n_vals = nn;
+    err = value_count(&nn);
+    size_t n_vals = nn;
     if (err)
         return err;
 
@@ -191,15 +188,15 @@ int DataApplyBoustrophedonicBitmap::unpack_double_element(size_t idx, double* va
         return GRIB_SUCCESS;
     }
 
-    bvals = (double*)grib_context_malloc(context_, n_vals * sizeof(double));
+    double* bvals = (double*)grib_context_malloc(context_, n_vals * sizeof(double));
     if (bvals == NULL)
         return GRIB_OUT_OF_MEMORY;
 
     if ((err = grib_get_double_array_internal(gh, bitmap_, bvals, &n_vals)) != GRIB_SUCCESS)
         return err;
 
-    cidx = 0;
-    for (i = 0; i < idx; i++) {
+    size_t cidx = 0;
+    for (size_t i = 0; i < idx; i++) {
         cidx += bvals[i];
     }
 
@@ -216,7 +213,6 @@ int DataApplyBoustrophedonicBitmap::unpack_double_element_set(const size_t* inde
     size_t* cidx_array   = NULL; /* array of indexes into the coded_values */
     double* cval_array   = NULL; /* array of values of the coded_values */
     double missing_value = 0;
-    double* bvals        = NULL;
     size_t n_vals = 0, i = 0, j = 0, idx = 0, count_1s = 0, ci = 0;
     long nn = 0;
 
@@ -249,7 +245,7 @@ int DataApplyBoustrophedonicBitmap::unpack_double_element_set(const size_t* inde
     /* At this point val_array contains entries which are either missing_value or 1 */
     /* Now we need to dig into the codes values with index array of count_1s */
 
-    bvals = (double*)grib_context_malloc(context_, n_vals * sizeof(double));
+    double* bvals = (double*)grib_context_malloc(context_, n_vals * sizeof(double));
     if (!bvals) return GRIB_OUT_OF_MEMORY;
 
     if ((err = grib_get_double_array_internal(gh, bitmap_, bvals, &n_vals)) != GRIB_SUCCESS)

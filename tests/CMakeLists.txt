@@ -41,7 +41,6 @@ list(APPEND test_c_bins
     grib_set_force
     grib_run_length_packing
     grib_partial_message
-    grib_ecc-386
     grib_ecc-1467
     grib_ecc-1431
     grib_ecc-1433
