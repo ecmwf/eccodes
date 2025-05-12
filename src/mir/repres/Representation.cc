@@ -63,13 +63,6 @@ std::vector<util::GridBox> Representation::gridBoxes() const {
 }
 
 
-void Representation::estimate(api::MIREstimation& /*unused*/) const {
-    std::ostringstream os;
-    os << "Representation::estimate() not implemented for " << *this;
-    throw exception::SeriousBug(os.str());
-}
-
-
 bool Representation::isGlobal() const {
     return domain().isGlobal();
 }
@@ -246,17 +239,19 @@ void Representation::comparison(std::string& /*unused*/) const {
 }
 
 
-size_t Representation::frame(MIRValuesVector& /*unused*/, size_t /*unused*/, double /*unused*/, bool /*unused*/) const {
+size_t Representation::frame(MIRValuesVector& /*unused*/, size_t /*unused*/, double /*unused*/) const {
     std::ostringstream os;
     os << "Representation::frame() not implemented for " << *this;
     throw exception::SeriousBug(os.str());
 }
+
 
 std::string Representation::factory() const {
     std::ostringstream os;
     os << "Representation::factory() not implemented for " << *this;
     throw exception::SeriousBug(os.str());
 }
+
 
 void Representation::reorder(long /*unused*/, MIRValuesVector& /*unused*/) const {
     std::ostringstream os;

@@ -239,12 +239,10 @@ void LatLon::fillMeshGen(util::MeshGeneratorParameters& params) const {
 }
 
 
-size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue, bool estimate) const {
+size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue) const {
 
     // Could be done better, just a demo
-    if (!estimate) {
-        validate(values);
-    }
+    validate(values);
 
     size_t count = 0;
 
@@ -252,9 +250,7 @@ size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue, 
     for (size_t j = 0; j < nj_; j++) {
         for (size_t i = 0; i < ni_; i++) {
             if (!((i < size) || (j < size) || (i >= ni_ - size) || (j >= nj_ - size))) {  // Check me, may be buggy
-                if (!estimate) {
-                    values[k] = missingValue;
-                }
+                values[k] = missingValue;
                 count++;
             }
             k++;
@@ -264,9 +260,7 @@ size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue, 
     // Log::info() << "LatLon::frame(" << size << ") " << count << " " << k << std::endl;
 
 
-    if (!estimate) {
-        ASSERT(k == values.size());
-    }
+    ASSERT(k == values.size());
     return count;
 }
 

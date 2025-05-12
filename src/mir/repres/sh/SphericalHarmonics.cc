@@ -14,7 +14,6 @@
 
 #include <ostream>
 
-#include "mir/api/MIREstimation.h"
 #include "mir/api/MIRJob.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Exceptions.h"
@@ -187,12 +186,6 @@ void SphericalHarmonics::validate(const MIRValuesVector& values) const {
 
 size_t SphericalHarmonics::numberOfValues() const {
     return number_of_complex_coefficients(truncation_) * 2;
-}
-
-
-void SphericalHarmonics::estimate(api::MIREstimation& estimation) const {
-    estimation.packing("spectral_complex");  // Will be overriden
-    estimation.representation(factory());
 }
 
 
