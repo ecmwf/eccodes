@@ -81,15 +81,8 @@ int ScaleValues::pack_double(const double* val, size_t* len)
     // Assigning 0 to both decimalScaleFactor and binaryScaleFactor automatically triggers a
     // recalculation of binaryScaleFactor.
 
-    if ((ret = grib_set_long(h, "decimalScaleFactor", 0) != GRIB_SUCCESS)) {
-        grib_context_free(c, values);
-        return ret;
-    }
-
-    if ((ret = grib_set_long(h, "binaryScaleFactor", 0) != GRIB_SUCCESS)) {
-        grib_context_free(c, values);
-        return ret;
-    }
+    grib_set_long(h, "decimalScaleFactor", 0);
+    grib_set_long(h, "binaryScaleFactor", 0);
 
     if ((ret = grib_set_double_array_internal(h, values_, values, size)) != GRIB_SUCCESS) {
         grib_context_free(c, values);
