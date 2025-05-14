@@ -24,5 +24,3 @@ concept cfVarNameECMF (defaultShortName,"cfVarName.def",conceptsMasterDir,concep
 concept cfVarName (cfVarNameECMF,"cfVarName.def",conceptsMasterDir,conceptsLocalDirAll) : no_copy,dump;
 
 template_nofail names "grib3/products_[productionStatusOfProcessedData].def";
-
-meta ifsParam ifs_param(paramId,type);

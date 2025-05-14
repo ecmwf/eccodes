@@ -112,7 +112,6 @@
 { "headers_only", &grib_accessor_headers_only, },
 { "ibmfloat", &grib_accessor_ibmfloat, },
 { "ieeefloat", &grib_accessor_ieeefloat, },
-{ "ifs_param", &grib_accessor_ifs_param, },
 { "iterator", &grib_accessor_iterator, },
 { "julian_date", &grib_accessor_julian_date, },
 { "julian_day", &grib_accessor_julian_day, },
