@@ -80,7 +80,7 @@ int ScaleValues::pack_double(const double* val, size_t* len)
     // ECC-2083: GRIB: Applying the scaleValuesBy operation can produce constant fields
     // Assigning 0 to both decimalScaleFactor and binaryScaleFactor automatically triggers a
     // recalculation of binaryScaleFactor.
-
+    // Note: We do not check for errors as there could be packing types without these keys
     grib_set_long(h, "decimalScaleFactor", 0);
     grib_set_long(h, "binaryScaleFactor", 0);
 
