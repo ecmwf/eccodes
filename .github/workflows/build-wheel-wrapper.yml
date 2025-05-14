@@ -19,5 +19,7 @@ on:
 jobs:
   python-wrapper-wheel:
     name: Python Wrapper Wheel
-    uses: ecmwf/reusable-workflows/.github/workflows/python-wrapper-wheel.yml@main
+    uses: ecmwf/reusable-workflows/.github/workflows/python-wrapper-wheel.yml@act/pyWrapWheel/changeVer
     secrets: inherit
+    with:
+      use_test_pypi: true
