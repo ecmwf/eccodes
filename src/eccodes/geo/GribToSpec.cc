@@ -363,6 +363,33 @@ const char* get_key(const std::string& name, codes_handle* h)
 }
 
 
+std::string get_string(codes_handle* h, const char* key)
+{
+    if (codes_is_defined(h, key) != 0) {
+        char buffer[64];
+        size_t size = sizeof(buffer);
+
+        CHECK_CALL(codes_get_string(h, key, buffer, &size));
+        ASSERT(size < sizeof(buffer) - 1);
+
+        if (std::strcmp(buffer, "MISSING") != 0) {
+            return buffer;
+        }
+    }
+
+    return "";
+}
+
+
+bool get_bool(codes_handle* h, const char* key)
+{
+    long l = 0;
+    CHECK_CALL(codes_get_long(h, key, &l));
+
+    return l != 0;
+}
+
+
 template <typename T>
 struct ProcessingT
 {
@@ -597,25 +624,36 @@ ProcessingT<std::vector<double>>* vector_double(std::initializer_list<std::strin
 }
 
 
+ProcessingT<std::string>* order()
+{
+    return new ProcessingT<std::string>([](codes_handle* h, std::string& value) {
+        static const std::string P{ "+" };
+        static const std::string M{ "-" };
+
+        if (auto gridType = get_string(h, "gridType"); gridType == "healpix") {
+            value = get_string(h, "orderingConvention");
+            return true;
+        }
+
+        if (get_bool(h, "jPointsAreConsecutive")) {
+            throw eckit::UserError("jPointsAreConsecutive not supported");
+        }
+
+        auto ip  = get_bool(h, "iScansPositively");
+        auto jp  = get_bool(h, "jScansPositively");
+        auto alt = get_bool(h, "alternativeRowScanning");
+
+        value = "i" + (ip ? P : M) + "j" + (jp ? P : M) + (!alt ? "" : jp ? M
+                                                                          : P);
+        return true;
+    });
+}
+
+
 ProcessingT<std::string>* packing()
 {
     return new ProcessingT<std::string>([](codes_handle* h, std::string& value) {
-        auto get = [](codes_handle* h, const char* key) -> std::string {
-            if (codes_is_defined(h, key) != 0) {
-                char buffer[64];
-                size_t size = sizeof(buffer);
-
-                CHECK_CALL(codes_get_string(h, key, buffer, &size));
-                ASSERT(size < sizeof(buffer) - 1);
-
-                if (std::strcmp(buffer, "MISSING") != 0) {
-                    return buffer;
-                }
-            }
-            return "";
-        };
-
-        auto packingType = get(h, "packingType");
+        auto packingType = get_string(h, "packingType");
         for (const auto& prefix : std::vector<std::string>{ "grid_", "spectral_" }) {
             if (packingType.find(prefix) == 0) {
                 value = packingType.substr(prefix.size());
@@ -718,6 +756,7 @@ bool GribToSpec::get(const std::string& name, std::string& value) const
 
     if (err == CODES_NOT_FOUND) {
         static const ProcessingList<std::string> process{
+            { "order", order() },
             { "packing", packing() },
         };
 
