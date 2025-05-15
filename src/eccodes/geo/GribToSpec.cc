@@ -295,6 +295,10 @@ const char* get_key(const std::string& name, codes_handle* h)
         { "first_lon",
           "longitudeOfFirstGridPointInDegrees" },
 
+        { "radius", "radiusInMetres" },
+        { "semi_major_axis", "earthMajorAxisInMetres" },
+        { "semi_minor_axis", "earthMinorAxisInMetres" },
+
         { "lat_0",
           "LaDInDegrees",
           _or(is("gridType", "lambert"), is("gridType", "lambert_lam")) },
@@ -641,11 +645,10 @@ ProcessingT<std::string>* order()
         const auto ip = get_bool(h, "iScansPositively");
         const auto jp = get_bool(h, "jScansPositively");
         const auto a  = get_bool(h, "alternativeRowScanning");
-        const auto i  = "i" + (ip ? P : M);
-        const auto j  = "j" + (jp ? P : M);
 
-        value = get_bool(h, "jPointsAreConsecutive") ? i + j + (!a ? "" : (jp ? M : P))
-                                                     : j + i + (!a ? "" : (ip ? M : P));
+        value = get_bool(h, "jPointsAreConsecutive") ? "j" + (jp ? P : M) + (!a ? "" : (jp ? M : P)) + "i" + (ip ? P : M)
+                                                     : "i" + (ip ? P : M) + (!a ? "" : (ip ? M : P)) + "j" + (jp ? P : M);
+
         return true;
     });
 }
