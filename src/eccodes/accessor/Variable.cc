@@ -218,7 +218,7 @@ void Variable::destroy(grib_context* c)
 
 int Variable::unpack_string(char* val, size_t* len)
 {
-    char buf[80];
+    char buf[80] = {0,};
     char* p     = buf;
     size_t slen = 0;
 

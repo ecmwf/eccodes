@@ -181,7 +181,7 @@ size_t G2StepRange::string_length()
 
 int G2StepRange::pack_long(const long* val, size_t* len)
 {
-    char buff[100];
+    char buff[100] = {0,};
     size_t bufflen = 100;
 
     snprintf(buff, sizeof(buff), "%ld", *val);

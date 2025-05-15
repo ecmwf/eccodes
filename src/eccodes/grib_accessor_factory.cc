@@ -9,11 +9,6 @@
  */
 
 
-// <<<<<<< HEAD:src/eccodes/grib_accessor_factory.cc
-// =======
-// #include "grib_api_internal.h"
-// #include "grib_accessor_classes_hash.cc"
-// >>>>>>> develop:src/eccodes/grib_accessor_class.cc
 #include "accessor/Accessor.h"
 #include "grib_api_internal.h"
 

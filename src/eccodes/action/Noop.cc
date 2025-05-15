@@ -20,7 +20,7 @@ namespace eccodes::action
 
 Noop::Noop(grib_context* context, const char* fname)
 {
-    char buf[1024];
+    char buf[1024] = {0,};
 
     class_name_ = "action_class_noop";
     op_      = grib_context_strdup_persistent(context, "section");

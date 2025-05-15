@@ -183,7 +183,7 @@ int G1StepRange::grib_g1_step_get_steps(long* start, long* theEnd)
 
 int G1StepRange::unpack_string(char* val, size_t* len)
 {
-    char buf[100];
+    char buf[100] = {0,};
     size_t size = 0;
     long start = 0, theEnd = 0;
     long timeRangeIndicator = 0;
@@ -525,7 +525,7 @@ size_t G1StepRange::string_length()
 
 int G1StepRange::pack_long(const long* val, size_t* len)
 {
-    char buff[256];
+    char buff[256] = {0,};
     size_t bufflen    = 100;
     char sval[100]    = { 0 };
     char* p           = sval;
@@ -600,7 +600,7 @@ int G1StepRange::pack_long(const long* val, size_t* len)
 
 int G1StepRange::unpack_long(long* val, size_t* len)
 {
-    char buff[100];
+    char buff[100] = {0,};
     size_t bufflen = 100;
     long start, theEnd;
     char* p = buff;

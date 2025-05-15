@@ -133,7 +133,6 @@ list( APPEND eccodes_src_files
     accessor/GaussianGridName.cc
     accessor/Getenv.cc
     accessor/GtsHeader.cc
-    accessor/IfsParam.cc
     accessor/JulianDay.cc
     accessor/JulianDate.cc
     accessor/ClosestDate.cc
