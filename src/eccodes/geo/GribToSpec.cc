@@ -10,7 +10,7 @@
  */
 
 
-#include "geo/GribSpec.h"
+#include "geo/GribToSpec.h"
 
 #include <algorithm>
 #include <cstring>
@@ -290,6 +290,24 @@ const char* get_key(const std::string& name, codes_handle* h)
         { "proj", "projTargetString" },
         { "projSource", "projSourceString" },
 
+        { "first_lat",
+          "latitudeOfFirstGridPointInDegrees" },
+        { "first_lon",
+          "longitudeOfFirstGridPointInDegrees" },
+
+        { "lat_0",
+          "LaDInDegrees",
+          _or(is("gridType", "lambert"), is("gridType", "lambert_lam")) },
+        { "lon_0",
+          "LoVInDegrees",
+          _or(is("gridType", "lambert"), is("gridType", "lambert_lam")) },
+        { "lat_1",
+          "Latin1InDegrees",
+          _or(is("gridType", "albers"), _or(is("gridType", "lambert"), is("gridType", "lambert_lam"))) },
+        { "lat_2",
+          "Latin2InDegrees",
+          _or(is("gridType", "albers"), _or(is("gridType", "lambert"), is("gridType", "lambert_lam"))) },
+
         // This will be just called for has()
         {
             "gridded",
@@ -342,6 +360,35 @@ const char* get_key(const std::string& name, codes_handle* h)
 
     const auto* key = name.c_str();
     return key;
+}
+
+
+std::string get_string(codes_handle* h, const char* key)
+{
+    if (codes_is_defined(h, key) != 0) {
+        char buffer[64] = {
+            0,
+        };
+        size_t size = sizeof(buffer);
+
+        CHECK_CALL(codes_get_string(h, key, buffer, &size));
+        ASSERT(size < sizeof(buffer) - 1);
+
+        if (std::strcmp(buffer, "MISSING") != 0) {
+            return buffer;
+        }
+    }
+
+    return "";
+}
+
+
+bool get_bool(codes_handle* h, const char* key)
+{
+    long l = 0;
+    CHECK_CALL(codes_get_long(h, key, &l));
+
+    return l != 0;
 }
 
 
@@ -579,25 +626,35 @@ ProcessingT<std::vector<double>>* vector_double(std::initializer_list<std::strin
 }
 
 
+ProcessingT<std::string>* order()
+{
+    return new ProcessingT<std::string>([](codes_handle* h, std::string& value) {
+        if (auto gridType = get_string(h, "gridType"); gridType == "healpix") {
+            value = get_string(h, "orderingConvention");
+            return true;
+        }
+
+        // scanningMode
+        static const std::string P{ "+" };
+        static const std::string M{ "-" };
+
+        const auto ip = get_bool(h, "iScansPositively");
+        const auto jp = get_bool(h, "jScansPositively");
+        const auto a  = get_bool(h, "alternativeRowScanning");
+        const auto i  = "i" + (ip ? P : M);
+        const auto j  = "j" + (jp ? P : M);
+
+        value = get_bool(h, "jPointsAreConsecutive") ? i + j + (!a ? "" : (jp ? M : P))
+                                                     : j + i + (!a ? "" : (ip ? M : P));
+        return true;
+    });
+}
+
+
 ProcessingT<std::string>* packing()
 {
     return new ProcessingT<std::string>([](codes_handle* h, std::string& value) {
-        auto get = [](codes_handle* h, const char* key) -> std::string {
-            if (codes_is_defined(h, key) != 0) {
-                char buffer[64];
-                size_t size = sizeof(buffer);
-
-                CHECK_CALL(codes_get_string(h, key, buffer, &size));
-                ASSERT(size < sizeof(buffer) - 1);
-
-                if (std::strcmp(buffer, "MISSING") != 0) {
-                    return buffer;
-                }
-            }
-            return "";
-        };
-
-        auto packingType = get(h, "packingType");
+        auto packingType = get_string(h, "packingType");
         for (const auto& prefix : std::vector<std::string>{ "grid_", "spectral_" }) {
             if (packingType.find(prefix) == 0) {
                 value = packingType.substr(prefix.size());
@@ -653,14 +710,14 @@ class lock_type
 }  // namespace
 
 
-GribSpec::GribSpec(codes_handle* h) :
+GribToSpec::GribToSpec(codes_handle* h) :
     handle_(h)
 {
     ASSERT(handle_ != nullptr);
 }
 
 
-bool GribSpec::has(const std::string& name) const
+bool GribToSpec::has(const std::string& name) const
 {
     lock_type lock;
 
@@ -679,7 +736,7 @@ bool GribSpec::has(const std::string& name) const
 }
 
 
-bool GribSpec::get(const std::string& name, std::string& value) const
+bool GribToSpec::get(const std::string& name, std::string& value) const
 {
     lock_type lock;
 
@@ -700,6 +757,7 @@ bool GribSpec::get(const std::string& name, std::string& value) const
 
     if (err == CODES_NOT_FOUND) {
         static const ProcessingList<std::string> process{
+            { "order", order() },
             { "packing", packing() },
         };
 
@@ -719,7 +777,7 @@ bool GribSpec::get(const std::string& name, std::string& value) const
 }
 
 
-bool GribSpec::get(const std::string& name, bool& value) const
+bool GribToSpec::get(const std::string& name, bool& value) const
 {
     lock_type lock;
 
@@ -744,7 +802,7 @@ bool GribSpec::get(const std::string& name, bool& value) const
 }
 
 
-bool GribSpec::get(const std::string& name, int& value) const
+bool GribToSpec::get(const std::string& name, int& value) const
 {
     if (long v = 0; get(name, v)) {
         ASSERT(static_cast<long>(static_cast<int>(v)) == v);
@@ -756,7 +814,7 @@ bool GribSpec::get(const std::string& name, int& value) const
 }
 
 
-bool GribSpec::get(const std::string& name, long& value) const
+bool GribToSpec::get(const std::string& name, long& value) const
 {
     lock_type lock;
 
@@ -782,19 +840,19 @@ bool GribSpec::get(const std::string& name, long& value) const
 }
 
 
-bool GribSpec::get(const std::string& /*name*/, long long& /*value*/) const
+bool GribToSpec::get(const std::string& /*name*/, long long& /*value*/) const
 {
     return false;
 }
 
 
-bool GribSpec::get(const std::string& /*name*/, std::size_t& /*value*/) const
+bool GribToSpec::get(const std::string& /*name*/, std::size_t& /*value*/) const
 {
     return false;
 }
 
 
-bool GribSpec::get(const std::string& name, float& value) const
+bool GribToSpec::get(const std::string& name, float& value) const
 {
     if (cache_.get(name, value)) {
         return true;
@@ -809,7 +867,7 @@ bool GribSpec::get(const std::string& name, float& value) const
 }
 
 
-bool GribSpec::get(const std::string& name, double& value) const
+bool GribToSpec::get(const std::string& name, double& value) const
 {
     lock_type lock;
 
@@ -856,13 +914,13 @@ bool GribSpec::get(const std::string& name, double& value) const
 }
 
 
-bool GribSpec::get(const std::string& /*name*/, std::vector<int>& /*value*/) const
+bool GribToSpec::get(const std::string& /*name*/, std::vector<int>& /*value*/) const
 {
     return false;
 }
 
 
-bool GribSpec::get(const std::string& name, std::vector<long>& value) const
+bool GribToSpec::get(const std::string& name, std::vector<long>& value) const
 {
     lock_type lock;
 
@@ -901,19 +959,19 @@ bool GribSpec::get(const std::string& name, std::vector<long>& value) const
 }
 
 
-bool GribSpec::get(const std::string& /*name*/, std::vector<long long>& /*value*/) const
+bool GribToSpec::get(const std::string& /*name*/, std::vector<long long>& /*value*/) const
 {
     return false;
 }
 
 
-bool GribSpec::get(const std::string& /*name*/, std::vector<std::size_t>& /*value*/) const
+bool GribToSpec::get(const std::string& /*name*/, std::vector<std::size_t>& /*value*/) const
 {
     return false;
 }
 
 
-bool GribSpec::get(const std::string& name, std::vector<float>& value) const
+bool GribToSpec::get(const std::string& name, std::vector<float>& value) const
 {
     if (cache_.get(name, value)) {
         return true;
@@ -934,7 +992,7 @@ bool GribSpec::get(const std::string& name, std::vector<float>& value) const
 }
 
 
-bool GribSpec::get(const std::string& name, std::vector<double>& value) const
+bool GribToSpec::get(const std::string& name, std::vector<double>& value) const
 {
     lock_type lock;
 
@@ -993,13 +1051,13 @@ bool GribSpec::get(const std::string& name, std::vector<double>& value) const
 }
 
 
-bool GribSpec::get(const std::string& /*name*/, std::vector<std::string>& /*value*/) const
+bool GribToSpec::get(const std::string& /*name*/, std::vector<std::string>& /*value*/) const
 {
     return false;
 }
 
 
-void GribSpec::json(eckit::JSON& j) const
+void GribToSpec::json(eckit::JSON& j) const
 {
     j.startObject();
 

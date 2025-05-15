@@ -10,7 +10,7 @@
 
 #include "geo/GeoIterator.h"
 #include "eckit/geo/Exceptions.h"
-#include "geo/GribSpec.h"
+#include "geo/GribToSpec.h"
 
 
 namespace eccodes::geo_iterator
@@ -18,7 +18,7 @@ namespace eccodes::geo_iterator
 
 
 GeoIterator::GeoIterator(grib_handle* h, unsigned long flags) :
-    spec_(new eccodes::geo::GribSpec(h)),
+    spec_(new eccodes::geo::GribToSpec(h)),
     grid_(eckit::geo::GridFactory::build(*spec_)),
     iter_(grid_->make_next_iterator()),
     point_(eckit::geo::PointLonLat{})

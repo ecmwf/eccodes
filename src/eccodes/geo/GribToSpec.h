@@ -28,10 +28,10 @@ namespace eccodes::geo
 bool codes_check_error(int e, const char* call);
 
 
-class GribSpec final : public eckit::geo::Spec
+class GribToSpec final : public eckit::geo::Spec
 {
 public:
-    explicit GribSpec(codes_handle*);
+    explicit GribToSpec(codes_handle*);
 
     bool has(const std::string& name) const override;
 
