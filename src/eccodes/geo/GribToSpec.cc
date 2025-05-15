@@ -366,7 +366,9 @@ const char* get_key(const std::string& name, codes_handle* h)
 std::string get_string(codes_handle* h, const char* key)
 {
     if (codes_is_defined(h, key) != 0) {
-        char buffer[64];
+        char buffer[64] = {
+            0,
+        };
         size_t size = sizeof(buffer);
 
         CHECK_CALL(codes_get_string(h, key, buffer, &size));
