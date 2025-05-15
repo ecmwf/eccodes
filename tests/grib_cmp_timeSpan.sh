@@ -17,7 +17,7 @@
 
 REDIRECT=/dev/null
 
-label="grib_cmp_statwindow_test"  # Change prod to bufr or grib etc
+label="grib_cmp_timespan_test"
 tempGrib=temp.$label.grib
 tempFilt=temp.$label.filt
 
@@ -34,7 +34,7 @@ set lengthOfTimeRange=1;
 write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
-grib_check_key_equals $tempGrib statwindow "1h"
+grib_check_key_equals $tempGrib timeSpan "1h"
 
 # 3h
 cat >$tempFilt<<EOF
@@ -47,7 +47,7 @@ set lengthOfTimeRange=3;
 write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
-grib_check_key_equals $tempGrib statwindow "3h"
+grib_check_key_equals $tempGrib timeSpan "3h"
 
 # instantaneous / none
 cat >$tempFilt<<EOF
@@ -58,9 +58,9 @@ set productDefinitionTemplateNumber=0;
 write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
-grib_check_key_equals $tempGrib statwindow "none"
+grib_check_key_equals $tempGrib timeSpan "none"
 
-# since-start
+# fromstart
 cat >$tempFilt<<EOF
 set setLocalDefinition=1;
 set class='e6';
@@ -73,7 +73,7 @@ set lengthOfTimeRange=1;
 write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
-grib_check_key_equals $tempGrib statwindow "since-start"
+grib_check_key_equals $tempGrib timeSpan "fromstart"
 
 # Clean up
 rm -f $tempGrib $tempFilt 

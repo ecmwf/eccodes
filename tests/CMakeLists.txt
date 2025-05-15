@@ -175,8 +175,8 @@ if( HAVE_BUILD_TOOLS )
         grib_g1day_of_the_year_date
         grib_paramtypeConcept
         grib_cmp_paramtype
-        grib_statwindowConcept
-        grib_cmp_statwindow
+        grib_timeSpanConcept
+        grib_cmp_timeSpan
     )
 
     # These tests require data downloads

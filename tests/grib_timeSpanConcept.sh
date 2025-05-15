@@ -17,7 +17,7 @@
 
 REDIRECT=/dev/null
 
-label="grib_statwindow_concept_all_pdtn"  # Change prod to bufr or grib etc
+label="grib_timespan_concept_test"
 tempGrib=temp.$label.grib
 tempText=temp.$label.txt
 tempFilt=temp.$label.filt
@@ -40,11 +40,11 @@ if (defined(lengthOfTimeRange)){
 }
 write;
 EOF
-    ${tools_dir}/grib_filter $tempFilt $sample_grib2 -o $tempGrib
-    ${tools_dir}/grib_get -p statwindow $tempGrib
-    statwindow=$( ${tools_dir}/grib_get -p statwindow $tempGrib )
-    if [[ $statwindow  == 'unknown' ]]; then
-      echo "productDefinitionTemplateNumber=$pdtn: statwindow not defined"
+    ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
+    ${tools_dir}/grib_get -p timeSpan $tempGrib
+    timeSpan=$( ${tools_dir}/grib_get -p timeSpan $tempGrib )
+    if [[ $timeSpan  == 'unknown' ]]; then
+      echo "productDefinitionTemplateNumber=$pdtn: timeSpan not defined"
       exit 1
     fi
   done

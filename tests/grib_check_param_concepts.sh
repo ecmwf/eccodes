@@ -70,12 +70,27 @@ set -e
 $EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/paramId.def
 datasets="ecmf uerra cerise hydro s2s tigge era6 destine era nextgems"
 for a_dataset in $datasets; do
-    $EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/$a_dataset/paramId.def
+    pidfile=$ECCODES_DEFINITION_PATH/grib2/localConcepts/$a_dataset/paramId.def
+    if [ -f "$pidfile" ]; then
+      $EXEC ${test_dir}/grib_check_param_concepts paramId $pidfile
+    fi
+
+    pidfile=$ECCODES_DEFINITION_PATH/grib2/localConcepts/$a_dataset/paramId.lte33.def
+    if [ -f "$pidfile" ]; then
+      $EXEC ${test_dir}/grib_check_param_concepts paramId $pidfile
+    fi
 done
 
 $EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/shortName.def
 for a_dataset in $datasets; do
-    $EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/$a_dataset/shortName.def
+    snfile=$ECCODES_DEFINITION_PATH/grib2/localConcepts/$a_dataset/shortName.def
+    if [ -f "$snfile" ]; then
+      $EXEC ${test_dir}/grib_check_param_concepts shortName $snfile
+    fi
+    snfile=$ECCODES_DEFINITION_PATH/grib2/localConcepts/$a_dataset/shortName.lte33.def
+    if [ -f "$snfile" ]; then
+      $EXEC ${test_dir}/grib_check_param_concepts shortName $snfile
+    fi
 done
 
 # Check WMO name.def etc
@@ -174,10 +189,23 @@ rm -fr $tempDir
 # -------------------------------
 echo "Check duplicates"
 # -------------------------------
+# There are a group of chemical parameters which need to be in TWO places because of the chemID matching
+# e.g. we want different combos
+#  wmo pid + wmo   chem
+#  wmo pid + local chem
+# etc...
 paramIdFile=$ECCODES_DEFINITION_PATH/grib2/paramId.def
+
+exclude="409000 412000 417000 432000 442000 443000 451000 452000 453000 463000 464000 465000 466000"
+
 pids=$(grep "^'" $paramIdFile | awk -F"'" '{printf "%s\n", $2}')
 set +e
 for p in $pids; do
+  process_it=1
+  for ex in $exclude; do
+    if [ "$p" = "$ex" ]; then process_it=0; break; fi
+  done
+  if [ $process_it = 1 ]; then
     # For each paramId found in the top-level WMO file, check if it also exists
     # in the ECMWF local one
     grep "'$p'"  $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/paramId.def
@@ -185,6 +213,7 @@ for p in $pids; do
       echo "ERROR: check paramId $p. Is it duplicated?"
       exit 1
     fi
+  fi
 done
 set -e
 
