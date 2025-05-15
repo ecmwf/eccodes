@@ -629,24 +629,23 @@ ProcessingT<std::vector<double>>* vector_double(std::initializer_list<std::strin
 ProcessingT<std::string>* order()
 {
     return new ProcessingT<std::string>([](codes_handle* h, std::string& value) {
-        static const std::string P{ "+" };
-        static const std::string M{ "-" };
-
         if (auto gridType = get_string(h, "gridType"); gridType == "healpix") {
             value = get_string(h, "orderingConvention");
             return true;
         }
 
-        if (get_bool(h, "jPointsAreConsecutive")) {
-            throw eckit::UserError("jPointsAreConsecutive not supported");
-        }
+        // scanningMode
+        static const std::string P{ "+" };
+        static const std::string M{ "-" };
 
-        auto ip  = get_bool(h, "iScansPositively");
-        auto jp  = get_bool(h, "jScansPositively");
-        auto alt = get_bool(h, "alternativeRowScanning");
+        const auto ip = get_bool(h, "iScansPositively");
+        const auto jp = get_bool(h, "jScansPositively");
+        const auto a  = get_bool(h, "alternativeRowScanning");
+        const auto i  = "i" + (ip ? P : M);
+        const auto j  = "j" + (jp ? P : M);
 
-        value = "i" + (ip ? P : M) + "j" + (jp ? P : M) + (!alt ? "" : jp ? M
-                                                                          : P);
+        value = get_bool(h, "jPointsAreConsecutive") ? i + j + (!a ? "" : (jp ? M : P))
+                                                     : j + i + (!a ? "" : (ip ? M : P));
         return true;
     });
 }
