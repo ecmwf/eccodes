@@ -22,7 +22,8 @@ _if (subCentre==98 ) {
   alias centreForLocal=centre;
 }
 
-codetable[1] tablesVersion 'grib2/tables/1.0.table' = tablesVersionLatestOfficial : edition_specific;
+constant tablesVersionMTG2Switch = 33: hidden;
+codetable[1] tablesVersion 'grib2/tables/1.0.table' = tablesVersionMTG2Switch : edition_specific;
 alias gribMasterTablesVersionNumber=tablesVersion;
 
 transient masterDir="grib2/tables/[tablesVersion]";
