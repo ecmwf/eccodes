@@ -42,6 +42,11 @@ if ($pwd =~ /\/localConcepts\//) {
     $localConcept = 1;
 }
 
+if (! -f "name.def") {
+    print "No name.def so nothing to do\n";
+    exit 0;
+}
+
 @files = qw(name.def paramId.def shortName.def units.def);
 foreach my $f (@files) {
     die "Where is $f?\nI expected to find: @files\n" unless -f $f;
