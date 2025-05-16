@@ -1,6 +1,6 @@
 concept originRadarComposite(unknown) {
-  "Odyssey"       = {generatingProcessIdentifier=1; backgroundProcess=200; type=97;}
-  "Nimbus" 	  = {generatingProcessIdentifier=2; backgroundProcess=200; type=97;}
+  "odyssey"       = {generatingProcessIdentifier=1; backgroundProcess=200; type=97;}
+  "nimbus" 	  = {generatingProcessIdentifier=2; backgroundProcess=200; type=97;}
 }
 
 alias mars.origin = originRadarComposite;
