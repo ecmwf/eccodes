@@ -8,9 +8,10 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "geo/GeoIterator.h"
 #include "eckit/geo/Exceptions.h"
-#include "geo/GribToSpec.h"
+
+#include "eccodes/geo/GeoIterator.h"
+#include "eccodes/geo/GribToSpec.h"
 
 
 namespace eccodes::geo_iterator
