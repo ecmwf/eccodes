@@ -1,0 +1,13 @@
+concept originRadarComposite(unknown) {
+  "Odyssey"       = {generatingProcessIdentifier=1; backgroundProcess=200; type=97;}
+  "Nimbus" 	  = {generatingProcessIdentifier=2; backgroundProcess=200; type=97;}
+}
+
+alias mars.origin = originRadarComposite;
+
+unalias mars.date;
+unalias mars.time;
+unalias mars.step;
+
+alias mars.date = validityDate;
+alias mars.time = validityTime;
