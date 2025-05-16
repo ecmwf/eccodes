@@ -24,9 +24,7 @@ public:
     int unpack_double(double* val, size_t* len) override;
     int unpack_string(char*, size_t* len) override;
     void init(const long, grib_arguments*) override;
-private:
 
-public:
     static inline const AccessorType accessor_type_{"offset_file"};
 };
 

@@ -26,9 +26,7 @@ public:
     int pack_string(const char*, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
-private:
 
-public:
     static inline const AccessorType accessor_type_{"grid_spec"};
 };
 

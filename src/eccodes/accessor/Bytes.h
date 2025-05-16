@@ -26,9 +26,7 @@ public:
     int unpack_string(char*, size_t* len) override;
     void init(const long, grib_arguments*) override;
     int compare(grib_accessor*) override;
-private:
 
-public:
     static inline const AccessorType accessor_type_{"bytes"};
 };
 

@@ -29,9 +29,7 @@ public:
 protected:
     const char* coded_values_ = nullptr;
     const char* real_part_ = nullptr;
-private:
 
-public:
     static inline const AccessorType accessor_type_{"data_shsimple_packing"};
 };
 

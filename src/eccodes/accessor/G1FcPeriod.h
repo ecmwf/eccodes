@@ -22,9 +22,7 @@ public:
         G1StepRange() { }
     const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_string(char*, size_t* len) override;
-private:
 
-public:
     static inline const AccessorType accessor_type_{"g1fcperiod"};
 };
 

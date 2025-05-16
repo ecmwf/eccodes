@@ -26,9 +26,7 @@ public:
     int unpack_long(long* val, size_t* len) override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
-private:
 
-public:
     static inline const AccessorType accessor_type_{"g1_half_byte_codeflag"};
 };
 

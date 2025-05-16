@@ -34,9 +34,7 @@ public:
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
     int compare(grib_accessor*) override;
-private:
 
-public:
     static inline const AccessorType accessor_type_{"concept"};
 };
 

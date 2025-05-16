@@ -30,9 +30,7 @@ protected:
     const char* packingType_ = nullptr;
     const char* ieee_packing_ = nullptr;
     const char* precision_ = nullptr;
-private:
 
-public:
     static inline const AccessorType accessor_type_{"data_g1simple_packing"};
 };
 

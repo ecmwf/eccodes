@@ -32,9 +32,7 @@ protected:
     const char* year_ = nullptr;
     const char* month_ = nullptr;
     const char* day_ = nullptr;
-private:
 
-public:
     static inline const AccessorType accessor_type_{"g1date"};
 };
 

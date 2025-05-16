@@ -28,9 +28,7 @@ public:
     void update_size(size_t) override;
     void resize(size_t) override;
     int compare(grib_accessor*) override;
-private:
 
-public:
     static inline const AccessorType accessor_type_{"padding"};
 };
 

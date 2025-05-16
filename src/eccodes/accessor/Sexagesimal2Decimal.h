@@ -25,9 +25,7 @@ public:
     int unpack_string(char*, size_t* len) override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
-private:
 
-public:
     static inline const AccessorType accessor_type_{"sexagesimal2decimal"};
 };
 

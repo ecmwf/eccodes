@@ -24,9 +24,7 @@ public:
     int value_count(long*) override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
-private:
 
-public:
     static inline const AccessorType accessor_type_{"section_length"};
 };
 
