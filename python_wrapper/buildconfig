@@ -21,4 +21,7 @@ CMAKE_PARAMS="$CMAKE_PARAMS1 $CMAKE_PARAMS2 $CMAKE_PARAMS3 $CMAKE_PARAMS4"
 
 PYPROJECT_DIR="python_wrapper"
 # TODO add eckit once the dependency is in place
-DEPENDENCIES='[]'
+# NOTE fckit is present because it bundles intel fortran libs in, which eccodes fortran also needs. There is no code
+# dependency. We could have instead bundled fortran libs in here as well, but that would result in bloated wheels and
+# perhaps conflicts -- thus we opt for a hack (temporary anyway as eventually fortran will fade out)
+DEPENDENCIES='["fckitlib"]'
