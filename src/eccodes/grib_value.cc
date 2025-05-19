@@ -1248,6 +1248,22 @@ int grib_get_string_internal(grib_handle* h, const char* name, char* val, size_t
     return ret;
 }
 
+#if 0
+static bool is_in_namespace(const grib_accessor* a, const char* ns)
+{
+    int i = 0;
+    while (i < MAX_ACCESSOR_NAMES) {
+        if (a->all_name_spaces_[i]) {
+            if (strcmp(a->all_name_spaces_[i], ns)==0) {
+                return true;
+            }
+        }
+        i++;
+    }
+    return false;
+}
+#endif
+
 int grib_get_string(const grib_handle* h, const char* name, char* val, size_t* length)
 {
     grib_accessor* a        = NULL;
@@ -1266,7 +1282,15 @@ int grib_get_string(const grib_handle* h, const char* name, char* val, size_t* l
         a = grib_find_accessor(h, name);
         if (!a)
             return GRIB_NOT_FOUND;
-        return a->unpack_string(val, length);
+        ret = a->unpack_string(val, length);
+#if 0
+        if (is_in_namespace(a, "mars")) {
+            if (strchr(val, ':')) {
+                grib_context_log(h->context, GRIB_LOG_FATAL, "The value of key '%s' (=%s) contains a colon", name, val);
+            }
+        }
+#endif
+        return ret;
     }
 }
 
