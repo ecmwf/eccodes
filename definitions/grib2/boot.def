@@ -9,9 +9,9 @@
 
 # This gets updated twice a year by WMO.
 # See https://community.wmo.int/en/wis/latest-version
-constant tablesVersionLatestOfficial = 34 : edition_specific;
+constant tablesVersionLatestOfficial = 35 : edition_specific;
 # If this is different from the official version, then it is the pre-operational version
-constant tablesVersionLatest = 34 : edition_specific;
+constant tablesVersionLatest = 35 : edition_specific;
 
 constant false = 0 : hidden;
 constant true = 1 : hidden;

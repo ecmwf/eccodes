@@ -38,7 +38,7 @@ output=$(echo 'print "[attributeOfTile]";' | ${tools_dir}/grib_filter - ${temp_g
 # Check template is being picked up correctly
 
 ${tools_dir}/grib_dump -O -p section_4 $temp_grib_a > $temp_dump
-grep -q "Generalised tiles at a horizontal level or horizontal layer at a point in time" $temp_dump
+grep -q "Generalized tiles at a horizontal level or horizontal layer at a point in time" $temp_dump
 
 # Check StatisticalProcessing template also works
 
