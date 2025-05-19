@@ -29,7 +29,7 @@ result=$( ${tools_dir}/grib_get -f -p chemName,chemId $tempGribA )
 
 # Switch to the newer tablesVersion so now the chemId/paramId split is activated
 # Now expect paramId 402000 and chemId 17
-${tools_dir}/grib_set -s tablesVersion=34 $tempGribA $tempGribB
+${tools_dir}/grib_set -s setLocalDefinition=1,class=a5,tablesVersion=34 $tempGribA $tempGribB
 
 grib_check_key_equals $tempGribB paramId,chemId "402000 17"
 grib_check_key_equals $tempGribB chemName "Nitrogen dioxide"
@@ -41,8 +41,8 @@ result=$( ${tools_dir}/grib_get -f -p is_chemical $tempGribB )
 
 
 # Test non-chemical e.g. temperature. Now chem keys are present but unknown
-${tools_dir}/grib_set -s tablesVersion=34,discipline=0,parameterCategory=0,parameterNumber=0 $sample_grib2  $tempGribA
-grib_check_key_equals $tempGribA "chemId,chemName,chemShortName" "0 unknown unknown"
+${tools_dir}/grib_set -s tablesVersion=34,setLocalDefinition=1,class=a5,discipline=0,parameterCategory=0,parameterNumber=0 $sample_grib2  $tempGribA
+grib_check_key_equals $tempGribA "chemId,chemName,chemShortName" "-1 unknown unknown"
 
 
 # Clean up
