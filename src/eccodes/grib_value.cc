@@ -439,7 +439,6 @@ static int preprocess_packingType_change(grib_handle* h, const char* keyname, co
                 /* ECC-1219: packingType conversion from grid_ieee to grid_second_order.
                  * Normally having a bitsPerValue of 0 means a constant field but this is
                  * not so for IEEE packing which can be non-constant but always has bitsPerValue==0! */
-                len = sizeof(input_packing_type);
                 grib_get_string(h, "packingType", input_packing_type, &len);
                 if (strcmp(input_packing_type, "grid_ieee") != 0) {
                     /* Not IEEE, so bitsPerValue==0 really means constant field */
