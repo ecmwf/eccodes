@@ -1247,7 +1247,7 @@ int grib_get_string_internal(grib_handle* h, const char* name, char* val, size_t
     return ret;
 }
 
-#if 0
+#if TESTING_MARS_KEYS_FOR_FDB
 static bool is_in_namespace(const grib_accessor* a, const char* ns)
 {
     int i = 0;
@@ -1282,8 +1282,10 @@ int grib_get_string(const grib_handle* h, const char* name, char* val, size_t* l
         if (!a)
             return GRIB_NOT_FOUND;
         ret = a->unpack_string(val, length);
-#if 0
-        if (is_in_namespace(a, "mars")) {
+#if TESTING_MARS_KEYS_FOR_FDB
+        // We should never have a key with a colon as it would cause massive issues for FDB
+        // mars.quantile is an exception
+        if (is_in_namespace(a, "mars") && !STR_EQUAL(name,"quantile")) {
             if (strchr(val, ':')) {
                 grib_context_log(h->context, GRIB_LOG_FATAL, "The value of key '%s' (=%s) contains a colon", name, val);
             }
