@@ -107,7 +107,6 @@ static int concept_condition_expression_true(
         }
 
         default:
-            // TODO
             break;
     }
     return ok;
