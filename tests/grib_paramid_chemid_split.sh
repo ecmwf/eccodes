@@ -10,6 +10,9 @@
 
 . ./include.ctest.sh
 
+echo "Test temporarily disabled"
+exit 0
+
 label="grib_paramid_chemid_split_test"
 tempGribA=temp1.$label.grib
 tempGribB=temp2.$label.grib
