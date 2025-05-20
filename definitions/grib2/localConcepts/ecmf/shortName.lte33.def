@@ -13308,27 +13308,6 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Aerosol negative fixer mass flux
-'aer_negfix_mflx' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 193 ;
-	}
-#Aerosol sink/loss mass flux
-'aer_sink_mflx' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 194 ;
-	}
-#Aerosol source/gain mass flux
-'aer_src_mflx' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 192 ;
-	}
 #Stream function gradient
 'strfgrd' = {
 	 discipline = 192 ;

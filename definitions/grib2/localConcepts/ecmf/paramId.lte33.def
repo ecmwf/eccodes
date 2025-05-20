@@ -13308,27 +13308,6 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Aerosol negative fixer mass flux
-'451000' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 193 ;
-	}
-#Aerosol sink/loss mass flux
-'452000' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 194 ;
-	}
-#Aerosol source/gain mass flux
-'453000' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 192 ;
-	}
 #Stream function gradient
 '129001' = {
 	 discipline = 192 ;
