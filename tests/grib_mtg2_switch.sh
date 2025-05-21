@@ -10,9 +10,6 @@
 
 . ./include.ctest.sh
 
-echo "Test temporarily disabled"
-exit 0
-
 REDIRECT=/dev/null
 
 label="grib_mtg2_switch_test"
@@ -48,8 +45,8 @@ ${tools_dir}/grib_set -s \
     $sample_grib2 $base_grib2
 
 # Now adapt to various cases
-cases=()
-expected=()
+declare -a cases
+declare -a expected
 ## CASE 01: ECMWF OD CY48R1 pre-mtg2 ##
 # tablesVersion=33
 # backgroundProcess=255
@@ -65,7 +62,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -90,7 +87,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -115,7 +112,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -140,7 +137,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -165,7 +162,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -184,7 +181,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -211,7 +208,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -238,7 +235,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -267,7 +264,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -296,7 +293,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -325,7 +322,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -354,7 +351,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -383,7 +380,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -406,7 +403,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -435,7 +432,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -464,7 +461,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -493,7 +490,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -520,7 +517,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=0
@@ -541,7 +538,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=0
@@ -562,7 +559,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=0
@@ -583,7 +580,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=0
@@ -604,7 +601,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=0
@@ -625,7 +622,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=0
@@ -646,7 +643,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=0
@@ -671,7 +668,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=0
@@ -696,7 +693,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=0
@@ -715,7 +712,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -734,7 +731,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -753,7 +750,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -772,7 +769,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -791,7 +788,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -810,7 +807,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -829,7 +826,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -848,7 +845,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -875,7 +872,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -902,7 +899,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -931,7 +928,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -958,7 +955,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=0
@@ -985,7 +982,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=0
@@ -1012,7 +1009,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -1039,7 +1036,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -1064,7 +1061,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -1089,7 +1086,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -1110,7 +1107,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 # Expected result
 # MTG2SwitchViaTablesVersion=1
 # MTG2SwitchDefault=0
@@ -1130,7 +1127,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -1151,7 +1148,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -1172,7 +1169,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -1193,7 +1190,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
@@ -1214,7 +1211,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 
-${tools_dir}/grib_filter -o ${cases[-1]} $tempFilt $base_grib2
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
 # MTG2SwitchViaTablesVersion=1
