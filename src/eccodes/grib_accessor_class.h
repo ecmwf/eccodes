@@ -114,7 +114,6 @@ extern grib_accessor* grib_accessor_hash_array;
 extern grib_accessor* grib_accessor_headers_only;
 extern grib_accessor* grib_accessor_ibmfloat;
 extern grib_accessor* grib_accessor_ieeefloat;
-extern grib_accessor* grib_accessor_ifs_param;
 extern grib_accessor* grib_accessor_iterator;
 extern grib_accessor* grib_accessor_julian_date;
 extern grib_accessor* grib_accessor_julian_day;

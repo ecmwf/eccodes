@@ -25,7 +25,7 @@ ecbuild_add_library( TARGET    ecc_tools
                      SOURCES   ${ecc_tools_sources}
                      PRIVATE_LIBS      eccodes )
 if( eccodes_HAVE_ECKIT_GEO )
-    target_link_libraries( ecc_tools PRIVATE eckit )
+    target_link_libraries( ecc_tools PUBLIC eckit )
 endif()
 
 # tools binaries

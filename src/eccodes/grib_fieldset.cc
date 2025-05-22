@@ -9,9 +9,7 @@
  */
 
 /*
- *
  * Description: routines for GRIB indexing from a set of files
- *
  */
 #include "grib_api_internal.h"
 #define GRIB_START_ARRAY_SIZE 5000
@@ -211,7 +209,7 @@ static int grib_fieldset_column_copy_from_handle(grib_handle* h, grib_fieldset* 
     int err     = 0;
     long lval   = 0;
     double dval = 0;
-    char sval[1024];
+    char sval[1024] = {0,};
     size_t slen = 1024;
     if (!set || !h || set->columns[i].type == 0)
         return GRIB_INVALID_ARGUMENT;
@@ -221,15 +219,15 @@ static int grib_fieldset_column_copy_from_handle(grib_handle* h, grib_fieldset* 
 
     switch (set->columns[i].type) {
         case GRIB_TYPE_LONG:
-            err                                               = grib_get_long(h, set->columns[i].name, &lval);
+            err = grib_get_long(h, set->columns[i].name, &lval);
             set->columns[i].long_values[set->columns[i].size] = lval;
             break;
         case GRIB_TYPE_DOUBLE:
-            err                                                 = grib_get_double(h, set->columns[i].name, &dval);
+            err = grib_get_double(h, set->columns[i].name, &dval);
             set->columns[i].double_values[set->columns[i].size] = dval;
             break;
         case GRIB_TYPE_STRING:
-            err                                                 = grib_get_string(h, set->columns[i].name, sval, &slen);
+            err = grib_get_string(h, set->columns[i].name, sval, &slen);
             set->columns[i].string_values[set->columns[i].size] = grib_context_strdup(h->context, sval);
             break;
     }

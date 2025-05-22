@@ -24,7 +24,7 @@ Close::Close(grib_context* context, const char* filename)
     context_    = context;
     filename_   = grib_context_strdup_persistent(context, filename);
 
-    char buf[1024];
+    char buf[1024] = {0,};
     snprintf(buf, sizeof(buf), "close_%p", (void*)filename_);
 
     name_ = grib_context_strdup_persistent(context, buf);
