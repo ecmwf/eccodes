@@ -44,4 +44,3 @@ concept cfVarName (defaultCfVarName, "cfVarName.def", conceptsDir2, conceptsDir1
 
 template_nofail names "grib2/products_[productionStatusOfProcessedData].def";
 
-meta ifsParam ifs_param(paramId,type);

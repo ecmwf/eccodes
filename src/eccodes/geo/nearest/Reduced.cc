@@ -299,9 +299,7 @@ int Reduced::find_global(grib_handle* h,
 
         if (!nearest_lons_found) {
             if (!global_) {
-                row_count  = 0;
-                ilon_first = 0;
-                ilon_last  = 0;
+                row_count  = ilon_first = ilon_last  = 0;
                 get_reduced_row_func(pl[j_[0]], lon_first_, lon_last_, &row_count, &ilon_first, &ilon_last);
             }
             else {

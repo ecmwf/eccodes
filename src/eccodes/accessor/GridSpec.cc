@@ -20,7 +20,7 @@
     #include "eckit/geo/Grid.h"
     #include "eckit/geo/Exceptions.h"
 
-    #include "geo/GribSpec.h"
+    #include "geo/GribToSpec.h"
     #include "geo/EckitMainInit.h"
 #endif
 
@@ -76,7 +76,7 @@ int GridSpec::unpack_string(char* v, size_t* len)
     try {
         eccodes::geo::eckit_main_init();
 
-        std::unique_ptr<const eckit::geo::Spec> spec(new eccodes::geo::GribSpec(h));
+        std::unique_ptr<const eckit::geo::Spec> spec(new eccodes::geo::GribToSpec(h));
         std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(*spec));
 
         spec_str = grid->spec_str();

@@ -148,7 +148,7 @@ int Ascii::unpack_long(long* v, size_t* len)
 
 int Ascii::unpack_double(double* v, size_t* len)
 {
-    char val[1024];
+    char val[1024] = {0,};
     size_t l   = sizeof(val);
     char* last = NULL;
 
