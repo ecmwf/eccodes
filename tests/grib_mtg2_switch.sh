@@ -12,6 +12,9 @@
 
 REDIRECT=/dev/null
 
+echo "SHELL is = $SHELL"
+uname -a
+
 label="grib_mtg2_switch_test"
 tempGrib=temp.$label.grib
 base_grib2=temp.$label.base.grib2
