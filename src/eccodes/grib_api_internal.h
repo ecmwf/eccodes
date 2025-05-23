@@ -16,13 +16,18 @@
 #ifndef grib_api_internal_H
 #define grib_api_internal_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* cmake config header */
 #ifdef HAVE_ECCODES_CONFIG_H
     #include "eccodes_config.h"
+#endif
+
+#if GRIB_OMP_THREADS
+    #include <omp.h>
+#endif
+
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 #ifndef GRIB_INLINE
@@ -128,7 +133,6 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
  #define GRIB_MUTEX_UNLOCK(a) {pthread_mutex_unlock(a);printf("MUTEX UNLOCK %p %s line %d\n",(void*)a,__FILE__,__LINE__);}
  */
 #elif GRIB_OMP_THREADS
-    #include <omp.h>
     #ifdef _MSC_VER
         #define GRIB_OMP_CRITICAL(a) __pragma(omp critical(a))
     #else

@@ -69,6 +69,24 @@ ${tools_dir}/grib_set -s missingValue=1.0E34,offsetValuesBy=0.5 $input $temp2
 ${tools_dir}/grib_compare $temp1 $temp2
 
 
+# ECC-2083
+# --------
+${tools_dir}/grib_copy -wcount=1 $data_dir/satellite.grib $temp1
+${tools_dir}/grib_set -s scaleValuesBy=1e-7 $temp1 $temp2
+${tools_dir}/grib_ls -n statistics $temp1
+${tools_dir}/grib_ls -n statistics $temp2
+
+skew1=$( ${tools_dir}/grib_get -F%.1f -p skew $temp1 )
+kurt1=$( ${tools_dir}/grib_get -F%.1f -p kurtosis $temp1 )
+[ "$skew1" = "-1.0" ]
+[ "$kurt1" = "0.6" ]
+
+skew2=$( ${tools_dir}/grib_get -F%.1f -p skew $temp2 )
+kurt2=$( ${tools_dir}/grib_get -F%.1f -p kurtosis $temp2 )
+[ "$skew1" = "$skew2" ]
+[ "$kurt1" = "$kurt2" ]
+
+
 # Decode as string - Null op
 cat >$tempFilt<<EOF
     print "[computeStatistics:s]";

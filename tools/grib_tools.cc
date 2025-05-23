@@ -1086,7 +1086,7 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
             snprintf(value_str, 32, "not_found");
         } else {
             fprintf(dump_file, "ERROR: Failed to get value for key '%s' (%s)\n", key_name, grib_get_error_message(ret));
-            if (ret == GRIB_ARRAY_TOO_SMALL)
+            if (ret == GRIB_ARRAY_TOO_SMALL || ret == GRIB_BUFFER_TOO_SMALL)
                 fprintf(dump_file, "\tHint: Tool %s cannot print keys of array type. Use grib_filter.\n", tool_name);
             exit(1);
         }
