@@ -73,7 +73,7 @@ long Bitmap::next_offset()
 void Bitmap::dump(eccodes::Dumper* dumper)
 {
     long len = 0;
-    char label[1024];
+    char label[1024] = {0,};
 
     value_count(&len);
     snprintf(label, sizeof(label), "Bitmap of %ld values", len);

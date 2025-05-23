@@ -765,8 +765,6 @@ static const char* codes_bufr_header_get_centre_name(long centre_code)
             return "mpim";
         case 254:
             return "eums";
-        case 255:
-            return "consensus";
         case 291:
             return "anso";
         case 292:
