@@ -299,8 +299,6 @@ meta defaultCfVarName cf_var_name(shortName) : hidden, read_only;
 concept cfVarNameECMF(defaultCfVarName,"cfVarName.def",conceptsMasterDir,conceptsLocalDirECMF) : no_copy,read_only;
 concept cfVarName(cfVarNameECMF,"cfVarName.def",conceptsDir2,conceptsDir1) : dump,no_copy,read_only;
 
-meta ifsParam ifs_param(paramId,type);
-
 alias parameter.paramId=paramId;
 alias parameter.shortName=shortName;
 alias parameter.units=units;

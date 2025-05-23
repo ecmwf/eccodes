@@ -146,8 +146,7 @@ int DataApplyBoustrophedonic::unpack_float(float* val, size_t* len)
 
 int DataApplyBoustrophedonic::unpack_double_element(size_t idx, double* val)
 {
-    size_t size;
-    double* values;
+    size_t size = 0;
 
     /* GRIB-564: The index idx relates to codedValues NOT values! */
     int err = grib_get_size(parent_->h, "codedValues", &size);
@@ -156,8 +155,8 @@ int DataApplyBoustrophedonic::unpack_double_element(size_t idx, double* val)
     if (idx > size)
         return GRIB_INVALID_NEAREST;
 
-    values = (double*)grib_context_malloc_clear(parent_->h->context, size * sizeof(double));
-    err    = grib_get_double_array(parent_->h, "codedValues", values, &size);
+    double* values = (double*)grib_context_malloc_clear(parent_->h->context, size * sizeof(double));
+    err = grib_get_double_array(parent_->h, "codedValues", values, &size);
     if (err) {
         grib_context_free(parent_->h->context, values);
         return err;

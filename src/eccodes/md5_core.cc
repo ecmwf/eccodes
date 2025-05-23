@@ -230,7 +230,7 @@ main(int argc, char **argv)
     grib_md5_state s;
     grib_md5_init(&s);
     if(argc>1) {
-        char buffer[10240];
+        char buffer[10240] = {0,};
         long len = 0;
         FILE* f = fopen64(argv[1],"r");
         if(!f) {

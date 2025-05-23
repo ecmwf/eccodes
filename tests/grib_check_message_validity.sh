@@ -156,7 +156,6 @@ ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample 2>$tempText
 grep -q "Invalid PL array" $tempText
 grib_check_key_equals $tempGrib isMessageValid 0
 
-
 sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
 cat >$tempFilt<<EOF
    meta pl_elem0 element(pl, 0);

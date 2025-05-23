@@ -439,7 +439,6 @@ static int preprocess_packingType_change(grib_handle* h, const char* keyname, co
                 /* ECC-1219: packingType conversion from grid_ieee to grid_second_order.
                  * Normally having a bitsPerValue of 0 means a constant field but this is
                  * not so for IEEE packing which can be non-constant but always has bitsPerValue==0! */
-                len = sizeof(input_packing_type);
                 grib_get_string(h, "packingType", input_packing_type, &len);
                 if (strcmp(input_packing_type, "grid_ieee") != 0) {
                     /* Not IEEE, so bitsPerValue==0 really means constant field */
@@ -1248,6 +1247,22 @@ int grib_get_string_internal(grib_handle* h, const char* name, char* val, size_t
     return ret;
 }
 
+#ifdef TESTING_MARS_KEYS_FOR_FDB
+static bool is_in_namespace(const grib_accessor* a, const char* ns)
+{
+    int i = 0;
+    while (i < MAX_ACCESSOR_NAMES) {
+        if (a->all_name_spaces_[i]) {
+            if (strcmp(a->all_name_spaces_[i], ns)==0) {
+                return true;
+            }
+        }
+        i++;
+    }
+    return false;
+}
+#endif
+
 int grib_get_string(const grib_handle* h, const char* name, char* val, size_t* length)
 {
     grib_accessor* a        = NULL;
@@ -1266,7 +1281,17 @@ int grib_get_string(const grib_handle* h, const char* name, char* val, size_t* l
         a = grib_find_accessor(h, name);
         if (!a)
             return GRIB_NOT_FOUND;
-        return a->unpack_string(val, length);
+        ret = a->unpack_string(val, length);
+#ifdef TESTING_MARS_KEYS_FOR_FDB
+        // We should never have a key with a colon as it would cause massive issues for FDB
+        // Note: mars.quantile is an exception
+        if (is_in_namespace(a, "mars") && strstr(name, "quantile") == NULL) {
+            if (strchr(val, ':')) {
+                grib_context_log(h->context, GRIB_LOG_FATAL, "The value of mars key '%s' (=%s) contains a colon", name, val);
+            }
+        }
+#endif
+        return ret;
     }
 }
 

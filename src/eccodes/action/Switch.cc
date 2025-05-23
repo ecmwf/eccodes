@@ -82,8 +82,8 @@ int Switch::execute(grib_handle* h)
     int ok      = 0;
     const char* cval;
     const char* cres;
-    char buf[80];
-    char tmp[80];
+    char buf[80] = {0,};
+    char tmp[80] = {0,};
     size_t len  = sizeof(buf);
     size_t size = sizeof(tmp);
     int err     = 0;

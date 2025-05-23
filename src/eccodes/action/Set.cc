@@ -22,7 +22,7 @@ namespace eccodes::action
 Set::Set(grib_context* context,
          const char* name, grib_expression* expression, int nofail)
 {
-    char buf[1024];
+    char buf[1024] = {0,};
 
     class_name_ = "action_class_set";
     op_         = grib_context_strdup_persistent(context, "section");

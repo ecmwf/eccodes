@@ -298,27 +298,24 @@ void Debug::dump_string(grib_accessor* a, const char* comment)
 
 void Debug::dump_string_array(grib_accessor* a, const char* comment)
 {
-    char** values;
-    size_t size = 0, i = 0;
-    grib_context* c = NULL;
-    int err         = 0;
-    int tab         = 0;
-    long count      = 0;
+    int err = 0;
+    int tab = 0;
+    long count = 0;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
-    c = a->context_;
+    grib_context* c = a->context_;
     a->value_count(&count);
     if (count == 0)
         return;
-    size = count;
+    size_t size = count;
     if (size == 1) {
         dump_string(a, comment);
         return;
     }
 
-    values = (char**)grib_context_malloc_clear(c, size * sizeof(char*));
+    char** values = (char**)grib_context_malloc_clear(c, size * sizeof(char*));
     if (!values) {
         grib_context_log(c, GRIB_LOG_ERROR, "unable to allocate %zu bytes", size);
         return;
@@ -349,7 +346,7 @@ void Debug::dump_string_array(grib_accessor* a, const char* comment)
 
     tab++;
     fprintf(out_, "%s = {\n", a->name_);
-    for (i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++) {
         fprintf(out_, "%-*s\"%s\",\n", (int)(tab + strlen(a->name_) + 4), " ", values[i]);
     }
     fprintf(out_, "  }");
@@ -360,7 +357,7 @@ void Debug::dump_string_array(grib_accessor* a, const char* comment)
     }
 
     fprintf(out_, "\n");
-    for (i = 0; i < size; ++i)
+    for (size_t i = 0; i < size; ++i)
         grib_context_free(c, values[i]);
     grib_context_free(c, values);
 }

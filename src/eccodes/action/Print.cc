@@ -20,7 +20,7 @@ namespace eccodes::action
 
 Print::Print(grib_context* context, const char* name, char* outname)
 {
-    char buf[1024];
+    char buf[1024] = {0,};
 
     class_name_ = "action_class_print";
     op_         = grib_context_strdup_persistent(context, "section");

@@ -48,20 +48,17 @@ int main(int argc, char** argv)
 
     lats = (double*)malloc(numberOfPoints * sizeof(double));
     if (!lats) {
-        fprintf(stderr, "Error: unable to allocate %ld bytes\n", (long)(numberOfPoints * sizeof(double)));
+        fprintf(stderr, "Error: unable to allocate %zu bytes\n", numberOfPoints * sizeof(double));
         return 1;
     }
     lons = (double*)malloc(numberOfPoints * sizeof(double));
     if (!lons) {
-        fprintf(stderr, "Error: unable to allocate %ld bytes\n", (long)(numberOfPoints * sizeof(double)));
-        free(lats);
+        fprintf(stderr, "Error: unable to allocate %zu bytes\n", numberOfPoints * sizeof(double));
         return 1;
     }
     values = (double*)malloc(numberOfPoints * sizeof(double));
     if (!values) {
-        fprintf(stderr, "Error: unable to allocate %ld bytes\n", (long)(numberOfPoints * sizeof(double)));
-        free(lats);
-        free(lons);
+        fprintf(stderr, "Error: unable to allocate %zu bytes\n", numberOfPoints * sizeof(double));
         return 1;
     }
 

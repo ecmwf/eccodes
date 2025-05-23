@@ -57,7 +57,7 @@ static const struct table_entry table[] = {
     { "polar_stereographic", &grib_iterator_polar_stereographic, },
     { "regular", &grib_iterator_regular, },
     { "space_view", &grib_iterator_space_view, },
-    { "unstructured", &grib_iterator_unstructured, },
+    // { "unstructured", &grib_iterator_unstructured, },
 };
 
 eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* error)

@@ -24,8 +24,14 @@ git clone https://${GH_TOKEN}@github.com/ecmwf/eccodes-regression-tests.git $reg
 cd $regression_suite_dir
 
 # Launch the regression tests in parallel (This script uses GNU parallel)
-# cd ~masn/REGRESSION_TESTING/ecCodes
+echo "Running ./par-suite.sh -w $TMPDIR/install/eccodes/$version"
 ./par-suite.sh -w $TMPDIR/install/eccodes/$version
+
+# Parallel tests succeeded
+# We should ideally run performance tests MULTIPLE times
+echo "Running ./seq-suite.sh -w $TMPDIR/install/eccodes/$version -t PERFORMANCE"
+./seq-suite.sh -w $TMPDIR/install/eccodes/$version -t PERFORMANCE
+
 
 # For debugging specific test(s)
 # ./seq-suite.sh -w $TMPDIR/install/eccodes/$version -d -t $test_name

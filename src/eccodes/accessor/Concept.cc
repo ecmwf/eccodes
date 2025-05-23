@@ -95,8 +95,8 @@ static int concept_condition_expression_true(
 
         case GRIB_TYPE_STRING: {
             const char* cval;
-            char buf[80];
-            char tmp[80];
+            char buf[80] = {0,};
+            char tmp[80] = {0,};
             size_t len  = sizeof(buf);
             size_t size = sizeof(tmp);
 
@@ -107,7 +107,6 @@ static int concept_condition_expression_true(
         }
 
         default:
-            // TODO
             break;
     }
     return ok;
@@ -469,7 +468,7 @@ int Concept::pack_double(const double* val, size_t* len)
 
 int Concept::pack_long(const long* val, size_t* len)
 {
-    char buf[80];
+    char buf[80] = {0,};
     size_t s;
     snprintf(buf, sizeof(buf), "%ld", *val);
 

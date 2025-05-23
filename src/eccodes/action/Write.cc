@@ -22,7 +22,7 @@ namespace eccodes::action
 
 Write::Write(grib_context* context, const char* name, int append, int padtomultiple)
 {
-    char buf[1024];
+    char buf[1024] = {0,};
 
     class_name_ = "action_class_write";
     op_         = grib_context_strdup_persistent(context, "section");

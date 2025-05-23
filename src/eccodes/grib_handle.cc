@@ -1486,7 +1486,7 @@ int grib_get_message(const grib_handle* ch, const void** msg, size_t* size)
         *size = totalLength;
 
     if (h->context->gts_header_on && h->gts_header) {
-        char strbuf[10];
+        char strbuf[10] = {0,};
         snprintf(strbuf, sizeof(strbuf), "%.8d", (int)(h->buffer->ulength + h->gts_header_len - 6));
         memcpy(h->gts_header, strbuf, 8);
     }

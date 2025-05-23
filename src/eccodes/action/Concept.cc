@@ -254,8 +254,8 @@ static int concept_condition_expression_true(grib_handle* h, grib_concept_condit
 
         case GRIB_TYPE_STRING: {
             const char* cval;
-            char buf[256];
-            char tmp[256];
+            char buf[256] = {0,};
+            char tmp[256] = {0,};
             size_t len  = sizeof(buf);
             size_t size = sizeof(tmp);
 

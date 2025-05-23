@@ -11,7 +11,7 @@ alias unusedBitsInBitmap=numberOfUnusedBitsAtEndOfSection3;
 unsigned[2] tableReference = 0 : dump;
 
 position offsetBeforeBitmap;
-meta geography.bitmap g1bitmap( tableReference,
+meta bitmap g1bitmap( tableReference,
                     missingValue,
                     offsetSection3,
                     section3Length,

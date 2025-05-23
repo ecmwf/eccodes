@@ -110,6 +110,16 @@ if test "x$JSON_CHECK" != "x"; then
   json_xs -t none < $tempLog
 fi
 
+# ECC-2089: The 'geography' namespace should not include 'bitmapPresent' and 'bitmap'
+input=${data_dir}/missing_field.grib1
+grib_check_key_equals $input bitmapPresent 1
+${tools_dir}/grib_ls -j -n geography $input > $tempLog
+set +e
+grep bitmap $tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+
 
 # Clean up
 rm -f $tempLog $tempOut $tempRef

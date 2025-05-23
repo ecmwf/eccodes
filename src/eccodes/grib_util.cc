@@ -924,9 +924,9 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     grib_handle* h_out    = NULL;
     grib_handle* h_sample = NULL;
     const char* grid_type = NULL;
-    char sample_name[1024]; // name of the GRIB sample file
+    char sample_name[1024] = {0,}; // name of the GRIB sample file
     char input_grid_type[100];
-    char input_packing_type[100];
+    char input_packing_type[100] = {0,};
     long editionNumber = 0;
     size_t count = 0, len = 100, slen = 20, input_grid_type_len = 100;
     double laplacianOperator;

@@ -14,7 +14,7 @@ unsigned[1] numberOfSection = 6:read_only;
 codetable[1] bitMapIndicator ('6.0.table',masterDir,localDir) = 255 : dump;
 
 #transient bitmapPresent=1;
-meta geography.bitmapPresent g2bitmap_present(bitMapIndicator): dump;
+meta bitmapPresent g2bitmap_present(bitMapIndicator): dump;
 transient missingValuesPresent = bitmapPresent : hidden, read_only;
 
 # Bitmap...
@@ -28,7 +28,7 @@ if (bitMapIndicator == 0) {
           numberOfDataMatrices) : read_only;
     }
     else {
-      meta geography.bitmap g2bitmap( tableReference,
+      meta bitmap g2bitmap( tableReference,
           missingValue,
           offsetBSection6,
           section6Length,
@@ -36,7 +36,7 @@ if (bitMapIndicator == 0) {
     }
   }
   else {
-    meta geography.bitmap g2bitmap( tableReference,
+    meta bitmap g2bitmap( tableReference,
         missingValue,
         offsetBSection6,
         section6Length,

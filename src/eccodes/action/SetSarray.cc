@@ -27,7 +27,7 @@ SetSArray::SetSArray(grib_context* context, const char* name, grib_sarray* sarra
     sarray_     = sarray;
     name2_      = grib_context_strdup_persistent(context, name);
 
-    char buf[1024];
+    char buf[1024] = {0,};
     snprintf(buf, sizeof(buf), "set_sarray%p", (void*)sarray);
 
     name_ = grib_context_strdup_persistent(context, buf);

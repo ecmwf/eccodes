@@ -537,7 +537,7 @@ grib_context* grib_context_get_default()
         {
             const char* samples_extra = getenv("ECCODES_EXTRA_SAMPLES_PATH");
             if (samples_extra) {
-                char buffer[ECC_PATH_MAXLEN];
+                char buffer[ECC_PATH_MAXLEN] = {0,};
                 snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", samples_extra, ECC_PATH_DELIMITER_CHAR, default_grib_context.grib_samples_path);
                 default_grib_context.grib_samples_path = strdup(buffer);
             }
@@ -545,7 +545,7 @@ grib_context* grib_context_get_default()
 #ifdef ECCODES_SAMPLES_PATH
         {
             if (strstr(default_grib_context.grib_samples_path, ECCODES_SAMPLES_PATH) == NULL) {
-                char buffer[ECC_PATH_MAXLEN];
+                char buffer[ECC_PATH_MAXLEN] = {0,};
                 snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", default_grib_context.grib_samples_path,
                              ECC_PATH_DELIMITER_CHAR, ECCODES_SAMPLES_PATH);
                 default_grib_context.grib_samples_path = strdup(buffer);
@@ -1240,7 +1240,7 @@ void codes_assertion_failed(const char* message, const char* file, int line)
         }
     }
     else {
-        char buffer[10240];
+        char buffer[10240] = {0,};
         snprintf(buffer, sizeof(buffer), "ecCodes assertion failed: `%s' in %s:%d", message, file, line);
         assertion(buffer);
     }
