@@ -28,7 +28,7 @@ public:
 private:
     const char* tablesVersion_           = nullptr;  // int
     const char* tablesVersionMTG2Switch_ = nullptr;  // int
-    const char* marsClass_               = nullptr;  // str
+    const char* MTG2SwitchChemSplit_     = nullptr;  // int
     const char* MTG2SwitchViaTablesVersion_  = nullptr;  //int
 };
 

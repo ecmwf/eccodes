@@ -33,7 +33,7 @@ void Mtg2SwitchDefault::init(const long len, grib_arguments* arg)
 
     tablesVersion_           = arg->get_name(h, 0);
     tablesVersionMTG2Switch_ = arg->get_name(h, 1);
-    marsClass_               = arg->get_name(h, 2);
+    MTG2SwitchChemSplit_     = arg->get_name(h, 2);
     MTG2SwitchViaTablesVersion_ = arg->get_name(h, 3);
 
     length_ = 0;
@@ -52,18 +52,18 @@ int Mtg2SwitchDefault::unpack_long(long* val, size_t* len)
     int err            = 0;
     long tablesVersion = 0, tablesVersionMTG2Switch = 0;
     char marsClass[32] = {0,};
+    long isChemSplit   = 0;
 
     err = grib_get_long(h, tablesVersion_, &tablesVersion);
     if (err) return err;
     err = grib_get_long_internal(h, tablesVersionMTG2Switch_, &tablesVersionMTG2Switch);
     if (err) return err;
 
-    bool marsClassExists = true;
-    size_t size = sizeof(marsClass);
-    err = grib_get_string(h, marsClass_, marsClass, &size);
+    bool MTG2SwitchChemSplitExists = true;
+    err = grib_get_long(h, MTG2SwitchChemSplit_, &isChemSplit);
     if (err) {
         if (err == GRIB_NOT_FOUND) {
-            marsClassExists = false;
+            MTG2SwitchChemSplitExists = false;
             err = 0;
         }
         else {
@@ -83,7 +83,7 @@ int Mtg2SwitchDefault::unpack_long(long* val, size_t* len)
         else {
             // For certain classes post MTG2 we always want the param + chem split (value 2)
             // For TIGGE, marsClass is not defined in the empty local Section 2, but is defined later on.
-            if ( marsClassExists && (STR_EQUAL(marsClass, "mc") || STR_EQUAL(marsClass, "cr") || STR_EQUAL(marsClass, "a5")) ) {
+            if (MTG2SwitchChemSplitExists && isChemSplit) {
                 *val = 2;
             }
             else {
