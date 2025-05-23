@@ -1,0 +1,6 @@
+# Concept by which we define which conditions will give a default value of MTG2Switch=2, i.e.
+# having the split of chemical parameters from param-only to param + chem
+# This default can be overidden in the MTG2SwitchConcept itself
+1 = {marsClass=mc;}
+1 = {marsClass=cr;}
+1 = {marsClass=a5;}

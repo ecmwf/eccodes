@@ -209,7 +209,7 @@ static int grib_fieldset_column_copy_from_handle(grib_handle* h, grib_fieldset* 
     int err     = 0;
     long lval   = 0;
     double dval = 0;
-    char sval[1024];
+    char sval[1024] = {0,};
     size_t slen = 1024;
     if (!set || !h || set->columns[i].type == 0)
         return GRIB_INVALID_ARGUMENT;

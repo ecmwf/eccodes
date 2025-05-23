@@ -37,7 +37,7 @@ void Lookup::dump(eccodes::Dumper* dumper)
 {
     unsigned char bytes[1024] = {0,};
     char msg[1024] = {0,};
-    char buf[2048];
+    char buf[2048] = {0,};
     unsigned long v = 0;
 
     size_t llen = llength_;

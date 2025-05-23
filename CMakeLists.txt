@@ -384,7 +384,7 @@ configure_file( eccodes_config.h.in eccodes_config.h )
 
 add_definitions( -DHAVE_ECCODES_CONFIG_H )
 
-if( CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang" )
+if( CMAKE_CXX_COMPILER_ID STREQUAL "GNU" )
     ecbuild_add_c_flags("-pedantic")
     ecbuild_add_cxx_flags("-pedantic")
 endif()
