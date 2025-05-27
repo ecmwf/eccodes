@@ -37,7 +37,7 @@ grib_check_key_equals $tempGribB name "Mass mixing ratio"
 
 # The is_chemical key should not be present
 result=$( ${tools_dir}/grib_get -f -p is_chemical $tempGribB )
-[ "$result" = "not_found" ]
+[ "$result" = "1" ]
 
 
 # Test non-chemical e.g. temperature. Now chem keys are present but unknown
