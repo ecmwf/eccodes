@@ -1,7 +1,7 @@
-# Note: the count 10 of generated C files must match
+# Note: the count 11 of generated C files must match
 #       the 'generated_c_files' list
 list( APPEND memfs_args
-      --count 10
+      --count 11
       --output ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen
       )
 
@@ -16,6 +16,7 @@ set( generated_c_files
     ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_007.c
     ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_008.c
     ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_009.c
+    ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_010.c
     ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_final.c)
 
 if( NOT HAVE_PRODUCT_BUFR )
