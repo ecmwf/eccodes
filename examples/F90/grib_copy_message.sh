@@ -12,7 +12,7 @@
 INPUT="../../data/constant_field.grib1"
 OUTPUT=out.copy.grib1
 
-${examples_dir}/eccodes_f_grib_copy_message > /dev/null
+${examples_dir}/f_grib_copy_message > /dev/null
 ${tools_dir}/grib_compare -b centre $INPUT $OUTPUT
 
 rm -f $OUTPUT

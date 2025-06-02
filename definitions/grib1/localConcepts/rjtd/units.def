@@ -213,27 +213,22 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 78 ;
 	}
-#Maximum wind speed
-'m s**-1' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 219 ;
-	}
-#Downward short-wave radiation flux
+#Surface downward short-wave radiation flux
 'W m**-2' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 204 ;
 	}
-#Upward short-wave radiation flux
+#Surface upward short-wave radiation flux
 'W m**-2' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 211 ;
 	}
-#Downward long-wave radiation flux
+#Surface downward long-wave radiation flux
 'W m**-2' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 205 ;
 	}
-#Upward long-wave radiation flux
+#Surface upward long-wave radiation flux
 'W m**-2' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 212 ;
@@ -486,7 +481,7 @@
 	 indicatorOfParameter = 253 ;
 	}
 #Type of vegetation
-'Code Table JMA-252' = {
+'(Code table JMA-252)' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 252 ;
 	}
@@ -530,7 +525,7 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 5 ;
 	}
-#Geometrical height
+#Geometrical height above ground
 'm' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 8 ;
@@ -664,16 +659,6 @@
 'm s**-1' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 48 ;
-	}
-#U-component of current
-'m s**-1' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 49 ;
-	}
-#V-component of current
-'m s**-1' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 50 ;
 	}
 #Humidity mixing ratio
 'kg kg**-1' = {
@@ -920,22 +905,22 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 87 ;
 	}
-#Vertical integral of eastward heat flux
+#Total column vertically-integrated eastward heat flux
 'W m**-1' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 190 ;
 	}
-#Vertical integral of northward heat flux
+#Total column vertically-integrated northward heat flux
 'W m**-1' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 191 ;
 	}
-#Vertical integral of eastward water vapour flux
+#Total column vertically-integrated eastward water vapour flux
 'kg m**-1 s**-1' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 157 ;
 	}
-#Vertical integral of northward water vapour flux
+#Total column vertically-integrated northward water vapour flux
 'kg m**-1 s**-1' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 152 ;

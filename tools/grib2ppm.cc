@@ -122,7 +122,7 @@ int main(int argc, char* argv[])
             continue;
         }
 
-        f = fopen(argv[i], "r");
+        f = fopen(argv[i], "rb");
         if (!f) {
             perror(argv[i]);
             exit(1);
@@ -185,7 +185,7 @@ int main(int argc, char* argv[])
                 for (jj = 0; jj < height; jj++) {
                     for (i = 0; i < width; i++) {
                         int m = (i + width / 2) % width + jj * width;
-                        Assert(k < count);
+                        ECCODES_ASSERT(k < count);
                         indices[k++] = m;
                     }
                 }
@@ -226,7 +226,9 @@ int main(int argc, char* argv[])
                     if (v > ucap) {
                         v = ucap;
                     }
-                    c  = (v - min) * 65535 / (max - min);
+                    double denom = 1;
+                    if (max != min) denom = max - min;
+                    c  = (v - min) * 65535 / denom;
                     hh = c >> 8;
                     l  = c & 0xff;
                     printf("%c", hh);

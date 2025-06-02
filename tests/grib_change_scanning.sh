@@ -11,6 +11,20 @@
 . ./include.ctest.sh
 
 label="grib_change_scanning_test"
+tempFilt=temp.$label.filt
+tempGribA=temp.$label.A.grib
+tempGribB=temp.$label.B.grib
+tempText=temp.$label.txt
+tempRef=temp.$label.ref
+
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
 
 editions="1 2"
 gridTypes="regular_ll rotated_ll" 
@@ -77,12 +91,6 @@ done
 
 # alternativeRowScanning
 # -----------------------
-tempFilt=temp.$label.filt
-tempGribA=temp.$label.A.grib
-tempGribB=temp.$label.B.grib
-tempText=temp.$label.txt
-tempRef=temp.$label.ref
-
 cat > $tempFilt <<EOF
   set Nj = 2;
   set latitudeOfFirstGridPointInDegrees = 60;
@@ -140,6 +148,34 @@ grib_check_key_equals "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" jScansNegatively,jScans
 ${tools_dir}/grib_set -s swapScanningX:s=1 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $tempGribA 2>/dev/null
 ${tools_dir}/grib_set -s swapScanningX:i=1 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $tempGribB 2>/dev/null
 cmp $tempGribA $tempGribB
+
+
+# Check constraint keys follow (observe) their expressions
+# --------------------------------------------------------
+cat > $tempFilt <<EOF
+  set iScansNegatively = 1;       # Change from 0 to 1
+  assert (0 == iScansPositively); # should change too
+  set jScansPositively = 1;       # Same for j
+  assert (0 == jScansNegatively);
+EOF
+grib_check_key_equals $file 'iScansNegatively,jScansPositively' '0 0'
+grib_check_key_equals $file 'iScansPositively,jScansNegatively' '1 1'
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB1.tmpl
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
+
+# ECC-1819: Keys iScansPositively and jScansNegatively should be read-only
+for s in GRIB1.tmpl GRIB2.tmpl; do
+  for k in iScansPositively jScansNegatively; do
+    set +e
+    ${tools_dir}/grib_set -s $k=0 $ECCODES_SAMPLES_PATH/$s $tempGribA 2>$tempText
+    status=$?
+    set -e
+    [ $status -ne 0 ]
+    grep -q "Value is read only" $tempText
+    rm $tempText
+  done
+done
 
 # Clean up
 rm -f $tempFilt $tempGribA $tempGribB $tempRef $tempText

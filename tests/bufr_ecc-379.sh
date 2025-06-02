@@ -23,7 +23,7 @@ tempText=temp.${label}.text
 tempRef=temp.${label}.ref
 
 # --------------------------------------------------------
-# Test 1
+# Test: Maximum value exceeded
 # --------------------------------------------------------
 BufrFile=airs_57.bufr
 cat > $tempRules <<EOF
@@ -41,6 +41,24 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q 'longitude (006001). Maximum value (value\[0\]=500) out of range' $tempText
+
+
+# --------------------------------------------------------
+# Test: Minimum value exceeded
+# --------------------------------------------------------
+cat > $tempRules <<EOF
+ set unpack=1;
+ set longitude={-5000, -172, -400, -170, -169, -168, -168, -167, -167, -166, -166, -165, -164, -164, -164};
+ set pack=1;
+ write;
+EOF
+set +e
+${tools_dir}/codes_bufr_filter -o $tempOut $tempRules $BufrFile 2>$tempText
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q 'Minimum value .* out of range' $tempText
+
 
 # Now set environment variable to turn out-of-range values into 'missing'
 export ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE=1

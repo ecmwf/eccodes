@@ -9,6 +9,7 @@
  */
 
 #include "grib_tools.h"
+#include "grib_dumper_factory.h"
 
 grib_option grib_options[] = {
     /*  {id, args, help}, on, command_line, value*/
@@ -61,7 +62,7 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-    int opt = grib_options_on("C") + grib_options_on("O") + grib_options_on("D") + grib_options_on("j");
+    const int opt = grib_options_on("C") + grib_options_on("O") + grib_options_on("D") + grib_options_on("j");
 
     options->dump_mode = (char*)"default";
 
@@ -126,7 +127,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
     if (json)
         return 0;
 
-    Assert(file);
+    ECCODES_ASSERT(file);
     exit_if_input_is_directory(tool_name, file->name);
 
     snprintf(tmp, sizeof(tmp), "FILE: %s ", options->current_infile->name);
@@ -141,7 +142,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
         grib_context* c      = grib_context_get_default();
         const char* filename = options->current_infile->name;
 
-        err = grib_index_dump_file(stdout, filename);
+        err = grib_index_dump_file(stdout, filename, options->dump_flags);
         if (err) {
             grib_context_log(c, GRIB_LOG_ERROR, "%s: Could not dump index file \"%s\".\n%s\n",
                              tool_name,
@@ -153,6 +154,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
          * are more index files */
         options->fail = 0;
         options->skip_all = 1; /* ECC-1516 */
+        file->handle_count = 1; // Suppress error "No messages found in ..."
     }
 
     return 0;
@@ -229,11 +231,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     grib_handle_delete(h);
     return 0;
-}
-
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
-    grib_print_key_values(options, h);
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options)

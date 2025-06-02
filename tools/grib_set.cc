@@ -44,7 +44,7 @@ grib_option grib_options[] = {
 };
 
 const char* tool_description =
-    "Sets key/value pairs in the input GRIB file and writes"
+    "Sets key/value pairs in the input GRIB file(s) and writes"
     "\n\teach message to the output_grib_file."
     "\n\tIt fails when an error occurs (e.g. key not found).";
 const char* tool_name       = "grib_set";
@@ -71,6 +71,15 @@ int grib_tool_init(grib_runtime_options* options)
     }
     if (options->verbose)
         options->print_header = 1;
+
+    if (grib_options_on("p:")) { // ECC-2018
+        if (grib_options_get_option("p:")) {
+            options->verbose = 1;
+            options->print_header = 0;
+            options->print_statistics = 0;
+        }
+    }
+
     //  if (grib_options_on("n:")) {
     //     noise=atof(grib_options_get_option("n:"));
     //     options->repack=1;
@@ -156,11 +165,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     grib_handle_delete(h);
     return 0;
-}
-
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
-    grib_print_key_values(options, h);
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options)

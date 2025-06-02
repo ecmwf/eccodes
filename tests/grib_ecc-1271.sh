@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1271
+# NCEP local grid: Arakawa Non-E Staggered grid
+# ---------------------------------------------------------------------
+
 label="grib_ecc-1271_test"
 temp=temp.$label
 
@@ -23,6 +28,6 @@ $sample_grib2 $temp
 
 grib_check_key_equals $temp Ni,Nj "16 31"
 grib_check_key_equals $temp centreLatitudeInDegrees,centreLongitudeInDegrees "0 30"
-grib_check_key_equals $temp minimum,maximum "1 1"
+grib_check_key_equals $temp minimum,maximum "273 273"
 
 rm -f $temp

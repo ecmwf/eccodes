@@ -12,23 +12,10 @@
  * Check GRIB2 parameter concept file e.g. shortName.def, paramId.def
  */
 
+#include "expression/Long.h"
+#include "expression/Functor.h"
+#include "expression/String.h"
 #include "grib_api_internal.h"
-
-typedef struct grib_expression_long {
-    grib_expression base;
-    long value;
-} grib_expression_long;
-
-typedef struct grib_expression_functor {
-    grib_expression base;
-    char* name;
-    grib_arguments* args;
-} grib_expression_functor;
-
-typedef struct grib_expression_string {
-    grib_expression base;
-    char* value;
-} grib_expression_string;
 
 static int type_of_surface_missing(const char* name, const char* value)
 {
@@ -39,7 +26,7 @@ static int type_of_surface_missing(const char* name, const char* value)
     /* Beware of problems where we put 'missing()' for a code table key! */
     if (strncmp(value, "missing", 7) == 0) {
         fprintf(stderr, "Invalid value for %s Code Table entry: '%s'\n", name, value);
-        Assert(0);
+        ECCODES_ASSERT(0);
     }
     return 0;
 }
@@ -52,6 +39,8 @@ static int scale_factor_missing(const char* value)
     return 0;
 }
 
+#define STAT_PROC_MAX_VAL 103 // increase this with new Code Table 4.10 entries
+
 /*
  * key      = paramId or shortName
  * filename = paramId.def or shortName.def
@@ -59,6 +48,7 @@ static int scale_factor_missing(const char* value)
 static int grib_check_param_concepts(const char* key, const char* filename)
 {
     int isLocal = 0;
+    int count = 0;
     grib_concept_value* concept_value = grib_parse_concept_file(NULL, filename);
     if (!concept_value)
         return GRIB_IO_PROBLEM;
@@ -67,6 +57,11 @@ static int grib_check_param_concepts(const char* key, const char* filename)
         isLocal = 1;
     }
     while (concept_value) {
+        count++;
+        if (strlen(concept_value->name) == 0) {
+            fprintf(stderr, "%s %s: Empty concept value (count=%d)\n", key, concept_value->name, count);
+            ECCODES_ASSERT(0);
+        }
         grib_concept_condition* concept_condition = concept_value->conditions;
         /* Convention:
          *  -1 key not present
@@ -78,33 +73,53 @@ static int grib_check_param_concepts(const char* key, const char* filename)
         int type1Missing = -1, type2Missing = -1;
         int err = 0;
         /* concept_value->name is the value of the key (e.g. 151163 or sst) */
+        if (strcmp(key, "cfVarName")==0) {
+            ECCODES_ASSERT( strlen(concept_value->name) > 0 );
+            if ( isdigit(concept_value->name[0]) || strcmp(concept_value->name, "~")==0 ) {
+                fprintf(stderr, "%s %s: Invalid cfVarName in file %s\n",
+                        key, concept_value->name, filename);
+                return GRIB_INVALID_KEY_VALUE;
+            }
+        }
         while (concept_condition) {
-            char condition_value[512] = {0,};
-            grib_expression* expression = concept_condition->expression;
+            char condition_value[512] = {0, };
+            eccodes::Expression* expression = concept_condition->expression;
             const char* condition_name  = concept_condition->name;
             /* printf("%s\n", concept_value->name); */
             /* condition_name is discipline, parameterCategory etc. */
-            if (strcmp(expression->cclass->name, "long") == 0) {
-                grib_expression_long* el = (grib_expression_long*)expression;
-                snprintf(condition_value, sizeof(condition_value), "%ld", el->value);
+            if (strcmp(expression->class_name(), "long") == 0) {
+                eccodes::expression::Long* el = dynamic_cast<eccodes::expression::Long*>(expression);
+                long value;
+                el->evaluate_long(NULL, &value);
+                snprintf(condition_value, sizeof(condition_value), "%ld", value);
             }
-            else if (strcmp(expression->cclass->name, "functor") == 0) {
-                grib_expression_functor* ef = (grib_expression_functor*)expression;
-                snprintf(condition_value, sizeof(condition_value), "%s", ef->name);
+            else if (strcmp(expression->class_name(), "functor") == 0) {
+                eccodes::expression::Functor* ef = dynamic_cast<eccodes::expression::Functor*>(expression);
+                snprintf(condition_value, sizeof(condition_value), "%s", ef->name());
             }
-            else if (strcmp(expression->cclass->name, "string") == 0) {
-                grib_expression_string* es = (grib_expression_string*)expression;
-                snprintf(condition_value, sizeof(condition_value), "%s", es->value);
+            else if (strcmp(expression->class_name(), "string") == 0) {
+                eccodes::expression::String* es = dynamic_cast<eccodes::expression::String*>(expression);
+                int error;
+                const char* value = es->evaluate_string(NULL, NULL, NULL, &error);
+                snprintf(condition_value, sizeof(condition_value), "%s", value);
             }
             else {
                 fprintf(stderr, "%s %s: Unknown class name: '%s'\n",
-                        key, concept_value->name, expression->cclass->name);
-                Assert(0);
+                        key, concept_value->name, expression->class_name());
+                ECCODES_ASSERT(0);
             }
             if (!isLocal && strcmp(condition_name, "localTablesVersion") == 0) {
                 fprintf(stderr, "%s %s: Cannot have localTablesVersion key in WMO file %s!\n",
                         key, concept_value->name, filename);
                 return GRIB_INVALID_KEY_VALUE;
+            }
+            if (strcmp(condition_name, "typeOfStatisticalProcessing") == 0) {
+                long lValue = atol(condition_value);
+                if (lValue > STAT_PROC_MAX_VAL || lValue < 0) {
+                    fprintf(stderr, "Bad value for %s in %s=%s in file %s\n",
+                            condition_name, key, concept_value->name, filename);
+                    return GRIB_INVALID_KEY_VALUE;
+                }
             }
             if (strcmp(condition_name, "typeOfFirstFixedSurface") == 0) {
                 type1Missing = type_of_surface_missing(condition_name, condition_value);
@@ -128,8 +143,8 @@ static int grib_check_param_concepts(const char* key, const char* filename)
             concept_condition = concept_condition->next;
         }
         /* Now check the scale factor/value pairs */
-        if (type1Missing == 1 && scaleFactor1Missing == 0 && scaledValue1Missing == 0) err = 1;
-        if (type2Missing == 1 && scaleFactor2Missing == 0 && scaledValue2Missing == 0) err = 1;
+        if (type1Missing == 1 && (scaleFactor1Missing == 0 || scaledValue1Missing == 0)) err = 1;
+        if (type2Missing == 1 && (scaleFactor2Missing == 0 || scaledValue2Missing == 0)) err = 1;
         if (scaleFactor1Missing == 1 && scaledValue1Missing == 0) err = 1;
         if (scaleFactor1Missing == 0 && scaledValue1Missing == 1) err = 1;
         if (scaleFactor2Missing == 1 && scaledValue2Missing == 0) err = 1;
@@ -153,7 +168,7 @@ int main(int argc, char** argv)
     const char* concepts_key      = argv[1];
     const char* concepts_filename = argv[2];
 
-    Assert(argc == 3);
+    ECCODES_ASSERT(argc == 3);
     err = grib_check_param_concepts(concepts_key, concepts_filename);
     if (err) return err;
 

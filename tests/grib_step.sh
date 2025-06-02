@@ -12,10 +12,11 @@
 
 REDIRECT=/dev/null
 
-label=grib_step_test
+label="grib_step_test"
 tempGrb=${data_dir}/temp.$label.out.grib
-templog=${data_dir}/temp.$label.log
-rm -f $templog $tempGrb
+tempLog=${data_dir}/temp.$label.log
+tempFilt=${data_dir}/temp.$label.filt
+rm -f $tempLog $tempGrb
 
 grib1_sample=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 grib2_sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
@@ -31,7 +32,7 @@ do
       #echo grib_set -s ${key}=$s ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb
       #grib_get -p step,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb 
       ${tools_dir}/grib_get -p mars.step,stepRange,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange:l \
-                            ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb >> ${templog}
+                            ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb >> $tempLog
 	done
   done
 done
@@ -44,7 +45,7 @@ do
    #echo grib_set -s ${key}=$s ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb
    #grib_ls -p step,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb 
    ${tools_dir}/grib_get -p mars.step,stepRange,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange:l \
-                         ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb >> ${templog}
+                         ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb >> $tempLog
 done
 
 rm -f $tempGrb
@@ -52,17 +53,17 @@ rm -f $tempGrb
 # test added for ifs stepType=max,min
 ${tools_dir}/grib_set -s stepType=max,startStep=3,endStep=6 ${data_dir}/reduced_gaussian_model_level.grib1 $tempGrb
 ${tools_dir}/grib_get -p mars.step,stepRange,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange:l \
-                      ${data_dir}/reduced_gaussian_model_level.grib1 $tempGrb >> ${templog}
+                      ${data_dir}/reduced_gaussian_model_level.grib1 $tempGrb >> $tempLog
 
 rm -f $tempGrb
 
-diff ${data_dir}/step.log ${templog}
+diff ${data_dir}/step.log $tempLog
 
-(${tools_dir}/grib_filter ${data_dir}/step_grib1.filter ${data_dir}/timeRangeIndicator_0.grib > ${templog}) 2>$REDIRECT
+(${tools_dir}/grib_filter ${data_dir}/step_grib1.filter ${data_dir}/timeRangeIndicator_0.grib > $tempLog) 2>$REDIRECT
 
-diff ${data_dir}/step_grib1.log ${templog}
+diff ${data_dir}/step_grib1.log $tempLog
 
-rm -f ${templog}
+rm -f $tempLog
 
 # GRIB-180
 # ------------
@@ -117,6 +118,12 @@ grib_check_key_equals $temp productDefinitionTemplateNumber,typeOfStatisticalPro
 ${tools_dir}/grib_set -s stepType=mode,paramId=260320     $grib2_sample $temp
 grib_check_key_equals $temp productDefinitionTemplateNumber,typeOfStatisticalProcessing '8 101'
 
+# ECC-1991: stepType for index processing
+# -----------------------------------------
+${tools_dir}/grib_set -s stepType=index $grib2_sample $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber,typeOfStatisticalProcessing '8 102'
+
+
 # ECC-1577: stepType when typeOfTimeIncrement=255
 # -----------------------------------------------
 ${tools_dir}/grib_set -s stepType=accum,typeOfTimeIncrement=255 $grib2_sample $temp
@@ -127,7 +134,7 @@ grib_check_key_equals $temp typeOfTimeIncrement 2
 ${tools_dir}/grib_set -s stepType=avg,typeOfTimeIncrement=255 $grib2_sample $temp
 grib_check_key_equals $temp stepType avg
 ${tools_dir}/grib_set -s stepType=avg $grib2_sample $temp
-grib_check_key_equals $temp typeOfTimeIncrement 3
+grib_check_key_equals $temp typeOfTimeIncrement 2 # default is 2
 
 # Decode/Encode stepRange as an int and double
 ${tools_dir}/grib_set -s stepType=accum,stepRange=23-28 $grib2_sample $temp
@@ -146,7 +153,7 @@ grib_check_key_equals $temp "stepRange,startStep,endStep" "14 14 14"
 input=${data_dir}/constant_field.grib2
 grib_check_key_equals $input "dataDate,dataTime,step" "20061205 1200 6"
 grib_check_key_equals $input "validityDate,validityTime" "20061205 1800"
-grib_check_key_equals $input "validityDateTime:s" "20061205 001800"
+grib_check_key_equals $input "validityDateTime:s" "20061205 180000"
 
 # ECC-1704: Key validityTime as string
 # -------------------------------------
@@ -166,10 +173,10 @@ grib_check_key_equals $temp day  7
 
 # Seconds (ignored)
 # -----------------
-${tools_dir}/grib_ls -s second=9 -n time $grib2_sample 2>$templog
+${tools_dir}/grib_ls -s second=9 -n time $grib2_sample 2>$tempLog
 # Something should have been written to stderr
-[ -s $templog ]
-grep -q "Truncating time: non-zero seconds.* ignored" $templog
+[ -s $tempLog ]
+grep -q "Truncating time: non-zero seconds.* ignored" $tempLog
 
 # Hour or minute set to 255
 # ---------------------------
@@ -182,28 +189,28 @@ result=$( ${tools_dir}/grib_get -p dataTime -s hour=2,minute=255 $input )
 # Various step units
 # --------------------
 input=${data_dir}/tigge_cf_ecmwf.grib2
-result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=h $input)
+result=$(${tools_dir}/grib_get -w count=1 -p step:i -s stepUnits=h $input)
 [ $result = 96 ]
 
-result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=30m $input)
+result=$(${tools_dir}/grib_get -w count=1 -p step:i -s stepUnits=30m $input)
 [ $result = 192 ]
 
-result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=15m $input)
+result=$(${tools_dir}/grib_get -w count=1 -p step:i -s stepUnits=15m $input)
 [ $result = 384 ]
 
-result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=s   $input)
+result=$(${tools_dir}/grib_get -w count=1 -p step:i -s stepUnits=s   $input)
 [ $result = 345600 ]
 
-result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=12h $input)
+result=$(${tools_dir}/grib_get -w count=1 -p step:i -s stepUnits=12h $input)
 [ $result = 8 ]
 
-result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=6h  $input)
+result=$(${tools_dir}/grib_get -w count=1 -p step:i -s stepUnits=6h  $input)
 [ $result = 16 ]
 
-result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=D   $input)
+result=$(${tools_dir}/grib_get -w count=1 -p step:i -s stepUnits=D   $input)
 [ $result = 4 ]
 
-result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=m   $input)
+result=$(${tools_dir}/grib_get -w count=1 -p step:i -s stepUnits=m   $input)
 [ $result = 5760 ]
 
 # GRIB1 stepRange and timeRangeIndicator=10
@@ -214,13 +221,111 @@ ECCODES_GRIBEX_MODE_ON=1 ${tools_dir}/grib_set -s stepRange=11-12 $input $temp
 grib_check_key_equals $temp P1,P2 '0 11'
 
 set +e
-${tools_dir}/grib_set -s stepRange=11-12 $input $temp 2>$templog
+${tools_dir}/grib_set -s stepRange=11-12 $input $temp 2>$tempLog
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "Unable to set stepRange" $templog
+grep -q "Unable to set stepRange" $tempLog
+
+
+# GRIB1: sub-hourly
+# -----------------
+${tools_dir}/grib_set -s unitOfTimeRange=0,P1=5 $grib1_sample $temp
+set +e
+${tools_dir}/grib_get -p step $temp 2>$tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "unable to represent the step in h" $tempLog
+
+# GRIB1: Unknown timeRangeIndicator
+${tools_dir}/grib_set -s timeRangeIndicator=138 $grib1_sample $temp
+set +e
+${tools_dir}/grib_get -p step $temp 2>$tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Unknown stepType" $tempLog
+
+# Several time ranges
+# --------------------
+cat >$tempFilt <<EOF
+  set productDefinitionTemplateNumber = 8;
+  set numberOfTimeRange = 3;
+
+  meta elem_penultimate element(typeOfStatisticalProcessing, numberOfTimeRange - 2);
+  set elem_penultimate = 8;
+
+  meta elem_last  element(typeOfStatisticalProcessing, numberOfTimeRange - 1);
+  set elem_last = 7;
+
+  print "[typeOfStatisticalProcessing]";
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempLog
+grep -q "255 8 7" $tempLog
+
+# Two time ranges
+# See ECC-813
+# -----------------
+cat >$tempFilt <<EOF
+  set tablesVersion = 5;
+  set setLocalDefinition = 1;
+  set marsClass = 22;
+  set marsType = 9;
+  set marsStream = 1071;
+
+  set productDefinitionTemplateNumber = 8;
+  set year = 1899;
+  set month = 1;
+  set day = 31;
+  set hour = 6;
+
+  set yearOfEndOfOverallTimeInterval = 1899;
+  set monthOfEndOfOverallTimeInterval = 3;
+  set dayOfEndOfOverallTimeInterval = 1;
+  set hourOfEndOfOverallTimeInterval = 0;
+  set minuteOfEndOfOverallTimeInterval = 0;
+  set secondOfEndOfOverallTimeInterval = 0;
+
+  set numberOfTimeRanges = 2;
+  set indicatorOfUnitForTimeIncrement = {1, 1};
+  set typeOfStatisticalProcessing = {0, 1};
+  set typeOfTimeIncrement = {1, 2};
+  set lengthOfTimeRange = { 648,24 };
+  set timeIncrement = {24, 0};
+  write;
+EOF
+${tools_dir}/grib_filter -o $tempGrb $tempFilt $grib2_sample
+${tools_dir}/grib_ls -jntime $tempGrb
+grib_check_key_equals $tempGrb stepRange '0-24'
+rm -f $tempGrb $tempFilt
+
+# ECC-1866: Setting step on interval-based message with dataDate=0000
+# -------------------------------------------------------------------
+tempGrbA=${data_dir}/temp.$label.A.grib
+tempGrbB=${data_dir}/temp.$label.B.grib
+${tools_dir}/grib_set -s stepType=accum $ECCODES_SAMPLES_PATH/GRIB2.tmpl $tempGrbA
+set +e
+${tools_dir}/grib_set -s year=0,month=0,day=0,step=0 $tempGrbA $tempGrbB 2>$tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Date/Time is not valid" $tempLog
+
+set +e
+${tools_dir}/grib_set -s year=0,month=0,day=0,stepUnits=1 $tempGrbA $tempGrbB 2>$tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Date/Time is not valid" $tempLog
+rm -f $tempGrbA $tempGrbB
+
+# Warning re startStep > endStep
+${tools_dir}/grib_set -s stepType=accum,startStep=12,endStep=6  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrbA
+${tools_dir}/grib_get -p step $tempGrbA 2>$tempLog
+grep -q "ECCODES WARNING :  endStep < startStep" $tempLog
 
 
 # Clean up
-rm -f $temp $templog
+rm -f $temp $tempLog $tempFilt $tempGrb
 rm -f $grib2File.p8tmp ${grib2File}.tmp x.grib

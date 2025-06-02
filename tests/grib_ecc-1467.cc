@@ -8,6 +8,9 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+//
+// ECC-1467: Support data values array decoded as "floats" (single-precision)
+//
 #include <math.h>
 #include "eccodes.h"
 #include "grib_api_internal.h"
@@ -23,26 +26,22 @@ int main(int argc, char** argv)
     double abs_error     = 0;
     const double max_abs_error = 1e-03;
     const double tolerance     = 1e-03;
-    double dmin;
-    double dmax;
+    double dmin, dmax, dval;
     float fval;
 
-    FILE* in             = NULL;
-    const char* filename = 0;
-    codes_handle* h      = NULL;
-
-    if (argc != 2) {
-        fprintf(stderr, "usage: %s file\n", argv[0]);
-        return 1;
-    }
-    filename = argv[1];
+    ECCODES_ASSERT(argc == 2);
+    const char* filename = argv[1];
 
     printf("Opening %s\n", filename);
-    in = fopen(filename, "rb");
-    Assert(in);
+    FILE* in = fopen(filename, "rb");
+    ECCODES_ASSERT(in);
 
-    h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
-    Assert(h);
+    codes_handle* h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
+    ECCODES_ASSERT(h);
+
+    CODES_CHECK(codes_get_float(h, "referenceValue", &fval), 0);
+    CODES_CHECK(codes_get_double(h, "referenceValue", &dval), 0);
+    printf("dval = %g, fval = %g\n", dval, fval);
 
     CODES_CHECK(codes_get_size(h, "values", &values_len), 0);
 
@@ -56,7 +55,7 @@ int main(int argc, char** argv)
         if (abs_error > max_abs_error) {
             fprintf(stderr, "ERROR:\n\tfvalue %e\n\tdvalue %e\n\terror %e\n\tmax_abs_error %e\n",
                     fvalues[i], dvalues[i], abs_error, max_abs_error);
-            Assert(!"Absolute error test failed\n");
+            ECCODES_ASSERT(!"Absolute error test failed\n");
         }
 
         dmin = dvalues[i] >= 0 ? dvalues[i] / (1 + tolerance) : dvalues[i] * (1 + tolerance);
@@ -64,8 +63,7 @@ int main(int argc, char** argv)
         fval = fvalues[i];
 
         if (!((dmin <= fval) && (fval <= dmax))) {
-            fprintf(stderr, "Error:\n");
-            fprintf(stderr, "dvalue: %f, fvalue: %f\n", dvalues[i], fvalues[i]);
+            fprintf(stderr, "Error: dvalue: %f, fvalue: %f\n", dvalues[i], fvalues[i]);
             fprintf(stderr, "\tmin < fvalue < max = %.20e < %.20e < %.20e FAILED\n",
                     dmin, fvalues[i], dmax);
             fprintf(stderr, "\tfvalue - min = %.20e (%s)\n",
@@ -73,7 +71,7 @@ int main(int argc, char** argv)
             fprintf(stderr, "\tmax - fvalue = %.20e (%s)\n",
                     dmax - fvalues[i], dmax - fvalues[i] >= 0 ? "OK" : "FAILED (should be positive)");
 
-            Assert(!"Relative tolerance test failed\n");
+            ECCODES_ASSERT(!"Relative tolerance test failed\n");
         }
     }
 

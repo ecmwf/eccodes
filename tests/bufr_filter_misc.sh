@@ -8,13 +8,14 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-set -x
 . ./include.ctest.sh
-
-cd ${data_dir}/bufr
 
 # Define a common label for all the tmp files
 label="bufr_filter_misc_test"
+
+tempErr=temp.$label.err
+
+cd ${data_dir}/bufr
 
 # Create log file
 fLog=${label}".log"
@@ -118,7 +119,7 @@ for statid  in 1 3 7 ; do
 done
 
 #-----------------------------------------------------------
-# Test:  print attributes
+# Test: print attributes
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -158,7 +159,7 @@ diff ${f}.ref ${f}.log
 rm -f ${f}.ref ${f}.log
 
 #-----------------------------------------------------------
-# Test:  access element by rank
+# Test: access element by rank
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -191,7 +192,7 @@ diff ${f}.ref ${f}.log
 rm -f ${f}.ref ${f}.log
 
 #-----------------------------------------------------------
-# Test:  access marker operators
+# Test: access marker operators
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -265,7 +266,7 @@ diff ${f}.ref ${f}.log
 rm -f ${f}.ref ${f}.log
 
 #-----------------------------------------------------------
-# Test:  access marker operators 2
+# Test: access marker operators 2
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -318,7 +319,7 @@ diff ${f}.ref ${f}.log
 rm -f ${f}.ref ${f}.log
 
 #-----------------------------------------------------------
-# Test:  access by condition
+# Test: access by condition
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -339,7 +340,7 @@ diff $REFERENCE_FILE ${f}.log
 rm -f ${f}.log
 
 #-----------------------------------------------------------
-# Test:  access by condition 2
+# Test: access by condition 2
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -419,7 +420,7 @@ rm -f ${f}.ref ${f}.log
 #rm -f $testScript $testScript1
 
 #-----------------------------------------------------------
-# Test:  get string
+# Test: get string
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -452,7 +453,7 @@ f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
 ${tools_dir}/codes_bufr_filter $fRules $f
 
 #-----------------------------------------------------------
-# Test:  get string whose value is MISSING (ECC-650)
+# Test: get string whose value is MISSING (ECC-650)
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  set unpack=1;
@@ -467,7 +468,7 @@ diff ${f}.ref ${f}.log
 rm -f ${f}.ref ${f}.log
 
 #-----------------------------------------------------------
-# Test:  get string array and stringValues
+# Test: get string array and stringValues
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  set unpack=1;
@@ -515,75 +516,6 @@ EOF
 diff ${f}.ref ${f}.log 
 
 rm -f ${f}.ref ${f}.log
-
-#-----------------------------------------------------------
-# Test: with nonexistent keys.
-#-----------------------------------------------------------
-cat > $fRules <<EOF
- set center="98";   #Here centre is misspelled
-EOF
-
-# Invoke without -f i.e. should fail if error encountered
-set +e
-
-f="syno_1.bufr"
-echo "Test: nonexistent keys" >> $fLog
-echo "file: $f" >> $fLog
-${tools_dir}/codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
-if [ $? -eq 0 ]; then
-   echo "bufr_filter should have failed if key not found" >&2
-   exit 1
-fi
-set -e
-
-# Now repeat with -f option (do not exit on error)
-${tools_dir}/codes_bufr_filter -f $fRules $f 2>>$fLog 1>>$fLog
-
-
-#-----------------------------------------------------------
-# Test: with not allowed key values
-#-----------------------------------------------------------
-cat > $fRules <<EOF
- set centre=1024;  #1024 is out of range (it is 8-bit only)
-EOF
-
-# Invoke without -f i.e. should fail if error encountered
-set +e
-
-f="syno_1.bufr"
-echo "Test: not allowed key values" >> $fLog
-echo "file: $f" >> $fLog
-${tools_dir}/codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
-if [ $? -eq 0 ]; then
-   echo "bufr_filter should have failed if key value is not allowed" >&2
-   exit 1
-fi
-set -e
-
-# Now repeat with -f option (do not exit on error)
-${tools_dir}/codes_bufr_filter -f $fRules $f 2>>$fLog 1>>$fLog
-
-
-#-----------------------------------------------------------
-# Test: with invalid string key
-#-----------------------------------------------------------
-cat > $fRules <<EOF
- set unexpandedDescriptors={1015};
- set stationOrSiteName="Caesar non supra grammaticos"; # Too long
- set pack=1;
- write;
-EOF
-
-set +e
-f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
-echo "Test: Invalid string key" >> $fLog
-${tools_dir}/codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
-if [ $? -eq 0 ]; then
-   echo "bufr_filter should have failed if string key is invalid" >&2
-   exit 1
-fi
-set -e
-
 
 #----------------------------------------------------
 # Test: format specifier for integer keys
@@ -718,7 +650,7 @@ ${tools_dir}/bufr_compare $fout ${fout}.ref #2>> $fLog 1>> $fLog
 rm -f $fout
 
 #-----------------------------------------------------------
-# Test:  access subsets by condition 
+# Test: access subsets by condition 
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  set unpack=1;
@@ -756,7 +688,7 @@ diff ${f}.ref ${f}.log
 rm -f ${f}.ref ${f}.log
 
 #-----------------------------------------------------------
-# Test:  access subsets and attribute by condition 
+# Test: access subsets and attribute by condition 
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  set unpack=1;
@@ -778,7 +710,7 @@ diff ${f}.ref ${f}.log
 rm -f ${f}.ref ${f}.log
 rm -f $fLog $fRules
 #-----------------------------------------------------------
-# Test:  set key by rank                           
+# Test: set key by rank                           
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  set unpack=1;
@@ -801,7 +733,7 @@ diff ${f}.ref ${f}.log
 rm -f ${f}.ref ${f}.log
 rm -f $fLog $fRules
 #-----------------------------------------------------------
-# Test:  initialise with given values of delayed replications
+# Test: initialise with given values of delayed replications
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  set localTablesVersionNumber=0;
@@ -851,7 +783,7 @@ ${tools_dir}/bufr_compare ${fOut} ${fOut}.ref
 rm -f ${fOut}.log
 rm -f $fLog $fRules ${fOut} ${fOut}.log.ref
 #-----------------------------------------------------------
-# Test:  add section 2
+# Test: add section 2
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  set bufrHeaderCentre=98;
@@ -866,15 +798,25 @@ if [ -f "$f" ]; then
   echo "file: $f" >> $fLog
   ${tools_dir}/codes_bufr_filter -o ${fOut} $fRules $f 2>> $fLog 1>> $fLog
 
-  ${tools_dir}/bufr_ls ${fOut} > ${fOut}.log
+  ${tools_dir}/bufr_ls -j ${fOut} > ${fOut}.log
 
   cat > ${fOut}.log.ref <<EOF
-vos308014_v3_26_sec_2.bufr
-centre                     masterTablesVersionNumber  localTablesVersionNumber   typicalDate                typicalTime                rdbType                    rdbSubtype                 rdbtimeDate                rdbtimeTime                numberOfSubsets            localNumberOfObservations  satelliteID                
-ecmf                       26                         0                          20150107                   142500                     0                          0                          20150200                   000000                     40                         0                          0                         
-1 of 1 messages in vos308014_v3_26_sec_2.bufr
-
-1 of 1 total messages in 1 files
+{ "messages" : [ 
+  {
+    "centre": "ecmf",
+    "masterTablesVersionNumber": 26,
+    "localTablesVersionNumber": 0,
+    "typicalDate": 20150107,
+    "typicalTime": 142500,
+    "rdbType": 0,
+    "rdbSubtype": 0,
+    "rdbtimeDate": 20150200,
+    "rdbtimeTime": "000000",
+    "numberOfSubsets": 40,
+    "localNumberOfObservations": 0,
+    "satelliteID": 0
+  }
+]}
 EOF
 
   diff ${fOut}.log.ref ${fOut}.log
@@ -884,7 +826,7 @@ rm -f ${fOut}.log
 rm -f $fLog $fRules ${fOut} ${fOut}.log.ref
 
 #-----------------------------------------------------------
-# Test:  associatedField
+# Test: associatedField
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -910,7 +852,7 @@ rm -f ${f}.log ${f}.log.ref
 rm -f $fLog $fRules 
 
 #-----------------------------------------------------------
-# Test:  firstOrderStatistics
+# Test: firstOrderStatistics
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -945,7 +887,7 @@ rm -f ${f}.log ${f}.log.ref
 rm -f $fLog $fRules 
 
 #-----------------------------------------------------------
-# Test:  delayed replication compressed data
+# Test: delayed replication compressed data
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  set localTablesVersionNumber=1;
@@ -995,7 +937,7 @@ rm -f ${f}.log ${f}.log.ref
 rm -f $fLog $fOut $fRules 
 
 #-----------------------------------------------------------
-# Test:  create new BUFR with bitmap
+# Test: create new BUFR with bitmap
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set compressedData=1;
@@ -1043,7 +985,7 @@ rm -f ${f}.log ${f}.log.ref
 rm -f $fLog $fOut $fRules 
 
 #-----------------------------------------------------------
-# Test:  several percentConfidence for same element
+# Test: several percentConfidence for same element
 #-----------------------------------------------------------
 cat > $fRules <<EOF
 set unpack=1;
@@ -1255,67 +1197,6 @@ diff ${f}.log.ref ${f}.log
 
 rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
 
-#-----------------------------------------------------------
-# Test: DateTime
-#-----------------------------------------------------------
-cat > $fRules <<EOF
-transient myStartYear=2012;
-transient myStartMonth=10;
-transient myStartDay=29;
-transient myStartHour=21;
-transient myStartMinute=0;
-transient myStartSecond=0;
-
-transient myEndDate=20121030;
-transient myEndTime=050000;
-
-meta myStartDateTime julian_date(myStartYear,myStartMonth,myStartDay,myStartHour,myStartMinute,myStartSecond);
-meta myEndDateTime julian_date(myEndDate,myEndTime);
-
-if (rdbDateTime > myStartDateTime && rdbDateTime < myEndDateTime) {
-  print "match";
-} else {
-  print "no match";
-}
-print "rdbtimeDate=[rdbtimeDate] rdbtimeTime=[rdbtimeTime] rdbDateTime=[rdbDateTime%f] mystart=[myEndDateTime] myend=[myEndDateTime]";
-
-print "rdbDateTime=[rdbDateTime:s]";
-
-set myEndDateTime="2017-05-22 12:15:23";
-print "myEndDate=[myEndDateTime:s] myEndDateTime=[myEndDateTime] myEndDate=[myEndDate] myEndTime=[myEndTime]";
-
-set myEndDateTime=rdbDateTime;
-print "myEndDate=[myEndDateTime:s] myEndDateTime=[myEndDateTime] myEndDate=[myEndDate] myEndTime=[myEndTime]";
-
-set userDateTimeStart="2017/05/23 09-12:12";
-print "userDateTimeStart=[userDateTimeStart] userDateStart=[userDateStart] userTimeStart=[userTimeStart] [userDateTimeStart:s]";
-set userDateTimeStart="20170523 091212";
-print "userDateTimeStart=[userDateTimeStart] userDateStart=[userDateStart] userTimeStart=[userTimeStart] [userDateTimeStart:s]";
-set userDateTimeStart="20170523091212";
-print "userDateTimeStart=[userDateTimeStart] userDateStart=[userDateStart] userTimeStart=[userTimeStart] [userDateTimeStart:s]";
-EOF
-
-f="syno_1.bufr"
-
-echo "Test: Julian Date" >> $fLog
-echo "file: $f" >> $fLog
-
-${tools_dir}/codes_bufr_filter $fRules $f  > ${f}.log
-
-cat > ${f}.log.ref <<EOF
-match
-rdbtimeDate=20121030 rdbtimeTime=001019 rdbDateTime=2456230.507164 mystart=2456230.708333 myend=2456230.708333
-rdbDateTime=20121030 001019
-myEndDate=2017-05-22 12:15:23 myEndDateTime=2457896.01068 myEndDate=20170522 myEndTime=121523
-myEndDate=2012-10-30 00:10:19 myEndDateTime=2456230.50716 myEndDate=20121030 myEndTime=1019
-userDateTimeStart=2457896.88347 userDateStart=20170523 userTimeStart=91212 2017/05/23 09-12:12
-userDateTimeStart=2457896.88347 userDateStart=20170523 userTimeStart=91212 20170523 091212
-userDateTimeStart=2457896.88347 userDateStart=20170523 userTimeStart=91212 20170523091212
-EOF
-
-diff ${f}.log.ref ${f}.log
-rm -f $f.log ${f}.log.ref
-
 
 
 # Decode expandedDescriptors as array of string
@@ -1337,5 +1218,52 @@ EOF
 diff $fRef $fLog
 rm -f $fRef
 
+
+# Decode expandedDescriptors as array of doubles
+cat > $fRules <<EOF
+ print "[expandedDescriptors:d]";
+EOF
+${tools_dir}/codes_bufr_filter $fRules airc_142.bufr
+
+# Various expanded descriptors
+f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
+cat > $fRules <<EOF
+  meta expandedScales     expanded_descriptors(elemetsTable,expandedCodes,1);
+  meta expandedReferences expanded_descriptors(elemetsTable,expandedCodes,2);
+  meta expandedWidths     expanded_descriptors(elemetsTable,expandedCodes,3);
+  meta expandedTypes      expanded_descriptors(elemetsTable,expandedCodes,4);
+  print "scales=[expandedScales]";
+  print "refs=[expandedReferences]";
+  print "widths=[expandedWidths]";
+  print "types=[expandedTypes]";
+EOF
+${tools_dir}/codes_bufr_filter $fRules $f > $fLog
+
+# smart table unpack_string
+tempBufr=temp.$label.bufr
+f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
+cat > $fRules <<EOF
+  set unexpandedDescriptors = { 1031 };
+  print "[expandedOriginalCodes:s]";
+EOF
+${tools_dir}/codes_bufr_filter -o $tempBufr $fRules $f
+rm -f $tempBufr
+
+# hash_array (sequences) as string and double
+# --------------------------------------------
+cat >$fRules <<EOF
+ set sequences="301012"; print "[sequences]";
+EOF
+result=$(${tools_dir}/codes_bufr_filter $fRules $f)
+[ "$result" = '4004 4005' ]
+
+cat >$fRules <<EOF
+ set sequences=301012.0; print "[sequences]";
+EOF
+result=$(${tools_dir}/codes_bufr_filter $fRules $f)
+[ "$result" = '4004 4005' ]
+
+
 # Clean up
 rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
+rm -f $tempErr

@@ -20,8 +20,10 @@ integer, external :: grib_f_skip_computed, &
 integer, external :: grib_f_keys_iterator_get_name, &
                      grib_f_keys_iterator_rewind
 integer, external :: grib_f_new_from_message, &
-                     grib_f_new_from_message_copy, &
-                     grib_f_new_from_samples, &
+                     grib_f_new_from_message_int, &
+		     grib_f_new_from_message_no_copy, &
+                     grib_f_new_from_message_no_copy_int, &
+		     grib_f_new_from_samples, &
                      codes_bufr_f_new_from_samples, &
                      grib_f_read_any_from_file, &
                      any_f_new_from_file, &
@@ -48,7 +50,8 @@ integer, external :: grib_f_get_int, grib_f_get_long,grib_f_get_int_array, &
                      grib_f_get_real4_elements, grib_f_get_real8_elements, &
                      grib_f_get_string,grib_f_get_string_array, &
                      codes_f_bufr_copy_data, &
-                     grib_f_is_missing,grib_f_is_defined
+                     grib_f_is_missing, grib_f_is_defined, grib_f_key_is_computed, &
+                     grib_f_grib_surface_type_requires_value
 integer, external :: grib_f_new_from_index, &
                      grib_f_index_new_from_file, &
                      grib_f_index_add_file, &
@@ -76,10 +79,10 @@ integer, external :: grib_f_set_int, grib_f_set_int_array, &
                      grib_f_gribex_mode_on,grib_f_gribex_mode_off, &
                      codes_f_bufr_multi_element_constant_arrays_on,codes_f_bufr_multi_element_constant_arrays_off, &
                      grib_f_find_nearest_single,grib_f_find_nearest_four_single,grib_f_find_nearest_multiple
-integer, external :: grib_f_get_message_size, grib_f_copy_message, grib_f_count_in_file
+integer, external :: grib_f_get_message_size, grib_f_copy_message, grib_f_get_message, grib_f_count_in_file
 integer, external :: grib_f_write, grib_f_multi_write, grib_f_multi_append
 integer, external :: grib_f_clone, grib_f_copy_namespace
-external :: grib_f_check
+external :: grib_f_check , grib_f_set_debug, grib_f_set_data_quality_checks
 integer, external :: grib_f_util_sections_copy
 integer, external :: grib_f_set_definitions_path, grib_f_set_samples_path
 integer, external :: grib_f_julian_to_datetime, grib_f_datetime_to_julian, grib_f_copy_key

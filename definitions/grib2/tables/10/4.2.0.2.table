@@ -35,6 +35,4 @@
 33 33 Wind fetch (m)
 34 34 Normal wind component (m/s)
 35 35 Tangential wind component (m/s)
-# 36-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+255 255 Missing

@@ -47,7 +47,7 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-    int opt = grib_options_on("C") + grib_options_on("O") + grib_options_on("D");
+    int opt = grib_options_on("O") + grib_options_on("D");
 
     options->dump_mode = (char*)"default";
 
@@ -66,13 +66,8 @@ int grib_tool_init(grib_runtime_options* options)
         options->dump_flags = GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
-    if (grib_options_on("J")) {
+    if (grib_options_on("j")) {
         options->dump_mode  = (char*)"json";
-        options->dump_flags = GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
-    }
-
-    if (grib_options_on("X")) {
-        options->dump_mode  = (char*)"xml";
         options->dump_flags = GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
@@ -104,7 +99,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
     if (!options->current_infile->name)
         return 0;
     snprintf(tmp, 1024, "FILE: %s ", options->current_infile->name);
-    if (!grib_options_on("C") && !grib_options_on("J") && !grib_options_on("X"))
+    if ( !grib_options_on("j") )
         fprintf(stdout, "***** %s\n", tmp);
     return 0;
 }
@@ -123,7 +118,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         grib_set_flag(h, options->print_keys[i].name, GRIB_ACCESSOR_FLAG_DUMP);
 
     snprintf(tmp, 1024, "MESSAGE %d ( length=%ld )", options->handle_count, length);
-    if (!grib_options_on("C") && !grib_options_on("X") && !grib_options_on("J"))
+    if (!grib_options_on("j"))
         fprintf(stdout, "#==============   %-38s   ==============\n", tmp);
     if (!strcmp(options->dump_mode, "default")) {
         GRIB_CHECK_NOLINE(grib_get_string(h, "identifier", identifier, &idlen), 0);
@@ -141,11 +136,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     grib_handle_delete(h);
     return 0;
-}
-
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
-    grib_print_key_values(options, h);
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options)

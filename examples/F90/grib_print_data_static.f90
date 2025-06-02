@@ -12,7 +12,7 @@
 !               rather than the new ALLOCATABLE array
 !
 !
-program print_data
+program print_data_static
    use grib_api
    implicit none
    integer            :: ifile
@@ -55,4 +55,4 @@ program print_data
    call grib_release(igrib)
    call grib_close_file(ifile)
 
-end program print_data
+end program

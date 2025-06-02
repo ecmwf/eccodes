@@ -9,22 +9,19 @@
  */
 
 #include "grib_api_internal.h"
+#include "eccodes.h"
 
 #define EPSILON 1e-12
 #define DBL_EQUAL(a, b) (fabs((a) - (b)) <= (EPSILON)*fabs((a)))
 
-#define BOOL int
-#define TRUE 1
-#define FALSE 0
-
-static BOOL Check(
+static bool Check(
     const long year1, const long month1, const long day1, const long hour1, const long min1, const long sec1,
     const long year2, const long month2, const long day2, const long hour2, const long min2, const long sec2)
 {
     if (year1 != year2 || month1 != month2 || day1 != day2 || hour1 != hour2 || min1 != min2 || sec1 != sec2) {
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
 static void TestDateTime(const long year, const long month, const long day, const long hour, const long min, const long sec)
@@ -34,10 +31,10 @@ static void TestDateTime(const long year, const long month, const long day, cons
     long jdlong1, jdlong2, date;
 
     /* Convert the input values to a double */
-    grib_datetime_to_julian(year, month, day, hour, min, sec, &jd);
+    codes_datetime_to_julian(year, month, day, hour, min, sec, &jd);
 
     /* Convert the double back to the input values and compare */
-    grib_julian_to_datetime(jd, &year1, &month1, &day1, &hour1, &min1, &sec1);
+    codes_julian_to_datetime(jd, &year1, &month1, &day1, &hour1, &min1, &sec1);
 
     if (!Check(year, month, day, hour, min, sec, year1, month1, day1, hour1, min1, sec1)) {
         fprintf(stderr,
@@ -73,17 +70,17 @@ static void Test0()
     min   = 26;
     sec   = 24;
 
-    grib_datetime_to_julian(year, month, day, hour, min, sec, &jd);
-    Assert(DBL_EQUAL(jd, 2378891.268333));
+    codes_datetime_to_julian(year, month, day, hour, min, sec, &jd);
+    ECCODES_ASSERT(DBL_EQUAL(jd, 2378891.268333));
     printf("%ld %ld %ld %ld:%ld:%ld -> %f\n", year, month, day, hour, min, sec, jd);
 
     grib_julian_to_datetime(jd, &year, &month, &day, &hour, &min, &sec);
-    Assert(year == 1801);
-    Assert(month == 1);
-    Assert(day == 30);
-    Assert(hour == 18);
-    Assert(min == 26);
-    Assert(sec == 24);
+    ECCODES_ASSERT(year == 1801);
+    ECCODES_ASSERT(month == 1);
+    ECCODES_ASSERT(day == 30);
+    ECCODES_ASSERT(hour == 18);
+    ECCODES_ASSERT(min == 26);
+    ECCODES_ASSERT(sec == 24);
     printf("%ld %ld %ld %ld:%ld:%ld -> %f\n", year, month, day, hour, min, sec, jd);
 }
 
@@ -102,16 +99,16 @@ static void Test1()
     sec   = 24;
 
     grib_datetime_to_julian(year, month, day, hour, min, sec, &jd);
-    Assert(DBL_EQUAL(jd, 2436116.31));
+    ECCODES_ASSERT(DBL_EQUAL(jd, 2436116.31));
     printf("%ld %ld %ld %ld:%ld:%ld -> %f\n", year, month, day, hour, min, sec, jd);
 
     grib_julian_to_datetime(jd, &year, &month, &day, &hour, &min, &sec);
-    Assert(year == 1957);
-    Assert(month == 10);
-    Assert(day == 4);
-    Assert(hour == 19);
-    Assert(min == 26);
-    Assert(sec == 24);
+    ECCODES_ASSERT(year == 1957);
+    ECCODES_ASSERT(month == 10);
+    ECCODES_ASSERT(day == 4);
+    ECCODES_ASSERT(hour == 19);
+    ECCODES_ASSERT(min == 26);
+    ECCODES_ASSERT(sec == 24);
     printf("%ld %ld %ld %ld:%ld:%ld -> %f\n", year, month, day, hour, min, sec, jd);
 }
 
@@ -149,13 +146,13 @@ static void Test2()
 
         if (!DBL_EQUAL(jd, jds[i])) {
             fprintf(stderr, "i=%d:  Got: %f, expected: %f\n", i, jd, jds[i]);
-            Assert(0);
+            ECCODES_ASSERT(0);
         }
 
         jdl  = (long)(jd + 0.5);
-        date = grib_julian_to_date(jdl);
+        date = codes_julian_to_date(jdl);
         printf("+ %ld -> %ld\n", date, jdl);
-        jdl = grib_date_to_julian(date);
+        jdl = codes_date_to_julian(date);
         printf("- %ld -> %ld\n", date, jdl);
         printf("\n");
     }
@@ -183,6 +180,7 @@ static void Test3()
 static void Test4()
 {
     const long iyear = 1582;
+    printf("Test4...\n");
 
     TestDateTime(iyear, 9, 1, 1, 0, 0);
     TestDateTime(iyear, 9, 2, 1, 0, 0);
@@ -214,6 +212,24 @@ static void Test4()
      */
 }
 
+static void Test5()
+{
+    printf("Test5...\n");
+
+    // Also see function is_date_valid()
+
+    double jd = 0.0;
+    long year=2017, month=2, day=29, hour=0, min=0, sec=0; // Feb 2017 had 28 days
+    long year1, month1, day1, hour1, min1, sec1;
+
+    codes_datetime_to_julian(year, month, day, hour, min, sec, &jd);
+    codes_julian_to_datetime(jd, &year1, &month1, &day1, &hour1, &min1, &sec1);
+
+    if (Check(year, month, day, hour, min, sec, year1, month1, day1, hour1, min1, sec1)) {
+        ECCODES_ASSERT(!"Bad input should have failed checks");
+    }
+}
+
 int main(int argc, char* argv[])
 {
     Test0();
@@ -221,6 +237,7 @@ int main(int argc, char* argv[])
     Test2();
     Test3();
     Test4();
+    Test5();
     printf("All OK\n");
     return 0;
 }

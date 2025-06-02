@@ -14,7 +14,7 @@ constant grib2LocalSectionNumber=26;
 if (stepType is "instant" ) {
   alias productDefinitionTemplateNumber=epsPoint;
 } else {
-  alias productDefinitionTemplateNumber=epsContinous;
+  alias productDefinitionTemplateNumber=epsContinuous;
 }
 
 constant wrongPadding=1 : hidden;

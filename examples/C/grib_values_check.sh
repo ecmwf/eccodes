@@ -11,13 +11,13 @@
 . ./include.ctest.sh
 
 # Define a common label for all the tmp files
-label="grib_values_check_c"
+label="examples_c_grib_values_check"
 tempErr=${label}.tmp.err
 tempRef=${label}.tmp.ref
 
 cat > $tempRef <<EOF
-Error: "level" Value is different
-Error: "levelll" Key/value not found
+Error: "level" - Value is different
+Error: "levelll" - Key/value not found
 EOF
 
 # Input GRIB file path is hard coded in the example

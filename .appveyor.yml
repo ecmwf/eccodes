@@ -51,8 +51,8 @@ install:
                                 m2-perl ^
                                 m2w64-ntldd-git
 
-    # get deps
-  - cmd: conda install -c conda-forge cmake libnetcdf
+    # get deps. Drop libnetcdf
+  - cmd: conda install -c conda-forge cmake libaec
 
 #---------------------------------#
 #       build configuration       #
@@ -64,6 +64,9 @@ platform:
 before_build:
   - cmd: call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
 
+# Building with libaec fails. When any executable runs, we get:
+#   error while loading shared libraries: ?: cannot open shared object file: No such file or directory
+# So we have to disable AEC
 build_script:
   - cmd: cd %ECCODES_SRC%
   - cmd: mkdir build && cd build
@@ -71,7 +74,7 @@ build_script:
                -D CMAKE_INSTALL_PREFIX=%INSTALL_DIR% ^
                -D CMAKE_BUILD_TYPE=Release ^
                -D ENABLE_FORTRAN=0 ^
-               -D ENABLE_NETCDF=1 ^
+               -D ENABLE_NETCDF=0 ^
                -D ENABLE_JPG=1 ^
                -D ENABLE_AEC=0 ^
                -D IEEE_LE=1 ^

@@ -9,7 +9,13 @@
  */
 
 #include "grib_tools.h"
+
 #include <stdlib.h>
+#include <string>
+
+#ifdef HAVE_ECKIT_GEO
+    #include "eckit/runtime/Main.h"
+#endif
 
 #if HAVE_LIBJASPER
 /* Remove compiler warnings re macros being redefined */
@@ -76,7 +82,6 @@ static grib_runtime_options global_options = {
     0, /* grib_tools_file* infile */
     0, /* grib_tools_file* outfile */
     0, /* grib_action* action */
-    0, /* grib_rule* rules */
     0, /* int dump_flags; */
     0, /* char* dump_mode; */
     0, /* repack    */
@@ -135,12 +140,16 @@ static grib_handle* grib_handle_new_from_file_x(grib_context* c, FILE* f, int mo
     if (mode == MODE_TAF)
         return taf_new_from_file(c, f, err);
 
-    Assert(!"grib_handle_new_from_file_x: unknown mode");
+    ECCODES_ASSERT(!"grib_handle_new_from_file_x: unknown mode");
     return NULL;
 }
 
 int grib_tool(int argc, char** argv)
 {
+#ifdef HAVE_ECKIT_GEO
+    eckit::Main::initialise(argc, argv);
+#endif
+
     int ret                = 0;
     int i = 0;
     grib_context* c        = grib_context_get_default();
@@ -168,16 +177,16 @@ int grib_tool(int argc, char** argv)
     grib_process_runtime_options(c, argc, argv, &global_options);
 
     grib_tool_init(&global_options);
-    if (global_options.dump_filename) {
-        dump_file = fopen(global_options.dump_filename, "w");
-        if (!dump_file) {
-            perror(global_options.dump_filename);
-            exit(1);
-        }
-    }
-    else {
-        dump_file = stdout;
-    }
+
+    ECCODES_ASSERT(global_options.dump_filename == NULL);
+    dump_file = stdout;
+    // if (global_options.dump_filename) {
+    //     dump_file = fopen(global_options.dump_filename, "w");
+    //     if (!dump_file) {
+    //         perror(global_options.dump_filename);
+    //         exit(1);
+    //     }
+    // }
 
     /* ECC-926: Currently only GRIB and BUFR indexing work. Disable the through_index if GTS etc */
     if ((global_options.mode == MODE_GRIB || global_options.mode == MODE_BUFR) &&
@@ -292,7 +301,7 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
 
         grib_tool_new_handle_action(options, h);
 
-        grib_tool_print_key_values(options, h);
+        grib_print_key_values(options, h);
 
         grib_handle_delete(h);
     }
@@ -307,6 +316,29 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
 }
 
 static char iobuf[1024 * 1024];
+
+// Read the first few bytes of the file to guess what kind of product
+// it could be. Returns an empty string if it fails
+static std::string guess_file_product(const std::string& filename)
+{
+    std::string result;
+    char buffer[5] = {0,};
+    FILE* fin = fopen(filename.c_str(), "rb");
+    if (fin) {
+        size_t bytes = fread(buffer, 1, sizeof(buffer), fin);
+        if (bytes == sizeof(buffer)) {
+            if (strncmp(buffer, "GRIB", 4)==0) {
+                result = "GRIB";
+            } else if (strncmp(buffer, "BUDG", 4)==0) {
+                result = "GRIB";
+            } else if (strncmp(buffer, "BUFR", 4)==0) {
+                result = "BUFR";
+            }
+        }
+        fclose(fin);
+    }
+    return result;
+}
 
 static int grib_tool_without_orderby(grib_runtime_options* options)
 {
@@ -340,7 +372,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
         if (options->infile_offset) {
 #ifndef ECCODES_ON_WINDOWS
             /* Check at compile time to ensure our file offset is at least 64 bits */
-            COMPILE_TIME_ASSERT(sizeof(options->infile_offset) >= 8);
+            static_assert(sizeof(options->infile_offset) >= 8);
 #endif
             err = fseeko(infile->file, options->infile_offset, SEEK_SET);
             if (err) {
@@ -419,6 +451,10 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
 
         if (infile->handle_count == 0) {
             fprintf(stderr, "%s: No messages found in %s\n", tool_name, infile->name);
+            std::string product = guess_file_product(infile->name);
+            if (!product.empty()) {
+                fprintf(stderr, "%s: Input file seems to be %s\n", tool_name, product.c_str());
+            }
             if (options->fail)
                 exit(1);
         }
@@ -450,7 +486,8 @@ static int navigate(grib_field_tree* fields, grib_runtime_options* options)
             message_type = CODES_BUFR;
             break;
         default:
-            Assert(0);
+            fprintf(stderr, "%s %s: Invalid mode", tool_name, __func__);
+            exit(1);
     }
 
     if (fields->field) {
@@ -484,7 +521,7 @@ static int grib_tool_index(grib_runtime_options* options)
     int err  = 0;
     char* f1 = options->infile->name;
     char* f2 = options->infile_extra->name;
-    grib_index_key *k1, *k2;
+    grib_index_key *k1=0, *k2=0;
     int found = 0;
 
     grib_context* c = grib_context_get_default();
@@ -575,7 +612,7 @@ static int grib_tool_index(grib_runtime_options* options)
 #ifndef ECCODES_ON_WINDOWS
 static int scan(grib_context* c, grib_runtime_options* options, const char* dir)
 {
-    struct dirent* s;
+    const struct dirent* s = 0;
     DIR* d;
     int err = 0;
 
@@ -772,7 +809,7 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
                 grib_accessor* anAccessor = h->accessors[i];
                 if (anAccessor) {
                     for (j = 0; j < MAX_ACCESSOR_NAMES; j++) {
-                        const char* a_namespace = anAccessor->all_name_spaces[j];
+                        const char* a_namespace = anAccessor->all_name_spaces_[j];
                         if (a_namespace) {
                             all_namespace_vals[k++] = a_namespace;
                             ns_count++;
@@ -805,7 +842,7 @@ static int to_skip(grib_runtime_options* options, grib_handle* h, grib_values* v
     size_t len = MAX_STRING_LEN;
     *err       = 0;
 
-    Assert(options->constraints_count > 0);
+    ECCODES_ASSERT(options->constraints_count > 0);
 
     if (strcmp(v->name, "count")==0 && v->long_value < 1) {
         fprintf(dump_file, "ERROR: Invalid value for key '%s' (must be an integer greater than 0)\n", v->name);
@@ -942,7 +979,7 @@ static int get_initial_element_of_array(grib_handle* h, const char* keyName, siz
     double* dval        = NULL;
     grib_context* c     = h->context;
 
-    Assert(num_vals > 1); /* This is for array keys */
+    ECCODES_ASSERT(num_vals > 1); /* This is for array keys */
     if ((err = grib_get_native_type(h, keyName, &type)) != GRIB_SUCCESS)
         return err;
     switch (type) {
@@ -1049,7 +1086,7 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
             snprintf(value_str, 32, "not_found");
         } else {
             fprintf(dump_file, "ERROR: Failed to get value for key '%s' (%s)\n", key_name, grib_get_error_message(ret));
-            if (ret == GRIB_ARRAY_TOO_SMALL)
+            if (ret == GRIB_ARRAY_TOO_SMALL || ret == GRIB_BUFFER_TOO_SMALL)
                 fprintf(dump_file, "\tHint: Tool %s cannot print keys of array type. Use grib_filter.\n", tool_name);
             exit(1);
         }
@@ -1211,14 +1248,18 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
                 //GRIB_CHECK_NOLINE(ret, options->print_keys[i].name);
                 grib_context_log(h->context, GRIB_LOG_ERROR, "%s (%s)",
                                 options->print_keys[i].name, grib_get_error_message(ret));
+                if (ret == GRIB_ARRAY_TOO_SMALL || ret == GRIB_BUFFER_TOO_SMALL) {
+                    fprintf(dump_file, "\tHint: Tool %s cannot print keys of array type. Use grib_filter.\n", tool_name);
+                }
                 exit(ret);
             }
             if (ret == GRIB_NOT_FOUND) {
                 strcpy(value, notfound);
             } else {
                 fprintf(dump_file, "%s (%s)\n", options->print_keys[i].name, grib_get_error_message(ret));
-                if (ret == GRIB_ARRAY_TOO_SMALL)
+                if (ret == GRIB_ARRAY_TOO_SMALL || ret == GRIB_BUFFER_TOO_SMALL) {
                     fprintf(dump_file, "\tHint: Tool %s cannot print keys of array type. Use grib_filter.\n", tool_name);
+                }
                 exit(ret);
             }
         }
@@ -1285,7 +1326,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
         snprintf(value, 32, options->format, v);
         strlenvalue = (int)strlen(value);
         width       = strlenvalue < options->default_print_width ? options->default_print_width + 2 : strlenvalue + 2;
-        fprintf(dump_file, "%-*s", (int)width, value);
+        fprintf(dump_file, "%s%-*s", (written_to_dump?" ":""),  (int)width, value);
         written_to_dump = 1;
     }
     if (written_to_dump) {
@@ -1295,8 +1336,8 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
 
 void grib_print_file_statistics(grib_runtime_options* options, grib_tools_file* file)
 {
-    grib_failed* failed = NULL;
-    Assert(file);
+    const grib_failed* failed = NULL;
+    ECCODES_ASSERT(file);
     if (options->json_output && !options->latlon)
         return;
 
@@ -1311,16 +1352,15 @@ void grib_print_file_statistics(grib_runtime_options* options, grib_tools_file* 
             file->name);
     if (!failed)
         return;
-    /*
-       fprintf(dump_file,"Following bad messages found in %s\n", file->name);
-       fprintf(dump_file,"N      Error\n");
-       while (failed){
-           fprintf(dump_file,"%-*d    %s\n", 7,failed->count,
-           grib_get_error_message(failed->error));
-           failed=failed->next;
-       }
-       fprintf(dump_file,"\n");
-     */
+
+    //  fprintf(dump_file,"Following bad messages found in %s\n", file->name);
+    //  fprintf(dump_file,"N      Error\n");
+    //  while (failed){
+    //      fprintf(dump_file,"%-*d    %s\n", 7,failed->count,
+    //      grib_get_error_message(failed->error));
+    //      failed=failed->next;
+    //  }
+    //  fprintf(dump_file,"\n");
 }
 
 void grib_print_full_statistics(grib_runtime_options* options)
@@ -1351,7 +1391,7 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     grib_file* of       = NULL;
     int err             = 0;
     char filename[1024] = {0,};
-    Assert(options->outfile != NULL && options->outfile->name != NULL);
+    ECCODES_ASSERT(options->outfile != NULL && options->outfile->name != NULL);
 
     /* See ECC-1086
      * if (options->error == GRIB_WRONG_LENGTH)
@@ -1394,7 +1434,7 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     }
 
     if (options->gts && h->gts_header) {
-        char gts_trailer[4] = { '\x0D', '\x0D', '\x0A', '\x03' };
+        const char gts_trailer[4] = { '\x0D', '\x0D', '\x0A', '\x03' };
         if (fwrite(gts_trailer, 1, 4, of->handle) != 4) {
             grib_context_log(h->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
                              "Error writing GTS trailer to %s", filename);

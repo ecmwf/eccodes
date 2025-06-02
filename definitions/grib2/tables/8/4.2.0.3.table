@@ -25,6 +25,4 @@
 23 23 Gravity wave dissipation (W m-2)
 24 24 Anisotropy of sub-gridscale orography (Numeric)
 25 25 Natural logarithm of pressure in Pa (Numeric)
-# 26-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+255 255 Missing

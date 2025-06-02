@@ -8,5 +8,10 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
 . ./include.ctest.sh
+set -u
+
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
 
 ${examples_dir}/c_grib_get_data > /dev/null

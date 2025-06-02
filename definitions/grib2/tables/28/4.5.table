@@ -18,7 +18,6 @@
 16 16 Level of neutral buoyancy or equilibrium level (LNB) (-)
 17 sfc Departure level of the most unstable parcel of air (MUDL)
 18 sfc Departure level of a mixed layer parcel of air with specified layer depth (Pa)
-# 19 Reserved
 20 20 Isothermal level (K)
 21 21 Lowest level where mass density exceeds the specified value (base for a given threshold of mass density) (kg m-3)
 22 22 Highest level where mass density exceeds the specified value (top for a given threshold of mass density) (kg m-3)
@@ -27,14 +26,12 @@
 25 25 Highest level where radar reflectivity exceeds the specified value (echo top for a given threshold of reflectivity) (dBZ)
 26 26 Convective cloud layer base (m)
 27 27 Convective cloud layer top (m)
-# 28-29 Reserved
 30 30 Specified radius from the center of the Sun (m)
 31 31 Solar photosphere
 32 32 Ionospheric D-region level
 33 33 Ionospheric E-region level
 34 34 Ionospheric F1-region level
 35 35 Ionospheric F2-region level
-# 36-99 Reserved
 100 pl Isobaric surface (Pa)
 101 sfc Mean sea level
 102 102 Specific altitude above mean sea level (m)
@@ -51,15 +48,12 @@
 113 113 Logarithmic hybrid level
 114 sol Snow level (Numeric)
 115 115 Sigma height level
-# 116 Reserved
 117 117 Mixed layer depth (m)
 118 hhl Hybrid height level (-)
 119 hpl Hybrid pressure level (-)
-# 120-149 Reserved
 150 150 Generalized vertical height coordinate
 151 sol Soil level (Numeric)
 152 sol Sea-ice level (Numeric)
-# 153-159 Reserved
 160 160 Depth below sea level (m)
 161 161 Depth below water surface (m)
 162 sfc Lake or river bottom (-)
@@ -72,18 +66,14 @@
 169 169 Ocean level defined by water density (sigma-theta) difference from near-surface to level (kg m-3)
 170 170 Ocean level defined by water potential temperature difference from near-surface to level (K)
 171 171 Ocean level defined by vertical eddy diffusivity difference from near-surface to level (m2 s-1)
-# 172-173 Reserved
 174 sfc Top surface of ice on sea, lake or river
 175 175 Top surface of ice, under snow cover, on sea, lake or river
 176 176 Bottom surface (underside) ice on sea, lake or river
 177 sfc Deep soil (of indefinite depth)
-# 178 Reserved
 179 179 Top surface of glacier ice and inland ice
 180 180 Deep inland or glacier ice (of indefinite depth)
 181 181 Grid tile land fraction as a model surface
 182 182 Grid tile water fraction as a model surface
 183 183 Grid tile ice fraction on sea, lake or river as a model surface
 184 184 Grid tile glacier ice and inland ice fraction as a model surface
-# 185-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing

@@ -62,7 +62,7 @@
 60 60 Snow depth water equivalent (kg m-2)
 61 61 Snow density (kg m-3)
 62 62 Snow evaporation (kg m-2)
-63 63 Reserved 
+63 63 Reserved
 64 64 Total column integrated water vapour (kg m-2)
 65 65 Rain precipitation rate (kg m-2 s-1)
 66 66 Snow precipitation rate (kg m-2 s-1)
@@ -86,7 +86,6 @@
 84 84 Specific cloud ice water content (kg/kg)
 85 85 Specific rainwater content (kg/kg)
 86 86 Specific snow water content (kg/kg)
-# 87-89 Reserved 
 90 90 Total kinematic moisture flux (kg kg-1 m s-1)
 91 91 u-component (zonal) kinematic moisture flux (kg kg-1 m s-1)
 92 92 v-component (meridional) kinematic moisture flux (kg kg-1 m s-1)
@@ -105,6 +104,4 @@
 105 105 Number density of snow (m-3)
 106 106 Number density of graupel (m-3)
 107 107 Number density of hail (m-3)
-# 108-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+255 255 Missing

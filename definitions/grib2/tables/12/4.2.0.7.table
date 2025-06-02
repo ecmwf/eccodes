@@ -13,8 +13,6 @@
 11 11 Best (4-layer) lifted index (K)
 12 12 Richardson number (Numeric)
 13 13 Showalter index (K)
-14 14 Reserved 
+14 14 Reserved
 15 15 Updraft helicity (m2 s-2)
-# 16-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+255 255 Missing

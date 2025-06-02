@@ -30,7 +30,11 @@ set -e
 infile1=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
 ${tools_dir}/grib_set -s year=2019 $infile1 $outfile
 ${tools_dir}/grib_compare -c data:n $infile1 $outfile
-
+set +e
+${tools_dir}/grib_compare -a -c data:n $infile1 $outfile
+status=$?
+set -e
+[ $status -eq 1 ]
 
 # Header (meta-data) keys
 infile=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
@@ -40,9 +44,15 @@ ${tools_dir}/grib_compare -v $infile $outfile
 status=$?
 set -e
 [ $status -eq 1 ]
-${tools_dir}/grib_compare -b referenceValue $infile $outfile
+${tools_dir}/grib_compare -b referenceValue,binaryScaleFactor $infile $outfile
 ${tools_dir}/grib_compare -H $infile $outfile
 
+# ECC-2012
+for infile in $ECCODES_SAMPLES_PATH/gg_sfc_grib1.tmpl $ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl; do
+  grib_check_key_equals $infile bitsPerValue,binaryScaleFactor '16 -9'
+  ${tools_dir}/grib_set -d4 $infile $outfile
+  grib_check_key_equals $outfile bitsPerValue,binaryScaleFactor '0 0'
+done
 
 infile="${data_dir}/regular_latlon_surface.grib1"
 ${tools_dir}/grib_set -s shortName=2d $infile $outfile
@@ -145,6 +155,21 @@ set -e
 # Raise the tolerance
 ${tools_dir}/grib_compare -b referenceValue -A 3.2  $infile $temp1
 
+# Invalid value
+set +e
+${tools_dir}/grib_compare -A badnum $infile $temp1 >$outfile 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "Invalid absolute error" $outfile
+
+set +e
+${tools_dir}/grib_compare -A badnum -R 88 $infile $temp1 >$outfile 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "Invalid absolute error" $outfile
+
 
 # ----------------------------------------
 # ECC-355: -R with "all" option
@@ -156,6 +181,29 @@ BLACKLIST="typeOfProcessedData,typeOfEnsembleForecast,perturbationNumber"
 ${tools_dir}/grib_compare -b $BLACKLIST -R referenceValue=0.03,codedValues=2 $temp1 $temp2
 # Now try the "all" option with the highest relative diff value
 ${tools_dir}/grib_compare -b $BLACKLIST -R all=2 $temp1 $temp2
+
+# ----------------------------------------
+# Use -w switch
+# ----------------------------------------
+cp ${data_dir}/tigge_cf_ecmwf.grib2 $temp1
+${tools_dir}/grib_compare -w typeOfLevel=surface ${data_dir}/tigge_cf_ecmwf.grib2 $temp1
+
+
+# ----------------------------------------
+# Use -T switch
+# ----------------------------------------
+${tools_dir}/grib_compare -T5 ${data_dir}/tigge_cf_ecmwf.grib2 ${data_dir}/tigge_cf_ecmwf.grib2
+
+# ----------------------------------------
+# Summary mode (-f)
+# ----------------------------------------
+set +e
+${tools_dir}/grib_compare -f ${data_dir}/tigge_cf_ecmwf.grib2 ${data_dir}/tigge_pf_ecmwf.grib2 > $outfile 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "indicatorOfUnitForTimeIncrement . 7 different" $outfile
+
 
 # ----------------------------------------
 # ECC-651: Two-way (symmetric) comparison
@@ -213,14 +261,14 @@ sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 # --------------------------------------------
 ${tools_dir}/grib_set -s scaleFactorOfFirstFixedSurface=1 $sample_g2 $temp1
 set +e
-${tools_dir}/grib_compare $sample_g2 $temp1 > $outfile
+${tools_dir}/grib_compare -v $sample_g2 $temp1 > $outfile
 status=$?
 set -e
 [ $status -eq 1 ]
 grep -q "scaleFactorOfFirstFixedSurface is set to missing in 1st field but is not missing in 2nd field" $outfile
 
 set +e
-${tools_dir}/grib_compare $temp1 $sample_g2 > $outfile
+${tools_dir}/grib_compare -v $temp1 $sample_g2 > $outfile
 status=$?
 set -e
 [ $status -eq 1 ]
@@ -251,21 +299,75 @@ status=$?
 set -e
 [ $status -eq 1 ]
 
+# ----------------------------------------
+# Through index using -S and -E
+# ----------------------------------------
+tempIndex1=temp.$label.1.idx
+tempIndex2=temp.$label.2.idx
+${tools_dir}/grib_index_build -o $tempIndex1 -N -k time,date $data_dir/tigge_ecmwf.grib2
+${tools_dir}/grib_index_build -o $tempIndex2 -N -k time,date $data_dir/tigge_cf_ecmwf.grib2
+set +e
+${tools_dir}/grib_compare -S 4 -E 5 $tempIndex1 $tempIndex2
+status=$?
+set -e
+[ $status -ne 0 ]
 
+rm -f $tempIndex1 $tempIndex2
+
+# Key unpackedValues
+#-------------------
+${tools_dir}/grib_set -s scaleValuesBy=1.01 $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $temp1
+${tools_dir}/grib_compare -c unpackedValues -A 1.86 $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $temp1
+
+
+# -----------------
+# Angle comparison
+# -----------------
+$tools_dir/grib_set -s longitudeOfFirstGridPoint=360000 $ECCODES_SAMPLES_PATH/GRIB1.tmpl $temp1
+$tools_dir/grib_set -s longitudeOfFirstGridPoint=0      $ECCODES_SAMPLES_PATH/GRIB1.tmpl $temp2
+# Comparing low-level keys of type integer
+set +e
+${tools_dir}/grib_compare $temp1 $temp2
+status=$?
+set -e
+[ $status -ne 0 ]
+# Comparing computed keys of type double (longitudeOfFirstGridPointInDegrees)
+$tools_dir/grib_compare -c geography:n $temp1 $temp2
+
+
+# -----------------
 # Failing cases
 # -----------------
 set +e
-${tools_dir}/grib_compare -H -c data:n $temp1 $temp2
+${tools_dir}/grib_compare -Rxxxx $temp1 $temp2 > $outfile 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
+grep "Invalid argument" $outfile
 
 set +e
-${tools_dir}/grib_compare -a $temp1 $temp2
+${tools_dir}/grib_compare -H -c data:n $temp1 $temp2 > $outfile 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
+grep -q "options are incompatible" $outfile
 
+set +e
+${tools_dir}/grib_compare -a $temp1 $temp2 > $outfile 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "a option requires -c option" $outfile
+
+
+echo GRIB > $temp1
+echo GRIB > $temp2
+set +e
+${tools_dir}/grib_compare $temp1 $temp2 > $outfile 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep "unreadable message" $outfile
 
 # Clean up
 # ---------

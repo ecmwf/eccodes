@@ -19,12 +19,6 @@
 #include <assert.h>
 #include "eccodes.h"
 
-static void usage(const char* prog)
-{
-    fprintf(stderr, "usage: %s in out\n", prog);
-    exit(1);
-}
-
 int main(int argc, char** argv)
 {
     int err       = 0;
@@ -40,7 +34,7 @@ int main(int argc, char** argv)
     codes_handle* h    = NULL;
     const void* buffer = NULL;
 
-    if (argc != 3) usage(argv[0]);
+    if (argc != 3) return 1;
     infile  = argv[1];
     outfile = argv[2];
 
@@ -78,7 +72,7 @@ int main(int argc, char** argv)
 
     /* write the buffer in a file*/
     if (fwrite(buffer, 1, size, out) != size) {
-        perror(argv[1]);
+        perror(outfile);
         exit(1);
     }
 

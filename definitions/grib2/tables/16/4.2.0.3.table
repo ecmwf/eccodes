@@ -30,6 +30,4 @@
 28 28 Downdraught mass flux (kg m-2 s-1)
 29 29 Updraught detrainment rate (kg m-3 s-1)
 30 30 Downdraught detrainment rate (kg m-3 s-1)
-# 31-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+255 255 Missing

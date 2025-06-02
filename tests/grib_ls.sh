@@ -32,15 +32,41 @@ set -e
 grep -q "Full documentation and examples at" $tempLog
 grep -q "https://confluence.ecmwf.int/display/ECC/grib_ls" $tempLog
 
+set +e
+${tools_dir}/grib_ls -? > $tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+
+set +e
+${tools_dir}/grib_ls -h > $tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+
+set +e
+DOXYGEN_USAGE=1 ${tools_dir}/grib_ls > $tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+
 
 ${tools_dir}/grib_ls -P count $infile       >  $tempLog
 ${tools_dir}/grib_ls -p count,step $infile  >> $tempLog
 ${tools_dir}/grib_ls $infile                >> $tempLog
-${tools_dir}/grib_ls -l 0,0,1 $infile       >> $tempLog
-${tools_dir}/grib_get -l 0,0,1 $infile      >> $tempLog
+if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+  ${tools_dir}/grib_ls -l 0,0,1 $infile       >> $tempLog
+  ${tools_dir}/grib_get -l 0,0,1 $infile      >> $tempLog
+fi
 ${tools_dir}/grib_get -p count,step $infile >> $tempLog
 ${tools_dir}/grib_get -P count $infile      >> $tempLog
-${tools_dir}/grib_get -i 0 $infile
+
+# ECC-786 and ECC-791
+result=$( ${tools_dir}/grib_get -p shortName -i 0 $infile )
+[ "$result" = "t 199.078  " ]
+result=$( ${tools_dir}/grib_get -i 8191 $infile )
+[ "$result" = "160.852  " ]
+
 
 files=" reduced_gaussian_lsm.grib1
 reduced_gaussian_model_level.grib1
@@ -66,15 +92,16 @@ regular_gaussian_surface.grib2
 regular_latlon_surface.grib1
 regular_latlon_surface.grib2
 "
+if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+  for file in $files; do
+    [ -f "$file" ]
+    echo $file >> $tempLog
+    ${tools_dir}/grib_ls -l 40,28 $file  | grep index | awk '{print $4;}' >> $tempLog
+  done
 
-for file in $files; do
-  [ -f "$file" ]
-  echo $file >> $tempLog
-  ${tools_dir}/grib_ls -l 40,28 $file  | grep index | awk '{print $4;}' >> $tempLog
-done
-
-diff $tempLog ls.log 
-rm -f $tempLog
+  diff $tempLog ls.log 
+  rm -f $tempLog
+fi
 
 echo "Test for bug GRIB-56..."
 # ------------------------------
@@ -99,16 +126,18 @@ type=`${tools_dir}/grib_get -wcount=1 -p typeOfLevel test_uuid.grib2`
 [ "$type" = "generalVertical" ]
 
 
-echo "GRIB-213 nearest with land-sea mask..."
-# ----------------------------------------------------------
-${tools_dir}/grib_ls -l 85,13,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$tempText
-grep -q 'Point chosen #3 index=21 .* distance=11\.' $tempText
+if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+  echo "GRIB-213 nearest with land-sea mask..."
+  # ----------------------------------------------------------
+  ${tools_dir}/grib_ls -l 85,13,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$tempText
+  grep -q 'Point chosen #3 index=21 .* distance=11\.' $tempText
 
-${tools_dir}/grib_ls -l 53,2,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$tempText
-grep -q 'Point chosen #2 index=749 .* distance=204\.' $tempText
+  ${tools_dir}/grib_ls -l 53,2,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$tempText
+  grep -q 'Point chosen #2 index=749 .* distance=204\.' $tempText
 
-${tools_dir}/grib_get -F%.2f -l 85,13,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$tempText
-grep -q '252.88' $tempText
+  ${tools_dir}/grib_get -F%.2f -l 85,13,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$tempText
+  grep -q '252.88' $tempText
+fi
 
 echo "ECC-278: grib_ls -n namespace..."
 # ----------------------------------------------------------
@@ -166,6 +195,14 @@ grep -q "0 of 38 messages" $tempText
 ${tools_dir}/grib_ls -w units!=K $file > $tempText
 grep -q "30 of 38 messages" $tempText
 
+${tools_dir}/grib_ls -w scaleFactorOfSecondFixedSurface=missing $file > $tempText
+grep -q "36 of 38 messages" $tempText
+${tools_dir}/grib_ls -w scaleFactorOfSecondFixedSurface!=missing $file > $tempText
+grep -q "2 of 38 messages" $tempText
+
+${tools_dir}/grib_ls -w referenceValue:d=0 $file > $tempText
+grep -q "5 of 38 messages" $tempText
+
 file=mixed.grib # Has 14 messages
 ${tools_dir}/grib_ls -w packingType=grid_simple,gridType=regular_ll/regular_gg $file > $tempText
 grep -q "12 of 14 messages" $tempText
@@ -215,16 +252,54 @@ file=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
 grib_check_key_equals $file 'expver:d' 1
 grib_check_key_equals $file 'expver:s' '0001'
 
+if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+  # JSON and lat/lon
+  ${tools_dir}/grib_ls -j -l0,0 -p referenceValue:d $data_dir/sample.grib2
+  ${tools_dir}/grib_ls -j -l0,0 -p referenceValue:i $data_dir/sample.grib2
+  ${tools_dir}/grib_ls -j -l0,0 -p bitmap $data_dir/simple_bitmap.grib > $tempText 2>&1
+  grep -q "invalid_type" $tempText
+  ${tools_dir}/grib_ls -j -l0,0 -p nosuchkey $data_dir/sample.grib2 > $tempText 2>&1
+  grep -q "nosuchkey.* null" $tempText
+fi
 
-${tools_dir}/grib_ls -j -l0,0 -p referenceValue:d $data_dir/sample.grib2
-${tools_dir}/grib_ls -j -l0,0 -p referenceValue:i $data_dir/sample.grib2
+# -M and -g options
+${tools_dir}/grib_ls -M -g $data_dir/gts.grib
 
+
+if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+  ${tools_dir}/grib_get -l0,0,4 $data_dir/sample.grib2
+
+  set +e
+  ${tools_dir}/grib_ls -l0,0,666 $data_dir/sample.grib2 > $tempText 2>&1
+  status=$?
+  set -e
+  [ $status -ne 0 ]
+  grep -q "Wrong mode given" $tempText
+
+  set +e
+  ${tools_dir}/grib_ls -l poo $data_dir/sample.grib2 > $tempText 2>&1
+  status=$?
+  set -e
+  [ $status -ne 0 ]
+  grep -q "Wrong latitude value" $tempText
+
+  set +e
+  ${tools_dir}/grib_ls -l0,0,1,nonexistingmask $data_dir/sample.grib2 > $tempText 2>&1
+  status=$?
+  set -e
+  [ $status -ne 0 ]
+  grep -q "unable to open mask file" $tempText
+fi
+
+# ----------------------
+# Printing array keys
+# ----------------------
 set +e
-${tools_dir}/grib_ls -l0,0,666 $data_dir/sample.grib2 > $tempText 2>&1
+${tools_dir}/grib_ls -p bitmap $data_dir/reduced_latlon_surface.grib2 > $tempText 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "Wrong mode given" $tempText
+grep -q "Hint: Tool grib_ls cannot print keys of array type" $tempText
 
 
 # Clean up

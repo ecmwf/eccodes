@@ -11,7 +11,7 @@
 . ./include.ctest.sh
 
 # Define a common label for all the tmp files
-label="bufr_get_string_array_test_c"
+label="examples_c_bufr_get_string_array"
 
 # Define tmp file
 fTmp=${label}.tmp.txt

@@ -9,6 +9,10 @@
 
 . ./include.ctest.sh
 
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
+
 if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
     # m2-bash messes with the system path.
     # %CONDA_PREFIX%\Library\usr\bin is converted to /usr/bin.
@@ -100,7 +104,22 @@ echo "Test shuffle and deflate ..."
 if [ $have_netcdf4 -eq 1 ]; then
     input=${data_dir}/sst_globus0083.grib
     ${tools_dir}/grib_to_netcdf -s -d9 -k4 -o $tempNetcdf $input
+
+    set +e
+    ${tools_dir}/grib_to_netcdf -s -o $tempNetcdf $input > $tempText 2>&1
+    status=$?
+    set -e
+    [ $status -ne 0 ]
+    grep -q "Invalid shuffle option. Deflate option needed" $tempText
+
+    set +e
+    ${tools_dir}/grib_to_netcdf -s -dy -o $tempNetcdf $input > $tempText 2>&1
+    status=$?
+    set -e
+    [ $status -ne 0 ]
+    grep -q "Invalid number" $tempText
 fi
+
 
 echo "Test ECC-1060 ..."
 # ----------------------
@@ -109,6 +128,15 @@ ${tools_dir}/grib_set -s productDefinitionTemplateNumber=30 $sample2 $tempGrib
 ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=31 $sample2 $tempGrib
 ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
+
+ECCODES_DEBUG=-1 ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
+
+
+echo "Test -u option ..."
+# ----------------------
+input=${data_dir}/sample.grib2
+${tools_dir}/grib_to_netcdf -u time -o $tempNetcdf $input
+
 
 echo "Test different resolutions ..."
 # ------------------------------------
@@ -135,6 +163,25 @@ ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempDir > $tempText
 grep -q "Processing input file .*/subdir/regular_latlon_surface.grib2" $tempText
 rm -rf $tempDir
 
+echo "Test non-numeric dates ..."
+# ------------------------------------
+sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+${tools_dir}/grib_set -s class=ei,type=em,yearOfCentury=255,month=3,day=20 $sample1 $tempGrib
+grib_check_key_equals $tempGrib 'dataDate:s' 'mar-20'
+${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
+
+
+echo "Test -S option..."
+# ------------------------------------
+input=${data_dir}/high_level_api.grib2
+${tools_dir}/grib_to_netcdf -o $tempNetcdf -S param $input
+
+echo "Test -I option..."
+# ------------------------------------
+input=${data_dir}/high_level_api.grib2
+${tools_dir}/grib_to_netcdf -o $tempNetcdf -I method $input
+
+
 echo "Enable/Disable Checks ..."
 # ---------------------------------
 rm -f $tempNetcdf
@@ -148,7 +195,9 @@ set -e
 [ $status -ne 0 ]
 grep -q "Wrong number of fields" $tempText
 
-# Not regular grid
+
+echo "Not a regular grid ..."
+# --------------------------
 input=${data_dir}/reduced_gaussian_pressure_level.grib2
 set +e
 ${tools_dir}/grib_to_netcdf -o $tempNetcdf $input > $tempText 2>&1
@@ -158,6 +207,65 @@ set -e
 grep -q "not on a regular lat/lon grid or on a regular Gaussian grid" $tempText
 
 
+echo "No output ..."
+# --------------------------
+set +e
+${tools_dir}/grib_to_netcdf $input > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "No output file" $tempText
+
+
+# ECC-1783: No error message when input file has invalid fields
+input=$data_dir/bad.grib
+set +e
+${tools_dir}/grib_to_netcdf -o $tempNetcdf $input > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Wrong message length" $tempText
+
+
+# Non-GRIB input
+input=$data_dir/bufr/aaen_55.bufr
+set +e
+${tools_dir}/grib_to_netcdf -o $tempNetcdf $input > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Input does not contain any field" $tempText
+
+
+# Bad reference date
+input=$data_dir/sample.grib2
+set +e
+${tools_dir}/grib_to_netcdf -Rxxx -o $tempNetcdf $input > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid reference date" $tempText
+
+# Bad -k option
+input=$data_dir/sample.grib2
+set +e
+${tools_dir}/grib_to_netcdf -k hallo -o $tempNetcdf $input > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid value" $tempText
+
+# Bad -d option
+input=$data_dir/sample.grib2
+set +e
+${tools_dir}/grib_to_netcdf -d 999 -o $tempNetcdf $input > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid deflate option" $tempText
+
+
+# Validity time check
 export GRIB_TO_NETCDF_CHECKVALIDTIME=0
 ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
 [ -f "$tempNetcdf" ]

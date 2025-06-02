@@ -17,7 +17,16 @@ tempGrib=temp.$label.grib
 
 input=$data_dir/reduced_latlon_surface.grib1
 ${tools_dir}/grib_set -s gridDescriptionSectionPresent=0 $input $tempGrib
+result=`${tools_dir}/grib_get -fp Ni,Nj $tempGrib`
+[ "$result" = "not_found not_found" ]
+
 ${tools_dir}/grib_dump $tempGrib > $REDIRECT 2>&1
+# ${tools_dir}/grib_get -n statistics $tempGrib
+
+max=`${tools_dir}/grib_get -F%.3f -p max $input`
+min=`${tools_dir}/grib_get -F%.3f -p min $input`
+[ "$max" = "12.597" ]
+[ "$min" = "0.019" ]
 
 # Clean up
 rm -f $tempGrib

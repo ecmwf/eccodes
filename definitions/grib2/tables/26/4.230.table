@@ -46,7 +46,6 @@
 44 44 Hydrofluoric acid HF
 45 45 Sulphur hexafluoride SF6
 46 46 Chlorine Cl2
-# 47-9999 Reserved
 10000 10000 Hydroxyl radical HO
 10001 10001 Methyl peroxy radical CH3OO
 10002 10002 Methyl hydroperoxide CH3O2H
@@ -106,10 +105,8 @@
 10057 10057 2-lambda^1-Oxidanyloxy-3-methylbut-3-en-1-ol (2-Hydroxy-1-isopropenylethylperoxy radical) HOCH_2CH(OO)C(CH_3)CH_2
 10058 10058 (Z)-4-Hydroperoxy-2-methyl-2-butenal CH2(OOH)CHC(CH_3)CHO
 10059 10059 (Z)-4-Hydroperoxy-3-methyl-2-butenal CH2(OOH)C(CH_3)CHCHO
-# 10060-10499 Reserved for other simple organic molecules e.g. higher aldehydes alcohols
 10500 10500 Dimethyl sulphide CH3SCH3 (DMS)
 10501 10501 DMSO (dimethyl sulfoxide) (CH3)2SO
-# 10502-20000 Reserved
 20001 20001 Hydrogen chloride HCl
 20002 20002 CFC-11 (trichlorofluoromethane) CCl3F
 20003 20003 CFC-12 (dichlorodifluoromethane) CCl2F2
@@ -132,9 +129,7 @@
 20020 20020 alpha-HCH (alpha-hexachlorocyclohexane) both enantiomers alpha-C6H6Cl6
 20021 20021 PCB-153 (2,2',4,4',5,5'-hexachlorobiphenyl) (C6H2Cl3)2
 20022 20022 HCFC-141a (1,1-dichloro-2-fluoroethane) Cl2HC-CH2F
-# 20023-29999 Reserved
 30000 30000 Radioactive pollutant (tracer, defined by originating centre)
-# 30001-30009 Reserved
 30010 30010 Tritium (Hydrogen 3) H-3
 30011 30011 Tritium organic bounded H-3o
 30012 30012 Tritium inorganic H-3a
@@ -422,12 +417,10 @@
 30294 30294 Cs-137 Equivalent EquCs137
 30295 30295 Carbon-13 C-13
 30296 30296 Lead Pb
-# 30297-39999 Reserved
 40000 40000 Singlet sigma oxygen (dioxygen (sigma singlet)) O2
 40001 40001 Singlet delta oxygen (dioxygen (delta singlet)) O2
 40002 40002 Singlet excited oxygen atom O(1D)
 40003 40003 Triplet ground state oxygen atom O(3P)
-# 40004-59999 Reserved
 60000 60000 HOx radical (OH+HO2) HOx
 60001 60001 Total inorganic and organic peroxy radicals (HOO + ROO) ROO
 60002 60002 Passive Ozone
@@ -461,7 +454,6 @@
 60030 60030 Biogenic Secondary Organic Compound
 60031 60031 Anthropogenic Secondary Organic Compound
 60032 60032 all hydroxy-peroxides products of the reaction of hydroxy-isoprene adducts with O_2 ISOPOOH
-# 60033-61999 Reserved
 62000 62000 Total aerosol
 62001 62001 Dust dry
 62002 62002 Water in ambient
@@ -481,22 +473,18 @@
 62016 62016 Particulate organic matter hydrophobic dry
 62017 62017 Nitrate hydrophilic dry
 62018 62018 Nitrate hydrophobic dry
-# 62019 Reserved
 62020 62020 Smoke - high absorption
 62021 62021 Smoke - low absorption
 62022 62022 Aerosol - high absorption
 62023 62023 Aerosol - low absorption
-# 62024 Reserved
 62025 62025 Volcanic ash
 62026 62026 Particulate matter (PM)
-# 62027 Reserved
 62028 62028 Total aerosol hydrophilic
 62029 62029 Total aerosol hydrophobic
 62030 62030 Primary particulate inorganic matter dry
 62031 62031 Secondary particulate Inorganic matter dry
 62032 62032 Biogenic Secondary Organic aerosol
 62033 62033 Anthropogenic Secondary Organic aerosol
-# 62034-62099 Reserved
 62100 62100 Alnus (alder) pollen
 62101 62101 Betula (birch) pollen
 62102 62102 Castanea (chestnut) pollen
@@ -513,15 +501,12 @@
 62113 62113 Tilia (lime, linden) pollen
 62114 62114 Ulmus (elm) pollen
 62115 62115 Olea (olive) pollen
-# 62116-62199 Reserved
 62200 62200 Ambrosia (ragweed, burr-ragweed) pollen
 62201 62201 Artemisia (sagebrush, wormwood, mugwort) pollen
 62202 62202 Brassica (rape, broccoli, Brussels sprouts, cabbage, cauliflower, collards, kale, kohlrabi, mustard, rutabaga) pollen
 62203 62203 Plantago (plantain) pollen
 62204 62204 Rumex (dock, sorrel) pollen
 62205 62205 Urtica (nettle) pollen
-# 62206-62299 Reserved
 62300 62300 Poaceae (grass family) pollen
-# 62301-62999 Reserved
 # 63000-65534 For experimental use at local level
 65535 65535 Missing

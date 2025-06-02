@@ -8,6 +8,4 @@
 6 6  Earth assumed spherical with radius of 6 371 229.0 m
 7 7  Earth assumed oblate spheroid with major or minor axes specified (in m) by data producer
 8 8  Earth model assumed spherical with radius of 6 371 200 m, but the horizontal datum of the resulting latitude/longitude field is the WGS84 reference frame
-# 9-191 Reserved
-# 192- 254  Reserved for local use
 255 255  Missing

@@ -53,6 +53,4 @@
 51 51 Northward wind stress (N m-2)
 52 52 u-component of wind stress (N m-2)
 53 53 v-component of wind stress (N m-2)
-# 54-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing

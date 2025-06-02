@@ -16,7 +16,7 @@ TEST_TITLE="$1"
 TEST_TITLE=$(echo $TEST_TITLE | tr '[A-Z]' '[a-z]')
 
 # Check label is unique
-grep -i -q "label=\"$TEST_TITLE\"" $TEST_DIR/*.sh
+grep -i -q "label=.*${TEST_TITLE}_test\"" $TEST_DIR/*.sh
 if [ $? -eq 0 ]; then
   echo "ERROR: Test label \"$TEST_TITLE\" seems to already exist!"
   grep -l "label=\"$TEST_TITLE\"" $TEST_DIR/*.sh # Show results
@@ -36,6 +36,11 @@ cat <<EOF
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------
+# This is the test for JIRA issue ECC-XXXX
+# < Add issue summary here >
+# ---------------------------------------------------------
+
 REDIRECT=/dev/null
 
 label="prod_${TEST_TITLE}_test"  # Change prod to bufr or grib etc
@@ -43,6 +48,7 @@ tempGrib=temp.\$label.grib
 tempBufr=temp.\$label.bufr
 tempFilt=temp.\$label.filt
 tempLog=temp.\$label.log
+tempOut=temp.\$label.txt
 tempRef=temp.\$label.ref
 
 sample_grib2=\$ECCODES_SAMPLES_PATH/GRIB2.tmpl
@@ -61,7 +67,8 @@ sample_bufr4=\$ECCODES_SAMPLES_PATH/BUFR4.tmpl
 #\${tools_dir}/bufr_set
 #...
 
-rm -f \$tempGrib \$tempBufr \$tempFilt \$tempLog \$tempRef
+# Clean up
+rm -f \$tempGrib \$tempBufr \$tempFilt \$tempLog \$tempOut \$tempRef
 EOF
 
 echo >&2

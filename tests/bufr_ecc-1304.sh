@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1304
+# BUFR encoding: Crash if bitmap specification is invalid
+# ---------------------------------------------------------------------
+
 label="bufr_ecc-1304_test"
 
 tempBufr=temp.$label.bufr
@@ -36,7 +41,7 @@ EOF
 
 # Command should fail but not crash
 set +e
-${tools_dir}/bufr_filter $tempFilt $sample_bufr4 > $tempOut
+${tools_dir}/bufr_filter $tempFilt $sample_bufr4 2> $tempOut
 stat=$?
 set -e
 echo stat=$stat

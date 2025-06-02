@@ -53,12 +53,12 @@ int grib_tool_init(grib_runtime_options* options)
     if (!options->action) {
         const char* filt = options->infile_extra->name;
         if (strcmp(filt, "-") == 0) filt = "stdin";
-        fprintf(stderr, "Error: %s: unable to create action\n", filt);
+        fprintf(stderr, "ERROR: %s: unable to create action\n", filt);
         exit(1);
     }
 
     if (options->outfile && options->outfile->name)
-        options->action->context->outfilename = options->outfile->name;
+        options->action->context_->outfilename = options->outfile->name;
 
     /* Turn off GRIB multi-field support mode. Not relevant for BUFR */
     grib_multi_support_off(grib_context_get_default());
@@ -88,7 +88,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     err = grib_handle_apply_action(h, options->action);
     if (err != GRIB_SUCCESS && options->fail) {
-        printf("ERROR: %s\n", grib_get_error_message(err));
+        fprintf(stderr, "ERROR: %s (message %d)\n",
+                grib_get_error_message(err), h->context->handle_file_count);
         exit(err);
     }
     return 0;
@@ -98,11 +99,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     grib_handle_delete(h);
     return 0;
-}
-
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
-    grib_print_key_values(options, h);
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options)

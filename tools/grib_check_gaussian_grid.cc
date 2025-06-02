@@ -69,9 +69,9 @@ static int process_file(const char* filename)
     grib_handle* h = NULL;
     FILE* in       = NULL;
 
-    if (!path_is_regular_file(filename)) {
+    if (path_is_directory(filename)) {
         if (verbose)
-            printf(" WARNING: '%s' not a regular file! Ignoring\n", filename);
+            printf(" WARNING: '%s' is a directory! Ignoring\n", filename);
         return GRIB_IO_PROBLEM;
     }
 
@@ -85,8 +85,13 @@ static int process_file(const char* filename)
         printf("Checking file %s\n", filename);
 
     while ((h = grib_handle_new_from_file(0, in, &err)) != NULL) {
+        // if (err) {
+        //     fprintf(stderr, "ERROR: %s\n", grib_get_error_message(err));
+        //     exit(err);
+        // }
         int is_reduced_gaussian = 0, is_regular_gaussian = 0, grid_ok = 0;
-        long edition = 0, N = 0, Nj = 0, numberOfDataPoints, numberOfValues, angleSubdivisions;
+        long edition = 0, N = 0, Nj = 0, numberOfDataPoints, angleSubdivisions;
+        size_t numberOfValues = 0;
         size_t len = 0, sizeOfValuesArray = 0;
         double* lats       = NULL;
         long* pl           = NULL;
@@ -117,14 +122,14 @@ static int process_file(const char* filename)
         GRIB_CHECK(grib_get_long(h, "N", &N), 0);
         GRIB_CHECK(grib_get_long(h, "Nj", &Nj), 0);
         GRIB_CHECK(grib_get_long(h, "numberOfDataPoints", &numberOfDataPoints), 0);
-        GRIB_CHECK(grib_get_long(h, "numberOfValues", &numberOfValues), 0);
+        GRIB_CHECK(grib_get_size(h, "values", &numberOfValues), 0);
         GRIB_CHECK(grib_get_double(h, "latitudeOfFirstGridPointInDegrees", &lat1), 0);
         GRIB_CHECK(grib_get_double(h, "longitudeOfFirstGridPointInDegrees", &lon1), 0);
         GRIB_CHECK(grib_get_double(h, "latitudeOfLastGridPointInDegrees", &lat2), 0);
         GRIB_CHECK(grib_get_double(h, "longitudeOfLastGridPointInDegrees", &lon2), 0);
 
         GRIB_CHECK(grib_get_long(h, "angleSubdivisions", &angleSubdivisions), 0);
-        Assert(angleSubdivisions > 0);
+        ECCODES_ASSERT(angleSubdivisions > 0);
         angular_tolerance = 1.0/angleSubdivisions;
 
         if (N <= 0) {
@@ -165,9 +170,9 @@ static int process_file(const char* filename)
             long iDirectionIncrementGiven = 0;
 
             is_missing_Ni      = grib_is_missing(h, "Ni", &err);
-            Assert(err == GRIB_SUCCESS);
+            ECCODES_ASSERT(err == GRIB_SUCCESS);
             is_missing_Di = grib_is_missing(h, "iDirectionIncrement", &err);
-            Assert(err == GRIB_SUCCESS);
+            ECCODES_ASSERT(err == GRIB_SUCCESS);
             GRIB_CHECK(grib_get_long(h, "iDirectionIncrementGiven", &iDirectionIncrementGiven), 0);
             if (iDirectionIncrementGiven) {
                 error(filename, msg_num, "For a reduced grid, iDirectionIncrementGiven should be 0\n");
@@ -180,12 +185,12 @@ static int process_file(const char* filename)
             }
 
             GRIB_CHECK(grib_get_size(h, "pl", &pl_len), 0);
-            Assert(pl_len > 0);
+            ECCODES_ASSERT(pl_len > 0);
             if (pl_len != (size_t)(2 * N)) {
                 error(filename, msg_num, "Length of pl array is %ld but should be 2*N (%ld)\n", pl_len, 2 * N);
             }
             pl = (long*)malloc(pl_len * sizeof(long));
-            Assert(pl);
+            ECCODES_ASSERT(pl);
             GRIB_CHECK(grib_get_long_array(h, "pl", pl, &pl_len), 0);
             max_pl = pl[0];
 
@@ -208,8 +213,8 @@ static int process_file(const char* filename)
             if (pl_sum != numberOfDataPoints) {
                 error(filename, msg_num, "Sum of pl array %ld does not match numberOfDataPoints %ld\n", pl_sum, numberOfDataPoints);
             }
-            if (pl_sum != numberOfValues) {
-                error(filename, msg_num, "Sum of pl array %ld does not match numberOfValues %ld\n", pl_sum, numberOfValues);
+            if ( (size_t)pl_sum != numberOfValues ) {
+                error(filename, msg_num, "Sum of pl array %ld does not match size of values array %zu\n", pl_sum, numberOfValues);
             }
             GRIB_CHECK(grib_get_long(h, "isOctahedral", &is_octahedral), 0);
             if (is_octahedral) {
@@ -227,18 +232,25 @@ static int process_file(const char* filename)
         }
 
         if (fabs(lon2 - expected_lon2) > angular_tolerance) {
-            error(filename, msg_num, "longitudeOfLastGridPointInDegrees=%f but should be %f\n", lon2, expected_lon2);
+            error(filename, msg_num, "longitudeOfLastGridPointInDegrees=%f but should be %f (= 360 - 360/max(pl) )\n",
+                  lon2, expected_lon2);
         }
 
         GRIB_CHECK(grib_get_size(h, "values", &sizeOfValuesArray), 0);
         if (sizeOfValuesArray != (size_t)numberOfDataPoints) {
-            error(filename, msg_num, "Number of data points %d different from size of values array %d\n",
+            error(filename, msg_num, "Number of data points %ld different from size of values array %zu\n",
                   numberOfDataPoints, sizeOfValuesArray);
         }
 
         free(lats);
         grib_handle_delete(h);
     }
+
+    if (err) {
+        error(filename, msg_num, "%s\n", grib_get_error_message(err));
+        exit(err);
+    }
+
     fclose(in);
     if (verbose)
         printf("\n");

@@ -55,8 +55,8 @@ grib_check_key_equals $temp constituentType,numberOfModeOfDistribution,modeNumbe
 
 # Plain aerosols
 ${tools_dir}/grib_set -s tablesVersion=$latest,is_aerosol=1 $sample2 $temp
-grib_check_key_equals $temp productDefinitionTemplateNumber '48'
-grib_check_key_equals $temp aerosolType,typeOfSizeInterval,typeOfWavelengthInterval '0 0 0'
+grib_check_key_equals $temp productDefinitionTemplateNumber '50'
+grib_check_key_equals $temp aerosolType,typeOfSizeInterval '0 0'
 
 # Aerosol optical
 ${tools_dir}/grib_set -s tablesVersion=$latest,is_aerosol_optical=1 $sample2 $temp
@@ -119,6 +119,25 @@ grib_check_key_equals $temp aerosolType,typeOfSizeInterval '0 0'
 ${tools_dir}/grib_set -s paramId=210072 $tempSample $temp
 ${tools_dir}/grib_ls -p firstSize,secondSize $temp
 
+
+# =============================
+# Ensemble interval-based
+# =============================
+tempSample=temp.sample.$label
+${tools_dir}/grib_set -s tablesVersion=$latest,productDefinitionTemplateNumber=11,typeOfStatisticalProcessing=1 $sample2 $tempSample
+grib_check_key_equals $tempSample stepType,perturbationNumber 'accum 0'
+
+${tools_dir}/grib_set -s is_chemical=1 $tempSample $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '43'
+grib_check_key_equals $temp constituentType,perturbationNumber,stepType '0 0 accum'
+
+${tools_dir}/grib_set -s is_chemical_srcsink=1 $tempSample $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '79'
+
+${tools_dir}/grib_set -s is_chemical_distfn=1 $tempSample $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '68'
+
+
 # ECC-1303: Setting localDefinitionNumber=1 on chemical source/sink
 # ------------------------------------------------------------------
 ${tools_dir}/grib_set -s paramId=228104,setLocalDefinition=1,localDefinitionNumber=1 $sample2 $temp
@@ -148,6 +167,11 @@ ${tools_dir}/grib_set -s paramId=215189 $sample2 $temp
 ${tools_dir}/grib_dump -O -p aerosolType $temp > $temp1
 grep -q "Nitrate Fine Mode .*grib2/tables/local/ecmf/1/4.233.table" $temp1
 grib_check_key_equals $temp aerosolTypeName "Nitrate Fine Mode"
+
+# Automatic PDT selection
+${tools_dir}/grib_set -s paramId=403000 $sample2 $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber,sourceSinkChemicalPhysicalProcess '76 255'
+
 
 # Clean up
 rm -f $tempSample $temp $temp1

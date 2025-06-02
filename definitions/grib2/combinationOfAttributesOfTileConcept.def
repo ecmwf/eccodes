@@ -1,5 +1,6 @@
 # Concept combinationOfAttributesOfTile
 
+'UNDEF' = {attributeOfTile = [0];}
 'UNMOD' = {attributeOfTile = [1];}
 'SNOW' = {attributeOfTile = [2];}
 'FLOOD' = {attributeOfTile = [3];}
@@ -37,3 +38,4 @@
 'FLOOD_ICE_ITCW_ITCS' = {attributeOfTile = [3,4,5,6];}
 
 'SNOW_FLOOD_ICE_ITCW_ITCS' = {attributeOfTile = [2,3,4,5,6];}
+

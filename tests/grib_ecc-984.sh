@@ -9,7 +9,11 @@
 #
 
 . ./include.ctest.sh
-set -u
+
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
+
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-984
 # grib_get_data: missing jDirectionIncrement produces huge values

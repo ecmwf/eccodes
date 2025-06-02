@@ -19,6 +19,4 @@
 17 17 y-component of surface water velocity (m s-1)
 18 18 Heat flux correction (W m-2)
 19 19 Sea surface height tendency due to parameterization (m s-1)
-# 20-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing

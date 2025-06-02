@@ -34,7 +34,7 @@
 #endif
 
 #define MAX_KEYS       256
-#define MAX_STRING_LEN 512
+#define MAX_STRING_LEN 1024
 #define MAX_FAILED     1024
 #define LATLON_SIZE    4 /* nearest */
 
@@ -44,17 +44,6 @@
 #define MODE_METAR 3
 #define MODE_TAF 5
 #define MODE_ANY 6
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef union grib_typed_value
-{
-    long* long_value;
-    double* double_value;
-    const char* string_value;
-} grib_typed_value;
 
 /*
 #define MAX_CONSTRAINT_VALUES 500
@@ -83,7 +72,7 @@ typedef struct grib_option
     const char* help;
     int on;
     int command_line;
-    char* value;
+    const char* value;
 } grib_option;
 
 typedef struct grib_failed grib_failed;
@@ -137,7 +126,6 @@ typedef struct grib_runtime_options
     grib_tools_file* infile;
     grib_tools_file* outfile;
     grib_action* action;
-    grib_rule* rules;
     int dump_flags;
     char* dump_mode;
     int repack;
@@ -200,7 +188,6 @@ int grib_tool_init(grib_runtime_options* options);
 int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* file);
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h);
 int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h);
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h);
 int grib_tool_finalise_action(grib_runtime_options* options);
 void grib_skip_check(grib_runtime_options* options, grib_handle* h);
 void grib_print_key_values(grib_runtime_options* options, grib_handle* h);
@@ -213,8 +200,5 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
 int grib_no_handle_action(grib_runtime_options* options, int err);
 int exit_if_input_is_directory(const char* toolname, const char* filename);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* GRIB_TOOLS_H */

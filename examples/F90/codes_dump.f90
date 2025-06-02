@@ -12,7 +12,7 @@ program codes_dump_test
    implicit none
    integer            :: ifile, iret, msgid
    integer            :: product_kind
-   character(len=10)  :: product_string
+   character(len=512) :: product_string
    character(len=512) :: infile_name
 
    call getarg(1, product_string)
@@ -21,6 +21,7 @@ program codes_dump_test
 
    call getarg(2, infile_name)
 
+   call codes_set_debug(-1)
    call codes_open_file(ifile, infile_name, 'r')
 
    print *, "===== FILE:", infile_name
@@ -29,7 +30,11 @@ program codes_dump_test
       !call codes_any_new_from_file(ifile, msgid, iret)
       if (iret == CODES_END_OF_FILE) exit
 
+      call codes_set_debug(0)
+      call codes_set_data_quality_checks(1)
       call codes_dump(msgid)
+      call codes_set_debug(1)
+      call codes_set_data_quality_checks(0)
 
       call codes_release(msgid)
 

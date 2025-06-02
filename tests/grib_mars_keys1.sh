@@ -15,6 +15,11 @@ tempOut=temp.${label}.out
 tempGrib=temp.${label}.grib
 tempRef=temp.${label}.ref
 
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
 grib1_sample=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 grib2_sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
 types_table=$ECCODES_DEFINITION_PATH/mars/type.table
@@ -83,7 +88,7 @@ diff $tempRef $tempOut
 # -------------------------------
 tables="$types_table $classes_table $streams_table"
 for table in $tables; do
-    echo "Testing numeric codes in $table ..."
+    echo "Testing numeric codes are unique in $table ..."
     awk '{print $1}' < $table > $tempOut
     count1=`sort -u $tempOut | wc -l`
     count2=`wc -l $tempOut | awk '{print $1}'`
@@ -94,7 +99,7 @@ done
 # -------------------------------
 tables="$types_table $classes_table $streams_table"
 for table in $tables; do
-    echo "Testing abbreviations in $table ..."
+    echo "Testing abbreviations are unique in $table ..."
     awk '{print $2}' < $table > $tempOut
     count1=`sort -u $tempOut | wc -l`
     count2=`wc -l $tempOut | awk '{print $1}'`

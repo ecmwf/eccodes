@@ -9,16 +9,20 @@
 
 . ./include.ctest.sh
 
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
+
 # Define a common label for all the tmp files
 label="grib_lambert_conformal_test"
-tempFilter="temp.${label}.filt"
+tempFilt="temp.${label}.filt"
 tempGrib="temp.${label}.grib"
 tempOut="temp.${label}.out"
 
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 # Create a filter
-cat > $tempFilter <<EOF
+cat > $tempFilt <<EOF
  set gridType="lambert";
  set numberOfDataPoints=294000;
  set shapeOfTheEarth=6;
@@ -37,9 +41,9 @@ cat > $tempFilter <<EOF
 EOF
 
 # Use filter on input to create a new Lambert conformal GRIB
-${tools_dir}/grib_filter -o $tempGrib $tempFilter $input
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $input
 if [ ! -f "$tempGrib" ]; then
-   echo 'Failed to create output GRIB from filter' >&2
+   echo 'ERROR: Failed to create output GRIB from filter' >&2
    exit 1
 fi
 # Invoke Geoiterator on the newly created GRIB file
@@ -49,7 +53,7 @@ ${tools_dir}/grib_ls -l 50,0 $tempGrib
 
 # Oblate earth
 # --------------
-cat > $tempFilter <<EOF
+cat > $tempFilt <<EOF
  set gridType="lambert";
  set numberOfDataPoints=294000;
  set Nx=588;
@@ -68,9 +72,9 @@ cat > $tempFilter <<EOF
 EOF
 
 # Use this filter and the input GRIB to create a new GRIB
-${tools_dir}/grib_filter -o $tempGrib $tempFilter $input
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $input
 if [ ! -f "$tempGrib" ]; then
-   echo 'Failed to create output GRIB from filter' >&2
+   echo 'ERROR: Failed to create output GRIB from filter' >&2
    exit 1
 fi
 grib_check_key_equals $tempGrib 'earthIsOblate,earthMinorAxisInMetres,earthMajorAxisInMetres' '1 6356775 6378160'
@@ -82,5 +86,24 @@ ${tools_dir}/grib_get_data $tempGrib > $tempOut
 ${tools_dir}/grib_ls -l 40.44,353.56 $tempGrib
 
 
+# Error conditions
+# ----------------
+set +e
+${tools_dir}/grib_get_data -s Latin1=5000,Latin2=-5000 $tempGrib > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Cannot have equal latitudes for standard parallels on opposite sides of equator" $tempOut
+
+
+set +e
+${tools_dir}/grib_get_data -s Ni=8 $tempGrib > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Wrong number of points" $tempOut
+
+
+
 # Clean up
-rm -f $tempFilter $tempGrib $tempOut
+rm -f $tempFilt $tempGrib $tempOut

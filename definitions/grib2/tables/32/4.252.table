@@ -161,5 +161,4 @@
 # 4023-4500 Reserved for tile class entries for tile models using the European Commission-Global Land Cover Project GLC2000 survey
 # 4501-5000 Reserved for tile grouping entries for tile models using the European Commission-Global Land Cover Project GLC2000 survey
 # 5001-32767 Reserved for additional land cover surveys
-# 32768-65534 Reserved for local use 
-65535 65535 Missing 
+65535 65535 Missing

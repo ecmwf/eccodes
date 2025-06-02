@@ -9,22 +9,27 @@
 #
 
 . ./include.ctest.sh
-set -u
+
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1028
+# Segmentation fault: bufr_dump -d on message with incorrect replication
+# ---------------------------------------------------------------------
+
 label="bufr_ecc-1028_test"
-tempFilter=temp.$label.filt
+tempFilt=temp.$label.filt
 tempError=temp.$label.err
 
 sample_bufr4=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
 
 # Incorrect replication. Encoding should fail
-echo "set unexpandedDescriptors={ 101000, 31002 }; write;" > $tempFilter
+echo "set unexpandedDescriptors={ 101000, 31002 }; write;" > $tempFilt
 set +e
-${tools_dir}/bufr_filter $tempFilter $sample_bufr4 2>$tempError
+${tools_dir}/bufr_filter $tempFilt $sample_bufr4 2>$tempError
 status=$?
 set -e
 [ $status -ne 0 ]
 # Check error message
-grep -q "Delayed replication: 101000: expected 1 but only found 0 elements" $tempError
+grep -q "Delayed replication: 101000: expected 1 but only found 0 element(s)" $tempError
 
 
-rm -f $tempFilter $tempError
+rm -f $tempFilt $tempError

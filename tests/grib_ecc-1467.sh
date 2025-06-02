@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1467
+# Support data values array decoded as "floats" (single-precision)
+# ---------------------------------------------------------------------
+
 # Constant fields
 gfiles="constant_field.grib1" # grid_simple, edition=1
 gfiles="$gfiles constant_field.grib2" # grid_simple, edition=2

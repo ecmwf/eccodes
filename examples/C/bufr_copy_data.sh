@@ -10,7 +10,7 @@
 . ./include.ctest.sh
 
 #Define a common label for all the tmp files
-label="bufr_copy_data_c"
+label="examples_c_bufr_copy_data"
 
 TEMP_BUFR=$label.out.bufr
 TEMP_TEXT=$label.out.txt

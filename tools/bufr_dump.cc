@@ -9,6 +9,8 @@
  */
 
 #include "grib_tools.h"
+#include "grib_dumper_factory.h"
+#include "accessor/BufrDataArray.h"
 
 grib_option grib_options[] = {
     /*  {id, args, help}, on, command_line, value*/
@@ -58,15 +60,15 @@ grib_option grib_options[] = {
     /* {"x",0,0,0,1,0} */
 };
 
-const char* tool_description = "Dump the content of a BUFR file in different formats.";
-const char* tool_name        = "bufr_dump";
-const char* tool_online_doc  = "https://confluence.ecmwf.int/display/ECC/bufr_dump";
-const char* tool_usage       = "[options] bufr_file bufr_file ...";
-static int json              = 0;
-static int dump_descriptors  = 0;
-static char* json_option     = 0;
-static int first_handle      = 1;
-static grib_dumper* dumper   = 0;
+const char* tool_description   = "Dump the content of a BUFR file in different formats.";
+const char* tool_name          = "bufr_dump";
+const char* tool_online_doc    = "https://confluence.ecmwf.int/display/ECC/bufr_dump";
+const char* tool_usage         = "[options] bufr_file bufr_file ...";
+static int json                = 0;
+static int dump_descriptors    = 0;
+static char* json_option       = 0;
+static int first_handle        = 1;
+static eccodes::Dumper* dumper = 0;
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
@@ -99,15 +101,8 @@ static void check_code_gen_dump_mode(const char* language)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-    int opt = grib_options_on("C") + grib_options_on("O");
-
     options->dump_mode = (char*)"default";
     options->strict    = 1; /* Must set here as bufr_dump has its own -S option */
-
-    if (opt > 1) {
-        printf("%s: simultaneous j/C/O options not allowed\n", tool_name);
-        exit(1);
-    }
 
     if (grib_options_on("j:")) {
         options->dump_mode = (char*)"json";
@@ -184,7 +179,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
     if (!options->current_infile->name)
         return 0;
 
-    Assert(file);
+    ECCODES_ASSERT(file);
     exit_if_input_is_directory(tool_name, file->name);
 
     /*
@@ -196,7 +191,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
         const char* filename = options->current_infile->name;
         json = 0;
 
-        err = grib_index_dump_file(stdout, filename);
+        err = grib_index_dump_file(stdout, filename, options->dump_flags);
         if (err) {
             grib_context_log(c, GRIB_LOG_ERROR, "%s: Could not dump index file \"%s\".\n%s\n",
                              tool_name,
@@ -330,7 +325,7 @@ static void bufr_dump_descriptors(grib_handle* h)
         exit(GRIB_OUT_OF_MEMORY);
     }
     GRIB_CHECK_NOLINE(grib_get_string_array(h, the_key, array_abbrevs, &size_abbrevs), 0);
-    Assert(size_proper == size_abbrevs);
+    ECCODES_ASSERT(size_proper == size_abbrevs);
 
     the_key = "expandedNames";
     GRIB_CHECK_NOLINE(grib_get_size(h, the_key, &size_names), 0);
@@ -340,7 +335,7 @@ static void bufr_dump_descriptors(grib_handle* h)
         exit(GRIB_OUT_OF_MEMORY);
     }
     GRIB_CHECK_NOLINE(grib_get_string_array(h, the_key, array_names, &size_names), 0);
-    Assert(size_proper == size_names);
+    ECCODES_ASSERT(size_proper == size_names);
 
     the_key = "expandedUnits";
     GRIB_CHECK_NOLINE(grib_get_size(h, the_key, &size_units), 0);
@@ -350,7 +345,7 @@ static void bufr_dump_descriptors(grib_handle* h)
         exit(GRIB_OUT_OF_MEMORY);
     }
     GRIB_CHECK_NOLINE(grib_get_string_array(h, the_key, array_units, &size_units), 0);
-    Assert(size_proper == size_units);
+    ECCODES_ASSERT(size_proper == size_units);
 
     i = 0;
     j = 0;
@@ -403,9 +398,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     long length = 0;
     int i, err = 0;
-    grib_handle* hclone     = NULL;
-    grib_accessor* a        = NULL;
-    grib_accessors_list* al = NULL;
+    grib_handle* hclone                   = NULL;
+    eccodes::accessor::BufrDataArray* data = NULL;
+    grib_accessors_list* al               = NULL;
     if (grib_get_long(h, "totalLength", &length) != GRIB_SUCCESS)
         length = -9999;
 
@@ -421,8 +416,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     if (grib_options_on("S:")) {
         long numberOfSubsets = 0, subsetNumber = 0;
-        char* str = grib_options_get_option("S:");
-        err       = grib_get_long(h, "numberOfSubsets", &numberOfSubsets);
+        const char* str = grib_options_get_option("S:");
+        err = grib_get_long(h, "numberOfSubsets", &numberOfSubsets);
         if (err) {
             fprintf(stderr, "%s: Failed to get numberOfSubsets.\n", tool_name);
             exit(1);
@@ -437,7 +432,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
                 /* Clone, unpack and extract that particular subset */
                 h2 = grib_handle_clone(h);
-                Assert(h2);
+                ECCODES_ASSERT(h2);
                 GRIB_CHECK_NOLINE(grib_set_long(h2, "unpack", 1), 0);
                 GRIB_CHECK_NOLINE(grib_set_long(h2, "extractSubset", subsetNumber), 0);
                 GRIB_CHECK_NOLINE(grib_set_long(h2, "doExtractSubsets", 1), 0);
@@ -445,7 +440,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 /* Put result into buffer then form new handle from it */
                 GRIB_CHECK_NOLINE(grib_get_message(h2, &buffer, &size), 0);
                 new_handle = grib_handle_new_from_message(0, buffer, size);
-                Assert(new_handle);
+                ECCODES_ASSERT(new_handle);
                 /* Replace handle with the new one which has only one subset */
                 h      = new_handle;
                 hclone = h2; /* to be deleted later */
@@ -481,8 +476,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                         /*return err; See ECC-723*/
                     }
                 }
-                a                   = grib_find_accessor(h, "numericValues");
-                al                  = accessor_bufr_data_array_get_dataAccessors(a);
+                data                = dynamic_cast<eccodes::accessor::BufrDataArray*>(grib_find_accessor(h, "numericValues"));
+                al                  = data->accessor_bufr_data_array_get_dataAccessors();
                 options->dump_flags = GRIB_DUMP_FLAG_ALL_ATTRIBUTES;
                 codes_dump_bufr_flat(al, h, stdout, options->dump_mode, options->dump_flags, 0);
                 break;
@@ -574,11 +569,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     grib_handle_delete(h);
     return 0;
-}
-
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
-    grib_print_key_values(options, h);
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options)

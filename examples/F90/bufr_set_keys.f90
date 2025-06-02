@@ -22,7 +22,7 @@ program bufr_set_keys
    call codes_open_file(infile, '../../data/bufr/syno_multi.bufr', 'r')
 
    ! Open output file
-   call codes_open_file(outfile, 'bufr_set_keys_test_f.tmp.bufr', 'w')
+   call codes_open_file(outfile, 'examples_f_bufr_set_keys.tmp.bufr', 'w')
 
    do while (.true.)
       call codes_bufr_new_from_file(infile, ibufr, iret)

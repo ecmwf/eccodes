@@ -9,5 +9,5 @@
 
 . ./include.ctest.sh
 
-${examples_dir}/eccodes_f_grib_set_pv > /dev/null
+${examples_dir}/f_grib_set_pv > /dev/null
 rm -f out.pv.grib1

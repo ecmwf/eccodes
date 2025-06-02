@@ -60,11 +60,12 @@ do_tests()
 
     rm -f $outfile2
 
-    # GRIB-564 nearest 4 neighbours with JPEG packing
-    res=`${tools_dir}/grib_get -l 0,50 $outfile1`
-    [ "$res" = "2.47244 2.47244 2.5115 2.51931 " ]
-
-    rm -f $outfile1
+    if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+        # GRIB-564 nearest 4 neighbours with JPEG packing
+        res=`${tools_dir}/grib_get -l 0,50 $outfile1`
+        [ "$res" = "2.47244 2.47244 2.5115 2.51931 " ]
+        rm -f $outfile1
+    fi
 
     # ECC-317: Constant JPEG field numberOfValues
     # Create a JPEG encoded GRIB message to have all constant values and one more value
@@ -156,5 +157,23 @@ ECCODES_GRIB_DUMP_JPG_FILE=$tempDump  ${tools_dir}/grib_copy -r $data_dir/jpeg.g
 [ -f $tempDump ]
 rm -f $tempDump
 
+# Check Jasper decoding when it is disabled
+if [ $HAVE_LIBJASPER -eq 0 ]; then
+    set +e
+    ECCODES_GRIB_JPEG=jasper ${tools_dir}/grib_get -n statistics $data_dir/jpeg.grib2 > $tempDump 2>&1
+    status=$?
+    set -e
+    [ $status -ne 0 ]
+    grep -q "JasPer JPEG support not enabled" $tempDump
+
+    infile=$data_dir/sample.grib2
+    set +e
+    ECCODES_GRIB_JPEG=jasper ${tools_dir}/grib_set -rs packingType=grid_jpeg $infile $outfile1 > $tempDump 2>&1
+    status=$?
+    set -e
+    [ $status -ne 0 ]
+    grep -q "JasPer JPEG support not enabled" $tempDump
+fi
+
 # Clean up
-rm -f $tempFilt $tempGrib
+rm -f $tempFilt $tempGrib $tempDump

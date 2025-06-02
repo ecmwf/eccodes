@@ -213,28 +213,23 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 78 ;
 	}
-#Maximum wind speed
-'Maximum wind speed' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 219 ;
-	}
-#Downward short-wave radiation flux
-'Downward short-wave radiation flux' = {
+#Surface downward short-wave radiation flux
+'Surface downward short-wave radiation flux' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 204 ;
 	}
-#Upward short-wave radiation flux
-'Upward short-wave radiation flux' = {
+#Surface upward short-wave radiation flux
+'Surface upward short-wave radiation flux' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 211 ;
 	}
-#Downward long-wave radiation flux
-'Downward long-wave radiation flux' = {
+#Surface downward long-wave radiation flux
+'Surface downward long-wave radiation flux' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 205 ;
 	}
-#Upward long-wave radiation flux
-'Upward long-wave radiation flux' = {
+#Surface upward long-wave radiation flux
+'Surface upward long-wave radiation flux' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 212 ;
 	}
@@ -530,8 +525,8 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 5 ;
 	}
-#Geometrical height
-'Geometrical height' = {
+#Geometrical height above ground
+'Geometrical height above ground' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 8 ;
 	}
@@ -664,16 +659,6 @@
 'Speed of current' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 48 ;
-	}
-#U-component of current
-'U-component of current' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 49 ;
-	}
-#V-component of current
-'V-component of current' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 50 ;
 	}
 #Humidity mixing ratio
 'Humidity mixing ratio' = {
@@ -920,23 +905,23 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 87 ;
 	}
-#Vertical integral of eastward heat flux
-'Vertical integral of eastward heat flux' = {
+#Total column vertically-integrated eastward heat flux
+'Total column vertically-integrated eastward heat flux' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 190 ;
 	}
-#Vertical integral of northward heat flux
-'Vertical integral of northward heat flux' = {
+#Total column vertically-integrated northward heat flux
+'Total column vertically-integrated northward heat flux' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 191 ;
 	}
-#Vertical integral of eastward water vapour flux
-'Vertical integral of eastward water vapour flux' = {
+#Total column vertically-integrated eastward water vapour flux
+'Total column vertically-integrated eastward water vapour flux' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 157 ;
 	}
-#Vertical integral of northward water vapour flux
-'Vertical integral of northward water vapour flux' = {
+#Total column vertically-integrated northward water vapour flux
+'Total column vertically-integrated northward water vapour flux' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 152 ;
 	}

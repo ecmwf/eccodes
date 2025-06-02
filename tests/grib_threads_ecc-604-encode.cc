@@ -26,19 +26,24 @@ int opt_write                     = 0; /* If 1 write handle to file */
 
 static int encode_values(grib_handle* h, char* output_file)
 {
-    double* values;
-    const size_t DIM = 1000;
-    size_t size      = DIM * DIM;
-    size_t i         = 0;
-    values           = (double*)malloc(size * sizeof(double));
-    for (i = 0; i < size; ++i) {
+    double* values = NULL;
+    long numberOfDataPoints = 0;
+    GRIB_CHECK(grib_get_long(h, "numberOfDataPoints", &numberOfDataPoints), 0);
+    size_t size = numberOfDataPoints;
+
+    values = (double*)malloc(size * sizeof(double));
+    for (size_t i = 0; i < size; ++i) {
         double v = i;
-        if (i % DIM == 0) v = 0;
+        if (i % size == 0) v = 0;
         values[i] = v;
     }
     GRIB_CHECK(grib_set_long(h, "bitsPerValue", 16), 0);
     GRIB_CHECK(grib_set_double_array(h, "values", values, size), 0);
     free(values);
+    if (opt_dump) {
+        FILE* devnull = fopen("/dev/null", "w");
+        grib_dump_content(h, devnull, "wmo", 0, NULL);
+    }
     return GRIB_SUCCESS;
 }
 
@@ -62,6 +67,7 @@ int main(int argc, char** argv)
     char* mode;
     if (argc < 5 || argc > 7) {
         fprintf(stderr, "Usage:\n\t%s [options] seq sample numRuns numIter\nOr\n\t%s [options] par sample numThreads numIter\n", prog, prog);
+        fprintf(stderr, "Options:\n\t-d: do a dump\n\t-c: clone\n");
         return 1;
     }
 
@@ -88,11 +94,11 @@ int main(int argc, char** argv)
         parallel = 0;
     }
     if (parallel) {
-        printf("Running parallel in %ld threads. %ld iterations (prod=%ld)\n", NUM_THREADS, FILES_PER_ITERATION, NUM_THREADS * FILES_PER_ITERATION);
+        printf("Running parallel in %zu threads. %zu iterations (prod=%zu)\n", NUM_THREADS, FILES_PER_ITERATION, NUM_THREADS * FILES_PER_ITERATION);
         printf("Options: dump=%d, clone=%d, write=%d\n", opt_dump, opt_clone, opt_write);
     }
     else {
-        printf("Running sequentially in %ld runs. %ld iterations\n", NUM_THREADS, FILES_PER_ITERATION);
+        printf("Running sequentially in %zu runs. %zu iterations\n", NUM_THREADS, FILES_PER_ITERATION);
     }
 
     {
@@ -144,15 +150,21 @@ void do_encode(void* ptr)
     hs = grib_handle_new_from_samples(0, INPUT_FILE);
 
     for (i = 0; i < FILES_PER_ITERATION; i++) {
-        grib_handle* h = grib_handle_clone(hs);
+        grib_handle* h = NULL;
+        if (opt_clone) {
+            h = grib_handle_clone(hs);
+        } else {
+            h = hs;
+        }
         if (opt_write) {
-            snprintf(output_file, 50, "output/output_file_%ld-%ld.grib", data->number, i);
+            snprintf(output_file, 50, "output/output_file_%zu-%zu.grib", data->number, i);
             encode_values(h, output_file);
         }
         else {
             encode_values(h, NULL);
         }
-        grib_handle_delete(h);
+        if (opt_clone)
+            grib_handle_delete(h);
     }
 
     ltime = time(NULL);
@@ -160,6 +172,6 @@ void do_encode(void* ptr)
     strftime(stime, 32, "%H:%M:%S", &result); /* Try to get milliseconds here too*/
     /* asctime_r(&result, stime); */
 
-    printf("%s: Worker %ld finished.\n", stime, data->number);
+    printf("%s: Worker %zu finished.\n", stime, data->number);
     grib_handle_delete(hs);
 }

@@ -13,17 +13,15 @@
 grib_option grib_options[] = {
     /*  {id, args, help}, on, command_line, value*/
     { "s:", 0, 0, 1, 1, 0 },
-    /*     {"r",0,0,0,1,0}, */
-    /*     {"d:",0,0,0,1,0},*/
-    /*     {"n:","noise percentage","\n\t\tAdd noise to the data values. The noise added is the given percentage of the data value.\n",0,1,0},*/
     { "p:", 0, 0, 1, 1, 0 },
     { "P:", 0, 0, 0, 1, 0 },
     { "w:", "key[:{s|d|i}]=value,key[:{s|d|i}]=value,...",
       "\n\t\tWhere clause.\n\t\tSet is only executed for BUFR messages matching all the "
       "key/value constraints.\n\t\tIf a BUFR message does not match the constraints it is"
-      " copied unchanged\n\t\tto the output_file. This behaviour can be changed "
+      " copied unchanged\n\t\tto the output_bufr_file. This behaviour can be changed "
       "setting the option -S.\n\t\tFor each key a string (key:s), a double (key:d) or"
       " an integer (key:i)\n\t\ttype can be defined. Default type is string."
+      "\n\t\tIn the value you can also use the forward-slash character '/' to specify an OR condition (i.e. a logical disjunction)"
       "\n\t\tNote: only one -w clause is allowed.\n",
       0, 1, 0 },
     { "q", 0, 0, 1, 0, 0 },
@@ -32,7 +30,6 @@ grib_option grib_options[] = {
     { "U", 0, 0, 1, 0, 0 },
     { "V", 0, 0, 0, 1, 0 },
     { "g", 0, 0, 0, 1, 0 },
-    /*      {"G",0,0,0,1,0}, */
     { "T:", 0, 0, 1, 0, "B" },
     { "f", 0, 0, 0, 1, 0 },
     { "v", 0, 0, 0, 1, 0 },
@@ -40,12 +37,12 @@ grib_option grib_options[] = {
 };
 
 const char* tool_description =
-    "Sets key/value pairs in the input BUFR file and writes"
-    "\n\teach message to the output_file."
+    "Sets key/value pairs in the input BUFR file(s) and writes"
+    "\n\teach message to the output_bufr_file."
     "\n\tIt fails when an error occurs (e.g. key not found).";
 const char* tool_name       = "bufr_set";
 const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/bufr_set";
-const char* tool_usage      = "[options] file file ... output_file";
+const char* tool_usage      = "[options] bufr_file bufr_file ... output_bufr_file";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
@@ -62,20 +59,11 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 int grib_tool_init(grib_runtime_options* options)
 {
     if (options->set_values_count == 0 && !options->repack && !options->constant) {
-        printf("ERROR: please provide some keys to set through the -s option or use the -r/-d options\n");
+        fprintf(stderr, "ERROR: Please provide some keys to set through the -s option or use the -r/-d options\n");
         exit(1);
     }
     if (options->verbose)
         options->print_header = 1;
-    /*if (grib_options_on("n:")) {
-    noise=atof(grib_options_get_option("n:"));
-    options->repack=1;
-  }*/
-
-    if (grib_options_on("n:") && grib_options_on("d:")) {
-        printf("Error: -n and -d options are incompatible. Choose one of the two please.\n");
-        exit(1);
-    }
 
     // if (options->outfile && options->outfile->name) {
     //     options->outfile->file = fopen(options->outfile->name,"w");
@@ -121,11 +109,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     grib_handle_delete(h);
     return 0;
-}
-
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
-    grib_print_key_values(options, h);
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options)

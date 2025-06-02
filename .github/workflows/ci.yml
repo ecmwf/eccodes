@@ -24,9 +24,10 @@ jobs:
   downstream-ci:
     name: downstream-ci
     if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
-    uses: ecmwf-actions/downstream-ci/.github/workflows/downstream-ci.yml@main
+    uses: ecmwf/downstream-ci/.github/workflows/downstream-ci.yml@main
     with:
       eccodes: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
+      codecov_upload: true
     secrets: inherit
 
   # Run CI of private downstream packages on self-hosted runners
@@ -39,10 +40,10 @@ jobs:
       pull-requests: write
     steps:
       - name: Dispatch private downstream CI
-        uses: ecmwf-actions/dispatch-private-downstream-ci@v1
+        uses: ecmwf/dispatch-private-downstream-ci@v1
         with:
           token: ${{ secrets.GH_REPO_READ_TOKEN }}
-          owner: ecmwf-actions
+          owner: ecmwf
           repository: private-downstream-ci
           event_type: downstream-ci
           payload: '{"eccodes": "ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}"}'
@@ -51,7 +52,7 @@ jobs:
   downstream-ci-hpc:
     name: downstream-ci-hpc
     if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
-    uses: ecmwf-actions/downstream-ci/.github/workflows/downstream-ci-hpc.yml@main
+    uses: ecmwf/downstream-ci/.github/workflows/downstream-ci-hpc.yml@main
     with:
       eccodes: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
     secrets: inherit
@@ -66,22 +67,13 @@ jobs:
       pull-requests: write
     steps:
       - name: Dispatch private downstream CI
-        uses: ecmwf-actions/dispatch-private-downstream-ci@v1
+        uses: ecmwf/dispatch-private-downstream-ci@v1
         with:
           token: ${{ secrets.GH_REPO_READ_TOKEN }}
-          owner: ecmwf-actions
+          owner: ecmwf
           repository: private-downstream-ci
           event_type: downstream-ci-hpc
-          payload: '{"eccodes": "ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}"}'
-
-  codecov:
-    name: code-coverage
-    if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
-    uses: ./.github/workflows/reusable-ci.yml
-    with:
-      eccodes: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
-      codecov: true
-    secrets: inherit
+          payload: '{"eccodes": "ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}","skip_matrix_jobs": "nvidia-22.11"}'
 
   notify:
     runs-on: ubuntu-latest
@@ -90,11 +82,10 @@ jobs:
       - private-downstream-ci
       - downstream-ci-hpc
       - private-downstream-ci-hpc
-      - codecov
-    if: always() && ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
+    if: ${{ always() && !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
     steps:
       - name: Trigger Teams notification
-        uses: ecmwf-actions/notify-teams@v1
+        uses: ecmwf/notify-teams@v1
         with:
           incoming_webhook: ${{ secrets.MS_TEAMS_INCOMING_WEBHOOK }}
           needs_context: ${{ toJSON(needs) }}

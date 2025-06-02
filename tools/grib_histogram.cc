@@ -58,7 +58,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 */
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
-    size_t i, j, err = 0;
+    size_t i, j;
     size_t last_size = 0;
     long missingValuesPresent;
     double delta;
@@ -75,21 +75,11 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         names[name_count++] = options->requested_print_keys[i].name;
     }
 
-    if (!options->skip) {
-        if (options->set_values_count != 0)
-            err = grib_set_values(h, options->set_values, options->set_values_count);
-
-        if (err != GRIB_SUCCESS && options->fail)
-            exit(err);
-    }
-
     GRIB_CHECK(grib_get_long(h, "missingValuesPresent", &missingValuesPresent), 0);
 
     GRIB_CHECK(grib_get_size(h, "values", &size), 0);
 
     if (size > last_size) {
-        if (values)
-            free(values);
         values = (double*)malloc(size * sizeof(double));
         /*last_size = size;*/
         if (!values) {
@@ -166,6 +156,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         printf(" %ld", intervals[j]);
     printf("\n");
 
+    if (values)
+        free(values);
+
     return 0;
 }
 
@@ -173,11 +166,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     grib_handle_delete(h);
     return 0;
-}
-
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
-    grib_print_key_values(options, h);
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options)

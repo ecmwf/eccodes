@@ -39,7 +39,7 @@ static grib_options_help grib_options_help_list[] = {
     { "e:", "tolerance", "\n\t\tOnly values whose difference is more than tolerance are considered different.\n" },
     { "f", 0, "Force. Force the execution not to fail on error.\n" },
     { "F:", "format", "\n\t\tC style format for floating-point values.\n" },
-    { "g", 0, "Copy GTS header. \n" },
+    { "g", 0, "Copy GTS header.\n" },
     { "G", 0, "GRIBEX compatibility mode.\n" },
     { "i:", "index",
       "\n\t\tData value corresponding to the given index is printed.\n" },
@@ -81,7 +81,7 @@ static grib_options_help grib_options_help_list[] = {
       "\n\t\tIn the value you can also use the forward-slash character '/' to specify an OR condition (i.e. a logical disjunction)"
       "\n\t\tNote: only one -w clause is allowed.\n" },
     { "v", 0, "Verbose.\n" },
-    { "7", 0, "Does not fail when the message has wrong length\n" },
+    { "7", 0, "Does not fail when the message has wrong length.\n" },
     { "A:", "absolute error\n",
       "\tCompare floating-point values using the absolute error as tolerance.\n\t\tDefault is absolute error=0\n" },
     { "C", 0, "C code mode. A C code program generating the message is dumped.\n" },
@@ -98,7 +98,7 @@ static grib_options_help grib_options_help_list[] = {
     { "S", 0,
       "Strict. Only messages matching all the constraints are copied to"
       "\n\t\tthe output file\n" },
-    { "T:", "T | B | M | A", "Message type. T->GTS, B->BUFR, M->METAR (Experimental), A->Any (Experimental).\n\t\t\t\tThe input file is interpreted according to the message type.\n" },
+    { "T:", "T | B | A", "Message type. T->GTS, B->BUFR, A->Any (Experimental).\n\t\t\tThe input file is interpreted according to the message type.\n" },
     { "V", 0, "Version.\n" },
     { "W:", "width", "\n\t\tMinimum width of each column in output. Default is 10.\n" },
     { "X:", "offset", "\n\t\tInput file offset in bytes. Processing of the input file will start from the given offset.\n" },
@@ -139,7 +139,7 @@ char* grib_options_get_option(const char* id)
     int i = 0;
     for (i = 0; i < grib_options_count; i++) {
         if (!strcmp(id, grib_options[i].id))
-            return grib_options[i].value;
+            return (char*)grib_options[i].value;
     }
     return NULL;
 }
@@ -218,7 +218,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
         options->headers_only = 0;
 
     if (grib_options_on("T:")) {
-        char* x = grib_options_get_option("T:");
+        const char* x = grib_options_get_option("T:");
         if (*x == 'T')
             options->mode = MODE_GTS;
         else if (*x == 'B')
@@ -256,7 +256,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
 
 #ifndef ECCODES_ON_WINDOWS
     /* Check at compile time to ensure our file offset is at least 64 bits */
-    COMPILE_TIME_ASSERT(sizeof(options->infile_offset) >= 8);
+    static_assert(sizeof(options->infile_offset) >= 8);
 #endif
 
     has_output      = grib_options_on("U");
@@ -357,12 +357,6 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
     else
         grib_gts_header_off(context);
 
-    if (grib_options_on("V")) {
-        printf("\necCodes Version ");
-        grib_print_api_version(stdout);
-        printf("\n\n");
-    }
-
     if (grib_options_on("s:")) {
         sarg                      = grib_options_get_option("s:");
         options->set_values_count = MAX_KEYS;
@@ -432,7 +426,7 @@ const char* grib_options_get_help(const char* id)
 const char* grib_options_get_args(const char* id)
 {
     int i        = 0;
-    char empty[] = "";
+    const char empty[] = "";
     char msg[]   = "ERROR: help not found for option -";
     const size_t msize = sizeof(msg) + 3;
     char* err    = NULL;

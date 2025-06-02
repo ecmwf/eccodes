@@ -46,7 +46,6 @@
 44 44 Hydrofluoric acid HF
 45 45 Sulphur hexafluoride SF6
 46 46 Chlorine Cl2
-# 47-9999 Reserved
 10000 10000 Hydroxyl radical OH
 10001 10001 Methyl peroxy radical CH3O2
 10002 10002 Methyl hydroperoxide CH3O2H
@@ -101,10 +100,8 @@
 10052 10052 Ethyl hydroperoxide CH3CH2OOH
 10053 10053 3-hydroxypropyl dioxidanyl radical HOCH2CH2CH2OO
 10054 10054 3-hydroxypropyl hydroperoxide HOCH2CH2CH2OOH
-# 10055-10499 Reserved for other simple organic molecules(e.g. higher aldehydes, alcohols, peroxides, ...)
 10500 10500 Dimethyl sulphide CH3SCH3 (DMS)
 10501 10501 DMSO (dimethyl sulfoxide) (CH3)2SO
-#10502-20000 Reserved
 20001 20001 Hydrogen chloride
 20002 20002 CFC-11
 20003 20003 CFC-12
@@ -127,9 +124,7 @@
 20020 20020 Alpha hexachlorocyclohexane
 20021 20021 Hexachlorobiphenyl (PCB-153)
 20022 20022 HCFC 141a (1,1-dichloro-2-fluoro-ethane) CH3CClF2
-# 20023-29999 Reserved
 30000 30000 Radioactive pollutant (tracer, defined by originating centre)
-#3000-30009 Reserved
 30010 30010 Hydrogen H-3
 30011 30011 Hydrogen organic bounded H-3o
 30012 30012 Hydrogen inorganic H-3a
@@ -417,12 +412,10 @@
 30294 30294 Cs-137 Equivalent EquCs137
 30295 30295 Carbon-13 C-13
 30296 30296 Lead Pb
-#30297-39999 Reserved
 40000 40000 Singlet sigma oxygen (dioxygen (sigma singlet)) O2
 40001 40001 Singlet delta oxygen (dioxygen (delta singlet)) O2
 40002 40002 Singlet excited oxygen atom O(D)
 40003 40003 Triplet ground state oxygen atom O(P)
-# 40004-59999 Reserved
 60000 60000 HOx radical (OH+HO2)
 60001 60001 Total inorganic and organic peroxy radicals (HO2 + RO2) RO2
 60002 60002 Passive Ozone
@@ -451,7 +444,6 @@
 60025 60025 Hydroxy dicarbonyls unsaturated RC(O)CHOHC(O)R
 60026 60026 Hydroxy ketones RC(OH)C(O)R
 60027 60027 Oxides Ox
-# 60028-61999 Reserved
 62000 62000 Total aerosol
 62001 62001 Dust dry
 62002 62002 Water in ambient
@@ -471,18 +463,14 @@
 62016 62016 Particulate organic matter hydrophobic dry
 62017 62017 Nitrate hydrophilic dry
 62018 62018 Nitrate hydrophobic dry
-#62019 Reserved
 62020 62020 Smoke - high absorption
 62021 62021 Smoke - low absorption
 62022 62022 Aerosol - high absorption
 62023 62023 Aerosol - low absorption
-#62024 Reserved
 62025 62025 Volcanic ash
 62026 62026 Particulate matter (PM)
-#62027 Reserved
 62028 62028 Total aerosol hydrophilic
 62029 62029 Total aerosol hydrophobic
-#62030-62099 Reserved
 62100 62100 Alnus (alder) pollen
 62101 62101 Betula (birch) pollen
 62102 62102 Castanea (chestnut) pollen
@@ -498,14 +486,11 @@
 62112 62112 Taxus (yew) pollen
 62113 62113 Tilia (lime, linden) pollen
 62114 62114 Ulmus (elm) pollen
-# 62115-62199 Reserved
 62200 62200 Ambrosia (ragweed, burr-ragweed) pollen
 62201 62201 Artemisia (sagebrush, wormwood, mugwort) pollen
 62202 62202 Brassica (rape, broccoli, Brussels sprouts, cabbage, cauliflower, collards, kale,kohlrabi, mustard, rutabaga) pollen
 62203 62203 Plantago (plantain) pollen
 62204 62204 Rumex (dock, sorrel) pollen
 62205 62205 Urtica (nettle) pollen
-#62206-62299 Reserved
 62300 62300 Poaceae (grass family) pollen
-#6230-65534 Reserved
 65535 65535 Missing

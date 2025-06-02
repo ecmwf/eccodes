@@ -10,7 +10,11 @@
 
 . ./include.ctest.sh
 
-label="grib_nearest_multiple"
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
+
+label="examples_c_grib_nearest_multiple"
 temp1=$label.temp1.$$
 temp2=$label.temp2.$$
 tempRef=$label.ref.$$

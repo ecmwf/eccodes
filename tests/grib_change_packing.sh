@@ -36,7 +36,7 @@ test_packing() {
     grib=$1
 
     if [ ! -f $grib ]; then
-        echo "Input data missing"
+        echo "ERROR: Input data missing"
         exit 1
     fi
 
@@ -48,7 +48,7 @@ test_packing() {
         result=`${tools_dir}/grib_get -p packingType $temp`
 
         if [ "$result" != "$packing" ]; then
-            echo "Setting packing did not go right"
+            echo "ERROR: Setting packing did not go right"
             exit 1
         fi
 
@@ -144,9 +144,15 @@ fi
 # grid_simple_log_preprocessing
 # -----------------------------
 input=${data_dir}/sample.grib2
-${tools_dir}/grib_set -r -s packingType=grid_simple_log_preprocessing $input $temp
+${tools_dir}/grib_set -r -s packingType=grid_simple_log_preprocessing $input $temp 2> $temp_err
 grib_check_key_equals $temp packingType 'grid_simple_log_preprocessing'
 ${tools_dir}/grib_compare -c data:n -R packedValues=2e-6 $input $temp
+# ECC-1897
+grep -q "ECCODES WARNING.*is experimental" $temp_err
+
+${tools_dir}/grib_set -r -s packingType=grid_simple_matrix $input $temp 2> $temp_err
+grep -q "ECCODES WARNING.*is experimental" $temp_err
+
 
 # Large constant fields
 # -----------------------

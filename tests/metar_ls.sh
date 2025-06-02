@@ -37,6 +37,17 @@ echo $f >> $fLog
 ${tools_dir}/metar_ls $f >> $fLog
 
 #-------------------------------------------
+# Test "-w" switch
+#-------------------------------------------
+${tools_dir}/metar_ls -w CCCC=VILK $f >> $fLog
+
+
+#-------------------------------------------
+# Test "-s" switch
+#-------------------------------------------
+${tools_dir}/metar_ls -s dummy=1 -w count=5 $f >> $fLog
+
+#-------------------------------------------
 # Test "-p" switch
 #-------------------------------------------
 ref_ls=$f".ls.ref"
@@ -47,4 +58,11 @@ ${tools_dir}//metar_ls -pCCCC,latitude,longitude,dateTime,elevation,temperature,
 
 diff $ref_ls $res_ls >$REDIRECT 2> $REDIRECT
 
-rm -f $fLog $res_ls 
+# Test assert and print statements within definitions
+# See metar/boot.def
+# ---------------------------------------------------
+ECCODES_DEBUG=-1 ${tools_dir}/metar_ls -wcount=1 $f > $fTmp
+grep -q "Testing: identifier=METAR" $fTmp
+
+# Clean up
+rm -f $fLog $res_ls $fTmp

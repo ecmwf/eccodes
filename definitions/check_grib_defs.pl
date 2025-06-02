@@ -106,12 +106,12 @@ is_deeply(\%name_map, \%paramId_map,   'Check name and paramId are the same');
 is_deeply(\%name_map, \%shortName_map, 'Check name and shortName are the same');
 is_deeply(\%name_map, \%units_map,     'Check name and units are the same');
 
-if (-f "cfVarName.def") {
-   my %cfVar_map     = process("cfVarName.def");
-   is_deeply(\%name_map, \%cfVar_map, 'Check name and cfVarName are the same');
-} else {
-   print "\n\tINFO: Did not find a cfVarName.def file!!!\n\n";
-}
+#if (-f "cfVarName.def") {
+#   my %cfVar_map     = process("cfVarName.def");
+#   is_deeply(\%name_map, \%cfVar_map, 'Check name and cfVarName are the same');
+#} else {
+#   print "\n\tINFO: Did not find a cfVarName.def file!!!\n\n";
+#}
 
 done_testing();
 
@@ -204,6 +204,7 @@ sub process {
         }
         elsif ($this =~ /'(.*)' *= *{/) {
             $concept = $1;
+            die "File: $filename, line: $lineNum: Value is empty." if ($concept eq '');
             die "File: $filename, line: $lineNum: Value contains invalid characters." if (non_printable($concept));
             if ($filename eq 'cfVarName.def') {
                #if ($concept =~ /^[0-9]/) {

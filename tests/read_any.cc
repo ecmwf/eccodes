@@ -9,12 +9,6 @@
  */
 #include "grib_api.h"
 
-static void usage(const char* prog)
-{
-    printf("usage: %s infile\n", prog);
-    exit(1);
-}
-
 static unsigned char buffer[50000000];
 
 int main(int argc, char* argv[])
@@ -22,9 +16,7 @@ int main(int argc, char* argv[])
     char* filename;
     FILE* f;
     grib_handle* h = NULL;
-    grib_context* c;
     size_t size    = 0;
-    int ret        = 0;
     size_t bufsize = sizeof(buffer);
     long count, step, edition, totalLength;
     char gridType[50], levelType[50], level[50], shortName[50];
@@ -35,7 +27,7 @@ int main(int argc, char* argv[])
     size_t len;
 
     if (argc != 2)
-        usage(argv[0]);
+        return 1;
     filename = argv[1];
 
     f = fopen(filename, "rb");
@@ -43,11 +35,11 @@ int main(int argc, char* argv[])
         perror(filename);
         exit(1);
     }
-    c = grib_context_get_default();
+    grib_context* c = grib_context_get_default();
 
     size  = bufsize;
     count = 1;
-    while ((ret = grib_read_any_from_file(c, f, buffer, &size)) == GRIB_SUCCESS) {
+    while (grib_read_any_from_file(c, f, buffer, &size) == GRIB_SUCCESS) {
         if ((1)) {
             h = grib_handle_new_from_message_copy(c, buffer, size);
             if (!h) {

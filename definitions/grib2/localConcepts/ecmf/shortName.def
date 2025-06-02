@@ -115,12 +115,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 25 ;
 	}
-#Lake cover
-'cl' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 26 ;
-	}
 #Snow albedo
 'asn' = {
 	 localTablesVersion = 1 ;
@@ -224,18 +218,6 @@
 	 typeOfStatisticalProcessing = 3 ;
 	 lengthOfTimeRange = 24 ;
 	}
-#Mean temperature at 2 metres in the last 24 hours
-'mean2t24' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 55 ;
-	}
-#Mean 2 metre dewpoint temperature in the last 24 hours
-'mn2d24' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 56 ;
-	}
 #Observation count
 'obct' = {
 	 discipline = 192 ;
@@ -260,18 +242,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 65 ;
 	}
-#Minimum stomatal resistance, low vegetation
-'msr_lv' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 68 ;
-	}
-#Minimum stomatal resistance, high vegetation
-'msr_hv' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 69 ;
-	}
 #Biome cover, low vegetation
 'bc_lv' = {
 	 discipline = 192 ;
@@ -283,18 +253,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 71 ;
-	}
-#Instantaneous surface solar radiation downwards
-'issrd' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 72 ;
-	}
-#Instantaneous surface thermal radiation downwards
-'istrd' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 73 ;
 	}
 #Experimental product
 '~' = {
@@ -1306,18 +1264,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 67 ;
-	}
-#Minimum stomatal resistance, low vegetation
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 68 ;
-	}
-#Minimum stomatal resistance, high vegetation
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 69 ;
 	}
 #Biome cover, low vegetation
 '~' = {
@@ -2579,6 +2525,24 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 122 ;
 	}
+#Time-mean surface runoff rate
+'msror' = {
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 202 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sub-surface runoff rate
+'mssror' = {
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 204 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Volcanic ash aerosol mixing ratio
 'aermr13' = {
 	 discipline = 192 ;
@@ -2663,12 +2627,6 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 59 ;
 	}
-#Injection height (from IS4FIRES)
-'injh' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 60 ;
-	}
 #Wildfire viewing angle of observation
 'vafire' = {
 	 discipline = 192 ;
@@ -2680,18 +2638,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 118 ;
-	}
-#Mean height of maximum injection
-'mami' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 119 ;
-	}
-#Plume top height above surface
-'apt' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 120 ;
 	}
 #Wildfire day-time radiative power
 'frpdayfire' = {
@@ -2915,12 +2861,6 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 241 ;
 	}
-#Plume bottom height above surface
-'apb' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 242 ;
-	}
 #Volcanic sulphate aerosol optical depth at 550 nm
 'vsuaod550' = {
 	 discipline = 192 ;
@@ -3028,6 +2968,16 @@
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
 	 parameterNumber = 56 ;
+	}
+#Water vapour (chemistry) difference
+'h2odiff' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 1 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical = 1 ;
 	}
 #Altitude of emitter
 'alediff' = {
@@ -4621,750 +4571,6 @@
 	 parameterCategory = 213 ;
 	 parameterNumber = 5 ;
 	}
-#Random pattern 1 for SPP scheme
-'spp1' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 101 ;
-	}
-#Random pattern 2 for SPP scheme
-'spp2' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 102 ;
-	}
-#Random pattern 3 for SPP scheme
-'spp3' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 103 ;
-	}
-#Random pattern 4 for SPP scheme
-'spp4' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 104 ;
-	}
-#Random pattern 5 for SPP scheme
-'spp5' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 105 ;
-	}
-#Random pattern 6 for SPP scheme
-'spp6' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 106 ;
-	}
-#Random pattern 7 for SPP scheme
-'spp7' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 107 ;
-	}
-#Random pattern 8 for SPP scheme
-'spp8' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 108 ;
-	}
-#Random pattern 9 for SPP scheme
-'spp9' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 109 ;
-	}
-#Random pattern 10 for SPP scheme
-'spp10' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 110 ;
-	}
-#Random pattern 11 for SPP scheme
-'spp11' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 111 ;
-	}
-#Random pattern 12 for SPP scheme
-'spp12' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 112 ;
-	}
-#Random pattern 13 for SPP scheme
-'spp13' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 113 ;
-	}
-#Random pattern 14 for SPP scheme
-'spp14' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 114 ;
-	}
-#Random pattern 15 for SPP scheme
-'spp15' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 115 ;
-	}
-#Random pattern 16 for SPP scheme
-'spp16' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 116 ;
-	}
-#Random pattern 17 for SPP scheme
-'spp17' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 117 ;
-	}
-#Random pattern 18 for SPP scheme
-'spp18' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 118 ;
-	}
-#Random pattern 19 for SPP scheme
-'spp19' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 119 ;
-	}
-#Random pattern 20 for SPP scheme
-'spp20' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 120 ;
-	}
-#Random pattern 21 for SPP scheme
-'spp21' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 121 ;
-	}
-#Random pattern 22 for SPP scheme
-'spp22' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 122 ;
-	}
-#Random pattern 23 for SPP scheme
-'spp23' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 123 ;
-	}
-#Random pattern 24 for SPP scheme
-'spp24' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 124 ;
-	}
-#Random pattern 25 for SPP scheme
-'spp25' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 125 ;
-	}
-#Random pattern 26 for SPP scheme
-'spp26' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 126 ;
-	}
-#Random pattern 27 for SPP scheme
-'spp27' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 127 ;
-	}
-#Random pattern 28 for SPP scheme
-'spp28' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 128 ;
-	}
-#Random pattern 29 for SPP scheme
-'spp29' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 129 ;
-	}
-#Random pattern 30 for SPP scheme
-'spp30' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 130 ;
-	}
-#Random pattern 31 for SPP scheme
-'spp31' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 131 ;
-	}
-#Random pattern 32 for SPP scheme
-'spp32' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 132 ;
-	}
-#Random pattern 33 for SPP scheme
-'spp33' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 133 ;
-	}
-#Random pattern 34 for SPP scheme
-'spp34' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 134 ;
-	}
-#Random pattern 35 for SPP scheme
-'spp35' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 135 ;
-	}
-#Random pattern 36 for SPP scheme
-'spp36' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 136 ;
-	}
-#Random pattern 37 for SPP scheme
-'spp37' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 137 ;
-	}
-#Random pattern 38 for SPP scheme
-'spp38' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 138 ;
-	}
-#Random pattern 39 for SPP scheme
-'spp39' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 139 ;
-	}
-#Random pattern 40 for SPP scheme
-'spp40' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 140 ;
-	}
-#Random pattern 41 for SPP scheme
-'spp41' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 141 ;
-	}
-#Random pattern 42 for SPP scheme
-'spp42' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 142 ;
-	}
-#Random pattern 43 for SPP scheme
-'spp43' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 143 ;
-	}
-#Random pattern 44 for SPP scheme
-'spp44' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 144 ;
-	}
-#Random pattern 45 for SPP scheme
-'spp45' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 145 ;
-	}
-#Random pattern 46 for SPP scheme
-'spp46' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 146 ;
-	}
-#Random pattern 47 for SPP scheme
-'spp47' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 147 ;
-	}
-#Random pattern 48 for SPP scheme
-'spp48' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 148 ;
-	}
-#Random pattern 49 for SPP scheme
-'spp49' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 149 ;
-	}
-#Random pattern 50 for SPP scheme
-'spp50' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 150 ;
-	}
-#Random pattern 51 for SPP scheme
-'spp51' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 151 ;
-	}
-#Random pattern 52 for SPP scheme
-'spp52' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 152 ;
-	}
-#Random pattern 53 for SPP scheme
-'spp53' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 153 ;
-	}
-#Random pattern 54 for SPP scheme
-'spp54' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 154 ;
-	}
-#Random pattern 55 for SPP scheme
-'spp55' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 155 ;
-	}
-#Random pattern 56 for SPP scheme
-'spp56' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 156 ;
-	}
-#Random pattern 57 for SPP scheme
-'spp57' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 157 ;
-	}
-#Random pattern 58 for SPP scheme
-'spp58' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 158 ;
-	}
-#Random pattern 59 for SPP scheme
-'spp59' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 159 ;
-	}
-#Random pattern 60 for SPP scheme
-'spp60' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 160 ;
-	}
-#Random pattern 61 for SPP scheme
-'spp61' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 161 ;
-	}
-#Random pattern 62 for SPP scheme
-'spp62' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 162 ;
-	}
-#Random pattern 63 for SPP scheme
-'spp63' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 163 ;
-	}
-#Random pattern 64 for SPP scheme
-'spp64' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 164 ;
-	}
-#Random pattern 65 for SPP scheme
-'spp65' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 165 ;
-	}
-#Random pattern 66 for SPP scheme
-'spp66' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 166 ;
-	}
-#Random pattern 67 for SPP scheme
-'spp67' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 167 ;
-	}
-#Random pattern 68 for SPP scheme
-'spp68' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 168 ;
-	}
-#Random pattern 69 for SPP scheme
-'spp69' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 169 ;
-	}
-#Random pattern 70 for SPP scheme
-'spp70' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 170 ;
-	}
-#Random pattern 71 for SPP scheme
-'spp71' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 171 ;
-	}
-#Random pattern 72 for SPP scheme
-'spp72' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 172 ;
-	}
-#Random pattern 73 for SPP scheme
-'spp73' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 173 ;
-	}
-#Random pattern 74 for SPP scheme
-'spp74' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 174 ;
-	}
-#Random pattern 75 for SPP scheme
-'spp75' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 175 ;
-	}
-#Random pattern 76 for SPP scheme
-'spp76' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 176 ;
-	}
-#Random pattern 77 for SPP scheme
-'spp77' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 177 ;
-	}
-#Random pattern 78 for SPP scheme
-'spp78' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 178 ;
-	}
-#Random pattern 79 for SPP scheme
-'spp79' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 179 ;
-	}
-#Random pattern 80 for SPP scheme
-'spp80' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 180 ;
-	}
-#Random pattern 81 for SPP scheme
-'spp81' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 181 ;
-	}
-#Random pattern 82 for SPP scheme
-'spp82' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 182 ;
-	}
-#Random pattern 83 for SPP scheme
-'spp83' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 183 ;
-	}
-#Random pattern 84 for SPP scheme
-'spp84' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 184 ;
-	}
-#Random pattern 85 for SPP scheme
-'spp85' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 185 ;
-	}
-#Random pattern 86 for SPP scheme
-'spp86' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 186 ;
-	}
-#Random pattern 87 for SPP scheme
-'spp87' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 187 ;
-	}
-#Random pattern 88 for SPP scheme
-'spp88' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 188 ;
-	}
-#Random pattern 89 for SPP scheme
-'spp89' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 189 ;
-	}
-#Random pattern 90 for SPP scheme
-'spp90' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 190 ;
-	}
-#Random pattern 91 for SPP scheme
-'spp91' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 191 ;
-	}
-#Random pattern 92 for SPP scheme
-'spp92' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 192 ;
-	}
-#Random pattern 93 for SPP scheme
-'spp93' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 193 ;
-	}
-#Random pattern 94 for SPP scheme
-'spp94' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 194 ;
-	}
-#Random pattern 95 for SPP scheme
-'spp95' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 195 ;
-	}
-#Random pattern 96 for SPP scheme
-'spp96' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 196 ;
-	}
-#Random pattern 97 for SPP scheme
-'spp97' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 197 ;
-	}
-#Random pattern 98 for SPP scheme
-'spp98' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 198 ;
-	}
-#Random pattern 99 for SPP scheme
-'spp99' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 199 ;
-	}
-#Random pattern 100 for SPP scheme
-'spp100' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 200 ;
-	}
-#Random pattern 101 for SPP scheme
-'spp101' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 201 ;
-	}
-#Random pattern 102 for SPP scheme
-'spp102' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 202 ;
-	}
-#Random pattern 103 for SPP scheme
-'spp103' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 203 ;
-	}
-#Random pattern 104 for SPP scheme
-'spp104' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 204 ;
-	}
-#Random pattern 105 for SPP scheme
-'spp105' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 205 ;
-	}
-#Random pattern 106 for SPP scheme
-'spp106' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 206 ;
-	}
-#Random pattern 107 for SPP scheme
-'spp107' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 207 ;
-	}
-#Random pattern 108 for SPP scheme
-'spp108' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 208 ;
-	}
-#Random pattern 109 for SPP scheme
-'spp109' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 209 ;
-	}
-#Random pattern 110 for SPP scheme
-'spp110' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 210 ;
-	}
-#Random pattern 111 for SPP scheme
-'spp111' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 211 ;
-	}
-#Random pattern 112 for SPP scheme
-'spp112' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 212 ;
-	}
-#Random pattern 113 for SPP scheme
-'spp113' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 213 ;
-	}
-#Random pattern 114 for SPP scheme
-'spp114' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 214 ;
-	}
-#Random pattern 115 for SPP scheme
-'spp115' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 215 ;
-	}
-#Random pattern 116 for SPP scheme
-'spp116' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 216 ;
-	}
-#Random pattern 117 for SPP scheme
-'spp117' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 217 ;
-	}
-#Random pattern 118 for SPP scheme
-'spp118' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 218 ;
-	}
-#Random pattern 119 for SPP scheme
-'spp119' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 219 ;
-	}
-#Random pattern 120 for SPP scheme
-'spp120' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 220 ;
-	}
-#Random pattern 121 for SPP scheme
-'spp121' = {
-	 discipline = 192 ;
-	 parameterCategory = 213 ;
-	 parameterNumber = 221 ;
-	}
-#Cosine of solar zenith angle
-'uvcossza' = {
-	 discipline = 192 ;
-	 parameterCategory = 214 ;
-	 parameterNumber = 1 ;
-	}
-#UV biologically effective dose
-'uvbed' = {
-	 discipline = 192 ;
-	 parameterCategory = 214 ;
-	 parameterNumber = 2 ;
-	}
-#UV biologically effective dose clear-sky
-'uvbedcs' = {
-	 discipline = 192 ;
-	 parameterCategory = 214 ;
-	 parameterNumber = 3 ;
-	}
 #Total surface UV spectral flux (280-285 nm)
 'uvsflxt280285' = {
 	 discipline = 192 ;
@@ -5809,13 +5015,13 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 25 ;
 	}
-#Source/gain of dust aerosol (0.55 - 9 um)
+#Source/gain of dust aerosol (0.55 - 0.9 um)
 'aersrcdum' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 26 ;
 	}
-#Source/gain of dust aerosol (9 - 20 um)
+#Source/gain of dust aerosol (0.9 - 20 um)
 'aersrcdul' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
@@ -5827,13 +5033,13 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 28 ;
 	}
-#Dry deposition of dust aerosol (0.55 - 9 um)
+#Dry deposition of dust aerosol (0.55 - 0.9 um)
 'aerddpdum' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 29 ;
 	}
-#Dry deposition of dust aerosol (9 - 20 um)
+#Dry deposition of dust aerosol (0.9 - 20 um)
 'aerddpdul' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
@@ -5845,13 +5051,13 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 31 ;
 	}
-#Sedimentation of dust aerosol (0.55 - 9 um)
+#Sedimentation of dust aerosol (0.55 - 0.9 um)
 'aersdmdum' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 32 ;
 	}
-#Sedimentation of dust aerosol (9 - 20 um)
+#Sedimentation of dust aerosol (0.9 - 20 um)
 'aersdmdul' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
@@ -5863,13 +5069,13 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 34 ;
 	}
-#Wet deposition of dust aerosol (0.55 - 9 um) by large-scale precipitation
+#Wet deposition of dust aerosol (0.55 - 0.9 um) by large-scale precipitation
 'aerwdlsdum' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 35 ;
 	}
-#Wet deposition of dust aerosol (9 - 20 um) by large-scale precipitation
+#Wet deposition of dust aerosol (0.9 - 20 um) by large-scale precipitation
 'aerwdlsdul' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
@@ -5881,13 +5087,13 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 37 ;
 	}
-#Wet deposition of dust aerosol (0.55 - 9 um) by convective precipitation
+#Wet deposition of dust aerosol (0.55 - 0.9 um) by convective precipitation
 'aerwdccdum' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 38 ;
 	}
-#Wet deposition of dust aerosol (9 - 20 um) by convective precipitation
+#Wet deposition of dust aerosol (0.9 - 20 um) by convective precipitation
 'aerwdccdul' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
@@ -5899,13 +5105,13 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 40 ;
 	}
-#Negative fixer of dust aerosol (0.55 - 9 um)
+#Negative fixer of dust aerosol (0.55 - 0.9 um)
 'aerngtdum' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 41 ;
 	}
-#Negative fixer of dust aerosol (9 - 20 um)
+#Negative fixer of dust aerosol (0.9 - 20 um)
 'aerngtdul' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
@@ -5917,13 +5123,13 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 43 ;
 	}
-#Vertically integrated mass of dust aerosol (0.55 - 9 um)
+#Vertically integrated mass of dust aerosol (0.55 - 0.9 um)
 'aermssdum' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 44 ;
 	}
-#Vertically integrated mass of dust aerosol (9 - 20 um)
+#Vertically integrated mass of dust aerosol (0.9 - 20 um)
 'aermssdul' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
@@ -5935,13 +5141,13 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 46 ;
 	}
-#Dust aerosol (0.55 - 9 um) optical depth
+#Dust aerosol (0.55 - 0.9 um) optical depth
 'aeroddum' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 47 ;
 	}
-#Dust aerosol (9 - 20 um) optical depth
+#Dust aerosol (0.9 - 20 um) optical depth
 'aeroddul' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
@@ -13825,6 +13031,222 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Time-mean snow depth
+'avg_sd_m' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 254 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean logarithm of surface pressure
+'avg_lnsp' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean low cloud cover
+'avg_lcc_frac' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean medium cloud cover
+'avg_mcc_frac' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean high cloud cover
+'avg_hcc_frac' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 195 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean forecast albedo
+'avg_fal_frac' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Covariance between 2-metre temperature and volumetric soil water layer 1
+'covar_t2m_swvl1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and volumetric soil water layer 1
+'covar_rh2m_swvl1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 193 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between surface soil moisture and volumetric soil water layer 1
+'covar_ssm_swvl1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 194 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and volumetric soil water layer 2
+'covar_t2m_swvl2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 195 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and volumetric soil water layer 2
+'covar_rh2m_swvl2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 196 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between surface soil moisture and volumetric soil water layer 2
+'covar_ssm_swvl2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 197 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and volumetric soil water layer 3
+'covar_t2m_swvl3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 198 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and volumetric soil water layer 3
+'covar_rh2m_swvl3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 199 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between surface soil moisture and volumetric soil water layer 3
+'covar_ssm_swvl3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 200 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and soil temperature layer 1
+'covar_t2m_stl1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 201 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and soil temperature layer 1
+'covar_rh2m_stl1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 202 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and soil temperature layer 2
+'covar_t2m_stl2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 203 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and soil temperature layer 2
+'covar_rh2m_stl2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 204 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and soil temperature layer 3
+'covar_t2m_stl3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 205 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and soil temperature layer 3
+'covar_rh2m_stl3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 206 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and temperature of snow layer 1
+'covar_t2m_tsn1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 207 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and temperature of snow layer 1
+'covar_rh2m_tsn1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 208 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and temperature of snow layer 2
+'covar_t2m_tsn2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 209 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and temperature of snow layer 2
+'covar_rh2m_tsn2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 210 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and temperature of snow layer 3
+'covar_t2m_tsn3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 211 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and temperature of snow layer 3
+'covar_rh2m_tsn3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 212 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
 #Surface roughness length for heat
 'srlh' = {
 	 localTablesVersion = 1 ;
@@ -13885,58 +13307,6 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
-	}
-#Volume-mean total column mixing ratio
-'vm_tc_vol_mixrat' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 195 ;
-	}
-#Emission mass flux from vegetation
-'emi_mflx_veg' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 is_chemical_srcsink = 1 ;
-	 sourceSinkChemicalPhysicalProcess = 192 ;
-	}
-#Emission mass flux from biomass burning
-'emi_mflx_biomburn' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 is_chemical_srcsink = 1 ;
-	 sourceSinkChemicalPhysicalProcess = 193 ;
-	}
-#Emission mass flux from settlements
-'emi_mflx_settl' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 is_chemical_srcsink = 1 ;
-	 sourceSinkChemicalPhysicalProcess = 194 ;
-	}
-#Emission mass flux from soil
-'emi_mflx_soil' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 is_chemical_srcsink = 1 ;
-	 sourceSinkChemicalPhysicalProcess = 195 ;
-	}
-#Emission mass flux from wild animals
-'emi_mflx_wildanim' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 77 ;
-	 is_chemical_srcsink = 1 ;
-	 sourceSinkChemicalPhysicalProcess = 196 ;
 	}
 #Aerosol negative fixer mass flux
 'aer_negfix_mflx' = {
@@ -14217,18 +13587,6 @@
 	 parameterCategory = 129 ;
 	 parameterNumber = 54 ;
 	}
-#Mean 2 metre temperature in the last 24 hours gradient
-'mean2t24grd' = {
-	 discipline = 192 ;
-	 parameterCategory = 129 ;
-	 parameterNumber = 55 ;
-	}
-#Mean 2 metre dewpoint temperature in the last 24 hours gradient
-'mn2d24grd' = {
-	 discipline = 192 ;
-	 parameterCategory = 129 ;
-	 parameterNumber = 56 ;
-	}
 #Downward UV radiation at the surface gradient
 'uvbgrd' = {
 	 discipline = 192 ;
@@ -14294,18 +13652,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 129 ;
 	 parameterNumber = 67 ;
-	}
-#Minimum stomatal resistance, low vegetation
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 129 ;
-	 parameterNumber = 68 ;
-	}
-#Minimum stomatal resistance, high vegetation
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 129 ;
-	 parameterNumber = 69 ;
 	}
 #Biome cover, low vegetation
 '~' = {
@@ -15501,12 +14847,6 @@
 	 parameterCategory = 130 ;
 	 parameterNumber = 231 ;
 	}
-#Mean vertical velocity
-'mvv' = {
-	 discipline = 192 ;
-	 parameterCategory = 130 ;
-	 parameterNumber = 232 ;
-	}
 #2m temperature anomaly of at least +2K
 '2tag2' = {
 	 discipline = 192 ;
@@ -16405,41 +15745,11 @@
 	 parameterCategory = 140 ;
 	 parameterNumber = 200 ;
 	}
-#Standard deviation wave height
-'sdhs' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 240 ;
-	}
-#Mean of 10 metre wind speed
-'mu10' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 241 ;
-	}
-#Mean wind direction
-'mdwi' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 242 ;
-	}
-#Standard deviation of 10 metre wind speed
-'sdu' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 243 ;
-	}
 #2D wave spectra (multiple)
 '2dsp' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 250 ;
-	}
-#Wave spectral peakedness
-'wsp' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 254 ;
 	}
 #Indicates a missing value
 '~' = {
@@ -16645,24 +15955,6 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 128 ;
 	}
-#Sea water potential temperature
-'thetao' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 129 ;
-	}
-#Sea water practical salinity
-'so' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 130 ;
-	}
-#Upward sea water velocity
-'wo' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 133 ;
-	}
 #Modulus of strain rate tensor
 'mst' = {
 	 discipline = 192 ;
@@ -16686,12 +15978,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 137 ;
-	}
-#Sea water sigma theta
-'sigmat' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 138 ;
 	}
 #Richardson number
 'rn' = {
@@ -16764,18 +16050,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 152 ;
-	}
-#Surface downward eastward stress
-'taueo' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 153 ;
-	}
-#Surface downward northward stress
-'tauno' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 154 ;
 	}
 #Turbulent kinetic energy input
 'tki' = {
@@ -16866,30 +16140,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 170 ;
-	}
-#U velocity maximum
-'umax' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 171 ;
-	}
-#Depth of the velocity maximum
-'dumax' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 172 ;
-	}
-#Salinity maximum
-'smax' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 173 ;
-	}
-#Depth of salinity maximum
-'dsmax' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 174 ;
 	}
 #Layer Thickness at scalar points
 'ldp' = {
@@ -17173,41 +16423,17 @@
 	 parameterCategory = 160 ;
 	 parameterNumber = 199 ;
 	}
-#Maximum temperature at 2 metres during averaging time
-'mx2trea' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 201 ;
-	}
-#Minimum temperature at 2 metres during averaging time
-'mn2trea' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 202 ;
-	}
 #Runoff
 'rorea' = {
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 205 ;
 	}
-#Standard deviation of geopotential
-'zzrea' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 206 ;
-	}
 #Covariance of temperature and geopotential
 'tzrea' = {
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 207 ;
-	}
-#Standard deviation of temperature
-'ttrea' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 208 ;
 	}
 #Covariance of specific humidity and geopotential
 'qzrea' = {
@@ -17220,12 +16446,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 210 ;
-	}
-#Standard deviation of specific humidity
-'qqrea' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 211 ;
 	}
 #Covariance of U component and geopotential
 'uzrea' = {
@@ -17244,12 +16464,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 214 ;
-	}
-#Standard deviation of U velocity
-'uurea' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 215 ;
 	}
 #Covariance of V component and geopotential
 'vzrea' = {
@@ -17274,12 +16488,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 219 ;
-	}
-#Standard deviation of V component
-'vvrea' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 220 ;
 	}
 #Covariance of W component and geopotential
 'wzrea' = {
@@ -17310,12 +16518,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 225 ;
-	}
-#Standard deviation of vertical velocity
-'wwrea' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 226 ;
 	}
 #Instantaneous surface heat flux
 'ishfrea' = {
@@ -17376,198 +16578,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 254 ;
-	}
-#Surface geopotential
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 51 ;
-	}
-#Vertical integral of temperature
-'vit' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 54 ;
-	}
-#Vertical integral of cloud liquid water
-'vilw' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 56 ;
-	}
-#Vertical integral of cloud frozen water
-'viiw' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 57 ;
-	}
-#Vertical integral of ozone
-'vioz' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 58 ;
-	}
-#Vertical integral of energy conversion
-'viec' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 64 ;
-	}
-#Vertical integral of eastward mass flux
-'vimae' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 65 ;
-	}
-#Vertical integral of northward mass flux
-'viman' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 66 ;
-	}
-#Vertical integral of eastward kinetic energy flux
-'vikee' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 67 ;
-	}
-#Vertical integral of northward kinetic energy flux
-'viken' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 68 ;
-	}
-#Vertical integral of eastward geopotential flux
-'vige' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 73 ;
-	}
-#Vertical integral of northward geopotential flux
-'vign' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 74 ;
-	}
-#Vertical integral of eastward total energy flux
-'vitoee' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 75 ;
-	}
-#Vertical integral of northward total energy flux
-'vitoen' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 76 ;
-	}
-#Vertical integral of eastward ozone flux
-'vioze' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 77 ;
-	}
-#Vertical integral of northward ozone flux
-'viozn' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 78 ;
-	}
-#Vertical integral of divergence of mass flux
-'vimad' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 81 ;
-	}
-#Vertical integral of divergence of kinetic energy flux
-'viked' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 82 ;
-	}
-#Vertical integral of divergence of thermal energy flux
-'vithed' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 83 ;
-	}
-#Vertical integral of divergence of geopotential flux
-'vigd' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 85 ;
-	}
-#Vertical integral of divergence of total energy flux
-'vitoed' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 86 ;
-	}
-#Vertical integral of divergence of ozone flux
-'viozd' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 87 ;
-	}
-#Variance of geopotential
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 206 ;
-	}
-#Covariance of geopotential/temperature
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 207 ;
-	}
-#Variance of temperature
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 208 ;
-	}
-#Covariance of geopotential/specific humidity
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 209 ;
-	}
-#Covariance of temperature/specific humidity
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 210 ;
-	}
-#Variance of specific humidity
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 211 ;
-	}
-#Covariance of u component/geopotential
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 212 ;
-	}
-#Covariance of u component/temperature
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 213 ;
-	}
-#Covariance of u component/specific humidity
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 214 ;
-	}
-#Variance of u component
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 215 ;
 	}
 #Covariance of v component/geopotential
 '~' = {
@@ -18793,205 +17803,91 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 255 ;
 	}
-#Snow evaporation
+#Time-mean snow evaporation rate
 'esrate' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 44 ;
 	}
-#Snowmelt
+#Time-mean snowmelt rate
 '~' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 45 ;
 	}
-#Magnitude of turbulent surface stress
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 48 ;
-	}
-#Mean large-scale precipitation fraction
-'mlspfr' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 50 ;
-	}
-#Mean large-scale precipitation rate
+#Time-mean large-scale precipitation rate
 'mlsprt' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 142 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 196 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean convective precipitation rate
+#Time-mean convective precipitation rate
 'cprate' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 143 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 195 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean total snowfall rate
+#Time-mean total snowfall rate
 'mtsfr' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 144 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 198 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
-#Boundary layer dissipation
-'bldrate' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 145 ;
-	}
-#Mean surface sensible heat flux
-'msshfl' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 146 ;
-	}
-#Mean surface latent heat flux
-'mslhfl' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 147 ;
-	}
-#Mean short-wave heating rate
+#Time-mean short-wave (solar) heating rate
 'mswhr' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 153 ;
 	}
-#Mean long-wave heating rate
+#Time-mean long-wave (thermal) heating rate
 'mlwhr' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 154 ;
 	}
-#Mean surface downward solar radiation flux
-'msdsrf' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 169 ;
-	}
-#Mean surface downward thermal radiation flux
-'msdtrf' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 175 ;
-	}
-#Mean surface net solar radiation flux
-'msnsrf' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 176 ;
-	}
-#Mean surface net thermal radiation flux
-'msntrf' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 177 ;
-	}
-#Mean top net solar radiation flux
-'mtnsrf' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 178 ;
-	}
-#Mean top net thermal radiation flux
-'mtntrf' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 179 ;
-	}
-#East-West surface stress rate of accumulation
-'ewssra' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 180 ;
-	}
-#North-South surface stress rate of accumulation
-'nsssra' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 181 ;
-	}
-#Evaporation
+#Time-mean evaporation rate
 'erate' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 182 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 199 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
-#Mean sunshine duration rate
-'msdr' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 189 ;
-	}
-#Longitudinal component of gravity wave stress
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 195 ;
-	}
-#Meridional component of gravity wave stress
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 196 ;
-	}
-#Gravity wave dissipation
-'gwdrate' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 197 ;
-	}
-#Mean runoff rate
+#Time-mean runoff rate
 'mrort' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 205 ;
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 201 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
-#Top net solar radiation, clear sky
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 208 ;
-	}
-#Top net thermal radiation, clear sky
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 209 ;
-	}
-#Surface net solar radiation, clear sky
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 210 ;
-	}
-#Surface net thermal radiation, clear sky
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 211 ;
-	}
-#Solar insolation rate of accumulation
-'soira' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 212 ;
-	}
-#Mean total precipitation rate
+#Time-mean total precipitation rate
 'tprate' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 228 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 193 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
-#Convective snowfall
+#Time-mean convective snowfall rate
 '~' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 239 ;
 	}
-#Large scale snowfall
+#Time-mean large-scale snowfall rate
 '~' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
@@ -19003,13 +17899,13 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 255 ;
 	}
-#Snow evaporation anomaly
+#Time-mean snow evaporation anomalous rate of accumulation
 '~' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 44 ;
 	}
-#Snowmelt anomaly
+#Time-mean snowmelt anomalous rate of accumulation
 '~' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
@@ -19129,7 +18025,7 @@
 	 parameterCategory = 173 ;
 	 parameterNumber = 181 ;
 	}
-#Evaporation anomalous rate of accumulation
+#Time-mean evaporation anomalous rate of accumulation
 'evara' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
@@ -19387,18 +18283,6 @@
 	 parameterCategory = 174 ;
 	 parameterNumber = 183 ;
 	}
-#1.5m temperature - maximum in the last 24 hours
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 174 ;
-	 parameterNumber = 201 ;
-	}
-#1.5m temperature - minimum in the last 24 hours
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 174 ;
-	 parameterNumber = 202 ;
-	}
 #Soil temperature layer 4
 '~' = {
 	 discipline = 192 ;
@@ -19560,18 +18444,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 175 ;
 	 parameterNumber = 183 ;
-	}
-#1.5m temperature - maximum in the last 24 hours
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 175 ;
-	 parameterNumber = 201 ;
-	}
-#1.5m temperature - minimum in the last 24 hours
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 175 ;
-	 parameterNumber = 202 ;
 	}
 #Soil temperature layer 4
 '~' = {
@@ -20059,23 +18931,11 @@
 	 parameterCategory = 201 ;
 	 parameterNumber = 113 ;
 	}
-#deviation of pressure from reference value
-'pp' = {
-	 discipline = 192 ;
-	 parameterCategory = 201 ;
-	 parameterNumber = 139 ;
-	}
 #coefficient of horizontal diffusion
 '~' = {
 	 discipline = 192 ;
 	 parameterCategory = 201 ;
 	 parameterNumber = 150 ;
-	}
-#Maximum wind velocity
-'vmax_10m' = {
-	 discipline = 192 ;
-	 parameterCategory = 201 ;
-	 parameterNumber = 187 ;
 	}
 #water content of interception store
 'w_i' = {
@@ -21673,17 +20533,15 @@
 	 parameterCategory = 220 ;
 	 parameterNumber = 228 ;
 	}
-#Mean of 10 metre wind speed
-'mean10ws' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 5 ;
-	}
 #Mean total cloud cover
 'meantcc' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 6 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Surface temperature significance
 'sts' = {

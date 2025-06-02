@@ -11,7 +11,11 @@
 . ./include.ctest.sh
 set -u
 
-label="grib_nearest_c"
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
+
+label="examples_c_grib_nearest"
 tempTxt=temp.$label.txt
 tempRef=temp.$label.ref
 

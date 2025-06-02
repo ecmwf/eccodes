@@ -10,6 +10,15 @@
 
 #include "grib_tools.h"
 
+#include <map>
+#include <numeric>
+#include <string>
+
+#if defined(HAVE_ECKIT_GEO)
+    #include "eckit/system/Library.h"
+    #include "eckit/system/LibraryManager.h"
+#endif
+
 extern char* optarg;
 extern int optind;
 
@@ -40,7 +49,13 @@ static void print_debug_info(grib_context* context)
 #ifdef HAVE_AEC
     aec = 1;
 #endif
-    grib_context_log(context, GRIB_LOG_DEBUG, "Git SHA1:         %s", grib_get_git_sha1());
+    const char* git_branch = grib_get_git_branch();
+    const char* git_sha1 = grib_get_git_sha1();
+    if (strlen(git_branch) > 0)
+        grib_context_log(context, GRIB_LOG_DEBUG, "Git branch:       %s", git_branch);
+    if (strlen(git_sha1) > 0)
+        grib_context_log(context, GRIB_LOG_DEBUG, "Git SHA1:         %s", git_sha1);
+
     grib_context_log(context, GRIB_LOG_DEBUG, "Build date:       %s", codes_get_build_date());
     grib_context_log(context, GRIB_LOG_DEBUG, "Features:");
     grib_context_log(context, GRIB_LOG_DEBUG, "  HAVE_AEC=%d", aec);
@@ -53,6 +68,38 @@ static void print_debug_info(grib_context* context)
     grib_context_log(context, GRIB_LOG_DEBUG, "  HAVE_ECCODES_OMP_THREADS=%d", GRIB_OMP_THREADS);
 #endif
     grib_context_log(context, GRIB_LOG_DEBUG, "  HAVE_MEMFS=%d", memfs);
+
+#if defined(HAVE_ECKIT_GEO)
+    grib_context_log(context, GRIB_LOG_DEBUG, "Libraries:");
+
+    struct Libraries : std::map<std::string, std::string>
+    {
+        Libraries()
+        {
+            constexpr size_t sha1len = 8;
+
+            using eckit::system::LibraryManager;
+            for (const auto& lib_name : LibraryManager::list()) {
+                const auto& lib = LibraryManager::lookup(lib_name);
+
+                emplace(lib_name + " version", lib.version());
+                emplace(lib_name + " git-sha1", lib.gitsha1(sha1len));
+                emplace(lib_name + " home", lib.libraryHome());
+            }
+        }
+    } static const libs;
+
+    auto key_max = std::accumulate(libs.begin(), libs.end(), static_cast<size_t>(0),
+                                   [](size_t max, const auto& kv) { return std::max(max, kv.first.size()); });
+
+    for (const auto& [key, val] : libs) {
+        auto key_str = key;
+        key_str.resize(key_max, ' ');
+
+        key_str = "  " + key_str + " : " + val;
+        grib_context_log(context, GRIB_LOG_DEBUG, key_str.c_str());
+    }
+#endif
 }
 
 int main(int argc, char* argv[])
@@ -136,8 +183,8 @@ int main(int argc, char* argv[])
                 "It is recommended you use ECCODES_SAMPLES_PATH instead!)\n");
         }
         else {
-            printf("Default SAMPLES path is used: %s\n", context->grib_samples_path);
-            printf("SAMPLES path can be changed by setting the ECCODES_SAMPLES_PATH environment variable.\n");
+            printf("Default samples path is used: %s\n", context->grib_samples_path);
+            printf("Samples path can be changed by setting the ECCODES_SAMPLES_PATH environment variable.\n");
         }
         if ((path = getenv("ECCODES_EXTRA_SAMPLES_PATH")) != NULL) {
             printf("Environment variable ECCODES_EXTRA_SAMPLES_PATH=%s\n", path);

@@ -9,4 +9,8 @@
 
 . ./include.ctest.sh
 
-${examples_dir}/eccodes_f_grib_nearest > /dev/null
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
+
+${examples_dir}/f_grib_nearest > /dev/null

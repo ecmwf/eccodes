@@ -18,11 +18,6 @@
 #include <stdio.h>
 #include "eccodes.h"
 
-static void usage(const char* app)
-{
-    fprintf(stderr, "Usage is: %s input_file ouput_file\n", app);
-}
-
 int main(int argc, char* argv[])
 {
     FILE* in                    = NULL;
@@ -33,7 +28,6 @@ int main(int argc, char* argv[])
     int err                     = 0;
 
     if (argc != 3) {
-        usage(argv[0]);
         return 1;
     }
 
@@ -68,7 +62,7 @@ int main(int argc, char* argv[])
         CODES_CHECK(codes_get_message(clone_handle, &buffer, &size), 0);
         /* write the buffer to a file */
         if (fwrite(buffer, 1, size, out) != size) {
-            perror(argv[1]);
+            perror(argv[2]);
             return 1;
         }
         codes_handle_delete(clone_handle);

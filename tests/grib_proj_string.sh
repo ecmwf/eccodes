@@ -37,7 +37,7 @@ for f in `echo $files`; do
     # Check contents (basic)
     case $ps in
       *+proj=*) echo OK;;
-      *)        echo "File: $file. Invalid proj string: |$ps|"; exit 1;;
+      *)        echo "ERROR: File: $file. Invalid proj string: |$ps|"; exit 1;;
     esac
     if test "x$PROJ_TOOL" != "x"; then
         ${tools_dir}/grib_get -p longitudeOfFirstGridPointInDegrees,latitudeOfFirstGridPointInDegrees $file |\
@@ -97,6 +97,21 @@ set -e
 grep -q "ERROR.*Cannot unpack.*projTargetString.* as double" $tempText
 grep -q "Hint: Try unpacking as string" $tempText
 
+# Albers
+${tools_dir}/grib_set -s gridType=albers $grib2_sample $tempGrib
+${tools_dir}/grib_get -p projString $tempGrib
+
+# Unsupported grids
+unsupported_grids="space_view equatorial_azimuthal_equidistant transverse_mercator"
+for ug in $unsupported_grids; do
+  ${tools_dir}/grib_set -s gridType=$ug $grib2_sample $tempGrib
+  set +e
+  ${tools_dir}/grib_get -p projString $tempGrib > $tempText 2>&1
+  status=$?
+  set -e
+  [ $status -ne 0 ]
+  grep -q "not yet implemented" $tempText
+done
 
 # Clean up
 rm -f $tempGrib $tempText

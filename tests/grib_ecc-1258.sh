@@ -10,11 +10,20 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1258
+# find_nearest returns wrong point if searched location is at a grid point
+# ---------------------------------------------------------------------
+
 label="grib_ecc-1258_test"
 tempFilt=temp.$label.filt
 tempGrib=temp.$label.grib
 tempOut=temp.$label.txt
 sample_grib1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
 
 cat > $tempFilt <<EOF
  set Ni = 16;

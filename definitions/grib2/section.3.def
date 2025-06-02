@@ -38,7 +38,7 @@ alias isRotatedGrid = false;
 if (gridDefinitionTemplateNumber >= 32768) {
   template gridDefinitionSection "grib2/local/[centreForLocal]/template.3.[gridDefinitionTemplateNumber:l].def";
 } else {
-  template gridDefinitionSection "grib2/template.3.[gridDefinitionTemplateNumber:l].def";
+  template gridDefinitionSection "grib2/templates/template.3.[gridDefinitionTemplateNumber:l].def";
 }
 
 if(PLPresent){
@@ -67,6 +67,10 @@ concept gridType {
  "rotated_ll"            = { gridDefinitionTemplateNumber=1;  PLPresent=0; }
  "stretched_ll"          = { gridDefinitionTemplateNumber=2;  PLPresent=0; }
  "stretched_rotated_ll"  = { gridDefinitionTemplateNumber=3;  PLPresent=0; }
+
+ "varres_ll"             = { gridDefinitionTemplateNumber=4;  PLPresent=0; }
+ "varres_rotated_ll"     = { gridDefinitionTemplateNumber=5;  PLPresent=0; }
+
  "mercator"              = { gridDefinitionTemplateNumber=10; PLPresent=0; }
  "transverse_mercator"   = { gridDefinitionTemplateNumber=12; PLPresent=0; }
  "polar_stereographic"   = { gridDefinitionTemplateNumber=20; PLPresent=0; }

@@ -1,9 +1,6 @@
-#########################
-#
 # author: Sebastien Villaume
 # created: 13 May 2013
 #
-#########################
 "none"={matchTimeRepres=0;} 
 "3hMean"={matchTimeRepres=1;}
 "diurnalMean"={matchTimeRepres=2;}

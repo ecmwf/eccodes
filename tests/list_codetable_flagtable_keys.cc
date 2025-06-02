@@ -8,73 +8,48 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
+#include "action/List.h"
+#include "action/If.h"
+#include "action/Gen.h"
 
-typedef struct grib_action_if
-{
-    grib_action act;
-    /* Members defined in section */
-    /* Members defined in if */
-    grib_expression* expression;
-    grib_action* block_true;
-    grib_action* block_false;
-} grib_action_if;
-
-typedef struct grib_action_list
-{
-    grib_action act;
-    /* Members defined in section */
-    /* Members defined in list */
-    grib_expression* expression;
-    grib_action* block_list;
-} grib_action_list;
-
-typedef struct grib_action_gen
-{
-    grib_action act;
-    /* Members defined in gen */
-    long len;
-    grib_arguments* params;
-} grib_action_gen;
-
-static void print_names(grib_action* a)
+static void print_names(eccodes::Action* a)
 {
     while (a) {
-        if (a->op && !strcmp(a->op, "label")) {
-            a = a->next;
+        if (a->op_ && !strcmp(a->op_, "label")) {
+            a = a->next_;
             continue;
         }
-        if (!strcmp(a->cclass->name, "action_class_noop") ||
-            !strcmp(a->cclass->name, "action_class_when")) {
-            a = a->next;
+        if (!strcmp(a->class_name_, "action_class_noop") ||
+            !strcmp(a->class_name_, "action_class_when")) {
+            a = a->next_;
             continue;
         }
 
-        if (!strcmp(a->cclass->name, "action_class_list")) {
-            grib_action_list* al = (grib_action_list*)a;
-            /*printf("%s\n", a->name);*/
-            print_names(al->block_list);
+        if (!strcmp(a->class_name_, "action_class_list")) {
+            eccodes::action::List* al = dynamic_cast<eccodes::action::List*>(a);
+            /*printf("%s\n", a->name_);*/
+            print_names(al->block_list_);
         }
-        else if (!strcmp(a->cclass->name, "action_class_if")) {
-            grib_action_if* ai = (grib_action_if*)a;
-            print_names(ai->block_false);
-            print_names(ai->block_true);
+        else if (!strcmp(a->class_name_, "action_class_if")) {
+            eccodes::action::If* ai = dynamic_cast<eccodes::action::If*>(a);
+            print_names(ai->block_false_);
+            print_names(ai->block_true_);
         }
-        else if (!strcmp(a->cclass->name, "action_class_gen")) {
+        else if (!strcmp(a->class_name_, "action_class_gen")) {
             const char* table = NULL;
-            grib_action_gen* ag = (grib_action_gen*)a;
-            if (strcmp(a->op,"codetable")==0 || strcmp(a->op,"codeflag")==0) {
-                printf("%s", a->name);
-                table = grib_arguments_get_string(NULL, ag->params, 0);
-                if (table) printf("\t%s=%s", a->op, table);
+            eccodes::action::Gen* ag = dynamic_cast<eccodes::action::Gen*>(a);
+            if (strcmp(a->op_,"codetable")==0 || strcmp(a->op_,"codeflag")==0) {
+                printf("%s", a->name_);
+                table = ag->params_->get_string(NULL, 0);
+                if (table) printf("\t%s=%s", a->op_, table);
                 printf("\n");
             }
         }
         else {
-            /*printf("%s\n", a->name);*/
+            /*printf("%s\n", a->name_);*/
         }
 
-        a = a->next;
+        a = a->next_;
     }
 }
 

@@ -8,6 +8,4 @@
 6 6 Distance downward from roof surface (m)
 7 7 Distance inward from outer wall surface (m)
 8 8 Distance downward from road surface (m)
-# 9-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing

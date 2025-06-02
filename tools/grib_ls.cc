@@ -17,7 +17,7 @@ grib_option grib_options[] = {
     { "F:", 0, 0, 1, 1, "%g" },
     { "P:", 0, 0, 0, 1, 0 },
     { "w:", 0, 0, 0, 1, 0 },
-    { "j", 0, "JSON output\n", 0, 1, 0 },
+    { "j", 0, "JSON output.\n", 0, 1, 0 },
     { "B:", 0, 0, 0, 1, 0 },
     { "l:", 0, 0, 0, 1, 0 },
     { "s:", 0, 0, 0, 1, 0 },
@@ -122,7 +122,6 @@ int grib_tool_init(grib_runtime_options* options)
                     exit(1);
                 }
             }
-            Assert(p);
             if (p && *p == ',') {
                 p++;
                 options->latlon_mask = strdup(p);
@@ -137,6 +136,7 @@ int grib_tool_init(grib_runtime_options* options)
         int idx_overall    = -1;
         FILE* f            = fopen(options->latlon_mask, "r");
         if (!f) {
+            fprintf(stderr, "%s: unable to open mask file %s\n", tool_name, options->latlon_mask);
             perror(options->latlon_mask);
             exit(1);
         }
@@ -370,18 +370,20 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     }
 
     if (!json_latlon && options->json_output) {
-        if (options->current_infile && options->current_infile->name) {
-            size_t len = strlen(options->current_infile->name);
-            grib_set_string(h, "file", options->current_infile->name, &len);
-        }
         if (!first_handle && options->handle_count > 1) {
             fprintf(stdout, ",\n");
         }
-        if (options->json_output && first_handle) {
+        if (first_handle) {
             fprintf(stdout, "{ \"messages\" : [ \n");
             first_handle = 0;
         }
     }
+
+    if (options->current_infile && options->current_infile->name) {
+        size = strlen(options->current_infile->name);
+        grib_set_string(h, "file", options->current_infile->name, &size);
+    }
+
     new_handle = "\n,";
     return 0;
 }
@@ -394,12 +396,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     grib_handle_delete(h);
     return 0;
-}
-
-/* key values can be printed here. Headers are already printed if requested */
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
-    grib_print_key_values(options, h);
 }
 
 /* This is executed after the last message in the last file is processed */

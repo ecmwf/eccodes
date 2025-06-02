@@ -23,7 +23,5 @@
 21 21 Humidity parameter in canopy conductance (Proportion)
 22 22 Soil moisture (kg m-3)
 26 26 Wilting point (kg m-3)
-# 23-191 Reserved
-#192-254 Reserved for local use
 255 255 Missing
 

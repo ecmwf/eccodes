@@ -31,21 +31,21 @@ int main(int argc, char* argv[])
     char packingType[50] = {0,};
     bool do_compare = true;
 
-    Assert(argc == 3);
+    ECCODES_ASSERT(argc == 3);
     in_filename = argv[1];
     out_filename = argv[2];
 
     printf("Opening file '%s'...\n", in_filename);
     fin = fopen(in_filename, "rb");
-    Assert(fin);
+    ECCODES_ASSERT(fin);
 
     h = grib_handle_new_from_file(0, fin, &err);
-    Assert(h);
-    Assert(!err);
+    ECCODES_ASSERT(h);
+    ECCODES_ASSERT(!err);
 
     len = sizeof(packingType);
     GRIB_CHECK(grib_get_string(h, "packingType", packingType, &len), 0);
-    Assert( STR_EQUAL(packingType, "spectral_complex") || STR_EQUAL(packingType, "spectral_simple") );
+    ECCODES_ASSERT( STR_EQUAL(packingType, "spectral_complex") || STR_EQUAL(packingType, "spectral_simple") );
 
     GRIB_CHECK(grib_set_long(h, "pentagonalResolutionParameterJ", MTRONC), 0);
     GRIB_CHECK(grib_set_long(h, "pentagonalResolutionParameterK", MTRONC), 0);
@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
     fout = fopen(out_filename, "wb");
     GRIB_CHECK(grib_get_message(h, &buffer, &size), 0);
     if (fwrite(buffer, 1, size, fout) != size) {
-        Assert(!"Failed to write data");
+        ECCODES_ASSERT(!"Failed to write data");
     }
     fclose(fout);
 
@@ -104,8 +104,8 @@ int main(int argc, char* argv[])
     // Read in the saved GRIB file
     if (do_compare) {
         printf("Load values from saved file and compare....\n");
-        fin = fopen(out_filename, "rb"); Assert(fin);
-        h = grib_handle_new_from_file(0, fin, &err); Assert(h);
+        fin = fopen(out_filename, "rb"); ECCODES_ASSERT(fin);
+        h = grib_handle_new_from_file(0, fin, &err); ECCODES_ASSERT(h);
         GRIB_CHECK(grib_get_double_array(h, "values", zval, &len), 0);
         for (i = 0; i < ILCHAM; ++i) {
             const double diff = fabs(zval[i] - values[i]);

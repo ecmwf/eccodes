@@ -1,4 +1,5 @@
-public :: codes_get, codes_set, codes_set_force, codes_grib_get_data, codes_is_missing, codes_is_defined
+public :: codes_get, codes_set, codes_set_force, codes_grib_get_data, codes_is_missing, codes_is_defined, codes_key_is_computed
+public :: codes_grib_surface_type_requires_value
 public :: codes_open_file, codes_close_file,codes_read_bytes,codes_write_bytes
 public :: codes_grib_multi_support_on, codes_grib_multi_support_off
 public :: codes_keys_iterator_new, &
@@ -7,6 +8,8 @@ public :: codes_keys_iterator_new, &
 public :: codes_skip_computed, &
           codes_skip_coded, &
           codes_skip_duplicates, &
+          codes_skip_function, &
+          codes_skip_edition_specific, &
           codes_skip_read_only
 public :: codes_keys_iterator_get_name, &
           codes_keys_iterator_rewind

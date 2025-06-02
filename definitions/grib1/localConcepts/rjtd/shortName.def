@@ -213,28 +213,23 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 78 ;
 	}
-#Maximum wind speed
-'maxgust' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 219 ;
-	}
-#Downward short-wave radiation flux
-'dswrf' = {
+#Surface downward short-wave radiation flux
+'sdswrf' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 204 ;
 	}
-#Upward short-wave radiation flux
-'uswrf' = {
+#Surface upward short-wave radiation flux
+'suswrf' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 211 ;
 	}
-#Downward long-wave radiation flux
-'dlwrf' = {
+#Surface downward long-wave radiation flux
+'sdlwrf' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 205 ;
 	}
-#Upward long-wave radiation flux
-'ulwrf' = {
+#Surface upward long-wave radiation flux
+'sulwrf' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 212 ;
 	}
@@ -530,7 +525,7 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 5 ;
 	}
-#Geometrical height
+#Geometrical height above ground
 'h' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 8 ;
@@ -664,16 +659,6 @@
 'spc' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 48 ;
-	}
-#U-component of current
-'ucurr' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 49 ;
-	}
-#V-component of current
-'vcurr' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 50 ;
 	}
 #Humidity mixing ratio
 'mixr' = {
@@ -920,22 +905,22 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 87 ;
 	}
-#Vertical integral of eastward heat flux
+#Total column vertically-integrated eastward heat flux
 'vithee' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 190 ;
 	}
-#Vertical integral of northward heat flux
+#Total column vertically-integrated northward heat flux
 'vithen' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 191 ;
 	}
-#Vertical integral of eastward water vapour flux
+#Total column vertically-integrated eastward water vapour flux
 'viwve' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 157 ;
 	}
-#Vertical integral of northward water vapour flux
+#Total column vertically-integrated northward water vapour flux
 'viwvn' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 152 ;

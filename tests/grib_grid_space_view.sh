@@ -9,9 +9,13 @@
 
 . ./include.ctest.sh
 
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
+
 # Define a common label for all the tmp files
 label="grib_space_view_test"
-tempFilter="temp.${label}.filt"
+tempFilt="temp.${label}.filt"
 tempGrib1="temp.${label}.grib1"
 tempGrib2="temp.${label}.grib2"
 tempOut="temp.${label}.out"
@@ -20,7 +24,7 @@ tempOut="temp.${label}.out"
 # GRIB2
 # -----------
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-cat > $tempFilter <<EOF
+cat > $tempFilt <<EOF
  set gridType="space_view";
  set Nx=1900;
  set Ny=900;
@@ -35,9 +39,9 @@ cat > $tempFilter <<EOF
 EOF
 
 # Use filter on input to create a new GRIB
-${tools_dir}/grib_filter -o $tempGrib2 $tempFilter $input
+${tools_dir}/grib_filter -o $tempGrib2 $tempFilt $input
 if [ ! -f "$tempGrib2" ]; then
-   echo 'Failed to create output GRIB from filter' >&2
+   echo 'ERROR: Failed to create output GRIB from filter' >&2
    exit 1
 fi
 # Invoke Geoiterator on the newly created GRIB2 file
@@ -46,6 +50,14 @@ ${tools_dir}/grib_get_data $tempGrib2 > $tempOut
 ${tools_dir}/grib_ls -l 50,0 $tempGrib2
 
 # Invalid cases
+# --------------
+set +e
+${tools_dir}/grib_get_data -s Nx=1 $tempGrib2 > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Wrong number of points" $tempOut
+
 set +e
 ${tools_dir}/grib_get_data -sNr=missing $tempGrib2 > $tempOut 2>&1
 status=$?
@@ -60,13 +72,29 @@ set -e
 [ $status -ne 0 ]
 grep -q "must be greater than zero" $tempOut
 
+
+set +e
+${tools_dir}/grib_get_data -s latitudeOfSubSatellitePoint=66 $tempGrib2 > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "satellite must be located in the equator plane" $tempOut
+
+
+set +e
+${tools_dir}/grib_get_data -s dx=0 $tempGrib2 > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Keys dx and dy must be greater than zero" $tempOut
+
 rm -f $tempGrib2 $tempOut
 
 # -----------
 # GRIB1
 # -----------
 input=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
-cat > $tempFilter <<EOF
+cat > $tempFilt <<EOF
  set gridType="space_view";
  set Nx=550;
  set Ny=550;
@@ -77,7 +105,7 @@ cat > $tempFilter <<EOF
  set Nr=6610710;
  write;
 EOF
-${tools_dir}/grib_filter -o $tempGrib1 $tempFilter $input
+${tools_dir}/grib_filter -o $tempGrib1 $tempFilt $input
 ${tools_dir}/grib_get_data $tempGrib1 > $tempOut
 
 ${tools_dir}/grib_set -s edition=2 $tempGrib1 $tempGrib2
@@ -85,4 +113,4 @@ ${tools_dir}/grib_compare -e -b param $tempGrib1 $tempGrib2
 
 
 # Clean up
-rm -f $tempFilter $tempGrib1 $tempGrib2 $tempOut
+rm -f $tempFilt $tempGrib1 $tempGrib2 $tempOut

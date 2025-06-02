@@ -9,72 +9,61 @@
  */
 
 /*
- * Description: Reads a GRIB message from file, measures read time.
- *
+ * Description: Reads a GRIB message from file, measures time taken
  */
-#include <stdio.h>
+
+
 #include "grib_api_internal.h"
 
-static void usage(const char* prog)
-{
-    printf("usage: %s filename\n", prog);
-    exit(1);
-}
+#include <chrono>
+#include <iostream>
+using namespace std::chrono;
+using std::cout, std::cerr, std::endl;
 
 int main(int argc, char** argv)
 {
-    grib_timer* tes = grib_get_timer(0, "decoding", 0, 0);
-    FILE* in        = NULL;
-    int err = 0, i = 0;
-    grib_handle* h            = NULL;
-    size_t values_len         = 0;
-    double* values            = NULL;
-    double duration_actual    = 0;
-    const double duration_max = 3.6; /* seconds */
+    int err = 0;
+    size_t values_len = 0;
+    double* values = NULL;
+    #ifdef DEBUG
+    const auto duration_max = std::chrono::milliseconds(1500);
+    #else
+    const auto duration_max = std::chrono::milliseconds(600);
+    #endif
     const int num_repetitions = 100;
 
-    if (argc < 2) usage(argv[0]);
+    if (argc < 2) return 1;
 
-    in = fopen(argv[1], "rb");
-    if (!in) {
-        printf("ERROR: unable to open file %s\n", argv[1]);
-        return 1;
-    }
+    FILE* in = fopen(argv[1], "rb");
+    ECCODES_ASSERT(in);
 
-    /* create new handle */
+    // create new handle
     err = 0;
-    h   = grib_handle_new_from_file(0, in, &err);
-    if (h == NULL) {
-        printf("Error: unable to create handle from file.\n");
-        return 1;
-    }
+    grib_handle* h = grib_handle_new_from_file(0, in, &err);
+    ECCODES_ASSERT(h);
 
-    /* get the size of the values array*/
+    // get the size of the values array
     GRIB_CHECK(grib_get_size(h, "values", &values_len), 0);
 
     values = (double*)malloc(values_len * sizeof(double));
 
-    /* get data values*/
-    grib_timer_start(tes);
-    for (i = 0; i < num_repetitions; i++) {
+    // get data values and time it
+    auto start = high_resolution_clock::now();
+    for (int i = 0; i < num_repetitions; i++) {
         GRIB_CHECK(grib_get_double_array(h, "values", values, &values_len), 0);
     }
-    grib_timer_stop(tes, 0);
-    duration_actual = grib_timer_value(tes);
+    auto stop = high_resolution_clock::now();
+    auto duration_actual = duration_cast<milliseconds>(stop - start);
+
     if (duration_actual > duration_max) {
-        fprintf(stderr, "Decoding took longer than expected! actual time=%g, expected to take less than %g seconds",
-                duration_actual, duration_max);
+        cerr << "ERROR: Decoding took longer than expected! actual time=" << duration_actual.count() <<
+                " ms, expected " << duration_max.count() << " ms" << endl;
         return 1;
     }
-    printf("Test passed. Actual decode time=%g\n", duration_actual);
+    cout << "Test passed. Actual decode time  = " << duration_actual.count() << " ms" <<endl;
+    cout << "Test passed. Maximum decode time = " << duration_max.count() << " ms" <<endl;
     free(values);
     grib_handle_delete(h);
     fclose(in);
     return 0;
 }
-
-// int main(int argc, char** argv)
-// {
-//     return 0;
-// }
-// #endif

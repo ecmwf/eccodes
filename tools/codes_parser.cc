@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
     int fail = 0;
 
     grib_context* c = grib_context_get_default();
-    grib_action* a  = NULL;
+    const grib_action* a  = NULL;
 
     for (i = 1; i < argc; i++) {
         printf("%s ... ", argv[i]);
@@ -31,5 +31,6 @@ int main(int argc, char* argv[])
             printf("OK\n");
         }
     }
+    (void)a;
     return fail;
 }

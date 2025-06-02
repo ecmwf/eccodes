@@ -101,7 +101,6 @@ int grib_tool_init(grib_runtime_options* options)
                     exit(1);
                 }
             }
-            Assert(p);
             if (p && *p == ',') {
                 p++;
                 options->latlon_mask = strdup(p);
@@ -113,6 +112,7 @@ int grib_tool_init(grib_runtime_options* options)
         grib_handle* hh;
         FILE* f = fopen(options->latlon_mask, "r");
         if (!f) {
+            fprintf(stderr, "%s: unable to open mask file %s\n", tool_name, options->latlon_mask);
             perror(options->latlon_mask);
             exit(1);
         }
@@ -218,11 +218,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     grib_handle_delete(h);
     return 0;
-}
-
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
-    grib_print_key_values(options, h);
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options)

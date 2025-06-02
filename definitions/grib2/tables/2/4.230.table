@@ -27,7 +27,6 @@
 25	25	Non-methane volatile organic compounds expressed as carbon
 26	26	Anthropogenic non-methane volatile organic compounds expressed as carbon
 27	27	Biogenic non-methane volatile organic compounds expressed as carbon
-#28-39999	28-39999	Reserved
 40000	40000	Sulphate dry aerosol
 40001	40001	Black carbon dry aerosol
 40002	40002	Particulate organic matter dry aerosol
@@ -42,6 +41,4 @@
 40011	40011	Nitrate dry aerosol
 40012	40012	Ammonium dry aerosol
 40013	40013	Water in ambient aerosol
-#40014-63999	40014-63999	Reserved
-#64000-65534	64000-65534	Reserved for local use
 65535	65535	Missing

@@ -32,6 +32,4 @@
 30 30 Frictional velocity (m s-1)
 31 31 Turbulent diffusion coefficient for momentum (m2 s-1)
 32 32 eta coordinate vertical velocity (s-1)
-#33-191 33-191 Reserved (-)
-#192-254 192-254 Reserved for local use (-)
 255 255 Missing (-)

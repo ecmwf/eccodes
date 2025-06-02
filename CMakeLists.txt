@@ -18,7 +18,16 @@
 
 cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 
-find_package( ecbuild 3.7 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
+find_package( ecbuild 3.7 HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
+if(NOT ecbuild_FOUND)
+    message(STATUS "Fetching ecbuild...")
+    include(FetchContent)
+    FetchContent_Populate(ecbuild
+        GIT_REPOSITORY https://github.com/ecmwf/ecbuild.git
+        GIT_TAG        3.8.5
+    )
+    find_package( ecbuild 3.7 REQUIRED HINTS ${ecbuild_SOURCE_DIR})
+endif()
 
 # Initialise project
 project( eccodes LANGUAGES CXX )
@@ -50,9 +59,9 @@ check_symbol_exists( fdatasync       "unistd.h"   ECCODES_HAVE_FDATASYNC)
 
 check_c_source_compiles(
       " typedef int foo_t;
-      static inline foo_t static_foo(){return 0;}
-      foo_t foo(){return 0;}
-      int main(int argc, char *argv[]){return 0;}
+      static inline foo_t static_foo(void){return 0;}
+      foo_t foo(void){return 0;}
+      int main(int argc, char *argv[]){ return static_foo(); }
       " ECCODES_HAVE_C_INLINE
 )
 
@@ -73,11 +82,11 @@ endif()
 ###############################################################################
 # some variables/options of this project
 
-if( CMAKE_CXX_COMPILER_ID STREQUAL "GNU" )
-    ecbuild_add_cxx_flags("-Wno-write-strings -Wno-deprecated")
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
-    ecbuild_add_cxx_flags("-Wno-write-strings -Wno-deprecated")
-elseif( CMAKE_CXX_COMPILER_ID STREQUAL "Cray" )
+# ecbuild_add_cxx_flags("-Wno-write-strings" NO_FAIL)
+# ecbuild_add_cxx_flags("-Wno-writable-strings" NO_FAIL)
+# ecbuild_add_cxx_flags("-Wno-deprecated" NO_FAIL)
+
+if( CMAKE_CXX_COMPILER_ID STREQUAL "Cray" )
     set(CMAKE_CXX_FLAGS "-hstd=c++11 ${CMAKE_CXX_FLAGS}")
 endif()
 
@@ -98,6 +107,22 @@ ecbuild_add_option( FEATURE EXAMPLES
 ecbuild_add_option( FEATURE BUILD_TOOLS
     DESCRIPTION "Build the command line tools"
     DEFAULT ON )
+
+ecbuild_add_option( FEATURE GEOGRAPHY
+    DESCRIPTION "Support for Geoiterator and nearest neighbour"
+    DEFAULT ON )
+
+ecbuild_add_option( FEATURE ECKIT_GEO
+    DESCRIPTION "Support for Geoiterator and nearest neighbour (additional backend)"
+    CONDITION ENABLE_GEOGRAPHY
+    DEFAULT OFF )
+
+if( eccodes_HAVE_ECKIT_GEO AND NOT TARGET eckit_geo )
+    ecbuild_find_package(NAME eckit VERSION 1.27 REQUIRED)
+    if( NOT TARGET eckit_geo )
+        ecbuild_critical("eckit has not been built with ECKIT_GEO enabled")
+    endif()
+endif()
 
 ecbuild_add_option( FEATURE JPG
     DESCRIPTION "Support for JPG decoding/encoding"
@@ -138,13 +163,12 @@ if(NOT DEFINED ENABLE_AEC AND NOT AEC_FOUND)
                    "\nTo force the build without it, use -DENABLE_AEC=OFF")
 endif()
 ecbuild_add_option( FEATURE AEC
-    DESCRIPTION "Support for Adaptive Entropy Coding"
+    DESCRIPTION "Support for Adaptive Entropy Coding (WMO GRIB CCSDS)"
     DEFAULT ON
     CONDITION AEC_FOUND )
 
-ecbuild_find_python( VERSION 2.6 NO_LIBS )
-find_package( NumPy )
-set( HAVE_PYTHON 0 )
+ecbuild_find_python( VERSION 3.6 NO_LIBS )
+# find_package( NumPy )
 
 ## TODO REQUIRED_LANGUAGES Fortran
 ecbuild_add_option( FEATURE FORTRAN
@@ -165,7 +189,7 @@ endif()
 ecbuild_add_option( FEATURE MEMFS
     DESCRIPTION "Memory based access to definitions/samples"
     DEFAULT OFF
-    REQUIRED_PACKAGES PythonInterp )
+    REQUIRED_PACKAGES Python3 )
 
 #if( HAVE_MEMFS AND "${CMAKE_C_COMPILER_ID}" STREQUAL "Cray")
 #  set( HAVE_MEMFS OFF )
@@ -195,9 +219,8 @@ ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
 
 ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "Enable memory management" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "Enable memory alignment"  DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE TIMER               DESCRIPTION "Enable timer" DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "Enable POSIX threads" DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "Enable OpenMP threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "Enable thread-safety using POSIX threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "Enable thread-safety using OpenMP threads" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE EXTRA_TESTS         DESCRIPTION "Enable extended regression testing" DEFAULT OFF ADVANCED )
 
 ###############################################################################
@@ -253,12 +276,6 @@ endif()
 
 ###############################################################################
 # other options
-
-if( HAVE_TIMER )
-    set( ECCODES_TIMER 1 )
-else()
-    set( ECCODES_TIMER 0 )
-endif()
 
 set( IS_BIG_ENDIAN 0 )
 if( ECCODES_BIG_ENDIAN )
@@ -367,13 +384,30 @@ configure_file( eccodes_config.h.in eccodes_config.h )
 
 add_definitions( -DHAVE_ECCODES_CONFIG_H )
 
-if( CMAKE_COMPILER_IS_GNUCC )
+if( CMAKE_CXX_COMPILER_ID STREQUAL "GNU" )
     ecbuild_add_c_flags("-pedantic")
+    ecbuild_add_cxx_flags("-pedantic")
 endif()
+if( CMAKE_CXX_COMPILER_ID MATCHES IntelLLVM )
+  # Turn off -ffinite-math-only which gets included by some optimisation levels which assume values can never be NaN.
+  # This results in std::isnan(value) always returning false.
+  ecbuild_add_cxx_flags("-fno-finite-math-only")
+endif()
+
 
 # gfortran 10 has become stricter with argument matching
 if( HAVE_FORTRAN AND CMAKE_Fortran_COMPILER_ID MATCHES "GNU" AND NOT CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 10 )
     ecbuild_add_fortran_flags("-fallow-argument-mismatch")
+endif()
+
+if(GIT_FOUND AND NOT ${GIT_EXECUTABLE} STREQUAL "")
+    ecbuild_info("Found git: ${GIT_EXECUTABLE} (found version \"${GIT_VERSION_STRING}\")")
+    execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD
+                    OUTPUT_VARIABLE eccodes_GIT_BRANCH
+                    RESULT_VARIABLE nok ERROR_VARIABLE error
+                    OUTPUT_STRIP_TRAILING_WHITESPACE
+                    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}" )
+    ecbuild_info("ecCodes branch = ${eccodes_GIT_BRANCH}" )
 endif()
 
 ###############################################################################
@@ -381,7 +415,11 @@ endif()
 
 ### export package to other ecbuild packages
 
-set( ECCODES_INCLUDE_DIRS    ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src )
+set( ECCODES_INCLUDE_DIRS
+  ${CMAKE_CURRENT_BINARY_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/eccodes
+  ${CMAKE_CURRENT_BINARY_DIR}/src/eccodes
+)
 set( ECCODES_LIBRARIES       eccodes )
 
 get_directory_property( COMPILE_DEFINITIONS ECCODES_DEFINITIONS )
@@ -412,7 +450,10 @@ endforeach()
 
 ### include directories
 
-include_directories( ${ECCODES_INCLUDE_DIRS}  ${ECCODES_EXTRA_INCLUDE_DIRS} )
+include_directories(
+    ${ECCODES_INCLUDE_DIRS}
+    ${ECCODES_EXTRA_INCLUDE_DIRS}
+    )
 
 add_subdirectory( definitions ) # must be before memfs
 add_subdirectory( memfs )
@@ -429,10 +470,10 @@ add_subdirectory( samples )
 add_subdirectory( ifs_samples ) # must come after samples
 
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
-ecbuild_dont_pack( FILES .cproject .project )
+ecbuild_dont_pack( FILES .cproject .project eccodes.code-workspace )
 ecbuild_dont_pack( DIRS
     experimental deprecated doxygen confluence tests/deprecated tests/tests.ecmwf
-    src/deprecated tools/deprecated ifs_samples/grib1_mlgrib2_ieee32
+    src/eccodes/deprecated tools/deprecated ifs_samples/grib1_mlgrib2_ieee32
     examples/examples.dev examples/extra examples/deprecated bamboo
     fortran/fortranCtypes share/eccodes  .settings )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
@@ -458,9 +499,9 @@ ecbuild_pkgconfig(
   DESCRIPTION    "The ecCodes library"
   LIBRARIES      eccodes
   IGNORE_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
-  VARIABLES      HAVE_MEMFS HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
+  VARIABLES      HAVE_MEMFS HAVE_GEOGRAPHY HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                  HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
-                 HAVE_NETCDF HAVE_FORTRAN HAVE_PNG HAVE_AEC
+                 HAVE_NETCDF HAVE_FORTRAN HAVE_PNG HAVE_AEC HAVE_ECKIT_GEO
 )
 if( HAVE_FORTRAN )
   ecbuild_pkgconfig(
@@ -470,14 +511,14 @@ if( HAVE_FORTRAN )
     DESCRIPTION         "The ecCodes library for Fortran 90"
     IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${PROJECT_BINARY_DIR}/fortran
                         ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
-    VARIABLES           HAVE_MEMFS HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
+    VARIABLES           HAVE_MEMFS HAVE_GEOGRAPHY HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                         HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
-                        HAVE_NETCDF HAVE_PNG HAVE_AEC
+                        HAVE_NETCDF HAVE_PNG HAVE_AEC HAVE_ECKIT_GEO
   )
 endif()
 
 ###############################################################################
-# Debugging aid. Print all known CMake variables
+# Debugging aid. Print all known CMake variables:
 # get_cmake_property(_variableNames VARIABLES)
 # foreach( _variableName ${_variableNames} )
 #   ecbuild_info("  ${_variableName}=${${_variableName}}")
@@ -495,11 +536,6 @@ ecbuild_info("   |  ecCodes version ${eccodes_VERSION}  |")
 ecbuild_info("   +--------------------------+")
 ecbuild_info("")
 
-ecbuild_info("   +--------------------------------------+")
-ecbuild_info("   | Please note:                         |")
-ecbuild_info("   | For Python3 support, first install   |")
-ecbuild_info("   | ecCodes and then install the Python  |")
-ecbuild_info("   | bindings from PyPI with:             |")
-ecbuild_info("   |   $ pip3 install eccodes             |")
-ecbuild_info("   +--------------------------------------+")
+ecbuild_info("For further installation instructions, please see:")
+ecbuild_info("  https://confluence.ecmwf.int/display/ECC/ecCodes+installation")
 ecbuild_info("")

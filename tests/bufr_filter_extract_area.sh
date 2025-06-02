@@ -58,6 +58,7 @@ cat > $fRules <<EOF
  write;
  print "extracted [numberOfSubsets] of [originalNumberOfSubsets] subsets";
  assert(numberOfSubsets == extractedAreaNumberOfSubsets);
+ assert(localNumberOfObservations == numberOfSubsets);
 EOF
 
 inputBufr="amsa_55.bufr"

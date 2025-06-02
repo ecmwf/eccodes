@@ -1338,7 +1338,7 @@
     end if
   end subroutine any_new_from_file
 
-  !> Create a new message in memory from a character array containting the coded message.
+  !> Create a new message in memory from a character array containing the coded message.
   !>
   !> The message can be accessed through its gribid and it will be available\n
   !> until @ref grib_release is called. A reference to the original coded\n
@@ -1365,12 +1365,73 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'new_from_message', '')
+      call grib_check(iret, 'new_from_message_char', '')
     end if
 
   end subroutine grib_new_from_message_char
 
-  !> Create a new message in memory from an integer array containting the coded message.
+  
+  !> Create a message pointing to an character array containing the coded message.
+  !>
+  !> The message can be accessed through its gribid and it will be available\n
+  !> until @ref grib_release is called or (attention) the character array is deallocated!
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param gribid      id of the grib loaded in memory
+  !> @param message     array containing the coded message
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+
+  subroutine grib_new_from_message_no_copy_char(gribid, message, status)
+    integer(kind=kindOfInt), intent(out)              :: gribid
+    character(len=1), dimension(:), intent(in)        :: message
+    integer(kind=kindOfInt), optional, intent(out)    :: status
+    integer(kind=kindOfSize_t)                        :: size_bytes
+    integer(kind=kindOfInt)                           :: iret
+
+    size_bytes = size(message, dim=1)
+    iret = grib_f_new_from_message_no_copy(gribid, message, size_bytes)
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'new_from_message_no_copy_char', '')
+    end if
+
+  end subroutine grib_new_from_message_no_copy_char
+  
+  !> Create a message pointing to an integer4 array containing the coded message.
+  !>
+  !> The message can be accessed through its gribid and it will be available\n
+  !> until @ref grib_release is called or (attention) the character array is deallocated!
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param gribid      id of the grib loaded in memory
+  !> @param message     array containing the coded message
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+
+  subroutine grib_new_from_message_no_copy_int4(gribid, message, status)
+    integer(kind=kindOfInt), intent(out)              :: gribid
+    integer(kind=4), dimension(:), intent(in)         :: message
+    integer(kind=kindOfInt), optional, intent(out)    :: status
+    integer(kind=kindOfSize_t)                        :: size_bytes
+    integer(kind=kindOfInt)                           :: iret
+
+    size_bytes = size(message, dim=1)*sizeOfInteger4
+    iret = grib_f_new_from_message_no_copy_int(gribid, message, size_bytes)
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'new_from_message_no_copy_int', '')
+    end if
+
+  end subroutine grib_new_from_message_no_copy_int4
+  
+  !> Create a new message in memory from an integer array containing the coded message.
   !>
   !> The message can be accessed through its gribid and it will be available\n
   !> until @ref grib_release is called. A reference to the original coded\n
@@ -1394,11 +1455,13 @@
     integer(kind=kindOfInt)                         :: iret
 
     size_bytes = size(message, dim=1)*sizeOfInteger4
-    iret = grib_f_new_from_message(gribid, message, size_bytes)
+    ! See SUP-3893
+    !iret = grib_f_new_from_message(gribid, message, size_bytes)
+    iret = grib_f_new_from_message_int(gribid, message, size_bytes)
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'new_from_message', '')
+      call grib_check(iret, 'new_from_message_int4', '')
     end if
 
   end subroutine grib_new_from_message_int4
@@ -1542,7 +1605,7 @@
   !> and prints the error message.\n
   !>
   !> @param status      the status to be checked
-  !> @param caller      name of the caller soubroutine
+  !> @param caller      name of the caller subroutine
   !> @param string      a string variable from the caller routine (e.g. key,filename)
   subroutine grib_check(status, caller, string)
     integer(kind=kindOfInt), intent(in)  :: status
@@ -2314,7 +2377,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'get', key)
+      call grib_check(iret, 'get_real4_elements', key)
     end if
   end subroutine grib_get_real4_elements
 
@@ -2346,7 +2409,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'get', key)
+      call grib_check(iret, 'get_real8_elements', key)
     end if
   end subroutine grib_get_real8_elements
 
@@ -2647,7 +2710,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'set', key)
+      call grib_check(iret, 'set_force_real4_array', key)
     end if
   end subroutine grib_set_force_real4_array
 
@@ -2663,12 +2726,12 @@
   !> @param value       real(8) array value
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_set_force_real8_array(gribid, key, value, status)
-    integer(kind=kindOfInt), intent(in)  :: gribid
-    character(len=*), intent(in)  :: key
-    real(kind=kindOfDouble), dimension(:), intent(in)  :: value
-    integer(kind=kindOfInt), optional, intent(out) :: status
-    integer(kind=kindOfInt)                               :: iret
-    integer(kind=kindOfInt)                               :: nb_values
+    integer(kind=kindOfInt), intent(in)               :: gribid
+    character(len=*), intent(in)                      :: key
+    real(kind=kindOfDouble), dimension(:), intent(in) :: value
+    integer(kind=kindOfInt), optional, intent(out)    :: status
+    integer(kind=kindOfInt)                           :: iret
+    integer(kind=kindOfInt)                           :: nb_values
 
     nb_values = size(value)
     iret = grib_f_set_force_real8_array(gribid, key, value, nb_values)
@@ -2678,7 +2741,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'set', key)
+      call grib_check(iret, 'set_force_real8_array', key)
     end if
   end subroutine grib_set_force_real8_array
 
@@ -2694,10 +2757,10 @@
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_set_string(gribid, key, value, status)
     integer(kind=kindOfInt), intent(in)  :: gribid
-    character(len=*), intent(in)  :: key
-    character(len=*), intent(in)  :: value
+    character(len=*), intent(in)         :: key
+    character(len=*), intent(in)         :: value
     integer(kind=kindOfInt), optional, intent(out) :: status
-    integer(kind=kindOfInt)                                   :: iret
+    integer(kind=kindOfInt)              :: iret
 
     iret = grib_f_set_string(gribid, key, value)
     if (iret /= 0) then
@@ -2720,8 +2783,8 @@
   !> @param nbytes      size in bytes of the message
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_message_size_int(gribid, nbytes, status)
-    integer(kind=kindOfInt), intent(in)  :: gribid
-    integer(kind=kindOfInt), intent(out) :: nbytes
+    integer(kind=kindOfInt), intent(in)            :: gribid
+    integer(kind=kindOfInt), intent(out)           :: nbytes
     integer(kind=kindOfInt), optional, intent(out) :: status
     integer(kind=kindOfInt)                        :: iret
     integer(kind=kindOfSize_t)                     :: ibytes
@@ -2751,10 +2814,10 @@
   !> @param nbytes      size in bytes of the message
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_message_size_size_t(gribid, nbytes, status)
-    integer(kind=kindOfInt), intent(in)  :: gribid
+    integer(kind=kindOfInt), intent(in)     :: gribid
     integer(kind=kindOfSize_t), intent(out) :: nbytes
     integer(kind=kindOfInt), optional, intent(out) :: status
-    integer(kind=kindOfInt)                                   :: iret
+    integer(kind=kindOfInt)                 :: iret
 
     iret = grib_f_get_message_size(gribid, nbytes)
     if (iret /= 0) then
@@ -2777,7 +2840,7 @@
   !> @param message     array containing the coded message to be copied
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_copy_message(gribid, message, status)
-    integer(kind=kindOfInt), intent(in)  :: gribid
+    integer(kind=kindOfInt), intent(in)         :: gribid
     character(len=1), dimension(:), intent(out) :: message
     integer(kind=kindOfInt), optional, intent(out) :: status
     integer(kind=kindOfInt)      :: iret
@@ -2795,6 +2858,68 @@
     end if
   end subroutine grib_copy_message
 
+  !> Get pointer to message and message length from the grib_handle.
+  !> Be careful, user has to manage deallocation via pointer or handle!
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param gribid      ID of the message loaded in memory
+  !> @param message     array containing the coded message
+  !> @param mess_len    length of the message
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+ subroutine grib_get_message_size_t(gribid, message, mess_len, status)
+    USE, INTRINSIC :: ISO_C_BINDING, ONLY: C_PTR, C_F_POINTER
+    implicit none
+    integer(kind=kindOfInt), intent(in)            :: gribid
+    integer(kind=kindOfInt), optional, intent(out) :: status
+    integer(kind=kindOfInt)                        :: iret
+    character(len=1), pointer, intent(out)         :: message(:) 
+    type(C_PTR)                                    :: mess_ptr
+    integer(kind=kindOfSize_t), intent(out)        :: mess_len
+
+    iret = grib_f_get_message(gribid, mess_ptr, mess_len)
+    call C_F_POINTER(mess_ptr, message,(/mess_len/))
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'get_message', '')
+    end if
+  end subroutine grib_get_message_size_t
+
+!> Get pointer to message and message length from the grib_handle.
+  !> Be careful, user has to manage deallocation via pointer or handle!
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param gribid      ID of the message loaded in memory
+  !> @param message     array containing the coded message
+  !> @param mess_len    length of the message
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+ subroutine grib_get_message_int(gribid, message, mess_len, status)
+    USE, INTRINSIC :: ISO_C_BINDING, ONLY: C_PTR, C_F_POINTER
+    implicit none
+    integer(kind=kindOfInt), intent(in)            :: gribid
+    integer(kind=kindOfInt), optional, intent(out) :: status
+    integer(kind=kindOfInt)                        :: iret
+    character(len=1), pointer, intent(out)         :: message(:)
+    type(C_PTR)                                    :: mess_ptr
+    integer(kind=kindOfInt), intent(out)           :: mess_len
+    integer(kind=kindOfSize_t)                     :: ibytes
+
+    iret = grib_f_get_message(gribid, mess_ptr, ibytes)
+    call C_F_POINTER(mess_ptr, message,(/ibytes/))
+    if (iret == GRIB_SUCCESS .and. ibytes > huge(mess_len)) then
+      iret = GRIB_MESSAGE_TOO_LARGE
+    end if
+    mess_len = INT(ibytes, kind=kindOfInt)
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'get_message', '')
+    end if
+  end subroutine grib_get_message_int
   !> Write the coded message to a file.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
@@ -2808,7 +2933,6 @@
     integer(kind=kindOfInt), intent(in)  :: gribid
     integer(kind=kindOfInt), intent(in)  :: ifile
     integer(kind=kindOfInt), optional, intent(out) :: status
-
     integer(kind=kindOfInt)               :: iret
 
     iret = grib_f_write(gribid, ifile)
@@ -2832,7 +2956,7 @@
     integer(kind=kindOfInt), intent(in)  :: multigribid
     integer(kind=kindOfInt), intent(in)  :: ifile
     integer(kind=kindOfInt), optional, intent(out) :: status
-    integer(kind=kindOfInt)               :: iret
+    integer(kind=kindOfInt)              :: iret
 
     iret = grib_f_multi_write(multigribid, ifile)
     if (present(status)) then
@@ -2843,7 +2967,7 @@
   end subroutine grib_multi_write
 
   !> Append a single field grib message to a multi field grib message.
-  !> Only the sections with section number greather or equal "startsection" are copied from the input single message to the multi field output grib.
+  !> Only the sections with section number greater or equal "startsection" are copied from the input single message to the multi field output grib.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
@@ -2936,13 +3060,13 @@
                                       inlat, inlon, outlat, outlon, &
                                       value, distance, kindex, status)
     integer(kind=kindOfInt), intent(in)    :: gribid
-    logical, intent(in)    :: is_lsm
+    logical, intent(in)                    :: is_lsm
     real(kind=kindOfDouble), intent(in)    :: inlat
     real(kind=kindOfDouble), intent(in)    :: inlon
     real(kind=kindOfDouble), intent(out)   :: outlat
     real(kind=kindOfDouble), intent(out)   :: outlon
-    real(kind=kindOfDouble), intent(out)   :: distance
     real(kind=kindOfDouble), intent(out)   :: value
+    real(kind=kindOfDouble), intent(out)   :: distance
     integer(kind=kindOfInt), intent(out)   :: kindex
     integer(kind=kindOfInt), optional, intent(out)                           :: status
     integer(kind=kindOfInt)                                                 :: iret
@@ -3056,7 +3180,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'grib_gribex_mode_on', '')
+      call grib_check(iret, 'gribex_mode_on', '')
     end if
 
   end subroutine grib_gribex_mode_on
@@ -3076,7 +3200,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'grib_gribex_mode_off', '')
+      call grib_check(iret, 'gribex_mode_off', '')
     end if
 
   end subroutine grib_gribex_mode_off
@@ -3175,6 +3299,47 @@
       call grib_check(iret, 'skip_read_only', '')
     end if
   end subroutine grib_skip_read_only
+
+
+  subroutine grib_skip_function(iterid, status)
+    integer(kind=kindOfInt), intent(in)            :: iterid
+    integer(kind=kindOfInt), optional, intent(out) :: status
+    integer(kind=kindOfInt)                        :: iret
+
+    iret = grib_f_skip_function(iterid)
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'skip_function', '')
+    end if
+  end subroutine grib_skip_function
+
+  !!!
+  subroutine grib_skip_edition_specific(iterid, status)
+    integer(kind=kindOfInt), intent(in)            :: iterid
+    integer(kind=kindOfInt), optional, intent(out) :: status
+    integer(kind=kindOfInt)                        :: iret
+
+    iret = grib_f_skip_edition_specific(iterid)
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'skip_edition_specific', '')
+    end if
+  end subroutine grib_skip_edition_specific
+
+  !> Set debug mode
+  subroutine grib_set_debug(dmode)
+    integer(kind=kindOfInt), intent(in) :: dmode
+    call grib_f_set_debug(dmode)
+  end subroutine grib_set_debug
+
+  !> Set data quality check value (0, 1 or 2)
+  subroutine grib_set_data_quality_checks(val)
+    integer(kind=kindOfInt), intent(in) :: val
+    call grib_f_set_data_quality_checks(val)
+  end subroutine grib_set_data_quality_checks
+
 
   !> Set the definition path
   !>

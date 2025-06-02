@@ -1,5 +1,3 @@
-#!	---------------------------
-#!
 #!Description				Octet		Code		Ksec1		Count
 #!-----------				-----	   	-----		-----		-----
 #!
@@ -14,17 +12,12 @@
 #
 # author: Sebastien Villaume
 # created: 6 Oct 2011
-# modified: 13 May 2013 
-#
-#######################
-### LOCAL SECTION 0 ###
-#######################
+# modified: 13 May 2013
 
 #
 # This piece of definition is common to all SMHI definitions
 # It is only accessed through "include" statement inside local.82.x.def
 #
-
 codetable[1]	marsClass	"mars/eswi/class.table"	    : dump,lowercase;
 codetable[1]	marsType	"mars/eswi/type.table"	    : dump,lowercase,string_type;
 codetable[2]	marsStream	"mars/eswi/stream.table"    : dump,lowercase,string_type;
@@ -35,5 +28,4 @@ ksec1expver[4]	experimentVersionNumber	= "0000"            : dump;
 #unsigned[1]	numberOfForecastsInEnsemble                 : dump;
 pad reservedNeedNotBePresent(2);
 codetable[1]	marsModel	"mars/eswi/model.table"	    : dump,lowercase,string_type;
-
 

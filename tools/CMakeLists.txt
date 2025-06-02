@@ -24,11 +24,14 @@ ecbuild_add_library( TARGET    ecc_tools
                      NOINSTALL
                      SOURCES   ${ecc_tools_sources}
                      PRIVATE_LIBS      eccodes )
+if( eccodes_HAVE_ECKIT_GEO )
+    target_link_libraries( ecc_tools PUBLIC eckit )
+endif()
 
 # tools binaries
 list( APPEND ecc_tools_binaries
-             codes_info codes_count codes_split_file
-             grib_histogram grib_filter grib_ls grib_dump grib_merge
+             codes_info codes_count codes_split_file codes_export_resource
+             grib_histogram grib_filter grib_ls grib_dump
              grib2ppm grib_set grib_get grib_get_data grib_copy
              grib_compare codes_parser grib_index_build bufr_index_build
              bufr_ls bufr_dump bufr_set bufr_get
@@ -37,11 +40,8 @@ list( APPEND ecc_tools_binaries
              metar_dump metar_ls metar_compare metar_get metar_filter metar_copy )
 
 list( APPEND ecc_tools_binaries_extra
-             big2gribex
-             gg_sub_area_check
              grib_repair
              grib_to_json
-             codes_export_resource
              grib_check_gaussian_grid
              bufr_split_by_rdbSubtype )
 
@@ -97,6 +97,19 @@ else()
     ecbuild_info("ECCODES_INSTALL_EXTRA_TOOLS disabled")
 endif()
 ########################################
+
+configure_file( codes_config.in ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/codes_config @ONLY )
+file(COPY ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/codes_config
+  DESTINATION ${CMAKE_BINARY_DIR}/bin
+  FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ
+  GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+
+install( FILES ${CMAKE_BINARY_DIR}/bin/codes_config
+         DESTINATION ${INSTALL_BIN_DIR}
+         PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
+                     GROUP_EXECUTE GROUP_READ
+                     WORLD_EXECUTE WORLD_READ )
+
 
 # BUFR compare script
 install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/bufr_compare_dir

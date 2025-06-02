@@ -1,0 +1,9 @@
+# (C) Copyright 2005- ECMWF.
+
+# TEMPLATE 3.150, Hierarchical Equal Area isoLatitude Pixelization grid (HEALPix)
+# See https://healpix.jpl.nasa.gov/pdf/intro.pdf
+
+include "grib2/templates/template.3.shape_of_the_earth.def"
+include "grib2/templates/template.3.resolution_flags.def"
+include "grib2/templates/template.3.healpix.def"
+

@@ -284,12 +284,12 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 46 ;
 	}
-#Direct solar radiation
+#Surface direct normal short-wave (solar) radiation
 '47' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 47 ;
 	}
-#Magnitude of turbulent surface stress
+#Time-integrated magnitude of turbulent surface stress
 '48' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 48 ;
@@ -334,7 +334,7 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 56 ;
 	}
-#Downward UV radiation at the surface
+#Surface downward UV radiation
 '57' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 57 ;
@@ -989,62 +989,62 @@
 	 table2Version = 180 ;
 	 indicatorOfParameter = 144 ;
 	}
-#Boundary layer dissipation
+#Time-integrated boundary layer dissipation
 '145' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 145 ;
 	}
-#Boundary layer dissipation
+#Time-integrated boundary layer dissipation
 '145' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 145 ;
 	}
-#Surface sensible heat flux
+#Time-integrated surface sensible heat net flux
 '146' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface sensible heat flux
+#Time-integrated surface sensible heat net flux
 '146' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface sensible heat flux
+#Time-integrated surface sensible heat net flux
 '146' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface sensible heat flux
+#Time-integrated surface sensible heat net flux
 '146' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface sensible heat flux
+#Time-integrated surface sensible heat net flux
 '146' = {
 	 table2Version = 190 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface latent heat flux
+#Time-integrated surface latent heat net flux
 '147' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Surface latent heat flux
+#Time-integrated surface latent heat net flux
 '147' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Surface latent heat flux
+#Time-integrated surface latent heat net flux
 '147' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Surface latent heat flux
+#Time-integrated surface latent heat net flux
 '147' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Surface latent heat flux
+#Time-integrated surface latent heat net flux
 '147' = {
 	 table2Version = 190 ;
 	 indicatorOfParameter = 147 ;
@@ -1894,7 +1894,7 @@
 	 table2Version = 160 ;
 	 indicatorOfParameter = 230 ;
 	}
-#Instantaneous surface sensible heat flux
+#Instantaneous surface sensible heat net flux
 '231' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 231 ;
@@ -2373,16 +2373,6 @@
 '200067' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 67 ;
-	}
-#Minimum stomatal resistance, low vegetation
-'200068' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 68 ;
-	}
-#Minimum stomatal resistance, high vegetation
-'200069' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 69 ;
 	}
 #Biome cover, low vegetation
 '200070' = {
@@ -3584,37 +3574,37 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 45 ;
 	}
-#Vertical integral of divergence of cloud liquid water flux
+#Total column vertically-integrated divergence of cloud liquid water flux
 '162079' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 79 ;
 	}
-#Vertical integral of divergence of cloud frozen water flux
+#Total column vertically-integrated divergence of cloud frozen water flux
 '162080' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 80 ;
 	}
-#Vertical integral of eastward cloud liquid water flux
+#Total column vertically-integrated eastward cloud liquid water flux
 '162088' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 88 ;
 	}
-#Vertical integral of northward cloud liquid water flux
+#Total column vertically-integrated northward cloud liquid water flux
 '162089' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 89 ;
 	}
-#Vertical integral of eastward cloud frozen water flux
+#Total column vertically-integrated eastward cloud frozen water flux
 '162090' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 90 ;
 	}
-#Vertical integral of northward cloud frozen water flux 
+#Total column vertically-integrated northward cloud frozen water flux 
 '162091' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 91 ;
 	}
-#Vertical integral of mass tendency
+#Total column vertically-integrated mass tendency
 '162092' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 92 ;
@@ -3784,6 +3774,11 @@
 	 table2Version = 171 ;
 	 indicatorOfParameter = 7 ;
 	}
+#100 metre wind speed anomaly
+'171008' = {
+	 table2Version = 171 ;
+	 indicatorOfParameter = 8 ;
+	}
 #Lake mix-layer temperature anomaly
 '171024' = {
 	 table2Version = 171 ;
@@ -3804,12 +3799,12 @@
 	 table2Version = 171 ;
 	 indicatorOfParameter = 122 ;
 	}
-#Mean surface runoff rate
+#Time-mean surface runoff rate
 '172008' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 8 ;
 	}
-#Mean sub-surface runoff rate
+#Time-mean sub-surface runoff rate
 '172009' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 9 ;
@@ -6619,12 +6614,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 25 ;
 	}
-#Source/gain of dust aerosol (0.55 - 9 um)
+#Source/gain of dust aerosol (0.55 - 0.9 um)
 '215026' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 26 ;
 	}
-#Source/gain of dust aerosol (9 - 20 um)
+#Source/gain of dust aerosol (0.9 - 20 um)
 '215027' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 27 ;
@@ -6634,12 +6629,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 28 ;
 	}
-#Dry deposition of dust aerosol (0.55 - 9 um)
+#Dry deposition of dust aerosol (0.55 - 0.9 um)
 '215029' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 29 ;
 	}
-#Dry deposition of dust aerosol (9 - 20 um)
+#Dry deposition of dust aerosol (0.9 - 20 um)
 '215030' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 30 ;
@@ -6649,12 +6644,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 31 ;
 	}
-#Sedimentation of dust aerosol (0.55 - 9 um)
+#Sedimentation of dust aerosol (0.55 - 0.9 um)
 '215032' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 32 ;
 	}
-#Sedimentation of dust aerosol (9 - 20 um)
+#Sedimentation of dust aerosol (0.9 - 20 um)
 '215033' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 33 ;
@@ -6664,12 +6659,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 34 ;
 	}
-#Wet deposition of dust aerosol (0.55 - 9 um) by large-scale precipitation
+#Wet deposition of dust aerosol (0.55 - 0.9 um) by large-scale precipitation
 '215035' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 35 ;
 	}
-#Wet deposition of dust aerosol (9 - 20 um) by large-scale precipitation
+#Wet deposition of dust aerosol (0.9 - 20 um) by large-scale precipitation
 '215036' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 36 ;
@@ -6679,12 +6674,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 37 ;
 	}
-#Wet deposition of dust aerosol (0.55 - 9 um) by convective precipitation
+#Wet deposition of dust aerosol (0.55 - 0.9 um) by convective precipitation
 '215038' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 38 ;
 	}
-#Wet deposition of dust aerosol (9 - 20 um) by convective precipitation
+#Wet deposition of dust aerosol (0.9 - 20 um) by convective precipitation
 '215039' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 39 ;
@@ -6694,12 +6689,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 40 ;
 	}
-#Negative fixer of dust aerosol (0.55 - 9 um)
+#Negative fixer of dust aerosol (0.55 - 0.9 um)
 '215041' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 41 ;
 	}
-#Negative fixer of dust aerosol (9 - 20 um)
+#Negative fixer of dust aerosol (0.9 - 20 um)
 '215042' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 42 ;
@@ -6709,12 +6704,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 43 ;
 	}
-#Vertically integrated mass of dust aerosol (0.55 - 9 um)
+#Vertically integrated mass of dust aerosol (0.55 - 0.9 um)
 '215044' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 44 ;
 	}
-#Vertically integrated mass of dust aerosol (9 - 20 um)
+#Vertically integrated mass of dust aerosol (0.9 - 20 um)
 '215045' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 45 ;
@@ -6724,12 +6719,12 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 46 ;
 	}
-#Dust aerosol (0.55 - 9 um) optical depth
+#Dust aerosol (0.55 - 0.9 um) optical depth
 '215047' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 47 ;
 	}
-#Dust aerosol (9 - 20 um) optical depth
+#Dust aerosol (0.9 - 20 um) optical depth
 '215048' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 48 ;
@@ -9874,12 +9869,12 @@
 	 table2Version = 221 ;
 	 indicatorOfParameter = 56 ;
 	}
-#-10 degrees C isothermal level (atm)
+#Geometric height of -10 degrees C atmospheric isothermal level above ground
 '228020' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 20 ;
 	}
-#Total sky direct short-wave (solar) radiation at surface
+#Surface direct short-wave (solar) radiation
 '228021' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 21 ;
@@ -9894,7 +9889,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 23 ;
 	}
-#0 degrees C isothermal level (atm)
+#Geometric height of 0 degrees C atmospheric isothermal level above ground
 '228024' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 24 ;
@@ -10039,17 +10034,17 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 82 ;
 	}
-#Flux of Carbon Dioxide Net Ecosystem Exchange
+#Carbon dioxide net ecosystem exchange flux
 '228083' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 83 ;
 	}
-#Flux of Carbon Dioxide Gross Primary Production
+#Carbon dioxide gross primary production flux
 '228084' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 84 ;
 	}
-#Flux of Carbon Dioxide Ecosystem Respiration
+#Carbon dioxide ecosystem respiration flux
 '228085' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 85 ;
@@ -10104,7 +10099,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 216 ;
 	}
-#Instantaneous large-scale surface precipitation fraction
+#Instantaneous large-scale precipitation fraction
 '228217' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 217 ;
@@ -10319,202 +10314,202 @@
 	 table2Version = 230 ;
 	 indicatorOfParameter = 251 ;
 	}
-#Mean surface runoff rate
+#Time-mean surface runoff rate
 '235020' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 20 ;
 	}
-#Mean sub-surface runoff rate
+#Time-mean sub-surface runoff rate
 '235021' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 21 ;
 	}
-#Mean surface photosynthetically active radiation flux, clear sky
+#Time-mean surface photosynthetically active radiation flux, clear sky
 '235022' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 22 ;
 	}
-#Mean snow evaporation rate
+#Time-mean snow evaporation rate water equivalent
 '235023' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 23 ;
 	}
-#Mean snowmelt rate
+#Time-mean snow melt rate
 '235024' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 24 ;
 	}
-#Mean magnitude of turbulent surface stress
+#Time-mean magnitude of turbulent surface stress
 '235025' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 25 ;
 	}
-#Mean large-scale precipitation fraction
+#Time-mean large-scale precipitation fraction
 '235026' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 26 ;
 	}
-#Mean surface downward UV radiation flux
+#Time-mean surface downward UV radiation flux
 '235027' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 27 ;
 	}
-#Mean surface photosynthetically active radiation flux
+#Time-mean surface photosynthetically active radiation flux
 '235028' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 28 ;
 	}
-#Mean large-scale precipitation rate
+#Time-mean large-scale precipitation rate
 '235029' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 29 ;
 	}
-#Mean convective precipitation rate
+#Time-mean convective precipitation rate
 '235030' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 30 ;
 	}
-#Mean snowfall rate
+#Time-mean total snowfall rate water equivalent
 '235031' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 31 ;
 	}
-#Mean boundary layer dissipation
+#Time-mean boundary layer dissipation
 '235032' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 32 ;
 	}
-#Mean surface sensible heat flux
+#Time-mean surface sensible heat flux
 '235033' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 33 ;
 	}
-#Mean surface latent heat flux
+#Time-mean surface latent heat flux
 '235034' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 34 ;
 	}
-#Mean surface downward short-wave radiation flux
+#Time-mean surface downward short-wave radiation flux
 '235035' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 35 ;
 	}
-#Mean surface downward long-wave radiation flux
+#Time-mean surface downward long-wave radiation flux
 '235036' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 36 ;
 	}
-#Mean surface net short-wave radiation flux
+#Time-mean surface net short-wave radiation flux
 '235037' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 37 ;
 	}
-#Mean surface net long-wave radiation flux
+#Time-mean surface net long-wave radiation flux
 '235038' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 38 ;
 	}
-#Mean top net short-wave radiation flux
+#Time-mean top net short-wave radiation flux
 '235039' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 39 ;
 	}
-#Mean top net long-wave radiation flux
+#Time-mean top net long-wave radiation flux
 '235040' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 40 ;
 	}
-#Mean eastward turbulent surface stress
+#Time-mean eastward turbulent surface stress
 '235041' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 41 ;
 	}
-#Mean northward turbulent surface stress
+#Time-mean northward turbulent surface stress
 '235042' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 42 ;
 	}
-#Mean evaporation rate
+#Time-mean moisture flux
 '235043' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 43 ;
 	}
-#Sunshine duration fraction
+#Time-mean sunshine duration fraction
 '235044' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 44 ;
 	}
-#Mean eastward gravity wave surface stress
+#Time-mean eastward gravity wave surface stress
 '235045' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 45 ;
 	}
-#Mean northward gravity wave surface stress
+#Time-mean northward gravity wave surface stress
 '235046' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 46 ;
 	}
-#Mean gravity wave dissipation
+#Time-mean gravity wave dissipation
 '235047' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 47 ;
 	}
-#Mean runoff rate
+#Time-mean runoff rate water equivalent (surface plus subsurface)
 '235048' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 48 ;
 	}
-#Mean top net short-wave radiation flux, clear sky
+#Time-mean top net short-wave radiation flux, clear sky
 '235049' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 49 ;
 	}
-#Mean top net long-wave radiation flux, clear sky
+#Time-mean top net long-wave radiation flux, clear sky
 '235050' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 50 ;
 	}
-#Mean surface net short-wave radiation flux, clear sky
+#Time-mean surface net short-wave radiation flux, clear sky
 '235051' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 51 ;
 	}
-#Mean surface net long-wave radiation flux, clear sky
+#Time-mean surface net long-wave radiation flux, clear sky
 '235052' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 52 ;
 	}
-#Mean top downward short-wave radiation flux
+#Time mean top downward short-wave radiation flux
 '235053' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 53 ;
 	}
-#Mean vertically integrated moisture divergence
+#Time-mean total column vertically-integrated moisture divergence flux
 '235054' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 54 ;
 	}
-#Mean total precipitation rate
+#Time-mean total precipitation rate
 '235055' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 55 ;
 	}
-#Mean convective snowfall rate
+#Time-mean convective snowfall rate water equivalent
 '235056' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 56 ;
 	}
-#Mean large-scale snowfall rate
+#Time-mean large scale snowfall rate water equivalent
 '235057' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Mean surface direct short-wave radiation flux
+#Time-mean surface direct short-wave radiation flux
 '235058' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 58 ;
 	}
-#Mean surface direct short-wave radiation flux, clear sky
+#Time-mean surface direct short-wave radiation flux, clear sky
 '235059' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 59 ;
@@ -10524,52 +10519,37 @@
 	 table2Version = 235 ;
 	 indicatorOfParameter = 60 ;
 	}
-#Mean surface diffuse short-wave radiation flux, clear sky
+#Time-mean surface diffuse short-wave radiation flux, clear sky
 '235061' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 61 ;
 	}
-#Mean carbon dioxide net ecosystem exchange flux
+#Time-mean carbon dioxide net ecosystem exchange flux
 '235062' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 62 ;
 	}
-#Mean carbon dioxide gross primary production flux
+#Time-mean carbon dioxide gross primary production flux
 '235063' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 63 ;
 	}
-#Mean carbon dioxide ecosystem respiration flux
+#Time-mean carbon dioxide ecosystem respiration flux
 '235064' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 64 ;
 	}
-#Mean rain rate
-'235065' = {
-	 table2Version = 235 ;
-	 indicatorOfParameter = 65 ;
-	}
-#Mean convective rain rate
-'235066' = {
-	 table2Version = 235 ;
-	 indicatorOfParameter = 66 ;
-	}
-#Mean large-scale rain rate
-'235067' = {
-	 table2Version = 235 ;
-	 indicatorOfParameter = 67 ;
-	}
-#Mean surface downward short-wave radiation flux, clear sky
+#Time-mean surface downward short-wave radiation flux, clear sky
 '235068' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 68 ;
 	}
-#Mean surface downward long-wave radiation flux, clear sky
+#Time-mean surface downward long-wave radiation flux, clear sky
 '235069' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 69 ;
 	}
-#Mean potential evaporation rate
+#Time-mean potential evaporation rate
 '235070' = {
 	 table2Version = 235 ;
 	 indicatorOfParameter = 70 ;
@@ -10873,16 +10853,6 @@
 '129067' = {
 	 table2Version = 129 ;
 	 indicatorOfParameter = 67 ;
-	}
-#Minimum stomatal resistance, low vegetation
-'129068' = {
-	 table2Version = 129 ;
-	 indicatorOfParameter = 68 ;
-	}
-#Minimum stomatal resistance, high vegetation
-'129069' = {
-	 table2Version = 129 ;
-	 indicatorOfParameter = 69 ;
 	}
 #Biome cover, low vegetation
 '129070' = {
@@ -12659,7 +12629,7 @@
 	 table2Version = 140 ;
 	 indicatorOfParameter = 217 ;
 	}
-#Maximum individual wave height
+#Envelop-maximum individual wave height
 '140218' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 218 ;
@@ -13024,12 +12994,12 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 130 ;
 	}
-#Eastward sea water velocity
+#Eastward surface sea water velocity
 '151131' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 131 ;
 	}
-#Northward sea water velocity
+#Northward surface sea water velocity
 '151132' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 132 ;
@@ -13244,7 +13214,7 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 174 ;
 	}
-#Average salinity in the upper 300m
+#Average sea water practical salinity in the upper 300m
 '151175' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 175 ;
@@ -13494,35 +13464,15 @@
 	 table2Version = 160 ;
 	 indicatorOfParameter = 199 ;
 	}
-#Maximum temperature at 2 metres during averaging time
-'160201' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 201 ;
-	}
-#Minimum temperature at 2 metres during averaging time
-'160202' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 202 ;
-	}
 #Runoff
 '160205' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 205 ;
 	}
-#Standard deviation of geopotential
-'160206' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 206 ;
-	}
 #Covariance of temperature and geopotential
 '160207' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 207 ;
-	}
-#Standard deviation of temperature
-'160208' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 208 ;
 	}
 #Covariance of specific humidity and geopotential
 '160209' = {
@@ -13533,11 +13483,6 @@
 '160210' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 210 ;
-	}
-#Standard deviation of specific humidity
-'160211' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 211 ;
 	}
 #Covariance of U component and geopotential
 '160212' = {
@@ -13553,11 +13498,6 @@
 '160214' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 214 ;
-	}
-#Standard deviation of U velocity
-'160215' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 215 ;
 	}
 #Covariance of V component and geopotential
 '160216' = {
@@ -13578,11 +13518,6 @@
 '160219' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 219 ;
-	}
-#Standard deviation of V component
-'160220' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 220 ;
 	}
 #Covariance of W component and geopotential
 '160221' = {
@@ -13608,11 +13543,6 @@
 '160225' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 225 ;
-	}
-#Standard deviation of vertical velocity
-'160226' = {
-	 table2Version = 160 ;
-	 indicatorOfParameter = 226 ;
 	}
 #Instantaneous surface heat flux
 '160231' = {
@@ -13669,32 +13599,32 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 51 ;
 	}
-#Vertical integral of mass of atmosphere
+#Total column vertically-integrated mass of atmosphere
 '162053' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 53 ;
 	}
-#Vertical integral of temperature
+#Total column vertically-integrated temperature
 '162054' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 54 ;
 	}
-#Vertical integral of water vapour
+#Total column vertically-integrated water vapour
 '162055' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 55 ;
 	}
-#Vertical integral of cloud liquid water
+#Total column vertically-integrated cloud liquid water
 '162056' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 56 ;
 	}
-#Vertical integral of cloud frozen water
+#Total column vertically-integrated cloud frozen water
 '162057' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Vertical integral of ozone
+#Total column vertically-integrated ozone
 '162058' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 58 ;
@@ -13714,7 +13644,7 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 61 ;
 	}
-#Vertical integral of potential+internal+latent energy
+#Total column vertically-integrated potential+internal+latent energy
 '162062' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 62 ;
@@ -13724,112 +13654,112 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 63 ;
 	}
-#Vertical integral of energy conversion
+#Total column vertically-integrated energy conversion
 '162064' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 64 ;
 	}
-#Vertical integral of eastward mass flux
+#Total column vertically-integrated eastward mass flux
 '162065' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 65 ;
 	}
-#Vertical integral of northward mass flux
+#Total column vertically-integrated northward mass flux
 '162066' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 66 ;
 	}
-#Vertical integral of eastward kinetic energy flux
+#Total column vertically-integrated eastward kinetic energy flux
 '162067' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 67 ;
 	}
-#Vertical integral of northward kinetic energy flux
+#Total column vertically-integrated northward kinetic energy flux
 '162068' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 68 ;
 	}
-#Vertical integral of eastward heat flux
+#Total column vertically-integrated eastward heat flux
 '162069' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 69 ;
 	}
-#Vertical integral of northward heat flux
+#Total column vertically-integrated northward heat flux
 '162070' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 70 ;
 	}
-#Vertical integral of eastward water vapour flux
+#Total column vertically-integrated eastward water vapour flux
 '162071' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 71 ;
 	}
-#Vertical integral of northward water vapour flux
+#Total column vertically-integrated northward water vapour flux
 '162072' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 72 ;
 	}
-#Vertical integral of eastward geopotential flux
+#Total column vertically-integrated eastward geopotential flux
 '162073' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 73 ;
 	}
-#Vertical integral of northward geopotential flux
+#Total column vertically-integrated northward geopotential flux
 '162074' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 74 ;
 	}
-#Vertical integral of eastward total energy flux
+#Total column vertically-integrated eastward total energy flux
 '162075' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 75 ;
 	}
-#Vertical integral of northward total energy flux
+#Total column vertically-integrated northward total energy flux
 '162076' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 76 ;
 	}
-#Vertical integral of eastward ozone flux
+#Total column vertically-integrated eastward ozone flux
 '162077' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 77 ;
 	}
-#Vertical integral of northward ozone flux
+#Total column vertically-integrated northward ozone flux
 '162078' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 78 ;
 	}
-#Vertical integral of divergence of mass flux
+#Total column vertically-integrated divergence of mass flux
 '162081' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 81 ;
 	}
-#Vertical integral of divergence of kinetic energy flux
+#Total column vertically-integrated divergence of kinetic energy flux
 '162082' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 82 ;
 	}
-#Vertical integral of divergence of thermal energy flux
+#Total column vertically-integrated divergence of thermal energy flux
 '162083' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 83 ;
 	}
-#Vertically integrated moisture divergence flux
+#Total column vertically-integrated moisture divergence flux
 '162084' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 84 ;
 	}
-#Vertical integral of divergence of geopotential flux
+#Total column vertically-integrated divergence of geopotential flux
 '162085' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 85 ;
 	}
-#Vertical integral of divergence of total energy flux
+#Total column vertically-integrated divergence of total energy flux
 '162086' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 86 ;
 	}
-#Vertical integral of divergence of ozone flux
+#Total column vertically-integrated divergence of ozone flux
 '162087' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 87 ;
@@ -14974,37 +14904,32 @@
 	 table2Version = 171 ;
 	 indicatorOfParameter = 255 ;
 	}
-#Snow evaporation
+#Time-mean snow evaporation rate
 '172044' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 44 ;
 	}
-#Snowmelt
+#Time-mean snowmelt rate
 '172045' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 45 ;
-	}
-#Magnitude of turbulent surface stress
-'172048' = {
-	 table2Version = 172 ;
-	 indicatorOfParameter = 48 ;
 	}
 #Mean large-scale precipitation fraction
 '172050' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 50 ;
 	}
-#Mean large-scale precipitation rate
+#Time-mean large-scale precipitation rate
 '172142' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 142 ;
 	}
-#Mean convective precipitation rate
+#Time-mean convective precipitation rate
 '172143' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 143 ;
 	}
-#Mean total snowfall rate
+#Time-mean total snowfall rate
 '172144' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 144 ;
@@ -15014,72 +14939,67 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 145 ;
 	}
-#Mean surface sensible heat flux
+#Time-mean surface sensible heat flux
 '172146' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Mean surface latent heat flux
+#Time-mean surface latent heat flux
 '172147' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Time-mean surface net radiation flux (SW and LW)
-'172149' = {
-	 table2Version = 172 ;
-	 indicatorOfParameter = 149 ;
-	}
-#Mean short-wave heating rate
+#Time-mean short-wave (solar) heating rate
 '172153' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 153 ;
 	}
-#Mean long-wave heating rate
+#Time-mean long-wave (thermal) heating rate
 '172154' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 154 ;
 	}
-#Mean surface downward solar radiation flux
+#Time-mean surface downward short-wave (solar) radiation flux
 '172169' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 169 ;
 	}
-#Mean surface downward thermal radiation flux
+#Time-mean surface downward long-wave (thermal) radiation flux
 '172175' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 175 ;
 	}
-#Mean surface net solar radiation flux
+#Time-mean surface net short-wave (solar) radiation flux
 '172176' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 176 ;
 	}
-#Mean surface net thermal radiation flux
+#Time-mean surface net long-wave (thermal) radiation flux
 '172177' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 177 ;
 	}
-#Mean top net solar radiation flux
+#Time-mean top net short-wave (solar) radiation flux
 '172178' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 178 ;
 	}
-#Mean top net thermal radiation flux
+#Time-mean top net long-wave (thermal) radiation flux
 '172179' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 179 ;
 	}
-#East-West surface stress rate of accumulation
+#Time-mean eastward turbulent surface stress
 '172180' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 180 ;
 	}
-#North-South surface stress rate of accumulation
+#Time-mean northward turbulent surface stress
 '172181' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 181 ;
 	}
-#Evaporation
+#Time-mean evaporation rate
 '172182' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 182 ;
@@ -15104,47 +15024,47 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 197 ;
 	}
-#Mean runoff rate
+#Time-mean runoff rate
 '172205' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 205 ;
 	}
-#Top net solar radiation, clear sky
+#Time-mean top net short-wave (solar) radiation flux, clear sky
 '172208' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 208 ;
 	}
-#Top net thermal radiation, clear sky
+#Time-mean top net long-wave (thermal) radiation flux, clear sky
 '172209' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 209 ;
 	}
-#Surface net solar radiation, clear sky
+#Time-mean surface net short-wave (solar) radiation flux, clear sky
 '172210' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 210 ;
 	}
-#Surface net thermal radiation, clear sky
+#Time-mean surface net long-wave (thermal) radiation flux, clear sky
 '172211' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 211 ;
 	}
-#Solar insolation rate of accumulation
+#Time-mean short-wave (solar) insolation rate
 '172212' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 212 ;
 	}
-#Mean total precipitation rate
+#Time-mean total precipitation rate
 '172228' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 228 ;
 	}
-#Convective snowfall
+#Time-mean convective snowfall rate
 '172239' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 239 ;
 	}
-#Large scale snowfall
+#Time-mean large-scale snowfall rate
 '172240' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 240 ;
@@ -15154,12 +15074,12 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 255 ;
 	}
-#Snow evaporation anomaly
+#Time-mean snow evaporation anomalous rate of accumulation
 '173044' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 44 ;
 	}
-#Snowmelt anomaly
+#Time-mean snowmelt anomalous rate of accumulation
 '173045' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 45 ;
@@ -15259,7 +15179,7 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 181 ;
 	}
-#Evaporation anomalous rate of accumulation
+#Time-mean evaporation anomalous rate of accumulation
 '173182' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 182 ;
@@ -16048,11 +15968,6 @@
 '201113' = {
 	 table2Version = 201 ;
 	 indicatorOfParameter = 113 ;
-	}
-#deviation of pressure from reference value
-'201139' = {
-	 table2Version = 201 ;
-	 indicatorOfParameter = 139 ;
 	}
 #coefficient of horizontal diffusion
 '201150' = {
@@ -17509,12 +17424,12 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 3 ;
 	}
-#Mean 2 metre temperature
+#Time-mean 2 metre temperature
 '228004' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 4 ;
 	}
-#Mean of 10 metre wind speed
+#Time-mean 10 metre wind speed
 '228005' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 5 ;

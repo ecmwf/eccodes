@@ -23,17 +23,23 @@ concept packingType (unknown) {
 #set uses the last one
 #get returns the first match
   "grid_simple"                          = { dataRepresentationTemplateNumber = 0; }
-  "spectral_complex"                     = { dataRepresentationTemplateNumber = 51; spectralType=1; spectralMode=1; }
-  "spectral_simple"                      = { dataRepresentationTemplateNumber = 50; spectralType=1; spectralMode=1; }
   "grid_simple_matrix"                   = { dataRepresentationTemplateNumber = 1; }
   "grid_complex"                         = { dataRepresentationTemplateNumber = 2; }
   "grid_complex_spatial_differencing"    = { dataRepresentationTemplateNumber = 3; }
-  "grid_jpeg"                            = { dataRepresentationTemplateNumber = 40000; }
+  "grid_ieee"                            = { dataRepresentationTemplateNumber = 4; }
+
+  "grid_jpeg"                            = { dataRepresentationTemplateNumber = 40000; } # experimental
+  "grid_png"                             = { dataRepresentationTemplateNumber = 40010; } # experimental
   "grid_jpeg"                            = { dataRepresentationTemplateNumber = 40; }
-  "grid_png"                             = { dataRepresentationTemplateNumber = 40010; }
   "grid_png"                             = { dataRepresentationTemplateNumber = 41; }
   "grid_ccsds"                           = { dataRepresentationTemplateNumber = 42; }
-  "grid_ieee"                            = { dataRepresentationTemplateNumber = 4; }
+  "spectral_simple"                      = { dataRepresentationTemplateNumber = 50; spectralType=1; spectralMode=1; }
+  "spectral_complex"                     = { dataRepresentationTemplateNumber = 51; spectralType=1; spectralMode=1; }
+  "bifourier_complex"                    = { dataRepresentationTemplateNumber = 53; spectralType=2; }
+  "grid_simple_log_preprocessing"        = { dataRepresentationTemplateNumber = 61; }
+  "grid_run_length"                      = { dataRepresentationTemplateNumber = 200; }
+
+  # These second order packing types are local (ECMWF)
   "grid_second_order"                    = { dataRepresentationTemplateNumber = 50001; }
   "grid_second_order"                    = { dataRepresentationTemplateNumber = 50002; }
   "grid_second_order_boustrophedonic"    = { dataRepresentationTemplateNumber = 50002; }
@@ -46,12 +52,9 @@ concept packingType (unknown) {
   "grid_second_order_SPD2"               = { dataRepresentationTemplateNumber = 50001;orderOfSPD=2; }
   "grid_second_order_SPD3"               = { dataRepresentationTemplateNumber = 50001;orderOfSPD=3; }
   "spectral_ieee"                        = { dataRepresentationTemplateNumber = 50000; }
-  "grid_simple_log_preprocessing"        = { dataRepresentationTemplateNumber = 61; }
-  "bifourier_complex"                    = { dataRepresentationTemplateNumber = 53; spectralType=2; }
-  "grid_run_length"                      = { dataRepresentationTemplateNumber = 200; }
 }  : dump;
 
-template dataRepresentation "grib2/template.5.[dataRepresentationTemplateNumber:l].def";
+template dataRepresentation "grib2/templates/template.5.[dataRepresentationTemplateNumber:l].def";
 
 alias ls.packingType=packingType;
 alias dataRepresentation=packingType;

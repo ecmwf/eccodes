@@ -71,7 +71,7 @@ int main(int argc, char** argv)
 
     for (;;) {
         size_t len = SIZE;
-        long ret   = wmo_read_grib_from_file(in, buffer, &len);
+        int ret = wmo_read_grib_from_file(in, buffer, &len);
         if (ret == GRIB_END_OF_FILE && len == 0)
             break;
         if (count > MAX_NUM_MESSAGES) {
@@ -81,7 +81,7 @@ int main(int argc, char** argv)
             break;
         }
 
-        printf("GRIB %lu: size: %ld code: %ld (%s)\n", ++count, (long)len, ret, grib_get_error_message(ret));
+        printf("GRIB %lu: size: %zu code: %d (%s)\n", ++count, len, ret, grib_get_error_message(ret));
 
         switch (ret) {
             case 0:
@@ -98,7 +98,7 @@ int main(int argc, char** argv)
                 len = data_len = SIZE;
                 data           = (unsigned char*)&buffer[0];
                 ret            = grib_read_any_from_memory(NULL, &data, &data_len, buffer, &len);
-                printf("   -> GRIB %lu: size: %ld code: %ld (%s)\n", count, (long)len, ret, grib_get_error_message(ret));
+                printf("   -> GRIB %lu: size: %zu code: %d (%s)\n", count, len, ret, grib_get_error_message(ret));
                 if (ret == 0) {
                     if (fwrite(buffer, 1, len, bad) != len) {
                         perror(cbad);

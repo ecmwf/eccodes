@@ -9,22 +9,27 @@
 
 . ./include.ctest.sh
 
+if [ $HAVE_GEOGRAPHY -eq 0 ]; then
+    exit 0
+fi
 
-GRIB_INFILE=${data_dir}/regular_gaussian_pressure_level_constant.grib2
-REF_FILE=grib_lamb_az_eq_area.ref
+label="grib_grid_lamb_az_eq_area_test"
+
+input=${data_dir}/regular_gaussian_pressure_level_constant.grib2
+tempRef=grib_lamb_az_eq_area.ref
 
 # Temporary files created for this test
-FILTER_FILE=lamb_az_eq_area.filter
-GRIB_OUTFILE=lamb_az_eq_area.grib2
-DATA_OUTFILE=lamb_data.txt
-rm -f $FILTER_FILE $GRIB_OUTFILE $DATA_OUTFILE
+tempFilt=temp.$label.filter
+tempGrib=temp.$label.grib2
+tempOut=temp.$label.txt
+rm -f $tempFilt $tempGrib $tempOut
 
+# --------------------
 # Spherical Earth
-# ----------------
+# --------------------
 
 # Create a filter
-cat > $FILTER_FILE<<EOF
-set edition = 2;
+cat > $tempFilt<<EOF
 set gridType = "lambert_azimuthal_equal_area";
 set Nx = 10;
 set Ny = 10;
@@ -46,28 +51,40 @@ write;
 EOF
 
 # Use this filter and the input GRIB to create a new GRIB
-rm -f "$GRIB_OUTFILE"
-${tools_dir}/grib_filter -o $GRIB_OUTFILE $FILTER_FILE $GRIB_INFILE
+rm -f "$tempGrib"
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $input
 
 # Now run the Geoiterator on the newly created GRIB file
-${tools_dir}/grib_get_data $GRIB_OUTFILE > $DATA_OUTFILE
+${tools_dir}/grib_get_data $tempGrib > $tempOut
 
 # Compare output with reference. If the diff fails, script will immediately exit with status 1
-diff $DATA_OUTFILE $REF_FILE
+diff $tempRef $tempOut
 
-grib_check_key_equals $GRIB_OUTFILE standardParallelInDegrees,centralLongitudeInDegrees '48 9'
-grib_check_key_equals $GRIB_OUTFILE xDirectionGridLengthInMetres,yDirectionGridLengthInMetres '5000 5000'
+grib_check_key_equals $tempGrib standardParallelInDegrees,centralLongitudeInDegrees '48 9'
+grib_check_key_equals $tempGrib xDirectionGridLengthInMetres,yDirectionGridLengthInMetres '5000 5000'
 
 # Nearest
-${tools_dir}/grib_ls -l 67,-33,1 $GRIB_OUTFILE
+${tools_dir}/grib_ls -l 67,-33,1 $tempGrib
 
 # jPointsAreConsecutive
-${tools_dir}/grib_get_data -s jPointsAreConsecutive=1 $GRIB_OUTFILE > $DATA_OUTFILE
+tempOutA=temp.$label.A.txt
+tempOutB=temp.$label.B.txt
+${tools_dir}/grib_get_data -s jPointsAreConsecutive=0 $tempGrib > $tempOutA
+${tools_dir}/grib_get_data -s jPointsAreConsecutive=1 $tempGrib > $tempOutB
+# Results should be different.
+set +e
+diff $tempOutA $tempOutB > /dev/null
+status=$?
+set -e
+[ $status -ne 0 ]
+rm -f $tempOutA $tempOutB
 
+
+# --------------------
 # Oblate spheroid
 # --------------------
 
-cat > $FILTER_FILE<<EOF
+cat > $tempFilt<<EOF
 set edition = 2;
 set gridType = "lambert_azimuthal_equal_area";
 set Nx = 10;
@@ -88,12 +105,33 @@ write;
 EOF
 
 # Use this filter and the input GRIB to create a new GRIB
-rm -f "$GRIB_OUTFILE"
-${tools_dir}/grib_filter -o $GRIB_OUTFILE $FILTER_FILE $GRIB_INFILE
+rm -f "$tempGrib"
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $input
 
-${tools_dir}/grib_get_data $GRIB_OUTFILE > $DATA_OUTFILE
+${tools_dir}/grib_get_data $tempGrib > $tempOut
+
+# ECC-1818
+# ---------
+cat > $tempFilt<<EOF
+set gridType = "lambert_azimuthal_equal_area";
+set shapeOfTheEarth = 5;
+set numberOfPointsAlongXAxis = 432;
+set numberOfPointsAlongYAxis = 432;
+set latitudeOfFirstGridPoint = 16623926;
+set longitudeOfFirstGridPoint = -135000000;
+set standardParallelInMicrodegrees = 90000000;
+set centralLongitudeInMicrodegrees = 0;
+set xDirectionGridLengthInMillimetres = 25000000;
+set yDirectionGridLengthInMillimetres = 25000000;
+set values = 666;
+set numberOfDataPoints = 186624;
+set numberOfValues = 186624;
+write;
+EOF
+
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_get_data $tempGrib > $tempOut
 
 
 # Clean up
-rm -f $FILTER_FILE $DATA_OUTFILE
-rm -f $GRIB_OUTFILE
+rm -f $tempFilt $tempOut $tempGrib

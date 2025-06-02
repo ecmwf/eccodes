@@ -34,6 +34,4 @@
 32 32 Saturation water vapour pressure (Pa)
 33 33 Geometric altitude above mean sea level (m)
 34 34 Geometric height above ground level (m)
-# 35-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing
