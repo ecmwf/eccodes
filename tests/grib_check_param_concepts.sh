@@ -65,10 +65,10 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
-# First check the GRIB2 paramId.def and shortName.def
-# ----------------------------------------------------
+# Check the GRIB2 paramId and shortName defs
+# --------------------------------------------
 $EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/paramId.def
-datasets="ecmf uerra cerise hydro s2s tigge era6 destine era nextgems"
+datasets="cerise destine ecmf era era6  hydro nextgems s2s tigge uerra"
 for a_dataset in $datasets; do
     pidfile=$ECCODES_DEFINITION_PATH/grib2/localConcepts/$a_dataset/paramId.def
     if [ -f "$pidfile" ]; then
@@ -96,6 +96,10 @@ done
 # Check WMO name.def etc
 $EXEC ${test_dir}/grib_check_param_concepts name  $ECCODES_DEFINITION_PATH/grib2/name.def
 $EXEC ${test_dir}/grib_check_param_concepts units $ECCODES_DEFINITION_PATH/grib2/units.def
+
+$EXEC ${test_dir}/grib_check_param_concepts name  $ECCODES_DEFINITION_PATH/grib2/name.lte33.def
+$EXEC ${test_dir}/grib_check_param_concepts units $ECCODES_DEFINITION_PATH/grib2/units.lte33.def
+
 $EXEC ${test_dir}/grib_check_param_concepts cfVarName $ECCODES_DEFINITION_PATH/grib2/cfVarName.def
 $EXEC ${test_dir}/grib_check_param_concepts cfVarName $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/cfVarName.def
 
