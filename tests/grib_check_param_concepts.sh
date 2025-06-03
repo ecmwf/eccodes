@@ -193,30 +193,17 @@ rm -fr $tempDir
 # -------------------------------
 echo "Check duplicates"
 # -------------------------------
-# There are a group of chemical parameters which need to be in TWO places because of the chemID matching
-# e.g. we want different combos
-#  wmo pid + wmo   chem
-#  wmo pid + local chem
-# etc...
 paramIdFile=$ECCODES_DEFINITION_PATH/grib2/paramId.def
-
-exclude="409000 412000 417000 432000 442000 443000 451000 452000 453000 463000 464000 465000 466000"
 
 pids=$(grep "^'" $paramIdFile | awk -F"'" '{printf "%s\n", $2}')
 set +e
 for p in $pids; do
-  process_it=1
-  for ex in $exclude; do
-    if [ "$p" = "$ex" ]; then process_it=0; break; fi
-  done
-  if [ $process_it = 1 ]; then
-    # For each paramId found in the top-level WMO file, check if it also exists
-    # in the ECMWF local one
-    grep "'$p'"  $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/paramId.def
-    if [ $? -ne 1 ]; then
-      echo "ERROR: check paramId $p. Is it duplicated?"
-      exit 1
-    fi
+  # For each paramId found in the top-level WMO file, check if it also exists
+  # in the ECMWF local one
+  grep "'$p'"  $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/paramId.def
+  if [ $? -ne 1 ]; then
+    echo "ERROR: check paramId $p. Is it duplicated?"
+    exit 1
   fi
 done
 set -e
