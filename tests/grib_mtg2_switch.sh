@@ -45,7 +45,15 @@ ${tools_dir}/grib_set -s \
     $sample_grib2 $base_grib2
 
 # Now adapt to various cases
+set +e
 declare -a cases
+status=$?
+set -e
+if [ $status -ne 0 ]; then
+    echo "Looks like this version of bash doesn't support 'declare'"
+    exit 0
+fi
+
 declare -a expected
 ## CASE 01: ECMWF OD CY48R1 pre-mtg2 ##
 # tablesVersion=33
