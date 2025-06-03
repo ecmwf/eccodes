@@ -1245,6 +1245,13 @@ for i in "${!cases[@]}"; do
         grib_check_key_equals ${cases[i]} paramIdFilename   "paramId.lte33.def"
         grib_check_key_equals ${cases[i]} shortNameFilename "shortName.lte33.def"
 
+    # Else if we are post-MTG2 but chem-split we expect new paramId but to read the chemsplit defs
+    elif [[ $MTG2Switch -eq 2 ]]; then
+        grib_check_key_equals ${cases[i]} paramId           "237287"
+        grib_check_key_equals ${cases[i]} shortName         "max_cape"
+        grib_check_key_equals ${cases[i]} paramIdFilename   "paramId.chemsplit.def"
+        grib_check_key_equals ${cases[i]} shortNameFilename "shortName.chemsplit.def"
+    
     # Otherwise we are post-MTG2 so we expect new paramId and to read the post-MTG2 defs
     else
         grib_check_key_equals ${cases[i]} paramId           "237287"
