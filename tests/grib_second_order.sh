@@ -222,6 +222,18 @@ EOF
 input=lfpw.grib1
 ${tools_dir}/grib_filter $tempFilt $input
 
+# Local entries in table 5.0
+# ---------------------------
+latestOfficial=$( ${tools_dir}/grib_get -p tablesVersionLatestOfficial $ECCODES_SAMPLES_PATH/GRIB2.tmpl )
+for drtn in 50001 50002; do
+    ${tools_dir}/grib_set -r -s tablesVersion=$latestOfficial,dataRepresentationTemplateNumber=$drtn sample.grib2 $temp1
+    ${tools_dir}/grib_dump -O -p section_5 $temp1 > $temp2
+    grep -q "dataRepresentationTemplateNumber = $drtn .*Second order packing.*/5.0.table" $temp2
+done
+
+# ${tools_dir}/grib_set -r -s tablesVersion=$latestOfficial,dataRepresentationTemplateNumber=50001 sample.grib2 $temp1
+# ${tools_dir}/grib_dump -O -p section_5 $temp1 > $temp2
+# grep -q "dataRepresentationTemplateNumber = 50001 .*Second order packing.*/5.0.table" $temp2
 
 # Clean up
 rm -f $temp_stat1 $temp_stat2
