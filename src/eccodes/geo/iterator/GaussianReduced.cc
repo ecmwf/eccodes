@@ -204,7 +204,7 @@ int GaussianReduced::iterate_reduced_gaussian_subarea(grib_handle* h,
                                  "%s (sub-area). Num points=%zu, size(values)=%zu", ITER, np, nv_);
                 return GRIB_WRONG_GRID;
             }
-            lons_[e_] = lon2;
+            lons_[e_] = normalise_longitude_in_degrees(lon2);
             DEBUG_ASSERT(j + l < numlats);
             lats_[e_] = lats[j + l];
             e_++;
