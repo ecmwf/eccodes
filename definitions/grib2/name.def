@@ -11998,8 +11998,8 @@
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
-#Time-mean surface diffuse short-wave radiation flux, clear sky
-'Time-mean surface diffuse short-wave radiation flux, clear sky' = {
+#Time-maximum surface diffuse short-wave radiation flux, clear sky
+'Time-maximum surface diffuse short-wave radiation flux, clear sky' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 63 ;
@@ -13927,8 +13927,8 @@
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
-#Time-mean surface diffuse short-wave radiation flux, clear sky
-'Time-mean surface diffuse short-wave radiation flux, clear sky' = {
+#Time-minimum surface diffuse short-wave radiation flux, clear sky
+'Time-minimum surface diffuse short-wave radiation flux, clear sky' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 63 ;
@@ -15857,8 +15857,8 @@
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
-#Time-mean surface diffuse short-wave radiation flux, clear sky
-'Time-mean surface diffuse short-wave radiation flux, clear sky' = {
+#Time-standard-deviation surface diffuse short-wave radiation flux, clear sky
+'Time-standard-deviation surface diffuse short-wave radiation flux, clear sky' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 63 ;
