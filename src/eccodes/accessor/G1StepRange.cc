@@ -123,7 +123,6 @@ int G1StepRange::grib_g1_step_get_steps(long* start, long* theEnd)
     if (err)
         return err;
 
-    /* TODO move to the def file */
     err = grib_get_long(hand, "timeRangeIndicatorFromStepRange", &timeRangeIndicatorFromStepRange);
     if (err) return err;
 
@@ -392,7 +391,6 @@ int G1StepRange::pack_string(const char* val, size_t* len)
         timeRangeIndicator = 10;
         if ((ret = grib_set_long_internal(h, timeRangeIndicator_, 10)))
             return ret;
-        /* TODO move to the def file*/
         if ((ret = grib_set_long_internal(h, "timeRangeIndicatorFromStepRange", 10)))
             return ret;
     }
@@ -449,7 +447,6 @@ int G1StepRange::pack_string(const char* val, size_t* len)
             grib_accessor* p1_accessor = NULL;
             if ((ret = grib_set_long_internal(h, timeRangeIndicator_, 10)))
                 return ret;
-            /* TODO move to the def file*/
             if ((ret = grib_set_long_internal(h, "timeRangeIndicatorFromStepRange", 10)))
                 return ret;
             if (theEnd != start && !h->context->gribex_mode_on) {
@@ -608,7 +605,6 @@ int G1StepRange::unpack_long(long* val, size_t* len)
     char* q = NULL;
     int err = 0;
 
-    /*TODO implement dirty*/
     if ((err = unpack_string(buff, &bufflen)) != GRIB_SUCCESS)
         return err;
 
