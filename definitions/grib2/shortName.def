@@ -6578,6 +6578,51 @@
 	 typeOfStatisticalProcessing = 0 ;
 	 lengthOfTimeRange = 6 ;
 	}
+#Accumulated Carbon Dioxide Net Ecosystem Exchange
+'aco2nee' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 59 ;
+	 constituentType = 3 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Accumulated Carbon Dioxide Gross Primary Production
+'aco2gpp' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 60 ;
+	 constituentType = 3 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Accumulated Carbon Dioxide Ecosystem Respiration
+'aco2rec' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 61 ;
+	 constituentType = 3 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Carbon dioxide net ecosystem exchange flux
+'fco2nee' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 59 ;
+	 constituentType = 3 ;
+	}
+#Carbon dioxide gross primary production flux
+'fco2gpp' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 60 ;
+	 constituentType = 3 ;
+	}
+#Carbon dioxide ecosystem respiration flux
+'fco2rec' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 61 ;
+	 constituentType = 3 ;
+	}
 #Soil moisture top 20 cm
 'sm20' = {
 	 discipline = 2 ;
