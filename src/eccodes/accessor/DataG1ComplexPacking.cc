@@ -43,7 +43,7 @@ int DataG1ComplexPacking::pack_double(const double* val, size_t* len)
     if (*len == 0)
         return GRIB_NO_VALUES;
 
-    //     /* TODO: spectral_ieee does not work */
+    //     /* TODO(masn): spectral_ieee does not work */
     //     if (c->ieee_packing && ieee_packing_ ) {
     //         grib_handle* h       = get_enclosing_handle();
     //         grib_context* c      = context_ ;

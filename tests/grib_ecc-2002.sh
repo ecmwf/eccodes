@@ -15,6 +15,9 @@
 # GRIB: Setting paramId=228080 for ERA6 fails
 # ---------------------------------------------------------------------
 
+echo "This test is now disabled due to ECC-2092"
+exit 0
+
 label="grib_ecc-2002_test"
 tempGrib=temp.$label.grib
 tempFilt=temp.$label.filt

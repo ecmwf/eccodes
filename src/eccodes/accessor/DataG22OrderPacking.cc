@@ -1591,7 +1591,8 @@ int DataG22OrderPacking::unpack(T* val, size_t* len)
 
     dirty_ = 0;
 
-    if (bits_per_value == 0) {
+    // ECC-2095: Detect constant fields by counting the groups
+    if (numberOfGroupsOfDataValues == 0) {
         for (i = 0; i < n_vals; i++) {
             val[i] = reference_value;
         }

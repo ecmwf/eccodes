@@ -31,7 +31,6 @@ static int pack_double_old(grib_accessor* a, const double* val, size_t *len)
     long *groupLengths,*groupWidths,*firstOrderValues;
     /* long groupLengths[MAX_NUMBER_OF_GROUPS],groupWidths[MAX_NUMBER_OF_GROUPS],firstOrderValues[MAX_NUMBER_OF_GROUPS]; */
 
-    /* TODO put these parameters in def file */
     long startGroupLength=15;
     long incrementGroupLength=3;
     long minGroupLength=3;
@@ -294,7 +293,7 @@ static int pack_double_old(grib_accessor* a, const double* val, size_t *len)
         /* check if group B can be coded with a smaller width than A */
         if (maxB-minB <= range/2 && range>0 ) {
 
-            /* TODO Add code to try if A can be expanded taking some elements
+            /* TODO(maee): Add code to try if A can be expanded taking some elements
                from the left (preceding) group.
                 A possible variation is to do this left check (and the previous one)
                 in the final loop when checking that the width of each group.

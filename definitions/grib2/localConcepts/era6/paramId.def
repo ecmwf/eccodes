@@ -323,51 +323,6 @@
 	 parameterNumber = 194 ;
 	 typeOfGeneratingProcess = 9 ;
 	}
-#Accumulated Carbon Dioxide Net Ecosystem Exchange
-'228080' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 59 ;
-	 constituentType = 3 ;
-	 typeOfStatisticalProcessing = 1 ;
-	}
-#Accumulated Carbon Dioxide Gross Primary Production
-'228081' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 60 ;
-	 constituentType = 3 ;
-	 typeOfStatisticalProcessing = 1 ;
-	}
-#Accumulated Carbon Dioxide Ecosystem Respiration
-'228082' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 61 ;
-	 constituentType = 3 ;
-	 typeOfStatisticalProcessing = 1 ;
-	}
-#Carbon dioxide net ecosystem exchange flux
-'228083' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 59 ;
-	 constituentType = 3 ;
-	}
-#Carbon dioxide gross primary production flux
-'228084' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 60 ;
-	 constituentType = 3 ;
-	}
-#Carbon dioxide ecosystem respiration flux
-'228085' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 61 ;
-	 constituentType = 3 ;
-	}
 #Accumulated freezing rain
 '228216' = {
 	 localTablesVersion = 1 ;

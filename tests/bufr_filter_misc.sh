@@ -732,6 +732,22 @@ diff ${f}.ref ${f}.log
 
 rm -f ${f}.ref ${f}.log
 rm -f $fLog $fRules
+
+
+#-----------------------------------------------------------
+# Test: default value of delayed replication factor (=1)
+#-----------------------------------------------------------
+f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
+cat > $fRules <<EOF
+ set unexpandedDescriptors = {101000, 31000, 7007};
+ assert(shortDelayedDescriptorReplicationFactor == 1);
+ write;
+EOF
+${tools_dir}/codes_bufr_filter -o $fBufrTmp $fRules $f
+${tools_dir}/bufr_dump -p $fBufrTmp > $fLog
+grep -q "height=MISSING" $fLog
+
+
 #-----------------------------------------------------------
 # Test: initialise with given values of delayed replications
 #-----------------------------------------------------------

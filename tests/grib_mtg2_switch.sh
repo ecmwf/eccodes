@@ -1227,6 +1227,96 @@ ${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 # MTG2Switch=1
 expected+=("1 1 1")
 
+## CASE 50: ECMWF AI tv33 pre-mtg2 ##
+# tablesVersion=33
+# class=ai
+cases+=(temp.$label.case50.grib2)
+
+cat >$tempFilt<<EOF
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=1;
+    set class="ai";
+    set tablesVersion=33;
+    write;
+EOF
+
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
+
+# Expected result
+# MTG2SwitchViaTablesVersion=1
+# MTG2SwitchDefault=0
+# MTG2Switch=0
+expected+=("1 0 0")
+
+## CASE 51: ECMWF AI tv34 pre-mtg2 ##
+# tablesVersion=34
+# productionStatusOfProcessedData=0
+# class=ai
+cases+=(temp.$label.case51.grib2)
+
+cat >$tempFilt<<EOF
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=1;
+    set class="ai";
+    set tablesVersion=34;
+    set productionStatusOfProcessedData=0;
+    write;
+EOF
+
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
+
+# Expected result
+# MTG2SwitchViaTablesVersion=1
+# MTG2SwitchDefault=1
+# MTG2Switch=0
+expected+=("1 1 0")
+
+## CASE 52: ECMWF AI tv35 pre-mtg2 ##
+# tablesVersion=35
+# productionStatusOfProcessedData=0
+# class=ai
+cases+=(temp.$label.case52.grib2)
+
+cat >$tempFilt<<EOF
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=1;
+    set class="ai";
+    set tablesVersion=35;
+    set productionStatusOfProcessedData=0;
+    write;
+EOF
+
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
+
+# Expected result
+# MTG2SwitchViaTablesVersion=1
+# MTG2SwitchDefault=1
+# MTG2Switch=0
+expected+=("1 1 0")
+
+## CASE 53: ECMWF AI tv36 post-mtg2 ##
+# tablesVersion=36
+# productionStatusOfProcessedData=0
+# class=ai
+cases+=(temp.$label.case53.grib2)
+
+cat >$tempFilt<<EOF
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=1;
+    set class="ai";
+    set tablesVersion=36;
+    set productionStatusOfProcessedData=0;
+    write;
+EOF
+
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
+
+# Expected result
+# MTG2SwitchViaTablesVersion=1
+# MTG2SwitchDefault=1
+# MTG2Switch=1
+expected+=("1 1 1")
+
 # Test different cases
 
 for i in "${!cases[@]}"; do

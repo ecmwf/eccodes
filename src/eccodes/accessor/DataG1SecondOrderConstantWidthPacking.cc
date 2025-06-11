@@ -192,7 +192,7 @@ int DataG1SecondOrderConstantWidthPacking::unpack_double_element(size_t idx, dou
     double* values    = NULL;
     int err           = 0;
 
-    /* TODO: This should be 'codedValues' not 'values'
+    /* TODO(masn): This should be 'codedValues' not 'values'
        but GRIB1 version of this packing does not have that key!! */
     err = grib_get_size(hand, "values", &size);
     if (err)
@@ -218,7 +218,7 @@ int DataG1SecondOrderConstantWidthPacking::unpack_double_element_set(const size_
     double* values = NULL;
     int err        = 0;
 
-    /* TODO: This should be 'codedValues' not 'values'
+    /* TODO(masn): This should be 'codedValues' not 'values'
        but GRIB1 version of this packing does not have that key!! */
     err = grib_get_size(hand, "values", &size);
     if (err) return err;
