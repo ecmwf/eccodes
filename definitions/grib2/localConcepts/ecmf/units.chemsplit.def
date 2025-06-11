@@ -194,30 +194,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 46 ;
 	}
-#Maximum temperature at 2 metres in the last 24 hours
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 lengthOfTimeRange = 24 ;
-	}
-#Minimum temperature at 2 metres in the last 24 hours
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 3 ;
-	 lengthOfTimeRange = 24 ;
-	}
 #Observation count
 '~' = {
 	 discipline = 192 ;
@@ -499,12 +475,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 120 ;
-	}
-#Maximum 10 metre wind gust in the last 6 hours
-'m s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 123 ;
 	}
 #Vertically integrated total energy
 'J m**-2' = {
@@ -1583,12 +1553,6 @@
 	 parameterCategory = 200 ;
 	 parameterNumber = 129 ;
 	}
-#Temperature difference
-'K' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 130 ;
-	}
 #U component of wind difference
 'm s**-1' = {
 	 discipline = 192 ;
@@ -1600,12 +1564,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 132 ;
-	}
-#Specific humidity difference
-'kg kg**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 133 ;
 	}
 #Surface pressure difference
 'Pa' = {
@@ -1630,12 +1588,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 137 ;
-	}
-#Vorticity (relative) difference
-'s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 138 ;
 	}
 #Soil temperature level 1 difference
 'K' = {
@@ -1717,9 +1669,11 @@
 	}
 #Logarithm of surface pressure difference
 'kg m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 152 ;
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfGeneratingProcess = 20 ;
 	}
 #Short-wave heating rate difference
 'K' = {
@@ -1732,12 +1686,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 154 ;
-	}
-#Divergence difference
-'s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 155 ;
 	}
 #Height difference
 'm' = {
@@ -2014,12 +1962,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 202 ;
-	}
-#Ozone mass mixing ratio difference
-'kg kg**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 200 ;
-	 parameterNumber = 203 ;
 	}
 #Precipitation analysis weights difference
 '~' = {
@@ -2885,24 +2827,6 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 246 ;
 	}
-#Nitrate fine mode aerosol mass mixing ratio
-'kg kg**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 aerosolType = 65534 ;
-	 is_aerosol = 1 ;
-	}
-#Nitrate coarse mode aerosol mass mixing ratio
-'kg kg**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 aerosolType = 65533 ;
-	 is_aerosol = 1 ;
-	}
 #Aerosol type 13 mass mixing ratio
 'kg kg**-1' = {
 	 discipline = 192 ;
@@ -2969,16 +2893,6 @@
 	 parameterCategory = 211 ;
 	 parameterNumber = 56 ;
 	}
-#Water vapour (chemistry) difference
-'kg kg**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 constituentType = 1 ;
-	 typeOfGeneratingProcess = 20 ;
-	 is_chemical = 1 ;
-	}
 #Altitude of emitter
 'm' = {
 	 discipline = 192 ;
@@ -2990,26 +2904,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
 	 parameterNumber = 120 ;
-	}
-#Nitrate fine mode aerosol mass mixing ratio
-'kg kg**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 aerosolType = 65534 ;
-	 typeOfGeneratingProcess = 20 ;
-	 is_aerosol = 1 ;
-	}
-#Nitrate coarse mode aerosol mass mixing ratio
-'kg kg**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 aerosolType = 65533 ;
-	 typeOfGeneratingProcess = 20 ;
-	 is_aerosol = 1 ;
 	}
 #Experimental product
 '~' = {
@@ -5993,216 +5887,6 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 188 ;
 	}
-#Source/gain of fine-mode nitrate aerosol
-'kg m**-2 s**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 192 ;
-	 aerosolType = 65534 ;
-	 is_aerosol = 1 ;
-	}
-#Source/gain of coarse-mode nitrate aerosol
-'kg m**-2 s**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 192 ;
-	 aerosolType = 65533 ;
-	 is_aerosol = 1 ;
-	}
-#Dry deposition of fine-mode nitrate aerosol
-'kg m**-2 s**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 6 ;
-	 aerosolType = 65534 ;
-	 is_aerosol = 1 ;
-	}
-#Dry deposition of coarse-mode nitrate aerosol
-'kg m**-2 s**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 6 ;
-	 aerosolType = 65533 ;
-	 is_aerosol = 1 ;
-	}
-#Sedimentation of fine-mode nitrate aerosol
-'kg m**-2 s**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 11 ;
-	 aerosolType = 65534 ;
-	 is_aerosol = 1 ;
-	}
-#Sedimentation of coarse-mode nitrate aerosol
-'kg m**-2 s**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 11 ;
-	 aerosolType = 65533 ;
-	 is_aerosol = 1 ;
-	}
-#Wet deposition of fine-mode nitrate aerosol by large-scale precipitation
-'kg m**-2 s**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 9 ;
-	 aerosolType = 65534 ;
-	 is_aerosol = 1 ;
-	}
-#Wet deposition of coarse-mode nitrate aerosol by large-scale precipitation
-'kg m**-2 s**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 9 ;
-	 aerosolType = 65533 ;
-	 is_aerosol = 1 ;
-	}
-#Wet deposition of fine-mode nitrate aerosol by convective precipitation
-'kg m**-2 s**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 10 ;
-	 aerosolType = 65534 ;
-	 is_aerosol = 1 ;
-	}
-#Wet deposition of coarse-mode nitrate aerosol by convective precipitation
-'kg m**-2 s**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 10 ;
-	 aerosolType = 65533 ;
-	 is_aerosol = 1 ;
-	}
-#Negative fixer of fine-mode nitrate aerosol
-'kg m**-2 s**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 193 ;
-	 aerosolType = 65534 ;
-	 is_aerosol = 1 ;
-	}
-#Negative fixer of coarse-mode nitrate aerosol
-'kg m**-2 s**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 193 ;
-	 aerosolType = 65533 ;
-	 is_aerosol = 1 ;
-	}
-#Vertically integrated mass of fine-mode nitrate aerosol
-'kg m**-2' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 aerosolType = 65534 ;
-	 is_aerosol = 1 ;
-	}
-#Vertically integrated mass of coarse-mode nitrate aerosol
-'kg m**-2' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 aerosolType = 65533 ;
-	 is_aerosol = 1 ;
-	}
-#Fine-mode nitrate aerosol optical depth at 550 nm
-'dimensionless' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 102 ;
-	 scaleFactorOfFirstWavelength = 8 ;
-	 typeOfSizeInterval = 255 ;
-	 aerosolType = 65534 ;
-	 scaledValueOfFirstWavelength = 55 ;
-	 typeOfWavelengthInterval = 11 ;
-	 is_aerosol_optical = 1 ;
-	}
-#Coarse-mode nitrate aerosol optical depth at 550 nm
-'dimensionless' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 102 ;
-	 scaleFactorOfFirstWavelength = 8 ;
-	 typeOfSizeInterval = 255 ;
-	 aerosolType = 65533 ;
-	 scaledValueOfFirstWavelength = 55 ;
-	 typeOfWavelengthInterval = 11 ;
-	 is_aerosol_optical = 1 ;
-	}
-#Source/gain of ammonium aerosol
-'kg m**-2 s**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 192 ;
-	 aerosolType = 62003 ;
-	 is_aerosol = 1 ;
-	}
-#Negative fixer of ammonium aerosol
-'kg m**-2 s**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 193 ;
-	 aerosolType = 62003 ;
-	 is_aerosol = 1 ;
-	}
-#Source/gain of biogenic secondary organic aerosol
-'kg m**-2 s**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 192 ;
-	 aerosolType = 62032 ;
-	 is_aerosol = 1 ;
-	}
-#Negative fixer of biogenic secondary organic aerosol
-'kg m**-2 s**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 193 ;
-	 aerosolType = 62032 ;
-	 is_aerosol = 1 ;
-	}
-#Source/gain of anthropogenic secondary organic aerosol
-'kg m**-2 s**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 192 ;
-	 aerosolType = 62033 ;
-	 is_aerosol = 1 ;
-	}
-#Negative fixer of anthropogenic secondary organic aerosol
-'kg m**-2 s**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 193 ;
-	 aerosolType = 62033 ;
-	 is_aerosol = 1 ;
-	}
 #Experimental product
 '~' = {
 	 discipline = 192 ;
@@ -8915,24 +8599,6 @@
 	 parameterCategory = 217 ;
 	 parameterNumber = 206 ;
 	}
-#Anthropogenic volatile organic compounds mass mixing ratio
-'kg kg**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 constituentType = 65532 ;
-	 is_chemical = 1 ;
-	}
-#Biomass burning volatile organic compounds mass mixing ratio
-'kg kg**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 2 ;
-	 constituentType = 65531 ;
-	 is_chemical = 1 ;
-	}
 #Total column hydrogen peroxide
 'kg m**-2' = {
 	 discipline = 192 ;
@@ -10126,24 +9792,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 218 ;
 	 parameterNumber = 206 ;
-	}
-#Column integrated mass density of Anthropogenic volatile organic compounds
-'kg m**-2' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 1 ;
-	 constituentType = 65532 ;
-	 is_chemical = 1 ;
-	}
-#Column integrated mass density of Biomass burning volatile organic compounds
-'kg m**-2' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 1 ;
-	 constituentType = 65531 ;
-	 is_chemical = 1 ;
 	}
 #Ozone emissions
 'kg m**-2 s**-1' = {
@@ -12719,133 +12367,11 @@
 	 parameterCategory = 221 ;
 	 parameterNumber = 206 ;
 	}
-#Dry deposition velocity of Anthropogenic volatile organic compounds
-'m s**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 15 ;
-	 constituentType = 65532 ;
-	 is_chemical = 1 ;
-	}
-#Dry deposition velocity of Biomass burning volatile organic compounds
-'m s**-1' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 15 ;
-	 constituentType = 65531 ;
-	 is_chemical = 1 ;
-	}
-#Time-integrated dry deposition mass flux of Ozone (stratospheric)
-'kg m**-2' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 6 ;
-	 constituentType = 65524 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
-	}
-#Time-integrated dry deposition mass flux of Nitrate
-'kg m**-2' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 6 ;
-	 constituentType = 65525 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
-	}
-#Time-integrated dry deposition mass flux of Toluene and less reactive aromatics
-'kg m**-2' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 6 ;
-	 constituentType = 65529 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
-	}
-#Time-integrated dry deposition mass flux of Xylene and more reactive aromatics
-'kg m**-2' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 6 ;
-	 constituentType = 65530 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
-	}
-#Time-integrated wet deposition mass flux of Nitrate
-'kg m**-2' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 7 ;
-	 constituentType = 65525 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
-	}
-#Time-integrated wet deposition mass flux of Condensable gas type 1
-'kg m**-2' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 7 ;
-	 constituentType = 65526 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
-	}
-#Time-integrated wet deposition mass flux of Condensable gas type 2a
-'kg m**-2' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 7 ;
-	 constituentType = 65527 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
-	}
-#Time-integrated wet deposition mass flux of Condensable gas type 2b
-'kg m**-2' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 20 ;
-	 parameterNumber = 7 ;
-	 constituentType = 65528 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 is_chemical = 1 ;
-	}
 #Horizontal visibility
 'm' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 25 ;
-	}
-#Maximum temperature at 2 metres in the last 3 hours
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 lengthOfTimeRange = 3 ;
-	}
-#Minimum temperature at 2 metres in the last 3 hours
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 3 ;
-	 lengthOfTimeRange = 3 ;
 	}
 #Soil wetness index in layer 1
 'dimensionless' = {
@@ -13328,6 +12854,106 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 192 ;
+	}
+#Volume-mean total column mixing ratio
+'mol mol**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 195 ;
+	}
+#Emission mass flux from vegetation
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 192 ;
+	}
+#Emission mass flux from biomass burning
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 193 ;
+	}
+#Emission mass flux from settlements
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 194 ;
+	}
+#Emission mass flux from soil
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 195 ;
+	}
+#Emission mass flux from wild animals
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 196 ;
+	}
+#Aerosol negative fixer mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	}
+#Aerosol sink/loss mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	}
+#Aerosol source/gain mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	}
+#Emission mass flux from commercial buildings heating
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 197 ;
+	}
+#Emission mass flux from residential heating
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 198 ;
+	}
+#Emission mass flux from oil refineries and transformation industry
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 199 ;
+	}
+#Emission mass flux from gas production
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 200 ;
 	}
 #Stream function gradient
 'm**2 s**-1' = {
@@ -18151,12 +17777,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 174 ;
 	 parameterNumber = 42 ;
-	}
-#10 metre wind gust in the last 24 hours
-'m s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 174 ;
-	 parameterNumber = 49 ;
 	}
 #1.5m temperature - mean in the last 24 hours
 'K' = {
