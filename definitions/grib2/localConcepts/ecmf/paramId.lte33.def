@@ -14999,7 +14999,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
-	 productDefinitionTemplateNumber = 9 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
@@ -15019,7 +15018,6 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
-	 productDefinitionTemplateNumber = 5 ;
 	 typeOfFirstFixedSurface = 101 ;
 	 scaledValueOfLowerLimit = 2 ;
 	 scaleFactorOfLowerLimit = 0 ;
@@ -15030,7 +15028,6 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
-	 productDefinitionTemplateNumber = 5 ;
 	 typeOfFirstFixedSurface = 101 ;
 	 scaledValueOfLowerLimit = 4 ;
 	 scaleFactorOfLowerLimit = 0 ;
@@ -15041,7 +15038,6 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
-	 productDefinitionTemplateNumber = 5 ;
 	 typeOfFirstFixedSurface = 101 ;
 	 scaledValueOfLowerLimit = 6 ;
 	 scaleFactorOfLowerLimit = 0 ;
@@ -15052,7 +15048,6 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
-	 productDefinitionTemplateNumber = 5 ;
 	 typeOfFirstFixedSurface = 101 ;
 	 scaledValueOfLowerLimit = 8 ;
 	 scaleFactorOfLowerLimit = 0 ;
