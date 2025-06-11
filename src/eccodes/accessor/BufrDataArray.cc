@@ -2410,7 +2410,7 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
                     depth        = bitmapDepth[bitmapIndex];
                     reset_deeper_qualifiers(significanceQualifierGroup, significanceQualifierDepth,
                                             number_of_qualifiers, depth);
-                    /* TODO: This branch is not reached in our tests! */
+                    /* TODO(masn): This branch is not reached in our tests! */
                     reset_deeper_qualifiers(bitmapGroup, bitmapDepth, MAX_NUMBER_OF_BITMAPS, depth);
                 }
                 else {

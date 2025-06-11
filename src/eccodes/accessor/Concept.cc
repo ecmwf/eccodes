@@ -242,8 +242,7 @@ static int rectify_concept_apply(grib_handle* h, const char* key)
         { "aerosolType",                       { "is_aerosol", 1 }                        },
         { "sourceSinkChemicalPhysicalProcess", { "is_chemical_srcsink", 1 }               },
         { "randomFieldNumber",                 { "productDefinitionTemplateNumber", 143 } },
-        // TODO(masn): Add a new key e.g. is_probability_forecast
-        { "probabilityType",                   { "productDefinitionTemplateNumber", 5 }   }
+        { "probabilityType",                   { "is_probability_fcst", 1 }               }
     };
     const auto mapIter = keyMap.find(key);
     if (mapIter != keyMap.end()) {
