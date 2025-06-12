@@ -1,0 +1,5 @@
+# Concept satellite
+# This brings together all the satellite information to define a channel. This is done via an include.
+
+# include "grib2/satelliteConcepts/satellite.[satelliteSeries].[satelliteNumber].[instrumentType].def"
+template_nofail "grib2/satelliteConcepts/satellite.[satelliteSeries].[satelliteNumber].[instrumentType].def";

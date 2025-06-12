@@ -14,5 +14,9 @@ listOfContributingSpectralBands list(numberOfContributingSpectralBands){
   unsigned[4] scaledValueOfCentralWaveNumber = missing() : dump,can_be_missing ;
 }
 
+meta centralWaveNumber  from_scale_factor_scaled_value(scaleFactorOfCentralWaveNumber, scaledValueOfCentralWaveNumber);
+
 alias instrument = instrumentType;
 alias ident = satelliteNumber;
+
+concept mychannel(unknown, "satelliteConcept.def", conceptsDir2, conceptsDir1): hidden, read_only, no_fail;

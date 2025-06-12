@@ -1,0 +1,9 @@
+# Concept for satellite channel information
+# satelliteSeries = 333
+# satelliteNumber = 57
+# instrument = 207
+1 = {centralWaveNumber=1569000;}
+3 = {centralWaveNumber=610800;}
+5 = {centralWaveNumber=158800;}
+6 = {centralWaveNumber=135800;}
+9 = {centralWaveNumber=92700;}
