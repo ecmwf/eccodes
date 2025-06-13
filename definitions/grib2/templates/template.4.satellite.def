@@ -19,4 +19,6 @@ meta centralWaveNumber  from_scale_factor_scaled_value(scaleFactorOfCentralWaveN
 alias instrument = instrumentType;
 alias ident = satelliteNumber;
 
-concept mychannel(unknown, "satelliteConcept.def", conceptsDir2, conceptsDir1): hidden, read_only, no_fail;
+#concept mychannel(false, "satelliteConcept.def", conceptsDir2, conceptsDir1): hidden, read_only;
+concept mychannel(unknown, "satelliteConcepts/satellite.[satelliteSeries].[satelliteNumber].[instrumentType].def",
+                  conceptsDir2, conceptsDir1): hidden, read_only;
