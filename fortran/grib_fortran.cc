@@ -618,7 +618,7 @@ static grib_handle* get_handle(int handle_id)
 
 extern "C" {
 // Needed for fortran2c interoperability
-static grib_handle* f_handle_id2c_handle(int handle_id){
+grib_handle* f_handle_id2c_handle(int handle_id){
   return get_handle(handle_id);
 }
 }
