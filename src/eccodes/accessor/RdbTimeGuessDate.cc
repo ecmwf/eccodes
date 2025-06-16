@@ -59,6 +59,7 @@ int RdbTimeGuessDate::unpack_long(long* val, size_t* len)
             rdbMonth = typicalMonth + 1;
         }
     }
+    // ECC-2100
     else if ((rdbDay - typicalDay) >= 27 and typicalDay == 1) {
         if (typicalMonth == 1) {
             rdbYear  = typicalYear - 1;
