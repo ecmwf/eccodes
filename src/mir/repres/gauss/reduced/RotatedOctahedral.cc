@@ -64,7 +64,7 @@ void RotatedOctahedral::fillJob(api::MIRJob& job) const {
 
 
 atlas::Grid RotatedOctahedral::atlasGrid() const {
-    return rotation_.rotate(Octahedral::atlasGrid());
+    return rotate_atlas_grid(rotation_.rotation(), Octahedral::atlasGrid());
 }
 
 

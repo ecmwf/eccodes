@@ -15,7 +15,9 @@
 #include "eckit/log/JSON.h"
 #include "eckit/types/FloatCompare.h"
 
+#include "mir/api/mir_config.h"
 #include "mir/api/MIRJob.h"
+#include "mir/api/mir_config.h"
 #include "mir/util/Atlas.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Exceptions.h"
@@ -201,7 +203,11 @@ bool Regular::isPeriodicWestEast() const {
 }
 
 atlas::Grid Regular::atlasGrid() const {
+#if mir_HAVE_ATLAS
     return atlas::RegularGaussianGrid("F" + std::to_string(N_), domain());
+#else
+    NOTIMP;
+#endif
 }
 
 void Regular::setNiNj() {
@@ -259,12 +265,10 @@ void Regular::setNiNj() {
     Log::debug() << "Regular::setNiNj: Ni*Nj = " << Ni_ << " * " << Nj_ << " = " << (Ni_ * Nj_) << std::endl;
 }
 
-size_t Regular::frame(MIRValuesVector& values, size_t size, double missingValue, bool estimate) const {
+size_t Regular::frame(MIRValuesVector& values, size_t size, double missingValue) const {
 
     // TODO: Check if that logic cannot also be used for other grid, and therefore move it to a higher class
-    if (!estimate) {
-        validate(values);
-    }
+    validate(values);
 
     size_t count = 0;
 
@@ -272,18 +276,14 @@ size_t Regular::frame(MIRValuesVector& values, size_t size, double missingValue,
     for (size_t j = 0; j < Nj_; j++) {
         for (size_t i = 0; i < Ni_; i++) {
             if (!((i < size) || (j < size) || (i >= Ni_ - size) || (j >= Nj_ - size))) {  // Check me, may be buggy
-                if (!estimate) {
-                    values[k] = missingValue;
-                }
+                values[k] = missingValue;
                 count++;
             }
             k++;
         }
     }
 
-    if (!estimate) {
-        ASSERT(k == values.size());
-    }
+    ASSERT(k == values.size());
     return count;
 }
 

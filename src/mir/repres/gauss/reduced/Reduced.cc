@@ -23,7 +23,6 @@
 #include "eckit/log/JSON.h"
 #include "eckit/types/Fraction.h"
 
-#include "mir/api/MIREstimation.h"
 #include "mir/api/MIRJob.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/gauss/GaussianIterator.h"
@@ -281,13 +280,6 @@ void Reduced::fillGrib(grib_info& info) const {
 }
 
 
-void Reduced::estimate(api::MIREstimation& estimation) const {
-    Gaussian::estimate(estimation);
-    const auto& pl = pls();
-    estimation.pl(pl.size());
-}
-
-
 std::vector<util::GridBox> Reduced::gridBoxes() const {
     ASSERT(1 <= Nj_);
 
@@ -368,11 +360,8 @@ void Reduced::fillJob(api::MIRJob& job) const {
 }
 
 
-size_t Reduced::frame(MIRValuesVector& values, size_t size, double missingValue, bool estimate) const {
-
-    if (!estimate) {
-        validate(values);
-    }
+size_t Reduced::frame(MIRValuesVector& values, size_t size, double missingValue) const {
+    validate(values);
 
     size_t count = 0;
 
@@ -415,19 +404,14 @@ size_t Reduced::frame(MIRValuesVector& values, size_t size, double missingValue,
         size_t cols = shape[j];
         for (size_t i = 0; i < cols; i++) {
             if (!((i < size) || (j < size) || (i >= cols - size) || (j >= rows - size))) {
-                if (!estimate) {
-                    values[k] = missingValue;
-                }
+                values[k] = missingValue;
                 count++;
             }
             k++;
         }
     }
 
-    if (!estimate) {
-        ASSERT(k == values.size());
-    }
-
+    ASSERT(k == values.size());
     return count;
 }
 

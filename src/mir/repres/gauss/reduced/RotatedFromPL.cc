@@ -68,7 +68,7 @@ void RotatedFromPL::fillJob(api::MIRJob& job) const {
 
 
 atlas::Grid RotatedFromPL::atlasGrid() const {
-    return rotation_.rotate(FromPL::atlasGrid());
+    return rotate_atlas_grid(rotation_.rotation(), FromPL::atlasGrid());
 }
 
 

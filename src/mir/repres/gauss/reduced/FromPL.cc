@@ -14,7 +14,9 @@
 
 #include "eckit/utils/MD5.h"
 
+#include "mir/api/mir_config.h"
 #include "mir/util/Domain.h"
+#include "mir/util/Exceptions.h"
 
 
 namespace mir::repres::gauss::reduced {
@@ -57,7 +59,11 @@ void FromPL::fillJob(api::MIRJob& job) const {
 
 
 atlas::Grid FromPL::atlasGrid() const {
+#if mir_HAVE_ATLAS
     return atlas::ReducedGaussianGrid(pls(), domain());
+#else
+    NOTIMP;
+#endif
 }
 
 

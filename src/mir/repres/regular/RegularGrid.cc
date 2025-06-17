@@ -137,36 +137,6 @@ RegularGrid::LinearSpacing RegularGrid::linspace(double start, double step, long
 }
 
 
-std::pair<RegularGrid::ij_t, RegularGrid::ij_t> RegularGrid::minmax_ij(const util::BoundingBox& bbox) const {
-    auto Ni = x_.size();
-    auto Nj = y_.size();
-
-    ij_t max{0, 0};
-    ij_t min{Ni, Nj};
-
-    bool first = true;
-    for (std::unique_ptr<Iterator> it(iterator()); it->next();) {
-        if (bbox.contains(*(*it))) {
-            auto i = it->index() % Ni;
-            auto j = it->index() / Ni;
-            if (first) {
-                first = false;
-                max = min = {i, j};
-                continue;
-            }
-
-            max.i = std::max(max.i, i);
-            max.j = std::max(max.j, j);
-            min.i = std::min(min.i, i);
-            min.j = std::min(min.j, j);
-        }
-    }
-
-    ASSERT_NONEMPTY_AREA("RegularGrid::minmax_ij", min.i <= max.i && min.j <= max.j);
-    return {min, max};
-}
-
-
 void RegularGrid::print(std::ostream& out) const {
     out << "RegularGrid[x=" << x_.spec() << ",y=" << y_.spec() << ",projection=" << grid_.projection().spec()
         << ",firstPointBottomLeft=" << firstPointBottomLeft_ << ",bbox=" << bbox_ << "]";
@@ -174,26 +144,6 @@ void RegularGrid::print(std::ostream& out) const {
 
 
 bool RegularGrid::extendBoundingBoxOnIntersect() const {
-    return true;
-}
-
-
-bool RegularGrid::crop(util::BoundingBox& bbox, util::IndexMapping& mapping) const {
-    auto mm = minmax_ij(bbox);
-    auto Ni = x_.size();
-    auto N  = (mm.second.i - mm.first.i + 1) * (mm.second.j - mm.first.j + 1);
-    mapping.clear();
-    mapping.reserve(N);
-
-    for (std::unique_ptr<Iterator> it(iterator()); it->next();) {
-        auto i = it->index() % Ni;
-        auto j = it->index() / Ni;
-        if (mm.first.i <= i && i <= mm.second.i && mm.first.j <= j && j <= mm.second.j) {
-            mapping.push_back(it->index());
-        }
-    }
-    ASSERT(mapping.size() == N);
-
     return true;
 }
 
@@ -266,7 +216,7 @@ void RegularGrid::validate(const MIRValuesVector& values) const {
 
 
 Iterator* RegularGrid::iterator() const {
-    class RegularGridIterator : public Iterator {
+    class RegularGridIterator final : public Iterator {
         Projection projection_;
         const LinearSpacing& x_;
         const LinearSpacing& y_;
@@ -309,12 +259,6 @@ Iterator* RegularGrid::iterator() const {
     public:
         RegularGridIterator(Projection projection, const LinearSpacing& x, const LinearSpacing& y) :
             projection_(std::move(projection)), x_(x), y_(y), ni_(x.size()), nj_(y.size()) {}
-        ~RegularGridIterator() override = default;
-
-        RegularGridIterator(const RegularGridIterator&)            = delete;
-        RegularGridIterator(RegularGridIterator&&)                 = delete;
-        RegularGridIterator& operator=(const RegularGridIterator&) = delete;
-        RegularGridIterator& operator=(RegularGridIterator&&)      = delete;
     };
 
     return new RegularGridIterator(grid_.projection(), x_, y_);

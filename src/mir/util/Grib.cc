@@ -42,10 +42,10 @@ void grib_reorder(std::vector<double>& values, long scanningMode, size_t Ni, siz
 
     enum
     {
-        iScansNegatively      = 1 << 7,
-        jScansPositively      = 1 << 6,
-        jPointsAreConsecutive = 1 << 5,
-        alternateRowScanning  = 1 << 4
+        iScansNegatively       = 1 << 7,
+        jScansPositively       = 1 << 6,
+        jPointsAreConsecutive  = 1 << 5,
+        alternativeRowScanning = 1 << 4
     };
 
     auto scanningModeAsString = [](long mode) {
