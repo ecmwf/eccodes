@@ -16,18 +16,21 @@ set -euo pipefail
 
 mkdir -p python_wrapper/src/copying
 mkdir -p /tmp/eccodes/target/eccodes/lib64/
+mkdir -p /tmp/eccodes/target/eccodes/include/
+mkdir -p /tmp/eccodes/target/eccodes/cmake/
 
 if [ "$(uname)" != "Darwin" ] ; then
     echo "installing deps for platform $(uname)"
 
     ## yum-available prereqs -- assumed to be installed in the base due to privileges here
-    for p in libaec-devel libpng-devel gobject-introspection-devel
+    for p in libpng-devel gobject-introspection-devel
     do
-        v=$(dnf list --installed libaec-devel | grep libaec-devel | sed 's/ \+/;/g')
-        echo "yum $v" >> python_wrapper/src/versions.txt
+        v=$(dnf list --installed $p | tail -n 1 | sed 's/[ \t]\+/ /g' | cut -f 2 -d\ )
+        echo "$p: yum $v" >> python_wrapper/src/versions.txt
     done
 
     ## buildable prereqs
+    ### openjpg
     GIT_OPENJPEG=https://github.com/uclouvain/openjpeg
     OPENJPEG_VERSION=v2.5.2
 
@@ -43,11 +46,25 @@ if [ "$(uname)" != "Darwin" ] ; then
     cd -
     cat /tmp/openjpeg/version.txt >> python_wrapper/src/versions.txt
 
+    ### libaec
+    # NOTE we need at least 1.1.1 due to gribjump, thats why no dnf install atm
+    mkdir -p /tmp/libaec/build
+    wget https://gitlab.dkrz.de/k202009/libaec/-/archive/v1.1.3/libaec-v1.1.3.tar.gz -O /tmp/libaec.tar.gz
+    tar -xzf /tmp/libaec.tar.gz -C /tmp
+    mkdir /tmp/libaec-v1.1.3/build && cd /tmp/libaec-v1.1.3/build
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/tmp/libaec ..
+    make install
+    cd -
+    echo "libaec v1.1.3" >> python_wrapper/src/versions.txt
+
     # copy the libs, instead of having auditwheel done it later. This is a bit risky because cmake will later write in this
     # very directory... but it works
-    cp /tmp/openjpeg/target/lib64/libopenjp2.so.7 /tmp/eccodes/target/eccodes/lib64/libopenjp2.so.7
-    cp /lib64/libaec.so.0 /tmp/eccodes/target/eccodes/lib64/libaec.so.0
     cp /lib64/libpng16.so.16 /tmp/eccodes/target/eccodes/lib64/libpng16.so.16
+    cp /tmp/openjpeg/target/lib64/libopenjp2.so.7 /tmp/eccodes/target/eccodes/lib64/libopenjp2.so.7
+    cp /tmp/libaec/lib64/libaec.so* /tmp/eccodes/target/eccodes/lib64
+    cp /tmp/libaec/include/libaec.h /tmp/eccodes/target/eccodes/include
+    cp /tmp/libaec/cmake/* /tmp/eccodes/target/eccodes/cmake
+
 
 else
     echo "no deps installation for platform $(uname)"
@@ -56,9 +73,9 @@ fi
 echo "license setup"
 
 ## licenses
-wget https://raw.githubusercontent.com/MathisRosenhauer/libaec/master/LICENSE.txt -O python_wrapper/src/copying/libaec.txt
-wget https://raw.githubusercontent.com/uclouvain/openjpeg/master/LICENSE -O python_wrapper/src/copying/libopenjpeg.txt
 wget https://raw.githubusercontent.com/glennrp/libpng/libpng16/LICENSE -O python_wrapper/src/copying/libpng.txt
+wget https://raw.githubusercontent.com/uclouvain/openjpeg/master/LICENSE -O python_wrapper/src/copying/libopenjpeg.txt
+wget https://raw.githubusercontent.com/MathisRosenhauer/libaec/master/LICENSE.txt -O python_wrapper/src/copying/libaec.txt
 cp LICENSE python_wrapper/src/copying/libeccodes.txt
 echo '{"libeccodes": {"path": "copying/libeccodes.txt", "home": "https://github.com/ecmwf/eccodes"}, "libaec": {"path": "copying/libaec.txt", "home": "https://github.com/MathisRosenhauer/libaec"}, "home": "https://github.com/uclouvain/openjpeg"}, "libpng": {"path": "copying/libpng.txt", "home": "https://github.com/glennrp/libpng"}}' > python_wrapper/src/copying/list.json
 
