@@ -14605,42 +14605,6 @@
 	 parameterCategory = 131 ;
 	 parameterNumber = 59 ;
 	}
-#Total precipitation less than 0.1 mm
-'Total precipitation less than 0.1 mm' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 64 ;
-	}
-#Total precipitation rate less than 1 mm/day
-'Total precipitation rate less than 1 mm/day' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 65 ;
-	}
-#Total precipitation rate of at least 3 mm/day
-'Total precipitation rate of at least 3 mm/day' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 66 ;
-	}
-#Total precipitation rate of at least 5 mm/day
-'Total precipitation rate of at least 5 mm/day' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 67 ;
-	}
-#10 metre Wind speed of at least 10 m/s
-'10 metre Wind speed of at least 10 m/s' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 68 ;
-	}
-#10 metre Wind speed of at least 15 m/s
-'10 metre Wind speed of at least 15 m/s' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 69 ;
-	}
 #10 metre wind gust of at least 25 m/s
 '10 metre wind gust of at least 25 m/s' = {
 	 discipline = 0 ;
@@ -14653,12 +14617,6 @@
 	 scaledValueOfLowerLimit = 25 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
-	}
-#2 metre temperature less than 273.15 K
-'2 metre temperature less than 273.15 K' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 73 ;
 	}
 #Significant wave height of at least 2 m
 'Significant wave height of at least 2 m' = {
