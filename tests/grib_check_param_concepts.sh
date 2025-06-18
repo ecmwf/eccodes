@@ -34,6 +34,13 @@ check_grib_defs()
 # Do various checks on the concepts files
 #
 
+# Check files with the name *Concept.def are actually concepts and not something else
+for file in `find $ECCODES_DEFINITION_PATH/grib2/ -name '*Concept.def' -print`
+do
+   # The key name does not matter; we're just checking the syntax
+   ${test_dir}/grib_check_param_concepts dummy $file
+done
+
 # -----------------------------------
 echo "Check for duplicate encodings"
 # -----------------------------------

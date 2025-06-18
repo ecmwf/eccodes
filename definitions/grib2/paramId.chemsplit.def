@@ -21620,6 +21620,82 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 19 ;
 	}
+#Total precipitation less than 0.1 mm
+'131064' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 1 ;
+	 scaledValueOfLowerLimit = 1 ;
+	 scaleFactorOfLowerLimit = 1 ;
+	 probabilityType = 0 ;
+	}
+#Total precipitation rate less than 1 mm/day
+'131065' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	 scaledValueOfLowerLimit = 115741 ;
+	 scaleFactorOfLowerLimit = 10 ;
+	 probabilityType = 0 ;
+	}
+#Total precipitation rate of at least 3 mm/day
+'131066' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	 scaledValueOfLowerLimit = 347222 ;
+	 scaleFactorOfLowerLimit = 10 ;
+	 probabilityType = 3 ;
+	}
+#Total precipitation rate of at least 5 mm/day
+'131067' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	 scaledValueOfLowerLimit = 578704 ;
+	 scaleFactorOfLowerLimit = 10 ;
+	 probabilityType = 3 ;
+	}
+#10 metre Wind speed of at least 10 m/s
+'131068' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfLowerLimit = 10 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
+#10 metre Wind speed of at least 15 m/s
+'131069' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfLowerLimit = 15 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
 #10 metre wind gust of at least 15 m/s
 '131070' = {
 	 discipline = 0 ;
@@ -21645,6 +21721,18 @@
 	 scaledValueOfLowerLimit = 20 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
+	}
+#2 metre temperature less than 273.15 K
+'131073' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfLowerLimit = 27315 ;
+	 scaleFactorOfLowerLimit = 2 ;
+	 probabilityType = 0 ;
 	}
 #Period corresponding to maximum individual wave height
 '140217' = {
