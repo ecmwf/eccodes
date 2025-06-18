@@ -30,7 +30,6 @@ transient missingValue = 9999;
 constant ieeeFloats = 1 : edition_specific;
 constant isHindcast = 0;
 
-
 include "grib2/section.0.def"
 
 template core "grib2/sections.def";
