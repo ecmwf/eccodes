@@ -24,7 +24,7 @@ jobs:
   downstream-ci:
     name: downstream-ci
     if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
-    uses: ecmwf/downstream-ci/.github/workflows/downstream-ci.yml@main
+    uses: ecmwf/downstream-ci/.github/workflows/downstream-ci.yml@remove-libaec-dep
     with:
       eccodes: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
       codecov_upload: true
