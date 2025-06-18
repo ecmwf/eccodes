@@ -117,22 +117,6 @@
 1254 olda Ocean Long window data assimilation
 1255 gfra Global fire assimilation system reanalysis
 1256 rfsd Retrospective forcing and simulation data
-1301 moav Monthly means statistics
-1303 momx Monthly maximum statistics
-1304 momn Monthly minimum statistics
-1305 mosd Monthly standard deviation statistics
-1311 daav Daily means statistics
-1313 damx Daily maximum statistics
-1314 damn Daily minimum statistics
-1315 dasd Daily standard deviation statistics
-1321 emav Ensemble monthly means statistics
-1323 emmx Ensemble monthly maximum statistics
-1324 emmn Ensemble monthly minimum statistics
-1325 emsd Ensemble monthly standard deviation statistics
-1331 edav Ensemble daily means statistics
-1333 edmx Ensemble daily maximum statistics
-1334 edmn Ensemble daily minimum statistics
-1335 edsd Ensemble daily standard deviation statistics
 2231 cnrm Meteo France climate centre
 2232 mpic Max Plank Institute
 2233 ukmo UKMO climate centre
