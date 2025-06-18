@@ -616,6 +616,13 @@ static grib_handle* get_handle(int handle_id)
     return h;
 }
 
+extern "C" {
+// Needed for fortran2c interoperability
+grib_handle* f_handle_id2c_handle(int handle_id){
+  return get_handle(handle_id);
+}
+}
+
 static grib_index* get_index(int index_id)
 {
     grib_index* h=NULL;
@@ -904,7 +911,7 @@ int grib_f_get_message_(int* gid, void** mess, size_t* mess_len)
     if (!h) return GRIB_INVALID_GRIB;
     iret = grib_get_message(h,&message,mess_len);
     if(iret != 0){
-    	return iret;
+        return iret;
     }
     *mess = (void*) message;
     return GRIB_SUCCESS;
@@ -1397,7 +1404,7 @@ int grib_f_new_from_message_no_copy_(int* gid, void* buffer, size_t* bufsize)
 /*****************************************************************************/
 int grib_f_new_from_message_no_copy_int_(int* gid, int* buffer, size_t* bufsize)
 {
-	return grib_f_new_from_message_no_copy_(gid, (void*)buffer, bufsize);
+    return grib_f_new_from_message_no_copy_(gid, (void*)buffer, bufsize);
 }
 
 #if 0
