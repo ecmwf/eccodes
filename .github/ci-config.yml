@@ -1,5 +1,6 @@
 dependencies: |
   ecmwf/ecbuild
+  ecmwf/eckit
   MathisRosenhauer/libaec@refs/tags/v1.1.3
 dependency_branch: develop
 parallelism_factor: 8
