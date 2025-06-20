@@ -151,11 +151,13 @@ else {
   concept timeSpan (unknown,"timespanConcept.def",conceptsDir2,conceptsDir1) : read_only ;
   # we use an abbreviation for fromstart -> fs
   if ( timeSpan is "fromstart"){
-    constant timeSpanfs = "fs" ;
+    constant timeSpanfs = "fs" : hidden ;
     alias mars.timespan = timeSpanfs;
     }
   else {
-    alias mars.timespan = timeSpan;
+    if (timeSpan isnot "unknown") {
+     alias mars.timespan = timeSpan;
+    }
   }
  }
 
