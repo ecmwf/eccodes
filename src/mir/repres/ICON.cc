@@ -220,7 +220,7 @@ atlas::Grid ICON::atlasGrid() const {
 }
 
 
-static const RepresentationBuilder<ICON> __grid("orca");
+static const RepresentationBuilder<ICON> __grid("icon");
 
 
 }  // namespace mir::repres::geo
