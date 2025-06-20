@@ -10,13 +10,13 @@
  */
 
 
-#include "mir/repres/ORCA.h"
+#include "mir/repres/FESOM.h"
 
 #include <cctype>
 #include <ostream>
 #include <vector>
 
-#include "eckit/geo/grid/ORCA.h"
+#include "eckit/geo/grid/unstructured/FESOM.h"
 
 #include "mir/api/MIRJob.h"
 #include "mir/api/mir_config.h"
@@ -36,37 +36,37 @@ namespace mir::repres {
 namespace {
 
 
-class NamedORCA : public key::grid::NamedGrid {
+class NamedFESOM : public key::grid::NamedGrid {
 public:
     // -- Constructors
 
-    explicit NamedORCA(const std::string& key) : NamedGrid(key) {}
+    explicit NamedFESOM(const std::string& key) : NamedGrid(key) {}
 
 protected:
     // -- Overridden methods
 
-    void print(std::ostream& out) const override { out << "NamedORCA[key=" << key_ << "]"; }
+    void print(std::ostream& out) const override { out << "NamedFESOM[key=" << key_ << "]"; }
     size_t gaussianNumber() const override { return default_gaussian_number(); }
-    const repres::Representation* representation() const override { return new ORCA(key_); }
+    const repres::Representation* representation() const override { return new FESOM(key_); }
     const repres::Representation* representation(const util::Rotation&) const override { NOTIMP; }
 };
 
 
-const std::string PATTERN("^([eE])?[oO][rR][cC][aA]([0-9]+)(_[tTuUvVwWfF])?$");
+const std::string PATTERN("^([cC][oO][rR][eE]2|[dD][aA][rR][tT]|[nN][gG]5|[pP][iI])(_[cCnN])?$");
 
 
-class ORCAPattern : public key::grid::GridPattern {
+class FESOMPattern : public key::grid::GridPattern {
 public:
     // -- Constructors
 
-    explicit ORCAPattern(const std::string& pattern) : GridPattern(pattern) {}
+    explicit FESOMPattern(const std::string& pattern) : GridPattern(pattern) {}
 
 private:
     // -- Overridden methods
 
-    void print(std::ostream& out) const override { out << "ORCAPattern[pattern=" << pattern_ << "]"; }
+    void print(std::ostream& out) const override { out << "FESOMPattern[pattern=" << pattern_ << "]"; }
 
-    const key::grid::Grid* make(const std::string& name) const override { return new NamedORCA(name); }
+    const key::grid::Grid* make(const std::string& name) const override { return new NamedFESOM(name); }
 
     std::string canonical(const std::string& name, const param::MIRParametrisation& param) const override {
         ASSERT(!name.empty());
@@ -93,18 +93,18 @@ private:
         }
         ASSERT(a.size() == 1);
 
-        return e + "ORCA" + n + "_" + a;
+        return e + "FESOM" + n + "_" + a;
     }
 };
 
 
-const ORCAPattern __ORCA(PATTERN);
+const FESOMPattern __FESOM(PATTERN);
 
 
 }  // namespace
 
 
-ORCA::ORCA(const std::string& grid) :
+FESOM::FESOM(const std::string& grid) :
     grid_([&grid]() {
         eckit::geo::spec::Custom custom{{"grid", grid}};
         std::unique_ptr<eckit::geo::Spec> spec(eckit::geo::GridFactory::make_spec(custom));
@@ -113,20 +113,20 @@ ORCA::ORCA(const std::string& grid) :
     }()) {}
 
 
-ORCA::ORCA(const param::MIRParametrisation& param) :
-    ORCA([&param]() {
+FESOM::FESOM(const param::MIRParametrisation& param) :
+    FESOM([&param]() {
         std::string uid;
         ASSERT(param.get("uid", uid));
         return uid;
     }()) {}
 
 
-std::string ORCA::match(const std::string& name, const param::MIRParametrisation& param) {
+std::string FESOM::match(const std::string& name, const param::MIRParametrisation& param) {
     return key::grid::GridPattern::match(name, param);
 }
 
 
-std::string ORCA::name() const {
+std::string FESOM::name() const {
     auto n = grid_->name() + "_" + grid_->arrangement();
 
     if (const auto& spec = static_cast<const eckit::geo::Grid&>(*grid_).spec(); spec.has("uid")) {
@@ -137,7 +137,7 @@ std::string ORCA::name() const {
 }
 
 
-ORCA::points_type& ORCA::to_latlons() const {
+FESOM::points_type& FESOM::to_latlons() const {
     if (points_.first.empty() || points_.second.empty()) {
         ASSERT(points_.first.empty() && points_.second.empty());
 
@@ -150,18 +150,18 @@ ORCA::points_type& ORCA::to_latlons() const {
 }
 
 
-bool ORCA::sameAs(const Representation& other) const {
-    const auto* o = dynamic_cast<const ORCA*>(&other);
+bool FESOM::sameAs(const Representation& other) const {
+    const auto* o = dynamic_cast<const FESOM*>(&other);
     return (o != nullptr) && *grid_ == *(o->grid_);
 }
 
 
-void ORCA::makeName(std::ostream& out) const {
+void FESOM::makeName(std::ostream& out) const {
     out << name();
 }
 
 
-void ORCA::fillGrib(grib_info& info) const {
+void FESOM::fillGrib(grib_info& info) const {
     info.grid.grid_type        = GRIB_UTIL_GRID_SPEC_UNSTRUCTURED;
     info.packing.editionNumber = 2;
 
@@ -171,47 +171,47 @@ void ORCA::fillGrib(grib_info& info) const {
 }
 
 
-void ORCA::fillMeshGen(util::MeshGeneratorParameters& params) const {
+void FESOM::fillMeshGen(util::MeshGeneratorParameters& params) const {
     if (params.meshGenerator_.empty()) {
-        params.meshGenerator_ = "orca";
+        params.meshGenerator_ = "delaunay";
     }
 }
 
 
-void ORCA::fillJob(api::MIRJob& job) const {
+void FESOM::fillJob(api::MIRJob& job) const {
     const auto& spec = static_cast<const eckit::geo::Grid&>(*grid_).spec();
     job.set("grid", spec.get_string(spec.has("uid") ? "uid" : "grid"));
 }
 
 
-void ORCA::json(eckit::JSON& j) const {
+void FESOM::json(eckit::JSON& j) const {
     const auto& spec = static_cast<const eckit::geo::Grid&>(*grid_).spec();
     spec.json(j);
 }
 
 
-Iterator* ORCA::iterator() const {
+Iterator* FESOM::iterator() const {
     const auto& [lats, lons] = to_latlons();
     return new iterator::UnstructuredIterator(lats, lons);
 }
 
 
-void ORCA::print(std::ostream& out) const {
-    out << "ORCA[grid=" << name() << "]";
+void FESOM::print(std::ostream& out) const {
+    out << "FESOM[grid=" << name() << "]";
 }
 
 
-void ORCA::validate(const MIRValuesVector& values) const {
-    ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("ORCA", values.size(), numberOfPoints());
+void FESOM::validate(const MIRValuesVector& values) const {
+    ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("FESOM", values.size(), numberOfPoints());
 }
 
 
-size_t ORCA::numberOfPoints() const {
+size_t FESOM::numberOfPoints() const {
     return grid_->size();
 }
 
 
-atlas::Grid ORCA::atlasGrid() const {
+atlas::Grid FESOM::atlasGrid() const {
 #if mir_HAVE_ATLAS
     return {atlas::grid::SpecRegistry::get(grid_->uid())};
 #else
@@ -220,7 +220,7 @@ atlas::Grid ORCA::atlasGrid() const {
 }
 
 
-static const RepresentationBuilder<ORCA> __grid("orca");
+static const RepresentationBuilder<FESOM> __grid("orca");
 
 
 }  // namespace mir::repres::geo

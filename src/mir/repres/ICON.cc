@@ -10,13 +10,13 @@
  */
 
 
-#include "mir/repres/ORCA.h"
+#include "mir/repres/ICON.h"
 
 #include <cctype>
 #include <ostream>
 #include <vector>
 
-#include "eckit/geo/grid/ORCA.h"
+#include "eckit/geo/grid/unstructured/ICON.h"
 
 #include "mir/api/MIRJob.h"
 #include "mir/api/mir_config.h"
@@ -36,37 +36,37 @@ namespace mir::repres {
 namespace {
 
 
-class NamedORCA : public key::grid::NamedGrid {
+class NamedICON : public key::grid::NamedGrid {
 public:
     // -- Constructors
 
-    explicit NamedORCA(const std::string& key) : NamedGrid(key) {}
+    explicit NamedICON(const std::string& key) : NamedGrid(key) {}
 
 protected:
     // -- Overridden methods
 
-    void print(std::ostream& out) const override { out << "NamedORCA[key=" << key_ << "]"; }
+    void print(std::ostream& out) const override { out << "NamedICON[key=" << key_ << "]"; }
     size_t gaussianNumber() const override { return default_gaussian_number(); }
-    const repres::Representation* representation() const override { return new ORCA(key_); }
+    const repres::Representation* representation() const override { return new ICON(key_); }
     const repres::Representation* representation(const util::Rotation&) const override { NOTIMP; }
 };
 
 
-const std::string PATTERN("^([eE])?[oO][rR][cC][aA]([0-9]+)(_[tTuUvVwWfF])?$");
+const std::string PATTERN("^[iI][cC][oO][nN]_.+$");
 
 
-class ORCAPattern : public key::grid::GridPattern {
+class ICONPattern : public key::grid::GridPattern {
 public:
     // -- Constructors
 
-    explicit ORCAPattern(const std::string& pattern) : GridPattern(pattern) {}
+    explicit ICONPattern(const std::string& pattern) : GridPattern(pattern) {}
 
 private:
     // -- Overridden methods
 
-    void print(std::ostream& out) const override { out << "ORCAPattern[pattern=" << pattern_ << "]"; }
+    void print(std::ostream& out) const override { out << "ICONPattern[pattern=" << pattern_ << "]"; }
 
-    const key::grid::Grid* make(const std::string& name) const override { return new NamedORCA(name); }
+    const key::grid::Grid* make(const std::string& name) const override { return new NamedICON(name); }
 
     std::string canonical(const std::string& name, const param::MIRParametrisation& param) const override {
         ASSERT(!name.empty());
@@ -93,18 +93,18 @@ private:
         }
         ASSERT(a.size() == 1);
 
-        return e + "ORCA" + n + "_" + a;
+        return e + "ICON" + n + "_" + a;
     }
 };
 
 
-const ORCAPattern __ORCA(PATTERN);
+const ICONPattern __ICON(PATTERN);
 
 
 }  // namespace
 
 
-ORCA::ORCA(const std::string& grid) :
+ICON::ICON(const std::string& grid) :
     grid_([&grid]() {
         eckit::geo::spec::Custom custom{{"grid", grid}};
         std::unique_ptr<eckit::geo::Spec> spec(eckit::geo::GridFactory::make_spec(custom));
@@ -113,20 +113,20 @@ ORCA::ORCA(const std::string& grid) :
     }()) {}
 
 
-ORCA::ORCA(const param::MIRParametrisation& param) :
-    ORCA([&param]() {
+ICON::ICON(const param::MIRParametrisation& param) :
+    ICON([&param]() {
         std::string uid;
         ASSERT(param.get("uid", uid));
         return uid;
     }()) {}
 
 
-std::string ORCA::match(const std::string& name, const param::MIRParametrisation& param) {
+std::string ICON::match(const std::string& name, const param::MIRParametrisation& param) {
     return key::grid::GridPattern::match(name, param);
 }
 
 
-std::string ORCA::name() const {
+std::string ICON::name() const {
     auto n = grid_->name() + "_" + grid_->arrangement();
 
     if (const auto& spec = static_cast<const eckit::geo::Grid&>(*grid_).spec(); spec.has("uid")) {
@@ -137,7 +137,7 @@ std::string ORCA::name() const {
 }
 
 
-ORCA::points_type& ORCA::to_latlons() const {
+ICON::points_type& ICON::to_latlons() const {
     if (points_.first.empty() || points_.second.empty()) {
         ASSERT(points_.first.empty() && points_.second.empty());
 
@@ -150,18 +150,18 @@ ORCA::points_type& ORCA::to_latlons() const {
 }
 
 
-bool ORCA::sameAs(const Representation& other) const {
-    const auto* o = dynamic_cast<const ORCA*>(&other);
+bool ICON::sameAs(const Representation& other) const {
+    const auto* o = dynamic_cast<const ICON*>(&other);
     return (o != nullptr) && *grid_ == *(o->grid_);
 }
 
 
-void ORCA::makeName(std::ostream& out) const {
+void ICON::makeName(std::ostream& out) const {
     out << name();
 }
 
 
-void ORCA::fillGrib(grib_info& info) const {
+void ICON::fillGrib(grib_info& info) const {
     info.grid.grid_type        = GRIB_UTIL_GRID_SPEC_UNSTRUCTURED;
     info.packing.editionNumber = 2;
 
@@ -171,47 +171,47 @@ void ORCA::fillGrib(grib_info& info) const {
 }
 
 
-void ORCA::fillMeshGen(util::MeshGeneratorParameters& params) const {
+void ICON::fillMeshGen(util::MeshGeneratorParameters& params) const {
     if (params.meshGenerator_.empty()) {
-        params.meshGenerator_ = "orca";
+        params.meshGenerator_ = "delaunay";
     }
 }
 
 
-void ORCA::fillJob(api::MIRJob& job) const {
+void ICON::fillJob(api::MIRJob& job) const {
     const auto& spec = static_cast<const eckit::geo::Grid&>(*grid_).spec();
     job.set("grid", spec.get_string(spec.has("uid") ? "uid" : "grid"));
 }
 
 
-void ORCA::json(eckit::JSON& j) const {
+void ICON::json(eckit::JSON& j) const {
     const auto& spec = static_cast<const eckit::geo::Grid&>(*grid_).spec();
     spec.json(j);
 }
 
 
-Iterator* ORCA::iterator() const {
+Iterator* ICON::iterator() const {
     const auto& [lats, lons] = to_latlons();
     return new iterator::UnstructuredIterator(lats, lons);
 }
 
 
-void ORCA::print(std::ostream& out) const {
-    out << "ORCA[grid=" << name() << "]";
+void ICON::print(std::ostream& out) const {
+    out << "ICON[grid=" << name() << "]";
 }
 
 
-void ORCA::validate(const MIRValuesVector& values) const {
-    ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("ORCA", values.size(), numberOfPoints());
+void ICON::validate(const MIRValuesVector& values) const {
+    ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("ICON", values.size(), numberOfPoints());
 }
 
 
-size_t ORCA::numberOfPoints() const {
+size_t ICON::numberOfPoints() const {
     return grid_->size();
 }
 
 
-atlas::Grid ORCA::atlasGrid() const {
+atlas::Grid ICON::atlasGrid() const {
 #if mir_HAVE_ATLAS
     return {atlas::grid::SpecRegistry::get(grid_->uid())};
 #else
@@ -220,7 +220,7 @@ atlas::Grid ORCA::atlasGrid() const {
 }
 
 
-static const RepresentationBuilder<ORCA> __grid("orca");
+static const RepresentationBuilder<ICON> __grid("orca");
 
 
 }  // namespace mir::repres::geo
