@@ -149,7 +149,6 @@ else {
   concept paramtype(unknown, "paramtypeConcept.def", conceptsDir2, conceptsDir1): hidden, read_only;
   # timeSpan
   concept timeSpan (unknown,"timespanConcept.def",conceptsDir2,conceptsDir1) : read_only ;
-    alias mars.timespan = timeSpan ;
   # we use an abbreviation for fromstart -> fs
   if ( timeSpan is "fromstart"){
     constant timeSpanfs = "fs" ;
