@@ -144,21 +144,19 @@ else {
    }
 }
 
- if (MTG2Switch > 0 ) {
-  # paramtype
-  concept paramtype(unknown, "paramtypeConcept.def", conceptsDir2, conceptsDir1): hidden, read_only;
-  # timeSpan
-  concept timeSpan (unknown,"timespanConcept.def",conceptsDir2,conceptsDir1) : read_only ;
-  # we use an abbreviation for fromstart -> fs
-  if ( timeSpan is "fromstart"){
-    constant timeSpanfs = "fs" ;
-    alias mars.timespan = timeSpanfs;
-    }
-  else {
-    if (timeSpan isnot "unknown") {
-     alias mars.timespan = timeSpan;
-    }
-  }
- }
+if (MTG2Switch > 0 ) {
+   concept paramtype(unknown, "paramtypeConcept.def", conceptsDir2, conceptsDir1): hidden, read_only;
+   concept timeSpan (unknown,"timespanConcept.def",conceptsDir2,conceptsDir1) : read_only;
+   # we use an abbreviation for fromstart -> fs
+   if (timeSpan is "fromstart") {
+      constant timeSpanfs = "fs" ;
+      alias mars.timespan = timeSpanfs;
+   }
+   else {
+      if (timeSpan isnot "unknown") {
+         alias mars.timespan = timeSpan;
+      }
+   }
+}
 
 meta md5Section4 md5(offsetSection4,section4Length);
