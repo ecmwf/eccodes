@@ -144,24 +144,19 @@ else {
    }
 }
 
-## Here we handle paramtype and timespan
-## These keys should be present only in the Post-MTG2 case
-#### Temporarily limited to classes e6 and a5 ####
-# if ( class is 'e6' || class is 'a5' || class is 'rd' || class is 'cr' ){
  if (MTG2Switch > 0 ) {
   # paramtype
   concept paramtype(unknown, "paramtypeConcept.def", conceptsDir2, conceptsDir1): hidden, read_only;
   # timeSpan
   concept timeSpan (unknown,"timespanConcept.def",conceptsDir2,conceptsDir1) : read_only ;
-  ### timespan instant/none should not appear in mars namespace for backward compatibility
-  #if (! timeSpan is "none"){
     alias mars.timespan = timeSpan ;
-  #}
   # we use an abbreviation for fromstart -> fs
   if ( timeSpan is "fromstart"){
-    unalias mars.timespan;
-    constant timespan = "fs": read_only;
-    alias mars.timespan = timespan;
+    constant timeSpanfs = "fs" ;
+    alias mars.timespan = timeSpanfs;
+    }
+  else {
+    alias mars.timespan = timeSpan;
   }
  }
 
