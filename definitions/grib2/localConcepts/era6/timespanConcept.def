@@ -1,5 +1,6 @@
 ## Statistical window overall concept based on official low-level GRIB2 keys only
- '1h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='06'; lengthOfTimeRange = 1;}
- '1h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='18'; lengthOfTimeRange = 1;}
- '3h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='06'; lengthOfTimeRange = 3;}
- '3h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='18'; lengthOfTimeRange = 3;}
+ '1h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='0600'; lengthOfTimeRange = 1;}
+ '1h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='1800'; lengthOfTimeRange = 1;}
+ '3h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='0600'; lengthOfTimeRange = 3;}
+ '3h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='1800'; lengthOfTimeRange = 3;}
+
