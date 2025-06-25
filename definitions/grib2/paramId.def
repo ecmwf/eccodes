@@ -815,41 +815,6 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 32 ;
 	}
-#Temperature difference
-'200130' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfGeneratingProcess = 20 ;
-	}
-#Specific humidity difference
-'200133' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 0 ;
-	 typeOfGeneratingProcess = 20 ;
-	}
-#Vorticity (relative) difference
-'200138' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 12 ;
-	 typeOfGeneratingProcess = 20 ;
-	}
-#Divergence difference
-'200155' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 13 ;
-	 typeOfGeneratingProcess = 20 ;
-	}
-#Ozone mass mixing ratio difference
-'200203' = {
-	 discipline = 0 ;
-	 parameterCategory = 14 ;
-	 parameterNumber = 1 ;
-	 typeOfGeneratingProcess = 20 ;
-	}
 #Large-scale precipitation
 '3062' = {
 	 discipline = 0 ;

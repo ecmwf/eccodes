@@ -1667,14 +1667,6 @@
 	 parameterCategory = 200 ;
 	 parameterNumber = 151 ;
 	}
-#Logarithm of surface pressure difference
-'200152' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 105 ;
-	 typeOfGeneratingProcess = 20 ;
-	}
 #Short-wave heating rate difference
 '200153' = {
 	 discipline = 192 ;
