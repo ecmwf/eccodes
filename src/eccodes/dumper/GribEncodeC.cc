@@ -59,12 +59,13 @@ static void pcomment(FILE* f, long value, const char* p)
 
 void GribEncodeC::dump_long(grib_accessor* a, const char* comment)
 {
-    long value;
-    size_t size = 1;
-    int err     = a->unpack_long(&value, &size);
-
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY))
         return;
+
+    long value = -1;
+    size_t size = 1;
+    int err = a->unpack_long(&value, &size);
+    if (err) return;
 
     if (comment)
         pcomment(out_, value, comment);
@@ -89,18 +90,16 @@ static int test_bit(long a, long b)
 
 void GribEncodeC::dump_bits(grib_accessor* a, const char* comment)
 {
-    long value;
-    size_t size = 1;
-    int err     = a->unpack_long(&value, &size);
-    int i;
-
-    char buf[1024];
-
     if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY)
         return;
-
     if (a->length_ == 0)
         return;
+
+    long value = -1;
+    size_t size = 1;
+    int err = a->unpack_long(&value, &size);
+    int i;
+    char buf[1024] = {0,};
 
     buf[0] = 0;
 
@@ -128,17 +127,16 @@ void GribEncodeC::dump_bits(grib_accessor* a, const char* comment)
 
 void GribEncodeC::dump_double(grib_accessor* a, const char* comment)
 {
-    double value;
-    size_t size = 1;
-    int err     = a->unpack_double(&value, &size);
     if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY)
         return;
-
     if (a->length_ == 0)
         return;
 
-    //if(comment) fprintf(out_,"/* %s */\n",comment);
+    double value = -1;
+    size_t size = 1;
+    int err = a->unpack_double(&value, &size);
 
+    //if(comment) fprintf(out_,"/* %s */\n",comment);
     fprintf(out_, "    GRIB_CHECK(grib_set_double(h,\"%s\",%g),%d);\n", a->name_, value, 0);
 
     if (err)
@@ -147,15 +145,14 @@ void GribEncodeC::dump_double(grib_accessor* a, const char* comment)
 
 void GribEncodeC::dump_string(grib_accessor* a, const char* comment)
 {
-    char value[1024];
-    size_t size = sizeof(value);
-    int err     = a->unpack_string(value, &size);
-
     if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY)
         return;
-
     if (a->length_ == 0)
         return;
+
+    char value[1024] = {0,};
+    size_t size = sizeof(value);
+    int err = a->unpack_string(value, &size);
 
     if (comment)
         fprintf(out_, "/* %s */\n", comment);

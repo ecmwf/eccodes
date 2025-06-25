@@ -183,7 +183,6 @@ int DataApplyBitmap::pack_double(const double* val, size_t* len)
     size_t bmaplen       = *len;
     long coded_n_vals    = 0;
     double* coded_vals   = NULL;
-    long i               = 0;
     long j               = 0;
     double missing_value = 0;
     grib_handle* hand    = get_enclosing_handle();
@@ -218,7 +217,7 @@ int DataApplyBitmap::pack_double(const double* val, size_t* len)
     if (!coded_vals)
         return GRIB_OUT_OF_MEMORY;
 
-    for (i = 0; i < *len; i++) {
+    for (size_t i = 0; i < *len; i++) {
         if (val[i] != missing_value) {
             coded_vals[j++] = val[i];
         }

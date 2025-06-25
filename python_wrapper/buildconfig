@@ -12,12 +12,19 @@
 
 NAME="eccodes"
 
-CMAKE_PARAMS1="-DENABLE_PNG=1 -DENABLE_JPG=1 -DENABLE_AEC=1 -DENABLE_JPG_LIBJASPER=0 -DENABLE_JPG_LIBOPENJPEG=1 -DOPENJPEG_DIR=/tmp/openjpeg/target"
-CMAKE_PARAMS2="-DENABLE_NETCDF=0 -DENABLE_FORTRAN=0"
-CMAKE_PARAMS3="-DENABLE_EXAMPLES=0 -DENABLE_PYTHON=0 -DENABLE_BUILD_TOOLS=0 -DENABLE_INSTALL_ECCODES_DEFINITIONS=0 -DENABLE_INSTALL_ECCODES_SAMPLES=0"
+CMAKE_PARAMS1="-DENABLE_PNG=1 -DENABLE_JPG=1 -DENABLE_JPG_LIBJASPER=0 -DENABLE_JPG_LIBOPENJPEG=1 -DOPENJPEG_DIR=/tmp/openjpeg/target"
+CMAKE_PARAMS2="-DENABLE_NETCDF=0 -DENABLE_FORTRAN=1"
+# NOTE build tools is enabled because it currently seems required by fdb compilation. Consider removal in the future
+CMAKE_PARAMS3="-DENABLE_EXAMPLES=0 -DENABLE_BUILD_TOOLS=1 -DENABLE_INSTALL_ECCODES_DEFINITIONS=0 -DENABLE_INSTALL_ECCODES_SAMPLES=0"
 CMAKE_PARAMS4="-DENABLE_ECCODES_THREADS=1 -DENABLE_MEMFS=1"
+CMAKE_PARAMS5="-DENABLE_AEC=1 -DAEC_INCLUDE_DIR=/tmp/libaec/include/ -DAEC_LIBRARY=/tmp/libaec/lib64/"
 CMAKE_PARAMS="$CMAKE_PARAMS1 $CMAKE_PARAMS2 $CMAKE_PARAMS3 $CMAKE_PARAMS4"
 
 PYPROJECT_DIR="python_wrapper"
-# TODO add eckit once the dependency is in place
-DEPENDENCIES='[]'
+# NOTE fckit is present because it bundles intel fortran libs in, which eccodes fortran also needs. There is no code
+# dependency. We could have instead bundled fortran libs in here as well, but that would result in bloated wheels and
+# perhaps conflicts -- thus we opt for a hack (temporary anyway as eventually fortran will fade out)
+# NOTE we have eckit dependency here already, but it's not actually used during compilation -- the reason is that
+# the dependency resolution during install cannot well resolve transitive dependencies yet, and fckit does depend on
+# eckit
+DEPENDENCIES='["eckitlib", "fckitlib"]'

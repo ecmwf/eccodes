@@ -10,6 +10,16 @@
 
 #include "ProjString.h"
 
+#if defined(HAVE_ECKIT_GEO)
+    #include <cstdio>
+    #include <memory>
+
+    #include "eckit/geo/Grid.h"
+
+    #include "eccodes/geo/EckitMainInit.h"
+    #include "eccodes/geo/GribToSpec.h"
+#endif
+
 eccodes::accessor::ProjString _grib_accessor_proj_string;
 eccodes::Accessor* grib_accessor_proj_string = &_grib_accessor_proj_string;
 
@@ -91,8 +101,25 @@ static int proj_space_view(grib_handle* h, char* result)
 
 static int proj_albers(grib_handle* h, char* result)
 {
-    return GRIB_NOT_IMPLEMENTED;
+    int err = 0;
+    char shape[128] = {0,};
+    double LoVInDegrees = 0, LaDInDegrees = 0, Latin1InDegrees = 0, Latin2InDegrees = 0;
+
+    if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(h, "Latin1InDegrees", &Latin1InDegrees)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(h, "Latin2InDegrees", &Latin2InDegrees)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(h, "LoVInDegrees", &LoVInDegrees)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(h, "LaDInDegrees", &LaDInDegrees)) != GRIB_SUCCESS)
+        return err;
+    snprintf(result, 1024, "+proj=aea +lon_0=%lf +lat_0=%lf +lat_1=%lf +lat_2=%lf %s",
+             LoVInDegrees, LaDInDegrees, Latin1InDegrees, Latin2InDegrees, shape);
+    return err;
 }
+
 static int proj_transverse_mercator(grib_handle* h, char* result)
 {
     return GRIB_NOT_IMPLEMENTED;
@@ -217,6 +244,39 @@ int ProjString::unpack_string(char* v, size_t* len)
     size_t size    = sizeof(grid_type) / sizeof(*grid_type);
 
     ECCODES_ASSERT(endpoint_ == ENDPOINT_SOURCE || endpoint_ == ENDPOINT_TARGET);
+
+#if defined(HAVE_ECKIT_GEO)
+    const int eckit_geo = h->context->eckit_geo;  // check environment variable
+    if (eckit_geo != 0) {
+        eccodes::geo::eckit_main_init();
+
+        try {
+            geo::GribToSpec spec(h);
+            std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(spec));
+
+            auto proj_str = grid->projection().proj_str();
+
+            auto buf_size = *len;
+            if (*len = std::snprintf(v, buf_size, "%s", proj_str.c_str()); *len >= buf_size) {
+                grib_context_log(h->context, GRIB_LOG_ERROR,
+                                 "%s: Buffer too small for %s. It is at least %zu bytes long (len=%zu)",
+                                 class_name_, name_, *len, buf_size);
+                *len = buf_size;
+                return GRIB_BUFFER_TOO_SMALL;
+            }
+
+            return CODES_SUCCESS;
+        }
+        catch (eckit::geo::Exception& e) {
+            grib_context_log(h->context, GRIB_LOG_ERROR, "ProjString::unpack_string: geo::Exception thrown (%s)", e.what());
+        }
+        catch (std::exception& e) {
+            grib_context_log(h->context, GRIB_LOG_ERROR, "ProjString::unpack_string: Exception thrown (%s)", e.what());
+        }
+
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
+#endif
 
     size_t l = 100;  // Safe bet
     if (*len < l) {

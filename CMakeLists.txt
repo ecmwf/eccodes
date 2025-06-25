@@ -163,7 +163,7 @@ if(NOT DEFINED ENABLE_AEC AND NOT AEC_FOUND)
                    "\nTo force the build without it, use -DENABLE_AEC=OFF")
 endif()
 ecbuild_add_option( FEATURE AEC
-    DESCRIPTION "Support for Adaptive Entropy Coding"
+    DESCRIPTION "Support for Adaptive Entropy Coding (WMO GRIB CCSDS)"
     DEFAULT ON
     CONDITION AEC_FOUND )
 
@@ -219,7 +219,6 @@ ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
 
 ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "Enable memory management" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "Enable memory alignment"  DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE TIMER               DESCRIPTION "Enable timer (deprecated)" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "Enable thread-safety using POSIX threads" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "Enable thread-safety using OpenMP threads" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE EXTRA_TESTS         DESCRIPTION "Enable extended regression testing" DEFAULT OFF ADVANCED )
@@ -385,8 +384,9 @@ configure_file( eccodes_config.h.in eccodes_config.h )
 
 add_definitions( -DHAVE_ECCODES_CONFIG_H )
 
-if( CMAKE_COMPILER_IS_GNUCC )
+if( CMAKE_CXX_COMPILER_ID STREQUAL "GNU" )
     ecbuild_add_c_flags("-pedantic")
+    ecbuild_add_cxx_flags("-pedantic")
 endif()
 if( CMAKE_CXX_COMPILER_ID MATCHES IntelLLVM )
   # Turn off -ffinite-math-only which gets included by some optimisation levels which assume values can never be NaN.
@@ -470,7 +470,7 @@ add_subdirectory( samples )
 add_subdirectory( ifs_samples ) # must come after samples
 
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
-ecbuild_dont_pack( FILES .cproject .project )
+ecbuild_dont_pack( FILES .cproject .project eccodes.code-workspace )
 ecbuild_dont_pack( DIRS
     experimental deprecated doxygen confluence tests/deprecated tests/tests.ecmwf
     src/eccodes/deprecated tools/deprecated ifs_samples/grib1_mlgrib2_ieee32
@@ -518,11 +518,11 @@ if( HAVE_FORTRAN )
 endif()
 
 ###############################################################################
-# Debugging aid. Print all known CMake variables
-#get_cmake_property(_variableNames VARIABLES)
-#foreach( _variableName ${_variableNames} )
+# Debugging aid. Print all known CMake variables:
+# get_cmake_property(_variableNames VARIABLES)
+# foreach( _variableName ${_variableNames} )
 #   ecbuild_info("  ${_variableName}=${${_variableName}}")
-#endforeach()
+# endforeach()
 ###############################################################################
 # finalize
 
@@ -536,15 +536,6 @@ ecbuild_info("   |  ecCodes version ${eccodes_VERSION}  |")
 ecbuild_info("   +--------------------------+")
 ecbuild_info("")
 
-ecbuild_info("Please note:")
-ecbuild_info(" For Python3 support, you must install the Python bindings.")
-ecbuild_info(" See:")
+ecbuild_info("For further installation instructions, please see:")
 ecbuild_info("  https://confluence.ecmwf.int/display/ECC/ecCodes+installation")
 ecbuild_info("")
-
-if( HAVE_TIMER )
-    ecbuild_deprecate( "Option ENABLE_TIMER is ignored and will be removed in a future release." )
-    set( ECCODES_TIMER 1 )
-else()
-    set( ECCODES_TIMER 0 )
-endif()

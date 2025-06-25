@@ -1,12 +1,12 @@
 #!/bin/sh
 set -xe
 
-cd ../tests
+cd ../../tests
 
 echo "List all keys..."
 ./list_all_keys.sh
-
-cd ../eccodes
+pwd
+cd ../src/eccodes
 
 # Editing keys grib_hash_keys.cc
 # -l  Compare key lengths before trying a string comparison
@@ -17,8 +17,10 @@ cd ../eccodes
 # -H  Specify name of generated hash function
 # -N  Specify name of generated lookup function
 
-gperf -l -C -I -t -G -H hash_keys -N grib_keys_hash_get -m 3  ../tests/keys |\
-  sed -e '/^#line /d' > grib_hash_keys.cc
+[ -f "../../tests/keys" ]
+
+gperf -l -C -I -t -G -H hash_keys -N grib_keys_hash_get -m 3  ../../tests/keys |\
+  sed -e '/^#line /d' -e 's/register //g'  > grib_hash_keys.cc
 
 cat grib_itrie_keys.cc >> grib_hash_keys.cc
 

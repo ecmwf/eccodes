@@ -222,14 +222,7 @@ grib_handle* codes_grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto,
 {
     return grib_util_sections_copy(hfrom, hto, what, err);
 }
-grib_string_list* codes_grib_util_get_param_id(const char* mars_param)
-{
-    return grib_util_get_param_id(mars_param);
-}
-grib_string_list* codes_grib_util_get_mars_param(const char* param_id)
-{
-    return grib_util_get_mars_param(param_id);
-}
+
 void codes_grib_multi_support_on(codes_context* c)
 {
     grib_multi_support_on(c);

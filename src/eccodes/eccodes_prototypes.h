@@ -57,8 +57,8 @@ void* grib_oarray_get(grib_oarray* v, int i);
 /* grib_iarray.cc */
 void grib_iarray_print(const char* title, const grib_iarray* iarray);
 grib_iarray* grib_iarray_new(size_t size, size_t incsize);
-long grib_iarray_pop(grib_iarray* a);
-long grib_iarray_pop_front(grib_iarray* a);
+// long grib_iarray_pop(grib_iarray* a);
+// long grib_iarray_pop_front(grib_iarray* a);
 grib_iarray* grib_iarray_push(grib_iarray* v, long val);
 void grib_iarray_delete(grib_iarray* v);
 void grib_iarray_delete_array(grib_iarray* v);
@@ -675,8 +675,6 @@ int codes_key_is_computed(const grib_handle* h, const char* key, int* err);
 
 /* grib_util.cc */
 grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err);
-grib_string_list* grib_util_get_param_id(const char* mars_param);
-grib_string_list* grib_util_get_mars_param(const char* param_id);
 grib_handle* grib_util_set_spec(grib_handle* h, const grib_util_grid_spec* spec, const grib_util_packing_spec* packing_spec, int flags, const double* data_values, size_t data_values_count, int* err);
 int parse_keyval_string(const char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count);
 int grib2_is_PDTN_Plain(long productDefinitionTemplateNumber);

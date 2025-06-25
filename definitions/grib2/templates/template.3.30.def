@@ -5,11 +5,13 @@ include "grib2/templates/template.3.shape_of_the_earth.def"
 
 constant isGridded = true;
 
+# Nx - number of points along the X-axis
 unsigned[4] Nx : dump;
 alias Ni = Nx;
 alias numberOfPointsAlongXAxis = Nx;
 alias geography.Nx=Nx;
 
+# Ny - number of points along the Y-axis
 unsigned[4] Ny : dump;
 alias Nj = Ny;
 alias numberOfPointsAlongYAxis = Nj;
@@ -40,7 +42,7 @@ alias latitudeWhereDxAndDyAreSpecified=LaD;
 meta geography.LaDInDegrees scale(LaD,one,grib2divider,truncateDegrees) : dump;
 
 # LoV - Longitude of meridian parallel to Y-axis along which latitude increases as the Y-coordinate increases
-unsigned[4] LoV  : edition_specific;
+unsigned[4] LoV : edition_specific;
 meta geography.LoVInDegrees scale(LoV,one,grib2divider,truncateDegrees) : dump;
 
 # Dx - X-direction grid length (in units of millimetres)
@@ -52,7 +54,7 @@ meta geography.DxInMetres scale(Dx,one,thousand) : dump;
 # Dy - Y-direction grid length (in units of millimetres)
 unsigned[4] Dy : edition_specific;
 alias yDirectionGridLength=Dy;
-alias Dj =  Dy;
+alias Dj = Dy;
 meta geography.DyInMetres scale(Dy,one,thousand) : dump;
 
 # Projection centre flag
@@ -61,12 +63,12 @@ flags[1] projectionCentreFlag 'grib2/tables/[tablesVersion]/3.5.table' : dump;
 include "grib2/templates/template.3.scanning_mode.def"
 
 # Latin 1 - first latitude from the pole at which the secant cone cuts the sphere
-signed[4] Latin1   : edition_specific;
+signed[4] Latin1 : edition_specific;
 alias firstLatitude=Latin1;
 meta geography.Latin1InDegrees scale(Latin1,one,grib2divider,truncateDegrees) : dump;
 
 # Latin 2 - second latitude from the pole at which the secant cone cuts the sphere
-signed[4] Latin2  : dump;
+signed[4] Latin2 : edition_specific;
 alias secondLatitude=Latin2;
 meta geography.Latin2InDegrees scale(Latin2,one,grib2divider,truncateDegrees) : dump;
 

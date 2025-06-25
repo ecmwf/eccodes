@@ -42,9 +42,16 @@ if ($pwd =~ /\/localConcepts\//) {
     $localConcept = 1;
 }
 
-@files = qw(name.def paramId.def shortName.def units.def);
-foreach my $f (@files) {
-    die "Where is $f?\nI expected to find: @files\n" unless -f $f;
+if (-f "paramId.lte33.def") {
+    my %name_map      = process("name.lte33.def");
+    my %paramId_map   = process("paramId.lte33.def");
+    my %shortName_map = process("shortName.lte33.def");
+    my %units_map     = process("units.lte33.def");
+
+    # Check maps are the same
+    is_deeply(\%name_map, \%paramId_map,   'Check name and paramId are the same');
+    is_deeply(\%name_map, \%shortName_map, 'Check name and shortName are the same');
+    is_deeply(\%name_map, \%units_map,     'Check name and units are the same');
 }
 
 while (my $arg = shift @ARGV){
@@ -55,56 +62,63 @@ while (my $arg = shift @ARGV){
     }
 }
 
-my %name_map = process("name.def");
-my $count = scalar(keys %name_map);
-
-ok($count > 0, "Check some params found");
-die "No params found." if ($count eq 0);
-
-my %paramId_map   = process("paramId.def");
-print Data::Dumper->Dump([\%paramId_map], ["paramId_map"]), $/ if ($debug);
-
-if ($extra_info) {
-    # Define an array of all hashes: key -> hash
-    my @all_maps = ();
-    print "paramId.def: Num parameters = " . $count . " \n";
-    print "paramId.def: Scanning for duplicate definitions...\n";
-    my $num_duplicates = 0;
-    for $key (keys %paramId_map) {
-        @hashes = @{ $paramId_map{$key} };
-        
-        #if (@hashes > 1) {
-            #print "\t$key: @{ $name_map{$key} }\n";
-        #    print Data::Dumper->Dump([\$name_map{$key}], ["Map for $key"]);
-        #    ++$num_duplicates;
-        #}
-        # Iterate through the hashes array. Each entry in @hashes is a hash
-        foreach $ahash (@hashes) {
-            # See if our little map exists in the pool of all maps seen so far
-            #print Data::Dumper->Dump([\$ahash], ["Map for ahash"]);
-            for $m1 (@all_maps) {
-                #print "\t", Data::Dumper->Dump([\$m1], ["Map for m1"]);
-                #my $same = is_deeply(\$m1, \$ahash);
-                my $same = eq_hash(\$m1, \$ahash);
-                if ($same) {
-                    print "\nThe following mapping occurs somewhere else!!\n";
-                    print "Key=$key,\t", Data::Dumper->Dump([\$ahash], [" "]);
-                    #exit 2;
-                }
-            }
-            push(@all_maps, $ahash);
-        }
+if (-f "paramId.def") {
+    @files = qw(name.def paramId.def shortName.def units.def);
+    foreach my $f (@files) {
+        die "Where is $f?\nI expected to find: @files\n" unless -f $f;
     }
-    #print "DONE\n";
+
+    my %name_map = process("name.def");
+    my $count = scalar(keys %name_map);
+
+    ok($count > 0, "Check some params found");
+    die "No params found." if ($count eq 0);
+
+    my %paramId_map   = process("paramId.def");
+    print Data::Dumper->Dump([\%paramId_map], ["paramId_map"]), $/ if ($debug);
+
+    if ($extra_info) {
+        # Define an array of all hashes: key -> hash
+        my @all_maps = ();
+        print "paramId.def: Num parameters = " . $count . " \n";
+        print "paramId.def: Scanning for duplicate definitions...\n";
+        my $num_duplicates = 0;
+        for $key (keys %paramId_map) {
+            @hashes = @{ $paramId_map{$key} };
+            
+            #if (@hashes > 1) {
+                #print "\t$key: @{ $name_map{$key} }\n";
+            #    print Data::Dumper->Dump([\$name_map{$key}], ["Map for $key"]);
+            #    ++$num_duplicates;
+            #}
+            # Iterate through the hashes array. Each entry in @hashes is a hash
+            foreach $ahash (@hashes) {
+                # See if our little map exists in the pool of all maps seen so far
+                #print Data::Dumper->Dump([\$ahash], ["Map for ahash"]);
+                for $m1 (@all_maps) {
+                    #print "\t", Data::Dumper->Dump([\$m1], ["Map for m1"]);
+                    #my $same = is_deeply(\$m1, \$ahash);
+                    my $same = eq_hash(\$m1, \$ahash);
+                    if ($same) {
+                        print "\nThe following mapping occurs somewhere else!!\n";
+                        print "Key=$key,\t", Data::Dumper->Dump([\$ahash], [" "]);
+                        #exit 2;
+                    }
+                }
+                push(@all_maps, $ahash);
+            }
+        }
+        #print "DONE\n";
+    }
+
+    my %shortName_map = process("shortName.def");
+    my %units_map     = process("units.def");
+
+    # Check maps are the same
+    is_deeply(\%name_map, \%paramId_map,   'Check name and paramId are the same');
+    is_deeply(\%name_map, \%shortName_map, 'Check name and shortName are the same');
+    is_deeply(\%name_map, \%units_map,     'Check name and units are the same');
 }
-
-my %shortName_map = process("shortName.def");
-my %units_map     = process("units.def");
-
-# Check maps are the same
-is_deeply(\%name_map, \%paramId_map,   'Check name and paramId are the same');
-is_deeply(\%name_map, \%shortName_map, 'Check name and shortName are the same');
-is_deeply(\%name_map, \%units_map,     'Check name and units are the same');
 
 #if (-f "cfVarName.def") {
 #   my %cfVar_map     = process("cfVarName.def");
@@ -113,10 +127,16 @@ is_deeply(\%name_map, \%units_map,     'Check name and units are the same');
 #   print "\n\tINFO: Did not find a cfVarName.def file!!!\n\n";
 #}
 
-done_testing();
 
-check_paramIDs("paramId.def");
+if (-f "paramId.def") {
+    check_paramIDs("paramId.def");
+}
+if (-f "paramId.lte33.def") {
+    check_paramIDs("paramId.lte33.def");
+}
 
+
+done_testing($number_of_tests_run);
 
 # -------------------------------------------------------------------------
 # Function to return a hash:

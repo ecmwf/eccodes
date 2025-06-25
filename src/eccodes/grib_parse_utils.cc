@@ -684,7 +684,7 @@ void grib_parser_include(const char* included_fname)
     /* printf("PARSING %s\n",parse_file); */
 
     if (f == NULL) {
-        char buffer[1024];
+        char buffer[1024]={0,};
         grib_context_log(grib_parser_context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR), "Parser include: cannot open: '%s'", parse_file);
         snprintf(buffer, sizeof(buffer), "Cannot include file: '%s'", parse_file);
         grib_yyerror(buffer);

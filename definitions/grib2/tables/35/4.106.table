@@ -1,0 +1,17 @@
+# Code table 4.106 - Radar data quality flags
+0 0 Normal operating data
+1 1 No data
+2 2 Undetected
+3 3 Implausible data/outliers
+4 4 Beam overshooting
+5 5 Beam blocking
+6 6 Ground clutter
+7 7 Sea clutter
+8 8 Beam attenuation
+9 9 Wet radome attenuation
+10 10 Wind turbines
+11 11 Insects/birds
+12 12 Ships/aircrafts
+# 13-189 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

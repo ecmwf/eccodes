@@ -16,11 +16,10 @@
 
 static int copy_values(grib_handle* h, grib_accessor* ga)
 {
-    int i, j, k;
     /* printf("copy_values stack is %ld\n",(long)h->values_stack);*/
-    for (j = 0; j < h->values_stack; j++) {
-        for (i = 0; i < h->values_count[j]; i++) {
-            for (k = 0; (k < MAX_ACCESSOR_NAMES) && (ga->all_names_[k] != NULL); k++) {
+    for (int j = 0; j < h->values_stack; j++) {
+        for (size_t i = 0; i < h->values_count[j]; i++) {
+            for (int k = 0; (k < MAX_ACCESSOR_NAMES) && (ga->all_names_[k] != NULL); k++) {
                 /*printf("copy_values: %s %s\n",h->values[j][i].name,ga->all_names[k]);*/
                 if (strcmp(h->values[j][i].name, ga->all_names_[k]) == 0) {
                     size_t len = 1;

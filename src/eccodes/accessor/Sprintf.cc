@@ -30,7 +30,6 @@ int Sprintf::unpack_string(char* val, size_t* len)
     char sres[1024];
     long ires            = 0;
     double dres          = 0;
-    int i                = 0;
     size_t replen        = 1024;
     int ret              = GRIB_SUCCESS;
     int carg             = 0;
@@ -43,7 +42,7 @@ int Sprintf::unpack_string(char* val, size_t* len)
     snprintf(result, sizeof(result), "%s", "");
     uname_len = strlen(uname);
 
-    for (i = 0; i < uname_len; i++) {
+    for (size_t i = 0; i < uname_len; i++) {
         if (uname[i] == '%') {
             int precision = 999;
             i++;

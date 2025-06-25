@@ -20,7 +20,7 @@
     #include "eckit/geo/Grid.h"
     #include "eckit/geo/Exceptions.h"
 
-    #include "geo/GribSpec.h"
+    #include "geo/GribToSpec.h"
     #include "geo/EckitMainInit.h"
 #endif
 
@@ -42,8 +42,14 @@ long GridSpec::get_native_type()
     return GRIB_TYPE_STRING;
 }
 
+static void print_warning_feature_not_implemented()
+{
+    fprintf(stderr, "ECCODES WARNING :  Key gridSpec is not yet implemented. Work in progress...\n");
+}
+
 int GridSpec::pack_string(const char* sval, size_t* len)
 {
+    print_warning_feature_not_implemented();
     return GRIB_NOT_IMPLEMENTED;
 
 #if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
@@ -56,6 +62,9 @@ int GridSpec::pack_string(const char* sval, size_t* len)
 int GridSpec::unpack_string(char* v, size_t* len)
 {
 #if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
+    if (context_->eckit_geo == 0) { // check env. variable too
+        return GRIB_NOT_IMPLEMENTED;
+    }
     ECCODES_ASSERT(0 < *len);
     ECCODES_ASSERT(v != nullptr);
 
@@ -67,7 +76,7 @@ int GridSpec::unpack_string(char* v, size_t* len)
     try {
         eccodes::geo::eckit_main_init();
 
-        std::unique_ptr<const eckit::geo::Spec> spec(new eccodes::geo::GribSpec(h));
+        std::unique_ptr<const eckit::geo::Spec> spec(new eccodes::geo::GribToSpec(h));
         std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(*spec));
 
         spec_str = grid->spec_str();
@@ -97,6 +106,7 @@ int GridSpec::unpack_string(char* v, size_t* len)
 
     return GRIB_SUCCESS;
 #else
+    print_warning_feature_not_implemented();
     return GRIB_NOT_IMPLEMENTED;
 #endif
 }

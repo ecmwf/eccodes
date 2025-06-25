@@ -45,7 +45,7 @@
 // if product_kind is PRODUCT_ANY, the type of sample file is determined at runtime
 static grib_handle* try_product_sample(grib_context* c, ProductKind product_kind, const char* dir, const char* name)
 {
-    char path[1024];
+    char path[1024] = {0,};
     grib_handle* g = NULL;
     int err        = 0;
 
@@ -105,7 +105,7 @@ static grib_handle* try_product_sample(grib_context* c, ProductKind product_kind
 static char* try_sample_path(grib_context* c, const char* dir, const char* name)
 {
     // The ".tmpl" extension is historic. It should have been ".sample"
-    char path[2048];
+    char path[2048] = {0,};
     if (string_ends_with(name, ".tmpl"))
         snprintf(path, sizeof(path), "%s/%s", dir, name);
     else
@@ -122,7 +122,7 @@ static char* try_sample_path(grib_context* c, const char* dir, const char* name)
 grib_handle* codes_external_sample(grib_context* c, ProductKind product_kind, const char* name)
 {
     const char* base = c->grib_samples_path;
-    char buffer[1024];
+    char buffer[1024] = {0,};
     char* p        = buffer;
     grib_handle* g = NULL;
 
@@ -149,7 +149,7 @@ grib_handle* codes_external_sample(grib_context* c, ProductKind product_kind, co
 char* get_external_sample_path(grib_context* c, const char* name)
 {
     const char* base = c->grib_samples_path;
-    char buffer[1024];
+    char buffer[1024] = {0,};
     char* p = buffer;
     char* g = NULL;
 

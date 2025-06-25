@@ -31,7 +31,7 @@ int OffsetValues::unpack_double(double* val, size_t* len)
     *val    = 0;
     *len    = 1;
     // It does not make sense to decode this key!
-    fprintf(stderr, "ECCODES WARNING :  Key %s is applicable only during encoding.\n", name_);
+    //fprintf(stderr, "ECCODES WARNING :  Key %s is applicable only during encoding.\n", name_);
     return GRIB_SUCCESS;
 }
 
@@ -41,7 +41,7 @@ int OffsetValues::pack_double(const double* val, size_t* len)
     size_t size               = 0;
     double missingValue       = 0;
     long missingValuesPresent = 0;
-    int ret = 0, i = 0;
+    int ret = 0;
     grib_context* c = context_;
     grib_handle* h  = get_enclosing_handle();
 
@@ -67,7 +67,7 @@ int OffsetValues::pack_double(const double* val, size_t* len)
         return ret;
     }
 
-    for (i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++) {
         if (missingValuesPresent) {
             if (values[i] != missingValue)
                 values[i] += *val;
@@ -76,6 +76,12 @@ int OffsetValues::pack_double(const double* val, size_t* len)
             values[i] += *val;
         }
     }
+    // ECC-2083: GRIB: Applying the scaleValuesBy operation can produce constant fields
+    // Assigning 0 to both decimalScaleFactor and binaryScaleFactor automatically triggers a
+    // recalculation of binaryScaleFactor.
+    // Note: We do not check for errors as there could be packing types without these keys
+    grib_set_long(h, "decimalScaleFactor", 0);
+    grib_set_long(h, "binaryScaleFactor", 0);
 
     if ((ret = grib_set_double_array_internal(h, values_, values, size)) != GRIB_SUCCESS)
         return ret;

@@ -41,7 +41,6 @@ list(APPEND test_c_bins
     grib_set_force
     grib_run_length_packing
     grib_partial_message
-    grib_ecc-386
     grib_ecc-1467
     grib_ecc-1431
     grib_ecc-1433
@@ -174,6 +173,11 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_polar_stereographic
         grib_grid_healpix
         grib_g1day_of_the_year_date
+        grib_paramid_chemid_split
+        grib_paramtypeConcept
+        grib_cmp_paramtype
+        grib_timeSpanConcept
+        grib_cmp_timeSpan
     )
 
     # These tests require data downloads
@@ -192,6 +196,7 @@ if( HAVE_BUILD_TOOLS )
         grib_double_cmp
         grib_element
         grib_change_packing
+        grib_complex_spatial_differencing
         grib_run_length_packing
         grib_grid_space_view
         grib_partial_message
@@ -201,7 +206,6 @@ if( HAVE_BUILD_TOOLS )
         grib_unpack_subarray
         grib_count
         grib_clone_headers_only
-        grib_ifsParam
         filter_dump_content
         wmo_read_bufr_from_file
         wmo_read_gts_from_file
@@ -274,12 +278,14 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-1938
         bufr_ecc-2030
         bufr_ecc-2037
+        bufr_ecc-2100
         grib_488
         grib_ecc-490
         grib_ecc-756
         grib_ecc-806
         grib_ecc-873
         grib_ecc-600
+        grib_ecc-813
         grib_ecc-923
         grib_ecc-979
         grib_ecc-984
@@ -297,7 +303,6 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1907
         grib_ecc-1941
         grib_ecc-1942
-        grib_ecc-2002
         grib_ecc-2005
         grib_ecc-2006
         grib_ecc-2013

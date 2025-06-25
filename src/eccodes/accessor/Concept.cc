@@ -95,8 +95,8 @@ static int concept_condition_expression_true(
 
         case GRIB_TYPE_STRING: {
             const char* cval;
-            char buf[80];
-            char tmp[80];
+            char buf[80] = {0,};
+            char tmp[80] = {0,};
             size_t len  = sizeof(buf);
             size_t size = sizeof(tmp);
 
@@ -107,7 +107,6 @@ static int concept_condition_expression_true(
         }
 
         default:
-            // TODO
             break;
     }
     return ok;
@@ -240,10 +239,10 @@ static int rectify_concept_apply(grib_handle* h, const char* key)
         { "typeOfStatisticalProcessing",       { "selectStepTemplateInterval", 1 }        },
         { "typeOfWavePeriodInterval",          { "productDefinitionTemplateNumber", 103 } },
         { "constituentType",                   { "is_chemical", 1 }                       },
+        { "aerosolType",                       { "is_aerosol", 1 }                        },
         { "sourceSinkChemicalPhysicalProcess", { "is_chemical_srcsink", 1 }               },
         { "randomFieldNumber",                 { "productDefinitionTemplateNumber", 143 } },
-        // TODO(masn): Add a new key e.g. is_probability_forecast
-        { "probabilityType",                   { "productDefinitionTemplateNumber", 5 }   }
+        { "probabilityType",                   { "is_probability_fcst", 1 }               }
     };
     const auto mapIter = keyMap.find(key);
     if (mapIter != keyMap.end()) {
@@ -468,7 +467,7 @@ int Concept::pack_double(const double* val, size_t* len)
 
 int Concept::pack_long(const long* val, size_t* len)
 {
-    char buf[80];
+    char buf[80] = {0,};
     size_t s;
     snprintf(buf, sizeof(buf), "%ld", *val);
 

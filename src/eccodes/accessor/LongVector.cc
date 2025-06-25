@@ -20,9 +20,9 @@ namespace eccodes::accessor
 void LongVector::init(const long l, grib_arguments* c)
 {
     AbstractLongVector::init(l, c);
-    grib_accessor* va                       = NULL;
+    grib_accessor* va = NULL;
     AbstractLongVector* v = NULL;
-    int n                                   = 0;
+    int n = 0;
 
     vector_ = c->get_name(get_enclosing_handle(), n++);
     va      = (grib_accessor*)grib_find_accessor(get_enclosing_handle(), vector_);
@@ -40,18 +40,15 @@ int LongVector::unpack_long(long* val, size_t* len)
 {
     size_t size = 0;
     int err     = 0;
-    long* vector;
-    grib_accessor* va                       = NULL;
-    AbstractLongVector* v = NULL;
 
-    va = (grib_accessor*)grib_find_accessor(get_enclosing_handle(), vector_);
-    v  = (AbstractLongVector*)va;
+    grib_accessor* va = (grib_accessor*)grib_find_accessor(get_enclosing_handle(), vector_);
+    AbstractLongVector*  v  = (AbstractLongVector*)va;
 
     /*TODO implement the dirty mechanism to avoid to unpack every time */
     err = grib_get_size(get_enclosing_handle(), vector_, &size);
     if (err) return err;
     DEBUG_ASSERT(size > 0);
-    vector = (long*)grib_context_malloc(context_, sizeof(long) * size);
+    long* vector = (long*)grib_context_malloc(context_, sizeof(long) * size);
     err    = va->unpack_long(vector, &size);
     grib_context_free(context_, vector);
     if (err) return err;
@@ -63,12 +60,12 @@ int LongVector::unpack_long(long* val, size_t* len)
 
 int LongVector::unpack_double(double* val, size_t* len)
 {
-    long lval                               = 0;
-    int err                                 = 0;
-    grib_accessor* va                       = NULL;
+    long lval = 0;
+    int err = 0;
+    grib_accessor* va = NULL;
     AbstractLongVector* v = NULL;
-    va                                      = (grib_accessor*)grib_find_accessor(get_enclosing_handle(), vector_);
-    v                                       = (AbstractLongVector*)va;
+    va = (grib_accessor*)grib_find_accessor(get_enclosing_handle(), vector_);
+    v  = (AbstractLongVector*)va;
 
     err = unpack_long(&lval, len);
 
@@ -79,8 +76,8 @@ int LongVector::unpack_double(double* val, size_t* len)
 
 int LongVector::pack_long(const long* val, size_t* len)
 {
-    int err                                 = 0;
-    grib_accessor* va                       = NULL;
+    int err = 0;
+    grib_accessor* va = NULL;
     AbstractLongVector* v = NULL;
 
     va = (grib_accessor*)grib_find_accessor(get_enclosing_handle(), vector_);

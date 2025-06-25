@@ -17,3 +17,18 @@ alias secondWavelengthInMetres = secondWavelength;
 constant billion = 1000000000 : hidden;
 meta firstWavelengthInNanometres  multdouble(firstWavelength, billion) : read_only;
 meta secondWavelengthInNanometres multdouble(secondWavelength, billion) : read_only;
+
+# All post-MTG2 data (MTG2Switch != 0) will have the wavelength key
+if (MTG2Switch != 0) {
+ # typeOfWavelengthInterval (table 4.91 specifies if first / second / first+second limit(s) are to be defined)
+ if ( typeOfWavelengthInterval == 0 || typeOfWavelengthInterval == 3 || typeOfWavelengthInterval == 5 || typeOfWavelengthInterval == 8 || typeOfWavelengthInterval == 11 ){
+  alias mars.wavelength = firstWavelengthInNanometres ;
+ }
+ if ( typeOfWavelengthInterval == 1 || typeOfWavelengthInterval == 4 || typeOfWavelengthInterval == 6 || typeOfWavelengthInterval == 9 ){
+  alias mars.wavelength = secondWavelengthInNanometres ;
+ }
+ if ( typeOfWavelengthInterval == 2 || typeOfWavelengthInterval == 7 || typeOfWavelengthInterval == 10 ){
+  meta wavelengthRange sprintf("%s-%s",firstWavelengthInNanometres,secondWavelengthInNanometres) ;
+  alias mars.wavelength = wavelengthRange ;
+ }
+}
