@@ -24,3 +24,5 @@
  '168h'   = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168; class='od'; stream='eehs'; type='cd';}
  '240h'   = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 240; class='od'; stream='efhs'; type='cd';}
  '360h'   = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 360; class='od'; stream='efhs'; type='cd';}
+ ## 7 days rolling accumulation
+ '7 days'    = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168; type='cd';}
