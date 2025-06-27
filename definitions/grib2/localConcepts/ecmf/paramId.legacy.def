@@ -836,6 +836,48 @@
 	 parameterCategory = 130 ;
 	 parameterNumber = 232 ;
 	}
+#Total precipitation less than 0.1 mm
+'131064' = {
+	 discipline = 192 ;
+	 parameterCategory = 131 ;
+	 parameterNumber = 64 ;
+	}
+#Total precipitation rate less than 1 mm/day
+'131065' = {
+	 discipline = 192 ;
+	 parameterCategory = 131 ;
+	 parameterNumber = 65 ;
+	}
+#Total precipitation rate of at least 3 mm/day
+'131066' = {
+	 discipline = 192 ;
+	 parameterCategory = 131 ;
+	 parameterNumber = 66 ;
+	}
+#Total precipitation rate of at least 5 mm/day
+'131067' = {
+	 discipline = 192 ;
+	 parameterCategory = 131 ;
+	 parameterNumber = 67 ;
+	}
+#10 metre Wind speed of at least 10 m/s
+'131068' = {
+	 discipline = 192 ;
+	 parameterCategory = 131 ;
+	 parameterNumber = 68 ;
+	}
+#10 metre Wind speed of at least 15 m/s
+'131069' = {
+	 discipline = 192 ;
+	 parameterCategory = 131 ;
+	 parameterNumber = 69 ;
+	}
+#2 metre temperature less than 273.15 K
+'131073' = {
+	 discipline = 192 ;
+	 parameterCategory = 131 ;
+	 parameterNumber = 73 ;
+	}
 #Period corresponding to maximum individual wave height
 '140217' = {
 	 discipline = 192 ;
