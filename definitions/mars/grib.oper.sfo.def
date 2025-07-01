@@ -1,0 +1,9 @@
+alias mars.step = endStep;
+
+alias mars.version  = modelVersion;
+alias mars.time  = dataTime;
+alias mars.origin = inputOriginatingCentre;
+
+alias mars.anoffset=anoffset;
+
+alias mars.model = modelName;
