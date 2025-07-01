@@ -3,7 +3,7 @@ alias mars.hdate  = dataDate;
 alias mars.date   = referenceDate;
 alias mars.number = perturbationNumber;
 
-if (class is "ef" || class is "gf" || class is "gh" || class is "eh) {
+if (class is "ef" || class is "gf" ) {
  alias mars.version  = modelVersion;
  alias mars.origin = inputOriginatingCentre;
  alias mars.model = modelName;
