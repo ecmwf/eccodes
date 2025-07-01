@@ -3,3 +3,10 @@ if (levtype is "o2d" || levtype is "o3d") {
 } else {
    alias mars.step = endStep;
 }
+
+
+if (class is "ef" || class is "gf" || class is "gh" || class is "eh) {
+ alias mars.version  = modelVersion;
+ alias mars.origin = inputOriginatingCentre;
+ alias mars.model = modelName;
+}
