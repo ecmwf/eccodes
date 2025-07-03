@@ -92,6 +92,7 @@ g2_concept_dir, &grib_accessor_g2_concept_dir
 g2_eps, &grib_accessor_g2_eps
 g2_mars_labeling, &grib_accessor_g2_mars_labeling
 g2_param_concept_filename, &grib_accessor_g2_param_concept_filename
+g2_probability, &grib_accessor_g2_probability
 g2bitmap, &grib_accessor_g2bitmap
 g2bitmap_present, &grib_accessor_g2bitmap_present
 g2date, &grib_accessor_g2date
