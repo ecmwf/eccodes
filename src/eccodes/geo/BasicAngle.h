@@ -15,24 +15,24 @@
 #include <iosfwd>
 #include <numeric>
 
+#include "eccodes/geo/Geo.h"
 
-struct grib_info;
 
-namespace eckit {
+namespace eckit
+{
 class Fraction;
 }
 
 
-namespace mir::grib {
+namespace eccodes::geo
+{
 
 
-struct Fraction {
+struct Fraction
+{
     // -- Types
 
     using value_type = long;
-
-    // -- Exceptions
-    // None
 
     // -- Constructors
 
@@ -50,60 +50,44 @@ struct Fraction {
 };
 
 
-constexpr Fraction::value_type lcm(Fraction::value_type a) {
+constexpr Fraction::value_type lcm(Fraction::value_type a)
+{
     return a;
 }
 
 
 template <typename... Values>
-constexpr Fraction::value_type lcm(Fraction::value_type a, Values... bc) {
+constexpr Fraction::value_type lcm(Fraction::value_type a, Values... bc)
+{
     return (std::lcm(a, lcm(bc...)));
 }
 
 
-constexpr Fraction::value_type gcd(Fraction::value_type a) {
+constexpr Fraction::value_type gcd(Fraction::value_type a)
+{
     return a;
 }
 
 
 template <typename... Values>
-constexpr Fraction::value_type gcd(Fraction::value_type a, Values... bc) {
+constexpr Fraction::value_type gcd(Fraction::value_type a, Values... bc)
+{
     return (std::gcd(a, gcd(bc...)));
 }
 
 
-struct BasicAngle : Fraction {
-    // -- Types
-    // None
-
-    // -- Exceptions
-    // None
-
+struct BasicAngle : Fraction
+{
     // -- Constructors
 
     using Fraction::Fraction;
     BasicAngle(Fraction, Fraction, Fraction, Fraction, Fraction, Fraction);
     explicit BasicAngle(const grib_info&);
 
-    // -- Destructor
-    // None
-
-    // -- Convertors
-    // None
-
-    // -- Operators
-    // None
-
     // -- Methods
 
     void fillGrib(grib_info&) const;
     value_type numerator(const Fraction&) const;
-
-    // -- Overridden methods
-    // None
-
-    // -- Class members
-    // None
 
     // -- Class methods
 
@@ -111,4 +95,4 @@ struct BasicAngle : Fraction {
 };
 
 
-}  // namespace mir::grib
+}  // namespace eccodes::geo

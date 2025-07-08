@@ -24,9 +24,7 @@ namespace eccodes::geo
 {
 
 
-
-
-class GribToSpec final : public eckit::geo::Spec
+class GribToSpec final : public Spec
 {
 public:
     explicit GribToSpec(codes_handle*);

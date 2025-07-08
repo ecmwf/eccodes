@@ -10,14 +10,10 @@
  */
 
 
-#include "eccodes/geo/GribToSpec.h"
+#include "eccodes/geo/GribFromSpec.h"
 
-// #include <algorithm>
+#include <utility>
 #include <cstring>
-// #include <ios>
-// #include <sstream>
-#include <string>
-// #include <utility>
 #include <vector>
 #include <string>
 #include <vector>
@@ -25,102 +21,13 @@
 #include "eckit/types/Fraction.h"
 #include "eckit/geo/Spec.h"
 #include "eckit/exception/Exceptions.h"
+#include "eckit/geo/util/mutex.h"
+
+#include "eccodes/geo/BasicAngle.h"
 
 
 namespace eccodes::geo
 {
-
-
-struct grib_info
-{
-    grib_info();
-    grib_info(const grib_info&) = delete;
-    grib_info(grib_info&&)      = delete;
-
-    ~grib_info() = default;
-
-    void operator=(grib_info&&)      = delete;
-    void operator=(const grib_info&) = delete;
-
-    void extra_set(const char* key, long);
-    void extra_set(const char* key, double);
-    void extra_set(const char* key, const char*);
-
-    codes_util_grid_spec grid;
-    codes_util_packing_spec packing;
-
-private:
-    std::vector<std::string> strings_;
-    const size_t extra_settings_size_;
-};
-
-
-grib_info::grib_info() :
-    grid{}, packing{}, extra_settings_size_(sizeof(packing.extra_settings) / sizeof(packing.extra_settings[0]))
-{
-    // NOTE low-level initialisation only necessary for C interface
-    std::memset(&grid, 0, sizeof(grid));
-    std::memset(&packing, 0, sizeof(packing));
-
-    strings_.reserve(extra_settings_size_);
-}
-
-
-void grib_info::extra_set(const char* key, long value)
-{
-    auto j = static_cast<size_t>(packing.extra_settings_count++);
-    ASSERT(j < extra_settings_size_);
-
-    auto& set      = packing.extra_settings[j];
-    set.name       = key;
-    set.type       = CODES_TYPE_LONG;
-    set.long_value = value;
-}
-
-
-void grib_info::extra_set(const char* key, double value)
-{
-    auto j = static_cast<size_t>(packing.extra_settings_count++);
-    ASSERT(j < extra_settings_size_);
-
-    auto& set        = packing.extra_settings[j];
-    set.name         = key;
-    set.type         = CODES_TYPE_DOUBLE;
-    set.double_value = value;
-}
-
-
-void grib_info::extra_set(const char* key, const char* value)
-{
-    auto j = static_cast<size_t>(packing.extra_settings_count++);
-    ASSERT(j < extra_settings_size_);
-
-    auto& set = packing.extra_settings[j];
-    set.name  = key;
-    set.type  = CODES_TYPE_STRING;
-
-    strings_.emplace_back(value);
-    set.string_value = strings_.back().c_str();
-}
-
-
-void Rotation_fillGrib(grib_info& info)
-{
-#if 0
-    // Warning: scanning mode not considered
-
-    info.grid.grid_type = CODES_UTIL_GRID_SPEC_ROTATED_LL;
-
-    info.grid.latitudeOfSouthernPoleInDegrees  = rotation_.south_pole().lat;
-    info.grid.longitudeOfSouthernPoleInDegrees = rotation_.south_pole().lon;
-
-    // This is missing from the grib_spec
-    // Remove that when supported
-    if (!eckit::types::is_approximately_equal<double>(rotation_.angle(), 0.)) {
-        info.extra_set("angleOfRotationInDegrees", rotation_.angle());
-    }
-#endif
-}
 
 
 void LatLon_fillGrib(grib_info& info)
@@ -391,7 +298,6 @@ void ICON_fillGrib(grib_info& info)
     info.extra_set("unstructuredGridSubtype", grid_->arrangement().c_str());
     info.extra_set("uuidOfHGrid", grid_->uid().c_str());
 #endif
-#endif
 }
 
 
@@ -425,51 +331,72 @@ void SphericalHarmonics_fillGrib(grib_info& info)
 }
 
 
-int grib_from_spec(codes_handle* h, const Spec&)
+namespace
+{
+
+
+eckit::geo::util::recursive_mutex MUTEX;
+
+
+class lock_type
+{
+    eckit::geo::util::lock_guard<eckit::geo::util::recursive_mutex> lock_guard_{ MUTEX };
+};
+
+
+}  // namespace
+
+
+GribFromSpec::GribFromSpec(BasicAngleFormat basicAngleFormat) :
+    basicAngleFormat_(basicAngleFormat)
+{
+}
+
+
+int GribFromSpec::set(codes_handle* h, const Spec&, const std::map<std::string, long>& extra)
 {
     // Protect ecCodes and set error callback handling (throws)
-    // util::lock_guard<util::recursive_mutex> lock(local_mutex);
+    lock_type lock;
     codes_set_codes_assertion_failed_proc(&codes_assertion);
 
     grib_info info;
 
     // Ask representation to update info
+#if 0
     repres::RepresentationHandle repres(field.representation());
     repres->fillGrib(info);
+#endif
 
     // Basic angle (after representation), support only for gridType=regular_ll
-    std::string basicAngle = "decimal";
-    param.get("basic-angle", basicAngle);
 
-    if (basicAngle == "as-input") {
+    if (basicAngleFormat_ == BasicAngleFormat::AS_INPUT) {
         std::vector<long> fraction(2);
-        CHECK_CALL(codes_get_long(h, "basicAngleOfTheInitialProductionDomain", &fraction[0]));
+        CHECK_CALL(codes_get_long(h, "basicAngleOfTheInitialProductionDomain", fraction.data()));
         CHECK_CALL(codes_get_long(h, "subdivisionsOfBasicAngle", &fraction[1]));
 
-        grib::BasicAngle basic(fraction[0], fraction[1]);
+        BasicAngle basic(fraction[0], fraction[1]);
         basic.fillGrib(info);
     }
-    else if (basicAngle == "fraction") {
-        grib::BasicAngle basic(info);
+    else if (basicAngleFormat_ == BasicAngleFormat::FRACTION) {
+        BasicAngle basic(info);
         basic.fillGrib(info);
     }
     else {
         // codes_grib_util_set_spec does not need anything here (GRIB standard)
-        ASSERT(basicAngle == "decimal");
+        ASSERT(basicAngleFormat_ == BasicAngleFormat::DECIMAL);
     }
 
     // Extra settings (paramId comes from here)
-    for (const auto& k : field.metadata(i)) {
+    for (const auto& k : extra) {
         info.extra_set(k.first.c_str(), k.second);
     }
 
 
-    const auto& values = field.values(i);
-    int flags          = 0;
-    int err            = 0;
-
     try {
-        auto* hh = codes_grib_util_set_spec(h, &info.grid, &info.packing, flags, values.data(), values.size(), &err);
+        int flags = 0;
+        int err   = 0;
+
+        auto* hh = codes_grib_util_set_spec(h, &info.grid, &info.packing, flags, nullptr, 0, &err);
 
         CHECK_CALL(err);  // err == CODES_WRONG_GRID
 

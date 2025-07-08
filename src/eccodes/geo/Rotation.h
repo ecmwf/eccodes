@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2024- ECMWF.
+ * (C) Copyright 1996- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include <map>
-#include <string>
 
 #include "eccodes/geo/Geo.h"
 
@@ -22,22 +20,22 @@ namespace eccodes::geo
 {
 
 
-class GribFromSpec
+struct Rotation
 {
-public:
-    enum BasicAngleFormat
-    {
-        DECIMAL,
-        AS_INPUT,
-        FRACTION
-    };
+    // -- Constructors
 
-    explicit GribFromSpec(BasicAngleFormat basicAngleFormat = DECIMAL);
+    Rotation(double south_pole_lat, double south_pole_lon, double south_pole_angle);
 
-    int set(codes_handle*, const Spec&, const std::map<std::string, long>& extra = {});
+    // -- Methods
+
+    void fillGrib(grib_info&) const;
 
 private:
-    const BasicAngleFormat basicAngleFormat_;
+    // -- Members
+
+    const double south_pole_lat_;
+    const double south_pole_lon_;
+    const double south_pole_angle_;
 };
 
 
