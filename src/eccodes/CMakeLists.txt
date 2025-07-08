@@ -433,7 +433,9 @@ if( eccodes_HAVE_GEOGRAPHY AND eccodes_HAVE_ECKIT_GEO )
         geo/GribFromSpec.cc
         geo/GribFromSpec.h
         geo/GribToSpec.cc
-        geo/GribToSpec.h )
+        geo/GribToSpec.h
+        geo/Rotation.cc
+        geo/Rotation.h )
     list( APPEND ECCODES_EXTRA_LIBRARIES eckit_geo )
 endif()
 
