@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 1996- ECMWF.
+ * (C) Copyright 2024- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -10,16 +10,16 @@
  */
 
 
+#pragma once
+
+#include "eccodes/geo/Geo.h"
+
+
 namespace eccodes::geo
 {
 
 
-void RotatedLL_fillGrib(grib_info& info) const
-{
-    LatLon_fillGrib(info);
+int grib_from_spec(codes_handle*, const Spec&);
 
-    info.grid.grid_type = CODES_UTIL_GRID_SPEC_ROTATED_LL;
-    rotation_.fillGrib(info);
-}
 
 }  // namespace eccodes::geo

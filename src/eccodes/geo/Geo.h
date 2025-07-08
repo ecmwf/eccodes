@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 1996- ECMWF.
+ * (C) Copyright 2024- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -10,19 +10,30 @@
  */
 
 
+#pragma once
+
+#include "eccodes.h"
+
+
+namespace eckit::geo
+{
+class Spec;
+}
+
+
 namespace eccodes::geo
 {
 
 
-void RegularGrid_fillGrib(grib_info& info) const
-{
-    // shape of the reference system
-    shape_.fillGrib(info, grid_.projection().spec());
+using Spec = eckit::geo::Spec;
 
-    // scanningMode
-    info.grid.iScansNegatively = x_.front() < x_.back() ? 0L : 1L;
-    info.grid.jScansPositively = y_.front() < y_.back() ? 1L : 0L;
-}
+
+[[noreturn]] bool codes_check_error(int e, const char* call);
+[[noreturn]] void codes_assertion(const char* message);
+
+
+#define CHECK_ERROR(a, b) codes_check_error(a, b)
+#define CHECK_CALL(a)     codes_check_error(a, #a)
 
 
 }  // namespace eccodes::geo
