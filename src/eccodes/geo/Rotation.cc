@@ -13,10 +13,25 @@
 #include "eccodes/geo/Rotation.h"
 
 #include "eckit/types/FloatCompare.h"
+#include "eckit/geo/projection/Rotation.h"
 
 
 namespace eccodes::geo
 {
+
+
+Rotation::Rotation(const Projection& projection) :
+    Rotation(dynamic_cast<const ::eckit::geo::projection::Rotation&>(projection))
+{
+}
+
+
+Rotation::Rotation(const eckit::geo::projection::Rotation& r) :
+    Rotation(r.south_pole().lat,
+             r.south_pole().lon,
+             r.angle())
+{
+}
 
 
 Rotation::Rotation(double south_pole_lat, double south_pole_lon, double south_pole_angle) :

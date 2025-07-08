@@ -424,6 +424,8 @@ if( eccodes_HAVE_GEOGRAPHY AND eccodes_HAVE_ECKIT_GEO )
 
         geo/BasicAngle.cc
         geo/BasicAngle.h
+        geo/BoundingBox.cc
+        geo/BoundingBox.h
         geo/EckitMainInit.cc
         geo/EckitMainInit.h
         geo/Geo.cc

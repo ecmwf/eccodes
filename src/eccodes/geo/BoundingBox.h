@@ -12,33 +12,32 @@
 
 #pragma once
 
-
 #include "eccodes/geo/Geo.h"
-#include "eckit/geo/projection/Rotation.h"
+
+
+namespace eckit::geo::area
+{
+class BoundingBox;
+}
 
 
 namespace eccodes::geo
 {
 
 
-struct Rotation
+struct BoundingBox
 {
-    // -- Constructors
+    BoundingBox(double _north, double _west, double _south, double _east) :
+        north(_north), west(_west), south(_south), east(_east) {}
 
-    Rotation(double south_pole_lat, double south_pole_lon, double south_pole_angle);
-
-    explicit Rotation(const ::eckit::geo::projection::Rotation&);
-
-    // -- Methods
+    explicit BoundingBox(const ::eckit::geo::area::BoundingBox&);
 
     void fillGrib(grib_info&) const;
 
-private:
-    // -- Members
-
-    const double south_pole_lat_;
-    const double south_pole_lon_;
-    const double south_pole_angle_;
+    const double north;
+    const double west;
+    const double south;
+    const double east;
 };
 
 
