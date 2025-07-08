@@ -215,20 +215,20 @@ int is_date_valid(long year, long month, long day, long hour, long minute, doubl
 }
 
 // Return 1 if input time is valid. Otherwise 0
-int is_time_valid(int hours, int minutes, int seconds)
+int is_time_valid(long hours, long minutes, long seconds)
 {
-    // Check if hours are within the valid range (00-24)
-    if (hours < 0 || hours > 24) {
+    // Check if hours are within the valid range (0-24)
+    if (hours != 255 && (hours < 0 || hours > 24)) {
         return 0;
     }
 
-    // Check if minutes are within the valid range (00-59)
-    if (minutes < 0 || minutes > 59) {
+    // Check if minutes are within the valid range (0-59)
+    if (minutes != 255 && (minutes < 0 || minutes > 59)) {
         return 0;
     }
 
-    // Check if seconds are within the valid range (00-59)
-    if (seconds < 0 || seconds > 59) {
+    // Check if seconds are within the valid range (0-59)
+    if (seconds != 255 && (seconds < 0 || seconds > 59)) {
         return 0;
     }
 
