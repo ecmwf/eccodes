@@ -7,7 +7,8 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
-#undef NDEBUG // activate the asserts
+
+#include "grib_api_internal.h"
 
 #include <map>
 #include <stdexcept>
@@ -15,7 +16,6 @@
 #include <limits>
 #include <iostream>
 #include <algorithm>
-#include <cassert>
 #include <regex>
 
 #include "step_unit.h"
@@ -105,28 +105,28 @@ bool Step::operator==(const Step& other) const
 bool Step::operator>(const Step& step) const
 {
     auto [a, b] = find_common_units(this->copy().optimize_unit(), step.copy().optimize_unit());
-    assert(a.internal_unit_ == b.internal_unit_);
+    ECCODES_ASSERT(a.internal_unit_ == b.internal_unit_);
     return a.internal_value_ > b.internal_value_;
 }
 
 bool Step::operator<(const Step& step) const
 {
     auto [a, b] = find_common_units(this->copy().optimize_unit(), step.copy().optimize_unit());
-    assert(a.internal_unit_ == b.internal_unit_);
+    ECCODES_ASSERT(a.internal_unit_ == b.internal_unit_);
     return a.internal_value_ < b.internal_value_;
 }
 
 Step Step::operator+(const Step& step) const
 {
     auto [a, b] = find_common_units(this->copy().optimize_unit(), step.copy().optimize_unit());
-    assert(a.internal_unit_ == b.internal_unit_);
+    ECCODES_ASSERT(a.internal_unit_ == b.internal_unit_);
     return Step(a.internal_value_ + b.internal_value_, a.internal_unit_);
 }
 
 Step Step::operator-(const Step& step) const
 {
     auto [a, b] = find_common_units(this->copy().optimize_unit(), step.copy().optimize_unit());
-    assert(a.internal_unit_ == b.internal_unit_);
+    ECCODES_ASSERT(a.internal_unit_ == b.internal_unit_);
     return Step(a.internal_value_ - b.internal_value_, a.internal_unit_);
 }
 
@@ -159,13 +159,13 @@ std::pair<Step, Step> find_common_units(const Step& startStep, const Step& endSt
             return e == a.unit().value<Unit::Value>() || e == b.unit().value<Unit::Value>();
         });
 
-        assert(it != Unit::grib_selected_units.end());
+        ECCODES_ASSERT(it != Unit::grib_selected_units.end());
 
         a.set_unit(*it);
         b.set_unit(*it);
         a.recalculateValue();
         b.recalculateValue();
-        assert(a.internal_unit_ == b.internal_unit_);
+        ECCODES_ASSERT(a.internal_unit_ == b.internal_unit_);
     }
 
     return {a, b};
