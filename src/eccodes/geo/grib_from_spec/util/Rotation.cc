@@ -10,10 +10,12 @@
  */
 
 
-namespace mir::util {
+namespace eccodes::geo::util
+{
 
 
-void Rotation::fillGrib(grib_info& info) const {
+void Rotation_fillGrib(grib_info& info) const
+{
     // Warning: scanning mode not considered
 
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_ROTATED_LL;
