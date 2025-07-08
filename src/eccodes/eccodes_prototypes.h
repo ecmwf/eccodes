@@ -664,7 +664,8 @@ char* codes_getenv(const char* name);
 int codes_check_grib_ieee_packing_value(int value);
 int codes_flush_sync_close_file(FILE* f);
 int is_date_valid(long year, long month, long day, long hour, long minute, double second);
-int is_time_valid(long number); // number is HHMM
+int is_time_valid(int hours, int minutes, int seconds);
+int is_time_valid_HHMM(long number); // number is HHMM
 long convert_to_minutes(long step, long stepUnits);
 bool is_sorted_ascending(const double arr[], size_t n);
 bool is_sorted_descending(const double arr[], size_t n);
