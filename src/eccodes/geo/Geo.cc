@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 1996- ECMWF.
+ * (C) Copyright 2024- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -10,18 +10,30 @@
  */
 
 
+#include "eccodes/geo/Geo.h"
+
+#include <string>
+
+#include "eckit/exception/Exceptions.h"
+
+
 namespace eccodes::geo
 {
 
 
-void ORCA_fillGrib(grib_info& info) const
+bool codes_check_error(int e, const char* call)
 {
-    info.grid.grid_type        = GRIB_UTIL_GRID_SPEC_UNSTRUCTURED;
-    info.packing.editionNumber = 2;
+    if (e != CODES_SUCCESS) {
+        throw ::eckit::SeriousBug(std::string(call) + ": " + codes_get_error_message(e));
+    }
 
-    info.extra_set("unstructuredGridType", grid_->name().c_str());
-    info.extra_set("unstructuredGridSubtype", grid_->arrangement().c_str());
-    info.extra_set("uuidOfHGrid", grid_->uid().c_str());
+    return true;
+}
+
+
+void codes_assertion(const char* message)
+{
+    throw ::eckit::SeriousBug(message);
 }
 
 
