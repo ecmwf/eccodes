@@ -99,6 +99,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
             }
             if ((err = check_element_index(name_, keyName, index, size)) != GRIB_SUCCESS) return err;
             *lres = ar[index];
+            grib_context_free(h->context, ar);
             return GRIB_SUCCESS;
         }
         return GRIB_INVALID_ARGUMENT;
