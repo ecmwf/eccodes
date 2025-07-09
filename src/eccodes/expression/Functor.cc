@@ -33,6 +33,17 @@ static bool string_contains_case(const char* haystack, const char* needle, bool 
     return copy_haystack.find(copy_needle) != std::string::npos;
 }
 
+static int check_element_index(const char* func, const char* array_name, long index, size_t size)
+{
+    const grib_context* c = grib_context_get_default();
+    if (index < 0 || (size_t)index >= size) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Invalid element index %ld for array '%s'. Value must be between 0 and %zu",
+                         func, index, array_name, size - 1);
+        return GRIB_INVALID_ARGUMENT;
+    }
+    return GRIB_SUCCESS;
+}
+
 int Functor::evaluate_long(grib_handle* h, long* lres) const
 {
     // if (STR_EQUAL(name_, "lookup")) {
@@ -63,6 +74,31 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
             int err = grib_get_size(h, keyName, &size);
             if (err) return err;
             *lres = (long)size;
+            return GRIB_SUCCESS;
+        }
+        return GRIB_INVALID_ARGUMENT;
+    }
+
+    if (STR_EQUAL(name_, "element")) {
+        const int n = args_ ? args_->get_count() : 0;
+        if (n != 2) {
+            return GRIB_INVALID_ARGUMENT;
+        }
+        const char* keyName = args_->get_name(h, 0);
+        if (keyName) {
+            long index = args_->get_long(h, 1);
+            size_t size = 0;
+            int err = grib_get_size(h, keyName, &size);
+            if (err) return err;
+            long* ar = (long*)grib_context_malloc_clear(h->context, size * sizeof(long));
+            if (!ar) return GRIB_OUT_OF_MEMORY;
+            if ((err = grib_get_long_array_internal(h, keyName, ar, &size)) != GRIB_SUCCESS) return err;
+            // An index of -x means the xth item from the end of the list, so ar[-1] means the last item in ar
+            if (index < 0) {
+                index = (long)size + index;
+            }
+            if ((err = check_element_index(name_, keyName, index, size)) != GRIB_SUCCESS) return err;
+            *lres = ar[index];
             return GRIB_SUCCESS;
         }
         return GRIB_INVALID_ARGUMENT;

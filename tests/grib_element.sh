@@ -20,6 +20,9 @@ input=$ECCODES_SAMPLES_PATH/reduced_gg_pl_48_grib2.tmpl
 
 # Print the last three entries from the "pl" array
 cat > $tempFilt <<EOF
+    if( element(pl,0) != 20 ) {
+        assert( 0 );
+    }
     meta elemA element(pl, Nj - 3);
     meta elemB element(pl, Nj - 2);
     meta elemC element(pl, Nj - 1);
