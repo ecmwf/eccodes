@@ -117,8 +117,8 @@
 1254 olda Ocean Long window data assimilation
 1255 gfra Global fire assimilation system reanalysis
 1256 rfsd Retrospective forcing and simulation data
-1257 tstd Temporal statistics of deterministic data
-1258 tste Temporal statistics of ensemble data
+1257 sttd Statistics of deterministic data
+1258 stte Statistics of ensemble data
 2231 cnrm Meteo France climate centre
 2232 mpic Max Plank Institute
 2233 ukmo UKMO climate centre

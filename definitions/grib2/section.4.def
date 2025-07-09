@@ -147,7 +147,7 @@ else {
 if (MTG2Switch > 0 ) {
    concept paramtype(unknown, "paramtypeConcept.def", conceptsDir2, conceptsDir1): hidden, read_only;
 
-   if (defined(stream) && (stream is "tstd" || stream is "tste")){
+   if (defined(stream) && (stream is "sttd" || stream is "stte")){
     meta lengthOfTimeRange0 element(lengthOfTimeRange,0);
     meta typeOfStatisticalProcessing0 element(typeOfStatisticalProcessing, 0);
     meta indicatorOfUnitForTimeRange0 element(indicatorOfUnitForTimeRange,0);

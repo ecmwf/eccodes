@@ -1,6 +1,4 @@
-#meta lengthOfTimeRange0 element(lengthOfTimeRange,0);
-#meta typeOfStatisticalProcessing0 element(typeOfStatisticalProcessing, 0);
-#meta indicatorOfUnitForTimeRange0 element(indicatorOfUnitForTimeRange,0);
+# stattype concept, meta keys are created in section.4.def
 
 'moav' = {lengthOfTimeRange0 = 672 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 0 ; }
 'moav' = {lengthOfTimeRange0 = 696 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 0 ; }
