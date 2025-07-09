@@ -18,7 +18,6 @@
 #include <algorithm>
 #include <regex>
 
-#include "step_unit.h"
 #include "step.h"
 
 namespace eccodes {
