@@ -1190,6 +1190,7 @@ void codes_context_set_print_proc(codes_context* c, codes_print_proc p_print);
  * @param p_log   : the logging procedure to be set @see codes_log_proc
  */
 void codes_context_set_logging_proc(codes_context* c, codes_log_proc p_log);
+void codes_context_set_logging_file(codes_context* c, FILE*);
 
 /**
  *  Turn on support for multi-fields in single GRIB messages

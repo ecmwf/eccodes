@@ -262,6 +262,7 @@ int grib_context_seek(const grib_context* c, off_t offset, int whence, void* str
 void grib_context_set_print_proc(grib_context* c, grib_print_proc p);
 void grib_context_set_debug(grib_context* c, int mode);
 void grib_context_set_logging_proc(grib_context* c, grib_log_proc p);
+void grib_context_set_logging_file(grib_context* c, FILE*);
 long grib_get_api_version(void);
 void grib_print_api_version(FILE* out);
 const char* grib_get_package_name(void);

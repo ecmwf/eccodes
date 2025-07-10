@@ -600,3 +600,7 @@ void codes_context_set_logging_proc(codes_context* c, grib_log_proc p_log)
 {
     grib_context_set_logging_proc(c, p_log);
 }
+void codes_context_set_logging_file(codes_context* c, FILE* f)
+{
+    grib_context_set_logging_file(c, f);
+}

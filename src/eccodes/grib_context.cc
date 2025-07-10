@@ -265,6 +265,12 @@ void grib_context_set_logging_proc(grib_context* c, grib_log_proc p)
     c->output_log = (p ? p : &default_log);
 }
 
+void grib_context_set_logging_file(grib_context* c, FILE* f)
+{
+    c = c ? c : grib_context_get_default();
+    c->log_stream = (f ? f : stderr);
+}
+
 long grib_get_api_version()
 {
     return ECCODES_VERSION;
