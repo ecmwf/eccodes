@@ -12,243 +12,30 @@
 
 #include "eccodes/geo/GribFromSpec.h"
 
-#include <utility>
 #include <cstring>
+#include <functional>
+#include <map>
 #include <memory>
-#include <vector>
-#include <string>
+#include <utility>
 #include <vector>
 
-#include "eckit/geo/Spec.h"
+#include "eckit/geo/Exceptions.h"
 #include "eckit/geo/Grid.h"
-#include "eckit/geo/grid/Regular.h"
-#include "eckit/geo/area/BoundingBox.h"
 #include "eckit/geo/Projection.h"
-#include "eckit/exception/Exceptions.h"
-#include "eckit/geo/util/mutex.h"
+#include "eckit/geo/Spec.h"
 #include "eckit/geo/area/BoundingBox.h"
+#include "eckit/geo/grid/Regular.h"
+#include "eckit/geo/grid/RegularGaussian.h"
+#include "eckit/geo/util/mutex.h"
 
-#include "eccodes/geo/BoundingBox.h"
 #include "eccodes/geo/BasicAngle.h"
+#include "eccodes/geo/BoundingBox.h"
 #include "eccodes/geo/Rotation.h"
+#include "eccodes/geo/Shape.h"
 
 
 namespace eccodes::geo
 {
-
-
-struct Representation
-{
-    explicit Representation(const Spec&) {}
-
-    virtual void fill(grib_info&) const = 0;
-};
-
-
-struct SphericalHarmonics : Representation
-{
-    explicit SphericalHarmonics(const Spec& spec) :
-        Representation(spec), spec_(spec) {}
-
-private:
-    const Spec& spec_;
-};
-
-
-struct Gridded : Representation
-{
-    enum ProjectionType
-    {
-        UNROTATED = 0,
-        ROTATED,
-        LAMBERT_AZIMUTHAL_EQUAL_AREA,
-        LAMBERT_CONFORMAL_CONIC,
-        POLAR_STEREOGRAPHIC,
-        MERCATOR,
-        TRANSVERSE_MERCATOR,
-    };
-
-    enum LatitudeType
-    {
-        LAT_REGULAR = 0,
-        LAT_GAUSSIAN,
-        LAT_UNSTRUCTURED,
-    };
-
-    enum LongitudeType
-    {
-        LON_REGULAR = 0,
-        LON_REDUCED,
-        LON_UNSTRUCTURED,
-    };
-
-    explicit Gridded(const Spec& spec) :
-        Representation(spec),
-        grid_(::eckit::geo::GridFactory::build(spec)),
-        projection_(grid_->projection())
-    {
-        /*
-         * TODO:
-         * - none => longlat
-         * - rotation => ob_tran
-         * - polar-stereographic => stere
-         * - merc => mercator
-         * - tmerc => transverse_mercator
-         */
-        const auto p    = projection().type();
-        projectionType_ = p == "none" ? ProjectionType::UNROTATED : p == "rotation"          ? ProjectionType::ROTATED
-                                                                : p == "laea"                ? ProjectionType::LAMBERT_AZIMUTHAL_EQUAL_AREA
-                                                                : p == "lcc"                 ? ProjectionType::LAMBERT_CONFORMAL_CONIC
-                                                                : p == "polar-stereographic" ? ProjectionType::POLAR_STEREOGRAPHIC
-                                                                : p == "merc"                ? ProjectionType::MERCATOR
-                                                                : p == "tmerc"               ? ProjectionType::TRANSVERSE_MERCATOR
-                                                                                             : throw ::eckit::SeriousBug("GribFromSpec: unknown projection type: " + p);
-
-        const auto g = grid().type();
-        if (g == "regular-ll") {
-            latitudeType_  = LAT_REGULAR;
-            longitudeType_ = LON_REGULAR;
-        }
-        else if (g == "reduced-ll") {
-            latitudeType_  = LAT_REGULAR;
-            longitudeType_ = LON_REDUCED;
-        }
-        else if (g == "regular-gg") {
-            latitudeType_  = LAT_GAUSSIAN;
-            longitudeType_ = LON_REGULAR;
-        }
-        else if (g == "reduced-gg") {
-            latitudeType_  = LAT_GAUSSIAN;
-            longitudeType_ = LON_REGULAR;
-        }
-        else if (g == "healpix") {
-            latitudeType_  = LAT_REGULAR;
-            longitudeType_ = LON_REDUCED;
-        }
-        else if (g == "unstructured" || g == "fesom" || g == "icon" || g == "orca") {
-            latitudeType_  = LAT_UNSTRUCTURED;
-            longitudeType_ = LON_UNSTRUCTURED;
-        }
-        else {
-            throw ::eckit::SeriousBug("GribFromSpec: unknown projection type: " + g);
-        }
-    };
-
-    const Grid&
-    grid() const
-    {
-        return *grid_;
-    }
-
-    const Projection& projection() const
-    {
-        return projection_;
-    }
-
-    ProjectionType projectionType() const
-    {
-        return projectionType_;
-    }
-
-    LatitudeType latitudeType() const
-    {
-        return latitudeType_;
-    }
-
-    LongitudeType longitudeType() const
-    {
-        return longitudeType_;
-    }
-
-protected:
-    const Grid* grid_ptr() const
-    {
-        return grid_.get();
-    }
-
-private:
-    std::unique_ptr<const Grid> grid_;
-
-    const Projection& projection_;
-
-    ProjectionType projectionType_ = ProjectionType::UNROTATED;
-    LatitudeType latitudeType_     = LatitudeType::LAT_REGULAR;
-    LongitudeType longitudeType_   = LongitudeType::LON_REGULAR;
-};
-
-
-struct Regular : Gridded
-{
-    explicit Regular(const Spec& spec) :
-        Gridded(spec), regular_grid_(dynamic_cast<const ::eckit::geo::grid::Regular*>(grid_ptr()))
-    {
-        ASSERT(regular_grid_);
-
-        ASSERT(latitudeType() == LatitudeType::LAT_REGULAR);
-        ASSERT(longitudeType() == LongitudeType::LON_REGULAR);
-    }
-
-    void fill(grib_info& info) const override
-    {
-        info.grid.iDirectionIncrementInDegrees = regular_grid_->dx();  // west-east
-        info.grid.jDirectionIncrementInDegrees = regular_grid_->dy();  // south-north
-
-        info.grid.Ni = static_cast<long>(regular_grid_->nx());
-        info.grid.Nj = static_cast<long>(regular_grid_->ny());
-
-        BoundingBox bbox(dynamic_cast<const ::eckit::geo::area::BoundingBox&>(grid().area()));
-        bbox.fillGrib(info);
-
-        // See copy_spec_from_ksec.c in libemos for info
-        if (projectionType() == ProjectionType::UNROTATED) {
-            info.grid.grid_type = CODES_UTIL_GRID_SPEC_REGULAR_LL;
-        }
-        else if (projectionType() == ProjectionType::ROTATED) {
-            info.grid.grid_type = CODES_UTIL_GRID_SPEC_ROTATED_LL;
-
-            Rotation rotation(dynamic_cast<const ::eckit::geo::projection::Rotation&>(projection()));
-            rotation.fillGrib(info);
-        }
-
-        NOTIMP;
-    }
-
-private:
-    std::unique_ptr<const ::eckit::geo::grid::Regular> regular_grid_;
-};
-
-
-struct Reduced : Gridded
-{
-    explicit Reduced(const Spec& spec) :
-        Gridded(spec)
-    {
-        ASSERT(longitudeType() == LongitudeType::LON_REDUCED);
-        ASSERT(projectionType() == Gridded::ProjectionType::ROTATED || projectionType() == Gridded::ProjectionType::UNROTATED);
-    }
-
-    void fill(grib_info&) const override
-    {
-        NOTIMP;
-    }
-};
-
-
-struct Unstructured : Gridded
-{
-    explicit Unstructured(const Spec& spec) :
-        Gridded(spec)
-    {
-        ASSERT(latitudeType() == LatitudeType::LAT_UNSTRUCTURED);
-        ASSERT(longitudeType() == LongitudeType::LON_UNSTRUCTURED);
-        ASSERT(projectionType() == Gridded::ProjectionType::UNROTATED);
-    }
-
-    void fill(grib_info&) const override
-    {
-        NOTIMP;
-    }
-};
 
 
 void Reduced_fillGrib(grib_info& info)
@@ -299,33 +86,6 @@ void RotatedFromPL_fillGrib(grib_info& info)
     FromPL_fillGrib(info);
     rotation_.fillGrib(info);
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_REDUCED_ROTATED_GG;
-#endif
-}
-
-
-void Regular_fillGrib(grib_info& info)
-{
-#if 0
-    // See copy_spec_from_ksec.c in libemos for info
-
-    info.grid.grid_type = CODES_UTIL_GRID_SPEC_REGULAR_GG;
-
-    info.grid.N                            = long(N_);
-    info.grid.iDirectionIncrementInDegrees = getSmallestIncrement();
-    info.grid.Ni                           = long(Ni_);
-    info.grid.Nj                           = long(Nj_);
-
-    bbox_.fillGrib(info);
-#endif
-}
-
-
-void RotatedGG_fillGrib(grib_info& info)
-{
-#if 0
-    Regular_fillGrib(info);
-    rotation_.fillGrib(info);
-    info.grid.grid_type = CODES_UTIL_GRID_SPEC_ROTATED_GG;
 #endif
 }
 
@@ -385,32 +145,6 @@ void Lambert_fillGrib(grib_info& info)
     if (writeLaDInDegrees_) {
         info.extra_set("LaDInDegrees", reference[LLCOORDS::LAT]);
     }
-
-    // some extra keys are edition-specific, so parent call is here
-    RegularGrid_fillGrib(info);
-#endif
-}
-
-
-void LambertAzimuthalEqualArea_fillGrib(grib_info& info)
-{
-#if 0
-    info.grid.grid_type        = CODES_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA;
-    info.packing.editionNumber = 2;
-
-    Point2 reference = grid().projection().lonlat({ 0., 0. });
-    Point2 firstLL   = grid().projection().lonlat({ x().front(), y().front() });
-
-    info.grid.Ni = static_cast<long>(x().size());
-    info.grid.Nj = static_cast<long>(y().size());
-
-    info.grid.latitudeOfFirstGridPointInDegrees  = firstLL[LLCOORDS::LAT];
-    info.grid.longitudeOfFirstGridPointInDegrees = firstLL[LLCOORDS::LON];
-
-    info.extra_set("DxInMetres", std::abs(x().step()));
-    info.extra_set("DyInMetres", std::abs(y().step()));
-    info.extra_set("standardParallelInDegrees", reference[LLCOORDS::LAT]);
-    info.extra_set("centralLongitudeInDegrees", reference[LLCOORDS::LON]);
 
     // some extra keys are edition-specific, so parent call is here
     RegularGrid_fillGrib(info);
@@ -527,32 +261,240 @@ class lock_type
 };
 
 
-}  // namespace
-
-
-GribFromSpec::GribFromSpec(BasicAngleFormat basicAngleFormat) :
-    basicAngleFormat_(basicAngleFormat)
+int grid_type_regular_ll(grib_info& info, const Grid& grid)
 {
+    info.grid.grid_type = CODES_UTIL_GRID_SPEC_REGULAR_LL;
+
+    const auto& r =
+        dynamic_cast<const ::eckit::geo::grid::Regular&>(grid);
+
+    info.grid.iDirectionIncrementInDegrees = r.dx();  // west-east
+    info.grid.jDirectionIncrementInDegrees = r.dy();  // south-north
+
+    info.grid.Ni = static_cast<long>(r.nx());
+    info.grid.Nj = static_cast<long>(r.ny());
+
+    BoundingBox bbox(dynamic_cast<const ::eckit::geo::area::BoundingBox&>(grid.area()));
+    bbox.fillGrib(info);
+
+    return CODES_SUCCESS;
 }
 
 
-int GribFromSpec::set(codes_handle* h, const Spec&, const std::map<std::string, long>& extra)
+int grid_type_rotated_ll(grib_info& info, const Grid& grid)
+{
+    info.grid.grid_type = CODES_UTIL_GRID_SPEC_ROTATED_LL;
+
+    const auto& r =
+        dynamic_cast<const ::eckit::geo::grid::Regular&>(grid);
+
+    info.grid.iDirectionIncrementInDegrees = r.dx();  // west-east
+    info.grid.jDirectionIncrementInDegrees = r.dy();  // south-north
+
+    info.grid.Ni = static_cast<long>(r.nx());
+    info.grid.Nj = static_cast<long>(r.ny());
+
+    BoundingBox bbox(dynamic_cast<const ::eckit::geo::area::BoundingBox&>(grid.area()));
+    bbox.fillGrib(info);
+
+    Rotation rotation(dynamic_cast<const ::eckit::geo::projection::Rotation&>(grid.projection()));
+    rotation.fillGrib(info);
+
+    return CODES_SUCCESS;
+}
+
+
+int grid_type_lambert_azimuthal_equal_area(grib_info& info, const Grid& grid)
+{
+    info.grid.grid_type = CODES_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA;
+
+    using ::eckit::geo::PointLonLat;
+    using ::eckit::geo::PointXY;
+
+    const auto& r =
+        dynamic_cast<const ::eckit::geo::grid::Regular&>(grid);
+
+    info.packing.editionNumber = 2;
+
+    auto reference = std::get<PointLonLat>(grid.projection().fwd(PointXY{ 0., 0. }));
+    auto firstLL   = std::get<PointLonLat>(grid.projection().fwd({ x().front(), y().front() }));
+
+    info.grid.Ni = static_cast<long>(r.nx());
+    info.grid.Nj = static_cast<long>(r.ny());
+
+    info.grid.latitudeOfFirstGridPointInDegrees  = firstLL.lat;
+    info.grid.longitudeOfFirstGridPointInDegrees = firstLL.lon;
+
+    info.extra_set("DxInMetres", r.dx());
+    info.extra_set("DyInMetres", r.dy());
+    info.extra_set("standardParallelInDegrees", reference.lat);
+    info.extra_set("centralLongitudeInDegrees", reference.lon);
+
+    // some extra keys are edition-specific, so parent call is here
+    RegularGrid_fillGrib(info);
+
+    return CODES_SUCCESS;
+}
+
+
+int grid_type_grid_type_lambert(grib_info& info, const Grid& grid)
+{
+    info.grid.grid_type = CODES_UTIL_GRID_SPEC_LAMBERT_CONFORMAL;
+
+    NOTIMP;
+
+    return CODES_SUCCESS;
+}
+
+
+int grid_type_polar_stereographic(grib_info& info, const Grid& grid)
+{
+    info.grid.grid_type = CODES_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC;
+
+    NOTIMP;
+
+    return CODES_SUCCESS;
+}
+
+
+int grid_type_regular_gg(grib_info& info, const Grid& grid)
+{
+    info.grid.grid_type = CODES_UTIL_GRID_SPEC_REGULAR_GG;
+
+    const auto& r =
+        dynamic_cast<const ::eckit::geo::grid::RegularGaussian&>(grid);
+
+    info.grid.N                            = static_cast<long>(r.N());
+    info.grid.iDirectionIncrementInDegrees = 90. / r.N();
+
+    info.grid.Ni = static_cast<long>(r.nx());
+    info.grid.Nj = static_cast<long>(r.ny());
+
+    BoundingBox bbox(dynamic_cast<const ::eckit::geo::area::BoundingBox&>(grid.area()));
+    bbox.fillGrib(info);
+
+    return CODES_SUCCESS;
+}
+
+
+int grid_type_rotated_gg(grib_info& info, const Grid& grid)
+{
+    info.grid.grid_type = CODES_UTIL_GRID_SPEC_ROTATED_GG;
+
+    const auto& r =
+        dynamic_cast<const ::eckit::geo::grid::RegularGaussian&>(grid);
+
+    info.grid.N                            = static_cast<long>(r.N());
+    info.grid.iDirectionIncrementInDegrees = 90. / r.N();
+
+    info.grid.Ni = static_cast<long>(r.nx());
+    info.grid.Nj = static_cast<long>(r.ny());
+
+    BoundingBox bbox(dynamic_cast<const ::eckit::geo::area::BoundingBox&>(grid.area()));
+    bbox.fillGrib(info);
+
+    Rotation rotation(dynamic_cast<const ::eckit::geo::projection::Rotation&>(grid.projection()));
+    rotation.fillGrib(info);
+
+    return CODES_SUCCESS;
+}
+
+
+}  // namespace
+
+
+int GribFromSpec::set(codes_handle* h, const Spec& spec, const std::map<std::string, long>& extra)
 {
     // Protect ecCodes and set error callback handling (throws)
     lock_type lock;
     codes_set_codes_assertion_failed_proc(&codes_assertion);
 
+
+    // Check grid properties
+    //
+    // TODO:
+    // - none => longlat
+    // - rotation => ob_tran
+    // - polar-stereographic => stere
+    std::unique_ptr<const Grid> grid(::eckit::geo::GridFactory::build(spec));
+    ASSERT(grid);
+
+    struct key_type
+    {
+        ProjectionType proj;
+        LatitudeType lat;
+        LongitudeType lon;
+    } key;
+
+    if (const auto p = grid->projection().type(); p == "none") {
+        key.proj = ProjectionType::UNROTATED;
+    }
+    else if (p == "rotation") {
+        key.proj = ProjectionType::ROTATED;
+    }
+    else if (p == "laea") {
+        key.proj = ProjectionType::LAMBERT_AZIMUTHAL_EQUAL_AREA;
+    }
+    else if (p == "lcc") {
+        key.proj = ProjectionType::LAMBERT_CONFORMAL_CONIC;
+    }
+    else if (p == "polar-stereographic") {
+        key.proj = ProjectionType::POLAR_STEREOGRAPHIC;
+    }
+    else {
+        throw ::eckit::SeriousBug("GribFromSpec: unknown projection type: " + p);
+    }
+
+    if (const auto g = grid->type(); g == "regular-ll") {
+        key.lat = LatitudeType::LAT_REGULAR;
+        key.lon = LongitudeType::LON_REGULAR;
+    }
+    else if (g == "reduced-ll") {
+        key.lat = LatitudeType::LAT_REGULAR;
+        key.lon = LongitudeType::LON_REDUCED;
+    }
+    else if (g == "regular-gg") {
+        key.lat = LatitudeType::LAT_GAUSSIAN;
+        key.lon = LongitudeType::LON_REGULAR;
+    }
+    else if (g == "reduced-gg") {
+        key.lat = LatitudeType::LAT_GAUSSIAN;
+        key.lon = LongitudeType::LON_REGULAR;
+    }
+    else if (g == "healpix") {
+        key.lat = LatitudeType::LAT_REGULAR;
+        key.lon = LongitudeType::LON_REDUCED;
+    }
+    else if (g == "unstructured" || g == "fesom" || g == "icon" || g == "orca") {
+        key.lat = LatitudeType::LAT_UNSTRUCTURED;
+        key.lon = LongitudeType::LON_UNSTRUCTURED;
+    }
+    else {
+        throw ::eckit::SeriousBug("GribFromSpec: unknown projection type: " + g);
+    }
+
+
     grib_info info;
 
-    // Ask representation to update info
-#if 0
-    repres::RepresentationHandle repres(field.representation());
-    repres->fillGrib(info);
-#endif
+    // Map from Spec properties to grib_info method
+    static const std::map<key_type, std::function<int(grib_info&, const Grid&)>> GRIB_INFO_METHODS{
+        { { UNROTATED, LAT_REGULAR, LON_REGULAR }, grid_type_regular_ll },
+        { { ROTATED, LAT_REGULAR, LON_REGULAR }, grid_type_rotated_ll },
+
+        { { LAMBERT_AZIMUTHAL_EQUAL_AREA }, grid_type_lambert_azimuthal_equal_area },
+        { { LAMBERT_CONFORMAL_CONIC }, grid_type_grid_type_lambert },
+        { { POLAR_STEREOGRAPHIC }, grid_type_polar_stereographic },
+
+        { { UNROTATED, LAT_GAUSSIAN, LON_REGULAR }, grid_type_regular_gg },
+        { { ROTATED, LAT_GAUSSIAN, LON_REGULAR }, grid_type_rotated_gg },
+    };
+
+    CHECK_CALL(GRIB_INFO_METHODS.at(key)(info, *grid));
+
 
     // Basic angle (after representation), support only for gridType=regular_ll
 
-    if (basicAngleFormat_ == BasicAngleFormat::AS_INPUT) {
+    if (basicAngleFormat_ == BasicAngleType::AS_INPUT) {
         std::vector<long> fraction(2);
         CHECK_CALL(codes_get_long(h, "basicAngleOfTheInitialProductionDomain", fraction.data()));
         CHECK_CALL(codes_get_long(h, "subdivisionsOfBasicAngle", &fraction[1]));
@@ -560,18 +502,18 @@ int GribFromSpec::set(codes_handle* h, const Spec&, const std::map<std::string, 
         BasicAngle basic(fraction[0], fraction[1]);
         basic.fillGrib(info);
     }
-    else if (basicAngleFormat_ == BasicAngleFormat::FRACTION) {
+    else if (basicAngleFormat_ == BasicAngleType::FRACTION) {
         BasicAngle basic(info);
         basic.fillGrib(info);
     }
     else {
         // codes_grib_util_set_spec does not need anything here (GRIB standard)
-        ASSERT(basicAngleFormat_ == BasicAngleFormat::DECIMAL);
+        ASSERT(basicAngleFormat_ == BasicAngleType::DECIMAL);
     }
 
     // Extra settings (paramId comes from here)
-    for (const auto& k : extra) {
-        info.extra_set(k.first.c_str(), k.second);
+    for (const auto& [key, value] : extra) {
+        info.extra_set(key.c_str(), value);
     }
 
 

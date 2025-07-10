@@ -15,9 +15,9 @@
 #include <limits>
 #include <ostream>
 
+#include "eckit/geo/Exceptions.h"
 #include "eckit/geo/PointLonLat.h"
 #include "eckit/types/Fraction.h"
-#include "eckit/exception/Exceptions.h"
 
 
 namespace eccodes::geo

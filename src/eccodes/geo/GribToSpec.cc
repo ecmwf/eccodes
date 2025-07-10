@@ -22,7 +22,7 @@
 #include <vector>
 
 #include "eckit/config/Resource.h"
-#include "eckit/exception/Exceptions.h"
+#include "eckit/geo/Exceptions.h"
 #include "eckit/geo/PointLonLat.h"
 #include "eckit/geo/util/mutex.h"
 #include "eckit/log/JSON.h"

@@ -14,7 +14,7 @@
 
 #include <string>
 
-#include "eckit/exception/Exceptions.h"
+#include "eckit/geo/Exceptions.h"
 
 
 namespace eccodes::geo
