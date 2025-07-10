@@ -220,8 +220,9 @@ static void default_log(const grib_context* c, int level, const char* mess)
         ECCODES_ASSERT(0);
     }
 
-    if (getenv("ECCODES_FAIL_IF_LOG_MESSAGE")) {
-        long n = atol(getenv("ECCODES_FAIL_IF_LOG_MESSAGE"));
+    const char* fail_if_log = getenv("ECCODES_FAIL_IF_LOG_MESSAGE");
+    if (fail_if_log) {
+        const long n = atol(fail_if_log);
         if (n >= 1 && level == GRIB_LOG_ERROR)
             ECCODES_ASSERT(0);
         if (n >= 2 && level == GRIB_LOG_WARNING)
