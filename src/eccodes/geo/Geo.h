@@ -20,6 +20,7 @@
 
 namespace eckit::geo
 {
+class Figure;
 class Grid;
 class Iterator;
 class Projection;
