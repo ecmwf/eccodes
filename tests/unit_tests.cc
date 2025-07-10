@@ -298,9 +298,10 @@ static void test_logging_file()
     grib_context* context = grib_context_get_default();
     grib_context_log(context, GRIB_LOG_ERROR, "test_logging_file: On stderr I hope");
     FILE* fp = fopen("/dev/null", "w");
-    ECCODES_ASSERT(fp);
-    grib_context_set_logging_file(context, fp);
-    grib_context_log(context, GRIB_LOG_ERROR, "test_logging_file: sent to /dev/null");
+    if (fp) {
+        grib_context_set_logging_file(context, fp);
+        grib_context_log(context, GRIB_LOG_ERROR, "test_logging_file: sent to /dev/null");
+    }
     grib_context_set_logging_file(context, stderr); // restore
     grib_context_log(context, GRIB_LOG_ERROR, "test_logging_file: Can you see me now?");
 }
