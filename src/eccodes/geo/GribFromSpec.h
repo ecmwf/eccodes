@@ -50,7 +50,7 @@ public:
 
     enum BasicAngleType
     {
-        DECIMAL,
+        DECIMAL = 0,
         AS_INPUT,
         FRACTION
     };
