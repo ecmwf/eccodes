@@ -42,8 +42,6 @@ sub create_cfName {
     param.id=cf.grib1_ecmwf and
     grib_encoding.is_legacy=0 and
     (grib_encoding.centre_id=0 or grib_encoding.centre_id=98) and
-#    grib_encoding.is_mtg2_switch_0 = 0 and
-#    grib_encoding.is_mtg2_switch_1 = 0 and
     grib_encoding.is_mtg2_switch_2 = 1 order by
     edition,centre_id,param.o,param.id,grib_encoding.param_version,attribute.o;
 EOF
@@ -121,8 +119,6 @@ sub create_cfName_legacy {
     centre.id=grib_encoding.centre_id and
     units.id=param.units_id and
     param.id=cf.grib1_ecmwf and
-#    grib_encoding.is_mtg2_switch_0 = 0 and
-#    grib_encoding.is_mtg2_switch_1 = 0 and
     grib_encoding.is_mtg2_switch_2 = 1 and
     (grib_encoding.centre_id=0 or grib_encoding.centre_id=98) and
     grib_encoding.is_legacy=1 order by
@@ -208,8 +204,6 @@ sub create_def {
         units.id=param.units_id and
         grib_encoding.is_legacy=0 and
         (grib_encoding.centre_id=0 or grib_encoding.centre_id=98) and
-#        grib_encoding.is_mtg2_switch_0 = 0 and
-#        grib_encoding.is_mtg2_switch_1 = 0 and
         grib_encoding.is_mtg2_switch_2 = 1
         order by edition,centre_id,param.o,param.id,grib_encoding.param_version,attribute.o;
 EOF
@@ -298,8 +292,6 @@ sub create_def_legacy {
         units.id=param.units_id and
         grib_encoding.is_legacy=1 and
         (grib_encoding.centre_id=0 or grib_encoding.centre_id=98) and
-#        grib_encoding.is_mtg2_switch_0 = 0 and
-#        grib_encoding.is_mtg2_switch_1 = 0 and
         grib_encoding.is_mtg2_switch_2 = 1
         order by edition,centre_id,param.o,param.id,grib_encoding.param_version,attribute.o;
 EOF
@@ -386,8 +378,6 @@ sub create_cfVarName {
         attribute.id=grib.attribute_id and
         centre.id=grib_encoding.centre_id and
         units.id=param.units_id and
-#        grib_encoding.is_mtg2_switch_0 = 0 and
-#        grib_encoding.is_mtg2_switch_1 = 0 and
         grib_encoding.is_mtg2_switch_2 = 1 and
         (grib_encoding.centre_id=0 or grib_encoding.centre_id=98)
         and cfVarName IS NOT NULL
@@ -470,8 +460,6 @@ sub create_paramId_def {
     centre.id=grib_encoding.centre_id and
     grib_encoding.is_legacy=0 and
     (grib_encoding.centre_id=0 or grib_encoding.centre_id=98) and
-#    grib_encoding.is_mtg2_switch_0 = 0 and
-#    grib_encoding.is_mtg2_switch_1 = 0 and
     grib_encoding.is_mtg2_switch_2 = 1
     order by edition,centre_id,param.o,param.id,attribute.o";
     my $qh=$dbh->prepare($query);
@@ -553,7 +541,7 @@ create_def("name");
 ####create_def_legacy("name");
 create_def("units");
 ####create_def_legacy("units");
-####create_cfVarName("cfVarName");
-####create_cfName("cfName");
+create_cfVarName("cfVarName");
+create_cfName("cfName");
 ####create_cfName_legacy("cfName");
 
