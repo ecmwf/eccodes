@@ -1,53 +1,192 @@
-# stattype concept, meta keys are created in section.4.def
+# true = (element(key,n) == value);
+# with n=0,1,2,3,4,...
+# accessed the n+1 element, e.g., true = (element(key,0) == value);
+# the first array element of array key
 
-'moav' = {lengthOfTimeRange0 = 672 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 0 ; }
-'moav' = {lengthOfTimeRange0 = 696 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 0 ; }
-'moav' = {lengthOfTimeRange0 = 720 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 0 ; }
-'moav' = {lengthOfTimeRange0 = 744 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 0 ; }
-'moav' = {lengthOfTimeRange0 = 28 ; indicatorOfUnitForTimeRange0 = 2 ;typeOfStatisticalProcessing0 = 0 ; }
-'moav' = {lengthOfTimeRange0 = 29 ; indicatorOfUnitForTimeRange0 = 2 ;typeOfStatisticalProcessing0 = 0 ; }
-'moav' = {lengthOfTimeRange0 = 30 ; indicatorOfUnitForTimeRange0 = 2 ;typeOfStatisticalProcessing0 = 0 ; }
-'moav' = {lengthOfTimeRange0 = 31 ; indicatorOfUnitForTimeRange0 = 2 ;typeOfStatisticalProcessing0 = 0 ; }
-'moav' = {lengthOfTimeRange0 = 1 ; indicatorOfUnitForTimeRange0 = 3 ;typeOfStatisticalProcessing0 = 0 ; }
+#'moav' = {true = (element(lengthOfTimeRange,0) == 720);
+#          true = (element(indicatorOfUnitForTimeRange,0) == 1);
+#          true = (element(typeOfStatisticalProcessing,0) == 0);}
 
-'momx' = {lengthOfTimeRange0 = 672 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 2 ; }
-'momx' = {lengthOfTimeRange0 = 696 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 2 ; }
-'momx' = {lengthOfTimeRange0 = 720 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 2 ; }
-'momx' = {lengthOfTimeRange0 = 744 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 2 ; }
-'momx' = {lengthOfTimeRange0 = 28 ; indicatorOfUnitForTimeRange0 = 2 ;typeOfStatisticalProcessing0 = 2 ; }
-'momx' = {lengthOfTimeRange0 = 29 ; indicatorOfUnitForTimeRange0 = 2 ;typeOfStatisticalProcessing0 = 2 ; }
-'momx' = {lengthOfTimeRange0 = 30 ; indicatorOfUnitForTimeRange0 = 2 ;typeOfStatisticalProcessing0 = 2 ; }
-'momx' = {lengthOfTimeRange0 = 31 ; indicatorOfUnitForTimeRange0 = 2 ;typeOfStatisticalProcessing0 = 2 ; }
-'momx' = {lengthOfTimeRange0 = 1 ; indicatorOfUnitForTimeRange0 = 3 ;typeOfStatisticalProcessing0 = 2 ; }
+'moav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 672) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ; }
+'moav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 696) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ; }
+'moav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 720) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ; }
+'moav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 744) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ; }
+'moav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 28) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ; }
+'moav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 29) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ; }
+'moav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 30) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ; }
+'moav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 31) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ; }
+'moav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 1) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 3) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ; }
 
-'momn' = {lengthOfTimeRange0 = 672 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 3 ; }
-'momn' = {lengthOfTimeRange0 = 696 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 3 ; }
-'momn' = {lengthOfTimeRange0 = 720 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 3 ; }
-'momn' = {lengthOfTimeRange0 = 744 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 3 ; }
-'momn' = {lengthOfTimeRange0 = 28 ; indicatorOfUnitForTimeRange0 = 2 ;typeOfStatisticalProcessing0 = 3 ; }
-'momn' = {lengthOfTimeRange0 = 29 ; indicatorOfUnitForTimeRange0 = 2 ;typeOfStatisticalProcessing0 = 3 ; }
-'momn' = {lengthOfTimeRange0 = 30 ; indicatorOfUnitForTimeRange0 = 2 ;typeOfStatisticalProcessing0 = 3 ; }
-'momn' = {lengthOfTimeRange0 = 31 ; indicatorOfUnitForTimeRange0 = 2 ;typeOfStatisticalProcessing0 = 3 ; }
-'momn' = {lengthOfTimeRange0 = 1 ; indicatorOfUnitForTimeRange0 = 3 ;typeOfStatisticalProcessing0 = 3 ; }
+'momx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 672) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 2) ; }
+'momx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 696) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 2) ; }
+'momx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 720) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 2) ; }
+'momx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 744) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 2) ; }
+'momx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 28) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 2) ; }
+'momx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 29) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 2) ; }
+'momx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 30) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 2) ; }
+'momx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 31) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 2) ; }
+'momx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 1) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 3) ;
+          true = (element(typeOfStatisticalProcessing,0) == 2) ; }
 
-'mosd' = {lengthOfTimeRange0 = 672 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 6 ; }
-'mosd' = {lengthOfTimeRange0 = 696 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 6 ; }
-'mosd' = {lengthOfTimeRange0 = 720 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 6 ; }
-'mosd' = {lengthOfTimeRange0 = 744 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 6 ; }
-'mosd' = {lengthOfTimeRange0 = 28 ; indicatorOfUnitForTimeRange0 = 2 ;typeOfStatisticalProcessing0 = 6 ; }
-'mosd' = {lengthOfTimeRange0 = 29 ; indicatorOfUnitForTimeRange0 = 2 ;typeOfStatisticalProcessing0 = 6 ; }
-'mosd' = {lengthOfTimeRange0 = 30 ; indicatorOfUnitForTimeRange0 = 2 ;typeOfStatisticalProcessing0 = 6 ; }
-'mosd' = {lengthOfTimeRange0 = 31 ; indicatorOfUnitForTimeRange0 = 2 ;typeOfStatisticalProcessing0 = 6 ; }
-'mosd' = {lengthOfTimeRange0 = 1 ; indicatorOfUnitForTimeRange0 = 3 ;typeOfStatisticalProcessing0 = 6 ; }
+'momn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 672) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+'momn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 696) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+'momn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 720) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+'momn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 744) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+'momn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 28) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+'momn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 29) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+'momn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 30) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+'momn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 31) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+'momn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 1) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 3) ;
+          true = (element(typeOfStatisticalProcessing,0) == 3) ; }
 
-'daav' = {lengthOfTimeRange0 = 24 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 0 ; }
-'daav' = {lengthOfTimeRange0 = 1 ; indicatorOfUnitForTimeRange0 = 2 ;typeOfStatisticalProcessing0 = 0 ; }
+'mosd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 672) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+'mosd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 696) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+'mosd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 720) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+'mosd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 744) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+'mosd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 28) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+'mosd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 29) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+'mosd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 30) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+'mosd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 31) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+'mosd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 1) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 3) ;
+          true = (element(typeOfStatisticalProcessing,0) == 6) ; }
 
-'damx' = {lengthOfTimeRange0 = 24 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 2 ; }
-'damx' = {lengthOfTimeRange0 = 1 ; indicatorOfUnitForTimeRange0 = 2 ;typeOfStatisticalProcessing0 = 2 ; }
+'daav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ; }
+'daav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 1) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ; }
 
-'damn' = {lengthOfTimeRange0 = 24 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 3 ; }
-'damn' = {lengthOfTimeRange0 = 1 ; indicatorOfUnitForTimeRange0 = 2 ;typeOfStatisticalProcessing0 = 3 ; }
+'damx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 2) ; }
+'damx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 1) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 2) ; }
 
-'dasd' = {lengthOfTimeRange0 = 24 ; indicatorOfUnitForTimeRange0 = 1 ;typeOfStatisticalProcessing0 = 6 ; }
-'dasd' = {lengthOfTimeRange0 = 1 ; indicatorOfUnitForTimeRange0 = 2 ;typeOfStatisticalProcessing0 = 6 ; }
+'damn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+'damn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 1) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+
+'dasd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+'dasd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 1) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 6) ; }
