@@ -3672,13 +3672,13 @@ grib_yyreduce:
 
   case 229: /* atom: IDENT '(' ')'  */
 #line 826 "griby.y"
-                    { (grib_yyval.exp) = new_func_expression(grib_parser_context,(grib_yyvsp[-2].str),NULL); free((grib_yyvsp[-2].str));}
+                    { (grib_yyval.exp) = new_functor_expression(grib_parser_context,(grib_yyvsp[-2].str),NULL); free((grib_yyvsp[-2].str));}
 #line 3677 "y.tab.c"
     break;
 
   case 230: /* atom: IDENT '(' argument_list ')'  */
 #line 827 "griby.y"
-                                  { (grib_yyval.exp) = new_func_expression(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].explist)); free((grib_yyvsp[-3].str));}
+                                  { (grib_yyval.exp) = new_functor_expression(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].explist)); free((grib_yyvsp[-3].str));}
 #line 3683 "y.tab.c"
     break;
 

@@ -308,6 +308,6 @@ int Functor::native_type(grib_handle* h) const
 }  // namespace eccodes::expression
 
 
-grib_expression* new_func_expression(grib_context* c, const char* name, grib_arguments* args) {
+grib_expression* new_functor_expression(grib_context* c, const char* name, grib_arguments* args) {
     return new eccodes::expression::Functor(c, name, args);
 }

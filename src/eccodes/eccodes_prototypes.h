@@ -620,7 +620,7 @@ grib_expression* new_string_compare_expression(grib_context* c, grib_expression*
 grib_expression* new_unop_expression(grib_context* c, grib_unop_long_proc long_func, grib_unop_double_proc double_func, grib_expression* exp);
 
 /* grib_expression_class_functor.cc */
-grib_expression* new_func_expression(grib_context* c, const char* name, grib_arguments* args);
+grib_expression* new_functor_expression(grib_context* c, const char* name, grib_arguments* args);
 
 /* grib_expression_class_accessor.cc */
 grib_expression* new_accessor_expression(grib_context* c, const char* name, long start, size_t length);
