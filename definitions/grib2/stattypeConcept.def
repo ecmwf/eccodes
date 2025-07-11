@@ -1,187 +1,241 @@
 # true = (element(key,n) == value);
 # with n=0,1,2,3,4,...
-# accessed the n+1 element, e.g., true = (element(key,0) == value);
-# the first array element of array key
+# accesses the n+1 element, e.g., true = (element(key,0) == value);
+# gets the first array element of key
 
+# Separate blocks for daily and monthly stattypes
+# in case of 1 or 2 timeloops stattype gets a single entry, inner loop entry goes into timespan (None in case of instantaneous fields)
+# for more then 2 loops stattype have to be a string containing the temporal information of the n-1 first array entries
+
+#############################################
+## Monthly STATTYPES with 1 or 2 time loop ##
+#############################################
+# Mean - 672 hours
 'moav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 672) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 0) ; }
+# Mean - 696 hours
 'moav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 696) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 0) ; }
+# Mean - 720 hours
 'moav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 720) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 0) ; }
+# Mean - 744 hours
 'moav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 744) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 0) ; }
+# Mean - 28 days
 'moav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 28) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 0) ; }
+# Mean - 29 days
 'moav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 29) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 0) ; }
+# Mean - 30 days
 'moav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 30) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 0) ; }
+# Mean - 31 days
 'moav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 31) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 0) ; }
+# Mean - 1 month
 'moav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 1) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 3) ;
           true = (element(typeOfStatisticalProcessing,0) == 0) ; }
 
+# Max - 672 hours
 'momx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 672) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 2) ; }
+# Max - 696 hours
 'momx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 696) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 2) ; }
+# Max - 720 hours
 'momx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 720) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 2) ; }
+# Max - 744 hours
 'momx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 744) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 2) ; }
+# Max - 28 days
 'momx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 28) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 2) ; }
+# Max - 29 days
 'momx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 29) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 2) ; }
+# Max - 30 days
 'momx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 30) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 2) ; }
+# Max - 31 days
 'momx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 31) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 2) ; }
+# Max - 1 month
 'momx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 1) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 3) ;
           true = (element(typeOfStatisticalProcessing,0) == 2) ; }
 
+# Min - 672 hours
 'momn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 672) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+# Min - 696 hours
 'momn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 696) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+# Min - 720 hours
 'momn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 720) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+# Min - 744 hours
 'momn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 744) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+# Min - 28 days
 'momn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 28) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+# Min - 29 days
 'momn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 29) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+# Min - 30 days
 'momn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 30) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+# Min - 31 days
 'momn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 31) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+# Min - 1 month
 'momn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 1) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 3) ;
           true = (element(typeOfStatisticalProcessing,0) == 3) ; }
 
+# Stdev - 672 hours
 'mosd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 672) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+# Stdev - 696 hours
 'mosd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 696) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+# Stdev - 720 hours
 'mosd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 720) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+# Stdev - 744 hours
 'mosd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 744) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+# Stdev - 28 days
 'mosd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 28) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+# Stdev - 29 days
 'mosd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 29) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+# Stdev - 30 days
 'mosd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 30) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+# Stdev - 31 days
 'mosd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 31) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+# Stdev - 1 month
 'mosd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 1) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 3) ;
           true = (element(typeOfStatisticalProcessing,0) == 6) ; }
 
+############################################
+## Daily STATTYPES with 1 or 2 time loops ##
+############################################
+# Mean - 24 hours
 'daav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 24) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 0) ; }
+# Mean - 1 day
 'daav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 1) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 0) ; }
 
+# Max - 24 hours
 'damx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 24) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 2) ; }
+# Max - 1 day
 'damx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 1) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 2) ; }
 
+# Min - 24 hours
 'damn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 24) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+# Min - 1 day
 'damn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 1) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 3) ; }
 
+# Stdev - 24 hours
 'dasd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 24) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+# Stdev - 1 day
 'dasd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 1) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
