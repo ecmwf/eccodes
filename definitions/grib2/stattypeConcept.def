@@ -3,10 +3,6 @@
 # accessed the n+1 element, e.g., true = (element(key,0) == value);
 # the first array element of array key
 
-#'moav' = {true = (element(lengthOfTimeRange,0) == 720);
-#          true = (element(indicatorOfUnitForTimeRange,0) == 1);
-#          true = (element(typeOfStatisticalProcessing,0) == 0);}
-
 'moav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 672) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
