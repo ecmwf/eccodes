@@ -26,11 +26,11 @@ concept datasetForLocal(unknown) {
   "tigge"       = {productionStatusOfProcessedData=5;}
   "s2s"         = {productionStatusOfProcessedData=6;}
   "s2s"         = {productionStatusOfProcessedData=7;}
-  "cerise"      = {marsClass="ci";}
-  "era6"        = {marsClass="e6";} # for ERA6 parameters with constituentType
-  "hydro"       = {marsClass="ce";} # EFAS/GLOFAS
-  "hydro"       = {marsClass="ul";} # ULYSSES
-  "fire"        = {marsClass="gw";} # Global Wildfire awareness system
+  "cerise"      = {marsClass=50;}
+  "era6"        = {marsClass=40;} # for ERA6 parameters with constituentType
+  "hydro"       = {marsClass=35;} # EFAS/GLOFAS
+  "hydro"       = {marsClass=38;} # ULYSSES
+  "fire"        = {marsClass=39;} # Global Wildfire awareness system
   "uerra"       = {productionStatusOfProcessedData=8;} # UERRA
   "uerra"       = {productionStatusOfProcessedData=9;}
   "uerra"       = {productionStatusOfProcessedData=10;} # CARRA/CERRA
@@ -39,16 +39,16 @@ concept datasetForLocal(unknown) {
   "destine"     = {productionStatusOfProcessedData=13;}
   "destinegen1" = {productionStatusOfProcessedData=12;generation=1;} # DestinE ClimateDT Generation 1
   "destinegen1" = {productionStatusOfProcessedData=13;generation=1;}
-  "era"         = {marsClass="e2";}
-  "era"         = {marsClass="e4";}
-  "era"         = {marsClass="ea";}
-  "era"         = {marsClass="ei";}
-  "era"         = {marsClass="em";}
-  "era"         = {marsClass="ep";}
-  "era"         = {marsClass="er";}
-  "era"         = {marsClass="et";}
-  "era"         = {marsClass="l5";}
-  "nextgems"    = {marsClass="ng";}
+  "era"         = {marsClass=22;}
+  "era"         = {marsClass=5;}
+  "era"         = {marsClass=23;}
+  "era"         = {marsClass=14;}
+  "era"         = {marsClass=21;}
+  "era"         = {marsClass=24;}
+  "era"         = {marsClass=3;}
+  "era"         = {marsClass=30;}
+  "era"         = {marsClass=33;}
+  "nextgems"    = {marsClass=53;}
   "unknown"     = { dummy=1; }
 }
 
