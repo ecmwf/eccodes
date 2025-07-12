@@ -28,6 +28,7 @@ cat > $tempFilt <<EOF
     meta elemC element(pl, Nj - 1);
     meta elemZ element(pl, -1); # another way of getting the last element
     print "elemA=[elemA], elemB=[elemB], elemC=[elemC], elemZ=[elemZ]";
+    set elemZ = 1099; # Set the last element, using a -ve index
 EOF
 ${tools_dir}/grib_filter $tempFilt $input > $tempText
 echo "elemA=36, elemB=25, elemC=20, elemZ=20" > $tempRef
