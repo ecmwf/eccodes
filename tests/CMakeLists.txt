@@ -27,6 +27,7 @@ list(APPEND test_c_bins
     grib_set_large_message_fail
     unit_tests
     bufr_keys_iter
+    bufr_keys_iter_header
     grib_keys_iter
     grib_keys_iter_skip
     grib_geo_iter
@@ -241,6 +242,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ls_json
         bufr_change_edition
         bufr_keys_iter
+        bufr_keys_iter_header
         grib_keys_iter
         grib_keys_iter_skip
         grib_geo_iter
