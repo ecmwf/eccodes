@@ -2830,7 +2830,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
         numberOfNestedRepetitions = 0;
 
         for (i = 0; i < numberOfDescriptors; i++) {
-            int op203_definition_phase = 0;
+            bool op203_definition_phase = false;
             if (c->debug) grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data processing: elementNumber=%ld code=%6.6ld", icount++, descriptors[i]->code);
             switch (descriptors[i]->F) {
                 case 0:
