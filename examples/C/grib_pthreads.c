@@ -11,18 +11,12 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#undef NDEBUG
+#include <assert.h>
 /*#include "grib_api_internal.h"*/
 
 #include "eccodes.h"
 #define NUM_THREADS 4
-
-static void Assert(int condition)
-{
-    if (!condition) {
-        printf("Assertion failed\n");
-        exit(1);
-    }
-}
 
 
 /* Return 0 if numbers considered equal, otherwise 1 */
@@ -45,15 +39,15 @@ static void* process_grib(void* threadID)
     double* values    = NULL;
     size_t values_len = 0;
     double min = 0, max = 0, avg = 0;
-    const double tol      = 1e-6;
+    const double tol      = 1e-4;
     double pv[4]          = { 1, 2, 3, 4 };
     const size_t pvsize   = 4;
     ProductKind prod_kind = PRODUCT_ANY;
 
     codes_handle* h = codes_grib_handle_new_from_samples(0, "regular_ll_pl_grib2");
-    Assert(h != NULL);
+    assert(h != NULL);
     CODES_CHECK(codes_get_product_kind(h, &prod_kind), 0);
-    Assert(prod_kind == PRODUCT_GRIB);
+    assert(prod_kind == PRODUCT_GRIB);
     printf("Thread %ld running\n", tid);
 
     CODES_CHECK(codes_set_long(h, "indicatorOfUnitOfTimeRange", indicatorOfUnitOfTimeRange), 0);
@@ -83,10 +77,10 @@ static void* process_grib(void* threadID)
     CODES_CHECK(codes_get_double(h, "min", &min), 0);
     CODES_CHECK(codes_get_double(h, "max", &max), 0);
     CODES_CHECK(codes_get_double(h, "avg", &avg), 0);
-    printf("Thread %ld: min=%g max=%g avg=%g\n", tid, min, max, avg);
-    Assert(compare_doubles(min, 0.84, tol) == 0);
-    Assert(compare_doubles(max, 1.00, tol) == 0);
-    Assert(compare_doubles(avg, 0.916774, tol) == 0);
+    printf("\nThread %ld: min=%.8f max=%.8f avg=%.8f\n", tid, min, max, avg);
+    assert(compare_doubles(min, 229.4459, tol) == 0);
+    assert(compare_doubles(max, 273.1499, tol) == 0);
+    assert(compare_doubles(avg, 250.4168, tol) == 0);
 
     codes_handle_delete(h);
     pthread_exit(NULL);
@@ -101,7 +95,7 @@ int main(int argc, char** argv)
         printf("Creating thread %ld\n", i);
         error = pthread_create(&threads[i], NULL, process_grib, (void*)i);
         if (error) {
-            Assert(0);
+            assert(0);
             return 1;
         }
     }

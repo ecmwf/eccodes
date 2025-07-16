@@ -37,9 +37,10 @@ key: hoursAfterDataCutoff  (Long values are different)
 key: minutesAfterDataCutoff  (Long values are different)
 key: numberOfValues  (Long values are different)
 key: referenceValue  (Double values are different)
+key: binaryScaleFactor  (Long values are different)
 ECCODES ERROR   :  Key abcdefghij not found in first message
 
-Comparison failed: 13 differences
+Comparison failed: 14 differences
 EOF
 
 diff $tempRef $tempLog
