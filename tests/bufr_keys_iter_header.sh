@@ -17,7 +17,6 @@ tempRef=temp.$label.ref
 input=$ECCODES_SAMPLES_PATH/BUFR4_local.tmpl
 $EXEC ${test_dir}/bufr_keys_iter_header $input
 
-
 input=$ECCODES_SAMPLES_PATH/BUFR4_local_satellite.tmpl
 $EXEC ${test_dir}/bufr_keys_iter_header $input
 
