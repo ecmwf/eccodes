@@ -14,7 +14,8 @@ meta nameFilename      g2_param_concept_filename("name",      MTG2Switch, tables
 
 # Now deal with chemical parameter split, pre and post MTG2
 # Recall 2 = post-MTG2 encoding with paramId + chemId used
-if (MTG2Switch == 2) {
+transient forceChem = false;
+if (MTG2Switch == 2 || forceChem) {
   # Note: 0 is a valid chemId
   concept chemId (minus_one,"chemId.def",conceptsDir2,conceptsDir1): no_copy,long_type,dump;
   concept chemName (unknown,"chemName.def",conceptsDir2,conceptsDir1): no_copy,dump;
