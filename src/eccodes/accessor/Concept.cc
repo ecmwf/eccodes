@@ -106,7 +106,6 @@ static int concept_condition_expression_true(
         }
 
         default:
-            // TODO
             break;
     }
     return ok;
@@ -149,10 +148,10 @@ static int concept_condition_true_count(
     grib_handle* h, grib_concept_condition* c,
     std::unordered_map<std::string_view, long>& memo)
 {
-    if (c->expression == NULL)
-        return concept_condition_iarray_true_count(h, c);
-    else
+    if (c->expression)
         return concept_condition_expression_true(h, c, memo);
+    else
+        return concept_condition_iarray_true_count(h, c);
 }
 
 static const char* concept_evaluate(grib_accessor* a)
@@ -242,8 +241,7 @@ static int rectify_concept_apply(grib_handle* h, const char* key)
         { "aerosolType",                       { "is_aerosol", 1 }                        },
         { "sourceSinkChemicalPhysicalProcess", { "is_chemical_srcsink", 1 }               },
         { "randomFieldNumber",                 { "productDefinitionTemplateNumber", 143 } },
-        // TODO(masn): Add a new key e.g. is_probability_forecast
-        { "probabilityType",                   { "productDefinitionTemplateNumber", 5 }   }
+        { "probabilityType",                   { "is_probability_fcst", 1 }               }
     };
     const auto mapIter = keyMap.find(key);
     if (mapIter != keyMap.end()) {

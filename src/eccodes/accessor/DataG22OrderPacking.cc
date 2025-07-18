@@ -66,13 +66,13 @@ struct bitstream_context
     int n_bitstream;
 };
 
-void init_bitstream(bitstream_context* ctx, unsigned char* new_bitstream)
+static void init_bitstream(bitstream_context* ctx, unsigned char* new_bitstream)
 {
     ctx->bitstream   = new_bitstream;
     ctx->n_bitstream = ctx->reg = ctx->rbits = 0;
 }
 
-void finish_bitstream(bitstream_context* ctx)
+static void finish_bitstream(bitstream_context* ctx)
 {
     if (ctx->rbits) {
         ctx->n_bitstream++;
@@ -81,7 +81,7 @@ void finish_bitstream(bitstream_context* ctx)
     }
 }
 
-void add_many_bitstream(bitstream_context* ctx, grib_accessor* a, int* t, int n, int n_bits)
+static void add_many_bitstream(bitstream_context* ctx, grib_accessor* a, int* t, int n, int n_bits)
 {
     unsigned int jmask;
     int i;
@@ -105,7 +105,7 @@ void add_many_bitstream(bitstream_context* ctx, grib_accessor* a, int* t, int n,
     }
 }
 
-void add_bitstream(bitstream_context* ctx, grib_accessor* a, int t, int n_bits)
+static void add_bitstream(bitstream_context* ctx, grib_accessor* a, int t, int n_bits)
 {
     unsigned int jmask;
     const int max_numbits = 25;
@@ -1590,7 +1590,8 @@ int DataG22OrderPacking::unpack(T* val, size_t* len)
 
     dirty_ = 0;
 
-    if (bits_per_value == 0) {
+    // ECC-2095: Detect constant fields by counting the groups
+    if (numberOfGroupsOfDataValues == 0) {
         for (i = 0; i < n_vals; i++) {
             val[i] = reference_value;
         }

@@ -1,0 +1,150 @@
+#Methane (chemistry)
+'CH4_c' = {
+	constituentType = 2 ;
+	localTablesVersion = 1 ;
+	}
+#Volcanic sulphur dioxide
+'SO2_v' = {
+        constituentType = 65507 ;
+        localTablesVersion = 1 ;
+        }
+#Stratospheric ozone
+'O3S' = {
+	constituentType = 65524 ;
+	localTablesVersion = 1 ;
+	}
+#PAR budget corrector
+'rxpar' = {
+	constituentType = 65520 ;
+	localTablesVersion = 1 ;
+	}
+#NO to NO2 operator
+'xo2' = {
+	constituentType = 65521 ;
+	localTablesVersion = 1 ;
+	}
+#NO to alkyl nitrate operator
+'xo2n' = {
+	constituentType = 65522 ;
+	localTablesVersion = 1 ;
+	}
+#Polar stratospheric cloud
+'psc' = {
+	constituentType = 65516 ;
+	localTablesVersion = 1 ;
+	}
+#Methacrolein MVK
+'ISPD' = {
+	constituentType = 65523 ;
+	localTablesVersion = 1 ;
+	}
+#Acetone product
+'aco2' = {
+	constituentType = 65515 ;
+	localTablesVersion = 1 ;
+	}
+#HYPROPO2
+'hypropo2' = {
+	constituentType = 65519 ;
+	localTablesVersion = 1 ;
+	}
+#Nitrogen oxides Transp
+'noxa' = {
+	constituentType = 65514 ;
+	localTablesVersion = 1 ;
+	}
+#Carbon dioxide (chemistry)
+'CO2_c' = {
+	constituentType = 3 ;
+	localTablesVersion = 1 ;
+	}
+#Nitrous oxide (chemistry)
+'N2O_c' = {
+	constituentType = 6 ;
+	localTablesVersion = 1 ;
+	}
+#Water vapour (chemistry)
+'H2O_c' = {
+	constituentType = 1 ;
+	localTablesVersion = 1 ;
+	}
+#Toluene and less reactive aromatics
+'tol' = {
+	constituentType = 65529 ;
+	localTablesVersion = 1 ;
+	}
+#Xylene and more reactive aromatics
+'xyl' = {
+	constituentType = 65530 ;
+	localTablesVersion = 1 ;
+	}
+#Lumped alkenes
+'BIGENE' = {
+	constituentType = 60010 ;
+	localTablesVersion = 2 ;
+	}
+#Lumped alkanes
+'BIGALK' = {
+	constituentType = 60009 ;
+	localTablesVersion = 2 ;
+	}
+#Hydrogen atom
+'h_c' = {
+	constituentType = 65513 ;
+	localTablesVersion = 1 ;
+	}
+#Condensable gas type 1
+'sog1' = {
+	constituentType = 65526 ;
+	localTablesVersion = 1 ;
+	}
+#Condensable gas type 2a
+'sog2a' = {
+	constituentType = 65527 ;
+	localTablesVersion = 1 ;
+	}
+#Condensable gas type 2b
+'sog2b' = {
+	constituentType = 65528 ;
+	localTablesVersion = 1 ;
+	}
+#Asymmetric chlorine dioxide radical
+'cloo' = {
+	constituentType = 65518 ;
+	localTablesVersion = 1 ;
+	}
+#GEMS ozone
+'gO3' = {
+	constituentType = 0 ;
+	localTablesVersion = 1 ;
+	}
+#Stratospheric aerosol
+'strataer' = {
+	constituentType = 65517 ;
+	localTablesVersion = 1 ;
+	}
+#Biogenic secondary organic aerosol precursor
+'aer_biosecorg_pre' = {
+	constituentType = 65511 ;
+	localTablesVersion = 1 ;
+	}
+#Anthropogenic secondary organic aerosol precursor
+'aer_antsecorg_pre' = {
+	constituentType = 65512 ;
+	localTablesVersion = 1 ;
+	}
+#SO2 precursor
+'aer_so2_pre' = {
+	constituentType = 65510 ;
+	localTablesVersion = 1 ;
+	}
+#Aerosol small mode
+'aer_sm' = {
+	constituentType = 65508 ;
+	localTablesVersion = 1 ;
+	}
+#Aerosol large mode
+'aer_lm' = {
+	constituentType = 65509 ;
+	localTablesVersion = 1 ;
+	}

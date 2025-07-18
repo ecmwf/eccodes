@@ -48,7 +48,7 @@ int BudgDate::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-/* TODO: Check for a valid date */
+/* TODO(masn): Check for a valid date */
 int BudgDate::pack_long(const long* val, size_t* len)
 {
     int ret = 0;

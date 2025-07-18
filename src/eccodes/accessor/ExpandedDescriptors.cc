@@ -185,6 +185,9 @@ void ExpandedDescriptors::__expand(bufr_descriptors_array* unexpanded, bufr_desc
                     grib_context_log(c, GRIB_LOG_ERROR,
                                      "Delayed replication: %06ld: expected %d but only found %lu element(s)",
                                      u->code, us->X, unexpanded->n - 1);
+                    grib_context_log(c, GRIB_LOG_ERROR,
+                        "Hint: After the delayed replication you need a replication factor (e.g. 31001)"
+                        " followed by %d descriptor(s)", us->X);
                     *err = GRIB_DECODING_ERROR;
                     return;
                 }

@@ -8,6 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include "grib_api_internal.h"
 #include "Trigger.h"
 
 grib_action* grib_action_create_trigger(grib_context* context, grib_arguments* args, grib_action* block)

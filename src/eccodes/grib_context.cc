@@ -220,8 +220,9 @@ static void default_log(const grib_context* c, int level, const char* mess)
         ECCODES_ASSERT(0);
     }
 
-    if (getenv("ECCODES_FAIL_IF_LOG_MESSAGE")) {
-        long n = atol(getenv("ECCODES_FAIL_IF_LOG_MESSAGE"));
+    const char* fail_if_log = getenv("ECCODES_FAIL_IF_LOG_MESSAGE");
+    if (fail_if_log) {
+        const long n = atol(fail_if_log);
         if (n >= 1 && level == GRIB_LOG_ERROR)
             ECCODES_ASSERT(0);
         if (n >= 2 && level == GRIB_LOG_WARNING)
@@ -263,6 +264,14 @@ void grib_context_set_logging_proc(grib_context* c, grib_log_proc p)
     c = c ? c : grib_context_get_default();
     /* Set logging back to the default if p is NULL */
     c->output_log = (p ? p : &default_log);
+}
+
+// f can be stderr, stdout or a file like /dev/null
+void grib_context_set_logging_file(grib_context* c, FILE* f)
+{
+    ECCODES_ASSERT(f);
+    c = c ? c : grib_context_get_default();
+    c->log_stream = f;
 }
 
 long grib_get_api_version()

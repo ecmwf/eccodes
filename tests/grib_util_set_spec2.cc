@@ -23,9 +23,10 @@ static grib_handle* lamb_conf_grib1()
     int err = 0;
     grib_util_grid_spec spec = {0,};
     grib_util_packing_spec packing_spec = {0,};
-    double values[4]   = { 1.1, 2.2, 3.3, 0.4 };
     int set_spec_flags = 0;
-    size_t outlen      = 4;
+
+    size_t outlen  = 0; // test passing in no values
+    double* values = NULL;
 
     auto* handle   = grib_handle_new_from_samples(nullptr, "GRIB1");
     spec.grid_type = GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL;

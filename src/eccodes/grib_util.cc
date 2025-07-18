@@ -188,6 +188,7 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom, grib_handle*
     return h;
 }
 
+// The 'what' argument can be a bitwise OR of GRIB_SECTION_GRID, GRIB_SECTION_PRODUCT...etc
 grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err)
 {
     long edition_from                      = 0;
@@ -352,32 +353,34 @@ static void print_values(const grib_context* c,
         }
     }
 
-    fprintf(stderr, "ECCODES DEBUG grib_util: data_values_count=%zu;\n", data_values_count);
-    for (i = 0; i < data_values_count; i++) {
-        if (i == 0)
-            v = data_values[i];
-        if (data_values[i] != spec->missingValue) {
-            if (v == spec->missingValue) {
+    if (data_values) {
+        fprintf(stderr, "ECCODES DEBUG grib_util: data_values_count=%zu;\n", data_values_count);
+        for (i = 0; i < data_values_count; i++) {
+            if (i == 0)
                 v = data_values[i];
-            }
-            else if (v != data_values[i]) {
-                isConstant = 0;
-                break;
+            if (data_values[i] != spec->missingValue) {
+                if (v == spec->missingValue) {
+                    v = data_values[i];
+                }
+                else if (v != data_values[i]) {
+                    isConstant = 0;
+                    break;
+                }
             }
         }
-    }
 
-    for (i = 0; i < data_values_count; i++) {
-        v = data_values[i];
-        if (v != spec->missingValue) {
-            if (v < minVal)
-                minVal = v;
-            if (v > maxVal)
-                maxVal = v;
+        for (i = 0; i < data_values_count; i++) {
+            v = data_values[i];
+            if (v != spec->missingValue) {
+                if (v < minVal)
+                    minVal = v;
+                if (v > maxVal)
+                    maxVal = v;
+            }
         }
+        fprintf(stderr, "ECCODES DEBUG grib_util: data_values are CONSTANT? %d\t(min=%.16e, max=%.16e)\n",
+                isConstant, minVal, maxVal);
     }
-    fprintf(stderr, "ECCODES DEBUG grib_util: data_values are CONSTANT? %d\t(min=%.16e, max=%.16e)\n",
-            isConstant, minVal, maxVal);
     if (c->gribex_mode_on)
         fprintf(stderr, "ECCODES DEBUG grib_util: GRIBEX mode is turned on!\n");
 
@@ -387,23 +390,6 @@ static void print_values(const grib_context* c,
             get_packing_spec_packing_name(packing_spec->packing));
     fprintf(stderr, "ECCODES DEBUG grib_util: packing_spec->packing_type = %s\n",
             get_packing_spec_packing_type_name(packing_spec->packing_type));
-
-//         if (spec->bitmapPresent) {
-//             int missing = 0;
-//             size_t j = 0;
-//             double min = 1e100;
-//             for(j = 0; j < data_values_count ; j++)
-//             {
-//                 double d = data_values[j] - spec->missingValue;
-//                 if(d < 0) d = -d;
-//                 if(d < min) {
-//                     min = d;
-//                 }
-//                 if(data_values[j] == spec->missingValue)
-//                     missing++;
-//             }
-//         }
-
 }
 
 // static int DBL_EQUAL(double d1, double d2, double tolerance)
@@ -869,11 +855,12 @@ static int get_grib_sample_name(grib_handle* h, long editionNumber,
     return GRIB_SUCCESS;
 }
 
+// Note: if data_values == NULL, then data_values_count must be 0
 grib_handle* grib_util_set_spec(grib_handle* h,
                                  const grib_util_grid_spec* spec,
                                  const grib_util_packing_spec* packing_spec,
                                  int flags,
-                                 const double* data_values,
+                                 const double* data_values, //can be NULL
                                  size_t data_values_count,
                                  int* err)
 {
@@ -938,6 +925,9 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     grib_util_grid_spec* nonConstSpec = const_cast<grib_util_grid_spec*>(spec);
 
     ECCODES_ASSERT(h);
+    if (!data_values) {
+        ECCODES_ASSERT(data_values_count == 0);
+    }
 
     // Get edition number from input handle
     if ((*err = grib_get_long(h, "edition", &editionNumber)) != 0) {
@@ -1437,10 +1427,12 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         goto cleanup;
     }
 
-    if ((*err = grib_set_double_array(h_out, "values", data_values, data_values_count)) != GRIB_SUCCESS) {
-        write_out_error_data_file(data_values, data_values_count);
-        if (c->write_on_fail) grib_write_message(h_out, "error.grib", "w");
-        goto cleanup;
+    if (data_values) {
+        if ((*err = grib_set_double_array(h_out, "values", data_values, data_values_count)) != GRIB_SUCCESS) {
+            write_out_error_data_file(data_values, data_values_count);
+            if (c->write_on_fail) grib_write_message(h_out, "error.grib", "w");
+            goto cleanup;
+        }
     }
 
     /* grib_write_message(h_out,"h.grib","w"); */
@@ -1470,6 +1462,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     //grib_dump_content(h_out, stdout,"debug", ~0, NULL);
     // convert to second_order if not constant field. (Also see ECC-326)
     if (setSecondOrder) {
+        ECCODES_ASSERT(data_values); // must have this; cannot be NULL
         double missingValue = 0;
         grib_get_double(h_out, "missingValue", &missingValue);
         bool constant = is_constant_field(missingValue, data_values, data_values_count);

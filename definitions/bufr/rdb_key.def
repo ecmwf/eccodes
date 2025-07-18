@@ -78,7 +78,7 @@ meta correction4Part bits(corr4Data,6,1) : dump,long_type,no_copy;
 meta spare4          bits(corr4Data,7,1) : long_type,no_copy;
 
 unsigned[1] qualityControl : dump,long_type;
-alias qualityControl=qualityControl;
+# alias qualityControl=qualityControl;
 
 unsigned[2] newSubtype = 0 : dump;
 

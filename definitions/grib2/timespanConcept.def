@@ -1,0 +1,133 @@
+## Statistical window overall concept based on official low-level GRIB2 keys only
+ #
+ 'unknown'          = {dummy=0;}
+ ## Instananeous
+ #'none'    = {stepType='instant';}
+ # all instantaeous templates
+ 'none' = {productDefinitionTemplateNumber=0;}
+ 'none' = {productDefinitionTemplateNumber=1;}
+ 'none' = {productDefinitionTemplateNumber=2;}
+ 'none' = {productDefinitionTemplateNumber=3;}
+ 'none' = {productDefinitionTemplateNumber=4;}
+ 'none' = {productDefinitionTemplateNumber=5;}
+ 'none' = {productDefinitionTemplateNumber=6;}
+ 'none' = {productDefinitionTemplateNumber=7;}
+ 'none' = {productDefinitionTemplateNumber=15;}
+ 'none' = {productDefinitionTemplateNumber=20;}
+ 'none' = {productDefinitionTemplateNumber=30;}
+ 'none' = {productDefinitionTemplateNumber=31;}
+ 'none' = {productDefinitionTemplateNumber=32;}
+ 'none' = {productDefinitionTemplateNumber=33;}
+ 'none' = {productDefinitionTemplateNumber=35;}
+ 'none' = {productDefinitionTemplateNumber=40;}
+ 'none' = {productDefinitionTemplateNumber=41;}
+ 'none' = {productDefinitionTemplateNumber=44;}
+ 'none' = {productDefinitionTemplateNumber=45;}
+ 'none' = {productDefinitionTemplateNumber=48;}
+ 'none' = {productDefinitionTemplateNumber=49;}
+ 'none' = {productDefinitionTemplateNumber=50;}
+ 'none' = {productDefinitionTemplateNumber=51;}
+ 'none' = {productDefinitionTemplateNumber=53;}
+ 'none' = {productDefinitionTemplateNumber=54;}
+ 'none' = {productDefinitionTemplateNumber=55;}
+ 'none' = {productDefinitionTemplateNumber=56;}
+ 'none' = {productDefinitionTemplateNumber=57;}
+ 'none' = {productDefinitionTemplateNumber=58;}
+ 'none' = {productDefinitionTemplateNumber=59;}
+ 'none' = {productDefinitionTemplateNumber=60;}
+ 'none' = {productDefinitionTemplateNumber=70;}
+ 'none' = {productDefinitionTemplateNumber=71;}
+ 'none' = {productDefinitionTemplateNumber=76;}
+ 'none' = {productDefinitionTemplateNumber=77;}
+ 'none' = {productDefinitionTemplateNumber=80;}
+ 'none' = {productDefinitionTemplateNumber=81;}
+ 'none' = {productDefinitionTemplateNumber=86;}
+ 'none' = {productDefinitionTemplateNumber=88;}
+ 'none' = {productDefinitionTemplateNumber=89;}
+ 'none' = {productDefinitionTemplateNumber=92;}
+ 'none' = {productDefinitionTemplateNumber=93;}
+ 'none' = {productDefinitionTemplateNumber=94;}
+ 'none' = {productDefinitionTemplateNumber=99;}
+ 'none' = {productDefinitionTemplateNumber=100;}
+ 'none' = {productDefinitionTemplateNumber=101;}
+ 'none' = {productDefinitionTemplateNumber=102;}
+ 'none' = {productDefinitionTemplateNumber=103;}
+ 'none' = {productDefinitionTemplateNumber=104;}
+ 'none' = {productDefinitionTemplateNumber=108;}
+ 'none' = {productDefinitionTemplateNumber=109;}
+ 'none' = {productDefinitionTemplateNumber=113;}
+ 'none' = {productDefinitionTemplateNumber=115;}
+ 'none' = {productDefinitionTemplateNumber=117;}
+ 'none' = {productDefinitionTemplateNumber=119;}
+ 'none' = {productDefinitionTemplateNumber=121;}
+ 'none' = {productDefinitionTemplateNumber=124;}
+ 'none' = {productDefinitionTemplateNumber=125;}
+ 'none' = {productDefinitionTemplateNumber=128;}
+ 'none' = {productDefinitionTemplateNumber=129;}
+ 'none' = {productDefinitionTemplateNumber=130;}
+ 'none' = {productDefinitionTemplateNumber=131;}
+ 'none' = {productDefinitionTemplateNumber=132;}
+ 'none' = {productDefinitionTemplateNumber=133;}
+ 'none' = {productDefinitionTemplateNumber=136;}
+ 'none' = {productDefinitionTemplateNumber=137;}
+ 'none' = {productDefinitionTemplateNumber=139;}
+ 'none' = {productDefinitionTemplateNumber=140;}
+ 'none' = {productDefinitionTemplateNumber=141;}
+ 'none' = {productDefinitionTemplateNumber=142;}
+ 'none' = {productDefinitionTemplateNumber=143;}
+ 'none' = {productDefinitionTemplateNumber=146;}
+ 'none' = {productDefinitionTemplateNumber=148;}
+ 'none' = {productDefinitionTemplateNumber=150;}
+ 'none' = {productDefinitionTemplateNumber=254;}
+ 'none' = {productDefinitionTemplateNumber=1000;}
+ 'none' = {productDefinitionTemplateNumber=1002;}
+ 'none' = {productDefinitionTemplateNumber=1100;}
+ # some exceptions for non point-in-time templates
+ 'none'    = {productDefinitionTemplateNumber=8; lengthOfTimeRange=0;}
+ 'none'    = {productDefinitionTemplateNumber=11; lengthOfTimeRange=0;}
+ 'none'    = {typeOfStatisticalProcessing=10; lengthOfTimeRange=0;}
+ # End instantaneous
+ ##
+ ### Accumulations ###
+ # we need to do this dataset dependent, in some datasets we might have
+ # hourly rolling accumulations and we don't want to have the first in a different bucket
+ ## since start accumulation must have forecastTime=0
+ # specific rules are in the centre's own definitions
+ # hourly
+ 'fromstart'    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1;}
+ # minutes
+ 'fromstart'    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=0;}
+ # 24 hourly time unit
+ 'fromstart'    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=2;}
+ ### end Accumulations ###
+ #
+ ### mean/min/max/stdev ###
+ '30m'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 30;}
+ '1h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 1;}
+ '3h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 3;}
+ '3h'   = {indicatorOfUnitForTimeRange=10; lengthOfTimeRange = 1;}
+ '6h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 6;}
+ '6h'   = {indicatorOfUnitForTimeRange=11; lengthOfTimeRange = 1;}
+ '12h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 12;}
+ '12h'   = {indicatorOfUnitForTimeRange=12; lengthOfTimeRange = 1;}
+ '18h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 18;}
+ '24h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 24;}
+ '24h'   = {indicatorOfUnitForTimeRange=2; lengthOfTimeRange = 1;}
+ '48h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 48;}
+ '72h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 72;}
+ '120h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 120;}
+ '168h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168;}
+ '240h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 240;}
+ '360h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 360;}
+ #'7 days'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168;}
+ # 28 days
+ 'month'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 672;}
+ # 29 days
+ 'month'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 696;}
+ # 30 days
+ 'month'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 720;}
+ # 31 days
+ 'month'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 744;}
+ # time unit month
+ 'month'   = {indicatorOfUnitForTimeRange=3; lengthOfTimeRange = 1;}
+ ### end mean/min/max/stdev ###

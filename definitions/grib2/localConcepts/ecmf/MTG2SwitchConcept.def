@@ -13,6 +13,7 @@
 
 # We only need the concepts which differ from the default below.
 # These are all for 50r1 (255 + 161; GRIBmix), where we have the newer model but still want the pre-MTG2 behaviour
+# and for AIFS, where we have the newer tablesVersion but still want the pre-MTG2 behaviour
 
 # OD
 0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=161;}
@@ -22,3 +23,6 @@
 0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=161; marsClass='mc';}
 # CR
 0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=161; marsClass='cr';}
+# AI
+0 = {tablesVersion=34; productionStatusOfProcessedData=0; marsClass='ai';}
+0 = {tablesVersion=35; productionStatusOfProcessedData=0; marsClass='ai';}

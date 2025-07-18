@@ -22,7 +22,8 @@ _if (subCentre==98 ) {
   alias centreForLocal=centre;
 }
 
-codetable[1] tablesVersion 'grib2/tables/1.0.table' = tablesVersionLatestOfficial : edition_specific;
+constant tablesVersionMTG2Switch = 33: hidden;
+codetable[1] tablesVersion 'grib2/tables/1.0.table' = tablesVersionMTG2Switch : edition_specific;
 alias gribMasterTablesVersionNumber=tablesVersion;
 
 transient masterDir="grib2/tables/[tablesVersion]";
@@ -104,6 +105,8 @@ meta is_chemical_srcsink g2_chemical(productDefinitionTemplateNumber, stepType, 
 # 1=optical properties of aerosol
 meta is_aerosol          g2_aerosol(productDefinitionTemplateNumber, stepType, 0);
 meta is_aerosol_optical  g2_aerosol(productDefinitionTemplateNumber, stepType, 1);
+
+meta is_probability_fcst g2_probability(productDefinitionTemplateNumber, stepType);
 
 transient setCalendarId = 0 ;
 transient deleteCalendarId = 0 ;

@@ -27,6 +27,7 @@ list(APPEND test_c_bins
     grib_set_large_message_fail
     unit_tests
     bufr_keys_iter
+    bufr_keys_iter_header
     grib_keys_iter
     grib_keys_iter_skip
     grib_geo_iter
@@ -173,11 +174,17 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_polar_stereographic
         grib_grid_healpix
         grib_g1day_of_the_year_date
+        grib_paramid_chemid_split
+        grib_paramtypeConcept
+        grib_cmp_paramtype
+        grib_timeSpanConcept
+        grib_cmp_timeSpan
     )
 
     # These tests require data downloads
     # and/or take much longer
     list(APPEND tests_extra
+        grib_datasetForLocal
         grib_isGridded_isSpectral
         grib_data_quality_checks
         grib_check_message_validity
@@ -235,6 +242,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ls_json
         bufr_change_edition
         bufr_keys_iter
+        bufr_keys_iter_header
         grib_keys_iter
         grib_keys_iter_skip
         grib_geo_iter
@@ -273,6 +281,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-1938
         bufr_ecc-2030
         bufr_ecc-2037
+        bufr_ecc-2100
         grib_488
         grib_ecc-490
         grib_ecc-756
@@ -297,7 +306,6 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1907
         grib_ecc-1941
         grib_ecc-1942
-        grib_ecc-2002
         grib_ecc-2005
         grib_ecc-2006
         grib_ecc-2013
