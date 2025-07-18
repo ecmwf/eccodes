@@ -149,10 +149,10 @@ static int concept_condition_true_count(
     grib_handle* h, grib_concept_condition* c,
     std::unordered_map<std::string_view, long>& memo)
 {
-    if (c->expression == NULL)
-        return concept_condition_iarray_true_count(h, c);
-    else
+    if (c->expression)
         return concept_condition_expression_true(h, c, memo);
+    else
+        return concept_condition_iarray_true_count(h, c);
 }
 
 static const char* concept_evaluate(grib_accessor* a)
