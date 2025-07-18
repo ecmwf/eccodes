@@ -36,6 +36,8 @@
 #include "eckit/geo/util/mutex.h"
 #include "eckit/types/FloatCompare.h"
 
+#include "eccodes/geo/EckitMainInit.h"
+
 
 namespace eccodes::geo
 {
@@ -68,16 +70,21 @@ bool get_edition(const grib_info& info, long& edition)
 {
     static const std::string EDITION{ "edition" };
 
-    edition = info.packing.editionNumber;
+    auto _edition = info.packing.editionNumber;
 
     for (long j = 0; j < info.packing.extra_settings_count; ++j) {
         if (const auto& set = info.packing.extra_settings[j]; set.name == EDITION) {
-            edition = set.long_value;
+            _edition = set.long_value;
             break;
         }
     }
 
-    return edition != 0;
+    if (_edition != 0) {
+        edition = _edition;
+        return true;
+    }
+
+    return false;
 }
 
 
@@ -458,15 +465,27 @@ void set_rotation(grib_info& info, const Grid& grid)
 }
 
 
+struct GribHandler : std::unique_ptr<grib_handle, decltype(&codes_handle_delete)>
+{
+    GribHandler(element_type* ptr) :
+        unique_ptr(ptr, &codes_handle_delete)
+    {
+        ASSERT(ptr != nullptr);
+    }
+};
+
+
 }  // namespace
 
 
-int GribFromSpec::set(codes_handle* h, const Spec& spec, const std::map<std::string, long>& extra, const BasicAngle& basic_angle)
+int GribFromSpec::set(codes_handle*& h, const Spec& spec, const std::map<std::string, long>& extra, const BasicAngle& basic_angle)
 {
     // Protect ecCodes and set error callback handling (throws)
     lock_type lock;
     codes_set_codes_assertion_failed_proc(&codes_assertion);
 
+    // ensure eckit is initialized
+    eckit_main_init();
 
     // Check grid properties
     //
@@ -519,6 +538,12 @@ int GribFromSpec::set(codes_handle* h, const Spec& spec, const std::map<std::str
         throw ::eckit::SeriousBug("GribFromSpec: unknown grid type: '" + g + "'");
     }
 
+    // Ensure values size
+    // FIXME avoig touching the values altogether
+    auto size = static_cast<long>(grid->size());
+    info.extra_set("numberOfCodedValues", size);
+    info.extra_set("numberOfDataPoints", size);
+
 
     // Extra settings incl.:
     // - paramId
@@ -528,16 +553,30 @@ int GribFromSpec::set(codes_handle* h, const Spec& spec, const std::map<std::str
     }
 
 
+    // Ensure handle is created (from samples)
+    if (h == nullptr) {
+        long edition = 2;
+        get_edition(info, edition);
+
+        h = codes_grib_handle_new_from_samples(nullptr, edition == 1 ? "GRIB1" : edition == 2 ? "GRIB2"
+                                                                                              : NOTIMP);
+        if (h == nullptr) {
+            throw ::eckit::SeriousBug("GribFromSpec: failed to create handle from samples");
+        }
+    }
+
+
     try {
         int flags = 0;
         int err   = 0;
 
-        auto* hh = codes_grib_util_set_spec(h, &info.grid, &info.packing, flags, nullptr, 0, &err);
-
+        // result is destroyed even on exception handling
+        GribHandler result(codes_grib_util_set_spec(h, &info.grid, &info.packing, flags, nullptr, 0, &err));
         CHECK_CALL(err);  // err == CODES_WRONG_GRID
 
+        // reassign argument pointer to newly returned one
         codes_handle_delete(h);
-        h = hh;
+        h = result.release();
     }
     catch (...) {
         codes_handle_delete(h);
