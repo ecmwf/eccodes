@@ -188,6 +188,7 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom, grib_handle*
     return h;
 }
 
+// The 'what' argument can be a bitwise OR of GRIB_SECTION_GRID, GRIB_SECTION_PRODUCT...etc
 grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err)
 {
     long edition_from                      = 0;
