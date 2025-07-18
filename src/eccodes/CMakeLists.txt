@@ -422,6 +422,8 @@ if( eccodes_HAVE_GEOGRAPHY AND eccodes_HAVE_ECKIT_GEO )
         config/LibEccodes.cc
         config/LibEccodes.h
 
+        geo/BasicAngle.cc
+        geo/BasicAngle.h
         geo/EckitMainInit.cc
         geo/EckitMainInit.h
         geo/Geo.cc

@@ -13,15 +13,8 @@
 #include "eccodes/geo/GribFromSpec.h"
 
 #include <cstring>
-#include <functional>
-#include <iosfwd>
-#include <limits>
-#include <map>
 #include <memory>
-#include <numeric>
-#include <ostream>
 #include <utility>
-#include <vector>
 
 #include "eckit/geo/Exceptions.h"
 #include "eckit/geo/Figure.h"
@@ -42,24 +35,10 @@
 #include "eckit/geo/projection/Rotation.h"
 #include "eckit/geo/util/mutex.h"
 #include "eckit/types/FloatCompare.h"
-#include "eckit/types/Fraction.h"
 
 
 namespace eccodes::geo
 {
-
-
-void RegularGrid_fillGrib(grib_info& info)
-{
-#if 0
-    // shape of the reference system
-    shape_.fillGrib(info, grid_.projection().spec());
-
-    // scanningMode
-    info.grid.iScansNegatively = x_.front() < x_.back() ? 0L : 1L;
-    info.grid.jScansPositively = y_.front() < y_.back() ? 1L : 0L;
-#endif
-}
 
 
 namespace
@@ -82,6 +61,23 @@ using ::eckit::geo::PointXY;
 static inline double normalise_longitude(const double& lon, const double& minimum)
 {
     return PointLonLat::normalise_angle_to_minimum(lon, minimum);
+}
+
+
+bool get_edition(const grib_info& info, long& edition)
+{
+    static const std::string EDITION{ "edition" };
+
+    edition = info.packing.editionNumber;
+
+    for (long j = 0; j < info.packing.extra_settings_count; ++j) {
+        if (const auto& set = info.packing.extra_settings[j]; set.name == EDITION) {
+            edition = set.long_value;
+            break;
+        }
+    }
+
+    return edition != 0;
 }
 
 
@@ -108,115 +104,6 @@ struct BoundingBox
     const double west;
     const double south;
     const double east;
-};
-
-
-struct Fraction
-{
-    using value_type = long;
-
-    explicit Fraction(double d) :
-        Fraction(eckit::Fraction(d)) {}
-
-    explicit Fraction(const eckit::Fraction& frac) :
-        num(frac.numerator()), den(frac.denominator())
-    {
-        constexpr auto min = std::numeric_limits<value_type>::lowest();
-        constexpr auto max = std::numeric_limits<value_type>::max();
-        ASSERT(frac.denominator() != 0);
-        ASSERT(min <= frac.denominator() && frac.denominator() <= max);
-        ASSERT(min <= frac.numerator() && frac.numerator() <= max);
-    }
-
-    Fraction(value_type _numerator, value_type _denominator) :
-        num(_numerator), den(_denominator == 0 || _numerator == 0 ? 1 : _denominator) {}
-
-
-    const value_type num;
-    const value_type den;
-};
-
-
-constexpr Fraction::value_type lcm(Fraction::value_type a)
-{
-    return a;
-}
-
-
-template <typename... Values>
-constexpr Fraction::value_type lcm(Fraction::value_type a, Values... bc)
-{
-    return (std::lcm(a, lcm(bc...)));
-}
-
-
-constexpr Fraction::value_type gcd(Fraction::value_type a)
-{
-    return a;
-}
-
-
-template <typename... Values>
-constexpr Fraction::value_type gcd(Fraction::value_type a, Values... bc)
-{
-    return (std::gcd(a, gcd(bc...)));
-}
-
-
-struct BasicAngle : Fraction
-{
-    using Fraction::Fraction;
-
-    BasicAngle(Fraction a, Fraction b, Fraction c, Fraction d, Fraction e, Fraction f) :
-        Fraction(gcd(a.num, b.num, c.num, d.num, e.num, f.num), lcm(a.den, b.den, c.den, d.den, e.den, f.den))
-    {
-        ASSERT(den != 0);
-    }
-
-    explicit BasicAngle(const grib_info& info) :
-        BasicAngle(Fraction(info.grid.latitudeOfFirstGridPointInDegrees),
-                   Fraction(normalise_longitude(info.grid.longitudeOfFirstGridPointInDegrees, 0.)),
-                   Fraction(info.grid.latitudeOfLastGridPointInDegrees),
-                   Fraction(normalise_longitude(info.grid.longitudeOfLastGridPointInDegrees, 0.)),
-                   Fraction(info.grid.iDirectionIncrementInDegrees), Fraction(info.grid.jDirectionIncrementInDegrees)) {}
-
-    void fillGrib(grib_info& info) const
-    {
-        // FIXME limited functionality
-        ASSERT(info.grid.grid_type == CODES_UTIL_GRID_SPEC_REGULAR_LL);
-
-        auto fill = [this, &info](const char* key, double value) {
-            Fraction f(value);
-            ASSERT(f.den != 0);
-            if (f.num != 0) {
-                info.extra_set(key, numerator(f));
-            }
-        };
-
-        info.extra_set("basicAngleOfTheInitialProductionDomain", num);
-        info.extra_set("subdivisionsOfBasicAngle", den);
-
-        fill("latitudeOfFirstGridPoint", info.grid.latitudeOfFirstGridPointInDegrees);
-        fill("longitudeOfFirstGridPoint", normalise_longitude(info.grid.longitudeOfFirstGridPointInDegrees, 0.));
-        fill("latitudeOfLastGridPoint", info.grid.latitudeOfLastGridPointInDegrees);
-        fill("longitudeOfLastGridPoint", normalise_longitude(info.grid.longitudeOfLastGridPointInDegrees, 0.));
-        fill("iDirectionIncrement", info.grid.iDirectionIncrementInDegrees);
-        fill("jDirectionIncrement", info.grid.jDirectionIncrementInDegrees);
-    }
-
-    value_type numerator(const Fraction& f) const
-    {
-        Fraction x(f.num * den, f.den * num);
-        const auto div = gcd(x.num, x.den);
-
-        ASSERT(x.den == div);  // if BasicAngle is adequate
-        return x.num / div;
-    }
-
-    static void list(std::ostream& out)
-    {
-        out << "as-input, decimal, fraction";
-    }
 };
 
 
@@ -278,30 +165,25 @@ public:
 
     void fillGrib(grib_info& info) const
     {
-        static const std::string EDITION{ "edition" };
+        // GRIB edition=2 only
+        if (long edition = 0; get_edition(info, edition) && edition != 2) {
+            return;
+        }
+
         static const std::string SHAPE{ "shapeOfTheEarth" };
         static const auto* A = "earthMajorAxis";
         static const auto* B = "earthMinorAxis";
 
-        // GRIB edition=2 only, check if shape is already set/provided
-        auto edition  = info.packing.editionNumber;
+        // check if shape is already set/provided
         auto code     = 6L;
         bool provided = false;
 
         for (long j = 0; j < info.packing.extra_settings_count; ++j) {
-            const auto& set = info.packing.extra_settings[j];
-
-            if (set.name == EDITION && set.type == CODES_TYPE_LONG) {
-                edition = set.long_value;
-            }
-            else if (set.name == SHAPE && set.type == CODES_TYPE_LONG) {
+            if (const auto& set = info.packing.extra_settings[j];
+                set.name == SHAPE && set.type == CODES_TYPE_LONG) {
                 code     = set.long_value;
                 provided = true;
             }
-        }
-
-        if (edition != 2) {
-            return;
         }
 
         if (!provided) {
@@ -334,7 +216,7 @@ private:
 };
 
 
-void set_grid_type_regular_ll(grib_info& info, const Grid& grid)
+void set_grid_type_regular_ll(grib_info& info, const Grid& grid, const BasicAngle& basic_angle)
 {
     const auto rotated  = grid.projection().type() == "rotation";
     info.grid.grid_type = rotated ? CODES_UTIL_GRID_SPEC_ROTATED_LL : CODES_UTIL_GRID_SPEC_REGULAR_LL;
@@ -355,6 +237,14 @@ void set_grid_type_regular_ll(grib_info& info, const Grid& grid)
         Rotation rotation(dynamic_cast<const ::eckit::geo::projection::Rotation&>(grid.projection()));
         rotation.fillGrib(info);
     }
+
+    if (basic_angle.num != 0) {
+        ASSERT(basic_angle.num > 0);
+        ASSERT(basic_angle.den > 0);
+
+        BasicAngle basic(basic_angle.num, basic_angle.den);
+        basic.fillGrib(info);
+    }
 }
 
 
@@ -367,7 +257,7 @@ void set_grid_type_regular_gg(grib_info& info, const Grid& grid)
         dynamic_cast<const ::eckit::geo::grid::RegularGaussian&>(grid);
 
     info.grid.N                            = static_cast<long>(r.N());
-    info.grid.iDirectionIncrementInDegrees = 90. / r.N();
+    info.grid.iDirectionIncrementInDegrees = 90. / static_cast<double>(r.N());
 
     info.grid.Ni = static_cast<long>(r.nx());
     info.grid.Nj = static_cast<long>(r.ny());
@@ -425,7 +315,7 @@ void set_grid_type_healpix(grib_info& info, const Grid& grid)
 {
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_HEALPIX;
 
-    const auto& r = dynamic_cast<const ::eckit::geo::grid::HEALPix&>(grid);
+    const auto& r(dynamic_cast<const ::eckit::geo::grid::HEALPix&>(grid));
 
     info.grid.N                                  = static_cast<long>(r.Nside());
     info.grid.longitudeOfFirstGridPointInDegrees = 45.;
@@ -438,7 +328,7 @@ void set_grid_type_spherical_harmonics(grib_info& info, const Grid& grid)
 {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_SH;
 
-    const auto& r = dynamic_cast<const ::eckit::geo::grid::SphericalHarmonics&>(grid);
+    const auto& r(dynamic_cast<const ::eckit::geo::grid::SphericalHarmonics&>(grid));
 
     info.grid.truncation = static_cast<long>(r.truncation());
 
@@ -454,29 +344,28 @@ void set_grid_type_lambert_azimuthal_equal_area(grib_info& info, const Grid& gri
 {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA;
 
-    const auto& r =
-        dynamic_cast<const ::eckit::geo::grid::Regular&>(grid);
+    const auto& r(dynamic_cast<const ::eckit::geo::grid::Regular&>(grid));
+    const auto reference = std::get<PointLonLat>(grid.projection().fwd(PointXY{ 0., 0. }));
+    const auto first     = std::get<PointLonLat>(grid.first_point());
 
     info.packing.editionNumber = 2;
-
-    auto reference = std::get<PointLonLat>(grid.projection().fwd(PointXY{ 0., 0. }));
-#if 0
-    auto firstLL   = std::get<PointLonLat>(grid.projection().fwd({ x().front(), y().front() }));
 
     info.grid.Ni = static_cast<long>(r.nx());
     info.grid.Nj = static_cast<long>(r.ny());
 
-    info.grid.latitudeOfFirstGridPointInDegrees  = firstLL.lat;
-    info.grid.longitudeOfFirstGridPointInDegrees = firstLL.lon;
-#endif
+    info.grid.latitudeOfFirstGridPointInDegrees  = first.lat;
+    info.grid.longitudeOfFirstGridPointInDegrees = first.lon;
 
     info.extra_set("DxInMetres", r.dx());
     info.extra_set("DyInMetres", r.dy());
     info.extra_set("standardParallelInDegrees", reference.lat);
     info.extra_set("centralLongitudeInDegrees", reference.lon);
 
-    // some extra keys are edition-specific
-    RegularGrid_fillGrib(info);
+    ScanningMode scan(r);
+    scan.fillGrib(info);
+
+    Shape shape(r.projection().figure());
+    shape.fillGrib(info);
 }
 
 
@@ -484,38 +373,41 @@ void set_grid_type_grid_type_lambert(grib_info& info, const Grid& grid)
 {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_LAMBERT_CONFORMAL;
 
+    const auto& r(dynamic_cast<const ::eckit::geo::grid::Regular&>(grid));
+    const auto reference = std::get<PointLonLat>(grid.projection().fwd(PointXY{ 0., 0. }));
+    const auto first     = std::get<PointLonLat>(grid.first_point());
 
-#if 0
-    auto reference = std::get<PointLonLat>(grid.projection().fwd({ 0., 0. }));
+    auto writeLonPositive  = false;
+    auto writeLaDInDegrees = false;
 
-    PointXY first     = { firstPointBottomLeft() ? x().min() : x().front(), firstPointBottomLeft() ? y().min() : y().front() };
-    auto firstLL   = std::get<PointLonLat>(grid.projection().fwd(first));
+    if (long edition = 0; get_edition(info, edition)) {
+        writeLonPositive  = edition >= 2;
+        writeLaDInDegrees = edition >= 2;
+    }
 
-    info.grid.latitudeOfFirstGridPointInDegrees = firstLL.lat;
+    info.grid.latitudeOfFirstGridPointInDegrees = first.lat;
     info.grid.longitudeOfFirstGridPointInDegrees =
-        writeLonPositive_ ? util::normalise_longitude(firstLL.lon, 0) : firstLL.lon;
+        writeLonPositive ? normalise_longitude(first.lon, 0) : first.lon;
 
-    info.grid.Ni = static_cast<long>(x().size());
-    info.grid.Nj = static_cast<long>(y().size());
+    info.grid.Ni = static_cast<long>(r.nx());
+    info.grid.Nj = static_cast<long>(r.ny());
 
-    info.grid.latitudeOfSouthernPoleInDegrees  = latitudeOfSouthernPoleInDegrees_;
-    info.grid.longitudeOfSouthernPoleInDegrees = longitudeOfSouthernPoleInDegrees_;
-    info.grid.uvRelativeToGrid                 = uvRelativeToGrid_ ? 1 : 0;
-
-    info.extra_set("DxInMetres", std::abs(x().step()));
-    info.extra_set("DyInMetres", std::abs(y().step()));
+    info.extra_set("DxInMetres", r.dx());
+    info.extra_set("DyInMetres", r.dy());
     info.extra_set("Latin1InDegrees", reference.lat);
     info.extra_set("Latin2InDegrees", reference.lat);
-    info.extra_set("LoVInDegrees", writeLonPositive_ ? util::normalise_longitude(reference.lon, 0)
-                                                     : reference.lon);
+    info.extra_set("LoVInDegrees", writeLonPositive ? normalise_longitude(reference.lon, 0)
+                                                    : reference.lon);
 
-    if (writeLaDInDegrees_) {
+    if (writeLaDInDegrees) {
         info.extra_set("LaDInDegrees", reference.lat);
     }
-#endif
 
-    // some extra keys are edition-specific
-    RegularGrid_fillGrib(info);
+    ScanningMode scan(r);
+    scan.fillGrib(info);
+
+    Shape shape(r.projection().figure());
+    shape.fillGrib(info);
 }
 
 
@@ -523,30 +415,39 @@ void set_grid_type_polar_stereographic(grib_info& info, const Grid& grid)
 {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC;
 
-#if 0
-    Point2 first   = { x().front(), y().front() };
-    Point2 firstLL = grid().projection().lonlat(first);
+    const auto& r(dynamic_cast<const ::eckit::geo::grid::Regular&>(grid));
+    const auto reference = std::get<PointLonLat>(grid.projection().fwd(PointXY{ 0., 0. }));
+    const auto first     = std::get<PointLonLat>(grid.first_point());
 
-    info.grid.latitudeOfFirstGridPointInDegrees = firstLL.lat;
-    info.grid.longitudeOfFirstGridPointInDegrees =
-        writeLonPositive_ ? util::normalise_longitude(firstLL.lon, 0) : firstLL.lon;
+    auto writeLonPositive  = false;
+    auto writeLaDInDegrees = false;
 
-    info.grid.Ni = static_cast<long>(x().size());
-    info.grid.Nj = static_cast<long>(y().size());
-
-    info.grid.uvRelativeToGrid = uvRelativeToGrid_ ? 1 : 0;
-
-    info.extra_set("DxInMetres", std::abs(x().step()));
-    info.extra_set("DyInMetres", std::abs(y().step()));
-    info.extra_set("orientationOfTheGridInDegrees", util::normalise_longitude(orientationOfTheGridInDegrees_, 0));
-
-    if (writeLaDInDegrees_) {
-        info.extra_set("LaDInDegrees", LaDInDegrees_);
+    if (long edition = 0; get_edition(info, edition)) {
+        writeLonPositive  = edition >= 2;
+        writeLaDInDegrees = edition >= 2;
     }
-#endif
 
-    // some extra keys are edition-specific
-    RegularGrid_fillGrib(info);
+
+    info.grid.latitudeOfFirstGridPointInDegrees = first.lat;
+    info.grid.longitudeOfFirstGridPointInDegrees =
+        writeLonPositive ? normalise_longitude(first.lon, 0) : first.lon;
+
+    info.grid.Ni = static_cast<long>(r.nx());
+    info.grid.Nj = static_cast<long>(r.ny());
+
+    info.extra_set("DxInMetres", r.dx());
+    info.extra_set("DyInMetres", r.dy());
+    info.extra_set("orientationOfTheGridInDegrees", normalise_longitude(reference.lon, 0));
+
+    if (writeLaDInDegrees) {
+        info.extra_set("LaDInDegrees", reference.lat);
+    }
+
+    ScanningMode scan(r);
+    scan.fillGrib(info);
+
+    Shape shape(r.projection().figure());
+    shape.fillGrib(info);
 }
 
 
@@ -560,7 +461,7 @@ void set_rotation(grib_info& info, const Grid& grid)
 }  // namespace
 
 
-int GribFromSpec::set(codes_handle* h, const Spec& spec, const std::map<std::string, long>& extra)
+int GribFromSpec::set(codes_handle* h, const Spec& spec, const std::map<std::string, long>& extra, const BasicAngle& basic_angle)
 {
     // Protect ecCodes and set error callback handling (throws)
     lock_type lock;
@@ -579,7 +480,7 @@ int GribFromSpec::set(codes_handle* h, const Spec& spec, const std::map<std::str
     grib_info info;
 
     if (const auto g = grid->type(); g == "regular-ll") {
-        set_grid_type_regular_ll(info, *grid);
+        set_grid_type_regular_ll(info, *grid, basic_angle);
     }
     else if (g == "regular-xy") {
         const auto p = grid->projection().type();
@@ -616,26 +517,6 @@ int GribFromSpec::set(codes_handle* h, const Spec& spec, const std::map<std::str
     }
     else {
         throw ::eckit::SeriousBug("GribFromSpec: unknown grid type: '" + g + "'");
-    }
-
-
-    // Basic angle (after representation), support only for gridType=regular_ll
-
-    if (basicAngleFormat_ == BasicAngleType::AS_INPUT) {
-        std::vector<long> fraction(2);
-        CHECK_CALL(codes_get_long(h, "basicAngleOfTheInitialProductionDomain", fraction.data()));
-        CHECK_CALL(codes_get_long(h, "subdivisionsOfBasicAngle", &fraction[1]));
-
-        BasicAngle basic(fraction[0], fraction[1]);
-        basic.fillGrib(info);
-    }
-    else if (basicAngleFormat_ == BasicAngleType::FRACTION) {
-        BasicAngle basic(info);
-        basic.fillGrib(info);
-    }
-    else {
-        // codes_grib_util_set_spec does not need anything here (GRIB standard)
-        ASSERT(basicAngleFormat_ == BasicAngleType::DECIMAL);
     }
 
 

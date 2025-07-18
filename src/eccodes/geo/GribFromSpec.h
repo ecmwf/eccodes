@@ -15,6 +15,7 @@
 #include <map>
 #include <string>
 
+#include "eccodes/geo/BasicAngle.h"
 #include "eccodes/geo/Geo.h"
 
 
@@ -25,43 +26,7 @@ namespace eccodes::geo
 class GribFromSpec
 {
 public:
-    enum ProjectionType
-    {
-        UNROTATED = 0,
-        ROTATED,
-        LAMBERT_AZIMUTHAL_EQUAL_AREA,
-        LAMBERT_CONFORMAL_CONIC,
-        POLAR_STEREOGRAPHIC,
-    };
-
-    enum LatitudeType
-    {
-        LAT_REGULAR = 0,
-        LAT_GAUSSIAN,
-        LAT_UNSTRUCTURED,
-    };
-
-    enum LongitudeType
-    {
-        LON_REGULAR = 0,
-        LON_REDUCED,
-        LON_UNSTRUCTURED,
-    };
-
-    enum BasicAngleType
-    {
-        DECIMAL = 0,
-        AS_INPUT,
-        FRACTION
-    };
-
-    explicit GribFromSpec(BasicAngleType basicAngleType = DECIMAL) :
-        basicAngleFormat_(basicAngleType) {}
-
-    int set(codes_handle*, const Spec&, const std::map<std::string, long>& extra = {});
-
-private:
-    const BasicAngleType basicAngleFormat_;
+    static int set(codes_handle*, const Spec&, const std::map<std::string, long>& extra = {}, const BasicAngle& = {});
 };
 
 
