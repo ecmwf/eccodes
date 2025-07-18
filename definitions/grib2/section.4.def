@@ -146,7 +146,14 @@ else {
 
 if (MTG2Switch > 0 ) {
    concept paramtype(unknown, "paramtypeConcept.def", conceptsDir2, conceptsDir1): hidden, read_only;
+
+   if (defined(stream) && is_one_of(stream,"sttd","stte")){
+    concept statType (unknown,"stattypeConcept.def",conceptsDir2,conceptsDir1) : read_only;
+    alias mars.stattype = statType;
+   }
+
    concept timeSpan (unknown,"timespanConcept.def",conceptsDir2,conceptsDir1) : read_only;
+
    # we use an abbreviation for fromstart -> fs
    if (timeSpan is "fromstart") {
       constant timeSpanfs = "fs" ;
