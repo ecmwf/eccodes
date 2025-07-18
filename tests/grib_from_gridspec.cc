@@ -39,64 +39,72 @@ bool get_string(const grib_handle* h, const char* key, std::string& value)
 
 CASE("grid: O2")
 {
-    codes_handle* h = nullptr;
+    for (auto* h : {
+             static_cast<codes_handle*>(nullptr),
+             codes_grib_handle_new_from_samples(nullptr, "GRIB1"),
+             codes_grib_handle_new_from_samples(nullptr, "GRIB2"),
+         }) {
+        ::eckit::geo::spec::Custom spec{ { "grid", "o2" } };
 
-    ::eckit::geo::spec::Custom spec{ { "grid", "o2" } };
+        CODES_CHECK(eccodes::geo::GribFromSpec::set(h, spec), nullptr);
+        EXPECT(h != nullptr);
 
-    CODES_CHECK(eccodes::geo::GribFromSpec::set(h, spec), nullptr);
-    ASSERT(h != nullptr);
+        long valid = 0;
+        CODES_CHECK(codes_get_long(h, "isMessageValid", &valid), nullptr);
+        EXPECT(valid == 1);
 
-    long valid = 0;
-    CODES_CHECK(codes_get_long(h, "isMessageValid", &valid), nullptr);
-    EXPECT(valid == 1);
+        std::string type;
+        get_string(h, "gridType", type);
+        EXPECT(type == "reduced_gg");
 
-    std::string type;
-    get_string(h, "gridType", type);
-    EXPECT(type == "reduced_gg");
+        std::string name;
+        get_string(h, "gridName", name);
+        EXPECT(name == "O2");
 
-    std::string name;
-    get_string(h, "gridName", name);
-    EXPECT(name == "O2");
+        long N = 0;
+        CODES_CHECK(codes_get_long(h, "N", &N), nullptr);
+        EXPECT(N == 2);
 
-    long N = 0;
-    CODES_CHECK(codes_get_long(h, "N", &N), nullptr);
-    EXPECT(N == 2);
+        long numberOfDataPoints = 0;
+        CODES_CHECK(codes_get_long(h, "numberOfDataPoints", &numberOfDataPoints), nullptr);
+        EXPECT(numberOfDataPoints == 88);
 
-    long numberOfDataPoints = 0;
-    CODES_CHECK(codes_get_long(h, "numberOfDataPoints", &numberOfDataPoints), nullptr);
-    EXPECT(numberOfDataPoints == 88);
-
-    codes_handle_delete(h);
+        codes_handle_delete(h);
+    }
 }
 
 
 CASE("grid: 1/1")
 {
-    codes_handle* h = nullptr;
+    for (auto* h : {
+             static_cast<codes_handle*>(nullptr),
+             codes_grib_handle_new_from_samples(nullptr, "GRIB1"),
+             codes_grib_handle_new_from_samples(nullptr, "GRIB2"),
+         }) {
+        ::eckit::geo::spec::Custom spec{ { "grid", "1/1" } };
 
-    ::eckit::geo::spec::Custom spec{ { "grid", "1/1" } };
+        CODES_CHECK(eccodes::geo::GribFromSpec::set(h, spec), nullptr);
+        EXPECT(h != nullptr);
 
-    CODES_CHECK(eccodes::geo::GribFromSpec::set(h, spec), nullptr);
-    EXPECT(h != nullptr);
+        long valid = 0;
+        CODES_CHECK(codes_get_long(h, "isMessageValid", &valid), nullptr);
+        EXPECT(valid == 1);
 
-    long valid = 0;
-    CODES_CHECK(codes_get_long(h, "isMessageValid", &valid), nullptr);
-    EXPECT(valid == 1);
+        std::string type;
+        get_string(h, "gridType", type);
+        EXPECT(type == "regular_ll");
 
-    std::string type;
-    get_string(h, "gridType", type);
-    EXPECT(type == "regular_ll");
+        long Ni                 = 0;
+        long Nj                 = 0;
+        long numberOfDataPoints = 0;
+        CODES_CHECK(codes_get_long(h, "Ni", &Ni), nullptr);
+        CODES_CHECK(codes_get_long(h, "Nj", &Nj), nullptr);
+        CODES_CHECK(codes_get_long(h, "numberOfDataPoints", &numberOfDataPoints), nullptr);
 
-    long Ni                 = 0;
-    long Nj                 = 0;
-    long numberOfDataPoints = 0;
-    CODES_CHECK(codes_get_long(h, "Ni", &Ni), nullptr);
-    CODES_CHECK(codes_get_long(h, "Nj", &Nj), nullptr);
-    CODES_CHECK(codes_get_long(h, "numberOfDataPoints", &numberOfDataPoints), nullptr);
+        EXPECT(Ni * Nj == numberOfDataPoints);
 
-    EXPECT(Ni * Nj == numberOfDataPoints);
-
-    codes_handle_delete(h);
+        codes_handle_delete(h);
+    }
 }
 
 

@@ -538,13 +538,6 @@ int GribFromSpec::set(codes_handle*& h, const Spec& spec, const std::map<std::st
         throw ::eckit::SeriousBug("GribFromSpec: unknown grid type: '" + g + "'");
     }
 
-    // Ensure values size
-    // FIXME avoig touching the values altogether
-    auto size = static_cast<long>(grid->size());
-    info.extra_set("numberOfCodedValues", size);
-    info.extra_set("numberOfDataPoints", size);
-
-
     // Extra settings incl.:
     // - paramId
     // - uvRelativeToGrid (in codes_util_grid_spec as well)
@@ -553,11 +546,19 @@ int GribFromSpec::set(codes_handle*& h, const Spec& spec, const std::map<std::st
     }
 
 
-    // Ensure handle is created (from samples)
-    if (h == nullptr) {
+    // Ensure values size (edition >= 2) and a handle is created (from samples)
+    // FIXME avoid touching the values altogether
+    auto edition = [&h, &info]() -> long {
         long edition = 2;
+        if (h != nullptr) {
+            CODES_CHECK(codes_get_long(h, "edition", &edition), nullptr);
+        }
         get_edition(info, edition);
+        return edition;
+    }();
+    ASSERT(edition != 0);
 
+    if (h == nullptr) {
         auto sample = "GRIB" + std::to_string(edition);
 
         h = codes_grib_handle_new_from_samples(nullptr, sample.c_str());
@@ -566,6 +567,13 @@ int GribFromSpec::set(codes_handle*& h, const Spec& spec, const std::map<std::st
         }
     }
     ASSERT(h != nullptr);
+
+    if (edition >= 2) {
+        auto size = static_cast<long>(grid->size());
+
+        info.extra_set("numberOfCodedValues", size);
+        info.extra_set("numberOfDataPoints", size);
+    }
 
     try {
         int flags = 0;
