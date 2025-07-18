@@ -415,6 +415,7 @@ codes_handle* codes_bufr_handle_new_from_file(codes_context* c, FILE* f, int* er
  */
 int codes_write_message(const codes_handle* h, const char* file, const char* mode);
 
+/* 'what' is one of GRIB_SECTION_PRODUCT, GRIB_SECTION_GRID etc */
 codes_handle* codes_grib_util_sections_copy(codes_handle* hfrom, codes_handle* hto, int what, int* err);
 
 /**

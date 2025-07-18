@@ -447,6 +447,7 @@ struct grib_string_list
     grib_string_list* next;
 };
 
+/* 'what' is one of GRIB_SECTION_PRODUCT, GRIB_SECTION_GRID etc */
 grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err);
 
 /**
