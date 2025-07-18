@@ -558,13 +558,14 @@ int GribFromSpec::set(codes_handle*& h, const Spec& spec, const std::map<std::st
         long edition = 2;
         get_edition(info, edition);
 
-        h = codes_grib_handle_new_from_samples(nullptr, edition == 1 ? "GRIB1" : edition == 2 ? "GRIB2"
-                                                                                              : NOTIMP);
+        auto sample = "GRIB" + std::to_string(edition);
+
+        h = codes_grib_handle_new_from_samples(nullptr, sample.c_str());
         if (h == nullptr) {
             throw ::eckit::SeriousBug("GribFromSpec: failed to create handle from samples");
         }
     }
-
+    ASSERT(h != nullptr);
 
     try {
         int flags = 0;
