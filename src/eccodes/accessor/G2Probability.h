@@ -18,9 +18,8 @@ namespace eccodes::accessor
 class G2Probability : public Unsigned
 {
 public:
-    G2Probability() :
-        Unsigned() { class_name_ = "g2_probability"; }
-    grib_accessor* create_empty_accessor() override { return new G2Probability{}; }
+    G2Probability() : Unsigned() {}
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     int value_count(long*) override;
@@ -29,6 +28,9 @@ public:
 private:
     const char* productDefinitionTemplateNumber_ = nullptr;
     const char* stepType_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"g2_probability"};
 };
 
 }  // namespace eccodes::accessor
