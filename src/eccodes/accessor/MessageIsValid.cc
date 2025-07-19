@@ -258,6 +258,7 @@ int MessageIsValid::check_grid_pl_array()
 
     long interpretationOfNumberOfPoints = 0;
     err = grib_get_long_internal(handle_, "interpretationOfNumberOfPoints", &interpretationOfNumberOfPoints);
+    if (err) return err;
     if (interpretationOfNumberOfPoints != 1) {
         grib_context_log(c, GRIB_LOG_ERROR,
             "%s: For a reduced grid, interpretationOfNumberOfPoints should be 1 (See Code Table 3.11)", TITLE);
@@ -631,7 +632,7 @@ int MessageIsValid::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int MessageIsValid::pack_string(const char* sval, size_t* len)
+int MessageIsValid::pack_string(const char* sval, size_t*)
 {
     enabledChecks_ = 0; // disable all checks
 
