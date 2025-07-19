@@ -52,6 +52,12 @@ ${tools_dir}/grib_set -s scaleFactorOfSecondFixedSurface=99 $sample $tempGrib
 grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "Second fixed surface: If the type of surface is missing so should its scaleFactor/scaledValue keys" $tempText
 
+# Suppress the product checks; just do grid
+result=$( ${tools_dir}/grib_get -s messageValidityChecks=grid -p isMessageValid $tempGrib )
+[ $result -eq 1 ]
+result=$( ${tools_dir}/grib_get -s messageValidityChecks=product -p isMessageValid $tempGrib )
+[ $result -eq 0 ]
+
 ${tools_dir}/grib_set -s typeOfFirstFixedSurface=missing,scaleFactorOfFirstFixedSurface=99 $sample $tempGrib
 grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "First fixed surface: If the type of surface is missing so should its scaleFactor/scaledValue keys" $tempText
@@ -117,6 +123,10 @@ if [ $HAVE_GEOGRAPHY -eq 1 ]; then
    ${tools_dir}/grib_set -s Nj=0 $data_dir/sample.grib2 $tempGrib
    grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
    grep -q "Regular grid Geoiterator" $tempText
+
+   # Disable grid checks
+   result=$( ${tools_dir}/grib_get -s messageValidityChecks=local -p isMessageValid $tempGrib )
+   [ $result -eq 1 ]
 fi
 
 # Check reduced Gaussian grid Ni
@@ -177,13 +187,12 @@ grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "interpretationOfNumberOfPoints should be 1" $tempText
 
 
-# Check data values
-# ------------------------------
-# Note: This is actually quite an expensive check .... for now disabled
-#
-# ${tools_dir}/grib_set -s bitsPerValue=25 $data_dir/sample.grib2 $tempGrib
-# grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
-# grep -q "Data section size mismatch" $tempText
+# Check data values (by default disabled)
+# ---------------------------------------
+${tools_dir}/grib_set -s bitsPerValue=25 $data_dir/sample.grib2 $tempGrib
+result=$( ${tools_dir}/grib_get -s messageValidityChecks=data -p isMessageValid $tempGrib  2>$tempText )
+[ $result -eq 0 ]
+grep -q "Data section size mismatch" $tempText
 
 
 # Check number of values, missing etc

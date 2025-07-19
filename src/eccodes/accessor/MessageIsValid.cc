@@ -27,12 +27,17 @@ void MessageIsValid::init(const long l, grib_arguments* arg)
     product_ = arg->get_name(h, 0);
     edition_ = 0;
 
-    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     length_ = 0;
+    // GRIB_SECTION_DATA off by default. Too costly
+    enabledChecks_ = GRIB_SECTION_PRODUCT | GRIB_SECTION_GRID | GRIB_SECTION_LOCAL | GRIB_SECTION_BITMAP;
 }
 
 int MessageIsValid::check_date()
 {
+    if ((enabledChecks_ & GRIB_SECTION_PRODUCT)==0) {
+        return GRIB_SUCCESS; // product-related checks disabled
+    }
+
     if (handle_->context->debug)
         fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
@@ -142,29 +147,34 @@ int MessageIsValid::check_grid_and_packing_type()
     return GRIB_SUCCESS;
 }
 
-// int grib_accessor_message_is_valid_t::check_field_values()
-// {
-//     if (handle_->context->debug)
-//         fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
-//     int err = GRIB_SUCCESS;
-//     double* values = NULL;
-//     size_t size = 0;
-//     grib_context* c = handle_->context;
-//     if ((err = grib_get_size(handle_, "values", &size)) != GRIB_SUCCESS)
-//         return err;
-//     values = (double*)grib_context_malloc(c, size * sizeof(double));
-//     if (!values)
-//         return GRIB_OUT_OF_MEMORY;
-//     if ((err = grib_get_double_array(handle_, "values", values, &size)) != GRIB_SUCCESS) {
-//         if (err == GRIB_FUNCTIONALITY_NOT_ENABLED) {
-//             err = GRIB_SUCCESS;
-//         }
-//         grib_context_free(c, values);
-//         return err;
-//     }
-//     grib_context_free(c, values);
-//     return GRIB_SUCCESS;
-// }
+int MessageIsValid::check_field_values()
+{
+    if ((enabledChecks_ & GRIB_SECTION_DATA)==0) {
+        return GRIB_SUCCESS; // data-related checks disabled
+    }
+
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
+    int err = GRIB_SUCCESS;
+    double* values = NULL;
+    size_t size = 0;
+    grib_context* c = handle_->context;
+    if ((err = grib_get_size(handle_, "values", &size)) != GRIB_SUCCESS)
+        return err;
+    values = (double*)grib_context_malloc(c, size * sizeof(double));
+    if (!values)
+        return GRIB_OUT_OF_MEMORY;
+    if ((err = grib_get_double_array(handle_, "values", values, &size)) != GRIB_SUCCESS) {
+        if (err == GRIB_FUNCTIONALITY_NOT_ENABLED) {
+            err = GRIB_SUCCESS;
+        }
+        grib_context_free(c, values);
+        return err;
+    }
+    grib_context_free(c, values);
+    return GRIB_SUCCESS;
+}
 
 int MessageIsValid::check_number_of_missing()
 {
@@ -210,6 +220,10 @@ int MessageIsValid::check_number_of_missing()
 
 int MessageIsValid::check_grid_pl_array()
 {
+    if ((enabledChecks_ & GRIB_SECTION_GRID)==0) {
+        return GRIB_SUCCESS; // grid-related checks are disabled
+    }
+
     if (handle_->context->debug)
         fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
@@ -310,12 +324,21 @@ int MessageIsValid::check_grid_pl_array()
 int MessageIsValid::check_geoiterator()
 {
     int err = 0;
+    if ((enabledChecks_ & GRIB_SECTION_GRID)==0) {
+        return GRIB_SUCCESS; // grid-related checks are disabled
+    }
 
 #if defined(HAVE_GEOGRAPHY)
     if (handle_->context->debug)
         fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
-    grib_iterator* iter = grib_iterator_new(handle_, GRIB_GEOITERATOR_NO_VALUES, &err);
+    // By default do not decode the data values
+    long flags = GRIB_GEOITERATOR_NO_VALUES;
+    if (enabledChecks_ & GRIB_SECTION_DATA) {
+        flags = 0; // decode the data values (user requested it via pack_string)
+    }
+
+    grib_iterator* iter = grib_iterator_new(handle_, flags, &err);
     if (err == GRIB_NOT_IMPLEMENTED || err == GRIB_SUCCESS || err == GRIB_FUNCTIONALITY_NOT_ENABLED) {
         grib_iterator_delete(iter);
         return GRIB_SUCCESS; // GRIB_NOT_IMPLEMENTED is OK e.g., for spectral fields
@@ -341,6 +364,10 @@ int MessageIsValid::check_7777()
 
 int MessageIsValid::check_surface_keys()
 {
+    if ((enabledChecks_ & GRIB_SECTION_PRODUCT)==0) {
+        return GRIB_SUCCESS; // product-related checks disabled
+    }
+
     if (handle_->context->debug)
         fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
@@ -413,6 +440,10 @@ int MessageIsValid::check_surface_keys()
 
 int MessageIsValid::check_steps()
 {
+    if ((enabledChecks_ & GRIB_SECTION_PRODUCT)==0) {
+        return GRIB_SUCCESS; // product-related checks disabled
+    }
+
     if (handle_->context->debug)
         fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
@@ -509,6 +540,10 @@ int MessageIsValid::check_sections()
 
 int MessageIsValid::check_parameter()
 {
+    if ((enabledChecks_ & GRIB_SECTION_PRODUCT)==0) {
+        return GRIB_SUCCESS; // product-related checks disabled
+    }
+
     if (handle_->context->debug)
         fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
@@ -530,6 +565,19 @@ int MessageIsValid::check_parameter()
     return err;
 }
 
+void MessageIsValid::print_enabled_checks() const
+{
+    if (context_->debug) {
+        fprintf(stderr, "ECCODES DEBUG %s: List of enabled checks: ", TITLE);
+        if (enabledChecks_ & GRIB_SECTION_GRID)    fprintf(stderr, " GRID ");
+        if (enabledChecks_ & GRIB_SECTION_PRODUCT) fprintf(stderr, " PRODUCT ");
+        if (enabledChecks_ & GRIB_SECTION_LOCAL)   fprintf(stderr, " LOCAL ");
+        if (enabledChecks_ & GRIB_SECTION_DATA)    fprintf(stderr, " DATA ");
+        if (enabledChecks_ & GRIB_SECTION_BITMAP)  fprintf(stderr, " BITMAP ");
+        fprintf(stderr, "\n");
+    }
+}
+
 int MessageIsValid::unpack_long(long* val, size_t* len)
 {
     typedef int (MessageIsValid::*check_func)();
@@ -539,7 +587,7 @@ int MessageIsValid::unpack_long(long* val, size_t* len)
         &MessageIsValid::check_date,
         &MessageIsValid::check_spectral,
         &MessageIsValid::check_grid_and_packing_type,
-        // &MessageIsValid::check_field_values,
+        &MessageIsValid::check_field_values,
         &MessageIsValid::check_number_of_missing,
         &MessageIsValid::check_grid_pl_array,
         &MessageIsValid::check_geoiterator,
@@ -569,6 +617,8 @@ int MessageIsValid::unpack_long(long* val, size_t* len)
     err = grib_get_long_internal(handle_, "edition", &edition_);
     if (err) return err;
 
+    print_enabled_checks();
+
     const size_t num_check_functions = sizeof(check_functions) / sizeof(check_functions[0]);
     for (size_t i = 0; i < num_check_functions; ++i) {
         check_func cfunc = check_functions[i];
@@ -577,6 +627,38 @@ int MessageIsValid::unpack_long(long* val, size_t* len)
             *val = 0; // check failed
         }
     }
+
+    return GRIB_SUCCESS;
+}
+
+int MessageIsValid::pack_string(const char* sval, size_t* len)
+{
+    enabledChecks_ = 0; // disable all checks
+
+    if (strcmp(sval, "all")==0) {
+        enabledChecks_ = GRIB_SECTION_PRODUCT | GRIB_SECTION_GRID | GRIB_SECTION_LOCAL | GRIB_SECTION_BITMAP | GRIB_SECTION_DATA;
+    }
+    if (strcmp(sval, "default")==0) {
+        enabledChecks_ = GRIB_SECTION_PRODUCT | GRIB_SECTION_GRID | GRIB_SECTION_LOCAL | GRIB_SECTION_BITMAP;
+    }
+
+    if (strstr(sval, "grid")) {
+        enabledChecks_ |= GRIB_SECTION_GRID;
+    }
+    if (strstr(sval, "product")) {
+        enabledChecks_ |= GRIB_SECTION_PRODUCT;
+    }
+    if (strstr(sval, "data")) {
+        enabledChecks_ |= GRIB_SECTION_DATA;
+    }
+    if (strstr(sval, "bitmap")) {
+        enabledChecks_ |= GRIB_SECTION_BITMAP;
+    }
+    if (strstr(sval, "local")) {
+        enabledChecks_ |= GRIB_SECTION_LOCAL;
+    }
+
+    print_enabled_checks();
 
     return GRIB_SUCCESS;
 }
