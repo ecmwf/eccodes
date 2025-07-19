@@ -189,10 +189,13 @@ grep -q "interpretationOfNumberOfPoints should be 1" $tempText
 
 # Check data values (by default disabled)
 # ---------------------------------------
-${tools_dir}/grib_set -s bitsPerValue=25 $data_dir/sample.grib2 $tempGrib
+${tools_dir}/grib_set -s typeOfLevel=surface,bitsPerValue=25 $data_dir/sample.grib2 $tempGrib
 result=$( ${tools_dir}/grib_get -s messageValidityChecks=data -p isMessageValid $tempGrib  2>$tempText )
 [ $result -eq 0 ]
 grep -q "Data section size mismatch" $tempText
+
+result=$( ${tools_dir}/grib_get -s messageValidityChecks=default -p isMessageValid $tempGrib  2>$tempText )
+[ $result -eq 1 ]
 
 
 # Check number of values, missing etc
