@@ -197,6 +197,15 @@ grep -q "Data section size mismatch" $tempText
 result=$( ${tools_dir}/grib_get -s messageValidityChecks=default -p isMessageValid $tempGrib  2>$tempText )
 [ $result -eq 1 ]
 
+# test with filter
+${tools_dir}/grib_filter - $tempGrib <<EOF
+   assert(isMessageValid == 1);
+   set messageValidityChecks = 'default';
+   assert(isMessageValid == 1);
+   set messageValidityChecks = 'data';
+   assert(isMessageValid == 0);
+EOF
+
 
 # Check number of values, missing etc
 # -----------------------------------
@@ -224,6 +233,17 @@ grep -q "Spectral fields cannot have bitsPerValue=0" $tempText
 ${tools_dir}/grib_set -s bitmapPresent=1 $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $tempGrib
 grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "Spectral fields cannot have a bitmap" $tempText
+
+
+# Bad user input
+# ---------------
+set +e
+${tools_dir}/grib_get -s messageValidityChecks=rubbish -p isMessageValid $ECCODES_SAMPLES_PATH/GRIB2.tmpl 2>$tempText
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid argument" $tempText
+grep -q "Select one or more checks from" $tempText
 
 
 # Only GRIB supported for now
