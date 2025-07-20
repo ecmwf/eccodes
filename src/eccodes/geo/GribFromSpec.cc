@@ -102,17 +102,21 @@ struct BoundingBox
     explicit BoundingBox(PointLonLat first, PointLonLat last) :
         BoundingBox(first.lat, first.lon, last.lat, last.lon) {}
 
-    static BoundingBox make_from_points_minmax(const std::vector<Point>& points)
+    static BoundingBox make_from_points_minmax(const Grid& grid)
     {
+        const auto points = grid.to_points();
         ASSERT(!points.empty());
+
+        // invert rotation if necessary, as encoded bounding box is unrotated
+        auto unrotate = grid.projection().type() == "rotation";
 
         auto n = std::get<PointLonLat>(points.front()).lat;
         auto w = std::get<PointLonLat>(points.front()).lon;
         auto s = n;
         auto e = w;
 
-        for (auto point : points) {
-            auto p = std::get<PointLonLat>(point);
+        for (const auto& point : points) {
+            auto p = std::get<PointLonLat>(unrotate ? grid.projection().inv(point) : point);
 
             if (n < p.lat) {
                 n = p.lat;
@@ -334,7 +338,7 @@ void set_grid_type_reduced_gg(grib_info& info, const Grid& grid)
         rotation.fillGrib(info);
     }
 
-    auto bbox = BoundingBox::make_from_points_minmax(g.to_points());
+    auto bbox = BoundingBox::make_from_points_minmax(g);
     bbox.fillGrib(info);
 }
 
