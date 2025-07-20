@@ -12,6 +12,7 @@
 
 #include "eccodes/geo/GribFromSpec.h"
 
+#include <algorithm>
 #include <cstring>
 #include <memory>
 #include <utility>
@@ -56,8 +57,10 @@ class lock_type
 };
 
 
+using ::eckit::geo::Point;
 using ::eckit::geo::PointLonLat;
 using ::eckit::geo::PointXY;
+using ::eckit::types::is_approximately_equal;
 
 
 static inline double normalise_longitude(const double& lon, const double& minimum)
@@ -96,6 +99,39 @@ struct BoundingBox
     explicit BoundingBox(const ::eckit::geo::area::BoundingBox& bbox) :
         BoundingBox(bbox.north, bbox.west, bbox.south, bbox.east) {}
 
+    explicit BoundingBox(PointLonLat first, PointLonLat last) :
+        BoundingBox(first.lat, first.lon, last.lat, last.lon) {}
+
+    static BoundingBox make_from_points_minmax(const std::vector<Point>& points)
+    {
+        ASSERT(!points.empty());
+
+        auto n = std::get<PointLonLat>(points.front()).lat;
+        auto w = std::get<PointLonLat>(points.front()).lon;
+        auto s = n;
+        auto e = w;
+
+        for (auto point : points) {
+            auto p = std::get<PointLonLat>(point);
+
+            if (n < p.lat) {
+                n = p.lat;
+            }
+            else if (s > p.lat) {
+                s = p.lat;
+            }
+
+            if (w > p.lon) {
+                w = p.lon;
+            }
+            else if (e < p.lon) {
+                e = p.lon;
+            }
+        }
+
+        return { n, w, s, e };
+    }
+
     void fillGrib(grib_info& info) const
     {
         // Warning: scanning mode not considered
@@ -133,7 +169,7 @@ struct Rotation
         info.grid.latitudeOfSouthernPoleInDegrees  = south_pole_lat_;
         info.grid.longitudeOfSouthernPoleInDegrees = south_pole_lon_;
 
-        if (!eckit::types::is_approximately_equal<double>(south_pole_angle_, 0.)) {
+        if (!is_approximately_equal(south_pole_angle_, 0.)) {
             info.extra_set("angleOfRotationInDegrees", south_pole_angle_);
         }
     }
@@ -237,7 +273,7 @@ void set_grid_type_regular_ll(grib_info& info, const Grid& grid, const BasicAngl
     info.grid.Ni = static_cast<long>(g.nx());
     info.grid.Nj = static_cast<long>(g.ny());
 
-    BoundingBox bbox(dynamic_cast<const ::eckit::geo::area::BoundingBox&>(grid.area()));
+    BoundingBox bbox(std::get<PointLonLat>(g.first_point()), std::get<PointLonLat>(g.last_point()));
     bbox.fillGrib(info);
 
     if (rotated) {
@@ -260,16 +296,21 @@ void set_grid_type_regular_gg(grib_info& info, const Grid& grid)
     const auto rotated  = grid.projection().type() == "rotation";
     info.grid.grid_type = rotated ? CODES_UTIL_GRID_SPEC_ROTATED_GG : CODES_UTIL_GRID_SPEC_REGULAR_GG;
 
-    const auto& r =
+    const auto& g =
         dynamic_cast<const ::eckit::geo::grid::RegularGaussian&>(grid);
 
-    info.grid.N                            = static_cast<long>(r.N());
-    info.grid.iDirectionIncrementInDegrees = 90. / static_cast<double>(r.N());
+    info.grid.N                            = static_cast<long>(g.N());
+    info.grid.iDirectionIncrementInDegrees = 90. / static_cast<double>(g.N());
 
-    info.grid.Ni = static_cast<long>(r.nx());
-    info.grid.Nj = static_cast<long>(r.ny());
+    info.grid.Ni = static_cast<long>(g.nx());
+    info.grid.Nj = static_cast<long>(g.ny());
 
-    BoundingBox bbox(dynamic_cast<const ::eckit::geo::area::BoundingBox&>(grid.area()));
+    if (rotated) {
+        Rotation rotation(dynamic_cast<const ::eckit::geo::projection::Rotation&>(grid.projection()));
+        rotation.fillGrib(info);
+    }
+
+    BoundingBox bbox(std::get<PointLonLat>(g.first_point()), std::get<PointLonLat>(g.last_point()));
     bbox.fillGrib(info);
 }
 
@@ -279,16 +320,21 @@ void set_grid_type_reduced_gg(grib_info& info, const Grid& grid)
     const auto rotated  = grid.projection().type() == "rotation";
     info.grid.grid_type = rotated ? CODES_UTIL_GRID_SPEC_REDUCED_ROTATED_GG : CODES_UTIL_GRID_SPEC_REDUCED_GG;
 
-    const auto& r =
+    const auto& g =
         dynamic_cast<const ::eckit::geo::grid::ReducedGaussian&>(grid);
 
-    info.grid.pl      = r.pl().data();
-    info.grid.pl_size = static_cast<long>(r.pl().size());
-    info.grid.N       = static_cast<long>(r.N());
+    info.grid.pl      = g.pl().data();
+    info.grid.pl_size = static_cast<long>(g.pl().size());
+    info.grid.N       = static_cast<long>(g.N());
 
-    info.grid.Nj = static_cast<long>(r.ny());
+    info.grid.Nj = static_cast<long>(g.ny());
 
-    BoundingBox bbox(dynamic_cast<const ::eckit::geo::area::BoundingBox&>(grid.area()));
+    if (rotated) {
+        Rotation rotation(dynamic_cast<const ::eckit::geo::projection::Rotation&>(grid.projection()));
+        rotation.fillGrib(info);
+    }
+
+    auto bbox = BoundingBox::make_from_points_minmax(g.to_points());
     bbox.fillGrib(info);
 }
 
@@ -303,7 +349,6 @@ void set_grid_type_unstructured(grib_info& info, const Grid& grid)
         info.extra_set("unstructuredGridSubtype", grid.arrangement().c_str());
         info.extra_set("uuidOfHGrid", grid.uid().c_str());
     };
-
 
     if (const auto type = grid.type();
         type == "fesom") {
@@ -322,12 +367,12 @@ void set_grid_type_healpix(grib_info& info, const Grid& grid)
 {
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_HEALPIX;
 
-    const auto& r(dynamic_cast<const ::eckit::geo::grid::HEALPix&>(grid));
+    const auto& g(dynamic_cast<const ::eckit::geo::grid::HEALPix&>(grid));
 
-    info.grid.N                                  = static_cast<long>(r.Nside());
+    info.grid.N                                  = static_cast<long>(g.Nside());
     info.grid.longitudeOfFirstGridPointInDegrees = 45.;
 
-    info.extra_set("orderingConvention", r.order().c_str());
+    info.extra_set("orderingConvention", g.order().c_str());
 }
 
 
@@ -335,9 +380,9 @@ void set_grid_type_spherical_harmonics(grib_info& info, const Grid& grid)
 {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_SH;
 
-    const auto& r(dynamic_cast<const ::eckit::geo::grid::SphericalHarmonics&>(grid));
+    const auto& g(dynamic_cast<const ::eckit::geo::grid::SphericalHarmonics&>(grid));
 
-    info.grid.truncation = static_cast<long>(r.truncation());
+    info.grid.truncation = static_cast<long>(g.truncation());
 
     // MIR-131: repacking must happen, so computeLaplacianOperator is set
     info.packing.packing_type             = CODES_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX;
@@ -351,27 +396,27 @@ void set_grid_type_lambert_azimuthal_equal_area(grib_info& info, const Grid& gri
 {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA;
 
-    const auto& r(dynamic_cast<const ::eckit::geo::grid::Regular&>(grid));
+    const auto& g(dynamic_cast<const ::eckit::geo::grid::Regular&>(grid));
     const auto reference = std::get<PointLonLat>(grid.projection().fwd(PointXY{ 0., 0. }));
     const auto first     = std::get<PointLonLat>(grid.first_point());
 
     info.packing.editionNumber = 2;
 
-    info.grid.Ni = static_cast<long>(r.nx());
-    info.grid.Nj = static_cast<long>(r.ny());
+    info.grid.Ni = static_cast<long>(g.nx());
+    info.grid.Nj = static_cast<long>(g.ny());
 
     info.grid.latitudeOfFirstGridPointInDegrees  = first.lat;
     info.grid.longitudeOfFirstGridPointInDegrees = first.lon;
 
-    info.extra_set("DxInMetres", r.dx());
-    info.extra_set("DyInMetres", r.dy());
+    info.extra_set("DxInMetres", g.dx());
+    info.extra_set("DyInMetres", g.dy());
     info.extra_set("standardParallelInDegrees", reference.lat);
     info.extra_set("centralLongitudeInDegrees", reference.lon);
 
-    ScanningMode scan(r);
+    ScanningMode scan(g);
     scan.fillGrib(info);
 
-    Shape shape(r.projection().figure());
+    Shape shape(g.projection().figure());
     shape.fillGrib(info);
 }
 
@@ -380,7 +425,7 @@ void set_grid_type_grid_type_lambert(grib_info& info, const Grid& grid)
 {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_LAMBERT_CONFORMAL;
 
-    const auto& r(dynamic_cast<const ::eckit::geo::grid::Regular&>(grid));
+    const auto& g(dynamic_cast<const ::eckit::geo::grid::Regular&>(grid));
     const auto reference = std::get<PointLonLat>(grid.projection().fwd(PointXY{ 0., 0. }));
     const auto first     = std::get<PointLonLat>(grid.first_point());
 
@@ -396,11 +441,11 @@ void set_grid_type_grid_type_lambert(grib_info& info, const Grid& grid)
     info.grid.longitudeOfFirstGridPointInDegrees =
         writeLonPositive ? normalise_longitude(first.lon, 0) : first.lon;
 
-    info.grid.Ni = static_cast<long>(r.nx());
-    info.grid.Nj = static_cast<long>(r.ny());
+    info.grid.Ni = static_cast<long>(g.nx());
+    info.grid.Nj = static_cast<long>(g.ny());
 
-    info.extra_set("DxInMetres", r.dx());
-    info.extra_set("DyInMetres", r.dy());
+    info.extra_set("DxInMetres", g.dx());
+    info.extra_set("DyInMetres", g.dy());
     info.extra_set("Latin1InDegrees", reference.lat);
     info.extra_set("Latin2InDegrees", reference.lat);
     info.extra_set("LoVInDegrees", writeLonPositive ? normalise_longitude(reference.lon, 0)
@@ -410,10 +455,10 @@ void set_grid_type_grid_type_lambert(grib_info& info, const Grid& grid)
         info.extra_set("LaDInDegrees", reference.lat);
     }
 
-    ScanningMode scan(r);
+    ScanningMode scan(g);
     scan.fillGrib(info);
 
-    Shape shape(r.projection().figure());
+    Shape shape(g.projection().figure());
     shape.fillGrib(info);
 }
 
@@ -422,7 +467,7 @@ void set_grid_type_polar_stereographic(grib_info& info, const Grid& grid)
 {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC;
 
-    const auto& r(dynamic_cast<const ::eckit::geo::grid::Regular&>(grid));
+    const auto& g(dynamic_cast<const ::eckit::geo::grid::Regular&>(grid));
     const auto reference = std::get<PointLonLat>(grid.projection().fwd(PointXY{ 0., 0. }));
     const auto first     = std::get<PointLonLat>(grid.first_point());
 
@@ -439,29 +484,22 @@ void set_grid_type_polar_stereographic(grib_info& info, const Grid& grid)
     info.grid.longitudeOfFirstGridPointInDegrees =
         writeLonPositive ? normalise_longitude(first.lon, 0) : first.lon;
 
-    info.grid.Ni = static_cast<long>(r.nx());
-    info.grid.Nj = static_cast<long>(r.ny());
+    info.grid.Ni = static_cast<long>(g.nx());
+    info.grid.Nj = static_cast<long>(g.ny());
 
-    info.extra_set("DxInMetres", r.dx());
-    info.extra_set("DyInMetres", r.dy());
+    info.extra_set("DxInMetres", g.dx());
+    info.extra_set("DyInMetres", g.dy());
     info.extra_set("orientationOfTheGridInDegrees", normalise_longitude(reference.lon, 0));
 
     if (writeLaDInDegrees) {
         info.extra_set("LaDInDegrees", reference.lat);
     }
 
-    ScanningMode scan(r);
+    ScanningMode scan(g);
     scan.fillGrib(info);
 
-    Shape shape(r.projection().figure());
+    Shape shape(g.projection().figure());
     shape.fillGrib(info);
-}
-
-
-void set_rotation(grib_info& info, const Grid& grid)
-{
-    Rotation rotation(dynamic_cast<const ::eckit::geo::projection::Rotation&>(grid.projection()));
-    rotation.fillGrib(info);
 }
 
 

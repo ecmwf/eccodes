@@ -10,13 +10,18 @@
  */
 
 
+#include <vector>
+
 #include "eckit/geo/Exceptions.h"
 #include "eckit/geo/spec/Custom.h"
 #include "eckit/testing/Test.h"
+#include "eckit/types/FloatCompare.h"
 
 #include "eccodes/eccodes.h"
 #include "eccodes/geo/GribFromSpec.h"
 #include "eccodes/grib_api_internal.h"
+
+#define CHECK(a) CODES_CHECK(a, nullptr)
 
 
 bool get_string(const grib_handle* h, const char* key, std::string& value)
@@ -46,11 +51,11 @@ CASE("grid: O2")
          }) {
         ::eckit::geo::spec::Custom spec{ { "grid", "o2" } };
 
-        CODES_CHECK(eccodes::geo::GribFromSpec::set(h, spec), nullptr);
+        CHECK(eccodes::geo::GribFromSpec::set(h, spec));
         EXPECT(h != nullptr);
 
         long valid = 0;
-        CODES_CHECK(codes_get_long(h, "isMessageValid", &valid), nullptr);
+        CHECK(codes_get_long(h, "isMessageValid", &valid));
         EXPECT(valid == 1);
 
         std::string type;
@@ -62,12 +67,34 @@ CASE("grid: O2")
         EXPECT(name == "O2");
 
         long N = 0;
-        CODES_CHECK(codes_get_long(h, "N", &N), nullptr);
+        CHECK(codes_get_long(h, "N", &N));
         EXPECT(N == 2);
 
         long numberOfDataPoints = 0;
-        CODES_CHECK(codes_get_long(h, "numberOfDataPoints", &numberOfDataPoints), nullptr);
+        CHECK(codes_get_long(h, "numberOfDataPoints", &numberOfDataPoints));
         EXPECT(numberOfDataPoints == 88);
+
+        size_t pl_size = 0;
+        CHECK(codes_get_size(h, "pl", &pl_size));
+
+        std::vector<long> pl(pl_size, 0);
+        auto size = pl_size;
+        CHECK(codes_get_long_array(h, "pl", pl.data(), &size));
+        ASSERT(pl_size == size);
+
+        std::vector<long> pl_expected{ 20L, 24, 24, 20 };
+        EXPECT(pl == pl_expected);
+
+        std::vector<double> area(4);
+        CHECK(codes_get_double(h, "latitudeOfFirstGridPointInDegrees", &area[0]));
+        CHECK(codes_get_double(h, "longitudeOfFirstGridPointInDegrees", &area[1]));
+        CHECK(codes_get_double(h, "latitudeOfLastGridPointInDegrees", &area[2]));
+        CHECK(codes_get_double(h, "longitudeOfLastGridPointInDegrees", &area[3]));
+
+        EXPECT(eckit::types::is_strictly_greater(90., area[0]));
+        EXPECT(eckit::types::is_approximately_equal(area[1], 0.));
+        EXPECT(eckit::types::is_strictly_greater(area[2], -90.));
+        EXPECT(eckit::types::is_strictly_greater(360., area[3]));
 
         codes_handle_delete(h);
     }
@@ -83,11 +110,11 @@ CASE("grid: 1/1")
          }) {
         ::eckit::geo::spec::Custom spec{ { "grid", "1/1" } };
 
-        CODES_CHECK(eccodes::geo::GribFromSpec::set(h, spec), nullptr);
+        CHECK(eccodes::geo::GribFromSpec::set(h, spec));
         EXPECT(h != nullptr);
 
         long valid = 0;
-        CODES_CHECK(codes_get_long(h, "isMessageValid", &valid), nullptr);
+        CHECK(codes_get_long(h, "isMessageValid", &valid));
         EXPECT(valid == 1);
 
         std::string type;
@@ -97,11 +124,22 @@ CASE("grid: 1/1")
         long Ni                 = 0;
         long Nj                 = 0;
         long numberOfDataPoints = 0;
-        CODES_CHECK(codes_get_long(h, "Ni", &Ni), nullptr);
-        CODES_CHECK(codes_get_long(h, "Nj", &Nj), nullptr);
-        CODES_CHECK(codes_get_long(h, "numberOfDataPoints", &numberOfDataPoints), nullptr);
+        CHECK(codes_get_long(h, "Ni", &Ni));
+        CHECK(codes_get_long(h, "Nj", &Nj));
+        CHECK(codes_get_long(h, "numberOfDataPoints", &numberOfDataPoints));
 
         EXPECT(Ni * Nj == numberOfDataPoints);
+
+        std::vector<double> area(4);
+        CHECK(codes_get_double(h, "latitudeOfFirstGridPointInDegrees", &area[0]));
+        CHECK(codes_get_double(h, "longitudeOfFirstGridPointInDegrees", &area[1]));
+        CHECK(codes_get_double(h, "latitudeOfLastGridPointInDegrees", &area[2]));
+        CHECK(codes_get_double(h, "longitudeOfLastGridPointInDegrees", &area[3]));
+
+        EXPECT(eckit::types::is_approximately_equal(area[0], 90.));
+        EXPECT(eckit::types::is_approximately_equal(area[1], 0.));
+        EXPECT(eckit::types::is_approximately_equal(area[2], -90.));
+        // EXPECT(eckit::types::is_approximately_equal(area[0], 360. - 1.));
 
         codes_handle_delete(h);
     }
