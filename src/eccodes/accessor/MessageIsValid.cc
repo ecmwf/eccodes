@@ -180,6 +180,10 @@ int MessageIsValid::check_number_of_missing()
 {
     if (edition_ != 2) return GRIB_SUCCESS;
 
+    if (!bitmap_enabled()) {
+        return GRIB_SUCCESS;
+    }
+
     int err = 0;
     long isGridded = -1;
     err = grib_get_long_internal(handle_, "isGridded", &isGridded);
