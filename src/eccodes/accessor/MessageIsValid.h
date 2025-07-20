@@ -22,6 +22,7 @@ public:
         Long() { class_name_ = "message_is_valid"; }
     grib_accessor* create_empty_accessor() override { return new MessageIsValid{}; }
     int unpack_long(long* val, size_t* len) override;
+    int pack_string(const char* sval, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
 private:
@@ -44,6 +45,16 @@ private:
     const char* product_ = nullptr;
     grib_handle* handle_ = nullptr;
     long edition_ = 0;
+
+    // bitwise OR of GRIB_SECTION_PRODUCT, GRIB_SECTION_GRID, GRIB_SECTION_DATA etc
+    unsigned int enabledChecks_ = 0;
+
+    void print_enabled_checks() const;
+    bool grid_enabled() const    { return (enabledChecks_ & GRIB_SECTION_GRID) != 0; }
+    bool product_enabled() const { return (enabledChecks_ & GRIB_SECTION_PRODUCT) != 0; }
+    bool local_enabled() const   { return (enabledChecks_ & GRIB_SECTION_LOCAL) != 0; }
+    bool data_enabled() const    { return (enabledChecks_ & GRIB_SECTION_DATA) != 0; }
+    bool bitmap_enabled() const  { return (enabledChecks_ & GRIB_SECTION_BITMAP) != 0; }
 };
 
 }  // namespace eccodes::accessor

@@ -70,7 +70,8 @@ position   endOfHeadersMarker;
 meta lengthOfHeaders evaluate( endOfHeadersMarker-startOfHeaders);
 meta md5Headers md5(startOfHeaders,lengthOfHeaders);
 
-meta isMessageValid message_is_valid(kindOfProduct);
+meta isMessageValid message_is_valid(kindOfProduct) : no_copy;
+alias messageValidityChecks = isMessageValid; # For encoding
 
 if (!headersOnly) {
   transient  missingValue   = 9999 : dump;
