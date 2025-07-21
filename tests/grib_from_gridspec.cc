@@ -42,6 +42,13 @@ bool get_string(const grib_handle* h, const char* key, std::string& value)
 }
 
 
+void set_string(grib_handle* h, const char* key, const std::string& value)
+{
+    size_t length = value.length();
+    CHECK(codes_set_string(h, key, value.c_str(), &length));
+}
+
+
 CASE("grid: O2")
 {
     for (auto* h : {
@@ -55,6 +62,7 @@ CASE("grid: O2")
         EXPECT(h != nullptr);
 
         long valid = 0;
+        set_string(h, "messageValidityChecks", "grid");
         CHECK(codes_get_long(h, "isMessageValid", &valid));
         EXPECT(valid == 1);
 
@@ -114,6 +122,7 @@ CASE("grid: 1/1")
         EXPECT(h != nullptr);
 
         long valid = 0;
+        set_string(h, "messageValidityChecks", "grid");
         CHECK(codes_get_long(h, "isMessageValid", &valid));
         EXPECT(valid == 1);
 
@@ -139,7 +148,7 @@ CASE("grid: 1/1")
         EXPECT(eckit::types::is_approximately_equal(area[0], 90.));
         EXPECT(eckit::types::is_approximately_equal(area[1], 0.));
         EXPECT(eckit::types::is_approximately_equal(area[2], -90.));
-        // EXPECT(eckit::types::is_approximately_equal(area[0], 360. - 1.));
+        EXPECT(eckit::types::is_approximately_equal(area[3], 360. - 1., 0.5 * 1e-6));
 
         codes_handle_delete(h);
     }
