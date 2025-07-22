@@ -26,7 +26,7 @@ namespace eccodes::geo
 class GribFromSpec
 {
 public:
-    static int set(codes_handle*&, const Spec&, const std::map<std::string, long>& extra = {}, const BasicAngle& = {});
+    static codes_handle* set(const codes_handle*, const Spec&, const std::map<std::string, long>& extra = {}, const BasicAngle& = {});
 };
 
 

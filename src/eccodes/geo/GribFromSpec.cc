@@ -515,20 +515,17 @@ void set_grid_type_polar_stereographic(grib_info& info, const Grid& grid)
 }
 
 
-struct GribHandler : std::unique_ptr<grib_handle, decltype(&codes_handle_delete)>
+struct grib_handle_unique_ptr : std::unique_ptr<grib_handle, decltype(&codes_handle_delete)>
 {
-    explicit GribHandler(element_type* ptr) :
-        unique_ptr(ptr, &codes_handle_delete)
-    {
-        ASSERT(ptr != nullptr);
-    }
+    explicit grib_handle_unique_ptr(element_type* ptr) :
+        unique_ptr(ptr, &codes_handle_delete) { ASSERT(ptr != nullptr); }
 };
 
 
 }  // namespace
 
 
-int GribFromSpec::set(codes_handle*& h, const Spec& spec, const std::map<std::string, long>& extra, const BasicAngle& basic_angle)
+codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const std::map<std::string, long>& extra, const BasicAngle& basic_angle)
 {
     // Protect ecCodes and set error callback handling (throws)
     lock_type lock;
@@ -548,23 +545,17 @@ int GribFromSpec::set(codes_handle*& h, const Spec& spec, const std::map<std::st
 
     grib_info info;
 
-    if (const auto g = grid->type(); g == "regular-ll") {
+    if (const auto g = grid->type(), p = grid->projection().type(); g == "regular-ll") {
         set_grid_type_regular_ll(info, *grid, basic_angle);
     }
-    else if (g == "regular-xy") {
-        const auto p = grid->projection().type();
-        if (p == "laea") {
-            set_grid_type_lambert_azimuthal_equal_area(info, *grid);
-        }
-        else if (p == "lcc") {
-            set_grid_type_grid_type_lambert(info, *grid);
-        }
-        else if (p == "polar-stereographic") {
-            set_grid_type_polar_stereographic(info, *grid);
-        }
-        else {
-            throw ::eckit::SeriousBug("GribFromSpec: unknown projection type: '" + p + "'");
-        }
+    else if (g == "regular-xy" && p == "laea") {
+        set_grid_type_lambert_azimuthal_equal_area(info, *grid);
+    }
+    else if (g == "regular-xy" && p == "lcc") {
+        set_grid_type_grid_type_lambert(info, *grid);
+    }
+    else if (g == "regular-xy" && p == "polar-stereographic") {
+        set_grid_type_polar_stereographic(info, *grid);
     }
     else if (g == "reduced-ll") {
         NOTIMP;
@@ -626,20 +617,18 @@ int GribFromSpec::set(codes_handle*& h, const Spec& spec, const std::map<std::st
         int flags = 0;
         int err   = 0;
 
-        // result is destroyed even on exception handling
-        GribHandler result(codes_grib_util_set_spec(h, &info.grid, &info.packing, flags, nullptr, 0, &err));
+        // result destroyed on exception handling
+        grib_handle_unique_ptr result(codes_grib_util_set_spec(const_cast<codes_handle*>(h), &info.grid, &info.packing, flags, nullptr, 0, &err));
         CHECK_CALL(err);  // err == CODES_WRONG_GRID
 
-        // reassign argument pointer to newly returned one
-        codes_handle_delete(h);
-        h = result.release();
+        // return new handle
+        return result.release();
     }
     catch (...) {
-        codes_handle_delete(h);
         throw;
     }
 
-    return CODES_SUCCESS;
+    // never reached, but for completeness
 }
 
 

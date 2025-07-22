@@ -70,7 +70,10 @@ int GridSpec::pack_string(const char* v, size_t* len)
         std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::make_from_string(spec_str));
         ASSERT(grid);
 
-        CODES_CHECK(eccodes::geo::GribFromSpec::set(h, grid->spec()), nullptr);
+        auto* result = eccodes::geo::GribFromSpec::set(h, grid->spec());
+        ECCODES_ASSERT(result != nullptr);
+
+        // TODO(maee, masn) how to pass (grib_handle•) result into parent_->h or h_ ?
     }
     catch (eckit::geo::Exception& e) {
         grib_context_log(context_, GRIB_LOG_ERROR, "GridSpec: geo::Exception thrown (%s)", e.what());
