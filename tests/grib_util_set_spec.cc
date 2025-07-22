@@ -221,10 +221,12 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
     else
         packing_spec.packing  = GRIB_UTIL_PACKING_SAME_AS_INPUT;
 
-    //packing_spec.extra_settings_count++;
-    //packing_spec.extra_settings[0].type       = GRIB_TYPE_LONG;
-    //packing_spec.extra_settings[0].name       = "expandBoundingBox";
-    //packing_spec.extra_settings[0].long_value = 1;
+    // Temporary. We will remove all instances of the "expandBoundingBox" key from the extra_settings.
+    // This is no longer needed as MIR and gridSpec will always expand
+    packing_spec.extra_settings_count++;
+    packing_spec.extra_settings[0].type       = GRIB_TYPE_LONG;
+    packing_spec.extra_settings[0].name       = "expandBoundingBox";
+    packing_spec.extra_settings[0].long_value = 1;
 
     if (edition != 0) {
         packing_spec.editionNumber = edition;
