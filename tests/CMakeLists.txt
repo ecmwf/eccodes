@@ -595,3 +595,13 @@ else()
     endforeach()
 
 endif()
+
+
+if( eccodes_HAVE_ECKIT_GEO )
+    foreach( test
+            grib_from_gridspec )
+        ecbuild_add_test( TARGET  ${test}
+                          SOURCES ${test}.cc
+                          LIBS    eccodes eckit_geo )
+    endforeach()
+endif()

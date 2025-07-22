@@ -10,7 +10,7 @@
  */
 
 
-#include "geo/GribToSpec.h"
+#include "eccodes/geo/GribToSpec.h"
 
 #include <algorithm>
 #include <cstring>
@@ -22,7 +22,7 @@
 #include <vector>
 
 #include "eckit/config/Resource.h"
-#include "eckit/exception/Exceptions.h"
+#include "eckit/geo/Exceptions.h"
 #include "eckit/geo/PointLonLat.h"
 #include "eckit/geo/util/mutex.h"
 #include "eckit/log/JSON.h"
@@ -38,21 +38,6 @@ const std::vector<double>& gaussian_latitudes(size_t N, bool increasing);
 
 namespace eccodes::geo
 {
-
-
-bool codes_check_error(int e, const char* call)
-{
-    if (e != CODES_SUCCESS) {
-        std::ostringstream os;
-        os << call << ": " << codes_get_error_message(e);
-        throw ::eckit::SeriousBug(os.str());
-    }
-    return true;
-}
-
-
-#define CHECK_ERROR(a, b) codes_check_error(a, b)
-#define CHECK_CALL(a)     codes_check_error(a, #a)
 
 
 namespace
@@ -1036,7 +1021,7 @@ bool GribToSpec::get(const std::string& name, std::vector<double>& value) const
     }
 
     size_t count = 0;
-    int err = codes_get_size(handle_, key, &count);
+    int err      = codes_get_size(handle_, key, &count);
     CHECK_ERROR(err, key);
 
     ASSERT(count > 0);
@@ -1138,7 +1123,9 @@ void GribToSpec::json(eckit::JSON& j) const
         }
 
         if (type == CODES_TYPE_STRING) {
-            char value[1024] = {0,};
+            char value[1024] = {
+                0,
+            };
             size_t length = sizeof(value);
             CHECK_CALL(codes_get_string(handle_, name, value, &length));
             j << name << value;
@@ -1159,8 +1146,8 @@ void GribToSpec::json(eckit::JSON& j) const
 }
 
 
-}  // namespace eccodes::geo
-
-
 #undef CHECK_ERROR
 #undef CHECK_CALL
+
+
+}  // namespace eccodes::geo
