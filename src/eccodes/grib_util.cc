@@ -920,8 +920,11 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     int i = 0, packingTypeIsSet = 0, setSecondOrder = 0, setJpegPacking = 0, setCcsdsPacking = 0;
     bool convertEditionEarlier     = false; // For cases when we cannot set some keys without converting
     bool grib1_high_resolution_fix = false; // See GRIB-863
-    bool global_grid               = false;
-    int expandBoundingBox         = 0;
+
+    // ECC-625: Request is for expansion of bounding box (sub-area).
+    //          This is also called the "snap-out" policy
+    bool expandBoundingBox = true;  // always true for MIR
+
     grib_util_grid_spec* nonConstSpec = const_cast<grib_util_grid_spec*>(spec);
 
     ECCODES_ASSERT(h);
@@ -1331,22 +1334,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     if (packing_spec->extra_settings_count) {
         for (i = 0; i < packing_spec->extra_settings_count; i++) {
             ECCODES_ASSERT(count < 1024);
-            if (strcmp(packing_spec->extra_settings[i].name, "expandBoundingBox") == 0) {
-                if (packing_spec->extra_settings[i].long_value == 1) {
-                    /* ECC-625: Request is for expansion of bounding box (sub-area).
-                     * This is also called the "snap-out" policy */
-                    expandBoundingBox = 1;
-                }
-            }
-            else {
-                values[count++] = packing_spec->extra_settings[i];
-                if (strcmp(packing_spec->extra_settings[i].name, "global") == 0 &&
-                    packing_spec->extra_settings[i].long_value == 1) {
-                    /* GRIB-922: Request is for a global grid. Setting this key will
-                     * calculate the lat/lon values. So the spec's lat/lon can be ignored */
-                    global_grid = true;
-                }
-            }
+            values[count++] = packing_spec->extra_settings[i];
         }
     }
     // grib_write_message(h,"input.grib","w");
@@ -1376,21 +1364,9 @@ grib_handle* grib_util_set_spec(grib_handle* h,
             fprintf(stderr, "%s: Cannot set pl: %s\n", __func__, grib_get_error_message(*err));
             goto cleanup;
         }
-        if (global_grid) {
-            size_t sum = sum_of_pl_array(spec->pl, spec->pl_size);
-            if (data_values_count != sum) {
-                fprintf(stderr, "%s: invalid reduced gaussian grid: "
-                        "specified as global, data_values_count=%zu but sum of pl array=%zu\n",
-                        __func__, data_values_count, sum);
-                *err = GRIB_WRONG_GRID;
-                goto cleanup;
-            }
-        }
     }
 
     if (h->context->debug == -1) {
-        fprintf(stderr, "ECCODES DEBUG grib_util: global_grid = %d\n", global_grid);
-        fprintf(stderr, "ECCODES DEBUG grib_util: expandBoundingBox = %d\n", expandBoundingBox);
         print_values(h->context, spec, packing_spec, input_packing_type, data_values, data_values_count, values, count);
     }
 
@@ -1540,12 +1516,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         grib_set_long(h_out, "deleteLocalDefinition", 1);
     }
 
-    // ECC-445
-    if (expandBoundingBox) {
-        ECCODES_ASSERT(!global_grid); // ECC-576: "global" should not be set
-    }
-
-    if ((*err = check_geometry(h_out, spec, data_values_count, global_grid)) != GRIB_SUCCESS) {
+    if ((*err = check_geometry(h_out, spec, data_values_count, false)) != GRIB_SUCCESS) {
         fprintf(stderr, "%s: Geometry check failed: %s\n", __func__, grib_get_error_message(*err));
         if (h->context->write_on_fail)
             grib_write_message(h_out, "error.grib", "w");
@@ -1553,7 +1524,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     }
 
     /* Disable check: need to re-examine GRIB-864 */
-//     if ( (*err = check_handle_against_spec(h_out, editionNumber, spec, global_grid)) != GRIB_SUCCESS) {
+//     if ( (*err = check_handle_against_spec(h_out, editionNumber, spec, false)) != GRIB_SUCCESS) {
 //         fprintf(stderr,"GRIB_UTIL_SET_SPEC: Geometry check failed: %s\n", grib_get_error_message(*err));
 //         if (editionNumber == 1) {
 //             fprintf(stderr,"Note: in GRIB edition 1 latitude and longitude values cannot be represented with sub-millidegree precision.\n");
