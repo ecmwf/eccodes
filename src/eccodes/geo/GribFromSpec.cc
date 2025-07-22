@@ -12,10 +12,7 @@
 
 #include "eccodes/geo/GribFromSpec.h"
 
-#include <algorithm>
-#include <cstring>
 #include <memory>
-#include <utility>
 
 #include "eckit/geo/Exceptions.h"
 #include "eckit/geo/Figure.h"
@@ -449,9 +446,8 @@ void set_grid_type_grid_type_lambert(grib_info& info, const Grid& grid)
         writeLaDInDegrees = edition >= 2;
     }
 
-    info.grid.latitudeOfFirstGridPointInDegrees = first.lat;
-    info.grid.longitudeOfFirstGridPointInDegrees =
-        writeLonPositive ? normalise_longitude(first.lon, 0) : first.lon;
+    info.grid.latitudeOfFirstGridPointInDegrees  = first.lat;
+    info.grid.longitudeOfFirstGridPointInDegrees = writeLonPositive ? normalise_longitude(first.lon, 0) : first.lon;
 
     info.grid.Ni = static_cast<long>(g.nx());
     info.grid.Nj = static_cast<long>(g.ny());
@@ -534,6 +530,9 @@ codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const s
     // ensure eckit is initialized
     eckit_main_init();
 
+    // ensure handle is provided
+    ASSERT(h != nullptr);
+
     // Check grid properties
     //
     // TODO:
@@ -586,28 +585,12 @@ codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const s
         info.extra_set(key.c_str(), value);
     }
 
+    // Ensure values size (edition >= 2)
+    long edition = 2;
+    CODES_CHECK(codes_get_long(h, "edition", &edition), nullptr);
 
-    // Ensure values size (edition >= 2) and a handle is created (from samples)
-    // FIXME avoid touching the values altogether
-    auto edition = [&h, &info]() -> long {
-        long edition = 2;
-        if (h != nullptr) {
-            CODES_CHECK(codes_get_long(h, "edition", &edition), nullptr);
-        }
-        get_edition(info, edition);
-        return edition;
-    }();
+    get_edition(info, edition);
     ASSERT(edition != 0);
-
-    if (h == nullptr) {
-        auto sample = "GRIB" + std::to_string(edition);
-
-        h = codes_grib_handle_new_from_samples(nullptr, sample.c_str());
-        if (h == nullptr) {
-            throw ::eckit::SeriousBug("GribFromSpec: failed to create handle from samples");
-        }
-    }
-    ASSERT(h != nullptr);
 
     if (edition >= 2) {
         info.extra_set("numberOfDataPoints", static_cast<long>(grid->size()));
