@@ -19,7 +19,6 @@
 
 #include "eccodes/eccodes.h"
 #include "eccodes/geo/GribFromSpec.h"
-#include "eccodes/grib_api_internal.h"
 
 #define CHECK(a) CODES_CHECK(a, nullptr)
 
@@ -52,7 +51,6 @@ void set_string(grib_handle* h, const char* key, const std::string& value)
 CASE("grid: O2")
 {
     for (auto* handle : {
-             static_cast<codes_handle*>(nullptr),
              codes_grib_handle_new_from_samples(nullptr, "GRIB1"),
              codes_grib_handle_new_from_samples(nullptr, "GRIB2"),
          }) {
@@ -112,7 +110,6 @@ CASE("grid: O2")
 CASE("grid: 1/1")
 {
     for (auto* handle : {
-             static_cast<codes_handle*>(nullptr),
              codes_grib_handle_new_from_samples(nullptr, "GRIB1"),
              codes_grib_handle_new_from_samples(nullptr, "GRIB2"),
          }) {
