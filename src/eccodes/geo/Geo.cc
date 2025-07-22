@@ -13,6 +13,7 @@
 #include "eccodes/geo/Geo.h"
 
 #include <string>
+#include <cstring>
 
 #include "eckit/geo/Exceptions.h"
 
