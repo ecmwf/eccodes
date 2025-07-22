@@ -74,6 +74,12 @@ int GridSpec::pack_string(const char* v, size_t* len)
         ECCODES_ASSERT(result != nullptr);
 
         // TODO(maee, masn) how to pass (grib_handle•) result into parent_->h or h_ ?
+        // int err     = 0;
+        // auto* h_out = codes_grib_util_sections_copy(result, h, GRIB_SECTION_PRODUCT | GRIB_SECTION_GRID | GRIB_SECTION_LOCAL | GRIB_SECTION_DATA | GRIB_SECTION_BITMAP, &err);
+        // ECCODES_ASSERT(h_out != nullptr);
+
+        // codes_handle_delete(h);
+        // h = h_out;
     }
     catch (eckit::geo::Exception& e) {
         grib_context_log(context_, GRIB_LOG_ERROR, "GridSpec: geo::Exception thrown (%s)", e.what());
