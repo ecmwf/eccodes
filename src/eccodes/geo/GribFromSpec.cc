@@ -169,10 +169,7 @@ struct Rotation
 
         info.grid.latitudeOfSouthernPoleInDegrees  = south_pole_lat_;
         info.grid.longitudeOfSouthernPoleInDegrees = south_pole_lon_;
-
-        if (!is_approximately_equal(south_pole_angle_, 0.)) {
-            info.extra_set("angleOfRotationInDegrees", south_pole_angle_);
-        }
+        info.grid.angleOfRotationInDegrees = south_pole_angle_;
     }
 
 private:
