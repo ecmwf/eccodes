@@ -1283,7 +1283,7 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
     }
 
     if (c->debug) {
-        fprintf(stderr, "ECCODES DEBUG %s %s\n", __func__, filename);
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", __func__, filename);
         grib_index_dump(stderr, index, GRIB_DUMP_FLAG_TYPE);
     }
     return GRIB_SUCCESS;

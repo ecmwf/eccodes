@@ -84,7 +84,7 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
     outlen                                  = inlen;
     spec.iDirectionIncrementInDegrees       = 1.5;
     spec.jDirectionIncrementInDegrees       = 1.5;
-    spec.latitudeOfFirstGridPointInDegrees  = 87.8637991;
+    spec.latitudeOfFirstGridPointInDegrees  = 87.863799;
     spec.longitudeOfFirstGridPointInDegrees = 0.0;
     spec.latitudeOfLastGridPointInDegrees   = -spec.latitudeOfFirstGridPointInDegrees;
     spec.longitudeOfLastGridPointInDegrees  = 357.187500;
@@ -99,12 +99,11 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
     else
         packing_spec.packing  = GRIB_UTIL_PACKING_SAME_AS_INPUT;
 
-    /*Extra settings
+    // Extra settings
     packing_spec.extra_settings_count++;
     packing_spec.extra_settings[0].type = GRIB_TYPE_LONG;
-    packing_spec.extra_settings[0].name = "expandBoundingBox";
-    packing_spec.extra_settings[0].long_value = 1;
-    */
+    packing_spec.extra_settings[0].name = "year";
+    packing_spec.extra_settings[0].long_value = 1936;
 
     finalh = grib_util_set_spec(
         handle,
@@ -222,6 +221,8 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
     else
         packing_spec.packing  = GRIB_UTIL_PACKING_SAME_AS_INPUT;
 
+    // Temporary. We will remove all instances of the "expandBoundingBox" key from the extra_settings.
+    // This is no longer needed as MIR and gridSpec will always expand
     packing_spec.extra_settings_count++;
     packing_spec.extra_settings[0].type       = GRIB_TYPE_LONG;
     packing_spec.extra_settings[0].name       = "expandBoundingBox";

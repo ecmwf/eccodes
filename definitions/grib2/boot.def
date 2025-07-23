@@ -43,7 +43,8 @@ template core "grib2/sections.def";
 #  }
 #}
 
-meta isMessageValid message_is_valid(kindOfProduct);
+meta isMessageValid message_is_valid(kindOfProduct) : no_copy;
+alias messageValidityChecks = isMessageValid; # For encoding
 
 template section_8 "grib2/section.8.def";
 

@@ -9,7 +9,6 @@
 #
 
 . ./include.ctest.sh
-#test_dir="valgrind --error-exitcode=1 "$test_dir
 
 # --------------------------------------------------
 # Regular Lat/Lon Grid
@@ -106,6 +105,8 @@ stats_old=`${tools_dir}/grib_get -F%.2f -p min,max $infile`
 [ "$stats_old" = "160.25 224.45" ]
 
 $EXEC $grib_util_set_spec -p grid_second_order $infile $outfile
+
+grib_check_key_equals $outfile year 1936
 
 # Check output file. Values are scaled up by 1.1
 grib_check_key_equals $outfile packingType grid_second_order
