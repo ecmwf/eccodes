@@ -29,7 +29,7 @@ struct Fraction
 {
     using value_type = long;
 
-    explicit Fraction() :
+    Fraction() :
         num(0), den(1) {}
 
     explicit Fraction(double);

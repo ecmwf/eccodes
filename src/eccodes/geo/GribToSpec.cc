@@ -483,7 +483,7 @@ ProcessingT<double>* longitudeOfLastGridPointInDegrees_fix_for_global_reduced_gr
 
         return true;
     });
-};
+}
 
 
 ProcessingT<double>* latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids()
@@ -593,7 +593,7 @@ ProcessingT<double>* iDirectionIncrementInDegrees_fix_for_periodic_regular_grids
 
         return true;
     });
-};
+}
 
 
 ProcessingT<std::vector<double>>* vector_double(std::initializer_list<std::string> keys)
