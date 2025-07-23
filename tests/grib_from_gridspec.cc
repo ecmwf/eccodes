@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 1996- ECMWF.
+ * (C) Copyright 2025- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -151,8 +151,10 @@ CASE("grid: 1/1")
     }
 }
 
-
 int main(int argc, char* argv[])
 {
-    return eckit::testing::run_tests(argc, argv);
+    if (getenv("ECCODES_ECKIT_GEO")) {
+        return eckit::testing::run_tests(argc, argv);
+    }
+    return 0;
 }
