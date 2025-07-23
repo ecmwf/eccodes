@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include <vector>
 
 // Compare two strings ignoring case.
 // strcasecmp is not in the C standard. However, it's defined by
@@ -75,50 +76,21 @@ const char* extract_filename(const char* filepath)
 
 // Returns an array of strings the last of which is NULL.
 // Note: The delimiter here is a 'string' but must be ONE character!
-//       Splitting with several delimiters is not supported.
-char** string_split(char* inputString, const char* delimiter)
-{
-    char** result       = NULL;
-    char* p             = inputString;
-    char* lastDelimiter = NULL;
-    char* aToken        = NULL;
-    char* lasts         = NULL;
-    size_t numTokens    = 0;
-    size_t strLength    = 0;
-    size_t index        = 0;
-    char delimiterChar  = 0;
+std::vector<char*> string_split(char* inputString, const char* delimiter) {
+     DEBUG_ASSERT(inputString);
+     DEBUG_ASSERT(delimiter && (strlen(delimiter) == 1));
 
-    DEBUG_ASSERT(inputString);
-    DEBUG_ASSERT(delimiter && (strlen(delimiter) == 1));
-    delimiterChar = delimiter[0];
-    while (*p) {
-        const char ctmp = *p;
-        if (ctmp == delimiterChar) {
-            ++numTokens;
-            lastDelimiter = p;
-        }
-        p++;
+     std::vector<char*> tokens;
+
+     char* savePtr = nullptr;
+     const char* token = strtok_r(inputString, delimiter, &savePtr);
+
+     while (token != nullptr) {
+        tokens.push_back(strdup(token));
+        token = strtok_r(nullptr, delimiter, &savePtr);
     }
-    strLength = strlen(inputString);
-    if (lastDelimiter < (inputString + strLength - 1)) {
-        ++numTokens; // there is a trailing token
-    }
-    ++numTokens; // terminating NULL string to mark the end
 
-    result = (char**)malloc(numTokens * sizeof(char*));
-    ECCODES_ASSERT(result);
-
-    // Start tokenizing
-    aToken = strtok_r(inputString, delimiter, &lasts);
-    while (aToken) {
-        ECCODES_ASSERT(index < numTokens);
-        *(result + index++) = strdup(aToken);
-        aToken              = strtok_r(NULL, delimiter, &lasts);
-    }
-    ECCODES_ASSERT(index == numTokens - 1);
-    *(result + index) = NULL;
-
-    return result;
+    return tokens;
 }
 
 // Return GRIB_SUCCESS if we can convert 'input' to an integer, GRIB_INVALID_ARGUMENT otherwise.

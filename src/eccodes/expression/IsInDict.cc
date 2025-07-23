@@ -9,16 +9,17 @@
  */
 
 #include "IsInDict.h"
+#include <cassert>
 
 namespace eccodes::expression {
 
-grib_trie* IsInDict::load_dictionary(grib_context* c, int* err) const
+Dict IsInDict::load_dictionary(grib_context* c, int* err) const
 {
     char* filename  = NULL;
     char line[1024] = {0,};
     char key[1024] = {0,};
-    char* list = 0;
-    grib_trie* dictionary = NULL;
+    List list;
+    Dict dictionary;
     FILE* f = NULL;
     int i = 0;
 
@@ -28,14 +29,15 @@ grib_trie* IsInDict::load_dictionary(grib_context* c, int* err) const
     if (!filename) {
         grib_context_log(c, GRIB_LOG_ERROR, "unable to find def file %s", dictionary_);
         *err = GRIB_FILE_NOT_FOUND;
-        return NULL;
+        return dictionary;
     }
     else {
         grib_context_log(c, GRIB_LOG_DEBUG, "is_in_dict: found def file %s", filename);
     }
-    dictionary = (grib_trie*)grib_trie_get(c->lists, filename);
-    if (dictionary) {
-        grib_context_log(c, GRIB_LOG_DEBUG, "using dictionary %s from cache", dictionary_);
+
+    if (c->lists.find(filename) != c->lists.end()) {
+        dictionary = c->lists[filename];
+        grib_context_log(c, GRIB_LOG_DEBUG, "using dictionary %s from cache", filename);
         return dictionary;
     }
     else {
@@ -45,10 +47,8 @@ grib_trie* IsInDict::load_dictionary(grib_context* c, int* err) const
     f = codes_fopen(filename, "r");
     if (!f) {
         *err = GRIB_IO_PROBLEM;
-        return NULL;
+        return dictionary;
     }
-
-    dictionary = grib_trie_new(c);
 
     while (fgets(line, sizeof(line) - 1, f)) {
         i = 0;
@@ -57,12 +57,14 @@ grib_trie* IsInDict::load_dictionary(grib_context* c, int* err) const
             i++;
         }
         key[i] = 0;
-        list   = (char*)grib_context_malloc_clear(c, strlen(line) + 1);
-        memcpy(list, line, strlen(line));
-        grib_trie_insert(dictionary, key, list);
+        if (dictionary.find(key) == dictionary.end()) {
+          char* copy_line = (char*)grib_context_malloc_clear(c, strlen(line) + 1);
+          memcpy(copy_line, line, strlen(line));
+          dictionary[key] = List{ copy_line };
+        }
     }
 
-    grib_trie_insert(c->lists, filename, dictionary);
+    c->lists[filename] = dictionary;
 
     fclose(f);
 
@@ -80,12 +82,12 @@ int IsInDict::evaluate_long(grib_handle* h, long* result) const
     char mybuf[1024] = {0,};
     size_t size = 1024;
 
-    grib_trie* dict = load_dictionary(h->context, &err);
+    Dict dict = load_dictionary(h->context, &err);
 
     if ((err = grib_get_string_internal(h, key_, mybuf, &size)) != GRIB_SUCCESS)
         return err;
 
-    if (grib_trie_get(dict, mybuf))
+    if (dict.find(mybuf) != dict.end())
         *result = 1;
     else
         *result = 0;

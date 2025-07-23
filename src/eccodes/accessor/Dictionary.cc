@@ -9,6 +9,7 @@
  */
 
 #include "Dictionary.h"
+#include <cassert>
 
 eccodes::accessor::Dictionary _grib_accessor_dictionary;
 eccodes::Accessor* grib_accessor_dictionary = &_grib_accessor_dictionary;
@@ -31,7 +32,7 @@ void Dictionary::init(const long len, grib_arguments* params)
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-grib_trie* Dictionary::load_dictionary(int* err)
+Dict Dictionary::load_dictionary(int* err)
 {
     char* filename  = NULL;
     char line[1024] = {0,};
@@ -40,9 +41,9 @@ grib_trie* Dictionary::load_dictionary(int* err)
     char localDir[1024] = {0,};
     char dictName[1024] = {0,};
     const char* localFilename   = 0;
-    char* list            = 0;
+    List list;
     size_t len            = 1024;
-    grib_trie* dictionary = NULL;
+    Dict dictionary;
     FILE* f               = NULL;
     int i                 = 0;
     grib_handle* h        = get_enclosing_handle();
@@ -83,14 +84,15 @@ grib_trie* Dictionary::load_dictionary(int* err)
     if (!filename) {
         grib_context_log(c, GRIB_LOG_ERROR, "Unable to find def file %s", dictionary_);
         *err = GRIB_FILE_NOT_FOUND;
-        return NULL;
+        return dictionary;
     }
     else {
         grib_context_log(c, GRIB_LOG_DEBUG, "dictionary: found def file %s", filename);
     }
-    dictionary = (grib_trie*)grib_trie_get(c->lists, dictName);
-    if (dictionary) {
-        grib_context_log(c, GRIB_LOG_DEBUG, "using dictionary %s from cache", dictionary_);
+
+    if (c->lists.find(dictName) != c->lists.end()) {
+        dictionary = c->lists[dictName];
+        grib_context_log(c, GRIB_LOG_DEBUG, "using dictionary %s from cache", dictName);
         return dictionary;
     }
     else {
@@ -100,10 +102,10 @@ grib_trie* Dictionary::load_dictionary(int* err)
     f = codes_fopen(filename, "r");
     if (!f) {
         *err = GRIB_IO_PROBLEM;
-        return NULL;
+        return dictionary;
     }
 
-    dictionary = grib_trie_new(c);
+    dictionary.clear();
 
     while (fgets(line, sizeof(line) - 1, f)) {
         i = 0;
@@ -112,16 +114,27 @@ grib_trie* Dictionary::load_dictionary(int* err)
             i++;
         }
         key[i] = 0;
-        list   = (char*)grib_context_malloc_clear(c, strlen(line) + 1);
-        memcpy(list, line, strlen(line));
-        grib_trie_insert(dictionary, key, list);
+
+        char* copy_line = (char*)grib_context_malloc_clear(c, strlen(line) + 1);
+        memcpy(copy_line, line, strlen(line));
+
+        if (dictionary.find(key) != dictionary.end()) {
+          auto& l = dictionary[key];
+          for (auto& item : l) {
+            if (item) {
+              grib_context_free(c, item);
+            }
+          }
+          dictionary[key].clear();
+        }
+        dictionary[key] = { copy_line };
     }
 
     fclose(f);
 
     if (localFilename != 0) {
         *err = GRIB_NOT_IMPLEMENTED;
-        return NULL;
+        return dictionary;
         // f = codes_fopen(localFilename, "r");
         // if (!f) {
         //     *err = GRIB_IO_PROBLEM;
@@ -142,7 +155,7 @@ grib_trie* Dictionary::load_dictionary(int* err)
 
         //fclose(f);
     }
-    grib_trie_insert(c->lists, filename, dictionary);
+    c->lists[dictName] = dictionary;
     return dictionary;
 }
 
@@ -166,13 +179,13 @@ int Dictionary::unpack_string(char* buffer, size_t* len)
     int err        = GRIB_SUCCESS;
     char key[1024] = {0,};
     size_t size  = 1024;
-    char* list   = NULL;
+    List list;
     char* start  = NULL;
     char* end    = NULL;
     size_t rsize = 0;
     int i        = 0;
 
-    grib_trie* dictionary = load_dictionary(&err);
+    Dict dictionary = load_dictionary(&err);
     if (err)
         return err;
 
@@ -181,13 +194,17 @@ int Dictionary::unpack_string(char* buffer, size_t* len)
         return err;
     }
 
-    list = (char*)grib_trie_get(dictionary, key);
-    if (!list) {
+    if (dictionary.find(key) == dictionary.end()) {
         /* grib_trie_delete(dictionary); */
         return GRIB_NOT_FOUND;
     }
+    else {
+        list = dictionary[key];
+    }
 
-    end = list;
+    assert(!list.empty());
+    end = list[0];
+
     for (i = 0; i <= column_; i++) {
         start = end;
         while (*end != '|' && *end != 0)

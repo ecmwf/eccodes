@@ -11,6 +11,7 @@
 #pragma once
 
 #include "Gen.h"
+#include <optional>
 
 namespace eccodes::accessor
 {
@@ -36,7 +37,7 @@ private:
     const char* masterDir_ = nullptr;
     const char* localDir_ = nullptr;
 
-    grib_trie* load_dictionary(int* err);
+    Dict load_dictionary(int* err);
 };
 
 }  // namespace eccodes::accessor

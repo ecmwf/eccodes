@@ -73,7 +73,7 @@ void BufrElementsTable::init(const long len, grib_arguments* params)
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-grib_trie* BufrElementsTable::load_bufr_elements_table(int* err)
+Dict BufrElementsTable::load_bufr_elements_table(int* err)
 {
     char* filename = NULL;
     char line[1024] = {0,};
@@ -83,10 +83,9 @@ grib_trie* BufrElementsTable::load_bufr_elements_table(int* err)
     char masterRecomposed[1024] = {0,};  // e.g. bufr/tables/0/wmo/36/element.table
     char localRecomposed[1024] = {0,};   // e.g. bufr/tables/0/local/0/98/0/element.table
     char* localFilename   = 0;
-    char** list           = 0;
-    char** cached_list    = 0;
     size_t len            = 1024;
-    grib_trie* dictionary = NULL;
+    List list;
+    Dict dictionary;
     FILE* f               = NULL;
     grib_handle* h        = get_enclosing_handle();
     grib_context* c       = context_;
@@ -129,33 +128,29 @@ grib_trie* BufrElementsTable::load_bufr_elements_table(int* err)
         if (strlen(masterRecomposed) > 0) grib_context_log(c, GRIB_LOG_DEBUG, "master path=%s", masterRecomposed);
         if (strlen(localRecomposed) > 0) grib_context_log(c, GRIB_LOG_DEBUG, "local path=%s", localRecomposed);
         *err       = GRIB_FILE_NOT_FOUND;
-        dictionary = NULL;
         goto the_end;
     }
 
-    dictionary = (grib_trie*)grib_trie_get(c->lists, dictName);
-    if (dictionary) {
+    if (c->lists.find(dictName) != c->lists.end()) {
+        dictionary = c->lists[dictName];
         /*grib_context_log(c,GRIB_LOG_DEBUG,"using dictionary %s from cache",a->dictionary_ );*/
         goto the_end;
     }
     else {
-        grib_context_log(c, GRIB_LOG_DEBUG, "using dictionary %s from file %s", dictionary_, filename);
+        grib_context_log(c, GRIB_LOG_DEBUG, "using dictionary %s from file %s", dictName, filename);
     }
 
     f = codes_fopen(filename, "r");
     if (!f) {
         *err       = GRIB_IO_PROBLEM;
-        dictionary = NULL;
         goto the_end;
     }
-
-    dictionary = grib_trie_new(c);
 
     while (fgets(line, sizeof(line) - 1, f)) {
         DEBUG_ASSERT(strlen(line) > 0);
         if (line[0] == '#') continue; /* Ignore first line with column titles */
         list = string_split(line, "|");
-        grib_trie_insert(dictionary, list[0], list);
+        dictionary[list[0]] = list;
     }
 
     fclose(f);
@@ -164,7 +159,6 @@ grib_trie* BufrElementsTable::load_bufr_elements_table(int* err)
         f = codes_fopen(localFilename, "r");
         if (!f) {
             *err       = GRIB_IO_PROBLEM;
-            dictionary = NULL;
             goto the_end;
         }
 
@@ -173,19 +167,19 @@ grib_trie* BufrElementsTable::load_bufr_elements_table(int* err)
             if (line[0] == '#') continue; /* Ignore first line with column titles */
             list = string_split(line, "|");
             /* Look for the descriptor code in the trie. It might be there from before */
-            cached_list = (char**)grib_trie_get(dictionary, list[0]);
-            if (cached_list) { /* If found, we are about to overwrite it. So free memory */
-                int i;
-                for (i = 0; cached_list[i] != NULL; ++i)
-                    free(cached_list[i]);
-                free(cached_list);
+            // assert(dictionary.has_value());
+            auto& dict = dictionary;
+            if (dict.find(list[0]) != dict.end()) {
+                for (auto& item : dict[list[0]]) {
+                    grib_context_free(c, item);
+                }
             }
-            grib_trie_insert(dictionary, list[0], list);
+            dict[list[0]] = list;
         }
 
         fclose(f);
     }
-    grib_trie_insert(c->lists, dictName, dictionary);
+    c->lists[dictName] = dictionary;
 
 the_end:
     GRIB_MUTEX_UNLOCK(&mutex1);
@@ -233,18 +227,19 @@ static long atol_fast(const char* input)
 int BufrElementsTable::bufr_get_from_table(bufr_descriptor* v)
 {
     int ret              = 0;
-    char** list          = 0;
+    List list;
     char code[7]         = { 0 };
     const size_t codeLen = sizeof(code);
 
-    grib_trie* table = load_bufr_elements_table(&ret);
+    Dict table = load_bufr_elements_table(&ret);
     if (ret)
         return ret;
 
     snprintf(code, codeLen, "%06ld", v->code);
 
-    list = (char**)grib_trie_get(table, code);
-    if (!list)
+    if (table.find(code) != table.end())
+        list = table[code];
+    else
         return GRIB_NOT_FOUND;
 
 #ifdef DEBUG
@@ -276,9 +271,6 @@ bufr_descriptor* BufrElementsTable::get_descriptor(int code, int* err)
 {
     grib_context* c;
     bufr_descriptor* v = NULL;
-
-    // if (!this)  // TODO(maee): Check if this is needed
-    //     return NULL;
 
     c = context_;
     DEBUG_ASSERT(c);

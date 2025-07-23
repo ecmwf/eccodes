@@ -25,6 +25,9 @@
     #include <omp.h>
 #endif
 
+#include <unordered_map>
+#include <vector>
+#include <string>
 
 #ifdef __cplusplus
 extern "C" {
@@ -650,6 +653,10 @@ struct grib_concept_value
     grib_trie* index;
 };
 
+
+using List = std::vector<char*>;
+using Dict = std::unordered_map<std::string, List>;
+
 /* ----------*/
 struct grib_context
 {
@@ -723,7 +730,7 @@ struct grib_context
     int eckit_geo;
     FILE* log_stream;
     grib_trie* classes;
-    grib_trie* lists;
+    std::unordered_map<std::string, Dict> lists;
     grib_trie* expanded_descriptors;
     int file_pool_max_opened_files;
 #if GRIB_PTHREADS
