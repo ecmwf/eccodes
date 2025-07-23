@@ -355,9 +355,7 @@ const char* get_key(const std::string& name, codes_handle* h)
 std::string get_string(codes_handle* h, const char* key)
 {
     if (codes_is_defined(h, key) != 0) {
-        char buffer[64] = {
-            0,
-        };
+        char buffer[64] = {0,};
         size_t size = sizeof(buffer);
 
         CHECK_CALL(codes_get_string(h, key, buffer, &size));
@@ -1123,9 +1121,7 @@ void GribToSpec::json(eckit::JSON& j) const
         }
 
         if (type == CODES_TYPE_STRING) {
-            char value[1024] = {
-                0,
-            };
+            char value[1024] = {0,};
             size_t length = sizeof(value);
             CHECK_CALL(codes_get_string(handle_, name, value, &length));
             j << name << value;
