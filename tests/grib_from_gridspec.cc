@@ -153,7 +153,8 @@ CASE("grid: 1/1")
 
 int main(int argc, char* argv[])
 {
-    if (getenv("ECCODES_ECKIT_GEO")) {
+    const char* eckit_geo = getenv("ECCODES_ECKIT_GEO");
+    if (eckit_geo && atol(eckit_geo) != 0) {
         return eckit::testing::run_tests(argc, argv);
     }
     return 0;
