@@ -9,9 +9,6 @@
  * does it submit to any jurisdiction.
  */
 
-
-#include <vector>
-
 #include "eckit/geo/Exceptions.h"
 #include "eckit/geo/spec/Custom.h"
 #include "eckit/testing/Test.h"
@@ -153,9 +150,11 @@ CASE("grid: 1/1")
 
 int main(int argc, char* argv[])
 {
-    const char* eckit_geo = getenv("ECCODES_ECKIT_GEO");
-    if (eckit_geo && atol(eckit_geo) != 0) {
+    const char* ev_name = "ECCODES_ECKIT_GEO";
+    const char* ev_val = getenv(ev_name);
+    if (ev_val && atol(ev_val) != 0) {
         return eckit::testing::run_tests(argc, argv);
     }
+    printf("%s: This test is disabled (env. variable %s is not set)", argv[0], ev_name);
     return 0;
 }
