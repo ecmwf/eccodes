@@ -60,6 +60,18 @@ eccodes::Accessor* grib_accessor_bufr_elements_table = &_grib_accessor_bufr_elem
 namespace eccodes::accessor
 {
 
+BufrElementsTable::~BufrElementsTable()
+{
+    if (inited_) {
+        for (auto& item : table_) {
+            for (auto& str : item.second) {
+                grib_context_free(context_, str);
+            }
+        }
+        table_.clear();
+    }
+}
+
 void BufrElementsTable::init(const long len, grib_arguments* params)
 {
     Gen::init(len, params);
@@ -73,7 +85,7 @@ void BufrElementsTable::init(const long len, grib_arguments* params)
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-Dict BufrElementsTable::load_bufr_elements_table(int* err)
+void BufrElementsTable::load_bufr_elements_table(int* err)
 {
     char* filename = NULL;
     char line[1024] = {0,};
@@ -85,7 +97,6 @@ Dict BufrElementsTable::load_bufr_elements_table(int* err)
     char* localFilename   = 0;
     size_t len            = 1024;
     List list;
-    Dict dictionary;
     FILE* f               = NULL;
     grib_handle* h        = get_enclosing_handle();
     grib_context* c       = context_;
@@ -132,7 +143,7 @@ Dict BufrElementsTable::load_bufr_elements_table(int* err)
     }
 
     if (c->lists.find(dictName) != c->lists.end()) {
-        dictionary = c->lists[dictName];
+        table_ = c->lists[dictName];
         /*grib_context_log(c,GRIB_LOG_DEBUG,"using dictionary %s from cache",a->dictionary_ );*/
         goto the_end;
     }
@@ -150,7 +161,7 @@ Dict BufrElementsTable::load_bufr_elements_table(int* err)
         DEBUG_ASSERT(strlen(line) > 0);
         if (line[0] == '#') continue; /* Ignore first line with column titles */
         list = string_split(line, "|");
-        dictionary[list[0]] = list;
+        table_[list[0]] = list;
     }
 
     fclose(f);
@@ -167,23 +178,20 @@ Dict BufrElementsTable::load_bufr_elements_table(int* err)
             if (line[0] == '#') continue; /* Ignore first line with column titles */
             list = string_split(line, "|");
             /* Look for the descriptor code in the trie. It might be there from before */
-            // assert(dictionary.has_value());
-            auto& dict = dictionary;
-            if (dict.find(list[0]) != dict.end()) {
-                for (auto& item : dict[list[0]]) {
+            if (table_.find(list[0]) != table_.end()) {
+                for (auto& item : table_[list[0]]) {
                     grib_context_free(c, item);
                 }
             }
-            dict[list[0]] = list;
+            table_[list[0]] = list;
         }
 
         fclose(f);
     }
-    c->lists[dictName] = dictionary;
+    c->lists[dictName] = table_;
 
 the_end:
     GRIB_MUTEX_UNLOCK(&mutex1);
-    return dictionary;
 }
 
 static int convert_type(const char* stype)
@@ -231,14 +239,17 @@ int BufrElementsTable::bufr_get_from_table(bufr_descriptor* v)
     char code[7]         = { 0 };
     const size_t codeLen = sizeof(code);
 
-    Dict table = load_bufr_elements_table(&ret);
-    if (ret)
-        return ret;
+    if (!inited_) {
+      load_bufr_elements_table(&ret);
+      if (ret)
+          return ret;
+      inited_ = true;
+    }
 
     snprintf(code, codeLen, "%06ld", v->code);
 
-    if (table.find(code) != table.end())
-        list = table[code];
+    if (table_.find(code) != table_.end())
+        list = table_[code];
     else
         return GRIB_NOT_FOUND;
 

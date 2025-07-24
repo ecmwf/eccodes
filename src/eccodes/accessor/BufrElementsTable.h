@@ -11,6 +11,7 @@
 #pragma once
 
 #include "Gen.h"
+#include <atomic>
 
 namespace eccodes::accessor
 {
@@ -20,6 +21,7 @@ class BufrElementsTable : public Gen
 public:
     BufrElementsTable() :
         Gen() { class_name_ = "bufr_elements_table"; }
+    ~BufrElementsTable() override;
     grib_accessor* create_empty_accessor() override { return new BufrElementsTable{}; }
     long get_native_type() override;
     int unpack_double(double* val, size_t* len) override;
@@ -35,8 +37,11 @@ private:
     const char* masterDir_ = nullptr;
     const char* localDir_ = nullptr;
 
-    Dict load_bufr_elements_table(int* err);
+    void load_bufr_elements_table(int* err);
     int bufr_get_from_table(bufr_descriptor* v);
+
+    std::atomic_bool inited_ = false;
+    Dict table_;
 };
 
 }  // namespace eccodes::accessor
