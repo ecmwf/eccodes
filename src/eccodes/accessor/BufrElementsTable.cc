@@ -60,17 +60,17 @@ eccodes::Accessor* grib_accessor_bufr_elements_table = &_grib_accessor_bufr_elem
 namespace eccodes::accessor
 {
 
-BufrElementsTable::~BufrElementsTable()
-{
-    if (inited_) {
-        for (auto& item : table_) {
-            for (auto& str : item.second) {
-                grib_context_free(context_, str);
-            }
-        }
-        table_.clear();
-    }
-}
+// BufrElementsTable::~BufrElementsTable()
+// {
+//     if (inited_) {
+//         for (auto& item : table_) {
+//             for (auto& str : item.second) {
+//                 grib_context_free(context_, str);
+//             }
+//         }
+//         table_.clear();
+//     }
+// }
 
 void BufrElementsTable::init(const long len, grib_arguments* params)
 {
