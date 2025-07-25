@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
     grib_handle* h2 = NULL;
     int err       = 0;
     size_t num_diffs = 0, i = 0;
-    char** list_provided_keys = NULL;
+    List list_provided_keys;
 
     f1 = fopen(argv[1], "rb");
     f2 = fopen(argv[2], "rb");
@@ -57,15 +57,11 @@ int main(int argc, char* argv[])
         err = codes_compare_key(h1, h2, "abcdefghij", 0); // no such key
         ECCODES_ASSERT(err == GRIB_NOT_FOUND);
 
-        if (list_provided_keys) {
-            for (i = 0; list_provided_keys[i] != NULL; ++i) {
-                const char* pkey = list_provided_keys[i];
-                //printf("Comparing provided key %s ...\n", list_provided_keys[i]);
-                err = codes_compare_key(h1, h2, pkey, 0);
-                if (err) {
-                    fprintf(stderr, "key: %s  (%s)\n", pkey, grib_get_error_message(err));
-                    ++num_diffs;
-                }
+        for (const auto& key : list_provided_keys) {
+            err = codes_compare_key(h1, h2, key.c_str(), 0);
+            if (err) {
+                fprintf(stderr, "key: %s  (%s)\n", key.c_str(), grib_get_error_message(err));
+                ++num_diffs;
             }
         }
 
@@ -76,11 +72,6 @@ int main(int argc, char* argv[])
 
     fclose(f1);
     fclose(f2);
-
-    if (list_provided_keys) {
-        for (i = 0; list_provided_keys[i] != NULL; ++i) free(list_provided_keys[i]);
-        free(list_provided_keys);
-    }
 
     if (num_diffs > 0) {
         fprintf(stderr, "\nComparison failed: %zu differences\n", num_diffs);

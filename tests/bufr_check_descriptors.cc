@@ -32,19 +32,19 @@ int main(int argc, char** argv)
     char* filename  = NULL;
     FILE* fp        = NULL;
     char line[1024] = {0,};
-    char** list = NULL;
     size_t i = 0, line_number = 0;
     long lValue     = 0;
-    char* str_code  = NULL; /* descriptor */
-    char* str_key   = NULL;
-    char* str_type  = NULL;
-    char* str_scale = NULL;
-    char* str_ref   = NULL;
-    char* str_width = NULL;
-    char* str_units = NULL;
+    std::string str_code; /* descriptor */
+    std::string str_key;
+    std::string str_type;
+    std::string str_scale;
+    std::string str_ref;
+    std::string str_width;
+    std::string str_units;
     bufr_descriptor v;
     const size_t maxlen_keyName = sizeof(v.shortName);
     const size_t maxlen_units   = sizeof(v.units);
+    List list;
 
     ECCODES_ASSERT(argc == 2);
 
@@ -57,72 +57,67 @@ int main(int argc, char** argv)
         ECCODES_ASSERT(strlen(line) > 0);
         if (line[0] == '#') continue; /* Ignore first line with column titles */
         list = string_split(line, "|");
-        if (!list) {
+        if (list.empty()) {
             fprintf(stderr, "Error on line %zu: string_split failed!\n", line_number);
             return 1;
         }
-        for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
-        if (i < MIN_NUM_COLUMNS) {
+        if (list.size() < MIN_NUM_COLUMNS) {
             fprintf(stderr, "Error on line %zu: Number of columns (=%zu) < required miniumum (=%zu)!\n",
                     line_number, i, MIN_NUM_COLUMNS);
             return 1;
         }
         str_code = list[0];
-        if (string_to_long(str_code, &lValue, 1) != GRIB_SUCCESS) {
+        if (string_to_long(str_code.c_str(), &lValue, 1) != GRIB_SUCCESS) {
             fprintf(stderr, "Error on line %zu: descriptor code '%s' (column 1) is not numeric.\n",
-                    line_number, str_code);
+                    line_number, str_code.c_str());
             return 1;
         }
-        if (strlen(str_code) != NUM_DESCRIPTOR_DIGITS) {
+        if (str_code.size() != NUM_DESCRIPTOR_DIGITS) {
             fprintf(stderr, "Error on line %zu: descriptor code '%s' (column 1) is not %zu digits.\n",
-                    line_number, str_code, NUM_DESCRIPTOR_DIGITS);
+                    line_number, str_code.c_str(), NUM_DESCRIPTOR_DIGITS);
             return 1;
         }
         str_key  = list[1];
         str_type = list[2];
-        if (check_descriptor_type(str_type) != GRIB_SUCCESS) {
+        if (check_descriptor_type(str_type.c_str()) != GRIB_SUCCESS) {
             fprintf(stderr, "Error on line %zu: descriptor key type '%s' (column 3) is not valid.\n",
-                    line_number, str_type);
+                    line_number, str_type.c_str());
             fprintf(stderr, "Please choose one of:\n");
             for (i = 0; i < NUMBER(allowed_types); ++i) {
                 fprintf(stderr, "\t%s\n", allowed_types[i]);
             }
             return 1;
         }
-        if (strlen(str_key) >= maxlen_keyName) {
+        if (str_key.size() >= maxlen_keyName) {
             fprintf(stderr, "Error on line %zu: descriptor key name '%s' (column 2) exceeds %zu characters.\n",
-                    line_number, str_key, maxlen_keyName);
+                    line_number, str_key.c_str(), maxlen_keyName);
             return 1;
         }
         str_units = list[4];
-        if (strlen(str_units) >= maxlen_units) {
+        if (str_units.size() >= maxlen_units) {
             fprintf(stderr, "Error on line %zu: descriptor units '%s' (column 5) exceeds %zu characters.\n",
-                    line_number, str_units, maxlen_units);
+                    line_number, str_units.c_str(), maxlen_units);
             return 1;
         }
         str_scale = list[5];
         str_ref   = list[6];
         str_width = list[7];
-        if (string_to_long(str_scale, &lValue, 1) != GRIB_SUCCESS) {
+        if (string_to_long(str_scale.c_str(), &lValue, 1) != GRIB_SUCCESS) {
             fprintf(stderr, "Error on line %zu: descriptor scale '%s' (column 6) is not numeric.\n",
-                    line_number, str_scale);
+                    line_number, str_scale.c_str());
             return 1;
         }
-        if (string_to_long(str_ref, &lValue, 1) != GRIB_SUCCESS) {
+        if (string_to_long(str_ref.c_str(), &lValue, 1) != GRIB_SUCCESS) {
             fprintf(stderr, "Error on line %zu: descriptor reference '%s' (column 7) is not numeric.\n",
-                    line_number, str_ref);
+                    line_number, str_ref.c_str());
             return 1;
         }
         // The final width column can have spaces etc at the end. So turn off strict mode
-        if (string_to_long(str_width, &lValue, /*strict=*/0) != GRIB_SUCCESS) {
+        if (string_to_long(str_width.c_str(), &lValue, /*strict=*/0) != GRIB_SUCCESS) {
             fprintf(stderr, "Error on line %zu: descriptor width '%s' (column 8) is not numeric.\n",
-                    line_number, str_width);
+                    line_number, str_width.c_str());
             return 1;
         }
-
-        for (i = 0; list[i] != NULL; ++i)
-            free(list[i]);
-        free(list);
     }
 
     fclose(fp);

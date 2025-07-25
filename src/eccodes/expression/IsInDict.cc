@@ -57,9 +57,7 @@ std::shared_ptr<Dict> IsInDict::load_dictionary(grib_context* c, int* err) const
             i++;
         }
         key[i] = 0;
-        char* list = (char*)grib_context_malloc_clear(c, strlen(line) + 1);
-        memcpy(list, line, strlen(line));
-        (*dictionary)[key] = (char**) list;
+        (*dictionary)[key] = List{line};
     }
 
     c->lists[filename] = dictionary;

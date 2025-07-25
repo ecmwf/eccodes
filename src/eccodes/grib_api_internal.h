@@ -28,6 +28,7 @@
 #include <unordered_map>
 #include <memory>
 #include <string>
+#include <vector>
 
 #ifdef __cplusplus
 extern "C" {
@@ -653,7 +654,7 @@ struct grib_concept_value
     grib_trie* index;
 };
 
-using List = char**;
+using List = std::vector<std::string>;
 using Dict = std::unordered_map<std::string, List>;
 
 /* ----------*/

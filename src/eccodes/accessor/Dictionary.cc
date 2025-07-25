@@ -112,9 +112,7 @@ std::shared_ptr<Dict> Dictionary::load_dictionary(int* err)
             i++;
         }
         key[i] = 0;
-        char* list   = (char*)grib_context_malloc_clear(c, strlen(line) + 1);
-        memcpy(list, line, strlen(line));
-        (*dictionary)[key] = (char**) list;
+        (*dictionary)[key] = List{line};
     }
 
     fclose(f);
@@ -166,31 +164,28 @@ int Dictionary::unpack_string(char* buffer, size_t* len)
     int err        = GRIB_SUCCESS;
     char key[1024] = {0,};
     size_t size  = 1024;
-    char* list   = NULL;
-    char* start  = NULL;
-    char* end    = NULL;
+    const char* start  = NULL;
+    const char* end    = NULL;
     size_t rsize = 0;
-    int i        = 0;
+    List list;
 
     auto dictionary = load_dictionary(&err);
     if (err)
         return err;
 
     if ((err = grib_get_string_internal(get_enclosing_handle(), key_, key, &size)) != GRIB_SUCCESS) {
-        /* grib_trie_delete(dictionary); */
         return err;
     }
 
     if (dictionary->find(key) != dictionary->end()) {
-        list = (char*) (*dictionary)[key];
+        list = (*dictionary)[key];
     }
     else {
-        /* grib_trie_delete(dictionary); */
         return GRIB_NOT_FOUND;
     }
 
-    end = list;
-    for (i = 0; i <= column_; i++) {
+    end = list[0].c_str();
+    for (int i = 0; i <= column_; i++) {
         start = end;
         while (*end != '|' && *end != 0)
             end++;
@@ -202,7 +197,6 @@ int Dictionary::unpack_string(char* buffer, size_t* len)
     end--;
     rsize = end - start;
     if (*len < rsize) {
-        /* grib_trie_delete(dictionary); */
         return GRIB_ARRAY_TOO_SMALL;
     }
 
@@ -211,8 +205,6 @@ int Dictionary::unpack_string(char* buffer, size_t* len)
         memcpy(buffer, start, rsize);
     if (buffer)
         buffer[rsize] = 0;
-
-    /* grib_trie_delete(dictionary); */
 
     return err;
 }

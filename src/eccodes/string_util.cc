@@ -76,48 +76,22 @@ const char* extract_filename(const char* filepath)
 // Returns an array of strings the last of which is NULL.
 // Note: The delimiter here is a 'string' but must be ONE character!
 //       Splitting with several delimiters is not supported.
-char** string_split(char* inputString, const char* delimiter)
+List string_split(const std::string& inputString, const std::string& delimiter)
 {
-    char** result       = NULL;
-    char* p             = inputString;
-    char* lastDelimiter = NULL;
-    char* aToken        = NULL;
-    char* lasts         = NULL;
-    size_t numTokens    = 0;
-    size_t strLength    = 0;
-    size_t index        = 0;
-    char delimiterChar  = 0;
+    size_t pos = 0;
+    size_t lastPos = 0;
+    List result;
 
-    DEBUG_ASSERT(inputString);
-    DEBUG_ASSERT(delimiter && (strlen(delimiter) == 1));
-    delimiterChar = delimiter[0];
-    while (*p) {
-        const char ctmp = *p;
-        if (ctmp == delimiterChar) {
-            ++numTokens;
-            lastDelimiter = p;
-        }
-        p++;
+    DEBUG_ASSERT(!delimiter.empty() && delimiter.size() == 1);
+    char delimiterChar = delimiter[0];
+
+    while ((pos = inputString.find(delimiterChar, lastPos)) != std::string::npos) {
+        result.push_back(inputString.substr(lastPos, pos - lastPos));
+        lastPos = pos + 1;
     }
-    strLength = strlen(inputString);
-    if (lastDelimiter < (inputString + strLength - 1)) {
-        ++numTokens; // there is a trailing token
+    if (lastPos < inputString.size()) {
+        result.push_back(inputString.substr(lastPos));
     }
-    ++numTokens; // terminating NULL string to mark the end
-
-    result = (char**)malloc(numTokens * sizeof(char*));
-    ECCODES_ASSERT(result);
-
-    // Start tokenizing
-    aToken = strtok_r(inputString, delimiter, &lasts);
-    while (aToken) {
-        ECCODES_ASSERT(index < numTokens);
-        *(result + index++) = strdup(aToken);
-        aToken              = strtok_r(NULL, delimiter, &lasts);
-    }
-    ECCODES_ASSERT(index == numTokens - 1);
-    *(result + index) = NULL;
-
     return result;
 }
 

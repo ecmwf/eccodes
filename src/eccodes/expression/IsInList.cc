@@ -58,7 +58,7 @@ std::shared_ptr<Dict> IsInList::load_list(grib_context* c,  int* err) const
             }
             p++;
         }
-        (*list)[line] = (char**)line;
+        (*list)[line] = List{line};
     }
 
     c->lists[filename] = list;

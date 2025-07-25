@@ -197,42 +197,26 @@ static void test_string_splitting()
 {
     printf("Running %s ...\n", __func__);
 
-    int i          = 0;
     char input[80] = "Born|To|Be|Wild";
-    char** list    = 0;
+    List list;
 
-    list           = string_split(input, "|");
-    if (!list) { ECCODES_ASSERT(!"List is NULL"); return; }
-    for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
-    ECCODES_ASSERT(i == 4);
-    if (!list[0] || !STR_EQUAL(list[0], "Born")) ECCODES_ASSERT(0);
-    if (!list[1] || !STR_EQUAL(list[1], "To"))   ECCODES_ASSERT(0);
-    if (!list[2] || !STR_EQUAL(list[2], "Be"))   ECCODES_ASSERT(0);
-    if (!list[3] || !STR_EQUAL(list[3], "Wild")) ECCODES_ASSERT(0);
-    ECCODES_ASSERT(list[4] == NULL);
-    for (i = 0; list[i] != NULL; ++i) free(list[i]);
-    free(list);
+    list = string_split(input, "|");
+    ECCODES_ASSERT(list.size() == 4);
+    if (!(list[0] == "Born")) ECCODES_ASSERT(0);
+    if (!(list[1] == "To"))   ECCODES_ASSERT(0);
+    if (!(list[2] == "Be"))   ECCODES_ASSERT(0);
+    if (!(list[3] == "Wild")) ECCODES_ASSERT(0);
 
     strcpy(input, "12345|a gap|");
     list = string_split(input, "|");
-    if (!list) { ECCODES_ASSERT(0); return; }
-    for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
-    ECCODES_ASSERT(i == 2);
-    if (!list[0] || !STR_EQUAL(list[0], "12345")) ECCODES_ASSERT(0);
-    if (!list[1] || !STR_EQUAL(list[1], "a gap")) ECCODES_ASSERT(0);
-    ECCODES_ASSERT(list[2] == NULL);
-    for (i = 0; list[i] != NULL; ++i) free(list[i]);
-    free(list);
+    ECCODES_ASSERT(list.size() == 2);
+    if (!(list[0] == "12345")) ECCODES_ASSERT(0);
+    if (!(list[1] == "a gap")) ECCODES_ASSERT(0);
 
     strcpy(input, "Steppenwolf");
     list = string_split(input, ",");
-    if (!list) { ECCODES_ASSERT(0); return; }
-    for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
-    ECCODES_ASSERT(i == 1);
-    if (!list[0] || !STR_EQUAL(list[0], "Steppenwolf")) ECCODES_ASSERT(0);
-    ECCODES_ASSERT(list[1] == NULL);
-    for (i = 0; list[i] != NULL; ++i) free(list[i]);
-    free(list);
+    ECCODES_ASSERT(list.size() == 1);
+    if (!(list[0] == "Steppenwolf")) ECCODES_ASSERT(0);
 
     /* Note: currently cannot cope with */
     /*  input being NULL */
@@ -251,7 +235,7 @@ static void test_assertion_catching()
     printf("Running %s ...\n", __func__);
 
     char empty[] = "";
-    char** list  = NULL;
+    List list;
     ECCODES_ASSERT(assertion_caught == 0);
     codes_set_codes_assertion_failed_proc(&my_assertion_proc);
 
@@ -259,15 +243,11 @@ static void test_assertion_catching()
     list = string_split(empty, " ");
 
     ECCODES_ASSERT(assertion_caught == 1);
-    ECCODES_ASSERT(list == NULL);
+    ECCODES_ASSERT(list.empty());
 
     /* Restore everything */
     codes_set_codes_assertion_failed_proc(NULL);
     assertion_caught = 0;
-
-    // for (i = 0; list[i] != NULL; ++i)
-    //     free(list[i]);
-    free(list);
 }
 
 static void my_logging_proc(const grib_context* c, int level, const char* mesg)
