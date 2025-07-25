@@ -2,7 +2,7 @@ alias mars.step   = endStep;
 alias mars.number = perturbationNumber;
 
 if (class is "ef" || class is "gf" ) {
- alias mars.version  = modelVersion;
+ alias mars.configuration  = modelVersion;
  alias mars.origin = inputOriginatingCentre;
  alias mars.model = modelName;
 }

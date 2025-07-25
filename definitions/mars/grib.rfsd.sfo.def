@@ -1,9 +1,11 @@
-alias mars.step = endStep;
+if (class is "ef" || class is "gf" || class is "gh" || class is "eh) {
+ alias mars.step = endStep;
 
-alias mars.version  = modelVersion;
-alias mars.time  = dataTime;
-alias mars.hdate = dataDate;
-
-alias mars.origin = inputOriginatingCentre;
-
-alias mars.model = modelName;
+ alias mars.configuration  = modelVersion;
+ alias mars.time  = dataTime;
+ alias mars.hdate = dataDate;
+ 
+ alias mars.origin = inputOriginatingCentre;
+ 
+ alias mars.model = modelName;
+}

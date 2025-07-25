@@ -26,7 +26,7 @@ if (centre == 80 && subCentre == 98 && (class is "c3" || class is "ci")) {
 if (class is "ci") { unalias mars.method; }
 
 if (class is "ef" || class is "gf" || class is "gh" || class is "eh) {
- alias mars.version  = modelVersion;
+ alias mars.configuration  = modelVersion;
  alias mars.origin = inputOriginatingCentre;
  alias mars.model = modelName;
 }
