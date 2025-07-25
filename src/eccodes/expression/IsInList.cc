@@ -13,12 +13,12 @@
 
 namespace eccodes::expression {
 
-grib_trie* IsInList::load_list(grib_context* c,  int* err) const
+std::shared_ptr<Dict> IsInList::load_list(grib_context* c,  int* err) const
 {
     char* filename  = NULL;
     char line[1024] = {0,};
-    grib_trie* list = NULL;
     FILE* f         = NULL;
+    std::shared_ptr<Dict> list;
 
     *err = GRIB_SUCCESS;
 
@@ -26,13 +26,14 @@ grib_trie* IsInList::load_list(grib_context* c,  int* err) const
     if (!filename) {
         grib_context_log(c, GRIB_LOG_ERROR, "unable to find def file %s", list_);
         *err = GRIB_FILE_NOT_FOUND;
-        return NULL;
+        return nullptr;
     }
     else {
         grib_context_log(c, GRIB_LOG_DEBUG, "is_in_list: found def file %s", filename);
     }
-    list = (grib_trie*)grib_trie_get(c->lists, filename);
-    if (list) {
+
+    if (c->lists.find(filename) != c->lists.end()) {
+        list = c->lists[filename];
         grib_context_log(c, GRIB_LOG_DEBUG, "using list %s from cache", list_);
         return list;
     }
@@ -43,10 +44,10 @@ grib_trie* IsInList::load_list(grib_context* c,  int* err) const
     f = codes_fopen(filename, "r");
     if (!f) {
         *err = GRIB_IO_PROBLEM;
-        return NULL;
+        return nullptr;
     }
 
-    list = grib_trie_new(c);
+    list = std::make_shared<Dict>();
 
     while (fgets(line, sizeof(line) - 1, f)) {
         unsigned char* p = (unsigned char*)line;
@@ -57,10 +58,10 @@ grib_trie* IsInList::load_list(grib_context* c,  int* err) const
             }
             p++;
         }
-        grib_trie_insert(list, line, line);
+        (*list)[line] = (char**)line;
     }
 
-    grib_trie_insert(c->lists, filename, list);
+    c->lists[filename] = list;
 
     fclose(f);
 
@@ -78,15 +79,21 @@ int IsInList::evaluate_long(grib_handle* h, long* result) const
     char mybuf[1024] = {0,};
     size_t size = 1024;
 
-    grib_trie* list = load_list(h->context, &err);
+    const auto list = load_list(h->context, &err);
 
     if ((err = grib_get_string_internal(h, name_, mybuf, &size)) != GRIB_SUCCESS)
         return err;
 
-    if (grib_trie_get(list, mybuf))
-        *result = 1;
-    else
+    if (list != nullptr) {
+        if (list->find(mybuf) != list->end())
+            *result = 1;
+        else
+            *result = 0;
+    }
+    else {
         *result = 0;
+    }
+
 
     return err;
 }
@@ -114,15 +121,14 @@ const char* IsInList::evaluate_string(grib_handle* h, char* buf, size_t* size, i
     size_t sizebuf = 1024;
     long result;
 
-    grib_trie* list = load_list(h->context, err);
+    const auto list = load_list(h->context, err);
 
     if ((*err = grib_get_string_internal(h, name_, mybuf, &sizebuf)) != GRIB_SUCCESS)
         return NULL;
 
-    if (grib_trie_get(list, mybuf))
+    if (list != nullptr && list->find(mybuf) != list->end()) {
         result = 1;
-    else
-        result = 0;
+    }
 
     snprintf(buf, 32, "%ld", result);
     *size = strlen(buf);

@@ -32,7 +32,7 @@ private:
     const char* key_        = nullptr;
     const char* dictionary_ = nullptr;
 
-    grib_trie* load_dictionary(grib_context*, int* err) const;
+    std::shared_ptr<Dict> load_dictionary(grib_context*, int* err) const;
     friend Expression* new_is_in_dict_expression(grib_context*, const char*, const char*);
 };
 

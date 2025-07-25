@@ -36,7 +36,7 @@ private:
     const char* masterDir_ = nullptr;
     const char* localDir_ = nullptr;
 
-    grib_trie* load_dictionary(int* err);
+    std::shared_ptr<Dict> load_dictionary(int* err);
 };
 
 }  // namespace eccodes::accessor

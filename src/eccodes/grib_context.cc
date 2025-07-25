@@ -382,7 +382,7 @@ static grib_context default_grib_context = {
     0,              /* eckit_geo                  */
     0,              /* log_stream                 */
     0,              /* classes                    */
-    0,              /* lists                      */
+    {},             /* lists                      */
     0,              /* expanded_descriptors       */
     DEFAULT_FILE_POOL_MAX_OPENED_FILES /* file_pool_max_opened_files */
 #if GRIB_PTHREADS
@@ -573,7 +573,6 @@ grib_context* grib_context_get_default()
         default_grib_context.concepts_index = grib_itrie_new(&(default_grib_context), &(default_grib_context.concepts_count));
         default_grib_context.hash_array_index = grib_itrie_new(&(default_grib_context), &(default_grib_context.hash_array_count));
         default_grib_context.def_files = grib_trie_new(&(default_grib_context));
-        default_grib_context.lists = grib_trie_new(&(default_grib_context));
         default_grib_context.classes = grib_trie_new(&(default_grib_context));
         default_grib_context.bufrdc_mode = bufrdc_mode ? atoi(bufrdc_mode) : 0;
         default_grib_context.bufr_set_to_missing_if_out_of_range = bufr_set_to_missing_if_out_of_range ? atoi(bufr_set_to_missing_if_out_of_range) : 0;
