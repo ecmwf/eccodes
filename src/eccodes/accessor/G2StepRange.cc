@@ -89,7 +89,7 @@ int G2StepRange::unpack_string(char* val, size_t* len)
         memcpy(val, ss.str().c_str(), size);
     }
     catch (std::exception& e) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "G2stepRange::unpack_string: %s", e.what());
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s unpack_string: %s", class_name_, e.what());
         return GRIB_DECODING_ERROR;
     }
 
@@ -162,7 +162,7 @@ int G2StepRange::pack_string(const char* val, size_t* len)
         }
     }
     catch (std::exception& e) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "grib_accessor_g2step_range::pack_string: %s", e.what());
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s pack_string: %s", class_name_, e.what());
         return GRIB_INVALID_ARGUMENT;
     }
     return GRIB_SUCCESS;
@@ -256,7 +256,7 @@ int G2StepRange::unpack_double(double* val, size_t* len)
         }
     }
     catch (std::exception& e) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "grid_accessor_g2step_range::unpack_double: %s", e.what());
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s unpack_double: %s", class_name_, e.what());
         return GRIB_DECODING_ERROR;
     }
 

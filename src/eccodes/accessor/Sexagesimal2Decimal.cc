@@ -136,7 +136,7 @@ int Sexagesimal2Decimal::unpack_string(char* val, size_t* len)
     length = strlen(buff);
 
     if (len[0] < length + 1) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "unpack_string: Wrong size (%lu) for %s, it contains %ld values",
+        grib_context_log(context_, GRIB_LOG_ERROR, "unpack_string: Wrong size (%zu) for %s, it contains %ld values",
                          len[0], name_, length_ + 1);
         len[0] = 0;
         return GRIB_ARRAY_TOO_SMALL;
