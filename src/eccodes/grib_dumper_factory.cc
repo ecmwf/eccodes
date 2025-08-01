@@ -11,6 +11,7 @@
 
 #include "grib_api_internal.h"
 #include "grib_dumper_factory.h"
+#include "ExceptionHandler.h"
 
 #if GRIB_PTHREADS
 static pthread_once_t once   = PTHREAD_ONCE_INIT;
@@ -89,7 +90,7 @@ eccodes::Dumper* grib_dumper_factory(const char* op, const grib_handle* h, FILE*
     return NULL;
 }
 
-void grib_dump_content(const grib_handle* h, FILE* f, const char* mode, unsigned long flags, void* data)
+static void grib_dump_content_(const grib_handle* h, FILE* f, const char* mode, unsigned long flags, void* data)
 {
     eccodes::Dumper* dumper = grib_dumper_factory(mode ? mode : "default", h, f, flags, data);
     if (!dumper) {
@@ -107,6 +108,12 @@ void grib_dump_content(const grib_handle* h, FILE* f, const char* mode, unsigned
     grib_dump_accessors_block(dumper, h->root->block);
     dumper->footer(h);
     dumper->destroy();
+}
+
+void grib_dump_content(const grib_handle* h, FILE* f, const char* mode, unsigned long flags, void* data)
+{
+    auto result = eccodes::handleExceptions(grib_dump_content_, h, f, mode, flags, data);
+    return eccodes::logErrorAndReturnValue(result);
 }
 
 void grib_dump_accessors_block(eccodes::Dumper* dumper, grib_block_of_accessors* block)

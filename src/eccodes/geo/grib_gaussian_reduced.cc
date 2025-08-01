@@ -8,6 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 #include "grib_api_internal.h"
+#include "ExceptionHandler.h"
 
 
 /*
@@ -429,7 +430,7 @@ void grib_get_reduced_row_legacy(long pl, double lon_first, double lon_last, lon
 }
 
 /* New method based on eckit Fractions and matching MIR count */
-void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last)
+static void grib_get_reduced_row_(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last)
 {
     long long Ni_globe = pl;
     Fraction_type west;
@@ -454,8 +455,14 @@ void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoi
     *ilon_last  = (the_lon2 * pl) / 360.0;
 }
 
+void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last)
+{
+    auto result = eccodes::handleExceptions(grib_get_reduced_row_, pl, lon_first, lon_last, npoints, ilon_first, ilon_last);
+    return eccodes::logErrorAndReturnValue(result);
+}
+
 /* This version returns the actual first and last longitudes rather than indexes */
-void grib_get_reduced_row_p(long pl, double lon_first, double lon_last, long* npoints, double* olon_first, double* olon_last)
+static void grib_get_reduced_row_p_(long pl, double lon_first, double lon_last, long* npoints, double* olon_first, double* olon_last)
 {
     long long Ni_globe = pl;
     Fraction_type west;
@@ -478,4 +485,10 @@ void grib_get_reduced_row_p(long pl, double lon_first, double lon_last, long* np
     *npoints    = (long)the_count;
     *olon_first = the_lon1;
     *olon_last  = the_lon2;
+}
+
+void grib_get_reduced_row_p(long pl, double lon_first, double lon_last, long* npoints, double* olon_first, double* olon_last)
+{
+    auto result = eccodes::handleExceptions(grib_get_reduced_row_p_, pl, lon_first, lon_last, npoints, olon_first, olon_last);
+    return eccodes::logErrorAndReturnValue(result);
 }

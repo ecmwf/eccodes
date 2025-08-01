@@ -10,6 +10,7 @@
 
 #include "grib_api_internal.h"
 #include "action/Concept.h"
+#include "ExceptionHandler.h"
 #include <float.h>
 #include <string>
 #include <sstream>
@@ -189,7 +190,7 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom, grib_handle*
 }
 
 // The 'what' argument can be a bitwise OR of GRIB_SECTION_GRID, GRIB_SECTION_PRODUCT...etc
-grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err)
+static grib_handle* grib_util_sections_copy_(grib_handle* hfrom, grib_handle* hto, int what, int* err)
 {
     long edition_from                      = 0;
     long edition_to                        = 0;
@@ -287,6 +288,12 @@ grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int w
     }
 
     return grib_sections_copy_internal(hfrom, hto, sections_to_copy, err);
+}
+
+grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err)
+{
+    auto result = eccodes::handleExceptions(grib_util_sections_copy_, hfrom, hto, what, err);
+    return eccodes::updateErrorAndReturnValue(result, err);
 }
 
 static const char* get_packing_spec_packing_name(long packing_spec_packing)
@@ -856,7 +863,7 @@ static int get_grib_sample_name(grib_handle* h, long editionNumber,
 }
 
 // Note: if data_values == NULL, then data_values_count must be 0
-grib_handle* grib_util_set_spec(grib_handle* h,
+static grib_handle* grib_util_set_spec_(grib_handle* h,
                                  const grib_util_grid_spec* spec,
                                  const grib_util_packing_spec* packing_spec,
                                  int flags,
@@ -1542,6 +1549,20 @@ cleanup:
     return NULL;
 }
 
+grib_handle* grib_util_set_spec(grib_handle* h,
+                                 const grib_util_grid_spec* spec,
+                                 const grib_util_packing_spec* packing_spec,
+                                 int flags,
+                                 const double* data_values, //can be NULL
+                                 size_t data_values_count,
+                                 int* err)
+{
+    auto result = eccodes::handleExceptions(grib_util_set_spec_, h, spec, packing_spec, flags, data_values, data_values_count, err);
+    return eccodes::updateErrorAndReturnValue(result, err);
+}
+
+
+
 // int grib_moments(grib_handle* h, double east, double north, double west, double south, int order, double* moments, long* count)
 // {
 //     grib_iterator* iter = NULL;
@@ -2046,7 +2067,7 @@ int grib2_select_PDTN(int is_eps, int is_instant,
 // Output is:
 //  1 = means the surface type needs its scaledValue/scaleFactor i.e., has a level
 //  0 = means scaledValue/scaleFactor must be set to MISSING
-int codes_grib_surface_type_requires_value(int edition, int type_of_surface_code, int* err)
+static int codes_grib_surface_type_requires_value_(int edition, int type_of_surface_code, int* err)
 {
     static const int types_with_values[] = {
         18,  // Departure level of a mixed layer parcel of air with specified layer depth (Pa)
@@ -2088,6 +2109,12 @@ int codes_grib_surface_type_requires_value(int edition, int type_of_surface_code
             return 1;
     }
     return 0;
+}
+
+int codes_grib_surface_type_requires_value(int edition, int type_of_surface_code, int* err)
+{
+    auto result = eccodes::handleExceptions(codes_grib_surface_type_requires_value_, edition, type_of_surface_code, err);
+    return eccodes::updateErrorAndReturnValue(result, err);
 }
 
 size_t sum_of_pl_array(const long* pl, size_t plsize)

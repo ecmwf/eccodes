@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "ExceptionHandler.h"
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */
@@ -23,7 +24,7 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
     return (*a == 0 && *b == 0) ? 0 : 1;
 }
 
-grib_keys_iterator* grib_keys_iterator_new(grib_handle* h, unsigned long filter_flags, const char* name_space)
+static grib_keys_iterator* grib_keys_iterator_new_(grib_handle* h, unsigned long filter_flags, const char* name_space)
 {
     grib_keys_iterator* ki = NULL;
 
@@ -55,7 +56,13 @@ grib_keys_iterator* grib_keys_iterator_new(grib_handle* h, unsigned long filter_
     return ki;
 }
 
-int grib_keys_iterator_set_flags(grib_keys_iterator* ki, unsigned long flags)
+grib_keys_iterator* grib_keys_iterator_new(grib_handle* h, unsigned long filter_flags, const char* name_space)
+{
+    auto result = eccodes::handleExceptions(grib_keys_iterator_new_, h, filter_flags, name_space);
+    return eccodes::logErrorAndReturnValue(result);
+}
+
+static int grib_keys_iterator_set_flags_(grib_keys_iterator* ki, unsigned long flags)
 {
     int ret = 0;
     grib_handle* h;
@@ -86,6 +93,12 @@ int grib_keys_iterator_set_flags(grib_keys_iterator* ki, unsigned long flags)
     return ret;
 }
 
+int grib_keys_iterator_set_flags(grib_keys_iterator* ki, unsigned long flags)
+{
+    auto result = eccodes::handleExceptions(grib_keys_iterator_set_flags_, ki, flags);
+    return eccodes::getErrorCode(result);
+}
+
 static void mark_seen(grib_keys_iterator* ki, const char* name)
 {
     /* See GRIB-932 */
@@ -100,10 +113,16 @@ static int was_seen(grib_keys_iterator* ki, const char* name)
     return grib_trie_get(ki->seen, name) != NULL;
 }
 
-int grib_keys_iterator_rewind(grib_keys_iterator* ki)
+static int grib_keys_iterator_rewind_(grib_keys_iterator* ki)
 {
     ki->at_start = 1;
     return GRIB_SUCCESS;
+}
+
+int grib_keys_iterator_rewind(grib_keys_iterator* ki)
+{
+    auto result = eccodes::handleExceptions(grib_keys_iterator_rewind_, ki);
+    return eccodes::getErrorCode(result);
 }
 
 static int skip(grib_keys_iterator* kiter)
@@ -158,7 +177,7 @@ static int skip(grib_keys_iterator* kiter)
     return 0;
 }
 
-int grib_keys_iterator_next(grib_keys_iterator* kiter)
+static int grib_keys_iterator_next_(grib_keys_iterator* kiter)
 {
     if (kiter->at_start) {
         kiter->current  = kiter->handle->root->block->first;
@@ -174,11 +193,23 @@ int grib_keys_iterator_next(grib_keys_iterator* kiter)
     return kiter->current != NULL;
 }
 
-const char* grib_keys_iterator_get_name(const grib_keys_iterator* kiter)
+int grib_keys_iterator_next(grib_keys_iterator* kiter)
+{
+    auto result = eccodes::handleExceptions(grib_keys_iterator_next_, kiter);
+    return eccodes::getErrorCode(result);
+}
+
+static const char* grib_keys_iterator_get_name_(const grib_keys_iterator* kiter)
 {
     /* if(kiter->name_space) */
     ECCODES_ASSERT(kiter->current);
     return kiter->current->all_names_[kiter->match];
+}
+
+const char* grib_keys_iterator_get_name(const grib_keys_iterator* kiter)
+{
+    auto result = eccodes::handleExceptions(grib_keys_iterator_get_name_, kiter);
+    return eccodes::logErrorAndReturnValue(result);
 }
 
 grib_accessor* grib_keys_iterator_get_accessor(grib_keys_iterator* kiter)
@@ -186,7 +217,7 @@ grib_accessor* grib_keys_iterator_get_accessor(grib_keys_iterator* kiter)
     return kiter->current;
 }
 
-int grib_keys_iterator_delete(grib_keys_iterator* kiter)
+static int grib_keys_iterator_delete_(grib_keys_iterator* kiter)
 {
     if (kiter) {
         if (kiter->seen)
@@ -198,28 +229,65 @@ int grib_keys_iterator_delete(grib_keys_iterator* kiter)
     return 0;
 }
 
-int grib_keys_iterator_get_long(const grib_keys_iterator* kiter, long* v, size_t* len)
+int grib_keys_iterator_delete(grib_keys_iterator* kiter)
+{
+    auto result = eccodes::handleExceptions(grib_keys_iterator_delete_, kiter);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_keys_iterator_get_long_(const grib_keys_iterator* kiter, long* v, size_t* len)
 {
     return kiter->current->unpack_long(v, len);
 }
 
-int grib_keys_iterator_get_double(const grib_keys_iterator* kiter, double* v, size_t* len)
+int grib_keys_iterator_get_long(const grib_keys_iterator* kiter, long* v, size_t* len)
+{
+    auto result = eccodes::handleExceptions(grib_keys_iterator_get_long_, kiter, v, len);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_keys_iterator_get_double_(const grib_keys_iterator* kiter, double* v, size_t* len)
 {
     return kiter->current->unpack_double(v, len);
 }
-int grib_keys_iterator_get_float(const grib_keys_iterator* kiter, float* v, size_t* len)
+
+int grib_keys_iterator_get_double(const grib_keys_iterator* kiter, double* v, size_t* len)
+{
+    auto result = eccodes::handleExceptions(grib_keys_iterator_get_double_, kiter, v, len);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_keys_iterator_get_float_(const grib_keys_iterator* kiter, float* v, size_t* len)
 {
     return kiter->current->unpack_float(v, len);
 }
 
-int grib_keys_iterator_get_string(const grib_keys_iterator* kiter, char* v, size_t* len)
+int grib_keys_iterator_get_float(const grib_keys_iterator* kiter, float* v, size_t* len)
+{
+    auto result = eccodes::handleExceptions(grib_keys_iterator_get_float_, kiter, v, len);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_keys_iterator_get_string_(const grib_keys_iterator* kiter, char* v, size_t* len)
 {
     return kiter->current->unpack_string(v, len);
 }
 
-int grib_keys_iterator_get_bytes(const grib_keys_iterator* kiter, unsigned char* v, size_t* len)
+int grib_keys_iterator_get_string(const grib_keys_iterator* kiter, char* v, size_t* len)
+{
+    auto result = eccodes::handleExceptions(grib_keys_iterator_get_string_, kiter, v, len);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_keys_iterator_get_bytes_(const grib_keys_iterator* kiter, unsigned char* v, size_t* len)
 {
     return kiter->current->unpack_bytes(v, len);
+}
+
+int grib_keys_iterator_get_bytes(const grib_keys_iterator* kiter, unsigned char* v, size_t* len)
+{
+    auto result = eccodes::handleExceptions(grib_keys_iterator_get_bytes_, kiter, v, len);
+    return eccodes::getErrorCode(result);
 }
 
 int grib_keys_iterator_get_native_type(const grib_keys_iterator* kiter)

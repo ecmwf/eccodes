@@ -10,6 +10,7 @@
 
 #include "grib_iterator_factory.h"
 #include "accessor/Iterator.h"
+#include "ExceptionHandler.h"
 
 #if GRIB_PTHREADS
 static pthread_once_t once   = PTHREAD_ONCE_INIT;
@@ -92,7 +93,7 @@ eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_argu
     return NULL;
 }
 
-int grib_get_data(const grib_handle* h, double* lats, double* lons, double* values)
+static int grib_get_data_(const grib_handle* h, double* lats, double* lons, double* values)
 {
     int err             = 0;
     eccodes::geo_iterator::Iterator* iter = NULL;
@@ -110,6 +111,12 @@ int grib_get_data(const grib_handle* h, double* lats, double* lons, double* valu
     gribIteratorDelete(iter);
 
     return err;
+}
+
+int grib_get_data(const grib_handle* h, double* lats, double* lons, double* values)
+{
+    auto result = eccodes::handleExceptions(grib_get_data_, h, lats, lons, values);
+    return eccodes::getErrorCode(result);
 }
 
 /*

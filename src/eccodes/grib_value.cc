@@ -17,6 +17,7 @@
 #include <float.h>
 #include <limits>
 #include <type_traits>
+#include "ExceptionHandler.h"
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */
@@ -120,7 +121,7 @@ int grib_set_long_internal(grib_handle* h, const char* name, long val)
     return GRIB_NOT_FOUND;
 }
 
-int grib_set_long(grib_handle* h, const char* name, long val)
+static int grib_set_long_(grib_handle* h, const char* name, long val)
 {
     int ret          = GRIB_SUCCESS;
     grib_accessor* a = NULL;
@@ -151,6 +152,12 @@ int grib_set_long(grib_handle* h, const char* name, long val)
     }
 
     return GRIB_NOT_FOUND;
+}
+
+int grib_set_long(grib_handle* h, const char* name, long val)
+{
+    auto result = eccodes::handleExceptions(grib_set_long_, h, name, val);
+    return eccodes::getErrorCode(result);
 }
 
 int grib_set_double_internal(grib_handle* h, const char* name, double val)
@@ -188,7 +195,7 @@ struct grib_key_err
     grib_key_err* next;
 };
 
-int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
+static int grib_copy_namespace_(grib_handle* dest, const char* name, grib_handle* src)
 {
     int* err = NULL;
     int type, error_code = 0;
@@ -352,7 +359,13 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
     return error_code;
 }
 
-int grib_set_double(grib_handle* h, const char* name, double val)
+int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
+{
+    auto result = eccodes::handleExceptions(grib_copy_namespace_, dest, name, src);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_set_double_(grib_handle* h, const char* name, double val)
 {
     int ret          = GRIB_SUCCESS;
     grib_accessor* a = NULL;
@@ -378,6 +391,12 @@ int grib_set_double(grib_handle* h, const char* name, double val)
         return ret;
     }
     return GRIB_NOT_FOUND;
+}
+
+int grib_set_double(grib_handle* h, const char* name, double val)
+{
+    auto result = eccodes::handleExceptions(grib_set_double_, h, name, val);
+    return eccodes::getErrorCode(result);
 }
 
 int grib_set_string_internal(grib_handle* h, const char* name,
@@ -491,7 +510,7 @@ static void postprocess_packingType_change(grib_handle* h, const char* keyname, 
     }
 }
 
-int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* length)
+static int grib_set_string_(grib_handle* h, const char* name, const char* val, size_t* length)
 {
     int ret = GRIB_SUCCESS;
     grib_accessor* a = NULL;
@@ -540,7 +559,13 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* l
     return GRIB_NOT_FOUND;
 }
 
-int grib_set_string_array(grib_handle* h, const char* name, const char** val, size_t length)
+int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* length)
+{
+    auto result = eccodes::handleExceptions(grib_set_string_, h, name, val, length);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_set_string_array_(grib_handle* h, const char* name, const char** val, size_t length)
 {
     int ret = GRIB_SUCCESS;
     grib_accessor* a;
@@ -564,6 +589,12 @@ int grib_set_string_array(grib_handle* h, const char* name, const char** val, si
     return GRIB_NOT_FOUND;
 }
 
+int grib_set_string_array(grib_handle* h, const char* name, const char** val, size_t length)
+{
+    auto result = eccodes::handleExceptions(grib_set_string_array_, h, name, val, length);
+    return eccodes::getErrorCode(result);
+}
+
 // int grib_set_bytes_internal(grib_handle* h, const char* name, const unsigned char* val, size_t* length)
 // {
 //     int ret          = GRIB_SUCCESS;
@@ -582,7 +613,7 @@ int grib_set_string_array(grib_handle* h, const char* name, const char** val, si
 //     return GRIB_NOT_FOUND;
 // }
 
-int grib_set_bytes(grib_handle* h, const char* name, const unsigned char* val, size_t* length)
+static int grib_set_bytes_(grib_handle* h, const char* name, const unsigned char* val, size_t* length)
 {
     int ret = GRIB_SUCCESS;
     grib_accessor* a = grib_find_accessor(h, name);
@@ -598,6 +629,12 @@ int grib_set_bytes(grib_handle* h, const char* name, const unsigned char* val, s
         return ret;
     }
     return GRIB_NOT_FOUND;
+}
+
+int grib_set_bytes(grib_handle* h, const char* name, const unsigned char* val, size_t* length)
+{
+    auto result = eccodes::handleExceptions(grib_set_bytes_, h, name, val, length);
+    return eccodes::getErrorCode(result);
 }
 
 // int grib_clear(grib_handle* h, const char* name)
@@ -617,7 +654,7 @@ int grib_set_bytes(grib_handle* h, const char* name, const unsigned char* val, s
 //     return GRIB_NOT_FOUND;
 // }
 
-int grib_set_missing(grib_handle* h, const char* name)
+static int grib_set_missing_(grib_handle* h, const char* name)
 {
     int ret = GRIB_SUCCESS;
     grib_accessor* a = NULL;
@@ -646,6 +683,12 @@ int grib_set_missing(grib_handle* h, const char* name)
 
     grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
     return GRIB_NOT_FOUND;
+}
+
+int grib_set_missing(grib_handle* h, const char* name)
+{
+    auto result = eccodes::handleExceptions(grib_set_missing_, h, name);
+    return eccodes::getErrorCode(result);
 }
 
 int grib_is_missing_long(grib_accessor* a, long x)
@@ -711,17 +754,29 @@ int grib_accessor_can_be_missing(grib_accessor* a, int* err)
     return 0;
 }
 
-int grib_is_missing(const grib_handle* h, const char* name, int* err)
+static int grib_is_missing_(const grib_handle* h, const char* name, int* err)
 {
     grib_accessor* a = grib_find_accessor(h, name);
     return grib_accessor_is_missing(a, err);
 }
 
+int grib_is_missing(const grib_handle* h, const char* name, int* err)
+{
+    auto result = eccodes::handleExceptions(grib_is_missing_, h, name, err);
+    return eccodes::updateErrorAndReturnValue(result, err);
+}
+
 // Return true if the given key exists (is defined) in our grib message
-int grib_is_defined(const grib_handle* h, const char* name)
+static int grib_is_defined_(const grib_handle* h, const char* name)
 {
     const grib_accessor* a = grib_find_accessor(h, name);
     return (a ? 1 : 0);
+}
+
+int grib_is_defined(const grib_handle* h, const char* name)
+{
+    auto result = eccodes::handleExceptions(grib_is_defined_, h, name);
+    return eccodes::getErrorCode(result);
 }
 
 int grib_set_flag(grib_handle* h, const char* name, unsigned long flag)
@@ -889,13 +944,20 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
     return _grib_set_double_array(h, name, val, length, check);
 }
 
-int grib_set_force_double_array(grib_handle* h, const char* name, const double* val, size_t length)
+static int grib_set_force_double_array_(grib_handle* h, const char* name, const double* val, size_t length)
 {
     /* GRIB-285: Same as grib_set_double_array but allows setting of READ-ONLY keys like codedValues */
     /* Use with great caution!! */
     return __grib_set_double_array(h, name, val, length, /*check=*/0);
 }
-int grib_set_force_float_array(grib_handle* h, const char* name, const float* val, size_t length)
+
+int grib_set_force_double_array(grib_handle* h, const char* name, const double* val, size_t length)
+{
+    auto result = eccodes::handleExceptions(grib_set_force_double_array_, h, name, val, length);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_set_force_float_array_(grib_handle* h, const char* name, const float* val, size_t length)
 {
     /* GRIB-285: Same as grib_set_float_array but allows setting of READ-ONLY keys like codedValues */
     /* Use with great caution!! */
@@ -903,14 +965,33 @@ int grib_set_force_float_array(grib_handle* h, const char* name, const float* va
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_set_double_array(grib_handle* h, const char* name, const double* val, size_t length)
+int grib_set_force_float_array(grib_handle* h, const char* name, const float* val, size_t length)
+{
+    auto result = eccodes::handleExceptions(grib_set_force_float_array_, h, name, val, length);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_set_double_array_(grib_handle* h, const char* name, const double* val, size_t length)
 {
     return __grib_set_double_array(h, name, val, length, /*check=*/1);
 }
-int grib_set_float_array(grib_handle* h, const char* name, const float* val, size_t length)
+
+int grib_set_double_array(grib_handle* h, const char* name, const double* val, size_t length)
+{
+    auto result = eccodes::handleExceptions(grib_set_double_array_, h, name, val, length);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_set_float_array_(grib_handle* h, const char* name, const float* val, size_t length)
 {
     //return __grib_set_float_array(h, name, val, length, /*check=*/1);
     return GRIB_NOT_IMPLEMENTED;
+}
+
+int grib_set_float_array(grib_handle* h, const char* name, const float* val, size_t length)
+{
+    auto result = eccodes::handleExceptions(grib_set_float_array_, h, name, val, length);
+    return eccodes::getErrorCode(result);
 }
 
 static int _grib_set_long_array_internal(grib_handle* h, grib_accessor* a, const long* val, size_t buffer_len, size_t* encoded_length, int check)
@@ -990,9 +1071,15 @@ int grib_set_long_array_internal(grib_handle* h, const char* name, const long* v
     return ret;
 }
 
-int grib_set_long_array(grib_handle* h, const char* name, const long* val, size_t length)
+static int grib_set_long_array_(grib_handle* h, const char* name, const long* val, size_t length)
 {
     return _grib_set_long_array(h, name, val, length, 1);
+}
+
+int grib_set_long_array(grib_handle* h, const char* name, const long* val, size_t length)
+{
+    auto result = eccodes::handleExceptions(grib_set_long_array_, h, name, val, length);
+    return eccodes::getErrorCode(result);
 }
 
 int grib_get_long_internal(grib_handle* h, const char* name, long* val)
@@ -1029,7 +1116,7 @@ int grib_get_long_internal(grib_handle* h, const char* name, long* val)
 //     return GRIB_NOT_FOUND;
 // }
 
-int grib_get_long(const grib_handle* h, const char* name, long* val)
+static int grib_get_long_(const grib_handle* h, const char* name, long* val)
 {
     size_t length           = 1;
     grib_accessor* a        = NULL;
@@ -1052,6 +1139,12 @@ int grib_get_long(const grib_handle* h, const char* name, long* val)
     return ret;
 }
 
+int grib_get_long(const grib_handle* h, const char* name, long* val)
+{
+    auto result = eccodes::handleExceptions(grib_get_long_, h, name, val);
+    return eccodes::getErrorCode(result);
+}
+
 int grib_get_double_internal(grib_handle* h, const char* name, double* val)
 {
     int ret = grib_get_double(h, name, val);
@@ -1064,7 +1157,7 @@ int grib_get_double_internal(grib_handle* h, const char* name, double* val)
     return ret;
 }
 
-int grib_get_double(const grib_handle* h, const char* name, double* val)
+static int grib_get_double_(const grib_handle* h, const char* name, double* val)
 {
     size_t length           = 1;
     grib_accessor* a        = NULL;
@@ -1087,7 +1180,13 @@ int grib_get_double(const grib_handle* h, const char* name, double* val)
     return ret;
 }
 
-int grib_get_float(const grib_handle* h, const char* name, float* val)
+int grib_get_double(const grib_handle* h, const char* name, double* val)
+{
+    auto result = eccodes::handleExceptions(grib_get_double_, h, name, val);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_get_float_(const grib_handle* h, const char* name, float* val)
 {
     size_t length           = 1;
     grib_accessor* a        = NULL;
@@ -1110,6 +1209,12 @@ int grib_get_float(const grib_handle* h, const char* name, float* val)
     return ret;
 }
 
+int grib_get_float(const grib_handle* h, const char* name, float* val)
+{
+    auto result = eccodes::handleExceptions(grib_get_float_, h, name, val);
+    return eccodes::getErrorCode(result);
+}
+
 int grib_get_double_element_internal(grib_handle* h, const char* name, int i, double* val)
 {
     int ret = grib_get_double_element(h, name, i, val);
@@ -1122,7 +1227,7 @@ int grib_get_double_element_internal(grib_handle* h, const char* name, int i, do
     return ret;
 }
 
-int grib_get_double_element(const grib_handle* h, const char* name, int i, double* val)
+static int grib_get_double_element_(const grib_handle* h, const char* name, int i, double* val)
 {
     grib_accessor* act = grib_find_accessor(h, name);
 
@@ -1131,7 +1236,14 @@ int grib_get_double_element(const grib_handle* h, const char* name, int i, doubl
     }
     return GRIB_NOT_FOUND;
 }
-int grib_get_float_element(const grib_handle* h, const char* name, int i, float* val)
+
+int grib_get_double_element(const grib_handle* h, const char* name, int i, double* val)
+{
+    auto result = eccodes::handleExceptions(grib_get_double_element_, h, name, i, val);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_get_float_element_(const grib_handle* h, const char* name, int i, float* val)
 {
     grib_accessor* act = grib_find_accessor(h, name);
 
@@ -1139,6 +1251,12 @@ int grib_get_float_element(const grib_handle* h, const char* name, int i, float*
         return act->unpack_float_element(i, val);
     }
     return GRIB_NOT_FOUND;
+}
+
+int grib_get_float_element(const grib_handle* h, const char* name, int i, float* val)
+{
+    auto result = eccodes::handleExceptions(grib_get_float_element_, h, name, i, val);
+    return eccodes::getErrorCode(result);
 }
 
 int grib_get_double_element_set_internal(grib_handle* h, const char* name, const size_t* index_array, size_t len, double* val_array)
@@ -1183,7 +1301,7 @@ int grib_get_float_element_set(const grib_handle* h, const char* name, const siz
     return GRIB_NOT_FOUND;
 }
 
-int grib_get_double_elements(const grib_handle* h, const char* name, const int* index_array, long len, double* val_array)
+static int grib_get_double_elements_(const grib_handle* h, const char* name, const int* index_array, long len, double* val_array)
 {
     double* values = 0;
     int err        = 0;
@@ -1230,9 +1348,22 @@ int grib_get_double_elements(const grib_handle* h, const char* name, const int* 
 
     return err;
 }
-int grib_get_float_elements(const grib_handle* h, const char* name, const int* index_array, long len, float* val_array)
+
+int grib_get_double_elements(const grib_handle* h, const char* name, const int* index_array, long len, double* val_array)
+{
+    auto result = eccodes::handleExceptions(grib_get_double_elements_, h, name, index_array, len, val_array);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_get_float_elements_(const grib_handle* h, const char* name, const int* index_array, long len, float* val_array)
 {
     return GRIB_NOT_IMPLEMENTED;
+}
+
+int grib_get_float_elements(const grib_handle* h, const char* name, const int* index_array, long len, float* val_array)
+{
+    auto result = eccodes::handleExceptions(grib_get_float_elements_, h, name, index_array, len, val_array);
+    return eccodes::getErrorCode(result);
 }
 
 int grib_get_string_internal(grib_handle* h, const char* name, char* val, size_t* length)
@@ -1263,7 +1394,7 @@ static bool is_in_namespace(const grib_accessor* a, const char* ns)
 }
 #endif
 
-int grib_get_string(const grib_handle* h, const char* name, char* val, size_t* length)
+static int grib_get_string_(const grib_handle* h, const char* name, char* val, size_t* length)
 {
     grib_accessor* a        = NULL;
     grib_accessors_list* al = NULL;
@@ -1295,6 +1426,12 @@ int grib_get_string(const grib_handle* h, const char* name, char* val, size_t* l
     }
 }
 
+int grib_get_string(const grib_handle* h, const char* name, char* val, size_t* length)
+{
+    auto result = eccodes::handleExceptions(grib_get_string_, h, name, val, length);
+    return eccodes::getErrorCode(result);
+}
+
 // int grib_get_bytes_internal(const grib_handle* h, const char* name, unsigned char* val, size_t* length)
 // {
 //     int ret = grib_get_bytes(h, name, val, length);
@@ -1305,7 +1442,7 @@ int grib_get_string(const grib_handle* h, const char* name, char* val, size_t* l
 //     return ret;
 // }
 
-int grib_get_bytes(const grib_handle* h, const char* name, unsigned char* val, size_t* length)
+static int grib_get_bytes_(const grib_handle* h, const char* name, unsigned char* val, size_t* length)
 {
     int err = 0;
     grib_accessor* act = grib_find_accessor(h, name);
@@ -1316,7 +1453,13 @@ int grib_get_bytes(const grib_handle* h, const char* name, unsigned char* val, s
     return err;
 }
 
-int grib_get_native_type(const grib_handle* h, const char* name, int* type)
+int grib_get_bytes(const grib_handle* h, const char* name, unsigned char* val, size_t* length)
+{
+    auto result = eccodes::handleExceptions(grib_get_bytes_, h, name, val, length);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_get_native_type_(const grib_handle* h, const char* name, int* type)
 {
     grib_accessors_list* al = NULL;
     grib_accessor* a        = NULL;
@@ -1339,6 +1482,12 @@ int grib_get_native_type(const grib_handle* h, const char* name, int* type)
     }
 
     return GRIB_SUCCESS;
+}
+
+int grib_get_native_type(const grib_handle* h, const char* name, int* type)
+{
+    auto result = eccodes::handleExceptions(grib_get_native_type_, h, name, type);
+    return eccodes::getErrorCode(result);
 }
 
 // const char* grib_get_accessor_class_name(grib_handle* h, const char* name)
@@ -1382,7 +1531,7 @@ int grib_get_float_array_internal(const grib_handle* h, const char* name, float*
     return grib_get_array_internal<float>(h, name, val, length);
 }
 
-int grib_get_double_array(const grib_handle* h, const char* name, double* val, size_t* length)
+static int grib_get_double_array_(const grib_handle* h, const char* name, double* val, size_t* length)
 {
     size_t len              = *length;
     grib_accessor* a        = NULL;
@@ -1411,7 +1560,13 @@ int grib_get_double_array(const grib_handle* h, const char* name, double* val, s
     }
 }
 
-int grib_get_float_array(const grib_handle* h, const char* name, float* val, size_t *length)
+int grib_get_double_array(const grib_handle* h, const char* name, double* val, size_t* length)
+{
+    auto result = eccodes::handleExceptions(grib_get_double_array_, h, name, val, length);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_get_float_array_(const grib_handle* h, const char* name, float* val, size_t *length)
 {
     size_t len = *length;
     grib_accessor* a = grib_find_accessor(h, name);
@@ -1426,6 +1581,12 @@ int grib_get_float_array(const grib_handle* h, const char* name, float* val, siz
     ECCODES_ASSERT(name[0]!='#');
     *length = 0;
     return _grib_get_array_internal<float>(h,a,val,len,length);
+}
+
+int grib_get_float_array(const grib_handle* h, const char* name, float* val, size_t *length)
+{
+    auto result = eccodes::handleExceptions(grib_get_float_array_, h, name, val, length);
+    return eccodes::getErrorCode(result);
 }
 
 template <>
@@ -1499,7 +1660,7 @@ int grib_get_size_acc(const grib_handle* h, grib_accessor* a, size_t* size)
     return GRIB_SUCCESS;
 }
 
-int grib_get_size(const grib_handle* ch, const char* name, size_t* size)
+static int grib_get_size_(const grib_handle* ch, const char* name, size_t* size)
 {
     grib_handle* h          = (grib_handle*)ch;
     grib_accessor* a        = NULL;
@@ -1530,9 +1691,21 @@ int grib_get_size(const grib_handle* ch, const char* name, size_t* size)
     }
 }
 
-int grib_get_length(const grib_handle* h, const char* name, size_t* length)
+int grib_get_size(const grib_handle* ch, const char* name, size_t* size)
+{
+    auto result = eccodes::handleExceptions(grib_get_size_, ch, name, size);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_get_length_(const grib_handle* h, const char* name, size_t* length)
 {
     return grib_get_string_length(h, name, length);
+}
+
+int grib_get_length(const grib_handle* h, const char* name, size_t* length)
+{
+    auto result = eccodes::handleExceptions(grib_get_length_, h, name, length);
+    return eccodes::getErrorCode(result);
 }
 
 // int grib_get_count(grib_handle* h, const char* name, size_t* size)
@@ -1548,7 +1721,7 @@ int grib_get_length(const grib_handle* h, const char* name, size_t* length)
 //     return GRIB_SUCCESS;
 // }
 
-int grib_get_offset(const grib_handle* ch, const char* key, size_t* val)
+static int grib_get_offset_(const grib_handle* ch, const char* key, size_t* val)
 {
     const grib_handle* h     = (grib_handle*)ch;
     grib_accessor* act = grib_find_accessor(h, key);
@@ -1557,6 +1730,12 @@ int grib_get_offset(const grib_handle* ch, const char* key, size_t* val)
         return GRIB_SUCCESS;
     }
     return GRIB_NOT_FOUND;
+}
+
+int grib_get_offset(const grib_handle* ch, const char* key, size_t* val)
+{
+    auto result = eccodes::handleExceptions(grib_get_offset_, ch, key, val);
+    return eccodes::getErrorCode(result);
 }
 
 static int grib_get_string_array_internal_(const grib_handle* h, grib_accessor* a, char** val, size_t buffer_len, size_t* decoded_length)
@@ -1577,7 +1756,7 @@ static int grib_get_string_array_internal_(const grib_handle* h, grib_accessor* 
     }
 }
 
-int grib_get_string_array(const grib_handle* h, const char* name, char** val, size_t* length)
+static int grib_get_string_array_(const grib_handle* h, const char* name, char** val, size_t* length)
 {
     size_t len              = *length;
     grib_accessor* a        = NULL;
@@ -1604,6 +1783,12 @@ int grib_get_string_array(const grib_handle* h, const char* name, char** val, si
             return grib_get_string_array_internal_(h, a, val, len, length);
         }
     }
+}
+
+int grib_get_string_array(const grib_handle* h, const char* name, char** val, size_t* length)
+{
+    auto result = eccodes::handleExceptions(grib_get_string_array_, h, name, val, length);
+    return eccodes::getErrorCode(result);
 }
 
 static int _grib_get_long_array_internal(const grib_handle* h, grib_accessor* a, long* val, size_t buffer_len, size_t* decoded_length)
@@ -1636,7 +1821,7 @@ int grib_get_long_array_internal(grib_handle* h, const char* name, long* val, si
     return ret;
 }
 
-int grib_get_long_array(const grib_handle* h, const char* name, long* val, size_t* length)
+static int grib_get_long_array_(const grib_handle* h, const char* name, long* val, size_t* length)
 {
     size_t len              = *length;
     grib_accessor* a        = NULL;
@@ -1663,6 +1848,12 @@ int grib_get_long_array(const grib_handle* h, const char* name, long* val, size_
         }
     }
     return ret;
+}
+
+int grib_get_long_array(const grib_handle* h, const char* name, long* val, size_t* length)
+{
+    auto result = eccodes::handleExceptions(grib_get_long_array_, h, name, val, length);
+    return eccodes::getErrorCode(result);
 }
 
 // static void grib_clean_key_value(grib_context* c, grib_key_value_list* kv)
@@ -1831,10 +2022,16 @@ int grib_get_long_array(const grib_handle* h, const char* name, long* val, size_
 //     return ret;
 // }
 
-int grib_set_values(grib_handle* h, grib_values* args, size_t count)
+static int grib_set_values_(grib_handle* h, grib_values* args, size_t count)
 {
     // The default behaviour is to print any error messages (not silent)
     return grib_set_values_silent(h, args, count, /*silent=*/0);
+}
+
+int grib_set_values(grib_handle* h, grib_values* args, size_t count)
+{
+    auto result = eccodes::handleExceptions(grib_set_values_, h, args, count);
+    return eccodes::getErrorCode(result);
 }
 
 int grib_set_values_silent(grib_handle* h, grib_values* args, size_t count, int silent)
@@ -1954,7 +2151,7 @@ void grib_print_values(const char* title, const grib_values* values, FILE* out, 
     }
 }
 
-int grib_values_check(grib_handle* h, grib_values* values, int count)
+static int grib_values_check_(grib_handle* h, grib_values* values, int count)
 {
     int i = 0;
     long long_value;
@@ -2017,6 +2214,11 @@ int grib_values_check(grib_handle* h, grib_values* values, int count)
     }
 
     return 0;
+}
+
+int grib_values_check(grib_handle* h, grib_values* values, int count) {
+  auto errors = eccodes::handleExceptions(grib_values_check_, h, values, count);
+  return eccodes::getErrorCode(errors);
 }
 
 int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type)
