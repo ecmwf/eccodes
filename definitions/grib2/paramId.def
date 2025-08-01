@@ -1455,6 +1455,18 @@
 	 parameterNumber = 79 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean significant wave height of all waves with periods within the inclusive range from 10 to 12 seconds
+'141114' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 12 ;
+	}
 #Time-mean significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds
 '141115' = {
 	 discipline = 10 ;
@@ -2101,6 +2113,18 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 79 ;
 	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum significant wave height of all waves with periods within the inclusive range from 10 to 12 seconds
+'143114' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 12 ;
 	}
 #Time-maximum significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds
 '143115' = {
@@ -2749,6 +2773,18 @@
 	 parameterNumber = 79 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum significant wave height of all waves with periods within the inclusive range from 10 to 12 seconds
+'144114' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 12 ;
+	}
 #Time-minimum significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds
 '144115' = {
 	 discipline = 10 ;
@@ -3395,6 +3431,18 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 79 ;
 	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation significant wave height of all waves with periods within the inclusive range from 10 to 12 seconds
+'145114' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 12 ;
 	}
 #Time-standard-deviation significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds
 '145115' = {
