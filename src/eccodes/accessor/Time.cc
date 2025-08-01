@@ -42,14 +42,13 @@ int Time::unpack_long(long* val, size_t* len)
 
     /* We ignore the 'seconds' in our time calculation! */
     if (second != 0) {
-        grib_context_log(context_, GRIB_LOG_WARNING,
+        grib_context_log(context_, GRIB_LOG_ERROR,
                          "Key %s (%s): Truncating time: non-zero seconds(%ld) ignored", name_, __func__, second);
     }
 
     if (!is_time_valid(hour, minute, second)) {
-        grib_context_log(context_, GRIB_LOG_WARNING,
+        grib_context_log(context_, GRIB_LOG_ERROR,
                          "Key %s (%s): Time is not valid! hour=%ld min=%ld sec=%ld", name_, __func__, hour, minute, second);
-        return GRIB_ENCODING_ERROR;
     }
 
     if (*len < 1)
