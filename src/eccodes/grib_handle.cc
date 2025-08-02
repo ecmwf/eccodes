@@ -12,6 +12,7 @@
  *   Jean Baptiste Filippi - 01.11.2005                                    *
  ***************************************************************************/
 #include "grib_api_internal.h"
+#include "ExceptionHandler.h"
 
 static grib_handle* grib_handle_new_from_file_no_multi(grib_context* c, FILE* f, int headers_only, int* error);
 static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, int* error);
@@ -117,7 +118,7 @@ void grib_section_delete(grib_context* c, grib_section* b)
     grib_context_free(c, b);
 }
 
-int grib_handle_delete(grib_handle* h)
+static int grib_handle_delete_(grib_handle* h)
 {
     if (h != NULL) {
         grib_context* ct   = h->context;
@@ -144,6 +145,13 @@ int grib_handle_delete(grib_handle* h)
     }
     return GRIB_SUCCESS;
 }
+
+int grib_handle_delete(grib_handle* h)
+{
+    auto result = eccodes::handleExceptions(grib_handle_delete_, h);
+    return eccodes::getErrorCode(result);
+}
+
 
 grib_handle* grib_new_handle(grib_context* c)
 {
@@ -216,7 +224,7 @@ static grib_handle* grib_handle_create(grib_handle* gl, grib_context* c, const v
     return gl;
 }
 
-grib_handle* codes_handle_new_from_samples(grib_context* c, const char* name)
+static grib_handle* codes_handle_new_from_samples_(grib_context* c, const char* name)
 {
     grib_handle* g = 0;
     if (c == NULL)
@@ -240,7 +248,13 @@ grib_handle* codes_handle_new_from_samples(grib_context* c, const char* name)
     return g;
 }
 
-grib_handle* grib_handle_new_from_samples(grib_context* c, const char* name)
+grib_handle* codes_handle_new_from_samples(grib_context* c, const char* name)
+{
+    auto result = eccodes::handleExceptions(codes_handle_new_from_samples_, c, name);
+    return eccodes::logErrorAndReturnValue(result);
+}
+
+static grib_handle* grib_handle_new_from_samples_(grib_context* c, const char* name)
 {
     grib_handle* g = 0;
     if (c == NULL)
@@ -267,7 +281,13 @@ grib_handle* grib_handle_new_from_samples(grib_context* c, const char* name)
     return g;
 }
 
-grib_handle* codes_bufr_handle_new_from_samples(grib_context* c, const char* name)
+grib_handle* grib_handle_new_from_samples(grib_context* c, const char* name)
+{
+    auto result = eccodes::handleExceptions(grib_handle_new_from_samples_, c, name);
+    return eccodes::logErrorAndReturnValue(result);
+}
+
+static grib_handle* codes_bufr_handle_new_from_samples_(grib_context* c, const char* name)
 {
     grib_handle* g = 0;
     if (c == NULL)
@@ -291,7 +311,13 @@ grib_handle* codes_bufr_handle_new_from_samples(grib_context* c, const char* nam
     return g;
 }
 
-int grib_write_message(const grib_handle* h, const char* file, const char* mode)
+grib_handle* codes_bufr_handle_new_from_samples(grib_context* c, const char* name)
+{
+    auto result = eccodes::handleExceptions(codes_bufr_handle_new_from_samples_, c, name);
+    return eccodes::logErrorAndReturnValue(result);
+}
+
+static int grib_write_message_(const grib_handle* h, const char* file, const char* mode)
 {
     FILE* fh = 0;
     int err;
@@ -321,11 +347,23 @@ int grib_write_message(const grib_handle* h, const char* file, const char* mode)
     return 0;
 }
 
-grib_handle* grib_handle_clone(const grib_handle* h)
+int grib_write_message(const grib_handle* h, const char* file, const char* mode)
+{
+    auto result = eccodes::handleExceptions(grib_write_message_, h, file, mode);
+    return eccodes::getErrorCode(result);
+}
+
+static grib_handle* grib_handle_clone_(const grib_handle* h)
 {
     grib_handle* result  = grib_handle_new_from_message_copy(h->context, h->buffer->data, h->buffer->ulength);
     result->product_kind = h->product_kind;
     return result;
+}
+
+grib_handle* grib_handle_clone(const grib_handle* h)
+{
+    auto result = eccodes::handleExceptions(grib_handle_clone_, h);
+    return eccodes::logErrorAndReturnValue(result);
 }
 
 static bool can_create_clone_headers_only(const grib_handle* h)
@@ -347,7 +385,7 @@ static bool can_create_clone_headers_only(const grib_handle* h)
 }
 
 // Clone the message but not its Bitmap and Data sections (only the meta-data)
-grib_handle* grib_handle_clone_headers_only(const grib_handle* h)
+static grib_handle* grib_handle_clone_headers_only_(const grib_handle* h)
 {
     int err = 0;
     grib_handle* result = NULL;
@@ -398,6 +436,12 @@ grib_handle* grib_handle_clone_headers_only(const grib_handle* h)
     return result;
 }
 
+grib_handle* grib_handle_clone_headers_only(const grib_handle* h)
+{
+    auto result = eccodes::handleExceptions(grib_handle_clone_headers_only_, h);
+    return eccodes::logErrorAndReturnValue(result);
+}
+
 // grib_handle* grib_handle_clone_headers_only(const grib_handle* h)
 // {
 //     int err = 0;
@@ -434,7 +478,7 @@ grib_handle* grib_handle_clone_headers_only(const grib_handle* h)
 //     return result;
 // }
 
-grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind product, int* error)
+static grib_handle* codes_handle_new_from_file_(grib_context* c, FILE* f, ProductKind product, int* error)
 {
     if (product == PRODUCT_GRIB)
         return grib_handle_new_from_file(c, f, error);
@@ -451,6 +495,12 @@ grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind pr
 
     ECCODES_ASSERT(!"codes_handle_new_from_file: Invalid product");
     return NULL;
+}
+
+grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind product, int* error)
+{
+    auto result = eccodes::handleExceptions(codes_handle_new_from_file_, c, f, product, error);
+    return eccodes::updateErrorAndReturnValue(result, error);
 }
 
 grib_handle* codes_grib_handle_new_from_file(grib_context* c, FILE* f, int* error)
@@ -494,7 +544,7 @@ static int determine_product_kind(grib_handle* h, ProductKind* prod_kind)
     return err;
 }
 
-grib_handle* grib_handle_new_from_message_copy(grib_context* c, const void* data, size_t size)
+static grib_handle* grib_handle_new_from_message_copy_(grib_context* c, const void* data, size_t size)
 {
     grib_handle* g = NULL;
     void* copy     = NULL;
@@ -516,7 +566,13 @@ grib_handle* grib_handle_new_from_message_copy(grib_context* c, const void* data
     return g;
 }
 
-grib_handle* grib_handle_new_from_partial_message_copy(grib_context* c, const void* data, size_t size)
+grib_handle* grib_handle_new_from_message_copy(grib_context* c, const void* data, size_t size)
+{
+    auto result = eccodes::handleExceptions(grib_handle_new_from_message_copy_, c, data, size);
+    return eccodes::logErrorAndReturnValue(result);
+}
+
+static grib_handle* grib_handle_new_from_partial_message_copy_(grib_context* c, const void* data, size_t size)
 {
     grib_handle* g = NULL;
     void* copy     = NULL;
@@ -536,7 +592,13 @@ grib_handle* grib_handle_new_from_partial_message_copy(grib_context* c, const vo
     return g;
 }
 
-grib_handle* grib_handle_new_from_partial_message(grib_context* c, const void* data, size_t buflen)
+grib_handle* grib_handle_new_from_partial_message_copy(grib_context* c, const void* data, size_t size)
+{
+    auto result = eccodes::handleExceptions(grib_handle_new_from_partial_message_copy_, c, data, size);
+    return eccodes::logErrorAndReturnValue(result);
+}
+
+static grib_handle* grib_handle_new_from_partial_message_(grib_context* c, const void* data, size_t buflen)
 {
     grib_handle* gl = NULL;
     if (c == NULL)
@@ -548,7 +610,13 @@ grib_handle* grib_handle_new_from_partial_message(grib_context* c, const void* d
     return grib_handle_create(gl, c, data, buflen);
 }
 
-grib_handle* grib_handle_new_from_message(grib_context* c, const void* data, size_t buflen)
+grib_handle* grib_handle_new_from_partial_message(grib_context* c, const void* data, size_t buflen)
+{
+    auto result = eccodes::handleExceptions(grib_handle_new_from_partial_message_, c, data, buflen);
+    return eccodes::logErrorAndReturnValue(result);
+}
+
+static grib_handle* grib_handle_new_from_message_(grib_context* c, const void* data, size_t buflen)
 {
     grib_handle* gl          = NULL;
     grib_handle* h           = NULL;
@@ -576,7 +644,13 @@ grib_handle* grib_handle_new_from_message(grib_context* c, const void* data, siz
     return h;
 }
 
-grib_handle* grib_handle_new_from_multi_message(grib_context* c, void** data,
+grib_handle* grib_handle_new_from_message(grib_context* c, const void* data, size_t buflen)
+{
+    auto result = eccodes::handleExceptions(grib_handle_new_from_message_, c, data, buflen);
+    return eccodes::logErrorAndReturnValue(result);
+}
+
+static grib_handle* grib_handle_new_from_multi_message_(grib_context* c, void** data,
                                                 size_t* buflen, int* error)
 {
     grib_handle* h    = NULL;
@@ -599,9 +673,22 @@ grib_handle* grib_handle_new_from_multi_message(grib_context* c, void** data,
     return h;
 }
 
-grib_handle* grib_handle_new_from_file(grib_context* c, FILE* f, int* error)
+grib_handle* grib_handle_new_from_multi_message(grib_context* c, void** data,
+                                                size_t* buflen, int* error)
+{
+    auto result = eccodes::handleExceptions(grib_handle_new_from_multi_message_, c, data, buflen, error);
+    return eccodes::updateErrorAndReturnValue(result, error);
+}
+
+static grib_handle* grib_handle_new_from_file_(grib_context* c, FILE* f, int* error)
 {
     return grib_new_from_file(c, f, 0, error);
+}
+
+grib_handle* grib_handle_new_from_file(grib_context* c, FILE* f, int* error)
+{
+    auto result = eccodes::handleExceptions(grib_handle_new_from_file_, c, f, error);
+    return eccodes::updateErrorAndReturnValue(result, error);
 }
 
 static grib_handle* grib_handle_new_multi(grib_context* c, unsigned char** data,
@@ -1057,7 +1144,7 @@ grib_handle* metar_new_from_file(grib_context* c, FILE* f, int* error)
     return gl;
 }
 
-grib_handle* bufr_new_from_file(grib_context* c, FILE* f, int* error)
+static grib_handle* bufr_new_from_file_(grib_context* c, FILE* f, int* error)
 {
     void* data              = NULL;
     size_t olen             = 0;
@@ -1134,6 +1221,12 @@ grib_handle* bufr_new_from_file(grib_context* c, FILE* f, int* error)
     }
 
     return gl;
+}
+
+grib_handle* bufr_new_from_file(grib_context* c, FILE* f, int* error)
+{
+    auto result = eccodes::handleExceptions(bufr_new_from_file_, c, f, error);
+    return eccodes::updateErrorAndReturnValue(result, error);
 }
 
 grib_handle* any_new_from_file(grib_context* c, FILE* f, int* error)
@@ -1259,7 +1352,7 @@ static grib_handle* grib_handle_new_from_file_no_multi(grib_context* c, FILE* f,
     return gl;
 }
 
-grib_multi_handle* grib_multi_handle_new(grib_context* c)
+static grib_multi_handle* grib_multi_handle_new_(grib_context* c)
 {
     grib_multi_handle* h;
     if (c == NULL)
@@ -1280,7 +1373,13 @@ grib_multi_handle* grib_multi_handle_new(grib_context* c)
     return h;
 }
 
-int grib_multi_handle_delete(grib_multi_handle* h)
+grib_multi_handle* grib_multi_handle_new(grib_context* c)
+{
+    auto result = eccodes::handleExceptions(grib_multi_handle_new_, c);
+    return eccodes::logErrorAndReturnValue(result);
+}
+
+static int grib_multi_handle_delete_(grib_multi_handle* h)
 {
     if (h != NULL) {
         grib_buffer_delete(h->context, h->buffer);
@@ -1289,7 +1388,13 @@ int grib_multi_handle_delete(grib_multi_handle* h)
     return GRIB_SUCCESS;
 }
 
-int grib_multi_handle_append(grib_handle* h, int start_section, grib_multi_handle* mh)
+int grib_multi_handle_delete(grib_multi_handle* h)
+{
+    auto result = eccodes::handleExceptions(grib_multi_handle_delete_, h);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_multi_handle_append_(grib_handle* h, int start_section, grib_multi_handle* mh)
 {
     const void* mess = NULL;
     unsigned char* p = NULL;
@@ -1339,7 +1444,13 @@ int grib_multi_handle_append(grib_handle* h, int start_section, grib_multi_handl
     return err;
 }
 
-int grib_multi_handle_write(grib_multi_handle* h, FILE* f)
+int grib_multi_handle_append(grib_handle* h, int start_section, grib_multi_handle* mh)
+{
+    auto result = eccodes::handleExceptions(grib_multi_handle_append_, h, start_section, mh);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_multi_handle_write_(grib_multi_handle* h, FILE* f)
 {
     if (f == NULL)
         return GRIB_INVALID_FILE;
@@ -1352,6 +1463,12 @@ int grib_multi_handle_write(grib_multi_handle* h, FILE* f)
     }
 
     return GRIB_SUCCESS;
+}
+
+int grib_multi_handle_write(grib_multi_handle* h, FILE* f)
+{
+    auto result = eccodes::handleExceptions(grib_multi_handle_write_, h, f);
+    return eccodes::getErrorCode(result);
 }
 
 int grib_get_partial_message(grib_handle* h, const void** msg, size_t* len, int start_section)
@@ -1396,7 +1513,7 @@ int grib_get_partial_message_copy(grib_handle* h, void* message, size_t* len,
     return GRIB_SUCCESS;
 }
 
-int grib_get_message_copy(const grib_handle* h, void* message, size_t* len)
+static int grib_get_message_copy_(const grib_handle* h, void* message, size_t* len)
 {
     if (!h)
         return GRIB_NOT_FOUND;
@@ -1410,7 +1527,13 @@ int grib_get_message_copy(const grib_handle* h, void* message, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_get_message_offset(const grib_handle* h, off_t* offset)
+int grib_get_message_copy(const grib_handle* h, void* message, size_t* len)
+{
+    auto result = eccodes::handleExceptions(grib_get_message_copy_, h, message, len);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_get_message_offset_(const grib_handle* h, off_t* offset)
 {
     if (h)
         *offset = h->offset;
@@ -1420,7 +1543,13 @@ int grib_get_message_offset(const grib_handle* h, off_t* offset)
     return GRIB_SUCCESS;
 }
 
-int codes_get_product_kind(const grib_handle* h, ProductKind* product_kind)
+int grib_get_message_offset(const grib_handle* h, off_t* offset)
+{
+    auto result = eccodes::handleExceptions(grib_get_message_offset_, h, offset);
+    return eccodes::getErrorCode(result);
+}
+
+static int codes_get_product_kind_(const grib_handle* h, ProductKind* product_kind)
 {
     if (h) {
         *product_kind = h->product_kind;
@@ -1429,7 +1558,13 @@ int codes_get_product_kind(const grib_handle* h, ProductKind* product_kind)
     return GRIB_NULL_HANDLE;
 }
 
-int codes_check_message_header(const void* bytes, size_t length, ProductKind product)
+int codes_get_product_kind(const grib_handle* h, ProductKind* product_kind)
+{
+    auto result = eccodes::handleExceptions(codes_get_product_kind_, h, product_kind);
+    return eccodes::getErrorCode(result);
+}
+
+static int codes_check_message_header_(const void* bytes, size_t length, ProductKind product)
 {
     const char* p = ((const char*)bytes);
     ECCODES_ASSERT(p);
@@ -1449,7 +1584,14 @@ int codes_check_message_header(const void* bytes, size_t length, ProductKind pro
 
     return GRIB_SUCCESS;
 }
-int codes_check_message_footer(const void* bytes, size_t length, ProductKind product)
+
+int codes_check_message_header(const void* bytes, size_t length, ProductKind product)
+{
+    auto result = eccodes::handleExceptions(codes_check_message_header_, bytes, length, product);
+    return eccodes::getErrorCode(result);
+}
+
+static int codes_check_message_footer_(const void* bytes, size_t length, ProductKind product)
 {
     const char* p = ((const char*)bytes);
     ECCODES_ASSERT(p);
@@ -1461,7 +1603,13 @@ int codes_check_message_footer(const void* bytes, size_t length, ProductKind pro
     return GRIB_SUCCESS;
 }
 
-int grib_get_message_size(const grib_handle* ch, size_t* size)
+int codes_check_message_footer(const void* bytes, size_t length, ProductKind product)
+{
+    auto result = eccodes::handleExceptions(codes_check_message_footer_, bytes, length, product);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_get_message_size_(const grib_handle* ch, size_t* size)
 {
     long totalLength = 0;
     int err          = 0;
@@ -1473,7 +1621,13 @@ int grib_get_message_size(const grib_handle* ch, size_t* size)
     return err;
 }
 
-int grib_get_message(const grib_handle* ch, const void** msg, size_t* size)
+int grib_get_message_size(const grib_handle* ch, size_t* size)
+{
+    auto result = eccodes::handleExceptions(grib_get_message_size_, ch, size);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_get_message_(const grib_handle* ch, const void** msg, size_t* size)
 {
     long totalLength = 0;
     int err          = 0;
@@ -1491,6 +1645,12 @@ int grib_get_message(const grib_handle* ch, const void** msg, size_t* size)
         memcpy(h->gts_header, strbuf, 8);
     }
     return 0;
+}
+
+int grib_get_message(const grib_handle* ch, const void** msg, size_t* size)
+{
+    auto result = eccodes::handleExceptions(grib_get_message_, ch, msg, size);
+    return eccodes::getErrorCode(result);
 }
 
 int grib_get_message_headers(const grib_handle* h, const void** msg, size_t* size)
@@ -1660,7 +1820,7 @@ static void grib2_build_message(grib_context* context, unsigned char* sections[]
 }
 
 /* For multi support mode: Reset all file handles equal to f. See GRIB-249 */
-void grib_multi_support_reset_file(grib_context* c, FILE* f)
+static void grib_multi_support_reset_file_(grib_context* c, FILE* f)
 {
     if (!c) c = grib_context_get_default();
     grib_multi_support* gm = c->multi_support;
@@ -1670,6 +1830,12 @@ void grib_multi_support_reset_file(grib_context* c, FILE* f)
         }
         gm = gm->next;
     }
+}
+
+void grib_multi_support_reset_file(grib_context* c, FILE* f)
+{
+    auto result = eccodes::handleExceptions(grib_multi_support_reset_file_, c, f);
+    return eccodes::logErrorAndReturnValue(result);
 }
 
 static grib_multi_support* grib_get_multi_support(grib_context* c, FILE* f)

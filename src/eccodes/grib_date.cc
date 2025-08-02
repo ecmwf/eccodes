@@ -16,9 +16,10 @@
  *
  ***************************************************************************/
 #include "grib_api_internal.h"
+#include "ExceptionHandler.h"
 
 #define ROUND(a) ((a) >= 0 ? (long)((a) + 0.5) : (long)((a)-0.5))
-int grib_julian_to_datetime(double jd, long* year, long* month, long* day,
+static int grib_julian_to_datetime_(double jd, long* year, long* month, long* day,
                             long* hour, long* minute, long* second)
 {
     long z, a, alpha, b, c, d, e;
@@ -72,10 +73,24 @@ int grib_julian_to_datetime(double jd, long* year, long* month, long* day,
     return GRIB_SUCCESS;
 }
 
-int grib_datetime_to_julian(long year, long month, long day,
+int grib_julian_to_datetime(double jd, long* year, long* month, long* day,
+                            long* hour, long* minute, long* second)
+{
+    auto result = eccodes::handleExceptions(grib_julian_to_datetime_, jd, year, month, day, hour, minute, second);
+    return eccodes::logErrorAndReturnValue(result);
+}
+
+static int grib_datetime_to_julian_(long year, long month, long day,
                             long hour, long minute, long second, double* jd)
 {
     return grib_datetime_to_julian_d(year, month, day, hour, minute, second, jd);
+}
+
+int grib_datetime_to_julian(long year, long month, long day,
+                            long hour, long minute, long second, double* jd)
+{
+    auto result = eccodes::handleExceptions(grib_datetime_to_julian_, year, month, day, hour, minute, second, jd);
+    return eccodes::logErrorAndReturnValue(result);
 }
 
 /* This version can deal with seconds provided as a double. Supporting milliseconds etc */
@@ -108,7 +123,7 @@ int grib_datetime_to_julian_d(
     return GRIB_SUCCESS;
 }
 
-long grib_julian_to_date(long jdate)
+static long grib_julian_to_date_(long jdate)
 {
     long x, y, d, m, e;
     long day, month, year;
@@ -139,7 +154,13 @@ long grib_julian_to_date(long jdate)
     return year * 10000 + month * 100 + day;
 }
 
-long grib_date_to_julian(long ddate)
+long grib_julian_to_date(long jdate)
+{
+    auto result = eccodes::handleExceptions(grib_julian_to_date_, jdate);
+    return eccodes::logErrorAndReturnValue(result);
+}
+
+static long grib_date_to_julian_(long ddate)
 {
     long m1, y1, a, b, c, d, j1;
 
@@ -170,6 +191,12 @@ long grib_date_to_julian(long ddate)
     j1 = a + b + c;
 
     return (j1);
+}
+
+long grib_date_to_julian(long ddate)
+{
+    auto result = eccodes::handleExceptions(grib_date_to_julian_, ddate);
+    return eccodes::logErrorAndReturnValue(result);
 }
 
 /*

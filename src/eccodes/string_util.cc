@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "ExceptionHandler.h"
 
 // Compare two strings ignoring case.
 // strcasecmp is not in the C standard. However, it's defined by
@@ -194,7 +195,7 @@ const char* codes_get_product_name(ProductKind product)
     return "unknown";
 }
 
-const char* grib_get_type_name(int type)
+static const char* grib_get_type_name_(int type)
 {
     switch (type) {
         case GRIB_TYPE_LONG:
@@ -211,6 +212,12 @@ const char* grib_get_type_name(int type)
             return "section";
     }
     return "unknown";
+}
+
+const char* grib_get_type_name(int type)
+{
+    auto result = eccodes::handleExceptions(grib_get_type_name_, type);
+    return eccodes::logErrorAndReturnValue(result);
 }
 
 // Replace all occurrences of character in string.

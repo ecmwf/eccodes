@@ -12,6 +12,7 @@
  *   Jean Baptiste Filippi - 01.11.2005                                    *
  ***************************************************************************/
 #include "grib_api_internal.h"
+#include "ExceptionHandler.h"
 
 static void grib_get_buffer_ownership(const grib_context* c, grib_buffer* b)
 {
@@ -241,8 +242,14 @@ int grib_buffer_replace(grib_accessor* a, const unsigned char* data,
     return GRIB_SUCCESS;
 }
 
-void grib_update_sections_lengths(grib_handle* h)
+static void grib_update_sections_lengths_(grib_handle* h)
 {
     grib_section_adjust_sizes(h->root, 2, 0);
     grib_update_paddings(h->root);
+}
+
+void grib_update_sections_lengths(grib_handle* h)
+{
+    auto result = eccodes::handleExceptions(grib_update_sections_lengths_, h);
+    return eccodes::logErrorAndReturnValue(result);
 }

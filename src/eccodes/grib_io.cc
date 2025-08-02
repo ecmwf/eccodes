@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "ExceptionHandler.h"
 
 #if GRIB_PTHREADS
 static pthread_once_t once    = PTHREAD_ONCE_INIT;
@@ -1733,7 +1734,7 @@ int grib_read_any_from_memory(grib_context* ctx, unsigned char** data, size_t* d
     return err;
 }
 
-int grib_count_in_file(grib_context* c, FILE* f, int* n)
+static int grib_count_in_file_(grib_context* c, FILE* f, int* n)
 {
     int err = 0;
     *n      = 0;
@@ -1761,7 +1762,13 @@ int grib_count_in_file(grib_context* c, FILE* f, int* n)
     return err == GRIB_END_OF_FILE ? 0 : err;
 }
 
-int grib_count_in_filename(grib_context* c, const char* filename, int* n)
+int grib_count_in_file(grib_context* c, FILE* f, int* n)
+{
+    auto result = eccodes::handleExceptions(grib_count_in_file_, c, f, n);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_count_in_filename_(grib_context* c, const char* filename, int* n)
 {
     int err  = 0;
     FILE* fp = NULL;
@@ -1776,6 +1783,12 @@ int grib_count_in_filename(grib_context* c, const char* filename, int* n)
     err = grib_count_in_file(c, fp, n);
     fclose(fp);
     return err;
+}
+
+int grib_count_in_filename(grib_context* c, const char* filename, int* n)
+{
+    auto result = eccodes::handleExceptions(grib_count_in_filename_, c, filename, n);
+    return eccodes::getErrorCode(result);
 }
 
 typedef int (*decoder_proc)(FILE* f, size_t* size, off_t* offset);
@@ -1902,7 +1915,7 @@ static int codes_extract_offsets_malloc_internal(
 }
 
 // The lagacy version only did the offsets
-int codes_extract_offsets_malloc(
+static int codes_extract_offsets_malloc_(
     grib_context* c, const char* filename, ProductKind product,
     off_t** offsets, int* number_of_elements, int strict_mode)
 {
@@ -1910,10 +1923,28 @@ int codes_extract_offsets_malloc(
     return codes_extract_offsets_malloc_internal(c, filename, product, offsets, NULL, number_of_elements, strict_mode);
 }
 
+int codes_extract_offsets_malloc(
+    grib_context* c, const char* filename, ProductKind product,
+    off_t** offsets, int* number_of_elements, int strict_mode)
+{
+    auto result = eccodes::handleExceptions(
+        codes_extract_offsets_malloc_, c, filename, product, offsets, number_of_elements, strict_mode);
+    return eccodes::getErrorCode(result);
+}
+
 // New function does both message offsets and sizes
-int codes_extract_offsets_sizes_malloc(
+static int codes_extract_offsets_sizes_malloc_(
     grib_context* c, const char* filename, ProductKind product,
     off_t** offsets, size_t** sizes, int* number_of_elements, int strict_mode)
 {
     return codes_extract_offsets_malloc_internal(c, filename, product, offsets, sizes, number_of_elements, strict_mode);
+}
+
+int codes_extract_offsets_sizes_malloc(
+    grib_context* c, const char* filename, ProductKind product,
+    off_t** offsets, size_t** sizes, int* number_of_elements, int strict_mode)
+{
+    auto result = eccodes::handleExceptions(
+        codes_extract_offsets_sizes_malloc_, c, filename, product, offsets, sizes, number_of_elements, strict_mode);
+    return eccodes::getErrorCode(result);
 }
