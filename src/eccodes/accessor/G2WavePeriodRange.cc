@@ -32,6 +32,8 @@ int G2WavePeriodRange::unpack_long(long* val, size_t* len)
     grib_get_long(get_enclosing_handle(), productDefinitionTemplateNumber_, &productDefinitionTemplateNumber);
     *val = (productDefinitionTemplateNumber == 103 || // instant det
             productDefinitionTemplateNumber == 104 || // instant ens
+            productDefinitionTemplateNumber == 139 || // instant hindcast
+            productDefinitionTemplateNumber == 140 || // instant hindcast ens
             productDefinitionTemplateNumber == 144 || // interval det
             productDefinitionTemplateNumber == 145);  // interval ens
 
@@ -54,14 +56,18 @@ int G2WavePeriodRange::pack_long(const long* val, size_t* len)
     ret = grib_get_string(hand, stepType_, stepType, &slen);
     ECCODES_ASSERT(ret == GRIB_SUCCESS);
 
-    const int eps = grib_is_defined(hand, "perturbationNumber");
+    const int ensemble = grib_is_defined(hand, "perturbationNumber");
+    long hindcastValue = -1;
+    ret = grib_get_long(hand, "isHindcast", &hindcastValue);
+    const int hindcast = (ret == GRIB_SUCCESS && hindcastValue == 1);
 
     if (!strcmp(stepType, "instant"))
         isInstant = 1;
 
-    if (eps == 0) { // deterministic
+    if (ensemble == 0) { // deterministic
         if (isInstant) {
             productDefinitionTemplateNumberNew = 103;
+            if (hindcast) productDefinitionTemplateNumberNew = 139;
         } else {
             productDefinitionTemplateNumberNew = 144;
         }
@@ -69,6 +75,7 @@ int G2WavePeriodRange::pack_long(const long* val, size_t* len)
         // ensemble
         if (isInstant) {
             productDefinitionTemplateNumberNew = 104;
+            if (hindcast) productDefinitionTemplateNumberNew = 140;
         } else {
             productDefinitionTemplateNumberNew = 145;
         }
