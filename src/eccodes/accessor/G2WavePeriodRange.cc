@@ -42,7 +42,7 @@ int G2WavePeriodRange::unpack_long(long* val, size_t* len)
 
 int G2WavePeriodRange::pack_long(const long* val, size_t* len)
 {
-    grib_handle* hand                       = get_enclosing_handle();
+    grib_handle* hand = get_enclosing_handle();
     long productDefinitionTemplateNumber    = -1;
     long productDefinitionTemplateNumberNew = -1;
     char stepType[15] = {0,};
@@ -54,7 +54,7 @@ int G2WavePeriodRange::pack_long(const long* val, size_t* len)
         return GRIB_SUCCESS;
 
     ret = grib_get_string(hand, stepType_, stepType, &slen);
-    ECCODES_ASSERT(ret == GRIB_SUCCESS);
+    if (ret != GRIB_SUCCESS) return ret;
 
     const int ensemble = grib_is_defined(hand, "perturbationNumber");
     long hindcastValue = -1;
@@ -91,7 +91,7 @@ int G2WavePeriodRange::pack_long(const long* val, size_t* len)
 int G2WavePeriodRange::value_count(long* count)
 {
     *count = 1;
-    return 0;
+    return GRIB_SUCCESS;
 }
 
 }  // namespace eccodes::accessor
