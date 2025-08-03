@@ -48,18 +48,17 @@ int G2WavePeriodRange::pack_long(const long* val, size_t* len)
     char stepType[15] = {0,};
     size_t slen = 15;
     int isInstant = 0;
-    int ret = 0;
 
     if (grib_get_long(hand, productDefinitionTemplateNumber_, &productDefinitionTemplateNumber) != GRIB_SUCCESS)
         return GRIB_SUCCESS;
 
-    ret = grib_get_string(hand, stepType_, stepType, &slen);
-    if (ret != GRIB_SUCCESS) return ret;
+    int err = grib_get_string(hand, stepType_, stepType, &slen);
+    if (err) return err;
 
     const int ensemble = grib_is_defined(hand, "perturbationNumber");
     long hindcastValue = -1;
-    ret = grib_get_long(hand, "isHindcast", &hindcastValue);
-    const int hindcast = (ret == GRIB_SUCCESS && hindcastValue == 1);
+    err = grib_get_long(hand, "isHindcast", &hindcastValue);
+    const int hindcast = (!err && hindcastValue == 1);
 
     if (!strcmp(stepType, "instant"))
         isInstant = 1;

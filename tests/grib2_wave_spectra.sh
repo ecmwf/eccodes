@@ -98,6 +98,9 @@ ${tools_dir}/grib_set -s tablesVersion=35,eps=1,number=66 $sample2 $tempGribA # 
 ${tools_dir}/grib_set -s paramId=141114 $tempGribA $tempGribB
 grib_check_key_equals $tempGribB productDefinitionTemplateNumber,number '145 66'
 
+${tools_dir}/grib_set -s is_wave_period_range=1 $tempGribA $tempGribB
+grib_check_key_equals $tempGribB productDefinitionTemplateNumber '104'
+
 
 # Clean up
 rm -f $tempSample $temp $tempGribA $tempGribB $tempRef $tempOut
