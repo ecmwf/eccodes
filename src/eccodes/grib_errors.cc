@@ -95,7 +95,8 @@ static const char *errors[] = {
 "Assertion failure",		/* -79 GRIB_ASSERTION_FAILURE */
 };
 
-static const char* grib_get_error_message_(int code)
+// C-API: Ensure all exceptions are converted to error codes
+const char* grib_get_error_message(int code)
 {
     code = -code;
     const int num_errors = int( sizeof(errors)/sizeof(errors[0]) );
@@ -107,13 +108,8 @@ static const char* grib_get_error_message_(int code)
     return errors[code];
 }
 
-const char* grib_get_error_message(int code)
-{
-    auto result = eccodes::handleExceptions(grib_get_error_message_, code);
-    return eccodes::logErrorAndReturnValue(result);
-}
-
-static void grib_check_(const char* call, const char* file, int line, int e, const char* msg)
+// C-API: Ensure all exceptions are converted to error codes
+void grib_check(const char* call, const char* file, int line, int e, const char* msg)
 {
     grib_context* c=grib_context_get_default();
     if (e) {
@@ -127,10 +123,4 @@ static void grib_check_(const char* call, const char* file, int line, int e, con
         }
         exit(e);
     }
-}
-
-void grib_check(const char* call, const char* file, int line, int e, const char* msg)
-{
-    auto result = eccodes::handleExceptions(grib_check_, call, file, line, e, msg);
-    return eccodes::updateErrorAndReturnValue(result, &e);
 }

@@ -290,6 +290,7 @@ static grib_handle* grib_util_sections_copy_(grib_handle* hfrom, grib_handle* ht
     return grib_sections_copy_internal(hfrom, hto, sections_to_copy, err);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err)
 {
     auto result = eccodes::handleExceptions(grib_util_sections_copy_, hfrom, hto, what, err);
@@ -1549,6 +1550,7 @@ cleanup:
     return NULL;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_handle* grib_util_set_spec(grib_handle* h,
                                  const grib_util_grid_spec* spec,
                                  const grib_util_packing_spec* packing_spec,
@@ -2111,6 +2113,7 @@ static int codes_grib_surface_type_requires_value_(int edition, int type_of_surf
     return 0;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int codes_grib_surface_type_requires_value(int edition, int type_of_surface_code, int* err)
 {
     auto result = eccodes::handleExceptions(codes_grib_surface_type_requires_value_, edition, type_of_surface_code, err);

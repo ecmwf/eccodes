@@ -1762,6 +1762,7 @@ static int grib_count_in_file_(grib_context* c, FILE* f, int* n)
     return err == GRIB_END_OF_FILE ? 0 : err;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_count_in_file(grib_context* c, FILE* f, int* n)
 {
     auto result = eccodes::handleExceptions(grib_count_in_file_, c, f, n);
@@ -1785,6 +1786,7 @@ static int grib_count_in_filename_(grib_context* c, const char* filename, int* n
     return err;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_count_in_filename(grib_context* c, const char* filename, int* n)
 {
     auto result = eccodes::handleExceptions(grib_count_in_filename_, c, filename, n);
@@ -1923,6 +1925,7 @@ static int codes_extract_offsets_malloc_(
     return codes_extract_offsets_malloc_internal(c, filename, product, offsets, NULL, number_of_elements, strict_mode);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int codes_extract_offsets_malloc(
     grib_context* c, const char* filename, ProductKind product,
     off_t** offsets, int* number_of_elements, int strict_mode)
@@ -1940,6 +1943,7 @@ static int codes_extract_offsets_sizes_malloc_(
     return codes_extract_offsets_malloc_internal(c, filename, product, offsets, sizes, number_of_elements, strict_mode);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int codes_extract_offsets_sizes_malloc(
     grib_context* c, const char* filename, ProductKind product,
     off_t** offsets, size_t** sizes, int* number_of_elements, int strict_mode)

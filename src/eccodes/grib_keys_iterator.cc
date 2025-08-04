@@ -56,6 +56,7 @@ static grib_keys_iterator* grib_keys_iterator_new_(grib_handle* h, unsigned long
     return ki;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_keys_iterator* grib_keys_iterator_new(grib_handle* h, unsigned long filter_flags, const char* name_space)
 {
     auto result = eccodes::handleExceptions(grib_keys_iterator_new_, h, filter_flags, name_space);
@@ -93,6 +94,7 @@ static int grib_keys_iterator_set_flags_(grib_keys_iterator* ki, unsigned long f
     return ret;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_keys_iterator_set_flags(grib_keys_iterator* ki, unsigned long flags)
 {
     auto result = eccodes::handleExceptions(grib_keys_iterator_set_flags_, ki, flags);
@@ -113,16 +115,11 @@ static int was_seen(grib_keys_iterator* ki, const char* name)
     return grib_trie_get(ki->seen, name) != NULL;
 }
 
-static int grib_keys_iterator_rewind_(grib_keys_iterator* ki)
+// C-API: Ensure all exceptions are converted to error codes
+int grib_keys_iterator_rewind(grib_keys_iterator* ki)
 {
     ki->at_start = 1;
     return GRIB_SUCCESS;
-}
-
-int grib_keys_iterator_rewind(grib_keys_iterator* ki)
-{
-    auto result = eccodes::handleExceptions(grib_keys_iterator_rewind_, ki);
-    return eccodes::getErrorCode(result);
 }
 
 static int skip(grib_keys_iterator* kiter)
@@ -193,6 +190,7 @@ static int grib_keys_iterator_next_(grib_keys_iterator* kiter)
     return kiter->current != NULL;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_keys_iterator_next(grib_keys_iterator* kiter)
 {
     auto result = eccodes::handleExceptions(grib_keys_iterator_next_, kiter);
@@ -206,6 +204,7 @@ static const char* grib_keys_iterator_get_name_(const grib_keys_iterator* kiter)
     return kiter->current->all_names_[kiter->match];
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 const char* grib_keys_iterator_get_name(const grib_keys_iterator* kiter)
 {
     auto result = eccodes::handleExceptions(grib_keys_iterator_get_name_, kiter);
@@ -229,6 +228,7 @@ static int grib_keys_iterator_delete_(grib_keys_iterator* kiter)
     return 0;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_keys_iterator_delete(grib_keys_iterator* kiter)
 {
     auto result = eccodes::handleExceptions(grib_keys_iterator_delete_, kiter);
@@ -240,6 +240,7 @@ static int grib_keys_iterator_get_long_(const grib_keys_iterator* kiter, long* v
     return kiter->current->unpack_long(v, len);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_keys_iterator_get_long(const grib_keys_iterator* kiter, long* v, size_t* len)
 {
     auto result = eccodes::handleExceptions(grib_keys_iterator_get_long_, kiter, v, len);
@@ -251,6 +252,7 @@ static int grib_keys_iterator_get_double_(const grib_keys_iterator* kiter, doubl
     return kiter->current->unpack_double(v, len);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_keys_iterator_get_double(const grib_keys_iterator* kiter, double* v, size_t* len)
 {
     auto result = eccodes::handleExceptions(grib_keys_iterator_get_double_, kiter, v, len);
@@ -262,6 +264,7 @@ static int grib_keys_iterator_get_float_(const grib_keys_iterator* kiter, float*
     return kiter->current->unpack_float(v, len);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_keys_iterator_get_float(const grib_keys_iterator* kiter, float* v, size_t* len)
 {
     auto result = eccodes::handleExceptions(grib_keys_iterator_get_float_, kiter, v, len);
@@ -273,6 +276,7 @@ static int grib_keys_iterator_get_string_(const grib_keys_iterator* kiter, char*
     return kiter->current->unpack_string(v, len);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_keys_iterator_get_string(const grib_keys_iterator* kiter, char* v, size_t* len)
 {
     auto result = eccodes::handleExceptions(grib_keys_iterator_get_string_, kiter, v, len);
@@ -284,6 +288,7 @@ static int grib_keys_iterator_get_bytes_(const grib_keys_iterator* kiter, unsign
     return kiter->current->unpack_bytes(v, len);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_keys_iterator_get_bytes(const grib_keys_iterator* kiter, unsigned char* v, size_t* len)
 {
     auto result = eccodes::handleExceptions(grib_keys_iterator_get_bytes_, kiter, v, len);

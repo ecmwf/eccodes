@@ -58,6 +58,7 @@ static void grib_dump_action_tree_(grib_context* ctx, FILE* out)
     }
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 void grib_dump_action_tree(grib_context* ctx, FILE* f)
 {
     auto result = eccodes::handleExceptions(grib_dump_action_tree_, ctx, f);

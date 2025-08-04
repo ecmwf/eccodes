@@ -87,6 +87,7 @@ static int grib_iterator_reset_(grib_iterator* i)
     return i->iterator->reset();
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_iterator_reset(grib_iterator* i)
 {
     auto result = eccodes::handleExceptions(grib_iterator_reset_, i);
@@ -98,6 +99,7 @@ static int grib_iterator_has_next_(grib_iterator* i)
     return i->iterator->has_next();
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_iterator_has_next(grib_iterator* i)
 {
     auto result = eccodes::handleExceptions(grib_iterator_has_next_, i);
@@ -109,6 +111,7 @@ static int grib_iterator_next_(grib_iterator* i, double* lat, double* lon, doubl
     return i->iterator->next(lat, lon, value);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_iterator_next(grib_iterator* i, double* lat, double* lon, double* value)
 {
     auto result = eccodes::handleExceptions(grib_iterator_next_, i, lat, lon, value);
@@ -120,6 +123,7 @@ static int grib_iterator_previous_(grib_iterator* i, double* lat, double* lon, d
     return i->iterator->previous(lat, lon, value);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_iterator_previous(grib_iterator* i, double* lat, double* lon, double* value)
 {
     auto result = eccodes::handleExceptions(grib_iterator_previous_, i, lat, lon, value);
@@ -172,6 +176,7 @@ static grib_iterator* grib_iterator_new_(const grib_handle* ch, unsigned long fl
     return i;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int* error)
 {
   auto result = eccodes::handleExceptions(grib_iterator_new_, ch, flags, error);
@@ -188,6 +193,7 @@ static int grib_iterator_delete_(grib_iterator* i)
     return GRIB_SUCCESS;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_iterator_delete(grib_iterator* i)
 {
     auto result = eccodes::handleExceptions(grib_iterator_delete_, i);

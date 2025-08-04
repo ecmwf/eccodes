@@ -154,6 +154,7 @@ static int grib_set_long_(grib_handle* h, const char* name, long val)
     return GRIB_NOT_FOUND;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_set_long(grib_handle* h, const char* name, long val)
 {
     auto result = eccodes::handleExceptions(grib_set_long_, h, name, val);
@@ -359,6 +360,7 @@ static int grib_copy_namespace_(grib_handle* dest, const char* name, grib_handle
     return error_code;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
 {
     auto result = eccodes::handleExceptions(grib_copy_namespace_, dest, name, src);
@@ -393,6 +395,7 @@ static int grib_set_double_(grib_handle* h, const char* name, double val)
     return GRIB_NOT_FOUND;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_set_double(grib_handle* h, const char* name, double val)
 {
     auto result = eccodes::handleExceptions(grib_set_double_, h, name, val);
@@ -559,6 +562,7 @@ static int grib_set_string_(grib_handle* h, const char* name, const char* val, s
     return GRIB_NOT_FOUND;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* length)
 {
     auto result = eccodes::handleExceptions(grib_set_string_, h, name, val, length);
@@ -589,6 +593,7 @@ static int grib_set_string_array_(grib_handle* h, const char* name, const char**
     return GRIB_NOT_FOUND;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_set_string_array(grib_handle* h, const char* name, const char** val, size_t length)
 {
     auto result = eccodes::handleExceptions(grib_set_string_array_, h, name, val, length);
@@ -631,6 +636,7 @@ static int grib_set_bytes_(grib_handle* h, const char* name, const unsigned char
     return GRIB_NOT_FOUND;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_set_bytes(grib_handle* h, const char* name, const unsigned char* val, size_t* length)
 {
     auto result = eccodes::handleExceptions(grib_set_bytes_, h, name, val, length);
@@ -685,6 +691,7 @@ static int grib_set_missing_(grib_handle* h, const char* name)
     return GRIB_NOT_FOUND;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_set_missing(grib_handle* h, const char* name)
 {
     auto result = eccodes::handleExceptions(grib_set_missing_, h, name);
@@ -760,6 +767,7 @@ static int grib_is_missing_(const grib_handle* h, const char* name, int* err)
     return grib_accessor_is_missing(a, err);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_is_missing(const grib_handle* h, const char* name, int* err)
 {
     auto result = eccodes::handleExceptions(grib_is_missing_, h, name, err);
@@ -773,6 +781,7 @@ static int grib_is_defined_(const grib_handle* h, const char* name)
     return (a ? 1 : 0);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_is_defined(const grib_handle* h, const char* name)
 {
     auto result = eccodes::handleExceptions(grib_is_defined_, h, name);
@@ -951,13 +960,15 @@ static int grib_set_force_double_array_(grib_handle* h, const char* name, const 
     return __grib_set_double_array(h, name, val, length, /*check=*/0);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_set_force_double_array(grib_handle* h, const char* name, const double* val, size_t length)
 {
     auto result = eccodes::handleExceptions(grib_set_force_double_array_, h, name, val, length);
     return eccodes::getErrorCode(result);
 }
 
-static int grib_set_force_float_array_(grib_handle* h, const char* name, const float* val, size_t length)
+// C-API: Ensure all exceptions are converted to error codes
+int grib_set_force_float_array(grib_handle* h, const char* name, const float* val, size_t length)
 {
     /* GRIB-285: Same as grib_set_float_array but allows setting of READ-ONLY keys like codedValues */
     /* Use with great caution!! */
@@ -965,33 +976,23 @@ static int grib_set_force_float_array_(grib_handle* h, const char* name, const f
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_set_force_float_array(grib_handle* h, const char* name, const float* val, size_t length)
-{
-    auto result = eccodes::handleExceptions(grib_set_force_float_array_, h, name, val, length);
-    return eccodes::getErrorCode(result);
-}
-
 static int grib_set_double_array_(grib_handle* h, const char* name, const double* val, size_t length)
 {
     return __grib_set_double_array(h, name, val, length, /*check=*/1);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_set_double_array(grib_handle* h, const char* name, const double* val, size_t length)
 {
     auto result = eccodes::handleExceptions(grib_set_double_array_, h, name, val, length);
     return eccodes::getErrorCode(result);
 }
 
-static int grib_set_float_array_(grib_handle* h, const char* name, const float* val, size_t length)
+// C-API: Ensure all exceptions are converted to error codes
+int grib_set_float_array(grib_handle* h, const char* name, const float* val, size_t length)
 {
     //return __grib_set_float_array(h, name, val, length, /*check=*/1);
     return GRIB_NOT_IMPLEMENTED;
-}
-
-int grib_set_float_array(grib_handle* h, const char* name, const float* val, size_t length)
-{
-    auto result = eccodes::handleExceptions(grib_set_float_array_, h, name, val, length);
-    return eccodes::getErrorCode(result);
 }
 
 static int _grib_set_long_array_internal(grib_handle* h, grib_accessor* a, const long* val, size_t buffer_len, size_t* encoded_length, int check)
@@ -1076,6 +1077,7 @@ static int grib_set_long_array_(grib_handle* h, const char* name, const long* va
     return _grib_set_long_array(h, name, val, length, 1);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_set_long_array(grib_handle* h, const char* name, const long* val, size_t length)
 {
     auto result = eccodes::handleExceptions(grib_set_long_array_, h, name, val, length);
@@ -1139,6 +1141,7 @@ static int grib_get_long_(const grib_handle* h, const char* name, long* val)
     return ret;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_long(const grib_handle* h, const char* name, long* val)
 {
     auto result = eccodes::handleExceptions(grib_get_long_, h, name, val);
@@ -1180,6 +1183,7 @@ static int grib_get_double_(const grib_handle* h, const char* name, double* val)
     return ret;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_double(const grib_handle* h, const char* name, double* val)
 {
     auto result = eccodes::handleExceptions(grib_get_double_, h, name, val);
@@ -1209,6 +1213,7 @@ static int grib_get_float_(const grib_handle* h, const char* name, float* val)
     return ret;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_float(const grib_handle* h, const char* name, float* val)
 {
     auto result = eccodes::handleExceptions(grib_get_float_, h, name, val);
@@ -1237,6 +1242,7 @@ static int grib_get_double_element_(const grib_handle* h, const char* name, int 
     return GRIB_NOT_FOUND;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_double_element(const grib_handle* h, const char* name, int i, double* val)
 {
     auto result = eccodes::handleExceptions(grib_get_double_element_, h, name, i, val);
@@ -1253,6 +1259,7 @@ static int grib_get_float_element_(const grib_handle* h, const char* name, int i
     return GRIB_NOT_FOUND;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_float_element(const grib_handle* h, const char* name, int i, float* val)
 {
     auto result = eccodes::handleExceptions(grib_get_float_element_, h, name, i, val);
@@ -1349,21 +1356,17 @@ static int grib_get_double_elements_(const grib_handle* h, const char* name, con
     return err;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_double_elements(const grib_handle* h, const char* name, const int* index_array, long len, double* val_array)
 {
     auto result = eccodes::handleExceptions(grib_get_double_elements_, h, name, index_array, len, val_array);
     return eccodes::getErrorCode(result);
 }
 
-static int grib_get_float_elements_(const grib_handle* h, const char* name, const int* index_array, long len, float* val_array)
-{
-    return GRIB_NOT_IMPLEMENTED;
-}
-
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_float_elements(const grib_handle* h, const char* name, const int* index_array, long len, float* val_array)
 {
-    auto result = eccodes::handleExceptions(grib_get_float_elements_, h, name, index_array, len, val_array);
-    return eccodes::getErrorCode(result);
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 int grib_get_string_internal(grib_handle* h, const char* name, char* val, size_t* length)
@@ -1426,6 +1429,7 @@ static int grib_get_string_(const grib_handle* h, const char* name, char* val, s
     }
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_string(const grib_handle* h, const char* name, char* val, size_t* length)
 {
     auto result = eccodes::handleExceptions(grib_get_string_, h, name, val, length);
@@ -1453,6 +1457,7 @@ static int grib_get_bytes_(const grib_handle* h, const char* name, unsigned char
     return err;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_bytes(const grib_handle* h, const char* name, unsigned char* val, size_t* length)
 {
     auto result = eccodes::handleExceptions(grib_get_bytes_, h, name, val, length);
@@ -1484,6 +1489,7 @@ static int grib_get_native_type_(const grib_handle* h, const char* name, int* ty
     return GRIB_SUCCESS;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_native_type(const grib_handle* h, const char* name, int* type)
 {
     auto result = eccodes::handleExceptions(grib_get_native_type_, h, name, type);
@@ -1560,6 +1566,7 @@ static int grib_get_double_array_(const grib_handle* h, const char* name, double
     }
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_double_array(const grib_handle* h, const char* name, double* val, size_t* length)
 {
     auto result = eccodes::handleExceptions(grib_get_double_array_, h, name, val, length);
@@ -1583,6 +1590,7 @@ static int grib_get_float_array_(const grib_handle* h, const char* name, float* 
     return _grib_get_array_internal<float>(h,a,val,len,length);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_float_array(const grib_handle* h, const char* name, float* val, size_t *length)
 {
     auto result = eccodes::handleExceptions(grib_get_float_array_, h, name, val, length);
@@ -1691,6 +1699,7 @@ static int grib_get_size_(const grib_handle* ch, const char* name, size_t* size)
     }
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_size(const grib_handle* ch, const char* name, size_t* size)
 {
     auto result = eccodes::handleExceptions(grib_get_size_, ch, name, size);
@@ -1702,6 +1711,7 @@ static int grib_get_length_(const grib_handle* h, const char* name, size_t* leng
     return grib_get_string_length(h, name, length);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_length(const grib_handle* h, const char* name, size_t* length)
 {
     auto result = eccodes::handleExceptions(grib_get_length_, h, name, length);
@@ -1732,6 +1742,7 @@ static int grib_get_offset_(const grib_handle* ch, const char* key, size_t* val)
     return GRIB_NOT_FOUND;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_offset(const grib_handle* ch, const char* key, size_t* val)
 {
     auto result = eccodes::handleExceptions(grib_get_offset_, ch, key, val);
@@ -1785,6 +1796,7 @@ static int grib_get_string_array_(const grib_handle* h, const char* name, char**
     }
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_string_array(const grib_handle* h, const char* name, char** val, size_t* length)
 {
     auto result = eccodes::handleExceptions(grib_get_string_array_, h, name, val, length);
@@ -1850,6 +1862,7 @@ static int grib_get_long_array_(const grib_handle* h, const char* name, long* va
     return ret;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_long_array(const grib_handle* h, const char* name, long* val, size_t* length)
 {
     auto result = eccodes::handleExceptions(grib_get_long_array_, h, name, val, length);
@@ -2028,6 +2041,7 @@ static int grib_set_values_(grib_handle* h, grib_values* args, size_t count)
     return grib_set_values_silent(h, args, count, /*silent=*/0);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_set_values(grib_handle* h, grib_values* args, size_t count)
 {
     auto result = eccodes::handleExceptions(grib_set_values_, h, args, count);
@@ -2216,6 +2230,7 @@ static int grib_values_check_(grib_handle* h, grib_values* values, int count)
     return 0;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_values_check(grib_handle* h, grib_values* values, int count) {
   auto errors = eccodes::handleExceptions(grib_values_check_, h, values, count);
   return eccodes::getErrorCode(errors);

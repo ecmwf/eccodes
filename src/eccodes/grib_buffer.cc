@@ -248,6 +248,7 @@ static void grib_update_sections_lengths_(grib_handle* h)
     grib_update_paddings(h->root);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 void grib_update_sections_lengths(grib_handle* h)
 {
     auto result = eccodes::handleExceptions(grib_update_sections_lengths_, h);

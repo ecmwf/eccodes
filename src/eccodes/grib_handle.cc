@@ -146,6 +146,7 @@ static int grib_handle_delete_(grib_handle* h)
     return GRIB_SUCCESS;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_handle_delete(grib_handle* h)
 {
     auto result = eccodes::handleExceptions(grib_handle_delete_, h);
@@ -248,6 +249,7 @@ static grib_handle* codes_handle_new_from_samples_(grib_context* c, const char* 
     return g;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_handle* codes_handle_new_from_samples(grib_context* c, const char* name)
 {
     auto result = eccodes::handleExceptions(codes_handle_new_from_samples_, c, name);
@@ -281,6 +283,7 @@ static grib_handle* grib_handle_new_from_samples_(grib_context* c, const char* n
     return g;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_handle* grib_handle_new_from_samples(grib_context* c, const char* name)
 {
     auto result = eccodes::handleExceptions(grib_handle_new_from_samples_, c, name);
@@ -311,6 +314,7 @@ static grib_handle* codes_bufr_handle_new_from_samples_(grib_context* c, const c
     return g;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_handle* codes_bufr_handle_new_from_samples(grib_context* c, const char* name)
 {
     auto result = eccodes::handleExceptions(codes_bufr_handle_new_from_samples_, c, name);
@@ -347,6 +351,7 @@ static int grib_write_message_(const grib_handle* h, const char* file, const cha
     return 0;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_write_message(const grib_handle* h, const char* file, const char* mode)
 {
     auto result = eccodes::handleExceptions(grib_write_message_, h, file, mode);
@@ -360,6 +365,7 @@ static grib_handle* grib_handle_clone_(const grib_handle* h)
     return result;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_handle* grib_handle_clone(const grib_handle* h)
 {
     auto result = eccodes::handleExceptions(grib_handle_clone_, h);
@@ -436,6 +442,7 @@ static grib_handle* grib_handle_clone_headers_only_(const grib_handle* h)
     return result;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_handle* grib_handle_clone_headers_only(const grib_handle* h)
 {
     auto result = eccodes::handleExceptions(grib_handle_clone_headers_only_, h);
@@ -497,6 +504,7 @@ static grib_handle* codes_handle_new_from_file_(grib_context* c, FILE* f, Produc
     return NULL;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind product, int* error)
 {
     auto result = eccodes::handleExceptions(codes_handle_new_from_file_, c, f, product, error);
@@ -566,6 +574,7 @@ static grib_handle* grib_handle_new_from_message_copy_(grib_context* c, const vo
     return g;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_handle* grib_handle_new_from_message_copy(grib_context* c, const void* data, size_t size)
 {
     auto result = eccodes::handleExceptions(grib_handle_new_from_message_copy_, c, data, size);
@@ -592,6 +601,7 @@ static grib_handle* grib_handle_new_from_partial_message_copy_(grib_context* c, 
     return g;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_handle* grib_handle_new_from_partial_message_copy(grib_context* c, const void* data, size_t size)
 {
     auto result = eccodes::handleExceptions(grib_handle_new_from_partial_message_copy_, c, data, size);
@@ -610,6 +620,7 @@ static grib_handle* grib_handle_new_from_partial_message_(grib_context* c, const
     return grib_handle_create(gl, c, data, buflen);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_handle* grib_handle_new_from_partial_message(grib_context* c, const void* data, size_t buflen)
 {
     auto result = eccodes::handleExceptions(grib_handle_new_from_partial_message_, c, data, buflen);
@@ -644,6 +655,7 @@ static grib_handle* grib_handle_new_from_message_(grib_context* c, const void* d
     return h;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_handle* grib_handle_new_from_message(grib_context* c, const void* data, size_t buflen)
 {
     auto result = eccodes::handleExceptions(grib_handle_new_from_message_, c, data, buflen);
@@ -673,6 +685,7 @@ static grib_handle* grib_handle_new_from_multi_message_(grib_context* c, void** 
     return h;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_handle* grib_handle_new_from_multi_message(grib_context* c, void** data,
                                                 size_t* buflen, int* error)
 {
@@ -685,6 +698,7 @@ static grib_handle* grib_handle_new_from_file_(grib_context* c, FILE* f, int* er
     return grib_new_from_file(c, f, 0, error);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_handle* grib_handle_new_from_file(grib_context* c, FILE* f, int* error)
 {
     auto result = eccodes::handleExceptions(grib_handle_new_from_file_, c, f, error);
@@ -1223,6 +1237,7 @@ static grib_handle* bufr_new_from_file_(grib_context* c, FILE* f, int* error)
     return gl;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_handle* bufr_new_from_file(grib_context* c, FILE* f, int* error)
 {
     auto result = eccodes::handleExceptions(bufr_new_from_file_, c, f, error);
@@ -1373,6 +1388,7 @@ static grib_multi_handle* grib_multi_handle_new_(grib_context* c)
     return h;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_multi_handle* grib_multi_handle_new(grib_context* c)
 {
     auto result = eccodes::handleExceptions(grib_multi_handle_new_, c);
@@ -1388,6 +1404,7 @@ static int grib_multi_handle_delete_(grib_multi_handle* h)
     return GRIB_SUCCESS;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_multi_handle_delete(grib_multi_handle* h)
 {
     auto result = eccodes::handleExceptions(grib_multi_handle_delete_, h);
@@ -1444,13 +1461,15 @@ static int grib_multi_handle_append_(grib_handle* h, int start_section, grib_mul
     return err;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_multi_handle_append(grib_handle* h, int start_section, grib_multi_handle* mh)
 {
     auto result = eccodes::handleExceptions(grib_multi_handle_append_, h, start_section, mh);
     return eccodes::getErrorCode(result);
 }
 
-static int grib_multi_handle_write_(grib_multi_handle* h, FILE* f)
+// C-API: Ensure all exceptions are converted to error codes
+int grib_multi_handle_write(grib_multi_handle* h, FILE* f)
 {
     if (f == NULL)
         return GRIB_INVALID_FILE;
@@ -1463,12 +1482,6 @@ static int grib_multi_handle_write_(grib_multi_handle* h, FILE* f)
     }
 
     return GRIB_SUCCESS;
-}
-
-int grib_multi_handle_write(grib_multi_handle* h, FILE* f)
-{
-    auto result = eccodes::handleExceptions(grib_multi_handle_write_, h, f);
-    return eccodes::getErrorCode(result);
 }
 
 int grib_get_partial_message(grib_handle* h, const void** msg, size_t* len, int start_section)
@@ -1513,7 +1526,8 @@ int grib_get_partial_message_copy(grib_handle* h, void* message, size_t* len,
     return GRIB_SUCCESS;
 }
 
-static int grib_get_message_copy_(const grib_handle* h, void* message, size_t* len)
+// C-API: Ensure all exceptions are converted to error codes
+int grib_get_message_copy(const grib_handle* h, void* message, size_t* len)
 {
     if (!h)
         return GRIB_NOT_FOUND;
@@ -1527,13 +1541,8 @@ static int grib_get_message_copy_(const grib_handle* h, void* message, size_t* l
     return GRIB_SUCCESS;
 }
 
-int grib_get_message_copy(const grib_handle* h, void* message, size_t* len)
-{
-    auto result = eccodes::handleExceptions(grib_get_message_copy_, h, message, len);
-    return eccodes::getErrorCode(result);
-}
-
-static int grib_get_message_offset_(const grib_handle* h, off_t* offset)
+// C-API: Ensure all exceptions are converted to error codes
+int grib_get_message_offset(const grib_handle* h, off_t* offset)
 {
     if (h)
         *offset = h->offset;
@@ -1543,13 +1552,8 @@ static int grib_get_message_offset_(const grib_handle* h, off_t* offset)
     return GRIB_SUCCESS;
 }
 
-int grib_get_message_offset(const grib_handle* h, off_t* offset)
-{
-    auto result = eccodes::handleExceptions(grib_get_message_offset_, h, offset);
-    return eccodes::getErrorCode(result);
-}
-
-static int codes_get_product_kind_(const grib_handle* h, ProductKind* product_kind)
+// C-API: Ensure all exceptions are converted to error codes
+int codes_get_product_kind(const grib_handle* h, ProductKind* product_kind)
 {
     if (h) {
         *product_kind = h->product_kind;
@@ -1558,13 +1562,8 @@ static int codes_get_product_kind_(const grib_handle* h, ProductKind* product_ki
     return GRIB_NULL_HANDLE;
 }
 
-int codes_get_product_kind(const grib_handle* h, ProductKind* product_kind)
-{
-    auto result = eccodes::handleExceptions(codes_get_product_kind_, h, product_kind);
-    return eccodes::getErrorCode(result);
-}
-
-static int codes_check_message_header_(const void* bytes, size_t length, ProductKind product)
+// C-API: Ensure all exceptions are converted to error codes
+int codes_check_message_header(const void* bytes, size_t length, ProductKind product)
 {
     const char* p = ((const char*)bytes);
     ECCODES_ASSERT(p);
@@ -1585,13 +1584,8 @@ static int codes_check_message_header_(const void* bytes, size_t length, Product
     return GRIB_SUCCESS;
 }
 
-int codes_check_message_header(const void* bytes, size_t length, ProductKind product)
-{
-    auto result = eccodes::handleExceptions(codes_check_message_header_, bytes, length, product);
-    return eccodes::getErrorCode(result);
-}
-
-static int codes_check_message_footer_(const void* bytes, size_t length, ProductKind product)
+// C-API: Ensure all exceptions are converted to error codes
+int codes_check_message_footer(const void* bytes, size_t length, ProductKind product)
 {
     const char* p = ((const char*)bytes);
     ECCODES_ASSERT(p);
@@ -1601,12 +1595,6 @@ static int codes_check_message_footer_(const void* bytes, size_t length, Product
         return GRIB_7777_NOT_FOUND;
     }
     return GRIB_SUCCESS;
-}
-
-int codes_check_message_footer(const void* bytes, size_t length, ProductKind product)
-{
-    auto result = eccodes::handleExceptions(codes_check_message_footer_, bytes, length, product);
-    return eccodes::getErrorCode(result);
 }
 
 static int grib_get_message_size_(const grib_handle* ch, size_t* size)
@@ -1621,6 +1609,7 @@ static int grib_get_message_size_(const grib_handle* ch, size_t* size)
     return err;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_message_size(const grib_handle* ch, size_t* size)
 {
     auto result = eccodes::handleExceptions(grib_get_message_size_, ch, size);
@@ -1647,6 +1636,7 @@ static int grib_get_message_(const grib_handle* ch, const void** msg, size_t* si
     return 0;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_message(const grib_handle* ch, const void** msg, size_t* size)
 {
     auto result = eccodes::handleExceptions(grib_get_message_, ch, msg, size);
@@ -1819,8 +1809,9 @@ static void grib2_build_message(grib_context* context, unsigned char* sections[]
     *len = msglen;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 /* For multi support mode: Reset all file handles equal to f. See GRIB-249 */
-static void grib_multi_support_reset_file_(grib_context* c, FILE* f)
+void grib_multi_support_reset_file(grib_context* c, FILE* f)
 {
     if (!c) c = grib_context_get_default();
     grib_multi_support* gm = c->multi_support;
@@ -1830,12 +1821,6 @@ static void grib_multi_support_reset_file_(grib_context* c, FILE* f)
         }
         gm = gm->next;
     }
-}
-
-void grib_multi_support_reset_file(grib_context* c, FILE* f)
-{
-    auto result = eccodes::handleExceptions(grib_multi_support_reset_file_, c, f);
-    return eccodes::logErrorAndReturnValue(result);
 }
 
 static grib_multi_support* grib_get_multi_support(grib_context* c, FILE* f)

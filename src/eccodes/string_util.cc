@@ -195,7 +195,8 @@ const char* codes_get_product_name(ProductKind product)
     return "unknown";
 }
 
-static const char* grib_get_type_name_(int type)
+// C-API: Ensure all exceptions are converted to error codes
+const char* grib_get_type_name(int type)
 {
     switch (type) {
         case GRIB_TYPE_LONG:
@@ -212,12 +213,6 @@ static const char* grib_get_type_name_(int type)
             return "section";
     }
     return "unknown";
-}
-
-const char* grib_get_type_name(int type)
-{
-    auto result = eccodes::handleExceptions(grib_get_type_name_, type);
-    return eccodes::logErrorAndReturnValue(result);
 }
 
 // Replace all occurrences of character in string.

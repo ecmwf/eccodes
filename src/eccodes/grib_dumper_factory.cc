@@ -110,6 +110,7 @@ static void grib_dump_content_(const grib_handle* h, FILE* f, const char* mode, 
     dumper->destroy();
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 void grib_dump_content(const grib_handle* h, FILE* f, const char* mode, unsigned long flags, void* data)
 {
     auto result = eccodes::handleExceptions(grib_dump_content_, h, f, mode, flags, data);

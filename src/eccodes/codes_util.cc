@@ -513,6 +513,7 @@ static int codes_is_feature_enabled_(const char* feature)
     return 0;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int codes_is_feature_enabled(const char* feature)
 {
     auto result = eccodes::handleExceptions(codes_is_feature_enabled_, feature);
@@ -553,6 +554,7 @@ static int codes_get_features_(char* result, size_t* length, int select)
     return GRIB_SUCCESS;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int codes_get_features(char* result, size_t* length, int select)
 {
     auto r = eccodes::handleExceptions(codes_get_features_, result, length, select);
@@ -571,6 +573,7 @@ static int codes_key_is_computed_(const grib_handle* h, const char* key, int* er
     return (acc->length_ == 0);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int codes_key_is_computed(const grib_handle* h, const char* key, int* err)
 {
     auto result = eccodes::handleExceptions(codes_key_is_computed_, h, key, err);

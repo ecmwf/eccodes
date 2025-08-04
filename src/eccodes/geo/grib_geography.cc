@@ -199,6 +199,7 @@ static int grib_get_gaussian_latitudes_(long trunc, double* lats)
     return compute_gaussian_latitudes(trunc, lats);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_gaussian_latitudes(long trunc, double* lats)
 {
     auto result = eccodes::handleExceptions(grib_get_gaussian_latitudes_, trunc, lats);

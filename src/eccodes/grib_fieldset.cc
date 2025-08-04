@@ -304,6 +304,7 @@ static grib_fieldset* grib_fieldset_new_from_files_(grib_context* c, const char*
 }
 
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_fieldset* grib_fieldset_new_from_files(grib_context* c, const char* filenames[], int nfiles, const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err)
 {
     auto result = eccodes::handleExceptions(grib_fieldset_new_from_files_, c, filenames, nfiles, keys, nkeys, where_string, order_by_string, err);
@@ -441,6 +442,7 @@ int grib_fieldset_apply_order_by_(grib_fieldset* set, const char* order_by_strin
     return err;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_fieldset_apply_order_by(grib_fieldset* set, const char* order_by_string) {
     auto result = eccodes::handleExceptions(grib_fieldset_apply_order_by_, set, order_by_string);
     return eccodes::getErrorCode(result);
@@ -645,6 +647,7 @@ static void grib_fieldset_delete_(grib_fieldset* set)
     grib_context_free(c, set);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 void grib_fieldset_delete(grib_fieldset* set) {
     auto result = eccodes::handleExceptions(grib_fieldset_delete_, set);
     eccodes::logErrorAndReturnValue(result);
@@ -736,15 +739,11 @@ static int grib_fieldset_resize(grib_fieldset* set, size_t newsize)
     return GRIB_SUCCESS;
 }
 
-static void grib_fieldset_rewind_(grib_fieldset* set)
+// C-API: Ensure all exceptions are converted to error codes
+void grib_fieldset_rewind(grib_fieldset* set)
 {
     if (set)
         set->current = 0;
-}
-
-void grib_fieldset_rewind(grib_fieldset* set) {
-    auto result = eccodes::handleExceptions(grib_fieldset_rewind_, set);
-    eccodes::logErrorAndReturnValue(result);
 }
 
 static grib_handle* grib_fieldset_next_handle_(grib_fieldset* set, int* err)
@@ -758,19 +757,16 @@ static grib_handle* grib_fieldset_next_handle_(grib_fieldset* set, int* err)
     return h;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_handle* grib_fieldset_next_handle(grib_fieldset* set, int* err) {
     auto result = eccodes::handleExceptions(grib_fieldset_next_handle_, set, err);
     return eccodes::updateErrorAndReturnValue(result, err);
 }
 
-static int grib_fieldset_count_(const grib_fieldset* set)
+// C-API: Ensure all exceptions are converted to error codes
+int grib_fieldset_count(const grib_fieldset* set)
 {
     return set->size;
-}
-
-int grib_fieldset_count(const grib_fieldset* set) {
-    auto result = eccodes::handleExceptions(grib_fieldset_count_, set);
-    return eccodes::logErrorAndReturnValue(result);
 }
 
 grib_handle* grib_fieldset_retrieve(grib_fieldset* set, int i, int* err)

@@ -113,6 +113,7 @@ static int grib_get_data_(const grib_handle* h, double* lats, double* lons, doub
     return err;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_data(const grib_handle* h, double* lats, double* lons, double* values)
 {
     auto result = eccodes::handleExceptions(grib_get_data_, h, lats, lons, values);

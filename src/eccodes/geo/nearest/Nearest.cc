@@ -409,6 +409,7 @@ static int grib_nearest_find_multiple_(
     return ret;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_nearest_find_multiple(
     const grib_handle* h, int is_lsm,
     const double* inlats, const double* inlons, long npoints,
@@ -446,6 +447,7 @@ static int grib_nearest_find_(
     return ret;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_nearest_find(
     grib_nearest* nearest, const grib_handle* ch,
     double inlat, double inlon,
@@ -473,6 +475,7 @@ static int grib_nearest_delete_(grib_nearest* i)
     return GRIB_SUCCESS;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_nearest_delete(grib_nearest* i)
 {
     auto result = eccodes::handleExceptions(grib_nearest_delete_, i);
@@ -501,6 +504,7 @@ grib_nearest* grib_nearest_new(const grib_handle* ch, int* error)
 }
 #endif
 
+// C-API: Ensure all exceptions are converted to error codes
 grib_nearest* grib_nearest_new(const grib_handle* ch, int* error)
 {
     auto result = eccodes::handleExceptions(grib_nearest_new_, ch, error);

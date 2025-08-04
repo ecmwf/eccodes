@@ -455,6 +455,7 @@ static void grib_get_reduced_row_(long pl, double lon_first, double lon_last, lo
     *ilon_last  = (the_lon2 * pl) / 360.0;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last)
 {
     auto result = eccodes::handleExceptions(grib_get_reduced_row_, pl, lon_first, lon_last, npoints, ilon_first, ilon_last);
@@ -487,6 +488,7 @@ static void grib_get_reduced_row_p_(long pl, double lon_first, double lon_last, 
     *olon_last  = the_lon2;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 void grib_get_reduced_row_p(long pl, double lon_first, double lon_last, long* npoints, double* olon_first, double* olon_last)
 {
     auto result = eccodes::handleExceptions(grib_get_reduced_row_p_, pl, lon_first, lon_last, npoints, olon_first, olon_last);
