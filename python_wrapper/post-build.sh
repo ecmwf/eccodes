@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# NOTE auditwheel is problematic since it changes libnames -- all is well from
-# the pov # of this very package's libs, but subsequent packages compiled with
-# this as a dependency end up not working
+# NOTE auditwheel/delocate are problematic since firstly they don't copy
+# include/.h files so we'd need to handle them manually anyway, secondly they
+# would include also eckit etc which we want to stay in an isolated wheel,
+# and thirdly they mutate library names, posing a challenge for downstream
+# compilation
+
 # if [ "$(uname)" != "Darwin" ] ; then
 #   auditwheel repair -w /tmp/eccodes/auditwheel /tmp/eccodes/build/wheel/*whl
 # fi
-
-# NOTE on macos we delocate with impunity, because the findlibs recursive depload
-# is disabled anyway
-if [ "$(uname)" = "Darwin" ] ; then
-    delocate-wheel /tmp/eccodes/build/wheel/*whl
-fi
+# if [ "$(uname)" = "Darwin" ] ; then
+#    delocate-wheel /tmp/eccodes/build/wheel/*whl
+# fi
