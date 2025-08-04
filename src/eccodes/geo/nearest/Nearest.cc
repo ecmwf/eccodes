@@ -265,7 +265,7 @@ int grib_nearest_get_radius(grib_handle* h, double* radiusInKm)
 
     if ((err = grib_get_long(h, s_radius, &lRadiusInMetres)) == GRIB_SUCCESS) {
         if (grib_is_missing(h, s_radius, &err) || lRadiusInMetres == GRIB_MISSING_LONG) {
-            grib_context_log(h->context, GRIB_LOG_DEBUG, "Key 'radius' is missing");
+            grib_context_log(h->context, GRIB_LOG_ERROR, "Key 'radius' is missing");
             return GRIB_GEOCALCULUS_PROBLEM;
         }
         result = ((double)lRadiusInMetres) / 1000.0;
