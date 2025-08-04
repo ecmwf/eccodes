@@ -272,6 +272,7 @@ list( APPEND eccodes_src_files
     accessor/GridSpec.cc
     accessor/G2ParamConceptFilename.cc
     accessor/G2Probability.cc
+    accessor/G2WavePeriodRange.cc
 
     grib_jasper_encoding.cc
     grib_openjpeg_encoding.cc

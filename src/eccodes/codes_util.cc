@@ -214,13 +214,35 @@ int is_date_valid(long year, long month, long day, long hour, long minute, doubl
     return 1;
 }
 
+// Return 1 if input time is valid. Otherwise 0
+int is_time_valid(long hours, long minutes, long seconds)
+{
+    // Check if hours are within the valid range (0-24)
+    if (hours != 255 && (hours < 0 || hours > 24)) {
+        return 0;
+    }
+
+    // Check if minutes are within the valid range (0-59)
+    if (minutes != 255 && (minutes < 0 || minutes > 59)) {
+        return 0;
+    }
+
+    // Check if seconds are within the valid range (0-59)
+    if (seconds != 255 && (seconds < 0 || seconds > 59)) {
+        return 0;
+    }
+
+    // All checks pass
+    return 1;
+}
+
 // Return 1 if input date is valid. Otherwise 0
 // Note: In the 24-hour time notation, the day begins at midnight, 00:00 or 0:00,
 // and the last minute of the day begins at 23:59.
 // Where convenient, the notation 24:00 may also be used to refer to midnight
 // at the end of a given date - that is, 24:00 of one day is the same time
 // as 00:00 of the following day
-int is_time_valid(long number)
+int is_time_valid_HHMM(long number)
 {
     // Number should be 4 digits i.e., HHMM
     if (number < 0 || number > 9999) {
@@ -231,14 +253,9 @@ int is_time_valid(long number)
     long hours   = number / 100;  // Get the first two digits as hours
     long minutes = number % 100;  // Get the last two digits as minutes
 
-    // Check if hours are within the valid range (00-24)
-    if (hours < 0 || hours > 24) {
-        return 0;
-    }
-
-    // Check if minutes are within the valid range (00-59)
-    if (minutes < 0 || minutes > 59) {
-        return 0;
+    // Check if the time is valid
+    if (!is_time_valid(hours, minutes, 0)) {
+        return 0; // bad time
     }
 
     // All checks pass

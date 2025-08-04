@@ -1455,6 +1455,88 @@
 	 parameterNumber = 79 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean significant wave height of all waves with periods within the inclusive range from 10 to 12 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 12 ;
+	}
+#Time-mean significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 12 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 14 ;
+	}
+#Time-mean significant wave height of all waves with periods within the inclusive range from 14 to 17 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 14 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 17 ;
+	}
+#Time-mean significant wave height of all waves with periods within the inclusive range from 17 to 21 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 17 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 21 ;
+	}
+#Time-mean significant wave height of all waves with periods within the inclusive range from 21 to 25 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 21 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 25 ;
+	}
+#Time-mean significant wave height of all waves with periods within the inclusive range from 25 to 30 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 25 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 30 ;
+	}
+#Time-mean significant wave height of all waves with period larger than 10s
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfWavePeriodInterval = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
+	}
 #Time-mean significant wave height of first swell partition
 'm' = {
 	 discipline = 10 ;
@@ -2031,6 +2113,88 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 79 ;
 	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum significant wave height of all waves with periods within the inclusive range from 10 to 12 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 12 ;
+	}
+#Time-maximum significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 12 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 14 ;
+	}
+#Time-maximum significant wave height of all waves with periods within the inclusive range from 14 to 17 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 14 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 17 ;
+	}
+#Time-maximum significant wave height of all waves with periods within the inclusive range from 17 to 21 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 17 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 21 ;
+	}
+#Time-maximum significant wave height of all waves with periods within the inclusive range from 21 to 25 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 21 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 25 ;
+	}
+#Time-maximum significant wave height of all waves with periods within the inclusive range from 25 to 30 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 25 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 30 ;
+	}
+#Time-maximum significant wave height of all waves with period larger than 10s
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfWavePeriodInterval = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
 	}
 #Time-maximum significant wave height of first swell partition
 'm' = {
@@ -2609,6 +2773,88 @@
 	 parameterNumber = 79 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum significant wave height of all waves with periods within the inclusive range from 10 to 12 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 12 ;
+	}
+#Time-minimum significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 12 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 14 ;
+	}
+#Time-minimum significant wave height of all waves with periods within the inclusive range from 14 to 17 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 14 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 17 ;
+	}
+#Time-minimum significant wave height of all waves with periods within the inclusive range from 17 to 21 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 17 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 21 ;
+	}
+#Time-minimum significant wave height of all waves with periods within the inclusive range from 21 to 25 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 21 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 25 ;
+	}
+#Time-minimum significant wave height of all waves with periods within the inclusive range from 25 to 30 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 25 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 30 ;
+	}
+#Time-minimum significant wave height of all waves with period larger than 10s
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfWavePeriodInterval = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
+	}
 #Time-minimum significant wave height of first swell partition
 'm' = {
 	 discipline = 10 ;
@@ -3185,6 +3431,88 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 79 ;
 	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation significant wave height of all waves with periods within the inclusive range from 10 to 12 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 12 ;
+	}
+#Time-standard-deviation significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 12 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 14 ;
+	}
+#Time-standard-deviation significant wave height of all waves with periods within the inclusive range from 14 to 17 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 14 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 17 ;
+	}
+#Time-standard-deviation significant wave height of all waves with periods within the inclusive range from 17 to 21 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 17 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 21 ;
+	}
+#Time-standard-deviation significant wave height of all waves with periods within the inclusive range from 21 to 25 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 21 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 25 ;
+	}
+#Time-standard-deviation significant wave height of all waves with periods within the inclusive range from 25 to 30 seconds
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 25 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 30 ;
+	}
+#Time-standard-deviation significant wave height of all waves with period larger than 10s
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfWavePeriodInterval = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
 	}
 #Time-standard-deviation significant wave height of first swell partition
 'm' = {

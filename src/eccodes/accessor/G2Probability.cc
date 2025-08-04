@@ -36,19 +36,18 @@ int G2Probability::unpack_long(long* val, size_t* len)
 
 int G2Probability::pack_long(const long* val, size_t* len)
 {
-    grib_handle* hand                       = get_enclosing_handle();
+    grib_handle* hand = get_enclosing_handle();
     long productDefinitionTemplateNumber    = -1;
     long productDefinitionTemplateNumberNew = -1;
     char stepType[15] = {0,};
     size_t slen = 15;
     int isInstant = 0;
-    int ret = 0;
 
     if (grib_get_long(hand, productDefinitionTemplateNumber_, &productDefinitionTemplateNumber) != GRIB_SUCCESS)
         return GRIB_SUCCESS;
 
-    ret = grib_get_string(hand, stepType_, stepType, &slen);
-    ECCODES_ASSERT(ret == GRIB_SUCCESS);
+    int err = grib_get_string(hand, stepType_, stepType, &slen);
+    if (err) return err;
 
     // long eps = grib_is_defined(hand, "perturbationNumber");
 
@@ -66,13 +65,13 @@ int G2Probability::pack_long(const long* val, size_t* len)
         grib_set_long(hand, productDefinitionTemplateNumber_, productDefinitionTemplateNumberNew);
     }
 
-    return 0;
+    return GRIB_SUCCESS;
 }
 
 int G2Probability::value_count(long* count)
 {
     *count = 1;
-    return 0;
+    return GRIB_SUCCESS;
 }
 
 }  // namespace eccodes::accessor

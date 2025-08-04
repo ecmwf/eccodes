@@ -13,6 +13,7 @@
 label="grib_paramid_chemid_split_test"
 tempGribA=temp1.$label.grib
 tempGribB=temp2.$label.grib
+tempFilt=temp.$label.filt
 
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
@@ -44,6 +45,24 @@ result=$( ${tools_dir}/grib_get -f -p is_chemical $tempGribB )
 ${tools_dir}/grib_set -s tablesVersion=34,setLocalDefinition=1,class=a5,discipline=0,parameterCategory=0,parameterNumber=0 $sample_grib2  $tempGribA
 grib_check_key_equals $tempGribA "chemId,chemName,chemShortName" "-1 unknown unknown"
 
+# Conversion in memory using transient 'enableChemSplit'
+cat >$tempFilt<<EOF
+  set tablesVersion = 35;
+  set productDefinitionTemplateNumber = 50;
+  set class = 'cr';
+  set enableChemSplit = 1;
+  assert( paramId == 402000 );
+  assert( chemId == 914 );
+  write;
+EOF
+${tools_dir}/grib_set -s \
+  setLocalDefinition=1,class=2,stream=1025,type=2,productDefinitionTemplateNumber=44,constituentType=62003,parameterCategory=20,parameterNumber=2 \
+  $sample_grib2 $tempGribA
+grib_check_key_equals $tempGribA "paramId,shortName" "210249 aermr18"
+
+${tools_dir}/grib_filter -o $tempGribB $tempFilt $tempGribA
+grib_check_key_equals $tempGribB "paramId,shortName" "402000 mass_mixrat"
+
 
 # Clean up
-rm -f $tempGribA $tempGribB 
+rm -f $tempGribA $tempGribB $tempFilt
