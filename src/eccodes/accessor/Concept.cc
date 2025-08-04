@@ -237,7 +237,7 @@ static int rectify_concept_apply(grib_handle* h, const char* key)
     int ret = GRIB_NOT_FOUND;
     static const std::map<std::string_view, std::pair<std::string_view, long>> keyMap = {
         { "typeOfStatisticalProcessing",       { "selectStepTemplateInterval", 1 }        },
-        { "typeOfWavePeriodInterval",          { "productDefinitionTemplateNumber", 103 } },
+        { "typeOfWavePeriodInterval",          { "is_wave_period_range", 1 }              },
         { "constituentType",                   { "is_chemical", 1 }                       },
         { "aerosolType",                       { "is_aerosol", 1 }                        },
         { "sourceSinkChemicalPhysicalProcess", { "is_chemical_srcsink", 1 }               },
