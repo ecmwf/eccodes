@@ -107,6 +107,11 @@ grep -q "Time is not valid" $temp
 ${tools_dir}/grib_set -s dataTime=2501 $input $outfile > $temp 2>&1
 grep -q "Time is not valid" $temp
 
+${tools_dir}/grib_set -s hour=33 $input $outfile
+${tools_dir}/grib_get -ptime $outfile > $temp 2>&1
+grep -q "Time is not valid" $temp
+
+
 # Note for GRIB1 we DO fail on a bad date! This need to be consistent across editions
 input=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 set +e

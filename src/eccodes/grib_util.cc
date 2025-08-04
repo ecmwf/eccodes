@@ -21,6 +21,49 @@ typedef enum
     eROUND_ANGLE_DOWN
 } RoundingPolicy;
 
+#define SET_LONG_VALUE(n, v)                       \
+    do {                                           \
+        ECCODES_ASSERT(count < 1024);              \
+        values[count].name       = n;              \
+        values[count].type       = GRIB_TYPE_LONG; \
+        values[count].long_value = v;              \
+        count++;                                   \
+    } while (0)
+#define SET_DOUBLE_VALUE(n, v)                         \
+    do {                                               \
+        ECCODES_ASSERT(count < 1024);                  \
+        values[count].name         = n;                \
+        values[count].type         = GRIB_TYPE_DOUBLE; \
+        values[count].double_value = v;                \
+        count++;                                       \
+    } while (0)
+#define SET_STRING_VALUE(n, v)                         \
+    do {                                               \
+        ECCODES_ASSERT(count < 1024);                  \
+        values[count].name         = n;                \
+        values[count].type         = GRIB_TYPE_STRING; \
+        values[count].string_value = v;                \
+        count++;                                       \
+    } while (0)
+
+#define COPY_SPEC_LONG(x)                          \
+    do {                                           \
+        ECCODES_ASSERT(count < 1024);              \
+        values[count].name       = #x;             \
+        values[count].type       = GRIB_TYPE_LONG; \
+        values[count].long_value = spec->x;        \
+        count++;                                   \
+    } while (0)
+#define COPY_SPEC_DOUBLE(x)                            \
+    do {                                               \
+        ECCODES_ASSERT(count < 1024);                  \
+        values[count].name         = #x;               \
+        values[count].type         = GRIB_TYPE_DOUBLE; \
+        values[count].double_value = spec->x;          \
+        count++;                                       \
+    } while (0)
+
+
 static void set_total_length(unsigned char* buffer, long* section_length, const long* section_offset, int edition, size_t totalLength)
 {
     long off;
@@ -863,6 +906,275 @@ static int get_grib_sample_name(grib_handle* h, long editionNumber,
     return GRIB_SUCCESS;
 }
 
+int grib_set_grid_spec(grib_handle* h, const grib_grid_spec* spec, grib_values extra_settings[80], long extra_settings_count)
+{
+    grib_values values[1024] = {{0,},};
+    const grib_context* c = grib_context_get_default();
+    const char* grid_type = NULL;
+    char input_grid_type[100];
+    size_t count = 0, input_grid_type_len = 100;
+    // double laplacianOperator;
+    long editionNumber = 0;
+    int i = 0, err = 0;
+    bool grib1_high_resolution_fix = false; // See GRIB-863
+
+    // ECC-625: Request is for expansion of bounding box (sub-area). Also called the "snap-out" policy
+    bool expandBoundingBox = true;  // always true
+
+    // In some cases we need to modify the input spec
+    grib_grid_spec* nonConstSpec = const_cast<grib_grid_spec*>(spec);
+    ECCODES_ASSERT(h);
+
+    err = grib_get_long(h, "edition", &editionNumber);  // Get edition number from input handle
+    ECCODES_ASSERT(!err);
+
+    // Convert the integer grid types in spec to a string
+    grid_type = get_grid_type_name(spec->grid_type);
+    if (!grid_type) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Unknown grid_type (%d)", __func__, spec->grid_type);
+        return GRIB_INVALID_ARGUMENT;
+    }
+    SET_STRING_VALUE("gridType", grid_type);
+    // Check our edition can support the grid type requested
+    if (!grid_type_is_supported_in_edition(spec->grid_type, editionNumber)) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: '%s' specified but input is GRIB edition %ld.",
+                        __func__, grid_type, editionNumber);
+        return GRIB_INVALID_ARGUMENT;
+    }
+
+    // Set grid keys
+    switch (spec->grid_type) {
+        case GRIB_UTIL_GRID_SPEC_REGULAR_LL:
+        case GRIB_UTIL_GRID_SPEC_ROTATED_LL:
+            SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
+            if (editionNumber == 1) {
+                // GRIB-863: GRIB1 cannot represent increments less than a millidegree
+                if (!angle_can_be_encoded(h, spec->iDirectionIncrementInDegrees) ||
+                    !angle_can_be_encoded(h, spec->jDirectionIncrementInDegrees)) {
+                    grib1_high_resolution_fix = true;
+                    // Set flag to compute the increments
+                    SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
+                }
+            }
+
+            // default iScansNegatively=0 jScansPositively=0 is ok
+            COPY_SPEC_LONG(iScansNegatively);
+            COPY_SPEC_LONG(jScansPositively);
+            COPY_SPEC_LONG(Ni);
+            COPY_SPEC_LONG(Nj);
+            COPY_SPEC_DOUBLE(iDirectionIncrementInDegrees);
+            COPY_SPEC_DOUBLE(jDirectionIncrementInDegrees);
+            COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
+            COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
+            COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
+            COPY_SPEC_DOUBLE(latitudeOfLastGridPointInDegrees);
+
+            break;
+
+        case GRIB_UTIL_GRID_SPEC_REGULAR_GG:
+        case GRIB_UTIL_GRID_SPEC_ROTATED_GG:
+            SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
+            COPY_SPEC_LONG(Ni);
+            COPY_SPEC_DOUBLE(iDirectionIncrementInDegrees);
+            COPY_SPEC_LONG(Nj);
+            COPY_SPEC_LONG(N);
+            COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
+            COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
+            COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
+            COPY_SPEC_DOUBLE(latitudeOfLastGridPointInDegrees);
+            break;
+
+        case GRIB_UTIL_GRID_SPEC_REDUCED_LL:
+            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
+            COPY_SPEC_LONG(Nj);
+            COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
+            COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
+            COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
+            COPY_SPEC_DOUBLE(latitudeOfLastGridPointInDegrees);
+            break;
+
+        case GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC:
+            if (editionNumber == 2) {
+                // A -ve longitude passed in (could be from GRIB1). Polar stereo longitude in GRIB2 must be +ve
+                nonConstSpec->longitudeOfFirstGridPointInDegrees = normalise_longitude_in_degrees(spec->longitudeOfFirstGridPointInDegrees);
+            }
+            COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
+            COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
+            COPY_SPEC_LONG(Ni);
+            COPY_SPEC_LONG(Nj);
+
+            // default iScansNegatively=0 jScansPositively=0 is ok
+            COPY_SPEC_LONG(iScansNegatively);
+            COPY_SPEC_LONG(jScansPositively);
+            COPY_SPEC_DOUBLE(orientationOfTheGridInDegrees);
+            COPY_SPEC_LONG(DxInMetres);
+            COPY_SPEC_LONG(DyInMetres);
+            break;
+
+        case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
+            COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
+            COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
+            COPY_SPEC_LONG(Ni); // same as Nx
+            COPY_SPEC_LONG(Nj); // same as Ny
+            COPY_SPEC_LONG(iScansNegatively);
+            COPY_SPEC_LONG(jScansPositively);
+            COPY_SPEC_DOUBLE(standardParallelInDegrees);
+            COPY_SPEC_DOUBLE(centralLongitudeInDegrees);
+            COPY_SPEC_DOUBLE(DxInMetres);
+            COPY_SPEC_DOUBLE(DyInMetres);
+
+            break;
+        case GRIB_UTIL_GRID_SPEC_UNSTRUCTURED:
+            // TODO(masn): Other keys
+            break;
+        case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
+            if (editionNumber == 2) {
+                // A -ve longitude passed in (could be from GRIB1). Lambert longitude in GRIB2 must be +ve
+                nonConstSpec->longitudeOfFirstGridPointInDegrees = normalise_longitude_in_degrees(spec->longitudeOfFirstGridPointInDegrees);
+            }
+            COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
+            COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
+            COPY_SPEC_LONG(Ni); // same as Nx
+            COPY_SPEC_LONG(Nj); // same as Ny
+
+            COPY_SPEC_LONG(iScansNegatively);
+            COPY_SPEC_LONG(jScansPositively);
+            COPY_SPEC_DOUBLE(latitudeOfSouthernPoleInDegrees);
+            COPY_SPEC_DOUBLE(longitudeOfSouthernPoleInDegrees);
+            COPY_SPEC_LONG(uvRelativeToGrid);
+            COPY_SPEC_DOUBLE(DxInMetres);
+            COPY_SPEC_DOUBLE(DyInMetres);
+            COPY_SPEC_DOUBLE(Latin1InDegrees);
+            COPY_SPEC_DOUBLE(Latin1InDegrees);
+            COPY_SPEC_DOUBLE(LoVInDegrees);
+            COPY_SPEC_DOUBLE(LaDInDegrees);
+
+            break;
+        case GRIB_UTIL_GRID_SPEC_HEALPIX:
+            COPY_SPEC_LONG(N); // Nside
+            COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
+            break;
+
+        case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
+        case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
+            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
+
+            COPY_SPEC_LONG(Nj);
+            COPY_SPEC_LONG(N);
+            COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
+            COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
+            COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
+            COPY_SPEC_DOUBLE(latitudeOfLastGridPointInDegrees);
+
+            break;
+
+        case GRIB_UTIL_GRID_SPEC_SH:
+            err = grib_get_string(h, "gridType", input_grid_type, &input_grid_type_len);
+            if(err) return err;
+
+            SET_LONG_VALUE("J", spec->truncation);
+            SET_LONG_VALUE("K", spec->truncation);
+            SET_LONG_VALUE("M", spec->truncation);
+
+            // if (packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX) {
+            //     const long JS = spec->truncation < 20 ? spec->truncation : 20;
+            //     SET_STRING_VALUE("packingType", "spectral_complex");
+            //     packingTypeIsSet = 1;
+            //     SET_LONG_VALUE("JS", JS);
+            //     SET_LONG_VALUE("KS", JS);
+            //     SET_LONG_VALUE("MS", JS);
+            //     if (packing_spec->packing == GRIB_UTIL_PACKING_USE_PROVIDED && editionNumber == 2) {
+            //         SET_LONG_VALUE("computeLaplacianOperator", 1);
+            //     }
+            //     else if ((!(*err) && strcmp(input_grid_type, "sh")) || packing_spec->computeLaplacianOperator) {
+            //         SET_LONG_VALUE("computeLaplacianOperator", 1);
+            //         if (packing_spec->truncateLaplacian)
+            //             SET_LONG_VALUE("truncateLaplacian", 1);
+            //     }
+            //     else {
+            //         SET_LONG_VALUE("computeLaplacianOperator", 0);
+            //         *err = grib_get_double(h, "laplacianOperator", &laplacianOperator);
+            //         if (packing_spec->truncateLaplacian)
+            //             SET_LONG_VALUE("truncateLaplacian", 1);
+            //         SET_DOUBLE_VALUE("laplacianOperator", packing_spec->laplacianOperator);
+            //         if (laplacianOperator) {
+            //             SET_DOUBLE_VALUE("laplacianOperator", laplacianOperator);
+            //         }
+            //     }
+            // }
+            break;
+    }
+
+    // Set rotation
+    switch (spec->grid_type) {
+        case GRIB_UTIL_GRID_SPEC_ROTATED_LL:
+        case GRIB_UTIL_GRID_SPEC_ROTATED_GG:
+        case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
+            COPY_SPEC_LONG(uvRelativeToGrid);
+            COPY_SPEC_DOUBLE(latitudeOfSouthernPoleInDegrees);
+            COPY_SPEC_DOUBLE(longitudeOfSouthernPoleInDegrees);
+            COPY_SPEC_DOUBLE(angleOfRotationInDegrees);
+            break;
+    }
+
+    if (extra_settings_count) {
+        for (i = 0; i < extra_settings_count; i++) {
+            ECCODES_ASSERT(count < 1024);
+            values[count++] = extra_settings[i];
+        }
+    }
+
+    // GRIB-857: Set "pl" array if provided (For reduced Gaussian grids)
+    ECCODES_ASSERT(spec->pl_size >= 0);
+    if (spec->pl && spec->pl_size == 0) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: pl array not NULL but pl_size == 0!", __func__);
+        return GRIB_WRONG_GRID;
+    }
+    if (spec->pl_size > 0 && spec->pl == NULL) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: pl_size not zero but pl array == NULL!", __func__);
+        return GRIB_WRONG_GRID;
+    }
+
+    if (spec->pl_size != 0 && (spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG)) {
+        err = grib_set_long_array(h, "pl", spec->pl, spec->pl_size);
+        if (err) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set pl: %s", __func__, grib_get_error_message(err));
+            return err;
+        }
+    }
+
+    // Apply adjustments to bounding box if needed
+    if (expandBoundingBox) {
+        if ((err = expand_bounding_box(h, values, count)) != 0) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot expand bounding box: %s", __func__, grib_get_error_message(err));
+            return err;
+        }
+    }
+
+    // Set key/value pairs
+    if ((err = grib_set_values(h, values, count)) != 0) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set key values: %s", __func__, grib_get_error_message(err));
+        //for (size_t i = 0; i < count; i++)
+        //    if (values[i].error) fprintf(stderr, " %s %s\n", values[i].name, grib_get_error_message(values[i].error));
+        return err;
+    }
+
+    if (grib1_high_resolution_fix) {
+        // GRIB-863: must set increments to MISSING
+        // increments are not coded in message but computed
+        if ((err = grib_set_missing(h, "iDirectionIncrement")) != 0) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set Di to missing: %s", __func__, grib_get_error_message(err));
+            return err;
+        }
+        if ((err = grib_set_missing(h, "jDirectionIncrement")) != 0) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set Dj to missing: %s", __func__, grib_get_error_message(err));
+            return err;
+        }
+    }
+
+    return GRIB_SUCCESS;
+}
+
 // Note: if data_values == NULL, then data_values_count must be 0
 static grib_handle* grib_util_set_spec_(grib_handle* h,
                                  const grib_util_grid_spec* spec,
@@ -872,48 +1184,6 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
                                  size_t data_values_count,
                                  int* err)
 {
-#define SET_LONG_VALUE(n, v)                       \
-    do {                                           \
-        ECCODES_ASSERT(count < 1024);              \
-        values[count].name       = n;              \
-        values[count].type       = GRIB_TYPE_LONG; \
-        values[count].long_value = v;              \
-        count++;                                   \
-    } while (0)
-#define SET_DOUBLE_VALUE(n, v)                         \
-    do {                                               \
-        ECCODES_ASSERT(count < 1024);                  \
-        values[count].name         = n;                \
-        values[count].type         = GRIB_TYPE_DOUBLE; \
-        values[count].double_value = v;                \
-        count++;                                       \
-    } while (0)
-#define SET_STRING_VALUE(n, v)                         \
-    do {                                               \
-        ECCODES_ASSERT(count < 1024);                  \
-        values[count].name         = n;                \
-        values[count].type         = GRIB_TYPE_STRING; \
-        values[count].string_value = v;                \
-        count++;                                       \
-    } while (0)
-
-#define COPY_SPEC_LONG(x)                          \
-    do {                                           \
-        ECCODES_ASSERT(count < 1024);              \
-        values[count].name       = #x;             \
-        values[count].type       = GRIB_TYPE_LONG; \
-        values[count].long_value = spec->x;        \
-        count++;                                   \
-    } while (0)
-#define COPY_SPEC_DOUBLE(x)                            \
-    do {                                               \
-        ECCODES_ASSERT(count < 1024);                  \
-        values[count].name         = #x;               \
-        values[count].type         = GRIB_TYPE_DOUBLE; \
-        values[count].double_value = spec->x;          \
-        count++;                                       \
-    } while (0)
-
     grib_values values[1024] = {{0,},};
     const grib_context* c = grib_context_get_default();
     grib_handle* h_out    = NULL;

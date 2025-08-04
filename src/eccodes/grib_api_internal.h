@@ -1104,6 +1104,75 @@ typedef struct j2k_encode_helper
 
 } j2k_encode_helper;
 
+// For gridSpec encoding
+#define GRIB_GRID_SPEC_REGULAR_LL                   1
+#define GRIB_GRID_SPEC_ROTATED_LL                   2
+#define GRIB_GRID_SPEC_REGULAR_GG                   3
+#define GRIB_GRID_SPEC_ROTATED_GG                   4
+#define GRIB_GRID_SPEC_REDUCED_GG                   5
+#define GRIB_GRID_SPEC_SH                           6
+#define GRIB_GRID_SPEC_REDUCED_LL                   7
+#define GRIB_GRID_SPEC_POLAR_STEREOGRAPHIC          8
+#define GRIB_GRID_SPEC_REDUCED_ROTATED_GG           9
+#define GRIB_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA 10
+#define GRIB_GRID_SPEC_LAMBERT_CONFORMAL            11
+#define GRIB_GRID_SPEC_UNSTRUCTURED                 12
+#define GRIB_GRID_SPEC_HEALPIX                      13
+
+typedef struct grib_grid_spec
+{
+    int grid_type;         // e.g. GRIB_GRID_SPEC_REGULAR_LL etc
+    const char* grid_name; // e.g. N320
+
+    // Grid
+    long Ni;
+    long Nj;
+
+    double iDirectionIncrementInDegrees;
+    double jDirectionIncrementInDegrees;
+
+    double longitudeOfFirstGridPointInDegrees;
+    double longitudeOfLastGridPointInDegrees;
+
+    double latitudeOfFirstGridPointInDegrees;
+    double latitudeOfLastGridPointInDegrees;
+
+    // Rotation
+    long uvRelativeToGrid;
+    double latitudeOfSouthernPoleInDegrees;
+    double longitudeOfSouthernPoleInDegrees;
+    double angleOfRotationInDegrees;
+
+    // Scanning mode
+    long iScansNegatively;
+    long jScansPositively;
+
+    // Gaussian number or HEALPIX Nside
+    long N;
+
+    // PL array for reduced grids
+    const long* pl;
+    long pl_size;
+
+    // Spherical harmonics
+    long truncation;
+
+    double orientationOfTheGridInDegrees; //Polar stereographic, Space view
+
+    // Lambert, Polar stereographic
+    long DyInMetres;
+    long DxInMetres;
+    double standardParallelInDegrees;
+    double centralLongitudeInDegrees;
+
+    double Latin1InDegrees;
+    double Latin2InDegrees;
+    double LoVInDegrees;
+    double LaDInDegrees;
+
+} grib_grid_spec;
+
+
 
 #include "eccodes_prototypes.h"
 #ifdef __cplusplus

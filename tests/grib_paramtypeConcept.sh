@@ -10,17 +10,13 @@
 
 . ./include.ctest.sh
 
-# ---------------------------------------------------------
-# This is the test for the JIRA issue ECC-XXXX
-# < Add issue summary here >
-# ---------------------------------------------------------
-
-REDIRECT=/dev/null
-
-label="grib_paramtypeconcept_all_pdtn"  # Change prod to bufr or grib etc
+label="grib_paramtypeconcept_test"
 tempGrib=temp.$label.grib
-tempText=temp.$label.txt
-rm -f $tempGrib $tempText
+
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
 
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 latestOfficial=$( ${tools_dir}/grib_get -p tablesVersionLatestOfficial $sample_grib2 )
@@ -30,7 +26,6 @@ if [ -f "$latest_codetable_file" ]; then
   for pdtn in $pdtns; do
     # echo "Doing $pdtn "
     ${tools_dir}/grib_set -s tablesVersion=$latestOfficial,productDefinitionTemplateNumber=$pdtn $sample_grib2 $tempGrib
-    ${tools_dir}/grib_get -p paramtype $tempGrib
     paramtype=$( ${tools_dir}/grib_get -p paramtype $tempGrib )
     if [[ $paramtype  == 'unknown' ]]; then
       echo "productDefinitionTemplateNumber=$pdtn: paramtype not defined"
@@ -40,4 +35,4 @@ if [ -f "$latest_codetable_file" ]; then
 fi
 
 # Clean up
-rm -f $tempGrib $tempText 
+rm -f $tempGrib
