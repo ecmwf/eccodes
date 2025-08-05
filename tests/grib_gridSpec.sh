@@ -41,11 +41,17 @@ set -u
 # Gridded data
 infile=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_get -p gridSpec $infile
-grib_check_key_equals $infile gridSpec '{"east":30,"grid":[2,2],"north":60,"shape":[16,31],"south":0,"west":0}'
+grib_check_key_equals $infile gridSpec '{"east":30,"grid":[2,2],"north":60,"south":0,"west":0}'
 
 infile=$ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
 ${tools_dir}/grib_get -p gridSpec $infile
 grib_check_key_equals $infile gridSpec '{"grid":"N48"}'
+
+infile=$ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
+${tools_dir}/grib_set -s gridSpec='{grid:N32}' $infile $tempGrib
+# ${tools_dir}/grib_ls -jn geography $infile $tempGrib
+grib_check_key_equals $tempGrib N,Nj '32 64'
+# ${tools_dir}/grib_compare $infile $tempGrib
 
 
 # Clean up
