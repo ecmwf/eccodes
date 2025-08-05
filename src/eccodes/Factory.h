@@ -10,13 +10,14 @@
 
 #pragma once
 
-// #include "AccessorDefs.h"
-// #include "grib_api_internal.h"
+#include "grib_api_internal.h"
 #include "AccessorUtils/NamedType.h"
-#include "grib_value.h"
+// #include "AccessorStore.h"
 #include "AccessorUtils/AccessorException.h"
 #include <mutex>
-#include <map>
+// #include <map>
+// #include <unordered_map>
+#include <tsl/robin_map.h>
 
 namespace eccodes {
 
@@ -66,10 +67,24 @@ public:
 
     Ptr build(Type const& type);
 
-private:
-    Factory() {}
 
-    std::map<Type, BuilderBase<T>*> builders_;
+private:
+    struct TypeHash {
+        std::size_t operator()(const Type& type) const {
+            return std::hash<std::string>()(type.get());
+        }
+    };
+
+    struct TypeEqual {
+        bool operator()(const Type& lhs, const Type& rhs) const {
+            return lhs.get() == rhs.get();
+        }
+    };
+
+    Factory() {}
+    // std::map<Type, BuilderBase<T>*> builders_;
+    // std::unordered_map<Type, BuilderBase<T>*, TypeHash, TypeEqual> builders_;
+    tsl::robin_map<Type, BuilderBase<T>*, TypeHash, TypeEqual> builders_;
     std::recursive_mutex mutex_;
 };
 
@@ -146,7 +161,9 @@ typename Factory<T>::Ptr Factory<T>::build(Type const& type)
         throw Exception(std::string("No Builder called ") + type.get());
     }
     else {
-        return builder_->second->make();
+        auto builder =  builder_->second->make();
+        // eccodes::AccessorStore::instance().add(builder);
+        return builder;
     }
 }
 
