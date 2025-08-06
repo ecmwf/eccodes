@@ -13226,6 +13226,24 @@
 	 parameterNumber = 192 ;
 	 typeOfFirstFixedSurface = 173 ;
 	 typeOfSecondFixedSurface = 175 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum sea ice salinity
+'265023' = {
+	 localTablesVersion = 1 ;
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 193 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-minimum snow thickness over sea ice
@@ -13236,6 +13254,24 @@
 	 parameterNumber = 192 ;
 	 typeOfFirstFixedSurface = 173 ;
 	 typeOfSecondFixedSurface = 175 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum  sea ice salinity
+'266023' = {
+	 localTablesVersion = 1 ;
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 193 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-standard-deviation snow thickness over sea ice
@@ -13246,6 +13282,24 @@
 	 parameterNumber = 192 ;
 	 typeOfFirstFixedSurface = 173 ;
 	 typeOfSecondFixedSurface = 175 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation sea ice salinity
+'267023' = {
+	 localTablesVersion = 1 ;
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 193 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Stream function gradient
