@@ -13218,6 +13218,36 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-maximum snow thickness over sea ice
+'Time-maximum snow thickness over sea ice' = {
+	 localTablesVersion = 1 ;
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 173 ;
+	 typeOfSecondFixedSurface = 175 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum snow thickness over sea ice
+'Time-minimum snow thickness over sea ice' = {
+	 localTablesVersion = 1 ;
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 173 ;
+	 typeOfSecondFixedSurface = 175 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation snow thickness over sea ice
+'Time-standard-deviation snow thickness over sea ice' = {
+	 localTablesVersion = 1 ;
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 173 ;
+	 typeOfSecondFixedSurface = 175 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Stream function gradient
 'Stream function gradient' = {
 	 discipline = 192 ;
