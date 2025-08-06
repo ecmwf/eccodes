@@ -10308,6 +10308,23 @@
 	 typeOfSecondFixedSurface = 167 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean liquid water content in snow pack
+'avg_lwcs' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 23 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean most-unstable CIN
+'avg_mucin' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-integrated land surface heat net flux
 'acc_lshnf' = {
 	 discipline = 2 ;
@@ -10809,6 +10826,20 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum leaf area index, low vegetation
+'max_lai_lv' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 55 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum leaf area index, high vegetation
+'max_lai_hv' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 56 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-maximum total column cloud liquid water
 'max_tclw' = {
 	 discipline = 0 ;
@@ -10864,6 +10895,13 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum fraction of snow cover
+'max_fscov' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 121 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum soil temperature
@@ -12291,6 +12329,23 @@
 	 typeOfSecondFixedSurface = 167 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum liquid water content in snow pack
+'max_lwcs' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 23 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum most-unstable CIN
+'max_mucin' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-minimum temperature tendency due to short-wave radiation
 'min_ttswr' = {
 	 discipline = 0 ;
@@ -12776,6 +12831,20 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum leaf area index, low vegetation
+'min_lai_lv' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 55 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum leaf area index, high vegetation
+'min_lai_hv' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 56 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-minimum total column cloud liquid water
 'min_tclw' = {
 	 discipline = 0 ;
@@ -12831,6 +12900,13 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum fraction of snow cover
+'min_fscov' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 121 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum soil temperature
@@ -14238,6 +14314,23 @@
 	 typeOfSecondFixedSurface = 167 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum liquid water content in snow pack
+'min_lwcs' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 23 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum most-unstable CIN
+'min_mucin' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-standard-deviation temperature tendency due to short-wave radiation
 'std_ttswr' = {
 	 discipline = 0 ;
@@ -14723,6 +14816,20 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
+#Time-standard-deviation leaf area index, low vegetation
+'std_lai_lv' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 55 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation leaf area index, high vegetation
+'std_lai_hv' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 56 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Time-standard-deviation total column cloud liquid water
 'std_tclw' = {
 	 discipline = 0 ;
@@ -14768,6 +14875,13 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 166 ;
 	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation fraction of snow cover
+'std_fscov' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 121 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation soil temperature
@@ -16166,6 +16280,23 @@
 	 parameterNumber = 25 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 167 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation liquid water content in snow pack
+'std_lwcs' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 23 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation most-unstable CIN
+'std_mucin' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Cross sectional area of flow in channel
