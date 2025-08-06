@@ -53,6 +53,16 @@ ${tools_dir}/grib_set -s gridSpec='{grid:N32}' $infile $tempGrib
 grib_check_key_equals $tempGrib N,Nj '32 64'
 # ${tools_dir}/grib_compare $infile $tempGrib
 
+# Error conditions
+# ----------------
+infile=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+set +e
+${tools_dir}/grib_set -s gridSpec='{grid:H36}' $infile $tempGrib 2>$tempText
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "'healpix' specified but input is GRIB edition 1" $tempText
+
 
 # Clean up
 rm -f $tempGrib $tempFilt $tempText

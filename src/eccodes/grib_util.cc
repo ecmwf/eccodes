@@ -898,6 +898,7 @@ static int get_grib_sample_name(grib_handle* h, long editionNumber,
     return GRIB_SUCCESS;
 }
 
+#if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
 int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, const grib_util_packing_spec* packing_spec)
 {
     int err = 0;
@@ -1320,6 +1321,12 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
 
     return GRIB_SUCCESS;
 }
+#else
+int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, const grib_util_packing_spec* packing_spec)
+{
+    return GRIB_NOT_IMPLEMENTED;
+}
+#endif
 
 // Note: if data_values == NULL, then data_values_count must be 0
 grib_handle* grib_util_set_spec(grib_handle* h,
