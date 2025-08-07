@@ -10325,6 +10325,34 @@
 	 scaleFactorOfFirstFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean specific rain water content (convective)
+'avg_crwc_conv' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 144 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean specific snow water content (convective)
+'avg_cswc_conv' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 145 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mixed layer depth
+'avg_mld' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean urban cover
+'avg_cur' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-integrated land surface heat net flux
 'acc_lshnf' = {
 	 discipline = 2 ;
@@ -12186,6 +12214,15 @@
 	 parameterNumber = 51 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum cloud-to-ground lightning flash density
+'max_licgi' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-maximum 10 metre eastward wind gust
 'max_10efg' = {
 	 discipline = 0 ;
@@ -12344,6 +12381,34 @@
 	 typeOfFirstFixedSurface = 17 ;
 	 scaledValueOfFirstFixedSurface = missing() ;
 	 scaleFactorOfFirstFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum specific rain water content (convective)
+'max_crwc_conv' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 144 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum specific snow water content (convective)
+'max_cswc_conv' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 145 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum mixed layer depth
+'max_mld' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum urban cover
+'max_cur' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-minimum temperature tendency due to short-wave radiation
@@ -14191,6 +14256,15 @@
 	 parameterNumber = 51 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum cloud-to-ground lightning flash density
+'min_licgi' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-minimum land surface heat net flux
 'min_lshnf' = {
 	 discipline = 2 ;
@@ -14329,6 +14403,34 @@
 	 typeOfFirstFixedSurface = 17 ;
 	 scaledValueOfFirstFixedSurface = missing() ;
 	 scaleFactorOfFirstFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum specific rain water content (convective)
+'min_crwc_conv' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 144 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum specific snow water content (convective)
+'min_cswc_conv' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 145 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum mixed layer depth
+'min_mld' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum urban cover
+'min_cur' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-standard-deviation temperature tendency due to short-wave radiation
@@ -16159,6 +16261,15 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
+#Time-standard-deviation cloud-to-ground lightning flash density
+'std_licgi' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Time-standard-deviation land surface heat net flux
 'std_lshnf' = {
 	 discipline = 2 ;
@@ -16297,6 +16408,34 @@
 	 typeOfFirstFixedSurface = 17 ;
 	 scaledValueOfFirstFixedSurface = missing() ;
 	 scaleFactorOfFirstFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation specific rain water content (convective)
+'std_crwc_conv' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 144 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation specific snow water content (convective)
+'std_cswc_conv' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 145 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mixed layer depth
+'std_mld' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation urban cover
+'std_cur' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Cross sectional area of flow in channel
