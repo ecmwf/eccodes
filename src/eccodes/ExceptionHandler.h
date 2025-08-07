@@ -1,7 +1,6 @@
 #pragma once
 
 #include <grib_api_internal.h>
-#include "Exception.h"
 #include <tl/expected.hpp>
 #include <utility>
 
@@ -25,15 +24,6 @@ struct ExceptionHandler {
       else {
         return f(std::forward<Args>(args)...);
       }
-    }
-    catch (const RecoverableRuntimeError& e) {
-      grib_context_log(nullptr, GRIB_LOG_ERROR, "ECCODES ERROR: %s", e.what());
-      return tl::unexpected{GRIB_RUNTIME_ERROR};
-    }
-    catch (const FatalRuntimeError& e) {
-      grib_context_log(nullptr, GRIB_LOG_FATAL, "ECCODES FATAL ERROR: %s", e.what());
-      ECCODES_ASSERT(0);
-      exit(GRIB_RUNTIME_ERROR);
     }
     catch (const std::exception& e) {
       grib_context_log(nullptr, GRIB_LOG_ERROR, "ECCODES ERROR: %s", e.what());
