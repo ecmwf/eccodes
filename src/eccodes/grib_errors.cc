@@ -10,7 +10,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 #include "grib_api_internal.h"
-#include "ExceptionHandler.h"
 
 static const char *errors[] = {
 "No error",		/* 0 GRIB_SUCCESS */
@@ -95,7 +94,6 @@ static const char *errors[] = {
 "Assertion failure",		/* -79 GRIB_ASSERTION_FAILURE */
 };
 
-// C-API: Ensure all exceptions are converted to error codes
 const char* grib_get_error_message(int code)
 {
     code = -code;
@@ -108,7 +106,6 @@ const char* grib_get_error_message(int code)
     return errors[code];
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_check(const char* call, const char* file, int line, int e, const char* msg)
 {
     grib_context* c=grib_context_get_default();
