@@ -175,7 +175,6 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_healpix
         grib_g1day_of_the_year_date
         grib_paramid_chemid_split
-        grib_paramtypeConcept
         grib_cmp_paramtype
         grib_timeSpanConcept
         grib_cmp_timeSpan
@@ -196,6 +195,7 @@ if( HAVE_BUILD_TOOLS )
         grib_bpv_limit
         grib_complex
         grib_double_cmp
+        grib_paramtypeConcept
         grib_element
         grib_change_packing
         grib_complex_spatial_differencing
