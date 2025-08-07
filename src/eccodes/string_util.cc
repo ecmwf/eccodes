@@ -9,7 +9,6 @@
  */
 
 #include "grib_api_internal.h"
-#include "ExceptionHandler.h"
 
 // Compare two strings ignoring case.
 // strcasecmp is not in the C standard. However, it's defined by
@@ -195,7 +194,6 @@ const char* codes_get_product_name(ProductKind product)
     return "unknown";
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 const char* grib_get_type_name(int type)
 {
     switch (type) {
