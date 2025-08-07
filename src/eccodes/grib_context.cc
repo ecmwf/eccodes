@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "ExceptionHandler.h"
 #include <errno.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -235,6 +236,7 @@ static void default_print(const grib_context* c, void* descriptor, const char* m
     fprintf((FILE*)descriptor, "%s", mess);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 void grib_context_set_print_proc(grib_context* c, grib_print_proc p)
 {
     c = c ? c : grib_context_get_default();
@@ -242,6 +244,7 @@ void grib_context_set_print_proc(grib_context* c, grib_print_proc p)
     c->print = (p ? p : &default_print);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 void grib_context_set_data_quality_checks(grib_context* c, int val)
 {
     c = c ? c : grib_context_get_default();
@@ -253,12 +256,14 @@ void grib_context_set_data_quality_checks(grib_context* c, int val)
     c->grib_data_quality_checks = val;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 void grib_context_set_debug(grib_context* c, int mode)
 {
     c = c ? c : grib_context_get_default();
     c->debug = mode;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 void grib_context_set_logging_proc(grib_context* c, grib_log_proc p)
 {
     c = c ? c : grib_context_get_default();
@@ -266,6 +271,7 @@ void grib_context_set_logging_proc(grib_context* c, grib_log_proc p)
     c->output_log = (p ? p : &default_log);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 // f can be stderr, stdout or a file like /dev/null
 void grib_context_set_logging_file(grib_context* c, FILE* f)
 {
@@ -274,11 +280,13 @@ void grib_context_set_logging_file(grib_context* c, FILE* f)
     c->log_stream = f;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 long grib_get_api_version()
 {
     return ECCODES_VERSION;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 void grib_print_api_version(FILE* out)
 {
     fprintf(out, "%d.%d.%d",
@@ -291,6 +299,7 @@ void grib_print_api_version(FILE* out)
     }
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 const char* grib_get_package_name()
 {
     return "ecCodes";
@@ -394,7 +403,7 @@ static grib_context default_grib_context = {
 /* Hopefully big enough. Note: Definitions and samples path environment variables can contain SEVERAL colon-separated directories */
 #define ECC_PATH_MAXLEN 8192
 
-grib_context* grib_context_get_default()
+static grib_context* grib_context_get_default_()
 {
     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
@@ -589,6 +598,13 @@ grib_context* grib_context_get_default()
     return &default_grib_context;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
+grib_context* grib_context_get_default()
+{
+    auto result = eccodes::handleExceptions(grib_context_get_default_);
+    return eccodes::logErrorAndReturnValue(result);
+}
+
 // Do we really need this?
 // grib_context* grib_context_new(grib_context* parent)
 // {
@@ -772,12 +788,15 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
     return NULL;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 char* grib_samples_path(const grib_context* c)
 {
     if (!c)
         c = grib_context_get_default();
     return c->grib_samples_path;
 }
+
+// C-API: Ensure all exceptions are converted to error codes
 char* grib_definition_path(const grib_context* c)
 {
     if (!c)
@@ -866,7 +885,7 @@ void grib_context_reset(grib_context* c)
     }
 }
 
-void grib_context_delete(grib_context* c)
+static void grib_context_delete_(grib_context* c)
 {
     if (!c)
         c = grib_context_get_default();
@@ -890,22 +909,32 @@ void grib_context_delete(grib_context* c)
     c->inited = 0;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
+void grib_context_delete(grib_context* c)
+{
+    auto result = eccodes::handleExceptions(grib_context_delete_, c);
+    return eccodes::logErrorAndReturnValue(result);
+}
+
+// C-API: Ensure all exceptions are converted to error codes
 void codes_bufr_multi_element_constant_arrays_on(grib_context* c)
 {
     if (!c)
         c = grib_context_get_default();
     c->bufr_multi_element_constant_arrays = 1;
 }
+
+// C-API: Ensure all exceptions are converted to error codes
 void codes_bufr_multi_element_constant_arrays_off(grib_context* c)
 {
     if (!c)
         c = grib_context_get_default();
     c->bufr_multi_element_constant_arrays = 0;
 }
+
 /*int  codes_get_bufr_multi_element_constant_arrays(grib_context* c);*/
 
-
-void grib_context_set_definitions_path(grib_context* c, const char* path)
+static void grib_context_set_definitions_path_(grib_context* c, const char* path)
 {
     if (!c)
         c = grib_context_get_default();
@@ -917,7 +946,15 @@ void grib_context_set_definitions_path(grib_context* c, const char* path)
 
     GRIB_MUTEX_UNLOCK(&mutex_c);
 }
-void grib_context_set_samples_path(grib_context* c, const char* path)
+
+// C-API: Ensure all exceptions are converted to error codes
+void grib_context_set_definitions_path(grib_context* c, const char* path)
+{
+    auto result = eccodes::handleExceptions(grib_context_set_definitions_path_, c, path);
+    return eccodes::logErrorAndReturnValue(result);
+}
+
+static void grib_context_set_samples_path_(grib_context* c, const char* path)
 {
     if (!c)
         c = grib_context_get_default();
@@ -928,6 +965,13 @@ void grib_context_set_samples_path(grib_context* c, const char* path)
     grib_context_log(c, GRIB_LOG_DEBUG, "Samples path changed to: %s", c->grib_samples_path);
 
     GRIB_MUTEX_UNLOCK(&mutex_c);
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+void grib_context_set_samples_path(grib_context* c, const char* path)
+{
+    auto result = eccodes::handleExceptions(grib_context_set_samples_path_, c, path);
+    return eccodes::logErrorAndReturnValue(result);
 }
 
 void* grib_context_malloc_persistent(const grib_context* c, size_t size)
@@ -1255,18 +1299,23 @@ void codes_assertion_failed(const char* message, const char* file, int line)
     }
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_get_gribex_mode(const grib_context* c)
 {
     if (!c)
         c = grib_context_get_default();
     return c->gribex_mode_on;
 }
+
+// C-API: Ensure all exceptions are converted to error codes
 void grib_gribex_mode_on(grib_context* c)
 {
     if (!c)
         c = grib_context_get_default();
     c->gribex_mode_on = 1;
 }
+
+// C-API: Ensure all exceptions are converted to error codes
 void grib_gribex_mode_off(grib_context* c)
 {
     if (!c)
@@ -1274,12 +1323,15 @@ void grib_gribex_mode_off(grib_context* c)
     c->gribex_mode_on = 0;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 void grib_gts_header_on(grib_context* c)
 {
     if (!c)
         c = grib_context_get_default();
     c->gts_header_on = 1;
 }
+
+// C-API: Ensure all exceptions are converted to error codes
 void grib_gts_header_off(grib_context* c)
 {
     if (!c)
@@ -1287,12 +1339,15 @@ void grib_gts_header_off(grib_context* c)
     c->gts_header_on = 0;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 void grib_multi_support_on(grib_context* c)
 {
     if (!c)
         c = grib_context_get_default();
     c->multi_support_on = 1;
 }
+
+// C-API: Ensure all exceptions are converted to error codes
 void grib_multi_support_off(grib_context* c)
 {
     if (!c)

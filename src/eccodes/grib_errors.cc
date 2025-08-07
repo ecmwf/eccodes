@@ -92,6 +92,7 @@ static const char *errors[] = {
 "Type and value mismatch",		/* -77 GRIB_TYPE_AND_VALUE_MISMATCH */
 "Unable to compare accessors",		/* -78 GRIB_UNABLE_TO_COMPARE_ACCESSORS */
 "Assertion failure",		/* -79 GRIB_ASSERTION_FAILURE */
+"Runtime error",		/* -80 GRIB_RUNTIME_ERROR */
 };
 
 const char* grib_get_error_message(int code)

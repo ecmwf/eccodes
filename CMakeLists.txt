@@ -419,6 +419,7 @@ set( ECCODES_INCLUDE_DIRS
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/src/eccodes
   ${CMAKE_CURRENT_BINARY_DIR}/src/eccodes
+  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/expected/include
 )
 set( ECCODES_LIBRARIES       eccodes )
 

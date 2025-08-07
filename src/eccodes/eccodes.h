@@ -1625,5 +1625,7 @@ Error codes returned by the eccodes functions.
 #define CODES_UNABLE_TO_COMPARE_ACCESSORS		GRIB_UNABLE_TO_COMPARE_ACCESSORS
 /** Assertion failure */
 #define CODES_ASSERTION_FAILURE		GRIB_ASSERTION_FAILURE
+/** Runtime error */
+#define CODES_RUNTIME_ERROR		GRIB_RUNTIME_ERROR
 /*! @}*/
 #endif
