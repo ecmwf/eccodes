@@ -1739,6 +1739,6 @@ Error codes returned by the grib_api functions.
 /** Assertion failure */
 #define GRIB_ASSERTION_FAILURE		-79
 /** Runtime error */
-#define GRIB_RUNTIME_ERROR             -80
+#define GRIB_RUNTIME_ERROR		-80
 /*! @}*/
 #endif
