@@ -43,6 +43,12 @@ int G2Date::unpack_long(long* val, size_t* len)
     if (*len < 1)
         return GRIB_WRONG_ARRAY_SIZE;
 
+    if (!is_date_valid(year, month, day, 0, 0, 0)) {
+        // Just a warning during decoding as we must support legacy data
+        fprintf(stderr, "ECCODES WARNING :  %s:%s: Date is not valid! year=%ld month=%ld day=%ld\n",
+                class_name_, __func__, year, month, day);
+    }
+
     val[0] = year * 10000 + month * 100 + day;
 
     return GRIB_SUCCESS;
@@ -69,6 +75,7 @@ int G2Date::pack_long(const long* val, size_t* len)
         // ECC-1777: For now just a warning. Will later change to an error
         fprintf(stderr, "ECCODES WARNING :  %s:%s: Date is not valid! year=%ld month=%ld day=%ld\n",
                 class_name_, __func__, year, month, day);
+        // return GRIB_ENCODING_ERROR;
     }
 
     if ((ret = grib_set_long_internal(get_enclosing_handle(), day_, day)) != GRIB_SUCCESS)

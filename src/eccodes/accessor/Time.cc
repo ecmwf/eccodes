@@ -47,10 +47,9 @@ int Time::unpack_long(long* val, size_t* len)
     }
 
     if (!is_time_valid(hour, minute, second)) {
-        // ECC-1777: For now just a warning. Will later change to an error
+        // Just a warning during decoding as we must support legacy data
         fprintf(stderr, "ECCODES WARNING :  %s:%s: Time is not valid! hour=%ld min=%ld sec=%ld\n",
                 class_name_, __func__, hour, minute, second);
-        // return GRIB_DECODING_ERROR;
     }
 
     if (*len < 1)
