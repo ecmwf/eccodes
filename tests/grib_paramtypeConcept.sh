@@ -27,7 +27,7 @@ if [ -f "$latest_codetable_file" ]; then
     # echo "Doing $pdtn "
     ${tools_dir}/grib_set -s tablesVersion=$latestOfficial,productDefinitionTemplateNumber=$pdtn $sample_grib2 $tempGrib
     paramtype=$( ${tools_dir}/grib_get -p paramtype $tempGrib )
-    if [[ $paramtype  == 'unknown' ]]; then
+    if [ $paramtype = 'unknown' ]; then
       echo "productDefinitionTemplateNumber=$pdtn: paramtype not defined"
       exit 1
     fi

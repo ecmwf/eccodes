@@ -34,7 +34,13 @@ GeoIterator::GeoIterator(grib_handle* h, unsigned long flags) :
 
     long numberOfPoints = 0;
     grib_get_long_internal(h, "numberOfPoints", &numberOfPoints);
-    ECCODES_ASSERT(static_cast<size_t>(numberOfPoints) == nv_);
+    if ( (flags_ & GRIB_GEOITERATOR_NO_VALUES) == 0 ) { // Do check the data values count
+        if ((size_t)numberOfPoints != nv_) {
+            char errmsg[128] = {0,};
+            snprintf(errmsg, sizeof(errmsg), "numberOfPoints != size(values) (%ld!=%ld)", numberOfPoints, nv_);
+            throw std::runtime_error(errmsg);
+        }
+    }
 
     if (flags_ & GRIB_GEOITERATOR_NO_VALUES) {
         data_ = nullptr;

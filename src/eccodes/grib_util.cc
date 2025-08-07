@@ -10,6 +10,7 @@
 
 #include "grib_api_internal.h"
 #include "action/Concept.h"
+#include "ExceptionHandler.h"
 #include <float.h>
 #include <string>
 #include <sstream>
@@ -232,7 +233,7 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom, grib_handle*
 }
 
 // The 'what' argument can be a bitwise OR of GRIB_SECTION_GRID, GRIB_SECTION_PRODUCT...etc
-grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err)
+static grib_handle* grib_util_sections_copy_(grib_handle* hfrom, grib_handle* hto, int what, int* err)
 {
     long edition_from                      = 0;
     long edition_to                        = 0;
@@ -332,6 +333,13 @@ grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int w
     return grib_sections_copy_internal(hfrom, hto, sections_to_copy, err);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
+grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err)
+{
+    auto result = eccodes::handleExceptions(grib_util_sections_copy_, hfrom, hto, what, err);
+    return eccodes::updateErrorAndReturnValue(result, err);
+}
+
 static const char* get_packing_spec_packing_name(long packing_spec_packing)
 {
     if (GRIB_UTIL_PACKING_USE_PROVIDED == packing_spec_packing)
@@ -370,6 +378,7 @@ static const char* get_packing_spec_packing_type_name(long packing_spec_packing_
 
 // For debugging purposes
 static void print_values(const grib_context* c,
+                         const char* title,
                          const grib_util_grid_spec* spec,
                          const grib_util_packing_spec* packing_spec,
                          const char* input_packing_type,
@@ -379,25 +388,25 @@ static void print_values(const grib_context* c,
     size_t i       = 0;
     int isConstant = 1;
     double v = 0, minVal = DBL_MAX, maxVal = -DBL_MAX;
-    fprintf(stderr, "ECCODES DEBUG grib_util: input_packing_type = %s\n", input_packing_type);
-    fprintf(stderr, "ECCODES DEBUG grib_util: grib_set_values, setting %zu key/value pairs\n", count);
+    fprintf(stderr, "ECCODES DEBUG %s: input_packing_type = %s\n", title, input_packing_type);
+    fprintf(stderr, "ECCODES DEBUG %s: grib_set_values, setting %zu key/value pairs\n", title, count);
 
     for (i = 0; i < count; i++) {
         switch (keyval_pairs[i].type) {
             case GRIB_TYPE_LONG:
-                fprintf(stderr, "ECCODES DEBUG grib_util: => %s =  %ld;\n", keyval_pairs[i].name, keyval_pairs[i].long_value);
+                fprintf(stderr, "ECCODES DEBUG %s: => %s =  %ld;\n", title, keyval_pairs[i].name, keyval_pairs[i].long_value);
                 break;
             case GRIB_TYPE_DOUBLE:
-                fprintf(stderr, "ECCODES DEBUG grib_util: => %s = %.16e;\n", keyval_pairs[i].name, keyval_pairs[i].double_value);
+                fprintf(stderr, "ECCODES DEBUG %s: => %s = %.16e;\n", title, keyval_pairs[i].name, keyval_pairs[i].double_value);
                 break;
             case GRIB_TYPE_STRING:
-                fprintf(stderr, "ECCODES DEBUG grib_util: => %s = \"%s\";\n", keyval_pairs[i].name, keyval_pairs[i].string_value);
+                fprintf(stderr, "ECCODES DEBUG %s: => %s = \"%s\";\n", title, keyval_pairs[i].name, keyval_pairs[i].string_value);
                 break;
         }
     }
 
     if (data_values) {
-        fprintf(stderr, "ECCODES DEBUG grib_util: data_values_count=%zu;\n", data_values_count);
+        fprintf(stderr, "ECCODES DEBUG %s: data_values_count=%zu;\n", title, data_values_count);
         for (i = 0; i < data_values_count; i++) {
             if (i == 0)
                 v = data_values[i];
@@ -421,18 +430,17 @@ static void print_values(const grib_context* c,
                     maxVal = v;
             }
         }
-        fprintf(stderr, "ECCODES DEBUG grib_util: data_values are CONSTANT? %d\t(min=%.16e, max=%.16e)\n",
-                isConstant, minVal, maxVal);
+        fprintf(stderr, "ECCODES DEBUG %s: data_values are CONSTANT? %d\t(min=%.16e, max=%.16e)\n",
+               title, isConstant, minVal, maxVal);
     }
     if (c->gribex_mode_on)
-        fprintf(stderr, "ECCODES DEBUG grib_util: GRIBEX mode is turned on!\n");
+        fprintf(stderr, "ECCODES DEBUG %s: GRIBEX mode is turned on!\n", title);
 
-    fprintf(stderr, "ECCODES DEBUG grib_util: packing_spec->editionNumber = %ld\n",
-            packing_spec->editionNumber);
-    fprintf(stderr, "ECCODES DEBUG grib_util: packing_spec->packing = %s\n",
-            get_packing_spec_packing_name(packing_spec->packing));
-    fprintf(stderr, "ECCODES DEBUG grib_util: packing_spec->packing_type = %s\n",
-            get_packing_spec_packing_type_name(packing_spec->packing_type));
+    fprintf(stderr, "ECCODES DEBUG %s: packing_spec->editionNumber = %ld\n", title, packing_spec->editionNumber);
+    fprintf(stderr, "ECCODES DEBUG %s: packing_spec->packing = %s\n",
+            title, get_packing_spec_packing_name(packing_spec->packing));
+    fprintf(stderr, "ECCODES DEBUG %s: packing_spec->packing_type = %s\n",
+            title, get_packing_spec_packing_type_name(packing_spec->packing_type));
 }
 
 // static int DBL_EQUAL(double d1, double d2, double tolerance)
@@ -898,36 +906,45 @@ static int get_grib_sample_name(grib_handle* h, long editionNumber,
     return GRIB_SUCCESS;
 }
 
-int grib_set_grid_spec(grib_handle* h, const grib_grid_spec* spec, grib_values extra_settings[80], long extra_settings_count)
+#if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
+int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, const grib_util_packing_spec* packing_spec)
 {
+    int err = 0;
     grib_values values[1024] = {{0,},};
     const grib_context* c = grib_context_get_default();
     const char* grid_type = NULL;
     char input_grid_type[100];
-    size_t count = 0, input_grid_type_len = 100;
-    // double laplacianOperator;
+    char input_packing_type[100] = {0,};
     long editionNumber = 0;
-    int i = 0, err = 0;
+    size_t count = 0, len = 100, slen = 20, input_grid_type_len = 100;
+    double laplacianOperator;
+    int i = 0, packingTypeIsSet = 0, setJpegPacking = 0;
+    bool convertEditionEarlier     = false; // For cases when we cannot set some keys without converting
     bool grib1_high_resolution_fix = false; // See GRIB-863
 
-    // ECC-625: Request is for expansion of bounding box (sub-area). Also called the "snap-out" policy
-    bool expandBoundingBox = true;  // always true
+    // ECC-625: Request is for expansion of bounding box (sub-area).
+    //          This is also called the "snap-out" policy
+    bool expandBoundingBox = true;  // always true for MIR
 
-    // In some cases we need to modify the input spec
-    grib_grid_spec* nonConstSpec = const_cast<grib_grid_spec*>(spec);
+    grib_util_grid_spec* nonConstSpec = const_cast<grib_util_grid_spec*>(spec);
+
     ECCODES_ASSERT(h);
 
-    err = grib_get_long(h, "edition", &editionNumber);  // Get edition number from input handle
-    ECCODES_ASSERT(!err);
+    // Get edition number from input handle
+    if ((err = grib_get_long(h, "edition", &editionNumber)) != 0) {
+        return err;
+    }
 
-    // Convert the integer grid types in spec to a string
+    ECCODES_ASSERT(packing_spec->deleteLocalDefinition == 0);
+
+    grib_get_string(h, "packingType", input_packing_type, &len);
+
     grid_type = get_grid_type_name(spec->grid_type);
     if (!grid_type) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Unknown grid_type (%d)", __func__, spec->grid_type);
         return GRIB_INVALID_ARGUMENT;
     }
     SET_STRING_VALUE("gridType", grid_type);
-    // Check our edition can support the grid type requested
     if (!grid_type_is_supported_in_edition(spec->grid_type, editionNumber)) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: '%s' specified but input is GRIB edition %ld.",
                         __func__, grid_type, editionNumber);
@@ -938,6 +955,11 @@ int grib_set_grid_spec(grib_handle* h, const grib_grid_spec* spec, grib_values e
     switch (spec->grid_type) {
         case GRIB_UTIL_GRID_SPEC_REGULAR_LL:
         case GRIB_UTIL_GRID_SPEC_ROTATED_LL:
+
+            COPY_SPEC_LONG(bitmapPresent);
+            if (spec->missingValue)
+                COPY_SPEC_DOUBLE(missingValue);
+
             SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
             if (editionNumber == 1) {
                 // GRIB-863: GRIB1 cannot represent increments less than a millidegree
@@ -960,12 +982,15 @@ int grib_set_grid_spec(grib_handle* h, const grib_grid_spec* spec, grib_values e
             COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
             COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(latitudeOfLastGridPointInDegrees);
-
             break;
 
         case GRIB_UTIL_GRID_SPEC_REGULAR_GG:
         case GRIB_UTIL_GRID_SPEC_ROTATED_GG:
+
+            COPY_SPEC_LONG(bitmapPresent);
+            if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
+
             COPY_SPEC_LONG(Ni);
             COPY_SPEC_DOUBLE(iDirectionIncrementInDegrees);
             COPY_SPEC_LONG(Nj);
@@ -977,7 +1002,10 @@ int grib_set_grid_spec(grib_handle* h, const grib_grid_spec* spec, grib_values e
             break;
 
         case GRIB_UTIL_GRID_SPEC_REDUCED_LL:
+            COPY_SPEC_LONG(bitmapPresent);
+            if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
+
             COPY_SPEC_LONG(Nj);
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
@@ -986,6 +1014,9 @@ int grib_set_grid_spec(grib_handle* h, const grib_grid_spec* spec, grib_values e
             break;
 
         case GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC:
+            COPY_SPEC_LONG(bitmapPresent);
+            if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+
             if (editionNumber == 2) {
                 // A -ve longitude passed in (could be from GRIB1). Polar stereo longitude in GRIB2 must be +ve
                 nonConstSpec->longitudeOfFirstGridPointInDegrees = normalise_longitude_in_degrees(spec->longitudeOfFirstGridPointInDegrees);
@@ -994,7 +1025,6 @@ int grib_set_grid_spec(grib_handle* h, const grib_grid_spec* spec, grib_values e
             COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
             COPY_SPEC_LONG(Ni);
             COPY_SPEC_LONG(Nj);
-
             // default iScansNegatively=0 jScansPositively=0 is ok
             COPY_SPEC_LONG(iScansNegatively);
             COPY_SPEC_LONG(jScansPositively);
@@ -1004,22 +1034,30 @@ int grib_set_grid_spec(grib_handle* h, const grib_grid_spec* spec, grib_values e
             break;
 
         case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
+            COPY_SPEC_LONG(bitmapPresent);
+            if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
             COPY_SPEC_LONG(Ni); // same as Nx
             COPY_SPEC_LONG(Nj); // same as Ny
             COPY_SPEC_LONG(iScansNegatively);
             COPY_SPEC_LONG(jScansPositively);
-            COPY_SPEC_DOUBLE(standardParallelInDegrees);
-            COPY_SPEC_DOUBLE(centralLongitudeInDegrees);
+            // COPY_SPEC_DOUBLE(standardParallelInDegrees);
+            // COPY_SPEC_DOUBLE(centralLongitudeInDegrees);
             COPY_SPEC_DOUBLE(DxInMetres);
             COPY_SPEC_DOUBLE(DyInMetres);
 
             break;
         case GRIB_UTIL_GRID_SPEC_UNSTRUCTURED:
+            COPY_SPEC_LONG(bitmapPresent);
+            if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             // TODO(masn): Other keys
             break;
         case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
+            COPY_SPEC_LONG(bitmapPresent);
+            if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+
             if (editionNumber == 2) {
                 // A -ve longitude passed in (could be from GRIB1). Lambert longitude in GRIB2 must be +ve
                 nonConstSpec->longitudeOfFirstGridPointInDegrees = normalise_longitude_in_degrees(spec->longitudeOfFirstGridPointInDegrees);
@@ -1028,29 +1066,29 @@ int grib_set_grid_spec(grib_handle* h, const grib_grid_spec* spec, grib_values e
             COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
             COPY_SPEC_LONG(Ni); // same as Nx
             COPY_SPEC_LONG(Nj); // same as Ny
-
             COPY_SPEC_LONG(iScansNegatively);
             COPY_SPEC_LONG(jScansPositively);
             COPY_SPEC_DOUBLE(latitudeOfSouthernPoleInDegrees);
             COPY_SPEC_DOUBLE(longitudeOfSouthernPoleInDegrees);
             COPY_SPEC_LONG(uvRelativeToGrid);
-            COPY_SPEC_DOUBLE(DxInMetres);
-            COPY_SPEC_DOUBLE(DyInMetres);
-            COPY_SPEC_DOUBLE(Latin1InDegrees);
-            COPY_SPEC_DOUBLE(Latin1InDegrees);
-            COPY_SPEC_DOUBLE(LoVInDegrees);
-            COPY_SPEC_DOUBLE(LaDInDegrees);
 
+            // Note: DxInMetres and DyInMetres
+            // should be 'double' and not integer. WMO GRIB2 uses millimetres!
+            // TODO(masn): Add other keys like Latin1, LoV etc
             break;
         case GRIB_UTIL_GRID_SPEC_HEALPIX:
+            COPY_SPEC_LONG(bitmapPresent);
+            if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             COPY_SPEC_LONG(N); // Nside
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             break;
 
         case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
         case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
-            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
 
+            COPY_SPEC_LONG(bitmapPresent);
+            if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
             COPY_SPEC_LONG(Nj);
             COPY_SPEC_LONG(N);
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
@@ -1068,32 +1106,33 @@ int grib_set_grid_spec(grib_handle* h, const grib_grid_spec* spec, grib_values e
             SET_LONG_VALUE("K", spec->truncation);
             SET_LONG_VALUE("M", spec->truncation);
 
-            // if (packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX) {
-            //     const long JS = spec->truncation < 20 ? spec->truncation : 20;
-            //     SET_STRING_VALUE("packingType", "spectral_complex");
-            //     packingTypeIsSet = 1;
-            //     SET_LONG_VALUE("JS", JS);
-            //     SET_LONG_VALUE("KS", JS);
-            //     SET_LONG_VALUE("MS", JS);
-            //     if (packing_spec->packing == GRIB_UTIL_PACKING_USE_PROVIDED && editionNumber == 2) {
-            //         SET_LONG_VALUE("computeLaplacianOperator", 1);
-            //     }
-            //     else if ((!(*err) && strcmp(input_grid_type, "sh")) || packing_spec->computeLaplacianOperator) {
-            //         SET_LONG_VALUE("computeLaplacianOperator", 1);
-            //         if (packing_spec->truncateLaplacian)
-            //             SET_LONG_VALUE("truncateLaplacian", 1);
-            //     }
-            //     else {
-            //         SET_LONG_VALUE("computeLaplacianOperator", 0);
-            //         *err = grib_get_double(h, "laplacianOperator", &laplacianOperator);
-            //         if (packing_spec->truncateLaplacian)
-            //             SET_LONG_VALUE("truncateLaplacian", 1);
-            //         SET_DOUBLE_VALUE("laplacianOperator", packing_spec->laplacianOperator);
-            //         if (laplacianOperator) {
-            //             SET_DOUBLE_VALUE("laplacianOperator", laplacianOperator);
-            //         }
-            //     }
-            // }
+            if (packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX) {
+                const long JS = spec->truncation < 20 ? spec->truncation : 20;
+                SET_STRING_VALUE("packingType", "spectral_complex");
+                packingTypeIsSet = 1;
+                SET_LONG_VALUE("JS", JS);
+                SET_LONG_VALUE("KS", JS);
+                SET_LONG_VALUE("MS", JS);
+                if (packing_spec->packing == GRIB_UTIL_PACKING_USE_PROVIDED && editionNumber == 2) {
+                    SET_LONG_VALUE("computeLaplacianOperator", 1);
+                }
+                else if ((!(err) && strcmp(input_grid_type, "sh")) || packing_spec->computeLaplacianOperator) {
+                    SET_LONG_VALUE("computeLaplacianOperator", 1);
+                    if (packing_spec->truncateLaplacian)
+                        SET_LONG_VALUE("truncateLaplacian", 1);
+                }
+                else {
+                    SET_LONG_VALUE("computeLaplacianOperator", 0);
+                    err = grib_get_double(h, "laplacianOperator", &laplacianOperator);
+                    if(err) return err;
+                    if (packing_spec->truncateLaplacian)
+                        SET_LONG_VALUE("truncateLaplacian", 1);
+                    SET_DOUBLE_VALUE("laplacianOperator", packing_spec->laplacianOperator);
+                    if (laplacianOperator) {
+                        SET_DOUBLE_VALUE("laplacianOperator", laplacianOperator);
+                    }
+                }
+            }
             break;
     }
 
@@ -1109,10 +1148,110 @@ int grib_set_grid_spec(grib_handle* h, const grib_grid_spec* spec, grib_values e
             break;
     }
 
-    if (extra_settings_count) {
-        for (i = 0; i < extra_settings_count; i++) {
+    // process packing options
+    if (!packingTypeIsSet &&
+        packing_spec->packing == GRIB_UTIL_PACKING_USE_PROVIDED &&
+        strcmp(input_packing_type, "grid_simple_matrix")) {
+        switch (packing_spec->packing_type) {
+            case GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX:
+                if (strcmp(input_packing_type, "spectral_complex") && !strcmp(input_packing_type, "spectral_simple"))
+                    SET_STRING_VALUE("packingType", "spectral_complex");
+                break;
+            case GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE:
+                if (strcmp(input_packing_type, "spectral_simple") && !strcmp(input_packing_type, "spectral_complex"))
+                    SET_STRING_VALUE("packingType", "spectral_simple");
+                break;
+            case GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE:
+                if (strcmp(input_packing_type, "grid_simple") && !strcmp(input_packing_type, "grid_complex"))
+                    SET_STRING_VALUE("packingType", "grid_simple");
+                break;
+            case GRIB_UTIL_PACKING_TYPE_GRID_COMPLEX:
+                if (!STR_EQUAL(input_packing_type, "grid_complex")) {
+                    SET_STRING_VALUE("packingType", "grid_complex");
+                    convertEditionEarlier = true;
+                }
+                break;
+            case GRIB_UTIL_PACKING_TYPE_IEEE:
+                if ( !STR_EQUAL(input_packing_type, "grid_ieee") )
+                    SET_STRING_VALUE("packingType", "grid_ieee");
+                break;
+            default:
+                grib_context_log(c, GRIB_LOG_ERROR, "%s: invalid packing_spec.packing_type (%ld)", __func__, packing_spec->packing_type);
+                return GRIB_INTERNAL_ERROR;
+        }
+    }
+    if (strcmp(input_packing_type, "grid_simple_matrix") == 0) {
+        long numberOfDirections, numberOfFrequencies;
+        int keep_matrix = h->context->keep_matrix;
+        if (packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE) {
+            keep_matrix = 0; // ECC-911
+        }
+        if (keep_matrix) {
+            SET_STRING_VALUE("packingType", "grid_simple_matrix");
+            if (GRIB_SUCCESS == grib_get_long(h, "numberOfDirections", &numberOfDirections)) {
+                grib_get_long(h, "numberOfDirections", &numberOfDirections);
+                SET_LONG_VALUE("NC1", numberOfDirections);
+                grib_get_long(h, "numberOfFrequencies", &numberOfFrequencies);
+                SET_LONG_VALUE("NC2", numberOfFrequencies);
+                SET_LONG_VALUE("physicalFlag1", 1);
+                SET_LONG_VALUE("physicalFlag2", 2);
+                SET_LONG_VALUE("NR", 1);
+                SET_LONG_VALUE("NC", 1);
+            }
+        }
+        else {
+            SET_STRING_VALUE("packingType", "grid_simple");
+        }
+    }
+
+    switch (packing_spec->accuracy) {
+        case GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT: {
+            long bitsPerValue = 0;
+            if ((packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE ||
+                 packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_CCSDS)      &&
+                strcmp(input_packing_type, "grid_ieee")==0)
+            {
+                SET_LONG_VALUE("bitsPerValue", 32);
+            }
+            else
+            {
+                ECCODES_ASSERT(grib_get_long(h, "bitsPerValue", &bitsPerValue) == 0);
+                SET_LONG_VALUE("bitsPerValue", bitsPerValue);
+            }
+        }
+        break;
+
+        case GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES: {
+            // See ECC-1921
+            const long bitsPerValue = get_bitsPerValue_for_packingType(packing_spec->packing_type, packing_spec->bitsPerValue);
+            if (bitsPerValue != packing_spec->bitsPerValue) {
+                grib_context_log(c, GRIB_LOG_ERROR, "ECCODES WARNING :  Cannot pack with requested bitsPerValue (%ld). Using %ld",
+                        packing_spec->bitsPerValue, bitsPerValue);
+            }
+            SET_LONG_VALUE("bitsPerValue", bitsPerValue);
+        }
+        break;
+
+        case GRIB_UTIL_ACCURACY_SAME_DECIMAL_SCALE_FACTOR_AS_INPUT: {
+            long decimalScaleFactor = 0;
+            ECCODES_ASSERT(grib_get_long(h, "decimalScaleFactor", &decimalScaleFactor) == 0);
+            SET_LONG_VALUE("decimalScaleFactor", decimalScaleFactor);
+        }
+        break;
+
+        case GRIB_UTIL_ACCURACY_USE_PROVIDED_DECIMAL_SCALE_FACTOR:
+            SET_LONG_VALUE("decimalScaleFactor", packing_spec->decimalScaleFactor);
+            break;
+
+        default:
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: invalid packing_spec.accuracy (%ld)", __func__, packing_spec->accuracy);
+            return GRIB_INTERNAL_ERROR;
+    }
+
+    if (packing_spec->extra_settings_count) {
+        for (i = 0; i < packing_spec->extra_settings_count; i++) {
             ECCODES_ASSERT(count < 1024);
-            values[count++] = extra_settings[i];
+            values[count++] = packing_spec->extra_settings[i];
         }
     }
 
@@ -1135,6 +1274,10 @@ int grib_set_grid_spec(grib_handle* h, const grib_grid_spec* spec, grib_values e
         }
     }
 
+    if (h->context->debug == -1) {
+        print_values(h->context, __func__, spec, packing_spec, input_packing_type, NULL, 0, values, count);
+    }
+
     // Apply adjustments to bounding box if needed
     if (expandBoundingBox) {
         if ((err = expand_bounding_box(h, values, count)) != 0) {
@@ -1143,11 +1286,24 @@ int grib_set_grid_spec(grib_handle* h, const grib_grid_spec* spec, grib_values e
         }
     }
 
-    // Set key/value pairs
+    if (convertEditionEarlier && packing_spec->editionNumber > 1) {
+        // Note:
+        // If the input is GRIB1 and the requested grid type is HealPix or ORCA etc,
+        // we deliberately fail unless the user specifies edition conversion.
+        // i.e., we do not automatically convert edition
+        // If we later change our mind, we need to change editionNumber to 2 here:
+        //   long new_edition = packing_spec->editionNumber;
+        //   if (new_edition == 0) new_edition = 2;
+        //
+        err = grib_set_long(h, "edition", packing_spec->editionNumber);
+        if (err) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot convert to edition %ld", __func__, packing_spec->editionNumber);
+            return err;
+        }
+    }
+
     if ((err = grib_set_values(h, values, count)) != 0) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set key values: %s", __func__, grib_get_error_message(err));
-        //for (size_t i = 0; i < count; i++)
-        //    if (values[i].error) fprintf(stderr, " %s %s\n", values[i].name, grib_get_error_message(values[i].error));
         return err;
     }
 
@@ -1164,11 +1320,28 @@ int grib_set_grid_spec(grib_handle* h, const grib_grid_spec* spec, grib_values e
         }
     }
 
+    if (packing_spec->editionNumber && packing_spec->editionNumber != editionNumber) {
+        err = grib_set_long(h, "edition", packing_spec->editionNumber);
+        if (err != GRIB_SUCCESS) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Failed to change edition to %ld: %s",
+                    __func__, packing_spec->editionNumber, grib_get_error_message(err));
+            return err;
+        }
+    }
+
+    if (h->context->debug == -1) fprintf(stderr, "ECCODES DEBUG grib_util: %s end\n",__func__);
+
     return GRIB_SUCCESS;
 }
+#else
+int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, const grib_util_packing_spec* packing_spec)
+{
+    return GRIB_NOT_IMPLEMENTED;
+}
+#endif
 
 // Note: if data_values == NULL, then data_values_count must be 0
-grib_handle* grib_util_set_spec(grib_handle* h,
+static grib_handle* grib_util_set_spec_(grib_handle* h,
                                  const grib_util_grid_spec* spec,
                                  const grib_util_packing_spec* packing_spec,
                                  int flags,
@@ -1637,7 +1810,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     }
 
     if (h->context->debug == -1) {
-        print_values(h->context, spec, packing_spec, input_packing_type, data_values, data_values_count, values, count);
+        print_values(h->context, __func__, spec, packing_spec, input_packing_type, data_values, data_values_count, values, count);
     }
 
     // Apply adjustments to bounding box if needed
@@ -1811,6 +1984,21 @@ cleanup:
     grib_handle_delete(h_out);
     return NULL;
 }
+
+// C-API: Ensure all exceptions are converted to error codes
+grib_handle* grib_util_set_spec(grib_handle* h,
+                                 const grib_util_grid_spec* spec,
+                                 const grib_util_packing_spec* packing_spec,
+                                 int flags,
+                                 const double* data_values, //can be NULL
+                                 size_t data_values_count,
+                                 int* err)
+{
+    auto result = eccodes::handleExceptions(grib_util_set_spec_, h, spec, packing_spec, flags, data_values, data_values_count, err);
+    return eccodes::updateErrorAndReturnValue(result, err);
+}
+
+
 
 // int grib_moments(grib_handle* h, double east, double north, double west, double south, int order, double* moments, long* count)
 // {
@@ -2316,7 +2504,7 @@ int grib2_select_PDTN(int is_eps, int is_instant,
 // Output is:
 //  1 = means the surface type needs its scaledValue/scaleFactor i.e., has a level
 //  0 = means scaledValue/scaleFactor must be set to MISSING
-int codes_grib_surface_type_requires_value(int edition, int type_of_surface_code, int* err)
+static int codes_grib_surface_type_requires_value_(int edition, int type_of_surface_code, int* err)
 {
     static const int types_with_values[] = {
         18,  // Departure level of a mixed layer parcel of air with specified layer depth (Pa)
@@ -2358,6 +2546,13 @@ int codes_grib_surface_type_requires_value(int edition, int type_of_surface_code
             return 1;
     }
     return 0;
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+int codes_grib_surface_type_requires_value(int edition, int type_of_surface_code, int* err)
+{
+    auto result = eccodes::handleExceptions(codes_grib_surface_type_requires_value_, edition, type_of_surface_code, err);
+    return eccodes::updateErrorAndReturnValue(result, err);
 }
 
 size_t sum_of_pl_array(const long* pl, size_t plsize)

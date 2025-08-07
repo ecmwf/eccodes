@@ -1,3 +1,4 @@
+  integer, parameter,public :: GRIB_RUNTIME_ERROR                                 = -80
   integer, parameter,public :: GRIB_ASSERTION_FAILURE                             = -79
   integer, parameter,public :: GRIB_UNABLE_TO_COMPARE_ACCESSORS                   = -78
   integer, parameter,public :: GRIB_TYPE_AND_VALUE_MISMATCH                       = -77

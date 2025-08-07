@@ -85,3 +85,4 @@ GRIB_TYPE_MISMATCH                  Type mismatch
 GRIB_TYPE_AND_VALUE_MISMATCH        Type and value mismatch
 GRIB_UNABLE_TO_COMPARE_ACCESSORS    Unable to compare accessors
 GRIB_ASSERTION_FAILURE              Assertion failure
+GRIB_RUNTIME_ERROR                  Runtime error

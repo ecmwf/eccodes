@@ -1738,5 +1738,7 @@ Error codes returned by the grib_api functions.
 #define GRIB_UNABLE_TO_COMPARE_ACCESSORS		-78
 /** Assertion failure */
 #define GRIB_ASSERTION_FAILURE		-79
+/** Runtime error */
+#define GRIB_RUNTIME_ERROR		-80
 /*! @}*/
 #endif

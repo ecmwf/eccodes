@@ -45,7 +45,6 @@ int DecimalPrecision::unpack_long(long* val, size_t* len)
 int DecimalPrecision::pack_long(const long* val, size_t* len)
 {
     long bitsPerValue = 0;
-    double* values    = NULL;
     size_t size       = 0;
     int ret           = 0;
     grib_context* c   = context_;
@@ -59,48 +58,41 @@ int DecimalPrecision::pack_long(const long* val, size_t* len)
             return ret;
 
         if ((ret = grib_set_long_internal(h, changing_precision_, 1)) != GRIB_SUCCESS) {
-            grib_context_free(c, values);
             return ret;
         }
-
         return GRIB_SUCCESS;
     }
 
     if ((ret = grib_get_size(h, values_, &size)) != GRIB_SUCCESS)
         return ret;
 
-    values = (double*)grib_context_malloc(c, size * sizeof(double));
-    if (!values)
-        return GRIB_OUT_OF_MEMORY;
+    double* values = (double*)grib_context_malloc(c, size * sizeof(double));
+    if (!values) return GRIB_OUT_OF_MEMORY;
 
     if ((ret = grib_get_double_array_internal(h, values_, values, &size)) != GRIB_SUCCESS) {
-        grib_context_buffer_free(c, values);
-        return ret;
+        goto cleanup;
     }
 
     if ((ret = grib_set_long_internal(h, decimal_scale_factor_, *val)) != GRIB_SUCCESS) {
-        grib_context_buffer_free(c, values);
-        return ret;
+        goto cleanup;
     }
 
     if ((ret = grib_set_long_internal(h, bits_per_value_, bitsPerValue)) != GRIB_SUCCESS) {
-        grib_context_free(c, values);
-        return ret;
+        goto cleanup;
     }
 
     if ((ret = grib_set_long_internal(h, changing_precision_, 1)) != GRIB_SUCCESS) {
-        grib_context_free(c, values);
-        return ret;
+        goto cleanup;
     }
 
     if ((ret = grib_set_double_array_internal(h, values_, values, size)) != GRIB_SUCCESS) {
-        grib_context_buffer_free(c, values);
-        return ret;
+        goto cleanup;
     }
 
+cleanup:
     grib_context_free(c, values);
 
-    return GRIB_SUCCESS;
+    return ret;
 }
 
 }  // namespace eccodes::accessor

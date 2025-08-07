@@ -10,6 +10,7 @@
 
 #include "grib_api_internal.h"
 #include "eccodes.h"
+#include "ExceptionHandler.h"
 
 // Input lon must be in degrees not radians
 // Not to be used for latitudes as they can be -ve
@@ -436,7 +437,7 @@ static const char* known_features[] = {
 };
 
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
-int codes_is_feature_enabled(const char* feature)
+static int codes_is_feature_enabled_(const char* feature)
 {
     int aec_enabled           = 0; // or CCSDS
     int memfs_enabled         = 0;
@@ -529,7 +530,14 @@ int codes_is_feature_enabled(const char* feature)
     return 0;
 }
 
-int codes_get_features(char* result, size_t* length, int select)
+// C-API: Ensure all exceptions are converted to error codes
+int codes_is_feature_enabled(const char* feature)
+{
+    auto result = eccodes::handleExceptions(codes_is_feature_enabled_, feature);
+    return eccodes::getErrorCode(result);
+}
+
+static int codes_get_features_(char* result, size_t* length, int select)
 {
     ECCODES_ASSERT(select == CODES_FEATURES_ALL || select == CODES_FEATURES_ENABLED || select == CODES_FEATURES_DISABLED);
 
@@ -563,8 +571,15 @@ int codes_get_features(char* result, size_t* length, int select)
     return GRIB_SUCCESS;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
+int codes_get_features(char* result, size_t* length, int select)
+{
+    auto r = eccodes::handleExceptions(codes_get_features_, result, length, select);
+    return eccodes::getErrorCode(r);
+}
+
 // Returns 1 if the key is computed (virtual) and 0 if it is coded
-int codes_key_is_computed(const grib_handle* h, const char* key, int* err)
+static int codes_key_is_computed_(const grib_handle* h, const char* key, int* err)
 {
     const grib_accessor* acc = grib_find_accessor(h, key);
     if (!acc) {
@@ -573,4 +588,11 @@ int codes_key_is_computed(const grib_handle* h, const char* key, int* err)
     }
     *err = GRIB_SUCCESS;
     return (acc->length_ == 0);
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+int codes_key_is_computed(const grib_handle* h, const char* key, int* err)
+{
+    auto result = eccodes::handleExceptions(codes_key_is_computed_, h, key, err);
+    return eccodes::updateErrorAndReturnValue(result, err);
 }

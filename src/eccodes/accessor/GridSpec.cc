@@ -71,7 +71,8 @@ int GridSpec::pack_string(const char* v, size_t* len)
         ASSERT(grid);
 
         auto* result = eccodes::geo::GribFromSpec::set(h, grid->spec());
-        ECCODES_ASSERT(result != nullptr);
+        //ECCODES_ASSERT(result != nullptr);
+        if (!result) return GRIB_GEOCALCULUS_PROBLEM;
 
         // TODO(maee, masn) how to pass (grib_handle•) result into parent_->h or h_ ?
         // int err     = 0;
