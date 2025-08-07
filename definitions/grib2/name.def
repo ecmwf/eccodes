@@ -10325,6 +10325,34 @@
 	 scaleFactorOfFirstFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean specific rain water content (convective)
+'Time-mean specific rain water content (convective)' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 144 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean specific snow water content (convective)
+'Time-mean specific snow water content (convective)' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 145 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean mixed layer depth
+'Time-mean mixed layer depth' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean urban cover
+'Time-mean urban cover' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-integrated land surface heat net flux
 'Time-integrated land surface heat net flux' = {
 	 discipline = 2 ;
@@ -12186,6 +12214,15 @@
 	 parameterNumber = 51 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum cloud-to-ground lightning flash density
+'Time-maximum cloud-to-ground lightning flash density' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-maximum 10 metre eastward wind gust
 'Time-maximum 10 metre eastward wind gust' = {
 	 discipline = 0 ;
@@ -12344,6 +12381,34 @@
 	 typeOfFirstFixedSurface = 17 ;
 	 scaledValueOfFirstFixedSurface = missing() ;
 	 scaleFactorOfFirstFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum specific rain water content (convective)
+'Time-maximum specific rain water content (convective)' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 144 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum specific snow water content (convective)
+'Time-maximum specific snow water content (convective)' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 145 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum mixed layer depth
+'Time-maximum mixed layer depth' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum urban cover
+'Time-maximum urban cover' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-minimum temperature tendency due to short-wave radiation
@@ -14191,6 +14256,15 @@
 	 parameterNumber = 51 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum cloud-to-ground lightning flash density
+'Time-minimum cloud-to-ground lightning flash density' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-minimum land surface heat net flux
 'Time-minimum land surface heat net flux' = {
 	 discipline = 2 ;
@@ -14329,6 +14403,34 @@
 	 typeOfFirstFixedSurface = 17 ;
 	 scaledValueOfFirstFixedSurface = missing() ;
 	 scaleFactorOfFirstFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum specific rain water content (convective)
+'Time-minimum specific rain water content (convective)' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 144 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum specific snow water content (convective)
+'Time-minimum specific snow water content (convective)' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 145 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum mixed layer depth
+'Time-minimum mixed layer depth' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum urban cover
+'Time-minimum urban cover' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-standard-deviation temperature tendency due to short-wave radiation
@@ -16159,6 +16261,15 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
+#Time-standard-deviation cloud-to-ground lightning flash density
+'Time-standard-deviation cloud-to-ground lightning flash density' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Time-standard-deviation land surface heat net flux
 'Time-standard-deviation land surface heat net flux' = {
 	 discipline = 2 ;
@@ -16297,6 +16408,34 @@
 	 typeOfFirstFixedSurface = 17 ;
 	 scaledValueOfFirstFixedSurface = missing() ;
 	 scaleFactorOfFirstFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation specific rain water content (convective)
+'Time-standard-deviation specific rain water content (convective)' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 144 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation specific snow water content (convective)
+'Time-standard-deviation specific snow water content (convective)' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 145 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation mixed layer depth
+'Time-standard-deviation mixed layer depth' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation urban cover
+'Time-standard-deviation urban cover' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Cross sectional area of flow in channel

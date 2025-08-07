@@ -821,7 +821,7 @@
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-standard-deviation snow thickness over sea ice
-'std_ sisnthick' = {
+'std_sisnthick' = {
 	 localTablesVersion = 1 ;
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
