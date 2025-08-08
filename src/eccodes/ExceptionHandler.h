@@ -55,7 +55,6 @@ auto handleExceptions(Func&& f, Args&&... args)
     return ExceptionHandler<Func, Args...>::handle(std::forward<Func>(f), std::forward<Args>(args)...);
 }
 
-
 // Helper functions to update error codes and return values
 template <typename ErrorType>
 int getErrorCode(tl::expected<ErrorType, ErrorType> result)

@@ -1098,6 +1098,8 @@ void grib_context_set_data_accessing_proc(grib_context* c, grib_data_read_proc r
 /* Logging procedure */
 void grib_context_log(const grib_context* c, int level, const char* fmt, ...)
 {
+    if (!c) c = grib_context_get_default();
+
     /* Save some CPU */
     if ((level == GRIB_LOG_DEBUG && c->debug < 1) ||
         (level == GRIB_LOG_WARNING && !c->enable_warnings)) {
