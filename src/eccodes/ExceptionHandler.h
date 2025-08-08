@@ -37,7 +37,7 @@ struct ExceptionHandler
         }
         catch (const std::exception& e) {
             const grib_context* c = grib_context_get_default();
-            grib_context_log(c, GRIB_LOG_ERROR, "%s", e.what());
+            grib_context_log(c, GRIB_LOG_ERROR, "STL exception: %s", e.what());
             return tl::unexpected{ GRIB_RUNTIME_ERROR };
         }
         catch (...) {
