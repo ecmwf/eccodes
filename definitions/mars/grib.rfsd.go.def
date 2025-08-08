@@ -1,6 +1,5 @@
 if (class is "ef" || class is "gf" || class is "gh" || class is "eh) {
  alias mars.step = endStep;
- alias mars.configuration  = modelVersion;
  alias mars.hdate = dataDate;
 
  alias mars.origin = inputOriginatingCentre;

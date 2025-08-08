@@ -4,7 +4,6 @@ alias mars.date   = referenceDate;
 alias mars.number = perturbationNumber;
 
 if (class is "ef" || class is "gf" ) {
- alias mars.configuration  = modelVersion;
  alias mars.origin = inputOriginatingCentre;
  alias mars.model = modelName;
 }

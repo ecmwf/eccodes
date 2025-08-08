@@ -6,7 +6,7 @@
 concept modelName(unknown, "modelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
 
 if (modelName isnot "unknown") {
-   concept modelVersion(unknown, "modelVersionConcept.[modelName].def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
+   concept_nofail modelVersion(unknown, "modelVersionConcept.[modelName].def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
    if ( grib2LocalSectionPresent or localUsePresent ) { # See ECC-2039
       if ( defined(marsClass) && marsClass is "ai" ) { # See ECC-2032
          alias ls.model = modelName;

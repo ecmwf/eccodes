@@ -1,5 +1,4 @@
 if (class is "ef" || class is "gf" ) {
- alias mars.configuration  = modelVersion;
  alias mars.origin = inputOriginatingCentre;
  alias mars.model = modelName;
 }

@@ -1,10 +1,1 @@
 "unknown" = {dummy=0;}
-# To be discussed which keys to map
-"lisflood" = {backgroundProcess = 147; }
-"Htessel-lisflood" = {backgroundProcess = ;}
-"Hype" = {backgroundProcess = ;}
-"VIC-WUR" = {backgroundProcess = ;}
-"ecLand" = {backgroundProcess = ;}
-"mHM" = {backgroundProcess = ;}
-"PCR-GLOBWB" = {backgroundProcess = ;}
-"JULES" = {backgroundProcess = ;}

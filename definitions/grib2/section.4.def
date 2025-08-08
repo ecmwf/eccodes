@@ -30,6 +30,10 @@ concept datasetForLocal(unknown) {
   "era6"        = {marsClass="e6";} # for ERA6 parameters with constituentType
   "hydro"       = {marsClass="ce";} # EFAS/GLOFAS
   "hydro"       = {marsClass="ul";} # ULYSSES
+  "hydro"	= {marsClass="ef";} # EFAS
+  "hydro"	= {marsClass="gf";} # GLOFAS
+  "hydro"	= {marsClass="eh";} # C3S European hydrology
+  "hydro"	= {marsClass="gh";} # C3S Global hydrology
   "fire"        = {marsClass="gw";} # Global Wildfire awareness system
   "uerra"       = {productionStatusOfProcessedData=8;} # UERRA
   "uerra"       = {productionStatusOfProcessedData=9;}
@@ -107,7 +111,14 @@ concept productDefinitionTemplateName(unknown, "productDefinitionTemplateConcept
 template parameters "grib2/parameters.def";
 
 # Hook for local extras
-template_nofail extras "grib2/local/[centre]/section4_extras.def";
+# pseudo-centres are defined via datasetForLocal, see concept defined in this file
+# while centres are using the standard centre keys
+# if not distinguished, for pseudo-centres also a centre specific definition might be used
+if ( defined(datasetForLocal) && datasetForLocal isnot "unknown" ) {
+ template_nofail extras "grib2/local/[datasetForLocal]/section4_extras.def";
+} else {
+ template_nofail extras "grib2/local/[centre]/section4_extras.def";
+}
 
 # Detect if this is for Generalized vertical height coordinates
 if (defined(typeOfFirstFixedSurface)) {
