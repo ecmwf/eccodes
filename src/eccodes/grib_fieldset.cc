@@ -245,14 +245,12 @@ static grib_fieldset* grib_fieldset_new_from_files_(grib_context* c, const char*
                                             int nfiles, const char** keys, int nkeys,
                                             const char* where_string, const char* order_by_string, int* err)
 {
-    int i             = 0;
-    int ret           = GRIB_SUCCESS;
+    int i = 0;
+    int ret = GRIB_SUCCESS;
     grib_order_by* ob = NULL;
-
     grib_fieldset* set = NULL;
 
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
 
     if (((!keys || nkeys == 0) && !order_by_string) || !filenames) {
         *err = GRIB_INVALID_ARGUMENT;
@@ -305,7 +303,8 @@ static grib_fieldset* grib_fieldset_new_from_files_(grib_context* c, const char*
 
 
 // C-API: Ensure all exceptions are converted to error codes
-grib_fieldset* grib_fieldset_new_from_files(grib_context* c, const char* filenames[], int nfiles, const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err)
+grib_fieldset* grib_fieldset_new_from_files(grib_context* c, const char* filenames[], int nfiles,
+    const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err)
 {
     auto result = eccodes::handleExceptions(grib_fieldset_new_from_files_, c, filenames, nfiles, keys, nkeys, where_string, order_by_string, err);
     return eccodes::updateErrorAndReturnValue(result, err);
@@ -319,8 +318,7 @@ static grib_fieldset* grib_fieldset_create_from_keys(grib_context* c, const char
     int type         = 0;
     int default_type = GRIB_TYPE_STRING;
 
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
 
     size = GRIB_START_ARRAY_SIZE;
 
@@ -539,8 +537,7 @@ void grib_fieldset_delete_order_by_(grib_context* c, grib_order_by* order_by)
 {
     grib_order_by* ob = order_by;
 
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
 
     while (order_by) {
         if (order_by->key)
@@ -676,8 +673,7 @@ static int grib_fieldset_add_(grib_fieldset* set, const char* filename)
         return err;
 
     while ((h = grib_handle_new_from_file(c, file->handle, &ret)) != NULL || ret != GRIB_SUCCESS) {
-        if (!h)
-            return ret;
+        if (!h) return ret;
 
         err = GRIB_SUCCESS;
         for (i = 0; i < set->columns_size; i++) {
@@ -688,8 +684,7 @@ static int grib_fieldset_add_(grib_fieldset* set, const char* filename)
         if (err == GRIB_SUCCESS || err == GRIB_NOT_FOUND) {
             if (set->fields_array_size < set->columns[0].values_array_size) {
                 ret = grib_fieldset_resize(set, set->columns[0].values_array_size);
-                if (ret != GRIB_SUCCESS)
-                    return ret;
+                if (ret != GRIB_SUCCESS) return ret;
             }
             offset                       = 0;
             grib_get_double(h, "offset", &offset);
@@ -722,17 +717,12 @@ int grib_fieldset_add(grib_fieldset* set, const char* filename) {
 
 static int grib_fieldset_resize(grib_fieldset* set, size_t newsize)
 {
-    int err = 0;
-
-    err = grib_fieldset_resize_fields(set, newsize);
-    if (err)
-        return err;
+    int err = grib_fieldset_resize_fields(set, newsize);
+    if (err) return err;
     err = grib_fieldset_resize_int_array(set->order, newsize);
-    if (err)
-        return err;
+    if (err) return err;
     err = grib_fieldset_resize_int_array(set->filter, newsize);
-    if (err)
-        return err;
+    if (err) return err;
 
     set->fields_array_size = newsize;
 
@@ -830,14 +820,12 @@ static grib_int_array* grib_fieldset_create_int_array(grib_context* c, size_t si
 
 static int grib_fieldset_resize_int_array(grib_int_array* a, size_t newsize)
 {
-    int* el;
     int err = 0;
-    if (!a)
-        return GRIB_INVALID_ARGUMENT;
+    if (!a) return GRIB_INVALID_ARGUMENT;
 
     newsize = newsize * sizeof(int);
 
-    el = (int*)grib_context_realloc(a->context, a->el, newsize);
+    int* el = (int*)grib_context_realloc(a->context, a->el, newsize);
     if (!el) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
                          "%s: Error allocating %zu bytes", __func__, newsize);
@@ -872,10 +860,8 @@ static grib_field** grib_fieldset_create_fields(grib_context* c, size_t size)
 static int grib_fieldset_resize_fields(grib_fieldset* set, size_t newsize)
 {
     int err = 0;
-    int i;
     grib_field** fields;
-    if (!set)
-        return GRIB_INVALID_ARGUMENT;
+    if (!set) return GRIB_INVALID_ARGUMENT;
 
     fields = (grib_field**)grib_context_realloc(set->context, set->fields, newsize * sizeof(grib_field*));
     if (!fields) {
@@ -886,7 +872,7 @@ static int grib_fieldset_resize_fields(grib_fieldset* set, size_t newsize)
     else
         set->fields = fields;
 
-    for (i = set->fields_array_size; i < newsize; i++)
+    for (size_t i = set->fields_array_size; i < newsize; i++)
         set->fields[i] = 0;
 
     set->fields_array_size = newsize;

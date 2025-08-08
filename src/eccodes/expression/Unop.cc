@@ -30,8 +30,7 @@ int Unop::evaluate_double(grib_handle* h, double* dres) const
 {
     double v = 0;
     int ret = exp_->evaluate_double(h, &v);
-    if (ret != GRIB_SUCCESS)
-        return ret;
+    if (ret != GRIB_SUCCESS) return ret;
     *dres = double_func_ ? double_func_(v) : long_func_(v);
     return GRIB_SUCCESS;
 }
