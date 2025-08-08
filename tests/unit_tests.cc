@@ -1026,6 +1026,7 @@ static void test_stl_exceptions()
     printf("Running %s ...\n", __func__);
 
     auto result = eccodes::handleExceptions(test_stl_exceptions_);
+    ECCODES_ASSERT(!result);
     int e = eccodes::getErrorCode(result);
     ECCODES_ASSERT(e == GRIB_RUNTIME_ERROR);
 }
