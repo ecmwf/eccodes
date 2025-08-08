@@ -15,12 +15,12 @@
 set -euo pipefail
 
 mkdir -p python_wrapper/src/copying
-mkdir -p /tmp/eccodes/target/eccodes/lib64/
 mkdir -p /tmp/eccodes/target/eccodes/include/
 mkdir -p /tmp/eccodes/target/eccodes/cmake/
 
 if [ "$(uname)" != "Darwin" ] ; then
-    echo "installing deps for platform $(uname)"
+    echo "installing and copying deps for platform $(uname)"
+    mkdir -p /tmp/eccodes/target/eccodes/lib64/
 
     ## yum-available prereqs -- assumed to be installed in the base due to privileges here
     for p in libpng-devel gobject-introspection-devel
@@ -67,7 +67,22 @@ if [ "$(uname)" != "Darwin" ] ; then
 
 
 else
-    echo "no deps installation for platform $(uname)"
+    echo "copying deps for platform $(uname)"
+    mkdir -p /tmp/eccodes/target/eccodes/lib/
+
+    BREWBASE="$(brew --cellar)" # "/opt/homebrew/Cellar" or "/usr/local/Cellar"
+    LIBAEC="$(ls -d $BREWBASE/libaec/* | head -n1)"
+    LIBOPENJP="$(ls -d $BREWBASE/openjpeg/* | head -n1)"
+    LIBPNG="$(ls -d $BREWBASE/libpng/* | head -n1)"
+
+    for lib in $LIBAEC $LIBOPENJP $LIBPNG ; do
+        echo "will copy from $lib/lib with contents $(ls $lib/lib/*dylib)"
+        cp $lib/lib/*dylib /tmp/eccodes/target/eccodes/lib
+        echo "will copy from $lib/include with contents $(ls $lib/include)"
+        cp -R $lib/include/* /tmp/eccodes/target/eccodes/include
+    done
+    rm /tmp/eccodes/target/eccodes/lib/libsz* # comes from the openjp, but we dont need it
+
 fi
 
 echo "license setup"
