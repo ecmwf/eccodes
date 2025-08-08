@@ -3,10 +3,10 @@
 # See ECC-1846
 # This is ecmf local so we shouldn't use MasterDir. Instead we look for pseudocentre (conceptsDir2) then centre (conceptsLocalDirAll)
 
-concept_nofail modelName(unknown, "modelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+concept modelName(unknown, "modelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
 
 if (modelName isnot "unknown") {
-   concept_nofail configuration(unknown, "configurationConcept.[modelName].def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
+   concept configuration(unknown, "configurationConcept.[modelName].def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
   if ( grib2LocalSectionPresent or localUsePresent ) { # See ECC-2039
       if ( defined(marsClass) ) { # See ECC-2032
          alias ls.model = modelName;
