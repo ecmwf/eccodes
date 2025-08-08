@@ -251,8 +251,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     if (!global_handle || err != GRIB_SUCCESS) {
         morein2++;
-        if (global_handle)
-            grib_handle_delete(global_handle);
+        if (global_handle) grib_handle_delete(global_handle);
         return 0;
     }
 
