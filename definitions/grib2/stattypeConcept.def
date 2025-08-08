@@ -240,3 +240,166 @@
           true = (element(lengthOfTimeRange,0) == 1) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+#############################################
+## Monthly STATTYPES with 3 time loops.    ##
+#############################################
+# Mean - 672 hours of 24 hours mean
+'moav_daav' = {numberOfTimeRanges = 3 ;
+          true = (element(lengthOfTimeRange,0) == 672) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ;
+          true = (element(lengthOfTimeRange,1) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,1) == 1) ;
+          true = (element(typeOfStatisticalProcessing,1) == 0) ; }
+# Mean - 696 hours of 24 hours mean
+'moav_daav' = {numberOfTimeRanges = 3 ;
+          true = (element(lengthOfTimeRange,0) == 696) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ;
+          true = (element(lengthOfTimeRange,1) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,1) == 1) ;
+          true = (element(typeOfStatisticalProcessing,1) == 0) ; }
+# Mean - 720 hours of 24 hours mean
+'moav_daav' = {numberOfTimeRanges = 3 ;
+          true = (element(lengthOfTimeRange,0) == 720) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ;
+          true = (element(lengthOfTimeRange,1) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,1) == 1) ;
+          true = (element(typeOfStatisticalProcessing,1) == 0) ; }
+# Mean - 744 hours of 24 hours mean
+'moav_daav' = {numberOfTimeRanges = 3 ;
+          true = (element(lengthOfTimeRange,0) == 744) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ;
+          true = (element(lengthOfTimeRange,1) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,1) == 1) ;
+          true = (element(typeOfStatisticalProcessing,1) == 0) ; }
+# Mean - 672 hours of 24 hours stdev
+'moav_dasd' = {numberOfTimeRanges = 3 ;
+          true = (element(lengthOfTimeRange,0) == 672) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ;
+          true = (element(lengthOfTimeRange,1) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,1) == 1) ;
+          true = (element(typeOfStatisticalProcessing,1) == 6) ; }
+# Mean - 696 hours of 24 hours stdev
+'moav_dasd' = {numberOfTimeRanges = 3 ;
+          true = (element(lengthOfTimeRange,0) == 696) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ;
+          true = (element(lengthOfTimeRange,1) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,1) == 1) ;
+          true = (element(typeOfStatisticalProcessing,1) == 6) ; }
+# Mean - 720 hours of 24 hours stdev
+'moav_dasd' = {numberOfTimeRanges = 3 ;
+          true = (element(lengthOfTimeRange,0) == 720) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ;
+          true = (element(lengthOfTimeRange,1) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,1) == 1) ;
+          true = (element(typeOfStatisticalProcessing,1) == 6) ; }
+# Mean - 744 hours of 24 hours stdev
+'moav_dasd' = {numberOfTimeRanges = 3 ;
+          true = (element(lengthOfTimeRange,0) == 744) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ;
+          true = (element(lengthOfTimeRange,1) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,1) == 1) ;
+          true = (element(typeOfStatisticalProcessing,1) == 6) ; }
+# Stdev - 672 hours of 24 hours mean
+'mosd_daav' = {numberOfTimeRanges = 3 ;
+          true = (element(lengthOfTimeRange,0) == 672) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 6) ;
+          true = (element(lengthOfTimeRange,1) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,1) == 1) ;
+          true = (element(typeOfStatisticalProcessing,1) == 0) ; }
+# Stdev - 696 hours of 24 hours mean
+'mosd_daav' = {numberOfTimeRanges = 3 ;
+          true = (element(lengthOfTimeRange,0) == 696) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 6) ;
+          true = (element(lengthOfTimeRange,1) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,1) == 1) ;
+          true = (element(typeOfStatisticalProcessing,1) == 0) ; }
+# Stdev - 720 hours of 24 hours mean
+'mosd_daav' = {numberOfTimeRanges = 3 ;
+          true = (element(lengthOfTimeRange,0) == 720) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 6) ;
+          true = (element(lengthOfTimeRange,1) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,1) == 1) ;
+          true = (element(typeOfStatisticalProcessing,1) == 0) ; }
+# Stdev - 744 hours of 24 hours mean
+'mosd_daav' = {numberOfTimeRanges = 3 ;
+          true = (element(lengthOfTimeRange,0) == 744) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 6) ;
+          true = (element(lengthOfTimeRange,1) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,1) == 1) ;
+          true = (element(typeOfStatisticalProcessing,1) == 0) ; }
+# Min - 672 hours of 24 hours min
+'momn_damn' = {numberOfTimeRanges = 3 ;
+          true = (element(lengthOfTimeRange,0) == 672) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 3) ;
+          true = (element(lengthOfTimeRange,1) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,1) == 1) ;
+          true = (element(typeOfStatisticalProcessing,1) == 3) ; }
+# Min - 696 hours of 24 hours min
+'momn_damn' = {numberOfTimeRanges = 3 ;
+          true = (element(lengthOfTimeRange,0) == 696) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 3) ;
+          true = (element(lengthOfTimeRange,1) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,1) == 1) ;
+          true = (element(typeOfStatisticalProcessing,1) == 3) ; }
+# Min - 720 hours of 24 hours min
+'momn_damn' = {numberOfTimeRanges = 3 ;
+          true = (element(lengthOfTimeRange,0) == 720) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 3) ;
+          true = (element(lengthOfTimeRange,1) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,1) == 1) ;
+          true = (element(typeOfStatisticalProcessing,1) == 3) ; }
+# Min - 744 hours of 24 hours min
+'momn_damn' = {numberOfTimeRanges = 3 ;
+          true = (element(lengthOfTimeRange,0) == 744) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 3) ;
+          true = (element(lengthOfTimeRange,1) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,1) == 1) ;
+          true = (element(typeOfStatisticalProcessing,1) == 3) ; }
+# Max - 672 hours of 24 hours max
+'momx_damx' = {numberOfTimeRanges = 3 ;
+          true = (element(lengthOfTimeRange,0) == 672) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 2) ;
+          true = (element(lengthOfTimeRange,1) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,1) == 1) ;
+          true = (element(typeOfStatisticalProcessing,1) == 2) ; }
+# Max - 696 hours of 24 hours max
+'momx_damx' = {numberOfTimeRanges = 3 ;
+          true = (element(lengthOfTimeRange,0) == 696) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 2) ;
+          true = (element(lengthOfTimeRange,1) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,1) == 1) ;
+          true = (element(typeOfStatisticalProcessing,1) == 2) ; }
+# Max - 720 hours of 24 hours max
+'momx_damx' = {numberOfTimeRanges = 3 ;
+          true = (element(lengthOfTimeRange,0) == 720) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 2) ;
+          true = (element(lengthOfTimeRange,1) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,1) == 1) ;
+          true = (element(typeOfStatisticalProcessing,1) == 2) ; }
+# Max - 744 hours of 24 hours max
+'momx_damx' = {numberOfTimeRanges = 3 ;
+          true = (element(lengthOfTimeRange,0) == 744) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 2) ;
+          true = (element(lengthOfTimeRange,1) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,1) == 1) ;
+          true = (element(typeOfStatisticalProcessing,1) == 2) ; }
