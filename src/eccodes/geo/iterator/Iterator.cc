@@ -149,7 +149,14 @@ static grib_iterator* grib_iterator_new_(const grib_handle* ch, unsigned long fl
 
         try {
             if (i->iterator = new eccodes::geo_iterator::GeoIterator(const_cast<grib_handle*>(ch), flags);
-                i->iterator != nullptr) {
+                i->iterator != nullptr)
+            {
+                *error = i->iterator->init(const_cast<grib_handle*>(ch), nullptr);
+                if (*error) {
+                    grib_context_log(ch->context, GRIB_LOG_ERROR, "Geoiterator: Error instantiating iterator (%s)",
+                             grib_get_error_message(*error));
+                    return nullptr;
+                }
                 return i;
             }
         }

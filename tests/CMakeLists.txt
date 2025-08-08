@@ -597,10 +597,10 @@ else()
 endif()
 
 
-if( eccodes_HAVE_ECKIT_GEO )
+if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
     foreach( test
             grib_from_gridspec )
-        ecbuild_add_test( TARGET  ${test}
+        ecbuild_add_test( TARGET  eccodes_t_${test}
                           SOURCES ${test}.cc
                           LIBS    eccodes eckit_geo )
     endforeach()
