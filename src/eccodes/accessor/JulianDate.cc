@@ -67,29 +67,22 @@ int JulianDate::unpack_double(double* val, size_t* len)
 
     if (ymd_ == NULL) {
         ret = grib_get_long(h, year_, &year);
-        if (ret != GRIB_SUCCESS)
-            return ret;
+        if (ret != GRIB_SUCCESS) return ret;
         ret = grib_get_long(h, month_, &month);
-        if (ret != GRIB_SUCCESS)
-            return ret;
+        if (ret != GRIB_SUCCESS) return ret;
         ret = grib_get_long(h, day_, &day);
-        if (ret != GRIB_SUCCESS)
-            return ret;
+        if (ret != GRIB_SUCCESS) return ret;
 
         ret = grib_get_long(h, hour_, &hour);
-        if (ret != GRIB_SUCCESS)
-            return ret;
+        if (ret != GRIB_SUCCESS) return ret;
         ret = grib_get_long(h, minute_, &minute);
-        if (ret != GRIB_SUCCESS)
-            return ret;
+        if (ret != GRIB_SUCCESS) return ret;
         ret = grib_get_long(h, second_, &second);
-        if (ret != GRIB_SUCCESS)
-            return ret;
+        if (ret != GRIB_SUCCESS) return ret;
     }
     else {
         ret = grib_get_long(h, ymd_, &ymd);
-        if (ret != GRIB_SUCCESS)
-            return ret;
+        if (ret != GRIB_SUCCESS) return ret;
         year = ymd / 10000;
         ymd %= 10000;
         month = ymd / 100;
@@ -127,34 +120,26 @@ int JulianDate::pack_double(const double* val, size_t* len)
 
     if (ymd_ == NULL) {
         ret = grib_set_long(h, year_, year);
-        if (ret != 0)
-            return ret;
+        if (ret != 0) return ret;
         ret = grib_set_long(h, month_, month);
-        if (ret != 0)
-            return ret;
+        if (ret != 0) return ret;
         ret = grib_set_long(h, day_, day);
-        if (ret != 0)
-            return ret;
+        if (ret != 0) return ret;
         ret = grib_set_long(h, hour_, hour);
-        if (ret != 0)
-            return ret;
+        if (ret != 0) return ret;
         ret = grib_set_long(h, minute_, minute);
-        if (ret != 0)
-            return ret;
+        if (ret != 0) return ret;
         ret = grib_set_long(h, second_, second);
-        if (ret != 0)
-            return ret;
+        if (ret != 0) return ret;
     }
     else {
         ymd = year * 10000 + month * 100 + day;
         ret = grib_set_long(h, ymd_, ymd);
-        if (ret != 0)
-            return ret;
+        if (ret != 0) return ret;
 
         hms = hour * 10000 + minute * 100 + second;
         ret = grib_set_long(h, hms_, hms);
-        if (ret != 0)
-            return ret;
+        if (ret != 0) return ret;
     }
 
     return ret;
@@ -173,29 +158,22 @@ int JulianDate::unpack_string(char* val, size_t* len)
 
     if (ymd_ == NULL) {
         ret = grib_get_long(h, year_, &year);
-        if (ret != GRIB_SUCCESS)
-            return ret;
+        if (ret != GRIB_SUCCESS) return ret;
         ret = grib_get_long(h, month_, &month);
-        if (ret != GRIB_SUCCESS)
-            return ret;
+        if (ret != GRIB_SUCCESS) return ret;
         ret = grib_get_long(h, day_, &day);
-        if (ret != GRIB_SUCCESS)
-            return ret;
+        if (ret != GRIB_SUCCESS) return ret;
 
         ret = grib_get_long(h, hour_, &hour);
-        if (ret != GRIB_SUCCESS)
-            return ret;
+        if (ret != GRIB_SUCCESS) return ret;
         ret = grib_get_long(h, minute_, &minute);
-        if (ret != GRIB_SUCCESS)
-            return ret;
+        if (ret != GRIB_SUCCESS) return ret;
         ret = grib_get_long(h, second_, &second);
-        if (ret != GRIB_SUCCESS)
-            return ret;
+        if (ret != GRIB_SUCCESS) return ret;
     }
     else {
         ret = grib_get_long(h, ymd_, &ymd);
-        if (ret != GRIB_SUCCESS)
-            return ret;
+        if (ret != GRIB_SUCCESS) return ret;
         year = ymd / 10000;
         ymd %= 10000;
         month = ymd / 100;
@@ -271,34 +249,26 @@ int JulianDate::pack_string(const char* val, size_t* len)
 
     if (ymd_ == NULL) {
         ret = grib_set_long(h, year_, year);
-        if (ret != 0)
-            return ret;
+        if (ret != 0) return ret;
         ret = grib_set_long(h, month_, month);
-        if (ret != 0)
-            return ret;
+        if (ret != 0) return ret;
         ret = grib_set_long(h, day_, day);
-        if (ret != 0)
-            return ret;
+        if (ret != 0) return ret;
         ret = grib_set_long(h, hour_, hour);
-        if (ret != 0)
-            return ret;
+        if (ret != 0) return ret;
         ret = grib_set_long(h, minute_, minute);
-        if (ret != 0)
-            return ret;
+        if (ret != 0) return ret;
         ret = grib_set_long(h, second_, second);
-        if (ret != 0)
-            return ret;
+        if (ret != 0) return ret;
     }
     else {
         ymd = year * 10000 + month * 100 + day;
         ret = grib_set_long(h, ymd_, ymd);
-        if (ret != 0)
-            return ret;
+        if (ret != 0) return ret;
 
         hms = hour * 10000 + minute * 100 + second;
         ret = grib_set_long(h, hms_, hms);
-        if (ret != 0)
-            return ret;
+        if (ret != 0) return ret;
     }
 
     return ret;
