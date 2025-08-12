@@ -307,6 +307,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1907
         grib_ecc-1941
         grib_ecc-1942
+        grib_ecc-1992
         grib_ecc-2005
         grib_ecc-2006
         grib_ecc-2013

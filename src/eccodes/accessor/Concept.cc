@@ -102,8 +102,7 @@ static int concept_condition_expression_true(
             break;
 
         case GRIB_TYPE_DOUBLE: {
-            double dval;
-            double dres = 0.0;
+            double dval = 0.0, dres = 0.0;
             c->expression->evaluate_double(h, &dres);
             ok = (grib_get_double(h, c->name, &dval) == GRIB_SUCCESS) &&
                  (dval == dres);
