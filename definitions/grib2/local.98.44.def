@@ -1,0 +1,7 @@
+# (C) Copyright 2005- ECMWF.
+
+# Local definition 44 - Hydrological simulations with fillup
+
+unsigned[2] offsetToStartOfAnalysisInHours       = missing(): dump, can_be_missing;
+unsigned[2] offsetToStartOfForecastFillupInHours = missing(): dump, can_be_missing;
+unsigned[2] offsetTimeIncrementInHours           = missing(): dump, can_be_missing;
