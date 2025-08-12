@@ -28,12 +28,12 @@ concept datasetForLocal(unknown) {
   "s2s"         = {productionStatusOfProcessedData=7;}
   "cerise"      = {marsClass=50;}
   "era6"        = {marsClass=40;} # for ERA6 parameters with constituentType
-  "hydro"       = {marsClass=35;} # EFAS/GLOFAS
-  "hydro"       = {marsClass=38;} # ULYSSES
-  "hydro"	= {marsClass="ef";} # EFAS
-  "hydro"	= {marsClass="gf";} # GLOFAS
-  "hydro"	= {marsClass="eh";} # C3S European hydrology
-  "hydro"	= {marsClass="gh";} # C3S Global hydrology
+  "hydro_legacy"= {marsClass=35;} # EFAS/GLOFAS
+  "hydro_legacy"= {marsClass=38;} # ULYSSES
+  "hydro"	= {marsClass=42;} # EFAS
+  "hydro"	= {marsClass=43;} # GLOFAS
+  "hydro"	= {marsClass=48;} # C3S European hydrology
+  "hydro"	= {marsClass=49;} # C3S Global hydrology
   "fire"        = {marsClass=39;} # Global Wildfire awareness system
   "uerra"       = {productionStatusOfProcessedData=8;} # UERRA
   "uerra"       = {productionStatusOfProcessedData=9;}
