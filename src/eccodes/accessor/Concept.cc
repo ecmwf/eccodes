@@ -54,24 +54,27 @@ static int grib_get_long_memoize(
 {
     int err = 0;
 
+    // Check keys which are defined (present)
+    auto pos1 = present_keys_map.find(key);
+    if (pos1 != present_keys_map.end()) {
+        *value = pos1->second;  // Found. Copy its value
+        return GRIB_SUCCESS;
+    }
+
     // Check keys which are not defined (absent)
-    auto pos1 = absent_keys_map.find(key);
-    if (pos1 != absent_keys_map.end()) { // found in map
-        err = pos1->second;
+    auto pos2 = absent_keys_map.find(key);
+    if (pos2 != absent_keys_map.end()) {  // Found
+        err = pos2->second; // Return its error code
         return err;
     }
 
-    auto pos2 = present_keys_map.find(key);
-    if (pos2 != present_keys_map.end()) {
-        *value = pos2->second; // found in defined-keys map
-    } else {
-        // not found in defined-keys map so decode
-        err = grib_get_long(h, key, value);
-        if (err) {
-            absent_keys_map.insert(std::make_pair(key, err));
-        } else {
-            present_keys_map.insert(std::make_pair(key, *value));
-        }
+    // Not found in either map so decode and store
+    err = grib_get_long(h, key, value);
+    if (err) {
+        absent_keys_map.insert(std::make_pair(key, err));
+    }
+    else {
+        present_keys_map.insert(std::make_pair(key, *value));
     }
 
     return err;
@@ -181,7 +184,7 @@ static const char* concept_evaluate(grib_accessor* a)
     // Maps for fast lookup. See ECC-1905
     // Map for keys that are defined: key -> integer value
     std::unordered_map<std::string_view, long> present_keys_map;
-    // Map for keys that fail to decode e.g., not found
+    // Map for keys that fail to decode (e.g., not found): key -> error code
     std::unordered_map<std::string_view, int> absent_keys_map;
 
     while (c) {
