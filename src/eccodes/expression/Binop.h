@@ -32,7 +32,7 @@ private:
     Expression* right_ = nullptr;
     BinopLongProc long_func_ = nullptr;
     BinopDoubleProc double_func_ = nullptr;
-    BinopStringProc string_func_ = nullptr;
+    // BinopStringProc string_func_ = nullptr;
 };
 
 }  // namespace eccodes::expression

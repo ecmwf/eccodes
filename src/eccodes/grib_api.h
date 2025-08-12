@@ -447,6 +447,7 @@ struct grib_string_list
     grib_string_list* next;
 };
 
+/* The 'what' argument can be a bitwise OR of GRIB_SECTION_GRID, GRIB_SECTION_PRODUCT... etc */
 grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err);
 
 /**
@@ -1187,6 +1188,7 @@ void grib_context_set_print_proc(grib_context* c, grib_print_proc printp);
  * @param logp         : the logging procedure to be set @see grib_log_proc
  */
 void grib_context_set_logging_proc(grib_context* c, grib_log_proc logp);
+void grib_context_set_logging_file(grib_context* c, FILE*);
 
 /**
  *  Turn on support for multi-fields in single GRIB messages

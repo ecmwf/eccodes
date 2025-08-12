@@ -12,23 +12,19 @@
 
 #pragma once
 
-#include "eccodes.h"
-
 #include <string>
 #include <vector>
 
-#include "eckit/geo/Spec.h"
 #include "eckit/geo/spec/Custom.h"
+
+#include "eccodes/geo/Geo.h"
 
 
 namespace eccodes::geo
 {
 
 
-bool codes_check_error(int e, const char* call);
-
-
-class GribToSpec final : public eckit::geo::Spec
+class GribToSpec final : public Spec
 {
 public:
     explicit GribToSpec(codes_handle*);

@@ -222,7 +222,8 @@ ${tools_dir}/grib_set -s paramId=211123,setLocalDefinition=1,localDefinitionNumb
 grib_check_key_equals $temp productDefinitionTemplateNumber 40
 
 # Also see ECC-1760: is_chemical_srcsink removed so no automaric selection of product definition template
-${tools_dir}/grib_set -s productDefinitionTemplateNumber=76,paramId=456000,setLocalDefinition=1,localDefinitionNumber=36 $sample_g2 $temp
+${tools_dir}/grib_set -s setLocalDefinition=1,class=a5,tablesVersion=34 $sample_g2 $temp.1
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=76,paramId=456000,localDefinitionNumber=36 $temp.1 $temp
 grib_check_key_equals $temp shortName drydep_vel_vol
 
 ${tools_dir}/grib_set -s paramId=215225,setLocalDefinition=1,localDefinitionNumber=36 $sample_g2 $temp

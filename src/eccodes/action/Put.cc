@@ -8,6 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include "grib_api_internal.h"
 #include "Put.h"
 
 grib_action* grib_action_create_put(grib_context* context, const char* name, grib_arguments* args)

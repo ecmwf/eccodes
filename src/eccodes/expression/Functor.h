@@ -32,12 +32,12 @@ private:
     char* name_ = nullptr;
     grib_arguments* args_ = nullptr;
 
-    friend Expression* new_func_expression(grib_context*, const char*, grib_arguments*);
+    friend Expression* new_functor_expression(grib_context*, const char*, grib_arguments*);
 };
 
-Expression* new_func_expression(grib_context*, const char*, grib_arguments*);
+Expression* new_functor_expression(grib_context*, const char*, grib_arguments*);
 
 }  // namespace eccodes::expression
 
 
-grib_expression* new_func_expression(grib_context*, const char*, grib_arguments*);
+grib_expression* new_functor_expression(grib_context*, const char*, grib_arguments*);

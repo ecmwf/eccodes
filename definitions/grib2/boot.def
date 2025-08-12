@@ -20,6 +20,7 @@ constant grib2divider = 1000000;
 alias extraDimensionPresent = zero;
 transient angleSubdivisions = grib2divider; # micro degrees
 transient forceStepUnits = 255 : hidden;
+transient minus_one = -1: hidden;
 
 meta gts_header gts_header() : no_copy,hidden,read_only;
 meta gts_TTAAii gts_header(20,6) : no_copy,hidden,read_only;
@@ -42,7 +43,8 @@ template core "grib2/sections.def";
 #  }
 #}
 
-meta isMessageValid message_is_valid(kindOfProduct);
+meta isMessageValid message_is_valid(kindOfProduct) : no_copy;
+alias messageValidityChecks = isMessageValid; # For encoding
 
 template section_8 "grib2/section.8.def";
 

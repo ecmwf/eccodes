@@ -276,6 +276,7 @@ static void my_logging_proc(const grib_context* c, int level, const char* mesg)
 }
 static void test_logging_proc()
 {
+    printf("Running %s ...\n", __func__);
     grib_context* context = grib_context_get_default();
     ECCODES_ASSERT(logging_caught == 0);
 
@@ -291,11 +292,26 @@ static void test_logging_proc()
     ECCODES_ASSERT(logging_caught == 0);
 }
 
+static void test_logging_file()
+{
+    printf("Running %s ...\n", __func__);
+    grib_context* context = grib_context_get_default();
+    grib_context_log(context, GRIB_LOG_ERROR, "test_logging_file: On stderr I hope");
+    FILE* fp = fopen("/dev/null", "w");
+    if (fp) {
+        grib_context_set_logging_file(context, fp);
+        grib_context_log(context, GRIB_LOG_ERROR, "test_logging_file: sent to /dev/null");
+    }
+    grib_context_set_logging_file(context, stderr); // restore
+    grib_context_log(context, GRIB_LOG_ERROR, "test_logging_file: Can you see me now?");
+}
+
 static void my_print_proc(const grib_context* c, void* descriptor, const char* mesg)
 {
 }
 static void test_print_proc()
 {
+    printf("Running %s ...\n", __func__);
     grib_context* context = grib_context_get_default();
     grib_context_set_print_proc(context, my_print_proc);
     grib_context_set_print_proc(context, NULL);
@@ -1024,6 +1040,7 @@ int main(int argc, char** argv)
     test_dates();
     test_time_conversions();
     test_logging_proc();
+    test_logging_file();
     test_print_proc();
     test_grib_binary_search();
     test_parse_keyval_string();

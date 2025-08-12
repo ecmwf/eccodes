@@ -341,7 +341,7 @@ int G2EndStep::unpack_long(long* val, size_t* len)
         }
     }
     catch (std::exception& e) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "G2endStep::unpack_long: %s", e.what());
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s unpack_long: %s", class_name_, e.what());
         ret = GRIB_DECODING_ERROR;
     }
 
@@ -383,7 +383,7 @@ int G2EndStep::unpack_double(double* val, size_t* len)
         }
     }
     catch (std::exception& e) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "G2endStep::unpack_double: %s", e.what());
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s unpack_double: %s", class_name_, e.what());
         ret = GRIB_DECODING_ERROR;
     }
 
@@ -564,7 +564,7 @@ int G2EndStep::unpack_string(char* val, size_t* len)
         memcpy(val, ss.str().c_str(), size);
     }
     catch (std::exception& e) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "G2endStep::unpack_string: %s", e.what());
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s unpack_string: %s", class_name_, e.what());
         return GRIB_DECODING_ERROR;
     }
 
@@ -595,7 +595,7 @@ int G2EndStep::pack_long(const long* val, size_t* len)
         ret = pack_long_(*val, end_step_unit);
     }
     catch (std::exception& e) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "G2endStep::pack_long: %s", e.what());
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s pack_long: %s", class_name_, e.what());
         return GRIB_DECODING_ERROR;
     }
     return ret;
@@ -620,7 +620,7 @@ int G2EndStep::pack_string(const char* val, size_t* len)
             return ret;
     }
     catch (std::exception& e) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "G2endStep::pack_string: %s", e.what());
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s pack_string: %s", class_name_, e.what());
         return GRIB_DECODING_ERROR;
     }
     return GRIB_SUCCESS;

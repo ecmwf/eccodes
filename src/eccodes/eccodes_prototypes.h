@@ -262,6 +262,7 @@ int grib_context_seek(const grib_context* c, off_t offset, int whence, void* str
 void grib_context_set_print_proc(grib_context* c, grib_print_proc p);
 void grib_context_set_debug(grib_context* c, int mode);
 void grib_context_set_logging_proc(grib_context* c, grib_log_proc p);
+void grib_context_set_logging_file(grib_context* c, FILE*);
 long grib_get_api_version(void);
 void grib_print_api_version(FILE* out);
 const char* grib_get_package_name(void);
@@ -619,7 +620,7 @@ grib_expression* new_string_compare_expression(grib_context* c, grib_expression*
 grib_expression* new_unop_expression(grib_context* c, grib_unop_long_proc long_func, grib_unop_double_proc double_func, grib_expression* exp);
 
 /* grib_expression_class_functor.cc */
-grib_expression* new_func_expression(grib_context* c, const char* name, grib_arguments* args);
+grib_expression* new_functor_expression(grib_context* c, const char* name, grib_arguments* args);
 
 /* grib_expression_class_accessor.cc */
 grib_expression* new_accessor_expression(grib_context* c, const char* name, long start, size_t length);
