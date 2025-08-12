@@ -1,4 +1,0 @@
-if (class is "ef" || class is "gf" ) {
- alias mars.origin = inputOriginatingCentre;
- alias mars.model = modelName;
-}

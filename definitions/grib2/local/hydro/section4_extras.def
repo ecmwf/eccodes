@@ -18,4 +18,14 @@ if (modelName isnot "unknown") {
 if (class is "ef" || class is "gf" || class is "gh" || class is "eh") {
  alias mars.model = modelName;
  alias mars.configuration = configuration;
+ 
+}
+
+if (class is "ef" || class is "gf" ) {
+ alias mars.origin = inputOriginatingCentre;
+}
+
+if (stream is "mmsf" && (class is "gh" || class is "eh")){
+ alias mars.version  = modelVersion;
+ alias mars.origin = inputOriginatingCentre;
 }
