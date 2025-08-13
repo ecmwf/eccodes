@@ -50,13 +50,13 @@ cat > $tempFilt << EOF
 EOF
 
 
-
-export ECCODES_DEFINITION_PATH=$PWD/defs
+std_defs=`${tools_dir}/codes_info -d`
+export ECCODES_DEFINITION_PATH=$PWD/defs:$std_defs
 export ECCODES_DEBUG=1
 ${tools_dir}/codes_info
-${tools_dir}/grib_set -s tablesVersion=34,paramId=666666 $sample_grib2 $tempGrib #> $tempLog 2>&1
+${tools_dir}/grib_set -s tablesVersion=34,paramId=666666 $sample_grib2 $tempGrib > $tempLog 2>&1
 #cat $tempLog
-#grep  'Concept: Key typeOfStatisticalProcessing not found, setting PDTN' $tempLog
+grep  'Concept: Key typeOfStatisticalProcessing not found, setting PDTN' $tempLog
 unset ECCODES_DEBUG
 
 grib_check_key_equals $tempGrib paramId,productDefinitionTemplateNumber,numberOfTimeRanges '666666 8 3'
