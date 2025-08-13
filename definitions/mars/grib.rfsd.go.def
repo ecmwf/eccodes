@@ -1,3 +1,2 @@
- alias mars.step = endStep;
- alias mars.hdate = dataDate;
- alias mars.model = modelName;
+alias mars.hdate = dataDate;
+alias mars.model = modelName;

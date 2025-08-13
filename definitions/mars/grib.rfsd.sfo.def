@@ -1,3 +1,1 @@
- alias mars.step = endStep;
- alias mars.time  = dataTime;
- alias mars.hdate = dataDate;
+alias mars.hdate = dataDate;

@@ -1,2 +1,1 @@
- alias mars.step = endStep; 
- alias mars.anoffset=anoffset;
+alias mars.anoffset=anoffset;
