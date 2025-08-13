@@ -54,7 +54,7 @@ int Trim::pack_string(const char* val, size_t* len)
     size_t inputLen = 256;
     char buf[256]   = {0,};
     char* pBuf = NULL;
-    int err;
+    int err = 0;
     grib_handle* h                = get_enclosing_handle();
     grib_accessor* inputAccesstor = grib_find_accessor(h, input_);
     if (!inputAccesstor) {

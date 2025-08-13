@@ -132,10 +132,9 @@ long UnsignedBits::byte_count()
 
 int UnsignedBits::value_count(long* numberOfElements)
 {
-    int ret;
     *numberOfElements = 0;
 
-    ret = grib_get_long(get_enclosing_handle(), numberOfElements_, numberOfElements);
+    int ret = grib_get_long(get_enclosing_handle(), numberOfElements_, numberOfElements);
     if (ret) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s unable to get %s to compute size", name_, numberOfElements_);

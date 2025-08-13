@@ -94,7 +94,7 @@ static int proj_space_view(grib_handle* h, char* result)
     //         return err;
     //     snprintf(result, 526, "+proj=geos +lon_0=%lf +h=35785831 +x_0=0 +y_0=0 %s", lonOfSubSatellitePointInDegrees, shape);
     //     return err;
-    //     /* Experimental: For now do the same as gdalsrsinfo - hard coded values! */
+    //     // Experimental: For now do the same as gdalsrsinfo - hard coded values!
     //     snprintf(result, 526, "+proj=geos +lon_0=0 +h=35785831 +x_0=0 +y_0=0 %s",  shape);
     //     return err;
 }
