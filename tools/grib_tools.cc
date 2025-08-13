@@ -1015,10 +1015,8 @@ static int get_initial_element_of_array(grib_handle* h, const char* keyName, siz
             break;
         case GRIB_TYPE_BYTES:
             uval = (unsigned char*)grib_context_malloc(c, num_vals * sizeof(unsigned char));
-            if (!uval)
-                return GRIB_OUT_OF_MEMORY;
-            if ((err = grib_get_bytes(h, keyName, uval, &len)) != GRIB_SUCCESS)
-                return err;
+            if (!uval) return GRIB_OUT_OF_MEMORY;
+            if ((err = grib_get_bytes(h, keyName, uval, &len)) != GRIB_SUCCESS) return err;
             snprintf(value, 32, "%d...", (short)uval[0]);
             free(uval);
             break;
@@ -1306,8 +1304,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
             err = grib_get_size(h, "values", &size);
             if (err) {
                 snprintf(value, 32, "unknown");
-                if (!options->fail)
-                    exit(err);
+                if (!options->fail) exit(err);
                 return;
             }
             values = (double*)grib_context_malloc_clear(h->context, size * sizeof(double));
