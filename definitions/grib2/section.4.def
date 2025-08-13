@@ -22,38 +22,38 @@ transient neitherPresent = 0;
 # }
 
 concept datasetForLocal(unknown) {
-  "tigge"       = {productionStatusOfProcessedData=4;}
-  "tigge"       = {productionStatusOfProcessedData=5;}
-  "s2s"         = {productionStatusOfProcessedData=6;}
-  "s2s"         = {productionStatusOfProcessedData=7;}
-  "cerise"      = {marsClass=50;}
+  "tigge"        = {productionStatusOfProcessedData=4;}
+  "tigge"        = {productionStatusOfProcessedData=5;}
+  "s2s"          = {productionStatusOfProcessedData=6;}
+  "s2s"          = {productionStatusOfProcessedData=7;}
+  "cerise"       = {marsClass=50;}
   "era6"        = {marsClass=40;} # for ERA6 parameters with constituentType
-  "hydro_legacy"= {marsClass=35;} # EFAS/GLOFAS
-  "hydro_legacy"= {marsClass=38;} # ULYSSES
-  "hydro"	= {marsClass=42;} # EFAS
-  "hydro"	= {marsClass=43;} # GLOFAS
-  "hydro"	= {marsClass=48;} # C3S European hydrology
-  "hydro"	= {marsClass=49;} # C3S Global hydrology
-  "fire"        = {marsClass=39;} # Global Wildfire awareness system
-  "uerra"       = {productionStatusOfProcessedData=8;} # UERRA
-  "uerra"       = {productionStatusOfProcessedData=9;}
-  "uerra"       = {productionStatusOfProcessedData=10;} # CARRA/CERRA
-  "uerra"       = {productionStatusOfProcessedData=11;}
-  "destine"     = {productionStatusOfProcessedData=12;} # Destination Earth
-  "destine"     = {productionStatusOfProcessedData=13;}
-  "destinegen1" = {productionStatusOfProcessedData=12;generation=1;} # DestinE ClimateDT Generation 1
-  "destinegen1" = {productionStatusOfProcessedData=13;generation=1;}
-  "era"         = {marsClass=22;}
-  "era"         = {marsClass=5;}
-  "era"         = {marsClass=23;}
-  "era"         = {marsClass=14;}
-  "era"         = {marsClass=21;}
-  "era"         = {marsClass=24;}
-  "era"         = {marsClass=3;}
-  "era"         = {marsClass=30;}
-  "era"         = {marsClass=33;}
-  "nextgems"    = {marsClass=53;}
-  "unknown"     = { dummy=1; }
+  "hydro_legacy" = {marsClass=35;} # EFAS/GLOFAS
+  "hydro_legacy" = {marsClass=38;} # ULYSSES
+  "hydro"        = {marsClass=42;} # EFAS
+  "hydro"        = {marsClass=43;} # GLOFAS
+  "hydro"        = {marsClass=48;} # C3S European hydrology
+  "hydro"        = {marsClass=49;} # C3S Global hydrology
+  "fire"         = {marsClass=39;} # Global Wildfire awareness system
+  "uerra"        = {productionStatusOfProcessedData=8;} # UERRA
+  "uerra"        = {productionStatusOfProcessedData=9;}
+  "uerra"        = {productionStatusOfProcessedData=10;} # CARRA/CERRA
+  "uerra"        = {productionStatusOfProcessedData=11;}
+  "destine"      = {productionStatusOfProcessedData=12;} # Destination Earth
+  "destine"      = {productionStatusOfProcessedData=13;}
+  "destinegen1"  = {productionStatusOfProcessedData=12;generation=1;} # DestinE ClimateDT Generation 1
+  "destinegen1"  = {productionStatusOfProcessedData=13;generation=1;}
+  "era"          = {marsClass=22;}
+  "era"          = {marsClass=5;}
+  "era"          = {marsClass=23;}
+  "era"          = {marsClass=14;}
+  "era"          = {marsClass=21;}
+  "era"          = {marsClass=24;}
+  "era"          = {marsClass=3;}
+  "era"          = {marsClass=30;}
+  "era"          = {marsClass=33;}
+  "nextgems"     = {marsClass=53;}
+  "unknown"      = { dummy=1; }
 }
 
 # MTG2Switch logic defined here.
