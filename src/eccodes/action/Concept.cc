@@ -242,11 +242,9 @@ static int concept_condition_expression_true(grib_handle* h, grib_concept_condit
             break;
 
         case GRIB_TYPE_DOUBLE: {
-            double dval;
-            double dres = 0.0;
+            double dval = 0.0, dres = 0.0;
             c->expression->evaluate_double(h, &dres);
-            ok = (grib_get_double(h, c->name, &dval) == GRIB_SUCCESS) &&
-                 (dval == dres);
+            ok = (grib_get_double(h, c->name, &dval) == GRIB_SUCCESS) && (dval == dres);
             if (ok)
                 snprintf(exprVal, 64, "%g", dres);
             break;
@@ -319,7 +317,8 @@ int get_concept_condition_string(grib_handle* h, const char* key, const char* va
 
         concept_value = concept_value->next;
     }
-    if (length == 0)
-        return GRIB_CONCEPT_NO_MATCH;
+
+    if (length == 0) return GRIB_CONCEPT_NO_MATCH;
+
     return GRIB_SUCCESS;
 }

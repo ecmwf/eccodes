@@ -11,6 +11,7 @@
 #include "eccodes.h"
 #include "action/Concept.h"
 #include "step.h"
+#include "ExceptionHandler.h"
 
 #include <iostream>
 
@@ -996,6 +997,7 @@ static void test_expressions()
     ECCODES_ASSERT(eIsInList);
     cname = eIsInList->class_name();
     ECCODES_ASSERT( cname && strlen(cname) > 0 );
+    printf("\n");
 }
 
 static void test_step_units()
@@ -1014,6 +1016,20 @@ static void test_step_units()
 #endif
 }
 
+static int test_stl_exceptions_()
+{
+    throw std::runtime_error("Calm down...just testing");
+    return -1;
+}
+static void test_stl_exceptions()
+{
+    printf("Running %s ...\n", __func__);
+
+    auto result = eccodes::handleExceptions(test_stl_exceptions_);
+    ECCODES_ASSERT(!result);
+    int e = eccodes::getErrorCode(result);
+    ECCODES_ASSERT(e == GRIB_RUNTIME_ERROR);
+}
 
 int main(int argc, char** argv)
 {
@@ -1092,6 +1108,8 @@ int main(int argc, char** argv)
     test_codes_get_features();
     test_filepool();
     test_expressions();
+
+    test_stl_exceptions();
 
     printf("\n\nProgram %s finished\n", argv[0]);
     return 0;

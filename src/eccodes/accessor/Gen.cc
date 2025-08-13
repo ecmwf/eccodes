@@ -114,11 +114,8 @@ long Gen::byte_count()
 
 long Gen::get_native_type()
 {
-    grib_context_log(context_,
-                     GRIB_LOG_ERROR,
-                     "Accessor %s [%s] must implement 'get_native_type'",
-                     name_,
-                     class_name_);
+    grib_context_log(context_, GRIB_LOG_ERROR,
+        "Accessor %s [%s] must implement 'get_native_type'", name_, class_name_);
     return GRIB_TYPE_UNDEFINED;
 }
 
@@ -333,10 +330,7 @@ int Gen::pack_long(const long* v, size_t* len)
     if (is_overridden_[PACK_DOUBLE]) {
         double* val = (double*)grib_context_malloc(c, *len * (sizeof(double)));
         if (!val) {
-            grib_context_log(c,
-                             GRIB_LOG_ERROR,
-                             "Unable to allocate %zu bytes",
-                             *len * (sizeof(double)));
+            grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %zu bytes", *len * (sizeof(double)));
             return GRIB_OUT_OF_MEMORY;
         }
         for (size_t i = 0; i < *len; i++)
@@ -365,7 +359,7 @@ int pack_double_array_as_long(grib_accessor* a, const double* v, size_t* len)
     long* lValues   = (long*)grib_context_malloc(c, numBytes);
     if (!lValues) {
         grib_context_log(
-            c, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", numBytes);
+            c, GRIB_LOG_ERROR, "Unable to allocate %zu bytes", numBytes);
         return GRIB_OUT_OF_MEMORY;
     }
     for (size_t i = 0; i < *len; i++)

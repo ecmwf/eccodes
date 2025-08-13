@@ -17929,7 +17929,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Eastward of wind stress over sea ice
+#Eastward component of wind stress over sea ice
 '262906' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -17941,7 +17941,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Northward of wind stress over sea ice
+#Northward component of wind stress over sea ice
 '262907' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -19148,7 +19148,7 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean eastward of wind stress over sea ice
+#Time-mean eastward component of wind stress over sea ice
 '263906' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -19161,7 +19161,7 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean northward of wind stress over sea ice
+#Time-mean northward component of wind stress over sea ice
 '263907' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;

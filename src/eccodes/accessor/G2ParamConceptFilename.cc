@@ -60,7 +60,7 @@ int G2ParamConceptFilename::unpack_string(char* v, size_t* len)
     if ( MTG2Switch == 0 ) {
         snprintf(v, dsize, "%s.lte%ld.def", basename_, tablesVersionMTG2Switch);
     } else if ( MTG2Switch == 2 ) {
-        snprintf(v, dsize, "%s.chemsplit.def", basename_); 
+        snprintf(v, dsize, "%s.chemsplit.def", basename_);
     } else {
         // All other cases other than pre-MTG2 fall into default parameter files
         snprintf(v, dsize, "%s.def", basename_);

@@ -175,7 +175,6 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_healpix
         grib_g1day_of_the_year_date
         grib_paramid_chemid_split
-        grib_paramtypeConcept
         grib_cmp_paramtype
         grib_timeSpanConcept
         grib_cmp_timeSpan
@@ -184,6 +183,7 @@ if( HAVE_BUILD_TOOLS )
     # These tests require data downloads
     # and/or take much longer
     list(APPEND tests_extra
+        error_codes
         grib_datasetForLocal
         grib_isGridded_isSpectral
         grib_data_quality_checks
@@ -196,6 +196,7 @@ if( HAVE_BUILD_TOOLS )
         grib_bpv_limit
         grib_complex
         grib_double_cmp
+        grib_paramtypeConcept
         grib_element
         grib_change_packing
         grib_complex_spatial_differencing
@@ -306,6 +307,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1907
         grib_ecc-1941
         grib_ecc-1942
+        grib_ecc-1992
         grib_ecc-2005
         grib_ecc-2006
         grib_ecc-2013
@@ -597,10 +599,10 @@ else()
 endif()
 
 
-if( eccodes_HAVE_ECKIT_GEO )
+if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
     foreach( test
             grib_from_gridspec )
-        ecbuild_add_test( TARGET  ${test}
+        ecbuild_add_test( TARGET  eccodes_t_${test}
                           SOURCES ${test}.cc
                           LIBS    eccodes eckit_geo )
     endforeach()

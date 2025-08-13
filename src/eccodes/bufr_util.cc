@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "ExceptionHandler.h"
 
 // Return the rank of the key using list of keys (For BUFR keys)
 // The argument 'keys' is an input as well as output from each call
@@ -59,7 +60,7 @@ int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* ke
     return theRank;
 }
 
-char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin, grib_handle* hout, size_t* nkeys, int* err)
+static char** codes_bufr_copy_data_return_copied_keys_(grib_handle* hin, grib_handle* hout, size_t* nkeys, int* err)
 {
     bufr_keys_iterator* kiter = NULL;
     char** keys               = NULL;
@@ -99,7 +100,14 @@ char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin, grib_handle* ho
     return keys;
 }
 
-int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout)
+// C-API: Ensure all exceptions are converted to error codes
+char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin, grib_handle* hout, size_t* nkeys, int* err)
+{
+    auto result = eccodes::handleExceptions(codes_bufr_copy_data_return_copied_keys_, hin, hout, nkeys, err);
+    return eccodes::updateErrorAndReturnValue(result, err);
+}
+
+static int codes_bufr_copy_data_(grib_handle* hin, grib_handle* hout)
 {
     bufr_keys_iterator* kiter = NULL;
     int err                   = 0;
@@ -131,6 +139,13 @@ int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout)
 
     codes_bufr_keys_iterator_delete(kiter);
     return err;
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout)
+{
+    auto result = eccodes::handleExceptions(codes_bufr_copy_data_, hin, hout);
+    return eccodes::getErrorCode(result);
 }
 
 #define BUFR_SECTION0_LEN 8 // BUFR section 0 is always 8 bytes long
@@ -608,7 +623,7 @@ static int count_bufr_messages(grib_context* c, FILE* f, int* n, int strict_mode
     return err;
 }
 
-int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode)
+static int codes_bufr_extract_headers_malloc_(grib_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode)
 {
     int err = 0, i = 0;
     FILE* fp     = NULL;
@@ -680,6 +695,13 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
 
     fclose(fp);
     return GRIB_SUCCESS;
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode)
+{
+    auto r = eccodes::handleExceptions(codes_bufr_extract_headers_malloc_, c, filename, result, num_messages, strict_mode);
+    return eccodes::getErrorCode(r);
 }
 
 static const char* codes_bufr_header_get_centre_name(long centre_code)
@@ -832,7 +854,7 @@ static char* codes_bufr_header_get_centre_name(long edition, long centre_code)
 }
 #endif
 
-int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* val, size_t* len)
+static int codes_bufr_header_get_string_(codes_bufr_header* bh, const char* key, char* val, size_t* len)
 {
     static const char* NOT_FOUND = "not_found";
     bool isEcmwfLocal            = false;
@@ -1102,8 +1124,15 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
     return GRIB_SUCCESS;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
+int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* val, size_t* len)
+{
+    auto result = eccodes::handleExceptions(codes_bufr_header_get_string_, bh, key, val, len);
+    return eccodes::updateErrorAndReturnValue(result, NULL);
+}
+
 // Returns 1 if the BUFR key is in the header and 0 if it is in the data section
-int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err)
+static int codes_bufr_key_is_header_(const grib_handle* h, const char* key, int* err)
 {
     const grib_accessor* acc = grib_find_accessor(h, key);
     if (!acc) {
@@ -1114,8 +1143,15 @@ int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err)
     return ((acc->flags_ & GRIB_ACCESSOR_FLAG_BUFR_DATA) == 0);
 }
 
+// C-API: Ensure all exceptions are converted to error codes
+int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err)
+{
+    auto result = eccodes::handleExceptions(codes_bufr_key_is_header_, h, key, err);
+    return eccodes::updateErrorAndReturnValue(result, err);
+}
+
 // Returns 1 if the BUFR key is a coordinate descriptor
-int codes_bufr_key_is_coordinate(const grib_handle* h, const char* key, int* err)
+static int codes_bufr_key_is_coordinate_(const grib_handle* h, const char* key, int* err)
 {
     const grib_accessor* acc = grib_find_accessor(h, key);
     if (!acc) {
@@ -1124,6 +1160,13 @@ int codes_bufr_key_is_coordinate(const grib_handle* h, const char* key, int* err
     }
     *err = GRIB_SUCCESS;
     return ((acc->flags_ & GRIB_ACCESSOR_FLAG_BUFR_COORD) != 0);
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+int codes_bufr_key_is_coordinate(const grib_handle* h, const char* key, int* err)
+{
+    auto result = eccodes::handleExceptions(codes_bufr_key_is_coordinate_, h, key, err);
+    return eccodes::updateErrorAndReturnValue(result, err);
 }
 
 int codes_bufr_key_exclude_from_dump(const char* key)

@@ -27,6 +27,7 @@
 #include "Iterator.h"
 #include "grib_iterator_factory.h"
 #include "accessor/Iterator.h"
+#include "ExceptionHandler.h"
 
 namespace eccodes::geo_iterator
 {
@@ -81,24 +82,52 @@ int gribIteratorDelete(eccodes::geo_iterator::Iterator* i)
  * grib_iterator_* declarations are in grib_api.h
  */
 
-int grib_iterator_reset(grib_iterator* i)
+static int grib_iterator_reset_(grib_iterator* i)
 {
     return i->iterator->reset();
 }
 
-int grib_iterator_has_next(grib_iterator* i)
+// C-API: Ensure all exceptions are converted to error codes
+int grib_iterator_reset(grib_iterator* i)
+{
+    auto result = eccodes::handleExceptions(grib_iterator_reset_, i);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_iterator_has_next_(grib_iterator* i)
 {
     return i->iterator->has_next();
 }
 
-int grib_iterator_next(grib_iterator* i, double* lat, double* lon, double* value)
+// C-API: Ensure all exceptions are converted to error codes
+int grib_iterator_has_next(grib_iterator* i)
+{
+    auto result = eccodes::handleExceptions(grib_iterator_has_next_, i);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_iterator_next_(grib_iterator* i, double* lat, double* lon, double* value)
 {
     return i->iterator->next(lat, lon, value);
 }
 
-int grib_iterator_previous(grib_iterator* i, double* lat, double* lon, double* value)
+// C-API: Ensure all exceptions are converted to error codes
+int grib_iterator_next(grib_iterator* i, double* lat, double* lon, double* value)
+{
+    auto result = eccodes::handleExceptions(grib_iterator_next_, i, lat, lon, value);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_iterator_previous_(grib_iterator* i, double* lat, double* lon, double* value)
 {
     return i->iterator->previous(lat, lon, value);
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+int grib_iterator_previous(grib_iterator* i, double* lat, double* lon, double* value)
+{
+    auto result = eccodes::handleExceptions(grib_iterator_previous_, i, lat, lon, value);
+    return eccodes::getErrorCode(result);
 }
 
 int grib_iterator_destroy(grib_context* c, grib_iterator* i)
@@ -109,7 +138,7 @@ int grib_iterator_destroy(grib_context* c, grib_iterator* i)
 }
 
 #if defined(HAVE_GEOGRAPHY)
-grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int* error)
+static grib_iterator* grib_iterator_new_(const grib_handle* ch, unsigned long flags, int* error)
 {
     grib_iterator* i = (grib_iterator*)grib_context_malloc_clear(ch->context, sizeof(grib_iterator));
 
@@ -120,7 +149,14 @@ grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int
 
         try {
             if (i->iterator = new eccodes::geo_iterator::GeoIterator(const_cast<grib_handle*>(ch), flags);
-                i->iterator != nullptr) {
+                i->iterator != nullptr)
+            {
+                *error = i->iterator->init(const_cast<grib_handle*>(ch), nullptr);
+                if (*error) {
+                    grib_context_log(ch->context, GRIB_LOG_ERROR, "Geoiterator: Error instantiating iterator (%s)",
+                             grib_get_error_message(*error));
+                    return nullptr;
+                }
                 return i;
             }
         }
@@ -147,7 +183,14 @@ grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int
     return i;
 }
 
-int grib_iterator_delete(grib_iterator* i)
+// C-API: Ensure all exceptions are converted to error codes
+grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int* error)
+{
+  auto result = eccodes::handleExceptions(grib_iterator_new_, ch, flags, error);
+  return eccodes::updateErrorAndReturnValue(result, error);
+}
+
+static int grib_iterator_delete_(grib_iterator* i)
 {
     if (i) {
         grib_context* c = grib_context_get_default();
@@ -155,6 +198,13 @@ int grib_iterator_delete(grib_iterator* i)
         grib_context_free(c, i);
     }
     return GRIB_SUCCESS;
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+int grib_iterator_delete(grib_iterator* i)
+{
+    auto result = eccodes::handleExceptions(grib_iterator_delete_, i);
+    return eccodes::getErrorCode(result);
 }
 
 #else

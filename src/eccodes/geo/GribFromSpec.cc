@@ -36,6 +36,7 @@
 
 #include "eccodes/geo/EckitMainInit.h"
 
+#include "grib_api_internal.h"
 
 namespace eccodes::geo
 {
@@ -594,15 +595,16 @@ codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const s
     }
 
     try {
-        int flags = 0;
-        int err   = 0;
+        codes_handle* result = const_cast<codes_handle*>(h);
+        int err = grib_set_from_grid_spec(result, &info.grid, &info.packing);
+        if (err) {
+            grib_context_log(h->context, GRIB_LOG_ERROR, "GribFromSpec::set: %s", grib_get_error_message(err));
+            return NULL;
+        }
 
-        // result destroyed on exception handling
-        grib_handle_unique_ptr result(codes_grib_util_set_spec(const_cast<codes_handle*>(h), &info.grid, &info.packing, flags, nullptr, 0, &err));
-        CHECK_CALL(err);  // err == CODES_WRONG_GRID
+        //grib_handle_unique_ptr result(codes_grib_util_set_spec(const_cast<codes_handle*>(h), &info.grid, &info.packing, flags, nullptr, 0, &err));
 
-        // return new handle
-        return result.release();
+        return result;
     }
     catch (...) {
         throw;

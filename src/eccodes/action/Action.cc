@@ -9,6 +9,7 @@
  */
 
 #include "Action.h"
+#include "ExceptionHandler.h"
 
 // int grib_create_accessor(grib_section* p, grib_action* a, grib_loader* h)
 // {
@@ -28,7 +29,7 @@ void grib_dump_action_branch(FILE* out, grib_action* a, int decay)
     }
 }
 
-void grib_dump_action_tree(grib_context* ctx, FILE* out)
+static void grib_dump_action_tree_(grib_context* ctx, FILE* out)
 {
     ECCODES_ASSERT(ctx);
     ECCODES_ASSERT(ctx->grib_reader);
@@ -55,4 +56,11 @@ void grib_dump_action_tree(grib_context* ctx, FILE* out)
             a = na;
         }
     }
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+void grib_dump_action_tree(grib_context* ctx, FILE* f)
+{
+    auto result = eccodes::handleExceptions(grib_dump_action_tree_, ctx, f);
+    return eccodes::logErrorAndReturnValue(result);
 }

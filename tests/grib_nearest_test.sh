@@ -150,5 +150,16 @@ ${tools_dir}/grib_ls -l 11.91,366.3,1 $input_grb > $temp
 grep -q "Grid Point chosen #1 index=43089 " $temp
 
 
+# Radius missing
+sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -s shapeOfTheEarth=1 $sample2 $tempGrib
+set +e
+${tools_dir}/grib_get -l0,0 $tempGrib > $temp 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Key 'radius' is missing" $temp
+
+
 # Clean up
 rm -f $temp $tempRef $tempGrib

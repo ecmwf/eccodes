@@ -39,13 +39,10 @@ unsigned char unused(char c)
 
 static int next(FILE* f, char* buf)
 {
-    int c;
-    int i = 0;
+    int c = 0, i = 0;
     while ((c = fgetc(f)) != EOF) {
         if (c == ' ' || c == '\n') {
-            if (i) {
-                break;
-            }
+            if (i) break;
             i++;
         }
         else {

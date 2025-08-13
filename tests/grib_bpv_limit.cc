@@ -19,9 +19,7 @@ static double compare_double_absolute(double a, double b, double tolerance)
 {
     double ret = 0;
     double d   = fabs(a - b);
-    if (d > tolerance) {
-        ret = d;
-    }
+    if (d > tolerance) ret = d;
     return ret;
 }
 
