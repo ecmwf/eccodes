@@ -21,6 +21,11 @@ tempFilt=temp.$label.filt
 tempLog=temp.$label.log
 tempDir=temp.$label.dir
 
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 # Use a temporary directory
@@ -44,7 +49,7 @@ cat > $tempFilt << EOF
     set discipline = 0;
     set parameterCategory = 0;
     set parameterNumber = 0;
-    set numberOfTimeRange = 3;
+    set numberOfTimeRanges = 3;
     set typeOfStatisticalProcessing={3,1,4};
     write;
 EOF
