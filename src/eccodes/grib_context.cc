@@ -81,8 +81,7 @@ static void default_long_lasting_free(const grib_context* c, void* p)
 
 static void* default_long_lasting_malloc(const grib_context* c, size_t size)
 {
-    void* ret;
-    ret = malloc(size);
+    void* ret = malloc(size);
     if (!ret) {
         grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
     }
@@ -96,8 +95,7 @@ static void default_buffer_free(const grib_context* c, void* p)
 
 static void* default_buffer_malloc(const grib_context* c, size_t size)
 {
-    void* ret;
-    ret = malloc(size);
+    void* ret = malloc(size);
     if (!ret) {
         grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
     }
@@ -106,8 +104,7 @@ static void* default_buffer_malloc(const grib_context* c, size_t size)
 
 static void* default_buffer_realloc(const grib_context* c, void* p, size_t size)
 {
-    void* ret;
-    ret = realloc(p, size);
+    void* ret = realloc(p, size);
     if (!ret) {
         grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
     }
@@ -121,8 +118,7 @@ static void default_free(const grib_context* c, void* p)
 
 static void* default_malloc(const grib_context* c, size_t size)
 {
-    void* ret;
-    ret = malloc(size);
+    void* ret = malloc(size);
     if (!ret) {
         grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
     }
@@ -131,8 +127,7 @@ static void* default_malloc(const grib_context* c, size_t size)
 
 static void* default_realloc(const grib_context* c, void* p, size_t size)
 {
-    void* ret;
-    ret = realloc(p, size);
+    void* ret = realloc(p, size);
     if (!ret) {
         grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
     }
@@ -167,22 +162,19 @@ static size_t default_write(const grib_context* c, const void* ptr, size_t size,
 
 size_t grib_context_read(const grib_context* c, void* ptr, size_t size, void* stream)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     return c->read(c, ptr, size, stream);
 }
 
 off_t grib_context_tell(const grib_context* c, void* stream)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     return c->tell(c, stream);
 }
 
 int grib_context_seek(const grib_context* c, off_t offset, int whence, void* stream)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     return c->seek(c, offset, whence, stream);
 }
 
@@ -202,8 +194,7 @@ int grib_context_seek(const grib_context* c, off_t offset, int whence, void* str
 
 static void default_log(const grib_context* c, int level, const char* mess)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     if (level == GRIB_LOG_ERROR) {
         fprintf(c->log_stream, "ECCODES ERROR   :  %s\n", mess);
         /*ECCODES_ASSERT(1==0);*/
@@ -680,8 +671,7 @@ static int init_definition_files_dir(grib_context* c)
     char* lasts            = NULL;
     grib_string_list* next = NULL;
 
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
 
     if (c->grib_definition_files_dir)
         return 0;
@@ -734,8 +724,7 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
     char full[1024] = {0,};
     grib_string_list* dir      = NULL;
     grib_string_list* fullpath = 0;
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
 
     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
 
@@ -791,31 +780,27 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
 // C-API: Ensure all exceptions are converted to error codes
 char* grib_samples_path(const grib_context* c)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     return c->grib_samples_path;
 }
 
 // C-API: Ensure all exceptions are converted to error codes
 char* grib_definition_path(const grib_context* c)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     return c->grib_definition_files_path;
 }
 
 void grib_context_free(const grib_context* c, void* p)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     if (p)
         c->free_mem(c, p);
 }
 
 void grib_context_free_persistent(const grib_context* c, void* p)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     if (p)
         c->free_persistent_mem(c, p);
 }
@@ -823,8 +808,7 @@ void grib_context_free_persistent(const grib_context* c, void* p)
 void grib_context_reset(grib_context* c)
 {
     size_t i = 0;
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
 
     if (c->grib_reader) {
         grib_action_file* fr = c->grib_reader->first;
@@ -887,8 +871,7 @@ void grib_context_reset(grib_context* c)
 
 static void grib_context_delete_(grib_context* c)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
 
     grib_hash_keys_delete(c->keys);
     /* grib_trie_delete(c->def_files);  TODO:masn */
@@ -919,16 +902,14 @@ void grib_context_delete(grib_context* c)
 // C-API: Ensure all exceptions are converted to error codes
 void codes_bufr_multi_element_constant_arrays_on(grib_context* c)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     c->bufr_multi_element_constant_arrays = 1;
 }
 
 // C-API: Ensure all exceptions are converted to error codes
 void codes_bufr_multi_element_constant_arrays_off(grib_context* c)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     c->bufr_multi_element_constant_arrays = 0;
 }
 
@@ -936,8 +917,7 @@ void codes_bufr_multi_element_constant_arrays_off(grib_context* c)
 
 static void grib_context_set_definitions_path_(grib_context* c, const char* path)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
 
@@ -956,8 +936,7 @@ void grib_context_set_definitions_path(grib_context* c, const char* path)
 
 static void grib_context_set_samples_path_(grib_context* c, const char* path)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
 
@@ -1002,8 +981,7 @@ void* grib_context_malloc_clear_persistent(const grib_context* c, size_t size)
 void* grib_context_malloc(const grib_context* c, size_t size)
 {
     void* p = NULL;
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     if (size == 0)
         return p;
     else
@@ -1017,8 +995,7 @@ void* grib_context_malloc(const grib_context* c, size_t size)
 void* grib_context_realloc(const grib_context* c, void* p, size_t size)
 {
     void* q;
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     q = c->realloc_mem(c, p, size);
     if (!q) {
         grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
@@ -1049,8 +1026,7 @@ void* grib_context_malloc_clear(const grib_context* c, size_t size)
 void* grib_context_buffer_malloc(const grib_context* c, size_t size)
 {
     void* p = NULL;
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     if (size == 0)
         return p;
     else
@@ -1064,8 +1040,7 @@ void* grib_context_buffer_malloc(const grib_context* c, size_t size)
 
 void grib_context_buffer_free(const grib_context* c, void* p)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     if (p)
         c->free_buffer_mem(c, p);
 }
@@ -1148,8 +1123,7 @@ void grib_context_print(const grib_context* c, void* descriptor, const char* fmt
 int grib_context_get_handle_file_count(grib_context* c)
 {
     int r = 0;
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
     r = c->handle_file_count;
@@ -1159,8 +1133,7 @@ int grib_context_get_handle_file_count(grib_context* c)
 int grib_context_get_handle_total_count(grib_context* c)
 {
     int r = 0;
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
     r = c->handle_total_count;
@@ -1170,8 +1143,7 @@ int grib_context_get_handle_total_count(grib_context* c)
 
 void grib_context_set_handle_file_count(grib_context* c, int new_count)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
     c->handle_file_count = new_count;
@@ -1179,8 +1151,7 @@ void grib_context_set_handle_file_count(grib_context* c, int new_count)
 }
 void grib_context_set_handle_total_count(grib_context* c, int new_count)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
     c->handle_total_count = new_count;
@@ -1189,8 +1160,7 @@ void grib_context_set_handle_total_count(grib_context* c, int new_count)
 
 void grib_context_increment_handle_file_count(grib_context* c)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
     c->handle_file_count++;
@@ -1198,8 +1168,7 @@ void grib_context_increment_handle_file_count(grib_context* c)
 }
 void grib_context_increment_handle_total_count(grib_context* c)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
     c->handle_total_count++;
@@ -1209,11 +1178,10 @@ void grib_context_increment_handle_total_count(grib_context* c)
 bufr_descriptors_array* grib_context_expanded_descriptors_list_get(grib_context* c, const char* key, long* u, size_t size)
 {
     bufr_descriptors_map_list* expandedUnexpandedMapList;
-    size_t i                       = 0;
-    int found                      = 0;
+    size_t i  = 0;
+    int found = 0;
     bufr_descriptors_array* result = NULL;
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
 
     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
@@ -1252,8 +1220,7 @@ void grib_context_expanded_descriptors_list_push(grib_context* c,
     bufr_descriptors_map_list* descriptorsList    = NULL;
     bufr_descriptors_map_list* next               = NULL;
     bufr_descriptors_map_list* newdescriptorsList = NULL;
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
 
     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
     GRIB_MUTEX_LOCK(&mutex_c);
@@ -1304,55 +1271,48 @@ void codes_assertion_failed(const char* message, const char* file, int line)
 // C-API: Ensure all exceptions are converted to error codes
 int grib_get_gribex_mode(const grib_context* c)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     return c->gribex_mode_on;
 }
 
 // C-API: Ensure all exceptions are converted to error codes
 void grib_gribex_mode_on(grib_context* c)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     c->gribex_mode_on = 1;
 }
 
 // C-API: Ensure all exceptions are converted to error codes
 void grib_gribex_mode_off(grib_context* c)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     c->gribex_mode_on = 0;
 }
 
 // C-API: Ensure all exceptions are converted to error codes
 void grib_gts_header_on(grib_context* c)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     c->gts_header_on = 1;
 }
 
 // C-API: Ensure all exceptions are converted to error codes
 void grib_gts_header_off(grib_context* c)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     c->gts_header_on = 0;
 }
 
 // C-API: Ensure all exceptions are converted to error codes
 void grib_multi_support_on(grib_context* c)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     c->multi_support_on = 1;
 }
 
 // C-API: Ensure all exceptions are converted to error codes
 void grib_multi_support_off(grib_context* c)
 {
-    if (!c)
-        c = grib_context_get_default();
+    if (!c) c = grib_context_get_default();
     c->multi_support_on = 0;
 }

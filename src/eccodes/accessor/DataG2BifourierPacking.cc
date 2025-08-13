@@ -333,7 +333,7 @@ static void free_bif_trunc(bif_trunc_t* bt, grib_accessor* a)
 
 bif_trunc_t* DataG2BifourierPacking::new_bif_trunc()
 {
-    int ret;
+    int ret = GRIB_SUCCESS;
 
     grib_handle* gh = get_enclosing_handle();
     bif_trunc_t* bt = (bif_trunc_t*)grib_context_malloc(gh->context, sizeof(bif_trunc_t));

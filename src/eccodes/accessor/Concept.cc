@@ -309,7 +309,7 @@ static int cmpstringp(const void* p1, const void* p2)
 {
     // The actual arguments to this function are "pointers to
     // pointers to char", but strcmp(3) arguments are "pointers
-    // to char", hence the following cast plus dereference */
+    // to char", hence the following cast plus dereference
     return strcmp(*(char* const*)p1, *(char* const*)p2);
 }
 

@@ -25,8 +25,7 @@ int LogicalOr::evaluate_long(grib_handle* h, long* lres) const
     long v2    = 0;
     double dv1 = 0;
     double dv2 = 0;
-    int ret;
-
+    int ret    = 0;
 
     switch (left_->native_type(h)) {
         case GRIB_TYPE_LONG:
