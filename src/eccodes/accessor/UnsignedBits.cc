@@ -20,9 +20,8 @@ long UnsignedBits::compute_byte_count()
 {
     long numberOfBits;
     long numberOfElements;
-    int ret = 0;
 
-    ret = grib_get_long(get_enclosing_handle(), numberOfBits_, &numberOfBits);
+    int ret = grib_get_long(get_enclosing_handle(), numberOfBits_, &numberOfBits);
     if (ret) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s unable to get %s to compute size", name_, numberOfBits_);
@@ -50,12 +49,11 @@ void UnsignedBits::init(const long len, grib_arguments* args)
 
 int UnsignedBits::unpack_long(long* val, size_t* len)
 {
-    int ret           = 0;
     long pos          = offset_ * 8;
     long rlen         = 0;
     long numberOfBits = 0;
 
-    ret = value_count(&rlen);
+    int ret = value_count(&rlen);
     if (ret)
         return ret;
 

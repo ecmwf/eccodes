@@ -50,10 +50,9 @@ int DataApplyBoustrophedonic::unpack(T* val, size_t* len)
     T* pval                                          = 0;
     size_t valuesSize                                = 0;
     long i, j;
-    int ret;
     long numberOfPoints, numberOfRows, numberOfColumns;
 
-    ret = grib_get_long_internal(get_enclosing_handle(), numberOfPoints_, &numberOfPoints);
+    int ret = grib_get_long_internal(get_enclosing_handle(), numberOfPoints_, &numberOfPoints);
     if (ret)
         return ret;
 
