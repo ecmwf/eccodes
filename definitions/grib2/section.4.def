@@ -49,7 +49,6 @@ concept datasetForLocal(unknown) {
   "era"         = {marsClass=30;}
   "era"         = {marsClass=33;}
   "nextgems"    = {marsClass=53;}
-  "unknown"     = { dummy=1; }
 }
 
 # MTG2Switch logic defined here.
