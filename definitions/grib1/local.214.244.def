@@ -2,18 +2,8 @@
 
 #
 # # SREPS Short-Range EPS information
-#
 # Last update: 20070223
-#
 # Compatibility with MARS
-#
-#localDefinitionNumber
-#Class
-#Type
-#Stream
-#experimentVersionNumber
-#Number
-#Total
 #
 #************_EXPERIMENT_************
 #Experiment_Identifier_1

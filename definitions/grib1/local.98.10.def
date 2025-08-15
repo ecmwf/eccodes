@@ -21,23 +21,23 @@ signed[3] westLongitudeOfDomainOfTubing  : dump;
 
 signed[3] southLatitudeOfDomainOfTubing  : dump;
 
-signed[3] eastLongitudeOfDomainOfTubing  : dump;
+signed[3] eastLongitudeOfDomainOfTubing : dump;
 
-unsigned[1] numberOfOperationalForecastTube  : dump;
+unsigned[1] numberOfOperationalForecastTube : dump;
 
-unsigned[1] numberOfControlForecastTube  : dump;
+unsigned[1] numberOfControlForecastTube : dump;
 
-unsigned[2] heightOrPressureOfLevel  : dump;
+unsigned[2] heightOrPressureOfLevel : dump;
 
-unsigned[2] referenceStep  : dump;
+unsigned[2] referenceStep : dump;
 
-unsigned[2] radiusOfCentralCluster  : dump;
+unsigned[2] radiusOfCentralCluster : dump;
 
-unsigned[2] ensembleStandardDeviation  : dump;
+unsigned[2] ensembleStandardDeviation : dump;
 
-unsigned[2] distanceFromTubeToEnsembleMean  : dump;
+unsigned[2] distanceFromTubeToEnsembleMean : dump;
 
-unsigned[1] numberOfForecastsInTube  : dump;
+unsigned[1] numberOfForecastsInTube: dump;
 
 unsigned[1] ensembleForecastNumbers[numberOfForecastsInTube] : dump;
 
