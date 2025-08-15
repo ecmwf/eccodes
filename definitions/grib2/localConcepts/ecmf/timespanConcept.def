@@ -1,6 +1,5 @@
 ## Statistical window concept for ECMWF
 # either instantaneous data or processing is specified by mars stream
-'unknown'          = {dummy=0;}
 # this is for one loop grib2 data
 'none'  = {stream=1092; numberOfTimeRanges=1;}
 'none'  = {stream=1043; numberOfTimeRanges=1;}
