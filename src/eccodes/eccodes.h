@@ -429,6 +429,9 @@ codes_handle* codes_grib_util_sections_copy(codes_handle* hfrom, codes_handle* h
  */
 codes_handle* codes_handle_new_from_message(codes_context* c, const void* data, size_t data_len);
 
+/* GRIB-specific version of the above. Will skip any padding at the beginning of the data */
+codes_handle* codes_grib_handle_new_from_message(codes_context* c, const void* data, size_t data_len);
+
 /**
  *  Create a handle from a user message in memory. The message will not be freed at the end.
  *  The message will be copied as soon as a modification is needed.
@@ -452,6 +455,9 @@ codes_handle* codes_grib_handle_new_from_multi_message(codes_context* c, void** 
  * @return            the new handle, NULL if the message is invalid or a problem is encountered
  */
 codes_handle* codes_handle_new_from_message_copy(codes_context* c, const void* data, size_t data_len);
+
+/* GRIB-specific version of the above. Will skip any padding at the beginning of the data */
+codes_handle* codes_grib_handle_new_from_message_copy(grib_context* c, const void* data, size_t size);
 
 
 /**

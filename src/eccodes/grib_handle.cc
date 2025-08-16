@@ -662,6 +662,79 @@ grib_handle* grib_handle_new_from_message(grib_context* c, const void* data, siz
     return eccodes::logErrorAndReturnValue(result);
 }
 
+// GRIB-specific version of handle_new_from_message. Will skip any padding at the beginning of the data
+grib_handle* codes_grib_handle_new_from_message_(grib_context* c, const void* data, size_t buflen)
+{
+    if (!c) c = grib_context_get_default();
+    grib_handle* gl = grib_new_handle(c);
+
+    // Scan to find the first 'GRIB' marker
+    const unsigned char* pData = (const unsigned char*)data;
+    size_t i = 0;
+    while (pData && i < buflen - 4) {
+        if (pData[i] == 'G' && pData[i+1] == 'R' && pData[i+2] == 'I' && pData[i+3] == 'B') {
+            pData += i;  // Found. Advance the data pointer
+            break;
+        }
+        else {
+            i++;
+        }
+    }
+    grib_context_log(c, GRIB_LOG_DEBUG, "%s: GRIB marker found at bytes offset %zu", __func__, i);
+    grib_handle* h  = grib_handle_create(gl, c, pData, buflen);
+    if (!h) return NULL;
+
+    ProductKind product_kind = PRODUCT_ANY;
+    if (determine_product_kind(h, &product_kind) == GRIB_SUCCESS && product_kind != PRODUCT_GRIB) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Message is not GRIB!", __func__);
+        return NULL;
+    }
+
+    if (!grib_is_defined(h, "7777")) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: No final 7777 in message!", __func__);
+        return NULL;
+    }
+
+    h->product_kind = PRODUCT_GRIB;
+    return h;
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+grib_handle* codes_grib_handle_new_from_message(grib_context* c, const void* data, size_t buflen)
+{
+    auto result = eccodes::handleExceptions(codes_grib_handle_new_from_message_, c, data, buflen);
+    return eccodes::logErrorAndReturnValue(result);
+}
+
+static grib_handle* codes_grib_handle_new_from_message_copy_(grib_context* c, const void* data, size_t size)
+{
+    grib_handle* g = NULL;
+    void* copy     = NULL;
+    if (c == NULL)
+        c = grib_context_get_default();
+
+    grib_context_set_handle_file_count(c, 0);
+    grib_context_set_handle_total_count(c, 0);
+    copy = grib_context_malloc(c, size);
+    if (!copy) {
+        return NULL;
+    }
+
+    memcpy(copy, data, size);
+
+    g = codes_grib_handle_new_from_message(c, copy, size);
+    g->buffer->property = CODES_MY_BUFFER;
+
+    return g;
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+grib_handle* codes_grib_handle_new_from_message_copy(grib_context* c, const void* data, size_t size)
+{
+    auto result = eccodes::handleExceptions(codes_grib_handle_new_from_message_copy_, c, data, size);
+    return eccodes::logErrorAndReturnValue(result);
+}
+
 static grib_handle* grib_handle_new_from_multi_message_(grib_context* c, void** data,
                                                 size_t* buflen, int* error)
 {

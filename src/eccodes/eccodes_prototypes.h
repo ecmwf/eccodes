@@ -371,6 +371,10 @@ grib_handle* grib_handle_new_from_message_copy(grib_context* c, const void* data
 grib_handle* grib_handle_new_from_partial_message_copy(grib_context* c, const void* data, size_t size);
 grib_handle* grib_handle_new_from_partial_message(grib_context* c, const void* data, size_t buflen);
 grib_handle* grib_handle_new_from_message(grib_context* c, const void* data, size_t buflen);
+
+grib_handle* codes_grib_handle_new_from_message(grib_context* c, const void* data, size_t data_len);
+grib_handle* codes_grib_handle_new_from_message_copy(grib_context* c, const void* data, size_t size);
+
 grib_handle* grib_handle_new_from_multi_message(grib_context* c, void** data, size_t* buflen, int* error);
 grib_handle* grib_handle_new_from_file(grib_context* c, FILE* f, int* error);
 grib_handle* grib_new_from_file(grib_context* c, FILE* f, int headers_only, int* error);

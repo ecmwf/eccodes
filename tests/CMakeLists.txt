@@ -42,6 +42,7 @@ list(APPEND test_c_bins
     grib_set_force
     grib_run_length_packing
     grib_partial_message
+    grib_from_message_skip
     grib_ecc-1467
     grib_ecc-1431
     grib_ecc-1433
@@ -209,6 +210,7 @@ if( HAVE_BUILD_TOOLS )
         grib_unpack_subarray
         grib_count
         grib_clone_headers_only
+        grib_from_message_skip
         filter_dump_content
         wmo_read_bufr_from_file
         wmo_read_gts_from_file
