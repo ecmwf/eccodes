@@ -65,7 +65,7 @@ int main(int argc, char** argv)
     codes_grib_multi_support_on(NULL);
 
     for (i = 1; i < COUNT; ++i) {
-        printf("Pass %d: \n", i);
+        printf("Pass %d:\n", i);
         fseeko(fp, 0, SEEK_SET);
         read_data(fp, NUM_FIELDS);
 
