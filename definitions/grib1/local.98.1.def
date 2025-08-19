@@ -5,7 +5,7 @@ constant GRIBEXSection1Problem = 52 - section1Length ;
 
 template mars_labeling "grib1/mars_labeling.def";
 
-unsigned[1] perturbationNumber           : dump;
+unsigned[1] perturbationNumber : dump;
 alias number = perturbationNumber;
 
 unsigned[1] numberOfForecastsInEnsemble  : dump;
