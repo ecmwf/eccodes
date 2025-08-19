@@ -1821,6 +1821,8 @@ void grib_multi_support_reset_file(grib_context* c, FILE* f)
             gm->file = NULL;
             if (gm->message)
                 grib_context_free(c, gm->message);
+            if (gm->bitmap_section)
+                grib_context_free(c, gm->bitmap_section);
             grib_multi_support* old_gm = gm;
             gm = gm->next;
             if (prev) {
