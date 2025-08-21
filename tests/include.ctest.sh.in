@@ -1,5 +1,4 @@
 set -ea
-set -o posix
 
 . ./utils.sh
 
