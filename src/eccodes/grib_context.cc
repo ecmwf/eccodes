@@ -285,9 +285,7 @@ void grib_print_api_version(FILE* out)
             ECCODES_MINOR_VERSION,
             ECCODES_REVISION_VERSION);
 
-    if (ECCODES_MAJOR_VERSION < 1) {
-        fprintf(out, "%s", " PRE-RELEASE");
-    }
+    //fprintf(out, "%s", " PRE-RELEASE");
 }
 
 // C-API: Ensure all exceptions are converted to error codes
