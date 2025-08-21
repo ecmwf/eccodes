@@ -15,7 +15,6 @@
 # ---------------------------------------------------------
 label="grib_data_quality_test"
 tempOut=temp.1.${label}.out
-temp2=temp.2.${label}.out
 tempErr=temp.${label}.err
 tempGrib1=temp.${label}.grib1
 tempGrib2=temp.${label}.grib2
