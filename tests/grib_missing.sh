@@ -10,8 +10,6 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
-
 label="grib_missing_test"
 
 infile="${data_dir}/missing.grib2"

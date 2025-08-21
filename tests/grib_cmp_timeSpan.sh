@@ -10,8 +10,6 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
-
 label="grib_cmp_timespan_test"
 tempGrib=temp.$label.grib
 tempFilt=temp.$label.filt

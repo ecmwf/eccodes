@@ -11,7 +11,7 @@
 . ./include.ctest.sh
 
 label="grib_padding_test"
-REDIRECT=/dev/null
+
 tempGrib=temp.local.$label.grib1
 tempFilt=temp.local.$label.filt
 

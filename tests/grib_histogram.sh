@@ -11,7 +11,6 @@
 . ./include.ctest.sh
 
 label="grib_histogram_test"
-REDIRECT=/dev/null
 tempOut=temp.$label.txt
 
 ${tools_dir}/grib_histogram $ECCODES_SAMPLES_PATH/GRIB1.tmpl > $tempOut

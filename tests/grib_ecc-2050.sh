@@ -15,8 +15,6 @@
 # GRIB: Modifying section 2 unexpectedly alters section 4 PDT
 # ---------------------------------------------------------
 
-REDIRECT=/dev/null
-
 label="grib_ecc-2050_test"
 tempGribA=temp.$label.A.grib
 tempGribB=temp.$label.B.grib

@@ -10,7 +10,6 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
 
 label="grib_datasetForLocal_test"
 tempGrib=temp.$label.grib
