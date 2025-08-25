@@ -407,19 +407,19 @@ static void _push_multi_handle(grib_multi_handle *h,int *gid)
 
 static void push_handle(grib_handle *h,int *gid)
 {
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> handle_mutex;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock{handle_mutex};
     _push_handle(h,gid);
 }
 
 static void push_index(grib_index *h,int *gid)
 {
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> index_mutex;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock{index_mutex};
     _push_index(h,gid);
 }
 
 static void push_multi_handle(grib_multi_handle *h,int *gid)
 {
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> multi_handle_mutex;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock{multi_handle_mutex};
     _push_multi_handle(h,gid);
 }
 
@@ -465,7 +465,7 @@ static int _push_keys_iterator(grib_keys_iterator *i)
 
 static int push_keys_iterator(grib_keys_iterator *i)
 {
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> keys_iterator_mutex;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock{keys_iterator_mutex};
     return _push_keys_iterator(i);
 }
 
@@ -511,7 +511,7 @@ static int _push_bufr_keys_iterator(bufr_keys_iterator *i)
 }
 static int push_bufr_keys_iterator(bufr_keys_iterator *i)
 {
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> keys_iterator_mutex;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock{keys_iterator_mutex};
     return _push_bufr_keys_iterator(i);
 }
 
@@ -551,7 +551,7 @@ static grib_multi_handle* _get_multi_handle(int multi_handle_id)
 
 static grib_handle* get_handle(int handle_id)
 {
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> handle_mutex;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock{handle_mutex};
     return _get_handle(handle_id);
 }
 
@@ -564,14 +564,14 @@ grib_handle* f_handle_id2c_handle(int handle_id){
 
 static grib_index* get_index(int index_id)
 {
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> index_mutex;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock{index_mutex};
     return _get_index(index_id);
 }
 
 static grib_multi_handle* get_multi_handle(int multi_handle_id)
 {
     grib_multi_handle* h=NULL;
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> multi_handle_mutex;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock{multi_handle_mutex};
     return _get_multi_handle(multi_handle_id);
 }
 
@@ -600,7 +600,7 @@ static grib_keys_iterator* _get_keys_iterator(int keys_iterator_id)
 }
 static grib_keys_iterator* get_keys_iterator(int keys_iterator_id)
 {
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> keys_iterator_mutex;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock{keys_iterator_mutex};
     return _get_keys_iterator(keys_iterator_id);
 }
 
@@ -617,7 +617,7 @@ static bufr_keys_iterator* _get_bufr_keys_iterator(int keys_iterator_id)
 }
 static bufr_keys_iterator* get_bufr_keys_iterator(int keys_iterator_id)
 {
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> keys_iterator_mutex;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock{keys_iterator_mutex};
     return _get_bufr_keys_iterator(keys_iterator_id);
 }
 
@@ -698,20 +698,20 @@ static int _clear_multi_handle(int multi_handle_id)
 
 static int clear_handle(int handle_id)
 {
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> handle_mutex;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock{handle_mutex};
     return _clear_handle(handle_id);
 }
 
 static int clear_index(int index_id)
 {
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> index_mutex;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock{index_mutex};
     return _clear_index(index_id);
 }
 
 #if 0
 static int clear_multi_handle(int multi_handle_id)
 {
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> multi_handle_mutex;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock{multi_handle_mutex};
     return _clear_multi_handle(multi_handle_id);
 }
 #endif
@@ -731,7 +731,7 @@ static int _clear_keys_iterator(int keys_iterator_id)
 }
 static int clear_keys_iterator(int keys_iterator_id)
 {
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> keys_iterator_mutex;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock{keys_iterator_mutex};
     return _clear_keys_iterator(keys_iterator_id);
 }
 
@@ -751,7 +751,7 @@ static int _clear_bufr_keys_iterator(int keys_iterator_id)
 }
 static int clear_bufr_keys_iterator(int keys_iterator_id)
 {
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> keys_iterator_mutex;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock{keys_iterator_mutex};
     return _clear_bufr_keys_iterator(keys_iterator_id);
 }
 
@@ -908,7 +908,7 @@ void grib_f_write_on_fail(int* gid)
         pid_t pid=getpid();
 
         {
-            eccodes::sync::LockGuard<eccodes::sync::Mutex> handle_mutex;
+            eccodes::sync::LockGuard<eccodes::sync::Mutex> lock{handle_mutex};
             file_count++;
         }
 
@@ -977,7 +977,7 @@ static int _push_iterator(grib_iterator *i)
 }
 static int push_iterator(grib_iterator *i)
 {
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> iterator_mutex;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock{iterator_mutex};
     return _push_iterator(i);
 }
 static grib_iterator* _get_iterator(int iterator_id)
@@ -992,7 +992,7 @@ static grib_iterator* _get_iterator(int iterator_id)
 }
 static grib_iterator* get_iterator(int iterator_id)
 {
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> iterator_mutex;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock{iterator_mutex};
     return _get_iterator(iterator_id);
 }
 static int _clear_iterator(int iterator_id)
@@ -1010,7 +1010,7 @@ static int _clear_iterator(int iterator_id)
 }
 static int clear_iterator(int iterator_id)
 {
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> iterator_mutex;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock{iterator_mutex};
     return _clear_iterator(iterator_id);
 }
 static int _grib_f_iterator_new_(int* gid,int* iterid,int* mode) {
@@ -1068,7 +1068,7 @@ static int _grib_f_keys_iterator_new_(int* gid,int* iterid,char* name_space,int 
 int grib_f_keys_iterator_new_(int* gid,int* iterid,char* name_space,int len)
 {
     eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(keys_iterator_mutex);
-    ret=_grib_f_keys_iterator_new_(gid,iterid,name_space,len);
+    return _grib_f_keys_iterator_new_(gid,iterid,name_space,len);
 }
 
 /*****************************************************************************/
@@ -1449,11 +1449,9 @@ int any_f_new_from_scanned_file_(int* fid, int* msgid, int* gid)
     msg = (l_message_info*)grib_oarray_get(info_messages, n);
 
     if (msg && f) {
-        GRIB_MUTEX_INIT_ONCE(&once, &init);
-        eccodes::sync::LockGuard<eccodes::sync::Mutex> read_mutex;
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock{read_mutex};
         fseeko(f, msg->offset, SEEK_SET);
         h = any_new_from_file (c, f, &err);
-        GRIB_MUTEX_UNLOCK(&read_mutex);
     }
     if (err) return err;
 
