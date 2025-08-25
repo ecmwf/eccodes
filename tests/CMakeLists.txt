@@ -499,7 +499,7 @@ if( HAVE_BUILD_TOOLS )
                       TEST_DEPENDS eccodes_download_bufrs eccodes_download_bufr_refs )
 
 
-    if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
+    if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS OR HAVE_ECCODES_OMP_THREADS )
         ecbuild_add_executable( TARGET    grib_encode_pthreads
                                 NOINSTALL
                                 SOURCES   grib_encode_pthreads.cc

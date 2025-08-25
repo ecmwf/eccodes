@@ -712,7 +712,6 @@ int strcmp_nocase(const char* s1, const char* s2);
 void string_rtrim(char* s);
 void string_lrtrim(char** x, int do_left, int do_right);
 const char* extract_filename(const char* filepath);
-List string_split(const std::string& inputString, const std::string& delimiter);
 int string_to_long(const char* input, long* output, int strict);
 int string_ends_with(const char* str1, const char* str2);
 int string_count_char(const char* str, char c);

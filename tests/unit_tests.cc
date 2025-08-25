@@ -10,6 +10,7 @@
 
 #include "eccodes.h"
 #include "action/Concept.h"
+#include "string_util.h"
 #include "step.h"
 
 #include <iostream>

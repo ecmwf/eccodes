@@ -9,36 +9,12 @@
  */
 
 #include "BufrElementsTable.h"
+#include "string_util.h"
+#include "sync/Mutex.h"
 #include "grib_scaling.h"
 #include <fstream>
 
-#if GRIB_PTHREADS
-static pthread_once_t once    = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
-
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex1, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex1;
-
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_BufrElementsable_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex1);
-            once = 1;
-        }
-    }
-}
-#endif
+static eccodes::sync::Mutex mutex;
 
 int bufr_descriptor_is_marker(bufr_descriptor* d)
 {
@@ -97,78 +73,56 @@ std::shared_ptr<Dict> BufrElementsTable::load_bufr_elements_table(int* err)
     if (localDir_ != NULL)
         grib_get_string(h, localDir_, localDir, &len);
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex1);
+    {
+      eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
-    if (*masterDir != 0) {
-        char name[4096] = {0,};
-        snprintf(name, 4096, "%s/%s", masterDir, dictionary_);
-        grib_recompose_name(h, NULL, name, masterRecomposed, 0);
-        filename = grib_context_full_defs_path(c, masterRecomposed);
-    }
-    else {
-        filename = grib_context_full_defs_path(c, dictionary_);
-    }
-
-    if (*localDir != 0) {
-        char localName[2048] = {0,};
-        snprintf(localName, 2048, "%s/%s", localDir, dictionary_);
-        grib_recompose_name(h, NULL, localName, localRecomposed, 0);
-        localFilename = grib_context_full_defs_path(c, localRecomposed);
-        snprintf(dictName, 1024, "%s:%s", localFilename, filename);
-    }
-    else {
-        snprintf(dictName, 1024, "%s", filename);
-    }
-
-    if (!filename) {
-        grib_context_log(c, GRIB_LOG_ERROR, "Unable to find definition file %s", dictionary_);
-        if (strlen(masterRecomposed) > 0) grib_context_log(c, GRIB_LOG_DEBUG, "master path=%s", masterRecomposed);
-        if (strlen(localRecomposed) > 0) grib_context_log(c, GRIB_LOG_DEBUG, "local path=%s", localRecomposed);
-        *err = GRIB_FILE_NOT_FOUND;
-        GRIB_MUTEX_UNLOCK(&mutex1);
-        return nullptr;
-    }
-
-    if (c->lists.find(dictName) != c->lists.end()) {
-        /*grib_context_log(c,GRIB_LOG_DEBUG,"using dictionary %s from cache",a->dictionary_ );*/
-        GRIB_MUTEX_UNLOCK(&mutex1);
-        return c->lists[dictName];
-    }
-    else {
-        grib_context_log(c, GRIB_LOG_DEBUG, "using dictionary %s from file %s", dictionary_, filename);
-    }
-
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        *err = GRIB_IO_PROBLEM;
-        GRIB_MUTEX_UNLOCK(&mutex1);
-        return nullptr;
-    }
-
-    std::string line;
-    dictionary = std::make_shared<Dict>();
-
-    while (std::getline(file, line)) {
-        DEBUG_ASSERT(line.empty() == false);
-        if (line[0] == '#') continue; /* Ignore first line with column titles */
-        List list = string_split(line, "|");
-        if (list.size() > 0) {
-            (*dictionary)[list[0]] = list;
+        if (*masterDir != 0) {
+            char name[4096] = {0,};
+            snprintf(name, 4096, "%s/%s", masterDir, dictionary_);
+            grib_recompose_name(h, NULL, name, masterRecomposed, 0);
+            filename = grib_context_full_defs_path(c, masterRecomposed);
         }
-    }
+        else {
+            filename = grib_context_full_defs_path(c, dictionary_);
+        }
 
-    file.close();
+        if (*localDir != 0) {
+            char localName[2048] = {0,};
+            snprintf(localName, 2048, "%s/%s", localDir, dictionary_);
+            grib_recompose_name(h, NULL, localName, localRecomposed, 0);
+            localFilename = grib_context_full_defs_path(c, localRecomposed);
+            snprintf(dictName, 1024, "%s:%s", localFilename, filename);
+        }
+        else {
+            snprintf(dictName, 1024, "%s", filename);
+        }
 
-    if (localFilename != 0) {
-      std::ifstream localFile(localFilename);
-        if (!localFile.is_open()) {
-            *err = GRIB_IO_PROBLEM;
-            GRIB_MUTEX_UNLOCK(&mutex1);
+        if (!filename) {
+            grib_context_log(c, GRIB_LOG_ERROR, "Unable to find definition file %s", dictionary_);
+            if (strlen(masterRecomposed) > 0) grib_context_log(c, GRIB_LOG_DEBUG, "master path=%s", masterRecomposed);
+            if (strlen(localRecomposed) > 0) grib_context_log(c, GRIB_LOG_DEBUG, "local path=%s", localRecomposed);
+            *err = GRIB_FILE_NOT_FOUND;
             return nullptr;
         }
 
-        while (std::getline(localFile, line)) {
+        if (c->lists.find(dictName) != c->lists.end()) {
+            /*grib_context_log(c,GRIB_LOG_DEBUG,"using dictionary %s from cache",a->dictionary_ );*/
+            return c->lists[dictName];
+        }
+        else {
+            grib_context_log(c, GRIB_LOG_DEBUG, "using dictionary %s from file %s", dictionary_, filename);
+        }
+
+        std::ifstream file(filename);
+        if (!file.is_open()) {
+            *err = GRIB_IO_PROBLEM;
+            return nullptr;
+        }
+
+        std::string line;
+        dictionary = std::make_shared<Dict>();
+
+        while (std::getline(file, line)) {
             DEBUG_ASSERT(line.empty() == false);
             if (line[0] == '#') continue; /* Ignore first line with column titles */
             List list = string_split(line, "|");
@@ -177,11 +131,29 @@ std::shared_ptr<Dict> BufrElementsTable::load_bufr_elements_table(int* err)
             }
         }
 
-        localFile.close();
-    }
-    c->lists[dictName] = dictionary;
+        file.close();
 
-    GRIB_MUTEX_UNLOCK(&mutex1);
+        if (localFilename != 0) {
+          std::ifstream localFile(localFilename);
+            if (!localFile.is_open()) {
+                *err = GRIB_IO_PROBLEM;
+                return nullptr;
+            }
+
+            while (std::getline(localFile, line)) {
+                DEBUG_ASSERT(line.empty() == false);
+                if (line[0] == '#') continue; /* Ignore first line with column titles */
+                List list = string_split(line, "|");
+                if (list.size() > 0) {
+                    (*dictionary)[list[0]] = list;
+                }
+            }
+
+            localFile.close();
+        }
+        c->lists[dictName] = dictionary;
+      }
+
     return dictionary;
 }
 
@@ -248,8 +220,8 @@ int BufrElementsTable::bufr_get_from_table(bufr_descriptor* v)
         /* ECC-1137: check descriptor key name and unit lengths */
         const size_t maxlen_shortName = sizeof(v->shortName);
         const size_t maxlen_units     = sizeof(v->units);
-        ECCODES_ASSERT(strlen(list[1]) < maxlen_shortName);
-        ECCODES_ASSERT(strlen(list[4]) < maxlen_units);
+        ECCODES_ASSERT(strlen(list[1].c_str()) < maxlen_shortName);
+        ECCODES_ASSERT(strlen(list[4].c_str()) < maxlen_units);
     }
 #endif
 
