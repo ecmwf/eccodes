@@ -11,34 +11,9 @@
 #include "grib_iterator_factory.h"
 #include "accessor/Iterator.h"
 #include "ExceptionHandler.h"
+#include "sync/Mutex.h"
 
-#if GRIB_PTHREADS
-static pthread_once_t once   = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex;
-
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_grib_iterator_factory_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex);
-            once = 1;
-        }
-    }
-}
-#endif
+static eccodes::sync::Mutex mutex;
 
 struct table_entry
 {
@@ -74,10 +49,10 @@ eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_argu
             eccodes::geo_iterator::Iterator* it = builder->create();
             it->flags_              = flags;
 
-            GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-            GRIB_MUTEX_LOCK(&mutex);
-            *error = it->init(h, args);
-            GRIB_MUTEX_UNLOCK(&mutex);
+            {
+                eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+                *error = it->init(h, args);
+            }
 
             if (*error == GRIB_SUCCESS)
                 return it;

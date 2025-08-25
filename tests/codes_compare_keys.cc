@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "string_util.h"
 
 int main(int argc, char* argv[])
 {

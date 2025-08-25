@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "string_util.h"
 
 static const size_t MIN_NUM_COLUMNS = 8;
 static const size_t NUM_DESCRIPTOR_DIGITS = 6; /* FXY */

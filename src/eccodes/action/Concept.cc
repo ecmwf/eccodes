@@ -9,35 +9,9 @@
  */
 
 #include "Concept.h"
+#include "sync/Mutex.h"
 
-
-#if GRIB_PTHREADS
-static pthread_once_t once   = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex;
-
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_action_class_concept_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex);
-            once = 1;
-        }
-    }
-}
-#endif
+static eccodes::sync::Mutex mutex;
 
 grib_concept_value* action_concept_get_concept(grib_accessor* a)
 {
@@ -213,13 +187,8 @@ grib_concept_value* Concept::get_concept_impl(grib_handle* h)
 grib_concept_value* Concept::get_concept(grib_handle* h)
 {
     grib_concept_value* result = NULL;
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
-
-    result = get_concept_impl(h);
-
-    GRIB_MUTEX_UNLOCK(&mutex);
-    return result;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+    return get_concept_impl(h);
 }
 
 }  // namespace eccodes::action

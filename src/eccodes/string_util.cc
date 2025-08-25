@@ -8,6 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include "string_util.h"
 #include "grib_api_internal.h"
 
 // Compare two strings ignoring case.
