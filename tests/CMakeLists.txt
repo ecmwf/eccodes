@@ -121,6 +121,7 @@ if( HAVE_BUILD_TOOLS )
         grib2_probability
         grib_suppressed
         grib_destine_mars_keys
+        grib_destine_test_mars_keys
         grib_2nd_order_numValues
         grib_ecc-136
         grib_ecc-530
