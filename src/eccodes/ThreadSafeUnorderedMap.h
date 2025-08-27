@@ -1,12 +1,12 @@
 #include <unordered_map>
 
-#if GRIB_PTHREADS || GRIB_OMP_THREADS || STL_THREADS
+#if GRIB_PTHREADS || GRIB_OMP_THREADS
 #include "sync/Mutex.h"
 #endif
 
 namespace eccodes {
 
-#if GRIB_PTHREADS || GRIB_OMP_THREADS || STL_THREADS
+#if GRIB_PTHREADS || GRIB_OMP_THREADS
 
 template <typename K, typename V>
 class ThreadSafeUnorderedMap
