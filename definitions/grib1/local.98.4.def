@@ -38,7 +38,7 @@ unsigned[1] timeUnitFlag : dump ;
 unsigned[1] timeCoordinateDefinition : dump ;
 
 #
-# Position definition:  mixed coordinates
+# Position definition: mixed coordinates
 #
 unsigned[1] mixedCoordinateFieldFlag : dump ;
 

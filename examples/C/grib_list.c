@@ -74,7 +74,10 @@ int main(int argc, char** argv)
     assert(size == count);
 
     for (i = 0; i < count; i++) {
-        printf("scaledValueOfCentralWaveNumber %zu = %ld\n", i, values[i]);
+        if (values[i] == GRIB_MISSING_LONG)
+            printf("scaledValueOfCentralWaveNumber %zu = %s\n", i, "MISSING");
+        else
+            printf("scaledValueOfCentralWaveNumber %zu = %ld\n", i, values[i]);
         if (i == 0) assert(values[i] == 26870);
         if (i == 1) assert(values[i] == 9272);
     }

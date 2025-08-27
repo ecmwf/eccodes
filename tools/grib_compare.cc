@@ -687,8 +687,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
 
     type1 = type;
     type2 = type;
-    if (verbose)
-        printf("  comparing %s", name);
+    if (verbose) printf("  comparing %s", name);
 
     /* If key was blocklisted, then we should not have got here */
     DEBUG_ASSERT(!blocklisted(name));
@@ -766,14 +765,12 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
     isMissing2 = ((grib_is_missing(h2, name, &err2) == 1) && (err2 == 0)) ? 1 : 0;
 
     if ((isMissing1 == 1) && (isMissing2 == 1)) {
-        if (verbose)
-            printf(" is set to missing in both fields\n");
+        if (verbose) printf(" is set to missing in both fields\n");
         return GRIB_SUCCESS;
     }
 
     if (isMissing1 == 1) {
-        if (verbose)
-            printf(" is set to missing in %s field\n", first_str);
+        if (verbose) printf(" is set to missing in %s field\n", first_str);
         printInfo(h1);
         printf("%s is set to missing in %s field but is not missing in %s field\n", name, first_str, second_str);
         err1 = GRIB_VALUE_MISMATCH;
@@ -782,8 +779,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
     }
 
     if (isMissing2 == 1) {
-        if (verbose)
-            printf(" is set to missing in %s field\n", first_str);
+        if (verbose) printf(" is set to missing in %s field\n", first_str);
         printInfo(h1);
         printf("%s is set to missing in %s field but is not missing in %s field\n", name, second_str, first_str);
         err1 = GRIB_VALUE_MISMATCH;
@@ -793,8 +789,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
 
     switch (type1) {
         case GRIB_TYPE_STRING:
-            if (verbose)
-                printf(" as string\n");
+            if (verbose) printf(" as string\n");
             grib_get_string_length(h1, name, &len1);
             grib_get_string_length(h2, name, &len2);
             sval1 = (char*)grib_context_malloc(h1->context, len1 * sizeof(char));
@@ -851,8 +846,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
             break;
 
         case GRIB_TYPE_LONG:
-            if (verbose)
-                printf(" as long\n");
+            if (verbose) printf(" as long\n");
 
             lval1 = (long*)grib_context_malloc(h1->context, len1 * sizeof(long));
             lval2 = (long*)grib_context_malloc(h2->context, len2 * sizeof(long));
@@ -913,8 +907,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
             break;
 
         case GRIB_TYPE_DOUBLE:
-            if (verbose)
-                printf(" as double\n");
+            if (verbose) printf(" as double\n");
             dval1 = (double*)grib_context_malloc(h1->context, len1 * sizeof(double));
             dval2 = (double*)grib_context_malloc(h2->context, len2 * sizeof(double));
 
@@ -1093,8 +1086,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
             break;
 
         case GRIB_TYPE_BYTES:
-            if (verbose)
-                printf(" as bytes\n");
+            if (verbose) printf(" as bytes\n");
             grib_get_string_length(h1, name, &len1);
             grib_get_string_length(h2, name, &len2);
             uval1 = (unsigned char*)grib_context_malloc(h1->context, len1 * sizeof(unsigned char));
@@ -1146,13 +1138,11 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
             break;
 
         case GRIB_TYPE_LABEL:
-            if (verbose)
-                printf(" as label\n");
+            if (verbose) printf(" as label\n");
             break;
 
         default:
-            if (verbose)
-                printf("\n");
+            if (verbose) printf("\n");
             printInfo(h1);
             save_error(c, name);
             printf("Cannot compare [%s], unsupported type %d\n", name, type1);

@@ -15,8 +15,6 @@
 # grib_compare reports differences twice (when two timeRange blocks exist)
 # ---------------------------------------------------------
 
-REDIRECT=/dev/null
-
 label="grib_ecc-813_test"
 tempGribA=temp.$label.A.grib
 tempGribB=temp.$label.B.grib

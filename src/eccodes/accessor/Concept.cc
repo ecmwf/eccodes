@@ -49,25 +49,42 @@ void Concept::dump(eccodes::Dumper* dumper)
 // See ECC-1905
 static int grib_get_long_memoize(
     grib_handle* h, const char* key, long* value,
-    std::unordered_map<std::string_view, long>& memo)
+    std::unordered_map<std::string_view, long>& present_keys_map,
+    std::unordered_map<std::string_view, int>& absent_keys_map)
 {
     int err = 0;
-    auto pos = memo.find(key);
-    if (pos == memo.end()) { // not in map so decode & insert
-        err = grib_get_long(h, key, value);
-        if (!err) {
-            memo.insert(std::make_pair(key, *value));
-        }
-    } else {
-        *value = pos->second; // found in map
+
+    // Check keys which are defined (present)
+    auto pos1 = present_keys_map.find(key);
+    if (pos1 != present_keys_map.end()) {
+        *value = pos1->second;  // Found. Copy its value
+        return GRIB_SUCCESS;
     }
+
+    // Check keys which are not defined (absent)
+    auto pos2 = absent_keys_map.find(key);
+    if (pos2 != absent_keys_map.end()) {  // Found
+        err = pos2->second; // Return its error code
+        return err;
+    }
+
+    // Not found in either map so decode and store
+    err = grib_get_long(h, key, value);
+    if (err) {
+        absent_keys_map.insert(std::make_pair(key, err));
+    }
+    else {
+        present_keys_map.insert(std::make_pair(key, *value));
+    }
+
     return err;
 }
 
 // Return 1 (=True) or 0 (=False)
 static int concept_condition_expression_true(
     grib_handle* h, grib_concept_condition* c,
-    std::unordered_map<std::string_view, long>& memo)
+    std::unordered_map<std::string_view, long>& present_keys_map,
+    std::unordered_map<std::string_view, int>& absent_keys_map)
 {
     long lval;
     long lres      = 0;
@@ -79,14 +96,13 @@ static int concept_condition_expression_true(
         case GRIB_TYPE_LONG:
             c->expression->evaluate_long(h, &lres);
             // Use memoization for the most common type (integer keys)
-            ok = (grib_get_long_memoize(h, c->name, &lval, memo) == GRIB_SUCCESS) &&
+            ok = (grib_get_long_memoize(h, c->name, &lval, present_keys_map, absent_keys_map) == GRIB_SUCCESS) &&
                  (lval == lres);
             //ok = (grib_get_long(h, c->name, &lval) == GRIB_SUCCESS) && (lval == lres);
             break;
 
         case GRIB_TYPE_DOUBLE: {
-            double dval;
-            double dres = 0.0;
+            double dval = 0.0, dres = 0.0;
             c->expression->evaluate_double(h, &dres);
             ok = (grib_get_double(h, c->name, &dval) == GRIB_SUCCESS) &&
                  (dval == dres);
@@ -147,10 +163,11 @@ static int concept_condition_iarray_true_count(grib_handle* h, grib_concept_cond
 // Return 0 (=no match) or >0 (=match count)
 static int concept_condition_true_count(
     grib_handle* h, grib_concept_condition* c,
-    std::unordered_map<std::string_view, long>& memo)
+    std::unordered_map<std::string_view, long>& present_keys_map,
+    std::unordered_map<std::string_view, int>& absent_keys_map)
 {
     if (c->expression)
-        return concept_condition_expression_true(h, c, memo);
+        return concept_condition_expression_true(h, c, present_keys_map, absent_keys_map);
     else
         return concept_condition_iarray_true_count(h, c);
 }
@@ -163,14 +180,18 @@ static const char* concept_evaluate(grib_accessor* a)
     grib_concept_value* c = action_concept_get_concept(a);
     grib_handle* h = a->get_enclosing_handle();
 
-    std::unordered_map<std::string_view, long> memo; // See ECC-1905
+    // Maps for fast lookup. See ECC-1905
+    // Map for keys that are defined: key -> integer value
+    std::unordered_map<std::string_view, long> present_keys_map;
+    // Map for keys that fail to decode (e.g., not found): key -> error code
+    std::unordered_map<std::string_view, int> absent_keys_map;
 
     while (c) {
         // printf("DEBUG: %s concept=%s while loop c->name=%s\n", __func__, a->name_, c->name);
         grib_concept_condition* e = c->conditions;
         int cnt = 0;
         while (e) {
-            const int cc_count = concept_condition_true_count(h, e, memo);
+            const int cc_count = concept_condition_true_count(h, e, present_keys_map, absent_keys_map);
             if (cc_count == 0) // match failed
                 break;
             e = e->next;
@@ -288,7 +309,7 @@ static int cmpstringp(const void* p1, const void* p2)
 {
     // The actual arguments to this function are "pointers to
     // pointers to char", but strcmp(3) arguments are "pointers
-    // to char", hence the following cast plus dereference */
+    // to char", hence the following cast plus dereference
     return strcmp(*(char* const*)p1, *(char* const*)p2);
 }
 

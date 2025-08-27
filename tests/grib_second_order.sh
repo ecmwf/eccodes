@@ -10,7 +10,6 @@
 
 . ./include.ctest.sh
 
-workdir=`pwd`
 REDIRECT=/dev/null
 label="grib_second_order_test"
 tempText=temp.$label.txt

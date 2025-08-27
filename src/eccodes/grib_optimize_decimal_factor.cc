@@ -77,9 +77,7 @@ int grib_optimize_decimal_factor(grib_accessor* a, const char* reference_value,
     double pa      = pmax - pmin;
 
     if (pa == 0) {
-        *kdec = 0;
-        *kbin = 0;
-        *ref  = 0.;
+        *kdec = *kbin = *ref  = 0.;
         return GRIB_SUCCESS;
     }
 
@@ -198,9 +196,7 @@ int grib_optimize_decimal_factor(grib_accessor* a, const char* reference_value,
         *kbin = grib_get_binary_scale_fact(max, *ref, knbit, &err);
 
         if (err == GRIB_UNDERFLOW) {
-            *kbin = 0;
-            *kdec = 0;
-            *ref  = 0;
+            *kbin = *kdec = *ref  = 0;
         }
     }
 

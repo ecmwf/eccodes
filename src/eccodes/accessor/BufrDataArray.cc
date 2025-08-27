@@ -1992,10 +1992,9 @@ static GRIB_INLINE void reset_deeper_qualifiers(
     }
 }
 
-
 static grib_accessor* get_element_from_bitmap(bitmap_s* bitmap)
 {
-    int ret;
+    int ret = GRIB_SUCCESS;
     long bitmapVal = 1;
     size_t len;
 
@@ -2007,7 +2006,7 @@ static grib_accessor* get_element_from_bitmap(bitmap_s* bitmap)
         else {
             return NULL;
         }
-        if (ret != 0)
+        if (ret != GRIB_SUCCESS)
             return NULL;
         bitmap->cursor = bitmap->cursor->next_;
         if (bitmap->referredElement)

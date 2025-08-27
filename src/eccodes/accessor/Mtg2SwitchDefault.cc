@@ -84,7 +84,6 @@ int Mtg2SwitchDefault::unpack_long(long* val, size_t* len)
             // For certain classes post MTG2 we always want the param + chem split (value 2)
             // For TIGGE, marsClass is not defined in the empty local Section 2, but is defined later on.
             if ( marsClassExists && (STR_EQUAL(marsClass, "mc") || STR_EQUAL(marsClass, "cr") || STR_EQUAL(marsClass, "a5")) ) {
-//            if ( marsClassExists && (STR_EQUAL(marsClass, "mc") || STR_EQUAL(marsClass, "cr") || STR_EQUAL(marsClass, "a5")) && ( grib_is_defined(h, "constituentType") || grib_is_defined(h, "aerosolType")) ) {
                 *val = 2;
             }
             else {

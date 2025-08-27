@@ -19,9 +19,6 @@ label="grib_ecc-1195_test"
 temp1=temp.$label.grib
 temp2=temp.$label.txt
 sample_grib1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
-sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-sample_bufr4=$ECCODES_SAMPLES_PATH/BUFR4_local.tmpl
-
 
 ${tools_dir}/grib_set -s localDefinitionNumber=3 $sample_grib1 $temp1
 set +e
@@ -38,6 +35,8 @@ set -e
 [ $status -ne 0 ]
 grep -q "Value is read only" $temp2
 
+
+#sample_bufr4=$ECCODES_SAMPLES_PATH/BUFR4_local.tmpl
 #set +e
 #${tools_dir}/bufr_set -s localDate=20140102 $sample_bufr4 $temp1 2>$temp2
 #status=$?

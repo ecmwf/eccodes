@@ -111,8 +111,8 @@ int Latitudes::value_count(long* len)
 {
     grib_handle* h  = get_enclosing_handle();
     double* val     = NULL;
-    int ret;
-    size_t size;
+    int ret = GRIB_SUCCESS;
+    size_t size = 0;
 
     *len = 0;
     if ((ret = grib_get_size(h, values_, &size)) != GRIB_SUCCESS) {

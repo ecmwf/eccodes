@@ -32,7 +32,7 @@ if(type != perturbedType)
   alias local.southEastLongitudeOfLPOArea= southEastLongitudeOfLPOArea  ;
   alias local.accuracyMultipliedByFactor= accuracyMultipliedByFactor ;
   alias local.numberOfSingularVectorsEvolved= numberOfSingularVectorsEvolved ;
-# Ritz numbers:
+  # Ritz numbers:
   alias local.NINT_LOG10_RITZ= NINT_LOG10_RITZ ;
   alias local.NINT_RITZ_EXP= NINT_RITZ_EXP  ;
 }

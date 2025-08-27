@@ -15,8 +15,6 @@
 # GRIB: cannot clone repeatedly with headers only
 # ---------------------------------------------------------
 
-REDIRECT=/dev/null
-
 label="grib_ecc-2045_test"
 tempGrib=temp.$label.grib
 tempLog=temp.$label.log

@@ -10,9 +10,9 @@
 
 . ./include.ctest.sh
 
-# ECC-1691: Destination Earth ClimateDT metadata support
+# ECC-2125: Destination Earth test MARS metadata support
 
-label="grib_destine_mars_keys_test"
+label="grib_destine_test_mars_keys_test"
 temp_grib_a=temp.$label.a.grib
 temp_grib_b=temp.$label.b.grib
 destine_sample=temp.$label.destine.grib
@@ -24,8 +24,8 @@ tablesVersionLatest=$( ${tools_dir}/grib_get -p tablesVersionLatest $sample_grib
 # First latest tables version and add local section with MARS labeling
 ${tools_dir}/grib_set -s tablesVersion=$tablesVersionLatest,setLocalDefinition=1,grib2LocalSectionNumber=1 $sample_grib2 $temp_grib_a
 
-# Then change to processed data = 12 --> DestinE
-${tools_dir}/grib_set -s productionStatusOfProcessedData=12,class=d1 $temp_grib_a $destine_sample
+# Then change to processed data = 13 --> DestinE test
+${tools_dir}/grib_set -s productionStatusOfProcessedData=13,class=d1 $temp_grib_a $destine_sample
 
 # Check DestinE base related keys are present and correct
 grib_check_key_exists $destine_sample destineLocalVersion,dataset,marsClass,marsType,marsStream,experimentVersionNumber
@@ -92,7 +92,7 @@ ${tools_dir}/grib_ls -jm $temp_grib_a
 [ $( ${tools_dir}/grib_get -f -p mars.step $temp_grib_a ) = "not_found" ]
 
 # ECC-1801
-${tools_dir}/grib_set -s productionStatusOfProcessedData=12 $sample_grib2 $temp_grib_a
+${tools_dir}/grib_set -s productionStatusOfProcessedData=13 $sample_grib2 $temp_grib_a
 ${tools_dir}/grib_compare -b productionStatusOfProcessedData $sample_grib2 $temp_grib_a
 
 # ECC-1832 On-Demand DT metadata

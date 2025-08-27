@@ -123,8 +123,8 @@ int Unsigned::pack_long_unsigned_helper(const long* val, size_t* len, int check)
                     unsigned long maxval = NumericLimits<unsigned long>::max(nbits);
                     if (maxval > 0 && v > maxval) { /* See ECC-1002 */
                         grib_context_log(context_, GRIB_LOG_ERROR,
-                                         "Key \"%s\": Trying to encode value of %ld but the maximum allowable value is %lu (number of bits=%ld)",
-                                         name_, v, maxval, nbits);
+                            "Key \"%s\": Trying to encode value of %ld but the maximum allowable value is %lu (number of bits=%ld)",
+                             name_, v, maxval, nbits);
                         return GRIB_ENCODING_ERROR;
                     }
                 }
@@ -136,7 +136,8 @@ int Unsigned::pack_long_unsigned_helper(const long* val, size_t* len, int check)
         if (ret == GRIB_SUCCESS)
             len[0] = 1;
         if (*len > 1)
-            grib_context_log(context_, GRIB_LOG_WARNING, "grib_accessor_unsigned : Trying to pack %d values in a scalar %s, packing first value", *len, name_);
+            grib_context_log(context_, GRIB_LOG_WARNING,
+                "grib_accessor_unsigned : Trying to pack %d values in a scalar %s, packing first value", *len, name_);
         len[0] = 1;
         return ret;
     }

@@ -15,8 +15,6 @@
 # GRIB2: setting stream to enda changes the PDTN
 # ---------------------------------------------------------
 
-REDIRECT=/dev/null
-
 label="grib_ecc-2052_test"
 tempGribA=temp.$label.A.grib
 tempGribB=temp.$label.B.grib

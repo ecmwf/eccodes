@@ -10,7 +10,6 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
 
 label="grib_mtg2_switch_test"
 tempGrib=temp.$label.grib

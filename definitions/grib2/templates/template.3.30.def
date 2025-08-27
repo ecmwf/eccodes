@@ -57,7 +57,6 @@ alias yDirectionGridLength=Dy;
 alias Dj = Dy;
 meta geography.DyInMetres scale(Dy,one,thousand) : dump;
 
-# Projection centre flag
 flags[1] projectionCentreFlag 'grib2/tables/[tablesVersion]/3.5.table' : dump;
 
 include "grib2/templates/template.3.scanning_mode.def"
@@ -83,13 +82,13 @@ alias longitudeOfTheSouthernPoleOfProjection=longitudeOfSouthernPole;
 meta geography.longitudeOfSouthernPoleInDegrees scale(longitudeOfSouthernPole,oneConstant,grib2divider,truncateDegrees) : dump;
 
 iterator lambert_conformal(numberOfPoints,missingValue,values,
-          radius,Nx,Ny,
-          LoVInDegrees,LaDInDegrees,
-          Latin1InDegrees,Latin2InDegrees,
-          latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
-          DxInMetres,DyInMetres,
-          iScansNegatively, jScansPositively,
-          jPointsAreConsecutive, alternativeRowScanning);
+    radius,Nx,Ny,
+    LoVInDegrees,LaDInDegrees,
+    Latin1InDegrees,Latin2InDegrees,
+    latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
+    DxInMetres,DyInMetres,
+    iScansNegatively, jScansPositively,
+    jPointsAreConsecutive, alternativeRowScanning);
 
 nearest lambert_conformal(values,radius,Nx,Ny);
 

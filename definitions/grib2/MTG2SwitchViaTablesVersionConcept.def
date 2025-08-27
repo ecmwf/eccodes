@@ -1,6 +1,6 @@
-# Concept by which we define which conditions will imply using the tablesVersion
+# Concept where we define which conditions will imply using the tablesVersion
 # to switch between pre and post MTG2
 # This allows all non-ECMWF data that uses the MARS namespace to have the same migration pathway as ECMWF
 1 = {subCentre = 98;}
 # Need an exception for non-ECMWF CERISE data, which uses sub-centre 98 but shall remain pre-MTG2
-0 = {subCentre = 98; marsClass="ci";}
+0 = {subCentre = 98; marsClass = 50;}

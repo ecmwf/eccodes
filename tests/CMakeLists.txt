@@ -121,6 +121,7 @@ if( HAVE_BUILD_TOOLS )
         grib2_probability
         grib_suppressed
         grib_destine_mars_keys
+        grib_destine_test_mars_keys
         grib_2nd_order_numValues
         grib_ecc-136
         grib_ecc-530
@@ -183,6 +184,7 @@ if( HAVE_BUILD_TOOLS )
     # These tests require data downloads
     # and/or take much longer
     list(APPEND tests_extra
+        error_codes
         grib_datasetForLocal
         grib_isGridded_isSpectral
         grib_data_quality_checks
@@ -306,6 +308,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1907
         grib_ecc-1941
         grib_ecc-1942
+        grib_ecc-1992
         grib_ecc-2005
         grib_ecc-2006
         grib_ecc-2013
@@ -597,10 +600,10 @@ else()
 endif()
 
 
-if( eccodes_HAVE_ECKIT_GEO )
+if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
     foreach( test
             grib_from_gridspec )
-        ecbuild_add_test( TARGET  ${test}
+        ecbuild_add_test( TARGET  eccodes_t_${test}
                           SOURCES ${test}.cc
                           LIBS    eccodes eckit_geo )
     endforeach()

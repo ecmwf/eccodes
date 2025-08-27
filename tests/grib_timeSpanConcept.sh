@@ -38,7 +38,7 @@ write;
 EOF
     ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
     timeSpan=$( ${tools_dir}/grib_get -p timeSpan $tempGrib )
-    if [[ $timeSpan  == 'unknown' ]]; then
+    if [ "$timeSpan" = 'unknown' ]; then
       echo "productDefinitionTemplateNumber=$pdtn: timeSpan not defined"
       exit 1
     fi

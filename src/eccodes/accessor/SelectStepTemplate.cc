@@ -96,7 +96,7 @@ int SelectStepTemplate::pack_long(const long* val, size_t* len)
             case 72:  // DET post-processing
                 productDefinitionTemplateNumberNew = 70;
                 break;
-            case 73:  // ENS post-processing */
+            case 73:  // ENS post-processing
                 productDefinitionTemplateNumberNew = 71;
                 break;
             case 0:
