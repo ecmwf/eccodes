@@ -110,6 +110,33 @@ int MessageIsValid::check_spectral()
         }
     }
 
+    // ECC-2126
+    if (edition_ == 2) {
+        char packingType[128] = {0,};
+        len = sizeof(packingType);
+        err = grib_get_string_internal(handle_, "packingType", packingType, &len);
+        if (err) return err;
+        if (STR_EQUAL(packingType, "spectral_complex") || STR_EQUAL(packingType, "spectral_simple")) {
+            size_t size = 0;
+            if ((err = grib_get_size(handle_, "values", &size)) != GRIB_SUCCESS)
+                return err;
+            long numberOfDataPoints = 0;
+            if ((err = grib_get_long_internal(handle_, "numberOfDataPoints", &numberOfDataPoints)) != GRIB_SUCCESS)
+                return err;
+
+            long numberOfCodedValues = 0;
+            if ((err = grib_get_long_internal(handle_, "numberOfCodedValues", &numberOfCodedValues)) != GRIB_SUCCESS)
+                return err;
+
+            if (size != (size_t)numberOfDataPoints || numberOfDataPoints != numberOfCodedValues) {
+                grib_context_log(context_, GRIB_LOG_ERROR,
+                    "%s: Inconsistent numbers: size of values=%zu numberOfDataPoints=%ld numberOfCodedValues=%ld (packingType=%s)",
+                    TITLE, size, numberOfDataPoints, numberOfCodedValues, packingType);
+                return GRIB_INVALID_MESSAGE;
+            }
+        }
+    }
+
     return GRIB_SUCCESS;
 }
 
