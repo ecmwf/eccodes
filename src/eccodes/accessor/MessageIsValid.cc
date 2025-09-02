@@ -353,6 +353,64 @@ int MessageIsValid::check_grid_pl_array()
     return GRIB_SUCCESS;
 }
 
+int MessageIsValid::check_grid_increments()
+{
+    if (!grid_enabled()) {
+        return GRIB_SUCCESS;  // grid-related checks are disabled
+    }
+
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
+    int err = GRIB_SUCCESS;
+    grib_context* c = handle_->context;
+
+    // Do not process reduced grids
+    long PLPresent = 0;
+    if (grib_get_long(handle_, "PLPresent", &PLPresent) == GRIB_SUCCESS && PLPresent == 1) {
+        return GRIB_SUCCESS;
+    }
+
+    long iDirectionIncrementGiven = 0, jDirectionIncrementGiven = 0;
+    long iDirectionIncrement = 0, jDirectionIncrement = 0;
+
+    if (grib_get_long(handle_, "iDirectionIncrementGiven", &iDirectionIncrementGiven) == GRIB_SUCCESS &&
+        grib_get_long(handle_, "jDirectionIncrementGiven", &jDirectionIncrementGiven) == GRIB_SUCCESS &&
+        grib_get_long(handle_, "iDirectionIncrement", &iDirectionIncrement) == GRIB_SUCCESS &&
+        grib_get_long(handle_, "jDirectionIncrement", &jDirectionIncrement) == GRIB_SUCCESS)
+    {
+        // Check increments to see if they are missing
+        bool iIncrementMissing = false, jIncrementMissing = false;
+        err = 0;
+        if (grib_is_missing(handle_, "iDirectionIncrement", &err) == 1 && !err)
+            iIncrementMissing = true;
+        err = 0;
+        if (grib_is_missing(handle_, "jDirectionIncrement", &err) == 1 && !err)
+            jIncrementMissing = true;
+
+        // If increment is given, then it cannot be missing
+        if (iDirectionIncrementGiven && iIncrementMissing) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: iDirectionIncrementGiven=1 but iDirectionIncrement=missing",TITLE);
+            return GRIB_WRONG_GRID;
+        }
+        if (jDirectionIncrementGiven && jIncrementMissing) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: jDirectionIncrementGiven=1 but jDirectionIncrement=missing",TITLE);
+            return GRIB_WRONG_GRID;
+        }
+
+        // If increment is not given, then it must be set to missing
+        if (!iDirectionIncrementGiven && !iIncrementMissing) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: iDirectionIncrementGiven=0 but iDirectionIncrement!=missing",TITLE);
+            return GRIB_WRONG_GRID;
+        }
+        if (!jDirectionIncrementGiven && !jIncrementMissing) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: jDirectionIncrementGiven=0 but jDirectionIncrement!=missing",TITLE);
+            return GRIB_WRONG_GRID;
+        }
+    }
+    return GRIB_SUCCESS;
+}
+
 int MessageIsValid::check_geoiterator()
 {
     if (!grid_enabled()) {
@@ -622,6 +680,7 @@ int MessageIsValid::unpack_long(long* val, size_t* len)
         &MessageIsValid::check_field_values,
         &MessageIsValid::check_number_of_missing,
         &MessageIsValid::check_grid_pl_array,
+        &MessageIsValid::check_grid_increments,
         &MessageIsValid::check_geoiterator,
         &MessageIsValid::check_surface_keys,
         &MessageIsValid::check_steps,
