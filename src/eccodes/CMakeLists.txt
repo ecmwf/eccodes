@@ -439,6 +439,7 @@ if( eccodes_HAVE_GEOGRAPHY AND eccodes_HAVE_ECKIT_GEO )
 endif()
 
 ecbuild_add_library( TARGET    eccodes
+                     AUTO_VERSION
                      SOURCES   ${CMAKE_CURRENT_BINARY_DIR}/grib_api_version.cc
                               # griby.cc gribl.cc
                               ${eccodes_src_files}

@@ -51,6 +51,7 @@ endif()
 
 if( HAVE_MEMFS )
     ecbuild_add_library(TARGET    eccodes_memfs
+                        AUTO_VERSION
                         SOURCES   ${generated_c_files}
                         GENERATED ${generated_c_files})
 endif()
