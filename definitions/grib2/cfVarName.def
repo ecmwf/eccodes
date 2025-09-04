@@ -296,6 +296,26 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean 10 metre convective gust
+'avg_10cogu' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 68 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean 10 metre turbulent gust
+'avg_10tugu' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 69 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-maximum sea ice area fraction
 'max_ci' = {
 	 discipline = 10 ;
@@ -382,6 +402,26 @@
 	 parameterNumber = 93 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum 10 metre convective gust
+'max_10cogu' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 68 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum 10 metre turbulent gust
+'max_10tugu' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 69 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
@@ -474,6 +514,26 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum 10 metre convective gust
+'min_10cogu' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 68 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum 10 metre turbulent gust
+'min_10tugu' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 69 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-standard-deviation sea ice area fraction
 'std_ci' = {
 	 discipline = 10 ;
@@ -560,6 +620,26 @@
 	 parameterNumber = 93 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 10 metre convective gust
+'std_10cogu' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 68 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation 10 metre turbulent gust
+'std_10tugu' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 69 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
