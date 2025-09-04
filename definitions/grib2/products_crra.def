@@ -49,19 +49,34 @@ if (section2Used == 1) {
 # See GRIB-911 re typeOfProcessedData values in UERRA
 concept marsType(unknown) {
 
+# https://jira.ecmwf.int/browse/SD-80276
+   em = {
+     derivedForecast = 0;
+   }
+#  "17" = {
+#    derivedForecast = 0;
+#  }
+
+   es = {
+     derivedForecast = 4;
+   }
+#  "18" = {
+#    derivedForecast = 4;
+#  }
+
    fc = {
      typeOfProcessedData = 1;
    }
-   "9" = {
-     typeOfProcessedData = 1;
-   }
+#  "9" = {
+#    typeOfProcessedData = 1;
+#  }
 
    an = {
      typeOfProcessedData = 0;
    }
-   "2" = {
-     typeOfProcessedData = 0;
-   }
+#  "2" = {
+#    typeOfProcessedData = 0;
+#  }
 
    # See ECC-456. Special rule for Swedish data
    # oi is Optimal Interpolation
@@ -70,11 +85,11 @@ concept marsType(unknown) {
      typeOfGeneratingProcess = 0;
      generatingProcessIdentifier = 50;
    }
-   "4" = {
-     centre = 82;
-     typeOfGeneratingProcess = 0;
-     generatingProcessIdentifier = 50;
-   }
+#  "4" = {
+#    centre = 82;
+#    typeOfGeneratingProcess = 0;
+#    generatingProcessIdentifier = 50;
+#  }
 }
 
 # get the values from the 1st most outer loop which matter
@@ -98,6 +113,13 @@ concept marsStream(unknown) {
     enda = {
       productDefinitionTemplateNumber = 1;
     }
+    enda = {
+      productDefinitionTemplateNumber = 12;
+    }
+    enda = {
+      productDefinitionTemplateNumber = 2;
+    }
+
     moda = {
       productDefinitionTemplateNumber = 8;
       outerLoopTypeOfTimeIncrement = 1;
