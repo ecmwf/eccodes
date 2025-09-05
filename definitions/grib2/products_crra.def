@@ -49,7 +49,7 @@ if (section2Used == 1) {
 # See GRIB-911 re typeOfProcessedData values in UERRA
 concept marsType(unknown) {
 
-# https://jira.ecmwf.int/browse/DGOV-570
+https://jira.ecmwf.int/browse/DGOV-496
    em = {
      derivedForecast = 0;
    }
