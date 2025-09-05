@@ -134,14 +134,14 @@ static grib_handle* spectral()
     int err = 0;
     grib_util_grid_spec spec = {0,};
     grib_util_packing_spec packing_spec = {0,};
-    double values[4]   = { 1.1, 2.2 };
     int set_spec_flags = 0;
-    size_t outlen      = 0;
+
+    size_t outlen  = 0; // test passing in no values
+    double* values = NULL;
 
     auto* handle    = grib_handle_new_from_samples(nullptr, "sh_pl_grib2");
     spec.grid_type  = GRIB_UTIL_GRID_SPEC_SH;
     spec.truncation = 20;
-    outlen          = 2;
 
     packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE;
     packing_spec.bitsPerValue = 16;
@@ -152,6 +152,12 @@ static grib_handle* spectral()
         handle, &spec, &packing_spec, set_spec_flags,
         values, outlen, &err);
     ECCODES_ASSERT(err == 0);
+
+    long dataRepresentationTemplateNumber=0;
+    err = grib_get_long(handle, "dataRepresentationTemplateNumber", &dataRepresentationTemplateNumber);
+    ECCODES_ASSERT(err == 0);
+    ECCODES_ASSERT(dataRepresentationTemplateNumber == 51);  // Spherical harmonics data - complex packing
+
     return finalh;
 }
 
