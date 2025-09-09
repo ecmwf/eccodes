@@ -16,3 +16,10 @@
 'aifs-ens-diff' = {
     backgroundProcess = 5;
 }
+'aifs-compo-single' = {
+    backgroundProcess = 6;
+}
+
+'aifs-compo-ens' = {
+    backgroundProcess = 7;
+}
