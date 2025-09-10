@@ -13,7 +13,8 @@ alias marsEndStep   = endStep;
 
 meta stepRange g2step_range(startStep): dump;
 alias ls.stepRange=stepRange;
-concept stepTypeInternal {
+# See ECC-2134
+concept_nofail stepTypeInternal {
   "instant" = {dummy=1;}
 }
 meta stepHumanReadable step_human_readable(stepUnits, stepRange): hidden,no_copy;
