@@ -1158,8 +1158,9 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
                     SET_STRING_VALUE("packingType", "spectral_complex");
                 break;
             case GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE: // See ECC-2131
-                if (strcmp(input_packing_type, "spectral_simple") && !strcmp(input_packing_type, "spectral_complex"))
-                    SET_STRING_VALUE("packingType", "spectral_complex");
+                if (strcmp(input_packing_type, "spectral_simple") && !strcmp(input_packing_type, "spectral_complex")) {
+                    return GRIB_ENCODING_ERROR;
+                }
                 break;
             case GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE:
                 if (strcmp(input_packing_type, "grid_simple") && !strcmp(input_packing_type, "grid_complex"))
@@ -1660,8 +1661,10 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
                     SET_STRING_VALUE("packingType", "spectral_complex");
                 break;
             case GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE:  // See ECC-2131
-                if (strcmp(input_packing_type, "spectral_simple") && !strcmp(input_packing_type, "spectral_complex"))
-                    SET_STRING_VALUE("packingType", "spectral_complex");
+                if (strcmp(input_packing_type, "spectral_simple") && !strcmp(input_packing_type, "spectral_complex")) {
+                    *err = GRIB_ENCODING_ERROR;
+                    goto cleanup;
+                }
                 break;
             case GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE:
                 if (strcmp(input_packing_type, "grid_simple") && !strcmp(input_packing_type, "grid_complex"))

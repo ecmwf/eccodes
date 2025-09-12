@@ -143,7 +143,7 @@ static grib_handle* spectral()
     spec.grid_type  = GRIB_UTIL_GRID_SPEC_SH;
     spec.truncation = 20;
 
-    packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE;
+    packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE; //must fail
     packing_spec.bitsPerValue = 16;
     packing_spec.accuracy     = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
     packing_spec.packing      = GRIB_UTIL_PACKING_USE_PROVIDED;
@@ -151,14 +151,10 @@ static grib_handle* spectral()
     grib_handle* finalh = grib_util_set_spec(
         handle, &spec, &packing_spec, set_spec_flags,
         values, outlen, &err);
-    ECCODES_ASSERT(err == 0);
+    ECCODES_ASSERT(err);
+    ECCODES_ASSERT(!finalh);
 
-    long dataRepresentationTemplateNumber=0;
-    err = grib_get_long(handle, "dataRepresentationTemplateNumber", &dataRepresentationTemplateNumber);
-    ECCODES_ASSERT(err == 0);
-    ECCODES_ASSERT(dataRepresentationTemplateNumber == 51);  // Spherical harmonics data - complex packing
-
-    return finalh;
+    return handle;
 }
 
 // Polar stereo
