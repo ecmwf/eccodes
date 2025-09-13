@@ -34,3 +34,4 @@ meta _TS spectral_truncation(JS,KS,MS,TS) : read_only,hidden;
 codetable[1] unpackedSubsetPrecision ('5.7.table',masterDir,localDir) = 1 : dump;
 
 alias precisionOfTheUnpackedSubset=unpackedSubsetPrecision;
+transient realPartOf00 = 0;
