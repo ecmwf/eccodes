@@ -286,6 +286,14 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
 
     n_vals = (pen_j + 1) * (pen_j + 2);
 
+    long converting=0;
+    if (grib_get_long(gh, "convertingSpectralSimpleToComplex", &converting)==GRIB_SUCCESS && converting==1) {
+        if ( (size_t)n_vals == *len + 1) {
+            *len += 1;
+            grib_set_long(gh, "numberOfDataPoints", n_vals);
+        }
+    }
+
     if (*len != n_vals) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s: Wrong number of values, expected %ld - got %zu",
                          class_name_, n_vals, *len);
