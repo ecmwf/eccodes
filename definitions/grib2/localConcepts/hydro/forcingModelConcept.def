@@ -1,0 +1,6 @@
+'IFS' = { forcingModelCode = 1; }
+'AIFS' = { forcingModelCode = 2; }
+'COSMO' = { forcingModelCode = 3; }
+'DWD' = { forcingModelCode = 4; }
+'ERA5' = { forcingModelCode = 5; }
+'SEAS' = { forcingModelCode = 6; }
