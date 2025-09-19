@@ -25,12 +25,12 @@
 'base' = {productDefinitionTemplateNumber=14;}
 'base' = {productDefinitionTemplateNumber=15;}
 'base' = {productDefinitionTemplateNumber=20;}
-'base' = {productDefinitionTemplateNumber=30;}
-'base' = {productDefinitionTemplateNumber=31;}
-'base' = {productDefinitionTemplateNumber=32;}
-'base' = {productDefinitionTemplateNumber=33;}
-'base' = {productDefinitionTemplateNumber=34;}
-'base' = {productDefinitionTemplateNumber=35;}
+'satellite' = {productDefinitionTemplateNumber=30;}
+'satellite' = {productDefinitionTemplateNumber=31;}
+'satellite' = {productDefinitionTemplateNumber=32;}
+'satellite' = {productDefinitionTemplateNumber=33;}
+'satellite' = {productDefinitionTemplateNumber=34;}
+'satellite' = {productDefinitionTemplateNumber=35;}
 # chemical templates should appear in gribMix as paramtype base
 # gribMix data won't have the chem mars key !
 'base' = {productDefinitionTemplateNumber=40; MTG2Switch=1;}
