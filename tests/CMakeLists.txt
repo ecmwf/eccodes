@@ -609,9 +609,11 @@ endif()
 
 if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
     foreach( test
-            grib_from_gridspec )
-        ecbuild_add_test( TARGET  eccodes_t_${test}
+            grib_from_gridspec
+            grib_to_gridspec )
+        ecbuild_add_test( TARGET eccodes_t_${test}
                           SOURCES ${test}.cc
-                          LIBS    eccodes eckit_geo )
+                          LIBS eccodes eckit_geo
+                          WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} )
     endforeach()
 endif()
