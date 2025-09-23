@@ -1,4 +1,4 @@
-if ( defined(stattype) and (stattype is "moav" or stattype is "momn" or stattype is "momx" or stattype is "mosd") ) {
+if ( defined(stattype) && is_one_of(stattype,"moav","momn","momx","mosd") ) {
  meta verificationDate        g1verificationdate(dataDate, dataTime, endStep) : read_only;
  meta monthlyVerificationDate g1monthlydate(verificationDate) : dump,no_copy;
  alias mars.date            = monthlyVerificationDate;
