@@ -481,6 +481,16 @@ static int preprocess_packingType_change(grib_handle* h, const char* keyname, co
                 return 1; /* Dealt with - no further action needed */
             }
         }
+        // ECC-2137: Converting spectral_simple to spectral_complex
+        if (strcmp(keyval, "spectral_complex")==0) {
+            size_t len = sizeof(input_packing_type);
+            if (grib_get_string(h, "packingType", input_packing_type, &len) == GRIB_SUCCESS) {
+                if (strcmp(input_packing_type, "spectral_simple")==0) {
+                    len = 50;
+                    grib_set_string(h, "convertingFrom", input_packing_type, &len);
+                }
+            }
+        }
 
         /* ECC-1407: Are we changing from IEEE to CCSDS or Simple? */
         if (strcmp(keyval, "grid_simple")==0 || strcmp(keyval, "grid_ccsds")==0) {
