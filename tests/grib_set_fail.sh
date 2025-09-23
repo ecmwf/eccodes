@@ -11,7 +11,6 @@
 . ./include.ctest.sh
 
 label="grib_set_fail_test"
-REDIRECT=/dev/null
 
 outfile=${data_dir}/temp.$label.grib
 temp=${data_dir}/temp.$label.out
@@ -107,6 +106,11 @@ grep -q "Time is not valid" $temp
 ${tools_dir}/grib_set -s dataTime=2501 $input $outfile > $temp 2>&1
 grep -q "Time is not valid" $temp
 
+${tools_dir}/grib_set -s hour=33 $input $outfile
+${tools_dir}/grib_get -ptime $outfile > $temp 2>&1
+grep -q "Time is not valid" $temp
+
+
 # Note for GRIB1 we DO fail on a bad date! This need to be consistent across editions
 input=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 set +e
@@ -119,6 +123,9 @@ grep -q "invalid date 20180229" $temp
 # 2016 did have 29th Feb
 ${tools_dir}/grib_set -s dataDate=20160229 $input $outfile
 
+# GRIB2 invalid date
+${tools_dir}/grib_set -s dataDate=20160233 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $outfile 2> $temp
+grep -q "ECCODES WARNING .* Date is not valid! year=2016 month=2 day=33" $temp
 
 # ECC-1359: string that can be converted to an integer
 # ---------------------------------------------------

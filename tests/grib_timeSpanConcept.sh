@@ -10,18 +10,14 @@
 
 . ./include.ctest.sh
 
-# ---------------------------------------------------------
-# This is the test for the JIRA issue ECC-XXXX
-# < Add issue summary here >
-# ---------------------------------------------------------
-
-REDIRECT=/dev/null
-
 label="grib_timespan_concept_test"
 tempGrib=temp.$label.grib
-tempText=temp.$label.txt
 tempFilt=temp.$label.filt
-rm -f $tempGrib $tempText $tempFilt
+
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
 
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 latestOfficial=$( ${tools_dir}/grib_get -p tablesVersionLatestOfficial $sample_grib2 )
@@ -41,9 +37,8 @@ if (defined(lengthOfTimeRange)){
 write;
 EOF
     ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
-    ${tools_dir}/grib_get -p timeSpan $tempGrib
     timeSpan=$( ${tools_dir}/grib_get -p timeSpan $tempGrib )
-    if [[ $timeSpan  == 'unknown' ]]; then
+    if [ "$timeSpan" = 'unknown' ]; then
       echo "productDefinitionTemplateNumber=$pdtn: timeSpan not defined"
       exit 1
     fi
@@ -51,4 +46,4 @@ EOF
 fi
 
 # Clean up
-rm -f $tempGrib $tempText 
+rm -f $tempGrib

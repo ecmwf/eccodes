@@ -79,6 +79,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
         return GRIB_INVALID_ARGUMENT;
     }
 
+    // Note: Only works for integer arrays
     if (STR_EQUAL(name_, "element")) {
         const int n = args_ ? args_->get_count() : 0;
         if (n != 2) {
@@ -99,6 +100,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
             }
             if ((err = check_element_index(name_, keyName, index, size)) != GRIB_SUCCESS) return err;
             *lres = ar[index];
+            grib_context_free(h->context, ar);
             return GRIB_SUCCESS;
         }
         return GRIB_INVALID_ARGUMENT;
@@ -306,6 +308,6 @@ int Functor::native_type(grib_handle* h) const
 }  // namespace eccodes::expression
 
 
-grib_expression* new_func_expression(grib_context* c, const char* name, grib_arguments* args) {
+grib_expression* new_functor_expression(grib_context* c, const char* name, grib_arguments* args) {
     return new eccodes::expression::Functor(c, name, args);
 }

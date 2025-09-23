@@ -10,7 +10,6 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
 
 label="grib_mtg2_switch_test"
 tempGrib=temp.$label.grib
@@ -1328,15 +1327,14 @@ for i in "${!cases[@]}"; do
     # Pull in values of keys
     read MTG2SwitchViaTablesVersion MTG2SwitchDefault MTG2Switch <<< "${expected[i]}"
     # If pre-MTG2 we expect old paramId and to read the pre-MTG2 defs
-    if [[ $MTG2Switch -eq 0 ]]; then
-
+    if [ $MTG2Switch -eq 0 ]; then
         grib_check_key_equals ${cases[i]} paramId           "228035"
         grib_check_key_equals ${cases[i]} shortName         "mxcape6"
         grib_check_key_equals ${cases[i]} paramIdFilename   "paramId.lte33.def"
         grib_check_key_equals ${cases[i]} shortNameFilename "shortName.lte33.def"
 
     # Else if we are post-MTG2 but chem-split we expect new paramId but to read the chemsplit defs
-    elif [[ $MTG2Switch -eq 2 ]]; then
+    elif [ $MTG2Switch -eq 2 ]; then
         grib_check_key_equals ${cases[i]} paramId           "237287"
         grib_check_key_equals ${cases[i]} shortName         "max_cape"
         grib_check_key_equals ${cases[i]} paramIdFilename   "paramId.chemsplit.def"
@@ -1350,14 +1348,13 @@ for i in "${!cases[@]}"; do
         grib_check_key_equals ${cases[i]} shortNameFilename "shortName.def"
     fi
     echo
-
 done
 
 # Now test changes done in memory
 
 # Changing tablesVersion should trigger MTG2Switch to go to the appropriate value
 cat >$tempFilt<<EOF
-    set tablesVersion=37;
+    set tablesVersion = 37;
     assert (MTG2Switch == 1);
     assert (paramId == 237287);
     write;
@@ -1366,10 +1363,10 @@ EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $base_grib2
 
 cat >$tempFilt<<EOF
-    set tablesVersion=37;
-    set setLocalDefinition=1;
-    set grib2LocalSectionNumber=1;
-    set class="mc";
+    set tablesVersion = 37;
+    set setLocalDefinition = 1;
+    set grib2LocalSectionNumber = 1;
+    set class = "mc";
     assert (MTG2Switch == 2);
     assert (paramId == 237287);
     write;

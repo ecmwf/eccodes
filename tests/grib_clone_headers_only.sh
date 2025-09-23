@@ -11,7 +11,9 @@
 . ./include.ctest.sh
 
 label="grib_clone_headers_only_test"
-temp=temp.$label.grib
+
+tempGribA=temp.$label.A.grib
+tempGribB=temp.$label.B.grib
 
 inputs="
   sst_globus0083.grib
@@ -20,10 +22,20 @@ inputs="
 
 for f in $inputs; do
     infile=$data_dir/$f
-    rm -f $temp
-    $EXEC ${test_dir}/grib_clone_headers_only $infile $temp
-    ${tools_dir}/grib_compare -H -b totalLength $infile $temp
+    rm -f $tempGribA $tempGribB
+    $EXEC ${test_dir}/grib_clone_headers_only $infile $tempGribA
+    ${tools_dir}/grib_compare -H -b totalLength $infile $tempGribA
 done
 
+# Second order packing does not apply to constant fields.
+# So the result should use simple packing
+${tools_dir}/grib_set -r -s typeOfLevel=surface,packingType=grid_second_order $data_dir/sample.grib2 $tempGribA
+grib_check_key_equals $tempGribA packingType,const 'grid_second_order 0'
+grib_check_key_equals $tempGribA isMessageValid 1
+
+$EXEC ${test_dir}/grib_clone_headers_only $tempGribA $tempGribB
+grib_check_key_equals $tempGribB packingType,const 'grid_simple 1'
+
+
 # Clean up
-rm -f $temp
+rm -f $tempGribA $tempGribB

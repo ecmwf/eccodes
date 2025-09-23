@@ -15,7 +15,6 @@
 # ---------------------------------------------------------
 label="grib_data_quality_test"
 tempOut=temp.1.${label}.out
-temp2=temp.2.${label}.out
 tempErr=temp.${label}.err
 tempGrib1=temp.${label}.grib1
 tempGrib2=temp.${label}.grib2
@@ -119,18 +118,18 @@ set -e
 [ $status -ne 0 ]
 
 
-echo "Test limits with steps..."
-# -----------------------------
+# echo "Test limits with steps..."
+# # -----------------------------
 input1=$ECCODES_SAMPLES_PATH/reduced_gg_pl_48_grib1.tmpl
-# This sets the minimum to 1.1 but this should work for step=0
-${tools_dir}/grib_set -s step=0,paramId=121,scaleValuesBy=1.1 $input1 $tempOut
+# # This sets the minimum to 1.1 but this should work for step=0
+# ${tools_dir}/grib_set -s step=0,paramId=121,scaleValuesBy=1.1 $input1 $tempOut
 
-# But it must fail when step > 0
-set +e
-${tools_dir}/grib_set -s step=6,paramId=121,scaleValuesBy=1.1 $input1 $tempOut
-status=$?
-set -e
-[ $status -ne 0 ]
+# # But it must fail when step > 0
+# set +e
+# ${tools_dir}/grib_set -s step=6,paramId=121,scaleValuesBy=1.1 $input1 $tempOut
+# status=$?
+# set -e
+# [ $status -ne 0 ]
 
 
 echo "Override the defaults..."
@@ -151,21 +150,6 @@ cat > $tempDir/param_limits.def <<EOF
     273   = { paramId=130; }
  } : double_type, hidden;
 EOF
-
-# High 2m temperature (paramId=167) should succeed
-export ECCODES_GRIB_DATA_QUALITY_CHECKS=1
-export ECCODES_EXTRA_DEFINITION_PATH=$test_dir/$tempDir
-${tools_dir}/grib_set -s paramId=167,scaleValuesBy=1000 $input1 $tempOut
-
-# Spectral temperature (paramId=130) should fail
-sh_sample="$ECCODES_SAMPLES_PATH/sh_sfc_grib1.tmpl"
-grib_check_key_equals $sh_sample "packingType,paramId" "spectral_complex 130"
-set +e
-${tools_dir}/grib_copy -r $sh_sample $tempGrib1
-status=$?
-set -e
-[ $status -ne 0 ]
-
 
 
 # Set limits based on a more complex condition

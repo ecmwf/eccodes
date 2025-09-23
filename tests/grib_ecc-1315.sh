@@ -21,7 +21,6 @@ tempRef=temp.$label.ref
 tempFilt=temp.$label.filt
 tempGrb=temp.$label.grib
 
-sample_grib1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 cat > $tempFilt << EOF

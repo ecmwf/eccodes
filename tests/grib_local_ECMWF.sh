@@ -15,7 +15,6 @@ if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
     exit 0
 fi
 
-REDIRECT=/dev/null
 sample_g1=$ECCODES_SAMPLES_PATH/reduced_gg_pl_640_grib1.tmpl
 sample_g2=$ECCODES_SAMPLES_PATH/reduced_gg_pl_640_grib2.tmpl
 
@@ -86,7 +85,7 @@ ${tools_dir}/grib_set -s type=em loc1.grib2 eps.grib2
 ${tools_dir}/grib_get -p localDefinitionNumber,productDefinitionTemplateNumber,derivedForecast eps.grib2 >> local.log
 ${tools_dir}/grib_set -s type=es loc1.grib2 eps.grib2
 ${tools_dir}/grib_get -p localDefinitionNumber,productDefinitionTemplateNumber,derivedForecast eps.grib2 >> local.log
-${tools_dir}/grib_set -s stream=enda loc1.grib2 eps.grib2 #2> $REDIRECT
+${tools_dir}/grib_set -s stream=enda loc1.grib2 eps.grib2
 ${tools_dir}/grib_get -p localDefinitionNumber,productDefinitionTemplateNumber eps.grib2 >> local.log
 
 diff local.log local.good.log

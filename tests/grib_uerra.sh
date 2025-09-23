@@ -125,5 +125,34 @@ grib_check_key_equals $temp1 'mars.stream' 'dame'
 result=$(${tools_dir}/grib_get -fp mars.time,mars.step $temp1)
 [ "$result" = "not_found not_found" ]
 
+# ECC-1913
+# ----------
+# types em/es for class=rr and expver=prod/test (and suiteName=se-al-ec though it works generally)
+for pspd in 10 11 ; do
+  if [ $pspd -eq 10 ]; then
+    expver=prod
+  else
+    expver=test
+  fi
+  for type in em es ; do
+    # Param 228228 (accum)
+    ${tools_dir}/grib_set -s \
+     paramId=228228,productionStatusOfProcessedData=$pspd,grib2LocalSectionPresent=1,crraLocalVersion=1,suiteName=4 \
+     $grib2_sample $temp1
+    ${tools_dir}/grib_set -s \
+     productionStatusOfProcessedData=$pspd,productDefinitionTemplateNumber=12,type=$type \
+     $temp1 $temp2
+    grib_check_key_equals $temp2 'mars.stream,mars.type,mars.expver' "enda $type $expver"
+     # Param 167 (instant)
+    ${tools_dir}/grib_set -s \
+     paramId=167,productionStatusOfProcessedData=$pspd,grib2LocalSectionPresent=1,crraLocalVersion=1,suiteName=4 \
+     $grib2_sample $temp1
+    ${tools_dir}/grib_set -s \
+     productionStatusOfProcessedData=$pspd,productDefinitionTemplateNumber=12,type=$type \
+     $temp1 $temp2
+    grib_check_key_equals $temp2 'mars.stream,mars.type,mars.expver' "enda $type $expver"
+  done
+done
+
 # Clean up
 rm -f $temp1 $temp2 $tempSample $tempLog

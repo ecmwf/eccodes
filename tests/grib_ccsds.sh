@@ -207,6 +207,12 @@ ECCODES_DEBUG=-1 ${tools_dir}/grib_set -s packingType=grid_ccsds $infile $outfil
 ${tools_dir}/grib_compare $infile $outfile1
 grep -q "CCSDS packing does not apply to spectral fields" $logfile
 
+# ECC-2088: Support for optimizeScaleFactor
+set -x
+${tools_dir}/grib_set    -s packingType=grid_ccsds $grib2_sample $outfile1
+${tools_dir}/grib_set -r -s optimizeScaleFactor=1 $outfile1 $outfile2
+grib_check_key_equals $outfile1 packingType,bitsPerValue,binaryScaleFactor,decimalScaleFactor,referenceValue 'grid_ccsds 16 -9 0 209.535'
+grib_check_key_equals $outfile2 packingType,bitsPerValue,binaryScaleFactor,decimalScaleFactor,referenceValue 'grid_ccsds 16 -59 -15 2.09535e-13'
 
 # Clean up
 rm -f $outfile1 $outfile2 $logfile

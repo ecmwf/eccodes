@@ -10,14 +10,7 @@
 
 . ./include.ctest.sh
 
-# ---------------------------------------------------------
-# This is the test for the JIRA issue ECC-XXXX
-# < Add issue summary here >
-# ---------------------------------------------------------
-
-REDIRECT=/dev/null
-
-label="grib_cmp_paramtype_test"  # Change prod to bufr or grib etc
+label="grib_cmp_paramtype_test"
 tempGrib=temp.$label.grib
 tempFilt=temp.$label.filt
 

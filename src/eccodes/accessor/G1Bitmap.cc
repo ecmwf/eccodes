@@ -65,7 +65,7 @@ int G1Bitmap::pack_double(const double* val, size_t* len)
 int G1Bitmap::value_count(long* count)
 {
     long tlen;
-    int err;
+    int err = 0;
 
     if ((err = grib_get_long_internal(get_enclosing_handle(), unusedBits_, &tlen)) != GRIB_SUCCESS)
         grib_context_log(context_, GRIB_LOG_ERROR, "grib_accessor_bitmap.value_count : cannot get %s err=%d", unusedBits_, err);
@@ -78,7 +78,7 @@ int G1Bitmap::unpack_bytes(unsigned char* val, size_t* len)
 {
     unsigned char* buf = get_enclosing_handle()->buffer->data;
     long tlen;
-    int err;
+    int err = 0;
     long length = byte_count();
     long offset = byte_offset();
     if (*len < (size_t)length) {

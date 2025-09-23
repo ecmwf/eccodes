@@ -10,8 +10,6 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
-
 label="grib_run_length_packing_test"
 tempGrib=temp.$label.grib
 tempLog=temp.$label.log

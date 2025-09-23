@@ -11,10 +11,9 @@
 . ./include.ctest.sh
 
 # ---------------------------------------------------------
-# This is the test for the JIRA issue ECC-680:
 # BUFR operator 203YYY: implement encoding
 # ---------------------------------------------------------
-label="bufr_ecc-680_test"
+label="bufr_operator_203_test"
 
 tempBufr=temp.$label.bufr
 tempFilt=temp.${label}.filter
@@ -115,6 +114,24 @@ status=$?
 set -e
 [ $status -ne 0 ]
 fgrep -q "does not fit in 14 bits" $tempText
+
+
+#
+# ECC-2136: Support operator 203 for compressed data
+# ---------------------------------------------------
+cat > $tempFilt <<EOF
+  set compressedData = 1;
+  set inputOverriddenReferenceValues = { -5000, -5000 };
+  set unexpandedDescriptors = { 203014, 7030, 7031, 203255, 307080 };
+  set heightOfStationGroundAboveMeanSeaLevel = -415;
+  set heightOfBarometerAboveMeanSeaLevel     = -417;
+  set pack = 1;
+  write;
+EOF
+
+${tools_dir}/codes_bufr_filter -o $tempBufr $tempFilt $sample_bufr4
+val=`${tools_dir}/bufr_get -s unpack=1 -p heightOfStationGroundAboveMeanSeaLevel $tempBufr`
+[ "$val" = "-415" ]
 
 
 

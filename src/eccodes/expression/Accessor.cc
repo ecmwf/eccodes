@@ -110,7 +110,7 @@ Accessor::Accessor(grib_context* c, const char* name, long start, size_t length)
 int Accessor::native_type(grib_handle* h) const
 {
     int type = 0;
-    int err;
+    int err = 0;
     if ((err = grib_get_native_type(h, name_, &type)) != GRIB_SUCCESS) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
                          "Error in evaluating the type of '%s': %s", name_, grib_get_error_message(err));

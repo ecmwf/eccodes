@@ -101,7 +101,7 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
 
     long binary_scale_factor  = 0;
     long decimal_scale_factor = 0;
-    // long optimize_scaling_factor  = 0;
+    long optimize_scaling_factor  = 0;
     double reference_value = 0;
     long bits_per_value    = 0;
     double max, min, d, divisor;
@@ -126,10 +126,8 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
         return err;
     if ((err = grib_get_long_internal(hand, decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
-
-    // if ((err = grib_get_long_internal(gh, optimize_scaling_factor_ , &optimize_scaling_factor)) != GRIB_SUCCESS)
-    //     return err;
-
+    if ((err = grib_get_long_internal(hand, optimize_scaling_factor_ , &optimize_scaling_factor)) != GRIB_SUCCESS)
+        return err;
     if ((err = grib_get_long_internal(hand, ccsds_flags_, &ccsds_flags)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_long_internal(hand, ccsds_block_size_, &ccsds_block_size)) != GRIB_SUCCESS)
@@ -218,6 +216,17 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
             DEBUG_ASSERT(reference_value <= min);
             return GRIB_INTERNAL_ERROR;
         }
+
+        binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
+        if (err) return err;
+    }
+    else if (optimize_scaling_factor) {
+        if ((err = grib_optimize_decimal_factor(this, reference_value_,
+                                                max, min, bits_per_value,
+                                                0, 1,
+                                                &decimal_scale_factor, &binary_scale_factor, &reference_value)) != GRIB_SUCCESS)
+            return err;
+        d = codes_power<double>(decimal_scale_factor, 10);
     }
     else {
         int last        = 127;  // last must be a parameter coming from the def file
@@ -257,10 +266,11 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
             return GRIB_INTERNAL_ERROR;
         }
         d = codes_power<double>(decimal_scale_factor, 10);
+
+        binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
+        if (err) return err;
     }
 
-    binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
-    if (err) return err;
     divisor = codes_power<double>(-binary_scale_factor, 2);
 
     size_t nbytes = (bits_per_value + 7) / 8;

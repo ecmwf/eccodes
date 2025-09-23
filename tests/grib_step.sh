@@ -251,12 +251,12 @@ grep -q "Unknown stepType" $tempLog
 # --------------------
 cat >$tempFilt <<EOF
   set productDefinitionTemplateNumber = 8;
-  set numberOfTimeRange = 3;
+  set numberOfTimeRanges = 3;
 
-  meta elem_penultimate element(typeOfStatisticalProcessing, numberOfTimeRange - 2);
+  meta elem_penultimate element(typeOfStatisticalProcessing, numberOfTimeRanges - 2);
   set elem_penultimate = 8;
 
-  meta elem_last  element(typeOfStatisticalProcessing, numberOfTimeRange - 1);
+  meta elem_last  element(typeOfStatisticalProcessing, numberOfTimeRanges - 1);
   set elem_last = 7;
 
   print "[typeOfStatisticalProcessing]";

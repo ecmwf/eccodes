@@ -52,6 +52,12 @@ ${tools_dir}/grib_set -s scaleFactorOfSecondFixedSurface=99 $sample $tempGrib
 grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "Second fixed surface: If the type of surface is missing so should its scaleFactor/scaledValue keys" $tempText
 
+# Suppress the product checks; just do grid
+result=$( ${tools_dir}/grib_get -s messageValidityChecks=grid -p isMessageValid $tempGrib )
+[ $result -eq 1 ]
+result=$( ${tools_dir}/grib_get -s messageValidityChecks=product -p isMessageValid $tempGrib )
+[ $result -eq 0 ]
+
 ${tools_dir}/grib_set -s typeOfFirstFixedSurface=missing,scaleFactorOfFirstFixedSurface=99 $sample $tempGrib
 grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "First fixed surface: If the type of surface is missing so should its scaleFactor/scaledValue keys" $tempText
@@ -102,12 +108,10 @@ grep -q "Invalid step: startStep > endStep" $tempText
 # Wrong order of keys
 ${tools_dir}/grib_set -s endStep=1,startStep=1,stepType=accum  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrib
 grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
-cat $tempText
 grep -q "Invalid step" $tempText
 
 ${tools_dir}/grib_set -s stepType=accum,endStep=6,startStep=6  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrib
 grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
-cat $tempText
 grep -q "Invalid steps: stepType=accum but startStep=endStep" $tempText
 
 
@@ -117,7 +121,21 @@ if [ $HAVE_GEOGRAPHY -eq 1 ]; then
    ${tools_dir}/grib_set -s Nj=0 $data_dir/sample.grib2 $tempGrib
    grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
    grep -q "Regular grid Geoiterator" $tempText
+
+   # Disable grid checks
+   result=$( ${tools_dir}/grib_get -s messageValidityChecks=local -p isMessageValid $tempGrib )
+   [ $result -eq 1 ]
+
+   # ECC-2127: Invalid direction increments
+   ${tools_dir}/grib_set -s iDirectionIncrementGiven=0,iDirectionIncrement=4 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $tempGrib
+   grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+   grep -q "iDirectionIncrementGiven=0 but iDirectionIncrement!=missing" $tempText
+
+   ${tools_dir}/grib_set -s iDirectionIncrementGiven=1,iDirectionIncrement=missing $ECCODES_SAMPLES_PATH/GRIB2.tmpl $tempGrib
+   grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+   grep -q "iDirectionIncrementGiven=1 but iDirectionIncrement=missing" $tempText
 fi
+
 
 # Check reduced Gaussian grid Ni
 # ------------------------------
@@ -177,13 +195,24 @@ grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "interpretationOfNumberOfPoints should be 1" $tempText
 
 
-# Check data values
-# ------------------------------
-# Note: This is actually quite an expensive check .... for now disabled
-#
-# ${tools_dir}/grib_set -s bitsPerValue=25 $data_dir/sample.grib2 $tempGrib
-# grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
-# grep -q "Data section size mismatch" $tempText
+# Check data values (by default disabled)
+# ---------------------------------------
+${tools_dir}/grib_set -s typeOfLevel=surface,bitsPerValue=25 $data_dir/sample.grib2 $tempGrib
+result=$( ${tools_dir}/grib_get -s messageValidityChecks=data -p isMessageValid $tempGrib  2>$tempText )
+[ $result -eq 0 ]
+grep -q "Data section size mismatch" $tempText
+
+result=$( ${tools_dir}/grib_get -s messageValidityChecks=default -p isMessageValid $tempGrib  2>$tempText )
+[ $result -eq 1 ]
+
+# test with filter
+${tools_dir}/grib_filter - $tempGrib <<EOF
+   assert(isMessageValid == 1);
+   set messageValidityChecks = 'default';
+   assert(isMessageValid == 1);
+   set messageValidityChecks = 'data';
+   assert(isMessageValid == 0);
+EOF
 
 
 # Check number of values, missing etc
@@ -212,6 +241,17 @@ grep -q "Spectral fields cannot have bitsPerValue=0" $tempText
 ${tools_dir}/grib_set -s bitmapPresent=1 $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $tempGrib
 grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "Spectral fields cannot have a bitmap" $tempText
+
+
+# Bad user input
+# ---------------
+set +e
+${tools_dir}/grib_get -s messageValidityChecks=rubbish -p isMessageValid $ECCODES_SAMPLES_PATH/GRIB2.tmpl 2>$tempText
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid argument" $tempText
+grep -q "Select one or more checks from" $tempText
 
 
 # Only GRIB supported for now

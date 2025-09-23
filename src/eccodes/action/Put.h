@@ -10,8 +10,6 @@
 
 #pragma once
 
-#include "grib_api_internal.h"
-
 // No longer used: For the original intent see
 // src/deprecated/action_class_put.cc
 grib_action* grib_action_create_put(grib_context* context, const char* name, grib_arguments* args);

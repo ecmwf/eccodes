@@ -46,6 +46,12 @@ int Time::unpack_long(long* val, size_t* len)
                          "Key %s (%s): Truncating time: non-zero seconds(%ld) ignored", name_, __func__, second);
     }
 
+    if (!is_time_valid(hour, minute, second)) {
+        // Just a warning during decoding as we must support legacy data
+        fprintf(stderr, "ECCODES WARNING :  %s:%s: Time is not valid! hour=%ld min=%ld sec=%ld\n",
+                class_name_, __func__, hour, minute, second);
+    }
+
     if (*len < 1)
         return GRIB_WRONG_ARRAY_SIZE;
 
@@ -74,7 +80,7 @@ int Time::pack_long(const long* val, size_t* len)
     minute = v % 100;
     second = 0; /* We ignore the 'seconds' in our time calculation! */
 
-    if (!is_time_valid(v)) {
+    if (!is_time_valid_HHMM(v)) {
         // ECC-1777: For now just a warning. Will later change to an error
         fprintf(stderr, "ECCODES WARNING :  %s:%s: Time is not valid! hour=%ld min=%ld sec=%ld\n",
                 class_name_, __func__, hour, minute, second);
