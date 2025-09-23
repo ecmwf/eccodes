@@ -60,7 +60,8 @@ concept isTemplateExperimental(false) {
 
 # ECC-1806
 transient paramIdForConversion = 0;
-transient convertingSpectralSimpleToComplex = 0;
+# ECC-2137
+transient convertingFrom = "unknown" : hidden;
 
 if (isGridded) {
     meta gridSpec grid_spec(): hidden, no_copy;
