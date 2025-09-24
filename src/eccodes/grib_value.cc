@@ -528,6 +528,9 @@ static int grib_set_string_(grib_handle* h, const char* name, const char* val, s
     int ret = GRIB_SUCCESS;
     grib_accessor* a = NULL;
     bool add_bitmap = false;
+    grib_context* ctx = h->context;
+    bool changing_packing_type = false; // See ECC-2141
+    const int quality_checks_saved = ctx->grib_data_quality_checks;  //save state
 
     int processed = preprocess_packingType_change(h, name, val);
     if (processed)
@@ -535,6 +538,8 @@ static int grib_set_string_(grib_handle* h, const char* name, const char* val, s
 
     // ECC-536: Embedded bitmap?
     if (grib_inline_strcmp(name, "packingType") == 0) {
+        changing_packing_type = true;
+        ctx->grib_data_quality_checks = 0;  // ECC-2141: disable during change of packing
         long missingValsEmbedded = 0;
         if (grib_get_long(h, "missingValueManagementUsed", &missingValsEmbedded) == GRIB_SUCCESS && missingValsEmbedded != 0) {
             add_bitmap = true;
@@ -560,7 +565,11 @@ static int grib_set_string_(grib_handle* h, const char* name, const char* val, s
             if (add_bitmap) {
                 grib_set_long(h, "bitmapPresent", 1);
             }
-            return grib_dependency_notify_change(a);
+            ret = grib_dependency_notify_change(a);
+            if (changing_packing_type) {
+                ctx->grib_data_quality_checks = quality_checks_saved;  // ECC-2141: restore
+            }
+            return ret;
         }
         return ret;
     }
