@@ -45,5 +45,71 @@ EOF
   done
 fi
 
+# now we test for the seasonal products
+# for those we have monthyl statistics, but timespan should be none in case of a single time loop
+for STREAM in 1043 1092 1221 1224 ; do
+cat >$tempFilt<<EOF
+set setLocalDefinition=1;
+set stream=$STREAM;
+set tablesVersion=34;
+set productDefinitionTemplateNumber=8;
+set numberOfTimeRanges=1;
+set lengthOfTimeRange=744;
+write;
+EOF
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
+grib_check_key_equals $tempGrib timeSpan "none"
+done
+
+# sub-seasonal, one time loop -> timeSpan = none
+for TYPE in 47 48 80 81 82 83 ; do
+cat >$tempFilt<<EOF
+set setLocalDefinition=1;
+set stream=1122;
+set type=$TYPE;
+set tablesVersion=34;
+set productDefinitionTemplateNumber=8;
+set numberOfTimeRanges=1;
+set lengthOfTimeRange=168;
+write;
+EOF
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
+grib_check_key_equals $tempGrib timeSpan "none"
+done
+
+# fromstart
+for IUTR in 0 1 2 ; do
+cat >$tempFilt<<EOF
+set setLocalDefinition=1;
+set tablesVersion=34;
+set productDefinitionTemplateNumber=8;
+set indicatorOfUnitForTimeRange=$IUTR;
+set numberOfTimeRanges=1;
+set typeOfStatisticalProcessing=1;
+set forecastTime=0;
+set lengthOfTimeRange=1;
+write;
+EOF
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
+grib_check_key_equals $tempGrib timeSpan "fromstart"
+done
+
+# month
+for LTR in 672 696 720 744 ; do
+cat >$tempFilt<<EOF
+set setLocalDefinition=1;
+set tablesVersion=34;
+set productDefinitionTemplateNumber=8;
+set indicatorOfUnitForTimeRange=1;
+set numberOfTimeRanges=1;
+set typeOfStatisticalProcessing=0;
+set lengthOfTimeRange=$LTR;
+write;
+EOF
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
+grib_check_key_equals $tempGrib timeSpan "month"
+done
+
+
 # Clean up
 rm -f $tempGrib
