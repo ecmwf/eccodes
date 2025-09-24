@@ -189,7 +189,7 @@ if [ $HAVE_AEC -eq 1 ]; then
    input=${data_dir}/reduced_gaussian_surface.grib2
    grib_check_key_equals $input packingType grid_simple
    ${tools_dir}/grib_set -s scaleValuesBy=100 $input $tempOut
-   ECCODES_GRIB_DATA_QUALITY_CHECKS=1 grib_set -s packingType=grid_ccsds $tempOut $tempGrib2 > $tempLog 2>&1
+   ECCODES_GRIB_DATA_QUALITY_CHECKS=1 ${tools_dir}/grib_set -s packingType=grid_ccsds $tempOut $tempGrib2 > $tempLog 2>&1
    if [ -s $tempLog ]; then
       # -s = True if file exists and has a size greater than zero
       echo "Error: No output should have been generated!"
