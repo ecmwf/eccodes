@@ -10,30 +10,25 @@
 
 . ./include.ctest.sh
 
-# ---------------------------------------------------------
-# This is the test for JIRA issue ECC-XXXX
-# < Add issue summary here >
-# ---------------------------------------------------------
-
 REDIRECT=/dev/null
 
-label="grib_stattype_test"  # Change prod to bufr or grib etc
+label="grib_stattype_test"
 tempGrib=temp.$label.grib
 tempFilt=temp.$label.rules
 
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 cat >$tempFilt<<EOF
-set tablesVersion=35;
-set setLocalDefinition=1;
-set class='e6';
-set stream='stte';
-set productDefinitionTemplateNumber = 8;
-set numberOfTimeRanges = 2;
-set typeOfStatisticalProcessing = {0,6};
-set indicatorOfUnitForTimeRange = {1,1};
-set lengthOfTimeRange = {720,24};
-write;
+    set tablesVersion=35;
+    set setLocalDefinition=1;
+    set class='e6';
+    set stream='stte';
+    set productDefinitionTemplateNumber = 8;
+    set numberOfTimeRanges = 2;
+    set typeOfStatisticalProcessing = {0,6};
+    set indicatorOfUnitForTimeRange = {1,1};
+    set lengthOfTimeRange = {720,24};
+    write;
 EOF
 
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
@@ -43,16 +38,16 @@ grib_check_key_equals $tempGrib stattype,timespan "moav 24h"
 rm -f $tempGrib $tempFilt
 
 cat >$tempFilt<<EOF
-set tablesVersion=35;
-set setLocalDefinition=1;
-set class='e6';
-set stream='stte';
-set productDefinitionTemplateNumber = 8;
-set numberOfTimeRanges = 3;
-set typeOfStatisticalProcessing = {0,6,2};
-set indicatorOfUnitForTimeRange = {1,1,1};
-set lengthOfTimeRange = {720,24,1};
-write;
+    set tablesVersion=35;
+    set setLocalDefinition=1;
+    set class='e6';
+    set stream='stte';
+    set productDefinitionTemplateNumber = 8;
+    set numberOfTimeRanges = 3;
+    set typeOfStatisticalProcessing = {0,6,2};
+    set indicatorOfUnitForTimeRange = {1,1,1};
+    set lengthOfTimeRange = {720,24,1};
+    write;
 EOF
 
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
