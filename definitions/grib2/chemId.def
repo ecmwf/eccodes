@@ -538,6 +538,22 @@
 '404' = {
 	constituentType = 2 ;
 	}
+#Toluene
+'431' = {
+	constituentType = 10022 ;
+	}
+#Benzene
+'432' = {
+	constituentType = 10021 ;
+	}
+#Xylene
+'433' = {
+	constituentType = 10023 ;
+	}
+#Butene
+'438' = {
+	constituentType = 10016 ;
+	}
 #Nitrate
 '900' = {
 	constituentType = 62004 ;
@@ -717,3 +733,59 @@
         scaledValueOfSecondSize = missing() ;
         constituentType = 62026 ;
         }
+#Volcanic ash
+'932' = {
+	constituentType = 62025 ;
+	}
+#Black carbon organic aerosol
+'933' = {
+        constituentType = 62009 ;
+        }
+#Organic matter aerosol
+'934' = {
+        constituentType = 62010 ;
+        }
+#Dust aerosol
+'935' = {
+        constituentType = 62001 ;
+        }
+#Sea salt aerosol
+'936' = {
+	constituentType = 62008 ;
+	}
+#Dust aerosol smaller than 1 um
+'937' = {
+	scaleFactorOfSecondSize = missing() ;
+	scaledValueOfFirstSize = 1 ;
+	scaleFactorOfFirstSize = 6 ;
+	typeOfSizeInterval = 5 ;
+	scaledValueOfSecondSize = missing() ;
+	constituentType = 62001 ;
+	}
+#Dust aerosol smaller than 2.5 um
+'938' = {
+	scaleFactorOfSecondSize = missing() ;
+	scaledValueOfFirstSize = 25 ;
+	scaleFactorOfFirstSize = 7 ;
+	typeOfSizeInterval = 5 ;
+	scaledValueOfSecondSize = missing() ;
+	constituentType = 62001 ;
+	}
+#Dust aerosol smaller than 10 um
+'939' = {
+	scaleFactorOfSecondSize = missing() ;
+	scaledValueOfFirstSize = 1 ;
+	scaleFactorOfFirstSize = 5 ;
+	typeOfSizeInterval = 5 ;
+	scaledValueOfSecondSize = missing() ;
+	constituentType = 62001 ;
+	}
+#Dust aerosol smaller than 20 um
+'940' = {
+	scaleFactorOfSecondSize = missing() ;
+	scaledValueOfFirstSize = 2 ;
+	scaleFactorOfFirstSize = 5 ;
+	typeOfSizeInterval = 5 ;
+	scaledValueOfSecondSize = missing() ;
+	constituentType = 62001 ;
+	}

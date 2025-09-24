@@ -1,0 +1,19 @@
+if ( defined(stattype) && is_one_of(stattype,"moav","momn","momx","mosd") ) {
+ meta verificationDate        g1verificationdate(dataDate, dataTime, endStep) : read_only;
+ meta monthlyVerificationDate g1monthlydate(verificationDate) : dump,no_copy;
+ alias mars.date            = monthlyVerificationDate;
+ alias monthlyVerificationTime = zero;
+ meta verificationYear          evaluate(verificationDate/10000);
+ meta monthlyVerificationYear   evaluate(monthlyVerificationDate/10000);
+ meta verificationMonth         evaluate( (verificationDate/100)%100 );
+ meta monthlyVerificationMonth  evaluate( (monthlyVerificationDate/100)%100 );
+} else {
+ alias monthlyVerificationTime = zero;
+ alias monthlyVerificationDate = dataDate;
+}
+
+alias mars.number = perturbationNumber;
+
+unalias mars.time;
+unalias mars.step;
+

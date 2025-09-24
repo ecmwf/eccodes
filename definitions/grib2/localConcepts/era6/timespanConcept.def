@@ -10,3 +10,22 @@
  '3h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='2100'; lengthOfTimeRange = 3; type='4v';}
  '6h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='0900'; lengthOfTimeRange = 6; type='4v';}
  '6h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='2100'; lengthOfTimeRange = 6; type='4v';}
+## Statistical window overall concept based on official low-level GRIB2 keys only
+ '1h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='0600'; lengthOfTimeRange = 1;}
+ '1h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='1800'; lengthOfTimeRange = 1;}
+ '3h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='0600'; lengthOfTimeRange = 3;}
+ '3h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='1800'; lengthOfTimeRange = 3;}
+ # types 4v 09 / 21 UTC rolling accumulations
+ '1h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='0900'; lengthOfTimeRange = 1; type='4v';}
+ '1h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='2100'; lengthOfTimeRange = 1; type='4v';}
+ '3h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='0900'; lengthOfTimeRange = 3; type='4v';}
+ '3h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='2100'; lengthOfTimeRange = 3; type='4v';}
+ '6h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='0900'; lengthOfTimeRange = 6; type='4v';}
+ '6h'   = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1; dataTime='2100'; lengthOfTimeRange = 6; type='4v';}
+#
+ 'none'    = {stream=1257; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=1;}
+ 'none'    = {stream=1257; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=2;}
+ 'none'    = {stream=1257; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=3;}
+ 'none'    = {stream=1258; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=1;}
+ 'none'    = {stream=1258; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=2;}
+ 'none'    = {stream=1258; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=3;}

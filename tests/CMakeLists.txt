@@ -179,6 +179,7 @@ if( HAVE_BUILD_TOOLS )
         grib_cmp_paramtype
         grib_timeSpanConcept
         grib_cmp_timeSpan
+        grib_stattype
     )
 
     # These tests require data downloads

@@ -5,6 +5,12 @@
 'none'  = {stream=1043; numberOfTimeRanges=1;}
 'none'  = {stream=1224; numberOfTimeRanges=1;}
 'none'  = {stream=1221; numberOfTimeRanges=1;}
+'none'  = {stream=1257; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=1;}
+'none'  = {stream=1257; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=2;}
+'none'  = {stream=1257; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=3;}
+'none'  = {stream=1258; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=1;}
+'none'  = {stream=1258; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=2;}
+'none'  = {stream=1258; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=3;}
 # special rules for weekly extended-range (sub-seasonal) products
 'none'  = {marsStream=1122; type='fcmax';   numberOfTimeRanges=1;}
 'none'  = {marsStream=1122; type='fcmin';   numberOfTimeRanges=1;}
@@ -14,7 +20,7 @@
 'none'  = {marsStream=1122; type='taes';    numberOfTimeRanges=1;}
 ## accumulations
 # 24 hourly time unit
-'24h'    = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=24; class=1; stream=1035; type=30;}
+'24h'  = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=24; class=1; stream=1035; type=30;}
 # special rule for accumulations in streams efhs / eehs, type cd
 '24h'  = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=24;  class=1; stream=1040; type=32;}
 '72h'  = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=72;  class=1; stream=1040; type=32;}
@@ -25,3 +31,5 @@
 '360h' = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=360; class=1; stream=1040; type=32;}
 ## 7 days rolling accumulation
 '7 days' = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=168; type=32;}
+ ## 7 days rolling accumulation
+ '7 days' = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168; type='cd';}
