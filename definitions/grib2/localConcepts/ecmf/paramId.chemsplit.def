@@ -2435,18 +2435,6 @@
 	 parameterCategory = 162 ;
 	 parameterNumber = 141 ;
 	}
-#100 metre U wind component anomaly
-'171006' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 6 ;
-	}
-#100 metre V wind component anomaly
-'171007' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 7 ;
-	}
 #Maximum temperature at 2 metres in the last 6 hours anomaly
 '171121' = {
 	 discipline = 192 ;
