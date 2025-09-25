@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
     grib_handle* h1 = NULL;
     grib_handle* h2 = NULL;
     int err       = 0;
-    size_t num_diffs = 0, i = 0;
+    size_t num_diffs = 0;
     List list_provided_keys;
 
     f1 = fopen(argv[1], "rb");

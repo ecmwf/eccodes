@@ -194,7 +194,6 @@ const char* HashArray::get_hash_array_full_path()
 
 grib_hash_array_value* HashArray::get_hash_array(grib_handle* h)
 {
-    grib_hash_array_value* result = NULL;
     eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     return get_hash_array_impl(h);
 }

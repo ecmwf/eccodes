@@ -186,7 +186,6 @@ grib_concept_value* Concept::get_concept_impl(grib_handle* h)
 
 grib_concept_value* Concept::get_concept(grib_handle* h)
 {
-    grib_concept_value* result = NULL;
     eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     return get_concept_impl(h);
 }
