@@ -4,3 +4,4 @@
 'icon' = { forcingModelCode = 4; }
 'era5' = { forcingModelCode = 5; }
 'seas' = { forcingModelCode = 6; }
+'obs' = { forcingModelCode = 7; }
