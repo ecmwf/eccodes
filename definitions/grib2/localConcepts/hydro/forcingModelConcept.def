@@ -1,6 +1,6 @@
-'IFS' = { forcingModelCode = 1; }
-'AIFS' = { forcingModelCode = 2; }
-'COSMO' = { forcingModelCode = 3; }
-'DWD' = { forcingModelCode = 4; }
-'ERA5' = { forcingModelCode = 5; }
-'SEAS' = { forcingModelCode = 6; }
+'ifs' = { forcingModelCode = 1; }
+'aifs' = { forcingModelCode = 2; }
+'cosmo' = { forcingModelCode = 3; }
+'icon' = { forcingModelCode = 4; }
+'era5' = { forcingModelCode = 5; }
+'seas' = { forcingModelCode = 6; }
