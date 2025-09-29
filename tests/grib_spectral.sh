@@ -14,6 +14,7 @@ label="grib_spectral_test"
 
 tempFilt=temp.${label}.filt
 tempGrib=temp.${label}.grib
+tempText=temp.${label}.txt
 
 input_complex=$ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl
 
@@ -25,6 +26,13 @@ rm -f $tempGrib
 tempSimple=temp.$label.simple.grib
 ${tools_dir}/grib_set  -rs packingType=spectral_simple $input_complex $tempSimple
 $EXEC ${test_dir}/grib_spectral $tempSimple $tempGrib
+
+# ECC-2126
+${tools_dir}/grib_set -rs packingType=spectral_simple,J=9 $input_complex $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 0
+${tools_dir}/grib_get -p isMessageValid $tempGrib 2>$tempText
+grep -q "Inconsistent numbers" $tempText
+
 
 # GRIB1: octet_number pack_long
 input_complex=$ECCODES_SAMPLES_PATH/sh_ml_grib1.tmpl
@@ -81,4 +89,4 @@ avg=$( ${tools_dir}/grib_get -p avg:i $tempGrib )
 
 
 # Clean up
-rm -f $tempSimple $tempFilt $tempGrib
+rm -f $tempSimple $tempFilt $tempGrib $tempText

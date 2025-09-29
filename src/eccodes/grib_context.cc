@@ -197,7 +197,6 @@ static void default_print(const grib_context* c, void* descriptor, const char* m
     fprintf((FILE*)descriptor, "%s", mess);
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_context_set_print_proc(grib_context* c, grib_print_proc p)
 {
     c = c ? c : grib_context_get_default();
@@ -205,7 +204,6 @@ void grib_context_set_print_proc(grib_context* c, grib_print_proc p)
     c->print = (p ? p : &default_print);
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_context_set_data_quality_checks(grib_context* c, int val)
 {
     c = c ? c : grib_context_get_default();
@@ -217,14 +215,12 @@ void grib_context_set_data_quality_checks(grib_context* c, int val)
     c->grib_data_quality_checks = val;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_context_set_debug(grib_context* c, int mode)
 {
     c = c ? c : grib_context_get_default();
     c->debug = mode;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_context_set_logging_proc(grib_context* c, grib_log_proc p)
 {
     c = c ? c : grib_context_get_default();
@@ -232,7 +228,6 @@ void grib_context_set_logging_proc(grib_context* c, grib_log_proc p)
     c->output_log = (p ? p : &default_log);
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 // f can be stderr, stdout or a file like /dev/null
 void grib_context_set_logging_file(grib_context* c, FILE* f)
 {
@@ -241,13 +236,11 @@ void grib_context_set_logging_file(grib_context* c, FILE* f)
     c->log_stream = f;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 long grib_get_api_version()
 {
     return ECCODES_VERSION;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_print_api_version(FILE* out)
 {
     fprintf(out, "%d.%d.%d",
@@ -258,7 +251,6 @@ void grib_print_api_version(FILE* out)
     //fprintf(out, "%s", " PRE-RELEASE");
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 const char* grib_get_package_name()
 {
     return "ecCodes";
@@ -728,14 +720,12 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
     return NULL;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 char* grib_samples_path(const grib_context* c)
 {
     if (!c) c = grib_context_get_default();
     return c->grib_samples_path;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 char* grib_definition_path(const grib_context* c)
 {
     if (!c) c = grib_context_get_default();
@@ -850,14 +840,12 @@ void grib_context_delete(grib_context* c)
     return eccodes::logErrorAndReturnValue(result);
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void codes_bufr_multi_element_constant_arrays_on(grib_context* c)
 {
     if (!c) c = grib_context_get_default();
     c->bufr_multi_element_constant_arrays = 1;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void codes_bufr_multi_element_constant_arrays_off(grib_context* c)
 {
     if (!c) c = grib_context_get_default();
@@ -1199,49 +1187,42 @@ void codes_assertion_failed(const char* message, const char* file, int line)
     }
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 int grib_get_gribex_mode(const grib_context* c)
 {
     if (!c) c = grib_context_get_default();
     return c->gribex_mode_on;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_gribex_mode_on(grib_context* c)
 {
     if (!c) c = grib_context_get_default();
     c->gribex_mode_on = 1;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_gribex_mode_off(grib_context* c)
 {
     if (!c) c = grib_context_get_default();
     c->gribex_mode_on = 0;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_gts_header_on(grib_context* c)
 {
     if (!c) c = grib_context_get_default();
     c->gts_header_on = 1;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_gts_header_off(grib_context* c)
 {
     if (!c) c = grib_context_get_default();
     c->gts_header_on = 0;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_multi_support_on(grib_context* c)
 {
     if (!c) c = grib_context_get_default();
     c->multi_support_on = 1;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_multi_support_off(grib_context* c)
 {
     if (!c) c = grib_context_get_default();

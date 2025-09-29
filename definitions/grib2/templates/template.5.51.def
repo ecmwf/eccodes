@@ -10,7 +10,7 @@ if (gribex_mode_on()) {
   transient computeLaplacianOperator=1 : hidden;
 }
 
-meta _numberOfValues spectral_truncation(J,K,M,numberOfValues): read_only;
+# meta _numberOfValues spectral_truncation(J,K,M,numberOfValues): read_only;
 
 constant laplacianScalingFactorUnset = -2147483647;
 signed[4] laplacianScalingFactor : edition_specific ;
@@ -34,3 +34,4 @@ meta _TS spectral_truncation(JS,KS,MS,TS) : read_only,hidden;
 codetable[1] unpackedSubsetPrecision ('5.7.table',masterDir,localDir) = 1 : dump;
 
 alias precisionOfTheUnpackedSubset=unpackedSubsetPrecision;
+transient realPartOf00 = 0 : hidden; # ECC-2137

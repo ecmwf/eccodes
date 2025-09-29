@@ -1172,6 +1172,7 @@ void grib_context_set_samples_path(grib_context* c, const char* path);
 
 void grib_context_set_debug(grib_context* c, int mode);
 void grib_context_set_data_quality_checks(grib_context* c, int val);
+char* grib_context_full_defs_path(grib_context* c, const char* basename);
 
 /**
  *  Sets the context printing procedure used for user interaction

@@ -87,6 +87,9 @@ if (!headersOnly) {
   template     section_5 "grib1/section.5.def";
 }
 
+# ECC-2137
+transient convertingFrom = "unknown" : hidden;
+
 if (isGridded) {
     meta gridSpec grid_spec(): hidden, no_copy;
 }

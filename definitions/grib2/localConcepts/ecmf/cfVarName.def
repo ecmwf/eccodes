@@ -29,6 +29,12 @@
 	 typeOfStatisticalProcessing = 3 ;
 	 lengthOfTimeRange = 24 ;
 	}
+#Maximum 10 metre wind gust in the last 6 hours
+'fg10_6' = {
+	 discipline = 192 ;
+	 parameterCategory = 128 ;
+	 parameterNumber = 123 ;
+	}
 #10 metre wind gust difference
 'fgdiff10' = {
 	 discipline = 192 ;
@@ -102,7 +108,7 @@
 	 lengthOfTimeRange = 3 ;
 	}
 #Maximum 10 metre wind gust in the last 3 hours
-'fg310' = {
+'fg10_3' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 28 ;

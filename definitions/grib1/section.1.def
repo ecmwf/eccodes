@@ -27,8 +27,6 @@ constant wrongPadding=0 : hidden;
 unsigned[1] table2Version : edition_specific,dump;
 alias gribTablesVersionNo=table2Version;
 
-#assert(section1Length > 5);
-
 # Identification of originating/generating centre
 codetable[1] centre 'common/c-1.table' : dump,string_type;
 alias identificationOfOriginatingGeneratingCentre=centre;
