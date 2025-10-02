@@ -465,3 +465,6 @@ ecbuild_add_library(
         $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
 )
+if(ENABLE_INSTALL_BUNDLED_DEPENDENCIES)
+    ecbuild_install_dependency_with_soversion(libaec::aec)
+endif()
