@@ -25,6 +25,7 @@ set +e
 ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=300 $sample_grib2 $tempGrib > $tempLog 2>&1
 status=$?
 set -e
+[ $status -ne 0 ]
 grep -q "This local definition has been deprecated" $tempLog
 
 rm -f $tempGrib $tempLog

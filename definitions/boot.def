@@ -32,6 +32,9 @@ constant marsDir="mars" : no_copy,hidden;
 constant present=1 : hidden;
 # alias epsStatistics=zero : hidden;
 
+# Temporary
+transient expandBoundingBox = 1 : hidden;
+
 constant defaultParameter = 0 : hidden;
 constant defaultName="unknown" :hidden;
 constant defaultShortName="unknown" : hidden;

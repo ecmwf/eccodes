@@ -229,6 +229,10 @@ int Variable::unpack_string(char* val, size_t* len)
         snprintf(p, 64, "%g", dval_);
     }
 
+    if (!p) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: Cannot unpack string %s", class_name_, name_);
+        return GRIB_INVALID_ARGUMENT;
+    }
     slen = strlen(p) + 1;
     if (*len < slen) {
         grib_context_log(context_, GRIB_LOG_ERROR,

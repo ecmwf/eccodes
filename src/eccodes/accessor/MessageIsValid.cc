@@ -27,12 +27,17 @@ void MessageIsValid::init(const long l, grib_arguments* arg)
     product_ = arg->get_name(h, 0);
     edition_ = 0;
 
-    flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     length_ = 0;
+    // GRIB_SECTION_DATA off by default. Too costly
+    enabledChecks_ = GRIB_SECTION_PRODUCT | GRIB_SECTION_GRID | GRIB_SECTION_LOCAL | GRIB_SECTION_BITMAP;
 }
 
 int MessageIsValid::check_date()
 {
+    if (!product_enabled()) {
+        return GRIB_SUCCESS;  // product-related checks disabled
+    }
+
     if (handle_->context->debug)
         fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
@@ -54,7 +59,7 @@ int MessageIsValid::check_date()
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Invalid date/time: %ld-%ld-%ld %ld:%ld:%ld",
                          TITLE, year, month, day, hour, min, sec);
-        return GRIB_INVALID_MESSAGE ;
+        return GRIB_INVALID_MESSAGE;
     }
     return GRIB_SUCCESS;
 }
@@ -105,6 +110,33 @@ int MessageIsValid::check_spectral()
         }
     }
 
+    // ECC-2126
+    if (edition_ == 2) {
+        char packingType[128] = {0,};
+        len = sizeof(packingType);
+        err = grib_get_string_internal(handle_, "packingType", packingType, &len);
+        if (err) return err;
+        if (STR_EQUAL(packingType, "spectral_complex") || STR_EQUAL(packingType, "spectral_simple")) {
+            size_t size = 0;
+            if ((err = grib_get_size(handle_, "values", &size)) != GRIB_SUCCESS)
+                return err;
+            long numberOfDataPoints = 0;
+            if ((err = grib_get_long_internal(handle_, "numberOfDataPoints", &numberOfDataPoints)) != GRIB_SUCCESS)
+                return err;
+
+            long numberOfCodedValues = 0;
+            if ((err = grib_get_long_internal(handle_, "numberOfCodedValues", &numberOfCodedValues)) != GRIB_SUCCESS)
+                return err;
+
+            if (size != (size_t)numberOfDataPoints || numberOfDataPoints != numberOfCodedValues) {
+                grib_context_log(context_, GRIB_LOG_ERROR,
+                    "%s: Inconsistent numbers: size of values=%zu numberOfDataPoints=%ld numberOfCodedValues=%ld (packingType=%s)",
+                    TITLE, size, numberOfDataPoints, numberOfCodedValues, packingType);
+                return GRIB_INVALID_MESSAGE;
+            }
+        }
+    }
+
     return GRIB_SUCCESS;
 }
 
@@ -142,39 +174,48 @@ int MessageIsValid::check_grid_and_packing_type()
     return GRIB_SUCCESS;
 }
 
-// int grib_accessor_message_is_valid_t::check_field_values()
-// {
-//     if (handle_->context->debug)
-//         fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
-//     int err = GRIB_SUCCESS;
-//     double* values = NULL;
-//     size_t size = 0;
-//     grib_context* c = handle_->context;
-//     if ((err = grib_get_size(handle_, "values", &size)) != GRIB_SUCCESS)
-//         return err;
-//     values = (double*)grib_context_malloc(c, size * sizeof(double));
-//     if (!values)
-//         return GRIB_OUT_OF_MEMORY;
-//     if ((err = grib_get_double_array(handle_, "values", values, &size)) != GRIB_SUCCESS) {
-//         if (err == GRIB_FUNCTIONALITY_NOT_ENABLED) {
-//             err = GRIB_SUCCESS;
-//         }
-//         grib_context_free(c, values);
-//         return err;
-//     }
-//     grib_context_free(c, values);
-//     return GRIB_SUCCESS;
-// }
+int MessageIsValid::check_field_values()
+{
+    if (!data_enabled()) {
+        return GRIB_SUCCESS;  // data-related checks disabled
+    }
+
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
+    int err = GRIB_SUCCESS;
+    double* values = NULL;
+    size_t size = 0;
+    grib_context* c = handle_->context;
+    if ((err = grib_get_size(handle_, "values", &size)) != GRIB_SUCCESS)
+        return err;
+    values = (double*)grib_context_malloc(c, size * sizeof(double));
+    if (!values)
+        return GRIB_OUT_OF_MEMORY;
+    if ((err = grib_get_double_array(handle_, "values", values, &size)) != GRIB_SUCCESS) {
+        if (err == GRIB_FUNCTIONALITY_NOT_ENABLED) {
+            err = GRIB_SUCCESS;
+        }
+        grib_context_free(c, values);
+        return err;
+    }
+    grib_context_free(c, values);
+    return GRIB_SUCCESS;
+}
 
 int MessageIsValid::check_number_of_missing()
 {
     if (edition_ != 2) return GRIB_SUCCESS;
 
+    if (!bitmap_enabled()) {
+        return GRIB_SUCCESS;
+    }
+
     int err = 0;
     long isGridded = -1;
     err = grib_get_long_internal(handle_, "isGridded", &isGridded);
     if (!err && isGridded == 0)
-        return GRIB_SUCCESS; // Spectral data does not have missing field values
+        return GRIB_SUCCESS;  // Spectral data does not have missing field values
 
     // Some packing types like grid_complex and run length encoding
     // do not store missing values in the bitmap
@@ -210,19 +251,23 @@ int MessageIsValid::check_number_of_missing()
 
 int MessageIsValid::check_grid_pl_array()
 {
+    if (!grid_enabled()) {
+        return GRIB_SUCCESS;  // grid-related checks are disabled
+    }
+
     if (handle_->context->debug)
         fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
     int err = GRIB_SUCCESS;
     long Ni = 0,plpresent  = 0;
-    long* pl = NULL; // pl array
+    long* pl = NULL;  // pl array
     size_t plsize = 0;
     grib_context* c = handle_->context;
 
     // is there a PL array?
     err = grib_get_long(handle_, "PLPresent", &plpresent);
     if (err != GRIB_SUCCESS || plpresent == 0)
-        return GRIB_SUCCESS; // No PL array. So nothing to do
+        return GRIB_SUCCESS;  // No PL array. So nothing to do
 
     char gridType[128] = {0,};
     size_t len = 128;
@@ -231,7 +276,7 @@ int MessageIsValid::check_grid_pl_array()
 
     if ((err = grib_get_size(handle_, "pl", &plsize)) != GRIB_SUCCESS)
         return err;
-    if (plsize == 0) { // pl array must have at least one element
+    if (plsize == 0) {  // pl array must have at least one element
         return GRIB_WRONG_GRID;
     }
 
@@ -244,6 +289,7 @@ int MessageIsValid::check_grid_pl_array()
 
     long interpretationOfNumberOfPoints = 0;
     err = grib_get_long_internal(handle_, "interpretationOfNumberOfPoints", &interpretationOfNumberOfPoints);
+    if (err) return err;
     if (interpretationOfNumberOfPoints != 1) {
         grib_context_log(c, GRIB_LOG_ERROR,
             "%s: For a reduced grid, interpretationOfNumberOfPoints should be 1 (See Code Table 3.11)", TITLE);
@@ -307,18 +353,85 @@ int MessageIsValid::check_grid_pl_array()
     return GRIB_SUCCESS;
 }
 
+int MessageIsValid::check_grid_increments()
+{
+    if (!grid_enabled()) {
+        return GRIB_SUCCESS;  // grid-related checks are disabled
+    }
+
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
+    int err = GRIB_SUCCESS;
+    grib_context* c = handle_->context;
+
+    // Do not process reduced grids
+    long PLPresent = 0;
+    if (grib_get_long(handle_, "PLPresent", &PLPresent) == GRIB_SUCCESS && PLPresent == 1) {
+        return GRIB_SUCCESS;
+    }
+
+    long iDirectionIncrementGiven = 0, jDirectionIncrementGiven = 0;
+    long iDirectionIncrement = 0, jDirectionIncrement = 0;
+
+    if (grib_get_long(handle_, "iDirectionIncrementGiven", &iDirectionIncrementGiven) == GRIB_SUCCESS &&
+        grib_get_long(handle_, "jDirectionIncrementGiven", &jDirectionIncrementGiven) == GRIB_SUCCESS &&
+        grib_get_long(handle_, "iDirectionIncrement", &iDirectionIncrement) == GRIB_SUCCESS &&
+        grib_get_long(handle_, "jDirectionIncrement", &jDirectionIncrement) == GRIB_SUCCESS)
+    {
+        // Check increments to see if they are missing
+        bool iIncrementMissing = false, jIncrementMissing = false;
+        err = 0;
+        if (grib_is_missing(handle_, "iDirectionIncrement", &err) == 1 && !err)
+            iIncrementMissing = true;
+        err = 0;
+        if (grib_is_missing(handle_, "jDirectionIncrement", &err) == 1 && !err)
+            jIncrementMissing = true;
+
+        // If increment is given, then it cannot be missing
+        if (iDirectionIncrementGiven && iIncrementMissing) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: iDirectionIncrementGiven=1 but iDirectionIncrement=missing",TITLE);
+            return GRIB_WRONG_GRID;
+        }
+        if (jDirectionIncrementGiven && jIncrementMissing) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: jDirectionIncrementGiven=1 but jDirectionIncrement=missing",TITLE);
+            return GRIB_WRONG_GRID;
+        }
+
+        // If increment is not given, then it must be set to missing
+        if (!iDirectionIncrementGiven && !iIncrementMissing) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: iDirectionIncrementGiven=0 but iDirectionIncrement!=missing",TITLE);
+            return GRIB_WRONG_GRID;
+        }
+        if (!jDirectionIncrementGiven && !jIncrementMissing) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: jDirectionIncrementGiven=0 but jDirectionIncrement!=missing",TITLE);
+            return GRIB_WRONG_GRID;
+        }
+    }
+    return GRIB_SUCCESS;
+}
+
 int MessageIsValid::check_geoiterator()
 {
-    int err = 0;
+    if (!grid_enabled()) {
+        return GRIB_SUCCESS;  // grid-related checks are disabled
+    }
 
+    int err = 0;
 #if defined(HAVE_GEOGRAPHY)
     if (handle_->context->debug)
         fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
-    grib_iterator* iter = grib_iterator_new(handle_, GRIB_GEOITERATOR_NO_VALUES, &err);
+    // By default do not decode the data values
+    long flags = GRIB_GEOITERATOR_NO_VALUES;
+    if (data_enabled()) {
+        flags = 0;  // decode the data values (user requested it via pack_string)
+    }
+
+    grib_iterator* iter = grib_iterator_new(handle_, flags, &err);
     if (err == GRIB_NOT_IMPLEMENTED || err == GRIB_SUCCESS || err == GRIB_FUNCTIONALITY_NOT_ENABLED) {
         grib_iterator_delete(iter);
-        return GRIB_SUCCESS; // GRIB_NOT_IMPLEMENTED is OK e.g., for spectral fields
+        return GRIB_SUCCESS;  // GRIB_NOT_IMPLEMENTED is OK e.g., for spectral fields
     }
 
     grib_context_log(handle_->context, GRIB_LOG_ERROR, "%s: %s", TITLE, grib_get_error_message(err));
@@ -341,6 +454,10 @@ int MessageIsValid::check_7777()
 
 int MessageIsValid::check_surface_keys()
 {
+    if (!product_enabled()) {
+        return GRIB_SUCCESS;  // product-related checks disabled
+    }
+
     if (handle_->context->debug)
         fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
@@ -350,7 +467,7 @@ int MessageIsValid::check_surface_keys()
     if (edition_ != 2) return GRIB_SUCCESS;
 
     if (!grib_is_defined(handle_, "typeOfFirstFixedSurface"))
-        return GRIB_SUCCESS; // nothing to do
+        return GRIB_SUCCESS;  // nothing to do
 
     long stype=0;
     grib_get_long_internal(handle_, "typeOfFirstFixedSurface", &stype);
@@ -413,6 +530,10 @@ int MessageIsValid::check_surface_keys()
 
 int MessageIsValid::check_steps()
 {
+    if (!product_enabled()) {
+        return GRIB_SUCCESS;  // product-related checks disabled
+    }
+
     if (handle_->context->debug)
         fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
@@ -493,13 +614,13 @@ int MessageIsValid::check_sections()
 
     int err = 0;
     if (edition_ == 1) {
-        const int grib1_section_nums[] = {1, 2, 4}; // section 3 is optional
+        const int grib1_section_nums[] = {1, 2, 4};  // section 3 is optional
         const size_t N = sizeof(grib1_section_nums) / sizeof(grib1_section_nums[0]);
         err = check_section_numbers(grib1_section_nums, N);
         if (err) return err;
     }
     else if (edition_ == 2) {
-        const int grib2_section_nums[] = {1, 3, 4, 5, 6, 7, 8}; // section 2 is optional
+        const int grib2_section_nums[] = {1, 3, 4, 5, 6, 7, 8};  // section 2 is optional
         const size_t N = sizeof(grib2_section_nums) / sizeof(grib2_section_nums[0]);
         err = check_section_numbers(grib2_section_nums, N);
         if (err) return err;
@@ -509,6 +630,10 @@ int MessageIsValid::check_sections()
 
 int MessageIsValid::check_parameter()
 {
+    if (!product_enabled()) {
+        return GRIB_SUCCESS;  // product-related checks disabled
+    }
+
     if (handle_->context->debug)
         fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
@@ -530,6 +655,19 @@ int MessageIsValid::check_parameter()
     return err;
 }
 
+void MessageIsValid::print_enabled_checks() const
+{
+    if (context_->debug) {
+        fprintf(stderr, "ECCODES DEBUG %s: List of enabled checks: ", TITLE);
+        if (grid_enabled())    fprintf(stderr, " GRID ");
+        if (product_enabled()) fprintf(stderr, " PRODUCT ");
+        if (local_enabled())   fprintf(stderr, " LOCAL ");
+        if (data_enabled())    fprintf(stderr, " DATA ");
+        if (bitmap_enabled())  fprintf(stderr, " BITMAP ");
+        fprintf(stderr, "\n");
+    }
+}
+
 int MessageIsValid::unpack_long(long* val, size_t* len)
 {
     typedef int (MessageIsValid::*check_func)();
@@ -539,9 +677,10 @@ int MessageIsValid::unpack_long(long* val, size_t* len)
         &MessageIsValid::check_date,
         &MessageIsValid::check_spectral,
         &MessageIsValid::check_grid_and_packing_type,
-        // &MessageIsValid::check_field_values,
+        &MessageIsValid::check_field_values,
         &MessageIsValid::check_number_of_missing,
         &MessageIsValid::check_grid_pl_array,
+        &MessageIsValid::check_grid_increments,
         &MessageIsValid::check_geoiterator,
         &MessageIsValid::check_surface_keys,
         &MessageIsValid::check_steps,
@@ -553,7 +692,7 @@ int MessageIsValid::unpack_long(long* val, size_t* len)
     handle_ = get_enclosing_handle();
 
     *len = 1;
-    *val = 1; // Assume message is valid
+    *val = 1;  // Assume message is valid
 
     char product[32] = {0,};
     size_t size = sizeof(product) / sizeof(*product);
@@ -569,14 +708,58 @@ int MessageIsValid::unpack_long(long* val, size_t* len)
     err = grib_get_long_internal(handle_, "edition", &edition_);
     if (err) return err;
 
+    print_enabled_checks();
+
     const size_t num_check_functions = sizeof(check_functions) / sizeof(check_functions[0]);
     for (size_t i = 0; i < num_check_functions; ++i) {
         check_func cfunc = check_functions[i];
         err = (this->*cfunc)();
         if (err) {
-            *val = 0; // check failed
+            *val = 0;  // check failed
         }
     }
+
+    return GRIB_SUCCESS;
+}
+
+int MessageIsValid::pack_string(const char* sval, size_t*)
+{
+    enabledChecks_ = 0;  // disable all checks
+
+    if (strcmp(sval, "all")==0) {
+        enabledChecks_ = GRIB_SECTION_PRODUCT | GRIB_SECTION_GRID | GRIB_SECTION_LOCAL | GRIB_SECTION_BITMAP | GRIB_SECTION_DATA;
+    }
+    if (strcmp(sval, "default")==0) {
+        enabledChecks_ = GRIB_SECTION_PRODUCT | GRIB_SECTION_GRID | GRIB_SECTION_LOCAL | GRIB_SECTION_BITMAP;
+    }
+
+    if (strstr(sval, "grid")) {
+        enabledChecks_ |= GRIB_SECTION_GRID;
+    }
+    if (strstr(sval, "product")) {
+        enabledChecks_ |= GRIB_SECTION_PRODUCT;
+    }
+    if (strstr(sval, "data")) {
+        enabledChecks_ |= GRIB_SECTION_DATA;
+    }
+    if (strstr(sval, "bitmap")) {
+        enabledChecks_ |= GRIB_SECTION_BITMAP;
+    }
+    if (strstr(sval, "local")) {
+        enabledChecks_ |= GRIB_SECTION_LOCAL;
+    }
+
+    // If the flags are still all 0, the input didn't match any known check
+    if (enabledChecks_ == 0) {
+        grib_context_log(context_, GRIB_LOG_ERROR,
+                         "%s: Invalid argument '%s'. Select one or more checks from: "
+                         "'grid', 'product', 'data' and 'bitmap'.",
+                         TITLE, sval);
+
+        return GRIB_INVALID_ARGUMENT;
+    }
+
+    print_enabled_checks();
 
     return GRIB_SUCCESS;
 }

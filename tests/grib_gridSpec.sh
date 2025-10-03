@@ -38,14 +38,65 @@ if test "x$ECCODES_ECKIT_GEO" = "x"; then
 fi
 set -u
 
-# Gridded data
+# Decode gridSpec
+# ----------------
 infile=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_get -p gridSpec $infile
-grib_check_key_equals $infile gridSpec '{"east":30,"grid":[2,2],"north":60,"shape":[16,31],"south":0,"west":0}'
+grib_check_key_equals $infile gridSpec '{"east":30,"grid":[2,2],"north":60,"south":0,"west":0}'
 
 infile=$ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
 ${tools_dir}/grib_get -p gridSpec $infile
 grib_check_key_equals $infile gridSpec '{"grid":"N48"}'
+
+infile=$ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
+${tools_dir}/grib_set -s gridSpec='{grid:N32}' $infile $tempGrib
+# ${tools_dir}/grib_ls -jn geography $infile $tempGrib
+grib_check_key_equals $tempGrib N,Nj '32 64'
+# ${tools_dir}/grib_compare $infile $tempGrib
+
+
+# Encode gridSpec
+# ----------------
+infile=${data_dir}/missing.grib2
+cat >$tempFilt<<EOF
+    # Decode the current gridSpec
+    transient gs_from_msg1 = gridSpec;
+
+    # Feed it to the encoder
+    set gridSpec=gs_from_msg1;
+    # Decode it again
+    transient gs_from_msg2 = gridSpec;
+
+    print "[gs_from_msg1=]";
+    print "[gs_from_msg2=]";
+    # The two should be the same
+    assert( gs_from_msg1 is gs_from_msg2 );
+    write;
+EOF
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $infile
+${tools_dir}/grib_compare $infile $tempGrib
+rm -f $tempGrib
+
+# Can encode and decode in one step!
+infile=${data_dir}/missing.grib2
+cat >$tempFilt<<EOF
+    set gridSpec = gridSpec;
+    write;
+EOF
+ECCODES_DEBUG=-1 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $infile > $tempText 2>&1
+${tools_dir}/grib_compare $infile $tempGrib
+grep -q "ECCODES DEBUG grib_set_from_grid_spec: grib_set_values, setting 16 key/value pairs" $tempText
+
+
+# Error conditions
+# ----------------
+infile=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+set +e
+${tools_dir}/grib_set -s gridSpec='{grid:H36}' $infile $tempGrib 2>$tempText
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "'healpix' specified but input is GRIB edition 1" $tempText
 
 
 # Clean up

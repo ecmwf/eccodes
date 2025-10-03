@@ -65,10 +65,13 @@ grib_encode_via_set_and_filter()
    temp_encode_gribA=temp.encode.$_label.A.grib
    temp_encode_gribB=temp.encode.$_label.B.grib
 
+   rm -f $temp_encode_filt $temp_encode_gribB $temp_encode_gribA
    for kv in $(echo $_kvals | tr ',' ' '); do
       k=$(echo $kv | awk -F= '{print $1}')
       v=$(echo $kv | awk -F= '{print $2}')
-      if [[ "$v" =~ ^[A-z] ]]; then
+      # See ECC-2116: Do not use non-POSIX shell syntax
+      # if [[ "$v" =~ ^[A-z] ]]; then
+      if test "${v#[a-zA-Z]}" != "$v"; then
          echo "set $k = \"$v\" ;" >> $temp_encode_filt
       else
          echo "set $k = $v ;" >> $temp_encode_filt

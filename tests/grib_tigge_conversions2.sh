@@ -14,8 +14,6 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
-
 label="grib_tigge_conv2_test"
 dir="${data_dir}/tigge"
 temp1="temp.${label}.grib1_"

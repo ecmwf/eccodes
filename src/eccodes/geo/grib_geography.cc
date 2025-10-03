@@ -12,6 +12,7 @@
  *   Jean Baptiste Filippi - 01.11.2005                                    *
  ***************************************************************************/
 #include "grib_api_internal.h"
+#include "ExceptionHandler.h"
 
 #include <cmath>
 #include <algorithm>
@@ -184,7 +185,7 @@ static int get_precomputed_latitudes_N1280(double* lats)
     return GRIB_SUCCESS;
 }
 
-int grib_get_gaussian_latitudes(long trunc, double* lats)
+static int grib_get_gaussian_latitudes_(long trunc, double* lats)
 {
     if (trunc <= 0)
         return GRIB_GEOCALCULUS_PROBLEM;
@@ -196,6 +197,13 @@ int grib_get_gaussian_latitudes(long trunc, double* lats)
         return get_precomputed_latitudes_N1280(lats);
     }
     return compute_gaussian_latitudes(trunc, lats);
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+int grib_get_gaussian_latitudes(long trunc, double* lats)
+{
+    auto result = eccodes::handleExceptions(grib_get_gaussian_latitudes_, trunc, lats);
+    return eccodes::getErrorCode(result);
 }
 
 /* Boolean return type: 1 if the reduced gaussian field is global, 0 for sub area */

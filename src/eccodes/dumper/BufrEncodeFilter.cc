@@ -469,7 +469,7 @@ void BufrEncodeFilter::dump_string_array(grib_accessor* a, const char* comment)
 
     values = (char**)grib_context_malloc_clear(c, size * sizeof(char*));
     if (!values) {
-        grib_context_log(c, GRIB_LOG_ERROR, "unable to allocate %zu bytes", size);
+        grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %zu bytes", size);
         return;
     }
 
@@ -527,7 +527,7 @@ void BufrEncodeFilter::dump_string(grib_accessor* a, const char* comment)
 
     value = (char*)grib_context_malloc_clear(c, size);
     if (!value) {
-        grib_context_log(c, GRIB_LOG_ERROR, "unable to allocate %zu bytes", size);
+        grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %zu bytes", size);
         return;
     }
 

@@ -1,3 +1,4 @@
+  integer, parameter,public :: CODES_RUNTIME_ERROR                                = -80
   integer, parameter,public :: CODES_ASSERTION_FAILURE                            = -79
   integer, parameter,public :: CODES_UNABLE_TO_COMPARE_ACCESSORS                  = -78
   integer, parameter,public :: CODES_TYPE_AND_VALUE_MISMATCH                      = -77

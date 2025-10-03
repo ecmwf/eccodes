@@ -50,10 +50,9 @@ int DataApplyBoustrophedonic::unpack(T* val, size_t* len)
     T* pval                                          = 0;
     size_t valuesSize                                = 0;
     long i, j;
-    int ret;
     long numberOfPoints, numberOfRows, numberOfColumns;
 
-    ret = grib_get_long_internal(get_enclosing_handle(), numberOfPoints_, &numberOfPoints);
+    int ret = grib_get_long_internal(get_enclosing_handle(), numberOfPoints_, &numberOfPoints);
     if (ret)
         return ret;
 
@@ -150,10 +149,8 @@ int DataApplyBoustrophedonic::unpack_double_element(size_t idx, double* val)
 
     /* GRIB-564: The index idx relates to codedValues NOT values! */
     int err = grib_get_size(parent_->h, "codedValues", &size);
-    if (err)
-        return err;
-    if (idx > size)
-        return GRIB_INVALID_NEAREST;
+    if (err) return err;
+    if (idx > size) return GRIB_INVALID_NEAREST;
 
     double* values = (double*)grib_context_malloc_clear(parent_->h->context, size * sizeof(double));
     err = grib_get_double_array(parent_->h, "codedValues", values, &size);

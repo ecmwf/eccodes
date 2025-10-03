@@ -70,7 +70,8 @@ position   endOfHeadersMarker;
 meta lengthOfHeaders evaluate( endOfHeadersMarker-startOfHeaders);
 meta md5Headers md5(startOfHeaders,lengthOfHeaders);
 
-meta isMessageValid message_is_valid(kindOfProduct);
+meta isMessageValid message_is_valid(kindOfProduct) : no_copy;
+alias messageValidityChecks = isMessageValid; # For encoding
 
 if (!headersOnly) {
   transient  missingValue   = 9999 : dump;
@@ -85,6 +86,10 @@ if (!headersOnly) {
 
   template     section_5 "grib1/section.5.def";
 }
+
+# ECC-2137
+transient convertingFrom = "unknown" : hidden;
+transient numberOfGridPoints = 0 : hidden, no_copy;
 
 if (isGridded) {
     meta gridSpec grid_spec(): hidden, no_copy;

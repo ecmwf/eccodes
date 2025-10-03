@@ -46,11 +46,7 @@ int G2Grid::value_count(long* count)
 int G2Grid::unpack_double(double* val, size_t* len)
 {
     grib_handle* hand = get_enclosing_handle();
-    int ret           = 0;
-
-    long basic_angle  = 0;
-    long sub_division = 0;
-    int n             = 0;
+    int ret = 0;
     long v[6];
 
     if (*len < 6) {
@@ -58,9 +54,11 @@ int G2Grid::unpack_double(double* val, size_t* len)
         return ret;
     }
 
+    long basic_angle  = 0;
     if ((ret = grib_get_long_internal(hand, basic_angle_, &basic_angle)) != GRIB_SUCCESS)
         return ret;
 
+    long sub_division = 0;
     if ((ret = grib_get_long_internal(hand, sub_division_, &sub_division)) != GRIB_SUCCESS)
         return ret;
 
@@ -70,7 +68,7 @@ int G2Grid::unpack_double(double* val, size_t* len)
     if (basic_angle == 0)
         basic_angle = 1;
 
-    n = 0;
+    int n = 0;
     if ((ret = grib_get_long_internal(hand, latitude_first_, &v[n++])) != GRIB_SUCCESS)
         return ret;
 
@@ -177,7 +175,7 @@ static int trial(const double* val, long v[6], long* basic_angle, long* sub_divi
 int G2Grid::pack_double(const double* val, size_t* len)
 {
     grib_handle* hand = get_enclosing_handle();
-    int ret;
+    int ret = 0;
     long v[6];
     int n;
     long basic_angle;

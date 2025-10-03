@@ -43,7 +43,8 @@ template core "grib2/sections.def";
 #  }
 #}
 
-meta isMessageValid message_is_valid(kindOfProduct);
+meta isMessageValid message_is_valid(kindOfProduct) : no_copy;
+alias messageValidityChecks = isMessageValid; # For encoding
 
 template section_8 "grib2/section.8.def";
 
@@ -59,6 +60,8 @@ concept isTemplateExperimental(false) {
 
 # ECC-1806
 transient paramIdForConversion = 0;
+# ECC-2137
+transient convertingFrom = "unknown" : hidden;
 
 if (isGridded) {
     meta gridSpec grid_spec(): hidden, no_copy;

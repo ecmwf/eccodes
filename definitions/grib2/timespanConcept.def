@@ -1,9 +1,7 @@
 ## Statistical window overall concept based on official low-level GRIB2 keys only
- #
- 'unknown'          = {dummy=0;}
- ## Instananeous
- #'none'    = {stepType='instant';}
- # all instantaeous templates
+## Instananeous
+#'none'    = {stepType='instant';}
+# all instantaeous templates
  'none' = {productDefinitionTemplateNumber=0;}
  'none' = {productDefinitionTemplateNumber=1;}
  'none' = {productDefinitionTemplateNumber=2;}
@@ -93,14 +91,8 @@
  # hourly rolling accumulations and we don't want to have the first in a different bucket
  ## since start accumulation must have forecastTime=0
  # specific rules are in the centre's own definitions
- # hourly
- 'fromstart'    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1;}
- # minutes
- 'fromstart'    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=0;}
- # 24 hourly time unit
- 'fromstart'    = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=2;}
- ## 7 days rolling accumulation
- '7 days'    = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168; type='cd';}
+ # fromstart for minutes / hourly / day
+ 'fromstart'    = {typeOfStatisticalProcessing=1; forecastTime=0; true=is_one_of(indicatorOfUnitForTimeRange,0,1,2);}
  ### end Accumulations ###
  #
  ### mean/min/max/stdev ###
@@ -121,15 +113,9 @@
  '168h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168;}
  '240h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 240;}
  '360h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 360;}
- #'7 days'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168;}
- # 28 days
- 'month'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 672;}
- # 29 days
- 'month'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 696;}
- # 30 days
- 'month'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 720;}
- # 31 days
- 'month'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 744;}
- # time unit month
+#'7 days'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168;}
+# 28/29/30/31 days
+ 'month'   = {indicatorOfUnitForTimeRange=1; true=is_one_of(lengthOfTimeRange,672,696,720,744);}
+# time unit month
  'month'   = {indicatorOfUnitForTimeRange=3; lengthOfTimeRange = 1;}
- ### end mean/min/max/stdev ###
+### end mean/min/max/stdev ###

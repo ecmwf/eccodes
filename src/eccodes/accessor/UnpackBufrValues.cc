@@ -93,7 +93,20 @@ int UnpackBufrValues::pack_long(const long* val, size_t* len)
 
     data_accessor_->accessor_bufr_data_array_set_unpackMode(unpackMode);
 
-    return data_accessor_->unpack_double(0, 0);
+    int err = data_accessor_->unpack_double(0, 0);
+    if (err == GRIB_HASH_ARRAY_NO_MATCH) {
+        const grib_handle* h = get_enclosing_handle();
+        long tablesVersion, tablesVersionLatest;
+        if (grib_get_long(h, "masterTablesVersionNumber", &tablesVersion) == GRIB_SUCCESS &&
+            grib_get_long(h, "masterTablesVersionNumberLatest", &tablesVersionLatest) == GRIB_SUCCESS &&
+            tablesVersion > tablesVersionLatest)
+        {
+            grib_context_log(context_, GRIB_LOG_ERROR,
+                "Please note: masterTablesVersionNumber=%ld but masterTablesVersionNumberLatest=%ld",
+                tablesVersion, tablesVersionLatest);
+        }
+    }
+    return err;
 }
 
 int UnpackBufrValues::pack_double(const double* val, size_t* len)

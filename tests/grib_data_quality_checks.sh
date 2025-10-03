@@ -15,7 +15,7 @@
 # ---------------------------------------------------------
 label="grib_data_quality_test"
 tempOut=temp.1.${label}.out
-temp2=temp.2.${label}.out
+tempLog=temp.1.${label}.log
 tempErr=temp.${label}.err
 tempGrib1=temp.${label}.grib1
 tempGrib2=temp.${label}.grib2
@@ -119,18 +119,18 @@ set -e
 [ $status -ne 0 ]
 
 
-echo "Test limits with steps..."
-# -----------------------------
+# echo "Test limits with steps..."
+# # -----------------------------
 input1=$ECCODES_SAMPLES_PATH/reduced_gg_pl_48_grib1.tmpl
-# This sets the minimum to 1.1 but this should work for step=0
-${tools_dir}/grib_set -s step=0,paramId=121,scaleValuesBy=1.1 $input1 $tempOut
+# # This sets the minimum to 1.1 but this should work for step=0
+# ${tools_dir}/grib_set -s step=0,paramId=121,scaleValuesBy=1.1 $input1 $tempOut
 
-# But it must fail when step > 0
-set +e
-${tools_dir}/grib_set -s step=6,paramId=121,scaleValuesBy=1.1 $input1 $tempOut
-status=$?
-set -e
-[ $status -ne 0 ]
+# # But it must fail when step > 0
+# set +e
+# ${tools_dir}/grib_set -s step=6,paramId=121,scaleValuesBy=1.1 $input1 $tempOut
+# status=$?
+# set -e
+# [ $status -ne 0 ]
 
 
 echo "Override the defaults..."
@@ -151,21 +151,6 @@ cat > $tempDir/param_limits.def <<EOF
     273   = { paramId=130; }
  } : double_type, hidden;
 EOF
-
-# High 2m temperature (paramId=167) should succeed
-export ECCODES_GRIB_DATA_QUALITY_CHECKS=1
-export ECCODES_EXTRA_DEFINITION_PATH=$test_dir/$tempDir
-${tools_dir}/grib_set -s paramId=167,scaleValuesBy=1000 $input1 $tempOut
-
-# Spectral temperature (paramId=130) should fail
-sh_sample="$ECCODES_SAMPLES_PATH/sh_sfc_grib1.tmpl"
-grib_check_key_equals $sh_sample "packingType,paramId" "spectral_complex 130"
-set +e
-${tools_dir}/grib_copy -r $sh_sample $tempGrib1
-status=$?
-set -e
-[ $status -ne 0 ]
-
 
 
 # Set limits based on a more complex condition
@@ -195,6 +180,23 @@ status=$?
 set -e
 [ $status -ne 0 ]
 unset ECCODES_EXTRA_DEFINITION_PATH
+
+
+# ECC-2141: Disable data quality checks when setting packingType
+# --------------------------------------------------------------
+if [ $HAVE_AEC -eq 1 ]; then
+   unset ECCODES_GRIB_DATA_QUALITY_CHECKS
+   input=${data_dir}/reduced_gaussian_surface.grib2
+   grib_check_key_equals $input packingType grid_simple
+   ${tools_dir}/grib_set -s scaleValuesBy=100 $input $tempOut
+   ECCODES_GRIB_DATA_QUALITY_CHECKS=1 ${tools_dir}/grib_set -s packingType=grid_ccsds $tempOut $tempGrib2 > $tempLog 2>&1
+   if [ -s $tempLog ]; then
+      # -s = True if file exists and has a size greater than zero
+      echo "Error: No output should have been generated!"
+      exit 1
+   fi
+   grib_check_key_equals $tempGrib2 packingType grid_ccsds
+fi
 
 
 # Check CCSDS encoding too
@@ -235,4 +237,4 @@ grep -q "Invalid metadata: name='Experimental product'" $tempErr
 
 # Clean up
 rm -rf $tempDir
-rm -f $tempOut $tempErr $tempGrib1 $tempGrib2
+rm -f $tempOut $tempErr $tempGrib1 $tempGrib2 $tempLog

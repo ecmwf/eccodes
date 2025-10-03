@@ -165,14 +165,12 @@ int DataApplyBoustrophedonicBitmap::unpack_double(double* val, size_t* len)
 int DataApplyBoustrophedonicBitmap::unpack_double_element(size_t idx, double* val)
 {
     grib_handle* gh = get_enclosing_handle();
-    int err = 0;
     double missing_value = 0;
     long nn = 0;
 
-    err = value_count(&nn);
+    int err = value_count(&nn);
     size_t n_vals = nn;
-    if (err)
-        return err;
+    if (err) return err;
 
     if (!grib_find_accessor(gh, bitmap_))
         return grib_get_double_element_internal(gh, coded_values_, idx, val);
@@ -189,8 +187,7 @@ int DataApplyBoustrophedonicBitmap::unpack_double_element(size_t idx, double* va
     }
 
     double* bvals = (double*)grib_context_malloc(context_, n_vals * sizeof(double));
-    if (bvals == NULL)
-        return GRIB_OUT_OF_MEMORY;
+    if (bvals == NULL) return GRIB_OUT_OF_MEMORY;
 
     if ((err = grib_get_double_array_internal(gh, bitmap_, bvals, &n_vals)) != GRIB_SUCCESS)
         return err;

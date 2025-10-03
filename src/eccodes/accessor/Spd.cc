@@ -130,10 +130,9 @@ int Spd::pack_long(const long* val, size_t* len)
 
 int Spd::value_count(long* numberOfElements)
 {
-    int ret;
     *numberOfElements = 0;
 
-    ret = grib_get_long(get_enclosing_handle(), numberOfElements_, numberOfElements);
+    int ret = grib_get_long(get_enclosing_handle(), numberOfElements_, numberOfElements);
     if (ret) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s unable to get %s to compute size", name_, numberOfElements_);

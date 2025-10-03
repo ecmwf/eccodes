@@ -97,5 +97,12 @@ for pdtn in 95 96 97 98 1001 1101; do
 done
 
 
+# ECC-2134 Cannot set productDefinitionTemplateNumber=0 on an interval-based message
+$tools_dir/grib_set -s stepType=avg,stepRange=12-15 $sample_g2 $tempGribA
+grib_check_key_equals $tempGribA productDefinitionTemplateNumber 8
+$tools_dir/grib_set -s productDefinitionTemplateNumber=0 $tempGribA $tempGribB
+grib_check_key_equals $tempGribB productDefinitionTemplateNumber,stepType '0 instant'
+
+
 # Clean up
 rm -f $tempText $tempGribA $tempGribB

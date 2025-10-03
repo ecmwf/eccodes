@@ -71,7 +71,7 @@ int G1MessageLength::pack_long(const long* val, size_t* len)
     grib_accessor* s4 = grib_find_accessor(get_enclosing_handle(), sec4_length_);
     long tlen, slen;
     long t120;
-    int ret;
+    int ret = GRIB_SUCCESS;
 
     tlen = *val;
     if ((tlen < 0x800000 || !context_->gribex_mode_on) && tlen < 0xFFFFFF) {
@@ -124,7 +124,7 @@ int G1MessageLength::pack_long(const long* val, size_t* len)
 
 int G1MessageLength::unpack_long(long* val, size_t* len)
 {
-    int ret;
+    int ret = GRIB_SUCCESS;
     long total_length, sec4_length;
 
     if ((ret = grib_get_g1_message_size(get_enclosing_handle(), this,

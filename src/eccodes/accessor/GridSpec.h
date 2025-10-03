@@ -26,6 +26,8 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
+    void print_warning_feature_not_implemented();
+    bool warned_ = false;
 };
 
 }  // namespace eccodes::accessor

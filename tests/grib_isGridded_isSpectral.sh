@@ -10,7 +10,6 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
 label="grib_isGridded_isSpectral_test"
 tempGrib=temp.$label.grib
 tempText=temp.$label.txt

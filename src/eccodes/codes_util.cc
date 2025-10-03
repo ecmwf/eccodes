@@ -10,6 +10,7 @@
 
 #include "grib_api_internal.h"
 #include "eccodes.h"
+#include "ExceptionHandler.h"
 
 // Input lon must be in degrees not radians
 // Not to be used for latitudes as they can be -ve
@@ -214,13 +215,35 @@ int is_date_valid(long year, long month, long day, long hour, long minute, doubl
     return 1;
 }
 
+// Return 1 if input time is valid. Otherwise 0
+int is_time_valid(long hours, long minutes, long seconds)
+{
+    // Check if hours are within the valid range (0-24)
+    if (hours != 255 && (hours < 0 || hours > 24)) {
+        return 0;
+    }
+
+    // Check if minutes are within the valid range (0-59)
+    if (minutes != 255 && (minutes < 0 || minutes > 59)) {
+        return 0;
+    }
+
+    // Check if seconds are within the valid range (0-59)
+    if (seconds != 255 && (seconds < 0 || seconds > 59)) {
+        return 0;
+    }
+
+    // All checks pass
+    return 1;
+}
+
 // Return 1 if input date is valid. Otherwise 0
 // Note: In the 24-hour time notation, the day begins at midnight, 00:00 or 0:00,
 // and the last minute of the day begins at 23:59.
 // Where convenient, the notation 24:00 may also be used to refer to midnight
 // at the end of a given date - that is, 24:00 of one day is the same time
 // as 00:00 of the following day
-int is_time_valid(long number)
+int is_time_valid_HHMM(long number)
 {
     // Number should be 4 digits i.e., HHMM
     if (number < 0 || number > 9999) {
@@ -231,14 +254,9 @@ int is_time_valid(long number)
     long hours   = number / 100;  // Get the first two digits as hours
     long minutes = number % 100;  // Get the last two digits as minutes
 
-    // Check if hours are within the valid range (00-24)
-    if (hours < 0 || hours > 24) {
-        return 0;
-    }
-
-    // Check if minutes are within the valid range (00-59)
-    if (minutes < 0 || minutes > 59) {
-        return 0;
+    // Check if the time is valid
+    if (!is_time_valid(hours, minutes, 0)) {
+        return 0; // bad time
     }
 
     // All checks pass
@@ -419,7 +437,7 @@ static const char* known_features[] = {
 };
 
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
-int codes_is_feature_enabled(const char* feature)
+static int codes_is_feature_enabled_(const char* feature)
 {
     int aec_enabled           = 0; // or CCSDS
     int memfs_enabled         = 0;
@@ -512,7 +530,14 @@ int codes_is_feature_enabled(const char* feature)
     return 0;
 }
 
-int codes_get_features(char* result, size_t* length, int select)
+// C-API: Ensure all exceptions are converted to error codes
+int codes_is_feature_enabled(const char* feature)
+{
+    auto result = eccodes::handleExceptions(codes_is_feature_enabled_, feature);
+    return eccodes::getErrorCode(result);
+}
+
+static int codes_get_features_(char* result, size_t* length, int select)
 {
     ECCODES_ASSERT(select == CODES_FEATURES_ALL || select == CODES_FEATURES_ENABLED || select == CODES_FEATURES_DISABLED);
 
@@ -546,8 +571,15 @@ int codes_get_features(char* result, size_t* length, int select)
     return GRIB_SUCCESS;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
+int codes_get_features(char* result, size_t* length, int select)
+{
+    auto r = eccodes::handleExceptions(codes_get_features_, result, length, select);
+    return eccodes::getErrorCode(r);
+}
+
 // Returns 1 if the key is computed (virtual) and 0 if it is coded
-int codes_key_is_computed(const grib_handle* h, const char* key, int* err)
+static int codes_key_is_computed_(const grib_handle* h, const char* key, int* err)
 {
     const grib_accessor* acc = grib_find_accessor(h, key);
     if (!acc) {
@@ -556,4 +588,11 @@ int codes_key_is_computed(const grib_handle* h, const char* key, int* err)
     }
     *err = GRIB_SUCCESS;
     return (acc->length_ == 0);
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+int codes_key_is_computed(const grib_handle* h, const char* key, int* err)
+{
+    auto result = eccodes::handleExceptions(codes_key_is_computed_, h, key, err);
+    return eccodes::updateErrorAndReturnValue(result, err);
 }

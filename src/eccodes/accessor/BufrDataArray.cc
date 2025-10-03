@@ -1992,10 +1992,9 @@ static GRIB_INLINE void reset_deeper_qualifiers(
     }
 }
 
-
 static grib_accessor* get_element_from_bitmap(bitmap_s* bitmap)
 {
-    int ret;
+    int ret = GRIB_SUCCESS;
     long bitmapVal = 1;
     size_t len;
 
@@ -2007,7 +2006,7 @@ static grib_accessor* get_element_from_bitmap(bitmap_s* bitmap)
         else {
             return NULL;
         }
-        if (ret != 0)
+        if (ret != GRIB_SUCCESS)
             return NULL;
         bitmap->cursor = bitmap->cursor->next_;
         if (bitmap->referredElement)
@@ -2830,7 +2829,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
         numberOfNestedRepetitions = 0;
 
         for (i = 0; i < numberOfDescriptors; i++) {
-            int op203_definition_phase = 0;
+            bool op203_definition_phase = false;
             if (c->debug) grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data processing: elementNumber=%ld code=%6.6ld", icount++, descriptors[i]->code);
             switch (descriptors[i]->F) {
                 case 0:
@@ -2895,10 +2894,11 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
                     /* Operator */
                     switch (descriptors[i]->X) {
                         case 3: /* Change reference values */
-                            if (compressedData_ == 1 && flag != PROCESS_DECODE) {
-                                grib_context_log(c, GRIB_LOG_ERROR, "process_elements: operator %d not supported for encoding compressed data", descriptors[i]->X);
-                                return GRIB_INTERNAL_ERROR;
-                            }
+                            // ECC-2136: Why did we not support compressed data? No idea!!
+                            // if (compressedData_ == 1 && flag != PROCESS_DECODE)  {
+                            //     grib_context_log(c, GRIB_LOG_ERROR, "process_elements: operator %d not supported for encoding compressed data", descriptors[i]->X);
+                            //     return GRIB_INTERNAL_ERROR;
+                            // }
                             if (descriptors[i]->Y == 255) {
                                 grib_context_log(c, GRIB_LOG_DEBUG, "Operator 203YYY: Y=255, definition of new reference values is concluded");
                                 change_ref_value_operand_ = 255;
