@@ -438,23 +438,30 @@ if( eccodes_HAVE_GEOGRAPHY AND eccodes_HAVE_ECKIT_GEO )
     list( APPEND ECCODES_EXTRA_LIBRARIES eckit_geo )
 endif()
 
-ecbuild_add_library( TARGET    eccodes
-                     SOURCES   ${CMAKE_CURRENT_BINARY_DIR}/grib_api_version.cc
-                              # griby.cc gribl.cc
-                              ${eccodes_src_files}
-                     #PRIVATE_LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${CMATH_LIBRARIES}
-                     PRIVATE_INCLUDES "${AEC_INCLUDE_DIRS}" "${PNG_INCLUDE_DIRS}"
-                     PRIVATE_LIBS ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${AEC_LIBRARIES} ${PNG_LIBRARIES}
-                     PUBLIC_LIBS  ${CMATH_LIBRARIES} ${THREADS_LIBRARIES}
-                     TEMPLATES ${eccodes_extra_src_files}
-                     INSTALL_HEADERS_LIST
-                              grib_api.h
-                              eccodes.h
-                              eccodes_windef.h
-                              ${CMAKE_CURRENT_BINARY_DIR}/eccodes_version.h
-                              ${PROJECT_BINARY_DIR}/eccodes_config.h
-                    PUBLIC_INCLUDES
-                              $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src/eccodes>
-                              $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/eccodes>
-                              $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
-                              $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src> )
+ecbuild_add_library(
+    TARGET    eccodes
+    SOURCES   
+        ${CMAKE_CURRENT_BINARY_DIR}/grib_api_version.cc
+        ${eccodes_src_files}
+    PRIVATE_INCLUDES "${PNG_INCLUDE_DIRS}"
+    PRIVATE_LIBS
+       ${ECCODES_EXTRA_LIBRARIES}
+       ${CMAKE_THREAD_LIBS_INIT}
+       ${PNG_LIBRARIES}
+       $<$<BOOL:${libaec_FOUND}>:libaec::aec>
+    PUBLIC_LIBS 
+        ${CMATH_LIBRARIES}
+        ${THREADS_LIBRARIES}
+    TEMPLATES ${eccodes_extra_src_files}
+    INSTALL_HEADERS_LIST
+        grib_api.h
+        eccodes.h
+        eccodes_windef.h
+        ${CMAKE_CURRENT_BINARY_DIR}/eccodes_version.h
+        ${PROJECT_BINARY_DIR}/eccodes_config.h
+    PUBLIC_INCLUDES
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src/eccodes>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/eccodes>
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+)
