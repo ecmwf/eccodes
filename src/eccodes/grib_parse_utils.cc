@@ -13,6 +13,7 @@
  ***************************************************************************/
 #include "grib_api_internal.h"
 #include "action/Noop.h"
+#include "sync/Mutex.h"
 
 grib_action* grib_parser_all_actions          = 0;
 grib_context* grib_parser_context             = 0;
@@ -24,54 +25,10 @@ extern FILE* grib_yyin;
 extern int grib_yydebug;
 
 static const char* parse_file = 0;
-
-#if GRIB_PTHREADS
-static pthread_once_t once              = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex_file       = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t mutex_rules      = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t mutex_concept    = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t mutex_hash_array = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t mutex_stream     = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t mutex_parse      = PTHREAD_MUTEX_INITIALIZER;
-
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex_file, &attr);
-    pthread_mutex_init(&mutex_rules, &attr);
-    pthread_mutex_init(&mutex_concept, &attr);
-    pthread_mutex_init(&mutex_hash_array, &attr);
-    pthread_mutex_init(&mutex_stream, &attr);
-    pthread_mutex_init(&mutex_parse, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex_file;
-static omp_nest_lock_t mutex_rules;
-static omp_nest_lock_t mutex_concept;
-static omp_nest_lock_t mutex_hash_array;
-static omp_nest_lock_t mutex_stream;
-static omp_nest_lock_t mutex_parse;
-
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_grib_parse_utils_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex_file);
-            omp_init_nest_lock(&mutex_rules);
-            omp_init_nest_lock(&mutex_concept);
-            omp_init_nest_lock(&mutex_hash_array);
-            omp_init_nest_lock(&mutex_stream);
-            omp_init_nest_lock(&mutex_parse);
-            once = 1;
-        }
-    }
-}
-#endif
+static eccodes::sync::Mutex mutex_file;
+// static eccodes::sync::Mutex mutex_rules;
+static eccodes::sync::Mutex mutex_stream;
+static eccodes::sync::Mutex mutex_parse;
 
 int grib_recompose_name(grib_handle* h, grib_accessor* observer, const char* uname, char* fname, int fail)
 {
@@ -716,9 +673,7 @@ extern int grib_yyparse(void);
 static int parse(grib_context* gc, const char* filename)
 {
     int err = 0;
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex_parse);
-
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> guard(mutex_parse);
 #ifdef YYDEBUG
     {
         extern int grib_yydebug;
@@ -735,7 +690,6 @@ static int parse(grib_context* gc, const char* filename)
     if (!grib_yyin) {
         /* Could not read from file */
         parse_file = 0;
-        GRIB_MUTEX_UNLOCK(&mutex_parse);
         return GRIB_FILE_NOT_FOUND;
     }
     err        = grib_yyparse();
@@ -745,66 +699,54 @@ static int parse(grib_context* gc, const char* filename)
         grib_context_log(gc, GRIB_LOG_ERROR, "Parsing error: %s, file: %s\n",
                 grib_get_error_message(err), filename);
 
-    GRIB_MUTEX_UNLOCK(&mutex_parse);
     return err;
 }
 
 static grib_action* grib_parse_stream(grib_context* gc, const char* filename)
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex_stream);
-
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> guard(mutex_stream);
     grib_parser_all_actions = 0;
 
     if (parse(gc, filename) == 0) {
         if (grib_parser_all_actions) {
-            GRIB_MUTEX_UNLOCK(&mutex_stream);
             return grib_parser_all_actions;
         }
         else {
             grib_action* ret = grib_action_create_noop(gc, filename);
-            GRIB_MUTEX_UNLOCK(&mutex_stream);
             return ret;
         }
     }
     else {
-        GRIB_MUTEX_UNLOCK(&mutex_stream);
         return NULL;
     }
 }
 
 grib_concept_value* grib_parse_concept_file(grib_context* gc, const char* filename)
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex_file);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> guard(mutex_file);
 
     gc                  = gc ? gc : grib_context_get_default();
     grib_parser_context = gc;
 
     if (parse(gc, filename) == 0) {
-        GRIB_MUTEX_UNLOCK(&mutex_file);
         return grib_parser_concept;
     }
     else {
-        GRIB_MUTEX_UNLOCK(&mutex_file);
         return NULL;
     }
 }
 
 grib_hash_array_value* grib_parse_hash_array_file(grib_context* gc, const char* filename)
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex_file);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> guard(mutex_file);
 
     gc                  = gc ? gc : grib_context_get_default();
     grib_parser_context = gc;
 
     if (parse(gc, filename) == 0) {
-        GRIB_MUTEX_UNLOCK(&mutex_file);
         return grib_parser_hash_array;
     }
     else {
-        GRIB_MUTEX_UNLOCK(&mutex_file);
         return NULL;
     }
 }
@@ -812,16 +754,13 @@ grib_hash_array_value* grib_parse_hash_array_file(grib_context* gc, const char* 
 // grib_rule* grib_parse_rules_file(grib_context* gc, const char* filename)
 // {
 //     if (!gc) gc = grib_context_get_default();
-//     GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-//     GRIB_MUTEX_LOCK(&mutex_rules);
+//     eccodes::sync::LockGuard<eccodes::sync::Mutex> guard(mutex_rules);
 //     gc                  = gc ? gc : grib_context_get_default();
 //     grib_parser_context = gc;
 //     if (parse(gc, filename) == 0) {
-//         GRIB_MUTEX_UNLOCK(&mutex_rules);
 //         return grib_parser_rules;
 //     }
 //     else {
-//         GRIB_MUTEX_UNLOCK(&mutex_rules);
 //         return NULL;
 //     }
 // }
@@ -830,8 +769,7 @@ grib_action* grib_parse_file(grib_context* gc, const char* filename)
 {
     grib_action_file* af;
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex_file);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> guard(mutex_file);
 
     af = 0;
 
@@ -855,7 +793,6 @@ grib_action* grib_parse_file(grib_context* gc, const char* filename)
             if (a) {
                 delete a;
             }
-            GRIB_MUTEX_UNLOCK(&mutex_file);
             return NULL;
         }
 
@@ -869,7 +806,6 @@ grib_action* grib_parse_file(grib_context* gc, const char* filename)
     else
         grib_context_log(gc, GRIB_LOG_DEBUG, "Using cached version of %s", filename);
 
-    GRIB_MUTEX_UNLOCK(&mutex_file);
     return af->root;
 }
 

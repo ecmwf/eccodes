@@ -35,7 +35,7 @@ private:
     const char* masterDir_ = nullptr;
     const char* localDir_ = nullptr;
 
-    grib_trie* load_bufr_elements_table(int* err);
+    std::shared_ptr<Dict> load_bufr_elements_table(int* err);
     int bufr_get_from_table(bufr_descriptor* v);
 };
 

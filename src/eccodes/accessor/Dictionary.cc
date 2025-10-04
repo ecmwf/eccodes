@@ -31,7 +31,7 @@ void Dictionary::init(const long len, grib_arguments* params)
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-grib_trie* Dictionary::load_dictionary(int* err)
+std::shared_ptr<Dict> Dictionary::load_dictionary(int* err)
 {
     char* filename  = NULL;
     char line[1024] = {0,};
@@ -40,13 +40,12 @@ grib_trie* Dictionary::load_dictionary(int* err)
     char localDir[1024] = {0,};
     char dictName[1024] = {0,};
     const char* localFilename   = 0;
-    char* list            = 0;
     size_t len            = 1024;
-    grib_trie* dictionary = NULL;
     FILE* f               = NULL;
     int i                 = 0;
     grib_handle* h        = get_enclosing_handle();
     grib_context* c       = context_;
+    std::shared_ptr<Dict> dictionary;
 
     *err = GRIB_SUCCESS;
 
@@ -83,13 +82,14 @@ grib_trie* Dictionary::load_dictionary(int* err)
     if (!filename) {
         grib_context_log(c, GRIB_LOG_ERROR, "Unable to find def file %s", dictionary_);
         *err = GRIB_FILE_NOT_FOUND;
-        return NULL;
+        return nullptr;
     }
     else {
         grib_context_log(c, GRIB_LOG_DEBUG, "dictionary: found def file %s", filename);
     }
-    dictionary = (grib_trie*)grib_trie_get(c->lists, dictName);
-    if (dictionary) {
+
+    if (c->lists.find(dictName) != c->lists.end()) {
+        dictionary = c->lists[dictName];
         grib_context_log(c, GRIB_LOG_DEBUG, "using dictionary %s from cache", dictionary_);
         return dictionary;
     }
@@ -100,10 +100,10 @@ grib_trie* Dictionary::load_dictionary(int* err)
     f = codes_fopen(filename, "r");
     if (!f) {
         *err = GRIB_IO_PROBLEM;
-        return NULL;
+        return nullptr;
     }
 
-    dictionary = grib_trie_new(c);
+    dictionary = std::make_shared<Dict>();
 
     while (fgets(line, sizeof(line) - 1, f)) {
         i = 0;
@@ -112,16 +112,14 @@ grib_trie* Dictionary::load_dictionary(int* err)
             i++;
         }
         key[i] = 0;
-        list   = (char*)grib_context_malloc_clear(c, strlen(line) + 1);
-        memcpy(list, line, strlen(line));
-        grib_trie_insert(dictionary, key, list);
+        (*dictionary)[key] = List{line};
     }
 
     fclose(f);
 
     if (localFilename != 0) {
         *err = GRIB_NOT_IMPLEMENTED;
-        return NULL;
+        return nullptr;
         // f = codes_fopen(localFilename, "r");
         // if (!f) {
         //     *err = GRIB_IO_PROBLEM;
@@ -142,7 +140,7 @@ grib_trie* Dictionary::load_dictionary(int* err)
 
         //fclose(f);
     }
-    grib_trie_insert(c->lists, filename, dictionary);
+    c->lists[filename] = dictionary;
     return dictionary;
 }
 
@@ -166,29 +164,28 @@ int Dictionary::unpack_string(char* buffer, size_t* len)
     int err        = GRIB_SUCCESS;
     char key[1024] = {0,};
     size_t size  = 1024;
-    char* list   = NULL;
-    char* start  = NULL;
-    char* end    = NULL;
+    const char* start  = NULL;
+    const char* end    = NULL;
     size_t rsize = 0;
-    int i        = 0;
+    List list;
 
-    grib_trie* dictionary = load_dictionary(&err);
+    auto dictionary = load_dictionary(&err);
     if (err)
         return err;
 
     if ((err = grib_get_string_internal(get_enclosing_handle(), key_, key, &size)) != GRIB_SUCCESS) {
-        /* grib_trie_delete(dictionary); */
         return err;
     }
 
-    list = (char*)grib_trie_get(dictionary, key);
-    if (!list) {
-        /* grib_trie_delete(dictionary); */
+    if (dictionary->find(key) != dictionary->end()) {
+        list = (*dictionary)[key];
+    }
+    else {
         return GRIB_NOT_FOUND;
     }
 
-    end = list;
-    for (i = 0; i <= column_; i++) {
+    end = list[0].c_str();
+    for (int i = 0; i <= column_; i++) {
         start = end;
         while (*end != '|' && *end != 0)
             end++;
@@ -200,7 +197,6 @@ int Dictionary::unpack_string(char* buffer, size_t* len)
     end--;
     rsize = end - start;
     if (*len < rsize) {
-        /* grib_trie_delete(dictionary); */
         return GRIB_ARRAY_TOO_SMALL;
     }
 
@@ -209,8 +205,6 @@ int Dictionary::unpack_string(char* buffer, size_t* len)
         memcpy(buffer, start, rsize);
     if (buffer)
         buffer[rsize] = 0;
-
-    /* grib_trie_delete(dictionary); */
 
     return err;
 }

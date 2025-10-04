@@ -12,35 +12,9 @@
 #include "grib_api_internal.h"
 #include "grib_dumper_factory.h"
 #include "ExceptionHandler.h"
+#include "sync/Mutex.h"
 
-#if GRIB_PTHREADS
-static pthread_once_t once   = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex;
-
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_grib_dumper_factory_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex);
-            once = 1;
-        }
-    }
-}
-#endif
-
+static eccodes::sync::Mutex mutex;
 
 struct table_entry
 {
@@ -72,15 +46,15 @@ eccodes::Dumper* grib_dumper_factory(const char* op, const grib_handle* h, FILE*
     for (size_t i = 0; i < num_table_entries; i++) {
         if (strcmp(op, table[i].type) == 0) {
             eccodes::Dumper* d = *(table[i].dumper);
-            GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-            GRIB_MUTEX_LOCK(&mutex);
-            d->depth_          = 0;
-            d->context_        = h->context;
-            d->option_flags_   = option_flags;
-            d->arg_            = arg;
-            d->out_            = out;
-            d->init();
-            GRIB_MUTEX_UNLOCK(&mutex);
+            {
+                eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+                d->depth_          = 0;
+                d->context_        = h->context;
+                d->option_flags_   = option_flags;
+                d->arg_            = arg;
+                d->out_            = out;
+                d->init();
+            }
             grib_context_log(
                 h->context, GRIB_LOG_DEBUG, "Creating dumper of type : %s ", op);
             return d;
@@ -120,35 +94,29 @@ void grib_dump_content(const grib_handle* h, FILE* f, const char* mode, unsigned
 void grib_dump_accessors_block(eccodes::Dumper* dumper, grib_block_of_accessors* block)
 {
     grib_accessor* a = block->first;
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     while (a) {
         a->dump(dumper);
         a = a->next_;
     }
-    GRIB_MUTEX_UNLOCK(&mutex);
 }
 
 void grib_dump_accessors_list(eccodes::Dumper* dumper, grib_accessors_list* al)
 {
     grib_accessors_list* cur = al;
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     while (cur) {
         cur->accessor->dump(dumper);
         cur = cur->next_;
     }
-    GRIB_MUTEX_UNLOCK(&mutex);
 }
 
 int grib_print(grib_handle* h, const char* name, eccodes::Dumper* d)
 {
     grib_accessor* act = grib_find_accessor(h, name);
     if (act) {
-        GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-        GRIB_MUTEX_LOCK(&mutex);
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
         act->dump(d);
-        GRIB_MUTEX_UNLOCK(&mutex);
         return GRIB_SUCCESS;
     }
     return GRIB_NOT_FOUND;
@@ -160,15 +128,15 @@ void grib_dump_keys(grib_handle* h, FILE* f, const char* mode, unsigned long fla
     eccodes::Dumper* dumper = grib_dumper_factory(mode ? mode : "default", h, f, flags, data);
     if (!dumper)
         return;
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
-    for (size_t i = 0; i < num_keys; ++i) {
-        acc = grib_find_accessor(h, keys[i]);
-        if (acc) {
-            acc->dump(dumper);
+    {
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+        for (size_t i = 0; i < num_keys; ++i) {
+            acc = grib_find_accessor(h, keys[i]);
+            if (acc) {
+                acc->dump(dumper);
+            }
         }
     }
-    GRIB_MUTEX_UNLOCK(&mutex);
     dumper->destroy();
 }
 
