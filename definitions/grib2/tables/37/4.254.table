@@ -1,0 +1,11 @@
+# Code table 4.254 - Polarisation
+0 0 Unpolarised
+1 1 Quasi-horizontal (QH)
+2 2 Quasi-vertical (QV)
+3 3 Horizontal (H)
+4 4 Vertical (V)
+5 5 Right-Hand Circular Polarisation (RHCP)
+6 6 Left-Hand Circular Polarisation (LHCP)
+# 7-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing
