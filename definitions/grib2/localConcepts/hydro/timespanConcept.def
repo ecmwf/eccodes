@@ -1,0 +1,5 @@
+## Statistical window concept for pseudo-centre hydro
+#
+# only rolling accumulations are used, so the standard timespan=fs for the first step have to be overrules here
+'6h'  = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=6; forecastTime=0;}
+'24h'  = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=24; forecastTime=0;}
