@@ -11,7 +11,6 @@
 . ./include.ctest.sh
 
 label="grib_set_fail_test"
-REDIRECT=/dev/null
 
 outfile=${data_dir}/temp.$label.grib
 temp=${data_dir}/temp.$label.out

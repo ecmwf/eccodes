@@ -20,9 +20,9 @@
 # RD
 0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=161;}
 # MC
-0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=161; marsClass='mc';}
+0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=161; marsClass=19;}
 # CR
-0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=161; marsClass='cr';}
+0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=161; marsClass=36;}
 # AI
-0 = {tablesVersion=34; productionStatusOfProcessedData=0; marsClass='ai';}
-0 = {tablesVersion=35; productionStatusOfProcessedData=0; marsClass='ai';}
+0 = {tablesVersion=34; productionStatusOfProcessedData=0; marsClass=51;}
+0 = {tablesVersion=35; productionStatusOfProcessedData=0; marsClass=51;}

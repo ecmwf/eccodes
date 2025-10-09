@@ -10,13 +10,28 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
 
 label="grib_datasetForLocal_test"
 tempGrib=temp.$label.grib
 
+# Sample without mars local section
+sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+grib_check_key_equals $sample datasetForLocal unknown
+
+
 # Sample with mars local section
 sample=$ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
+
+# Try with class=Spain
+${tools_dir}/grib_set -s class=es $sample $tempGrib
+grib_check_key_equals $tempGrib datasetForLocal unknown
+
+# productionStatusOfProcessedData = Research products and Re-analysis products
+${tools_dir}/grib_set -s productionStatusOfProcessedData=2 $sample $tempGrib
+grib_check_key_equals $tempGrib datasetForLocal unknown
+${tools_dir}/grib_set -s productionStatusOfProcessedData=3 $sample $tempGrib
+grib_check_key_equals $tempGrib datasetForLocal unknown
+
 
 test_ds()
 {

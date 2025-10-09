@@ -33,6 +33,7 @@ private:
     int check_grid_and_packing_type();
     int check_field_values();
     int check_grid_pl_array();
+    int check_grid_increments();
     int check_geoiterator();
     int check_surface_keys();
     int check_steps();

@@ -19,11 +19,11 @@ unsigned[4] verifyingMonth : dump ;
 meta endOfInterval g1end_of_interval_monthly(verifyingMonth);
 
 meta yearOfEndOfOverallTimeInterval   vector(endOfInterval,0);
-meta monthOfEndOfOverallTimeInterval   vector(endOfInterval,1);
-meta dayOfEndOfOverallTimeInterval   vector(endOfInterval,2);
+meta monthOfEndOfOverallTimeInterval  vector(endOfInterval,1);
+meta dayOfEndOfOverallTimeInterval    vector(endOfInterval,2);
 meta hourOfEndOfOverallTimeInterval   vector(endOfInterval,3);
-meta minuteOfEndOfOverallTimeInterval   vector(endOfInterval,4);
-meta secondOfEndOfOverallTimeInterval   vector(endOfInterval,5);
+meta minuteOfEndOfOverallTimeInterval vector(endOfInterval,4);
+meta secondOfEndOfOverallTimeInterval vector(endOfInterval,5);
 
 transient hourOfEndOfOverallTimeInterval=23 : no_copy;
 transient minuteOfEndOfOverallTimeInterval=59 : no_copy;

@@ -315,7 +315,7 @@ static int cmpstringp(const void* p1, const void* p2)
 
 static bool blacklisted(grib_handle* h, long edition, const char* concept_name, const char* concept_value)
 {
-    if (strcmp(concept_name, "packingType") == 0) {
+    if (STR_EQUAL(concept_name, "packingType")) {
         char input_packing_type[100];
         size_t len = sizeof(input_packing_type);
         if (strstr(concept_value, "SPD")) {
@@ -335,6 +335,17 @@ static bool blacklisted(grib_handle* h, long edition, const char* concept_name, 
             return true;
         }
         if (strstr(input_packing_type, "spectral_") && !strstr(concept_value, "spectral_")) {
+            return true;
+        }
+    }
+    if (STR_EQUAL(concept_name, "gridType")) {
+        if (strstr(concept_value, "unknown")) {
+            return true;
+        }
+        if (strstr(concept_value, "ncep_")) {
+            return true;
+        }
+        if (strstr(concept_value, "miller") || strstr(concept_value, "UTM") || strstr(concept_value, "stretched")) {
             return true;
         }
     }
@@ -389,7 +400,7 @@ static void print_user_friendly_message(grib_handle* h, const char* name, grib_c
     concept_count = i;
     // Only print out all concepts if fewer than MAX_NUM_CONCEPT_VALUES.
     // Printing out all values for concepts like paramId would be silly!
-    if (concept_count < MAX_NUM_CONCEPT_VALUES) {
+    if (concept_count <= MAX_NUM_CONCEPT_VALUES) {
         fprintf(stderr, "Here are some possible values for concept %s:\n", act->name_);
         qsort(&all_concept_vals, concept_count, sizeof(char*), cmpstringp);
         for (i = 0; i < concept_count; ++i) {

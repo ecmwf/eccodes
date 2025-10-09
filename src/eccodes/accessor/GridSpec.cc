@@ -43,9 +43,12 @@ long GridSpec::get_native_type()
     return GRIB_TYPE_STRING;
 }
 
-static void print_warning_feature_not_implemented()
+void GridSpec::print_warning_feature_not_implemented()
 {
-    fprintf(stderr, "ECCODES WARNING :  Key gridSpec is not yet implemented. Work in progress...\n");
+    if (!warned_) {
+        fprintf(stderr, "ECCODES WARNING :  Key gridSpec is not yet implemented. Work in progress...\n");
+        warned_ = true;
+    }
 }
 
 int GridSpec::pack_string(const char* v, size_t* len)

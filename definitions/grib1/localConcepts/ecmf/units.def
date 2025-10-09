@@ -3320,22 +3320,22 @@
 	 indicatorOfParameter = 100 ;
 	}
 #Convective available potential energy shear index
-'(-1 to 1)' = {
+'Numeric' = {
 	 table2Version = 132 ;
 	 indicatorOfParameter = 44 ;
 	}
 #Water vapour flux index
-'dimensionless' = {
+'Numeric' = {
 	 table2Version = 132 ;
 	 indicatorOfParameter = 45 ;
 	}
 #Convective available potential energy index
-'(-1 to 1)' = {
+'Numeric' = {
 	 table2Version = 132 ;
 	 indicatorOfParameter = 59 ;
 	}
 #Maximum of significant wave height index
-'(-1 to 1)' = {
+'Numeric' = {
 	 table2Version = 132 ;
 	 indicatorOfParameter = 216 ;
 	}
@@ -12125,37 +12125,37 @@
 	 indicatorOfParameter = 255 ;
 	}
 #10 metre wind gust index
-'(-1 to 1)' = {
+'Numeric' = {
 	 table2Version = 132 ;
 	 indicatorOfParameter = 49 ;
 	}
 #Snowfall index
-'(-1 to 1)' = {
+'Numeric' = {
 	 table2Version = 132 ;
 	 indicatorOfParameter = 144 ;
 	}
 #10 metre speed index
-'(-1 to 1)' = {
+'Numeric' = {
 	 table2Version = 132 ;
 	 indicatorOfParameter = 165 ;
 	}
 #2 metre temperature index
-'(-1 to 1)' = {
+'Numeric' = {
 	 table2Version = 132 ;
 	 indicatorOfParameter = 167 ;
 	}
 #Maximum temperature at 2 metres index
-'(-1 to 1)' = {
+'Numeric' = {
 	 table2Version = 132 ;
 	 indicatorOfParameter = 201 ;
 	}
 #Minimum temperature at 2 metres index
-'(-1 to 1)' = {
+'Numeric' = {
 	 table2Version = 132 ;
 	 indicatorOfParameter = 202 ;
 	}
 #Total precipitation index
-'(-1 to 1)' = {
+'Numeric' = {
 	 table2Version = 132 ;
 	 indicatorOfParameter = 228 ;
 	}

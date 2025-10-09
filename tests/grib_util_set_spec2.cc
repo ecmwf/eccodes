@@ -134,16 +134,16 @@ static grib_handle* spectral()
     int err = 0;
     grib_util_grid_spec spec = {0,};
     grib_util_packing_spec packing_spec = {0,};
-    double values[4]   = { 1.1, 2.2 };
     int set_spec_flags = 0;
-    size_t outlen      = 0;
+
+    size_t outlen  = 0; // test passing in no values
+    double* values = NULL;
 
     auto* handle    = grib_handle_new_from_samples(nullptr, "sh_pl_grib2");
     spec.grid_type  = GRIB_UTIL_GRID_SPEC_SH;
     spec.truncation = 20;
-    outlen          = 2;
 
-    packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE;
+    packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE; //must fail
     packing_spec.bitsPerValue = 16;
     packing_spec.accuracy     = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
     packing_spec.packing      = GRIB_UTIL_PACKING_USE_PROVIDED;
@@ -151,8 +151,10 @@ static grib_handle* spectral()
     grib_handle* finalh = grib_util_set_spec(
         handle, &spec, &packing_spec, set_spec_flags,
         values, outlen, &err);
-    ECCODES_ASSERT(err == 0);
-    return finalh;
+    ECCODES_ASSERT(err);
+    ECCODES_ASSERT(!finalh);
+
+    return handle;
 }
 
 // Polar stereo

@@ -121,6 +121,7 @@ if( HAVE_BUILD_TOOLS )
         grib2_probability
         grib_suppressed
         grib_destine_mars_keys
+        grib_destine_test_mars_keys
         grib_2nd_order_numValues
         grib_ecc-136
         grib_ecc-530
@@ -151,6 +152,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1708
         grib_ecc-1766
         grib_ecc-1829
+        grib_ecc-2140
         bufr_ecc-1028
         bufr_ecc-1195
         bufr_ecc-1259
@@ -178,6 +180,7 @@ if( HAVE_BUILD_TOOLS )
         grib_cmp_paramtype
         grib_timeSpanConcept
         grib_cmp_timeSpan
+        grib_stattype
     )
 
     # These tests require data downloads
@@ -255,6 +258,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_wmo_tables
         bufr_extract_headers
         extract_offsets
+        bufr_operator_203
         bufr_ecc-147
         bufr_ecc-389
         bufr_ecc-673
@@ -263,7 +267,6 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-288
         bufr_ecc-313
         bufr_ecc-616
-        bufr_ecc-680
         bufr_ecc-686
         bufr_ecc-690
         bufr_ecc-379
@@ -316,6 +319,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2045
         grib_ecc-2050
         grib_ecc-2052
+        grib_ecc-2137
         grib_modelName
         grib_sub_hourly
         grib_set_bytes
@@ -335,11 +339,6 @@ if( HAVE_BUILD_TOOLS )
         hdf5
         taf
         pseudo_diag
-        metar_ls
-        metar_filter
-        metar_get
-        metar_dump
-        metar_compare
         bufr_set
         grib_ieee
         grib1_gds_not_present
@@ -413,6 +412,9 @@ if( HAVE_BUILD_TOOLS )
     if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra grib_ecc-1431)
         list(APPEND tests_extra grib_ecc-1433)
+    endif()
+    if( ECCODES_INSTALL_EXTRA_TOOLS AND ENABLE_EXTRA_TESTS )
+        list(APPEND tests_extra metar_ls metar_filter metar_get metar_dump metar_compare)
     endif()
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra bufr_dump_encode_fortran)

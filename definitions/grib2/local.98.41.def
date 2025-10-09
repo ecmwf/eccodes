@@ -31,7 +31,6 @@ meta _anoffset round(diffInHours, 10): dump,long_type;
 transient anoffset = _anoffset; # needed to force anoffset to be integer
 alias local.anoffset = anoffset;
 
-
 # ECC-662
 unsigned[2] anoffsetFirst     = missing(): dump, can_be_missing;
 unsigned[2] anoffsetLast      = missing(): dump, can_be_missing;
@@ -52,10 +51,9 @@ meta dateOfModelVersion  g2date(yearOfModelVersion, monthOfModelVersion, dayOfMo
 meta timeOfModelVersion  time  (hourOfModelVersion, minuteOfModelVersion, secondOfModelVersion) : dump;
 
 # Note: the key inputOriginatingCentre is in the PDTNs 70, 71, 72 and 73
-#concept efas_forecast {
+#concept efas_forecast(unknown) {
 #  "griddedobs" = { inputOriginatingCentre=98; marsType = "an"; }
 #  # "reanalysis" = { inputOriginatingCentre=98; marsType = "an"; }
-#
 #  "hres" = { inputOriginatingCentre=98; marsType = "fc"; } # deterministic
 #  "ens"  = { inputOriginatingCentre=98; marsType = "pf"; } # ensemble
 #  "ens"  = { inputOriginatingCentre=98; marsType = "cf"; } # ensemble
@@ -66,6 +64,4 @@ meta timeOfModelVersion  time  (hourOfModelVersion, minuteOfModelVersion, second
 #
 # TODO: For now anything coming from cnmc (COSMO) is local area
 #  "lam"     = { inputOriginatingCentre=80; }
-#
-#  "unknown" = { dummy = 1; }
 #} : hidden;

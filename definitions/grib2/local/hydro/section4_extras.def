@@ -15,6 +15,11 @@ if (modelName isnot "unknown") {
    }
 }
 
+if (defined(class) && is_one_of(class,"gh","eh")){
+ concept statType (unknown,"stattypeConcept.def",conceptsDir2,conceptsDir1) : read_only;
+ alias mars.stattype = statType;
+}
+
 alias mars.model = modelName;
 alias mars.configuration = configuration;
 #alias mars.origin = inputOriginatingCentre;

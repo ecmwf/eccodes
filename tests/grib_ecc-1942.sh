@@ -10,12 +10,10 @@
 
 . ./include.ctest.sh
 
-# ------------------------------------------------------------
+# -----------------------------------------------------------------------
 # This is the test for the JIRA issue ECC-1942
 # Reorganise template.4.horizontal.def to avoid unaliasing mars.levelist
-# ------------------------------------------------------------
-
-REDIRECT=/dev/null
+# -----------------------------------------------------------------------
 
 label="grib_ecc-1942_test"
 tempGrib=temp.$label.grib

@@ -9,6 +9,44 @@
 
 . ./include.ctest.sh
 
+label=examples_c_grib_multi
+tempRef=temp.$label.ref
+tempText=temp.$label.txt
+
 # Test decoding multi-field GRIB2 data
-${examples_dir}/c_grib_multi
-${examples_dir}/c_multi2
+${examples_dir}/c_grib_multi > $tempText
+grep -q "codes_handle_new_from_file counted 56 messages" $tempText
+
+
+${examples_dir}/c_multi2 > $tempText
+cat > $tempRef <<EOF
+Pass 1:
+File offset start = 0
+0 : stepRange=0
+1 : stepRange=12
+2 : stepRange=24
+3 : stepRange=36
+Pass 2:
+File offset start = 0
+0 : stepRange=0
+1 : stepRange=12
+2 : stepRange=24
+3 : stepRange=36
+Pass 3:
+File offset start = 0
+0 : stepRange=0
+1 : stepRange=12
+2 : stepRange=24
+3 : stepRange=36
+Pass 4:
+File offset start = 0
+0 : stepRange=0
+1 : stepRange=12
+2 : stepRange=24
+3 : stepRange=36
+All OK
+EOF
+diff $tempRef $tempText
+
+# Clean up
+rm -f $tempText $tempRef

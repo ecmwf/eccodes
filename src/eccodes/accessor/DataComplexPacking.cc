@@ -286,6 +286,21 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
 
     n_vals = (pen_j + 1) * (pen_j + 2);
 
+    // ECC-2137: Converting spectral_simple to spectral_complex
+    // Note: in spectral_simple we have one less.
+    // See definitions/grib2/templates/template.7.50.def
+    //    transient numberOfPackedValues = numberOfValues - 1 : no_copy;
+    if ( (size_t)n_vals == *len + 1) {
+        char convertingFrom[128] = {0,};
+        size_t slen = sizeof(convertingFrom);
+        if (grib_get_string(gh, "convertingFrom", convertingFrom, &slen) == GRIB_SUCCESS &&
+            STR_EQUAL(convertingFrom, "spectral_simple"))
+        {
+            *len += 1; // adjust size
+            grib_set_long(gh, "numberOfDataPoints", n_vals);
+        }
+    }
+
     if (*len != n_vals) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s: Wrong number of values, expected %ld - got %zu",
                          class_name_, n_vals, *len);

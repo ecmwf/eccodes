@@ -108,12 +108,10 @@ grep -q "Invalid step: startStep > endStep" $tempText
 # Wrong order of keys
 ${tools_dir}/grib_set -s endStep=1,startStep=1,stepType=accum  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrib
 grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
-cat $tempText
 grep -q "Invalid step" $tempText
 
 ${tools_dir}/grib_set -s stepType=accum,endStep=6,startStep=6  $ECCODES_SAMPLES_PATH/GRIB1.tmpl $tempGrib
 grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
-cat $tempText
 grep -q "Invalid steps: stepType=accum but startStep=endStep" $tempText
 
 
@@ -127,7 +125,17 @@ if [ $HAVE_GEOGRAPHY -eq 1 ]; then
    # Disable grid checks
    result=$( ${tools_dir}/grib_get -s messageValidityChecks=local -p isMessageValid $tempGrib )
    [ $result -eq 1 ]
+
+   # ECC-2127: Invalid direction increments
+   ${tools_dir}/grib_set -s iDirectionIncrementGiven=0,iDirectionIncrement=4 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $tempGrib
+   grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+   grep -q "iDirectionIncrementGiven=0 but iDirectionIncrement!=missing" $tempText
+
+   ${tools_dir}/grib_set -s iDirectionIncrementGiven=1,iDirectionIncrement=missing $ECCODES_SAMPLES_PATH/GRIB2.tmpl $tempGrib
+   grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
+   grep -q "iDirectionIncrementGiven=1 but iDirectionIncrement=missing" $tempText
 fi
+
 
 # Check reduced Gaussian grid Ni
 # ------------------------------

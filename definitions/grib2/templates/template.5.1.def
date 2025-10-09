@@ -57,14 +57,13 @@ if (matrixBitmapsPresent == 1) {
 
   position offsetBBitmap;
   meta secondaryBitmaps g2bitmap(
-          dummy,
-          missingValue,
-          offsetBSection5,
-          section5Length,
-          numberOfCodedValues ,
-          dummy) : read_only;
+        dummy,
+        missingValue,
+        offsetBSection5,
+        section5Length,
+        numberOfCodedValues ,
+        dummy) : read_only;
 
   meta bitmap data_g2secondary_bitmap(primaryBitmap,
-      secondaryBitmaps,
-      missingValue,datumSize,numberOfDataPoints) : read_only;
+      secondaryBitmaps, missingValue,datumSize,numberOfDataPoints) : read_only;
 }

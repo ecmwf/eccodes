@@ -2894,10 +2894,11 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
                     /* Operator */
                     switch (descriptors[i]->X) {
                         case 3: /* Change reference values */
-                            if (compressedData_ == 1 && flag != PROCESS_DECODE) {
-                                grib_context_log(c, GRIB_LOG_ERROR, "process_elements: operator %d not supported for encoding compressed data", descriptors[i]->X);
-                                return GRIB_INTERNAL_ERROR;
-                            }
+                            // ECC-2136: Why did we not support compressed data? No idea!!
+                            // if (compressedData_ == 1 && flag != PROCESS_DECODE)  {
+                            //     grib_context_log(c, GRIB_LOG_ERROR, "process_elements: operator %d not supported for encoding compressed data", descriptors[i]->X);
+                            //     return GRIB_INTERNAL_ERROR;
+                            // }
                             if (descriptors[i]->Y == 255) {
                                 grib_context_log(c, GRIB_LOG_DEBUG, "Operator 203YYY: Y=255, definition of new reference values is concluded");
                                 change_ref_value_operand_ = 255;
