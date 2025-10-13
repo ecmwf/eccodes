@@ -2435,18 +2435,6 @@
 	 parameterCategory = 162 ;
 	 parameterNumber = 141 ;
 	}
-#100 metre U wind component anomaly
-'m s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 6 ;
-	}
-#100 metre V wind component anomaly
-'m s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 7 ;
-	}
 #Maximum temperature at 2 metres in the last 6 hours anomaly
 'K' = {
 	 discipline = 192 ;
@@ -12887,6 +12875,38 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 193 ;
 	}
+#Time-mean aerosol negative fixer mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum aerosol negative fixer mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum aerosol negative fixer mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation aerosol negative fixer mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Aerosol sink/loss mass flux
 'kg m**-2 s**-1' = {
 	 localTablesVersion = 1 ;
@@ -12901,6 +12921,38 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 194 ;
 	}
+#Time-mean aerosol sink/loss mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum aerosol sink/loss mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum aerosol sink/loss mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation aerosol sink/loss mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Aerosol source/gain mass flux
 'kg m**-2 s**-1' = {
 	 localTablesVersion = 1 ;
@@ -12914,6 +12966,38 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 192 ;
+	}
+#Time-mean aerosol source/gain mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum aerosol source/gain mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum aerosol source/gain mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation aerosol source/gain mass flux
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 6 ;
 	}
 #Emission mass flux from commercial buildings heating
 'kg m**-2 s**-1' = {
