@@ -35,5 +35,9 @@ alias mars.configuration = configuration;
 meta forcingModelCode evaluate(inputProcessIdentifier/1000);
 concept forcingModel(unknown, "forcingModelConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
 
-meta originForcing sprintf("%s_%s",inputOriginatingCentre,forcingModel);
+if ( forcingModel is "obs" ){
+ meta originForcing sprintf("%s",forcingModel);
+ } else {
+ meta originForcing sprintf("%s_%s",inputOriginatingCentre,forcingModel);
+}
 alias mars.origin = originForcing;
