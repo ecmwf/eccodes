@@ -119,6 +119,7 @@ constant numberOfUnusedBitsAtEndOfSection3 = 0;
 
 # Table reference:
 constant tableReference = 0;
+constant isGridded = true;
 
 #position offsetBeforeBitmap;
 # meta bitmap gds_not_present_bitmap( missingValue,numberOfValues,

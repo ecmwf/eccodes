@@ -89,6 +89,7 @@ if (!headersOnly) {
 
 # ECC-2137
 transient convertingFrom = "unknown" : hidden;
+transient numberOfGridPoints = 0 : hidden, no_copy;
 
 if (isGridded) {
     meta gridSpec grid_spec(): hidden, no_copy;
