@@ -1,1 +1,5 @@
-alias mars.anoffset=anoffset;
+if (defined(grib2LocalSectionNumber)  && grib2LocalSectionNumber==44){
+ alias mars.anoffset=offsetToStartOfForecastFillupInHours;
+} else {
+ alias mars.anoffset=anoffset;
+}
