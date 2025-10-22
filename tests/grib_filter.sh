@@ -423,6 +423,16 @@ EOF
 ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 
+# Use of "min" and "max"
+cat >$tempFilt <<EOF
+  transient xmin = min(year, month);
+  transient xmax = max(year, month);
+  meta x1 sprintf("%d %d", xmin, xmax);
+  assert( x1 is "3 2007" );
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
+
 # Write statement with padding
 # ------------------------------------------------------------------------
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl

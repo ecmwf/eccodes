@@ -55,6 +55,22 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
         return GRIB_SUCCESS;
     }
 
+    if (STR_EQUAL(name_, "max") || STR_EQUAL(name_, "min")) {
+        const grib_expression* exp1 = args_ ? args_->get_expression(h, 0) : nullptr;
+        const grib_expression* exp2 = args_ ? args_->get_expression(h, 1) : nullptr;
+        if (exp1 && exp2) {
+            long lval1 = 0, lval2 = 0;
+            int ret = exp1->evaluate_long(h, &lval1);
+            if (ret == GRIB_SUCCESS)
+                ret = exp2->evaluate_long(h, &lval2);
+            *lres = lval1;
+            if (STR_EQUAL(name_, "max") && lval2 > lval1) *lres = lval2;
+            if (STR_EQUAL(name_, "min") && lval2 < lval1) *lres = lval2;
+            return ret;
+        }
+        return GRIB_INVALID_ARGUMENT;
+    }
+
     if (STR_EQUAL(name_, "abs")) {
         const grib_expression* exp = args_ ? args_->get_expression(h, 0) : nullptr;
         if (exp) {
