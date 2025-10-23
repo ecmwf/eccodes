@@ -916,9 +916,9 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
     char input_grid_type[100];
     char input_packing_type[100] = {0,};
     long editionNumber = 0;
-    size_t count = 0, len = 100, slen = 20, input_grid_type_len = 100;
+    size_t count = 0, len = 100, input_grid_type_len = 100;
     double laplacianOperator;
-    int i = 0, packingTypeIsSet = 0, setJpegPacking = 0;
+    int i = 0, packingTypeIsSet = 0;
     bool convertEditionEarlier     = false; // For cases when we cannot set some keys without converting
     bool grib1_high_resolution_fix = false; // See GRIB-863
 
