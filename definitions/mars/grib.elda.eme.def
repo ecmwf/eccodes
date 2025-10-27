@@ -1,5 +1,6 @@
+alias mars.anoffset=offsetToEndOf4DvarWindow;
+
 if ( grib2LocalSectionNumber != 44) {
- alias mars.anoffset=offsetToEndOf4DvarWindow;
  alias mars.number=componentIndex;
 }
 
