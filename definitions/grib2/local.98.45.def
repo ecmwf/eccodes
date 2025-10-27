@@ -1,4 +1,4 @@
-# Local definition 44: Model error fourier coefficients
+# Local definition 45: Model error fourier coefficients
 
 unsigned[1] fourierCoefficientIndex : dump;
 unsigned[1] numberOfFourierCoefficients  : dump;
