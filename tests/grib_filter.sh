@@ -423,7 +423,7 @@ EOF
 ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 
-# Use of "min" and "max"
+# ECC-2152: Use of "min" and "max"
 cat >$tempFilt <<EOF
   transient xmin = min(year, month);
   transient xmax = max(year, month);
