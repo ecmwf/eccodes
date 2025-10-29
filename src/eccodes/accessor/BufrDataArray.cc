@@ -2645,13 +2645,13 @@ static int set_to_missing_if_out_of_range(grib_handle* h)
 int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset, long endSubset)
 {
     int err = 0;
-    long inr, innr, ir, ip;
-    long n[MAX_NESTED_REPLICATIONS] = {0,};
-    long nn[MAX_NESTED_REPLICATIONS] = {0,};
+    long d, innr, ir, dPrev;
+    long nElems[MAX_NESTED_REPLICATIONS] = {0,};
+    long nReps[MAX_NESTED_REPLICATIONS] = {0,};
     long numberOfElementsToRepeat[MAX_NESTED_REPLICATIONS] = {0,};
     long numberOfRepetitions[MAX_NESTED_REPLICATIONS] = {0,};
     long startRepetition[MAX_NESTED_REPLICATIONS] = {0,};
-    long numberOfNestedRepetitions = 0;
+    long depth = 0;
     unsigned char* data            = 0;
     size_t subsetListSize          = 0;
     long* subsetList               = 0;
@@ -2826,7 +2826,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
         }
         elementIndex = 0;
 
-        numberOfNestedRepetitions = 0;
+        depth = 0;
 
         for (i = 0; i < numberOfDescriptors; i++) {
             bool op203_definition_phase = false;
@@ -2852,42 +2852,64 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
                     break;
                 case 1:
                     /* Delayed replication */
-                    inr = numberOfNestedRepetitions;
-                    numberOfNestedRepetitions++;
-                    DEBUG_ASSERT(numberOfNestedRepetitions <= MAX_NESTED_REPLICATIONS);
-                    numberOfElementsToRepeat[inr] = descriptors[i]->X;
-                    n[inr]                        = numberOfElementsToRepeat[inr];
+                    d = depth;
+                    depth++;
+                    DEBUG_ASSERT(depth <= MAX_NESTED_REPLICATIONS);
+                    numberOfElementsToRepeat[d] = descriptors[i]->X;  // Y  = number of repetitions
+                    nElems[d]                   = numberOfElementsToRepeat[d];
                     i++;
 
                     data = buffer->data; /* ECC-517 */
-                    err  = codec_replication(c, this, iss, buffer, data, &pos, i, elementIndex, dval, &(numberOfRepetitions[inr]));
+                    err  = codec_replication(c, this, iss, buffer, data, &pos, i, elementIndex, dval, &(numberOfRepetitions[d]));
                     if (err) return err;
 
-                    startRepetition[inr] = i;
-                    nn[inr]              = numberOfRepetitions[inr];
+                    startRepetition[d] = i;
+                    nReps[d]           = numberOfRepetitions[d];
                     if (flag != PROCESS_ENCODE)
                         grib_iarray_push(elementsDescriptorsIndex, i);
                     elementIndex++;
-                    if (numberOfRepetitions[inr] == 0) {
-                        i += numberOfElementsToRepeat[inr];
-                        if (inr > 0) {
-                            n[inr - 1] -= numberOfElementsToRepeat[inr] + 2;
+
+                    if (numberOfRepetitions[d] == 0) {
+                        i += numberOfElementsToRepeat[d];
+
+                        if (d > 0) {
+                            // If it's the last element(s) of the nested repetition(s)
+                            dPrev = d - 1;
+
+                            // ECC-2153: fix handling of empty nested replications
+                            if (dPrev >= 1 && nReps[dPrev] == 1 && nReps[d] == 0 && nReps[0] > 1) {
+                                for (long ii = dPrev; ii >= 0; ii--) {
+                                    if (nReps[ii]) {
+                                        nElems[ii] = numberOfElementsToRepeat[ii];
+                                        nReps[ii]--;
+                                        if (nReps[ii]) {
+                                            i = startRepetition[ii];
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            nElems[dPrev] -= numberOfElementsToRepeat[d] + 2;
                             /* if the empty nested repetition is at the end of the nesting repetition
-                           we need to re-point to the start of the nesting repetition */
-                            ip = inr - 1;
-                            while (ip >= 0 && n[ip] == 0) {
-                                nn[ip]--;
-                                if (nn[ip] <= 0) {
-                                    numberOfNestedRepetitions--;
+                               we need to re-point to the start of the nesting repetition */
+                            while (dPrev >= 0 && nElems[dPrev] == 0) {
+                                nReps[dPrev]--;
+                                if (nReps[dPrev] <= 0) {
+                                    while (nReps[dPrev] <= 0 && dPrev > 0) {
+                                        i += numberOfElementsToRepeat[dPrev] + 2;
+                                        dPrev--;
+                                    }
+                                    depth--;
                                 }
                                 else {
-                                    n[ip] = numberOfElementsToRepeat[ip];
-                                    i     = startRepetition[ip];
+                                    nElems[dPrev] = numberOfElementsToRepeat[dPrev];
+                                    i     = startRepetition[dPrev];
                                 }
-                                ip--;
+                                dPrev--;
                             }
                         }
-                        numberOfNestedRepetitions--;
+                        depth--;
                     }
                     continue;
                 case 2:
@@ -3135,36 +3157,36 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
             } /* switch F */
 
             /* Delayed repetition check */
-            innr = numberOfNestedRepetitions - 1;
+            innr = depth - 1;
             for (ir = innr; ir >= 0; ir--) {
-                if (nn[ir]) {
-                    if (n[ir] > 1) {
-                        n[ir]--;
+                if (nReps[ir]) {
+                    if (nElems[ir] > 1) {
+                        nElems[ir]--;
                         break;
                     }
                     else {
-                        n[ir] = numberOfElementsToRepeat[ir];
-                        nn[ir]--;
-                        if (nn[ir]) {
+                        nElems[ir] = numberOfElementsToRepeat[ir];
+                        nReps[ir]--;
+                        if (nReps[ir]) {
                             i = startRepetition[ir];
                             break;
                         }
                         else {
                             if (ir > 0) {
-                                n[ir - 1] -= numberOfElementsToRepeat[ir] + 1;
+                                nElems[ir - 1] -= numberOfElementsToRepeat[ir] + 1;
                             }
                             i = startRepetition[ir] + numberOfElementsToRepeat[ir];
-                            numberOfNestedRepetitions--;
+                            depth--;
                         }
                     }
                 }
                 else {
                     if (ir == 0) {
-                        i                         = startRepetition[ir] + numberOfElementsToRepeat[ir] + 1;
-                        numberOfNestedRepetitions = 0;
+                        i = startRepetition[ir] + numberOfElementsToRepeat[ir] + 1;
+                        depth = 0;
                     }
                     else {
-                        numberOfNestedRepetitions--;
+                        depth--;
                     }
                 }
             }
