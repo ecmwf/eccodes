@@ -1,0 +1,4 @@
+0 0 Basic observation without radar data capability
+1 1 Intermediate observation with or without radar data capability
+2 2 Basic observation with radar data capability
+3 3 Missing value

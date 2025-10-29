@@ -1,0 +1,16 @@
+0 0 Summer Day
+1 1 Day with maximum temperature of 30 degrees Celsius or more
+2 2 Day with minimum temperature below 0 degrees Celsius
+3 3 Day with maximum temperature below 0 degrees Celsius
+4 4 Day with precipitation of 0.1 mm or more
+5 5 Day with precipitation of 1.0 mm or more
+6 6 Day with snow or hail (hail, small hail, snow pellets) but no rain or drizzle
+7 7 Day with snow or hail (hail, small hail, snow pellets) cover
+8 8 Sunny Day
+9 9 Day with overcast sky
+10 10 Day with thunderstorm
+11 11 Day with Beaufort 6 or more
+12 12 Day with Beaufort 8 or more
+13 13 Day with both snow and/or hail (hail, small hail, snow pellets) and rain and/or drizzle
+14 14 Day with depositions of precipitation >=0.1 mm only
+31 31 Missing value

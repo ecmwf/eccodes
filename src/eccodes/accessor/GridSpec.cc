@@ -43,13 +43,13 @@ long GridSpec::get_native_type()
     return GRIB_TYPE_STRING;
 }
 
-void GridSpec::print_warning_feature_not_implemented()
-{
-    if (!warned_) {
-        fprintf(stderr, "ECCODES WARNING :  Key gridSpec is not yet implemented. Work in progress...\n");
-        warned_ = true;
-    }
-}
+//void GridSpec::print_warning_feature_not_implemented()
+// {
+//     if (!warned_) {
+//         fprintf(stderr, "ECCODES WARNING :  Key gridSpec is not yet implemented. Work in progress...\n");
+//         warned_ = true;
+//     }
+// }
 
 int GridSpec::pack_string(const char* v, size_t* len)
 {
@@ -88,7 +88,7 @@ int GridSpec::pack_string(const char* v, size_t* len)
 
     return GRIB_SUCCESS;
 #else
-    print_warning_feature_not_implemented();
+    // print_warning_feature_not_implemented();
     return GRIB_NOT_IMPLEMENTED;
 #endif
 }
@@ -143,7 +143,7 @@ int GridSpec::unpack_string(char* v, size_t* len)
 
     return GRIB_SUCCESS;
 #else
-    print_warning_feature_not_implemented();
+    // print_warning_feature_not_implemented();
     return GRIB_NOT_IMPLEMENTED;
 #endif
 }

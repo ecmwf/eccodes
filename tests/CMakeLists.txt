@@ -340,11 +340,6 @@ if( HAVE_BUILD_TOOLS )
         hdf5
         taf
         pseudo_diag
-        metar_ls
-        metar_filter
-        metar_get
-        metar_dump
-        metar_compare
         bufr_set
         grib_ieee
         grib1_gds_not_present
@@ -418,6 +413,9 @@ if( HAVE_BUILD_TOOLS )
     if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra grib_ecc-1431)
         list(APPEND tests_extra grib_ecc-1433)
+    endif()
+    if( ECCODES_INSTALL_EXTRA_TOOLS AND ENABLE_EXTRA_TESTS )
+        list(APPEND tests_extra metar_ls metar_filter metar_get metar_dump metar_compare)
     endif()
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra bufr_dump_encode_fortran)

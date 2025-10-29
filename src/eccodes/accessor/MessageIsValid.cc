@@ -174,6 +174,30 @@ int MessageIsValid::check_grid_and_packing_type()
     return GRIB_SUCCESS;
 }
 
+int MessageIsValid::check_pv_array()
+{
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
+    long pvpresent = 0;
+    size_t pvsize  = 0;
+
+    // is there a PV array?
+    int err = grib_get_long(handle_, "PVPresent", &pvpresent);
+    if (err != GRIB_SUCCESS || pvpresent == 0)
+        return GRIB_SUCCESS;  // No PV array. So nothing to do
+
+    if ((err = grib_get_size(handle_, "pv", &pvsize)) != GRIB_SUCCESS)
+        return err;
+    if (pvsize == 0 || (pvsize % 2) == 1) {
+        // PV array size must be an even number > 0
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: PV array size should be an even number > 0", TITLE);
+        return GRIB_INVALID_MESSAGE;
+    }
+
+    return GRIB_SUCCESS;
+}
+
 int MessageIsValid::check_field_values()
 {
     if (!data_enabled()) {
@@ -677,6 +701,7 @@ int MessageIsValid::unpack_long(long* val, size_t* len)
         &MessageIsValid::check_date,
         &MessageIsValid::check_spectral,
         &MessageIsValid::check_grid_and_packing_type,
+        &MessageIsValid::check_pv_array,
         &MessageIsValid::check_field_values,
         &MessageIsValid::check_number_of_missing,
         &MessageIsValid::check_grid_pl_array,

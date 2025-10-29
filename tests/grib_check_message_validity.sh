@@ -215,6 +215,21 @@ ${tools_dir}/grib_filter - $tempGrib <<EOF
 EOF
 
 
+# Check PV array size
+# -----------------------------------
+sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+cat >$tempFilt<<EOF
+   set PVPresent=1;
+   set pv={2.1, 3.1, 4.1};
+   assert ( NV == 3 );
+   assert ( isMessageValid == 0 );
+   write;
+EOF
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample 2>$tempText
+grep -q "PV array size should be an even number" $tempText
+grib_check_key_equals $tempGrib isMessageValid 0
+
+
 # Check number of values, missing etc
 # -----------------------------------
 ${tools_dir}/grib_set -s values=5,numberOfDataPoints=55 $data_dir/sample.grib2 $tempGrib
