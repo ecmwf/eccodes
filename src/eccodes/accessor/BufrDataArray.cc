@@ -2876,14 +2876,14 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
                             // If it's the last element(s) of the nested repetition(s)
                             dPrev = d - 1;
 
-                            // Handle the case where we have to roll back to an upper level of nesting
+                            // ECC-2153: fix handling of empty nested replications
                             if (dPrev >= 1 && nReps[dPrev] == 1 && nReps[d] == 0 && nReps[0] > 1) {
-                                for (long i = dPrev; i >= 0; i--) {
-                                    if (nReps[i]) {
-                                        nElems[i] = numberOfElementsToRepeat[i];
-                                        nReps[i]--;
-                                        if (nReps[i]) {
-                                            i = startRepetition[i];
+                                for (long ii = dPrev; ii >= 0; ii--) {
+                                    if (nReps[ii]) {
+                                        nElems[ii] = numberOfElementsToRepeat[ii];
+                                        nReps[ii]--;
+                                        if (nReps[ii]) {
+                                            i = startRepetition[ii];
                                             break;
                                         }
                                     }
