@@ -1860,13 +1860,14 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
         }
     }
 
-    // Unstructured grids (GRIB2 only)
-    if (spec->grid_type == GRIB_UTIL_GRID_SPEC_UNSTRUCTURED) {
-        if (grib_get_long(h, "shapeOfTheEarth", &shapeOfTheEarth) == GRIB_SUCCESS) {
-            *err = grib_set_long(h_out, "shapeOfTheEarth", shapeOfTheEarth);
-            if (*err) goto cleanup;
-        }
+    // Shape of the earth must be preserved
+    if (grib_get_long(h, "shapeOfTheEarth", &shapeOfTheEarth) == GRIB_SUCCESS) {
+        *err = grib_set_long(h_out, "shapeOfTheEarth", shapeOfTheEarth);
+        if (*err) goto cleanup;
+    }
 
+    // ECC-2154: Unstructured grids (GRIB2 only)
+    if (spec->grid_type == GRIB_UTIL_GRID_SPEC_UNSTRUCTURED) {
         if (grib_get_long(h, "numberOfGridInReference", &numberOfGridInReference) == GRIB_SUCCESS) {
             *err = grib_set_long(h_out, "numberOfGridInReference", numberOfGridInReference);
             if (*err) goto cleanup;

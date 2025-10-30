@@ -201,11 +201,17 @@ static grib_handle* regular_gg()
     spec.grid_type = GRIB_UTIL_GRID_SPEC_REGULAR_GG;
     spec.Ni = spec.Nj = 2;
     outlen            = 4;
+    CODES_CHECK(codes_set_long(handle, "shapeOfTheEarth", 5), 0);
 
     grib_handle* finalh = grib_util_set_spec(
         handle, &spec, &packing_spec, set_spec_flags,
         values, outlen, &err);
     ECCODES_ASSERT(err == 0);
+
+    long shapeOfTheEarth=-1;
+    CODES_CHECK(codes_get_long(finalh, "shapeOfTheEarth", &shapeOfTheEarth), 0);
+    ECCODES_ASSERT( shapeOfTheEarth == 5 );
+
     return finalh;
 }
 
