@@ -115,7 +115,7 @@ ecbuild_add_option( FEATURE GEOGRAPHY
 ecbuild_add_option( FEATURE ECKIT_GEO
     DESCRIPTION "Support for Geoiterator and nearest neighbour (additional backend)"
     CONDITION ENABLE_GEOGRAPHY
-    DEFAULT OFF )
+    DEFAULT ON )
 
 if( eccodes_HAVE_ECKIT_GEO AND NOT TARGET eckit_geo )
     ecbuild_find_package(NAME eckit VERSION 1.27 REQUIRED)
