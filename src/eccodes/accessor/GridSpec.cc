@@ -93,6 +93,7 @@ int GridSpec::pack_string(const char* v, size_t* len)
 #endif
 }
 
+#if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
 static bool eckit_can_handle_it(grib_handle* h, std::string& reason)
 {
     long iNeg = 0;
@@ -117,6 +118,7 @@ static bool eckit_can_handle_it(grib_handle* h, std::string& reason)
     }
     return true;
 }
+#endif
 
 int GridSpec::unpack_string(char* v, size_t* len)
 {
