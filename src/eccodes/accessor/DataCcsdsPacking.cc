@@ -661,6 +661,11 @@ int DataCcsdsPacking::unpack_double_element_set(const size_t* index_array, size_
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
+int DataCcsdsPacking::pack_bytes(const unsigned char* val, size_t* len)
+{
+    print_error_feature_not_enabled(context_);
+    return GRIB_FUNCTIONALITY_NOT_ENABLED;
+}
 
 #endif
 
