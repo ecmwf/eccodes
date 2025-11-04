@@ -22,7 +22,7 @@
 int main(int argc, char** argv)
 {
     int err         = 0;
-    long centre     = 80;
+    long centre     = 78;
     long long_value = 0;
     char string_value[100];
     size_t len  = sizeof(string_value) / sizeof(char);

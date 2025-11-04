@@ -129,10 +129,7 @@ defs_dirs="
  $ECCODES_DEFINITION_PATH/grib1/localConcepts/ecmf
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf
 
- $ECCODES_DEFINITION_PATH/grib1/localConcepts/ekmi
- $ECCODES_DEFINITION_PATH/grib1/localConcepts/enmi
  $ECCODES_DEFINITION_PATH/grib1/localConcepts/lfpw
- $ECCODES_DEFINITION_PATH/grib1/localConcepts/lowm
  $ECCODES_DEFINITION_PATH/grib1/localConcepts/rjtd
 
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/uerra
@@ -145,8 +142,6 @@ defs_dirs="
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/destine
 
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/egrr
- $ECCODES_DEFINITION_PATH/grib2/localConcepts/ekmi
- $ECCODES_DEFINITION_PATH/grib2/localConcepts/eswi
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/lfpw
 "
 
