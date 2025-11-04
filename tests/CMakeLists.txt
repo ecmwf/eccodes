@@ -42,6 +42,7 @@ list(APPEND test_c_bins
     grib_set_force
     grib_run_length_packing
     grib_partial_message
+    grib_codedValues_as_bytes
     grib_ecc-1467
     grib_ecc-1431
     grib_ecc-1433
@@ -204,6 +205,7 @@ if( HAVE_BUILD_TOOLS )
         grib_element
         grib_change_packing
         grib_complex_spatial_differencing
+        grib_codedValues_as_bytes
         grib_run_length_packing
         grib_grid_space_view
         grib_partial_message
