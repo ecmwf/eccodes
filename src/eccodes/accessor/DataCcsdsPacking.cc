@@ -621,6 +621,13 @@ int DataCcsdsPacking::unpack_double_element_set(const size_t* index_array, size_
     return GRIB_SUCCESS;
 }
 
+int DataCcsdsPacking::pack_bytes(const unsigned char* val, size_t* len)
+{
+    size_t length = *len;
+    grib_buffer_replace(this, val, length, 1, 1);
+    return GRIB_SUCCESS;
+}
+
 #else
 
 static void print_error_feature_not_enabled(grib_context* c)
