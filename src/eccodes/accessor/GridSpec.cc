@@ -96,24 +96,22 @@ int GridSpec::pack_string(const char* v, size_t* len)
 #if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
 static bool eckit_can_handle_it(grib_handle* h, std::string& reason)
 {
+    std::string key = "iScansNegatively";
     long iNeg = 0;
-    if (grib_get_long(h, "iScansNegatively", &iNeg) == GRIB_SUCCESS && iNeg == 1) {
-        reason = "Scanning mode iScansNegatively not supported";
+    if (grib_get_long(h, key.c_str(), &iNeg) == GRIB_SUCCESS && iNeg == 1) {
+        reason = key + "=1: Scanning mode not supported";
         return false;
     }
-    // long jPos = 0;
-    // if (grib_get_long(h, "jScansPositively", &jPos) == GRIB_SUCCESS && jPos == 1) {
-    //     reason = "Scanning mode jScansPositively not supported";
-    //     return false;
-    // }
+    key = "jPointsAreConsecutive";
     long jCons = 0;
-    if (grib_get_long(h, "jPointsAreConsecutive", &jCons) == GRIB_SUCCESS && jCons == 1) {
-        reason = "Scanning mode jPointsAreConsecutive not supported";
+    if (grib_get_long(h, key.c_str(), &jCons) == GRIB_SUCCESS && jCons == 1) {
+        reason = key + "=1: Scanning mode not supported";
         return false;
     }
+    key = "alternativeRowScanning";
     long altRow = 0;
-    if (grib_get_long(h, "alternativeRowScanning", &altRow) == GRIB_SUCCESS && altRow == 1) {
-        reason = "Scanning mode alternativeRowScanning not supported";
+    if (grib_get_long(h, key.c_str(), &altRow) == GRIB_SUCCESS && altRow == 1) {
+        reason = key + "=1: Scanning mode not supported";
         return false;
     }
     return true;
