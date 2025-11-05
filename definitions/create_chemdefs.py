@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 
+# needs pandas >= 2.0
+
 import pandas as pd
 import os
 import sys
 import subprocess
 import mysql.connector
+from sqlalchemy import create_engine
 ## Create a connection object
 ## IP address of the MySQL database server
 Host = os.environ['PARAM_DB_HOST']
@@ -15,18 +18,12 @@ Password = os.environ['PARAM_DB_PASS']
 ## opens directly the database param
 database = "param"
 
-conn  = mysql.connector.connect(host=Host, user=User, password=Password, database=database)
-
-# Create a cursor object
-cur  = conn.cursor()
+engine = create_engine(f"mysql+mysqlconnector://{User}:{Password}@{Host}/{database}")
 
 # WMO definitions
-#os.system('mkdir -p grib2')
 centre = 0
 query = f"select chem.id as chemId,shortName as chemShortName,chem.name as chemName,chem.formula as chemFormula,group_concat(concat(attribute.name,'=',coalesce(chem_attributes.attribute_value,'missing()')) order by attribute.o) as attributes from chem join chem_attributes on chem_attributes.chem_id=chem.id join attribute on attribute.id=chem_attributes.attribute_id where chem.centre_id={centre} group by chem.id;"
-#cur.execute(query)
-#df = cur.fetchall()
-df = pd.read_sql(query, con=conn)
+df = pd.read_sql(query, con=engine)
 f1 = open("grib2/chemId.def", "w")
 f2 = open("grib2/chemName.def", "w")
 f3 = open("grib2/chemShortName.def", "w")
@@ -75,7 +72,7 @@ centre = 98
 query = f"select chem.id as chemId,shortName as chemShortName,chem.name as chemName,chem.formula as chemFormula,group_concat(concat(attribute.name,'=',coalesce(chem_attributes.attribute_value,'missing()')) order by attribute.o) as attributes from chem join chem_attributes on chem_attributes.chem_id=chem.id join attribute on attribute.id=chem_attributes.attribute_id where chem.centre_id={centre} group by chem.id;"
 #cur.execute(query)
 #df = cur.fetchall()
-df = pd.read_sql(query, con=conn)
+df = pd.read_sql(query, con=engine)
 f1 = open("grib2/localConcepts/ecmf/chemId.def", "w")
 f2 = open("grib2/localConcepts/ecmf/chemName.def", "w")
 f3 = open("grib2/localConcepts/ecmf/chemShortName.def", "w")
@@ -116,5 +113,3 @@ f1.close()
 f2.close()
 f3.close()
 f4.close()
-
-conn.close()
