@@ -327,7 +327,7 @@ const char* get_key(const std::string& name, codes_handle* h)
         { "spectral", "pentagonalResolutionParameterJ" },
 
         { "uid", "uuidOfHGrid", is("gridType", "unstructured_grid") },
-        { "ordering", "orderingConvention", is("gridType", "healpix") },
+        { "order", "orderingConvention", is("gridType", "healpix") },
 
         /// FIXME: Find something that does no clash
         { "reduced", "numberOfParallelsBetweenAPoleAndTheEquator", is("isOctahedral", 0L) },
