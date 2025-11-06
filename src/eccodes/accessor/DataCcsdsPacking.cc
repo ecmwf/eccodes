@@ -623,9 +623,8 @@ int DataCcsdsPacking::unpack_double_element_set(const size_t* index_array, size_
 
 int DataCcsdsPacking::pack_bytes(const unsigned char* val, size_t* len)
 {
-    size_t length = *len;
-    grib_buffer_replace(this, val, length, 1, 1);
-    return GRIB_SUCCESS;
+    const size_t length = *len;
+    return grib_buffer_replace(this, val, length, 1, 1);
 }
 
 #else
