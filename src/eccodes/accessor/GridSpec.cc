@@ -84,16 +84,16 @@ int GridSpec::pack_string(const char* v, size_t* len)
     }
 
     auto* h = get_enclosing_handle();
-    ECCODES_ASSERT(h != nullptr);
+    ECCODES_ASSERT(h);
 
     std::string reason;
     if (!eckit_can_handle_it(h, reason)) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "GridSpec: %s", reason.c_str());
+        grib_context_log(h->context, GRIB_LOG_ERROR, "GridSpec::pack_string %s", reason.c_str());
         return GRIB_NOT_IMPLEMENTED;
     }
 
     ECCODES_ASSERT(len != nullptr && 0 < *len);
-    ECCODES_ASSERT(v != nullptr && v[*len] == '\0');
+    ECCODES_ASSERT(v && v[*len] == '\0');
 
     std::string spec_str(v);
     ECCODES_ASSERT(spec_str.length() == *len);
@@ -105,7 +105,6 @@ int GridSpec::pack_string(const char* v, size_t* len)
         ASSERT(grid);
 
         auto* result = eccodes::geo::GribFromSpec::set(h, grid->spec());
-        //ECCODES_ASSERT(result != nullptr);
         if (!result) return GRIB_GEOCALCULUS_PROBLEM;
     }
     catch (eckit::geo::Exception& e) {
@@ -124,7 +123,6 @@ int GridSpec::pack_string(const char* v, size_t* len)
 #endif
 }
 
-
 int GridSpec::unpack_string(char* v, size_t* len)
 {
 #if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
@@ -132,15 +130,15 @@ int GridSpec::unpack_string(char* v, size_t* len)
         return GRIB_NOT_IMPLEMENTED;
     }
     auto* h = get_enclosing_handle();
-    ECCODES_ASSERT(h != nullptr);
+    ECCODES_ASSERT(h);
 
     std::string reason;
     if (!eckit_can_handle_it(h, reason)) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "GridSpec: %s", reason.c_str());
+        grib_context_log(h->context, GRIB_LOG_ERROR, "GridSpec::unpack_string %s", reason.c_str());
         return GRIB_NOT_IMPLEMENTED;
     }
     ECCODES_ASSERT(0 < *len);
-    ECCODES_ASSERT(v != nullptr);
+    ECCODES_ASSERT(v);
 
     std::string spec_str;
 
