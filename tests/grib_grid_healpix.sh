@@ -122,7 +122,9 @@ ${tools_dir}/grib_get_data $tempGrib > $tempLog
 
 # Nested: N must be a power of 2
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-${tools_dir}/grib_set -s gridType=healpix,Nside=3,orderingConvention=nested,numberOfDataPoints=108,numberOfValues=108 $input $tempGrib
+${tools_dir}/grib_set -s \
+  gridType=healpix,longitudeOfFirstGridPointInDegrees=45,Nside=3,orderingConvention=nested,numberOfDataPoints=108,numberOfValues=108 \
+  $input $tempGrib
 set +e
 ${tools_dir}/grib_get_data $tempGrib > $tempLog 2>&1
 status=$?
@@ -133,7 +135,9 @@ grep -q "Nside must be a power of 2" $tempLog
 
 # Nested N=1
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-${tools_dir}/grib_set -s gridType=healpix,Nside=1,orderingConvention=nested,numberOfDataPoints=12,numberOfValues=12 $input $tempGrib
+${tools_dir}/grib_set -s \
+  gridType=healpix,longitudeOfFirstGridPointInDegrees=45,Nside=1,orderingConvention=nested,numberOfDataPoints=12,numberOfValues=12 \
+  $input $tempGrib
 ${tools_dir}/grib_get_data $tempGrib > $tempLog
 
 # Invalid cases
@@ -147,6 +151,19 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "ordering.*ring.*nested" $tempLog
+
+# Lon != 45
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -s \
+  gridType=healpix,longitudeOfFirstGridPointInDegrees=0,Nside=1,orderingConvention=nested,numberOfDataPoints=12,numberOfValues=12 \
+  $input $tempGrib
+set +e
+${tools_dir}/grib_get_data $tempGrib > $tempLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "should be 45" $tempLog
+
 
 # N = 0
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
