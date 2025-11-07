@@ -18425,6 +18425,18 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 19 ;
 	}
+#Probability of fire detection
+'pof' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 43 ;
+	}
+#Probability of ignition from lightning
+'pil' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 44 ;
+	}
 #Volumetric soil ice
 'vsi' = {
 	 discipline = 2 ;
