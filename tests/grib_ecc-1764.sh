@@ -20,6 +20,7 @@ temp=temp.$label.txt
 
 infile=${data_dir}/tigge_cf_ecmwf.grib2
 ls -l ${data_dir}/tigge_*grib2
+file ${data_dir}/tigge_*grib2
 $EXEC ${test_dir}/grib_ecc-1764 $infile # > $temp
 
 # Clean up
