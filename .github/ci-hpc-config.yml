@@ -1,5 +1,6 @@
 build:
   modules:
+    - ecbuild/new
     - ninja
     - aec
     - netcdf4
