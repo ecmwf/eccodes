@@ -534,6 +534,18 @@
 'H2O' = {
 	constituentType = 1 ;
 	}
+#Rain water
+'H2Orain' = {
+	constituentType = 62034 ;
+	}
+#Cloud water
+'H2Ocloud' = {
+	constituentType = 62035 ;
+	}
+#Gaseous molecules
+'gasmol' = {
+	constituentType = 60035 ;
+	}
 #Methane
 'CH4' = {
 	constituentType = 2 ;

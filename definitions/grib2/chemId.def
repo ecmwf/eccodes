@@ -534,6 +534,18 @@
 '359' = {
 	constituentType = 1 ;
 	}
+#Rain water
+'360' = {
+	constituentType = 62034 ;
+	}
+#Cloud water
+'361' = {
+	constituentType = 62035 ;
+	}
+#Gaseous molecules
+'400' = {
+	constituentType = 60035 ;
+	}
 #Methane
 '404' = {
 	constituentType = 2 ;

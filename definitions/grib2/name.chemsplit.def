@@ -19764,6 +19764,27 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 113 ;
 	}
+#Potential of hydrogen
+'Potential of hydrogen' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 18 ;
+	}
+#Stratospheric aerosol optical thickness
+'Stratospheric aerosol optical thickness' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfSecondFixedSurface = 36 ;
+	}
+#Emission mass flux from lightning
+'Emission mass flux from lightning' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 2 ;
+	}
 #Pressure tendency
 'Pressure tendency' = {
 	 discipline = 0 ;

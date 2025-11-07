@@ -534,6 +534,18 @@
 'Water vapour' = {
 	constituentType = 1 ;
 	}
+#Rain water
+'Rain water' = {
+	constituentType = 62034 ;
+	}
+#Cloud water
+'Cloud water' = {
+	constituentType = 62035 ;
+	}
+#Gaseous molecules
+'Gaseous molecules' = {
+	constituentType = 60035 ;
+	}
 #Methane
 'Methane' = {
 	constituentType = 2 ;
