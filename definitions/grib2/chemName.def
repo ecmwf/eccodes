@@ -550,9 +550,45 @@
 'Xylene' = {
 	constituentType = 10023 ;
 	}
+#Butane
+'Butane' = {
+	constituentType = 10016 ;
+	}
 #Butene
 'Butene' = {
-	constituentType = 10016 ;
+	constituentType = 10060 ;
+	}
+#Pentene
+'Pentene' = {
+	constituentType = 10061 ;
+	}
+#Hexene
+'Hexene' = {
+	constituentType = 10062 ;
+	}
+#Heptene
+'Heptene' = {
+	constituentType = 10063 ;
+	}
+#Octene
+'Octene' = {
+	constituentType = 10064 ;
+	}
+#Pentane
+'Pentane' = {
+	constituentType = 10065 ;
+	}
+#Hexane
+'Hexane' = {
+	constituentType = 10066 ;
+	}
+#Heptane
+'Heptane' = {
+	constituentType = 10067 ;
+	}
+#Octane
+'Octane' = {
+	constituentType = 10068 ;
 	}
 #Nitrate
 'Nitrate' = {
@@ -788,4 +824,8 @@
 	typeOfSizeInterval = 5 ;
 	scaledValueOfSecondSize = missing() ;
 	constituentType = 62001 ;
+	}
+#Sea salt wet at 80% relative humidity
+'Sea salt wet at 80% relative humidity' = {
+	constituentType = 62037 ;
 	}

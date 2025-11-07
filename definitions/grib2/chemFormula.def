@@ -550,9 +550,45 @@
 'C8H10' = {
 	constituentType = 10023 ;
 	}
-#Butene
+#Butane
 'C4H10' = {
 	constituentType = 10016 ;
+	}
+#Butene
+'C4H8' = {
+	constituentType = 10060 ;
+	}
+#Pentene
+'C5H10' = {
+	constituentType = 10061 ;
+	}
+#Hexene
+'C6H12' = {
+	constituentType = 10062 ;
+	}
+#Heptene
+'C7H14' = {
+	constituentType = 10063 ;
+	}
+#Octene
+'C8H16' = {
+	constituentType = 10064 ;
+	}
+#Pentane
+'C5H12' = {
+	constituentType = 10065 ;
+	}
+#Hexane
+'C6H14' = {
+	constituentType = 10066 ;
+	}
+#Heptane
+'C7H16' = {
+	constituentType = 10067 ;
+	}
+#Octane
+'C8H18' = {
+	constituentType = 10068 ;
 	}
 #Nitrate
 'aer_NO3' = {
@@ -788,4 +824,8 @@
 	typeOfSizeInterval = 5 ;
 	scaledValueOfSecondSize = missing() ;
 	constituentType = 62001 ;
+	}
+#Sea salt wet at 80% relative humidity
+'aer_seasalt_wet80p' = {
+	constituentType = 62037 ;
 	}
