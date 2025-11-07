@@ -28,6 +28,7 @@
 #include "eckit/log/JSON.h"
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
+#include "eckit/utils/SafeCasts.h"
 
 
 namespace eckit::geo::util
@@ -832,8 +833,17 @@ bool GribToSpec::get(const std::string& /*name*/, long long& /*value*/) const
 }
 
 
-bool GribToSpec::get(const std::string& /*name*/, std::size_t& /*value*/) const
+bool GribToSpec::get(const std::string& name, std::size_t& value) const
 {
+    if (cache_.get(name, value)) {
+        return true;
+    }
+
+    if (long value_long = 0; get(name, value_long)) {
+        cache_.set(name, value = eckit::into_unsigned<size_t>(value_long));
+        return true;
+    }
+
     return false;
 }
 
