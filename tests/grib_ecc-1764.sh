@@ -24,10 +24,13 @@ ls -l ${data_dir}/tigge_*grib2
 # file ${data_dir}/tigge_*grib2
 # curl --verbose --output x https://sites.ecmwf.int/repository/eccodes/test-data/data/reduced_latlon_surface.grib1
 
-curl -fsSLo x --proto '=https' --http1.1 https://sites.ecmwf.int/repository/eccodes/test-data/data/reduced_latlon_surface.grib1
+# curl -fsSLo x --proto '=https' --http1.1 https://sites.ecmwf.int/repository/eccodes/test-data/data/reduced_latlon_surface.grib1
+# ls -l x
+# file x
+curl -fsSLo x --proto '=https' --http1.1 https://sites.ecmwf.int/repository/eccodes/test-data/data/tigge_cf_ecmwf.grib2
 ls -l x
 file x
-cat x
+mv x ${data_dir}/tigge_cf_ecmwf.grib2
 
 $EXEC ${test_dir}/grib_ecc-1764 $infile # > $temp
 
