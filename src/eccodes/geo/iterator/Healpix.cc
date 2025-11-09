@@ -299,7 +299,7 @@ int Healpix::init(grib_handle* h, grib_arguments* args)
     long longitudeOfFirstGridPoint=0;
     if (grib_get_long_internal(h, "longitudeOfFirstGridPoint", &longitudeOfFirstGridPoint) == GRIB_SUCCESS) {
         if (longitudeOfFirstGridPoint != 45000000) { // GRIB2 uses microdegrees
-            grib_context_log(h->context, GRIB_LOG_ERROR, "%s: longitude of the first grid point should be 45", ITER);
+            grib_context_log(h->context, GRIB_LOG_ERROR, "%s: key longitudeOfFirstGridPointInDegrees should be 45", ITER);
             return GRIB_WRONG_GRID;
         }
     }
