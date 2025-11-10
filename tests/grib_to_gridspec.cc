@@ -48,12 +48,12 @@ bool grib_to_gridspec(const std::string& path, const map_count_spec_t& specs)
 
             EXPECT(CODES_SUCCESS == codes_get_string(h, "gridSpec", gridSpec, &size));
 
-            std::cout << "count=" << count << " '" << gridSpec << "' == '" << it->second << "' (expected)" << std::endl;
+            std::cout << "count=" << count << " '" << gridSpec << "' (calculated) == '" << it->second << "' (expected)" << std::endl;
 
             EXPECT(it->second == "?" || gridSpec == it->second);
-
-            codes_handle_delete(h);
         }
+
+        codes_handle_delete(h);
     }
 
     std::fclose(in);
@@ -61,166 +61,237 @@ bool grib_to_gridspec(const std::string& path, const map_count_spec_t& specs)
 }
 
 
-CASE("grib_to_gridspec/albers.grib")
+CASE("healpix")
 {
     const map_count_spec_t specs{
-        { 0, R"()" },
-    };
-
-    EXPECT(grib_to_gridspec("grib_to_gridspec/albers.grib", specs));
-}
-
-
-CASE("grib_to_gridspec/healpix.grib")
-{
-    const map_count_spec_t specs{
-        { 0, "H2" },
-        { 1, "H2n" },
-        { 2, "H32n" },
-        { 3, "H32" },
-        { 4, "H36" },
+        { 0, R"({"grid":"H2"})" },
+        { 1, R"({"grid":"H2n"})" },
+        { 2, R"({"grid":"H32"})" },
+        { 3, R"({"grid":"H32n"})" },
+        { 4, R"({"grid":"H1024n"})" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/healpix.grib", specs));
 }
 
 
-CASE("grib_to_gridspec/icon.grib")
+CASE("icon")
 {
     const map_count_spec_t specs{
-        { 0, R"()" },
+        { 0, R"({"grid":"icon-grid-0012-r02b04-g"})" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/icon.grib", specs));
 }
 
 
-CASE("grib_to_gridspec/lambert.grib")
+CASE("lambert")
 {
     const map_count_spec_t specs{
-        { 0, R"()" },
+        { 0, "?" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/lambert.grib", specs));
 }
 
 
-CASE("grib_to_gridspec/lambert_azimuthal_equal_area.grib")
+CASE("lambert_azimuthal_equal_area")
 {
     const map_count_spec_t specs{
-        { 0, R"()" },
+        { 0, "?" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/lambert_azimuthal_equal_area.grib", specs));
 }
 
 
-CASE("grib_to_gridspec/mercator.grib")
+CASE("mercator")
 {
     const map_count_spec_t specs{
-        { 0, R"()" },
+        { 0, "?" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/mercator.grib", specs));
 }
 
 
-CASE("grib_to_gridspec/orca.grib")
+CASE("orca")
 {
     const map_count_spec_t specs{
-        { 0, R"()" },
+        { 0, R"({"grid":"eORCA1_T","uid":"16076978a048410747dd7c9876677b28"})" },
+        { 1, R"({"grid":"eORCA1_T"})" },
+        { 2, R"({"grid":"eORCA1_U"})" },
+        { 3, R"({"grid":"eORCA1_U","uid":"7378487847e050559b82d0792374a705"})" },
+        { 4, R"({"grid":"eORCA1_V","uid":"d9622b55f3120eafb3dbaf5c742bc56c"})" },
+        { 5, R"({"grid":"eORCA1_V"})" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/orca.grib", specs));
 }
 
 
-CASE("grib_to_gridspec/polar_stereographic.grib")
+CASE("polar_stereographic")
 {
     const map_count_spec_t specs{
-        { 0, R"()" },
+        { 0, "?" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/polar_stereographic.grib", specs));
 }
 
 
-CASE("grib_to_gridspec/reduced_gg.grib")
+CASE("reduced_gg")
 {
-    const map_count_spec_t specs{
-        { 0, R"()" },
-    };
+    SECTION("global")
+    {
+        const map_count_spec_t specs{
+            { 0, R"({"grid":"O8"})" },
+            { 1, R"({"grid":"O16"})" },
+            { 2, R"({"grid":"O20"})" },
+            { 3, R"({"grid":"N32"})" },
+            { 4, R"({"grid":"N32"})" },
+            { 5, R"({"grid":"O32"})" },
+            { 6, R"({"grid":"O32"})" },
+            { 7, R"({"grid":"N80"})" },
+            { 8, R"({"grid":"N80"})" },
+            { 9, R"({"grid":"O80"})" },
+            { 10, R"({"grid":"N128"})" },
+            { 11, R"({"grid":"N160"})" },
+            { 12, R"({"grid":"N160"})" },
+            { 13, R"({"grid":"O160"})" },
+            { 14, R"({"grid":"O160"})" },
+            { 15, R"({"grid":"N200"})" },
+            { 16, R"({"grid":"N200"})" },
+            { 17, R"({"grid":"N256"})" },
+            { 18, R"({"grid":"N320"})" },
+            { 19, R"({"grid":"N320"})" },
+            { 20, R"({"grid":"N320"})" },
+            { 21, R"({"grid":"N320"})" },
+            { 22, R"({"grid":"N400"})" },
+            { 23, R"({"grid":"O400"})" },
+            { 24, R"({"grid":"O400"})" },
+            { 25, R"({"grid":"O400"})" },
+            { 26, R"({"grid":"N640"})" },
+            { 27, R"({"grid":"N640"})" },
+            { 28, R"({"grid":"N640"})" },
+            { 29, R"({"grid":"N640"})" },
+            { 30, R"({"grid":"N640"})" },
+            { 31, R"({"grid":"N640"})" },
+            { 32, R"({"grid":"O640"})" },
+            { 33, R"({"grid":"O640"})" },
+            { 34, R"({"grid":"O640"})" },
+            { 35, R"({"grid":"O1280"})" },
+            { 36, R"({"grid":"O1280"})" },
+            { 37, R"({"grid":"O1280"})" },
+            { 38, R"({"grid":"O1280"})" },
+            { 39, R"({"grid":"O1280"})" },
+            { 40, R"({"grid":"O1280"})" },
+        };
 
-    EXPECT(grib_to_gridspec("grib_to_gridspec/reduced_gg.grib", specs));
+        EXPECT(grib_to_gridspec("grib_to_gridspec/reduced_gg_global.grib", specs));
+    }
+
+
+    SECTION("regional")
+    {
+        const map_count_spec_t specs{
+            { 0, "?" },   // R"({"grid":"N640","area":[]})" },
+            { 1, "?" },   // R"({"grid":"O640","area":[]})" },
+            { 2, "?" },   // R"({"grid":"O640","area":[]})" },
+            { 3, "?" },   // R"({"grid":"O640","area":[]})" },
+            { 4, "?" },   // R"({"grid":"O640","area":[]})" },
+            { 5, "?" },   // R"({"grid":"O640","area":[]})" },
+            { 6, "?" },   // R"({"grid":"O640","area":[]})" },
+            { 7, "?" },   // R"({"grid":"O640","area":[]})" },
+            { 8, "?" },   // R"({"grid":"O640","area":[]})" },
+            { 9, "?" },   // R"({"grid":"O640","area":[]})" },
+            { 10, "?" },  // R"({"grid":"O640","area":[]})" },
+            { 11, "?" },  // R"({"grid":"N1280","area":[]})" },
+            { 12, "?" },  // R"({"grid":"N1280","area":[]})" },
+            { 13, "?" },  // R"({"grid":"O1280","area":[]})" },
+            { 14, "?" },  // R"({"grid":"O1280","area":[]})" },
+            { 15, "?" },  // R"({"grid":"O1280","area":[]})" },
+            { 16, "?" },  // R"({"grid":"O1280","area":[]})" },
+            { 17, "?" },  // R"({"grid":"O1280","area":[]})" },
+            { 18, "?" },  // R"({"grid":"O1280","area":[]})" },
+            { 19, "?" },  // R"({"grid":"O1280","area":[]})" },
+            { 20, "?" },  // R"({"grid":"O1280","area":[]})" },
+            { 21, "?" },  // R"({"grid":"O1280","area":[]})" },
+            { 22, "?" },  // R"({"grid":"O1280","area":[]})" },
+            { 23, "?" },  // R"({"grid":"O1280","area":[]})" },
+            { 24, "?" },  // R"({"grid":"O1280","area":[]})" },
+        };
+        EXPECT(grib_to_gridspec("grib_to_gridspec/reduced_gg_regional.grib", specs));
+    }
 }
 
 
-CASE("grib_to_gridspec/reduced_ll.grib")
+CASE("reduced_ll")
 {
     const map_count_spec_t specs{
-        { 0, R"()" },
+        { 0, "?" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/reduced_ll.grib", specs));
 }
 
 
-CASE("grib_to_gridspec/reduced_rotated_gg.grib")
+CASE("reduced_rotated_gg")
 {
     const map_count_spec_t specs{
-        { 0, R"()" },
+        { 0, "?" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/reduced_rotated_gg.grib", specs));
 }
 
 
-CASE("grib_to_gridspec/regular_gg.grib")
+CASE("regular_gg")
 {
     const map_count_spec_t specs{
-        // { 0, R"({"grid:"F2250","area":[]})" },
-        { 1, "F32" },
-        // { 2, R"({"grid:"F48,"area":[]})" },
-        // { 3, R"({"grid:"F48,"area":[]})" },
-        { 4, "F48" },
-        // { 5, R"({"grid:"F60,"area":[]})" },
-        // { 6, R"({"grid:"F640,"area":[]})" },
-        { 7, "F640" },
-        { 8, "F8" },
-        { 9, "F80" },
-        // { 10, R"({"grid:"F80,"area":[]})" },
-        // { 11, R"({"grid:"F80,"area":[]})" },
-        // { 12, R"({"grid:"F95,"area":[]})" },
+        { 0, "?" },  // R"({"grid":"F48","area":[]})" },
+        { 1, "?" },  // R"({"grid":"F48","area":[]})" },
+        { 2, "?" },  // R"({"grid":"F60","area":[]})" },
+        { 3, "?" },  // R"({"grid":"F80","area":[]})" },
+        { 4, "?" },  // R"({"grid":"F80","area":[]})" },
+        { 5, "?" },  // R"({"grid":"F640","area":[]})" },
+        { 6, "?" },  // R"({"grid":"F2250","area":[]})" },
+        { 7, R"({"grid":"F8"})" },
+        { 8, R"({"grid":"F32"})" },
+        { 9, R"({"grid":"F48"})" },
+        { 10, R"({"grid":"F80"})" },
+        { 11, R"({"grid":"F95"})" },
+        { 12, R"({"grid":"F640"})" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/regular_gg.grib", specs));
 }
 
 
-CASE("grib_to_gridspec/regular_ll.grib")
+CASE("regular_ll")
 {
     const map_count_spec_t specs{
-        { 0, R"()" },
+        { 0, "?" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/regular_ll.grib", specs));
 }
 
 
-CASE("grib_to_gridspec/rotated_gg.grib")
+CASE("rotated_gg")
 {
     const map_count_spec_t specs{
-        { 0, R"()" },
+        { 0, "?" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/rotated_gg.grib", specs));
 }
 
 
-CASE("grib_to_gridspec/rotated_ll.grib")
+CASE("rotated_ll")
 {
     const map_count_spec_t specs{
-        { 0, R"()" },
+        { 0, "?" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/rotated_ll.grib", specs));
@@ -228,10 +299,11 @@ CASE("grib_to_gridspec/rotated_ll.grib")
 
 
 #if 0
-CASE("grib_to_gridspec/sh.grib")
+// maybe support 'Spherical Harmonics' "grid" in the future
+CASE("sh")
 {
     const map_count_spec_t specs{
-        { 0, "T19" },
+        { 0, R"({"grid":"T19"})" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/sh.grib", specs));
@@ -239,20 +311,20 @@ CASE("grib_to_gridspec/sh.grib")
 #endif
 
 
-CASE("grib_to_gridspec/space_view.grib")
+CASE("space_view")
 {
     const map_count_spec_t specs{
-        { 0, R"()" },
+        { 0, "?" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/space_view.grib", specs));
 }
 
 
-CASE("grib_to_gridspec/transverse_mercator.grib")
+CASE("transverse_mercator")
 {
     const map_count_spec_t specs{
-        { 0, R"()" },
+        { 0, "?" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/transverse_mercator.grib", specs));
