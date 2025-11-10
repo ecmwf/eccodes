@@ -1,4 +1,11 @@
 # assert(=4)
-alias mars.hdate  = dataDate;
-alias mars.date   = referenceDate;
-alias mars.number = perturbationNumber;
+# ef - 42
+# gf - 43
+if (marsClass == 42 or marsClass == 43){
+ alias mars.date = dataDate;
+ alias mars.number = perturbationNumber;
+} else {
+ alias mars.hdate  = dataDate;
+ alias mars.date   = referenceDate;
+ alias mars.number = perturbationNumber;
+}

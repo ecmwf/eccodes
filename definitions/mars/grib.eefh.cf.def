@@ -1,3 +1,9 @@
 #assert(local=4)
-alias mars.hdate = dataDate;
-alias mars.date  = referenceDate;
+# ef - 42
+# gf - 43
+if (marsClass == 42 or marsClass == 43){
+ alias mars.date = dataDate;
+} else {
+ alias mars.hdate = dataDate;
+ alias mars.date  = referenceDate;
+}
