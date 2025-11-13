@@ -115,7 +115,7 @@ grib_check_key_equals $temp_grib_a "georef" "gcpkd2eu"
 ${tools_dir}/grib_set -s dataset=2,productDefinitionTemplateNumber=8,startStep=0,endStep=6 $destine_sample $temp_grib_a
 
 grib_check_key_exists $temp_grib_a timespan
-grib_check_key_equals $temp_grib_a "step,timespan,mars.timespan" "6 6h"
+grib_check_key_equals $temp_grib_a "step,timespan,mars.timespan" "6 6h 6h"
 
 # Clean up
 rm -f $temp_grib_a $temp_grib_b $destine_sample
