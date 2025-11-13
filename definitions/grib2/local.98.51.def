@@ -1,0 +1,6 @@
+# Local definition 51: CURV diagnostic
+
+signed[4] radiusInMetre = 0 : dump;
+signed[4] tolerance = 0 : dump;
+
+codetable[2] curvConfiguration "grib2/tables/local/ecmf/1/curv.config.table" : dump; 
