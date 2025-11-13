@@ -64,7 +64,7 @@ grib_check_key_equals $temp_grib_a "gridSpecification" "H1024"
 
 # Now check streams for use in climate-dt.
 # Setting stream clte and type fc should set mars.date and mars.time to dataDate and dataTime,
-# and mars.step should be unaliased
+# and mars.step and mars.timespan should be unaliased (#ECC-2161)
 # We must also set dataset=climate-dt, since in other datasets mars.step is set to stepRange
 
 ${tools_dir}/grib_set -s dataset=climate-dt,stream=clte,type=fc $destine_sample $temp_grib_a
@@ -75,9 +75,10 @@ result2=$( ${tools_dir}/grib_get -p dataDate,dataTime $temp_grib_a )
 
 ${tools_dir}/grib_ls -jm $temp_grib_a
 [ $( ${tools_dir}/grib_get -f -p mars.step $temp_grib_a ) = "not_found" ]
+[ $( ${tools_dir}/grib_get -f -p mars.timespan $temp_grib_a ) = "not_found" ]
 
 # Setting stream clmn and type fc should set mars.year and mars.month to year and month,
-# and mars.date, mars.time, mars.step should be unaliased
+# and mars.date, mars.time, mars.step, mars.timespan should be unaliased (#ECC-2161)
 # We must also set dataset=climate-dt, since in other datasets mars.step is set to stepRange
 
 ${tools_dir}/grib_set -s dataset=climate-dt,stream=clmn,type=fc $destine_sample $temp_grib_a
@@ -90,6 +91,7 @@ ${tools_dir}/grib_ls -jm $temp_grib_a
 [ $( ${tools_dir}/grib_get -f -p mars.date $temp_grib_a ) = "not_found" ]
 [ $( ${tools_dir}/grib_get -f -p mars.time $temp_grib_a ) = "not_found" ]
 [ $( ${tools_dir}/grib_get -f -p mars.step $temp_grib_a ) = "not_found" ]
+[ $( ${tools_dir}/grib_get -f -p mars.timespan $temp_grib_a ) = "not_found" ]
 
 # ECC-1801
 ${tools_dir}/grib_set -s productionStatusOfProcessedData=12 $sample_grib2 $temp_grib_a
@@ -107,6 +109,13 @@ grib_check_key_equals $temp_grib_a "dataset,dataset:s,georef,mars.georef" "4 on-
 ${tools_dir}/grib_set -s dataset=4,georef=gcpkd2eu $destine_sample $temp_grib_a
 
 grib_check_key_equals $temp_grib_a "georef" "gcpkd2eu"
+
+# ECC-2161: We replace mars.step=stepRange with mars.step=endStep (default) and mars.timespan
+# in extremes-dt. We continue to unalias timespan in climate-dt streams clte/clmn (checked above)
+${tools_dir}/grib_set -s dataset=2,productDefinitionTemplateNumber=8,startStep=0,endStep=6 $destine_sample $temp_grib_a
+
+grib_check_key_exists $temp_grib_a timespan
+grib_check_key_equals $temp_grib_a "step,timespan,mars.timespan" "6 6h"
 
 # Clean up
 rm -f $temp_grib_a $temp_grib_b $destine_sample
