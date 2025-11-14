@@ -868,8 +868,10 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
     unsigned char c;
     int err             = 0;
     unsigned long magic = 0;
+    size_t offset = 0;
 
     while (r->read(r->read_data, &c, 1, &err) == 1 && err == 0) {
+        offset++;
         magic <<= 8;
         magic |= c;
 
@@ -877,6 +879,7 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
             case GRIB:
                 if (grib_ok) {
                     err = read_GRIB(r, no_alloc);
+                    r->offset = offset - 4;
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
@@ -1197,6 +1200,10 @@ static int ecc_wmo_read_any_from_file(FILE* f, void* buffer, size_t* len, off_t*
     return err;
 }
 
+int wmo_read_any_from_file_offset(FILE* f, void* buffer, size_t* len, off_t* offset)
+{
+    return ecc_wmo_read_any_from_file(f, buffer, len, offset, /*no_alloc=*/0, 1, 1, 1, 1);
+}
 int wmo_read_any_from_file(FILE* f, void* buffer, size_t* len)
 {
     off_t offset = 0;

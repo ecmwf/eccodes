@@ -410,6 +410,7 @@ off_t stdio_tell(void* data);
 int stdio_seek(void* data, off_t len);
 int stdio_seek_from_start(void* data, off_t len);
 size_t stdio_read(void* data, void* buf, size_t len, int* err);
+int wmo_read_any_from_file_offset(FILE* f, void* buffer, size_t* len, off_t* offset);
 int wmo_read_any_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_grib_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_bufr_from_file(FILE* f, void* buffer, size_t* len);
