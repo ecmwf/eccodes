@@ -11,12 +11,14 @@
 #include "grib_scaling.h"
 #include "grib_api_internal.h"
 #include <math.h>
+#include <iostream>
 
 // Unfortunately, metkit uses grib_power() (illegal usage of private API)
 // As soon as it is fixed, the wrapper below can be deleted
 double grib_power(long s, long n) {
     return codes_power<double>(s, n);
 }
+
 
 long grib_get_binary_scale_fact(double max, double min, long bpval, int* error)
 {
@@ -41,8 +43,6 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* error)
         *error = GRIB_OUT_OF_RANGE; /*overflow*/
         return 0;
     }
-    const double dmaxint = codes_power<double>(bpval, 2) - 1;
-    maxint = (unsigned long)dmaxint; /* Now it's safe to cast */
 
     *error = 0;
     if (bpval < 1) {
@@ -50,30 +50,7 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* error)
         return 0;
     }
 
-    ECCODES_ASSERT(bpval >= 1);
-    if (range == 0)
-        return 0;
-
-    /* range -= 1e-10; */
-    while ((range * zs) <= dmaxint) {
-        scale--;
-        zs *= 2;
-    }
-
-    while ((range * zs) > dmaxint) {
-        scale++;
-        zs /= 2;
-    }
-
-    while ((unsigned long)(range * zs + 0.5) <= maxint) {
-        scale--;
-        zs *= 2;
-    }
-
-    while ((unsigned long)(range * zs + 0.5) > maxint) {
-        scale++;
-        zs /= 2;
-    }
+    scale = -(bpval - static_cast<long>(std::ceil(std::log2(range))));
 
     if (scale < -last) {
         *error = GRIB_UNDERFLOW;
@@ -82,6 +59,72 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* error)
     ECCODES_ASSERT(scale <= last);
     return scale;
 }
+
+// long grib_get_binary_scale_fact(double max, double min, long bpval, int* error)
+// {
+//     double range         = max - min;
+//     double zs            = 1;
+//     long scale           = 0;
+//     const long last      = 127; /* Depends on edition, should be parameter */
+//     unsigned long maxint = 0;
+//     const size_t ulong_size = sizeof(maxint) * 8;
+//
+//     // See ECC-1927
+//     if ((isnan(range) || isinf(range))) {
+//         *error = GRIB_OUT_OF_RANGE; /*overflow*/
+//         return 0;
+//     }
+//
+//     /* See ECC-246
+//       unsigned long maxint = codes_power<double>(bpval,2) - 1;
+//       double dmaxint=(double)maxint;
+//     */
+//     if (bpval >= ulong_size) {
+//         *error = GRIB_OUT_OF_RANGE; /*overflow*/
+//         return 0;
+//     }
+//     const double dmaxint = codes_power<double>(bpval, 2) - 1;
+//     maxint = static_cast<unsigned long>(codes_power<double>(bpval, 2)) - 1; /* Now it's safe to cast */
+//
+//     *error = 0;
+//     if (bpval < 1) {
+//         *error = GRIB_ENCODING_ERROR; /* constant field */
+//         return 0;
+//     }
+//
+//     ECCODES_ASSERT(bpval >= 1);
+//     if (range == 0)
+//         return 0;
+//
+//     /* range -= 1e-10; */
+//     while ((range * zs) <= dmaxint) {
+//         scale--;
+//         zs *= 2;
+//     }
+//
+//     while ((range * zs) > dmaxint) {
+//         scale++;
+//         zs /= 2;
+//     }
+//
+//     while ((unsigned long)(range * zs + 0.5) <= maxint) {
+//         scale--;
+//         zs *= 2;
+//     }
+//
+//     while ((unsigned long)(range * zs + 0.5) > maxint) {
+//         scale++;
+//         zs /= 2;
+//     }
+//
+//    std::cout << "scale initial=" << scale << "\n";
+//     if (scale < -last) {
+//         *error = GRIB_UNDERFLOW;
+//         scale = -last;
+//     }
+//     ECCODES_ASSERT(scale <= last);
+//     return scale;
+// }
 
 // long grib_get_bits_per_value(double max, double min, long binary_scale_factor)
 // {
