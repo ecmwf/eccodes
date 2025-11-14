@@ -92,7 +92,7 @@
  ## since start accumulation must have forecastTime=0
  # specific rules are in the centre's own definitions
  # fromstart for minutes / hourly / day
- 'fromstart'    = {typeOfStatisticalProcessing=1; forecastTime=0; true=is_one_of(indicatorOfUnitForTimeRange,0,1,2);}
+ 'fromstart'    = {typeOfStatisticalProcessing=1; forecastTime=0; true=is_one_of(indicatorOfUnitForTimeRange,0,1,2,13);}
  ### end Accumulations ###
  #
  ### mean/min/max/stdev ###
