@@ -1,7 +1,7 @@
 label "_model errors";
 #alias mars.number=perturbationNumber;
 
-if ( grib2LocalSectionNumber == 44) {
+if ( grib2LocalSectionNumber == 45) {
  #alias mars.number = perturbationNumber;
  alias mars.coefficient = fourierCoefficientIndex;
 }
