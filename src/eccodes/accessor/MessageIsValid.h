@@ -31,6 +31,7 @@ private:
     int check_date();
     int check_spectral();
     int check_grid_and_packing_type();
+    int check_pv_array();
     int check_field_values();
     int check_grid_pl_array();
     int check_grid_increments();

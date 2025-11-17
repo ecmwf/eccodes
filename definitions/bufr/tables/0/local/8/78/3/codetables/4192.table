@@ -1,0 +1,9 @@
+0 0 Reserved
+1 1 Past day
+2 2 Present day
+3 3 Mean from 24 Measurements from day before past day 23:50 UTC until past day 22:50 UTC
+4 4 Mean from 3 Measurements at 06:50, 13:50 and 20:50 UTC from past day
+5 5 From past day 06:30 UTC until 06:30 UTC (today)
+6 6 From past day 21 UTC until 21 UTC (today)
+7 7 Last 10 hours
+15 15 Missing value

@@ -76,7 +76,9 @@ int GeoIterator::next(double* lat, double* lon, double* val) const
             *lat = q.lat;
             *lon = q.lon;
             if (val != nullptr && data_ != nullptr) {
-                *val = data_[iter_->index()];
+                const size_t i = iter_->index();
+                if (i < nv_)
+                    *val = data_[i];
             }
 
             return 1;  // (true)

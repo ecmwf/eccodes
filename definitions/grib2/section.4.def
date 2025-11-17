@@ -57,7 +57,7 @@ concept datasetForLocal(unknown) {
 # 2 = post-MTG2 encoding with paramId + chemId used
 
 # By default centres will use post MTG2 parameter concepts (= 1) to retain the status quo.
-# The default can then be modified based on the below tablesVersion, according to the
+# The default can then be modified based on the below tablesVersion, according to the
 # conditions defined in the MTG2SwitchViaTablesVersion concept at the top level or in the
 # concept at the centre/pseudocentre level
 
@@ -66,7 +66,7 @@ concept MTG2SwitchViaTablesVersion(false, "MTG2SwitchViaTablesVersionConcept.def
 # Then the logic for the MTG2 switch default value in these cases is
 # applied in the below function - cf. the mtg2_switch_default accessor
 # This is as follows:
-#     tablesVersion <= tablesVersionMTG2Switch, then MTG2SwitchDefault=0., i.e. we are pre-MTG2
+#     tablesVersion <= tablesVersionMTG2Switch, then MTG2SwitchDefault=0., i.e. we are pre-MTG2
 #     tablesVersion > tablesVersionMTG2Switch, and class=mc/cr  then MTG2SwitchDefault=2., i.e. we are post-MTG2 with param-chem split.
 #     tablesVersion > tablesVersionMTG2Switch  in all other cases then MTG2SwitchDefault=1., i.e. we are post-MTG2.
 

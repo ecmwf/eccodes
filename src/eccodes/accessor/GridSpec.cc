@@ -51,6 +51,31 @@ long GridSpec::get_native_type()
 //     }
 // }
 
+#if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
+static bool eckit_can_handle_it(const grib_handle* h, std::string& reason)
+{
+    std::string key = "iScansNegatively";
+    long iNeg = 0;
+    if (grib_get_long(h, key.c_str(), &iNeg) == GRIB_SUCCESS && iNeg == 1) {
+        reason = key + "=1: Scanning mode not supported";
+        return false;
+    }
+    key = "jPointsAreConsecutive";
+    long jCons = 0;
+    if (grib_get_long(h, key.c_str(), &jCons) == GRIB_SUCCESS && jCons == 1) {
+        reason = key + "=1: Scanning mode not supported";
+        return false;
+    }
+    key = "alternativeRowScanning";
+    long altRow = 0;
+    if (grib_get_long(h, key.c_str(), &altRow) == GRIB_SUCCESS && altRow == 1) {
+        reason = key + "=1: Scanning mode not supported";
+        return false;
+    }
+    return true;
+}
+#endif
+
 int GridSpec::pack_string(const char* v, size_t* len)
 {
 #if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
@@ -58,14 +83,20 @@ int GridSpec::pack_string(const char* v, size_t* len)
         return GRIB_NOT_IMPLEMENTED;
     }
 
+    auto* h = get_enclosing_handle();
+    ECCODES_ASSERT(h);
+
+    std::string reason;
+    if (!eckit_can_handle_it(h, reason)) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "GridSpec::pack_string %s", reason.c_str());
+        return GRIB_NOT_IMPLEMENTED;
+    }
+
     ECCODES_ASSERT(len != nullptr && 0 < *len);
-    ECCODES_ASSERT(v != nullptr && v[*len] == '\0');
+    ECCODES_ASSERT(v && v[*len] == '\0');
 
     std::string spec_str(v);
     ECCODES_ASSERT(spec_str.length() == *len);
-
-    auto* h = get_enclosing_handle();
-    ECCODES_ASSERT(h != nullptr);
 
     try {
         eccodes::geo::eckit_main_init();
@@ -74,7 +105,6 @@ int GridSpec::pack_string(const char* v, size_t* len)
         ASSERT(grid);
 
         auto* result = eccodes::geo::GribFromSpec::set(h, grid->spec());
-        //ECCODES_ASSERT(result != nullptr);
         if (!result) return GRIB_GEOCALCULUS_PROBLEM;
     }
     catch (eckit::geo::Exception& e) {
@@ -99,11 +129,16 @@ int GridSpec::unpack_string(char* v, size_t* len)
     if (context_->eckit_geo == 0) {  // check env. variable too
         return GRIB_NOT_IMPLEMENTED;
     }
-    ECCODES_ASSERT(0 < *len);
-    ECCODES_ASSERT(v != nullptr);
-
     auto* h = get_enclosing_handle();
-    ECCODES_ASSERT(h != nullptr);
+    ECCODES_ASSERT(h);
+
+    std::string reason;
+    if (!eckit_can_handle_it(h, reason)) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "GridSpec::unpack_string %s", reason.c_str());
+        return GRIB_NOT_IMPLEMENTED;
+    }
+    ECCODES_ASSERT(0 < *len);
+    ECCODES_ASSERT(v);
 
     std::string spec_str;
 

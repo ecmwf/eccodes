@@ -621,6 +621,12 @@ int DataCcsdsPacking::unpack_double_element_set(const size_t* index_array, size_
     return GRIB_SUCCESS;
 }
 
+int DataCcsdsPacking::pack_bytes(const unsigned char* val, size_t* len)
+{
+    const size_t length = *len;
+    return grib_buffer_replace(this, val, length, 1, 1);
+}
+
 #else
 
 static void print_error_feature_not_enabled(grib_context* c)
@@ -650,6 +656,11 @@ int DataCcsdsPacking::unpack_double_element(size_t idx, double* val)
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 int DataCcsdsPacking::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
+{
+    print_error_feature_not_enabled(context_);
+    return GRIB_FUNCTIONALITY_NOT_ENABLED;
+}
+int DataCcsdsPacking::pack_bytes(const unsigned char* val, size_t* len)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
