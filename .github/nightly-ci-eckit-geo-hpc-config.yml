@@ -9,6 +9,7 @@ build:
     - ecmwf/eckit@develop
   cmake_options:
     - -DENABLE_ECKIT_GEO=1
+    - -DENABLE_EXTRA_TESTS=1
   force_build: true
   env:
     - ECCODES_ECKIT_GEO=1
