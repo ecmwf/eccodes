@@ -1,0 +1,15 @@
+# (C) Copyright 2005- ECMWF.
+
+# Local definition 46 - Hydrological reforecast simulations with fillup
+
+# The input process identifier shall have the value of the 'analysis or forecast process identifier' of the
+# original GRIB message used as input of the post-processing
+unsigned[2] inputProcessIdentifier : dump,edition_specific;
+
+# The input originating centre shall have the value of the 'originating centre' of the original GRIB message
+# used as input of the post-processing
+codetable[2] inputOriginatingCentre 'common/c-11.table' : dump,edition_specific,string_type;
+
+unsigned[2] offsetToStartOfAnalysisInHours       = missing(): dump, can_be_missing;
+unsigned[2] offsetToStartOfForecastFillupInHours = missing(): dump, can_be_missing;
+unsigned[2] offsetTimeIncrementInHours           = missing(): dump, can_be_missing;
