@@ -1,0 +1,15 @@
+build:
+  modules:
+    - ecbuild/new
+    - ninja
+    - aec
+    - netcdf4
+  parallel: 64
+  cmake_options:
+    - -DENABLE_ECKIT_GEO=1
+  force_build: true
+  env:
+    - ECCODES_ECKIT_GEO=1
+  compiler_cc: gcc
+  compiler_cxx: g++
+  compiler_fc: gfortran
