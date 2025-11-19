@@ -889,6 +889,9 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
             case BUFR:
                 if (bufr_ok) {
                     err = read_BUFR(r, no_alloc);
+                    if (r->offset == -5) {
+                        r->offset = offset - 4;
+                    }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
@@ -910,18 +913,27 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
             case BUDG:
                 if (grib_ok) {
                     err = read_PSEUDO(r, "BUDG", no_alloc);
+                    if (r->offset == -5) {
+                        r->offset = offset - 4;
+                    }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
             case DIAG:
                 if (grib_ok) {
                     err = read_PSEUDO(r, "DIAG", no_alloc);
+                    if (r->offset == -5) {
+                        r->offset = offset - 4;
+                    }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
             case TIDE:
                 if (grib_ok) {
                     err = read_PSEUDO(r, "TIDE", no_alloc);
+                    if (r->offset == -5) {
+                        r->offset = offset - 4;
+                    }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
@@ -964,8 +976,10 @@ static int read_any_gts(reader* r)
     size_t message_size = 0;
     size_t already_read = 0;
     int i               = 0;
+    off_t offset        = r->offset;
 
     while (r->read(r->read_data, &c, 1, &err) == 1 && err == 0) {
+        offset++;
         magic <<= 8;
         magic |= c;
         magic &= 0xffffffff;
@@ -976,7 +990,8 @@ static int read_any_gts(reader* r)
             tmp[i++] = 0x0d;
             tmp[i++] = 0x0a;
 
-            r->offset = r->tell(r->read_data) - 4;
+            off_t rTell = r->tell(r->read_data);
+            r->offset = (rTell != -1 ? rTell : offset) - 4;
 
             if (r->read(r->read_data, &tmp[i], 6, &err) != 6 || err)
                 return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
@@ -1023,8 +1038,10 @@ static int read_any_taf(reader* r)
     size_t message_size = 0;
     size_t already_read = 0;
     int i               = 0;
+    off_t offset        = r->offset;
 
     while (r->read(r->read_data, &c, 1, &err) == 1 && err == 0) {
+        offset++;
         magic <<= 8;
         magic |= c;
         magic &= 0xffffffff;
@@ -1035,7 +1052,8 @@ static int read_any_taf(reader* r)
             tmp[i++] = 0x46; //F
             tmp[i++] = 0x20; //space
 
-            r->offset = r->tell(r->read_data) - 4;
+            off_t rTell = r->tell(r->read_data);
+            r->offset = (rTell != -1 ? rTell : offset) - 4;
 
             already_read = 4;
             message_size = already_read;
@@ -1071,8 +1089,10 @@ static int read_any_metar(reader* r)
     size_t message_size = 0;
     size_t already_read = 0;
     int i               = 0;
+    off_t offset        = r->offset;
 
     while (r->read(r->read_data, &c, 1, &err) == 1 && err == 0) {
+        offset++;
         magic <<= 8;
         magic |= c;
         magic &= 0xffffffff;
@@ -1087,9 +1107,10 @@ static int read_any_metar(reader* r)
                 tmp[i++] = 0x41; // A
                 tmp[i++] = 'R';
 
-                r->offset = r->tell(r->read_data) - 4;
-
                 already_read = 5;
+                off_t rTell = r->tell(r->read_data);
+                r->offset = (rTell != -1 ? rTell : offset) - already_read;
+                
                 message_size = already_read;
                 while (r->read(r->read_data, &c, 1, &err) == 1 && err == 0) {
                     message_size++;
