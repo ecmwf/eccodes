@@ -14,6 +14,7 @@ list(APPEND test_c_bins
     wmo_read_gts_from_file
     wmo_read_any_from_file
     wmo_read_any_from_stream
+    wmo_read_any_from_stream_with_offsets
     grib_bpv_limit
     grib_double_cmp
     read_any
@@ -220,6 +221,7 @@ if( HAVE_BUILD_TOOLS )
         wmo_read_gts_from_file
         wmo_read_any_from_file
         wmo_read_any_from_stream
+        wmo_read_any_from_stream_with_offsets
         bufr_templates
         bufr_rdbSubTypes
         bufr_dump_data

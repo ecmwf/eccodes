@@ -1322,18 +1322,30 @@ typedef struct stream_struct
 {
     void* stream_data;
     long (*stream_proc)(void*, void* buffer, long len);
+    off_t position;
 
 } stream_struct;
 
 static off_t stream_tell(void* data)
 {
-    return 0;
+    stream_struct* s = (stream_struct*)data;
+    return s->position;
 }
 
 static int stream_seek(void* data, off_t len)
 {
+    stream_struct* s = (stream_struct*)data;
+    s->position += len;
     return 0;
 }
+
+static int stream_seek_from_start(void* data, off_t len)
+{
+    stream_struct* s = (stream_struct*)data;
+    s->position      = len;
+    return 0;
+}
+
 static size_t stream_read(void* data, void* buffer, size_t len, int* err)
 {
     stream_struct* s = (stream_struct*)data;
@@ -1351,6 +1363,7 @@ static size_t stream_read(void* data, void* buffer, size_t len, int* err)
         if (n == -1)
             *err = GRIB_END_OF_FILE;
     }
+    s->position += n;
     return n;
 }
 
@@ -1376,6 +1389,7 @@ int wmo_read_any_from_stream(void* stream_data, long (*stream_proc)(void*, void*
 
     s.stream_data = stream_data;
     s.stream_proc = stream_proc;
+    s.position    = 0;
 
     u.user_buffer = buffer;
     u.buffer_size = *len;
@@ -1385,7 +1399,7 @@ int wmo_read_any_from_stream(void* stream_data, long (*stream_proc)(void*, void*
     r.read_data       = &s;
     r.read            = &stream_read;
     r.seek            = &stream_seek;
-    r.seek_from_start = &stream_seek;
+    r.seek_from_start = &stream_seek_from_start;
     r.tell            = &stream_tell;
     r.alloc_data      = &u;
     r.alloc           = &user_provider_buffer;
@@ -1393,6 +1407,38 @@ int wmo_read_any_from_stream(void* stream_data, long (*stream_proc)(void*, void*
 
     err  = read_any(&r, /*no_alloc=*/0, 1, 1, 1, 1);
     *len = r.message_size;
+
+    return err;
+}
+
+int wmo_read_any_from_stream_with_offset(void* stream_data, long (*stream_proc)(void*, void* buffer, long len), void* buffer, size_t* len, off_t* offset)
+{
+    int err;
+    stream_struct s;
+    user_buffer_t u;
+    reader r;
+
+    s.stream_data = stream_data;
+    s.stream_proc = stream_proc;
+    s.position    = *offset;
+
+    u.user_buffer = buffer;
+    u.buffer_size = *len;
+
+    r.message_size    = 0;
+    r.offset          = 0;
+    r.read_data       = &s;
+    r.read            = &stream_read;
+    r.seek            = &stream_seek;
+    r.seek_from_start = &stream_seek_from_start;
+    r.tell            = &stream_tell;
+    r.alloc_data      = &u;
+    r.alloc           = &user_provider_buffer;
+    r.headers_only    = 0;
+
+    err  = read_any(&r, /*no_alloc=*/0, 1, 1, 1, 1);
+    *len = r.message_size;
+    *offset = s.position;
 
     return err;
 }
@@ -1408,13 +1454,14 @@ void* wmo_read_any_from_stream_malloc(void* stream_data, long (*stream_proc)(voi
 
     s.stream_data = stream_data;
     s.stream_proc = stream_proc;
+    s.position    = 0;
 
     r.message_size    = 0;
     r.offset          = 0;
     r.read_data       = &s;
     r.read            = &stream_read;
     r.seek            = &stream_seek;
-    r.seek_from_start = &stream_seek;
+    r.seek_from_start = &stream_seek_from_start;
     r.tell            = &stream_tell;
     r.alloc_data      = &u;
     r.alloc           = &allocate_buffer;
@@ -1422,6 +1469,37 @@ void* wmo_read_any_from_stream_malloc(void* stream_data, long (*stream_proc)(voi
 
     *err  = read_any(&r, /*no_alloc=*/0, 1, 1, 1, 1);
     *size = r.message_size;
+
+    return u.buffer;
+}
+
+/* This function allocates memory for the result so the user is responsible for freeing it */
+void* wmo_read_any_from_stream_malloc_with_offset(void* stream_data, long (*stream_proc)(void*, void* buffer, long len), size_t* size, off_t* offset, int* err)
+{
+    alloc_buffer u;
+    stream_struct s;
+    reader r;
+
+    u.buffer = NULL;
+
+    s.stream_data = stream_data;
+    s.stream_proc = stream_proc;
+    s.position    = *offset;
+
+    r.message_size    = 0;
+    r.offset          = 0;
+    r.read_data       = &s;
+    r.read            = &stream_read;
+    r.seek            = &stream_seek;
+    r.seek_from_start = &stream_seek_from_start;
+    r.tell            = &stream_tell;
+    r.alloc_data      = &u;
+    r.alloc           = &allocate_buffer;
+    r.headers_only    = 0;
+
+    *err  = read_any(&r, /*no_alloc=*/0, 1, 1, 1, 1);
+    *size = r.message_size;
+    *offset = s.position;
 
     return u.buffer;
 }

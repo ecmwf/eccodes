@@ -1351,9 +1351,11 @@ int wmo_read_grib_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_bufr_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_gts_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_any_from_stream(void* stream_data, long (*stream_proc)(void*, void* buffer, long len), void* buffer, size_t* len);
+int wmo_read_any_from_stream_with_offset(void* stream_data, long (*stream_proc)(void*, void* buffer, long len), void* buffer, size_t* len, off_t* offset);
 
 /* These functions allocate memory for the result so the user is responsible for freeing it */
 void* wmo_read_any_from_stream_malloc(void* stream_data, long (*stream_proc)(void*, void* buffer, long len), size_t* size, int* err);
+void* wmo_read_any_from_stream_malloc_with_offset(void* stream_data, long (*stream_proc)(void*, void* buffer, long len), size_t* size, off_t* offset, int* err);
 void* wmo_read_any_from_file_malloc(FILE* f, int headers_only, size_t* size, off_t* offset, int* err);
 void* wmo_read_gts_from_file_malloc(FILE* f, int headers_only, size_t* size, off_t* offset, int* err);
 void* wmo_read_bufr_from_file_malloc(FILE* f, int headers_only, size_t* size, off_t* offset, int* err);
