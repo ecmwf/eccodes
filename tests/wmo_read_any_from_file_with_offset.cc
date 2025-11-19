@@ -19,7 +19,7 @@ int test_next(FILE* in, size_t* len, off_t offset_expected, off_t* offset) // , 
 {
     *len = SIZE;
 
-    int err = wmo_read_any_from_file_offset(in, buffer, len, offset);
+    int err = wmo_read_any_from_file_with_offset(in, buffer, len, offset);
     if (err == GRIB_END_OF_FILE && *len == 0)
         printf("end of file\n");
 

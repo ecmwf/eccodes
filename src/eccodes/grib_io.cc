@@ -1202,7 +1202,7 @@ static int ecc_wmo_read_any_from_file(FILE* f, void* buffer, size_t* len, off_t*
     return err;
 }
 
-int wmo_read_any_from_file_offset(FILE* f, void* buffer, size_t* len, off_t* offset)
+int wmo_read_any_from_file_with_offset(FILE* f, void* buffer, size_t* len, off_t* offset)
 {
     return ecc_wmo_read_any_from_file(f, buffer, len, offset, /*no_alloc=*/0, 1, 1, 1, 1);
 }

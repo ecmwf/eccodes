@@ -10,7 +10,7 @@
 
 . ./include.ctest.sh
 
-label="wmo_read_any_from_file_offset_test"
+label="wmo_read_any_from_file_with_offset_test"
 tempText=temp.$label.txt
 
 if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
@@ -18,7 +18,7 @@ if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
     exit 0
 fi
 
-${test_dir}/wmo_read_any_from_file_offset $data_dir/pad.grib
+${test_dir}/wmo_read_any_from_file_with_offset $data_dir/pad.grib
 
 # Clean up
 rm -f $tempText

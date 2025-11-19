@@ -1346,7 +1346,7 @@ void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoi
 void grib_get_reduced_row_p(long pl, double lon_first, double lon_last, long* npoints, double* olon_first, double* olon_last);
 
 /* read products */
-int wmo_read_any_from_file_offset(FILE* f, void* buffer, size_t* len, off_t* offset);
+int wmo_read_any_from_file_with_offset(FILE* f, void* buffer, size_t* len, off_t* offset);
 int wmo_read_any_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_grib_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_bufr_from_file(FILE* f, void* buffer, size_t* len);
