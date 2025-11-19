@@ -15,25 +15,13 @@ unsigned[1] numberOfForecastsUsedInLocalTime : dump;
 
 localTimeForecastList list(numberOfForecastsUsedInLocalTime)
 {
-  # Year of Forecast used in Local Time
   unsigned[2] yearOfForecastUsedInLocalTime=0 : dump, edition_specific;
-
-  # Month of Forecast used in Local Time
   unsigned[1] monthOfForecastUsedInLocalTime=0 : dump, edition_specific;
-
-  # Day of Forecast used in Local Time
   unsigned[1] dayOfForecastUsedInLocalTime=0 : dump, edition_specific;
-
-  # Hour of Forecast used in Local Time
   unsigned[1] hourOfForecastUsedInLocalTime=0 : dump, edition_specific;
-
-  # Minute of Forecast used in Local Time
   unsigned[1] minuteOfForecastUsedInLocalTime=0 : dump, edition_specific;
-
-  # Second of Forecast used in Local Time
   unsigned[1] secondOfForecastUsedInLocalTime=0 : dump, edition_specific;
 
-  # Indicator of unit of time for ForecastTime
   codetable[1] indicatorOfUnitForForecastTime('4.4.table',masterDir,localDir)=1 : dump;
 
   # Length of the time range over which statistical processing is done, in units defined by the previous octet
@@ -43,7 +31,7 @@ localTimeForecastList list(numberOfForecastsUsedInLocalTime)
   unsigned[1] numberOfTimeIncrementsOfForecastsUsedInLocalTime=1 : dump;
 
   # Indicator of unit of time for the increment between the successive steps used
-  codetable[1]  indicatorOfUnitForTimeIncrement('4.4.table',masterDir,localDir)=255 : dump;
+  codetable[1] indicatorOfUnitForTimeIncrement('4.4.table',masterDir,localDir)=255 : dump;
 
   # Time increment between successive fields, in units defined by the previous octet
   unsigned[4] timeIncrement=0 : dump;
@@ -54,21 +42,20 @@ alias ls.time = dataTime;
 transient lsdate_bug = 1: hidden;
 transient lstime_bug = 1: hidden;
 
-
 if (numberOfForecastsUsedInLocalTime == 1) {
   meta dateOfForecastUsedInLocalTime g2date(yearOfForecastUsedInLocalTime, monthOfForecastUsedInLocalTime, dayOfForecastUsedInLocalTime) : dump;
   meta timeOfForecastUsedInLocalTime   time(hourOfForecastUsedInLocalTime, minuteOfForecastUsedInLocalTime, secondOfForecastUsedInLocalTime) : dump;
 
   #transient stepOfForecastUsedInLocalTime = forecastTime : dump;
-
   # need something here to compute the diff between date time of *OfForecastUsedInLocalTime and the local time defined in section 1 (dataDate and dataTime)
   # this would be the offset (step) used to index data in mars as mars.step
-  #meta dateTimeOfForecastUsedInLocalTime julian_date(yearOfForecastUsedInLocalTime, monthOfForecastUsedInLocalTime, dayOfForecastUsedInLocalTime,
-  #                                                   hourOfForecastUsedInLocalTime, minuteOfForecastUsedInLocalTime, secondOfForecastUsedInLocalTime) : hidden;
-  #meta dateTimeOfLocalTime               julian_date(dataDate, dataTime) : hidden;
+  #meta dateTimeOfForecastUsedInLocalTime julian_date(
+  #            yearOfForecastUsedInLocalTime, monthOfForecastUsedInLocalTime, dayOfForecastUsedInLocalTime,
+  #            hourOfForecastUsedInLocalTime, minuteOfForecastUsedInLocalTime, secondOfForecastUsedInLocalTime) : hidden;
+  #meta dateTimeOfLocalTime  julian_date(dataDate, dataTime) : hidden;
 
-  meta jdSelected julian_day(dateOfForecastUsedInLocalTime,
-                      hourOfForecastUsedInLocalTime, minuteOfForecastUsedInLocalTime, secondOfForecastUsedInLocalTime);
+  meta jdSelected julian_day(
+       dateOfForecastUsedInLocalTime, hourOfForecastUsedInLocalTime, minuteOfForecastUsedInLocalTime, secondOfForecastUsedInLocalTime);
   meta jdLocal julian_day(dataDate, hour,minute,second);
 
   transient diffInDays = (jdLocal - jdSelected) : hidden;  # float
@@ -77,7 +64,6 @@ if (numberOfForecastsUsedInLocalTime == 1) {
   transient endStep = _endStep; # needed to force it to be integer
 
   #transient stepOfLocalTime = dateTimeOfLocalTime - dateTimeOfForecastUsedInLocalTime : dump;
-
   alias mars.date = dateOfForecastUsedInLocalTime : dump;
   alias mars.time = timeOfForecastUsedInLocalTime : dump;
   alias mars.step = endStep;

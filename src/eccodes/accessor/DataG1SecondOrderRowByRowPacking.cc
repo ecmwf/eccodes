@@ -80,7 +80,6 @@ int DataG1SecondOrderRowByRowPacking::value_count(long* count)
 
     n = 0;
     if (bitmapPresent) {
-        long *bitmap, *pbitmap;
         size_t numberOfPoints = 0;
 
         if (plSize && pl) {
@@ -91,10 +90,10 @@ int DataG1SecondOrderRowByRowPacking::value_count(long* count)
         else {
             numberOfPoints = Ni * Nj;
         }
-        bitmap  = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfPoints);
-        pbitmap = bitmap;
+        long* bitmap  = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfPoints);
+        long* pbitmap = bitmap;
         grib_get_long_array(gh, bitmap_, bitmap, &numberOfPoints);
-        for (i = 0; i < numberOfPoints; i++)
+        for (size_t ii = 0; ii < numberOfPoints; ii++)
             n += *(bitmap++);
 
         grib_context_free(context_, pbitmap);
@@ -173,7 +172,6 @@ int DataG1SecondOrderRowByRowPacking::unpack_real(T* values, size_t* len)
     if (!numbersPerRow)
         return GRIB_OUT_OF_MEMORY;
     if (bitmapPresent) {
-        long *bitmap, *pbitmap;
         size_t numberOfPoints = Ni * Nj;
 
         if (plSize && pl) {
@@ -181,8 +179,8 @@ int DataG1SecondOrderRowByRowPacking::unpack_real(T* values, size_t* len)
             for (i = 0; i < numberOfRows; i++)
                 numberOfPoints += pl[i];
         }
-        bitmap  = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfPoints);
-        pbitmap = bitmap;
+        long* bitmap  = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfPoints);
+        long* pbitmap = bitmap;
         grib_get_long_array(gh, bitmap_, bitmap, &numberOfPoints);
         if (plSize && pl) {
             for (i = 0; i < numberOfRows; i++) {

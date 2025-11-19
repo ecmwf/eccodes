@@ -415,11 +415,8 @@ codes_handle* codes_bufr_handle_new_from_file(codes_context* c, FILE* f, int* er
  */
 int codes_write_message(const codes_handle* h, const char* file, const char* mode);
 
+/* The 'what' argument can be a bitwise OR of GRIB_SECTION_GRID, GRIB_SECTION_PRODUCT... etc */
 codes_handle* codes_grib_util_sections_copy(codes_handle* hfrom, codes_handle* hto, int what, int* err);
-
-/* These 2 functions are deprecated and will later be removed */
-codes_string_list* codes_grib_util_get_param_id(const char* mars_param) ECCODES_DEPRECATED;
-codes_string_list* codes_grib_util_get_mars_param(const char* param_id) ECCODES_DEPRECATED;
 
 /**
  *  Create a handle from a user message in memory. The message will not be freed at the end.
@@ -1194,6 +1191,7 @@ void codes_context_set_print_proc(codes_context* c, codes_print_proc p_print);
  * @param p_log   : the logging procedure to be set @see codes_log_proc
  */
 void codes_context_set_logging_proc(codes_context* c, codes_log_proc p_log);
+void codes_context_set_logging_file(codes_context* c, FILE*);
 
 /**
  *  Turn on support for multi-fields in single GRIB messages
@@ -1627,5 +1625,7 @@ Error codes returned by the eccodes functions.
 #define CODES_UNABLE_TO_COMPARE_ACCESSORS		GRIB_UNABLE_TO_COMPARE_ACCESSORS
 /** Assertion failure */
 #define CODES_ASSERTION_FAILURE		GRIB_ASSERTION_FAILURE
+/** Runtime error */
+#define CODES_RUNTIME_ERROR		GRIB_RUNTIME_ERROR
 /*! @}*/
 #endif

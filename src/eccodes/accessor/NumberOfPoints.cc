@@ -37,7 +37,6 @@ int NumberOfPoints::unpack_long(long* val, size_t* len)
     long ni = 0, nj = 0, plpresent = 0;
     size_t plsize     = 0;
     long* pl          = NULL;
-    int i             = 0;
     grib_context* c   = context_;
     grib_handle* hand = get_enclosing_handle();
 
@@ -67,7 +66,7 @@ int NumberOfPoints::unpack_long(long* val, size_t* len)
         pl     = (long*)grib_context_malloc(c, sizeof(long) * plsize);
         grib_get_long_array_internal(hand, pl_, pl, &plsize);
         *val = 0;
-        for (i = 0; i < plsize; i++)
+        for (size_t i = 0; i < plsize; i++)
             *val += pl[i];
         grib_context_free(c, pl);
     }

@@ -14,7 +14,6 @@ unsigned[2] forecastOrSingularVectorNumber  : dump;
 #
 # These elements are set to zero for perturbed forecast
 #
-
 constant perturbedType = 60;
 if(type == perturbedType)
 {
@@ -25,7 +24,6 @@ if(type == perturbedType)
 #
 # These elements are coded for singular vectors
 #
-
 if(type != perturbedType)
 {
   unsigned[2] numberOfIterations : dump;

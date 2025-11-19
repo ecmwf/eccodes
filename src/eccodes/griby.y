@@ -823,8 +823,8 @@ atom: string_or_ident
 	| DUMMY     { $$ = new_true_expression(grib_parser_context); }
       | '(' expression ')' { $$ = $2; }
       | '-' atom { $$ = new_unop_expression(grib_parser_context,&grib_op_neg,&grib_op_neg_d,$2); }
-    | IDENT '(' ')' { $$ = new_func_expression(grib_parser_context,$1,NULL); free($1);}
-    | IDENT '(' argument_list ')' { $$ = new_func_expression(grib_parser_context,$1,$3); free($1);}
+    | IDENT '(' ')' { $$ = new_functor_expression(grib_parser_context,$1,NULL); free($1);}
+    | IDENT '(' argument_list ')' { $$ = new_functor_expression(grib_parser_context,$1,$3); free($1);}
       ;
 
 

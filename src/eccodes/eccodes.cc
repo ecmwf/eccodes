@@ -74,7 +74,8 @@ void codes_check(const char* call, const char* file, int line, int e, const char
 
 /* Fieldsets */
 /******************************************************************************/
-grib_fieldset* codes_fieldset_new_from_files(codes_context* c, const char* filenames[], int nfiles, const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err)
+grib_fieldset* codes_fieldset_new_from_files(codes_context* c, const char* filenames[],
+    int nfiles, const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err)
 {
     return grib_fieldset_new_from_files(c, filenames, nfiles, keys, nkeys, where_string, order_by_string, err);
 }
@@ -222,14 +223,7 @@ grib_handle* codes_grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto,
 {
     return grib_util_sections_copy(hfrom, hto, what, err);
 }
-grib_string_list* codes_grib_util_get_param_id(const char* mars_param)
-{
-    return grib_util_get_param_id(mars_param);
-}
-grib_string_list* codes_grib_util_get_mars_param(const char* param_id)
-{
-    return grib_util_get_mars_param(param_id);
-}
+
 void codes_grib_multi_support_on(codes_context* c)
 {
     grib_multi_support_on(c);
@@ -606,4 +600,8 @@ void codes_context_set_print_proc(codes_context* c, grib_print_proc p_print)
 void codes_context_set_logging_proc(codes_context* c, grib_log_proc p_log)
 {
     grib_context_set_logging_proc(c, p_log);
+}
+void codes_context_set_logging_file(codes_context* c, FILE* f)
+{
+    grib_context_set_logging_file(c, f);
 }

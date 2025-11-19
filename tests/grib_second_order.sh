@@ -10,10 +10,10 @@
 
 . ./include.ctest.sh
 
-workdir=`pwd`
 REDIRECT=/dev/null
 label="grib_second_order_test"
 tempText=temp.$label.txt
+tempGrib1=temp.$label.grib1
 
 cd ${data_dir}
 
@@ -82,6 +82,13 @@ test_data
 # Now make sure grib_dump works on a second-order row-by-row file
 # See GRIB-147
 ${tools_dir}/grib_dump second_ord_rbr.grib1 > $REDIRECT
+
+# ECC-2111
+# Convert grid_second_order_row_by_row to grid_simple
+${tools_dir}/grib_set -r -s packingType=grid_simple second_ord_rbr.grib1 $tempGrib1
+grib_check_key_equals $tempGrib1 packingType grid_simple
+${tools_dir}/grib_compare -c data:n second_ord_rbr.grib1 $tempGrib1
+rm -f $tempGrib1
 
 # Test nearest neighbour on second order with a bitmap
 # GRIB-541
@@ -222,6 +229,18 @@ EOF
 input=lfpw.grib1
 ${tools_dir}/grib_filter $tempFilt $input
 
+# Local entries in table 5.0
+# ---------------------------
+latestOfficial=$( ${tools_dir}/grib_get -p tablesVersionLatestOfficial $ECCODES_SAMPLES_PATH/GRIB2.tmpl )
+for drtn in 50001 50002; do
+    ${tools_dir}/grib_set -r -s tablesVersion=$latestOfficial,dataRepresentationTemplateNumber=$drtn sample.grib2 $temp1
+    ${tools_dir}/grib_dump -O -p section_5 $temp1 > $temp2
+    grep -q "dataRepresentationTemplateNumber = $drtn .*Second order packing.*/5.0.table" $temp2
+done
+
+# ${tools_dir}/grib_set -r -s tablesVersion=$latestOfficial,dataRepresentationTemplateNumber=50001 sample.grib2 $temp1
+# ${tools_dir}/grib_dump -O -p section_5 $temp1 > $temp2
+# grep -q "dataRepresentationTemplateNumber = 50001 .*Second order packing.*/5.0.table" $temp2
 
 # Clean up
 rm -f $temp_stat1 $temp_stat2

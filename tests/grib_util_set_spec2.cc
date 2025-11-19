@@ -23,9 +23,10 @@ static grib_handle* lamb_conf_grib1()
     int err = 0;
     grib_util_grid_spec spec = {0,};
     grib_util_packing_spec packing_spec = {0,};
-    double values[4]   = { 1.1, 2.2, 3.3, 0.4 };
     int set_spec_flags = 0;
-    size_t outlen      = 4;
+
+    size_t outlen  = 0; // test passing in no values
+    double* values = NULL;
 
     auto* handle   = grib_handle_new_from_samples(nullptr, "GRIB1");
     spec.grid_type = GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL;
@@ -133,16 +134,16 @@ static grib_handle* spectral()
     int err = 0;
     grib_util_grid_spec spec = {0,};
     grib_util_packing_spec packing_spec = {0,};
-    double values[4]   = { 1.1, 2.2 };
     int set_spec_flags = 0;
-    size_t outlen      = 0;
+
+    size_t outlen  = 0; // test passing in no values
+    double* values = NULL;
 
     auto* handle    = grib_handle_new_from_samples(nullptr, "sh_pl_grib2");
     spec.grid_type  = GRIB_UTIL_GRID_SPEC_SH;
     spec.truncation = 20;
-    outlen          = 2;
 
-    packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE;
+    packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE; //must fail
     packing_spec.bitsPerValue = 16;
     packing_spec.accuracy     = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
     packing_spec.packing      = GRIB_UTIL_PACKING_USE_PROVIDED;
@@ -150,8 +151,10 @@ static grib_handle* spectral()
     grib_handle* finalh = grib_util_set_spec(
         handle, &spec, &packing_spec, set_spec_flags,
         values, outlen, &err);
-    ECCODES_ASSERT(err == 0);
-    return finalh;
+    ECCODES_ASSERT(err);
+    ECCODES_ASSERT(!finalh);
+
+    return handle;
 }
 
 // Polar stereo
@@ -198,11 +201,17 @@ static grib_handle* regular_gg()
     spec.grid_type = GRIB_UTIL_GRID_SPEC_REGULAR_GG;
     spec.Ni = spec.Nj = 2;
     outlen            = 4;
+    CODES_CHECK(codes_set_long(handle, "shapeOfTheEarth", 5), 0);
 
     grib_handle* finalh = grib_util_set_spec(
         handle, &spec, &packing_spec, set_spec_flags,
         values, outlen, &err);
     ECCODES_ASSERT(err == 0);
+
+    long shapeOfTheEarth=-1;
+    CODES_CHECK(codes_get_long(finalh, "shapeOfTheEarth", &shapeOfTheEarth), 0);
+    ECCODES_ASSERT( shapeOfTheEarth == 5 );
+
     return finalh;
 }
 
@@ -241,12 +250,28 @@ static grib_handle* unstruct()
     size_t outlen      = 4;
 
     auto* handle   = grib_handle_new_from_samples(nullptr, "GRIB2");
+    size_t alen = 1000;
+    CODES_CHECK(codes_set_string(handle, "gridType", "unstructured_grid", &alen), 0);
+    CODES_CHECK(codes_set_long(handle, "numberOfGridInReference", 4), 0);
+    CODES_CHECK(codes_set_long(handle, "numberOfGridUsed", 2), 0);
+    CODES_CHECK(codes_set_long(handle, "shapeOfTheEarth", 6), 0);
+
     spec.grid_type = GRIB_UTIL_GRID_SPEC_UNSTRUCTURED;
 
     grib_handle* finalh = grib_util_set_spec(
         handle, &spec, &packing_spec, set_spec_flags,
         values, outlen, &err);
     ECCODES_ASSERT(err == 0);
+
+    long numberOfGridInReference=-1, numberOfGridUsed=-1, shapeOfTheEarth=-1;
+    CODES_CHECK(codes_get_long(finalh, "numberOfGridInReference", &numberOfGridInReference), 0);
+    ECCODES_ASSERT( numberOfGridInReference == 4 );
+    CODES_CHECK(codes_get_long(finalh, "numberOfGridUsed", &numberOfGridUsed), 0);
+    ECCODES_ASSERT( numberOfGridUsed == 2 );
+
+    CODES_CHECK(codes_get_long(finalh, "shapeOfTheEarth", &shapeOfTheEarth), 0);
+    ECCODES_ASSERT( shapeOfTheEarth == 6 );
+
     return finalh;
 }
 

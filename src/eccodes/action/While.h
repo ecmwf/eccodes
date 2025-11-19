@@ -10,8 +10,6 @@
 
 #pragma once
 
-#include "grib_api_internal.h"
-
 // No longer used: For the original intent see
 // src/deprecated/action_class_while.cc
 grib_action* grib_action_create_while(grib_context* context, grib_expression* expression, grib_action* block);

@@ -57,8 +57,8 @@ void* grib_oarray_get(grib_oarray* v, int i);
 /* grib_iarray.cc */
 void grib_iarray_print(const char* title, const grib_iarray* iarray);
 grib_iarray* grib_iarray_new(size_t size, size_t incsize);
-long grib_iarray_pop(grib_iarray* a);
-long grib_iarray_pop_front(grib_iarray* a);
+// long grib_iarray_pop(grib_iarray* a);
+// long grib_iarray_pop_front(grib_iarray* a);
 grib_iarray* grib_iarray_push(grib_iarray* v, long val);
 void grib_iarray_delete(grib_iarray* v);
 void grib_iarray_delete_array(grib_iarray* v);
@@ -262,6 +262,7 @@ int grib_context_seek(const grib_context* c, off_t offset, int whence, void* str
 void grib_context_set_print_proc(grib_context* c, grib_print_proc p);
 void grib_context_set_debug(grib_context* c, int mode);
 void grib_context_set_logging_proc(grib_context* c, grib_log_proc p);
+void grib_context_set_logging_file(grib_context* c, FILE*);
 long grib_get_api_version(void);
 void grib_print_api_version(FILE* out);
 const char* grib_get_package_name(void);
@@ -619,7 +620,7 @@ grib_expression* new_string_compare_expression(grib_context* c, grib_expression*
 grib_expression* new_unop_expression(grib_context* c, grib_unop_long_proc long_func, grib_unop_double_proc double_func, grib_expression* exp);
 
 /* grib_expression_class_functor.cc */
-grib_expression* new_func_expression(grib_context* c, const char* name, grib_arguments* args);
+grib_expression* new_functor_expression(grib_context* c, const char* name, grib_arguments* args);
 
 /* grib_expression_class_accessor.cc */
 grib_expression* new_accessor_expression(grib_context* c, const char* name, long start, size_t length);
@@ -663,7 +664,8 @@ char* codes_getenv(const char* name);
 int codes_check_grib_ieee_packing_value(int value);
 int codes_flush_sync_close_file(FILE* f);
 int is_date_valid(long year, long month, long day, long hour, long minute, double second);
-int is_time_valid(long number); // number is HHMM
+int is_time_valid(long hours, long minutes, long seconds);
+int is_time_valid_HHMM(long number); // number is HHMM
 long convert_to_minutes(long step, long stepUnits);
 bool is_sorted_ascending(const double arr[], size_t n);
 bool is_sorted_descending(const double arr[], size_t n);
@@ -674,9 +676,9 @@ int codes_key_is_computed(const grib_handle* h, const char* key, int* err);
 
 
 /* grib_util.cc */
+int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* grid_spec, const grib_util_packing_spec* packing_spec);
+
 grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err);
-grib_string_list* grib_util_get_param_id(const char* mars_param);
-grib_string_list* grib_util_get_mars_param(const char* param_id);
 grib_handle* grib_util_set_spec(grib_handle* h, const grib_util_grid_spec* spec, const grib_util_packing_spec* packing_spec, int flags, const double* data_values, size_t data_values_count, int* err);
 int parse_keyval_string(const char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count);
 int grib2_is_PDTN_Plain(long productDefinitionTemplateNumber);

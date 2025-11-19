@@ -244,7 +244,6 @@ void Wmo::dump_string(grib_accessor* a, const char* comment)
     grib_get_string_length_acc(a, &size);
     value = (char*)grib_context_malloc_clear(a->context_, size);
     if (!value) {
-        grib_context_log(a->context_, GRIB_LOG_ERROR, "unable to allocate %zu bytes", size);
         return;
     }
     err = a->unpack_string(value, &size);
@@ -539,7 +538,7 @@ void Wmo::dump_string_array(grib_accessor* a, const char* comment)
 
     values = (char**)grib_context_malloc_clear(c, size * sizeof(char*));
     if (!values) {
-        grib_context_log(c, GRIB_LOG_ERROR, "unable to allocate %zu bytes", size);
+        grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %zu bytes", size);
         return;
     }
 

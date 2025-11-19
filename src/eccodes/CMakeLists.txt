@@ -134,7 +134,6 @@ list( APPEND eccodes_src_files
     accessor/GaussianGridName.cc
     accessor/Getenv.cc
     accessor/GtsHeader.cc
-    accessor/IfsParam.cc
     accessor/JulianDay.cc
     accessor/JulianDate.cc
     accessor/ClosestDate.cc
@@ -273,6 +272,8 @@ list( APPEND eccodes_src_files
     accessor/DataRunLengthPacking.cc
     accessor/GridSpec.cc
     accessor/G2ParamConceptFilename.cc
+    accessor/G2Probability.cc
+    accessor/G2WavePeriodRange.cc
 
     grib_jasper_encoding.cc
     grib_openjpeg_encoding.cc
@@ -285,7 +286,6 @@ list( APPEND eccodes_src_files
     grib_memory.cc
     grib_buffer.cc
 
-    dumper/Serialize.cc
     dumper/Debug.cc
     dumper/Default.cc
     dumper/BufrEncodeC.cc
@@ -368,7 +368,6 @@ list( APPEND eccodes_src_files
     geo/iterator/PolarStereographic.cc
     geo/iterator/Regular.cc
     geo/iterator/SpaceView.cc
-    geo/iterator/Unstructured.cc
 
     codes_util.cc
     grib_util.cc
@@ -421,32 +420,48 @@ endif()
 
 if( eccodes_HAVE_GEOGRAPHY AND eccodes_HAVE_ECKIT_GEO )
     list( APPEND eccodes_src_files
+        config/LibEccodes.cc
+        config/LibEccodes.h
+
+        geo/BasicAngle.cc
+        geo/BasicAngle.h
         geo/EckitMainInit.cc
         geo/EckitMainInit.h
+        geo/Geo.cc
+        geo/Geo.h
         geo/GeoIterator.cc
         geo/GeoIterator.h
-        geo/GribSpec.cc
-        geo/GribSpec.h )
+        geo/GribFromSpec.cc
+        geo/GribFromSpec.h
+        geo/GribToSpec.cc
+        geo/GribToSpec.h )
     list( APPEND ECCODES_EXTRA_LIBRARIES eckit_geo )
 endif()
 
-ecbuild_add_library( TARGET    eccodes
-                     SOURCES   ${CMAKE_CURRENT_BINARY_DIR}/grib_api_version.cc
-                              # griby.cc gribl.cc
-                              ${eccodes_src_files}
-                     #PRIVATE_LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${CMATH_LIBRARIES}
-                     PRIVATE_INCLUDES "${AEC_INCLUDE_DIRS}" "${PNG_INCLUDE_DIRS}"
-                     PRIVATE_LIBS ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${AEC_LIBRARIES} ${PNG_LIBRARIES}
-                     PUBLIC_LIBS  ${CMATH_LIBRARIES} ${THREADS_LIBRARIES}
-                     TEMPLATES ${eccodes_extra_src_files}
-                     INSTALL_HEADERS_LIST
-                              grib_api.h
-                              eccodes.h
-                              eccodes_windef.h
-                              ${CMAKE_CURRENT_BINARY_DIR}/eccodes_version.h
-                              ${PROJECT_BINARY_DIR}/eccodes_config.h
-                    PUBLIC_INCLUDES
-                              $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src/eccodes>
-                              $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/eccodes>
-                              $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
-                              $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src> )
+ecbuild_add_library(
+    TARGET    eccodes
+    SOURCES   
+        ${CMAKE_CURRENT_BINARY_DIR}/grib_api_version.cc
+        ${eccodes_src_files}
+    PRIVATE_INCLUDES "${PNG_INCLUDE_DIRS}"
+    PRIVATE_LIBS
+       ${ECCODES_EXTRA_LIBRARIES}
+       ${CMAKE_THREAD_LIBS_INIT}
+       ${PNG_LIBRARIES}
+       $<$<BOOL:${libaec_FOUND}>:libaec::aec>
+    PUBLIC_LIBS 
+        ${CMATH_LIBRARIES}
+        ${THREADS_LIBRARIES}
+    TEMPLATES ${eccodes_extra_src_files}
+    INSTALL_HEADERS_LIST
+        grib_api.h
+        eccodes.h
+        eccodes_windef.h
+        ${CMAKE_CURRENT_BINARY_DIR}/eccodes_version.h
+        ${PROJECT_BINARY_DIR}/eccodes_config.h
+    PUBLIC_INCLUDES
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src/eccodes>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/eccodes>
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+)

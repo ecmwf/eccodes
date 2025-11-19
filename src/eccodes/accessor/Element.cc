@@ -29,7 +29,7 @@ void Element::init(const long l, grib_arguments* c)
 static int check_element_index(const char* func, const char* array_name, long index, size_t size)
 {
     const grib_context* c = grib_context_get_default();
-    if (index < 0 || index >= size) {
+    if (index < 0 || (size_t)index >= size) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Invalid element index %ld for array '%s'. Value must be between 0 and %zu",
                          func, index, array_name, size - 1);
         return GRIB_INVALID_ARGUMENT;
@@ -121,7 +121,7 @@ int Element::pack_long(const long* val, size_t* len)
     }
 
     ECCODES_ASSERT(index >= 0);
-    ECCODES_ASSERT(index < size);
+    ECCODES_ASSERT( (size_t)index < size);
     ar[index] = *val;
 
     if ((ret = grib_set_long_array_internal(hand, array_, ar, size)) != GRIB_SUCCESS)
@@ -168,7 +168,7 @@ int Element::pack_double(const double* v, size_t* len)
     }
 
     ECCODES_ASSERT(index >= 0);
-    ECCODES_ASSERT(index < size);
+    ECCODES_ASSERT( (size_t)index < size);
     ar[index] = *v;
 
     if ((ret = grib_set_double_array_internal(hand, array_, ar, size)) != GRIB_SUCCESS)

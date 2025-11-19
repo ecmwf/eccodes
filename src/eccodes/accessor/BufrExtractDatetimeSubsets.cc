@@ -55,7 +55,7 @@ static int build_long_array(grib_context* c, grib_handle* h, int compressed,
         }
         if (err)
             return err;
-        if (n != numberOfSubsets) {
+        if (n != (size_t)numberOfSubsets) {
             if (n == 1) {
                 for (i = 1; i < numberOfSubsets; i++)
                     (*array)[i] = (*array)[0];
@@ -201,7 +201,7 @@ int BufrExtractDatetimeSubsets::select_datetime()
             n         = 1;
             (void)ret;
         }
-        if (n != numberOfSubsets) {
+        if (n != (size_t)numberOfSubsets) {
             if (n == 1) {
                 for (i = 1; i < numberOfSubsets; i++)
                     second[i] = second[0];

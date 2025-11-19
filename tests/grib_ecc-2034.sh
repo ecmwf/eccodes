@@ -15,6 +15,4 @@
 # GRIB encoding: Data quality checks via the API
 # ---------------------------------------------------------
 
-label="grib_ecc-2034_test"
-
 $EXEC $test_dir/grib_ecc-2034

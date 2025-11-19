@@ -35,21 +35,35 @@ cat >$tempFilt<<EOF
 EOF
 ${tools_dir}/grib_filter $tempFilt $infile
 
-# Once bug is fully fixed, enable this
-run_exec=0
+# Once bug is fully fixed, remove all the 'set +e'
+run_exec=1
 if [ $run_exec -eq 1 ]; then
     # Try with a GRIB1 sample with mars keys
     infile=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
-    $EXEC $test_dir/grib_ecc-2005 $infile
+    set +e
+    $EXEC $test_dir/grib_ecc-2005 $infile >$tempLog 2>&1
+    status=$?
+    set -e
+    [ $status -ne 0 ]
+    cat $tempLog
+    grep -q "Key 'hdate' was not in the mars namespace" $tempLog
 
     # Try with a GRIB2 sample without a local section (no mars keys)
+    set +e
     infile=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
     $EXEC $test_dir/grib_ecc-2005 $infile
+    status=$?
+    set -e
+    [ $status -ne 0 ]
 
     # Try with a GRIB2 sample with a local section (has mars keys)
+    set +e
     infile=$ECCODES_SAMPLES_PATH/destine_grib2.tmpl
     grib_check_key_equals $infile stream,type 'oper an'
     $EXEC $test_dir/grib_ecc-2005 $infile
+    status=$?
+    set -e
+    [ $status -ne 0 ]
 fi
 
 # Clean up

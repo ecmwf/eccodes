@@ -3,29 +3,51 @@
 transient dummyc=0: hidden;
 
 # With value of the switch defined in section.4.def, we read the corresponding def files. This works as follows:
-#      Pre-MTG2 ( MTG2Switch=0 ): static def files [concept].lte[tablesVersionMTG2Switch].def
+#      Pre-MTG2 ( MTG2Switch=0 ): static def files [concept].lte[tablesVersionMTG2Switch].def
 #      Else ( MTG2Switch!=0 ): default def files [concept].def. Ensures continuity of "status quo".
+# See the G2ParamConceptFilename accessor
 
 meta paramIdFilename   g2_param_concept_filename("paramId",   MTG2Switch, tablesVersionMTG2Switch): hidden;
 meta shortNameFilename g2_param_concept_filename("shortName", MTG2Switch, tablesVersionMTG2Switch): hidden;
 meta unitsFilename     g2_param_concept_filename("units",     MTG2Switch, tablesVersionMTG2Switch): hidden;
 meta nameFilename      g2_param_concept_filename("name",      MTG2Switch, tablesVersionMTG2Switch): hidden;
 
+# Now deal with chemical parameter split, pre and post MTG2
+# Recall 2 = post-MTG2 encoding with paramId + chemId used
+transient enableChemSplit = false;
+if (MTG2Switch == 2 || enableChemSplit) {
+  # Note: 0 is a valid chemId
+  concept chemId (minus_one,"chemId.def",conceptsDir2,conceptsDir1): no_copy,long_type,dump;
+  concept chemName (unknown,"chemName.def",conceptsDir2,conceptsDir1): no_copy,dump;
+  concept chemShortName (unknown,"chemShortName.def",conceptsDir2,conceptsDir1): no_copy,dump;
+  concept chemFormula (unknown,"chemFormula.def",conceptsDir2,conceptsDir1): no_copy,dump;
+
+  if ( chemId != -1 ) {
+    alias mars.chem = chemId;
+    alias parameter.chemId = chemId;
+    alias ls.chemShortName = chemShortName;
+    alias parameter.chemShortName = chemShortName;
+  }
+}
+
 concept paramIdLegacyECMF(defaultParameter,"paramId.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): long_type,no_copy,hidden;
-concept paramIdECMF (paramIdLegacyECMF,"paramId.def",conceptsMasterDir,conceptsLocalDirECMF): long_type,no_copy;
-concept paramId (paramIdECMF,"paramId.def",conceptsDir2,conceptsDir1): long_type;
+concept paramIdECMF (paramIdLegacyECMF,paramIdFilename,conceptsMasterDir,conceptsLocalDirECMF): long_type,no_copy;
+concept paramId (paramIdECMF,paramIdFilename,conceptsDir2,conceptsDir1): long_type;
 
 concept shortNameLegacyECMF(defaultShortName,"shortName.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,hidden;
-concept shortNameECMF (shortNameLegacyECMF,"shortName.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy;
-concept ls.shortName (shortNameECMF,"shortName.def",conceptsDir2,conceptsDir1): no_copy,dump;
+concept shortNameECMF (shortNameLegacyECMF,shortNameFilename,conceptsMasterDir,conceptsLocalDirECMF): no_copy;
+concept shortName (shortNameECMF,shortNameFilename,conceptsDir2,conceptsDir1): no_copy,dump;
+alias ls.shortName = shortName;
 
 concept unitsLegacyECMF(defaultName,"units.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,hidden,read_only;
-concept unitsECMF (unitsLegacyECMF,"units.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy, read_only;
-concept units (unitsECMF,"units.def",conceptsDir2,conceptsDir1): no_copy, read_only;
+concept unitsECMF (unitsLegacyECMF,unitsFilename,conceptsMasterDir,conceptsLocalDirECMF): no_copy, read_only;
+concept units (unitsECMF,unitsFilename,conceptsDir2,conceptsDir1): no_copy, read_only;
 
 concept nameLegacyECMF(defaultName,"name.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,hidden;
-concept nameECMF(nameLegacyECMF,"name.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy;
-concept name(nameECMF,"name.def",conceptsDir2,conceptsDir1): no_copy,dump;
+concept nameECMF(nameLegacyECMF,nameFilename,conceptsMasterDir,conceptsLocalDirECMF): no_copy;
+concept name(nameECMF,nameFilename,conceptsDir2,conceptsDir1): no_copy,dump;
+
+# cfName does not have pre and post MTG2 change in definition files
 
 concept cfNameLegacyECMF(defaultShortName,"cfName.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,hidden;
 concept cfNameECMF(cfNameLegacyECMF,"cfName.def",conceptsMasterDir,conceptsLocalDirECMF) : no_copy;
@@ -40,4 +62,3 @@ concept cfVarName (defaultCfVarName, "cfVarName.def", conceptsDir2, conceptsDir1
 
 template_nofail names "grib2/products_[productionStatusOfProcessedData].def";
 
-meta ifsParam ifs_param(paramId,type);

@@ -27,6 +27,7 @@ list(APPEND test_c_bins
     grib_set_large_message_fail
     unit_tests
     bufr_keys_iter
+    bufr_keys_iter_header
     grib_keys_iter
     grib_keys_iter_skip
     grib_geo_iter
@@ -41,7 +42,7 @@ list(APPEND test_c_bins
     grib_set_force
     grib_run_length_packing
     grib_partial_message
-    grib_ecc-386
+    grib_codedValues_as_bytes
     grib_ecc-1467
     grib_ecc-1431
     grib_ecc-1433
@@ -121,6 +122,7 @@ if( HAVE_BUILD_TOOLS )
         grib2_probability
         grib_suppressed
         grib_destine_mars_keys
+        grib_destine_test_mars_keys
         grib_2nd_order_numValues
         grib_ecc-136
         grib_ecc-530
@@ -151,6 +153,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1708
         grib_ecc-1766
         grib_ecc-1829
+        grib_ecc-2140
         bufr_ecc-1028
         bufr_ecc-1195
         bufr_ecc-1259
@@ -163,6 +166,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-359
         bufr_ecc-517
         bufr_ecc-2011
+        bufr_ecc-2153
         grib_efas
         grib_sh_imag
         grib_spectral
@@ -174,11 +178,18 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_polar_stereographic
         grib_grid_healpix
         grib_g1day_of_the_year_date
+        grib_paramid_chemid_split
+        grib_cmp_paramtype
+        grib_timeSpanConcept
+        grib_cmp_timeSpan
+        grib_stattype
     )
 
     # These tests require data downloads
     # and/or take much longer
     list(APPEND tests_extra
+        error_codes
+        grib_datasetForLocal
         grib_isGridded_isSpectral
         grib_data_quality_checks
         grib_check_message_validity
@@ -190,8 +201,11 @@ if( HAVE_BUILD_TOOLS )
         grib_bpv_limit
         grib_complex
         grib_double_cmp
+        grib_paramtypeConcept
         grib_element
         grib_change_packing
+        grib_complex_spatial_differencing
+        grib_codedValues_as_bytes
         grib_run_length_packing
         grib_grid_space_view
         grib_partial_message
@@ -201,7 +215,6 @@ if( HAVE_BUILD_TOOLS )
         grib_unpack_subarray
         grib_count
         grib_clone_headers_only
-        grib_ifsParam
         filter_dump_content
         wmo_read_bufr_from_file
         wmo_read_gts_from_file
@@ -236,6 +249,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ls_json
         bufr_change_edition
         bufr_keys_iter
+        bufr_keys_iter_header
         grib_keys_iter
         grib_keys_iter_skip
         grib_geo_iter
@@ -247,6 +261,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_wmo_tables
         bufr_extract_headers
         extract_offsets
+        bufr_operator_203
         bufr_ecc-147
         bufr_ecc-389
         bufr_ecc-673
@@ -255,7 +270,6 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-288
         bufr_ecc-313
         bufr_ecc-616
-        bufr_ecc-680
         bufr_ecc-686
         bufr_ecc-690
         bufr_ecc-379
@@ -274,12 +288,14 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-1938
         bufr_ecc-2030
         bufr_ecc-2037
+        bufr_ecc-2100
         grib_488
         grib_ecc-490
         grib_ecc-756
         grib_ecc-806
         grib_ecc-873
         grib_ecc-600
+        grib_ecc-813
         grib_ecc-923
         grib_ecc-979
         grib_ecc-984
@@ -297,7 +313,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1907
         grib_ecc-1941
         grib_ecc-1942
-        grib_ecc-2002
+        grib_ecc-1992
         grib_ecc-2005
         grib_ecc-2006
         grib_ecc-2013
@@ -306,6 +322,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2045
         grib_ecc-2050
         grib_ecc-2052
+        grib_ecc-2137
         grib_modelName
         grib_sub_hourly
         grib_set_bytes
@@ -325,11 +342,6 @@ if( HAVE_BUILD_TOOLS )
         hdf5
         taf
         pseudo_diag
-        metar_ls
-        metar_filter
-        metar_get
-        metar_dump
-        metar_compare
         bufr_set
         grib_ieee
         grib1_gds_not_present
@@ -403,6 +415,9 @@ if( HAVE_BUILD_TOOLS )
     if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra grib_ecc-1431)
         list(APPEND tests_extra grib_ecc-1433)
+    endif()
+    if( ECCODES_INSTALL_EXTRA_TOOLS AND ENABLE_EXTRA_TESTS )
+        list(APPEND tests_extra metar_ls metar_filter metar_get metar_dump metar_compare)
     endif()
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra bufr_dump_encode_fortran)
@@ -586,4 +601,14 @@ else()
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh )
     endforeach()
 
+endif()
+
+
+if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
+    foreach( test
+            grib_from_gridspec )
+        ecbuild_add_test( TARGET  eccodes_t_${test}
+                          SOURCES ${test}.cc
+                          LIBS    eccodes eckit_geo )
+    endforeach()
 endif()

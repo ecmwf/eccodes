@@ -20,7 +20,7 @@ void G2Aerosol::init(const long l, grib_arguments* c)
 {
     Unsigned::init(l, c);
     grib_handle* hand = get_enclosing_handle();
-    int n             = 0;
+    int n = 0;
 
     productDefinitionTemplateNumber_ = c->get_name(hand, n++);
     stepType_                        = c->get_name(hand, n++);
@@ -53,7 +53,7 @@ int G2Aerosol::pack_long(const long* val, size_t* len)
     // int aerosol = *val;
     int isInstant = 0;
     // long derivedForecast=-1;
-    int ret = 0;
+    int err = 0;
 
     if (grib_get_long(hand, productDefinitionTemplateNumber_, &productDefinitionTemplateNumber) != GRIB_SUCCESS)
         return GRIB_SUCCESS;
@@ -62,10 +62,9 @@ int G2Aerosol::pack_long(const long* val, size_t* len)
      grib_get_long(hand, type_ ,&type);
      grib_get_long(hand, stream_ ,&stream);
      */
-    ret = grib_get_string(hand, stepType_, stepType, &slen);
-    ECCODES_ASSERT(ret == GRIB_SUCCESS);
+    err = grib_get_string(hand, stepType_, stepType, &slen);
+    if (err) return err;
 
-    // eps = grib2_is_PDTN_EPS(productDefinitionTemplateNumber);
     eps = grib_is_defined(hand, "perturbationNumber");
 
     if (!strcmp(stepType, "instant"))
@@ -106,13 +105,13 @@ int G2Aerosol::pack_long(const long* val, size_t* len)
         // if (derivedForecast>=0) grib_set_long(hand, derivedForecast_ ,derivedForecast);
     }
 
-    return 0;
+    return GRIB_SUCCESS;
 }
 
 int G2Aerosol::value_count(long* count)
 {
     *count = 1;
-    return 0;
+    return GRIB_SUCCESS;
 }
 
 }  // namespace eccodes::accessor

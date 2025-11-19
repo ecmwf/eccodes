@@ -10,8 +10,6 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
-
 # ECC-1691: Destination Earth ClimateDT metadata support
 
 label="grib_destine_mars_keys_test"

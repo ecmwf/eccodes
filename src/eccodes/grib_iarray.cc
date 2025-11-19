@@ -58,25 +58,25 @@ grib_iarray* grib_iarray_new(size_t size, size_t incsize)
     return v;
 }
 
-long grib_iarray_pop(grib_iarray* a)
-{
-    a->n -= 1;
-    return a->v[a->n];
-}
+// long grib_iarray_pop(grib_iarray* a)
+// {
+//     a->n -= 1;
+//     return a->v[a->n];
+// }
 
-long grib_iarray_pop_front(grib_iarray* a)
-{
-    long v = a->v[0];
-    /* size_t i=0; */
-    if (a->n == 0)
-        ECCODES_ASSERT(0);
-    a->n--;
-    a->v++;
-    a->number_of_pop_front++;
-    /* for (i=0;i<a->n;i++) a->v[i]=a->v[i+1]; */
+// long grib_iarray_pop_front(grib_iarray* a)
+// {
+//     long v = a->v[0];
+//     /* size_t i=0; */
+//     if (a->n == 0)
+//         ECCODES_ASSERT(0);
+//     a->n--;
+//     a->v++;
+//     a->number_of_pop_front++;
+//     /* for (i=0;i<a->n;i++) a->v[i]=a->v[i+1]; */
 
-    return v;
-}
+//     return v;
+// }
 
 static grib_iarray* grib_iarray_resize_to(grib_iarray* v, size_t newsize)
 {

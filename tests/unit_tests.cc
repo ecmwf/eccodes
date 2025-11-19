@@ -10,6 +10,10 @@
 
 #include "eccodes.h"
 #include "action/Concept.h"
+#include "step.h"
+#include "ExceptionHandler.h"
+
+#include <iostream>
 
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 
@@ -58,6 +62,14 @@ static void test_get_git_sha1()
     const char* sha1 = codes_get_git_sha1();
     ECCODES_ASSERT(sha1 != NULL);
     printf("Git SHA1 = %s\n", sha1);
+}
+
+static void test_get_git_branch()
+{
+    printf("Running %s ...\n", __func__);
+    const char* gbr = codes_get_git_branch();
+    ECCODES_ASSERT(gbr != NULL);
+    printf("Git branch = %s\n", gbr);
 }
 
 static void test_get_build_date()
@@ -265,6 +277,7 @@ static void my_logging_proc(const grib_context* c, int level, const char* mesg)
 }
 static void test_logging_proc()
 {
+    printf("Running %s ...\n", __func__);
     grib_context* context = grib_context_get_default();
     ECCODES_ASSERT(logging_caught == 0);
 
@@ -280,11 +293,26 @@ static void test_logging_proc()
     ECCODES_ASSERT(logging_caught == 0);
 }
 
+static void test_logging_file()
+{
+    printf("Running %s ...\n", __func__);
+    grib_context* context = grib_context_get_default();
+    grib_context_log(context, GRIB_LOG_ERROR, "test_logging_file: On stderr I hope");
+    FILE* fp = fopen("/dev/null", "w");
+    if (fp) {
+        grib_context_set_logging_file(context, fp);
+        grib_context_log(context, GRIB_LOG_ERROR, "test_logging_file: sent to /dev/null");
+    }
+    grib_context_set_logging_file(context, stderr); // restore
+    grib_context_log(context, GRIB_LOG_ERROR, "test_logging_file: Can you see me now?");
+}
+
 static void my_print_proc(const grib_context* c, void* descriptor, const char* mesg)
 {
 }
 static void test_print_proc()
 {
+    printf("Running %s ...\n", __func__);
     grib_context* context = grib_context_get_default();
     grib_context_set_print_proc(context, my_print_proc);
     grib_context_set_print_proc(context, NULL);
@@ -969,7 +997,38 @@ static void test_expressions()
     ECCODES_ASSERT(eIsInList);
     cname = eIsInList->class_name();
     ECCODES_ASSERT( cname && strlen(cname) > 0 );
+    printf("\n");
+}
 
+static void test_step_units()
+{
+#ifndef ECCODES_ON_WINDOWS
+    printf("Running %s ...\n", __func__);
+    const auto supported_units = eccodes::Unit::list_supported_units();
+    std::cout << "\tSupported units are: ";
+    int count = 0;
+    for (auto& u : supported_units) {
+        std::cout << eccodes::Unit{ u }.value<std::string>() + ",";
+        ++count;
+    }
+    std::cout << std::endl;
+    ECCODES_ASSERT(count == 14);
+#endif
+}
+
+static int test_stl_exceptions_()
+{
+    throw std::runtime_error("Calm down...just testing");
+    return -1;
+}
+static void test_stl_exceptions()
+{
+    printf("Running %s ...\n", __func__);
+
+    auto result = eccodes::handleExceptions(test_stl_exceptions_);
+    ECCODES_ASSERT(!result);
+    int e = eccodes::getErrorCode(result);
+    ECCODES_ASSERT(e == GRIB_RUNTIME_ERROR);
 }
 
 int main(int argc, char** argv)
@@ -979,6 +1038,7 @@ int main(int argc, char** argv)
     codes_print_api_version(stdout);
     printf("\n");
 
+    test_step_units();
     test_grib_get_reduced_row_legacy();
 
     test_codes_context_set_debug();
@@ -996,11 +1056,13 @@ int main(int argc, char** argv)
     test_dates();
     test_time_conversions();
     test_logging_proc();
+    test_logging_file();
     test_print_proc();
     test_grib_binary_search();
     test_parse_keyval_string();
 
     test_get_git_sha1();
+    test_get_git_branch();
     test_get_package_name();
     test_get_build_date();
     test_gribex_mode();
@@ -1046,6 +1108,8 @@ int main(int argc, char** argv)
     test_codes_get_features();
     test_filepool();
     test_expressions();
+
+    test_stl_exceptions();
 
     printf("\n\nProgram %s finished\n", argv[0]);
     return 0;

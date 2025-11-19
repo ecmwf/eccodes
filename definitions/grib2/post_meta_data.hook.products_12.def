@@ -12,3 +12,6 @@ unalias mars.domain;
 if ( defined(dataset) && dataset isnot "climate-dt" ) {
     alias mars.step=stepRange;
 }
+
+# ECC-1903: MTG2 switch, for now in DestinE we do not want the MARS timespan key
+unalias mars.timespan;

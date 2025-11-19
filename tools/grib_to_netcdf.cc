@@ -90,15 +90,13 @@ void usage_and_exit(void)
 
 static bool eq_string(const char* l, const char* r)
 {
-    if (l && r)
-        return strcmp(l, r) == 0;
+    if (l && r) return strcmp(l, r) == 0;
     return false;
 }
 
 static bool eq_integer(const char* l, const char* r)
 {
-    if (l && r)
-        return atol(l) == atol(r);
+    if (l && r) return atol(l) == atol(r);
     return false;
 }
 
@@ -109,36 +107,31 @@ static bool eq_null(const char* l, const char* r)
 
 static bool eq_coord(const char* l, const char* r)
 {
-    if (l && r)
-        return strcmp(l, r) == 0;
+    if (l && r) return strcmp(l, r) == 0;
     return false;
 }
 
 static bool eq_range(const char* l, const char* r)
 {
-    if (l && r)
-        return strcmp(l, r) == 0;
+    if (l && r) return strcmp(l, r) == 0;
     return false;
 }
 
 static bool eq_date(const char* l, const char* r)
 {
-    if (l && r)
-        return strcmp(l, r) == 0;
+    if (l && r) return strcmp(l, r) == 0;
     return false;
 }
 
 static bool eq_param(const char* l, const char* r)
 {
-    if (l && r)
-        return strcmp(l, r) == 0;
+    if (l && r) return strcmp(l, r) == 0;
     return false;
 }
 
 static bool eq_time(const char* l, const char* r)
 {
-    if (l && r)
-        return strcmp(l, r) == 0;
+    if (l && r) return strcmp(l, r) == 0;
     return false;
 }
 
@@ -3239,28 +3232,17 @@ static size_t string_to_unique_number(const char* axis, const char* str)
     size_t result = 0;
     if (strcmp(axis, "type") == 0) {
         /* TODO: not ideal but capture the most common MARS types */
-        if (strcmp(str, "an") == 0)
-            return 2;
-        else if (strcmp(str, "fc") == 0)
-            return 9;
-        else if (strcmp(str, "cf") == 0)
-            return 10;
-        else if (strcmp(str, "pf") == 0)
-            return 11;
-        else if (strcmp(str, "em") == 0)
-            return 17;
-        else if (strcmp(str, "es") == 0)
-            return 18;
-        else if (strcmp(str, "ep") == 0)
-            return 30;
-        else if (strcmp(str, "4i") == 0)
-            return 33;
-        else if (strcmp(str, "4g") == 0)
-            return 8;
-        else if (strcmp(str, "ia") == 0)
-            return 3;
-        else if (strcmp(str, "efi") == 0)
-            return 27;
+        if      (strcmp(str, "an") == 0) return 2;
+        else if (strcmp(str, "fc") == 0) return 9;
+        else if (strcmp(str, "cf") == 0) return 10;
+        else if (strcmp(str, "pf") == 0) return 11;
+        else if (strcmp(str, "em") == 0) return 17;
+        else if (strcmp(str, "es") == 0) return 18;
+        else if (strcmp(str, "ep") == 0) return 30;
+        else if (strcmp(str, "4i") == 0) return 33;
+        else if (strcmp(str, "4g") == 0) return 8;
+        else if (strcmp(str, "ia") == 0) return 3;
+        else if (strcmp(str, "efi") == 0) return 27;
     }
     /* Fallback general case: Use hashing */
     result = 5381;
@@ -3729,30 +3711,18 @@ static void free_subsets(dataset_t* subsets, int count)
 /* Return the number of the given month or -1 if it fails to match */
 static int convert_month(const char* pMonthString)
 {
-    if (strcmp(pMonthString, "jan") == 0)
-        return 1;
-    if (strcmp(pMonthString, "feb") == 0)
-        return 2;
-    if (strcmp(pMonthString, "mar") == 0)
-        return 3;
-    if (strcmp(pMonthString, "apr") == 0)
-        return 4;
-    if (strcmp(pMonthString, "may") == 0)
-        return 5;
-    if (strcmp(pMonthString, "jun") == 0)
-        return 6;
-    if (strcmp(pMonthString, "jul") == 0)
-        return 7;
-    if (strcmp(pMonthString, "aug") == 0)
-        return 8;
-    if (strcmp(pMonthString, "sep") == 0)
-        return 9;
-    if (strcmp(pMonthString, "oct") == 0)
-        return 10;
-    if (strcmp(pMonthString, "nov") == 0)
-        return 11;
-    if (strcmp(pMonthString, "dec") == 0)
-        return 12;
+    if (strcmp(pMonthString, "jan") == 0) return 1;
+    if (strcmp(pMonthString, "feb") == 0) return 2;
+    if (strcmp(pMonthString, "mar") == 0) return 3;
+    if (strcmp(pMonthString, "apr") == 0) return 4;
+    if (strcmp(pMonthString, "may") == 0) return 5;
+    if (strcmp(pMonthString, "jun") == 0) return 6;
+    if (strcmp(pMonthString, "jul") == 0) return 7;
+    if (strcmp(pMonthString, "aug") == 0) return 8;
+    if (strcmp(pMonthString, "sep") == 0) return 9;
+    if (strcmp(pMonthString, "oct") == 0) return 10;
+    if (strcmp(pMonthString, "nov") == 0) return 11;
+    if (strcmp(pMonthString, "dec") == 0) return 12;
     return -1; /*Failed*/
 }
 

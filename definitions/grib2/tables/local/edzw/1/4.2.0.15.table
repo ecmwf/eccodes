@@ -15,3 +15,4 @@
 225 225 NowCastMIX-AutoWARN (Gewitter-Warnkeulen mit variablen L??ngen) (numeric)
 226 226 NowCastMIX-Aviation (Starkregen, Radolan-Gebiet) (numeric)
 227 227 NowCastMIX-AutoWARN (Schneefallgrenze) (m)
+228 228 NowCastMIX-Aviation-XL (Konvektiver Status, EuCOM-XL-Gebiet)

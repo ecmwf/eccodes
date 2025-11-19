@@ -1,0 +1,11 @@
+0 0 Total cloud amount less than 1/8
+1 1 Total cloud amount at least 1/8, with either 1/8 to 4/8 above or 1/8 to 4/8 below, or combinations thereof
+2 2 Cloud amount more than 4/8 above and 0 to 4/8 below
+3 3 Cloud amount 0 to 4/8 above and more than 4/8 below
+4 4 Cloud amount more than 4/8 above and more than 4/8 below
+5 5 Chaotic sky, many undefined layers
+6 6 In and out of clouds, Instrument Meteorological Conditions 25 percent of the time
+7 7 In and out of clouds, Instrument Meteorological Conditions 50 percent of the time
+8 8 In and out of clouds, Instrument Meteorological Conditions 75 percent of the time
+9 9 In clouds all the time, continuous Instrument Meteorological Conditions
+15 15 Missing value

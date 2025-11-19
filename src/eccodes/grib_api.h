@@ -447,11 +447,8 @@ struct grib_string_list
     grib_string_list* next;
 };
 
+/* The 'what' argument can be a bitwise OR of GRIB_SECTION_GRID, GRIB_SECTION_PRODUCT... etc */
 grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err);
-
-/* These 2 functions are deprecated and will later be removed */
-grib_string_list* grib_util_get_param_id(const char* mars_param) ECCODES_DEPRECATED;
-grib_string_list* grib_util_get_mars_param(const char* param_id) ECCODES_DEPRECATED;
 
 /**
  *  Create a handle from a user message in memory. The message will not be freed at the end.
@@ -1175,6 +1172,7 @@ void grib_context_set_samples_path(grib_context* c, const char* path);
 
 void grib_context_set_debug(grib_context* c, int mode);
 void grib_context_set_data_quality_checks(grib_context* c, int val);
+char* grib_context_full_defs_path(grib_context* c, const char* basename);
 
 /**
  *  Sets the context printing procedure used for user interaction
@@ -1191,6 +1189,7 @@ void grib_context_set_print_proc(grib_context* c, grib_print_proc printp);
  * @param logp         : the logging procedure to be set @see grib_log_proc
  */
 void grib_context_set_logging_proc(grib_context* c, grib_log_proc logp);
+void grib_context_set_logging_file(grib_context* c, FILE*);
 
 /**
  *  Turn on support for multi-fields in single GRIB messages
@@ -1740,5 +1739,7 @@ Error codes returned by the grib_api functions.
 #define GRIB_UNABLE_TO_COMPARE_ACCESSORS		-78
 /** Assertion failure */
 #define GRIB_ASSERTION_FAILURE		-79
+/** Runtime error */
+#define GRIB_RUNTIME_ERROR		-80
 /*! @}*/
 #endif

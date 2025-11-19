@@ -22,7 +22,7 @@ namespace eccodes::action
 
 SetDArray::SetDArray(grib_context* context, const char* name, grib_darray* darray)
 {
-    char buf[1024];
+    char buf[1024] = {0,};
     class_name_ = "action_class_set_darray";
     op_         = grib_context_strdup_persistent(context, "section");
     context_    = context;

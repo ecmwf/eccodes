@@ -17,6 +17,7 @@ codetable[1] sourceOfGridDefinition ('3.0.table',masterDir,localDir) ;
 # Number of data points
 unsigned[4] numberOfDataPoints : dump;
 alias numberOfPoints=numberOfDataPoints;
+alias numberOfGridPoints = numberOfDataPoints;
 
 # Number of octets for optional list of numbers defining number of points
 unsigned[1] numberOfOctectsForNumberOfPoints;

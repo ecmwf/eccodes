@@ -990,7 +990,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                 value_tolerance *= tolerance_factor;
                 if (verbose)
                     printf("  (%d values) tolerance=%g\n", (int)len1, value_tolerance);
-                for (i = 0; i < len1; i++) {
+                for (size_t i = 0; i < len1; i++) {
                     if ((diff = compare_double(pv1++, pv2++, &value_tolerance)) != 0) {
                         countdiff++;
                         if (maxdiff < diff) {
@@ -1058,7 +1058,6 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
 
         case GRIB_TYPE_BYTES:
             return 0; // Not in BUFR
-            break;
 
         case GRIB_TYPE_LABEL:
             break;

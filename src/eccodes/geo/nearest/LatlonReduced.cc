@@ -117,19 +117,13 @@ int LatlonReduced::find_global(grib_handle* h,
             return ret;
         lats_count_ = n;
 
-        if (lats_)
-            grib_context_free(h->context, lats_);
-        lats_ = (double*)grib_context_malloc(h->context,
-                                                  lats_count_ * sizeof(double));
-        if (!lats_)
-            return GRIB_OUT_OF_MEMORY;
+        if (lats_) grib_context_free(h->context, lats_);
+        lats_ = (double*)grib_context_malloc(h->context, lats_count_ * sizeof(double));
+        if (!lats_) return GRIB_OUT_OF_MEMORY;
 
-        if (lons_)
-            grib_context_free(h->context, lons_);
-        lons_ = (double*)grib_context_malloc(h->context,
-                                                  values_count_ * sizeof(double));
-        if (!lons_)
-            return GRIB_OUT_OF_MEMORY;
+        if (lons_) grib_context_free(h->context, lons_);
+        lons_ = (double*)grib_context_malloc(h->context, values_count_ * sizeof(double));
+        if (!lons_) return GRIB_OUT_OF_MEMORY;
 
         iter = grib_iterator_new(h, GRIB_GEOITERATOR_NO_VALUES, &ret);
         if (ret) {
@@ -176,13 +170,10 @@ int LatlonReduced::find_global(grib_handle* h,
         }
 
         plsize = lats_count_;
-        if ((ret = grib_get_size(h, pl_, &plsize)) != GRIB_SUCCESS)
-            return ret;
+        if ((ret = grib_get_size(h, pl_, &plsize)) != GRIB_SUCCESS) return ret;
         pla = (long*)grib_context_malloc(h->context, plsize * sizeof(long));
-        if (!pla)
-            return GRIB_OUT_OF_MEMORY;
-        if ((ret = grib_get_long_array(h, pl_, pla, &plsize)) != GRIB_SUCCESS)
-            return ret;
+        if (!pla) return GRIB_OUT_OF_MEMORY;
+        if ((ret = grib_get_long_array(h, pl_, pla, &plsize)) != GRIB_SUCCESS) return ret;
 
         pl = pla;
         while ((*pl) == 0) {

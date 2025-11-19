@@ -68,38 +68,23 @@ ${tools_dir}/grib_set -s offsetValuesBy=0.5                     $input $temp1
 ${tools_dir}/grib_set -s missingValue=1.0E34,offsetValuesBy=0.5 $input $temp2
 ${tools_dir}/grib_compare $temp1 $temp2
 
-# ECC-511
-# GRIB2 message from NCEP/GFS with grid_complex_spatial_differencing and
-# missingValueManagementUsed. No bitmap but missing values embedded in data
-input=${data_dir}/gfs.complex.mvmu.grib2
-stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $input`
-[ "$stats" = "2.81 0.00 0.30" ]
 
-# ECC-1926
-# grid_complex_spatial_differencing with bpv=0
-# Create a data section similar to the attached file dswrf-1.grib2
-cat >$tempFilt<<EOF
-    set packingType='grid_complex_spatial_differencing';
-    set numberOfGroupsOfDataValues=0;
-    set orderOfSpatialDifferencing=2;
-    set primaryMissingValueSubstitute=0;
-    set referenceForGroupWidths = 64;
-    set numberOfBitsUsedForTheGroupWidths = 4;
-    set referenceForGroupLengths = 203736800;
-    set trueLengthOfLastGroup = 8;
-    set numberOfBitsForScaledGroupLengths = 7;
-    set numberOfOctetsExtraDescriptors = 1;
-    write;
-EOF
-input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-${tools_dir}/grib_filter -o $temp1 $tempFilt $input
-grib_check_key_equals $temp1 packingType,isConstant 'grid_complex_spatial_differencing 1'
-stats1=`${tools_dir}/grib_get -M -F%.0f -n statistics $input`
-stats2=`${tools_dir}/grib_get -M -F%.0f -n statistics $temp1`
-[ "$stats1" = "$stats2" ]
-${tools_dir}/grib_set -rs packingType=grid_simple $temp1 $temp2
-grib_check_key_equals $temp2 packingType,isConstant 'grid_simple 1'
-${tools_dir}/grib_compare -b totalLength,section5Length,dataRepresentationTemplateNumber $temp2 $temp1
+# ECC-2083
+# --------
+${tools_dir}/grib_copy -wcount=1 $data_dir/satellite.grib $temp1
+${tools_dir}/grib_set -s scaleValuesBy=1e-7 $temp1 $temp2
+${tools_dir}/grib_ls -n statistics $temp1
+${tools_dir}/grib_ls -n statistics $temp2
+
+skew1=$( ${tools_dir}/grib_get -F%.1f -p skew $temp1 )
+kurt1=$( ${tools_dir}/grib_get -F%.1f -p kurtosis $temp1 )
+[ "$skew1" = "-1.0" ]
+[ "$kurt1" = "0.6" ]
+
+skew2=$( ${tools_dir}/grib_get -F%.1f -p skew $temp2 )
+kurt2=$( ${tools_dir}/grib_get -F%.1f -p kurtosis $temp2 )
+[ "$skew1" = "$skew2" ]
+[ "$kurt1" = "$kurt2" ]
 
 
 # Decode as string - Null op
@@ -108,6 +93,17 @@ cat >$tempFilt<<EOF
 EOF
 input=$data_dir/sample.grib2
 ${tools_dir}/grib_filter $tempFilt $input
+
+
+# Error condition: Empty field
+grib1_sample=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+$tools_dir/grib_set -s packingType=grid_second_order_row_by_row,bitmapPresent=1 $grib1_sample $temp1
+set +e
+$tools_dir/grib_get -p min,max $temp1 2>$tempText
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Cannot compute statistics for field with no values" $tempText
 
 
 # Clean up

@@ -9,7 +9,6 @@
  */
 
 #include "OptimalStepUnits.h"
-#include "step.h"
 #include "step_utilities.h"
 
 eccodes::accessor::OptimalStepUnits _grib_accessor_optimal_step_units;

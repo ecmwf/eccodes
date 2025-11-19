@@ -9,9 +9,12 @@
 #
 
 . ./include.ctest.sh
-#set -x
 
-REDIRECT=/dev/null
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
 sample_g1=$ECCODES_SAMPLES_PATH/reduced_gg_pl_640_grib1.tmpl
 sample_g2=$ECCODES_SAMPLES_PATH/reduced_gg_pl_640_grib2.tmpl
 
@@ -82,7 +85,7 @@ ${tools_dir}/grib_set -s type=em loc1.grib2 eps.grib2
 ${tools_dir}/grib_get -p localDefinitionNumber,productDefinitionTemplateNumber,derivedForecast eps.grib2 >> local.log
 ${tools_dir}/grib_set -s type=es loc1.grib2 eps.grib2
 ${tools_dir}/grib_get -p localDefinitionNumber,productDefinitionTemplateNumber,derivedForecast eps.grib2 >> local.log
-${tools_dir}/grib_set -s stream=enda loc1.grib2 eps.grib2 #2> $REDIRECT
+${tools_dir}/grib_set -s stream=enda loc1.grib2 eps.grib2
 ${tools_dir}/grib_get -p localDefinitionNumber,productDefinitionTemplateNumber eps.grib2 >> local.log
 
 diff local.log local.good.log
@@ -218,13 +221,19 @@ ${tools_dir}/grib_set -s paramId=211123,setLocalDefinition=1,localDefinitionNumb
 grib_check_key_equals $temp productDefinitionTemplateNumber 40
 
 # Also see ECC-1760: is_chemical_srcsink removed so no automaric selection of product definition template
-${tools_dir}/grib_set -s productDefinitionTemplateNumber=76,paramId=456000,setLocalDefinition=1,localDefinitionNumber=36 $sample_g2 $temp
+${tools_dir}/grib_set -s setLocalDefinition=1,class=a5,tablesVersion=34 $sample_g2 $temp.1
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=76,paramId=456000,localDefinitionNumber=36 $temp.1 $temp
 grib_check_key_equals $temp shortName drydep_vel_vol
 
 ${tools_dir}/grib_set -s paramId=215225,setLocalDefinition=1,localDefinitionNumber=36 $sample_g2 $temp
 grib_check_key_equals $temp productDefinitionTemplateNumber 50
 
 ${tools_dir}/grib_set -s paramId=210251,setLocalDefinition=1,localDefinitionNumber=36 $sample_g2 $temp
+
+
+# ECC-2068: GRIB1: Setting local definition 11 issues error messages
+${tools_dir}/grib_set -s localDefinitionNumber=11 $sample_g1 $temp
+grib_check_key_equals $temp "classOfAnalysis,typeOfAnalysis,streamOfAnalysis,originatingCentreOfAnalysis" "1 2 1025 98"
 
 
 # Clean up

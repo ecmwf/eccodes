@@ -20,7 +20,6 @@ tempGrib=temp.$label.grib
 tempRef=temp.$label.ref
 tempOut=temp.$label.txt
 
-sample_grib1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 # Create a GRIB with a stepRange having a hyphen

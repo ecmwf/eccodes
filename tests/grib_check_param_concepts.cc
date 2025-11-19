@@ -15,6 +15,7 @@
 #include "expression/Long.h"
 #include "expression/Functor.h"
 #include "expression/String.h"
+#include "expression/Binop.h"
 #include "grib_api_internal.h"
 
 static int type_of_surface_missing(const char* name, const char* value)
@@ -84,62 +85,73 @@ static int grib_check_param_concepts(const char* key, const char* filename)
         while (concept_condition) {
             char condition_value[512] = {0, };
             eccodes::Expression* expression = concept_condition->expression;
-            const char* condition_name  = concept_condition->name;
-            /* printf("%s\n", concept_value->name); */
-            /* condition_name is discipline, parameterCategory etc. */
-            if (strcmp(expression->class_name(), "long") == 0) {
-                eccodes::expression::Long* el = dynamic_cast<eccodes::expression::Long*>(expression);
-                long value;
-                el->evaluate_long(NULL, &value);
-                snprintf(condition_value, sizeof(condition_value), "%ld", value);
-            }
-            else if (strcmp(expression->class_name(), "functor") == 0) {
-                eccodes::expression::Functor* ef = dynamic_cast<eccodes::expression::Functor*>(expression);
-                snprintf(condition_value, sizeof(condition_value), "%s", ef->name());
-            }
-            else if (strcmp(expression->class_name(), "string") == 0) {
-                eccodes::expression::String* es = dynamic_cast<eccodes::expression::String*>(expression);
-                int error;
-                const char* value = es->evaluate_string(NULL, NULL, NULL, &error);
-                snprintf(condition_value, sizeof(condition_value), "%s", value);
-            }
-            else {
-                fprintf(stderr, "%s %s: Unknown class name: '%s'\n",
-                        key, concept_value->name, expression->class_name());
-                ECCODES_ASSERT(0);
-            }
-            if (!isLocal && strcmp(condition_name, "localTablesVersion") == 0) {
-                fprintf(stderr, "%s %s: Cannot have localTablesVersion key in WMO file %s!\n",
-                        key, concept_value->name, filename);
-                return GRIB_INVALID_KEY_VALUE;
-            }
-            if (strcmp(condition_name, "typeOfStatisticalProcessing") == 0) {
-                long lValue = atol(condition_value);
-                if (lValue > STAT_PROC_MAX_VAL || lValue < 0) {
-                    fprintf(stderr, "Bad value for %s in %s=%s in file %s\n",
-                            condition_name, key, concept_value->name, filename);
+            if(expression) {
+                const char* condition_name  = concept_condition->name;
+                /* printf("%s\n", concept_value->name); */
+                /* condition_name is discipline, parameterCategory etc. */
+                if (strcmp(expression->class_name(), "long") == 0) {
+                    eccodes::expression::Long* el = dynamic_cast<eccodes::expression::Long*>(expression);
+                    ECCODES_ASSERT(el);
+                    long value;
+                    el->evaluate_long(NULL, &value);
+                    snprintf(condition_value, sizeof(condition_value), "%ld", value);
+                }
+                else if (strcmp(expression->class_name(), "functor") == 0) {
+                    eccodes::expression::Functor* ef = dynamic_cast<eccodes::expression::Functor*>(expression);
+                    ECCODES_ASSERT(ef);
+                    snprintf(condition_value, sizeof(condition_value), "%s", ef->name());
+                }
+                else if (strcmp(expression->class_name(), "string") == 0) {
+                    eccodes::expression::String* es = dynamic_cast<eccodes::expression::String*>(expression);
+                    ECCODES_ASSERT(es);
+                    int error;
+                    const char* value = es->evaluate_string(NULL, NULL, NULL, &error);
+                    snprintf(condition_value, sizeof(condition_value), "%s", value);
+                }
+                else if (strcmp(expression->class_name(), "binop") == 0) {
+                    eccodes::expression::Binop* eb = dynamic_cast<eccodes::expression::Binop*>(expression);
+                    ECCODES_ASSERT(eb);
+                    eb->print(0, 0, stdout);
+                    printf("\n");
+                    // Not yet implemented
+                }
+                else {
+                    fprintf(stderr, "%s %s: Unknown class name: '%s'\n",
+                            key, concept_value->name, expression->class_name());
+                    ECCODES_ASSERT(0);
+                }
+                if (!isLocal && strcmp(condition_name, "localTablesVersion") == 0) {
+                    fprintf(stderr, "%s %s: Cannot have localTablesVersion key in WMO file %s!\n",
+                            key, concept_value->name, filename);
                     return GRIB_INVALID_KEY_VALUE;
                 }
+                if (strcmp(condition_name, "typeOfStatisticalProcessing") == 0) {
+                    long lValue = atol(condition_value);
+                    if (lValue > STAT_PROC_MAX_VAL || lValue < 0) {
+                        fprintf(stderr, "Bad value for %s in %s=%s in file %s\n",
+                                condition_name, key, concept_value->name, filename);
+                        return GRIB_INVALID_KEY_VALUE;
+                    }
+                }
+                if (strcmp(condition_name, "typeOfFirstFixedSurface") == 0) {
+                    type1Missing = type_of_surface_missing(condition_name, condition_value);
+                }
+                if (strcmp(condition_name, "typeOfSecondFixedSurface") == 0) {
+                    type2Missing = type_of_surface_missing(condition_name, condition_value);
+                }
+                if (strcmp(condition_name, "scaleFactorOfFirstFixedSurface") == 0) {
+                    scaleFactor1Missing = scale_factor_missing(condition_value);
+                }
+                if (strcmp(condition_name, "scaleFactorOfSecondFixedSurface") == 0) {
+                    scaleFactor2Missing = scale_factor_missing(condition_value);
+                }
+                if (strcmp(condition_name, "scaledValueOfFirstFixedSurface") == 0) {
+                    scaledValue1Missing = (strncmp(condition_value, "missing", 7) == 0);
+                }
+                if (strcmp(condition_name, "scaledValueOfSecondFixedSurface") == 0) {
+                    scaledValue2Missing = (strncmp(condition_value, "missing", 7) == 0);
+                }
             }
-            if (strcmp(condition_name, "typeOfFirstFixedSurface") == 0) {
-                type1Missing = type_of_surface_missing(condition_name, condition_value);
-            }
-            if (strcmp(condition_name, "typeOfSecondFixedSurface") == 0) {
-                type2Missing = type_of_surface_missing(condition_name, condition_value);
-            }
-            if (strcmp(condition_name, "scaleFactorOfFirstFixedSurface") == 0) {
-                scaleFactor1Missing = scale_factor_missing(condition_value);
-            }
-            if (strcmp(condition_name, "scaleFactorOfSecondFixedSurface") == 0) {
-                scaleFactor2Missing = scale_factor_missing(condition_value);
-            }
-            if (strcmp(condition_name, "scaledValueOfFirstFixedSurface") == 0) {
-                scaledValue1Missing = (strncmp(condition_value, "missing", 7) == 0);
-            }
-            if (strcmp(condition_name, "scaledValueOfSecondFixedSurface") == 0) {
-                scaledValue2Missing = (strncmp(condition_value, "missing", 7) == 0);
-            }
-
             concept_condition = concept_condition->next;
         }
         /* Now check the scale factor/value pairs */

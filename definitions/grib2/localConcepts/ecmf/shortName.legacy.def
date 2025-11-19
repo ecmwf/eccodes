@@ -539,6 +539,12 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 149 ;
 	}
+#Injection height (from IS4FIRES)
+'injh' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 60 ;
+	}
 #Particulate matter d <= 1 um
 'pm1' = {
 	 discipline = 192 ;
@@ -556,6 +562,18 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 74 ;
+	}
+#Mean height of maximum injection
+'mami' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 119 ;
+	}
+#Plume top height above surface
+'apt' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 120 ;
 	}
 #UV visible albedo for direct radiation, isotropic component (climatological)
 'aluvpi' = {
@@ -628,6 +646,12 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 197 ;
+	}
+#Plume bottom height above surface
+'apb' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 242 ;
 	}
 #Random pattern 1 for SPP scheme
 'spp1' = {
@@ -1361,6 +1385,18 @@
 	 parameterCategory = 214 ;
 	 parameterNumber = 1 ;
 	}
+#UV biologically effective dose
+'uvbed' = {
+	 discipline = 192 ;
+	 parameterCategory = 214 ;
+	 parameterNumber = 2 ;
+	}
+#UV biologically effective dose clear-sky
+'uvbedcs' = {
+	 discipline = 192 ;
+	 parameterCategory = 214 ;
+	 parameterNumber = 3 ;
+	}
 #Ammonia mass mixing ratio
 'nh3' = {
 	 discipline = 192 ;
@@ -1646,6 +1682,48 @@
 	 discipline = 192 ;
 	 parameterCategory = 130 ;
 	 parameterNumber = 232 ;
+	}
+#Total precipitation less than 0.1 mm
+'tpl01' = {
+	 discipline = 192 ;
+	 parameterCategory = 131 ;
+	 parameterNumber = 64 ;
+	}
+#Total precipitation rate less than 1 mm/day
+'tprl1' = {
+	 discipline = 192 ;
+	 parameterCategory = 131 ;
+	 parameterNumber = 65 ;
+	}
+#Total precipitation rate of at least 3 mm/day
+'tprg3' = {
+	 discipline = 192 ;
+	 parameterCategory = 131 ;
+	 parameterNumber = 66 ;
+	}
+#Total precipitation rate of at least 5 mm/day
+'tprg5' = {
+	 discipline = 192 ;
+	 parameterCategory = 131 ;
+	 parameterNumber = 67 ;
+	}
+#10 metre Wind speed of at least 10 m/s
+'10spg10' = {
+	 discipline = 192 ;
+	 parameterCategory = 131 ;
+	 parameterNumber = 68 ;
+	}
+#10 metre Wind speed of at least 15 m/s
+'10spg15' = {
+	 discipline = 192 ;
+	 parameterCategory = 131 ;
+	 parameterNumber = 69 ;
+	}
+#2 metre temperature less than 273.15 K
+'2tl273' = {
+	 discipline = 192 ;
+	 parameterCategory = 131 ;
+	 parameterNumber = 73 ;
 	}
 #Period corresponding to maximum individual wave height
 'tmax' = {
@@ -2588,4 +2666,40 @@
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 247 ;
+}
+#Temperature difference
+'tdiff' = {
+ discipline = 192 ;
+ parameterCategory = 200 ;
+ parameterNumber = 130 ;
+}
+#Specific humidity difference
+'qdiff' = {
+ discipline = 192 ;
+ parameterCategory = 200 ;
+ parameterNumber = 133 ;
+}
+#Vorticity (relative) difference
+'vodiff' = {
+ discipline = 192 ;
+ parameterCategory = 200 ;
+ parameterNumber = 138 ;
+}
+#Logarithm of surface pressure difference
+'lnspdiff' = {
+ discipline = 192 ;
+ parameterCategory = 200 ;
+ parameterNumber = 152 ;
+}
+#Divergence difference
+'ddiff' = {
+ discipline = 192 ;
+ parameterCategory = 200 ;
+ parameterNumber = 155 ;
+}
+#Ozone mass mixing ratio difference
+'o3diff' = {
+ discipline = 192 ;
+ parameterCategory = 200 ;
+ parameterNumber = 203 ;
 }

@@ -27,8 +27,6 @@ constant wrongPadding=0 : hidden;
 unsigned[1] table2Version : edition_specific,dump;
 alias gribTablesVersionNo=table2Version;
 
-#assert(section1Length > 5);
-
 # Identification of originating/generating centre
 codetable[1] centre 'common/c-1.table' : dump,string_type;
 alias identificationOfOriginatingGeneratingCentre=centre;
@@ -298,8 +296,6 @@ concept ls.shortName (shortNameECMF,"shortName.def",conceptsDir2,conceptsDir1) :
 meta defaultCfVarName cf_var_name(shortName) : hidden, read_only;
 concept cfVarNameECMF(defaultCfVarName,"cfVarName.def",conceptsMasterDir,conceptsLocalDirECMF) : no_copy,read_only;
 concept cfVarName(cfVarNameECMF,"cfVarName.def",conceptsDir2,conceptsDir1) : dump,no_copy,read_only;
-
-meta ifsParam ifs_param(paramId,type);
 
 alias parameter.paramId=paramId;
 alias parameter.shortName=shortName;

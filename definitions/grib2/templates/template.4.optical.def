@@ -17,3 +17,12 @@ alias secondWavelengthInMetres = secondWavelength;
 constant billion = 1000000000 : hidden;
 meta firstWavelengthInNanometres  multdouble(firstWavelength, billion) : read_only;
 meta secondWavelengthInNanometres multdouble(secondWavelength, billion) : read_only;
+
+# MARS include
+# mars.wavelength is aliased for MTG2Switch > 0
+# this was done originally here, but the MTG2SwitchConcept uses the generatingProcessIdenfiert
+# to implement an exception for 50r1
+# as template.4.optical.def is evaluated before template.4.generating_process.def"
+# the aliasing has to happen later, this is why in the optical templates the following is included:
+#
+# include "mars/mars.wavelength.def"

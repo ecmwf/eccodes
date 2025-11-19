@@ -156,17 +156,13 @@ int Reduced::find_global(grib_handle* h,
             return err;
         lats_count_ = n;
 
-        if (lats_)
-            grib_context_free(h->context, lats_);
+        if (lats_) grib_context_free(h->context, lats_);
         lats_ = (double*)grib_context_malloc(h->context, lats_count_ * sizeof(double));
-        if (!lats_)
-            return GRIB_OUT_OF_MEMORY;
+        if (!lats_) return GRIB_OUT_OF_MEMORY;
 
-        if (lons_)
-            grib_context_free(h->context, lons_);
+        if (lons_) grib_context_free(h->context, lons_);
         lons_ = (double*)grib_context_malloc(h->context, values_count_ * sizeof(double));
-        if (!lons_)
-            return GRIB_OUT_OF_MEMORY;
+        if (!lons_) return GRIB_OUT_OF_MEMORY;
 
         iter = grib_iterator_new(h, GRIB_GEOITERATOR_NO_VALUES, &err);
         if (err != GRIB_SUCCESS) {
@@ -232,13 +228,10 @@ int Reduced::find_global(grib_handle* h,
         grib_binary_search(lats_, ilat - 1, inlat, &(j_[0]), &(j_[1]));
 
         plsize = lats_count_;
-        if ((err = grib_get_size(h, pl_, &plsize)) != GRIB_SUCCESS)
-            return err;
+        if ((err = grib_get_size(h, pl_, &plsize)) != GRIB_SUCCESS) return err;
         pla = (long*)grib_context_malloc(h->context, plsize * sizeof(long));
-        if (!pla)
-            return GRIB_OUT_OF_MEMORY;
-        if ((err = grib_get_long_array(h, pl_, pla, &plsize)) != GRIB_SUCCESS)
-            return err;
+        if (!pla) return GRIB_OUT_OF_MEMORY;
+        if ((err = grib_get_long_array(h, pl_, pla, &plsize)) != GRIB_SUCCESS) return err;
 
         pl = pla;
         while ((*pl) == 0) {
@@ -254,15 +247,11 @@ int Reduced::find_global(grib_handle* h,
         else {
             nlon = 0;
             for (jj = 0; jj < j_[0]; jj++) {
-                row_count  = 0;
-                ilon_first = 0;
-                ilon_last  = 0;
+                row_count  = ilon_first = ilon_last = 0;
                 get_reduced_row_func(pl[jj], lon_first_, lon_last_, &row_count, &ilon_first, &ilon_last);
                 nlon += row_count;
             }
-            row_count  = 0;
-            ilon_first = 0;
-            ilon_last  = 0;
+            row_count  = ilon_first = ilon_last = 0;
             get_reduced_row_func(pl[j_[0]], lon_first_, lon_last_, &row_count, &ilon_first, &ilon_last);
             nplm1 = row_count - 1;
         }
@@ -299,9 +288,7 @@ int Reduced::find_global(grib_handle* h,
 
         if (!nearest_lons_found) {
             if (!global_) {
-                row_count  = 0;
-                ilon_first = 0;
-                ilon_last  = 0;
+                row_count  = ilon_first = ilon_last  = 0;
                 get_reduced_row_func(pl[j_[0]], lon_first_, lon_last_, &row_count, &ilon_first, &ilon_last);
             }
             else {
@@ -322,15 +309,11 @@ int Reduced::find_global(grib_handle* h,
         }
         else {
             for (jj = 0; jj < j_[1]; jj++) {
-                row_count  = 0;
-                ilon_first = 0;
-                ilon_last  = 0;
+                row_count  = ilon_first = ilon_last = 0;
                 get_reduced_row_func(pl[jj], lon_first_, lon_last_, &row_count, &ilon_first, &ilon_last);
                 nlon += row_count;
             }
-            row_count  = 0;
-            ilon_first = 0;
-            ilon_last  = 0;
+            row_count  = ilon_first = ilon_last = 0;
             get_reduced_row_func(pl[j_[1]], lon_first_, lon_last_, &nplm1, &ilon_first, &ilon_last);
             nplm1--;
         }
@@ -364,9 +347,7 @@ int Reduced::find_global(grib_handle* h,
 
         if (!nearest_lons_found) {
             if (!global_) {
-                row_count  = 0;
-                ilon_first = 0;
-                ilon_last  = 0;
+                row_count  = ilon_first = ilon_last  = 0;
                 get_reduced_row_func(pl[j_[1]], lon_first_, lon_last_, &row_count, &ilon_first, &ilon_last);
             }
             else {

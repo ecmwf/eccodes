@@ -1015,10 +1015,8 @@ static int get_initial_element_of_array(grib_handle* h, const char* keyName, siz
             break;
         case GRIB_TYPE_BYTES:
             uval = (unsigned char*)grib_context_malloc(c, num_vals * sizeof(unsigned char));
-            if (!uval)
-                return GRIB_OUT_OF_MEMORY;
-            if ((err = grib_get_bytes(h, keyName, uval, &len)) != GRIB_SUCCESS)
-                return err;
+            if (!uval) return GRIB_OUT_OF_MEMORY;
+            if ((err = grib_get_bytes(h, keyName, uval, &len)) != GRIB_SUCCESS) return err;
             snprintf(value, 32, "%d...", (short)uval[0]);
             free(uval);
             break;
@@ -1086,7 +1084,7 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
             snprintf(value_str, 32, "not_found");
         } else {
             fprintf(dump_file, "ERROR: Failed to get value for key '%s' (%s)\n", key_name, grib_get_error_message(ret));
-            if (ret == GRIB_ARRAY_TOO_SMALL)
+            if (ret == GRIB_ARRAY_TOO_SMALL || ret == GRIB_BUFFER_TOO_SMALL)
                 fprintf(dump_file, "\tHint: Tool %s cannot print keys of array type. Use grib_filter.\n", tool_name);
             exit(1);
         }
@@ -1306,8 +1304,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
             err = grib_get_size(h, "values", &size);
             if (err) {
                 snprintf(value, 32, "unknown");
-                if (!options->fail)
-                    exit(err);
+                if (!options->fail) exit(err);
                 return;
             }
             values = (double*)grib_context_malloc_clear(h->context, size * sizeof(double));

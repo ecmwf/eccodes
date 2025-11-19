@@ -780,7 +780,7 @@ void BufrEncodeC::header(const grib_handle* h) const
         grib_print_api_version(out_);
         fprintf(out_, " */\n\n");
         fprintf(out_, "#include \"eccodes.h\"\n");
-        fprintf(out_, "int main()\n");
+        fprintf(out_, "int main(void)\n");
         fprintf(out_, "{\n");
         fprintf(out_, "  size_t         size=0;\n");
         fprintf(out_, "  const void*    buffer = NULL;\n");

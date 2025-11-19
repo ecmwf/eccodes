@@ -33,6 +33,17 @@ static bool string_contains_case(const char* haystack, const char* needle, bool 
     return copy_haystack.find(copy_needle) != std::string::npos;
 }
 
+static int check_element_index(const char* func, const char* array_name, long index, size_t size)
+{
+    const grib_context* c = grib_context_get_default();
+    if (index < 0 || (size_t)index >= size) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Invalid element index %ld for array '%s'. Value must be between 0 and %zu",
+                         func, index, array_name, size - 1);
+        return GRIB_INVALID_ARGUMENT;
+    }
+    return GRIB_SUCCESS;
+}
+
 int Functor::evaluate_long(grib_handle* h, long* lres) const
 {
     // if (STR_EQUAL(name_, "lookup")) {
@@ -42,6 +53,66 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
     if (STR_EQUAL(name_, "new")) {
         *lres = h->loader != NULL;
         return GRIB_SUCCESS;
+    }
+
+    if (STR_EQUAL(name_, "defined")) {
+        const char* keyName = args_ ? args_->get_name(h, 0) : nullptr;
+        if (keyName) {
+            const grib_accessor* a = grib_find_accessor(h, keyName);
+            *lres = a != NULL ? 1 : 0;
+            return GRIB_SUCCESS;
+        }
+        *lres = 0;
+        return GRIB_SUCCESS;
+    }
+
+    if (STR_EQUAL(name_, "changed")) {
+        *lres = 1;
+        return GRIB_SUCCESS;
+    }
+
+    if (STR_EQUAL(name_, "missing")) {
+        const char* keyName = args_ ? args_->get_name(h, 0) : nullptr;
+        if (keyName) {
+            long val = 0;
+            int err  = 0;
+            if (h->product_kind == PRODUCT_BUFR) {
+                int ismiss = grib_is_missing(h, keyName, &err);
+                if (err) return err;
+                *lres = ismiss;
+                return GRIB_SUCCESS;
+            }
+            err = grib_get_long_internal(h, keyName, &val);
+            if (err) return err;
+            // Note: This does not cope with keys like typeOfSecondFixedSurface
+            // which are codetable entries with values like 255: this value is
+            // not classed as 'missing'!
+            // (See ECC-594)
+            *lres = (val == GRIB_MISSING_LONG);
+            return GRIB_SUCCESS;
+        }
+        else {
+            // No arguments means return the actual integer missing value
+            *lres = GRIB_MISSING_LONG;
+        }
+        return GRIB_SUCCESS;
+    }
+
+    if (STR_EQUAL(name_, "max") || STR_EQUAL(name_, "min")) {
+        // For now, only two arguments are supported
+        const grib_expression* exp1 = args_ ? args_->get_expression(h, 0) : nullptr;
+        const grib_expression* exp2 = args_ ? args_->get_expression(h, 1) : nullptr;
+        if (exp1 && exp2) {
+            long lval1 = 0, lval2 = 0;
+            int ret = exp1->evaluate_long(h, &lval1);
+            if (ret == GRIB_SUCCESS)
+                ret = exp2->evaluate_long(h, &lval2);
+            *lres = lval1;
+            if (STR_EQUAL(name_, "max") && lval2 > lval1) *lres = lval2;
+            if (STR_EQUAL(name_, "min") && lval2 < lval1) *lres = lval2;
+            return ret;
+        }
+        return GRIB_INVALID_ARGUMENT;
     }
 
     if (STR_EQUAL(name_, "abs")) {
@@ -63,6 +134,33 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
             int err = grib_get_size(h, keyName, &size);
             if (err) return err;
             *lres = (long)size;
+            return GRIB_SUCCESS;
+        }
+        return GRIB_INVALID_ARGUMENT;
+    }
+
+    // Note: Only works for integer arrays
+    if (STR_EQUAL(name_, "element")) {
+        const int n = args_ ? args_->get_count() : 0;
+        if (n != 2) {
+            return GRIB_INVALID_ARGUMENT;
+        }
+        const char* keyName = args_->get_name(h, 0);
+        if (keyName) {
+            long index = args_->get_long(h, 1);
+            size_t size = 0;
+            int err = grib_get_size(h, keyName, &size);
+            if (err) return err;
+            long* ar = (long*)grib_context_malloc_clear(h->context, size * sizeof(long));
+            if (!ar) return GRIB_OUT_OF_MEMORY;
+            if ((err = grib_get_long_array_internal(h, keyName, ar, &size)) != GRIB_SUCCESS) return err;
+            // An index of -x means the xth item from the end of the list, so ar[-1] means the last item in ar
+            if (index < 0) {
+                index = (long)size + index;
+            }
+            if ((err = check_element_index(name_, keyName, index, size)) != GRIB_SUCCESS) return err;
+            *lres = ar[index];
+            grib_context_free(h->context, ar);
             return GRIB_SUCCESS;
         }
         return GRIB_INVALID_ARGUMENT;
@@ -97,44 +195,6 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
         }
     }
 
-    if (STR_EQUAL(name_, "missing")) {
-        const char* keyName = args_ ? args_->get_name(h, 0) : nullptr;
-        if (keyName) {
-            long val = 0;
-            int err  = 0;
-            if (h->product_kind == PRODUCT_BUFR) {
-                int ismiss = grib_is_missing(h, keyName, &err);
-                if (err) return err;
-                *lres = ismiss;
-                return GRIB_SUCCESS;
-            }
-            err = grib_get_long_internal(h, keyName, &val);
-            if (err) return err;
-            // Note: This does not cope with keys like typeOfSecondFixedSurface
-            // which are codetable entries with values like 255: this value is
-            // not classed as 'missing'!
-            // (See ECC-594)
-            *lres = (val == GRIB_MISSING_LONG);
-            return GRIB_SUCCESS;
-        }
-        else {
-            // No arguments means return the actual integer missing value
-            *lres = GRIB_MISSING_LONG;
-        }
-        return GRIB_SUCCESS;
-    }
-
-    if (STR_EQUAL(name_, "defined")) {
-        const char* keyName = args_ ? args_->get_name(h, 0) : nullptr;
-        if (keyName) {
-            const grib_accessor* a = grib_find_accessor(h, keyName);
-            *lres = a != NULL ? 1 : 0;
-            return GRIB_SUCCESS;
-        }
-        *lres = 0;
-        return GRIB_SUCCESS;
-    }
-
     if (STR_EQUAL(name_, "environment_variable")) {
         // ECC-1520: This implementation has some limitations:
         // 1. Cannot distinguish between environment variable NOT SET
@@ -152,11 +212,6 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
             }
         }
         *lres = 0;
-        return GRIB_SUCCESS;
-    }
-
-    if (STR_EQUAL(name_, "changed")) {
-        *lres = 1;
         return GRIB_SUCCESS;
     }
 
@@ -270,6 +325,6 @@ int Functor::native_type(grib_handle* h) const
 }  // namespace eccodes::expression
 
 
-grib_expression* new_func_expression(grib_context* c, const char* name, grib_arguments* args) {
+grib_expression* new_functor_expression(grib_context* c, const char* name, grib_arguments* args) {
     return new eccodes::expression::Functor(c, name, args);
 }

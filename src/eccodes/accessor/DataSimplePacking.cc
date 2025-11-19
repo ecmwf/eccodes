@@ -265,7 +265,7 @@ int DataSimplePacking::unpack(T* val, size_t* len)
             }
         }
         //         if (offsetBeforeData == offsetAfterData) {
-        //             /* Crazy case: Constant field with bitsPerValue > 0 */
+        //             // Crazy case: Constant field with bitsPerValue > 0
         //             for (i = 0; i < n_vals; i++)
         //                 val[i] = reference_value;
         //             *len = n_vals;
@@ -406,7 +406,7 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
         }
 
         //         if (offsetBeforeData == offsetAfterData) {
-        //             /* Crazy case: Constant field with bitsPerValue > 0 */
+        //             // Crazy case: Constant field with bitsPerValue > 0
         //             for (i = 0; i < n_vals; i++)
         //                 val[i] = reference_value;
         //             *len = n_vals;

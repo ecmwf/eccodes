@@ -20,11 +20,15 @@ input=$ECCODES_SAMPLES_PATH/reduced_gg_pl_48_grib2.tmpl
 
 # Print the last three entries from the "pl" array
 cat > $tempFilt <<EOF
+    if( element(pl,0) != 20 ) {
+        assert( 0 );
+    }
     meta elemA element(pl, Nj - 3);
     meta elemB element(pl, Nj - 2);
     meta elemC element(pl, Nj - 1);
     meta elemZ element(pl, -1); # another way of getting the last element
     print "elemA=[elemA], elemB=[elemB], elemC=[elemC], elemZ=[elemZ]";
+    set elemZ = 1099; # Set the last element, using a -ve index
 EOF
 ${tools_dir}/grib_filter $tempFilt $input > $tempText
 echo "elemA=36, elemB=25, elemC=20, elemZ=20" > $tempRef

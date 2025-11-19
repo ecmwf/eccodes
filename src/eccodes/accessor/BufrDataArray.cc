@@ -170,34 +170,34 @@ static int check_overridden_reference_values(const grib_context* c, long* refVal
 void BufrDataArray::init(const long v, grib_arguments* params)
 {
     Gen::init(v, params);
-    int n                      = 0;
+    int n = 0;
     const char* dataKeysName   = NULL;
     grib_accessor* dataKeysAcc = NULL;
 
-    unitsName_                             = NULL;
-    canBeMissing_                          = NULL;
-    numberOfSubsets_                       = 0;
-    compressedData_                        = 0;
     bitmapStartElementsDescriptorsIndex_   = 0;
     bitmapCurrentElementsDescriptorsIndex_ = 0;
-    bitmapSize_                            = 0;
-    bitmapStart_                           = 0;
-    bitmapCurrent_                         = 0;
-    dataAccessors_                         = NULL;
-    nInputBitmap_                          = 0;
-    iInputBitmap_                          = 0;
-    inputReplications_                     = NULL;
-    nInputReplications_                    = 0;
-    iInputReplications_                    = 0;
-    inputExtendedReplications_             = NULL;
-    nInputExtendedReplications_            = 0;
-    iInputExtendedReplications_            = 0;
-    inputShortReplications_                = NULL;
-    nInputShortReplications_               = 0;
-    iInputShortReplications_               = 0;
-    iss_list_                              = NULL;
-    tempStrings_                           = NULL;
 
+    unitsName_                  = NULL;
+    canBeMissing_               = NULL;
+    numberOfSubsets_            = 0;
+    compressedData_             = 0;
+    bitmapSize_                 = 0;
+    bitmapStart_                = 0;
+    bitmapCurrent_              = 0;
+    dataAccessors_              = NULL;
+    nInputBitmap_               = 0;
+    iInputBitmap_               = 0;
+    inputReplications_          = NULL;
+    nInputReplications_         = 0;
+    iInputReplications_         = 0;
+    inputExtendedReplications_  = NULL;
+    nInputExtendedReplications_ = 0;
+    iInputExtendedReplications_ = 0;
+    inputShortReplications_     = NULL;
+    nInputShortReplications_    = 0;
+    iInputShortReplications_    = 0;
+    iss_list_                   = NULL;
+    tempStrings_                = NULL;
 
     bufrDataEncodedName_          = params->get_name(get_enclosing_handle(), n++);
     numberOfSubsetsName_          = params->get_name(get_enclosing_handle(), n++);
@@ -229,7 +229,6 @@ void BufrDataArray::init(const long v, grib_arguments* params)
     bitsToEndData_ = get_length() * 8;
     unpackMode_    = CODES_BUFR_UNPACK_STRUCTURE;
     inputBitmap_   = NULL;
-    /* ECCODES_ASSERT(length_ >=0); */
 }
 
 // void clean_string(char* s,int len)
@@ -426,8 +425,7 @@ int BufrDataArray::decode_string_array(grib_context* c, unsigned char* data, lon
 }
 
 grib_darray* BufrDataArray::decode_double_array(grib_context* c, unsigned char* data, long* pos,
-                                                                  bufr_descriptor* bd, int canBeMissing,
-                                                                  int* err)
+                                                bufr_descriptor* bd, int canBeMissing, int* err)
 {
     grib_darray* ret = NULL;
     int j;
@@ -591,7 +589,7 @@ static int descriptor_get_min_max(bufr_descriptor* bd, long width, long referenc
 }
 
 int BufrDataArray::encode_double_array(grib_context* c, grib_buffer* buff, long* pos, bufr_descriptor* bd,
-                                                         grib_darray* dvalues)
+                                       grib_darray* dvalues)
 {
     int err = 0;
     int j, i;
@@ -808,8 +806,7 @@ int BufrDataArray::encode_double_array(grib_context* c, grib_buffer* buff, long*
     return err;
 }
 
-int BufrDataArray::encode_double_value(grib_context* c, grib_buffer* buff, long* pos, bufr_descriptor* bd,
-                                                         double value)
+int BufrDataArray::encode_double_value(grib_context* c, grib_buffer* buff, long* pos, bufr_descriptor* bd, double value)
 {
     size_t lval;
     double maxAllowed, minAllowed;
@@ -870,15 +867,12 @@ static int encode_string_value(grib_context* c, grib_buffer* buff, long* pos, bu
     return err;
 }
 
-char* BufrDataArray::decode_string_value(grib_context* c, unsigned char* data, long* pos, bufr_descriptor* bd,
-                                                           int* err)
+char* BufrDataArray::decode_string_value(grib_context* c, unsigned char* data, long* pos, bufr_descriptor* bd, int* err)
 {
     char* sval = 0;
-    int len;
-
     *err = 0;
 
-    len = bd->width / 8;
+    long len = bd->width / 8;
 
     CHECK_END_DATA_RETURN(c, bd, this, bd->width, NULL);
     sval = (char*)grib_context_malloc_clear(c, len + 1);
@@ -1998,10 +1992,9 @@ static GRIB_INLINE void reset_deeper_qualifiers(
     }
 }
 
-
 static grib_accessor* get_element_from_bitmap(bitmap_s* bitmap)
 {
-    int ret;
+    int ret = GRIB_SUCCESS;
     long bitmapVal = 1;
     size_t len;
 
@@ -2013,7 +2006,7 @@ static grib_accessor* get_element_from_bitmap(bitmap_s* bitmap)
         else {
             return NULL;
         }
-        if (ret != 0)
+        if (ret != GRIB_SUCCESS)
             return NULL;
         bitmap->cursor = bitmap->cursor->next_;
         if (bitmap->referredElement)
@@ -2262,7 +2255,7 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
     int idx;
     grib_context* c    = context_;
     int qualityPresent = 0;
-    bitmap_s bitmap    = {0,};
+    bitmap_s bitmap    = {0,0,0};
     int extraElement         = 0;
     int add_extra_attributes = 1;
 
@@ -2416,7 +2409,7 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
                     depth        = bitmapDepth[bitmapIndex];
                     reset_deeper_qualifiers(significanceQualifierGroup, significanceQualifierDepth,
                                             number_of_qualifiers, depth);
-                    /* TODO: This branch is not reached in our tests! */
+                    /* TODO(masn): This branch is not reached in our tests! */
                     reset_deeper_qualifiers(bitmapGroup, bitmapDepth, MAX_NUMBER_OF_BITMAPS, depth);
                 }
                 else {
@@ -2652,13 +2645,13 @@ static int set_to_missing_if_out_of_range(grib_handle* h)
 int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset, long endSubset)
 {
     int err = 0;
-    long inr, innr, ir, ip;
-    long n[MAX_NESTED_REPLICATIONS] = {0,};
-    long nn[MAX_NESTED_REPLICATIONS] = {0,};
+    long d, innr, ir, dPrev;
+    long nElems[MAX_NESTED_REPLICATIONS] = {0,};
+    long nReps[MAX_NESTED_REPLICATIONS] = {0,};
     long numberOfElementsToRepeat[MAX_NESTED_REPLICATIONS] = {0,};
     long numberOfRepetitions[MAX_NESTED_REPLICATIONS] = {0,};
     long startRepetition[MAX_NESTED_REPLICATIONS] = {0,};
-    long numberOfNestedRepetitions = 0;
+    long depth = 0;
     unsigned char* data            = 0;
     size_t subsetListSize          = 0;
     long* subsetList               = 0;
@@ -2833,10 +2826,10 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
         }
         elementIndex = 0;
 
-        numberOfNestedRepetitions = 0;
+        depth = 0;
 
         for (i = 0; i < numberOfDescriptors; i++) {
-            int op203_definition_phase = 0;
+            bool op203_definition_phase = false;
             if (c->debug) grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data processing: elementNumber=%ld code=%6.6ld", icount++, descriptors[i]->code);
             switch (descriptors[i]->F) {
                 case 0:
@@ -2859,52 +2852,75 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
                     break;
                 case 1:
                     /* Delayed replication */
-                    inr = numberOfNestedRepetitions;
-                    numberOfNestedRepetitions++;
-                    DEBUG_ASSERT(numberOfNestedRepetitions <= MAX_NESTED_REPLICATIONS);
-                    numberOfElementsToRepeat[inr] = descriptors[i]->X;
-                    n[inr]                        = numberOfElementsToRepeat[inr];
+                    d = depth;
+                    depth++;
+                    DEBUG_ASSERT(depth <= MAX_NESTED_REPLICATIONS);
+                    numberOfElementsToRepeat[d] = descriptors[i]->X;  // Y  = number of repetitions
+                    nElems[d]                   = numberOfElementsToRepeat[d];
                     i++;
 
                     data = buffer->data; /* ECC-517 */
-                    err  = codec_replication(c, this, iss, buffer, data, &pos, i, elementIndex, dval, &(numberOfRepetitions[inr]));
+                    err  = codec_replication(c, this, iss, buffer, data, &pos, i, elementIndex, dval, &(numberOfRepetitions[d]));
                     if (err) return err;
 
-                    startRepetition[inr] = i;
-                    nn[inr]              = numberOfRepetitions[inr];
+                    startRepetition[d] = i;
+                    nReps[d]           = numberOfRepetitions[d];
                     if (flag != PROCESS_ENCODE)
                         grib_iarray_push(elementsDescriptorsIndex, i);
                     elementIndex++;
-                    if (numberOfRepetitions[inr] == 0) {
-                        i += numberOfElementsToRepeat[inr];
-                        if (inr > 0) {
-                            n[inr - 1] -= numberOfElementsToRepeat[inr] + 2;
+
+                    if (numberOfRepetitions[d] == 0) {
+                        i += numberOfElementsToRepeat[d];
+
+                        if (d > 0) {
+                            // If it's the last element(s) of the nested repetition(s)
+                            dPrev = d - 1;
+
+                            // ECC-2153: fix handling of empty nested replications
+                            if (dPrev >= 1 && nReps[dPrev] == 1 && nReps[d] == 0 && nReps[0] > 1) {
+                                for (long ii = dPrev; ii >= 0; ii--) {
+                                    if (nReps[ii]) {
+                                        nElems[ii] = numberOfElementsToRepeat[ii];
+                                        nReps[ii]--;
+                                        if (nReps[ii]) {
+                                            i = startRepetition[ii];
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            nElems[dPrev] -= numberOfElementsToRepeat[d] + 2;
                             /* if the empty nested repetition is at the end of the nesting repetition
-                           we need to re-point to the start of the nesting repetition */
-                            ip = inr - 1;
-                            while (ip >= 0 && n[ip] == 0) {
-                                nn[ip]--;
-                                if (nn[ip] <= 0) {
-                                    numberOfNestedRepetitions--;
+                               we need to re-point to the start of the nesting repetition */
+                            while (dPrev >= 0 && nElems[dPrev] == 0) {
+                                nReps[dPrev]--;
+                                if (nReps[dPrev] <= 0) {
+                                    while (nReps[dPrev] <= 0 && dPrev > 0) {
+                                        i += numberOfElementsToRepeat[dPrev] + 2;
+                                        dPrev--;
+                                    }
+                                    depth--;
                                 }
                                 else {
-                                    n[ip] = numberOfElementsToRepeat[ip];
-                                    i     = startRepetition[ip];
+                                    nElems[dPrev] = numberOfElementsToRepeat[dPrev];
+                                    i     = startRepetition[dPrev];
                                 }
-                                ip--;
+                                dPrev--;
                             }
                         }
-                        numberOfNestedRepetitions--;
+                        depth--;
                     }
                     continue;
                 case 2:
                     /* Operator */
                     switch (descriptors[i]->X) {
                         case 3: /* Change reference values */
-                            if (compressedData_ == 1 && flag != PROCESS_DECODE) {
-                                grib_context_log(c, GRIB_LOG_ERROR, "process_elements: operator %d not supported for encoding compressed data", descriptors[i]->X);
-                                return GRIB_INTERNAL_ERROR;
-                            }
+                            // ECC-2136: Why did we not support compressed data? No idea!!
+                            // if (compressedData_ == 1 && flag != PROCESS_DECODE)  {
+                            //     grib_context_log(c, GRIB_LOG_ERROR, "process_elements: operator %d not supported for encoding compressed data", descriptors[i]->X);
+                            //     return GRIB_INTERNAL_ERROR;
+                            // }
                             if (descriptors[i]->Y == 255) {
                                 grib_context_log(c, GRIB_LOG_DEBUG, "Operator 203YYY: Y=255, definition of new reference values is concluded");
                                 change_ref_value_operand_ = 255;
@@ -3141,36 +3157,36 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
             } /* switch F */
 
             /* Delayed repetition check */
-            innr = numberOfNestedRepetitions - 1;
+            innr = depth - 1;
             for (ir = innr; ir >= 0; ir--) {
-                if (nn[ir]) {
-                    if (n[ir] > 1) {
-                        n[ir]--;
+                if (nReps[ir]) {
+                    if (nElems[ir] > 1) {
+                        nElems[ir]--;
                         break;
                     }
                     else {
-                        n[ir] = numberOfElementsToRepeat[ir];
-                        nn[ir]--;
-                        if (nn[ir]) {
+                        nElems[ir] = numberOfElementsToRepeat[ir];
+                        nReps[ir]--;
+                        if (nReps[ir]) {
                             i = startRepetition[ir];
                             break;
                         }
                         else {
                             if (ir > 0) {
-                                n[ir - 1] -= numberOfElementsToRepeat[ir] + 1;
+                                nElems[ir - 1] -= numberOfElementsToRepeat[ir] + 1;
                             }
                             i = startRepetition[ir] + numberOfElementsToRepeat[ir];
-                            numberOfNestedRepetitions--;
+                            depth--;
                         }
                     }
                 }
                 else {
                     if (ir == 0) {
-                        i                         = startRepetition[ir] + numberOfElementsToRepeat[ir] + 1;
-                        numberOfNestedRepetitions = 0;
+                        i = startRepetition[ir] + numberOfElementsToRepeat[ir] + 1;
+                        depth = 0;
                     }
                     else {
-                        numberOfNestedRepetitions--;
+                        depth--;
                     }
                 }
             }

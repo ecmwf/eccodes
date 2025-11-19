@@ -34,8 +34,8 @@ _if (shapeOfTheEarth == 0) {
 }
 _if (shapeOfTheEarth == 1){
   meta radius from_scale_factor_scaled_value(
-                          scaleFactorOfRadiusOfSphericalEarth,
-                          scaledValueOfRadiusOfSphericalEarth);
+    scaleFactorOfRadiusOfSphericalEarth,
+    scaledValueOfRadiusOfSphericalEarth);
   alias radiusOfTheEarth=radius;
   alias radiusInMetres=radius;
   alias earthIsOblate=false;
@@ -53,7 +53,6 @@ _if (shapeOfTheEarth == 8){
   alias radiusInMetres=radius;
   alias earthIsOblate=false;
 }
-
 
 # Oblate spheroid cases
 _if (shapeOfTheEarth == 2){

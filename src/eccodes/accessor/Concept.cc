@@ -49,25 +49,42 @@ void Concept::dump(eccodes::Dumper* dumper)
 // See ECC-1905
 static int grib_get_long_memoize(
     grib_handle* h, const char* key, long* value,
-    std::unordered_map<std::string_view, long>& memo)
+    std::unordered_map<std::string_view, long>& present_keys_map,
+    std::unordered_map<std::string_view, int>& absent_keys_map)
 {
     int err = 0;
-    auto pos = memo.find(key);
-    if (pos == memo.end()) { // not in map so decode & insert
-        err = grib_get_long(h, key, value);
-        if (!err) {
-            memo.insert(std::make_pair(key, *value));
-        }
-    } else {
-        *value = pos->second; // found in map
+
+    // Check keys which are defined (present)
+    auto pos1 = present_keys_map.find(key);
+    if (pos1 != present_keys_map.end()) {
+        *value = pos1->second;  // Found. Copy its value
+        return GRIB_SUCCESS;
     }
+
+    // Check keys which are not defined (absent)
+    auto pos2 = absent_keys_map.find(key);
+    if (pos2 != absent_keys_map.end()) {  // Found
+        err = pos2->second; // Return its error code
+        return err;
+    }
+
+    // Not found in either map so decode and store
+    err = grib_get_long(h, key, value);
+    if (err) {
+        absent_keys_map.insert(std::make_pair(key, err));
+    }
+    else {
+        present_keys_map.insert(std::make_pair(key, *value));
+    }
+
     return err;
 }
 
 // Return 1 (=True) or 0 (=False)
 static int concept_condition_expression_true(
     grib_handle* h, grib_concept_condition* c,
-    std::unordered_map<std::string_view, long>& memo)
+    std::unordered_map<std::string_view, long>& present_keys_map,
+    std::unordered_map<std::string_view, int>& absent_keys_map)
 {
     long lval;
     long lres      = 0;
@@ -79,14 +96,13 @@ static int concept_condition_expression_true(
         case GRIB_TYPE_LONG:
             c->expression->evaluate_long(h, &lres);
             // Use memoization for the most common type (integer keys)
-            ok = (grib_get_long_memoize(h, c->name, &lval, memo) == GRIB_SUCCESS) &&
+            ok = (grib_get_long_memoize(h, c->name, &lval, present_keys_map, absent_keys_map) == GRIB_SUCCESS) &&
                  (lval == lres);
             //ok = (grib_get_long(h, c->name, &lval) == GRIB_SUCCESS) && (lval == lres);
             break;
 
         case GRIB_TYPE_DOUBLE: {
-            double dval;
-            double dres = 0.0;
+            double dval = 0.0, dres = 0.0;
             c->expression->evaluate_double(h, &dres);
             ok = (grib_get_double(h, c->name, &dval) == GRIB_SUCCESS) &&
                  (dval == dres);
@@ -95,8 +111,8 @@ static int concept_condition_expression_true(
 
         case GRIB_TYPE_STRING: {
             const char* cval;
-            char buf[80];
-            char tmp[80];
+            char buf[80] = {0,};
+            char tmp[80] = {0,};
             size_t len  = sizeof(buf);
             size_t size = sizeof(tmp);
 
@@ -107,7 +123,6 @@ static int concept_condition_expression_true(
         }
 
         default:
-            // TODO
             break;
     }
     return ok;
@@ -148,12 +163,13 @@ static int concept_condition_iarray_true_count(grib_handle* h, grib_concept_cond
 // Return 0 (=no match) or >0 (=match count)
 static int concept_condition_true_count(
     grib_handle* h, grib_concept_condition* c,
-    std::unordered_map<std::string_view, long>& memo)
+    std::unordered_map<std::string_view, long>& present_keys_map,
+    std::unordered_map<std::string_view, int>& absent_keys_map)
 {
-    if (c->expression == NULL)
-        return concept_condition_iarray_true_count(h, c);
+    if (c->expression)
+        return concept_condition_expression_true(h, c, present_keys_map, absent_keys_map);
     else
-        return concept_condition_expression_true(h, c, memo);
+        return concept_condition_iarray_true_count(h, c);
 }
 
 static const char* concept_evaluate(grib_accessor* a)
@@ -164,14 +180,18 @@ static const char* concept_evaluate(grib_accessor* a)
     grib_concept_value* c = action_concept_get_concept(a);
     grib_handle* h = a->get_enclosing_handle();
 
-    std::unordered_map<std::string_view, long> memo; // See ECC-1905
+    // Maps for fast lookup. See ECC-1905
+    // Map for keys that are defined: key -> integer value
+    std::unordered_map<std::string_view, long> present_keys_map;
+    // Map for keys that fail to decode (e.g., not found): key -> error code
+    std::unordered_map<std::string_view, int> absent_keys_map;
 
     while (c) {
         // printf("DEBUG: %s concept=%s while loop c->name=%s\n", __func__, a->name_, c->name);
         grib_concept_condition* e = c->conditions;
         int cnt = 0;
         while (e) {
-            const int cc_count = concept_condition_true_count(h, e, memo);
+            const int cc_count = concept_condition_true_count(h, e, present_keys_map, absent_keys_map);
             if (cc_count == 0) // match failed
                 break;
             e = e->next;
@@ -238,12 +258,12 @@ static int rectify_concept_apply(grib_handle* h, const char* key)
     int ret = GRIB_NOT_FOUND;
     static const std::map<std::string_view, std::pair<std::string_view, long>> keyMap = {
         { "typeOfStatisticalProcessing",       { "selectStepTemplateInterval", 1 }        },
-        { "typeOfWavePeriodInterval",          { "productDefinitionTemplateNumber", 103 } },
+        { "typeOfWavePeriodInterval",          { "is_wave_period_range", 1 }              },
         { "constituentType",                   { "is_chemical", 1 }                       },
+        { "aerosolType",                       { "is_aerosol", 1 }                        },
         { "sourceSinkChemicalPhysicalProcess", { "is_chemical_srcsink", 1 }               },
         { "randomFieldNumber",                 { "productDefinitionTemplateNumber", 143 } },
-        // TODO(masn): Add a new key e.g. is_probability_forecast
-        { "probabilityType",                   { "productDefinitionTemplateNumber", 5 }   }
+        { "probabilityType",                   { "is_probability_fcst", 1 }               }
     };
     const auto mapIter = keyMap.find(key);
     if (mapIter != keyMap.end()) {
@@ -289,13 +309,13 @@ static int cmpstringp(const void* p1, const void* p2)
 {
     // The actual arguments to this function are "pointers to
     // pointers to char", but strcmp(3) arguments are "pointers
-    // to char", hence the following cast plus dereference */
+    // to char", hence the following cast plus dereference
     return strcmp(*(char* const*)p1, *(char* const*)p2);
 }
 
 static bool blacklisted(grib_handle* h, long edition, const char* concept_name, const char* concept_value)
 {
-    if (strcmp(concept_name, "packingType") == 0) {
+    if (STR_EQUAL(concept_name, "packingType")) {
         char input_packing_type[100];
         size_t len = sizeof(input_packing_type);
         if (strstr(concept_value, "SPD")) {
@@ -315,6 +335,17 @@ static bool blacklisted(grib_handle* h, long edition, const char* concept_name, 
             return true;
         }
         if (strstr(input_packing_type, "spectral_") && !strstr(concept_value, "spectral_")) {
+            return true;
+        }
+    }
+    if (STR_EQUAL(concept_name, "gridType")) {
+        if (strstr(concept_value, "unknown")) {
+            return true;
+        }
+        if (strstr(concept_value, "ncep_")) {
+            return true;
+        }
+        if (strstr(concept_value, "miller") || strstr(concept_value, "UTM") || strstr(concept_value, "stretched")) {
             return true;
         }
     }
@@ -369,7 +400,7 @@ static void print_user_friendly_message(grib_handle* h, const char* name, grib_c
     concept_count = i;
     // Only print out all concepts if fewer than MAX_NUM_CONCEPT_VALUES.
     // Printing out all values for concepts like paramId would be silly!
-    if (concept_count < MAX_NUM_CONCEPT_VALUES) {
+    if (concept_count <= MAX_NUM_CONCEPT_VALUES) {
         fprintf(stderr, "Here are some possible values for concept %s:\n", act->name_);
         qsort(&all_concept_vals, concept_count, sizeof(char*), cmpstringp);
         for (i = 0; i < concept_count; ++i) {
@@ -468,7 +499,7 @@ int Concept::pack_double(const double* val, size_t* len)
 
 int Concept::pack_long(const long* val, size_t* len)
 {
-    char buf[80];
+    char buf[80] = {0,};
     size_t s;
     snprintf(buf, sizeof(buf), "%ld", *val);
 

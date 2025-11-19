@@ -11,6 +11,7 @@
 #include "grib_api_internal.h"
 #include <map>
 #include <string>
+#include "ExceptionHandler.h"
 
 #define UNDEF_LONG   -99999
 #define UNDEF_DOUBLE -99999
@@ -53,10 +54,11 @@
 // }
 
 static const char* mars_keys =
-    "mars.date,mars.time,mars.expver,mars.stream,mars.class,mars.type,"
+    "mars.date,mars.time,mars.expver,mars.stream,mars.class,mars.type,mars.channel,mars.generation,"
     "mars.step,mars.param,mars.levtype,mars.levelist,mars.number,mars.iteration,"
     "mars.domain,mars.fcmonth,mars.fcperiod,mars.hdate,mars.method,"
-    "mars.model,mars.origin,mars.quantile,mars.range,mars.refdate,mars.direction,mars.frequency";
+    "mars.model,mars.origin,mars.quantile,mars.range,mars.refdate,mars.reftime,"
+    "mars.direction,mars.frequency,mars.offdate,mars.offtime,mars.activity,mars.dataset,mars.tile,mars.tileattribute";
 
 
 /* See GRIB-32: start off ID with -1 as it is incremented before being used */
@@ -524,7 +526,7 @@ grib_field_tree* grib_read_field_tree(grib_context* c, FILE* fh, grib_file** fil
     return tree;
 }
 
-grib_index* grib_index_new(grib_context* c, const char* key, int* err)
+static grib_index* grib_index_new_(grib_context* c, const char* key, int* err)
 {
     grib_index* index;
     grib_index_key* keys = NULL;
@@ -567,6 +569,13 @@ grib_index* grib_index_new(grib_context* c, const char* key, int* err)
 
     grib_context_free(c, q);
     return index;
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+grib_index* grib_index_new(grib_context* c, const char* key, int* err)
+{
+    auto result = eccodes::handleExceptions(grib_index_new_, c, key, err);
+    return eccodes::updateErrorAndReturnValue(result, err);
 }
 
 static void grib_index_values_delete(grib_context* c, grib_string_list* values)
@@ -758,7 +767,7 @@ static void grib_field_list_delete(grib_context* c, grib_field_list* field_list)
     }
 }
 
-void grib_index_delete(grib_index* index)
+static void grib_index_delete_(grib_index* index)
 {
     grib_file* file = index->files;
     grib_index_key_delete(index->context, index->keys);
@@ -770,6 +779,13 @@ void grib_index_delete(grib_index* index)
         grib_file_pool_delete_clone(f);
     }
     grib_context_free(index->context, index);
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+void grib_index_delete(grib_index* index)
+{
+    auto result = eccodes::handleExceptions(grib_index_delete_, index);
+    return eccodes::logErrorAndReturnValue(result);
 }
 
 static int grib_write_files(FILE* fh, grib_file* files)
@@ -823,7 +839,7 @@ static grib_file* grib_read_files(grib_context* c, FILE* fh, int* err)
     return file;
 }
 
-int grib_index_write(grib_index* index, const char* filename)
+static int grib_index_write_(grib_index* index, const char* filename)
 {
     int err = 0;
     FILE* fh;
@@ -893,7 +909,14 @@ int grib_index_write(grib_index* index, const char* filename)
     return err;
 }
 
-grib_index* grib_index_read(grib_context* c, const char* filename, int* err)
+// C-API: Ensure all exceptions are converted to error codes
+int grib_index_write(grib_index* index, const char* filename)
+{
+    auto result = eccodes::handleExceptions(grib_index_write_, index, filename);
+    return eccodes::getErrorCode(result);
+}
+
+static grib_index* grib_index_read_(grib_context* c, const char* filename, int* err)
 {
     grib_file *file, *f;
     grib_file** files;
@@ -985,6 +1008,13 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int* err)
     return index;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
+grib_index* grib_index_read(grib_context* c, const char* filename, int* err)
+{
+    auto result = eccodes::handleExceptions(grib_index_read_, c, filename, err);
+    return eccodes::updateErrorAndReturnValue(result, err);
+}
+
 int grib_index_search_same(grib_index* index, grib_handle* h)
 {
     int err        = 0;
@@ -1045,7 +1075,7 @@ int grib_index_search_same(grib_index* index, grib_handle* h)
     return 0;
 }
 
-int grib_index_add_file(grib_index* index, const char* filename)
+static int grib_index_add_file_(grib_index* index, const char* filename)
 {
     int message_type = 0;
     if (index->product_kind == PRODUCT_GRIB) message_type = CODES_GRIB;
@@ -1053,6 +1083,13 @@ int grib_index_add_file(grib_index* index, const char* filename)
     else return GRIB_INVALID_ARGUMENT;
 
     return codes_index_add_file_internal(index, filename, message_type);
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+int grib_index_add_file(grib_index* index, const char* filename)
+{
+    auto result = eccodes::handleExceptions(grib_index_add_file_, index, filename);
+    return eccodes::getErrorCode(result);
 }
 
 static grib_handle* new_message_from_file(int message_type, grib_context* c, FILE* f, int* error)
@@ -1282,7 +1319,7 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
     }
 
     if (c->debug) {
-        fprintf(stderr, "ECCODES DEBUG %s %s\n", __func__, filename);
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", __func__, filename);
         grib_index_dump(stderr, index, GRIB_DUMP_FLAG_TYPE);
     }
     return GRIB_SUCCESS;
@@ -1450,7 +1487,7 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
 // }
 
 
-grib_index* grib_index_new_from_file(grib_context* c, const char* filename, const char* keys, int* err)
+static grib_index* grib_index_new_from_file_(grib_context* c, const char* filename, const char* keys, int* err)
 {
     grib_index* index = NULL;
 
@@ -1468,7 +1505,14 @@ grib_index* grib_index_new_from_file(grib_context* c, const char* filename, cons
     return index;
 }
 
-int grib_index_get_size(const grib_index* index, const char* key, size_t* size)
+// C-API: Ensure all exceptions are converted to error codes
+grib_index* grib_index_new_from_file(grib_context* c, const char* filename, const char* keys, int* err)
+{
+    auto result = eccodes::handleExceptions(grib_index_new_from_file_, c, filename, keys, err);
+    return eccodes::updateErrorAndReturnValue(result, err);
+}
+
+static int grib_index_get_size_(const grib_index* index, const char* key, size_t* size)
 {
     grib_index_key* k = index->keys;
     while (k && strcmp(k->name, key))
@@ -1479,7 +1523,14 @@ int grib_index_get_size(const grib_index* index, const char* key, size_t* size)
     return 0;
 }
 
-int grib_index_get_string(const grib_index* index, const char* key, char** values, size_t* size)
+// C-API: Ensure all exceptions are converted to error codes
+int grib_index_get_size(const grib_index* index, const char* key, size_t* size)
+{
+    auto result = eccodes::handleExceptions(grib_index_get_size_, index, key, size);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_index_get_string_(const grib_index* index, const char* key, char** values, size_t* size)
 {
     grib_index_key* k = index->keys;
     grib_string_list* kv;
@@ -1503,7 +1554,14 @@ int grib_index_get_string(const grib_index* index, const char* key, char** value
     return GRIB_SUCCESS;
 }
 
-int grib_index_get_long(const grib_index* index, const char* key, long* values, size_t* size)
+// C-API: Ensure all exceptions are converted to error codes
+int grib_index_get_string(const grib_index* index, const char* key, char** values, size_t* size)
+{
+    auto result = eccodes::handleExceptions(grib_index_get_string_, index, key, values, size);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_index_get_long_(const grib_index* index, const char* key, long* values, size_t* size)
 {
     grib_index_key* k = index->keys;
     grib_string_list* kv;
@@ -1532,7 +1590,14 @@ int grib_index_get_long(const grib_index* index, const char* key, long* values, 
     return GRIB_SUCCESS;
 }
 
-int grib_index_get_double(const grib_index* index, const char* key, double* values, size_t* size)
+// C-API: Ensure all exceptions are converted to error codes
+int grib_index_get_long(const grib_index* index, const char* key, long* values, size_t* size)
+{
+    auto result = eccodes::handleExceptions(grib_index_get_long_, index, key, values, size);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_index_get_double_(const grib_index* index, const char* key, double* values, size_t* size)
 {
     grib_index_key* k = index->keys;
     grib_string_list* kv;
@@ -1562,7 +1627,14 @@ int grib_index_get_double(const grib_index* index, const char* key, double* valu
     return GRIB_SUCCESS;
 }
 
-int grib_index_select_long(grib_index* index, const char* skey, long value)
+// C-API: Ensure all exceptions are converted to error codes
+int grib_index_get_double(const grib_index* index, const char* key, double* values, size_t* size)
+{
+    auto result = eccodes::handleExceptions(grib_index_get_double_, index, key, values, size);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_index_select_long_(grib_index* index, const char* skey, long value)
 {
     grib_index_key* key = NULL;
     int err             = GRIB_NOT_FOUND;
@@ -1594,7 +1666,14 @@ int grib_index_select_long(grib_index* index, const char* skey, long value)
     return 0;
 }
 
-int grib_index_select_double(grib_index* index, const char* skey, double value)
+// C-API: Ensure all exceptions are converted to error codes
+int grib_index_select_long(grib_index* index, const char* skey, long value)
+{
+    auto result = eccodes::handleExceptions(grib_index_select_long_, index, skey, value);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_index_select_double_(grib_index* index, const char* skey, double value)
 {
     grib_index_key* key = NULL;
     int err             = GRIB_NOT_FOUND;
@@ -1626,7 +1705,14 @@ int grib_index_select_double(grib_index* index, const char* skey, double value)
     return 0;
 }
 
-int grib_index_select_string(grib_index* index, const char* skey, const char* value)
+// C-API: Ensure all exceptions are converted to error codes
+int grib_index_select_double(grib_index* index, const char* skey, double value)
+{
+    auto result = eccodes::handleExceptions(grib_index_select_double_, index, skey, value);
+    return eccodes::getErrorCode(result);
+}
+
+static int grib_index_select_string_(grib_index* index, const char* skey, const char* value)
 {
     grib_index_key* key = NULL;
     int err             = GRIB_NOT_FOUND;
@@ -1656,6 +1742,13 @@ int grib_index_select_string(grib_index* index, const char* skey, const char* va
     snprintf(key->value, sizeof(key->value), "%s", value);
     grib_index_rewind(index);
     return 0;
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+int grib_index_select_string(grib_index* index, const char* skey, const char* value)
+{
+    auto result = eccodes::handleExceptions(grib_index_select_string_, index, skey, value);
+    return eccodes::getErrorCode(result);
 }
 
 grib_handle* codes_index_get_handle(grib_field* field, int message_type, int* err)
@@ -1878,7 +1971,7 @@ char* grib_get_field_file(grib_index* index, off_t* offset)
     return file;
 }
 
-grib_handle* grib_handle_new_from_index(grib_index* index, int* err)
+static grib_handle* grib_handle_new_from_index_(grib_index* index, int* err)
 {
     ProductKind pkind = index->product_kind;
     if (pkind == PRODUCT_GRIB)
@@ -1886,6 +1979,13 @@ grib_handle* grib_handle_new_from_index(grib_index* index, int* err)
     if (pkind == PRODUCT_BUFR)
         return codes_new_from_index(index, CODES_BUFR, err);
     return NULL;
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+grib_handle* grib_handle_new_from_index(grib_index* index, int* err)
+{
+    auto result = eccodes::handleExceptions(grib_handle_new_from_index_, index, err);
+    return eccodes::updateErrorAndReturnValue(result, err);
 }
 
 grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err)

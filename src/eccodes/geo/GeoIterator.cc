@@ -8,9 +8,10 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "geo/GeoIterator.h"
 #include "eckit/geo/Exceptions.h"
-#include "geo/GribSpec.h"
+
+#include "eccodes/geo/GeoIterator.h"
+#include "eccodes/geo/GribToSpec.h"
 
 
 namespace eccodes::geo_iterator
@@ -18,7 +19,7 @@ namespace eccodes::geo_iterator
 
 
 GeoIterator::GeoIterator(grib_handle* h, unsigned long flags) :
-    spec_(new eccodes::geo::GribSpec(h)),
+    spec_(new eccodes::geo::GribToSpec(h)),
     grid_(eckit::geo::GridFactory::build(*spec_)),
     iter_(grid_->make_next_iterator()),
     point_(eckit::geo::PointLonLat{})
@@ -27,28 +28,41 @@ GeoIterator::GeoIterator(grib_handle* h, unsigned long flags) :
     class_name_ = "geo_iterator";
     flags_      = flags;
     ECCODES_ASSERT(h_ != nullptr);
+}
 
-    CODES_CHECK(codes_get_size(h_, "values", &nv_), "");
-    ECCODES_ASSERT(nv_ > 0);
+int GeoIterator::init(grib_handle* h, grib_arguments*)
+{
+    ECCODES_ASSERT(h == h_);
+    int err = codes_get_size(h_, "values", &nv_);
+    if (err) return err;
+    if (nv_ == 0) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator: size(values) is 0!");
+        return GRIB_WRONG_GRID;
+    }
 
     long numberOfPoints = 0;
-    grib_get_long_internal(h, "numberOfPoints", &numberOfPoints);
-    ECCODES_ASSERT(static_cast<size_t>(numberOfPoints) == nv_);
+    err = grib_get_long_internal(h_, "numberOfPoints", &numberOfPoints);
+    if (err) return err;
+
+    if ( (flags_ & GRIB_GEOITERATOR_NO_VALUES) == 0 ) { // Do check the data values count
+        if ((size_t)numberOfPoints != nv_) {
+            grib_context_log(h_->context, GRIB_LOG_ERROR,
+                "Geoiterator: numberOfPoints != size(values) (%ld!=%ld)", numberOfPoints, nv_);
+            return GRIB_WRONG_GRID;
+        }
+    }
 
     if (flags_ & GRIB_GEOITERATOR_NO_VALUES) {
         data_ = nullptr;
     }
     else {
         data_ = static_cast<double*>(grib_context_malloc(h_->context, nv_ * sizeof(double)));
-        ECCODES_ASSERT(data_ != nullptr);
+        if (!data_) return GRIB_OUT_OF_MEMORY;
         auto size = nv_;
-        CODES_CHECK(codes_get_double_array(h_, "values", data_, &size), "");
+        err = codes_get_double_array(h_, "values", data_, &size);
+        if (err) return err;
     }
-}
-
-int GeoIterator::init(grib_handle*, grib_arguments*)
-{
-    NOTIMP;
+    return GRIB_SUCCESS;
 }
 
 // The C public API for this does not have a way of returning an error,
@@ -62,7 +76,9 @@ int GeoIterator::next(double* lat, double* lon, double* val) const
             *lat = q.lat;
             *lon = q.lon;
             if (val != nullptr && data_ != nullptr) {
-                *val = data_[iter_->index()];
+                const size_t i = iter_->index();
+                if (i < nv_)
+                    *val = data_[i];
             }
 
             return 1;  // (true)

@@ -15,7 +15,7 @@ set -u
 # Mismatched count not reported as difference by grib_compare
 # ---------------------------------------------------------
 label="grib_ecc-923_test"
-tempOut=temp.${label}.out
+
 tempGrib1=temp.1.${label}.grib
 tempGrib2=temp.2.${label}.grib
 tempGrib3=temp.3.${label}.grib

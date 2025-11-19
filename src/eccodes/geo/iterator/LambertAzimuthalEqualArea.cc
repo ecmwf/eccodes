@@ -376,7 +376,7 @@ int LambertAzimuthalEqualArea::init(grib_handle* h, grib_arguments* args)
     if ((err = grib_get_long_internal(h, sny, &ny)) != GRIB_SUCCESS)
         return err;
 
-    if (nv_ != nx * ny) {
+    if ( nv_ != (size_t)(nx * ny) ) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, nv_, nx, ny);
         return GRIB_WRONG_GRID;
     }

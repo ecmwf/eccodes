@@ -184,7 +184,8 @@ grib_concept_value* Concept::get_concept_impl(grib_handle* h)
         c = grib_parse_concept_file(context, full);
     }
     else {
-        grib_context_log(context, GRIB_LOG_FATAL,
+        // ECC-2073: Do not fail if top-level concept file is not there
+        grib_context_log(context, GRIB_LOG_DEBUG,
                          "unable to find definition file %s in %s:%s\nDefinition files path=\"%s\"",
                          basename, master, local, context->grib_definition_files_path);
         return NULL;
@@ -241,11 +242,9 @@ static int concept_condition_expression_true(grib_handle* h, grib_concept_condit
             break;
 
         case GRIB_TYPE_DOUBLE: {
-            double dval;
-            double dres = 0.0;
+            double dval = 0.0, dres = 0.0;
             c->expression->evaluate_double(h, &dres);
-            ok = (grib_get_double(h, c->name, &dval) == GRIB_SUCCESS) &&
-                 (dval == dres);
+            ok = (grib_get_double(h, c->name, &dval) == GRIB_SUCCESS) && (dval == dres);
             if (ok)
                 snprintf(exprVal, 64, "%g", dres);
             break;
@@ -253,8 +252,8 @@ static int concept_condition_expression_true(grib_handle* h, grib_concept_condit
 
         case GRIB_TYPE_STRING: {
             const char* cval;
-            char buf[256];
-            char tmp[256];
+            char buf[256] = {0,};
+            char tmp[256] = {0,};
             size_t len  = sizeof(buf);
             size_t size = sizeof(tmp);
 
@@ -318,7 +317,8 @@ int get_concept_condition_string(grib_handle* h, const char* key, const char* va
 
         concept_value = concept_value->next;
     }
-    if (length == 0)
-        return GRIB_CONCEPT_NO_MATCH;
+
+    if (length == 0) return GRIB_CONCEPT_NO_MATCH;
+
     return GRIB_SUCCESS;
 }

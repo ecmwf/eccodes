@@ -16,7 +16,9 @@
  *
  ***************************************************************************/
 #include "grib_api_internal.h"
+#include "ExceptionHandler.h"
 
+// C-API: Ensure all exceptions are converted to error codes
 #define ROUND(a) ((a) >= 0 ? (long)((a) + 0.5) : (long)((a)-0.5))
 int grib_julian_to_datetime(double jd, long* year, long* month, long* day,
                             long* hour, long* minute, long* second)
@@ -72,6 +74,7 @@ int grib_julian_to_datetime(double jd, long* year, long* month, long* day,
     return GRIB_SUCCESS;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 int grib_datetime_to_julian(long year, long month, long day,
                             long hour, long minute, long second, double* jd)
 {
@@ -108,6 +111,7 @@ int grib_datetime_to_julian_d(
     return GRIB_SUCCESS;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 long grib_julian_to_date(long jdate)
 {
     long x, y, d, m, e;
@@ -139,6 +143,7 @@ long grib_julian_to_date(long jdate)
     return year * 10000 + month * 100 + day;
 }
 
+// C-API: Ensure all exceptions are converted to error codes
 long grib_date_to_julian(long ddate)
 {
     long m1, y1, a, b, c, d, j1;
