@@ -746,11 +746,14 @@ int codes_get_size(const codes_handle* h, const char* key, size_t* size);
 
 /**
  *  Get the length of the string representation of the key, if several keys of the same name are present, the maximum length is returned
+ *  If a key has a native type CODES_TYPE_BYTES, this call returns the number of bytes (@see codes_get_bytes).
  *
  * @param h           : the handle to get the data from
  * @param key         : the key to be searched
  * @param length        : the address of a size_t where the length will be set
  * @return            0 if OK, integer value on error
+ * @see codes_get_bytes
+ * @see codes_get_string
  */
 int codes_get_length(const codes_handle* h, const char* key, size_t* length);
 
@@ -812,6 +815,7 @@ int codes_get_float_elements(const codes_handle* h, const char* key, const int* 
  * @param length    : the address of a size_t that contains allocated length of the string on input,
  *                    and that contains the actual length of the string on output
  * @return          0 if OK, integer value on error
+ * @see             codes_get_length
  */
 int codes_get_string(const codes_handle* h, const char* key, char* value, size_t* length);
 
@@ -836,8 +840,11 @@ int codes_get_string_array(const codes_handle* h, const char* key, char** vals, 
  * @param key       : the key to be searched
  * @param bytes     : the address of a byte array where the data will be retrieved
  * @param length    : the address of a size_t that contains allocated length of the byte array on input,
- *                    and that contains the actual length of the byte array on output
+ *                    and that contains the actual length of the byte array on output.
+ *                    The length can be determined by codes_get_length, similar to strings. 
+ *                    This is different to other calls array retrieving calls.
  * @return          0 if OK, integer value on error
+ * @see             codes_get_length
  */
 int codes_get_bytes(const codes_handle* h, const char* key, unsigned char* bytes, size_t* length);
 
