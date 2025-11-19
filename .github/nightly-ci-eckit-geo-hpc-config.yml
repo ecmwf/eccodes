@@ -5,6 +5,8 @@ build:
     - aec
     - netcdf4
   parallel: 64
+    dependencies:
+    - ecmwf/eckit@develop
   cmake_options:
     - -DENABLE_ECKIT_GEO=1
   force_build: true
