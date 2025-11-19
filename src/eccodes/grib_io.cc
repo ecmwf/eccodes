@@ -868,7 +868,7 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
     unsigned char c;
     int err             = 0;
     unsigned long magic = 0;
-    size_t offset = 0;
+    off_t offset        = r->offset;
 
     while (r->read(r->read_data, &c, 1, &err) == 1 && err == 0) {
         offset++;
@@ -1192,7 +1192,7 @@ static int ecc_wmo_read_any_from_file(FILE* f, void* buffer, size_t* len, off_t*
     r.seek            = &stdio_seek;
     r.seek_from_start = &stdio_seek_from_start;
     r.tell            = &stdio_tell;
-    r.offset          = 0;
+    r.offset          = *offset;
     r.message_size    = 0;
 
     err  = read_any(&r, no_alloc, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
