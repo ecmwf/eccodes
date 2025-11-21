@@ -879,7 +879,7 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
             case GRIB:
                 if (grib_ok) {
                     err = read_GRIB(r, no_alloc);
-                    if (r->offset == -5) {
+                    if (r->offset < 0) {
                         r->offset = offset - 4;
                     }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
@@ -889,7 +889,7 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
             case BUFR:
                 if (bufr_ok) {
                     err = read_BUFR(r, no_alloc);
-                    if (r->offset == -5) {
+                    if (r->offset < 0) {
                         r->offset = offset - 4;
                     }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
@@ -913,7 +913,7 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
             case BUDG:
                 if (grib_ok) {
                     err = read_PSEUDO(r, "BUDG", no_alloc);
-                    if (r->offset == -5) {
+                    if (r->offset < 0) {
                         r->offset = offset - 4;
                     }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
@@ -922,7 +922,7 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
             case DIAG:
                 if (grib_ok) {
                     err = read_PSEUDO(r, "DIAG", no_alloc);
-                    if (r->offset == -5) {
+                    if (r->offset < 0) {
                         r->offset = offset - 4;
                     }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
@@ -931,7 +931,7 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
             case TIDE:
                 if (grib_ok) {
                     err = read_PSEUDO(r, "TIDE", no_alloc);
-                    if (r->offset == -5) {
+                    if (r->offset < 0) {
                         r->offset = offset - 4;
                     }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
