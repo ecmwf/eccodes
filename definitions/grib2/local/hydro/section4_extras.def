@@ -27,7 +27,9 @@ if (defined(class) && is_one_of(class,"gh","eh")){
 }
 
 alias mars.model = modelName;
-alias mars.configuration = configuration;
+if (defined(stream) && (stream is "rfsd")){
+ alias mars.configuration = configuration;
+}
 #alias mars.origin = inputOriginatingCentre;
 
 # last three digits specify the model version of the input
@@ -40,4 +42,4 @@ if ( forcingModel is "obs" ){
  } else {
  meta originForcing sprintf("%s_%s",inputOriginatingCentre,forcingModel);
 }
-alias mars.origin = originForcing;
+alias mars.forcing = originForcing;
