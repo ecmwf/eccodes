@@ -1316,6 +1316,56 @@ ${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 # MTG2Switch=1
 expected+=("1 1 1")
 
+## CASE 54: ECMWF OD CY50R1 wave global pre-mtg2 ##
+# tablesVersion=35
+# productionStatusOfProcessedData=0
+# backgroundProcess=255
+# generatingProcessIdentifier=109
+cases+=(temp.$label.case54.grib2)
+
+cat >$tempFilt<<EOF
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=1;
+    set tablesVersion=35;
+    set productionStatusOfProcessedData=0;
+    set backgroundProcess=255;
+    set generatingProcessIdentifier=109;
+    write;
+EOF
+
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
+
+# Expected result
+# MTG2SwitchViaTablesVersion=1
+# MTG2SwitchDefault=1
+# MTG2Switch=0
+expected+=("1 1 0")
+
+## CASE 55: ECMWF OD CY50R1 wave local pre-mtg2 ##
+# tablesVersion=35
+# productionStatusOfProcessedData=0
+# backgroundProcess=255
+# generatingProcessIdentifier=209
+cases+=(temp.$label.case55.grib2)
+
+cat >$tempFilt<<EOF
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=1;
+    set tablesVersion=35;
+    set productionStatusOfProcessedData=0;
+    set backgroundProcess=255;
+    set generatingProcessIdentifier=209;
+    write;
+EOF
+
+${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
+
+# Expected result
+# MTG2SwitchViaTablesVersion=1
+# MTG2SwitchDefault=1
+# MTG2Switch=0
+expected+=("1 1 0")
+
 # Test different cases
 
 for i in "${!cases[@]}"; do
