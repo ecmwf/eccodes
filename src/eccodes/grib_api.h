@@ -1350,6 +1350,9 @@ int wmo_read_any_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_grib_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_bufr_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_gts_from_file(FILE* f, void* buffer, size_t* len);
+/* if f support ftell, offset is updated with the absolute position within the file, */
+/* otherwise, it accumulates the position across a series of calls */
+int wmo_read_any_from_file_with_offset(FILE* f, void* buffer, size_t* len, off_t* offset);
 int wmo_read_any_from_stream(void* stream_data, long (*stream_proc)(void*, void* buffer, long len), void* buffer, size_t* len);
 
 /* These functions allocate memory for the result so the user is responsible for freeing it */
