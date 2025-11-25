@@ -11,6 +11,8 @@
 #include "grib_api_internal.h"
 #include "ExceptionHandler.h"
 
+#define IDENTIFIER_SIZE 4  // Size of the identifiers like GRIB, BUFR, etc.
+
 #if GRIB_PTHREADS
 static pthread_once_t once    = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
@@ -881,7 +883,7 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
                     err = read_GRIB(r, no_alloc);
                     // ECC-2167: Offset support in streams (if ftello() fails)
                     if (r->offset < 0) { // ftello() returns -1
-                        r->offset = offset - 4; // Adjust offset manually by subtracting 4 bytes read for 'GRIB'
+                        r->offset = offset - IDENTIFIER_SIZE; // Adjust offset manually by subtracting 4 bytes read for 'GRIB'
                     }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
@@ -891,7 +893,7 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
                 if (bufr_ok) {
                     err = read_BUFR(r, no_alloc);
                     if (r->offset < 0) {
-                        r->offset = offset - 4;
+                        r->offset = offset - IDENTIFIER_SIZE;
                     }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
@@ -915,7 +917,7 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
                 if (grib_ok) {
                     err = read_PSEUDO(r, "BUDG", no_alloc);
                     if (r->offset < 0) {
-                        r->offset = offset - 4;
+                        r->offset = offset - IDENTIFIER_SIZE;
                     }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
@@ -924,7 +926,7 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
                 if (grib_ok) {
                     err = read_PSEUDO(r, "DIAG", no_alloc);
                     if (r->offset < 0) {
-                        r->offset = offset - 4;
+                        r->offset = offset - IDENTIFIER_SIZE;
                     }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
@@ -933,7 +935,7 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
                 if (grib_ok) {
                     err = read_PSEUDO(r, "TIDE", no_alloc);
                     if (r->offset < 0) {
-                        r->offset = offset - 4;
+                        r->offset = offset - IDENTIFIER_SIZE;
                     }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
