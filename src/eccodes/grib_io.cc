@@ -879,8 +879,9 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
             case GRIB:
                 if (grib_ok) {
                     err = read_GRIB(r, no_alloc);
-                    if (r->offset < 0) {
-                        r->offset = offset - 4;
+                    // ECC-2167: Offset support in streams (if ftello() fails)
+                    if (r->offset < 0) { // ftello() returns -1
+                        r->offset = offset - 4; // Adjust offset manually by subtracting 4 bytes read for 'GRIB'
                     }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
