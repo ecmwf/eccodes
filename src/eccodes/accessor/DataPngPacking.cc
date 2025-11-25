@@ -45,7 +45,15 @@ int DataPngPacking::value_count(long* n_vals)
 
 #if HAVE_LIBPNG
 
-    #include <png.h>
+// Workaround for RHEL8 + Clang/Intel icpx conflicting __sigsetjmp,
+// temporarily redefine __sigsetjmp when including png.h
+#ifdef __clang__
+  #define __sigsetjmp sigsetjmp
+  #include <png.h>
+  #undef __sigsetjmp
+#else
+  #include <png.h>
+#endif
 
 typedef struct png_read_callback_data
 {

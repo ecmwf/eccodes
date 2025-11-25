@@ -9,6 +9,7 @@
  */
 
 #include "Codetable.h"
+#include "sync/Mutex.h"
 #include <cctype>
 
 eccodes::accessor::Codetable _grib_accessor_codetable;
@@ -129,33 +130,7 @@ int codes_codetable_check_abbreviation(const grib_handle* h, const char* key, co
 namespace eccodes::accessor
 {
 
-#if GRIB_PTHREADS
-static pthread_once_t once    = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
-
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex1, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex1;
-
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_grib_accessor_codetable_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex1);
-            once = 1;
-        }
-    }
-}
-#endif
+static eccodes::sync::Mutex mutex;
 
 static int grib_load_codetable(grib_context* c, const char* filename, const char* recomposed_name, size_t size, grib_codetable* t);
 
@@ -319,28 +294,24 @@ grib_codetable* Codetable::load_table()
         localFilename = grib_context_full_defs_path(c, localRecomposed);
     }
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex1); /* GRIB-930 */
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
     /*printf("DBG %s: Look in cache: f=%s lf=%s (recomposed=%s)\n", att_ .name, filename, localFilename,recomposed);*/
     if (filename == NULL && localFilename == NULL) {
-        t = NULL;
-        goto the_end;
+        return NULL;
     }
     next = c->codetable;
     while (next) {
         if ((filename && next->filename[0] && grib_inline_strcmp(filename, next->filename[0]) == 0) &&
             ((localFilename == 0 && next->filename[1] == NULL) ||
              ((localFilename != 0 && next->filename[1] != NULL) && grib_inline_strcmp(localFilename, next->filename[1]) == 0))) {
-            t = next;
-            goto the_end;
+            return next;
         }
         /* Special case: see GRIB-735 */
         if (filename == NULL && localFilename != NULL) {
             if (str_eq(localFilename, next->filename[0]) ||
                 str_eq(localFilename, next->filename[1])) {
-                t = next;
-                goto the_end;
+                return next;
             }
         }
         next = next->next;
@@ -369,12 +340,8 @@ grib_codetable* Codetable::load_table()
 
     if (t->filename[0] == NULL && t->filename[1] == NULL) {
         grib_context_free_persistent(c, t);
-        t = NULL;
-        goto the_end;
+        return NULL;
     }
-
-the_end:
-    GRIB_MUTEX_UNLOCK(&mutex1);
 
     return t;
 }

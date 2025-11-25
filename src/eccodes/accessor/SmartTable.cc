@@ -9,6 +9,7 @@
  */
 
 #include "SmartTable.h"
+#include "sync/Mutex.h"
 #include <cctype>
 
 eccodes::accessor::SmartTable _grib_accessor_smart_table;
@@ -48,33 +49,7 @@ void grib_smart_table_delete(grib_context* c)
 namespace eccodes::accessor
 {
 
-#if GRIB_PTHREADS
-static pthread_once_t once   = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex;
-
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_Smartable_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex);
-            once = 1;
-        }
-    }
-}
-#endif
+static eccodes::sync::Mutex mutex;
 
 static int grib_load_smart_table(grib_context* c, const char* filename, const char* recomposed_name, size_t size, grib_smart_table* t);
 
@@ -215,10 +190,10 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
         t->recomposed_name[0] = grib_context_strdup_persistent(c, recomposed_name);
         t->next               = c->smart_table;
         t->numberOfEntries    = size;
-        GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-        GRIB_MUTEX_LOCK(&mutex);
-        c->smart_table = t;
-        GRIB_MUTEX_UNLOCK(&mutex);
+        {
+            eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+            c->smart_table = t;
+        }
     }
     else if (t->filename[1] == NULL) {
         t->filename[1]        = grib_context_strdup_persistent(c, filename);
