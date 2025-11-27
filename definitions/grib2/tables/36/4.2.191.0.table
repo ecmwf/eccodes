@@ -1,0 +1,10 @@
+# Product discipline 191 - Computational parameters, parameter category 0: stochastic parametrizations
+0 0 Stochastically Perturbed Parametrization Tendency (SPPT) (Numeric)
+1 1 Stochastically Perturbed Parameterizations (SPP) (Numeric)
+2 2 Stochastic Kinetic Energy Backscatter  (SKEB) (Numeric)
+3 3 Stochastic Trigger of Convection (STC) (Numeric)
+4 4 Stochastic boundary-layer Humidity (SHUM) (Numeric)
+5 5 Stochastic Total Tendency Perturbations (STTP) (Numeric)
+# 6-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing
