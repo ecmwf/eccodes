@@ -27,8 +27,9 @@ alias mars.realization = realization;
 codetable[2] resolution "grib2/destine_resolution.table" : dump;
 alias mars.resolution = resolution;
 
-# Remove mars domain from this data
+# Remove mars domain and mars timepsan from this data
 unalias mars.domain;
+unalias mars.timespan;
 
 # Add some padding just in case we want more keys in the future
 pad padding_loc43(30);
