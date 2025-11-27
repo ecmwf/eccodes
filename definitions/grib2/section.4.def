@@ -37,8 +37,6 @@ concept datasetForLocal(unknown) {
   "uerra"       = {productionStatusOfProcessedData=11;}
   "destine"     = {productionStatusOfProcessedData=12;} # Destination Earth
   "destine"     = {productionStatusOfProcessedData=13;}
-  "destinegen1" = {productionStatusOfProcessedData=12;generation=1;} # DestinE ClimateDT Generation 1
-  "destinegen1" = {productionStatusOfProcessedData=13;generation=1;}
   "era"         = {marsClass=22;}
   "era"         = {marsClass=5;}
   "era"         = {marsClass=23;}
