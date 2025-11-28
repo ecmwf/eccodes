@@ -22,11 +22,10 @@
 #include "eckit/geo/Projection.h"
 #include "eckit/geo/Spec.h"
 #include "eckit/geo/area/BoundingBox.h"
-#include "eckit/geo/grid/HEALPix.h"
+#include "eckit/geo/grid/reduced/HEALPix.h"
 #include "eckit/geo/grid/ORCA.h"
-#include "eckit/geo/grid/ReducedGaussian.h"
-#include "eckit/geo/grid/Regular.h"
-#include "eckit/geo/grid/RegularGaussian.h"
+#include "eckit/geo/grid/reduced/ReducedGaussian.h"
+#include "eckit/geo/grid/regular/RegularGaussian.h"
 #include "eckit/geo/grid/SphericalHarmonics.h"
 #include "eckit/geo/grid/unstructured/FESOM.h"
 #include "eckit/geo/grid/unstructured/ICON.h"
@@ -300,7 +299,7 @@ void set_grid_type_regular_gg(grib_info& info, const Grid& grid)
     info.grid.grid_type = rotated ? CODES_UTIL_GRID_SPEC_ROTATED_GG : CODES_UTIL_GRID_SPEC_REGULAR_GG;
 
     const auto& g =
-        dynamic_cast<const ::eckit::geo::grid::RegularGaussian&>(grid);
+        dynamic_cast<const ::eckit::geo::grid::regular::RegularGaussian&>(grid);
 
     info.grid.N                            = static_cast<long>(g.N());
     info.grid.iDirectionIncrementInDegrees = 90. / static_cast<double>(g.N());
@@ -328,7 +327,7 @@ void set_grid_type_reduced_gg(grib_info& info, const Grid& grid)
     info.grid.grid_type = rotated ? CODES_UTIL_GRID_SPEC_REDUCED_ROTATED_GG : CODES_UTIL_GRID_SPEC_REDUCED_GG;
 
     const auto& g =
-        dynamic_cast<const ::eckit::geo::grid::ReducedGaussian&>(grid);
+        dynamic_cast<const ::eckit::geo::grid::reduced::ReducedGaussian&>(grid);
 
     info.grid.pl      = g.pl().data();
     info.grid.pl_size = static_cast<long>(g.pl().size());
@@ -374,7 +373,7 @@ void set_grid_type_healpix(grib_info& info, const Grid& grid)
 {
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_HEALPIX;
 
-    const auto& g(dynamic_cast<const ::eckit::geo::grid::HEALPix&>(grid));
+    const auto& g(dynamic_cast<const ::eckit::geo::grid::reduced::HEALPix&>(grid));
 
     info.grid.N                                  = static_cast<long>(g.Nside());
     info.grid.longitudeOfFirstGridPointInDegrees = 45.;
