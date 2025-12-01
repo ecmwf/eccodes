@@ -965,12 +965,12 @@ EOF
 ${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
-# MTG2SwitchViaTablesVersion=0
-# MTG2SwitchDefault=1
+# MTG2SwitchViaTablesVersion=1
+# MTG2SwitchDefault=0
 # MTG2Switch=0
-expected+=("0 1 0")
+expected+=("1 0 0")
 
-## CASE 39: DestinE ClimateDT generation 1 tv37 pre-mtg2 ##
+## CASE 39: DestinE ClimateDT generation 1 tv37 post-mtg2 ##
 # tablesVersion=37
 # class=d1
 # productionStatusOfProcessedData=12
@@ -992,10 +992,10 @@ EOF
 ${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
-# MTG2SwitchViaTablesVersion=0
+# MTG2SwitchViaTablesVersion=1
 # MTG2SwitchDefault=1
-# MTG2Switch=0
-expected+=("0 1 0")
+# MTG2Switch=1
+expected+=("1 1 1")
 
 ## CASE 40: DestinE ClimateDT generation 2 pre-mtg2 ##
 # tablesVersion=31
@@ -1142,7 +1142,7 @@ ${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 # MTG2Switch=1
 expected+=("1 1 1")
 
-## CASE 46: NextGEMS pre-mtg2 ##
+## CASE 46: NextGEMS tv31 post-mtg2 ##
 # tablesVersion=31
 # class=ng
 cases+=(temp.$label.case46.grib2)
@@ -1158,10 +1158,10 @@ EOF
 ${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
-# MTG2SwitchViaTablesVersion=1
-# MTG2SwitchDefault=0
-# MTG2Switch=0
-expected+=("1 0 0")
+# MTG2SwitchViaTablesVersion=0
+# MTG2SwitchDefault=1
+# MTG2Switch=1
+expected+=("0 1 1")
 
 ## CASE 47: NextGEMS post-mtg2 ##
 # tablesVersion=37
@@ -1179,10 +1179,10 @@ EOF
 ${tools_dir}/grib_filter -o ${cases[*]: -1} $tempFilt $base_grib2
 
 # Expected result
-# MTG2SwitchViaTablesVersion=1
+# MTG2SwitchViaTablesVersion=0
 # MTG2SwitchDefault=1
 # MTG2Switch=1
-expected+=("1 1 1")
+expected+=("0 1 1")
 
 ## CASE 48: FIRE pre-mtg2 ##
 # tablesVersion=28

@@ -142,7 +142,6 @@ defs_dirs="
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/s2s
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/era6
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/era
- $ECCODES_DEFINITION_PATH/grib2/localConcepts/destine
 
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/egrr
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/ekmi
