@@ -94,10 +94,6 @@ if (productDefinitionTemplateNumber >= 32768) {
    template productDefinition "grib2/templates/template.4.[productDefinitionTemplateNumber:l].def";
 }
 
-if ( setLocalDefinition || (defined(marsStream) && defined(marsType)) ) {
-   template_nofail marsKeywords1 "mars/grib.[marsStream:s].[marsType:s].def";
-}
-
 concept productDefinitionTemplateName(unknown, "productDefinitionTemplateConcept.def", conceptsDir2,conceptsDir1): no_copy;
 
 template parameters "grib2/parameters.def";
@@ -161,6 +157,12 @@ if (MTG2Switch > 0) {
          alias mars.timespan = timeSpan;
       }
    }
+}
+
+# ECC-2144: Need to evaluate stream/types after timespan.
+# This would allow a better way to adjust specific streams/types as needed
+if ( setLocalDefinition || (defined(marsStream) && defined(marsType)) ) {
+   template_nofail marsKeywords1 "mars/grib.[marsStream:s].[marsType:s].def";
 }
 
 meta md5Section4 md5(offsetSection4,section4Length);
