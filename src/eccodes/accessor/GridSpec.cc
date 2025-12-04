@@ -145,7 +145,7 @@ int GridSpec::unpack_string(char* v, size_t* len)
     try {
         eccodes::geo::eckit_main_init();
 
-        std::unique_ptr<const eckit::geo::Spec> spec(new eccodes::geo::GribToSpec(h));
+        std::unique_ptr<const Spec> spec(new eccodes::geo::GribToSpec(h));
         ASSERT(spec);
 
         std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(*spec));

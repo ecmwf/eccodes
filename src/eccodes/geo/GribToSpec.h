@@ -15,16 +15,17 @@
 #include <string>
 #include <vector>
 
-#include "eckit/geo/spec/Custom.h"
+#include "eckit/spec/Custom.h"
 
 #include "eccodes/geo/Geo.h"
+#include "eccodes/Spec.h"
 
 
 namespace eccodes::geo
 {
 
 
-class GribToSpec final : public Spec
+class GribToSpec final : public eccodes::Spec
 {
 public:
     explicit GribToSpec(codes_handle*);
@@ -49,7 +50,7 @@ public:
     bool get(const std::string& name, std::vector<std::string>& value) const override;
 
 private:
-    mutable eckit::geo::spec::Custom cache_;
+    mutable eckit::spec::Custom cache_;
     codes_handle* handle_;
 
     void json(eckit::JSON&) const final;

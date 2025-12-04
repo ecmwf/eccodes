@@ -16,6 +16,7 @@
 #include "eckit/geo/Grid.h"
 
 #include "eccodes/geo/iterator/Iterator.h"
+#include "eccodes/Spec.h"
 
 
 namespace eccodes::geo_iterator
@@ -27,7 +28,7 @@ public:
     explicit GeoIterator(grib_handle*, unsigned long flags);
 
 private:
-    std::unique_ptr<const eckit::geo::Spec> spec_;
+    std::unique_ptr<const Spec> spec_;
     std::unique_ptr<const eckit::geo::Grid> grid_;
 
     mutable std::unique_ptr<eckit::geo::Grid::NextIterator> iter_;

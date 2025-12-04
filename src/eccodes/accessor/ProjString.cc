@@ -15,6 +15,7 @@
     #include <memory>
 
     #include "eckit/geo/Grid.h"
+    #include "eckit/geo/Exceptions.h"
 
     #include "eccodes/geo/EckitMainInit.h"
     #include "eccodes/geo/GribToSpec.h"

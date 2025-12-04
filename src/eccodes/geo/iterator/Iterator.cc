@@ -15,6 +15,8 @@
 #include "eccodes_config.h"
 
 #if defined(HAVE_ECKIT_GEO)
+    #include "eckit/geo/Exceptions.h"
+
     #include "geo/EckitMainInit.h"
     #include "geo/GeoIterator.h"
 

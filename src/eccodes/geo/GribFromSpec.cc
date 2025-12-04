@@ -20,7 +20,7 @@
 #include "eckit/geo/PointLonLat.h"
 #include "eckit/geo/PointXY.h"
 #include "eckit/geo/Projection.h"
-#include "eckit/geo/Spec.h"
+#include "eckit/spec/Spec.h"
 #include "eckit/geo/area/BoundingBox.h"
 #include "eckit/geo/grid/reduced/HEALPix.h"
 #include "eckit/geo/grid/ORCA.h"
@@ -34,6 +34,7 @@
 #include "eckit/types/FloatCompare.h"
 
 #include "eccodes/geo/EckitMainInit.h"
+#include "eccodes/Spec.h"
 
 #include "grib_api_internal.h"
 
