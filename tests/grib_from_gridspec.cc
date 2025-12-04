@@ -10,7 +10,7 @@
  */
 
 #include "eckit/geo/Exceptions.h"
-#include "eckit/geo/spec/Custom.h"
+#include "eckit/spec/Custom.h"
 #include "eckit/testing/Test.h"
 #include "eckit/types/FloatCompare.h"
 
@@ -51,7 +51,7 @@ CASE("grid: O2")
              codes_grib_handle_new_from_samples(nullptr, "GRIB1"),
              codes_grib_handle_new_from_samples(nullptr, "GRIB2"),
          }) {
-        ::eckit::geo::spec::Custom spec{ { "grid", "o2" } };
+        ::eckit::spec::Custom spec{ { "grid", "o2" } };
 
         auto* h = eccodes::geo::GribFromSpec::set(handle, spec);
         EXPECT(h != nullptr);
@@ -110,7 +110,7 @@ CASE("grid: 1/1")
              codes_grib_handle_new_from_samples(nullptr, "GRIB1"),
              codes_grib_handle_new_from_samples(nullptr, "GRIB2"),
          }) {
-        ::eckit::geo::spec::Custom spec{ { "grid", "1/1" } };
+        ::eckit::spec::Custom spec{ { "grid", "1/1" } };
 
         auto* h = eccodes::geo::GribFromSpec::set(handle, spec);
         EXPECT(h != nullptr);
