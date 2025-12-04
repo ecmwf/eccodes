@@ -18,6 +18,6 @@ jobs:
           github_user: ${{ secrets.BUILD_PACKAGE_HPC_GITHUB_USER }}
           github_token: ${{ secrets.GH_REPO_READ_TOKEN }}
           troika_user: ${{ secrets.HPC_TEST_USER }}
-          repository: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
+          # repository: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
+          repository: ecmwf/eccodes@feature/eckit-geo
           build_config: .github/nightly-ci-eckit-geo-hpc-config.yml
-
