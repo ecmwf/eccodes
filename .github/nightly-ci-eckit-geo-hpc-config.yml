@@ -7,6 +7,7 @@ build:
   parallel: 64
   dependencies:
     - ecmwf/eckit@feature/eckit-geo
+  dependency_branch: feature/eckit-geo
   cmake_options:
     - -DENABLE_ECKIT_GEO=1
     - -DENABLE_EXTRA_TESTS=1
