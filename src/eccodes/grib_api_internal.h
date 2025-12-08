@@ -13,8 +13,7 @@
     ecCodes, not seen by the user of the API
   */
 
-#ifndef grib_api_internal_H
-#define grib_api_internal_H
+#pragma once
 
 /* cmake config header */
 #ifdef HAVE_ECCODES_CONFIG_H
@@ -123,38 +122,12 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 #endif
 */
 
-#if GRIB_PTHREADS
-    #include <pthread.h>
-    #define GRIB_MUTEX_INIT_ONCE(a, b) pthread_once(a, b);
-    #define GRIB_MUTEX_LOCK(a)         pthread_mutex_lock(a);
-    #define GRIB_MUTEX_UNLOCK(a)       pthread_mutex_unlock(a);
-/*
- #define GRIB_MUTEX_LOCK(a) {pthread_mutex_lock(a); printf("MUTEX LOCK %p %s line %d\n",(void*)a,__FILE__,__LINE__);}
- #define GRIB_MUTEX_UNLOCK(a) {pthread_mutex_unlock(a);printf("MUTEX UNLOCK %p %s line %d\n",(void*)a,__FILE__,__LINE__);}
- */
-#elif GRIB_OMP_THREADS
-    #ifdef _MSC_VER
-        #define GRIB_OMP_CRITICAL(a) __pragma(omp critical(a))
-    #else
-        #define GRIB_OMP_STR(a)      #a
-        #define GRIB_OMP_XSTR(a)     GRIB_OMP_STR(a)
-        #define GRIB_OMP_CRITICAL(a) _Pragma(GRIB_OMP_XSTR(omp critical(a)))
-    #endif
-    #define GRIB_MUTEX_INIT_ONCE(a, b) (*(b))();
-    #define GRIB_MUTEX_LOCK(a)         omp_set_nest_lock(a);
-    #define GRIB_MUTEX_UNLOCK(a)       omp_unset_nest_lock(a);
-#else
-    #define GRIB_MUTEX_INIT_ONCE(a, b)
-    #define GRIB_MUTEX_LOCK(a)
-    #define GRIB_MUTEX_UNLOCK(a)
-#endif
-
-#if GRIB_LINUX_PTHREADS
-    /* Note: in newer pthreads PTHREAD_MUTEX_RECURSIVE and PTHREAD_MUTEX_RECURSIVE_NP are enums */
-    #if !defined(PTHREAD_MUTEX_RECURSIVE)
-        #define PTHREAD_MUTEX_RECURSIVE PTHREAD_MUTEX_RECURSIVE_NP
-    #endif
-#endif
+// #if GRIB_LINUX_PTHREADS
+//     /* Note: in newer pthreads PTHREAD_MUTEX_RECURSIVE and PTHREAD_MUTEX_RECURSIVE_NP are enums */
+//     #if !defined(PTHREAD_MUTEX_RECURSIVE)
+//         #define PTHREAD_MUTEX_RECURSIVE PTHREAD_MUTEX_RECURSIVE_NP
+//     #endif
+// #endif
 
 
 #ifndef HAVE_FSEEKO
@@ -726,11 +699,6 @@ struct grib_context
     grib_trie* lists;
     grib_trie* expanded_descriptors;
     int file_pool_max_opened_files;
-#if GRIB_PTHREADS
-    pthread_mutex_t mutex;
-#elif GRIB_OMP_THREADS
-    omp_nest_lock_t mutex;
-#endif
 };
 
 /* expression*/
@@ -1115,6 +1083,4 @@ typedef struct j2k_encode_helper
     #include "geo/nearest/Nearest.h"
     #include "expression/Expression.h"
     #include "grib_arguments.h"
-#endif
-
 #endif
