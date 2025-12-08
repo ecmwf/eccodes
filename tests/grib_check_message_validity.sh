@@ -258,6 +258,12 @@ grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "Spectral fields cannot have a bitmap" $tempText
 
 
+# Warning re wasteful bitmap
+${tools_dir}/grib_set -rs bitmapPresent=1 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 1 2>$tempText
+grep -q "There is a bitmap but all its entries are 1" $tempText
+
+
 # Bad user input
 # ---------------
 set +e
