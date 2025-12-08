@@ -22,7 +22,7 @@
 
 
 #define CHECK(a) CODES_CHECK(a, nullptr)
-#define SHOULD_WORK_TESTS 0
+#define SHOULD_WORK_TESTS 1
 
 
 using map_count_spec_t = std::map<size_t, std::string>;
@@ -49,9 +49,11 @@ bool grib_to_gridspec(const std::string& path, const map_count_spec_t& specs)
 
             EXPECT(CODES_SUCCESS == codes_get_string(h, "gridSpec", gridSpec, &size));
 
-            std::cout << "count=" << count << " '" << gridSpec << "' (calculated) == '" << it->second << "' (expected)" << std::endl;
+            // std::cout << "count=" << count << " '" << gridSpec << "'\t(calculated) == \n"
+            //           << "count=" << count << " '" << it->second << "'\t(expected)\n"
+            //           << std::endl;
 
-            // EXPECT(it->second == "?" || gridSpec == it->second);
+            EXPECT(it->second.empty() || gridSpec == it->second);
         }
 
         codes_handle_delete(h);
@@ -94,7 +96,7 @@ CASE("icon")
 CASE("lambert")
 {
     const map_count_spec_t specs{
-        { 0, "?" },
+        { 0, "" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/lambert.grib", specs));
@@ -106,7 +108,7 @@ CASE("lambert")
 CASE("lambert_azimuthal_equal_area")
 {
     const map_count_spec_t specs{
-        { 0, "?" },
+        { 0, "" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/lambert_azimuthal_equal_area.grib", specs));
@@ -118,7 +120,7 @@ CASE("lambert_azimuthal_equal_area")
 CASE("mercator")
 {
     const map_count_spec_t specs{
-        { 0, "?" },
+        { 0, "" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/mercator.grib", specs));
@@ -147,7 +149,7 @@ CASE("orca")
 CASE("polar_stereographic")
 {
     const map_count_spec_t specs{
-        { 0, "?" },
+        { 0, "" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/polar_stereographic.grib", specs));
@@ -175,72 +177,61 @@ CASE("reduced_gg")
             { 10, R"({"grid":"N128"})" },
             { 11, R"({"grid":"N160"})" },
             { 12, R"({"grid":"N160"})" },
-            { 13, R"({"grid":"O160"})" },
-            { 14, R"({"grid":"O160"})" },
+            { 13, "" },
+            { 14, "" },
             { 15, R"({"grid":"N200"})" },
             { 16, R"({"grid":"N200"})" },
             { 17, R"({"grid":"N256"})" },
-            { 18, R"({"grid":"N320"})" },
+            { 18, "" },
             { 19, R"({"grid":"N320"})" },
             { 20, R"({"grid":"N320"})" },
             { 21, R"({"grid":"N320"})" },
             { 22, R"({"grid":"N400"})" },
-            { 23, R"({"grid":"O400"})" },
+            { 23, "" },
             { 24, R"({"grid":"O400"})" },
             { 25, R"({"grid":"O400"})" },
-            { 26, R"({"grid":"N640"})" },
+            { 26, "" },
             { 27, R"({"grid":"N640"})" },
-            { 28, R"({"grid":"N640"})" },
+            { 28, "" },
             { 29, R"({"grid":"N640"})" },
             { 30, R"({"grid":"N640"})" },
             { 31, R"({"grid":"N640"})" },
             { 32, R"({"grid":"O640"})" },
-            { 33, R"({"grid":"O640"})" },
+            { 33, "" },
             { 34, R"({"grid":"O640"})" },
             { 35, R"({"grid":"O1280"})" },
-            { 36, R"({"grid":"O1280"})" },
+            { 36, "" },
             { 37, R"({"grid":"O1280"})" },
             { 38, R"({"grid":"O1280"})" },
             { 39, R"({"grid":"O1280"})" },
             { 40, R"({"grid":"O1280"})" },
+            { 41, "" },
+            { 42, "" },
+            { 43, "" },
+            { 44, "" },
+            { 45, "" },
+            { 46, "" },
+            { 47, "" },
+            { 48, "" },
+            { 49, "" },
+            { 50, "" },
+            { 51, "" },
+            { 52, "" },
+            { 53, "" },
+            { 54, "" },
+            { 55, "" },
+            { 56, "" },
+            { 57, "" },
+            { 58, "" },
+            { 59, "" },
+            { 60, "" },
+            { 61, "" },
+            { 62, "" },
+            { 63, "" },
+            { 64, "" },
+            { 65, "" },
         };
-
-        EXPECT(grib_to_gridspec("grib_to_gridspec/reduced_gg_global.grib", specs));
-    }
-    #endif
-
-
-    #if 1
-    SECTION("regional")
-    {
-        const map_count_spec_t specs{
-            { 0, "?" },   // R"({"grid":"N640","area":[]})" },
-            { 1, "?" },   // R"({"grid":"O640","area":[]})" },
-            { 2, "?" },   // R"({"grid":"O640","area":[]})" },
-            { 3, "?" },   // R"({"grid":"O640","area":[]})" },
-            { 4, "?" },   // R"({"grid":"O640","area":[]})" },
-            { 5, "?" },   // R"({"grid":"O640","area":[]})" },
-            { 6, "?" },   // R"({"grid":"O640","area":[]})" },
-            { 7, "?" },   // R"({"grid":"O640","area":[]})" },
-            { 8, "?" },   // R"({"grid":"O640","area":[]})" },
-            { 9, "?" },   // R"({"grid":"O640","area":[]})" },
-            { 10, "?" },  // R"({"grid":"O640","area":[]})" },
-            { 11, "?" },  // R"({"grid":"N1280","area":[]})" },
-            { 12, "?" },  // R"({"grid":"N1280","area":[]})" },
-            { 13, "?" },  // R"({"grid":"O1280","area":[]})" },
-            { 14, "?" },  // R"({"grid":"O1280","area":[]})" },
-            { 15, "?" },  // R"({"grid":"O1280","area":[]})" },
-            { 16, "?" },  // R"({"grid":"O1280","area":[]})" },
-            { 17, "?" },  // R"({"grid":"O1280","area":[]})" },
-            { 18, "?" },  // R"({"grid":"O1280","area":[]})" },
-            { 19, "?" },  // R"({"grid":"O1280","area":[]})" },
-            { 20, "?" },  // R"({"grid":"O1280","area":[]})" },
-            { 21, "?" },  // R"({"grid":"O1280","area":[]})" },
-            { 22, "?" },  // R"({"grid":"O1280","area":[]})" },
-            { 23, "?" },  // R"({"grid":"O1280","area":[]})" },
-            { 24, "?" },  // R"({"grid":"O1280","area":[]})" },
-        };
-        EXPECT(grib_to_gridspec("grib_to_gridspec/reduced_gg_regional.grib", specs));
+        EXPECT(grib_to_gridspec("grib_to_gridspec/reduced_gg.grib", specs));
     }
     #endif
 }
@@ -251,7 +242,7 @@ CASE("reduced_gg")
 CASE("reduced_ll")
 {
     const map_count_spec_t specs{
-        { 0, "?" },
+        { 0, "" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/reduced_ll.grib", specs));
@@ -263,7 +254,7 @@ CASE("reduced_ll")
 CASE("reduced_rotated_gg")
 {
     const map_count_spec_t specs{
-        { 0, "?" },
+        { 0, "" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/reduced_rotated_gg.grib", specs));
@@ -275,13 +266,13 @@ CASE("reduced_rotated_gg")
 CASE("regular_gg")
 {
     const map_count_spec_t specs{
-        { 0, "?" },  // R"({"grid":"F48","area":[]})" },
-        { 1, "?" },  // R"({"grid":"F48","area":[]})" },
-        { 2, "?" },  // R"({"grid":"F60","area":[]})" },
-        { 3, "?" },  // R"({"grid":"F80","area":[]})" },
-        { 4, "?" },  // R"({"grid":"F80","area":[]})" },
-        { 5, "?" },  // R"({"grid":"F640","area":[]})" },
-        { 6, "?" },  // R"({"grid":"F2250","area":[]})" },
+        { 0, "" },  // R"({"grid":"F48","area":[]})" },
+        { 1, "" },  // R"({"grid":"F48","area":[]})" },
+        { 2, "" },  // R"({"grid":"F60","area":[]})" },
+        { 3, "" },  // R"({"grid":"F80","area":[]})" },
+        { 4, "" },  // R"({"grid":"F80","area":[]})" },
+        { 5, "" },  // R"({"grid":"F640","area":[]})" },
+        { 6, "" },  // R"({"grid":"F2250","area":[]})" },
         { 7, R"({"grid":"F8"})" },
         { 8, R"({"grid":"F32"})" },
         { 9, R"({"grid":"F48"})" },
@@ -299,7 +290,7 @@ CASE("regular_gg")
 CASE("regular_ll")
 {
     const map_count_spec_t specs{
-        { 0, "?" },
+        { 0, "" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/regular_ll.grib", specs));
@@ -311,7 +302,7 @@ CASE("regular_ll")
 CASE("rotated_gg")
 {
     const map_count_spec_t specs{
-        { 0, "?" },
+        { 0, "" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/rotated_gg.grib", specs));
@@ -323,7 +314,7 @@ CASE("rotated_gg")
 CASE("rotated_ll")
 {
     const map_count_spec_t specs{
-        { 0, "?" },
+        { 0, "" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/rotated_ll.grib", specs));
@@ -347,7 +338,7 @@ CASE("sh")
 CASE("space_view")
 {
     const map_count_spec_t specs{
-        { 0, "?" },
+        { 0, "" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/space_view.grib", specs));
@@ -359,7 +350,7 @@ CASE("space_view")
 CASE("transverse_mercator")
 {
     const map_count_spec_t specs{
-        { 0, "?" },
+        { 0, "" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/transverse_mercator.grib", specs));
