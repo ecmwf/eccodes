@@ -1,2 +1,2 @@
 include "mars/xwda.def";
-alias mars.number=componentIndex;
+alias mars.number=perturbationNumber;
