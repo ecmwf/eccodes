@@ -92,12 +92,21 @@
  ## since start accumulation must have forecastTime=0
  # specific rules are in the centre's own definitions
  # fromstart for minutes / hourly / day
- 'fromstart'    = {typeOfStatisticalProcessing=1; forecastTime=0; true=is_one_of(indicatorOfUnitForTimeRange,0,1,2);}
+ 'fromstart'    = {typeOfStatisticalProcessing=1; forecastTime=0; true=is_one_of(indicatorOfUnitForTimeRange,0,1,2,13);}
  ### end Accumulations ###
  #
  ### mean/min/max/stdev ###
+ '10m'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 10;}
+ '10m'   = {indicatorOfUnitForTimeRange=13; lengthOfTimeRange = 600;}
+ '15m'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 15;}
+ '15m'   = {indicatorOfUnitForTimeRange=13; lengthOfTimeRange = 900;}
+ '20m'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 20;}
+ '20m'   = {indicatorOfUnitForTimeRange=13; lengthOfTimeRange = 1200;}
  '30m'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 30;}
+ '30m'   = {indicatorOfUnitForTimeRange=13; lengthOfTimeRange = 1800;}
  '1h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 1;}
+ '1h'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 60;}
+ '1h'   = {indicatorOfUnitForTimeRange=13; lengthOfTimeRange = 3600;}
  '3h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 3;}
  '3h'   = {indicatorOfUnitForTimeRange=10; lengthOfTimeRange = 1;}
  '6h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 6;}

@@ -270,6 +270,16 @@ int MessageIsValid::check_number_of_missing()
                 TITLE, numberOfCodedValues, numberOfMissing, numberOfDataPoints);
         return GRIB_INVALID_MESSAGE;
     }
+
+    // Warn re wasteful bitmap
+    long bitmapPresent = 0;
+    err = grib_get_long(handle_, "bitmapPresent", &bitmapPresent);
+    if (!err && bitmapPresent == 1) {
+        if (numberOfMissing == 0) {
+            fprintf(stderr, "ECCODES WARNING :  %s: There is a bitmap but all its entries are 1\n", TITLE);
+        }
+    }
+
     return GRIB_SUCCESS;
 }
 

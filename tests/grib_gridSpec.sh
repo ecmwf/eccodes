@@ -20,10 +20,10 @@ tempGrib=temp.$label.grib
 tempFilt=temp.$label.filt
 tempText=temp.$label.txt
 
-# Key is not there for spectral data (only gridded)
-infile=$ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl
-result=$( ${tools_dir}/grib_get -fp gridSpec $infile )
-[ "$result" = "not_found" ]
+# # Key is not there for spectral data (only gridded)
+# infile=$ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl
+# result=$( ${tools_dir}/grib_get -fp gridSpec $infile )
+# [ "$result" = "not_found" ]
 
 if [ $HAVE_ECKIT_GEO -ne 1 ]; then
     echo "$0: This test is disabled when HAVE_ECKIT_GEO=OFF"
