@@ -9,7 +9,6 @@
  */
 
 #include "BufrElementsTable.h"
-#include "string_util.h"
 #include "sync/Mutex.h"
 #include "grib_scaling.h"
 #include <fstream>
