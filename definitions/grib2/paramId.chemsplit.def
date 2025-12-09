@@ -19785,6 +19785,12 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 2 ;
 	}
+#Loss rate due to OH
+'479000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 19 ;
+	}
 #Pressure tendency
 '3003' = {
 	 discipline = 0 ;
