@@ -13,6 +13,15 @@ set -x
 
 REDIRECT=/dev/null
 
+# Cannot use plain diff. We need to compare FLOAT NUMBERS with a tolerance.
+# Decide if we have the numdiff commandline utility
+NUMDIFF_CMD="numdiff"
+USE_NUMDIFF=0
+if command -v $NUMDIFF_CMD >/dev/null 2>&1; then
+    USE_NUMDIFF=1
+fi
+
+
 cat > bufrdc_num_ref.filter<<EOF
 print "[numericValues!1%23.14e]";
 EOF
@@ -38,9 +47,9 @@ do
   fi
 
   if [ -f "$ref_num" ]; then
-    # Cannot use plain diff. We need to compare FLOAT NUMBERS with a tolerance
-    perl number_compare.pl $ref_num $res_num # >$REDIRECT 2> $REDIRECT
-    #numdiff               $ref_num $res_num >$REDIRECT 2> $REDIRECT
+    if [ $USE_NUMDIFF -eq 1 ]; then
+      $NUMDIFF_CMD $ref_num $res_num
+    fi
   fi
 
   rm -f $res_num

@@ -9,7 +9,7 @@ concept destineOrigin(unknown, "destineOriginConcept.def", conceptsDir2, concept
 unalias mars.domain;
 
 # ECC-1796: stepRange indexing for DestinE ExtremesDT and On-Demand ExtremesDT data
-# ECC-2161: only for pre-MTG2 data
+# ECC-2161: only for pre-MTG2 data
 if ( defined(dataset) && dataset isnot "climate-dt" && MTG2Switch == 0 ) {
     alias mars.step=stepRange;
 }
