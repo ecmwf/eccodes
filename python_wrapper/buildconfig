@@ -28,3 +28,6 @@ PYPROJECT_DIR="python_wrapper"
 # the dependency resolution during install cannot well resolve transitive dependencies yet, and fckit does depend on
 # eckit
 DEPENDENCIES='["eckitlib", "fckitlib"]'
+
+# eccodes has the convention of VERSION in `master` containing the *next* version, meaning we should not increment during dev releases
+export VERSION_MICROINCR="no"
