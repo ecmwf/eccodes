@@ -1,6 +1,3 @@
-'IFS' = {
-    backgroundProcess = 255;
-}
 'aifs-single' = {
     backgroundProcess = 1;
 }
@@ -27,4 +24,15 @@
 }
 'aifs-compo-ens-crps' = {
     backgroundProcess = 9;
+}
+# ldas 206-215
+'ldas' = {
+    backgroundProcess = 215;
+}
+# ecwam 216-225
+# nemo 226-235
+# ifs-compo 236-245
+# ifs 246-255
+'ifs' = {
+    backgroundProcess = 255;
 }
