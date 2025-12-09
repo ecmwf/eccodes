@@ -10389,6 +10389,34 @@
 	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean water surface elevation
+'235412' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 21 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean groundwater return flow rate
+'235413' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean river and floodplain storage
+'235414' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 23 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean depth-averaged river velocity
+'235415' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 24 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-integrated land surface heat net flux
 '236386' = {
 	 discipline = 2 ;
@@ -16627,6 +16655,30 @@
 	 discipline = 1 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 23 ;
+	}
+#Water surface elevation
+'240042' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 21 ;
+	}
+#Groundwater return flow rate
+'240043' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 22 ;
+	}
+#River and floodplain storage
+'240044' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 23 ;
+	}
+#Depth-averaged river velocity
+'240045' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 24 ;
 	}
 #Latitude
 '250001' = {
