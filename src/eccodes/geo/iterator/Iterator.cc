@@ -142,6 +142,15 @@ int grib_iterator_destroy(grib_context* c, grib_iterator* i)
 #if defined(HAVE_GEOGRAPHY)
 static grib_iterator* grib_iterator_new_(const grib_handle* ch, unsigned long flags, int* error)
 {
+    {
+        long isGridded = -1;
+        int err        = grib_get_long(ch, "isGridded", &isGridded);
+        if (!err && !isGridded) {
+            *error = GRIB_NOT_IMPLEMENTED;
+            return nullptr;
+        }
+    }
+
     grib_iterator* i = (grib_iterator*)grib_context_malloc_clear(ch->context, sizeof(grib_iterator));
 
     #if defined(HAVE_ECKIT_GEO)
@@ -151,12 +160,11 @@ static grib_iterator* grib_iterator_new_(const grib_handle* ch, unsigned long fl
 
         try {
             if (i->iterator = new eccodes::geo_iterator::GeoIterator(const_cast<grib_handle*>(ch), flags);
-                i->iterator != nullptr)
-            {
+                i->iterator != nullptr) {
                 *error = i->iterator->init(const_cast<grib_handle*>(ch), nullptr);
                 if (*error) {
                     grib_context_log(ch->context, GRIB_LOG_ERROR, "Geoiterator: Error instantiating iterator (%s)",
-                             grib_get_error_message(*error));
+                                     grib_get_error_message(*error));
                     return nullptr;
                 }
                 return i;
@@ -188,8 +196,8 @@ static grib_iterator* grib_iterator_new_(const grib_handle* ch, unsigned long fl
 // C-API: Ensure all exceptions are converted to error codes
 grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int* error)
 {
-  auto result = eccodes::handleExceptions(grib_iterator_new_, ch, flags, error);
-  return eccodes::updateErrorAndReturnValue(result, error);
+    auto result = eccodes::handleExceptions(grib_iterator_new_, ch, flags, error);
+    return eccodes::updateErrorAndReturnValue(result, error);
 }
 
 static int grib_iterator_delete_(grib_iterator* i)
