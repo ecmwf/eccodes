@@ -470,6 +470,13 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
 	}
+#Logarithm of surface pressure
+'Numeric' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
 #Divergence
 's**-1' = {
 	 discipline = 0 ;
@@ -1010,16 +1017,16 @@
 	}
 #U-component of atmospheric surface momentum flux
 'N m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 17 ;
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 103 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
 #V-component of atmospheric surface momentum flux
 'N m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 18 ;
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 104 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
 #U-component of surface momentum flux into ocean
@@ -1398,17 +1405,17 @@
 	}
 #Time-mean U-component of atmospheric surface momentum flux
 'N m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 17 ;
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 103 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean V-component of atmospheric surface momentum flux
 'N m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 18 ;
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 104 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
@@ -2057,17 +2064,17 @@
 	}
 #Time-maximum U-component of atmospheric surface momentum flux
 'N m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 17 ;
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 103 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum V-component of atmospheric surface momentum flux
 'N m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 18 ;
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 104 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
@@ -2716,17 +2723,17 @@
 	}
 #Time-minimum U-component of atmospheric surface momentum flux
 'N m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 17 ;
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 103 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum V-component of atmospheric surface momentum flux
 'N m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 18 ;
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 104 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
@@ -3375,17 +3382,17 @@
 	}
 #Time-standard-deviation U-component of atmospheric surface momentum flux
 'N m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 17 ;
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 103 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation V-component of atmospheric surface momentum flux
 'N m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 18 ;
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 104 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
@@ -7627,6 +7634,22 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 167 ;
 	}
+#Total column vertical-maximum radar precipitation rate
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 16 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertical-maximum radar reflectivity
+'dB' = {
+	 discipline = 0 ;
+	 parameterCategory = 16 ;
+	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
 #Thunderstorm hazard index
 '(Code table 4.253)' = {
 	 discipline = 20 ;
@@ -9042,6 +9065,14 @@
 	 typeOfFirstFixedSurface = 101 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean logarithm of surface pressure
+'Numeric' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean divergence
 's**-1' = {
 	 discipline = 0 ;
@@ -10389,6 +10420,34 @@
 	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean water surface elevation
+'m' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 21 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean groundwater return flow rate
+'m**3 s**-1' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean river and floodplain storage
+'m**3' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 23 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean depth-averaged river velocity
+'m s**-1' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 24 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-integrated land surface heat net flux
 'J m**-2' = {
 	 discipline = 2 ;
@@ -11184,7 +11243,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 105 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum divergence
@@ -13226,7 +13285,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 105 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum divergence
@@ -15238,7 +15297,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 105 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation divergence
@@ -16627,6 +16686,30 @@
 	 discipline = 1 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 23 ;
+	}
+#Water surface elevation
+'m' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 21 ;
+	}
+#Groundwater return flow rate
+'m**3 s**-1' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 22 ;
+	}
+#River and floodplain storage
+'m**3' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 23 ;
+	}
+#Depth-averaged river velocity
+'m s**-1' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 24 ;
 	}
 #Latitude
 'Degree N' = {

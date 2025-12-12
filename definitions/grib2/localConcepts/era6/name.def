@@ -502,6 +502,14 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum logarithm of surface pressure
+'Time-maximum logarithm of surface pressure' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-minimum wind speed
 'Time-minimum wind speed' = {
 	 discipline = 0 ;
@@ -520,6 +528,14 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 200 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum logarithm of surface pressure
+'Time-minimum logarithm of surface pressure' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-standard-deviation wind speed
@@ -540,6 +556,14 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 200 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation logarithm of surface pressure
+'Time-standard-deviation logarithm of surface pressure' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Covariance between 2-metre temperature and volumetric soil water layer 1
