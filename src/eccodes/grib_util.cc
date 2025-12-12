@@ -2613,7 +2613,8 @@ int grib_check_data_values_minmax(grib_handle* h, const double min_val, const do
     }
 
     // Data Quality checks
-    if (ctx->grib_data_quality_checks) {
+    const int quality_checks_enabled = grib_context_get_data_quality_checks(ctx);
+    if (quality_checks_enabled) {
         result = grib_util_grib_data_quality_check(h, min_val, max_val);
     }
 

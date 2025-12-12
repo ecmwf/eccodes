@@ -242,7 +242,18 @@ void grib_context_set_data_quality_checks(grib_context* c, int val)
     // If val == 2, failure results in a warning
     ECCODES_ASSERT(val == 0 || val == 1 || val == 2);
 
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
+    GRIB_MUTEX_LOCK(&mutex_c);
     c->grib_data_quality_checks = val;
+    GRIB_MUTEX_UNLOCK(&mutex_c);
+}
+int grib_context_get_data_quality_checks(const grib_context* c)
+{
+    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
+    GRIB_MUTEX_LOCK(&mutex_c);
+    int result = c->grib_data_quality_checks;
+    GRIB_MUTEX_UNLOCK(&mutex_c);
+    return result;
 }
 
 void grib_context_set_debug(grib_context* c, int mode)
