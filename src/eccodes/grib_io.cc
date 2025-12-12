@@ -920,8 +920,6 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
 
 static int read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
 {
-    int result = 0;
-
 #ifndef ECCODES_EACH_THREAD_OWN_FILE
     /* If several threads can open the same file, then we need the locks
      * so each thread gets its own message. Otherwise if threads are passed

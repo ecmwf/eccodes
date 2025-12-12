@@ -1117,7 +1117,6 @@ bufr_descriptors_array* grib_context_expanded_descriptors_list_get(grib_context*
     bufr_descriptors_map_list* expandedUnexpandedMapList;
     size_t i  = 0;
     int found = 0;
-    bufr_descriptors_array* result = NULL;
     if (!c) c = grib_context_get_default();
 
     eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
