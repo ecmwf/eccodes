@@ -10,39 +10,11 @@
 
 #include "grib_api_internal.h"
 #include "ExceptionHandler.h"
+#include "sync/Mutex.h"
+
+static eccodes::sync::Mutex mutex;
 
 #define IDENTIFIER_SIZE 4  // Size of the identifiers like GRIB, BUFR, etc.
-
-#if GRIB_PTHREADS
-static pthread_once_t once    = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex1, &attr);
-    pthread_mutex_init(&mutex2, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex1;
-static omp_nest_lock_t mutex2;
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_grib_io_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex1);
-            omp_init_nest_lock(&mutex2);
-            once = 1;
-        }
-    }
-}
-#endif
-
 
 #define GRIB 0x47524942
 #define BUDG 0x42554447
@@ -955,16 +927,10 @@ static int read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int hdf5_
      * so each thread gets its own message. Otherwise if threads are passed
      * different files, then the lock is not needed
      */
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex1);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 #endif
 
-    result = ecc_read_any(r, no_alloc, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
-
-#ifndef ECCODES_EACH_THREAD_OWN_FILE
-    GRIB_MUTEX_UNLOCK(&mutex1);
-#endif
-    return result;
+    return ecc_read_any(r, no_alloc, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
 }
 
 static int read_any_gts(reader* r)

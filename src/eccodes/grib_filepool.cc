@@ -9,38 +9,12 @@
  */
 
 #include "grib_api_internal.h"
+#include "sync/Mutex.h"
 #include <cstdio>
 
 #define GRIB_MAX_OPENED_FILES 200
 
-#if GRIB_PTHREADS
-static pthread_once_t once    = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
-
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex1, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex1;
-
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_grib_filepool_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex1);
-            once = 1;
-        }
-    }
-}
-#endif
-
+static eccodes::sync::Mutex mutex;
 static short next_id = 0;
 
 static grib_file* grib_file_new(grib_context* c, const char* name, int* err);
@@ -177,7 +151,6 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
     grib_file *file = 0, *prev = 0;
     int same_mode = 0;
     int is_new    = 0;
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
 
     if (!file_pool.context)
         file_pool.context = grib_context_get_default();
@@ -186,7 +159,7 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
         file = file_pool.current;
     }
     else {
-        GRIB_MUTEX_LOCK(&mutex1);
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
         file = file_pool.first;
         while (file) {
             if (!grib_inline_strcmp(filename, file->name))
@@ -204,7 +177,6 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
                 file_pool.first = file;
             file_pool.size++;
         }
-        GRIB_MUTEX_UNLOCK(&mutex1);
     }
 
     if (file->mode)
@@ -214,7 +186,7 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
         return file;
     }
 
-    GRIB_MUTEX_LOCK(&mutex1);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     if (!same_mode && file->handle) {
         fclose(file->handle);
     }
@@ -230,7 +202,6 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
         if (!file->handle) {
             grib_context_log(file->context, GRIB_LOG_PERROR, "%s: Cannot open file '%s'", __func__, file->name);
             *err = GRIB_IO_PROBLEM;
-            GRIB_MUTEX_UNLOCK(&mutex1);
             return NULL;
         }
         if (file->mode) free(file->mode);
@@ -252,7 +223,6 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
         file_pool.number_of_opened_files++;
     }
 
-    GRIB_MUTEX_UNLOCK(&mutex1);
     return file;
 }
 
@@ -266,14 +236,10 @@ grib_file* grib_file_pool_create_clone(grib_context* c, short clone_id, grib_fil
         newfile->handle             = pool_file->handle;
         newfile->pool_file          = pool_file;
         newfile->pool_file_refcount = 0;
-
-        GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-        GRIB_MUTEX_LOCK(&mutex1);
-
-        ++pool_file->pool_file_refcount;
-
-        GRIB_MUTEX_UNLOCK(&mutex1);
-
+        {
+            eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+            ++pool_file->pool_file_refcount;
+        }
         return newfile;
     }
     else
@@ -285,8 +251,7 @@ void grib_file_pool_delete_clone(grib_file* cloned_file)
     grib_file* pool_file = cloned_file->pool_file;
     if(pool_file)
     {
-        GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-        GRIB_MUTEX_LOCK(&mutex1);
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
         if(pool_file->pool_file_refcount > 0)
         {
             --pool_file->pool_file_refcount;
@@ -294,8 +259,6 @@ void grib_file_pool_delete_clone(grib_file* cloned_file)
             if (pool_file->pool_file_refcount == 0)
                 grib_file_pool_delete_file(pool_file);
         }
-
-        GRIB_MUTEX_UNLOCK(&mutex1);
     }
 
     grib_file_delete(cloned_file);
@@ -304,9 +267,8 @@ void grib_file_pool_delete_clone(grib_file* cloned_file)
 void grib_file_pool_delete_file(grib_file* file)
 {
     grib_file* prev = NULL;
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex1);
 
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     if (file == file_pool.first) {
         file_pool.first   = file->next;
         file_pool.current = file->next;
@@ -333,7 +295,6 @@ void grib_file_pool_delete_file(grib_file* file)
         file_pool.number_of_opened_files--;
     }
     grib_file_delete(file);
-    GRIB_MUTEX_UNLOCK(&mutex1);
 }
 
 void grib_file_close(const char* filename, int force, int* err)
@@ -350,8 +311,7 @@ void grib_file_close(const char* filename, int force, int* err)
 
     if (do_close) {
         /*printf("+++++++++++++ closing file %s (n=%d)\n",filename, file_pool.number_of_opened_files);*/
-        GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-        GRIB_MUTEX_LOCK(&mutex1);
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
         file = grib_get_file(filename, err);
         if (file->handle) {
             if (fclose(file->handle) != 0) {
@@ -364,7 +324,6 @@ void grib_file_close(const char* filename, int force, int* err)
             file->handle = NULL;
             file_pool.number_of_opened_files--;
         }
-        GRIB_MUTEX_UNLOCK(&mutex1);
     }
 }
 
@@ -374,9 +333,7 @@ void grib_file_close_all(int* err)
     if (!file_pool.first)
         return;
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex1);
-
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     file = file_pool.first;
     while (file) {
         if (file->handle) {
@@ -387,8 +344,6 @@ void grib_file_close_all(int* err)
         }
         file = file->next;
     }
-
-    GRIB_MUTEX_UNLOCK(&mutex1);
 }
 
 grib_file* grib_get_file(const char* filename, int* err)
@@ -441,15 +396,13 @@ static grib_file* grib_file_new(grib_context* c, const char* name, int* err)
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
     }
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
 
     file->name = strdup(name);
     file->id   = next_id;
-
-    GRIB_MUTEX_LOCK(&mutex1);
-    next_id++;
-    GRIB_MUTEX_UNLOCK(&mutex1);
-
+    {
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+        next_id++;
+    }
     file->mode               = 0;
     file->handle             = 0;
     file->refcount           = 0;
@@ -465,8 +418,7 @@ void grib_file_delete(grib_file* file)
 {
     if (!file) return;
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex1);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     /* GRIB-803: cannot call fclose yet! Causes crash */
     /* TODO: Set handle to NULL in filepool too */
 
@@ -481,7 +433,6 @@ void grib_file_delete(grib_file* file)
     free(file->buffer); file->buffer = 0;
     grib_context_free(file->context, file);
     /* file = NULL; */
-    GRIB_MUTEX_UNLOCK(&mutex1);
 }
 
 void grib_file_pool_print(const char* title, FILE* out)
