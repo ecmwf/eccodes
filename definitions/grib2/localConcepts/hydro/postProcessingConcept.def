@@ -1,0 +1,5 @@
+# For template.4.postproc.def
+"None" = { typeOfPostProcessing = 0; }
+"Stitched NWP 24h lagged forcings" = { typeOfPostProcessing = 1; }
+"Stitched NWP forcings" = { typeOfPostProcessing = 2; }
+"Bias Adjusted Forcings" = { typeOfPostProcessing = 3; }
