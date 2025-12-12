@@ -7634,6 +7634,22 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 167 ;
 	}
+#Total column vertical-maximum radar precipitation rate
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 16 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertical-maximum radar reflectivity
+'dB' = {
+	 discipline = 0 ;
+	 parameterCategory = 16 ;
+	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
 #Thunderstorm hazard index
 '(Code table 4.253)' = {
 	 discipline = 20 ;

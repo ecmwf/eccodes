@@ -7634,6 +7634,22 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 167 ;
 	}
+#Total column vertical-maximum radar precipitation rate
+'Total column vertical-maximum radar precipitation rate' = {
+	 discipline = 0 ;
+	 parameterCategory = 16 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertical-maximum radar reflectivity
+'Total column vertical-maximum radar reflectivity' = {
+	 discipline = 0 ;
+	 parameterCategory = 16 ;
+	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
 #Thunderstorm hazard index
 'Thunderstorm hazard index' = {
 	 discipline = 20 ;
