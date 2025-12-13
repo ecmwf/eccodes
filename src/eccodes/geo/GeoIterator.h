@@ -31,8 +31,7 @@ private:
     std::unique_ptr<const Spec> spec_;
     std::unique_ptr<const eckit::geo::Grid> grid_;
 
-    mutable std::unique_ptr<eckit::geo::Grid::NextIterator> iter_;
-    mutable eckit::geo::Point point_;
+    mutable eckit::geo::Grid::iterator iter_;
 
     int init(grib_handle*, grib_arguments*) override;
     int next(double* lat, double* lon, double* val) const override;

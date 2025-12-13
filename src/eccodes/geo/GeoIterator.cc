@@ -21,8 +21,7 @@ namespace eccodes::geo_iterator
 GeoIterator::GeoIterator(grib_handle* h, unsigned long flags) :
     spec_(new eccodes::geo::GribToSpec(h)),
     grid_(eckit::geo::GridFactory::build(*spec_)),
-    iter_(grid_->make_next_iterator()),
-    point_(eckit::geo::PointLonLat{})
+    iter_(grid_->begin())
 {
     h_          = h;
     class_name_ = "geo_iterator";
@@ -70,8 +69,8 @@ int GeoIterator::init(grib_handle* h, grib_arguments*)
 int GeoIterator::next(double* lat, double* lon, double* val) const
 {
     try {
-        if (iter_->next(point_)) {
-            const auto& q = std::get<eckit::geo::PointLonLat>(point_);
+        if (iter_) {
+            const auto& q = std::get<eckit::geo::PointLonLat>(*iter_);
 
             *lat = q.lat;
             *lon = q.lon;
@@ -81,6 +80,7 @@ int GeoIterator::next(double* lat, double* lon, double* val) const
                     *val = data_[i];
             }
 
+            ++iter_;
             return 1;  // (true)
         }
     }
@@ -101,7 +101,7 @@ int GeoIterator::previous(double*, double*, double*) const
 
 int GeoIterator::reset()
 {
-    iter_.reset(grid_->make_next_iterator());
+    iter_ = grid_->begin();
     return GRIB_SUCCESS;
 }
 
@@ -113,7 +113,8 @@ int GeoIterator::destroy()
 
 bool GeoIterator::has_next() const
 {
-    return iter_->has_next();
+    auto it = iter_;
+    return ++it;
 }
 
 Iterator* GeoIterator::create() const
