@@ -69,10 +69,10 @@ CASE("healpix")
 {
     const map_count_spec_t specs{
         { 0, R"({"grid":"H2"})" },
-        { 1, R"({"grid":"H2n"})" },
+        { 1, R"({"grid":"H2","order":"nested"})" },
         { 2, R"({"grid":"H32"})" },
-        { 3, R"({"grid":"H32n"})" },
-        { 4, R"({"grid":"H1024n"})" },
+        { 3, R"({"grid":"H32","order":"nested"})" },
+        { 4, R"({"grid":"H1024","order":"nested"})" },
     };
 
     EXPECT(grib_to_gridspec("grib_to_gridspec/healpix.grib", specs));
