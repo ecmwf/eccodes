@@ -6,7 +6,7 @@ if ( grib2LocalSectionNumber == 45 && MTG2Switch == 0) {
  # this has always value 1, so we mimick this for pre-mtg2 which 50r1 is part of
  transient pertNumber=1;
  alias mars.number = pertNumber;
- alias mars.coefficient = fourierCoefficientIndex;
+ alias mars.coeffindex = fourierCoefficientIndex;
 } else {
- alias mars.coefficient = fourierCoefficientIndex;
+ alias mars.coeffindex = fourierCoefficientIndex;
 }
