@@ -11,4 +11,4 @@ unsigned[2] lengthOf4DvarWindow : dump;
 alias anoffset=offsetToEndOf4DvarWindow;
 
 # Add some padding just in case we want more keys in the future
-pad padding_loc45(4);
+pad padding_loc45(32);
