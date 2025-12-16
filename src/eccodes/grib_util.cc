@@ -1308,6 +1308,13 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
             grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set pl: %s", __func__, grib_get_error_message(err));
             return err;
         }
+        if (editionNumber != 1) {
+            err = grib_set_long(h, "interpretationOfNumberOfPoints", 1); // See Code Table 3.11
+            if (err) {
+                grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set key: %s", __func__, grib_get_error_message(err));
+                return err;
+            }
+        }
     }
 
     if (grib1_high_resolution_fix) {
