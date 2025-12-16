@@ -198,6 +198,11 @@
 ## Daily STATTYPES with 1 or 2 time loops ##
 ############################################
 # Mean - 24 hours
+'daac' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 24) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 1) ; }
+# Mean - 24 hours
 'daav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 24) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
