@@ -1257,25 +1257,6 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
         }
     }
 
-    // GRIB-857: Set "pl" array if provided (For reduced Gaussian grids)
-    ECCODES_ASSERT(spec->pl_size >= 0);
-    if (spec->pl && spec->pl_size == 0) {
-        grib_context_log(c, GRIB_LOG_ERROR, "%s: pl array not NULL but pl_size == 0!", __func__);
-        return GRIB_WRONG_GRID;
-    }
-    if (spec->pl_size > 0 && spec->pl == NULL) {
-        grib_context_log(c, GRIB_LOG_ERROR, "%s: pl_size not zero but pl array == NULL!", __func__);
-        return GRIB_WRONG_GRID;
-    }
-
-    if (spec->pl_size != 0 && (spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG)) {
-        err = grib_set_long_array(h, "pl", spec->pl, spec->pl_size);
-        if (err) {
-            grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set pl: %s", __func__, grib_get_error_message(err));
-            return err;
-        }
-    }
-
     if (h->context->debug == -1) {
         print_values(h->context, __func__, spec, packing_spec, input_packing_type, NULL, 0, values, count);
     }
@@ -1307,6 +1288,26 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
     if ((err = grib_set_values(h, values, count)) != 0) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set key values: %s", __func__, grib_get_error_message(err));
         return err;
+    }
+
+    // GRIB-857: Set "pl" array if provided (For reduced Gaussian grids)
+    // Note: We must set the PL array after we've submitted the key/values and gridType
+    ECCODES_ASSERT(spec->pl_size >= 0);
+    if (spec->pl && spec->pl_size == 0) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: pl array not NULL but pl_size == 0!", __func__);
+        return GRIB_WRONG_GRID;
+    }
+    if (spec->pl_size > 0 && spec->pl == NULL) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: pl_size not zero but pl array == NULL!", __func__);
+        return GRIB_WRONG_GRID;
+    }
+
+    if (spec->pl_size != 0 && (spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG)) {
+        err = grib_set_long_array(h, "pl", spec->pl, spec->pl_size);
+        if (err) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set pl: %s", __func__, grib_get_error_message(err));
+            return err;
+        }
     }
 
     if (grib1_high_resolution_fix) {
