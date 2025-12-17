@@ -595,6 +595,55 @@ ProcessingT<double>* iDirectionIncrementInDegrees_fix_for_periodic_regular_grids
 }
 
 
+ProcessingT<std::vector<double>>* grid_lonlat()
+{
+    return new ProcessingT<std::vector<double>>([=](codes_handle* h, std::vector<double>& values) {
+        static auto codes_is_well_defined = [h](const char* key) -> bool {
+            int err = CODES_SUCCESS;
+            return (codes_is_defined(h, key) != 0) && (codes_is_missing(h, key, &err) == 0) && (err == CODES_SUCCESS);
+        };
+
+        static auto get_increment = [h](double& value, const char* inc_key,
+                                        const char* x0_key,
+                                        const char* x1_key,
+                                        const char* n_key, const char* sign_key) -> bool {
+            if (codes_is_well_defined(inc_key)) {
+                codes_get_double(h, inc_key, &value);
+                return true;
+            }
+
+            if (codes_is_well_defined(x0_key) && codes_is_well_defined(x1_key) && codes_is_well_defined(n_key) && codes_is_well_defined(sign_key)) {
+                double x0 = 0.;
+                CHECK_CALL(codes_get_double(h, x0_key, &x0));
+
+                double x1 = 0.;
+                CHECK_CALL(codes_get_double(h, x1_key, &x1));
+
+                long n = 0;
+                CHECK_CALL(codes_get_long(h, n_key, &n));
+                ASSERT(n >= 1);
+
+                long sign = 0;
+                CHECK_CALL(codes_get_long(h, sign_key, &sign));
+
+                value = (x1 - x0) / (sign != 0 ? static_cast<double>(n - 1) : static_cast<double>(1 - n));
+                return true;
+            }
+
+            return false;
+        };
+
+        if (double dlon = 0., dlat = 0.; get_increment(dlon, "iDirectionIncrementInDegrees", "longitudeOfFirstGridPointInDegrees", "longitudeOfLastGridPointInDegrees", "Ni", "iScansPositively") &&
+                                         get_increment(dlat, "jDirectionIncrementInDegrees", "latitudeOfFirstGridPointInDegrees", "latitudeOfLastGridPointInDegrees", "Nj", "jScansPositively")) {
+            values = { dlon, dlat };
+            return true;
+        }
+
+        return false;
+    });
+}
+
+
 ProcessingT<std::vector<double>>* vector_double(std::initializer_list<std::string> keys)
 {
     const std::vector<std::string> keys_(keys);
@@ -945,8 +994,11 @@ bool GribToSpec::get(const std::string& name, std::vector<long>& value) const
     ASSERT(!value.empty());
 
     if (name == "pl") {
+        // pl array must not contain zeros for reduced grids (except reduced_ll)
         if (std::find(value.rbegin(), value.rend(), 0) != value.rend()) {
-            wrongly_encoded_grib("GribParametrisation: pl array contains zeros");
+            if (std::string gridType; get("gridType", gridType) && (gridType != "reduced_ll")) {
+                wrongly_encoded_grib("GribToSpec: pl array contains zeros");
+            }
         }
     }
 
@@ -1005,7 +1057,7 @@ bool GribToSpec::get(const std::string& name, std::vector<double>& value) const
     }
 
     static const ProcessingList<std::vector<double>> process{
-        { "grid", vector_double({ "iDirectionIncrementInDegrees", "jDirectionIncrementInDegrees" }),
+        { "grid", grid_lonlat(),
           _or(is("gridType", "regular_ll"), is("gridType", "rotated_ll")) },
         { "grid", vector_double({ "xDirectionGridLengthInMetres", "yDirectionGridLengthInMetres" }),
           is("gridType", "lambert_azimuthal_equal_area") },
