@@ -356,7 +356,9 @@ const char* get_key(const std::string& name, codes_handle* h)
 std::string get_string(codes_handle* h, const char* key)
 {
     if (codes_is_defined(h, key) != 0) {
-        char buffer[64] = {0,};
+        char buffer[64] = {
+            0,
+        };
         size_t size = sizeof(buffer);
 
         CHECK_CALL(codes_get_string(h, key, buffer, &size));
@@ -464,7 +466,7 @@ ProcessingT<double>* longitudeOfLastGridPointInDegrees_fix_for_global_reduced_gr
                     if (!eckit::types::is_approximately_greater_or_equal<double>(Lon2, Lon2_expected, eps)) {
                         std::ostringstream msgs;
                         msgs.precision(32);
-                        msgs << "GribParametrisation: wrongly encoded longitudeOfLastGridPointInDegrees:"
+                        msgs << "GribToSpec: wrongly encoded longitudeOfLastGridPointInDegrees:"
                              << "\n"
                                 "encoded:  "
                              << Lon2
@@ -573,7 +575,7 @@ ProcessingT<double>* iDirectionIncrementInDegrees_fix_for_periodic_regular_grids
             // TODO refactor, not really specific to "periodic regular grids", but useful
             std::ostringstream msgs;
             msgs.precision(32);
-            msgs << "GribParametrisation: wrongly encoded iDirectionIncrementInDegrees:"
+            msgs << "GribToSpec: wrongly encoded iDirectionIncrementInDegrees:"
                     "\n"
                     "encoded: "
                  << we
@@ -648,7 +650,7 @@ ProcessingT<std::vector<double>>* vector_double(std::initializer_list<std::strin
 {
     const std::vector<std::string> keys_(keys);
     return new ProcessingT<std::vector<double>>([=](codes_handle* h, std::vector<double>& values) {
-        ASSERT(keys.size());
+        ASSERT(keys_.size());
 
         values.assign(keys_.size(), 0);
         size_t i = 0;
