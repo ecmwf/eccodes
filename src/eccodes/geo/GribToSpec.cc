@@ -929,8 +929,7 @@ bool GribToSpec::get(const std::string& name, double& value) const
 
     const auto* key = get_key(name, handle_);
 
-    ASSERT(key != nullptr);
-    if (std::strlen(key) == 0) {
+    if (key == nullptr || std::strlen(key) == 0) {
         return false;
     }
 
