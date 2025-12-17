@@ -92,8 +92,10 @@
  # hourly rolling accumulations and we don't want to have the first in a different bucket
  ## since start accumulation must have forecastTime=0
  # specific rules are in the centre's own definitions
- # fromstart for minutes / hourly / day
- 'fromstart'    = {typeOfStatisticalProcessing=1; forecastTime=0; true=is_one_of(indicatorOfUnitForTimeRange,0,1,2,13);}
+ # minutes / hours / day / seconds
+ 'fromstart'    = {typeOfStatisticalProcessing=1; forecastTime=0; true=is_one_of(indicatorOfUnitForTimeRange,0,1,2,13); numberOfTimeRanges=1;}
+ 'none' = {typeOfStatisticalProcessing=1; forecastTime=0; stattype="daac"; numberOfTimeRanges=1;}
+ '1h' = {typeOfStatisticalProcessing=1; forecastTime=0; stattype="daac"; numberOfTimeRanges=2; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 1;}
  ### end Accumulations ###
  #
  ### mean/min/max/stdev ###
