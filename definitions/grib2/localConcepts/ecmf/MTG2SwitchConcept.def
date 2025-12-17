@@ -35,6 +35,10 @@
 0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=161; marsClass=36;}
 0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=109; marsClass=36;}
 0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=209; marsClass=36;}
+# GG
+0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=161; marsClass=44;}
+0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=109; marsClass=44;}
+0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=209; marsClass=44;}
 # AI
 0 = {tablesVersion=34; productionStatusOfProcessedData=0; marsClass=51;}
 0 = {tablesVersion=35; productionStatusOfProcessedData=0; marsClass=51;}
