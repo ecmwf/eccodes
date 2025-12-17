@@ -1302,7 +1302,7 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
         return GRIB_WRONG_GRID;
     }
 
-    if (spec->pl_size != 0 && (spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG)) {
+    if (spec->pl_size != 0 && (spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG || spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_LL)) {
         err = grib_set_long_array(h, "pl", spec->pl, spec->pl_size);
         if (err) {
             grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set pl: %s", __func__, grib_get_error_message(err));
