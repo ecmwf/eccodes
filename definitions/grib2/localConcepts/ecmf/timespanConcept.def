@@ -2,10 +2,18 @@
  # either instantaneous data or processing is specified by mars stream
  'unknown'          = {dummy=0;}
  # this is for one loop grib2 data
- 'none'    = {stream='swmm'; numberOfTimeRanges=1;}
- 'none'    = {stream='mnth'; numberOfTimeRanges=1;}
- 'none'    = {stream='mmsa'; numberOfTimeRanges=1;}
- 'none'    = {stream='msmm'; numberOfTimeRanges=1;}
+ 'none'    = {stream='swmm'; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=1;}
+ 'none'    = {stream='mnth'; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=1;}
+ 'none'    = {stream='mmsa'; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=1;}
+ 'none'    = {stream='msmm'; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=1;}
+ 'none'    = {stream='swmm'; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=2;}
+ 'none'    = {stream='mnth'; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=2;}
+ 'none'    = {stream='mmsa'; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=2;}
+ 'none'    = {stream='msmm'; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=2;}
+ 'none'    = {stream='swmm'; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=3;}
+ 'none'    = {stream='mnth'; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=3;}
+ 'none'    = {stream='mmsa'; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=3;}
+ 'none'    = {stream='msmm'; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=3;}
  'none'    = {stream='sttd'; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=1;}
  'none'    = {stream='sttd'; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=2;}
  'none'    = {stream='sttd'; numberOfTimeRanges=1; indicatorOfUnitForTimeRange=3;}
