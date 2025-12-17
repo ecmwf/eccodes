@@ -11,6 +11,7 @@
 
 
 #include "eccodes/geo/GribToSpec.h"
+#include "grib_api_internal.h"
 
 #include <algorithm>
 #include <cstring>
@@ -168,11 +169,13 @@ void wrongly_encoded_grib(const std::string& msg)
     static bool abortIfWronglyEncodedGRIB = eckit::Resource<bool>("$MIR_ABORT_IF_WRONGLY_ENCODED_GRIB", false);
 
     if (abortIfWronglyEncodedGRIB) {
-        Log::error() << msg << std::endl;
+        // Log::error() << msg << std::endl;
+        grib_context_log(nullptr, GRIB_LOG_ERROR, "%s", msg.c_str());
         throw eckit::UserError(msg);
     }
 
-    Log::warning() << msg << std::endl;
+    //Log::warning() << msg << std::endl;
+    grib_context_log(nullptr, GRIB_LOG_WARNING, "%s", msg.c_str());
 }
 
 
