@@ -172,10 +172,10 @@ CASE("grid: reduced_ll")
         auto* h = eccodes::geo::GribFromSpec::set(sample, spec);
         EXPECT(h != nullptr);
 
-        // long valid = 0;
-        // set_string(h, "messageValidityChecks", "grid");
-        // CHECK(codes_get_long(h, "isMessageValid", &valid));
-        // EXPECT(valid == 1);
+        long valid = 0;
+        set_string(h, "messageValidityChecks", "grid");
+        CHECK(codes_get_long(h, "isMessageValid", &valid));
+        EXPECT(valid == 1);
 
         std::string type;
         get_string(h, "gridType", type);
