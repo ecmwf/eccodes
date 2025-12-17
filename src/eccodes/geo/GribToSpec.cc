@@ -454,10 +454,10 @@ ProcessingT<double>* longitudeOfLastGridPointInDegrees_fix_for_global_reduced_gr
                 }
                 ASSERT(plMax > 0);
 
-                size_t valuesSize = 0;
-                CHECK_CALL(codes_get_size(h, "values", &valuesSize));
+                long numberOfDataPoints = 0;
+                CHECK_CALL(codes_get_long(h, "numberOfDataPoints", &numberOfDataPoints));
 
-                if (static_cast<size_t>(plSum) == valuesSize) {
+                if (static_cast<size_t>(plSum) == numberOfDataPoints) {
                     double eps = 0.;
                     ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
 
@@ -1185,7 +1185,9 @@ void GribToSpec::json(eckit::JSON& j) const
         }
 
         if (type == CODES_TYPE_STRING) {
-            char value[1024] = {0,};
+            char value[1024] = {
+                0,
+            };
             size_t length = sizeof(value);
             CHECK_CALL(codes_get_string(handle_, name, value, &length));
             j << name << value;
