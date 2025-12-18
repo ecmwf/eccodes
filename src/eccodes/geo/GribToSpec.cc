@@ -401,17 +401,17 @@ struct ProcessingT
 };
 
 
+bool codes_is_well_defined(codes_handle* h, const char* key)
+{
+    int err = CODES_SUCCESS;
+    return (codes_is_defined(h, key) != 0) && (codes_is_missing(h, key, &err) == 0) && (err == CODES_SUCCESS);
+}
+
+
 ProcessingT<double>* angular_precision()
 {
     return new ProcessingT<double>([](codes_handle* h, double& value) {
-        auto well_defined = [](codes_handle* h, const char* key) -> bool {
-            long dummy = 0;
-            int err    = 0;
-            return (codes_is_defined(h, key) != 0) && (codes_is_missing(h, key, &err) == 0) && (err == CODES_SUCCESS) &&
-                   (codes_get_long(h, key, &dummy) == CODES_SUCCESS) && (dummy != 0);
-        };
-
-        if (well_defined(h, "basicAngleOfTheInitialProductionDomain") && well_defined(h, "subdivisionsOfBasicAngle")) {
+        if (codes_is_well_defined(h, "basicAngleOfTheInitialProductionDomain") && codes_is_well_defined(h, "subdivisionsOfBasicAngle")) {
             value = 0.;
             return true;
         }
@@ -603,21 +603,14 @@ ProcessingT<double>* iDirectionIncrementInDegrees_fix_for_periodic_regular_grids
 ProcessingT<std::vector<double>>* grid_lonlat()
 {
     return new ProcessingT<std::vector<double>>([=](codes_handle* h, std::vector<double>& values) {
-        static auto codes_is_well_defined = [h](const char* key) -> bool {
-            int err = CODES_SUCCESS;
-            return (codes_is_defined(h, key) != 0) && (codes_is_missing(h, key, &err) == 0) && (err == CODES_SUCCESS);
-        };
-
-        static auto get_increment = [h](double& value, const char* inc_key,
-                                        const char* x0_key,
-                                        const char* x1_key,
-                                        const char* n_key, const char* sign_key) -> bool {
-            if (codes_is_well_defined(inc_key)) {
+        static auto get_increment = [h](double& value, const char* inc_key, const char* incgiven_key,
+                                        const char* x0_key, const char* x1_key, const char* n_key, const char* sign_key) -> bool {
+            if (long incgiven = 0; codes_is_well_defined(h, inc_key) && (codes_get_long(h, incgiven_key, &incgiven) == CODES_SUCCESS) && (incgiven != 0)) {
                 codes_get_double(h, inc_key, &value);
                 return true;
             }
 
-            if (codes_is_well_defined(x0_key) && codes_is_well_defined(x1_key) && codes_is_well_defined(n_key) && codes_is_well_defined(sign_key)) {
+            if (codes_is_well_defined(h, x0_key) && codes_is_well_defined(h, x1_key) && codes_is_well_defined(h, n_key) && codes_is_well_defined(h, sign_key)) {
                 double x0 = 0.;
                 CHECK_CALL(codes_get_double(h, x0_key, &x0));
 
@@ -626,7 +619,7 @@ ProcessingT<std::vector<double>>* grid_lonlat()
 
                 long n = 0;
                 CHECK_CALL(codes_get_long(h, n_key, &n));
-                ASSERT(n >= 1);
+                ASSERT(n > 1);
 
                 long sign = 0;
                 CHECK_CALL(codes_get_long(h, sign_key, &sign));
@@ -638,8 +631,8 @@ ProcessingT<std::vector<double>>* grid_lonlat()
             return false;
         };
 
-        if (double dlon = 0., dlat = 0.; get_increment(dlon, "iDirectionIncrementInDegrees", "longitudeOfFirstGridPointInDegrees", "longitudeOfLastGridPointInDegrees", "Ni", "iScansPositively") &&
-                                         get_increment(dlat, "jDirectionIncrementInDegrees", "latitudeOfFirstGridPointInDegrees", "latitudeOfLastGridPointInDegrees", "Nj", "jScansPositively")) {
+        if (double dlon = 0., dlat = 0.; get_increment(dlon, "iDirectionIncrementInDegrees", "iDirectionIncrementGiven", "longitudeOfFirstGridPointInDegrees", "longitudeOfLastGridPointInDegrees", "Ni", "iScansPositively") &&
+                                         get_increment(dlat, "jDirectionIncrementInDegrees", "jDirectionIncrementGiven", "latitudeOfFirstGridPointInDegrees", "latitudeOfLastGridPointInDegrees", "Nj", "jScansPositively")) {
             values = { dlon, dlat };
             return true;
         }
