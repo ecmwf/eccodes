@@ -16,6 +16,7 @@
 'sfc' = {typeOfFirstFixedSurface=103; scaleFactorOfFirstFixedSurface=1; scaledValueOfFirstFixedSurface=15; typeOfSecondFixedSurface=255;}
 'sfc' = {typeOfFirstFixedSurface=103; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=2; typeOfSecondFixedSurface=255;}
 'sfc' = {typeOfFirstFixedSurface=103; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=10; typeOfSecondFixedSurface=255;}
+'sfc' = {typeOfFirstFixedSurface=103; typeOfSecondFixedSurface=103;}
 'ml'  = {typeOfFirstFixedSurface=105; typeOfSecondFixedSurface=255;}
 'sfc' = {typeOfFirstFixedSurface=106; typeOfSecondFixedSurface=255;}
 'sfc' = {typeOfFirstFixedSurface=106;typeOfSecondFixedSurface=106;}
