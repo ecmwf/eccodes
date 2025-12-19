@@ -28,3 +28,6 @@
 'aifs-compo-ens-crps' = {
     backgroundProcess = 9;
 }
+'unknown' = {
+    true =defined(typeOfPostProcessing);
+}

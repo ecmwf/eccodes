@@ -600,6 +600,25 @@ int MessageIsValid::check_steps()
     return GRIB_SUCCESS;
 }
 
+int MessageIsValid::check_deprecation()
+{
+    if (!product_enabled()) {
+        return GRIB_SUCCESS;  // product-related checks disabled
+    }
+
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
+    long dep = 0;
+    int err = grib_get_long(handle_, "template_is_deprecated", &dep);
+    if (!err && dep == 1) {
+        grib_accessor* acc = grib_find_accessor(handle_, "template_is_deprecated");
+        const char* owner = acc->parent_->owner->name_;
+        fprintf(stderr, "ECCODES WARNING :  %s: The template for %s is deprecated\n", TITLE, owner);
+    }
+    return GRIB_SUCCESS;
+}
+
 int MessageIsValid::check_section_numbers(const int* sec_nums, size_t N)
 {
     for (size_t i = 0; i < N; ++i) {
@@ -719,6 +738,7 @@ int MessageIsValid::unpack_long(long* val, size_t* len)
         &MessageIsValid::check_geoiterator,
         &MessageIsValid::check_surface_keys,
         &MessageIsValid::check_steps,
+        &MessageIsValid::check_deprecation,
         &MessageIsValid::check_namespace_keys,
         &MessageIsValid::check_parameter,
     };

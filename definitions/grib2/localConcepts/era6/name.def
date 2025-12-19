@@ -368,6 +368,30 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-maximum logarithm of surface pressure
+'Time-maximum logarithm of surface pressure' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum logarithm of surface pressure
+'Time-minimum logarithm of surface pressure' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation logarithm of surface pressure
+'Time-standard-deviation logarithm of surface pressure' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Covariance between 2-metre temperature and volumetric soil water layer 1
 'Covariance between 2-metre temperature and volumetric soil water layer 1' = {
 	 localTablesVersion = 1 ;
