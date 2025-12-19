@@ -1182,6 +1182,7 @@ void codes_context_set_samples_path(codes_context* c, const char* path);
 
 void codes_context_set_debug(codes_context* c, int mode);
 void codes_context_set_data_quality_checks(codes_context* c, int val);
+int codes_context_get_data_quality_checks(const codes_context* c);
 
 /**
  *  Sets the context printing procedure used for user interaction

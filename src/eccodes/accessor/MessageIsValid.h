@@ -38,6 +38,7 @@ private:
     int check_geoiterator();
     int check_surface_keys();
     int check_steps();
+    int check_deprecation();
     int check_section_numbers(const int* sec_nums, size_t N);
     int check_namespace_keys();
     int check_parameter();
