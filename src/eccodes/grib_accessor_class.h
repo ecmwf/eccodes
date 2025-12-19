@@ -188,6 +188,7 @@ extern grib_accessor* grib_accessor_step_in_units;
 extern grib_accessor* grib_accessor_sum;
 extern grib_accessor* grib_accessor_suppressed;
 extern grib_accessor* grib_accessor_time;
+extern grib_accessor* grib_accessor_time_span;
 extern grib_accessor* grib_accessor_to_double;
 extern grib_accessor* grib_accessor_to_integer;
 extern grib_accessor* grib_accessor_to_string;

@@ -252,6 +252,7 @@ list( APPEND eccodes_src_files
     accessor/BufrExtractDatetimeSubsets.cc
     accessor/Spd.cc
     accessor/Sum.cc
+    accessor/TimeSpan.cc
     accessor/ToInteger.cc
     accessor/ToDouble.cc
     accessor/ToString.cc

@@ -98,32 +98,7 @@
  ### end Accumulations ###
  #
  ### mean/min/max/stdev ###
- '10m'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 10;}
- '10m'   = {indicatorOfUnitForTimeRange=13; lengthOfTimeRange = 600;}
- '15m'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 15;}
- '15m'   = {indicatorOfUnitForTimeRange=13; lengthOfTimeRange = 900;}
- '20m'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 20;}
- '20m'   = {indicatorOfUnitForTimeRange=13; lengthOfTimeRange = 1200;}
- '30m'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 30;}
- '30m'   = {indicatorOfUnitForTimeRange=13; lengthOfTimeRange = 1800;}
- '1h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 1;}
- '1h'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 60;}
- '1h'   = {indicatorOfUnitForTimeRange=13; lengthOfTimeRange = 3600;}
- '3h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 3;}
- '3h'   = {indicatorOfUnitForTimeRange=10; lengthOfTimeRange = 1;}
- '6h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 6;}
- '6h'   = {indicatorOfUnitForTimeRange=11; lengthOfTimeRange = 1;}
- '12h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 12;}
- '12h'   = {indicatorOfUnitForTimeRange=12; lengthOfTimeRange = 1;}
- '18h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 18;}
- '24h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 24;}
- '24h'   = {indicatorOfUnitForTimeRange=2; lengthOfTimeRange = 1;}
- '48h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 48;}
- '72h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 72;}
- '120h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 120;}
- '168h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168;}
- '240h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 240;}
- '360h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 360;}
+ 'computeTS'   = {true=defined(indicatorOfUnitForTimeRange); true=defined(lengthOfTimeRange);}
 #'7 days'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168;}
 # 28/29/30/31 days
  'month'   = {indicatorOfUnitForTimeRange=1; true=is_one_of(lengthOfTimeRange,672,696,720,744);}

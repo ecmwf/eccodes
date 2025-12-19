@@ -154,14 +154,20 @@ if (MTG2Switch > 0) {
    concept timeSpan (unknown,"timespanConcept.def",conceptsDir2,conceptsDir1) : read_only;
 
    # we use an abbreviation for fromstart -> fs
-   if (timeSpan is "fromstart") {
-      constant timeSpanfs = "fs" ;
-      alias mars.timespan = timeSpanfs;
+   if (timeSpan is "computeTS") {
+       meta timeSpan timespan(lengthOfTimeRange, indicatorOfUnitForTimeRange) : read_only;
+       alias mars.timespan = timeSpan;
    }
    else {
-      if (timeSpan isnot "unknown") {
-         alias mars.timespan = timeSpan;
-      }
+       if (timeSpan is "fromstart") {
+           constant timeSpanfs = "fs" ;
+           alias mars.timespan = timeSpanfs;
+       }
+       else {
+           if (timeSpan isnot "unknown") {
+               alias mars.timespan = timeSpan;
+           }
+       }
    }
 }
 

@@ -187,6 +187,7 @@ step_in_units, &grib_accessor_step_in_units
 sum, &grib_accessor_sum
 suppressed, &grib_accessor_suppressed
 time, &grib_accessor_time
+timespan, &grib_accessor_time_span
 to_double, &grib_accessor_to_double
 to_integer, &grib_accessor_to_integer
 to_string, &grib_accessor_to_string
