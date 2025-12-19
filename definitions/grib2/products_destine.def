@@ -10,7 +10,7 @@ alias mars.class  = marsClass;
 alias mars.param = paramId;
 
 # Special rule for level type 103 'Specified height level above ground (m)'
-if(defined(typeOfFirstFixedSurface) and (typeOfFirstFixedSurface == 103)) {
+if(defined(typeOfFirstFixedSurface) and (typeOfFirstFixedSurface == 103 and typeOfSecondFixedSurface == 255)) {
     # only the parameters above 10m
     if (level > 10) {
         constant heightLevelName = 'hl';

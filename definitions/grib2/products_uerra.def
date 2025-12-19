@@ -14,7 +14,7 @@ alias parameter.units=units;
 alias parameter.name=name;
 
 # Special UERRA rule for level type 103 'Specified height level above ground (m)'
-if(typeOfFirstFixedSurface == 103) {
+if(defined(typeOfFirstFixedSurface) and (typeOfFirstFixedSurface == 103 and typeOfSecondFixedSurface == 255)) {
     # only the parameters above 10m
     if (level > 10) {
         constant heightLevelName = 'hl';

@@ -12,7 +12,7 @@ alias parameter.name=name;
 
 # Special rule for level type 103 'Specified height level above ground (m)'
 # Activated for all post-MTG2 data
-if(defined(typeOfFirstFixedSurface) and (typeOfFirstFixedSurface == 103 and MTG2Switch > 0)) {
+if(defined(typeOfFirstFixedSurface) and (typeOfFirstFixedSurface == 103 and typeOfSecondFixedSurface == 255 and MTG2Switch > 0)) {
     # only the parameters above 10m
     if (level > 10) {
         constant heightLevelName = 'hl';
