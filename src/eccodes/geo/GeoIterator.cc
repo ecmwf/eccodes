@@ -32,13 +32,15 @@ GeoIterator::GeoIterator(grib_handle* h, unsigned long flags) :
 int GeoIterator::init(grib_handle* h, grib_arguments*)
 {
     ECCODES_ASSERT(h == h_);
-    if (int err = codes_get_size(h_, "values", &nv_); err) {
-        return err;
-    }
+    if ((flags_ & GRIB_GEOITERATOR_NO_VALUES) == 0) {
+        if (int err = codes_get_size(h_, "values", &nv_); err) {
+            return err;
+        }
 
-    if (nv_ == 0) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator: size(values) is 0!");
-        return GRIB_WRONG_GRID;
+        if (nv_ == 0) {
+            grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator: size(values) is 0!");
+            return GRIB_WRONG_GRID;
+        }
     }
 
     long numberOfPoints = 0;
@@ -47,6 +49,7 @@ int GeoIterator::init(grib_handle* h, grib_arguments*)
     }
 
     if ((flags_ & GRIB_GEOITERATOR_NO_VALUES) == 0) {
+        //printf("GeoIterator::init WE WANT values - numberOfPoints=%ld nv_=%zu\n", numberOfPoints , nv_);
         if (static_cast<size_t>(numberOfPoints) != nv_) {
             grib_context_log(h_->context, GRIB_LOG_ERROR, "Geoiterator: numberOfPoints != size(values) (%ld!=%ld)",
                              numberOfPoints, nv_);
@@ -62,6 +65,9 @@ int GeoIterator::init(grib_handle* h, grib_arguments*)
         if (int err = codes_get_double_array(h_, "values", data_, &size); err) {
             return err;
         }
+    } else {
+        //printf("GeoIterator::init we do NOT want values\n");
+        nv_ = numberOfPoints;
     }
 
     return GRIB_SUCCESS;
@@ -73,6 +79,7 @@ int GeoIterator::next(double* lat, double* lon, double* val) const
 {
     try {
         if (iter_) {
+            if (iter_->index() >= nv_) return 0;
             const auto p = *iter_;
             const auto& q(std::get<eckit::geo::PointLonLat>(p));
 
