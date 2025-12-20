@@ -87,11 +87,29 @@ EOF
 ${tools_dir}/grib_filter -o $temp1 $tempRules $grib1
 ${tools_dir}/grib_filter -o $temp2 $tempRules $grib2
 
-if [ $HAVE_GEOGRAPHY -eq 1 ]; then
-  ${tools_dir}/grib_get_data -m missing $temp1 > $tempData1
-  ${tools_dir}/grib_get_data -m missing $temp2 > $tempData2
+cat > $tempRef <<EOF
+Latitude Longitude Value
+   60.000    0.000 1.0
+   60.000    6.000 2.0
+   60.000   12.000 3.0
+   60.000   18.000 4.0
+   60.000   24.000 5.0
+   60.000   30.000 6.0
+    0.000    0.000 7.0
+    0.000    6.000 missing
+    0.000   12.000 missing
+    0.000   18.000 8.0
+    0.000   24.000 9.0
+    0.000   30.000 10.0
+EOF
 
+if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+  ${tools_dir}/grib_get_data -m missing -F%.1f $temp1 > $tempData1
+  ${tools_dir}/grib_get_data -m missing -F%.1f $temp2 > $tempData2
+
+  diff $tempRef $tempData2
   diff $tempData1 $tempData2
+
   rm -f $tempData1 $tempData2
 fi
 
