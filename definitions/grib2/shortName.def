@@ -7045,42 +7045,6 @@
 	 scaledValueOfFirstFixedSurface = missing() ;
 	 scaleFactorOfFirstFixedSurface = missing() ;
 	}
-#200 metre U wind component
-'200u' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 2 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 200 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
-#200 metre V wind component
-'200v' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 200 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
-#200 metre wind speed
-'200si' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 200 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
-#100 metre wind speed
-'100si' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 100 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
 #Urban cover
 'cur' = {
 	 discipline = 2 ;
@@ -26339,22 +26303,4 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 22 ;
-	}
-#100 metre U wind component
-'100u' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 2 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 100 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
-#100 metre V wind component
-'100v' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 100 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
 }
