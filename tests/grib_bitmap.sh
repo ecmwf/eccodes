@@ -76,16 +76,23 @@ rm -f $outfile1 $outfile1.dump $outfile $outfile.dump
 
 
 cat > $tempRules<<EOF
- set bitmapPresent=1;
- set missingValue=1111;
- set Ni=6;
- set Nj=2;
+ set bitmapPresent = 1;
+ set missingValue = 1111;
+ set Ni = 6;
+ set Nj = 2;
+ set iDirectionIncrementGiven = 0;
+ set jDirectionIncrementGiven = 0;
+ set iDirectionIncrement = MISSING;
+ set jDirectionIncrement = MISSING;
  set values={1,2,3,4,5,6,7,1111,1111,8,9,10};
- write ;
+ write;
 EOF
 
 ${tools_dir}/grib_filter -o $temp1 $tempRules $grib1
 ${tools_dir}/grib_filter -o $temp2 $tempRules $grib2
+
+grib_check_key_equals $temp1 isMessageValid 1
+grib_check_key_equals $temp2 isMessageValid 1
 
 cat > $tempRef <<EOF
 Latitude Longitude Value
