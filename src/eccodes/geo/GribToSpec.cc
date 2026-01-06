@@ -174,7 +174,7 @@ void wrongly_encoded_grib(const std::string& msg)
         throw eckit::UserError(msg);
     }
 
-    //Log::warning() << msg << std::endl;
+    Log::warning() << msg << std::endl;
     grib_context_log(nullptr, GRIB_LOG_WARNING, "%s", msg.c_str());
 }
 
@@ -600,40 +600,45 @@ ProcessingT<double>* iDirectionIncrementInDegrees_fix_for_periodic_regular_grids
 }
 
 
-ProcessingT<std::vector<double>>* grid_lonlat()
+ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_key,
+                                    const char* x0_key, const char* x1_key, const char* n_key, const char* sign_key)
 {
-    return new ProcessingT<std::vector<double>>([=](codes_handle* h, std::vector<double>& values) {
-        static auto get_increment = [](codes_handle* h, double& value, const char* inc_key, const char* incgiven_key,
-                                       const char* x0_key, const char* x1_key, const char* n_key, const char* sign_key) -> bool {
-            if (long incgiven = 0; codes_is_well_defined(h, inc_key) && (codes_get_long(h, incgiven_key, &incgiven) == CODES_SUCCESS) && (incgiven != 0)) {
-                codes_get_double(h, inc_key, &value);
-                return true;
+    return new ProcessingT<double>([=](codes_handle* h, double& value) {
+        bool given = false;
+        if (long incgiven = 0; codes_is_well_defined(h, inc_key) && (codes_get_long(h, incgiven_key, &incgiven) == CODES_SUCCESS) && (incgiven != 0)) {
+            codes_get_double(h, inc_key, &value);
+            given = true;
+        }
+
+        if (codes_is_well_defined(h, x0_key) && codes_is_well_defined(h, x1_key) && codes_is_well_defined(h, n_key) && codes_is_well_defined(h, sign_key)) {
+            double x0 = 0.;
+            CHECK_CALL(codes_get_double(h, x0_key, &x0));
+
+            double x1 = 0.;
+            CHECK_CALL(codes_get_double(h, x1_key, &x1));
+
+            long n = 0;
+            CHECK_CALL(codes_get_long(h, n_key, &n));
+            ASSERT(n > 1);
+
+            long sign = 0;
+            CHECK_CALL(codes_get_long(h, sign_key, &sign));
+
+            if (auto value_calculated = (x1 - x0) / static_cast<double>(sign != 0 ? (n - 1) : (1 - n)); given) {
+                if (!eckit::types::is_approximately_equal(value, value_calculated, 1e-6)) {
+                    wrongly_encoded_grib(
+                        "GribToSpec: inconsist increment: '" + std::string{ inc_key } +
+                        "'=" + std::to_string(value) + " ~= " + std::to_string(value_calculated) +
+                        " (calculated from '" + std::string{ x0_key } + "'=" + std::to_string(x0) +
+                        ", '" + std::string{ x1_key } + "'=" + std::to_string(x1) +
+                        ", '" + std::string{ n_key } + "'=" + std::to_string(n) +
+                        ", '" + std::string{ sign_key } + "'=" + std::to_string(sign) + ")");
+                }
+            }
+            else {
+                value = value_calculated;
             }
 
-            if (codes_is_well_defined(h, x0_key) && codes_is_well_defined(h, x1_key) && codes_is_well_defined(h, n_key) && codes_is_well_defined(h, sign_key)) {
-                double x0 = 0.;
-                CHECK_CALL(codes_get_double(h, x0_key, &x0));
-
-                double x1 = 0.;
-                CHECK_CALL(codes_get_double(h, x1_key, &x1));
-
-                long n = 0;
-                CHECK_CALL(codes_get_long(h, n_key, &n));
-                ASSERT(n > 1);
-
-                long sign = 0;
-                CHECK_CALL(codes_get_long(h, sign_key, &sign));
-
-                value = (x1 - x0) / (sign != 0 ? static_cast<double>(n - 1) : static_cast<double>(1 - n));
-                return true;
-            }
-
-            return false;
-        };
-
-        if (double dlon = 0., dlat = 0.; get_increment(h, dlon, "iDirectionIncrementInDegrees", "iDirectionIncrementGiven", "longitudeOfFirstGridPointInDegrees", "longitudeOfLastGridPointInDegrees", "Ni", "iScansPositively") &&
-                                         get_increment(h, dlat, "jDirectionIncrementInDegrees", "jDirectionIncrementGiven", "latitudeOfFirstGridPointInDegrees", "latitudeOfLastGridPointInDegrees", "Nj", "jScansPositively")) {
-            values = { dlon, dlat };
             return true;
         }
 
@@ -931,6 +936,8 @@ bool GribToSpec::get(const std::string& name, double& value) const
     if (err == CODES_NOT_FOUND || codes_is_missing(handle_, key, &err) != 0) {
         static const ProcessingList<double> process{
             { "angular_precision", angular_precision() },
+            { "dlon", grid_increment("iDirectionIncrementInDegrees", "iDirectionIncrementGiven", "longitudeOfFirstGridPointInDegrees", "longitudeOfLastGridPointInDegrees", "Ni", "iScansPositively"), _or(is("gridType", "regular_ll"), is("gridType", "rotated_ll")) },
+            { "dlat", grid_increment("jDirectionIncrementInDegrees", "jDirectionIncrementGiven", "latitudeOfFirstGridPointInDegrees", "latitudeOfLastGridPointInDegrees", "Nj", "jScansPositively"), _or(is("gridType", "regular_ll"), is("gridType", "rotated_ll")) },
             { "longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids",
               longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids() },
             { "iDirectionIncrementInDegrees_fix_for_periodic_regular_grids",
@@ -1054,8 +1061,6 @@ bool GribToSpec::get(const std::string& name, std::vector<double>& value) const
     }
 
     static const ProcessingList<std::vector<double>> process{
-        { "grid", grid_lonlat(),
-          _or(is("gridType", "regular_ll"), is("gridType", "rotated_ll")) },
         { "grid", vector_double({ "xDirectionGridLengthInMetres", "yDirectionGridLengthInMetres" }),
           is("gridType", "lambert_azimuthal_equal_area") },
         { "grid", vector_double({ "DxInMetres", "DyInMetres" }),
