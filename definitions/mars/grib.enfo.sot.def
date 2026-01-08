@@ -19,7 +19,7 @@ if (edition == 2) {
  ## we have the two percentile values in the GRIB2 meta-data
  # SOT10 -> mars.quantile=10-1:100
  # SOT90 -> mars.quantile=90-99:100
- ## in case floating point percentiles, e.g., 900-995:1000
+ ## in case floating point percentiles, e.g., SOT with 90 to 99.5 -> 900-995:1000
  # we take the largest quantile denominator and scale the values accordingly
 
  meta quantileDenominator0 evaluate(100*10^scaleFactorOfAdditionalParameterForReferencePeriod0) : hidden;
