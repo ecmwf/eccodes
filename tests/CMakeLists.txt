@@ -183,6 +183,7 @@ if( HAVE_BUILD_TOOLS )
         grib_timeSpanConcept
         grib_cmp_timeSpan
         grib_stattype
+        grib_ecc-2000
     )
 
     # These tests require data downloads
