@@ -58,6 +58,8 @@ transient timeRangeIndicatorFromStepRange=-1 : hidden;
 transient formatForDoubles = "%g"  : no_copy,hidden;
 transient formatForLongs   = "%ld" : no_copy,hidden;
 
+include "boot_extra.def";
+
 # ECC-868
 transient produceLargeConstantFields = 0 : hidden;
 

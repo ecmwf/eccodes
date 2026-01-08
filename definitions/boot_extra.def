@@ -1,0 +1,17 @@
+# Override this file to add your own additional definitions.”
+# e.g., check for ecCodes library version compatibility
+
+#meta ecmwfLibraryVersion library_version() : string_type, hidden, read_only;
+#
+#concept isCompatible(unknown) {
+#    yes = { true=is_one_of(ecmwfLibraryVersion, '2.45.0', '2.44.0'); }
+#    no = { ecmwfLibraryVersion = '2.43.0'; }
+#} : hidden, read_only;
+#
+#if (isCompatible is 'no') {
+#    print "ERROR: ecCodes library version is NOT compatible: ";
+#    assert(0);
+#}
+#else {
+#    print "WARNING: Unable to determine ecCodes library version compatibility: ";
+#}
