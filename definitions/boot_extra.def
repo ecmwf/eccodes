@@ -14,5 +14,7 @@
 # 
 # if (isCompatible is 'no') {
 #     print("/dev/stderr") "ERROR: ecCodes [ecmwfLibraryVersion] is NOT compatible with loaded definitions. Please make sure ECCODES_DEFINITION_PATH environment variable is set correctly.";
-#     assert(0);
+#     assert(0 && "Quitting ...");
 # }
+#
+# Please note: print("/dev/stderr") "..." may not work on Windows systems. Please use print "..." instead.
