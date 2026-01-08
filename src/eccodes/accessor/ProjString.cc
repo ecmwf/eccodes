@@ -246,38 +246,38 @@ int ProjString::unpack_string(char* v, size_t* len)
 
     ECCODES_ASSERT(endpoint_ == ENDPOINT_SOURCE || endpoint_ == ENDPOINT_TARGET);
 
-#if defined(HAVE_ECKIT_GEO)
-    const int eckit_geo = h->context->eckit_geo;  // check environment variable
-    if (eckit_geo != 0) {
-        eccodes::geo::eckit_main_init();
+// #if defined(HAVE_ECKIT_GEO)
+//     const int eckit_geo = h->context->eckit_geo;  // check environment variable
+//     if (eckit_geo != 0) {
+//         eccodes::geo::eckit_main_init();
 
-        try {
-            geo::GribToSpec spec(h);
-            std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(spec));
+//         try {
+//             geo::GribToSpec spec(h);
+//             std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(spec));
 
-            auto proj_str = grid->projection().proj_str();
+//             auto proj_str = grid->projection().proj_str();
 
-            auto buf_size = *len;
-            if (*len = std::snprintf(v, buf_size, "%s", proj_str.c_str()); *len >= buf_size) {
-                grib_context_log(h->context, GRIB_LOG_ERROR,
-                                 "%s: Buffer too small for %s. It is at least %zu bytes long (len=%zu)",
-                                 class_name_, name_, *len, buf_size);
-                *len = buf_size;
-                return GRIB_BUFFER_TOO_SMALL;
-            }
+//             auto buf_size = *len;
+//             if (*len = std::snprintf(v, buf_size, "%s", proj_str.c_str()); *len >= buf_size) {
+//                 grib_context_log(h->context, GRIB_LOG_ERROR,
+//                                  "%s: Buffer too small for %s. It is at least %zu bytes long (len=%zu)",
+//                                  class_name_, name_, *len, buf_size);
+//                 *len = buf_size;
+//                 return GRIB_BUFFER_TOO_SMALL;
+//             }
 
-            return CODES_SUCCESS;
-        }
-        catch (eckit::geo::Exception& e) {
-            grib_context_log(h->context, GRIB_LOG_ERROR, "ProjString::unpack_string: geo::Exception thrown (%s)", e.what());
-        }
-        catch (std::exception& e) {
-            grib_context_log(h->context, GRIB_LOG_ERROR, "ProjString::unpack_string: Exception thrown (%s)", e.what());
-        }
+//             return CODES_SUCCESS;
+//         }
+//         catch (eckit::geo::Exception& e) {
+//             grib_context_log(h->context, GRIB_LOG_ERROR, "ProjString::unpack_string: geo::Exception thrown (%s)", e.what());
+//         }
+//         catch (std::exception& e) {
+//             grib_context_log(h->context, GRIB_LOG_ERROR, "ProjString::unpack_string: Exception thrown (%s)", e.what());
+//         }
 
-        return GRIB_GEOCALCULUS_PROBLEM;
-    }
-#endif
+//         return GRIB_GEOCALCULUS_PROBLEM;
+//     }
+// #endif
 
     size_t l = 100;  // Safe bet
     if (*len < l) {
