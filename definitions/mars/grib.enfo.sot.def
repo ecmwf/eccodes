@@ -19,7 +19,7 @@ if (edition == 2) {
  ## we have the two percentile values in the GRIB2 meta-data
  # SOT10 -> mars.quantile=10-1:100
  # SOT90 -> mars.quantile=90-99:100
- ## in case floting point percentiles, e.g., 900-995:1000
+ ## in case floating point percentiles, e.g., 900-995:1000
  # we take the largest quantile denominator and scale the values accordingly
 
  meta quantileDenominator0 evaluate(100*10^scaleFactorOfAdditionalParameterForReferencePeriod0) : hidden;
@@ -30,18 +30,19 @@ if (edition == 2) {
      transient quantileDenominator = quantileDenominator0;
      meta scaledValue1 evaluate(scaledValueOfAdditionalParameterForReferencePeriod1*quantileDenominatorFactor) : hidden;
      transient scaledValue0 = scaledValueOfAdditionalParameterForReferencePeriod0 : hidden;
- }
- if (quantileDenominator1 > quantileDenominator0){
-     meta quantileDenominatorFactor evaluate(quantileDenominator1/quantileDenominator0) : hidden;
-     transient quantileDenominator = quantileDenominator1;
-     meta scaledValue0 evaluate(scaledValueOfAdditionalParameterForReferencePeriod0*quantileDenominatorFactor) : hidden;
-     transient scaledValue1 = scaledValueOfAdditionalParameterForReferencePeriod1 : hidden;
- }
- if (quantileDenominator1 == quantileDenominator0){
-     meta quantileDenominatorFactor evaluate(quantileDenominator1/quantileDenominator0) : hidden;
-     transient quantileDenominator = quantileDenominator0;
-     transient scaledValue0 = scaledValueOfAdditionalParameterForReferencePeriod0 : hidden;
-     transient scaledValue1 = scaledValueOfAdditionalParameterForReferencePeriod1 : hidden;
+ } else {
+     if (quantileDenominator0 < quantileDenominator1){
+         meta quantileDenominatorFactor evaluate(quantileDenominator1/quantileDenominator0) : hidden;
+         transient quantileDenominator = quantileDenominator1;
+         meta scaledValue0 evaluate(scaledValueOfAdditionalParameterForReferencePeriod0*quantileDenominatorFactor) : hidden;
+         transient scaledValue1 = scaledValueOfAdditionalParameterForReferencePeriod1 : hidden;
+     } else {
+         # quantileDenominator0 == quantileDenominator1
+         meta quantileDenominatorFactor evaluate(quantileDenominator1/quantileDenominator0) : hidden;
+         transient quantileDenominator = quantileDenominator0;
+         transient scaledValue0 = scaledValueOfAdditionalParameterForReferencePeriod0 : hidden;
+         transient scaledValue1 = scaledValueOfAdditionalParameterForReferencePeriod1 : hidden;
+     }
  }
 
  meta marsQuantile sprintf("%d-%d:%d",scaledValue0,scaledValue1,quantileDenominator);
