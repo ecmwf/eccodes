@@ -26,10 +26,7 @@ if (edition == 2) {
  meta quantileDenominator1 evaluate(100*10^scaleFactorOfAdditionalParameterForReferencePeriod1) : hidden;
 
  if (quantileDenominator0 == quantileDenominator1){
-     meta quantileDenominatorFactor evaluate(quantileDenominator1/quantileDenominator0) : hidden;
-     transient quantileDenominator = quantileDenominator0;
-     transient scaledValue0 = scaledValueOfAdditionalParameterForReferencePeriod0 : hidden;
-     transient scaledValue1 = scaledValueOfAdditionalParameterForReferencePeriod1 : hidden;
+     meta marsQuantile sprintf("%d-%d:%d",scaledValueOfAdditionalParameterForReferencePeriod0,scaledValueOfAdditionalParameterForReferencePeriod1,quantileDenominator0);
  } else {
      if (quantileDenominator0 < quantileDenominator1){
          meta quantileDenominatorFactor evaluate(quantileDenominator1/quantileDenominator0) : hidden;
@@ -43,8 +40,7 @@ if (edition == 2) {
          meta scaledValue1 evaluate(scaledValueOfAdditionalParameterForReferencePeriod1*quantileDenominatorFactor) : hidden;
          transient scaledValue0 = scaledValueOfAdditionalParameterForReferencePeriod0 : hidden;
      }
+     meta marsQuantile sprintf("%d-%d:%d",scaledValue0,scaledValue1,quantileDenominator);
  }
-
- meta marsQuantile sprintf("%d-%d:%d",scaledValue0,scaledValue1,quantileDenominator);
  alias mars.quantile = marsQuantile;
 }
