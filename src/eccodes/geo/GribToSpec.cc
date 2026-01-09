@@ -627,7 +627,7 @@ ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_ke
             if (auto value_calculated = (x1 - x0) / static_cast<double>(sign != 0 ? (n - 1) : (1 - n)); given) {
                 if (!eckit::types::is_approximately_equal(value, value_calculated, 1e-6)) {
                     wrongly_encoded_grib(
-                        "GribToSpec: inconsist increment: '" + std::string{ inc_key } +
+                        "GribToSpec: inconsistent increment: '" + std::string{ inc_key } +
                         "'=" + std::to_string(value) + " ~= " + std::to_string(value_calculated) +
                         " (calculated from '" + std::string{ x0_key } + "'=" + std::to_string(x0) +
                         ", '" + std::string{ x1_key } + "'=" + std::to_string(x1) +
