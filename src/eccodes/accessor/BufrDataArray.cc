@@ -430,7 +430,8 @@ grib_darray* BufrDataArray::decode_double_array(grib_context* c, unsigned char* 
     grib_darray* ret = NULL;
     int j;
     size_t lval;
-    int localReference, localWidth, modifiedWidth, modifiedReference;
+    long localReference;
+    int localWidth, modifiedWidth, modifiedReference;
     double modifiedFactor, dval;
     int bufr_multi_element_constant_arrays = c->bufr_multi_element_constant_arrays;
 
