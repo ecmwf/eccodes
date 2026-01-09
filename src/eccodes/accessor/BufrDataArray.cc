@@ -513,7 +513,7 @@ int BufrDataArray::encode_string_array(grib_context* c, grib_buffer* buff, long*
     int k, j, modifiedWidth, width;
 
     if (iss_list_ == NULL) {
-        grib_context_log(c, GRIB_LOG_ERROR, "encode_string_array: iss_list_ ==NULL");
+        grib_context_log(c, GRIB_LOG_ERROR, "encode_string_array: iss_list_ == NULL");
         return GRIB_INTERNAL_ERROR;
     }
     if (!stringValues) {
@@ -1002,7 +1002,8 @@ int decode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
 }
 
 
-int decode_replication(grib_context* c, BufrDataArray* self, int subsetIndex, grib_buffer* buff, unsigned char* data, long* pos, int i, long elementIndex, grib_darray* dval, long* numberOfRepetitions)
+int decode_replication(grib_context* c, BufrDataArray* self, int subsetIndex, grib_buffer* buff,
+                       unsigned char* data, long* pos, int i, long elementIndex, grib_darray* dval, long* numberOfRepetitions)
 {
     int ret = 0;
     int* err;
@@ -1090,8 +1091,7 @@ int BufrDataArray::encode_new_bitmap(grib_context* c, grib_buffer* buff, long* p
 }
 
 /* Operator 203YYY: Change Reference Values: Encoding definition phase */
-int BufrDataArray::encode_overridden_reference_value(grib_context* c,
-                                                                       grib_buffer* buff, long* pos, bufr_descriptor* bd)
+int BufrDataArray::encode_overridden_reference_value(grib_context* c, grib_buffer* buff, long* pos, bufr_descriptor* bd)
 {
     int err         = 0;
     long currRefVal = -1;
@@ -1349,7 +1349,7 @@ int encode_replication(grib_context* c, BufrDataArray* self, int subsetIndex,
 
 
 int BufrDataArray::build_bitmap(unsigned char* data, long* pos,
-                                                  int iel, grib_iarray* elementsDescriptorsIndex, int iBitmapOperator)
+                                int iel, grib_iarray* elementsDescriptorsIndex, int iBitmapOperator)
 {
     int bitmapSize = 0, iDelayedReplication = 0;
     int i, localReference, width, bitmapEndElementsDescriptorsIndex;
@@ -1476,7 +1476,7 @@ int BufrDataArray::consume_bitmap(int iBitmapOperator)
 }
 
 int BufrDataArray::build_bitmap_new_data(unsigned char* data, long* pos,
-                                                           int iel, grib_iarray* elementsDescriptorsIndex, int iBitmapOperator)
+                                        int iel, grib_iarray* elementsDescriptorsIndex, int iBitmapOperator)
 {
     int bitmapSize = 0, iDelayedReplication = 0;
     int i, bitmapEndElementsDescriptorsIndex;
@@ -1653,7 +1653,8 @@ void BufrDataArray::push_zero_element(grib_darray* dval)
     }
 }
 
-grib_accessor* BufrDataArray::create_attribute_variable(const char* name, grib_section* section, int type, char* sval, double dval, long lval, unsigned long flags)
+grib_accessor* BufrDataArray::create_attribute_variable(const char* name, grib_section* section, int type, char* sval,
+                                                        double dval, long lval, unsigned long flags)
 {
     grib_action creator;
     size_t len;
@@ -1772,8 +1773,8 @@ static int adding_extra_key_attributes(grib_handle* h)
 }
 
 grib_accessor* BufrDataArray::create_accessor_from_descriptor(grib_accessor* attribute, grib_section* section,
-                                                                                long ide, long subset, int add_dump_flag, int add_coord_flag,
-                                                                                int count, int add_extra_attributes)
+                                                            long ide, long subset, int add_dump_flag, int add_coord_flag,
+                                                            int count, int add_extra_attributes)
 {
     char code[10] = {0,};
     char* temp_str              = NULL;

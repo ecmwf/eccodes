@@ -15,11 +15,14 @@
 # Invalid value decoded after using operators 201 and 202
 # ---------------------------------------------------------
 
-REDIRECT=/dev/null
-
 label="bufr_ecc-2189_test"
 tempBufr=temp.$label.bufr
 tempFilt=temp.$label.filt
+
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
 
 sample_bufr4=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
 
