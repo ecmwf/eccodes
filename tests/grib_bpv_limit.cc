@@ -19,9 +19,7 @@ static double compare_double_absolute(double a, double b, double tolerance)
 {
     double ret = 0;
     double d   = fabs(a - b);
-    if (d > tolerance) {
-        ret = d;
-    }
+    if (d > tolerance) ret = d;
     return ret;
 }
 
@@ -39,14 +37,14 @@ int main(int argc, char** argv)
     const double tolerance = 1e-5;
     size_t slong = sizeof(long) * 8;
 
-    Assert(argc == 2);
+    ECCODES_ASSERT(argc == 2);
     char* filename = argv[1];
 
     for (i = 0; i < 255; i++) {
         FILE* in = fopen(filename, "rb");
-        Assert(in);
+        ECCODES_ASSERT(in);
         grib_handle* h = grib_handle_new_from_file(0, in, &err);
-        Assert(h);
+        ECCODES_ASSERT(h);
 
         /* get the size of the values array*/
         GRIB_CHECK(grib_get_size(h, "values", &values_len), 0);

@@ -7,13 +7,14 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-lookup[1] ed       (7,editionNumber);
+lookup[1] ed(7,editionNumber);
 transient missingValue=999999 : hidden;
 transient setToMissingIfOutOfRange=0 : hidden;
 
 # This gets updated twice a year by WMO.
 # See https://community.wmo.int/en/wis/latest-version
-constant masterTablesVersionNumberLatest = 43;
+#     https://wmo.int/latest-version
+constant masterTablesVersionNumberLatest = 45;
 
 #negative value=not used
 transient inputDelayedDescriptorReplicationFactor={-1} : hidden;

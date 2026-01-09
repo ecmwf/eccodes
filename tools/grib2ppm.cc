@@ -39,13 +39,10 @@ unsigned char unused(char c)
 
 static int next(FILE* f, char* buf)
 {
-    int c;
-    int i = 0;
+    int c = 0, i = 0;
     while ((c = fgetc(f)) != EOF) {
         if (c == ' ' || c == '\n') {
-            if (i) {
-                break;
-            }
+            if (i) break;
             i++;
         }
         else {
@@ -185,7 +182,7 @@ int main(int argc, char* argv[])
                 for (jj = 0; jj < height; jj++) {
                     for (i = 0; i < width; i++) {
                         int m = (i + width / 2) % width + jj * width;
-                        Assert(k < count);
+                        ECCODES_ASSERT(k < count);
                         indices[k++] = m;
                     }
                 }

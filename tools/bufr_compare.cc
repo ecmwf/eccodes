@@ -190,7 +190,7 @@ static int blocklisted(const char* name)
     grib_string_list* b = blocklist;
     if (!name) return 0;
     while (b) {
-        Assert(b->value);
+        ECCODES_ASSERT(b->value);
         if (!strcmp(name, b->value))
             return 1;
         b = b->next;
@@ -748,7 +748,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
           return GRIB_COUNT_MISMATCH;
         } */
 
-    Assert(options->mode == MODE_BUFR);
+    ECCODES_ASSERT(options->mode == MODE_BUFR);
         /* TODO: Ignore missing values for keys in BUFR. Not yet implemented */
         //isMissing1 = ((grib_is_missing(handle1, name, &err1) == 1) && (err1 == 0)) ? 1 : 0;
         //isMissing2 = ((grib_is_missing(handle2, name, &err2) == 1) && (err2 == 0)) ? 1 : 0;
@@ -990,7 +990,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                 value_tolerance *= tolerance_factor;
                 if (verbose)
                     printf("  (%d values) tolerance=%g\n", (int)len1, value_tolerance);
-                for (i = 0; i < len1; i++) {
+                for (size_t i = 0; i < len1; i++) {
                     if ((diff = compare_double(pv1++, pv2++, &value_tolerance)) != 0) {
                         countdiff++;
                         if (maxdiff < diff) {
@@ -1058,7 +1058,6 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
 
         case GRIB_TYPE_BYTES:
             return 0; // Not in BUFR
-            break;
 
         case GRIB_TYPE_LABEL:
             break;

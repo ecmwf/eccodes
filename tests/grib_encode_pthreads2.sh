@@ -37,19 +37,19 @@ process()
     # Test 01: Clone + output
     # ------------------------
     rm -fr $OUTPUT;   mkdir -p $OUTPUT
-    time $PROG -c -w par $input $NUM_THREADS $NUM_ITER
+    $PROG -c -w par $input $NUM_THREADS $NUM_ITER
     validate
 
     # Test 02: No clone + output
     # --------------------------
     rm -fr $OUTPUT;   mkdir -p $OUTPUT
-    time $PROG -w par $input $NUM_THREADS $NUM_ITER
+    $PROG -w par $input $NUM_THREADS $NUM_ITER
     validate
 
     # Test 03: Clone + dump + no output
     # ---------------------------------
     rm -fr $OUTPUT
-    time $PROG -c -d par $input $NUM_THREADS $NUM_ITER
+    $PROG -c -d par $input $NUM_THREADS $NUM_ITER
     # Nothing to validate as there is no output
 }
 ###################################################
@@ -71,8 +71,7 @@ GRIB2_INPUTS="
   ${data_dir}/test_file.grib2
   ${data_dir}/sample.grib2"
 
-# There is a problem with multi-threading and Jasper versions > 2
-if [ $HAVE_JPEG -eq 1 -a $HAVE_LIBJASPER -eq 0 ]; then
+if [ $HAVE_JPEG -eq 1 ]; then
     echo "Adding extra files (HAVE_JPEG=1)"
     GRIB2_INPUTS="${data_dir}/jpeg.grib2 ${data_dir}/reduced_gaussian_surface_jpeg.grib2 "$GRIB2_INPUTS
 fi

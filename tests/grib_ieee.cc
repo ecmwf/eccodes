@@ -93,14 +93,14 @@ int main(int argc, char* argv[])
 #if 1
     unsigned long i = 0;
     printf("Test doubles with grib_ieee_to_long/grib_long_to_ieee...\n");
-    Assert(test_doubles(grib_ieee_to_long, grib_long_to_ieee) == 1);
+    ECCODES_ASSERT(test_doubles(grib_ieee_to_long, grib_long_to_ieee) == 1);
 
     printf("Test doubles with grib_ieee64_to_long/grib_long_to_ieee64...\n");
-    Assert(test_doubles(grib_ieee64_to_long, grib_long_to_ieee64) == 1);
+    ECCODES_ASSERT(test_doubles(grib_ieee64_to_long, grib_long_to_ieee64) == 1);
 
     printf("Test integers...\n");
     /* test(3242539564, grib_ieee_to_long, grib_long_to_ieee); This fails! */
-    Assert(grib_ieee_to_long(grib_long_to_ieee(i)) == i);
+    ECCODES_ASSERT(grib_ieee_to_long(grib_long_to_ieee(i)) == i);
 
     /* The minimum value for which we can convert a long to ieee and back is 0x800000 */
     /* The maximum value for which we can convert a long to ieee and back is 0x7f800000 */
@@ -109,8 +109,8 @@ int main(int argc, char* argv[])
 
         if (grib_ieee_to_long(grib_long_to_ieee(i)) != i) {
             printf("i=%lu i=%lx e=%g x=%lx\n", i, i, grib_long_to_ieee(i), grib_ieee_to_long(grib_long_to_ieee(i)));
-            /*Assert(grib_ieee_to_long(grib_long_to_ieee(i)) == i);*/
-            Assert(0);
+            /*ECCODES_ASSERT(grib_ieee_to_long(grib_long_to_ieee(i)) == i);*/
+            ECCODES_ASSERT(0);
         }
         /*if(grib_ieee_to_long(grib_long_to_ieee(j)) != j)
 		{
@@ -131,7 +131,7 @@ int main(int argc, char* argv[])
     double c = p(ref1, ref1);
     double d = p(ref2, ref2);
 
-    Assert(min < max);
+    ECCODES_ASSERT(min < max);
 
 #endif
     printf("ALL DONE\n");

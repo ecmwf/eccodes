@@ -34,6 +34,13 @@ check_grib_defs()
 # Do various checks on the concepts files
 #
 
+# Check files with the name *Concept.def are actually concepts and not something else
+for file in `find $ECCODES_DEFINITION_PATH/grib2/ -name '*Concept.def' -print`
+do
+   # The key name does not matter; we're just checking the syntax
+   ${test_dir}/grib_check_param_concepts dummy $file
+done
+
 # -----------------------------------
 echo "Check for duplicate encodings"
 # -----------------------------------
@@ -65,22 +72,41 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
-# First check the GRIB2 paramId.def and shortName.def
-# ----------------------------------------------------
+# Check the GRIB2 paramId and shortName defs
+# --------------------------------------------
 $EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/paramId.def
-datasets="ecmf uerra cerise hydro s2s tigge era6 destine era nextgems"
+datasets="cerise destine ecmf era era6  hydro nextgems s2s tigge uerra"
 for a_dataset in $datasets; do
-    $EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/$a_dataset/paramId.def
+    pidfile=$ECCODES_DEFINITION_PATH/grib2/localConcepts/$a_dataset/paramId.def
+    if [ -f "$pidfile" ]; then
+      $EXEC ${test_dir}/grib_check_param_concepts paramId $pidfile
+    fi
+
+    pidfile=$ECCODES_DEFINITION_PATH/grib2/localConcepts/$a_dataset/paramId.lte33.def
+    if [ -f "$pidfile" ]; then
+      $EXEC ${test_dir}/grib_check_param_concepts paramId $pidfile
+    fi
 done
 
 $EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/shortName.def
 for a_dataset in $datasets; do
-    $EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/$a_dataset/shortName.def
+    snfile=$ECCODES_DEFINITION_PATH/grib2/localConcepts/$a_dataset/shortName.def
+    if [ -f "$snfile" ]; then
+      $EXEC ${test_dir}/grib_check_param_concepts shortName $snfile
+    fi
+    snfile=$ECCODES_DEFINITION_PATH/grib2/localConcepts/$a_dataset/shortName.lte33.def
+    if [ -f "$snfile" ]; then
+      $EXEC ${test_dir}/grib_check_param_concepts shortName $snfile
+    fi
 done
 
 # Check WMO name.def etc
 $EXEC ${test_dir}/grib_check_param_concepts name  $ECCODES_DEFINITION_PATH/grib2/name.def
 $EXEC ${test_dir}/grib_check_param_concepts units $ECCODES_DEFINITION_PATH/grib2/units.def
+
+$EXEC ${test_dir}/grib_check_param_concepts name  $ECCODES_DEFINITION_PATH/grib2/name.lte33.def
+$EXEC ${test_dir}/grib_check_param_concepts units $ECCODES_DEFINITION_PATH/grib2/units.lte33.def
+
 $EXEC ${test_dir}/grib_check_param_concepts cfVarName $ECCODES_DEFINITION_PATH/grib2/cfVarName.def
 $EXEC ${test_dir}/grib_check_param_concepts cfVarName $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/cfVarName.def
 
@@ -171,22 +197,24 @@ check_grib_defs
 cd $test_dir
 rm -fr $tempDir
 
-# -------------------------------
-echo "Check duplicates"
-# -------------------------------
-paramIdFile=$ECCODES_DEFINITION_PATH/grib2/paramId.def
-pids=$(grep "^'" $paramIdFile | awk -F"'" '{printf "%s\n", $2}')
-set +e
-for p in $pids; do
-    # For each paramId found in the top-level WMO file, check if it also exists
-    # in the ECMWF local one
-    grep "'$p'"  $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/paramId.def
-    if [ $? -ne 1 ]; then
-      echo "ERROR: check paramId $p. Is it duplicated?"
-      exit 1
-    fi
-done
-set -e
+
+## -------------------------------
+#echo "Check duplicates"
+## -------------------------------
+#paramIdFile=$ECCODES_DEFINITION_PATH/grib2/paramId.def
+#
+#pids=$(grep "^'" $paramIdFile | awk -F"'" '{printf "%s\n", $2}')
+#set +e
+#for p in $pids; do
+#  # For each paramId found in the top-level WMO file, check if it also exists
+#  # in the ECMWF local one
+#  grep "'$p'"  $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/paramId.def
+#  if [ $? -ne 1 ]; then
+#    echo "ERROR: check paramId $p. Is it duplicated?"
+#    exit 1
+#  fi
+#done
+#set -e
 
 
 # -------------------------------

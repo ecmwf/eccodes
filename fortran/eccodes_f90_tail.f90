@@ -1096,7 +1096,7 @@
     call bufr_new_from_file(ifile, bufrid, status)
   end subroutine codes_bufr_new_from_file
 
-  !> Create a new message in memory from a character array containting the coded message.
+  !> Create a new message in memory from a character array containing the coded message.
   !>
   !> The message can be accessed through its msgid and it will be available\n
   !> until @ref codes_release is called. A reference to the original coded\n
@@ -1119,7 +1119,7 @@
     call grib_new_from_message_char(msgid, message, status)
   end subroutine codes_new_from_message_char
 
-  !> Create a new message in memory from an integer array containting the coded message.
+  !> Create a new message in memory from an integer array containing the coded message.
   !>
   !> The message can be accessed through its msgid and it will be available\n
   !> until @ref codes_release is called. A reference to the original coded\n
@@ -1268,7 +1268,7 @@
   !> and prints the error message.\n
   !>
   !> @param status      the status to be checked
-  !> @param caller      name of the caller soubroutine
+  !> @param caller      name of the caller subroutine
   !> @param string      a string variable from the caller routine (e.g. key,filename)
   subroutine codes_check(status, caller, string)
     integer(kind=kindOfInt), intent(in)  :: status
@@ -1709,6 +1709,37 @@
 
     call grib_is_defined(msgid, key, is_defined, status)
   end subroutine codes_is_defined
+
+
+
+  !> Check if a key is computed(virtual) or coded
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref codes_get_error_string.
+  !>
+  !> @param msgid        id of the message loaded in memory
+  !> @param key          key name
+  !> @param is_computed  0->coded, 1->computed
+  !> @param status       CODES_SUCCESS if OK, integer value on error
+  subroutine codes_key_is_computed(msgid, key, is_computed, status)
+    integer(kind=kindOfInt), intent(in)            :: msgid
+    character(len=*), intent(in)                   :: key
+    integer(kind=kindOfInt), intent(out)           :: is_computed
+    integer(kind=kindOfInt), optional, intent(out) :: status
+    integer(kind=kindOfInt)                        :: iret
+
+    iret = grib_f_key_is_computed(msgid, key, is_computed)
+    if (iret /= 0) then
+      call grib_f_write_on_fail(msgid)
+    end if
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'key_is_computed', key)
+    end if
+  end subroutine codes_key_is_computed
+
 
   !> Get the real(4) value of a key from a message.
   !>
@@ -2517,7 +2548,7 @@
   end subroutine codes_grib_multi_write
 
   !> Append a single field grib message to a multi field grib message.
-  !> Only the sections with section number greather or equal "startsection" are copied from the input single message to the multi field output grib.
+  !> Only the sections with section number greater or equal "startsection" are copied from the input single message to the multi field output grib.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
@@ -2901,5 +2932,22 @@
     end if
 
   end subroutine codes_bufr_multi_element_constant_arrays_off
+
+
+  subroutine codes_grib_surface_type_requires_value(edition, type_of_surface_code, requires_value, status)
+    integer(kind=kindOfInt), intent(in)            :: edition
+    integer(kind=kindOfInt), intent(in)            :: type_of_surface_code
+    integer(kind=kindOfInt), intent(out)           :: requires_value
+    integer(kind=kindOfInt), optional, intent(out) :: status
+    integer(kind=kindOfInt)                        :: iret
+
+    iret = grib_f_grib_surface_type_requires_value(edition, type_of_surface_code, requires_value)
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'codes_grib_surface_type_requires_value', '')
+    end if
+end subroutine codes_grib_surface_type_requires_value
+
 
 end module eccodes

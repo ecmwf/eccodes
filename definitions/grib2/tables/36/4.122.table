@@ -1,0 +1,7 @@
+# Code table 4.122 - Type of additional arguments for verification score
+0 0 Fixed threshold value
+1 1 Threshold specified as a quantile of the climatology
+2 2 Threshold specified as a multiple of the standard deviation
+# 3-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

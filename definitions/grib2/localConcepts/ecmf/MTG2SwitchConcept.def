@@ -1,0 +1,44 @@
+# Concept MTG2Switch
+# 0 = pre-MTG2 encoding used
+# 1 = post-MTG2 encoding used
+# 2 = post-MTG2 encoding with paramId + chemId used
+# Model version cannot be used in this concept because its concept is only evaluated at the end of Section 4,
+# and in many cases we use the value of the MTG2Switch earlier. Therefore we must use the backgroundProcess
+# and generatingProcessIdentifier key directly. The values for IFS are:
+# backgroundProcess=255
+# 'cy50r2' = { generatingProcessIdentifier = 162; }
+# 'cy50r1' = { generatingProcessIdentifier = 161; }
+# 'cy49r2' = { generatingProcessIdentifier = 159; }
+# 'cy49r1' = { generatingProcessIdentifier = 158; }
+# We also need the wave model for cy50r1. The values for the wave model are:
+# generatingProcessIdentifier = 109; # cy50r1 wave global
+# generatingProcessIdentifier = 209; # cy50r1 wave global
+
+
+# We only need the concepts which differ from the default below.
+# These are all for 50r1 (255 + 161, 255 + 109, 255 + 209; GRIBmix), where we have the newer model but still want the pre-MTG2 behaviour
+# and for AIFS, where we have the newer tablesVersion but still want the pre-MTG2 behaviour
+
+# OD
+0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=161;}
+0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=109;}
+0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=209;}
+# RD
+0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=161;}
+0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=109;}
+0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=209;}
+# MC
+0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=161; marsClass=19;}
+0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=109; marsClass=19;}
+0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=209; marsClass=19;}
+# CR
+0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=161; marsClass=36;}
+0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=109; marsClass=36;}
+0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=209; marsClass=36;}
+# GG
+0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=161; marsClass=44;}
+0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=109; marsClass=44;}
+0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=209; marsClass=44;}
+# AI
+0 = {tablesVersion=34; productionStatusOfProcessedData=0; marsClass=51;}
+0 = {tablesVersion=35; productionStatusOfProcessedData=0; marsClass=51;}

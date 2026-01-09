@@ -83,6 +83,24 @@ ${tools_dir}/grib_compare -b marsType,typeOfProcessedData,typeOfGeneratingProces
 ${tools_dir}/grib_set -s type=es $tempGribA $tempGribB
 ${tools_dir}/grib_compare -b marsType,typeOfProcessedData,typeOfGeneratingProcess $tempGribA $tempGribB
 
+# Check PDTN
+#
+${tools_dir}/grib_set -s paramId=140114 $sample2 $tempGribA
+grib_check_key_equals $tempGribA productDefinitionTemplateNumber,shortName '103 h1012'
+
+# PDTN selection
+# typeOfStatisticalProcessing and typeOfWavePeriodInterval combined
+${tools_dir}/grib_set -s tablesVersion=35 $sample2 $tempGribA # post mtg2
+${tools_dir}/grib_set -s paramId=141114 $tempGribA $tempGribB
+grib_check_key_equals $tempGribB productDefinitionTemplateNumber 144
+
+${tools_dir}/grib_set -s tablesVersion=35,eps=1,number=66 $sample2 $tempGribA # post mtg2, ensemble
+${tools_dir}/grib_set -s paramId=141114 $tempGribA $tempGribB
+grib_check_key_equals $tempGribB productDefinitionTemplateNumber,number '145 66'
+
+${tools_dir}/grib_set -s is_wave_period_range=1 $tempGribA $tempGribB
+grib_check_key_equals $tempGribB productDefinitionTemplateNumber '104'
+
 
 # Clean up
 rm -f $tempSample $temp $tempGribA $tempGribB $tempRef $tempOut

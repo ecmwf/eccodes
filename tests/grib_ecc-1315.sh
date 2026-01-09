@@ -10,13 +10,17 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1315
+# Keys like parameterName & nameOfFirstFixedSurface have trailing space
+# ---------------------------------------------------------------------
+
 label="grib_ecc-1313_test"
 tempOut=temp.$label.text
 tempRef=temp.$label.ref
 tempFilt=temp.$label.filt
 tempGrb=temp.$label.grib
 
-sample_grib1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 cat > $tempFilt << EOF

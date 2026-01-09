@@ -10,7 +10,10 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1806
+# Change of paramId in conversion from GRIB1 to GRIB2
+# ---------------------------------------------------------------------
 
 label="grib_ecc-1806_test"
 tempGrib1=temp.$label.1.grib

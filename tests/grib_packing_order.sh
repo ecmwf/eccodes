@@ -11,7 +11,7 @@
 . ./include.ctest.sh
 
 label="grib_packing_order_test"
-temp=${label}".grib.tmp"
+
 temp_simple1=${label}".simple1.tmp"
 temp_simple2=${label}".simple2.tmp"
 temp_second1=${label}".second1.tmp"

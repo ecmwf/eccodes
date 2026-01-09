@@ -1,0 +1,843 @@
+#Carbon monoxide
+'2' = {
+	constituentType = 4 ;
+	}
+#Hydrogen peroxide
+'3' = {
+	constituentType = 19 ;
+	}
+#Formaldehyde
+'5' = {
+	constituentType = 7 ;
+	}
+#Nitric acid
+'6' = {
+	constituentType = 17 ;
+	}
+#Methyl peroxide
+'7' = {
+	constituentType = 10002 ;
+	}
+#Paraffins
+'9' = {
+	constituentType = 60009 ;
+	}
+#Ethene
+'10' = {
+	constituentType = 10009 ;
+	}
+#Radon
+'11' = {
+	constituentType = 23 ;
+	}
+#Aldehydes
+'12' = {
+	constituentType = 60018 ;
+	}
+#Peroxyacetyl nitrate
+'13' = {
+	constituentType = 10013 ;
+	}
+#Peroxides
+'14' = {
+	constituentType = 60019 ;
+	}
+#Organic nitrates
+'15' = {
+	constituentType = 60020 ;
+	}
+#Isoprene
+'16' = {
+	constituentType = 10017 ;
+	}
+#Nitrogen dioxide
+'17' = {
+	constituentType = 5 ;
+	}
+#Dimethyl sulfide
+'18' = {
+	constituentType = 10500 ;
+	}
+#Ammonia
+'19' = {
+	constituentType = 9 ;
+	}
+#Sulfate
+'20' = {
+	constituentType = 22 ;
+	}
+#Ammonium
+'21' = {
+	constituentType = 10 ;
+	}
+#Methane sulfonic acid
+'22' = {
+	constituentType = 10024 ;
+	}
+#Methyl glyoxal
+'23' = {
+	constituentType = 10025 ;
+	}
+#Carbon dioxide
+'25' = {
+	constituentType = 3 ;
+	}
+#Lead
+'26' = {
+	constituentType = 30296 ;
+	}
+#Nitrogen monoxide
+'27' = {
+	constituentType = 11 ;
+	}
+#Hydroperoxy radical
+'28' = {
+	constituentType = 14 ;
+	}
+#Methylperoxy radical
+'29' = {
+	constituentType = 10001 ;
+	}
+#Hydroxyl radical
+'30' = {
+	constituentType = 10000 ;
+	}
+#Nitrous oxide
+'31' = {
+	constituentType = 6 ;
+	}
+#Nitrate radical
+'32' = {
+	constituentType = 13 ;
+	}
+#Dinitrogen pentoxide
+'33' = {
+	constituentType = 15 ;
+	}
+#Pernitric acid
+'34' = {
+	constituentType = 18 ;
+	}
+#Peroxy acetyl radical
+'35' = {
+	constituentType = 10026 ;
+	}
+#Organic ethers
+'36' = {
+	constituentType = 60021 ;
+	}
+#Amine
+'40' = {
+	constituentType = 60022 ;
+	}
+#Methanol
+'42' = {
+	constituentType = 10004 ;
+	}
+#Formic acid
+'43' = {
+	constituentType = 10005 ;
+	}
+#Methacrylic acid
+'44' = {
+	constituentType = 10027 ;
+	}
+#Ethane
+'45' = {
+	constituentType = 10008 ;
+	}
+#Ethanol
+'46' = {
+	constituentType = 10011 ;
+	}
+#Propane
+'47' = {
+	constituentType = 10014 ;
+	}
+#Propene
+'48' = {
+	constituentType = 10015 ;
+	}
+#Terpenes
+'49' = {
+	constituentType = 60012 ;
+	}
+#Acetone
+'52' = {
+	constituentType = 10029 ;
+	}
+#Dioxygen
+'60' = {
+	constituentType = 38 ;
+	}
+#Singlet sigma dioxygen
+'61' = {
+	constituentType = 40000 ;
+	}
+#Singlet Delta dioxygen
+'62' = {
+	constituentType = 40001 ;
+	}
+#Chlorine dioxide
+'63' = {
+	constituentType = 31 ;
+	}
+#Chlorine nitrate
+'64' = {
+	constituentType = 30 ;
+	}
+#Hypochlorous acid
+'65' = {
+	constituentType = 29 ;
+	}
+#Chlorine
+'66' = {
+	constituentType = 46 ;
+	}
+#Nitryl chloride
+'67' = {
+	constituentType = 39 ;
+	}
+#Hydrogen bromide
+'68' = {
+	constituentType = 35 ;
+	}
+#Dichlorine dioxide
+'69' = {
+	constituentType = 28 ;
+	}
+#Hypobromous acid
+'70' = {
+	constituentType = 36 ;
+	}
+#Trichlorofluoromethane
+'71' = {
+	constituentType = 20002 ;
+	}
+#Dichlorodifluoromethane
+'72' = {
+	constituentType = 20003 ;
+	}
+#Trichlorotrifluoroethane
+'73' = {
+	constituentType = 20004 ;
+	}
+#Dichlorotetrafluoroethane
+'74' = {
+	constituentType = 20006 ;
+	}
+#Chloropentafluoroethane
+'75' = {
+	constituentType = 20007 ;
+	}
+#Tetrachloromethane
+'76' = {
+	constituentType = 20016 ;
+	}
+#Methyl chloroform
+'77' = {
+	constituentType = 20017 ;
+	}
+#Methyl chloride
+'78' = {
+	constituentType = 20015 ;
+	}
+#Chlorodifluoromethane
+'79' = {
+	constituentType = 20008 ;
+	}
+#Methyl bromide
+'80' = {
+	constituentType = 20018 ;
+	}
+#Bromochlorodifluoromethane
+'82' = {
+	constituentType = 20012 ;
+	}
+#Trifluorobromomethane
+'83' = {
+	constituentType = 20013 ;
+	}
+#Sulfuric acid
+'85' = {
+	constituentType = 40 ;
+	}
+#Nitrous acid
+'86' = {
+	constituentType = 16 ;
+	}
+#Butadiene
+'93' = {
+	constituentType = 10031 ;
+	}
+#Ethyl hydroperoxide
+'94' = {
+	constituentType = 10052 ;
+	}
+#Acetic acid
+'96' = {
+	constituentType = 10012 ;
+	}
+#Acetaldehyde
+'98' = {
+	constituentType = 10032 ;
+	}
+#Glycolaldehyde
+'101' = {
+	constituentType = 10033 ;
+	}
+#Cresol
+'102' = {
+	constituentType = 10034 ;
+	}
+#Peracetic acid
+'104' = {
+	constituentType = 10035 ;
+	}
+#Ketones
+'105' = {
+	constituentType = 60023 ;
+	}
+#Hoch2ch2o2
+'106' = {
+	constituentType = 10037 ;
+	}
+#Glyoxal
+'107' = {
+	constituentType = 10038 ;
+	}
+#Hoch2ch2o
+'108' = {
+	constituentType = 10036 ;
+	}
+#Unsaturated dicarbonyls
+'109' = {
+	constituentType = 60024 ;
+	}
+#Methacrolein
+'110' = {
+	constituentType = 10028 ;
+	}
+#Unsaturated hydroxy dicarbonyl
+'111' = {
+	constituentType = 60025 ;
+	}
+#Isopropyldioxidanyl
+'112' = {
+	constituentType = 10039 ;
+	}
+#Hydroxy ketone
+'113' = {
+	constituentType = 60026 ;
+	}
+#Isopropyl hydroperoxide
+'114' = {
+	constituentType = 10040 ;
+	}
+#C3h6oho2
+'115' = {
+	constituentType = 10053 ;
+	}
+#C3h6ohooh
+'116' = {
+	constituentType = 10054 ;
+	}
+#Hydroxyacetone
+'118' = {
+	constituentType = 10041 ;
+	}
+#Peroxyacetic acid
+'119' = {
+	constituentType = 10042 ;
+	}
+#Nitrogen oxides
+'129' = {
+	constituentType = 60003 ;
+	}
+#Methylvinylketone
+'138' = {
+	constituentType = 10043 ;
+	}
+#Phenoxy radical
+'139' = {
+	constituentType = 10044 ;
+	}
+#Oxides
+'155' = {
+	constituentType = 60027 ;
+	}
+#Hoch2c(ooh)(ch3)ch=ch2
+'161' = {
+	constituentType = 60032 ;
+	}
+#Dimethyl sulfoxyde
+'163' = {
+	constituentType = 10501 ;
+	}
+#Hydrogensulfide
+'166' = {
+	constituentType = 41 ;
+	}
+#All nitrogen oxides
+'168' = {
+	constituentType = 60004 ;
+	}
+#Chlorine family
+'169' = {
+	constituentType = 60005 ;
+	}
+#Bromine family
+'171' = {
+	constituentType = 60006 ;
+	}
+#Nitrogen atom
+'173' = {
+	constituentType = 21 ;
+	}
+#Chlorine monoxide
+'174' = {
+	constituentType = 27 ;
+	}
+#Chlorine atom
+'175' = {
+	constituentType = 26 ;
+	}
+#Bromine monoxide
+'176' = {
+	constituentType = 33 ;
+	}
+#Methyl group
+'178' = {
+	constituentType = 10045 ;
+	}
+#Sulfur trioxide
+'189' = {
+	constituentType = 42 ;
+	}
+#Carbonyl sulfide
+'190' = {
+	constituentType = 10046 ;
+	}
+#Bromine atom
+'191' = {
+	constituentType = 32 ;
+	}
+#Bromine
+'192' = {
+	constituentType = 43 ;
+	}
+#Bromine monochloride
+'193' = {
+	constituentType = 34 ;
+	}
+#Bromine nitrate
+'194' = {
+	constituentType = 37 ;
+	}
+#Dibromomethane
+'195' = {
+	constituentType = 10047 ;
+	}
+#Methoxy radical
+'196' = {
+	constituentType = 10048 ;
+	}
+#Tribromomethane
+'197' = {
+	constituentType = 10049 ;
+	}
+#Dihydrogen
+'199' = {
+	constituentType = 20 ;
+	}
+#Hydrogen chloride
+'200' = {
+	constituentType = 20001 ;
+	}
+#Formyl radical
+'201' = {
+	constituentType = 10050 ;
+	}
+#Hydrogen fluoride
+'202' = {
+	constituentType = 44 ;
+	}
+#Oxygen atom
+'203' = {
+	constituentType = 12 ;
+	}
+#Excited oxygen atom
+'204' = {
+	constituentType = 40002 ;
+	}
+#Ground state oxygen atom
+'205' = {
+	constituentType = 40003 ;
+	}
+#Aromatic peroxide radical
+'222' = {
+	constituentType = 60029 ;
+	}
+#Acetonitrile
+'224' = {
+	constituentType = 10007 ;
+	}
+#Methyl peroxy nitrate
+'225' = {
+	constituentType = 10055 ;
+	}
+#Hydrogen cyanide
+'226' = {
+	constituentType = 10006 ;
+	}
+#Hydroperoxy aldehydes type 1
+'227' = {
+	constituentType = 10058 ;
+	}
+#Hydroperoxy aldehydes type 2
+'228' = {
+	constituentType = 10059 ;
+	}
+#Isoprene peroxy type B
+'229' = {
+	constituentType = 10056 ;
+	}
+#Isoprene peroxy type D
+'230' = {
+	constituentType = 10057 ;
+	}
+#Sulphur hexafluoride
+'232' = {
+	constituentType = 45 ;
+	}
+#Sulphur dioxide
+'233' = {
+	constituentType = 8 ;
+	}
+#Ozone
+'236' = {
+	constituentType = 0 ;
+	}
+#Olefins
+'311' = {
+	constituentType = 60010 ;
+	}
+#Anthropogenic volatile organic compounds
+'331' = {
+	constituentType = 60033 ;
+	}
+#Biomass burning volatile organic compounds
+'332' = {
+	constituentType = 60034 ;
+	}
+#Water vapour
+'359' = {
+	constituentType = 1 ;
+	}
+#Rain water
+'360' = {
+	constituentType = 62034 ;
+	}
+#Cloud water
+'361' = {
+	constituentType = 62035 ;
+	}
+#Gaseous molecules
+'400' = {
+	constituentType = 60035 ;
+	}
+#Methane
+'404' = {
+	constituentType = 2 ;
+	}
+#Toluene
+'431' = {
+	constituentType = 10022 ;
+	}
+#Benzene
+'432' = {
+	constituentType = 10021 ;
+	}
+#Xylene
+'433' = {
+	constituentType = 10023 ;
+	}
+#Butane
+'438' = {
+	constituentType = 10016 ;
+	}
+#Butene
+'439' = {
+	constituentType = 10060 ;
+	}
+#Pentene
+'440' = {
+	constituentType = 10061 ;
+	}
+#Hexene
+'441' = {
+	constituentType = 10062 ;
+	}
+#Heptene
+'442' = {
+	constituentType = 10063 ;
+	}
+#Octene
+'443' = {
+	constituentType = 10064 ;
+	}
+#Pentane
+'444' = {
+	constituentType = 10065 ;
+	}
+#Hexane
+'445' = {
+	constituentType = 10066 ;
+	}
+#Heptane
+'446' = {
+	constituentType = 10067 ;
+	}
+#Octane
+'447' = {
+	constituentType = 10068 ;
+	}
+#Nitrate
+'900' = {
+	constituentType = 62004 ;
+	}
+#Sea salt aerosol (0.03 - 0.5 um)
+'901' = {
+	scaleFactorOfSecondSize = 7 ;
+	scaledValueOfFirstSize = 3 ;
+	scaleFactorOfFirstSize = 8 ;
+	typeOfSizeInterval = 7 ;
+	scaledValueOfSecondSize = 5 ;
+	constituentType = 62008 ;
+	}
+#Sea salt aerosol (0.5 - 5 um)
+'902' = {
+	scaleFactorOfSecondSize = 6 ;
+	scaledValueOfFirstSize = 5 ;
+	scaleFactorOfFirstSize = 7 ;
+	typeOfSizeInterval = 7 ;
+	scaledValueOfSecondSize = 5 ;
+	constituentType = 62008 ;
+	}
+#Sea salt aerosol (5 - 20 um)
+'903' = {
+	scaleFactorOfSecondSize = 5 ;
+	scaledValueOfFirstSize = 5 ;
+	scaleFactorOfFirstSize = 6 ;
+	typeOfSizeInterval = 7 ;
+	scaledValueOfSecondSize = 2 ;
+	constituentType = 62008 ;
+	}
+#Dust aerosol (0.03 - 0.55 um)
+'904' = {
+	scaleFactorOfSecondSize = 8 ;
+	scaledValueOfFirstSize = 3 ;
+	scaleFactorOfFirstSize = 8 ;
+	typeOfSizeInterval = 7 ;
+	scaledValueOfSecondSize = 55 ;
+	constituentType = 62001 ;
+	}
+#Dust aerosol (0.55 - 0.9 um)
+'905' = {
+	scaleFactorOfSecondSize = 7 ;
+	scaledValueOfFirstSize = 55 ;
+	scaleFactorOfFirstSize = 8 ;
+	typeOfSizeInterval = 7 ;
+	scaledValueOfSecondSize = 9 ;
+	constituentType = 62001 ;
+	}
+#Dust aerosol (0.9 - 20 um)
+'906' = {
+	scaleFactorOfSecondSize = 5 ;
+	scaledValueOfFirstSize = 9 ;
+	scaleFactorOfFirstSize = 7 ;
+	typeOfSizeInterval = 7 ;
+	scaledValueOfSecondSize = 2 ;
+	constituentType = 62001 ;
+	}
+#Hydrophilic organic matter aerosol
+'907' = {
+	constituentType = 62015 ;
+	}
+#Hydrophobic organic matter aerosol
+'908' = {
+	constituentType = 62016 ;
+	}
+#Hydrophilic black carbon aerosol
+'909' = {
+	constituentType = 62013 ;
+	}
+#Hydrophobic black carbon aerosol
+'910' = {
+	constituentType = 62014 ;
+	}
+#Sulphate aerosol
+'911' = {
+	constituentType = 62006 ;
+	}
+#Nitrate fine mode aerosol (<= 2.5 um)
+'912' = {
+	scaleFactorOfSecondSize = missing() ;
+	scaledValueOfFirstSize = 25 ;
+	scaleFactorOfFirstSize = 7 ;
+	typeOfSizeInterval = 5 ;
+	scaledValueOfSecondSize = missing() ;
+	constituentType = 62004 ;
+	}
+#Nitrate coarse mode aerosol (>2.5 um)
+'913' = {
+	scaleFactorOfSecondSize = missing() ;
+	scaledValueOfFirstSize = 25 ;
+	scaleFactorOfFirstSize = 7 ;
+	typeOfSizeInterval = 3 ;
+	scaledValueOfSecondSize = missing() ;
+	constituentType = 62004 ;
+	}
+#Ammonium aerosol
+'914' = {
+	constituentType = 62003 ;
+	}
+#Biogenic secondary organic aerosol
+'915' = {
+	constituentType = 62032 ;
+	}
+#Anthropogenic secondary organic aerosol
+'916' = {
+	constituentType = 62033 ;
+	}
+#Secondary particulate organic matter dry
+'918' = {
+	constituentType = 62012 ;
+	}
+#Total aerosol
+'922' = {
+	constituentType = 62000 ;
+	}
+#Dust aerosol (0.9 - 2.5 um)
+'925' = {
+	scaleFactorOfSecondSize = 7 ;
+	scaledValueOfFirstSize = 9 ;
+	scaleFactorOfFirstSize = 7 ;
+	typeOfSizeInterval = 7 ;
+	scaledValueOfSecondSize = 25 ;
+	constituentType = 62001 ;
+	}
+#Dust aerosol (2.5 - 5.0 um)
+'926' = {
+	scaleFactorOfSecondSize = 6 ;
+	scaledValueOfFirstSize = 25 ;
+	scaleFactorOfFirstSize = 7 ;
+	typeOfSizeInterval = 7 ;
+	scaledValueOfSecondSize = 5 ;
+	constituentType = 62001 ;
+	}
+#Dust aerosol (5.0 - 10.0 um)
+'927' = {
+	scaleFactorOfSecondSize = 5 ;
+	scaledValueOfFirstSize = 5 ;
+	scaleFactorOfFirstSize = 6 ;
+	typeOfSizeInterval = 7 ;
+	scaledValueOfSecondSize = 1 ;
+	constituentType = 62001 ;
+	}
+#Dust aerosol (10.0 - 20.0 um)
+'928' = {
+	scaleFactorOfSecondSize = 5 ;
+	scaledValueOfFirstSize = 1 ;
+	scaleFactorOfFirstSize = 5 ;
+	typeOfSizeInterval = 7 ;
+	scaledValueOfSecondSize = 2 ;
+	constituentType = 62001 ;
+	}
+#Particulate matter <= 1 um
+'929' = {
+	scaleFactorOfSecondSize = missing() ;
+	scaledValueOfFirstSize = 1 ;
+	scaleFactorOfFirstSize = 6 ;
+	typeOfSizeInterval = 5 ;
+	scaledValueOfSecondSize = missing() ;
+	constituentType = 62026 ;
+	}
+#Particulate matter <= 2.5 um
+'930' = {
+	scaleFactorOfSecondSize = missing() ;
+	scaledValueOfFirstSize = 25 ;
+	scaleFactorOfFirstSize = 7 ;
+	typeOfSizeInterval = 5 ;
+	scaledValueOfSecondSize = missing() ;
+	constituentType = 62026 ;
+	}
+#Particulate matter <= 10 um
+'931' = {
+	scaleFactorOfSecondSize = missing() ;
+	scaledValueOfFirstSize = 1 ;
+	scaleFactorOfFirstSize = 5 ;
+	typeOfSizeInterval = 5 ;
+	scaledValueOfSecondSize = missing() ;
+	constituentType = 62026 ;
+	}
+#Volcanic Ash
+'932' = {
+	constituentType = 62025 ;
+	}
+#Black carbon organic aerosol
+'933' = {
+	constituentType = 62009 ;
+	}
+#Organic matter aerosol
+'934' = {
+	constituentType = 62010 ;
+	}
+#Dust aerosol
+'935' = {
+	constituentType = 62001 ;
+	}
+#Sea salt aerosol
+'936' = {
+	constituentType = 62008 ;
+	}
+#Dust aerosol smaller than 1 um
+'937' = {
+	scaleFactorOfSecondSize = missing() ;
+	scaledValueOfFirstSize = 1 ;
+	scaleFactorOfFirstSize = 6 ;
+	typeOfSizeInterval = 5 ;
+	scaledValueOfSecondSize = missing() ;
+	constituentType = 62001 ;
+	}
+#Dust aerosol smaller than 2.5 um
+'938' = {
+	scaleFactorOfSecondSize = missing() ;
+	scaledValueOfFirstSize = 25 ;
+	scaleFactorOfFirstSize = 7 ;
+	typeOfSizeInterval = 5 ;
+	scaledValueOfSecondSize = missing() ;
+	constituentType = 62001 ;
+	}
+#Dust aerosol smaller than 10 um
+'939' = {
+	scaleFactorOfSecondSize = missing() ;
+	scaledValueOfFirstSize = 1 ;
+	scaleFactorOfFirstSize = 5 ;
+	typeOfSizeInterval = 5 ;
+	scaledValueOfSecondSize = missing() ;
+	constituentType = 62001 ;
+	}
+#Dust aerosol smaller than 20 um
+'940' = {
+	scaleFactorOfSecondSize = missing() ;
+	scaledValueOfFirstSize = 2 ;
+	scaleFactorOfFirstSize = 5 ;
+	typeOfSizeInterval = 5 ;
+	scaledValueOfSecondSize = missing() ;
+	constituentType = 62001 ;
+	}
+#Sea salt wet at 80% relative humidity
+'942' = {
+	constituentType = 62037 ;
+	}

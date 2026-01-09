@@ -1,4 +1,4 @@
-#Code Table 0.0: Discipline of processed data in the GRIB message, number of GRIB Master table
+# Code Table 0.0: Discipline of processed data in the GRIB message, number of GRIB Master table
 0 0 Meteorological products
 1 1 Hydrological products
 2 2 Land surface products
@@ -6,4 +6,5 @@
 4 4 Space weather products 
 10 10 Oceanographic products
 20 20 Health and socioeconomic impacts
+191 191 Computational parameters
 255 255 Missing

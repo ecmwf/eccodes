@@ -5,9 +5,6 @@
 transient numberOfValues = ( J + 1 ) * ( J + 2 ) : no_copy ;
 transient numberOfPackedValues = numberOfValues - 1 : no_copy;
 
-transient numberOfValues = ( J + 1 ) * ( J + 2 ) : no_copy ;
-transient numberOfPackedValues = numberOfValues - 1 : no_copy;
-
 meta codedValues data_g2simple_packing(
     section7Length,
     offsetBeforeData,

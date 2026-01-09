@@ -8,17 +8,17 @@ unsigned[3] section1Length;
 unsigned[1] edition = 0 : dump;
 alias editionNumber=edition;
 
-template    section_1 "bufr/section.1.1.def";
+template section_1 "bufr/section.1.1.def";
 
 flagbit localSectionPresent(section1Flags,7) = 1;
 alias section2Present=localSectionPresent;
 alias localUsePresent=localSectionPresent;
 
-if(localSectionPresent){
+if (localSectionPresent) {
    template section_2 "bufr/section.2.def";
 }
 else {
-	transient section2Length = 0;
+   transient section2Length = 0;
 }
 
 template section_3 "bufr/section.3.def";

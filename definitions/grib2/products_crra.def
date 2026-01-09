@@ -1,7 +1,9 @@
 # (C) Copyright 2005- ECMWF.
 
 # Copernicus regional reanalysis (CARRA/CERRA)
-constant marsClass = 'rr';
+if (!defined(class)) {
+  constant marsClass = 'rr';
+}
 
 alias tigge_short_name=shortName;
 alias short_name=shortName;
@@ -46,6 +48,20 @@ if (section2Used == 1) {
 
 # See GRIB-911 re typeOfProcessedData values in UERRA
 concept marsType(unknown) {
+
+# DGOV-496: Ensemble mean and spread for CERRA EDA in MARS
+   em = {
+     derivedForecast = 0;
+   }
+   "17" = {
+     derivedForecast = 0;
+   }
+   es = {
+     derivedForecast = 4;
+   }
+   "18" = {
+     derivedForecast = 4;
+   }
 
    fc = {
      typeOfProcessedData = 1;
@@ -96,6 +112,13 @@ concept marsStream(unknown) {
     enda = {
       productDefinitionTemplateNumber = 1;
     }
+    enda = {
+      productDefinitionTemplateNumber = 12;
+    }
+    enda = {
+      productDefinitionTemplateNumber = 2;
+    }
+
     moda = {
       productDefinitionTemplateNumber = 8;
       outerLoopTypeOfTimeIncrement = 1;

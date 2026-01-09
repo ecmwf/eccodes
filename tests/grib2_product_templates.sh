@@ -62,6 +62,18 @@ grib_check_key_equals $tempGribA productDefinitionTemplateNumber 8
 grib_check_key_equals $tempGribA typeOfStatisticalProcessing,stepType '1 accum'
 grib_check_key_equals $tempGribA shortName,name 'tp Total precipitation'
 
+# ensemble
+$tools_dir/grib_set -s eps=1 $sample_g2 $tempGribA
+grib_check_key_equals $tempGribA productDefinitionTemplateNumber 1
+$tools_dir/grib_set -s stepType=avg,eps=1 $sample_g2 $tempGribA
+grib_check_key_equals $tempGribA productDefinitionTemplateNumber 11
+$tools_dir/grib_set -s eps=1,stepType=avg $sample_g2 $tempGribA
+grib_check_key_equals $tempGribA productDefinitionTemplateNumber 11
+
+$tools_dir/grib_set -s stepType=avg,eps=0 $sample_g2 $tempGribA
+grib_check_key_equals $tempGribA productDefinitionTemplateNumber 8
+
+
 $tools_dir/grib_set -s productDefinitionTemplateNumber=1,shortName=tp,perturbationNumber=32 $sample_g2 $tempGribA
 grib_check_key_equals $tempGribA productDefinitionTemplateNumber 11
 grib_check_key_equals $tempGribA number 32
@@ -75,12 +87,21 @@ grib_check_key_equals $tempGribA typeOfStatisticalProcessing,stepType '2 max'
 grib_check_key_equals $tempGribA shortName,name 'max_visp Time-maximum visibility through precipitation'
 
 # Test an expected failure, e.g., paramId=239375 has constituentType
-set +e
 $tools_dir/grib_set -s paramId=239375 $sample_g2 $tempGribA 2>$tempText
-status=$?
-set -e
-[ $status -ne 0 ]
-grep -q "constituentType .* failed: Key/value not found" $tempText
+grib_check_key_equals $tempGribA shortName 'std_viozn'
+
+# ECC-2077: GRIB2: Default value of typeOfStatisticalProcessing should be 255
+for pdtn in 95 96 97 98 1001 1101; do
+    $tools_dir/grib_set -s productDefinitionTemplateNumber=$pdtn $sample_g2 $tempGribA
+    grib_check_key_equals $tempGribA typeOfStatisticalProcessing 255
+done
+
+
+# ECC-2134 Cannot set productDefinitionTemplateNumber=0 on an interval-based message
+$tools_dir/grib_set -s stepType=avg,stepRange=12-15 $sample_g2 $tempGribA
+grib_check_key_equals $tempGribA productDefinitionTemplateNumber 8
+$tools_dir/grib_set -s productDefinitionTemplateNumber=0 $tempGribA $tempGribB
+grib_check_key_equals $tempGribB productDefinitionTemplateNumber,stepType '0 instant'
 
 
 # Clean up

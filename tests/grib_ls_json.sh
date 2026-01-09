@@ -42,7 +42,7 @@ grep -q 'not_found' $tempLog
 # so there should not be any instances of 'not_found'
 ${tools_dir}/grib_ls -j $input > $tempLog
 if grep -q 'not_found' $tempLog; then
-  echo "grib_ls: JSON output should not have contained 'not_found'"
+  echo "ERROR: grib_ls: JSON output should not have contained 'not_found'"
   exit 1
 fi
 
@@ -109,6 +109,16 @@ ${tools_dir}/grib_ls -j -n geography ${data_dir}/reduced_latlon_surface.grib2 > 
 if test "x$JSON_CHECK" != "x"; then
   json_xs -t none < $tempLog
 fi
+
+# ECC-2089: The 'geography' namespace should not include 'bitmapPresent' and 'bitmap'
+input=${data_dir}/missing_field.grib1
+grib_check_key_equals $input bitmapPresent 1
+${tools_dir}/grib_ls -j -n geography $input > $tempLog
+set +e
+grep bitmap $tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
 
 
 # Clean up

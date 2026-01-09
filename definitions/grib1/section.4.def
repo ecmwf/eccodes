@@ -17,6 +17,7 @@ ibmfloat referenceValue : read_only,dump;
 
 meta referenceValueError reference_value_error(referenceValue,ibm);
 
+
 flagbit sphericalHarmonics(dataFlag,7) : dump;
 flagbit complexPacking(dataFlag,6) : dump;
 flagbit integerPointValues(dataFlag,5) : dump;
@@ -63,11 +64,12 @@ if (complexPacking && sphericalHarmonics==0) {
     meta orderOfSPD evaluate(plusOneinOrdersOfSPD + 2 * twoOrdersOfSPD);
     alias secondaryBitmap = secondaryBitmapPresent;
     alias boustrophedonic=boustrophedonicOrdering;
-}  else {
-    transient orderOfSPD=2;
-    transient boustrophedonic=0;
+} else {
+    transient widthOfFirstOrderValues = 0; #ECC-2111
+    transient orderOfSPD = 2;
+    transient boustrophedonic = 0;
 }
-transient hideThis=0;
+transient hideThis = 0 : hidden;
 
 concept packingType {
 #set uses the last one
@@ -122,10 +124,10 @@ concept packingType {
 } : dump;
 
 
-alias ls.packingType=packingType;
-alias typeOfPacking=packingType;
+alias ls.packingType = packingType;
+alias typeOfPacking  = packingType;
 
-if( binaryScaleFactor == -32767) {
+if (binaryScaleFactor == -32767) {
   unsigned[1] bitsPerValue : dump ;
   alias numberOfBitsContainingEachPackedValue = bitsPerValue;
   alias accuracy = bitsPerValue;

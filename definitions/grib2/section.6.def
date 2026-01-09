@@ -7,15 +7,17 @@ position offsetBSection6;
 section_length[4] section6Length ;
 meta section6 section_pointer(offsetSection6,section6Length,6);
 
-#  Number of section
+# Number of section
 unsigned[1] numberOfSection = 6:read_only;
 
-#  Bit-map indicator
+# Bit-map indicator
 codetable[1] bitMapIndicator ('6.0.table',masterDir,localDir) = 255 : dump;
 
-#transient bitmapPresent=1;
-meta geography.bitmapPresent g2bitmap_present(bitMapIndicator): dump;
-transient missingValuesPresent = bitmapPresent : hidden, read_only;
+meta bitmapPresent g2bitmap_present(bitMapIndicator): dump;
+
+# See ECC-2170
+# transient missingValuesPresent = bitmapPresent : hidden, read_only;
+meta missingValuesPresent evaluate( bitmapPresent && numberOfMissing > 0 ): hidden, read_only;
 
 # Bitmap...
 if (bitMapIndicator == 0) {
@@ -28,7 +30,7 @@ if (bitMapIndicator == 0) {
           numberOfDataMatrices) : read_only;
     }
     else {
-      meta geography.bitmap g2bitmap( tableReference,
+      meta bitmap g2bitmap( tableReference,
           missingValue,
           offsetBSection6,
           section6Length,
@@ -36,7 +38,7 @@ if (bitMapIndicator == 0) {
     }
   }
   else {
-    meta geography.bitmap g2bitmap( tableReference,
+    meta bitmap g2bitmap( tableReference,
         missingValue,
         offsetBSection6,
         section6Length,

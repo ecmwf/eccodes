@@ -10,7 +10,10 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1440
+# ECMWF local definition 300 should be for decoding only (no encoding)
+# ---------------------------------------------------------------------
 
 label="grib_ecc-1440_test"
 tempGrib=temp.$label.grib
@@ -22,6 +25,7 @@ set +e
 ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=300 $sample_grib2 $tempGrib > $tempLog 2>&1
 status=$?
 set -e
+[ $status -ne 0 ]
 grep -q "This local definition has been deprecated" $tempLog
 
 rm -f $tempGrib $tempLog

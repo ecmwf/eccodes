@@ -44,9 +44,15 @@ ${tools_dir}/grib_compare -v $infile $outfile
 status=$?
 set -e
 [ $status -eq 1 ]
-${tools_dir}/grib_compare -b referenceValue $infile $outfile
+${tools_dir}/grib_compare -b referenceValue,binaryScaleFactor $infile $outfile
 ${tools_dir}/grib_compare -H $infile $outfile
 
+# ECC-2012
+for infile in $ECCODES_SAMPLES_PATH/gg_sfc_grib1.tmpl $ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl; do
+  grib_check_key_equals $infile bitsPerValue,binaryScaleFactor '16 -9'
+  ${tools_dir}/grib_set -d4 $infile $outfile
+  grib_check_key_equals $outfile bitsPerValue,binaryScaleFactor '0 0'
+done
 
 infile="${data_dir}/regular_latlon_surface.grib1"
 ${tools_dir}/grib_set -s shortName=2d $infile $outfile
@@ -306,10 +312,27 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
+rm -f $tempIndex1 $tempIndex2
+
 # Key unpackedValues
 #-------------------
 ${tools_dir}/grib_set -s scaleValuesBy=1.01 $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $temp1
 ${tools_dir}/grib_compare -c unpackedValues -A 1.86 $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $temp1
+
+
+# -----------------
+# Angle comparison
+# -----------------
+$tools_dir/grib_set -s longitudeOfFirstGridPoint=360000 $ECCODES_SAMPLES_PATH/GRIB1.tmpl $temp1
+$tools_dir/grib_set -s longitudeOfFirstGridPoint=0      $ECCODES_SAMPLES_PATH/GRIB1.tmpl $temp2
+# Comparing low-level keys of type integer
+set +e
+${tools_dir}/grib_compare $temp1 $temp2
+status=$?
+set -e
+[ $status -ne 0 ]
+# Comparing computed keys of type double (longitudeOfFirstGridPointInDegrees)
+$tools_dir/grib_compare -c geography:n $temp1 $temp2
 
 
 # -----------------

@@ -7,6 +7,34 @@ if( HAVE_FORTRAN )
 
     include_directories( ${srcdir} ${bindir} )
 
+    # Our code is compiled with '-fallow-argument-mismatch' when compiling with
+    # gfortran. The manual has to say this about it:
+    #
+    # > Some code contains calls to external procedures with mismatches between
+    # > the calls and the procedure definition, or with mismatches between
+    # > different calls. Such code is nonconforming, and is usually flagged with
+    # > an error. This options degrades the error to a warning that can only be
+    # > disabled by disabling all warnings via -w. Only a single occurrence per
+    # > argument is flagged by this warning. -fallow-argument-mismatch is implied
+    # > by -std=legacy.
+    # >
+    # > Using this option is strongly discouraged. It is possible to provide
+    # > standard-conforming code that allows different types of arguments by
+    # > using an explicit interface and TYPE(*).
+    # From: https://gcc.gnu.org/onlinedocs/gcc-15.2.0/gfortran/Fortran-Dialect-Options.html
+    #
+    # Code in grib_types.f90, grib_f90.f90 is emitting this warning and for now we
+    # want to silence it.
+    # See https://jira.ecmwf.int/browse/ECC-2148
+    if(CMAKE_Fortran_COMPILER_ID MATCHES "GNU")
+        set_source_files_properties(
+            grib_types.f90
+            grib_f90.f90
+            PROPERTIES
+                COMPILE_FLAGS "-w"
+        )
+    endif()
+
     ecbuild_add_executable( TARGET  grib_types
                             NOINSTALL
                             SOURCES grib_types.f90 grib_fortran_kinds.c )
@@ -116,4 +144,3 @@ if( HAVE_FORTRAN )
     #                 DESTINATION ${INSTALL_INCLUDE_DIR} )
 
 endif()
-

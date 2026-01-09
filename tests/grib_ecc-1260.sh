@@ -10,12 +10,16 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1260
+# grib_ls/grib_get -pstep: does not show step ranges with hyphens in some cases
+# ---------------------------------------------------------------------
+
 label="grib_ecc-1260_test"
 tempGrib=temp.$label.grib
 tempRef=temp.$label.ref
 tempOut=temp.$label.txt
 
-sample_grib1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 # Create a GRIB with a stepRange having a hyphen

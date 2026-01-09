@@ -21,6 +21,7 @@ int grib_f_get_string_array_(int* gid, char* key, char* val,int* nvals,int* slen
 int codes_f_bufr_keys_iterator_rewind_(int* kiter);
 int any_f_scan_file_(int* fid, int* n);
 int grib_f_new_from_message_int_(int* gid, int* buffer , size_t* bufsize);
+int grib_f_new_from_message_no_copy_int_(int* gid, int* buffer , size_t* bufsize);
 int grib_f_copy_key_(int* gidsrc, char* key, int* giddest, int len);
 int grib_f_set_samples_path_(char* path, int len);
 
@@ -91,6 +92,9 @@ int grib_f_keys_iterator_rewind(int *kiter);
 int grib_f_new_from_message_(int *gid, void *buffer, size_t *bufsize);
 int grib_f_new_from_message__(int *gid, void *buffer, size_t *bufsize);
 int grib_f_new_from_message(int *gid, void *buffer, size_t *bufsize);
+int grib_f_new_from_message_no_copy_(int *gid, void *buffer, size_t *bufsize);
+int grib_f_new_from_message_no_copy__(int *gid, void *buffer, size_t *bufsize);
+int grib_f_new_from_message_no_copy(int *gid, void *buffer, size_t *bufsize);
 int grib_f_new_from_message_copy_(int *gid, void *buffer, size_t *bufsize);
 int grib_f_new_from_message_copy__(int *gid, void *buffer, size_t *bufsize);
 int grib_f_new_from_message_copy(int *gid, void *buffer, size_t *bufsize);
@@ -293,6 +297,9 @@ int grib_f_get_message_size(int *gid, size_t *len);
 int grib_f_copy_message_(int *gid, void *mess, size_t *len);
 int grib_f_copy_message__(int *gid, void *mess, size_t *len);
 int grib_f_copy_message(int *gid, void *mess, size_t *len);
+int grib_f_get_message(int *gid, void **mess, size_t *len);
+int grib_f_get_message_(int *gid, void **mess, size_t *len);
+int grib_f_get_message__(int *gid, void **mess, size_t *len);
 void grib_f_check_(int *err, char *call, char *str, int lencall, int lenstr);
 void grib_f_check__(int *err, char *call, char *key, int lencall, int lenkey);
 void grib_f_check(int *err, char *call, char *key, int lencall, int lenkey);
@@ -327,7 +334,8 @@ int grib_f_datetime_to_julian_(long* year,long* month,long* day, long* hour,long
 int grib_f_set_string_array_(int* gid, char* key, char* val,int* nvals,int* slen, int len);
 int codes_f_bufr_keys_iterator_get_name_(int* iterid, char* name, int len);
 int codes_f_bufr_multi_element_constant_arrays_off_();
-
+int grib_f_key_is_computed_(int *gid, char *key, int *isComputed, int len);
+int grib_f_grib_surface_type_requires_value_(int* edition, int* type_of_surface_code, int* requires_value);
 
 #ifdef __cplusplus
 }

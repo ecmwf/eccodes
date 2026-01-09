@@ -11,10 +11,11 @@
 . ./include.ctest.sh
 
 grib2_sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-label=grib_uerra_test
+label="grib_uerra_test"
 tempSample=tempSample.${label}.grib2
 temp1=temp1.${label}.grib2
 temp2=temp2.${label}.grib2
+tempLog=temp2.${label}.log
 
 test_stream_and_type()
 {
@@ -97,6 +98,21 @@ ${tools_dir}/grib_set -s \
 $grib2_sample $temp1
 grib_check_key_equals $temp1 'marsExpver,mars.expver' '0078 0078'
 
+# ECC-2053: GRIB: alias mars.class not working in a new local concept
+# crraLocalVersion=3 has a coded key for mars class
+${tools_dir}/grib_set -s centre=255,productionStatusOfProcessedData=10,grib2LocalSectionPresent=1,crraLocalVersion=3 $grib2_sample $temp1
+${tools_dir}/grib_set -s class=ci,expver=at99 $temp1 $temp2
+grib_check_key_equals $temp1 'mars.class,mars.expver' 'rr 0002'
+grib_check_key_equals $temp2 'mars.class,marsClass,mars.expver' 'ci ci at99'
+${tools_dir}/grib_ls -jm $temp2 > $tempLog
+grep -q "class.*ci" $tempLog
+
+# ECC-2066
+${tools_dir}/grib_set -s centre=255,productionStatusOfProcessedData=10,grib2LocalSectionPresent=1,crraLocalVersion=3,suiteName=8 \
+   $grib2_sample $temp1
+${tools_dir}/grib_dump -O -p section_2 $temp1 > $tempLog
+grep -q "HARMONIE-AROME reanalysis by SMHI on EURO-CORDEX domain" $tempLog
+grib_check_key_equals $temp1 "suiteName:s" "se-ar-ec"
 
 # Stream 'dame'
 ${tools_dir}/grib_set -s productionStatusOfProcessedData=10 $grib2_sample $temp1
@@ -109,5 +125,34 @@ grib_check_key_equals $temp1 'mars.stream' 'dame'
 result=$(${tools_dir}/grib_get -fp mars.time,mars.step $temp1)
 [ "$result" = "not_found not_found" ]
 
+# ECC-1913
+# ----------
+# types em/es for class=rr and expver=prod/test (and suiteName=se-al-ec though it works generally)
+for pspd in 10 11 ; do
+  if [ $pspd -eq 10 ]; then
+    expver=prod
+  else
+    expver=test
+  fi
+  for type in em es ; do
+    # Param 228228 (accum)
+    ${tools_dir}/grib_set -s \
+     paramId=228228,productionStatusOfProcessedData=$pspd,grib2LocalSectionPresent=1,crraLocalVersion=1,suiteName=4 \
+     $grib2_sample $temp1
+    ${tools_dir}/grib_set -s \
+     productionStatusOfProcessedData=$pspd,productDefinitionTemplateNumber=12,type=$type \
+     $temp1 $temp2
+    grib_check_key_equals $temp2 'mars.stream,mars.type,mars.expver' "enda $type $expver"
+     # Param 167 (instant)
+    ${tools_dir}/grib_set -s \
+     paramId=167,productionStatusOfProcessedData=$pspd,grib2LocalSectionPresent=1,crraLocalVersion=1,suiteName=4 \
+     $grib2_sample $temp1
+    ${tools_dir}/grib_set -s \
+     productionStatusOfProcessedData=$pspd,productDefinitionTemplateNumber=12,type=$type \
+     $temp1 $temp2
+    grib_check_key_equals $temp2 'mars.stream,mars.type,mars.expver' "enda $type $expver"
+  done
+done
+
 # Clean up
-rm -f $temp1 $temp2 $tempSample
+rm -f $temp1 $temp2 $tempSample $tempLog

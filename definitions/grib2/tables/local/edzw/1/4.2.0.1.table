@@ -48,3 +48,8 @@
 238 238 Hail diameter (mm)
 239 239 Extreme weather index (EWI) of total precipitation rate (kg m-2 s-1)
 240 240 Extreme weather index (EWI) of snow precipitation rate (kg m-2 s-1)
+241 241 Cloud droplets - Diameter of a particle representing the mean mass of the particle size distribuion (mass density divided by number density) (m)
+242 242 Rain - Diameter of a particle representing the mean mass of the particle size distribution (mass density divided by number density) (m)
+243 243 Cloud ice - Diameter of a particle representing the mean mass of the particle size distribution (mass density divided by number density)
+244 244 Snow - Diameter of a particle representing the mean mass of the particle size distribution (mass density divided by number density) (m)
+245 245 Graupel - Diameter of a particle representing the mean mass of the particle size distribution (mass densitiy divided by number density) (m)

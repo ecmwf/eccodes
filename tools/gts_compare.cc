@@ -127,7 +127,7 @@ static int blocklisted(const char* name)
     grib_string_list* b = blocklist;
     if (!name) return 0;
     while (b) {
-        Assert(b->value);
+        ECCODES_ASSERT(b->value);
         if (!strcmp(name, b->value))
             return 1;
         b = b->next;
@@ -251,8 +251,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     if (!global_handle || err != GRIB_SUCCESS) {
         morein2++;
-        if (global_handle)
-            grib_handle_delete(global_handle);
+        if (global_handle) grib_handle_delete(global_handle);
         return 0;
     }
 
@@ -424,7 +423,7 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
         save_error(c, name);
         return err;
     }
-    Assert(options->mode == MODE_GTS);
+    ECCODES_ASSERT(options->mode == MODE_GTS);
         /* TODO: Ignore missing values for keys in GTS. Not yet implemented */
         //isMissing1 = ((grib_is_missing(h1, name, &err1) == 1) && (err1 == 0)) ? 1 : 0;
         //isMissing2 = ((grib_is_missing(h2, name, &err2) == 1) && (err2 == 0)) ? 1 : 0;

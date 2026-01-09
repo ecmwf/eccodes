@@ -18,9 +18,7 @@ transient preferLocalConcepts = preferLocalConceptsEnvVar : hidden;
 constant defaultTypeOfLevel="unknown" : hidden;
 
 gribDataQualityChecks = getenv("ECCODES_GRIB_DATA_QUALITY_CHECKS","0") : hidden;
-if (gribDataQualityChecks) {
-  template LIMITS "param_limits.def";
-}
+template GRIB_LIMITS "param_limits.def";
 
 # GRIBEX special boustrophedonic mode. See GRIB-472
 # If the environment variable is not defined, the key will be 0
@@ -33,6 +31,9 @@ transient truncateLaplacian=0 : hidden;
 constant marsDir="mars" : no_copy,hidden;
 constant present=1 : hidden;
 # alias epsStatistics=zero : hidden;
+
+# Temporary
+transient expandBoundingBox = 1 : hidden;
 
 constant defaultParameter = 0 : hidden;
 constant defaultName="unknown" :hidden;

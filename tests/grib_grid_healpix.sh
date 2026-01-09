@@ -16,8 +16,10 @@ fi
 # Define a common label for all the tmp files
 label="grib_healpix_test"
 tempFilt="temp.${label}.filt"
+tempRef="temp.${label}.ref"
 tempGrib="temp.${label}.grib"
 tempLog="temp.${label}.log"
+tempOut="temp.${label}.out"
 
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
@@ -37,7 +39,7 @@ cat $tempFilt
 # Use filter on input to create a new HEALPix GRIB
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $input
 if [ ! -f "$tempGrib" ]; then
-   echo 'Failed to create output GRIB from filter' >&2
+   echo 'ERROR: Failed to create output GRIB from filter' >&2
    exit 1
 fi
 grib_check_key_equals $tempGrib gridType,orderingConvention,N,Nside 'healpix ring 32 32'
@@ -62,7 +64,24 @@ cat > $tempFilt <<EOF
   write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $input
-${tools_dir}/grib_get_data $tempGrib
+${tools_dir}/grib_get_data -F%.0f $tempGrib > $tempOut
+cat > $tempRef <<EOF
+Latitude Longitude Value
+   41.810   45.000 1
+   41.810  135.000 2
+   41.810  225.000 3
+   41.810  315.000 4
+    0.000    0.000 5
+    0.000   90.000 6
+    0.000  180.000 7
+    0.000  270.000 8
+  -41.810   45.000 9
+  -41.810  135.000 10
+  -41.810  225.000 11
+  -41.810  315.000 12
+EOF
+diff $tempRef $tempOut
+# Nearest
 val=$(${tools_dir}/grib_get -l 0,0,1 $tempGrib | tr -d ' ')
 [ "$val" = 5 ]
 
@@ -73,6 +92,8 @@ cat > $tempFilt <<EOF
  print "longitudes=[longitudes]";
  print "distinctLatitudes=[distinctLatitudes]";
  print "distinctLongitudes=[distinctLongitudes]";
+ meta ndlats size(distinctLatitudes);
+ assert( ndlats == 3 );
 EOF
 
 ${tools_dir}/grib_filter $tempFilt $tempGrib
@@ -101,7 +122,9 @@ ${tools_dir}/grib_get_data $tempGrib > $tempLog
 
 # Nested: N must be a power of 2
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-${tools_dir}/grib_set -s gridType=healpix,Nside=3,orderingConvention=nested,numberOfDataPoints=108,numberOfValues=108 $input $tempGrib
+${tools_dir}/grib_set -s \
+  gridType=healpix,longitudeOfFirstGridPointInDegrees=45,Nside=3,orderingConvention=nested,numberOfDataPoints=108,numberOfValues=108 \
+  $input $tempGrib
 set +e
 ${tools_dir}/grib_get_data $tempGrib > $tempLog 2>&1
 status=$?
@@ -112,23 +135,42 @@ grep -q "Nside must be a power of 2" $tempLog
 
 # Nested N=1
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-${tools_dir}/grib_set -s gridType=healpix,Nside=1,orderingConvention=nested,numberOfDataPoints=12,numberOfValues=12 $input $tempGrib
+${tools_dir}/grib_set -s \
+  gridType=healpix,longitudeOfFirstGridPointInDegrees=45,Nside=1,orderingConvention=nested,numberOfDataPoints=12,numberOfValues=12 \
+  $input $tempGrib
 ${tools_dir}/grib_get_data $tempGrib > $tempLog
 
 # Invalid cases
 # ------------------
 # Bad ordering
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_set -s gridType=healpix,Nside=1,ordering=6 $input $tempGrib
 set +e
 ${tools_dir}/grib_get_data $tempGrib > $tempLog 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "Only orderingConvention.*are supported" $tempLog
+grep -q "ordering.*ring.*nested" $tempLog
+
+# Lon != 45
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -s \
+  gridType=healpix,longitudeOfFirstGridPointInDegrees=0,Nside=1,orderingConvention=nested,numberOfDataPoints=12,numberOfValues=12 \
+  $input $tempGrib
+set +e
+${tools_dir}/grib_get_data $tempGrib > $tempLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "should be 45" $tempLog
+
 
 # N = 0
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -s gridType=healpix $input $tempGrib
+grib_check_key_equals $tempGrib N 0
 set +e
-${tools_dir}/grib_get_data -sN=0 $tempGrib > $tempLog 2>&1
+${tools_dir}/grib_get_data $tempGrib > $tempLog 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
@@ -136,4 +178,4 @@ grep -q "Nside must be greater than zero" $tempLog
 
 
 # Clean up
-rm -f $tempFilt $tempGrib $tempLog
+rm -f $tempFilt $tempGrib $tempLog $tempOut $tempRef

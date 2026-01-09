@@ -81,7 +81,7 @@ ${tools_dir}/grib_compare -b $BLACKLIST $outfile1 $outfile2 > $REDIRECT
 
 templateNumber=`${tools_dir}/grib_get -p dataRepresentationTemplateNumber $outfile2`
 if [ $templateNumber -ne 42 ]; then
-  echo "dataRepresentationTemplateNumber=$templateNumber. Should be 42!"
+  echo "ERROR: dataRepresentationTemplateNumber=$templateNumber. Should be 42!"
   exit 1
 fi
 
@@ -199,6 +199,20 @@ if [ $HAVE_JPEG -eq 1 ]; then
   ${tools_dir}/grib_set -r -s packingType=grid_ccsds $outfile1 $outfile2
   ${tools_dir}/grib_compare -c data:n $outfile1 $outfile2
 fi
+
+# ECC-2021: CCSDS packing should not be applied to spectral fields
+infile=$ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl
+grib_check_key_equals $infile isSpectral,isGridded '1 0'
+ECCODES_DEBUG=-1 ${tools_dir}/grib_set -s packingType=grid_ccsds $infile $outfile1 >$logfile 2>&1
+${tools_dir}/grib_compare $infile $outfile1
+grep -q "CCSDS packing does not apply to spectral fields" $logfile
+
+# ECC-2088: Support for optimizeScaleFactor
+set -x
+${tools_dir}/grib_set    -s packingType=grid_ccsds $grib2_sample $outfile1
+${tools_dir}/grib_set -r -s optimizeScaleFactor=1 $outfile1 $outfile2
+grib_check_key_equals $outfile1 packingType,bitsPerValue,binaryScaleFactor,decimalScaleFactor,referenceValue 'grid_ccsds 16 -9 0 209.535'
+grib_check_key_equals $outfile2 packingType,bitsPerValue,binaryScaleFactor,decimalScaleFactor,referenceValue 'grid_ccsds 16 -59 -15 2.09535e-13'
 
 # Clean up
 rm -f $outfile1 $outfile2 $logfile

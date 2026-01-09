@@ -66,6 +66,8 @@ info()
   echo "  JPG                 : $(print_feature @HAVE_JPEG@)"
   echo "  PNG                 : $(print_feature @HAVE_PNG@)"
   echo "  NETCDF              : $(print_feature @HAVE_NETCDF@)"
+  echo "  GEOGRAPHY           : $(print_feature @HAVE_GEOGRAPHY@)"
+  echo "  ECKIT_GEO           : $(print_feature @HAVE_ECKIT_GEO@)"
   echo ""
   # echo "Dependencies: "
   # if [ -n "@ECCODES_HAVE_ECKIT@" ]; then

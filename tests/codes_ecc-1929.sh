@@ -10,12 +10,18 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-1929
+# Definitions: Ability to use the print statement
+# ---------------------------------------------------------------------
+
 label="codes_ecc-1929_test"
 
-if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
-    echo "$0: This test is currently disabled on Windows"
-    exit 0
-fi
+# Due to problems at DWD (See SD-103761) we have disabled this test
+# To be revived later
+echo "$0: This test is currently disabled"
+exit 0
+
 
 tempOut=temp.$label.txt
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl

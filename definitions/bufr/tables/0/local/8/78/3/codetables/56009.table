@@ -1,0 +1,4 @@
+0 0 In-flight visibility 0 to and including 1 nmi (nautical mile?)
+1 1 In-flight visibility > 1 to 3 nmi
+2 2 In-flight visibility > 3 nmi
+3 3 Missing value

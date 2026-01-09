@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+# ---------------------------------------------------------------------
+# This is the test for JIRA issue ECC-530
+# GRIB2: Order of setting keys creates a failure
+# ---------------------------------------------------------------------
+
 label="grid_ecc-530_test"
 tempGrib=temp.$label.grib
 tempFilt=temp.${label}.filt

@@ -17,6 +17,7 @@ codetable[1] sourceOfGridDefinition ('3.0.table',masterDir,localDir) ;
 # Number of data points
 unsigned[4] numberOfDataPoints : dump;
 alias numberOfPoints=numberOfDataPoints;
+alias numberOfGridPoints = numberOfDataPoints;
 
 # Number of octets for optional list of numbers defining number of points
 unsigned[1] numberOfOctectsForNumberOfPoints;
@@ -67,6 +68,10 @@ concept gridType {
  "rotated_ll"            = { gridDefinitionTemplateNumber=1;  PLPresent=0; }
  "stretched_ll"          = { gridDefinitionTemplateNumber=2;  PLPresent=0; }
  "stretched_rotated_ll"  = { gridDefinitionTemplateNumber=3;  PLPresent=0; }
+
+ "varres_ll"             = { gridDefinitionTemplateNumber=4;  PLPresent=0; }
+ "varres_rotated_ll"     = { gridDefinitionTemplateNumber=5;  PLPresent=0; }
+
  "mercator"              = { gridDefinitionTemplateNumber=10; PLPresent=0; }
  "transverse_mercator"   = { gridDefinitionTemplateNumber=12; PLPresent=0; }
  "polar_stereographic"   = { gridDefinitionTemplateNumber=20; PLPresent=0; }

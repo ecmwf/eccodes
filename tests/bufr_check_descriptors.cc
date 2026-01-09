@@ -46,15 +46,15 @@ int main(int argc, char** argv)
     const size_t maxlen_keyName = sizeof(v.shortName);
     const size_t maxlen_units   = sizeof(v.units);
 
-    Assert(argc == 2);
+    ECCODES_ASSERT(argc == 2);
 
     filename = argv[1];
     fp       = fopen(filename, "r");
-    Assert(fp);
+    ECCODES_ASSERT(fp);
 
     while (fgets(line, sizeof(line) - 1, fp)) {
         ++line_number;
-        Assert(strlen(line) > 0);
+        ECCODES_ASSERT(strlen(line) > 0);
         if (line[0] == '#') continue; /* Ignore first line with column titles */
         list = string_split(line, "|");
         if (!list) {
