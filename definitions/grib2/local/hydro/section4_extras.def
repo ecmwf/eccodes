@@ -40,6 +40,6 @@ concept forcingModel(unknown, "forcingModelConcept.def", conceptsDir2, conceptsL
 if ( forcingModel is "obs" ){
  meta originForcing sprintf("%s",forcingModel);
  } else {
- meta originForcing sprintf("%s_%s",inputOriginatingCentre,forcingModel);
+ meta originForcing sprintf("%s-%s",inputOriginatingCentre,forcingModel);
 }
 alias mars.forcing = originForcing;
