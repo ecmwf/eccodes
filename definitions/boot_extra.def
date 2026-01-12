@@ -1,4 +1,4 @@
-# Override this file to add your own additional definitions.”
+# Override this file to add your own additional definitions.
 # e.g., check for ecCodes library version compatibility
 
 # meta ecmwfLibraryVersion library_version() : string_type, hidden, read_only;
