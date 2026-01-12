@@ -1,0 +1,5 @@
+#1-39 keep the numbers for ecland europe
+'v1-c3s-europe' = { generatingProcessIdentifier = 1 ; }
+
+#40-79 keep the numbers for ecland global
+'v1-c3s-global' = { generatingProcessIdentifier = 40 ; }

@@ -1,0 +1,16 @@
+#1-39 keep the numbers for Efas
+'v2-efas' = { generatingProcessIdentifier = 1; }
+'v3-efas' = { generatingProcessIdentifier = 2; }
+'v3.5-efas' = { generatingProcessIdentifier = 3 ; }
+'v4-efas' = { generatingProcessIdentifier = 4; }
+'v5-efas' = { generatingProcessIdentifier = 5; }
+
+#40-79 keep the numbers for Glofas
+'v3.1-glofas' = { generatingProcessIdentifier = 40; }
+'v4.0-glofas' = { generatingProcessIdentifier = 41; }
+
+#80-119 keep the numbers for c3s europe
+'v1-c3s-efas' = { generatingProcessIdentifier = 80; }
+
+#120-159 keep the numbers for c3s global
+'v1-c3s-glofas' = { generatingProcessIdentifier = 120; }
