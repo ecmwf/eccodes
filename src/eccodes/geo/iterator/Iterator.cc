@@ -175,7 +175,7 @@ static grib_iterator* grib_iterator_new_(const grib_handle* ch, unsigned long fl
     const int eckit_geo = ch->context->eckit_geo;  // check environment variable
     if (eckit_geo != 0 && do_process) {
         eccodes::geo::eckit_main_init();
-
+        grib_context_log(ch->context, GRIB_LOG_DEBUG, "Geoiterator: using eckit/geo");
         try {
             if (i->iterator = new eccodes::geo_iterator::GeoIterator(const_cast<grib_handle*>(ch), flags);
                 i->iterator != nullptr) {

@@ -250,7 +250,7 @@ int ProjString::unpack_string(char* v, size_t* len)
 //     const int eckit_geo = h->context->eckit_geo;  // check environment variable
 //     if (eckit_geo != 0) {
 //         eccodes::geo::eckit_main_init();
-
+//         grib_context_log(h->context, GRIB_LOG_DEBUG, "ProjString: using eckit/geo");
 //         try {
 //             geo::GribToSpec spec(h);
 //             std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(spec));
