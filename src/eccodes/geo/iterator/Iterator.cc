@@ -70,7 +70,6 @@ int gribIteratorDelete(eccodes::geo_iterator::Iterator* i)
     if (i) {
         i->destroy();
         delete i;
-        i = nullptr;
     }
     return GRIB_SUCCESS;
 }
@@ -142,9 +141,10 @@ int grib_iterator_destroy(grib_context* c, grib_iterator* i)
 #if defined(HAVE_GEOGRAPHY)
 static grib_iterator* grib_iterator_new_(const grib_handle* ch, unsigned long flags, int* error)
 {
+    int err = 0;
     {
         long isGridded = -1;
-        int err        = grib_get_long(ch, "isGridded", &isGridded);
+        err = grib_get_long(ch, "isGridded", &isGridded);
         if (!err && !isGridded) {
             *error = GRIB_NOT_IMPLEMENTED;
             return nullptr;
@@ -154,8 +154,26 @@ static grib_iterator* grib_iterator_new_(const grib_handle* ch, unsigned long fl
     grib_iterator* i = (grib_iterator*)grib_context_malloc_clear(ch->context, sizeof(grib_iterator));
 
     #if defined(HAVE_ECKIT_GEO)
+
+//// TODO(maee)
+//// This is TEMPORARY! Remove when eckit geo can handle projected grids
+////
+    char gridType[128] = {0,};
+    size_t gtlen = sizeof(gridType);
+    err = grib_get_string(ch, "gridType", gridType, &gtlen);
+    bool do_process = true;
+    if (!err &&
+        (STR_EQUAL(gridType, "lambert") ||
+        STR_EQUAL(gridType,  "space_view") ||
+        STR_EQUAL(gridType,  "mercator") ||
+        STR_EQUAL(gridType,  "lambert_azimuthal_equal_area") ||
+        STR_EQUAL(gridType,  "polar_stereographic")) )
+    {
+        do_process = false;
+    }
+
     const int eckit_geo = ch->context->eckit_geo;  // check environment variable
-    if (eckit_geo != 0) {
+    if (eckit_geo != 0 && do_process) {
         eccodes::geo::eckit_main_init();
 
         try {
@@ -170,7 +188,7 @@ static grib_iterator* grib_iterator_new_(const grib_handle* ch, unsigned long fl
                 return i;
             }
         }
-        catch (eckit::geo::exception::GridUnknownError& e) {
+        catch (eckit::geo::exception::GridUnknownError&) {
             *error = GRIB_NOT_IMPLEMENTED;
             return nullptr;
         }
