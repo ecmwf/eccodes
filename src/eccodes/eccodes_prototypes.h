@@ -398,7 +398,7 @@ grib_action* grib_action_from_filter(const char* filter);
 int grib_handle_apply_action(grib_handle* h, grib_action* a);
 void grib_multi_support_reset_file(grib_context* c, FILE* f);
 void grib_multi_support_reset(grib_context* c);
-int codes_handle_take_message_ownership(grib_handle* h, void (*deleter)(void*));
+int codes_handle_change_buffer_ownership(grib_handle* h, void (*deleter)(void*));
 
 /* grib_hash_keys.cc */
 const struct grib_keys_hash* grib_keys_hash_get(const char* str, size_t len);

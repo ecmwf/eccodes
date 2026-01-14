@@ -48,7 +48,7 @@ static int test_message_ownership(const char* filename) // , size_t* previous_en
             return 1;
         }
 
-        err = codes_handle_take_message_ownership(h, deleter);
+        err = codes_handle_change_buffer_ownership(h, deleter);
 
         if (err != GRIB_SUCCESS) {
             printf("Error taking message ownership at offset: %s\n", codes_get_error_message(err));
