@@ -1724,7 +1724,7 @@ int grib_get_message_headers(const grib_handle* h, const void** msg, size_t* siz
 //         grib_handle_delete(h);
 //         return NULL;
 //     }
-//     h->buffer->property = CODES_USER_BUFFER;
+//     h->buffer->deleter = NULL;
 //     h->header_mode = 1;
 //     return h;
 // }
