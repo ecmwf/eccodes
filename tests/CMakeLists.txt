@@ -155,7 +155,6 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1766
         grib_ecc-1829
         grib_ecc-2140
-        grib_ecc-2188
         bufr_ecc-1028
         bufr_ecc-1195
         bufr_ecc-1259
@@ -327,6 +326,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2050
         grib_ecc-2052
         grib_ecc-2137
+        grib_ecc-2188
         grib_modelName
         grib_sub_hourly
         grib_set_bytes
