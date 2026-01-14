@@ -25,7 +25,10 @@ static void deleter(void* data)
 static int test_message_ownership(const char* filename) // , size_t* previous_end_of_message)
 {
     FILE* in = fopen(filename, "r");
-    if (!in) return 1;
+    if (!in) {
+        printf("Error opening file %s\n", filename);
+        return 1;
+    }
 
     while (true) {
         size_t buf_len = SIZE;
@@ -70,15 +73,16 @@ static long fread_wrapper(void* stream_data, void* buffer, long len)
     return fread(buffer, 1, len, f);
 }
 
-
 static int test_codes_handle_from_stream(const char* filename)
 {
     FILE* in = fopen(filename, "r");
+    if (!in) {
+        printf("Error opening file %s\n", filename);
+        return 1;
+    }
+
     codes_handle* h = NULL;
     int err = 0;
-
-    if (!in)
-        return 1;
 
     while ((h = codes_handle_new_from_stream(NULL, reinterpret_cast<void*>(in), fread_wrapper, &err)) != NULL) {
         if (err != GRIB_SUCCESS) {
@@ -101,11 +105,9 @@ static int test_codes_handle_from_stream(const char* filename)
     return 0;
 }
 
-
 int main(int argc, char** argv)
 {
     int err = 0;
-    FILE* in = NULL;
 
     if (argc != 2) return 1;
 
