@@ -301,7 +301,7 @@ struct grib_loader
  */
 struct grib_buffer
 {
-    int property;        /** < property parameter of buffer */
+    void (*deleter)(void*);
     int validity;        /** < validity parameter of buffer */
     int growable;        /** < buffer can be grown */
     size_t length;       /** < Buffer length */
