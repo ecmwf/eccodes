@@ -333,6 +333,7 @@ if( HAVE_BUILD_TOOLS )
         codes_assert
         codes_ecc-1698
         codes_ecc-1929
+        codes_ecc-2192
         codes_get_string
         codes_codetable
         gts_get

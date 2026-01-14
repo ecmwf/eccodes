@@ -17,18 +17,30 @@ int Binop::evaluate_long(grib_handle* h, long* lres) const
     long v1 = 0;
     long v2 = 0;
 
-//     {
-//         int typeLeft, typeRight;
-//         const char* nameLeft;
-//         const char* nameRight;
-//         typeLeft = grib_expression_native_type(h, left_);
-//         typeRight = grib_expression_native_type(h, right_);
-//         nameLeft = grib_expression_get_name(left_);
-//         nameRight= grib_expression_get_name(right_);
-//         printf("eval_long nameLeft=%s (type=%d), nameRight=%s (type=%d)\n",nameLeft,typeLeft, nameRight,typeRight);
-//         grib_expression_print(h->context, g, h);
-//         printf("\n");
-//     }
+    // int typeLeft, typeRight;
+    // const char* nameLeft;
+    // const char* nameRight;
+    // typeLeft = grib_expression_native_type(h, left_);
+    // typeRight = grib_expression_native_type(h, right_);
+    // nameLeft = grib_expression_get_name(left_);
+    // nameRight= grib_expression_get_name(right_);
+    // printf("eval_long nameLeft=%s (type=%d), nameRight=%s (type=%d)\n",nameLeft,typeLeft, nameRight,typeRight);
+    // grib_expression_print(h->context, g, h);
+    // printf("\n");
+
+    const int ltype = left_->native_type(h);
+    const int rtype = right_->native_type(h);
+    if (ltype == GRIB_TYPE_STRING && rtype == GRIB_TYPE_STRING) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Cannot process string arguments", __func__);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Hint: To compare strings, use the 'is' or 'isnot' operators");
+        // print(h->context, h, stderr);
+        // if (long_func_ && long_func_.target<std::equal_to<long>>()) {
+        //     grib_context_log(h->context, GRIB_LOG_ERROR, "Hint: To compare strings use the 'is' operator");
+        // }
+        // if (long_func_ && long_func_.target<std::not_equal_to<long>>()) {
+        //     grib_context_log(h->context, GRIB_LOG_ERROR, "Hint: To compare strings use the 'isnot' operator");
+        // }
+    }
 
     int ret = left_->evaluate_long(h, &v1);
     if (ret != GRIB_SUCCESS)
