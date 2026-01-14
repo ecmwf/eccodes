@@ -170,7 +170,7 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom, grib_handle*
     h = grib_handle_new_from_message(hfrom->context, buffer, totalLength);
 
     // to allow freeing of buffer
-    h->buffer->property = CODES_MY_BUFFER;
+    h->buffer->deleter = default_deleter;
 
     switch (edition) {
         case 1:

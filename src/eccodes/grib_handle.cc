@@ -205,7 +205,7 @@ static grib_handle* grib_handle_create(grib_handle* gl, grib_context* c, const v
         return NULL;
     }
 
-    gl->buffer->property = CODES_USER_BUFFER;
+    gl->buffer->deleter = NULL;
 
     next = gl->context->grib_reader->first->root;
     while (next) {
@@ -511,6 +511,43 @@ grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind pr
     return eccodes::updateErrorAndReturnValue(result, error);
 }
 
+grib_handle* grib_handle_new_from_stream_(grib_context* c, void* stream_data, long (*stream_proc)(void*, void* buffer, long len), int* error)
+{
+    size_t buf_len = 0;
+    void* buf      = NULL;
+    *error         = GRIB_SUCCESS;
+
+    buf = wmo_read_any_from_stream_malloc(stream_data, stream_proc, &buf_len, error);
+    if (*error == GRIB_END_OF_FILE && buf_len == 0) {
+        *error = GRIB_SUCCESS; /* No error, just EOF */
+        return NULL;
+    }
+    else if (*error != GRIB_SUCCESS) {
+        return NULL;
+    }
+
+    grib_handle* h = grib_handle_new_from_message(NULL, buf, buf_len);
+    if (!h) {
+        grib_context_free(c, buf);
+        *error = GRIB_INTERNAL_ERROR;
+        return NULL;
+    }
+
+    *error = codes_handle_take_message_ownership(h, default_deleter);
+    if (*error != GRIB_SUCCESS) {
+        grib_handle_delete(h);
+        return NULL;
+    }
+
+    return h;
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+grib_handle* grib_handle_new_from_stream(grib_context* c, void* stream_data, long (*stream_proc)(void*, void* buffer, long len), int* error) {
+    auto result = eccodes::handleExceptions(grib_handle_new_from_stream_, c, stream_data, stream_proc, error);
+    return eccodes::updateErrorAndReturnValue(result, error);
+}
+
 grib_handle* codes_grib_handle_new_from_file(grib_context* c, FILE* f, int* error)
 {
     return grib_handle_new_from_file(c, f, error);
@@ -569,7 +606,7 @@ static grib_handle* grib_handle_new_from_message_copy_(grib_context* c, const vo
     memcpy(copy, data, size);
 
     g                   = grib_handle_new_from_message(c, copy, size);
-    g->buffer->property = CODES_MY_BUFFER;
+    g->buffer->deleter  = default_deleter;
 
     return g;
 }
@@ -596,7 +633,7 @@ static grib_handle* grib_handle_new_from_partial_message_copy_(grib_context* c, 
     memcpy(copy, data, size);
 
     g = grib_handle_new_from_partial_message(c, copy, size);
-    g->buffer->property = CODES_MY_BUFFER;
+    g->buffer->deleter = default_deleter;
 
     return g;
 }
@@ -823,7 +860,7 @@ static grib_handle* grib_handle_new_multi(grib_context* c, unsigned char** data,
         return NULL;
     }
 
-    gl->buffer->property = CODES_MY_BUFFER;
+    gl->buffer->deleter = default_deleter;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
 
@@ -986,7 +1023,7 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
     }
 
     gl->offset           = gm->offset;
-    gl->buffer->property = CODES_MY_BUFFER;
+    gl->buffer->deleter  = default_deleter;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
 
@@ -1066,7 +1103,7 @@ grib_handle* gts_new_from_file(grib_context* c, FILE* f, int* error)
     }
 
     gl->offset           = offset;
-    gl->buffer->property = CODES_MY_BUFFER;
+    gl->buffer->deleter  = default_deleter;
     gl->product_kind     = PRODUCT_GTS;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
@@ -1107,7 +1144,7 @@ grib_handle* taf_new_from_file(grib_context* c, FILE* f, int* error)
     }
 
     gl->offset           = offset;
-    gl->buffer->property = CODES_MY_BUFFER;
+    gl->buffer->deleter  = default_deleter;
     gl->product_kind     = PRODUCT_TAF;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
@@ -1148,7 +1185,7 @@ grib_handle* metar_new_from_file(grib_context* c, FILE* f, int* error)
     }
 
     gl->offset           = offset;
-    gl->buffer->property = CODES_MY_BUFFER;
+    gl->buffer->deleter  = default_deleter;
     gl->product_kind     = PRODUCT_METAR;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
@@ -1216,7 +1253,7 @@ static grib_handle* bufr_new_from_file_(grib_context* c, FILE* f, int* error)
     }
 
     gl->offset           = offset;
-    gl->buffer->property = CODES_MY_BUFFER;
+    gl->buffer->deleter  = default_deleter;
     gl->product_kind     = PRODUCT_BUFR;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
@@ -1275,7 +1312,7 @@ grib_handle* any_new_from_file(grib_context* c, FILE* f, int* error)
     }
 
     gl->offset           = offset;
-    gl->buffer->property = CODES_MY_BUFFER;
+    gl->buffer->deleter  = default_deleter;
     gl->product_kind     = PRODUCT_ANY;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
@@ -1348,7 +1385,7 @@ static grib_handle* grib_handle_new_from_file_no_multi(grib_context* c, FILE* f,
     }
 
     gl->offset           = offset;
-    gl->buffer->property = CODES_MY_BUFFER;
+    gl->buffer->deleter  = default_deleter;
 
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
@@ -1608,6 +1645,16 @@ int grib_get_message_size(const grib_handle* ch, size_t* size)
 {
     auto result = eccodes::handleExceptions(grib_get_message_size_, ch, size);
     return eccodes::getErrorCode(result);
+}
+
+int codes_handle_take_message_ownership(grib_handle* h, void (*deleter)(void*))
+{
+    if (!h)
+        return GRIB_NULL_HANDLE;
+
+    h->buffer->deleter = deleter;
+
+    return GRIB_SUCCESS;
 }
 
 static int grib_get_message_(const grib_handle* ch, const void** msg, size_t* size)

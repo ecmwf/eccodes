@@ -155,7 +155,7 @@ static int read_GRIB(reader* r, int no_alloc)
     if (!tmp)
         return GRIB_OUT_OF_MEMORY;
     buf           = grib_new_buffer(c, tmp, buflen);
-    buf->property = CODES_MY_BUFFER;
+    buf->deleter = default_deleter;
 
     tmp[i++] = 'G';
     tmp[i++] = 'R';
@@ -694,7 +694,7 @@ static int read_BUFR(reader* r, int no_alloc)
     if (!tmp)
         return GRIB_OUT_OF_MEMORY;
     buf           = grib_new_buffer(c, tmp, buflen);
-    buf->property = CODES_MY_BUFFER;
+    buf->deleter = default_deleter;
     r->offset     = r->tell(r->read_data) - 4;
 
     tmp[i++] = 'B';
