@@ -533,7 +533,7 @@ grib_handle* grib_handle_new_from_stream_(grib_context* c, void* stream_data, lo
         return NULL;
     }
 
-    *error = codes_handle_take_message_ownership(h, default_deleter);
+    *error = codes_handle_change_buffer_ownership(h, default_deleter);
     if (*error != GRIB_SUCCESS) {
         grib_handle_delete(h);
         return NULL;
@@ -1647,7 +1647,7 @@ int grib_get_message_size(const grib_handle* ch, size_t* size)
     return eccodes::getErrorCode(result);
 }
 
-int codes_handle_take_message_ownership(grib_handle* h, void (*deleter)(void*))
+int codes_handle_change_buffer_ownership(grib_handle* h, void (*deleter)(void*))
 {
     if (!h)
         return GRIB_NULL_HANDLE;
