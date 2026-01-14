@@ -170,9 +170,6 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 #define CODES_NAMESPACE   10
 #define MAX_NAMESPACE_LEN 64
 
-#define CODES_MY_BUFFER   0
-#define CODES_USER_BUFFER 1
-
 #define CODES_REAL_MODE8 8
 
 #define MAX_NUM_SECTIONS 12
