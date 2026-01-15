@@ -9,9 +9,13 @@ concept destineOrigin(unknown, "destineOriginConcept.def", conceptsDir2, concept
 unalias mars.domain;
 
 # ECC-1796: stepRange indexing for DestinE ExtremesDT and On-Demand ExtremesDT data
-if ( defined(dataset) && dataset isnot "climate-dt" ) {
+# ECC-2161: only for pre-MTG2 data
+if ( defined(dataset) && dataset isnot "climate-dt" && MTG2Switch == 0 ) {
     alias mars.step=stepRange;
 }
 
-# ECC-1903: MTG2 switch, for now in DestinE we do not want the MARS timespan key
-unalias mars.timespan;
+# ECC-2161: We want timespan by default
+# Timespan key comes after stream.type.def in section 4 and so we need to unalias it here for climate-dt
+if ( defined(dataset) && dataset is "climate-dt" ) {
+    unalias mars.timespan;
+}

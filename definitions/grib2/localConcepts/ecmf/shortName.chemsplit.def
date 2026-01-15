@@ -12585,6 +12585,30 @@
 	 parameterNumber = 193 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-maximum logarithm of surface pressure
+'max_lnsp' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum logarithm of surface pressure
+'min_lnsp' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation logarithm of surface pressure
+'std_lnsp' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Covariance between 2-metre temperature and volumetric soil water layer 1
 'covar_t2m_swvl1' = {
 	 localTablesVersion = 1 ;
@@ -12875,6 +12899,70 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 193 ;
 	}
+#Time-mean aerosol negative fixer mass flux
+'avg_aer_negfix_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean aerosol negative fixer mass flux
+'avg_aer_negfix_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum aerosol negative fixer mass flux
+'max_aer_negfix_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum aerosol negative fixer mass flux
+'max_aer_negfix_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum aerosol negative fixer mass flux
+'min_aer_negfix_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum aerosol negative fixer mass flux
+'min_aer_negfix_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation aerosol negative fixer mass flux
+'std_aer_negfix_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation aerosol negative fixer mass flux
+'std_aer_negfix_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Aerosol sink/loss mass flux
 'aer_sink_mflx' = {
 	 localTablesVersion = 1 ;
@@ -12889,6 +12977,70 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 194 ;
 	}
+#Time-mean aerosol sink/loss mass flux
+'avg_aer_sink_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean aerosol sink/loss mass flux
+'avg_aer_sink_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum aerosol sink/loss mass flux
+'max_aer_sink_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum aerosol sink/loss mass flux
+'max_aer_sink_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum aerosol sink/loss mass flux
+'min_aer_sink_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum aerosol sink/loss mass flux
+'min_aer_sink_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation aerosol sink/loss mass flux
+'std_aer_sink_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation aerosol sink/loss mass flux
+'std_aer_sink_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Aerosol source/gain mass flux
 'aer_src_mflx' = {
 	 localTablesVersion = 1 ;
@@ -12902,6 +13054,70 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 192 ;
+	}
+#Time-mean aerosol source/gain mass flux
+'avg_aer_src_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean aerosol source/gain mass flux
+'avg_aer_src_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum aerosol source/gain mass flux
+'max_aer_src_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum aerosol source/gain mass flux
+'max_aer_src_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum aerosol source/gain mass flux
+'min_aer_src_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum aerosol source/gain mass flux
+'min_aer_src_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation aerosol source/gain mass flux
+'std_aer_src_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation aerosol source/gain mass flux
+'std_aer_src_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 6 ;
 	}
 #Emission mass flux from commercial buildings heating
 'emi_mflx_cbh' = {

@@ -1,7 +1,6 @@
 ## Statistical window overall concept based on official low-level GRIB2 keys only
-## Instananeous
 #'none'    = {stepType='instant';}
-# all instantaeous templates
+# all instantaneous templates
  'none' = {productDefinitionTemplateNumber=0;}
  'none' = {productDefinitionTemplateNumber=1;}
  'none' = {productDefinitionTemplateNumber=2;}
@@ -76,6 +75,8 @@
  'none' = {productDefinitionTemplateNumber=146;}
  'none' = {productDefinitionTemplateNumber=148;}
  'none' = {productDefinitionTemplateNumber=150;}
+ 'none' = {productDefinitionTemplateNumber=152;}
+ 'none'	= {productDefinitionTemplateNumber=154;}
  'none' = {productDefinitionTemplateNumber=254;}
  'none' = {productDefinitionTemplateNumber=1000;}
  'none' = {productDefinitionTemplateNumber=1002;}
@@ -98,8 +99,17 @@
  ### end Accumulations ###
  #
  ### mean/min/max/stdev ###
+ '10m'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 10;}
+ '10m'   = {indicatorOfUnitForTimeRange=13; lengthOfTimeRange = 600;}
+ '15m'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 15;}
+ '15m'   = {indicatorOfUnitForTimeRange=13; lengthOfTimeRange = 900;}
+ '20m'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 20;}
+ '20m'   = {indicatorOfUnitForTimeRange=13; lengthOfTimeRange = 1200;}
  '30m'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 30;}
+ '30m'   = {indicatorOfUnitForTimeRange=13; lengthOfTimeRange = 1800;}
  '1h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 1;}
+ '1h'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 60;}
+ '1h'   = {indicatorOfUnitForTimeRange=13; lengthOfTimeRange = 3600;}
  '3h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 3;}
  '3h'   = {indicatorOfUnitForTimeRange=10; lengthOfTimeRange = 1;}
  '6h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 6;}

@@ -433,7 +433,8 @@ static const char* known_features[] = {
     "ECCODES_OMP_THREADS",
     "NETCDF",
     "FORTRAN",
-    "GEOGRAPHY"
+    "GEOGRAPHY",
+    "ECKIT_GEO"
 };
 
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
@@ -448,6 +449,7 @@ static int codes_is_feature_enabled_(const char* feature)
     int netcdf_enabled        = 0;
     int fortran_enabled       = 0;
     int geography_enabled     = 0;
+    int eckit_geo_enabled     = 0;
 
     int found_feature = 0;
     const size_t num = NUMBER(known_features);
@@ -498,6 +500,9 @@ static int codes_is_feature_enabled_(const char* feature)
 #if defined(HAVE_GEOGRAPHY)
     geography_enabled = 1;
 #endif
+#if defined(HAVE_ECKIT_GEO)
+    eckit_geo_enabled = 1;
+#endif
 
     if (STR_EQUAL(feature, "AEC") || STR_EQUAL(feature, "CCSDS")) {
         return aec_enabled;
@@ -525,6 +530,9 @@ static int codes_is_feature_enabled_(const char* feature)
     }
     if (STR_EQUAL(feature, "GEOGRAPHY")) {
         return geography_enabled;
+    }
+    if (STR_EQUAL(feature, "ECKIT_GEO")) {
+        return eckit_geo_enabled;
     }
 
     return 0;

@@ -592,6 +592,10 @@ void codes_context_set_data_quality_checks(codes_context* c, int val)
 {
     grib_context_set_data_quality_checks(c, val);
 }
+int codes_context_get_data_quality_checks(const codes_context* c)
+{
+    return grib_context_get_data_quality_checks(c);
+}
 
 void codes_context_set_print_proc(codes_context* c, grib_print_proc p_print)
 {

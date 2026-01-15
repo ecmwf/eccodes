@@ -215,6 +215,21 @@ ${tools_dir}/grib_filter - $tempGrib <<EOF
 EOF
 
 
+# Check PV array size
+# -----------------------------------
+sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+cat >$tempFilt<<EOF
+   set PVPresent=1;
+   set pv={2.1, 3.1, 4.1};
+   assert ( NV == 3 );
+   assert ( isMessageValid == 0 );
+   write;
+EOF
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample 2>$tempText
+grep -q "PV array size should be an even number" $tempText
+grib_check_key_equals $tempGrib isMessageValid 0
+
+
 # Check number of values, missing etc
 # -----------------------------------
 ${tools_dir}/grib_set -s values=5,numberOfDataPoints=55 $data_dir/sample.grib2 $tempGrib
@@ -241,6 +256,19 @@ grep -q "Spectral fields cannot have bitsPerValue=0" $tempText
 ${tools_dir}/grib_set -s bitmapPresent=1 $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl $tempGrib
 grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "Spectral fields cannot have a bitmap" $tempText
+
+
+# Warning re wasteful bitmap
+# ---------------------------
+${tools_dir}/grib_set -rs bitmapPresent=1 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 1 2>$tempText
+grep -q "There is a bitmap but all its entries are 1" $tempText
+
+# Warning re deprecation
+# ------------------------
+${tools_dir}/grib_set -s tablesVersion=35,productDefinitionTemplateNumber=30 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $tempGrib
+grib_check_key_equals $tempGrib isMessageValid 1 2>$tempText
+grep -q "deprecated" $tempText
 
 
 # Bad user input

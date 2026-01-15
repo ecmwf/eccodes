@@ -150,7 +150,12 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     }
 
     if ((err = grib_get_long(h, "numberOfPoints", &numberOfPoints)) != GRIB_SUCCESS) {
-        fprintf(stderr, "ERROR: Unable to get number of points\n");
+        fprintf(stderr, "ERROR: Unable to get number of points (%s)\n", grib_get_error_message(err));
+        long gridDescriptionSectionPresent=-1;
+        int err2 = grib_get_long(h, "gridDescriptionSectionPresent", &gridDescriptionSectionPresent);
+        if (!err2 && gridDescriptionSectionPresent == 0) {
+            fprintf(stderr, "ERROR: The grid description section is not included in the message.\n");
+        }
         exit(err);
     }
 

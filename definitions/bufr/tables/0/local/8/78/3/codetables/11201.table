@@ -1,0 +1,11 @@
+0 0 Spot wind
+1 1 Winds averaged over 100 nm preceding last fix, last fix 25 nm prior to the reported position
+2 2 Winds averaged over 200 nm preceding last fix, last fix 25 nm prior to the reported position
+3 3 Winds averaged over 300 nm preceding last fix, last fix 25 nm prior to the reported position
+4 4 Winds averaged over 400 nm preceding last fix, last fix 25 nm prior to the reported position
+5 5 Winds averaged over 100 nm preceding last fix, last fix 75 nm prior to the reported position
+6 6 Winds averaged over 200 nm preceding last fix, last fix 75 nm prior to the reported position
+7 7 Winds averaged over 300 nm preceding last fix, last fix 75 nm prior to the reported position
+8 8 Winds averaged over 400 nm preceding last fix, last fix 75 nm prior to the reported position
+9 9 Winds averaged over more than 400 nm
+15 15 Missing value

@@ -24,7 +24,7 @@ if(NOT ecbuild_FOUND)
     include(FetchContent)
     FetchContent_Populate(ecbuild
         GIT_REPOSITORY https://github.com/ecmwf/ecbuild.git
-        GIT_TAG        3.8.5
+        GIT_TAG        3.12.0
     )
     find_package( ecbuild 3.7 REQUIRED HINTS ${ecbuild_SOURCE_DIR})
 endif()
@@ -155,8 +155,8 @@ ecbuild_add_option( FEATURE NETCDF
     REQUIRED_PACKAGES NetCDF
     NO_TPL )
 
-find_package( AEC )
-if(NOT DEFINED ENABLE_AEC AND NOT AEC_FOUND)
+find_package( libaec 1.0.6 )
+if(NOT DEFINED ENABLE_AEC AND NOT libaec_FOUND)
   ecbuild_critical("AEC library was not found.\n"
                    "AEC (Adaptive Entropy Coding) provides the WMO GRIB CCSDS compression and decompression of data. "
                    "This is highly recommended from ecCodes >= 2.25.0"
@@ -165,7 +165,7 @@ endif()
 ecbuild_add_option( FEATURE AEC
     DESCRIPTION "Support for Adaptive Entropy Coding (WMO GRIB CCSDS)"
     DEFAULT ON
-    CONDITION AEC_FOUND )
+    CONDITION libaec_FOUND )
 
 ecbuild_find_python( VERSION 3.6 NO_LIBS )
 # find_package( NumPy )

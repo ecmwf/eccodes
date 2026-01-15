@@ -506,7 +506,7 @@
 'ISOPDO2' = {
 	constituentType = 10057 ;
 	}
-#Sulphur hexafluoride 
+#Sulphur hexafluoride
 'SF6' = {
 	constituentType = 45 ;
 	}
@@ -562,9 +562,45 @@
 'C8H10' = {
 	constituentType = 10023 ;
 	}
-#Butene
+#Butane
 'C4H10' = {
 	constituentType = 10016 ;
+	}
+#Butene
+'C4H8' = {
+	constituentType = 10060 ;
+	}
+#Pentene
+'C5H10' = {
+	constituentType = 10061 ;
+	}
+#Hexene
+'C6H12' = {
+	constituentType = 10062 ;
+	}
+#Heptene
+'C7H14' = {
+	constituentType = 10063 ;
+	}
+#Octene
+'C8H16' = {
+	constituentType = 10064 ;
+	}
+#Pentane
+'C5H12' = {
+	constituentType = 10065 ;
+	}
+#Hexane
+'C6H14' = {
+	constituentType = 10066 ;
+	}
+#Heptane
+'C7H16' = {
+	constituentType = 10067 ;
+	}
+#Octane
+'C8H18' = {
+	constituentType = 10068 ;
 	}
 #Nitrate
 'aer_NO3' = {
@@ -572,57 +608,57 @@
 	}
 #Sea salt aerosol (0.03 - 0.5 um)
 'aer_seasalt_003_05' = {
-	constituentType = 62008 ;
-	typeOfSizeInterval = 7 ;
-	scaleFactorOfFirstSize = 8 ;
-	scaledValueOfFirstSize = 3 ;
 	scaleFactorOfSecondSize = 7 ;
+	scaledValueOfFirstSize = 3 ;
+	scaleFactorOfFirstSize = 8 ;
+	typeOfSizeInterval = 7 ;
 	scaledValueOfSecondSize = 5 ;
+	constituentType = 62008 ;
 	}
 #Sea salt aerosol (0.5 - 5 um)
 'aer_seasalt_05_5' = {
-	constituentType = 62008 ;
-	typeOfSizeInterval = 7 ;
-	scaleFactorOfFirstSize = 7 ;
-	scaledValueOfFirstSize = 5 ;
 	scaleFactorOfSecondSize = 6 ;
+	scaledValueOfFirstSize = 5 ;
+	scaleFactorOfFirstSize = 7 ;
+	typeOfSizeInterval = 7 ;
 	scaledValueOfSecondSize = 5 ;
+	constituentType = 62008 ;
 	}
 #Sea salt aerosol (5 - 20 um)
 'aer_seasalt_5_20' = {
-	constituentType = 62008 ;
-	typeOfSizeInterval = 7 ;
-	scaleFactorOfFirstSize = 6 ;
-	scaledValueOfFirstSize = 5 ;
 	scaleFactorOfSecondSize = 5 ;
+	scaledValueOfFirstSize = 5 ;
+	scaleFactorOfFirstSize = 6 ;
+	typeOfSizeInterval = 7 ;
 	scaledValueOfSecondSize = 2 ;
+	constituentType = 62008 ;
 	}
 #Dust aerosol (0.03 - 0.55 um)
 'aer_dust_003_055' = {
-	constituentType = 62001 ;
-	typeOfSizeInterval = 7 ;
-	scaleFactorOfFirstSize = 8 ;
-	scaledValueOfFirstSize = 3 ;
 	scaleFactorOfSecondSize = 8 ;
+	scaledValueOfFirstSize = 3 ;
+	scaleFactorOfFirstSize = 8 ;
+	typeOfSizeInterval = 7 ;
 	scaledValueOfSecondSize = 55 ;
+	constituentType = 62001 ;
 	}
 #Dust aerosol (0.55 - 0.9 um)
 'aer_dust_055_09' = {
-	constituentType = 62001 ;
-	typeOfSizeInterval = 7 ;
-	scaleFactorOfFirstSize = 8 ;
-	scaledValueOfFirstSize = 55 ;
 	scaleFactorOfSecondSize = 7 ;
+	scaledValueOfFirstSize = 55 ;
+	scaleFactorOfFirstSize = 8 ;
+	typeOfSizeInterval = 7 ;
 	scaledValueOfSecondSize = 9 ;
+	constituentType = 62001 ;
 	}
 #Dust aerosol (0.9 - 20 um)
 'aer_dust_09_20' = {
-	constituentType = 62001 ;
-	typeOfSizeInterval = 7 ;
-	scaleFactorOfFirstSize = 7 ;
-	scaledValueOfFirstSize = 9 ;
 	scaleFactorOfSecondSize = 5 ;
+	scaledValueOfFirstSize = 9 ;
+	scaleFactorOfFirstSize = 7 ;
+	typeOfSizeInterval = 7 ;
 	scaledValueOfSecondSize = 2 ;
+	constituentType = 62001 ;
 	}
 #Hydrophilic organic matter aerosol
 'aer_hicorgmat' = {
@@ -646,21 +682,21 @@
 	}
 #Nitrate fine mode aerosol (<= 2.5 um)
 'aer_nitrfine' = {
-	constituentType = 62004 ;
-	typeOfSizeInterval = 5 ;
-	scaleFactorOfFirstSize = 7 ;
-	scaledValueOfFirstSize = 25 ;
 	scaleFactorOfSecondSize = missing() ;
+	scaledValueOfFirstSize = 25 ;
+	scaleFactorOfFirstSize = 7 ;
+	typeOfSizeInterval = 5 ;
 	scaledValueOfSecondSize = missing() ;
+	constituentType = 62004 ;
 	}
 #Nitrate coarse mode aerosol (>2.5 um)
 'aer_nitrcoars' = {
-	constituentType = 62004 ;
-	typeOfSizeInterval = 3 ;
-	scaleFactorOfFirstSize = 7 ;
-	scaledValueOfFirstSize = 25 ;
 	scaleFactorOfSecondSize = missing() ;
+	scaledValueOfFirstSize = 25 ;
+	scaleFactorOfFirstSize = 7 ;
+	typeOfSizeInterval = 3 ;
 	scaledValueOfSecondSize = missing() ;
+	constituentType = 62004 ;
 	}
 #Ammonium aerosol
 'aer_nh4' = {
@@ -684,83 +720,83 @@
 	}
 #Dust aerosol (0.9 - 2.5 um)
 'aer_dust_09_2p5' = {
-        scaleFactorOfSecondSize = 7 ;
-        scaledValueOfFirstSize = 9 ;
-        scaleFactorOfFirstSize = 7 ;
-        typeOfSizeInterval = 7 ;
-        scaledValueOfSecondSize = 25 ;
-        constituentType = 62001 ;
-        }
+	scaleFactorOfSecondSize = 7 ;
+	scaledValueOfFirstSize = 9 ;
+	scaleFactorOfFirstSize = 7 ;
+	typeOfSizeInterval = 7 ;
+	scaledValueOfSecondSize = 25 ;
+	constituentType = 62001 ;
+	}
 #Dust aerosol (2.5 - 5.0 um)
 'aer_dust_2p5_5' = {
-        scaleFactorOfSecondSize = 6 ;
-        scaledValueOfFirstSize = 25 ;
-        scaleFactorOfFirstSize = 7 ;
-        typeOfSizeInterval = 7 ;
-        scaledValueOfSecondSize = 5 ;
-        constituentType = 62001 ;
-        }
+	scaleFactorOfSecondSize = 6 ;
+	scaledValueOfFirstSize = 25 ;
+	scaleFactorOfFirstSize = 7 ;
+	typeOfSizeInterval = 7 ;
+	scaledValueOfSecondSize = 5 ;
+	constituentType = 62001 ;
+	}
 #Dust aerosol (5.0 - 10.0 um)
 'aer_dust_5_10' = {
-        scaleFactorOfSecondSize = 5 ;
-        scaledValueOfFirstSize = 5 ;
-        scaleFactorOfFirstSize = 6 ;
-        typeOfSizeInterval = 7 ;
-        scaledValueOfSecondSize = 1 ;
-        constituentType = 62001 ;
-        }
+	scaleFactorOfSecondSize = 5 ;
+	scaledValueOfFirstSize = 5 ;
+	scaleFactorOfFirstSize = 6 ;
+	typeOfSizeInterval = 7 ;
+	scaledValueOfSecondSize = 1 ;
+	constituentType = 62001 ;
+	}
 #Dust aerosol (10.0 - 20.0 um)
 'aer_dust_10_20' = {
-        scaleFactorOfSecondSize = 5 ;
-        scaledValueOfFirstSize = 1 ;
-        scaleFactorOfFirstSize = 5 ;
-        typeOfSizeInterval = 7 ;
-        scaledValueOfSecondSize = 2 ;
-        constituentType = 62001 ;
-        }
+	scaleFactorOfSecondSize = 5 ;
+	scaledValueOfFirstSize = 1 ;
+	scaleFactorOfFirstSize = 5 ;
+	typeOfSizeInterval = 7 ;
+	scaledValueOfSecondSize = 2 ;
+	constituentType = 62001 ;
+	}
 #Particulate matter <= 1 um
 'aer_pm_1' = {
-        scaleFactorOfSecondSize = missing() ;
-        scaledValueOfFirstSize = 1 ;
-        scaleFactorOfFirstSize = 6 ;
-        typeOfSizeInterval = 5 ;
-        scaledValueOfSecondSize = missing() ;
-        constituentType = 62026 ;
-        }
+	scaleFactorOfSecondSize = missing() ;
+	scaledValueOfFirstSize = 1 ;
+	scaleFactorOfFirstSize = 6 ;
+	typeOfSizeInterval = 5 ;
+	scaledValueOfSecondSize = missing() ;
+	constituentType = 62026 ;
+	}
 #Particulate matter <= 2.5 um
 'aer_pm_2p5' = {
-        scaleFactorOfSecondSize = missing() ;
-        scaledValueOfFirstSize = 25 ;
-        scaleFactorOfFirstSize = 7 ;
-        typeOfSizeInterval = 5 ;
-        scaledValueOfSecondSize = missing() ;
-        constituentType = 62026 ;
-        }
+	scaleFactorOfSecondSize = missing() ;
+	scaledValueOfFirstSize = 25 ;
+	scaleFactorOfFirstSize = 7 ;
+	typeOfSizeInterval = 5 ;
+	scaledValueOfSecondSize = missing() ;
+	constituentType = 62026 ;
+	}
 #Particulate matter <= 10 um
 'aer_pm_10' = {
-        scaleFactorOfSecondSize = missing() ;
-        scaledValueOfFirstSize = 1 ;
-        scaleFactorOfFirstSize = 5 ;
-        typeOfSizeInterval = 5 ;
-        scaledValueOfSecondSize = missing() ;
-        constituentType = 62026 ;
-        }
-#Volcanic ash
+	scaleFactorOfSecondSize = missing() ;
+	scaledValueOfFirstSize = 1 ;
+	scaleFactorOfFirstSize = 5 ;
+	typeOfSizeInterval = 5 ;
+	scaledValueOfSecondSize = missing() ;
+	constituentType = 62026 ;
+	}
+#Volcanic Ash
 'volash' = {
 	constituentType = 62025 ;
 	}
 #Black carbon organic aerosol
 'aer_blackcarb' = {
-        constituentType = 62009 ;
-        }
+	constituentType = 62009 ;
+	}
 #Organic matter aerosol
 'aer_orgmat' = {
-        constituentType = 62010 ;
-        }
+	constituentType = 62010 ;
+	}
 #Dust aerosol
 'aer_dust' = {
-        constituentType = 62001 ;
-        }
+	constituentType = 62001 ;
+	}
 #Sea salt aerosol
 'aer_seasalt' = {
 	constituentType = 62008 ;
@@ -800,4 +836,8 @@
 	typeOfSizeInterval = 5 ;
 	scaledValueOfSecondSize = missing() ;
 	constituentType = 62001 ;
+	}
+#Sea salt wet at 80% relative humidity
+'aer_seasalt_wet80p' = {
+	constituentType = 62037 ;
 	}

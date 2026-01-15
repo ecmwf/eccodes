@@ -31,12 +31,14 @@ private:
     int check_date();
     int check_spectral();
     int check_grid_and_packing_type();
+    int check_pv_array();
     int check_field_values();
     int check_grid_pl_array();
     int check_grid_increments();
     int check_geoiterator();
     int check_surface_keys();
     int check_steps();
+    int check_deprecation();
     int check_section_numbers(const int* sec_nums, size_t N);
     int check_namespace_keys();
     int check_parameter();

@@ -916,9 +916,9 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
     char input_grid_type[100];
     char input_packing_type[100] = {0,};
     long editionNumber = 0;
-    size_t count = 0, len = 100, slen = 20, input_grid_type_len = 100;
+    size_t count = 0, len = 100, input_grid_type_len = 100;
     double laplacianOperator;
-    int i = 0, packingTypeIsSet = 0, setJpegPacking = 0;
+    int i = 0, packingTypeIsSet = 0;
     bool convertEditionEarlier     = false; // For cases when we cannot set some keys without converting
     bool grib1_high_resolution_fix = false; // See GRIB-863
 
@@ -1365,6 +1365,8 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
     int i = 0, packingTypeIsSet = 0, setSecondOrder = 0, setJpegPacking = 0, setCcsdsPacking = 0;
     bool convertEditionEarlier     = false; // For cases when we cannot set some keys without converting
     bool grib1_high_resolution_fix = false; // See GRIB-863
+    long shapeOfTheEarth = 0;
+    long numberOfGridInReference = -1, numberOfGridUsed=-1; // unstructured grids
 
     // ECC-625: Request is for expansion of bounding box (sub-area).
     //          This is also called the "snap-out" policy
@@ -1556,7 +1558,6 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
         case GRIB_UTIL_GRID_SPEC_UNSTRUCTURED:
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
-            // TODO(masn): Other keys
             break;
         case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
             COPY_SPEC_LONG(bitmapPresent);
@@ -1856,6 +1857,24 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
             write_out_error_data_file(data_values, data_values_count);
             if (c->write_on_fail) grib_write_message(h_out, "error.grib", "w");
             goto cleanup;
+        }
+    }
+
+    // Shape of the earth must be preserved
+    if (grib_get_long(h, "shapeOfTheEarth", &shapeOfTheEarth) == GRIB_SUCCESS) {
+        *err = grib_set_long(h_out, "shapeOfTheEarth", shapeOfTheEarth);
+        if (*err) goto cleanup;
+    }
+
+    // ECC-2154: Unstructured grids (GRIB2 only)
+    if (spec->grid_type == GRIB_UTIL_GRID_SPEC_UNSTRUCTURED) {
+        if (grib_get_long(h, "numberOfGridInReference", &numberOfGridInReference) == GRIB_SUCCESS) {
+            *err = grib_set_long(h_out, "numberOfGridInReference", numberOfGridInReference);
+            if (*err) goto cleanup;
+        }
+        if (grib_get_long(h, "numberOfGridUsed", &numberOfGridUsed) == GRIB_SUCCESS) {
+            *err = grib_set_long(h_out, "numberOfGridUsed", numberOfGridUsed);
+            if (*err) goto cleanup;
         }
     }
 
@@ -2594,7 +2613,8 @@ int grib_check_data_values_minmax(grib_handle* h, const double min_val, const do
     }
 
     // Data Quality checks
-    if (ctx->grib_data_quality_checks) {
+    const int quality_checks_enabled = grib_context_get_data_quality_checks(ctx);
+    if (quality_checks_enabled) {
         result = grib_util_grib_data_quality_check(h, min_val, max_val);
     }
 

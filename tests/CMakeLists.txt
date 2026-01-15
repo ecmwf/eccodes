@@ -4,7 +4,6 @@
 configure_file( include.ctest.sh.in  include.ctest.sh @ONLY )
 
 execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/utils.sh   ${CMAKE_CURRENT_BINARY_DIR} )
-execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/number_compare.pl ${CMAKE_CURRENT_BINARY_DIR} )
 
 # Build the executables used by test scripts
 ################################################
@@ -43,6 +42,7 @@ list(APPEND test_c_bins
     grib_set_force
     grib_run_length_packing
     grib_partial_message
+    grib_codedValues_as_bytes
     grib_ecc-1467
     grib_ecc-1431
     grib_ecc-1433
@@ -166,6 +166,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-359
         bufr_ecc-517
         bufr_ecc-2011
+        bufr_ecc-2153
         grib_efas
         grib_sh_imag
         grib_spectral
@@ -204,6 +205,7 @@ if( HAVE_BUILD_TOOLS )
         grib_element
         grib_change_packing
         grib_complex_spatial_differencing
+        grib_codedValues_as_bytes
         grib_run_length_packing
         grib_grid_space_view
         grib_partial_message
@@ -288,6 +290,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-2030
         bufr_ecc-2037
         bufr_ecc-2100
+        bufr_ecc-2189
         grib_488
         grib_ecc-490
         grib_ecc-756
@@ -341,11 +344,6 @@ if( HAVE_BUILD_TOOLS )
         hdf5
         taf
         pseudo_diag
-        metar_ls
-        metar_filter
-        metar_get
-        metar_dump
-        metar_compare
         bufr_set
         grib_ieee
         grib1_gds_not_present
@@ -419,6 +417,9 @@ if( HAVE_BUILD_TOOLS )
     if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra grib_ecc-1431)
         list(APPEND tests_extra grib_ecc-1433)
+    endif()
+    if( ECCODES_INSTALL_EXTRA_TOOLS AND ENABLE_EXTRA_TESTS )
+        list(APPEND tests_extra metar_ls metar_filter metar_get metar_dump metar_compare)
     endif()
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra bufr_dump_encode_fortran)

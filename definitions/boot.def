@@ -125,3 +125,5 @@ if(kindOfProduct == `WRAP`){
  constant WRAPstr="WRAP";
  alias ls.identifier=WRAPstr;
 }
+
+include "boot_extra.def";

@@ -76,16 +76,23 @@ rm -f $outfile1 $outfile1.dump $outfile $outfile.dump
 
 
 cat > $tempRules<<EOF
- set bitmapPresent=1;
- set missingValue=1111;
- set Ni=6;
- set Nj=2;
+ set bitmapPresent = 1;
+ set missingValue = 1111;
+ set Ni = 6;
+ set Nj = 2;
+ set iDirectionIncrementGiven = 0;
+ set jDirectionIncrementGiven = 0;
+ set iDirectionIncrement = MISSING;
+ set jDirectionIncrement = MISSING;
  set values={1,2,3,4,5,6,7,1111,1111,8,9,10};
- write ;
+ write;
 EOF
 
 ${tools_dir}/grib_filter -o $temp1 $tempRules $grib1
 ${tools_dir}/grib_filter -o $temp2 $tempRules $grib2
+
+grib_check_key_equals $temp1 isMessageValid 1
+grib_check_key_equals $temp2 isMessageValid 1
 
 if [ $HAVE_GEOGRAPHY -eq 1 ]; then
   ${tools_dir}/grib_get_data -m missing $temp1 > $tempData1
@@ -111,11 +118,10 @@ diff $tempRef $tempData1
 rm -f  $tempData1 $temp1 $tempRules $tempRef
 
 # ECC-511: grid_complex_spatial_differencing
-# To convert to simple packing, must pass in bitmapPresent=1
-# ----------------------------------------------------------
+# -------------------------------------------
 infile=${data_dir}/gfs.complex.mvmu.grib2
 tempSimple=temp.grib_bitmap.simple.grib
-${tools_dir}/grib_set -r -s bitmapPresent=1,packingType=grid_simple $infile $tempSimple
+${tools_dir}/grib_set -r -s packingType=grid_simple $infile $tempSimple
 grib_check_key_equals $tempSimple bitmapPresent,numberOfMissing,numberOfValues,numberOfPoints "1 556901 481339 1038240"
 stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $tempSimple`
 [ "$stats" = "2.81 0.00 0.30" ]

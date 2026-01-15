@@ -11,8 +11,8 @@
 # 'cy49r2' = { generatingProcessIdentifier = 159; }
 # 'cy49r1' = { generatingProcessIdentifier = 158; }
 # We also need the wave model for cy50r1. The values for the wave model are:
-# generatingProcessIdentifier = 109; # cy50r1 wave global
-# generatingProcessIdentifier = 209; # cy50r1 wave global
+# generatingProcessIdentifier = 109; # cy50r1 wave global
+# generatingProcessIdentifier = 209; # cy50r1 wave global
 
 
 # We only need the concepts which differ from the default below.

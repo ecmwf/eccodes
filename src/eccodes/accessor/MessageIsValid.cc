@@ -174,6 +174,30 @@ int MessageIsValid::check_grid_and_packing_type()
     return GRIB_SUCCESS;
 }
 
+int MessageIsValid::check_pv_array()
+{
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
+    long pvpresent = 0;
+    size_t pvsize  = 0;
+
+    // is there a PV array?
+    int err = grib_get_long(handle_, "PVPresent", &pvpresent);
+    if (err != GRIB_SUCCESS || pvpresent == 0)
+        return GRIB_SUCCESS;  // No PV array. So nothing to do
+
+    if ((err = grib_get_size(handle_, "pv", &pvsize)) != GRIB_SUCCESS)
+        return err;
+    if (pvsize == 0 || (pvsize % 2) == 1) {
+        // PV array size must be an even number > 0
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: PV array size should be an even number > 0", TITLE);
+        return GRIB_INVALID_MESSAGE;
+    }
+
+    return GRIB_SUCCESS;
+}
+
 int MessageIsValid::check_field_values()
 {
     if (!data_enabled()) {
@@ -246,6 +270,16 @@ int MessageIsValid::check_number_of_missing()
                 TITLE, numberOfCodedValues, numberOfMissing, numberOfDataPoints);
         return GRIB_INVALID_MESSAGE;
     }
+
+    // Warn re wasteful bitmap
+    long bitmapPresent = 0;
+    err = grib_get_long(handle_, "bitmapPresent", &bitmapPresent);
+    if (!err && bitmapPresent == 1) {
+        if (numberOfMissing == 0) {
+            fprintf(stderr, "ECCODES WARNING :  %s: There is a bitmap but all its entries are 1\n", TITLE);
+        }
+    }
+
     return GRIB_SUCCESS;
 }
 
@@ -566,6 +600,25 @@ int MessageIsValid::check_steps()
     return GRIB_SUCCESS;
 }
 
+int MessageIsValid::check_deprecation()
+{
+    if (!product_enabled()) {
+        return GRIB_SUCCESS;  // product-related checks disabled
+    }
+
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
+    long dep = 0;
+    int err = grib_get_long(handle_, "template_is_deprecated", &dep);
+    if (!err && dep == 1) {
+        grib_accessor* acc = grib_find_accessor(handle_, "template_is_deprecated");
+        const char* owner = acc->parent_->owner->name_;
+        fprintf(stderr, "ECCODES WARNING :  %s: The template for %s is deprecated\n", TITLE, owner);
+    }
+    return GRIB_SUCCESS;
+}
+
 int MessageIsValid::check_section_numbers(const int* sec_nums, size_t N)
 {
     for (size_t i = 0; i < N; ++i) {
@@ -677,6 +730,7 @@ int MessageIsValid::unpack_long(long* val, size_t* len)
         &MessageIsValid::check_date,
         &MessageIsValid::check_spectral,
         &MessageIsValid::check_grid_and_packing_type,
+        &MessageIsValid::check_pv_array,
         &MessageIsValid::check_field_values,
         &MessageIsValid::check_number_of_missing,
         &MessageIsValid::check_grid_pl_array,
@@ -684,6 +738,7 @@ int MessageIsValid::unpack_long(long* val, size_t* len)
         &MessageIsValid::check_geoiterator,
         &MessageIsValid::check_surface_keys,
         &MessageIsValid::check_steps,
+        &MessageIsValid::check_deprecation,
         &MessageIsValid::check_namespace_keys,
         &MessageIsValid::check_parameter,
     };

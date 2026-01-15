@@ -530,7 +530,7 @@ static int grib_set_string_(grib_handle* h, const char* name, const char* val, s
     bool add_bitmap = false;
     grib_context* ctx = h->context;
     bool changing_packing_type = false; // See ECC-2141
-    const int quality_checks_saved = ctx->grib_data_quality_checks;  //save state
+    const int quality_checks_saved = grib_context_get_data_quality_checks(ctx);  // save state
 
     int processed = preprocess_packingType_change(h, name, val);
     if (processed)
@@ -539,7 +539,7 @@ static int grib_set_string_(grib_handle* h, const char* name, const char* val, s
     // ECC-536: Embedded bitmap?
     if (grib_inline_strcmp(name, "packingType") == 0) {
         changing_packing_type = true;
-        ctx->grib_data_quality_checks = 0;  // ECC-2141: disable during change of packing
+        grib_context_set_data_quality_checks(ctx, 0);  // ECC-2141: disable during change of packing
         long missingValsEmbedded = 0;
         if (grib_get_long(h, "missingValueManagementUsed", &missingValsEmbedded) == GRIB_SUCCESS && missingValsEmbedded != 0) {
             add_bitmap = true;
@@ -567,7 +567,7 @@ static int grib_set_string_(grib_handle* h, const char* name, const char* val, s
             }
             ret = grib_dependency_notify_change(a);
             if (changing_packing_type) {
-                ctx->grib_data_quality_checks = quality_checks_saved;  // ECC-2141: restore
+                grib_context_set_data_quality_checks(ctx, quality_checks_saved);  // ECC-2141: restore
             }
             return ret;
         }
@@ -2285,7 +2285,6 @@ int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type)
                     return err;
                 grib_context_log(h1->context, GRIB_LOG_DEBUG, "codes_copy_key double: %s=%g\n", key, d);
                 err = grib_set_double(h2, key, d);
-                return err;
             }
             else {
                 ad  = (double*)grib_context_malloc_clear(h1->context, len1 * sizeof(double));
@@ -2294,8 +2293,8 @@ int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type)
                     return err;
                 err = grib_set_double_array(h2, key, ad, len1);
                 grib_context_free(h1->context, ad);
-                return err;
             }
+            return err;
             break;
         case GRIB_TYPE_LONG:
             if (len1 == 1) {
@@ -2304,7 +2303,6 @@ int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type)
                     return err;
                 grib_context_log(h1->context, GRIB_LOG_DEBUG, "codes_copy_key long: %s=%ld\n", key, l);
                 err = grib_set_long(h2, key, l);
-                return err;
             }
             else {
                 al  = (long*)grib_context_malloc_clear(h1->context, len1 * sizeof(long));
@@ -2313,8 +2311,8 @@ int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type)
                     return err;
                 err = grib_set_long_array(h2, key, al, len1);
                 grib_context_free(h1->context, al);
-                return err;
             }
+            return err;
             break;
         case GRIB_TYPE_STRING:
             err = grib_get_string_length(h1, key, &len);
@@ -2328,7 +2326,6 @@ int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type)
                 grib_context_log(h1->context, GRIB_LOG_DEBUG, "codes_copy_key str: %s=%s\n", key, s);
                 err = grib_set_string(h2, key, s, &len);
                 grib_context_free(h1->context, s);
-                return err;
             }
             else {
                 as  = (char**)grib_context_malloc_clear(h1->context, len1 * sizeof(char*));
@@ -2336,8 +2333,8 @@ int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type)
                 if (err)
                     return err;
                 err = grib_set_string_array(h2, key, (const char**)as, len1);
-                return err;
             }
+            return err;
             break;
         default:
             return GRIB_INVALID_TYPE;
