@@ -42,3 +42,5 @@
 # AI
 0 = {tablesVersion=34; productionStatusOfProcessedData=0; marsClass=51;}
 0 = {tablesVersion=35; productionStatusOfProcessedData=0; marsClass=51;}
+# weather-type-subgrid-calibration
+0 = {tablesVersion=35; inputProcessIdentifier=161; inputOriginatingCentre=98; typeOfPostProcessing=206; marsClass=1;}
