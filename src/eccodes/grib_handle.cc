@@ -1809,10 +1809,25 @@ void grib_multi_support_reset_file(grib_context* c, FILE* f)
 {
     if (!c) c = grib_context_get_default();
     grib_multi_support* gm = c->multi_support;
+    grib_multi_support* prev = NULL;
     while (gm) {
         if (gm->file == f) {
             gm->file = NULL;
+            if (gm->message)
+                grib_context_free(c, gm->message);
+            if (gm->bitmap_section)
+                grib_context_free(c, gm->bitmap_section);
+            grib_multi_support* old_gm = gm;
+            gm = gm->next;
+            if (prev) {
+                prev->next = gm;
+            } else {
+                c->multi_support = gm;
+            }
+            grib_context_free(c, old_gm);
+            continue;
         }
+        prev = gm;
         gm = gm->next;
     }
 }
