@@ -15,6 +15,8 @@
 #include "eccodes_config.h"
 
 #if defined(HAVE_ECKIT_GEO)
+    #include "eckit/geo/Exceptions.h"
+
     #include "geo/EckitMainInit.h"
     #include "geo/GeoIterator.h"
 
@@ -68,7 +70,6 @@ int gribIteratorDelete(eccodes::geo_iterator::Iterator* i)
     if (i) {
         i->destroy();
         delete i;
-        i = nullptr;
     }
     return GRIB_SUCCESS;
 }
@@ -140,25 +141,56 @@ int grib_iterator_destroy(grib_context* c, grib_iterator* i)
 #if defined(HAVE_GEOGRAPHY)
 static grib_iterator* grib_iterator_new_(const grib_handle* ch, unsigned long flags, int* error)
 {
+    int err = 0;
+    {
+        long isGridded = -1;
+        err = grib_get_long(ch, "isGridded", &isGridded);
+        if (!err && !isGridded) {
+            *error = GRIB_NOT_IMPLEMENTED;
+            return nullptr;
+        }
+    }
+
     grib_iterator* i = (grib_iterator*)grib_context_malloc_clear(ch->context, sizeof(grib_iterator));
 
     #if defined(HAVE_ECKIT_GEO)
-    const int eckit_geo = ch->context->eckit_geo;  // check environment variable
-    if (eckit_geo != 0) {
-        eccodes::geo::eckit_main_init();
 
+//// TODO(maee)
+//// This is TEMPORARY! Remove when eckit geo can handle projected grids
+////
+    char gridType[128] = {0,};
+    size_t gtlen = sizeof(gridType);
+    err = grib_get_string(ch, "gridType", gridType, &gtlen);
+    bool do_process = true;
+    if (!err &&
+        (STR_EQUAL(gridType, "lambert") ||
+        STR_EQUAL(gridType,  "space_view") ||
+        STR_EQUAL(gridType,  "mercator") ||
+        STR_EQUAL(gridType,  "lambert_azimuthal_equal_area") ||
+        STR_EQUAL(gridType,  "polar_stereographic")) )
+    {
+        do_process = false;
+    }
+
+    const int eckit_geo = ch->context->eckit_geo;  // check environment variable
+    if (eckit_geo != 0 && do_process) {
+        eccodes::geo::eckit_main_init();
+        grib_context_log(ch->context, GRIB_LOG_DEBUG, "Geoiterator: using eckit/geo");
         try {
             if (i->iterator = new eccodes::geo_iterator::GeoIterator(const_cast<grib_handle*>(ch), flags);
-                i->iterator != nullptr)
-            {
+                i->iterator != nullptr) {
                 *error = i->iterator->init(const_cast<grib_handle*>(ch), nullptr);
                 if (*error) {
                     grib_context_log(ch->context, GRIB_LOG_ERROR, "Geoiterator: Error instantiating iterator (%s)",
-                             grib_get_error_message(*error));
+                                     grib_get_error_message(*error));
                     return nullptr;
                 }
                 return i;
             }
+        }
+        catch (eckit::geo::exception::GridUnknownError&) {
+            *error = GRIB_NOT_IMPLEMENTED;
+            return nullptr;
         }
         catch (eckit::geo::Exception& e) {
             grib_context_log(ch->context, GRIB_LOG_ERROR, "grib_iterator_new: geo::Exception thrown (%s)", e.what());
@@ -186,8 +218,8 @@ static grib_iterator* grib_iterator_new_(const grib_handle* ch, unsigned long fl
 // C-API: Ensure all exceptions are converted to error codes
 grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int* error)
 {
-  auto result = eccodes::handleExceptions(grib_iterator_new_, ch, flags, error);
-  return eccodes::updateErrorAndReturnValue(result, error);
+    auto result = eccodes::handleExceptions(grib_iterator_new_, ch, flags, error);
+    return eccodes::updateErrorAndReturnValue(result, error);
 }
 
 static int grib_iterator_delete_(grib_iterator* i)

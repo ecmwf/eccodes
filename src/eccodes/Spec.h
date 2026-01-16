@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2025- ECMWF.
+ * (C) Copyright 2024- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -12,23 +12,18 @@
 
 #pragma once
 
-#include <map>
-#include <string>
 
-#include "eccodes/geo/BasicAngle.h"
-#include "eccodes/geo/Geo.h"
-#include "eccodes/Spec.h"
+namespace eckit::spec
+{
+class Spec;
+}
 
 
-namespace eccodes::geo
+namespace eccodes
 {
 
 
-class GribFromSpec
-{
-public:
-    static codes_handle* set(const codes_handle*, const Spec&, const std::map<std::string, long>& extra = {}, const BasicAngle& = {});
-};
+using Spec = ::eckit::spec::Spec;
 
 
 }  // namespace eccodes::geo

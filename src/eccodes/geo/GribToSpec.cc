@@ -11,6 +11,7 @@
 
 
 #include "eccodes/geo/GribToSpec.h"
+#include "grib_api_internal.h"
 
 #include <algorithm>
 #include <cstring>
@@ -28,6 +29,7 @@
 #include "eckit/log/JSON.h"
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
+#include "eckit/utils/SafeCasts.h"
 
 
 namespace eckit::geo::util
@@ -167,11 +169,13 @@ void wrongly_encoded_grib(const std::string& msg)
     static bool abortIfWronglyEncodedGRIB = eckit::Resource<bool>("$MIR_ABORT_IF_WRONGLY_ENCODED_GRIB", false);
 
     if (abortIfWronglyEncodedGRIB) {
-        Log::error() << msg << std::endl;
+        // Log::error() << msg << std::endl;
+        grib_context_log(nullptr, GRIB_LOG_ERROR, "%s", msg.c_str());
         throw eckit::UserError(msg);
     }
 
     Log::warning() << msg << std::endl;
+    grib_context_log(nullptr, GRIB_LOG_WARNING, "%s", msg.c_str());
 }
 
 
@@ -327,7 +331,7 @@ const char* get_key(const std::string& name, codes_handle* h)
         { "spectral", "pentagonalResolutionParameterJ" },
 
         { "uid", "uuidOfHGrid", is("gridType", "unstructured_grid") },
-        { "ordering", "orderingConvention", is("gridType", "healpix") },
+        { "order", "orderingConvention", is("gridType", "healpix") },
 
         /// FIXME: Find something that does no clash
         { "reduced", "numberOfParallelsBetweenAPoleAndTheEquator", is("isOctahedral", 0L) },
@@ -355,7 +359,9 @@ const char* get_key(const std::string& name, codes_handle* h)
 std::string get_string(codes_handle* h, const char* key)
 {
     if (codes_is_defined(h, key) != 0) {
-        char buffer[64] = {0,};
+        char buffer[64] = {
+            0,
+        };
         size_t size = sizeof(buffer);
 
         CHECK_CALL(codes_get_string(h, key, buffer, &size));
@@ -395,17 +401,17 @@ struct ProcessingT
 };
 
 
+bool codes_is_well_defined(codes_handle* h, const char* key)
+{
+    int err = CODES_SUCCESS;
+    return (codes_is_defined(h, key) != 0) && (codes_is_missing(h, key, &err) == 0) && (err == CODES_SUCCESS);
+}
+
+
 ProcessingT<double>* angular_precision()
 {
     return new ProcessingT<double>([](codes_handle* h, double& value) {
-        auto well_defined = [](codes_handle* h, const char* key) -> bool {
-            long dummy = 0;
-            int err    = 0;
-            return (codes_is_defined(h, key) != 0) && (codes_is_missing(h, key, &err) == 0) && (err == CODES_SUCCESS) &&
-                   (codes_get_long(h, key, &dummy) == CODES_SUCCESS) && (dummy != 0);
-        };
-
-        if (well_defined(h, "basicAngleOfTheInitialProductionDomain") && well_defined(h, "subdivisionsOfBasicAngle")) {
+        if (codes_is_well_defined(h, "basicAngleOfTheInitialProductionDomain") && codes_is_well_defined(h, "subdivisionsOfBasicAngle")) {
             value = 0.;
             return true;
         }
@@ -451,10 +457,10 @@ ProcessingT<double>* longitudeOfLastGridPointInDegrees_fix_for_global_reduced_gr
                 }
                 ASSERT(plMax > 0);
 
-                size_t valuesSize = 0;
-                CHECK_CALL(codes_get_size(h, "values", &valuesSize));
+                long numberOfDataPoints = 0;
+                CHECK_CALL(codes_get_long(h, "numberOfDataPoints", &numberOfDataPoints));
 
-                if (static_cast<size_t>(plSum) == valuesSize) {
+                if (static_cast<size_t>(plSum) == numberOfDataPoints) {
                     double eps = 0.;
                     ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
 
@@ -463,7 +469,7 @@ ProcessingT<double>* longitudeOfLastGridPointInDegrees_fix_for_global_reduced_gr
                     if (!eckit::types::is_approximately_greater_or_equal<double>(Lon2, Lon2_expected, eps)) {
                         std::ostringstream msgs;
                         msgs.precision(32);
-                        msgs << "GribParametrisation: wrongly encoded longitudeOfLastGridPointInDegrees:"
+                        msgs << "GribToSpec: wrongly encoded longitudeOfLastGridPointInDegrees:"
                              << "\n"
                                 "encoded:  "
                              << Lon2
@@ -572,7 +578,7 @@ ProcessingT<double>* iDirectionIncrementInDegrees_fix_for_periodic_regular_grids
             // TODO refactor, not really specific to "periodic regular grids", but useful
             std::ostringstream msgs;
             msgs.precision(32);
-            msgs << "GribParametrisation: wrongly encoded iDirectionIncrementInDegrees:"
+            msgs << "GribToSpec: wrongly encoded iDirectionIncrementInDegrees:"
                     "\n"
                     "encoded: "
                  << we
@@ -594,11 +600,58 @@ ProcessingT<double>* iDirectionIncrementInDegrees_fix_for_periodic_regular_grids
 }
 
 
+ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_key,
+                                    const char* x0_key, const char* x1_key, const char* n_key, const char* sign_key)
+{
+    return new ProcessingT<double>([=](codes_handle* h, double& value) {
+        bool given = false;
+        if (long incgiven = 0; codes_is_well_defined(h, inc_key) && (codes_get_long(h, incgiven_key, &incgiven) == CODES_SUCCESS) && (incgiven != 0)) {
+            codes_get_double(h, inc_key, &value);
+            given = true;
+        }
+
+        if (codes_is_well_defined(h, x0_key) && codes_is_well_defined(h, x1_key) && codes_is_well_defined(h, n_key) && codes_is_well_defined(h, sign_key)) {
+            double x0 = 0.;
+            CHECK_CALL(codes_get_double(h, x0_key, &x0));
+
+            double x1 = 0.;
+            CHECK_CALL(codes_get_double(h, x1_key, &x1));
+
+            long n = 0;
+            CHECK_CALL(codes_get_long(h, n_key, &n));
+            ASSERT(n > 1);
+
+            long sign = 0;
+            CHECK_CALL(codes_get_long(h, sign_key, &sign));
+
+            if (auto value_calculated = (x1 - x0) / static_cast<double>(sign != 0 ? (n - 1) : (1 - n)); given) {
+                if (!eckit::types::is_approximately_equal(value, value_calculated, 1e-6)) {
+                    wrongly_encoded_grib(
+                        "GribToSpec: inconsistent increment: '" + std::string{ inc_key } +
+                        "'=" + std::to_string(value) + " ~= " + std::to_string(value_calculated) +
+                        " (calculated from '" + std::string{ x0_key } + "'=" + std::to_string(x0) +
+                        ", '" + std::string{ x1_key } + "'=" + std::to_string(x1) +
+                        ", '" + std::string{ n_key } + "'=" + std::to_string(n) +
+                        ", '" + std::string{ sign_key } + "'=" + std::to_string(sign) + ")");
+                }
+            }
+            else {
+                value = value_calculated;
+            }
+
+            return true;
+        }
+
+        return false;
+    });
+}
+
+
 ProcessingT<std::vector<double>>* vector_double(std::initializer_list<std::string> keys)
 {
     const std::vector<std::string> keys_(keys);
     return new ProcessingT<std::vector<double>>([=](codes_handle* h, std::vector<double>& values) {
-        ASSERT(keys.size());
+        ASSERT(keys_.size());
 
         values.assign(keys_.size(), 0);
         size_t i = 0;
@@ -832,8 +885,17 @@ bool GribToSpec::get(const std::string& /*name*/, long long& /*value*/) const
 }
 
 
-bool GribToSpec::get(const std::string& /*name*/, std::size_t& /*value*/) const
+bool GribToSpec::get(const std::string& name, std::size_t& value) const
 {
+    if (cache_.get(name, value)) {
+        return true;
+    }
+
+    if (long value_long = 0; get(name, value_long)) {
+        cache_.set(name, value = eckit::into_unsigned<size_t>(value_long));
+        return true;
+    }
+
     return false;
 }
 
@@ -865,8 +927,7 @@ bool GribToSpec::get(const std::string& name, double& value) const
 
     const auto* key = get_key(name, handle_);
 
-    ASSERT(key != nullptr);
-    if (std::strlen(key) == 0) {
+    if (key == nullptr || std::strlen(key) == 0) {
         return false;
     }
 
@@ -875,6 +936,8 @@ bool GribToSpec::get(const std::string& name, double& value) const
     if (err == CODES_NOT_FOUND || codes_is_missing(handle_, key, &err) != 0) {
         static const ProcessingList<double> process{
             { "angular_precision", angular_precision() },
+            { "dlon", grid_increment("iDirectionIncrementInDegrees", "iDirectionIncrementGiven", "longitudeOfFirstGridPointInDegrees", "longitudeOfLastGridPointInDegrees", "Ni", "iScansPositively"), _or(is("gridType", "regular_ll"), is("gridType", "rotated_ll")) },
+            { "dlat", grid_increment("jDirectionIncrementInDegrees", "jDirectionIncrementGiven", "latitudeOfFirstGridPointInDegrees", "latitudeOfLastGridPointInDegrees", "Nj", "jScansPositively"), _or(is("gridType", "regular_ll"), is("gridType", "rotated_ll")) },
             { "longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids",
               longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids() },
             { "iDirectionIncrementInDegrees_fix_for_periodic_regular_grids",
@@ -935,8 +998,11 @@ bool GribToSpec::get(const std::string& name, std::vector<long>& value) const
     ASSERT(!value.empty());
 
     if (name == "pl") {
+        // pl array must not contain zeros for reduced grids (except reduced_ll)
         if (std::find(value.rbegin(), value.rend(), 0) != value.rend()) {
-            wrongly_encoded_grib("GribParametrisation: pl array contains zeros");
+            if (std::string gridType; get("gridType", gridType) && (gridType != "reduced_ll")) {
+                wrongly_encoded_grib("GribToSpec: pl array contains zeros");
+            }
         }
     }
 
@@ -995,8 +1061,6 @@ bool GribToSpec::get(const std::string& name, std::vector<double>& value) const
     }
 
     static const ProcessingList<std::vector<double>> process{
-        { "grid", vector_double({ "iDirectionIncrementInDegrees", "jDirectionIncrementInDegrees" }),
-          _or(is("gridType", "regular_ll"), is("gridType", "rotated_ll")) },
         { "grid", vector_double({ "xDirectionGridLengthInMetres", "yDirectionGridLengthInMetres" }),
           is("gridType", "lambert_azimuthal_equal_area") },
         { "grid", vector_double({ "DxInMetres", "DyInMetres" }),
@@ -1121,7 +1185,9 @@ void GribToSpec::json(eckit::JSON& j) const
         }
 
         if (type == CODES_TYPE_STRING) {
-            char value[1024] = {0,};
+            char value[1024] = {
+                0,
+            };
             size_t length = sizeof(value);
             CHECK_CALL(codes_get_string(handle_, name, value, &length));
             j << name << value;
