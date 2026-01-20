@@ -23,6 +23,7 @@ void* runner(void* ptr); /* the thread function */
 
 int main(int argc, char** argv)
 {
+#if GRIB_PTHREADS
     long i;
     int thread_counter = 0;
     pthread_t workers[NUM_THREADS];
@@ -39,6 +40,17 @@ int main(int argc, char** argv)
     for (i = 0; i < NUM_THREADS; i++) {
         pthread_join(workers[i], NULL);
     }
+#elif GRIB_OMP_THREADS
+    long i;
+    INPUT_FILE = argv[1];
+#pragma omp parallel for schedule(static) num_threads(NUM_THREADS)
+    for (i = 0; i < NUM_THREADS; i++) {
+        do_stuff((void*)i);
+    }
+#else
+    fprintf(stderr, "This test requires either GRIB_PTHREADS or GRIB_OMP_THREADS to be set to a non-zero value\n");
+    return 1;
+#endif
 
     return 0;
 }
