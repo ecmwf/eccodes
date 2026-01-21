@@ -2970,6 +2970,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
                                 grib_iarray_push(elementsDescriptorsIndex, i);
                             elementIndex++;
                             break;
+                        case 62: // ECC-968: BUFR edition 0 operator! not in the WMO standard
                         case 22: /* Quality information follows */
                             if (descriptors[i]->Y == 0) {
                                 if (flag == PROCESS_DECODE) {
@@ -3136,7 +3137,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
                             elementIndex++;
                             break;
                         default:
-                            grib_context_log(c, GRIB_LOG_ERROR, "process_elements: unsupported operator %d\n", descriptors[i]->X);
+                            grib_context_log(c, GRIB_LOG_ERROR, "process_elements: unsupported operator %d", descriptors[i]->X);
                             return GRIB_INTERNAL_ERROR;
                     } /* F == 2 */
                     break;
