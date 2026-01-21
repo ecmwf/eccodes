@@ -10,16 +10,16 @@
 
 #include "ProjString.h"
 
-#if defined(HAVE_ECKIT_GEO)
-    #include <cstdio>
-    #include <memory>
+// #if defined(HAVE_ECKIT_GEO)
+//     #include <cstdio>
+//     #include <memory>
 
-    #include "eckit/geo/Grid.h"
-    #include "eckit/geo/Exceptions.h"
+//     #include "eckit/geo/Grid.h"
+//     #include "eckit/geo/Exceptions.h"
 
-    #include "eccodes/geo/EckitMainInit.h"
-    #include "eccodes/geo/GribToSpec.h"
-#endif
+//     #include "eccodes/geo/EckitMainInit.h"
+//     #include "eccodes/geo/GribToSpec.h"
+// #endif
 
 eccodes::accessor::ProjString _grib_accessor_proj_string;
 eccodes::Accessor* grib_accessor_proj_string = &_grib_accessor_proj_string;
