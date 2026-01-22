@@ -1,9 +1,9 @@
 "unknown" = {dummy=0;}
-"lisflood" = {backgroundProcess = 147; }
-"Htessel-lisflood" = {backgroundProcess = 148;}
-"HYPE" = {backgroundProcess = 149;}
-"VIC-WUR" = {backgroundProcess = 150;}
-"ecLand" = {backgroundProcess = 151;}
-"mHM" = {backgroundProcess = 152;}
-"PCR-GLOBWB" = {backgroundProcess = 153;}
-"JULES" = {backgroundProcess = 154;}
+"lisflood" = {backgroundprocess = 147; }
+"htessel-lisflood" = {backgroundprocess = 148;}
+"hype" = {backgroundprocess = 149;}
+"vic-wur" = {backgroundprocess = 150;}
+"ecland" = {backgroundprocess = 151;}
+"mhm" = {backgroundprocess = 152;}
+"pcr-globwb" = {backgroundprocess = 153;}
+"jules" = {backgroundprocess = 154;}
