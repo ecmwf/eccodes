@@ -83,8 +83,8 @@ int GeoIterator::next(double* lat, double* lon, double* val) const
             const auto p = *iter_;
             const auto& q(std::get<eckit::geo::PointLonLat>(p));
 
-            *lat = q.lat;
-            *lon = q.lon;
+            *lat = q.lat();
+            *lon = q.lon();
             if (val != nullptr && data_ != nullptr) {
                 if (const size_t i = iter_->index(); i < nv_) {
                     *val = data_[i];

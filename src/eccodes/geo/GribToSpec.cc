@@ -508,7 +508,7 @@ ProcessingT<double>* latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids()
 
         const auto snap = eckit::geo::util::gaussian_latitudes(N, Lat1 < Lat2).front();
         if (eckit::types::is_approximately_equal(Lat1, snap, eps)) {
-            lat = snap < 0. ? eckit::geo::SOUTH_POLE.lat : eckit::geo::NORTH_POLE.lat;
+            lat = snap < 0. ? eckit::geo::SOUTH_POLE.lat() : eckit::geo::NORTH_POLE.lat();
         }
 
         return true;
@@ -534,7 +534,7 @@ ProcessingT<double>* latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids()
 
         const auto snap = eckit::geo::util::gaussian_latitudes(N, Lat1 < Lat2).back();
         if (eckit::types::is_approximately_equal(Lat2, snap, eps)) {
-            lat = snap < 0. ? eckit::geo::SOUTH_POLE.lat : eckit::geo::NORTH_POLE.lat;
+            lat = snap < 0. ? eckit::geo::SOUTH_POLE.lat() : eckit::geo::NORTH_POLE.lat();
         }
 
         return true;
