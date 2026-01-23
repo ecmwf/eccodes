@@ -167,7 +167,7 @@
 010052|altimeterSettingQnh|long|ALTIMETER SETTING (QNH)|Pa|-1|0|14|NA|0|0
 010060|pressureChange|long|PRESSURE CHANGE|Pa|-1|-1024|11|NA|0|0
 010061|3HourPressureChange|long|3 HOUR PRESSURE CHANGE|Pa|-1|-500|10|NA|0|0
-010062|24HourPressureChange|long|24 HOUR PRESSURE CHANGE|Pa|-1|-1000|11|NA|0|0
+010062|24HourPressureChange|long|24 HOUR PRESSURE CHANGE|Pa|-1|-500|10|NA|0|0
 010063|characteristicOfPressureTendency|table|CHARACTERISTIC OF PRESSURE TENDENCY|CODE TABLE|0|0|4|NA|0|0
 010082|instantaneousAltitudeRate|double|INSTANTANEOUS ALTITUDE RATE|m/s|3|-65536|17|NA|0|0
 011001|windDirection|long|WIND DIRECTION|deg|0|0|9|NA|0|0
@@ -222,22 +222,22 @@
 013002|mixingRatio|double|MIXING RATIO|kg/kg|5|0|14|NA|0|0
 013003|relativeHumidity|long|RELATIVE HUMIDITY|%|0|0|7|NA|0|0
 013004|vapourPressure|long|VAPOUR PRESSURE|Pa|-1|0|10|NA|0|0
-013005|vapourDensity|double|VAPOUR DENSITY|kg m-3|3|0|7|NA|0|0
+013005|vapourDensity|double|VAPOUR DENSITY|kg m-3|0|0|7|NA|0|0
 013006|mixingHeights|long|MIXING HEIGHT|m|-1|-40|16|NA|0|0
 013009|relativeHumidity|double|RELATIVE HUMIDITY|%|1|-1000|12|NA|0|0
-013011|totalPrecipitationOrTotalWaterEquivalent|double|TOTAL PRECIPITATION/TOTAL WATER EQUIVALENT|kg m-2|1|-1|14|NA|0|0
-013012|depthOfFreshSnow|double|DEPTH OF FRESH SNOW|m|2|-2|12|NA|0|0
-013013|totalSnowDepth|double|TOTAL SNOW DEPTH|m|2|-2|16|NA|0|0
-013014|rainfallOrWaterEquivalentOfSnowAveragedRate|double|RAINFALL/WATER EQUIVALENT OF SNOW (AVERAGE RATE)|kg m-2 s-1|4|0|12|NA|0|0
-013015|snowfallAveragedRate|double|SNOWFALL (AVERAGE RATE)|m/s|7|0|12|NA|0|0
-013016|precipitableWater|long|PRECIPITABLE WATER|kg m-2|0|0|7|NA|0|0
-013019|totalPrecipitationPast1Hour|double|TOTAL PRECIPITATION PAST 1 HOUR|kg m-2|1|-1|14|NA|0|0
-013020|totalPrecipitationPast3Hours|double|TOTAL PRECIPITATION PAST 3 HOURS|kg m-2|1|-1|14|NA|0|0
-013021|totalPrecipitationPast6Hours|double|TOTAL PRECIPITATION PAST 6 HOURS|kg m-2|1|-1|14|NA|0|0
-013022|totalPrecipitationPast12Hours|double|TOTAL PRECIPITATION PAST 12 HOURS|kg m-2|1|-1|14|NA|0|0
-013023|totalPrecipitationPast24Hours|double|TOTAL PRECIPITATION PAST 24 HOURS|kg m-2|1|-1|14|NA|0|0
-013031|evapotranspiration|long|EVAPOTRANSPIRATION|kg m-2|0|0|7|NA|0|0
-013032|evaporation|double|EVAPORATION/EVAPOTRANSPIRATION|kg m-2|1|0|8|NA|0|0
+013011|totalPrecipitationOrTotalWaterEquivalent|double|TOTAL PRECIPITATION/TOTAL WATER EQUIVALENT|kg m-2|4|-1|14|NA|0|0
+013012|depthOfFreshSnow|double|DEPTH OF FRESH SNOW|m|2|0|12|NA|0|0
+013013|totalSnowDepth|double|TOTAL SNOW DEPTH|m|2|0|16|NA|0|0
+013014|rainfallOrWaterEquivalentOfSnowAveragedRate|double|RAINFALL/WATER EQUIVALENT OF SNOW (AVERAGE RATE)|kg m-2 s-1|7|0|12|NA|0|0
+013015|snowfallAveragedRate|double|SNOWFALL (AVERAGE RATE)|m/s|1|0|10|NA|0|0
+013016|precipitableWater|long|PRECIPITABLE WATER|kg m-2|3|0|7|NA|0|0
+013019|totalPrecipitationPast1Hour|double|TOTAL PRECIPITATION PAST 1 HOUR|kg m-2|4|-1|14|NA|0|0
+013020|totalPrecipitationPast3Hours|double|TOTAL PRECIPITATION PAST 3 HOURS|kg m-2|4|-1|14|NA|0|0
+013021|totalPrecipitationPast6Hours|double|TOTAL PRECIPITATION PAST 6 HOURS|kg m-2|4|-1|14|NA|0|0
+013022|totalPrecipitationPast12Hours|double|TOTAL PRECIPITATION PAST 12 HOURS|kg m-2|4|-1|14|NA|0|0
+013023|totalPrecipitationPast24Hours|double|TOTAL PRECIPITATION PAST 24 HOURS|kg m-2|4|-1|14|NA|0|0
+013031|evapotranspiration|long|EVAPOTRANSPIRATION|kg m-2|3|0|7|NA|0|0
+013032|evaporation|double|EVAPORATION/EVAPOTRANSPIRATION|kg m-2|4|0|8|NA|0|0
 013041|pasquillGiffordStabilityCategory|table|PASQUILL-GILLFORD STABILITY CATEGORY|CODE TABLE|0|0|4|NA|0|0
 014001|longWaveRadiationIntegratedOver24Hours|long|LONG-WAVE RADIATION,INTEGRATED OVER 24 HOURS|J m-2|-3|-2048|12|NA|0|0
 014002|longWaveRadiationIntegratedOverPeriodSpecified|long|LONG-WAVE RADIATION,INTEGRATED OVER PERIOD SPECIFIED|J m-2|-3|-2048|12|NA|0|0
@@ -257,7 +257,7 @@
 014023|diffuseSolarRadiationIntegratedOverPeriodSpecified|long|DIFFUSE SOLAR RADIATION INTEGRATED OVER PERIOD SPECIFIED|J m-2|-4|0|15|NA|0|0
 014024|directSolarRadiationIntegratedOver24Hours|long|DIRECT SOLAR RADIATION INTEGRATED OVER 24 HOURS|J m-2|-4|0|15|NA|0|0
 014025|directSolarRadiationIntegratedOverPeriodSpecified|long|DIRECT SOLAR RADIATION INTEGRATED OVER PERIOD SPECIFIED|J m-2|-4|0|15|NA|0|0
-014031|totalSunshine|long|TOTAL SUNSHINE|min|0|0|11|NA|0|0
+014031|totalSunshine|long|TOTAL SUNSHINE|min|0|0|6|NA|0|0
 014032|totalSunshine|long|TOTAL SUNSHINE|h|0|0|10|NA|0|0
 015001|totalOzone|long|OZON|DU|0|0|10|NA|0|0
 019001|synopticFeatureType|table|TYPE OF SYNOPTIC FEATURE|CODE TABLE|0|0|6|NA|0|0
@@ -398,7 +398,7 @@
 028002|nonCoordinateLongitude|double|LONGITUDE(COARSE ACCURACY)|deg|2|-18000|16|NA|0|0
 028003|alternateLongitude|double|ALTERNATE LONGITUDE|deg|2|-18000|16|NA|0|0
 029001|projectionType|table|PROJECTION TYPE|CODE TABLE|0|0|3|NA|0|0
-029002|coordinateGridType|table|CO-ORDINATE GRID TYPE|CODE TABLE|0|0|2|NA|0|0
+029002|coordinateGridType|table|CO-ORDINATE GRID TYPE|CODE TABLE|0|0|3|NA|0|0
 030001|pixelValue4Bits|long|PIXEL VALUE(4 BITS)|Numeric|0|0|4|NA|0|0
 030021|numberOfPixelsPerRow|long|NUMBER OF PIXELS PER ROW|Numeric|0|0|12|NA|0|0
 030022|numberOfPixelsPerColumn|long|NUMBER OF PIXELS PER COLUMN|Numeric|0|0|12|NA|0|0
