@@ -97,10 +97,10 @@ struct BoundingBox
         north(_north), west(_west), south(_south), east(_east) {}
 
     explicit BoundingBox(const ::eckit::geo::area::BoundingBox& bbox) :
-        BoundingBox(bbox.north, bbox.west, bbox.south, bbox.east) {}
+        BoundingBox(bbox.north(), bbox.west(), bbox.south(), bbox.east()) {}
 
     explicit BoundingBox(PointLonLat first, PointLonLat last) :
-        BoundingBox(first.lat, first.lon, last.lat, last.lon) {}
+        BoundingBox(first.lat(), first.lon(), last.lat(), last.lon()) {}
 
     static BoundingBox make_from_points_minmax(const Grid& grid)
     {
@@ -110,26 +110,26 @@ struct BoundingBox
         // invert rotation if necessary, as encoded bounding box is unrotated
         auto unrotate = grid.projection().type() == "rotation";
 
-        auto n = std::get<PointLonLat>(points.front()).lat;
-        auto w = std::get<PointLonLat>(points.front()).lon;
+        auto n = std::get<PointLonLat>(points.front()).lat();
+        auto w = std::get<PointLonLat>(points.front()).lon();
         auto s = n;
         auto e = w;
 
         for (const auto& point : points) {
             auto p = std::get<PointLonLat>(unrotate ? grid.projection().inv(point) : point);
 
-            if (n < p.lat) {
-                n = p.lat;
+            if (n < p.lat()) {
+                n = p.lat();
             }
-            else if (s > p.lat) {
-                s = p.lat;
+            else if (s > p.lat()) {
+                s = p.lat();
             }
 
-            if (w > p.lon) {
-                w = p.lon;
+            if (w > p.lon()) {
+                w = p.lon();
             }
-            else if (e < p.lon) {
-                e = p.lon;
+            else if (e < p.lon()) {
+                e = p.lon();
             }
         }
 
@@ -160,8 +160,8 @@ struct Rotation
         south_pole_lat_(south_pole_lat), south_pole_lon_(south_pole_lon), south_pole_angle_(south_pole_angle) {}
 
     explicit Rotation(const ::eckit::geo::projection::Rotation& r) :
-        Rotation(r.south_pole().lat,
-                 r.south_pole().lon,
+        Rotation(r.south_pole().lat(),
+                 r.south_pole().lon(),
                  r.angle()) {}
 
     void fillGrib(grib_info& info) const
@@ -350,9 +350,9 @@ void set_grid_type_reduced_ll(grib_info& info, const Grid& grid)
     ASSERT(max_pl >= 2);
 
     const auto& bbox = g.boundingBox();
-    const auto east  = bbox.periodic() ? bbox.west + 360. - 360. / static_cast<double>(max_pl) : bbox.east;
+    const auto east  = bbox.periodic() ? bbox.west() + 360. - 360. / static_cast<double>(max_pl) : bbox.east();
 
-    BoundingBox(bbox.north, bbox.west, bbox.south, east).fillGrib(info);
+    BoundingBox(bbox.north(), bbox.west(), bbox.south(), east).fillGrib(info);
 }
 
 
@@ -446,13 +446,13 @@ void set_grid_type_lambert_azimuthal_equal_area(grib_info& info, const Grid& gri
     info.grid.Ni = static_cast<long>(g.nx());
     info.grid.Nj = static_cast<long>(g.ny());
 
-    info.grid.latitudeOfFirstGridPointInDegrees  = first.lat;
-    info.grid.longitudeOfFirstGridPointInDegrees = first.lon;
+    info.grid.latitudeOfFirstGridPointInDegrees  = first.lat();
+    info.grid.longitudeOfFirstGridPointInDegrees = first.lon();
 
     info.extra_set("DxInMetres", g.dx());
     info.extra_set("DyInMetres", g.dy());
-    info.extra_set("standardParallelInDegrees", reference.lat);
-    info.extra_set("centralLongitudeInDegrees", reference.lon);
+    info.extra_set("standardParallelInDegrees", reference.lat());
+    info.extra_set("centralLongitudeInDegrees", reference.lon());
 
     ScanningMode scan(g);
     scan.fillGrib(info);
@@ -478,21 +478,21 @@ void set_grid_type_grid_type_lambert(grib_info& info, const Grid& grid)
         writeLaDInDegrees = edition >= 2;
     }
 
-    info.grid.latitudeOfFirstGridPointInDegrees  = first.lat;
-    info.grid.longitudeOfFirstGridPointInDegrees = writeLonPositive ? normalise_longitude(first.lon, 0) : first.lon;
+    info.grid.latitudeOfFirstGridPointInDegrees  = first.lat();
+    info.grid.longitudeOfFirstGridPointInDegrees = writeLonPositive ? normalise_longitude(first.lon(), 0) : first.lon();
 
     info.grid.Ni = static_cast<long>(g.nx());
     info.grid.Nj = static_cast<long>(g.ny());
 
     info.extra_set("DxInMetres", g.dx());
     info.extra_set("DyInMetres", g.dy());
-    info.extra_set("Latin1InDegrees", reference.lat);
-    info.extra_set("Latin2InDegrees", reference.lat);
-    info.extra_set("LoVInDegrees", writeLonPositive ? normalise_longitude(reference.lon, 0)
-                                                    : reference.lon);
+    info.extra_set("Latin1InDegrees", reference.lat());
+    info.extra_set("Latin2InDegrees", reference.lat());
+    info.extra_set("LoVInDegrees", writeLonPositive ? normalise_longitude(reference.lon(), 0)
+                                                    : reference.lon());
 
     if (writeLaDInDegrees) {
-        info.extra_set("LaDInDegrees", reference.lat);
+        info.extra_set("LaDInDegrees", reference.lat());
     }
 
     ScanningMode scan(g);
@@ -520,19 +520,19 @@ void set_grid_type_polar_stereographic(grib_info& info, const Grid& grid)
     }
 
 
-    info.grid.latitudeOfFirstGridPointInDegrees = first.lat;
+    info.grid.latitudeOfFirstGridPointInDegrees = first.lat();
     info.grid.longitudeOfFirstGridPointInDegrees =
-        writeLonPositive ? normalise_longitude(first.lon, 0) : first.lon;
+        writeLonPositive ? normalise_longitude(first.lon(), 0) : first.lon();
 
     info.grid.Ni = static_cast<long>(g.nx());
     info.grid.Nj = static_cast<long>(g.ny());
 
     info.extra_set("DxInMetres", g.dx());
     info.extra_set("DyInMetres", g.dy());
-    info.extra_set("orientationOfTheGridInDegrees", normalise_longitude(reference.lon, 0));
+    info.extra_set("orientationOfTheGridInDegrees", normalise_longitude(reference.lon(), 0));
 
     if (writeLaDInDegrees) {
-        info.extra_set("LaDInDegrees", reference.lat);
+        info.extra_set("LaDInDegrees", reference.lat());
     }
 
     ScanningMode scan(g);
