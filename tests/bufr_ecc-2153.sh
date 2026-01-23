@@ -15,8 +15,6 @@
 # Check handling of empty nested delayed replication factors in BUFR 
 # ---------------------------------------------------------
 
-REDIRECT=/dev/null
-
 label="bufr_ecc-2153_test"
 tempBufr=temp.$label.bufr
 tempFilt=temp.$label.filt

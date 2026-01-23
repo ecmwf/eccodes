@@ -9,13 +9,11 @@
 #
 
 . ./include.ctest.sh
-set -u
 
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-556.
 # It tests typicalDate for BUFR edition 4
 # ---------------------------------------------------------
-label="bufr_ecc-556_test"
 
 # In this BUFR message the typicalYear should have been encoded
 # as 2012 but it is actually 12!
