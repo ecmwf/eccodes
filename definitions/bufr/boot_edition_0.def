@@ -31,3 +31,4 @@ transient totalLength = section1Length + section2Length + section3Length + secti
 transient typicalYear = 0;
 transient typicalMonth = 0;
 transient typicalDay = 0;
+transient bufrHeaderSubCentre = 0;
