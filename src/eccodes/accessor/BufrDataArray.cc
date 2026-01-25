@@ -92,7 +92,7 @@ void BufrDataArray::tableB_override_store_ref_val(grib_context* c, int code, lon
 /* Operator 203YYY: Retrieve changed reference value from linked list */
 int BufrDataArray::tableB_override_get_ref_val(int code, long* out_ref_val)
 {
-    bufr_tableb_override* p = tableb_override_;
+    const bufr_tableb_override* p = tableb_override_;
     while (p) {
         if (p->code == code) {
             *out_ref_val = p->new_ref_val;
@@ -172,7 +172,7 @@ void BufrDataArray::init(const long v, grib_arguments* params)
     Gen::init(v, params);
     int n = 0;
     const char* dataKeysName   = NULL;
-    grib_accessor* dataKeysAcc = NULL;
+    const grib_accessor* dataKeysAcc = NULL;
 
     bitmapStartElementsDescriptorsIndex_   = 0;
     bitmapCurrentElementsDescriptorsIndex_ = 0;
@@ -582,7 +582,7 @@ static int descriptor_get_min_max(bufr_descriptor* bd, long width, long referenc
     if (width <= 0)
         return GRIB_MISSING_BUFR_ENTRY; /* ECC-1395 */
 
-    DEBUG_ASSERT(width > 0 && width < 64);
+    DEBUG_ASSERT(width < 64);
 
     *maxAllowed = (max1 + reference) * factor;
     *minAllowed = reference * factor;
