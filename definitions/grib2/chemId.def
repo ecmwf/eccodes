@@ -366,6 +366,10 @@
 '155' = {
 	constituentType = 60027 ;
 	}
+#Bromine oxides
+'159' = {
+	constituentType = 60008 ;
+	}
 #Hoch2c(ooh)(ch3)ch=ch2
 '161' = {
 	constituentType = 60032 ;
