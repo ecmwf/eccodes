@@ -9,7 +9,7 @@
  */
 
 #include <stdio.h>
-// #include <iostream>
+#include <iostream>
 
 #include "grib_api_internal.h"
 #include "eccodes.h"
@@ -67,10 +67,8 @@ static int test_message_ownership(const char* filename) // , size_t* previous_en
     return 0;
 }
 
-static long fread_wrapper(void* stream_data, void* buffer, long len)
-{
-    FILE* f = static_cast<FILE*>(stream_data);
-    return fread(buffer, 1, len, f);
+static long fread_wrapper(void* stream_data, void* buffer, long len) {
+    return fread(buffer, 1, len, (FILE*) stream_data);
 }
 
 static int test_codes_handle_from_stream(const char* filename)
@@ -105,6 +103,57 @@ static int test_codes_handle_from_stream(const char* filename)
     return 0;
 }
 
+size_t posInStream = 0;
+
+static long fread_wrapper_with_offset(void* stream_data, void* buffer, long len) {
+    size_t nBytesRead = fread(buffer, 1, len, (FILE*) stream_data);
+    posInStream += nBytesRead;
+    return nBytesRead;
+}
+
+static int test_codes_handle_from_stream_with_offset(const char* filename)
+{
+    std::cout << "Testing codes_handle_new_from_stream with offset..." << std::endl;
+    FILE* in = fopen(filename, "r");
+    if (!in) {
+        printf("Error opening file %s\n", filename);
+        return 1;
+    }
+
+    codes_handle* h = NULL;
+    int err = 0;
+
+    while ((h = codes_handle_new_from_stream(NULL, reinterpret_cast<void*>(in), fread_wrapper_with_offset, &err)) != NULL) {
+        if (err != GRIB_SUCCESS) {
+            printf("Error reading message from stream: %s\n", codes_get_error_message(err));
+            return err;
+        }
+
+        size_t messageSize = 0;
+        err = codes_get_message_size(h, &messageSize);
+        if (err != GRIB_SUCCESS) {
+            printf("Error getting message length: %s\n", codes_get_error_message(err));
+            codes_handle_delete(h);
+            return err;
+        }
+
+        std::cout << "Message offset: " << posInStream - messageSize << " size: " << messageSize << std::endl;
+
+        long paramId = 0;
+        err = codes_get_long(h, "paramId", &paramId); // Just a dummy operation
+        if (err != GRIB_SUCCESS) {
+            printf("Error getting paramId: %s\n", codes_get_error_message(err));
+            codes_handle_delete(h);
+            return err;
+        }
+
+        codes_handle_delete(h);
+    }
+
+    fclose(in);
+    return 0;
+}
+
 int main(int argc, char** argv)
 {
     int err = 0;
@@ -115,6 +164,9 @@ int main(int argc, char** argv)
     if (err != 0) return err;
 
     err = test_codes_handle_from_stream(argv[1]);
+    if (err != 0) return err;
+
+    err = test_codes_handle_from_stream_with_offset(argv[1]);
     if (err != 0) return err;
 
     return 0;
