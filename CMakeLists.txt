@@ -155,6 +155,16 @@ ecbuild_add_option( FEATURE NETCDF
     REQUIRED_PACKAGES NetCDF
     NO_TPL )
 
+ecbuild_add_option( FEATURE USE_STATIC_AEC
+    DESCRIPTION "Link statically against libaec"
+    DEFAULT OFF )
+
+if ( ENABLE_USE_STATIC_AEC )
+  set( libaec_USE_STATIC_LIBS ON )
+else()
+  set( libaec_USE_STATIC_LIBS OFF )
+endif()
+
 find_package( libaec 1.0.6 )
 if(NOT DEFINED ENABLE_AEC AND NOT libaec_FOUND)
   ecbuild_critical("AEC library was not found.\n"
