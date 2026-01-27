@@ -15,6 +15,14 @@ label="grib_second_order_test"
 tempText=temp.$label.txt
 tempGrib1=temp.$label.grib1
 
+# Cannot use plain diff. We need to compare FLOAT NUMBERS with a tolerance.
+# Decide if we have the numdiff commandline utility
+NUMDIFF_CMD="numdiff"
+USE_NUMDIFF=0
+if command -v $NUMDIFF_CMD >/dev/null 2>&1; then
+    USE_NUMDIFF=1
+fi
+
 cd ${data_dir}
 
 encoding=1
@@ -133,7 +141,9 @@ for f1 in $g1files; do
     ${tools_dir}/grib_copy -r $f1 $temp1
     ${tools_dir}/grib_get -n statistics $f1    > $temp_stat1
     ${tools_dir}/grib_get -n statistics $temp1 > $temp_stat2
-    perl ${test_dir}/number_compare.pl $temp_stat1 $temp_stat2
+    if [ $USE_NUMDIFF -eq 1 ]; then
+        $NUMDIFF_CMD $temp_stat1 $temp_stat2
+    fi
 done
 
 # GRIB-883

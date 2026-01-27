@@ -366,6 +366,10 @@
 'Ox' = {
 	constituentType = 60027 ;
 	}
+#Bromine oxides
+'BrOx' = {
+	constituentType = 60008 ;
+	}
 #Hoch2c(ooh)(ch3)ch=ch2
 'ISOPOOH' = {
 	constituentType = 60032 ;

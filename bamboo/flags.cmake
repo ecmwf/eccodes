@@ -1,4 +1,4 @@
-SET(ENABLE_AEC                  OFF CACHE BOOL "Disable CCSDS for Bamboo")
+# SET(ENABLE_AEC                  OFF CACHE BOOL "Disable CCSDS for Bamboo")
 SET(ENABLE_EXTRA_TESTS          ON  CACHE BOOL "Enable extra tests")
 SET(ECCODES_INSTALL_EXTRA_TOOLS ON  CACHE BOOL "Install extra tools")
 SET(ENABLE_ECCODES_THREADS      ON  CACHE BOOL "Enable POSIX threads")

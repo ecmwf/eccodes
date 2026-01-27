@@ -12585,6 +12585,30 @@
 	 parameterNumber = 193 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-maximum logarithm of surface pressure
+'237152' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum logarithm of surface pressure
+'238152' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation logarithm of surface pressure
+'239152' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Covariance between 2-metre temperature and volumetric soil water layer 1
 '254001' = {
 	 localTablesVersion = 1 ;
@@ -12753,6 +12777,78 @@
 	 parameterNumber = 212 ;
 	 typeOfFirstFixedSurface = 254 ;
 	}
+#Covariance between skin temperature and soil temperature layer 1
+'254022' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 213 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and soil temperature layer 2
+'254023' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 214 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and soil temperature layer 3
+'254024' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 215 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and volumetric soil water layer 1
+'254025' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 216 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and volumetric soil water layer 2
+'254026' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 217 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and volumetric soil water layer 3
+'254027' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 218 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and temperature of snow layer 1
+'254028' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 219 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and temperature of snow layer 2
+'254029' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 220 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and temperature of snow layer 3
+'254030' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 221 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
 #Surface roughness length for heat
 '260651' = {
 	 localTablesVersion = 1 ;
@@ -12875,6 +12971,70 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 193 ;
 	}
+#Time-mean aerosol negative fixer mass flux
+'451001' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean aerosol negative fixer mass flux
+'451001' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum aerosol negative fixer mass flux
+'451003' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum aerosol negative fixer mass flux
+'451003' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum aerosol negative fixer mass flux
+'451004' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum aerosol negative fixer mass flux
+'451004' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation aerosol negative fixer mass flux
+'451005' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation aerosol negative fixer mass flux
+'451005' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Aerosol sink/loss mass flux
 '452000' = {
 	 localTablesVersion = 1 ;
@@ -12889,6 +13049,70 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 194 ;
 	}
+#Time-mean aerosol sink/loss mass flux
+'452001' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean aerosol sink/loss mass flux
+'452001' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum aerosol sink/loss mass flux
+'452003' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum aerosol sink/loss mass flux
+'452003' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum aerosol sink/loss mass flux
+'452004' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum aerosol sink/loss mass flux
+'452004' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation aerosol sink/loss mass flux
+'452005' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation aerosol sink/loss mass flux
+'452005' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Aerosol source/gain mass flux
 '453000' = {
 	 localTablesVersion = 1 ;
@@ -12902,6 +13126,70 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 192 ;
+	}
+#Time-mean aerosol source/gain mass flux
+'453001' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean aerosol source/gain mass flux
+'453001' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum aerosol source/gain mass flux
+'453003' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum aerosol source/gain mass flux
+'453003' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum aerosol source/gain mass flux
+'453004' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum aerosol source/gain mass flux
+'453004' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation aerosol source/gain mass flux
+'453005' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation aerosol source/gain mass flux
+'453005' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 6 ;
 	}
 #Emission mass flux from commercial buildings heating
 '463000' = {

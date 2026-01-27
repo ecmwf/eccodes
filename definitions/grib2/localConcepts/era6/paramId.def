@@ -17,24 +17,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Wind speed
-'10' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 100 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
-#Wind speed
-'10' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 200 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
 #UV visible albedo for direct radiation (climatological)
 '15' = {
 	 localTablesVersion = 1 ;
@@ -91,42 +73,6 @@
 	 parameterNumber = 203 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
-	}
-#U component of wind
-'131' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 2 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 100 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
-#U component of wind
-'131' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 2 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 200 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
-#V component of wind
-'132' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 100 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
-#V component of wind
-'132' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 200 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #Snow depth
 '141' = {
@@ -405,66 +351,6 @@
 	 constituentType = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean wind speed
-'235097' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 100 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
-#Time-mean wind speed
-'235097' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 200 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
-#Time-mean U component of wind
-'235131' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 2 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 200 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
-#Time-mean U component of wind
-'235131' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 2 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 100 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
-#Time-mean V component of wind
-'235132' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 200 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
-#Time-mean V component of wind
-'235132' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 100 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
 #Time-mean logarithm of surface pressure
 '235152' = {
 	 discipline = 0 ;
@@ -502,6 +388,14 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum logarithm of surface pressure
+'237152' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-minimum wind speed
 '238097' = {
 	 discipline = 0 ;
@@ -520,6 +414,14 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 200 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum logarithm of surface pressure
+'238152' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-standard-deviation wind speed
@@ -540,6 +442,14 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 200 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation logarithm of surface pressure
+'239152' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Covariance between 2-metre temperature and volumetric soil water layer 1

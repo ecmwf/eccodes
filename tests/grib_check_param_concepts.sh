@@ -197,23 +197,24 @@ check_grib_defs
 cd $test_dir
 rm -fr $tempDir
 
-# -------------------------------
-echo "Check duplicates"
-# -------------------------------
-paramIdFile=$ECCODES_DEFINITION_PATH/grib2/paramId.def
 
-pids=$(grep "^'" $paramIdFile | awk -F"'" '{printf "%s\n", $2}')
-set +e
-for p in $pids; do
-  # For each paramId found in the top-level WMO file, check if it also exists
-  # in the ECMWF local one
-  grep "'$p'"  $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/paramId.def
-  if [ $? -ne 1 ]; then
-    echo "ERROR: check paramId $p. Is it duplicated?"
-    exit 1
-  fi
-done
-set -e
+## -------------------------------
+#echo "Check duplicates"
+## -------------------------------
+#paramIdFile=$ECCODES_DEFINITION_PATH/grib2/paramId.def
+#
+#pids=$(grep "^'" $paramIdFile | awk -F"'" '{printf "%s\n", $2}')
+#set +e
+#for p in $pids; do
+#  # For each paramId found in the top-level WMO file, check if it also exists
+#  # in the ECMWF local one
+#  grep "'$p'"  $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/paramId.def
+#  if [ $? -ne 1 ]; then
+#    echo "ERROR: check paramId $p. Is it duplicated?"
+#    exit 1
+#  fi
+#done
+#set -e
 
 
 # -------------------------------

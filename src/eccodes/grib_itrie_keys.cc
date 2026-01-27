@@ -8,6 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include "sync/Mutex.h"
+
 static const int mapping[] = {
     0,  /* 00 */
     0,  /* 01 */
@@ -269,33 +271,7 @@ static const int mapping[] = {
 
 #define SIZE 64
 
-#if GRIB_PTHREADS
-static pthread_once_t once   = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex;
-
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_grib_itrie_keys_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex);
-            once = 1;
-        }
-    }
-}
-#endif
+static eccodes::sync::Mutex mutex;
 
 struct grib_itrie
 {
@@ -317,8 +293,7 @@ grib_itrie* grib_hash_keys_new(grib_context* c, int* count)
 
 void grib_hash_keys_delete(grib_itrie* t)
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
     if (t) {
         int i;
@@ -328,8 +303,6 @@ void grib_hash_keys_delete(grib_itrie* t)
 
         grib_context_free(t->context, t);
     }
-
-    GRIB_MUTEX_UNLOCK(&mutex);
 }
 
 static int grib_hash_keys_insert(grib_itrie* t, const char* key)
@@ -338,8 +311,7 @@ static int grib_hash_keys_insert(grib_itrie* t, const char* key)
     grib_itrie* last = t;
     int* count;
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
     ECCODES_ASSERT(t);
     if (!t) return -1;
@@ -371,8 +343,6 @@ static int grib_hash_keys_insert(grib_itrie* t, const char* key)
         ECCODES_ASSERT(*(t->count) + TOTAL_KEYWORDS < ACCESSORS_ARRAY_SIZE);
     }
 
-    GRIB_MUTEX_UNLOCK(&mutex);
-
     /*printf("grib_hash_keys_get_id: %s -> %d\n",key,t->id);*/
 
     return t->id;
@@ -392,19 +362,16 @@ int grib_hash_keys_get_id(grib_itrie* t, const char* key)
         const char* k    = key;
         grib_itrie* last = t;
 
-        GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-        GRIB_MUTEX_LOCK(&mutex);
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
         while (*k && t)
             t = t->next[mapping[(int)*k++]];
 
         if (t != NULL && t->id != -1) {
-            GRIB_MUTEX_UNLOCK(&mutex);
             return t->id + TOTAL_KEYWORDS + 1;
         }
         else {
             int ret = grib_hash_keys_insert(last, key);
-            GRIB_MUTEX_UNLOCK(&mutex);
             return ret + TOTAL_KEYWORDS + 1;
         }
     }

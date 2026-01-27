@@ -9,8 +9,11 @@
  * does it submit to any jurisdiction.
  */
 
+
+#include <vector>
+
 #include "eckit/geo/Exceptions.h"
-#include "eckit/geo/spec/Custom.h"
+#include "eckit/spec/Custom.h"
 #include "eckit/testing/Test.h"
 #include "eckit/types/FloatCompare.h"
 
@@ -47,13 +50,16 @@ void set_string(grib_handle* h, const char* key, const std::string& value)
 
 CASE("grid: O2")
 {
-    for (auto* handle : {
-             codes_grib_handle_new_from_samples(nullptr, "GRIB1"),
-             codes_grib_handle_new_from_samples(nullptr, "GRIB2"),
-         }) {
-        ::eckit::geo::spec::Custom spec{ { "grid", "o2" } };
+    const ::eckit::spec::Custom spec{ { "grid", "o2" } };
 
-        auto* h = eccodes::geo::GribFromSpec::set(handle, spec);
+    for (const auto* name : {
+             "GRIB1",
+             "GRIB2",
+         }) {
+        auto* sample = codes_grib_handle_new_from_samples(nullptr, name);
+        EXPECT(sample != nullptr);
+
+        auto* h = eccodes::geo::GribFromSpec::set(sample, spec);
         EXPECT(h != nullptr);
 
         long valid = 0;
@@ -65,9 +71,9 @@ CASE("grid: O2")
         get_string(h, "gridType", type);
         EXPECT(type == "reduced_gg");
 
-        std::string name;
-        get_string(h, "gridName", name);
-        EXPECT(name == "O2");
+        std::string gridName;
+        get_string(h, "gridName", gridName);
+        EXPECT(gridName == "O2");
 
         long N = 0;
         CHECK(codes_get_long(h, "N", &N));
@@ -106,13 +112,16 @@ CASE("grid: O2")
 
 CASE("grid: 1/1")
 {
-    for (auto* handle : {
-             codes_grib_handle_new_from_samples(nullptr, "GRIB1"),
-             codes_grib_handle_new_from_samples(nullptr, "GRIB2"),
-         }) {
-        ::eckit::geo::spec::Custom spec{ { "grid", "1/1" } };
+    const ::eckit::spec::Custom spec{ { "grid", "1/1" } };
 
-        auto* h = eccodes::geo::GribFromSpec::set(handle, spec);
+    for (const auto* name : {
+             "GRIB1",
+             "GRIB2",
+         }) {
+        auto* sample = codes_grib_handle_new_from_samples(nullptr, name);
+        EXPECT(sample != nullptr);
+
+        auto* h = eccodes::geo::GribFromSpec::set(sample, spec);
         EXPECT(h != nullptr);
 
         long valid = 0;
@@ -147,6 +156,51 @@ CASE("grid: 1/1")
         codes_handle_delete(h);
     }
 }
+
+
+CASE("grid: reduced_ll")
+{
+    const ::eckit::spec::Custom spec{ { "type", "reduced_ll" }, { "pl", std::vector<long>{ 0, 10, 0 } }, { "area", std::vector<double>{ 90., 0., -90., 360. } } };
+
+    for (const auto* name : {
+             "GRIB1",
+             "GRIB2",
+         }) {
+        auto* sample = codes_grib_handle_new_from_samples(nullptr, name);
+        EXPECT(sample != nullptr);
+
+        auto* h = eccodes::geo::GribFromSpec::set(sample, spec);
+        EXPECT(h != nullptr);
+
+        long valid = 0;
+        set_string(h, "messageValidityChecks", "grid");
+        CHECK(codes_get_long(h, "isMessageValid", &valid));
+        EXPECT(valid == 1);
+
+        std::string type;
+        get_string(h, "gridType", type);
+        EXPECT(type == "reduced_ll");
+
+        long Nj                 = 3;
+        long numberOfDataPoints = 10;
+        CHECK(codes_get_long(h, "Nj", &Nj));
+        CHECK(codes_get_long(h, "numberOfDataPoints", &numberOfDataPoints));
+
+        std::vector<double> area(4);
+        CHECK(codes_get_double(h, "latitudeOfFirstGridPointInDegrees", &area[0]));
+        CHECK(codes_get_double(h, "longitudeOfFirstGridPointInDegrees", &area[1]));
+        CHECK(codes_get_double(h, "latitudeOfLastGridPointInDegrees", &area[2]));
+        CHECK(codes_get_double(h, "longitudeOfLastGridPointInDegrees", &area[3]));
+
+        EXPECT(eckit::types::is_approximately_equal(area[0], 90.));
+        EXPECT(eckit::types::is_approximately_equal(area[1], 0.));
+        EXPECT(eckit::types::is_approximately_equal(area[2], -90.));
+        EXPECT(eckit::types::is_approximately_equal(area[3], 324.));
+
+        codes_handle_delete(h);
+    }
+}
+
 
 int main(int argc, char* argv[])
 {

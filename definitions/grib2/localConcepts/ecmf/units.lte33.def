@@ -13079,6 +13079,30 @@
 	 parameterNumber = 193 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-maximum logarithm of surface pressure
+'Numeric' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum logarithm of surface pressure
+'Numeric' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation logarithm of surface pressure
+'Numeric' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 105 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Covariance between 2-metre temperature and volumetric soil water layer 1
 'K m**3 m**-3' = {
 	 localTablesVersion = 1 ;
@@ -13245,6 +13269,78 @@
 	 discipline = 254 ;
 	 parameterCategory = 254 ;
 	 parameterNumber = 212 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and soil temperature layer 1
+'K K' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 213 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and soil temperature layer 2
+'K K' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 214 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and soil temperature layer 3
+'K K' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 215 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and volumetric soil water layer 1
+'K m**3 m**-3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 216 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and volumetric soil water layer 2
+'K m**3 m**-3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 217 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and volumetric soil water layer 3
+'K m**3 m**-3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 218 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and temperature of snow layer 1
+'K K' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 219 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and temperature of snow layer 2
+'K K' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 220 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and temperature of snow layer 3
+'K K' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 221 ;
 	 typeOfFirstFixedSurface = 254 ;
 	}
 #Surface roughness length for heat

@@ -791,6 +791,8 @@ static const char* codes_bufr_header_get_centre_name(long centre_code)
             return "anso";
         case 292:
             return "ufz";
+        case 323:
+            return "wpmip";
         default:
             return NULL;
     }

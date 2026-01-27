@@ -1468,7 +1468,6 @@ int grib_multi_handle_append(grib_handle* h, int start_section, grib_multi_handl
     return eccodes::getErrorCode(result);
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 int grib_multi_handle_write(grib_multi_handle* h, FILE* f)
 {
     if (f == NULL)
@@ -1526,7 +1525,6 @@ int grib_get_partial_message_copy(grib_handle* h, void* message, size_t* len,
     return GRIB_SUCCESS;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 int grib_get_message_copy(const grib_handle* h, void* message, size_t* len)
 {
     if (!h)
@@ -1541,7 +1539,6 @@ int grib_get_message_copy(const grib_handle* h, void* message, size_t* len)
     return GRIB_SUCCESS;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 int grib_get_message_offset(const grib_handle* h, off_t* offset)
 {
     if (h)
@@ -1552,7 +1549,6 @@ int grib_get_message_offset(const grib_handle* h, off_t* offset)
     return GRIB_SUCCESS;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 int codes_get_product_kind(const grib_handle* h, ProductKind* product_kind)
 {
     if (h) {
@@ -1562,7 +1558,6 @@ int codes_get_product_kind(const grib_handle* h, ProductKind* product_kind)
     return GRIB_NULL_HANDLE;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 int codes_check_message_header(const void* bytes, size_t length, ProductKind product)
 {
     const char* p = ((const char*)bytes);
@@ -1584,7 +1579,6 @@ int codes_check_message_header(const void* bytes, size_t length, ProductKind pro
     return GRIB_SUCCESS;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 int codes_check_message_footer(const void* bytes, size_t length, ProductKind product)
 {
     const char* p = ((const char*)bytes);

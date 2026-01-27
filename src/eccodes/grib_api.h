@@ -1172,6 +1172,8 @@ void grib_context_set_samples_path(grib_context* c, const char* path);
 
 void grib_context_set_debug(grib_context* c, int mode);
 void grib_context_set_data_quality_checks(grib_context* c, int val);
+int grib_context_get_data_quality_checks(const grib_context* c);
+
 char* grib_context_full_defs_path(grib_context* c, const char* basename);
 
 /**
@@ -1350,6 +1352,9 @@ int wmo_read_any_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_grib_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_bufr_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_gts_from_file(FILE* f, void* buffer, size_t* len);
+/* if f support ftell, offset is updated with the absolute position within the file, */
+/* otherwise, it accumulates the position across a series of calls */
+int wmo_read_any_from_file_with_offset(FILE* f, void* buffer, size_t* len, off_t* offset);
 int wmo_read_any_from_stream(void* stream_data, long (*stream_proc)(void*, void* buffer, long len), void* buffer, size_t* len);
 
 /* These functions allocate memory for the result so the user is responsible for freeing it */

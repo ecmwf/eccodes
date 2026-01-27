@@ -41,7 +41,7 @@ sub create_cfName {
     units.id=param.units_id and
     param.id=cf.grib1_ecmwf and
     grib_encoding.is_legacy=0 and
-    (grib_encoding.centre_id=0 or grib_encoding.centre_id=98) and
+    (grib_encoding.centre_id=0 or grib_encoding.centre_id=98 or grib_encoding.centre_id < 0) and
 #    grib_encoding.is_mtg2_switch_0 = 0 and
 #    grib_encoding.is_mtg2_switch_1 = 0 and
     grib_encoding.is_mtg2_switch_2 = 1 order by
@@ -124,7 +124,7 @@ sub create_cfName_legacy {
 #    grib_encoding.is_mtg2_switch_0 = 0 and
 #    grib_encoding.is_mtg2_switch_1 = 0 and
     grib_encoding.is_mtg2_switch_2 = 1 and
-    (grib_encoding.centre_id=0 or grib_encoding.centre_id=98) and
+    (grib_encoding.centre_id=0 or grib_encoding.centre_id=98 or grib_encoding.centre_id < 0) and
     grib_encoding.is_legacy=1 order by
     edition,centre_id,param.o,param.id,grib_encoding.param_version,attribute.o;
 EOF
@@ -207,7 +207,7 @@ sub create_def {
         centre.id=grib_encoding.centre_id and
         units.id=param.units_id and
         grib_encoding.is_legacy=0 and
-        (grib_encoding.centre_id=0 or grib_encoding.centre_id=98) and
+        (grib_encoding.centre_id=0 or grib_encoding.centre_id=98 or grib_encoding.centre_id < 0) and
 #        grib_encoding.is_mtg2_switch_0 = 0 and
 #        grib_encoding.is_mtg2_switch_1 = 0 and
         grib_encoding.is_mtg2_switch_2 = 1
@@ -297,7 +297,7 @@ sub create_def_legacy {
         centre.id=grib_encoding.centre_id and
         units.id=param.units_id and
         grib_encoding.is_legacy=1 and
-        (grib_encoding.centre_id=0 or grib_encoding.centre_id=98) and
+        (grib_encoding.centre_id=0 or grib_encoding.centre_id=98 or grib_encoding.centre_id < 0) and
 #        grib_encoding.is_mtg2_switch_0 = 0 and
 #        grib_encoding.is_mtg2_switch_1 = 0 and
         grib_encoding.is_mtg2_switch_2 = 1
@@ -389,7 +389,7 @@ sub create_cfVarName {
 #        grib_encoding.is_mtg2_switch_0 = 0 and
 #        grib_encoding.is_mtg2_switch_1 = 0 and
         grib_encoding.is_mtg2_switch_2 = 1 and
-        (grib_encoding.centre_id=0 or grib_encoding.centre_id=98)
+        (grib_encoding.centre_id=0 or grib_encoding.centre_id=98 or grib_encoding.centre_id < 0)
         and cfVarName IS NOT NULL
         order by edition,centre_id,param.o,param.id,grib_encoding.param_version,attribute.o;
 EOF
@@ -469,7 +469,7 @@ sub create_paramId_def {
     attribute.id=grib.attribute_id and
     centre.id=grib_encoding.centre_id and
     grib_encoding.is_legacy=0 and
-    (grib_encoding.centre_id=0 or grib_encoding.centre_id=98) and
+    (grib_encoding.centre_id=0 or grib_encoding.centre_id=98 or grib_encoding.centre_id < 0) and
 #    grib_encoding.is_mtg2_switch_0 = 0 and
 #    grib_encoding.is_mtg2_switch_1 = 0 and
     grib_encoding.is_mtg2_switch_2 = 1

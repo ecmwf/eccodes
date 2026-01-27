@@ -470,6 +470,13 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
 	}
+#Logarithm of surface pressure
+'Logarithm of surface pressure' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
 #Divergence
 'Divergence' = {
 	 discipline = 0 ;
@@ -974,16 +981,16 @@
 	}
 #U-component of atmospheric surface momentum flux
 'U-component of atmospheric surface momentum flux' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 17 ;
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 103 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
 #V-component of atmospheric surface momentum flux
 'V-component of atmospheric surface momentum flux' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 18 ;
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 104 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
 #U-component of surface momentum flux into ocean
@@ -1362,17 +1369,17 @@
 	}
 #Time-mean U-component of atmospheric surface momentum flux
 'Time-mean U-component of atmospheric surface momentum flux' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 17 ;
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 103 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean V-component of atmospheric surface momentum flux
 'Time-mean V-component of atmospheric surface momentum flux' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 18 ;
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 104 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
@@ -1939,17 +1946,17 @@
 	}
 #Time-maximum U-component of atmospheric surface momentum flux
 'Time-maximum U-component of atmospheric surface momentum flux' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 17 ;
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 103 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum V-component of atmospheric surface momentum flux
 'Time-maximum V-component of atmospheric surface momentum flux' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 18 ;
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 104 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
@@ -2516,17 +2523,17 @@
 	}
 #Time-minimum U-component of atmospheric surface momentum flux
 'Time-minimum U-component of atmospheric surface momentum flux' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 17 ;
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 103 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum V-component of atmospheric surface momentum flux
 'Time-minimum V-component of atmospheric surface momentum flux' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 18 ;
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 104 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
@@ -3093,17 +3100,17 @@
 	}
 #Time-standard-deviation U-component of atmospheric surface momentum flux
 'Time-standard-deviation U-component of atmospheric surface momentum flux' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 17 ;
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 103 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation V-component of atmospheric surface momentum flux
 'Time-standard-deviation V-component of atmospheric surface momentum flux' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 18 ;
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 104 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
@@ -7305,6 +7312,14 @@
 	 typeOfFirstFixedSurface = 101 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean logarithm of surface pressure
+'Time-mean logarithm of surface pressure' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean divergence
 'Time-mean divergence' = {
 	 discipline = 0 ;
@@ -9357,7 +9372,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 105 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum divergence
@@ -11300,7 +11315,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 105 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum divergence
@@ -13213,7 +13228,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 105 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation divergence
@@ -19263,6 +19278,34 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 0 ;
 	}
+#Time-mean mass density
+'Time-mean mass density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum mass density
+'Time-maximum mass density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum mass density
+'Time-minimum mass density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation mass density
+'Time-standard-deviation mass density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Total column vertically-integrated mass density
 'Total column vertically-integrated mass density' = {
 	 discipline = 0 ;
@@ -19271,11 +19314,75 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
+#Time-mean total column vertically-integrated mass density
+'Time-mean total column vertically-integrated mass density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum total column vertically-integrated mass density
+'Time-maximum total column vertically-integrated mass density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum total column vertically-integrated mass density
+'Time-minimum total column vertically-integrated mass density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation total column vertically-integrated mass density
+'Time-standard-deviation total column vertically-integrated mass density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Mass mixing ratio
 'Mass mixing ratio' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
+	}
+#Time-mean mass mixing ratio
+'Time-mean mass mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum mass mixing ratio
+'Time-maximum mass mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum mass mixing ratio
+'Time-minimum mass mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation mass mixing ratio
+'Time-standard-deviation mass mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 6 ;
 	}
 #Emission mass flux
 'Emission mass flux' = {
@@ -19284,11 +19391,71 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 255 ;
 	}
+#Time-mean emission mass flux
+'Time-mean emission mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 255 ;
+	}
+#Time-maximum emission mass flux
+'Time-maximum emission mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 255 ;
+	}
+#Time-minimum emission mass flux
+'Time-minimum emission mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 255 ;
+	}
+#Time-standard-deviation emission mass flux
+'Time-standard-deviation emission mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 sourceSinkChemicalPhysicalProcess = 255 ;
+	}
 #Dry deposition velocity
 'Dry deposition velocity' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 15 ;
+	}
+#Time-mean dry deposition velocity
+'Time-mean dry deposition velocity' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum dry deposition velocity
+'Time-maximum dry deposition velocity' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum dry deposition velocity
+'Time-minimum dry deposition velocity' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation dry deposition velocity
+'Time-standard-deviation dry deposition velocity' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 typeOfStatisticalProcessing = 6 ;
 	}
 #Wet deposition mass flux
 'Wet deposition mass flux' = {
@@ -19296,11 +19463,67 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 7 ;
 	}
+#Time-mean wet deposition mass flux
+'Time-mean wet deposition mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum wet deposition mass flux
+'Time-maximum wet deposition mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum wet deposition mass flux
+'Time-minimum wet deposition mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation wet deposition mass flux
+'Time-standard-deviation wet deposition mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Dry deposition mass flux
 'Dry deposition mass flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 6 ;
+	}
+#Time-mean dry deposition mass flux
+'Time-mean dry deposition mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum dry deposition mass flux
+'Time-maximum dry deposition mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum dry deposition mass flux
+'Time-minimum dry deposition mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation dry deposition mass flux
+'Time-standard-deviation dry deposition mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 typeOfStatisticalProcessing = 6 ;
 	}
 #Sedimentation mass flux
 'Sedimentation mass flux' = {
@@ -19308,11 +19531,67 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 11 ;
 	}
+#Time-mean sedimentation mass flux
+'Time-mean sedimentation mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum sedimentation mass flux
+'Time-maximum sedimentation mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum sedimentation mass flux
+'Time-minimum sedimentation mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation sedimentation mass flux
+'Time-standard-deviation sedimentation mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Volume mixing ratio
 'Volume mixing ratio' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 52 ;
+	}
+#Time-mean volume mixing ratio
+'Time-mean volume mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 52 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum volume mixing ratio
+'Time-maximum volume mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 52 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum volume mixing ratio
+'Time-minimum volume mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 52 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation volume mixing ratio
+'Time-standard-deviation volume mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 52 ;
+	 typeOfStatisticalProcessing = 6 ;
 	}
 #Volume-mean total column mixing ratio
 'Volume-mean total column mixing ratio' = {
@@ -19320,11 +19599,67 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 84 ;
 	}
+#Time-mean volume-mean total column mixing ratio
+'Time-mean volume-mean total column mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 84 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum volume-mean total column mixing ratio
+'Time-maximum volume-mean total column mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 84 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum volume-mean total column mixing ratio
+'Time-minimum volume-mean total column mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 84 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation volume-mean total column mixing ratio
+'Time-standard-deviation volume-mean total column mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 84 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Wet deposition mass flux by large-scale precipitation
 'Wet deposition mass flux by large-scale precipitation' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 9 ;
+	}
+#Time-mean wet deposition mass flux by large-scale precipitation
+'Time-mean wet deposition mass flux by large-scale precipitation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum wet deposition mass flux by large-scale precipitation
+'Time-maximum wet deposition mass flux by large-scale precipitation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum wet deposition mass flux by large-scale precipitation
+'Time-minimum wet deposition mass flux by large-scale precipitation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation wet deposition mass flux by large-scale precipitation
+'Time-standard-deviation wet deposition mass flux by large-scale precipitation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 typeOfStatisticalProcessing = 6 ;
 	}
 #Wet deposition mass flux by convective precipitation
 'Wet deposition mass flux by convective precipitation' = {
@@ -19332,11 +19667,71 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 10 ;
 	}
+#Time-mean wet deposition mass flux by convective precipitation
+'Time-mean wet deposition mass flux by convective precipitation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum wet deposition mass flux by convective precipitation
+'Time-maximum wet deposition mass flux by convective precipitation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum wet deposition mass flux by convective precipitation
+'Time-minimum wet deposition mass flux by convective precipitation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation wet deposition mass flux by convective precipitation
+'Time-standard-deviation wet deposition mass flux by convective precipitation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Emission mass flux from vegetation
 'Emission mass flux from vegetation' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 34 ;
+	}
+#Time-mean emission mass flux from vegetation
+'Time-mean emission mass flux from vegetation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 34 ;
+	}
+#Time-maximum emission mass flux from vegetation
+'Time-maximum emission mass flux from vegetation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 34 ;
+	}
+#Time-minimum emission mass flux from vegetation
+'Time-minimum emission mass flux from vegetation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 34 ;
+	}
+#Time-standard-deviation emission mass flux from vegetation
+'Time-standard-deviation emission mass flux from vegetation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 sourceSinkChemicalPhysicalProcess = 34 ;
 	}
 #Emission mass flux from natural sources
@@ -19346,11 +19741,75 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 6 ;
 	}
+#Time-mean emission mass flux from natural sources
+'Time-mean emission mass flux from natural sources' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 6 ;
+	}
+#Time-maximum emission mass flux from natural sources
+'Time-maximum emission mass flux from natural sources' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 6 ;
+	}
+#Time-minimum emission mass flux from natural sources
+'Time-minimum emission mass flux from natural sources' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 6 ;
+	}
+#Time-standard-deviation emission mass flux from natural sources
+'Time-standard-deviation emission mass flux from natural sources' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 sourceSinkChemicalPhysicalProcess = 6 ;
+	}
 #Emission mass flux from anthropogenic sources
 'Emission mass flux from anthropogenic sources' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 4 ;
+	}
+#Time-mean emission mass flux from anthropogenic sources
+'Time-mean emission mass flux from anthropogenic sources' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 4 ;
+	}
+#Time-maximum emission mass flux from anthropogenic sources
+'Time-maximum emission mass flux from anthropogenic sources' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 4 ;
+	}
+#Time-minimum emission mass flux from anthropogenic sources
+'Time-minimum emission mass flux from anthropogenic sources' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 4 ;
+	}
+#Time-standard-deviation emission mass flux from anthropogenic sources
+'Time-standard-deviation emission mass flux from anthropogenic sources' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 sourceSinkChemicalPhysicalProcess = 4 ;
 	}
 #Emission mass flux from elevated anthropogenic sources
@@ -19360,11 +19819,75 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 12 ;
 	}
+#Time-mean emission mass flux from elevated anthropogenic sources
+'Time-mean emission mass flux from elevated anthropogenic sources' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 12 ;
+	}
+#Time-maximum emission mass flux from elevated anthropogenic sources
+'Time-maximum emission mass flux from elevated anthropogenic sources' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 12 ;
+	}
+#Time-minimum emission mass flux from elevated anthropogenic sources
+'Time-minimum emission mass flux from elevated anthropogenic sources' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 12 ;
+	}
+#Time-standard-deviation emission mass flux from elevated anthropogenic sources
+'Time-standard-deviation emission mass flux from elevated anthropogenic sources' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 sourceSinkChemicalPhysicalProcess = 12 ;
+	}
 #Emission mass flux from surface anthropogenic sources
 'Emission mass flux from surface anthropogenic sources' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 13 ;
+	}
+#Time-mean emission mass flux from surface anthropogenic sources
+'Time-mean emission mass flux from surface anthropogenic sources' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 13 ;
+	}
+#Time-maximum emission mass flux from surface anthropogenic sources
+'Time-maximum emission mass flux from surface anthropogenic sources' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 13 ;
+	}
+#Time-minimum emission mass flux from surface anthropogenic sources
+'Time-minimum emission mass flux from surface anthropogenic sources' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 13 ;
+	}
+#Time-standard-deviation emission mass flux from surface anthropogenic sources
+'Time-standard-deviation emission mass flux from surface anthropogenic sources' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 sourceSinkChemicalPhysicalProcess = 13 ;
 	}
 #Emission mass flux from biomass burning
@@ -19374,11 +19897,75 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 35 ;
 	}
+#Time-mean emission mass flux from biomass burning
+'Time-mean emission mass flux from biomass burning' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 35 ;
+	}
+#Time-maximum emission mass flux from biomass burning
+'Time-maximum emission mass flux from biomass burning' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 35 ;
+	}
+#Time-minimum emission mass flux from biomass burning
+'Time-minimum emission mass flux from biomass burning' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 35 ;
+	}
+#Time-standard-deviation emission mass flux from biomass burning
+'Time-standard-deviation emission mass flux from biomass burning' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 sourceSinkChemicalPhysicalProcess = 35 ;
+	}
 #Emission from aviation
 'Emission from aviation' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 1 ;
+	}
+#Time-mean emission from aviation
+'Time-mean emission from aviation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 1 ;
+	}
+#Time-maximum emission from aviation
+'Time-maximum emission from aviation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 1 ;
+	}
+#Time-minimum emission from aviation
+'Time-minimum emission from aviation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 1 ;
+	}
+#Time-standard-deviation emission from aviation
+'Time-standard-deviation emission from aviation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 sourceSinkChemicalPhysicalProcess = 1 ;
 	}
 #Emission mass flux from agriculture livestock
@@ -19388,11 +19975,75 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 14 ;
 	}
+#Time-mean emission mass flux from agriculture livestock
+'Time-mean emission mass flux from agriculture livestock' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 14 ;
+	}
+#Time-maximum emission mass flux from agriculture livestock
+'Time-maximum emission mass flux from agriculture livestock' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 14 ;
+	}
+#Time-minimum emission mass flux from agriculture livestock
+'Time-minimum emission mass flux from agriculture livestock' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 14 ;
+	}
+#Time-standard-deviation emission mass flux from agriculture livestock
+'Time-standard-deviation emission mass flux from agriculture livestock' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 sourceSinkChemicalPhysicalProcess = 14 ;
+	}
 #Emission mass flux from agriculture soils
 'Emission mass flux from agriculture soils' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 15 ;
+	}
+#Time-mean emission mass flux from agriculture soils
+'Time-mean emission mass flux from agriculture soils' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 15 ;
+	}
+#Time-maximum emission mass flux from agriculture soils
+'Time-maximum emission mass flux from agriculture soils' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 15 ;
+	}
+#Time-minimum emission mass flux from agriculture soils
+'Time-minimum emission mass flux from agriculture soils' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 15 ;
+	}
+#Time-standard-deviation emission mass flux from agriculture soils
+'Time-standard-deviation emission mass flux from agriculture soils' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 sourceSinkChemicalPhysicalProcess = 15 ;
 	}
 #Emission mass flux from agricultural waste burning
@@ -19402,11 +20053,75 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 16 ;
 	}
+#Time-mean emission mass flux from agricultural waste burning
+'Time-mean emission mass flux from agricultural waste burning' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 16 ;
+	}
+#Time-maximum emission mass flux from agricultural waste burning
+'Time-maximum emission mass flux from agricultural waste burning' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 16 ;
+	}
+#Time-minimum emission mass flux from agricultural waste burning
+'Time-minimum emission mass flux from agricultural waste burning' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 16 ;
+	}
+#Time-standard-deviation emission mass flux from agricultural waste burning
+'Time-standard-deviation emission mass flux from agricultural waste burning' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 sourceSinkChemicalPhysicalProcess = 16 ;
+	}
 #Emission mass flux from residential, commercial and other combustion
 'Emission mass flux from residential, commercial and other combustion' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 18 ;
+	}
+#Time-mean emission mass flux from residential, commercial and other combustion
+'Time-mean emission mass flux from residential, commercial and other combustion' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 18 ;
+	}
+#Time-maximum emission mass flux from residential, commercial and other combustion
+'Time-maximum emission mass flux from residential, commercial and other combustion' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 18 ;
+	}
+#Time-minimum emission mass flux from residential, commercial and other combustion
+'Time-minimum emission mass flux from residential, commercial and other combustion' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 18 ;
+	}
+#Time-standard-deviation emission mass flux from residential, commercial and other combustion
+'Time-standard-deviation emission mass flux from residential, commercial and other combustion' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 sourceSinkChemicalPhysicalProcess = 18 ;
 	}
 #Emission mass flux from power generation
@@ -19416,11 +20131,75 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 19 ;
 	}
+#Time-mean emission mass flux from power generation
+'Time-mean emission mass flux from power generation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 19 ;
+	}
+#Time-maximum emission mass flux from power generation
+'Time-maximum emission mass flux from power generation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 19 ;
+	}
+#Time-minimum emission mass flux from power generation
+'Time-minimum emission mass flux from power generation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 19 ;
+	}
+#Time-standard-deviation emission mass flux from power generation
+'Time-standard-deviation emission mass flux from power generation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 sourceSinkChemicalPhysicalProcess = 19 ;
+	}
 #Emission mass flux from fugitives
 'Emission mass flux from fugitives' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 21 ;
+	}
+#Time-mean emission mass flux from fugitives
+'Time-mean emission mass flux from fugitives' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 21 ;
+	}
+#Time-maximum emission mass flux from fugitives
+'Time-maximum emission mass flux from fugitives' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 21 ;
+	}
+#Time-minimum emission mass flux from fugitives
+'Time-minimum emission mass flux from fugitives' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 21 ;
+	}
+#Time-standard-deviation emission mass flux from fugitives
+'Time-standard-deviation emission mass flux from fugitives' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 sourceSinkChemicalPhysicalProcess = 21 ;
 	}
 #Emission mass flux from industrial process
@@ -19430,11 +20209,75 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 22 ;
 	}
+#Time-mean emission mass flux from industrial process
+'Time-mean emission mass flux from industrial process' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 22 ;
+	}
+#Time-maximum emission mass flux from industrial process
+'Time-maximum emission mass flux from industrial process' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 22 ;
+	}
+#Time-minimum emission mass flux from industrial process
+'Time-minimum emission mass flux from industrial process' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 22 ;
+	}
+#Time-standard-deviation emission mass flux from industrial process
+'Time-standard-deviation emission mass flux from industrial process' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 sourceSinkChemicalPhysicalProcess = 22 ;
+	}
 #Emission mass flux from solvents
 'Emission mass flux from solvents' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 23 ;
+	}
+#Time-mean emission mass flux from solvents
+'Time-mean emission mass flux from solvents' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 23 ;
+	}
+#Time-maximum emission mass flux from solvents
+'Time-maximum emission mass flux from solvents' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 23 ;
+	}
+#Time-minimum emission mass flux from solvents
+'Time-minimum emission mass flux from solvents' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 23 ;
+	}
+#Time-standard-deviation emission mass flux from solvents
+'Time-standard-deviation emission mass flux from solvents' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 sourceSinkChemicalPhysicalProcess = 23 ;
 	}
 #Emission mass flux from ships
@@ -19444,11 +20287,75 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 24 ;
 	}
+#Time-mean emission mass flux from ships
+'Time-mean emission mass flux from ships' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 24 ;
+	}
+#Time-maximum emission mass flux from ships
+'Time-maximum emission mass flux from ships' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 24 ;
+	}
+#Time-minimum emission mass flux from ships
+'Time-minimum emission mass flux from ships' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 24 ;
+	}
+#Time-standard-deviation emission mass flux from ships
+'Time-standard-deviation emission mass flux from ships' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 sourceSinkChemicalPhysicalProcess = 24 ;
+	}
 #Emission mass flux from wastes (solid and water)
 'Emission mass flux from wastes (solid and water)' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 25 ;
+	}
+#Time-mean emission mass flux from wastes (solid and water)
+'Time-mean emission mass flux from wastes (solid and water)' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 25 ;
+	}
+#Time-maximum emission mass flux from wastes (solid and water)
+'Time-maximum emission mass flux from wastes (solid and water)' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 25 ;
+	}
+#Time-minimum emission mass flux from wastes (solid and water)
+'Time-minimum emission mass flux from wastes (solid and water)' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 25 ;
+	}
+#Time-standard-deviation emission mass flux from wastes (solid and water)
+'Time-standard-deviation emission mass flux from wastes (solid and water)' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 sourceSinkChemicalPhysicalProcess = 25 ;
 	}
 #Emission mass flux from off-road transportation
@@ -19458,11 +20365,75 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 27 ;
 	}
+#Time-mean emission mass flux from off-road transportation
+'Time-mean emission mass flux from off-road transportation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 27 ;
+	}
+#Time-maximum emission mass flux from off-road transportation
+'Time-maximum emission mass flux from off-road transportation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 27 ;
+	}
+#Time-minimum emission mass flux from off-road transportation
+'Time-minimum emission mass flux from off-road transportation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 27 ;
+	}
+#Time-standard-deviation emission mass flux from off-road transportation
+'Time-standard-deviation emission mass flux from off-road transportation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 sourceSinkChemicalPhysicalProcess = 27 ;
+	}
 #Emission mass flux from road transportation
 'Emission mass flux from road transportation' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 26 ;
+	}
+#Time-mean emission mass flux from road transportation
+'Time-mean emission mass flux from road transportation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 26 ;
+	}
+#Time-maximum emission mass flux from road transportation
+'Time-maximum emission mass flux from road transportation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 26 ;
+	}
+#Time-minimum emission mass flux from road transportation
+'Time-minimum emission mass flux from road transportation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 26 ;
+	}
+#Time-standard-deviation emission mass flux from road transportation
+'Time-standard-deviation emission mass flux from road transportation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 sourceSinkChemicalPhysicalProcess = 26 ;
 	}
 #Emission mass flux from super power stations
@@ -19472,11 +20443,75 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 20 ;
 	}
+#Time-mean emission mass flux from super power stations
+'Time-mean emission mass flux from super power stations' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 20 ;
+	}
+#Time-maximum emission mass flux from super power stations
+'Time-maximum emission mass flux from super power stations' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 20 ;
+	}
+#Time-minimum emission mass flux from super power stations
+'Time-minimum emission mass flux from super power stations' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 20 ;
+	}
+#Time-standard-deviation emission mass flux from super power stations
+'Time-standard-deviation emission mass flux from super power stations' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 sourceSinkChemicalPhysicalProcess = 20 ;
+	}
 #Emission mass flux from settlements
 'Emission mass flux from settlements' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 36 ;
+	}
+#Time-mean emission mass flux from settlements
+'Time-mean emission mass flux from settlements' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 36 ;
+	}
+#Time-maximum emission mass flux from settlements
+'Time-maximum emission mass flux from settlements' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 36 ;
+	}
+#Time-minimum emission mass flux from settlements
+'Time-minimum emission mass flux from settlements' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 36 ;
+	}
+#Time-standard-deviation emission mass flux from settlements
+'Time-standard-deviation emission mass flux from settlements' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 sourceSinkChemicalPhysicalProcess = 36 ;
 	}
 #Emission mass flux from volcanoes
@@ -19486,11 +20521,75 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
+#Time-mean emission mass flux from volcanoes
+'Time-mean emission mass flux from volcanoes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Time-maximum emission mass flux from volcanoes
+'Time-maximum emission mass flux from volcanoes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Time-minimum emission mass flux from volcanoes
+'Time-minimum emission mass flux from volcanoes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Time-standard-deviation emission mass flux from volcanoes
+'Time-standard-deviation emission mass flux from volcanoes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
 #Emission mass flux from wetlands
 'Emission mass flux from wetlands' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 10 ;
+	}
+#Time-mean emission mass flux from wetlands
+'Time-mean emission mass flux from wetlands' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 10 ;
+	}
+#Time-maximum emission mass flux from wetlands
+'Time-maximum emission mass flux from wetlands' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 10 ;
+	}
+#Time-minimum emission mass flux from wetlands
+'Time-minimum emission mass flux from wetlands' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 10 ;
+	}
+#Time-standard-deviation emission mass flux from wetlands
+'Time-standard-deviation emission mass flux from wetlands' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 sourceSinkChemicalPhysicalProcess = 10 ;
 	}
 #Net ecosystem exchange flux
@@ -19513,6 +20612,27 @@
 	 parameterNumber = 59 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Time-maximum net ecosystem exchange flux
+'Time-maximum net ecosystem exchange flux' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 59 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum net ecosystem exchange flux
+'Time-minimum net ecosystem exchange flux' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 59 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation net ecosystem exchange flux
+'Time-standard-deviation net ecosystem exchange flux' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 59 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Gross primary production flux
 'Gross primary production flux' = {
 	 discipline = 2 ;
@@ -19532,6 +20652,27 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 60 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-maximum gross primary production flux
+'Time-maximum gross primary production flux' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 60 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum gross primary production flux
+'Time-minimum gross primary production flux' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 60 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation gross primary production flux
+'Time-standard-deviation gross primary production flux' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 60 ;
+	 typeOfStatisticalProcessing = 6 ;
 	}
 #Ecosystem respiration flux
 'Ecosystem respiration flux' = {
@@ -19553,11 +20694,64 @@
 	 parameterNumber = 61 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Time-maximum ecosystem respiration flux
+'Time-maximum ecosystem respiration flux' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 61 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum ecosystem respiration flux
+'Time-minimum ecosystem respiration flux' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 61 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation ecosystem respiration flux
+'Time-standard-deviation ecosystem respiration flux' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 61 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Emission mass flux from bio fuel
 'Emission mass flux from bio fuel' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 8 ;
+	}
+#Time-mean emission mass flux from bio fuel
+'Time-mean emission mass flux from bio fuel' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 8 ;
+	}
+#Time-maximum emission mass flux from bio fuel
+'Time-maximum emission mass flux from bio fuel' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 8 ;
+	}
+#Time-minimum emission mass flux from bio fuel
+'Time-minimum emission mass flux from bio fuel' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 8 ;
+	}
+#Time-standard-deviation emission mass flux from bio fuel
+'Time-standard-deviation emission mass flux from bio fuel' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 sourceSinkChemicalPhysicalProcess = 8 ;
 	}
 #Emission mass flux from fossil fuel
@@ -19567,11 +20761,75 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 9 ;
 	}
+#Time-mean emission mass flux from fossil fuel
+'Time-mean emission mass flux from fossil fuel' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 9 ;
+	}
+#Time-maximum emission mass flux from fossil fuel
+'Time-maximum emission mass flux from fossil fuel' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 9 ;
+	}
+#Time-minimum emission mass flux from fossil fuel
+'Time-minimum emission mass flux from fossil fuel' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 9 ;
+	}
+#Time-standard-deviation emission mass flux from fossil fuel
+'Time-standard-deviation emission mass flux from fossil fuel' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 sourceSinkChemicalPhysicalProcess = 9 ;
+	}
 #Emission mass flux from other
 'Emission mass flux from other' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 0 ;
+	}
+#Time-mean emission mass flux from other
+'Time-mean emission mass flux from other' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 0 ;
+	}
+#Time-maximum emission mass flux from other
+'Time-maximum emission mass flux from other' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 0 ;
+	}
+#Time-minimum emission mass flux from other
+'Time-minimum emission mass flux from other' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 0 ;
+	}
+#Time-standard-deviation emission mass flux from other
+'Time-standard-deviation emission mass flux from other' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 sourceSinkChemicalPhysicalProcess = 0 ;
 	}
 #Emission mass flux from oceans
@@ -19581,6 +20839,38 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 11 ;
 	}
+#Time-mean emission mass flux from oceans
+'Time-mean emission mass flux from oceans' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 11 ;
+	}
+#Time-maximum emission mass flux from oceans
+'Time-maximum emission mass flux from oceans' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 11 ;
+	}
+#Time-minimum emission mass flux from oceans
+'Time-minimum emission mass flux from oceans' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 11 ;
+	}
+#Time-standard-deviation emission mass flux from oceans
+'Time-standard-deviation emission mass flux from oceans' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 sourceSinkChemicalPhysicalProcess = 11 ;
+	}
 #Emission mass flux from soil
 'Emission mass flux from soil' = {
 	 discipline = 0 ;
@@ -19588,11 +20878,75 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 37 ;
 	}
+#Time-mean emission mass flux from soil
+'Time-mean emission mass flux from soil' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 37 ;
+	}
+#Time-maximum emission mass flux from soil
+'Time-maximum emission mass flux from soil' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 37 ;
+	}
+#Time-minimum emission mass flux from soil
+'Time-minimum emission mass flux from soil' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 37 ;
+	}
+#Time-standard-deviation emission mass flux from soil
+'Time-standard-deviation emission mass flux from soil' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 sourceSinkChemicalPhysicalProcess = 37 ;
+	}
 #Emission mass flux from wild animals
 'Emission mass flux from wild animals' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 38 ;
+	}
+#Time-mean emission mass flux from wild animals
+'Time-mean emission mass flux from wild animals' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 38 ;
+	}
+#Time-maximum emission mass flux from wild animals
+'Time-maximum emission mass flux from wild animals' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 38 ;
+	}
+#Time-minimum emission mass flux from wild animals
+'Time-minimum emission mass flux from wild animals' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 38 ;
+	}
+#Time-standard-deviation emission mass flux from wild animals
+'Time-standard-deviation emission mass flux from wild animals' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 sourceSinkChemicalPhysicalProcess = 38 ;
 	}
 #Accumulated wet deposition mass flux
@@ -19615,11 +20969,71 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 59 ;
 	}
+#Time-mean aerosol number density
+'Time-mean aerosol number density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 59 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum aerosol number density
+'Time-maximum aerosol number density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 59 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum aerosol number density
+'Time-minimum aerosol number density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 59 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation aerosol number density
+'Time-standard-deviation aerosol number density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 59 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Mass mixing ratio from volcanoes
 'Mass mixing ratio from volcanoes' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Time-mean mass mixing ratio from volcanoes
+'Time-mean mass mixing ratio from volcanoes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Time-maximum mass mixing ratio from volcanoes
+'Time-maximum mass mixing ratio from volcanoes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Time-minimum mass mixing ratio from volcanoes
+'Time-minimum mass mixing ratio from volcanoes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Time-standard-deviation mass mixing ratio from volcanoes
+'Time-standard-deviation mass mixing ratio from volcanoes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
 #Total column vertically-integrated mass density from volcanoes
@@ -19631,11 +21045,83 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
+#Time-mean total column vertically-integrated mass density from volcanoes
+'Time-mean total column vertically-integrated mass density from volcanoes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Time-maximum total column vertically-integrated mass density from volcanoes
+'Time-maximum total column vertically-integrated mass density from volcanoes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Time-minimum total column vertically-integrated mass density from volcanoes
+'Time-minimum total column vertically-integrated mass density from volcanoes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Time-standard-deviation total column vertically-integrated mass density from volcanoes
+'Time-standard-deviation total column vertically-integrated mass density from volcanoes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
 #Dry deposition velocity from volcanoes
 'Dry deposition velocity from volcanoes' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 15 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Time-mean dry deposition velocity from volcanoes
+'Time-mean dry deposition velocity from volcanoes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Time-maximum dry deposition velocity from volcanoes
+'Time-maximum dry deposition velocity from volcanoes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Time-minimum dry deposition velocity from volcanoes
+'Time-minimum dry deposition velocity from volcanoes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Time-standard-deviation dry deposition velocity from volcanoes
+'Time-standard-deviation dry deposition velocity from volcanoes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
 #Aerosol optical depth
@@ -19644,11 +21130,67 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 102 ;
 	}
+#Time-mean aerosol optical depth
+'Time-mean aerosol optical depth' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum aerosol optical depth
+'Time-maximum aerosol optical depth' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum aerosol optical depth
+'Time-minimum aerosol optical depth' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation aerosol optical depth
+'Time-standard-deviation aerosol optical depth' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Single scattering albedo
 'Single scattering albedo' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 103 ;
+	}
+#Time-mean single scattering albedo
+'Time-mean single scattering albedo' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 103 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum single scattering albedo
+'Time-maximum single scattering albedo' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 103 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum single scattering albedo
+'Time-minimum single scattering albedo' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 103 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation single scattering albedo
+'Time-standard-deviation single scattering albedo' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 103 ;
+	 typeOfStatisticalProcessing = 6 ;
 	}
 #Asymmetry Factor
 'Asymmetry Factor' = {
@@ -19656,11 +21198,67 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 104 ;
 	}
+#Time-mean asymmetry Factor
+'Time-mean asymmetry Factor' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 104 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum asymmetry Factor
+'Time-maximum asymmetry Factor' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 104 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum asymmetry Factor
+'Time-minimum asymmetry Factor' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 104 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation asymmetry Factor
+'Time-standard-deviation asymmetry Factor' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 104 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Attenuated aerosol backscatter from top of atmosphere
 'Attenuated aerosol backscatter from top of atmosphere' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 107 ;
+	}
+#Time-mean attenuated aerosol backscatter from top of atmosphere
+'Time-mean attenuated aerosol backscatter from top of atmosphere' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 107 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum attenuated aerosol backscatter from top of atmosphere
+'Time-maximum attenuated aerosol backscatter from top of atmosphere' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 107 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum attenuated aerosol backscatter from top of atmosphere
+'Time-minimum attenuated aerosol backscatter from top of atmosphere' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 107 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation attenuated aerosol backscatter from top of atmosphere
+'Time-standard-deviation attenuated aerosol backscatter from top of atmosphere' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 107 ;
+	 typeOfStatisticalProcessing = 6 ;
 	}
 #Attenuated aerosol backscatter from ground
 'Attenuated aerosol backscatter from ground' = {
@@ -19668,17 +21266,105 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 108 ;
 	}
+#Time-mean attenuated aerosol backscatter from ground
+'Time-mean attenuated aerosol backscatter from ground' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 108 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum attenuated aerosol backscatter from ground
+'Time-maximum attenuated aerosol backscatter from ground' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 108 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum attenuated aerosol backscatter from ground
+'Time-minimum attenuated aerosol backscatter from ground' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 108 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation attenuated aerosol backscatter from ground
+'Time-standard-deviation attenuated aerosol backscatter from ground' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 108 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Aerosol extinction coefficient
 'Aerosol extinction coefficient' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 105 ;
 	}
+#Time-mean aerosol extinction coefficient
+'Time-mean aerosol extinction coefficient' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 105 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum aerosol extinction coefficient
+'Time-maximum aerosol extinction coefficient' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 105 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum aerosol extinction coefficient
+'Time-minimum aerosol extinction coefficient' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 105 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation aerosol extinction coefficient
+'Time-standard-deviation aerosol extinction coefficient' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 105 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Emission mass flux from commercial buildings heating
 'Emission mass flux from commercial buildings heating' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 30 ;
+	}
+#Time-mean emission mass flux from commercial buildings heating
+'Time-mean emission mass flux from commercial buildings heating' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 30 ;
+	}
+#Time-maximum emission mass flux from commercial buildings heating
+'Time-maximum emission mass flux from commercial buildings heating' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 30 ;
+	}
+#Time-minimum emission mass flux from commercial buildings heating
+'Time-minimum emission mass flux from commercial buildings heating' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 30 ;
+	}
+#Time-standard-deviation emission mass flux from commercial buildings heating
+'Time-standard-deviation emission mass flux from commercial buildings heating' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 sourceSinkChemicalPhysicalProcess = 30 ;
 	}
 #Emission mass flux from residential heating
@@ -19688,11 +21374,75 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 31 ;
 	}
+#Time-mean emission mass flux from residential heating
+'Time-mean emission mass flux from residential heating' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 31 ;
+	}
+#Time-maximum emission mass flux from residential heating
+'Time-maximum emission mass flux from residential heating' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 31 ;
+	}
+#Time-minimum emission mass flux from residential heating
+'Time-minimum emission mass flux from residential heating' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 31 ;
+	}
+#Time-standard-deviation emission mass flux from residential heating
+'Time-standard-deviation emission mass flux from residential heating' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 sourceSinkChemicalPhysicalProcess = 31 ;
+	}
 #Emission mass flux from oil refineries and transformation industry
 'Emission mass flux from oil refineries and transformation industry' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 32 ;
+	}
+#Time-mean emission mass flux from oil refineries and transformation industry
+'Time-mean emission mass flux from oil refineries and transformation industry' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 32 ;
+	}
+#Time-maximum emission mass flux from oil refineries and transformation industry
+'Time-maximum emission mass flux from oil refineries and transformation industry' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 32 ;
+	}
+#Time-minimum emission mass flux from oil refineries and transformation industry
+'Time-minimum emission mass flux from oil refineries and transformation industry' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 32 ;
+	}
+#Time-standard-deviation emission mass flux from oil refineries and transformation industry
+'Time-standard-deviation emission mass flux from oil refineries and transformation industry' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 sourceSinkChemicalPhysicalProcess = 32 ;
 	}
 #Emission mass flux from gas production
@@ -19702,11 +21452,75 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 33 ;
 	}
+#Time-mean emission mass flux from gas production
+'Time-mean emission mass flux from gas production' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 33 ;
+	}
+#Time-maximum emission mass flux from gas production
+'Time-maximum emission mass flux from gas production' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 33 ;
+	}
+#Time-minimum emission mass flux from gas production
+'Time-minimum emission mass flux from gas production' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 33 ;
+	}
+#Time-standard-deviation emission mass flux from gas production
+'Time-standard-deviation emission mass flux from gas production' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 sourceSinkChemicalPhysicalProcess = 33 ;
+	}
 #Mass mixing ratio difference
 'Mass mixing ratio difference' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
+#Time-mean mass mixing ratio difference
+'Time-mean mass mixing ratio difference' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
+#Time-maximum mass mixing ratio difference
+'Time-maximum mass mixing ratio difference' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
+#Time-minimum mass mixing ratio difference
+'Time-minimum mass mixing ratio difference' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
+#Time-standard-deviation mass mixing ratio difference
+'Time-standard-deviation mass mixing ratio difference' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 typeOfGeneratingProcess = 20 ;
 	}
 #Mass mixing ratio from volcanoes difference
@@ -19717,11 +21531,79 @@
 	 typeOfGeneratingProcess = 20 ;
 	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
+#Time-mean mass mixing ratio from volcanoes difference
+'Time-mean mass mixing ratio from volcanoes difference' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfGeneratingProcess = 20 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Time-maximum mass mixing ratio from volcanoes difference
+'Time-maximum mass mixing ratio from volcanoes difference' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfGeneratingProcess = 20 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Time-minimum mass mixing ratio from volcanoes difference
+'Time-minimum mass mixing ratio from volcanoes difference' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfGeneratingProcess = 20 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Time-standard-deviation mass mixing ratio from volcanoes difference
+'Time-standard-deviation mass mixing ratio from volcanoes difference' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfGeneratingProcess = 20 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
 #Emission mass flux from wild fires
 'Emission mass flux from wild fires' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
+	 sourceSinkChemicalPhysicalProcess = 5 ;
+	}
+#Time-mean emission mass flux from wild fires
+'Time-mean emission mass flux from wild fires' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 5 ;
+	}
+#Time-maximum emission mass flux from wild fires
+'Time-maximum emission mass flux from wild fires' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 5 ;
+	}
+#Time-minimum emission mass flux from wild fires
+'Time-minimum emission mass flux from wild fires' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 5 ;
+	}
+#Time-standard-deviation emission mass flux from wild fires
+'Time-standard-deviation emission mass flux from wild fires' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
 	 sourceSinkChemicalPhysicalProcess = 5 ;
 	}
 #Sink mass flux
@@ -19730,17 +21612,101 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 82 ;
 	}
+#Time-mean sink mass flux
+'Time-mean sink mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 82 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum sink mass flux
+'Time-maximum sink mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 82 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum sink mass flux
+'Time-minimum sink mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 82 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation sink mass flux
+'Time-standard-deviation sink mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 82 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Source mass flux
 'Source mass flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 83 ;
 	}
+#Time-mean source mass flux
+'Time-mean source mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 83 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum source mass flux
+'Time-maximum source mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 83 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum source mass flux
+'Time-minimum source mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 83 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation source mass flux
+'Time-standard-deviation source mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 83 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Absorption aerosol optical thickness
 'Absorption aerosol optical thickness' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 112 ;
+	}
+#Time-mean absorption aerosol optical thickness
+'Time-mean absorption aerosol optical thickness' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 112 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum absorption aerosol optical thickness
+'Time-maximum absorption aerosol optical thickness' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 112 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum absorption aerosol optical thickness
+'Time-minimum absorption aerosol optical thickness' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 112 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation absorption aerosol optical thickness
+'Time-standard-deviation absorption aerosol optical thickness' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 112 ;
+	 typeOfStatisticalProcessing = 6 ;
 	}
 #Tropospheric column vertically-integrated mass density
 'Tropospheric column vertically-integrated mass density' = {
@@ -19750,6 +21716,42 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 7 ;
 	}
+#Time-mean tropospheric column vertically-integrated mass density
+'Time-mean tropospheric column vertically-integrated mass density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 7 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum tropospheric column vertically-integrated mass density
+'Time-maximum tropospheric column vertically-integrated mass density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 7 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum tropospheric column vertically-integrated mass density
+'Time-minimum tropospheric column vertically-integrated mass density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 7 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation tropospheric column vertically-integrated mass density
+'Time-standard-deviation tropospheric column vertically-integrated mass density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 7 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Stratospheric column vertically-integrated mass density
 'Stratospheric column vertically-integrated mass density' = {
 	 discipline = 0 ;
@@ -19758,11 +21760,75 @@
 	 typeOfFirstFixedSurface = 7 ;
 	 typeOfSecondFixedSurface = 36 ;
 	}
+#Time-mean stratospheric column vertically-integrated mass density
+'Time-mean stratospheric column vertically-integrated mass density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfSecondFixedSurface = 36 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum stratospheric column vertically-integrated mass density
+'Time-maximum stratospheric column vertically-integrated mass density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfSecondFixedSurface = 36 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum stratospheric column vertically-integrated mass density
+'Time-minimum stratospheric column vertically-integrated mass density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfSecondFixedSurface = 36 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation stratospheric column vertically-integrated mass density
+'Time-standard-deviation stratospheric column vertically-integrated mass density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfSecondFixedSurface = 36 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Aerosol unattenuated backscatter coefficient
 'Aerosol unattenuated backscatter coefficient' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 113 ;
+	}
+#Time-mean aerosol unattenuated backscatter coefficient
+'Time-mean aerosol unattenuated backscatter coefficient' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 113 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum aerosol unattenuated backscatter coefficient
+'Time-maximum aerosol unattenuated backscatter coefficient' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 113 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum aerosol unattenuated backscatter coefficient
+'Time-minimum aerosol unattenuated backscatter coefficient' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 113 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation aerosol unattenuated backscatter coefficient
+'Time-standard-deviation aerosol unattenuated backscatter coefficient' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 113 ;
+	 typeOfStatisticalProcessing = 6 ;
 	}
 #Potential of hydrogen
 'Potential of hydrogen' = {
@@ -19784,6 +21850,12 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 2 ;
+	}
+#Loss rate due to OH
+'Loss rate due to OH' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 19 ;
 	}
 #Pressure tendency
 'Pressure tendency' = {

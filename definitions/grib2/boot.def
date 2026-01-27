@@ -9,9 +9,10 @@
 
 # This gets updated twice a year by WMO.
 # See https://community.wmo.int/en/wis/latest-version
-constant tablesVersionLatestOfficial = 35 : edition_specific;
+#     https://wmo.int/latest-version
+constant tablesVersionLatestOfficial = 36 : edition_specific;
 # If this is different from the official version, then it is the pre-operational version
-constant tablesVersionLatest = 35 : edition_specific;
+constant tablesVersionLatest = 36 : edition_specific;
 
 constant false = 0 : hidden;
 constant true = 1 : hidden;
@@ -63,6 +64,4 @@ transient paramIdForConversion = 0;
 # ECC-2137
 transient convertingFrom = "unknown" : hidden;
 
-if (isGridded) {
-    meta gridSpec grid_spec(): hidden, no_copy;
-}
+meta gridSpec grid_spec(): hidden, no_copy;

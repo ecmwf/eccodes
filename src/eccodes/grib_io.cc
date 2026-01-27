@@ -10,37 +10,11 @@
 
 #include "grib_api_internal.h"
 #include "ExceptionHandler.h"
+#include "sync/Mutex.h"
 
-#if GRIB_PTHREADS
-static pthread_once_t once    = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex1, &attr);
-    pthread_mutex_init(&mutex2, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex1;
-static omp_nest_lock_t mutex2;
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_grib_io_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex1);
-            omp_init_nest_lock(&mutex2);
-            once = 1;
-        }
-    }
-}
-#endif
+static eccodes::sync::Mutex mutex;
 
+#define IDENTIFIER_SIZE 4  // Size of the identifiers like GRIB, BUFR, etc.
 
 #define GRIB 0x47524942
 #define BUDG 0x42554447
@@ -868,8 +842,10 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
     unsigned char c;
     int err             = 0;
     unsigned long magic = 0;
+    off_t offset        = r->offset;
 
     while (r->read(r->read_data, &c, 1, &err) == 1 && err == 0) {
+        offset++;
         magic <<= 8;
         magic |= c;
 
@@ -877,6 +853,10 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
             case GRIB:
                 if (grib_ok) {
                     err = read_GRIB(r, no_alloc);
+                    // ECC-2167: Offset support in streams (if ftello() fails)
+                    if (r->offset < 0) { // ftello() returns -1
+                        r->offset = offset - IDENTIFIER_SIZE; // Adjust offset manually by subtracting 4 bytes read for 'GRIB'
+                    }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
@@ -884,6 +864,9 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
             case BUFR:
                 if (bufr_ok) {
                     err = read_BUFR(r, no_alloc);
+                    if (r->offset < 0) {
+                        r->offset = offset - IDENTIFIER_SIZE;
+                    }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
@@ -905,18 +888,27 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
             case BUDG:
                 if (grib_ok) {
                     err = read_PSEUDO(r, "BUDG", no_alloc);
+                    if (r->offset < 0) {
+                        r->offset = offset - IDENTIFIER_SIZE;
+                    }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
             case DIAG:
                 if (grib_ok) {
                     err = read_PSEUDO(r, "DIAG", no_alloc);
+                    if (r->offset < 0) {
+                        r->offset = offset - IDENTIFIER_SIZE;
+                    }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
             case TIDE:
                 if (grib_ok) {
                     err = read_PSEUDO(r, "TIDE", no_alloc);
+                    if (r->offset < 0) {
+                        r->offset = offset - IDENTIFIER_SIZE;
+                    }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
@@ -928,23 +920,15 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
 
 static int read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
 {
-    int result = 0;
-
 #ifndef ECCODES_EACH_THREAD_OWN_FILE
     /* If several threads can open the same file, then we need the locks
      * so each thread gets its own message. Otherwise if threads are passed
      * different files, then the lock is not needed
      */
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex1);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 #endif
 
-    result = ecc_read_any(r, no_alloc, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
-
-#ifndef ECCODES_EACH_THREAD_OWN_FILE
-    GRIB_MUTEX_UNLOCK(&mutex1);
-#endif
-    return result;
+    return ecc_read_any(r, no_alloc, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
 }
 
 static int read_any_gts(reader* r)
@@ -959,8 +943,10 @@ static int read_any_gts(reader* r)
     size_t message_size = 0;
     size_t already_read = 0;
     int i               = 0;
+    off_t offset        = r->offset;
 
     while (r->read(r->read_data, &c, 1, &err) == 1 && err == 0) {
+        offset++;
         magic <<= 8;
         magic |= c;
         magic &= 0xffffffff;
@@ -971,7 +957,8 @@ static int read_any_gts(reader* r)
             tmp[i++] = 0x0d;
             tmp[i++] = 0x0a;
 
-            r->offset = r->tell(r->read_data) - 4;
+            off_t rTell = r->tell(r->read_data);
+            r->offset = (rTell != -1 ? rTell : offset) - 4;
 
             if (r->read(r->read_data, &tmp[i], 6, &err) != 6 || err)
                 return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
@@ -1018,8 +1005,10 @@ static int read_any_taf(reader* r)
     size_t message_size = 0;
     size_t already_read = 0;
     int i               = 0;
+    off_t offset        = r->offset;
 
     while (r->read(r->read_data, &c, 1, &err) == 1 && err == 0) {
+        offset++;
         magic <<= 8;
         magic |= c;
         magic &= 0xffffffff;
@@ -1030,7 +1019,8 @@ static int read_any_taf(reader* r)
             tmp[i++] = 0x46; //F
             tmp[i++] = 0x20; //space
 
-            r->offset = r->tell(r->read_data) - 4;
+            off_t rTell = r->tell(r->read_data);
+            r->offset = (rTell != -1 ? rTell : offset) - 4;
 
             already_read = 4;
             message_size = already_read;
@@ -1066,8 +1056,10 @@ static int read_any_metar(reader* r)
     size_t message_size = 0;
     size_t already_read = 0;
     int i               = 0;
+    off_t offset        = r->offset;
 
     while (r->read(r->read_data, &c, 1, &err) == 1 && err == 0) {
+        offset++;
         magic <<= 8;
         magic |= c;
         magic &= 0xffffffff;
@@ -1082,9 +1074,10 @@ static int read_any_metar(reader* r)
                 tmp[i++] = 0x41; // A
                 tmp[i++] = 'R';
 
-                r->offset = r->tell(r->read_data) - 4;
-
                 already_read = 5;
+                off_t rTell = r->tell(r->read_data);
+                r->offset = (rTell != -1 ? rTell : offset) - already_read;
+                
                 message_size = already_read;
                 while (r->read(r->read_data, &c, 1, &err) == 1 && err == 0) {
                     message_size++;
@@ -1187,7 +1180,7 @@ static int ecc_wmo_read_any_from_file(FILE* f, void* buffer, size_t* len, off_t*
     r.seek            = &stdio_seek;
     r.seek_from_start = &stdio_seek_from_start;
     r.tell            = &stdio_tell;
-    r.offset          = 0;
+    r.offset          = *offset;
     r.message_size    = 0;
 
     err  = read_any(&r, no_alloc, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
@@ -1197,6 +1190,10 @@ static int ecc_wmo_read_any_from_file(FILE* f, void* buffer, size_t* len, off_t*
     return err;
 }
 
+int wmo_read_any_from_file_with_offset(FILE* f, void* buffer, size_t* len, off_t* offset)
+{
+    return ecc_wmo_read_any_from_file(f, buffer, len, offset, /*no_alloc=*/0, 1, 1, 1, 1);
+}
 int wmo_read_any_from_file(FILE* f, void* buffer, size_t* len)
 {
     off_t offset = 0;
