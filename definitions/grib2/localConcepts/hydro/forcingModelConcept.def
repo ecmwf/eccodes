@@ -5,3 +5,4 @@
 'era5' = { forcingModelCode = 5; }
 'seas' = { forcingModelCode = 6; }
 'obs' = { forcingModelCode = 7; }
+'sps' = { forcingModelCode = 8; }
