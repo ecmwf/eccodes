@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
 # ---------------------------------------------------------
 # This is the test for JIRA issue ECC-2188
 # Create codes handle from stream
