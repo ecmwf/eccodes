@@ -1,5 +1,5 @@
 
-# MODEL ifs (ID range: 1146-1163)
+# ifs (ID range: 1146-1163)
 'ifs cy41r2' = {inputProcessIdentifier=1146;}
 'ifs cy43r1' = {inputProcessIdentifier=1147;}
 'ifs cy43r3' = {inputProcessIdentifier=1148;}
@@ -19,5 +19,5 @@
 'ifs cy50r2' = {inputProcessIdentifier=1162;}
 'ifs cy50r3' = {inputProcessIdentifier=1163;}
 
-# MODEL cosmo (ID range: 3131-3131)
+# cosmo (ID range: 3131-3131)
 'cosmo' = {inputProcessIdentifier=3131;}

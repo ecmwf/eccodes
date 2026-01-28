@@ -1,5 +1,5 @@
 
-# MODEL ifs (ID range: 1146-1163)
+# ifs (ID range: 1146-1163)
 'ifs' = {inputProcessIdentifier=1146;}
 'ifs' = {inputProcessIdentifier=1147;}
 'ifs' = {inputProcessIdentifier=1148;}
@@ -19,5 +19,5 @@
 'ifs' = {inputProcessIdentifier=1162;}
 'ifs' = {inputProcessIdentifier=1163;}
 
-# MODEL cosmo (ID range: 3131-3131)
+# cosmo (ID range: 3131-3131)
 'cosmo' = {inputProcessIdentifier=3131;}

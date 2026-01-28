@@ -4,6 +4,7 @@ import yaml
 import shutil
 import os
 import sys
+import argparse
 from jsonschema import validate, ValidationError
 
 # =========================================================
@@ -24,6 +25,27 @@ ENABLE_COPY = True
 DEST_FOLDERS = [
     "grib2/localConcepts/hydro",
 ]
+
+# =========================================================
+# CLI
+# =========================================================
+parser = argparse.ArgumentParser(
+    description=f"Generate {NAME_OUTPUT} and {VERSION_OUTPUT} from YAML"
+)
+
+parser.add_argument(
+    "--dry-run",
+    action="store_true",
+    help="Process YAML but do not write files"
+)
+
+parser.add_argument(
+    "--validate-only",
+    action="store_true",
+    help="Only validate YAML and exit"
+)
+
+args = parser.parse_args()
 
 # =========================================================
 # YAML Schema
@@ -97,6 +119,10 @@ try:
     validate(instance=data, schema=SCHEMA)
 except ValidationError as e:
     sys.exit(f"YAML SCHEMA VALIDATION ERROR:\n{e.message}")
+
+if args.validate_only:
+    print("YAML validation successful.")
+    sys.exit(0)
 
 # =========================================================
 # Build blocks
@@ -173,7 +199,8 @@ for block in blocks:
     end_id = max(ids)
 
     prefix = "\n" if ADD_BLANK_LINE_BEFORE_MODEL else ""
-    header = f"{prefix}# MODEL {model}"
+    #header = f"{prefix}# MODEL {model}"
+    header = f"{prefix}# {model}"
     if INCLUDE_ID_RANGE_IN_COMMENT:
         header += f" (ID range: {start_id}-{end_id})"
     header += "\n"
@@ -200,21 +227,25 @@ for block in blocks:
 # =========================================================
 # Write files
 # =========================================================
-with open(NAME_OUTPUT, "w") as f:
-    f.writelines(name_lines)
-print(f"Created file: {NAME_OUTPUT}")
+if args.dry_run:
+    print("Dry run enabled — no files written.")
+else:
+    for path in (NAME_OUTPUT, VERSION_OUTPUT):
+        d = os.path.dirname(path)
+        if d:
+            os.makedirs(d, exist_ok=True)
 
-with open(VERSION_OUTPUT, "w") as f:
-    f.writelines(version_lines)
-print(f"Created file: {VERSION_OUTPUT}")
+    with open(NAME_OUTPUT, "w") as f:
+        f.writelines(name_lines)
+    print(f"Created file: {NAME_OUTPUT}")
 
-# =========================================================
-# Optional copy
-# =========================================================
-if ENABLE_COPY:
-    for folder in DEST_FOLDERS:
-        os.makedirs(folder, exist_ok=True)
-        shutil.copy(NAME_OUTPUT, folder)
-        shutil.copy(VERSION_OUTPUT, folder)
+    with open(VERSION_OUTPUT, "w") as f:
+        f.writelines(version_lines)
+    print(f"Created file: {VERSION_OUTPUT}")
 
+    if ENABLE_COPY:
+        for folder in DEST_FOLDERS:
+            os.makedirs(folder, exist_ok=True)
+            shutil.copy(NAME_OUTPUT, folder)
+            shutil.copy(VERSION_OUTPUT, folder)
 
