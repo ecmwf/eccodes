@@ -166,9 +166,11 @@ int main(int argc, char** argv)
     err = test_codes_handle_from_stream(argv[1]);
     if (err != 0) return err;
 
-    // TODO(maee): Check why does it fail Windows?
-    // err = test_codes_handle_from_stream_with_offset(argv[1]);
-    // if (err != 0) return err;
+    // TODO(maee): Check why this fails on Windows?
+#ifndef ECCODES_ON_WINDOWS
+    err = test_codes_handle_from_stream_with_offset(argv[1]);
+    if (err != 0) return err;
+#endif
 
     return 0;
 }

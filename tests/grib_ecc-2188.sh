@@ -11,12 +11,8 @@
 . ./include.ctest.sh
 
 # ---------------------------------------------------------
-# This is the test for JIRA issue ECC-XXXX
-# < Add issue summary here >
+# This is the test for JIRA issue ECC-2188
+# Create codes handle from stream
 # ---------------------------------------------------------
 
-REDIRECT=/dev/null
-
-label="prod_ecc-2188_test"  # Change prod to bufr or grib etc
-
-${test_dir}/grib_ecc-2188 $data_dir/pad.grib
+$EXEC ${test_dir}/grib_ecc-2188 $data_dir/pad.grib
