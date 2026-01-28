@@ -54,6 +54,7 @@ for model_entry in models:
         model_name = model_entry["name"]
         start_id = int(model_entry["start"])
         versions = model_entry.get("versions", [])
+        block_extra = model_entry.get("extra_keys", {})
     except KeyError as e:
         sys.exit(f"Missing required key in model entry: {e}")
 
@@ -61,12 +62,18 @@ for model_entry in models:
     current_id = start_id
 
     for v in versions:
-        if v is None:
-            version = model_name
+        # Determine version string and per-version extra_keys
+        if isinstance(v, dict):
+            version = v.get("version", model_name)
+            version_extra = v.get("extra_keys", {})
         else:
-            version = str(v).strip()
+            version = str(v).strip() if v is not None else model_name
+            version_extra = {}
 
-        entries.append((model_name, version, current_id))
+        # Merge block-level and version-level extra keys
+        combined_extra = {**block_extra, **version_extra}
+
+        entries.append((model_name, version, current_id, combined_extra))
         current_id += 1
 
     blocks.append({
@@ -87,8 +94,8 @@ used_ranges = []
 
 for block in blocks:
     start_id = block["start_id"]
-    count = len(block["entries"])
-    end_id = start_id + count - 1
+    entries = block["entries"]
+    end_id = entries[-1][2] if entries else start_id
 
     for used_start, used_end, used_model in used_ranges:
         if not (end_id < used_start or start_id > used_end):
@@ -108,35 +115,35 @@ version_lines = []
 
 for block in blocks:
     model = block["model"]
-    start_id = block["start_id"]
     entries = block["entries"]
+    start_id = entries[0][2] if entries else 0
     end_id = entries[-1][2] if entries else start_id
 
     prefix = "\n" if ADD_BLANK_LINE_BEFORE_MODEL else ""
     comment = f"{prefix}# MODEL {model}"
-
     if INCLUDE_ID_RANGE_IN_COMMENT:
         comment += f" (ID range: {start_id}-{end_id})"
-
     comment += "\n"
 
     name_lines.append(comment)
     version_lines.append(comment)
 
-    for model_name, version, id_val in entries:
-        # inputModelNameConcept.def
+    for model_name, version, id_val, extra_keys in entries:
+        extra_str = "".join([f"{k}={v};" for k, v in extra_keys.items()]) if extra_keys else ""
+
+        # inputModelNameConcept.def always uses just the model name
         name_lines.append(
-            f"'{model_name}' = {{inputProcessIdentifier={id_val};}}\n"
+            f"'{model_name}' = {{inputProcessIdentifier={id_val};{extra_str}}}\n"
         )
 
-        # inputModelVersionConcept.def
+        # inputModelVersionConcept.def includes version unless same as model
         if version == model_name:
             version_lines.append(
-                f"'{model_name}' = {{inputProcessIdentifier={id_val};}}\n"
+                f"'{model_name}' = {{inputProcessIdentifier={id_val};{extra_str}}}\n"
             )
         else:
             version_lines.append(
-                f"'{model_name} {version}' = {{inputProcessIdentifier={id_val};}}\n"
+                f"'{model_name} {version}' = {{inputProcessIdentifier={id_val};{extra_str}}}\n"
             )
 
 # =========================================================

@@ -1,3 +1,17 @@
+# YAML file to create inputModelNameConcept.def and inputModelVersionConcept.def
+#
+#models:
+#  - name: XZ
+#    start: 1
+#    extra_keys:
+#      class: od        # block-level → applies to all versions unless overridden
+#    versions:
+#      - version: v1.0.0
+#        extra_keys:
+#          centre: 98     # per-version → overrides/adds to block-level
+#      - version: v1.0.1                # no per-version extra_keys
+
+
 models:
   - name: ifs
     start: 1000
