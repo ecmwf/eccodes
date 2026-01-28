@@ -980,7 +980,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                 save_error(c, name);
             }
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 == len2) {
-                int imaxdiff = 0;
+                size_t imaxdiff = 0;
                 double diff;
                 double *pv1, *pv2;
                 maxdiff   = 0;
@@ -1013,7 +1013,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                             if (!compareAbsolute)
                                 printf(" max");
                             printf(" relative diff. = %g", relative_error(dval1[imaxdiff], dval2[imaxdiff], value_tolerance));
-                            printf("\n\tmax diff. element %d: %.20e %.20e",
+                            printf("\n\tmax diff. element %zu: %.20e %.20e",
                                    imaxdiff, dval1[imaxdiff], dval2[imaxdiff]);
                             printf("\n\ttolerance=%.16e", value_tolerance);
                         }
@@ -1021,7 +1021,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                             /* One or both values are missing */
                             char* svalA = double_as_string(c, dval1[imaxdiff]);
                             char* svalB = double_as_string(c, dval2[imaxdiff]);
-                            printf("\tdiff. element %d: %s %s", imaxdiff, svalA, svalB);
+                            printf("\tdiff. element %zu: %s %s", imaxdiff, svalA, svalB);
                             grib_context_free(c, svalA);
                             grib_context_free(c, svalB);
                         }
