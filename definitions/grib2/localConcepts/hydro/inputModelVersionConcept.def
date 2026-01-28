@@ -1,0 +1,7 @@
+
+# MODEL ifs (ID range: 1000-1001)
+'ifs cy41r2' = {inputProcessIdentifier=1000;}
+'ifs cy43r1' = {inputProcessIdentifier=1001;}
+
+# MODEL cosmo (ID range: 3131-3131)
+'cosmo v1' = {inputProcessIdentifier=3131;}

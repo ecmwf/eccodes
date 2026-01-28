@@ -30,16 +30,13 @@ alias mars.model = modelName;
 if (defined(stream) && (stream is "rfsd")){
  alias mars.configuration = configuration;
 }
-#alias mars.origin = inputOriginatingCentre;
 
-# last three digits specify the model version of the input
-# leading 1 to 2 digits the model name of the input
-meta forcingModelCode evaluate(inputProcessIdentifier/1000);
-concept forcingModel(unknown, "forcingModelConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
+concept inputModelName(unknown, "inputModelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
+concept inputModelVersion(unknown, "inputModelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
 
-if ( forcingModel is "obs" ){
- meta originForcing sprintf("%s",forcingModel);
+if ( inputModelName is "obs" ){
+ meta forcingModel sprintf("%s",inputModelName);
  } else {
- meta originForcing sprintf("%s-%s",inputOriginatingCentre,forcingModel);
+ meta forcingModel sprintf("%s-%s",inputOriginatingCentre,inputModelName);
 }
-alias mars.forcing = originForcing;
+alias mars.forcing = forcingModel;

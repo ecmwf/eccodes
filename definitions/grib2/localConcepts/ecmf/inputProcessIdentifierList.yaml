@@ -1,0 +1,12 @@
+models:
+  - name: ifs
+    start: 1000
+    versions:
+      - cy41r2
+      - cy43r1
+
+  - name: cosmo
+    start: 3131
+    versions:
+      - v1
+
