@@ -1,7 +1,23 @@
 
-# MODEL ifs (ID range: 1000-1001)
-'ifs cy41r2' = {inputProcessIdentifier=1000;}
-'ifs cy43r1' = {inputProcessIdentifier=1001;}
+# MODEL ifs (ID range: 1146-1163)
+'ifs cy41r2' = {inputProcessIdentifier=1146;}
+'ifs cy43r1' = {inputProcessIdentifier=1147;}
+'ifs cy43r3' = {inputProcessIdentifier=1148;}
+'ifs cy45r1' = {inputProcessIdentifier=1149;}
+'ifs cy46r1' = {inputProcessIdentifier=1150;}
+'ifs cy47r1' = {inputProcessIdentifier=1151;}
+'ifs cy47r2' = {inputProcessIdentifier=1152;}
+'ifs cy47r3' = {inputProcessIdentifier=1153;}
+'ifs cy48r1' = {inputProcessIdentifier=1154;}
+'ifs cy48r2' = {inputProcessIdentifier=1155;}
+'ifs climatedt' = {inputProcessIdentifier=1156;}
+'ifs cy48r3' = {inputProcessIdentifier=1157;}
+'ifs cy49r1' = {inputProcessIdentifier=1158;}
+'ifs cy49r2' = {inputProcessIdentifier=1159;}
+'ifs cy49r3' = {inputProcessIdentifier=1160;}
+'ifs cy50r1' = {inputProcessIdentifier=1161;}
+'ifs cy50r2' = {inputProcessIdentifier=1162;}
+'ifs cy50r3' = {inputProcessIdentifier=1163;}
 
 # MODEL cosmo (ID range: 3131-3131)
-'cosmo v1' = {inputProcessIdentifier=3131;}
+'cosmo' = {inputProcessIdentifier=3131;}

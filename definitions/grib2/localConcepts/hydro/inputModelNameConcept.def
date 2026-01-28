@@ -1,7 +1,23 @@
 
-# MODEL ifs (ID range: 1000-1001)
-'ifs' = {inputProcessIdentifier=1000;}
-'ifs' = {inputProcessIdentifier=1001;}
+# MODEL ifs (ID range: 1146-1163)
+'ifs' = {inputProcessIdentifier=1146;}
+'ifs' = {inputProcessIdentifier=1147;}
+'ifs' = {inputProcessIdentifier=1148;}
+'ifs' = {inputProcessIdentifier=1149;}
+'ifs' = {inputProcessIdentifier=1150;}
+'ifs' = {inputProcessIdentifier=1151;}
+'ifs' = {inputProcessIdentifier=1152;}
+'ifs' = {inputProcessIdentifier=1153;}
+'ifs' = {inputProcessIdentifier=1154;}
+'ifs' = {inputProcessIdentifier=1155;}
+'ifs' = {inputProcessIdentifier=1156;}
+'ifs' = {inputProcessIdentifier=1157;}
+'ifs' = {inputProcessIdentifier=1158;}
+'ifs' = {inputProcessIdentifier=1159;}
+'ifs' = {inputProcessIdentifier=1160;}
+'ifs' = {inputProcessIdentifier=1161;}
+'ifs' = {inputProcessIdentifier=1162;}
+'ifs' = {inputProcessIdentifier=1163;}
 
 # MODEL cosmo (ID range: 3131-3131)
 'cosmo' = {inputProcessIdentifier=3131;}

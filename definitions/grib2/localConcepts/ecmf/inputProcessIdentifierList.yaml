@@ -14,13 +14,29 @@
 
 models:
   - name: ifs
-    start: 1000
+    start: 1146
     versions:
-      - cy41r2
-      - cy43r1
+      - version: cy41r2
+      - version: cy43r1
+      - version: cy43r3
+      - version: cy45r1
+      - version: cy46r1
+      - version: cy47r1
+      - version: cy47r2
+      - version: cy47r3
+      - version: cy48r1
+      - version: cy48r2
+      - version: climatedt
+      - version: cy48r3
+      - version: cy49r1
+      - version: cy49r2
+      - version: cy49r3
+      - version: cy50r1
+      - version: cy50r2
+      - version: cy50r3
 
   - name: cosmo
     start: 3131
     versions:
-      - v1
+      - version: null
 

@@ -64,10 +64,14 @@ for model_entry in models:
     for v in versions:
         # Determine version string and per-version extra_keys
         if isinstance(v, dict):
-            version = v.get("version", model_name)
+            # version can be None or missing → fallback to model name
+            version = v.get("version")
+            if version is None:
+                version = model_name
             version_extra = v.get("extra_keys", {})
         else:
-            version = str(v).strip() if v is not None else model_name
+            # simple string; None → model name
+            version = v if v else model_name
             version_extra = {}
 
         # Merge block-level and version-level extra keys
