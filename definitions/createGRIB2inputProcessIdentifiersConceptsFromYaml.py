@@ -4,15 +4,16 @@ import yaml
 import shutil
 import os
 import sys
+from jsonschema import validate, ValidationError
 
 # =========================================================
 # User settings
 # =========================================================
-input_yaml = "grib2/localConcepts/ecmf/inputProcessIdentifierList.yaml"
+INPUT_YAML = "grib2/localConcepts/ecmf/inputProcessIdentifierList.yaml"
 
 # Output files in sub-folder
-name_output = "grib2/localConcepts/ecmf/inputModelNameConcept.def"
-version_output = "grib2/localConcepts/ecmf/inputModelVersionConcept.def"
+NAME_OUTPUT = "grib2/localConcepts/ecmf/inputModelNameConcept.def"
+VERSION_OUTPUT = "grib2/localConcepts/ecmf/inputModelVersionConcept.def"
 
 # Formatting toggles
 ADD_BLANK_LINE_BEFORE_MODEL = True
@@ -25,122 +26,168 @@ DEST_FOLDERS = [
 ]
 
 # =========================================================
-# Step 0: Ensure output folder exists
+# YAML Schema
 # =========================================================
-os.makedirs(os.path.dirname(name_output), exist_ok=True)
-os.makedirs(os.path.dirname(version_output), exist_ok=True)
+SCHEMA = {
+    "type": "object",
+    "required": ["models"],
+    "properties": {
+        "models": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["name", "start"],
+                "additionalProperties": False,
+                "properties": {
+                    "name": {"type": "string"},
+                    "start": {"type": "integer"},
+                    "extra_keys": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": ["string", "number", "boolean"]
+                        }
+                    },
+                    "versions": {
+                        "type": "array",
+                        "items": {
+                            "oneOf": [
+                                {"type": ["string", "null"]},
+                                {
+                                    "type": "object",
+                                    "additionalProperties": False,
+                                    "properties": {
+                                        "version": {"type": ["string", "null"]},
+                                        "skip": {"type": "boolean"},
+                                        "override_id": {"type": "integer"},
+                                        "extra_keys": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": ["string", "number", "boolean"]
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 # =========================================================
-# Step 1: Read YAML
+# Ensure output folders exist (if needed)
+# =========================================================
+for path in (NAME_OUTPUT, VERSION_OUTPUT):
+    d = os.path.dirname(path)
+    if d:
+        os.makedirs(d, exist_ok=True)
+
+# =========================================================
+# Read & validate YAML
 # =========================================================
 try:
-    with open(input_yaml, "r") as f:
+    with open(INPUT_YAML, "r") as f:
         data = yaml.safe_load(f)
 except Exception as e:
-    sys.exit(f"Failed to read YAML file: {e}")
+    sys.exit(f"ERROR reading YAML: {e}")
 
-if not data or "models" not in data:
-    sys.exit("YAML file must contain a top-level 'models' list")
-
-models = data["models"]
+try:
+    validate(instance=data, schema=SCHEMA)
+except ValidationError as e:
+    sys.exit(f"YAML SCHEMA VALIDATION ERROR:\n{e.message}")
 
 # =========================================================
-# Step 2: Build blocks
+# Build blocks
 # =========================================================
 blocks = []
+used_ids = {}  # id -> "MODEL VERSION"
 
-for model_entry in models:
-    try:
-        model_name = model_entry["name"]
-        start_id = int(model_entry["start"])
-        versions = model_entry.get("versions", [])
-        block_extra = model_entry.get("extra_keys", {})
-    except KeyError as e:
-        sys.exit(f"Missing required key in model entry: {e}")
+for model in data["models"]:
+    model_name = model["name"]
+    start_id = int(model["start"])
+    versions = model.get("versions", [])
+    block_extra = model.get("extra_keys", {})
 
     entries = []
     current_id = start_id
 
     for v in versions:
-        # Determine version string and per-version extra_keys
         if isinstance(v, dict):
-            # version can be None or missing → fallback to model name
-            version = v.get("version")
-            if version is None:
-                version = model_name
+            version = v.get("version") or model_name
             version_extra = v.get("extra_keys", {})
+            skip = v.get("skip", False)
+            override_id = v.get("override_id")
         else:
-            # simple string; None → model name
             version = v if v else model_name
             version_extra = {}
+            skip = False
+            override_id = None
 
-        # Merge block-level and version-level extra keys
+        if override_id is not None:
+            id_val = override_id
+        else:
+            id_val = current_id
+
         combined_extra = {**block_extra, **version_extra}
 
-        entries.append((model_name, version, current_id, combined_extra))
-        current_id += 1
+        if not skip:
+            if id_val in used_ids:
+                sys.exit(
+                    "ID COLLISION DETECTED:\n"
+                    f"  ID {id_val} used by:\n"
+                    f"    - {used_ids[id_val]}\n"
+                    f"    - {model_name} {version}"
+                )
+
+            used_ids[id_val] = f"{model_name} {version}"
+            entries.append((model_name, version, id_val, combined_extra))
+
+        if override_id is None:
+            current_id += 1
 
     blocks.append({
         "model": model_name,
-        "start_id": start_id,
         "entries": entries
     })
 
 # =========================================================
-# Step 3: Sort blocks by start ID
+# Sort blocks
 # =========================================================
-blocks.sort(key=lambda b: b["start_id"])
-
-# =========================================================
-# Step 4: Detect ID collisions
-# =========================================================
-used_ranges = []
-
-for block in blocks:
-    start_id = block["start_id"]
-    entries = block["entries"]
-    end_id = entries[-1][2] if entries else start_id
-
-    for used_start, used_end, used_model in used_ranges:
-        if not (end_id < used_start or start_id > used_end):
-            sys.exit(
-                "ID collision detected:\n"
-                f"  MODEL {block['model']} uses {start_id}-{end_id}\n"
-                f"  MODEL {used_model} already uses {used_start}-{used_end}"
-            )
-
-    used_ranges.append((start_id, end_id, block["model"]))
+blocks.sort(key=lambda b: b["entries"][0][2] if b["entries"] else float("inf"))
 
 # =========================================================
-# Step 5: Generate output content
+# Generate output
 # =========================================================
 name_lines = []
 version_lines = []
 
 for block in blocks:
+    if not block["entries"]:
+        continue
+
     model = block["model"]
-    entries = block["entries"]
-    start_id = entries[0][2] if entries else 0
-    end_id = entries[-1][2] if entries else start_id
+    ids = [e[2] for e in block["entries"]]
+    start_id = min(ids)
+    end_id = max(ids)
 
     prefix = "\n" if ADD_BLANK_LINE_BEFORE_MODEL else ""
-    comment = f"{prefix}# MODEL {model}"
+    header = f"{prefix}# MODEL {model}"
     if INCLUDE_ID_RANGE_IN_COMMENT:
-        comment += f" (ID range: {start_id}-{end_id})"
-    comment += "\n"
+        header += f" (ID range: {start_id}-{end_id})"
+    header += "\n"
 
-    name_lines.append(comment)
-    version_lines.append(comment)
+    name_lines.append(header)
+    version_lines.append(header)
 
-    for model_name, version, id_val, extra_keys in entries:
-        extra_str = "".join([f"{k}={v};" for k, v in extra_keys.items()]) if extra_keys else ""
+    for model_name, version, id_val, extra in block["entries"]:
+        extra_str = "".join(f"{k}={v};" for k, v in extra.items())
 
-        # inputModelNameConcept.def always uses just the model name
         name_lines.append(
             f"'{model_name}' = {{inputProcessIdentifier={id_val};{extra_str}}}\n"
         )
 
-        # inputModelVersionConcept.def includes version unless same as model
         if version == model_name:
             version_lines.append(
                 f"'{model_name}' = {{inputProcessIdentifier={id_val};{extra_str}}}\n"
@@ -151,28 +198,23 @@ for block in blocks:
             )
 
 # =========================================================
-# Step 6: Write files
+# Write files
 # =========================================================
-with open(name_output, "w") as f:
+with open(NAME_OUTPUT, "w") as f:
     f.writelines(name_lines)
-print(f"Created file: {name_output}")
+print(f"Created file: {NAME_OUTPUT}")
 
-with open(version_output, "w") as f:
+with open(VERSION_OUTPUT, "w") as f:
     f.writelines(version_lines)
-print(f"Created file: {version_output}")
+print(f"Created file: {VERSION_OUTPUT}")
 
 # =========================================================
-# Step 7: Optional copy
+# Optional copy
 # =========================================================
 if ENABLE_COPY:
     for folder in DEST_FOLDERS:
         os.makedirs(folder, exist_ok=True)
-        shutil.copy(name_output, os.path.join(folder, os.path.basename(name_output)))
-        shutil.copy(version_output, os.path.join(folder, os.path.basename(version_output)))
+        shutil.copy(NAME_OUTPUT, folder)
+        shutil.copy(VERSION_OUTPUT, folder)
 
-    print("Copied files to the following folders:")
-    for folder in DEST_FOLDERS:
-        print(f"  - {folder}")
-else:
-    print("Copying disabled.")
 
