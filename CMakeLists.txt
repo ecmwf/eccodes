@@ -319,8 +319,8 @@ if( HAVE_ECCODES_THREADS AND HAVE_ECCODES_OMP_THREADS )
     ecbuild_critical("Cannot enable both POSIX threads and OpenMP! Please specify just one option")
 endif()
 
-ecbuild_info(" POSIX THREADS = ${GRIB_PTHREADS}")
-ecbuild_info(" OpenMP THREADS= ${GRIB_OMP_THREADS}")
+ecbuild_info(" POSIX THREADS=${GRIB_PTHREADS}")
+ecbuild_info(" OpenMP THREADS=${GRIB_OMP_THREADS}")
 
 set( GRIB_MEM_ALIGN 0 )
 if( ENABLE_ALIGN_MEMORY )
