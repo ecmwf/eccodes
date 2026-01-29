@@ -995,7 +995,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                 save_error(c, name);
             }
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 == len2) {
-                int imaxdiff;
+                size_t imaxdiff;
                 double diff;
                 double *pv1, *pv2, dnew1, dnew2;
                 maxdiff   = 0;
@@ -1048,7 +1048,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                         if (!compareAbsolute)
                             printf(" max");
                         printf(" relative diff. = %g", relative_error(dval1[imaxdiff], dval2[imaxdiff], value_tolerance));
-                        printf("\n\tmax diff. element %d: %.20e %.20e",
+                        printf("\n\tmax diff. element %zu: %.20e %.20e",
                                imaxdiff, dval1[imaxdiff], dval2[imaxdiff]);
                         printf("\n\ttolerance=%.16e", value_tolerance);
                         if (packingError2 != 0 || packingError1 != 0)

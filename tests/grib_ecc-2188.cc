@@ -161,16 +161,16 @@ int main(int argc, char** argv)
     if (argc != 2) return 1;
 
     err = test_message_ownership(argv[1]);
-    if (err != 0) return err;
+    if (err) return err;
 
     err = test_codes_handle_from_stream(argv[1]);
-    if (err != 0) return err;
+    if (err) return err;
 
     // TODO(maee): Check why this fails on Windows?
-#ifndef ECCODES_ON_WINDOWS
+//#ifndef ECCODES_ON_WINDOWS
     err = test_codes_handle_from_stream_with_offset(argv[1]);
-    if (err != 0) return err;
-#endif
+    if (err) return err;
+//#endif
 
     return 0;
 }
