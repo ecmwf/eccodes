@@ -32,8 +32,8 @@
 # icon (ID range: 3500-3500)
 'icon' = {inputProcessIdentifier=3500;}
 
-# ERA5 (ID range: 65000-65000)
-'ERA5' = {inputProcessIdentifier=65000;}
+# era5 (ID range: 65000-65000)
+'era5' = {inputProcessIdentifier=65000;}
 
 # seas (ID range: 65050-65051)
 'seas-5' = {inputProcessIdentifier=65050;}

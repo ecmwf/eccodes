@@ -64,7 +64,7 @@ models:
     versions:
       - version: null
 
-  - name: ERA5
+  - name: era5
     start: 65000
     versions:
       - version: null
