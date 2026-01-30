@@ -156,7 +156,7 @@ ecbuild_add_option( FEATURE NETCDF
     NO_TPL )
 
 ecbuild_add_option( FEATURE USE_SHARED_LIB_AEC
-    DESCRIPTION "Link statically against libaec"
+    DESCRIPTION "Link against shared libaec library (dynamic linking)"
     DEFAULT ON )
 
 if ( ENABLE_USE_SHARED_LIB_AEC )
