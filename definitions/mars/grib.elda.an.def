@@ -1,7 +1,7 @@
 alias mars.anoffset=offsetToEndOf4DvarWindow;
 alias mars.number=perturbationNumber;
 
-if (typeOfLevel is "abstractSingleLevel"){
+if (defined(typeOfLevel) and typeOfLevel is "abstractSingleLevel"){
  unalias mars.levelist;
 }
 
