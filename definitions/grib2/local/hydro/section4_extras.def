@@ -31,8 +31,8 @@ if (defined(stream) && (stream is "rfsd")){
  alias mars.configuration = configuration;
 }
 
-concept inputModelName(unknown, "inputModelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
-concept inputModelVersion(unknown, "inputModelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
+concept inputModelName(unknown, "inputModelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+concept inputModelVersion(unknown, "inputModelVersionConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
 
 if ( inputModelName is "obs" ){
  meta forcingModel sprintf("%s",inputModelName);
