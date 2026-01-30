@@ -24,7 +24,7 @@
 
 models:
   - name: ifs
-    start: 1146
+    start: 1
     versions:
       - version: cy41r2
       - version: cy43r1
@@ -45,8 +45,37 @@ models:
       - version: cy50r2
       - version: cy50r3
 
+  - name: aifs
+    start: 500
+    versions:
+      - version: single-mse-v0.2.0
+      - version: single-mse-v0.2.1
+      - version: single-mse-v1.0
+      - version: single-mse-v1.1
+      - version: single-mse-v2.0
+
   - name: cosmo
-    start: 3131
+    start: 3000
     versions:
       - version: null
 
+  - name: icon
+    start: 3500
+    versions:
+      - version: null
+
+  - name: ERA5
+    start: 65000
+    versions:
+      - version: null
+
+  - name: seas
+    start: 65050
+    versions:
+      - version: '5'
+      - version: '6'
+
+  - name: obs
+    start: 65100
+    versions:
+      - version: null

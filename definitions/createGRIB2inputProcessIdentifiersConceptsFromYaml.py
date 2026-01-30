@@ -221,7 +221,7 @@ for block in blocks:
             )
         else:
             version_lines.append(
-                f"'{model_name} {version}' = {{inputProcessIdentifier={id_val};{extra_str}}}\n"
+                f"'{model_name}-{version}' = {{inputProcessIdentifier={id_val};{extra_str}}}\n"
             )
 
 # =========================================================

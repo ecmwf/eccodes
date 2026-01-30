@@ -1,23 +1,43 @@
 
-# ifs (ID range: 1146-1163)
-'ifs' = {inputProcessIdentifier=1146;}
-'ifs' = {inputProcessIdentifier=1147;}
-'ifs' = {inputProcessIdentifier=1148;}
-'ifs' = {inputProcessIdentifier=1149;}
-'ifs' = {inputProcessIdentifier=1150;}
-'ifs' = {inputProcessIdentifier=1151;}
-'ifs' = {inputProcessIdentifier=1152;}
-'ifs' = {inputProcessIdentifier=1153;}
-'ifs' = {inputProcessIdentifier=1154;}
-'ifs' = {inputProcessIdentifier=1155;}
-'ifs' = {inputProcessIdentifier=1156;}
-'ifs' = {inputProcessIdentifier=1157;}
-'ifs' = {inputProcessIdentifier=1158;}
-'ifs' = {inputProcessIdentifier=1159;}
-'ifs' = {inputProcessIdentifier=1160;}
-'ifs' = {inputProcessIdentifier=1161;}
-'ifs' = {inputProcessIdentifier=1162;}
-'ifs' = {inputProcessIdentifier=1163;}
+# ifs (ID range: 1-18)
+'ifs' = {inputProcessIdentifier=1;}
+'ifs' = {inputProcessIdentifier=2;}
+'ifs' = {inputProcessIdentifier=3;}
+'ifs' = {inputProcessIdentifier=4;}
+'ifs' = {inputProcessIdentifier=5;}
+'ifs' = {inputProcessIdentifier=6;}
+'ifs' = {inputProcessIdentifier=7;}
+'ifs' = {inputProcessIdentifier=8;}
+'ifs' = {inputProcessIdentifier=9;}
+'ifs' = {inputProcessIdentifier=10;}
+'ifs' = {inputProcessIdentifier=11;}
+'ifs' = {inputProcessIdentifier=12;}
+'ifs' = {inputProcessIdentifier=13;}
+'ifs' = {inputProcessIdentifier=14;}
+'ifs' = {inputProcessIdentifier=15;}
+'ifs' = {inputProcessIdentifier=16;}
+'ifs' = {inputProcessIdentifier=17;}
+'ifs' = {inputProcessIdentifier=18;}
 
-# cosmo (ID range: 3131-3131)
-'cosmo' = {inputProcessIdentifier=3131;}
+# aifs (ID range: 500-504)
+'aifs' = {inputProcessIdentifier=500;}
+'aifs' = {inputProcessIdentifier=501;}
+'aifs' = {inputProcessIdentifier=502;}
+'aifs' = {inputProcessIdentifier=503;}
+'aifs' = {inputProcessIdentifier=504;}
+
+# cosmo (ID range: 3000-3000)
+'cosmo' = {inputProcessIdentifier=3000;}
+
+# icon (ID range: 3500-3500)
+'icon' = {inputProcessIdentifier=3500;}
+
+# ERA5 (ID range: 65000-65000)
+'ERA5' = {inputProcessIdentifier=65000;}
+
+# seas (ID range: 65050-65051)
+'seas' = {inputProcessIdentifier=65050;}
+'seas' = {inputProcessIdentifier=65051;}
+
+# obs (ID range: 65100-65100)
+'obs' = {inputProcessIdentifier=65100;}
