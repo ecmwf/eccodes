@@ -35,9 +35,5 @@
 # era5 (ID range: 65000-65000)
 'era5' = {inputProcessIdentifier=65000;}
 
-# seas (ID range: 65050-65051)
-'seas' = {inputProcessIdentifier=65050;}
-'seas' = {inputProcessIdentifier=65051;}
-
 # obs (ID range: 65100-65100)
 'obs' = {inputProcessIdentifier=65100;}

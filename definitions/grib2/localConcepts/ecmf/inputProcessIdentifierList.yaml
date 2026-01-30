@@ -69,12 +69,6 @@ models:
     versions:
       - version: null
 
-  - name: seas
-    start: 65050
-    versions:
-      - version: '5'
-      - version: '6'
-
   - name: obs
     start: 65100
     versions:
