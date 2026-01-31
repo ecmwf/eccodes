@@ -55,6 +55,7 @@ list(APPEND test_c_bins
     bufr_ecc-517
     bufr_ecc-1288
     bufr_ecc-2011
+    bufr_edition0
     bufr_get_element
     bufr_extract_headers
     bufr_check_descriptors
@@ -222,6 +223,7 @@ if( HAVE_BUILD_TOOLS )
         wmo_read_any_from_file
         wmo_read_any_from_file_with_offset
         wmo_read_any_from_stream
+        bufr_edition0
         bufr_templates
         bufr_rdbSubTypes
         bufr_dump_data
