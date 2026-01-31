@@ -424,6 +424,8 @@ static int bufr_decode_edition0(const void* message, codes_bufr_header* hdr)
         err = bufr_decode_extra_rdb_keys(message, offset_section2, hdr);
     }
 #endif
+
+    hdr->numberOfSubsets = 1; // temporary
     return err;
 }
 
