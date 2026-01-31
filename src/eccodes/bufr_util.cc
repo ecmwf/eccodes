@@ -309,85 +309,79 @@ static int bufr_decode_edition0(const void* message, codes_bufr_header* hdr)
     int err = GRIB_SUCCESS;
     const unsigned char* pMessage = (const unsigned char*)message;
 
-    unsigned long totalLength    = 0;
-    const long nbits_totalLength = 3 * 8;
-    long pos_totalLength         = 4 * 8;
-
     unsigned long section1Length    = 0;
     const long nbits_section1Length = 3 * 8;
     long pos_section1Length         = 4 * 8;
 
-    long nbits_masterTableNumber = 1 * 8;
-    long pos_masterTableNumber   = 11 * 8;
+    //long nbits_bufrHeaderSubCentre = 1 * 8;
+    //long pos_bufrHeaderSubCentre   = 12 * 8;
 
-    long nbits_bufrHeaderSubCentre = 1 * 8;
-    long pos_bufrHeaderSubCentre   = 12 * 8;
-
-    long nbits_bufrHeaderCentre = 1 * 8;
-    long pos_bufrHeaderCentre   = 9 * 8;
+    long nbits_bufrHeaderCentre = 2 * 8;
+    long pos_bufrHeaderCentre   = 8 * 8;
 
     long nbits_updateSequenceNumber = 1 * 8;
-    long pos_updateSequenceNumber   = 14 * 8;
+    long pos_updateSequenceNumber   = 10 * 8;
 
     long section1Flags       = 0;
     long nbits_section1Flags = 1 * 8;
-    long pos_section1Flags   = 15 * 8;
+    long pos_section1Flags   = 11 * 8;
 
     long nbits_dataCategory = 1 * 8;
-    long pos_dataCategory   = 16 * 8;
+    long pos_dataCategory   = 12 * 8;
 
     long nbits_dataSubCategory = 1 * 8;
-    long pos_dataSubCategory   = 17 * 8;
+    long pos_dataSubCategory   = 13 * 8;
 
-    long nbits_masterTablesVersionNumber = 1 * 8;
-    long pos_masterTablesVersionNumber   = 18 * 8;
+    long nbits_localTablesVersionNumber = 2 * 8;
+    long pos_localTablesVersionNumber   = 14 * 8;
 
-    long nbits_localTablesVersionNumber = 1 * 8;
-    long pos_localTablesVersionNumber   = 19 * 8;
-
-    const long typicalCentury       = 21; // This century
+    const long typicalCentury       = 20; // Last century
     long typicalYearOfCentury       = 0;
     long nbits_typicalYearOfCentury = 1 * 8;
-    long pos_typicalYearOfCentury   = 20 * 8;
+    long pos_typicalYearOfCentury   = 16 * 8;
 
     long nbits_typicalMonth = 1 * 8;
-    long pos_typicalMonth   = 21 * 8;
+    long pos_typicalMonth   = 17 * 8;
 
     long nbits_typicalDay = 1 * 8;
-    long pos_typicalDay   = 22 * 8;
+    long pos_typicalDay   = 18 * 8;
 
     long nbits_typicalHour = 1 * 8;
-    long pos_typicalHour   = 23 * 8;
+    long pos_typicalHour   = 19 * 8;
 
     long nbits_typicalMinute = 1 * 8;
-    long pos_typicalMinute   = 24 * 8;
+    long pos_typicalMinute   = 20 * 8;
 
-    long section2Length        = 0;
-    long offset_section2       = 0;
-    long offset_section3       = 0;
-    long nbits_numberOfSubsets = 2 * 8;
-    long pos_numberOfSubsets   = 0; //depends on offset_section3
+    long nbits_masterTablesVersionNumber = 1 * 8;
+    long pos_masterTablesVersionNumber   = 20 * 8;
 
-    unsigned long section3Flags;
-    long nbits_section3Flags = 1 * 8;
-    long pos_section3Flags   = 0; //depends on offset_section3
+//     long section2Length        = 0;
+//     long offset_section2       = 0;
+//     long offset_section3       = 0;
+//     long nbits_numberOfSubsets = 2 * 8;
+//     long pos_numberOfSubsets   = 0; //depends on offset_section3q
+//     unsigned long section3Flags;
+//     long nbits_section3Flags = 1 * 8;
+//     long pos_section3Flags   = 0; //depends on offset_section3
 
     // totalLength = grib_decode_unsigned_long(pMessage, &pos_totalLength, nbits_totalLength);
     // if (totalLength != hdr->message_size) {
     //     return GRIB_WRONG_LENGTH;
     // }
     section1Length                 = grib_decode_unsigned_long(pMessage, &pos_section1Length, nbits_section1Length);
+    (void)section1Length;
     //hdr->masterTableNumber         = (long)grib_decode_unsigned_long(pMessage, &pos_masterTableNumber, nbits_masterTableNumber);
-    hdr->bufrHeaderSubCentre       = (long)grib_decode_unsigned_long(pMessage, &pos_bufrHeaderSubCentre, nbits_bufrHeaderSubCentre);
+    //hdr->bufrHeaderSubCentre       = (long)grib_decode_unsigned_long(pMessage, &pos_bufrHeaderSubCentre, nbits_bufrHeaderSubCentre);
     hdr->bufrHeaderCentre          = (long)grib_decode_unsigned_long(pMessage, &pos_bufrHeaderCentre, nbits_bufrHeaderCentre);
     hdr->updateSequenceNumber      = (long)grib_decode_unsigned_long(pMessage, &pos_updateSequenceNumber, nbits_updateSequenceNumber);
     section1Flags                  = (long)grib_decode_unsigned_long(pMessage, &pos_section1Flags, nbits_section1Flags);
+    (void)section1Flags;
     hdr->dataCategory              = (long)grib_decode_unsigned_long(pMessage, &pos_dataCategory, nbits_dataCategory);
     hdr->dataSubCategory           = (long)grib_decode_unsigned_long(pMessage, &pos_dataSubCategory, nbits_dataSubCategory);
-    hdr->masterTablesVersionNumber = (long)grib_decode_unsigned_long(
-        pMessage, &pos_masterTablesVersionNumber, nbits_masterTablesVersionNumber);
+
     hdr->localTablesVersionNumber = (long)grib_decode_unsigned_long(pMessage, &pos_localTablesVersionNumber, nbits_localTablesVersionNumber);
     typicalYearOfCentury          = (long)grib_decode_unsigned_long(pMessage, &pos_typicalYearOfCentury, nbits_typicalYearOfCentury);
+
     hdr->typicalYear              = (typicalCentury - 1) * 100 + typicalYearOfCentury;
     hdr->typicalMonth             = (long)grib_decode_unsigned_long(pMessage, &pos_typicalMonth, nbits_typicalMonth);
     hdr->typicalDay               = (long)grib_decode_unsigned_long(pMessage, &pos_typicalDay, nbits_typicalDay);
@@ -397,6 +391,10 @@ static int bufr_decode_edition0(const void* message, codes_bufr_header* hdr)
     hdr->typicalDate              = hdr->typicalYear * 10000 + hdr->typicalMonth * 100 + hdr->typicalDay;
     hdr->typicalTime              = hdr->typicalHour * 10000 + hdr->typicalMinute * 100 + hdr->typicalSecond;
 
+    hdr->masterTablesVersionNumber = (long)grib_decode_unsigned_long(
+        pMessage, &pos_masterTablesVersionNumber, nbits_masterTablesVersionNumber);
+
+#if 0
     offset_section2          = BUFR_SECTION0_LEN + section1Length; //bytes
     section2Length           = 0;
     hdr->localSectionPresent = (section1Flags != 0);
@@ -425,7 +423,7 @@ static int bufr_decode_edition0(const void* message, codes_bufr_header* hdr)
     if (hdr->ecmwfLocalSectionPresent && hdr->bufrHeaderCentre == 98 && section2Length == 52) {
         err = bufr_decode_extra_rdb_keys(message, offset_section2, hdr);
     }
-
+#endif
     return err;
 }
 
