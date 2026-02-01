@@ -89,7 +89,7 @@ int grib_tool_init(grib_runtime_options* options)
     int ret     = 0;
     double min = 0, max = 0;
     int i   = 0;
-    char* p = NULL;
+    const char* p = NULL;
     if (options->latlon && grib_options_on("j")) {
         options->verbose = 0;
         json_latlon      = 1;
