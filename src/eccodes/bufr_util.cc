@@ -309,12 +309,7 @@ static int bufr_decode_edition0(const void* message, codes_bufr_header* hdr)
     int err = GRIB_SUCCESS;
     const unsigned char* pMessage = (const unsigned char*)message;
 
-    unsigned long section1Length    = 0;
-    const long nbits_section1Length = 3 * 8;
-    long pos_section1Length         = 4 * 8;
-
-    //long nbits_bufrHeaderSubCentre = 1 * 8;
-    //long pos_bufrHeaderSubCentre   = 12 * 8;
+    const unsigned long section1Length  = 14; // seems to be hard coded
 
     long nbits_bufrHeaderCentre = 2 * 8;
     long pos_bufrHeaderCentre   = 8 * 8;
@@ -355,21 +350,21 @@ static int bufr_decode_edition0(const void* message, codes_bufr_header* hdr)
     long nbits_masterTablesVersionNumber = 1 * 8;
     long pos_masterTablesVersionNumber   = 20 * 8;
 
-//     long section2Length        = 0;
-//     long offset_section2       = 0;
-//     long offset_section3       = 0;
-//     long nbits_numberOfSubsets = 2 * 8;
-//     long pos_numberOfSubsets   = 0; //depends on offset_section3q
-//     unsigned long section3Flags;
-//     long nbits_section3Flags = 1 * 8;
-//     long pos_section3Flags   = 0; //depends on offset_section3
+    long section2Length        = 0;
+    long offset_section2       = 0;
+    long offset_section3       = 0;
+    long nbits_numberOfSubsets = 2 * 8;
+    long pos_numberOfSubsets   = 0; //depends on offset_section3q
+    unsigned long section3Flags;
+    long nbits_section3Flags = 1 * 8;
+    long pos_section3Flags   = 0; //depends on offset_section3
 
     // totalLength = grib_decode_unsigned_long(pMessage, &pos_totalLength, nbits_totalLength);
     // if (totalLength != hdr->message_size) {
     //     return GRIB_WRONG_LENGTH;
     // }
-    section1Length                 = grib_decode_unsigned_long(pMessage, &pos_section1Length, nbits_section1Length);
-    (void)section1Length;
+    //section1Length = grib_decode_unsigned_long(pMessage, &pos_section1Length, nbits_section1Length);
+
     //hdr->masterTableNumber         = (long)grib_decode_unsigned_long(pMessage, &pos_masterTableNumber, nbits_masterTableNumber);
     //hdr->bufrHeaderSubCentre       = (long)grib_decode_unsigned_long(pMessage, &pos_bufrHeaderSubCentre, nbits_bufrHeaderSubCentre);
     hdr->bufrHeaderCentre          = (long)grib_decode_unsigned_long(pMessage, &pos_bufrHeaderCentre, nbits_bufrHeaderCentre);
@@ -394,24 +389,25 @@ static int bufr_decode_edition0(const void* message, codes_bufr_header* hdr)
     hdr->masterTablesVersionNumber = (long)grib_decode_unsigned_long(
         pMessage, &pos_masterTablesVersionNumber, nbits_masterTablesVersionNumber);
 
-#if 0
-    offset_section2          = BUFR_SECTION0_LEN + section1Length; //bytes
+    offset_section2 = BUFR_SECTION0_LEN + section1Length; //bytes
+
     section2Length           = 0;
     hdr->localSectionPresent = (section1Flags != 0);
     if (hdr->localSectionPresent) {
         long pos_section2Length;
         const long nbits_section2Length = 3 * 8;
-        pos_section2Length              = offset_section2 * 8;
+        pos_section2Length = offset_section2 * 8;
 
         section2Length = grib_decode_unsigned_long(pMessage, &pos_section2Length, nbits_section2Length);
 
         if (hdr->bufrHeaderCentre == 98) {
             hdr->ecmwfLocalSectionPresent = 1;
-            err                           = bufr_decode_rdb_keys(message, offset_section2, hdr);
+            err = bufr_decode_rdb_keys(message, offset_section2, hdr);
         }
     }
 
     offset_section3       = BUFR_SECTION0_LEN + section1Length + section2Length; //bytes
+
     pos_numberOfSubsets   = (offset_section3 + 4) * 8;
     hdr->numberOfSubsets  = grib_decode_unsigned_long(pMessage, &pos_numberOfSubsets, nbits_numberOfSubsets);
 
@@ -423,9 +419,7 @@ static int bufr_decode_edition0(const void* message, codes_bufr_header* hdr)
     if (hdr->ecmwfLocalSectionPresent && hdr->bufrHeaderCentre == 98 && section2Length == 52) {
         err = bufr_decode_extra_rdb_keys(message, offset_section2, hdr);
     }
-#endif
 
-    hdr->numberOfSubsets = 1; // temporary
     return err;
 }
 
