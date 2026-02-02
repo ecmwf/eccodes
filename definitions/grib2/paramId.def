@@ -470,13 +470,6 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
 	}
-#Logarithm of surface pressure
-'152' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 1 ;
-	}
 #Divergence
 '155' = {
 	 discipline = 0 ;
@@ -9029,14 +9022,6 @@
 	 typeOfFirstFixedSurface = 101 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean logarithm of surface pressure
-'235152' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
 #Time-mean divergence
 '235155' = {
 	 discipline = 0 ;
@@ -11202,14 +11187,6 @@
 	 typeOfFirstFixedSurface = 101 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
-#Time-maximum logarithm of surface pressure
-'237152' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
 #Time-maximum divergence
 '237155' = {
 	 discipline = 0 ;
@@ -13244,14 +13221,6 @@
 	 typeOfFirstFixedSurface = 101 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
-#Time-minimum logarithm of surface pressure
-'238152' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 3 ;
-	}
 #Time-minimum divergence
 '238155' = {
 	 discipline = 0 ;
@@ -15254,14 +15223,6 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
-	 typeOfStatisticalProcessing = 6 ;
-	}
-#Time-standard-deviation logarithm of surface pressure
-'239152' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation divergence
