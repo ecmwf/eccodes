@@ -616,45 +616,45 @@ static char* get_keyname_without_rank(const char* name)
     return ret;
 }
 
-static int are_strings_both_missing(grib_handle* h1, grib_handle* h2, const char* key,
+static bool is_string_missing(grib_handle* h, const char* key, const char* sval, size_t slen)
+{
+    if (strlen(sval) == 0) { // empty string means missing
+        return true;
+    }
+    grib_accessor* a = grib_find_accessor(h, key);
+    // All bits=1 in the sval means missing too
+    if (a && grib_is_missing_string(a, (unsigned char*)sval, slen)) {
+        return true;
+    }
+    return false;
+}
+
+static bool are_strings_both_missing(grib_handle* h1, grib_handle* h2, const char* key,
                                     const char* s1, const char* s2,
                                     size_t slen1, size_t slen2)
 {
-    /* Note: one string could have all its bits=1 and the other empty */
-    int is_miss_1 = 0, is_miss_2 = 0;
-    if (strlen(s1) == 0) {
-        is_miss_1 = 1;
-    }
-    else {
-        grib_accessor* a1 = grib_find_accessor(h1, key);
-        is_miss_1         = grib_is_missing_string(a1, (unsigned char*)s1, slen1);
-    }
-    if (strlen(s2) == 0) {
-        is_miss_2 = 1;
-    }
-    else {
-        grib_accessor* a2 = grib_find_accessor(h2, key);
-        is_miss_2         = grib_is_missing_string(a2, (unsigned char*)s2, slen2);
-    }
+    // Note: one string could have all its bits=1 and the other empty
+    const bool is_miss_1 = is_string_missing(h1, key, s1, slen1);
+    const bool is_miss_2 = is_string_missing(h2, key, s2, slen2);
     if (is_miss_1 && is_miss_2) {
-        return 1; /* both classed as missing */
+        return true;
     }
-    return 0;
+    return false;
 }
 
-static int strings_are_different(grib_handle* h1, grib_handle* h2, const char* key,
+static bool strings_are_different(grib_handle* h1, grib_handle* h2, const char* key,
                                  const char* s1, const char* s2,
                                  size_t slen1, size_t slen2)
 {
     if (strcmp(s1, s2) == 0) {
-        return 0;
+        return false;
     }
     /* Strings are different. Now check if strings are 'missing'.
      * Note: one string could have all its bits=1 and the other empty */
     if (are_strings_both_missing(h1, h2, key, s1, s2, slen1, slen2)) {
-        return 0;
+        return false;
     }
-    return 1;
+    return true;
 }
 
 static int compare_values(grib_runtime_options* options, grib_handle* handle1, grib_handle* handle2, const char* name, int type)
@@ -806,7 +806,12 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                 if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS) {
                     if (strings_are_different(handle1, handle2, name, sval1, sval2, slen1, slen2)) {
                         printInfo(handle1);
-                        printf("string [%s]: [%s] != [%s]\n", name, sval1, sval2);
+                        if (is_string_missing(handle1, name, sval1, slen1))
+                            printf("string [%s]: [%s] != [%s]\n", name, "MISSING", sval2);
+                        else if (is_string_missing(handle2, name, sval2, slen2))
+                            printf("string [%s]: [%s] != [%s]\n", name, sval1, "MISSING");
+                        else
+                            printf("string [%s]: [%s] != [%s]\n", name, sval1, sval2);
                         err1 = GRIB_VALUE_MISMATCH;
                         save_error(c, name);
                     }
