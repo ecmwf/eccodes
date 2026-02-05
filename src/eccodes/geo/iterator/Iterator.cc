@@ -161,7 +161,7 @@ static grib_iterator* grib_iterator_new_(const grib_handle* ch, unsigned long fl
     char gridType[128] = {0,};
     size_t gtlen = sizeof(gridType);
     err = grib_get_string(ch, "gridType", gridType, &gtlen);
-    bool do_process = true;
+    bool do_process_with_eckit = true;
     if (!err &&
         (STR_EQUAL(gridType, "lambert") ||
         STR_EQUAL(gridType,  "space_view") ||
@@ -169,11 +169,11 @@ static grib_iterator* grib_iterator_new_(const grib_handle* ch, unsigned long fl
         STR_EQUAL(gridType,  "lambert_azimuthal_equal_area") ||
         STR_EQUAL(gridType,  "polar_stereographic")) )
     {
-        do_process = false;
+        do_process_with_eckit = false;
     }
 
     const int eckit_geo = ch->context->eckit_geo;  // check environment variable
-    if (eckit_geo != 0 && do_process) {
+    if (eckit_geo != 0 && do_process_with_eckit) {
         eccodes::geo::eckit_main_init();
         grib_context_log(ch->context, GRIB_LOG_DEBUG, "Geoiterator: using eckit/geo");
         try {
