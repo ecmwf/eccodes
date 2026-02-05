@@ -2657,7 +2657,8 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
     unsigned char* data            = 0;
     size_t subsetListSize          = 0;
     long* subsetList               = 0;
-    long satelliteID               = -1;// this may be undefined
+    long section2Present = 0; // See ECC-2055
+    long satelliteID     = -1;// this may be undefined
     int i;
     grib_iarray* elementsDescriptorsIndex = 0;
 
@@ -2722,8 +2723,10 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
             grib_get_long(get_enclosing_handle(), "extractSubset", &onlySubset);
             grib_get_long(get_enclosing_handle(), "extractSubsetIntervalStart", &startSubset);
             grib_get_long(get_enclosing_handle(), "extractSubsetIntervalEnd", &endSubset);
-            // satelliteID can be undefined. So do not check for errors
-            grib_get_long(get_enclosing_handle(), "satelliteID", &satelliteID);
+
+            err = grib_get_long(get_enclosing_handle(), "section2Present", &section2Present);
+            if (!err && section2Present == 1) // satelliteID can be undefined. So do not check for errors
+                grib_get_long(get_enclosing_handle(), "satelliteID", &satelliteID);
 
             err = grib_get_size(get_enclosing_handle(), "extractSubsetList", &subsetListSize);
             if (err)
@@ -3221,7 +3224,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
         grib_buffer_delete(c, buffer);
         if (numberOfSubsets_ != grib_iarray_used_size(iss_list_)) {
             err = grib_set_long(h, numberOfSubsetsName_, grib_iarray_used_size(iss_list_));
-            if (!err) {
+            if (!err && section2Present) {
                 // ECC-2055
                 if (grib_is_defined(h, "localNumberOfObservations")) {
                     grib_set_long(h, "localNumberOfObservations", grib_iarray_used_size(iss_list_));
