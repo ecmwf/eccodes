@@ -156,20 +156,18 @@ static grib_iterator* grib_iterator_new_(const grib_handle* ch, unsigned long fl
     #if defined(HAVE_ECKIT_GEO)
 
 //// TODO(maee)
-//// This is TEMPORARY! Remove when eckit geo can handle projected grids
+//// TEMPORARY! Remove when eckit geo can handle all grid types
 ////
+    bool do_process_with_eckit = false; // ideally should always be true
     char gridType[128] = {0,};
     size_t gtlen = sizeof(gridType);
     err = grib_get_string(ch, "gridType", gridType, &gtlen);
-    bool do_process_with_eckit = true;
     if (!err &&
-        (STR_EQUAL(gridType, "lambert") ||
-        STR_EQUAL(gridType,  "space_view") ||
-        STR_EQUAL(gridType,  "mercator") ||
-        STR_EQUAL(gridType,  "lambert_azimuthal_equal_area") ||
-        STR_EQUAL(gridType,  "polar_stereographic")) )
+        STR_EQUAL(gridType, "unstructured_grid") ||
+        STR_EQUAL(gridType, "healpix") ||
+        STR_EQUAL(gridType, "regular_ll"))
     {
-        do_process_with_eckit = false;
+        do_process_with_eckit = true;
     }
 
     const int eckit_geo = ch->context->eckit_geo;  // check environment variable
