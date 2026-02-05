@@ -192,6 +192,4 @@
 'abstractSingleLevel' = {typeOfFirstFixedSurface=191; scaleFactorOfFirstFixedSurface=missing(); scaledValueOfFirstFixedSurface=missing(); }
 'abstractMultipleLevels' = {typeOfFirstFixedSurface=191;}
 
-'flightLevel' = {typeOfFirstFixedSurface=193;}
-
 'unknown'        = {dummyc=1;}
