@@ -121,5 +121,17 @@ set -e
 [ $status -ne 0 ]
 
 
+# ECC-2210: Tools: grib_ls with '-j' and empty output will generate invalid JSON
+rm -f $tempLog
+input=sample.grib2
+${tools_dir}/grib_ls -j -w level=42 $input > $tempLog
+if [ -s $tempLog ]; then
+  # File exists and has a size greater than zero
+  echo "ERROR: JSON output should have been empty!" >&2
+  echo "See temp file $tempLog"
+  exit 1
+fi
+
+
 # Clean up
 rm -f $tempLog $tempOut $tempRef
