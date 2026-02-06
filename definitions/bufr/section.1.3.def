@@ -10,7 +10,7 @@ codetable[1] bufrHeaderCentre    'common/c-1.table' : dump;
 
 unsigned[1]  updateSequenceNumber :dump;
 
-flags[1] section1Flags 'bufr/section1_flags.table' = 128 : hidden ; # = section 2 present
+flags[1] section1Flags 'bufr/section1_flags.table' = 128 : dump ; # = section 2 present
 
 unsigned[1] dataCategory : dump;
 unsigned[1] dataSubCategory : dump;
