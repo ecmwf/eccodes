@@ -11,7 +11,6 @@
 
 
 #include "eccodes/geo/GribToSpec.h"
-#include "grib_api_internal.h"
 
 #include <algorithm>
 #include <map>
@@ -32,6 +31,8 @@
 #include "eckit/types/Fraction.h"
 #include "eckit/utils/SafeCasts.h"
 
+#include "eccodes/grib_api_internal.h"
+
 
 namespace eckit::geo::util
 {
@@ -45,9 +46,6 @@ namespace eccodes::geo
 
 namespace
 {
-
-
-using eckit::Log;
 
 
 struct Condition
@@ -167,15 +165,13 @@ public:
 
 void wrongly_encoded_grib(const std::string& msg)
 {
-    static bool abortIfWronglyEncodedGRIB = eckit::Resource<bool>("$MIR_ABORT_IF_WRONGLY_ENCODED_GRIB", false);
+    static bool abortIfWronglyEncodedGRIB = eckit::Resource<bool>("$ECCODES_ABORT_IF_WRONGLY_ENCODED_GRIB", false);
 
     if (abortIfWronglyEncodedGRIB) {
-        // Log::error() << msg << std::endl;
         grib_context_log(nullptr, GRIB_LOG_ERROR, "%s", msg.c_str());
-        throw eckit::UserError(msg);
+        throw eckit::geo::exception::GridError(msg, Here());
     }
 
-    Log::warning() << msg << std::endl;
     grib_context_log(nullptr, GRIB_LOG_WARNING, "%s", msg.c_str());
 }
 
@@ -269,6 +265,9 @@ const char* get_key(const std::string& name, codes_handle* h)
         { "south", "latitudeOfFirstGridPointInDegrees", is("jScansPositively", 1L) },
         { "north", "latitudeOfFirstGridPointInDegrees" },
         { "south", "latitudeOfLastGridPointInDegrees" },
+
+        { "reference_lat", "latitudeOfFirstGridPointInDegrees" },
+        { "reference_lon", "longitudeOfFirstGridPointInDegrees" },
 
         { "truncation", "pentagonalResolutionParameterJ" },  // Assumes triangular truncation
         { "accuracy", "bitsPerValue" },
@@ -624,6 +623,10 @@ ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_ke
 
             long sign = 0;
             CHECK_CALL(codes_get_long(h, sign_key, &sign));
+
+            // For longitudes, x1 can be numerically less than x0
+            if (STR_EQUAL(n_key,"Ni"))
+                if (x1<x0) x1=x1+360;
 
             if (auto value_calculated = (x1 - x0) / static_cast<double>(sign != 0 ? (n - 1) : (1 - n)); given) {
                 if (!eckit::types::is_approximately_equal(value, value_calculated, 1e-6)) {
