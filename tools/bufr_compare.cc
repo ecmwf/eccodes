@@ -1208,6 +1208,11 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
             grib_context_free(context, prefix);
     }
 
+    if (compare_values(options, handle1, handle2, "section2Present", GRIB_TYPE_UNDEFINED)) {
+        (*pErr)++;
+        ret = 1;
+    }
+
     grib_keys_iterator_delete(iter);
 
     return ret;
