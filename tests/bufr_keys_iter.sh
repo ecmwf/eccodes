@@ -33,7 +33,6 @@ masterTableNumber
 bufrHeaderCentre
 bufrHeaderSubCentre
 updateSequenceNumber
-section1Flags
 dataCategory
 internationalDataSubCategory
 dataSubCategory

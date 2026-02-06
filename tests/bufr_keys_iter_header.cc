@@ -42,7 +42,6 @@ int main(int argc, char* argv[])
         char value[MAX_VAL_LEN];
         const char* kname = codes_bufr_keys_iterator_get_name(kiter);
         if (strcmp(kname, "unexpandedDescriptors")==0 ||
-            strcmp(kname, "section1Flags")==0         ||
             strcmp(kname, "bufrHeaderCentre")==0      ||
             strncmp(kname, "correction", 10)==0       ||
             strcmp(kname, "rdbtimeTime")==0) {
