@@ -431,9 +431,12 @@ int grib_tool_finalise_action(grib_runtime_options* options)
         }
     }
 
-    if (!json_latlon && options->json_output && json_nonempty_output) {
-        // ECC-2210: Only print the end if there was some JSON output
-        fprintf(stdout, "\n]}\n");
+    if (!json_latlon && options->json_output) {
+        // ECC-2210: Check if there was some JSON output
+        if (json_nonempty_output)
+            fprintf(stdout, "\n]}\n");
+        else
+            fprintf(stdout, "{ \"messages\" : [\n]}\n");
     }
 
     if (nearest)

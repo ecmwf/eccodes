@@ -135,8 +135,13 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 /* This is executed after the last message in the last file is processed */
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
-    if (options->json_output && json_nonempty_output)
-        fprintf(stdout, "\n]}\n");
+    if (options->json_output) {
+        // ECC-2210: Check if there was some JSON output
+        if (json_nonempty_output)
+            fprintf(stdout, "\n]}\n");
+        else
+            fprintf(stdout, "{ \"messages\" : [\n]}\n");
+    }
     return 0;
 }
 

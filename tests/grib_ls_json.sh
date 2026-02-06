@@ -125,12 +125,14 @@ set -e
 rm -f $tempLog
 input=sample.grib2
 ${tools_dir}/grib_ls -j -w level=42 $input > $tempLog
-if [ -s $tempLog ]; then
-  # File exists and has a size greater than zero
-  echo "ERROR: JSON output should have been empty!" >&2
-  echo "See temp file $tempLog"
-  exit 1
+if test "x$JSON_CHECK" != "x"; then
+  json_xs -t none < $tempLog
 fi
+cat > $tempRef <<EOF
+{ "messages" : [
+]}
+EOF
+diff $tempRef $tempLog
 
 
 # Clean up

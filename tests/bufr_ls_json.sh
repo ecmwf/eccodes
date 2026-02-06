@@ -45,11 +45,8 @@ done
 rm -f $tempLog
 input=aaen_55.bufr
 ${tools_dir}/bufr_ls -j -w localTablesVersionNumber=42 $input > $tempLog
-if [ -s $tempLog ]; then
-  # File exists and has a size greater than zero
-  echo "ERROR: JSON output should have been empty!" >&2
-  echo "See temp file $tempLog"
-  exit 1
+if test "x$JSON_CHECK" != "x"; then
+  cat $tempLog | json_xs -t none
 fi
 
 
