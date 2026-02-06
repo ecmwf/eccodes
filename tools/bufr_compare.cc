@@ -1164,6 +1164,12 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
     release_keys_list(); /* The keys list is used to determine the rank */
     new_keys_list();
 
+    // ECC-2211: Some keys are not included in the iterator
+    if (compare_values(options, handle1, handle2, "section2Present", GRIB_TYPE_UNDEFINED)) {
+        (*pErr)++;
+        ret = 1;
+    }
+
     while (grib_keys_iterator_next(iter)) {
         int rank          = 0;
         int dofree        = 0;
@@ -1206,11 +1212,6 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
         }
         if (dofree)
             grib_context_free(context, prefix);
-    }
-
-    if (compare_values(options, handle1, handle2, "section2Present", GRIB_TYPE_UNDEFINED)) {
-        (*pErr)++;
-        ret = 1;
     }
 
     grib_keys_iterator_delete(iter);
