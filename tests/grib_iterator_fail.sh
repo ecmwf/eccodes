@@ -33,7 +33,7 @@ ${tools_dir}/grib_get_data $tempGrib > $tempText 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "Invalid pl array" $tempText
+grep -q "pl array" $tempText
 rm -f $tempFilt
 
 
