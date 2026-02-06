@@ -14,6 +14,7 @@
 #include "grib_api_internal.h"
 
 #include <algorithm>
+#include <map>
 #include <cstring>
 #include <functional>
 #include <initializer_list>
@@ -753,6 +754,31 @@ GribToSpec::GribToSpec(codes_handle* h) :
     handle_(h)
 {
     ASSERT(handle_ != nullptr);
+
+    static bool ECCODES_GRIB_FIXES = eckit::Resource<bool>("$ECCODES_GRIB_FIXES", false);
+    if (ECCODES_GRIB_FIXES) {
+        using fixes_type = std::map<std::string, const eckit::spec::Custom&>;
+        static const fixes_type FIXES{
+            // gridName=N640, edition=2
+            { "51ea7dcd62e71c9707157a2d15247593", { { "longitudeOfLastGridPointInDegrees", 359.859375 } } },
+
+            // gridName=O2560, edition=1, experimentVersionNumber=h5xa/h5zi
+            { "8a6f6c4cc9ad3f64546773b87566bc72", { { "latitudeOfFirstGridPointInDegrees", 89.973 }, { "latitudeOfLastGridPointInDegrees", -89.973 } } },
+
+            // gridName=O640, edition=1, experimentVersionNumber=h5wk/h6en/hc9k
+            { "f5dc74ec36353f4c83f7de3bf46e1aef", { { "latitudeOfFirstGridPointInDegrees", 89.892 }, { "latitudeOfLastGridPointInDegrees", -89.892 } } },
+        };
+
+        char buffer[34];
+        auto size = sizeof(buffer);
+        CHECK_CALL(codes_get_string(handle_, "md5GridSection", buffer, &size));
+
+        const fixes_type::key_type md5GridSection(buffer, size);
+        if (const auto& fix = FIXES.find(md5GridSection); fix != FIXES.end()) {
+            grib_context_log(nullptr, GRIB_LOG_WARNING, "GribToSpec: applying fix for md5GridSection=%s", md5GridSection.c_str());
+            cache_.set(fix->second.container());
+        }
+    };
 }
 
 
