@@ -371,7 +371,7 @@ static void printInfo(grib_handle* h)
 
 static void print_index_key_values(grib_index* index, int icounter, const char* error_message)
 {
-    grib_index_key* keys = index->keys;
+    const grib_index_key* keys = index->keys;
     printf("== %d == ", icounter);
     if (error_message)
         printf("%s == ", error_message);
@@ -409,7 +409,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         global_handle = codes_new_from_index(idx1, CODES_BUFR, &err);
         if (options->verbose) {
             off_t offset   = 0;
-            char* filename = grib_get_field_file(options->index2, &offset);
+            const char* filename = grib_get_field_file(options->index2, &offset);
             printf("file1=\"%s\" ", filename);
             filename = grib_get_field_file(options->index1, &offset);
             printf("file2=\"%s\" \n", filename);
@@ -504,8 +504,8 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
-    grib_error* e   = error_summary;
-    int err         = 0;
+    const grib_error* e = error_summary;
+    int err = 0;
     grib_context* c = grib_context_get_default();
 
     /*if (grib_options_on("w:")) return 0;*/
@@ -995,12 +995,12 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                 value_tolerance *= tolerance_factor;
                 if (verbose)
                     printf("  (%d values) tolerance=%g\n", (int)len1, value_tolerance);
-                for (size_t i = 0; i < len1; i++) {
+                for (size_t k = 0; k < len1; k++) {
                     if ((diff = compare_double(pv1++, pv2++, &value_tolerance)) != 0) {
                         countdiff++;
                         if (maxdiff < diff) {
                             maxdiff  = diff;
-                            imaxdiff = i;
+                            imaxdiff = k;
                         }
                         err1 = GRIB_VALUE_MISMATCH;
                     }
@@ -1263,8 +1263,8 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
                 printf("#%d different size: %d!=%d\n",lcount,(int)size1,(int)size2);
             }
             if (memcmp_ret) {
-                unsigned char *m1=(unsigned char*)msg1;
-                unsigned char *m2=(unsigned char*)msg2;
+                const unsigned char *m1=(unsigned char*)msg1;
+                const unsigned char *m2=(unsigned char*)msg2;
                 printf("=== list of different bytes for message %d\n",lcount);
                 for (ii=0;ii<size1;ii++) {
                     if (memcmp(m1,m2,1)) {
