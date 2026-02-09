@@ -2657,7 +2657,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
     unsigned char* data            = 0;
     size_t subsetListSize          = 0;
     long* subsetList               = 0;
-    long section2Present = 0; // See ECC-2055
+    long section2Present = 0; // See ECC-2122
     long satelliteID     = -1;// this may be undefined
     int i;
     grib_iarray* elementsDescriptorsIndex = 0;
@@ -3225,7 +3225,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
         if (numberOfSubsets_ != grib_iarray_used_size(iss_list_)) {
             err = grib_set_long(h, numberOfSubsetsName_, grib_iarray_used_size(iss_list_));
             if (!err && section2Present) {
-                // ECC-2055
+                // ECC-2122
                 if (grib_is_defined(h, "localNumberOfObservations")) {
                     grib_set_long(h, "localNumberOfObservations", grib_iarray_used_size(iss_list_));
                 }
