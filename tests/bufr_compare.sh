@@ -318,8 +318,8 @@ set -e
 ${tools_dir}/bufr_compare -bident -v $tempIndex1 $tempIndex2
 rm -f $tempIndex1 $tempIndex2
 
-# ECC-2209
-# ------------
+# ECC-2209 string
+# ----------------
 f=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
 ${tools_dir}/codes_bufr_filter -o $fBufrTmp - $f <<EOF
  set unpack=1;
@@ -332,15 +332,39 @@ ${tools_dir}/bufr_compare $f $fBufrTmp > $fLog 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
-grep -q "stationOrSiteName.*MISSING. != .*Darya" $fLog
-
+grep -q "string.*stationOrSiteName.*MISSING. != .*Darya" $fLog
 
 set +e
 ${tools_dir}/bufr_compare $fBufrTmp $f > $fLog 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
-grep -q "stationOrSiteName.*Darya. != .*MISSING" $fLog
+grep -q "string.*stationOrSiteName.*Darya. != .*MISSING" $fLog
+
+# ECC-2209 integer
+# ----------------
+f=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
+${tools_dir}/codes_bufr_filter -o $fBufrTmp - $f <<EOF
+ set unpack=1;
+ set cloudCoverTotal=42;
+ set pack=1;
+ write;
+EOF
+set +e
+${tools_dir}/bufr_compare $f $fBufrTmp > $fLog 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+cat $fLog
+grep -q "long.*cloudCoverTotal.*MISSING. != .*42" $fLog
+
+set +e
+${tools_dir}/bufr_compare $fBufrTmp $f > $fLog 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "long.*cloudCoverTotal.*42. != .*MISSING" $fLog
+
 
 
 # Fail to unpack
