@@ -419,6 +419,33 @@ set -e
 [ $status -ne 0 ]
 grep -q "unreadable message" $fLog
 
+
+# ----------------------------------------
+echo "Test: Cannot get type..."
+# ----------------------------------------
+f1=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
+f2=$ECCODES_SAMPLES_PATH/BUFR4_local.tmpl
+set +e
+${tools_dir}/bufr_compare -c xxxx $f1 $f2  > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Error.*cannot get type of" $fLog
+
+# ----------------------------------------
+echo "Test: not found in field..."
+# ----------------------------------------
+f1=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
+f2=$ECCODES_SAMPLES_PATH/BUFR4_local.tmpl
+set +e
+${tools_dir}/bufr_compare -c rdbType $f2 $f1 > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+cat $fLog
+grep -q "rdbType.* not found in 2nd field" $fLog
+
+
 # Options
 # ----------
 f1="aaen_55.bufr"
