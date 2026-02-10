@@ -1,0 +1,7 @@
+# CURV configrations
+0 0 unknown
+1 1 Configuration with 8, bilinear interpolation
+2 2 Configuration with 16, bilinear interpolation
+3 3 Configuration with 8, nearest neighbour
+4 4 Configuration with 16, nearest neighbour
+255 255 missing
