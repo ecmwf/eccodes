@@ -68,7 +68,7 @@ int grib_tool_init(grib_runtime_options* options)
     int ret     = 0;
     double min = 0, max = 0;
     int i   = 0;
-    char* p = NULL;
+    const char* p = NULL;
 
     options->print_header        = 0;
     options->print_statistics    = 0;

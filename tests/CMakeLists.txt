@@ -51,9 +51,11 @@ list(APPEND test_c_bins
     grib_ecc-2019
     grib_ecc-2034
     grib_ecc-2045
+    grib_ecc-2188
     bufr_ecc-517
     bufr_ecc-1288
     bufr_ecc-2011
+    bufr_edition0
     bufr_get_element
     bufr_extract_headers
     bufr_check_descriptors
@@ -221,6 +223,7 @@ if( HAVE_BUILD_TOOLS )
         wmo_read_any_from_file
         wmo_read_any_from_file_with_offset
         wmo_read_any_from_stream
+        bufr_edition0
         bufr_templates
         bufr_rdbSubTypes
         bufr_dump_data
@@ -290,6 +293,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-2030
         bufr_ecc-2037
         bufr_ecc-2100
+        bufr_ecc-2189
         grib_488
         grib_ecc-490
         grib_ecc-756
@@ -324,6 +328,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2050
         grib_ecc-2052
         grib_ecc-2137
+        grib_ecc-2188
         grib_modelName
         grib_sub_hourly
         grib_set_bytes
@@ -332,6 +337,7 @@ if( HAVE_BUILD_TOOLS )
         codes_assert
         codes_ecc-1698
         codes_ecc-1929
+        codes_ecc-2192
         codes_get_string
         codes_codetable
         gts_get
@@ -507,7 +513,7 @@ if( HAVE_BUILD_TOOLS )
                       TEST_DEPENDS eccodes_download_bufrs eccodes_download_bufr_refs )
 
 
-    if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
+    if( ENABLE_EXTRA_TESTS AND (HAVE_ECCODES_THREADS OR HAVE_ECCODES_OMP_THREADS) )
         ecbuild_add_executable( TARGET    grib_encode_pthreads
                                 NOINSTALL
                                 SOURCES   grib_encode_pthreads.cc
@@ -607,9 +613,11 @@ endif()
 
 if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
     foreach( test
-            grib_from_gridspec )
-        ecbuild_add_test( TARGET  eccodes_t_${test}
+            grib_from_gridspec
+            grib_to_gridspec )
+        ecbuild_add_test( TARGET eccodes_t_${test}
                           SOURCES ${test}.cc
-                          LIBS    eccodes eckit_geo )
+                          LIBS eccodes eckit_geo
+                          WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} )
     endforeach()
 endif()

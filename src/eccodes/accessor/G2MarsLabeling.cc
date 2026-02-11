@@ -303,9 +303,10 @@ int G2MarsLabeling::extra_set(long val)
         grib_set_long(hand, derivedForecast_, derivedForecast);
     }
 
-    if (typeOfProcessedData > 0)
+    // See ECC-2198
+    if (typeOfProcessedData >= 0)
         grib_set_long(hand, typeOfProcessedData_, typeOfProcessedData);
-    if (typeOfGeneratingProcess > 0)
+    if (typeOfGeneratingProcess >= 0)
         grib_set_long(hand, typeOfGeneratingProcess_, typeOfGeneratingProcess);
 
     return ret;

@@ -26,3 +26,9 @@ template section_4 "bufr/section.4.def";
 template section_5 "bufr/section.5.def";
 
 transient totalLength = section1Length + section2Length + section3Length + section4Length + 8;
+
+# Edition 0 does not have these
+transient typicalYear = 0;
+transient typicalMonth = 0;
+transient typicalDay = 0;
+transient bufrHeaderSubCentre = 0;

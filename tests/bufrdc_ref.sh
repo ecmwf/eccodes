@@ -34,7 +34,7 @@ do
   # Test numeric data: compare output of filter (res) with reference file (ref)
   res_num=$file.num.test
   ref_num=$file.num.ref
-  diff_num=$file.num.diff
+  # diff_num=$file.num.diff
 
   rm -f $res_num
 

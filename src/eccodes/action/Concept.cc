@@ -117,8 +117,11 @@ grib_concept_value* Concept::get_concept_impl(grib_handle* h)
     ECCODES_ASSERT(basename);
     char baseNameValue[1024] = {0, }; // its value if a key
     size_t lenBaseName = sizeof(baseNameValue);
-    if (grib_get_string(h, basename_, baseNameValue, &lenBaseName) == GRIB_SUCCESS) {
-        basename = baseNameValue;  // basename_ was a key whose value is baseNameValue
+    // All concept files have the .def extension so they are plain strings
+    if (!string_ends_with(basename_, ".def")) {
+        if (grib_get_string(h, basename_, baseNameValue, &lenBaseName) == GRIB_SUCCESS) {
+            basename = baseNameValue;  // basename_ was a key whose value is baseNameValue
+        }
     }
     snprintf(buf, bufLen, "%s/%s", masterDir, basename);
 
