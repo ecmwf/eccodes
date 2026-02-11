@@ -13169,6 +13169,78 @@
 	 parameterNumber = 212 ;
 	 typeOfFirstFixedSurface = 254 ;
 	}
+#Covariance between skin temperature and soil temperature layer 1
+'covar_skt_stl1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 213 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and soil temperature layer 2
+'covar_skt_stl2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 214 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and soil temperature layer 3
+'covar_skt_stl3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 215 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and volumetric soil water layer 1
+'covar_skt_swvl1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 216 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and volumetric soil water layer 2
+'covar_skt_swvl2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 217 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and volumetric soil water layer 3
+'covar_skt_swvl3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 218 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and temperature of snow layer 1
+'covar_skt_tsn1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 219 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and temperature of snow layer 2
+'covar_skt_tsn2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 220 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and temperature of snow layer 3
+'covar_skt_tsn3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 221 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
 #Surface roughness length for heat
 'srlh' = {
 	 localTablesVersion = 1 ;

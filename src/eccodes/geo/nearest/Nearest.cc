@@ -246,7 +246,6 @@ int gribNearestDelete(eccodes::geo_nearest::Nearest* i)
     if (i) {
         i->destroy();
         delete i;
-        i = nullptr;
     }
     return GRIB_SUCCESS;
 }

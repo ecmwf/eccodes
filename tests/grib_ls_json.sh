@@ -121,5 +121,19 @@ set -e
 [ $status -ne 0 ]
 
 
+# ECC-2210: grib_ls with '-j' and empty output
+rm -f $tempLog
+input=sample.grib2
+${tools_dir}/grib_ls -j -w level=42 $input > $tempLog
+if test "x$JSON_CHECK" != "x"; then
+  json_xs -t none < $tempLog
+fi
+cat > $tempRef <<EOF
+{ "messages" : [
+]}
+EOF
+diff $tempRef $tempLog
+
+
 # Clean up
 rm -f $tempLog $tempOut $tempRef

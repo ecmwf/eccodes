@@ -30,16 +30,16 @@ fBufrInput2=temp2.in.${label}".bufr"
 fRules=temp.${label}.filter
 
 #----------------------------------------------------
-# Test: comparing same files
+echo "Test: comparing same files..."
 #----------------------------------------------------
 f="syno_1.bufr"
 echo "Test: comparing the same files" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}/bufr_compare $f $f >> $fLog
 
-#----------------------------------------------------
-# Test: comparing two completely different files
-#----------------------------------------------------
+#-------------------------------------------------------
+echo "Test: comparing two completely different files..."
+#-------------------------------------------------------
 set +e
 f1="syno_1.bufr"
 f2="aaen_55.bufr"
@@ -63,9 +63,9 @@ set -e
 [ $statusB -ne 0 ]
 
 
-#----------------------------------------------------
-# Test: comparing with and without the -b switch
-#----------------------------------------------------
+#-------------------------------------------------------
+echo "Test: comparing with and without the -b switch..."
+#-------------------------------------------------------
 f="syno_1.bufr"
 echo "Test: comparing with and without the -b switch" >> $fLog
 echo "file: $f" >> $fLog
@@ -101,7 +101,7 @@ ${tools_dir}/bufr_compare -b dataCategory $f ${fBufrTmp}>> $fLog
 #${tools_dir}/bufr_compare -r ${fBufrInput1} ${fBufrInput2}>> $fLog
 
 #----------------------------------------------------
-# Change subCentre and compare
+echo "Change subCentre and compare..."
 #----------------------------------------------------
 echo "Test: Change subCentre and compare" >> $fLog
 ${tools_dir}/bufr_set -s bufrHeaderSubCentre=12 aaen_55.bufr $fBufrTmp
@@ -112,10 +112,10 @@ set -e
 [ $status -eq 1 ]
 fgrep -q "[bufrHeaderSubCentre]: [70] != [12]" $fLog
 
-#----------------------------------------------------
-# First argument of bufr_compare is a directory (error)
-#----------------------------------------------------
-echo "Test: First argument of bufr_compare is a directory (error)" >> $fLog
+#------------------------------------------------------------------
+echo "Test: 1st argument of bufr_compare is a directory (error)..."
+#------------------------------------------------------------------
+echo "Test: 1st argument of bufr_compare is a directory (error)" >> $fLog
 temp_dir=tempdir.${label}
 mkdir -p $temp_dir
 set +e
@@ -125,10 +125,10 @@ set -e
 [ $status -eq 1 ]
 rm -fr $temp_dir
 
-#----------------------------------------------------
-# Second argument of bufr_compare is a directory
-#----------------------------------------------------
-echo "Test: Second argument of bufr_compare is a directory" >> $fLog
+#--------------------------------------------------------------
+echo "Test: 2nd argument of bufr_compare is a directory..."
+#--------------------------------------------------------------
+echo "Test: 2nd argument of bufr_compare is a directory" >> $fLog
 temp_dir=tempdir.${label}
 mkdir -p $temp_dir
 infile=aaen_55.bufr
@@ -137,7 +137,7 @@ ${tools_dir}/bufr_compare $infile $temp_dir >/dev/null
 rm -fr $temp_dir
 
 #----------------------------------------------------
-# Compare attributes
+echo "Test: Compare attributes..."
 #----------------------------------------------------
 echo "Test: Compare attributes" >> $fLog
 set +e
@@ -151,7 +151,7 @@ grep -q "#1#windSpeed->percentConfidence" $fLog
 grep -q "#1#coldestClusterTemperature->percentConfidence" $fLog
 
 #----------------------------------------------------
-# Header-only mode
+echo "Test: Header-only mode..."
 #----------------------------------------------------
 echo "Test: Header-only mode" >> $fLog
 f="syno_1.bufr"
@@ -167,25 +167,32 @@ ${tools_dir}/codes_bufr_filter -o $fBufrTmp $fRules $f
 ${tools_dir}/bufr_compare -H $f $fBufrTmp
 
 #----------------------------------------------------
-# Compare two-way (symmetric mode)
+echo "Test: Compare two-way (symmetric mode)..."
 #----------------------------------------------------
 echo "Test: Compare two-way (symmetric mode)" >> $fLog
 f=$ECCODES_SAMPLES_PATH/BUFR3.tmpl
 # Add a local section
 ${tools_dir}/bufr_set -s section2Present=1 $f $fBufrTmp
-# Compare A with B will pass
-${tools_dir}/bufr_compare $f $fBufrTmp
+# ECC-2211: Comparing A with B must return 1
+set +e
+${tools_dir}/bufr_compare $f $fBufrTmp > $fLog 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+fgrep -q "DIFFERENCE == long [section2Present]: [0] != [1]" $fLog
+
 # Compare with -2 option
 set +e
 ${tools_dir}/bufr_compare -2 -v $f $fBufrTmp > $fLog 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
-grep Swapping $fLog
+grep -q "Swapping" $fLog
+grep -q "rdbType. not found in 1st field" $fLog
 
-#----------------------------------------------------
-# ECC-656: using relative comparison (-R) with 'all'
-#----------------------------------------------------
+#------------------------------------------------------------------
+echo "Test: ECC-656: using relative comparison (-R) with 'all'..."
+#------------------------------------------------------------------
 echo "Test: ECC-656: using relative comparison (-R) with 'all'" >> $fLog
 f='airc_142.bufr'
 echo 'set unpack=1;set airTemperature=228; set height=1.037e+04; set pack=1; write;' |\
@@ -193,9 +200,9 @@ echo 'set unpack=1;set airTemperature=228; set height=1.037e+04; set pack=1; wri
 ${tools_dir}/bufr_compare -R airTemperature=0.004,height=0.001 $f $fBufrTmp
 ${tools_dir}/bufr_compare -R all=0.004 $f $fBufrTmp
 
-#--------------------------------------------------------------------
-# ECC-658: apply relative comparison (-R) to all ranks of a given key
-#--------------------------------------------------------------------
+#----------------------------------------------------------------------------------
+echo "Test: ECC-658: apply relative comparison (-R) to all ranks of a given key..."
+#----------------------------------------------------------------------------------
 echo "Test: ECC-658: apply relative comparison (-R) to all ranks of a given key" >> $fLog
 f='PraticaTemp.bufr'
 ${tools_dir}/codes_bufr_filter -o $fBufrTmp - $f <<EOF
@@ -311,6 +318,55 @@ set -e
 ${tools_dir}/bufr_compare -bident -v $tempIndex1 $tempIndex2
 rm -f $tempIndex1 $tempIndex2
 
+# ECC-2209 string
+# ----------------
+f=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
+${tools_dir}/codes_bufr_filter -o $fBufrTmp - $f <<EOF
+ set unpack=1;
+ set stationOrSiteName="Darya";
+ set pack=1;
+ write;
+EOF
+set +e
+${tools_dir}/bufr_compare $f $fBufrTmp > $fLog 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "string.*stationOrSiteName.*MISSING. != .*Darya" $fLog
+
+set +e
+${tools_dir}/bufr_compare $fBufrTmp $f > $fLog 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "string.*stationOrSiteName.*Darya. != .*MISSING" $fLog
+
+# ECC-2209 integer
+# ----------------
+f=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
+${tools_dir}/codes_bufr_filter -o $fBufrTmp - $f <<EOF
+ set unpack=1;
+ set cloudCoverTotal=42;
+ set pack=1;
+ write;
+EOF
+set +e
+${tools_dir}/bufr_compare $f $fBufrTmp > $fLog 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+cat $fLog
+grep -q "long.*cloudCoverTotal.*MISSING. != .*42" $fLog
+
+set +e
+${tools_dir}/bufr_compare $fBufrTmp $f > $fLog 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "long.*cloudCoverTotal.*42. != .*MISSING" $fLog
+
+
+
 # Fail to unpack
 # ---------------
 bufr1=vos308014_v3_26.bufr
@@ -330,7 +386,7 @@ set -e
 grep -q "Failed to unpack 2nd message" $fLog
 
 # ----------------------------------------
-# Summary mode (-f)
+echo "Summary mode (-f)..."
 # ----------------------------------------
 set +e
 ${tools_dir}/bufr_compare -f aaen_55.bufr aben_55.bufr > $fLog 2>&1
@@ -353,7 +409,7 @@ grep -q "Different number of messages" $fLog
 
 
 # ----------------------------------------
-# Unreadable message
+echo "Test: Unreadable message..."
 # ----------------------------------------
 echo BUFR > $fBufrTmp
 set +e
@@ -362,6 +418,33 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "unreadable message" $fLog
+
+
+# ----------------------------------------
+echo "Test: Cannot get type..."
+# ----------------------------------------
+f1=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
+f2=$ECCODES_SAMPLES_PATH/BUFR4_local.tmpl
+set +e
+${tools_dir}/bufr_compare -c xxxx $f1 $f2  > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Error.*cannot get type of" $fLog
+
+# ----------------------------------------
+echo "Test: not found in field..."
+# ----------------------------------------
+f1=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
+f2=$ECCODES_SAMPLES_PATH/BUFR4_local.tmpl
+set +e
+${tools_dir}/bufr_compare -c rdbType $f2 $f1 > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+cat $fLog
+grep -q "rdbType.* not found in 2nd field" $fLog
+
 
 # Options
 # ----------

@@ -1,2 +1,3 @@
 # Concept typeOfLevel
+'flightLevel' = {typeOfFirstFixedSurface=193; typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();}
 'abstractLevel' = {typeOfFirstFixedSurface=254;}

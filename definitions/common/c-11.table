@@ -298,5 +298,6 @@
 320 320 Radiation and Nuclear Safety Authority (Finland)
 321 321 State Office for Nuclear Safety (Czechia)
 322 322 Nuclear Regulation Authority (Slovakia)
-# 323-65534 Reserved for other centres
+323 wpmip Weather Prediction Model Intercomparison Project (WP-MIP)
+# 324-65534 Reserved for other centres
 65535 65535 Missing value
