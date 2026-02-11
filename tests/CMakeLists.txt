@@ -522,7 +522,7 @@ if( HAVE_BUILD_TOOLS )
                           TYPE SCRIPT
                           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_pthreads.sh )
 
-        foreach( test grib_encode_pthreads2 grib_threads_ecc-604-encode bufr_encode_pthreads )
+        foreach( test grib_encode_pthreads2 grib_threads_ecc-604-encode bufr_encode_pthreads grib_ecc-2216)
             ecbuild_add_executable( TARGET    ${test}
                                     NOINSTALL
                                     SOURCES   ${test}.cc
@@ -536,6 +536,11 @@ if( HAVE_BUILD_TOOLS )
                           TYPE SCRIPT
                           TEST_DEPENDS eccodes_download_bufrs
                           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_encode_pthreads.sh )
+        ecbuild_add_test( TARGET grib_ecc-2216
+                          TYPE SCRIPT
+                          # TEST_DEPENDS grib_ecc-2216
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-2216.sh )
+
     endif()
 
     if( NOT ECCODES_ON_WINDOWS )
