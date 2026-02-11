@@ -574,6 +574,11 @@ if( HAVE_BUILD_TOOLS )
                       CONDITION ENABLE_EXTRA_TESTS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_param_concepts.sh )
 
+    ecbuild_add_test( TARGET eccodes_t_grib_check_concept_keys
+                      TYPE SCRIPT
+                      CONDITION ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_concept_keys.sh )
+
     ecbuild_add_test( TARGET eccodes_t_bufr_split_by_rdbSubtype
                       TYPE SCRIPT
                       CONDITION ENABLE_EXTRA_TESTS AND ECCODES_INSTALL_EXTRA_TOOLS
