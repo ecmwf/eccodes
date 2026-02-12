@@ -55,21 +55,21 @@ models:
       - version: single-mse-v2.0
 
   - name: cosmo
-    start: 3000
+    start: 1000
     versions:
       - version: null
 
   - name: icon
-    start: 3500
+    start: 1500
     versions:
       - version: null
 
   - name: era5
-    start: 65000
+    start: 65533
     versions:
       - version: null
 
   - name: obs
-    start: 65100
+    start: 65534
     versions:
       - version: null

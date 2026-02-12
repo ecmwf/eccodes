@@ -26,14 +26,14 @@
 'aifs-single-mse-v1.1' = {inputProcessIdentifier=503;}
 'aifs-single-mse-v2.0' = {inputProcessIdentifier=504;}
 
-# cosmo (ID range: 3000-3000)
-'cosmo' = {inputProcessIdentifier=3000;}
+# cosmo (ID range: 1000-1000)
+'cosmo' = {inputProcessIdentifier=1000;}
 
-# icon (ID range: 3500-3500)
-'icon' = {inputProcessIdentifier=3500;}
+# icon (ID range: 1500-1500)
+'icon' = {inputProcessIdentifier=1500;}
 
-# era5 (ID range: 65000-65000)
-'era5' = {inputProcessIdentifier=65000;}
+# era5 (ID range: 65533-65533)
+'era5' = {inputProcessIdentifier=65533;}
 
-# obs (ID range: 65100-65100)
-'obs' = {inputProcessIdentifier=65100;}
+# obs (ID range: 65534-65534)
+'obs' = {inputProcessIdentifier=65534;}
