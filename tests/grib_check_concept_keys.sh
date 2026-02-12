@@ -21,24 +21,22 @@ fi
 
 files=$( find $proj_dir/definitions/grib2 -name '*Concept*def' -print )
 
-err_count=0
 file_count=0
 for f in $files; do
    file_count=$((file_count + 1))
    #echo "Doing $f ..."
    list=$( ${test_dir}/grib_check_param_concepts -v dummy $f |sort -u )
    for k in $list; do
+      set +e
       grep -q -w $k "$proj_dir/tests/keys"
       if [ $? -ne 0 ]; then
          echo "ERROR on key $k (See $f)" 2>&1
-         err_count=$((err_count + 1))
+         exit 1
       fi
+      set -e
    done
 done
-echo "Checked $file_count files. Error count = $err_count"
-if [ $err_count -gt 0 ]; then
-  exit 1
-fi
+echo "Checked $file_count files."
 
 
 # Clean up
