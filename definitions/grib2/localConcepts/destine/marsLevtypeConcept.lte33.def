@@ -1,3 +1,4 @@
+# Concept marsLevtype
 'hl'  = {typeOfFirstFixedSurface=103; typeOfSecondFixedSurface=255;}
 'sfc' = {typeOfFirstFixedSurface=103; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=0; typeOfSecondFixedSurface=255;}
 'sfc' = {typeOfFirstFixedSurface=103; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=2; typeOfSecondFixedSurface=255;}
