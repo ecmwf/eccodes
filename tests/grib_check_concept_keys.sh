@@ -19,16 +19,21 @@ if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
     exit 0
 fi
 
-files=$( find $proj_dir/definitions/grib2 -name '*Concept*def' -print )
+keys_file="$proj_dir/tests/keys"
+if [ ! -f "$keys_file" ]; then
+   echo "The file $keys_file does not exist!"
+   exit 1
+fi
+
+files=$( find "$proj_dir/definitions/grib2" -name '*Concept*def' -print )
 
 file_count=0
 for f in $files; do
    file_count=$((file_count + 1))
-   #echo "Doing $f ..."
    list=$( ${test_dir}/grib_check_param_concepts -v dummy $f |sort -u )
    for k in $list; do
       set +e
-      grep -q -w $k "$proj_dir/tests/keys"
+      grep -q -w $k "$keys_file"
       if [ $? -ne 0 ]; then
          echo "ERROR on key $k (See $f)" 2>&1
          exit 1

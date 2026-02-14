@@ -11,13 +11,12 @@
 . ./include.ctest.sh
 
 # ---------------------------------------------------------
-# This is the test for JIRA issue ECC-XXXX
-# < Add issue summary here >
+# This is the test for JIRA issue ECC-2218
+# GRIB2: levtype hl for post-mtg2 encodings
 # ---------------------------------------------------------
 
-REDIRECT=/dev/null
+label=`basename $0 | sed -e 's/\.sh/_test/'`
 
-label="grib_ecc-2218_test"  # Change prod to bufr or grib etc
 tempGrib=temp.$label.grib
 tempFilt=temp.$label.filt
 
