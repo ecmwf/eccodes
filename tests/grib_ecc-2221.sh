@@ -11,30 +11,28 @@
 . ./include.ctest.sh
 
 # ---------------------------------------------------------
-# This is the test for JIRA issue ECC-XXXX
-# < Add issue summary here >
+# This is the test for JIRA issue ECC-2221
+# Hydrological CEMS and C3S data refactoring of the encoding and the archival
 # ---------------------------------------------------------
 
-REDIRECT=/dev/null
-
-label="prod_ecc-2221_test"  # Change prod to bufr or grib etc
+label="grib_ecc-2221_test"
 tempGrib=temp.$label.grib
 tempFilt=temp.$label.filt
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 cat >$tempFilt<<EOF
-set setLocalDefinition=1;
-set class="ef";
-set tablesVersion=35;
-set productDefinitionTemplateNumber=73;
-set inputProcessIdentifier=16;
-set inputOriginatingCentre=98;
-set backgroundProcess=147;
-set generatingProcessIdentifier=5;
-set indicatorOfUnitForTimeRange=1;
-set lengthOfTimeRange=6;
-set paramId=235270;
-write;
+    set setLocalDefinition=1;
+    set class="ef";
+    set tablesVersion=35;
+    set productDefinitionTemplateNumber=73;
+    set inputProcessIdentifier=16;
+    set inputOriginatingCentre=98;
+    set backgroundProcess=147;
+    set generatingProcessIdentifier=5;
+    set indicatorOfUnitForTimeRange=1;
+    set lengthOfTimeRange=6;
+    set paramId=235270;
+    write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
 grib_check_key_equals $tempGrib model,configuration,forcing,timespan "lisflood v5 ecmf-ifs 6h"
