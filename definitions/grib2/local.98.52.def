@@ -1,0 +1,11 @@
+# Local definition 52: LDAS
+
+codetable[1] ldasMode "grib2/tables/local/ecmf/1/ldas_mode.table" : dump,string_type,lowercase; 
+
+codetable[2] targetMarsStream "mars/stream.table" = "oper" : dump,string_type,lowercase;
+
+# Hours
+unsigned[2] offsetToEndOf4DvarWindow : dump;
+unsigned[2] lengthOf4DvarWindow : dump;
+
+alias anoffset=offsetToEndOf4DvarWindow;

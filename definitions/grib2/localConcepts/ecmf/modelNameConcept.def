@@ -28,6 +28,9 @@
 'aifs-compo-ens-crps' = {
     backgroundProcess = 9;
 }
+## ldas 246 and 247
+'ldas' = {backgroundProcess = 246;}
+#'ldas' = {backgroundProcess = 247;}
 'unknown' = {
     true =defined(typeOfPostProcessing);
 }

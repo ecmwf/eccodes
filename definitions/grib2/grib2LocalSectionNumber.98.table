@@ -25,6 +25,7 @@
 43 43 EERIE project MARS labelling
 45 45 Model error fourier coefficients
 51 51 CURV diagnostic
+52 52 Land data assimilation system
 60 60 Ocean data analysis date and analysis time
 192 192 Multiple ECMWF local definitions
 300 300 Multi-dimensional parameters (deprecated)

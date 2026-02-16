@@ -1,0 +1,7 @@
+meta ldas_configuration sprintf("%s-%s", modelVersion, targetMarsStream ) : no_copy;
+
+alias mars.configuration = ldas_configuration ;
+
+alias mars.mode = ldasMode ;
+
+alias mars.anoffset = anoffset ;
