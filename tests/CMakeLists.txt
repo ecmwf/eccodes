@@ -186,6 +186,7 @@ if( HAVE_BUILD_TOOLS )
         grib_cmp_timeSpan
         grib_stattype
         grib_ecc-2221
+        grib_ecc-2218
     )
 
     # These tests require data downloads
@@ -574,6 +575,11 @@ if( HAVE_BUILD_TOOLS )
                       TYPE SCRIPT
                       CONDITION ENABLE_EXTRA_TESTS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_param_concepts.sh )
+
+    ecbuild_add_test( TARGET eccodes_t_grib_check_concept_keys
+                      TYPE SCRIPT
+                      CONDITION ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_concept_keys.sh )
 
     ecbuild_add_test( TARGET eccodes_t_bufr_split_by_rdbSubtype
                       TYPE SCRIPT

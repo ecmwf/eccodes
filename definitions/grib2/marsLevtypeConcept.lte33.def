@@ -21,11 +21,8 @@
          scaledValueOfFirstFixedSurface=45000; typeOfSecondFixedSurface=8;}
 'sfc' = {typeOfFirstFixedSurface=101; typeOfSecondFixedSurface=255;}
 'sfc' = {typeOfFirstFixedSurface=102; typeOfSecondFixedSurface=255;}
-'hl' = {typeOfFirstFixedSurface=103; typeOfSecondFixedSurface=255;}
-'hl' = {typeOfFirstFixedSurface=103; typeOfSecondFixedSurface=103;}
-'sfc' = {typeOfFirstFixedSurface=103; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=0; typeOfSecondFixedSurface=255;}
-'sfc' = {typeOfFirstFixedSurface=103; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=2; typeOfSecondFixedSurface=255;}
-'sfc' = {typeOfFirstFixedSurface=103; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=10; typeOfSecondFixedSurface=255;}
+'sfc' = {typeOfFirstFixedSurface=103; typeOfSecondFixedSurface=255;}
+'sfc' = {typeOfFirstFixedSurface=103; typeOfSecondFixedSurface=103;}
 'ml'  = {typeOfFirstFixedSurface=105; typeOfSecondFixedSurface=255;}
 'ml'  = {typeOfFirstFixedSurface=105; typeOfSecondFixedSurface=105;}
 'sfc' = {typeOfFirstFixedSurface=106; typeOfSecondFixedSurface=255;}
@@ -81,3 +78,13 @@
 'sol' = {typeOfFirstFixedSurface=187; typeOfSecondFixedSurface=255;}
 'sol' = {typeOfFirstFixedSurface=187; typeOfSecondFixedSurface=187;}
 'sfc' = {typeOfFirstFixedSurface=187; typeOfSecondFixedSurface=185;}
+
+'sfc' = {typeOfFirstFixedSurface=1; typeOfSecondFixedSurface=7;}
+'sfc' = {typeOfFirstFixedSurface=7; typeOfSecondFixedSurface=36;}
+
+'sfc' = {typeOfFirstFixedSurface=107; scaleFactorOfFirstFixedSurface=2; scaledValueOfFirstFixedSurface=27315;}
+'sfc' = {typeOfFirstFixedSurface=107; scaleFactorOfFirstFixedSurface=2; scaledValueOfFirstFixedSurface=27415;}
+'sfc' = {typeOfFirstFixedSurface=107; scaleFactorOfFirstFixedSurface=2; scaledValueOfFirstFixedSurface=27465;}
+
+'al'  = {typeOfFirstFixedSurface=191; scaleFactorOfFirstFixedSurface=missing(); scaledValueOfFirstFixedSurface=missing(); }
+'al'  = {typeOfFirstFixedSurface=191;}
