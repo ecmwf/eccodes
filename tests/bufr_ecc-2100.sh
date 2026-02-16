@@ -15,8 +15,6 @@
 # ECC-2100: BUFR: Handle rdbtimeDate edge case
 # ---------------------------------------------------------
 
-REDIRECT=/dev/null
-
 label="bufr_ecc-2100_test"
 
 tempBufr=temp.$label.bufr

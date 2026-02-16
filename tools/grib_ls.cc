@@ -61,6 +61,7 @@ static int mode        = 0;
 static int json_latlon       = 0;
 static int first_handle      = 1;
 static grib_nearest* nearest = NULL;
+static bool json_nonempty_output = false; // ECC-2210
 
 int main(int argc, char* argv[])
 {
@@ -89,7 +90,7 @@ int grib_tool_init(grib_runtime_options* options)
     int ret     = 0;
     double min = 0, max = 0;
     int i   = 0;
-    char* p = NULL;
+    const char* p = NULL;
     if (options->latlon && grib_options_on("j")) {
         options->verbose = 0;
         json_latlon      = 1;
@@ -376,6 +377,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         if (first_handle) {
             fprintf(stdout, "{ \"messages\" : [ \n");
             first_handle = 0;
+            json_nonempty_output = true;
         }
     }
 
@@ -429,8 +431,13 @@ int grib_tool_finalise_action(grib_runtime_options* options)
         }
     }
 
-    if (!json_latlon && options->json_output)
-        fprintf(stdout, "\n]}\n");
+    if (!json_latlon && options->json_output) {
+        // ECC-2210: Check if there was some JSON output
+        if (json_nonempty_output)
+            fprintf(stdout, "\n]}\n");
+        else
+            fprintf(stdout, "{ \"messages\" : [\n]}\n");
+    }
 
     if (nearest)
         grib_nearest_delete(nearest);
