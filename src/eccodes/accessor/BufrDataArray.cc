@@ -2899,7 +2899,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
                                 nReps[dPrev]--;
                                 if (nReps[dPrev] <= 0) {
                                     while (nReps[dPrev] <= 0 && dPrev > 0) {
-                                        i += numberOfElementsToRepeat[dPrev] + 2;
+                                        i = startRepetition[dPrev] + numberOfElementsToRepeat[dPrev];
                                         dPrev--;
                                     }
                                     depth--;
