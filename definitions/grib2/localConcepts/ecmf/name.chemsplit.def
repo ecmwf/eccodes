@@ -14598,46 +14598,6 @@
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
 	}
-#Significant wave height of at least 2 m
-'Significant wave height of at least 2 m' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 101 ;
-	 scaledValueOfLowerLimit = 2 ;
-	 scaleFactorOfLowerLimit = 0 ;
-	 probabilityType = 3 ;
-	}
-#Significant wave height of at least 4 m
-'Significant wave height of at least 4 m' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 101 ;
-	 scaledValueOfLowerLimit = 4 ;
-	 scaleFactorOfLowerLimit = 0 ;
-	 probabilityType = 3 ;
-	}
-#Significant wave height of at least 6 m
-'Significant wave height of at least 6 m' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 101 ;
-	 scaledValueOfLowerLimit = 6 ;
-	 scaleFactorOfLowerLimit = 0 ;
-	 probabilityType = 3 ;
-	}
-#Significant wave height of at least 8 m
-'Significant wave height of at least 8 m' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 101 ;
-	 scaledValueOfLowerLimit = 8 ;
-	 scaleFactorOfLowerLimit = 0 ;
-	 probabilityType = 3 ;
-	}
 #Mean wave period of at least 8 s
 'Mean wave period of at least 8 s' = {
 	 discipline = 192 ;
