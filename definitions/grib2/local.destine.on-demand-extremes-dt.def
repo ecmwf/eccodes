@@ -6,14 +6,5 @@ ascii[8] georef = "s0000000" : dump ;
 alias mars.georef = georef;
 
 # ECC-2222: We want model in on-demand-extremes-dt
-concept modelName(unknown, "modelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
-
-# print "[modelName=]";
-# print "[conceptsDir2=]";
-
-if (modelName isnot "unknown") {
-    concept modelVersion(unknown, "modelVersionConcept.[modelName].def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
-    alias ls.model = modelName;
-    alias mars.model = modelName;
-
-}
+#           Concept and aliasing into mars namespace must be done post metadata
+transient onDemandMarsModel = true : hidden;
