@@ -5,4 +5,6 @@
 ascii[8] georef = "s0000000" : dump ;
 alias mars.georef = georef;
 
-transient createModel = true : hidden; # ECC-2222: Delay model name creation until all dependent concepts are available
+# ECC-2222: We want model in on-demand-extremes-dt
+#           Concept and aliasing into mars namespace must be done post metadata
+transient onDemandMarsModel = true : hidden;
