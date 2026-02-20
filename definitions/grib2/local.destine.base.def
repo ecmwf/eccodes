@@ -1,4 +1,6 @@
 # DestinE MARS base keywords
 
 codetable[2] dataset "grib2/destine_dataset.table" : dump;
-alias mars.dataset = dataset;
+#alias mars.dataset = dataset;
+
+alias datasetTrigger = dataset;

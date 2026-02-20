@@ -21,7 +21,7 @@ if ( defined(dataset) && dataset is "climate-dt" ) {
 }
 
 # ECC-2222: We want model in on-demand-extremes-dt
-if ( defined(onDemandMarsModel) ) {
+if ( (datasetTrigger != -1) && defined(onDemandMarsModel) ) {
     concept modelName(unknown, "modelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
     if (modelName isnot "unknown") {
         concept modelVersion(unknown, "modelVersionConcept.[modelName].def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
