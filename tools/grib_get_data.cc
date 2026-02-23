@@ -172,7 +172,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     if (iter) {
         double *lat = 0, *lon = 0, *val = 0;
         lats = (double*)calloc(numberOfPoints + 1, sizeof(double));
+        if (!lats) exit(GRIB_OUT_OF_MEMORY);
         lons = (double*)calloc(numberOfPoints + 1, sizeof(double));
+        if (!lons) exit(GRIB_OUT_OF_MEMORY);
         lat  = lats;
         lon  = lons;
         val  = data_values;

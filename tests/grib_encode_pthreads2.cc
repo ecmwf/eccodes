@@ -137,38 +137,45 @@ int main(int argc, char** argv)
     if (strcmp(mode, "seq") == 0) {
         parallel = 0;
     }
-    if (parallel) {
-        printf("Running parallel in %zu threads. %zu iterations (prod=%zu)\n", NUM_THREADS, FILES_PER_ITERATION, NUM_THREADS * FILES_PER_ITERATION);
-        printf("Options: dump=%d, clone=%d, write=%d\n", opt_dump, opt_clone, opt_write);
-    }
-    else {
-        printf("Running sequentially in %zu runs. %zu iterations\n", NUM_THREADS, FILES_PER_ITERATION);
-    }
 
-    {
+    if (parallel) {
+#if GRIB_PTHREADS
         pthread_t* workers = (pthread_t*)malloc(NUM_THREADS * sizeof(pthread_t));
         for (i = 0; i < NUM_THREADS; i++) {
             struct v* data = (struct v*)malloc(sizeof(struct v));
             data->number   = i;
             data->data     = NULL;
 
-            if (parallel) {
-                /* Now we will create the thread passing it data as an argument */
-                pthread_create(&workers[thread_counter], NULL, runner, data);
-                /*pthread_join(workers[thread_counter], NULL);*/
-                thread_counter++;
-            }
-            else {
-                do_stuff(data);
-            }
+            /* Now we will create the thread passing it data as an argument */
+            pthread_create(&workers[thread_counter], NULL, runner, data);
+            /*pthread_join(workers[thread_counter], NULL);*/
+            thread_counter++;
         }
 
-        if (parallel) {
-            for (i = 0; i < NUM_THREADS; i++) {
-                pthread_join(workers[i], NULL);
-            }
+        for (i = 0; i < NUM_THREADS; i++) {
+          pthread_join(workers[i], NULL);
         }
         free(workers);
+#elif GRIB_OMP_THREADS
+#pragma omp parallel for schedule(static) num_threads(NUM_THREADS)
+        for (i = 0; i < NUM_THREADS; i++) {
+            struct v* data = (struct v*)malloc(sizeof(struct v));
+            data->number   = i;
+            data->data     = NULL;
+            do_stuff(data);
+        }
+#else
+        fprintf(stderr, "This test requires either GRIB_PTHREADS or GRIB_OMP_THREADS to be set to a non-zero value\n");
+        return 1;
+#endif
+    }
+    else {
+        for (i = 0; i < NUM_THREADS; i++) {
+            struct v* data = (struct v*)malloc(sizeof(struct v));
+            data->number   = i;
+            data->data     = NULL;
+            do_stuff(data);
+        }
     }
 
     return 0;

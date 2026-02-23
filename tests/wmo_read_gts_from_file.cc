@@ -23,7 +23,7 @@ int main(int argc, char** argv)
 
     if (argc != 2) return 1;
 
-    in = fopen(argv[1], "r");
+    in = fopen(argv[1], "rb");
     if (!in) return 1;
 
     err = wmo_read_gts_from_file(in, buffer, &len);

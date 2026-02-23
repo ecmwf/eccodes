@@ -1,0 +1,39 @@
+
+# ifs (ID range: 1-18)
+'ifs-cy41r2' = {inputProcessIdentifier=1;}
+'ifs-cy43r1' = {inputProcessIdentifier=2;}
+'ifs-cy43r3' = {inputProcessIdentifier=3;}
+'ifs-cy45r1' = {inputProcessIdentifier=4;}
+'ifs-cy46r1' = {inputProcessIdentifier=5;}
+'ifs-cy47r1' = {inputProcessIdentifier=6;}
+'ifs-cy47r2' = {inputProcessIdentifier=7;}
+'ifs-cy47r3' = {inputProcessIdentifier=8;}
+'ifs-cy48r1' = {inputProcessIdentifier=9;}
+'ifs-cy48r2' = {inputProcessIdentifier=10;}
+'ifs-climatedt' = {inputProcessIdentifier=11;}
+'ifs-cy48r3' = {inputProcessIdentifier=12;}
+'ifs-cy49r1' = {inputProcessIdentifier=13;}
+'ifs-cy49r2' = {inputProcessIdentifier=14;}
+'ifs-cy49r3' = {inputProcessIdentifier=15;}
+'ifs-cy50r1' = {inputProcessIdentifier=16;}
+'ifs-cy50r2' = {inputProcessIdentifier=17;}
+'ifs-cy50r3' = {inputProcessIdentifier=18;}
+
+# aifs (ID range: 500-504)
+'aifs-single-mse-v0.2.0' = {inputProcessIdentifier=500;}
+'aifs-single-mse-v0.2.1' = {inputProcessIdentifier=501;}
+'aifs-single-mse-v1.0' = {inputProcessIdentifier=502;}
+'aifs-single-mse-v1.1' = {inputProcessIdentifier=503;}
+'aifs-single-mse-v2.0' = {inputProcessIdentifier=504;}
+
+# cosmo (ID range: 1000-1000)
+'cosmo' = {inputProcessIdentifier=1000;}
+
+# icon (ID range: 1500-1500)
+'icon' = {inputProcessIdentifier=1500;}
+
+# era5 (ID range: 65533-65533)
+'era5' = {inputProcessIdentifier=65533;}
+
+# obs (ID range: 65534-65534)
+'obs' = {inputProcessIdentifier=65534;}

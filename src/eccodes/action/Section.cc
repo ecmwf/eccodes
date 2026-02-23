@@ -98,7 +98,6 @@ int Section::notify_change(grib_accessor* notified,
         return GRIB_INTERNAL_ERROR;
     }
 
-    ECCODES_ASSERT(h->kid == NULL);
     tmp_handle->loader = &loader;
     tmp_handle->main   = h;
     h->kid             = tmp_handle;

@@ -256,18 +256,18 @@ static void dump_codetable(grib_codetable* atable)
 
 grib_codetable* Codetable::load_table()
 {
-    size_t size                     = 0;
-    grib_handle* h                  = parent_->h;
-    grib_context* c                 = h->context;
-    grib_codetable* t               = NULL;
-    grib_codetable* next            = NULL;
-    char* filename                  = 0;
-    char recomposed[1024]           = {0,};
+    size_t size                = 0;
+    grib_handle* h             = parent_->h;
+    grib_context* c            = h->context;
+    grib_codetable* t          = NULL;
+    grib_codetable* next       = NULL;
+    const char* filename       = 0;
+    char recomposed[1024]      = {0,};
     char localRecomposed[1024] = {0,};
-    char* localFilename  = 0;
-    char masterDir[1024] = {0,};
-    char localDir[1024] = {0,};
-    size_t len = 1024;
+    const char* localFilename  = 0;
+    char masterDir[1024]       = {0,};
+    char localDir[1024]        = {0,};
+    size_t len                 = 1024;
 
     if (masterDir_ != NULL)
         grib_get_string(h, masterDir_, masterDir, &len);
@@ -539,7 +539,7 @@ void Codetable::dump(eccodes::Dumper* dumper)
 
 int Codetable::unpack_string(char* buffer, size_t* len)
 {
-    grib_codetable* table = NULL;
+    const grib_codetable* table = NULL;
 
     size_t size = 1;
     long value;
@@ -802,7 +802,7 @@ int Codetable::pack_missing()
     // Many of the code tables do have a 'Missing' entry (all bits = 1)
     // So it is more user-friendly to allow setting codetable keys to
     // missing. For tables that do not have such an entry, an error is issued
-    grib_handle* h = get_enclosing_handle();
+    const grib_handle* h = get_enclosing_handle();
 
     const long nbytes = length_;
     const long nbits  = nbytes * 8;

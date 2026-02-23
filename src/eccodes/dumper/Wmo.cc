@@ -450,7 +450,7 @@ void Wmo::dump_label(grib_accessor* a, const char* comment)
 
 void Wmo::dump_section(grib_accessor* a, grib_block_of_accessors* block)
 {
-    grib_section* s    = a->sub_section_;
+    const grib_section* s = a->sub_section_;
     int is_wmo_section = 0;
     char* upper        = NULL;
     char tmp[512];
@@ -502,7 +502,7 @@ static void print_hexadecimal(FILE* out, unsigned long flags, grib_accessor* a)
 {
     int i                = 0;
     unsigned long offset = 0;
-    grib_handle* h       = a->get_enclosing_handle();
+    const grib_handle* h = a->get_enclosing_handle();
     if ((flags & GRIB_DUMP_FLAG_HEXADECIMAL) != 0 && a->length_ != 0) {
         fprintf(out, " (");
         offset = a->offset_;

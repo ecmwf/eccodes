@@ -387,7 +387,9 @@ list( APPEND eccodes_src_files
     grib_optimize_decimal_factor.cc
     eccodes_windef.h
     # We ship our own generated lex/yacc C files
-    grib_yacc.cc  grib_lex.cc )
+    grib_yacc.cc  grib_lex.cc
+
+    Spec.h )
 
 list( APPEND eccodes_extra_src_files
     grib_bits_fast_big_endian.cc grib_bits_any_endian.cc

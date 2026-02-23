@@ -1,0 +1,8 @@
+#1-39 keep the numbers for c3s E hype catchment
+'v1-catchment' = { generatingProcessIdentifier = 1; }
+
+#40-79 keep the numbers for c3s E hype grid
+'v1-grid' = { generatingProcessIdentifier = 40; }
+
+#80-119 keep the numbers for c3s ww hype
+'v1' = { generatingProcessIdentifier = 80; }

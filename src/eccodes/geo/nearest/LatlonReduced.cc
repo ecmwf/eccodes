@@ -85,7 +85,7 @@ int LatlonReduced::find_global(grib_handle* h,
     int ret = 0, kk = 0, ii = 0, jj = 0;
     int j               = 0;
     long* pla           = NULL;
-    long* pl            = NULL;
+    const long* pl      = NULL;
     size_t nvalues      = 0;
     grib_iterator* iter = NULL;
     double lat = 0, lon = 0;
