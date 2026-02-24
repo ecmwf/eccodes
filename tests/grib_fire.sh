@@ -18,13 +18,13 @@ temp=temp1.${label}.grib2
 
 for pdtn in 70 71 72 73 93 94 97 98; do
   ${tools_dir}/grib_set -s \
-    productDefinitionTemplateNumber=$pdtn,marsClass=gw,inputProcessIdentifier=1000,inputOriginatingCentre=98 \
+    productDefinitionTemplateNumber=$pdtn,typeOfPostProcessing=10,marsClass=gw,inputProcessIdentifier=1000,inputOriginatingCentre=98 \
   $grib2_sample $temp
   grib_check_key_equals $temp "datasetForLocal,originatingClass,originOfPostProcessing" "fire 1 ecmf_od"
 
 
   ${tools_dir}/grib_set -s \
-    productDefinitionTemplateNumber=$pdtn,marsClass=gw,inputProcessIdentifier=23000,inputOriginatingCentre=98 \
+    productDefinitionTemplateNumber=$pdtn,typeOfPostProcessing=10,marsClass=gw,inputProcessIdentifier=23000,inputOriginatingCentre=98 \
   $grib2_sample $temp
   grib_check_key_equals $temp "datasetForLocal,originatingClass,originOfPostProcessing" "fire 23 ecmf_ea"
 done
