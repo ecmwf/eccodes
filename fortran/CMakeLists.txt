@@ -142,7 +142,7 @@ if( HAVE_FORTRAN )
     # Install the contents of the fortran module directory
     if(ECBUILD_INSTALL_FORTRAN_MODULES)
         install( CODE  "execute_process(
-                            COMMAND ${CMAKE_COMMAND} -D MOD_DESTINATION=${INSTALL_INCLUDE_DIR}
+                            COMMAND ${CMAKE_COMMAND} -D MOD_DESTINATION=\${CMAKE_INSTALL_PREFIX}/${INSTALL_INCLUDE_DIR}
                                                      -P ${CMAKE_CURRENT_BINARY_DIR}/eccodes_f90_copy_mod.cmake )" )
     endif()
 
