@@ -117,7 +117,6 @@ if( HAVE_BUILD_TOOLS )
         grib_ecpoint
         grib_s2s
         grib_fire
-        grib_mtg2_switch
         grib_generalised_tiles
         # grib_true_imagery
         grib2_wave_spectra
@@ -173,7 +172,6 @@ if( HAVE_BUILD_TOOLS )
         grib_sh_imag
         grib_spectral
         grib_levtype
-        grib_typeOfLevel
         grib2_product_templates
         grib_grid_unstructured
         grib_grid_lambert_conformal
@@ -182,7 +180,6 @@ if( HAVE_BUILD_TOOLS )
         grib_g1day_of_the_year_date
         grib_paramid_chemid_split
         grib_cmp_paramtype
-        grib_timeSpanConcept
         grib_cmp_timeSpan
         grib_stattype
         grib_ecc-2221
@@ -193,6 +190,9 @@ if( HAVE_BUILD_TOOLS )
     # and/or take much longer
     list(APPEND tests_extra
         error_codes
+        grib_typeOfLevel
+        grib_mtg2_switch
+        grib_timeSpanConcept
         grib_datasetForLocal
         grib_isGridded_isSpectral
         grib_data_quality_checks
