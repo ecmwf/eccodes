@@ -516,28 +516,28 @@ if( HAVE_BUILD_TOOLS )
 
 
     if( ENABLE_EXTRA_TESTS AND (HAVE_ECCODES_THREADS OR HAVE_ECCODES_OMP_THREADS) )
-        ecbuild_add_executable( TARGET    grib_encode_pthreads
+        ecbuild_add_executable( TARGET    grib_encode_threads
                                 NOINSTALL
-                                SOURCES   grib_encode_pthreads.cc
+                                SOURCES   grib_encode_threads.cc
                                 LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
-        ecbuild_add_test( TARGET eccodes_t_grib_encode_pthreads
+        ecbuild_add_test( TARGET eccodes_t_grib_encode_threads
                           TYPE SCRIPT
-                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_pthreads.sh )
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_threads.sh )
 
-        foreach( test grib_encode_pthreads2 grib_threads_ecc-604-encode bufr_encode_pthreads )
+        foreach( test grib_encode_threads2 grib_threads_ecc-604-encode bufr_encode_threads )
             ecbuild_add_executable( TARGET    ${test}
                                     NOINSTALL
                                     SOURCES   ${test}.cc
                                     LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
         endforeach()
-        ecbuild_add_test( TARGET eccodes_t_grib_encode_pthreads2
+        ecbuild_add_test( TARGET eccodes_t_grib_encode_threads2
                           TYPE SCRIPT
                           TEST_DEPENDS eccodes_download_gribs
-                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_pthreads2.sh )
-        ecbuild_add_test( TARGET eccodes_t_bufr_encode_pthreads
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_threads2.sh )
+        ecbuild_add_test( TARGET eccodes_t_bufr_encode_threads
                           TYPE SCRIPT
                           TEST_DEPENDS eccodes_download_bufrs
-                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_encode_pthreads.sh )
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_encode_threads.sh )
     endif()
 
     if( NOT ECCODES_ON_WINDOWS )
