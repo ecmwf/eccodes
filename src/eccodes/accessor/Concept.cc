@@ -373,6 +373,10 @@ static void print_user_friendly_message(grib_handle* h, const char* name, grib_c
     if (grib_get_string(h, "datasetForLocal", dataset_s, &dataset_len) == GRIB_SUCCESS && !STR_EQUAL(dataset_s, "unknown")) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle dataset=%s", dataset_s);
     }
+    long tablesVersion = 0;
+    if (grib_get_long(h, "tablesVersion", &tablesVersion) == GRIB_SUCCESS) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle tablesVersion=%ld", tablesVersion);
+    }
     if (strcmp(act->name_, "paramId") == 0) {
         if (string_to_long(name, &dummy, 1) == GRIB_SUCCESS) {
             // The paramId value is an integer. Show them the param DB
