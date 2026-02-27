@@ -441,11 +441,11 @@ int grib_fieldset_apply_order_by_(grib_fieldset* set, const char* order_by_strin
 }
 
 // C-API: Ensure all exceptions are converted to error codes
-int grib_fieldset_apply_order_by(grib_fieldset* set, const char* order_by_string) {
+int grib_fieldset_apply_order_by(grib_fieldset* set, const char* order_by_string)
+{
     auto result = eccodes::handleExceptions(grib_fieldset_apply_order_by_, set, order_by_string);
     return eccodes::getErrorCode(result);
 }
-
 
 static int grib_fieldset_compare(grib_fieldset* set, const int* i, const int* j)
 {
@@ -645,7 +645,8 @@ static void grib_fieldset_delete_(grib_fieldset* set)
 }
 
 // C-API: Ensure all exceptions are converted to error codes
-void grib_fieldset_delete(grib_fieldset* set) {
+void grib_fieldset_delete(grib_fieldset* set)
+{
     auto result = eccodes::handleExceptions(grib_fieldset_delete_, set);
     eccodes::logErrorAndReturnValue(result);
 }
@@ -729,7 +730,6 @@ static int grib_fieldset_resize(grib_fieldset* set, size_t newsize)
     return GRIB_SUCCESS;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_fieldset_rewind(grib_fieldset* set)
 {
     if (set)
@@ -748,12 +748,12 @@ static grib_handle* grib_fieldset_next_handle_(grib_fieldset* set, int* err)
 }
 
 // C-API: Ensure all exceptions are converted to error codes
-grib_handle* grib_fieldset_next_handle(grib_fieldset* set, int* err) {
+grib_handle* grib_fieldset_next_handle(grib_fieldset* set, int* err)
+{
     auto result = eccodes::handleExceptions(grib_fieldset_next_handle_, set, err);
     return eccodes::updateErrorAndReturnValue(result, err);
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 int grib_fieldset_count(const grib_fieldset* set)
 {
     return set->size;
