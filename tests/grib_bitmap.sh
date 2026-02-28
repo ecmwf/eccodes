@@ -27,12 +27,12 @@ tempOut=grib_bitmap.txt
 
 rm -f $outfile
 
-# Add a bitmap
-# -------------
+echo "Test: Add a bitmap..."
+# ---------------------------
 ${tools_dir}/grib_set -s bitmapPresent=1 $infile $outfile >$REDIRECT
 
-${tools_dir}/grib_dump $infile  | grep -v FILE > $infile.dump
-${tools_dir}/grib_dump $outfile | grep -v FILE > $outfile.dump
+${tools_dir}/grib_dump -s missingValue=9999 $infile  | grep -v FILE > $infile.dump
+${tools_dir}/grib_dump -s missingValue=9999 $outfile | grep -v FILE > $outfile.dump
 
 grib_check_key_equals $outfile section1Flags,section3Length '192 772'
 
@@ -61,12 +61,12 @@ diff $tempRef $outfile.dump
 rm -f $infile.dump $outfile.dump $tempRef
 
 
-# Remove the bitmap
-# -----------------
+echo "Test: Remove the bitmap..."
+# --------------------------------
 ${tools_dir}/grib_set -s bitmapPresent=0 $outfile $outfile1 >$REDIRECT
 
-${tools_dir}/grib_dump $outfile1 | grep -v FILE > $outfile1.dump
-${tools_dir}/grib_dump $outfile  | grep -v FILE > $outfile.dump
+${tools_dir}/grib_dump -s missingValue=9999 $outfile1 | grep -v FILE > $outfile1.dump
+${tools_dir}/grib_dump -s missingValue=9999 $outfile  | grep -v FILE > $outfile.dump
 
 if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
     diff $outfile1.dump ${data_dir}/no_bitmap.diff
@@ -102,8 +102,8 @@ if [ $HAVE_GEOGRAPHY -eq 1 ]; then
   rm -f $tempData1 $tempData2
 fi
 
-# ECC-1233: Allow printing of 'byte' keys e.g., bitmap, section paddings
-# -----------------------------------------------------------------------
+echo "Test: ECC-1233: Allow printing of 'byte' keys e.g., bitmap, section paddings..."
+# -------------------------------------------------------------------------------------
 cat > $tempRules<<EOF
  print " bitmap=[bitmap]";
  print " padding_local1_1=[padding_local1_1]";
@@ -117,8 +117,8 @@ EOF
 diff $tempRef $tempData1
 rm -f  $tempData1 $temp1 $tempRules $tempRef
 
-# ECC-511: grid_complex_spatial_differencing
-# -------------------------------------------
+echo "Test: ECC-511: grid_complex_spatial_differencing..."
+# --------------------------------------------------------
 infile=${data_dir}/gfs.complex.mvmu.grib2
 tempSimple=temp.grib_bitmap.simple.grib
 ${tools_dir}/grib_set -r -s packingType=grid_simple $infile $tempSimple
