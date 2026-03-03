@@ -30,6 +30,12 @@
 'aifs-compo-ens-crps' = {
     backgroundProcess = 9;
 }
+'aifs-subs' = {
+    backgroundProcess = 10;
+}
+'aifs-subs-crps' = {
+    backgroundProcess = 11;
+}
 ####################################################
 ## 147 - 154 used in hydro centre                 ##
 ## grib2/localConcepts/hydro/modelNameConcept.def ##
