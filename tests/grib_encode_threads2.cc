@@ -106,7 +106,9 @@ void* runner(void* ptr); /* the thread */
 int main(int argc, char** argv)
 {
     size_t i;
+#if GRIB_PTHREADS
     int thread_counter = 0;
+#endif
     int parallel = 1, index = 0, c = 0;
     const char* prog = argv[0];
     char* mode;
