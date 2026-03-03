@@ -106,9 +106,6 @@ void* runner(void* ptr); /* the thread */
 int main(int argc, char** argv)
 {
     size_t i;
-#if GRIB_PTHREADS
-    int thread_counter = 0;
-#endif
     int parallel = 1, index = 0, c = 0;
     const char* prog = argv[0];
     char* mode;
@@ -142,6 +139,7 @@ int main(int argc, char** argv)
 
     if (parallel) {
 #if GRIB_PTHREADS
+        int thread_counter = 0;
         pthread_t* workers = (pthread_t*)malloc(NUM_THREADS * sizeof(pthread_t));
         for (i = 0; i < NUM_THREADS; i++) {
             struct v* data = (struct v*)malloc(sizeof(struct v));
