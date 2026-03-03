@@ -40,6 +40,7 @@ int main(int argc, char** argv)
 
     free(ivalues);
     ivalues    = (long*)malloc(1 * sizeof(long));
+    assert(ivalues);
     size       = 1;
     ivalues[0] = 486;
     CODES_CHECK(codes_set_long_array(h, "inputExtendedDelayedDescriptorReplicationFactor", ivalues, size), 0);

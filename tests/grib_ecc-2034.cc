@@ -35,6 +35,7 @@ int main(int argc, char** argv)
 
     // Field values ranging from 0 to 1
     double* values = (double*)malloc(values_len * sizeof(double));
+    if (!values) return 1;
     e = d = 10e-8;
     for (size_t i = 0; i < values_len; i++) {
         if (count > 100) {
