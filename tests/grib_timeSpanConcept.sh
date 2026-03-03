@@ -112,4 +112,4 @@ done
 
 
 # Clean up
-rm -f $tempGrib
+rm -f $tempGrib $tempFilt

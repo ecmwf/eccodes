@@ -8,13 +8,15 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 /*
- * Test for ECC-604: GRIB decoding/encoding sequentially and parallel with POSIX threads
+ * Test for ECC-604: Each thread creates a new BUFR handle, optionaly clone it and/or write it out
  */
 #include <time.h>
 #include <pthread.h>
 #include <unistd.h>
 
+#include "eccodes.h"
 #include "grib_api_internal.h"
+#include "grib_dumper_factory.h"
 
 /* These are passed in via argv */
 static size_t NUM_THREADS         = 0;
@@ -24,52 +26,37 @@ int opt_dump                      = 0; /* If 1 then dump handle to /dev/null */
 int opt_clone                     = 0; /* If 1 then clone source handle */
 int opt_write                     = 0; /* If 1 write handle to file */
 
-static int encode_file(const char* template_file, const char* output_file)
+static int encode_file(char* template_file, char* output_file)
 {
     FILE *in, *out = NULL;
-    grib_handle* source_handle = NULL;
-    const void* buffer         = NULL;
-    size_t size                = 0;
-    int err                    = 0;
-    double* values;
+    codes_handle* source_handle = NULL;
+    const void* buffer          = NULL;
+    size_t size                 = 0;
+    int err                     = 0;
+    long numSubsets             = 0;
 
+    ECCODES_ASSERT(template_file);
     in = fopen(template_file, "rb");
     ECCODES_ASSERT(in);
-    if (opt_write && output_file) {
+    if (opt_write) {
+        ECCODES_ASSERT(output_file);
         out = fopen(output_file, "wb");
         ECCODES_ASSERT(out);
     }
 
-    /* loop over the messages in the source GRIB and clone them */
-    while ((source_handle = grib_handle_new_from_file(0, in, &err)) != NULL) {
-        int i;
-        size_t values_len = 0;
-        size_t str_len    = 20;
-        grib_handle* h    = source_handle;
+    /* loop over the messages in the source BUFR and clone them */
+    while ((source_handle = codes_handle_new_from_file(NULL, in, PRODUCT_BUFR, &err)) != NULL || err != CODES_SUCCESS) {
+        codes_handle* h = source_handle;
 
         if (opt_clone) {
-            h = grib_handle_clone(source_handle);
+            h = codes_handle_clone(source_handle);
             ECCODES_ASSERT(h);
         }
 
-        GRIB_CHECK(grib_get_size(h, "values", &values_len), 0);
+        CODES_CHECK(codes_get_long(h, "numberOfSubsets", &numSubsets), 0);
+        CODES_CHECK(codes_set_long(h, "unpack", 1), 0);
 
-        values = (double*)malloc(values_len * sizeof(double));
-        GRIB_CHECK(grib_get_double_array(h, "values", values, &values_len), 0);
-
-        for (i = 0; i < values_len; i++) {
-            values[i] *= 0.9;
-        }
-
-        GRIB_CHECK(grib_set_string(h, "stepUnits", "s", &str_len), 0);
-        GRIB_CHECK(grib_set_long(h, "startStep", 43200), 0);
-        GRIB_CHECK(grib_set_long(h, "endStep", 86400), 0);
-        GRIB_CHECK(grib_set_long(h, "bitsPerValue", 16), 0);
-
-        /* set data values */
-        GRIB_CHECK(grib_set_double_array(h, "values", values, values_len), 0);
-
-        GRIB_CHECK(grib_get_message(h, &buffer, &size), 0);
+        CODES_CHECK(codes_get_message(h, &buffer, &size), 0);
         if (opt_write) {
             if (fwrite(buffer, 1, size, out) != size) {
                 perror(output_file);
@@ -77,13 +64,18 @@ static int encode_file(const char* template_file, const char* output_file)
             }
         }
         if (opt_dump) {
-            FILE* devnull = fopen("/dev/null", "w");
-            grib_dump_content(source_handle, devnull, "debug", 0, NULL);
+            FILE* devnull            = fopen("/dev/null", "w");
+            eccodes::Dumper* dumper  = NULL;
+            const char* dumper_name  = "bufr_simple";
+            unsigned long dump_flags = CODES_DUMP_FLAG_ALL_DATA;
+            /* codes_dump_content(source_handle,devnull, "json", 1024, NULL); */ /* JSON dump with all attributes */
+            dumper = grib_dump_content_with_dumper(source_handle, dumper, devnull, dumper_name, dump_flags, NULL);
+            ECCODES_ASSERT(dumper);
+            fclose(devnull);
         }
 
-        grib_handle_delete(source_handle);
-        if (opt_clone) grib_handle_delete(h);
-        free(values);
+        codes_handle_delete(source_handle);
+        if (opt_clone) codes_handle_delete(h);
     }
 
     if (opt_write) fclose(out);
@@ -106,11 +98,13 @@ void* runner(void* ptr); /* the thread */
 int main(int argc, char** argv)
 {
     size_t i;
+#if GRIB_PTHREADS
     int thread_counter = 0;
+#endif
     int parallel = 1, index = 0, c = 0;
     const char* prog = argv[0];
     char* mode;
-    if (argc < 5 || argc > 8) {
+    if (argc < 5 || argc > 7) {
         fprintf(stderr, "Usage:\n\t%s [options] seq file numRuns numIter\nOr\n\t%s [options] par file numThreads numIter\n", prog, prog);
         return 1;
     }
@@ -136,6 +130,13 @@ int main(int argc, char** argv)
 
     if (strcmp(mode, "seq") == 0) {
         parallel = 0;
+    }
+    if (parallel) {
+        printf("Running parallel in %ld threads. %ld iterations\n", NUM_THREADS, FILES_PER_ITERATION);
+        printf("Options: dump=%d, clone=%d, write=%d\n", opt_dump, opt_clone, opt_write);
+    }
+    else {
+        printf("Running sequentially in %ld runs. %ld iterations\n", NUM_THREADS, FILES_PER_ITERATION);
     }
 
     if (parallel) {
@@ -165,8 +166,7 @@ int main(int argc, char** argv)
             do_stuff(data);
         }
 #else
-        fprintf(stderr, "This test requires either GRIB_PTHREADS or GRIB_OMP_THREADS to be set to a non-zero value\n");
-        return 1;
+        ECCODES_ASSERT(0);
 #endif
     }
     else {
@@ -200,7 +200,7 @@ void do_stuff(void* ptr)
 
     for (i = 0; i < FILES_PER_ITERATION; i++) {
         if (opt_write) {
-            snprintf(output_file, 50, "output/output_file_%zu-%zu.grib", data->number, i);
+            snprintf(output_file, 50, "output/output_file_%ld-%ld.bufr", data->number, i);
             encode_file(INPUT_FILE, output_file);
         }
         else {
@@ -213,5 +213,5 @@ void do_stuff(void* ptr)
     strftime(stime, 32, "%H:%M:%S", &result); /* Try to get milliseconds here too*/
     /* asctime_r(&result, stime); */
 
-    printf("%s: Worker %zu finished.\n", stime, data->number);
+    printf("%s: Worker %ld finished.\n", stime, data->number);
 }

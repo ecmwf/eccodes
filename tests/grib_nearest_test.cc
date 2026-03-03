@@ -21,12 +21,6 @@
 
 #include "eccodes.h"
 
-static void usage(const char* prog)
-{
-    printf("Usage: %s [-n] grib_file grib_file ...\n", prog);
-    exit(1);
-}
-
 int main(int argc, char** argv)
 {
     int err       = 0;
@@ -52,7 +46,7 @@ int main(int argc, char** argv)
     const char** filenames = NULL;
     codes_nearest* nearest = NULL;
 
-    if (argc < 2) usage(argv[0]);
+    if (argc < 2) return 1; // Usage: prog [-n] grib_file grib_file ...
 
     filenames = (const char**)malloc(sizeof(char*) * max_numfiles);
 
