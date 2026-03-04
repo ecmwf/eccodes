@@ -79,8 +79,10 @@
 1123 weef Wave extended ensemble forecast
 1124 weeh Wave extended ensemble forecast hindcast
 1125 wees Wave extended ensemble forecast hindcast statistics
-1150 ldas Land data-assimilation system
-1151 ldst Land data-assimilation system statistics
+1150 ldnr Land data-assimilation system near real time
+1151 ldbt Land data-assimilation system	behind real time
+1152 lsnr Land data-assimilation system near real time statistics
+1153 lsbt Land data-assimilation system behind real time statistics
 1200 mnfc Real-time
 1201 mnfh Hindcasts
 1202 mnfa Anomalies

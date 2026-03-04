@@ -1,7 +1,5 @@
 # Local definition 52: LDAS
 
-codetable[1] ldasMode "grib2/tables/local/ecmf/1/ldas_mode.table" : dump,string_type,lowercase; 
-
 codetable[2] targetFcstSystem "mars/stream.table" = "oper" : dump,string_type,lowercase;
 
 # Hours

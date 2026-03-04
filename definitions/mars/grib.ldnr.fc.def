@@ -2,8 +2,4 @@ meta ldas_configuration sprintf("%s-%s", modelVersion, targetFcstSystem ) : no_c
 
 alias mars.configuration = ldas_configuration ;
 
-alias mars.mode = ldasMode ;
-
-if (ldasMode is "nrt"){
- alias mars.anoffset = anoffset ;
-}
+alias mars.anoffset = anoffset ;
