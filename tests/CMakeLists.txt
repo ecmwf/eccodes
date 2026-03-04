@@ -98,9 +98,10 @@ if( HAVE_BUILD_TOOLS )
         codes_deprecated
         unit_tests
         julian
+    )
+
+    list(APPEND tests_basic_grib
         grib_dump_samples
-        bufr_dump_samples
-        bufr_check_descriptors
         definitions
         grib2_version
         grib_accessors
@@ -155,19 +156,6 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1766
         grib_ecc-1829
         grib_ecc-2140
-        bufr_ecc-1028
-        bufr_ecc-1195
-        bufr_ecc-1259
-        bufr_ecc-1290
-        bufr_ecc-1304
-        bufr_ecc-1347
-        bufr_ecc-1395
-        bufr_ecc-1840
-        bufr_json_samples
-        bufr_ecc-359
-        bufr_ecc-517
-        bufr_ecc-2011
-        bufr_ecc-2153
         grib_efas
         grib_sh_imag
         grib_spectral
@@ -186,10 +174,59 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2218
     )
 
+    list(APPEND tests_basic_bufr
+        bufr_dump_samples
+        bufr_check_descriptors
+        bufr_ecc-1028
+        bufr_ecc-1195
+        bufr_ecc-1259
+        bufr_ecc-1290
+        bufr_ecc-1304
+        bufr_ecc-1347
+        bufr_ecc-1395
+        bufr_ecc-1840
+        bufr_json_samples
+        bufr_ecc-359
+        bufr_ecc-517
+        bufr_ecc-2011
+        bufr_ecc-2153
+    )
+
     # These tests require data downloads
     # and/or take much longer
     list(APPEND tests_extra
         error_codes
+        wmo_read_gts_from_file
+        wmo_read_any_from_file
+        wmo_read_any_from_file_with_offset
+        wmo_read_any_from_stream
+        extract_offsets
+        codes_assert
+        codes_ecc-1698
+        codes_ecc-1929
+        codes_ecc-2192
+        codes_get_string
+        codes_codetable
+        gts_get
+        gts_ls
+        gts_count
+        gts_compare
+        gts_dump
+        wrap
+        hdf5
+        taf
+        pseudo_diag
+        read_any
+        codes_new_from_samples
+        codes_dump_action_tree
+        codes_set_samples_path
+        codes_compare_keys
+        codes_dump_content
+        codes_to_double
+        codes_split_file
+    )
+
+    list(APPEND tests_extra_grib
         grib_typeOfLevel
         grib_mtg2_switch
         grib_timeSpanConcept
@@ -220,42 +257,6 @@ if( HAVE_BUILD_TOOLS )
         grib_count
         grib_clone_headers_only
         filter_dump_content
-        wmo_read_bufr_from_file
-        wmo_read_gts_from_file
-        wmo_read_any_from_file
-        wmo_read_any_from_file_with_offset
-        wmo_read_any_from_stream
-        bufr_edition0
-        bufr_templates
-        bufr_rdbSubTypes
-        bufr_dump_data
-        bufr_dump_descriptors
-        bufr_coordinate_descriptors
-        bufr_dump_subset
-        bufr_dump_decode_filter
-        bufr_dump_encode_filter
-        bufrdc_desc_ref
-        bufrdc_ref
-        bufr_compare
-        bufr_copy
-        bufr_count
-        bufr_get
-        bufr_operators
-        bufr_filter_misc
-        bufr_filter_datetime
-        bufr_filter_fail
-        bufr_filter_extract_subsets
-        bufr_filter_extract_datetime
-        bufr_filter_extract_area
-        bufr_filter_unpack_pack
-        bufr_filter_skipExtraKeyAttributes
-        bufr_indexing
-        bufr_json_data
-        bufr_ls
-        bufr_ls_json
-        bufr_change_edition
-        bufr_keys_iter
-        bufr_keys_iter_header
         grib_keys_iter
         grib_keys_iter_skip
         grib_geo_iter
@@ -263,39 +264,6 @@ if( HAVE_BUILD_TOOLS )
         grib_to_ppm
         grib_list_keys
         grib_histogram
-        bufr_get_element
-        bufr_wmo_tables
-        bufr_extract_headers
-        extract_offsets
-        bufr_operator_203
-        bufr_ecc-147
-        bufr_ecc-389
-        bufr_ecc-673
-        bufr_ecc-428
-        bufr_ecc-286
-        bufr_ecc-288
-        bufr_ecc-313
-        bufr_ecc-616
-        bufr_ecc-686
-        bufr_ecc-690
-        bufr_ecc-379
-        bufr_ecc-393
-        bufr_ecc-433
-        bufr_ecc-750
-        bufr_ecc-765
-        bufr_ecc-875
-        bufr_ecc-887
-        bufr_ecc-1187
-        bufr_ecc-1305
-        bufr_ecc-1476
-        bufr_ecc-1623
-        bufr_ecc-1785
-        bufr_ecc-1958
-        bufr_ecc-1938
-        bufr_ecc-2030
-        bufr_ecc-2037
-        bufr_ecc-2100
-        bufr_ecc-2189
         grib_488
         grib_ecc-490
         grib_ecc-756
@@ -335,23 +303,6 @@ if( HAVE_BUILD_TOOLS )
         grib_sub_hourly
         grib_set_bytes
         grib_set_force
-        bufr_ecc-556
-        codes_assert
-        codes_ecc-1698
-        codes_ecc-1929
-        codes_ecc-2192
-        codes_get_string
-        codes_codetable
-        gts_get
-        gts_ls
-        gts_count
-        gts_compare
-        gts_dump
-        wrap
-        hdf5
-        taf
-        pseudo_diag
-        bufr_set
         grib_ieee
         grib1_gds_not_present
         grib_sh_ieee64
@@ -404,44 +355,106 @@ if( HAVE_BUILD_TOOLS )
         grib_multi_from_message
         grib_change_scanning
         grib_statistics
-        read_any
-        codes_new_from_samples
-        codes_dump_action_tree
-        codes_set_samples_path
-        codes_compare_keys
-        codes_dump_content
-        codes_to_double
         grib_dump
         grib_dump_debug
         grib_dump_json
         grib_local_MeteoFrance
         grib_local_NCEP
         grib_neg_fctime
-        codes_split_file
         grib_mars_keys1
-        grib_mars_keys2)
+        grib_mars_keys2
+    )
+
+    list(APPEND tests_extra_bufr
+        wmo_read_bufr_from_file
+        bufr_edition0
+        bufr_templates
+        bufr_rdbSubTypes
+        bufr_dump_data
+        bufr_dump_descriptors
+        bufr_coordinate_descriptors
+        bufr_dump_subset
+        bufr_dump_decode_filter
+        bufr_dump_encode_filter
+        bufrdc_desc_ref
+        bufrdc_ref
+        bufr_compare
+        bufr_copy
+        bufr_count
+        bufr_get
+        bufr_operators
+        bufr_filter_misc
+        bufr_filter_datetime
+        bufr_filter_fail
+        bufr_filter_extract_subsets
+        bufr_filter_extract_datetime
+        bufr_filter_extract_area
+        bufr_filter_unpack_pack
+        bufr_filter_skipExtraKeyAttributes
+        bufr_indexing
+        bufr_json_data
+        bufr_ls
+        bufr_ls_json
+        bufr_change_edition
+        bufr_keys_iter
+        bufr_keys_iter_header
+        bufr_get_element
+        bufr_wmo_tables
+        bufr_extract_headers
+        bufr_operator_203
+        bufr_ecc-147
+        bufr_ecc-389
+        bufr_ecc-673
+        bufr_ecc-428
+        bufr_ecc-286
+        bufr_ecc-288
+        bufr_ecc-313
+        bufr_ecc-616
+        bufr_ecc-686
+        bufr_ecc-690
+        bufr_ecc-379
+        bufr_ecc-393
+        bufr_ecc-433
+        bufr_ecc-750
+        bufr_ecc-765
+        bufr_ecc-875
+        bufr_ecc-887
+        bufr_ecc-1187
+        bufr_ecc-1305
+        bufr_ecc-1476
+        bufr_ecc-1623
+        bufr_ecc-1785
+        bufr_ecc-1958
+        bufr_ecc-1938
+        bufr_ecc-2030
+        bufr_ecc-2037
+        bufr_ecc-2100
+        bufr_ecc-2189
+        bufr_set
+        bufr_ecc-556
+    )
 
     if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
-        list(APPEND tests_extra grib_ecc-1431)
-        list(APPEND tests_extra grib_ecc-1433)
+        list(APPEND tests_extra_grib grib_ecc-1431)
+        list(APPEND tests_extra_grib grib_ecc-1433)
     endif()
     if( ECCODES_INSTALL_EXTRA_TOOLS AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra metar_ls metar_filter metar_get metar_dump metar_compare)
     endif()
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
-        list(APPEND tests_extra bufr_dump_encode_fortran)
-        list(APPEND tests_extra bufr_dump_decode_fortran)
+        list(APPEND tests_extra_bufr bufr_dump_encode_fortran)
+        list(APPEND tests_extra_bufr bufr_dump_decode_fortran)
     endif()
     if( ENABLE_EXTRA_TESTS )
-        list(APPEND tests_extra grib_util_set_spec)
-        list(APPEND tests_extra grib_util_set_spec2)
-        list(APPEND tests_extra grib_padding)
-        list(APPEND tests_extra grib_tigge_conversions1)
-        list(APPEND tests_extra grib_tigge_conversions2)
-        list(APPEND tests_extra bufr_dump_encode_C)
-        list(APPEND tests_extra bufr_dump_decode_C)
-        list(APPEND tests_extra bufr_dump_encode_python)
-        list(APPEND tests_extra bufr_dump_decode_python)
+        list(APPEND tests_extra_grib grib_util_set_spec)
+        list(APPEND tests_extra_grib grib_util_set_spec2)
+        list(APPEND tests_extra_grib grib_padding)
+        list(APPEND tests_extra_grib grib_tigge_conversions1)
+        list(APPEND tests_extra_grib grib_tigge_conversions2)
+        list(APPEND tests_extra_bufr bufr_dump_encode_C)
+        list(APPEND tests_extra_bufr bufr_dump_decode_C)
+        list(APPEND tests_extra_bufr bufr_dump_encode_python)
+        list(APPEND tests_extra_bufr bufr_dump_decode_python)
         list(APPEND tests_extra list_codetable_flagtable_keys)
     endif()
 
@@ -450,6 +463,18 @@ if( HAVE_BUILD_TOOLS )
         ecbuild_add_test( TARGET  eccodes_t_${test}
                           TYPE    SCRIPT
                           LABELS  "sanity"
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh )
+    endforeach()
+    foreach( test ${tests_basic_grib} )
+        ecbuild_add_test( TARGET  eccodes_t_${test}
+                          TYPE    SCRIPT
+                          LABELS  "sanity;grib"
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh )
+    endforeach()
+    foreach( test ${tests_basic_bufr} )
+        ecbuild_add_test( TARGET  eccodes_t_${test}
+                          TYPE    SCRIPT
+                          LABELS  "sanity;bufr"
                           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh )
     endforeach()
     ecbuild_add_test( TARGET eccodes_t_grib_check_gaussian_grids
@@ -476,6 +501,24 @@ if( HAVE_BUILD_TOOLS )
                       TEST_DEPENDS eccodes_download_gribs eccodes_download_tigge_gribs
                                    eccodes_download_bufrs eccodes_download_bufr_refs
                                    eccodes_download_metars eccodes_download_gts )
+    endforeach()
+    foreach( test ${tests_extra_grib} )
+        ecbuild_add_test( TARGET eccodes_t_${test}
+                      TYPE SCRIPT
+                      CONDITION ENABLE_EXTRA_TESTS
+                      LABELS "grib"
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                      RESOURCES asca_139.t1.ref
+                      TEST_DEPENDS eccodes_download_gribs eccodes_download_tigge_gribs )
+    endforeach()
+    foreach( test ${tests_extra_bufr} )
+        ecbuild_add_test( TARGET eccodes_t_${test}
+                      TYPE SCRIPT
+                      CONDITION ENABLE_EXTRA_TESTS
+                      LABELS "bufr"
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                      RESOURCES asca_139.t1.ref
+                      TEST_DEPENDS eccodes_download_bufrs eccodes_download_bufr_refs )
     endforeach()
 
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
@@ -602,16 +645,32 @@ else()
     # No command line tools
     list(APPEND tests_no_tools
         unit_tests
-        julian
-        bufr_check_descriptors
+        julian)
+
+    list(APPEND tests_no_tools_grib
         grib_sh_imag
         grib_2nd_order_numValues
         grib_sh_ieee64)
+
+    list(APPEND tests_no_tools_bufr
+        bufr_check_descriptors)
 
     foreach( test ${tests_no_tools} )
     ecbuild_add_test( TARGET  eccodes_t_${test}
                       TYPE    SCRIPT
                       LABELS  "sanity"
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh )
+    endforeach()
+    foreach( test ${tests_no_tools_grib} )
+    ecbuild_add_test( TARGET  eccodes_t_${test}
+                      TYPE    SCRIPT
+                      LABELS  "sanity;grib"
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh )
+    endforeach()
+    foreach( test ${tests_no_tools_bufr} )
+    ecbuild_add_test( TARGET  eccodes_t_${test}
+                      TYPE    SCRIPT
+                      LABELS  "sanity;bufr"
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh )
     endforeach()
 
