@@ -32,6 +32,9 @@
 # icon (ID range: 1500-1500)
 'icon' = {inputProcessIdentifier=1500;}
 
+# era5-land (ID range: 65532-65532)
+'era5-land' = {inputProcessIdentifier=65532;}
+
 # era5 (ID range: 65533-65533)
 'era5' = {inputProcessIdentifier=65533;}
 
