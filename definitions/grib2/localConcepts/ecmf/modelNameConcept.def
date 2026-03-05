@@ -31,6 +31,11 @@
     backgroundProcess = 9;
 }
 ####################################################
+## Fire models                                    ##
+####################################################
+#"geff" = {backgroundProcess = 145; }
+#"sparky" = {backgroundProcess = 146; }
+####################################################
 ## 147 - 154 used in hydro centre                 ##
 ## grib2/localConcepts/hydro/modelNameConcept.def ##
 ####################################################
