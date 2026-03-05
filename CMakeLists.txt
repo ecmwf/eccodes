@@ -165,7 +165,7 @@ else()
     set( libaec_USE_STATIC_LIBS ON )
 endif()
 
-find_package( libaec 1.1.3 )
+find_package( libaec 1.0.6 )
 if(NOT DEFINED ENABLE_AEC AND NOT libaec_FOUND)
   ecbuild_critical("AEC library was not found.\n"
                    "AEC (Adaptive Entropy Coding) provides the WMO GRIB CCSDS compression and decompression of data. "

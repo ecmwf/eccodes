@@ -352,7 +352,7 @@ static bool blacklisted(grib_handle* h, long edition, const char* concept_name, 
     return false;
 }
 
-#define MAX_NUM_CONCEPT_VALUES 50
+#define MAX_NUM_CONCEPT_VALUES 40
 
 static void print_user_friendly_message(grib_handle* h, const char* name, grib_concept_value* concepts, grib_action* act)
 {
@@ -391,19 +391,16 @@ static void print_user_friendly_message(grib_handle* h, const char* name, grib_c
     }
 
     // Create a list of all possible values for this concept and sort it
-    bool hasMore = false;
     while (pCon) {
-        if (i >= MAX_NUM_CONCEPT_VALUES) {
-            hasMore = true;
+        if (i >= MAX_NUM_CONCEPT_VALUES)
             break;
-        }
         all_concept_vals[i++] = pCon->name;
         pCon                  = pCon->next;
     }
     concept_count = i;
     // Only print out all concepts if fewer than MAX_NUM_CONCEPT_VALUES.
     // Printing out all values for concepts like paramId would be silly!
-    if (!hasMore) {
+    if (concept_count <= MAX_NUM_CONCEPT_VALUES) {
         fprintf(stderr, "Here are some possible values for concept %s:\n", act->name_);
         qsort(&all_concept_vals, concept_count, sizeof(char*), cmpstringp);
         for (i = 0; i < concept_count; ++i) {
