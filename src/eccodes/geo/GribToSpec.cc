@@ -22,7 +22,6 @@
 #include <sstream>
 #include <vector>
 
-#include "eckit/config/Resource.h"
 #include "eckit/geo/Exceptions.h"
 #include "eckit/geo/PointLonLat.h"
 #include "eckit/geo/util/mutex.h"
@@ -165,9 +164,7 @@ public:
 
 void wrongly_encoded_grib(const std::string& msg)
 {
-    static bool abortIfWronglyEncodedGRIB = eckit::Resource<bool>("$ECCODES_ABORT_IF_WRONGLY_ENCODED_GRIB", false);
-
-    if (abortIfWronglyEncodedGRIB) {
+    if (static bool do_abort = codes_getenv("ECCODES_GRIB_GEO_STRICT") != nullptr; do_abort) {
         grib_context_log(nullptr, GRIB_LOG_ERROR, "%s", msg.c_str());
         throw eckit::geo::exception::GridError(msg, Here());
     }
@@ -625,8 +622,8 @@ ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_ke
             CHECK_CALL(codes_get_long(h, sign_key, &sign));
 
             // For longitudes, x1 can be numerically less than x0
-            if (STR_EQUAL(n_key,"Ni"))
-                if (x1<x0) x1=x1+360;
+            if (STR_EQUAL(n_key, "Ni"))
+                if (x1 < x0) x1 = x1 + 360;
 
             if (auto value_calculated = (x1 - x0) / static_cast<double>(sign != 0 ? (n - 1) : (1 - n)); given) {
                 if (!eckit::types::is_approximately_equal(value, value_calculated, 1e-6)) {
@@ -758,8 +755,7 @@ GribToSpec::GribToSpec(codes_handle* h) :
 {
     ASSERT(handle_ != nullptr);
 
-    static bool ECCODES_GRIB_FIXES = eckit::Resource<bool>("$ECCODES_GRIB_FIXES", false);
-    if (ECCODES_GRIB_FIXES) {
+    if (static bool do_fix = codes_getenv("ECCODES_GRIB_GEO_FIXES") != nullptr; do_fix) {
         using fixes_type = std::map<std::string, const eckit::spec::Custom&>;
         static const fixes_type FIXES{
             // gridName=N640, edition=2
