@@ -75,7 +75,7 @@ set -e
 # Check the GRIB2 paramId and shortName defs
 # --------------------------------------------
 $EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/paramId.def
-datasets="cerise destine ecmf era era6  hydro nextgems s2s tigge uerra"
+datasets="cerise destine ecmf era era6 nextgems s2s tigge uerra"
 for a_dataset in $datasets; do
     pidfile=$ECCODES_DEFINITION_PATH/grib2/localConcepts/$a_dataset/paramId.def
     if [ -f "$pidfile" ]; then
@@ -136,7 +136,6 @@ defs_dirs="
  $ECCODES_DEFINITION_PATH/grib1/localConcepts/rjtd
 
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/uerra
- $ECCODES_DEFINITION_PATH/grib2/localConcepts/hydro
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/cerise
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/tigge
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/s2s
