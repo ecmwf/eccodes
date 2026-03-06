@@ -13343,6 +13343,18 @@
 	 parameterNumber = 221 ;
 	 typeOfFirstFixedSurface = 254 ;
 	}
+#CURV diagnostic mean sea level pressure
+'254500' = {
+	 discipline = 254 ;
+	 parameterCategory = 253 ;
+	 parameterNumber = 192 ;
+	}
+#CURV diagnostic geopotential
+'254501' = {
+	 discipline = 254 ;
+	 parameterCategory = 253 ;
+	 parameterNumber = 193 ;
+	}
 #Surface roughness length for heat
 '260651' = {
 	 localTablesVersion = 1 ;
