@@ -99,26 +99,6 @@ if( HAVE_FORTRAN )
     add_custom_command( TARGET     eccodes_f90 POST_BUILD
                         COMMAND ${CMAKE_COMMAND} -D MOD_DESTINATION=${CMAKE_BINARY_DIR}/include -P ${CMAKE_CURRENT_BINARY_DIR}/eccodes_f90_copy_mod.cmake )
 
-    # add_custom_command( TARGET     eccodes_f90 POST_BUILD
-    #                     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/include
-    #                     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR}/eccodes.mod ${CMAKE_BINARY_DIR}/include
-    #                     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR}/grib_api.mod ${CMAKE_BINARY_DIR}/include )
-
-    # Add the eccodes module file as well
-    #set(_eccodes_mod "${CMAKE_Fortran_MODULE_DIRECTORY}/eccodes.mod" )
-
-    #add_custom_command(
-    #    OUTPUT ${_eccodes_mod}
-    #    WORKING_DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}
-    #    #COMMAND ${CMAKE_COMMAND} -E create_symlink "${CMAKE_Fortran_MODULE_DIRECTORY}/grib_api.mod" ${_eccodes_mod}
-    #    #COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_Fortran_MODULE_DIRECTORY}/grib_api.mod" ${_eccodes_mod}
-    #    COMMAND "/usr/bin/sh" "-c" "if test -f GRIB_API.mod; then ln -s GRIB_API.mod ECCODES.mod; fi"
-    #    COMMAND "/usr/bin/sh" "-c" "if test -f grib_api.mod; then ln -s grib_api.mod eccodes.mod; fi"
-    #   DEPENDS eccodes_f90
-    #    VERBATIM
-    #)
-    #add_custom_target(add_eccodes_mod ALL DEPENDS ${_eccodes_mod})
-
     ecbuild_add_resources( TARGET fortran_resources
                            PACK
                             grib_api_constants.h grib_api_externals.h
@@ -133,11 +113,7 @@ if( HAVE_FORTRAN )
                             same_int_long.f90 same_int_size_t.f90 grib_fortran_kinds.c )
 
 
-
 ### installation
-
-    # Install the generated .mod file
-    # install( CODE "EXECUTE_PROCESS (COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR} ${CMAKE_INSTALL_PREFIX}/${INSTALL_INCLUDE_DIR})" )
 
     # Install the contents of the fortran module directory
     if(ECBUILD_INSTALL_FORTRAN_MODULES)
@@ -145,18 +121,5 @@ if( HAVE_FORTRAN )
                             COMMAND ${CMAKE_COMMAND} -D MOD_DESTINATION=\${CMAKE_INSTALL_PREFIX}/${INSTALL_INCLUDE_DIR}
                                                      -P ${CMAKE_CURRENT_BINARY_DIR}/eccodes_f90_copy_mod.cmake )" )
     endif()
-
-    # Install the eccodes module file as a copy of the grib api mod file.
-    # Note: the mod filename can be lowercase or uppercase!
-    # First try the lowercase one. Specify OPTIONAL so if it fails it carries on
-    #install( FILES ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR}/grib_api.mod
-    #                 RENAME eccodes.mod
-    #                 OPTIONAL
-    #                 DESTINATION ${INSTALL_INCLUDE_DIR} )
-    # Now try the uppercase mod file
-    #install( FILES ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR}/GRIB_API.mod
-    #                 RENAME ECCODES.mod
-    #                 OPTIONAL
-    #                 DESTINATION ${INSTALL_INCLUDE_DIR} )
 
 endif()
