@@ -76,15 +76,6 @@ if( HAVE_FORTRAN )
                                          $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>
                          PRIVATE_LIBS    eccodes ${ECCODES_PTHREADS_LIBRARIES} )
 
-    if( DEFINED ecbuild_VERSION AND NOT ${ecbuild_VERSION} VERSION_LESS 3.1 )
-        # Installed module directory is not in the PUBLIC INCLUDES!
-        target_include_directories( eccodes_f90 PUBLIC $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}> )
-
-        # NOTE: When eccodes accepts ecbuild 3.0 as minimum requirement,
-        # this should instead be written inside the ecbuild_add_library macro with:
-        #    PUBLIC_INCLUDES $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>
-    endif()
-
     set(_eccodes_mod_candidates eccodes.mod ECCODES.mod grib_api.mod GRIB_API.mod)
 
     file( GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/eccodes_f90_copy_mod.cmake
