@@ -13345,12 +13345,14 @@
 	}
 #CURV diagnostic mean sea level pressure
 'CURV diagnostic mean sea level pressure' = {
+	 localTablesVersion = 1 ;
 	 discipline = 254 ;
 	 parameterCategory = 253 ;
 	 parameterNumber = 192 ;
 	}
 #CURV diagnostic geopotential
 'CURV diagnostic geopotential' = {
+	 localTablesVersion = 1 ;
 	 discipline = 254 ;
 	 parameterCategory = 253 ;
 	 parameterNumber = 193 ;
