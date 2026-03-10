@@ -1,5 +1,10 @@
 alias mars.step = stepRange;
-
+if (MTG2Switch < 1){
+ alias mars.step = stepRange;
+} else {
+ alias mars.step = endStep;
+ alias mars.timespan = timespan;
+}
 # We need this because 'postProcessing' is defined later
 #meta ecpt_method sprintf("%s", postProcessing) : no_copy;
 #alias mars.method = ecpt_method;
