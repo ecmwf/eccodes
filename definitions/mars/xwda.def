@@ -2,6 +2,6 @@ alias mars.anoffset=offsetToEndOf4DvarWindow;
 
 transient maxobscutoff = max(0, hoursAfterDataCutoff - offsetToEndOf4DvarWindow);
 
-meta obscutoff sprintf("%.2d%.2d", maxobscutoff, minutesAfterDataCutoff);
+meta obscutoff time(maxobscutoff,minutesAfterDataCutoff,zero);
 alias mars.obscutoff=obscutoff;
 
