@@ -35,13 +35,11 @@ if [ "$(uname)" != "Darwin" ] ; then
     ## buildable prereqs
     ### openjpg
     git clone --branch $OPENJPEG_VERSION --depth=1 $GIT_OPENJPEG /src/openjpeg
-
     mkdir -p /tmp/openjpeg/build
-    cd /tmp/openjpeg/build
-    # TODO we build thirdparty due to tiff etc -- ideally build separately and handle licenses, versions
-    # NOTE beware the darwin c source, otherwise fails
-    cmake /src/openjpeg/ -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=/tmp/openjpeg/target -DBUILD_THIRDPARTY=1 -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_C_FLAGS="-D_DARWIN_C_SOURCE"
+    pushd /tmp/openjpeg/build
+    cmake /src/openjpeg/ -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=/tmp/openjpeg/target -DBUILD_CODEC=OFF
     cmake --build . --target install
+    popd
 
     ### libaec
     # comes from cxx-deps
@@ -73,22 +71,13 @@ else
         cp -R $lib/include/* /tmp/eccodes/target/eccodes/include
     done
 
-    # tiff -- not really needed, but openjpeg cant be built without, and we cant use brew due to macos target
-    mkdir -p /tmp/tiff/src /tmp/tiff/build
-    TIFF_VERSION=v4.7.1
-    TIFF_GIT=https://github.com/libsdl-org/libtiff
-    git clone --branch $TIFF_VERSION --depth=1 $TIFF_GIT /tmp/tiff/src
-    cd /tmp/tiff/build
-    cmake /tmp/tiff/src -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=/tmp/tiff/target -Djpeg=OFF -Djpegturbo=OFF -Dzlib=OFF -Dpixarlog=OFF -Dwebp=OFF
-    cmake --build . --target install
-
     # openjpg -- not in cxxdeps currently
     mkdir -p /tmp/openjpeg/build /tmp/openjpeg/src
     git clone --branch $OPENJPEG_VERSION --depth=1 $GIT_OPENJPEG /tmp/openjpeg/src
-    cd /tmp/openjpeg/build
-    cmake /tmp/openjpeg/src -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=/tmp/openjpeg/target -DTIFF_INCLUDE_DIR=/tmp/tiff/target/include -DTIFF_LIBRARY=/tmp/tiff/target/lib/libtiff.dylib
+    pushd /tmp/openjpeg/build
+    cmake /tmp/openjpeg/src -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=/tmp/openjpeg/target -DBUILD_CODEC=OFF
     cmake --build . --target install
-    cd -
+    popd
 
     cp /tmp/openjpeg/target/lib/libopenjp2*dylib /tmp/eccodes/target/eccodes/lib/
 
