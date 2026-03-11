@@ -86,7 +86,9 @@ list(APPEND test_c_bins
     test_trie
     test_keys_iterator
     test_handle_lifecycle
-    test_util)
+    test_util
+    test_bufr_descriptors
+    test_bufr_api)
 
 
 foreach( tool ${test_c_bins} )

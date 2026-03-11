@@ -56,4 +56,12 @@ echo "Running test_util..."
 $EXEC ${test_dir}/test_util
 echo ""
 
+echo "Running test_bufr_descriptors..."
+$EXEC ${test_dir}/test_bufr_descriptors
+echo ""
+
+echo "Running test_bufr_api..."
+$EXEC ${test_dir}/test_bufr_api
+echo ""
+
 echo "All new unit tests passed."
