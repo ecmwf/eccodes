@@ -58,18 +58,10 @@ if [ "$(uname)" != "Darwin" ] ; then
 
 
 else
-    echo "copying deps for platform $(uname)"
+    echo "building deps for platform $(uname)"
     mkdir -p /tmp/eccodes/target/eccodes/lib/
 
-    BREWBASE="$(brew --cellar)" # "/opt/homebrew/Cellar" or "/usr/local/Cellar"
-    LIBPNG="$(ls -d $BREWBASE/libpng/* | head -n1)"
-
-    for lib in $LIBPNG ; do
-        echo "will copy from $lib/lib with contents $(ls $lib/lib/*dylib)"
-        cp $lib/lib/*dylib /tmp/eccodes/target/eccodes/lib
-        echo "will copy from $lib/include with contents $(ls $lib/include)"
-        cp -R $lib/include/* /tmp/eccodes/target/eccodes/include
-    done
+    # NOTE we cant use brew installs due to macos compatibility targets
 
     # openjpg -- not in cxxdeps currently
     mkdir -p /tmp/openjpeg/build /tmp/openjpeg/src
@@ -78,8 +70,18 @@ else
     cmake /tmp/openjpeg/src -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=/tmp/openjpeg/target -DBUILD_CODEC=OFF
     cmake --build . --target install
     popd
-
     cp /tmp/openjpeg/target/lib/libopenjp2*dylib /tmp/eccodes/target/eccodes/lib/
+
+    # libpng -- not in cxxdeps currently
+    mkdir -p /tmp/libpng/build /tmp/libpng/src
+    LIBPNG_VERSION=v1.6.55
+    git clone --branch $LIBPNG_VERSION https://github.com/pnggroup/libpng /tmp/libpng/src
+    pushd /tmp/libpng/build
+    cmake /tmp/libpng/src -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=/tmp/libpng/target
+    cmake --build . --target install
+    popd
+    cp /tmp/libpng/target/lib/libpng*dylib /tmp/eccodes/target/eccodes/lib
+
 
     # aec -- needs headers and cmake due to dependent on by eg gribjump
     cp /tmp/cxx-deps/lib/libaec*dylib /tmp/eccodes/target/eccodes/lib
