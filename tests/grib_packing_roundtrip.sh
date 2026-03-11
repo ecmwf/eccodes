@@ -34,7 +34,7 @@ set Nj = 18;
 set numberOfDataPoints = 648;
 set numberOfValues = 648;
 # Set values to a ramp from 200 to 320 (temperature range in K)
-set values = {$(seq 200 0.1855 320 | head -648 | tr '\n' ',' | sed 's/,$//')};
+set values = {$(seq 200 0.1855 320.1 | head -648 | tr '\n' ',' | sed 's/,$//')};
 write;
 EOF
 
