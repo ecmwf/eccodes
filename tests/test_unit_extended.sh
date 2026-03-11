@@ -40,4 +40,20 @@ echo "Running test_io..."
 $EXEC ${test_dir}/test_io
 echo ""
 
+echo "Running test_trie..."
+$EXEC ${test_dir}/test_trie
+echo ""
+
+echo "Running test_keys_iterator..."
+$EXEC ${test_dir}/test_keys_iterator
+echo ""
+
+echo "Running test_handle_lifecycle..."
+$EXEC ${test_dir}/test_handle_lifecycle
+echo ""
+
+echo "Running test_util..."
+$EXEC ${test_dir}/test_util
+echo ""
+
 echo "All new unit tests passed."

@@ -82,7 +82,11 @@ list(APPEND test_c_bins
     test_expression
     test_data_structures
     test_geo
-    test_io)
+    test_io
+    test_trie
+    test_keys_iterator
+    test_handle_lifecycle
+    test_util)
 
 
 foreach( tool ${test_c_bins} )
