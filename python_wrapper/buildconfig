@@ -13,15 +13,15 @@
 NAME="eccodes"
 
 CMAKE_PARAMS1="-DENABLE_PNG=1 -DENABLE_JPG=1 -DENABLE_JPG_LIBJASPER=0 -DENABLE_JPG_LIBOPENJPEG=1 -DOPENJPEG_DIR=/tmp/openjpeg/target"
-CMAKE_PARAMS2="-DENABLE_NETCDF=0 -DENABLE_FORTRAN=1"
+if [ "$(uname)" = "Darwin" ] ; then
+    CMAKE_PARAMS1="$CMAKE_PARAMS1 -DLIBPNG_DIR=/tmp/libpng/target -DPNG_DIR=/tmp/libpng/target"
+fi
+CMAKE_PARAMS2="-DENABLE_NETCDF=0 -DENABLE_FORTRAN=0" # NOTE fortran is a problem because of macos compatibilty versions, we'd need to build gfort first
 # NOTE build tools is enabled because it currently seems required by fdb compilation. Consider removal in the future
 CMAKE_PARAMS3="-DENABLE_EXAMPLES=0 -DENABLE_BUILD_TOOLS=1 -DENABLE_INSTALL_ECCODES_DEFINITIONS=0 -DENABLE_INSTALL_ECCODES_SAMPLES=0"
 CMAKE_PARAMS4="-DENABLE_ECCODES_THREADS=1 -DENABLE_MEMFS=1 -DENABLE_ECKIT_GEO=1 -Deckit_ROOT=/tmp/eccodes/prereqs/eckitlib"
-CMAKE_PARAMS5="-DENABLE_AEC=1 -Dlibaec_ROOT=/tmp/libaec"
+CMAKE_PARAMS5="-DENABLE_AEC=1" # NOTE libaec should now come from the cxx deps, whose location is platform dependent
 CMAKE_PARAMS="$CMAKE_PARAMS1 $CMAKE_PARAMS2 $CMAKE_PARAMS3 $CMAKE_PARAMS4 $CMAKE_PARAMS5"
 
 PYPROJECT_DIR="python_wrapper"
-# NOTE fckit is present because it is the first fortran project in the chain -- but we will remove it soon,
-# once it is verified the whole stack can be compiled with default fortran compiler on all platforms,
-# no sooner than https://github.com/ecmwf/ci-utils/pull/16 is merged and released
-DEPENDENCIES='["eckitlib", "fckitlib"]'
+DEPENDENCIES='["eckitlib"]'
