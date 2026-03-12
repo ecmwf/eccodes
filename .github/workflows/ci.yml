@@ -12,7 +12,6 @@ on:
   # Trigger the workflow on pull request
   pull_request:
     paths-ignore:
-    - "tests/**"
     - "data/**"
     - "deprecated/**"
 
