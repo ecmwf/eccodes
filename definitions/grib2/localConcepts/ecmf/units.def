@@ -13243,12 +13243,14 @@
 	}
 #CURV diagnostic mean sea level pressure
 'dimensionless' = {
+	 localTablesVersion = 1 ;
 	 discipline = 254 ;
 	 parameterCategory = 253 ;
 	 parameterNumber = 192 ;
 	}
 #CURV diagnostic geopotential
 'dimensionless' = {
+	 localTablesVersion = 1 ;
 	 discipline = 254 ;
 	 parameterCategory = 253 ;
 	 parameterNumber = 193 ;
