@@ -51,3 +51,7 @@
 0 = {tablesVersion=34; productionStatusOfProcessedData=0; marsClass=51;}
 0 = {tablesVersion=35; productionStatusOfProcessedData=0; marsClass=51;}
 0 = {tablesVersion=36; productionStatusOfProcessedData=0; marsClass=51;}
+# 50r1 as input data for ecPoint
+0 = {tablesVersion=35; productionStatusOfProcessedData=0; inputProcessIdentifier=16; inputOriginatingCentre=98; typeOfGeneratingProcess=13; typeOfPostProcessing=206;}
+# ERA5 as input data for ecPoint
+0 = {tablesVersion=35; productionStatusOfProcessedData=0; inputProcessIdentifier=65533; inputOriginatingCentre=98; typeOfGeneratingProcess=13; typeOfPostProcessing=206;}
