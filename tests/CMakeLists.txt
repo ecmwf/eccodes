@@ -75,7 +75,20 @@ list(APPEND test_c_bins
     grib_sh_imag
     grib_spectral
     grib_lam_bf
-    grib_lam_gp)
+    grib_lam_gp
+    test_bits
+    test_float_conversions
+    test_value_api
+    test_expression
+    test_data_structures
+    test_geo
+    test_io
+    test_trie
+    test_keys_iterator
+    test_handle_lifecycle
+    test_util
+    test_bufr_descriptors
+    test_bufr_api)
 
 
 foreach( tool ${test_c_bins} )
@@ -184,6 +197,8 @@ if( HAVE_BUILD_TOOLS )
         grib_stattype
         grib_ecc-2221
         grib_ecc-2218
+        test_unit_extended
+        grib_corrupted_messages
     )
 
     # These tests require data downloads
@@ -420,7 +435,9 @@ if( HAVE_BUILD_TOOLS )
         grib_neg_fctime
         codes_split_file
         grib_mars_keys1
-        grib_mars_keys2)
+        grib_mars_keys2
+        grib_packing_roundtrip
+    )
 
     if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra grib_ecc-1431)
