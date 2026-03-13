@@ -1,6 +1,5 @@
 alias mars.fcmonth = marsForecastMonth;
 alias mars.number  = perturbationNumber;
-alias mars.origin  = centre;
 alias mars.system = systemNumber;
 
 unalias mars.step;
