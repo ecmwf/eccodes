@@ -55,7 +55,7 @@
 #"jules" = {backgroundProcess = 154;}
 ####################################################
 ## ldas 246 and 247
-#'ldas' = {backgroundProcess = 246;}
+'ldas' = {backgroundProcess = 246;}
 #'ldas' = {backgroundProcess = 247;}
 ## ecwam 248 and 249
 #'ecwam' = {backgroundProcess = 248;}
