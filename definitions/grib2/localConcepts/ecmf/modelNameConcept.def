@@ -1,3 +1,5 @@
+"unknown" = {dummy=0;}
+#
 'IFS' = {
     backgroundProcess = 255;
 }
@@ -28,9 +30,39 @@
 'aifs-compo-ens-crps' = {
     backgroundProcess = 9;
 }
+'aifs-subs' = {
+    backgroundProcess = 10;
+}
+'aifs-subs-crps' = {
+    backgroundProcess = 11;
+}
+####################################################
+## 147 - 154 used in hydro centre                 ##
+## grib2/localConcepts/hydro/modelNameConcept.def ##
+####################################################
+#"lisflood" = {backgroundProcess = 147; }
+#"htessel-lisflood" = {backgroundProcess = 148;}
+#"hype" = {backgroundProcess = 149;}
+#"vic-wur" = {backgroundProcess = 150;}
+#"ecland" = {backgroundProcess = 151;}
+#"mhm" = {backgroundProcess = 152;}
+#"pcr-globwb" = {backgroundProcess = 153;}
+#"jules" = {backgroundProcess = 154;}
+####################################################
 ## ldas 246 and 247
 'ldas' = {backgroundProcess = 246;}
 #'ldas' = {backgroundProcess = 247;}
+## ecwam 248 and 249
+#'ecwam' = {backgroundProcess = 248;}
+#'ecwam' = {backgroundProcess = 249;}
+## nemo 250 and 251
+#'nemo' = {backgroundProcess = 250;}
+#'nemo' = {backgroundProcess = 251;}
+## ifs-compo 252 and 253
+#'ifs-compo' = {backgroundProcess = 252;}
+#'ifs-compo' = {backgroundProcess = 253;}
+## ifs 254 and 255, 255 defined on top
+#'IFS' = {backgroundProcess = 254;}
 'unknown' = {
     true =defined(typeOfPostProcessing);
 }
