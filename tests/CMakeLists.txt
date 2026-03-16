@@ -186,6 +186,7 @@ if( HAVE_BUILD_TOOLS )
         grib_cmp_timeSpan
         grib_stattype
         grib_ecc-2218
+        grib_ecc-2242
     )
 
     # These tests require data downloads
