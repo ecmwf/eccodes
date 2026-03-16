@@ -13280,6 +13280,13 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
+#Sea water sigma theta relative
+'262523' = {
+	 localTablesVersion = 1 ;
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 192 ;
+	}
 #Time-mean snow thickness over sea ice
 '263002' = {
 	 localTablesVersion = 1 ;
@@ -13306,6 +13313,14 @@
 	 scaleFactorOfFirstFixedSurface = missing() ;
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea water sigma theta relative
+'263523' = {
+	 localTablesVersion = 1 ;
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 192 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Stream function gradient
