@@ -64,6 +64,11 @@ models:
     versions:
       - version: null
 
+  - name: era5-land
+    start: 65532
+    versions:
+      - version: null
+
   - name: era5
     start: 65533
     versions:
