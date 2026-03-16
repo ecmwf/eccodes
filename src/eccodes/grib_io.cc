@@ -130,7 +130,107 @@ static int read_the_rest(reader* r, size_t message_length, unsigned char* tmp, i
         tmp = buf->data;                          \
     }
 
-#define UINT3(a, b, c) (size_t)((a << 16) + (b << 8) + c);
+#define UINT3(a, b, c)    (size_t)((a << 16) + (b << 8) + c);
+#define UINT4(a, b, c, d) (size_t)((a << 24) + (b << 16) + (c << 8) + d);
+
+//??
+#define GET_METADATA_LEN 0
+#if GET_METADATA_LEN
+static int get_GRIB_metadata_length(reader* r, long edition, size_t* result)
+{
+    if (edition != 2) {
+        return GRIB_UNSUPPORTED_EDITION;
+    }
+    unsigned char* tmp  = NULL;
+    int i = 0, err = 0;
+    size_t sec0len      = 16;
+    size_t sec1len      = 0;
+    size_t sec2len      = 0;
+    size_t sec3len      = 0;
+    size_t sec4len      = 0;
+
+    size_t buflen = 40000;
+
+    grib_context* c = grib_context_get_default();
+    tmp = (unsigned char*)malloc(buflen);
+    if (!tmp) return GRIB_OUT_OF_MEMORY;
+    grib_buffer* buf = grib_new_buffer(c, tmp, buflen);
+    buf->deleter = default_deleter;
+
+    // At this point grib2 section 0 has been read (which is 16 bytes)
+
+    // Next 4 bytes encodes section1's length
+    if (r->read(r->read_data, &tmp[i], 4, &err) != 4 || err)
+        return err;
+    sec1len = UINT4(tmp[i], tmp[i + 1], tmp[i + 2], tmp[i + 3]);
+    i += 4;
+    printf("DBG:  sec1len=%zu\n", sec1len);
+
+    // The next byte is the numberOfSection which should be 1
+    if (r->read(r->read_data, &tmp[i], 1, &err) != 1 || err)
+        return err;
+    ECCODES_ASSERT((size_t)tmp[i] == 1);
+    i += 1;
+
+    // Read the rest of section 1. Note: We've read 5 bytes already
+    if ((r->read(r->read_data, tmp + i, sec1len - 5, &err) != sec1len - 5) || err)
+        return err;
+    i += sec1len - 5;
+    
+    // Next comes Section2 (which is optional) or Section3
+    if (r->read(r->read_data, &tmp[i], 4, &err) != 4 || err)
+        return err;
+    size_t sec2or3len = UINT4(tmp[i], tmp[i + 1], tmp[i + 2], tmp[i + 3]);
+    i += 4;
+
+    // Read the next section number: 2 or 3
+    if (r->read(r->read_data, &tmp[i], 1, &err) != 1 || err)
+        return err;
+    size_t sec2or3Num = (size_t)tmp[i];
+    ECCODES_ASSERT( sec2or3Num == 2 || sec2or3Num == 3);
+    i += 1;
+    printf("DBG:  sec2 or 3 num=%zu\n", sec2or3Num);
+    // Read the rest
+    if (sec2or3Num == 2) {
+        // We have the optional section 2
+        sec2len = sec2or3len;
+        if ((r->read(r->read_data, tmp + i, sec2len - 5, &err) != sec2len - 5) || err)
+            return err;
+        i += sec2len - 5;
+
+        // Section3 
+        if (r->read(r->read_data, &tmp[i], 4, &err) != 4 || err)
+            return err;
+        sec3len = UINT4(tmp[i], tmp[i + 1], tmp[i + 2], tmp[i + 3]);
+        i += 4;
+        printf("DBG:  sec2 len=%zu, sec3 len=%zu\n", sec2len, sec3len);
+        if ((r->read(r->read_data, tmp + i, sec3len - 4, &err) != sec3len - 4) || err)
+            return err;
+        i += sec3len - 4;
+    } else {
+        // No section 2
+        sec3len = sec2or3len;
+        if ((r->read(r->read_data, tmp + i, sec3len - 5, &err) != sec3len - 5) || err)
+            return err;
+        i += sec3len - 5;
+        printf("DBG:  sec3 len=%zu\n", sec3len);
+    }
+    
+    // Section 4
+    if (r->read(r->read_data, &tmp[i], 4, &err) != 4 || err)
+        return err;
+    sec4len = UINT4(tmp[i], tmp[i + 1], tmp[i + 2], tmp[i + 3]);
+    i += 4;
+    printf("DBG:  sec4 len=%zu\n", sec4len);
+
+    *result = sec0len + sec1len +  sec2len + sec3len + sec4len;
+    printf("DBG:  result=%zu\n", *result);
+
+    grib_buffer_delete(c, buf);
+
+    return GRIB_SUCCESS;
+}
+#endif
 
 static int read_GRIB(reader* r, int no_alloc)
 {
@@ -146,6 +246,9 @@ static int read_GRIB(reader* r, int no_alloc)
     size_t sec4len      = 0;
     unsigned long flags;
     size_t buflen = 32768; /* See ECC-515: was 16368 */
+    #if GET_METADATA_LEN
+    size_t meta_data_len = 0;
+    #endif
     grib_context* c;
     grib_buffer* buf;
 
@@ -390,6 +493,11 @@ static int read_GRIB(reader* r, int no_alloc)
                     i++;
                 }
             }
+            #if GET_METADATA_LEN
+            get_GRIB_metadata_length(r, edition, &meta_data_len);
+            (void)meta_data_len;
+            r->seek_from_start(r->read_data, r->offset + 16);  // section 0 is 16 bytes
+            #endif
             break;
 
         default:
