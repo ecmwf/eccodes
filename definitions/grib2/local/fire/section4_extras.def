@@ -1,0 +1,20 @@
+concept modelName(unknown, "modelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+
+if (modelName isnot "unknown") {
+   concept modelVersionConcept(unknown, "modelVersionConcept.[modelName].def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
+  if ( grib2LocalSectionPresent or localUsePresent ) { # See ECC-2039
+      if ( defined(marsClass) ) {
+         alias ls.model = modelName;
+         alias ls.modelVersion = modelVersionConcept;;
+      }
+   }
+}
+
+concept inputModelName(unknown, "inputModelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+concept inputModelVersion(unknown, "inputModelVersionConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+
+if (defined(typeOfPostProcessing) and typeOfPostProcessing != 10){
+ meta forcingModel sprintf("%s",inputModelName);
+ alias mars.forcing = forcingModel;
+ unalias mars.origin;
+}
