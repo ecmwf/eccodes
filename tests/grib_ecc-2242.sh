@@ -11,8 +11,7 @@
 . ./include.ctest.sh
 
 # ---------------------------------------------------------
-# This is the test for JIRA issue ECC-XXXX
-# < Add issue summary here >
+# This is the test for JIRA issue ECC-2242
 # ---------------------------------------------------------
 
 REDIRECT=/dev/null
