@@ -185,6 +185,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2221
         grib_ecc-2218
         grib_ecc-2240
+        grib_ecc-2242
     )
 
     # These tests require data downloads

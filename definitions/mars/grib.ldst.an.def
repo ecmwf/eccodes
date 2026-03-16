@@ -1,0 +1,13 @@
+alias mars.step = startStep;
+
+alias monthlyVerificationTime = zero;
+alias monthlyVerificationDate = dataDate;
+
+unalias mars.time;
+unalias mars.step;
+
+meta ldas_configuration sprintf("%s-%s", modelVersion, targetFcstSystem ) : no_copy;
+
+alias mars.configuration = ldas_configuration ;
+
+alias mars.anoffset = anoffset ;
