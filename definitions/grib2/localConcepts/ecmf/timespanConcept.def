@@ -18,6 +18,8 @@
 'none'  = {stream=1221; numberOfTimeRanges=1; true=is_one_of(indicatorOfUnitForTimeRange,1,2,3);}
 'none'  = {stream=1257; numberOfTimeRanges=1; true=is_one_of(indicatorOfUnitForTimeRange,1,2,3);}
 'none'  = {stream=1258; numberOfTimeRanges=1; true=is_one_of(indicatorOfUnitForTimeRange,1,2,3);}
+'none'  = {stream=1261; numberOfTimeRanges=1; true=is_one_of(indicatorOfUnitForTimeRange,1,2,3);}
+'none'  = {stream=1263; numberOfTimeRanges=1; true=is_one_of(indicatorOfUnitForTimeRange,1,2,3);}
 'none'  = {stream=1268; numberOfTimeRanges=1; true=is_one_of(indicatorOfUnitForTimeRange,1,2,3);}
 'none'  = {stream=1269; numberOfTimeRanges=1; true=is_one_of(indicatorOfUnitForTimeRange,1,2,3);}
 # special rules for weekly extended-range (sub-seasonal) products, types
@@ -46,6 +48,4 @@
 '240h' = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=240; class=1; stream=1040; type=32;}
 '360h' = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=360; class=1; stream=1040; type=32;}
 ## 7 days rolling accumulation
-'7 days' = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=168; marsType=32;}
- ## 7 days rolling accumulation
-'7 days' = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168; marsType=32;}
+'168h' = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=168; marsType=32;}
