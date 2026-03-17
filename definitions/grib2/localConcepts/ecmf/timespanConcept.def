@@ -44,4 +44,4 @@
 '240h' = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=240; class=1; stream=1040; type=32;}
 '360h' = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=360; class=1; stream=1040; type=32;}
 ## 7 days rolling accumulation
-'7days' = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=168; marsType=32;}
+'168h' = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=168; marsType=32;}
