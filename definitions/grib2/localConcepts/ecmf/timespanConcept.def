@@ -8,6 +8,8 @@
 # 1224 | mmsa #
 # 1257 | sttd #
 # 1258 | stte #
+# 1268 | ldst #
+# 1269 | ldsb #
 ###############
 # this is for one loop grib2 data
 'none'  = {stream=1092; numberOfTimeRanges=1; true=is_one_of(indicatorOfUnitForTimeRange,1,2,3);}
@@ -18,6 +20,8 @@
 'none'  = {stream=1258; numberOfTimeRanges=1; true=is_one_of(indicatorOfUnitForTimeRange,1,2,3);}
 'none'  = {stream=1261; numberOfTimeRanges=1; true=is_one_of(indicatorOfUnitForTimeRange,1,2,3);}
 'none'  = {stream=1263; numberOfTimeRanges=1; true=is_one_of(indicatorOfUnitForTimeRange,1,2,3);}
+'none'  = {stream=1268; numberOfTimeRanges=1; true=is_one_of(indicatorOfUnitForTimeRange,1,2,3);}
+'none'  = {stream=1269; numberOfTimeRanges=1; true=is_one_of(indicatorOfUnitForTimeRange,1,2,3);}
 # special rules for weekly extended-range (sub-seasonal) products, types
 ################
 # 47 | taem    #

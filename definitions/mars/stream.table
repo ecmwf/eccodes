@@ -126,6 +126,10 @@
 1263 shmd Seasonal hindcast monthly data
 1264 sfdp Seasonal forecast derived products
 1265 shdp Seasonal hindcast derived products
+1266 ldas Land data-assimilation system (near real time)
+1267 ldbt Land data-assimilation system behind real time
+1268 ldst Land data-assimilation system statistics (near real time)
+1269 ldsb Land data-assimilation system statistics behind real time
 2231 cnrm Meteo France climate centre
 2232 mpic Max Plank Institute
 2233 ukmo UKMO climate centre
