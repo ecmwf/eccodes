@@ -18,27 +18,64 @@
 # We only need the concepts which differ from the default below.
 # These are all for 50r1 (255 + 161, 255 + 109, 255 + 209; GRIBmix), where we have the newer model but still want the pre-MTG2 behaviour
 # and for AIFS, where we have the newer tablesVersion but still want the pre-MTG2 behaviour
+# ECC-2241: Data has already been produced as cy50r1 with tablesVersion 34, and tablesVersion 36 may also be used.
+#           To this end we should extend the 50r1 switch functionality to include tablesVersion 34 and 36.
 
-# OD
+## OD 50r1 ##
+# tv34
+0 = {tablesVersion=34; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=161;}
+0 = {tablesVersion=34; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=109;}
+0 = {tablesVersion=34; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=209;}
+# tv35
 0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=161;}
 0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=109;}
 0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=209;}
-# RD
+# tv36
+0 = {tablesVersion=36; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=161;}
+0 = {tablesVersion=36; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=109;}
+0 = {tablesVersion=36; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=209;}
+## OD 50r3 ##
+# tv35 only
+0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=163;}
+0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=111;}
+0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=211;}
+## RD 50r1 ##
+# tv34
+0 = {tablesVersion=34; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=161;}
+0 = {tablesVersion=34; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=109;}
+0 = {tablesVersion=34; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=209;}
+# tv35
 0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=161;}
 0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=109;}
 0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=209;}
-# MC
+# tv36
+0 = {tablesVersion=36; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=161;}
+0 = {tablesVersion=36; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=109;}
+0 = {tablesVersion=36; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=209;}
+## RD 50r3 ##
+# tv35 only
+0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=163;}
+0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=111;}
+0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=211;}
+## MC ##
+# tv35 only
 0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=161; marsClass=19;}
 0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=109; marsClass=19;}
 0 = {tablesVersion=35; productionStatusOfProcessedData=0; backgroundProcess=255; generatingProcessIdentifier=209; marsClass=19;}
-# CR
+## CR ##
+# tv35 only
 0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=161; marsClass=36;}
 0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=109; marsClass=36;}
 0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=209; marsClass=36;}
-# GG
+## GG ##
+# tv35 only
 0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=161; marsClass=44;}
 0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=109; marsClass=44;}
 0 = {tablesVersion=35; productionStatusOfProcessedData=2; backgroundProcess=255; generatingProcessIdentifier=209; marsClass=44;}
-# AI
+## AI ##
+# tv34
 0 = {tablesVersion=34; productionStatusOfProcessedData=0; marsClass=51;}
+# tv35
 0 = {tablesVersion=35; productionStatusOfProcessedData=0; marsClass=51;}
+# tv36
+0 = {tablesVersion=36; productionStatusOfProcessedData=0; marsClass=51;}
