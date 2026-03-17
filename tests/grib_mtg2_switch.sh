@@ -1303,7 +1303,7 @@ cat >$tempFilt<<EOF
     set setLocalDefinition=1;
     set grib2LocalSectionNumber=1;
     set class="ai";
-    set tablesVersion=36;
+    set tablesVersion=37;
     set productionStatusOfProcessedData=0;
     write;
 EOF
