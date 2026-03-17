@@ -120,6 +120,12 @@
 1257 sttd Statistics of deterministic data
 1258 stte Statistics of ensemble data
 1259 xwda eXtended Window Data Assimilation
+1260 sfdd Seasonal forecast daily and sub-daily data
+1261 sfmd Seasonal forecast monthly data
+1262 shdd Seasonal hindcast daily and sub-daily data
+1263 shmd Seasonal hindcast monthly data
+1264 sfdp Seasonal forecast derived products
+1265 shdp Seasonal hindcast derived products
 1266 ldas Land data-assimilation system (near real time)
 1267 ldbt Land data-assimilation system behind real time
 1268 ldst Land data-assimilation system statistics (near real time)
