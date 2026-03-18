@@ -79,9 +79,6 @@ static bool eckit_can_handle_it(const grib_handle* h, std::string& reason)
 int GridSpec::pack_string(const char* v, size_t* len)
 {
 #if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
-    if (context_->eckit_geo == 0) {  // check env. variable too
-        return GRIB_NOT_IMPLEMENTED;
-    }
 
     auto* h = get_enclosing_handle();
     ECCODES_ASSERT(h);
