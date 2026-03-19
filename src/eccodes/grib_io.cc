@@ -60,7 +60,7 @@ typedef struct reader
 } reader;
 
 // If no_alloc argument is 1, then the content of the message are not stored. We just seek to the final 7777
-static int read_the_rest(reader* r, size_t message_length, unsigned char* tmp, int already_read, int check7777, int no_alloc)
+static int read_the_rest(reader* r, size_t message_length, unsigned char* tmp, int already_read, int check7777, int no_alloc, size_t metadata_len)
 {
     int err = GRIB_SUCCESS;
     size_t buffer_size;
@@ -235,7 +235,7 @@ static int read_GRIB(reader* r, int no_alloc)
     unsigned long flags;
     size_t buflen = 32768; /* See ECC-515: was 16368 */
     #if GET_METADATA_LEN
-    size_t meta_data_len = 0;
+    size_t metadata_len = 0;
     #endif
     grib_context* c;
     grib_buffer* buf;
@@ -482,8 +482,7 @@ static int read_GRIB(reader* r, int no_alloc)
                 }
             }
             #if GET_METADATA_LEN
-            get_GRIB2_metadata_length(r, &meta_data_len);
-            (void)meta_data_len;
+            get_GRIB2_metadata_length(r, &metadata_len);
             r->seek_from_start(r->read_data, r->offset + 16);  // section 0 is 16 bytes
             #endif
             break;
@@ -495,7 +494,7 @@ static int read_GRIB(reader* r, int no_alloc)
     }
 
     /* ECCODES_ASSERT(i <= buf->length); */
-    err = read_the_rest(r, length, tmp, i, /*check7777=*/1, no_alloc);
+    err = read_the_rest(r, length, tmp, i, /*check7777=*/1, no_alloc, metadata_len);
     if (err)
         r->seek_from_start(r->read_data, r->offset + 4);
 
@@ -550,7 +549,7 @@ static int read_PSEUDO(reader* r, const char* type, int no_alloc)
     /* fprintf(stderr,"%s sec4len=%d i=%d l=%d\n",type,sec4len,i,4+sec1len+sec4len+4); */
 
     ECCODES_ASSERT(i <= sizeof(tmp));
-    return read_the_rest(r, 4 + sec1len + sec4len + 4, tmp, i, /*check7777=*/1, no_alloc);
+    return read_the_rest(r, 4 + sec1len + sec4len + 4, tmp, i, /*check7777=*/1, no_alloc, 0);
 }
 
 static int read_HDF5_offset(reader* r, int length, unsigned long* v, unsigned char* tmp, int* i)
@@ -737,7 +736,7 @@ static int read_HDF5(reader* r)
     }
 
     ECCODES_ASSERT(i <= sizeof(tmp));
-    return read_the_rest(r, end_of_file_address, tmp, i, 0, 0);
+    return read_the_rest(r, end_of_file_address, tmp, i, 0, 0, 0);
 }
 
 static int read_WRAP(reader* r)
@@ -769,7 +768,7 @@ static int read_WRAP(reader* r)
     }
 
     ECCODES_ASSERT(i <= sizeof(tmp));
-    return read_the_rest(r, length, tmp, i, 1, 0);
+    return read_the_rest(r, length, tmp, i, 1, 0, 0);
 }
 
 static int read_BUFR(reader* r, int no_alloc)
@@ -924,7 +923,7 @@ static int read_BUFR(reader* r, int no_alloc)
     }
 
     /* ECCODES_ASSERT(i <= sizeof(tmp)); */
-    err = read_the_rest(r, length, tmp, i, /*check7777=*/1, no_alloc);
+    err = read_the_rest(r, length, tmp, i, /*check7777=*/1, no_alloc, 0);
     if (err)
         r->seek_from_start(r->read_data, r->offset + 4);
 
