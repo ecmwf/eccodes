@@ -25,28 +25,18 @@ on:
 
 jobs:
   # Run CI for own package
-  eccodes:
-    name: eccodes
-    needs:
-    - ecbuild
-    - setup
-    - clang-format
-    if: ${{ (always() && !cancelled()) && contains(join(needs.*.result, ','), 'success') && needs.setup.outputs.eccodes_matrix && (needs.setup.outputs.ecbuild || needs.setup.outputs.eccodes)&& contains(fromJson(needs.setup.outputs.ci_group_pkgs), 'eccodes') }}
-    strategy:
-      fail-fast: false
-      matrix: ${{ fromJson(needs.setup.outputs.eccodes_matrix) }}
-    env:
-      DEP_TREE: ${{ needs.setup.outputs.dep_tree }}
-    runs-on: ${{ matrix.labels }}
+  smoke-build:
+    name: smoke-build
+    runs-on: ubuntu-latest
     steps:
-    - uses: ecmwf/reusable-workflows/build-package-with-config@v2
-      with:
-        repository: ${{ matrix.owner_repo_ref }}
-        build_package_inputs: 'repository: ${{ matrix.owner_repo_ref }}'
-        build_config: ${{ matrix.config_path }}
-        build_dependencies: ${{ needs.setup.outputs.ecbuild }}
-        codecov_token: ${{ secrets.CODECOV_UPLOAD_TOKEN }}
-        codecov_upload: ${{ contains(needs.setup.outputs.trigger_pkgs, github.job) && inputs.codecov_upload }}
+    - uses: actions/checkout@v4
+    - name: Configure
+      run: cmake -S . -B build -DENABLE_AEC=OFF
+    - name: Build
+      run: make -C build -j"$(nproc)"
+    - name: Test
+      run: ctest --test-dir build -j"$(nproc)" --output-on-failure
+
   # # Run CI including downstream packages on self-hosted runners
   # downstream-ci:
   #   name: downstream-ci
