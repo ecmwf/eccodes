@@ -136,20 +136,16 @@ static int read_the_rest(reader* r, size_t message_length, unsigned char* tmp, i
 //??
 #define GET_METADATA_LEN 1
 #if GET_METADATA_LEN
-static int get_GRIB_metadata_length(reader* r, long edition, size_t* result)
+static int get_GRIB2_metadata_length(reader* r, size_t* result)
 {
-    if (edition != 2) {
-        return GRIB_UNSUPPORTED_EDITION;
-    }
-
     int i = 0, err = 0;
-    size_t sec0len      = 16;
-    size_t sec1len      = 0;
-    size_t sec2len      = 0;
-    size_t sec3len      = 0;
-    size_t sec4len      = 0;
+    size_t sec0len = 16;
+    size_t sec1len = 0;
+    size_t sec2len = 0;
+    size_t sec3len = 0;
+    size_t sec4len = 0;
 
-    unsigned char tmp[40000]; // big enough to read the headers of GRIB2 messages (sections 0,1,2,3,4)
+    unsigned char tmp[40000]; // big enough for headers of GRIB2 messages (sections 0,1,2,3,4)
 
     // At this point grib2 section 0 has been read (which is 16 bytes)
 
@@ -158,12 +154,12 @@ static int get_GRIB_metadata_length(reader* r, long edition, size_t* result)
         return err;
     sec1len = UINT4(tmp[i], tmp[i + 1], tmp[i + 2], tmp[i + 3]);
     i += 4;
-    // printf("DBG:  sec1len=%zu\n", sec1len);
 
     // The next byte is the numberOfSection which should be 1
     if (r->read(r->read_data, &tmp[i], 1, &err) != 1 || err)
         return err;
-    ECCODES_ASSERT((size_t)tmp[i] == 1);
+    if ( (size_t)tmp[i] != 1)
+        return GRIB_INVALID_MESSAGE;
     i += 1;
 
     // Read the rest of section 1. Note: We've read 5 bytes already
@@ -486,7 +482,7 @@ static int read_GRIB(reader* r, int no_alloc)
                 }
             }
             #if GET_METADATA_LEN
-            get_GRIB_metadata_length(r, edition, &meta_data_len);
+            get_GRIB2_metadata_length(r, &meta_data_len);
             (void)meta_data_len;
             r->seek_from_start(r->read_data, r->offset + 16);  // section 0 is 16 bytes
             #endif
