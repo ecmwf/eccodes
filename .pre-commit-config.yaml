@@ -1,0 +1,43 @@
+default_language_version:
+  python: python3
+default_stages:
+- pre-commit
+- pre-push
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v6.0.0
+  hooks:
+  - id: trailing-whitespace
+  - id: end-of-file-fixer
+  - id: check-json
+  - id: check-yaml
+  - id: check-toml
+  - id: check-added-large-files
+  - id: check-merge-conflict
+  - id: debug-statements
+  - id: mixed-line-ending
+  - id: no-commit-to-branch
+    args: [--branch, main]
+# - repo: https://github.com/astral-sh/ruff-pre-commit
+#   rev: v0.15.4
+#   hooks:
+#   - id: ruff-check
+#     exclude: '(dev/.*|.*_)\.py$'
+#     args:
+#     - --exit-non-zero-on-fix
+#   - id: ruff-format
+- repo: https://github.com/executablebooks/mdformat
+  rev: 1.0.0
+  hooks:
+  - id: mdformat
+- repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+  rev: v2.16.0
+  hooks:
+  - id: pretty-format-yaml
+    args: [--autofix, --preserve-quotes]
+  - id: pretty-format-toml
+    args: [--autofix]
+- repo: https://github.com/gitleaks/gitleaks
+  rev: v8.30.0
+  hooks:
+  - id: gitleaks
