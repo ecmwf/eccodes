@@ -11,11 +11,9 @@
 . ./include.ctest.sh
 
 # ---------------------------------------------------------
-# This is the test for JIRA issue ECC-XXXX
-# < Add issue summary here >
+# This is the test for JIRA issue ECC-2240
+# XWDA with obscutoff
 # ---------------------------------------------------------
-
-REDIRECT=/dev/null
 
 label=`basename $0 | sed -e 's/\.sh/_test/'`
 
@@ -25,39 +23,37 @@ tempFilt=temp.$label.filt
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 cat >$tempFilt<<EOF
-set setLocalDefinition=1;
-set grib2LocalSectionNumber=36;
-set marsStream="xwda";
-#set type="fc";
-set hoursAfterDataCutoff=11;
-set offsetToEndOf4DvarWindow=9;
-write;
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=36;
+    set marsStream="xwda";
+    #set type="fc";
+    set hoursAfterDataCutoff=11;
+    set offsetToEndOf4DvarWindow=9;
+    write;
 EOF
 
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
 grib_check_key_equals $tempGrib mars.obscutoff,mars.anoffset "200 9"
 
 cat >$tempFilt<<EOF
-set setLocalDefinition=1;
-set grib2LocalSectionNumber=36;
-set marsStream="xwda";
-#set type="fc";
-set hoursAfterDataCutoff=9;
-set offsetToEndOf4DvarWindow=9;
-write;
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=36;
+    set marsStream="xwda";
+    set hoursAfterDataCutoff=9;
+    set offsetToEndOf4DvarWindow=9;
+    write;
 EOF
 
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
 grib_check_key_equals $tempGrib mars.obscutoff,mars.anoffset "0 9"
 
 cat >$tempFilt<<EOF
-set setLocalDefinition=1;
-set grib2LocalSectionNumber=36;
-set marsStream="xwda";
-#set type="fc";
-set hoursAfterDataCutoff=8;
-set offsetToEndOf4DvarWindow=9;
-write;
+    set setLocalDefinition=1;
+    set grib2LocalSectionNumber=36;
+    set marsStream="xwda";
+    set hoursAfterDataCutoff=8;
+    set offsetToEndOf4DvarWindow=9;
+    write;
 EOF
 
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
@@ -65,4 +61,3 @@ grib_check_key_equals $tempGrib mars.obscutoff,mars.anoffset "0 9"
 
 # Clean up
 rm -f $tempGrib $tempFilt
-

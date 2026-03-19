@@ -765,8 +765,9 @@ bool GribToSpec::has(const std::string& name) const
     }
 
     const auto* key = get_key(name, handle_);
+    if (!key)
+        return false;
 
-    ASSERT(key != nullptr);
     if (std::strlen(key) == 0) {
         return false;
     }
