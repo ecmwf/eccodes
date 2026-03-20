@@ -1,0 +1,6 @@
+alias mars.anoffset = offsetToEndOf4DvarWindow;
+
+transient maxobscutoff = max(0, hoursAfterDataCutoff - offsetToEndOf4DvarWindow);
+
+meta obscutoff time(maxobscutoff,minutesAfterDataCutoff,zero);
+alias mars.obscutoff = obscutoff;

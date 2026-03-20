@@ -24,6 +24,7 @@ INCLUDE_ID_RANGE_IN_COMMENT = True
 ENABLE_COPY = True
 DEST_FOLDERS = [
     "grib2/localConcepts/hydro",
+    "grib2/localConcepts/fire",
 ]
 
 # =========================================================
