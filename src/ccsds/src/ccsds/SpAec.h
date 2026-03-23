@@ -10,8 +10,13 @@
 #include "Stats.h"
 
 template <typename T>
-T grib_power(int exponent, int base) {
-    return static_cast<T>(std::pow(base, exponent));
+T grib_power(int s, int n) {
+    T divisor = 1.0;
+    if (s == 0) return static_cast<T>(1.0);
+    if (s == 1) return static_cast<T>(n);
+    while (s < 0) { divisor /= n; s++; }
+    while (s > 0) { divisor *= n; s--; }
+    return divisor;
 }
 
 
@@ -25,8 +30,8 @@ class SpAec {
         public:
             SimpleMapper(ValueType referenceValue, int binaryScaleFactor, int decimalScaleFactor) :
                 referenceValue_(referenceValue),
-                binary_{grib_power<ValueType>(binaryScaleFactor, 2)},
-                decimal_{grib_power<ValueType>(-decimalScaleFactor, 10)}
+                binary_{grib_power<ValueType>(-binaryScaleFactor, 2)},
+                decimal_{grib_power<ValueType>(decimalScaleFactor, 10)}
             {}
 
             // template <typename, typename>
@@ -46,17 +51,19 @@ class SpAec {
     class SimpleUnmapper {
         public:
             SimpleUnmapper(ValueType referenceValue, int binaryScaleFactor, int decimalScaleFactor) :
-                combined_{grib_power<ValueType>(-binaryScaleFactor, 2) * grib_power<ValueType>(decimalScaleFactor, 10)},
-                offset_{referenceValue * grib_power<ValueType>(decimalScaleFactor, 10)}
+                referenceValue_(referenceValue),
+                bscale_{grib_power<ValueType>(binaryScaleFactor, 2)},
+                dscale_{grib_power<ValueType>(-decimalScaleFactor, 10)}
             {}
 
             ValueType operator()(MappedType mapped) const {
-                return static_cast<ValueType>(mapped) * combined_ + offset_;
+                return (static_cast<ValueType>(mapped) * bscale_ + referenceValue_) * dscale_;
             }
 
         private:
-            const ValueType combined_;  // binary * decimal
-            const ValueType offset_;    // referenceValue * decimal
+            const ValueType referenceValue_;
+            const ValueType bscale_;
+            const ValueType dscale_;
     };
 
 

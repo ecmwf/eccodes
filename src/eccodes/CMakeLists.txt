@@ -451,6 +451,7 @@ ecbuild_add_library(
        ${CMAKE_THREAD_LIBS_INIT}
        ${PNG_LIBRARIES}
        $<$<BOOL:${libaec_FOUND}>:libaec::aec>
+       $<$<BOOL:${HAVE_CCSDS_SPAEC}>:ccsds_spaec>
     PUBLIC_LIBS 
         ${CMATH_LIBRARIES}
         ${THREADS_LIBRARIES}
@@ -467,3 +468,11 @@ ecbuild_add_library(
         $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
 )
+
+# CCSDS SpAec: always compile with native arch and release optimization
+if(HAVE_CCSDS_SPAEC)
+    set_source_files_properties(accessor/DataCcsdsPacking.cc PROPERTIES
+        COMPILE_OPTIONS "-march=native;-mtune=native;-O3"
+        COMPILE_DEFINITIONS "NDEBUG"
+    )
+endif()

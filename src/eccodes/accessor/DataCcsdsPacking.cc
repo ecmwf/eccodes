@@ -17,11 +17,27 @@
     #endif
 #endif
 
+#ifdef HAVE_CCSDS_SPAEC
+    #include "SpAec.h"
+#endif
+
 eccodes::accessor::DataCcsdsPacking _grib_accessor_data_ccsds_packing;
 eccodes::Accessor* grib_accessor_data_ccsds_packing = &_grib_accessor_data_ccsds_packing;
 
 namespace eccodes::accessor
 {
+
+#ifdef HAVE_CCSDS_SPAEC
+static bool use_spaec()
+{
+    static int cached = -1;
+    // if (cached == -1) {
+        const char* env = getenv("ECCODES_USE_LIBAEC");
+        cached = (env == nullptr || env[0] == '\0') ? 1 : 0;
+    // }
+    return cached == 1;
+}
+#endif
 
 void DataCcsdsPacking::init(const long v, grib_arguments* args)
 {
@@ -48,10 +64,10 @@ int DataCcsdsPacking::value_count(long* count)
     return grib_get_long_internal(get_enclosing_handle(), number_of_values_, count);
 }
 
-#if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
+#if defined(HAVE_LIBAEC) || defined(HAVE_AEC) || defined(HAVE_CCSDS_SPAEC)
 
-static bool is_big_endian()
-{
+#if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
+static bool is_big_endian(){
     unsigned char is_big_endian   = 0;
     unsigned short endianess_test = 1;
     return reinterpret_cast<const char*>(&endianess_test)[0] == is_big_endian;
@@ -86,6 +102,7 @@ static void print_aec_stream_info(struct aec_stream* strm, const char* func)
     fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.avail_out=%lu\n", func, strm->avail_out);
     fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.avail_in=%lu\n", func, strm->avail_in);
 }
+#endif /* HAVE_LIBAEC || HAVE_AEC */
 
 #define MAX_BITS_PER_VALUE 32
 int DataCcsdsPacking::pack_double(const double* val, size_t* len)
@@ -112,8 +129,6 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
     long ccsds_block_size;
     long ccsds_rsi;
 
-    struct aec_stream strm;
-
     dirty_ = 1;
 
     n_vals = *len;
@@ -134,8 +149,6 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
         return err;
     if ((err = grib_get_long_internal(hand, ccsds_rsi_, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
-
-    modify_aec_flags(&ccsds_flags);
 
     // Special case
     if (*len == 0) {
@@ -273,70 +286,6 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
 
     divisor = codes_power<double>(-binary_scale_factor, 2);
 
-    size_t nbytes = (bits_per_value + 7) / 8;
-    // ECC-1602: use native a data type (4 bytes for uint32_t) for values that require only 3 bytes
-    if (nbytes == 3)
-        nbytes = 4;
-
-    encoded = reinterpret_cast<unsigned char*>(grib_context_buffer_malloc_clear(context_, nbytes * n_vals));
-
-    if (!encoded) {
-        err = GRIB_OUT_OF_MEMORY;
-        goto cleanup;
-    }
-
-    /*
-    // Original code is memory efficient and supports 3 bytes per value
-    // replaced by ECC-1602 for performance reasons
-    buflen = 0;
-    p      = encoded;
-    for (i = 0; i < n_vals; i++) {
-        long blen                  = bits8;
-        unsigned long unsigned_val = (unsigned long)((((val[i] * d) - reference_value) * divisor) + 0.5);
-        while (blen >= 8) {
-            blen -= 8;
-            *p = (unsigned_val >> blen);
-            p++;
-            buflen++;
-        }
-    }
-    */
-
-    // ECC-1602: Performance improvement
-    switch (nbytes) {
-        case 1:
-            for (i = 0; i < n_vals; i++) {
-                encoded[i] = static_cast<uint8_t>(((val[i] * d - reference_value) * divisor) + 0.5);
-            }
-            break;
-        case 2:
-            for (i = 0; i < n_vals; i++) {
-                reinterpret_cast<uint16_t*>(encoded)[i] = static_cast<uint16_t>(((val[i] * d - reference_value) * divisor) + 0.5);
-            }
-            break;
-        case 4:
-            for (i = 0; i < n_vals; i++) {
-                reinterpret_cast<uint32_t*>(encoded)[i] = static_cast<uint32_t>(((val[i] * d - reference_value) * divisor) + 0.5);
-            }
-            break;
-        default:
-            grib_context_log(context_, GRIB_LOG_ERROR, "%s pack_double: packing %s, bitsPerValue=%ld (max %d)",
-                             class_name_, name_, bits_per_value, MAX_BITS_PER_VALUE);
-            err = GRIB_INVALID_BPV;
-            goto cleanup;
-    }
-
-    grib_context_log(context_, GRIB_LOG_DEBUG, "%s pack_double: packing %s, %zu values", class_name_, name_, n_vals);
-
-    // ECC-1431: GRIB2: CCSDS encoding failure AEC_STREAM_ERROR
-    buflen = (nbytes * n_vals) * 67 / 64 + 256;
-    buf    = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
-
-    if (!buf) {
-        err = GRIB_OUT_OF_MEMORY;
-        goto cleanup;
-    }
-
     if ((err = grib_set_double_internal(hand, reference_value_, reference_value)) != GRIB_SUCCESS)
         return err;
     {
@@ -356,42 +305,158 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
     if ((err = grib_set_long_internal(hand, decimal_scale_factor_, decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
-    strm.flags           = ccsds_flags;
-    strm.bits_per_sample = bits_per_value;
-    strm.block_size      = ccsds_block_size;
-    strm.rsi             = ccsds_rsi;
+#ifdef HAVE_CCSDS_SPAEC
+    if (use_spaec()) {
+        if (bits_per_value < 1 || bits_per_value > MAX_BITS_PER_VALUE) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s pack_double: packing %s, bitsPerValue=%ld (max %d)",
+                             class_name_, name_, bits_per_value, MAX_BITS_PER_VALUE);
+            return GRIB_INVALID_BPV;
+        }
 
-    strm.next_out  = buf;
-    strm.avail_out = buflen;
-    strm.next_in   = encoded;
-    strm.avail_in  = nbytes * n_vals;
+        grib_context_log(context_, GRIB_LOG_DEBUG, "%s pack_double: packing %s, %zu values (SpAec)", class_name_, name_, n_vals);
 
-    // This does not support spherical harmonics, and treats 24 differently than:
-    // see http://cdo.sourcearchive.com/documentation/1.5.1.dfsg.1-1/cgribexlib_8c_source.html
+        if (hand->context->debug) {
+            fprintf(stderr, "ECCODES DEBUG CCSDS pack_double aec_stream.flags=%ld\n", ccsds_flags);
+            fprintf(stderr, "ECCODES DEBUG CCSDS pack_double aec_stream.bits_per_sample=%ld\n", bits_per_value);
+            fprintf(stderr, "ECCODES DEBUG CCSDS pack_double aec_stream.block_size=%ld\n", ccsds_block_size);
+            fprintf(stderr, "ECCODES DEBUG CCSDS pack_double aec_stream.rsi=%ld\n", ccsds_rsi);
+        }
 
-    if (hand->context->debug) print_aec_stream_info(&strm, "pack_double");
+        size_t nbytes = (bits_per_value + 7) / 8;
+        if (nbytes == 3) nbytes = 4;
 
-    if ((err = aec_buffer_encode(&strm)) != AEC_OK) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: aec_buffer_encode error %d (%s)",
-                         class_name_, __func__, err, aec_get_error_message(err));
-        err = GRIB_ENCODING_ERROR;
-        goto cleanup;
+        // Worst-case output buffer
+        buflen = (nbytes * n_vals) * 67 / 64 + 256;
+        buf = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
+        if (!buf) {
+            return GRIB_OUT_OF_MEMORY;
+        }
+
+        try {
+            encoder::SpAec<double> spaec(
+                static_cast<uint8_t>(bits_per_value),
+                static_cast<uint8_t>(ccsds_block_size),
+                static_cast<uint16_t>(ccsds_rsi),
+                CodeOptionSet::Basic,
+                reference_value,
+                static_cast<int>(binary_scale_factor),
+                static_cast<int>(decimal_scale_factor));
+
+            Span<double> input(const_cast<double*>(val), n_vals);
+            Span<uint8_t> output(buf, buflen);
+            buflen = spaec.encode(input, output);
+        }
+        catch (const std::exception& e) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SpAec encode error: %s",
+                             class_name_, __func__, e.what());
+            grib_context_buffer_free(context_, buf);
+            return GRIB_ENCODING_ERROR;
+        }
+
+        grib_buffer_replace(this, buf, buflen, 1, 1);
+        grib_context_buffer_free(context_, buf);
+
+        if ((err = grib_set_long_internal(hand, number_of_values_, *len)) != GRIB_SUCCESS)
+            return err;
+        if ((err = grib_set_long_internal(hand, bits_per_value_, bits_per_value)) != GRIB_SUCCESS)
+            return err;
+
+        return GRIB_SUCCESS;
     }
+#endif
 
-    buflen = strm.total_out;
-    grib_buffer_replace(this, buf, buflen, 1, 1);
+#if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
+    {
+        struct aec_stream strm;
+        modify_aec_flags(&ccsds_flags);
 
-cleanup:
-    grib_context_buffer_free(context_, buf);
-    grib_context_buffer_free(context_, encoded);
+        size_t nbytes = (bits_per_value + 7) / 8;
+        // ECC-1602: use native a data type (4 bytes for uint32_t) for values that require only 3 bytes
+        if (nbytes == 3)
+            nbytes = 4;
 
-    if (err == GRIB_SUCCESS)
-        err = grib_set_long_internal(hand, number_of_values_, *len);
+        encoded = reinterpret_cast<unsigned char*>(grib_context_buffer_malloc_clear(context_, nbytes * n_vals));
 
-    if (err == GRIB_SUCCESS)
-        err = grib_set_long_internal(hand, bits_per_value_, strm.bits_per_sample);
+        if (!encoded) {
+            err = GRIB_OUT_OF_MEMORY;
+            goto cleanup;
+        }
 
-    return err;
+        // ECC-1602: Performance improvement
+        switch (nbytes) {
+            case 1:
+                for (i = 0; i < n_vals; i++) {
+                    encoded[i] = static_cast<uint8_t>(((val[i] * d - reference_value) * divisor) + 0.5);
+                }
+                break;
+            case 2:
+                for (i = 0; i < n_vals; i++) {
+                    reinterpret_cast<uint16_t*>(encoded)[i] = static_cast<uint16_t>(((val[i] * d - reference_value) * divisor) + 0.5);
+                }
+                break;
+            case 4:
+                for (i = 0; i < n_vals; i++) {
+                    reinterpret_cast<uint32_t*>(encoded)[i] = static_cast<uint32_t>(((val[i] * d - reference_value) * divisor) + 0.5);
+                }
+                break;
+            default:
+                grib_context_log(context_, GRIB_LOG_ERROR, "%s pack_double: packing %s, bitsPerValue=%ld (max %d)",
+                                 class_name_, name_, bits_per_value, MAX_BITS_PER_VALUE);
+                err = GRIB_INVALID_BPV;
+                goto cleanup;
+        }
+
+        grib_context_log(context_, GRIB_LOG_DEBUG, "%s pack_double: packing %s, %zu values (libaec)", class_name_, name_, n_vals);
+
+        // ECC-1431: GRIB2: CCSDS encoding failure AEC_STREAM_ERROR
+        buflen = (nbytes * n_vals) * 67 / 64 + 256;
+        buf    = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
+
+        if (!buf) {
+            err = GRIB_OUT_OF_MEMORY;
+            goto cleanup;
+        }
+
+        strm.flags           = ccsds_flags;
+        strm.bits_per_sample = bits_per_value;
+        strm.block_size      = ccsds_block_size;
+        strm.rsi             = ccsds_rsi;
+
+        strm.next_out  = buf;
+        strm.avail_out = buflen;
+        strm.next_in   = encoded;
+        strm.avail_in  = nbytes * n_vals;
+
+        if (hand->context->debug) print_aec_stream_info(&strm, "pack_double");
+
+        if ((err = aec_buffer_encode(&strm)) != AEC_OK) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: aec_buffer_encode error %d (%s)",
+                             class_name_, __func__, err, aec_get_error_message(err));
+            err = GRIB_ENCODING_ERROR;
+            goto cleanup;
+        }
+
+        buflen = strm.total_out;
+        grib_buffer_replace(this, buf, buflen, 1, 1);
+
+    cleanup:
+        grib_context_buffer_free(context_, buf);
+        grib_context_buffer_free(context_, encoded);
+
+        if (err == GRIB_SUCCESS)
+            err = grib_set_long_internal(hand, number_of_values_, *len);
+
+        if (err == GRIB_SUCCESS)
+            err = grib_set_long_internal(hand, bits_per_value_, strm.bits_per_sample);
+
+        return err;
+    }
+#endif
+
+    grib_context_log(context_, GRIB_LOG_ERROR,
+                     "CCSDS support not enabled. "
+                     "Please rebuild with -DENABLE_AEC=ON or -DENABLE_CCSDS_SPAEC=ON");
+    return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
 template <typename T>
@@ -402,14 +467,10 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
 
     int err = GRIB_SUCCESS;
     size_t buflen = 0;
-    struct aec_stream strm;
     double bscale          = 0;
     double dscale          = 0;
     unsigned char* buf     = NULL;
     size_t n_vals          = 0;
-    size_t size            = 0;
-    unsigned char* decoded = NULL;
-    // unsigned char* p       = NULL;
     long nn = 0;
 
     long binary_scale_factor  = 0;
@@ -420,7 +481,6 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
     long ccsds_flags;
     long ccsds_block_size;
     long ccsds_rsi;
-    size_t nbytes;
 
     dirty_ = 0;
 
@@ -446,8 +506,6 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
     if ((err = grib_get_long_internal(hand, ccsds_rsi_, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
 
-    modify_aec_flags(&ccsds_flags);
-
     // TODO(masn): This should be called upstream
     if (*len < n_vals)
         return GRIB_ARRAY_TOO_SMALL;
@@ -466,68 +524,110 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
     buflen = byte_count();
     buf    = hand->buffer->data;
     buf += byte_offset();
-    strm.flags           = ccsds_flags;
-    strm.bits_per_sample = bits_per_value;
-    strm.block_size      = ccsds_block_size;
-    strm.rsi             = ccsds_rsi;
 
-    strm.next_in  = buf;
-    strm.avail_in = buflen;
+#ifdef HAVE_CCSDS_SPAEC
+    if (use_spaec()) {
+        if (hand->context->debug) {
+            fprintf(stderr, "ECCODES DEBUG CCSDS unpack_* aec_stream.flags=%ld\n", ccsds_flags);
+            fprintf(stderr, "ECCODES DEBUG CCSDS unpack_* aec_stream.bits_per_sample=%ld\n", bits_per_value);
+            fprintf(stderr, "ECCODES DEBUG CCSDS unpack_* aec_stream.block_size=%ld\n", ccsds_block_size);
+            fprintf(stderr, "ECCODES DEBUG CCSDS unpack_* aec_stream.rsi=%ld\n", ccsds_rsi);
+        }
+        try {
+            encoder::SpAec<T> spaec(
+                static_cast<uint8_t>(bits_per_value),
+                static_cast<uint8_t>(ccsds_block_size),
+                static_cast<uint16_t>(ccsds_rsi),
+                CodeOptionSet::Basic,
+                static_cast<T>(reference_value),
+                static_cast<int>(binary_scale_factor),
+                static_cast<int>(decimal_scale_factor));
 
-    nbytes = (bits_per_value + 7) / 8;
-    if (nbytes == 3)
-        nbytes = 4;
-
-    size    = n_vals * nbytes;
-    decoded = (unsigned char*)grib_context_buffer_malloc_clear(context_, size);
-    if (!decoded) {
-        err = GRIB_OUT_OF_MEMORY;
-        goto cleanup;
+            Span<uint8_t> source(buf, buflen);
+            Span<T> target(val, n_vals);
+            spaec.decode(source, target);
+        }
+        catch (const std::exception& e) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SpAec decode error: %s",
+                             class_name_, __func__, e.what());
+            return GRIB_DECODING_ERROR;
+        }
+        *len = n_vals;
+        return GRIB_SUCCESS;
     }
-    strm.next_out  = decoded;
-    strm.avail_out = size;
+#endif
 
-    if (hand->context->debug) print_aec_stream_info(&strm, "unpack_*");
+#if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
+    {
+        struct aec_stream strm;
+        unsigned char* decoded = NULL;
+        size_t nbytes, size;
 
-    if ((err = aec_buffer_decode(&strm)) != AEC_OK) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: aec_buffer_decode error %d (%s)",
-                         class_name_, __func__, err, aec_get_error_message(err));
-        err = GRIB_DECODING_ERROR;
-        goto cleanup;
+        modify_aec_flags(&ccsds_flags);
+
+        strm.flags           = ccsds_flags;
+        strm.bits_per_sample = bits_per_value;
+        strm.block_size      = ccsds_block_size;
+        strm.rsi             = ccsds_rsi;
+
+        strm.next_in  = buf;
+        strm.avail_in = buflen;
+
+        nbytes = (bits_per_value + 7) / 8;
+        if (nbytes == 3)
+            nbytes = 4;
+
+        size    = n_vals * nbytes;
+        decoded = (unsigned char*)grib_context_buffer_malloc_clear(context_, size);
+        if (!decoded) {
+            return GRIB_OUT_OF_MEMORY;
+        }
+        strm.next_out  = decoded;
+        strm.avail_out = size;
+
+        if (hand->context->debug) print_aec_stream_info(&strm, "unpack_*");
+
+        if ((err = aec_buffer_decode(&strm)) != AEC_OK) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: aec_buffer_decode error %d (%s)",
+                             class_name_, __func__, err, aec_get_error_message(err));
+            grib_context_buffer_free(context_, decoded);
+            return GRIB_DECODING_ERROR;
+        }
+
+        // ECC-1602: Performance improvement
+        switch (nbytes) {
+            case 1:
+                for (size_t i = 0; i < n_vals; i++) {
+                    val[i] = (reinterpret_cast<uint8_t*>(decoded)[i] * bscale + reference_value) * dscale;
+                }
+                break;
+            case 2:
+                for (size_t i = 0; i < n_vals; i++) {
+                    val[i] = (reinterpret_cast<uint16_t*>(decoded)[i] * bscale + reference_value) * dscale;
+                }
+                break;
+            case 4:
+                for (size_t i = 0; i < n_vals; i++) {
+                    val[i] = (reinterpret_cast<uint32_t*>(decoded)[i] * bscale + reference_value) * dscale;
+                }
+                break;
+            default:
+                grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: unpacking %s, bitsPerValue=%ld (max %d)",
+                                 class_name_, __func__, name_, bits_per_value, MAX_BITS_PER_VALUE);
+                grib_context_buffer_free(context_, decoded);
+                return GRIB_INVALID_BPV;
+        }
+
+        *len = n_vals;
+        grib_context_buffer_free(context_, decoded);
+        return GRIB_SUCCESS;
     }
+#endif
 
-    // ECC-1427: Performance improvement (replaced by ECC-1602)
-    // grib_decode_array<T>(decoded, &pos, bits8 , reference_value, bscale, dscale, n_vals, val);
-
-    // ECC-1602: Performance improvement
-    switch (nbytes) {
-        case 1:
-            for (size_t i = 0; i < n_vals; i++) {
-                val[i] = (reinterpret_cast<uint8_t*>(decoded)[i] * bscale + reference_value) * dscale;
-            }
-            break;
-        case 2:
-            for (size_t i = 0; i < n_vals; i++) {
-                val[i] = (reinterpret_cast<uint16_t*>(decoded)[i] * bscale + reference_value) * dscale;
-            }
-            break;
-        case 4:
-            for (size_t i = 0; i < n_vals; i++) {
-                val[i] = (reinterpret_cast<uint32_t*>(decoded)[i] * bscale + reference_value) * dscale;
-            }
-            break;
-        default:
-            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: unpacking %s, bitsPerValue=%ld (max %d)",
-                             class_name_, __func__, name_, bits_per_value, MAX_BITS_PER_VALUE);
-            err = GRIB_INVALID_BPV;
-            goto cleanup;
-    }
-
-    *len = n_vals;
-
-cleanup:
-    grib_context_buffer_free(context_, decoded);
-    return err;
+    grib_context_log(context_, GRIB_LOG_ERROR,
+                     "CCSDS support not enabled. "
+                     "Please rebuild with -DENABLE_AEC=ON or -DENABLE_CCSDS_SPAEC=ON");
+    return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
 int DataCcsdsPacking::unpack_double(double* val, size_t* len)
@@ -633,7 +733,7 @@ static void print_error_feature_not_enabled(grib_context* c)
 {
     grib_context_log(c, GRIB_LOG_ERROR,
                      "CCSDS support not enabled. "
-                     "Please rebuild with -DENABLE_AEC=ON (Adaptive Entropy Coding library)");
+                     "Please rebuild with -DENABLE_AEC=ON or -DENABLE_CCSDS_SPAEC=ON");
 }
 int DataCcsdsPacking::pack_double(const double* val, size_t* len)
 {
