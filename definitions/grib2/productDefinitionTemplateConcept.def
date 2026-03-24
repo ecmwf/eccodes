@@ -32,6 +32,11 @@
 # 49 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for optical properties of aerosol
 'aerosol_optical_ensemble_instantaneous'      = {productDefinitionTemplateNumber=49;}
 
+# 80 Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for optical properties of aerosol with source or sink
+'aerosol_optical_srcsink_deterministic_instantaneous'  = {productDefinitionTemplateNumber=80;}
+# 81 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for optical properties of aerosol with source or sink
+'aerosol_optical_srcsink_ensemble_instantaneous'  = {productDefinitionTemplateNumber=81;}
+
 # 50 Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for aerosol
 'aerosol_deterministic_instantaneous'           = {productDefinitionTemplateNumber=50;}
 # 46 Average, accumulation, and/or extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for aerosol
