@@ -115,7 +115,6 @@ static int was_seen(grib_keys_iterator* ki, const char* name)
     return grib_trie_get(ki->seen, name) != NULL;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 int grib_keys_iterator_rewind(grib_keys_iterator* ki)
 {
     ki->at_start = 1;

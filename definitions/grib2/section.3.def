@@ -64,7 +64,7 @@ section_padding section3Padding : read_only;
 
 concept gridType {
  "regular_ll"            = { gridDefinitionTemplateNumber=0;  PLPresent=0; }
- "reduced_ll"            = { gridDefinitionTemplateNumber=0;  PLPresent=1; }
+ "reduced_ll"            = { gridDefinitionTemplateNumber=0;  PLPresent=1; numberOfOctectsForNumberOfPoints=2;iDirectionIncrementGiven=0;numberOfPointsAlongAParallel = missing();  }
  "rotated_ll"            = { gridDefinitionTemplateNumber=1;  PLPresent=0; }
  "stretched_ll"          = { gridDefinitionTemplateNumber=2;  PLPresent=0; }
  "stretched_rotated_ll"  = { gridDefinitionTemplateNumber=3;  PLPresent=0; }

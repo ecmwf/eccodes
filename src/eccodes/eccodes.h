@@ -379,6 +379,20 @@ int codes_count_in_filename(codes_context* c, const char* filename, int* n);
 codes_handle* codes_handle_new_from_file(codes_context* c, FILE* f, ProductKind product, int* error);
 
 /**
+ *  Create a handle from a stream.
+ *  The stream is read until a message is found. A handle of the appropriate type is then created and the message is copied.
+ *  Remember always to delete the handle when it is not needed anymore to avoid
+ *  memory leaks.
+ *
+ * @param c               : the context from which the handle will be created (NULL for default context)
+ * @param stream_data    : pointer to user defined stream data
+ * @param stream_proc    : pointer to user defined stream read function
+ * @param error          : error code set if the returned handle is NULL and the end of file is not reached
+ * @return                the new handle, NULL if the resource is invalid or a problem is encountered
+ */
+codes_handle* codes_handle_new_from_stream(codes_context* c, void* stream_data, long (*stream_proc)(void*, void* buffer, long len), int* error);
+
+/**
  *  Create a GRIB handle from a file resource.
  *  The file is read until a GRIB message is found. The message is then copied.
  *  Remember always to delete the handle when it is not needed anymore to avoid
@@ -403,7 +417,6 @@ codes_handle* codes_grib_handle_new_from_file(codes_context* c, FILE* f, int* er
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
 codes_handle* codes_bufr_handle_new_from_file(codes_context* c, FILE* f, int* error);
-
 
 /**
  *  Write a coded message to a file.
@@ -452,7 +465,6 @@ codes_handle* codes_grib_handle_new_from_multi_message(codes_context* c, void** 
  * @return            the new handle, NULL if the message is invalid or a problem is encountered
  */
 codes_handle* codes_handle_new_from_message_copy(codes_context* c, const void* data, size_t data_len);
-
 
 /**
  *  Create a handle from a GRIB message contained in the samples directory.

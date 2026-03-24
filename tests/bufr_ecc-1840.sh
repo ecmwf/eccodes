@@ -15,8 +15,6 @@
 # BUFR: Problem with edition 3 typicalYear and typicalDate
 # ---------------------------------------------------------------------
 
-REDIRECT=/dev/null
-
 label="bufr_ecc-1840_test"
 tempBufr=temp.$label.bufr
 tempFilt=temp.$label.filt

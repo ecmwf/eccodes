@@ -110,17 +110,18 @@ nums=`${tools_dir}/grib_get -p numberOfDataPoints,numberOfCodedValues,numberOfMi
 [ "$nums" = "5969 4 5965" ]
 
 if [ $HAVE_GEOGRAPHY -eq 1 ]; then
-    res=`${tools_dir}/grib_get -l 33,88.5 $sec_ord_bmp`
-    [ "$res" = "9999 5.51552 9999 9999 " ]
+    mvalue=88888
+    res=`${tools_dir}/grib_get -s missingValue=$mvalue -l 33,88.5 $sec_ord_bmp`
+    [ "$res" = "$mvalue 5.51552 $mvalue $mvalue " ]
 
-    res=`${tools_dir}/grib_get -l 30,90.0 $sec_ord_bmp`
-    [ "$res" = "5.26552 9999 9999 9999 " ]
+    res=`${tools_dir}/grib_get -s missingValue=$mvalue -l 30,90.0 $sec_ord_bmp`
+    [ "$res" = "5.26552 $mvalue $mvalue $mvalue " ]
 
-    res=`${tools_dir}/grib_get -l 28.5,87 $sec_ord_bmp`
-    [ "$res" = "9999 2.51552 9999 9999 " ]
+    res=`${tools_dir}/grib_get -s missingValue=$mvalue -l 28.5,87 $sec_ord_bmp`
+    [ "$res" = "$mvalue 2.51552 $mvalue $mvalue " ]
 
-    res=`${tools_dir}/grib_get -l 28.5,90 $sec_ord_bmp`
-    [ "$res" = "3.51552 9999 5.26552 9999 " ]
+    res=`${tools_dir}/grib_get -s missingValue=$mvalue -l 28.5,90 $sec_ord_bmp`
+    [ "$res" = "3.51552 $mvalue 5.26552 $mvalue " ]
 
     # GRIB-203 nearest on M-F second order boustrophedonic
     res=`${tools_dir}/grib_get -w count=1 -l 0,0,1 lfpw.grib1`

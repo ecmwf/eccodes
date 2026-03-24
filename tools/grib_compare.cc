@@ -560,8 +560,8 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
-    grib_error* e   = error_summary;
-    int err         = 0;
+    const grib_error* e = error_summary;
+    int err = 0;
     grib_context* c = grib_context_get_default();
 
     /*if (grib_options_on("w:")) return 0;*/
@@ -648,9 +648,8 @@ static int test_bit(long a, long b)
 static int codeflag_to_bitstr(grib_accessor* a, long val, char* result)
 {
     if (a && grib_inline_strcmp(a->class_name_, "codeflag") == 0) {
-        long i;
         const long bytelen = a->length_ * 8;
-        for (i = 0; i < bytelen; i++) {
+        for (long i = 0; i < bytelen; i++) {
             if (test_bit(val, bytelen - i - 1))
                 *result = '1';
             else
@@ -872,10 +871,10 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
             }
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 == len2) {
                 countdiff = 0;
-                for (size_t i = 0; i < len1; i++)
-                    if (lval1[i] != lval2[i])
+                for (size_t k = 0; k < len1; k++) {
+                    if (lval1[k] != lval2[k])
                         countdiff++;
-
+                }
                 if (countdiff) {
                     printInfo(h1);
                     save_error(c, name);
@@ -995,7 +994,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                 save_error(c, name);
             }
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 == len2) {
-                int imaxdiff;
+                size_t imaxdiff;
                 double diff;
                 double *pv1, *pv2, dnew1, dnew2;
                 maxdiff   = 0;
@@ -1026,12 +1025,12 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                         printf("using compare_double_relative");
                     printf("\n");
                 }
-                for (size_t i = 0; i < len1; i++) {
+                for (size_t k = 0; k < len1; k++) {
                     if ((diff = compare_double(pv1++, pv2++, value_tolerance)) != 0) {
                         countdiff++;
                         if (maxdiff < diff) {
                             maxdiff  = diff;
-                            imaxdiff = i;
+                            imaxdiff = k;
                         }
                         err1 = GRIB_VALUE_MISMATCH;
                     }
@@ -1048,7 +1047,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                         if (!compareAbsolute)
                             printf(" max");
                         printf(" relative diff. = %g", relative_error(dval1[imaxdiff], dval2[imaxdiff], value_tolerance));
-                        printf("\n\tmax diff. element %d: %.20e %.20e",
+                        printf("\n\tmax diff. element %zu: %.20e %.20e",
                                imaxdiff, dval1[imaxdiff], dval2[imaxdiff]);
                         printf("\n\ttolerance=%.16e", value_tolerance);
                         if (packingError2 != 0 || packingError1 != 0)
@@ -1109,16 +1108,16 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS) {
                 const size_t len_min = MINIMUM(len1, len2);
                 if (memcmp(uval1, uval2, len_min) != 0) {
-                    for (size_t i = 0; i < len_min; i++) {
-                        if (uval1[i] != uval2[i]) {
+                    for (size_t k = 0; k < len_min; k++) {
+                        if (uval1[k] != uval2[k]) {
                             printInfo(h1);
                             save_error(c, name);
                             if (len_min == 1)
                                 printf("[%s] byte values are different: [%02x] and [%02x]\n",
-                                       name, uval1[i], uval2[i]);
+                                       name, uval1[k], uval2[k]);
                             else
                                 printf("[%s] byte value %zu of %zu is different: [%02x] and [%02x]\n",
-                                       name, i, len_min, uval1[i], uval2[i]);
+                                       name, k, len_min, uval1[k], uval2[k]);
 
                             err1 = GRIB_VALUE_MISMATCH;
                             break;
@@ -1154,11 +1153,11 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
 
 static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_options* options)
 {
-    int err                  = 0;
-    int i                    = 0;
-    const char* name         = NULL;
+    int err = 0;
+    int i = 0;
+    const char* name = NULL;
     grib_keys_iterator* iter = NULL;
-    grib_context* context    = handle1->context;
+    grib_context* context = handle1->context;
 
     //if (blocklist && (!listFromCommandLine || headerMode)) {
         // See ECC-245, GRIB-573, GRIB-915: Do not change handles in memory!

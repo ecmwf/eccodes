@@ -14,6 +14,5 @@
 # This is the test for the JIRA issue ECC-2011
 # BUFR: Attributes of data section keys (mis)identified as header keys
 # ---------------------------------------------------------
-label="bufr_ecc-2011_test"
 
 $EXEC ${test_dir}/bufr_ecc-2011

@@ -12777,6 +12777,78 @@
 	 parameterNumber = 212 ;
 	 typeOfFirstFixedSurface = 254 ;
 	}
+#Covariance between skin temperature and soil temperature layer 1
+'covar_skt_stl1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 213 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and soil temperature layer 2
+'covar_skt_stl2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 214 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and soil temperature layer 3
+'covar_skt_stl3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 215 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and volumetric soil water layer 1
+'covar_skt_swvl1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 216 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and volumetric soil water layer 2
+'covar_skt_swvl2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 217 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and volumetric soil water layer 3
+'covar_skt_swvl3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 218 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and temperature of snow layer 1
+'covar_skt_tsn1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 219 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and temperature of snow layer 2
+'covar_skt_tsn2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 220 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and temperature of snow layer 3
+'covar_skt_tsn3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 221 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
 #Surface roughness length for heat
 'srlh' = {
 	 localTablesVersion = 1 ;
@@ -12899,6 +12971,70 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 193 ;
 	}
+#Time-mean aerosol negative fixer mass flux
+'avg_aer_negfix_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean aerosol negative fixer mass flux
+'avg_aer_negfix_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum aerosol negative fixer mass flux
+'max_aer_negfix_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum aerosol negative fixer mass flux
+'max_aer_negfix_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum aerosol negative fixer mass flux
+'min_aer_negfix_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum aerosol negative fixer mass flux
+'min_aer_negfix_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation aerosol negative fixer mass flux
+'std_aer_negfix_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation aerosol negative fixer mass flux
+'std_aer_negfix_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Aerosol sink/loss mass flux
 'aer_sink_mflx' = {
 	 localTablesVersion = 1 ;
@@ -12913,6 +13049,70 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 194 ;
 	}
+#Time-mean aerosol sink/loss mass flux
+'avg_aer_sink_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean aerosol sink/loss mass flux
+'avg_aer_sink_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum aerosol sink/loss mass flux
+'max_aer_sink_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum aerosol sink/loss mass flux
+'max_aer_sink_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum aerosol sink/loss mass flux
+'min_aer_sink_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum aerosol sink/loss mass flux
+'min_aer_sink_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation aerosol sink/loss mass flux
+'std_aer_sink_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation aerosol sink/loss mass flux
+'std_aer_sink_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Aerosol source/gain mass flux
 'aer_src_mflx' = {
 	 localTablesVersion = 1 ;
@@ -12926,6 +13126,70 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 192 ;
+	}
+#Time-mean aerosol source/gain mass flux
+'avg_aer_src_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean aerosol source/gain mass flux
+'avg_aer_src_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum aerosol source/gain mass flux
+'max_aer_src_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum aerosol source/gain mass flux
+'max_aer_src_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum aerosol source/gain mass flux
+'min_aer_src_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum aerosol source/gain mass flux
+'min_aer_src_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation aerosol source/gain mass flux
+'std_aer_src_mflx' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation aerosol source/gain mass flux
+'std_aer_src_mflx' = {
+	 localTablesVersion = 2 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 6 ;
 	}
 #Emission mass flux from commercial buildings heating
 'emi_mflx_cbh' = {
@@ -14619,46 +14883,6 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 scaledValueOfLowerLimit = 25 ;
-	 scaleFactorOfLowerLimit = 0 ;
-	 probabilityType = 3 ;
-	}
-#Significant wave height of at least 2 m
-'swhg2' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 101 ;
-	 scaledValueOfLowerLimit = 2 ;
-	 scaleFactorOfLowerLimit = 0 ;
-	 probabilityType = 3 ;
-	}
-#Significant wave height of at least 4 m
-'swhg4' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 101 ;
-	 scaledValueOfLowerLimit = 4 ;
-	 scaleFactorOfLowerLimit = 0 ;
-	 probabilityType = 3 ;
-	}
-#Significant wave height of at least 6 m
-'swhg6' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 101 ;
-	 scaledValueOfLowerLimit = 6 ;
-	 scaleFactorOfLowerLimit = 0 ;
-	 probabilityType = 3 ;
-	}
-#Significant wave height of at least 8 m
-'swhg8' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 101 ;
-	 scaledValueOfLowerLimit = 8 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
 	}

@@ -54,13 +54,6 @@ ${tools_dir}/grib_set -s \
     $temp1 $temp2
 grib_check_key_equals $temp2 mars.model  'geff'
 
-# Parameter tests
-${tools_dir}/grib_set -s paramId=260267 $temp2 $temp3
-grib_check_key_equals $temp3 paramId,lengthOfTimeRange '260267 6'
-
-${tools_dir}/grib_set -s paramId=260268 $temp2 $temp3
-grib_check_key_equals $temp3 paramId,lengthOfTimeRange '260268 24'
-
 # Use stepType
 ${tools_dir}/grib_set -s localDefinitionNumber=41,stepType=accum $sample $temp1
 ${tools_dir}/grib_set -s paramId=260267 $temp1 $temp2

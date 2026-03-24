@@ -58,6 +58,12 @@ int OffsetValues::pack_double(const double* val, size_t* len)
     if ((ret = grib_get_size(h, values_, &size)) != GRIB_SUCCESS)
         return ret;
 
+    // ECC-2202
+    if (size == 0) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "OffsetValues: Cannot offset field with no values");
+        return GRIB_DECODING_ERROR;
+    }
+
     values = (double*)grib_context_malloc(c, size * sizeof(double));
     if (!values)
         return GRIB_OUT_OF_MEMORY;

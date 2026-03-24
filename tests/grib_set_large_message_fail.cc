@@ -38,6 +38,7 @@ int main(int argc, char** argv)
     values_len = Ni * Nj;
 
     values = (double*)calloc(values_len, sizeof(double));
+    if (!values) return 1;
 
     CODES_CHECK(codes_set_long(h, "Ni", Ni), 0);
     CODES_CHECK(codes_set_long(h, "Nj", Nj), 0);

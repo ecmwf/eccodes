@@ -504,13 +504,6 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
 	}
-#Logarithm of surface pressure
-'lnsp' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 1 ;
-	}
 #Divergence
 'd' = {
 	 discipline = 0 ;
@@ -8891,14 +8884,6 @@
 	 typeOfFirstFixedSurface = 101 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean logarithm of surface pressure
-'avg_lnsp' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
 #Time-mean divergence
 'avg_d' = {
 	 discipline = 0 ;
@@ -10963,14 +10948,6 @@
 	 typeOfFirstFixedSurface = 101 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
-#Time-maximum logarithm of surface pressure
-'max_lnsp' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
 #Time-maximum divergence
 'max_d' = {
 	 discipline = 0 ;
@@ -12862,14 +12839,6 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
-	 typeOfStatisticalProcessing = 3 ;
-	}
-#Time-minimum logarithm of surface pressure
-'min_lnsp' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum divergence
@@ -14789,14 +14758,6 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
-	 typeOfStatisticalProcessing = 6 ;
-	}
-#Time-standard-deviation logarithm of surface pressure
-'std_lnsp' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation divergence
@@ -21341,6 +21302,42 @@
 	 scaledValueOfLowerLimit = 27315 ;
 	 scaleFactorOfLowerLimit = 2 ;
 	 probabilityType = 0 ;
+	}
+#Significant wave height of at least 2 m
+'swhg2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 2 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
+#Significant wave height of at least 4 m
+'swhg4' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 4 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
+#Significant wave height of at least 6 m
+'swhg6' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 6 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
+#Significant wave height of at least 8 m
+'swhg8' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 8 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #10 metre wind gust index
 '10fgi' = {

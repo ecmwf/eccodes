@@ -18,9 +18,6 @@ fLog=${label}".log"
 rm -f $fLog
 touch $fLog
 
-# Define tmp bufr files
-fJsonTmp=${label}".txt.tmp"
-
 if [ $HAVE_MEMFS -eq 1 ]; then
     unset ECCODES_DEFINITION_PATH
     unset ECCODES_SAMPLES_PATH

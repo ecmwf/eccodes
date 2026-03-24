@@ -23,12 +23,13 @@ sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 echo "Test with nonexistent keys. Note spelling of centre!"
 # ---------------------------------------------------------
+input=${data_dir}/tigge_pf_ecmwf.grib2
 cat >${data_dir}/nonexkey.rules <<EOF
  set center="john";
 EOF
 # Invoke without -f i.e. should fail if error encountered
 set +e
-${tools_dir}/grib_filter ${data_dir}/nonexkey.rules ${data_dir}/tigge_pf_ecmwf.grib2 2> $REDIRECT > $REDIRECT
+${tools_dir}/grib_filter ${data_dir}/nonexkey.rules $input 2> $REDIRECT > $REDIRECT
 if [ $? -eq 0 ]; then
    echo "ERROR: grib_filter should have failed if key not found" >&2
    exit 1
@@ -36,7 +37,7 @@ fi
 set -e
 
 # Now repeat with -f option (do not exit on error)
-${tools_dir}/grib_filter -f ${data_dir}/nonexkey.rules ${data_dir}/tigge_pf_ecmwf.grib2 2> $REDIRECT > $REDIRECT
+${tools_dir}/grib_filter -f ${data_dir}/nonexkey.rules $input 2> $REDIRECT > $REDIRECT
 
 rm -f ${data_dir}/nonexkey.rules
 
@@ -78,8 +79,9 @@ grep -q "Invalid argument" $tempOut
 
 # Bad write
 # ----------
+input="${samp_dir}/GRIB2.tmpl"
 set +e
-echo 'write "/";' | ${tools_dir}/grib_filter - $input > $tempOut 2>&1
+echo 'write "/";' | ${tools_dir}/grib_filter - $sample_grib2 > $tempOut 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
@@ -88,12 +90,21 @@ grep -q "Unable to open file" $tempOut
 
 # Bad print
 # ----------
+input="${samp_dir}/GRIB2.tmpl"
 set +e
-echo 'print ("/") "should fail";' | ${tools_dir}/grib_filter - $input > $tempOut 2>&1
+echo 'print ("/") "should fail";' | ${tools_dir}/grib_filter - $sample_grib2 > $tempOut 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "IO ERROR" $tempOut
+
+# Print nonexistent key
+# ----------------------
+cat >$tempFilt <<EOF
+  print "[opeth]";
+EOF
+ECCODES_DEBUG=1 ${tools_dir}/grib_filter -f $tempFilt $sample_grib2 > $tempOut 2>&1
+grep "Problem using print with key.*opeth" $tempOut
 
 
 # Signed bits

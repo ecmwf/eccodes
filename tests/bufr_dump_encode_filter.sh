@@ -93,4 +93,12 @@ do
     rm -f $fBufrTmp $fRules
   fi
 done
+
+# Special cases
+# BUFR with non-ECMWF local section (bufrHeaderCentre = 78)
+file=uegabe.bufr
+${tools_dir}/bufr_dump -Efilter ${data_dir}/bufr/$file > $fRules 2>$fLog
+grep -q "Cannot generate code for section 2" $fLog
+
+# Clean up
 rm -f $fLog $fBufrTmp $fRules

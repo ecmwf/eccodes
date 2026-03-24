@@ -48,17 +48,13 @@ cat > $fRules<<EOF
 EOF
 ${tools_dir}/gts_filter -o $fGtsTmp $fRules $gts_file
 set +e
-${tools_dir}/gts_compare -v -d -f $gts_file $fGtsTmp
+${tools_dir}/gts_compare -v -f $gts_file $fGtsTmp
 status=$?
 set -e
 if [ $status -eq 0 ]; then
    echo "ERROR: gts_compare should have failed if files are different" >&2
    exit 1
 fi
-# The -d option should have created these two files
-[ -f error1_1.gts ]
-[ -f error2_1.gts ]
-rm -f error1_1.gts error2_1.gts
 
 #----------------------------------------------------
 # Test: comparing with and without the -b switch

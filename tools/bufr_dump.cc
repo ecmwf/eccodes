@@ -595,6 +595,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
             fprintf(stdout, "        bufr_encode()\n");
             fprintf(stdout, "    except CodesInternalError as err:\n");
             fprintf(stdout, "        traceback.print_exc(file=sys.stderr)\n");
+            fprintf(stdout, "        sys.stderr.write(err.msg + '\\n')\n");
             fprintf(stdout, "        return 1\n");
             fprintf(stdout, "\n\n");
             fprintf(stdout, "if __name__ == \"__main__\":\n");

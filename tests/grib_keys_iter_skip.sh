@@ -10,8 +10,6 @@
 
 . ./include.ctest.sh
 
-label="grib_keys_iter_skip_test"
-
 gribs="
     row.grib
     grid_ieee.grib

@@ -541,7 +541,7 @@ static err handle_to_request(request* r, grib_handle* g)
 {
     grib_keys_iterator* ks;
     char name[256];
-    char value[256];
+    char value[256] = {0,};
     size_t len = sizeof(value);
     int e      = 0;
 

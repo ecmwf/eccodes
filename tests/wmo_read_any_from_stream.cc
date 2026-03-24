@@ -32,7 +32,7 @@ int main(int argc, char** argv)
 
     if (argc != 2) return 1;
 
-    in = fopen(argv[1], "r");
+    in = fopen(argv[1], "rb");
     if (!in) return 1;
 
     h = grib_handle_new_from_file(0, in, &err);

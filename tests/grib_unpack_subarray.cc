@@ -19,7 +19,7 @@ int main(int argc, char** argv)
     const char* filename = argv[1];
     grib_context* c      = grib_context_get_default();
 
-    FILE* fin = fopen(filename, "r");
+    FILE* fin = fopen(filename, "rb");
     ECCODES_ASSERT(fin);
     grib_handle* h = grib_handle_new_from_file(0, fin, &err);
     ECCODES_ASSERT(h);

@@ -118,10 +118,9 @@ static long lcm(long a, long b)
 
 static int is_ok(const double* val, long v[6], double basic_angle, double sub_division)
 {
-    int i;
     int ok = 1;
 
-    for (i = 0; i < 6; i++) {
+    for (int i = 0; i < 6; i++) {
         if (val[i] == GRIB_MISSING_DOUBLE)
             v[i] = GRIB_MISSING_LONG;
         else {

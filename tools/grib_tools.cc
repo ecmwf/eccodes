@@ -688,7 +688,7 @@ static int process(grib_context* c, grib_runtime_options* options, const char* p
 static int grib_tool_onlyfiles(grib_runtime_options* options)
 {
     grib_context* c         = grib_context_get_default();
-    grib_tools_file* infile = options->infile;
+    const grib_tools_file* infile = options->infile;
     int err = 0;
 
     while (infile != NULL && infile->name != NULL) {

@@ -231,6 +231,8 @@ static double laplam(bif_trunc_t* bt, const double val[])
      */
     znorm = (double*)calloc(lmax, sizeof(double));
     zw    = (double*)malloc(sizeof(double) * lmax);
+    if (!zw || !znorm)
+        return GRIB_OUT_OF_MEMORY;
 
     /*
      * Compute norms of input field, gathered by values of i**2+j**2; we have to
@@ -661,6 +663,8 @@ int DataG2BifourierPacking::pack_double(const double* val, size_t* len)
     buflen = hsize + lsize;
 
     buf = (unsigned char*)grib_context_malloc(gh->context, buflen);
+    if (!buf)
+        return GRIB_OUT_OF_MEMORY;
 
     hres = buf;
     lres = buf + hsize;

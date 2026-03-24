@@ -68,6 +68,7 @@ int main(int argc, char* argv[])
     // Write to a temporary GRIB file
     printf("Save to file '%s'...\n", out_filename);
     fout = fopen(out_filename, "wb");
+    if (!fout) return 1;
     GRIB_CHECK(grib_get_message(h, &buffer, &size), 0);
     if (fwrite(buffer, 1, size, fout) != size) {
         ECCODES_ASSERT(!"Failed to write data");

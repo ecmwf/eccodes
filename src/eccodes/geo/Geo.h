@@ -24,7 +24,6 @@ class Figure;
 class Grid;
 class Iterator;
 class Projection;
-class Spec;
 }  // namespace eckit::geo
 
 
@@ -34,7 +33,6 @@ namespace eccodes::geo
 
 using Grid       = ::eckit::geo::Grid;
 using Projection = ::eckit::geo::Projection;
-using Spec       = ::eckit::geo::Spec;
 
 
 bool codes_check_error(int e, const char* call);

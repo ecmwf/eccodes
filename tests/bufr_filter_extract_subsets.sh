@@ -22,6 +22,7 @@ touch $fLog
 
 fBufrTmp1=temp1.${label}.bufr
 fBufrTmp2=temp2.${label}.bufr
+fBufrTmp3=temp3.${label}.bufr
 
 # Define filter rules file
 fRules=${label}.filter
@@ -233,6 +234,35 @@ EOF
 ${tools_dir}/codes_bufr_filter $fRules mhen_55.bufr
 
 
+# Extract to different output files
+# ---------------------------------
+cat > $fRules <<EOF
+  set numberOfSubsets=3;
+  set unexpandedDescriptors={1021};
+  set synopticFeatureIdentifier={11,12,13};
+  set pack=1;
+  write;
+EOF
+${tools_dir}/codes_bufr_filter -o $fBufrTmp1 $fRules $ECCODES_SAMPLES_PATH/BUFR4_local_satellite.tmpl
+cat > $fRules <<EOF
+ set unpack=1;
+ set extractSubset=2;
+ set doExtractSubsets=1;
+ write "$fBufrTmp2";
+
+ set extractSubset=3;
+ set doExtractSubsets=1;
+ write "$fBufrTmp3";
+EOF
+${tools_dir}/codes_bufr_filter $fRules $fBufrTmp1
+
+v2=$( ${tools_dir}/bufr_get -s unpack=1 -p synopticFeatureIdentifier $fBufrTmp2)
+v3=$( ${tools_dir}/bufr_get -s unpack=1 -p synopticFeatureIdentifier $fBufrTmp3)
+[ "$v2" = "12" ]
+[ "$v3" = "13" ]
+${tools_dir}/bufr_compare -b synopticFeatureIdentifier $fBufrTmp2 $fBufrTmp3
+
 
 # Clean up
-rm -f ${f}.log ${f}.log.ref $fBufrTmp1 $fBufrTmp2 $fLog $fRules
+rm -f ${f}.log ${f}.log.ref
+rm -f $fBufrTmp1 $fBufrTmp2 $fBufrTmp3 $fLog $fRules

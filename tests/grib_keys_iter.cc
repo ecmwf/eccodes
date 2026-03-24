@@ -32,6 +32,8 @@ int main(int argc, char* argv[])
         kiter = grib_keys_iterator_new(h, /*flags=*/0, /*namespace=*/NULL);
         ECCODES_ASSERT(kiter);
 
+        grib_keys_iterator_rewind(kiter); // no-op
+
         while (grib_keys_iterator_next(kiter)) {
             const char* name = grib_keys_iterator_get_name(kiter);
             ECCODES_ASSERT(name);

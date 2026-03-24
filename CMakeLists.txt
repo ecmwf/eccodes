@@ -24,7 +24,7 @@ if(NOT ecbuild_FOUND)
     include(FetchContent)
     FetchContent_Populate(ecbuild
         GIT_REPOSITORY https://github.com/ecmwf/ecbuild.git
-        GIT_TAG        3.8.5
+        GIT_TAG        3.12.0
     )
     find_package( ecbuild 3.7 REQUIRED HINTS ${ecbuild_SOURCE_DIR})
 endif()
@@ -155,7 +155,17 @@ ecbuild_add_option( FEATURE NETCDF
     REQUIRED_PACKAGES NetCDF
     NO_TPL )
 
-find_package( libaec 1.0.6 )
+ecbuild_add_option( FEATURE USE_SHARED_LIB_AEC
+    DESCRIPTION "Link against shared libaec library (dynamic linking)"
+    DEFAULT ON )
+
+if ( ENABLE_USE_SHARED_LIB_AEC )
+    set( libaec_USE_STATIC_LIBS OFF )
+else()
+    set( libaec_USE_STATIC_LIBS ON )
+endif()
+
+find_package( libaec 1.1.4 )
 if(NOT DEFINED ENABLE_AEC AND NOT libaec_FOUND)
   ecbuild_critical("AEC library was not found.\n"
                    "AEC (Adaptive Entropy Coding) provides the WMO GRIB CCSDS compression and decompression of data. "
@@ -319,8 +329,8 @@ if( HAVE_ECCODES_THREADS AND HAVE_ECCODES_OMP_THREADS )
     ecbuild_critical("Cannot enable both POSIX threads and OpenMP! Please specify just one option")
 endif()
 
-ecbuild_info(" POSIX THREADS = ${GRIB_PTHREADS}")
-ecbuild_info(" OpenMP THREADS= ${GRIB_OMP_THREADS}")
+ecbuild_info(" POSIX THREADS=${GRIB_PTHREADS}")
+ecbuild_info(" OpenMP THREADS=${GRIB_OMP_THREADS}")
 
 set( GRIB_MEM_ALIGN 0 )
 if( ENABLE_ALIGN_MEMORY )

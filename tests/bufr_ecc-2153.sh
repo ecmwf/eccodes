@@ -15,8 +15,6 @@
 # Check handling of empty nested delayed replication factors in BUFR 
 # ---------------------------------------------------------
 
-REDIRECT=/dev/null
-
 label="bufr_ecc-2153_test"
 tempBufr=temp.$label.bufr
 tempFilt=temp.$label.filt
@@ -78,6 +76,197 @@ unexpandedDescriptors={
 #4#satelliteChannelCentreFrequency=MISSING
 #5#satelliteChannelCentreFrequency=MISSING
 #6#satelliteChannelCentreFrequency=MISSING
+
+EOF
+
+# Exit if different
+diff $tempOut $tempRef
+
+
+# ==========================================================
+# ECC-2195: Don't ignore descriptor following the delayed replication
+# ==========================================================
+
+# Set filter
+cat >$tempFilt<<EOF
+set numberOfSubsets = 1;
+set observedData = 1;
+set compressedData = 0;
+set inputExtendedDelayedDescriptorReplicationFactor={2};
+set inputDelayedDescriptorReplicationFactor = {3,3};
+set inputShortDelayedDescriptorReplicationFactor = {1,1,1,1,1,0};
+set unexpandedDescriptors = {106000, 031002, 104000, 031001, 002153, 101000, 031000, 007007, 33007 };
+set pack = 1;
+write;
+EOF
+
+${tools_dir}/bufr_filter -o $tempBufr $tempFilt $sample_bufr4
+${tools_dir}/bufr_dump -p $tempBufr > $tempOut
+
+# Reference
+cat > $tempRef << EOF
+delayedDescriptorReplicationFactor= {
+      3, 3}
+shortDelayedDescriptorReplicationFactor= {
+      1, 1, 1, 1, 1, 0}
+extendedDelayedDescriptorReplicationFactor= {2}
+edition=4
+masterTableNumber=0
+bufrHeaderCentre=98
+bufrHeaderSubCentre=0
+updateSequenceNumber=0
+dataCategory=1
+internationalDataSubCategory=255
+dataSubCategory=110
+masterTablesVersionNumber=24
+localTablesVersionNumber=0
+typicalYear=2012
+typicalMonth=10
+typicalDay=31
+typicalHour=0
+typicalMinute=2
+typicalSecond=0
+numberOfSubsets=1
+observedData=1
+compressedData=0
+unexpandedDescriptors={
+      106000, 031002, 104000, 031001, 002153, 101000, 031000, 007007, 033007 }
+#1#satelliteChannelCentreFrequency=MISSING
+#1#height=MISSING
+#2#satelliteChannelCentreFrequency=MISSING
+#2#height=MISSING
+#3#satelliteChannelCentreFrequency=MISSING
+#3#height=MISSING
+#4#satelliteChannelCentreFrequency=MISSING
+#4#height=MISSING
+#5#satelliteChannelCentreFrequency=MISSING
+#5#height=MISSING
+#6#satelliteChannelCentreFrequency=MISSING
+percentConfidence=MISSING
+
+EOF
+
+# Exit if different
+diff $tempOut $tempRef
+
+# ==========================================================
+
+# Set filter
+cat >$tempFilt<<EOF
+set numberOfSubsets = 1;
+set observedData = 1;
+set compressedData = 0;
+set inputExtendedDelayedDescriptorReplicationFactor={2};
+set inputDelayedDescriptorReplicationFactor = {3,3};
+set inputShortDelayedDescriptorReplicationFactor = {0,0,0,0,0,0};
+set unexpandedDescriptors = {106000, 031002, 104000, 031001, 002153, 101000, 031000, 007007, 33007 };
+set pack = 1;
+write;
+EOF
+
+${tools_dir}/bufr_filter -o $tempBufr $tempFilt $sample_bufr4
+${tools_dir}/bufr_dump -p $tempBufr > $tempOut
+
+# Reference
+cat > $tempRef << EOF
+delayedDescriptorReplicationFactor= {
+      3, 3}
+shortDelayedDescriptorReplicationFactor= {
+      0, 0, 0, 0, 0, 0}
+extendedDelayedDescriptorReplicationFactor= {2}
+edition=4
+masterTableNumber=0
+bufrHeaderCentre=98
+bufrHeaderSubCentre=0
+updateSequenceNumber=0
+dataCategory=1
+internationalDataSubCategory=255
+dataSubCategory=110
+masterTablesVersionNumber=24
+localTablesVersionNumber=0
+typicalYear=2012
+typicalMonth=10
+typicalDay=31
+typicalHour=0
+typicalMinute=2
+typicalSecond=0
+numberOfSubsets=1
+observedData=1
+compressedData=0
+unexpandedDescriptors={
+      106000, 031002, 104000, 031001, 002153, 101000, 031000, 007007, 033007 }
+#1#satelliteChannelCentreFrequency=MISSING
+#2#satelliteChannelCentreFrequency=MISSING
+#3#satelliteChannelCentreFrequency=MISSING
+#4#satelliteChannelCentreFrequency=MISSING
+#5#satelliteChannelCentreFrequency=MISSING
+#6#satelliteChannelCentreFrequency=MISSING
+percentConfidence=MISSING
+
+EOF
+
+# Exit if different
+diff $tempOut $tempRef
+
+# ==========================================================
+
+# Set filter
+cat >$tempFilt<<EOF
+set numberOfSubsets = 1;
+set observedData = 1;
+set compressedData = 0;
+set inputExtendedDelayedDescriptorReplicationFactor={2};
+set inputDelayedDescriptorReplicationFactor = {3,3};
+set inputShortDelayedDescriptorReplicationFactor = {1,1,1,1,1,1};
+set unexpandedDescriptors = {106000, 031002, 104000, 031001, 002153, 101000, 031000, 007007, 33007 };
+set pack = 1;
+write;
+EOF
+
+${tools_dir}/bufr_filter -o $tempBufr $tempFilt $sample_bufr4
+${tools_dir}/bufr_dump -p $tempBufr > $tempOut
+
+# Reference
+cat > $tempRef << EOF
+delayedDescriptorReplicationFactor= {
+      3, 3}
+shortDelayedDescriptorReplicationFactor= {
+      1, 1, 1, 1, 1, 1}
+extendedDelayedDescriptorReplicationFactor= {2}
+edition=4
+masterTableNumber=0
+bufrHeaderCentre=98
+bufrHeaderSubCentre=0
+updateSequenceNumber=0
+dataCategory=1
+internationalDataSubCategory=255
+dataSubCategory=110
+masterTablesVersionNumber=24
+localTablesVersionNumber=0
+typicalYear=2012
+typicalMonth=10
+typicalDay=31
+typicalHour=0
+typicalMinute=2
+typicalSecond=0
+numberOfSubsets=1
+observedData=1
+compressedData=0
+unexpandedDescriptors={
+      106000, 031002, 104000, 031001, 002153, 101000, 031000, 007007, 033007 }
+#1#satelliteChannelCentreFrequency=MISSING
+#1#height=MISSING
+#2#satelliteChannelCentreFrequency=MISSING
+#2#height=MISSING
+#3#satelliteChannelCentreFrequency=MISSING
+#3#height=MISSING
+#4#satelliteChannelCentreFrequency=MISSING
+#4#height=MISSING
+#5#satelliteChannelCentreFrequency=MISSING
+#5#height=MISSING
+#6#satelliteChannelCentreFrequency=MISSING
+#6#height=MISSING
+percentConfidence=MISSING
 
 EOF
 

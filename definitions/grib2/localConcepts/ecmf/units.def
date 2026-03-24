@@ -13169,6 +13169,92 @@
 	 parameterNumber = 212 ;
 	 typeOfFirstFixedSurface = 254 ;
 	}
+#Covariance between skin temperature and soil temperature layer 1
+'K K' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 213 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and soil temperature layer 2
+'K K' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 214 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and soil temperature layer 3
+'K K' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 215 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and volumetric soil water layer 1
+'K m**3 m**-3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 216 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and volumetric soil water layer 2
+'K m**3 m**-3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 217 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and volumetric soil water layer 3
+'K m**3 m**-3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 218 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and temperature of snow layer 1
+'K K' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 219 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and temperature of snow layer 2
+'K K' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 220 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between skin temperature and temperature of snow layer 3
+'K K' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 221 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#CURV diagnostic mean sea level pressure
+'dimensionless' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 253 ;
+	 parameterNumber = 192 ;
+	}
+#CURV diagnostic geopotential
+'dimensionless' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 253 ;
+	 parameterNumber = 193 ;
+	}
 #Surface roughness length for heat
 'm' = {
 	 localTablesVersion = 1 ;
@@ -13202,6 +13288,13 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
+#Sea water sigma theta relative
+'Proportion' = {
+	 localTablesVersion = 1 ;
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 192 ;
+	}
 #Time-mean snow thickness over sea ice
 'm' = {
 	 localTablesVersion = 1 ;
@@ -13228,6 +13321,14 @@
 	 scaleFactorOfFirstFixedSurface = missing() ;
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea water sigma theta relative
+'Proportion' = {
+	 localTablesVersion = 1 ;
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 192 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-maximum snow thickness over sea ice
@@ -14974,46 +15075,6 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 scaledValueOfLowerLimit = 25 ;
-	 scaleFactorOfLowerLimit = 0 ;
-	 probabilityType = 3 ;
-	}
-#Significant wave height of at least 2 m
-'%' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 101 ;
-	 scaledValueOfLowerLimit = 2 ;
-	 scaleFactorOfLowerLimit = 0 ;
-	 probabilityType = 3 ;
-	}
-#Significant wave height of at least 4 m
-'%' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 101 ;
-	 scaledValueOfLowerLimit = 4 ;
-	 scaleFactorOfLowerLimit = 0 ;
-	 probabilityType = 3 ;
-	}
-#Significant wave height of at least 6 m
-'%' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 101 ;
-	 scaledValueOfLowerLimit = 6 ;
-	 scaleFactorOfLowerLimit = 0 ;
-	 probabilityType = 3 ;
-	}
-#Significant wave height of at least 8 m
-'%' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 101 ;
-	 scaledValueOfLowerLimit = 8 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
 	}

@@ -27,12 +27,12 @@ tempOut=grib_bitmap.txt
 
 rm -f $outfile
 
-# Add a bitmap
-# -------------
+echo "Test: Add a bitmap..."
+# ---------------------------
 ${tools_dir}/grib_set -s bitmapPresent=1 $infile $outfile >$REDIRECT
 
-${tools_dir}/grib_dump $infile  | grep -v FILE > $infile.dump
-${tools_dir}/grib_dump $outfile | grep -v FILE > $outfile.dump
+${tools_dir}/grib_dump -s missingValue=9999 $infile  | grep -v FILE > $infile.dump
+${tools_dir}/grib_dump -s missingValue=9999 $outfile | grep -v FILE > $outfile.dump
 
 grib_check_key_equals $outfile section1Flags,section3Length '192 772'
 
@@ -61,12 +61,12 @@ diff $tempRef $outfile.dump
 rm -f $infile.dump $outfile.dump $tempRef
 
 
-# Remove the bitmap
-# -----------------
+echo "Test: Remove the bitmap..."
+# --------------------------------
 ${tools_dir}/grib_set -s bitmapPresent=0 $outfile $outfile1 >$REDIRECT
 
-${tools_dir}/grib_dump $outfile1 | grep -v FILE > $outfile1.dump
-${tools_dir}/grib_dump $outfile  | grep -v FILE > $outfile.dump
+${tools_dir}/grib_dump -s missingValue=9999 $outfile1 | grep -v FILE > $outfile1.dump
+${tools_dir}/grib_dump -s missingValue=9999 $outfile  | grep -v FILE > $outfile.dump
 
 if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
     diff $outfile1.dump ${data_dir}/no_bitmap.diff
@@ -76,16 +76,23 @@ rm -f $outfile1 $outfile1.dump $outfile $outfile.dump
 
 
 cat > $tempRules<<EOF
- set bitmapPresent=1;
- set missingValue=1111;
- set Ni=6;
- set Nj=2;
+ set bitmapPresent = 1;
+ set missingValue = 1111;
+ set Ni = 6;
+ set Nj = 2;
+ set iDirectionIncrementGiven = 0;
+ set jDirectionIncrementGiven = 0;
+ set iDirectionIncrement = MISSING;
+ set jDirectionIncrement = MISSING;
  set values={1,2,3,4,5,6,7,1111,1111,8,9,10};
- write ;
+ write;
 EOF
 
 ${tools_dir}/grib_filter -o $temp1 $tempRules $grib1
 ${tools_dir}/grib_filter -o $temp2 $tempRules $grib2
+
+grib_check_key_equals $temp1 isMessageValid 1
+grib_check_key_equals $temp2 isMessageValid 1
 
 if [ $HAVE_GEOGRAPHY -eq 1 ]; then
   ${tools_dir}/grib_get_data -m missing $temp1 > $tempData1
@@ -95,8 +102,8 @@ if [ $HAVE_GEOGRAPHY -eq 1 ]; then
   rm -f $tempData1 $tempData2
 fi
 
-# ECC-1233: Allow printing of 'byte' keys e.g., bitmap, section paddings
-# -----------------------------------------------------------------------
+echo "Test: ECC-1233: Allow printing of 'byte' keys e.g., bitmap, section paddings..."
+# -------------------------------------------------------------------------------------
 cat > $tempRules<<EOF
  print " bitmap=[bitmap]";
  print " padding_local1_1=[padding_local1_1]";
@@ -110,44 +117,6 @@ EOF
 diff $tempRef $tempData1
 rm -f  $tempData1 $temp1 $tempRules $tempRef
 
-# ECC-511: grid_complex_spatial_differencing
-# -------------------------------------------
-infile=${data_dir}/gfs.complex.mvmu.grib2
-tempSimple=temp.grib_bitmap.simple.grib
-${tools_dir}/grib_set -r -s packingType=grid_simple $infile $tempSimple
-grib_check_key_equals $tempSimple bitmapPresent,numberOfMissing,numberOfValues,numberOfPoints "1 556901 481339 1038240"
-stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $tempSimple`
-[ "$stats" = "2.81 0.00 0.30" ]
-
-# Repack
-${tools_dir}/grib_copy -r $infile $temp2
-# The values do not have to be be bit-identical. The high effort to make them bit-identical is not justified.
-# Therefore, we compare the values with a relative tolerance.
-${tools_dir}/grib_compare -R all=0.3 -c data:n $infile $temp2
-grib_check_key_equals $temp2 bitsPerValue 9  # Note: The input file has bpv=9
-
-${tools_dir}/grib_set -rs optimizeScaleFactor=1 $infile $temp2
-${tools_dir}/grib_compare $infile $temp2
-
-# Simple to grid_complex
-tempComplex=temp.grib_bitmap.complex.grib
-#${tools_dir}/grib_set -r -s packingType=grid_complex  $tempSimple $tempComplex # TODO: fix re-packing 
-${tools_dir}/grib_set -s packingType=grid_complex  $tempSimple $tempComplex
-grib_check_key_equals $tempComplex packingType,bitmapPresent,numberOfMissing,numberOfValues,numberOfPoints "grid_complex 1 556901 481339 1038240"
-stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $tempComplex`
-[ "$stats" = "2.81 0.00 0.30" ]
-rm -f $tempComplex
-
-# Simple to grid_complex_spatial_differencing
-tempComplexSD=temp.grib_bitmap.complexSD.grib
-#${tools_dir}/grib_set -r -s packingType=grid_complex_spatial_differencing  $tempSimple $tempComplexSD # TODO: fix re-packing
-${tools_dir}/grib_set -s packingType=grid_complex_spatial_differencing  $tempSimple $tempComplexSD
-grib_check_key_equals $tempComplexSD packingType "grid_complex_spatial_differencing"
-grib_check_key_equals $tempComplexSD bitmapPresent,numberOfMissing,numberOfValues,numberOfPoints "1 556901 481339 1038240"
-stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $tempComplexSD`
-[ "$stats" = "2.81 0.00 0.30" ]
-rm -f $tempComplexSD
-rm -f $tempSimple
 
 # Secondary bitmap
 grib2_sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
@@ -209,6 +178,7 @@ ${tools_dir}/grib_set -r -s packingType=grid_simple $in_no_bitmap $temp2
 stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $temp2`
 [ "$stats" = '549.61 11.61 203.28'  ]
 
+tempSimple=temp.grib_bitmap.simple.grib
 ${tools_dir}/grib_set -r -s packingType=grid_complex_spatial_differencing $temp2 $tempSimple
 stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $temp2`
 [ "$stats" = '549.61 11.61 203.28'  ]

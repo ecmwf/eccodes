@@ -65,7 +65,8 @@ if (extraDim) {
     alias mars.levtype = dimensionType;
 } else {
     # ECC-1333: levtype should be read-only in GRIB2
-    concept mars.levtype(unknown,"marsLevtypeConcept.def",conceptsDir2,conceptsDir1):no_copy, read_only;
+    meta marsLevtypeFilename   g2_param_concept_filename("marsLevtypeConcept",   MTG2Switch, tablesVersionMTG2Switch): hidden;
+    concept mars.levtype(unknown,marsLevtypeFilename,conceptsDir2,conceptsDir1):no_copy, read_only;
     # GRIB-372: levelist alias does not pertain to surface parameters
     # See GRIB-74 why we store the pressureUnits in a transient
     transient tempPressureUnits=pressureUnits;

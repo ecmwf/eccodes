@@ -16,14 +16,14 @@
 # ---------------------------------------------------------------------
 
 label="bufr_ecc-1290_test"
-temp=temp.$label
-tempRules=temp.${label}.filter
+
+tempFilt=temp.${label}.filter
 tempBufr=temp.${label}.bufr
 
 sample_bufr4=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
 
 # Sequence 315010 will give spectralWaveDensity a bit width of 38
-cat > $tempRules << EOF
+cat > $tempFilt << EOF
  set masterTablesVersionNumber=33;
  set localTablesVersionNumber=0;
  set observedData=1;
@@ -34,8 +34,8 @@ cat > $tempRules << EOF
  write;
 EOF
 
-${tools_dir}/codes_bufr_filter -o $tempBufr $tempRules $sample_bufr4
+${tools_dir}/codes_bufr_filter -o $tempBufr $tempFilt $sample_bufr4
 val=`${tools_dir}/bufr_get -s unpack=1 -p spectralWaveDensity $tempBufr`
 [ "$val" = "6.66" ]
 
-rm -f $tempBufr $tempRules
+rm -f $tempBufr $tempFilt

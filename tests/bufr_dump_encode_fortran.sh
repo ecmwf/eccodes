@@ -83,5 +83,14 @@ do
   rm -f $tempExe $tempSrc $tempBufr
 done
 
+# Special cases
+# BUFR with non-ECMWF local section (bufrHeaderCentre = 78)
+file=uegabe.bufr
+tempSrc=temp.$label.$file.f90
+${tools_dir}/bufr_dump -Efortran ${data_dir}/bufr/$file > $tempSrc 2>$fLog
+grep -q "Cannot generate code for section 2" $fLog
+
+
+# Clean up
 cd $test_dir
 rm -fr $tempDir

@@ -43,7 +43,7 @@ int Bytes::compare(grib_accessor* b)
 
 int Bytes::unpack_string(char* v, size_t* len)
 {
-    unsigned char* p   = NULL;
+    const unsigned char* p   = NULL;
     char* s = v;
     const long length  = byte_count();
     const long slength = 2 * length;

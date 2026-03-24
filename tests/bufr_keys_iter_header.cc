@@ -34,6 +34,7 @@ int main(int argc, char* argv[])
     const int strict_mode = 1;
     codes_context* c = codes_context_get_default();
     err = codes_bufr_extract_headers_malloc(c, input_filename, &header_array, &num_messages, strict_mode);
+    if (err) return err;
 
     int count = 0;
     while (codes_bufr_keys_iterator_next(kiter)) {

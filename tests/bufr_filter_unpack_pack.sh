@@ -78,6 +78,7 @@ set +e
 echo 'print "[pack]";' | ${tools_dir}/codes_bufr_filter - $f 2>$temp
 status=$?
 set -e
+[ $status -ne 0 ]
 grep -q "Function not yet implemented" $temp
 
 # Pack using a double

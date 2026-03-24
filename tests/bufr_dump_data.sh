@@ -14,7 +14,7 @@
 label="bufr_dump_data_test"
 
 fLog=temp.$label.log
-fJsonTmp=temp.$label.json
+# fJsonTmp=temp.$label.json
 
 if [ $HAVE_MEMFS -eq 1 ]; then
     unset ECCODES_DEFINITION_PATH

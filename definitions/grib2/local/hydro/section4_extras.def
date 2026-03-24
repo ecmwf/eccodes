@@ -1,0 +1,42 @@
+# (C) Copyright 2005- ECMWF.
+
+# See ECC-1846
+# This is ecmf local so we shouldn't use MasterDir. Instead we look for pseudocentre (conceptsDir2) then centre (conceptsLocalDirAll)
+
+concept modelName(unknown, "modelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+
+if (modelName isnot "unknown") {
+   concept configuration(unknown, "configurationConcept.[modelName].def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
+  if ( grib2LocalSectionPresent or localUsePresent ) { # See ECC-2039
+      if ( defined(marsClass) ) {
+         alias ls.model = modelName;
+         alias ls.configuration = configuration;
+      }
+   }
+}
+
+if (defined(class) && is_one_of(class,"gh","eh")){
+ concept statType (unknown,"stattypeConcept.def",conceptsDir2,conceptsDir1) : read_only;
+ alias mars.stattype = statType;
+ if (defined(stream) && stream is "mmsf" && stattype is "moav"){
+  meta marsForecastMonth g1forecastmonth(dataDate, forecastTime): read_only;
+  alias forecastMonth = marsForecastMonth;
+  unalias mars.step;
+  alias mars.fcmonth = marsForecastMonth;
+ }
+}
+
+alias mars.model = modelName;
+if (defined(stream) && (stream is "rfsd")){
+ alias mars.configuration = configuration;
+}
+
+concept inputModelName(unknown, "inputModelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+concept inputModelVersion(unknown, "inputModelVersionConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+
+if ( inputModelName is "obs" ){
+ meta forcingModel sprintf("%s",inputModelName);
+ } else {
+ meta forcingModel sprintf("%s-%s",inputOriginatingCentre,inputModelName);
+}
+alias mars.forcing = forcingModel;

@@ -452,15 +452,15 @@ int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* un
                     else                      { loc[mode] = 0; }
                     mode = -1;
                     if (al) grib_accessors_list_delete(h->context, al);
-                    al        = grib_find_accessors_list(h, loc); /* This allocates memory */
+                    al = grib_find_accessors_list(h, loc); /* This allocates memory */
                     if (!al) {
+                        grib_context_log(h->context, GRIB_LOG_DEBUG,
+                            "Recompose print: Problem using print with key '%s', no accessor found", loc);
                         if (!fail) {
                             fprintf(out, "undef");
                             ret = GRIB_NOT_FOUND;
                         }
                         else {
-                            grib_context_log(h->context, GRIB_LOG_WARNING,
-                            "Recompose print: Problem recomposing print with : %s, no accessor found", loc);
                             return GRIB_NOT_FOUND;
                         }
                     }

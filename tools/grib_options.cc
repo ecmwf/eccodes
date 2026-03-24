@@ -38,7 +38,7 @@ static grib_options_help grib_options_help_list[] = {
       "\n\t\tSet all the data values to \"value\".\n" },
     { "e:", "tolerance", "\n\t\tOnly values whose difference is more than tolerance are considered different.\n" },
     { "f", 0, "Force. Force the execution not to fail on error.\n" },
-    { "F:", "format", "\n\t\tC style format for floating-point values.\n" },
+    { "F:", "format", "\n\t\tC-style format for floating-point values.\n" },
     { "g", 0, "Copy GTS header.\n" },
     { "G", 0, "GRIBEX compatibility mode.\n" },
     { "i:", "index",
@@ -52,7 +52,7 @@ static grib_options_help grib_options_help_list[] = {
       "\n\t\tfile (file is used as mask. The closer point with mask value>=0.5 is printed)\n" },
     { "n:", "namespace",
       "\n\t\tAll the keys belonging to the given namespace are printed.\n" },
-    { "m", 0, "Mars keys are printed.\n" },
+    { "m", 0, "All the keys belonging to the 'mars' namespace are printed.\n" },
     { "o:", "output_file",
       "\n\t\tOutput is written to output_file."
       "\n\t\tIf an output file is required and -o is not used, the"
@@ -90,7 +90,7 @@ static grib_options_help grib_options_help_list[] = {
     { "M", 0, "Multi-field support off. Turn off support for multiple fields in a single GRIB message.\n" },
     { "O", 0, "Octet mode. WMO documentation style dump.\n" },
     { "P:", "key[:{s|d|i}],key[:{s|d|i}],...",
-      "\n\t\tAs -p adding the declared keys to the default list.\n" },
+      "\n\t\tSame as -p but adds the declared keys to the default list.\n" },
     { "R:", "key1=relative_error1,key2=relative_error2,...\n",
       "\tCompare floating-point values using the relative error as tolerance."
       "\n\t\tkey1=relative_error1 will compare key1 using relative_error1."
@@ -99,7 +99,7 @@ static grib_options_help grib_options_help_list[] = {
       "Strict. Only messages matching all the constraints are copied to"
       "\n\t\tthe output file\n" },
     { "T:", "T | B | A", "Message type. T->GTS, B->BUFR, A->Any (Experimental).\n\t\t\tThe input file is interpreted according to the message type.\n" },
-    { "V", 0, "Version.\n" },
+    { "V", 0, "Print version.\n" },
     { "W:", "width", "\n\t\tMinimum width of each column in output. Default is 10.\n" },
     { "X:", "offset", "\n\t\tInput file offset in bytes. Processing of the input file will start from the given offset.\n" },
     { "x", 0, "Fast parsing option, only headers are loaded.\n" },

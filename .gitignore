@@ -19,6 +19,9 @@ grib_api_f90.pc
 *.snalyzerinfo
 tags
 src/eccodes/convert_*.sh
+compile_commands.json
+.cache/
+coverage/
 
 # compiled source #
 ###################
