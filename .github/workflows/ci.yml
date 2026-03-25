@@ -42,7 +42,7 @@ jobs:
   # Run CI including downstream packages on self-hosted runners
   downstream-ci:
     name: downstream-ci
-    depends: smoke-build
+    needs: smoke-build
     if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
     uses: ecmwf/downstream-ci/.github/workflows/downstream-ci.yml@main
     with:
@@ -53,7 +53,6 @@ jobs:
   # Run CI of private downstream packages on self-hosted runners
   private-downstream-ci:
     name: private-downstream-ci
-    depends: smoke-build
     needs: [downstream-ci]
     if: ${{ (success() || failure()) && (!github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci') }}
     runs-on: ubuntu-latest
@@ -72,7 +71,7 @@ jobs:
   # Build downstream packages on HPC
   downstream-ci-hpc:
     name: downstream-ci-hpc
-    depends: smoke-build
+    needs: smoke-build
     if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
     uses: ecmwf/downstream-ci/.github/workflows/downstream-ci-hpc.yml@main
     with:
@@ -82,7 +81,6 @@ jobs:
   # Run CI of private downstream packages on HPC
   private-downstream-ci-hpc:
     name: private-downstream-ci-hpc
-    depends: smoke-build
     needs: [downstream-ci-hpc]
     if: ${{ (success() || failure()) && (!github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci') }}
     runs-on: ubuntu-latest
