@@ -28,7 +28,7 @@ def_file="$ECCODES_DEFINITION_PATH/grib2/productDefinitionTemplateConcept.def"
 rm -f $tempText
 
 # uniq -d outputs a single copy of each line that is repeated in the input
-awk -F= '$0 ~ /product/ {print $3}' $def_file | tr -d ';} ' | sort -n | uniq -d > $tempText
+awk -F= '$0 ~ /product/ {print $3}' $def_file | tr -d ';} ' | sort -n | uniq -d | sed '/^$/d' > $tempText
 
 if [ -s "$tempText" ]; then
     # File exists and has a size greater than zero

@@ -1,55 +1,123 @@
 # Concept for the Product Definition Template
+
+# 0 Analysis or forecast at a horizontal level or in a horizontal layer at a point in time
 'base_deterministic_instantaneous'           = {productDefinitionTemplateNumber=0;}
+# 1 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time
 'base_ensemble_instantaneous'                = {productDefinitionTemplateNumber=1;}
+# 8 Average, accumulation, extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
 'base_deterministic_statistically_processed' = {productDefinitionTemplateNumber=8;}
+# 11 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer, in a continuous or non-continuous interval
 'base_ensemble_statistically_processed'      = {productDefinitionTemplateNumber=11;}
 
+# 40 Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for atmospheric chemical constituents
 'chemical_deterministic_instantaneous'           = {productDefinitionTemplateNumber=40;}
+# 41 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for atmospheric chemical constituents
 'chemical_ensemble_instantaneous'                = {productDefinitionTemplateNumber=41;}
+# 42 Average, accumulation, and/or extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for atmospheric chemical constituents
 'chemical_deterministic_statistically_processed' = {productDefinitionTemplateNumber=42;}
+# 43 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for atmospheric chemical constituents
 'chemical_ensemble_statistically_processed'      = {productDefinitionTemplateNumber=43;}
 
+# 76 Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for atmospheric chemical constituents with source or sink
 'chemical_srcsink_deterministic_instantaneous'           = {productDefinitionTemplateNumber=76;}
+# 77 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for atmospheric chemical constituents with source or sink
 'chemical_srcsink_ensemble_instantaneous'                = {productDefinitionTemplateNumber=77;}
+# 78 Average, accumulation, and/or extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for atmospheric chemical constituents with source or sink
 'chemical_srcsink_deterministic_statistically_processed' = {productDefinitionTemplateNumber=78;}
+# 79 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for atmospheric chemical constituents with source or sink
 'chemical_srcsink_ensemble_statistically_processed'      = {productDefinitionTemplateNumber=79;}
 
+# 48 Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for optical properties of aerosol
 'aerosol_optical_deterministic_instantaneous' = {productDefinitionTemplateNumber=48;}
+# 49 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for optical properties of aerosol
 'aerosol_optical_ensemble_instantaneous'      = {productDefinitionTemplateNumber=49;}
+# 156 Average, accumulation, extreme values or other statistically processed values at a horizontal layer in a continuous or non-continuous time interval for optical properties of aerosol
+'aerosol_optical_deterministic_statistically_processed' = {productDefinitionTemplateNumber=156;}
+# 157 Individual ensemble forecast, control and perturbed at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for optical properties of aerosol
+'aerosol_optical_ensemble_statistically_processed' = {productDefinitionTemplateNumber=157;}
 
+# 80 Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for optical properties of aerosol with source or sink
+'aerosol_optical_srcsink_deterministic_instantaneous'  = {productDefinitionTemplateNumber=80;}
+# 81 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for optical properties of aerosol with source or sink
+'aerosol_optical_srcsink_ensemble_instantaneous'  = {productDefinitionTemplateNumber=81;}
+# 158 Average, accumulation, extreme values or other statistically processed values at a continuous or non-continuous time interval for optical properties of aerosol with source or sink
+'aerosol_optical_srcsink_deterministic_statistically_processed'  = {productDefinitionTemplateNumber=158;}
+# 159 Individual ensemble forecast, control and perturbed at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for optical properties of aerosol with source or sink
+'aerosol_optical_srcsink_ensemble_statistically_processed'  = {productDefinitionTemplateNumber=159;}
+
+# 50 Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for aerosol
 'aerosol_deterministic_instantaneous'           = {productDefinitionTemplateNumber=50;}
+# 46 Average, accumulation, and/or extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for aerosol
 'aerosol_deterministic_statistically_processed' = {productDefinitionTemplateNumber=46;}
+# 45 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for aerosol
 'aerosol_ensemble_instantaneous'                = {productDefinitionTemplateNumber=45;}
+# 85 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for aerosol
 'aerosol_ensemble_statistically_processed'      = {productDefinitionTemplateNumber=85;}
 
+# 82 Average, accumulation, and/or extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for aerosol with source or sink
+'aerosol_srcsink_deterministic_statistically_processed' = {productDefinitionTemplateNumber=82;}
+# 84 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for aerosol with source or sink
+'aerosol_srcsink_ensemble_statistically_processed' = {productDefinitionTemplateNumber=84;}
+
+# 70 Post-processing analysis or forecast at a horizontal level or in a horizontal layer at a point in time
 'postproc_deterministic_instantaneous'           = {productDefinitionTemplateNumber=70;}
+# 71 Post-processing individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time
 'postproc_ensemble_instantaneous'                = {productDefinitionTemplateNumber=71;}
+# 72 Post-processing average, accumulation, extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
 'postproc_deterministic_statistically_processed' = {productDefinitionTemplateNumber=72;}
+# 73 Post-processing individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer, in a continuous or non-continuous time interval
 'postproc_ensemble_statistically_processed'      = {productDefinitionTemplateNumber=73;}
 
+# 60 Individual ensemble reforecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time
+'reforecast_ensemble_instantaneous'  = {productDefinitionTemplateNumber=60;}
+# 61 Individual ensemble reforecast, control and perturbed, at a horizontal level or in a horizontal layer, in a continuous or non-continuous time interval
+'reforecast_ensemble_statistically_processed'  = {productDefinitionTemplateNumber=61;}
+
+# 86 Quantile forecasts at a horizontal level or in a horizontal layer at a point in time
 'quantile_forecast_instantaneous'           = {productDefinitionTemplateNumber=86;}
+# 87 Quantile forecasts at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
 'quantile_forecast_statistically_processed' = {productDefinitionTemplateNumber=87;}
 
+# 89 Post-processed quantile forecasts at a horizontal level or in a horizontal layer at a point in time
 'postproc_quantile_forecast_instantaneous'           = {productDefinitionTemplateNumber=89;}
+# 90 Post-processed quantile forecasts at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
 'postproc_quantile_forecast_statistically_processed' = {productDefinitionTemplateNumber=90;}
 
+# 99 Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for wave 2D spectra with explicit list of frequencies and directions
 'wavespectra_list_deterministic_instantaneous' = {productDefinitionTemplateNumber=99;}
+# 100 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for wave 2D spectra with explicit list of frequencies and directions
 'wavespectra_list_ensemble_instantaneous'      = {productDefinitionTemplateNumber=100;}
 
+# 101 Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for wave 2D spectra with frequencies and directions defined by formulae
 'wavespectra_formulae_deterministic_instantaneous' = {productDefinitionTemplateNumber=101;}
+# 102 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for wave 2D spectra with frequencies and directions defined by formulae
 'wavespectra_formulae_ensemble_instantaneous'      = {productDefinitionTemplateNumber=102;}
 
+# 103 Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for waves selected by period range
 'waves_period_range_deterministic_instantaneous' = {productDefinitionTemplateNumber=103;}
+# 104 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for waves selected by period range
 'waves_period_range_ensemble_instantaneous'      = {productDefinitionTemplateNumber=104;}
 
-
+# 105 Anomalies, significance and other derived products from an analysis or forecast in relation to a reference period at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
 'referencePeriod_relation_deterministic_instantaneous' = {productDefinitionTemplateNumber=105;}
+# 106 Anomalies, significance and other derived products from an individual ensemble forecast, control and perturbed in relation to a reference period at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
 'referencePeriod_relation_ensemble_instantaneous'      = {productDefinitionTemplateNumber=106;}
+# 107 Anomalies, significance and other derived products from derived forecasts based on all ensemble members in relation to a reference period at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
 'referencePeriod_relation_derived_instantaneous'       = {productDefinitionTemplateNumber=107;}
+# 112 Anomalies, significance and other derived products as probability forecasts in relation to a reference period at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
 'referencePeriod_relation_probability_instantaneous'   = {productDefinitionTemplateNumber=112;}
 
+# 2 Derived forecasts based on all ensemble members at a horizontal level or in a horizontal layer at a point in time
+'derived_forecast_all_members_instantaneous'   = {productDefinitionTemplateNumber=2;}
+# 12 Derived forecasts based on all ensemble members at a horizontal level or in a horizontal layer, in a continuous or non-continuous interval
+'derived_forecast_all_members_statistically_processed' = {productDefinitionTemplateNumber=12;}
+
+# 5 Probability forecasts at a horizontal level or in a horizontal layer at a point in time
 'probability_forecast_instantaneous'           = {productDefinitionTemplateNumber=5;}
+# 9 Probability forecasts at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
 'probability_forecast_statistically_processed' = {productDefinitionTemplateNumber=9;}
 
+# 51 Categorical forecasts at a horizontal level or in a horizontal layer at a point in time
 'categorical_forecast_instantaneous'           = {productDefinitionTemplateNumber=51;}
+# 91 Categorical forecasts at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
 'categorical_forecast_statistically_processed' = {productDefinitionTemplateNumber=91;}
