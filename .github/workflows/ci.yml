@@ -39,72 +39,76 @@ jobs:
     - name: Test
       run: ctest --test-dir build -j"$(nproc)" --output-on-failure
 
-  # # Run CI including downstream packages on self-hosted runners
-  # downstream-ci:
-  #   name: downstream-ci
-  #   if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
-  #   uses: ecmwf/downstream-ci/.github/workflows/downstream-ci.yml@main
-  #   with:
-  #     eccodes: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
-  #     codecov_upload: true
-  #   secrets: inherit
+  # Run CI including downstream packages on self-hosted runners
+  downstream-ci:
+    name: downstream-ci
+    depends: smoke-build
+    if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
+    uses: ecmwf/downstream-ci/.github/workflows/downstream-ci.yml@main
+    with:
+      eccodes: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
+      codecov_upload: true
+    secrets: inherit
 
-  # # Run CI of private downstream packages on self-hosted runners
-  # private-downstream-ci:
-  #   name: private-downstream-ci
-  #   needs: [downstream-ci]
-  #   if: ${{ (success() || failure()) && (!github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci') }}
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     pull-requests: write
-  #   steps:
-  #     - name: Dispatch private downstream CI
-  #       uses: ecmwf/dispatch-private-downstream-ci@v1
-  #       with:
-  #         token: ${{ secrets.GH_REPO_READ_TOKEN }}
-  #         owner: ecmwf
-  #         repository: private-downstream-ci
-  #         event_type: downstream-ci
-  #         payload: '{"eccodes": "ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}"}'
+  # Run CI of private downstream packages on self-hosted runners
+  private-downstream-ci:
+    name: private-downstream-ci
+    depends: smoke-build
+    needs: [downstream-ci]
+    if: ${{ (success() || failure()) && (!github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci') }}
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+    - name: Dispatch private downstream CI
+      uses: ecmwf/dispatch-private-downstream-ci@v1
+      with:
+        token: ${{ secrets.GH_REPO_READ_TOKEN }}
+        owner: ecmwf
+        repository: private-downstream-ci
+        event_type: downstream-ci
+        payload: '{"eccodes": "ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}"}'
 
-  # # Build downstream packages on HPC
-  # downstream-ci-hpc:
-  #   name: downstream-ci-hpc
-  #   if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
-  #   uses: ecmwf/downstream-ci/.github/workflows/downstream-ci-hpc.yml@main
-  #   with:
-  #     eccodes: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
-  #   secrets: inherit
+  # Build downstream packages on HPC
+  downstream-ci-hpc:
+    name: downstream-ci-hpc
+    depends: smoke-build
+    if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
+    uses: ecmwf/downstream-ci/.github/workflows/downstream-ci-hpc.yml@main
+    with:
+      eccodes: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
+    secrets: inherit
 
-  # # Run CI of private downstream packages on HPC
-  # private-downstream-ci-hpc:
-  #   name: private-downstream-ci-hpc
-  #   needs: [downstream-ci-hpc]
-  #   if: ${{ (success() || failure()) && (!github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci') }}
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     pull-requests: write
-  #   steps:
-  #     - name: Dispatch private downstream CI
-  #       uses: ecmwf/dispatch-private-downstream-ci@v1
-  #       with:
-  #         token: ${{ secrets.GH_REPO_READ_TOKEN }}
-  #         owner: ecmwf
-  #         repository: private-downstream-ci
-  #         event_type: downstream-ci-hpc
-  #         payload: '{"eccodes": "ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}","skip_matrix_jobs": "nvidia-22.11"}'
+  # Run CI of private downstream packages on HPC
+  private-downstream-ci-hpc:
+    name: private-downstream-ci-hpc
+    depends: smoke-build
+    needs: [downstream-ci-hpc]
+    if: ${{ (success() || failure()) && (!github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci') }}
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+    - name: Dispatch private downstream CI
+      uses: ecmwf/dispatch-private-downstream-ci@v1
+      with:
+        token: ${{ secrets.GH_REPO_READ_TOKEN }}
+        owner: ecmwf
+        repository: private-downstream-ci
+        event_type: downstream-ci-hpc
+        payload: '{"eccodes": "ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}","skip_matrix_jobs": "nvidia-22.11"}'
 
-  # notify:
-  #   runs-on: ubuntu-latest
-  #   needs:
-  #     - downstream-ci
-  #     - private-downstream-ci
-  #     - downstream-ci-hpc
-  #     - private-downstream-ci-hpc
-  #   if: ${{ always() && !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
-  #   steps:
-  #     - name: Trigger Teams notification
-  #       uses: ecmwf/notify-teams@v1
-  #       with:
-  #         incoming_webhook: ${{ secrets.MS_TEAMS_INCOMING_WEBHOOK }}
-  #         needs_context: ${{ toJSON(needs) }}
+  notify:
+    runs-on: ubuntu-latest
+    needs:
+    - downstream-ci
+    - private-downstream-ci
+    - downstream-ci-hpc
+    - private-downstream-ci-hpc
+    if: ${{ always() && !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
+    steps:
+    - name: Trigger Teams notification
+      uses: ecmwf/notify-teams@v1
+      with:
+        incoming_webhook: ${{ secrets.MS_TEAMS_INCOMING_WEBHOOK }}
+        needs_context: ${{ toJSON(needs) }}
