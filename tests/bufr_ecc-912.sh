@@ -16,7 +16,7 @@
 # Operator 201YYY should not modify class 31 descriptors.
 # ---------------------------------------------------------
 
-label="bufr_ecc-912_test"
+label=`basename $0 | sed -e 's/\.sh/_test/'`
 tempFilt=temp.$label.filt
 tempOut=temp.$label.out
 tempBufr=temp.$label.bufr
@@ -39,10 +39,11 @@ cat > $tempFilt <<EOF
     write;
 EOF
 
-
-
 ${tools_dir}/bufr_filter -o$tempBufr $tempFilt $sample_bufr4
 ${tools_dir}/bufr_dump -p $tempBufr > $tempOut 2>&1
+
+grep -q "#5#horizontalReflectivity=66" $tempOut
+grep -q "#6#horizontalReflectivity=MISSING" $tempOut
 
 # Check the output does not contain ERROR
 if grep -q "ERROR" $tempOut; then
@@ -50,6 +51,7 @@ if grep -q "ERROR" $tempOut; then
     cat $tempOut
     exit 1
 fi
+
 
 # Use a filter to verify the file can be fully decoded
 cat > $tempFilt <<EOF
@@ -62,4 +64,4 @@ result=$(${tools_dir}/codes_bufr_filter $tempFilt $tempBufr)
 # Should print 1 (number of subsets)
 [ "$result" = "1" ]
 
-rm -f $tempFilt $tempOut
+rm -f $tempFilt $tempOut $tempBufr
