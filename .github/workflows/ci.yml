@@ -42,7 +42,6 @@ jobs:
   # Run CI including downstream packages on self-hosted runners
   downstream-ci:
     name: downstream-ci
-    needs: smoke-build
     if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
     uses: ecmwf/downstream-ci/.github/workflows/downstream-ci.yml@try_reverting_dependencies
     with:
@@ -71,7 +70,6 @@ jobs:
   # Build downstream packages on HPC
   downstream-ci-hpc:
     name: downstream-ci-hpc
-    needs: smoke-build
     if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
     uses: ecmwf/downstream-ci/.github/workflows/downstream-ci-hpc.yml@try_reverting_dependencies
     with:
