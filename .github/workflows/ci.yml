@@ -44,7 +44,7 @@ jobs:
     name: downstream-ci
     needs: smoke-build
     if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
-    uses: ecmwf/downstream-ci/.github/workflows/downstream-ci.yml@b220e60ceed71a4375aef1436f2c4522bc967375
+    uses: ecmwf/downstream-ci/.github/workflows/downstream-ci.yml@try_reverting_dependencies
     with:
       eccodes: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
       codecov_upload: true
@@ -73,7 +73,7 @@ jobs:
     name: downstream-ci-hpc
     needs: smoke-build
     if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
-    uses: ecmwf/downstream-ci/.github/workflows/downstream-ci-hpc.yml@b220e60ceed71a4375aef1436f2c4522bc967375
+    uses: ecmwf/downstream-ci/.github/workflows/downstream-ci-hpc.yml@try_reverting_dependencies
     with:
       eccodes: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
     secrets: inherit
