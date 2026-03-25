@@ -18,6 +18,7 @@
 
 cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 
+
 find_package( ecbuild 3.7 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
 # if(NOT ecbuild_FOUND)
 #     message(STATUS "Fetching ecbuild...")
