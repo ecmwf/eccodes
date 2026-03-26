@@ -17,7 +17,7 @@ repos:
   - id: debug-statements
   - id: mixed-line-ending
   - id: no-commit-to-branch
-    args: [--branch, main]
+    args: [--branch, main, --branch, master, --branch, develop]
 # - repo: https://github.com/astral-sh/ruff-pre-commit
 #   rev: v0.15.4
 #   hooks:
