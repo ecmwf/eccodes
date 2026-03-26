@@ -72,6 +72,15 @@ static bool eckit_can_handle_it(const grib_handle* h, std::string& reason)
         reason = key + "=1: Scanning mode not supported";
         return false;
     }
+
+    char gridType[128] = {0,};
+    size_t gtlen = sizeof(gridType);
+    int err = grib_get_string(h, "gridType", gridType, &gtlen);
+    if (!err && STR_EQUAL(gridType, "rotated_ll")) {
+        reason = "gridType=rotated_ll: Not supported yet";
+        return false;
+    }
+
     return true;
 }
 #endif
