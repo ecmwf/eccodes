@@ -15,6 +15,11 @@ on:
     - "tests/**"
     - "data/**"
     - "deprecated/**"
+    - "bamboo/**"
+    - "confluence/**"
+    - "doxygen/**"
+    - "html/**"
+    - "python_wrapper/**"
 
   # Trigger the workflow manually
   workflow_dispatch:
