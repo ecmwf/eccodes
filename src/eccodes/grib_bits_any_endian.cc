@@ -19,50 +19,86 @@
 #include "grib_scaling.h"
 #include "grib_api_internal.h"
 #include "sync/Mutex.h"
+#include <array>
 
-static eccodes::sync::Mutex mutex;
+// LUT: A lookup table of 64 values, where the nth value has the n least significant bits set to 1 and the rest set to 0. For example:
+// Benchmark results (GCC 15.2.1, -O2, Intel i7-3770 @ 3.40GHz, 50M calls):
+//   mutex + runtime LUT:  9.37 ns/call  (11.3x slower)
+//   constexpr LUT:        0.83 ns/call  (fastest)
+//   bit shift:            1.06 ns/call  (1.3x slower)
 
-typedef struct bits_all_one_t
+// static eccodes::sync::Mutex mutex;
+//
+// typedef struct bits_all_one_t
+// {
+//     int inited;
+//     int size;
+//     int64_t v[128];
+// } bits_all_one_t;
+//
+// static bits_all_one_t bits_all_one = { 0, 0, {0,} };
+//
+// static void init_bits_all_one()
+// {
+//     int size            = sizeof(int64_t) * 8;
+//     int64_t* v             = 0;
+//     uint64_t cmask = -1;
+//     DEBUG_ASSERT(!bits_all_one.inited);
+//
+//     bits_all_one.size   = size;
+//     bits_all_one.inited = 1;
+//     v                   = bits_all_one.v + size;
+//     /*
+//         * The result of a shift operation is undefined if the RHS is negative or
+//         * greater than or equal to the number of bits in the (promoted) shift-expression
+//         */
+//     /* *v= cmask << size; */
+//     *v = -1;
+//     while (size > 0)
+//         *(--v) = ~(cmask << --size);
+// }
+//
+// static void init_bits_all_one_if_needed()
+// {
+//     eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+//     if (!bits_all_one.inited)
+//         init_bits_all_one();
+// }
+//
+// int grib_is_all_bits_one(int64_t val, long nbits)
+// {
+//     /*if (!bits_all_one.inited) init_bits_all_one();*/
+//     init_bits_all_one_if_needed();
+//     return bits_all_one.v[nbits] == val;
+// }
+
+// ECC-2252
+// v[0]  = 0b00000000'00000000'00000000'00000000'00000000'00000000'00000000'00000000;
+// v[1]  = 0b00000000'00000000'00000000'00000000'00000000'00000000'00000000'00000001;
+// v[2]  = 0b00000000'00000000'00000000'00000000'00000000'00000000'00000000'00000011;
+// ...
+// v[63] = 0b11111111'11111111'11111111'11111111'11111111'11111111'11111111'11111111;
+constexpr auto bits_all_one_array = []() constexpr
 {
-    int inited;
-    int size;
-    int64_t v[128];
-} bits_all_one_t;
+    std::array<int64_t, 64> v{};
+    for (int i = 1; i < 64; ++i) {
+        v[i] = 0xFFFF'FFFF'FFFF'FFFF >> (64 - i);
+    }
+    v[0] = 0;
+    return v;
+}();
 
-static bits_all_one_t bits_all_one = { 0, 0, {0,} };
-
-static void init_bits_all_one()
-{
-    int size            = sizeof(int64_t) * 8;
-    int64_t* v             = 0;
-    uint64_t cmask = -1;
-    DEBUG_ASSERT(!bits_all_one.inited);
-
-    bits_all_one.size   = size;
-    bits_all_one.inited = 1;
-    v                   = bits_all_one.v + size;
-    /*
-        * The result of a shift operation is undefined if the RHS is negative or
-        * greater than or equal to the number of bits in the (promoted) shift-expression
-        */
-    /* *v= cmask << size; */
-    *v = -1;
-    while (size > 0)
-        *(--v) = ~(cmask << --size);
-}
-
-static void init_bits_all_one_if_needed()
-{
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
-    if (!bits_all_one.inited)
-        init_bits_all_one();
-}
 int grib_is_all_bits_one(int64_t val, long nbits)
 {
-    /*if (!bits_all_one.inited) init_bits_all_one();*/
-    init_bits_all_one_if_needed();
-    return bits_all_one.v[nbits] == val;
+    DEBUG_ASSERT(nbits > 0 && nbits <= 64);
+    return bits_all_one_array[nbits] == val;
 }
+
+// int grib_is_all_bits_one(int64_t val, long nbits)
+// {
+//     int64_t val_shifted = (~val) << (64 - nbits);
+//     return val_shifted == 0;
+// }
 
 int grib_encode_string(unsigned char* bitStream, long* bitOffset, size_t numberOfCharacters, const char* string)
 {
