@@ -92,8 +92,8 @@
 
 int grib_is_all_bits_one(int64_t val, long nbits)
 {
-    // if (nbits == 0)
-    //     return val == 0;
+    DEBUG_ASSERT(nbits >  0);
+    DEBUG_ASSERT(nbits <= 64);
 
     int64_t val_shifted = (~val) << (64 - nbits);
     return val_shifted == 0;
