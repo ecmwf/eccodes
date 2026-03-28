@@ -424,7 +424,8 @@ int BufrDataArray::decode_string_array(grib_context* c, unsigned char* data, lon
     return ret;
 }
 
-grib_darray* BufrDataArray::decode_double_array(grib_context* c, unsigned char* data, long* pos,
+// numeric (integer or double) or codetable or flagtable array
+grib_darray* BufrDataArray::decode_numeric_array(grib_context* c, unsigned char* data, long* pos,
                                                 bufr_descriptor* bd, int canBeMissing, int* err)
 {
     grib_darray* ret = NULL;
@@ -888,7 +889,8 @@ char* BufrDataArray::decode_string_value(grib_context* c, unsigned char* data, l
     return sval;
 }
 
-double BufrDataArray::decode_double_value(grib_context* c, unsigned char* data, long* pos,
+// numeric (integer or double) or codetable or flagtable
+double BufrDataArray::decode_numeric_value(grib_context* c, unsigned char* data, long* pos,
                                                             bufr_descriptor* bd, int canBeMissing,
                                                             int* err)
 {
@@ -918,7 +920,6 @@ double BufrDataArray::decode_double_value(grib_context* c, unsigned char* data, 
     }
     return dval;
 }
-
 
 int decode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
                    grib_buffer* b, unsigned char* data, long* pos, int i, bufr_descriptor* descriptor, long elementIndex,
@@ -987,12 +988,12 @@ int decode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
             return GRIB_DECODING_ERROR;
         }
         if (self->compressedData_) {
-            dar = self->decode_double_array(c, data, pos, bd, self->canBeMissing_[i], &err);
+            dar = self->decode_numeric_array(c, data, pos, bd, self->canBeMissing_[i], &err);
             grib_vdarray_push(self->numericValues_, dar);
         }
         else {
             /* Uncompressed */
-            cdval = self->decode_double_value(c, data, pos, bd, self->canBeMissing_[i], &err);
+            cdval = self->decode_numeric_value(c, data, pos, bd, self->canBeMissing_[i], &err);
             grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data decoding: \t %s = %g",
                              bd->shortName, cdval);
             grib_darray_push(dval, cdval);
@@ -1000,7 +1001,6 @@ int decode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
     }
     return err;
 }
-
 
 int decode_replication(grib_context* c, BufrDataArray* self, int subsetIndex, grib_buffer* buff,
                        unsigned char* data, long* pos, int i, long elementIndex, grib_darray* dval, long* numberOfRepetitions)
@@ -1066,7 +1066,6 @@ int decode_replication(grib_context* c, BufrDataArray* self, int subsetIndex, gr
     }
     return ret;
 }
-
 
 int BufrDataArray::encode_new_bitmap(grib_context* c, grib_buffer* buff, long* pos, int idx)
 {
@@ -1189,7 +1188,6 @@ int encode_new_element(grib_context* c, BufrDataArray* self, int subsetIndex,
     return err;
 }
 
-
 int encode_new_replication(grib_context* c, BufrDataArray* self, int subsetIndex,
                            grib_buffer* buff, unsigned char* data, long* pos, int i, long elementIndex, grib_darray* dval, long* numberOfRepetitions)
 {
@@ -1252,7 +1250,6 @@ int encode_new_replication(grib_context* c, BufrDataArray* self, int subsetIndex
 
     return err;
 }
-
 
 int encode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
                    grib_buffer* buff, unsigned char* data, long* pos, int i, bufr_descriptor* descriptor,
