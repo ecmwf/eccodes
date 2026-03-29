@@ -109,8 +109,8 @@ private:
     int get_descriptors();
     int decode_string_array(grib_context*, unsigned char*, long*, bufr_descriptor*);
     int encode_string_array(grib_context*, grib_buffer*, long*, bufr_descriptor*, grib_sarray*);
-    int encode_double_array(grib_context*, grib_buffer*, long*, bufr_descriptor*, grib_darray*);
-    int encode_double_value(grib_context*, grib_buffer*, long*, bufr_descriptor*, double);
+    int encode_numeric_array(grib_context*, grib_buffer*, long*, bufr_descriptor*, grib_darray*);
+    int encode_numeric_value(grib_context*, grib_buffer*, long*, bufr_descriptor*, double);
     char* decode_string_value(grib_context*, unsigned char*, long*, bufr_descriptor*, int*);
     double decode_numeric_value(grib_context*, unsigned char*, long*, bufr_descriptor*, int, int*);
     int encode_new_bitmap(grib_context*, grib_buffer*, long*, int);

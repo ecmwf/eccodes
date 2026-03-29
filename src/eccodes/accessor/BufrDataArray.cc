@@ -590,7 +590,7 @@ static int descriptor_get_min_max(bufr_descriptor* bd, long width, long referenc
     return GRIB_SUCCESS;
 }
 
-int BufrDataArray::encode_double_array(grib_context* c, grib_buffer* buff, long* pos, bufr_descriptor* bd,
+int BufrDataArray::encode_numeric_array(grib_context* c, grib_buffer* buff, long* pos, bufr_descriptor* bd,
                                        grib_darray* dvalues)
 {
     int err = 0;
@@ -808,7 +808,7 @@ int BufrDataArray::encode_double_array(grib_context* c, grib_buffer* buff, long*
     return err;
 }
 
-int BufrDataArray::encode_double_value(grib_context* c, grib_buffer* buff, long* pos, bufr_descriptor* bd, double value)
+int BufrDataArray::encode_numeric_value(grib_context* c, grib_buffer* buff, long* pos, bufr_descriptor* bd, double value)
 {
     size_t lval;
     double maxAllowed, minAllowed;
@@ -1080,11 +1080,11 @@ int BufrDataArray::encode_new_bitmap(grib_context* c, grib_buffer* buff, long* p
     if (compressedData_) {
         doubleValues = grib_darray_new(1, 1);
         grib_darray_push(doubleValues, cdval);
-        err = encode_double_array(c, buff, pos, expanded_->v[idx], doubleValues);
+        err = encode_numeric_array(c, buff, pos, expanded_->v[idx], doubleValues);
         grib_darray_delete(doubleValues);
     }
     else {
-        err = encode_double_value(c, buff, pos, expanded_->v[idx], cdval);
+        err = encode_numeric_value(c, buff, pos, expanded_->v[idx], cdval);
     }
     return err;
 }
@@ -1178,11 +1178,11 @@ int encode_new_element(grib_context* c, BufrDataArray* self, int subsetIndex,
         if (self->compressedData_) {
             grib_darray* doubleValues = grib_darray_new(1, 1);
             grib_darray_push(doubleValues, cdval);
-            err = self->encode_double_array(c, buff, pos, bd, doubleValues);
+            err = self->encode_numeric_array(c, buff, pos, bd, doubleValues);
             grib_darray_delete(doubleValues);
         }
         else {
-            err = self->encode_double_value(c, buff, pos, bd, cdval);
+            err = self->encode_numeric_value(c, buff, pos, bd, cdval);
         }
     }
     return err;
@@ -1297,7 +1297,7 @@ int encode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
     else {
         /* numeric or codetable or flagtable */
         if (self->compressedData_) {
-            err = self->encode_double_array(c, buff, pos, bd, self->numericValues_->v[elementIndex]);
+            err = self->encode_numeric_array(c, buff, pos, bd, self->numericValues_->v[elementIndex]);
             if (err) {
                 grib_darray* varr = self->numericValues_->v[elementIndex];
                 grib_context_log(c, GRIB_LOG_ERROR, "Encoding key '%s' ( code=%6.6ld width=%ld scale=%ld reference=%ld )",
@@ -1317,7 +1317,7 @@ int encode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
                 grib_context_log(c, GRIB_LOG_ERROR, "Invalid subset index %d (number of subsets=%ld)", subsetIndex, self->numberOfSubsets_);
                 return GRIB_INVALID_ARGUMENT;
             }
-            err = self->encode_double_value(c, buff, pos, bd, self->numericValues_->v[subsetIndex]->v[elementIndex]);
+            err = self->encode_numeric_value(c, buff, pos, bd, self->numericValues_->v[subsetIndex]->v[elementIndex]);
             if (err) {
                 grib_context_log(c, GRIB_LOG_ERROR, "Cannot encode %s=%g (subset=%d)", /*subsetIndex starts from 0*/
                                  bd->shortName, self->numericValues_->v[subsetIndex]->v[elementIndex], subsetIndex + 1);
