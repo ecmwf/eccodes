@@ -44,7 +44,6 @@ small_ensemble.grib1
 spectral_complex.grib1
 spherical_model_level.grib1
 spherical_pressure_level.grib1
-constant_field.grib2
 reduced_gaussian_model_level.grib2
 reduced_gaussian_pressure_level.grib2
 reduced_gaussian_pressure_level_constant.grib2
