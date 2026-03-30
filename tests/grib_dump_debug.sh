@@ -23,7 +23,6 @@ if [ $HAVE_MEMFS -eq 1 ]; then
 fi
 
 files="
-constant_field.grib1
 lfpw.grib1
 missing_field.grib1
 reduced_gaussian_lsm.grib1
