@@ -168,6 +168,15 @@ static grib_iterator* grib_iterator_new_(const grib_handle* ch, unsigned long fl
         STR_EQUAL(gridType, "regular_ll"))
     {
         do_process_with_eckit = true;
+
+        if (STR_EQUAL(gridType, "regular_ll")) {
+            long numberOfDataPoints = 0;
+            if (grib_get_long(ch, "numberOfDataPoints", &numberOfDataPoints) == GRIB_SUCCESS &&
+                numberOfDataPoints == 1)
+            {
+                do_process_with_eckit = false;
+            }
+        }
     }
 
     const int eckit_geo = ch->context->eckit_geo;  // check environment variable
@@ -188,6 +197,10 @@ static grib_iterator* grib_iterator_new_(const grib_handle* ch, unsigned long fl
         }
         catch (eckit::geo::exception::GridUnknownError&) {
             *error = GRIB_NOT_IMPLEMENTED;
+            return nullptr;
+        }
+        catch (eckit::geo::exception::GridError&) {
+            *error = GRIB_WRONG_GRID;
             return nullptr;
         }
         catch (eckit::geo::Exception& e) {
