@@ -11,9 +11,9 @@
 
 
 #include "eccodes/geo/GribToSpec.h"
-#include "grib_api_internal.h"
 
 #include <algorithm>
+#include <map>
 #include <cstring>
 #include <functional>
 #include <initializer_list>
@@ -22,7 +22,6 @@
 #include <sstream>
 #include <vector>
 
-#include "eckit/config/Resource.h"
 #include "eckit/geo/Exceptions.h"
 #include "eckit/geo/PointLonLat.h"
 #include "eckit/geo/util/mutex.h"
@@ -30,6 +29,8 @@
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 #include "eckit/utils/SafeCasts.h"
+
+#include "eccodes/grib_api_internal.h"
 
 
 namespace eckit::geo::util
@@ -44,9 +45,6 @@ namespace eccodes::geo
 
 namespace
 {
-
-
-using eckit::Log;
 
 
 struct Condition
@@ -166,15 +164,11 @@ public:
 
 void wrongly_encoded_grib(const std::string& msg)
 {
-    static bool abortIfWronglyEncodedGRIB = eckit::Resource<bool>("$MIR_ABORT_IF_WRONGLY_ENCODED_GRIB", false);
-
-    if (abortIfWronglyEncodedGRIB) {
-        // Log::error() << msg << std::endl;
+    if (static bool do_abort = codes_getenv("ECCODES_GRIB_GEO_STRICT") != nullptr; do_abort) {
         grib_context_log(nullptr, GRIB_LOG_ERROR, "%s", msg.c_str());
-        throw eckit::UserError(msg);
+        throw eckit::geo::exception::GridError(msg, Here());
     }
 
-    Log::warning() << msg << std::endl;
     grib_context_log(nullptr, GRIB_LOG_WARNING, "%s", msg.c_str());
 }
 
@@ -268,6 +262,9 @@ const char* get_key(const std::string& name, codes_handle* h)
         { "south", "latitudeOfFirstGridPointInDegrees", is("jScansPositively", 1L) },
         { "north", "latitudeOfFirstGridPointInDegrees" },
         { "south", "latitudeOfLastGridPointInDegrees" },
+
+        { "reference_lat", "latitudeOfFirstGridPointInDegrees" },
+        { "reference_lon", "longitudeOfFirstGridPointInDegrees" },
 
         { "truncation", "pentagonalResolutionParameterJ" },  // Assumes triangular truncation
         { "accuracy", "bitsPerValue" },
@@ -624,6 +621,10 @@ ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_ke
             long sign = 0;
             CHECK_CALL(codes_get_long(h, sign_key, &sign));
 
+            // For longitudes, x1 can be numerically less than x0
+            if (STR_EQUAL(n_key, "Ni"))
+                if (x1 < x0) x1 = x1 + 360;
+
             if (auto value_calculated = (x1 - x0) / static_cast<double>(sign != 0 ? (n - 1) : (1 - n)); given) {
                 if (!eckit::types::is_approximately_equal(value, value_calculated, 1e-6)) {
                     wrongly_encoded_grib(
@@ -753,6 +754,30 @@ GribToSpec::GribToSpec(codes_handle* h) :
     handle_(h)
 {
     ASSERT(handle_ != nullptr);
+
+    if (static bool do_fix = codes_getenv("ECCODES_GRIB_GEO_FIXES") != nullptr; do_fix) {
+        using fixes_type = std::map<std::string, const eckit::spec::Custom&>;
+        static const fixes_type FIXES{
+            // gridName=N640, edition=2
+            { "51ea7dcd62e71c9707157a2d15247593", { { "longitudeOfLastGridPointInDegrees", 359.859375 } } },
+
+            // gridName=O2560, edition=1, experimentVersionNumber=h5xa/h5zi
+            { "8a6f6c4cc9ad3f64546773b87566bc72", { { "latitudeOfFirstGridPointInDegrees", 89.973 }, { "latitudeOfLastGridPointInDegrees", -89.973 } } },
+
+            // gridName=O640, edition=1, experimentVersionNumber=h5wk/h6en/hc9k
+            { "f5dc74ec36353f4c83f7de3bf46e1aef", { { "latitudeOfFirstGridPointInDegrees", 89.892 }, { "latitudeOfLastGridPointInDegrees", -89.892 } } },
+        };
+
+        char buffer[34];
+        auto size = sizeof(buffer);
+        CHECK_CALL(codes_get_string(handle_, "md5GridSection", buffer, &size));
+
+        const fixes_type::key_type md5GridSection(buffer, size);
+        if (const auto& fix = FIXES.find(md5GridSection); fix != FIXES.end()) {
+            grib_context_log(nullptr, GRIB_LOG_WARNING, "GribToSpec: applying fix for md5GridSection=%s", md5GridSection.c_str());
+            cache_.set(fix->second.container());
+        }
+    };
 }
 
 

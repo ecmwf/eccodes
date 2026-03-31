@@ -72,6 +72,15 @@ static bool eckit_can_handle_it(const grib_handle* h, std::string& reason)
         reason = key + "=1: Scanning mode not supported";
         return false;
     }
+
+    char gridType[128] = {0,};
+    size_t gtlen = sizeof(gridType);
+    int err = grib_get_string(h, "gridType", gridType, &gtlen);
+    if (!err && STR_EQUAL(gridType, "rotated_ll")) {
+        reason = "gridType=rotated_ll: Not supported yet";
+        return false;
+    }
+
     return true;
 }
 #endif
@@ -79,9 +88,6 @@ static bool eckit_can_handle_it(const grib_handle* h, std::string& reason)
 int GridSpec::pack_string(const char* v, size_t* len)
 {
 #if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
-    if (context_->eckit_geo == 0) {  // check env. variable too
-        return GRIB_NOT_IMPLEMENTED;
-    }
 
     auto* h = get_enclosing_handle();
     ECCODES_ASSERT(h);
@@ -126,9 +132,7 @@ int GridSpec::pack_string(const char* v, size_t* len)
 int GridSpec::unpack_string(char* v, size_t* len)
 {
 #if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
-    if (context_->eckit_geo == 0) {  // check env. variable too
-        return GRIB_NOT_IMPLEMENTED;
-    }
+
     auto* h = get_enclosing_handle();
     ECCODES_ASSERT(h);
 
