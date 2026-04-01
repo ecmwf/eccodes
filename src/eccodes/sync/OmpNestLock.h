@@ -2,7 +2,12 @@
 
 #include <omp.h>
 
-#if defined(__SANITIZE_THREAD__) || (defined(__has_feature) && __has_feature(thread_sanitizer))
+#if defined(__has_feature)
+#if __has_feature(thread_sanitizer)
+#include <sanitizer/tsan_interface.h>
+#define ECCODES_TSAN_ENABLED 1
+#endif
+#elif defined(__SANITIZE_THREAD__)
 #include <sanitizer/tsan_interface.h>
 #define ECCODES_TSAN_ENABLED 1
 #endif
