@@ -10,8 +10,7 @@
 
 #include "Double.h"
 
-eccodes::accessor::Double _grib_accessor_double;
-eccodes::Accessor* grib_accessor_double = &_grib_accessor_double;
+eccodes::AccessorBuilder<eccodes::accessor::Double> _grib_accessor_double_builder{};
 
 namespace eccodes::accessor
 {
@@ -44,7 +43,7 @@ int Double::unpack_string(char* v, size_t* len)
     if (l > *len) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         class_name_, name_, l, *len);
+                         accessor_type().get().c_str(), name_, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }

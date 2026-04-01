@@ -10,8 +10,7 @@
 
 #include "BufrExtractDatetimeSubsets.h"
 
-eccodes::accessor::BufrExtractDatetimeSubsets _grib_accessor_bufr_extract_datetime_subsets;
-eccodes::Accessor* grib_accessor_bufr_extract_datetime_subsets = &_grib_accessor_bufr_extract_datetime_subsets;
+eccodes::AccessorBuilder<eccodes::accessor::BufrExtractDatetimeSubsets> _grib_accessor_bufr_extract_datetime_subsets_builder{};
 
 /* Convert input date to Julian number. If date is invalid, return -1 */
 double date_to_julian(long year, long month, long day, long hour, long minute, double second)

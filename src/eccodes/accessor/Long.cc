@@ -10,8 +10,7 @@
 
 #include "Long.h"
 
-eccodes::accessor::Long _grib_accessor_long;
-eccodes::Accessor* grib_accessor_long = &_grib_accessor_long;
+eccodes::AccessorBuilder<eccodes::accessor::Long> _grib_accessor_long_builder{};
 
 namespace eccodes::accessor
 {
@@ -57,7 +56,7 @@ int Long::unpack_string(char* v, size_t* len)
     if (*len < l) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         class_name_, name_, l, *len);
+                         accessor_type().get().c_str(), name_, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }

@@ -10,8 +10,7 @@
 
 #include "SectionLength.h"
 
-eccodes::accessor::SectionLength _grib_accessor_section_length;
-eccodes::Accessor* grib_accessor_section_length = &_grib_accessor_section_length;
+eccodes::AccessorBuilder<eccodes::accessor::SectionLength> _grib_accessor_section_length_builder{};
 
 namespace eccodes::accessor
 {

@@ -19,8 +19,8 @@ class TransientDarray : public Gen
 {
 public:
     TransientDarray() :
-        Gen() { class_name_ = "transient_darray"; }
-    grib_accessor* create_empty_accessor() override { return new TransientDarray{}; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;
@@ -34,6 +34,9 @@ public:
 private:
     grib_darray* arr_ = nullptr;
     int type_ = 0;
+
+public:
+    static inline const AccessorType accessor_type_{"transient_darray"};
 };
 
 }  // namespace eccodes::accessor

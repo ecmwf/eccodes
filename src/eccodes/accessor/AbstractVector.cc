@@ -10,8 +10,7 @@
 
 #include "AbstractVector.h"
 
-eccodes::accessor::AbstractVector _grib_accessor_abstract_vector;
-eccodes::Accessor* grib_accessor_abstract_vector = &_grib_accessor_abstract_vector;
+eccodes::AccessorBuilder<eccodes::accessor::AbstractVector> _grib_accessor_abstract_vector_builder{};
 
 namespace eccodes::accessor
 {

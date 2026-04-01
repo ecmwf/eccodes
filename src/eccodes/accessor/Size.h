@@ -19,13 +19,16 @@ class Size : public Long
 {
 public:
     Size() :
-        Long() { class_name_ = "size"; }
-    grib_accessor* create_empty_accessor() override { return new Size{}; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
 private:
     const char* accessor_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"size"};
 };
 
 }  // namespace eccodes::accessor

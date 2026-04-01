@@ -10,8 +10,7 @@
 
 #include "G1MessageLength.h"
 
-eccodes::accessor::G1MessageLength _grib_accessor_g1_message_length;
-eccodes::Accessor* grib_accessor_g1_message_length = &_grib_accessor_g1_message_length;
+eccodes::AccessorBuilder<eccodes::accessor::G1MessageLength> _grib_accessor_g1_message_length_builder{};
 
 int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s4,
                              long* total_length, long* sec4_len)
@@ -113,7 +112,7 @@ int G1MessageLength::pack_long(const long* val, size_t* len)
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "%s %s: Failed to set GRIB1 message length to %ld"
                              " (actual length=%ld)",
-                             class_name_, __func__, *val, total_length);
+                             accessor_type().get().c_str(), __func__, *val, total_length);
             grib_context_log(context_, GRIB_LOG_ERROR, "Hint: Try encoding as GRIB2\n");
             return GRIB_ENCODING_ERROR;
         }

@@ -10,8 +10,7 @@
 
 #include "Sprintf.h"
 
-eccodes::accessor::Sprintf _grib_accessor_sprintf;
-eccodes::Accessor* grib_accessor_sprintf = &_grib_accessor_sprintf;
+eccodes::AccessorBuilder<eccodes::accessor::Sprintf> _grib_accessor_sprintf_builder{};
 
 namespace eccodes::accessor
 {

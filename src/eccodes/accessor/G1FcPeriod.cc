@@ -10,8 +10,7 @@
 
 #include "G1FcPeriod.h"
 
-eccodes::accessor::G1FcPeriod _grib_accessor_g1fcperiod;
-eccodes::Accessor* grib_accessor_g1fcperiod = &_grib_accessor_g1fcperiod;
+eccodes::AccessorBuilder<eccodes::accessor::G1FcPeriod> _grib_accessor_g1fcperiod_builder{};
 
 namespace eccodes::accessor
 {

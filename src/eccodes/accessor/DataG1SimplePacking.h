@@ -19,8 +19,8 @@ class DataG1SimplePacking : public DataSimplePacking
 {
 public:
     DataG1SimplePacking() :
-        DataSimplePacking() { class_name_ = "data_g1simple_packing"; }
-    grib_accessor* create_empty_accessor() override { return new DataG1SimplePacking{}; }
+        DataSimplePacking() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_double(const double* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
@@ -30,6 +30,9 @@ protected:
     const char* packingType_ = nullptr;
     const char* ieee_packing_ = nullptr;
     const char* precision_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"data_g1simple_packing"};
 };
 
 }  // namespace eccodes::accessor

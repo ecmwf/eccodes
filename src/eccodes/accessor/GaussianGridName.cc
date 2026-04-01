@@ -10,8 +10,7 @@
 
 #include "GaussianGridName.h"
 
-eccodes::accessor::GaussianGridName _grib_accessor_gaussian_grid_name;
-eccodes::Accessor* grib_accessor_gaussian_grid_name = &_grib_accessor_gaussian_grid_name;
+eccodes::AccessorBuilder<eccodes::accessor::GaussianGridName> _grib_accessor_gaussian_grid_name_builder{};
 
 namespace eccodes::accessor
 {
@@ -69,7 +68,7 @@ int GaussianGridName::unpack_string(char* v, size_t* len)
     if (*len < length) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         class_name_, name_, length, *len);
+                         accessor_type().get().c_str(), name_, length, *len);
         *len = length;
         return GRIB_BUFFER_TOO_SMALL;
     }

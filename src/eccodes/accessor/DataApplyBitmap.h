@@ -19,8 +19,8 @@ class DataApplyBitmap : public Gen
 {
 public:
     DataApplyBitmap() :
-        Gen() { class_name_ = "data_apply_bitmap"; }
-    grib_accessor* create_empty_accessor() override { return new DataApplyBitmap{}; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
@@ -41,6 +41,9 @@ private:
     const char* binary_scale_factor_ = nullptr;
 
     template <typename T> int unpack(T* val, size_t* len);
+
+public:
+    static inline const AccessorType accessor_type_{"data_apply_bitmap"};
 };
 
 }  // namespace eccodes::accessor

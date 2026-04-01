@@ -10,8 +10,7 @@
 
 #include "G2ParamConceptFilename.h"
 
-eccodes::accessor::G2ParamConceptFilename _grib_accessor_g2_param_concept_filename{};
-eccodes::Accessor* grib_accessor_g2_param_concept_filename = &_grib_accessor_g2_param_concept_filename;
+eccodes::AccessorBuilder<eccodes::accessor::G2ParamConceptFilename> _grib_accessor_g2_param_concept_filename_builder{};
 
 namespace eccodes::accessor
 {
@@ -25,7 +24,7 @@ void G2ParamConceptFilename::init(const long len, grib_arguments* arg)
         const int numExpectedArgs = 3;
         if (numActualArgs != numExpectedArgs) {
             grib_context_log(context_, GRIB_LOG_FATAL, "Accessor %s (key %s): %d arguments provided but expected %d",
-                             class_name_, name_, numActualArgs, numExpectedArgs);
+                             accessor_type().get().c_str(), name_, numActualArgs, numExpectedArgs);
         }
     }
 

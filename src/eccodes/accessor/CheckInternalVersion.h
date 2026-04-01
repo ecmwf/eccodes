@@ -19,11 +19,13 @@ class CheckInternalVersion : public Ascii
 {
 public:
     CheckInternalVersion() :
-        Ascii() { class_name_ = "check_internal_version"; }
-    grib_accessor* create_empty_accessor() override { return new CheckInternalVersion{}; }
+        Ascii() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     size_t string_length() override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
+
+    static inline const AccessorType accessor_type_{"check_internal_version"};
 };
 
 }  // namespace eccodes::accessor

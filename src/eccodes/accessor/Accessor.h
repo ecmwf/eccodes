@@ -13,6 +13,7 @@
 
 #include "grib_api_internal.h"
 #include "dumper/Dumper.h"
+#include "Factory.h"
 
 namespace eccodes {
 class Dumper;
@@ -21,12 +22,15 @@ class Dumper;
 namespace eccodes
 {
 
+using AccessorFactory = Factory<Accessor>;
+using AccessorType = AccessorFactory::Type;
+template<class T> using AccessorBuilder = Builder<grib_accessor, T>;
+
 class Accessor {
 public:
     Accessor() :
         context_(nullptr),
         name_(nullptr),
-        class_name_(nullptr),
         name_space_(nullptr),
         h_(nullptr),
         creator_(nullptr),
@@ -47,7 +51,6 @@ public:
     Accessor(const char* name) :
         context_(nullptr),
         name_(name),
-        class_name_(nullptr),
         name_space_(nullptr),
         h_(nullptr),
         creator_(nullptr),
@@ -112,12 +115,13 @@ public:
     virtual void init(const long, grib_arguments*) = 0;
     virtual void post_init() = 0;
     virtual grib_section* sub_section() = 0;
-    virtual Accessor* create_empty_accessor() = 0;
+    // virtual Accessor* create_empty_accessor() = 0;
     virtual int is_missing() = 0;
     virtual long next_offset() = 0;
     virtual Accessor* next(Accessor*, int) = 0;
     virtual int clear() = 0;
     virtual Accessor* make_clone(grib_section*, int*) = 0;
+    virtual const AccessorType& accessor_type() const = 0;
 
     grib_handle* get_enclosing_handle() const
     {

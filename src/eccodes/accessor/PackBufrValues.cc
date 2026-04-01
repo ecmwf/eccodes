@@ -10,8 +10,7 @@
 
 #include "PackBufrValues.h"
 
-eccodes::accessor::PackBufrValues _grib_accessor_pack_bufr_values;
-eccodes::Accessor* grib_accessor_pack_bufr_values = &_grib_accessor_pack_bufr_values;
+eccodes::AccessorBuilder<eccodes::accessor::PackBufrValues> _grib_accessor_pack_bufr_values_builder{};
 
 namespace eccodes::accessor
 {

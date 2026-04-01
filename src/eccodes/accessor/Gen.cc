@@ -13,8 +13,7 @@
 #include "grib_accessor_class.h"
 #include <stdexcept>
 
-eccodes::accessor::Gen _grib_accessor_gen;
-eccodes::Accessor* grib_accessor_gen = &_grib_accessor_gen;
+eccodes::AccessorBuilder<eccodes::accessor::Gen> _grib_accessor_gen_builder{};
 
 namespace eccodes::accessor
 {
@@ -114,8 +113,11 @@ long Gen::byte_count()
 
 long Gen::get_native_type()
 {
-    grib_context_log(context_, GRIB_LOG_ERROR,
-        "Accessor %s [%s] must implement 'get_native_type'", name_, class_name_);
+    grib_context_log(context_,
+                     GRIB_LOG_ERROR,
+                     "Accessor %s [%s] must implement 'get_native_type'",
+                     name_,
+                     accessor_type().get().c_str());
     return GRIB_TYPE_UNDEFINED;
 }
 
@@ -374,7 +376,7 @@ int Gen::pack_double(const double* v, size_t* len)
     is_overridden_[PACK_DOUBLE] = 0;
     grib_context* c             = context_;
 
-    if (is_overridden_[PACK_LONG] || strcmp(class_name_, "codetable") == 0) {
+    if (is_overridden_[PACK_LONG] || strcmp(accessor_type().get().c_str(), "codetable") == 0) {
         /* ECC-648: Special case of codetable */
         return pack_double_array_as_long(this, v, len);
     }
@@ -485,7 +487,7 @@ void Gen::update_size(size_t s)
                      GRIB_LOG_FATAL,
                      "Accessor %s [%s] must implement 'update_size'",
                      name_,
-                     class_name_);
+                     accessor_type().get().c_str());
 }
 
 grib_accessor* Gen::next_accessor()
@@ -579,7 +581,7 @@ int Gen::unpack_double_subarray(double* val,
 grib_accessor* Gen::clone(grib_section* s, int* err)
 {
     grib_context* ct = context_;
-    grib_context_log(ct, GRIB_LOG_DEBUG, "clone %s ==> %s", class_name_, name_);
+    grib_context_log(ct, GRIB_LOG_DEBUG, "clone %s ==> %s", accessor_type().get().c_str(), name_);
     return make_clone(s, err);
 }
 

@@ -10,8 +10,7 @@
 
 #include "G2MarsLabeling.h"
 
-eccodes::accessor::G2MarsLabeling _grib_accessor_g2_mars_labeling;
-eccodes::Accessor* grib_accessor_g2_mars_labeling = &_grib_accessor_g2_mars_labeling;
+eccodes::AccessorBuilder<eccodes::accessor::G2MarsLabeling> _grib_accessor_g2_mars_labeling_builder{};
 
 namespace eccodes::accessor
 {

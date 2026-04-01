@@ -10,8 +10,9 @@
 
 #include "G2WavePeriodRange.h"
 
-eccodes::accessor::G2WavePeriodRange _grib_accessor_g2_wave_period_range;
-eccodes::Accessor* grib_accessor_g2_wave_period_range = &_grib_accessor_g2_wave_period_range;
+// eccodes::accessor::G2WavePeriodRange _grib_accessor_g2_wave_period_range;
+// eccodes::Accessor* grib_accessor_g2_wave_period_range = &_grib_accessor_g2_wave_period_range;
+eccodes::AccessorBuilder<eccodes::accessor::G2WavePeriodRange> _grib_accessor_g2_wave_period_range{};
 
 namespace eccodes::accessor
 {

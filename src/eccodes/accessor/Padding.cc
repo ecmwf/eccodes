@@ -10,8 +10,7 @@
 
 #include "Padding.h"
 
-eccodes::accessor::Padding _grib_accessor_padding;
-eccodes::Accessor* grib_accessor_padding = &_grib_accessor_padding;
+eccodes::AccessorBuilder<eccodes::accessor::Padding> _grib_accessor_padding_builder{};
 
 namespace eccodes::accessor
 {
@@ -45,7 +44,7 @@ void Padding::resize(size_t new_size)
 
     grib_context_log(context_, GRIB_LOG_DEBUG,
                      "grib_accessor_padding::resize new_size=%zu length_ =%ld %s %s",
-                     new_size, length_, class_name_, name_);
+                     new_size, length_, accessor_type().get().c_str(), name_);
     ECCODES_ASSERT(new_size == (size_t)length_);
 }
 

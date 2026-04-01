@@ -14,8 +14,7 @@
 #include <utility>
 #include <map>
 
-eccodes::accessor::Concept _grib_accessor_concept;
-eccodes::Accessor* grib_accessor_concept = &_grib_accessor_concept;
+eccodes::AccessorBuilder<eccodes::accessor::Concept> _grib_accessor_concept_builder{};
 
 namespace eccodes::accessor
 {
@@ -522,7 +521,7 @@ int Concept::pack_long(const long* val, size_t* len)
             if (grib_get_long(h, "paramIdForConversion", &newParamId) == GRIB_SUCCESS && newParamId > 0) {
                 if (context_->debug) {
                     fprintf(stderr, "ECCODES DEBUG %s::%s: Changing %s from %ld to %ld\n",
-                            class_name_, __func__, name_, *val, newParamId);
+                            accessor_type().get().c_str(), __func__, name_, *val, newParamId);
                 }
                 snprintf(buf, sizeof(buf), "%ld", newParamId);
             }

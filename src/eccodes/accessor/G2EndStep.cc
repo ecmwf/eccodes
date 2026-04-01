@@ -12,8 +12,7 @@
 #include "step_utilities.h"
 #include <stdexcept>
 
-eccodes::accessor::G2EndStep _grib_accessor_g2end_step;
-eccodes::Accessor* grib_accessor_g2end_step = &_grib_accessor_g2end_step;
+eccodes::AccessorBuilder<eccodes::accessor::G2EndStep> _grib_accessor_g2end_step_builder{};
 
 namespace eccodes::accessor
 {
@@ -474,7 +473,7 @@ int G2EndStep::pack_long_(const long end_step_value, const long end_step_unit)
         grib_context_log(h->context, GRIB_LOG_ERROR,
                          "%s:%s: Date/Time is not valid! "
                          "year=%ld month=%ld day=%ld hour=%ld minute=%ld second=%ld",
-                         class_name_, __func__, year, month, day, hour, minute, second);
+                         accessor_type().get().c_str(), __func__, year, month, day, hour, minute, second);
         return GRIB_DECODING_ERROR;
     }
 

@@ -11,8 +11,7 @@
 #include "DataG1SecondOrderConstantWidthPacking.h"
 #include "grib_scaling.h"
 
-eccodes::accessor::DataG1SecondOrderConstantWidthPacking _grib_accessor_data_g1second_order_constant_width_packing;
-eccodes::Accessor* grib_accessor_data_g1second_order_constant_width_packing = &_grib_accessor_data_g1second_order_constant_width_packing;
+eccodes::AccessorBuilder<eccodes::accessor::DataG1SecondOrderConstantWidthPacking> _grib_accessor_data_g1second_order_constant_width_packing_builder{};
 
 namespace eccodes::accessor
 {
@@ -181,7 +180,7 @@ int DataG1SecondOrderConstantWidthPacking::unpack_double(double* values, size_t*
 
 int DataG1SecondOrderConstantWidthPacking::pack_double(const double* cval, size_t* len)
 {
-    grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s: Not implemented", class_name_, __func__);
+    grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s: Not implemented", accessor_type().get().c_str(), __func__);
     return GRIB_NOT_IMPLEMENTED;
 }
 

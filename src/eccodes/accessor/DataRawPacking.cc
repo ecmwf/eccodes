@@ -11,8 +11,7 @@
 #include "DataRawPacking.h"
 #include "grib_ieeefloat.h"
 
-eccodes::accessor::DataRawPacking _grib_accessor_data_raw_packing;
-eccodes::Accessor* grib_accessor_data_raw_packing = &_grib_accessor_data_raw_packing;
+eccodes::AccessorBuilder<eccodes::accessor::DataRawPacking> _grib_accessor_data_raw_packing_builder{};
 
 namespace eccodes::accessor
 {

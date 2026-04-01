@@ -10,8 +10,7 @@
 
 #include "GtsHeader.h"
 
-eccodes::accessor::GtsHeader _grib_accessor_gts_header;
-eccodes::Accessor* grib_accessor_gts_header = &_grib_accessor_gts_header;
+eccodes::AccessorBuilder<eccodes::accessor::GtsHeader> _grib_accessor_gts_header_builder{};
 
 namespace eccodes::accessor
 {

@@ -10,8 +10,7 @@
 
 #include "Statistics.h"
 
-eccodes::accessor::Statistics _grib_accessor_statistics;
-eccodes::Accessor* grib_accessor_statistics = &_grib_accessor_statistics;
+eccodes::AccessorBuilder<eccodes::accessor::Statistics> _grib_accessor_statistics_builder{};
 
 namespace eccodes::accessor
 {

@@ -10,11 +10,10 @@
 
 #include "Ascii.h"
 
-eccodes::accessor::Ascii _grib_accessor_ascii;
-eccodes::Accessor* grib_accessor_ascii = &_grib_accessor_ascii;
-
 namespace eccodes::accessor
 {
+
+AccessorBuilder<Ascii> _grib_accessor_ascii_builder{};
 
 void Ascii::init(const long len, grib_arguments* arg)
 {
@@ -52,7 +51,7 @@ int Ascii::unpack_string(char* val, size_t* len)
     if (*len < (alen + 1)) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         class_name_, name_, alen + 1, *len);
+                         accessor_type().get().c_str(), name_, alen + 1, *len);
         *len = alen + 1;
         return GRIB_BUFFER_TOO_SMALL;
     }
@@ -72,7 +71,7 @@ int Ascii::pack_string(const char* val, size_t* len)
     if (*len > (alen + 1)) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (input string len=%zu)",
-                         class_name_, name_, alen, *len);
+                         accessor_type().get().c_str(), name_, alen, *len);
         *len = alen;
         return GRIB_BUFFER_TOO_SMALL;
     }

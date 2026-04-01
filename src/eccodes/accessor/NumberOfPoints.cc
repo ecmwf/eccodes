@@ -10,8 +10,7 @@
 
 #include "NumberOfPoints.h"
 
-eccodes::accessor::NumberOfPoints _grib_accessor_number_of_points;
-eccodes::Accessor* grib_accessor_number_of_points = &_grib_accessor_number_of_points;
+eccodes::AccessorBuilder<eccodes::accessor::NumberOfPoints> _grib_accessor_number_of_points_builder{};
 
 namespace eccodes::accessor
 {

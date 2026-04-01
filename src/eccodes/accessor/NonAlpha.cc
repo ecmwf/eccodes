@@ -10,8 +10,7 @@
 
 #include "NonAlpha.h"
 
-eccodes::accessor::NonAlpha _grib_accessor_non_alpha;
-eccodes::Accessor* grib_accessor_non_alpha = &_grib_accessor_non_alpha;
+eccodes::AccessorBuilder<eccodes::accessor::NonAlpha> _grib_accessor_non_alpha_builder{};
 
 namespace eccodes::accessor
 {

@@ -12,8 +12,7 @@
 #include "step_utilities.h"
 #include <stdexcept>
 
-eccodes::accessor::StepInUnits _grib_accessor_step_in_units;
-eccodes::Accessor* grib_accessor_step_in_units = &_grib_accessor_step_in_units;
+eccodes::AccessorBuilder<eccodes::accessor::StepInUnits> _grib_accessor_step_in_units_builder{};
 
 namespace eccodes::accessor
 {

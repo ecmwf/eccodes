@@ -10,8 +10,7 @@
 
 #include "ToInteger.h"
 
-eccodes::accessor::ToInteger _grib_accessor_to_integer;
-eccodes::Accessor* grib_accessor_to_integer = &_grib_accessor_to_integer;
+eccodes::AccessorBuilder<eccodes::accessor::ToInteger> _grib_accessor_to_integer_builder{};
 
 namespace eccodes::accessor
 {
@@ -70,7 +69,7 @@ int ToInteger::unpack_string(char* val, size_t* len)
     if (*len < length + 1) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         class_name_, name_, length + 1, *len);
+                         accessor_type().get().c_str(), name_, length + 1, *len);
         *len = length + 1;
         return GRIB_BUFFER_TOO_SMALL;
     }

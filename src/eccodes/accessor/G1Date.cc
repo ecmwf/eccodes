@@ -10,8 +10,7 @@
 
 #include "G1Date.h"
 
-eccodes::accessor::G1Date _grib_accessor_g1date;
-eccodes::Accessor* grib_accessor_g1date = &_grib_accessor_g1date;
+eccodes::AccessorBuilder<eccodes::accessor::G1Date> _grib_accessor_g1date_builder{};
 
 namespace eccodes::accessor
 {

@@ -19,8 +19,8 @@ class ChangeScanningDirection : public Gen
 {
 public:
     ChangeScanningDirection() :
-        Gen() { class_name_ = "change_scanning_direction"; }
-    grib_accessor* create_empty_accessor() override { return new ChangeScanningDirection{}; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
@@ -35,6 +35,9 @@ private:
     const char* first_ = nullptr;
     const char* last_ = nullptr;
     const char* axis_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"change_scanning_direction"};
 };
 
 }  // namespace eccodes::accessor

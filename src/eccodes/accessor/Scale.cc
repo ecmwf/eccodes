@@ -10,8 +10,7 @@
 
 #include "Scale.h"
 
-eccodes::accessor::Scale _grib_accessor_scale;
-eccodes::Accessor* grib_accessor_scale = &_grib_accessor_scale;
+eccodes::AccessorBuilder<eccodes::accessor::Scale> _grib_accessor_scale_builder{};
 
 namespace eccodes::accessor
 {

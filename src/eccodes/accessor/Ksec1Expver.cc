@@ -10,8 +10,7 @@
 
 #include "Ksec1Expver.h"
 
-eccodes::accessor::Ksec1Expver _grib_accessor_ksec1expver;
-eccodes::Accessor* grib_accessor_ksec1expver = &_grib_accessor_ksec1expver;
+eccodes::AccessorBuilder<eccodes::accessor::Ksec1Expver> _grib_accessor_ksec1expver_builder{};
 
 namespace eccodes::accessor
 {

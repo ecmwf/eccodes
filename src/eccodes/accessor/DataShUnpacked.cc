@@ -11,8 +11,7 @@
 #include "DataShUnpacked.h"
 #include "grib_scaling.h"
 
-eccodes::accessor::DataShUnpacked _grib_accessor_data_sh_unpacked;
-eccodes::Accessor* grib_accessor_data_sh_unpacked = &_grib_accessor_data_sh_unpacked;
+eccodes::AccessorBuilder<eccodes::accessor::DataShUnpacked> _grib_accessor_data_sh_unpacked_builder{};
 
 namespace eccodes::accessor
 {

@@ -10,8 +10,7 @@
 
 #include "BufrdcExpandedDescriptors.h"
 
-eccodes::accessor::BufrdcExpandedDescriptors _grib_accessor_bufrdc_expanded_descriptors;
-eccodes::Accessor* grib_accessor_bufrdc_expanded_descriptors = &_grib_accessor_bufrdc_expanded_descriptors;
+eccodes::AccessorBuilder<eccodes::accessor::BufrdcExpandedDescriptors> _grib_accessor_bufrdc_expanded_descriptors_builder{};
 
 namespace eccodes::accessor
 {

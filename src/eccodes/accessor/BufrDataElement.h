@@ -19,8 +19,8 @@ class BufrDataElement : public Gen
 {
 public:
     BufrDataElement() :
-        Gen() { class_name_ = "bufr_data_element"; }
-    grib_accessor* create_empty_accessor() override { return new BufrDataElement{}; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int pack_missing() override;
     int is_missing() override;
@@ -60,6 +60,9 @@ private:
     grib_vsarray* stringValues_ = nullptr;
     grib_viarray* elementsDescriptorsIndex_ = nullptr;
     char* cname_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"bufr_data_element"};
 };
 
 }  // namespace eccodes::accessor

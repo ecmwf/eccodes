@@ -19,8 +19,8 @@ class Scale : public Double
 {
 public:
     Scale() :
-        Double() { class_name_ = "scale"; }
-    grib_accessor* create_empty_accessor() override { return new Scale{}; }
+        Double() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int is_missing() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;
@@ -32,6 +32,9 @@ private:
     const char* multiplier_ = nullptr;
     const char* divisor_ = nullptr;
     const char* truncating_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"scale"};
 };
 
 }  // namespace eccodes::accessor

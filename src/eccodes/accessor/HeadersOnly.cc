@@ -10,8 +10,7 @@
 
 #include "HeadersOnly.h"
 
-eccodes::accessor::HeadersOnly _grib_accessor_headers_only;
-eccodes::Accessor* grib_accessor_headers_only = &_grib_accessor_headers_only;
+eccodes::AccessorBuilder<eccodes::accessor::HeadersOnly> _grib_accessor_headers_only_builder{};
 
 namespace eccodes::accessor
 {

@@ -10,8 +10,7 @@
 
 #include "G1VerificationDate.h"
 
-eccodes::accessor::G1VerificationDate _grib_accessor_g1verificationdate;
-eccodes::Accessor* grib_accessor_g1verificationdate = &_grib_accessor_g1verificationdate;
+eccodes::AccessorBuilder<eccodes::accessor::G1VerificationDate> _grib_accessor_g1verificationdate_builder{};
 
 namespace eccodes::accessor
 {

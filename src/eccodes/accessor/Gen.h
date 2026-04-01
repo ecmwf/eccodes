@@ -21,11 +21,11 @@ namespace eccodes::accessor
 class Gen : public Accessor
 {
 public:
-    Gen() { class_name_ = "gen"; }
+    Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     ~Gen();
 
     void init_accessor(const long, grib_arguments*) override;  // TODO: Implement
-    grib_accessor* create_empty_accessor() override { return new Gen{}; }
     grib_section* sub_section() override;
     long get_native_type() override;
     int pack_missing() override;
@@ -87,6 +87,9 @@ private:
 
     template <typename T>
     int unpack_helper(grib_accessor* a, T* v, size_t* len);
+
+public:
+    static inline const AccessorType accessor_type_{"gen"};
 };
 
 

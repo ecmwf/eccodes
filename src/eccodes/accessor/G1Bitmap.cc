@@ -10,8 +10,7 @@
 
 #include "G1Bitmap.h"
 
-eccodes::accessor::G1Bitmap _grib_accessor_g1bitmap;
-eccodes::Accessor* grib_accessor_g1bitmap = &_grib_accessor_g1bitmap;
+eccodes::AccessorBuilder<eccodes::accessor::G1Bitmap> _grib_accessor_g1bitmap_builder{};
 
 namespace eccodes::accessor
 {

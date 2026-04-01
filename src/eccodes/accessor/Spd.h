@@ -19,8 +19,8 @@ class Spd : public Long
 {
 public:
     Spd() :
-        Long() { class_name_ = "spd"; }
-    grib_accessor* create_empty_accessor() override { return new Spd{}; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     long byte_count() override;
@@ -35,6 +35,9 @@ private:
     const char* numberOfElements_ = nullptr;
 
     long compute_byte_count();
+
+public:
+    static inline const AccessorType accessor_type_{"spd"};
 };
 
 }  // namespace eccodes::accessor
