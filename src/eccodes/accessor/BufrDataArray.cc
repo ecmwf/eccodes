@@ -2593,6 +2593,11 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
             }
         }
     }
+    if (associatedFieldSignificanceAccessor) {
+        associatedFieldSignificanceAccessor->destroy(c);
+        delete associatedFieldSignificanceAccessor;
+        associatedFieldSignificanceAccessor = nullptr;
+    }
     (void)extraElement;
     return err;
 }
