@@ -152,6 +152,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1654
         grib_ecc-1671
         grib_ecc-1708
+        grib_ecc-1734
         grib_ecc-1766
         grib_ecc-1829
         grib_ecc-2140
