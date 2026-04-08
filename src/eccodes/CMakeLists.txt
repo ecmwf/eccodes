@@ -440,6 +440,14 @@ if( eccodes_HAVE_GEOGRAPHY AND eccodes_HAVE_ECKIT_GEO )
     list( APPEND ECCODES_EXTRA_LIBRARIES eckit_geo )
 endif()
 
+if( HAVE_SIMPLE_PACKING_SP )
+    set(SP_SRC_DIR "${PROJECT_SOURCE_DIR}/src/simple_packing/src/simple")
+    list( APPEND eccodes_src_files
+        ${SP_SRC_DIR}/Utils.cc
+        ${SP_SRC_DIR}/optimizer/BinDecOptimizer.cc
+    )
+endif()
+
 ecbuild_add_library(
     TARGET    eccodes
     SOURCES   
@@ -480,6 +488,14 @@ if(HAVE_SIMPLE_PACKING_SP)
         COMPILE_DEFINITIONS "NDEBUG"
     )
     set_source_files_properties(accessor/DataG2SimplePacking.cc PROPERTIES
+        COMPILE_OPTIONS "-march=native;-mtune=native;-O3"
+        COMPILE_DEFINITIONS "NDEBUG"
+    )
+    set_source_files_properties(${SP_SRC_DIR}/Utils.cc PROPERTIES
+        COMPILE_OPTIONS "-march=native;-mtune=native;-O3"
+        COMPILE_DEFINITIONS "NDEBUG"
+    )
+    set_source_files_properties(${SP_SRC_DIR}/optimizer/BinDecOptimizer.cc PROPERTIES
         COMPILE_OPTIONS "-march=native;-mtune=native;-O3"
         COMPILE_DEFINITIONS "NDEBUG"
     )

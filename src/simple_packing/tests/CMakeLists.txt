@@ -13,21 +13,10 @@ set(SP_TEST_PREFIX "simple_packing_")
 
 # --- Tests ---
 
-add_executable(sp_check_encode
-  check_encode.cc
-  ../src/simple/LibEccodes.cc
-  )
-target_link_libraries(sp_check_encode simple_packing_lib)
-
-foreach (i 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64)
-    add_test(NAME ${SP_TEST_PREFIX}check_encode_${i} COMMAND sp_check_encode 10000 ${i})
-endforeach ()
-
 ### --------------------------------
 
 add_executable(sp_check_array_codec
   check_array_codec.cc
-  ../src/simple/LibEccodes.cc
   )
 target_link_libraries(sp_check_array_codec simple_packing_lib)
 

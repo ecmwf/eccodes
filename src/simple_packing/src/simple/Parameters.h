@@ -5,7 +5,7 @@
 
 struct Parameters {
     public:
-        Parameters() : bitsPerValue_(0), decimalScaleFactor_(0), binaryScaleFactor_(0), referenceValue_(0.0) {}
+        Parameters() : bitsPerValue_(0), decimalScaleFactor_(0), binaryScaleFactor_(0), referenceValue_(0.0), isConstantField_(false) {}
         Parameters(long bitsPerValue, long decimalScaleFactor, long binaryScaleFactor, double referenceValue, bool isConstantField)
             : bitsPerValue_(bitsPerValue),
               decimalScaleFactor_(decimalScaleFactor),

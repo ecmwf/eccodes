@@ -18,7 +18,6 @@
 #include <memory>
 #include <variant>
 
-#include "LibEccodes.h"
 #include <Parameters.h>
 #include <Optimizer.h>
 #include <Utils.h>
@@ -49,7 +48,7 @@ class SimplePacking {
             // auto [min, max] = minmax_fast<ValueType>(values.data(), values.size());
 
             int err;
-            if (grib_check_data_values_range(min, max) != LIB_ECCODES_SUCCESS) {
+            if (check_data_values_range(min, max) != SP_SUCCESS) {
                 throw std::runtime_error("Invalid data values range");
             }
 

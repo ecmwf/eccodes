@@ -10,9 +10,7 @@ target_compile_features(simple_packing_sp INTERFACE cxx_std_20)
 
 # Compiled library (for tests and standalone use)
 add_library(simple_packing_lib STATIC
-    LibEccodes.cc
     Utils.cc
-    optimizer/DecOptimizer.cc
     optimizer/BinDecOptimizer.cc
 )
 target_include_directories(simple_packing_lib PUBLIC

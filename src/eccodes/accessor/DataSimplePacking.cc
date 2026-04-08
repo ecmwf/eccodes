@@ -15,24 +15,8 @@
 #include <type_traits>
 
 #ifdef HAVE_SIMPLE_PACKING_SP
-    #include <array>
-    #include <memory>
-    template <typename T>
-    static inline T grib_power(int s, int n) { return codes_power<T>(static_cast<long>(s), static_cast<long>(n)); }
-    #include "BitPacking.h"
-    #include "codec/Binary.h"
-
-    template <typename ValueType, std::size_t... Is>
-    static auto make_sp_codecs_impl(std::index_sequence<Is...>) {
-        using Base = BinaryInterface<ValueType>;
-        return std::array<std::unique_ptr<Base>, sizeof...(Is)>{
-            std::unique_ptr<Base>{ std::make_unique<Binary<ValueType, Is + 1>>() }...
-        };
-    }
-    template <typename ValueType, std::size_t N>
-    static auto make_sp_codecs() {
-        return make_sp_codecs_impl<ValueType>(std::make_index_sequence<N>{});
-    }
+    #include "simple/Binary.h"
+    #include "Parameters.h"
 #endif
 
 eccodes::accessor::DataSimplePacking _grib_accessor_data_simple_packing;
@@ -311,16 +295,15 @@ int DataSimplePacking::unpack(T* val, size_t* len)
         grib_context_log(context_, GRIB_LOG_DEBUG,
                          "%s %s: using new Simple Packing (SP) for decode, %zu values", class_name_, __func__, n_vals);
         try {
-            static constexpr uint8_t maxNBits = 64;
-            static const auto codecs = make_sp_codecs<T, maxNBits>();
+            SimplePackingBinary<T> sp(nullptr);
+            Parameters params;
+            params.bitsPerValue(bits_per_value);
+            params.binaryScaleFactor(binary_scale_factor);
+            params.decimalScaleFactor(decimal_scale_factor);
+            params.referenceValue(static_cast<T>(reference_value));
 
             std::vector<unsigned char> codedBuf(buf, buf + ((bits_per_value * n_vals + 7) / 8));
-            auto decoded = codecs[bits_per_value - 1]->unpack(
-                codedBuf,
-                static_cast<int>(decimal_scale_factor),
-                static_cast<int>(binary_scale_factor),
-                static_cast<T>(reference_value),
-                n_vals);
+            auto decoded = sp.unpack(params, codedBuf, n_vals);
             for (i = 0; i < n_vals; i++) {
                 val[i] = decoded[i];
             }
@@ -480,16 +463,15 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
 #ifdef HAVE_SIMPLE_PACKING_SP
     if (use_sp() && bits_per_value >= 1 && bits_per_value <= 64) {
         try {
-            static constexpr uint8_t maxNBits = 64;
-            static const auto codecs = make_sp_codecs<double, maxNBits>();
+            SimplePackingBinary<double> sp(nullptr);
+            Parameters params;
+            params.bitsPerValue(bits_per_value);
+            params.binaryScaleFactor(binary_scale_factor);
+            params.decimalScaleFactor(decimal_scale_factor);
+            params.referenceValue(reference_value);
 
             std::vector<unsigned char> codedBuf(buf, buf + ((bits_per_value * n_vals + 7) / 8));
-            auto decoded = codecs[bits_per_value - 1]->unpack(
-                codedBuf,
-                static_cast<int>(decimal_scale_factor),
-                static_cast<int>(binary_scale_factor),
-                reference_value,
-                n_vals);
+            auto decoded = sp.unpack(params, codedBuf, n_vals);
             for (i = 0; i < n_vals; i++) {
                 val[i] = decoded[i];
             }

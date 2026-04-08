@@ -1,11 +1,86 @@
+/*
+ * (C) Copyright 2023- ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ * In applying this licence, ECMWF does not waive the privileges and immunities
+ * granted to it by virtue of its status as an intergovernmental organisation nor
+ * does it submit to any jurisdiction.
+ */
+
 #pragma once
 
 #include <cstddef>
+#include <cstdint>
+#include <cassert>
+#include <cmath>
+#include <iostream>
 #include <limits>
 #include <utility>
+#include <vector>
 
+#include <optional>
+
+
+// --- Error codes ---
+
+#define SP_SUCCESS 0
+#define SP_NO_VALUES 1
+#define SP_INVALID_BPV 2
+#define SP_INTERNAL_ERROR 3
+#define SP_LOG_DEBUG 4
+#define SP_LOG_ERROR 5
+#define SP_ENCODING_ERROR 6
+#define SP_OUT_OF_RANGE 7
+#define SP_UNDERFLOW 8
+#define SP_ARRAY_TOO_SMALL 9
+
+// --- Utility functions ---
 
 size_t nSplits(size_t totalSize, size_t splitSize);
+
+
+// --- Power function ---
+
+/* Return n to the power of s */
+template <typename T>
+constexpr T sp_power(long s, long n)
+{
+    T divisor = 1.0;
+    if (s == 0)
+        return 1.0;
+    if (s == 1)
+        return n;
+    while (s < 0) {
+        divisor /= n;
+        s++;
+    }
+    while (s > 0) {
+        divisor *= n;
+        s--;
+    }
+    return divisor;
+}
+
+
+// --- IEEE float utilities ---
+
+struct ieee_table_t
+{
+    int inited;
+    double e[255];
+    double v[255];
+    double vmin;
+    double vmax;
+};
+
+std::optional<long> number_of_bits(unsigned long x);
+std::optional<double> nearest_smaller_value(double val);
+long get_binary_scale_factor(double max, double min, long bpval, int* ret);
+int check_data_values_range(double min_val, double max_val);
+
+
+// --- Byte swap macros ---
 
 #if defined(_MSC_VER)
   #include <stdlib.h>

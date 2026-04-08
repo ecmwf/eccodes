@@ -40,13 +40,12 @@ class Binary : public BinaryInterface<ValueType> {
 template <typename ValueType, uint8_t BPV>
 typename Binary<ValueType, BPV>::Buffer Binary<ValueType, BPV>::pack(const Values& values, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, ValueType min, ValueType max)
 {
-    const ValueType decimal = grib_power<ValueType>(decimalScaleFactor, 10);
-    const ValueType divisor = grib_power<ValueType>(-binaryScaleFactor, 2);
+    const ValueType decimal = sp_power<ValueType>(decimalScaleFactor, 10);
+    const ValueType divisor = sp_power<ValueType>(-binaryScaleFactor, 2);
     const size_t buflen  = (((BPV * values.size()) + 7) / 8) * sizeof(unsigned char);
 
-    const ValueType x = decimal * divisor;
     auto encode = [&](auto val) {
-        return val * x - referenceValue * divisor + 0.5;  // Performs better than the alternative below
+        return ((val * decimal) - referenceValue) * divisor + 0.5;
     };
 
     size_t nVals = values.size();
@@ -73,16 +72,15 @@ typename Binary<ValueType, BPV>::Buffer Binary<ValueType, BPV>::pack(const Value
 template <typename ValueType, uint8_t BPV>
 typename Binary<ValueType, BPV>::Values Binary<ValueType, BPV>::unpack(const Buffer& codedBuf, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, size_t nVals)
 {
-    const ValueType s = grib_power<ValueType>(binaryScaleFactor, 2);
-    const ValueType d = grib_power<ValueType>(-decimalScaleFactor, 10);
+    const ValueType s = sp_power<ValueType>(binaryScaleFactor, 2);
+    const ValueType d = sp_power<ValueType>(-decimalScaleFactor, 10);
 
     Values values(nVals);
 
-    const ValueType x = s * d;
     size_t nBlocks = (nVals + 7) / 8;
 
     auto decode = [&](const ValueType& val) {
-        return static_cast<ValueType>(val) * x + referenceValue * d;
+        return (static_cast<ValueType>(val) * s + referenceValue) * d;
     };
 
     BitPacking<BPV, Optimization::Block> bvf;

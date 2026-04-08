@@ -3,7 +3,7 @@
 
 
 #include "BinDecOptimizer.h"
-#include "LibEccodes.h"
+#include <Utils.h>
 #include <cmath>
 #include <limits>
 #include <cstdlib>
@@ -43,9 +43,9 @@ void factec(int* krep, const double pa, const int knbit, const long kdec, const 
     }
 
     /* Binary scale factor associated to kdec */
-    *ke = floor(log2((pa * grib_power<double>(kdec, 10)) / (grib_power<double>(knbit, 2) - 0.5))) + 1;
+    *ke = floor(log2((pa * sp_power<double>(kdec, 10)) / (sp_power<double>(knbit, 2) - 0.5))) + 1;
     /* Encoded value for pa = max - min       */
-    *knutil = floor(0.5 + pa * grib_power<double>(kdec, 10) * grib_power<double>(-*ke, 2));
+    *knutil = floor(0.5 + pa * sp_power<double>(kdec, 10) * sp_power<double>(-*ke, 2));
 }
 
 
@@ -94,14 +94,14 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
     xtinyr4 = flt_min;
     xhuger4 = flt_max;
 
-    inbint = grib_power<double>(knbit_, 2) - 1;
+    inbint = sp_power<double>(knbit_, 2) - 1;
     xnbint = (double)inbint;
 
     /* Test decimal scale factors; keep the most suitable */
     for (jdec = idecmin; jdec <= idecmax; jdec++) {
         /* Fix a problem in GRIBEX */
         if (compat_gribex_)
-            if (pa * grib_power<double>(jdec, 10) <= 1.E-12)
+            if (pa * sp_power<double>(jdec, 10) <= 1.E-12)
                 continue;
 
         /* Check it will be possible to decode reference value with 32bit floats */
@@ -121,7 +121,7 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
 
         /* Check it will be possible to decode the maximum value of the fields using 32bit floats */
         if (compat_32bit_)
-            if (pmin * grib_power<double>(jdec, 10) + xnbint * grib_power<double>(ie, 2) >= xhuger4)
+            if (pmin * sp_power<double>(jdec, 10) + xnbint * sp_power<double>(ie, 2) >= xhuger4)
                 continue;
 
         /* GRIB1 demands that the binary scale factor be encoded in a single byte */
@@ -139,22 +139,19 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
     }
 
     if (inumax > 0) {
-        // double decimal = grib_power<double>(+*kdec, 10);
-        // double divisor = grib_power<double>(-*kbin, 2);
-        double decimal = grib_power<double>(+params.decimalScaleFactor(), 10);
-        double divisor = grib_power<double>(-params.binaryScaleFactor(), 2);
+        // double decimal = sp_power<double>(+*kdec, 10);
+        // double divisor = sp_power<double>(-*kbin, 2);
+        double decimal = sp_power<double>(+params.decimalScaleFactor(), 10);
+        double divisor = sp_power<double>(-params.binaryScaleFactor(), 2);
         double min     = pmin * decimal;
         double max     = pmax * decimal;
         long vmin, vmax;
         // if (grib_get_nearest_smaller_value(min, ref) != LIB_ECCODES_SUCCESS) {
         auto ref = nearest_smaller_value(min);
-        if (!ref.has_value()) {
+        if (ref.has_value()) {
             params.referenceValue(ref.value());
         }
         else {
-            //grib_context_log(gh->context, LIB_ECCODES_LOG_ERROR,
-            //                 "unable to find nearest_smaller_value of %g for %s", min, reference_value);
-            // return LIB_ECCODES_INTERNAL_ERROR;
             throw std::runtime_error("unable to find nearest_smaller_value");
         }
 
@@ -173,9 +170,9 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
         int last   = compat_gribex_ ? 99 : 127;
         double min = pmin, max = pmax;
         double range    = max - min;
-        double f        = grib_power<double>(knbit_, 2) - 1;
-        double minrange = grib_power<double>(-last, 2) * f;
-        double maxrange = grib_power<double>(+last, 2) * f;
+        double f        = sp_power<double>(knbit_, 2) - 1;
+        double minrange = sp_power<double>(-last, 2) * f;
+        double maxrange = sp_power<double>(+last, 2) * f;
         double decimal  = 1;
         int err;
 
@@ -212,10 +209,10 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
             throw std::runtime_error("unable to find nearest_smaller_value");
         }
 
-        // *kbin = grib_get_binary_scale_fact(max, *ref, knbit, &err);
-        params.binaryScaleFactor(grib_get_binary_scale_fact(max, params.referenceValue(), knbit_, &err));
+        // *kbin = get_binary_scale_factor(max, *ref, knbit, &err);
+        params.binaryScaleFactor(get_binary_scale_factor(max, params.referenceValue(), knbit_, &err));
 
-        if (err == LIB_ECCODES_UNDERFLOW) {
+        if (err == SP_UNDERFLOW) {
             // *kbin = 0;
             // *kdec = 0;
             // *ref  = 0;

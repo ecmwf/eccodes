@@ -2,7 +2,7 @@
 
 #include <Parameters.h>
 #include <Optimizer.h>
-#include <LibEccodes.h>
+#include <Utils.h>
 
 class BPVOptimizer : public Optimizer
 {
@@ -14,7 +14,7 @@ class BPVOptimizer : public Optimizer
 
             Parameters params;
 
-            auto  decimal = grib_power<double>(decimalScaleFactor_, 10);
+            auto  decimal = sp_power<double>(decimalScaleFactor_, 10);
             min *= decimal;
             max *= decimal;
 

@@ -33,8 +33,8 @@ class ArrayCodec {
 template <typename ValueType, uint8_t BPV>
 typename ArrayCodec<ValueType, BPV>::CodedValues ArrayCodec<ValueType, BPV>::pack(const Values& values, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, ValueType min, ValueType max)
 {
-    const ValueType decimal = grib_power<ValueType>(decimalScaleFactor, 10);
-    const ValueType divisor = grib_power<ValueType>(-binaryScaleFactor, 2);
+    const ValueType decimal = sp_power<ValueType>(decimalScaleFactor, 10);
+    const ValueType divisor = sp_power<ValueType>(-binaryScaleFactor, 2);
     const size_t buflen  = (((BPV * values.size()) + 7) / 8) * sizeof(unsigned char);
 
     auto encode = [&](auto val) {
@@ -53,8 +53,8 @@ typename ArrayCodec<ValueType, BPV>::CodedValues ArrayCodec<ValueType, BPV>::pac
 template <typename ValueType, uint8_t BPV>
 typename ArrayCodec<ValueType, BPV>::Values ArrayCodec<ValueType, BPV>::unpack(const CodedValues& codedValues, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, size_t nVals)
 {
-    const ValueType s = grib_power<ValueType>(binaryScaleFactor, 2);
-    const ValueType d = grib_power<ValueType>(-decimalScaleFactor, 10);
+    const ValueType s = sp_power<ValueType>(binaryScaleFactor, 2);
+    const ValueType d = sp_power<ValueType>(-decimalScaleFactor, 10);
 
     Values values(codedValues.size());
 
