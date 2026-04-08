@@ -451,6 +451,7 @@ ecbuild_add_library(
        ${CMAKE_THREAD_LIBS_INIT}
        ${PNG_LIBRARIES}
        $<$<BOOL:${libaec_FOUND}>:libaec::aec>
+       $<$<BOOL:${HAVE_SIMPLE_PACKING_SP}>:simple_packing_sp>
     PUBLIC_LIBS 
         ${CMATH_LIBRARIES}
         ${THREADS_LIBRARIES}
@@ -467,3 +468,19 @@ ecbuild_add_library(
         $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
 )
+
+# Simple Packing SP: always compile with native arch and release optimization
+if(HAVE_SIMPLE_PACKING_SP)
+    set_source_files_properties(accessor/DataSimplePacking.cc PROPERTIES
+        COMPILE_OPTIONS "-march=native;-mtune=native;-O3"
+        COMPILE_DEFINITIONS "NDEBUG"
+    )
+    set_source_files_properties(accessor/DataG1SimplePacking.cc PROPERTIES
+        COMPILE_OPTIONS "-march=native;-mtune=native;-O3"
+        COMPILE_DEFINITIONS "NDEBUG"
+    )
+    set_source_files_properties(accessor/DataG2SimplePacking.cc PROPERTIES
+        COMPILE_OPTIONS "-march=native;-mtune=native;-O3"
+        COMPILE_DEFINITIONS "NDEBUG"
+    )
+endif()

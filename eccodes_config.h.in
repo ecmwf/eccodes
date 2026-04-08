@@ -109,6 +109,8 @@
 
 #cmakedefine HAVE_AEC
 
+#cmakedefine HAVE_SIMPLE_PACKING_SP
+
 #cmakedefine HAVE_NETCDF
 
 #cmakedefine HAVE_GEOGRAPHY

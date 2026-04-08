@@ -11,11 +11,40 @@
 #include "DataG1SimplePacking.h"
 #include "grib_scaling.h"
 
+#ifdef HAVE_SIMPLE_PACKING_SP
+    #include <array>
+    #include <memory>
+    template <typename T>
+    static inline T grib_power(int s, int n) { return codes_power<T>(static_cast<long>(s), static_cast<long>(n)); }
+    #include "BitPacking.h"
+    #include "codec/Binary.h"
+
+    template <typename ValueType, std::size_t... Is>
+    static auto make_sp_codecs_impl(std::index_sequence<Is...>) {
+        using Base = BinaryInterface<ValueType>;
+        return std::array<std::unique_ptr<Base>, sizeof...(Is)>{
+            std::unique_ptr<Base>{ std::make_unique<Binary<ValueType, Is + 1>>() }...
+        };
+    }
+    template <typename ValueType, std::size_t N>
+    static auto make_sp_codecs() {
+        return make_sp_codecs_impl<ValueType>(std::make_index_sequence<N>{});
+    }
+#endif
+
 eccodes::accessor::DataG1SimplePacking _grib_accessor_data_g1simple_packing;
 eccodes::Accessor* grib_accessor_data_g1simple_packing = &_grib_accessor_data_g1simple_packing;
 
 namespace eccodes::accessor
 {
+
+#ifdef HAVE_SIMPLE_PACKING_SP
+static bool use_sp()
+{
+    const char* env = getenv("ECCODES_USE_LEGACY_SIMPLE_PACKING");
+    return (env == nullptr || env[0] == '\0');
+}
+#endif
 
 void DataG1SimplePacking::init(const long v, grib_arguments* args)
 {
@@ -204,7 +233,44 @@ int DataG1SimplePacking::pack_double(const double* cval, size_t* len)
     buf     = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
     encoded = buf;
 
-    grib_encode_double_array(n_vals, val, bits_per_value, reference_value, decimal, divisor, encoded, &off);
+#ifdef HAVE_SIMPLE_PACKING_SP
+    if (use_sp() && bits_per_value >= 1 && bits_per_value <= 64) {
+        grib_context_log(context_, GRIB_LOG_DEBUG,
+                         "DataG1simplePacking : pack_double : packing %s, %zu values (SP)", name_, n_vals);
+
+        try {
+            static constexpr uint8_t maxNBits = 64;
+            static const auto codecs = make_sp_codecs<double, maxNBits>();
+
+            double min_val = val[0], max_val = val[0];
+            for (size_t j = 1; j < n_vals; j++) {
+                if (val[j] < min_val) min_val = val[j];
+                if (val[j] > max_val) max_val = val[j];
+            }
+
+            std::vector<double> values(val, val + n_vals);
+            auto encoded_buf = codecs[bits_per_value - 1]->pack(
+                values,
+                static_cast<int>(decimal_scale_factor),
+                static_cast<int>(binary_scale_factor),
+                reference_value,
+                min_val, max_val);
+
+            // Copy encoded data into the pre-allocated buffer (which may be padded for GRIB1)
+            std::memcpy(buf, encoded_buf.data(), std::min(encoded_buf.size(), buflen));
+        }
+        catch (const std::exception& e) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SP encode error: %s",
+                             class_name_, __func__, e.what());
+            grib_context_buffer_free(context_, buf);
+            return GRIB_ENCODING_ERROR;
+        }
+    }
+    else
+#endif
+    {
+        grib_encode_double_array(n_vals, val, bits_per_value, reference_value, decimal, divisor, encoded, &off);
+    }
 
     grib_context_log(context_, GRIB_LOG_DEBUG,
                      "DataG1simplePacking : pack_double : packing %s, %d values", name_, n_vals);

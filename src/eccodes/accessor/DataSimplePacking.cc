@@ -14,11 +14,40 @@
 #include <float.h>
 #include <type_traits>
 
+#ifdef HAVE_SIMPLE_PACKING_SP
+    #include <array>
+    #include <memory>
+    template <typename T>
+    static inline T grib_power(int s, int n) { return codes_power<T>(static_cast<long>(s), static_cast<long>(n)); }
+    #include "BitPacking.h"
+    #include "codec/Binary.h"
+
+    template <typename ValueType, std::size_t... Is>
+    static auto make_sp_codecs_impl(std::index_sequence<Is...>) {
+        using Base = BinaryInterface<ValueType>;
+        return std::array<std::unique_ptr<Base>, sizeof...(Is)>{
+            std::unique_ptr<Base>{ std::make_unique<Binary<ValueType, Is + 1>>() }...
+        };
+    }
+    template <typename ValueType, std::size_t N>
+    static auto make_sp_codecs() {
+        return make_sp_codecs_impl<ValueType>(std::make_index_sequence<N>{});
+    }
+#endif
+
 eccodes::accessor::DataSimplePacking _grib_accessor_data_simple_packing;
 eccodes::Accessor* grib_accessor_data_simple_packing = &_grib_accessor_data_simple_packing;
 
 namespace eccodes::accessor
 {
+
+#ifdef HAVE_SIMPLE_PACKING_SP
+static bool use_sp()
+{
+    const char* env = getenv("ECCODES_USE_LEGACY_SIMPLE_PACKING");
+    return (env == nullptr || env[0] == '\0');
+}
+#endif
 
 void DataSimplePacking::init(const long v, grib_arguments* args)
 {
@@ -276,7 +305,37 @@ int DataSimplePacking::unpack(T* val, size_t* len)
     grib_context_log(context_, GRIB_LOG_DEBUG,
                      "%s %s: calling outline function: bpv: %ld, rv: %g, bsf: %ld, dsf: %ld",
                      class_name_, __func__, bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
-    grib_decode_array<T>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, val);
+
+#ifdef HAVE_SIMPLE_PACKING_SP
+    if (use_sp() && bits_per_value >= 1 && bits_per_value <= 64) {
+        grib_context_log(context_, GRIB_LOG_DEBUG,
+                         "%s %s: using new Simple Packing (SP) for decode, %zu values", class_name_, __func__, n_vals);
+        try {
+            static constexpr uint8_t maxNBits = 64;
+            static const auto codecs = make_sp_codecs<T, maxNBits>();
+
+            std::vector<unsigned char> codedBuf(buf, buf + ((bits_per_value * n_vals + 7) / 8));
+            auto decoded = codecs[bits_per_value - 1]->unpack(
+                codedBuf,
+                static_cast<int>(decimal_scale_factor),
+                static_cast<int>(binary_scale_factor),
+                static_cast<T>(reference_value),
+                n_vals);
+            for (i = 0; i < n_vals; i++) {
+                val[i] = decoded[i];
+            }
+        }
+        catch (const std::exception& e) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SP decode error: %s",
+                             class_name_, __func__, e.what());
+            return GRIB_DECODING_ERROR;
+        }
+    }
+    else
+#endif
+    {
+        grib_decode_array<T>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, val);
+    }
 
     *len = (long)n_vals;
 
@@ -417,7 +476,35 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
     grib_context_log(context_, GRIB_LOG_DEBUG,
                      "unpack_double: calling outline function : bpv %d, rv : %g, sf : %d, dsf : %d ",
                      bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
-    grib_decode_array<double>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, val);
+
+#ifdef HAVE_SIMPLE_PACKING_SP
+    if (use_sp() && bits_per_value >= 1 && bits_per_value <= 64) {
+        try {
+            static constexpr uint8_t maxNBits = 64;
+            static const auto codecs = make_sp_codecs<double, maxNBits>();
+
+            std::vector<unsigned char> codedBuf(buf, buf + ((bits_per_value * n_vals + 7) / 8));
+            auto decoded = codecs[bits_per_value - 1]->unpack(
+                codedBuf,
+                static_cast<int>(decimal_scale_factor),
+                static_cast<int>(binary_scale_factor),
+                reference_value,
+                n_vals);
+            for (i = 0; i < n_vals; i++) {
+                val[i] = decoded[i];
+            }
+        }
+        catch (const std::exception& e) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SP decode error: %s",
+                             class_name_, __func__, e.what());
+            return GRIB_DECODING_ERROR;
+        }
+    }
+    else
+#endif
+    {
+        grib_decode_array<double>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, val);
+    }
 
     *len = (long)n_vals;
 
