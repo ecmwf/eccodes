@@ -2716,7 +2716,6 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
             do_decode_                      = 0;
             set_to_missing_if_out_of_range_ = set_to_missing_if_out_of_range(h);
             pos                             = 0;
-            codec_element                   = &encode_element;
             grib_get_long(get_enclosing_handle(), "extractSubset", &onlySubset);
             grib_get_long(get_enclosing_handle(), "extractSubsetIntervalStart", &startSubset);
             grib_get_long(get_enclosing_handle(), "extractSubsetIntervalEnd", &endSubset);
@@ -2735,7 +2734,22 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
                 err        = grib_get_long_array(get_enclosing_handle(), "extractSubsetList", subsetList, &subsetListSize);
                 if (err) return err;
             }
-            codec_replication = &encode_replication;
+               set_input_replications(h);
+               set_input_bitmap(h);
+
+               /* If input replication factors are set, use NEW_DATA codec (which honors them).
+                * Otherwise, use regular ENCODE codec (which reads from previously decoded numericValues_).
+                * See: github issue 456 - inputExtendedDelayedDescriptorReplicationFactor was silently ignored.
+                */
+               if (nInputReplications_ >= 0 || nInputExtendedReplications_ >= 0 || nInputShortReplications_ >= 0) {
+                   codec_element     = &encode_new_element;
+                   codec_replication = &encode_new_replication;
+               }
+               else {
+                   codec_element     = &encode_element;
+                   codec_replication = &encode_replication;
+               }
+
             break;
         default:
             return GRIB_NOT_IMPLEMENTED;

@@ -168,6 +168,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
+        bufr_extended_replication_factor_regression
         bufr_ecc-2011
         bufr_ecc-2153
         grib_efas
