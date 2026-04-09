@@ -12,5 +12,10 @@ if (modelName isnot "unknown") {
          alias ls.model = modelName;
          alias mars.model = modelName;
       }
+      if ( defined(marsClass) && marsStream == 1255 ) { # See DGOV-585 - stream gfra
+         alias ls.model = modelName;
+         alias mars.model = modelName;
+         alias mars.configuration = modelVersion;
+      }
    }
 }
