@@ -14,7 +14,6 @@
 
 label="grib_destine_tilescheme_test"
 temp_grib_a=temp.$label.a.grib
-temp_grib_b=temp.$label.b.grib
 destine_sample=temp.$label.destine.grib
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
@@ -40,5 +39,12 @@ ${tools_dir}/grib_set -s dataset=4 $destine_sample $temp_grib_a
 grib_check_key_exists $temp_grib_a dataset,georef,model,tilescheme
 grib_check_key_equals $temp_grib_a "dataset,dataset:s,georef,mars.georef,model,mars.model,tilescheme,mars.tilescheme" "4 on-demand-extremes-dt s0000000 s0000000 IFS IFS 0 0"
 
+# Check an example where a few additional things are set in on-demand-extremes-dt
+${tools_dir}/grib_set -s dataset=4,productDefinitionTemplateNumber=113,tile=SEAO,tileattribute=AGG,tilescheme=simple $destine_sample $temp_grib_a
+
+grib_check_key_exists $temp_grib_a tile,tileattribute,tilescheme
+grib_check_key_equals $temp_grib_a "tile,mars.tile,tileattribute,mars.tileattribute,tilescheme:s,mars.tilescheme:s" "SEAO SEAO AGG AGG simple simple"
+
+
 # Clean up
-rm -f $temp_grib_a $temp_grib_b $destine_sample
+rm -f $temp_grib_a $destine_sample
