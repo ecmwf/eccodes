@@ -40,10 +40,10 @@ grib_check_key_exists $temp_grib_a dataset,georef,model,tilescheme
 grib_check_key_equals $temp_grib_a "dataset,dataset:s,georef,mars.georef,model,mars.model,tilescheme,mars.tilescheme" "4 on-demand-extremes-dt s0000000 s0000000 IFS IFS 0 0"
 
 # Check an example where a few additional things are set in on-demand-extremes-dt
-${tools_dir}/grib_set -s dataset=4,productDefinitionTemplateNumber=113,tile=SEAO,tileattribute=AGG,tilescheme=simple $destine_sample $temp_grib_a
+${tools_dir}/grib_set -s dataset=4,productDefinitionTemplateNumber=113,tile=seao,tileattribute=agg,tilescheme=simple $destine_sample $temp_grib_a
 
 grib_check_key_exists $temp_grib_a tile,tileattribute,tilescheme
-grib_check_key_equals $temp_grib_a "tile,mars.tile,tileattribute,mars.tileattribute,tilescheme:s,mars.tilescheme:s" "SEAO SEAO AGG AGG simple simple"
+grib_check_key_equals $temp_grib_a "tile,mars.tile,tileattribute,mars.tileattribute,tilescheme:s,mars.tilescheme:s" "seao seao agg agg simple simple"
 
 
 # Clean up
