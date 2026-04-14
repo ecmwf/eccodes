@@ -27,3 +27,11 @@ unsigned[8]   INBITS : dump;
 # FA scaling factor
 signed[8]     FMULTM = 1 : dump;
 signed[8]     FMULTE = 0 : dump;
+
+# FA change min value
+transient ascii[16] faFunction = "";
+transient ascii[32] faFunctionArg0 = "";
+transient ascii[32] faFunctionArg1 = "";
+transient ascii[32] faFunctionArg2 = "";
+transient ascii[32] faFunctionArg3 = "";
+transient ascii[32] faFunctionArg4 = "";
