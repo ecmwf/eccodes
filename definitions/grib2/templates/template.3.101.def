@@ -16,3 +16,10 @@ byte[16] uuidOfHGrid : dump;
 template_nofail unstructuredGrid "grib2/localConcepts/[centre:s]/unstructuredGrid.def";
 
 # iterator unstructured(numberOfPoints, missingValue, values, uuidOfHGrid);
+# For eckit/geo: See ECC-2257
+meta latLonValues latlonvalues(values);
+alias latitudeLongitudeValues=latLonValues;
+meta latitudes latitudes(values,0);
+meta longitudes longitudes(values,0);
+meta distinctLatitudes latitudes(values,1);
+meta distinctLongitudes longitudes(values,1);
