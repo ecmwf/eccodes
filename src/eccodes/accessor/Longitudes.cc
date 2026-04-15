@@ -69,6 +69,7 @@ int Longitudes::unpack_double(double* val, size_t* len)
     iter = grib_iterator_new(get_enclosing_handle(), GRIB_GEOITERATOR_NO_VALUES, &ret);
     if (ret != GRIB_SUCCESS) {
         grib_iterator_delete(iter);
+        *len = 0;
         grib_context_log(context_, GRIB_LOG_ERROR, "longitudes: Unable to create iterator");
         return ret;
     }
