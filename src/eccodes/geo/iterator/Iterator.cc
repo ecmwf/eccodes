@@ -163,20 +163,10 @@ static grib_iterator* grib_iterator_new_(const grib_handle* ch, unsigned long fl
     size_t gtlen = sizeof(gridType);
     err = grib_get_string(ch, "gridType", gridType, &gtlen);
     if (!err &&
-        STR_EQUAL(gridType, "unstructured_grid") ||
-        STR_EQUAL(gridType, "healpix") ||
-        STR_EQUAL(gridType, "regular_ll"))
+        (STR_EQUAL(gridType, "unstructured_grid") ||
+         STR_EQUAL(gridType, "healpix")))
     {
         do_process_with_eckit = true;
-
-        if (STR_EQUAL(gridType, "regular_ll")) {
-            long numberOfDataPoints = 0;
-            if (grib_get_long(ch, "numberOfDataPoints", &numberOfDataPoints) == GRIB_SUCCESS &&
-                numberOfDataPoints == 1)
-            {
-                do_process_with_eckit = false;
-            }
-        }
     }
 
     const int eckit_geo = ch->context->eckit_geo;  // check environment variable
