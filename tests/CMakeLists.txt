@@ -31,6 +31,7 @@ list(APPEND test_c_bins
     grib_keys_iter
     grib_keys_iter_skip
     grib_geo_iter
+    grib_geo_iter_roundtrip
     grib_nearest_test
     grib_util_set_spec
     grib_util_set_spec2
@@ -265,6 +266,7 @@ if( HAVE_BUILD_TOOLS )
         grib_keys_iter
         grib_keys_iter_skip
         grib_geo_iter
+        grib_geo_iter_roundtrip
         grib_to_json
         grib_to_ppm
         grib_list_keys
