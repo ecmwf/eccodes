@@ -632,6 +632,7 @@ if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
         ecbuild_add_test( TARGET eccodes_t_${test}
                           SOURCES ${test}.cc
                           LIBS eccodes eckit_geo
+                          ENVIRONMENT ECCODES_GRIB_GEO_FIXES=1
                           WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} )
     endforeach()
 endif()

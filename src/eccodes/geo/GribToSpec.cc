@@ -825,15 +825,15 @@ bool GribToSpec::get(const std::string& name, std::string& value) const
 {
     lock_type lock;
 
-    if (cache_get(cache_, name, value)) {
-        return true;
-    }
-
     const auto* key = get_key(name, handle_);
 
     ASSERT(key != nullptr);
     if (std::strlen(key) == 0) {
         return false;
+    }
+
+    if (cache_get(cache_, key, value)) {
+        return true;
     }
 
     char buffer[10240];
@@ -867,15 +867,15 @@ bool GribToSpec::get(const std::string& name, bool& value) const
 {
     lock_type lock;
 
-    if (cache_get(cache_, name, value)) {
-        return true;
-    }
-
     const auto* key = get_key(name, handle_);
 
     ASSERT(key != nullptr);
     if (std::strlen(key) == 0) {
         return false;
+    }
+
+    if (cache_get(cache_, key, value)) {
+        return true;
     }
 
     // FIXME: make sure that 'temp' is not set if CODES_MISSING_LONG
@@ -905,13 +905,13 @@ bool GribToSpec::get(const std::string& name, long& value) const
 {
     lock_type lock;
 
-    if (cache_get(cache_, name, value)) {
-        return true;
-    }
-
     const std::string key = get_key(name, handle_);
     if (key.empty()) {
         return false;
+    }
+
+    if (cache_get(cache_, key, value)) {
+        return true;
     }
 
     // FIXME: make sure that 'value' is not set if CODES_MISSING_LONG
@@ -1023,15 +1023,15 @@ bool GribToSpec::get(const std::string& name, std::vector<long>& value) const
 {
     lock_type lock;
 
-    if (cache_get(cache_, name, value)) {
-        return true;
-    }
-
     const auto* key = get_key(name, handle_);
 
     ASSERT(key != nullptr);
     if (std::strlen(key) == 0) {
         return false;
+    }
+
+    if (cache_get(cache_, key, value)) {
+        return true;
     }
 
     size_t count = 0;
@@ -1098,16 +1098,16 @@ bool GribToSpec::get(const std::string& name, std::vector<double>& value) const
 {
     lock_type lock;
 
-    if (cache_get(cache_, name, value)) {
-        return true;
-    }
-
     const auto* key = get_key(name, handle_);
 
     // NOTE: MARS client sets 'grid=vector' (deprecated) which needs to be compared against GRIB gridName
     ASSERT(key != nullptr);
     if (std::strlen(key) == 0 || std::strncmp(key, "gridName", 8) == 0) {
         return false;
+    }
+
+    if (cache_get(cache_, key, value)) {
+        return true;
     }
 
     static const ProcessingList<std::vector<double>> process{
