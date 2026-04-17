@@ -13,7 +13,7 @@ if (class is "od" || class is "me" || class is "en" ||
 alias mars.number = perturbationNumber;
 alias mars.method = methodNumber;
 
-if (class isnot "gw") { # ECC-1448
+if (class isnot "gw" && class isnot "ef" && class isnot "gf" && class isnot "eh" && class isnot "gh") { # ECC-1448
     alias mars.origin = centre;
 }
 
