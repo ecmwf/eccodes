@@ -785,6 +785,12 @@ GribToSpec::GribToSpec(codes_handle* h) :
 
             // gridName=O640, edition=1, experimentVersionNumber=h5wk/h6en/hc9k
             { "f5dc74ec36353f4c83f7de3bf46e1aef", { { "latitudeOfFirstGridPointInDegrees", 89.892 }, { "latitudeOfLastGridPointInDegrees", -89.892 } } },
+
+            // gridType=regular_ll, edition=2, centre=egrr (Arakawa C-grid UM)
+            { "026edb6c52792bc15957072536dbe7c2", { { "longitudeOfLastGridPointInDegrees", 359.0625 } } },                                                   // N96, T
+            { "379bbee20b78c58b9e86e1377c14a3da", { { "longitudeOfLastGridPointInDegrees", 358.125 } } },                                                    // N96, U
+            { "2e0f685a14d8ad3615dbc7252d5ebbb9", { { "longitudeOfLastGridPointInDegrees", 359.0625 } } },                                                   // N96, V
+            { "fd45c3ec374370a77222de303aa00a23", { { "latitudeOfFirstGridPointInDegrees", -89.8125 }, { "latitudeOfLastGridPointInDegrees", 89.8125 } } },  // N320, T
         };
 
         char buffer[34];
