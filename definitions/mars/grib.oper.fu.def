@@ -1,5 +1,8 @@
 alias mars.anoffset=anoffset;
 
-if (grib2LocalSectionNumber == 44){
- alias mars.anoffset=offsetToStartOfForecastFillupInHours;
+if (edition == 2) {
+ if (grib2LocalSectionNumber == 44){
+  alias mars.anoffset=offsetToStartOfForecastFillupInHours;
+ }
 }
+
