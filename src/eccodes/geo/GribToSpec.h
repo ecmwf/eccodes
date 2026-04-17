@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include <map>
 #include <string>
 #include <vector>
 
@@ -28,6 +29,8 @@ namespace eccodes::geo
 class GribToSpec final : public eccodes::Spec
 {
 public:
+    using cache_type = std::map<std::string, eckit::spec::Custom::value_type>;
+
     explicit GribToSpec(codes_handle*);
 
     bool has(const std::string& name) const override;
@@ -50,7 +53,7 @@ public:
     bool get(const std::string& name, std::vector<std::string>& value) const override;
 
 private:
-    mutable eckit::spec::Custom cache_;
+    mutable cache_type cache_;
     codes_handle* handle_;
 
     void json(eckit::JSON&) const final;

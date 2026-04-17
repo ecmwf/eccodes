@@ -747,6 +747,24 @@ class lock_type
 };
 
 
+template <typename T>
+bool cache_get(const GribToSpec::cache_type& cache, const std::string& name, T& value) {
+    if (auto it = cache.find(name); it != cache.end()) {
+        if (std::holds_alternative<T>(it->second)) {
+            value = std::get<T>(it->second);
+            return true;
+        }
+    }
+    return false;
+}
+
+
+template <typename T>
+void cache_set(GribToSpec::cache_type& cache, const std::string& name, const T& value) {
+    cache.insert_or_assign(name, eckit::spec::Custom::value_type{std::in_place_type<T>, value});
+}
+
+
 }  // namespace
 
 
@@ -756,8 +774,9 @@ GribToSpec::GribToSpec(codes_handle* h) :
     ASSERT(handle_ != nullptr);
 
     if (static bool do_fix = codes_getenv("ECCODES_GRIB_GEO_FIXES") != nullptr; do_fix) {
-        using fixes_type = std::map<std::string, const eckit::spec::Custom&>;
+        using fixes_type = std::map<std::string, const cache_type>;
         static const fixes_type FIXES{
+
             // gridName=N640, edition=2
             { "51ea7dcd62e71c9707157a2d15247593", { { "longitudeOfLastGridPointInDegrees", 359.859375 } } },
 
@@ -772,10 +791,12 @@ GribToSpec::GribToSpec(codes_handle* h) :
         auto size = sizeof(buffer);
         CHECK_CALL(codes_get_string(handle_, "md5GridSection", buffer, &size));
 
-        const fixes_type::key_type md5GridSection(buffer, size);
+        const std::string md5GridSection(buffer);
+        ASSERT(md5GridSection.size() == 32);
+
         if (const auto& fix = FIXES.find(md5GridSection); fix != FIXES.end()) {
             grib_context_log(nullptr, GRIB_LOG_WARNING, "GribToSpec: applying fix for md5GridSection=%s", md5GridSection.c_str());
-            cache_.set(fix->second.container());
+            cache_ = fix->second;
         }
     };
 }
@@ -785,19 +806,12 @@ bool GribToSpec::has(const std::string& name) const
 {
     lock_type lock;
 
-    if (cache_.has(name)) {
-        return true;
-    }
-
     const auto* key = get_key(name, handle_);
-    if (!key)
-        return false;
-
-    if (std::strlen(key) == 0) {
+    if (key == nullptr || std::strlen(key) == 0) {
         return false;
     }
 
-    return codes_is_defined(handle_, key) != 0;
+    return cache_.find(key) != cache_.end() || codes_is_defined(handle_, key) != 0;
 }
 
 
@@ -805,7 +819,7 @@ bool GribToSpec::get(const std::string& name, std::string& value) const
 {
     lock_type lock;
 
-    if (cache_.get(name, value)) {
+    if (cache_get(cache_, name, value)) {
         return true;
     }
 
@@ -837,7 +851,8 @@ bool GribToSpec::get(const std::string& name, std::string& value) const
         return false;
     }
 
-    cache_.set(name, value = buffer);
+    value = buffer;
+    cache_set(cache_, name, value);
     return true;
 }
 
@@ -846,7 +861,7 @@ bool GribToSpec::get(const std::string& name, bool& value) const
 {
     lock_type lock;
 
-    if (cache_.get(name, value)) {
+    if (cache_get(cache_, name, value)) {
         return true;
     }
 
@@ -862,7 +877,8 @@ bool GribToSpec::get(const std::string& name, bool& value) const
     int err   = codes_get_long(handle_, key, &temp);
     CHECK_ERROR(err, key);
 
-    cache_.set(name, value = temp != 0);
+    value = temp != 0;
+    cache_set(cache_, name, value);
     return true;
 }
 
@@ -883,7 +899,7 @@ bool GribToSpec::get(const std::string& name, long& value) const
 {
     lock_type lock;
 
-    if (cache_.get(name, value)) {
+    if (cache_get(cache_, name, value)) {
         return true;
     }
 
@@ -900,7 +916,7 @@ bool GribToSpec::get(const std::string& name, long& value) const
 
     CHECK_ERROR(err, key.c_str());
 
-    cache_.set(name, value);
+    cache_set(cache_, name, value);
     return true;
 }
 
@@ -913,12 +929,13 @@ bool GribToSpec::get(const std::string& /*name*/, long long& /*value*/) const
 
 bool GribToSpec::get(const std::string& name, std::size_t& value) const
 {
-    if (cache_.get(name, value)) {
+    if (cache_get(cache_, name, value)) {
         return true;
     }
 
     if (long value_long = 0; get(name, value_long)) {
-        cache_.set(name, value = eckit::into_unsigned<size_t>(value_long));
+        value = eckit::into_unsigned<size_t>(value_long);
+        cache_set(cache_, name, value);
         return true;
     }
 
@@ -928,12 +945,13 @@ bool GribToSpec::get(const std::string& name, std::size_t& value) const
 
 bool GribToSpec::get(const std::string& name, float& value) const
 {
-    if (cache_.get(name, value)) {
+    if (cache_get(cache_, name, value)) {
         return true;
     }
 
     if (double v = 0; get(name, v)) {
-        cache_.set(name, value = static_cast<float>(v));
+        value = static_cast<float>(v);
+        cache_set(cache_, name, value);
         return true;
     }
 
@@ -945,16 +963,16 @@ bool GribToSpec::get(const std::string& name, double& value) const
 {
     lock_type lock;
 
-    if (cache_.get(name, value)) {
-        return true;
-    }
-
     ASSERT(name != "grid");
 
     const auto* key = get_key(name, handle_);
 
     if (key == nullptr || std::strlen(key) == 0) {
         return false;
+    }
+
+    if (cache_get(cache_, key, value)) {
+        return true;
     }
 
     // FIXME: make sure that 'value' is not set if CODES_MISSING_DOUBLE
@@ -975,7 +993,7 @@ bool GribToSpec::get(const std::string& name, double& value) const
         };
 
         if (get_value(key, handle_, value, process)) {
-            cache_.set(name, value);
+            cache_set(cache_, name, value);
             return true;
         }
 
@@ -984,7 +1002,7 @@ bool GribToSpec::get(const std::string& name, double& value) const
 
     CHECK_ERROR(err, key);
 
-    cache_.set(name, value);
+    cache_set(cache_, name, value);
     return true;
 }
 
@@ -999,7 +1017,7 @@ bool GribToSpec::get(const std::string& name, std::vector<long>& value) const
 {
     lock_type lock;
 
-    if (cache_.get(name, value)) {
+    if (cache_get(cache_, name, value)) {
         return true;
     }
 
@@ -1032,7 +1050,7 @@ bool GribToSpec::get(const std::string& name, std::vector<long>& value) const
         }
     }
 
-    cache_.set(name, value);
+    cache_set(cache_, name, value);
     return true;
 }
 
@@ -1051,7 +1069,7 @@ bool GribToSpec::get(const std::string& /*name*/, std::vector<std::size_t>& /*va
 
 bool GribToSpec::get(const std::string& name, std::vector<float>& value) const
 {
-    if (cache_.get(name, value)) {
+    if (cache_get(cache_, name, value)) {
         return true;
     }
 
@@ -1062,7 +1080,7 @@ bool GribToSpec::get(const std::string& name, std::vector<float>& value) const
             value.push_back(static_cast<float>(d));
         }
 
-        cache_.set(name, value);
+        cache_set(cache_, name, value);
         return true;
     }
 
@@ -1074,7 +1092,7 @@ bool GribToSpec::get(const std::string& name, std::vector<double>& value) const
 {
     lock_type lock;
 
-    if (cache_.get(name, value)) {
+    if (cache_get(cache_, name, value)) {
         return true;
     }
 
@@ -1099,7 +1117,7 @@ bool GribToSpec::get(const std::string& name, std::vector<double>& value) const
     };
 
     if (get_value(key, handle_, value, process)) {
-        cache_.set(name, value);
+        cache_set(cache_, name, value);
         return true;
     }
 
@@ -1122,7 +1140,7 @@ bool GribToSpec::get(const std::string& name, std::vector<double>& value) const
 
     ASSERT(!value.empty());
 
-    cache_.set(name, value);
+    cache_set(cache_, name, value);
     return true;
 }
 
