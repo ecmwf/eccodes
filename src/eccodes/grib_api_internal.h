@@ -486,7 +486,6 @@ struct bufr_descriptor
     long reference;
     long width;
     int nokey; /* set if descriptor does not have an associated key */
-    grib_accessor* a;
 };
 
 struct bufr_descriptors_array

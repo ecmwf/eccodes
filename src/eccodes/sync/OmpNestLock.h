@@ -1,13 +1,22 @@
 #pragma once
 
 #include <omp.h>
-// #include <sanitizer/tsan_interface.h>
+
+#if defined(__has_feature)
+#if __has_feature(thread_sanitizer)
+#include <sanitizer/tsan_interface.h>
+#define ECCODES_TSAN_ENABLED 1
+#endif
+#elif defined(__SANITIZE_THREAD__)
+#include <sanitizer/tsan_interface.h>
+#define ECCODES_TSAN_ENABLED 1
+#endif
 
 namespace eccodes::sync {
 
 // Note:
 // The GCC15 thread sanitiser doesn't fully support OpenMP.
-// See commented calls to tsan...
+// Use TSan annotations to inform it about synchronization.
 
 class OmpNestLock {
   public:
@@ -21,11 +30,15 @@ class OmpNestLock {
 
     void lock() {
         omp_set_nest_lock(&mutex_);
-        // __tsan_acquire(&mutex_);
+#if ECCODES_TSAN_ENABLED
+        __tsan_acquire(&mutex_);
+#endif
     }
 
     void unlock() {
-        // __tsan_release(&mutex_);
+#if ECCODES_TSAN_ENABLED
+        __tsan_release(&mutex_);
+#endif
         omp_unset_nest_lock(&mutex_);
     }
   private:

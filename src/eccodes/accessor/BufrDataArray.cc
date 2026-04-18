@@ -259,6 +259,9 @@ int check_end_data(grib_context* c, bufr_descriptor* bd, BufrDataArray* self, in
 void BufrDataArray::self_clear()
 {
     grib_context_free(context_, canBeMissing_);
+    grib_context_free(context_, nokeys_);
+    grib_context_free(context_, refOverrides_);
+    grib_context_free(context_, hasRefOverride_);
     grib_vdarray_delete_content(numericValues_);
     grib_vdarray_delete(numericValues_);
 
@@ -355,6 +358,12 @@ int BufrDataArray::get_descriptors()
     numberOfDescriptors = grib_bufr_descriptors_array_used_size(expanded_);
     if (canBeMissing_) grib_context_free(c, canBeMissing_);
     canBeMissing_ = (int*)grib_context_malloc_clear(c, numberOfDescriptors * sizeof(int));
+    if (nokeys_) grib_context_free(c, nokeys_);
+    nokeys_ = (int*)grib_context_malloc_clear(c, numberOfDescriptors * sizeof(int));
+    if (refOverrides_) grib_context_free(c, refOverrides_);
+    refOverrides_ = (long*)grib_context_malloc_clear(c, numberOfDescriptors * sizeof(long));
+    if (hasRefOverride_) grib_context_free(c, hasRefOverride_);
+    hasRefOverride_ = (int*)grib_context_malloc_clear(c, numberOfDescriptors * sizeof(int));
     for (i = 0; i < numberOfDescriptors; i++)
         canBeMissing_[i] = grib_bufr_descriptor_can_be_missing(expanded_->v[i]);
 
@@ -942,7 +951,7 @@ int decode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
                          number_of_bits, (long)*pos, (long)(*pos - self->offset_ * 8));
         grib_context_log(c, GRIB_LOG_DEBUG, "Operator 203YYY: Store for code %6.6ld => new ref val %ld", bd->code, new_ref_val);
         self->tableB_override_store_ref_val(c, bd->code, new_ref_val);
-        bd->nokey = 1;
+        self->nokeys_[i] = 1;
         err       = check_end_data(c, NULL, self, number_of_bits); /*advance bitsToEnd*/
         return err;
     }
@@ -978,9 +987,16 @@ int decode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
     }
     else {
         /* numeric or codetable or flagtable */
-        /* Operator 203YYY: Check if we have changed ref value for this element. If so modify bd->reference */
-        if (self->change_ref_value_operand_ != 0 && self->tableB_override_get_ref_val(bd->code, &(bd->reference)) == GRIB_SUCCESS) {
-            grib_context_log(c, GRIB_LOG_DEBUG, "Operator 203YYY: For code %6.6ld, changed ref val: %ld", bd->code, bd->reference);
+        /* Operator 203YYY: Check if we have changed ref value for this element. If so use local copy */
+        bufr_descriptor bd_local;
+        long overridden_ref;
+        if (self->change_ref_value_operand_ != 0 && self->tableB_override_get_ref_val(bd->code, &overridden_ref) == GRIB_SUCCESS) {
+            grib_context_log(c, GRIB_LOG_DEBUG, "Operator 203YYY: For code %6.6ld, changed ref val: %ld", bd->code, overridden_ref);
+            bd_local = *bd;
+            bd_local.reference = overridden_ref;
+            bd = &bd_local;
+            self->hasRefOverride_[i] = 1;
+            self->refOverrides_[i] = overridden_ref;
         }
 
         if (bd->width > 64) {
@@ -1125,6 +1141,7 @@ int BufrDataArray::encode_overridden_reference_value(grib_context* c, grib_buffe
                          currRefVal, bd->shortName, bd->code);
     }
     refValIndex_++;
+    tableB_override_store_ref_val(c, bd->code, currRefVal);
     return err;
 }
 
@@ -1171,6 +1188,14 @@ int encode_new_element(grib_context* c, BufrDataArray* self, int subsetIndex,
     }
     else {
         /* numeric or codetable or flagtable */
+        /* Operator 203YYY: Use overridden reference if available */
+        bufr_descriptor bd_new_local;
+        long overridden_ref;
+        if (self->change_ref_value_operand_ != 0 && self->tableB_override_get_ref_val(bd->code, &overridden_ref) == GRIB_SUCCESS) {
+            bd_new_local = *bd;
+            bd_new_local.reference = overridden_ref;
+            bd = &bd_new_local;
+        }
         grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data encoding: \t %s = %g",
                          bd->shortName, cdval);
         if (bd->code == 31031)
@@ -1296,6 +1321,14 @@ int encode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
     }
     else {
         /* numeric or codetable or flagtable */
+        /* Operator 203YYY: Use overridden reference if available */
+        bufr_descriptor bd_enc_local;
+        long overridden_ref;
+        if (self->change_ref_value_operand_ != 0 && self->tableB_override_get_ref_val(bd->code, &overridden_ref) == GRIB_SUCCESS) {
+            bd_enc_local = *bd;
+            bd_enc_local.reference = overridden_ref;
+            bd = &bd_enc_local;
+        }
         if (self->compressedData_) {
             err = self->encode_numeric_array(c, buff, pos, bd, self->numericValues_->v[elementIndex]);
             if (err) {
@@ -1829,8 +1862,6 @@ grib_accessor* BufrDataArray::create_accessor_from_descriptor(grib_accessor* att
             elementAccessor->numberOfSubsets(numberOfSubsets_);
             elementAccessor->subsetNumber(subset);
 
-            expanded_->v[idx]->a = accessor;
-
             if (attribute) {
                 /* attribute->parent=accessor->parent; */
                 /*
@@ -1865,7 +1896,8 @@ grib_accessor* BufrDataArray::create_accessor_from_descriptor(grib_accessor* att
                     return NULL;
                 accessor->add_attribute(attribute, 0);
 
-                attribute = create_attribute_variable("reference", section, GRIB_TYPE_DOUBLE, 0, expanded_->v[idx]->reference, 0, flags);
+                attribute = create_attribute_variable("reference", section, GRIB_TYPE_DOUBLE, 0,
+                    hasRefOverride_[idx] ? refOverrides_[idx] : expanded_->v[idx]->reference, 0, flags);
                 if (!attribute)
                     return NULL;
                 accessor->add_attribute(attribute, 0);
@@ -1914,7 +1946,6 @@ grib_accessor* BufrDataArray::create_accessor_from_descriptor(grib_accessor* att
                     return NULL;
                 accessor->add_attribute(attribute, 0);
             }
-            expanded_->v[idx]->a = accessor;
             break;
         case 9:
             set_creator_name(&creator, expanded_->v[idx]->code);
@@ -1953,7 +1984,8 @@ grib_accessor* BufrDataArray::create_accessor_from_descriptor(grib_accessor* att
                     return NULL;
                 accessor->add_attribute(attribute, 0);
 
-                attribute = create_attribute_variable("reference", section, GRIB_TYPE_DOUBLE, 0, expanded_->v[idx]->reference, 0, flags);
+                attribute = create_attribute_variable("reference", section, GRIB_TYPE_DOUBLE, 0,
+                    hasRefOverride_[idx] ? refOverrides_[idx] : expanded_->v[idx]->reference, 0, flags);
                 if (!attribute)
                     return NULL;
                 accessor->add_attribute(attribute, 0);
@@ -2337,7 +2369,7 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
             idx = compressedData_ ? elementsDescriptorsIndex_->v[0]->v[ide] : elementsDescriptorsIndex_->v[iss]->v[ide];
 
             descriptor = expanded_->v[idx];
-            if (descriptor->nokey == 1) {
+            if (descriptor->nokey == 1 || nokeys_[idx] == 1) {
                 continue; /* Descriptor does not have an associated key e.g. inside op 203YYY */
             }
             elementFromBitmap = NULL;
@@ -2560,6 +2592,11 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
                 }
             }
         }
+    }
+    if (associatedFieldSignificanceAccessor) {
+        associatedFieldSignificanceAccessor->destroy(c);
+        delete associatedFieldSignificanceAccessor;
+        associatedFieldSignificanceAccessor = nullptr;
     }
     (void)extraElement;
     return err;
@@ -2962,14 +2999,17 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
                             break;
 
                         case 5: /* Signify character */
-                            descriptors[i]->width = descriptors[i]->Y * 8;
-                            descriptors[i]->type  = BUFR_DESCRIPTOR_TYPE_STRING;
-                            err                   = codec_element(c, this, iss, buffer, data, &pos, i, 0, elementIndex, dval, sval);
+                        {
+                            bufr_descriptor bd_signify = *(descriptors[i]);
+                            bd_signify.width = descriptors[i]->Y * 8;
+                            bd_signify.type  = BUFR_DESCRIPTOR_TYPE_STRING;
+                            err              = codec_element(c, this, iss, buffer, data, &pos, i, &bd_signify, elementIndex, dval, sval);
                             if (err) return err;
                             if (flag != PROCESS_ENCODE)
                                 grib_iarray_push(elementsDescriptorsIndex, i);
                             elementIndex++;
                             break;
+                        }
                         case 62: // ECC-968: BUFR edition 0 operator! not in the WMO standard
                         case 22: /* Quality information follows */
                             if (descriptors[i]->Y == 0) {
