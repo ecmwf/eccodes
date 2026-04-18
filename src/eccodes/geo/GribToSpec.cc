@@ -882,6 +882,10 @@ bool GribToSpec::get(const std::string& name, bool& value) const
     // FIXME: make sure that 'temp' is not set if CODES_MISSING_LONG
     long temp = CODES_MISSING_LONG;
     int err   = codes_get_long(handle_, key, &temp);
+    if (err == CODES_NOT_FOUND || codes_is_missing(handle_, key, &err) != 0) {
+        return false;
+    }
+
     CHECK_ERROR(err, key);
 
     value = temp != 0;

@@ -80,11 +80,10 @@ bool eckit_geo_use_for_iterator(const grib_handle* h)
 
     // EckitGeoLevel::RESTRICTED
 
-    auto gridType = get_grid_type(h);
-
+    const auto gridType = get_grid_type(h);
     if (gridType == "healpix" ||
         gridType == "unstructured_grid" ||
-        (gridType == "unstructured_grid" && get_number_of_points(h) > 1)) {
+        (gridType == "regular_ll" && get_number_of_points(h) > 1)) {
         return true;
     }
 
@@ -108,7 +107,7 @@ bool eckit_geo_use_for_gridspec(const grib_handle* h)
         return false;
     }
 
-    auto gridType = get_grid_type(h);
+    const auto gridType = get_grid_type(h);
     if (gridType != "rotated_ll") {
         return true;
     }
