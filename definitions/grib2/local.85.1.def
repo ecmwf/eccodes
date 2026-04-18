@@ -27,3 +27,11 @@ unsigned[8]   INBITS : dump;
 # FA scaling factor
 signed[8]     FMULTM = 1 : dump;
 signed[8]     FMULTE = 0 : dump;
+
+# FA function for user post-processing
+transient faFunction = "";
+transient faFunctionArg0 = "";
+transient faFunctionArg1 = "";
+transient faFunctionArg2 = "";
+transient faFunctionArg3 = "";
+transient faFunctionArg4 = "";
