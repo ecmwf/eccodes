@@ -68,8 +68,8 @@ int Longitudes::unpack_double(double* val, size_t* len)
     // ECC-1525 Performance: We do not need the values to be decoded
     iter = grib_iterator_new(get_enclosing_handle(), GRIB_GEOITERATOR_NO_VALUES, &ret);
     if (ret != GRIB_SUCCESS) {
-        grib_iterator_delete(iter);
         *len = 0;
+        grib_iterator_delete(iter);
         grib_context_log(context_, GRIB_LOG_ERROR, "longitudes: Unable to create iterator");
         return ret;
     }
@@ -142,6 +142,7 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     // Performance: We do not need the values to be decoded
     grib_iterator* iter = grib_iterator_new(a->get_enclosing_handle(), GRIB_GEOITERATOR_NO_VALUES, &ret);
     if (ret != GRIB_SUCCESS) {
+        *len = 0;
         grib_iterator_delete(iter);
         grib_context_log(c, GRIB_LOG_ERROR, "longitudes: Unable to create iterator");
         return ret;
