@@ -4,10 +4,10 @@ on:
   # Trigger the workflow on push to master or develop, except tag creation
   push:
     branches:
-      - "master"
-      - "develop"
+    - "master"
+    - "develop"
     tags-ignore:
-      - "**"
+    - "**"
 
   # Trigger the workflow on pull request
   pull_request:
@@ -15,18 +15,39 @@ on:
     - "tests/**"
     - "data/**"
     - "deprecated/**"
+    - "bamboo/**"
+    - "confluence/**"
+    - "doxygen/**"
+    - "html/**"
+    - "python_wrapper/**"
 
   # Trigger the workflow manually
-  workflow_dispatch: ~
+  workflow_dispatch:
 
   # Trigger after public PR approved for CI
   pull_request_target:
     types: [labeled]
 
 jobs:
+  # Run CI for own package
+  smoke-build:
+    name: smoke-build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Checkout ecbuild
+      run: git clone --depth 1 https://github.com/ecmwf/ecbuild.git ../ecbuild
+    - name: Configure
+      run: cmake -S . -B build -DENABLE_AEC=OFF
+    - name: Build
+      run: make -C build -j"$(nproc)"
+    - name: Test
+      run: ctest --test-dir build -j"$(nproc)" --output-on-failure
+
   # Run CI including downstream packages on self-hosted runners
   downstream-ci:
     name: downstream-ci
+    needs: [smoke-build]
     if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
     uses: ecmwf/downstream-ci/.github/workflows/downstream-ci.yml@main
     with:
@@ -43,18 +64,19 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - name: Dispatch private downstream CI
-        uses: ecmwf/dispatch-private-downstream-ci@v1
-        with:
-          token: ${{ secrets.GH_REPO_READ_TOKEN }}
-          owner: ecmwf
-          repository: private-downstream-ci
-          event_type: downstream-ci
-          payload: '{"eccodes": "ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}"}'
+    - name: Dispatch private downstream CI
+      uses: ecmwf/dispatch-private-downstream-ci@v1
+      with:
+        token: ${{ secrets.GH_REPO_READ_TOKEN }}
+        owner: ecmwf
+        repository: private-downstream-ci
+        event_type: downstream-ci
+        payload: '{"eccodes": "ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}"}'
 
   # Build downstream packages on HPC
   downstream-ci-hpc:
     name: downstream-ci-hpc
+    needs: [smoke-build]
     if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
     uses: ecmwf/downstream-ci/.github/workflows/downstream-ci-hpc.yml@main
     with:
@@ -70,26 +92,26 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - name: Dispatch private downstream CI
-        uses: ecmwf/dispatch-private-downstream-ci@v1
-        with:
-          token: ${{ secrets.GH_REPO_READ_TOKEN }}
-          owner: ecmwf
-          repository: private-downstream-ci
-          event_type: downstream-ci-hpc
-          payload: '{"eccodes": "ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}","skip_matrix_jobs": "nvidia-22.11"}'
+    - name: Dispatch private downstream CI
+      uses: ecmwf/dispatch-private-downstream-ci@v1
+      with:
+        token: ${{ secrets.GH_REPO_READ_TOKEN }}
+        owner: ecmwf
+        repository: private-downstream-ci
+        event_type: downstream-ci-hpc
+        payload: '{"eccodes": "ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}","skip_matrix_jobs": "nvidia-22.11"}'
 
   notify:
     runs-on: ubuntu-latest
     needs:
-      - downstream-ci
-      - private-downstream-ci
-      - downstream-ci-hpc
-      - private-downstream-ci-hpc
+    - downstream-ci
+    - private-downstream-ci
+    - downstream-ci-hpc
+    - private-downstream-ci-hpc
     if: ${{ always() && !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
     steps:
-      - name: Trigger Teams notification
-        uses: ecmwf/notify-teams@v1
-        with:
-          incoming_webhook: ${{ secrets.MS_TEAMS_INCOMING_WEBHOOK }}
-          needs_context: ${{ toJSON(needs) }}
+    - name: Trigger Teams notification
+      uses: ecmwf/notify-teams@v1
+      with:
+        incoming_webhook: ${{ secrets.MS_TEAMS_INCOMING_WEBHOOK }}
+        needs_context: ${{ toJSON(needs) }}
