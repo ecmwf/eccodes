@@ -35,8 +35,8 @@
 #include "eckit/geo/util/mutex.h"
 #include "eckit/types/FloatCompare.h"
 
-#include "eccodes/geo/EckitMainInit.h"
 #include "eccodes/Spec.h"
+#include "eccodes/geo/eckit.h"
 
 #include "grib_api_internal.h"
 

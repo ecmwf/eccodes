@@ -12,6 +12,7 @@
 #include "GridSpec.h"
 
 #include "eccodes_config.h"
+#include "eccodes/geo/eckit.h"
 
 #if defined(HAVE_ECKIT_GEO)
     #include <cstring>
@@ -22,7 +23,6 @@
 
     #include "geo/GribFromSpec.h"
     #include "geo/GribToSpec.h"
-    #include "geo/EckitMainInit.h"
 #endif
 
 
@@ -43,47 +43,6 @@ long GridSpec::get_native_type()
     return GRIB_TYPE_STRING;
 }
 
-//void GridSpec::print_warning_feature_not_implemented()
-// {
-//     if (!warned_) {
-//         fprintf(stderr, "ECCODES WARNING :  Key gridSpec is not yet implemented. Work in progress...\n");
-//         warned_ = true;
-//     }
-// }
-
-#if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
-static bool eckit_can_handle_it(const grib_handle* h, std::string& reason)
-{
-    std::string key = "iScansNegatively";
-    long iNeg = 0;
-    if (grib_get_long(h, key.c_str(), &iNeg) == GRIB_SUCCESS && iNeg == 1) {
-        reason = key + "=1: Scanning mode not supported";
-        return false;
-    }
-    key = "jPointsAreConsecutive";
-    long jCons = 0;
-    if (grib_get_long(h, key.c_str(), &jCons) == GRIB_SUCCESS && jCons == 1) {
-        reason = key + "=1: Scanning mode not supported";
-        return false;
-    }
-    key = "alternativeRowScanning";
-    long altRow = 0;
-    if (grib_get_long(h, key.c_str(), &altRow) == GRIB_SUCCESS && altRow == 1) {
-        reason = key + "=1: Scanning mode not supported";
-        return false;
-    }
-
-    char gridType[128] = {0,};
-    size_t gtlen = sizeof(gridType);
-    int err = grib_get_string(h, "gridType", gridType, &gtlen);
-    if (!err && STR_EQUAL(gridType, "rotated_ll")) {
-        reason = "gridType=rotated_ll: Not supported yet";
-        return false;
-    }
-
-    return true;
-}
-#endif
 
 int GridSpec::pack_string(const char* v, size_t* len)
 {
@@ -92,9 +51,8 @@ int GridSpec::pack_string(const char* v, size_t* len)
     auto* h = get_enclosing_handle();
     ECCODES_ASSERT(h);
 
-    std::string reason;
-    if (!eckit_can_handle_it(h, reason)) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "GridSpec::pack_string %s", reason.c_str());
+    if (!eccodes::geo::eckit_geo_use_for_gridspec(h)) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "GridSpec::pack_string not available");
         return GRIB_NOT_IMPLEMENTED;
     }
 
@@ -136,9 +94,8 @@ int GridSpec::unpack_string(char* v, size_t* len)
     auto* h = get_enclosing_handle();
     ECCODES_ASSERT(h);
 
-    std::string reason;
-    if (!eckit_can_handle_it(h, reason)) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "GridSpec::unpack_string %s", reason.c_str());
+    if (!eccodes::geo::eckit_geo_use_for_gridspec(h)) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "GridSpec::unpack_string not available");
         return GRIB_NOT_IMPLEMENTED;
     }
     ECCODES_ASSERT(0 < *len);

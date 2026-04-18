@@ -8,18 +8,19 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "ProjString.h"
+#include "eccodes/accessor/ProjString.h"
 
-// #if defined(HAVE_ECKIT_GEO)
-//     #include <cstdio>
-//     #include <memory>
+#include "eccodes/geo/eckit.h"
 
-//     #include "eckit/geo/Grid.h"
-//     #include "eckit/geo/Exceptions.h"
+#if defined(HAVE_ECKIT_GEO)
+    #include <cstdio>
+    #include <memory>
 
-//     #include "eccodes/geo/EckitMainInit.h"
-//     #include "eccodes/geo/GribToSpec.h"
-// #endif
+    #include "eckit/geo/Grid.h"
+    #include "eckit/geo/Exceptions.h"
+
+    #include "geo/GribToSpec.h"
+#endif
 
 eccodes::accessor::ProjString _grib_accessor_proj_string;
 eccodes::Accessor* grib_accessor_proj_string = &_grib_accessor_proj_string;
@@ -246,38 +247,37 @@ int ProjString::unpack_string(char* v, size_t* len)
 
     ECCODES_ASSERT(endpoint_ == ENDPOINT_SOURCE || endpoint_ == ENDPOINT_TARGET);
 
-// #if defined(HAVE_ECKIT_GEO)
-//     const int eckit_geo = h->context->eckit_geo;  // check environment variable
-//     if (eckit_geo != 0) {
-//         eccodes::geo::eckit_main_init();
-//         grib_context_log(h->context, GRIB_LOG_DEBUG, "ProjString: using eckit/geo");
-//         try {
-//             geo::GribToSpec spec(h);
-//             std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(spec));
+#if defined(HAVE_ECKIT_GEO)
+    if (eccodes::geo::eckit_geo_use_for_projstring(h)) {
+        eccodes::geo::eckit_main_init();
+        grib_context_log(h->context, GRIB_LOG_DEBUG, "ProjString: using eckit/geo");
+        try {
+            geo::GribToSpec spec(h);
+            std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(spec));
 
-//             auto proj_str = grid->projection().proj_str();
+            auto proj_str = grid->projection().proj_str();
 
-//             auto buf_size = *len;
-//             if (*len = std::snprintf(v, buf_size, "%s", proj_str.c_str()); *len >= buf_size) {
-//                 grib_context_log(h->context, GRIB_LOG_ERROR,
-//                                  "%s: Buffer too small for %s. It is at least %zu bytes long (len=%zu)",
-//                                  class_name_, name_, *len, buf_size);
-//                 *len = buf_size;
-//                 return GRIB_BUFFER_TOO_SMALL;
-//             }
+            auto buf_size = *len;
+            if (*len = std::snprintf(v, buf_size, "%s", proj_str.c_str()); *len >= buf_size) {
+                grib_context_log(h->context, GRIB_LOG_ERROR,
+                                 "%s: Buffer too small for %s. It is at least %zu bytes long (len=%zu)",
+                                 class_name_, name_, *len, buf_size);
+                *len = buf_size;
+                return GRIB_BUFFER_TOO_SMALL;
+            }
 
-//             return CODES_SUCCESS;
-//         }
-//         catch (eckit::geo::Exception& e) {
-//             grib_context_log(h->context, GRIB_LOG_ERROR, "ProjString::unpack_string: geo::Exception thrown (%s)", e.what());
-//         }
-//         catch (std::exception& e) {
-//             grib_context_log(h->context, GRIB_LOG_ERROR, "ProjString::unpack_string: Exception thrown (%s)", e.what());
-//         }
+            return CODES_SUCCESS;
+        }
+        catch (eckit::geo::Exception& e) {
+            grib_context_log(h->context, GRIB_LOG_ERROR, "ProjString::unpack_string: geo::Exception thrown (%s)", e.what());
+        }
+        catch (std::exception& e) {
+            grib_context_log(h->context, GRIB_LOG_ERROR, "ProjString::unpack_string: Exception thrown (%s)", e.what());
+        }
 
-//         return GRIB_GEOCALCULUS_PROBLEM;
-//     }
-// #endif
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
+#endif
 
     size_t l = 100;  // Safe bet
     if (*len < l) {

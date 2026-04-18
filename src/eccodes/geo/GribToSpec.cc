@@ -30,6 +30,7 @@
 #include "eckit/types/Fraction.h"
 #include "eckit/utils/SafeCasts.h"
 
+#include "eccodes/geo/eckit.h"
 #include "eccodes/grib_api_internal.h"
 
 
@@ -773,7 +774,7 @@ GribToSpec::GribToSpec(codes_handle* h) :
 {
     ASSERT(handle_ != nullptr);
 
-    if (static bool do_fix = codes_getenv("ECCODES_GRIB_GEO_FIXES") != nullptr; do_fix) {
+    if (eckit_geo_use_grib_fixes(h)) {
         using fixes_type = std::map<std::string, const cache_type>;
         static const fixes_type FIXES{
 
