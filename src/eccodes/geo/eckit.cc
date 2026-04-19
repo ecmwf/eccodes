@@ -101,8 +101,7 @@ bool eckit_geo_use_for_gridspec(const grib_handle* h)
     // EckitGeoLevel::RESTRICTED
 
     long l = 0;
-    if ((grib_get_long(h, "iScansNegatively", &l) == GRIB_SUCCESS && l == 1) ||
-        (grib_get_long(h, "jPointsAreConsecutive", &l) == GRIB_SUCCESS && l == 1) ||
+    if ((grib_get_long(h, "jPointsAreConsecutive", &l) == GRIB_SUCCESS && l == 1) ||
         (grib_get_long(h, "alternativeRowScanning", &l) == GRIB_SUCCESS && l == 1)) {
         return false;
     }
