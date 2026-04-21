@@ -1,13 +1,14 @@
-if (MTG2Switch < 1){
- alias mars.step = stepRange;
-} else {
- alias mars.step = endStep;
- alias mars.timespan = timespan;
+if (edition == 2) {
+  if (MTG2Switch < 1) {
+    alias mars.step = stepRange;
+  } else {
+    alias mars.step = endStep;
+    alias mars.timespan = timespan;
+  }
 }
-
 # We need this because 'postProcessing' is defined later
 #meta ecpt_method sprintf("%s", postProcessing) : no_copy;
 #alias mars.method = ecpt_method;
 
 meta marsQuantile sprintf("%d:%d",quantileValue,totalNumberOfQuantiles);
-alias   mars.quantile = marsQuantile;
+alias mars.quantile = marsQuantile;

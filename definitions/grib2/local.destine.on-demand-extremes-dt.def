@@ -6,7 +6,7 @@ ascii[8] georef = "s0000000" : dump ;
 alias mars.georef = georef;
 
 # ECC-2222: We want model in on-demand-extremes-dt
-# Concept and aliasing into mars namespace must be done post metadata
+# Concept and aliasing into mars namespace must be done post metadata
 # otherwise the metadata for the modelName are not yet defined since
 # they come in Section 4
-# Thus we use logic in post_meta_data.hook for productionstatus 12/13
+# Thus we use logic in post_meta_data.hook for productionstatus 12/13

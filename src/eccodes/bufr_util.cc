@@ -1253,7 +1253,7 @@ static int codes_bufr_header_get_string_(codes_bufr_header* bh, const char* key,
 int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* val, size_t* len)
 {
     auto result = eccodes::handleExceptions(codes_bufr_header_get_string_, bh, key, val, len);
-    return eccodes::updateErrorAndReturnValue(result, NULL);
+    return eccodes::getErrorCode(result);
 }
 
 // Returns 1 if the BUFR key is in the header and 0 if it is in the data section

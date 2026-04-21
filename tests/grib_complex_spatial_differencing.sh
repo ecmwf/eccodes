@@ -100,6 +100,47 @@ check_complex_packing ${data_dir}/reduced_latlon_surface.grib2 grid_complex_spat
 check_complex_packing ${data_dir}/reduced_latlon_surface.grib2 grid_complex 0
 
 
+echo "Test: ECC-511: grid_complex_spatial_differencing..."
+# --------------------------------------------------------
+infile=${data_dir}/gfs.complex.mvmu.grib2
+tempSimple=temp.$label.simple.grib
+${tools_dir}/grib_set -r -s packingType=grid_simple $infile $tempSimple
+grib_check_key_equals $tempSimple bitmapPresent,numberOfMissing,numberOfValues,numberOfPoints "1 556901 481339 1038240"
+stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $tempSimple`
+[ "$stats" = "2.81 0.00 0.30" ]
+
+# Repack
+${tools_dir}/grib_copy -r $infile $temp2
+# The values do not have to be be bit-identical. The high effort to make them bit-identical is not justified.
+# Therefore, we compare the values with a relative tolerance.
+${tools_dir}/grib_compare -R all=0.3 -c data:n $infile $temp2
+grib_check_key_equals $temp2 bitsPerValue 9  # Note: The input file has bpv=9
+
+${tools_dir}/grib_set -rs optimizeScaleFactor=1 $infile $temp2
+${tools_dir}/grib_compare $infile $temp2
+
+# Simple to grid_complex
+tempComplex=temp.$label.complex.grib
+#${tools_dir}/grib_set -r -s packingType=grid_complex  $tempSimple $tempComplex # TODO: fix re-packing 
+${tools_dir}/grib_set -s packingType=grid_complex  $tempSimple $tempComplex
+grib_check_key_equals $tempComplex packingType,bitmapPresent,numberOfMissing,numberOfValues,numberOfPoints "grid_complex 1 556901 481339 1038240"
+stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $tempComplex`
+[ "$stats" = "2.81 0.00 0.30" ]
+rm -f $tempComplex
+
+# Simple to grid_complex_spatial_differencing
+tempComplexSD=temp.$label.complexSD.grib
+#${tools_dir}/grib_set -r -s packingType=grid_complex_spatial_differencing  $tempSimple $tempComplexSD # TODO: fix re-packing
+${tools_dir}/grib_set -s packingType=grid_complex_spatial_differencing  $tempSimple $tempComplexSD
+grib_check_key_equals $tempComplexSD packingType "grid_complex_spatial_differencing"
+grib_check_key_equals $tempComplexSD bitmapPresent,numberOfMissing,numberOfValues,numberOfPoints "1 556901 481339 1038240"
+stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $tempComplexSD`
+[ "$stats" = "2.81 0.00 0.30" ]
+rm -f $tempComplexSD
+rm -f $tempSimple
+
+
+
 # Error conditions
 # -----------------
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
