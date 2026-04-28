@@ -1921,7 +1921,11 @@ grib_accessor* BufrDataArray::create_accessor_from_descriptor(grib_accessor* att
                 elementAccessor->numericValues(numericValues_);
                 elementAccessor->stringValues(stringValues_);
                 elementAccessor->compressedData(compressedData_);
-                elementAccessor->type(expanded_->v[idx]->type);
+                // Signify character (F=2, X=5) overrides type to STRING
+                if (expanded_->v[idx]->F == 2 && expanded_->v[idx]->X == 5)
+                    elementAccessor->type(BUFR_DESCRIPTOR_TYPE_STRING);
+                else
+                    elementAccessor->type(expanded_->v[idx]->type);
                 elementAccessor->numberOfSubsets(numberOfSubsets_);
                 elementAccessor->subsetNumber(subset);
 
