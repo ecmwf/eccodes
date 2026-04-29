@@ -199,7 +199,8 @@ static grib_iterator* grib_iterator_new_(const grib_handle* ch, unsigned long fl
             *error = GRIB_NOT_IMPLEMENTED;
             return nullptr;
         }
-        catch (eckit::geo::exception::GridError&) {
+        catch (eckit::geo::exception::GridError& e) {
+            grib_context_log(ch->context, GRIB_LOG_ERROR, "grib_iterator_new: geo::Exception thrown (%s)", e.what());
             *error = GRIB_WRONG_GRID;
             return nullptr;
         }

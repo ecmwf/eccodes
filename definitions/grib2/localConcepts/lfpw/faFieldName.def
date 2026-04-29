@@ -152,6 +152,8 @@
 'HUMI_RELAT' = {
   FMULTM                           =               1;
   FMULTE                           =               2;
+  faFunction                       =      "fixrhmin";
+  faFunctionArg0                   =           "100";
   discipline                       =               0;
   parameterCategory                =               1;
   parameterNumber                  =               1;
@@ -264,6 +266,8 @@
 'HUMI_RELAT' = {
   FMULTM                           =               1;
   FMULTE                           =               2;
+  faFunction                       =      "fixrhmin";
+  faFunctionArg0                   =           "100";
   discipline                       =               0;
   parameterCategory                =               1;
   parameterNumber                  =               1;
@@ -979,6 +983,8 @@
 'CLSHUMI.RELATIVE' = {
   FMULTM                           =               1;
   FMULTE                           =               2;
+  faFunction                       =      "fixrhmin";
+  faFunctionArg0                   =           "100";
   discipline                       =               0;
   level                            =               2;
   parameterCategory                =               1;
@@ -993,6 +999,8 @@
   typeOfFirstFixedSurface          =             103;
 }
 'CLSMAXI.HUMI.REL' = {
+  faFunction                       =      "fixrhmin";
+  faFunctionArg0                   =           "100";
   discipline                       =               0;
   level                            =               2;
   parameterCategory                =               1;
@@ -1011,6 +1019,8 @@
   typeOfStatisticalProcessing      =               2;
 }
 'CLSMINI.HUMI.REL' = {
+  faFunction                       =      "fixrhmin";
+  faFunctionArg0                   =           "100";
   discipline                       =               0;
   level                            =               2;
   parameterCategory                =               1;
