@@ -357,21 +357,21 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Low cloud cover
-'lcc' = {
+'lcc_wu' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Medium cloud cover
-'mcc' = {
+'mcc_wu' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 4 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #High cloud cover
-'hcc' = {
+'hcc_wu' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 5 ;
@@ -540,7 +540,7 @@
 	 typeOfStatisticalProcessing = 1 ;
 	}
 #Forecast albedo
-'al' = {
+'al_wu' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 1 ;
@@ -603,14 +603,14 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
 #Snow depth water equivalent
-'sd' = {
+'sd_wu' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 60 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Total Cloud Cover
-'tcc' = {
+'tcc_wu' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 1 ;

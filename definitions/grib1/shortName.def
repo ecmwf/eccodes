@@ -489,17 +489,17 @@
 	 indicatorOfParameter = 10 ;
 	}
 #Large-scale precipitation
-'lsp' = {
+'lsp_wu' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 62 ;
 	}
 #Large-scale precipitation
-'lsp' = {
+'lsp_wu' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 62 ;
 	}
 #Large-scale precipitation
-'lsp' = {
+'lsp_wu' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 62 ;
 	}
@@ -534,47 +534,47 @@
 	 indicatorOfParameter = 72 ;
 	}
 #Low cloud cover
-'lcc' = {
+'lcc_wu' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 73 ;
 	}
 #Low cloud cover
-'lcc' = {
+'lcc_wu' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 73 ;
 	}
 #Low cloud cover
-'lcc' = {
+'lcc_wu' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 73 ;
 	}
 #Medium cloud cover
-'mcc' = {
+'mcc_wu' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 74 ;
 	}
 #Medium cloud cover
-'mcc' = {
+'mcc_wu' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 74 ;
 	}
 #Medium cloud cover
-'mcc' = {
+'mcc_wu' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 74 ;
 	}
 #High cloud cover
-'hcc' = {
+'hcc_wu' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 75 ;
 	}
 #High cloud cover
-'hcc' = {
+'hcc_wu' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 75 ;
 	}
 #High cloud cover
-'hcc' = {
+'hcc_wu' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 75 ;
 	}
@@ -669,17 +669,17 @@
 	 indicatorOfParameter = 76 ;
 	}
 #Forecast albedo
-'al' = {
+'al_wu' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 84 ;
 	}
 #Forecast albedo
-'al' = {
+'al_wu' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 84 ;
 	}
 #Forecast albedo
-'al' = {
+'al_wu' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 84 ;
 	}
@@ -1977,51 +1977,51 @@
 	 indicatorOfParameter = 85 ;
 	}
 #Snowfall water equivalent
-'sf' = {
+'sf_wu' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 65 ;
 	}
 #Snowfall water equivalent
-'sf' = {
+'sf_wu' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 65 ;
 	}
 #Snowfall water equivalent
-'sf' = {
+'sf_wu' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 65 ;
 	}
 #Total Cloud Cover
-'tcc' = {
+'tcc_wu' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 71 ;
 	}
 #Total Cloud Cover
-'tcc' = {
+'tcc_wu' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 71 ;
 	}
 #Total Cloud Cover
-'tcc' = {
+'tcc_wu' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 71 ;
 	}
 #Total Precipitation
-'tp' = {
+'tp_wu' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 61 ;
 	 indicatorOfTypeOfLevel = 1 ;
 	 level = 0 ;
 	}
 #Total Precipitation
-'tp' = {
+'tp_wu' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 61 ;
 	 indicatorOfTypeOfLevel = 1 ;
 	 level = 0 ;
 	}
 #Total Precipitation
-'tp' = {
+'tp_wu' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 61 ;
 	 indicatorOfTypeOfLevel = 1 ;

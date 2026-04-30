@@ -816,7 +816,7 @@
 	 parameterNumber = 32 ;
 	}
 #Large-scale precipitation
-'lsp' = {
+'lsp_wu' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 54 ;
@@ -830,19 +830,19 @@
 	 parameterNumber = 11 ;
 	}
 #Low cloud cover
-'lcc' = {
+'lcc_wu' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 3 ;
 	}
 #Medium cloud cover
-'mcc' = {
+'mcc_wu' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 4 ;
 	}
 #High cloud cover
-'hcc' = {
+'hcc_wu' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 5 ;
@@ -5226,7 +5226,7 @@
 	 typeOfStatisticalProcessing = 1 ;
 	}
 #Convective precipitation
-'cp' = {
+'cp_wu' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 37 ;
@@ -16101,7 +16101,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	}
 #Forecast albedo
-'al' = {
+'al_wu' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 1 ;
@@ -22943,13 +22943,13 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #Snow depth water equivalent
-'sd' = {
+'sd_wu' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 60 ;
 	}
 #Snowfall water equivalent
-'sf' = {
+'sf_wu' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 53 ;
@@ -22957,7 +22957,7 @@
 	 typeOfStatisticalProcessing = 1 ;
 	}
 #Total Cloud Cover
-'tcc' = {
+'tcc_wu' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 1 ;
@@ -22989,7 +22989,7 @@
 	 scaleFactorOfSecondFixedSurface = 1 ;
 	}
 #Total Precipitation
-'tp' = {
+'tp_wu' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;

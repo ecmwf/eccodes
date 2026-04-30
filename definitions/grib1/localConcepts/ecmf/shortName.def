@@ -17525,17 +17525,17 @@
 	 indicatorOfParameter = 139 ;
 	}
 #Snow depth water equivalent
-'sd' = {
+'sd_wu' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 141 ;
 	}
 #Snowfall water equivalent
-'sf' = {
+'sf_wu' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 144 ;
 	}
 #Total Cloud Cover
-'tcc' = {
+'tcc_wu' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 164 ;
 	}
@@ -17550,7 +17550,7 @@
 	 indicatorOfParameter = 171 ;
 	}
 #Total Precipitation
-'tp' = {
+'tp_wu' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 228 ;
 	}

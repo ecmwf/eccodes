@@ -167,17 +167,17 @@
 	 indicatorOfParameter = 72 ;
 	}
 #Low cloud cover
-'lcc' = {
+'lcc_wu' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 73 ;
 	}
 #Medium cloud cover
-'mcc' = {
+'mcc_wu' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 74 ;
 	}
 #High cloud cover
-'hcc' = {
+'hcc_wu' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 75 ;
 	}
@@ -281,7 +281,7 @@
 	 indicatorOfParameter = 163 ;
 	}
 #Forecast albedo
-'al' = {
+'al_wu' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 84 ;
 	}
@@ -936,12 +936,12 @@
 	 indicatorOfParameter = 85 ;
 	}
 #Snow depth water equivalent
-'sd' = {
+'sd_wu' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 65 ;
 	}
 #Total Cloud Cover
-'tcc' = {
+'tcc_wu' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 71 ;
 }
