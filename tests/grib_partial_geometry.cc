@@ -15,7 +15,6 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/stat.h>
 
 #define MAX_VAL_LEN  1024
 #define METADATA_LEN 17000 // guess! works for nearly all GRIB2
