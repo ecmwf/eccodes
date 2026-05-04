@@ -42,6 +42,7 @@ list(APPEND test_c_bins
     grib_set_force
     grib_run_length_packing
     grib_partial_message
+    grib_partial_geometry
     grib_codedValues_as_bytes
     grib_ecc-1467
     grib_ecc-1431
@@ -219,6 +220,7 @@ if( HAVE_BUILD_TOOLS )
         grib_run_length_packing
         grib_grid_space_view
         grib_partial_message
+        grib_partial_geometry
         grib_true_imagery
         grib_headers_only
         grib_uerra
