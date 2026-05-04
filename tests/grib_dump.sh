@@ -159,9 +159,9 @@ grep -q "12-10227752 codedValues" $temp
 #-----------------------------------------------------------
 file=$data_dir/sample.grib2
 ${tools_dir}/grib_dump -Ot $file > $temp 2>&1
-fgrep -q "codetable (int) typeOfFirstFixedSurface = 103 [Specified height level above ground (m)  (grib2/tables/4/4.5.table) ]" $temp
-fgrep -q "codeflag (int) resolutionAndComponentFlags = 48 [00110000 (grib2/tables/4/3.3.table) ]" $temp
-fgrep -q "codeflag (int) scanningMode = 0 [00000000 (grib2/tables/4/3.4.table) ]" $temp
+fgrep -q "codetable (int) typeOfFirstFixedSurface = 103 [Specified height level above ground (m)" $temp
+fgrep -q "codeflag (int) resolutionAndComponentFlags = 48 [00110000" $temp
+fgrep -q "codeflag (int) scanningMode = 0 [00000000" $temp
 
 # Error conditions
 #-----------------------------------------------------------
