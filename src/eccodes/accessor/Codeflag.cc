@@ -14,7 +14,7 @@ eccodes::AccessorBuilder<eccodes::accessor::Codeflag> _grib_accessor_codeflag_bu
 
 static int test_bit(long a, long b)
 {
-    DEBUG_ASSERT(b >= 0);
+    if (b < 0) return 0;
     return a & (1 << b);
 }
 

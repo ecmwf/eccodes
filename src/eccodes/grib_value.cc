@@ -17,6 +17,7 @@
 #include <float.h>
 #include <limits>
 #include <type_traits>
+#include <vector>
 #include "ExceptionHandler.h"
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
@@ -1524,25 +1525,27 @@ template <typename T>
 static int _grib_get_array_internal(const grib_handle* h, grib_accessor* a, T* val, size_t buffer_len, size_t* decoded_length)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
-    if (a) {
-        int err = _grib_get_array_internal<T>(h, a->same_, val, buffer_len, decoded_length);
 
-        if (err == GRIB_SUCCESS) {
-            size_t len = buffer_len - *decoded_length;
-            if constexpr (std::is_same<T, double>::value) {
-                err = a->unpack_double(val + *decoded_length, &len);
-            }
-            else if constexpr (std::is_same<T, float>::value) {
-                err = a->unpack_float(val + *decoded_length, &len);
-            }
-            *decoded_length += len;
+    // Collect the same_ chain into a list to avoid stack overflow from deep recursion
+    std::vector<grib_accessor*> chain;
+    for (grib_accessor* curr = a; curr; curr = curr->same_)
+        chain.push_back(curr);
+
+    // Process in reverse order (tail first) to match original recursive semantics
+    for (size_t i = chain.size(); i > 0; i--) {
+        size_t len = buffer_len - *decoded_length;
+        int err;
+        if constexpr (std::is_same<T, double>::value) {
+            err = chain[i - 1]->unpack_double(val + *decoded_length, &len);
         }
-
-        return err;
+        else if constexpr (std::is_same<T, float>::value) {
+            err = chain[i - 1]->unpack_float(val + *decoded_length, &len);
+        }
+        *decoded_length += len;
+        if (err != GRIB_SUCCESS)
+            return err;
     }
-    else {
-        return GRIB_SUCCESS;
-    }
+    return GRIB_SUCCESS;
 }
 
 int grib_get_double_array_internal(const grib_handle* h, const char* name, double* val, size_t* length)
@@ -1769,20 +1772,20 @@ int grib_get_offset(const grib_handle* ch, const char* key, size_t* val)
 
 static int grib_get_string_array_internal_(const grib_handle* h, grib_accessor* a, char** val, size_t buffer_len, size_t* decoded_length)
 {
-    if (a) {
-        int err = grib_get_string_array_internal_(h, a->same_, val, buffer_len, decoded_length);
+    // Collect the same_ chain into a list to avoid stack overflow from deep recursion
+    std::vector<grib_accessor*> chain;
+    for (grib_accessor* curr = a; curr; curr = curr->same_)
+        chain.push_back(curr);
 
-        if (err == GRIB_SUCCESS) {
-            size_t len = buffer_len - *decoded_length;
-            err        = a->unpack_string_array(val + *decoded_length, &len);
-            *decoded_length += len;
-        }
-
-        return err;
+    // Process in reverse order (tail first) to match original recursive semantics
+    for (size_t i = chain.size(); i > 0; i--) {
+        size_t len = buffer_len - *decoded_length;
+        int err    = chain[i - 1]->unpack_string_array(val + *decoded_length, &len);
+        *decoded_length += len;
+        if (err != GRIB_SUCCESS)
+            return err;
     }
-    else {
-        return GRIB_SUCCESS;
-    }
+    return GRIB_SUCCESS;
 }
 
 static int grib_get_string_array_(const grib_handle* h, const char* name, char** val, size_t* length)
@@ -1823,20 +1826,20 @@ int grib_get_string_array(const grib_handle* h, const char* name, char** val, si
 
 static int _grib_get_long_array_internal(const grib_handle* h, grib_accessor* a, long* val, size_t buffer_len, size_t* decoded_length)
 {
-    if (a) {
-        int err = _grib_get_long_array_internal(h, a->same_, val, buffer_len, decoded_length);
+    // Collect the same_ chain into a list to avoid stack overflow from deep recursion
+    std::vector<grib_accessor*> chain;
+    for (grib_accessor* curr = a; curr; curr = curr->same_)
+        chain.push_back(curr);
 
-        if (err == GRIB_SUCCESS) {
-            size_t len = buffer_len - *decoded_length;
-            err        = a->unpack_long(val + *decoded_length, &len);
-            *decoded_length += len;
-        }
-
-        return err;
+    // Process in reverse order (tail first) to match original recursive semantics
+    for (size_t i = chain.size(); i > 0; i--) {
+        size_t len = buffer_len - *decoded_length;
+        int err    = chain[i - 1]->unpack_long(val + *decoded_length, &len);
+        *decoded_length += len;
+        if (err != GRIB_SUCCESS)
+            return err;
     }
-    else {
-        return GRIB_SUCCESS;
-    }
+    return GRIB_SUCCESS;
 }
 
 int grib_get_long_array_internal(grib_handle* h, const char* name, long* val, size_t* length)

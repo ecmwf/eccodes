@@ -60,6 +60,9 @@ private:
     bufr_descriptors_array* expanded_ = nullptr;
     ExpandedDescriptors* expandedAccessor_ = nullptr;
     int* canBeMissing_ = nullptr;
+    int* nokeys_ = nullptr;
+    long* refOverrides_ = nullptr;
+    int* hasRefOverride_ = nullptr;
     long numberOfSubsets_ = 0;
     long compressedData_ = 0;
     grib_vdarray* numericValues_ = nullptr;
