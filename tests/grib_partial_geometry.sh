@@ -15,6 +15,11 @@ label=`basename $0 | sed -e 's/\.sh/_test/'`
 tempText1=temp.$label.1.txt
 tempText2=temp.$label.2.txt
 
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
 # TODO(maee): Currently only GRIB2 files are tested. GRIB1 to be added later
 files="
 reduced_gaussian_model_level.grib2

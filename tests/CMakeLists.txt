@@ -42,7 +42,6 @@ list(APPEND test_c_bins
     grib_set_force
     grib_run_length_packing
     grib_partial_message
-    grib_partial_geometry
     grib_codedValues_as_bytes
     grib_ecc-1467
     grib_ecc-1431
@@ -553,6 +552,10 @@ if( HAVE_BUILD_TOOLS )
         ecbuild_add_executable( TARGET    extract_offsets
                                 NOINSTALL
                                 SOURCES   extract_offsets.cc
+                                LIBS      eccodes )
+        ecbuild_add_executable( TARGET    grib_partial_geometry
+                                NOINSTALL
+                                SOURCES   grib_partial_geometry.cc
                                 LIBS      eccodes )
     endif()
 
