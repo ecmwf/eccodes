@@ -140,7 +140,6 @@ void Factory<T>::list(std::ostream& out)
 {
     std::lock_guard<std::recursive_mutex> guard(mutex_);
     const grib_context* context = grib_context_get_default();
-    const char* sep             = "";
     for (auto const& entry : builders_) {
         grib_context_log(context, GRIB_LOG_DEBUG, "%s, ", entry.first.get().c_str());
     }
