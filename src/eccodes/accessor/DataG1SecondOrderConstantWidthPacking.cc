@@ -180,7 +180,7 @@ int DataG1SecondOrderConstantWidthPacking::unpack_double(double* values, size_t*
 
 int DataG1SecondOrderConstantWidthPacking::pack_double(const double* cval, size_t* len)
 {
-    grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s: Not implemented", accessor_type().get().c_str(), __func__);
+    grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s: Not implemented", accessor_type().c_str(), __func__);
     return GRIB_NOT_IMPLEMENTED;
 }
 

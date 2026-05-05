@@ -66,20 +66,8 @@ public:
 
 
 private:
-    struct TypeHash {
-        std::size_t operator()(const Type& type) const {
-            return std::hash<std::string>()(type.get());
-        }
-    };
-
-    struct TypeEqual {
-        bool operator()(const Type& lhs, const Type& rhs) const {
-            return lhs.get() == rhs.get();
-        }
-    };
-
     Factory() {}
-    std::unordered_map<Type, BuilderBase<T>*, TypeHash, TypeEqual> builders_;
+    std::unordered_map<Type, BuilderBase<T>*> builders_;
     std::recursive_mutex mutex_;
 };
 
@@ -91,7 +79,7 @@ Factory<T>::~Factory()
     if (!builders_.empty()) {
         for (auto it = builders_.begin(); it != builders_.end();) {
             const grib_context* context = grib_context_get_default();
-            grib_context_log(context, GRIB_LOG_DEBUG, "Factory::~Factory - Erasing %s", it->first.get().c_str());
+            grib_context_log(context, GRIB_LOG_DEBUG, "Factory::~Factory - Erasing %s", it->first.c_str());
             it = builders_.erase(it);
         }
     }
@@ -110,7 +98,7 @@ void Factory<T>::add(Type const& type, BuilderBase<T>* builder)
     std::lock_guard<std::recursive_mutex> guard(mutex_);
 #if ECCODED_DEBUG
     if (has(type)) {
-        throw std::runtime_error("Factory::add - duplicate entry: " + type.get());
+        throw std::runtime_error(std::string("Factory::add - duplicate entry: ") + type.c_str());
     }
 #endif
     builders_[type] = builder;
@@ -136,7 +124,7 @@ void Factory<T>::list(std::ostream& out)
     std::lock_guard<std::recursive_mutex> guard(mutex_);
     const grib_context* context = grib_context_get_default();
     for (auto const& entry : builders_) {
-        grib_context_log(context, GRIB_LOG_DEBUG, "%s, ", entry.first.get().c_str());
+        grib_context_log(context, GRIB_LOG_DEBUG, "%s, ", entry.first.c_str());
     }
 }
 
@@ -147,12 +135,12 @@ typename Factory<T>::Ptr Factory<T>::build(Type const& type)
 
     if (auto builder_ = builders_.find(type); builder_ == builders_.end()) {
         const grib_context* context = grib_context_get_default();
-        grib_context_log(context, GRIB_LOG_ERROR, "No Builder called %s", type.get().c_str());
+        grib_context_log(context, GRIB_LOG_ERROR, "No Builder called %s", type.c_str());
         grib_context_log(context, GRIB_LOG_ERROR, "Builders are:");
         for (auto const& entry : builders_) {
-            grib_context_log(context, GRIB_LOG_ERROR, "No Builder called %s", entry.first.get().c_str());
+            grib_context_log(context, GRIB_LOG_ERROR, "No Builder called %s", entry.first.c_str());
         }
-        throw std::runtime_error(std::string("No Builder called ") + type.get());
+        throw std::runtime_error(std::string("No Builder called ") + type.c_str());
     }
     else {
         auto builder =  builder_->second->make();

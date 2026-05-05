@@ -73,7 +73,7 @@ int G2Date::pack_long(const long* val, size_t* len)
     if (!is_date_valid(year, month, day, 0, 0, 0)) {
         // ECC-1777: For now just a warning. Will later change to an error
         fprintf(stderr, "ECCODES WARNING :  %s:%s: Date is not valid! year=%ld month=%ld day=%ld\n",
-                accessor_type().get().c_str(), __func__, year, month, day);
+                accessor_type().c_str(), __func__, year, month, day);
         // return GRIB_ENCODING_ERROR;
     }
 

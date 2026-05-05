@@ -479,7 +479,7 @@ int G2EndStep::pack_long_(const long end_step_value, const long end_step_unit)
         grib_context_log(h->context, GRIB_LOG_ERROR,
                          "%s:%s: Date/Time is not valid! "
                          "year=%ld month=%ld day=%ld hour=%ld minute=%ld second=%ld",
-                         accessor_type().get().c_str(), __func__, year, month, day, hour, minute, second);
+                         accessor_type().c_str(), __func__, year, month, day, hour, minute, second);
         return GRIB_DECODING_ERROR;
     }
 

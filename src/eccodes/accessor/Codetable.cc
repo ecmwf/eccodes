@@ -24,7 +24,7 @@ int codes_codetable_get_contents_malloc(const grib_handle* h, const char* key, c
     grib_accessor* aa = grib_find_accessor(h, key);
     if (!aa) return GRIB_NOT_FOUND;
 
-    if (!STR_EQUAL(aa->accessor_type().get().c_str(), "codetable")) {
+    if (aa->accessor_type() != "codetable") {
         return GRIB_INVALID_ARGUMENT;  // key is not a codetable
     }
 
@@ -567,7 +567,7 @@ int Codetable::unpack_string(char* buffer, size_t* len)
     if (*len < l) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         accessor_type().get().c_str(), name_, l, *len);
+                         accessor_type().c_str(), name_, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }

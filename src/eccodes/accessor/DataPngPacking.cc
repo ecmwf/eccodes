@@ -310,7 +310,7 @@ int DataPngPacking::pack_double(const double* val, size_t* len)
             grib_get_double_internal(get_enclosing_handle(), reference_value_, &ref);
             if (ref != reference_value) {
                 grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
-                                 accessor_type().get().c_str(), __func__, reference_value_, ref, reference_value);
+                                 accessor_type().c_str(), __func__, reference_value_, ref, reference_value);
                 return GRIB_INTERNAL_ERROR;
             }
         }
@@ -363,7 +363,7 @@ int DataPngPacking::pack_double(const double* val, size_t* len)
     if (width * height != *len) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s %s: width=%ld height=%ld len=%ld. width*height should equal len!",
-                         accessor_type().get().c_str(), __func__, (long)width, (long)height, (long)*len);
+                         accessor_type().c_str(), __func__, (long)width, (long)height, (long)*len);
         /* ECC-802: We cannot bomb out here as the user might have changed Ni/Nj and the packingType
          * but has not yet submitted the new data values. So len will be out of sync!
          * So issue a warning but proceed.
@@ -441,7 +441,7 @@ int DataPngPacking::pack_double(const double* val, size_t* len)
         grib_get_double_internal(get_enclosing_handle(), reference_value_, &ref);
         if (ref != reference_value) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
-                             accessor_type().get().c_str(), __func__, reference_value_, ref, reference_value);
+                             accessor_type().c_str(), __func__, reference_value_, ref, reference_value);
             return GRIB_INTERNAL_ERROR;
         }
     }
