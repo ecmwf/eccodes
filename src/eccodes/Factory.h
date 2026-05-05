@@ -12,8 +12,8 @@
 
 #include "grib_api_internal.h"
 #include "AccessorUtils/NamedType.h"
+#include "sync/Mutex.h"
 #include <stdexcept>
-#include <mutex>
 #include <unordered_map>
 
 namespace eccodes {
@@ -68,14 +68,14 @@ public:
 private:
     Factory() {}
     std::unordered_map<Type, BuilderBase<T>*> builders_;
-    std::recursive_mutex mutex_;
+    sync::Mutex mutex_;
 };
 
 
 template <class T>
 Factory<T>::~Factory()
 {
-    std::lock_guard<std::recursive_mutex> guard(mutex_);
+    sync::LockGuard<sync::Mutex> guard(mutex_);
     if (!builders_.empty()) {
         for (auto it = builders_.begin(); it != builders_.end();) {
             const grib_context* context = grib_context_get_default();
@@ -95,7 +95,7 @@ Factory<T>& Factory<T>::instance()
 template <class T>
 void Factory<T>::add(Type const& type, BuilderBase<T>* builder)
 {
-    std::lock_guard<std::recursive_mutex> guard(mutex_);
+    sync::LockGuard<sync::Mutex> guard(mutex_);
 #if ECCODED_DEBUG
     if (has(type)) {
         throw std::runtime_error(std::string("Factory::add - duplicate entry: ") + type.c_str());
@@ -107,21 +107,21 @@ void Factory<T>::add(Type const& type, BuilderBase<T>* builder)
 template <class T>
 void Factory<T>::remove(Type const& type)
 {
-    std::lock_guard<std::recursive_mutex> guard(mutex_);
+    sync::LockGuard<sync::Mutex> guard(mutex_);
     builders_.erase(type);
 }
 
 template <class T>
 bool Factory<T>::has(Type const& type)
 {
-    std::lock_guard<std::recursive_mutex> guard(mutex_);
+    sync::LockGuard<sync::Mutex> guard(mutex_);
     return builders_.find(type) != builders_.end();
 }
 
 template <class T>
 void Factory<T>::list(std::ostream& out)
 {
-    std::lock_guard<std::recursive_mutex> guard(mutex_);
+    sync::LockGuard<sync::Mutex> guard(mutex_);
     const grib_context* context = grib_context_get_default();
     for (auto const& entry : builders_) {
         grib_context_log(context, GRIB_LOG_DEBUG, "%s, ", entry.first.c_str());
@@ -131,7 +131,7 @@ void Factory<T>::list(std::ostream& out)
 template <class T>
 typename Factory<T>::Ptr Factory<T>::build(Type const& type)
 {
-    std::lock_guard<std::recursive_mutex> guard(mutex_);
+    sync::LockGuard<sync::Mutex> guard(mutex_);
 
     if (auto builder_ = builders_.find(type); builder_ == builders_.end()) {
         const grib_context* context = grib_context_get_default();
