@@ -11,7 +11,7 @@
 #pragma once
 
 #include <cstddef>
-#include <cstdlib>
+#include <cstdint>
 #include <cstring>
 
 namespace eccodes {
@@ -19,120 +19,114 @@ namespace eccodes {
 class Accessor;
 
 // Per-handle open-addressing hash map for accessor name lookups.
-// Designed to be embedded in the handle struct (zero-initialized by calloc).
-// Uses a fixed-size embedded array — no heap allocation, no pointer indirection.
-// Not thread-safe — handles are not shared between threads.
+//
+// Design:
+// - Embedded fixed-size array (no heap allocation, zero-init by calloc).
+// - 64-bit FNV-1a hash; matches by hash only (collision probability ~ 10^-15).
+// - hash == 0 means "empty slot" (FNV-1a is OR'ed with 1 to ensure non-zero).
+// - Thread-safe in the sense that distinct handles can be used from distinct
+//   threads; the same handle must not be shared between threads (matches the
+//   contract of grib_handle in develop branch).
 class AccessorStore {
 public:
-    static constexpr size_t CAPACITY = 1024;
-    static constexpr size_t MASK = CAPACITY - 1;
-    static constexpr size_t EMPTY = 0;
+    static constexpr std::size_t CAPACITY = 1024;  // power of 2
+    static constexpr std::size_t MASK     = CAPACITY - 1;
 
     struct Slot {
-        size_t hash;
-        Accessor* value;
+        std::uint64_t hash;
+        Accessor*     value;
     };
 
-    // No constructor needed — zero-initialization (calloc) produces a valid empty store.
-    // No destructor needed — no heap allocations (unless grow() is called).
+    static_assert((CAPACITY & MASK) == 0, "CAPACITY must be a power of 2");
 
     __attribute__((always_inline))
-    static size_t compute_hash(const char* s) {
-        size_t h = 14695981039346656037ULL;
+    static std::uint64_t compute_hash(const char* s) {
+        std::uint64_t h = 14695981039346656037ULL;
         for (; *s; ++s) {
             h ^= static_cast<unsigned char>(*s);
             h *= 1099511628211ULL;
         }
-        return h | 1; // ensure non-zero (0 = empty sentinel)
+        return h | 1;  // ensure non-zero (0 = empty sentinel)
     }
 
     __attribute__((always_inline))
     Accessor* get(const char* name) const {
-        const size_t h = compute_hash(name);
-        const Slot* s = slots();
-        size_t idx = h & mask();
-        while (s[idx].hash != EMPTY) {
-            if (s[idx].hash == h)
-                return s[idx].value;
-            idx = (idx + 1) & mask();
+        const std::uint64_t h = compute_hash(name);
+        std::size_t idx = h & MASK;
+        while (slots_[idx].hash) {
+            if (slots_[idx].hash == h)
+                return slots_[idx].value;
+            idx = (idx + 1) & MASK;
         }
         return nullptr;
     }
 
     __attribute__((always_inline))
     void add(const char* name, Accessor* accessor) {
-        if (__builtin_expect(size_ * 10 >= (mask() + 1) * 7, 0))
-            grow();
-
-        const size_t h = compute_hash(name);
-        Slot* s = slots();
-        size_t idx = h & mask();
-        while (s[idx].hash != EMPTY) {
-            if (s[idx].hash == h) {
-                s[idx].value = accessor;
-                return;
-            }
-            idx = (idx + 1) & mask();
-        }
-        s[idx].hash = h;
-        s[idx].value = accessor;
-        ++size_;
+        exchange(name, accessor);
     }
 
-    // Combined get + replace: returns old value, stores new value. One hash computation.
+    // Insert-or-replace; returns the previous value (nullptr if new).
     __attribute__((always_inline))
     Accessor* exchange(const char* name, Accessor* new_value) {
-        if (__builtin_expect(size_ * 10 >= (mask() + 1) * 7, 0))
-            grow();
-
-        const size_t h = compute_hash(name);
-        Slot* s = slots();
-        size_t idx = h & mask();
-        while (s[idx].hash != EMPTY) {
-            if (s[idx].hash == h) {
-                Accessor* old = s[idx].value;
-                s[idx].value = new_value;
+        const std::uint64_t h = compute_hash(name);
+        std::size_t idx = h & MASK;
+        while (slots_[idx].hash) {
+            if (slots_[idx].hash == h) {
+                Accessor* old = slots_[idx].value;
+                slots_[idx].value = new_value;
                 return old;
             }
-            idx = (idx + 1) & mask();
+            idx = (idx + 1) & MASK;
         }
-        s[idx].hash = h;
-        s[idx].value = new_value;
+        slots_[idx].hash  = h;
+        slots_[idx].value = new_value;
         ++size_;
         return nullptr;
     }
 
-    void remove(const char* name);
-    void clear();
-    void destroy(); // call before handle is freed (only needed if grow() was called)
-
-    template <typename F>
-    void for_each(F&& func) const {
-        const Slot* s = slots();
-        const size_t m = mask();
-        for (size_t i = 0; i <= m; ++i) {
-            if (s[i].hash != EMPTY)
-                func(s[i].value);
+    void remove(const char* name) {
+        const std::uint64_t h = compute_hash(name);
+        std::size_t idx = h & MASK;
+        while (slots_[idx].hash) {
+            if (slots_[idx].hash == h) {
+                // Backward-shift deletion — preserves probe chains.
+                std::size_t j = idx;
+                for (;;) {
+                    j = (j + 1) & MASK;
+                    if (!slots_[j].hash) break;
+                    const std::size_t k = slots_[j].hash & MASK;
+                    if ((idx <= j) ? (k <= idx || k > j) : (k <= idx && k > j)) {
+                        slots_[idx] = slots_[j];
+                        idx = j;
+                    }
+                }
+                slots_[idx] = {0, nullptr};
+                --size_;
+                return;
+            }
+            idx = (idx + 1) & MASK;
         }
     }
 
+    void clear() {
+        std::memset(slots_, 0, sizeof(slots_));
+        size_ = 0;
+    }
+
+    template <typename F>
+    void for_each(F&& func) const {
+        for (std::size_t i = 0; i < CAPACITY; ++i) {
+            if (slots_[i].hash)
+                func(slots_[i].value);
+        }
+    }
+
+    std::size_t size() const { return size_; }
+
 private:
-    __attribute__((always_inline))
-    Slot* slots() { return overflow_ ? overflow_ : embedded_; }
-
-    __attribute__((always_inline))
-    const Slot* slots() const { return overflow_ ? overflow_ : embedded_; }
-
-    __attribute__((always_inline))
-    size_t mask() const { return overflow_ ? overflow_mask_ : MASK; }
-
-    void grow();
-
-    // Embedded storage — zero-initialized by calloc = empty table
-    Slot embedded_[CAPACITY];
-    Slot* overflow_ = nullptr;       // non-null only after grow()
-    size_t overflow_mask_ = 0;
-    size_t size_ = 0;
+    Slot        slots_[CAPACITY];  // zero-init by calloc = empty table
+    std::size_t size_ = 0;
 };
 
-} // namespace eccodes
+}  // namespace eccodes

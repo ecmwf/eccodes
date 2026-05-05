@@ -13,7 +13,6 @@ list( APPEND eccodes_src_files
     step_unit.cc
     step.cc
     step_utilities.cc
-    AccessorStore.cc
     grib_api.h
     eccodes.h
 

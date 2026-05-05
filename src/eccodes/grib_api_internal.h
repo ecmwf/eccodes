@@ -28,6 +28,8 @@
 #ifdef __cplusplus
 #include "AccessorStore.h"
 extern "C" {
+#else
+#include <stdint.h>
 #endif
 
 #ifndef GRIB_INLINE
@@ -549,7 +551,12 @@ struct grib_handle
 #ifdef __cplusplus
     eccodes::AccessorStore accessor_store;
 #else
-    char accessor_store_reserved_[16408]; /* must match sizeof(eccodes::AccessorStore) */
+    /* Layout-compatible C view of eccodes::AccessorStore (POD layout). */
+    struct {
+        uint64_t hash;
+        void*    value;
+    } accessor_store_slots_[1024];
+    size_t accessor_store_size_;
 #endif
     char* section_offset[MAX_NUM_SECTIONS];
     char* section_length[MAX_NUM_SECTIONS];

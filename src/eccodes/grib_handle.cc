@@ -14,6 +14,12 @@
 #include "grib_api_internal.h"
 #include "ExceptionHandler.h"
 
+/* Keep the C and C++ views of grib_handle::accessor_store in sync. */
+static_assert(sizeof(eccodes::AccessorStore::Slot) == 16,
+              "AccessorStore::Slot must be 16 bytes for C-side layout match");
+static_assert(eccodes::AccessorStore::CAPACITY == 1024,
+              "AccessorStore::CAPACITY must match C-side accessor_store_slots_ size");
+
 static grib_handle* grib_handle_new_from_file_no_multi(grib_context* c, FILE* f, int headers_only, int* error);
 static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, int* error);
 static bool grib2_get_next_section(unsigned char* msgbegin, size_t msglen, unsigned char** secbegin, size_t* seclen, int* secnum, int* err);
@@ -138,7 +144,6 @@ static int grib_handle_delete_(grib_handle* h)
         grib_buffer_delete(ct, h->buffer);
         grib_section_delete(ct, h->root);
         grib_context_free(ct, h->gts_header);
-        h->accessor_store.destroy();
 
         grib_context_log(ct, GRIB_LOG_DEBUG, "grib_handle_delete: deleting handle %p", (void*)h);
         grib_context_free(ct, h);
