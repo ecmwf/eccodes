@@ -197,7 +197,6 @@ static void link_same_attributes(grib_accessor* a, grib_accessor* b)
 
 void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
 {
-    int id;
     grib_handle* hand = a->get_enclosing_handle();
     if (!l->first)
         l->first = l->last = a;
@@ -207,22 +206,15 @@ void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
     }
     l->last = a;
 
-    if (hand->use_trie) {
-        DEBUG_ASSERT( a->all_names_[0] );
-        if (*(a->all_names_[0]) != '_') {
-            id = grib_hash_keys_get_id(a->context_->keys, a->all_names_[0]);
+    DEBUG_ASSERT( a->all_names_[0] );
+    if (*(a->all_names_[0]) != '_') {
+        a->same_ = hand->accessor_store->get(a->all_names_[0]);
+        link_same_attributes(a, a->same_);
+        hand->accessor_store->add(a->all_names_[0], a);
 
-            DEBUG_ASSERT(id >= 0 && id < ACCESSORS_ARRAY_SIZE);
-
-            a->same_ = hand->accessors[id];
-            link_same_attributes(a, a->same_);
-            hand->accessors[id] = a;
-
-
-            if (a->same_ && (a->same_ == a)) {
-                fprintf(stderr, "---> %s\n", a->name_);
-                ECCODES_ASSERT(a->same_ != a);
-            }
+        if (a->same_ && (a->same_ == a)) {
+            fprintf(stderr, "---> %s\n", a->name_);
+            ECCODES_ASSERT(a->same_ != a);
         }
     }
 }

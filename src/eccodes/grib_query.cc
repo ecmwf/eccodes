@@ -75,18 +75,15 @@ static void rebuild_hash_keys(grib_handle* h, grib_section* s)
     while (a) {
         grib_section* sub = a->sub_section_;
         int i             = 0;
-        int id            = -1;
         const char* p;
         DEBUG_ASSERT(h == a->get_enclosing_handle());
 
         while (i < MAX_ACCESSOR_NAMES && ((p = a->all_names_[i]) != NULL)) {
             if (*p != '_') {
-                id = grib_hash_keys_get_id(a->context_->keys, p);
-
                 if (a->same_ != a && i == 0) {
-                    grib_handle* hand   = a->get_enclosing_handle();
-                    a->same_            = hand->accessors[id];
-                    hand->accessors[id] = a;
+                    grib_handle* hand = a->get_enclosing_handle();
+                    a->same_          = hand->accessor_store->get(p);
+                    hand->accessor_store->add(p, a);
                     DEBUG_ASSERT(a->same_ != a);
                 }
             }
@@ -101,37 +98,27 @@ static grib_accessor* search_and_cache(grib_handle* h, const char* name, const c
 
 static grib_accessor* _search_and_cache(grib_handle* h, const char* name, const char* the_namespace)
 {
-    if (h->use_trie) {
-        grib_accessor* a = NULL;
-        int id           = -1;
+    grib_accessor* a = NULL;
 
-        if (h->trie_invalid && h->kid == NULL) {
-            int i = 0;
-            for (i = 0; i < ACCESSORS_ARRAY_SIZE; i++)
-                h->accessors[i] = NULL;
+    if (h->trie_invalid && h->kid == NULL) {
+        h->accessor_store->clear();
 
-            if (h->root)
-                rebuild_hash_keys(h, h->root);
+        if (h->root)
+            rebuild_hash_keys(h, h->root);
 
-            h->trie_invalid = 0;
-            id              = grib_hash_keys_get_id(h->context->keys, name);
-        }
-        else {
-            id = grib_hash_keys_get_id(h->context->keys, name);
-
-            if ((a = h->accessors[id]) != NULL &&
-                (the_namespace == NULL || matching(a, name, the_namespace)))
-                return a;
-        }
-
-        a                = search(h->root, name, the_namespace);
-        h->accessors[id] = a;
-
-        return a;
+        h->trie_invalid = 0;
     }
     else {
-        return search(h->root, name, the_namespace);
+        a = h->accessor_store->get(name);
+        if (a != NULL &&
+            (the_namespace == NULL || matching(a, name, the_namespace)))
+            return a;
     }
+
+    a = search(h->root, name, the_namespace);
+    h->accessor_store->add(name, a);
+
+    return a;
 }
 
 static char* get_rank(grib_context* c, const char* name, int* rank)
@@ -633,12 +620,12 @@ grib_accessor* grib_find_accessor_fast(grib_handle* h, const char* name)
 
         name_space[len] = '\0';
 
-        a = h->accessors[grib_hash_keys_get_id(h->context->keys, name)];
+        a = h->accessor_store->get(name);
         if (a && !matching(a, name, name_space))
             a = NULL;
     }
     else {
-        a = h->accessors[grib_hash_keys_get_id(h->context->keys, name)];
+        a = h->accessor_store->get(name);
     }
 
     if (a == NULL && h->main)

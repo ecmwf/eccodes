@@ -143,9 +143,7 @@ typename Factory<T>::Ptr Factory<T>::build(Type const& type)
         throw std::runtime_error(std::string("No Builder called ") + type.c_str());
     }
     else {
-        auto builder =  builder_->second->make();
-        // eccodes::AccessorStore::instance().add(builder);
-        return builder;
+        return builder_->second->make();
     }
 }
 

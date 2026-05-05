@@ -64,7 +64,7 @@ static int same(const char* a, const char* b)
 
 int Alias::create_accessor(grib_section* p, grib_loader* h)
 {
-    int i, j, id;
+    int i, j;
     grib_accessor* x  = NULL;
     grib_accessor* y  = NULL;
     grib_handle* hand = NULL;
@@ -130,13 +130,7 @@ int Alias::create_accessor(grib_section* p, grib_loader* h)
                  * i.e., when unaliasing "mars.step" it also unaliases "step"
                  */
 
-                // TODO(maee): Implement a new hash function, which uses the name and the name_space as well
-
-                // grib_handle* hand = y->get_enclosing_handle();
-                // if (hand->use_trie && y->all_name_spaces_[i] != NULL && strcmp(y->name_, name_) != 0) {
-                //     int id = grib_hash_keys_get_id(hand->context->keys, name_);
-                //     hand->accessors[id] = NULL;
-                // }
+                // TODO(maee): Implement removal using the name and the name_space as well
 
                 while (i < MAX_ACCESSOR_NAMES - 1) {
                     y->all_names_[i]       = y->all_names_[i + 1];
@@ -169,17 +163,7 @@ int Alias::create_accessor(grib_section* p, grib_loader* h)
     }
 
     hand = x->get_enclosing_handle();
-    if (hand->use_trie) {
-        id                  = grib_hash_keys_get_id(x->context_->keys, name_);
-        hand->accessors[id] = x;
-
-        /*
-         if (hand->accessors[id] != x) {
-           x->same=hand->accessors[id];
-           hand->accessors[id] = x;
-         }
-        */
-    }
+    hand->accessor_store->add(name_, x);
 
     i = 0;
     while (i < MAX_ACCESSOR_NAMES) {

@@ -40,14 +40,11 @@ Rename::~Rename()
 
 static void rename_accessor(grib_accessor* a, char* name)
 {
-    int id;
     char* the_old = (char*)a->all_names_[0];
 
-    if (a->get_enclosing_handle()->use_trie && *(a->all_names_[0]) != '_') {
-        id = grib_hash_keys_get_id(a->context_->keys, a->all_names_[0]);
-        a->get_enclosing_handle()->accessors[id] = NULL;
-        id = grib_hash_keys_get_id(a->context_->keys, name);
-        a->get_enclosing_handle()->accessors[id] = a;
+    if (*(a->all_names_[0]) != '_') {
+        a->get_enclosing_handle()->accessor_store->remove(a->all_names_[0]);
+        a->get_enclosing_handle()->accessor_store->add(name, a);
     }
     a->all_names_[0] = grib_context_strdup_persistent(a->context_, name);
     a->name_         = a->all_names_[0];

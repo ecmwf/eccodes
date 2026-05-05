@@ -26,6 +26,7 @@
 
 
 #ifdef __cplusplus
+#include "AccessorStore.h"
 extern "C" {
 #endif
 
@@ -544,9 +545,12 @@ struct grib_handle
     int header_mode;                           /** Header not jet complete */
     char* gts_header;
     size_t gts_header_len;
-    int use_trie;
     int trie_invalid;
-    grib_accessor* accessors[ACCESSORS_ARRAY_SIZE];
+#ifdef __cplusplus
+    eccodes::AccessorStore* accessor_store;
+#else
+    void* accessor_store;
+#endif
     char* section_offset[MAX_NUM_SECTIONS];
     char* section_length[MAX_NUM_SECTIONS];
     int sections_count;
