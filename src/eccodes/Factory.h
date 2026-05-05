@@ -12,7 +12,7 @@
 
 #include "grib_api_internal.h"
 #include "AccessorUtils/NamedType.h"
-#include "AccessorUtils/AccessorException.h"
+#include <stdexcept>
 #include <mutex>
 #include <unordered_map>
 
@@ -110,7 +110,7 @@ void Factory<T>::add(Type const& type, BuilderBase<T>* builder)
     std::lock_guard<std::recursive_mutex> guard(mutex_);
 #if ECCODED_DEBUG
     if (has(type)) {
-        throw Exception("Factory::add - duplicate entry: " + type.get());
+        throw std::runtime_error("Factory::add - duplicate entry: " + type.get());
     }
 #endif
     builders_[type] = builder;
@@ -152,7 +152,7 @@ typename Factory<T>::Ptr Factory<T>::build(Type const& type)
         for (auto const& entry : builders_) {
             grib_context_log(context, GRIB_LOG_ERROR, "No Builder called %s", entry.first.get().c_str());
         }
-        throw Exception(std::string("No Builder called ") + type.get());
+        throw std::runtime_error(std::string("No Builder called ") + type.get());
     }
     else {
         auto builder =  builder_->second->make();
