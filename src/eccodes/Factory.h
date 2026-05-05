@@ -12,12 +12,9 @@
 
 #include "grib_api_internal.h"
 #include "AccessorUtils/NamedType.h"
-// #include "AccessorStore.h"
 #include "AccessorUtils/AccessorException.h"
 #include <mutex>
-// #include <map>
-// #include <unordered_map>
-#include <tsl/robin_map.h>
+#include <unordered_map>
 
 namespace eccodes {
 
@@ -82,9 +79,7 @@ private:
     };
 
     Factory() {}
-    // std::map<Type, BuilderBase<T>*> builders_;
-    // std::unordered_map<Type, BuilderBase<T>*, TypeHash, TypeEqual> builders_;
-    tsl::robin_map<Type, BuilderBase<T>*, TypeHash, TypeEqual> builders_;
+    std::unordered_map<Type, BuilderBase<T>*, TypeHash, TypeEqual> builders_;
     std::recursive_mutex mutex_;
 };
 
