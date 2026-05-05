@@ -9,43 +9,80 @@
  */
 
 #include "AccessorStore.h"
+#include <cstring>
 
 namespace eccodes {
 
-void AccessorStore::add(const std::string& name, Accessor* accessor)
+void AccessorStore::remove(const char* name)
 {
-    sync::LockGuard<sync::Mutex> guard(mutex_);
-    store_[name] = accessor;
-}
+    const size_t h = compute_hash(name);
+    Slot* s = slots();
+    const size_t m = mask();
+    size_t idx = h & m;
 
-Accessor* AccessorStore::get(const std::string& name) const
-{
-    sync::LockGuard<sync::Mutex> guard(mutex_);
-    auto it = store_.find(name);
-    if (it != store_.end()) {
-        return it->second;
+    while (s[idx].hash != EMPTY) {
+        if (s[idx].hash == h) {
+            --size_;
+            // Backward shift deletion
+            size_t j = idx;
+            for (;;) {
+                j = (j + 1) & m;
+                if (s[j].hash == EMPTY) break;
+                size_t k = s[j].hash & m;
+                if ((idx <= j) ? (k <= idx || k > j) : (k <= idx && k > j)) {
+                    s[idx] = s[j];
+                    idx = j;
+                }
+            }
+            s[idx].hash = EMPTY;
+            s[idx].value = nullptr;
+            return;
+        }
+        idx = (idx + 1) & m;
     }
-    return nullptr;
-}
-
-void AccessorStore::remove(const std::string& name)
-{
-    sync::LockGuard<sync::Mutex> guard(mutex_);
-    store_.erase(name);
 }
 
 void AccessorStore::clear()
 {
-    sync::LockGuard<sync::Mutex> guard(mutex_);
-    store_.clear();
+    Slot* s = slots();
+    std::memset(s, 0, (mask() + 1) * sizeof(Slot));
+    size_ = 0;
 }
 
-void AccessorStore::for_each(std::function<void(Accessor*)> fn) const
+void AccessorStore::destroy()
 {
-    sync::LockGuard<sync::Mutex> guard(mutex_);
-    for (const auto& entry : store_) {
-        fn(entry.second);
+    if (overflow_) {
+        std::free(overflow_);
+        overflow_ = nullptr;
+        overflow_mask_ = 0;
     }
+    size_ = 0;
+}
+
+void AccessorStore::grow()
+{
+    const size_t old_mask = mask();
+    const Slot* old_slots = slots();
+
+    const size_t new_cap = (old_mask + 1) * 2;
+    const size_t new_mask = new_cap - 1;
+
+    Slot* new_slots = static_cast<Slot*>(std::calloc(new_cap, sizeof(Slot)));
+
+    for (size_t i = 0; i <= old_mask; ++i) {
+        if (old_slots[i].hash != EMPTY) {
+            size_t idx = old_slots[i].hash & new_mask;
+            while (new_slots[idx].hash != EMPTY)
+                idx = (idx + 1) & new_mask;
+            new_slots[idx] = old_slots[i];
+        }
+    }
+
+    if (overflow_)
+        std::free(overflow_);
+
+    overflow_ = new_slots;
+    overflow_mask_ = new_mask;
 }
 
 } // namespace eccodes

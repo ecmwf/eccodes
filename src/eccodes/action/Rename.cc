@@ -43,8 +43,8 @@ static void rename_accessor(grib_accessor* a, char* name)
     char* the_old = (char*)a->all_names_[0];
 
     if (*(a->all_names_[0]) != '_') {
-        a->get_enclosing_handle()->accessor_store->remove(a->all_names_[0]);
-        a->get_enclosing_handle()->accessor_store->add(name, a);
+        a->get_enclosing_handle()->accessor_store.remove(a->all_names_[0]);
+        a->get_enclosing_handle()->accessor_store.add(name, a);
     }
     a->all_names_[0] = grib_context_strdup_persistent(a->context_, name);
     a->name_         = a->all_names_[0];

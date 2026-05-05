@@ -210,9 +210,8 @@ void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
 
     DEBUG_ASSERT( a->all_names_[0] );
     if (*(a->all_names_[0]) != '_') {
-        a->same_ = hand->accessor_store->get(a->all_names_[0]);
+        a->same_ = hand->accessor_store.exchange(a->all_names_[0], a);
         link_same_attributes(a, a->same_);
-        hand->accessor_store->add(a->all_names_[0], a);
 
         if (a->same_ && (a->same_ == a)) {
             fprintf(stderr, "---> %s\n", a->name_);

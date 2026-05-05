@@ -82,8 +82,7 @@ static void rebuild_hash_keys(grib_handle* h, grib_section* s)
             if (*p != '_') {
                 if (a->same_ != a && i == 0) {
                     grib_handle* hand = a->get_enclosing_handle();
-                    a->same_          = hand->accessor_store->get(p);
-                    hand->accessor_store->add(p, a);
+                    a->same_          = hand->accessor_store.exchange(p, a);
                     DEBUG_ASSERT(a->same_ != a);
                 }
             }
@@ -101,7 +100,7 @@ static grib_accessor* _search_and_cache(grib_handle* h, const char* name, const 
     grib_accessor* a = NULL;
 
     if (h->trie_invalid && h->kid == NULL) {
-        h->accessor_store->clear();
+        h->accessor_store.clear();
 
         if (h->root)
             rebuild_hash_keys(h, h->root);
@@ -109,14 +108,14 @@ static grib_accessor* _search_and_cache(grib_handle* h, const char* name, const 
         h->trie_invalid = 0;
     }
     else {
-        a = h->accessor_store->get(name);
+        a = h->accessor_store.get(name);
         if (a != NULL &&
             (the_namespace == NULL || matching(a, name, the_namespace)))
             return a;
     }
 
     a = search(h->root, name, the_namespace);
-    h->accessor_store->add(name, a);
+    h->accessor_store.add(name, a);
 
     return a;
 }
@@ -620,12 +619,12 @@ grib_accessor* grib_find_accessor_fast(grib_handle* h, const char* name)
 
         name_space[len] = '\0';
 
-        a = h->accessor_store->get(name);
+        a = h->accessor_store.get(name);
         if (a && !matching(a, name, name_space))
             a = NULL;
     }
     else {
-        a = h->accessor_store->get(name);
+        a = h->accessor_store.get(name);
     }
 
     if (a == NULL && h->main)

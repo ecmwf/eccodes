@@ -163,7 +163,7 @@ int Alias::create_accessor(grib_section* p, grib_loader* h)
     }
 
     hand = x->get_enclosing_handle();
-    hand->accessor_store->add(name_, x);
+    hand->accessor_store.add(name_, x);
 
     i = 0;
     while (i < MAX_ACCESSOR_NAMES) {

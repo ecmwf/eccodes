@@ -805,7 +805,7 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
             const char* all_namespace_vals[1024] = {NULL,}; // sorted array containing all namespaces
             printf("ERROR: namespace \"%s\" does not contain any key.\n", ns);
             printf("Here are the available namespaces in this message:\n");
-            h->accessor_store->for_each([&](grib_accessor* anAccessor) {
+            h->accessor_store.for_each([&](grib_accessor* anAccessor) {
                 for (j = 0; j < MAX_ACCESSOR_NAMES; j++) {
                     const char* a_namespace = anAccessor->all_name_spaces_[j];
                     if (a_namespace) {

@@ -44,7 +44,7 @@ static void remove_accessor(grib_accessor* a)
     s = a->parent_;
 
     if (a->get_enclosing_handle() && *(a->all_names_[0]) != '_') {
-        a->get_enclosing_handle()->accessor_store->remove(a->all_names_[0]);
+        a->get_enclosing_handle()->accessor_store.remove(a->all_names_[0]);
     }
 
     if (a->next_)

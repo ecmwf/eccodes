@@ -547,9 +547,9 @@ struct grib_handle
     size_t gts_header_len;
     int trie_invalid;
 #ifdef __cplusplus
-    eccodes::AccessorStore* accessor_store;
+    eccodes::AccessorStore accessor_store;
 #else
-    void* accessor_store;
+    char accessor_store_reserved_[16408]; /* must match sizeof(eccodes::AccessorStore) */
 #endif
     char* section_offset[MAX_NUM_SECTIONS];
     char* section_length[MAX_NUM_SECTIONS];

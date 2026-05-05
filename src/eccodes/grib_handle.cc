@@ -138,8 +138,7 @@ static int grib_handle_delete_(grib_handle* h)
         grib_buffer_delete(ct, h->buffer);
         grib_section_delete(ct, h->root);
         grib_context_free(ct, h->gts_header);
-        delete h->accessor_store;
-        h->accessor_store = nullptr;
+        h->accessor_store.destroy();
 
         grib_context_log(ct, GRIB_LOG_DEBUG, "grib_handle_delete: deleting handle %p", (void*)h);
         grib_context_free(ct, h);
@@ -169,7 +168,6 @@ grib_handle* grib_new_handle(grib_context* c)
     else {
         g->context      = c;
         g->product_kind = PRODUCT_ANY; /* Default. Will later be set to a specific product */
-        g->accessor_store = new eccodes::AccessorStore();
     }
 
     grib_context_log(c, GRIB_LOG_DEBUG, "%s: Allocated handle %p", __func__, (void*)g);
