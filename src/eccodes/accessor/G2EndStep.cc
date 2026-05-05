@@ -71,6 +71,22 @@ static bool is_special_expver(const grib_handle* h)
     return false;
 }
 
+static bool is_special_type(const grib_handle* h)
+{
+    char strMarsType[50] = {0,};
+    size_t slen = 50;
+    int ret = grib_get_string(h, "mars.type", strMarsType, &slen);
+    if (ret == GRIB_SUCCESS &&
+        (STR_EQUAL(strMarsType, "pfc")  ||  // pfc = Point values
+         STR_EQUAL(strMarsType, "ppm")  ||  // ppm = Point value metrics
+         STR_EQUAL(strMarsType, "gwt")  ||  // gwt = Weather types
+         STR_EQUAL(strMarsType, "gbf")))    // gbf = Bias-corrected gridbox
+    {
+        return true;  // Special case for ecPoint MARS types used in ERA5 with typeOfTimeIncrement=1
+    }
+    return false;
+}
+
 static int convert_time_range_long_(
     grib_handle* h,
     long stepUnits,                   /* step_units */
@@ -179,7 +195,7 @@ int G2EndStep::unpack_one_time_range_double_(double* val, size_t* len)
         /* See GRIB-488 & ECC-1734 */
         /* Note: For this case, lengthOfTimeRange is not related to step and should not be used to calculate step */
         add_time_range = 0;
-        if (is_special_expver(h)) {
+        if (is_special_expver(h) || is_special_type(h)) {
             add_time_range = 1;
         }
     }
