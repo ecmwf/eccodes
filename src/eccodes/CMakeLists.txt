@@ -306,7 +306,6 @@ list( APPEND eccodes_src_files
     grib_filepool.cc
     geo/grib_geography.cc
     grib_handle.cc
-    grib_hash_keys.cc
     grib_io.cc
     grib_trie.cc
     grib_trie_with_rank.cc

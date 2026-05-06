@@ -400,13 +400,6 @@ void grib_multi_support_reset_file(grib_context* c, FILE* f);
 void grib_multi_support_reset(grib_context* c);
 int codes_handle_change_buffer_ownership(grib_handle* h, void (*deleter)(void*));
 
-/* grib_hash_keys.cc */
-const struct grib_keys_hash* grib_keys_hash_get(const char* str, size_t len);
-grib_itrie* grib_hash_keys_new(grib_context* c, int* count);
-void grib_hash_keys_delete(grib_itrie* t);
-int grib_hash_keys_get_id(grib_itrie* t, const char* key);
-int grib_hash_keys_get_size(grib_itrie* t);
-
 /* grib_io.cc */
 off_t stdio_tell(void* data);
 int stdio_seek(void* data, off_t len);

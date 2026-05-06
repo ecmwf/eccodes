@@ -166,7 +166,6 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 
 #define MAX_ACCESSOR_ATTRIBUTES     20
 #define MAX_FILE_HANDLES_WITH_MULTI 10
-#define ACCESSORS_ARRAY_SIZE        5000
 #define MAX_NUM_CONCEPTS            2000
 #define MAX_NUM_HASH_ARRAY          2000
 
@@ -683,8 +682,6 @@ struct grib_context
     int gts_header_on;
     int gribex_mode_on;
     int large_constant_fields;
-    grib_itrie* keys;
-    int keys_count;
     grib_itrie* concepts_index;
     int concepts_count;
     grib_concept_value* concepts[MAX_NUM_CONCEPTS];
