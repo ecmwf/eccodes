@@ -141,7 +141,7 @@ int G2EndStep::unpack_one_time_range_long_(long* val, size_t* len)
         /* See GRIB-488 & ECC-1734 */
         /* Note: For this case, lengthOfTimeRange is not related to step and should not be used to calculate step */
         add_time_range = 0;
-        if (is_special_expver(h)) {
+        if (is_special_expver(h) || is_special_type(h)) {
             add_time_range = 1;
         }
     }
