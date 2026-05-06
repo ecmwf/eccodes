@@ -1,0 +1,29 @@
+[workspace]
+resolver = "2"
+members = ["crates/eccodes-sys"]
+
+[workspace.package]
+edition = "2024"
+license = "Apache-2.0"
+repository = "https://github.com/ecmwf/eccodes"
+rust-version = "1.90"
+readme = "README.md"
+keywords = ["ecmwf", "weather", "meteorology", "grib", "bufr"]
+categories = ["science"]
+
+[workspace.dependencies]
+# Internal
+eccodes-sys = { path = "crates/eccodes-sys" }
+
+# Foundation crates
+eckit-sys = { git = "ssh://git@github.com/ecmwf/eckit.git", branch = "rust-bindings", default-features = false }
+
+# Build tools
+bindman = { git = "ssh://git@github.com/ecmwf/bindman.git", branch = "generate_exception_bridge" }
+bindman-build = { git = "ssh://git@github.com/ecmwf/bindman.git", branch = "generate_exception_bridge" }
+bindman-utils = { git = "ssh://git@github.com/ecmwf/bindman.git", branch = "generate_exception_bridge" }
+
+# External
+cxx = "1.0"
+cxx-build = "1.0"
+thiserror = "2"

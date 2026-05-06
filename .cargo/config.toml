@@ -1,0 +1,15 @@
+[build]
+jobs = -1
+
+[target.'cfg(all())']
+rustflags = [
+    "-Wclippy::all",
+    "-Wclippy::pedantic",
+    "-Wclippy::nursery",
+    "-Wclippy::unwrap_used",
+    "-Aclippy::module_name_repetitions",
+    "-Aclippy::missing_errors_doc",
+]
+
+[net]
+git-fetch-with-cli = true
