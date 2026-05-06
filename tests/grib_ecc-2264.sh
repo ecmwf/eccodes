@@ -39,7 +39,7 @@ set typeOfTimeIncrement=2;
 write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
-grib_check_key_equals $tempGrib step "0-24"
+grib_check_key_equals $tempGrib step,endStep "0-24 24"
 
 # here we also expect step=0-24 and endStep 24
 # should be fixed for ecPoint types only
@@ -57,7 +57,7 @@ set typeOfTimeIncrement=1;
 write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
-grib_check_key_equals $tempGrib step "0-24"
+grib_check_key_equals $tempGrib step,endStep "0-24 24"
 
 # ERA5 gbf
 cat >$tempFilt<<EOF
@@ -72,7 +72,7 @@ set typeOfTimeIncrement=1;
 write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
-grib_check_key_equals $tempGrib step "0-24"
+grib_check_key_equals $tempGrib step,endStep "0-24 24"
 
 # ERA5 pfc
 cat >$tempFilt<<EOF
@@ -87,7 +87,7 @@ set typeOfTimeIncrement=1;
 write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
-grib_check_key_equals $tempGrib step "0-24"
+grib_check_key_equals $tempGrib step,endStep "0-24 24"
 
 # ERA5 ppm
 cat >$tempFilt<<EOF
@@ -102,7 +102,7 @@ set typeOfTimeIncrement=1;
 write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
-grib_check_key_equals $tempGrib step "0-24"
+grib_check_key_equals $tempGrib step,endStep "0-24 24"
 
 # ERA5 fc
 cat >$tempFilt<<EOF
