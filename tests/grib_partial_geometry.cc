@@ -9,6 +9,7 @@
  */
 
 #include "eccodes.h"
+#include "grib_api_internal.h"
 
 #undef NDEBUG
 #include <assert.h>
@@ -21,7 +22,7 @@
 const int verbose = 1;
 
 #if defined(HAVE_ECKIT_GEO)
-static int print_keys(codes_handle* h)
+static int print_keys(grib_handle* h)
 {
     char value[MAX_VAL_LEN] = {0,};
     size_t vlen = sizeof(value);
@@ -34,7 +35,7 @@ static int print_keys(codes_handle* h)
     return err;
 }
 #else
-static int print_keys(codes_handle* h)
+static int print_keys(grib_handle* h)
 {
     grib_keys_iterator* kiter = grib_keys_iterator_new(h, 0, "geography");
     while (grib_keys_iterator_next(kiter)) {
@@ -57,18 +58,21 @@ static int print_keys(codes_handle* h)
 
 static int process_messages_full(const char* filename)
 {
+    grib_context* c = grib_context_get_default();
     FILE* fin = fopen(filename, "rb");
     assert(fin);
 
+    grib_context_log(c, GRIB_LOG_DEBUG, "process_messages_full %s",filename);
+
     int err = 0, i = 0;
-    codes_handle* h = 0;
-    while ((h = codes_handle_new_from_file(0, fin, PRODUCT_GRIB, &err)) != NULL) {
+    grib_handle* h = 0;
+    while ((h = grib_handle_new_from_file(c, fin, &err)) != NULL) {
         if (verbose) {
             printf("\nMsg %d\n--------\n", i+1);
         }
         err = print_keys(h);
         if (err) return err;
-        codes_handle_delete(h);
+        grib_handle_delete(h);
         i++;
     }
     return err;
@@ -79,8 +83,10 @@ static int process_messages_partial(const char* filename)
     int num_messages = 0, i = 0;
     off_t* offsets        = NULL;  // array of message offsets
     size_t* sizes         = NULL;  // array of message sizes
-    codes_context* c      = codes_context_get_default();
+    grib_context* c      = grib_context_get_default();
     const int strict_mode = 1;
+
+    grib_context_log(c, GRIB_LOG_DEBUG, "process_messages_partial %s",filename);
 
     int err = codes_extract_offsets_sizes_malloc(c, filename, PRODUCT_ANY, &offsets, &sizes, &num_messages, strict_mode);
     if (err) return err;
@@ -89,28 +95,32 @@ static int process_messages_partial(const char* filename)
     assert(fin);
 
     for (i = 0; i < num_messages; ++i) {
-        if (verbose) {
-            printf("\nMsg %d\n--------\n", i+1);
-            // printf("\nMsg %d: offset=%lu size=%zu\n========================\n", i+1, (unsigned long)offsets[i], sizes[i]);
-        }
         err = fseek(fin, offsets[i], SEEK_SET);
         assert(!err);
         char buf[METADATA_LEN];
         size_t num_bytes_to_read = sizeof(buf);
         if (sizes[i] < num_bytes_to_read) { // is message size smaller than the buffer size?
             num_bytes_to_read = sizes[i];
-            //printf("Setting num_bytes_to_read to %zu \n", num_bytes_to_read);
         }
         if (fread(buf, 1, num_bytes_to_read, fin) != num_bytes_to_read) {
             perror(filename);
             exit(1);
         }
 
-        codes_handle* h = codes_handle_new_from_partial_message(NULL, buf, num_bytes_to_read);
+        grib_handle* h = grib_handle_new_from_partial_message(c, buf, num_bytes_to_read);
         assert(h);
+        long edition = 0;
+        err = grib_get_long(h, "edition", &edition);
+        if (!err && edition == 1) {
+            grib_handle_delete(h);
+            return GRIB_UNSUPPORTED_EDITION;
+        }
+        if (verbose) {
+            printf("\nMsg %d\n--------\n", i+1);
+        }
         err = print_keys(h);
         if (err) return err;
-        codes_handle_delete(h);
+        grib_handle_delete(h);
     }
 
     free(sizes);
@@ -146,6 +156,9 @@ int main(int argc, char* argv[])
     } else {
         assert(do_partial);
         err = process_messages_partial(filename);
+        if (err == GRIB_UNSUPPORTED_EDITION) {
+            err = process_messages_full(filename);
+        }
     }
 
     return err;
