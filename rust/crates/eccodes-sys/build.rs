@@ -7,7 +7,7 @@
 use std::env;
 use std::path::{Path, PathBuf};
 
-const ECCODES_VERSION: &str = "2.48.0";
+const ECCODES_VERSION: &str = "2.47.0";
 
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
@@ -305,7 +305,8 @@ fn build_vendored(out_dir: &Path) {
     // Clone sources
     let ecbuild_src = bindman_utils::git_clone(ECBUILD_REPO, ECBUILD_TAG, &src_dir.join("ecbuild"));
     let aec_src = bindman_utils::git_clone(AEC_REPO, AEC_TAG, &src_dir.join("libaec"));
-    let eccodes_src = bindman_utils::git_clone(ECCODES_REPO, ECCODES_VERSION, &src_dir.join("eccodes"));
+    let eccodes_src =
+        bindman_utils::git_clone(ECCODES_REPO, ECCODES_VERSION, &src_dir.join("eccodes"));
 
     let ecbuild_bin = ecbuild_src.join("bin/ecbuild");
     let num_jobs = bindman_utils::build_parallelism();
