@@ -11,8 +11,8 @@
 . ./include.ctest.sh
 
 # ---------------------------------------------------------
-# This is the test for JIRA issue ECC-XXXX
-# < Add issue summary here >
+# This is the test for JIRA issue ECC-2264
+# Validate that step and endStep are encoded correctly for GRIB statistical processing and ecPoint-type cases
 # ---------------------------------------------------------
 
 REDIRECT=/dev/null
