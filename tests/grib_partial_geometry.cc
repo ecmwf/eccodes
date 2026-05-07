@@ -9,13 +9,10 @@
  */
 
 #include "eccodes.h"
-#include "grib_api_internal.h"
 
 #undef NDEBUG
 #include <assert.h>
 #include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 #define MAX_VAL_LEN  1024
 #define METADATA_LEN 17000 // guess! works for nearly all GRIB2
@@ -56,13 +53,14 @@ static int print_keys(grib_handle* h)
 }
 #endif
 
-static int process_messages_full(const char* filename)
+static int process_messages_full(const char* filename, int debug)
 {
     grib_context* c = grib_context_get_default();
     FILE* fin = fopen(filename, "rb");
     assert(fin);
 
-    grib_context_log(c, GRIB_LOG_DEBUG, "process_messages_full %s",filename);
+    if (debug)
+        fprintf(stderr, "DEBUG: process_messages_full %s", filename);
 
     int err = 0, i = 0;
     grib_handle* h = 0;
@@ -78,7 +76,7 @@ static int process_messages_full(const char* filename)
     return err;
 }
 
-static int process_messages_partial(const char* filename)
+static int process_messages_partial(const char* filename, int debug)
 {
     int num_messages = 0, i = 0;
     off_t* offsets        = NULL;  // array of message offsets
@@ -86,7 +84,8 @@ static int process_messages_partial(const char* filename)
     grib_context* c      = grib_context_get_default();
     const int strict_mode = 1;
 
-    grib_context_log(c, GRIB_LOG_DEBUG, "process_messages_partial %s",filename);
+    if (debug)
+        fprintf(stderr, "DEBUG: process_messages_partial %s", filename);
 
     int err = codes_extract_offsets_sizes_malloc(c, filename, PRODUCT_ANY, &offsets, &sizes, &num_messages, strict_mode);
     if (err) return err;
@@ -129,18 +128,21 @@ static int process_messages_partial(const char* filename)
 }
 
 // Usage:
-//     prog -f file
-// or  prog -p file
+//     prog [-d] -f file
+// or  prog [-d] -p file
 int main(int argc, char* argv[])
 {
     char* filename   = NULL;
     int err          = 0;
-    int do_full = 0, do_partial = 0, oc = 0;
+    int debug = 0, do_full = 0, do_partial = 0, oc = 0;
 
-    assert(argc == 3);
+    assert(argc == 3 || argc == 4);
 
-    while ((oc = getopt(argc, argv, "fp")) != -1) {
+    while ((oc = getopt(argc, argv, "fpd")) != -1) {
         switch (oc) {
+            case 'd':
+                debug = 1;
+                break;
             case 'f':
                 do_full = 1;
                 break;
@@ -152,12 +154,12 @@ int main(int argc, char* argv[])
     filename = argv[optind];
 
     if (do_full) {
-        err = process_messages_full(filename);
+        err = process_messages_full(filename, debug);
     } else {
         assert(do_partial);
-        err = process_messages_partial(filename);
+        err = process_messages_partial(filename, debug);
         if (err == GRIB_UNSUPPORTED_EDITION) {
-            err = process_messages_full(filename);
+            err = process_messages_full(filename, debug);
         }
     }
 
