@@ -39,8 +39,7 @@ public:
 
     static_assert((CAPACITY & MASK) == 0, "CAPACITY must be a power of 2");
 
-    __attribute__((always_inline))
-    static std::uint64_t compute_hash(const char* s) {
+    static inline std::uint64_t compute_hash(const char* s) {
         std::uint64_t h = 14695981039346656037ULL;
         for (; *s; ++s) {
             h ^= static_cast<unsigned char>(*s);
@@ -49,8 +48,7 @@ public:
         return h | 1;  // ensure non-zero (0 = empty sentinel)
     }
 
-    __attribute__((always_inline))
-    Accessor* get(const char* name) const {
+    inline Accessor* get(const char* name) const {
         const std::uint64_t h = compute_hash(name);
         std::size_t idx = h & MASK;
         while (slots_[idx].hash) {
@@ -61,14 +59,12 @@ public:
         return nullptr;
     }
 
-    __attribute__((always_inline))
-    void add(const char* name, Accessor* accessor) {
+    inline void add(const char* name, Accessor* accessor) {
         exchange(name, accessor);
     }
 
     // Insert-or-replace; returns the previous value (nullptr if new).
-    __attribute__((always_inline))
-    Accessor* exchange(const char* name, Accessor* new_value) {
+    inline Accessor* exchange(const char* name, Accessor* new_value) {
         const std::uint64_t h = compute_hash(name);
         std::size_t idx = h & MASK;
         while (slots_[idx].hash) {
