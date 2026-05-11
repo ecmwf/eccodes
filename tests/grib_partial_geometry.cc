@@ -18,7 +18,6 @@
 #define METADATA_LEN 17000 // guess! works for nearly all GRIB2
 const int verbose = 1;
 
-#if defined(HAVE_ECKIT_GEO)
 static int print_keys(grib_handle* h)
 {
     char value[MAX_VAL_LEN] = {0,};
@@ -26,32 +25,22 @@ static int print_keys(grib_handle* h)
     int err = grib_get_string(h, "gridSpec", value, &vlen);
     if (!err) {
         printf("%s\n", value);
-    } else {
-        fprintf(stderr, "Error: %s\n", grib_get_error_message(err));
     }
-    return err;
-}
-#else
-static int print_keys(grib_handle* h)
-{
-    grib_keys_iterator* kiter = grib_keys_iterator_new(h, 0, "geography");
-    while (grib_keys_iterator_next(kiter)) {
-        const char* name = grib_keys_iterator_get_name(kiter);
-        if (strcmp(name, "pl")==0) continue; // this one is an array!
-        char value[MAX_VAL_LEN] = {0,};
-        size_t vlen = sizeof(value);
-        int err = grib_get_string(h, name, value, &vlen);
-        if (!err) printf("%s = %s \n", name, value);
-        else      { fprintf(stderr, "Error: %s\n", grib_get_error_message(err)); return err; }
+    else {
+        grib_keys_iterator* kiter = grib_keys_iterator_new(h, 0, "geography");
+        while (grib_keys_iterator_next(kiter)) {
+            const char* name = grib_keys_iterator_get_name(kiter);
+            if (strcmp(name, "pl")==0) continue; // this one is an array!
+            char value[MAX_VAL_LEN] = {0,};
+            size_t vlen = sizeof(value);
+            int err = grib_get_string(h, name, value, &vlen);
+            if (!err) printf("%s = %s \n", name, value);
+            else      { fprintf(stderr, "Error: %s\n", grib_get_error_message(err)); return err; }
+        }
+        grib_keys_iterator_delete(kiter);
     }
-    grib_keys_iterator_delete(kiter);
-
-    // long l=0;
-    // int err = grib_get_long(h, "bitsPerValue", &l);
-    // assert(err != GRIB_SUCCESS);
     return GRIB_SUCCESS;
 }
-#endif
 
 static int process_messages_full(const char* filename, int debug)
 {
