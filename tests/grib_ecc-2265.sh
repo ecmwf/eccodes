@@ -11,8 +11,8 @@
 . ./include.ctest.sh
 
 # ---------------------------------------------------------
-# This is the test for JIRA issue ECC-XXXX
-# < Add issue summary here >
+# This is the test for JIRA issue ECC-2265
+# Validate that the forcing key is derived as "ecmf-era5" for this GRIB2 setup
 # ---------------------------------------------------------
 
 REDIRECT=/dev/null
