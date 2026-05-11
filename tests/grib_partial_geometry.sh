@@ -64,5 +64,15 @@ $EXEC ${test_dir}/grib_partial_geometry -f $input > $tempText1
 $EXEC ${test_dir}/grib_partial_geometry -p $input > $tempText2
 diff $tempText1 $tempText2
 
-# input=${data_dir}/regular_latlon_surface.grib1
-# $EXEC ${test_dir}/grib_partial_geometry $input
+# For GRIB1, we fall back to the FULL geometry processing, as the partial geometry is not supported.
+# We check that the fallback is working by looking in the debug message
+input=${data_dir}/regular_latlon_surface.grib1
+$EXEC ${test_dir}/grib_partial_geometry -d -p $input > $tempText1 2>&1
+grep "process_messages_full" $tempText1
+
+$EXEC ${test_dir}/grib_partial_geometry -f $input > $tempText1
+$EXEC ${test_dir}/grib_partial_geometry -p $input > $tempText2
+diff $tempText1 $tempText2
+
+# Cleanup
+rm -f $tempText1 $tempText2
