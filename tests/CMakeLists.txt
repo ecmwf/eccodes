@@ -340,6 +340,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2137
         grib_ecc-2188
         grib_ecc-2230
+        grib_ecc-2268
         grib_modelName
         grib_sub_hourly
         grib_set_bytes
