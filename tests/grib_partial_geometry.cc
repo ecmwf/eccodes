@@ -55,7 +55,10 @@ static int process_messages_full(const char* filename, int debug)
     grib_handle* h = 0;
     while ((h = grib_handle_new_from_file(c, fin, &err)) != NULL) {
         if (verbose) {
-            printf("\nMsg %d\n--------\n", i+1);
+            long edition = 0;
+            err = grib_get_long(h, "edition", &edition);
+            assert(!err);
+            printf("\nMsg %d (edition=%ld)\n------------------\n", i+1, edition);
         }
         err = print_keys(h);
         if (err) return err;
@@ -72,6 +75,7 @@ static int process_messages_partial(const char* filename, int debug)
     size_t* sizes         = NULL;  // array of message sizes
     grib_context* c      = grib_context_get_default();
     const int strict_mode = 1;
+    grib_handle* h = NULL;
 
     if (debug)
         fprintf(stderr, "DEBUG: process_messages_partial %s", filename);
@@ -94,18 +98,26 @@ static int process_messages_partial(const char* filename, int debug)
             perror(filename);
             exit(1);
         }
+        assert(buf[0] == 'G');
+        assert(buf[1] == 'R');
+        assert(buf[2] == 'I');
+        assert(buf[3] == 'B');
+        int edition = (int)buf[7];
+        assert(edition == 1 || edition == 2);
 
-        grib_handle* h = grib_handle_new_from_partial_message(c, buf, num_bytes_to_read);
-        assert(h);
-        long edition = 0;
-        err = grib_get_long(h, "edition", &edition);
-        if (!err && edition == 1) {
-            grib_handle_delete(h);
-            return GRIB_UNSUPPORTED_EDITION;
+        if (edition == 1) {
+            err = fseek(fin, offsets[i], SEEK_SET);
+            assert(!err);
+            h = grib_handle_new_from_file(c, fin, &err);
+            assert(!err);
+        }
+        else {
+            h = grib_handle_new_from_partial_message(c, buf, num_bytes_to_read);
         }
         if (verbose) {
-            printf("\nMsg %d\n--------\n", i+1);
+            printf("\nMsg %d (edition=%d)\n------------------\n", i+1, edition);
         }
+        assert(h);
         err = print_keys(h);
         if (err) return err;
         grib_handle_delete(h);
