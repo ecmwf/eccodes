@@ -2,6 +2,7 @@ alias mars.step = stepRange;
 
 if (edition == 2) {
   if (MTG2Switch < 1) {
+    transient typeOfTimeIncrementSwitch	= 1;
     alias mars.step = stepRange;
   } else {
     alias mars.step = endStep;
