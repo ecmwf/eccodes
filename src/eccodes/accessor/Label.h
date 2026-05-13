@@ -19,12 +19,14 @@ class Label : public Gen
 {
 public:
     Label() :
-        Gen() { class_name_ = "label"; }
-    grib_accessor* create_empty_accessor() override { return new Label{}; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
+
+    static inline const AccessorType accessor_type_{"label"};
 };
 
 }  // namespace eccodes::accessor

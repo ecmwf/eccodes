@@ -10,8 +10,7 @@
 
 #include "Size.h"
 
-eccodes::accessor::Size _grib_accessor_size;
-eccodes::Accessor* grib_accessor_size = &_grib_accessor_size;
+eccodes::AccessorBuilder<eccodes::accessor::Size> _grib_accessor_size_builder{};
 
 namespace eccodes::accessor
 {

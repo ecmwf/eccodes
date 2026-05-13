@@ -19,8 +19,8 @@ class DataShUnpacked : public DataSimplePacking
 {
 public:
     DataShUnpacked() :
-        DataSimplePacking() { class_name_ = "data_sh_unpacked"; }
-    grib_accessor* create_empty_accessor() override { return new DataShUnpacked{}; }
+        DataSimplePacking() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
@@ -36,6 +36,9 @@ private:
     const char* pen_j_ = nullptr;
     const char* pen_k_ = nullptr;
     const char* pen_m_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"data_sh_unpacked"};
 };
 
 }  // namespace eccodes::accessor

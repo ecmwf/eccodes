@@ -106,8 +106,6 @@ int Section::notify_change(grib_accessor* notified,
     grib_context_log(context_, GRIB_LOG_DEBUG, "------------- CREATE TMP BLOCK act=%s notified=%s", name_, notified->name_);
     tmp_handle->root = grib_section_create(tmp_handle, NULL);
 
-    tmp_handle->use_trie = 1;
-
     err = create_accessor(tmp_handle->root, &loader);
     if (err) {
         if (err == GRIB_NOT_FOUND && strcmp(name_, "dataValues") == 0) {
@@ -156,7 +154,6 @@ int Section::notify_change(grib_accessor* notified,
     }
     grib_handle_delete(tmp_handle);
 
-    h->use_trie     = 1;
     h->trie_invalid = 1;
     h->kid          = NULL;
 

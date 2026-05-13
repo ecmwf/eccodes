@@ -19,8 +19,8 @@ class JulianDay : public Double
 {
 public:
     JulianDay() :
-        Double() { class_name_ = "julian_day"; }
-    grib_accessor* create_empty_accessor() override { return new JulianDay{}; }
+        Double() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
@@ -33,6 +33,9 @@ private:
     const char* hour_ = nullptr;
     const char* minute_ = nullptr;
     const char* second_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"julian_day"};
 };
 
 }  // namespace eccodes::accessor

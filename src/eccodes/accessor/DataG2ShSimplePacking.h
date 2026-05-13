@@ -19,8 +19,8 @@ class DataG2ShSimplePacking : public DataShSimplePacking
 {
 public:
     DataG2ShSimplePacking() :
-        DataShSimplePacking() { class_name_ = "data_g2shsimple_packing"; }
-    grib_accessor* create_empty_accessor() override { return new DataG2ShSimplePacking{}; }
+        DataShSimplePacking() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
@@ -29,6 +29,9 @@ public:
 private:
     const char* numberOfValues_ = nullptr;
     const char* numberOfDataPoints_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"data_g2shsimple_packing"};
 };
 
 }  // namespace eccodes::accessor

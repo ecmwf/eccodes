@@ -19,8 +19,8 @@ class ToDouble : public Gen
 {
 public:
     ToDouble() :
-        Gen() { class_name_ = "to_double"; }
-    grib_accessor* create_empty_accessor() override { return new ToDouble{}; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
@@ -38,6 +38,9 @@ protected:
 
 private:
     long scale_ = 0;
+
+public:
+    static inline const AccessorType accessor_type_{"to_double"};
 };
 
 }  // namespace eccodes::accessor

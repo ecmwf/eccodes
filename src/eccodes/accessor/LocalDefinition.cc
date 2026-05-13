@@ -10,8 +10,7 @@
 
 #include "LocalDefinition.h"
 
-eccodes::accessor::LocalDefinition _grib_accessor_local_definition;
-eccodes::Accessor* grib_accessor_local_definition = &_grib_accessor_local_definition;
+eccodes::AccessorBuilder<eccodes::accessor::LocalDefinition> _grib_accessor_local_definition_builder{};
 
 namespace eccodes::accessor
 {

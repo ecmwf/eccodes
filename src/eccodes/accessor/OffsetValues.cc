@@ -10,8 +10,7 @@
 
 #include "OffsetValues.h"
 
-eccodes::accessor::OffsetValues _grib_accessor_offset_values;
-eccodes::Accessor* grib_accessor_offset_values = &_grib_accessor_offset_values;
+eccodes::AccessorBuilder<eccodes::accessor::OffsetValues> _grib_accessor_offset_values_builder{};
 
 namespace eccodes::accessor
 {
