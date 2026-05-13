@@ -20,7 +20,6 @@ if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
     exit 0
 fi
 
-# TODO(maee): Currently only GRIB2 files are tested. GRIB1 to be added later
 files="
 reduced_gaussian_model_level.grib2
 reduced_gaussian_pressure_level.grib2
@@ -36,7 +35,9 @@ regular_latlon_surface_constant.grib2
 spherical_model_level.grib2
 spherical_pressure_level.grib2
 tigge_af_ecmwf.grib2
-tigge_cf_ecmwf.grib2
+mixed.grib
+lfpw.grib1
+test_file.grib2
 "
 
 # Check if JPEG is enabled
@@ -47,22 +48,13 @@ if [ $HAVE_JPEG -eq 1 ]; then
 fi
 
 for file in $files; do
-    if [ -f ${data_dir}/$file ]; then
-        input=${data_dir}/$file
-        # -f => FULL
-        # -p => PARTIAL
-        $EXEC ${test_dir}/grib_partial_geometry -f $input > $tempText1
-        $EXEC ${test_dir}/grib_partial_geometry -p $input > $tempText2
-        diff $tempText1 $tempText2
-    else
-        echo "File ${data_dir}/$file not found. Skipping."
-    fi
+    input=${data_dir}/$file
+    # -f => FULL
+    # -p => PARTIAL
+    $EXEC ${test_dir}/grib_partial_geometry -f $input > $tempText1
+    $EXEC ${test_dir}/grib_partial_geometry -p $input > $tempText2
+    diff $tempText1 $tempText2
 done
 
-input=${data_dir}/test_file.grib2
-$EXEC ${test_dir}/grib_partial_geometry -f $input > $tempText1
-$EXEC ${test_dir}/grib_partial_geometry -p $input > $tempText2
-diff $tempText1 $tempText2
-
-# input=${data_dir}/regular_latlon_surface.grib1
-# $EXEC ${test_dir}/grib_partial_geometry $input
+# Cleanup
+rm -f $tempText1 $tempText2

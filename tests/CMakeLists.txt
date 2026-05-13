@@ -190,6 +190,8 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2242
         grib_ecc-2248
         grib_ecc-2254
+        grib_ecc-2264
+        grib_ecc-2265
     )
 
     # These tests require data downloads
@@ -339,6 +341,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2137
         grib_ecc-2188
         grib_ecc-2230
+        grib_ecc-2268
         grib_modelName
         grib_sub_hourly
         grib_set_bytes
