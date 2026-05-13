@@ -13,8 +13,11 @@
 #include "grib_api_internal.h"
 #include "AccessorUtils/NamedType.h"
 #include "sync/Mutex.h"
+#include <algorithm>
 #include <stdexcept>
+#include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace eccodes {
 
@@ -59,6 +62,31 @@ void Factory<T>::remove(Type const& type)
     creators_.erase(type);
 }
 
+
+inline size_t levenshteinDistance(const std::string& a, const std::string& b)
+{
+    const size_t m = a.size();
+    const size_t n = b.size();
+
+    // Use a single-row approach: prev holds the previous row, curr the current
+    std::vector<size_t> prev(n + 1);
+    std::vector<size_t> curr(n + 1);
+
+    for (size_t j = 0; j <= n; ++j)
+        prev[j] = j;
+
+    for (size_t i = 1; i <= m; ++i) {
+        curr[0] = i;
+        for (size_t j = 1; j <= n; ++j) {
+            size_t cost = (a[i - 1] == b[j - 1]) ? 0 : 1;
+            curr[j] = std::min({prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost});
+        }
+        std::swap(prev, curr);
+    }
+    return prev[n];
+}
+
+
 template <class T>
 typename Factory<T>::Ptr Factory<T>::build(Type const& type)
 {
@@ -67,9 +95,26 @@ typename Factory<T>::Ptr Factory<T>::build(Type const& type)
     if (auto it = creators_.find(type); it == creators_.end()) {
         const grib_context* context = grib_context_get_default();
         grib_context_log(context, GRIB_LOG_ERROR, "No creator for type %s", type.c_str());
-        grib_context_log(context, GRIB_LOG_ERROR, "Registered types:");
+
+        // Find the 5 most similar registered types using Levenshtein distance
+        const std::string requested = type.get();
+        constexpr size_t maxSuggestions = 5;
+        std::vector<std::pair<size_t, const char*>> candidates;
+        candidates.reserve(creators_.size());
         for (auto const& entry : creators_) {
-            grib_context_log(context, GRIB_LOG_ERROR, "  %s", entry.first.c_str());
+            size_t dist = levenshteinDistance(requested, entry.first.get());
+            candidates.push_back({dist, entry.first.c_str()});
+        }
+        std::partial_sort(candidates.begin(),
+                          candidates.begin() + std::min(maxSuggestions, candidates.size()),
+                          candidates.end(),
+                          [](auto const& a, auto const& b) { return a.first < b.first; });
+        size_t n = std::min(maxSuggestions, candidates.size());
+        if (n > 0) {
+            grib_context_log(context, GRIB_LOG_ERROR, "Did you mean:");
+            for (size_t i = 0; i < n; ++i) {
+                grib_context_log(context, GRIB_LOG_ERROR, "  %s", candidates[i].second);
+            }
         }
         throw std::runtime_error(std::string("No creator for type ") + type.c_str());
     }
