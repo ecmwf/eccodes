@@ -772,7 +772,7 @@ int grib_accessor_can_be_missing(grib_accessor* a, int* err)
     if (a->flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) {
         return 1;
     }
-    if (STR_EQUAL(a->class_name_, "codetable")) {
+    if (a->accessor_type() == "codetable") {
         // Special case of Code Table keys
         // The vast majority have a 'Missing' entry
         return 1;

@@ -19,10 +19,12 @@ class Uint64LittleEndian : public Gen
 {
 public:
     Uint64LittleEndian() :
-        Gen() { class_name_ = "uint64_little_endian"; }
-    grib_accessor* create_empty_accessor() override { return new Uint64LittleEndian{}; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
+
+    static inline const AccessorType accessor_type_{"uint64_little_endian"};
 };
 
 }  // namespace eccodes::accessor

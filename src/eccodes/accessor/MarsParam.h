@@ -19,8 +19,8 @@ class MarsParam : public Ascii
 {
 public:
     MarsParam() :
-        Ascii() { class_name_ = "mars_param"; }
-    grib_accessor* create_empty_accessor() override { return new MarsParam{}; }
+        Ascii() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
     void init(const long, grib_arguments*) override;
@@ -29,6 +29,9 @@ private:
     const char* paramId_ = nullptr;
     const char* table_ = nullptr;
     const char* param_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"mars_param"};
 };
 
 }  // namespace eccodes::accessor

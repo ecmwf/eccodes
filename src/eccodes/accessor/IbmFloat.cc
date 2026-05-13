@@ -10,8 +10,7 @@
 
 #include "IbmFloat.h"
 
-eccodes::accessor::IbmFloat _grib_accessor_ibmfloat;
-eccodes::Accessor* grib_accessor_ibmfloat = &_grib_accessor_ibmfloat;
+eccodes::AccessorBuilder<eccodes::accessor::IbmFloat> _grib_accessor_ibmfloat_builder{};
 
 namespace eccodes::accessor
 {

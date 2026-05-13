@@ -19,8 +19,8 @@ class G1StepRange : public AbstractLongVector
 {
 public:
     G1StepRange() :
-        AbstractLongVector() { class_name_ = "g1step_range"; }
-    grib_accessor* create_empty_accessor() override { return new G1StepRange{}; }
+        AbstractLongVector() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int pack_string(const char*, size_t* len) override;
@@ -44,6 +44,9 @@ private:
     const char* stepType_ = nullptr;
     const char* patch_fp_precip_ = nullptr;
     int error_on_units_ = 0;
+
+public:
+    static inline const AccessorType accessor_type_{"g1step_range"};
 };
 
 }  // namespace eccodes::accessor
