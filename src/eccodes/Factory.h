@@ -62,31 +62,6 @@ void Factory<T>::remove(Type const& type)
     creators_.erase(type);
 }
 
-
-inline size_t levenshteinDistance(const std::string& a, const std::string& b)
-{
-    const size_t m = a.size();
-    const size_t n = b.size();
-
-    // Use a single-row approach: prev holds the previous row, curr the current
-    std::vector<size_t> prev(n + 1);
-    std::vector<size_t> curr(n + 1);
-
-    for (size_t j = 0; j <= n; ++j)
-        prev[j] = j;
-
-    for (size_t i = 1; i <= m; ++i) {
-        curr[0] = i;
-        for (size_t j = 1; j <= n; ++j) {
-            size_t cost = (a[i - 1] == b[j - 1]) ? 0 : 1;
-            curr[j] = std::min({prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost});
-        }
-        std::swap(prev, curr);
-    }
-    return prev[n];
-}
-
-
 template <class T>
 typename Factory<T>::Ptr Factory<T>::build(Type const& type)
 {
@@ -97,12 +72,11 @@ typename Factory<T>::Ptr Factory<T>::build(Type const& type)
         grib_context_log(context, GRIB_LOG_ERROR, "No creator for type %s", type.c_str());
 
         // Find the 5 most similar registered types using Levenshtein distance
-        const std::string requested = type.get();
         constexpr size_t maxSuggestions = 5;
         std::vector<std::pair<size_t, const char*>> candidates;
         candidates.reserve(creators_.size());
         for (auto const& entry : creators_) {
-            size_t dist = levenshteinDistance(requested, entry.first.get());
+            size_t dist = levenshteinDistance(type.c_str(), entry.first.c_str());
             candidates.push_back({dist, entry.first.c_str()});
         }
         std::partial_sort(candidates.begin(),
