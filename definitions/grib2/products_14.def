@@ -1,11 +1,8 @@
 # (C) Copyright 2005- ECMWF.
 
-# LC-GCR prod re-analysis products
+# LC-GCR re-analysis products (prod)
+if (!defined(marsExpver)) {
+  constant marsExpver = 'prod';
+}
 
-alias parameter=paramId;
-alias mars.param = paramId;
-
-alias parameter.paramId=paramId;
-alias parameter.shortName=shortName;
-alias parameter.units=units;
-alias parameter.name=name;
+include "grib2/products_lcgcr.def"

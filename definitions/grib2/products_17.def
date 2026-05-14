@@ -1,11 +1,8 @@
 # (C) Copyright 2005- ECMWF.
 
-# WPMIP test products
+# WPMIP prod products (test)
+if (!defined(marsExpver)) {
+  constant marsExpver = 'test';
+}
 
-alias parameter=paramId;
-alias mars.param = paramId;
-
-alias parameter.paramId=paramId;
-alias parameter.shortName=shortName;
-alias parameter.units=units;
-alias parameter.name=name;
+include "grib2/products_wpmip.def"
