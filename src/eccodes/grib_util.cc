@@ -63,6 +63,121 @@ typedef enum
         count++;                                       \
     } while (0)
 
+class FileRestorer {
+public:
+    explicit FileRestorer(FILE* f) {
+        f_ = f;
+        pos_ = ftell(f);
+    }
+    ~FileRestorer() {
+        fseeko(f_, pos_, SEEK_SET);
+    }
+    FILE* f_;
+    long pos_;
+};
+
+#define UINT3(a, b, c)    (size_t)((a << 16) + (b << 8) + c);
+#define UINT4(a, b, c, d) (size_t)((a << 24) + (b << 16) + (c << 8) + d);
+
+int grib_get_header_length(FILE* f, size_t* result)
+{
+    ECCODES_ASSERT(f);
+    FileRestorer fRestore(f);
+
+    size_t sec0len = 16;
+    size_t sec1len = 0;
+    size_t sec2len = 0;
+    size_t sec3len = 0;
+    size_t sec4len = 0;
+    unsigned char buf[40000];
+    size_t n = fread(buf, 1, 16, f);
+    if (n != 16)
+        return GRIB_INTERNAL_ERROR;
+
+    if (buf[0] != 'G' ||
+        buf[1] != 'R' ||
+        buf[2] != 'I' ||
+        buf[3] != 'B') {
+        return GRIB_INVALID_MESSAGE;
+    }
+    int edition = (int)buf[7];
+    if (edition != 2)
+        return GRIB_UNSUPPORTED_EDITION;
+
+    // Next 4 bytes encodes section1's length
+    int i = 16;
+    n = fread(&buf[i], 1, 4, f);
+    if (n!=4) return GRIB_INVALID_MESSAGE;
+    sec1len = UINT4(buf[i], buf[i + 1], buf[i + 2], buf[i + 3]);
+    //printf("sec1len=%zu\n",sec1len);
+    i += 4;
+
+    // The next byte is the numberOfSection which should be 1
+    n = fread(&buf[i], 1, 1, f);
+    if (n!=1) return GRIB_INVALID_MESSAGE;
+    if ( (size_t)buf[i] != 1)
+        return GRIB_INVALID_MESSAGE;
+    i += 1;
+
+    // Read the rest of section 1. Note: We've read 5 bytes already
+    n = fread(buf + i, 1, sec1len - 5, f);
+    if (n != sec1len - 5) return GRIB_INVALID_MESSAGE;
+    i += sec1len - 5;
+
+    // Next comes Section2 (which is optional) or Section3
+    n = fread(&buf[i], 1, 4, f);
+    if (n != 4) return GRIB_INVALID_MESSAGE;
+    size_t sec2or3len = UINT4(buf[i], buf[i + 1], buf[i + 2], buf[i + 3]);
+    i += 4;
+    //printf("sec2or3len=%zu\n", sec2or3len);
+
+    // Read the next section number: 2 or 3
+    n = fread(&buf[i], 1, 1, f);
+    if (n!=1) return GRIB_INVALID_MESSAGE;
+    size_t sec2or3Num = (size_t)buf[i];
+    ECCODES_ASSERT( sec2or3Num == 2 || sec2or3Num == 3);
+    i += 1;
+    //printf("sec2or3Num=%zu\n", sec2or3Num);
+
+    // Read the rest
+    if (sec2or3Num == 2) {
+        // We have the optional section 2
+        sec2len = sec2or3len;
+        if (fread(buf + i, 1, sec2len - 5, f) != sec2len - 5)
+            return GRIB_INVALID_MESSAGE;
+        i += sec2len - 5;
+
+        // Section3
+        if (fread(&buf[i], 1, 4, f) != 4)
+            return GRIB_INVALID_MESSAGE;
+        sec3len = UINT4(buf[i], buf[i + 1], buf[i + 2], buf[i + 3]);
+        i += 4;
+        //printf("DBG:  sec2 len=%zu, sec3 len=%zu\n", sec2len, sec3len);
+        if (fread(buf + i, 1, sec3len - 4, f) != sec3len - 4)
+            return GRIB_INVALID_MESSAGE;
+        i += sec3len - 4;
+    } else {
+        // No section 2
+        sec3len = sec2or3len;
+        n = fread(buf + i, 1, sec3len - 5, f);
+        if (n != sec3len - 5)
+            return GRIB_INVALID_MESSAGE;
+        i += sec3len - 5;
+        //printf("DBG:  sec3 len=%zu\n", sec3len);
+    }
+
+    // Section 4
+    n = fread(&buf[i], 1, 4, f);
+    if (n != 4)
+        return GRIB_INVALID_MESSAGE;
+    sec4len = UINT4(buf[i], buf[i + 1], buf[i + 2], buf[i + 3]);
+    i += 4;
+    //printf("DBG:  sec4 len=%zu\n", sec4len);
+
+    *result = sec0len + sec1len +  sec2len + sec3len + sec4len;
+
+    return GRIB_SUCCESS;
+}
 
 static void set_total_length(unsigned char* buffer, long* section_length, const long* section_offset, int edition, size_t totalLength)
 {
