@@ -279,6 +279,12 @@
 'base' = {productDefinitionTemplateNumber=200;}
 'base' = {productDefinitionTemplateNumber=201;}
 'base' = {productDefinitionTemplateNumber=202;}
+# Satellite product with channel, bandwidth and polarisation
+'satellite' = {productDefinitionTemplateNumber=203;}
+'satellite' = {productDefinitionTemplateNumber=204;}
+'satellite' = {productDefinitionTemplateNumber=205;}
+'satellite' = {productDefinitionTemplateNumber=206;}
+'satellite' = {productDefinitionTemplateNumber=207;}
 #
 'base' = {productDefinitionTemplateNumber=254;}
 'base' = {productDefinitionTemplateNumber=311;}
