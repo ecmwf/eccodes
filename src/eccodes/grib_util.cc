@@ -82,7 +82,9 @@ private:
 #define UINT3(a, b, c)    (size_t)((a << 16) + (b << 8) + c);
 #define UINT4(a, b, c, d) (size_t)((a << 24) + (b << 16) + (c << 8) + d);
 
-// Currently only for GRIB edition 2
+// Currently only for GRIB edition 2 single-field
+// It does not work for multi-field GRIB2 files!
+// and it will not work for STREAMs (because we do ftell and fseek etc)
 int grib_get_header_length(FILE* f, size_t* result)
 {
     ECCODES_ASSERT(f);
