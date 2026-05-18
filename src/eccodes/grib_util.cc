@@ -68,10 +68,13 @@ public:
     explicit FileRestorer(FILE* f) {
         f_ = f;
         pos_ = ftell(f);
+        ECCODES_ASSERT(pos_ != -1);
     }
     ~FileRestorer() {
-        fseeko(f_, pos_, SEEK_SET);
+        int err = fseeko(f_, pos_, SEEK_SET);
+        ECCODES_ASSERT(!err);
     }
+private:
     FILE* f_;
     long pos_;
 };
@@ -79,19 +82,20 @@ public:
 #define UINT3(a, b, c)    (size_t)((a << 16) + (b << 8) + c);
 #define UINT4(a, b, c, d) (size_t)((a << 24) + (b << 16) + (c << 8) + d);
 
+// Currently only for GRIB edition 2
 int grib_get_header_length(FILE* f, size_t* result)
 {
     ECCODES_ASSERT(f);
     FileRestorer fRestore(f);
 
-    size_t sec0len = 16;
+    size_t sec0len = 16; // GRIB2
     size_t sec1len = 0;
     size_t sec2len = 0;
     size_t sec3len = 0;
     size_t sec4len = 0;
-    unsigned char buf[40000];
-    size_t n = fread(buf, 1, 16, f);
-    if (n != 16)
+    unsigned char buf[40000]; // Large enough to contain all the above sections
+    size_t n = fread(buf, 1, sec0len, f);
+    if (n != sec0len)
         return GRIB_INTERNAL_ERROR;
 
     if (buf[0] != 'G' ||
@@ -105,11 +109,10 @@ int grib_get_header_length(FILE* f, size_t* result)
         return GRIB_UNSUPPORTED_EDITION;
 
     // Next 4 bytes encodes section1's length
-    int i = 16;
+    int i = sec0len;
     n = fread(&buf[i], 1, 4, f);
     if (n!=4) return GRIB_INVALID_MESSAGE;
     sec1len = UINT4(buf[i], buf[i + 1], buf[i + 2], buf[i + 3]);
-    //printf("sec1len=%zu\n",sec1len);
     i += 4;
 
     // The next byte is the numberOfSection which should be 1
@@ -129,7 +132,6 @@ int grib_get_header_length(FILE* f, size_t* result)
     if (n != 4) return GRIB_INVALID_MESSAGE;
     size_t sec2or3len = UINT4(buf[i], buf[i + 1], buf[i + 2], buf[i + 3]);
     i += 4;
-    //printf("sec2or3len=%zu\n", sec2or3len);
 
     // Read the next section number: 2 or 3
     n = fread(&buf[i], 1, 1, f);
@@ -137,7 +139,6 @@ int grib_get_header_length(FILE* f, size_t* result)
     size_t sec2or3Num = (size_t)buf[i];
     ECCODES_ASSERT( sec2or3Num == 2 || sec2or3Num == 3);
     i += 1;
-    //printf("sec2or3Num=%zu\n", sec2or3Num);
 
     // Read the rest
     if (sec2or3Num == 2) {
@@ -152,7 +153,7 @@ int grib_get_header_length(FILE* f, size_t* result)
             return GRIB_INVALID_MESSAGE;
         sec3len = UINT4(buf[i], buf[i + 1], buf[i + 2], buf[i + 3]);
         i += 4;
-        //printf("DBG:  sec2 len=%zu, sec3 len=%zu\n", sec2len, sec3len);
+
         if (fread(buf + i, 1, sec3len - 4, f) != sec3len - 4)
             return GRIB_INVALID_MESSAGE;
         i += sec3len - 4;
@@ -163,7 +164,6 @@ int grib_get_header_length(FILE* f, size_t* result)
         if (n != sec3len - 5)
             return GRIB_INVALID_MESSAGE;
         i += sec3len - 5;
-        //printf("DBG:  sec3 len=%zu\n", sec3len);
     }
 
     // Section 4
@@ -172,7 +172,6 @@ int grib_get_header_length(FILE* f, size_t* result)
         return GRIB_INVALID_MESSAGE;
     sec4len = UINT4(buf[i], buf[i + 1], buf[i + 2], buf[i + 3]);
     i += 4;
-    //printf("DBG:  sec4 len=%zu\n", sec4len);
 
     *result = sec0len + sec1len +  sec2len + sec3len + sec4len;
 

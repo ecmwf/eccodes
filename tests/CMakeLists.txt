@@ -43,6 +43,7 @@ list(APPEND test_c_bins
     grib_run_length_packing
     grib_partial_message
     grib_codedValues_as_bytes
+    grib_get_header_length
     grib_ecc-1467
     grib_ecc-1431
     grib_ecc-1433
@@ -209,6 +210,7 @@ if( HAVE_BUILD_TOOLS )
         grib_units_bias_factor
         grib_set_large_message_fail
         grib_g1monthlydate
+        grib_get_header_length
         grib_g1fcperiod
         grib_bpv_limit
         grib_complex
