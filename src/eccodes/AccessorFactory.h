@@ -13,8 +13,11 @@
 #include "grib_api_internal.h"
 #include "AccessorUtils/NamedType.h"
 #include "sync/Mutex.h"
+#include <algorithm>
 #include <stdexcept>
+#include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace eccodes {
 
@@ -67,9 +70,25 @@ typename Factory<T>::Ptr Factory<T>::build(Type const& type)
     if (auto it = creators_.find(type); it == creators_.end()) {
         const grib_context* context = grib_context_get_default();
         grib_context_log(context, GRIB_LOG_ERROR, "No creator for type %s", type.c_str());
-        grib_context_log(context, GRIB_LOG_ERROR, "Registered types:");
+
+        // Find the 5 most similar registered types using Levenshtein distance
+        constexpr size_t maxSuggestions = 5;
+        std::vector<std::pair<size_t, const char*>> candidates;
+        candidates.reserve(creators_.size());
         for (auto const& entry : creators_) {
-            grib_context_log(context, GRIB_LOG_ERROR, "  %s", entry.first.c_str());
+            size_t dist = levenshteinDistance(type.c_str(), entry.first.c_str());
+            candidates.push_back({dist, entry.first.c_str()});
+        }
+        std::partial_sort(candidates.begin(),
+                          candidates.begin() + std::min(maxSuggestions, candidates.size()),
+                          candidates.end(),
+                          [](auto const& a, auto const& b) { return a.first < b.first; });
+        size_t n = std::min(maxSuggestions, candidates.size());
+        if (n > 0) {
+            grib_context_log(context, GRIB_LOG_ERROR, "Did you mean:");
+            for (size_t i = 0; i < n; ++i) {
+                grib_context_log(context, GRIB_LOG_ERROR, "  %s", candidates[i].second);
+            }
         }
         throw std::runtime_error(std::string("No creator for type ") + type.c_str());
     }

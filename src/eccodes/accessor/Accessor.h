@@ -13,7 +13,7 @@
 
 #include "grib_api_internal.h"
 #include "dumper/Dumper.h"
-#include "Factory.h"
+#include "CodesFactory.h"
 
 namespace eccodes {
 class Dumper;
@@ -22,7 +22,7 @@ class Dumper;
 namespace eccodes
 {
 
-using AccessorFactory = Factory<Accessor>;
+using AccessorFactory = CodesFactory<Accessor>;
 using AccessorType = AccessorFactory::Type;
 template<class T> using AccessorBuilder = Builder<grib_accessor, T>;
 

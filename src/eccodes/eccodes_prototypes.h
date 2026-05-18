@@ -671,6 +671,7 @@ int codes_key_is_computed(const grib_handle* h, const char* key, int* err);
 /* grib_util.cc */
 int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* grid_spec, const grib_util_packing_spec* packing_spec);
 
+int grib_get_header_length(FILE* f, size_t* result);
 grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err);
 grib_handle* grib_util_set_spec(grib_handle* h, const grib_util_grid_spec* spec, const grib_util_packing_spec* packing_spec, int flags, const double* data_values, size_t data_values_count, int* err);
 int parse_keyval_string(const char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count);
@@ -713,6 +714,7 @@ const char* codes_get_product_name(ProductKind product);
 const char* grib_get_type_name(int type);
 char* string_replace_char(char* str, char oldc, char newc);
 void string_remove_char(char* str, char c);
+size_t levenshteinDistance(const char* a, const char* b);
 
 /* functions.cc */
 long grib_op_eq(long a, long b);

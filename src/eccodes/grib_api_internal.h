@@ -929,17 +929,17 @@ struct grib_math
     int arity;
 };
 
-typedef double (*mathproc)(void);
-typedef int (*funcproc)(grib_math*, mathproc);
+typedef double (*grib_mathproc)(void);
+typedef int (*grib_funcproc)(grib_math*, grib_mathproc);
 
-typedef struct func
+typedef struct grib_func
 {
     char* name;
-    funcproc addr;
-    mathproc proc;
+    grib_funcproc addr;
+    grib_mathproc proc;
     int arity;
     char* info;
-} func;
+} grib_func;
 
 /* action file */
 struct grib_action_file
