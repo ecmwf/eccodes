@@ -212,6 +212,12 @@
 'chemical' = {productDefinitionTemplateNumber=166; MTG2Switch=2;}
 'base' = {productDefinitionTemplateNumber=167; MTG2Switch=1;}
 'chemical' = {productDefinitionTemplateNumber=167; MTG2Switch=2;}
+# Derived products of post-processed forecasts
+'base' = {productDefinitionTemplateNumber=199;}
+'base' = {productDefinitionTemplateNumber=200;}
+'base' = {productDefinitionTemplateNumber=201;}
+'base' = {productDefinitionTemplateNumber=202;}
+#
 'base' = {productDefinitionTemplateNumber=254;}
 'base' = {productDefinitionTemplateNumber=311;}
 'base' = {productDefinitionTemplateNumber=1000;}
