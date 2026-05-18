@@ -10418,6 +10418,13 @@
 	 parameterNumber = 24 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean Wind speed threshold for wind erosion
+'avg_ws10thr' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-integrated land surface heat net flux
 'acc_lshnf' = {
 	 discipline = 2 ;
@@ -12468,6 +12475,13 @@
 	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum Wind speed threshold for wind erosion
+'max_ws10thr' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-minimum temperature tendency due to short-wave radiation
 'min_ttswr' = {
 	 discipline = 0 ;
@@ -14482,6 +14496,13 @@
 	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum Wind speed threshold for wind erosion
+'min_ws10thr' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-standard-deviation temperature tendency due to short-wave radiation
 'std_ttswr' = {
 	 discipline = 0 ;
@@ -16477,6 +16498,13 @@
 	 discipline = 2 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation Wind speed threshold for wind erosion
+'std_ws10thr' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Cross sectional area of flow in channel

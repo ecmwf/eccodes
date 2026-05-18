@@ -8607,6 +8607,13 @@
 	 typeOfSecondFixedSurface = 167 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean Wind speed threshold for wind erosion
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-integrated land surface heat net flux
 'J m**-2' = {
 	 discipline = 2 ;
@@ -10558,6 +10565,13 @@
 	 typeOfSecondFixedSurface = 167 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum Wind speed threshold for wind erosion
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-minimum temperature tendency due to short-wave radiation
 'K s**-1' = {
 	 discipline = 0 ;
@@ -12473,6 +12487,13 @@
 	 typeOfSecondFixedSurface = 167 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum Wind speed threshold for wind erosion
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-standard-deviation temperature tendency due to short-wave radiation
 'K s**-1' = {
 	 discipline = 0 ;
@@ -14369,6 +14390,13 @@
 	 parameterNumber = 25 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 167 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation Wind speed threshold for wind erosion
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Cross sectional area of flow in channel
@@ -16650,6 +16678,12 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 63 ;
 	 typeOfFirstFixedSurface = 1 ;
+	}
+#Wind speed threshold for wind erosion
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
 	}
 #Universal thermal climate index
 'K' = {
@@ -21817,6 +21851,74 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 19 ;
+	}
+#Photolysis rate
+'s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 20 ;
+	}
+#Time-mean Photolysis rate
+'s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum Photolysis rate
+'s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum Photolysis rate
+'s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation Photolysis rate
+'s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Emission potential
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 21 ;
+	}
+#Time-mean Emission potential
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 21 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum Emission potential
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 21 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum Emission potential
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 21 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation Emission potential
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 21 ;
+	 typeOfStatisticalProcessing = 6 ;
 	}
 #Pressure tendency
 'Pa s**-1' = {
